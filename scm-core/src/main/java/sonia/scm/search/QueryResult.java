@@ -25,8 +25,11 @@
 package sonia.scm.search;
 
 import com.google.common.annotations.Beta;
-import lombok.Value;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -34,24 +37,20 @@ import java.util.List;
  * @since 2.21.0
  */
 @Beta
-@Value
-public class QueryResult {
-
-  /**
-   * Total count of hits, which are matched by the query.
-   */
-  long totalHits;
-
-  /**
-   * Searched type of object.
-   */
-  Class<?> type;
+@Getter
+@ToString
+@EqualsAndHashCode(callSuper = true)
+public class QueryResult extends QueryCountResult {
 
   /**
    * List of hits found by the query.
    * The list contains only those hits which are starting at start and they are limit by the given amount.
    * @see QueryBuilder
    */
-  List<Hit> hits;
+  private final List<Hit> hits;
 
+  public QueryResult(long totalHits, Class<?> type, List<Hit> hits) {
+    super(type, totalHits);
+    this.hits = Collections.unmodifiableList(hits);
+  }
 }

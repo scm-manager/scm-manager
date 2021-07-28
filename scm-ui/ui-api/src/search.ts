@@ -26,7 +26,7 @@ import { ApiResult, useIndexLinks } from "./base";
 import { Link, QueryResult } from "@scm-manager/ui-types";
 import { apiClient } from "./apiclient";
 import { createQueryString } from "./utils";
-import { useQuery } from "react-query";
+import { useQueries, useQuery } from "react-query";
 
 export type SearchOptions = {
   type: string;
@@ -38,7 +38,44 @@ const defaultSearchOptions: SearchOptions = {
   type: "repository",
 };
 
-const useSearchLink = (name: string) => {
+const isString = (str: string | undefined): str is string => !!str;
+
+export const useSearchTypes = () => {
+  return useSearchLinks()
+    .map((link) => link.name)
+    .filter(isString);
+};
+
+export const useSearchCounts = (types: string[], query: string) => {
+  const searchLinks = useSearchLinks();
+  const queries = useQueries(
+    types.map((type) => ({
+      queryKey: ["search", type, query, "count"],
+      queryFn: () =>
+        apiClient.get(`${findLink(searchLinks, type)}?q=${query}&countOnly=true`).then((response) => response.json()),
+    }))
+  );
+  const result: { [type: string]: ApiResult<number> } = {};
+  queries.forEach((q, i) => {
+    result[types[i]] = {
+      isLoading: q.isLoading,
+      error: q.error as Error,
+      data: (q.data as QueryResult)?.totalHits,
+    };
+  });
+  return result;
+};
+
+const findLink = (links: Link[], name: string) => {
+  for (const l of links) {
+    if (l.name === name) {
+      return l.href;
+    }
+  }
+  throw new Error(`could not find search link for ${name}`);
+};
+
+const useSearchLinks = () => {
   const links = useIndexLinks();
   const searchLinks = links["search"];
   if (!searchLinks) {
@@ -48,14 +85,12 @@ const useSearchLink = (name: string) => {
   if (!Array.isArray(searchLinks)) {
     throw new Error("search links returned in wrong format, array is expected");
   }
+  return searchLinks as Link[];
+};
 
-  for (const l of searchLinks as Link[]) {
-    if (l.name === name) {
-      return l.href;
-    }
-  }
-
-  throw new Error(`could not find search link for ${name}`);
+const useSearchLink = (name: string) => {
+  const searchLinks = useSearchLinks();
+  return findLink(searchLinks, name);
 };
 
 export const useSearch = (query: string, optionParam = defaultSearchOptions): ApiResult<QueryResult> => {
@@ -71,7 +106,7 @@ export const useSearch = (query: string, optionParam = defaultSearchOptions): Ap
     queryParams.pageSize = options.pageSize.toString();
   }
   return useQuery<QueryResult, Error>(
-    ["search", query],
+    ["search", options.type, queryParams],
     () => apiClient.get(`${link}?${createQueryString(queryParams)}`).then((response) => response.json()),
     {
       enabled: query.length > 1,

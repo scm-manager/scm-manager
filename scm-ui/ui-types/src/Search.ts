@@ -24,21 +24,21 @@
 
 import { HalRepresentation, PagedCollection } from "./hal";
 
-export type ValueField = {
+export type ValueHitField = {
   highlighted: false;
   value: unknown;
 };
 
-export type HighlightedField = {
+export type HighlightedHitField = {
   highlighted: true;
   fragments: string[];
 };
 
-export type Field = ValueField | HighlightedField;
+export type HitField = ValueHitField | HighlightedHitField;
 
 export type Hit = HalRepresentation & {
   score: number;
-  fields: { [name: string]: Field };
+  fields: { [name: string]: HitField };
 };
 
 export type HitEmbedded = {
@@ -47,4 +47,5 @@ export type HitEmbedded = {
 
 export type QueryResult = PagedCollection<HitEmbedded> & {
   type: string;
+  totalHits: number;
 };

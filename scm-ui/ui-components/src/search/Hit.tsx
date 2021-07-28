@@ -21,43 +21,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 import React, { FC } from "react";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
-import { Repository } from "@scm-manager/ui-types";
-import { Image } from "@scm-manager/ui-components";
-import styled from "styled-components";
+import { Hit as HitType } from "@scm-manager/ui-types";
 
-const Avatar = styled.p`
-  border-radius: 5px;
-`;
-
-type Props = {
-  repository: Repository;
-  size?: 16 | 24 | 32 | 48 | 64 | 96 | 128;
+export type HitProps = {
+  hit: HitType;
 };
 
-const renderExtensionPoint = (repository: Repository) => {
-  return (
-    <ExtensionPoint
-      name="repos.repository-avatar.primary"
-      props={{
-        repository,
-      }}
-    >
-      <ExtensionPoint
-        name="repos.repository-avatar"
-        props={{
-          repository,
-        }}
-      >
-        <Image src="/images/blib.jpg" alt="Logo" />
-      </ExtensionPoint>
-    </ExtensionPoint>
-  );
+type SearchResultType = FC & {
+  Title: FC;
+  Left: FC;
+  Content: FC;
+  Right: FC;
 };
 
-const RepositoryAvatar: FC<Props> = ({ repository, size = 64 }) => {
-  return <Avatar className={`image is-${size}x${size}`}>{renderExtensionPoint(repository)}</Avatar>;
+const Hit: SearchResultType = ({ children }) => {
+  return <article className="media p-1">{children}</article>;
 };
 
-export default RepositoryAvatar;
+Hit.Title = ({ children }) => <h3 className="has-text-weight-bold is-ellipsis-overflow">{children}</h3>;
+
+Hit.Left = ({ children }) => <div className="media-left">{children}</div>;
+
+Hit.Right = ({ children }) => <div className="media-right is-size-7 has-text-right">{children}</div>;
+
+Hit.Content = ({ children }) => <div className="media-content">{children}</div>;
+
+export default Hit;

@@ -21,14 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, KeyboardEvent, MouseEvent, useCallback, useState, useEffect } from "react";
-import { Hit, Links, ValueField } from "@scm-manager/ui-types";
+import React, { FC, KeyboardEvent as ReactKeyboardEvent, MouseEvent, useCallback, useState, useEffect } from "react";
+import { Hit, Links, ValueHitField } from "@scm-manager/ui-types";
 import styled from "styled-components";
 import { BackendError, useSearch } from "@scm-manager/ui-api";
 import classNames from "classnames";
 import { Link, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { ErrorNotification, Notification } from "@scm-manager/ui-components";
+import { Button, ErrorNotification, Notification } from "@scm-manager/ui-components";
 
 const Field = styled.div`
   margin-bottom: 0 !important;
@@ -43,24 +43,30 @@ type Props = {
 };
 
 const namespaceAndName = (hit: Hit) => {
-  const namespace = (hit.fields["namespace"] as ValueField).value as string;
-  const name = (hit.fields["name"] as ValueField).value as string;
+  const namespace = (hit.fields["namespace"] as ValueHitField).value as string;
+  const name = (hit.fields["name"] as ValueHitField).value as string;
   return `${namespace}/${name}`;
 };
 
 type HitsProps = {
   hits: Hit[];
   index: number;
+  gotoDetailSearch: () => void;
   clear: () => void;
 };
 
 const QuickSearchNotification: FC = ({ children }) => <div className="dropdown-content p-4">{children}</div>;
 
-const EmptyHits = () => {
+type GotoProps = {
+  gotoDetailSearch: () => void;
+};
+
+const EmptyHits: FC<GotoProps> = ({ gotoDetailSearch }) => {
   const [t] = useTranslation("commons");
   return (
     <QuickSearchNotification>
       <Notification type="info">{t("search.quickSearch.noResults")}</Notification>
+      <MoreResults gotoDetailSearch={gotoDetailSearch} />
     </QuickSearchNotification>
   );
 };
@@ -95,26 +101,44 @@ const SearchErrorNotification: FC<ErrorProps> = ({ error }) => {
   );
 };
 
-const ResultHeading = styled.div`
+const ResultHeading = styled.h3`
   border-bottom: 1px solid lightgray;
   margin: 0 0.5rem;
   padding: 0.375rem 0.5rem;
+  font-weight: bold;
 `;
 
 const DropdownMenu = styled.div`
   max-width: 20rem;
 `;
 
-const Hits: FC<HitsProps> = ({ hits, index, clear }) => {
+const ResultFooter = styled.div`
+  border-top: 1px solid lightgray;
+  margin: 0 0.5rem;
+  padding: 0.375rem 0.5rem;
+`;
+
+const MoreResults: FC<GotoProps> = ({ gotoDetailSearch }) => {
+  const [t] = useTranslation("commons");
+  return (
+    <ResultFooter className="dropdown-item has-text-centered">
+      <Button action={gotoDetailSearch} color="primary" data-omnisearch="true">
+        {t("search.quickSearch.moreResults")}
+      </Button>
+    </ResultFooter>
+  );
+};
+
+const Hits: FC<HitsProps> = ({ hits, index, clear, gotoDetailSearch }) => {
   const id = useCallback(namespaceAndName, [hits]);
   const [t] = useTranslation("commons");
 
   if (hits.length === 0) {
-    return <EmptyHits />;
+    return <EmptyHits gotoDetailSearch={gotoDetailSearch} />;
   }
 
   return (
-    <div className="dropdown-content">
+    <div aria-expanded="true" role="listbox" className="dropdown-content">
       <ResultHeading className="dropdown-item">{t("search.quickSearch.resultHeading")}</ResultHeading>
       {hits.map((hit, idx) => (
         <div key={id(hit)} onMouseDown={(e) => e.preventDefault()} onClick={clear}>
@@ -124,23 +148,26 @@ const Hits: FC<HitsProps> = ({ hits, index, clear }) => {
             })}
             title={id(hit)}
             to={`/repo/${id(hit)}`}
+            role="option"
+            data-omnisearch="true"
           >
             {id(hit)}
           </Link>
         </div>
       ))}
+      <MoreResults gotoDetailSearch={gotoDetailSearch} />
     </div>
   );
 };
 
-const useKeyBoardNavigation = (clear: () => void, hits?: Array<Hit>) => {
+const useKeyBoardNavigation = (gotoDetailSearch: () => void, clear: () => void, hits?: Array<Hit>) => {
   const [index, setIndex] = useState(-1);
   const history = useHistory();
   useEffect(() => {
     setIndex(-1);
   }, [hits]);
 
-  const onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+  const onKeyDown = (e: ReactKeyboardEvent<HTMLInputElement>) => {
     // We use e.which, because ie 11 does not support e.code
     // https://caniuse.com/keyboardevent-code
     switch (e.which) {
@@ -169,10 +196,17 @@ const useKeyBoardNavigation = (clear: () => void, hits?: Array<Hit>) => {
           const hit = hits[index];
           history.push(`/repo/${namespaceAndName(hit)}`);
           clear();
+        } else {
+          e.preventDefault();
+          gotoDetailSearch();
         }
         break;
       case 27: // e.code: Escape
-        clear();
+        if (index >= 0) {
+          setIndex(-1);
+        } else {
+          clear();
+        }
         break;
     }
   };
@@ -196,26 +230,68 @@ const useDebounce = (value: string, delay: number) => {
   return debouncedValue;
 };
 
+const isMoreResultsButton = (element: Element) => {
+  return element.tagName.toLocaleLowerCase("en") === "button" && element.className.includes("is-primary");
+};
+
+const isOnmiSearchElement = (element: Element) => {
+  return element.getAttribute("data-omnisearch") || isMoreResultsButton(element);
+};
+
 const useShowResultsOnFocus = () => {
   const [showResults, setShowResults] = useState(false);
+  useEffect(() => {
+    if (showResults) {
+      const close = () => {
+        setShowResults(false);
+      };
+
+      const onKeyUp = (e: KeyboardEvent) => {
+        if (e.which === 9) { // tab
+          const element = document.activeElement;
+          if (!element || !isOnmiSearchElement(element)) {
+            close();
+          }
+        }
+      };
+
+      window.addEventListener("click", close);
+      window.addEventListener("keyup", onKeyUp);
+      return () => {
+        window.removeEventListener("click", close);
+        window.removeEventListener("keyup", onKeyUp);
+      };
+    }
+  }, [showResults]);
   return {
     showResults,
-    onClick: (e: MouseEvent<HTMLInputElement>) => e.stopPropagation(),
+    onClick: (e: MouseEvent<HTMLInputElement>) => {
+      e.stopPropagation();
+      setShowResults(true);
+    },
+    onKeyPress: () => setShowResults(true),
     onFocus: () => setShowResults(true),
-    onBlur: () => setShowResults(false),
+    hideResults: () => setShowResults(false),
   };
 };
 
 const OmniSearch: FC = () => {
   const [query, setQuery] = useState("");
   const debouncedQuery = useDebounce(query, 250);
-  const { data, isLoading, error } = useSearch(debouncedQuery, { pageSize: 5 });
-  const { showResults, ...handlers } = useShowResultsOnFocus();
+  const { data, isLoading, error } = useSearch(debouncedQuery, { type: "repository", pageSize: 5 });
+  const { showResults, hideResults, ...handlers } = useShowResultsOnFocus();
+  const history = useHistory();
 
   const clearQuery = () => {
     setQuery("");
   };
-  const { onKeyDown, index } = useKeyBoardNavigation(clearQuery, data?._embedded.hits);
+
+  const gotoDetailSearch = () => {
+    history.push(`/search/repository/?q=${query}`);
+    hideResults();
+  };
+
+  const { onKeyDown, index } = useKeyBoardNavigation(gotoDetailSearch, clearQuery, data?._embedded.hits);
 
   return (
     <Field className="navbar-item field">
@@ -233,6 +309,9 @@ const OmniSearch: FC = () => {
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={onKeyDown}
               value={query}
+              role="combobox"
+              aria-autocomplete="list"
+              data-omnisearch="true"
               {...handlers}
             />
             {isLoading ? null : (
@@ -241,9 +320,11 @@ const OmniSearch: FC = () => {
               </span>
             )}
           </div>
-          <DropdownMenu className="dropdown-menu">
+          <DropdownMenu className="dropdown-menu" onMouseDown={(e) => e.preventDefault()}>
             {error ? <SearchErrorNotification error={error} /> : null}
-            {!error && data ? <Hits clear={clearQuery} index={index} hits={data._embedded.hits} /> : null}
+            {!error && data ? (
+              <Hits gotoDetailSearch={gotoDetailSearch} clear={clearQuery} index={index} hits={data._embedded.hits} />
+            ) : null}
           </DropdownMenu>
         </div>
       </div>

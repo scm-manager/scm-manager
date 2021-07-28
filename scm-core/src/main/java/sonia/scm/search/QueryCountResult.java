@@ -21,43 +21,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
-import { Repository } from "@scm-manager/ui-types";
-import { Image } from "@scm-manager/ui-components";
-import styled from "styled-components";
 
-const Avatar = styled.p`
-  border-radius: 5px;
-`;
+package sonia.scm.search;
 
-type Props = {
-  repository: Repository;
-  size?: 16 | 24 | 32 | 48 | 64 | 96 | 128;
-};
+import com.google.common.annotations.Beta;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
-const renderExtensionPoint = (repository: Repository) => {
-  return (
-    <ExtensionPoint
-      name="repos.repository-avatar.primary"
-      props={{
-        repository,
-      }}
-    >
-      <ExtensionPoint
-        name="repos.repository-avatar"
-        props={{
-          repository,
-        }}
-      >
-        <Image src="/images/blib.jpg" alt="Logo" />
-      </ExtensionPoint>
-    </ExtensionPoint>
-  );
-};
+/**
+ * Result of a counting query.
+ *
+ * @since 2.22.0
+ * @see QueryBuilder
+ */
+@Beta
+@Getter
+@ToString
+@EqualsAndHashCode
+public class QueryCountResult {
 
-const RepositoryAvatar: FC<Props> = ({ repository, size = 64 }) => {
-  return <Avatar className={`image is-${size}x${size}`}>{renderExtensionPoint(repository)}</Avatar>;
-};
+  /**
+   * Searched type of object.
+   */
+  private final Class<?> type;
 
-export default RepositoryAvatar;
+  /**
+   * Total count of hits, which are matched by the query.
+   */
+  private final long totalHits;
+
+  public QueryCountResult(Class<?> type, long totalHits) {
+    this.type = type;
+    this.totalHits = totalHits;
+  }
+}

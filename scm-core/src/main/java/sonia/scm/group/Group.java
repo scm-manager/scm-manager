@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.group;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -34,6 +34,8 @@ import com.google.common.collect.Lists;
 import sonia.scm.BasicPropertiesAware;
 import sonia.scm.ModelObject;
 import sonia.scm.ReducedModelObject;
+import sonia.scm.search.Indexed;
+import sonia.scm.search.IndexedType;
 import sonia.scm.util.Util;
 import sonia.scm.util.ValidationUtil;
 
@@ -53,6 +55,7 @@ import java.util.List;
  *
  * @author Sebastian Sdorra
  */
+@IndexedType(permission = "group:list")
 @StaticPermissions(
   value = "group",
   globalPermissions = {"create", "list", "autocomplete"},
@@ -484,18 +487,22 @@ public class Group extends BasicPropertiesAware
   private boolean external = false;
 
   /** timestamp of the creation date of this group */
+  @Indexed
   private Long creationDate;
 
   /** description of this group */
+  @Indexed(defaultQuery = true, highlighted = true)
   private String description;
 
   /** timestamp of the last modified date of this group */
+  @Indexed
   private Long lastModified;
 
   /** members of this group */
   private List<String> members;
 
   /** name of this group */
+  @Indexed(defaultQuery = true, boost = 1.5f)
   private String name;
 
   /** type of this group */

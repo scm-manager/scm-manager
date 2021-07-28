@@ -61,6 +61,9 @@ public class SearchParameters {
   @PathParam("type")
   private String type;
 
+  @QueryParam("countOnly")
+  private boolean countOnly = false;
+
   String getSelfLink() {
     return uriInfo.getAbsolutePath().toASCIIString();
   }

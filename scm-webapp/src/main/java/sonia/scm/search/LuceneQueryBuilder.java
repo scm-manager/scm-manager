@@ -38,6 +38,7 @@ import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.TopScoreDocCollector;
+import org.apache.lucene.search.TotalHitCountCollector;
 import org.apache.lucene.search.WildcardQuery;
 import org.apache.lucene.search.highlight.InvalidTokenOffsetsException;
 import org.apache.shiro.SecurityUtils;
@@ -71,7 +72,24 @@ public class LuceneQueryBuilder extends QueryBuilder {
   }
 
   @Override
+  protected QueryCountResult count(QueryParams queryParams) {
+    TotalHitCountCollector totalHitCountCollector = new TotalHitCountCollector();
+    return search(
+      queryParams, totalHitCountCollector,
+      (searcher, type, query) -> new QueryCountResult(type.getType(), totalHitCountCollector.getTotalHits())
+    );
+  }
+
+  @Override
   protected QueryResult execute(QueryParams queryParams) {
+    TopScoreDocCollector topScoreCollector = createTopScoreCollector(queryParams);
+    return search(queryParams, topScoreCollector, (searcher, searchableType, query) -> {
+      QueryResultFactory resultFactory = new QueryResultFactory(analyzer, searcher, searchableType, query);
+      return resultFactory.create(getTopDocs(queryParams, topScoreCollector));
+    });
+  }
+
+  private <T> T search(QueryParams queryParams, Collector collector, ResultBuilder<T> resultBuilder) {
     String queryString = Strings.nullToEmpty(queryParams.getQueryString());
 
     LuceneSearchableType searchableType = resolver.resolve(queryParams.getType());
@@ -87,12 +105,9 @@ public class LuceneQueryBuilder extends QueryBuilder {
     try (IndexReader reader = opener.openForRead(indexName)) {
       IndexSearcher searcher = new IndexSearcher(reader);
 
-      TopScoreDocCollector topScoreCollector = createTopScoreCollector(queryParams);
-      Collector collector = new PermissionAwareCollector(reader, topScoreCollector);
-      searcher.search(query, collector);
+      searcher.search(query, new PermissionAwareCollector(reader, collector));
 
-      QueryResultFactory resultFactory = new QueryResultFactory(analyzer, searcher, searchableType, query);
-      return resultFactory.create(getTopDocs(queryParams, topScoreCollector));
+      return resultBuilder.create(searcher, searchableType, parsedQuery);
     } catch (IOException e) {
       throw new SearchEngineException("failed to search index", e);
     } catch (InvalidTokenOffsetsException e) {
@@ -154,5 +169,10 @@ public class LuceneQueryBuilder extends QueryBuilder {
       queryString += "*";
     }
     return queryString;
+  }
+
+  @FunctionalInterface
+  private interface ResultBuilder<T> {
+    T create(IndexSearcher searcher, LuceneSearchableType searchableType, Query query) throws IOException, InvalidTokenOffsetsException;
   }
 }

@@ -2995,12 +2995,12 @@
     unist-util-generated "^1.1.6"
     unist-util-visit "^2.0.3"
 
-"@scm-manager/tsconfig@^2.11.2":
-  version "2.11.2"
-  resolved "https://registry.yarnpkg.com/@scm-manager/tsconfig/-/tsconfig-2.11.2.tgz#7f0ed5fd49ca77a9ecf34066507779535f2270bd"
-  integrity sha512-Y69XFe6EZFg/ZMt2g90uBEsxL3IPaAUYmra0bYHF2/dkmlJeZWJ0+0i3TrHMMajokXxTSpXwJUTrjC8bBWEYIw==
+"@scm-manager/tsconfig@^2.12.0":
+  version "2.12.0"
+  resolved "https://registry.yarnpkg.com/@scm-manager/tsconfig/-/tsconfig-2.12.0.tgz#ccbf149b4fccd7ef7a7cc9c1c4c7f19bec4d78e1"
+  integrity sha512-vcT1/Tn3MaNdj5vssQX7pBOfLJ9/RWVF3Ut1sVpcM2dsuQEo/qaXFlfLsVZxeQr1bJ45731l0hB/z55GjXTLKw==
   dependencies:
-    typescript "^4.1.3"
+    typescript "^4.3.5"
 
 "@sinonjs/commons@^1.7.0":
   version "1.8.3"
@@ -19393,10 +19393,15 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typescript@^4.0.5, typescript@^4.1.3:
+typescript@^4.0.5:
   version "4.2.4"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.2.4.tgz#8610b59747de028fda898a8aef0e103f156d0961"
   integrity sha512-V+evlYHZnQkaz8TRBuxTA92yZBPotr5H+WhQ7bD3hZUndx5tGOa1fuCgeSjxAzM1RiN5IzvadIXTVefuuwZCRg==
+
+typescript@^4.3.5:
+  version "4.3.5"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.3.5.tgz#4d1c37cc16e893973c45a06886b7113234f119f4"
+  integrity sha512-DqQgihaQ9cUrskJo9kIyW/+g0Vxsk8cDtZ52a3NGh0YNTfpUSArXSohyUGnvbPazEPLu398C0UxmKSOrPumUzA==
 
 uglify-js@^3.1.4:
   version "3.13.6"
@@ -20035,8 +20040,10 @@ watchpack@^1.7.4:
   resolved "https://registry.yarnpkg.com/watchpack/-/watchpack-1.7.5.tgz#1267e6c55e0b9b5be44c2023aed5437a2c26c453"
   integrity sha512-9P3MWk6SrKjHsGkLT2KHXdQ/9SNkyoJbabxnKOoJepsvJjJG8uYTR3yTPxPQvNDI3w4Nz1xnE0TLHK4RIVe/MQ==
   dependencies:
+    chokidar "^3.4.1"
     graceful-fs "^4.1.2"
     neo-async "^2.5.0"
+    watchpack-chokidar2 "^2.0.1"
   optionalDependencies:
     chokidar "^3.4.1"
     watchpack-chokidar2 "^2.0.1"

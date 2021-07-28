@@ -21,43 +21,43 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 import React, { FC } from "react";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
-import { Repository } from "@scm-manager/ui-types";
-import { Image } from "@scm-manager/ui-components";
-import styled from "styled-components";
+import { Link } from "react-router-dom";
+import {
+  DateFromNow,
+  useDateHitFieldValue,
+  useStringHitFieldValue,
+  TextHitField,
+  Hit,
+  HitProps,
+} from "@scm-manager/ui-components";
 
-const Avatar = styled.p`
-  border-radius: 5px;
-`;
+const UserHit: FC<HitProps> = ({ hit }) => {
+  const name = useStringHitFieldValue(hit, "name");
+  const lastModified = useDateHitFieldValue(hit, "lastModified");
+  const creationDate = useDateHitFieldValue(hit, "creationDate");
+  const date = lastModified || creationDate;
 
-type Props = {
-  repository: Repository;
-  size?: 16 | 24 | 32 | 48 | 64 | 96 | 128;
-};
-
-const renderExtensionPoint = (repository: Repository) => {
   return (
-    <ExtensionPoint
-      name="repos.repository-avatar.primary"
-      props={{
-        repository,
-      }}
-    >
-      <ExtensionPoint
-        name="repos.repository-avatar"
-        props={{
-          repository,
-        }}
-      >
-        <Image src="/images/blib.jpg" alt="Logo" />
-      </ExtensionPoint>
-    </ExtensionPoint>
+    <Hit>
+      <Hit.Content>
+        <Link to={`/user/${name}`}>
+          <Hit.Title>
+            <TextHitField hit={hit} field="name" />
+          </Hit.Title>
+        </Link>
+        <p>
+          <TextHitField hit={hit} field="displayName" /> &lt;
+          <TextHitField hit={hit} field="mail" />
+          &gt;
+        </p>
+      </Hit.Content>
+      <Hit.Right>
+        <DateFromNow date={date} />
+      </Hit.Right>
+    </Hit>
   );
 };
 
-const RepositoryAvatar: FC<Props> = ({ repository, size = 64 }) => {
-  return <Avatar className={`image is-${size}x${size}`}>{renderExtensionPoint(repository)}</Avatar>;
-};
-
-export default RepositoryAvatar;
+export default UserHit;

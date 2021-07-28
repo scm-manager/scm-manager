@@ -21,43 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
-import { Repository } from "@scm-manager/ui-types";
-import { Image } from "@scm-manager/ui-components";
-import styled from "styled-components";
 
-const Avatar = styled.p`
-  border-radius: 5px;
-`;
-
-type Props = {
-  repository: Repository;
-  size?: 16 | 24 | 32 | 48 | 64 | 96 | 128;
-};
-
-const renderExtensionPoint = (repository: Repository) => {
-  return (
-    <ExtensionPoint
-      name="repos.repository-avatar.primary"
-      props={{
-        repository,
-      }}
-    >
-      <ExtensionPoint
-        name="repos.repository-avatar"
-        props={{
-          repository,
-        }}
-      >
-        <Image src="/images/blib.jpg" alt="Logo" />
-      </ExtensionPoint>
-    </ExtensionPoint>
-  );
-};
-
-const RepositoryAvatar: FC<Props> = ({ repository, size = 64 }) => {
-  return <Avatar className={`image is-${size}x${size}`}>{renderExtensionPoint(repository)}</Avatar>;
-};
-
-export default RepositoryAvatar;
+export * from "./fields";
+export { default as Hit, HitProps } from "./Hit";
+export { default as TextHitField } from "./TextHitField";

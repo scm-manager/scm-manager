@@ -26,9 +26,15 @@ import { useLocation, useRouteMatch } from "react-router-dom";
 import { RoutingProps } from "./RoutingProps";
 
 const useActiveMatch = ({ to, activeOnlyWhenExact, activeWhenMatch }: RoutingProps) => {
+  let path = to;
+  const index = to.indexOf("?");
+  if (index > 0) {
+    path = to.substr(0, index);
+  }
+
   const match = useRouteMatch({
-    path: to,
-    exact: activeOnlyWhenExact
+    path,
+    exact: activeOnlyWhenExact,
   });
 
   const location = useLocation();
@@ -36,7 +42,7 @@ const useActiveMatch = ({ to, activeOnlyWhenExact, activeWhenMatch }: RoutingPro
   const isActiveWhenMatch = () => {
     if (activeWhenMatch) {
       return activeWhenMatch({
-        location
+        location,
       });
     }
     return false;

@@ -39,6 +39,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.search.Hit;
 import sonia.scm.search.IndexNames;
+import sonia.scm.search.QueryCountResult;
 import sonia.scm.search.QueryResult;
 import sonia.scm.search.SearchEngine;
 import sonia.scm.web.JsonMockHttpResponse;
@@ -182,6 +183,25 @@ class SearchResourceTest {
       assertThat(highlightedField.get("fragments").get(0).asText()).isEqualTo("Hello");
     }
 
+    @Test
+    void shouldReturnCountOnly() throws URISyntaxException {
+      when(
+        searchEngine.search(IndexNames.DEFAULT)
+          .count("string", "Hello")
+      ).thenReturn(new QueryCountResult(String.class, 2L));
+
+      MockHttpRequest request = MockHttpRequest.get("/v2/search/query/string?q=Hello&countOnly=true");
+      JsonMockHttpResponse response = new JsonMockHttpResponse();
+      dispatcher.invoke(request, response);
+
+      JsonNode node = response.getContentAsJson();
+
+      assertThat(node.get("totalHits").asLong()).isEqualTo(2L);
+
+      JsonNode hits = node.get("_embedded").get("hits");
+      assertThat(hits.size()).isZero();
+    }
+
   }
 
   private void assertLink(JsonNode links, String self, String s) {
@@ -244,6 +264,7 @@ class SearchResourceTest {
     dispatcher.invoke(request, response);
     return response;
   }
+
 
   @Getter
   @Setter

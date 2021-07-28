@@ -82,6 +82,7 @@ public class QueryResultFactory {
     }
     return new Hit(document.get(FieldNames.ID), scoreDoc.score, fields);
   }
+
   private Optional<Hit.Field> field(Document document, SearchableField field) throws IOException, InvalidTokenOffsetsException {
     Object value = field.value(document);
     if (value != null) {

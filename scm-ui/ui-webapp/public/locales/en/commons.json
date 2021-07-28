@@ -153,10 +153,15 @@
     "w_plural": "{{count}} weeks"
   },
   "search": {
+    "title": "Search",
+    "subtitle": "{{type}} results for \"{{query}}\"",
+    "types": "Results",
+    "noHits": "No results found",
     "quickSearch": {
       "resultHeading": "Top repository results",
       "parseError": "Failed to parse query",
-      "noResults": "Could not find matching repository"
+      "noResults": "Could not find matching repository",
+      "moreResults": "More Results"
     }
   }
 }

@@ -21,43 +21,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
-import { Repository } from "@scm-manager/ui-types";
-import { Image } from "@scm-manager/ui-components";
-import styled from "styled-components";
 
-const Avatar = styled.p`
-  border-radius: 5px;
-`;
+import React, { FC } from "react";
 
 type Props = {
-  repository: Repository;
-  size?: 16 | 24 | 32 | 48 | 64 | 96 | 128;
+  value: string;
 };
 
-const renderExtensionPoint = (repository: Repository) => {
+const HighlightedFragment: FC<Props> = ({ value }) => {
+  let content = value;
+
+  const result = [];
+  while (content.length > 0) {
+    const start = content.indexOf("<>");
+    const end = content.indexOf("</>");
+    if (start >= 0 && end > 0) {
+      if (start > 0) {
+        result.push(content.substring(0, start));
+      }
+      result.push(<strong>{content.substring(start + 2, end)}</strong>);
+      content = content.substring(end + 3);
+    } else {
+      result.push(content);
+      break;
+    }
+  }
   return (
-    <ExtensionPoint
-      name="repos.repository-avatar.primary"
-      props={{
-        repository,
-      }}
-    >
-      <ExtensionPoint
-        name="repos.repository-avatar"
-        props={{
-          repository,
-        }}
-      >
-        <Image src="/images/blib.jpg" alt="Logo" />
-      </ExtensionPoint>
-    </ExtensionPoint>
+    <>
+      {result.map((c, i) => (
+        <React.Fragment key={i}>{c}</React.Fragment>
+      ))}
+    </>
   );
 };
 
-const RepositoryAvatar: FC<Props> = ({ repository, size = 64 }) => {
-  return <Avatar className={`image is-${size}x${size}`}>{renderExtensionPoint(repository)}</Avatar>;
-};
-
-export default RepositoryAvatar;
+export default HighlightedFragment;

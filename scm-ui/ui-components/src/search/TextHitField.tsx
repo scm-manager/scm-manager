@@ -21,43 +21,42 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
-import { Repository } from "@scm-manager/ui-types";
-import { Image } from "@scm-manager/ui-components";
-import styled from "styled-components";
 
-const Avatar = styled.p`
-  border-radius: 5px;
-`;
+import React, { FC } from "react";
+import { HighlightedHitField, Hit } from "@scm-manager/ui-types";
+import HighlightedFragment from "./HighlightedFragment";
+import { isHighlightedHitField } from "./fields";
 
 type Props = {
-  repository: Repository;
-  size?: 16 | 24 | 32 | 48 | 64 | 96 | 128;
+  hit: Hit;
+  field: string;
 };
 
-const renderExtensionPoint = (repository: Repository) => {
-  return (
-    <ExtensionPoint
-      name="repos.repository-avatar.primary"
-      props={{
-        repository,
-      }}
-    >
-      <ExtensionPoint
-        name="repos.repository-avatar"
-        props={{
-          repository,
-        }}
-      >
-        <Image src="/images/blib.jpg" alt="Logo" />
-      </ExtensionPoint>
-    </ExtensionPoint>
-  );
+type HighlightedTextFieldProps = {
+  field: HighlightedHitField;
 };
 
-const RepositoryAvatar: FC<Props> = ({ repository, size = 64 }) => {
-  return <Avatar className={`image is-${size}x${size}`}>{renderExtensionPoint(repository)}</Avatar>;
+const HighlightedTextField: FC<HighlightedTextFieldProps> = ({ field }) => (
+  <>
+    {field.fragments.map((fr, i) => (
+      <React.Fragment key={fr}>
+        {" ... "}
+        <HighlightedFragment value={fr} />
+        {i + 1 >= field.fragments.length ? " ... " : null}
+      </React.Fragment>
+    ))}
+  </>
+);
+
+const TextHitField: FC<Props> = ({ hit, field: fieldName }) => {
+  const field = hit.fields[fieldName];
+  if (!field) {
+    return null;
+  } else if (isHighlightedHitField(field)) {
+    return <HighlightedTextField field={field} />;
+  } else {
+    return <>{field.value}</>;
+  }
 };
 
-export default RepositoryAvatar;
+export default TextHitField;

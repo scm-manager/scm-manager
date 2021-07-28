@@ -35,6 +35,7 @@ import lombok.Setter;
 public class QueryResultDto extends CollectionDto {
 
   private Class<?> type;
+  private long totalHits;
 
   QueryResultDto(Links links, Embedded embedded) {
     super(links, embedded);

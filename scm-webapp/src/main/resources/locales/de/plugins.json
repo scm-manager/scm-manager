@@ -433,5 +433,21 @@
     "exportFinished": "Der Repository Export wurde abgeschlossen.",
     "exportFailed": "Der Repository Export ist fehlgeschlagen. Versuchen Sie es erneut oder wenden Sie sich an einen Administrator.",
     "healthCheckFailed": "Der Repository Health Check ist fehlgeschlagen."
+  },
+  "search": {
+    "types": {
+      "repository": {
+        "subtitle": "Repository",
+        "navItem": "Repositories"
+      },
+      "user": {
+        "subtitle": "Benutzer",
+        "navItem": "Benutzer"
+      },
+      "group": {
+        "subtitle": "Gruppe",
+        "navItem": "Gruppen"
+      }
+    }
   }
 }

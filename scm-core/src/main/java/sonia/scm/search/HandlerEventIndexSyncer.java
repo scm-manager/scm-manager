@@ -21,43 +21,46 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
-import { Repository } from "@scm-manager/ui-types";
-import { Image } from "@scm-manager/ui-components";
-import styled from "styled-components";
 
-const Avatar = styled.p`
-  border-radius: 5px;
-`;
+package sonia.scm.search;
 
-type Props = {
-  repository: Repository;
-  size?: 16 | 24 | 32 | 48 | 64 | 96 | 128;
-};
+import sonia.scm.HandlerEventType;
+import sonia.scm.event.HandlerEvent;
 
-const renderExtensionPoint = (repository: Repository) => {
-  return (
-    <ExtensionPoint
-      name="repos.repository-avatar.primary"
-      props={{
-        repository,
-      }}
-    >
-      <ExtensionPoint
-        name="repos.repository-avatar"
-        props={{
-          repository,
-        }}
-      >
-        <Image src="/images/blib.jpg" alt="Logo" />
-      </ExtensionPoint>
-    </ExtensionPoint>
-  );
-};
+/**
+ * Keep index in sync with {@link HandlerEvent}.
+ *
+ * @param <T> type of indexed item
+ * @since 2.22.0
+ */
+public final class HandlerEventIndexSyncer<T> {
 
-const RepositoryAvatar: FC<Props> = ({ repository, size = 64 }) => {
-  return <Avatar className={`image is-${size}x${size}`}>{renderExtensionPoint(repository)}</Avatar>;
-};
+  private final Indexer<T> indexer;
 
-export default RepositoryAvatar;
+  public HandlerEventIndexSyncer(Indexer<T> indexer) {
+    this.indexer = indexer;
+  }
+
+  /**
+   * Update index based on {@link HandlerEvent}.
+   *
+   * @param event handler event
+   */
+  public void handleEvent(HandlerEvent<T> event) {
+    HandlerEventType type = event.getEventType();
+    if (type.isPost()) {
+      updateIndex(type, event.getItem());
+    }
+  }
+
+  private void updateIndex(HandlerEventType type, T item) {
+    try (Indexer.Updater<T> updater = indexer.open()) {
+      if (type == HandlerEventType.DELETE) {
+        updater.delete(item);
+      } else {
+        updater.store(item);
+      }
+    }
+  }
+
+}
