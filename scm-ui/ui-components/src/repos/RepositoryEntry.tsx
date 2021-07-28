@@ -123,7 +123,7 @@ const RepositoryEntry: FC<Props> = ({ repository, baseDate }) => {
   return (
     <>
       <GroupEntry
-        avatar={<RepositoryAvatar repository={repository} />}
+        avatar={<RepositoryAvatar repository={repository} size={48} />}
         name={name}
         description={repository.description}
         contentRight={actions}
