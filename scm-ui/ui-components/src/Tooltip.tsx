@@ -26,7 +26,7 @@ import React, { ReactNode } from "react";
 type Props = {
   message: string;
   className?: string;
-  location: string;
+  location: TooltipLocation;
   multiline?: boolean;
   children: ReactNode;
 };

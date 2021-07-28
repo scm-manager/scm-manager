@@ -34,7 +34,7 @@ import { TooltipLocation } from "../Tooltip";
 type Props = {
   repository: Repository;
   className?: string;
-  tooltipLocations?: TooltipLocation;
+  tooltipLocation?: TooltipLocation;
 };
 
 const Wrapper = styled.span`
@@ -48,14 +48,14 @@ const RepositoryFlagContainer = styled.div`
   }
 `;
 
-const RepositoryFlags: FC<Props> = ({ repository, className, tooltipLocations = "right" }) => {
+const RepositoryFlags: FC<Props> = ({ repository, className, tooltipLocation = "right" }) => {
   const [t] = useTranslation("repos");
   const [showHealthCheck, setShowHealthCheck] = useState(false);
 
   const repositoryFlags = [];
   if (repository.archived) {
     repositoryFlags.push(
-      <RepositoryFlag key="archived" title={t("archive.tooltip")} tooltipLocation={tooltipLocations}>
+      <RepositoryFlag key="archived" title={t("archive.tooltip")} tooltipLocation={tooltipLocation}>
         {t("repository.archived")}
       </RepositoryFlag>
     );
@@ -63,7 +63,7 @@ const RepositoryFlags: FC<Props> = ({ repository, className, tooltipLocations = 
 
   if (repository.exporting) {
     repositoryFlags.push(
-      <RepositoryFlag key="exporting" title={t("exporting.tooltip")} tooltipLocation={tooltipLocations}>
+      <RepositoryFlag key="exporting" title={t("exporting.tooltip")} tooltipLocation={tooltipLocation}>
         {t("repository.exporting")}
       </RepositoryFlag>
     );
@@ -76,7 +76,7 @@ const RepositoryFlags: FC<Props> = ({ repository, className, tooltipLocations = 
         color="danger"
         title={t("healthCheckFailure.tooltip")}
         onClick={() => setShowHealthCheck(true)}
-        tooltipLocation={tooltipLocations}
+        tooltipLocation={tooltipLocation}
       >
         {t("repository.healthCheckFailure")}
       </RepositoryFlag>
@@ -95,7 +95,7 @@ const RepositoryFlags: FC<Props> = ({ repository, className, tooltipLocations = 
       {modal}
       <RepositoryFlagContainer>
         {repositoryFlags}
-        <ExtensionPoint name="repository.flags" props={{ repository, tooltipLocations }} renderAll={true} />
+        <ExtensionPoint name="repository.flags" props={{ repository, tooltipLocation }} renderAll={true} />
       </RepositoryFlagContainer>
     </Wrapper>
   );

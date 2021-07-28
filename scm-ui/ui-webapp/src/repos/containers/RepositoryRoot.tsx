@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 import React, { useState } from "react";
-import { Link as RouteLink, Redirect, Route, Switch, useRouteMatch, match } from "react-router-dom";
+import { Link as RouteLink, match, Redirect, Route, Switch, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
 import { Changeset, Link } from "@scm-manager/ui-types";
@@ -36,11 +36,11 @@ import {
   NavLink,
   Page,
   PrimaryContentColumn,
+  RepositoryFlags,
   SecondaryNavigation,
   SecondaryNavigationColumn,
   StateMenuContextProvider,
   SubNavigation,
-  RepositoryFlags,
   urls,
 } from "@scm-manager/ui-components";
 import RepositoryDetails from "../components/RepositoryDetails";
@@ -221,7 +221,7 @@ const RepositoryRoot = () => {
           <div className="is-flex">
             <ExtensionPoint name={"repository.afterTitle"} props={{ repository }} />
             <TagGroup>
-              <RepositoryFlags repository={repository} tooltipLocations="bottom" />
+              <RepositoryFlags repository={repository} tooltipLocation="bottom" />
             </TagGroup>
           </div>
         }
