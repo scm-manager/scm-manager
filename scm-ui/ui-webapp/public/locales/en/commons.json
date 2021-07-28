@@ -156,12 +156,12 @@
     "title": "Search",
     "subtitle": "{{type}} results for \"{{query}}\"",
     "types": "Results",
-    "noHits": "No hit matched query",
+    "noHits": "No results found",
     "quickSearch": {
       "resultHeading": "Top repository results",
       "parseError": "Failed to parse query",
       "noResults": "Could not find matching repository",
-      "moreResults": "More results"
+      "moreResults": "More Results"
     }
   }
 }

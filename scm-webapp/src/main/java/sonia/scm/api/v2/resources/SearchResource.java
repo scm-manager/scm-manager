@@ -102,7 +102,7 @@ public class SearchResource {
   )
   @Parameter(
     name = "countOnly",
-    description = "Do not return hits, return only count of pages and hits"
+    description = "If set to 'true', no results will be returned, only the count of hits and the page count"
   )
   public QueryResultDto query(@Valid @BeanParam SearchParameters params) {
     if (params.isCountOnly()) {
