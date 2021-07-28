@@ -74,6 +74,7 @@ import static java.util.Collections.unmodifiableMap;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.eclipse.jgit.lib.RefUpdate.Result.NEW;
+import static org.eclipse.jgit.lib.RefUpdate.Result.REJECTED_CURRENT_BRANCH;
 import static sonia.scm.repository.api.MirrorCommandResult.ResultType.FAILED;
 import static sonia.scm.repository.api.MirrorCommandResult.ResultType.OK;
 import static sonia.scm.repository.api.MirrorCommandResult.ResultType.REJECTED_UPDATES;
@@ -135,6 +136,18 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
 
     private ResultType result = OK;
 
+    /**
+     * On the first synchronization, the clone has the implicit branch "master". This cannot be
+     * changed in JGit. When we fetch the refs from the repository that should be mirrored, the
+     * master branch of the clone will be updated to the revision of the remote repository (if
+     * it has a master branch). If now the master branch shall be filtered from mirroring (ie.
+     * if it is rejected), we normally would delete the ref in this clone. But because it is
+     * the current branch, it cannot be deleted. We detect this, set this variable to
+     * {@code true}, and later, after we have pushed the result, delete the master branch by
+     * pushing an empty ref to the central repository.
+     */
+    private boolean deleteMasterAfterInitialSync = false;
+
     private Worker(GitContext context, MirrorCommandRequest mirrorCommandRequest, sonia.scm.repository.Repository repository, Git git) {
       super(git, context, repository);
       this.mirrorCommandRequest = mirrorCommandRequest;
@@ -167,7 +180,14 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       }
 
       push(generatePushRefSpecs().toArray(new String[0]));
+      cleanUpMasterIfNecessary();
       return new MirrorCommandResult(result, mirrorLog, stopwatch.stop().elapsed());
+    }
+
+    private void cleanUpMasterIfNecessary() {
+      if (deleteMasterAfterInitialSync) {
+        push(":refs/heads/master");
+      }
     }
 
     private Collection<String> generatePushRefSpecs() {
@@ -302,7 +322,10 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       private void deleteReference(String targetRef) throws IOException {
         RefUpdate deleteUpdate = git.getRepository().getRefDatabase().newUpdate(targetRef, true);
         deleteUpdate.setForceUpdate(true);
-        deleteUpdate.delete();
+        RefUpdate.Result deleteResult = deleteUpdate.delete();
+        if (deleteResult == REJECTED_CURRENT_BRANCH) {
+          deleteMasterAfterInitialSync = true;
+        }
       }
 
       private boolean isDeletedReference(TrackingRefUpdate ref) {

@@ -113,6 +113,36 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
   }
 
   @Test
+  public void shouldFilterMasterBranchWhenFilteredOnInitialMirror() throws IOException, GitAPIException {
+    MirrorCommandResult result = callMirrorCommand(repositoryDirectory.getAbsolutePath(), c -> {
+      c.setFilter(new MirrorFilter() {
+        @Override
+        public Filter getFilter(FilterContext context) {
+          return new Filter() {
+            @Override
+            public Result acceptBranch(BranchUpdate branch) {
+              if (branch.getBranchName().equals("master")) {
+                return Result.reject("master not accepted");
+              } else {
+                return Result.accept();
+              }
+            }
+          };
+        }
+      });
+    });
+
+    assertThat(result.getResult()).isEqualTo(REJECTED_UPDATES);
+    assertThat(result.getLog())
+      .contains("- 000000000..fcd0ef183 master (master not accepted)");
+
+    try (Git createdMirror = Git.open(clone)) {
+      assertThat(createdMirror.branchList().call().stream().filter(r -> r.getName().contains("master")).findAny())
+        .isEmpty();
+    }
+  }
+
+  @Test
   public void shouldCreateEmptyLogWhenNoChangesFound() {
     callMirrorCommand();
 
