@@ -23,13 +23,12 @@
  */
 import React, { FC, useEffect, useState } from "react";
 import { Branch, Repository } from "@scm-manager/ui-types";
-import { useHistory, useLocation, useParams } from "react-router-dom";
+import { Link, useHistory, useLocation, useParams } from "react-router-dom";
 import { urls, usePaths } from "@scm-manager/ui-api";
 import { ErrorNotification, FilterInput, Help, Icon, Loading } from "@scm-manager/ui-components";
 import CodeActionBar from "../components/CodeActionBar";
 import styled from "styled-components";
 import FileSearchResults from "../components/FileSearchResults";
-import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { filepathSearch } from "../utils/filepathSearch";
 
@@ -67,7 +66,7 @@ const SearchHelp = styled(Help)`
 
 const useRevision = () => {
   const { revision } = useParams<Params>();
-  return decodeURIComponent(revision);
+  return revision;
 };
 
 const FileSearch: FC<Props> = ({ repository, baseUrl, branches, selectedBranch }) => {
@@ -98,12 +97,12 @@ const FileSearch: FC<Props> = ({ repository, baseUrl, branches, selectedBranch }
 
   const evaluateSwitchViewLink = (type: string) => {
     if (type === "sources") {
-      return `${baseUrl}/sources/${encodeURIComponent(revision)}/`;
+      return `${baseUrl}/sources/${revision}/`;
     }
-    return `${baseUrl}/changesets/${encodeURIComponent(revision)}/`;
+    return `${baseUrl}/changesets/${revision}/`;
   };
 
-  const contentBaseUrl = `${baseUrl}/sources/${encodeURIComponent(revision)}/`;
+  const contentBaseUrl = `${baseUrl}/sources/${revision}/`;
 
   return (
     <>
