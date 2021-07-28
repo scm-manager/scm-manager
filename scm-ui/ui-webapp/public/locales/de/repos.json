@@ -60,7 +60,8 @@
     "invalidNamespace": "Keine Repositories gefunden. Möglicherweise existiert der ausgewählte Namespace nicht.",
     "createButton": "Repository hinzufügen",
     "filterRepositories": "Repositories filtern",
-    "allNamespaces": "Alle Namespaces"
+    "allNamespaces": "Alle Namespaces",
+    "clone": "Clone/Checkout"
   },
   "create": {
     "title": "Repository hinzufügen",

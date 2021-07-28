@@ -32,7 +32,7 @@ const CreateRepository: FC<CreatorComponentProps> = ({ repositoryTypes, namespac
   const { isLoading, error, repository, create } = useCreateRepository();
 
   if (repository) {
-    return <Redirect to={`/repo/${repository.namespace}/${repository.name}`} />;
+    return <Redirect to={`/repo/${repository.namespace}/${repository.name}/info`} />;
   }
 
   return (

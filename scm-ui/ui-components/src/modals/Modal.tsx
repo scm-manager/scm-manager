@@ -21,11 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import * as React from "react";
-import { FC } from "react";
+import React, { FC } from "react";
 import classNames from "classnames";
 import usePortalRootElement from "../usePortalRootElement";
 import ReactDOM from "react-dom";
+import styled from "styled-components";
+
+type ModalSize = "S" | "M" | "L";
+
+const modalSizes: { [key in ModalSize]: number } = { S: 33, M: 50, L: 66 };
 
 type Props = {
   title: string;
@@ -36,7 +40,12 @@ type Props = {
   className?: string;
   headColor?: string;
   headTextColor?: string;
+  size?: ModalSize;
 };
+
+const SizedModal = styled.div<{ size?: ModalSize }>`
+  width: ${(props) => (props.size ? `${modalSizes[props.size]}%` : "640px")};
+`;
 
 export const Modal: FC<Props> = ({
   title,
@@ -46,7 +55,8 @@ export const Modal: FC<Props> = ({
   active,
   className,
   headColor = "light",
-  headTextColor = "black"
+  headTextColor = "black",
+  size,
 }) => {
   const portalRootElement = usePortalRootElement("modalsRoot");
 
@@ -64,14 +74,14 @@ export const Modal: FC<Props> = ({
   const modalElement = (
     <div className={classNames("modal", className, isActive)}>
       <div className="modal-background" onClick={closeFunction} />
-      <div className="modal-card">
+      <SizedModal className="modal-card" size={size}>
         <header className={classNames("modal-card-head", `has-background-${headColor}`)}>
           <p className={`modal-card-title is-marginless has-text-${headTextColor}`}>{title}</p>
           <button className="delete" aria-label="close" onClick={closeFunction} />
         </header>
         <section className="modal-card-body">{body}</section>
         {showFooter}
-      </div>
+      </SizedModal>
     </div>
   );
 

@@ -21,10 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, useEffect, useState } from "react";
+import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
-import { Link, Repository } from "@scm-manager/ui-types";
-import { apiClient, repositories } from "@scm-manager/ui-components";
+import { Repository } from "@scm-manager/ui-types";
+import { ErrorNotification, Loading, repositories } from "@scm-manager/ui-components";
+import { useChangesets } from "@scm-manager/ui-api";
 
 type Props = {
   repository: Repository;
@@ -32,27 +33,22 @@ type Props = {
 
 const ProtocolInformation: FC<Props> = ({ repository }) => {
   const [t] = useTranslation("plugins");
-  const [emptyRepository, setEmptyRepository] = useState<boolean>();
-
+  const { data, error, isLoading } = useChangesets(repository, { limit: 1 });
   const href = repositories.getProtocolLinkByType(repository, "http");
-
-  useEffect(() => {
-    if (repository) {
-      apiClient
-        .get((repository._links.changesets as Link).href)
-        .then(r => r.json())
-        .then(result => {
-          const empty = result._embedded.changesets.length === 0;
-          setEmptyRepository(empty);
-        });
-    }
-  }, [repository]);
 
   if (!href) {
     return null;
   }
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  const emptyRepository = data?._embedded.changesets.length === 0;
+
   return (
     <div>
+      <ErrorNotification error={error} />
       <h4>{t("scm-hg-plugin.information.clone")}</h4>
       <pre>
         <code>hg clone {href}</code>

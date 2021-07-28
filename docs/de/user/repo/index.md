@@ -12,20 +12,11 @@ Der Bereich Repository umfasst alles auf Basis von Repositories in Namespaces. D
 <!--- AppendLinkContentEnd -->
 
 ### Übersicht
-Auf der Übersichtsseite der Repositories werden die einzelnen Repositories nach Namespaces gegliedert aufgelistet. Jedes Repository wird durch eine Kachel dargestellt. Durch einen Klick auf diese Kachel öffnet sich die Readme Seite des jeweiligen Repositories. 
+Auf der Übersichtsseite der Repositories werden die einzelnen Repositories nach Namespaces gegliedert aufgelistet.
 
 ![Repository Übersicht](assets/repository-overview.png)
 
 Mithilfe der Auswahlbox oben auf der Seite kann die Anzeige der Repositories auf einen Namespace eingeschränkt werden. Alternativ kann die Überschrift eines Namespace angeklickt werden, um nur Repositories aus diesem Namespace anzuzeigen. Über die Suchleiste neben der Auswahlbox können die Repositories frei gefiltert werden. Die Suche filtert dabei nach dem Namespace, dem Namen und der Beschreibung der Repositories.
-
-Ein bestimmter Tab des Repositories wie Branches, Changesets oder Sources kann über die blauen Icons geöffnet werden. 
-
-Icon             |  Beschreibung
----|---
-![Repository Branches](assets/repository-overview-branches.png)  |  Öffnet die Branches-Übersicht für das Repository
-![Repository Changesets](assets/repository-overview-changesets.png) | Öffnet die Changesets-Übersicht für das Repository
-![Repository Sources](assets/repository-overview-sources.png) | Öffnet die Sources-Übersicht für das Repository
-![Repository Einstellungen](assets/repository-overview-settings.png) | Öffnet die Einstellungen für das Repository
 
 Zusätzlich können über das Icon rechts neben den Überschriften für die Namespaces weitere Einstellungen auf Namespace-Ebene vorgenommen werden.
 

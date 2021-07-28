@@ -44,6 +44,7 @@ type BaseProps = {
   testId?: string;
   defaultValue?: string;
   readOnly?: boolean;
+  className?: string;
 };
 
 const InnerSelect: FC<FieldProps<BaseProps, HTMLSelectElement, string>> = ({
@@ -56,6 +57,7 @@ const InnerSelect: FC<FieldProps<BaseProps, HTMLSelectElement, string>> = ({
   disabled,
   testId,
   readOnly,
+  className,
   ...props
 }) => {
   const field = useInnerRef(props.innerRef);
@@ -100,7 +102,7 @@ const InnerSelect: FC<FieldProps<BaseProps, HTMLSelectElement, string>> = ({
   return (
     <fieldset className="field" disabled={readOnly}>
       <LabelWithHelpIcon label={label} helpText={helpText} />
-      <div className={classNames("control select", loadingClass)}>
+      <div className={classNames("control select", loadingClass, className)}>
         <select
           name={name}
           ref={field}

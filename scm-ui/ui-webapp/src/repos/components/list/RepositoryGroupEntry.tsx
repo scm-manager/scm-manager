@@ -21,42 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
+import React, { FC } from "react";
 import { Link } from "react-router-dom";
-import { CardColumnGroup, Icon, RepositoryEntry } from "@scm-manager/ui-components";
+import { Icon, RepositoryEntry } from "@scm-manager/ui-components";
 import { RepositoryGroup } from "@scm-manager/ui-types";
-import { WithTranslation, withTranslation } from "react-i18next";
-import styled from "styled-components";
+import { useTranslation } from "react-i18next";
+import GroupEntries from "../../../../../ui-components/src/layout/GroupEntries";
 
-type Props = WithTranslation & {
+type Props = {
   group: RepositoryGroup;
 };
 
-const SizedIcon = styled(Icon)`
-  font-size: 1.33rem;
-`;
+const RepositoryGroupEntry: FC<Props> = ({ group }) => {
+  const [t] = useTranslation("namespaces");
 
-class RepositoryGroupEntry extends React.Component<Props> {
-  render() {
-    const { group, t } = this.props;
-    const settingsLink = group.namespace?._links?.permissions && (
-      <Link to={`/namespace/${group.name}/settings`}>
-        <SizedIcon color={"is-link"} name={"cog"} title={t("repositoryOverview.settings.tooltip")} />
-      </Link>
-    );
-    const namespaceHeader = (
-      <>
-        <Link to={`/repos/${group.name}/`} className={"has-text-dark"}>
-          {group.name}
-        </Link>{" "}
-        {settingsLink}
-      </>
-    );
-    const entries = group.repositories.map((repository, index) => {
-      return <RepositoryEntry repository={repository} key={index} />;
-    });
-    return <CardColumnGroup name={namespaceHeader} elements={entries} />;
-  }
-}
+  const settingsLink = group.namespace?._links?.permissions && (
+    <Link to={`/namespace/${group.name}/settings`}>
+      <Icon color="is-link" name="cog" title={t("repositoryOverview.settings.tooltip")} className={"is-size-6 ml-2"} />
+    </Link>
+  );
+  const namespaceHeader = (
+    <>
+      <Link to={`/repos/${group.name}/`} className={"has-text-dark"}>
+        {group.name}
+      </Link>{" "}
+      {settingsLink}
+    </>
+  );
+  const entries = group.repositories.map((repository, index) => {
+    return <RepositoryEntry repository={repository} key={index} />;
+  });
+  return <GroupEntries namespaceHeader={namespaceHeader} elements={entries} />;
+};
 
-export default withTranslation("namespaces")(RepositoryGroupEntry);
+export default RepositoryGroupEntry;

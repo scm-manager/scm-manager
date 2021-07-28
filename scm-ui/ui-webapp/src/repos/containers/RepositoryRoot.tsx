@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 import React, { useState } from "react";
-import { Link as RouteLink, Redirect, Route, Switch, useRouteMatch } from "react-router-dom";
+import { Link as RouteLink, match, Redirect, Route, Switch, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
 import { Changeset, Link } from "@scm-manager/ui-types";
@@ -36,12 +36,11 @@ import {
   NavLink,
   Page,
   PrimaryContentColumn,
-  RepositoryFlag,
+  RepositoryFlags,
   SecondaryNavigation,
   SecondaryNavigationColumn,
   StateMenuContextProvider,
   SubNavigation,
-  Tooltip,
   urls,
 } from "@scm-manager/ui-components";
 import RepositoryDetails from "../components/RepositoryDetails";
@@ -120,7 +119,7 @@ const RepositoryRoot = () => {
   if (redirectUrlFactory) {
     redirectedUrl = url + redirectUrlFactory(props);
   } else {
-    redirectedUrl = url + "/info";
+    redirectedUrl = url + "/code/sources/";
   }
 
   const fileControlFactoryFactory: (changeset: Changeset) => FileControlFactory = (changeset) => (file) => {
@@ -157,23 +156,6 @@ const RepositoryRoot = () => {
 
     return links ? links.map(({ url, label }) => <JumpToFileButton tooltip={label} link={url} />) : null;
   };
-
-  const repositoryFlags = [];
-  if (repository.archived) {
-    repositoryFlags.push(<RepositoryFlag title={t("archive.tooltip")}>{t("repository.archived")}</RepositoryFlag>);
-  }
-
-  if (repository.exporting) {
-    repositoryFlags.push(<RepositoryFlag title={t("exporting.tooltip")}>{t("repository.exporting")}</RepositoryFlag>);
-  }
-
-  if (repository.healthCheckFailures && repository.healthCheckFailures.length > 0) {
-    repositoryFlags.push(
-      <RepositoryFlag color="danger" title={t("healthCheckFailure.tooltip")} onClick={() => setShowHealthCheck(true)}>
-        {t("repository.healthCheckFailure")}
-      </RepositoryFlag>
-    );
-  }
 
   const titleComponent = (
     <>
@@ -236,13 +218,12 @@ const RepositoryRoot = () => {
         title={titleComponent}
         documentTitle={`${repository.namespace}/${repository.name}`}
         afterTitle={
-          <>
+          <div className="is-flex">
             <ExtensionPoint name={"repository.afterTitle"} props={{ repository }} />
             <TagGroup>
-              {repositoryFlags}
-              <ExtensionPoint name="repository.flags" props={{ repository }} renderAll={true} />
+              <RepositoryFlags repository={repository} tooltipLocation="bottom" />
             </TagGroup>
-          </>
+          </div>
         }
       >
         {modal}
@@ -286,10 +267,7 @@ const RepositoryRoot = () => {
               <Route path={`${url}/code`}>
                 <CodeOverview baseUrl={`${url}/code`} repository={repository} />
               </Route>
-              <Route
-                path={`${url}/branch/:branch`}
-                render={() => <BranchRoot repository={repository} baseUrl={`${url}/branch`} />}
-              />
+              <Route path={`${url}/branch/:branch`} render={() => <BranchRoot repository={repository} />} />
               <Route
                 path={`${url}/branches`}
                 exact={true}

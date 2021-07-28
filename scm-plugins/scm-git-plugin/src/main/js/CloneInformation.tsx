@@ -21,10 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, useEffect, useState } from "react";
+import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
-import { Link, Repository } from "@scm-manager/ui-types";
-import { apiClient } from "@scm-manager/ui-components";
+import { Repository } from "@scm-manager/ui-types";
+import { ErrorNotification, Loading } from "@scm-manager/ui-components";
+import { useChangesets, useDefaultBranch } from "@scm-manager/ui-api";
 
 type Props = {
   url: string;
@@ -33,32 +34,28 @@ type Props = {
 
 const CloneInformation: FC<Props> = ({ url, repository }) => {
   const [t] = useTranslation("plugins");
-  const [defaultBranch, setDefaultBranch] = useState<string>("main");
-  const [emptyRepository, setEmptyRepository] = useState<boolean>();
+  const {
+    data: changesets,
+    error: changesetsError,
+    isLoading: changesetsLoading,
+  } = useChangesets(repository, { limit: 1 });
+  const {
+    data: defaultBranchData,
+    isLoading: defaultBranchLoading,
+    error: defaultBranchError,
+  } = useDefaultBranch(repository);
 
-  useEffect(() => {
-    if (repository) {
-      apiClient
-        .get((repository._links.changesets as Link).href + "?limit=1")
-        .then(r => r.json())
-        .then(result => {
-          const empty = result._embedded.changesets.length === 0;
-          setEmptyRepository(empty);
-        });
-    }
-  }, [repository]);
+  if (changesetsLoading || defaultBranchLoading) {
+    return <Loading />;
+  }
 
-  useEffect(() => {
-    if (repository) {
-      apiClient
-        .get((repository._links.defaultBranch as Link).href)
-        .then(r => r.json())
-        .then(r => r.defaultBranch && setDefaultBranch(r.defaultBranch));
-    }
-  }, [repository]);
+  const error = changesetsError || defaultBranchError;
+  const branch = defaultBranchData?.defaultBranch;
+  const emptyRepository = changesets?._embedded.changesets.length === 0;
 
   return (
-    <div>
+    <div className="content">
+      <ErrorNotification error={error} />
       <h4>{t("scm-git-plugin.information.clone")}</h4>
       <pre>
         <code>
@@ -68,7 +65,7 @@ const CloneInformation: FC<Props> = ({ url, repository }) => {
           {emptyRepository && (
             <>
               <br />
-              git checkout -b {defaultBranch}
+              git checkout -b {branch}
             </>
           )}
         </code>
@@ -82,7 +79,7 @@ const CloneInformation: FC<Props> = ({ url, repository }) => {
               <br />
               cd {repository.name}
               <br />
-              git checkout -b {defaultBranch}
+              git checkout -b {branch}
               <br />
               echo "# {repository.name}
               " &gt; README.md
@@ -93,7 +90,7 @@ const CloneInformation: FC<Props> = ({ url, repository }) => {
               <br />
               git remote add origin {url}
               <br />
-              git push -u origin {defaultBranch}
+              git push -u origin {branch}
               <br />
             </code>
           </pre>

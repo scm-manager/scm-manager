@@ -26,14 +26,16 @@ import React, { ReactNode } from "react";
 type Props = {
   message: string;
   className?: string;
-  location: string;
+  location: TooltipLocation;
   multiline?: boolean;
   children: ReactNode;
 };
 
+export type TooltipLocation = "bottom" | "right" | "top" | "left";
+
 class Tooltip extends React.Component<Props> {
   static defaultProps = {
-    location: "right"
+    location: "right",
   };
 
   render() {

@@ -21,43 +21,47 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
-import { Repository } from "@scm-manager/ui-types";
-import { Image } from "@scm-manager/ui-components";
+
+import React, { FC, ReactNode } from "react";
 import styled from "styled-components";
 
-const Avatar = styled.div`
-  border-radius: 5px;
+const TitleWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 0.75rem;
+  font-size: 1rem;
+  font-weight: bold;
+`;
+
+const Separator = styled.div`
+  border-bottom: 1px solid rgb(219, 219, 219, 0.5);
+  margin: 0 1rem;
+`;
+
+const Box = styled.div`
+  padding: 0.5rem;
 `;
 
 type Props = {
-  repository: Repository;
-  size?: 16 | 24 | 32 | 48 | 64 | 96 | 128;
+  namespaceHeader: ReactNode;
+  elements: ReactNode[];
 };
 
-const renderExtensionPoint = (repository: Repository) => {
+const GroupEntries: FC<Props> = ({ namespaceHeader, elements }) => {
+  const content = elements.map((entry, index) => (
+    <React.Fragment key={index}>
+      <div>{entry}</div>
+      {index + 1 !== elements.length ? <Separator /> : null}
+    </React.Fragment>
+  ));
+
   return (
-    <ExtensionPoint
-      name="repos.repository-avatar.primary"
-      props={{
-        repository,
-      }}
-    >
-      <ExtensionPoint
-        name="repos.repository-avatar"
-        props={{
-          repository,
-        }}
-      >
-        <Image src="/images/blib.jpg" alt="Logo" />
-      </ExtensionPoint>
-    </ExtensionPoint>
+    <>
+      <TitleWrapper>{namespaceHeader}</TitleWrapper>
+      <Box className="box">{content}</Box>
+      <div className="is-clearfix" />
+    </>
   );
 };
 
-const RepositoryAvatar: FC<Props> = ({ repository, size = 64 }) => {
-  return <Avatar className={`image is-${size}x${size}`}>{renderExtensionPoint(repository)}</Avatar>;
-};
-
-export default RepositoryAvatar;
+export default GroupEntries;

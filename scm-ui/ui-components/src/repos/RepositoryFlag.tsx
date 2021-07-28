@@ -24,7 +24,7 @@
 
 import React, { FC } from "react";
 import { Color, Size } from "../styleConstants";
-import Tooltip from "../Tooltip";
+import Tooltip, {TooltipLocation} from "../Tooltip";
 import Tag from "../Tag";
 
 type Props = {
@@ -32,10 +32,11 @@ type Props = {
   title: string;
   onClick?: () => void;
   size?: Size;
+  tooltipLocation: TooltipLocation;
 };
 
-const RepositoryFlag: FC<Props> = ({ children, title, size = "small", ...props }) => (
-  <Tooltip location="bottom" message={title}>
+const RepositoryFlag: FC<Props> = ({ children, title, size = "small", tooltipLocation = "bottom", ...props }) => (
+  <Tooltip location={tooltipLocation} message={title}>
     <Tag size={size} {...props}>
       {children}
     </Tag>

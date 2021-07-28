@@ -21,207 +21,116 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
+import React, { FC, useState } from "react";
 import { Repository } from "@scm-manager/ui-types";
-import { CardColumn, DateFromNow } from "@scm-manager/ui-components";
-import RepositoryEntryLink from "./RepositoryEntryLink";
+import { DateFromNow, Modal } from "@scm-manager/ui-components";
 import RepositoryAvatar from "./RepositoryAvatar";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
-import { withTranslation, WithTranslation } from "react-i18next";
+import GroupEntry from "../layout/GroupEntry";
+import RepositoryFlags from "./RepositoryFlags";
 import styled from "styled-components";
-import HealthCheckFailureDetail from "./HealthCheckFailureDetail";
-import RepositoryFlag from "./RepositoryFlag";
+import Icon from "../Icon";
+import { useTranslation } from "react-i18next";
 
 type DateProp = Date | string;
 
-type Props = WithTranslation & {
+type Props = {
   repository: Repository;
   // @VisibleForTesting
   // the baseDate is only to avoid failing snapshot tests
   baseDate?: DateProp;
 };
 
-type State = {
-  showHealthCheck: boolean;
+const ContentRightContainer = styled.div`
+  height: calc(80px - 1.5rem);
+  margin-right: 1rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`;
+
+const DateWrapper = styled.small`
+  padding-bottom: 0.25rem;
+`;
+
+const QuickActionbar = styled.span`
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+`;
+
+const QuickAction = styled(Icon)`
+  font-size: 1.25rem;
+
+  :hover {
+    color: #363636 !important;
+  }
+`;
+
+const Name = styled.strong`
+  text-overflow: ellipsis;
+  overflow-x: hidden;
+  overflow-y: visible;
+  white-space: nowrap;
+`;
+
+const RepositoryEntry: FC<Props> = ({ repository, baseDate }) => {
+  const [t] = useTranslation("repos");
+  const [openCloneModal, setOpenCloneModal] = useState(false);
+
+  const createContentRight = () => (
+    <ContentRightContainer>
+      <Modal
+        size="L"
+        active={openCloneModal}
+        title={t("overview.clone")}
+        body={
+          <ExtensionPoint
+            name="repos.repository-details.information"
+            renderAll={true}
+            props={{
+              repository,
+            }}
+          />
+        }
+        closeFunction={() => setOpenCloneModal(false)}
+      />
+      <QuickActionbar>
+        <QuickAction
+          name="download"
+          color="info"
+          className="has-cursor-pointer"
+          onClick={() => setOpenCloneModal(true)}
+          title={t("overview.clone")}
+        />
+      </QuickActionbar>
+      <DateWrapper>
+        <DateFromNow baseDate={baseDate} date={repository.lastModified || repository.creationDate} />
+      </DateWrapper>
+    </ContentRightContainer>
+  );
+
+  const repositoryLink = `/repo/${repository.namespace}/${repository.name}/`;
+  const actions = createContentRight();
+  const name = (
+    <div className="is-flex">
+      <ExtensionPoint name="repository.card.beforeTitle" props={{ repository }} />
+      <Name>{repository.name}</Name> <RepositoryFlags repository={repository} className="is-hidden-mobile" />
+    </div>
+  );
+
+  return (
+    <>
+      <GroupEntry
+        avatar={<RepositoryAvatar repository={repository} size={48} />}
+        name={name}
+        description={repository.description}
+        contentRight={actions}
+        link={repositoryLink}
+      />
+    </>
+  );
 };
 
-const Title = styled.span`
-  display: flex;
-  align-items: center;
-`;
-
-const RepositoryFlagContainer = styled.div`
-  /*pointer-events: all;*/
-
-  .tag {
-    margin-left: 0.25rem;
-  }
-`;
-
-class RepositoryEntry extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      showHealthCheck: false,
-    };
-  }
-
-  createLink = (repository: Repository) => {
-    return `/repo/${repository.namespace}/${repository.name}`;
-  };
-
-  renderBranchesLink = (repository: Repository, repositoryLink: string) => {
-    const { t } = this.props;
-    if (repository._links["branches"]) {
-      return (
-        <RepositoryEntryLink
-          icon="code-branch"
-          to={repositoryLink + "/branches/"}
-          tooltip={t("repositoryRoot.tooltip.branches")}
-        />
-      );
-    }
-    return null;
-  };
-
-  renderTagsLink = (repository: Repository, repositoryLink: string) => {
-    const { t } = this.props;
-    if (repository._links["tags"]) {
-      return (
-        <RepositoryEntryLink icon="tags" to={repositoryLink + "/tags/"} tooltip={t("repositoryRoot.tooltip.tags")} />
-      );
-    }
-    return null;
-  };
-
-  renderChangesetsLink = (repository: Repository, repositoryLink: string) => {
-    const { t } = this.props;
-    if (repository._links["changesets"]) {
-      return (
-        <RepositoryEntryLink
-          icon="exchange-alt"
-          to={repositoryLink + "/code/changesets/"}
-          tooltip={t("repositoryRoot.tooltip.commits")}
-        />
-      );
-    }
-    return null;
-  };
-
-  renderSourcesLink = (repository: Repository, repositoryLink: string) => {
-    const { t } = this.props;
-    if (repository._links["sources"]) {
-      return (
-        <RepositoryEntryLink
-          icon="code"
-          to={repositoryLink + "/code/sources/"}
-          tooltip={t("repositoryRoot.tooltip.sources")}
-        />
-      );
-    }
-    return null;
-  };
-
-  renderModifyLink = (repository: Repository, repositoryLink: string) => {
-    const { t } = this.props;
-    if (repository._links["update"]) {
-      return (
-        <RepositoryEntryLink
-          icon="cog"
-          to={repositoryLink + "/settings/general"}
-          tooltip={t("repositoryRoot.tooltip.settings")}
-        />
-      );
-    }
-    return null;
-  };
-
-  createFooterLeft = (repository: Repository, repositoryLink: string) => {
-    return (
-      <>
-        {this.renderBranchesLink(repository, repositoryLink)}
-        {this.renderTagsLink(repository, repositoryLink)}
-        {this.renderChangesetsLink(repository, repositoryLink)}
-        {this.renderSourcesLink(repository, repositoryLink)}
-        <ExtensionPoint name={"repository.card.quickLink"} props={{ repository, repositoryLink }} renderAll={true} />
-        {this.renderModifyLink(repository, repositoryLink)}
-      </>
-    );
-  };
-
-  createFooterRight = (repository: Repository, baseDate?: DateProp) => {
-    return (
-      <small className="level-item">
-        <DateFromNow baseDate={baseDate} date={repository.lastModified || repository.creationDate} />
-      </small>
-    );
-  };
-
-  createTitle = () => {
-    const { repository, t } = this.props;
-    const repositoryFlags = [];
-    if (repository.archived) {
-      repositoryFlags.push(<RepositoryFlag title={t("archive.tooltip")}>{t("repository.archived")}</RepositoryFlag>);
-    }
-
-    if (repository.exporting) {
-      repositoryFlags.push(<RepositoryFlag title={t("exporting.tooltip")}>{t("repository.exporting")}</RepositoryFlag>);
-    }
-
-    if (repository.healthCheckFailures && repository.healthCheckFailures.length > 0) {
-      repositoryFlags.push(
-        <RepositoryFlag
-          color="danger"
-          title={t("healthCheckFailure.tooltip")}
-          onClick={() => {
-            this.setState({ showHealthCheck: true });
-          }}
-        >
-          {t("repository.healthCheckFailure")}
-        </RepositoryFlag>
-      );
-    }
-
-    return (
-      <Title>
-        <ExtensionPoint name="repository.card.beforeTitle" props={{ repository }} />
-        <strong>{repository.name}</strong>{" "}
-        <RepositoryFlagContainer>
-          {repositoryFlags}
-          <ExtensionPoint name="repository.flags" props={{ repository }} renderAll={true} />
-        </RepositoryFlagContainer>
-      </Title>
-    );
-  };
-
-  render() {
-    const { repository, baseDate } = this.props;
-    const repositoryLink = this.createLink(repository);
-    const footerLeft = this.createFooterLeft(repository, repositoryLink);
-    const footerRight = this.createFooterRight(repository, baseDate);
-    const title = this.createTitle();
-    const modal = (
-      <HealthCheckFailureDetail
-        closeFunction={() => this.setState({ showHealthCheck: false })}
-        active={this.state.showHealthCheck}
-        failures={repository.healthCheckFailures}
-      />
-    );
-
-    return (
-      <>
-        {modal}
-        <CardColumn
-          avatar={<RepositoryAvatar repository={repository} />}
-          title={title}
-          description={repository.description}
-          link={repositoryLink}
-          footerLeft={footerLeft}
-          footerRight={footerRight}
-        />
-      </>
-    );
-  }
-}
-
-export default withTranslation("repos")(RepositoryEntry);
+export default RepositoryEntry;
