@@ -49,7 +49,7 @@ import NamespaceRoot from "../repos/namespaces/containers/NamespaceRoot";
 import ImportLog from "../repos/importlog/ImportLog";
 import CreateRepositoryRoot from "../repos/containers/CreateRepositoryRoot";
 import styled from "styled-components";
-import Search from "../search";
+import Search from "../search/Search";
 
 type Props = {
   me: Me;
