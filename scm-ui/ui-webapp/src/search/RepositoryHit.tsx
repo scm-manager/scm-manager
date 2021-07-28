@@ -26,21 +26,21 @@ import React, { FC } from "react";
 import { Repository } from "@scm-manager/ui-types";
 import { Link } from "react-router-dom";
 import {
-  useDateFieldValue,
-  useStringFieldValue,
+  useDateHitFieldValue,
+  useStringHitFieldValue,
   DateFromNow,
   RepositoryAvatar,
-  TextField,
+  TextHitField,
   Hit,
   HitProps,
 } from "@scm-manager/ui-components";
 
 const RepositoryHit: FC<HitProps> = ({ hit }) => {
-  const namespace = useStringFieldValue(hit, "namespace");
-  const name = useStringFieldValue(hit, "name");
-  const type = useStringFieldValue(hit, "type");
-  const lastModified = useDateFieldValue(hit, "lastModified");
-  const creationDate = useDateFieldValue(hit, "creationDate");
+  const namespace = useStringHitFieldValue(hit, "namespace");
+  const name = useStringHitFieldValue(hit, "name");
+  const type = useStringHitFieldValue(hit, "type");
+  const lastModified = useDateHitFieldValue(hit, "lastModified");
+  const creationDate = useDateHitFieldValue(hit, "creationDate");
   const date = lastModified || creationDate;
 
   if (!namespace || !name || !type) {
@@ -69,7 +69,7 @@ const RepositoryHit: FC<HitProps> = ({ hit }) => {
           </Hit.Title>
         </Link>
         <p>
-          <TextField hit={hit} field="description" />
+          <TextHitField hit={hit} field="description" />
         </p>
       </Hit.Content>
       <Hit.Right>

@@ -23,16 +23,20 @@
  */
 
 import React, { FC } from "react";
-import { useDateFieldValue, useStringFieldValue } from "@scm-manager/ui-components/src/search/fields";
 import { Link } from "react-router-dom";
-import { DateFromNow } from "@scm-manager/ui-components";
-import TextField from "@scm-manager/ui-components/src/search/TextField";
-import Hit, { HitProps } from "@scm-manager/ui-components/src/search/Hit";
+import {
+  DateFromNow,
+  useDateHitFieldValue,
+  useStringHitFieldValue,
+  TextHitField,
+  Hit,
+  HitProps,
+} from "@scm-manager/ui-components";
 
 const UserHit: FC<HitProps> = ({ hit }) => {
-  const name = useStringFieldValue(hit, "name");
-  const lastModified = useDateFieldValue(hit, "lastModified");
-  const creationDate = useDateFieldValue(hit, "creationDate");
+  const name = useStringHitFieldValue(hit, "name");
+  const lastModified = useDateHitFieldValue(hit, "lastModified");
+  const creationDate = useDateHitFieldValue(hit, "creationDate");
   const date = lastModified || creationDate;
 
   return (
@@ -40,12 +44,12 @@ const UserHit: FC<HitProps> = ({ hit }) => {
       <Hit.Content>
         <Link to={`/user/${name}`}>
           <Hit.Title>
-            <TextField hit={hit} field="name" />
+            <TextHitField hit={hit} field="name" />
           </Hit.Title>
         </Link>
         <p>
-          <TextField hit={hit} field="displayName" /> &lt;
-          <TextField hit={hit} field="mail" />
+          <TextHitField hit={hit} field="displayName" /> &lt;
+          <TextHitField hit={hit} field="mail" />
           &gt;
         </p>
       </Hit.Content>

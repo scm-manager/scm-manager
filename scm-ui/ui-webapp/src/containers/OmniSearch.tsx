@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 import React, { FC, KeyboardEvent as ReactKeyboardEvent, MouseEvent, useCallback, useState, useEffect } from "react";
-import { Hit, Links, ValueField } from "@scm-manager/ui-types";
+import { Hit, Links, ValueHitField } from "@scm-manager/ui-types";
 import styled from "styled-components";
 import { BackendError, useSearch } from "@scm-manager/ui-api";
 import classNames from "classnames";
@@ -43,8 +43,8 @@ type Props = {
 };
 
 const namespaceAndName = (hit: Hit) => {
-  const namespace = (hit.fields["namespace"] as ValueField).value as string;
-  const name = (hit.fields["name"] as ValueField).value as string;
+  const namespace = (hit.fields["namespace"] as ValueHitField).value as string;
+  const name = (hit.fields["name"] as ValueHitField).value as string;
   return `${namespace}/${name}`;
 };
 

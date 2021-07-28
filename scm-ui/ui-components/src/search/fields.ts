@@ -22,30 +22,30 @@
  * SOFTWARE.
  */
 
-import { Field, HighlightedField, Hit, ValueField } from "@scm-manager/ui-types";
+import { HitField, HighlightedHitField, Hit, ValueHitField } from "@scm-manager/ui-types";
 
-export const isHighlightedField = (field: Field): field is HighlightedField => {
+export const isHighlightedHitField = (field: HitField): field is HighlightedHitField => {
   return field.highlighted;
 };
 
-export const isValueField = (field: Field): field is ValueField => {
+export const isValueHitField = (field: HitField): field is ValueHitField => {
   return !field.highlighted;
 };
 
-export const useFieldValue = (hit: Hit, fieldName: string) => {
+export const useHitFieldValue = (hit: Hit, fieldName: string) => {
   const field = hit.fields[fieldName];
   if (!field) {
     return;
   }
-  if (isValueField(field)) {
+  if (isValueHitField(field)) {
     return field.value;
   } else {
     throw new Error(`${fieldName} is a highlighted field and not a value field`);
   }
 };
 
-export const useStringFieldValue = (hit: Hit, fieldName: string): string | undefined => {
-  const value = useFieldValue(hit, fieldName);
+export const useStringHitFieldValue = (hit: Hit, fieldName: string): string | undefined => {
+  const value = useHitFieldValue(hit, fieldName);
   if (value) {
     if (typeof value === "string") {
       return value;
@@ -55,8 +55,8 @@ export const useStringFieldValue = (hit: Hit, fieldName: string): string | undef
   }
 };
 
-export const useNumberFieldValue = (hit: Hit, fieldName: string): number | undefined => {
-  const value = useFieldValue(hit, fieldName);
+export const useNumberHitFieldValue = (hit: Hit, fieldName: string): number | undefined => {
+  const value = useHitFieldValue(hit, fieldName);
   if (value) {
     if (typeof value === "number") {
       return value;
@@ -66,15 +66,15 @@ export const useNumberFieldValue = (hit: Hit, fieldName: string): number | undef
   }
 };
 
-export const useDateFieldValue = (hit: Hit, fieldName: string): Date | undefined => {
-  const value = useNumberFieldValue(hit, fieldName);
+export const useDateHitFieldValue = (hit: Hit, fieldName: string): Date | undefined => {
+  const value = useNumberHitFieldValue(hit, fieldName);
   if (value) {
     return new Date(value);
   }
 };
 
-export const useBooleanFieldValue = (hit: Hit, fieldName: string): boolean | undefined => {
-  const value = useFieldValue(hit, fieldName);
+export const useBooleanHitFieldValue = (hit: Hit, fieldName: string): boolean | undefined => {
+  const value = useHitFieldValue(hit, fieldName);
   if (value) {
     if (typeof value === "boolean") {
       return value;

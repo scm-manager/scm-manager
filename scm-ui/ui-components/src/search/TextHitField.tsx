@@ -23,9 +23,9 @@
  */
 
 import React, { FC } from "react";
-import { HighlightedField, Hit } from "@scm-manager/ui-types";
+import { HighlightedHitField, Hit } from "@scm-manager/ui-types";
 import HighlightedFragment from "./HighlightedFragment";
-import { isHighlightedField } from "./fields";
+import { isHighlightedHitField } from "./fields";
 
 type Props = {
   hit: Hit;
@@ -33,7 +33,7 @@ type Props = {
 };
 
 type HighlightedTextFieldProps = {
-  field: HighlightedField;
+  field: HighlightedHitField;
 };
 
 const HighlightedTextField: FC<HighlightedTextFieldProps> = ({ field }) => (
@@ -48,15 +48,15 @@ const HighlightedTextField: FC<HighlightedTextFieldProps> = ({ field }) => (
   </>
 );
 
-const TextField: FC<Props> = ({ hit, field: fieldName }) => {
+const TextHitField: FC<Props> = ({ hit, field: fieldName }) => {
   const field = hit.fields[fieldName];
   if (!field) {
     return null;
-  } else if (isHighlightedField(field)) {
+  } else if (isHighlightedHitField(field)) {
     return <HighlightedTextField field={field} />;
   } else {
     return <>{field.value}</>;
   }
 };
 
-export default TextField;
+export default TextHitField;

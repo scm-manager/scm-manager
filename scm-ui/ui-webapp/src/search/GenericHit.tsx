@@ -23,7 +23,7 @@
  */
 
 import React, { FC } from "react";
-import { Hit, HitProps, TextField } from "@scm-manager/ui-components";
+import { Hit, HitProps, TextHitField } from "@scm-manager/ui-components";
 import styled from "styled-components";
 
 const LabelColumn = styled.th`
@@ -38,7 +38,7 @@ const GenericHit: FC<HitProps> = ({ hit }) => (
           <tr key={field}>
             <LabelColumn>{field}:</LabelColumn>
             <td>
-              <TextField hit={hit} field={field} />
+              <TextHitField hit={hit} field={field} />
             </td>
           </tr>
         ))}

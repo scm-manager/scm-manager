@@ -27,16 +27,16 @@ import {
   Hit,
   HitProps,
   DateFromNow,
-  TextField,
-  useDateFieldValue,
-  useStringFieldValue,
+  TextHitField,
+  useDateHitFieldValue,
+  useStringHitFieldValue,
 } from "@scm-manager/ui-components";
 import { Link } from "react-router-dom";
 
 const GroupHit: FC<HitProps> = ({ hit }) => {
-  const name = useStringFieldValue(hit, "name");
-  const lastModified = useDateFieldValue(hit, "lastModified");
-  const creationDate = useDateFieldValue(hit, "creationDate");
+  const name = useStringHitFieldValue(hit, "name");
+  const lastModified = useDateHitFieldValue(hit, "lastModified");
+  const creationDate = useDateHitFieldValue(hit, "creationDate");
   const date = lastModified || creationDate;
 
   return (
@@ -44,11 +44,11 @@ const GroupHit: FC<HitProps> = ({ hit }) => {
       <Hit.Content>
         <Link to={`/group/${name}`}>
           <Hit.Title>
-            <TextField hit={hit} field="name" />
+            <TextHitField hit={hit} field="name" />
           </Hit.Title>
         </Link>
         <p>
-          <TextField hit={hit} field="description" />
+          <TextHitField hit={hit} field="description" />
         </p>
       </Hit.Content>
       <Hit.Right>

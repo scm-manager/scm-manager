@@ -24,4 +24,4 @@
 
 export * from "./fields";
 export { default as Hit, HitProps } from "./Hit";
-export { default as TextField } from "./TextField";
+export { default as TextHitField } from "./TextHitField";
