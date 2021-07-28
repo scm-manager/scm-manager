@@ -85,7 +85,7 @@ public class SvnMirrorCommand extends AbstractSvnCommand implements MirrorComman
       SVNURL url = createUrlForLocalRepository();
       SVNAdminClient admin = createAdminClient(url, mirrorCommandRequest);
 
-      consumer.accept(admin);
+      handleConsumer(mirrorCommandRequest, consumer, url, admin);
       afterUpdate = context.open().getLatestRevision();
     } catch (SVNException e) {
       LOG.info("Could not mirror svn repository", e);
@@ -102,6 +102,19 @@ public class SvnMirrorCommand extends AbstractSvnCommand implements MirrorComman
       ImmutableList.of("Updated from revision " + beforeUpdate + " to revision " + afterUpdate),
       stopwatch.stop().elapsed()
     );
+  }
+
+  private void handleConsumer(MirrorCommandRequest mirrorCommandRequest, AdminConsumer consumer, SVNURL url, SVNAdminClient admin) throws SVNException {
+    try {
+      consumer.accept(admin);
+    } catch (SVNException e) {
+      if (e.getMessage().equals("svn: E204899: Destination repository has not been initialized")) {
+        SVNURL source = SVNURL.parseURIEncoded(mirrorCommandRequest.getSourceUrl());
+        admin.doCompleteSynchronize(source, url);
+      } else {
+        throw e;
+      }
+    }
   }
 
   private SVNURL createUrlForLocalRepository() {
