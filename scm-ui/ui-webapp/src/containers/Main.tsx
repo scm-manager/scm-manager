@@ -21,9 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
+import React, { FC } from "react";
 
-import { Redirect, Route, Switch, withRouter } from "react-router-dom";
+import { Redirect, Route, Switch } from "react-router-dom";
 import { Links, Me } from "@scm-manager/ui-types";
 
 import Overview from "../repos/containers/Overview";
@@ -61,69 +61,59 @@ type StyledMainProps = {
   isSmallHeader: boolean;
 };
 
-const StyledMain = styled.div.attrs((props) => ({}))<StyledMainProps>`
+const StyledMain = styled.div<StyledMainProps>`
   min-height: calc(100vh - ${(props) => (props.isSmallHeader ? 250 : 210)}px);
 `;
 
-class Main extends React.Component<Props> {
-  render() {
-    const { authenticated, me, links } = this.props;
-    const redirectUrlFactory = binder.getExtension("main.redirect", this.props);
-    let url = "/";
-    if (authenticated) {
-      url = "/repos/";
-    }
-    if (redirectUrlFactory) {
-      url = redirectUrlFactory(this.props);
-    }
-    if (!me) {
-      url = "/login";
-    }
-    return (
-      <ErrorBoundary>
-        <StyledMain className="main" isSmallHeader={!!links.logout}>
-          <Switch>
-            <Redirect exact from="/" to={url} />
-            <Route exact path="/login" component={Login} />
-            <Route path="/logout" component={Logout} />
-            <Redirect exact strict from="/repos" to="/repos/" />
-            <ProtectedRoute exact path="/repos/" component={Overview} authenticated={authenticated} />
-            <ProtectedRoute path="/repos/create" component={CreateRepositoryRoot} authenticated={authenticated} />
-            <Redirect exact strict from="/repos/import" to="/repos/create/import" />
-            <ProtectedRoute exact path="/repos/:namespace" component={Overview} authenticated={authenticated} />
-            <ProtectedRoute exact path="/repos/:namespace/:page" component={Overview} authenticated={authenticated} />
-            <ProtectedRoute path="/repo/:namespace/:name" component={RepositoryRoot} authenticated={authenticated} />
-            <ProtectedRoute path="/namespace/:namespaceName" component={NamespaceRoot} authenticated={authenticated} />
-            <Redirect exact strict from="/users" to="/users/" />
-            <ProtectedRoute exact path="/users/" component={Users} authenticated={authenticated} />
-            <ProtectedRoute path="/users/create" component={CreateUser} authenticated={authenticated} />
-            <ProtectedRoute exact path="/users/:page" component={Users} authenticated={authenticated} />
-            <ProtectedRoute path="/user/:name" component={SingleUser} authenticated={authenticated} />
-            <Redirect exact strict from="/groups" to="/groups/" />
-            <ProtectedRoute exact path="/groups/" component={Groups} authenticated={authenticated} />
-            <ProtectedRoute path="/group/:name" component={SingleGroup} authenticated={authenticated} />
-            <ProtectedRoute path="/groups/create" component={CreateGroup} authenticated={authenticated} />
-            <ProtectedRoute exact path="/groups/:page" component={Groups} authenticated={authenticated} />
-            <ProtectedRoute path="/admin" component={Admin} authenticated={authenticated} />
-            <ProtectedRoute path="/me" component={Profile} authenticated={authenticated} />
-            <ProtectedRoute path="/importlog/:logId" component={ImportLog} authenticated={authenticated} />
-            <Redirect exact strict from="/search/:type" to="/search/:type/" />
-            <ProtectedRoute path="/search/:type/:page" component={Search} authenticated={authenticated} />
-            <ProtectedRoute path="/search/:type/" component={Search} authenticated={authenticated} />
-            <ExtensionPoint
-              name="main.route"
-              renderAll={true}
-              props={{
-                me,
-                links,
-                authenticated,
-              }}
-            />
-          </Switch>
-        </StyledMain>
-      </ErrorBoundary>
-    );
+const Main: FC<Props> = (props) => {
+  const { authenticated, me, links } = props;
+  const redirectUrlFactory = binder.getExtension("main.redirect", props);
+  let url = "/";
+  if (authenticated) {
+    url = "/repos/";
   }
-}
+  if (redirectUrlFactory) {
+    url = redirectUrlFactory(props);
+  }
+  if (!me) {
+    url = "/login";
+  }
+  return (
+    <ErrorBoundary>
+      <StyledMain className="main" isSmallHeader={!!links.logout}>
+        <Switch>
+          <Redirect exact from="/" to={url} />
+          <Route exact path="/login" component={Login} />
+          <Route path="/logout" component={Logout} />
+          <Redirect exact strict from="/repos" to="/repos/" />
+          <ProtectedRoute exact path="/repos/" component={Overview} authenticated={authenticated} />
+          <ProtectedRoute path="/repos/create" component={CreateRepositoryRoot} authenticated={authenticated} />
+          <Redirect exact strict from="/repos/import" to="/repos/create/import" />
+          <ProtectedRoute exact path="/repos/:namespace" component={Overview} authenticated={authenticated} />
+          <ProtectedRoute exact path="/repos/:namespace/:page" component={Overview} authenticated={authenticated} />
+          <ProtectedRoute path="/repo/:namespace/:name" component={RepositoryRoot} authenticated={authenticated} />
+          <ProtectedRoute path="/namespace/:namespaceName" component={NamespaceRoot} authenticated={authenticated} />
+          <Redirect exact strict from="/users" to="/users/" />
+          <ProtectedRoute exact path="/users/" component={Users} authenticated={authenticated} />
+          <ProtectedRoute path="/users/create" component={CreateUser} authenticated={authenticated} />
+          <ProtectedRoute exact path="/users/:page" component={Users} authenticated={authenticated} />
+          <ProtectedRoute path="/user/:name" component={SingleUser} authenticated={authenticated} />
+          <Redirect exact strict from="/groups" to="/groups/" />
+          <ProtectedRoute exact path="/groups/" component={Groups} authenticated={authenticated} />
+          <ProtectedRoute path="/group/:name" component={SingleGroup} authenticated={authenticated} />
+          <ProtectedRoute path="/groups/create" component={CreateGroup} authenticated={authenticated} />
+          <ProtectedRoute exact path="/groups/:page" component={Groups} authenticated={authenticated} />
+          <ProtectedRoute path="/admin" component={Admin} authenticated={authenticated} />
+          <ProtectedRoute path="/me" component={Profile} authenticated={authenticated} />
+          <ProtectedRoute path="/importlog/:logId" component={ImportLog} authenticated={authenticated} />
+          <Redirect exact strict from="/search/:type" to="/search/:type/" />
+          <ProtectedRoute path="/search/:type/:page" component={Search} authenticated={authenticated} />
+          <ProtectedRoute path="/search/:type/" component={Search} authenticated={authenticated} />
+          <ExtensionPoint name="main.route" renderAll={true} props={props} />
+        </Switch>
+      </StyledMain>
+    </ErrorBoundary>
+  );
+};
 
-export default withRouter(Main);
+export default Main;
