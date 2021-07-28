@@ -24,15 +24,25 @@
 
 package sonia.scm.repository.work;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sonia.scm.plugin.Extension;
 import sonia.scm.repository.RepositoryLocationResolver;
+import sonia.scm.util.IOUtil;
 
 import javax.inject.Inject;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 
-public class WorkdirProvider {
+@Extension
+public class WorkdirProvider implements ServletContextListener {
+
+  private static final Logger LOG = LoggerFactory.getLogger(WorkdirProvider.class);
 
   private final File rootDirectory;
   private final RepositoryLocationResolver repositoryLocationResolver;
@@ -58,10 +68,18 @@ public class WorkdirProvider {
 
   public File createNewWorkdir(String repositoryId) {
     if (useRepositorySpecificDir) {
-      return createWorkDir(repositoryLocationResolver.forClass(Path.class).getLocation(repositoryId).resolve("work").toFile());
+      Path repositoryLocation = repositoryLocationResolver.forClass(Path.class).getLocation(repositoryId);
+      File workDirectoryForRepositoryLocation = getWorkDirectoryForRepositoryLocation(repositoryLocation);
+      LOG.debug("creating work dir for repository {} in relative path {}", repositoryId, workDirectoryForRepositoryLocation);
+      return createWorkDir(workDirectoryForRepositoryLocation);
     } else {
+      LOG.debug("creating work dir for repository {} in global path", repositoryId);
       return createNewWorkdir();
     }
+  }
+
+  private File getWorkDirectoryForRepositoryLocation(Path repositoryLocation) {
+    return repositoryLocation.resolve("work").toFile();
   }
 
   private File createWorkDir(File baseDirectory) {
@@ -70,9 +88,38 @@ public class WorkdirProvider {
       throw new WorkdirCreationException(baseDirectory.toString());
     }
     try {
-      return Files.createTempDirectory(baseDirectory.toPath(),"work-").toFile();
+      File newWorkDir = Files.createTempDirectory(baseDirectory.toPath(), "work-").toFile();
+      LOG.debug("created new work dir {}", newWorkDir);
+      return newWorkDir;
     } catch (IOException e) {
       throw new WorkdirCreationException(baseDirectory.toString(), e);
+    }
+  }
+
+  @Override
+  public void contextInitialized(ServletContextEvent sce) {
+    deleteWorkDirs();
+  }
+
+  @Override
+  public void contextDestroyed(ServletContextEvent sce) {
+    deleteWorkDirs();
+  }
+
+  private void deleteWorkDirs() {
+    deleteWorkDirs(rootDirectory);
+    repositoryLocationResolver.forClass(Path.class).forAllLocations(
+      (repo, repositoryLocation) -> deleteWorkDirs(getWorkDirectoryForRepositoryLocation(repositoryLocation))
+    );
+  }
+
+  private void deleteWorkDirs(File root) {
+    File[] workDirs = root.listFiles();
+    if (workDirs != null) {
+      LOG.info("deleting {} old work dirs in {}", workDirs.length, root);
+      Arrays.stream(workDirs)
+        .filter(File::isDirectory)
+        .forEach(IOUtil::deleteSilently);
     }
   }
 }

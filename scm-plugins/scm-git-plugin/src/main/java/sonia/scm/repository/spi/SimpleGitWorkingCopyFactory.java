@@ -70,7 +70,7 @@ public class SimpleGitWorkingCopyFactory extends SimpleWorkingCopyFactory<Reposi
   }
 
   @Override
-  protected void closeWorkingCopy(Repository workingCopy) throws Exception {
+  protected void closeWorkingCopy(Repository workingCopy) {
     if (workingCopy != null) {
       workingCopy.close();
     }

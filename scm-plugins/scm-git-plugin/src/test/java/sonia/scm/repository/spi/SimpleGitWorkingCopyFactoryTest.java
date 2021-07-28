@@ -35,6 +35,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import sonia.scm.repository.GitRepositoryConfig;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.GitTestHelper;
 import sonia.scm.repository.PreProcessorUtil;
@@ -150,6 +151,32 @@ public class SimpleGitWorkingCopyFactoryTest extends AbstractGitCommandTestBase 
   }
 
   @Test
+  public void shouldReclaimCleanDirectoryConfiguredDefaultBranch() throws Exception {
+    SimpleGitWorkingCopyFactory factory = new SimpleGitWorkingCopyFactory(new NoneCachingWorkingCopyPool(workdirProvider), new SimpleMeterRegistry());
+    File workdir = createExistingClone(factory);
+
+    GitContext context = createContext();
+    GitRepositoryConfig config = context.getConfig();
+    config.setDefaultBranch("master");
+    context.setConfig(config);
+    factory.reclaim(context, workdir, null);
+
+    assertBranchCheckedOutAndClean(workdir, "master");
+  }
+
+  @Test
+  public void shouldReclaimCleanDirectoryGloballyConfiguredDefaultBranch() throws Exception {
+    SimpleGitWorkingCopyFactory factory = new SimpleGitWorkingCopyFactory(new NoneCachingWorkingCopyPool(workdirProvider), new SimpleMeterRegistry());
+    File workdir = createExistingClone(factory);
+
+    GitContext context = createContext();
+    context.getGlobalConfig().setDefaultBranch("master");
+    factory.reclaim(context, workdir, null);
+
+    assertBranchCheckedOutAndClean(workdir, "master");
+  }
+
+  @Test
   public void shouldReclaimCleanDirectoryWithOtherBranch() throws Exception {
     SimpleGitWorkingCopyFactory factory = new SimpleGitWorkingCopyFactory(new NoneCachingWorkingCopyPool(workdirProvider), new SimpleMeterRegistry());
     File workdir = createExistingClone(factory);
@@ -192,6 +219,7 @@ public class SimpleGitWorkingCopyFactoryTest extends AbstractGitCommandTestBase 
     factory.reclaim(createContext(), workdir, "master");
 
     assertBranchCheckedOutAndClean(workdir, "master");
+    assertThat(newDirectory).doesNotExist();
   }
 
   public File createExistingClone(SimpleGitWorkingCopyFactory factory) throws Exception {

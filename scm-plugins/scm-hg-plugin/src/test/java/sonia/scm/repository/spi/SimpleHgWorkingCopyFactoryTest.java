@@ -24,12 +24,19 @@
 
 package sonia.scm.repository.spi;
 
+import com.aragost.javahg.BaseRepository;
 import com.aragost.javahg.Repository;
+import com.aragost.javahg.commands.BranchCommand;
+import com.aragost.javahg.commands.RemoveCommand;
+import com.aragost.javahg.commands.StatusCommand;
+import com.aragost.javahg.commands.results.StatusResult;
+import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import sonia.scm.repository.work.NoneCachingWorkingCopyPool;
 import sonia.scm.repository.work.SimpleCachingWorkingCopyPool;
 import sonia.scm.repository.work.WorkdirProvider;
 import sonia.scm.repository.work.WorkingCopy;
@@ -38,6 +45,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -46,6 +54,7 @@ public class SimpleHgWorkingCopyFactoryTest extends AbstractHgCommandTestBase {
 
   @Rule
   public TemporaryFolder temporaryFolder = new TemporaryFolder();
+  private MeterRegistry meterRegistry = new SimpleMeterRegistry();
 
   private WorkdirProvider workdirProvider;
 
@@ -54,7 +63,7 @@ public class SimpleHgWorkingCopyFactoryTest extends AbstractHgCommandTestBase {
   @Before
   public void bindScmProtocol() throws IOException {
     workdirProvider = new WorkdirProvider(temporaryFolder.newFolder(), repositoryLocationResolver, false);
-    workingCopyFactory = new SimpleHgWorkingCopyFactory(new SimpleCachingWorkingCopyPool(workdirProvider), new SimpleMeterRegistry()) {
+    workingCopyFactory = new SimpleHgWorkingCopyFactory(new SimpleCachingWorkingCopyPool(workdirProvider, meterRegistry), new SimpleMeterRegistry()) {
       @Override
       public void configure(com.aragost.javahg.commands.PullCommand pullCommand) {
         // we do not want to configure http hooks in this unit test
@@ -134,6 +143,95 @@ public class SimpleHgWorkingCopyFactoryTest extends AbstractHgCommandTestBase {
 
     WorkingCopy<Repository, Repository> cachedWorkingCopy = workingCopyFactory.createWorkingCopy(cmdContext, "default");
     assertThat(cachedWorkingCopy.getDirectory()).isEqualTo(initialDirectory);
-    assertThat(cachedWorkingCopy.getDirectory().toPath().resolve("newDir")).isEmptyDirectory();
+    assertThat(cachedWorkingCopy.getDirectory().toPath().resolve("newDir")).doesNotExist();
+  }
+
+  @Test
+  public void shouldReclaimCleanDirectoryWithSameBranch() throws Exception {
+    SimpleHgWorkingCopyFactory factory = new SimpleHgWorkingCopyFactory(new NoneCachingWorkingCopyPool(workdirProvider), new SimpleMeterRegistry());
+    File workdir = createExistingClone(factory);
+
+    factory.reclaim(cmdContext, workdir, "default");
+
+    assertBranchCheckedOutAndClean(workdir, "default");
+  }
+
+  @Test
+  public void shouldReclaimCleanDirectoryWithDefaultBranch() throws Exception {
+    SimpleHgWorkingCopyFactory factory = new SimpleHgWorkingCopyFactory(new NoneCachingWorkingCopyPool(workdirProvider), new SimpleMeterRegistry());
+    File workdir = createExistingClone(factory);
+
+    factory.reclaim(cmdContext, workdir, null);
+
+    assertBranchCheckedOutAndClean(workdir, "default");
+  }
+
+  @Test
+  public void shouldReclaimCleanDirectoryWithOtherBranch() throws Exception {
+    SimpleHgWorkingCopyFactory factory = new SimpleHgWorkingCopyFactory(new NoneCachingWorkingCopyPool(workdirProvider), new SimpleMeterRegistry());
+    File workdir = createExistingClone(factory);
+
+    factory.reclaim(cmdContext, workdir, "test-branch");
+
+    assertBranchCheckedOutAndClean(workdir, "test-branch");
+  }
+
+  @Test
+  public void shouldReclaimDirectoryWithDeletedFileInIndex() throws Exception {
+    SimpleHgWorkingCopyFactory factory = new SimpleHgWorkingCopyFactory(new NoneCachingWorkingCopyPool(workdirProvider), new SimpleMeterRegistry());
+    File workdir = createExistingClone(factory);
+
+    RemoveCommand.on(Repository.open(workdir)).execute("a.txt");
+
+    factory.reclaim(cmdContext, workdir, "default");
+
+    assertBranchCheckedOutAndClean(workdir, "default");
+  }
+
+  @Test
+  public void shouldReclaimDirectoryWithDeletedFileInDirectory() throws Exception {
+    SimpleHgWorkingCopyFactory factory = new SimpleHgWorkingCopyFactory(new NoneCachingWorkingCopyPool(workdirProvider), new SimpleMeterRegistry());
+    File workdir = createExistingClone(factory);
+
+    RemoveCommand.on(Repository.open(workdir)).execute("c");
+
+    factory.reclaim(cmdContext, workdir, "default");
+
+    assertBranchCheckedOutAndClean(workdir, "default");
+  }
+
+  @Test
+  public void shouldReclaimDirectoryWithAdditionalFileInDirectory() throws Exception {
+    SimpleHgWorkingCopyFactory factory = new SimpleHgWorkingCopyFactory(new NoneCachingWorkingCopyPool(workdirProvider), new SimpleMeterRegistry());
+    File workdir = createExistingClone(factory);
+
+    Path newDirectory = workdir.toPath().resolve("new");
+    Files.createDirectories(newDirectory);
+    Files.createFile(newDirectory.resolve("newFile"));
+
+    factory.reclaim(cmdContext, workdir, "default");
+
+    assertBranchCheckedOutAndClean(workdir, "default");
+    assertThat(newDirectory).doesNotExist();
+  }
+
+  private void assertBranchCheckedOutAndClean(File workdir, String expectedBranch) {
+    BaseRepository repository = Repository.open(workdir);
+    StatusResult statusResult = StatusCommand.on(repository).execute();
+    assertThat(statusResult.getAdded()).isEmpty();
+    assertThat(statusResult.getCopied()).isEmpty();
+    assertThat(statusResult.getIgnored()).isEmpty();
+    assertThat(statusResult.getMissing()).isEmpty();
+    assertThat(statusResult.getModified()).isEmpty();
+    assertThat(statusResult.getRemoved()).isEmpty();
+    assertThat(statusResult.getUnknown()).isEmpty();
+    assertThat(BranchCommand.on(repository).get()).isEqualTo(expectedBranch);
+  }
+
+  public File createExistingClone(SimpleHgWorkingCopyFactory factory) throws Exception {
+    File workdir = temporaryFolder.newFolder();
+    extract(workdir, "sonia/scm/repository/spi/scm-hg-spi-workdir-test.zip");
+    Files.write(workdir.toPath().resolve(".hg").resolve("hgrc"), Arrays.asList("[paths]", "default = " + repositoryDirectory.getAbsolutePath()));
+    return workdir;
   }
 }
