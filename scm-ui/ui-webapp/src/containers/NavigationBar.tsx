@@ -29,7 +29,7 @@ import { devices, Logo, PrimaryNavigation } from "@scm-manager/ui-components";
 import Notifications from "./Notifications";
 import OmniSearch from "./OmniSearch";
 import LogoutButton from "./LogoutButton";
-import LoginButtonExtensionWrapper from "./LoginButtonExtensionWrapper";
+import LoginButton from "./LoginButton";
 
 const StyledMenuBar = styled.div`
   background-color: transparent !important;
@@ -153,7 +153,7 @@ const NavigationBar: FC<Props> = ({ links }) => {
         </div>
         <div className="navbar-end">
           <LogoutButton burgerMode={burgerActive} links={links} />
-          <LoginButtonExtensionWrapper burgerMode={burgerActive} links={links} />
+          <LoginButton burgerMode={burgerActive} links={links} />
         </div>
       </StyledMenuBar>
     </StyledNavBar>
