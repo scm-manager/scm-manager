@@ -26,6 +26,7 @@ import React from "react";
 import {
   Branch,
   IndexResources,
+  Links,
   NamespaceStrategies,
   Repository,
   RepositoryCreation,
@@ -80,4 +81,31 @@ export type ReposSourcesEmptyActionbarExtension = ReposSourcesActionbarExtension
 export type ReposSourcesEmptyActionbar = ExtensionPointDefinition<
   "repos.sources.empty.actionbar",
   ReposSourcesEmptyActionbarExtension
+>;
+
+export type PrimaryNavigationLoginButtonProps = {
+  links: Links;
+  label: string;
+  loginUrl: string;
+  from: string;
+  to: string;
+  className: string;
+  content: React.ReactNode;
+};
+
+export type PrimaryNavigationLoginButtonExtension = ExtensionPointDefinition<
+  "primary-navigation.login",
+  PrimaryNavigationLoginButtonProps
+>;
+
+export type PrimaryNavigationLogoutButtonProps = {
+  links: Links;
+  label: string;
+  className: string;
+  content: React.ReactNode;
+};
+
+export type PrimaryNavigationLogoutButtonExtension = ExtensionPointDefinition<
+  "primary-navigation.logout",
+  PrimaryNavigationLogoutButtonProps
 >;

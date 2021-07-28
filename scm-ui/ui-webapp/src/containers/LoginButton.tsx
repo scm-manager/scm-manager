@@ -23,62 +23,63 @@
  */
 
 import React, { FC } from "react";
-import { devices, Icon } from "@scm-manager/ui-components";
-import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
+import { urls } from "@scm-manager/ui-components";
+import { binder, ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import { useTranslation } from "react-i18next";
 import { Links } from "@scm-manager/ui-types";
+import { useLocation } from "react-router-dom";
 import classNames from "classnames";
+import HeaderButton from "../components/HeaderButton";
 import { Link } from "react-router-dom";
-import styled from "styled-components";
+import HeaderButtonContent, { headerButtonContentClassName } from "../components/HeaderButtonContent";
 
 type Props = {
   className?: string;
-  links?: Links;
+  links: Links;
   burgerMode: boolean;
 };
 
-const StyledLogoutButton = styled(Link)`
-  @media screen and (max-width: ${devices.desktop.width - 1}px) {
-    border-top: 1px solid white;
-    margin-top: 1rem;
-    padding-top: 1rem;
-    padding-bottom: 1rem;
-  }
-
-  @media screen and (min-width: ${devices.desktop.width}px) {
-    margin-left: 2rem;
-  }
-`;
-
 const LoginButton: FC<Props> = ({ burgerMode, links, className }) => {
   const [t] = useTranslation("commons");
+  const location = useLocation();
 
-  const extensionProps = {
+  const from = location.pathname;
+  const loginPath = "/login";
+
+  const label = t("primary-navigation.login");
+
+  const to = `${loginPath}?from=${encodeURIComponent(from)}`;
+
+  const content = <HeaderButtonContent burgerMode={burgerMode} label={label} icon="sign-in-alt" />;
+
+  const extensionProps: extensionPoints.PrimaryNavigationLoginButtonProps = {
     links,
-    label: t("primary-navigation.login"),
+    label,
+    loginUrl: urls.withContextPath(loginPath),
+    from,
+    to,
+    className: headerButtonContentClassName,
+    content,
   };
 
   if (links?.login) {
-    if (binder.hasExtension("primary-navigation.login", extensionProps)) {
-      return <ExtensionPoint key="primary-navigation.login" name="primary-navigation.login" props={extensionProps} />;
-    } else {
-      return (
-        <StyledLogoutButton
-          data-testid="primary-navigation-login"
-          to={"/login"}
-          className={classNames("is-align-items-center", "navbar-item", className)}
-        >
-          <Icon
-            title={t("primary-navigation.login")}
-            name="sign-in-alt"
-            color="white"
-            className={burgerMode ? "is-size-5" : "is-size-4"}
-          />
-          {" " + t("primary-navigation.login")}
-        </StyledLogoutButton>
-      );
-    }
+    const shouldRenderExtension = binder.hasExtension("primary-navigation.login", extensionProps);
+    return (
+      <HeaderButton
+        data-testid="primary-navigation-login"
+        className={classNames("is-flex-start", "navbar-item", className)}
+      >
+        {shouldRenderExtension ? (
+          <ExtensionPoint name="primary-navigation.login" props={extensionProps} />
+        ) : (
+          <Link to={to} className={headerButtonContentClassName}>
+            {content}
+          </Link>
+        )}
+      </HeaderButton>
+    );
   }
+
   return null;
 };
 

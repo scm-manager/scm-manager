@@ -23,61 +23,51 @@
  */
 
 import React, { FC } from "react";
-import { devices, Icon } from "@scm-manager/ui-components";
-import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
+import { binder, ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import { useTranslation } from "react-i18next";
 import { Links } from "@scm-manager/ui-types";
 import classNames from "classnames";
+import HeaderButtonContent, { headerButtonContentClassName } from "../components/HeaderButtonContent";
+import HeaderButton from "../components/HeaderButton";
 import { Link } from "react-router-dom";
-import styled from "styled-components";
 
 type Props = {
   className?: string;
-  links?: Links;
+  links: Links;
   burgerMode: boolean;
 };
-
-const StyledLogoutButton = styled(Link)`
-  @media screen and (max-width: ${devices.desktop.width}px -1 ) {
-    border-top: 1px solid white;
-    margin-top: 1rem;
-    padding-top: 1rem;
-    padding-bottom: 1rem;
-  }
-
-  @media screen and (min-width: ${devices.desktop.width}px) {
-    margin-left: 2rem;
-  }
-`;
 
 const LogoutButton: FC<Props> = ({ burgerMode, links, className }) => {
   const [t] = useTranslation("commons");
 
-  const extensionProps = {
+  const label = t("primary-navigation.logout");
+  const content = <HeaderButtonContent burgerMode={burgerMode} label={label} icon="sign-out-alt" />;
+
+  const extensionProps: extensionPoints.PrimaryNavigationLogoutButtonProps = {
     links,
-    label: t("primary-navigation.logout"),
+    label,
+
+    className: headerButtonContentClassName,
+    content,
   };
 
   if (links?.logout) {
-    if (binder.hasExtension("primary-navigation.logout", extensionProps)) {
-      return <ExtensionPoint key="primary-navigation.logout" name="primary-navigation.logout" props={extensionProps} />;
-    } else {
-      return (
-        <StyledLogoutButton
-          data-testid="primary-navigation-logout"
-          to={"/logout"}
-          className={classNames("is-align-items-center", "navbar-item", className)}
-        >
-          <Icon
-            title={t("primary-navigation.logout")}
-            name="sign-out-alt"
-            color="white"
-            className={burgerMode ? "is-size-5" : "is-size-4"}
-          />
-          {" " + t("primary-navigation.logout")}
-        </StyledLogoutButton>
-      );
-    }
+    const shouldRenderExtension = binder.hasExtension("primary-navigation.logout", extensionProps);
+
+    return (
+      <HeaderButton
+        data-testid="primary-navigation-logout"
+        className={classNames("is-flex-start", "navbar-item", className)}
+      >
+        {shouldRenderExtension ? (
+          <ExtensionPoint name="primary-navigation.logout" props={extensionProps} />
+        ) : (
+          <Link to="/logout" className={headerButtonContentClassName}>
+            {content}
+          </Link>
+        )}
+      </HeaderButton>
+    );
   }
   return null;
 };
