@@ -23,47 +23,20 @@
  */
 
 import React, { FC } from "react";
-import { devices, Icon, urls } from "@scm-manager/ui-components";
-import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
+import { urls } from "@scm-manager/ui-components";
+import { binder, ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import { useTranslation } from "react-i18next";
 import { Links } from "@scm-manager/ui-types";
-import { Link, useLocation } from "react-router-dom";
-import styled from "styled-components";
+import { useLocation } from "react-router-dom";
 import classNames from "classnames";
+import HeaderButton from "../components/HeaderButton";
+import { Link } from "react-router-dom";
+import HeaderButtonContent, { headerButtonContentClassName } from "../components/HeaderButtonContent";
 
 type Props = {
   className?: string;
-  links?: Links;
+  links: Links;
   burgerMode: boolean;
-};
-
-export const StyledHeaderButton = styled.div`
-  @media screen and (max-width: ${devices.desktop.width - 1}px) {
-    border-top: 1px solid white;
-    margin-top: 1rem;
-    padding-top: 1rem;
-    padding-bottom: 1rem;
-  }
-
-  @media screen and (min-width: ${devices.desktop.width}px) {
-    margin-left: 2rem;
-  }
-`;
-
-const DefaultLoginLink: FC<{ burgerMode: boolean; to: string }> = ({ to, burgerMode }) => {
-  const [t] = useTranslation("commons");
-
-  return (
-    <Link to={to} className="is-flex is-align-items-center is-justify-content-flex-start">
-      <Icon
-        title={t("primary-navigation.login")}
-        name="sign-in-alt"
-        color="white"
-        className={burgerMode ? "is-size-5" : "is-size-4"}
-      />
-      <span className="has-text-white">{" " + t("primary-navigation.login")}</span>
-    </Link>
-  );
 };
 
 const LoginButton: FC<Props> = ({ burgerMode, links, className }) => {
@@ -73,31 +46,37 @@ const LoginButton: FC<Props> = ({ burgerMode, links, className }) => {
   const from = location.pathname;
   const loginPath = "/login";
 
-  const shouldRenderExtension = () => {
-    return binder.hasExtension("primary-navigation.login", extensionProps);
-  };
+  const label = t("primary-navigation.login");
 
   const to = `${loginPath}?from=${encodeURIComponent(from)}`;
-  const extensionProps = {
+
+  const content = <HeaderButtonContent burgerMode={burgerMode} label={label} icon="sign-in-alt" />;
+
+  const extensionProps: extensionPoints.PrimaryNavigationLoginButtonProps = {
     links,
-    label: t("primary-navigation.login"),
+    label,
     loginUrl: urls.withContextPath(loginPath),
     from,
     to,
+    className: headerButtonContentClassName,
+    content,
   };
 
   if (links?.login) {
+    const shouldRenderExtension = binder.hasExtension("primary-navigation.login", extensionProps);
     return (
-      <StyledHeaderButton
+      <HeaderButton
         data-testid="primary-navigation-login"
         className={classNames("is-flex-start", "navbar-item", className)}
       >
-        {shouldRenderExtension() ? (
-          <ExtensionPoint key="primary-navigation.login" name="primary-navigation.login" props={extensionProps} />
+        {shouldRenderExtension ? (
+          <ExtensionPoint name="primary-navigation.login" props={extensionProps} />
         ) : (
-          <DefaultLoginLink to={to} burgerMode={burgerMode} />
+          <Link to={to} className={headerButtonContentClassName}>
+            {content}
+          </Link>
         )}
-      </StyledHeaderButton>
+      </HeaderButton>
     );
   }
 

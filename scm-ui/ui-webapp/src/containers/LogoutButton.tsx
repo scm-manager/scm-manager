@@ -23,60 +23,50 @@
  */
 
 import React, { FC } from "react";
-import { Icon } from "@scm-manager/ui-components";
-import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
+import { binder, ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import { useTranslation } from "react-i18next";
 import { Links } from "@scm-manager/ui-types";
 import classNames from "classnames";
+import HeaderButtonContent, { headerButtonContentClassName } from "../components/HeaderButtonContent";
+import HeaderButton from "../components/HeaderButton";
 import { Link } from "react-router-dom";
-import { StyledHeaderButton } from "./LoginButton";
 
 type Props = {
   className?: string;
-  links?: Links;
+  links: Links;
   burgerMode: boolean;
-};
-
-const DefaultLogoutLink: FC<{ burgerMode: boolean }> = ({ burgerMode }) => {
-  const [t] = useTranslation("commons");
-
-  return (
-    <Link to={"/logout"} className="is-flex is-align-items-center is-justify-content-flex-start">
-      <Icon
-        title={t("primary-navigation.logout")}
-        name="sign-out-alt"
-        color="white"
-        className={burgerMode ? "is-size-5" : "is-size-4"}
-      />
-      <span className="has-text-white">{" " + t("primary-navigation.logout")}</span>
-    </Link>
-  );
 };
 
 const LogoutButton: FC<Props> = ({ burgerMode, links, className }) => {
   const [t] = useTranslation("commons");
 
-  const shouldRenderExtension = () => {
-    return binder.hasExtension("primary-navigation.logout", extensionProps);
-  };
+  const label = t("primary-navigation.logout");
+  const content = <HeaderButtonContent burgerMode={burgerMode} label={label} icon="sign-out-alt" />;
 
-  const extensionProps = {
+  const extensionProps: extensionPoints.PrimaryNavigationLogoutButtonProps = {
     links,
-    label: t("primary-navigation.logout"),
+    label,
+
+    className: headerButtonContentClassName,
+    content,
   };
 
   if (links?.logout) {
+    const shouldRenderExtension = binder.hasExtension("primary-navigation.logout", extensionProps);
+
     return (
-      <StyledHeaderButton
+      <HeaderButton
         data-testid="primary-navigation-logout"
         className={classNames("is-flex-start", "navbar-item", className)}
       >
-        {shouldRenderExtension() ? (
-          <ExtensionPoint key="primary-navigation.logout" name="primary-navigation.logout" props={extensionProps} />
+        {shouldRenderExtension ? (
+          <ExtensionPoint name="primary-navigation.logout" props={extensionProps} />
         ) : (
-          <DefaultLogoutLink burgerMode={burgerMode} />
+          <Link to="/logout" className={headerButtonContentClassName}>
+            {content}
+          </Link>
         )}
-      </StyledHeaderButton>
+      </HeaderButton>
     );
   }
   return null;
