@@ -40,7 +40,7 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class HandlerEventsTest {
+class HandlerEventIndexSyncerTest {
 
   @Mock
   private Indexer<Repository> indexer;
@@ -53,7 +53,7 @@ class HandlerEventsTest {
   void shouldIgnoreBeforeEvents(HandlerEventType type) {
     RepositoryEvent event = new RepositoryEvent(type, RepositoryTestData.create42Puzzle());
 
-    HandlerEvents.handleEvent(indexer, event);
+    HandlerEventIndexSyncer.handleEvent(indexer, event);
 
     verifyNoInteractions(indexer);
   }
@@ -66,7 +66,7 @@ class HandlerEventsTest {
     Repository puzzle = RepositoryTestData.create42Puzzle();
     RepositoryEvent event = new RepositoryEvent(type, puzzle);
 
-    HandlerEvents.handleEvent(indexer, event);
+    HandlerEventIndexSyncer.handleEvent(indexer, event);
 
     verify(updater).store(puzzle);
     verify(updater).close();
@@ -79,7 +79,7 @@ class HandlerEventsTest {
     Repository puzzle = RepositoryTestData.create42Puzzle();
     RepositoryEvent event = new RepositoryEvent(HandlerEventType.DELETE, puzzle);
 
-    HandlerEvents.handleEvent(indexer, event);
+    HandlerEventIndexSyncer.handleEvent(indexer, event);
 
     verify(updater).delete(puzzle);
     verify(updater).close();

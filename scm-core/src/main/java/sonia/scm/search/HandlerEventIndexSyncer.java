@@ -32,9 +32,9 @@ import sonia.scm.event.HandlerEvent;
  *
  * @since 2.22.0
  */
-public final class HandlerEvents {
+public final class HandlerEventIndexSyncer {
 
-  private HandlerEvents() {
+  private HandlerEventIndexSyncer() {
   }
 
   /**

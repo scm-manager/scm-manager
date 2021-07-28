@@ -29,11 +29,11 @@ import sonia.scm.plugin.ExtensionPoint;
 /**
  * Indexer for a specific type.
  * Note: An implementation of the indexer creates only a bootstrap index.
- * To keep the index in sync you have to implement a subscriber, see {@link HandlerEvents}.
+ * To keep the index in sync you have to implement a subscriber, see {@link HandlerEventIndexSyncer}.
  *
  * @param <T> type to index
  * @since 2.22.0
- * @see HandlerEvents
+ * @see HandlerEventIndexSyncer
  */
 @ExtensionPoint
 public interface Indexer<T> {

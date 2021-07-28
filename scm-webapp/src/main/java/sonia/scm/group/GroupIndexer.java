@@ -27,7 +27,7 @@ package sonia.scm.group;
 import com.github.legman.Subscribe;
 import com.google.common.annotations.VisibleForTesting;
 import sonia.scm.plugin.Extension;
-import sonia.scm.search.HandlerEvents;
+import sonia.scm.search.HandlerEventIndexSyncer;
 import sonia.scm.search.Id;
 import sonia.scm.search.Index;
 import sonia.scm.search.IndexNames;
@@ -72,7 +72,7 @@ public class GroupIndexer implements Indexer<Group> {
 
   @Subscribe(async = false)
   public void handleEvent(GroupEvent event) {
-    HandlerEvents.handleEvent(this, event);
+    HandlerEventIndexSyncer.handleEvent(this, event);
   }
 
   @Override
