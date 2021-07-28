@@ -186,6 +186,21 @@ class Test_File_Viewer(unittest.TestCase):
     d = collector[0][1]
     self.assertDirectory(d, "d")
 
+  # https://github.com/scm-manager/scm-manager/issues/1719
+  def test_with_folder_and_file_same_name(self):
+    files = ["folder/ThisIsIt/ThisIsIt.sln", "folder/ThisIsIt/ThisIsIt/ThisIsIt.csproj"]
+    root = self.collect(files)
+    self.assertChildren(root, ["folder"])
+
+    root = self.collect(files, "folder")
+    self.assertChildren(root, ["folder/ThisIsIt"])
+
+    root = self.collect(files, "folder/ThisIsIt")
+    self.assertChildren(root, ["folder/ThisIsIt/ThisIsIt", "folder/ThisIsIt/ThisIsIt.sln"])
+
+    root = self.collect(files, "folder/ThisIsIt/ThisIsIt")
+    self.assertChildren(root, ["folder/ThisIsIt/ThisIsIt/ThisIsIt.csproj"])
+
 
   def collect(self, paths, path = "", recursive = False):
     revCtx = DummyRevContext(paths)
