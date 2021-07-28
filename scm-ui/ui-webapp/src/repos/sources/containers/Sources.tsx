@@ -26,7 +26,7 @@ import { useTranslation } from "react-i18next";
 import { useHistory, useLocation, useParams } from "react-router-dom";
 import { useSources } from "@scm-manager/ui-api";
 import { Branch, Repository } from "@scm-manager/ui-types";
-import { Breadcrumb, Loading, Notification } from "@scm-manager/ui-components";
+import { Breadcrumb, ErrorNotification, Loading, Notification } from "@scm-manager/ui-components";
 import FileTree from "../components/FileTree";
 import Content from "./Content";
 import CodeActionBar from "../../codeSection/components/CodeActionBar";
@@ -79,6 +79,10 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
     // expect if we have no branches (svn)
     enabled: !branches || !!selectedBranch,
   });
+
+  if (error) {
+    return <ErrorNotification error={error} />;
+  }
 
   if (isLoading || (!error && !file)) {
     return <Loading />;

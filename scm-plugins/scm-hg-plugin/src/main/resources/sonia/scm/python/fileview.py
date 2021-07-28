@@ -58,7 +58,7 @@ class File_Collector:
 
   def collect(self, paths, path = "", dir_only = False):
     for p in paths:
-      if p.startswith(path):
+      if p.startswith(path + b"/") or path == b"":
         self.attach(self.extract_name_without_parent(path, p), self.structure, dir_only)
 
   def attach(self, branch, trunk, dir_only = False):
