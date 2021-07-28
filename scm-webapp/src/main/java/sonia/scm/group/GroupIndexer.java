@@ -72,7 +72,7 @@ public class GroupIndexer implements Indexer<Group> {
 
   @Subscribe(async = false)
   public void handleEvent(GroupEvent event) {
-    HandlerEventIndexSyncer.handleEvent(this, event);
+    new HandlerEventIndexSyncer<>(this).handleEvent(event);
   }
 
   @Override

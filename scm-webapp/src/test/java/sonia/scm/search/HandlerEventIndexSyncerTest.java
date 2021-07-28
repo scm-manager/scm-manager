@@ -53,7 +53,7 @@ class HandlerEventIndexSyncerTest {
   void shouldIgnoreBeforeEvents(HandlerEventType type) {
     RepositoryEvent event = new RepositoryEvent(type, RepositoryTestData.create42Puzzle());
 
-    HandlerEventIndexSyncer.handleEvent(indexer, event);
+    new HandlerEventIndexSyncer<>(indexer).handleEvent(event);
 
     verifyNoInteractions(indexer);
   }
@@ -66,7 +66,7 @@ class HandlerEventIndexSyncerTest {
     Repository puzzle = RepositoryTestData.create42Puzzle();
     RepositoryEvent event = new RepositoryEvent(type, puzzle);
 
-    HandlerEventIndexSyncer.handleEvent(indexer, event);
+    new HandlerEventIndexSyncer<>(indexer).handleEvent(event);
 
     verify(updater).store(puzzle);
     verify(updater).close();
@@ -79,7 +79,7 @@ class HandlerEventIndexSyncerTest {
     Repository puzzle = RepositoryTestData.create42Puzzle();
     RepositoryEvent event = new RepositoryEvent(HandlerEventType.DELETE, puzzle);
 
-    HandlerEventIndexSyncer.handleEvent(indexer, event);
+    new HandlerEventIndexSyncer<>(indexer).handleEvent(event);
 
     verify(updater).delete(puzzle);
     verify(updater).close();

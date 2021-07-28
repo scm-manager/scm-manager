@@ -72,7 +72,7 @@ public class UserIndexer implements Indexer<User> {
 
   @Subscribe(async = false)
   public void handleEvent(UserEvent event) {
-    HandlerEventIndexSyncer.handleEvent(this, event);
+    new HandlerEventIndexSyncer<>(this).handleEvent(event);
   }
 
   @Override

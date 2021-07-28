@@ -30,28 +30,30 @@ import sonia.scm.event.HandlerEvent;
 /**
  * Keep index in sync with {@link HandlerEvent}.
  *
+ * @param <T> type of indexed item
  * @since 2.22.0
  */
-public final class HandlerEventIndexSyncer {
+public final class HandlerEventIndexSyncer<T> {
 
-  private HandlerEventIndexSyncer() {
+  private final Indexer<T> indexer;
+
+  public HandlerEventIndexSyncer(Indexer<T> indexer) {
+    this.indexer = indexer;
   }
 
   /**
    * Update index based on {@link HandlerEvent}.
    *
-   * @param indexer indexer
    * @param event handler event
-   * @param <T> type of item
    */
-  public static <T> void handleEvent(Indexer<T> indexer, HandlerEvent<T> event) {
+  public void handleEvent(HandlerEvent<T> event) {
     HandlerEventType type = event.getEventType();
     if (type.isPost()) {
-      updateIndex(indexer, type, event.getItem());
+      updateIndex(type, event.getItem());
     }
   }
 
-  private static <T> void updateIndex(Indexer<T> indexer, HandlerEventType type, T item) {
+  private void updateIndex(HandlerEventType type, T item) {
     try (Indexer.Updater<T> updater = indexer.open()) {
       if (type == HandlerEventType.DELETE) {
         updater.delete(item);

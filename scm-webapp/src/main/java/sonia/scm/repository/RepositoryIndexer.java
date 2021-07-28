@@ -73,7 +73,7 @@ public class RepositoryIndexer implements Indexer<Repository> {
 
   @Subscribe(async = false)
   public void handleEvent(RepositoryEvent event) {
-    HandlerEventIndexSyncer.handleEvent(this, event);
+    new HandlerEventIndexSyncer<>(this).handleEvent(event);
   }
 
   @Override
