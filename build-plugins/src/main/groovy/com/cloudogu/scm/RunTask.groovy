@@ -27,11 +27,10 @@ package com.cloudogu.scm
 
 import com.moowork.gradle.node.yarn.YarnTask
 import org.gradle.api.DefaultTask
-import org.gradle.api.tasks.JavaExec
-import org.gradle.api.tasks.Nested
-import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.TaskAction
 import org.gradle.api.GradleException
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.Nested
+import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.options.Option
 
 class RunTask extends DefaultTask {
@@ -109,7 +108,7 @@ class RunTask extends DefaultTask {
         args(new File(project.buildDir, 'server/config.json').toString())
         environment 'NODE_ENV', 'development'
         classpath project.buildscript.configurations.classpath
-        systemProperties = ["user.home": extension.getHome(), "scm.initialPassword": "scmadmin"]
+        systemProperties = ["user.home": extension.getHome(), "scm.initialPassword": "scmadmin", "scm.workingCopyPoolStrategy": "sonia.scm.repository.work.SimpleCachingWorkingCopyPool"]
         if (debugJvm) {
           debug = true
           debugOptions {
