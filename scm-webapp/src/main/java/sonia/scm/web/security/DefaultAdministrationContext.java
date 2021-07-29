@@ -174,7 +174,7 @@ public class DefaultAdministrationContext implements AdministrationContext
       state.bind();
       try
       {
-        logger.info("execute action {} in administration context", action.getClass().getName());
+        logger.debug("execute action {} in administration context", action.getClass().getName());
 
         action.run();
       } finally {
@@ -211,8 +211,7 @@ public class DefaultAdministrationContext implements AdministrationContext
         username = SCMContext.USER_ANONYMOUS;
       }
 
-      logger.info("user {} executes {} as admin", username,
-        action.getClass().getName());
+      logger.debug("user {} executes {} as admin", username, action.getClass().getName());
     }
 
     Subject adminSubject = createAdminSubject();
