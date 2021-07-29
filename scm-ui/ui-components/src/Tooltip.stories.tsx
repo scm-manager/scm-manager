@@ -27,7 +27,7 @@ import * as React from "react";
 import { ReactNode } from "react";
 import { MemoryRouter } from "react-router-dom";
 import { storiesOf } from "@storybook/react";
-import Tooltip from "./Tooltip";
+import Tooltip, { TooltipLocation } from "./Tooltip";
 import Button from "./buttons/Button";
 
 const Wrapper = styled.div`
@@ -41,7 +41,7 @@ const Spacing = styled.div`
   margin: 0 auto;
 `;
 
-const positions = ["right", "top", "left", "bottom"];
+const positions: TooltipLocation[] = ["right", "top", "left", "bottom"];
 
 const message = "Heart of Gold";
 
@@ -64,7 +64,7 @@ storiesOf("Tooltip", module)
   .addDecorator(RoutingDecorator)
   .add("Default", () => (
     <Wrapper>
-      {positions.map(position => (
+      {positions.map((position) => (
         <Spacing>
           <Tooltip message={message} location={position}>
             <Button label={position} color="info" />{" "}
@@ -75,7 +75,7 @@ storiesOf("Tooltip", module)
   ))
   .add("Multiline", () => (
     <Wrapper>
-      {positions.map(position => (
+      {positions.map((position) => (
         <Spacing>
           <Tooltip message={mutltiline} location={position}>
             <Button label={position} color="info" />{" "}
@@ -86,7 +86,7 @@ storiesOf("Tooltip", module)
   ))
   .add("Short Multiline", () => (
     <Wrapper>
-      {positions.map(position => (
+      {positions.map((position) => (
         <Spacing>
           <Tooltip message={shortMultiline} location={position}>
             <Button label={position} color="info" />{" "}

@@ -72600,7 +72600,7 @@ exports[`Storyshots RepositoryEntry Archived 1`] = `
           className="GroupEntry__Avatar-sc-1f902yu-2 jgyqDs"
         >
           <div
-            className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-64x64"
+            className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-48x48"
           >
             <img
               alt="Logo"
@@ -72704,7 +72704,7 @@ exports[`Storyshots RepositoryEntry Avatar EP 1`] = `
           className="GroupEntry__Avatar-sc-1f902yu-2 jgyqDs"
         >
           <div
-            className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-64x64"
+            className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-48x48"
           >
             <img
               alt="Logo"
@@ -72797,7 +72797,7 @@ exports[`Storyshots RepositoryEntry Before Title EP 1`] = `
           className="GroupEntry__Avatar-sc-1f902yu-2 jgyqDs"
         >
           <div
-            className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-64x64"
+            className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-48x48"
           >
             <img
               alt="Logo"
@@ -72893,7 +72893,7 @@ exports[`Storyshots RepositoryEntry Default 1`] = `
           className="GroupEntry__Avatar-sc-1f902yu-2 jgyqDs"
         >
           <div
-            className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-64x64"
+            className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-48x48"
           >
             <img
               alt="Logo"
@@ -72986,7 +72986,7 @@ exports[`Storyshots RepositoryEntry Exporting 1`] = `
           className="GroupEntry__Avatar-sc-1f902yu-2 jgyqDs"
         >
           <div
-            className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-64x64"
+            className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-48x48"
           >
             <img
               alt="Logo"
@@ -73090,7 +73090,7 @@ exports[`Storyshots RepositoryEntry HealthCheck Failure 1`] = `
           className="GroupEntry__Avatar-sc-1f902yu-2 jgyqDs"
         >
           <div
-            className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-64x64"
+            className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-48x48"
           >
             <img
               alt="Logo"
@@ -73195,7 +73195,7 @@ exports[`Storyshots RepositoryEntry MultiRepositoryTags 1`] = `
           className="GroupEntry__Avatar-sc-1f902yu-2 jgyqDs"
         >
           <div
-            className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-64x64"
+            className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-48x48"
           >
             <img
               alt="Logo"
@@ -73309,7 +73309,7 @@ exports[`Storyshots RepositoryEntry RepositoryFlag EP 1`] = `
           className="GroupEntry__Avatar-sc-1f902yu-2 jgyqDs"
         >
           <div
-            className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-64x64"
+            className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-48x48"
           >
             <img
               alt="Logo"
@@ -73414,7 +73414,7 @@ exports[`Storyshots RepositoryEntry With long texts 1`] = `
           className="GroupEntry__Avatar-sc-1f902yu-2 jgyqDs"
         >
           <div
-            className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-64x64"
+            className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-48x48"
           >
             <img
               alt="Logo"
