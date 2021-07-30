@@ -28,6 +28,7 @@ import de.otto.edison.hal.Link;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.io.DefaultContentTypeResolver;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.DiffFile;
 import sonia.scm.repository.api.DiffLine;
@@ -52,7 +53,7 @@ class DiffResultToDiffResultDtoMapperTest {
   private static final Repository REPOSITORY = new Repository("1", "git", "space", "X");
 
   ResourceLinks resourceLinks = ResourceLinksMock.createMock(create("/scm/api/v2"));
-  DiffResultToDiffResultDtoMapper mapper = new DiffResultToDiffResultDtoMapper(resourceLinks);
+  DiffResultToDiffResultDtoMapper mapper = new DiffResultToDiffResultDtoMapper(resourceLinks, new DefaultContentTypeResolver());
 
   @Test
   void shouldMapDiffResult() {
@@ -62,8 +63,8 @@ class DiffResultToDiffResultDtoMapperTest {
     assertAddedFile(files.get(0), "A.java", "abc", "java");
     assertModifiedFile(files.get(1), "B.ts", "abc", "def", "typescript");
     assertDeletedFile(files.get(2), "C.go", "ghi", "golang");
-    assertRenamedFile(files.get(3), "typo.ts", "okay.ts", "def",  "fixed", "typescript");
-    assertCopiedFile(files.get(4), "good.ts", "better.ts", "def",  "fixed", "typescript");
+    assertRenamedFile(files.get(3), "typo.ts", "okay.ts", "def", "fixed", "typescript");
+    assertCopiedFile(files.get(4), "good.ts", "better.ts", "def", "fixed", "typescript");
 
     DiffResultDto.HunkDto hunk = files.get(1).getHunks().get(0);
     assertHunk(hunk, "@@ -3,4 1,2 @@", 1, 2, 3, 4);

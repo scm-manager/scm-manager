@@ -22,30 +22,31 @@
  * SOFTWARE.
  */
 
-package sonia.scm.api.v2;
+package sonia.scm.io;
 
-import com.github.sdorra.spotter.ContentType;
-import com.github.sdorra.spotter.ContentTypeDetector;
-import com.github.sdorra.spotter.Language;
+/**
+ * ContentTypeResolver is able to detect the {@link ContentType} of content.
+ *
+ * @since 2.23.0
+ */
+public interface ContentTypeResolver {
 
-public final class ContentTypeResolver {
+  /**
+   * Detects the {@link ContentType} of the given path, by only using path based strategies..
+   *
+   * @param path path of the content
+   *
+   * @return {@link ContentType} of path
+   */
+  ContentType resolve(String path);
 
-  private static final ContentTypeDetector PATH_BASED = ContentTypeDetector.builder()
-    .defaultPathBased().boost(Language.MARKDOWN)
-    .bestEffortMatch();
-
-  private static final ContentTypeDetector PATH_AND_CONTENT_BASED = ContentTypeDetector.builder()
-    .defaultPathAndContentBased().boost(Language.MARKDOWN)
-    .bestEffortMatch();
-
-  private ContentTypeResolver() {
-  }
-
-  public static ContentType resolve(String path) {
-    return PATH_BASED.detect(path);
-  }
-
-  public static ContentType resolve(String path, byte[] contentPrefix) {
-    return PATH_AND_CONTENT_BASED.detect(path, contentPrefix);
-  }
+  /**
+   * Detects the {@link ContentType} of the given path, by using path and content based strategies.
+   *
+   * @param path path of the content
+   * @param contentPrefix first few bytes of the content
+   *
+   * @return {@link ContentType} of path and content prefix
+   */
+  ContentType resolve(String path, byte[] contentPrefix);
 }

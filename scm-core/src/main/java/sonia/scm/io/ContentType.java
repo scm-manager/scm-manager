@@ -22,12 +22,50 @@
  * SOFTWARE.
  */
 
-package sonia.scm.api.v2.resources;
+package sonia.scm.io;
 
-final class ProgrammingLanguages {
+import java.util.Optional;
 
-  static final String HEADER = "X-Programming-Language";
+/**
+ * Detected type of content.
+ *
+ * @since 2.23.0
+ */
+public interface ContentType {
 
-  private ProgrammingLanguages() {
-  }
+  /**
+   * Returns the primary part of the content type (e.g.: text of text/plain).
+   *
+   * @return primary content type part
+   */
+  String getPrimary();
+
+  /**
+   * Returns the secondary part of the content type (e.g.: plain of text/plain).
+   *
+   * @return secondary content type part
+   */
+  String getSecondary();
+
+  /**
+   * Returns the raw presentation of the content type (e.g.: text/plain).
+   *
+   * @return raw presentation
+   */
+  String getRaw();
+
+  /**
+   * Returns {@code true} if the content type is text based.
+   *
+   * @return {@code true} for text content
+   */
+  boolean isText();
+
+  /**
+   * Returns an optional with the programming language
+   * or empty if the content is not programming language.
+   *
+   * @return programming language or empty
+   */
+  Optional<String> getLanguage();
 }

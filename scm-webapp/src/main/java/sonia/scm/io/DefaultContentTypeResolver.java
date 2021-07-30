@@ -22,44 +22,28 @@
  * SOFTWARE.
  */
 
-package sonia.scm.api.v2;
+package sonia.scm.io;
 
-import com.github.sdorra.spotter.ContentType;
+import com.github.sdorra.spotter.ContentTypeDetector;
 import com.github.sdorra.spotter.Language;
-import org.junit.jupiter.api.Test;
 
-import java.nio.charset.StandardCharsets;
+public final class DefaultContentTypeResolver implements ContentTypeResolver {
 
-import static org.assertj.core.api.Assertions.assertThat;
+  private static final ContentTypeDetector PATH_BASED = ContentTypeDetector.builder()
+    .defaultPathBased().boost(Language.MARKDOWN)
+    .bestEffortMatch();
 
-class ContentSearchableTypeResolverTest {
+  private static final ContentTypeDetector PATH_AND_CONTENT_BASED = ContentTypeDetector.builder()
+    .defaultPathAndContentBased().boost(Language.MARKDOWN)
+    .bestEffortMatch();
 
-  @Test
-  void shouldResolveMarkdown() {
-    String content = String.join("\n",
-      "% Markdown content",
-      "% Which does not start with markdown"
-    );
-    ContentType contentType = ContentTypeResolver.resolve("somedoc.md", content.getBytes(StandardCharsets.UTF_8));
-    assertThat(contentType.getLanguage()).contains(Language.MARKDOWN);
+  @Override
+  public DefaultContentType resolve(String path) {
+    return new DefaultContentType(PATH_BASED.detect(path));
   }
 
-  @Test
-  void shouldResolveMarkdownWithoutContent() {
-    ContentType contentType = ContentTypeResolver.resolve("somedoc.md");
-    assertThat(contentType.getLanguage()).contains(Language.MARKDOWN);
+  @Override
+  public DefaultContentType resolve(String path, byte[] contentPrefix) {
+    return new DefaultContentType(PATH_AND_CONTENT_BASED.detect(path, contentPrefix));
   }
-
-  @Test
-  void shouldResolveMarkdownEvenWithDotsInFilename() {
-    ContentType contentType = ContentTypeResolver.resolve("somedoc.1.1.md");
-    assertThat(contentType.getLanguage()).contains(Language.MARKDOWN);
-  }
-
-  @Test
-  void shouldResolveDockerfile() {
-    ContentType contentType = ContentTypeResolver.resolve("Dockerfile");
-    assertThat(contentType.getLanguage()).contains(Language.DOCKERFILE);
-  }
-
 }

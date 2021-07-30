@@ -21,29 +21,46 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.api.v2.resources;
 
-import com.github.sdorra.spotter.Language;
-import org.junit.jupiter.api.Test;
+package sonia.scm.io;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import java.util.Optional;
 
-class ProgrammingLanguagesTest {
+public class DefaultContentType implements ContentType {
 
-  @Test
-  void shouldReturnAceModeIfPresent() {
-    assertThat(ProgrammingLanguages.getValue(Language.GO)).isEqualTo("golang");
-    assertThat(ProgrammingLanguages.getValue(Language.JAVA)).isEqualTo("java");
+  private static final String DEFAULT_LANG_MODE = "text";
+
+  private final com.github.sdorra.spotter.ContentType contentType;
+
+  DefaultContentType(com.github.sdorra.spotter.ContentType contentType) {
+    this.contentType = contentType;
   }
 
-  @Test
-  void shouldReturnCodemirrorIfAceModeIsMissing() {
-    assertThat(ProgrammingLanguages.getValue(Language.HTML_ECR)).isEqualTo("htmlmixed");
+  @Override
+  public String getPrimary() {
+    return contentType.getPrimary();
   }
 
-  @Test
-  void shouldReturnTextIfNoModeIsPresent() {
-    assertThat(ProgrammingLanguages.getValue(Language.HXML)).isEqualTo("text");
+  @Override
+  public String getSecondary() {
+    return contentType.getSecondary();
+  }
+
+  @Override
+  public String getRaw() {
+    return contentType.getRaw();
+  }
+
+  @Override
+  public boolean isText() {
+    return contentType.isText();
+  }
+
+  @Override
+  public Optional<String> getLanguage() {
+    return contentType.getLanguage().map(language -> {
+      Optional<String> aceMode = language.getAceMode();
+      return aceMode.orElseGet(() -> language.getCodemirrorMode().orElse(DEFAULT_LANG_MODE));
+    });
   }
 }
