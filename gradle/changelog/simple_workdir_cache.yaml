@@ -1,2 +1,0 @@
-- type: changed
-  description: The simple workdir cache has a maximum size, an lru semantic and blocks on parallel requests ([#1735](https://github.com/scm-manager/scm-manager/pull/1735))

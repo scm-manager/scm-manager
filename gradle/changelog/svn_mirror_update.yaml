@@ -1,2 +1,0 @@
-- type: Fixed
-  description: Fix svn mirror update if first initialization failed before ([#1745](https://github.com/scm-manager/scm-manager/pull/1745))

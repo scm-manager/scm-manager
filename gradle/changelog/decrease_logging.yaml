@@ -1,2 +1,0 @@
-- type: Changed
-  description: Decrease log level of DefaultAdministrationContext from info to debug

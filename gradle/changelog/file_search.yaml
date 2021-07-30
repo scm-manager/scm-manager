@@ -1,2 +1,0 @@
-- type: Fixed
-  description: Fix file search on branches with "/" ([#1748](https://github.com/scm-manager/scm-manager/pull/1748))

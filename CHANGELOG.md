@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.22.0] - 2021-07-30
+### Added
+- Add users and groups to default search index ([#1738](https://github.com/scm-manager/scm-manager/pull/1738))
+- Add dedicated search page with more details and different types ([#1738](https://github.com/scm-manager/scm-manager/pull/1738))
+
+### Changed
+- Remove repository shortlinks ([#1720](https://github.com/scm-manager/scm-manager/pull/1720))
+- The simple workdir cache has a maximum size, an lru semantic and blocks on parallel requests ([#1735](https://github.com/scm-manager/scm-manager/pull/1735))
+- Add username/password authentication to push command ([#1734](https://github.com/scm-manager/scm-manager/pull/1734))
+- Decrease log level of DefaultAdministrationContext from info to debug
+- Logo for small header
+- Redesign repository overview ([#1740](https://github.com/scm-manager/scm-manager/pull/1740))
+
+### Fixed
+- Make MarkdownView backwards-compatible with edge-cases ([#1737](https://github.com/scm-manager/scm-manager/pull/1737))
+- Handle rejected master branch on initial mirror synchronization correctly ([#1747](https://github.com/scm-manager/scm-manager/pull/1747))
+- Fix file search on branches with "/" ([#1748](https://github.com/scm-manager/scm-manager/pull/1748))
+- Fix overflow of quick search results with long repository names ([#1739](https://github.com/scm-manager/scm-manager/pull/1739))
+- Fix login extension point ([#1741](https://github.com/scm-manager/scm-manager/pull/1741))
+- Fix file detection on hg fileview command ([#1746](https://github.com/scm-manager/scm-manager/pull/1746))
+- Fix svn mirror update if first initialization failed before ([#1745](https://github.com/scm-manager/scm-manager/pull/1745))
+
 ## [2.21.0] - 2021-07-21
 ### Added
 - API to index and query objects ([#1727](https://github.com/scm-manager/scm-manager/pull/1727))
@@ -688,3 +710,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.19.1]: https://www.scm-manager.org/download/2.19.1
 [2.20.0]: https://www.scm-manager.org/download/2.20.0
 [2.21.0]: https://www.scm-manager.org/download/2.21.0
+[2.22.0]: https://www.scm-manager.org/download/2.22.0

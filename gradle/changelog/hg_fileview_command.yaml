@@ -1,2 +1,0 @@
-- type: Fixed
-  description: Fix file detection on hg fileview command ([#1746](https://github.com/scm-manager/scm-manager/pull/1746))

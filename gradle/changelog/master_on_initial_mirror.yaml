@@ -1,2 +1,0 @@
-- type: fixed
-  description: Handle rejected master branch on initial mirror synchronization correctly ([#1747](https://github.com/scm-manager/scm-manager/pull/1747))

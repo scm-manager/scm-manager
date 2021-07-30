@@ -1,2 +1,0 @@
-- type: Fixed
-  description: Fix overflow of quick search results with long repository names ([#1739](https://github.com/scm-manager/scm-manager/pull/1739))

@@ -1,2 +1,0 @@
-- type: changed
-  description: Add username/password authentication to push command ([#1734](https://github.com/scm-manager/scm-manager/pull/1734))
