@@ -63,6 +63,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
+@SuppressWarnings("java:S5976")
 @SubjectAware(value = "trillian", permissions = "abc")
 @ExtendWith({MockitoExtension.class, ShiroExtension.class})
 class LuceneQueryBuilderTest {
@@ -104,6 +105,37 @@ class LuceneQueryBuilderTest {
     }
 
     QueryResult result = query(Person.class, "Trill");
+    assertThat(result.getTotalHits()).isOne();
+  }
+
+  @Test
+  void shouldMatchWithHyphen() throws IOException {
+    try (IndexWriter writer = writer()) {
+      writer.addDocument(personDoc("Trillian-McMillan"));
+    }
+
+    QueryResult result = query(Person.class, "Trillian-McMi");
+    assertThat(result.getTotalHits()).isOne();
+  }
+
+  @Test
+  void shouldMatchQueryWithMultipleFieldsAndHyphen() throws IOException {
+    try (IndexWriter writer = writer()) {
+      writer.addDocument(inetOrgPersonDoc("Trillian", "McMillan", "Trillian McMillan", "abc"));
+    }
+
+    QueryResult result = query(InetOrgPerson.class, "Trillian-McMi");
+    assertThat(result.getTotalHits()).isOne();
+  }
+
+
+  @Test
+  void shouldMatchExpertQueryWithHyphen() throws IOException {
+    try (IndexWriter writer = writer()) {
+      writer.addDocument(personDoc("Trillian-McMillan"));
+    }
+
+    QueryResult result = query(Person.class, "lastName:Trillian-McMi");
     assertThat(result.getTotalHits()).isOne();
   }
 
