@@ -26,6 +26,8 @@ package sonia.scm.search;
 
 import com.google.common.base.Strings;
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.flexible.core.QueryNodeException;
@@ -130,7 +132,7 @@ public class LuceneQueryBuilder extends QueryBuilder {
         return createExpertQuery(searchableType, queryParams);
       }
       return createBestGuessQuery(searchableType, queryParams);
-    } catch (QueryNodeException ex) {
+    } catch (QueryNodeException | IOException ex) {
       throw new QueryParseException(queryString, "failed to parse query", ex);
     }
   }
@@ -142,15 +144,25 @@ public class LuceneQueryBuilder extends QueryBuilder {
     return parser.parse(queryParams.getQueryString(), "");
   }
 
-  public Query createBestGuessQuery(LuceneSearchableType searchableType, QueryBuilder.QueryParams queryParams) {
+  public Query createBestGuessQuery(LuceneSearchableType searchableType, QueryBuilder.QueryParams queryParams) throws QueryNodeException, IOException {
     String[] fieldNames = searchableType.getFieldNames();
     if (fieldNames == null || fieldNames.length == 0) {
       throw new NoDefaultQueryFieldsFoundException(searchableType.getType());
     }
+
+    String queryString = queryParams.getQueryString().toLowerCase(Locale.ENGLISH);
+    boolean hasWildcard = containsWildcard(queryString);
+
     BooleanQuery.Builder builder = new BooleanQuery.Builder();
     for (String fieldName : fieldNames) {
-      Term term = new Term(fieldName, appendWildcardIfNotAlreadyUsed(queryParams));
-      WildcardQuery query = new WildcardQuery(term);
+      Query query;
+      if (!hasWildcard) {
+        query = createWildcardQuery(fieldName, queryString);
+      } else {
+        StandardQueryParser parser = new StandardQueryParser(analyzer);
+        parser.setPointsConfigMap(searchableType.getPointsConfig());
+        query = parser.parse(queryParams.getQueryString(), fieldName);
+      }
 
       Float boost = searchableType.getBoosts().get(fieldName);
       if (boost != null) {
@@ -162,13 +174,24 @@ public class LuceneQueryBuilder extends QueryBuilder {
     return builder.build();
   }
 
-  @Nonnull
-  private String appendWildcardIfNotAlreadyUsed(QueryParams queryParams) {
-    String queryString = queryParams.getQueryString().toLowerCase(Locale.ENGLISH);
-    if (!queryString.contains("?") && !queryString.contains("*")) {
-      queryString += "*";
+  private Query createWildcardQuery(String fieldName, String queryString) throws IOException {
+    try (TokenStream tokenStream = analyzer.tokenStream(fieldName, queryString)) {
+      CharTermAttribute attribute = tokenStream.addAttribute(CharTermAttribute.class);
+
+      BooleanQuery.Builder queryBuilder = new BooleanQuery.Builder();
+
+      tokenStream.reset();
+      while (tokenStream.incrementToken()) {
+        String token = attribute.toString();
+        queryBuilder.add(new WildcardQuery(new Term(fieldName, token + "*")), BooleanClause.Occur.SHOULD);
+      }
+
+      return queryBuilder.build();
     }
-    return queryString;
+  }
+
+  private boolean containsWildcard(String queryString) {
+    return queryString.contains("?") || queryString.contains("*");
   }
 
   @FunctionalInterface
