@@ -24,13 +24,17 @@
 
 package sonia.scm.search;
 
+import lombok.Getter;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.de.GermanAnalyzer;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.analysis.es.SpanishAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.Locale;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -39,40 +43,79 @@ class AnalyzerFactoryTest {
 
   private final AnalyzerFactory analyzerFactory = new AnalyzerFactory();
 
-  @Test
-  void shouldReturnStandardAnalyzer() {
-    Analyzer analyzer = analyzerFactory.create(IndexOptions.defaults());
-    assertThat(analyzer).isInstanceOf(StandardAnalyzer.class);
+  @Nested
+  class FromIndexOptionsTests {
+
+    @Test
+    void shouldReturnStandardAnalyzer() {
+      Analyzer analyzer = analyzerFactory.create(IndexOptions.defaults());
+      assertThat(analyzer).isInstanceOf(StandardAnalyzer.class);
+    }
+
+    @Test
+    void shouldReturnStandardAnalyzerForUnknownLocale() {
+      Analyzer analyzer = analyzerFactory.create(IndexOptions.naturalLanguage(Locale.CHINESE));
+      assertThat(analyzer).isInstanceOf(StandardAnalyzer.class);
+    }
+
+    @Test
+    void shouldReturnEnglishAnalyzer() {
+      Analyzer analyzer = analyzerFactory.create(IndexOptions.naturalLanguage(Locale.ENGLISH));
+      assertThat(analyzer).isInstanceOf(EnglishAnalyzer.class);
+    }
+
+    @Test
+    void shouldReturnGermanAnalyzer() {
+      Analyzer analyzer = analyzerFactory.create(IndexOptions.naturalLanguage(Locale.GERMAN));
+      assertThat(analyzer).isInstanceOf(GermanAnalyzer.class);
+    }
+
+    @Test
+    void shouldReturnGermanAnalyzerForLocaleGermany() {
+      Analyzer analyzer = analyzerFactory.create(IndexOptions.naturalLanguage(Locale.GERMANY));
+      assertThat(analyzer).isInstanceOf(GermanAnalyzer.class);
+    }
+
+    @Test
+    void shouldReturnSpanishAnalyzer() {
+      Analyzer analyzer = analyzerFactory.create(IndexOptions.naturalLanguage(new Locale("es", "ES")));
+      assertThat(analyzer).isInstanceOf(SpanishAnalyzer.class);
+    }
   }
 
-  @Test
-  void shouldReturnStandardAnalyzerForUnknownLocale() {
-    Analyzer analyzer = analyzerFactory.create(IndexOptions.naturalLanguage(Locale.CHINESE));
-    assertThat(analyzer).isInstanceOf(StandardAnalyzer.class);
+  @Nested
+  class FromSearchableTypeTests {
+
+    @Test
+    void shouldUseDefaultAnalyzerIfNotSpecified() throws IOException {
+      analyze(Account.class, "simple_text", "description", "simple_text");
+    }
+
+    @Test
+    void shouldUseNonNaturalLanguageAnalyzer() throws IOException {
+      analyze(Account.class, "simple_text", "username", "simple", "text");
+    }
+
+    private void analyze(Class<?> type, String text, String field, String... expectedTokens) throws IOException {
+      LuceneSearchableType searchableType = SearchableTypes.create(type);
+      IndexOptions defaults = IndexOptions.defaults();
+      Analyzer analyzer = analyzerFactory.create(searchableType, defaults);
+      List<String> tokens = Analyzers.tokenize(analyzer, field, text);
+      assertThat(tokens).containsOnly(expectedTokens);
+    }
+
   }
 
-  @Test
-  void shouldReturnEnglishAnalyzer() {
-    Analyzer analyzer = analyzerFactory.create(IndexOptions.naturalLanguage(Locale.ENGLISH));
-    assertThat(analyzer).isInstanceOf(EnglishAnalyzer.class);
-  }
+  @Getter
+  @IndexedType
+  public static class Account {
 
-  @Test
-  void shouldReturnGermanAnalyzer() {
-    Analyzer analyzer = analyzerFactory.create(IndexOptions.naturalLanguage(Locale.GERMAN));
-    assertThat(analyzer).isInstanceOf(GermanAnalyzer.class);
-  }
+    @Indexed(analyzer = Indexed.Analyzer.IDENTIFIER)
+    private String username;
 
-  @Test
-  void shouldReturnGermanAnalyzerForLocaleGermany() {
-    Analyzer analyzer = analyzerFactory.create(IndexOptions.naturalLanguage(Locale.GERMANY));
-    assertThat(analyzer).isInstanceOf(GermanAnalyzer.class);
-  }
+    @Indexed
+    private String description;
 
-  @Test
-  void shouldReturnSpanishAnalyzer() {
-    Analyzer analyzer = analyzerFactory.create(IndexOptions.naturalLanguage(new Locale("es", "ES")));
-    assertThat(analyzer).isInstanceOf(SpanishAnalyzer.class);
   }
 
 }
