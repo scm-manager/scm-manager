@@ -66,7 +66,7 @@ class DefaultContentTypeResolverTest {
       assertThat(contentType.isText()).isTrue();
     }
 
-    @ParameterizedTest(name = "shouldReturnIsNotTextFor{argumentsWithNames}")
+    @ParameterizedTest(name = "shouldReturnIsNotTextFor: {argumentsWithNames}")
     @ValueSource(strings = {"scan.exe", "hog.pdf", "library.so", "awesome.dll", "something.dylib"})
     void shouldReturnIsNotTextFor(String path) {
       ContentType contentType = contentTypeResolver.resolve(path);
