@@ -26,6 +26,7 @@ package sonia.scm.search;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.group.Group;
@@ -53,7 +54,7 @@ class IndexBootstrapListenerTest {
   @Mock
   private AdministrationContext administrationContext;
 
-  @Mock
+  @Mock(answer = Answers.RETURNS_DEEP_STUBS)
   private IndexLogStore indexLogStore;
 
   @Test
@@ -67,7 +68,7 @@ class IndexBootstrapListenerTest {
 
     verify(updater).reIndexAll();
     verify(updater).close();
-    verify(indexLogStore).log(IndexNames.DEFAULT, Repository.class, 1);
+    verify(indexLogStore.defaultIndex()).log(Repository.class, 1);
   }
 
   @Test
@@ -81,7 +82,7 @@ class IndexBootstrapListenerTest {
 
     verify(updater).reIndexAll();
     verify(updater).close();
-    verify(indexLogStore).log(IndexNames.DEFAULT, User.class, 2);
+    verify(indexLogStore.defaultIndex()).log(User.class, 2);
   }
 
   @Test
@@ -103,7 +104,7 @@ class IndexBootstrapListenerTest {
   }
 
   private <T> void mockIndexLog(Class<T> type, @Nullable IndexLog indexLog) {
-    when(indexLogStore.get(IndexNames.DEFAULT, type)).thenReturn(Optional.ofNullable(indexLog));
+    when(indexLogStore.defaultIndex().get(type)).thenReturn(Optional.ofNullable(indexLog));
   }
 
   private void mockAdminContext() {
@@ -128,14 +129,15 @@ class IndexBootstrapListenerTest {
     );
   }
 
+  @SuppressWarnings("unchecked")
   private <T> Indexer<T> indexer(Class<T> type, int version) {
     Indexer<T> indexer = mock(Indexer.class);
     when(indexer.getType()).thenReturn(type);
     when(indexer.getVersion()).thenReturn(version);
-    when(indexer.getIndex()).thenReturn(IndexNames.DEFAULT);
     return indexer;
   }
 
+  @SuppressWarnings("unchecked")
   private <T> Indexer.Updater<T> updater(Indexer<T> indexer) {
     Indexer.Updater<T> updater = mock(Indexer.Updater.class);
     when(indexer.open()).thenReturn(updater);

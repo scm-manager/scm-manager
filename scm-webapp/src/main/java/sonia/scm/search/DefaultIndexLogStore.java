@@ -42,18 +42,36 @@ public class DefaultIndexLogStore implements IndexLogStore {
   }
 
   @Override
-  public void log(String index,Class<?> type, int version) {
-    String id = id(index, type);
-    dataStore.put(id, new IndexLog(version));
-  }
-
-  private String id(String index, Class<?> type) {
-    return index + "_" + type.getName();
+  public ForIndex forIndex(String index) {
+    return new DefaultForIndex(index);
   }
 
   @Override
-  public Optional<IndexLog> get(String index, Class<?> type) {
-    String id = id(index, type);
-    return dataStore.getOptional(id);
+  public ForIndex defaultIndex() {
+    // constant
+    return new DefaultForIndex("default");
+  }
+
+  class DefaultForIndex implements ForIndex {
+
+    private final String index;
+
+    private DefaultForIndex(String index) {
+      this.index = index;
+    }
+
+    private String id(Class<?> type) {
+      return index + "_" + type.getName();
+    }
+
+    @Override
+    public void log(Class<?> type, int version) {
+      dataStore.put(id(type), new IndexLog(version));
+    }
+
+    @Override
+    public Optional<IndexLog> get(Class<?> type) {
+      return dataStore.getOptional(id(type));
+    }
   }
 }

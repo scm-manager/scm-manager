@@ -32,7 +32,7 @@ import com.google.common.annotations.Beta;
  * @since 2.21.0
  */
 @Beta
-public interface Index extends AutoCloseable {
+public interface Index<T> extends AutoCloseable {
 
   /**
    * Store the given object in the index.
@@ -44,15 +44,16 @@ public interface Index extends AutoCloseable {
    *
    * @see Indexed
    */
-  void store(Id id, String permission, Object object);
+  void store(Id id, String permission, T object);
+
+  void deleteAll();
 
   /**
    * Delete the object with the given id and type from index.
    *
    * @param id id of object
-   * @param type type of object
    */
-  void delete(Id id, Class<?> type);
+  void delete(Id id);
 
   /**
    * Delete all objects which are related the given repository from index.
@@ -60,12 +61,6 @@ public interface Index extends AutoCloseable {
    * @param repositoryId id of repository
    */
   void deleteByRepository(String repositoryId);
-
-  /**
-   * Delete all objects with the given type from index.
-   * @param type type of objects
-   */
-  void deleteByType(Class<?> type);
 
   /**
    * Delete all objects with the given type from index.

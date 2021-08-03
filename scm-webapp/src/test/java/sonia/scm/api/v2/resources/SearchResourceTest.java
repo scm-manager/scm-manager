@@ -41,7 +41,6 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.search.Hit;
-import sonia.scm.search.IndexNames;
 import sonia.scm.search.QueryCountResult;
 import sonia.scm.search.QueryResult;
 import sonia.scm.search.SearchEngine;
@@ -200,8 +199,9 @@ class SearchResourceTest {
     @Test
     void shouldReturnCountOnly() throws URISyntaxException {
       when(
-        searchEngine.search(IndexNames.DEFAULT)
-          .count("string", "Hello")
+        searchEngine.forType("string")
+          .search()
+          .count("Hello")
       ).thenReturn(new QueryCountResult(String.class, 2L));
 
       MockHttpRequest request = MockHttpRequest.get("/v2/search/query/string?q=Hello&countOnly=true");
@@ -271,10 +271,11 @@ class SearchResourceTest {
 
   private void mockQueryResult(int start, int limit, String query, QueryResult result) {
     when(
-      searchEngine.search(IndexNames.DEFAULT)
+      searchEngine.forType("string")
+        .search()
         .start(start)
         .limit(limit)
-        .execute("string", query)
+        .execute(query)
     ).thenReturn(result);
   }
 

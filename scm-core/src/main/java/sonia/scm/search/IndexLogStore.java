@@ -38,24 +38,31 @@ import java.util.Optional;
 @Beta
 public interface IndexLogStore {
 
-  /**
-   * Log index and version of a type which is now indexed.
-   *
-   * @param index name of index
-   * @param type type which was indexed
-   * @param version model version
-   */
-  void log(String index, Class<?> type, int version);
+  ForIndex forIndex(String index);
 
-  /**
-   * Returns version and date of the indexed type or an empty object,
-   * if the object was not indexed at all.
-   *
-   * @param index name if index
-   * @param type type of object
-   *
-   * @return log entry or empty
-   */
-  Optional<IndexLog> get(String index, Class<?> type);
+  ForIndex defaultIndex();
 
+  interface ForIndex {
+
+    /**
+     * Log index and version of a type which is now indexed.
+     *
+     * @param index name of index
+     * @param type type which was indexed
+     * @param version model version
+     */
+    void log(Class<?> type, int version);
+
+    /**
+     * Returns version and date of the indexed type or an empty object,
+     * if the object was not indexed at all.
+     *
+     * @param index name if index
+     * @param type type of object
+     *
+     * @return log entry or empty
+     */
+    Optional<IndexLog> get(Class<?> type);
+
+  }
 }

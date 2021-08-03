@@ -43,34 +43,27 @@ import org.apache.lucene.search.TopScoreDocCollector;
 import org.apache.lucene.search.TotalHitCountCollector;
 import org.apache.lucene.search.WildcardQuery;
 import org.apache.lucene.search.highlight.InvalidTokenOffsetsException;
-import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.Locale;
-import java.util.Optional;
 
-public class LuceneQueryBuilder extends QueryBuilder {
+public class LuceneQueryBuilder<T> extends QueryBuilder<T> {
 
   private static final Logger LOG = LoggerFactory.getLogger(LuceneQueryBuilder.class);
 
   private final IndexOpener opener;
-  private final SearchableTypeResolver resolver;
+  private final LuceneSearchableType searchableType;
   private final String indexName;
   private final Analyzer analyzer;
 
-  LuceneQueryBuilder(IndexOpener opener, SearchableTypeResolver resolver, String indexName, Analyzer analyzer) {
+  LuceneQueryBuilder(IndexOpener opener, String indexName, LuceneSearchableType searchableType, Analyzer analyzer) {
     this.opener = opener;
-    this.resolver = resolver;
     this.indexName = indexName;
+    this.searchableType = searchableType;
     this.analyzer = analyzer;
-  }
-
-  @Override
-  protected Optional<Class<?>> resolveByName(String typeName) {
-    return resolver.resolveClassByName(typeName);
   }
 
   @Override
@@ -78,26 +71,21 @@ public class LuceneQueryBuilder extends QueryBuilder {
     TotalHitCountCollector totalHitCountCollector = new TotalHitCountCollector();
     return search(
       queryParams, totalHitCountCollector,
-      (searcher, type, query) -> new QueryCountResult(type.getType(), totalHitCountCollector.getTotalHits())
+      (searcher, query) -> new QueryCountResult(searchableType.getType(), totalHitCountCollector.getTotalHits())
     );
   }
 
   @Override
   protected QueryResult execute(QueryParams queryParams) {
     TopScoreDocCollector topScoreCollector = createTopScoreCollector(queryParams);
-    return search(queryParams, topScoreCollector, (searcher, searchableType, query) -> {
+    return search(queryParams, topScoreCollector, (searcher, query) -> {
       QueryResultFactory resultFactory = new QueryResultFactory(analyzer, searcher, searchableType, query);
       return resultFactory.create(getTopDocs(queryParams, topScoreCollector));
     });
   }
 
-  private <T> T search(QueryParams queryParams, Collector collector, ResultBuilder<T> resultBuilder) {
+  private <R> R search(QueryParams queryParams, Collector collector, ResultBuilder<R> resultBuilder) {
     String queryString = Strings.nullToEmpty(queryParams.getQueryString());
-
-    LuceneSearchableType searchableType = resolver.resolve(queryParams.getType());
-    searchableType.getPermission().ifPresent(
-      permission -> SecurityUtils.getSubject().checkPermission(permission)
-    );
 
     Query parsedQuery = createQuery(searchableType, queryParams, queryString);
     Query query = Queries.filter(parsedQuery, searchableType, queryParams);
@@ -109,7 +97,7 @@ public class LuceneQueryBuilder extends QueryBuilder {
 
       searcher.search(query, new PermissionAwareCollector(reader, collector));
 
-      return resultBuilder.create(searcher, searchableType, parsedQuery);
+      return resultBuilder.create(searcher, parsedQuery);
     } catch (IOException e) {
       throw new SearchEngineException("failed to search index", e);
     } catch (InvalidTokenOffsetsException e) {
@@ -196,6 +184,6 @@ public class LuceneQueryBuilder extends QueryBuilder {
 
   @FunctionalInterface
   private interface ResultBuilder<T> {
-    T create(IndexSearcher searcher, LuceneSearchableType searchableType, Query query) throws IOException, InvalidTokenOffsetsException;
+    T create(IndexSearcher searcher, Query query) throws IOException, InvalidTokenOffsetsException;
   }
 }

@@ -28,13 +28,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.HandlerEventType;
 import sonia.scm.search.Id;
 import sonia.scm.search.Index;
-import sonia.scm.search.IndexQueue;
+import sonia.scm.search.SearchEngine;
 
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -47,8 +48,8 @@ class UserIndexerTest {
   @Mock
   private UserManager userManager;
 
-  @Mock
-  private IndexQueue indexQueue;
+  @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+  private SearchEngine searchEngine;
 
   @InjectMocks
   private UserIndexer indexer;
@@ -56,11 +57,6 @@ class UserIndexerTest {
   @Test
   void shouldReturnRepositoryClass() {
     assertThat(indexer.getType()).isEqualTo(User.class);
-  }
-
-  @Test
-  void shouldReturnIndexName() {
-    assertThat(indexer.getIndex()).isEqualTo(UserIndexer.INDEX);
   }
 
   @Test
@@ -72,13 +68,13 @@ class UserIndexerTest {
   class UpdaterTests {
 
     @Mock
-    private Index index;
+    private Index<User> index;
 
     private final User user = UserTestData.createTrillian();
 
     @BeforeEach
     void open() {
-      when(indexQueue.getQueuedIndex(UserIndexer.INDEX)).thenReturn(index);
+      when(searchEngine.forType(User.class).getOrCreate()).thenReturn(index);
     }
 
     @Test
@@ -92,7 +88,7 @@ class UserIndexerTest {
     void shouldDeleteByRepository() {
       indexer.open().delete(user);
 
-      verify(index).delete(Id.of(user), User.class);
+      verify(index).delete(Id.of(user));
     }
 
     @Test
@@ -101,7 +97,7 @@ class UserIndexerTest {
 
       indexer.open().reIndexAll();
 
-      verify(index).deleteByType(User.class);
+      verify(index).deleteAll();
       verify(index).store(Id.of(user), "user:read:trillian", user);
     }
 
@@ -111,7 +107,7 @@ class UserIndexerTest {
 
       indexer.handleEvent(event);
 
-      verify(index).delete(Id.of(user), User.class);
+      verify(index).delete(Id.of(user));
     }
 
     @Test

@@ -44,14 +44,14 @@ class DefaultIndexLogStoreTest {
 
   @Test
   void shouldReturnEmptyOptional() {
-    Optional<IndexLog> indexLog = indexLogStore.get("index", String.class);
+    Optional<IndexLog> indexLog = indexLogStore.forIndex("index").get(String.class);
     assertThat(indexLog).isEmpty();
   }
 
   @Test
   void shouldStoreLog() {
-    indexLogStore.log("index", String.class, 42);
-    Optional<IndexLog> index = indexLogStore.get("index", String.class);
+    indexLogStore.forIndex("index").log(String.class, 42);
+    Optional<IndexLog> index = indexLogStore.forIndex("index").get(String.class);
     assertThat(index).hasValueSatisfying(log -> {
       assertThat(log.getVersion()).isEqualTo(42);
       assertThat(log.getDate()).isNotNull();

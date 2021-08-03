@@ -25,8 +25,8 @@
 package sonia.scm.search;
 
 @FunctionalInterface
-public interface IndexQueueTask {
+public interface IndexQueueTask<T> {
 
-  void updateIndex(Index index);
+  void updateIndex(Index<T> index);
 
 }

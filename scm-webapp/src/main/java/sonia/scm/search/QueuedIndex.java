@@ -27,28 +27,25 @@ package sonia.scm.search;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QueuedIndex implements Index {
+public class QueuedIndex<T> implements Index<T> {
 
-  private final DefaultIndexQueue queue;
-  private final String indexName;
-  private final IndexOptions indexOptions;
+  private final IndexQueue queue;
+  private final IndexParams indexParams;
+  private final List<IndexQueueTask<T>> tasks = new ArrayList<>();
 
-  private final List<IndexQueueTask> tasks = new ArrayList<>();
-
-  QueuedIndex(DefaultIndexQueue queue, String indexName, IndexOptions indexOptions) {
+   QueuedIndex(IndexQueue queue, IndexParams indexParams) {
     this.queue = queue;
-    this.indexName = indexName;
-    this.indexOptions = indexOptions;
-  }
+     this.indexParams = indexParams;
+   }
 
   @Override
-  public void store(Id id, String permission, Object object) {
+  public void store(Id id, String permission, T object) {
     tasks.add(index -> index.store(id, permission, object));
   }
 
   @Override
-  public void delete(Id id, Class<?> type) {
-    tasks.add(index -> index.delete(id, type));
+  public void delete(Id id) {
+    tasks.add(index -> index.delete(id));
   }
 
   @Override
@@ -57,19 +54,19 @@ public class QueuedIndex implements Index {
   }
 
   @Override
-  public void deleteByType(Class<?> type) {
-    tasks.add(index -> index.deleteByType(type));
-  }
-
-  @Override
   public void deleteByTypeName(String typeName) {
     tasks.add(index -> index.deleteByTypeName(typeName));
   }
 
   @Override
+  public void deleteAll() {
+    tasks.add(Index::deleteAll);
+  }
+
+  @Override
   public void close() {
-    IndexQueueTaskWrapper wrappedTask = new IndexQueueTaskWrapper(
-      queue.getSearchEngine(), indexName, indexOptions, tasks
+    IndexQueueTaskWrapper<T> wrappedTask = new IndexQueueTaskWrapper<>(
+      queue.getIndexFactory(), indexParams, tasks
     );
     queue.enqueue(wrappedTask);
   }

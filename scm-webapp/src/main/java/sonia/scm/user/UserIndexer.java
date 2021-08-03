@@ -30,9 +30,8 @@ import sonia.scm.plugin.Extension;
 import sonia.scm.search.HandlerEventIndexSyncer;
 import sonia.scm.search.Id;
 import sonia.scm.search.Index;
-import sonia.scm.search.IndexNames;
-import sonia.scm.search.IndexQueue;
 import sonia.scm.search.Indexer;
+import sonia.scm.search.SearchEngine;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -42,27 +41,20 @@ import javax.inject.Singleton;
 public class UserIndexer implements Indexer<User> {
 
   @VisibleForTesting
-  static final String INDEX = IndexNames.DEFAULT;
-  @VisibleForTesting
   static final int VERSION = 1;
 
   private final UserManager userManager;
-  private final IndexQueue queue;
+  private final SearchEngine searchEngine;
 
   @Inject
-  public UserIndexer(UserManager userManager, IndexQueue queue) {
+  public UserIndexer(UserManager userManager, SearchEngine searchEngine) {
     this.userManager = userManager;
-    this.queue = queue;
+    this.searchEngine = searchEngine;
   }
 
   @Override
   public Class<User> getType() {
     return User.class;
-  }
-
-  @Override
-  public String getIndex() {
-    return INDEX;
   }
 
   @Override
@@ -77,15 +69,15 @@ public class UserIndexer implements Indexer<User> {
 
   @Override
   public Updater<User> open() {
-    return new UserIndexUpdater(userManager, queue.getQueuedIndex(INDEX));
+    return new UserIndexUpdater(userManager, searchEngine.forType(User.class).getOrCreate());
   }
 
   public static class UserIndexUpdater implements Updater<User> {
 
     private final UserManager userManager;
-    private final Index index;
+    private final Index<User> index;
 
-    private UserIndexUpdater(UserManager userManager, Index index) {
+    private UserIndexUpdater(UserManager userManager, Index<User> index) {
       this.userManager = userManager;
       this.index = index;
     }
@@ -97,12 +89,12 @@ public class UserIndexer implements Indexer<User> {
 
     @Override
     public void delete(User user) {
-      index.delete(Id.of(user), User.class);
+      index.delete(Id.of(user));
     }
 
     @Override
     public void reIndexAll() {
-      index.deleteByType(User.class);
+      index.deleteAll();
       for (User user : userManager.getAll()) {
         store(user);
       }

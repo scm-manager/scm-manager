@@ -39,26 +39,25 @@ import static sonia.scm.search.FieldNames.REPOSITORY;
 import static sonia.scm.search.FieldNames.TYPE;
 import static sonia.scm.search.FieldNames.UID;
 
-public class LuceneIndex implements Index {
+public class LuceneIndex<T> implements Index<T> {
 
-  private final SearchableTypeResolver resolver;
+  private final LuceneSearchableType searchableType;
   private final IndexWriter writer;
 
-  LuceneIndex(SearchableTypeResolver resolver, IndexWriter writer) {
-    this.resolver = resolver;
+  LuceneIndex(LuceneSearchableType searchableType, IndexWriter writer) {
+    this.searchableType = searchableType;
     this.writer = writer;
   }
 
   @Override
   public void store(Id id, String permission, Object object) {
-    LuceneSearchableType type = resolver.resolve(object);
-    String uid = createUid(id, type);
-    Document document = type.getTypeConverter().convert(object);
+    String uid = createUid(id, searchableType);
+    Document document = searchableType.getTypeConverter().convert(object);
     try {
       field(document, UID, uid);
       field(document, ID, id.getValue());
       id.getRepository().ifPresent(repository -> field(document, REPOSITORY, repository));
-      field(document, TYPE, type.getName());
+      field(document, TYPE, searchableType.getName());
       if (!Strings.isNullOrEmpty(permission)) {
         field(document, PERMISSION, permission);
       }
@@ -77,8 +76,7 @@ public class LuceneIndex implements Index {
   }
 
   @Override
-  public void delete(Id id, Class<?> type) {
-    LuceneSearchableType searchableType = resolver.resolve(type);
+  public void delete(Id id) {
     try {
       writer.deleteDocuments(new Term(UID, createUid(id, searchableType)));
     } catch (IOException e) {
@@ -96,8 +94,7 @@ public class LuceneIndex implements Index {
   }
 
   @Override
-  public void deleteByType(Class<?> type) {
-    LuceneSearchableType searchableType = resolver.resolve(type);
+  public void deleteAll() {
     deleteByTypeName(searchableType.getName());
   }
 

@@ -62,7 +62,7 @@ public class IndexBootstrapListener implements ServletContextListener {
   }
 
   private void bootstrap(Indexer indexer) {
-    Optional<IndexLog> indexLog = indexLogStore.get(indexer.getIndex(), indexer.getType());
+    Optional<IndexLog> indexLog = indexLogStore.defaultIndex().get(indexer.getType());
     if (indexLog.isPresent()) {
       int version = indexLog.get().getVersion();
       if (version < indexer.getVersion()) {
@@ -82,7 +82,7 @@ public class IndexBootstrapListener implements ServletContextListener {
       }
     });
 
-    indexLogStore.log(indexer.getIndex(), indexer.getType(), indexer.getVersion());
+    indexLogStore.defaultIndex().log(indexer.getType(), indexer.getVersion());
   }
 
   @Override

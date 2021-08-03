@@ -46,13 +46,6 @@ public interface Indexer<T> {
   Class<T> getType();
 
   /**
-   * Returns name of index.
-   *
-   * @return name of index
-   */
-  String getIndex();
-
-  /**
    * Returns version of index type.
    * The version should be increased if the type changes and should be re indexed.
    *

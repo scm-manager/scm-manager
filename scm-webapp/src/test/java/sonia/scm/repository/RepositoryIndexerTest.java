@@ -28,13 +28,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.HandlerEventType;
 import sonia.scm.search.Id;
 import sonia.scm.search.Index;
-import sonia.scm.search.IndexQueue;
+import sonia.scm.search.SearchEngine;
 
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -47,8 +48,8 @@ class RepositoryIndexerTest {
   @Mock
   private RepositoryManager repositoryManager;
 
-  @Mock
-  private IndexQueue indexQueue;
+  @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+  private SearchEngine searchEngine;
 
   @InjectMocks
   private RepositoryIndexer indexer;
@@ -56,11 +57,6 @@ class RepositoryIndexerTest {
   @Test
   void shouldReturnRepositoryClass() {
     assertThat(indexer.getType()).isEqualTo(Repository.class);
-  }
-
-  @Test
-  void shouldReturnIndexName() {
-    assertThat(indexer.getIndex()).isEqualTo(RepositoryIndexer.INDEX);
   }
 
   @Test
@@ -72,13 +68,13 @@ class RepositoryIndexerTest {
   class UpdaterTests {
 
     @Mock
-    private Index index;
+    private Index<Repository> index;
 
     private Repository repository;
 
     @BeforeEach
     void open() {
-      when(indexQueue.getQueuedIndex(RepositoryIndexer.INDEX)).thenReturn(index);
+      when(searchEngine.forType(Repository.class).getOrCreate()).thenReturn(index);
       repository = new Repository();
       repository.setId("42");
     }
@@ -104,7 +100,7 @@ class RepositoryIndexerTest {
       indexer.open().reIndexAll();
 
       verify(index).deleteByTypeName(Repository.class.getName());
-      verify(index).deleteByType(Repository.class);
+      verify(index).deleteAll();
 
       verify(index).store(Id.of(repository), "repository:read:42", repository);
     }

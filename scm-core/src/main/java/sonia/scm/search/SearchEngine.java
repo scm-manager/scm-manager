@@ -46,47 +46,20 @@ public interface SearchEngine {
    */
   Collection<SearchableType> getSearchableTypes();
 
-  /**
-   * Returns the index with the given name and the given options.
-   * The index is created if it does not exist.
-   * Warning: Be careful, because an index can't be opened multiple times in parallel.
-   * If you are not sure how you should index your objects, use the {@link IndexQueue}.
-   *
-   * @param name    name of the index
-   * @param options index options
-   * @return existing index or a new one if none exists
-   */
-  Index getOrCreate(String name, IndexOptions options);
+  <T> ForType<T> forType(Class<T> type);
 
-  /**
-   * Same as {@link #getOrCreate(String, IndexOptions)} with default options.
-   *
-   * @param name name of the index
-   * @return existing index or a new one if none exists
-   * @see IndexOptions#defaults()
-   */
-  default Index getOrCreate(String name) {
-    return getOrCreate(name, IndexOptions.defaults());
-  }
+  ForType<Object> forType(String name);
 
-  /**
-   * Search the index.
-   * Returns a {@link QueryBuilder} which allows to query the index.
-   *
-   * @param name    name of the index
-   * @param options options for searching the index
-   * @return query builder
-   */
-  QueryBuilder search(String name, IndexOptions options);
+  interface ForType<T> {
 
-  /**
-   * Same as {@link #search(String, IndexOptions)} with default options.
-   *
-   * @param name name of the index
-   * @return query builder
-   * @see IndexOptions#defaults()
-   */
-  default QueryBuilder search(String name) {
-    return search(name, IndexOptions.defaults());
+    ForType<T> withOptions(IndexOptions options);
+
+    ForType<T> withIndex(String name);
+
+    /** Queue **/
+    Index<T> getOrCreate();
+
+    QueryBuilder<T> search();
+
   }
 }

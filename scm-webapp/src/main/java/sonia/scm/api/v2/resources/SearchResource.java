@@ -31,7 +31,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import sonia.scm.search.IndexNames;
 import sonia.scm.search.QueryCountResult;
 import sonia.scm.search.QueryResult;
 import sonia.scm.search.SearchEngine;
@@ -112,17 +111,19 @@ public class SearchResource {
   }
 
   private QueryResultDto search(SearchParameters params) {
-    QueryResult result = engine.search(IndexNames.DEFAULT)
+    QueryResult result = engine.forType(params.getType())
+      .search()
       .start(params.getPage() * params.getPageSize())
       .limit(params.getPageSize())
-      .execute(params.getType(), params.getQuery());
+      .execute(params.getQuery());
 
     return mapper.map(params, result);
   }
 
   private QueryResultDto count(SearchParameters params) {
-    QueryCountResult result = engine.search(IndexNames.DEFAULT)
-      .count(params.getType(), params.getQuery());
+    QueryCountResult result = engine.forType(params.getType())
+      .search()
+      .count(params.getQuery());
 
     return mapper.map(params, new QueryResult(result.getTotalHits(), result.getType(), Collections.emptyList()));
   }
