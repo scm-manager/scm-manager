@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 import React from "react";
+import styled from "styled-components";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import { Plugin } from "@scm-manager/ui-types";
 import { Image } from "@scm-manager/ui-components";
@@ -30,20 +31,28 @@ type Props = {
   plugin: Plugin;
 };
 
+const BoundingBox = styled.p`
+  img {
+    object-fit: contain;
+    height: 64px;
+    width: 64px;
+  }
+`;
+
 export default class PluginAvatar extends React.Component<Props> {
   render() {
     const { plugin } = this.props;
     return (
-      <p className="image is-64x64">
+      <BoundingBox className="image is-64x64">
         <ExtensionPoint
           name="plugins.plugin-avatar"
           props={{
-            plugin
+            plugin,
           }}
         >
           <Image src={plugin.avatarUrl ? plugin.avatarUrl : "/images/blib.jpg"} alt="Logo" />
         </ExtensionPoint>
-      </p>
+      </BoundingBox>
     );
   }
 }
