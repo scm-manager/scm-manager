@@ -24,10 +24,9 @@
 
 package sonia.scm.api.v2.resources;
 
-import com.github.sdorra.spotter.Language;
 import com.google.inject.Inject;
 import de.otto.edison.hal.Links;
-import sonia.scm.api.v2.ContentTypeResolver;
+import sonia.scm.io.ContentTypeResolver;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.DiffFile;
 import sonia.scm.repository.api.DiffLine;
@@ -49,10 +48,12 @@ import static de.otto.edison.hal.Links.linkingTo;
 class DiffResultToDiffResultDtoMapper {
 
   private final ResourceLinks resourceLinks;
+  private final ContentTypeResolver contentTypeResolver;
 
   @Inject
-  DiffResultToDiffResultDtoMapper(ResourceLinks resourceLinks) {
+  DiffResultToDiffResultDtoMapper(ResourceLinks resourceLinks, ContentTypeResolver contentTypeResolver) {
     this.resourceLinks = resourceLinks;
+    this.contentTypeResolver = contentTypeResolver;
   }
 
   public DiffResultDto mapForIncoming(Repository repository, DiffResult result, String source, String target) {
@@ -154,8 +155,8 @@ class DiffResultToDiffResultDtoMapper {
     dto.setOldPath(oldPath);
     dto.setOldRevision(file.getOldRevision());
 
-    Optional<Language> language = ContentTypeResolver.resolve(path).getLanguage();
-    language.ifPresent(value -> dto.setLanguage(ProgrammingLanguages.getValue(value)));
+    Optional<String> language = contentTypeResolver.resolve(path).getLanguage();
+    language.ifPresent(dto::setLanguage);
 
     List<DiffResultDto.HunkDto> hunks = new ArrayList<>();
     for (Hunk hunk : file) {

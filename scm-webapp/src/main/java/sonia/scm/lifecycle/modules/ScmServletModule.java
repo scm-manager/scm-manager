@@ -59,6 +59,8 @@ import sonia.scm.group.GroupManagerProvider;
 import sonia.scm.group.xml.XmlGroupDAO;
 import sonia.scm.initialization.DefaultInitializationFinisher;
 import sonia.scm.initialization.InitializationFinisher;
+import sonia.scm.io.ContentTypeResolver;
+import sonia.scm.io.DefaultContentTypeResolver;
 import sonia.scm.metrics.MeterRegistryProvider;
 import sonia.scm.migration.MigrationDAO;
 import sonia.scm.net.SSLContextProvider;
@@ -290,6 +292,8 @@ class ScmServletModule extends ServletModule {
     bind(IndexQueue.class, DefaultIndexQueue.class);
     bind(SearchEngine.class, LuceneSearchEngine.class);
     bind(IndexLogStore.class, DefaultIndexLogStore.class);
+
+    bind(ContentTypeResolver.class).to(DefaultContentTypeResolver.class);
   }
 
   private <T> void bind(Class<T> clazz, Class<? extends T> defaultImplementation) {

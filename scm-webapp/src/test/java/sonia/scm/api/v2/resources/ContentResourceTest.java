@@ -29,10 +29,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Answers;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.NotFoundException;
+import sonia.scm.io.DefaultContentTypeResolver;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.api.CatCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
@@ -68,13 +68,14 @@ public class ContentResourceTest {
   @Mock(answer = Answers.RETURNS_DEEP_STUBS)
   private RepositoryServiceFactory repositoryServiceFactory;
 
-  @InjectMocks
   private ContentResource contentResource;
 
   private CatCommandBuilder catCommand;
 
   @Before
   public void initService() throws Exception {
+    contentResource = new ContentResource(repositoryServiceFactory, new DefaultContentTypeResolver());
+
     NamespaceAndName existingNamespaceAndName = new NamespaceAndName(NAMESPACE, REPO_NAME);
     RepositoryService repositoryService = repositoryServiceFactory.create(existingNamespaceAndName);
     catCommand = repositoryService.getCatCommand();
@@ -169,7 +170,7 @@ public class ContentResourceTest {
   @Test
   public void shouldNotReadCompleteFileForHead() throws Exception {
     FailingAfterSomeBytesStream stream = new FailingAfterSomeBytesStream();
-    doAnswer(invocation -> stream).when(catCommand).getStream(eq("readHeadOnly"));
+    doAnswer(invocation -> stream).when(catCommand).getStream("readHeadOnly");
 
     Response response = contentResource.metadata(NAMESPACE, REPO_NAME, REV, "readHeadOnly");
     assertEquals(200, response.getStatus());
@@ -201,7 +202,7 @@ public class ContentResourceTest {
       outputStream.close();
       return null;
     }).when(catCommand).retriveContent(any(), eq(path));
-    doAnswer(invocation -> new ByteArrayInputStream(content)).when(catCommand).getStream(eq(path));
+    doAnswer(invocation -> new ByteArrayInputStream(content)).when(catCommand).getStream(path);
   }
 
   private ByteArrayOutputStream readOutputStream(Response response) throws IOException {
