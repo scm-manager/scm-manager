@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.ImportRepositoryHookEvent;
 import sonia.scm.repository.InternalRepositoryException;
+import sonia.scm.repository.PostReceiveRepositoryHookEvent;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryHookEvent;
 import sonia.scm.repository.RepositoryImportEvent;
@@ -132,6 +133,7 @@ public class FromBundleImporter {
       .unbundle(file);
     RepositoryHookEvent repositoryHookEvent = eventSink.get();
     if (repositoryHookEvent != null) {
+      eventBus.post(new PostReceiveRepositoryHookEvent(repositoryHookEvent));
       eventBus.post(new ImportRepositoryHookEvent(repositoryHookEvent));
     }
   }

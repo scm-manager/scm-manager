@@ -1,2 +1,2 @@
 - type: Fixed
-  description: Fixed search queries containing hypens ([#1743](https://github.com/scm-manager/scm-manager/issues/1743) and [#1753](https://github.com/scm-manager/scm-manager/pull/1753))
+  description: Search queries containing hypens ([#1743](https://github.com/scm-manager/scm-manager/issues/1743) and [#1753](https://github.com/scm-manager/scm-manager/pull/1753))

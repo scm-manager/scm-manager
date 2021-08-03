@@ -29,7 +29,6 @@ import org.eclipse.jgit.transport.FetchResult;
 import sonia.scm.ContextEntry;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.PostReceiveRepositoryHookEvent;
-import sonia.scm.repository.RepositoryHookEvent;
 import sonia.scm.repository.Tag;
 import sonia.scm.repository.WrappedRepositoryHookEvent;
 import sonia.scm.repository.api.ImportFailedException;

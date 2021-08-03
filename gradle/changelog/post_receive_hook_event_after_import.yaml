@@ -1,0 +1,2 @@
+- type: Fixed
+  description: Post 'post receive repository hook event' after import ([#1754](https://github.com/scm-manager/scm-manager/pull/1754))

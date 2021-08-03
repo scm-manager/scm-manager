@@ -28,7 +28,6 @@ import com.google.common.io.Resources;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
-import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -40,8 +39,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.event.ScmEventBus;
+import sonia.scm.repository.ImportRepositoryHookEvent;
+import sonia.scm.repository.PostReceiveRepositoryHookEvent;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryHandler;
+import sonia.scm.repository.RepositoryHookEvent;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.RepositoryTestData;
@@ -65,6 +67,7 @@ import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -136,8 +139,7 @@ class FromBundleImporterTest {
 
     @Test
     void shouldImportCompressedBundle() throws IOException {
-      URL dumpUrl = Resources.getResource("sonia/scm/api/v2/svn.dump.gz");
-      InputStream in = new ByteArrayInputStream(Resources.toByteArray(dumpUrl));
+      InputStream in = buildInput("sonia/scm/api/v2/svn.dump.gz");
 
       importer.importFromBundle(true, in, REPOSITORY);
 
@@ -147,8 +149,7 @@ class FromBundleImporterTest {
 
     @Test
     void shouldImportNonCompressedBundle() throws IOException {
-      URL dumpUrl = Resources.getResource("sonia/scm/api/v2/svn.dump");
-      InputStream in = new ByteArrayInputStream(Resources.toByteArray(dumpUrl));
+      InputStream in = buildInput("sonia/scm/api/v2/svn.dump");
 
       importer.importFromBundle(false, in, REPOSITORY);
 
@@ -158,8 +159,7 @@ class FromBundleImporterTest {
 
     @Test
     void shouldSetPermissionForCurrentUser() throws IOException {
-      URL dumpUrl = Resources.getResource("sonia/scm/api/v2/svn.dump");
-      InputStream in = new ByteArrayInputStream(Resources.toByteArray(dumpUrl));
+      InputStream in = buildInput("sonia/scm/api/v2/svn.dump");
 
       Repository createdRepository = importer.importFromBundle(false, in, REPOSITORY);
 
@@ -170,17 +170,38 @@ class FromBundleImporterTest {
       assertThat(permission.isGroupPermission()).isFalse();
       assertThat(permission.getRole()).isEqualTo("OWNER");
     }
+
+    @Test
+    void shouldPostEvents() throws IOException {
+      InputStream in = buildInput("sonia/scm/api/v2/svn.dump");
+
+      RepositoryHookEvent event = mock(RepositoryHookEvent.class);
+      when(unbundleCommandBuilder.setPostEventSink(any()))
+        .thenAnswer(invocationOnMock -> {
+          invocationOnMock.getArgument(0, Consumer.class).accept(event);
+          return invocationOnMock.getMock();
+        });
+
+      importer.importFromBundle(false, in, REPOSITORY);
+
+      verify(eventBus).post(argThat(o -> o instanceof PostReceiveRepositoryHookEvent));
+      verify(eventBus).post(argThat(o -> o instanceof ImportRepositoryHookEvent));
+    }
   }
 
   @Test
   void shouldFailWithoutPermission() throws IOException {
-    URL dumpUrl = Resources.getResource("sonia/scm/api/v2/svn.dump");
-    InputStream in = new ByteArrayInputStream(Resources.toByteArray(dumpUrl));
+    InputStream in = buildInput("sonia/scm/api/v2/svn.dump");
 
     doThrow(new AuthorizationException()).when(subject).checkPermission("repository:create");
 
     assertThrows(AuthorizationException.class, () -> importer.importFromBundle(false, in, REPOSITORY));
 
     verify(manager, never()).create(any(), any());
+  }
+
+  private InputStream buildInput(String s) throws IOException {
+    URL dumpUrl = Resources.getResource(s);
+    return new ByteArrayInputStream(Resources.toByteArray(dumpUrl));
   }
 }
