@@ -41,7 +41,7 @@ import javax.inject.Singleton;
 public class RepositoryIndexer implements Indexer<Repository> {
 
   @VisibleForTesting
-  static final int VERSION = 2;
+  static final int VERSION = 3;
 
   private final RepositoryManager repositoryManager;
   private final SearchEngine searchEngine;
