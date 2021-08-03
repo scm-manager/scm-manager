@@ -89,12 +89,12 @@ public class UserIndexer implements Indexer<User> {
 
     @Override
     public void delete(User user) {
-      index.delete(Id.of(user));
+      index.delete().byType().byId(Id.of(user));
     }
 
     @Override
     public void reIndexAll() {
-      index.deleteAll();
+      index.delete().byType().all();
       for (User user : userManager.getAll()) {
         store(user);
       }

@@ -47,35 +47,81 @@ public interface Index<T> extends AutoCloseable {
   void store(Id id, String permission, T object);
 
   /**
-   * Delete all objects of this type from index.
+   * Delete provides an api to delete objects from the index
+   * @return delete api
    * @since 2.23.0
    */
-  void deleteAll();
-
-  /**
-   * Delete the object with the given id and type from index.
-   *
-   * @param id id of object
-   */
-  void delete(Id id);
-
-  /**
-   * Delete all objects which are related the given repository from index.
-   *
-   * @param repositoryId id of repository
-   */
-  void deleteByRepository(String repositoryId);
-
-  /**
-   * Delete all objects with the given type from index.
-   * This method is mostly if the index type has changed and the old type (in form of class) is no longer available.
-   * @param typeName type name of objects
-   */
-  void deleteByTypeName(String typeName);
+  Deleter delete();
 
   /**
    * Close index and commit changes.
    */
   @Override
   void close();
+
+  /**
+   * Deleter provides an api to delete object from index.
+   *
+   * @since 2.23.0
+   */
+  interface Deleter {
+
+
+    /**
+     * Returns an api which allows deletion of objects from the given type.
+     * @return type restricted delete api
+     */
+    ByTypeDeleter byType();
+    /**
+     * Returns an api which allows deletion of objects from every kind.
+     * @return type unrestricted delete api.
+     */
+    AllTypesDeleter allTypes();
+
+  }
+  /**
+   * Type restricted delete api.
+   *
+   * @since 2.23.0
+   */
+  interface ByTypeDeleter {
+
+    /**
+     * Delete the object with the given id and type from index.
+     * @param id id of object
+     */
+    void byId(Id id);
+
+    /**
+     * Delete all objects of the given type from index.
+     */
+    void all();
+    /**
+     * Delete all objects which are related the given type and repository from index.
+     *
+     * @param repositoryId id of repository
+     */
+    void byRepository(String repositoryId);
+
+  }
+  /**
+   * Type unrestricted delete api.
+   *
+   * @since 2.23.0
+   */
+  interface AllTypesDeleter {
+
+    /**
+     * Delete all objects which are related to the given repository from index regardless of their type.
+     * @param repositoryId repository id
+     */
+    void byRepository(String repositoryId);
+    /**
+     * Delete all objects with the given type from index.
+     * This method is mostly if the index type has changed and the old type (in form of class) is no longer available.
+     * @param typeName type name of objects
+     */
+    void byTypeName(String typeName);
+
+  }
 }

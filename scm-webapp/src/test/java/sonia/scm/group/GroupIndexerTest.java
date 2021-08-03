@@ -55,7 +55,7 @@ class GroupIndexerTest {
   private GroupIndexer indexer;
 
   @Test
-  void shouldReturnRepositoryClass() {
+  void shouldReturnClass() {
     assertThat(indexer.getType()).isEqualTo(Group.class);
   }
 
@@ -78,17 +78,17 @@ class GroupIndexerTest {
     }
 
     @Test
-    void shouldStoreRepository() {
+    void shouldStore() {
       indexer.open().store(group);
 
       verify(index).store(Id.of(group), "group:read:astronauts", group);
     }
 
     @Test
-    void shouldDeleteByRepository() {
+    void shouldDeleteById() {
       indexer.open().delete(group);
 
-      verify(index).delete(Id.of(group));
+      verify(index).delete().byType().byId(Id.of(group));
     }
 
     @Test
@@ -97,7 +97,7 @@ class GroupIndexerTest {
 
       indexer.open().reIndexAll();
 
-      verify(index).deleteAll();
+      verify(index).delete().byType().all();
       verify(index).store(Id.of(group), "group:read:astronauts", group);
     }
 
@@ -107,7 +107,7 @@ class GroupIndexerTest {
 
       indexer.handleEvent(event);
 
-      verify(index).delete(Id.of(group));
+      verify(index).delete().byType().byId(Id.of(group));
     }
 
     @Test

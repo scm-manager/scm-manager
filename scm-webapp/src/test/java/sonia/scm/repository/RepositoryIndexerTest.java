@@ -90,7 +90,7 @@ class RepositoryIndexerTest {
     void shouldDeleteByRepository() {
       indexer.open().delete(repository);
 
-      verify(index).deleteByRepository("42");
+      verify(index).delete().byType().byRepository("42");
     }
 
     @Test
@@ -99,8 +99,8 @@ class RepositoryIndexerTest {
 
       indexer.open().reIndexAll();
 
-      verify(index).deleteByTypeName(Repository.class.getName());
-      verify(index).deleteAll();
+      verify(index).delete().allTypes().byTypeName(Repository.class.getName());
+      verify(index).delete().byType().all();
 
       verify(index).store(Id.of(repository), "repository:read:42", repository);
     }
@@ -111,7 +111,7 @@ class RepositoryIndexerTest {
 
       indexer.handleEvent(event);
 
-      verify(index).deleteByRepository("42");
+      verify(index).delete().allTypes().byRepository("42");
     }
 
     @Test

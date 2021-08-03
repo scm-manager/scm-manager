@@ -100,7 +100,7 @@ class IndexQueueTest {
     }
     executorService.execute(() -> {
       try (Index<IndexedNumber> index = getIndex(IndexedNumber.class)) {
-        index.delete(Id.of(String.valueOf(12)));
+        index.delete().byType().byId(Id.of(String.valueOf(12)));
       }
     });
     executorService.shutdown();

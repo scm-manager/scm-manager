@@ -55,7 +55,7 @@ class UserIndexerTest {
   private UserIndexer indexer;
 
   @Test
-  void shouldReturnRepositoryClass() {
+  void shouldReturnType() {
     assertThat(indexer.getType()).isEqualTo(User.class);
   }
 
@@ -78,17 +78,17 @@ class UserIndexerTest {
     }
 
     @Test
-    void shouldStoreRepository() {
+    void shouldStore() {
       indexer.open().store(user);
 
       verify(index).store(Id.of(user), "user:read:trillian", user);
     }
 
     @Test
-    void shouldDeleteByRepository() {
+    void shouldDeleteById() {
       indexer.open().delete(user);
 
-      verify(index).delete(Id.of(user));
+      verify(index).delete().byType().byId(Id.of(user));
     }
 
     @Test
@@ -97,7 +97,7 @@ class UserIndexerTest {
 
       indexer.open().reIndexAll();
 
-      verify(index).deleteAll();
+      verify(index).delete().byType().all();
       verify(index).store(Id.of(user), "user:read:trillian", user);
     }
 
@@ -107,7 +107,7 @@ class UserIndexerTest {
 
       indexer.handleEvent(event);
 
-      verify(index).delete(Id.of(user));
+      verify(index).delete().byType().byId(Id.of(user));
     }
 
     @Test

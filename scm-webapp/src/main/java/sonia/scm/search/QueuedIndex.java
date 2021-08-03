@@ -44,23 +44,8 @@ public class QueuedIndex<T> implements Index<T> {
   }
 
   @Override
-  public void delete(Id id) {
-    tasks.add(index -> index.delete(id));
-  }
-
-  @Override
-  public void deleteByRepository(String repository) {
-    tasks.add(index -> index.deleteByRepository(repository));
-  }
-
-  @Override
-  public void deleteByTypeName(String typeName) {
-    tasks.add(index -> index.deleteByTypeName(typeName));
-  }
-
-  @Override
-  public void deleteAll() {
-    tasks.add(Index::deleteAll);
+  public Deleter delete() {
+    return new QueueDeleter();
   }
 
   @Override
@@ -69,5 +54,49 @@ public class QueuedIndex<T> implements Index<T> {
       queue.getIndexFactory(), indexParams, tasks
     );
     queue.enqueue(wrappedTask);
+  }
+
+  class QueueDeleter implements Deleter {
+
+    @Override
+    public ByTypeDeleter byType() {
+      return new QueueByTypeDeleter();
+    }
+
+    @Override
+    public AllTypesDeleter allTypes() {
+      return new QueueAllTypesDeleter();
+    }
+  }
+
+  class QueueByTypeDeleter implements ByTypeDeleter {
+
+    @Override
+    public void byId(Id id) {
+      tasks.add(index -> index.delete().byType().byId(id));
+    }
+
+    @Override
+    public void all() {
+      tasks.add(index -> index.delete().byType().all());
+    }
+
+    @Override
+    public void byRepository(String repositoryId) {
+      tasks.add(index -> index.delete().byType().byRepository(repositoryId));
+    }
+  }
+
+  class QueueAllTypesDeleter implements AllTypesDeleter {
+
+    @Override
+    public void byRepository(String repositoryId) {
+      tasks.add(index -> index.delete().allTypes().byRepository(repositoryId));
+    }
+
+    @Override
+    public void byTypeName(String typeName) {
+      tasks.add(index -> index.delete().allTypes().byTypeName(typeName));
+    }
   }
 }

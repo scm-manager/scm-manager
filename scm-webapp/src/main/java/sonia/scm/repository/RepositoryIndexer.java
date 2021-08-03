@@ -89,14 +89,14 @@ public class RepositoryIndexer implements Indexer<Repository> {
 
     @Override
     public void delete(Repository repository) {
-      index.deleteByRepository(repository.getId());
+      index.delete().allTypes().byRepository(repository.getId());
     }
 
     @Override
     public void reIndexAll() {
       // v1 used the whole classname as type
-      index.deleteByTypeName(Repository.class.getName());
-      index.deleteAll();
+      index.delete().allTypes().byTypeName(Repository.class.getName());
+      index.delete().byType().all();
       for (Repository repository : repositoryManager.getAll()) {
         store(repository);
       }

@@ -89,12 +89,12 @@ public class GroupIndexer implements Indexer<Group> {
 
     @Override
     public void delete(Group group) {
-      index.delete(Id.of(group));
+      index.delete().byType().byId(Id.of(group));
     }
 
     @Override
     public void reIndexAll() {
-      index.deleteAll();
+      index.delete().byType().all();
       for (Group group : groupManager.getAll()) {
         store(group);
       }

@@ -30,6 +30,9 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.TermQuery;
 
 import java.io.IOException;
 
@@ -76,35 +79,8 @@ public class LuceneIndex<T> implements Index<T> {
   }
 
   @Override
-  public void delete(Id id) {
-    try {
-      writer.deleteDocuments(new Term(UID, createUid(id, searchableType)));
-    } catch (IOException e) {
-      throw new SearchEngineException("failed to delete document from index", e);
-    }
-  }
-
-  @Override
-  public void deleteByRepository(String repository) {
-    try {
-      writer.deleteDocuments(new Term(REPOSITORY, repository));
-    } catch (IOException ex) {
-      throw new SearchEngineException("failed to delete documents by repository " + repository + " from index", ex);
-    }
-  }
-
-  @Override
-  public void deleteAll() {
-    deleteByTypeName(searchableType.getName());
-  }
-
-  @Override
-  public void deleteByTypeName(String typeName) {
-    try {
-      writer.deleteDocuments(new Term(TYPE, typeName));
-    } catch (IOException ex) {
-      throw new SearchEngineException("failed to delete documents by repository " + typeName + " from index", ex);
-    }
+  public Deleter delete() {
+    return new LuceneDeleter();
   }
 
   @Override
@@ -113,6 +89,75 @@ public class LuceneIndex<T> implements Index<T> {
       writer.close();
     } catch (IOException e) {
       throw new SearchEngineException("failed to close index writer", e);
+    }
+  }
+
+  class LuceneDeleter implements Deleter {
+
+    @Override
+    public ByTypeDeleter byType() {
+      return new LuceneByTypeDeleter();
+    }
+
+    @Override
+    public AllTypesDeleter allTypes() {
+      return new LuceneAllTypesDelete();
+    }
+  }
+
+  @SuppressWarnings("java:S1192")
+  class LuceneByTypeDeleter implements ByTypeDeleter {
+
+    @Override
+    public void byId(Id id) {
+      try {
+        writer.deleteDocuments(new Term(UID, createUid(id, searchableType)));
+      } catch (IOException e) {
+        throw new SearchEngineException("failed to delete document from index", e);
+      }
+    }
+
+    @Override
+    public void all() {
+      try {
+        writer.deleteDocuments(new Term(TYPE, searchableType.getName()));
+      } catch (IOException ex) {
+        throw new SearchEngineException("failed to delete documents by type " + searchableType.getName() + " from index", ex);
+      }
+    }
+
+    @Override
+    public void byRepository(String repositoryId) {
+      try {
+        BooleanQuery query = new BooleanQuery.Builder()
+          .add(new TermQuery(new Term(TYPE, searchableType.getName())), BooleanClause.Occur.MUST)
+          .add(new TermQuery(new Term(REPOSITORY, repositoryId)), BooleanClause.Occur.MUST)
+          .build();
+        writer.deleteDocuments(query);
+      } catch (IOException ex) {
+        throw new SearchEngineException("failed to delete documents by repository " + repositoryId + " from index", ex);
+      }
+    }
+  }
+
+  class LuceneAllTypesDelete implements AllTypesDeleter {
+
+    @Override
+    public void byRepository(String repositoryId) {
+      try {
+        writer.deleteDocuments(new Term(REPOSITORY, repositoryId));
+      } catch (IOException ex) {
+        throw new SearchEngineException("failed to delete all documents by repository " + repositoryId + " from index", ex);
+      }
+    }
+
+    @Override
+    public void byTypeName(String typeName) {
+      try {
+        writer.deleteDocuments(new Term(TYPE, typeName));
+      } catch (IOException ex) {
+        throw new SearchEngineException("failed to delete documents by type " + typeName + " from index", ex);
+      }
     }
   }
 }
