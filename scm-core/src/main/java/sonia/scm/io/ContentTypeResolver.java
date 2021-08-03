@@ -32,7 +32,7 @@ package sonia.scm.io;
 public interface ContentTypeResolver {
 
   /**
-   * Detects the {@link ContentType} of the given path, by only using path based strategies..
+   * Detects the {@link ContentType} of the given path, by only using path based strategies.
    *
    * @param path path of the file
    *
