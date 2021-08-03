@@ -85,13 +85,14 @@ class SearchResourceTest {
     ScmPathInfoStore scmPathInfoStore = new ScmPathInfoStore();
     scmPathInfoStore.set(() -> URI.create("/"));
 
-    QueryResultMapper mapper = Mappers.getMapper(QueryResultMapper.class);
+    QueryResultMapper queryResultMapper = Mappers.getMapper(QueryResultMapper.class);
     mapper.setRepositoryManager(repositoryManager);
     mapper.setResourceLinks(new ResourceLinks(scmPathInfoStore));
 
-    mapper.setRegistry(enricherRegistry);
+    SearchableTypeMapper searchableTypeMapper = Mappers.getMapper(SearchableTypeMapper.class);
+    queryResultMapper.setRegistry(enricherRegistry);
     SearchResource resource = new SearchResource(
-      searchEngine, mapper
+      searchEngine, queryResultMapper, searchableTypeMapper
     );
     dispatcher = new RestDispatcher();
     dispatcher.addSingletonResource(resource);

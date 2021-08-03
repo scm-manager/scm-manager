@@ -1128,6 +1128,7 @@ class ResourceLinks {
     public String query(String type) {
       return searchLinkBuilder.method("query").parameters(type).href();
     }
+    public String searchableTypes() { return searchLinkBuilder.method("searchableTypes").parameters().href(); }
   }
 
   public InitialAdminAccountLinks initialAdminAccount() {

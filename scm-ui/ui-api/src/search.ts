@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import { ApiResult, useIndexLinks } from "./base";
+import { ApiResult, useIndexJsonResource, useIndexLinks } from "./base";
 import { Link, QueryResult } from "@scm-manager/ui-types";
 import { apiClient } from "./apiclient";
 import { createQueryString } from "./utils";
@@ -46,6 +46,8 @@ export const useSearchTypes = () => {
     .map((link) => link.name)
     .filter(isString);
 };
+
+export const useSearchableTypes = () => useIndexJsonResource("searchableTypes");
 
 export const useSearchCounts = (types: string[], query: string) => {
   const searchLinks = useSearchLinks();

@@ -1,5 +1,5 @@
 import React, { FC, useState } from "react";
-import { useSearchSyntaxContent } from "@scm-manager/ui-api";
+import { useSearchableTypes, useSearchSyntaxContent } from "@scm-manager/ui-api";
 import { useTranslation } from "react-i18next";
 import { Button, copyToClipboard, Icon, InputField, Loading, MarkdownView, Page } from "@scm-manager/ui-components";
 import { parse } from "date-fns";
@@ -17,6 +17,9 @@ const Syntax: FC = () => {
   const [datetime, setDatetime] = useState("");
   const [timestamp, setTimestamp] = useState("");
   const [copying, setCopying] = useState(false);
+  const { isLoading: isLoadingSearchableTypes, data: searchableTypes } = useSearchableTypes();
+
+  // useEffect(() => console.log("searchableTypes", searchableTypes), [searchableTypes]);
 
   const convert = () => {
     const format = "yyyy-MM-dd HH:mm:ss";
@@ -30,7 +33,7 @@ const Syntax: FC = () => {
   };
 
   let staticLoadedContent;
-  if (isLoading) {
+  if (isLoading || isLoadingSearchableTypes) {
     staticLoadedContent = <Loading />;
   } else {
     staticLoadedContent = <MarkdownView content={helpModalContent!} basePath="/" />;
