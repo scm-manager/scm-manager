@@ -28,7 +28,7 @@ import com.google.common.annotations.Beta;
 
 /**
  * Can be used to index objects for full text searches.
- *
+ * @param <T> type of indexed objects
  * @since 2.21.0
  */
 @Beta
@@ -46,6 +46,10 @@ public interface Index<T> extends AutoCloseable {
    */
   void store(Id id, String permission, T object);
 
+  /**
+   * Delete all objects of this type from index.
+   * @since 2.23.0
+   */
   void deleteAll();
 
   /**

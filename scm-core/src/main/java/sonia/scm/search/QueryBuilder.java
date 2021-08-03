@@ -37,6 +37,7 @@ import static sonia.scm.NotFoundException.notFound;
 /**
  * Build and execute queries against an index.
  *
+ * @param <T> type of indexed objects
  * @since 2.21.0
  */
 @Beta
@@ -100,7 +101,6 @@ public abstract class QueryBuilder<T> {
   /**
    * Executes the query and returns the total count of hits.
    *
-   * @param type type of objects which are searched
    * @param queryString searched query
    *
    * @return total count of hits
