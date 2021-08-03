@@ -59,7 +59,7 @@ class DefaultContentTypeResolverTest {
   @Nested
   class IsTextTests {
 
-    @ParameterizedTest(name = "shouldReturnIsTextFor{argumentsWithNames}")
+    @ParameterizedTest(name = "shouldReturnIsTextFor: {argumentsWithNames}")
     @ValueSource(strings = {"App.java", "Dockerfile", "Playbook.yml", "README.md", "LICENSE.txt"})
     void shouldReturnIsTextFor(String path) {
       ContentType contentType = contentTypeResolver.resolve(path);
