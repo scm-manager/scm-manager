@@ -164,7 +164,7 @@ const Hits: FC<HitsProps> = ({ hits, index, clear, gotoDetailSearch }) => {
   const id = useCallback(namespaceAndName, [hits]);
   const [showHelpModal, setShowHelpModal] = useState(false);
   const { t, i18n } = useTranslation("commons");
-  const { isLoading, error, data: helpModalContent } = useSearchHelpContent(i18n.languages[0]);
+  const { loading: isLoading, data: helpModalContent } = useSearchHelpContent(i18n.languages[0]);
 
   if (hits.length === 0) {
     return <EmptyHits gotoDetailSearch={gotoDetailSearch} />;
@@ -175,8 +175,6 @@ const Hits: FC<HitsProps> = ({ hits, index, clear, gotoDetailSearch }) => {
     let modalContent;
     if (isLoading) {
       modalContent = <Loading />;
-    } else if (error) {
-      modalContent = <ErrorNotification error={error} />;
     } else {
       modalContent = <MarkdownView content={helpModalContent!} basePath="/" />;
     }
@@ -196,7 +194,13 @@ const Hits: FC<HitsProps> = ({ hits, index, clear, gotoDetailSearch }) => {
       <div aria-expanded="true" role="listbox" className="dropdown-content">
         <ResultHeading className="dropdown-item">
           <span>{t("search.quickSearch.resultHeading")}</span>
-          <Icon onClick={() => setShowHelpModal(true)} title={t("search.quickSearch.hintsIcon")} name="question-circle" color="info" className="is-clickable" />
+          <Icon
+            onClick={() => setShowHelpModal(true)}
+            title={t("search.quickSearch.hintsIcon")}
+            name="question-circle"
+            color="info"
+            className="is-clickable"
+          />
         </ResultHeading>
         {hits.map((hit, idx) => (
           <div key={id(hit)} onMouseDown={(e) => e.preventDefault()} onClick={clear}>

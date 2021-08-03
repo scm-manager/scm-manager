@@ -27,6 +27,7 @@ import { Link, QueryResult } from "@scm-manager/ui-types";
 import { apiClient } from "./apiclient";
 import { createQueryString } from "./utils";
 import { useQueries, useQuery } from "react-query";
+import { useEffect, useState } from "react";
 
 export type SearchOptions = {
   type: string;
@@ -114,5 +115,21 @@ export const useSearch = (query: string, optionParam = defaultSearchOptions): Ap
   );
 };
 
-export const useSearchHelpContent = (language: string) => useQuery<string, Error>(["searchHelpContent", language], () => import(`./help/search/modal.${language}`).then(module => module.default));
-export const useSearchSyntaxContent = (language: string) => useQuery<string, Error>(["searchHelpContent", language], () => import(`./help/search/syntax.${language}`).then(module => module.default));
+const useObserveAsync = <D extends any[], R, E = Error>(fn: (...args: D) => Promise<R>, deps: D) => {
+  const [data, setData] = useState<R>();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<E>();
+  useEffect(() => {
+    setLoading(true);
+    fn(...deps)
+      .then(setData)
+      .catch(setError)
+      .finally(() => setLoading(false));
+  }, deps);
+  return { data, loading, error };
+};
+
+export const useSearchHelpContent = (language: string) =>
+  useObserveAsync((lang) => import(`./help/search/modal.${lang}`).then((module) => module.default), [language]);
+export const useSearchSyntaxContent = (language: string) =>
+  useObserveAsync((lang) => import(`./help/search/syntax.${lang}`).then((module) => module.default), [language]);

@@ -160,7 +160,28 @@
       "resultHeading": "Top-Ergebnisse Repositories",
       "parseError": "Der Suchstring is ungültig",
       "moreResults": "Mehr Ergebnisse",
-      "noResults": "Es konnten keine Repositories gefunden werden"
+      "noResults": "Es konnten keine Repositories gefunden werden",
+      "hintsIcon": "Suchtipps",
+      "hints": "Hinweise zu ihrer Suche"
+    },
+    "syntax": {
+      "title": "Experten-Suche",
+      "subtitle": "Erfahren Sie mehr über die Felder der Entitäten, Modifikatoren und Operatoren.",
+      "exampleQueriesAndFields": {
+        "title": "Beispielabfragen und Felder",
+        "description": "Felder können einzeln abgefragt werden, um Ihre Suche einzugrenzen, z.B. name:ultimate sucht nur nach ultimate im Feld \"name\" der Entitäten. Einige Felder können in allen oder den meisten Entitäten gefunden werden (z.B. Name, creationDate). Andere Felder sind nur bei einzelnen Entitäten vorhanden."
+      },
+      "utilities": {
+        "title": "Hilfsmittel",
+        "description": "Wandeln Sie menschlich-lesbare Zeitmarken in standard Millisekunden um, um diese in Ihren Queries zu verwenden. Das Datum ist ein Pflichtfeld, Stunde, Minute und Sekunde sind optional.",
+        "datetime":{
+          "label": "Datum in Standardzeitstempel umwandeln",
+          "format": "yyyy-mm-dd hh:mm:ss",
+          "convertButtonLabel": "Konvertieren"
+        },
+        "timestampPlaceholder": "Standard Zeitstempel",
+        "copyTimestampTooltip": "Zeitstempel in Zwischenablage kopieren"
+      }
     }
   }
 }

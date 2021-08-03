@@ -29,15 +29,15 @@ import { urls } from "@scm-manager/ui-api";
 
 // not sure if it is required
 import {
+  AnnotationFactory,
+  AnnotationFactoryContext,
+  BaseContext,
+  Change,
+  DiffEventContext,
+  DiffEventHandler,
   File,
   FileChangeType,
   Hunk,
-  Change,
-  BaseContext,
-  AnnotationFactory,
-  AnnotationFactoryContext,
-  DiffEventHandler,
-  DiffEventContext
 } from "./repos";
 
 export { validation, repositories };
@@ -81,6 +81,7 @@ export { default as SplitAndReplace, Replacement } from "./SplitAndReplace";
 export { regExpPattern as changesetShortLinkRegex } from "./markdown/remarkChangesetShortLinkParser";
 export * from "./markdown/PluginApi";
 export * from "./devices";
+export { default as copyToClipboard } from "./CopyToClipboard";
 
 export { default as comparators } from "./comparators";
 
@@ -108,7 +109,7 @@ export {
   AnnotationFactory,
   AnnotationFactoryContext,
   DiffEventHandler,
-  DiffEventContext
+  DiffEventContext,
 };
 
 // Re-export from ui-api
@@ -125,7 +126,7 @@ export {
   MissingLinkError,
   createBackendError,
   isBackendError,
-  TOKEN_EXPIRED_ERROR_CODE
+  TOKEN_EXPIRED_ERROR_CODE,
 } from "@scm-manager/ui-api";
 
 export { urls };

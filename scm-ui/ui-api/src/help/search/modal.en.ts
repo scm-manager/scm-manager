@@ -1,4 +1,4 @@
-export default `Our search uses Lucene and you may use the [full syntax](https://lucene.apache.org/core/2_9_4/queryparsersyntax.html).
+export default `Our search uses Lucene and you may use the [full syntax](http://lucene.apache.org/core/8_9_0/index.html).
 
 To learn about advanced search read our [Expert Search Site](/help/search-syntax).
 
