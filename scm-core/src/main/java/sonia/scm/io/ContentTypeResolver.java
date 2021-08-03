@@ -25,7 +25,7 @@
 package sonia.scm.io;
 
 /**
- * ContentTypeResolver is able to detect the {@link ContentType} of content.
+ * ContentTypeResolver is able to detect the {@link ContentType} of files based on their path and (optinally) a few starting bytes. These files do not have to be real files on the file system, but can be hypothetical constructs ("What content type is most probable for a file named like this").
  *
  * @since 2.23.0
  */
