@@ -43,7 +43,7 @@ public interface ContentTypeResolver {
   /**
    * Detects the {@link ContentType} of the given path, by using path and content based strategies.
    *
-   * @param path path of the content
+   * @param path path of the file
    * @param contentPrefix first few bytes of the content
    *
    * @return {@link ContentType} of path and content prefix
