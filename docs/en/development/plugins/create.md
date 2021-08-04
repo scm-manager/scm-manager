@@ -1,22 +1,20 @@
 ---
 title: Create a plugin
-subtitle: Create a plugin from Maven Archetype
-displayToc: true
+subtitle: Create a new SCM-Manager plugin
+displayToc: false
 ---
 
 # Requirements
 
 Be sure you have installed the following software:
 
-* [Java 8](https://java.com/de/download/)
-* [Apache Maven](http://maven.apache.org/)
+* [Java 11](https://java.com/de/download/)
 
 # Create the plugin structure
 
-There is a service which is able to create a skeleton for a new plugin:
-
-https://create-plugin.scm-manager.org/
+Use our [simple plugin creator](https://create-plugin.scm-manager.org/) to generate and download a pre-configured package for your new plugin.
 
 # Implement your plugin
 
 ... draw the rest of the owl
+
