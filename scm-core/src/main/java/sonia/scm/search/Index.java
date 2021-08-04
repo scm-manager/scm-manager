@@ -66,21 +66,22 @@ public interface Index<T> extends AutoCloseable {
    */
   interface Deleter {
 
-
     /**
-     * Returns an api which allows deletion of objects from the given type.
+     * Returns an api which allows deletion of objects from the type of this index.
      * @return type restricted delete api
      */
     ByTypeDeleter byType();
+
     /**
-     * Returns an api which allows deletion of objects from every kind.
-     * @return type unrestricted delete api.
+     * Returns an api which allows deletion of objects of every type.
+     * @return unrestricted delete api for all types.
      */
     AllTypesDeleter allTypes();
-
   }
+
   /**
-   * Type restricted delete api.
+   * Delete api for the type of the index. This means, that only entries for this
+   * type will be deleted.
    *
    * @since 2.23.0
    */
@@ -96,16 +97,17 @@ public interface Index<T> extends AutoCloseable {
      * Delete all objects of the given type from index.
      */
     void all();
+
     /**
      * Delete all objects which are related the given type and repository from index.
      *
      * @param repositoryId id of repository
      */
     void byRepository(String repositoryId);
-
   }
+
   /**
-   * Type unrestricted delete api.
+   * Delete api for the overall index regarding all types.
    *
    * @since 2.23.0
    */
@@ -116,12 +118,13 @@ public interface Index<T> extends AutoCloseable {
      * @param repositoryId repository id
      */
     void byRepository(String repositoryId);
+
     /**
      * Delete all objects with the given type from index.
-     * This method is mostly if the index type has changed and the old type (in form of class) is no longer available.
+     * This method is mostly useful if the index type has changed and the old type (in form of a class)
+     * is no longer available.
      * @param typeName type name of objects
      */
     void byTypeName(String typeName);
-
   }
 }
