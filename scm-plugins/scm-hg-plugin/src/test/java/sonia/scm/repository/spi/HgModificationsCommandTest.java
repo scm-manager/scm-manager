@@ -25,14 +25,17 @@
 package sonia.scm.repository.spi;
 
 import com.aragost.javahg.Changeset;
+import com.aragost.javahg.commands.BranchCommand;
 import com.aragost.javahg.commands.CopyCommand;
 import com.aragost.javahg.commands.RemoveCommand;
 import com.aragost.javahg.commands.RenameCommand;
+import com.aragost.javahg.commands.UpdateCommand;
 import org.junit.Before;
 import org.junit.Test;
 import sonia.scm.repository.HgConfigResolver;
 import sonia.scm.repository.HgTestUtil;
 import sonia.scm.repository.Modifications;
+import sonia.scm.repository.client.spi.CheckoutCommand;
 
 import java.io.File;
 import java.util.function.Consumer;
@@ -110,6 +113,37 @@ public class HgModificationsCommandTest extends IncomingOutgoingTestBase {
     String revision = String.valueOf(changeset.getRevision());
     Consumer<Modifications> assertModifications = assertCopiedFiles(srcFileName, newFileName);
     assertModifications.accept(outgoingModificationsCommand.getModifications(revision));
+  }
+
+  @Test
+  public void shouldFindModificationsBetweenRevisions() throws Exception {
+    writeNewFile(outgoing, outgoingDirectory, "a.txt", "bla bla");
+    writeNewFile(outgoing, outgoingDirectory, "42.txt", "the answer to life and everything");
+    writeNewFile(outgoing, outgoingDirectory, "SpaceX.txt", "Going to infinity and beyond");
+    commit(outgoing, "add files");
+    BranchCommand.on(outgoing).set("some_branch");
+    writeNewFile(outgoing, outgoingDirectory, "x.txt", "bla bla");
+    Changeset otherBranchCommit = commit(outgoing, "other branch");
+
+    UpdateCommand.on(outgoing).rev("default").execute();
+    writeNewFile(outgoing, outgoingDirectory, "a.txt", "modified content");
+    commit(outgoing, "modify file");
+    RenameCommand.on(outgoing).execute("42.txt", "7x6.txt");
+    commit(outgoing, "rename file");
+    CopyCommand.on(outgoing).execute("SpaceX.txt", "Virgin.txt");
+    commit(outgoing, "copy file");
+    writeNewFile(outgoing, outgoingDirectory, "c.txt", "brand new file");
+    Changeset targetChangeset = commit(outgoing, "add file");
+
+    Modifications modifications = outgoingModificationsCommand.getModifications(otherBranchCommit.getNode(), targetChangeset.getNode());
+
+    assertThat(modifications.getModifications())
+      .hasSize(6)
+      .extracting("class.simpleName")
+      .contains("Modified") // File a.txt has been modified
+      .contains("Removed") // File x.txt from the other branch is not present and 42.txt has been removed (via rename)
+      .contains("Added") // File c.txt, Virgin.txt, and 7x6.txt have been created (or copied or renamed) on the original branch
+    ;
   }
 
   Consumer<Modifications> assertRemovedFiles(String fileName) {

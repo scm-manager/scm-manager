@@ -22,34 +22,34 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.spi;
+package sonia.scm.repository.spi.javahg;
 
+import com.aragost.javahg.Repository;
+import com.aragost.javahg.internals.HgInputStream;
 import sonia.scm.repository.Modification;
-import sonia.scm.repository.Modifications;
-import sonia.scm.repository.spi.javahg.HgLogChangesetCommand;
-import sonia.scm.repository.spi.javahg.StateCommand;
 
 import java.io.IOException;
 import java.util.Collection;
 
-public class HgModificationsCommand extends AbstractCommand implements ModificationsCommand {
-
-  HgModificationsCommand(HgCommandContext context) {
-    super(context);
+public class StateCommand extends com.aragost.javahg.internals.AbstractCommand {
+  public StateCommand(Repository repository) {
+    super(repository);
   }
 
   @Override
-  public Modifications getModifications(String revision) {
-    com.aragost.javahg.Repository repository = open();
-    HgLogChangesetCommand hgLogChangesetCommand = HgLogChangesetCommand.on(repository, getContext().getConfig());
-    Collection<Modification> modifications = hgLogChangesetCommand.rev(revision).extractModifications();
-    return new Modifications(revision, modifications);
+  public String getCommandName() {
+    return "status";
   }
 
-  @Override
-  public Modifications getModifications(String baseRevision, String revision) throws IOException {
-    com.aragost.javahg.Repository repository = open();
-    StateCommand stateCommand = new StateCommand(repository);
-    return new Modifications(baseRevision, revision, stateCommand.call(baseRevision, revision));
+  public Collection<Modification> call(String from, String to) throws IOException {
+    cmdAppend("--rev", from + ":" + to);
+    HgInputStream in = launchStream();
+    HgModificationParser hgModificationParser = new HgModificationParser();
+    String line = in.textUpTo('\n');
+    while (line != null && line.length() > 0) {
+      hgModificationParser.addLine(line);
+      line = in.textUpTo('\n');
+    }
+    return hgModificationParser.getModifications();
   }
 }
