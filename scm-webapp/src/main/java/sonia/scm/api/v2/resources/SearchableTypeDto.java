@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Collection;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -12,4 +14,5 @@ import lombok.Setter;
 public class SearchableTypeDto extends HalRepresentation {
   private String name;
   private String type;
+  private Collection<SearchableFieldDto> fields;
 }

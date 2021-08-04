@@ -26,12 +26,31 @@ package sonia.scm.api.v2.resources;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import sonia.scm.search.SearchableField;
 import sonia.scm.search.SearchableType;
+import sonia.scm.search.TypeCheck;
 
 @Mapper
-public abstract class SearchableTypeMapper extends BaseMapper<SearchableType, SearchableTypeDto> {
+public abstract class SearchableTypeMapper {
 
   @Mapping(target = "type", ignore = true)
+  @Mapping(target = "attributes", ignore = true)
   public abstract SearchableTypeDto map(SearchableType searchableType);
+
+  public abstract SearchableFieldDto map(SearchableField searchableField);
+
+  public String map(Class<?> type) {
+    if (TypeCheck.isString(type)) {
+      return "string";
+    } else if (TypeCheck.isInstant(type)) {
+      return "timestamp";
+    } else if (TypeCheck.isNumber(type)) {
+      return "number";
+    } else if (TypeCheck.isBoolean(type)) {
+      return "boolean";
+    } else {
+      return "unknown";
+    }
+  }
 
 }

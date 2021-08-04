@@ -171,6 +171,21 @@
         "title": "Beispielabfragen und Felder",
         "description": "Felder können einzeln abgefragt werden, um Ihre Suche einzugrenzen, z.B. name:ultimate sucht nur nach ultimate im Feld \"name\" der Entitäten. Einige Felder können in allen oder den meisten Entitäten gefunden werden (z.B. Name, creationDate). Andere Felder sind nur bei einzelnen Entitäten vorhanden."
       },
+      "fields": {
+        "name": "Name",
+        "type": "Typ",
+        "exampleValue": "Beispielwert",
+        "hints": "Hinweise"
+      },
+      "exampleQueries": {
+        "title": "Beispielabfragen",
+        "description": "Felder mit Modifikatoren und Operatoren um Repositories zu finden.",
+        "table": {
+          "description": "Wonach gesucht wird",
+          "query": "Abfrage",
+          "explanation": "Erklärung"
+        }
+      },
       "utilities": {
         "title": "Hilfsmittel",
         "description": "Wandeln Sie menschlich-lesbare Zeitmarken in standard Millisekunden um, um diese in Ihren Queries zu verwenden. Das Datum ist ein Pflichtfeld, Stunde, Minute und Sekunde sind optional.",

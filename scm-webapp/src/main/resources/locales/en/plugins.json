@@ -382,16 +382,34 @@
     "types": {
       "repository": {
         "subtitle": "Repository",
-        "navItem": "Repositories"
+        "navItem": "Repositories",
+        "title": "Repositories",
+        "examples": [
+          {
+            "description": "a repository called ultimate-Repository or ultimate_repository. You are not sure about the connecting character.",
+            "query": "",
+            "explanation": ""
+          }
+        ]
       },
       "user": {
         "subtitle": "User",
-        "navItem": "Users"
+        "navItem": "Users",
+        "title": "Users"
       },
       "group": {
         "subtitle": "Group",
-        "navItem": "Groups"
+        "navItem": "Groups",
+        "title": "Groups",
+        "fields": {
+          "name": {
+            "name": "Name",
+            "exampleValue": "Developers",
+            "hint": "?"
+          }
+        }
       }
     }
   }
 }
+

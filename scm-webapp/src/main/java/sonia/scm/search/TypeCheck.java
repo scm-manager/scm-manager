@@ -26,7 +26,7 @@ package sonia.scm.search;
 
 import java.time.Instant;
 
-final class TypeCheck {
+public final class TypeCheck {
 
   private TypeCheck() {
   }
@@ -50,4 +50,6 @@ final class TypeCheck {
   public static boolean isString(Class<?> type) {
     return type == String.class;
   }
+
+  public static boolean isNumber(Class<?> type) { return isLong(type) || isInteger(type); }
 }

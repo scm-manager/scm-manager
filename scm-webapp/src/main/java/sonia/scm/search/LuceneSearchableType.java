@@ -28,6 +28,7 @@ import com.google.common.base.Strings;
 import lombok.Value;
 import org.apache.lucene.queryparser.flexible.standard.config.PointsConfig;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -42,13 +43,13 @@ public class LuceneSearchableType implements SearchableType {
   Class<?> type;
   String name;
   String permission;
-  List<SearchableField> fields;
+  List<LuceneSearchableField> fields;
   String[] fieldNames;
   Map<String, Float> boosts;
   Map<String, PointsConfig> pointsConfig;
   TypeConverter typeConverter;
 
-  LuceneSearchableType(Class<?> type, IndexedType annotation, List<SearchableField> fields) {
+  LuceneSearchableType(Class<?> type, IndexedType annotation, List<LuceneSearchableField> fields) {
     this.type = type;
     this.name = name(type, annotation);
     this.permission = Strings.emptyToNull(annotation.permission());
@@ -72,16 +73,16 @@ public class LuceneSearchableType implements SearchableType {
     return nameFromAnnotation;
   }
 
-  private String[] fieldNames(List<SearchableField> fields) {
+  private String[] fieldNames(List<LuceneSearchableField> fields) {
     return fields.stream()
-      .filter(SearchableField::isDefaultQuery)
-      .map(SearchableField::getName)
+      .filter(LuceneSearchableField::isDefaultQuery)
+      .map(LuceneSearchableField::getName)
       .toArray(String[]::new);
   }
 
-  private Map<String, Float> boosts(List<SearchableField> fields) {
+  private Map<String, Float> boosts(List<LuceneSearchableField> fields) {
     Map<String, Float> map = new HashMap<>();
-    for (SearchableField field : fields) {
+    for (LuceneSearchableField field : fields) {
       if (field.isDefaultQuery() && field.getBoost() != DEFAULT_BOOST) {
         map.put(field.getName(), field.getBoost());
       }
@@ -89,14 +90,18 @@ public class LuceneSearchableType implements SearchableType {
     return Collections.unmodifiableMap(map);
   }
 
-  private Map<String, PointsConfig> pointsConfig(List<SearchableField> fields) {
+  private Map<String, PointsConfig> pointsConfig(List<LuceneSearchableField> fields) {
     Map<String, PointsConfig> map = new HashMap<>();
-    for (SearchableField field : fields) {
+    for (LuceneSearchableField field : fields) {
       PointsConfig config = field.getPointsConfig();
       if (config != null) {
         map.put(field.getName(), config);
       }
     }
     return Collections.unmodifiableMap(map);
+  }
+
+  public Collection<LuceneSearchableField> getFields() {
+    return Collections.unmodifiableCollection(fields);
   }
 }

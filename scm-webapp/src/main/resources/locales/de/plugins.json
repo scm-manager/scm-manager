@@ -438,15 +438,18 @@
     "types": {
       "repository": {
         "subtitle": "Repository",
-        "navItem": "Repositories"
+        "navItem": "Repositories",
+        "title": "Repositories"
       },
       "user": {
         "subtitle": "Benutzer",
-        "navItem": "Benutzer"
+        "navItem": "Benutzer",
+        "title": "Benutzer"
       },
       "group": {
         "subtitle": "Gruppe",
-        "navItem": "Gruppen"
+        "navItem": "Gruppen",
+        "title": "Gruppen"
       }
     }
   }

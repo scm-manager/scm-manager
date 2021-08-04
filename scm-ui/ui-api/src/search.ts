@@ -23,7 +23,7 @@
  */
 
 import { ApiResult, useIndexJsonResource, useIndexLinks } from "./base";
-import { Link, QueryResult } from "@scm-manager/ui-types";
+import {Link, QueryResult, SearchableType} from "@scm-manager/ui-types";
 import { apiClient } from "./apiclient";
 import { createQueryString } from "./utils";
 import { useQueries, useQuery } from "react-query";
@@ -47,7 +47,7 @@ export const useSearchTypes = () => {
     .filter(isString);
 };
 
-export const useSearchableTypes = () => useIndexJsonResource("searchableTypes");
+export const useSearchableTypes = () => useIndexJsonResource<SearchableType[]>("searchableTypes");
 
 export const useSearchCounts = (types: string[], query: string) => {
   const searchLinks = useSearchLinks();

@@ -13,20 +13,45 @@ import {
 } from "@scm-manager/ui-components";
 import {parse} from "date-fns";
 import styled from "styled-components";
+import classNames from "classnames";
 
 const StyledTooltip = styled(Tooltip)`
   height: 40px;
 `;
 
+type ExpandableProps = {
+  header: React.ReactNode;
+  className?: string;
+};
+
+const Expandable: FC<ExpandableProps> = ({header, children, className}) => {
+  const [expanded, setExpanded] = useState(false);
+  return (
+    <div className={classNames("card", className)}>
+      <header onClick={() => setExpanded(!expanded)} className="card-header is-clickable">
+        <span className="card-header-title">{header}</span>
+        <span className="card-header-icon">
+          <Icon name={expanded ? "chevron-down" : "chevron-left"}/>
+        </span>
+      </header>
+      {expanded ? <div className="card-content">{children}</div> : null}
+    </div>
+  );
+};
+
+type Example = {
+  description: string;
+  query: string;
+  explanation: string;
+};
+
 const Syntax: FC = () => {
-  const { t, i18n } = useTranslation("commons");
-  const { loading: isLoading, data: helpModalContent } = useSearchSyntaxContent(i18n.languages[0]);
+  const {t, i18n} = useTranslation(["commons", "plugins"]);
+  const {loading: isLoading, data: helpModalContent} = useSearchSyntaxContent(i18n.languages[0]);
   const [datetime, setDatetime] = useState("");
   const [timestamp, setTimestamp] = useState("");
   const [copying, setCopying] = useState(false);
-  const { isLoading: isLoadingSearchableTypes, data: searchableTypes } = useSearchableTypes();
-
-  // useEffect(() => console.log("searchableTypes", searchableTypes), [searchableTypes]);
+  const {isLoading: isLoadingSearchableTypes, data: searchableTypes} = useSearchableTypes();
 
   const convert = () => {
     const format = "yyyy-MM-dd HH:mm:ss";
@@ -39,52 +64,73 @@ const Syntax: FC = () => {
     copyToClipboard(timestamp).finally(() => setCopying(false));
   };
 
-  let staticLoadedContent;
   if (isLoading || isLoadingSearchableTypes) {
-    staticLoadedContent = <Loading />;
-  } else {
-    staticLoadedContent = <MarkdownView content={helpModalContent!} basePath="/" />;
+    return <Loading/>;
   }
+
+  const searchableTypesContent = searchableTypes!.map((searchableType) => {
+    const examples = t<Example[]>(`plugins:search.syntax.types.${searchableType.name}.examples`, {
+      returnObjects: true,
+      defaultValue: [],
+    });
+    return (
+      <Expandable className="mb-1" header={t(`plugins:search.syntax.types.${searchableType.name}.title`)}>
+        <table>
+          <tr>
+            <th>{t("search.syntax.fields.table.name")}</th>
+            <th>{t("search.syntax.fields.table.type")}</th>
+            <th>{t("search.syntax.fields.table.exampleValue")}</th>
+            <th>{t("search.syntax.fields.table.hints")}</th>
+          </tr>
+          {searchableType.fields.map((searchableField) => (
+            <tr>
+              <th>{t(`plugins:search.syntax.types.${searchableType.name}.fields.${searchableField.name}.name`)}</th>
+              <td>{searchableField.type}</td>
+              <td>
+                {t(`plugins:search.syntax.types.${searchableType.name}.fields.${searchableField.name}.exampleValue`, {
+                  defaultValue: "",
+                })}
+              </td>
+              <td>
+                {t(`plugins:search.syntax.types.${searchableType.name}.fields.${searchableField.name}.hint`, {
+                  defaultValue: "",
+                })}
+              </td>
+            </tr>
+          ))}
+        </table>
+        {examples.length > 0 ? (
+          <>
+            <h5 className="title">{t("search.syntax.exampleQueries.title")}</h5>
+            <div>{t("search.syntax.exampleQueries.description")}</div>
+            <table>
+              <tr>
+                <th>{t("search.syntax.exampleQueries.table.description")}</th>
+                <th>{t("search.syntax.exampleQueries.table.query")}</th>
+                <th>{t("search.syntax.exampleQueries.table.explanation")}</th>
+              </tr>
+              {examples.map((example) => (
+                <tr>
+                  <td>{example.description}</td>
+                  <td>{example.query}</td>
+                  <td>{example.explanation}</td>
+                </tr>
+              ))}
+            </table>
+          </>
+        ) : null}
+      </Expandable>
+    );
+  });
 
   return (
     <Page title={t("search.syntax.title")} subtitle={t("search.syntax.subtitle")} loading={isLoading}>
       <div className="content">
         <h4 className="title">{t("search.syntax.exampleQueriesAndFields.title")}</h4>
         <p>{t("search.syntax.exampleQueriesAndFields.description")}</p>
-        <h5 className="title">Repository</h5>
-        <table>
-          <tr>
-            <th>Field</th>
-            <th>Type</th>
-            <th>Example Value</th>
-            <th>Hints</th>
-          </tr>
-          <tr>
-            <th>nameSpace</th>
-            <td>String</td>
-            <td>SCM-Manager</td>
-            <td>Query repositories in a namespace</td>
-          </tr>
-        </table>
-        <h5 className="title">Example Queries</h5>
-        <div>Combine Fields with Modifiers and Operators to find your repositories.</div>
-        <table>
-          <tr>
-            <th>What you search for</th>
-            <th>Query</th>
-            <th>Explanation</th>
-          </tr>
-          <tr>
-            <td>
-              a repository called ultimate-Repository or ultimate_repository. You are not sure about the connecting
-              character.
-            </td>
-            <td>name:ultimate?Repository</td>
-            <td>queries "ultimate" and "repository" with a single character between in the field "name".</td>
-          </tr>
-        </table>
+        {searchableTypesContent}
       </div>
-      {staticLoadedContent}
+      <MarkdownView content={helpModalContent!} basePath="/"/>
       <h3 className="title">{t("search.syntax.utilities.title")}</h3>
       <p>{t("search.syntax.utilities.description")}</p>
       <h6 className="title is-6 mt-4">{t("search.syntax.utilities.datetime.label")}</h6>
@@ -111,9 +157,9 @@ const Syntax: FC = () => {
             className="is-flex is-align-items-center"
           >
             {copying ? (
-              <span className="small-loading-spinner" />
+              <span className="small-loading-spinner"/>
             ) : (
-              <Icon name="clipboard" color="inherit" className="is-size-4 fa-fw is-clickable" onClick={copyTimestamp} />
+              <Icon name="clipboard" color="inherit" className="is-size-4 fa-fw is-clickable" onClick={copyTimestamp}/>
             )}
           </StyledTooltip>
         </span>
