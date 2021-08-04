@@ -93,7 +93,7 @@ class AnalyzerFactoryTest {
 
     @Test
     void shouldUseNonNaturalLanguageAnalyzer() throws IOException {
-      analyze(Account.class, "simple_text", "username", "simple", "text");
+      analyze(Account.class, "simple_text", "username", "simple", "text", "simple_text");
     }
 
     private void analyze(Class<?> type, String text, String field, String... expectedTokens) throws IOException {
