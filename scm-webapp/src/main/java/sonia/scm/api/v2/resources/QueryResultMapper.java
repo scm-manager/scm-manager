@@ -25,20 +25,27 @@
 package sonia.scm.api.v2.resources;
 
 import com.damnhandy.uri.template.UriTemplate;
+import com.google.common.annotations.VisibleForTesting;
 import de.otto.edison.hal.Embedded;
+import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Links;
 import de.otto.edison.hal.paging.NumberedPaging;
 import de.otto.edison.hal.paging.PagingRel;
+import lombok.Data;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.ObjectFactory;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryManager;
 import sonia.scm.search.Hit;
 import sonia.scm.search.QueryResult;
 import sonia.scm.web.EdisonHalAppender;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -50,13 +57,38 @@ import static de.otto.edison.hal.paging.NumberedPaging.zeroBasedNumberedPaging;
 @Mapper
 public abstract class QueryResultMapper extends HalAppenderMapper {
 
+  @Inject
+  private RepositoryManager repositoryManager;
+
+  @Inject
+  private ResourceLinks resourceLinks;
+
+  @VisibleForTesting
+  void setRepositoryManager(RepositoryManager repositoryManager) {
+    this.repositoryManager = repositoryManager;
+  }
+
+  @VisibleForTesting
+  void setResourceLinks(ResourceLinks resourceLinks) {
+    this.resourceLinks = resourceLinks;
+  }
+
   public abstract QueryResultDto map(@Context SearchParameters params, QueryResult result);
+
+  public abstract EmbeddedRepositoryDto map(Repository repository);
 
   @AfterMapping
   void setPageValues(@MappingTarget QueryResultDto dto, QueryResult result, @Context SearchParameters params) {
     int totalHits = (int) result.getTotalHits();
     dto.setPageTotal(computePageTotal(totalHits, params.getPageSize()));
     dto.setPage(params.getPage());
+  }
+
+  @Nonnull
+  @ObjectFactory
+  EmbeddedRepositoryDto createDto(Repository repository) {
+    String self = resourceLinks.repository().self(repository.getNamespace(), repository.getName());
+    return new EmbeddedRepositoryDto(linkingTo().self(self).build());
   }
 
   @Nonnull
@@ -103,9 +135,18 @@ public abstract class QueryResultMapper extends HalAppenderMapper {
   protected HitDto createHitDto(@Context QueryResult queryResult, Hit hit) {
     Links.Builder links = linkingTo();
     Embedded.Builder embedded = Embedded.embeddedBuilder();
-
+    hit.getRepositoryId().map(this::repository).ifPresent(r -> embedded.with("repository", r));
     applyEnrichers(new EdisonHalAppender(links, embedded), hit, queryResult);
     return new HitDto(links.build(), embedded.build());
+  }
+
+  @Nullable
+  private HalRepresentation repository(String id) {
+    Repository repository = repositoryManager.get(id);
+    if (repository != null) {
+      return map(repository);
+    }
+    return null;
   }
 
   private int computePageTotal(int totalHits, int pageSize) {
@@ -117,4 +158,13 @@ public abstract class QueryResultMapper extends HalAppenderMapper {
   }
 
   protected abstract HitDto map(@Context QueryResult queryResult, Hit hit);
+
+  @Data
+  public static class EmbeddedRepositoryDto extends HalRepresentation {
+    private String namespace;
+    private String name;
+    public EmbeddedRepositoryDto(Links links) {
+      super(links);
+    }
+  }
 }

@@ -80,7 +80,7 @@ public class QueryResultFactory {
     for (SearchableField field : searchableType.getFields()) {
       field(document, field).ifPresent(f -> fields.put(field.getName(), f));
     }
-    return new Hit(document.get(FieldNames.ID), scoreDoc.score, fields);
+    return new Hit(document.get(FieldNames.ID), document.get(FieldNames.REPOSITORY), scoreDoc.score, fields);
   }
 
   private Optional<Hit.Field> field(Document document, SearchableField field) throws IOException, InvalidTokenOffsetsException {

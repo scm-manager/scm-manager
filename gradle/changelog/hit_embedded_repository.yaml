@@ -1,0 +1,2 @@
+- type: Added
+  description: Embedded repository to search result hit ([#1756](https://github.com/scm-manager/scm-manager/pull/1756))
