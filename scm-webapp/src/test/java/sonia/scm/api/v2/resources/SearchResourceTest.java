@@ -37,6 +37,9 @@ import org.mapstruct.factory.Mappers;
 import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.search.Hit;
 import sonia.scm.search.IndexNames;
 import sonia.scm.search.QueryCountResult;
@@ -50,6 +53,7 @@ import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -60,6 +64,7 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -68,6 +73,9 @@ class SearchResourceTest {
   @Mock(answer = Answers.RETURNS_DEEP_STUBS)
   private SearchEngine searchEngine;
 
+  @Mock
+  private RepositoryManager repositoryManager;
+
   private RestDispatcher dispatcher;
 
   @Mock
@@ -75,7 +83,13 @@ class SearchResourceTest {
 
   @BeforeEach
   void setUpDispatcher() {
+    ScmPathInfoStore scmPathInfoStore = new ScmPathInfoStore();
+    scmPathInfoStore.set(() -> URI.create("/"));
+
     QueryResultMapper mapper = Mappers.getMapper(QueryResultMapper.class);
+    mapper.setRepositoryManager(repositoryManager);
+    mapper.setResourceLinks(new ResourceLinks(scmPathInfoStore));
+
     mapper.setRegistry(enricherRegistry);
     SearchResource resource = new SearchResource(
       searchEngine, mapper
@@ -202,6 +216,27 @@ class SearchResourceTest {
       assertThat(hits.size()).isZero();
     }
 
+    @Test
+    void shouldReturnEmbeddedRepository() throws UnsupportedEncodingException, URISyntaxException {
+      Repository heartOfGold = RepositoryTestData.createHeartOfGold("git");
+      heartOfGold.setId("42");
+      when(repositoryManager.get("42")).thenReturn(heartOfGold);
+
+      Hit hit = new Hit("21", "42", 21f, Collections.emptyMap());
+      QueryResult result = new QueryResult(1L, String.class, Collections.singletonList(hit));
+
+      mockQueryResult("hello", result);
+      JsonMockHttpResponse response = search("hello");
+
+      JsonNode hitNode = response.getContentAsJson().get("_embedded").get("hits").get(0);
+      JsonNode repositoryNode = hitNode.get("_embedded").get("repository");
+
+      assertThat(repositoryNode.get("namespace").asText()).isEqualTo(heartOfGold.getNamespace());
+      assertThat(repositoryNode.get("name").asText()).isEqualTo(heartOfGold.getName());
+      assertThat(repositoryNode.get("type").asText()).isEqualTo(heartOfGold.getType());
+      assertThat(repositoryNode.get("_links").get("self").get("href").asText()).isEqualTo("/v2/repositories/hitchhiker/HeartOfGold");
+    }
+
   }
 
   private void assertLink(JsonNode links, String self, String s) {
@@ -219,7 +254,7 @@ class SearchResourceTest {
   @Nonnull
   private Hit hit(int i, Object[] values) {
     Map<String, Hit.Field> fields = fields(values[i]);
-    return new Hit("" + i, values.length - i, fields);
+    return new Hit("" + i, null, values.length - i, fields);
   }
 
   @Nonnull

@@ -31,6 +31,7 @@ import lombok.Getter;
 import lombok.Value;
 
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Represents an object which matched the search query.
@@ -47,6 +48,12 @@ public class Hit {
   String id;
 
   /**
+   * Repository associated with the hit.
+   * @since 2.23.0
+   */
+  String repositoryId;
+
+  /**
    * The score describes how good the match was.
    */
   float score;
@@ -56,6 +63,17 @@ public class Hit {
    * Key of the map is the name of the field and the value is either a {@link ValueField} or a {@link HighlightedField}.
    */
   Map<String, Field> fields;
+
+  /**
+   * Returns optional id of a repository which associated with the hit
+   * or empty if the hit is not associated with any repository.
+   *
+   * @return optional repository id
+   * @since 2.23.0
+   */
+  public Optional<String> getRepositoryId() {
+    return Optional.ofNullable(repositoryId);
+  }
 
   /**
    * Base class of hit field types.

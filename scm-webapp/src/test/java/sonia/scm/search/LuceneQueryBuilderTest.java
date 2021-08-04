@@ -549,6 +549,30 @@ class LuceneQueryBuilderTest {
     assertThat(fields.get("instantValue").get("value").asText()).isEqualTo(now.toString());
   }
 
+  @Test
+  void shouldReturnEmptyRepository() throws IOException {
+    try (IndexWriter writer = writer()) {
+      writer.addDocument(simpleDoc("Trillian"));
+    }
+
+    QueryResult result = query(Simple.class, "Trillian");
+    Hit hit = result.getHits().get(0);
+    assertThat(hit.getRepositoryId()).isEmpty();
+  }
+
+  @Test
+  void shouldReturnRepositoryAsPartOfHit() throws IOException {
+    try (IndexWriter writer = writer()) {
+      Document document = simpleDoc("Trillian");
+      document.add(new StoredField(FieldNames.REPOSITORY, "4211"));
+      writer.addDocument(document);
+    }
+
+    QueryResult result = query(Simple.class, "Trillian");
+    Hit hit = result.getHits().get(0);
+    assertThat(hit.getRepositoryId()).contains("4211");
+  }
+
   private QueryResult query(Class<?> type, String queryString) throws IOException {
     return query(type, queryString, null, null);
   }
