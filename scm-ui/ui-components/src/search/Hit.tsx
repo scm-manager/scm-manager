@@ -24,28 +24,37 @@
 
 import React, { FC } from "react";
 import { Hit as HitType } from "@scm-manager/ui-types";
+import classNames from "classnames";
 
 export type HitProps = {
   hit: HitType;
 };
 
+type Props = {
+  className?: string;
+};
+
 type SearchResultType = FC & {
-  Title: FC;
-  Left: FC;
-  Content: FC;
-  Right: FC;
+  Title: FC<Props>;
+  Left: FC<Props>;
+  Content: FC<Props>;
+  Right: FC<Props>;
 };
 
 const Hit: SearchResultType = ({ children }) => {
   return <article className="media p-1">{children}</article>;
 };
 
-Hit.Title = ({ children }) => <h3 className="has-text-weight-bold is-ellipsis-overflow">{children}</h3>;
+Hit.Title = ({ className, children }) => (
+  <h3 className={classNames("has-text-weight-bold is-ellipsis-overflow", className)}>{children}</h3>
+);
 
-Hit.Left = ({ children }) => <div className="media-left">{children}</div>;
+Hit.Left = ({ className, children }) => <div className={classNames("media-left", className)}>{children}</div>;
 
-Hit.Right = ({ children }) => <div className="media-right is-size-7 has-text-right">{children}</div>;
+Hit.Right = ({ className, children }) => (
+  <div className={classNames("media-right is-size-7 has-text-right", className)}>{children}</div>
+);
 
-Hit.Content = ({ children }) => <div className="media-content">{children}</div>;
+Hit.Content = ({ className, children }) => <div className={classNames("media-content", className)}> {children}</div>;
 
 export default Hit;
