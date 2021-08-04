@@ -67,7 +67,7 @@ class GroupIndexerTest {
   @Nested
   class UpdaterTests {
 
-    @Mock
+    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     private Index<Group> index;
 
     private final Group group = new Group("xml", "astronauts");
@@ -88,7 +88,7 @@ class GroupIndexerTest {
     void shouldDeleteById() {
       indexer.open().delete(group);
 
-      verify(index).delete().byType().byId(Id.of(group));
+      verify(index.delete().byType()).byId(Id.of(group));
     }
 
     @Test
@@ -97,7 +97,7 @@ class GroupIndexerTest {
 
       indexer.open().reIndexAll();
 
-      verify(index).delete().byType().all();
+      verify(index.delete().byType()).all();
       verify(index).store(Id.of(group), "group:read:astronauts", group);
     }
 
@@ -107,7 +107,7 @@ class GroupIndexerTest {
 
       indexer.handleEvent(event);
 
-      verify(index).delete().byType().byId(Id.of(group));
+      verify(index.delete().byType()).byId(Id.of(group));
     }
 
     @Test

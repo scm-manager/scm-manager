@@ -67,7 +67,7 @@ class UserIndexerTest {
   @Nested
   class UpdaterTests {
 
-    @Mock
+    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     private Index<User> index;
 
     private final User user = UserTestData.createTrillian();
@@ -88,7 +88,7 @@ class UserIndexerTest {
     void shouldDeleteById() {
       indexer.open().delete(user);
 
-      verify(index).delete().byType().byId(Id.of(user));
+      verify(index.delete().byType()).byId(Id.of(user));
     }
 
     @Test
@@ -97,7 +97,7 @@ class UserIndexerTest {
 
       indexer.open().reIndexAll();
 
-      verify(index).delete().byType().all();
+      verify(index.delete().byType()).all();
       verify(index).store(Id.of(user), "user:read:trillian", user);
     }
 
@@ -107,7 +107,7 @@ class UserIndexerTest {
 
       indexer.handleEvent(event);
 
-      verify(index).delete().byType().byId(Id.of(user));
+      verify(index.delete().byType()).byId(Id.of(user));
     }
 
     @Test
