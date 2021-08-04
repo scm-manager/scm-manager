@@ -116,7 +116,28 @@ public class SearchResource {
 
   @GET
   @Path("searchableTypes")
-  @Produces(VndMediaType.QUERY_RESULT)
+  @Produces(VndMediaType.SEARCHABLE_TYPE_COLLECTION)
+  @Operation(
+    summary = "Searchable types",
+    description = "Returns a collection of all searchable types.",
+    tags = "Search",
+    operationId = "searchable_types"
+  )
+  @ApiResponse(
+    responseCode = "200",
+    description = "success",
+    content = @Content(
+      mediaType = VndMediaType.SEARCHABLE_TYPE_COLLECTION
+    )
+  )
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
   public Collection<SearchableTypeDto> searchableTypes() {
     return engine.getSearchableTypes().stream().map(searchableTypeMapper::map).collect(Collectors.toList());
   }

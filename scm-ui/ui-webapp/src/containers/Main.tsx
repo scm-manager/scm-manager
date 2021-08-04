@@ -111,7 +111,7 @@ const Main: FC<Props> = (props) => {
           <ProtectedRoute path="/search/:type/:page" component={Search} authenticated={authenticated} />
           <ProtectedRoute path="/search/:type/" component={Search} authenticated={authenticated} />
           <ProtectedRoute path="/help/search-syntax/" component={Syntax} authenticated={authenticated} />
-            <ExtensionPoint name="main.route" renderAll={true} props={props} />
+          <ExtensionPoint name="main.route" renderAll={true} props={props} />
         </Switch>
       </StyledMain>
     </ErrorBoundary>

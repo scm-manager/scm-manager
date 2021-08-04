@@ -23,7 +23,7 @@
  */
 
 import { ApiResult, useIndexJsonResource, useIndexLinks } from "./base";
-import {Link, QueryResult, SearchableType} from "@scm-manager/ui-types";
+import { Link, QueryResult, SearchableType } from "@scm-manager/ui-types";
 import { apiClient } from "./apiclient";
 import { createQueryString } from "./utils";
 import { useQueries, useQuery } from "react-query";
