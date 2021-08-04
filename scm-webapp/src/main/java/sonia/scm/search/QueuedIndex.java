@@ -27,7 +27,7 @@ package sonia.scm.search;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QueuedIndex<T> implements Index<T> {
+class QueuedIndex<T> implements Index<T> {
 
   private final IndexQueue queue;
   private final IndexParams indexParams;
@@ -56,7 +56,7 @@ public class QueuedIndex<T> implements Index<T> {
     queue.enqueue(wrappedTask);
   }
 
-  class QueueDeleter implements Deleter {
+  private class QueueDeleter implements Deleter {
 
     @Override
     public ByTypeDeleter byType() {
@@ -69,7 +69,7 @@ public class QueuedIndex<T> implements Index<T> {
     }
   }
 
-  class QueueByTypeDeleter implements ByTypeDeleter {
+  private class QueueByTypeDeleter implements ByTypeDeleter {
 
     @Override
     public void byId(Id id) {
@@ -87,7 +87,7 @@ public class QueuedIndex<T> implements Index<T> {
     }
   }
 
-  class QueueAllTypesDeleter implements AllTypesDeleter {
+  private class QueueAllTypesDeleter implements AllTypesDeleter {
 
     @Override
     public void byRepository(String repositoryId) {

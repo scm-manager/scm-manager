@@ -42,7 +42,7 @@ import static sonia.scm.search.FieldNames.REPOSITORY;
 import static sonia.scm.search.FieldNames.TYPE;
 import static sonia.scm.search.FieldNames.UID;
 
-public class LuceneIndex<T> implements Index<T> {
+class LuceneIndex<T> implements Index<T> {
 
   private final LuceneSearchableType searchableType;
   private final IndexWriter writer;
@@ -92,7 +92,7 @@ public class LuceneIndex<T> implements Index<T> {
     }
   }
 
-  class LuceneDeleter implements Deleter {
+  private class LuceneDeleter implements Deleter {
 
     @Override
     public ByTypeDeleter byType() {
@@ -106,7 +106,7 @@ public class LuceneIndex<T> implements Index<T> {
   }
 
   @SuppressWarnings("java:S1192")
-  class LuceneByTypeDeleter implements ByTypeDeleter {
+  private class LuceneByTypeDeleter implements ByTypeDeleter {
 
     @Override
     public void byId(Id id) {
@@ -140,7 +140,7 @@ public class LuceneIndex<T> implements Index<T> {
     }
   }
 
-  class LuceneAllTypesDelete implements AllTypesDeleter {
+  private class LuceneAllTypesDelete implements AllTypesDeleter {
 
     @Override
     public void byRepository(String repositoryId) {

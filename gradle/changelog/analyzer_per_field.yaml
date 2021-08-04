@@ -1,4 +1,4 @@
 - type: Added
-  description: Support for different type of analyzer per field ([#1755](https://github.com/scm-manager/scm-manager/pull/1755))
+  description: Support for different types of analyzer per field ([#1755](https://github.com/scm-manager/scm-manager/pull/1755))
 - type: Changed
   description: Improve Search API ([#1755](https://github.com/scm-manager/scm-manager/pull/1755))

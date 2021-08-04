@@ -101,7 +101,7 @@ public @interface Indexed {
     DEFAULT,
 
     /**
-     * Uses an analyzer which is specialized for identifier.
+     * Uses an analyzer which is specialized for identifiers like repository names.
      */
     IDENTIFIER,
 
