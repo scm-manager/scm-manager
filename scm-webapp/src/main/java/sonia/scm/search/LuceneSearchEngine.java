@@ -64,9 +64,6 @@ public class LuceneSearchEngine implements SearchEngine {
   }
 
   private <T> ForType<T> forType(LuceneSearchableType searchableType) {
-    searchableType.getPermission().ifPresent(
-      permission -> SecurityUtils.getSubject().checkPermission(permission)
-    );
     return new LuceneForType<>(searchableType);
   }
 
@@ -103,6 +100,9 @@ public class LuceneSearchEngine implements SearchEngine {
 
     @Override
     public QueryBuilder<T> search() {
+      searchableType.getPermission().ifPresent(
+        permission -> SecurityUtils.getSubject().checkPermission(permission)
+      );
       return queryBuilderFactory.create(params());
     }
   }

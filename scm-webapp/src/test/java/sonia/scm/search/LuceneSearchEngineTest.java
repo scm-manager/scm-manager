@@ -43,6 +43,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.Assert.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -176,16 +177,22 @@ class LuceneSearchEngineTest {
     when(searchableType.getPermission()).thenReturn(Optional.of("repository:read"));
     when(resolver.resolve(Repository.class)).thenReturn(searchableType);
 
-    assertThrows(AuthorizationException.class, () -> searchEngine.forType(Repository.class));
+    SearchEngine.ForType<Repository> forType = searchEngine.forType(Repository.class);
+    assertThrows(AuthorizationException.class, forType::search);
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   @SubjectAware(permissions = "repository:read")
   void shouldNotFailWithRequiredPermission() {
     when(searchableType.getPermission()).thenReturn(Optional.of("repository:read"));
     when(resolver.resolve(Repository.class)).thenReturn(searchableType);
 
-    assertThat(searchEngine.forType(Repository.class)).isNotNull();
+    LuceneQueryBuilder<Object> mockedBuilder = mock(LuceneQueryBuilder.class);
+    when(queryBuilderFactory.create(any())).thenReturn(mockedBuilder);
+
+    SearchEngine.ForType<Repository> forType = searchEngine.forType(Repository.class);
+    assertThat(forType.search()).isNotNull();
   }
 
   @Test
@@ -193,16 +200,22 @@ class LuceneSearchEngineTest {
     when(searchableType.getPermission()).thenReturn(Optional.of("repository:read"));
     when(resolver.resolveByName("repository")).thenReturn(searchableType);
 
-    assertThrows(AuthorizationException.class, () -> searchEngine.forType("repository"));
+    SearchEngine.ForType<Object> forType = searchEngine.forType("repository");
+    assertThrows(AuthorizationException.class, forType::search);
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   @SubjectAware(permissions = "repository:read")
   void shouldNotFailWithTypeNameAndRequiredPermission() {
     when(searchableType.getPermission()).thenReturn(Optional.of("repository:read"));
     when(resolver.resolveByName("repository")).thenReturn(searchableType);
 
-    assertThat(searchEngine.forType("repository")).isNotNull();
+    LuceneQueryBuilder<Object> mockedBuilder = mock(LuceneQueryBuilder.class);
+    when(queryBuilderFactory.create(any())).thenReturn(mockedBuilder);
+
+    SearchEngine.ForType<Object> forType = searchEngine.forType("repository");
+    assertThat(forType.search()).isNotNull();
   }
 
 }
