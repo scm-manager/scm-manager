@@ -87,10 +87,4 @@ public class SvnModificationsCommand extends AbstractSvnCommand implements Modif
 
     return new Modifications(null, modificationList);
   }
-
-  @Override
-  public Modifications getModifications(ModificationsCommandRequest request) {
-    return getModifications(request.getRevision());
-  }
-
 }

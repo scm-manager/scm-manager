@@ -32,6 +32,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.Optional;
+
+import static java.util.Optional.ofNullable;
+
 @ToString
 @EqualsAndHashCode
 @Getter
@@ -40,9 +44,15 @@ import lombok.ToString;
 @NoArgsConstructor
 public class ModificationsCommandRequest implements Resetable {
   private String revision;
+  private String baseRevision;
 
   @Override
   public void reset() {
     revision = null;
+    baseRevision = null;
+  }
+
+  public Optional<String> getBaseRevision() {
+    return ofNullable(baseRevision);
   }
 }

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.api;
 
 import lombok.AllArgsConstructor;
@@ -74,6 +74,17 @@ public final class ModificationsCommandBuilder {
 
   public ModificationsCommandBuilder revision(String revision){
     request.setRevision(revision);
+    return this;
+  }
+
+  /**
+   * This is only supported by repositories supporting the feature
+   * {@link sonia.scm.repository.Feature#COMBINED_MODIFICATIONS}.
+   * @param baseRevision If set, the command will compute the modifications between the two revisions.
+   * @return This command builder.
+   */
+  public ModificationsCommandBuilder baseRevision(String baseRevision){
+    request.setBaseRevision(baseRevision);
     return this;
   }
 

@@ -36,7 +36,6 @@ public class HgModificationsCommand extends AbstractCommand implements Modificat
     super(context);
   }
 
-
   @Override
   public Modifications getModifications(String revision) {
     com.aragost.javahg.Repository repository = open();
@@ -44,11 +43,4 @@ public class HgModificationsCommand extends AbstractCommand implements Modificat
     Collection<Modification> modifications = hgLogChangesetCommand.rev(revision).extractModifications();
     return new Modifications(revision, modifications);
   }
-
-  @Override
-  public Modifications getModifications(ModificationsCommandRequest request) {
-    return getModifications(request.getRevision());
-  }
-
-
 }
