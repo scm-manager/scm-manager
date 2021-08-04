@@ -33,6 +33,8 @@ image:
   tag: ${dockerTag}
   # image.pullPolicy -- SCM-Manager image pull policy
   pullPolicy: IfNotPresent
+  # imaage.pullSecret -- Secret with credentials for the image registry
+  # pullSecret: registry-credentials
 
 # nameOverride -- Override the resource name prefix
 nameOverride: ""

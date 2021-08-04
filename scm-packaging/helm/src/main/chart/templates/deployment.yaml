@@ -45,6 +45,10 @@ spec:
         app: {{ include "scm-manager.name" . }}
         release: {{ .Release.Name }}
     spec:
+      {{- if .Values.image.pullSecret }}
+      imagePullSecrets:
+        - name: {{ .Values.image.pullSecret }}
+      {{- end }}
       initContainers:
       - name: volume-permissions
         image: alpine:3.8
@@ -113,11 +117,11 @@ spec:
         emptyDir: {}
       {{- end }}
       - name: config
-        configMap: 
+        configMap:
           name: {{ include "scm-manager.fullname" . }}
       {{- if .Values.plugins }}
       - name: scripts
-        configMap: 
+        configMap:
           name: {{ include "scm-manager.fullname" . }}-scripts
       {{- end }}
       {{- with .Values.extraVolumes }}
