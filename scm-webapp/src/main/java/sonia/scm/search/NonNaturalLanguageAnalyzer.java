@@ -32,6 +32,7 @@ import org.apache.lucene.analysis.standard.StandardTokenizer;
 
 import static org.apache.lucene.analysis.miscellaneous.WordDelimiterGraphFilter.GENERATE_NUMBER_PARTS;
 import static org.apache.lucene.analysis.miscellaneous.WordDelimiterGraphFilter.GENERATE_WORD_PARTS;
+import static org.apache.lucene.analysis.miscellaneous.WordDelimiterGraphFilter.PRESERVE_ORIGINAL;
 import static org.apache.lucene.analysis.miscellaneous.WordDelimiterGraphFilter.SPLIT_ON_CASE_CHANGE;
 import static org.apache.lucene.analysis.miscellaneous.WordDelimiterGraphFilter.SPLIT_ON_NUMERICS;
 
@@ -42,7 +43,7 @@ public class NonNaturalLanguageAnalyzer extends Analyzer {
     StandardTokenizer tokenizer = new StandardTokenizer();
     TokenStream stream = new WordDelimiterGraphFilter(
       tokenizer,
-      GENERATE_WORD_PARTS | GENERATE_NUMBER_PARTS | SPLIT_ON_CASE_CHANGE | SPLIT_ON_NUMERICS,
+      GENERATE_WORD_PARTS | GENERATE_NUMBER_PARTS | SPLIT_ON_CASE_CHANGE | SPLIT_ON_NUMERICS | PRESERVE_ORIGINAL,
       null // list of words which are protected from being delimited
     );
     stream = new LowerCaseFilter(stream);
