@@ -1,14 +1,21 @@
-import React, { FC, useState } from "react";
-import { useSearchableTypes, useSearchSyntaxContent } from "@scm-manager/ui-api";
-import { useTranslation } from "react-i18next";
-import { Button, copyToClipboard, Icon, InputField, Loading, MarkdownView, Page } from "@scm-manager/ui-components";
-import { parse } from "date-fns";
+import React, {FC, useState} from "react";
+import {useSearchableTypes, useSearchSyntaxContent} from "@scm-manager/ui-api";
+import {useTranslation} from "react-i18next";
+import {
+  Button,
+  copyToClipboard,
+  Icon,
+  InputField,
+  Loading,
+  MarkdownView,
+  Page,
+  Tooltip,
+} from "@scm-manager/ui-components";
+import {parse} from "date-fns";
 import styled from "styled-components";
 
-const IconContainer = styled.div`
-  position: relative;
-  width: 1.5rem;
-  height: 1.5rem;
+const StyledTooltip = styled(Tooltip)`
+  height: 40px;
 `;
 
 const Syntax: FC = () => {
@@ -88,25 +95,28 @@ const Syntax: FC = () => {
             onChange={setDatetime}
             placeholder={t("search.syntax.utilities.datetime.format")}
           />
-          <Button color="primary" action={convert}>
+          <Button color="primary" action={convert} className="ml-2">
             {t("search.syntax.utilities.datetime.convertButtonLabel")}
           </Button>
         </span>
-        <InputField
-          className="mr-4"
-          value={timestamp}
-          readOnly={true}
-          placeholder={t("search.syntax.utilities.timestampPlaceholder")}
-        />
-        {/*<Tooltip message={t("search.syntax.utilities.copyTimestampTooltip")}>*/}
-        <IconContainer className="is-flex is-justify-content-center is-align-content-center">
-          {copying ? (
-            <span className="small-loading-spinner" />
-          ) : (
-            <Icon name="clipboard" color="inherit" className="is-size-4 fa-fw is-clickable" onClick={copyTimestamp} />
-          )}
-        </IconContainer>
-        {/*</Tooltip>*/}
+        <span className="is-flex">
+          <InputField
+            className="mr-4"
+            value={timestamp}
+            readOnly={true}
+            placeholder={t("search.syntax.utilities.timestampPlaceholder")}
+          />
+          <StyledTooltip
+            message={t("search.syntax.utilities.copyTimestampTooltip")}
+            className="is-flex is-align-items-center"
+          >
+            {copying ? (
+              <span className="small-loading-spinner" />
+            ) : (
+              <Icon name="clipboard" color="inherit" className="is-size-4 fa-fw is-clickable" onClick={copyTimestamp} />
+            )}
+          </StyledTooltip>
+        </span>
       </div>
     </Page>
   );

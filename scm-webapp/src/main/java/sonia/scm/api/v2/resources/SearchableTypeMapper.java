@@ -26,7 +26,6 @@ package sonia.scm.api.v2.resources;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Named;
 import sonia.scm.search.SearchableType;
 
 @Mapper
@@ -34,10 +33,5 @@ public abstract class SearchableTypeMapper extends BaseMapper<SearchableType, Se
 
   @Mapping(target = "type", ignore = true)
   public abstract SearchableTypeDto map(SearchableType searchableType);
-
-  @Named("type")
-  public String mapType(Class<?> type) {
-    return type.getSimpleName();
-  }
 
 }
