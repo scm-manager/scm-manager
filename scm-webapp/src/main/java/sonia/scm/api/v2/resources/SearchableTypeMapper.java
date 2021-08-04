@@ -42,9 +42,7 @@ public abstract class SearchableTypeMapper {
   public String map(Class<?> type) {
     if (TypeCheck.isString(type)) {
       return "string";
-    } else if (TypeCheck.isInstant(type)) {
-      return "timestamp";
-    } else if (TypeCheck.isNumber(type)) {
+    } else if (TypeCheck.isInstant(type) || TypeCheck.isNumber(type)) {
       return "number";
     } else if (TypeCheck.isBoolean(type)) {
       return "boolean";

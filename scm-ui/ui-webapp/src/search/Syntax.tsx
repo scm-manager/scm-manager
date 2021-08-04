@@ -92,7 +92,7 @@ const Syntax: FC = () => {
                 })}
               </td>
               <td>
-                {t(`plugins:search.types.${searchableType.name}.fields.${searchableField.name}.hint`, {
+                {t(`plugins:search.types.${searchableType.name}.fields.${searchableField.name}.hints`, {
                   defaultValue: "",
                 })}
               </td>
@@ -101,8 +101,8 @@ const Syntax: FC = () => {
         </table>
         {examples.length > 0 ? (
           <>
-            <h5 className="title">{t("search.syntax.exampleQueries.title")}</h5>
-            <div>{t("search.syntax.exampleQueries.description")}</div>
+            <h5 className="title mt-5">{t("search.syntax.exampleQueries.title")}</h5>
+            <div className="mb-2">{t("search.syntax.exampleQueries.description")}</div>
             <table>
               <tr>
                 <th>{t("search.syntax.exampleQueries.table.description")}</th>
