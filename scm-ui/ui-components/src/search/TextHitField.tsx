@@ -30,7 +30,7 @@ import { isHighlightedHitField } from "./fields";
 type Props = {
   hit: Hit;
   field: string;
-  cutValueAt?: number;
+  truncateValueAt?: number;
 };
 
 type HighlightedTextFieldProps = {
@@ -49,7 +49,7 @@ const HighlightedTextField: FC<HighlightedTextFieldProps> = ({ field }) => (
   </>
 );
 
-const TextHitField: FC<Props> = ({ hit, field: fieldName, cutValueAt = 0 }) => {
+const TextHitField: FC<Props> = ({ hit, field: fieldName, truncateValueAt = 0 }) => {
   const field = hit.fields[fieldName];
   if (!field) {
     return null;
@@ -57,8 +57,8 @@ const TextHitField: FC<Props> = ({ hit, field: fieldName, cutValueAt = 0 }) => {
     return <HighlightedTextField field={field} />;
   } else {
     let value = field.value;
-    if (typeof value === "string" && cutValueAt > 0 && value.length > cutValueAt) {
-      value = value.substring(0, cutValueAt) + "...";
+    if (typeof value === "string" && truncateValueAt > 0 && value.length > truncateValueAt) {
+      value = value.substring(0, truncateValueAt) + "...";
     }
     return <>{value}</>;
   }
