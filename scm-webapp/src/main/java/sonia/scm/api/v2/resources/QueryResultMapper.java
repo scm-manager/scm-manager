@@ -163,6 +163,7 @@ public abstract class QueryResultMapper extends HalAppenderMapper {
   public static class EmbeddedRepositoryDto extends HalRepresentation {
     private String namespace;
     private String name;
+    private String type;
     public EmbeddedRepositoryDto(Links links) {
       super(links);
     }

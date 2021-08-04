@@ -218,7 +218,7 @@ class SearchResourceTest {
 
     @Test
     void shouldReturnEmbeddedRepository() throws UnsupportedEncodingException, URISyntaxException {
-      Repository heartOfGold = RepositoryTestData.createHeartOfGold();
+      Repository heartOfGold = RepositoryTestData.createHeartOfGold("git");
       heartOfGold.setId("42");
       when(repositoryManager.get("42")).thenReturn(heartOfGold);
 
@@ -233,6 +233,7 @@ class SearchResourceTest {
 
       assertThat(repositoryNode.get("namespace").asText()).isEqualTo(heartOfGold.getNamespace());
       assertThat(repositoryNode.get("name").asText()).isEqualTo(heartOfGold.getName());
+      assertThat(repositoryNode.get("type").asText()).isEqualTo(heartOfGold.getType());
       assertThat(repositoryNode.get("_links").get("self").get("href").asText()).isEqualTo("/v2/repositories/hitchhiker/HeartOfGold");
     }
 
