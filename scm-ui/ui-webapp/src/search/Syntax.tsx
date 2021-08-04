@@ -1,6 +1,6 @@
-import React, {FC, useState} from "react";
-import {useSearchableTypes, useSearchSyntaxContent} from "@scm-manager/ui-api";
-import {useTranslation} from "react-i18next";
+import React, { FC, useState } from "react";
+import { useSearchableTypes, useSearchSyntaxContent } from "@scm-manager/ui-api";
+import { useTranslation } from "react-i18next";
 import {
   Button,
   copyToClipboard,
@@ -11,7 +11,7 @@ import {
   Page,
   Tooltip,
 } from "@scm-manager/ui-components";
-import {parse} from "date-fns";
+import { parse } from "date-fns";
 import styled from "styled-components";
 import classNames from "classnames";
 
@@ -24,14 +24,14 @@ type ExpandableProps = {
   className?: string;
 };
 
-const Expandable: FC<ExpandableProps> = ({header, children, className}) => {
+const Expandable: FC<ExpandableProps> = ({ header, children, className }) => {
   const [expanded, setExpanded] = useState(false);
   return (
     <div className={classNames("card", className)}>
       <header onClick={() => setExpanded(!expanded)} className="card-header is-clickable">
         <span className="card-header-title">{header}</span>
         <span className="card-header-icon">
-          <Icon name={expanded ? "chevron-down" : "chevron-left"}/>
+          <Icon name={expanded ? "chevron-down" : "chevron-left"} />
         </span>
       </header>
       {expanded ? <div className="card-content">{children}</div> : null}
@@ -46,12 +46,12 @@ type Example = {
 };
 
 const Syntax: FC = () => {
-  const {t, i18n} = useTranslation(["commons", "plugins"]);
-  const {loading: isLoading, data: helpModalContent} = useSearchSyntaxContent(i18n.languages[0]);
+  const { t, i18n } = useTranslation(["commons", "plugins"]);
+  const { loading: isLoading, data: helpModalContent } = useSearchSyntaxContent(i18n.languages[0]);
   const [datetime, setDatetime] = useState("");
   const [timestamp, setTimestamp] = useState("");
   const [copying, setCopying] = useState(false);
-  const {isLoading: isLoadingSearchableTypes, data: searchableTypes} = useSearchableTypes();
+  const { isLoading: isLoadingSearchableTypes, data: searchableTypes } = useSearchableTypes();
 
   const convert = () => {
     const format = "yyyy-MM-dd HH:mm:ss";
@@ -65,34 +65,34 @@ const Syntax: FC = () => {
   };
 
   if (isLoading || isLoadingSearchableTypes) {
-    return <Loading/>;
+    return <Loading />;
   }
 
   const searchableTypesContent = searchableTypes!.map((searchableType) => {
-    const examples = t<Example[]>(`plugins:search.syntax.types.${searchableType.name}.examples`, {
+    const examples = t<Example[]>(`plugins:search.types.${searchableType.name}.examples`, {
       returnObjects: true,
       defaultValue: [],
     });
     return (
-      <Expandable className="mb-1" header={t(`plugins:search.syntax.types.${searchableType.name}.title`)}>
+      <Expandable className="mb-1" header={t(`plugins:search.types.${searchableType.name}.title`)}>
         <table>
           <tr>
-            <th>{t("search.syntax.fields.table.name")}</th>
-            <th>{t("search.syntax.fields.table.type")}</th>
-            <th>{t("search.syntax.fields.table.exampleValue")}</th>
-            <th>{t("search.syntax.fields.table.hints")}</th>
+            <th>{t("search.syntax.fields.name")}</th>
+            <th>{t("search.syntax.fields.type")}</th>
+            <th>{t("search.syntax.fields.exampleValue")}</th>
+            <th>{t("search.syntax.fields.hints")}</th>
           </tr>
           {searchableType.fields.map((searchableField) => (
             <tr>
-              <th>{t(`plugins:search.syntax.types.${searchableType.name}.fields.${searchableField.name}.name`)}</th>
+              <th>{t(`plugins:search.types.${searchableType.name}.fields.${searchableField.name}.name`)}</th>
               <td>{searchableField.type}</td>
               <td>
-                {t(`plugins:search.syntax.types.${searchableType.name}.fields.${searchableField.name}.exampleValue`, {
+                {t(`plugins:search.types.${searchableType.name}.fields.${searchableField.name}.exampleValue`, {
                   defaultValue: "",
                 })}
               </td>
               <td>
-                {t(`plugins:search.syntax.types.${searchableType.name}.fields.${searchableField.name}.hint`, {
+                {t(`plugins:search.types.${searchableType.name}.fields.${searchableField.name}.hint`, {
                   defaultValue: "",
                 })}
               </td>
@@ -130,7 +130,7 @@ const Syntax: FC = () => {
         <p>{t("search.syntax.exampleQueriesAndFields.description")}</p>
         {searchableTypesContent}
       </div>
-      <MarkdownView content={helpModalContent!} basePath="/"/>
+      <MarkdownView content={helpModalContent!} basePath="/" />
       <h3 className="title">{t("search.syntax.utilities.title")}</h3>
       <p>{t("search.syntax.utilities.description")}</p>
       <h6 className="title is-6 mt-4">{t("search.syntax.utilities.datetime.label")}</h6>
@@ -157,9 +157,9 @@ const Syntax: FC = () => {
             className="is-flex is-align-items-center"
           >
             {copying ? (
-              <span className="small-loading-spinner"/>
+              <span className="small-loading-spinner" />
             ) : (
-              <Icon name="clipboard" color="inherit" className="is-size-4 fa-fw is-clickable" onClick={copyTimestamp}/>
+              <Icon name="clipboard" color="inherit" className="is-size-4 fa-fw is-clickable" onClick={copyTimestamp} />
             )}
           </StyledTooltip>
         </span>
