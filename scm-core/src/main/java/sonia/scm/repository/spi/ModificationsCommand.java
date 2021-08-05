@@ -63,6 +63,7 @@ public interface ModificationsCommand {
   /**
    * Execute the given {@link ModificationsCommandRequest}.
    */
+  @SuppressWarnings("java:S3655") // don't know why this should be an issue here. We check 'isPresent' before 'get' on 'request.getBaseRevision()'
   default Modifications getModifications(ModificationsCommandRequest request) throws IOException {
     if (request.getBaseRevision().isPresent()) {
       return getModifications(request.getBaseRevision().get(), request.getRevision());
