@@ -117,4 +117,17 @@ class ConsolidatingModificationCollectorTest {
       .extracting("class")
       .containsExactlyInAnyOrder(Added.class);
   }
+
+  @Test
+  void shouldReplaceAddWithModifyIfRemovedBefore() {
+    Collection<Modification> consolidated =
+      Stream.of(
+        new Removed("file"),
+        new Added("file")
+      ).collect(new ConsolidatingModificationCollector());
+
+    assertThat(consolidated)
+      .extracting("class")
+      .containsExactlyInAnyOrder(Modified.class);
+  }
 }

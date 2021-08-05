@@ -38,6 +38,13 @@ import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableCollection;
 import static java.util.Collections.unmodifiableSet;
 
+/**
+ * This class can be used to "consolidate" modifications for a stream of commit based modifications.
+ * Single modifications will be changed or ignored if subsequent modifications effect them. An "added"
+ * for a file for example will be ignored, if the same file is marked as "removed" later on. Another
+ * example would be a "modification" of a file, that was "added" beforehand, because in summary this
+ * simply is still an "added" file.
+ */
 class ConsolidatingModificationCollector implements Collector<Modification, ConsolidatedModifications, Collection<Modification>> {
 
   static ConsolidatingModificationCollector consolidate() {
@@ -98,7 +105,12 @@ class ConsolidatedModifications {
   }
 
   void added(Added added) {
-    modifications.put(added.getPath(), added);
+    Modification earlierModification = modifications.get(added.getPath());
+    if (earlierModification instanceof Removed) {
+      modifications.put(added.getPath(), new Modified(added.getPath()));
+    } else {
+      modifications.put(added.getPath(), added);
+    }
   }
 
   void modified(Modified modified) {
