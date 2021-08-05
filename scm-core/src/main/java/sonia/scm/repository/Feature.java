@@ -46,5 +46,5 @@ public enum Feature
   /**
    * The repository supports computation of modifications between two revisions, not only for a singe revision.
    */
-  COMBINED_MODIFICATIONS
+  MODIFICATIONS_BETWEEN_REVISIONS
 }

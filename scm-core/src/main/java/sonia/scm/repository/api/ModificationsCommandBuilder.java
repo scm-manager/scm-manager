@@ -87,7 +87,7 @@ public final class ModificationsCommandBuilder {
    * Set this to compute the modifications between two revisions. If this is not set,
    * only the modifications of the revision set by {@link #revision(String)} will be computed.
    * This is only supported by repositories supporting the feature
-   * {@link sonia.scm.repository.Feature#COMBINED_MODIFICATIONS}.
+   * {@link sonia.scm.repository.Feature#MODIFICATIONS_BETWEEN_REVISIONS}.
    * @param baseRevision If set, the command will compute the modifications between this revision
    *                     and the revision set by {@link #revision(String)}.
    * @return This command builder.

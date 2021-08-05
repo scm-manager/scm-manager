@@ -49,7 +49,7 @@ public interface ModificationsCommand {
    * Read the modifications between two revisions. The result is similar to a diff between
    * these two revisions, but without details about the content.
    * <br>
-   * Make sure your repository supports the feature {@link Feature#COMBINED_MODIFICATIONS},
+   * Make sure your repository supports the feature {@link Feature#MODIFICATIONS_BETWEEN_REVISIONS},
    * because otherwise this will throw a {@link FeatureNotSupportedException}.
    *
    * @throws FeatureNotSupportedException if the repository type does not support the feature
@@ -57,7 +57,7 @@ public interface ModificationsCommand {
    * @since 2.23.0
    */
   default Modifications getModifications(String baseRevision, String revision) throws IOException {
-    throw new FeatureNotSupportedException(Feature.COMBINED_MODIFICATIONS.name());
+    throw new FeatureNotSupportedException(Feature.MODIFICATIONS_BETWEEN_REVISIONS.name());
   }
 
   /**
