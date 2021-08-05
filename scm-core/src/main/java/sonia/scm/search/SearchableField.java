@@ -32,7 +32,18 @@ import com.google.common.annotations.Beta;
  */
 @Beta
 public interface SearchableField {
+
+  /**
+   * Returns the name of the searchable field.
+   *
+   * @return field name
+   */
   String getName();
 
+  /**
+   * Returns the type of the searchable field.
+   *
+   * @return field type
+   */
   Class<?> getType();
 }

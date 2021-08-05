@@ -33,7 +33,6 @@ import sonia.scm.search.TypeCheck;
 @Mapper
 public abstract class SearchableTypeMapper {
 
-  @Mapping(target = "type", ignore = true)
   @Mapping(target = "attributes", ignore = true)
   public abstract SearchableTypeDto map(SearchableType searchableType);
 

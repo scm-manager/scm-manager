@@ -62,6 +62,5 @@ export type SearchableField = {
 
 export type SearchableType = HalRepresentation & {
   name: string;
-  type: string;
   fields: SearchableField[];
 };

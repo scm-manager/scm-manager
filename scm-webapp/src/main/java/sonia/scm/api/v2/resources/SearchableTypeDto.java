@@ -36,6 +36,5 @@ import java.util.Collection;
 @SuppressWarnings("java:S2160") // we need no equals for dtos
 public class SearchableTypeDto extends HalRepresentation {
   private String name;
-  private String type;
   private Collection<SearchableFieldDto> fields;
 }
