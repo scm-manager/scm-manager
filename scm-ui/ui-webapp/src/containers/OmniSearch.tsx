@@ -22,13 +22,20 @@
  * SOFTWARE.
  */
 import React, { FC, KeyboardEvent as ReactKeyboardEvent, MouseEvent, useCallback, useState, useEffect } from "react";
-import { Hit, Links, ValueHitField } from "@scm-manager/ui-types";
+import { Hit, Links, Repository, ValueHitField } from "@scm-manager/ui-types";
 import styled from "styled-components";
 import { BackendError, useSearch } from "@scm-manager/ui-api";
 import classNames from "classnames";
 import { Link, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Button, ErrorNotification, Notification } from "@scm-manager/ui-components";
+import {
+  Button,
+  ErrorNotification,
+  HitProps,
+  Notification,
+  RepositoryAvatar,
+  useStringHitFieldValue,
+} from "@scm-manager/ui-components";
 
 const Field = styled.div`
   margin-bottom: 0 !important;
@@ -118,6 +125,30 @@ const ResultFooter = styled.div`
   padding: 0.375rem 0.5rem;
 `;
 
+const AvatarSection: FC<HitProps> = ({ hit }) => {
+  const namespace = useStringHitFieldValue(hit, "namespace");
+  const name = useStringHitFieldValue(hit, "name");
+  const type = useStringHitFieldValue(hit, "type");
+
+  if (!namespace || !name || !type) {
+    return null;
+  }
+
+  const repository: Repository = {
+    namespace,
+    name,
+    type,
+    _links: {},
+    _embedded: hit._embedded,
+  };
+
+  return (
+    <span className="mr-2">
+      <RepositoryAvatar repository={repository} size={24} />
+    </span>
+  );
+};
+
 const MoreResults: FC<GotoProps> = ({ gotoDetailSearch }) => {
   const [t] = useTranslation("commons");
   return (
@@ -143,7 +174,7 @@ const Hits: FC<HitsProps> = ({ hits, index, clear, gotoDetailSearch }) => {
       {hits.map((hit, idx) => (
         <div key={id(hit)} onMouseDown={(e) => e.preventDefault()} onClick={clear}>
           <Link
-            className={classNames("dropdown-item", "has-text-weight-medium", "is-ellipsis-overflow", {
+            className={classNames("is-flex", "dropdown-item", "has-text-weight-medium", "is-ellipsis-overflow", {
               "is-active": idx === index,
             })}
             title={id(hit)}
@@ -151,7 +182,7 @@ const Hits: FC<HitsProps> = ({ hits, index, clear, gotoDetailSearch }) => {
             role="option"
             data-omnisearch="true"
           >
-            {id(hit)}
+            <AvatarSection hit={hit} /> {id(hit)}
           </Link>
         </div>
       ))}
