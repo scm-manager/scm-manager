@@ -38,6 +38,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.ObjectFactory;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryCoordinates;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.search.Hit;
 import sonia.scm.search.QueryResult;
@@ -87,8 +88,16 @@ public abstract class QueryResultMapper extends HalAppenderMapper {
   @Nonnull
   @ObjectFactory
   EmbeddedRepositoryDto createDto(Repository repository) {
-    String self = resourceLinks.repository().self(repository.getNamespace(), repository.getName());
-    return new EmbeddedRepositoryDto(linkingTo().self(self).build());
+    Links.Builder links = linkingTo();
+    links.self(resourceLinks.repository().self(repository.getNamespace(), repository.getName()));
+    Embedded.Builder embedded = Embedded.embeddedBuilder();
+
+    HalEnricherContext context = HalEnricherContext.builder()
+      .put(RepositoryCoordinates.class, repository)
+      .build();
+
+    applyEnrichers(context, new EdisonHalAppender(links, embedded), RepositoryCoordinates.class);
+    return new EmbeddedRepositoryDto(links.build(), embedded.build());
   }
 
   @Nonnull
@@ -164,8 +173,8 @@ public abstract class QueryResultMapper extends HalAppenderMapper {
     private String namespace;
     private String name;
     private String type;
-    public EmbeddedRepositoryDto(Links links) {
-      super(links);
+    public EmbeddedRepositoryDto(Links links, Embedded embedded) {
+      super(links, embedded);
     }
   }
 }
