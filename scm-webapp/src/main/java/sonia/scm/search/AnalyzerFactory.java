@@ -66,14 +66,14 @@ public class AnalyzerFactory {
     Analyzer defaultAnalyzer = create(options);
 
     Map<String, Analyzer> analyzerMap = new HashMap<>();
-    for (SearchableField field : type.getFields()) {
+    for (LuceneSearchableField field : type.getFields()) {
       addFieldAnalyzer(analyzerMap, field);
     }
 
     return new PerFieldAnalyzerWrapper(defaultAnalyzer, analyzerMap);
   }
 
-  private void addFieldAnalyzer(Map<String, Analyzer> analyzerMap, SearchableField field) {
+  private void addFieldAnalyzer(Map<String, Analyzer> analyzerMap, LuceneSearchableField field) {
     if (field.getAnalyzer() != Indexed.Analyzer.DEFAULT) {
       analyzerMap.put(field.getName(), new NonNaturalLanguageAnalyzer());
     }
