@@ -22,7 +22,8 @@
  * SOFTWARE.
  */
 
-import { HalRepresentation, PagedCollection } from "./hal";
+import { HalRepresentationWithEmbedded, PagedCollection } from "./hal";
+import { Repository } from "./Repositories";
 
 export type ValueHitField = {
   highlighted: false;
@@ -36,7 +37,11 @@ export type HighlightedHitField = {
 
 export type HitField = ValueHitField | HighlightedHitField;
 
-export type Hit = HalRepresentation & {
+export type EmbeddedRepository = {
+  repository?: Repository;
+};
+
+export type Hit = HalRepresentationWithEmbedded<EmbeddedRepository> & {
   score: number;
   fields: { [name: string]: HitField };
 };
