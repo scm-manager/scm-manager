@@ -228,5 +228,6 @@ class IndexDtoGeneratorTest {
     when(resourceLinks.namespaceCollection()).thenReturn(new ResourceLinks.NamespaceCollectionLinks(scmPathInfo));
     when(resourceLinks.me()).thenReturn(new ResourceLinks.MeLinks(scmPathInfo, new ResourceLinks.UserLinks(scmPathInfo)));
     when(resourceLinks.repository()).thenReturn(new ResourceLinks.RepositoryLinks(scmPathInfo));
+    when(resourceLinks.search()).thenReturn(new ResourceLinks.SearchLinks(scmPathInfo));
   }
 }

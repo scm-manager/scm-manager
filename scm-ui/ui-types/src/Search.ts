@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import { HalRepresentationWithEmbedded, PagedCollection } from "./hal";
+import { HalRepresentation, HalRepresentationWithEmbedded, PagedCollection } from "./hal";
 import { Repository } from "./Repositories";
 
 export type ValueHitField = {
