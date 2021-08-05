@@ -24,7 +24,6 @@
 
 package sonia.scm.search;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
 import lombok.Value;
 import org.apache.lucene.queryparser.flexible.standard.config.PointsConfig;
@@ -49,8 +48,7 @@ public class LuceneSearchableType implements SearchableType {
   Map<String, Float> boosts;
   Map<String, PointsConfig> pointsConfig;
   TypeConverter typeConverter;
-
-  @VisibleForTesting
+  
   public LuceneSearchableType(Class<?> type, IndexedType annotation, List<LuceneSearchableField> fields) {
     this.type = type;
     this.name = name(type, annotation);
