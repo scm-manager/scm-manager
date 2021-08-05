@@ -81,6 +81,42 @@ public @interface Indexed {
   boolean highlighted() default false;
 
   /**
+   * Describes how the field is analyzed and tokenized.
+   *
+   * @return type of analyzer
+   * @since 2.23.0
+   */
+  Analyzer analyzer() default Analyzer.DEFAULT;
+
+  /**
+   * Describes how fields are analyzed and tokenized.
+   *
+   * @since 2.23.0
+   */
+  enum Analyzer {
+
+    /**
+     * Uses the analyzer which was used to open the index.
+     */
+    DEFAULT,
+
+    /**
+     * Uses an analyzer which is specialized for identifiers like repository names.
+     */
+    IDENTIFIER,
+
+    /**
+     * Uses an analyzer which is specialized for paths.
+     */
+    PATH,
+
+    /**
+     * Uses an analyzer which is specialized for source code.
+     */
+    CODE
+  }
+
+  /**
    * Describes how the field is indexed.
    */
   enum Type {

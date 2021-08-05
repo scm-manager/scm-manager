@@ -28,13 +28,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.HandlerEventType;
 import sonia.scm.search.Id;
 import sonia.scm.search.Index;
-import sonia.scm.search.IndexQueue;
+import sonia.scm.search.SearchEngine;
 
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -47,20 +48,15 @@ class GroupIndexerTest {
   @Mock
   private GroupManager groupManager;
 
-  @Mock
-  private IndexQueue indexQueue;
+  @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+  private SearchEngine searchEngine;
 
   @InjectMocks
   private GroupIndexer indexer;
 
   @Test
-  void shouldReturnRepositoryClass() {
+  void shouldReturnClass() {
     assertThat(indexer.getType()).isEqualTo(Group.class);
-  }
-
-  @Test
-  void shouldReturnIndexName() {
-    assertThat(indexer.getIndex()).isEqualTo(GroupIndexer.INDEX);
   }
 
   @Test
@@ -71,28 +67,28 @@ class GroupIndexerTest {
   @Nested
   class UpdaterTests {
 
-    @Mock
-    private Index index;
+    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+    private Index<Group> index;
 
     private final Group group = new Group("xml", "astronauts");
 
     @BeforeEach
     void open() {
-      when(indexQueue.getQueuedIndex(GroupIndexer.INDEX)).thenReturn(index);
+      when(searchEngine.forType(Group.class).getOrCreate()).thenReturn(index);
     }
 
     @Test
-    void shouldStoreRepository() {
+    void shouldStore() {
       indexer.open().store(group);
 
       verify(index).store(Id.of(group), "group:read:astronauts", group);
     }
 
     @Test
-    void shouldDeleteByRepository() {
+    void shouldDeleteById() {
       indexer.open().delete(group);
 
-      verify(index).delete(Id.of(group), Group.class);
+      verify(index.delete().byType()).byId(Id.of(group));
     }
 
     @Test
@@ -101,7 +97,7 @@ class GroupIndexerTest {
 
       indexer.open().reIndexAll();
 
-      verify(index).deleteByType(Group.class);
+      verify(index.delete().byType()).all();
       verify(index).store(Id.of(group), "group:read:astronauts", group);
     }
 
@@ -111,7 +107,7 @@ class GroupIndexerTest {
 
       indexer.handleEvent(event);
 
-      verify(index).delete(Id.of(group), Group.class);
+      verify(index.delete().byType()).byId(Id.of(group));
     }
 
     @Test

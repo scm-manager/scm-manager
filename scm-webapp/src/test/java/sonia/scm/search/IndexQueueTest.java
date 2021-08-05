@@ -43,35 +43,31 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.in;
 import static org.awaitility.Awaitility.await;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class DefaultIndexQueueTest {
+class IndexQueueTest {
 
   private Directory directory;
 
-  private DefaultIndexQueue queue;
-
-  @Mock
-  private LuceneQueryBuilderFactory queryBuilderFactory;
+  private IndexQueue queue;
 
   @BeforeEach
   void createQueue() throws IOException {
     directory = new ByteBuffersDirectory();
     IndexOpener opener = mock(IndexOpener.class);
-    when(opener.openForWrite(any(String.class), any(IndexOptions.class))).thenAnswer(ic -> {
+    when(opener.openForWrite(any(IndexParams.class))).thenAnswer(ic -> {
       IndexWriterConfig config = new IndexWriterConfig(new StandardAnalyzer());
       config.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
       return new IndexWriter(directory, config);
     });
 
-    SearchableTypeResolver resolver = new SearchableTypeResolver(Account.class, IndexedNumber.class);
-    LuceneIndexFactory indexFactory = new LuceneIndexFactory(resolver, opener);
-    SearchEngine engine = new LuceneSearchEngine(resolver, indexFactory, queryBuilderFactory);
-    queue = new DefaultIndexQueue(engine);
+    LuceneIndexFactory indexFactory = new LuceneIndexFactory(opener);
+    queue = new IndexQueue(indexFactory);
   }
 
   @AfterEach
@@ -82,11 +78,18 @@ class DefaultIndexQueueTest {
 
   @Test
   void shouldWriteToIndex() throws Exception {
-    try (Index index = queue.getQueuedIndex("default")) {
+    try (Index<Account> index = getIndex(Account.class)) {
       index.store(Id.of("tricia"), null, new Account("tricia", "Trillian", "McMillan"));
       index.store(Id.of("dent"), null, new Account("dent", "Arthur", "Dent"));
     }
     assertDocCount(2);
+  }
+
+  private <T> Index<T> getIndex(Class<T> type) {
+    SearchableTypeResolver resolver = new SearchableTypeResolver(type);
+    LuceneSearchableType searchableType = resolver.resolve(type);
+    IndexParams indexParams = new IndexParams("default", searchableType, IndexOptions.defaults());
+    return queue.getQueuedIndex(indexParams);
   }
 
   @Test
@@ -96,8 +99,8 @@ class DefaultIndexQueueTest {
       executorService.execute(new IndexNumberTask(i));
     }
     executorService.execute(() -> {
-      try (Index index = queue.getQueuedIndex("default")) {
-        index.delete(Id.of(String.valueOf(12)), IndexedNumber.class);
+      try (Index<IndexedNumber> index = getIndex(IndexedNumber.class)) {
+        index.delete().byType().byId(Id.of(String.valueOf(12)));
       }
     });
     executorService.shutdown();
@@ -141,7 +144,7 @@ class DefaultIndexQueueTest {
 
     @Override
     public void run() {
-      try (Index index = queue.getQueuedIndex("default")) {
+      try (Index<IndexedNumber> index = getIndex(IndexedNumber.class)) {
         index.store(Id.of(String.valueOf(number)), null, new IndexedNumber(number));
       }
     }

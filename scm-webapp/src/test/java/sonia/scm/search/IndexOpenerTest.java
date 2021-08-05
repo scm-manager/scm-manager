@@ -28,6 +28,7 @@ import org.apache.lucene.analysis.core.SimpleAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.TextField;
+import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -54,6 +55,9 @@ class IndexOpenerTest {
   @Mock
   private AnalyzerFactory analyzerFactory;
 
+  @Mock
+  private LuceneSearchableType searchableType;
+
   private IndexOpener indexOpener;
 
   @BeforeEach
@@ -61,32 +65,47 @@ class IndexOpenerTest {
     this.directory = tempDirectory;
     SCMContextProvider context = mock(SCMContextProvider.class);
     when(context.resolve(Paths.get("index"))).thenReturn(tempDirectory);
-    when(analyzerFactory.create(any(IndexOptions.class))).thenReturn(new SimpleAnalyzer());
+    when(analyzerFactory.create(any(LuceneSearchableType.class), any(IndexOptions.class))).thenReturn(new SimpleAnalyzer());
     indexOpener = new IndexOpener(context, analyzerFactory);
   }
 
   @Test
   void shouldCreateNewIndex() throws IOException {
-    try (IndexWriter writer = indexOpener.openForWrite("new-index", IndexOptions.defaults())) {
+    try (IndexWriter writer = open("new-index")) {
       addDoc(writer, "Trillian");
     }
     assertThat(directory.resolve("new-index")).exists();
   }
 
+  private IndexWriter open(String index) throws IOException {
+    return indexOpener.openForWrite(new IndexParams(index, searchableType, IndexOptions.defaults()));
+  }
+
   @Test
   void shouldOpenExistingIndex() throws IOException {
-    try (IndexWriter writer = indexOpener.openForWrite("reused", IndexOptions.defaults())) {
+    try (IndexWriter writer = open("reused")) {
       addDoc(writer, "Dent");
     }
-    try (IndexWriter writer = indexOpener.openForWrite("reused", IndexOptions.defaults())) {
+    try (IndexWriter writer = open("reused")) {
       assertThat(writer.getFieldNames()).contains("hitchhiker");
     }
   }
 
   @Test
   void shouldUseAnalyzerFromFactory() throws IOException {
-    try (IndexWriter writer = indexOpener.openForWrite("new-index", IndexOptions.defaults())) {
+    try (IndexWriter writer = open("new-index")) {
       assertThat(writer.getAnalyzer()).isInstanceOf(SimpleAnalyzer.class);
+    }
+  }
+
+  @Test
+  void shouldOpenIndexForRead() throws IOException {
+    try (IndexWriter writer = open("idx-for-read")) {
+      addDoc(writer, "Dent");
+    }
+
+    try (IndexReader reader = indexOpener.openForRead("idx-for-read")) {
+      assertThat(reader.numDocs()).isOne();
     }
   }
 

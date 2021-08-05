@@ -24,20 +24,33 @@
 
 package sonia.scm.search;
 
-import com.google.common.annotations.Beta;
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 
-/**
- * Names of predefined indexes.
- * @since 2.21.0
- */
-@Beta
-public final class IndexNames {
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-  /**
-   * The default index.
-   */
-  public static final String DEFAULT = "_default";
+class Analyzers {
 
-  private IndexNames() {
+  private Analyzers() {
   }
+
+  static List<String> tokenize(Analyzer analyzer, String text) throws IOException {
+    return tokenize(analyzer, "default", text);
+  }
+
+  static List<String> tokenize(Analyzer analyzer, String field, String text) throws IOException {
+    List<String> tokens = new ArrayList<>();
+    try (TokenStream stream = analyzer.tokenStream(field, text)) {
+      CharTermAttribute attr = stream.addAttribute(CharTermAttribute.class);
+      stream.reset();
+      while (stream.incrementToken()) {
+        tokens.add(attr.toString());
+      }
+    }
+    return tokens;
+  }
+
 }

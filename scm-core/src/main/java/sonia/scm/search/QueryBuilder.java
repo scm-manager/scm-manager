@@ -37,22 +37,22 @@ import static sonia.scm.NotFoundException.notFound;
 /**
  * Build and execute queries against an index.
  *
+ * @param <T> type of indexed objects
  * @since 2.21.0
  */
 @Beta
-public abstract class QueryBuilder {
+public abstract class QueryBuilder<T> {
 
   private String repositoryId;
   private int start = 0;
   private int limit = 10;
-
 
   /**
    * Return only results which are related to the given repository.
    * @param repository repository
    * @return {@code this}
    */
-  public QueryBuilder repository(Repository repository) {
+  public QueryBuilder<T> repository(Repository repository) {
     return repository(repository.getId());
   }
 
@@ -61,7 +61,7 @@ public abstract class QueryBuilder {
    * @param repositoryId id of the repository
    * @return {@code this}
    */
-  public QueryBuilder repository(String repositoryId) {
+  public QueryBuilder<T> repository(String repositoryId) {
     this.repositoryId = repositoryId;
     return this;
   }
@@ -72,7 +72,7 @@ public abstract class QueryBuilder {
    * @param start start of result
    * @return {@code this}
    */
-  public QueryBuilder start(int start) {
+  public QueryBuilder<T> start(int start) {
     this.start = start;
     return this;
   }
@@ -82,7 +82,7 @@ public abstract class QueryBuilder {
    * @param limit limit of hits
    * @return {@code this}
    */
-  public QueryBuilder limit(int limit) {
+  public QueryBuilder<T> limit(int limit) {
     this.limit = limit;
     return this;
   }
@@ -90,61 +90,26 @@ public abstract class QueryBuilder {
   /**
    * Executes the query and returns the matches.
    *
-   * @param type type of objects which are searched
    * @param queryString searched query
    * @return result of query
    */
-  public QueryResult execute(Class<?> type, String queryString){
-    return execute(new QueryParams(type, repositoryId, queryString, start, limit));
+  public QueryResult execute(String queryString){
+    return execute(new QueryParams(repositoryId, queryString, start, limit));
   }
 
 
   /**
    * Executes the query and returns the total count of hits.
    *
-   * @param type type of objects which are searched
    * @param queryString searched query
    *
    * @return total count of hits
    * @since 2.22.0
    */
-  public QueryCountResult count(Class<?> type, String queryString) {
-    return count(new QueryParams(type, repositoryId, queryString, start, limit));
+  public QueryCountResult count(String queryString) {
+    return count(new QueryParams(repositoryId, queryString, start, limit));
   }
 
-  /**
-   * Executes the query and returns the matches.
-   *
-   * @param typeName type name of objects which are searched
-   * @param queryString searched query
-   * @return result of query
-   *
-   * @throws NotFoundException if type could not be found
-   */
-  public QueryResult execute(String typeName, String queryString){
-    return execute(resolveTypeByName(typeName), queryString);
-  }
-
-  /**
-   * Executes the query and returns the total count of hits.
-   *
-   * @param typeName type name of objects which are searched
-   * @param queryString searched query
-   *
-   * @return total count of hits
-   * @since 2.22.0
-   */
-  public QueryCountResult count(String typeName, String queryString) {
-    return count(resolveTypeByName(typeName), queryString);
-  }
-
-  /**
-   * Resolves the type by its name. Returns optional with class of type or an empty optional.
-   *
-   * @param typeName name of type
-   * @return optional with class of type or empty
-   */
-  protected abstract Optional<Class<?>> resolveByName(String typeName);
 
   /**
    * Executes the query and returns the matches.
@@ -163,16 +128,11 @@ public abstract class QueryBuilder {
     return execute(queryParams);
   }
 
-  private Class<?> resolveTypeByName(String typeName) {
-    return resolveByName(typeName).orElseThrow(() -> notFound(entity("type", typeName)));
-  }
-
   /**
    * The searched query and all parameters, which belong to the query.
    */
   @Value
   static class QueryParams {
-    Class<?> type;
     String repositoryId;
     String queryString;
     int start;

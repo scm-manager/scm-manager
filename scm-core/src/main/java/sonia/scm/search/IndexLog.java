@@ -36,7 +36,8 @@ import java.time.Instant;
 
 /**
  * A marker keeping track of when and with which model version an object type was last indexed.
- * @since 2.21
+ *
+ * @since 2.21.0
  */
 @Beta
 @Data

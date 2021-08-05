@@ -24,37 +24,13 @@
 
 package sonia.scm.search;
 
-import com.google.common.annotations.Beta;
+import lombok.Value;
 
-/**
- * Queue the work of indexing.
- * An index can't be opened in parallel, so the queue coordinates the work of indexing in an asynchronous manner.
- * {@link IndexQueue} should be used most of the time to index content.
- *
- * @since 2.21.0
- */
-@Beta
-public interface IndexQueue {
+@Value
+public class IndexParams {
 
-  /**
-   * Returns an index which queues every change to the content.
-   *
-   * @param name name of index
-   * @param indexOptions options for the index
-   *
-   * @return index which queues changes
-   */
-  Index getQueuedIndex(String name, IndexOptions indexOptions);
-
-  /**
-   * Returns an index which with default options which queues every change to the content.
-   * @param name name of index
-   *
-   * @return index with default options which queues changes
-   * @see IndexOptions#defaults()
-   */
-  default Index getQueuedIndex(String name) {
-    return getQueuedIndex(name, IndexOptions.defaults());
-  }
+  String index;
+  LuceneSearchableType searchableType;
+  IndexOptions options;
 
 }

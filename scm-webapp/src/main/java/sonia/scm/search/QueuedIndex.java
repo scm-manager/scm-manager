@@ -27,50 +27,76 @@ package sonia.scm.search;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QueuedIndex implements Index {
+class QueuedIndex<T> implements Index<T> {
 
-  private final DefaultIndexQueue queue;
-  private final String indexName;
-  private final IndexOptions indexOptions;
+  private final IndexQueue queue;
+  private final IndexParams indexParams;
+  private final List<IndexQueueTask<T>> tasks = new ArrayList<>();
 
-  private final List<IndexQueueTask> tasks = new ArrayList<>();
-
-  QueuedIndex(DefaultIndexQueue queue, String indexName, IndexOptions indexOptions) {
+   QueuedIndex(IndexQueue queue, IndexParams indexParams) {
     this.queue = queue;
-    this.indexName = indexName;
-    this.indexOptions = indexOptions;
-  }
+     this.indexParams = indexParams;
+   }
 
   @Override
-  public void store(Id id, String permission, Object object) {
+  public void store(Id id, String permission, T object) {
     tasks.add(index -> index.store(id, permission, object));
   }
 
   @Override
-  public void delete(Id id, Class<?> type) {
-    tasks.add(index -> index.delete(id, type));
-  }
-
-  @Override
-  public void deleteByRepository(String repository) {
-    tasks.add(index -> index.deleteByRepository(repository));
-  }
-
-  @Override
-  public void deleteByType(Class<?> type) {
-    tasks.add(index -> index.deleteByType(type));
-  }
-
-  @Override
-  public void deleteByTypeName(String typeName) {
-    tasks.add(index -> index.deleteByTypeName(typeName));
+  public Deleter delete() {
+    return new QueueDeleter();
   }
 
   @Override
   public void close() {
-    IndexQueueTaskWrapper wrappedTask = new IndexQueueTaskWrapper(
-      queue.getSearchEngine(), indexName, indexOptions, tasks
+    IndexQueueTaskWrapper<T> wrappedTask = new IndexQueueTaskWrapper<>(
+      queue.getIndexFactory(), indexParams, tasks
     );
     queue.enqueue(wrappedTask);
+  }
+
+  private class QueueDeleter implements Deleter {
+
+    @Override
+    public ByTypeDeleter byType() {
+      return new QueueByTypeDeleter();
+    }
+
+    @Override
+    public AllTypesDeleter allTypes() {
+      return new QueueAllTypesDeleter();
+    }
+  }
+
+  private class QueueByTypeDeleter implements ByTypeDeleter {
+
+    @Override
+    public void byId(Id id) {
+      tasks.add(index -> index.delete().byType().byId(id));
+    }
+
+    @Override
+    public void all() {
+      tasks.add(index -> index.delete().byType().all());
+    }
+
+    @Override
+    public void byRepository(String repositoryId) {
+      tasks.add(index -> index.delete().byType().byRepository(repositoryId));
+    }
+  }
+
+  private class QueueAllTypesDeleter implements AllTypesDeleter {
+
+    @Override
+    public void byRepository(String repositoryId) {
+      tasks.add(index -> index.delete().allTypes().byRepository(repositoryId));
+    }
+
+    @Override
+    public void byTypeName(String typeName) {
+      tasks.add(index -> index.delete().allTypes().byTypeName(typeName));
+    }
   }
 }

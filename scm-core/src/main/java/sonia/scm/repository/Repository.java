@@ -70,10 +70,10 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
 
   private String id;
 
-  @Indexed(defaultQuery = true, boost = 1.25f)
+  @Indexed(defaultQuery = true, boost = 1.25f, analyzer = Indexed.Analyzer.IDENTIFIER)
   private String namespace;
 
-  @Indexed(defaultQuery = true, boost = 1.5f)
+  @Indexed(defaultQuery = true, boost = 1.5f, analyzer = Indexed.Analyzer.IDENTIFIER)
   private String name;
   @Indexed(type = Indexed.Type.SEARCHABLE)
   private String type;

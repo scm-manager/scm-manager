@@ -30,9 +30,8 @@ import sonia.scm.plugin.Extension;
 import sonia.scm.search.HandlerEventIndexSyncer;
 import sonia.scm.search.Id;
 import sonia.scm.search.Index;
-import sonia.scm.search.IndexNames;
-import sonia.scm.search.IndexQueue;
 import sonia.scm.search.Indexer;
+import sonia.scm.search.SearchEngine;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -42,18 +41,15 @@ import javax.inject.Singleton;
 public class RepositoryIndexer implements Indexer<Repository> {
 
   @VisibleForTesting
-  static final int VERSION = 2;
-
-  @VisibleForTesting
-  static final String INDEX = IndexNames.DEFAULT;
+  static final int VERSION = 3;
 
   private final RepositoryManager repositoryManager;
-  private final IndexQueue indexQueue;
+  private final SearchEngine searchEngine;
 
   @Inject
-  public RepositoryIndexer(RepositoryManager repositoryManager, IndexQueue indexQueue) {
+  public RepositoryIndexer(RepositoryManager repositoryManager, SearchEngine searchEngine) {
     this.repositoryManager = repositoryManager;
-    this.indexQueue = indexQueue;
+    this.searchEngine = searchEngine;
   }
 
   @Override
@@ -66,11 +62,6 @@ public class RepositoryIndexer implements Indexer<Repository> {
     return Repository.class;
   }
 
-  @Override
-  public String getIndex() {
-    return INDEX;
-  }
-
   @Subscribe(async = false)
   public void handleEvent(RepositoryEvent event) {
     new HandlerEventIndexSyncer<>(this).handleEvent(event);
@@ -78,15 +69,15 @@ public class RepositoryIndexer implements Indexer<Repository> {
 
   @Override
   public Updater<Repository> open() {
-    return new RepositoryIndexUpdater(repositoryManager, indexQueue.getQueuedIndex(INDEX));
+    return new RepositoryIndexUpdater(repositoryManager, searchEngine.forType(getType()).getOrCreate());
   }
 
   public static class RepositoryIndexUpdater implements Updater<Repository> {
 
     private final RepositoryManager repositoryManager;
-    private final Index index;
+    private final Index<Repository> index;
 
-    public RepositoryIndexUpdater(RepositoryManager repositoryManager, Index index) {
+    public RepositoryIndexUpdater(RepositoryManager repositoryManager, Index<Repository> index) {
       this.repositoryManager = repositoryManager;
       this.index = index;
     }
@@ -98,14 +89,14 @@ public class RepositoryIndexer implements Indexer<Repository> {
 
     @Override
     public void delete(Repository repository) {
-      index.deleteByRepository(repository.getId());
+      index.delete().allTypes().byRepository(repository.getId());
     }
 
     @Override
     public void reIndexAll() {
       // v1 used the whole classname as type
-      index.deleteByTypeName(Repository.class.getName());
-      index.deleteByType(Repository.class);
+      index.delete().allTypes().byTypeName(Repository.class.getName());
+      index.delete().byType().all();
       for (Repository repository : repositoryManager.getAll()) {
         store(repository);
       }

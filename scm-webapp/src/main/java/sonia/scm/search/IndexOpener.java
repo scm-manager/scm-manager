@@ -52,10 +52,10 @@ public class IndexOpener {
     return DirectoryReader.open(directory(name));
   }
 
-  public IndexWriter openForWrite(String name, IndexOptions options) throws IOException {
-    IndexWriterConfig config = new IndexWriterConfig(analyzerFactory.create(options));
+  public IndexWriter openForWrite(IndexParams indexParams) throws IOException {
+    IndexWriterConfig config = new IndexWriterConfig(analyzerFactory.create(indexParams.getSearchableType(), indexParams.getOptions()));
     config.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
-    return new IndexWriter(directory(name), config);
+    return new IndexWriter(directory(indexParams.getIndex()), config);
   }
 
   private Directory directory(String name) throws IOException {

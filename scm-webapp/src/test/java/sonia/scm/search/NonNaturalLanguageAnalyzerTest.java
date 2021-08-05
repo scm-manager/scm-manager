@@ -24,38 +24,52 @@
 
 package sonia.scm.search;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import sonia.scm.store.InMemoryByteDataStoreFactory;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.Optional;
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class DefaultIndexLogStoreTest {
+class NonNaturalLanguageAnalyzerTest {
 
-  private IndexLogStore indexLogStore;
+  private final NonNaturalLanguageAnalyzer analyzer = new NonNaturalLanguageAnalyzer();
 
-  @BeforeEach
-  void setUpIndexLogStore() {
-    InMemoryByteDataStoreFactory dataStoreFactory = new InMemoryByteDataStoreFactory();
-    indexLogStore = new DefaultIndexLogStore(dataStoreFactory);
+  @ParameterizedTest
+  @ValueSource(strings = {
+    "simple text", "simple-text", "simple(text)", "simple[text]",
+    "simple{text}", "simple/text", "simple;text", "simple$text",
+    "simple\\text"
+  })
+  void shouldTokenize(String value) throws IOException {
+    List<String> tokens = tokenize(value);
+
+    assertThat(tokens).containsOnly("simple", "text");
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {
+    "simple.text", "simple_text", "simpleText", "simple:text", "SimpleText"
+  })
+  void shouldTokenizeAndPreserveOriginal(String value) throws IOException {
+    List<String> tokens = tokenize(value);
+
+    assertThat(tokens).containsOnly("simple", "text", value.toLowerCase(Locale.ENGLISH));
   }
 
   @Test
-  void shouldReturnEmptyOptional() {
-    Optional<IndexLog> indexLog = indexLogStore.forIndex("index").get(String.class);
-    assertThat(indexLog).isEmpty();
+  void shouldSplitOnNumeric() throws IOException {
+    List<String> tokens = tokenize("simple42text");
+
+    assertThat(tokens).containsOnly("simple", "42", "text", "simple42text");
   }
 
-  @Test
-  void shouldStoreLog() {
-    indexLogStore.forIndex("index").log(String.class, 42);
-    Optional<IndexLog> index = indexLogStore.forIndex("index").get(String.class);
-    assertThat(index).hasValueSatisfying(log -> {
-      assertThat(log.getVersion()).isEqualTo(42);
-      assertThat(log.getDate()).isNotNull();
-    });
+  private List<String> tokenize(String text) throws IOException {
+    return Analyzers.tokenize(analyzer, text);
   }
+
 
 }

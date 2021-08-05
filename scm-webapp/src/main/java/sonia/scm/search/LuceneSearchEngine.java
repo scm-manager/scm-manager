@@ -34,13 +34,13 @@ import java.util.stream.Collectors;
 public class LuceneSearchEngine implements SearchEngine {
 
   private final SearchableTypeResolver resolver;
-  private final LuceneIndexFactory indexFactory;
+  private final IndexQueue indexQueue;
   private final LuceneQueryBuilderFactory queryBuilderFactory;
 
   @Inject
-  public LuceneSearchEngine(SearchableTypeResolver resolver, LuceneIndexFactory indexFactory, LuceneQueryBuilderFactory queryBuilderFactory) {
+  public LuceneSearchEngine(SearchableTypeResolver resolver, IndexQueue indexQueue, LuceneQueryBuilderFactory queryBuilderFactory) {
     this.resolver = resolver;
-    this.indexFactory = indexFactory;
+    this.indexQueue = indexQueue;
     this.queryBuilderFactory = queryBuilderFactory;
   }
 
@@ -54,13 +54,57 @@ public class LuceneSearchEngine implements SearchEngine {
   }
 
   @Override
-  public Index getOrCreate(String name, IndexOptions options) {
-    return indexFactory.create(name, options);
+  public <T> ForType<T> forType(Class<T> type) {
+    return forType(resolver.resolve(type));
   }
 
   @Override
-  public QueryBuilder search(String name, IndexOptions options) {
-    return queryBuilderFactory.create(name, options);
+  public ForType<Object> forType(String typeName) {
+    return forType(resolver.resolveByName(typeName));
+  }
+
+  private <T> ForType<T> forType(LuceneSearchableType searchableType) {
+    return new LuceneForType<>(searchableType);
+  }
+
+  class LuceneForType<T> implements ForType<T> {
+
+    private final LuceneSearchableType searchableType;
+    private IndexOptions options = IndexOptions.defaults();
+    private String index = "default";
+
+    private LuceneForType(LuceneSearchableType searchableType) {
+      this.searchableType = searchableType;
+    }
+
+    @Override
+    public ForType<T> withOptions(IndexOptions options) {
+      this.options = options;
+      return this;
+    }
+
+    @Override
+    public ForType<T> withIndex(String index) {
+      this.index = index;
+      return this;
+    }
+
+    private IndexParams params() {
+      return new IndexParams(index, searchableType, options);
+    }
+
+    @Override
+    public Index<T> getOrCreate() {
+      return indexQueue.getQueuedIndex(params());
+    }
+
+    @Override
+    public QueryBuilder<T> search() {
+      searchableType.getPermission().ifPresent(
+        permission -> SecurityUtils.getSubject().checkPermission(permission)
+      );
+      return queryBuilderFactory.create(params());
+    }
   }
 
 }

@@ -35,29 +35,28 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Singleton
-public class DefaultIndexQueue implements IndexQueue, Closeable {
+public class IndexQueue implements Closeable {
 
   private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
   private final AtomicLong size = new AtomicLong(0);
 
-  private final SearchEngine searchEngine;
+  private final LuceneIndexFactory indexFactory;
 
   @Inject
-  public DefaultIndexQueue(SearchEngine searchEngine) {
-    this.searchEngine = searchEngine;
+  public IndexQueue(LuceneIndexFactory indexFactory) {
+    this.indexFactory = indexFactory;
   }
 
-  @Override
-  public Index getQueuedIndex(String name, IndexOptions indexOptions) {
-    return new QueuedIndex(this, name, indexOptions);
+  public <T> Index<T> getQueuedIndex(IndexParams indexParams) {
+    return new QueuedIndex<>(this, indexParams);
   }
 
-  public SearchEngine getSearchEngine() {
-    return searchEngine;
+  public LuceneIndexFactory getIndexFactory() {
+    return indexFactory;
   }
 
-  void enqueue(IndexQueueTaskWrapper task) {
+  <T> void enqueue(IndexQueueTaskWrapper<T> task) {
     size.incrementAndGet();
     executor.execute(() -> {
       task.run();

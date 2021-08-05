@@ -41,6 +41,7 @@ class SearchableField {
   private final boolean defaultQuery;
   private final boolean highlighted;
   private final PointsConfig pointsConfig;
+  private final Indexed.Analyzer analyzer;
 
   SearchableField(Field field, Indexed indexed) {
     this.name = name(field, indexed);
@@ -50,6 +51,7 @@ class SearchableField {
     this.defaultQuery = indexed.defaultQuery();
     this.highlighted = indexed.highlighted();
     this.pointsConfig = IndexableFields.pointConfig(field);
+    this.analyzer = indexed.analyzer();
   }
 
   Object value(Document document) {

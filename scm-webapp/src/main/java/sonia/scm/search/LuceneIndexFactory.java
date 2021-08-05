@@ -29,20 +29,18 @@ import java.io.IOException;
 
 public class LuceneIndexFactory {
 
-  private final SearchableTypeResolver typeResolver;
   private final IndexOpener indexOpener;
 
   @Inject
-  public LuceneIndexFactory(SearchableTypeResolver typeResolver, IndexOpener indexOpener) {
-    this.typeResolver = typeResolver;
+  public LuceneIndexFactory(IndexOpener indexOpener) {
     this.indexOpener = indexOpener;
   }
 
-  public LuceneIndex create(String name, IndexOptions options) {
+  public <T> LuceneIndex<T> create(IndexParams indexParams) {
     try {
-      return new LuceneIndex(typeResolver, indexOpener.openForWrite(name, options));
+      return new LuceneIndex<>(indexParams.getSearchableType(), indexOpener.openForWrite(indexParams));
     } catch (IOException ex) {
-      throw new SearchEngineException("failed to open index " + name, ex);
+      throw new SearchEngineException("failed to open index " + indexParams.getIndex(), ex);
     }
   }
 }

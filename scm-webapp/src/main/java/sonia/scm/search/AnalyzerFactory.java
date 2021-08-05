@@ -28,9 +28,12 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.de.GermanAnalyzer;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.analysis.es.SpanishAnalyzer;
+import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 
 import javax.annotation.Nonnull;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AnalyzerFactory {
 
@@ -56,6 +59,23 @@ public class AnalyzerFactory {
         return new SpanishAnalyzer();
       default:
         return createDefaultAnalyzer();
+    }
+  }
+
+  public Analyzer create(LuceneSearchableType type, IndexOptions options) {
+    Analyzer defaultAnalyzer = create(options);
+
+    Map<String, Analyzer> analyzerMap = new HashMap<>();
+    for (SearchableField field : type.getFields()) {
+      addFieldAnalyzer(analyzerMap, field);
+    }
+
+    return new PerFieldAnalyzerWrapper(defaultAnalyzer, analyzerMap);
+  }
+
+  private void addFieldAnalyzer(Map<String, Analyzer> analyzerMap, SearchableField field) {
+    if (field.getAnalyzer() != Indexed.Analyzer.DEFAULT) {
+      analyzerMap.put(field.getName(), new NonNaturalLanguageAnalyzer());
     }
   }
 

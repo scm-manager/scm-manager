@@ -24,6 +24,7 @@
 
 package sonia.scm.search;
 
+import org.apache.shiro.authz.AuthorizationException;
 import org.github.sdorra.jse.ShiroExtension;
 import org.github.sdorra.jse.SubjectAware;
 import org.junit.jupiter.api.Test;
@@ -31,6 +32,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.repository.Repository;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -40,6 +42,8 @@ import java.util.Locale;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.junit.Assert.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -52,13 +56,16 @@ class LuceneSearchEngineTest {
   private SearchableTypeResolver resolver;
 
   @Mock
-  private LuceneIndexFactory indexFactory;
+  private IndexQueue indexQueue;
 
   @Mock
   private LuceneQueryBuilderFactory queryBuilderFactory;
 
   @InjectMocks
   private LuceneSearchEngine searchEngine;
+
+  @Mock
+  private LuceneSearchableType searchableType;
 
   @Test
   void shouldDelegateGetSearchableTypes() {
@@ -96,43 +103,119 @@ class LuceneSearchEngineTest {
   }
 
   @Test
+  @SuppressWarnings("unchecked")
+  void shouldDelegateGetOrCreateWithDefaultIndex() {
+    Index<Repository> index = mock(Index.class);
+
+    when(resolver.resolve(Repository.class)).thenReturn(searchableType);
+    IndexParams params = new IndexParams("default", searchableType, IndexOptions.defaults());
+    when(indexQueue.<Repository>getQueuedIndex(params)).thenReturn(index);
+
+    Index<Repository> idx = searchEngine.forType(Repository.class).getOrCreate();
+    assertThat(idx).isSameAs(index);
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
   void shouldDelegateGetOrCreateIndexWithDefaults() {
-    LuceneIndex index = mock(LuceneIndex.class);
-    when(indexFactory.create("idx", IndexOptions.defaults())).thenReturn(index);
+    Index<Repository> index = mock(Index.class);
 
-    Index idx = searchEngine.getOrCreate("idx");
+    when(resolver.resolve(Repository.class)).thenReturn(searchableType);
+    IndexParams params = new IndexParams("idx", searchableType, IndexOptions.defaults());
+    when(indexQueue.<Repository>getQueuedIndex(params)).thenReturn(index);
+
+    Index<Repository> idx = searchEngine.forType(Repository.class).withIndex("idx").getOrCreate();
     assertThat(idx).isSameAs(index);
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   void shouldDelegateGetOrCreateIndex() {
-    LuceneIndex index = mock(LuceneIndex.class);
+    Index<Repository> index = mock(Index.class);
     IndexOptions options = IndexOptions.naturalLanguage(Locale.ENGLISH);
-    when(indexFactory.create("idx", options)).thenReturn(index);
 
-    Index idx = searchEngine.getOrCreate("idx", options);
+    when(resolver.resolve(Repository.class)).thenReturn(searchableType);
+    IndexParams params = new IndexParams("default", searchableType, options);
+    when(indexQueue.<Repository>getQueuedIndex(params)).thenReturn(index);
+
+    Index<Repository> idx = searchEngine.forType(Repository.class).withOptions(options).getOrCreate();
     assertThat(idx).isSameAs(index);
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   void shouldDelegateSearchWithDefaults() {
-    LuceneQueryBuilder mockedBuilder = mock(LuceneQueryBuilder.class);
-    when(queryBuilderFactory.create("idx", IndexOptions.defaults())).thenReturn(mockedBuilder);
+    LuceneQueryBuilder<Repository> mockedBuilder = mock(LuceneQueryBuilder.class);
+    when(resolver.resolve(Repository.class)).thenReturn(searchableType);
 
-    QueryBuilder queryBuilder = searchEngine.search("idx");
+    IndexParams params = new IndexParams("default", searchableType, IndexOptions.defaults());
+    when(queryBuilderFactory.<Repository>create(params)).thenReturn(mockedBuilder);
+
+    QueryBuilder<Repository> queryBuilder = searchEngine.forType(Repository.class).search();
 
     assertThat(queryBuilder).isSameAs(mockedBuilder);
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   void shouldDelegateSearch() {
-    LuceneQueryBuilder mockedBuilder = mock(LuceneQueryBuilder.class);
     IndexOptions options = IndexOptions.naturalLanguage(Locale.GERMAN);
-    when(queryBuilderFactory.create("idx", options)).thenReturn(mockedBuilder);
 
-    QueryBuilder queryBuilder = searchEngine.search("idx", options);
+    LuceneQueryBuilder<Repository> mockedBuilder = mock(LuceneQueryBuilder.class);
+    when(resolver.resolve(Repository.class)).thenReturn(searchableType);
+
+    IndexParams params = new IndexParams("idx", searchableType, options);
+    when(queryBuilderFactory.<Repository>create(params)).thenReturn(mockedBuilder);
+
+    QueryBuilder<Repository> queryBuilder = searchEngine.forType(Repository.class).withIndex("idx").withOptions(options).search();
 
     assertThat(queryBuilder).isSameAs(mockedBuilder);
+  }
+
+  @Test
+  void shouldFailWithoutRequiredPermission() {
+    when(searchableType.getPermission()).thenReturn(Optional.of("repository:read"));
+    when(resolver.resolve(Repository.class)).thenReturn(searchableType);
+
+    SearchEngine.ForType<Repository> forType = searchEngine.forType(Repository.class);
+    assertThrows(AuthorizationException.class, forType::search);
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
+  @SubjectAware(permissions = "repository:read")
+  void shouldNotFailWithRequiredPermission() {
+    when(searchableType.getPermission()).thenReturn(Optional.of("repository:read"));
+    when(resolver.resolve(Repository.class)).thenReturn(searchableType);
+
+    LuceneQueryBuilder<Object> mockedBuilder = mock(LuceneQueryBuilder.class);
+    when(queryBuilderFactory.create(any())).thenReturn(mockedBuilder);
+
+    SearchEngine.ForType<Repository> forType = searchEngine.forType(Repository.class);
+    assertThat(forType.search()).isNotNull();
+  }
+
+  @Test
+  void shouldFailWithTypeNameWithoutRequiredPermission() {
+    when(searchableType.getPermission()).thenReturn(Optional.of("repository:read"));
+    when(resolver.resolveByName("repository")).thenReturn(searchableType);
+
+    SearchEngine.ForType<Object> forType = searchEngine.forType("repository");
+    assertThrows(AuthorizationException.class, forType::search);
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
+  @SubjectAware(permissions = "repository:read")
+  void shouldNotFailWithTypeNameAndRequiredPermission() {
+    when(searchableType.getPermission()).thenReturn(Optional.of("repository:read"));
+    when(resolver.resolveByName("repository")).thenReturn(searchableType);
+
+    LuceneQueryBuilder<Object> mockedBuilder = mock(LuceneQueryBuilder.class);
+    when(queryBuilderFactory.create(any())).thenReturn(mockedBuilder);
+
+    SearchEngine.ForType<Object> forType = searchEngine.forType("repository");
+    assertThat(forType.search()).isNotNull();
   }
 
 }

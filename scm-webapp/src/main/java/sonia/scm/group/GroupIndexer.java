@@ -30,9 +30,8 @@ import sonia.scm.plugin.Extension;
 import sonia.scm.search.HandlerEventIndexSyncer;
 import sonia.scm.search.Id;
 import sonia.scm.search.Index;
-import sonia.scm.search.IndexNames;
-import sonia.scm.search.IndexQueue;
 import sonia.scm.search.Indexer;
+import sonia.scm.search.SearchEngine;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -42,27 +41,20 @@ import javax.inject.Singleton;
 public class GroupIndexer implements Indexer<Group> {
 
   @VisibleForTesting
-  static final String INDEX = IndexNames.DEFAULT;
-  @VisibleForTesting
   static final int VERSION = 1;
 
   private final GroupManager groupManager;
-  private final IndexQueue indexQueue;
+  private final SearchEngine searchEngine;
 
   @Inject
-  public GroupIndexer(GroupManager groupManager, IndexQueue indexQueue) {
+  public GroupIndexer(GroupManager groupManager, SearchEngine searchEngine) {
     this.groupManager = groupManager;
-    this.indexQueue = indexQueue;
+    this.searchEngine = searchEngine;
   }
 
   @Override
   public Class<Group> getType() {
     return Group.class;
-  }
-
-  @Override
-  public String getIndex() {
-    return INDEX;
   }
 
   @Override
@@ -77,15 +69,15 @@ public class GroupIndexer implements Indexer<Group> {
 
   @Override
   public Updater<Group> open() {
-    return new GroupIndexUpdater(groupManager, indexQueue.getQueuedIndex(INDEX));
+    return new GroupIndexUpdater(groupManager, searchEngine.forType(Group.class).getOrCreate());
   }
 
   public static class GroupIndexUpdater implements Updater<Group> {
 
     private final GroupManager groupManager;
-    private final Index index;
+    private final Index<Group> index;
 
-    private GroupIndexUpdater(GroupManager groupManager, Index index) {
+    private GroupIndexUpdater(GroupManager groupManager, Index<Group> index) {
       this.groupManager = groupManager;
       this.index = index;
     }
@@ -97,12 +89,12 @@ public class GroupIndexer implements Indexer<Group> {
 
     @Override
     public void delete(Group group) {
-      index.delete(Id.of(group), Group.class);
+      index.delete().byType().byId(Id.of(group));
     }
 
     @Override
     public void reIndexAll() {
-      index.deleteByType(Group.class);
+      index.delete().byType().all();
       for (Group group : groupManager.getAll()) {
         store(group);
       }

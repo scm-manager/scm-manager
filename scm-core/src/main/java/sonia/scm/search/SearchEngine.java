@@ -30,10 +30,7 @@ import java.util.Collection;
 
 /**
  * The {@link SearchEngine} is the main entry point for indexing and searching.
- * Note that this is kind of a low level api for indexing.
- * For non expert indexing the {@link IndexQueue} should be used.
  *
- * @see IndexQueue
  * @since 2.21.0
  */
 @Beta
@@ -47,46 +44,58 @@ public interface SearchEngine {
   Collection<SearchableType> getSearchableTypes();
 
   /**
-   * Returns the index with the given name and the given options.
-   * The index is created if it does not exist.
-   * Warning: Be careful, because an index can't be opened multiple times in parallel.
-   * If you are not sure how you should index your objects, use the {@link IndexQueue}.
+   * Returns a type specific api which can be used to index objects of that specific type.
    *
-   * @param name    name of the index
-   * @param options index options
-   * @return existing index or a new one if none exists
+   * @param type type of object
+   * @param <T> type of object
+   * @return type specific index and search api
+   * @since 2.23.0
    */
-  Index getOrCreate(String name, IndexOptions options);
+  <T> ForType<T> forType(Class<T> type);
 
   /**
-   * Same as {@link #getOrCreate(String, IndexOptions)} with default options.
-   *
-   * @param name name of the index
-   * @return existing index or a new one if none exists
-   * @see IndexOptions#defaults()
+   * Returns an api which can be used to index and search object of that type.
+   * @param name name of type
+   * @return search and index api
+   * @since 2.23.0
    */
-  default Index getOrCreate(String name) {
-    return getOrCreate(name, IndexOptions.defaults());
-  }
+  ForType<Object> forType(String name);
 
   /**
-   * Search the index.
-   * Returns a {@link QueryBuilder} which allows to query the index.
+   * Search and index api.
    *
-   * @param name    name of the index
-   * @param options options for searching the index
-   * @return query builder
+   * @param <T> type of searchable objects
+   * @since 2.23.0
    */
-  QueryBuilder search(String name, IndexOptions options);
+  interface ForType<T> {
 
-  /**
-   * Same as {@link #search(String, IndexOptions)} with default options.
-   *
-   * @param name name of the index
-   * @return query builder
-   * @see IndexOptions#defaults()
-   */
-  default QueryBuilder search(String name) {
-    return search(name, IndexOptions.defaults());
+    /**
+     * Specify options for the index.
+     * If not used the default options will be used.
+     * @param options index options
+     * @return {@code this}
+     * @see IndexOptions#defaults()
+     */
+    ForType<T> withOptions(IndexOptions options);
+
+    /**
+     * Name of the index which should be used.
+     * If not specified the default index will be used.
+     * @param name name of index
+     * @return {@code this}
+     */
+    ForType<T> withIndex(String name);
+
+    /**
+     * Returns an index object which provides method to update the search index.
+     * @return index object
+     */
+    Index<T> getOrCreate();
+
+    /**
+     * Returns a query builder object which can be used to search the index.
+     * @return query builder
+     */
+    QueryBuilder<T> search();
   }
 }

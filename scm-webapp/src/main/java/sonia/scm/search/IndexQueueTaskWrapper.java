@@ -27,30 +27,28 @@ package sonia.scm.search;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public final class IndexQueueTaskWrapper implements Runnable {
+public final class IndexQueueTaskWrapper<T> implements Runnable {
 
   private static final Logger LOG = LoggerFactory.getLogger(IndexQueueTaskWrapper.class);
 
-  private final SearchEngine searchEngine;
-  private final String indexName;
-  private final IndexOptions options;
-  private final Iterable<IndexQueueTask> tasks;
+  private final LuceneIndexFactory indexFactory;
+  private final IndexParams indexParams;
+  private final Iterable<IndexQueueTask<T>> tasks;
 
-  IndexQueueTaskWrapper(SearchEngine searchEngine, String indexName, IndexOptions options, Iterable<IndexQueueTask> tasks) {
-    this.searchEngine = searchEngine;
-    this.indexName = indexName;
-    this.options = options;
+  IndexQueueTaskWrapper(LuceneIndexFactory indexFactory, IndexParams indexParams, Iterable<IndexQueueTask<T>> tasks) {
+    this.indexFactory = indexFactory;
+    this.indexParams = indexParams;
     this.tasks = tasks;
   }
 
   @Override
   public void run() {
-    try (Index index = searchEngine.getOrCreate(this.indexName, options)) {
-      for (IndexQueueTask task : tasks) {
+    try (Index<T> index = indexFactory.create(indexParams)) {
+      for (IndexQueueTask<T> task : tasks) {
         task.updateIndex(index);
       }
     } catch (Exception e) {
-      LOG.warn("failure during execution of index task for index {}", indexName, e);
+      LOG.warn("failure during execution of index task for index {}", indexParams.getIndex(), e);
     }
   }
 }

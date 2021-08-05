@@ -40,7 +40,6 @@ import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.index.IndexableField;
 import org.apache.lucene.store.ByteBuffersDirectory;
 import org.apache.lucene.store.Directory;
 import org.apache.shiro.authz.AuthorizationException;
@@ -305,10 +304,10 @@ class LuceneQueryBuilderTest {
     try (DirectoryReader reader = DirectoryReader.open(directory)) {
       when(opener.openForRead("default")).thenReturn(reader);
       SearchableTypeResolver resolver = new SearchableTypeResolver(Simple.class);
-      LuceneQueryBuilder builder = new LuceneQueryBuilder(
-        opener, resolver, "default", new StandardAnalyzer()
+      LuceneQueryBuilder<Simple> builder = new LuceneQueryBuilder<>(
+        opener, "default", resolver.resolve(Simple.class), new StandardAnalyzer()
       );
-      result = builder.repository("cde").execute(Simple.class, "content:awesome");
+      result = builder.repository("cde").execute("content:awesome");
     }
 
     assertThat(result.getTotalHits()).isOne();
@@ -432,24 +431,6 @@ class LuceneQueryBuilderTest {
       writer.addDocument(typesDoc(1, 2L, false, Instant.now()));
     }
     assertThrows(NoDefaultQueryFieldsFoundException.class, () -> query(Types.class, "something"));
-  }
-
-  @Test
-  void shouldFailWithoutPermissionForTheSearchedType() throws IOException {
-    try (IndexWriter writer = writer()) {
-      writer.addDocument(denyDoc("awesome"));
-    }
-    assertThrows(AuthorizationException.class, () -> query(Deny.class, "awesome"));
-  }
-
-  @Test
-  @SubjectAware(value = "marvin", permissions = "deny:4711")
-  void shouldNotFailWithRequiredPermissionForTheSearchedType() throws IOException {
-    try (IndexWriter writer = writer()) {
-      writer.addDocument(denyDoc("awesome"));
-    }
-    QueryResult result = query(Deny.class, "awesome");
-    assertThat(result.getTotalHits()).isOne();
   }
 
   @Test
@@ -577,23 +558,25 @@ class LuceneQueryBuilderTest {
     return query(type, queryString, null, null);
   }
 
-  private long count(Class<?> type, String queryString) throws IOException {
+  private <T> long count(Class<T> type, String queryString) throws IOException {
     try (DirectoryReader reader = DirectoryReader.open(directory)) {
       lenient().when(opener.openForRead("default")).thenReturn(reader);
       SearchableTypeResolver resolver = new SearchableTypeResolver(type);
-      LuceneQueryBuilder builder = new LuceneQueryBuilder(
-        opener, resolver, "default", new StandardAnalyzer()
+      LuceneSearchableType searchableType = resolver.resolve(type);
+      LuceneQueryBuilder<T> builder = new LuceneQueryBuilder<T>(
+        opener, "default", searchableType, new StandardAnalyzer()
       );
-      return builder.count(type, queryString).getTotalHits();
+      return builder.count(queryString).getTotalHits();
     }
   }
 
-  private QueryResult query(Class<?> type, String queryString, Integer start, Integer limit) throws IOException {
+  private <T> QueryResult query(Class<?> type, String queryString, Integer start, Integer limit) throws IOException {
     try (DirectoryReader reader = DirectoryReader.open(directory)) {
       lenient().when(opener.openForRead("default")).thenReturn(reader);
       SearchableTypeResolver resolver = new SearchableTypeResolver(type);
-      LuceneQueryBuilder builder = new LuceneQueryBuilder(
-        opener, resolver, "default", new StandardAnalyzer()
+      LuceneSearchableType searchableType = resolver.resolve(type);
+      LuceneQueryBuilder<T> builder = new LuceneQueryBuilder<T>(
+        opener, "default", searchableType, new StandardAnalyzer()
       );
       if (start != null) {
         builder.start(start);
@@ -601,7 +584,7 @@ class LuceneQueryBuilderTest {
       if (limit != null) {
         builder.limit(limit);
       }
-      return builder.execute(type, queryString);
+      return builder.execute(queryString);
     }
   }
 
