@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import com.google.common.collect.ImmutableMap;
@@ -39,9 +39,9 @@ import java.util.Optional;
  */
 public final class HalEnricherContext {
 
-  private final Map<Class, Object> instanceMap;
+  private final Map<Class<?>, Object> instanceMap;
 
-  private HalEnricherContext(Map<Class,Object> instanceMap) {
+  private HalEnricherContext(Map<Class<?>,Object> instanceMap) {
     this.instanceMap = instanceMap;
   }
 
@@ -53,11 +53,20 @@ public final class HalEnricherContext {
    * @return context of given entries
    */
   public static HalEnricherContext of(Object... instances) {
-    ImmutableMap.Builder<Class, Object> builder = ImmutableMap.builder();
+    ImmutableMap.Builder<Class<?>, Object> builder = ImmutableMap.builder();
     for (Object instance : instances) {
       builder.put(instance.getClass(), instance);
     }
     return new HalEnricherContext(builder.build());
+  }
+
+  /**
+   * Return builder for {@link HalEnricherContext}.
+   * @return builder
+   * @since 2.23.0
+   */
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -91,6 +100,37 @@ public final class HalEnricherContext {
     } else {
       throw new NoSuchElementException("No instance for given type present");
     }
+  }
+
+  /**
+   * Builder for {@link HalEnricherContext}.
+   *
+   * @since 2.23.0
+   */
+  public static class Builder {
+
+    private final ImmutableMap.Builder<Class<?>, Object> mapBuilder = ImmutableMap.builder();
+
+    /**
+     * Add an entry with the given type to the context.
+     * @param type type of the object
+     * @param object object
+     * @param <T> type of object
+     * @return {@code this}
+     */
+    public <T> Builder put(Class<? super T> type, T object) {
+      mapBuilder.put(type, object);
+      return this;
+    }
+
+    /**
+     * Returns the {@link HalEnricherContext}.
+     * @return context
+     */
+    public HalEnricherContext build() {
+      return new HalEnricherContext(mapBuilder.build());
+    }
+
   }
 
 }
