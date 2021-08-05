@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 import React, { FC, KeyboardEvent as ReactKeyboardEvent, MouseEvent, useCallback, useState, useEffect } from "react";
-import { Hit, Links, Repository, ValueHitField } from "@scm-manager/ui-types";
+import { Hit, Links, ValueHitField } from "@scm-manager/ui-types";
 import styled from "styled-components";
 import { BackendError, useSearch } from "@scm-manager/ui-api";
 import classNames from "classnames";
@@ -130,17 +130,10 @@ const AvatarSection: FC<HitProps> = ({ hit }) => {
   const name = useStringHitFieldValue(hit, "name");
   const type = useStringHitFieldValue(hit, "type");
 
-  if (!namespace || !name || !type) {
+  const repository = hit._embedded.repository;
+  if (!namespace || !name || !type || !repository) {
     return null;
   }
-
-  const repository: Repository = {
-    namespace,
-    name,
-    type,
-    _links: {},
-    _embedded: hit._embedded,
-  };
 
   return (
     <span className="mr-2">
@@ -278,7 +271,8 @@ const useShowResultsOnFocus = () => {
       };
 
       const onKeyUp = (e: KeyboardEvent) => {
-        if (e.which === 9) { // tab
+        if (e.which === 9) {
+          // tab
           const element = document.activeElement;
           if (!element || !isOnmiSearchElement(element)) {
             close();

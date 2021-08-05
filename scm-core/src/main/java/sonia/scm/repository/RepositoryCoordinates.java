@@ -22,35 +22,33 @@
  * SOFTWARE.
  */
 
-import { HalRepresentationWithEmbedded, PagedCollection } from "./hal";
-import { Repository } from "./Repositories";
+package sonia.scm.repository;
 
-export type ValueHitField = {
-  highlighted: false;
-  value: unknown;
-};
+import sonia.scm.TypedObject;
 
-export type HighlightedHitField = {
-  highlighted: true;
-  fragments: string[];
-};
+/**
+ * Coordinates to identify a repository.
+ *
+ * @since 2.23.0
+ */
+public interface RepositoryCoordinates extends TypedObject {
 
-export type HitField = ValueHitField | HighlightedHitField;
+  /**
+   * Returns the internal id of the repository.
+   * @return internal id
+   */
+  String getId();
 
-export type EmbeddedRepository = {
-  repository?: Repository;
-};
+  /**
+   * Returns the namespace of the repository.
+   *
+   * @return namespace
+   */
+  String getNamespace();
 
-export type Hit = HalRepresentationWithEmbedded<EmbeddedRepository> & {
-  score: number;
-  fields: { [name: string]: HitField };
-};
-
-export type HitEmbedded = {
-  hits: Hit[];
-};
-
-export type QueryResult = PagedCollection<HitEmbedded> & {
-  type: string;
-  totalHits: number;
-};
+  /**
+   * Returns the name of the repository.
+   * @return name
+   */
+  String getName();
+}

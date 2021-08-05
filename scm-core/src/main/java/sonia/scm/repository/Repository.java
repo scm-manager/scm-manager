@@ -64,7 +64,7 @@ import java.util.Set;
     @Guard(guard = RepositoryPermissionGuard.class)
   }
 )
-public class Repository extends BasicPropertiesAware implements ModelObject, PermissionObject {
+public class Repository extends BasicPropertiesAware implements ModelObject, PermissionObject, RepositoryCoordinates {
 
   private static final long serialVersionUID = 3486560714961909711L;
 
@@ -190,11 +190,12 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
     return lastModified;
   }
 
-
+  @Override
   public String getName() {
     return name;
   }
 
+  @Override
   public String getNamespace() {
     return namespace;
   }

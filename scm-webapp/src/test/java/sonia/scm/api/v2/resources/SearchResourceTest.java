@@ -38,6 +38,7 @@ import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryCoordinates;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.search.Hit;
@@ -63,7 +64,6 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -106,7 +106,7 @@ class SearchResourceTest {
     JsonMockHttpResponse response = search("Hello");
 
     JsonNode sample = response.getContentAsJson().get("_embedded").get("sample");
-    assertThat(sample.get("type").asText()).isEqualTo("java.lang.String");
+    assertThat(sample.get("value").asText()).isEqualTo("java.lang.String");
   }
 
   @Test
@@ -122,7 +122,35 @@ class SearchResourceTest {
     JsonNode sample = response.getContentAsJson()
       .get("_embedded").get("hits").get(0)
       .get("_embedded").get("sample");
-    assertThat(sample.get("type").asText()).isEqualTo("java.lang.String");
+    assertThat(sample.get("value").asText()).isEqualTo("java.lang.String");
+  }
+
+  @Test
+  void shouldEnrichRepository() throws UnsupportedEncodingException, URISyntaxException {
+    when(enricherRegistry.allByType(QueryResult.class))
+      .thenReturn(Collections.emptySet());
+    when(enricherRegistry.allByType(Hit.class))
+      .thenReturn(Collections.singleton(new SampleEnricher()));
+
+    when(enricherRegistry.allByType(RepositoryCoordinates.class))
+      .thenReturn(Collections.singleton(new RepositoryEnricher()));
+
+    Repository heartOfGold = RepositoryTestData.createHeartOfGold("hg");
+    heartOfGold.setId("42");
+    when(repositoryManager.get("42")).thenReturn(heartOfGold);
+
+    Hit hit = new Hit("21", "42", 21f, Collections.emptyMap());
+    QueryResult result = new QueryResult(1L, String.class, Collections.singletonList(hit));
+
+    mockQueryResult("hello", result);
+    JsonMockHttpResponse response = search("hello");
+
+    JsonNode sample = response.getContentAsJson()
+      .get("_embedded").get("hits").get(0)
+      .get("_embedded").get("repository")
+      .get("_embedded").get("sample");
+
+    assertThat(sample.get("value").asText()).isEqualTo("42");
   }
 
   @Nested
@@ -132,6 +160,7 @@ class SearchResourceTest {
     void setUpEnricherRegistry() {
       when(enricherRegistry.allByType(QueryResult.class)).thenReturn(Collections.emptySet());
       lenient().when(enricherRegistry.allByType(Hit.class)).thenReturn(Collections.emptySet());
+      lenient().when(enricherRegistry.allByType(RepositoryCoordinates.class)).thenReturn(Collections.emptySet());
     }
 
     @Test
@@ -305,7 +334,20 @@ class SearchResourceTest {
   @Getter
   @Setter
   public static class SampleEmbedded extends HalRepresentation {
-    private Class<?> type;
+    private String value;
+  }
+
+  private static class RepositoryEnricher implements HalEnricher {
+
+    @Override
+    public void enrich(HalEnricherContext context, HalAppender appender) {
+      RepositoryCoordinates repositoryCoordinates = context.oneRequireByType(RepositoryCoordinates.class);
+
+      SampleEmbedded embedded = new SampleEmbedded();
+      embedded.setValue(repositoryCoordinates.getId());
+
+      appender.appendEmbedded("sample", embedded);
+    }
   }
 
   private static class SampleEnricher implements HalEnricher {
@@ -314,7 +356,7 @@ class SearchResourceTest {
       QueryResult result = context.oneRequireByType(QueryResult.class);
 
       SampleEmbedded embedded = new SampleEmbedded();
-      embedded.setType(result.getType());
+      embedded.setValue(result.getType().getName());
 
       appender.appendEmbedded("sample", embedded);
     }

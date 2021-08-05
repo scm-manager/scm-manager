@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -49,11 +49,14 @@ public class HalAppenderMapper {
       }
 
       HalEnricherContext context = HalEnricherContext.of(ctx);
+      applyEnrichers(context, appender, source.getClass());
+    }
+  }
 
-      Iterable<HalEnricher> enrichers = registry.allByType(source.getClass());
-      for (HalEnricher enricher : enrichers) {
-        enricher.enrich(context, appender);
-      }
+  protected void applyEnrichers(HalEnricherContext context, HalAppender appender, Class<?> type) {
+    Iterable<HalEnricher> enrichers = registry.allByType(type);
+    for (HalEnricher enricher : enrichers) {
+      enricher.enrich(context, appender);
     }
   }
 

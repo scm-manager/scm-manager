@@ -23,7 +23,6 @@
  */
 
 import React, { FC } from "react";
-import { Repository } from "@scm-manager/ui-types";
 import { Link } from "react-router-dom";
 import {
   useDateHitFieldValue,
@@ -43,17 +42,12 @@ const RepositoryHit: FC<HitProps> = ({ hit }) => {
   const creationDate = useDateHitFieldValue(hit, "creationDate");
   const date = lastModified || creationDate;
 
-  if (!namespace || !name || !type) {
+  // the embedded repository is only a subset of the repository (RepositoryCoordinates),
+  // so we should use the fields to get more information
+  const repository = hit._embedded.repository;
+  if (!namespace || !name || !type || !repository) {
     return null;
   }
-
-  const repository: Repository = {
-    namespace,
-    name,
-    type,
-    _links: {},
-    _embedded: hit._embedded,
-  };
 
   return (
     <Hit>
