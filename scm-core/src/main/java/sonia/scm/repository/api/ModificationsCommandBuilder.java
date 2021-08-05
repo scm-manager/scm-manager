@@ -72,15 +72,24 @@ public final class ModificationsCommandBuilder {
   @Setter
   private boolean disablePreProcessors = false;
 
+  /**
+   * Set this to compute either the midifications of the given revision, or additionally set
+   * {@link #baseRevision(String)} to compute the modifications between this and the
+   * other revision.
+   * @return This command builder.
+   */
   public ModificationsCommandBuilder revision(String revision){
     request.setRevision(revision);
     return this;
   }
 
   /**
+   * Set this to compute the modifications between two revisions. If this is not set,
+   * only the modifications of the revision set by {@link #revision(String)} will be computed.
    * This is only supported by repositories supporting the feature
    * {@link sonia.scm.repository.Feature#COMBINED_MODIFICATIONS}.
-   * @param baseRevision If set, the command will compute the modifications between the two revisions.
+   * @param baseRevision If set, the command will compute the modifications between this revision
+   *                     and the revision set by {@link #revision(String)}.
    * @return This command builder.
    */
   public ModificationsCommandBuilder baseRevision(String baseRevision){
@@ -91,7 +100,6 @@ public final class ModificationsCommandBuilder {
   /**
    * Reset each parameter to its default value.
    *
-   *
    * @return {@code this}
    */
   public ModificationsCommandBuilder reset() {
@@ -101,6 +109,9 @@ public final class ModificationsCommandBuilder {
     return this;
   }
 
+  /**
+   * Computes the modifications.
+   */
   public Modifications getModifications() throws IOException {
     Modifications modifications;
     if (disableCache) {
