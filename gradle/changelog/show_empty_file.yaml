@@ -1,0 +1,2 @@
+- type: Fixed
+  description: Show empty files instead of endless loading spinner ([#1762](https://github.com/scm-manager/scm-manager/pull/1762))

@@ -41,13 +41,13 @@ const SourcecodeViewer: FC<Props> = ({ file, language }) => {
     return <ErrorNotification error={error} />;
   }
 
-  if (!content || isLoading) {
+  if (isLoading) {
     return <Loading />;
   }
 
   const permalink = replaceBranchWithRevision(location.pathname, file.revision);
 
-  return <SyntaxHighlighter language={language.toLowerCase()} value={content} permalink={permalink} />;
+  return <SyntaxHighlighter language={language.toLowerCase()} value={content || ""} permalink={permalink} />;
 };
 
 export default SourcecodeViewer;
