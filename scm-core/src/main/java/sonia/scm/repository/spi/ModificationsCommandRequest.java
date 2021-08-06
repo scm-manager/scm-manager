@@ -52,6 +52,9 @@ public class ModificationsCommandRequest implements Resetable {
     baseRevision = null;
   }
 
+  /**
+   * @since 2.23.0
+   */
   public Optional<String> getBaseRevision() {
     return ofNullable(baseRevision);
   }

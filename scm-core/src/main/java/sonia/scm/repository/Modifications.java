@@ -58,6 +58,9 @@ public class Modifications implements Serializable {
     this(null, revision, modifications);
   }
 
+  /**
+   * @since 2.23.0
+   */
   public Modifications(String baseRevision, String revision, Collection<Modification> modifications) {
     this.baseRevision = baseRevision;
     this.revision = revision;

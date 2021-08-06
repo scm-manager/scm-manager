@@ -91,6 +91,7 @@ public final class ModificationsCommandBuilder {
    * @param baseRevision If set, the command will compute the modifications between this revision
    *                     and the revision set by {@link #revision(String)}.
    * @return This command builder.
+   * @since 2.23.0
    */
   public ModificationsCommandBuilder baseRevision(String baseRevision){
     request.setBaseRevision(baseRevision);

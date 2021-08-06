@@ -45,6 +45,8 @@ public enum Feature
   INCOMING_REVISION,
   /**
    * The repository supports computation of modifications between two revisions, not only for a singe revision.
+   *
+   * @since 2.23.0
    */
   MODIFICATIONS_BETWEEN_REVISIONS
 }
