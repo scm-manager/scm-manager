@@ -48,14 +48,12 @@ public class SvnModificationsCommand extends AbstractSvnCommand implements Modif
 
   @Override
   public Modifications getModifications(String revisionOrTransactionId) {
-    Modifications modifications;
     try {
       if (SvnUtil.isTransactionEntryId(revisionOrTransactionId)) {
-        modifications = getModificationsFromTransaction(SvnUtil.getTransactionId(revisionOrTransactionId));
+        return getModificationsFromTransaction(SvnUtil.getTransactionId(revisionOrTransactionId));
       } else {
-        modifications = getModificationFromRevision(revisionOrTransactionId);
+        return getModificationFromRevision(revisionOrTransactionId, revisionOrTransactionId);
       }
-      return modifications;
     } catch (SVNException ex) {
       throw new InternalRepositoryException(
         repository,
@@ -65,15 +63,33 @@ public class SvnModificationsCommand extends AbstractSvnCommand implements Modif
     }
   }
 
+  @Override
+  public Modifications getModifications(String baseRevision, String revision) {
+    try {
+      return getModificationFromRevision(baseRevision, revision);
+    } catch (SVNException ex) {
+      throw new InternalRepositoryException(
+        repository,
+        "failed to get svn modifications from " + baseRevision + " to " + revision,
+        ex
+      );
+    }
+  }
+
   @SuppressWarnings("unchecked")
-  private Modifications getModificationFromRevision(String revision) throws SVNException {
-    log.debug("get svn modifications from revision: {}", revision);
-    long revisionNumber = SvnUtil.getRevisionNumber(revision, repository);
+  private Modifications getModificationFromRevision(String startRevision, String endRevision) throws SVNException {
+    log.debug("get svn modifications from revision {} to {}", startRevision, endRevision);
+    long startRevisionNumber = SvnUtil.getRevisionNumber(startRevision, repository);
+    long endRevisionNumber = SvnUtil.getRevisionNumber(endRevision, repository);
     SVNRepository repo = open();
-    Collection<SVNLogEntry> entries = repo.log(null, null, revisionNumber,
-      revisionNumber, true, true);
+    Collection<SVNLogEntry> entries = repo.log(null, null, startRevisionNumber,
+      endRevisionNumber, true, true);
     if (Util.isNotEmpty(entries)) {
-      return SvnUtil.createModifications(entries.iterator().next(), revision);
+      if (startRevision.equals(endRevision)) {
+        return SvnUtil.createModifications(entries.iterator().next(), endRevision);
+      } else {
+        return SvnUtil.createModifications(startRevision, endRevision, entries);
+      }
     }
     return null;
   }
@@ -87,10 +103,4 @@ public class SvnModificationsCommand extends AbstractSvnCommand implements Modif
 
     return new Modifications(null, modificationList);
   }
-
-  @Override
-  public Modifications getModifications(ModificationsCommandRequest request) {
-    return getModifications(request.getRevision());
-  }
-
 }

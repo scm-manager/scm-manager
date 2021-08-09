@@ -55,7 +55,7 @@ class HgModificationParserTest {
 
   @Test
   void shouldDetectRemovedPath() {
-    parser.addLine("d removed/file");
+    parser.addLine("r removed/file");
 
     assertThat(parser.getModifications())
       .containsExactly(new Removed("removed/file"));
@@ -64,7 +64,7 @@ class HgModificationParserTest {
   @Test
   void shouldDetectRenamedPath() {
     parser.addLine("a new/path");
-    parser.addLine("d old/path");
+    parser.addLine("r old/path");
     parser.addLine("c old/path\0new/path");
 
     assertThat(parser.getModifications())

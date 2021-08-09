@@ -22,40 +22,34 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.spi;
+package sonia.scm.repository.spi.javahg;
 
+import com.aragost.javahg.Repository;
+import com.aragost.javahg.internals.HgInputStream;
+import sonia.scm.repository.Modification;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import java.io.IOException;
+import java.util.Collection;
 
-import java.util.Optional;
-
-import static java.util.Optional.ofNullable;
-
-@ToString
-@EqualsAndHashCode
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-public class ModificationsCommandRequest implements Resetable {
-  private String revision;
-  private String baseRevision;
-
-  @Override
-  public void reset() {
-    revision = null;
-    baseRevision = null;
+public class StateCommand extends com.aragost.javahg.internals.AbstractCommand {
+  public StateCommand(Repository repository) {
+    super(repository);
   }
 
-  /**
-   * @since 2.23.0
-   */
-  public Optional<String> getBaseRevision() {
-    return ofNullable(baseRevision);
+  @Override
+  public String getCommandName() {
+    return "status";
+  }
+
+  public Collection<Modification> call(String from, String to) throws IOException {
+    cmdAppend("--rev", from + ":" + to);
+    HgInputStream in = launchStream();
+    HgModificationParser hgModificationParser = new HgModificationParser();
+    String line = in.textUpTo('\n');
+    while (line != null && line.length() > 0) {
+      hgModificationParser.addLine(line);
+      line = in.textUpTo('\n');
+    }
+    return hgModificationParser.getModifications();
   }
 }

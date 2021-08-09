@@ -47,15 +47,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import static java.util.Collections.emptyList;
 import static java.util.Optional.empty;
+import static java.util.stream.Collectors.toList;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
+import static sonia.scm.repository.ConsolidatingModificationCollector.consolidate;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -118,22 +120,29 @@ public final class SvnUtil
     return result;
   }
 
+  public static Modifications createModifications(String startRevision, String endRevision, Collection<SVNLogEntry> entries) {
+    Collection<Modification> consolidatedModifications =
+      entries.stream()
+        .flatMap(SvnUtil::createModificationStream)
+        .collect(consolidate());
+    return new Modifications(startRevision, endRevision, consolidatedModifications);
+  }
 
   public static Modifications createModifications(SVNLogEntry entry, String revision) {
+    return new Modifications(revision, createModificationStream(entry).collect(toList()));
+  }
+
+  private static Stream<Modification> createModificationStream(SVNLogEntry entry) {
     Map<String, SVNLogEntryPath> changeMap = entry.getChangedPaths();
 
-    List<Modification> modificationList;
     if (Util.isNotEmpty(changeMap)) {
-      modificationList = changeMap.values().stream()
+      return changeMap.values().stream()
         .map(e -> asModification(e.getType(), e.getPath()))
         .filter(Optional::isPresent)
-        .map(Optional::get)
-        .collect(Collectors.toList());
+        .map(Optional::get);
     } else {
-      modificationList = emptyList();
+      return Stream.empty();
     }
-
-    return new Modifications(revision, modificationList);
   }
 
   public static Optional<Modification> asModification(char type, String path) {
@@ -383,4 +392,5 @@ public final class SvnUtil
   {
     return Strings.nullToEmpty(id).startsWith(ID_TRANSACTION_PREFIX);
   }
+
 }

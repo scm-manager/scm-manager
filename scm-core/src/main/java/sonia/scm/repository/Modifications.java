@@ -32,9 +32,11 @@ import lombok.ToString;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
+import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 
 @EqualsAndHashCode
@@ -45,6 +47,7 @@ public class Modifications implements Serializable {
   private static final long serialVersionUID = -8902033326668658140L;
 
   private final String revision;
+  private final String baseRevision;
   private final Collection<Modification> modifications;
 
   public Modifications(String revision, Modification... modifications) {
@@ -52,8 +55,26 @@ public class Modifications implements Serializable {
   }
 
   public Modifications(String revision, Collection<Modification> modifications) {
+    this(null, revision, modifications);
+  }
+
+  /**
+   * @since 2.23.0
+   */
+  public Modifications(String baseRevision, String revision, Collection<Modification> modifications) {
+    this.baseRevision = baseRevision;
     this.revision = revision;
     this.modifications = ImmutableList.copyOf(modifications);
+  }
+
+  /**
+   * If these modifications are not related to a single revision but represent the
+   * modifications between two revisions, this gives the base revision.
+   *
+   * @since 2.23.0
+   */
+  public Optional<String> getBaseRevision() {
+    return ofNullable(baseRevision);
   }
 
   public List<String> getEffectedPaths() {

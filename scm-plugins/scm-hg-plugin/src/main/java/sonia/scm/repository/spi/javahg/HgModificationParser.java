@@ -33,28 +33,40 @@ import sonia.scm.repository.Renamed;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;
+import java.util.Locale;
 
 class HgModificationParser {
   private final Collection<Modification> modifications = new LinkedHashSet<>();
 
   void addLine(String line) {
-    if (line.startsWith("a ")) {
-      modifications.add(new Added(line.substring(2)));
-    } else if (line.startsWith("m ")) {
-      modifications.add(new Modified(line.substring(2)));
-    } else if (line.startsWith("d ")) {
-      modifications.add(new Removed(line.substring(2)));
-    } else if (line.startsWith("c ")) {
-      String sourceTarget = line.substring(2);
-      int divider = sourceTarget.indexOf('\0');
-      String source = sourceTarget.substring(0, divider);
-      String target = sourceTarget.substring(divider + 1);
-      modifications.remove(new Added(target));
-      if (modifications.remove(new Removed(source))) {
-        modifications.add(new Renamed(source, target));
-      } else {
-        modifications.add(new Copied(source, target));
-      }
+    if (line.length() < 2) {
+      return;
+    }
+    String linePrefix = line.substring(0, 2).toLowerCase(Locale.ROOT);
+    switch (linePrefix) {
+      case "a ":
+        modifications.add(new Added(line.substring(2)));
+        break;
+      case "m ":
+        modifications.add(new Modified(line.substring(2)));
+        break;
+      case "r ":
+        modifications.add(new Removed(line.substring(2)));
+        break;
+      case "c ":
+        String sourceTarget = line.substring(2);
+        int divider = sourceTarget.indexOf('\0');
+        String source = sourceTarget.substring(0, divider);
+        String target = sourceTarget.substring(divider + 1);
+        modifications.remove(new Added(target));
+        if (modifications.remove(new Removed(source))) {
+          modifications.add(new Renamed(source, target));
+        } else {
+          modifications.add(new Copied(source, target));
+        }
+        break;
+      default:
+        // nothing to do
     }
   }
 

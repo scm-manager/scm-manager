@@ -27,6 +27,7 @@ package sonia.scm.repository.spi;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
@@ -60,10 +61,65 @@ public class GitModificationsCommand extends AbstractGitCommand implements Modif
     super(context);
   }
 
-  private Modifications createModifications(TreeWalk treeWalk, RevCommit commit, RevWalk revWalk, String revision)
-    throws IOException {
+  @Override
+  public Modifications getModifications(String baseRevision, String revision) {
+    org.eclipse.jgit.lib.Repository gitRepository = null;
+    RevWalk revWalk = null;
+    try {
+      gitRepository = open();
+      if (!gitRepository.getAllRefs().isEmpty()) {
+        revWalk = new RevWalk(gitRepository);
+        RevCommit commit = getCommit(revision, gitRepository, revWalk);
+        TreeWalk treeWalk = createTreeWalk(gitRepository);
+        if (baseRevision == null) {
+          determineParentAsBase(treeWalk, commit, revWalk);
+        } else {
+          RevCommit baseCommit = getCommit(baseRevision, gitRepository, revWalk);
+          treeWalk.addTree(baseCommit.getTree());
+        }
+        return new Modifications(baseRevision, revision, createModifications(treeWalk, commit));
+      }
+    } catch (IOException ex) {
+      log.error("could not open repository", ex);
+      throw new InternalRepositoryException(entity(repository), "could not open repository", ex);
+    } finally {
+      GitUtil.release(revWalk);
+      GitUtil.close(gitRepository);
+    }
+    return null;
+  }
+
+  private RevCommit getCommit(String revision, Repository gitRepository, RevWalk revWalk) throws IOException {
+    ObjectId id = GitUtil.getRevisionId(gitRepository, revision);
+    return revWalk.parseCommit(id);
+  }
+
+  @Override
+  public Modifications getModifications(String revision) {
+    return getModifications(null, revision);
+  }
+
+  private TreeWalk createTreeWalk(Repository gitRepository) {
+    TreeWalk treeWalk = new TreeWalk(gitRepository);
     treeWalk.reset();
     treeWalk.setRecursive(true);
+    return treeWalk;
+  }
+
+  private Collection<Modification> createModifications(TreeWalk treeWalk, RevCommit commit)
+    throws IOException {
+    treeWalk.addTree(commit.getTree());
+    List<DiffEntry> entries = Differ.scanWithRename(context.open(), null, treeWalk);
+    Collection<Modification> modifications = new ArrayList<>();
+    for (DiffEntry e : entries) {
+      if (!e.getOldId().equals(e.getNewId()) || !e.getOldPath().equals(e.getNewPath())) {
+        modifications.add(asModification(e));
+      }
+    }
+    return modifications;
+  }
+
+  private void determineParentAsBase(TreeWalk treeWalk, RevCommit commit, RevWalk revWalk) throws IOException {
     if (commit.getParentCount() > 0) {
       RevCommit parent = commit.getParent(0);
       RevTree tree = parent.getTree();
@@ -81,43 +137,6 @@ public class GitModificationsCommand extends AbstractGitCommand implements Modif
       log.trace("no parent available for commit {}", commit.getName());
       treeWalk.addTree(new EmptyTreeIterator());
     }
-    treeWalk.addTree(commit.getTree());
-    List<DiffEntry> entries = Differ.scanWithRename(context.open(), null, treeWalk);
-    Collection<Modification> modifications = new ArrayList<>();
-    for (DiffEntry e : entries) {
-      if (!e.getOldId().equals(e.getNewId()) || !e.getOldPath().equals(e.getNewPath())) {
-        modifications.add(asModification(e));
-      }
-    }
-    return new Modifications(revision, modifications);
-  }
-
-  @Override
-  public Modifications getModifications(String revision) {
-    org.eclipse.jgit.lib.Repository gitRepository = null;
-    RevWalk revWalk = null;
-    try {
-      gitRepository = open();
-      if (!gitRepository.getAllRefs().isEmpty()) {
-        revWalk = new RevWalk(gitRepository);
-        ObjectId id = GitUtil.getRevisionId(gitRepository, revision);
-        RevCommit commit = revWalk.parseCommit(id);
-        TreeWalk treeWalk = new TreeWalk(gitRepository);
-        return createModifications(treeWalk, commit, revWalk, revision);
-      }
-    } catch (IOException ex) {
-      log.error("could not open repository", ex);
-      throw new InternalRepositoryException(entity(repository), "could not open repository", ex);
-    } finally {
-      GitUtil.release(revWalk);
-      GitUtil.close(gitRepository);
-    }
-    return null;
-  }
-
-  @Override
-  public Modifications getModifications(ModificationsCommandRequest request) {
-    return getModifications(request.getRevision());
   }
 
   private Modification asModification(DiffEntry entry) throws UnsupportedModificationTypeException {

@@ -60,7 +60,10 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider {
     Command.MIRROR
   );
 
-  protected static final Set<Feature> FEATURES = EnumSet.of(Feature.INCOMING_REVISION);
+  protected static final Set<Feature> FEATURES = EnumSet.of(
+    Feature.INCOMING_REVISION,
+    Feature.MODIFICATIONS_BETWEEN_REVISIONS
+  );
 
   private final GitContext context;
   private final Injector commandInjector;

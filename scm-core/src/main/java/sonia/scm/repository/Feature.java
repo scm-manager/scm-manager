@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 /**
@@ -42,5 +42,11 @@ public enum Feature
    * The repository supports computation of incoming changes (either diff or list of changesets) of one branch
    * in respect to another target branch.
    */
-  INCOMING_REVISION
+  INCOMING_REVISION,
+  /**
+   * The repository supports computation of modifications between two revisions, not only for a singe revision.
+   *
+   * @since 2.23.0
+   */
+  MODIFICATIONS_BETWEEN_REVISIONS
 }

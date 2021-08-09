@@ -106,6 +106,36 @@ public class GitModificationsCommandTest extends AbstractRemoteCommandTestBase {
     assertModifications.accept(incomingModificationsCommand.getModifications(revision));
   }
 
+  @Test
+  public void shouldFindModificationsBetweenRevisions() throws Exception {
+    write(outgoing, outgoingDirectory, "a.txt", "bal bla");
+    write(outgoing, outgoingDirectory, "d.txt", "some file to be renamed");
+    RevCommit baseCommit = commit(outgoing, "add files");
+
+    write(outgoing, outgoingDirectory, "a.txt", "modified content");
+    commit(outgoing, "modify file");
+    write(outgoing, outgoingDirectory, "c.txt", "brand new file");
+    commit(outgoing, "add file");
+    write(outgoing, outgoingDirectory, "o.txt", "some file to be renamed");
+    outgoing.rm().addFilepattern("d.txt").call();
+    RevCommit targetCommit = commit(outgoing, "move/rename file");
+
+    outgoing.checkout().setName("some_branch").setCreateBranch(true).setStartPoint(baseCommit).call();
+    write(outgoing, outgoingDirectory, "x.txt", "bla bla");
+    RevCommit otherBranchCommit = commit(outgoing, "other branch");
+
+    Modifications modifications = outgoingModificationsCommand.getModifications(otherBranchCommit.getName(), targetCommit.getName());
+
+    assertThat(modifications.getModifications())
+      .hasSize(4)
+      .extracting("class.simpleName")
+      .contains("Modified") // File a.txt has been modified
+      .contains("Removed") // File x.txt from the other branch is not present
+      .contains("Added") // File c.txt has been created on the original branch
+      .contains("Renamed") // File d.txt has been renamed on the original branch
+    ;
+  }
+
   void pushOutgoingAndPullIncoming() throws IOException {
     GitPushCommand cmd = new GitPushCommand(handler, new GitContext(outgoingDirectory, outgoingRepository, null, new GitConfig()));
     PushCommandRequest request = new PushCommandRequest();

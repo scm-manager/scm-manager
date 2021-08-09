@@ -26,6 +26,7 @@ package sonia.scm.repository.spi;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Closeables;
+import sonia.scm.repository.Feature;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.SvnRepositoryHandler;
 import sonia.scm.repository.SvnWorkingCopyFactory;
@@ -34,6 +35,7 @@ import sonia.scm.repository.api.HookContextFactory;
 
 import javax.net.ssl.TrustManager;
 import java.io.IOException;
+import java.util.EnumSet;
 import java.util.Set;
 
 /**
@@ -41,7 +43,6 @@ import java.util.Set;
  */
 public class SvnRepositoryServiceProvider extends RepositoryServiceProvider {
 
-  //J-
   public static final Set<Command> COMMANDS = ImmutableSet.of(
     Command.BLAME,
     Command.BROWSE,
@@ -55,8 +56,10 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider {
     Command.FULL_HEALTH_CHECK,
     Command.MIRROR
   );
-  //J+
 
+  public static final Set<Feature> FEATURES = EnumSet.of(
+    Feature.MODIFICATIONS_BETWEEN_REVISIONS
+  );
 
   private final SvnContext context;
   private final SvnWorkingCopyFactory workingCopyFactory;
@@ -127,6 +130,11 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider {
   @Override
   public Set<Command> getSupportedCommands() {
     return COMMANDS;
+  }
+
+  @Override
+  public Set<Feature> getSupportedFeatures() {
+    return FEATURES;
   }
 
   @Override

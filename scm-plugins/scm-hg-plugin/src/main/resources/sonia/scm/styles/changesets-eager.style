@@ -3,7 +3,7 @@ changeset = "{rev}:{node}{author}\n{date|hgdate}\n{branch}\n{parents}{extras}\n{
 tag = "t {tag}\n"
 file_add = "a {file_add}\n"
 file_mod = "m {file_mod}\n"
-file_del = "d {file_del}\n"
+file_del = "r {file_del}\n"
 file_copy = "c {source}\0{name}\n"
 extra = "{key}={value|stringescape},"
 footer = "%{pattern}"

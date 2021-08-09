@@ -24,38 +24,30 @@
 
 package sonia.scm.repository.spi;
 
+import org.junit.Test;
+import sonia.scm.repository.Modifications;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.Optional;
+public class SvnModificationsCommandTest extends AbstractSvnCommandTestBase {
 
-import static java.util.Optional.ofNullable;
+  @Test
+  public void shouldReadModificationsForSingleRevision() {
+    SvnContext context = createContext();
+    SvnModificationsCommand svnModificationsCommand = new SvnModificationsCommand(context);
 
-@ToString
-@EqualsAndHashCode
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-public class ModificationsCommandRequest implements Resetable {
-  private String revision;
-  private String baseRevision;
+    Modifications modifications = svnModificationsCommand.getModifications("4");
 
-  @Override
-  public void reset() {
-    revision = null;
-    baseRevision = null;
+    assertThat(modifications.getAdded()).hasSize(3);
   }
 
-  /**
-   * @since 2.23.0
-   */
-  public Optional<String> getBaseRevision() {
-    return ofNullable(baseRevision);
+  @Test
+  public void shouldReadModificationsForMultipleRevisions() {
+    SvnContext context = createContext();
+    SvnModificationsCommand svnModificationsCommand = new SvnModificationsCommand(context);
+
+    Modifications modifications = svnModificationsCommand.getModifications("1", "4");
+
+    assertThat(modifications.getModifications()).hasSize(4);
   }
 }

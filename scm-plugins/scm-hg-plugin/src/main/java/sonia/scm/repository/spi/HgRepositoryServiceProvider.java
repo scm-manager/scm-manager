@@ -63,7 +63,10 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider {
     Command.FULL_HEALTH_CHECK
   );
 
-  public static final Set<Feature> FEATURES = EnumSet.of(Feature.COMBINED_DEFAULT_BRANCH);
+  public static final Set<Feature> FEATURES = EnumSet.of(
+    Feature.COMBINED_DEFAULT_BRANCH,
+    Feature.MODIFICATIONS_BETWEEN_REVISIONS
+  );
 
   private final HgRepositoryHandler handler;
   private final HgCommandContext context;
