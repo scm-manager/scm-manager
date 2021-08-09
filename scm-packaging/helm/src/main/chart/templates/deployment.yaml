@@ -51,17 +51,21 @@ spec:
       {{- end }}
       initContainers:
       - name: volume-permissions
-        image: alpine:3.8
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: IfNotPresent
         command: ['sh', '-c', 'chown 1000:1000 /data']
+        securityContext:
+          runAsUser: 0
         volumeMounts:
         - name: data
           mountPath: /data
       {{- if .Values.plugins }}
       - name: install-plugins
-        image: alpine:3.8
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: IfNotPresent
         command: ['sh', '/scripts/install-plugins.sh']
+        securityContext:
+          runAsUser: 0
         volumeMounts:
         - name: data
           mountPath: /data
