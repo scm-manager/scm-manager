@@ -131,7 +131,16 @@ const useObserveAsync = <D extends any[], R, E = Error>(fn: (...args: D) => Prom
   return { data, isLoading, error };
 };
 
+const supportedLanguages = ["de", "en"];
+
+const pickLang = (language: string) => {
+  if (!supportedLanguages.includes(language)) {
+    return "en";
+  }
+  return language;
+};
+
 export const useSearchHelpContent = (language: string) =>
-  useObserveAsync((lang) => import(`./help/search/modal.${lang}`).then((module) => module.default), [language]);
+  useObserveAsync((lang) => import(`./help/search/modal.${pickLang(lang)}`).then((module) => module.default), [language]);
 export const useSearchSyntaxContent = (language: string) =>
-  useObserveAsync((lang) => import(`./help/search/syntax.${lang}`).then((module) => module.default), [language]);
+  useObserveAsync((lang) => import(`./help/search/syntax.${pickLang(lang)}`).then((module) => module.default), [language]);
