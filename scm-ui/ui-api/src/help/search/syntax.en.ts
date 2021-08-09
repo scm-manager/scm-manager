@@ -27,8 +27,8 @@ Note: You can not use wildcards as the first character of a search.
 
 <table>
   <tr>
-    <td>Definition</td>
-    <td>Example</td>
+    <th>Definition</th>
+    <th>Example</th>
   </tr>
   <tr>
     <td>? - single character Wildcard</td>
@@ -49,8 +49,8 @@ Ranges are not reserved to numerical fields.
 
 <table>
   <tr>
-    <td>Definition</td>
-    <td>Example</td>
+    <th>Definition</th>
+    <th>Example</th>
   </tr>
   <tr>
     <td>[ … TO … ] - inclusive range</td>
@@ -69,8 +69,8 @@ Boosting allows you to control the relevance of a document by boosting its term.
 
 <table>
   <tr>
-    <td>Definition</td>
-    <td>Example</td>
+    <th>Definition</th>
+    <th>Example</th>
   </tr>
   <tr>
     <td>term^number</td>
@@ -89,13 +89,12 @@ Note: Logical Operators must be entered in upper case (e.g. "AND").
 
 <table>
   <tr>
-    <td>Definition</td>
-    <td>Example</td>
+    <th>Definition</th>
+    <th>Example</th>
   </tr>
   <tr>
     <td>AND – both terms must be included</td>
-    <td>Ultimate AND Repository – finds e.g. Ultimate Repository, Ultimate Special Repository
- </td>
+    <td>Ultimate AND Repository – finds e.g. Ultimate Repository, Ultimate Special Repository</td>
   </tr>
   <tr>
     <td>OR – at least one of the terms must be included</td>
@@ -122,8 +121,8 @@ Search supports using parentheses to group clauses to form sub queries. This can
 
 <table>
   <tr>
-    <td>Definition</td>
-    <td>Example</td>
+    <th>Definition</th>
+    <th>Example</th>
   </tr>
   <tr>
     <td>() – terms inside parentheses are grouped together</td>

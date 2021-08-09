@@ -27,8 +27,8 @@ Hinweis: Sie können keine Wildcards als erstes Zeichen einer Suche verwenden.
 
 <table>
   <tr>
-    <td>Definition</td>
-    <td>Beispiel</td>
+    <th>Definition</th>
+    <th>Beispiel</th>
   </tr>
   <tr>
     <td>? - Einzelzeichen-Wildcard</td>
@@ -49,8 +49,8 @@ Bereiche sind nicht auf numerische Felder beschränkt.
 
 <table>
   <tr>
-    <td>Definition</td>
-    <td>Beispiel</td>
+    <th>Definition</th>
+    <th>Beispiel</th>
   </tr>
   <tr>
     <td>[ … TO … ] - inklusiver Bereich</td>
@@ -69,8 +69,8 @@ Mit dem Boosting können Sie die Relevanz eines Dokuments steuern, indem Sie sei
 
 <table>
   <tr>
-    <td>Definition</td>
-    <td>Beispiel</td>
+    <th>Definition</th>
+    <th>Beispiel</th>
   </tr>
   <tr>
     <td>term^Zahl</td>
@@ -89,8 +89,8 @@ Hinweis: Logische Operatoren müssen in Großbuchstaben eingegeben werden (z. B.
 
 <table>
   <tr>
-    <td>Definition</td>
-    <td>Beispiel</td>
+    <th>Definition</th>
+    <th>Beispiel</th>
   </tr>
   <tr>
     <td>AND – beide Terme müssen enthalten sein</td>
@@ -122,8 +122,8 @@ Die Suche unterstützt die Verwendung von Klammern zur Gruppierung von Begriffen
 
 <table>
   <tr>
-    <td>Definition</td>
-    <td>Beispiel</td>
+    <th>Definition</th>
+    <th>Beispiel</th>
   </tr>
   <tr>
     <td>() – Terme zwischen den Klammern werden gruppiert</td>
