@@ -156,6 +156,7 @@
     "subtitle": "{{type}} Ergebnisse für \"{{query}}\"",
     "types": "Ergebnisse",
     "noHits": "Die Suche ergab keine Treffer",
+    "syntaxHelp": "Finden Sie bessere Ergebnisse durch die Nutzung der vollen <0>Such-Syntax</0>",
     "quickSearch": {
       "resultHeading": "Top-Ergebnisse Repositories",
       "parseError": "Der Suchstring is ungültig.",

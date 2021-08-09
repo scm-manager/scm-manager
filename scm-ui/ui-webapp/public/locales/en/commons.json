@@ -157,6 +157,7 @@
     "subtitle": "{{type}} results for \"{{query}}\"",
     "types": "Results",
     "noHits": "No results found",
+    "syntaxHelp": "Find better results by using the full <0>search syntax</0>",
     "quickSearch": {
       "resultHeading": "Top repository results",
       "parseError": "Failed to parse query.",
