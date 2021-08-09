@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import de.otto.edison.hal.HalRepresentation;
 import lombok.Getter;
 import lombok.Setter;
+import org.assertj.core.util.Lists;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -45,6 +46,7 @@ import sonia.scm.search.Hit;
 import sonia.scm.search.QueryCountResult;
 import sonia.scm.search.QueryResult;
 import sonia.scm.search.SearchEngine;
+import sonia.scm.search.SearchableType;
 import sonia.scm.web.JsonMockHttpResponse;
 import sonia.scm.web.RestDispatcher;
 import sonia.scm.web.VndMediaType;
@@ -80,21 +82,45 @@ class SearchResourceTest {
   @Mock
   private HalEnricherRegistry enricherRegistry;
 
+  @Mock
+  private SearchableType searchableTypeOne;
+
+  @Mock
+  private SearchableType searchableTypeTwo;
+
   @BeforeEach
   void setUpDispatcher() {
     ScmPathInfoStore scmPathInfoStore = new ScmPathInfoStore();
     scmPathInfoStore.set(() -> URI.create("/"));
 
-    QueryResultMapper mapper = Mappers.getMapper(QueryResultMapper.class);
-    mapper.setRepositoryManager(repositoryManager);
-    mapper.setResourceLinks(new ResourceLinks(scmPathInfoStore));
+    QueryResultMapper queryResultMapper = Mappers.getMapper(QueryResultMapper.class);
+    queryResultMapper.setRepositoryManager(repositoryManager);
+    queryResultMapper.setResourceLinks(new ResourceLinks(scmPathInfoStore));
 
-    mapper.setRegistry(enricherRegistry);
+    SearchableTypeMapper searchableTypeMapper = Mappers.getMapper(SearchableTypeMapper.class);
+    queryResultMapper.setRegistry(enricherRegistry);
     SearchResource resource = new SearchResource(
-      searchEngine, mapper
+      searchEngine, queryResultMapper, searchableTypeMapper
     );
     dispatcher = new RestDispatcher();
     dispatcher.addSingletonResource(resource);
+  }
+
+  @Test
+  void shouldReturnSearchableTypes() throws URISyntaxException {
+    when(searchEngine.getSearchableTypes()).thenReturn(Lists.list(searchableTypeOne, searchableTypeTwo));
+    when(searchableTypeOne.getName()).thenReturn("Type One");
+    when(searchableTypeTwo.getName()).thenReturn("Type Two");
+
+    MockHttpRequest request = MockHttpRequest.get("/v2/search/searchableTypes");
+    JsonMockHttpResponse response = new JsonMockHttpResponse();
+    dispatcher.invoke(request, response);
+
+    JsonNode contentAsJson = response.getContentAsJson();
+    assertThat(response.getStatus()).isEqualTo(200);
+    assertThat(contentAsJson.isArray()).isTrue();
+    assertThat(contentAsJson.get(0).get("name").asText()).isEqualTo("Type One");
+    assertThat(contentAsJson.get(1).get("name").asText()).isEqualTo("Type Two");
   }
 
   @Test
@@ -329,7 +355,6 @@ class SearchResourceTest {
     dispatcher.invoke(request, response);
     return response;
   }
-
 
   @Getter
   @Setter

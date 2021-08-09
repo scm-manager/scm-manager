@@ -438,15 +438,102 @@
     "types": {
       "repository": {
         "subtitle": "Repository",
-        "navItem": "Repositories"
+        "navItem": "Repositories",
+        "title": "Repositories",
+        "fields": {
+          "name": {
+            "name": "Name",
+            "exampleValue": "scm-manager"
+          },
+          "namespace": {
+            "name": "Namespace",
+            "exampleValue": "cloudogu"
+          },
+          "type": {
+            "name": "Typ",
+            "exampleValue": "git, hg oder svn"
+          },
+          "description": {
+            "name": "Beschreibung",
+            "exampleValue": "Dieses Repository enthält den Quellcode des SCM-Managers."
+          },
+          "creationDate": {
+            "name": "Erstellungsdatum",
+            "exampleValue": "1628077286",
+            "hints": "Zeitstempel der Erstellung in ms seit dem 01.01.1970. Bereichssuche möglich."
+          },
+          "lastModified": {
+            "name": "Zuletzt geändert",
+            "exampleValue": "1623057235",
+            "hints": "Zeitstempel der letzten Änderung in ms seit dem 01.01.1970. Bereichssuche möglich."
+          }
+        },
+        "examples": [
+          {
+            "description": "...einem  Repository mit dem Namen ultimate-Repository oder ultimate_Repository. Sie sind nicht sicher, welches Zeichen die beiden Begriffe verbindet",
+            "query": "name:ultimate?Repository",
+            "explanation": "Sucht nach „ultimate“ und „Repository“ verbunden mit einem einzelnen Zeichen."
+          },
+          {
+            "description": "...alle Repositories, die zwischen dem 01.01.2021 und dem 01.02.2021 im Namespace ultimate geändert wurden.",
+            "query": "nameSpace:ultimate AND lastModified:[1609459200000 TO 1612137600000]",
+            "explanation": "Sucht nach Repositories im Namespace „ultimate“, die im gewünschten Zeitraum geändert wurden Der Zeitraum wird über Zeitstemple in Epoch Millisekunden angegeben. Rechnen Sie Zeitstempel mit unserem Converter in Epoch Millisekunden um."
+          }
+        ]
       },
       "user": {
         "subtitle": "Benutzer",
-        "navItem": "Benutzer"
+        "navItem": "Benutzer",
+        "title": "Benutzer",
+        "fields": {
+          "name": {
+            "name": "Name",
+            "exampleValue": "admin"
+          },
+          "displayName": {
+            "name": "Anzeigename",
+            "exampleValue": "Administrator"
+          },
+          "creationDate": {
+            "name": "Erstellungsdatum",
+            "exampleValue": "1628077286",
+            "hints": "Zeitstempel der Erstellung in ms seit dem 01.01.1970. Bereichssuche möglich."
+          },
+          "lastModified": {
+            "name": "Zuletzt geändert",
+            "exampleValue": "1623057235",
+            "hints": "Zeitstempel der letzten Änderung in ms seit dem 01.01.1970. Bereichssuche möglich."
+          },
+          "mail": {
+            "name": "Mail",
+            "exampleValue": "admin@hitchhiker.com"
+          }
+        }
       },
       "group": {
         "subtitle": "Gruppe",
-        "navItem": "Gruppen"
+        "navItem": "Gruppen",
+        "title": "Gruppen",
+        "fields": {
+          "name": {
+            "name": "Name",
+            "exampleValue": "Entwickler"
+          },
+          "description": {
+            "name": "Beschreibung",
+            "exampleValue": "Diese Gruppe enthält alle Softwareentwickler."
+          },
+          "creationDate": {
+            "name": "Erstellungsdatum",
+            "exampleValue": "1628077286",
+            "hints": "Zeitstempel der Erstellung in ms seit dem 01.01.1970. Bereichssuche möglich."
+          },
+          "lastModified": {
+            "name": "Zuletzt geändert",
+            "exampleValue": "1623057235",
+            "hints": "Zeitstempel der letzten Änderung in ms seit dem 01.01.1970. Bereichssuche möglich."
+          }
+        }
       }
     }
   }

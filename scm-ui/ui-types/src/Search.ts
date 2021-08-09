@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import { HalRepresentationWithEmbedded, PagedCollection } from "./hal";
+import { HalRepresentation, HalRepresentationWithEmbedded, PagedCollection } from "./hal";
 import { Repository } from "./Repositories";
 
 export type ValueHitField = {
@@ -53,4 +53,14 @@ export type HitEmbedded = {
 export type QueryResult = PagedCollection<HitEmbedded> & {
   type: string;
   totalHits: number;
+};
+
+export type SearchableField = {
+  name: string;
+  type: string;
+};
+
+export type SearchableType = HalRepresentation & {
+  name: string;
+  fields: SearchableField[];
 };

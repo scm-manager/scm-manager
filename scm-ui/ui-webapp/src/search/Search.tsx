@@ -33,10 +33,10 @@ import {
   Tag,
   urls,
 } from "@scm-manager/ui-components";
-import { useLocation, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { useSearch, useSearchCounts, useSearchTypes } from "@scm-manager/ui-api";
 import Results from "./Results";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 
 type PathParams = {
   type: string;
@@ -85,6 +85,27 @@ const orderTypes = (left: string, right: string) => {
   return 0;
 };
 
+type Props = {
+  selectedType: string;
+  query: string;
+};
+
+const SyntaxHelpLink: FC = ({ children }) => <Link to="/help/search-syntax">{children}</Link>;
+
+const SearchSubTitle: FC<Props> = ({ selectedType, query }) => {
+  const [t] = useTranslation("commons");
+  return (
+    <>
+      {t("search.subtitle", {
+        query,
+        type: t(`plugins:search.types.${selectedType}.subtitle`, selectedType),
+      })}
+      <br />
+      <Trans i18nKey="search.syntaxHelp" components={[<SyntaxHelpLink />]} />
+    </>
+  );
+};
+
 const Search: FC = () => {
   const [t] = useTranslation(["commons", "plugins"]);
   const { query, selectedType, page } = usePageParams();
@@ -112,10 +133,7 @@ const Search: FC = () => {
   return (
     <Page
       title={t("search.title")}
-      subtitle={t("search.subtitle", {
-        query,
-        type: t(`plugins:search.types.${selectedType}.subtitle`, selectedType),
-      })}
+      subtitle={<SearchSubTitle query={query} selectedType={selectedType} />}
       loading={isLoading}
       error={error}
     >

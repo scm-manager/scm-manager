@@ -21,43 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+export default `Our search uses Lucene and you may use the [full syntax](http://lucene.apache.org/core/8_9_0/index.html).
 
-import * as urls from "./urls";
+To learn about advanced search read our [Expert Search Site](/help/search-syntax).
 
-export { urls };
+### Basic Search
 
-export * from "./errors";
-export * from "./apiclient";
-
-export * from "./base";
-export * from "./login";
-export * from "./groups";
-export * from "./users";
-export * from "./suggestions";
-export * from "./userSuggestions";
-export * from "./groupSuggestions";
-export * from "./repositories";
-export * from "./namespaces";
-export * from "./branches";
-export * from "./changesets";
-export * from "./tags";
-export * from "./config";
-export * from "./admin";
-export * from "./plugins";
-export * from "./repository-roles";
-export * from "./permissions";
-export * from "./sources";
-export * from "./import";
-export * from "./diff";
-export * from "./notifications";
-export * from "./configLink";
-export * from "./apiKeys";
-export * from "./publicKeys";
-export * from "./fileContent";
-export * from "./history";
-export * from "./contentType";
-export * from "./annotations";
-export * from "./search";
-
-export { default as ApiProvider } from "./ApiProvider";
-export * from "./ApiProvider";
+- The most relevant repositories are shown in the quick results.
+- Press "enter" or click the "Show all results" button to find more results for all entities like users or groups.
+- A multi-character wildcard (*) is added to your search by default.
+- Do not enter Wildcards in front of the search!`;

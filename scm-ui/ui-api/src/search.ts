@@ -22,11 +22,12 @@
  * SOFTWARE.
  */
 
-import { ApiResult, useIndexLinks } from "./base";
-import { Link, QueryResult } from "@scm-manager/ui-types";
+import { ApiResult, useIndexJsonResource, useIndexLinks } from "./base";
+import { Link, QueryResult, SearchableType } from "@scm-manager/ui-types";
 import { apiClient } from "./apiclient";
 import { createQueryString } from "./utils";
 import { useQueries, useQuery } from "react-query";
+import { useEffect, useState } from "react";
 
 export type SearchOptions = {
   type: string;
@@ -45,6 +46,8 @@ export const useSearchTypes = () => {
     .map((link) => link.name)
     .filter(isString);
 };
+
+export const useSearchableTypes = () => useIndexJsonResource<SearchableType[]>("searchableTypes");
 
 export const useSearchCounts = (types: string[], query: string) => {
   const searchLinks = useSearchLinks();
@@ -113,3 +116,31 @@ export const useSearch = (query: string, optionParam = defaultSearchOptions): Ap
     }
   );
 };
+
+const useObserveAsync = <D extends any[], R, E = Error>(fn: (...args: D) => Promise<R>, deps: D) => {
+  const [data, setData] = useState<R>();
+  const [isLoading, setLoading] = useState(false);
+  const [error, setError] = useState<E>();
+  useEffect(() => {
+    setLoading(true);
+    fn(...deps)
+      .then(setData)
+      .catch(setError)
+      .finally(() => setLoading(false));
+  }, deps);
+  return { data, isLoading, error };
+};
+
+const supportedLanguages = ["de", "en"];
+
+const pickLang = (language: string) => {
+  if (!supportedLanguages.includes(language)) {
+    return "en";
+  }
+  return language;
+};
+
+export const useSearchHelpContent = (language: string) =>
+  useObserveAsync((lang) => import(`./help/search/modal.${pickLang(lang)}`).then((module) => module.default), [language]);
+export const useSearchSyntaxContent = (language: string) =>
+  useObserveAsync((lang) => import(`./help/search/syntax.${pickLang(lang)}`).then((module) => module.default), [language]);

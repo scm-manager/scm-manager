@@ -42,7 +42,9 @@ import javax.ws.rs.BeanParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.stream.Collectors;
 
 @Path(SearchResource.PATH)
 @OpenAPIDefinition(tags = {
@@ -53,12 +55,14 @@ public class SearchResource {
   static final String PATH = "v2/search";
 
   private final SearchEngine engine;
-  private final QueryResultMapper mapper;
+  private final QueryResultMapper queryResultMapper;
+  private final SearchableTypeMapper searchableTypeMapper;
 
   @Inject
-  public SearchResource(SearchEngine engine, QueryResultMapper mapper) {
+  public SearchResource(SearchEngine engine, QueryResultMapper mapper, SearchableTypeMapper searchableTypeMapper) {
     this.engine = engine;
-    this.mapper = mapper;
+    this.queryResultMapper = mapper;
+    this.searchableTypeMapper = searchableTypeMapper;
   }
 
   @GET
@@ -110,6 +114,34 @@ public class SearchResource {
     return search(params);
   }
 
+  @GET
+  @Path("searchableTypes")
+  @Produces(VndMediaType.SEARCHABLE_TYPE_COLLECTION)
+  @Operation(
+    summary = "Searchable types",
+    description = "Returns a collection of all searchable types.",
+    tags = "Search",
+    operationId = "searchable_types"
+  )
+  @ApiResponse(
+    responseCode = "200",
+    description = "success",
+    content = @Content(
+      mediaType = VndMediaType.SEARCHABLE_TYPE_COLLECTION
+    )
+  )
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
+  public Collection<SearchableTypeDto> searchableTypes() {
+    return engine.getSearchableTypes().stream().map(searchableTypeMapper::map).collect(Collectors.toList());
+  }
+
   private QueryResultDto search(SearchParameters params) {
     QueryResult result = engine.forType(params.getType())
       .search()
@@ -117,7 +149,7 @@ public class SearchResource {
       .limit(params.getPageSize())
       .execute(params.getQuery());
 
-    return mapper.map(params, result);
+    return queryResultMapper.map(params, result);
   }
 
   private QueryResultDto count(SearchParameters params) {
@@ -125,7 +157,7 @@ public class SearchResource {
       .search()
       .count(params.getQuery());
 
-    return mapper.map(params, new QueryResult(result.getTotalHits(), result.getType(), Collections.emptyList()));
+    return queryResultMapper.map(params, new QueryResult(result.getTotalHits(), result.getType(), Collections.emptyList()));
   }
 
 }

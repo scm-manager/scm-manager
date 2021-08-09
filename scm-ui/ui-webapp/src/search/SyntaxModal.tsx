@@ -21,13 +21,50 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
-import Icon from "./Icon";
+
+import React, { FC, MouseEvent } from "react";
+import { useTranslation } from "react-i18next";
+import { useSearchHelpContent } from "@scm-manager/ui-api";
+import { ErrorNotification, Loading, MarkdownView, Modal } from "@scm-manager/ui-components";
 
 type Props = {
-  className?: string;
+  close: () => void;
 };
 
-const HelpIcon: FC<Props> = ({ className }) => <Icon name="question-circle" color="blue-light" className={className} />;
+const SyntaxModalContent: FC<Props> = ({ close }) => {
+  const { i18n } = useTranslation("commons");
+  const { isLoading, data, error } = useSearchHelpContent(i18n.languages[0]);
 
-export default HelpIcon;
+  const handleClickEvent = (e: MouseEvent<HTMLElement>) => {
+    const target = e.target as HTMLElement;
+    if (target.tagName === "A") {
+      close();
+    }
+  };
+
+  if (error) {
+    return <ErrorNotification error={error} />;
+  } else if (isLoading || !data) {
+    return <Loading />;
+  } else {
+    return (
+      <div onClick={handleClickEvent}>
+        <MarkdownView content={data} basePath="/" />
+      </div>
+    );
+  }
+};
+
+const SyntaxModal: FC<Props> = ({ close }) => {
+  const [t] = useTranslation("commons");
+  return (
+    <Modal
+      active={true}
+      title={t("search.quickSearch.hints")}
+      body={<SyntaxModalContent close={close} />}
+      closeFunction={close}
+    />
+  );
+};
+
+export default SyntaxModal;

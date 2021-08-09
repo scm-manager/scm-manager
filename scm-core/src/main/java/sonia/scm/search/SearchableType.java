@@ -26,6 +26,8 @@ package sonia.scm.search;
 
 import com.google.common.annotations.Beta;
 
+import java.util.Collection;
+
 /**
  * A type which can be searched with the {@link SearchEngine}.
  *
@@ -47,4 +49,12 @@ public interface SearchableType {
    * @return class of type
    */
   Class<?> getType();
+
+  /**
+   * Returns collection of searchable fields.
+   *
+   * @return collection of searchable fields
+   * @since 2.23.0
+   */
+  Collection<? extends SearchableField> getFields();
 }

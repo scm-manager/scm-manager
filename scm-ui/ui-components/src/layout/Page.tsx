@@ -37,7 +37,7 @@ type Props = {
   // and use something different than a string for the title property.
   documentTitle?: string;
   afterTitle?: ReactNode;
-  subtitle?: string;
+  subtitle?: ReactNode;
   loading?: boolean;
   error?: Error | null;
   showContentOnError?: boolean;
@@ -123,7 +123,7 @@ export default class Page extends React.Component<Props> {
                 <Title title={this.getTextualTitle()}>{this.getTitleComponent()}</Title>
                 {afterTitle && <MarginLeft>{afterTitle}</MarginLeft>}
               </FlexContainer>
-              <Subtitle subtitle={subtitle} />
+              {subtitle ? <Subtitle>{subtitle}</Subtitle> : null}
             </div>
             {pageActions}
           </div>

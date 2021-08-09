@@ -22,42 +22,32 @@
  * SOFTWARE.
  */
 
-import * as urls from "./urls";
+package sonia.scm.api.v2.resources;
 
-export { urls };
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import sonia.scm.search.SearchableField;
+import sonia.scm.search.SearchableType;
+import sonia.scm.search.TypeCheck;
 
-export * from "./errors";
-export * from "./apiclient";
+@Mapper
+public abstract class SearchableTypeMapper {
 
-export * from "./base";
-export * from "./login";
-export * from "./groups";
-export * from "./users";
-export * from "./suggestions";
-export * from "./userSuggestions";
-export * from "./groupSuggestions";
-export * from "./repositories";
-export * from "./namespaces";
-export * from "./branches";
-export * from "./changesets";
-export * from "./tags";
-export * from "./config";
-export * from "./admin";
-export * from "./plugins";
-export * from "./repository-roles";
-export * from "./permissions";
-export * from "./sources";
-export * from "./import";
-export * from "./diff";
-export * from "./notifications";
-export * from "./configLink";
-export * from "./apiKeys";
-export * from "./publicKeys";
-export * from "./fileContent";
-export * from "./history";
-export * from "./contentType";
-export * from "./annotations";
-export * from "./search";
+  @Mapping(target = "attributes", ignore = true)
+  public abstract SearchableTypeDto map(SearchableType searchableType);
 
-export { default as ApiProvider } from "./ApiProvider";
-export * from "./ApiProvider";
+  public abstract SearchableFieldDto map(SearchableField searchableField);
+
+  public String map(Class<?> type) {
+    if (TypeCheck.isString(type)) {
+      return "string";
+    } else if (TypeCheck.isInstant(type) || TypeCheck.isNumber(type)) {
+      return "number";
+    } else if (TypeCheck.isBoolean(type)) {
+      return "boolean";
+    } else {
+      return "unknown";
+    }
+  }
+
+}

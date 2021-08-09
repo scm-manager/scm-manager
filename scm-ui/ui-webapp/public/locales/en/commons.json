@@ -157,11 +157,49 @@
     "subtitle": "{{type}} results for \"{{query}}\"",
     "types": "Results",
     "noHits": "No results found",
+    "syntaxHelp": "Find better results by using the full <0>search syntax</0>",
     "quickSearch": {
       "resultHeading": "Top repository results",
-      "parseError": "Failed to parse query",
+      "parseError": "Failed to parse query.",
+      "parseErrorHelp": "Hints for your Search",
       "noResults": "Could not find matching repository",
-      "moreResults": "More Results"
+      "moreResults": "More Results",
+      "hintsIcon": "Search Hints",
+      "hints": "Hints for your Search"
+    },
+    "syntax": {
+      "title": "Expert Search",
+      "subtitle": "Learn About the fields of the entities, modifiers and operators.",
+      "exampleQueriesAndFields": {
+        "title": "Example Queries and Fields",
+        "description": "Fields may be queried individually to narrow down your search, e.g. name:ultimate will query for ultimate only in the field “name” of entities. Some fields may be found in all or most entities (e.g. Name, creationDate). Other fields only exist with single entities."
+      },
+      "fields": {
+        "name": "Name",
+        "type": "Type",
+        "exampleValue": "Example Value",
+        "hints": "Hints"
+      },
+      "exampleQueries": {
+        "title": "Example Queries",
+        "description": "Combine Fields with Modifiers and Operators to find your repositories.",
+        "table": {
+          "description": "What you search for",
+          "query": "Query",
+          "explanation": "Explanation"
+        }
+      },
+      "utilities": {
+        "title": "Utilities",
+        "description": "Convert human-readable timestamps to Epoch Milliseconds to use in your query. Date is mandatory, hour, minute and seconds are optional.",
+        "datetime":{
+          "label": "Convert timestamps to Epoch Milliseconds",
+          "format": "yyyy-mm-dd hh:mm:ss",
+          "convertButtonLabel": "Convert"
+        },
+        "timestampPlaceholder": "Epoch Timestamp",
+        "copyTimestampTooltip": "Copy Timestamp to Clipboard"
+      }
     }
   }
 }

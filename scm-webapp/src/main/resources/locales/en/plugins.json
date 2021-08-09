@@ -382,16 +382,104 @@
     "types": {
       "repository": {
         "subtitle": "Repository",
-        "navItem": "Repositories"
+        "navItem": "Repositories",
+        "title": "Repositories",
+        "fields": {
+          "name": {
+            "name": "Name",
+            "exampleValue": "scm-manager"
+          },
+          "namespace": {
+            "name": "Namespace",
+            "exampleValue": "cloudogu"
+          },
+          "type": {
+            "name": "Type",
+            "exampleValue": "git, hg or svn"
+          },
+          "description": {
+            "name": "Description",
+            "exampleValue": "This repository contains the source code for the SCM-Manager."
+          },
+          "creationDate": {
+            "name": "Creation Date",
+            "exampleValue": "1628077286",
+            "hints": "Timestamp of creation in ms since 01-01-1970. Range search possible."
+          },
+          "lastModified": {
+            "name": "Last Modified",
+            "exampleValue": "1623057235",
+            "hints": "Timestamp of last modification in ms since 01-01-1970. Range search possible."
+          }
+        },
+        "examples": [
+          {
+            "description": "a repository called ultimate-Repository or ultimate_repository. You are not sure about the connecting character.",
+            "query": "name:ultimate?Repository",
+            "explanation": "queries \"ultimate\" and \"repository\" with a single character in between in the field \"name\"."
+          },
+          {
+            "description": "all repositories changed between 01-01-2021 and 01-02-2021 in the Namespace \"ultimate\"",
+            "query": "nameSpace:ultimate AND lastModified:[1609459200000 TO 1612137600000]",
+            "explanation": "queries for repositories that live in the namespace \"ultimate\" and were last changed in the chosen period (displayed in Epoch milliseconds). You can convert datetimes to timestamps with our converter at the bottom of this page."
+          }
+        ]
       },
       "user": {
         "subtitle": "User",
-        "navItem": "Users"
+        "navItem": "Users",
+        "title": "Users",
+        "fields": {
+          "name": {
+            "name": "Name",
+            "exampleValue": "admin"
+          },
+          "displayName": {
+            "name": "Display Name",
+            "exampleValue": "Administrator"
+          },
+          "creationDate": {
+            "name": "Creation Date",
+            "exampleValue": "1628077286",
+            "hints": "Timestamp of creation in ms since 01-01-1970. Range search possible."
+          },
+          "lastModified": {
+            "name": "Last Modified",
+            "exampleValue": "1623057235",
+            "hints": "Timestamp of last modification in ms since 01-01-1970. Range search possible."
+          },
+          "mail": {
+            "name": "Mail",
+            "exampleValue": "admin@hitchhiker.com"
+          }
+        }
       },
       "group": {
         "subtitle": "Group",
-        "navItem": "Groups"
+        "navItem": "Groups",
+        "title": "Groups",
+        "fields": {
+          "name": {
+            "name": "Name",
+            "exampleValue": "Developers"
+          },
+          "description": {
+            "name": "Description",
+            "exampleValue": "This group contains all software developers."
+          },
+          "creationDate": {
+            "name": "Creation Date",
+            "exampleValue": "1628077286",
+            "hints": "Timestamp of creation in ms since 01-01-1970. Range search possible."
+          },
+          "lastModified": {
+            "name": "Last Modified",
+            "exampleValue": "1623057235",
+            "hints": "Timestamp of last modification in ms since 01-01-1970. Range search possible."
+          }
+        }
       }
     }
   }
 }
+

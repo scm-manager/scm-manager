@@ -34,7 +34,7 @@ final class SearchableTypes {
   }
 
   static LuceneSearchableType create(Class<?> type) {
-    List<SearchableField> fields = new ArrayList<>();
+    List<LuceneSearchableField> fields = new ArrayList<>();
     IndexedType annotation = type.getAnnotation(IndexedType.class);
     if (annotation == null) {
       throw new IllegalArgumentException(
@@ -45,7 +45,7 @@ final class SearchableTypes {
     return new LuceneSearchableType(type, annotation, fields);
   }
 
-  private static void collectFields(Class<?> type, List<SearchableField> fields) {
+  private static void collectFields(Class<?> type, List<LuceneSearchableField> fields) {
     Class<?> parent = type.getSuperclass();
     if (parent != null) {
       collectFields(parent, fields);
@@ -53,7 +53,7 @@ final class SearchableTypes {
     for (Field field : type.getDeclaredFields()) {
       Indexed indexed = field.getAnnotation(Indexed.class);
       if (indexed != null) {
-        fields.add(new SearchableField(field, indexed));
+        fields.add(new LuceneSearchableField(field, indexed));
       }
     }
   }

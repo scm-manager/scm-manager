@@ -77,13 +77,13 @@ public class QueryResultFactory {
   private Hit createHit(ScoreDoc scoreDoc) throws IOException, InvalidTokenOffsetsException {
     Document document = searcher.doc(scoreDoc.doc);
     Map<String, Hit.Field> fields = new HashMap<>();
-    for (SearchableField field : searchableType.getFields()) {
+    for (LuceneSearchableField field : searchableType.getFields()) {
       field(document, field).ifPresent(f -> fields.put(field.getName(), f));
     }
     return new Hit(document.get(FieldNames.ID), document.get(FieldNames.REPOSITORY), scoreDoc.score, fields);
   }
 
-  private Optional<Hit.Field> field(Document document, SearchableField field) throws IOException, InvalidTokenOffsetsException {
+  private Optional<Hit.Field> field(Document document, LuceneSearchableField field) throws IOException, InvalidTokenOffsetsException {
     Object value = field.value(document);
     if (value != null) {
       if (field.isHighlighted()) {
@@ -97,7 +97,7 @@ public class QueryResultFactory {
     return empty();
   }
 
-  private String[] createFragments(SearchableField field, String value) throws InvalidTokenOffsetsException, IOException {
+  private String[] createFragments(LuceneSearchableField field, String value) throws InvalidTokenOffsetsException, IOException {
     return highlighter.getBestFragments(analyzer, field.getName(), value, 5);
   }
 

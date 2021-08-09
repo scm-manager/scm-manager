@@ -93,5 +93,7 @@ public class MapperModule extends AbstractModule {
     bind(RepositoryImportDtoToRepositoryImportParametersMapper.class).to(Mappers.getMapperClass(RepositoryImportDtoToRepositoryImportParametersMapper.class));
 
     bind(QueryResultMapper.class).to(Mappers.getMapperClass(QueryResultMapper.class));
+    bind(SearchableTypeMapper.class).to(Mappers.getMapperClass(SearchableTypeMapper.class));
+
   }
 }

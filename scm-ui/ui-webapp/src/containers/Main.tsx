@@ -50,6 +50,7 @@ import ImportLog from "../repos/importlog/ImportLog";
 import CreateRepositoryRoot from "../repos/containers/CreateRepositoryRoot";
 import styled from "styled-components";
 import Search from "../search/Search";
+import Syntax from "../search/Syntax";
 
 type Props = {
   me: Me;
@@ -109,6 +110,7 @@ const Main: FC<Props> = (props) => {
           <Redirect exact strict from="/search/:type" to="/search/:type/" />
           <ProtectedRoute path="/search/:type/:page" component={Search} authenticated={authenticated} />
           <ProtectedRoute path="/search/:type/" component={Search} authenticated={authenticated} />
+          <ProtectedRoute path="/help/search-syntax/" component={Syntax} authenticated={authenticated} />
           <ExtensionPoint name="main.route" renderAll={true} props={props} />
         </Switch>
       </StyledMain>
