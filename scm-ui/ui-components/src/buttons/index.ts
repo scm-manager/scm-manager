@@ -35,3 +35,5 @@ export { default as ButtonGroup } from "./ButtonGroup";
 export { default as ButtonAddons } from "./ButtonAddons";
 export { default as OpenInFullscreenButton } from "./OpenInFullscreenButton";
 export { default as RemoveEntryOfTableButton } from "./RemoveEntryOfTableButton";
+export { default as NoStyleButton } from "./NoStyleButton";
+export { default as LinkStyleButton } from "./LinkStyleButton";

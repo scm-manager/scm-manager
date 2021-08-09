@@ -21,13 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
-import Icon from "./Icon";
 
-type Props = {
-  className?: string;
-};
+import styled from "styled-components";
+import NoStyleButton from "./NoStyleButton";
 
-const HelpIcon: FC<Props> = ({ className }) => <Icon name="question-circle" color="blue-light" className={className} />;
+const LinkStyleButton = styled(NoStyleButton)`
+  text-decoration: underline;
+`;
 
-export default HelpIcon;
+export default LinkStyleButton;

@@ -159,7 +159,8 @@
     "noHits": "No results found",
     "quickSearch": {
       "resultHeading": "Top repository results",
-      "parseError": "Failed to parse query",
+      "parseError": "Failed to parse query.",
+      "parseErrorHelp": "Hints for your Search",
       "noResults": "Could not find matching repository",
       "moreResults": "More Results",
       "hintsIcon": "Search Hints",

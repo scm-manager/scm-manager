@@ -119,7 +119,7 @@ export const useSearch = (query: string, optionParam = defaultSearchOptions): Ap
 
 const useObserveAsync = <D extends any[], R, E = Error>(fn: (...args: D) => Promise<R>, deps: D) => {
   const [data, setData] = useState<R>();
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setLoading] = useState(false);
   const [error, setError] = useState<E>();
   useEffect(() => {
     setLoading(true);
@@ -128,7 +128,7 @@ const useObserveAsync = <D extends any[], R, E = Error>(fn: (...args: D) => Prom
       .catch(setError)
       .finally(() => setLoading(false));
   }, deps);
-  return { data, loading, error };
+  return { data, isLoading, error };
 };
 
 export const useSearchHelpContent = (language: string) =>

@@ -158,7 +158,8 @@
     "noHits": "Die Suche ergab keine Treffer",
     "quickSearch": {
       "resultHeading": "Top-Ergebnisse Repositories",
-      "parseError": "Der Suchstring is ungültig",
+      "parseError": "Der Suchstring is ungültig.",
+      "parseErrorHelp": "Hinweise zu ihrer Suche",
       "moreResults": "Mehr Ergebnisse",
       "noResults": "Es konnten keine Repositories gefunden werden",
       "hintsIcon": "Suchtipps",

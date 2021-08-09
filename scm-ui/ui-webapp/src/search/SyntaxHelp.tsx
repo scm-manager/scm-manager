@@ -21,13 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 import React, { FC } from "react";
-import Icon from "./Icon";
+import { useTranslation } from "react-i18next";
+import { HelpIcon, NoStyleButton } from "@scm-manager/ui-components";
 
 type Props = {
-  className?: string;
+  onClick: () => void;
 };
 
-const HelpIcon: FC<Props> = ({ className }) => <Icon name="question-circle" color="blue-light" className={className} />;
+const SyntaxHelp: FC<Props> = ({ onClick }) => {
+  const [t] = useTranslation("commons");
+  return (
+    <>
+      <NoStyleButton title={t("search.quickSearch.hintsIcon")} onClick={onClick}>
+        <HelpIcon />
+      </NoStyleButton>
+    </>
+  );
+};
 
-export default HelpIcon;
+export default SyntaxHelp;

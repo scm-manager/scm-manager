@@ -24,22 +24,21 @@
 import React, { FC, KeyboardEvent as ReactKeyboardEvent, MouseEvent, useCallback, useEffect, useState } from "react";
 import { Hit, Links, ValueHitField } from "@scm-manager/ui-types";
 import styled from "styled-components";
-import { BackendError, useSearch, useSearchHelpContent } from "@scm-manager/ui-api";
+import { BackendError, useSearch } from "@scm-manager/ui-api";
 import classNames from "classnames";
 import { Link, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
   Button,
   ErrorNotification,
-  Icon,
-  Loading,
-  MarkdownView,
-  Modal,
   HitProps,
+  LinkStyleButton,
   Notification,
   RepositoryAvatar,
-  useStringHitFieldValue
+  useStringHitFieldValue,
 } from "@scm-manager/ui-components";
+import SyntaxHelp from "../search/SyntaxHelp";
+import SyntaxModal from "../search/SyntaxModal";
 
 const Field = styled.div`
   margin-bottom: 0 !important;
@@ -62,6 +61,7 @@ const namespaceAndName = (hit: Hit) => {
 type HitsProps = {
   hits: Hit[];
   index: number;
+  showHelp: () => void;
   gotoDetailSearch: () => void;
   clear: () => void;
 };
@@ -72,26 +72,28 @@ type GotoProps = {
   gotoDetailSearch: () => void;
 };
 
-const EmptyHits: FC<GotoProps> = ({ gotoDetailSearch }) => {
+const EmptyHits: FC = () => {
   const [t] = useTranslation("commons");
   return (
-    <QuickSearchNotification>
-      <Notification type="info">{t("search.quickSearch.noResults")}</Notification>
-      <MoreResults gotoDetailSearch={gotoDetailSearch} />
-    </QuickSearchNotification>
+    <Notification className="m-4" type="info">
+      {t("search.quickSearch.noResults")}
+    </Notification>
   );
 };
 
 type ErrorProps = {
   error: Error;
+  showHelp: () => void;
 };
 
-const ParseErrorNotification: FC = () => {
+const ParseErrorNotification: FC<ErrorProps> = ({ showHelp }) => {
   const [t] = useTranslation("commons");
-  // TODO add link to query syntax page/modal
   return (
     <QuickSearchNotification>
-      <Notification type="warning">{t("search.quickSearch.parseError")}</Notification>
+      <Notification type="warning">
+        <p>{t("search.quickSearch.parseError")}</p>
+        <LinkStyleButton onClick={showHelp}>{t("search.quickSearch.parseErrorHelp")}</LinkStyleButton>
+      </Notification>
     </QuickSearchNotification>
   );
 };
@@ -100,10 +102,10 @@ const isBackendError = (error: Error | BackendError): error is BackendError => {
   return (error as BackendError).errorCode !== undefined;
 };
 
-const SearchErrorNotification: FC<ErrorProps> = ({ error }) => {
+const SearchErrorNotification: FC<ErrorProps> = ({ error, showHelp }) => {
   // 5VScek8Xp1 is the id of sonia.scm.search.QueryParseException
   if (isBackendError(error) && error.errorCode === "5VScek8Xp1") {
-    return <ParseErrorNotification />;
+    return <ParseErrorNotification error={error} showHelp={showHelp} />;
   }
   return (
     <QuickSearchNotification>
@@ -160,63 +162,44 @@ const MoreResults: FC<GotoProps> = ({ gotoDetailSearch }) => {
   );
 };
 
-const Hits: FC<HitsProps> = ({ hits, index, clear, gotoDetailSearch }) => {
+const HitsList: FC<HitsProps> = ({ hits, index, clear, gotoDetailSearch }) => {
   const id = useCallback(namespaceAndName, [hits]);
-  const [showHelpModal, setShowHelpModal] = useState(false);
-  const { t, i18n } = useTranslation("commons");
-  const { loading: isLoading, data: helpModalContent } = useSearchHelpContent(i18n.languages[0]);
-
   if (hits.length === 0) {
-    return <EmptyHits gotoDetailSearch={gotoDetailSearch} />;
+    return <EmptyHits />;
   }
-
-  let modal;
-  if (showHelpModal) {
-    let modalContent;
-    if (isLoading) {
-      modalContent = <Loading />;
-    } else {
-      modalContent = <MarkdownView content={helpModalContent!} basePath="/" />;
-    }
-    modal = (
-      <Modal
-        title={t("search.quickSearch.hints")}
-        body={modalContent}
-        active={showHelpModal}
-        closeFunction={() => setShowHelpModal(false)}
-      />
-    );
-  }
-
   return (
     <>
-      {modal}
-      <div aria-expanded="true" role="listbox" className="dropdown-content">
-        <ResultHeading className="dropdown-item">
-          <span>{t("search.quickSearch.resultHeading")}</span>
-          <Icon
-            onClick={() => setShowHelpModal(true)}
-            title={t("search.quickSearch.hintsIcon")}
-            name="question-circle"
-            color="info"
-            className="is-clickable"
-          />
-        </ResultHeading>
-        {hits.map((hit, idx) => (
-          <div key={id(hit)} onMouseDown={(e) => e.preventDefault()} onClick={clear}>
-            <Link
-              className={classNames("is-flex", "dropdown-item", "has-text-weight-medium", "is-ellipsis-overflow", {
+      {hits.map((hit, idx) => (
+        <div key={id(hit)} onMouseDown={(e) => e.preventDefault()} onClick={clear}>
+          <Link
+            className={classNames("is-flex", "dropdown-item", "has-text-weight-medium", "is-ellipsis-overflow", {
               "is-active": idx === index,
             })}
             title={id(hit)}
-              to={`/repo/${id(hit)}`}
-              role="option"
+            to={`/repo/${id(hit)}`}
+            role="option"
             data-omnisearch="true"
-            >
-              <AvatarSection hit={hit} />{id(hit)}
-            </Link>
-          </div>
-        ))}
+          >
+            <AvatarSection hit={hit} />
+            {id(hit)}
+          </Link>
+        </div>
+      ))}
+    </>
+  );
+};
+
+const Hits: FC<HitsProps> = ({ showHelp, gotoDetailSearch, ...rest }) => {
+  const [t] = useTranslation("commons");
+
+  return (
+    <>
+      <div aria-expanded="true" role="listbox" className="dropdown-content">
+        <ResultHeading className="dropdown-item">
+          <span>{t("search.quickSearch.resultHeading")}</span>
+          <SyntaxHelp onClick={showHelp} />
+        </ResultHeading>
+        <HitsList showHelp={showHelp} gotoDetailSearch={gotoDetailSearch} {...rest} />
         <MoreResults gotoDetailSearch={gotoDetailSearch} />
       </div>
     </>
@@ -344,11 +327,12 @@ const OmniSearch: FC = () => {
   const debouncedQuery = useDebounce(query, 250);
   const { data, isLoading, error } = useSearch(debouncedQuery, { type: "repository", pageSize: 5 });
   const { showResults, hideResults, ...handlers } = useShowResultsOnFocus();
+  const [showHelp, setShowHelp] = useState(false);
   const history = useHistory();
 
-  const clearQuery = () => {
-    setQuery("");
-  };
+  const openHelp = () => setShowHelp(true);
+  const closeHelp = () => setShowHelp(false);
+  const clearQuery = () => setQuery("");
 
   const gotoDetailSearch = () => {
     history.push(`/search/repository/?q=${query}`);
@@ -359,6 +343,7 @@ const OmniSearch: FC = () => {
 
   return (
     <Field className="navbar-item field">
+      {showHelp ? <SyntaxModal close={closeHelp} /> : null}
       <div
         className={classNames("control", "has-icons-right", {
           "is-loading": isLoading,
@@ -385,9 +370,15 @@ const OmniSearch: FC = () => {
             )}
           </div>
           <DropdownMenu className="dropdown-menu" onMouseDown={(e) => e.preventDefault()}>
-            {error ? <SearchErrorNotification error={error} /> : null}
+            {error ? <SearchErrorNotification error={error} showHelp={openHelp} /> : null}
             {!error && data ? (
-              <Hits gotoDetailSearch={gotoDetailSearch} clear={clearQuery} index={index} hits={data._embedded.hits} />
+              <Hits
+                showHelp={openHelp}
+                gotoDetailSearch={gotoDetailSearch}
+                clear={clearQuery}
+                index={index}
+                hits={data._embedded.hits}
+              />
             ) : null}
           </DropdownMenu>
         </div>
