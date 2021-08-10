@@ -49,15 +49,17 @@ const HighlightedTextField: FC<HighlightedTextFieldProps> = ({ field }) => (
   </>
 );
 
-const TextHitField: FC<Props> = ({ hit, field: fieldName, truncateValueAt = 0 }) => {
+const TextHitField: FC<Props> = ({ hit, field: fieldName, children, truncateValueAt = 0 }) => {
   const field = hit.fields[fieldName];
   if (!field) {
-    return null;
+    return <>{children}</>;
   } else if (isHighlightedHitField(field)) {
     return <HighlightedTextField field={field} />;
   } else {
     let value = field.value;
-    if (typeof value === "string" && truncateValueAt > 0 && value.length > truncateValueAt) {
+    if (value === "") {
+      return <>{children}</>;
+    } else if (typeof value === "string" && truncateValueAt > 0 && value.length > truncateValueAt) {
       value = value.substring(0, truncateValueAt) + "...";
     }
     return <>{value}</>;
