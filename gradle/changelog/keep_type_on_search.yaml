@@ -1,0 +1,2 @@
+- type: Changed
+  description: Keep search result type if searched from result page ([#1764](https://github.com/scm-manager/scm-manager/pull/1764))
