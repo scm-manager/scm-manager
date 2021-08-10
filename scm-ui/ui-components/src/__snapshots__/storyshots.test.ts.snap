@@ -72169,6 +72169,8 @@ exports[`Storyshots Modal|Modal Default 1`] = `null`;
 
 exports[`Storyshots Modal|Modal Long content 1`] = `null`;
 
+exports[`Storyshots Modal|Modal Nested 1`] = `null`;
+
 exports[`Storyshots Modal|Modal With form elements 1`] = `null`;
 
 exports[`Storyshots Modal|Modal With long tooltips 1`] = `null`;
