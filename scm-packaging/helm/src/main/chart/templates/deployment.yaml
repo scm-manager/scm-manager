@@ -45,19 +45,27 @@ spec:
         app: {{ include "scm-manager.name" . }}
         release: {{ .Release.Name }}
     spec:
+      {{- if .Values.image.pullSecret }}
+      imagePullSecrets:
+        - name: {{ .Values.image.pullSecret }}
+      {{- end }}
       initContainers:
       - name: volume-permissions
-        image: alpine:3.8
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: IfNotPresent
         command: ['sh', '-c', 'chown 1000:1000 /data']
+        securityContext:
+          runAsUser: 0
         volumeMounts:
         - name: data
           mountPath: /data
       {{- if .Values.plugins }}
       - name: install-plugins
-        image: alpine:3.8
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: IfNotPresent
         command: ['sh', '/scripts/install-plugins.sh']
+        securityContext:
+          runAsUser: 0
         volumeMounts:
         - name: data
           mountPath: /data
@@ -113,11 +121,11 @@ spec:
         emptyDir: {}
       {{- end }}
       - name: config
-        configMap: 
+        configMap:
           name: {{ include "scm-manager.fullname" . }}
       {{- if .Values.plugins }}
       - name: scripts
-        configMap: 
+        configMap:
           name: {{ include "scm-manager.fullname" . }}-scripts
       {{- end }}
       {{- with .Values.extraVolumes }}
