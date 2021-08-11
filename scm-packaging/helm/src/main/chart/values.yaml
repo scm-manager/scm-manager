@@ -34,7 +34,7 @@ image:
   # image.pullPolicy -- SCM-Manager image pull policy
   pullPolicy: IfNotPresent
   # image.pullSecret -- Secret with credentials for the image registry
-  # pullSecret: registry-credentials
+  pullSecret: ""
 
 # nameOverride -- Override the resource name prefix
 nameOverride: ""

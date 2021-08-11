@@ -29,8 +29,11 @@ IFS=$'\n\t'
 if helm-docs --version > /dev/null 2>&1; then
   SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
   MODULE_DIR="$( cd "${SCRIPT_DIR}/../../../" >/dev/null 2>&1 && pwd )"
+  CHARTDIR="${MODULE_DIR}/build/helm/charts/scm-manager"
+  PAGE="docs/en/installation/k8s.md"
+  TEMPLATE="${MODULE_DIR}/src/main/docs/helm.md.gotmpl"
+  README="${MODULE_DIR}/../../${PAGE}"
 
-  CHARTDIR="${MODULE_DIR}/target/chart"
   if [ ! -d "${CHARTDIR}" ]; then
     echo "chart directory ${CHARTDIR} does not exists"
     echo "please run maven package before"
@@ -39,9 +42,9 @@ if helm-docs --version > /dev/null 2>&1; then
   fi
 
   cd "${CHARTDIR}"
-  PAGE="docs/en/installation/k8s.md"
-  echo helm-docs --template-files="${MODULE_DIR}/src/main/docs/helm.md.gotmpl" --output-file="${MODULE_DIR}/../../${PAGE}"
-  helm-docs --template-files="../../src/main/docs/helm.md.gotmpl" --output-file="../../../../${PAGE}"
+  
+  helm-docs -t "${MODULE_DIR}/src/main/docs/helm.md.gotmpl" -l trace
+  cp "${CHARTDIR}/README.md" "${README}"
   echo "The helm documentation was successfully generated"
   echo "Please check the results at ${PAGE}"
   echo "And don't forget to commit ;)"
