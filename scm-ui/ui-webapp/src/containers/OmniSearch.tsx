@@ -26,7 +26,7 @@ import { Hit, Links, ValueHitField } from "@scm-manager/ui-types";
 import styled from "styled-components";
 import { BackendError, useSearch } from "@scm-manager/ui-api";
 import classNames from "classnames";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
   Button,
@@ -322,6 +322,23 @@ const useShowResultsOnFocus = () => {
   };
 };
 
+const useSearchType = () => {
+  const location = useLocation();
+  const pathname = location.pathname;
+
+  let type = "repository";
+  if (pathname.startsWith("/search/")) {
+    const path = pathname.substring("/search/".length);
+    const index = path.indexOf("/");
+    if (index > 0) {
+      type = path.substring(0, index);
+    } else {
+      type = path;
+    }
+  }
+  return type;
+};
+
 const OmniSearch: FC = () => {
   const [query, setQuery] = useState("");
   const debouncedQuery = useDebounce(query, 250);
@@ -329,13 +346,14 @@ const OmniSearch: FC = () => {
   const { showResults, hideResults, ...handlers } = useShowResultsOnFocus();
   const [showHelp, setShowHelp] = useState(false);
   const history = useHistory();
+  const searchType = useSearchType();
 
   const openHelp = () => setShowHelp(true);
   const closeHelp = () => setShowHelp(false);
   const clearQuery = () => setQuery("");
 
   const gotoDetailSearch = () => {
-    history.push(`/search/repository/?q=${query}`);
+    history.push(`/search/${searchType}/?q=${query}`);
     hideResults();
   };
 

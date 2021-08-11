@@ -42,7 +42,7 @@ type SearchResultType = FC & {
 };
 
 const Hit: SearchResultType = ({ children }) => {
-  return <article className="media p-1">{children}</article>;
+  return <article className="media">{children}</article>;
 };
 
 Hit.Title = ({ className, children }) => (
