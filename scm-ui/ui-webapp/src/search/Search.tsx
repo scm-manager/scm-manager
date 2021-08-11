@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import {
   CustomQueryFlexWrappedColumns,
   Level,
@@ -37,6 +37,8 @@ import { Link, useLocation, useParams } from "react-router-dom";
 import { useSearch, useSearchCounts, useSearchTypes } from "@scm-manager/ui-api";
 import Results from "./Results";
 import { Trans, useTranslation } from "react-i18next";
+import SearchErrorNotification from "./SearchErrorNotification";
+import SyntaxModal from "./SyntaxModal";
 
 type PathParams = {
   type: string;
@@ -108,6 +110,7 @@ const SearchSubTitle: FC<Props> = ({ selectedType, query }) => {
 
 const Search: FC = () => {
   const [t] = useTranslation(["commons", "plugins"]);
+  const [showHelp, setShowHelp] = useState(false);
   const { query, selectedType, page } = usePageParams();
   const { data, isLoading, error } = useSearch(query, {
     type: selectedType,
@@ -135,8 +138,9 @@ const Search: FC = () => {
       title={t("search.title")}
       subtitle={<SearchSubTitle query={query} selectedType={selectedType} />}
       loading={isLoading}
-      error={error}
     >
+      {showHelp ? <SyntaxModal close={() => setShowHelp(false)} /> : null}
+      <SearchErrorNotification error={error} showHelp={() => setShowHelp(true)} />
       {data ? (
         <CustomQueryFlexWrappedColumns>
           <PrimaryContentColumn>
