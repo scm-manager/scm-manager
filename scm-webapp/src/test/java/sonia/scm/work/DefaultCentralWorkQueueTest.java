@@ -76,7 +76,6 @@ class DefaultCentralWorkQueueTest {
       waitForTasks();
 
       assertThat(counter).isEqualTo(ITERATIONS);
-
     }
 
     private void waitForTasks() {
@@ -90,7 +89,13 @@ class DefaultCentralWorkQueueTest {
         queue.append().enqueue(new Increase());
       }
       waitForTasks();
-      assertThat(counter).isPositive().isLessThan(ITERATIONS);
+
+      // we test if the resulting counter is less than the iteration,
+      // because it is extremely likely that we miss a counter update
+      // when we run in parallel
+      assertThat(counter)
+        .isPositive()
+        .isLessThan(ITERATIONS);
     }
 
     @Test
@@ -156,10 +161,11 @@ class DefaultCentralWorkQueueTest {
       @Override
       @SuppressWarnings("java:S2925")
       public void run() {
+        int currentCounter = counter;
+        runs.incrementAndGet();
         try {
           Thread.sleep(5);
-          runs.incrementAndGet();
-          counter = counter + 1;
+          counter = currentCounter + 1;
         } catch (InterruptedException e) {
           e.printStackTrace();
         }
