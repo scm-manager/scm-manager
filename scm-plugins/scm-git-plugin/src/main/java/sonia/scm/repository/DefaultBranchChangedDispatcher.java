@@ -22,31 +22,38 @@
  * SOFTWARE.
  */
 
-package sonia.scm.api.v2.resources;
+package sonia.scm.repository;
 
 import com.github.legman.Subscribe;
+import com.google.common.base.Strings;
 import sonia.scm.EagerSingleton;
+import sonia.scm.api.v2.resources.GitRepositoryConfigChangedEvent;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.plugin.Extension;
-import sonia.scm.repository.ClearRepositoryCacheEvent;
-import sonia.scm.repository.RepositoryModificationEvent;
 
-import java.util.Objects;
+import javax.inject.Inject;
 
 @Extension
 @EagerSingleton
-public class GitRepositoryConfigChangeClearRepositoryCacheListener {
+public class DefaultBranchChangedDispatcher {
 
-  /**
-   * Receives {@link RepositoryModificationEvent} and fires a {@link ClearRepositoryCacheEvent} if
-   * the default branch of a git repository was modified.
-   *
-   * @param event repository modification event
-   */
+  private final ScmEventBus eventBus;
+
+  @Inject
+  public DefaultBranchChangedDispatcher(ScmEventBus eventBus) {
+    this.eventBus = eventBus;
+  }
+
   @Subscribe
-  public void sendClearRepositoryCacheEvent(GitRepositoryConfigChangedEvent event) {
-    if (!Objects.equals(event.getOldConfig().getDefaultBranch(), event.getNewConfig().getDefaultBranch())) {
-      ScmEventBus.getInstance().post(new ClearRepositoryCacheEvent(event.getRepository()));
+  public void handleConfigUpdate(GitRepositoryConfigChangedEvent event) {
+    String oldDefaultBranch = event.getOldConfig().getDefaultBranch();
+    String newDefaultBranch = event.getNewConfig().getDefaultBranch();
+    if (hasChanged(oldDefaultBranch, newDefaultBranch)) {
+      eventBus.post(new DefaultBranchChangedEvent(event.getRepository(), oldDefaultBranch, newDefaultBranch));
     }
+  }
+
+  private boolean hasChanged(String oldDefaultBranch, String newDefaultBranch) {
+    return !Strings.nullToEmpty(oldDefaultBranch).equals(Strings.nullToEmpty(newDefaultBranch));
   }
 }

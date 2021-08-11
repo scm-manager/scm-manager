@@ -22,31 +22,22 @@
  * SOFTWARE.
  */
 
-package sonia.scm.api.v2.resources;
+package sonia.scm.repository;
 
-import com.github.legman.Subscribe;
-import sonia.scm.EagerSingleton;
-import sonia.scm.event.ScmEventBus;
-import sonia.scm.plugin.Extension;
-import sonia.scm.repository.ClearRepositoryCacheEvent;
-import sonia.scm.repository.RepositoryModificationEvent;
+import lombok.Value;
+import sonia.scm.event.Event;
 
-import java.util.Objects;
+/**
+ * Event is fired whenever the default branch of a repository was modified.
+ *
+ * @since 2.23.0
+ */
+@Event
+@Value
+public class DefaultBranchChangedEvent {
 
-@Extension
-@EagerSingleton
-public class GitRepositoryConfigChangeClearRepositoryCacheListener {
+  Repository repository;
+  String oldDefaultBranch;
+  String newDefaultBranch;
 
-  /**
-   * Receives {@link RepositoryModificationEvent} and fires a {@link ClearRepositoryCacheEvent} if
-   * the default branch of a git repository was modified.
-   *
-   * @param event repository modification event
-   */
-  @Subscribe
-  public void sendClearRepositoryCacheEvent(GitRepositoryConfigChangedEvent event) {
-    if (!Objects.equals(event.getOldConfig().getDefaultBranch(), event.getNewConfig().getDefaultBranch())) {
-      ScmEventBus.getInstance().post(new ClearRepositoryCacheEvent(event.getRepository()));
-    }
-  }
 }

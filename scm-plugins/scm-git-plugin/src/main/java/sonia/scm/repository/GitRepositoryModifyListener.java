@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 import com.github.legman.Subscribe;
@@ -51,12 +51,6 @@ public class GitRepositoryModifyListener {
     this.storeProvider = storeProvider;
   }
 
-  /**
-   * Receives {@link RepositoryModificationEvent} and fires a {@link ClearRepositoryCacheEvent} if
-   * the default branch of a git repository was modified.
-   *
-   * @param event repository modification event
-   */
   @Subscribe
   public void handleEvent(GitRepositoryConfigChangedEvent event){
     Repository repository = event.getRepository();
