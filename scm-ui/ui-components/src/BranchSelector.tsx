@@ -64,6 +64,7 @@ const BranchSelector: FC<Props> = ({ branches, onSelectBranch, selectedBranch, l
                 onChange={(branch) => onSelectBranch(branches.filter((b) => b.name === branch)[0])}
                 disabled={!!disabled}
                 value={selectedBranch}
+                addValueToOptions={true}
               />
             </MinWidthControl>
           </NoBottomMarginField>

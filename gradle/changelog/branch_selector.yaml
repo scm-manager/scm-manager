@@ -1,0 +1,2 @@
+- type: Fixed
+  description: Branch selector display revision if selected instead of first branch ([#1767](https://github.com/scm-manager/scm-manager/pull/1767))
