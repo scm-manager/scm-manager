@@ -35,6 +35,7 @@ The following table list the configurable parameters of the SCM-Manager chart an
 | extraVolumeMounts | string | `""` | Add additional volumes mounts, parsed through tpl function |
 | extraVolumes | string | `""` | Add additional volumes, parsed through tpl function |
 | fullnameOverride | string | `""` | Override the full resource names |
+| image.pullSecret | string | `""` | Secret with credentials for the image registry |
 | image.pullPolicy | string | `"IfNotPresent"` | SCM-Manager image pull policy |
 | image.repository | string | `"scmmanager/scm-manager"` |  Name of SCM-Manager image |
 | image.tag | string | `"version-off Chart"` | Tag of SCM-Manager image |
