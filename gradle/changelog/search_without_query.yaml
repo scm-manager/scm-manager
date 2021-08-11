@@ -1,0 +1,2 @@
+- type: Fixed
+  description: Submission of empty search queries ([#1769](https://github.com/scm-manager/scm-manager/pull/1769))

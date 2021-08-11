@@ -353,8 +353,10 @@ const OmniSearch: FC = () => {
   const clearQuery = () => setQuery("");
 
   const gotoDetailSearch = () => {
-    history.push(`/search/${searchType}/?q=${query}`);
-    hideResults();
+    if (query.length > 1) {
+      history.push(`/search/${searchType}/?q=${query}`);
+      hideResults();
+    }
   };
 
   const { onKeyDown, index } = useKeyBoardNavigation(gotoDetailSearch, clearQuery, data?._embedded.hits);
