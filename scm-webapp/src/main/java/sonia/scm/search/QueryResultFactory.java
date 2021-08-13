@@ -77,7 +77,7 @@ public class QueryResultFactory {
   private Hit createHit(ScoreDoc scoreDoc) throws IOException, InvalidTokenOffsetsException {
     Document document = searcher.doc(scoreDoc.doc);
     Map<String, Hit.Field> fields = new HashMap<>();
-    for (LuceneSearchableField field : searchableType.getFields()) {
+    for (LuceneSearchableField field : searchableType.getAllFields()) {
       field(document, field).ifPresent(f -> fields.put(field.getName(), f));
     }
     return new Hit(document.get(FieldNames.ID), document.get(FieldNames.REPOSITORY), scoreDoc.score, fields);
