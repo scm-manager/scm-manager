@@ -27,6 +27,7 @@ import { useTranslation } from "react-i18next";
 import {
   Button,
   copyToClipboard,
+  ErrorNotification,
   Icon,
   InputField,
   Loading,
@@ -37,6 +38,7 @@ import {
 import { parse } from "date-fns";
 import styled from "styled-components";
 import classNames from "classnames";
+import { SearchableType } from "@scm-manager/ui-types";
 
 const StyledTooltip = styled(Tooltip)`
   height: 40px;
@@ -68,13 +70,99 @@ type Example = {
   explanation: string;
 };
 
-const Syntax: FC = () => {
-  const { t, i18n } = useTranslation(["commons", "plugins"]);
-  const { loading: isLoading, data: helpModalContent } = useSearchSyntaxContent(i18n.languages[0]);
+type ExampleProps = {
+  searchableType: SearchableType;
+};
+
+const Examples: FC<ExampleProps> = ({ searchableType }) => {
+  const [t] = useTranslation(["commons", "plugins"]);
+  const examples = t<Example[]>(`plugins:search.types.${searchableType.name}.examples`, {
+    returnObjects: true,
+    defaultValue: [],
+  });
+
+  if (examples.length === 0) {
+    return null;
+  }
+
+  return (
+    <>
+      <h5 className="title mt-5">{t("search.syntax.exampleQueries.title")}</h5>
+      <div className="mb-2">{t("search.syntax.exampleQueries.description")}</div>
+      <table>
+        <tr>
+          <th>{t("search.syntax.exampleQueries.table.description")}</th>
+          <th>{t("search.syntax.exampleQueries.table.query")}</th>
+          <th>{t("search.syntax.exampleQueries.table.explanation")}</th>
+        </tr>
+        {examples.map((example, index) => (
+          <tr key={index}>
+            <td>{example.description}</td>
+            <td>{example.query}</td>
+            <td>{example.explanation}</td>
+          </tr>
+        ))}
+      </table>
+    </>
+  );
+};
+
+const SearchableTypes: FC = () => {
+  const [t] = useTranslation(["commons", "plugins"]);
+  const { isLoading, error, data } = useSearchableTypes();
+
+  if (error) {
+    return <ErrorNotification error={error} />;
+  }
+
+  if (isLoading || !data) {
+    return <Loading />;
+  }
+
+  return (
+    <>
+      {data.map((searchableType) => (
+        <Expandable
+          key={searchableType.name}
+          className="mb-1"
+          header={t(`plugins:search.types.${searchableType.name}.title`, searchableType.name)}
+        >
+          <table>
+            <tr>
+              <th>{t("search.syntax.fields.name")}</th>
+              <th>{t("search.syntax.fields.type")}</th>
+              <th>{t("search.syntax.fields.exampleValue")}</th>
+              <th>{t("search.syntax.fields.hints")}</th>
+            </tr>
+            {searchableType.fields.map((searchableField) => (
+              <tr>
+                <th>{searchableField.name}</th>
+                <td>{searchableField.type}</td>
+                <td>
+                  {t(`plugins:search.types.${searchableType.name}.fields.${searchableField.name}.exampleValue`, {
+                    defaultValue: "",
+                  })}
+                </td>
+                <td>
+                  {t(`plugins:search.types.${searchableType.name}.fields.${searchableField.name}.hints`, {
+                    defaultValue: "",
+                  })}
+                </td>
+              </tr>
+            ))}
+          </table>
+          <Examples searchableType={searchableType} />
+        </Expandable>
+      ))}
+    </>
+  );
+};
+
+const TimestampConverter: FC = () => {
+  const [t] = useTranslation("commons");
   const [datetime, setDatetime] = useState("");
   const [timestamp, setTimestamp] = useState("");
   const [copying, setCopying] = useState(false);
-  const { isLoading: isLoadingSearchableTypes, data: searchableTypes } = useSearchableTypes();
 
   const convert = () => {
     const format = "yyyy-MM-dd HH:mm:ss";
@@ -87,106 +175,59 @@ const Syntax: FC = () => {
     copyToClipboard(timestamp).finally(() => setCopying(false));
   };
 
-  if (isLoading || isLoadingSearchableTypes) {
-    return <Loading />;
-  }
-
-  const searchableTypesContent = searchableTypes!.map((searchableType) => {
-    const examples = t<Example[]>(`plugins:search.types.${searchableType.name}.examples`, {
-      returnObjects: true,
-      defaultValue: [],
-    });
-    return (
-      <Expandable className="mb-1" header={t(`plugins:search.types.${searchableType.name}.title`, searchableType.name)}>
-        <table>
-          <tr>
-            <th>{t("search.syntax.fields.name")}</th>
-            <th>{t("search.syntax.fields.type")}</th>
-            <th>{t("search.syntax.fields.exampleValue")}</th>
-            <th>{t("search.syntax.fields.hints")}</th>
-          </tr>
-          {searchableType.fields.map((searchableField) => (
-            <tr>
-              <th>{searchableField.name}</th>
-              <td>{searchableField.type}</td>
-              <td>
-                {t(`plugins:search.types.${searchableType.name}.fields.${searchableField.name}.exampleValue`, {
-                  defaultValue: "",
-                })}
-              </td>
-              <td>
-                {t(`plugins:search.types.${searchableType.name}.fields.${searchableField.name}.hints`, {
-                  defaultValue: "",
-                })}
-              </td>
-            </tr>
-          ))}
-        </table>
-        {examples.length > 0 ? (
-          <>
-            <h5 className="title mt-5">{t("search.syntax.exampleQueries.title")}</h5>
-            <div className="mb-2">{t("search.syntax.exampleQueries.description")}</div>
-            <table>
-              <tr>
-                <th>{t("search.syntax.exampleQueries.table.description")}</th>
-                <th>{t("search.syntax.exampleQueries.table.query")}</th>
-                <th>{t("search.syntax.exampleQueries.table.explanation")}</th>
-              </tr>
-              {examples.map((example) => (
-                <tr>
-                  <td>{example.description}</td>
-                  <td>{example.query}</td>
-                  <td>{example.explanation}</td>
-                </tr>
-              ))}
-            </table>
-          </>
-        ) : null}
-      </Expandable>
-    );
-  });
-
   return (
-    <Page title={t("search.syntax.title")} subtitle={t("search.syntax.subtitle")} loading={isLoading}>
-      <div className="content">
-        <h4 className="title">{t("search.syntax.exampleQueriesAndFields.title")}</h4>
-        <p>{t("search.syntax.exampleQueriesAndFields.description")}</p>
-        {searchableTypesContent}
-      </div>
-      <MarkdownView content={helpModalContent!} basePath="/" />
-      <h3 className="title">{t("search.syntax.utilities.title")}</h3>
-      <p>{t("search.syntax.utilities.description")}</p>
-      <h6 className="title is-6 mt-4">{t("search.syntax.utilities.datetime.label")}</h6>
-      <div className="is-flex">
-        <span className="is-flex mr-5">
-          <InputField
-            value={datetime}
-            onChange={setDatetime}
-            placeholder={t("search.syntax.utilities.datetime.format")}
-          />
-          <Button color="primary" action={convert} className="ml-2">
-            {t("search.syntax.utilities.datetime.convertButtonLabel")}
-          </Button>
-        </span>
-        <span className="is-flex">
-          <InputField
-            className="mr-4"
-            value={timestamp}
-            readOnly={true}
-            placeholder={t("search.syntax.utilities.timestampPlaceholder")}
-          />
-          <StyledTooltip
-            message={t("search.syntax.utilities.copyTimestampTooltip")}
-            className="is-flex is-align-items-center"
-          >
-            {copying ? (
-              <span className="small-loading-spinner" />
-            ) : (
-              <Icon name="clipboard" color="inherit" className="is-size-4 fa-fw is-clickable" onClick={copyTimestamp} />
-            )}
-          </StyledTooltip>
-        </span>
-      </div>
+    <div className="is-flex">
+      <span className="is-flex mr-5">
+        <InputField
+          value={datetime}
+          onChange={setDatetime}
+          placeholder={t("search.syntax.utilities.datetime.format")}
+        />
+        <Button color="primary" action={convert} className="ml-2">
+          {t("search.syntax.utilities.datetime.convertButtonLabel")}
+        </Button>
+      </span>
+      <span className="is-flex">
+        <InputField
+          className="mr-4"
+          value={timestamp}
+          readOnly={true}
+          placeholder={t("search.syntax.utilities.timestampPlaceholder")}
+        />
+        <StyledTooltip
+          message={t("search.syntax.utilities.copyTimestampTooltip")}
+          className="is-flex is-align-items-center"
+        >
+          {copying ? (
+            <span className="small-loading-spinner" />
+          ) : (
+            <Icon name="clipboard" color="inherit" className="is-size-4 fa-fw is-clickable" onClick={copyTimestamp} />
+          )}
+        </StyledTooltip>
+      </span>
+    </div>
+  );
+};
+
+const Syntax: FC = () => {
+  const { t, i18n } = useTranslation("commons");
+  const { isLoading, data, error } = useSearchSyntaxContent(i18n.languages[0]);
+  return (
+    <Page title={t("search.syntax.title")} subtitle={t("search.syntax.subtitle")} loading={isLoading} error={error}>
+      {data ? (
+        <>
+          <div className="content">
+            <h4 className="title">{t("search.syntax.exampleQueriesAndFields.title")}</h4>
+            <p>{t("search.syntax.exampleQueriesAndFields.description")}</p>
+            <SearchableTypes />
+          </div>
+          <MarkdownView content={data} basePath="/" />
+          <h3 className="title">{t("search.syntax.utilities.title")}</h3>
+          <p>{t("search.syntax.utilities.description")}</p>
+          <h6 className="title is-6 mt-4">{t("search.syntax.utilities.datetime.label")}</h6>
+          <TimestampConverter />
+        </>
+      ) : null}
     </Page>
   );
 };
