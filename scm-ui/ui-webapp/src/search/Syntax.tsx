@@ -97,7 +97,7 @@ const Syntax: FC = () => {
       defaultValue: [],
     });
     return (
-      <Expandable className="mb-1" header={t(`plugins:search.types.${searchableType.name}.title`)}>
+      <Expandable className="mb-1" header={t(`plugins:search.types.${searchableType.name}.title`, searchableType.name)}>
         <table>
           <tr>
             <th>{t("search.syntax.fields.name")}</th>
