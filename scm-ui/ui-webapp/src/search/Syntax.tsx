@@ -107,7 +107,7 @@ const Syntax: FC = () => {
           </tr>
           {searchableType.fields.map((searchableField) => (
             <tr>
-              <th>{t(`plugins:search.types.${searchableType.name}.fields.${searchableField.name}.name`)}</th>
+              <th>{searchableField.name}</th>
               <td>{searchableField.type}</td>
               <td>
                 {t(`plugins:search.types.${searchableType.name}.fields.${searchableField.name}.exampleValue`, {
