@@ -45,6 +45,7 @@ type BaseProps = {
   defaultValue?: string;
   readOnly?: boolean;
   className?: string;
+  addValueToOptions?: boolean;
 };
 
 const InnerSelect: FC<FieldProps<BaseProps, HTMLSelectElement, string>> = ({
@@ -58,9 +59,16 @@ const InnerSelect: FC<FieldProps<BaseProps, HTMLSelectElement, string>> = ({
   testId,
   readOnly,
   className,
+  options,
+  addValueToOptions,
   ...props
 }) => {
   const field = useInnerRef(props.innerRef);
+
+  let opts = options;
+  if (value && addValueToOptions && options.some((o) => o.value === value)) {
+    opts = [{ label: value, value }, ...options];
+  }
 
   const handleInput = (event: ChangeEvent<HTMLSelectElement>) => {
     if (props.onChange) {
@@ -113,7 +121,7 @@ const InnerSelect: FC<FieldProps<BaseProps, HTMLSelectElement, string>> = ({
           disabled={disabled}
           {...createAttributesForTesting(testId)}
         >
-          {props.options.map((opt) => {
+          {opts.map((opt) => {
             return (
               <option value={opt.value} key={"KEY_" + opt.value}>
                 {opt.label}

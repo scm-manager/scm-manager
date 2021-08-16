@@ -37,11 +37,11 @@ const Ref: FC = () => {
       <Select
         options={[
           { label: "foo", value: "true" },
-          { label: "bar", value: "false" }
+          { label: "bar", value: "false" },
         ]}
         value={selected}
         label={"Ref Radio Button"}
-        onChange={e => setSelected(e.target.value)}
+        onChange={(e) => setSelected(e.target.value)}
         ref={ref}
       />
       <Button
@@ -80,7 +80,7 @@ const ReactHookForm: FC = () => {
         <Select
           options={[
             { label: "Yes", value: "true" },
-            { label: "No", value: "false" }
+            { label: "No", value: "false" },
           ]}
           label="Remember Me"
           {...register("rememberMe")}
@@ -88,7 +88,7 @@ const ReactHookForm: FC = () => {
         <Select
           options={[
             { label: "Yes", value: "true" },
-            { label: "No", value: "false" }
+            { label: "No", value: "false" },
           ]}
           label="Scramble Password"
           {...register("scramblePassword")}
@@ -96,7 +96,7 @@ const ReactHookForm: FC = () => {
         <Select
           options={[
             { label: "Yes", value: "true" },
-            { label: "No", value: "false" }
+            { label: "No", value: "false" },
           ]}
           label="Disabled wont be submitted"
           defaultValue="false"
@@ -106,7 +106,7 @@ const ReactHookForm: FC = () => {
         <Select
           options={[
             { label: "Yes", value: "true" },
-            { label: "No", value: "false" }
+            { label: "No", value: "false" },
           ]}
           label="Readonly will be submitted"
           readOnly={true}
@@ -136,7 +136,7 @@ const LegacyEvents: FC = () => {
       <Select
         options={[
           { label: "Yes", value: "true" },
-          { label: "No", value: "false" }
+          { label: "No", value: "false" },
         ]}
         onChange={setValue}
       />
@@ -145,8 +145,64 @@ const LegacyEvents: FC = () => {
   );
 };
 
+const AddNoExistingValue: FC = () => {
+  const [value, setValue] = useState<string>("uscss-prometheus");
+
+  return (
+    <>
+      <Select
+        options={[
+          {
+            label: "Millennium Falcon",
+            value: "millennium-falcon",
+          },
+          {
+            label: "Razor Crest",
+            value: "razor-crest",
+          },
+        ]}
+        onChange={setValue}
+        addValueToOptions={true}
+        value={value}
+      />
+      <div className="mt-3">{value}</div>
+    </>
+  );
+};
+
+const PreselectOption: FC = () => {
+  const [value, setValue] = useState<string>("razor-crest");
+
+  return (
+    <>
+      <Select
+        options={[
+          {
+            label: "Millennium Falcon",
+            value: "millennium-falcon",
+          },
+          {
+            label: "Razor Crest",
+            value: "razor-crest",
+          },
+          {
+            label: "USCSS Prometheus",
+            value: "uscss-prometheus"
+          }
+        ]}
+        onChange={setValue}
+        value={value}
+      />
+      <div className="mt-3">{value}</div>
+    </>
+  );
+};
+
 storiesOf("Forms|Select", module)
-  .addDecorator(storyFn => <MemoryRouter>{storyFn()}</MemoryRouter>)
+  .addDecorator((storyFn) => <MemoryRouter>{storyFn()}</MemoryRouter>)
+  .add("Add no existing value", () => <AddNoExistingValue />)
   .add("Ref", () => <Ref />)
   .add("Legacy Events", () => <LegacyEvents />)
-  .add("ReactHookForm", () => <ReactHookForm />);
+  .add("ReactHookForm", () => <ReactHookForm />)
+  .add("Preselect option", () => <PreselectOption />)
+;

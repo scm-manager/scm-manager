@@ -56524,6 +56524,41 @@ exports[`Storyshots Forms|Radio With HelpText 1`] = `
 </div>
 `;
 
+exports[`Storyshots Forms|Select Add no existing value 1`] = `
+Array [
+  <fieldset
+    className="field"
+  >
+    
+    <div
+      className="control select"
+    >
+      <select
+        onBlur={[Function]}
+        onChange={[Function]}
+        value="uscss-prometheus"
+      >
+        <option
+          value="millennium-falcon"
+        >
+          Millennium Falcon
+        </option>
+        <option
+          value="razor-crest"
+        >
+          Razor Crest
+        </option>
+      </select>
+    </div>
+  </fieldset>,
+  <div
+    className="mt-3"
+  >
+    uscss-prometheus
+  </div>,
+]
+`;
+
 exports[`Storyshots Forms|Select Legacy Events 1`] = `
 Array [
   <fieldset
@@ -56553,6 +56588,46 @@ Array [
   <div
     className="mt-3"
   />,
+]
+`;
+
+exports[`Storyshots Forms|Select Preselect option 1`] = `
+Array [
+  <fieldset
+    className="field"
+  >
+    
+    <div
+      className="control select"
+    >
+      <select
+        onBlur={[Function]}
+        onChange={[Function]}
+        value="razor-crest"
+      >
+        <option
+          value="millennium-falcon"
+        >
+          Millennium Falcon
+        </option>
+        <option
+          value="razor-crest"
+        >
+          Razor Crest
+        </option>
+        <option
+          value="uscss-prometheus"
+        >
+          USCSS Prometheus
+        </option>
+      </select>
+    </div>
+  </fieldset>,
+  <div
+    className="mt-3"
+  >
+    razor-crest
+  </div>,
 ]
 `;
 
