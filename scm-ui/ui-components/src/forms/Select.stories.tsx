@@ -170,9 +170,39 @@ const AddNoExistingValue: FC = () => {
   );
 };
 
+const PreselectOption: FC = () => {
+  const [value, setValue] = useState<string>("razor-crest");
+
+  return (
+    <>
+      <Select
+        options={[
+          {
+            label: "Millennium Falcon",
+            value: "millennium-falcon",
+          },
+          {
+            label: "Razor Crest",
+            value: "razor-crest",
+          },
+          {
+            label: "USCSS Prometheus",
+            value: "uscss-prometheus"
+          }
+        ]}
+        onChange={setValue}
+        value={value}
+      />
+      <div className="mt-3">{value}</div>
+    </>
+  );
+};
+
 storiesOf("Forms|Select", module)
   .addDecorator((storyFn) => <MemoryRouter>{storyFn()}</MemoryRouter>)
   .add("Add no existing value", () => <AddNoExistingValue />)
   .add("Ref", () => <Ref />)
   .add("Legacy Events", () => <LegacyEvents />)
-  .add("ReactHookForm", () => <ReactHookForm />);
+  .add("ReactHookForm", () => <ReactHookForm />)
+  .add("Preselect option", () => <PreselectOption />)
+;
