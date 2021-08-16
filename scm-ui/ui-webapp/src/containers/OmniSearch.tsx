@@ -24,21 +24,14 @@
 import React, { FC, KeyboardEvent as ReactKeyboardEvent, MouseEvent, useCallback, useEffect, useState } from "react";
 import { Hit, Links, ValueHitField } from "@scm-manager/ui-types";
 import styled from "styled-components";
-import { BackendError, useSearch } from "@scm-manager/ui-api";
+import { useSearch } from "@scm-manager/ui-api";
 import classNames from "classnames";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import {
-  Button,
-  ErrorNotification,
-  HitProps,
-  LinkStyleButton,
-  Notification,
-  RepositoryAvatar,
-  useStringHitFieldValue,
-} from "@scm-manager/ui-components";
+import { Button, HitProps, Notification, RepositoryAvatar, useStringHitFieldValue } from "@scm-manager/ui-components";
 import SyntaxHelp from "../search/SyntaxHelp";
 import SyntaxModal from "../search/SyntaxModal";
+import SearchErrorNotification from "../search/SearchErrorNotification";
 
 const Field = styled.div`
   margin-bottom: 0 !important;
@@ -78,39 +71,6 @@ const EmptyHits: FC = () => {
     <Notification className="m-4" type="info">
       {t("search.quickSearch.noResults")}
     </Notification>
-  );
-};
-
-type ErrorProps = {
-  error: Error;
-  showHelp: () => void;
-};
-
-const ParseErrorNotification: FC<ErrorProps> = ({ showHelp }) => {
-  const [t] = useTranslation("commons");
-  return (
-    <QuickSearchNotification>
-      <Notification type="warning">
-        <p>{t("search.quickSearch.parseError")}</p>
-        <LinkStyleButton onClick={showHelp}>{t("search.quickSearch.parseErrorHelp")}</LinkStyleButton>
-      </Notification>
-    </QuickSearchNotification>
-  );
-};
-
-const isBackendError = (error: Error | BackendError): error is BackendError => {
-  return (error as BackendError).errorCode !== undefined;
-};
-
-const SearchErrorNotification: FC<ErrorProps> = ({ error, showHelp }) => {
-  // 5VScek8Xp1 is the id of sonia.scm.search.QueryParseException
-  if (isBackendError(error) && error.errorCode === "5VScek8Xp1") {
-    return <ParseErrorNotification error={error} showHelp={showHelp} />;
-  }
-  return (
-    <QuickSearchNotification>
-      <ErrorNotification error={error} />
-    </QuickSearchNotification>
   );
 };
 
@@ -390,7 +350,11 @@ const OmniSearch: FC = () => {
             )}
           </div>
           <DropdownMenu className="dropdown-menu" onMouseDown={(e) => e.preventDefault()}>
-            {error ? <SearchErrorNotification error={error} showHelp={openHelp} /> : null}
+            {error ? (
+              <QuickSearchNotification>
+                <SearchErrorNotification error={error} showHelp={openHelp} />
+              </QuickSearchNotification>
+            ) : null}
             {!error && data ? (
               <Hits
                 showHelp={openHelp}
