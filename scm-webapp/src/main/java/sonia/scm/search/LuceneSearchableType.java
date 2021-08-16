@@ -34,6 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Value
 public class LuceneSearchableType implements SearchableType {
@@ -48,7 +49,7 @@ public class LuceneSearchableType implements SearchableType {
   Map<String, Float> boosts;
   Map<String, PointsConfig> pointsConfig;
   TypeConverter typeConverter;
-  
+
   public LuceneSearchableType(Class<?> type, IndexedType annotation, List<LuceneSearchableField> fields) {
     this.type = type;
     this.name = name(type, annotation);
@@ -101,7 +102,16 @@ public class LuceneSearchableType implements SearchableType {
     return Collections.unmodifiableMap(map);
   }
 
+  @Override
   public Collection<LuceneSearchableField> getFields() {
+    return Collections.unmodifiableCollection(
+      fields.stream()
+        .filter(LuceneSearchableField::isSearchable)
+        .collect(Collectors.toList())
+    );
+  }
+
+  public Collection<LuceneSearchableField> getAllFields() {
     return Collections.unmodifiableCollection(fields);
   }
 }

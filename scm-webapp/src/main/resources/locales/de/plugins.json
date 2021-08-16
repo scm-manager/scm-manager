@@ -442,28 +442,22 @@
         "title": "Repositories",
         "fields": {
           "name": {
-            "name": "Name",
             "exampleValue": "scm-manager"
           },
           "namespace": {
-            "name": "Namespace",
             "exampleValue": "cloudogu"
           },
           "type": {
-            "name": "Typ",
             "exampleValue": "git, hg oder svn"
           },
           "description": {
-            "name": "Beschreibung",
             "exampleValue": "Dieses Repository enthält den Quellcode des SCM-Managers."
           },
           "creationDate": {
-            "name": "Erstellungsdatum",
             "exampleValue": "1628077286",
             "hints": "Zeitstempel der Erstellung in ms seit dem 01.01.1970. Bereichssuche möglich."
           },
           "lastModified": {
-            "name": "Zuletzt geändert",
             "exampleValue": "1623057235",
             "hints": "Zeitstempel der letzten Änderung in ms seit dem 01.01.1970. Bereichssuche möglich."
           }
@@ -487,25 +481,20 @@
         "title": "Benutzer",
         "fields": {
           "name": {
-            "name": "Name",
             "exampleValue": "admin"
           },
           "displayName": {
-            "name": "Anzeigename",
             "exampleValue": "Administrator"
           },
           "creationDate": {
-            "name": "Erstellungsdatum",
             "exampleValue": "1628077286",
             "hints": "Zeitstempel der Erstellung in ms seit dem 01.01.1970. Bereichssuche möglich."
           },
           "lastModified": {
-            "name": "Zuletzt geändert",
             "exampleValue": "1623057235",
             "hints": "Zeitstempel der letzten Änderung in ms seit dem 01.01.1970. Bereichssuche möglich."
           },
           "mail": {
-            "name": "Mail",
             "exampleValue": "admin@hitchhiker.com"
           }
         }
@@ -516,20 +505,16 @@
         "title": "Gruppen",
         "fields": {
           "name": {
-            "name": "Name",
             "exampleValue": "Entwickler"
           },
           "description": {
-            "name": "Beschreibung",
             "exampleValue": "Diese Gruppe enthält alle Softwareentwickler."
           },
           "creationDate": {
-            "name": "Erstellungsdatum",
             "exampleValue": "1628077286",
             "hints": "Zeitstempel der Erstellung in ms seit dem 01.01.1970. Bereichssuche möglich."
           },
           "lastModified": {
-            "name": "Zuletzt geändert",
             "exampleValue": "1623057235",
             "hints": "Zeitstempel der letzten Änderung in ms seit dem 01.01.1970. Bereichssuche möglich."
           }

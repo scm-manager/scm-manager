@@ -66,7 +66,7 @@ public class AnalyzerFactory {
     Analyzer defaultAnalyzer = create(options);
 
     Map<String, Analyzer> analyzerMap = new HashMap<>();
-    for (LuceneSearchableField field : type.getFields()) {
+    for (LuceneSearchableField field : type.getAllFields()) {
       addFieldAnalyzer(analyzerMap, field);
     }
 
