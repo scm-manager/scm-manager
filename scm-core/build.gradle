@@ -43,7 +43,9 @@ dependencies {
 
   // lombok
   compileOnly libraries.lombok
+  testCompileOnly libraries.lombok
   annotationProcessor libraries.lombok
+  testAnnotationProcessor libraries.lombok
 
   // servlet api
   implementation libraries.servletApi
