@@ -51,7 +51,14 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import java.util.Collection;
 
-public class HttpURLConnectionFactory {
+/**
+ * The {@link HttpURLConnectionFactory} simplifies the correct configuration of {@link HttpURLConnection}.
+ * It sets timeout, proxy, ssl and authentication configurations to provide better defaults and respect SCM-Manager
+ * settings.
+ * <b>Note:</b> This class should only be used if a third party library requires an {@link HttpURLConnection}.
+ * In all other cases the {@link sonia.scm.net.ahc.AdvancedHttpClient} should be used.
+ */
+public final class HttpURLConnectionFactory {
 
   private static final Logger LOG = LoggerFactory.getLogger(HttpURLConnectionFactory.class);
 
@@ -77,10 +84,23 @@ public class HttpURLConnectionFactory {
     this.sslContextFactory = sslContextFactory;
   }
 
+  /**
+   * Creates a new {@link HttpURLConnection} from the given url with default options.
+   * @param url url
+   * @return a new connection with default options.
+   * @throws IOException
+   */
   public HttpURLConnection create(URL url) throws IOException {
     return create(url, new HttpConnectionOptions());
   }
 
+  /**
+   * Creates a new {@link HttpURLConnection} from the given url and options.
+   * @param url url
+   * @param options options for the new connection
+   * @return a new connection with the given options
+   * @throws IOException
+   */
   public HttpURLConnection create(URL url, HttpConnectionOptions options) throws IOException {
     return new InternalConnectionFactory(options).create(url);
   }
