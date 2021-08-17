@@ -24,47 +24,69 @@
 
 package sonia.scm.repository.spi;
 
+//~--- non-JDK imports --------------------------------------------------------
+
 import com.aragost.javahg.Changeset;
 import com.aragost.javahg.commands.ExecutionException;
-import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.api.PushResponse;
 
+import javax.inject.Inject;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
-import static com.aragost.javahg.commands.flags.PushCommandFlags.on;
+//~--- JDK imports ------------------------------------------------------------
 
-public class HgPushCommand extends AbstractHgPushOrPullCommand implements PushCommand {
+/**
+ *
+ * @author Sebastian Sdorra
+ */
+public class HgPushCommand extends AbstractHgPushOrPullCommand
+  implements PushCommand
+{
 
-  private static final Logger LOG = LoggerFactory.getLogger(HgPushCommand.class);
+  /** Field description */
+  private static final Logger logger =
+    LoggerFactory.getLogger(HgPushCommand.class);
 
-  public HgPushCommand(HgRepositoryHandler handler, HgCommandContext context) {
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   *  @param handler
+   * @param context
+   */
+  @Inject
+  public HgPushCommand(HgRepositoryHandler handler, HgCommandContext context)
+  {
     super(handler, context);
   }
 
+  //~--- methods --------------------------------------------------------------
+
   @Override
+  @SuppressWarnings("unchecked")
   public PushResponse push(PushCommandRequest request)
-    throws IOException {
+    throws IOException
+  {
     String url = getRemoteUrl(request);
 
-    LOG.debug("push changes from {} to {}", getRepository(), url);
+    logger.debug("push changes from {} to {}", getRepository(), url);
 
-    List<Changeset> result;
-    HgIniConfigurator iniConfigurator = new HgIniConfigurator(getContext());
-    try {
-      if (!Strings.isNullOrEmpty(request.getUsername()) && !Strings.isNullOrEmpty(request.getPassword())) {
-        iniConfigurator.addAuthenticationConfig(request, url);
-      }
+    List<Changeset> result = Collections.emptyList();
 
-      result = on(open()).execute(url);
-    } catch (ExecutionException ex) {
+    try
+    {
+      result = com.aragost.javahg.commands.PushCommand.on(open()).execute(url);
+    }
+    catch (ExecutionException ex)
+    {
       throw new InternalRepositoryException(getRepository(), "could not execute push command", ex);
-    } finally {
-      iniConfigurator.removeAuthenticationConfig();
     }
 
     return new PushResponse(result.size());

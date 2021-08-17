@@ -30,12 +30,15 @@ import com.aragost.javahg.commands.CommitCommand;
 import com.aragost.javahg.commands.ExecutionException;
 import com.aragost.javahg.commands.RemoveCommand;
 import com.aragost.javahg.commands.StatusCommand;
+import com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.NoChangesMadeException;
+import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.work.WorkingCopy;
 
+import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -48,8 +51,13 @@ public class HgModifyCommand extends AbstractWorkingCopyCommand implements Modif
 
   private static final Logger LOG = LoggerFactory.getLogger(HgModifyCommand.class);
 
+  @Inject
+  public HgModifyCommand(HgCommandContext context, HgRepositoryHandler handler) {
+    super(context, handler.getWorkingCopyFactory());
+  }
 
-  public HgModifyCommand(HgCommandContext context, HgWorkingCopyFactory workingCopyFactory) {
+  @VisibleForTesting
+  HgModifyCommand(HgCommandContext context, HgWorkingCopyFactory workingCopyFactory) {
     super(context, workingCopyFactory);
   }
 

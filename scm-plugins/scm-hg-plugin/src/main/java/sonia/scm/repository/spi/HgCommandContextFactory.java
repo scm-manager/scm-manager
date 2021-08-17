@@ -24,24 +24,25 @@
 
 package sonia.scm.repository.spi;
 
-import org.junit.Test;
-import sonia.scm.repository.Changeset;
-import sonia.scm.repository.HgTestUtil;
-import sonia.scm.repository.Person;
+import sonia.scm.repository.HgConfigResolver;
+import sonia.scm.repository.HgRepositoryFactory;
+import sonia.scm.repository.Repository;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import javax.inject.Inject;
 
-public class HgLazyChangesetResolverTest extends AbstractHgCommandTestBase {
+public class HgCommandContextFactory {
 
-  @Test
-  public void shouldResolveChangesets() {
-    HgLazyChangesetResolver changesetResolver = new HgLazyChangesetResolver(HgTestUtil.createFactory(handler, repositoryDirectory), cmdContext);
-    Iterable<Changeset> changesets = changesetResolver.call();
+  private final HgConfigResolver configResolver;
+  private final HgRepositoryFactory repositoryFactory;
 
-    Changeset firstChangeset = changesets.iterator().next();
-    assertThat(firstChangeset.getId()).isEqualTo("2baab8e80280ef05a9aa76c49c76feca2872afb7");
-    assertThat(firstChangeset.getDate()).isEqualTo(1339586381000L);
-    assertThat(firstChangeset.getAuthor()).isEqualTo(Person.toPerson("Zaphod Beeblebrox <zaphod.beeblebrox@hitchhiker.com>"));
-    assertThat(firstChangeset.getDescription()).isEqualTo("added new line for blame");
+  @Inject
+  public HgCommandContextFactory(HgConfigResolver configResolver, HgRepositoryFactory repositoryFactory) {
+    this.configResolver = configResolver;
+    this.repositoryFactory = repositoryFactory;
   }
+
+  public HgCommandContext create(Repository repository) {
+    return new HgCommandContext(configResolver, repositoryFactory, repository);
+  }
+
 }

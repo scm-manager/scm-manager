@@ -30,6 +30,7 @@ import sonia.scm.repository.HgRepositoryFactory;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.Repository;
 
+import javax.inject.Inject;
 import java.util.Iterator;
 import java.util.concurrent.Callable;
 
@@ -38,9 +39,10 @@ class HgLazyChangesetResolver implements Callable<Iterable<Changeset>> {
   private final HgRepositoryFactory factory;
   private final Repository repository;
 
-  HgLazyChangesetResolver(HgRepositoryFactory factory, Repository repository) {
+  @Inject
+  HgLazyChangesetResolver(HgRepositoryFactory factory, HgCommandContext context) {
     this.factory = factory;
-    this.repository = repository;
+    this.repository = context.getScmRepository();
   }
 
   @Override

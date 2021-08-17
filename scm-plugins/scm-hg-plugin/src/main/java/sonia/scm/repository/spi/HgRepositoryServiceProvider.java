@@ -24,13 +24,9 @@
 
 package sonia.scm.repository.spi;
 
-import com.google.common.io.Closeables;
-import sonia.scm.event.ScmEventBus;
+import com.google.inject.AbstractModule;
+import com.google.inject.Injector;
 import sonia.scm.repository.Feature;
-import sonia.scm.repository.HgConfigResolver;
-import sonia.scm.repository.HgRepositoryFactory;
-import sonia.scm.repository.HgRepositoryHandler;
-import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.CommandNotSupportedException;
 
@@ -68,28 +64,22 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider {
     Feature.MODIFICATIONS_BETWEEN_REVISIONS
   );
 
-  private final HgRepositoryHandler handler;
+  private final Injector commandInjector;
   private final HgCommandContext context;
-  private final HgLazyChangesetResolver lazyChangesetResolver;
-  private final HgRepositoryHookEventFactory eventFactory;
-  private final ScmEventBus eventBus;
 
-  HgRepositoryServiceProvider(HgRepositoryHandler handler,
-                              HgConfigResolver configResolver,
-                              HgRepositoryFactory factory,
-                              HgRepositoryHookEventFactory eventFactory,
-                              ScmEventBus eventBus,
-                              Repository repository) {
-    this.handler = handler;
-    this.eventBus = eventBus;
-    this.eventFactory = eventFactory;
-    this.context = new HgCommandContext(configResolver, factory, repository);
-    this.lazyChangesetResolver = new HgLazyChangesetResolver(factory, repository);
+  HgRepositoryServiceProvider(Injector injector, HgCommandContext context) {
+    this.commandInjector = injector.createChildInjector(new AbstractModule() {
+      @Override
+      protected void configure() {
+        bind(HgCommandContext.class).toInstance(context);
+      }
+    });
+    this.context = context;
   }
 
   @Override
   public void close() throws IOException {
-    Closeables.close(context, true);
+    context.close();
   }
 
   @Override
@@ -104,7 +94,7 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider {
 
   @Override
   public BranchCommand getBranchCommand() {
-    return new HgBranchCommand(context, handler.getWorkingCopyFactory());
+    return commandInjector.getInstance(HgBranchCommand.class);
   }
 
   @Override
@@ -124,7 +114,7 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider {
 
   @Override
   public IncomingCommand getIncomingCommand() {
-    return new HgIncomingCommand(context, handler);
+    return commandInjector.getInstance(HgIncomingCommand.class);
   }
 
   @Override
@@ -145,22 +135,22 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider {
 
   @Override
   public OutgoingCommand getOutgoingCommand() {
-    return new HgOutgoingCommand(context, handler);
+    return commandInjector.getInstance(HgOutgoingCommand.class);
   }
 
   @Override
   public PullCommand getPullCommand() {
-    return new HgPullCommand(handler, context, eventBus, lazyChangesetResolver, eventFactory);
+    return commandInjector.getInstance(HgPullCommand.class);
   }
 
   @Override
   public PushCommand getPushCommand() {
-    return new HgPushCommand(handler, context);
+    return commandInjector.getInstance(HgPushCommand.class);
   }
 
   @Override
   public ModifyCommand getModifyCommand() {
-    return new HgModifyCommand(context, handler.getWorkingCopyFactory());
+    return commandInjector.getInstance(HgModifyCommand.class);
   }
 
   @Override
@@ -180,7 +170,7 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider {
 
   @Override
   public TagCommand getTagCommand() {
-    return new HgTagCommand(context, handler.getWorkingCopyFactory());
+    return commandInjector.getInstance(HgTagCommand.class);
   }
 
   @Override
@@ -190,7 +180,7 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider {
 
   @Override
   public UnbundleCommand getUnbundleCommand() {
-    return new HgUnbundleCommand(context, lazyChangesetResolver, eventFactory);
+    return commandInjector.getInstance(HgUnbundleCommand.class);
   }
 
   @Override

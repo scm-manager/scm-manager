@@ -30,6 +30,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.repository.RepositoryHookEvent;
 import sonia.scm.repository.api.UnbundleResponse;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -44,6 +45,7 @@ public class HgUnbundleCommand implements UnbundleCommand {
   private final HgLazyChangesetResolver changesetResolver;
   private final HgRepositoryHookEventFactory eventFactory;
 
+  @Inject
   HgUnbundleCommand(HgCommandContext context,
                     HgLazyChangesetResolver changesetResolver,
                     HgRepositoryHookEventFactory eventFactory

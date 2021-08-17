@@ -25,13 +25,17 @@
 package sonia.scm.repository.spi;
 
 import com.aragost.javahg.Repository;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
 import org.apache.shiro.SecurityUtils;
+import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Tag;
 import sonia.scm.repository.api.TagCreateRequest;
 import sonia.scm.repository.api.TagDeleteRequest;
 import sonia.scm.repository.work.WorkingCopy;
 import sonia.scm.user.User;
+
+import javax.inject.Inject;
 
 import static sonia.scm.repository.spi.UserFormatter.getUserStringFor;
 
@@ -39,7 +43,13 @@ public class HgTagCommand extends AbstractWorkingCopyCommand implements TagComma
 
   public static final String DEFAULT_BRANCH_NAME = "default";
 
-  public HgTagCommand(HgCommandContext context, HgWorkingCopyFactory workingCopyFactory) {
+  @Inject
+  public HgTagCommand(HgCommandContext context, HgRepositoryHandler handler) {
+    this(context, handler.getWorkingCopyFactory());
+  }
+
+  @VisibleForTesting
+  HgTagCommand(HgCommandContext context, HgWorkingCopyFactory workingCopyFactory) {
     super(context, workingCopyFactory);
   }
 
