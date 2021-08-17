@@ -24,12 +24,10 @@
 
 package sonia.scm.net.ahc;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
 import com.google.common.collect.Multimap;
-import com.google.common.io.Closeables;
 import com.google.inject.Inject;
 import org.apache.shiro.codec.Base64;
 import org.slf4j.Logger;
@@ -49,13 +47,16 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.*;
+import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
+import java.net.ProtocolException;
+import java.net.Proxy;
+import java.net.SocketAddress;
+import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Set;
-
-//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Default implementation of the {@link AdvancedHttpClient}. The default
@@ -64,8 +65,7 @@ import java.util.Set;
  * @author Sebastian Sdorra
  * @since 1.46
  */
-public class DefaultAdvancedHttpClient extends AdvancedHttpClient
-{
+public class DefaultAdvancedHttpClient extends AdvancedHttpClient {
 
   /** proxy authorization header */
   @VisibleForTesting
@@ -88,10 +88,20 @@ public class DefaultAdvancedHttpClient extends AdvancedHttpClient
   /**
    * the logger for DefaultAdvancedHttpClient
    */
-  private static final Logger logger =
-    LoggerFactory.getLogger(DefaultAdvancedHttpClient.class);
+  private static final Logger LOG = LoggerFactory.getLogger(DefaultAdvancedHttpClient.class);
 
-  //~--- constructors ---------------------------------------------------------
+  /** scm-manager main configuration */
+  private final ScmConfiguration configuration;
+
+  /** set of content transformers */
+  private final Set<ContentTransformer> contentTransformers;
+
+  /** ssl context provider */
+  private final Provider<SSLContext> sslContextProvider;
+
+  /** tracer used for request tracing */
+  private final Tracer tracer;
+
 
   /**
    * Constructs a new {@link DefaultAdvancedHttpClient}.
@@ -103,15 +113,12 @@ public class DefaultAdvancedHttpClient extends AdvancedHttpClient
    */
   @Inject
   public DefaultAdvancedHttpClient(ScmConfiguration configuration,
-    Tracer tracer, Set<ContentTransformer> contentTransformers, Provider<SSLContext> sslContextProvider)
-  {
+    Tracer tracer, Set<ContentTransformer> contentTransformers, Provider<SSLContext> sslContextProvider) {
     this.configuration = configuration;
     this.tracer = tracer;
     this.contentTransformers = contentTransformers;
     this.sslContextProvider = sslContextProvider;
   }
-
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Creates a new {@link HttpURLConnection} from the given {@link URL}. The
@@ -125,8 +132,7 @@ public class DefaultAdvancedHttpClient extends AdvancedHttpClient
    * @throws IOException
    */
   @VisibleForTesting
-  protected HttpURLConnection createConnection(URL url) throws IOException
-  {
+  protected HttpURLConnection createConnection(URL url) throws IOException {
     return (HttpURLConnection) url.openConnection();
   }
 
@@ -143,37 +149,26 @@ public class DefaultAdvancedHttpClient extends AdvancedHttpClient
    * @throws IOException
    */
   @VisibleForTesting
-  protected HttpURLConnection createProxyConnecton(URL url,
-    SocketAddress address)
-    throws IOException
-  {
-    return (HttpURLConnection) url.openConnection(new Proxy(Proxy.Type.HTTP,
-      address));
+  protected HttpURLConnection createProxyConnecton(URL url, SocketAddress address) throws IOException {
+    return (HttpURLConnection) url.openConnection(new Proxy(Proxy.Type.HTTP, address));
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
-  protected ContentTransformer createTransformer(Class<?> type, String contentType)
-  {
+  protected ContentTransformer createTransformer(Class<?> type, String contentType) {
     ContentTransformer responsible = null;
 
-    for (ContentTransformer transformer : contentTransformers)
-    {
-      if (transformer.isResponsible(type, contentType))
-      {
+    for (ContentTransformer transformer : contentTransformers) {
+      if (transformer.isResponsible(type, contentType)) {
         responsible = transformer;
 
         break;
       }
     }
 
-    if (responsible == null)
-    {
+    if (responsible == null) {
       throw new ContentTransformerNotFoundException(
-        "could not find content transformer for content type ".concat(
-          contentType));
+        "could not find content transformer for content type ".concat(contentType)
+      );
     }
 
     return responsible;
@@ -193,7 +188,7 @@ public class DefaultAdvancedHttpClient extends AdvancedHttpClient
   protected AdvancedHttpResponse request(BaseHttpRequest<?> request) throws IOException {
     String spanKind = request.getSpanKind();
     if (Strings.isNullOrEmpty(spanKind)) {
-      logger.debug("execute request {} without tracing", request.getUrl());
+      LOG.debug("execute request {} without tracing", request.getUrl());
       return doRequest(request);
     }
     return doRequestWithTracing(request);
@@ -263,117 +258,79 @@ public class DefaultAdvancedHttpClient extends AdvancedHttpClient
       connection.getResponseCode(), connection.getResponseMessage());
   }
 
-  private void appendProxyAuthentication(HttpURLConnection connection)
-  {
+  private void appendProxyAuthentication(HttpURLConnection connection) {
     String username = configuration.getProxyUser();
     String password = configuration.getProxyPassword();
 
-    if (!Strings.isNullOrEmpty(username) ||!Strings.isNullOrEmpty(password))
-    {
-      logger.debug("append proxy authentication header for user {}", username);
+    if (!Strings.isNullOrEmpty(username) ||!Strings.isNullOrEmpty(password)) {
+      LOG.debug("append proxy authentication header for user {}", username);
 
       String auth = username.concat(CREDENTIAL_SEPARATOR).concat(password);
 
       auth = Base64.encodeToString(auth.getBytes());
-      connection.addRequestProperty(HEADER_PROXY_AUTHORIZATION,
-        PREFIX_BASIC_AUTHENTICATION.concat(auth));
+      connection.addRequestProperty(HEADER_PROXY_AUTHORIZATION, PREFIX_BASIC_AUTHENTICATION.concat(auth));
     }
   }
 
-  private void applyBaseSettings(BaseHttpRequest<?> request,
-    HttpURLConnection connection)
-    throws ProtocolException
-  {
+  private void applyBaseSettings(BaseHttpRequest<?> request, HttpURLConnection connection) throws ProtocolException {
     connection.setRequestMethod(request.getMethod());
     connection.setReadTimeout(TIMEOUT_RAED);
     connection.setConnectTimeout(TIMEOUT_CONNECTION);
   }
 
-  private void applyContent(HttpURLConnection connection, Content content)
-    throws IOException
-  {
+  private void applyContent(HttpURLConnection connection, Content content) throws IOException {
     connection.setDoOutput(true);
-
-    OutputStream output = null;
-
-    try
-    {
-      output = connection.getOutputStream();
+    try (OutputStream output = connection.getOutputStream()) {
       content.process(output);
-    }
-    finally
-    {
-      Closeables.close(output, true);
     }
   }
 
-  private void applyHeaders(BaseHttpRequest<?> request,
-    HttpURLConnection connection)
-  {
+  private void applyHeaders(BaseHttpRequest<?> request, HttpURLConnection connection) {
     Multimap<String, String> headers = request.getHeaders();
-
-    for (String key : headers.keySet())
-    {
-      for (String value : headers.get(key))
-      {
+    for (String key : headers.keySet()) {
+      for (String value : headers.get(key)) {
         connection.addRequestProperty(key, value);
       }
     }
   }
 
-  private void applySSLSettings(BaseHttpRequest<?> request,
-    HttpsURLConnection connection)
-  {
-    if (request.isDisableCertificateValidation())
-    {
-      logger.trace("disable certificate validation");
+  private void applySSLSettings(BaseHttpRequest<?> request, HttpsURLConnection connection) {
+    if (request.isDisableCertificateValidation()){
+      LOG.trace("disable certificate validation");
 
-      try
-      {
-        TrustManager[] trustAllCerts = new TrustManager[] {
-                                         new TrustAllTrustManager() };
+      try {
+        TrustManager[] trustAllCerts = new TrustManager[] {new TrustAllTrustManager() };
         SSLContext sc = SSLContext.getInstance("TLS");
 
         sc.init(null, trustAllCerts, new java.security.SecureRandom());
         connection.setSSLSocketFactory(sc.getSocketFactory());
+      } catch (KeyManagementException | NoSuchAlgorithmException ex) {
+        LOG.error("could not disable certificate validation", ex);
       }
-      catch (KeyManagementException | NoSuchAlgorithmException ex)
-      {
-        logger.error("could not disable certificate validation", ex);
-      }
-    }
-    else
-    {
-      logger.trace("set ssl socket factory from provider");
+    } else {
+      LOG.trace("set ssl socket factory from provider");
       connection.setSSLSocketFactory(sslContextProvider.get().getSocketFactory());
     }
 
-    if (request.isDisableHostnameValidation())
-    {
-      logger.trace("disable hostname validation");
+    if (request.isDisableHostnameValidation()) {
+      LOG.trace("disable hostname validation");
       connection.setHostnameVerifier(new TrustAllHostnameVerifier());
     }
   }
 
-  private HttpURLConnection openConnection(BaseHttpRequest<?> request, URL url)
-    throws IOException
-  {
+  private HttpURLConnection openConnection(BaseHttpRequest<?> request, URL url) throws IOException {
     HttpURLConnection connection;
 
-    if (isProxyEnabled(request))
-    {
+    if (isProxyEnabled(request)) {
       connection = openProxyConnection(url);
       appendProxyAuthentication(connection);
-    }
-    else
-    {
-      if (request.isIgnoreProxySettings())
-      {
-        logger.trace("ignore proxy settings");
+    } else {
+      if (request.isIgnoreProxySettings()) {
+        LOG.trace("ignore proxy settings");
       }
 
-      if (logger.isDebugEnabled()) {
-        logger.debug("fetch {}", url.toExternalForm());
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("fetch {}", url.toExternalForm());
       }
 
       connection = createConnection(url);
@@ -382,41 +339,20 @@ public class DefaultAdvancedHttpClient extends AdvancedHttpClient
     return connection;
   }
 
-  private HttpURLConnection openProxyConnection(URL url)
-    throws IOException
-  {
-    if (logger.isDebugEnabled())
-    {
-      logger.debug("fetch '{}' using proxy {}:{}", url.toExternalForm(),
-        configuration.getProxyServer(), configuration.getProxyPort());
+  private HttpURLConnection openProxyConnection(URL url) throws IOException {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug(
+        "fetch '{}' using proxy {}:{}",
+        url.toExternalForm(), configuration.getProxyServer(), configuration.getProxyPort()
+      );
     }
 
-    SocketAddress address =
-      new InetSocketAddress(configuration.getProxyServer(),
-        configuration.getProxyPort());
-
+    SocketAddress address = new InetSocketAddress(configuration.getProxyServer(), configuration.getProxyPort());
     return createProxyConnecton(url, address);
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  private boolean isProxyEnabled(BaseHttpRequest<?> request)
-  {
-    return !request.isIgnoreProxySettings()
-      && Proxies.isEnabled(configuration, request.getUrl());
+  private boolean isProxyEnabled(BaseHttpRequest<?> request) {
+    return !request.isIgnoreProxySettings() && Proxies.isEnabled(configuration, request.getUrl());
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** scm-manager main configuration */
-  private final ScmConfiguration configuration;
-
-  /** set of content transformers */
-  private final Set<ContentTransformer> contentTransformers;
-
-  /** ssl context provider */
-  private final Provider<SSLContext> sslContextProvider;
-
-  /** tracer used for request tracing */
-  private final Tracer tracer;
 }
