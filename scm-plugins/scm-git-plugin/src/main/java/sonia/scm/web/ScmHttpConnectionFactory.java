@@ -31,7 +31,6 @@ import sonia.scm.net.HttpConnectionOptions;
 import sonia.scm.net.HttpURLConnectionFactory;
 
 import javax.inject.Inject;
-import javax.net.ssl.KeyManager;
 import java.io.IOException;
 import java.net.Proxy;
 import java.net.URL;
@@ -46,9 +45,9 @@ public class ScmHttpConnectionFactory implements HttpConnectionFactory {
     this(connectionFactory, null);
   }
 
-  public ScmHttpConnectionFactory(HttpURLConnectionFactory connectionFactory, KeyManager[] keyManagers) {
+  public ScmHttpConnectionFactory(HttpURLConnectionFactory connectionFactory, HttpConnectionOptions options) {
     this.connectionFactory = connectionFactory;
-    this.options = new HttpConnectionOptions().withKeyManagers(keyManagers);
+    this.options = options;
   }
 
   @Override

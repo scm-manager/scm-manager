@@ -32,7 +32,9 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.spi.MirrorCommand;
 import sonia.scm.repository.spi.MirrorCommandRequest;
 import sonia.scm.security.PublicKey;
+import sonia.scm.net.ProxyConfiguration;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -56,6 +58,9 @@ public final class MirrorCommandBuilder {
   private Collection<Credential> credentials = emptyList();
   private List<PublicKey> publicKeys = emptyList();
   private MirrorFilter filter = new MirrorFilter() {};
+
+  @Nullable
+  private ProxyConfiguration proxyConfiguration;
 
   MirrorCommandBuilder(MirrorCommand mirrorCommand, Repository targetRepository) {
     this.mirrorCommand = mirrorCommand;
@@ -94,6 +99,18 @@ public final class MirrorCommandBuilder {
     return this;
   }
 
+  /**
+   * Set the proxy configuration which should be used to access the source repository of the mirror.
+   * If not proxy configuration is set the global configuration should be used instead.
+   * @param proxyConfiguration proxy configuration to access the source repository
+   * @return {@code this}
+   * @since 2.23.0
+   */
+  public MirrorCommandBuilder setProxyConfiguration(ProxyConfiguration proxyConfiguration) {
+    this.proxyConfiguration = proxyConfiguration;
+    return this;
+  }
+
   public MirrorCommandResult initialCall() {
     LOG.info("Creating mirror for {} in repository {}", sourceUrl, targetRepository);
     MirrorCommandRequest mirrorCommandRequest = createRequest();
@@ -112,6 +129,7 @@ public final class MirrorCommandBuilder {
     mirrorCommandRequest.setCredentials(credentials);
     mirrorCommandRequest.setFilter(filter);
     mirrorCommandRequest.setPublicKeys(publicKeys);
+    mirrorCommandRequest.setProxyConfiguration(proxyConfiguration);
     Preconditions.checkArgument(mirrorCommandRequest.isValid(), "source url has to be specified");
     return mirrorCommandRequest;
   }

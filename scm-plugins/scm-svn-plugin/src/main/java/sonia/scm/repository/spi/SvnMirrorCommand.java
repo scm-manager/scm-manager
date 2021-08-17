@@ -39,6 +39,7 @@ import org.tmatesoft.svn.core.auth.SVNSSLAuthentication;
 import org.tmatesoft.svn.core.wc.SVNWCUtil;
 import org.tmatesoft.svn.core.wc.admin.SVNAdminClient;
 import sonia.scm.net.GlobalProxyConfiguration;
+import sonia.scm.net.ProxyConfiguration;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.api.MirrorCommandResult;
 import sonia.scm.repository.api.Pkcs12ClientCertificateCredential;
@@ -145,11 +146,9 @@ public class SvnMirrorCommand extends AbstractSvnCommand implements MirrorComman
         return trustManager;
       }
     };
-
-    if (globalProxyConfiguration.isEnabled() && !globalProxyConfiguration.getExcludes().contains(url.getHost())) {
-      applyProxyConfiguration(authManager);
-    }
-
+    checkAndApplyProxyConfiguration(
+      authManager, mirrorCommandRequest.getProxyConfiguration().orElse(globalProxyConfiguration), url
+    );
     return authManager;
   }
 
@@ -165,15 +164,21 @@ public class SvnMirrorCommand extends AbstractSvnCommand implements MirrorComman
     return authentications.toArray(new SVNAuthentication[0]);
   }
 
-  private void applyProxyConfiguration(BasicAuthenticationManager authManager) {
+  private void checkAndApplyProxyConfiguration(BasicAuthenticationManager authManager, ProxyConfiguration proxyConfiguration, SVNURL url) {
+    if (proxyConfiguration.isEnabled() && !proxyConfiguration.getExcludes().contains(url.getHost())) {
+      applyProxyConfiguration(authManager, proxyConfiguration);
+    }
+  }
+
+  private void applyProxyConfiguration(BasicAuthenticationManager authManager, ProxyConfiguration proxyConfiguration) {
     char[] password = null;
-    if (!Strings.isNullOrEmpty(globalProxyConfiguration.getPassword())){
-      password = globalProxyConfiguration.getPassword().toCharArray();
+    if (!Strings.isNullOrEmpty(proxyConfiguration.getPassword())){
+      password = proxyConfiguration.getPassword().toCharArray();
     }
     authManager.setProxy(
-      globalProxyConfiguration.getHost(),
-      globalProxyConfiguration.getPort(),
-      Strings.emptyToNull(globalProxyConfiguration.getUsername()),
+      proxyConfiguration.getHost(),
+      proxyConfiguration.getPort(),
+      Strings.emptyToNull(proxyConfiguration.getUsername()),
       password
     );
   }

@@ -40,6 +40,7 @@ import org.tmatesoft.svn.core.wc.SVNWCUtil;
 import org.tmatesoft.svn.core.wc.admin.SVNAdminClient;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.net.GlobalProxyConfiguration;
+import sonia.scm.net.ProxyConfiguration;
 import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.repository.api.MirrorCommandResult;
 import sonia.scm.repository.api.SimpleUsernamePasswordCredential;
@@ -52,6 +53,8 @@ import java.util.function.Consumer;
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static sonia.scm.repository.api.MirrorCommandResult.ResultType.OK;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -180,6 +183,26 @@ public class SvnMirrorCommandTest extends AbstractSvnCommandTestBase {
     BasicAuthenticationManager authenticationManager = createAuthenticationManager();
 
     assertThat(authenticationManager.getProxyHost()).isNull();
+  }
+
+  @Test
+  public void shouldApplyLocalProxySettings() throws SVNException {
+    MirrorCommandRequest request = new MirrorCommandRequest();
+    request.setProxyConfiguration(createProxyConfiguration());
+
+    BasicAuthenticationManager authenticationManager = createAuthenticationManager(request);
+    assertThat(authenticationManager.getProxyHost()).isEqualTo("proxy.hitchhiker.com");
+    assertThat(authenticationManager.getProxyPort()).isEqualTo(3128);
+    assertThat(authenticationManager.getProxyUserName()).isNull();
+    assertThat(authenticationManager.getProxyPasswordValue()).isNull();
+  }
+
+  private ProxyConfiguration createProxyConfiguration() {
+    ProxyConfiguration configuration = mock(ProxyConfiguration.class);
+    when(configuration.isEnabled()).thenReturn(true);
+    when(configuration.getHost()).thenReturn("proxy.hitchhiker.com");
+    when(configuration.getPort()).thenReturn(3128);
+    return configuration;
   }
 
   private BasicAuthenticationManager createAuthenticationManager() throws SVNException {

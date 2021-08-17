@@ -27,6 +27,7 @@ package sonia.scm.repository.spi;
 import org.eclipse.jgit.transport.http.HttpConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.net.HttpConnectionOptions;
 import sonia.scm.net.HttpURLConnectionFactory;
 import sonia.scm.repository.api.Pkcs12ClientCertificateCredential;
 import sonia.scm.web.ScmHttpConnectionFactory;
@@ -51,8 +52,15 @@ class MirrorHttpConnectionProvider {
     this.httpURLConnectionFactory = httpURLConnectionFactory;
   }
 
-  public HttpConnectionFactory createHttpConnectionFactory(Pkcs12ClientCertificateCredential credential, List<String> log) {
-    return new ScmHttpConnectionFactory(httpURLConnectionFactory, createKeyManagers(credential, log));
+  public HttpConnectionFactory createHttpConnectionFactory(MirrorCommandRequest mirrorCommandRequest, List<String> log) {
+    HttpConnectionOptions options = new HttpConnectionOptions();
+
+    mirrorCommandRequest.getCredential(Pkcs12ClientCertificateCredential.class)
+      .ifPresent(c -> options.withKeyManagers(createKeyManagers(c, log)));
+    mirrorCommandRequest.getProxyConfiguration()
+      .ifPresent(options::withProxyConfiguration);
+
+    return new ScmHttpConnectionFactory(httpURLConnectionFactory, options);
   }
 
   private KeyManager[] createKeyManagers(Pkcs12ClientCertificateCredential credential, List<String> log) {

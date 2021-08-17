@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.spi;
 
+import com.google.inject.util.Providers;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -37,6 +38,9 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
+import sonia.scm.config.ScmConfiguration;
+import sonia.scm.net.GlobalProxyConfiguration;
+import sonia.scm.net.HttpURLConnectionFactory;
 import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.GitConfig;
 import sonia.scm.repository.api.MirrorCommandResult;
@@ -47,6 +51,7 @@ import sonia.scm.repository.work.WorkdirProvider;
 import sonia.scm.security.GPG;
 import sonia.scm.store.InMemoryConfigurationStoreFactory;
 
+import javax.net.ssl.TrustManager;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -70,13 +75,14 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
   public static final Consumer<MirrorCommandRequest> ACCEPT_ALL = r -> {
   };
   public static final Consumer<MirrorCommandRequest> REJECT_ALL = r -> r.setFilter(new DenyAllMirrorFilter());
-  private final MirrorHttpConnectionProvider mirrorHttpConnectionProvider = mock(MirrorHttpConnectionProvider.class);
   private final GPG gpg = mock(GPG.class);
   private final GitChangesetConverterFactory gitChangesetConverterFactory = new GitChangesetConverterFactory(gpg);
   private final GitTagConverter gitTagConverter = new GitTagConverter(gpg);
 
   private File clone;
   private GitMirrorCommand command;
+
+
 
   @Before
   public void bendContextToNewRepository() throws IOException, GitAPIException {
@@ -87,6 +93,14 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     SimpleGitWorkingCopyFactory workingCopyFactory =
       new SimpleGitWorkingCopyFactory(
         new NoneCachingWorkingCopyPool(new WorkdirProvider(repositoryLocationResolver)), new SimpleMeterRegistry());
+
+    MirrorHttpConnectionProvider mirrorHttpConnectionProvider = new MirrorHttpConnectionProvider(
+      new HttpURLConnectionFactory(
+        new GlobalProxyConfiguration(new ScmConfiguration()),
+        Providers.of(mock(TrustManager.class))
+      )
+    );
+
     command = new GitMirrorCommand(
       emptyContext,
       mirrorHttpConnectionProvider,
