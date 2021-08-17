@@ -26,6 +26,7 @@ package sonia.scm.repository.spi;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Closeables;
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.Feature;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.SvnRepositoryHandler;
@@ -65,16 +66,19 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider {
   private final SvnWorkingCopyFactory workingCopyFactory;
   private final HookContextFactory hookContextFactory;
   private final TrustManager trustManager;
+  private final ScmConfiguration scmConfiguration;
 
   SvnRepositoryServiceProvider(SvnRepositoryHandler handler,
                                Repository repository,
                                SvnWorkingCopyFactory workingCopyFactory,
                                HookContextFactory hookContextFactory,
-                               TrustManager trustManager) {
+                               TrustManager trustManager,
+                               ScmConfiguration scmConfiguration) {
     this.context = new SvnContext(repository, handler.getDirectory(repository.getId()));
     this.workingCopyFactory = workingCopyFactory;
     this.hookContextFactory = hookContextFactory;
     this.trustManager = trustManager;
+    this.scmConfiguration = scmConfiguration;
   }
 
   @Override
@@ -149,6 +153,6 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider {
 
   @Override
   public MirrorCommand getMirrorCommand() {
-    return new SvnMirrorCommand(context, trustManager);
+    return new SvnMirrorCommand(context, trustManager, scmConfiguration);
   }
 }
