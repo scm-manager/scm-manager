@@ -187,6 +187,19 @@ class HttpURLConnectionFactoryTest {
     }
 
     @Test
+    void shouldNotCreateProxyConnectionWithIgnoreOption() throws IOException {
+      configuration.setEnableProxy(true);
+      configuration.setProxyServer("proxy.hitchhiker.com");
+      configuration.setProxyPort(3128);
+
+      connectionFactory.create(
+        new URL("https://hitchhiker.org"), new HttpConnectionOptions().withIgnoreProxySettings()
+      );
+
+      assertThat(usedProxy).isNull();
+    }
+
+    @Test
     void shouldCreateProxyConnectionWithAuthentication() throws IOException {
       configuration.setEnableProxy(true);
       configuration.setProxyServer("proxy.hitchhiker.org");

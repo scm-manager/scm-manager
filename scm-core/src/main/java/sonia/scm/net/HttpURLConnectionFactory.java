@@ -122,7 +122,9 @@ public final class HttpURLConnectionFactory {
     }
 
     private boolean isProxyEnabled(ProxyConfiguration proxyConfiguration, URL url) {
-      return proxyConfiguration.isEnabled() && !isHostExcluded(proxyConfiguration, url);
+      return !options.isIgnoreProxySettings()
+        && proxyConfiguration.isEnabled()
+        && !isHostExcluded(proxyConfiguration, url);
     }
 
     private boolean isHostExcluded(ProxyConfiguration proxyConfiguration, URL url) {

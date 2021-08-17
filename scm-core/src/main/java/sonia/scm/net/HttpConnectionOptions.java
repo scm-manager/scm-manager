@@ -64,6 +64,7 @@ public final class HttpConnectionOptions {
   private boolean disableHostnameValidation = false;
   private int connectionTimeout = DEFAULT_CONNECTION_TIMEOUT;
   private int readTimeout = DEFAULT_READ_TIMEOUT;
+  private boolean ignoreProxySettings = false;
 
   /**
    * Returns optional local proxy configuration.
@@ -150,6 +151,15 @@ public final class HttpConnectionOptions {
     if (keyManagers != null) {
       this.keyManagers = Arrays.copyOf(keyManagers, keyManagers.length);
     }
+    return this;
+  }
+
+  /**
+   * Ignore proxy settings completely regardless if a local proxy configuration or a global configuration is configured.
+   * @return {@code this}
+   */
+  public HttpConnectionOptions withIgnoreProxySettings() {
+    this.ignoreProxySettings = true;
     return this;
   }
 }
