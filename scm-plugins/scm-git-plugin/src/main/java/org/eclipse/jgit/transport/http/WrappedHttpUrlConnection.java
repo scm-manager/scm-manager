@@ -22,35 +22,12 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository;
+package org.eclipse.jgit.transport.http;
 
-import org.eclipse.jgit.transport.HttpTransport;
-import sonia.scm.plugin.Extension;
-import sonia.scm.web.ScmHttpConnectionFactory;
+import java.net.HttpURLConnection;
 
-import javax.inject.Inject;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-
-@Extension
-public class GitHttpTransportRegistration implements ServletContextListener {
-
-  private final ScmHttpConnectionFactory connectionFactory;
-
-  @Inject
-  public GitHttpTransportRegistration(ScmHttpConnectionFactory connectionFactory) {
-    this.connectionFactory = connectionFactory;
+public class WrappedHttpUrlConnection extends JDKHttpConnection {
+  public WrappedHttpUrlConnection(HttpURLConnection urlConnection) {
+    super(urlConnection);
   }
-
-  @Override
-  public void contextInitialized(ServletContextEvent servletContextEvent) {
-    // Override default http connection factory to inject our own ssl context
-    HttpTransport.setConnectionFactory(connectionFactory);
-  }
-
-  @Override
-  public void contextDestroyed(ServletContextEvent servletContextEvent) {
-    // Nothing to destroy
-  }
-
 }

@@ -22,35 +22,37 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository;
+package sonia.scm.web;
 
-import org.eclipse.jgit.transport.HttpTransport;
-import sonia.scm.plugin.Extension;
-import sonia.scm.web.ScmHttpConnectionFactory;
+import org.eclipse.jgit.transport.http.HttpConnection;
+import org.eclipse.jgit.transport.http.JDKHttpConnection;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.net.HttpURLConnectionFactory;
 
-import javax.inject.Inject;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
+import java.io.IOException;
+import java.net.URL;
 
-@Extension
-public class GitHttpTransportRegistration implements ServletContextListener {
+import static org.assertj.core.api.Assertions.assertThat;
 
-  private final ScmHttpConnectionFactory connectionFactory;
+@ExtendWith(MockitoExtension.class)
+class ScmHttpConnectionFactoryTest {
 
-  @Inject
-  public GitHttpTransportRegistration(ScmHttpConnectionFactory connectionFactory) {
-    this.connectionFactory = connectionFactory;
+  @Mock
+  private HttpURLConnectionFactory internalConnectionFactory;
+
+  @InjectMocks
+  private ScmHttpConnectionFactory connectionFactory;
+
+  @Test
+  void shouldCreateConnection() throws IOException {
+    HttpConnection httpConnection = connectionFactory.create(new URL("https://scm.hitchhiker.org"), null);
+
+    assertThat(httpConnection)
+      .isNotNull()
+      .isInstanceOf(JDKHttpConnection.class);
   }
-
-  @Override
-  public void contextInitialized(ServletContextEvent servletContextEvent) {
-    // Override default http connection factory to inject our own ssl context
-    HttpTransport.setConnectionFactory(connectionFactory);
-  }
-
-  @Override
-  public void contextDestroyed(ServletContextEvent servletContextEvent) {
-    // Nothing to destroy
-  }
-
 }

@@ -24,17 +24,16 @@
 
 package sonia.scm.repository.spi;
 
-import org.eclipse.jgit.transport.http.HttpConnectionFactory2;
+import org.eclipse.jgit.transport.http.HttpConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.net.HttpURLConnectionFactory;
 import sonia.scm.repository.api.Pkcs12ClientCertificateCredential;
 import sonia.scm.web.ScmHttpConnectionFactory;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.TrustManager;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -45,15 +44,15 @@ class MirrorHttpConnectionProvider {
 
   private static final Logger LOG = LoggerFactory.getLogger(MirrorHttpConnectionProvider.class);
 
-  private final Provider<TrustManager> trustManagerProvider;
+  private final HttpURLConnectionFactory httpURLConnectionFactory;
 
   @Inject
-  public MirrorHttpConnectionProvider(Provider<TrustManager> trustManagerProvider) {
-    this.trustManagerProvider = trustManagerProvider;
+  public MirrorHttpConnectionProvider(HttpURLConnectionFactory httpURLConnectionFactory) {
+    this.httpURLConnectionFactory = httpURLConnectionFactory;
   }
 
-  public HttpConnectionFactory2 createHttpConnectionFactory(Pkcs12ClientCertificateCredential credential, List<String> log) {
-    return new ScmHttpConnectionFactory(trustManagerProvider, createKeyManagers(credential, log));
+  public HttpConnectionFactory createHttpConnectionFactory(Pkcs12ClientCertificateCredential credential, List<String> log) {
+    return new ScmHttpConnectionFactory(httpURLConnectionFactory, createKeyManagers(credential, log));
   }
 
   private KeyManager[] createKeyManagers(Pkcs12ClientCertificateCredential credential, List<String> log) {

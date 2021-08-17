@@ -25,32 +25,39 @@
 package sonia.scm.repository;
 
 import org.eclipse.jgit.transport.HttpTransport;
-import sonia.scm.plugin.Extension;
+import org.eclipse.jgit.transport.http.HttpConnectionFactory;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.web.ScmHttpConnectionFactory;
 
-import javax.inject.Inject;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
+import static org.assertj.core.api.Assertions.assertThat;
 
-@Extension
-public class GitHttpTransportRegistration implements ServletContextListener {
+@ExtendWith(MockitoExtension.class)
+class GitHttpTransportRegistrationTest {
 
-  private final ScmHttpConnectionFactory connectionFactory;
+  @Mock
+  private ScmHttpConnectionFactory scmHttpConnectionFactory;
 
-  @Inject
-  public GitHttpTransportRegistration(ScmHttpConnectionFactory connectionFactory) {
-    this.connectionFactory = connectionFactory;
+  private HttpConnectionFactory capturedFactory;
+
+  @BeforeEach
+  void captureConnectionFactory() {
+    this.capturedFactory = HttpTransport.getConnectionFactory();
   }
 
-  @Override
-  public void contextInitialized(ServletContextEvent servletContextEvent) {
-    // Override default http connection factory to inject our own ssl context
-    HttpTransport.setConnectionFactory(connectionFactory);
+  @AfterEach
+  void restoreConnectionFactory() {
+    HttpTransport.setConnectionFactory(capturedFactory);
   }
 
-  @Override
-  public void contextDestroyed(ServletContextEvent servletContextEvent) {
-    // Nothing to destroy
+  @Test
+  void shouldSetHttpConnectionFactory() {
+    new GitHttpTransportRegistration(scmHttpConnectionFactory).contextInitialized(null);
+    assertThat(HttpTransport.getConnectionFactory()).isSameAs(scmHttpConnectionFactory);
   }
 
 }

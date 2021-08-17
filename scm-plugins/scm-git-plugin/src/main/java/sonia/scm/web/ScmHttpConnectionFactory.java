@@ -24,75 +24,41 @@
 
 package sonia.scm.web;
 
-import org.eclipse.jgit.internal.JGitText;
 import org.eclipse.jgit.transport.http.HttpConnection;
-import org.eclipse.jgit.transport.http.JDKHttpConnection;
-import org.eclipse.jgit.transport.http.JDKHttpConnectionFactory;
-import org.eclipse.jgit.transport.http.NoCheckX509TrustManager;
+import org.eclipse.jgit.transport.http.HttpConnectionFactory;
+import org.eclipse.jgit.transport.http.WrappedHttpUrlConnection;
+import sonia.scm.net.HttpConnectionOptions;
+import sonia.scm.net.HttpURLConnectionFactory;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.net.ssl.KeyManager;
-import javax.net.ssl.TrustManager;
-import java.security.GeneralSecurityException;
-import java.text.MessageFormat;
+import java.io.IOException;
+import java.net.Proxy;
+import java.net.URL;
 
-public class ScmHttpConnectionFactory extends JDKHttpConnectionFactory {
+public class ScmHttpConnectionFactory implements HttpConnectionFactory {
 
-  private final Provider<TrustManager> trustManagerProvider;
-  private final KeyManager[] keyManagers;
+  private final HttpURLConnectionFactory connectionFactory;
+  private final HttpConnectionOptions options;
 
   @Inject
-  public ScmHttpConnectionFactory(Provider<TrustManager> trustManagerProvider) {
-    this(trustManagerProvider, null);
+  public ScmHttpConnectionFactory(HttpURLConnectionFactory connectionFactory) {
+    this(connectionFactory, null);
   }
 
-  public ScmHttpConnectionFactory(Provider<TrustManager> trustManagerProvider, KeyManager[] keyManagers) {
-    this.trustManagerProvider = trustManagerProvider;
-    this.keyManagers = keyManagers;
+  public ScmHttpConnectionFactory(HttpURLConnectionFactory connectionFactory, KeyManager[] keyManagers) {
+    this.connectionFactory = connectionFactory;
+    this.options = new HttpConnectionOptions().withKeyManagers(keyManagers);
   }
 
   @Override
-  public GitSession newSession() {
-    return new ScmConnectionSession(trustManagerProvider.get(), keyManagers);
+  public HttpConnection create(URL url) throws IOException {
+    return new WrappedHttpUrlConnection(connectionFactory.create(url, options));
   }
 
-  private static class ScmConnectionSession implements GitSession {
-
-    private final TrustManager trustManager;
-    private final KeyManager[] keyManagers;
-
-    private ScmConnectionSession(TrustManager trustManager, KeyManager[] keyManagers) {
-      this.trustManager = trustManager;
-      this.keyManagers = keyManagers;
-    }
-
-    @Override
-    @SuppressWarnings("java:S5527")
-    public JDKHttpConnection configure(HttpConnection connection,
-                                       boolean sslVerify) throws GeneralSecurityException {
-      if (!(connection instanceof JDKHttpConnection)) {
-        throw new IllegalArgumentException(MessageFormat.format(
-          JGitText.get().httpWrongConnectionType,
-          JDKHttpConnection.class.getName(),
-          connection.getClass().getName()));
-      }
-      JDKHttpConnection conn = (JDKHttpConnection) connection;
-      String scheme = conn.getURL().getProtocol();
-      if ("https".equals(scheme) && sslVerify) { //$NON-NLS-1$
-        // sslVerify == true: use the JDK defaults
-        conn.configure(keyManagers, new TrustManager[]{trustManager}, null);
-      } else if ("https".equals(scheme)) {
-        conn.configure(keyManagers, new TrustManager[]{new NoCheckX509TrustManager()}, null);
-        conn.setHostnameVerifier((name, value) -> true);
-      }
-
-      return conn;
-    }
-
-    @Override
-    public void close() {
-      // Nothing
-    }
+  @Override
+  public HttpConnection create(URL url, Proxy proxy) throws IOException {
+    // we ignore proxy configuration of jgit, because we have our own
+    return create(url);
   }
 }
