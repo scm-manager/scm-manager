@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.net.ahc;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -61,7 +61,7 @@ public class DefaultAdvancedHttpResponse extends AdvancedHttpResponse
    * @param statusText response status text
    */
   DefaultAdvancedHttpResponse(DefaultAdvancedHttpClient client,
-    HttpURLConnection connection, int status, String statusText)
+HttpURLConnection connection, int status, String statusText)
   {
     this.client = client;
     this.connection = connection;

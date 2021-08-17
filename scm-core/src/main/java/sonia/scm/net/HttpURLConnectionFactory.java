@@ -77,7 +77,7 @@ public final class HttpURLConnectionFactory {
   }
 
   @VisibleForTesting
-  HttpURLConnectionFactory(GlobalProxyConfiguration globalProxyConfiguration, Provider<TrustManager> trustManagerProvider, Connector connector, SSLContextFactory sslContextFactory) {
+  public HttpURLConnectionFactory(GlobalProxyConfiguration globalProxyConfiguration, Provider<TrustManager> trustManagerProvider, Connector connector, SSLContextFactory sslContextFactory) {
     this.globalProxyConfiguration = globalProxyConfiguration;
     this.trustManagerProvider = trustManagerProvider;
     this.connector = connector;
@@ -220,7 +220,7 @@ public final class HttpURLConnectionFactory {
 
   @VisibleForTesting
   @FunctionalInterface
-  interface Connector {
+  public interface Connector {
 
     URLConnection connect(URL url, @Nullable Proxy proxy) throws IOException;
 
@@ -240,7 +240,7 @@ public final class HttpURLConnectionFactory {
 
   @VisibleForTesting
   @FunctionalInterface
-  interface SSLContextFactory {
+  public interface SSLContextFactory {
 
     SSLContext create() throws NoSuchAlgorithmException;
 

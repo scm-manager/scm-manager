@@ -24,25 +24,27 @@
 
 package sonia.scm.net.ahc;
 
+import com.google.inject.util.Providers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.config.ScmConfiguration;
-import sonia.scm.net.SSLContextProvider;
-import sonia.scm.net.TrustAllHostnameVerifier;
+import sonia.scm.net.GlobalProxyConfiguration;
+import sonia.scm.net.HttpURLConnectionFactory;
 import sonia.scm.trace.Span;
 import sonia.scm.trace.Tracer;
 import sonia.scm.util.HttpUtil;
 
+import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.SocketAddress;
-import java.net.URL;
+import java.net.Proxy;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -63,6 +65,10 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class DefaultAdvancedHttpClientTest {
 
+  private static final String HEADER_PROXY_AUTHORIZATION = "Proxy-Authorization";
+  private static final int TIMEOUT_CONNECTION = 30000;
+  private static final int TIMEOUT_READ = 1200000;
+
   @Mock
   private HttpsURLConnection connection;
 
@@ -72,28 +78,44 @@ class DefaultAdvancedHttpClientTest {
   @Mock
   private Span span;
 
+  @Mock
+  private TrustManager trustManager;
+
   private Set<ContentTransformer> transformers;
 
   private ScmConfiguration configuration;
 
-  private TestingAdvacedHttpClient client;
+  private DefaultAdvancedHttpClient client;
+
+  private Proxy proxy;
 
   @BeforeEach
   void setUp() {
     configuration = new ScmConfiguration();
     transformers = new HashSet<>();
-    client = new TestingAdvacedHttpClient(configuration, transformers);
+    HttpURLConnectionFactory connectionFactory = new HttpURLConnectionFactory(
+      new GlobalProxyConfiguration(configuration),
+      Providers.of(trustManager),
+      (url, proxy) -> {
+        this.proxy = proxy;
+        return connection;
+      },
+      () -> SSLContext.getInstance("TLS")
+    );
+
+    client = new DefaultAdvancedHttpClient(connectionFactory, tracer, transformers);
     lenient().when(tracer.span(anyString())).thenReturn(span);
   }
 
   @Test
   void shouldApplyBaseSettings() throws IOException {
-    new AdvancedHttpRequest(client, HttpMethod.GET,
-      "https://www.scm-manager.org").request();
+    new AdvancedHttpRequest(
+      client, HttpMethod.GET, "https://www.scm-manager.org"
+    ).request();
+
     verify(connection).setRequestMethod(HttpMethod.GET);
-    verify(connection).setReadTimeout(DefaultAdvancedHttpClient.TIMEOUT_RAED);
-    verify(connection).setConnectTimeout(
-      DefaultAdvancedHttpClient.TIMEOUT_CONNECTION);
+    verify(connection).setReadTimeout(TIMEOUT_READ);
+    verify(connection).setConnectTimeout(TIMEOUT_CONNECTION);
     verify(connection).addRequestProperty(HttpUtil.HEADER_CONTENT_LENGTH, "0");
   }
 
@@ -179,7 +201,7 @@ class DefaultAdvancedHttpClientTest {
 
     request.disableHostnameValidation(true).request();
 
-    verify(connection).setHostnameVerifier(any(TrustAllHostnameVerifier.class));
+    verify(connection).setHostnameVerifier(any(HostnameVerifier.class));
   }
 
   @Test
@@ -192,7 +214,7 @@ class DefaultAdvancedHttpClientTest {
       client, HttpMethod.GET, "https://www.scm-manager.org"
     ).ignoreProxySettings(true).request();
 
-    assertThat(client.proxyConnection).isFalse();
+    assertThat(proxy).isNull();
   }
 
   @Test
@@ -205,7 +227,7 @@ class DefaultAdvancedHttpClientTest {
       client, HttpMethod.GET,"https://www.scm-manager.org"
     ).request();
 
-    assertThat(client.proxyConnection).isTrue();
+    assertThat(proxy).isNotNull();
   }
 
   @Test
@@ -220,10 +242,8 @@ class DefaultAdvancedHttpClientTest {
       client, HttpMethod.GET, "https://www.scm-manager.org"
     ).request();
 
-    assertThat(client.proxyConnection).isTrue();
-    verify(connection).addRequestProperty(
-      DefaultAdvancedHttpClient.HEADER_PROXY_AUTHORIZATION, "Basic dHJpY2lhOnRyaWNpYXMgc2VjcmV0"
-    );
+    assertThat(proxy).isNotNull();
+    verify(connection).setRequestProperty(HEADER_PROXY_AUTHORIZATION, "Basic dHJpY2lhOnRyaWNpYXMgc2VjcmV0");
   }
 
   @Test
@@ -320,26 +340,5 @@ class DefaultAdvancedHttpClientTest {
     verify(span).label("status", 401);
     verify(span).failed();
     verify(span).close();
-  }
-
-  public class TestingAdvacedHttpClient extends DefaultAdvancedHttpClient {
-
-    private boolean proxyConnection = false;
-
-
-    public TestingAdvacedHttpClient(ScmConfiguration configuration, Set<ContentTransformer> transformers) {
-      super(configuration, tracer, transformers, new SSLContextProvider());
-    }
-
-    @Override
-    protected HttpURLConnection createConnection(URL url) {
-      return connection;
-    }
-    @Override
-    protected HttpURLConnection createProxyConnecton(URL url, SocketAddress address) {
-      proxyConnection = true;
-      return connection;
-    }
-
   }
 }
