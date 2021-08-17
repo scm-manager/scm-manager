@@ -21,76 +21,98 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.io;
 
 //~--- JDK imports ------------------------------------------------------------
+
+import com.google.common.collect.ImmutableList;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
+ * A section of {@link INIConfiguration}.
+ * The section consists of keys and values.
  *
  * @author Sebastian Sdorra
  */
-public class INISection
-{
+public class INISection {
+
+  private final String name;
+  private final Map<String, String> parameters;
 
   /**
-   * Constructs ...
-   *
-   *
-   * @param name
+   * Constructs a new empty section with the given name.
+   * @param name name of the section
    */
-  public INISection(String name)
-  {
+  public INISection(String name) {
     this.name = name;
     this.parameters = new LinkedHashMap<>();
   }
 
   /**
-   * Constructs ...
+   * Constructs a new section with the given name and parameters.
    *
-   *
-   * @param name
-   * @param parameters
+   * @param name name of the section
+   * @param initialParameters initial parameter
    */
-  public INISection(String name, Map<String, String> parameters)
-  {
+  public INISection(String name, Map<String, String> initialParameters) {
     this.name = name;
-    this.parameters = parameters;
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param key
-   */
-  public void removeParameter(String key)
-  {
-    parameters.put(key, name);
+    this.parameters = new LinkedHashMap<>(initialParameters);
   }
 
   /**
-   * Method description
-   *
-   *
-   * @return
+   * Returns the name of the section.
+   * @return name of section
    */
+  public String getName() {
+    return name;
+  }
+
+  /**
+   * Returns the value of the parameter with the given key or {@code null} if the given parameter does not exist.
+   * @param key key of parameter
+   * @return value of parameter or {@code null}
+   */
+  public String getParameter(String key) {
+    return parameters.get(key);
+  }
+
+  /**
+   * Returns all parameter keys of the section.
+   * @return all parameters of section
+   */
+  public Collection<String> getParameterKeys() {
+    return ImmutableList.copyOf(parameters.keySet());
+  }
+
+  /**
+   * Sets the parameter with the given key to the given value.
+   * @param key key of parameter
+   * @param value value of parameter
+   */
+  public void setParameter(String key, String value) {
+    parameters.put(key, value);
+  }
+
+  /**
+   * Remove parameter with the given name from the section.
+   * @param key name of parameter
+   */
+  public void removeParameter(String key) {
+    parameters.remove(key);
+  }
+
   @Override
-  public String toString()
-  {
+  public String toString() {
     String s = System.getProperty("line.separator");
     StringBuilder out = new StringBuilder();
 
     out.append("[").append(name).append("]").append(s);
 
-    for (Map.Entry<String, String> entry : parameters.entrySet())
-    {
+    for (Map.Entry<String, String> entry : parameters.entrySet()) {
       out.append(entry.getKey()).append(" = ").append(entry.getValue());
       out.append(s);
     }
@@ -98,62 +120,4 @@ public class INISection
     return out.toString();
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getName()
-  {
-    return name;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param key
-   *
-   * @return
-   */
-  public String getParameter(String key)
-  {
-    return parameters.get(key);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Collection<String> getParameterKeys()
-  {
-    return parameters.keySet();
-  }
-
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param key
-   * @param value
-   */
-  public void setParameter(String key, String value)
-  {
-    parameters.put(key, value);
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private String name;
-
-  /** Field description */
-  private Map<String, String> parameters;
 }

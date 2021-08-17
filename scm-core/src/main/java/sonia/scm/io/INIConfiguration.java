@@ -21,83 +21,61 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.io;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import com.google.common.collect.ImmutableList;
+
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
+ * Configuration in the ini format.
+ * The format consists of sections, keys and values.
  *
  * @author Sebastian Sdorra
+ * @see <a href="https://en.wikipedia.org/wiki/INI_file">Wikipedia article</a>
  */
-public class INIConfiguration
-{
+public class INIConfiguration {
+
+  private final Map<String, INISection> sectionMap = new LinkedHashMap<>();
 
   /**
-   * Constructs ...
-   *
+   * Add a new section to the configuration.
+   * @param section section
    */
-  public INIConfiguration()
-  {
-    this.sectionMap = new LinkedHashMap<>();
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param section
-   */
-  public void addSection(INISection section)
-  {
+  public void addSection(INISection section) {
     sectionMap.put(section.getName(), section);
   }
 
   /**
-   * Method description
-   *
-   *
-   * @param name
+   * Remove an existing section from the configuration.
+   * @param name name of the section
    */
-  public void removeSection(String name)
-  {
+  public void removeSection(String name) {
     sectionMap.remove(name);
   }
 
-  //~--- get methods ----------------------------------------------------------
-
   /**
-   * Method description
-   *
-   *
-   * @param name
-   *
-   * @return
+   * Returns a section by its name or {@code null} if the section does not exists.
+   * @param name name of the section
+   * @return section or null
    */
-  public INISection getSection(String name)
-  {
+  @Nullable
+  public INISection getSection(String name) {
     return sectionMap.get(name);
   }
 
   /**
-   * Method description
-   *
-   *
-   * @return
+   * Returns all sections of the configuration.
+   * @return all sections
    */
-  public Collection<INISection> getSections()
-  {
-    return sectionMap.values();
+  public Collection<INISection> getSections() {
+    return ImmutableList.copyOf(sectionMap.values());
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private Map<String, INISection> sectionMap;
 }

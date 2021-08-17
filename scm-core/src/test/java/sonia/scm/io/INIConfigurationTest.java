@@ -24,22 +24,47 @@
 
 package sonia.scm.io;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
+import org.junit.jupiter.api.Test;
 
-/**
- * Write configurations in ini format to file and streams.
- * @author Sebastian Sdorra
- */
-public class INIConfigurationWriter extends AbstractWriter<INIConfiguration> {
+import static org.assertj.core.api.Assertions.assertThat;
 
-  @Override
-  public void write(INIConfiguration object, OutputStream output) throws IOException {
-    try (PrintWriter writer = new PrintWriter(output)) {
-      for (INISection section : object.getSections()) {
-        writer.println(section.toString());
+class INIConfigurationTest {
+
+  @Test
+  void shouldAddAndGet() {
+    INIConfiguration configuration = new INIConfiguration();
+
+    INISection section = new INISection("one");
+    configuration.addSection(section);
+
+    assertThat(configuration.getSection("one")).isSameAs(section);
+  }
+
+  @Test
+  void shouldRemoveExistingSection() {
+    INIConfiguration configuration = new INIConfiguration();
+
+    INISection section = new INISection("one");
+    configuration.addSection(section);
+    configuration.removeSection("one");
+
+    assertThat(configuration.getSection("one")).isNull();
+  }
+
+  @Test
+  void shouldAllowRemoveDuringIteration() {
+    INIConfiguration configuration = new INIConfiguration();
+    configuration.addSection(new INISection("one"));
+    configuration.addSection(new INISection("two"));
+    configuration.addSection(new INISection("three"));
+
+    for (INISection section : configuration.getSections()) {
+      if (section.getName().startsWith("t")) {
+        configuration.removeSection(section.getName());
       }
     }
+
+    assertThat(configuration.getSections()).hasSize(1);
   }
+
 }

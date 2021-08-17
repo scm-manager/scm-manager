@@ -24,22 +24,43 @@
 
 package sonia.scm.io;
 
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
+import java.nio.file.Path;
 
-/**
- * Write configurations in ini format to file and streams.
- * @author Sebastian Sdorra
- */
-public class INIConfigurationWriter extends AbstractWriter<INIConfiguration> {
+import static org.assertj.core.api.Assertions.assertThat;
 
-  @Override
-  public void write(INIConfiguration object, OutputStream output) throws IOException {
-    try (PrintWriter writer = new PrintWriter(output)) {
-      for (INISection section : object.getSections()) {
-        writer.println(section.toString());
-      }
-    }
+class INIConfigurationWriterTest {
+
+  @Test
+  void shouldWriteIni(@TempDir Path directory) throws IOException {
+    Path path = directory.resolve("config.ini");
+
+    INIConfiguration configuration = new INIConfiguration();
+
+    INISection one = new INISection("one");
+    one.setParameter("a", "b");
+    configuration.addSection(one);
+
+    INISection two = new INISection("two");
+    two.setParameter("c", "d");
+    configuration.addSection(two);
+
+    INIConfigurationWriter writer = new INIConfigurationWriter();
+    writer.write(configuration, path.toFile());
+
+    String expected = String.join(System.getProperty("line.separator"),
+      "[one]",
+      "a = b",
+      "",
+      "[two]",
+      "c = d",
+      "",
+      ""
+    );
+    assertThat(path).hasContent(expected);
   }
+
 }
