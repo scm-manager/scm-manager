@@ -25,7 +25,7 @@
 package sonia.scm.repository.spi;
 
 import com.google.common.base.Joiner;
-import org.assertj.core.util.Strings;
+import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.io.INIConfiguration;
