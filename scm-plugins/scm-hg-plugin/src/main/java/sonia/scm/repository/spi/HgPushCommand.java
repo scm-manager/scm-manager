@@ -28,16 +28,18 @@ package sonia.scm.repository.spi;
 
 import com.aragost.javahg.Changeset;
 import com.aragost.javahg.commands.ExecutionException;
+import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.HgRepositoryHandler;
-import sonia.scm.repository.InternalRepositoryException;
+import sonia.scm.repository.api.ImportFailedException;
 import sonia.scm.repository.api.PushResponse;
 
 import javax.inject.Inject;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
+
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -45,48 +47,36 @@ import java.util.List;
  *
  * @author Sebastian Sdorra
  */
-public class HgPushCommand extends AbstractHgPushOrPullCommand
-  implements PushCommand
-{
+public class HgPushCommand extends AbstractHgPushOrPullCommand implements PushCommand {
 
-  /** Field description */
-  private static final Logger logger =
-    LoggerFactory.getLogger(HgPushCommand.class);
+  private static final Logger LOG = LoggerFactory.getLogger(HgPushCommand.class);
 
-  //~--- constructors ---------------------------------------------------------
+  private final TemporaryConfigFactory configFactory;
 
-  /**
-   * Constructs ...
-   *
-   *  @param handler
-   * @param context
-   */
   @Inject
-  public HgPushCommand(HgRepositoryHandler handler, HgCommandContext context)
-  {
+  public HgPushCommand(HgRepositoryHandler handler, HgCommandContext context, TemporaryConfigFactory configFactory) {
     super(handler, context);
+    this.configFactory = configFactory;
   }
 
-  //~--- methods --------------------------------------------------------------
-
   @Override
-  @SuppressWarnings("unchecked")
-  public PushResponse push(PushCommandRequest request)
-    throws IOException
-  {
+  @SuppressWarnings("java:S3252") // this is how javahg is used
+  public PushResponse push(PushCommandRequest request) throws IOException {
     String url = getRemoteUrl(request);
 
-    logger.debug("push changes from {} to {}", getRepository(), url);
+    LOG.debug("push changes from {} to {}", getRepository(), url);
 
-    List<Changeset> result = Collections.emptyList();
-
-    try
-    {
-      result = com.aragost.javahg.commands.PushCommand.on(open()).execute(url);
+    TemporaryConfigFactory.Builder builder = configFactory.withContext(context);
+    if (!Strings.isNullOrEmpty(request.getUsername()) && !Strings.isNullOrEmpty(request.getPassword())) {
+      builder.withCredentials(url, request.getUsername(), request.getPassword());
     }
-    catch (ExecutionException ex)
-    {
-      throw new InternalRepositoryException(getRepository(), "could not execute push command", ex);
+
+    List<Changeset> result;
+
+    try {
+      result = com.aragost.javahg.commands.PushCommand.on(open()).execute(url);
+    } catch (ExecutionException ex) {
+      throw new ImportFailedException(entity(getRepository()).build(), "could not execute pull command", ex);
     }
 
     return new PushResponse(result.size());
