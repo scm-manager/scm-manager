@@ -38,8 +38,7 @@ import org.tmatesoft.svn.core.auth.SVNPasswordAuthentication;
 import org.tmatesoft.svn.core.auth.SVNSSLAuthentication;
 import org.tmatesoft.svn.core.wc.SVNWCUtil;
 import org.tmatesoft.svn.core.wc.admin.SVNAdminClient;
-import sonia.scm.config.ScmConfiguration;
-import sonia.scm.net.Proxies;
+import sonia.scm.net.GlobalProxyConfiguration;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.api.MirrorCommandResult;
 import sonia.scm.repository.api.Pkcs12ClientCertificateCredential;
@@ -59,12 +58,12 @@ public class SvnMirrorCommand extends AbstractSvnCommand implements MirrorComman
   private static final Logger LOG = LoggerFactory.getLogger(SvnMirrorCommand.class);
 
   private final TrustManager trustManager;
-  private final ScmConfiguration scmConfiguration;
+  private final GlobalProxyConfiguration globalProxyConfiguration;
 
-  SvnMirrorCommand(SvnContext context, TrustManager trustManager, ScmConfiguration scmConfiguration) {
+  SvnMirrorCommand(SvnContext context, TrustManager trustManager, GlobalProxyConfiguration globalProxyConfiguration) {
     super(context);
     this.trustManager = trustManager;
-    this.scmConfiguration = scmConfiguration;
+    this.globalProxyConfiguration = globalProxyConfiguration;
   }
 
   @Override
@@ -147,7 +146,7 @@ public class SvnMirrorCommand extends AbstractSvnCommand implements MirrorComman
       }
     };
 
-    if (Proxies.isEnabled(scmConfiguration, url.toString())) {
+    if (globalProxyConfiguration.isEnabled() && !globalProxyConfiguration.getExcludes().contains(url.getHost())) {
       applyProxyConfiguration(authManager);
     }
 
@@ -168,13 +167,13 @@ public class SvnMirrorCommand extends AbstractSvnCommand implements MirrorComman
 
   private void applyProxyConfiguration(BasicAuthenticationManager authManager) {
     char[] password = null;
-    if (!Strings.isNullOrEmpty(scmConfiguration.getProxyPassword())){
-      password = scmConfiguration.getProxyPassword().toCharArray();
+    if (!Strings.isNullOrEmpty(globalProxyConfiguration.getPassword())){
+      password = globalProxyConfiguration.getPassword().toCharArray();
     }
     authManager.setProxy(
-      scmConfiguration.getProxyServer(),
-      scmConfiguration.getProxyPort(),
-      Strings.emptyToNull(scmConfiguration.getProxyUser()),
+      globalProxyConfiguration.getHost(),
+      globalProxyConfiguration.getPort(),
+      Strings.emptyToNull(globalProxyConfiguration.getUsername()),
       password
     );
   }

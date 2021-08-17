@@ -29,6 +29,8 @@ import sonia.scm.config.ScmConfiguration;
 
 import javax.inject.Inject;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Set;
 
 public class GlobalProxyConfiguration implements ProxyConfiguration {
 
@@ -56,7 +58,11 @@ public class GlobalProxyConfiguration implements ProxyConfiguration {
 
   @Override
   public Collection<String> getExcludes() {
-    return configuration.getProxyExcludes();
+    Set<String> excludes = configuration.getProxyExcludes();
+    if (excludes == null) {
+      return Collections.emptyList();
+    }
+    return excludes;
   }
 
   @Override

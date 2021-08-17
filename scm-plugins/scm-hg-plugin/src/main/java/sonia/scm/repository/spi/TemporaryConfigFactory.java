@@ -28,11 +28,11 @@ import com.google.common.base.Joiner;
 import org.assertj.core.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.config.ScmConfiguration;
 import sonia.scm.io.INIConfiguration;
 import sonia.scm.io.INIConfigurationReader;
 import sonia.scm.io.INIConfigurationWriter;
 import sonia.scm.io.INISection;
+import sonia.scm.net.GlobalProxyConfiguration;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.util.Util;
 
@@ -49,11 +49,11 @@ public class TemporaryConfigFactory {
   private static final String SECTION_AUTH = "auth";
   private static final String AUTH_PREFIX = "temporary.";
 
-  private final ScmConfiguration configuration;
+  private final GlobalProxyConfiguration globalProxyConfiguration;
 
   @Inject
-  public TemporaryConfigFactory(ScmConfiguration configuration) {
-    this.configuration = configuration;
+  public TemporaryConfigFactory(GlobalProxyConfiguration globalProxyConfiguration) {
+    this.globalProxyConfiguration = globalProxyConfiguration;
   }
 
   public Builder withContext(HgCommandContext context) {
@@ -116,7 +116,7 @@ public class TemporaryConfigFactory {
         applyAuthentication(hgrc);
       }
 
-      if (configuration.isEnableProxy()) {
+      if (globalProxyConfiguration.isEnabled()) {
         applyProxyConfiguration(hgrc);
       }
 
@@ -127,17 +127,17 @@ public class TemporaryConfigFactory {
       previousProxyConfiguration = hgrc.getSection(SECTION_PROXY);
       hgrc.removeSection(SECTION_PROXY);
       INISection proxy = new INISection(SECTION_PROXY);
-      proxy.setParameter("host", configuration.getProxyServer() + ":" + configuration.getProxyPort());
+      proxy.setParameter("host", globalProxyConfiguration.getHost() + ":" + globalProxyConfiguration.getPort());
 
-      String user = configuration.getProxyUser();
-      String passwd = configuration.getProxyPassword();
+      String user = globalProxyConfiguration.getUsername();
+      String passwd = globalProxyConfiguration.getPassword();
       if (!Strings.isNullOrEmpty(user) && !Strings.isNullOrEmpty(passwd)) {
         proxy.setParameter("user", user);
         proxy.setParameter("passwd", passwd);
       }
 
-      if (Util.isNotEmpty(configuration.getProxyExcludes())) {
-        proxy.setParameter("no", Joiner.on(',').join(configuration.getProxyExcludes()));
+      if (Util.isNotEmpty(globalProxyConfiguration.getExcludes())) {
+        proxy.setParameter("no", Joiner.on(',').join(globalProxyConfiguration.getExcludes()));
       }
 
       hgrc.addSection(proxy);
@@ -159,7 +159,7 @@ public class TemporaryConfigFactory {
     }
 
     private boolean isModificationRequired() {
-      return isAuthenticationEnabled() || configuration.isEnableProxy();
+      return isAuthenticationEnabled() || globalProxyConfiguration.isEnabled();
     }
 
     private boolean isAuthenticationEnabled() {
@@ -178,7 +178,7 @@ public class TemporaryConfigFactory {
         }
       }
 
-      if (configuration.isEnableProxy()) {
+      if (globalProxyConfiguration.isEnabled()) {
         hgrc.removeSection(SECTION_PROXY);
         if (previousProxyConfiguration != null) {
           hgrc.addSection(previousProxyConfiguration);

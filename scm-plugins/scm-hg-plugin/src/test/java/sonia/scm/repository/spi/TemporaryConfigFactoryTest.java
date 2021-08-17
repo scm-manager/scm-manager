@@ -36,6 +36,7 @@ import sonia.scm.io.INIConfiguration;
 import sonia.scm.io.INIConfigurationReader;
 import sonia.scm.io.INIConfigurationWriter;
 import sonia.scm.io.INISection;
+import sonia.scm.net.GlobalProxyConfiguration;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -61,7 +62,7 @@ class TemporaryConfigFactoryTest {
     lenient().when(commandContext.getDirectory()).thenReturn(directory.toFile());
 
     configuration = new ScmConfiguration();
-    configFactory = new TemporaryConfigFactory(configuration);
+    configFactory = new TemporaryConfigFactory(new GlobalProxyConfiguration(configuration));
   }
 
   @Test

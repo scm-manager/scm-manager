@@ -39,6 +39,7 @@ import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
 import org.tmatesoft.svn.core.wc.SVNWCUtil;
 import org.tmatesoft.svn.core.wc.admin.SVNAdminClient;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.net.GlobalProxyConfiguration;
 import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.repository.api.MirrorCommandResult;
 import sonia.scm.repository.api.SimpleUsernamePasswordCredential;
@@ -210,7 +211,7 @@ public class SvnMirrorCommandTest extends AbstractSvnCommandTestBase {
   }
 
   private SvnMirrorCommand createMirrorCommand(SvnContext context) {
-    return new SvnMirrorCommand(context, trustManager, configuration);
+    return new SvnMirrorCommand(context, trustManager, new GlobalProxyConfiguration(configuration));
   }
 
   private SvnContext createEmptyContext() throws SVNException, IOException {

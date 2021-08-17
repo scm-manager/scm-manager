@@ -25,7 +25,7 @@
 package sonia.scm.repository.spi;
 
 import com.google.inject.Inject;
-import sonia.scm.config.ScmConfiguration;
+import sonia.scm.net.GlobalProxyConfiguration;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.SvnRepositoryHandler;
@@ -41,19 +41,19 @@ public class SvnRepositoryServiceResolver implements RepositoryServiceResolver {
   private final SvnWorkingCopyFactory workingCopyFactory;
   private final HookContextFactory hookContextFactory;
   private final TrustManager trustManager;
-  private final ScmConfiguration scmConfiguration;
+  private final GlobalProxyConfiguration globalProxyConfiguration;
 
   @Inject
   public SvnRepositoryServiceResolver(SvnRepositoryHandler handler,
                                       SvnWorkingCopyFactory workingCopyFactory,
                                       HookContextFactory hookContextFactory,
                                       TrustManager trustManager,
-                                      ScmConfiguration scmConfiguration) {
+                                      GlobalProxyConfiguration globalProxyConfiguration) {
     this.handler = handler;
     this.workingCopyFactory = workingCopyFactory;
     this.hookContextFactory = hookContextFactory;
     this.trustManager = trustManager;
-    this.scmConfiguration = scmConfiguration;
+    this.globalProxyConfiguration = globalProxyConfiguration;
   }
 
   @Override
@@ -62,7 +62,7 @@ public class SvnRepositoryServiceResolver implements RepositoryServiceResolver {
 
     if (SvnRepositoryHandler.TYPE_NAME.equalsIgnoreCase(repository.getType())) {
       provider = new SvnRepositoryServiceProvider(
-        handler, repository, workingCopyFactory, hookContextFactory, trustManager, scmConfiguration
+        handler, repository, workingCopyFactory, hookContextFactory, trustManager, globalProxyConfiguration
       );
     }
 
