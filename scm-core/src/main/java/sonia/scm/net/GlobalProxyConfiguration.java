@@ -39,7 +39,7 @@ import java.util.Set;
  *
  * @since 2.23.0
  */
-public class GlobalProxyConfiguration implements ProxyConfiguration {
+public final class GlobalProxyConfiguration implements ProxyConfiguration {
 
   private final ScmConfiguration configuration;
 
