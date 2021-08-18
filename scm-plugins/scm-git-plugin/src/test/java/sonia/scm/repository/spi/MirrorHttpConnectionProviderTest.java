@@ -22,54 +22,74 @@
  * SOFTWARE.
  */
 
-package sonia.scm.web;
+package sonia.scm.repository.spi;
 
 import org.eclipse.jgit.transport.http.HttpConnection;
-import org.eclipse.jgit.transport.http.JDKHttpConnection;
+import org.eclipse.jgit.transport.http.HttpConnectionFactory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.net.HttpConnectionOptions;
 import sonia.scm.net.HttpURLConnectionFactory;
+import sonia.scm.net.ProxyConfiguration;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-class ScmHttpConnectionFactoryTest {
+class MirrorHttpConnectionProviderTest {
 
   @Mock
   private HttpURLConnectionFactory internalConnectionFactory;
 
+  @InjectMocks
+  private MirrorHttpConnectionProvider provider;
+
+  @Captor
+  private ArgumentCaptor<HttpConnectionOptions> captor;
+
   @Test
-  void shouldCreateConnection() throws IOException {
-    ScmHttpConnectionFactory connectionFactory = new ScmHttpConnectionFactory(internalConnectionFactory);
+  void shouldNotConfigureProxy() throws IOException {
+    MirrorCommandRequest request = new MirrorCommandRequest();
 
-    URL url = new URL("https://scm.hitchhiker.org");
-    HttpConnection httpConnection = connectionFactory.create(url, null);
+    HttpConnectionOptions value = create(request);
 
-    assertThat(httpConnection)
-      .isNotNull()
-      .isInstanceOf(JDKHttpConnection.class);
-    verify(internalConnectionFactory).create(url, null);
+    assertThat(value.getProxyConfiguration()).isEmpty();
   }
 
   @Test
-  void shouldCreateConnectionWithOptions() throws IOException {
-    HttpConnectionOptions options = new HttpConnectionOptions();
-    ScmHttpConnectionFactory connectionFactory = new ScmHttpConnectionFactory(internalConnectionFactory, options);
+  void shouldConfigureProxy() throws IOException {
+    ProxyConfiguration proxy = mock(ProxyConfiguration.class);
+    MirrorCommandRequest request = new MirrorCommandRequest();
+    request.setProxyConfiguration(proxy);
 
-    URL url = new URL("https://scm.hitchhiker.org");
-    HttpConnection httpConnection = connectionFactory.create(url);
+    HttpConnectionOptions value = create(request);
 
-    assertThat(httpConnection)
-      .isNotNull()
-      .isInstanceOf(JDKHttpConnection.class);
-    verify(internalConnectionFactory).create(url, options);
+    assertThat(value.getProxyConfiguration()).containsSame(proxy);
   }
+
+  private HttpConnectionOptions create(MirrorCommandRequest request) throws IOException {
+    List<String> log = new ArrayList<>();
+
+    HttpConnectionFactory connectionFactory = provider.createHttpConnectionFactory(request, log);
+    assertThat(connectionFactory).isNotNull();
+
+    HttpConnection connection = connectionFactory.create(new URL("https://hitchhiker.com"));
+    assertThat(connection).isNotNull();
+
+    verify(internalConnectionFactory).create(any(), captor.capture());
+    return captor.getValue();
+  }
+
 }
