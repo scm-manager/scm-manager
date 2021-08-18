@@ -34,8 +34,8 @@ import java.util.Set;
 
 /**
  * The {@link GlobalProxyConfiguration} is an adapter between {@link ProxyConfiguration} and {@link ScmConfiguration}.
- * Whenever proxy setting are required the {@link GlobalProxyConfiguration} should be used instead of using
- * {@link ScmConfiguration} directly, this makes it easier to support local proxy configurations.
+ * Whenever proxy settings are required, the {@link GlobalProxyConfiguration} should be used instead of using
+ * {@link ScmConfiguration} directly. This makes it easier to support local proxy configurations.
  *
  * @since 2.23.0
  */
