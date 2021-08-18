@@ -35,6 +35,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.net.HttpURLConnectionFactory.DefaultSSLContextFactory;
+import sonia.scm.net.HttpURLConnectionFactory.ProxyAuthentication;
+import sonia.scm.net.HttpURLConnectionFactory.ThreadLocalAuthenticator;
 import sonia.scm.net.HttpURLConnectionFactory.TrustAllHostnameVerifier;
 import sonia.scm.net.HttpURLConnectionFactory.TrustAllTrustManager;
 
@@ -55,6 +57,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -207,10 +210,18 @@ class HttpURLConnectionFactoryTest {
       configuration.setProxyUser("marvin");
       configuration.setProxyPassword("brainLikeAPlanet");
 
-      HttpURLConnection connection = connectionFactory.create(new URL("https://hitchhiker.org"));
+      connectionFactory.create(new URL("https://hitchhiker.org"));
 
       assertUsedProxy("proxy.hitchhiker.org", 3129);
-      verify(connection).setRequestProperty("Proxy-Authorization", "Basic bWFydmluOmJyYWluTGlrZUFQbGFuZXQ=");
+
+      assertProxyAuthentication("marvin", "brainLikeAPlanet");
+    }
+
+    private void assertProxyAuthentication(String username, String password) {
+      ProxyAuthentication proxyAuthentication = ThreadLocalAuthenticator.get();
+      assertThat(proxyAuthentication).isNotNull();
+      assertThat(proxyAuthentication.getUsername()).isEqualTo(username);
+      assertThat(proxyAuthentication.getPassword()).isEqualTo(password.toCharArray());
     }
 
     @Test
@@ -222,13 +233,36 @@ class HttpURLConnectionFactoryTest {
       localProxyConf.setProxyUser("trillian");
       localProxyConf.setProxyPassword("secret");
 
-      HttpURLConnection connection = connectionFactory.create(
+      connectionFactory.create(
         new URL("https://hitchhiker.net"),
         new HttpConnectionOptions().withProxyConfiguration(new GlobalProxyConfiguration(localProxyConf))
       );
 
       assertUsedProxy("prox.hitchhiker.net", 3127);
-      verify(connection).setRequestProperty("Proxy-Authorization", "Basic dHJpbGxpYW46c2VjcmV0");
+      assertProxyAuthentication("trillian", "secret");
+    }
+
+    @Test
+    void shouldNotUsePreviousProxyAuthentication() throws IOException {
+      ScmConfiguration localProxyConf = new ScmConfiguration();
+      localProxyConf.setEnableProxy(true);
+      localProxyConf.setProxyServer("proxy.hitchhiker.net");
+      localProxyConf.setProxyPort(3127);
+      localProxyConf.setProxyUser("trillian");
+      localProxyConf.setProxyPassword("secret");
+
+      URL url = new URL("https://hitchhiker.net");
+      HttpConnectionOptions options = new HttpConnectionOptions()
+        .withProxyConfiguration(new GlobalProxyConfiguration(localProxyConf));
+
+      connectionFactory.create(url, options);
+      assertUsedProxy("proxy.hitchhiker.net", 3127);
+      assertProxyAuthentication("trillian", "secret");
+
+      localProxyConf.setEnableProxy(false);
+      connectionFactory.create(url, options);
+      assertThat(usedProxy).isNull();
+      assertThat(ThreadLocalAuthenticator.get()).isNull();
     }
 
     @Test

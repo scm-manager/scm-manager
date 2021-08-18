@@ -25,10 +25,12 @@
 package sonia.scm.net;
 
 import com.google.common.annotations.VisibleForTesting;
-import org.apache.shiro.codec.Base64;
+import com.google.common.base.Strings;
+import lombok.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -40,8 +42,10 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import java.io.IOException;
+import java.net.Authenticator;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
+import java.net.PasswordAuthentication;
 import java.net.Proxy;
 import java.net.SocketAddress;
 import java.net.URL;
@@ -62,9 +66,14 @@ public final class HttpURLConnectionFactory {
 
   private static final Logger LOG = LoggerFactory.getLogger(HttpURLConnectionFactory.class);
 
-  private static final String HEADER_PROXY_AUTHORIZATION = "Proxy-Authorization";
-  private static final String PREFIX_BASIC_AUTHENTICATION = "Basic ";
-  private static final String CREDENTIAL_SEPARATOR = ":";
+  static {
+    // Allow basic authentication for proxies
+    // https://stackoverflow.com/a/1626616
+    System.setProperty("jdk.http.auth.tunneling.disabledSchemes", "");
+
+    // Set the default authenticator to our thread local authenticator
+    Authenticator.setDefault(new ThreadLocalAuthenticator());
+  }
 
   private final GlobalProxyConfiguration globalProxyConfiguration;
   private final Provider<TrustManager> trustManagerProvider;
@@ -114,6 +123,10 @@ public final class HttpURLConnectionFactory {
     }
 
     HttpURLConnection create(URL url) throws IOException {
+      // clear authentication this is required,
+      // because we are not able to remove the authentication from thread local
+      ThreadLocalAuthenticator.clear();
+
       ProxyConfiguration proxyConfiguration = options.getProxyConfiguration().orElse(globalProxyConfiguration);
       if (isProxyEnabled(proxyConfiguration, url)) {
         return openProxyConnection(proxyConfiguration, url);
@@ -147,7 +160,11 @@ public final class HttpURLConnectionFactory {
 
       HttpURLConnection connection = configure(connector.connect(url, new Proxy(Proxy.Type.HTTP, address)));
       if (configuration.isAuthenticationRequired()) {
-        applyProxyAuthentication(configuration, connection);
+        // Set the authentication for the proxy server for the current thread.
+        // This becomes obsolete with java 9,
+        // because the HttpURLConnection of java 9 has a setAuthenticator method
+        // which makes it possible to set a proxy authentication for a single request.
+        ThreadLocalAuthenticator.set(configuration);
       }
 
       return connection;
@@ -200,22 +217,61 @@ public final class HttpURLConnectionFactory {
       connection.setHostnameVerifier(new TrustAllHostnameVerifier());
     }
 
-    private void applyProxyAuthentication(ProxyConfiguration configuration, HttpURLConnection connection) {
-      String username = configuration.getUsername();
-      String password = configuration.getPassword();
-
-      String auth = username.concat(CREDENTIAL_SEPARATOR).concat(password);
-      connection.setRequestProperty(
-        HEADER_PROXY_AUTHORIZATION,
-        PREFIX_BASIC_AUTHENTICATION.concat(Base64.encodeToString(auth.getBytes()))
-      );
-    }
-
     private void applyBaseSettings(HttpURLConnection connection) {
       connection.setReadTimeout(options.getReadTimeout());
       connection.setConnectTimeout(options.getConnectionTimeout());
     }
 
+  }
+
+  @Value
+  @VisibleForTesting
+  static class ProxyAuthentication {
+    String server;
+    String username;
+    char[] password;
+  }
+
+  @VisibleForTesting
+  static class ThreadLocalAuthenticator extends Authenticator {
+
+    private static final ThreadLocal<ProxyAuthentication> AUTHENTICATION = new ThreadLocal<>();
+
+    static void set(ProxyConfiguration proxyConfiguration) {
+      LOG.trace("configure proxy authentication for this thread");
+      AUTHENTICATION.set(create(proxyConfiguration));
+    }
+
+    static void clear() {
+      LOG.trace("release proxy authentication");
+      AUTHENTICATION.remove();
+    }
+
+    @Nullable
+    static ProxyAuthentication get() {
+      return AUTHENTICATION.get();
+    }
+
+    @Nonnull
+    private static ProxyAuthentication create(ProxyConfiguration proxyConfiguration) {
+      return new ProxyAuthentication(
+        proxyConfiguration.getHost(),
+        proxyConfiguration.getUsername(),
+        Strings.nullToEmpty(proxyConfiguration.getPassword()).toCharArray()
+      );
+    }
+
+    @Override
+    protected PasswordAuthentication getPasswordAuthentication() {
+      if (getRequestorType() == RequestorType.PROXY) {
+        ProxyAuthentication authentication = get();
+        if (authentication != null && authentication.getServer().equals(getRequestingHost())) {
+          LOG.debug("use proxy authentication for host {}", authentication.getServer());
+          return new PasswordAuthentication(authentication.getUsername(), authentication.getPassword());
+        }
+      }
+      return null;
+    }
   }
 
   @VisibleForTesting

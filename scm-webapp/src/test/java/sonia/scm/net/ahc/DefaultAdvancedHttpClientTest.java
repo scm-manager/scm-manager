@@ -65,7 +65,6 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class DefaultAdvancedHttpClientTest {
 
-  private static final String HEADER_PROXY_AUTHORIZATION = "Proxy-Authorization";
   private static final int TIMEOUT_CONNECTION = 30000;
   private static final int TIMEOUT_READ = 1200000;
 
@@ -228,22 +227,6 @@ class DefaultAdvancedHttpClientTest {
     ).request();
 
     assertThat(proxy).isNotNull();
-  }
-
-  @Test
-  void shouldUseProxyWithAuthentication() throws IOException {
-    configuration.setProxyServer("proxy.scm-manager.org");
-    configuration.setProxyPort(8090);
-    configuration.setProxyUser("tricia");
-    configuration.setProxyPassword("tricias secret");
-    configuration.setEnableProxy(true);
-
-    new AdvancedHttpRequest(
-      client, HttpMethod.GET, "https://www.scm-manager.org"
-    ).request();
-
-    assertThat(proxy).isNotNull();
-    verify(connection).setRequestProperty(HEADER_PROXY_AUTHORIZATION, "Basic dHJpY2lhOnRyaWNpYXMgc2VjcmV0");
   }
 
   @Test
