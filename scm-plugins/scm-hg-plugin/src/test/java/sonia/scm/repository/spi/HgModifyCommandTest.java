@@ -59,8 +59,7 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
         // we do not want to configure http hooks in this unit test
       }
     };
-    hgModifyCommand = new HgModifyCommand(cmdContext, workingCopyFactory
-    );
+    hgModifyCommand = new HgModifyCommand(cmdContext, workingCopyFactory);
   }
 
   @Test

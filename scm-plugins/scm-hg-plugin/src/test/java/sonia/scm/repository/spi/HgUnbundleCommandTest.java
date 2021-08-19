@@ -55,7 +55,7 @@ public class HgUnbundleCommandTest extends AbstractHgCommandTestBase {
   @Before
   public void initUnbundleCommand() {
     eventFactory = mock(HgRepositoryHookEventFactory.class);
-    unbundleCommand = new HgUnbundleCommand(cmdContext, new HgLazyChangesetResolver(HgTestUtil.createFactory(handler, repositoryDirectory), null), eventFactory);
+    unbundleCommand = new HgUnbundleCommand(cmdContext, new HgLazyChangesetResolver(HgTestUtil.createFactory(handler, repositoryDirectory), cmdContext), eventFactory);
   }
 
   @Test

@@ -25,8 +25,8 @@
 package sonia.scm.repository;
 
 import org.eclipse.jgit.transport.HttpTransport;
-import sonia.scm.web.ScmHttpConnectionFactory;
 import sonia.scm.plugin.Extension;
+import sonia.scm.web.ScmHttpConnectionFactory;
 
 import javax.inject.Inject;
 import javax.servlet.ServletContextEvent;
@@ -52,4 +52,5 @@ public class GitHttpTransportRegistration implements ServletContextListener {
   public void contextDestroyed(ServletContextEvent servletContextEvent) {
     // Nothing to destroy
   }
+
 }

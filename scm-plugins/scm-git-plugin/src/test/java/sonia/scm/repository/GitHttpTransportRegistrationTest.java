@@ -22,26 +22,42 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.spi;
+package sonia.scm.repository;
 
-import org.junit.Test;
-import sonia.scm.repository.Changeset;
-import sonia.scm.repository.HgTestUtil;
-import sonia.scm.repository.Person;
+import org.eclipse.jgit.transport.HttpTransport;
+import org.eclipse.jgit.transport.http.HttpConnectionFactory;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.web.ScmHttpConnectionFactory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class HgLazyChangesetResolverTest extends AbstractHgCommandTestBase {
+@ExtendWith(MockitoExtension.class)
+class GitHttpTransportRegistrationTest {
+
+  @Mock
+  private ScmHttpConnectionFactory scmHttpConnectionFactory;
+
+  private HttpConnectionFactory capturedFactory;
+
+  @BeforeEach
+  void captureConnectionFactory() {
+    this.capturedFactory = HttpTransport.getConnectionFactory();
+  }
+
+  @AfterEach
+  void restoreConnectionFactory() {
+    HttpTransport.setConnectionFactory(capturedFactory);
+  }
 
   @Test
-  public void shouldResolveChangesets() {
-    HgLazyChangesetResolver changesetResolver = new HgLazyChangesetResolver(HgTestUtil.createFactory(handler, repositoryDirectory), cmdContext);
-    Iterable<Changeset> changesets = changesetResolver.call();
-
-    Changeset firstChangeset = changesets.iterator().next();
-    assertThat(firstChangeset.getId()).isEqualTo("2baab8e80280ef05a9aa76c49c76feca2872afb7");
-    assertThat(firstChangeset.getDate()).isEqualTo(1339586381000L);
-    assertThat(firstChangeset.getAuthor()).isEqualTo(Person.toPerson("Zaphod Beeblebrox <zaphod.beeblebrox@hitchhiker.com>"));
-    assertThat(firstChangeset.getDescription()).isEqualTo("added new line for blame");
+  void shouldSetHttpConnectionFactory() {
+    new GitHttpTransportRegistration(scmHttpConnectionFactory).contextInitialized(null);
+    assertThat(HttpTransport.getConnectionFactory()).isSameAs(scmHttpConnectionFactory);
   }
+
 }

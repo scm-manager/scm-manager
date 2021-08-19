@@ -1,0 +1,6 @@
+- type: Fixed
+  description: Proxy authentication ([#1773](https://github.com/scm-manager/scm-manager/pull/1773))
+- type: Added
+  description: Proxy support for pull, push and mirror commands ([#1773](https://github.com/scm-manager/scm-manager/pull/1773))
+- type: Added
+  description: Option for local proxy configuration to mirror command ([#1773](https://github.com/scm-manager/scm-manager/pull/1773))

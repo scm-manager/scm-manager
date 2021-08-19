@@ -22,26 +22,56 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.spi;
+package sonia.scm.net;
 
-import org.junit.Test;
-import sonia.scm.repository.Changeset;
-import sonia.scm.repository.HgTestUtil;
-import sonia.scm.repository.Person;
+import java.util.Collection;
 
-import static org.assertj.core.api.Assertions.assertThat;
+/**
+ * Proxy server configuration.
+ *
+ * @since 2.23.0
+ */
+public interface ProxyConfiguration {
 
-public class HgLazyChangesetResolverTest extends AbstractHgCommandTestBase {
+  /**
+   * Returns {@code true} if proxy configuration is enabled.
+   * @return {@code true} if enabled
+   */
+  boolean isEnabled();
 
-  @Test
-  public void shouldResolveChangesets() {
-    HgLazyChangesetResolver changesetResolver = new HgLazyChangesetResolver(HgTestUtil.createFactory(handler, repositoryDirectory), cmdContext);
-    Iterable<Changeset> changesets = changesetResolver.call();
+  /**
+   * Return the hostname or ip address of the proxy server.
+   * @return proxy server hostname or ip address
+   */
+  String getHost();
 
-    Changeset firstChangeset = changesets.iterator().next();
-    assertThat(firstChangeset.getId()).isEqualTo("2baab8e80280ef05a9aa76c49c76feca2872afb7");
-    assertThat(firstChangeset.getDate()).isEqualTo(1339586381000L);
-    assertThat(firstChangeset.getAuthor()).isEqualTo(Person.toPerson("Zaphod Beeblebrox <zaphod.beeblebrox@hitchhiker.com>"));
-    assertThat(firstChangeset.getDescription()).isEqualTo("added new line for blame");
-  }
+  /**
+   * Returns port of the proxy server.
+   * @return port of proxy server
+   */
+  int getPort();
+
+  /**
+   * Returns a list of hostnames which should not be routed over the proxy server.
+   * @return list of excluded hostnames
+   */
+  Collection<String> getExcludes();
+
+  /**
+   * Returns the username for proxy server authentication.
+   * @return username for authentication
+   */
+  String getUsername();
+
+  /**
+   * Returns thr password for proxy server authentication.
+   * @return password for authentication
+   */
+  String getPassword();
+
+  /**
+   * Return {@code true} if the proxy server required authentication.
+   * @return {@code true} if authentication is required
+   */
+  boolean isAuthenticationRequired();
 }

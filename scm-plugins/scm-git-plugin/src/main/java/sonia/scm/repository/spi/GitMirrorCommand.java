@@ -55,7 +55,6 @@ import sonia.scm.repository.api.MirrorCommandResult;
 import sonia.scm.repository.api.MirrorCommandResult.ResultType;
 import sonia.scm.repository.api.MirrorFilter;
 import sonia.scm.repository.api.MirrorFilter.Result;
-import sonia.scm.repository.api.Pkcs12ClientCertificateCredential;
 import sonia.scm.repository.api.UsernamePasswordCredential;
 
 import javax.inject.Inject;
@@ -389,15 +388,14 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
         .setRefSpecs("refs/heads/*:refs/heads/*", "refs/tags/*:refs/tags/*")
         .setForceUpdate(true)
         .setRemoveDeletedRefs(true)
-        .setRemote(mirrorCommandRequest.getSourceUrl());
-
-      mirrorCommandRequest.getCredential(Pkcs12ClientCertificateCredential.class)
-        .ifPresent(c -> fetchCommand.setTransportConfigCallback(transport -> {
+        .setRemote(mirrorCommandRequest.getSourceUrl())
+        .setTransportConfigCallback(transport -> {
           if (transport instanceof TransportHttp) {
             TransportHttp transportHttp = (TransportHttp) transport;
-            transportHttp.setHttpConnectionFactory(mirrorHttpConnectionProvider.createHttpConnectionFactory(c, mirrorLog));
+            transportHttp.setHttpConnectionFactory(mirrorHttpConnectionProvider.createHttpConnectionFactory(mirrorCommandRequest, mirrorLog));
           }
-        }));
+        });
+
       mirrorCommandRequest.getCredential(UsernamePasswordCredential.class)
         .ifPresent(c -> fetchCommand
           .setCredentialsProvider(

@@ -33,6 +33,7 @@ import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.spi.javahg.HgOutgoingChangesetCommand;
 
+import javax.inject.Inject;
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
@@ -58,7 +59,8 @@ public class HgOutgoingCommand extends AbstractCommand
    *  @param context
    * @param handler
    */
-  public HgOutgoingCommand(HgCommandContext context, HgRepositoryHandler handler)
+  @Inject
+  HgOutgoingCommand(HgCommandContext context, HgRepositoryHandler handler)
   {
     super(context);
     this.handler = handler;
@@ -87,7 +89,7 @@ public class HgOutgoingCommand extends AbstractCommand
     {
       if (ex.getCommand().getReturnCode() == NO_OUTGOING_CHANGESETS)
       {
-        changesets = Collections.EMPTY_LIST;
+        changesets = Collections.emptyList();
       }
       else
       {

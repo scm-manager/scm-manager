@@ -29,14 +29,16 @@ import com.aragost.javahg.commands.ExecutionException;
 import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.ContextEntry;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.api.ImportFailedException;
 import sonia.scm.repository.api.PullResponse;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.util.List;
+
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
 
 public class HgPullCommand extends AbstractHgPushOrPullCommand implements PullCommand {
 
@@ -44,40 +46,41 @@ public class HgPullCommand extends AbstractHgPushOrPullCommand implements PullCo
   private final ScmEventBus eventBus;
   private final HgLazyChangesetResolver changesetResolver;
   private final HgRepositoryHookEventFactory eventFactory;
+  private final TemporaryConfigFactory configFactory;
 
+  @Inject
   public HgPullCommand(HgRepositoryHandler handler,
                        HgCommandContext context,
                        ScmEventBus eventBus,
                        HgLazyChangesetResolver changesetResolver,
-                       HgRepositoryHookEventFactory eventFactory
+                       HgRepositoryHookEventFactory eventFactory,
+                       TemporaryConfigFactory configFactory
   ) {
     super(handler, context);
     this.eventBus = eventBus;
     this.changesetResolver = changesetResolver;
     this.eventFactory = eventFactory;
+    this.configFactory = configFactory;
   }
 
   @Override
   @SuppressWarnings({"java:S3252"})
-  public PullResponse pull(PullCommandRequest request)
-    throws IOException {
+  public PullResponse pull(PullCommandRequest request) throws IOException {
     String url = getRemoteUrl(request);
-    HgIniConfigurator iniConfigurator = new HgIniConfigurator(getContext());
 
     LOG.debug("pull changes from {} to {}", url, getContext().getScmRepository());
 
-    List<Changeset> result;
-
+    TemporaryConfigFactory.Builder builder = configFactory.withContext(context);
     if (!Strings.isNullOrEmpty(request.getUsername()) && !Strings.isNullOrEmpty(request.getPassword())) {
-      iniConfigurator.addAuthenticationConfig(request, url);
+      builder.withCredentials(url, request.getUsername(), request.getPassword());
     }
 
+    List<Changeset> result;
+
     try {
-      result = com.aragost.javahg.commands.PullCommand.on(open()).execute(url);
+      result = builder.call(() -> com.aragost.javahg.commands.PullCommand.on(open()).execute(url));
     } catch (ExecutionException ex) {
-      throw new ImportFailedException(ContextEntry.ContextBuilder.entity(getRepository()).build(), "could not execute pull command", ex);
-    } finally {
-      iniConfigurator.removeAuthenticationConfig();
+      throw new ImportFailedException(entity(getRepository()).build(), "could not execute pull command", ex);
     }
 
     firePostReceiveRepositoryHookEvent();
@@ -88,4 +91,5 @@ public class HgPullCommand extends AbstractHgPushOrPullCommand implements PullCo
   private void firePostReceiveRepositoryHookEvent() {
     eventBus.post(eventFactory.createEvent(context, changesetResolver));
   }
+
 }

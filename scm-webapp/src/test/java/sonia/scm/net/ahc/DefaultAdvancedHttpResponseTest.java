@@ -31,101 +31,73 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.io.ByteSource;
-
 import org.hamcrest.Matchers;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Answers;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-
-import sonia.scm.config.ScmConfiguration;
-
-import static org.junit.Assert.*;
-
-import static org.mockito.Mockito.*;
-
-//~--- JDK imports ------------------------------------------------------------
+import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.net.HttpURLConnectionFactory;
+import sonia.scm.trace.Tracer;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-
 import java.net.HttpURLConnection;
-
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
-import sonia.scm.net.SSLContextProvider;
-import sonia.scm.trace.Tracer;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@RunWith(MockitoJUnitRunner.class)
-public class DefaultAdvancedHttpResponseTest
-{
+@ExtendWith(MockitoExtension.class)
+class DefaultAdvancedHttpResponseTest {
+
+  @Mock
+  private HttpURLConnection connection;
 
   private DefaultAdvancedHttpClient client;
 
-  @Before
-  public void setUpClient() {
-    client = new DefaultAdvancedHttpClient(new ScmConfiguration(), tracer, new HashSet<>(), new SSLContextProvider());
+  @BeforeEach
+  void setUpClient() {
+    client = new DefaultAdvancedHttpClient(mock(HttpURLConnectionFactory.class), mock(Tracer.class), Collections.emptySet());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
   @Test
-  public void testContentAsByteSource() throws IOException
-  {
-    ByteArrayInputStream bais =
-      new ByteArrayInputStream("test".getBytes(Charsets.UTF_8));
-
+  void shouldReturnContentAsByteSource() throws IOException {
+    ByteArrayInputStream bais = new ByteArrayInputStream("test".getBytes(Charsets.UTF_8));
     when(connection.getInputStream()).thenReturn(bais);
 
-    AdvancedHttpResponse response = new DefaultAdvancedHttpResponse(client,
-                                      connection, 200, "OK");
+    AdvancedHttpResponse response = new DefaultAdvancedHttpResponse(client, connection, 200, "OK");
     ByteSource content = response.contentAsByteSource();
 
-    assertEquals("test", content.asCharSource(Charsets.UTF_8).read());
+    assertThat(content.asCharSource(Charsets.UTF_8).read()).isEqualTo("test");
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
   @Test
-  @SuppressWarnings("unchecked")
-  public void testContentAsByteSourceWithFailedRequest() throws IOException
-  {
-    ByteArrayInputStream bais =
-      new ByteArrayInputStream("test".getBytes(Charsets.UTF_8));
-
+  void shouldReturnContentAsByteSourceEvenForFailedRequests() throws IOException {
+    ByteArrayInputStream bais = new ByteArrayInputStream("test".getBytes(Charsets.UTF_8));
     when(connection.getInputStream()).thenThrow(IOException.class);
     when(connection.getErrorStream()).thenReturn(bais);
 
-    AdvancedHttpResponse response = new DefaultAdvancedHttpResponse(client,
-                                      connection, 404, "NOT FOUND");
+    AdvancedHttpResponse response = new DefaultAdvancedHttpResponse(client, connection, 404, "NOT FOUND");
     ByteSource content = response.contentAsByteSource();
 
-    assertEquals("test", content.asCharSource(Charsets.UTF_8).read());
+    assertThat(content.asCharSource(Charsets.UTF_8).read()).isEqualTo("test");
   }
 
-  /**
-   * Method description
-   *
-   */
   @Test
-  public void testGetHeaders()
-  {
+  void shouldReturnHeaders() {
     LinkedHashMap<String, List<String>> map = Maps.newLinkedHashMap();
     List<String> test = Lists.newArrayList("One", "Two");
 
@@ -136,14 +108,7 @@ public class DefaultAdvancedHttpResponseTest
                                       connection, 200, "OK");
     Multimap<String, String> headers = response.getHeaders();
 
-    assertThat(headers.get("Test"), Matchers.contains("One", "Two"));
-    assertTrue(headers.get("Test-2").isEmpty());
+    assertThat(headers.get("Test")).containsOnly("One", "Two");
+    assertThat(headers.get("Test-2")).isEmpty();
   }
-
-  /** Field description */
-  @Mock
-  private HttpURLConnection connection;
-
-  @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-  private Tracer tracer;
 }

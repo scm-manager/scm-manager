@@ -24,38 +24,25 @@
 
 package sonia.scm.net.ahc;
 
-//~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
 import com.google.common.collect.Multimap;
-import com.google.common.io.Closeables;
 import com.google.inject.Inject;
-import org.apache.shiro.codec.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.config.ScmConfiguration;
-import sonia.scm.net.Proxies;
-import sonia.scm.net.TrustAllHostnameVerifier;
-import sonia.scm.net.TrustAllTrustManager;
+import sonia.scm.net.HttpConnectionOptions;
+import sonia.scm.net.HttpURLConnectionFactory;
 import sonia.scm.trace.Span;
 import sonia.scm.trace.Tracer;
 import sonia.scm.util.HttpUtil;
 
 import javax.annotation.Nonnull;
-import javax.inject.Provider;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.*;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.Set;
-
-//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Default implementation of the {@link AdvancedHttpClient}. The default
@@ -64,136 +51,51 @@ import java.util.Set;
  * @author Sebastian Sdorra
  * @since 1.46
  */
-public class DefaultAdvancedHttpClient extends AdvancedHttpClient
-{
-
-  /** proxy authorization header */
-  @VisibleForTesting
-  static final String HEADER_PROXY_AUTHORIZATION = "Proxy-Authorization";
-
-  /** connection timeout */
-  @VisibleForTesting
-  static final int TIMEOUT_CONNECTION = 30000;
-
-  /** read timeout */
-  @VisibleForTesting
-  static final int TIMEOUT_RAED = 1200000;
-
-  /** credential separator */
-  private static final String CREDENTIAL_SEPARATOR = ":";
-
-  /** basic authentication prefix */
-  private static final String PREFIX_BASIC_AUTHENTICATION = "Basic ";
+public class DefaultAdvancedHttpClient extends AdvancedHttpClient {
 
   /**
    * the logger for DefaultAdvancedHttpClient
    */
-  private static final Logger logger =
-    LoggerFactory.getLogger(DefaultAdvancedHttpClient.class);
+  private static final Logger LOG = LoggerFactory.getLogger(DefaultAdvancedHttpClient.class);
 
-  //~--- constructors ---------------------------------------------------------
+  private final HttpURLConnectionFactory connectionFactory;
+  private final Tracer tracer;
+  private final Set<ContentTransformer> contentTransformers;
 
-  /**
-   * Constructs a new {@link DefaultAdvancedHttpClient}.
-   *
-   *
-   * @param configuration scm-manager main configuration
-   * @param contentTransformers content transformer
-   * @param sslContextProvider ssl context provider
-   */
+
   @Inject
-  public DefaultAdvancedHttpClient(ScmConfiguration configuration,
-    Tracer tracer, Set<ContentTransformer> contentTransformers, Provider<SSLContext> sslContextProvider)
-  {
-    this.configuration = configuration;
+  public DefaultAdvancedHttpClient(HttpURLConnectionFactory connectionFactory, Tracer tracer, Set<ContentTransformer> contentTransformers) {
+    this.connectionFactory = connectionFactory;
     this.tracer = tracer;
     this.contentTransformers = contentTransformers;
-    this.sslContextProvider = sslContextProvider;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Creates a new {@link HttpURLConnection} from the given {@link URL}. The
-   * method is visible for testing.
-   *
-   *
-   * @param url url
-   *
-   * @return new {@link HttpURLConnection}
-   *
-   * @throws IOException
-   */
-  @VisibleForTesting
-  protected HttpURLConnection createConnection(URL url) throws IOException
-  {
-    return (HttpURLConnection) url.openConnection();
-  }
-
-  /**
-   * Creates a new proxy {@link HttpURLConnection} from the given {@link URL}
-   * and {@link SocketAddress}. The method is visible for testing.
-   *
-   *
-   * @param url url
-   * @param address proxy socket address
-   *
-   * @return new proxy {@link HttpURLConnection}
-   *
-   * @throws IOException
-   */
-  @VisibleForTesting
-  protected HttpURLConnection createProxyConnecton(URL url,
-    SocketAddress address)
-    throws IOException
-  {
-    return (HttpURLConnection) url.openConnection(new Proxy(Proxy.Type.HTTP,
-      address));
-  }
-
-  /**
-   * {@inheritDoc}
-   */
   @Override
-  protected ContentTransformer createTransformer(Class<?> type, String contentType)
-  {
+  protected ContentTransformer createTransformer(Class<?> type, String contentType) {
     ContentTransformer responsible = null;
 
-    for (ContentTransformer transformer : contentTransformers)
-    {
-      if (transformer.isResponsible(type, contentType))
-      {
+    for (ContentTransformer transformer : contentTransformers) {
+      if (transformer.isResponsible(type, contentType)) {
         responsible = transformer;
 
         break;
       }
     }
 
-    if (responsible == null)
-    {
+    if (responsible == null) {
       throw new ContentTransformerNotFoundException(
-        "could not find content transformer for content type ".concat(
-          contentType));
+        "could not find content transformer for content type ".concat(contentType)
+      );
     }
 
     return responsible;
   }
 
-  /**
-   * Executes the given request and returns the server response.
-   *
-   *
-   * @param request http request
-   *
-   * @return server response
-   *
-   * @throws IOException
-   */
   @Override
   protected AdvancedHttpResponse request(BaseHttpRequest<?> request) throws IOException {
     String spanKind = request.getSpanKind();
     if (Strings.isNullOrEmpty(spanKind)) {
-      logger.debug("execute request {} without tracing", request.getUrl());
+      LOG.debug("execute request {} without tracing", request.getUrl());
       return doRequest(request);
     }
     return doRequestWithTracing(request);
@@ -230,15 +132,9 @@ public class DefaultAdvancedHttpClient extends AdvancedHttpClient
   @Nonnull
   private DefaultAdvancedHttpResponse doRequest(BaseHttpRequest<?> request) throws IOException {
     HttpURLConnection connection = openConnection(request, new URL(request.getUrl()));
-
-    applyBaseSettings(request, connection);
-
-    if (connection instanceof HttpsURLConnection) {
-      applySSLSettings(request, (HttpsURLConnection) connection);
-    }
+    connection.setRequestMethod(request.getMethod());
 
     Content content = null;
-
     if (request instanceof AdvancedHttpRequestWithBody) {
       AdvancedHttpRequestWithBody ahrwb = (AdvancedHttpRequestWithBody) request;
 
@@ -259,164 +155,43 @@ public class DefaultAdvancedHttpClient extends AdvancedHttpClient
       applyContent(connection, content);
     }
 
-    return new DefaultAdvancedHttpResponse(this, connection,
-      connection.getResponseCode(), connection.getResponseMessage());
+    return new DefaultAdvancedHttpResponse(
+      this, connection, connection.getResponseCode(), connection.getResponseMessage()
+    );
   }
 
-  private void appendProxyAuthentication(HttpURLConnection connection)
-  {
-    String username = configuration.getProxyUser();
-    String password = configuration.getProxyPassword();
-
-    if (!Strings.isNullOrEmpty(username) ||!Strings.isNullOrEmpty(password))
-    {
-      logger.debug("append proxy authentication header for user {}", username);
-
-      String auth = username.concat(CREDENTIAL_SEPARATOR).concat(password);
-
-      auth = Base64.encodeToString(auth.getBytes());
-      connection.addRequestProperty(HEADER_PROXY_AUTHORIZATION,
-        PREFIX_BASIC_AUTHENTICATION.concat(auth));
-    }
-  }
-
-  private void applyBaseSettings(BaseHttpRequest<?> request,
-    HttpURLConnection connection)
-    throws ProtocolException
-  {
-    connection.setRequestMethod(request.getMethod());
-    connection.setReadTimeout(TIMEOUT_RAED);
-    connection.setConnectTimeout(TIMEOUT_CONNECTION);
-  }
-
-  private void applyContent(HttpURLConnection connection, Content content)
-    throws IOException
-  {
+  private void applyContent(HttpURLConnection connection, Content content) throws IOException {
     connection.setDoOutput(true);
-
-    OutputStream output = null;
-
-    try
-    {
-      output = connection.getOutputStream();
+    try (OutputStream output = connection.getOutputStream()) {
       content.process(output);
     }
-    finally
-    {
-      Closeables.close(output, true);
-    }
   }
 
-  private void applyHeaders(BaseHttpRequest<?> request,
-    HttpURLConnection connection)
-  {
+  private void applyHeaders(BaseHttpRequest<?> request, HttpURLConnection connection) {
     Multimap<String, String> headers = request.getHeaders();
-
-    for (String key : headers.keySet())
-    {
-      for (String value : headers.get(key))
-      {
+    for (String key : headers.keySet()) {
+      for (String value : headers.get(key)) {
         connection.addRequestProperty(key, value);
       }
     }
   }
 
-  private void applySSLSettings(BaseHttpRequest<?> request,
-    HttpsURLConnection connection)
-  {
-    if (request.isDisableCertificateValidation())
-    {
-      logger.trace("disable certificate validation");
-
-      try
-      {
-        TrustManager[] trustAllCerts = new TrustManager[] {
-                                         new TrustAllTrustManager() };
-        SSLContext sc = SSLContext.getInstance("TLS");
-
-        sc.init(null, trustAllCerts, new java.security.SecureRandom());
-        connection.setSSLSocketFactory(sc.getSocketFactory());
-      }
-      catch (KeyManagementException | NoSuchAlgorithmException ex)
-      {
-        logger.error("could not disable certificate validation", ex);
-      }
-    }
-    else
-    {
-      logger.trace("set ssl socket factory from provider");
-      connection.setSSLSocketFactory(sslContextProvider.get().getSocketFactory());
-    }
-
-    if (request.isDisableHostnameValidation())
-    {
-      logger.trace("disable hostname validation");
-      connection.setHostnameVerifier(new TrustAllHostnameVerifier());
-    }
+  private HttpURLConnection openConnection(BaseHttpRequest<?> request, URL url) throws IOException {
+    return connectionFactory.create(url, createOptionsFromRequest(request));
   }
 
-  private HttpURLConnection openConnection(BaseHttpRequest<?> request, URL url)
-    throws IOException
-  {
-    HttpURLConnection connection;
-
-    if (isProxyEnabled(request))
-    {
-      connection = openProxyConnection(url);
-      appendProxyAuthentication(connection);
+  private HttpConnectionOptions createOptionsFromRequest(BaseHttpRequest<?> request) {
+    HttpConnectionOptions options = new HttpConnectionOptions();
+    if (request.isDisableCertificateValidation()) {
+      options.withDisableCertificateValidation();
     }
-    else
-    {
-      if (request.isIgnoreProxySettings())
-      {
-        logger.trace("ignore proxy settings");
-      }
-
-      if (logger.isDebugEnabled()) {
-        logger.debug("fetch {}", url.toExternalForm());
-      }
-
-      connection = createConnection(url);
+    if (request.isDisableHostnameValidation()) {
+      options.withDisabledHostnameValidation();
     }
-
-    return connection;
+    if (request.isIgnoreProxySettings()) {
+      options.withIgnoreProxySettings();
+    }
+    return options;
   }
 
-  private HttpURLConnection openProxyConnection(URL url)
-    throws IOException
-  {
-    if (logger.isDebugEnabled())
-    {
-      logger.debug("fetch '{}' using proxy {}:{}", url.toExternalForm(),
-        configuration.getProxyServer(), configuration.getProxyPort());
-    }
-
-    SocketAddress address =
-      new InetSocketAddress(configuration.getProxyServer(),
-        configuration.getProxyPort());
-
-    return createProxyConnecton(url, address);
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  private boolean isProxyEnabled(BaseHttpRequest<?> request)
-  {
-    return !request.isIgnoreProxySettings()
-      && Proxies.isEnabled(configuration, request.getUrl());
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** scm-manager main configuration */
-  private final ScmConfiguration configuration;
-
-  /** set of content transformers */
-  private final Set<ContentTransformer> contentTransformers;
-
-  /** ssl context provider */
-  private final Provider<SSLContext> sslContextProvider;
-
-  /** tracer used for request tracing */
-  private final Tracer tracer;
 }

@@ -24,24 +24,28 @@
 
 package sonia.scm.repository.spi;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Stopwatch;
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNURL;
 import org.tmatesoft.svn.core.auth.BasicAuthenticationManager;
-import org.tmatesoft.svn.core.auth.ISVNAuthenticationManager;
 import org.tmatesoft.svn.core.auth.SVNAuthentication;
 import org.tmatesoft.svn.core.auth.SVNPasswordAuthentication;
 import org.tmatesoft.svn.core.auth.SVNSSLAuthentication;
 import org.tmatesoft.svn.core.wc.SVNWCUtil;
 import org.tmatesoft.svn.core.wc.admin.SVNAdminClient;
+import sonia.scm.net.GlobalProxyConfiguration;
+import sonia.scm.net.ProxyConfiguration;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.api.MirrorCommandResult;
 import sonia.scm.repository.api.Pkcs12ClientCertificateCredential;
 import sonia.scm.repository.api.UsernamePasswordCredential;
 
+import javax.annotation.Nonnull;
 import javax.net.ssl.TrustManager;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -55,10 +59,12 @@ public class SvnMirrorCommand extends AbstractSvnCommand implements MirrorComman
   private static final Logger LOG = LoggerFactory.getLogger(SvnMirrorCommand.class);
 
   private final TrustManager trustManager;
+  private final GlobalProxyConfiguration globalProxyConfiguration;
 
-  SvnMirrorCommand(SvnContext context, TrustManager trustManager) {
+  SvnMirrorCommand(SvnContext context, TrustManager trustManager, GlobalProxyConfiguration globalProxyConfiguration) {
     super(context);
     this.trustManager = trustManager;
+    this.globalProxyConfiguration = globalProxyConfiguration;
   }
 
   @Override
@@ -126,6 +132,28 @@ public class SvnMirrorCommand extends AbstractSvnCommand implements MirrorComman
   }
 
   private SVNAdminClient createAdminClient(SVNURL url, MirrorCommandRequest mirrorCommandRequest) {
+    BasicAuthenticationManager authenticationManager = createAuthenticationManager(url, mirrorCommandRequest);
+    return new SVNAdminClient(authenticationManager, SVNWCUtil.createDefaultOptions(true));
+  }
+
+  @VisibleForTesting
+  BasicAuthenticationManager createAuthenticationManager(SVNURL url, MirrorCommandRequest mirrorCommandRequest) {
+    SVNAuthentication[] authentications = createAuthentications(url, mirrorCommandRequest);
+
+    BasicAuthenticationManager authManager = new BasicAuthenticationManager(authentications) {
+      @Override
+      public TrustManager getTrustManager(SVNURL url) {
+        return trustManager;
+      }
+    };
+    checkAndApplyProxyConfiguration(
+      authManager, mirrorCommandRequest.getProxyConfiguration().orElse(globalProxyConfiguration), url
+    );
+    return authManager;
+  }
+
+  @Nonnull
+  private SVNAuthentication[] createAuthentications(SVNURL url, MirrorCommandRequest mirrorCommandRequest) {
     Collection<SVNAuthentication> authentications = new ArrayList<>();
     mirrorCommandRequest.getCredential(Pkcs12ClientCertificateCredential.class)
       .map(c -> createTlsAuth(url, c))
@@ -133,15 +161,26 @@ public class SvnMirrorCommand extends AbstractSvnCommand implements MirrorComman
     mirrorCommandRequest.getCredential(UsernamePasswordCredential.class)
       .map(c -> SVNPasswordAuthentication.newInstance(c.username(), c.password(), false, url, false))
       .ifPresent(authentications::add);
-    ISVNAuthenticationManager authManager = new BasicAuthenticationManager(
-      authentications.toArray(new SVNAuthentication[authentications.size()])) {
-      @Override
-      public TrustManager getTrustManager(SVNURL url) {
-        return trustManager;
-      }
-    };
+    return authentications.toArray(new SVNAuthentication[0]);
+  }
 
-    return new SVNAdminClient(authManager, SVNWCUtil.createDefaultOptions(true));
+  private void checkAndApplyProxyConfiguration(BasicAuthenticationManager authManager, ProxyConfiguration proxyConfiguration, SVNURL url) {
+    if (proxyConfiguration.isEnabled() && !proxyConfiguration.getExcludes().contains(url.getHost())) {
+      applyProxyConfiguration(authManager, proxyConfiguration);
+    }
+  }
+
+  private void applyProxyConfiguration(BasicAuthenticationManager authManager, ProxyConfiguration proxyConfiguration) {
+    char[] password = null;
+    if (!Strings.isNullOrEmpty(proxyConfiguration.getPassword())){
+      password = proxyConfiguration.getPassword().toCharArray();
+    }
+    authManager.setProxy(
+      proxyConfiguration.getHost(),
+      proxyConfiguration.getPort(),
+      Strings.emptyToNull(proxyConfiguration.getUsername()),
+      password
+    );
   }
 
   private SVNSSLAuthentication createTlsAuth(SVNURL url, Pkcs12ClientCertificateCredential c) {

@@ -21,55 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.io;
-
-//~--- non-JDK imports --------------------------------------------------------
-
-import sonia.scm.util.IOUtil;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 
 /**
- *
+ * Write configurations in ini format to file and streams.
  * @author Sebastian Sdorra
  */
-public class INIConfigurationWriter extends AbstractWriter<INIConfiguration>
-{
+public class INIConfigurationWriter extends AbstractWriter<INIConfiguration> {
 
-  /**
-   * Method description
-   *
-   *
-   * @param object
-   * @param output
-   *
-   * @throws IOException
-   */
   @Override
-  public void write(INIConfiguration object, OutputStream output)
-          throws IOException
-  {
-    PrintWriter writer = null;
-
-    try
-    {
-      writer = new PrintWriter(output);
-
-      for (INISection section : object.getSections())
-      {
+  public void write(INIConfiguration object, OutputStream output) throws IOException {
+    try (PrintWriter writer = new PrintWriter(output)) {
+      for (INISection section : object.getSections()) {
         writer.println(section.toString());
       }
-
-      writer.flush();
-    }
-    finally
-    {
-      IOUtil.close(writer);
     }
   }
 }

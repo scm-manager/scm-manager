@@ -29,7 +29,9 @@ import org.apache.commons.lang.StringUtils;
 import sonia.scm.repository.api.Credential;
 import sonia.scm.repository.api.MirrorFilter;
 import sonia.scm.security.PublicKey;
+import sonia.scm.net.ProxyConfiguration;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -48,6 +50,9 @@ public final class MirrorCommandRequest {
   private Collection<Credential> credentials = emptyList();
   private List<PublicKey> publicKeys = emptyList();
   private MirrorFilter filter = new MirrorFilter() {};
+
+  @Nullable
+  private ProxyConfiguration proxyConfiguration;
 
   public String getSourceUrl() {
     return sourceUrl;
@@ -91,5 +96,23 @@ public final class MirrorCommandRequest {
 
   public List<PublicKey> getPublicKeys() {
     return Collections.unmodifiableList(publicKeys);
+  }
+
+  /**
+   * Use the provided proxy configuration for the connection to the source repository.
+   * @param proxyConfiguration proxy configuration
+   * @since 2.23.0
+   */
+  public void setProxyConfiguration(ProxyConfiguration proxyConfiguration) {
+    this.proxyConfiguration = proxyConfiguration;
+  }
+
+  /**
+   * Returns an optional proxy configuration which is used for the connection to the source repository.
+   * @return optional proxy configuration or empty
+   * @since 2.23.0
+   */
+  public Optional<ProxyConfiguration> getProxyConfiguration() {
+    return Optional.ofNullable(proxyConfiguration);
   }
 }

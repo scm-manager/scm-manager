@@ -22,26 +22,12 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.spi;
+package org.eclipse.jgit.transport.http;
 
-import org.junit.Test;
-import sonia.scm.repository.Changeset;
-import sonia.scm.repository.HgTestUtil;
-import sonia.scm.repository.Person;
+import java.net.HttpURLConnection;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-public class HgLazyChangesetResolverTest extends AbstractHgCommandTestBase {
-
-  @Test
-  public void shouldResolveChangesets() {
-    HgLazyChangesetResolver changesetResolver = new HgLazyChangesetResolver(HgTestUtil.createFactory(handler, repositoryDirectory), cmdContext);
-    Iterable<Changeset> changesets = changesetResolver.call();
-
-    Changeset firstChangeset = changesets.iterator().next();
-    assertThat(firstChangeset.getId()).isEqualTo("2baab8e80280ef05a9aa76c49c76feca2872afb7");
-    assertThat(firstChangeset.getDate()).isEqualTo(1339586381000L);
-    assertThat(firstChangeset.getAuthor()).isEqualTo(Person.toPerson("Zaphod Beeblebrox <zaphod.beeblebrox@hitchhiker.com>"));
-    assertThat(firstChangeset.getDescription()).isEqualTo("added new line for blame");
+public class WrappedHttpUrlConnection extends JDKHttpConnection {
+  public WrappedHttpUrlConnection(HttpURLConnection urlConnection) {
+    super(urlConnection);
   }
 }

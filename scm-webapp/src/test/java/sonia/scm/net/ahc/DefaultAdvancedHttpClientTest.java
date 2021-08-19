@@ -24,110 +24,135 @@
 
 package sonia.scm.net.ahc;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import com.google.inject.util.Providers;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.config.ScmConfiguration;
-import sonia.scm.net.SSLContextProvider;
-import sonia.scm.net.TrustAllHostnameVerifier;
+import sonia.scm.net.GlobalProxyConfiguration;
+import sonia.scm.net.HttpURLConnectionFactory;
 import sonia.scm.trace.Span;
 import sonia.scm.trace.Tracer;
 import sonia.scm.util.HttpUtil;
 
+import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.SocketAddress;
-import java.net.URL;
+import java.net.Proxy;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-
-//~--- JDK imports ------------------------------------------------------------
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@RunWith(MockitoJUnitRunner.class)
-public class DefaultAdvancedHttpClientTest
-{
+@ExtendWith(MockitoExtension.class)
+class DefaultAdvancedHttpClientTest {
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
+  private static final int TIMEOUT_CONNECTION = 30000;
+  private static final int TIMEOUT_READ = 1200000;
+
+  @Mock
+  private HttpsURLConnection connection;
+
+  @Mock
+  private Tracer tracer;
+
+  @Mock
+  private Span span;
+
+  @Mock
+  private TrustManager trustManager;
+
+  private Set<ContentTransformer> transformers;
+
+  private ScmConfiguration configuration;
+
+  private DefaultAdvancedHttpClient client;
+
+  private Proxy proxy;
+
+  @BeforeEach
+  void setUp() {
+    configuration = new ScmConfiguration();
+    transformers = new HashSet<>();
+    HttpURLConnectionFactory connectionFactory = new HttpURLConnectionFactory(
+      new GlobalProxyConfiguration(configuration),
+      Providers.of(trustManager),
+      (url, proxy) -> {
+        this.proxy = proxy;
+        return connection;
+      },
+      () -> SSLContext.getInstance("TLS")
+    );
+
+    client = new DefaultAdvancedHttpClient(connectionFactory, tracer, transformers);
+    lenient().when(tracer.span(anyString())).thenReturn(span);
+  }
+
   @Test
-  public void testApplyBaseSettings() throws IOException
-  {
-    new AdvancedHttpRequest(client, HttpMethod.GET,
-      "https://www.scm-manager.org").request();
+  void shouldApplyBaseSettings() throws IOException {
+    new AdvancedHttpRequest(
+      client, HttpMethod.GET, "https://www.scm-manager.org"
+    ).request();
+
     verify(connection).setRequestMethod(HttpMethod.GET);
-    verify(connection).setReadTimeout(DefaultAdvancedHttpClient.TIMEOUT_RAED);
-    verify(connection).setConnectTimeout(
-      DefaultAdvancedHttpClient.TIMEOUT_CONNECTION);
+    verify(connection).setReadTimeout(TIMEOUT_READ);
+    verify(connection).setConnectTimeout(TIMEOUT_CONNECTION);
     verify(connection).addRequestProperty(HttpUtil.HEADER_CONTENT_LENGTH, "0");
   }
 
-  @Test(expected = ContentTransformerNotFoundException.class)
-  public void testContentTransformerNotFound(){
-    client.createTransformer(String.class, "text/plain");
+  @Test
+  void shouldThrowContentTransformerNotFound(){
+    assertThrows(ContentTransformerNotFoundException.class, () -> client.createTransformer(String.class, "text/plain"));
   }
 
   @Test
-  public void testContentTransformer(){
+  void shouldCreateContentTransformer() {
     ContentTransformer transformer = mock(ContentTransformer.class);
     when(transformer.isResponsible(String.class, "text/plain")).thenReturn(Boolean.TRUE);
     transformers.add(transformer);
     ContentTransformer t = client.createTransformer(String.class, "text/plain");
-    assertSame(transformer, t);
+    assertThat(t).isSameAs(transformer);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
   @Test
-  public void testApplyContent() throws IOException
-  {
+  void shouldApplyContent() throws IOException {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
     when(connection.getOutputStream()).thenReturn(baos);
 
-    AdvancedHttpRequestWithBody request =
-      new AdvancedHttpRequestWithBody(client, HttpMethod.PUT,
-        "https://www.scm-manager.org");
+    AdvancedHttpRequestWithBody request = new AdvancedHttpRequestWithBody(
+      client, HttpMethod.PUT, "https://www.scm-manager.org"
+    );
 
     request.stringContent("test").request();
     verify(connection).setDoOutput(true);
     verify(connection).addRequestProperty(HttpUtil.HEADER_CONTENT_LENGTH, "4");
-    assertEquals("test", baos.toString("UTF-8"));
+    assertThat(baos.toString("UTF-8")).isEqualTo("test");
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
   @Test
-  public void testApplyHeaders() throws IOException
-  {
-    AdvancedHttpRequest request = new AdvancedHttpRequest(client,
-                                    HttpMethod.POST,
-                                    "http://www.scm-manager.org");
+  void shouldApplyHeaders() throws IOException {
+    AdvancedHttpRequest request = new AdvancedHttpRequest(
+      client, HttpMethod.POST, "http://www.scm-manager.org"
+    );
 
     request.header("Header-One", "One").header("Header-Two", "Two").request();
     verify(connection).setRequestMethod(HttpMethod.POST);
@@ -135,18 +160,11 @@ public class DefaultAdvancedHttpClientTest
     verify(connection).addRequestProperty("Header-Two", "Two");
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
   @Test
-  public void testApplyMultipleHeaders() throws IOException
-  {
-    AdvancedHttpRequest request = new AdvancedHttpRequest(client,
-                                    HttpMethod.POST,
-                                    "http://www.scm-manager.org");
+  void shouldApplyMultipleHeaders() throws IOException {
+    AdvancedHttpRequest request = new AdvancedHttpRequest(
+      client, HttpMethod.POST, "http://www.scm-manager.org"
+    );
 
     request.header("Header-One", "One").header("Header-One", "Two").request();
     verify(connection).setRequestMethod(HttpMethod.POST);
@@ -154,118 +172,71 @@ public class DefaultAdvancedHttpClientTest
     verify(connection).addRequestProperty("Header-One", "Two");
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
   @Test
-  public void testBodyRequestWithoutContent() throws IOException
-  {
-    AdvancedHttpRequestWithBody request =
-      new AdvancedHttpRequestWithBody(client, HttpMethod.PUT,
-        "https://www.scm-manager.org");
+  void shouldReturnRequestWithoutContent() throws IOException {
+    AdvancedHttpRequestWithBody request = new AdvancedHttpRequestWithBody(
+      client, HttpMethod.PUT, "https://www.scm-manager.org");
 
     request.request();
     verify(connection).addRequestProperty(HttpUtil.HEADER_CONTENT_LENGTH, "0");
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
   @Test
-  public void testDisableCertificateValidation() throws IOException
-  {
-    AdvancedHttpRequest request = new AdvancedHttpRequest(client,
-                                    HttpMethod.GET,
-                                    "https://www.scm-manager.org");
+  void shouldDisableCertificateValidation() throws IOException {
+    AdvancedHttpRequest request = new AdvancedHttpRequest(
+      client, HttpMethod.GET, "https://www.scm-manager.org"
+    );
 
     request.disableCertificateValidation(true).request();
+
     verify(connection).setSSLSocketFactory(any(SSLSocketFactory.class));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
   @Test
-  public void testDisableHostnameValidation() throws IOException
-  {
-    AdvancedHttpRequest request = new AdvancedHttpRequest(client,
-                                    HttpMethod.GET,
-                                    "https://www.scm-manager.org");
+  void shouldDisableHostnameValidation() throws IOException {
+    AdvancedHttpRequest request = new AdvancedHttpRequest(
+      client, HttpMethod.GET,"https://www.scm-manager.org"
+    );
 
     request.disableHostnameValidation(true).request();
-    verify(connection).setHostnameVerifier(any(TrustAllHostnameVerifier.class));
+
+    verify(connection).setHostnameVerifier(any(HostnameVerifier.class));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
   @Test
-  public void testIgnoreProxy() throws IOException
-  {
+  void shouldIgnoreProxySettings() throws IOException {
     configuration.setProxyServer("proxy.scm-manager.org");
     configuration.setProxyPort(8090);
     configuration.setEnableProxy(true);
-    new AdvancedHttpRequest(client, HttpMethod.GET,
-      "https://www.scm-manager.org").ignoreProxySettings(true).request();
-    assertFalse(client.proxyConnection);
+
+    new AdvancedHttpRequest(
+      client, HttpMethod.GET, "https://www.scm-manager.org"
+    ).ignoreProxySettings(true).request();
+
+    assertThat(proxy).isNull();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
   @Test
-  public void testProxyConnection() throws IOException
-  {
+  void shouldUseProxyConnection() throws IOException {
     configuration.setProxyServer("proxy.scm-manager.org");
     configuration.setProxyPort(8090);
     configuration.setEnableProxy(true);
-    new AdvancedHttpRequest(client, HttpMethod.GET,
-      "https://www.scm-manager.org").request();
-    assertTrue(client.proxyConnection);
-  }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
-  @Test
-  public void testProxyWithAuthentication() throws IOException
-  {
-    configuration.setProxyServer("proxy.scm-manager.org");
-    configuration.setProxyPort(8090);
-    configuration.setProxyUser("tricia");
-    configuration.setProxyPassword("tricias secret");
-    configuration.setEnableProxy(true);
-    new AdvancedHttpRequest(client, HttpMethod.GET,
-      "https://www.scm-manager.org").request();
-    assertTrue(client.proxyConnection);
-    verify(connection).addRequestProperty(
-      DefaultAdvancedHttpClient.HEADER_PROXY_AUTHORIZATION,
-      "Basic dHJpY2lhOnRyaWNpYXMgc2VjcmV0");
+    new AdvancedHttpRequest(
+      client, HttpMethod.GET,"https://www.scm-manager.org"
+    ).request();
+
+    assertThat(proxy).isNotNull();
   }
 
   @Test
-  public void shouldCreateTracingSpan() throws IOException {
+  void shouldCreateTracingSpan() throws IOException {
     when(connection.getResponseCode()).thenReturn(200);
 
-    new AdvancedHttpRequest(client, HttpMethod.GET, "https://www.scm-manager.org").spanKind("spaceships").request();
+    new AdvancedHttpRequest(
+      client, HttpMethod.GET, "https://www.scm-manager.org"
+    ).spanKind("spaceships").request();
+
     verify(tracer).span("spaceships");
     verify(span).label("url", "https://www.scm-manager.org");
     verify(span).label("method", "GET");
@@ -275,10 +246,13 @@ public class DefaultAdvancedHttpClientTest
   }
 
   @Test
-  public void shouldCreateFailedTracingSpan() throws IOException {
+  void shouldCreateFailedTracingSpan() throws IOException {
     when(connection.getResponseCode()).thenReturn(500);
 
-    new AdvancedHttpRequest(client, HttpMethod.GET, "https://www.scm-manager.org").request();
+    new AdvancedHttpRequest(
+      client, HttpMethod.GET, "https://www.scm-manager.org"
+    ).request();
+
     verify(tracer).span("HTTP Request");
     verify(span).label("url", "https://www.scm-manager.org");
     verify(span).label("method", "GET");
@@ -288,16 +262,20 @@ public class DefaultAdvancedHttpClientTest
   }
 
   @Test
-  public void shouldCreateFailedTracingSpanOnIOException() throws IOException {
+  void shouldCreateFailedTracingSpanOnIOException() throws IOException {
     when(connection.getResponseCode()).thenThrow(new IOException("failed"));
 
     boolean thrown = false;
     try {
-      new AdvancedHttpRequest(client, HttpMethod.DELETE, "http://failing.host").spanKind("failures").request();
+
+      new AdvancedHttpRequest(
+        client, HttpMethod.DELETE, "http://failing.host"
+      ).spanKind("failures").request();
+
     } catch (IOException ex) {
       thrown = true;
     }
-    assertTrue(thrown);
+    assertThat(thrown).isTrue();
 
     verify(tracer).span("failures");
     verify(span).label("url", "http://failing.host");
@@ -309,19 +287,24 @@ public class DefaultAdvancedHttpClientTest
   }
 
   @Test
-  public void shouldNotCreateSpan() throws IOException {
+  void shouldNotCreateSpan() throws IOException {
     when(connection.getResponseCode()).thenReturn(200);
 
-    new AdvancedHttpRequest(client, HttpMethod.GET, "https://www.scm-manager.org")
-      .disableTracing().request();
+    new AdvancedHttpRequest(
+      client, HttpMethod.GET, "https://www.scm-manager.org"
+    ).disableTracing().request();
+
     verify(tracer, never()).span(anyString());
   }
 
   @Test
-  public void shouldNotTraceRequestIfAcceptedResponseCode() throws IOException {
+  void shouldNotTraceRequestIfAcceptedResponseCode() throws IOException {
     when(connection.getResponseCode()).thenReturn(400);
 
-    new AdvancedHttpRequest(client, HttpMethod.GET, "https://www.scm-manager.org").acceptStatusCodes(400).request();
+    new AdvancedHttpRequest(
+      client, HttpMethod.GET, "https://www.scm-manager.org"
+    ).acceptStatusCodes(400).request();
+
     verify(tracer).span("HTTP Request");
     verify(span).label("status", 400);
     verify(span, never()).failed();
@@ -329,120 +312,16 @@ public class DefaultAdvancedHttpClientTest
   }
 
   @Test
-  public void shouldTraceRequestAsFailedIfAcceptedResponseCodeDoesntMatch() throws IOException {
+  void shouldTraceRequestAsFailedIfAcceptedResponseCodeDoesntMatch() throws IOException {
     when(connection.getResponseCode()).thenReturn(401);
 
-    new AdvancedHttpRequest(client, HttpMethod.GET, "https://www.scm-manager.org").acceptStatusCodes(400).request();
+    new AdvancedHttpRequest(
+      client, HttpMethod.GET, "https://www.scm-manager.org"
+    ).acceptStatusCodes(400).request();
+
     verify(tracer).span("HTTP Request");
     verify(span).label("status", 401);
     verify(span).failed();
     verify(span).close();
   }
-
-
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   */
-  @Before
-  public void setUp()
-  {
-    configuration = new ScmConfiguration();
-    transformers = new HashSet<>();
-    client = new TestingAdvacedHttpClient(configuration, transformers);
-    when(tracer.span(anyString())).thenReturn(span);
-  }
-
-  //~--- inner classes --------------------------------------------------------
-
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 15/05/01
-   * @author         Enter your name here...
-   */
-  public class TestingAdvacedHttpClient extends DefaultAdvancedHttpClient
-  {
-
-    /**
-     * Constructs ...
-     *
-     *
-     * @param configuration
-     * @param transformers
-     */
-    public TestingAdvacedHttpClient(ScmConfiguration configuration, Set<ContentTransformer> transformers)
-    {
-      super(configuration, tracer, transformers, new SSLContextProvider());
-    }
-
-    //~--- methods ------------------------------------------------------------
-
-    /**
-     * Method description
-     *
-     *
-     * @param url
-     *
-     * @return
-     *
-     * @throws IOException
-     */
-    @Override
-    protected HttpURLConnection createConnection(URL url) throws IOException
-    {
-      return connection;
-    }
-
-    /**
-     * Method description
-     *
-     *
-     * @param url
-     * @param address
-     *
-     * @return
-     *
-     * @throws IOException
-     */
-    @Override
-    protected HttpURLConnection createProxyConnecton(URL url,
-      SocketAddress address)
-      throws IOException
-    {
-      proxyConnection = true;
-
-      return connection;
-    }
-
-    //~--- fields -------------------------------------------------------------
-
-    /** Field description */
-    private boolean proxyConnection = false;
-  }
-
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private TestingAdvacedHttpClient client;
-
-  /** Field description */
-  private ScmConfiguration configuration;
-
-  /** Field description */
-  @Mock
-  private HttpsURLConnection connection;
-
-  /** Field description */
-  private Set<ContentTransformer> transformers;
-
-  @Mock
-  private Tracer tracer;
-
-  @Mock
-  private Span span;
 }

@@ -21,83 +21,52 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.io;
-
-//~--- non-JDK imports --------------------------------------------------------
-
-import sonia.scm.util.IOUtil;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- *
+ * Read configuration in ini format from files and streams.
  * @author Sebastian Sdorra
  */
-public class INIConfigurationReader extends AbstractReader<INIConfiguration>
-{
+public class INIConfigurationReader extends AbstractReader<INIConfiguration> {
 
-  /** Field description */
-  private static final Pattern sectionPattern =
-    Pattern.compile("\\[([^\\]]+)\\]");
+  private static final Pattern sectionPattern = Pattern.compile("\\[([^]]+)]");
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param input
-   *
-   * @return
-   *
-   * @throws IOException
-   */
   @Override
-  public INIConfiguration read(InputStream input) throws IOException
-  {
+  public INIConfiguration read(InputStream input) throws IOException {
     INIConfiguration configuration = new INIConfiguration();
 
-    try
-    {
-      BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+    try (BufferedReader reader = new BufferedReader(new InputStreamReader(input))) {
+
       INISection section = null;
       String line = reader.readLine();
 
-      while (line != null)
-      {
+      while (line != null) {
         line = line.trim();
 
         Matcher sectionMatcher = sectionPattern.matcher(line);
 
-        if (sectionMatcher.matches())
-        {
+        if (sectionMatcher.matches()) {
           String name = sectionMatcher.group(1);
 
-          if (section != null)
-          {
+          if (section != null) {
             configuration.addSection(section);
           }
 
           section = new INISection(name);
-        }
-        else if ((section != null) &&!line.startsWith(";")
-                 &&!line.startsWith("#"))
-        {
+        } else if ((section != null) && !line.startsWith(";") && !line.startsWith("#")) {
           int index = line.indexOf('=');
 
-          if (index > 0)
-          {
+          if (index > 0) {
             String key = line.substring(0, index).trim();
-            String value = line.substring(index + 1, line.length()).trim();
+            String value = line.substring(index + 1).trim();
 
             section.setParameter(key, value);
           }
@@ -106,14 +75,9 @@ public class INIConfigurationReader extends AbstractReader<INIConfiguration>
         line = reader.readLine();
       }
 
-      if (section != null)
-      {
+      if (section != null) {
         configuration.addSection(section);
       }
-    }
-    finally
-    {
-      IOUtil.close(input);
     }
 
     return configuration;

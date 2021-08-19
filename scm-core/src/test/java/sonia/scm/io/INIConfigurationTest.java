@@ -22,26 +22,49 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.spi;
+package sonia.scm.io;
 
-import org.junit.Test;
-import sonia.scm.repository.Changeset;
-import sonia.scm.repository.HgTestUtil;
-import sonia.scm.repository.Person;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class HgLazyChangesetResolverTest extends AbstractHgCommandTestBase {
+class INIConfigurationTest {
 
   @Test
-  public void shouldResolveChangesets() {
-    HgLazyChangesetResolver changesetResolver = new HgLazyChangesetResolver(HgTestUtil.createFactory(handler, repositoryDirectory), cmdContext);
-    Iterable<Changeset> changesets = changesetResolver.call();
+  void shouldAddAndGet() {
+    INIConfiguration configuration = new INIConfiguration();
 
-    Changeset firstChangeset = changesets.iterator().next();
-    assertThat(firstChangeset.getId()).isEqualTo("2baab8e80280ef05a9aa76c49c76feca2872afb7");
-    assertThat(firstChangeset.getDate()).isEqualTo(1339586381000L);
-    assertThat(firstChangeset.getAuthor()).isEqualTo(Person.toPerson("Zaphod Beeblebrox <zaphod.beeblebrox@hitchhiker.com>"));
-    assertThat(firstChangeset.getDescription()).isEqualTo("added new line for blame");
+    INISection section = new INISection("one");
+    configuration.addSection(section);
+
+    assertThat(configuration.getSection("one")).isSameAs(section);
   }
+
+  @Test
+  void shouldRemoveExistingSection() {
+    INIConfiguration configuration = new INIConfiguration();
+
+    INISection section = new INISection("one");
+    configuration.addSection(section);
+    configuration.removeSection("one");
+
+    assertThat(configuration.getSection("one")).isNull();
+  }
+
+  @Test
+  void shouldAllowRemoveDuringIteration() {
+    INIConfiguration configuration = new INIConfiguration();
+    configuration.addSection(new INISection("one"));
+    configuration.addSection(new INISection("two"));
+    configuration.addSection(new INISection("three"));
+
+    for (INISection section : configuration.getSections()) {
+      if (section.getName().startsWith("t")) {
+        configuration.removeSection(section.getName());
+      }
+    }
+
+    assertThat(configuration.getSections()).hasSize(1);
+  }
+
 }
