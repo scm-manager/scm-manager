@@ -81,7 +81,7 @@ public class TemporaryConfigFactory {
       return this;
     }
 
-    @SuppressWarnings("java:S4042") // we now that we delete a file
+    @SuppressWarnings("java:S4042") // we know that we delete a file
     public <T> T call(HgCallable<T> callable) throws IOException {
       File file = new File(context.getDirectory(), HgRepositoryHandler.PATH_HGRC);
       boolean exists = file.exists();
