@@ -26,20 +26,22 @@ package sonia.scm.work;
 
 import lombok.EqualsAndHashCode;
 
+import javax.annotation.Nullable;
 import java.io.Serializable;
 
 @EqualsAndHashCode
 final class Resource implements Serializable {
 
   private final String name;
+  @Nullable
   private final String id;
 
-  public Resource(String name) {
+  Resource(String name) {
     this.name = name;
     this.id = null;
   }
 
-  public Resource(String name, String id) {
+  Resource(String name, @Nullable String id) {
     this.name = name;
     this.id = id;
   }

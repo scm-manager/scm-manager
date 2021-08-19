@@ -27,6 +27,8 @@ package sonia.scm.work;
 import com.google.common.annotations.Beta;
 import sonia.scm.ModelObject;
 
+import javax.annotation.Nullable;
+
 @Beta
 public interface CentralWorkQueue {
 
@@ -37,7 +39,7 @@ public interface CentralWorkQueue {
   interface Enqueue {
 
     Enqueue locks(String resource);
-    Enqueue locks(String resource, String id);
+    Enqueue locks(String resource, @Nullable String id);
     Enqueue locks(String resource, ModelObject object);
 
     void enqueue(Task task);

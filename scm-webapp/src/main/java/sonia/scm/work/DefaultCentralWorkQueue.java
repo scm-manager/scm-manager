@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.ModelObject;
 import sonia.scm.metrics.Metrics;
 
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Singleton;
 import java.io.Closeable;
 import java.util.ArrayList;
@@ -41,7 +41,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -54,7 +53,7 @@ public class DefaultCentralWorkQueue implements CentralWorkQueue, Closeable {
   private static final Logger LOG = LoggerFactory.getLogger(DefaultCentralWorkQueue.class);
 
   private final List<UnitOfWork> queue = new ArrayList<>();
-  private final List<Resource> lockedResources = new CopyOnWriteArrayList<>();
+  private final List<Resource> lockedResources = new ArrayList<>();
   private final AtomicInteger size = new AtomicInteger();
   private final AtomicLong order = new AtomicLong();
 
@@ -181,7 +180,7 @@ public class DefaultCentralWorkQueue implements CentralWorkQueue, Closeable {
     }
 
     @Override
-    public Enqueue locks(String resource, String id) {
+    public Enqueue locks(String resource, @Nullable String id) {
       locks.add(new Resource(resource, id));
       return this;
     }
@@ -199,11 +198,6 @@ public class DefaultCentralWorkQueue implements CentralWorkQueue, Closeable {
     @Override
     public void enqueue(Class<? extends Task> task) {
       appendAndRun(new InjectingUnitOfWork(order.incrementAndGet(), locks, task));
-    }
-
-    @Nonnull
-    private String tag(ModelObject object) {
-      return object.getClass() + ":" + object.getId();
     }
 
     private synchronized void appendAndRun(UnitOfWork unitOfWork) {
