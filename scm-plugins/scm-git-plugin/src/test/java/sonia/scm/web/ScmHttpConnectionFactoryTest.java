@@ -28,6 +28,8 @@ import org.eclipse.jgit.transport.http.HttpConnection;
 import org.eclipse.jgit.transport.http.JDKHttpConnection;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -38,6 +40,7 @@ import java.io.IOException;
 import java.net.URL;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -45,6 +48,9 @@ class ScmHttpConnectionFactoryTest {
 
   @Mock
   private HttpURLConnectionFactory internalConnectionFactory;
+
+  @Captor
+  private ArgumentCaptor<HttpConnectionOptions> connectionOptionsCaptor;
 
   @Test
   void shouldCreateConnection() throws IOException {
@@ -56,7 +62,8 @@ class ScmHttpConnectionFactoryTest {
     assertThat(httpConnection)
       .isNotNull()
       .isInstanceOf(JDKHttpConnection.class);
-    verify(internalConnectionFactory).create(url, null);
+    verify(internalConnectionFactory).create(eq(url), connectionOptionsCaptor.capture());
+    assertThat(connectionOptionsCaptor.getValue()).isNotNull();
   }
 
   @Test

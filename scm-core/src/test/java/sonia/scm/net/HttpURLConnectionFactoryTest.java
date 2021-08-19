@@ -109,6 +109,20 @@ class HttpURLConnectionFactoryTest {
     assertThat(connection).isNotNull();
   }
 
+  @Test
+  void shouldThrowWithNonExistentConnectionOptions() throws MalformedURLException {
+    URLConnection urlConnection = mock(HttpURLConnection.class);
+    HttpURLConnectionFactory factory = new HttpURLConnectionFactory(
+      new GlobalProxyConfiguration(new ScmConfiguration()),
+      () -> null,
+      (url, proxy) -> urlConnection,
+      new DefaultSSLContextFactory()
+    );
+    final URL url = new URL("http://hitchhiker.com");
+
+    assertThrows(IllegalArgumentException.class, () -> factory.create(url, null));
+  }
+
   @Nested
   class HttpsConnectionTests {
 

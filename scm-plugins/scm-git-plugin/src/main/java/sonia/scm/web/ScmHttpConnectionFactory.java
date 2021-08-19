@@ -42,7 +42,7 @@ public class ScmHttpConnectionFactory implements HttpConnectionFactory {
 
   @Inject
   public ScmHttpConnectionFactory(HttpURLConnectionFactory connectionFactory) {
-    this(connectionFactory, null);
+    this(connectionFactory, new HttpConnectionOptions());
   }
 
   public ScmHttpConnectionFactory(HttpURLConnectionFactory connectionFactory, HttpConnectionOptions options) {

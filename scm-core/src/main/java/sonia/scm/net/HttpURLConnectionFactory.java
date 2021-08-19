@@ -25,6 +25,7 @@
 package sonia.scm.net;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import lombok.Value;
 import org.slf4j.Logger;
@@ -111,6 +112,7 @@ public final class HttpURLConnectionFactory {
    * @throws IOException
    */
   public HttpURLConnection create(URL url, HttpConnectionOptions options) throws IOException {
+    Preconditions.checkArgument(options != null, "Options are required");
     return new InternalConnectionFactory(options).create(url);
   }
 
