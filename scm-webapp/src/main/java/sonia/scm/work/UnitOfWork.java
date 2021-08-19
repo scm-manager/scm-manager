@@ -35,9 +35,9 @@ import java.util.Optional;
 import java.util.Set;
 
 @EqualsAndHashCode
-abstract class ChunkOfWork implements Runnable, Serializable, Comparable<ChunkOfWork> {
+abstract class UnitOfWork implements Runnable, Serializable, Comparable<UnitOfWork> {
 
-  private static final Logger LOG = LoggerFactory.getLogger(ChunkOfWork.class);
+  private static final Logger LOG = LoggerFactory.getLogger(UnitOfWork.class);
 
   private long order;
   private final Set<String> blocks;
@@ -46,7 +46,7 @@ abstract class ChunkOfWork implements Runnable, Serializable, Comparable<ChunkOf
   private transient Task task;
   private transient String storageId;
 
-  protected ChunkOfWork(long order, Set<String> blocks, Set<String> blockedBy) {
+  protected UnitOfWork(long order, Set<String> blocks, Set<String> blockedBy) {
     this.order = order;
     this.blocks = blocks;
     this.blockedBy = blockedBy;
@@ -97,7 +97,7 @@ abstract class ChunkOfWork implements Runnable, Serializable, Comparable<ChunkOf
   }
 
   @Override
-  public int compareTo(ChunkOfWork o) {
+  public int compareTo(UnitOfWork o) {
     return Long.compare(order, o.order);
   }
 }

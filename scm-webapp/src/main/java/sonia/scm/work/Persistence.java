@@ -62,8 +62,8 @@ class Persistence {
     this.store = store;
   }
 
-  Collection<ChunkOfWork> loadAll() {
-    List<ChunkOfWork> chunks = new ArrayList<>();
+  Collection<UnitOfWork> loadAll() {
+    List<UnitOfWork> chunks = new ArrayList<>();
     for (Blob blob : store.getAll()) {
       load(blob).ifPresent(chunkOfWork -> {
         chunkOfWork.setStorageId(null);
@@ -75,13 +75,13 @@ class Persistence {
     return chunks;
   }
 
-  private Optional<ChunkOfWork> load(Blob blob) {
+  private Optional<UnitOfWork> load(Blob blob) {
     try (ObjectInputStream stream = new ClassLoaderObjectInputStream(classLoader, blob.getInputStream())) {
       Object o = stream.readObject();
-      if (o instanceof ChunkOfWork) {
-        return Optional.of((ChunkOfWork) o);
+      if (o instanceof UnitOfWork) {
+        return Optional.of((UnitOfWork) o);
       } else {
-        LOG.error("loaded object is not a instance of {}: {}", ChunkOfWork.class, o);
+        LOG.error("loaded object is not a instance of {}: {}", UnitOfWork.class, o);
       }
     } catch (IOException | ClassNotFoundException ex) {
       LOG.error("failed to load task from store", ex);
@@ -89,20 +89,20 @@ class Persistence {
     return Optional.empty();
   }
 
-  void store(ChunkOfWork chunkOfWork) {
+  void store(UnitOfWork unitOfWork) {
     Blob blob = store.create();
     try (ObjectOutputStream outputStream = new ObjectOutputStream(blob.getOutputStream())) {
-      outputStream.writeObject(chunkOfWork);
+      outputStream.writeObject(unitOfWork);
       blob.commit();
 
-      chunkOfWork.setStorageId(blob.getId());
+      unitOfWork.setStorageId(blob.getId());
     } catch (IOException ex) {
-      LOG.error("failed to persist task {}", chunkOfWork, ex);
+      LOG.error("failed to persist task {}", unitOfWork, ex);
     }
   }
 
-  void remove(ChunkOfWork chunkOfWork) {
-    chunkOfWork.getStorageId().ifPresent(store::remove);
+  void remove(UnitOfWork unitOfWork) {
+    unitOfWork.getStorageId().ifPresent(store::remove);
   }
 
 }

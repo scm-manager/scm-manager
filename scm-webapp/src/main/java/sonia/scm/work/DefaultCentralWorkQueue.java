@@ -49,7 +49,7 @@ public class DefaultCentralWorkQueue implements CentralWorkQueue, Closeable {
 
   private static final Logger LOG = LoggerFactory.getLogger(DefaultCentralWorkQueue.class);
 
-  private final List<ChunkOfWork> queue = new ArrayList<>();
+  private final List<UnitOfWork> queue = new ArrayList<>();
   private final List<String> currentlyBlocked = new CopyOnWriteArrayList<>();
   private final AtomicInteger size = new AtomicInteger();
   private final AtomicLong order = new AtomicLong();
@@ -88,9 +88,9 @@ public class DefaultCentralWorkQueue implements CentralWorkQueue, Closeable {
   }
 
   private void loadFromDisk() {
-    for (ChunkOfWork chunk : persistence.loadAll()) {
-      chunk.setOrder(order.incrementAndGet());
-      append(chunk);
+    for (UnitOfWork unitOfWork : persistence.loadAll()) {
+      unitOfWork.setOrder(order.incrementAndGet());
+      append(unitOfWork);
     }
     run();
   }
@@ -103,50 +103,50 @@ public class DefaultCentralWorkQueue implements CentralWorkQueue, Closeable {
     }
   }
 
-  private synchronized void append(ChunkOfWork chunkOfWork) {
-    persistence.store(chunkOfWork);
+  private synchronized void append(UnitOfWork unitOfWork) {
+    persistence.store(unitOfWork);
     int queueSize = size.incrementAndGet();
-    queue.add(chunkOfWork);
-    LOG.debug("add task {} to queue, queue size is now {}", chunkOfWork, queueSize);
+    queue.add(unitOfWork);
+    LOG.debug("add task {} to queue, queue size is now {}", unitOfWork, queueSize);
   }
 
   private synchronized void run() {
-    Iterator<ChunkOfWork> iterator = queue.iterator();
+    Iterator<UnitOfWork> iterator = queue.iterator();
     while (iterator.hasNext()) {
-      ChunkOfWork chunkOfWork = iterator.next();
-      if (isRunnable(chunkOfWork)) {
-        run(chunkOfWork);
+      UnitOfWork unitOfWork = iterator.next();
+      if (isRunnable(unitOfWork)) {
+        run(unitOfWork);
         iterator.remove();
       }
     }
   }
 
-  private void run(ChunkOfWork chunkOfWork) {
-    currentlyBlocked.addAll(chunkOfWork.getBlocks());
-    chunkOfWork.init(injector, this::finalizeWork);
-    LOG.trace("pass task {} to executor", chunkOfWork);
-    executor.execute(chunkOfWork);
+  private void run(UnitOfWork unitOfWork) {
+    currentlyBlocked.addAll(unitOfWork.getBlocks());
+    unitOfWork.init(injector, this::finalizeWork);
+    LOG.trace("pass task {} to executor", unitOfWork);
+    executor.execute(unitOfWork);
   }
 
-  private synchronized void finalizeWork(ChunkOfWork chunkOfWork) {
-    for (String block : chunkOfWork.getBlocks()) {
+  private synchronized void finalizeWork(UnitOfWork unitOfWork) {
+    for (String block : unitOfWork.getBlocks()) {
       currentlyBlocked.remove(block);
     }
-    persistence.remove(chunkOfWork);
+    persistence.remove(unitOfWork);
     run();
     int queueSize = size.decrementAndGet();
     LOG.debug("finish task, queue size is now {}", queueSize);
   }
 
-  private boolean isRunnable(ChunkOfWork chunkOfWork) {
-    for (String block : chunkOfWork.getBlocks()) {
+  private boolean isRunnable(UnitOfWork unitOfWork) {
+    for (String block : unitOfWork.getBlocks()) {
       if (currentlyBlocked.contains(block)) {
-        LOG.trace("skip {}, because it is blocked by {}", chunkOfWork, block);
+        LOG.trace("skip {}, because it is blocked by {}", unitOfWork, block);
         return false;
       }
     }
-    for (String block : chunkOfWork.getBlockedBy()) {
-      LOG.trace("skip {}, because it is blocked by {}", chunkOfWork, block);
+    for (String block : unitOfWork.getBlockedBy()) {
+      LOG.trace("skip {}, because it is blocked by {}", unitOfWork, block);
       if (currentlyBlocked.contains(block)) {
         return false;
       }
@@ -189,12 +189,12 @@ public class DefaultCentralWorkQueue implements CentralWorkQueue, Closeable {
 
     @Override
     public void enqueue(Task task) {
-      appendAndRun(new SimpleChunkOfWork(order.incrementAndGet(), blocks, blockedBy, task));
+      appendAndRun(new SimpleUnitOfWork(order.incrementAndGet(), blocks, blockedBy, task));
     }
 
     @Override
     public void enqueue(Class<? extends Task> task) {
-      appendAndRun(new InjectingChunkOfWork(order.incrementAndGet(), blocks, blockedBy, task));
+      appendAndRun(new InjectingUnitOfWork(order.incrementAndGet(), blocks, blockedBy, task));
     }
 
     @Nonnull
@@ -202,8 +202,8 @@ public class DefaultCentralWorkQueue implements CentralWorkQueue, Closeable {
       return object.getClass() + ":" + object.getId();
     }
 
-    private synchronized void appendAndRun(ChunkOfWork chunkOfWork) {
-      append(chunkOfWork);
+    private synchronized void appendAndRun(UnitOfWork unitOfWork) {
+      append(unitOfWork);
       run();
     }
   }

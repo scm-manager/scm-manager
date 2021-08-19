@@ -30,11 +30,11 @@ import lombok.EqualsAndHashCode;
 import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
-class InjectingChunkOfWork extends ChunkOfWork {
+class InjectingUnitOfWork extends UnitOfWork {
 
   private final Class<? extends Task> task;
 
-  InjectingChunkOfWork(long order, Set<String> blocks, Set<String> blockedBy, Class<? extends Task> task) {
+  InjectingUnitOfWork(long order, Set<String> blocks, Set<String> blockedBy, Class<? extends Task> task) {
     super(order, blocks, blockedBy);
     this.task = task;
   }

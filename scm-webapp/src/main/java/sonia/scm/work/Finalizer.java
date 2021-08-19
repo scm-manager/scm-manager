@@ -27,6 +27,6 @@ package sonia.scm.work;
 @FunctionalInterface
 interface Finalizer {
 
-  void finalizeWork(ChunkOfWork chunkOfWork);
+  void finalizeWork(UnitOfWork unitOfWork);
 
 }

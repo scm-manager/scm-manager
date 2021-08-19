@@ -30,11 +30,11 @@ import lombok.EqualsAndHashCode;
 import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
-class SimpleChunkOfWork extends ChunkOfWork {
+class SimpleUnitOfWork extends UnitOfWork {
 
   private final Task task;
 
-  SimpleChunkOfWork(long order, Set<String> blocks, Set<String> blockedBy, Task task) {
+  SimpleUnitOfWork(long order, Set<String> blocks, Set<String> blockedBy, Task task) {
     super(order, blocks, blockedBy);
     this.task = task;
   }
