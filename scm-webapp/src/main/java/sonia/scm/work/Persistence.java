@@ -66,7 +66,7 @@ class Persistence {
     List<UnitOfWork> chunks = new ArrayList<>();
     for (Blob blob : store.getAll()) {
       load(blob).ifPresent(chunkOfWork -> {
-        chunkOfWork.setStorageId(null);
+        chunkOfWork.assignStorageId(null);
         chunks.add(chunkOfWork);
       });
       store.remove(blob);
@@ -95,7 +95,7 @@ class Persistence {
       outputStream.writeObject(unitOfWork);
       blob.commit();
 
-      unitOfWork.setStorageId(blob.getId());
+      unitOfWork.assignStorageId(blob.getId());
     } catch (IOException ex) {
       LOG.error("failed to persist task {}", unitOfWork, ex);
     }

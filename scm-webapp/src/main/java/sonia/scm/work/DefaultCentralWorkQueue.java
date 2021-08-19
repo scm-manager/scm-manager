@@ -24,11 +24,14 @@
 
 package sonia.scm.work;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.ModelObject;
+import sonia.scm.metrics.Metrics;
 
 import javax.annotation.Nonnull;
 import java.io.Closeable;
@@ -57,19 +60,31 @@ public class DefaultCentralWorkQueue implements CentralWorkQueue, Closeable {
   private final Injector injector;
   private final Persistence persistence;
   private final ExecutorService executor;
+  private final MeterRegistry meterRegistry;
 
   @Inject
-  public DefaultCentralWorkQueue(Injector injector, Persistence persistence) {
-    this(injector, persistence, () -> Runtime.getRuntime().availableProcessors());
+  public DefaultCentralWorkQueue(Injector injector, Persistence persistence, MeterRegistry meterRegistry) {
+    this(injector, persistence, meterRegistry, () -> Runtime.getRuntime().availableProcessors());
   }
 
-  DefaultCentralWorkQueue(Injector injector, Persistence persistence, IntSupplier availableProcessorResolver) {
+  DefaultCentralWorkQueue(Injector injector, Persistence persistence, MeterRegistry meterRegistry, IntSupplier availableProcessorResolver) {
     this.injector = injector;
     this.persistence = persistence;
-    // TODO metrics
-    this.executor = Executors.newFixedThreadPool(poolSize(availableProcessorResolver));
+    this.executor = createExecutorService(meterRegistry, poolSize(availableProcessorResolver));
+    this.meterRegistry = meterRegistry;
 
     loadFromDisk();
+  }
+
+  private static ExecutorService createExecutorService(MeterRegistry registry, int fixed) {
+    ExecutorService executorService = Executors.newFixedThreadPool(
+      fixed,
+      new ThreadFactoryBuilder()
+        .setNameFormat("CentralWorkQueue-%d")
+        .build()
+    );
+    Metrics.executor(registry, executorService, "CentralWorkQueue", "fixed");
+    return executorService;
   }
 
   @Override
@@ -89,7 +104,7 @@ public class DefaultCentralWorkQueue implements CentralWorkQueue, Closeable {
 
   private void loadFromDisk() {
     for (UnitOfWork unitOfWork : persistence.loadAll()) {
-      unitOfWork.setOrder(order.incrementAndGet());
+      unitOfWork.restore(order.incrementAndGet());
       append(unitOfWork);
     }
     run();
@@ -117,13 +132,15 @@ public class DefaultCentralWorkQueue implements CentralWorkQueue, Closeable {
       if (isRunnable(unitOfWork)) {
         run(unitOfWork);
         iterator.remove();
+      } else {
+        unitOfWork.blocked();
       }
     }
   }
 
   private void run(UnitOfWork unitOfWork) {
     currentlyBlocked.addAll(unitOfWork.getBlocks());
-    unitOfWork.init(injector, this::finalizeWork);
+    unitOfWork.init(injector, this::finalizeWork, meterRegistry);
     LOG.trace("pass task {} to executor", unitOfWork);
     executor.execute(unitOfWork);
   }

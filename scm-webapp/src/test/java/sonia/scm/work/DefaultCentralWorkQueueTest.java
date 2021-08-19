@@ -26,6 +26,10 @@ package sonia.scm.work;
 
 import com.google.inject.Guice;
 import com.google.inject.Inject;
+import io.micrometer.core.instrument.Meter;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Timer;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -40,6 +44,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
@@ -57,11 +62,13 @@ class DefaultCentralWorkQueueTest {
   @Nested
   class WithDefaultInjector {
 
+    private MeterRegistry meterRegistry;
     private DefaultCentralWorkQueue queue;
 
     @BeforeEach
     void setUp() {
-      queue = new DefaultCentralWorkQueue(Guice.createInjector(), persistence);
+      meterRegistry = new SimpleMeterRegistry();
+      queue = new DefaultCentralWorkQueue(Guice.createInjector(), persistence, meterRegistry);
     }
 
     private final AtomicInteger runs = new AtomicInteger();
@@ -144,6 +151,65 @@ class DefaultCentralWorkQueueTest {
       await().atMost(TIMEOUT, TimeUnit.SECONDS).until(() -> queue.getSize() == 0);
     }
 
+    @Test
+    void shouldSetThreadName() {
+      AtomicReference<String> threadName = new AtomicReference<>();
+      queue.append().enqueue(() -> threadName.set(Thread.currentThread().getName()));
+      await().atMost(TIMEOUT, TimeUnit.SECONDS).until(() -> threadName.get() != null);
+
+      assertThat(threadName.get()).startsWith("CentralWorkQueue");
+    }
+
+    @Test
+    void shouldCaptureExecutorMetrics() {
+      for (int i = 0; i < ITERATIONS; i++) {
+        queue.append().enqueue(new Increase());
+      }
+      waitForTasks();
+
+      double count = meterRegistry.get("executor.completed").functionCounter().count();
+      assertThat(count).isEqualTo(ITERATIONS);
+    }
+
+    @Test
+    void shouldCaptureExecutionDuration() {
+      queue.append().enqueue(new Increase());
+      await().atMost(TIMEOUT, TimeUnit.SECONDS).until(() -> queue.getSize() == 0);
+
+      Timer timer = meterRegistry.get(UnitOfWork.METRIC_EXECUTION).timer();
+      assertThat(timer.count()).isEqualTo(1);
+    }
+
+    @Test
+    void shouldCaptureWaitDuration() {
+      queue.append().enqueue(new Increase());
+      await().atMost(TIMEOUT, TimeUnit.SECONDS).until(() -> queue.getSize() == 0);
+
+      Timer timer = meterRegistry.get(UnitOfWork.METRIC_WAIT).timer();
+      assertThat(timer.count()).isEqualTo(1);
+    }
+
+    @Test
+    void shouldIncreaseBlockCount() {
+      for (int i = 0; i < ITERATIONS; i++) {
+        queue.append().blocks("counter").enqueue(new Increase());
+      }
+      waitForTasks();
+
+      int blockCount = 0;
+      for (Meter meter : meterRegistry.getMeters()) {
+        Meter.Id id = meter.getId();
+        if ("cwq.task.wait.duration".equals(id.getName())) {
+          String blocked = id.getTag("blocked");
+          if (blocked != null) {
+            blockCount += Integer.parseInt(blocked);
+          }
+        }
+      }
+
+      assertThat(blockCount).isPositive();
+    }
+
     @Nonnull
     private Repository repository(String id) {
       Repository one = new Repository();
@@ -179,6 +245,7 @@ class DefaultCentralWorkQueueTest {
     DefaultCentralWorkQueue queue = new DefaultCentralWorkQueue(
       Guice.createInjector(binder -> binder.bind(Context.class).toInstance(ctx)),
       persistence,
+      new SimpleMeterRegistry(),
       () -> 1
     );
 
@@ -193,17 +260,20 @@ class DefaultCentralWorkQueueTest {
     SimpleUnitOfWork one = new SimpleUnitOfWork(
       21L, Collections.singleton("a"), Collections.emptySet(), new InjectingTask(context, "one")
     );
-    SimpleUnitOfWork two =new SimpleUnitOfWork(
+    SimpleUnitOfWork two = new SimpleUnitOfWork(
       42L, Collections.singleton("a"), Collections.emptySet(), new InjectingTask(context, "two")
     );
+    two.restore(42L);
     when(persistence.loadAll()).thenReturn(Arrays.asList(one, two));
 
-    new DefaultCentralWorkQueue(Guice.createInjector(), persistence);
+    new DefaultCentralWorkQueue(Guice.createInjector(), persistence, new SimpleMeterRegistry());
 
     await().atMost(TIMEOUT, TimeUnit.SECONDS).until(() -> context.value != null);
     assertThat(context.value).isEqualTo("two");
     assertThat(one.getOrder()).isEqualTo(1L);
+    assertThat(one.getRestoreCount()).isEqualTo(1);
     assertThat(two.getOrder()).isEqualTo(2L);
+    assertThat(two.getRestoreCount()).isEqualTo(2);
   }
 
   public static class Context {

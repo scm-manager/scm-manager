@@ -24,8 +24,11 @@
 
 package sonia.scm.work;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Stopwatch;
 import com.google.inject.Injector;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Timer;
 import lombok.EqualsAndHashCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,34 +36,58 @@ import org.slf4j.LoggerFactory;
 import java.io.Serializable;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 @EqualsAndHashCode
 abstract class UnitOfWork implements Runnable, Serializable, Comparable<UnitOfWork> {
 
+  @VisibleForTesting
+  static final String METRIC_EXECUTION = "cwq.task.execution.duration";
+
+  @VisibleForTesting
+  static final String METRIC_WAIT = "cwq.task.wait.duration";
+
   private static final Logger LOG = LoggerFactory.getLogger(UnitOfWork.class);
 
   private long order;
+  private int blockCount = 0;
+  private int restoreCount = 0;
   private final Set<String> blocks;
   private final Set<String> blockedBy;
+
   private transient Finalizer finalizer;
   private transient Task task;
+  private transient MeterRegistry meterRegistry;
+
+  private transient long createdAt;
   private transient String storageId;
 
   protected UnitOfWork(long order, Set<String> blocks, Set<String> blockedBy) {
     this.order = order;
     this.blocks = blocks;
     this.blockedBy = blockedBy;
+    this.createdAt = System.nanoTime();
   }
 
   public long getOrder() {
     return order;
   }
 
-  public void setOrder(long order) {
-    this.order = order;
+  public void restore(long newOrderId) {
+    this.order = newOrderId;
+    this.createdAt = System.nanoTime();
+    this.restoreCount++;
   }
 
-  public void setStorageId(String storageId) {
+  public int getRestoreCount() {
+    return restoreCount;
+  }
+
+  public void blocked() {
+    blockCount++;
+  }
+
+  public void assignStorageId(String storageId) {
     this.storageId = storageId;
   }
 
@@ -76,9 +103,10 @@ abstract class UnitOfWork implements Runnable, Serializable, Comparable<UnitOfWo
     return blocks;
   }
 
-  void init(Injector injector, Finalizer finalizer) {
+  void init(Injector injector, Finalizer finalizer, MeterRegistry meterRegistry) {
     this.task = task(injector);
     this.finalizer = finalizer;
+    this.meterRegistry = meterRegistry;
   }
 
   protected abstract Task task(Injector injector);
@@ -86,14 +114,31 @@ abstract class UnitOfWork implements Runnable, Serializable, Comparable<UnitOfWo
   @Override
   public void run() {
     Stopwatch sw = Stopwatch.createStarted();
+    Timer.Sample sample = Timer.start(meterRegistry);
     try {
       task.run();
       LOG.debug("task {} finished successful after {}", task, sw.stop());
     } catch (Exception ex) {
       LOG.error("task {} failed after {}", task, sw.stop(), ex);
     } finally {
+      sample.stop(createExecutionTimer());
+      createWaitTimer().record(System.nanoTime() - createdAt, TimeUnit.NANOSECONDS);
       finalizer.finalizeWork(this);
     }
+  }
+
+  private Timer createExecutionTimer() {
+    return Timer.builder(METRIC_EXECUTION)
+      .description("Central work queue task execution duration")
+      .tags("task", task.toString())
+      .register(meterRegistry);
+  }
+
+  private Timer createWaitTimer() {
+    return Timer.builder(METRIC_WAIT)
+      .description("Central work queue task wait duration")
+      .tags("task", task.toString(), "restores", String.valueOf(restoreCount), "blocked", String.valueOf(blockCount))
+      .register(meterRegistry);
   }
 
   @Override
