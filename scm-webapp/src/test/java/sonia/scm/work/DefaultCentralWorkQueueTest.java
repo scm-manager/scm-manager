@@ -190,10 +190,10 @@ class DefaultCentralWorkQueueTest {
   @Test
   void shouldLoadFromPersistence() {
     Context context = new Context();
-    SimpleChunkOfWork one = new SimpleChunkOfWork(
+    SimpleUnitOfWork one = new SimpleUnitOfWork(
       21L, Collections.singleton("a"), Collections.emptySet(), new InjectingTask(context, "one")
     );
-    SimpleChunkOfWork two =new SimpleChunkOfWork(
+    SimpleUnitOfWork two =new SimpleUnitOfWork(
       42L, Collections.singleton("a"), Collections.emptySet(), new InjectingTask(context, "two")
     );
     when(persistence.loadAll()).thenReturn(Arrays.asList(one, two));

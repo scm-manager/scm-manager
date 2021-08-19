@@ -62,23 +62,23 @@ class PersistenceTest {
 
     @Test
     void shouldStoreSimpleChunkOfWork() {
-      ChunkOfWork work = new SimpleChunkOfWork(
+      UnitOfWork work = new SimpleUnitOfWork(
         1L, Collections.singleton("a"), Collections.singleton("b"), new MyTask()
       );
       persistence.store(work);
 
-      ChunkOfWork loaded = persistence.loadAll().iterator().next();
+      UnitOfWork loaded = persistence.loadAll().iterator().next();
       assertThat(loaded).isEqualTo(work);
     }
 
     @Test
     void shouldStoreInjectingChunkOfWork() {
-      ChunkOfWork work = new InjectingChunkOfWork(
+      UnitOfWork work = new InjectingUnitOfWork(
         1L, Collections.singleton("a"), Collections.singleton("b"), MyTask.class
       );
       persistence.store(work);
 
-      ChunkOfWork loaded = persistence.loadAll().iterator().next();
+      UnitOfWork loaded = persistence.loadAll().iterator().next();
       assertThat(loaded).isEqualTo(work);
     }
 
@@ -88,7 +88,7 @@ class PersistenceTest {
 
       long[] orderIds = persistence.loadAll()
         .stream()
-        .mapToLong(ChunkOfWork::getOrder)
+        .mapToLong(UnitOfWork::getOrder)
         .toArray();
 
       assertThat(orderIds).containsExactly(1, 2, 3, 4, 5);
@@ -105,7 +105,7 @@ class PersistenceTest {
     @Test
     void shouldNotFailForSingleItems() {
       store(1);
-      persistence.store(new SimpleChunkOfWork(
+      persistence.store(new SimpleUnitOfWork(
         2L, Collections.emptySet(), Collections.emptySet(), new NotSerializable())
       );
 
@@ -115,7 +115,7 @@ class PersistenceTest {
     @Test
     void shouldRemoveStored() {
       store(1);
-      SimpleChunkOfWork chunkOfWork = new SimpleChunkOfWork(
+      SimpleUnitOfWork chunkOfWork = new SimpleUnitOfWork(
         2L, Collections.emptySet(), Collections.emptySet(), new MyTask()
       );
       persistence.store(chunkOfWork);
@@ -126,7 +126,7 @@ class PersistenceTest {
 
     private void store(long... orderIds) {
       for (long order : orderIds) {
-        persistence.store(new SimpleChunkOfWork(
+        persistence.store(new SimpleUnitOfWork(
           order, Collections.emptySet(), Collections.emptySet(), new MyTask()
         ));
       }
@@ -139,7 +139,7 @@ class PersistenceTest {
     InMemoryBlobStore blobStore = new InMemoryBlobStore();
 
     Persistence persistence = new Persistence(PersistenceTest.class.getClassLoader(), blobStore);
-    persistence.store(new SimpleChunkOfWork(
+    persistence.store(new SimpleUnitOfWork(
       1L, Collections.emptySet(), Collections.emptySet(), new MyTask())
     );
 

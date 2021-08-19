@@ -24,7 +24,10 @@
 
 package sonia.scm.work;
 
+import com.google.common.annotations.Beta;
+
 import java.io.Serializable;
 
+@Beta
 public interface Task extends Runnable, Serializable {
 }

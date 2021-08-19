@@ -24,8 +24,10 @@
 
 package sonia.scm.work;
 
+import com.google.common.annotations.Beta;
 import sonia.scm.ModelObject;
 
+@Beta
 public interface CentralWorkQueue {
 
   Enqueue append();
