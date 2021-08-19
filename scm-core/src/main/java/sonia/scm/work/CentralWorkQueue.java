@@ -36,10 +36,10 @@ public interface CentralWorkQueue {
 
   interface Enqueue {
 
-    Enqueue blocks(String... tags);
-    Enqueue blocks(ModelObject... object);
-    Enqueue blockedBy(String... tags);
-    Enqueue blockedBy(ModelObject... objects);
+    Enqueue locks(String resource);
+    Enqueue locks(String resource, String id);
+    Enqueue locks(String resource, ModelObject object);
+
     void enqueue(Task task);
     void enqueue(Class<? extends Task> task);
 

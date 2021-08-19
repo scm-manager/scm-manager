@@ -24,23 +24,41 @@
 
 package sonia.scm.work;
 
-import com.google.inject.Injector;
 import lombok.EqualsAndHashCode;
 
-import java.util.Set;
+import java.io.Serializable;
 
-@EqualsAndHashCode(callSuper = true)
-class SimpleUnitOfWork extends UnitOfWork {
+@EqualsAndHashCode
+final class Resource implements Serializable {
 
-  private final Task task;
+  private final String name;
+  private final String id;
 
-  SimpleUnitOfWork(long order, Set<Resource> locks, Task task) {
-    super(order, locks);
-    this.task = task;
+  public Resource(String name) {
+    this.name = name;
+    this.id = null;
+  }
+
+  public Resource(String name, String id) {
+    this.name = name;
+    this.id = id;
+  }
+
+  boolean isBlockedBy(Resource resource) {
+    if (name.equals(resource.name)) {
+      if (id != null && resource.id != null) {
+        return id.equals(resource.id);
+      }
+      return true;
+    }
+    return false;
   }
 
   @Override
-  protected Task task(Injector injector) {
-    return task;
+  public String toString() {
+    if (id != null) {
+      return name + ":" + id;
+    }
+    return name;
   }
 }

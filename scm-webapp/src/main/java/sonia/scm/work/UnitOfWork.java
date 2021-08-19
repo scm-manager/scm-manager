@@ -52,8 +52,7 @@ abstract class UnitOfWork implements Runnable, Serializable, Comparable<UnitOfWo
   private long order;
   private int blockCount = 0;
   private int restoreCount = 0;
-  private final Set<String> blocks;
-  private final Set<String> blockedBy;
+  private final Set<Resource> locks;
 
   private transient Finalizer finalizer;
   private transient Task task;
@@ -62,10 +61,9 @@ abstract class UnitOfWork implements Runnable, Serializable, Comparable<UnitOfWo
   private transient long createdAt;
   private transient String storageId;
 
-  protected UnitOfWork(long order, Set<String> blocks, Set<String> blockedBy) {
+  protected UnitOfWork(long order, Set<Resource> locks) {
     this.order = order;
-    this.blocks = blocks;
-    this.blockedBy = blockedBy;
+    this.locks = locks;
     this.createdAt = System.nanoTime();
   }
 
@@ -95,12 +93,8 @@ abstract class UnitOfWork implements Runnable, Serializable, Comparable<UnitOfWo
     return Optional.ofNullable(storageId);
   }
 
-  public Set<String> getBlockedBy() {
-    return blockedBy;
-  }
-
-  public Set<String> getBlocks() {
-    return blocks;
+  public Set<Resource> getLocks() {
+    return locks;
   }
 
   void init(Injector injector, Finalizer finalizer, MeterRegistry meterRegistry) {
@@ -130,14 +124,14 @@ abstract class UnitOfWork implements Runnable, Serializable, Comparable<UnitOfWo
   private Timer createExecutionTimer() {
     return Timer.builder(METRIC_EXECUTION)
       .description("Central work queue task execution duration")
-      .tags("task", task.toString())
+      .tags("task", task.getClass().getName())
       .register(meterRegistry);
   }
 
   private Timer createWaitTimer() {
     return Timer.builder(METRIC_WAIT)
       .description("Central work queue task wait duration")
-      .tags("task", task.toString(), "restores", String.valueOf(restoreCount), "blocked", String.valueOf(blockCount))
+      .tags("task", task.getClass().getName(), "restores", String.valueOf(restoreCount), "blocked", String.valueOf(blockCount))
       .register(meterRegistry);
   }
 

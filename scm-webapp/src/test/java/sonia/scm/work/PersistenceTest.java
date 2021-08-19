@@ -63,7 +63,7 @@ class PersistenceTest {
     @Test
     void shouldStoreSimpleChunkOfWork() {
       UnitOfWork work = new SimpleUnitOfWork(
-        1L, Collections.singleton("a"), Collections.singleton("b"), new MyTask()
+        1L, Collections.singleton(new Resource("a")), new MyTask()
       );
       persistence.store(work);
 
@@ -74,7 +74,7 @@ class PersistenceTest {
     @Test
     void shouldStoreInjectingChunkOfWork() {
       UnitOfWork work = new InjectingUnitOfWork(
-        1L, Collections.singleton("a"), Collections.singleton("b"), MyTask.class
+        1L, Collections.singleton(new Resource("a")), MyTask.class
       );
       persistence.store(work);
 
@@ -106,7 +106,7 @@ class PersistenceTest {
     void shouldNotFailForSingleItems() {
       store(1);
       persistence.store(new SimpleUnitOfWork(
-        2L, Collections.emptySet(), Collections.emptySet(), new NotSerializable())
+        2L, Collections.emptySet(), new NotSerializable())
       );
 
       assertThat(persistence.loadAll()).hasSize(1);
@@ -116,7 +116,7 @@ class PersistenceTest {
     void shouldRemoveStored() {
       store(1);
       SimpleUnitOfWork chunkOfWork = new SimpleUnitOfWork(
-        2L, Collections.emptySet(), Collections.emptySet(), new MyTask()
+        2L, Collections.emptySet(), new MyTask()
       );
       persistence.store(chunkOfWork);
       persistence.remove(chunkOfWork);
@@ -127,7 +127,7 @@ class PersistenceTest {
     private void store(long... orderIds) {
       for (long order : orderIds) {
         persistence.store(new SimpleUnitOfWork(
-          order, Collections.emptySet(), Collections.emptySet(), new MyTask()
+          order, Collections.emptySet(), new MyTask()
         ));
       }
     }
@@ -140,7 +140,7 @@ class PersistenceTest {
 
     Persistence persistence = new Persistence(PersistenceTest.class.getClassLoader(), blobStore);
     persistence.store(new SimpleUnitOfWork(
-      1L, Collections.emptySet(), Collections.emptySet(), new MyTask())
+      1L, Collections.emptySet(), new MyTask())
     );
 
     Blob blob = blobStore.create();

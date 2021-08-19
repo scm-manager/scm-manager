@@ -24,23 +24,49 @@
 
 package sonia.scm.work;
 
-import com.google.inject.Injector;
-import lombok.EqualsAndHashCode;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 
-import java.util.Set;
+import static org.assertj.core.api.Assertions.assertThat;
 
-@EqualsAndHashCode(callSuper = true)
-class SimpleUnitOfWork extends UnitOfWork {
+class ResourceTest {
 
-  private final Task task;
-
-  SimpleUnitOfWork(long order, Set<Resource> locks, Task task) {
-    super(order, locks);
-    this.task = task;
+  @Test
+  void shouldReturnResourceName() {
+    assertThat(res("a")).hasToString("a");
   }
 
-  @Override
-  protected Task task(Injector injector) {
-    return task;
+  @Test
+  void shouldReturnResourceNameAndId() {
+    assertThat(res("a", "b")).hasToString("a:b");
   }
+
+  @Nested
+  class IsBlockedByTests {
+
+    @Test
+    void shouldReturnTrue() {
+      assertThat(res("a").isBlockedBy(res("a"))).isTrue();
+      assertThat(res("a", "b").isBlockedBy(res("a", "b"))).isTrue();
+      assertThat(res("a").isBlockedBy(res("a", "b"))).isTrue();
+      assertThat(res("a", "b").isBlockedBy(res("a"))).isTrue();
+    }
+
+    @Test
+    void shouldReturnFalse() {
+      assertThat(res("a").isBlockedBy(res("b"))).isFalse();
+      assertThat(res("a", "b").isBlockedBy(res("a", "c"))).isFalse();
+      assertThat(res("a", "b").isBlockedBy(res("c", "b"))).isFalse();
+    }
+
+  }
+
+  private Resource res(String name) {
+    return new Resource(name);
+  }
+
+  private Resource res(String name, String id) {
+    return new Resource(name, id);
+  }
+
 }

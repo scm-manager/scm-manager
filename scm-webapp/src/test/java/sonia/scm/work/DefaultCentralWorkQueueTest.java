@@ -78,7 +78,7 @@ class DefaultCentralWorkQueueTest {
     @Test
     void shouldRunInSequenceWithBlock() {
       for (int i = 0; i < ITERATIONS; i++) {
-        queue.append().blocks("counter").enqueue(new Increase());
+        queue.append().locks("counter").enqueue(new Increase());
       }
       waitForTasks();
 
@@ -108,7 +108,7 @@ class DefaultCentralWorkQueueTest {
     @Test
     void shouldNotBlocked() {
       for (int i = 0; i < ITERATIONS; i++) {
-        queue.append().blocks("counter").enqueue(new Increase());
+        queue.append().locks("counter").enqueue(new Increase());
       }
       queue.append().enqueue(() -> copy = counter);
       waitForTasks();
@@ -118,11 +118,23 @@ class DefaultCentralWorkQueueTest {
     }
 
     @Test
-    void shouldBeBlockedWithBlockedBy() {
+    void shouldNotBlockedByDifferentResource() {
       for (int i = 0; i < ITERATIONS; i++) {
-        queue.append().blocks("counter").enqueue(new Increase());
+        queue.append().locks("counter").enqueue(new Increase());
       }
-      queue.append().blockedBy("counter").enqueue(() -> copy = counter);
+      queue.append().locks("copy").enqueue(() -> copy = counter);
+      waitForTasks();
+
+      assertThat(counter).isEqualTo(ITERATIONS);
+      assertThat(copy).isNotNegative().isLessThan(ITERATIONS);
+    }
+
+    @Test
+    void shouldBeBlockedByParentResource() {
+      for (int i = 0; i < ITERATIONS; i++) {
+        queue.append().locks("counter").enqueue(new Increase());
+      }
+      queue.append().locks("counter", "one").enqueue(() -> copy = counter);
       waitForTasks();
 
       assertThat(counter).isEqualTo(ITERATIONS);
@@ -130,12 +142,25 @@ class DefaultCentralWorkQueueTest {
     }
 
     @Test
-    void shouldBlockedByModelObject() {
+    void shouldBeBlockedByParentAndExactResource() {
+      for (int i = 0; i < ITERATIONS; i++) {
+        if (i % 2 == 0) {
+          queue.append().locks("counter", "c").enqueue(new Increase());
+        } else {
+          queue.append().locks("counter").enqueue(new Increase());
+        }
+      }
+      waitForTasks();
+      assertThat(counter).isEqualTo(ITERATIONS);
+    }
+
+    @Test
+    void shouldBeBlockedByParentResourceWithModelObject() {
       Repository one = repository("one");
       for (int i = 0; i < ITERATIONS; i++) {
-        queue.append().blocks(one).enqueue(new Increase());
+        queue.append().locks("counter").enqueue(new Increase());
       }
-      queue.append().blockedBy(one).enqueue(() -> copy = counter);
+      queue.append().locks("counter", one).enqueue(() -> copy = counter);
       waitForTasks();
 
       assertThat(counter).isEqualTo(ITERATIONS);
@@ -192,7 +217,7 @@ class DefaultCentralWorkQueueTest {
     @Test
     void shouldIncreaseBlockCount() {
       for (int i = 0; i < ITERATIONS; i++) {
-        queue.append().blocks("counter").enqueue(new Increase());
+        queue.append().locks("counter").enqueue(new Increase());
       }
       waitForTasks();
 
@@ -258,10 +283,10 @@ class DefaultCentralWorkQueueTest {
   void shouldLoadFromPersistence() {
     Context context = new Context();
     SimpleUnitOfWork one = new SimpleUnitOfWork(
-      21L, Collections.singleton("a"), Collections.emptySet(), new InjectingTask(context, "one")
+      21L, Collections.singleton(new Resource("a")), new InjectingTask(context, "one")
     );
     SimpleUnitOfWork two = new SimpleUnitOfWork(
-      42L, Collections.singleton("a"), Collections.emptySet(), new InjectingTask(context, "two")
+      42L, Collections.singleton(new Resource("a")), new InjectingTask(context, "two")
     );
     two.restore(42L);
     when(persistence.loadAll()).thenReturn(Arrays.asList(one, two));

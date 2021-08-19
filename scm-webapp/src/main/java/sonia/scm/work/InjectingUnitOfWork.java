@@ -34,8 +34,8 @@ class InjectingUnitOfWork extends UnitOfWork {
 
   private final Class<? extends Task> task;
 
-  InjectingUnitOfWork(long order, Set<String> blocks, Set<String> blockedBy, Class<? extends Task> task) {
-    super(order, blocks, blockedBy);
+  InjectingUnitOfWork(long order, Set<Resource> locks, Class<? extends Task> task) {
+    super(order, locks);
     this.task = task;
   }
 

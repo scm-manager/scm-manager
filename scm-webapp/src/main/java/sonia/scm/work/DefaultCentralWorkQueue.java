@@ -34,9 +34,9 @@ import sonia.scm.ModelObject;
 import sonia.scm.metrics.Metrics;
 
 import javax.annotation.Nonnull;
+import javax.inject.Singleton;
 import java.io.Closeable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -48,12 +48,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.IntSupplier;
 
+@Singleton
 public class DefaultCentralWorkQueue implements CentralWorkQueue, Closeable {
 
   private static final Logger LOG = LoggerFactory.getLogger(DefaultCentralWorkQueue.class);
 
   private final List<UnitOfWork> queue = new ArrayList<>();
-  private final List<String> currentlyBlocked = new CopyOnWriteArrayList<>();
+  private final List<Resource> lockedResources = new CopyOnWriteArrayList<>();
   private final AtomicInteger size = new AtomicInteger();
   private final AtomicLong order = new AtomicLong();
 
@@ -139,33 +140,31 @@ public class DefaultCentralWorkQueue implements CentralWorkQueue, Closeable {
   }
 
   private void run(UnitOfWork unitOfWork) {
-    currentlyBlocked.addAll(unitOfWork.getBlocks());
+    lockedResources.addAll(unitOfWork.getLocks());
     unitOfWork.init(injector, this::finalizeWork, meterRegistry);
     LOG.trace("pass task {} to executor", unitOfWork);
     executor.execute(unitOfWork);
   }
 
   private synchronized void finalizeWork(UnitOfWork unitOfWork) {
-    for (String block : unitOfWork.getBlocks()) {
-      currentlyBlocked.remove(block);
+    for (Resource lock : unitOfWork.getLocks()) {
+      lockedResources.remove(lock);
     }
     persistence.remove(unitOfWork);
-    run();
+
     int queueSize = size.decrementAndGet();
     LOG.debug("finish task, queue size is now {}", queueSize);
+
+    run();
   }
 
   private boolean isRunnable(UnitOfWork unitOfWork) {
-    for (String block : unitOfWork.getBlocks()) {
-      if (currentlyBlocked.contains(block)) {
-        LOG.trace("skip {}, because it is blocked by {}", unitOfWork, block);
-        return false;
-      }
-    }
-    for (String block : unitOfWork.getBlockedBy()) {
-      LOG.trace("skip {}, because it is blocked by {}", unitOfWork, block);
-      if (currentlyBlocked.contains(block)) {
-        return false;
+    for (Resource resource : unitOfWork.getLocks()) {
+      for (Resource lock : lockedResources) {
+        if (resource.isBlockedBy(lock)) {
+          LOG.trace("skip {}, because resource {} is locked by {}", unitOfWork, resource, lock);
+          return false;
+        }
       }
     }
     return true;
@@ -173,45 +172,33 @@ public class DefaultCentralWorkQueue implements CentralWorkQueue, Closeable {
 
   private class DefaultEnqueue implements Enqueue {
 
-    private final Set<String> blocks = new HashSet<>();
-    private final Set<String> blockedBy = new HashSet<>();
+    private final Set<Resource> locks = new HashSet<>();
 
     @Override
-    public Enqueue blocks(String... tags) {
-      blocks.addAll(Arrays.asList(tags));
+    public Enqueue locks(String resource) {
+      locks.add(new Resource(resource));
       return this;
     }
 
     @Override
-    public Enqueue blocks(ModelObject... objects) {
-      for (ModelObject object : objects) {
-        blocks.add(tag(object));
-      }
+    public Enqueue locks(String resource, String id) {
+      locks.add(new Resource(resource, id));
       return this;
     }
 
     @Override
-    public Enqueue blockedBy(String... tags) {
-      blockedBy.addAll(Arrays.asList(tags));
-      return this;
-    }
-
-    @Override
-    public Enqueue blockedBy(ModelObject... objects) {
-      for (ModelObject object : objects) {
-        blockedBy.add(tag(object));
-      }
-      return this;
+    public Enqueue locks(String resource, ModelObject object) {
+      return locks(resource, object.getId());
     }
 
     @Override
     public void enqueue(Task task) {
-      appendAndRun(new SimpleUnitOfWork(order.incrementAndGet(), blocks, blockedBy, task));
+      appendAndRun(new SimpleUnitOfWork(order.incrementAndGet(), locks, task));
     }
 
     @Override
     public void enqueue(Class<? extends Task> task) {
-      appendAndRun(new InjectingUnitOfWork(order.incrementAndGet(), blocks, blockedBy, task));
+      appendAndRun(new InjectingUnitOfWork(order.incrementAndGet(), locks, task));
     }
 
     @Nonnull
