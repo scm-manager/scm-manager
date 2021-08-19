@@ -24,24 +24,60 @@
 
 package sonia.scm.work;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
 import com.google.inject.Injector;
-import lombok.EqualsAndHashCode;
+import lombok.Value;
+import org.junit.jupiter.api.Test;
 
-import java.util.Set;
+import javax.inject.Inject;
+import java.util.Collections;
 
-@EqualsAndHashCode(callSuper = true)
-class SimpleUnitOfWork extends UnitOfWork {
+import static org.assertj.core.api.Assertions.assertThat;
 
-  private final Task task;
+class SimpleUnitOfWorkTest {
 
-  SimpleUnitOfWork(long order, Set<Resource> locks, Task task) {
-    super(order, locks);
-    this.task = task;
+  @Test
+  void shouldInjectMember() {
+    Context context = new Context("awesome");
+    Injector injector = Guice.createInjector(new AbstractModule() {
+      @Override
+      protected void configure() {
+        bind(Context.class).toInstance(context);
+      }
+    });
+
+    SimpleTask simpleTask = new SimpleTask();
+    SimpleUnitOfWork unitOfWork = new SimpleUnitOfWork(1L, Collections.emptySet(), simpleTask);
+    unitOfWork.task(injector);
+
+    simpleTask.run();
+
+    assertThat(simpleTask.value).isEqualTo("awesome");
   }
 
-  @Override
-  protected Task task(Injector injector) {
-    injector.injectMembers(task);
-    return task;
+  @Value
+  public class Context {
+    String value;
   }
+
+  public class SimpleTask implements Task {
+
+    private Context context;
+
+    private String value = "no value set";
+
+    @Inject
+    public void setContext(Context context) {
+      this.context = context;
+    }
+
+    @Override
+    public void run() {
+      if (context != null) {
+        value = context.getValue();
+      }
+    }
+  }
+
 }
