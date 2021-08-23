@@ -21,40 +21,138 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.filter;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import org.junit.Test;
-
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.config.ScmConfiguration;
 
-import static org.junit.Assert.*;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
+
 
 /**
- *
  * @author Sebastian Sdorra
  */
-public class BaseUrlFilterTest
-{
+@ExtendWith(MockitoExtension.class)
+class BaseUrlFilterTest {
 
-  /**
-   * Method description
-   *
-   */
+
+  @Mock
+  private HttpServletResponse response;
+
+  @Mock
+  private FilterChain chain;
+
+  private ScmConfiguration configuration;
+
+  private BaseUrlFilter filter;
+
+  @BeforeEach
+  void setUpFilter() {
+    configuration = new ScmConfiguration();
+    filter = new BaseUrlFilter(configuration);
+  }
+
   @Test
-  public void startsWithTest()
-  {
-    BaseUrlFilter filter = new BaseUrlFilter(new ScmConfiguration());
+  void shouldSetBaseUrl() throws ServletException, IOException {
+    HttpServletRequest request = mockRequest("https", "hitchhiker.com", 443, "/scm");
 
-    assertTrue(filter.startsWith("http://www.scm-manager.org/scm",
-      "http://www.scm-manager.org/scm"));
-    assertTrue(filter.startsWith("http://www.scm-manager.org:80/scm",
-      "http://www.scm-manager.org/scm"));
-    assertTrue(filter.startsWith("https://www.scm-manager.org/scm",
-      "https://www.scm-manager.org:443/scm"));
-    assertFalse(filter.startsWith("http://www.scm-manager.org/acb",
-      "http://www.scm-manager.org/scm"));
+    filter.doFilter(request, response, chain);
+
+    verify(chain).doFilter(request, response);
+    assertThat(configuration.getBaseUrl()).isEqualTo("https://hitchhiker.com:443/scm");
+  }
+
+  @Test
+  void shouldSendRedirect() throws ServletException, IOException {
+    configuration.setBaseUrl("https://hitchhiker.com:443/scm");
+    configuration.setForceBaseUrl(true);
+    HttpServletRequest request = mockRequest("http://192.168.1.42:8081", "/scm", "/api/v2");
+
+    filter.doFilter(request, response, chain);
+
+    verifyNoInteractions(chain);
+    verify(response).sendRedirect("https://hitchhiker.com:443/scm/api/v2");
+  }
+
+  @Test
+  void shouldNotSendRedirectIfDisabled() throws ServletException, IOException {
+    configuration.setBaseUrl("https://hitchhiker.com:443/scm");
+    configuration.setForceBaseUrl(false);
+    HttpServletRequest request = mockRequest("http://192.168.1.42:8081", "/scm", "/api/v2");
+
+    filter.doFilter(request, response, chain);
+
+    verify(chain).doFilter(request, response);
+  }
+
+  @Test
+  void shouldNotSendRedirect() throws ServletException, IOException {
+    configuration.setBaseUrl("https://hitchhiker.com:443/scm");
+    configuration.setForceBaseUrl(true);
+    HttpServletRequest request = mockRequest("https://hitchhiker.com", "/scm", "/api/v2/users");
+
+    filter.doFilter(request, response, chain);
+
+    verify(chain).doFilter(request, response);
+  }
+
+  private HttpServletRequest mockRequest(String baseUrl, String contextPath, String path) {
+    HttpServletRequest request = mock(HttpServletRequest.class);
+    lenient().when(request.getRequestURL()).thenReturn(new StringBuffer(baseUrl).append(contextPath).append(path));
+    lenient().when(request.getContextPath()).thenReturn(contextPath);
+    lenient().when(request.getRequestURI()).thenReturn(contextPath + path);
+    return request;
+  }
+
+  private HttpServletRequest mockRequest(String scheme, String serverName, int port, String contextPath) {
+    HttpServletRequest request = mock(HttpServletRequest.class);
+    when(request.getScheme()).thenReturn(scheme);
+    when(request.getServerName()).thenReturn(serverName);
+    when(request.getServerPort()).thenReturn(port);
+    when(request.getContextPath()).thenReturn(contextPath);
+    return request;
+  }
+
+  @Nested
+  class StartsWithTests {
+
+    @Test
+    void shouldReturnTrue() {
+      assertThat(
+        filter.startsWith("http://www.scm-manager.org/scm", "http://www.scm-manager.org/scm")
+      ).isTrue();
+      assertThat(
+        filter.startsWith("http://www.scm-manager.org:80/scm", "http://www.scm-manager.org/scm")
+      ).isTrue();
+      assertThat(
+        filter.startsWith("https://www.scm-manager.org/scm", "https://www.scm-manager.org:443/scm")
+      ).isTrue();
+    }
+
+    @Test
+    void shouldReturnFalse() {
+      assertThat(
+        filter.startsWith("http://www.scm-manager.org/acb", "http://www.scm-manager.org/scm")
+      ).isFalse();
+    }
+
   }
 }

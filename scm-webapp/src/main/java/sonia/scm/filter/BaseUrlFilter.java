@@ -21,10 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.filter;
 
-//~--- non-JDK imports --------------------------------------------------------
+package sonia.scm.filter;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.inject.Inject;
@@ -33,8 +31,6 @@ import sonia.scm.config.ScmConfiguration;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 import sonia.scm.web.filter.HttpFilter;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
 
@@ -50,110 +46,48 @@ import sonia.scm.Priority;
  */
 @Priority(Filters.PRIORITY_BASEURL)
 @WebElement(Filters.PATTERN_ALL)
-public class BaseUrlFilter extends HttpFilter
-{
+public class BaseUrlFilter extends HttpFilter {
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param configuration
-   */
+  /** scm configuration */
+  private final ScmConfiguration configuration;
+
   @Inject
-  public BaseUrlFilter(ScmConfiguration configuration)
-  {
+  public BaseUrlFilter(ScmConfiguration configuration) {
     this.configuration = configuration;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param requestUrl
-   * @param baseUrl
-   *
-   * @return
-   */
   @VisibleForTesting
-  boolean startsWith(String requestUrl, String baseUrl)
-  {
-    return HttpUtil.normalizeUrl(requestUrl).startsWith(
-      HttpUtil.normalizeUrl(baseUrl));
+  boolean startsWith(String requestUrl, String baseUrl) {
+    return HttpUtil.normalizeUrl(requestUrl).startsWith(HttpUtil.normalizeUrl(baseUrl));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param response
-   * @param chain
-   *
-   * @throws IOException
-   * @throws ServletException
-   */
   @Override
-  protected void doFilter(HttpServletRequest request,
-    HttpServletResponse response, FilterChain chain)
-    throws IOException, ServletException
-  {
-    if (Util.isEmpty(configuration.getBaseUrl()))
-    {
+  protected void doFilter(
+    HttpServletRequest request, HttpServletResponse response, FilterChain chain
+  ) throws IOException, ServletException {
+    if (Util.isEmpty(configuration.getBaseUrl())) {
       configuration.setBaseUrl(createDefaultBaseUrl(request));
     }
 
-    if (!configuration.isForceBaseUrl() || isBaseUrl(request))
-    {
+    if (!configuration.isForceBaseUrl() || isBaseUrl(request)) {
       chain.doFilter(request, response);
-    }
-    else
-    {
-      String url = HttpUtil.getCompleteUrl(configuration,
-                     HttpUtil.getStrippedURI(request));
-
+    } else {
+      String url = HttpUtil.getCompleteUrl(configuration, HttpUtil.getStrippedURI(request));
       response.sendRedirect(url);
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   */
-  private String createDefaultBaseUrl(HttpServletRequest request)
-  {
+  private String createDefaultBaseUrl(HttpServletRequest request) {
     StringBuilder sb = new StringBuilder(request.getScheme());
 
     sb.append("://").append(request.getServerName()).append(":");
-    sb.append(String.valueOf(request.getServerPort()));
+    sb.append(request.getServerPort());
     sb.append(request.getContextPath());
 
     return sb.toString();
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   */
-  private boolean isBaseUrl(HttpServletRequest request)
-  {
-    return startsWith(request.getRequestURL().toString(),
-      configuration.getBaseUrl());
+  private boolean isBaseUrl(HttpServletRequest request) {
+    return startsWith(request.getRequestURL().toString(), configuration.getBaseUrl());
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** scm configuration */
-  private final ScmConfiguration configuration;
 }
