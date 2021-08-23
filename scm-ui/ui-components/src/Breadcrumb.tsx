@@ -144,7 +144,7 @@ const Breadcrumb: FC<Props> = ({
           return (
             <li className="is-active" key={index}>
               <Link className="is-ellipsis-overflow" to="#" aria-current="page">
-                {pathFragment}
+                {decodeURIComponent(pathFragment)}
               </Link>
             </li>
           );
@@ -156,7 +156,7 @@ const Breadcrumb: FC<Props> = ({
               title={pathFragment}
               to={baseUrl + "/" + encodeURIComponent(revision) + "/" + currPath}
             >
-              {pathFragment}
+              {decodeURIComponent(pathFragment)}
             </Link>
           </li>
         );

@@ -1,0 +1,2 @@
+- type: fixed
+  description: Repository viewer filename with hash ([#1766](https://github.com/scm-manager/scm-manager/issues/1766) and [#1776](https://github.com/scm-manager/scm-manager/pull/1776))
