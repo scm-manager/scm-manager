@@ -197,9 +197,29 @@ public class SvnMirrorCommandTest extends AbstractSvnCommandTestBase {
     assertThat(authenticationManager.getProxyPasswordValue()).isNull();
   }
 
+  @Test
+  public void shouldNotApplyDisabledLocalProxySettings() throws SVNException {
+    MirrorCommandRequest request = new MirrorCommandRequest();
+    request.setProxyConfiguration(createDisabledProxyConfiguration());
+
+    BasicAuthenticationManager authenticationManager = createAuthenticationManager(request);
+    assertThat(authenticationManager.getProxyHost()).isNull();
+    assertThat(authenticationManager.getProxyPort()).isZero();
+    assertThat(authenticationManager.getProxyUserName()).isNull();
+    assertThat(authenticationManager.getProxyPasswordValue()).isNull();
+  }
+
   private ProxyConfiguration createProxyConfiguration() {
     ProxyConfiguration configuration = mock(ProxyConfiguration.class);
     when(configuration.isEnabled()).thenReturn(true);
+    when(configuration.getHost()).thenReturn("proxy.hitchhiker.com");
+    when(configuration.getPort()).thenReturn(3128);
+    return configuration;
+  }
+
+  private ProxyConfiguration createDisabledProxyConfiguration() {
+    ProxyConfiguration configuration = mock(ProxyConfiguration.class);
+    when(configuration.isEnabled()).thenReturn(false);
     when(configuration.getHost()).thenReturn("proxy.hitchhiker.com");
     when(configuration.getPort()).thenReturn(3128);
     return configuration;
