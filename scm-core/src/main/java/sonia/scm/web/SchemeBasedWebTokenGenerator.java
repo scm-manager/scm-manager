@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -42,8 +42,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author Sebastian Sdorra
  * @since 2.0.0
  */
-public abstract class SchemeBasedWebTokenGenerator implements WebTokenGenerator
-{
+public abstract class SchemeBasedWebTokenGenerator implements WebTokenGenerator {
 
   /** authorization header */
   private static final String HEADER_AUTHORIZATION = "Authorization";
@@ -51,54 +50,26 @@ public abstract class SchemeBasedWebTokenGenerator implements WebTokenGenerator
   /**
    * the logger for SchemeBasedWebTokenGenerator
    */
-  private static final Logger logger =
-    LoggerFactory.getLogger(SchemeBasedWebTokenGenerator.class);
+  private static final Logger LOG = LoggerFactory.getLogger(SchemeBasedWebTokenGenerator.class);
 
-  //~--- methods --------------------------------------------------------------
+  protected abstract AuthenticationToken createToken(HttpServletRequest request, String scheme, String authorization);
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param scheme
-   * @param authorization
-   *
-   * @return
-   */
-  protected abstract AuthenticationToken createToken(
-    HttpServletRequest request, String scheme, String authorization);
-
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   */
   @Override
-  public AuthenticationToken createToken(HttpServletRequest request)
-  {
+  public AuthenticationToken createToken(HttpServletRequest request) {
     AuthenticationToken token = null;
     String authorization = request.getHeader(HEADER_AUTHORIZATION);
 
-    if (!Strings.isNullOrEmpty(authorization))
-    {
+    if (!Strings.isNullOrEmpty(authorization)) {
       String[] parts = authorization.split("\\s+");
 
-      if (parts.length > 0)
-      {
+      if (parts.length > 0) {
         token = createToken(request, parts[0], parts[1]);
 
-        if (token == null)
-        {
-          logger.warn("could not create token from authentication header");
+        if (token == null) {
+          LOG.debug("could not create token from authentication header");
         }
-      }
-      else
-      {
-        logger.warn("found malformed authentication header");
+      } else {
+        LOG.warn("found malformed authentication header");
       }
     }
 
