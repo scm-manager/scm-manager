@@ -28,6 +28,8 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import lombok.Value;
+import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.junit.jupiter.api.Test;
 
 import javax.inject.Inject;
@@ -36,6 +38,8 @@ import java.util.Collections;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class SimpleUnitOfWorkTest {
+
+  private PrincipalCollection principal = new SimplePrincipalCollection("trillian", "test");
 
   @Test
   void shouldInjectMember() {
@@ -48,7 +52,7 @@ class SimpleUnitOfWorkTest {
     });
 
     SimpleTask simpleTask = new SimpleTask();
-    SimpleUnitOfWork unitOfWork = new SimpleUnitOfWork(1L, Collections.emptySet(), simpleTask);
+    SimpleUnitOfWork unitOfWork = new SimpleUnitOfWork(1L, principal, Collections.emptySet(), simpleTask);
     unitOfWork.task(injector);
 
     simpleTask.run();

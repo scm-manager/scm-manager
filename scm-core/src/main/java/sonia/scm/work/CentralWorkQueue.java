@@ -42,6 +42,8 @@ public interface CentralWorkQueue {
     Enqueue locks(String resource, @Nullable String id);
     Enqueue locks(String resource, ModelObject object);
 
+    Enqueue runAsAdmin();
+
     void enqueue(Task task);
     void enqueue(Class<? extends Task> task);
 

@@ -30,8 +30,11 @@ import com.google.inject.Injector;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Timer;
 import lombok.EqualsAndHashCode;
+import org.apache.shiro.subject.PrincipalCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.security.Impersonator;
+import sonia.scm.security.Impersonator.Session;
 
 import java.io.Serializable;
 import java.util.Optional;
@@ -53,16 +56,19 @@ abstract class UnitOfWork implements Runnable, Serializable, Comparable<UnitOfWo
   private int blockCount = 0;
   private int restoreCount = 0;
   private final Set<Resource> locks;
+  private final PrincipalCollection principal;
 
   private transient Finalizer finalizer;
   private transient Task task;
   private transient MeterRegistry meterRegistry;
+  private transient Impersonator impersonator;
 
   private transient long createdAt;
   private transient String storageId;
 
-  protected UnitOfWork(long order, Set<Resource> locks) {
+  protected UnitOfWork(long order, PrincipalCollection principal, Set<Resource> locks) {
     this.order = order;
+    this.principal = principal;
     this.locks = locks;
     this.createdAt = System.nanoTime();
   }
@@ -101,6 +107,7 @@ abstract class UnitOfWork implements Runnable, Serializable, Comparable<UnitOfWo
     this.task = task(injector);
     this.finalizer = finalizer;
     this.meterRegistry = meterRegistry;
+    this.impersonator = injector.getInstance(Impersonator.class);
   }
 
   protected abstract Task task(Injector injector);
@@ -109,7 +116,7 @@ abstract class UnitOfWork implements Runnable, Serializable, Comparable<UnitOfWo
   public void run() {
     Stopwatch sw = Stopwatch.createStarted();
     Timer.Sample sample = Timer.start(meterRegistry);
-    try {
+    try (Session session = impersonator.impersonate(principal)) {
       task.run();
       LOG.debug("task {} finished successful after {}", task, sw.stop());
     } catch (Exception ex) {

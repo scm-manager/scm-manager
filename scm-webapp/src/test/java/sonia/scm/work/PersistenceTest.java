@@ -25,6 +25,8 @@
 package sonia.scm.work;
 
 import lombok.EqualsAndHashCode;
+import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -46,6 +48,8 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class PersistenceTest {
 
+  private final PrincipalCollection principal = new SimplePrincipalCollection("trillian", "test");
+
   @Nested
   class Default {
 
@@ -63,7 +67,7 @@ class PersistenceTest {
     @Test
     void shouldStoreSimpleChunkOfWork() {
       UnitOfWork work = new SimpleUnitOfWork(
-        1L, Collections.singleton(new Resource("a")), new MyTask()
+        1L, principal, Collections.singleton(new Resource("a")), new MyTask()
       );
       persistence.store(work);
 
@@ -74,7 +78,7 @@ class PersistenceTest {
     @Test
     void shouldStoreInjectingChunkOfWork() {
       UnitOfWork work = new InjectingUnitOfWork(
-        1L, Collections.singleton(new Resource("a")), MyTask.class
+        1L, principal, Collections.singleton(new Resource("a")), MyTask.class
       );
       persistence.store(work);
 
@@ -106,7 +110,7 @@ class PersistenceTest {
     void shouldNotFailForSingleItems() {
       store(1);
       persistence.store(new SimpleUnitOfWork(
-        2L, Collections.emptySet(), new NotSerializable())
+        2L, principal, Collections.emptySet(), new NotSerializable())
       );
 
       assertThat(persistence.loadAll()).hasSize(1);
@@ -116,7 +120,7 @@ class PersistenceTest {
     void shouldRemoveStored() {
       store(1);
       SimpleUnitOfWork chunkOfWork = new SimpleUnitOfWork(
-        2L, Collections.emptySet(), new MyTask()
+        2L, principal, Collections.emptySet(), new MyTask()
       );
       persistence.store(chunkOfWork);
       persistence.remove(chunkOfWork);
@@ -127,7 +131,7 @@ class PersistenceTest {
     private void store(long... orderIds) {
       for (long order : orderIds) {
         persistence.store(new SimpleUnitOfWork(
-          order, Collections.emptySet(), new MyTask()
+          order, principal, Collections.emptySet(), new MyTask()
         ));
       }
     }
@@ -140,7 +144,7 @@ class PersistenceTest {
 
     Persistence persistence = new Persistence(PersistenceTest.class.getClassLoader(), blobStore);
     persistence.store(new SimpleUnitOfWork(
-      1L, Collections.emptySet(), new MyTask())
+      1L, principal, Collections.emptySet(), new MyTask())
     );
 
     Blob blob = blobStore.create();

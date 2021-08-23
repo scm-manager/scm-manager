@@ -26,6 +26,7 @@ package sonia.scm.work;
 
 import com.google.inject.Injector;
 import lombok.EqualsAndHashCode;
+import org.apache.shiro.subject.PrincipalCollection;
 
 import java.util.Set;
 
@@ -34,8 +35,8 @@ class SimpleUnitOfWork extends UnitOfWork {
 
   private final Task task;
 
-  SimpleUnitOfWork(long order, Set<Resource> locks, Task task) {
-    super(order, locks);
+  SimpleUnitOfWork(long order, PrincipalCollection principal, Set<Resource> locks, Task task) {
+    super(order, principal, locks);
     this.task = task;
   }
 

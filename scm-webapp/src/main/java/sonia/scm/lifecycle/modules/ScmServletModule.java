@@ -134,6 +134,8 @@ import sonia.scm.web.cgi.DefaultCGIExecutorFactory;
 import sonia.scm.web.filter.LoggingFilter;
 import sonia.scm.web.security.AdministrationContext;
 import sonia.scm.web.security.DefaultAdministrationContext;
+import sonia.scm.work.CentralWorkQueue;
+import sonia.scm.work.DefaultCentralWorkQueue;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -289,6 +291,8 @@ class ScmServletModule extends ServletModule {
     // bind search stuff
     bind(SearchEngine.class, LuceneSearchEngine.class);
     bind(IndexLogStore.class, DefaultIndexLogStore.class);
+
+    bind(CentralWorkQueue.class, DefaultCentralWorkQueue.class);
 
     bind(ContentTypeResolver.class).to(DefaultContentTypeResolver.class);
   }

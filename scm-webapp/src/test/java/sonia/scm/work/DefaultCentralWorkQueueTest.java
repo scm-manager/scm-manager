@@ -24,12 +24,19 @@
 
 package sonia.scm.work;
 
+import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import io.micrometer.core.instrument.Meter;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Timer;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.SimplePrincipalCollection;
+import org.github.sdorra.jse.ShiroExtension;
+import org.github.sdorra.jse.SubjectAware;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -38,6 +45,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.repository.Repository;
+import sonia.scm.security.Authentications;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
@@ -50,8 +58,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
+@SubjectAware("trillian")
+@ExtendWith({MockitoExtension.class, ShiroExtension.class})
 class DefaultCentralWorkQueueTest {
+
+  private final PrincipalCollection principal = new SimplePrincipalCollection("trillian", "test");
 
   private static final int ITERATIONS = 50;
   private static final int TIMEOUT = 1; // seconds
@@ -68,7 +79,7 @@ class DefaultCentralWorkQueueTest {
     @BeforeEach
     void setUp() {
       meterRegistry = new SimpleMeterRegistry();
-      queue = new DefaultCentralWorkQueue(Guice.createInjector(), persistence, meterRegistry);
+      queue = new DefaultCentralWorkQueue(Guice.createInjector(new SecurityModule()), persistence, meterRegistry);
     }
 
     private final AtomicInteger runs = new AtomicInteger();
@@ -268,7 +279,7 @@ class DefaultCentralWorkQueueTest {
   void shouldInjectDependencies() {
     Context ctx = new Context();
     DefaultCentralWorkQueue queue = new DefaultCentralWorkQueue(
-      Guice.createInjector(binder -> binder.bind(Context.class).toInstance(ctx)),
+      Guice.createInjector(new SecurityModule(), binder -> binder.bind(Context.class).toInstance(ctx)),
       persistence,
       new SimpleMeterRegistry(),
       () -> 1
@@ -283,15 +294,15 @@ class DefaultCentralWorkQueueTest {
   void shouldLoadFromPersistence() {
     Context context = new Context();
     SimpleUnitOfWork one = new SimpleUnitOfWork(
-      21L, Collections.singleton(new Resource("a")), new InjectingTask(context, "one")
+      21L, principal, Collections.singleton(new Resource("a")), new InjectingTask(context, "one")
     );
     SimpleUnitOfWork two = new SimpleUnitOfWork(
-      42L, Collections.singleton(new Resource("a")), new InjectingTask(context, "two")
+      42L, principal, Collections.singleton(new Resource("a")), new InjectingTask(context, "two")
     );
     two.restore(42L);
     when(persistence.loadAll()).thenReturn(Arrays.asList(one, two));
 
-    new DefaultCentralWorkQueue(Guice.createInjector(), persistence, new SimpleMeterRegistry());
+    new DefaultCentralWorkQueue(Guice.createInjector(new SecurityModule()), persistence, new SimpleMeterRegistry());
 
     await().atMost(TIMEOUT, TimeUnit.SECONDS).until(() -> context.value != null);
     assertThat(context.value).isEqualTo("two");
@@ -299,6 +310,28 @@ class DefaultCentralWorkQueueTest {
     assertThat(one.getRestoreCount()).isEqualTo(1);
     assertThat(two.getOrder()).isEqualTo(2L);
     assertThat(two.getRestoreCount()).isEqualTo(2);
+  }
+
+  @Test
+  void shouldRunAsUser() {
+    DefaultCentralWorkQueue workQueue = new DefaultCentralWorkQueue(
+      Guice.createInjector(new SecurityModule()), persistence, new SimpleMeterRegistry()
+    );
+
+    AtomicReference<Object> ref = new AtomicReference<>();
+    workQueue.append().enqueue(() -> ref.set(SecurityUtils.getSubject().getPrincipal()));
+    await().atMost(1, TimeUnit.SECONDS).until(() -> "trillian".equals(ref.get()));
+  }
+
+  @Test
+  void shouldRunAsAdminUser() {
+    DefaultCentralWorkQueue workQueue = new DefaultCentralWorkQueue(
+      Guice.createInjector(new SecurityModule()), persistence, new SimpleMeterRegistry()
+    );
+
+    AtomicReference<Object> ref = new AtomicReference<>();
+    workQueue.append().runAsAdmin().enqueue(() -> ref.set(SecurityUtils.getSubject().getPrincipal()));
+    await().atMost(1, TimeUnit.SECONDS).until(() -> Authentications.PRINCIPAL_SYSTEM.equals(ref.get()));
   }
 
   public static class Context {
@@ -328,6 +361,14 @@ class DefaultCentralWorkQueueTest {
     @Override
     public void run() {
       context.setValue(value);
+    }
+  }
+
+  public static class SecurityModule extends AbstractModule {
+
+    @Override
+    protected void configure() {
+      bind(SecurityManager.class).toInstance(SecurityUtils.getSecurityManager());
     }
   }
 

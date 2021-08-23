@@ -28,10 +28,13 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import io.micrometer.core.instrument.MeterRegistry;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.PrincipalCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.ModelObject;
 import sonia.scm.metrics.Metrics;
+import sonia.scm.web.security.DefaultAdministrationContext;
 
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
@@ -172,6 +175,7 @@ public class DefaultCentralWorkQueue implements CentralWorkQueue, Closeable {
   private class DefaultEnqueue implements Enqueue {
 
     private final Set<Resource> locks = new HashSet<>();
+    private boolean runAsAdmin = false;
 
     @Override
     public Enqueue locks(String resource) {
@@ -191,13 +195,26 @@ public class DefaultCentralWorkQueue implements CentralWorkQueue, Closeable {
     }
 
     @Override
+    public Enqueue runAsAdmin() {
+      this.runAsAdmin = true;
+      return this;
+    }
+
+    @Override
     public void enqueue(Task task) {
-      appendAndRun(new SimpleUnitOfWork(order.incrementAndGet(), locks, task));
+      appendAndRun(new SimpleUnitOfWork(order.incrementAndGet(), principal(), locks, task));
     }
 
     @Override
     public void enqueue(Class<? extends Task> task) {
-      appendAndRun(new InjectingUnitOfWork(order.incrementAndGet(), locks, task));
+      appendAndRun(new InjectingUnitOfWork(order.incrementAndGet(), principal(), locks, task));
+    }
+
+    private PrincipalCollection principal() {
+      if (runAsAdmin) {
+        return DefaultAdministrationContext.createAdminPrincipal();
+      }
+      return SecurityUtils.getSubject().getPrincipals();
     }
 
     private synchronized void appendAndRun(UnitOfWork unitOfWork) {
