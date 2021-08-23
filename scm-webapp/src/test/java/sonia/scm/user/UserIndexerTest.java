@@ -24,20 +24,23 @@
 
 package sonia.scm.user;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Answers;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.HandlerEventType;
 import sonia.scm.search.Id;
 import sonia.scm.search.Index;
+import sonia.scm.search.IndexLogStore;
+import sonia.scm.search.IndexTask;
 import sonia.scm.search.SearchEngine;
 
-import static java.util.Collections.singletonList;
+import java.util.Arrays;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -54,6 +57,16 @@ class UserIndexerTest {
   @InjectMocks
   private UserIndexer indexer;
 
+
+  @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+  private Index<User> index;
+
+  @Mock
+  private IndexLogStore indexLogStore;
+
+  @Captor
+  private ArgumentCaptor<IndexTask<User>> captor;
+
   @Test
   void shouldReturnType() {
     assertThat(indexer.getType()).isEqualTo(User.class);
@@ -64,58 +77,54 @@ class UserIndexerTest {
     assertThat(indexer.getVersion()).isEqualTo(UserIndexer.VERSION);
   }
 
-  @Nested
-  class UpdaterTests {
 
-    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-    private Index<User> index;
+  @Test
+  void shouldReturnReIndexAllClass() {
+    assertThat(indexer.getReIndexAllTask()).isEqualTo(UserIndexer.ReIndexAll.class);
+  }
 
-    private final User user = UserTestData.createTrillian();
+  @Test
+  void shouldCreateUser() {
+    User trillian = UserTestData.createTrillian();
 
-    @BeforeEach
-    void open() {
-      when(searchEngine.forType(User.class).getOrCreate()).thenReturn(index);
-    }
+    indexer.createStoreTask(trillian).update(index);
 
-    @Test
-    void shouldStore() {
-      indexer.open().store(user);
+    verify(index).store(Id.of(trillian), UserPermissions.read(trillian).asShiroString(), trillian);
+  }
 
-      verify(index).store(Id.of(user), "user:read:trillian", user);
-    }
+  @Test
+  void shouldDeleteUser() {
+    User trillian = UserTestData.createTrillian();
 
-    @Test
-    void shouldDeleteById() {
-      indexer.open().delete(user);
+    indexer.createDeleteTask(trillian).update(index);
 
-      verify(index.delete().byType()).byId(Id.of(user));
-    }
+    verify(index.delete()).byId(Id.of(trillian));
+  }
 
-    @Test
-    void shouldReIndexAll() {
-      when(userManager.getAll()).thenReturn(singletonList(user));
+  @Test
+  void shouldReIndexAll() {
+    User trillian = UserTestData.createTrillian();
+    User slarti = UserTestData.createSlarti();
+    when(userManager.getAll()).thenReturn(Arrays.asList(trillian, slarti));
 
-      indexer.open().reIndexAll();
+    UserIndexer.ReIndexAll reIndexAll = new UserIndexer.ReIndexAll(indexLogStore, userManager);
+    reIndexAll.update(index);
 
-      verify(index.delete().byType()).all();
-      verify(index).store(Id.of(user), "user:read:trillian", user);
-    }
+    verify(index.delete()).all();
+    verify(index).store(Id.of(trillian), UserPermissions.read(trillian).asShiroString(), trillian);
+    verify(index).store(Id.of(slarti), UserPermissions.read(slarti).asShiroString(), slarti);
+  }
 
-    @Test
-    void shouldHandleEvent() {
-      UserEvent event = new UserEvent(HandlerEventType.DELETE, user);
+  @Test
+  void shouldHandleEvents() {
+    User trillian = UserTestData.createTrillian();
+    UserEvent event = new UserEvent(HandlerEventType.DELETE, trillian);
 
-      indexer.handleEvent(event);
+    indexer.handleEvent(event);
 
-      verify(index.delete().byType()).byId(Id.of(user));
-    }
-
-    @Test
-    void shouldCloseIndex() {
-      indexer.open().close();
-
-      verify(index).close();
-    }
+    verify(searchEngine.forType(User.class)).update(captor.capture());
+    captor.getValue().update(index);
+    verify(index.delete()).byId(Id.of(trillian));
   }
 
 }

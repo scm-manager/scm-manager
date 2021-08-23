@@ -24,10 +24,12 @@
 
 package sonia.scm.search;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.HandlerEventType;
@@ -35,6 +37,7 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryEvent;
 import sonia.scm.repository.RepositoryTestData;
 
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -42,18 +45,23 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class HandlerEventIndexSyncerTest {
 
+  @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+  private SearchEngine searchEngine;
+
   @Mock
   private Indexer<Repository> indexer;
 
-  @Mock
-  private Indexer.Updater<Repository> updater;
+  @BeforeEach
+  void setUpIndexer() {
+    lenient().when(indexer.getType()).thenReturn(Repository.class);
+  }
 
   @ParameterizedTest
   @EnumSource(value = HandlerEventType.class, mode = EnumSource.Mode.MATCH_ANY, names = "BEFORE_.*")
   void shouldIgnoreBeforeEvents(HandlerEventType type) {
     RepositoryEvent event = new RepositoryEvent(type, RepositoryTestData.create42Puzzle());
 
-    new HandlerEventIndexSyncer<>(indexer).handleEvent(event);
+    new HandlerEventIndexSyncer<>(searchEngine, indexer).handleEvent(event);
 
     verifyNoInteractions(indexer);
   }
@@ -61,28 +69,29 @@ class HandlerEventIndexSyncerTest {
   @ParameterizedTest
   @EnumSource(value = HandlerEventType.class, mode = EnumSource.Mode.INCLUDE, names = {"CREATE", "MODIFY"})
   void shouldStore(HandlerEventType type) {
-    when(indexer.open()).thenReturn(updater);
+    IndexTask<Repository> store = index -> {};
 
     Repository puzzle = RepositoryTestData.create42Puzzle();
+    when(indexer.createStoreTask(puzzle)).thenReturn(store);
+
     RepositoryEvent event = new RepositoryEvent(type, puzzle);
 
-    new HandlerEventIndexSyncer<>(indexer).handleEvent(event);
+    new HandlerEventIndexSyncer<>(searchEngine, indexer).handleEvent(event);
 
-    verify(updater).store(puzzle);
-    verify(updater).close();
+    verify(searchEngine.forType(Repository.class)).update(store);
   }
 
   @Test
   void shouldDelete() {
-    when(indexer.open()).thenReturn(updater);
+    IndexTask<Repository> delete = index -> {};
 
     Repository puzzle = RepositoryTestData.create42Puzzle();
+    when(indexer.createDeleteTask(puzzle)).thenReturn(delete);
+
     RepositoryEvent event = new RepositoryEvent(HandlerEventType.DELETE, puzzle);
+    new HandlerEventIndexSyncer<>(searchEngine, indexer).handleEvent(event);
 
-    new HandlerEventIndexSyncer<>(indexer).handleEvent(event);
-
-    verify(updater).delete(puzzle);
-    verify(updater).close();
+    verify(searchEngine.forType(Repository.class)).update(delete);
   }
 
 }

@@ -30,6 +30,8 @@ import sonia.scm.plugin.Extension;
 import sonia.scm.search.HandlerEventIndexSyncer;
 import sonia.scm.search.Id;
 import sonia.scm.search.Index;
+import sonia.scm.search.IndexLogStore;
+import sonia.scm.search.IndexTask;
 import sonia.scm.search.Indexer;
 import sonia.scm.search.SearchEngine;
 
@@ -43,12 +45,10 @@ public class RepositoryIndexer implements Indexer<Repository> {
   @VisibleForTesting
   static final int VERSION = 3;
 
-  private final RepositoryManager repositoryManager;
   private final SearchEngine searchEngine;
 
   @Inject
-  public RepositoryIndexer(RepositoryManager repositoryManager, SearchEngine searchEngine) {
-    this.repositoryManager = repositoryManager;
+  public RepositoryIndexer(SearchEngine searchEngine) {
     this.searchEngine = searchEngine;
   }
 
@@ -62,49 +62,47 @@ public class RepositoryIndexer implements Indexer<Repository> {
     return Repository.class;
   }
 
+  @Override
+  public Class<? extends ReIndexAllTask<Repository>> getReIndexAllTask() {
+    return ReIndexAll.class;
+  }
+
   @Subscribe(async = false)
   public void handleEvent(RepositoryEvent event) {
-    new HandlerEventIndexSyncer<>(this).handleEvent(event);
+    new HandlerEventIndexSyncer<>(searchEngine, this).handleEvent(event);
   }
 
   @Override
-  public Updater<Repository> open() {
-    return new RepositoryIndexUpdater(repositoryManager, searchEngine.forType(getType()).getOrCreate());
+  public IndexTask<Repository> createStoreTask(Repository repository) {
+    return index -> store(index, repository);
   }
 
-  public static class RepositoryIndexUpdater implements Updater<Repository> {
+  @Override
+  public IndexTask<Repository> createDeleteTask(Repository repository) {
+    return index -> index.delete().byRepository(repository);
+  }
+
+  private static void store(Index<Repository> index, Repository repository) {
+    index.store(Id.of(repository), RepositoryPermissions.read(repository).asShiroString(), repository);
+  }
+
+  public static class ReIndexAll extends ReIndexAllTask<Repository> {
 
     private final RepositoryManager repositoryManager;
-    private final Index<Repository> index;
 
-    public RepositoryIndexUpdater(RepositoryManager repositoryManager, Index<Repository> index) {
+    @Inject
+    public ReIndexAll(IndexLogStore logStore, RepositoryManager repositoryManager) {
+      super(logStore, Repository.class, VERSION);
       this.repositoryManager = repositoryManager;
-      this.index = index;
     }
 
     @Override
-    public void store(Repository repository) {
-      index.store(Id.of(repository), RepositoryPermissions.read(repository).asShiroString(), repository);
-    }
-
-    @Override
-    public void delete(Repository repository) {
-      index.delete().allTypes().byRepository(repository.getId());
-    }
-
-    @Override
-    public void reIndexAll() {
-      // v1 used the whole classname as type
-      index.delete().allTypes().byTypeName(Repository.class.getName());
-      index.delete().byType().all();
+    public void update(Index<Repository> index) {
+      index.delete().all();
       for (Repository repository : repositoryManager.getAll()) {
-        store(repository);
+        store(index, repository);
       }
     }
-
-    @Override
-    public void close() {
-      index.close();
-    }
   }
+
 }

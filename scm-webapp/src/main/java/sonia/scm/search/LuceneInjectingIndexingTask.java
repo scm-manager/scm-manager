@@ -24,31 +24,29 @@
 
 package sonia.scm.search;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.google.inject.Injector;
+import sonia.scm.work.Task;
 
-public final class IndexQueueTaskWrapper<T> implements Runnable {
+import javax.inject.Inject;
 
-  private static final Logger LOG = LoggerFactory.getLogger(IndexQueueTaskWrapper.class);
+@SuppressWarnings("rawtypes")
+public class LuceneInjectingIndexingTask extends LuceneIndexTask implements Task {
 
-  private final LuceneIndexFactory indexFactory;
-  private final IndexParams indexParams;
-  private final Iterable<IndexQueueTask<T>> tasks;
+  private final Class<? extends IndexTask> taskClass;
+  private transient Injector injector;
 
-  IndexQueueTaskWrapper(LuceneIndexFactory indexFactory, IndexParams indexParams, Iterable<IndexQueueTask<T>> tasks) {
-    this.indexFactory = indexFactory;
-    this.indexParams = indexParams;
-    this.tasks = tasks;
+  LuceneInjectingIndexingTask(IndexParams params, Class<? extends IndexTask> taskClass) {
+    super(params);
+    this.taskClass = taskClass;
+  }
+
+  @Inject
+  public void setInjector(Injector injector) {
+    this.injector = injector;
   }
 
   @Override
   public void run() {
-    try (Index<T> index = indexFactory.create(indexParams)) {
-      for (IndexQueueTask<T> task : tasks) {
-        task.updateIndex(index);
-      }
-    } catch (Exception e) {
-      LOG.warn("failure during execution of index task for index {}", indexParams.getIndex(), e);
-    }
+    update(injector.getInstance(taskClass));
   }
 }

@@ -24,9 +24,10 @@
 
 package sonia.scm.search;
 
-@FunctionalInterface
-public interface IndexQueueTask<T> {
+public interface IndexDetails {
 
-  void updateIndex(Index<T> index);
+  Class<?> getType();
+
+  String getName();
 
 }

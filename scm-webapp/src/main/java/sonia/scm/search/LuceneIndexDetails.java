@@ -24,44 +24,20 @@
 
 package sonia.scm.search;
 
-import sonia.scm.HandlerEventType;
-import sonia.scm.event.HandlerEvent;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-/**
- * Keep index in sync with {@link HandlerEvent}.
- *
- * @param <T> type of indexed item
- * @since 2.22.0
- */
-public final class HandlerEventIndexSyncer<T> {
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
-  private final SearchEngine searchEngine;
-  private final Indexer<T> indexer;
-
-  public HandlerEventIndexSyncer(SearchEngine searchEngine, Indexer<T> indexer) {
-    this.searchEngine = searchEngine;
-    this.indexer = indexer;
-  }
-
-  /**
-   * Update index based on {@link HandlerEvent}.
-   *
-   * @param event handler event
-   */
-  public void handleEvent(HandlerEvent<T> event) {
-    HandlerEventType type = event.getEventType();
-    if (type.isPost()) {
-      IndexTask<T> task = createTask(type, event.getItem());
-      searchEngine.forType(indexer.getType()).update(task);
-    }
-  }
-
-  private IndexTask<T> createTask(HandlerEventType type, T item) {
-    if (type == HandlerEventType.DELETE) {
-      return indexer.createDeleteTask(item);
-    } else {
-      return indexer.createStoreTask(item);
-    }
-  }
-
+@Data
+@XmlRootElement
+@NoArgsConstructor
+@AllArgsConstructor
+@XmlAccessorType(XmlAccessType.FIELD)
+public class LuceneIndexDetails implements IndexDetails {
+  private Class<?> type;
+  private String name;
 }

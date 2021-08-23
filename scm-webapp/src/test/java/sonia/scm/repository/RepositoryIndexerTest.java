@@ -24,20 +24,23 @@
 
 package sonia.scm.repository;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Answers;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.HandlerEventType;
 import sonia.scm.search.Id;
 import sonia.scm.search.Index;
+import sonia.scm.search.IndexLogStore;
+import sonia.scm.search.IndexTask;
 import sonia.scm.search.SearchEngine;
 
-import static java.util.Collections.singletonList;
+import java.util.Arrays;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -54,6 +57,15 @@ class RepositoryIndexerTest {
   @InjectMocks
   private RepositoryIndexer indexer;
 
+  @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+  private Index<Repository> index;
+
+  @Mock
+  private IndexLogStore indexLogStore;
+
+  @Captor
+  private ArgumentCaptor<IndexTask<Repository>> captor;
+
   @Test
   void shouldReturnRepositoryClass() {
     assertThat(indexer.getType()).isEqualTo(Repository.class);
@@ -64,61 +76,53 @@ class RepositoryIndexerTest {
     assertThat(indexer.getVersion()).isEqualTo(RepositoryIndexer.VERSION);
   }
 
-  @Nested
-  class UpdaterTests {
-
-    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-    private Index<Repository> index;
-
-    private Repository repository;
-
-    @BeforeEach
-    void open() {
-      when(searchEngine.forType(Repository.class).getOrCreate()).thenReturn(index);
-      repository = new Repository();
-      repository.setId("42");
-    }
-
-    @Test
-    void shouldStoreRepository() {
-      indexer.open().store(repository);
-
-      verify(index).store(Id.of(repository), "repository:read:42", repository);
-    }
-
-    @Test
-    void shouldDeleteByRepository() {
-      indexer.open().delete(repository);
-
-      verify(index.delete().allTypes()).byRepository("42");
-    }
-
-    @Test
-    void shouldReIndexAll() {
-      when(repositoryManager.getAll()).thenReturn(singletonList(repository));
-
-      indexer.open().reIndexAll();
-
-      verify(index.delete().allTypes()).byTypeName(Repository.class.getName());
-      verify(index.delete().byType()).all();
-
-      verify(index).store(Id.of(repository), "repository:read:42", repository);
-    }
-
-    @Test
-    void shouldHandleEvent() {
-      RepositoryEvent event = new RepositoryEvent(HandlerEventType.DELETE, repository);
-
-      indexer.handleEvent(event);
-
-      verify(index.delete().allTypes()).byRepository("42");
-    }
-
-    @Test
-    void shouldCloseIndex() {
-      indexer.open().close();
-
-      verify(index).close();
-    }
+  @Test
+  void shouldReturnReIndexAllClass() {
+    assertThat(indexer.getReIndexAllTask()).isEqualTo(RepositoryIndexer.ReIndexAll.class);
   }
+
+  @Test
+  void shouldCreateRepository() {
+    Repository heartOfGold = RepositoryTestData.createHeartOfGold();
+
+    indexer.createStoreTask(heartOfGold).update(index);
+
+    verify(index).store(Id.of(heartOfGold), RepositoryPermissions.read(heartOfGold).asShiroString(), heartOfGold);
+  }
+
+  @Test
+  void shouldDeleteRepository() {
+    Repository heartOfGold = RepositoryTestData.createHeartOfGold();
+
+    indexer.createDeleteTask(heartOfGold).update(index);
+
+    verify(index.delete()).byRepository(heartOfGold);
+  }
+
+  @Test
+  void shouldReIndexAll() {
+    Repository heartOfGold = RepositoryTestData.createHeartOfGold();
+    Repository puzzle = RepositoryTestData.create42Puzzle();
+    when(repositoryManager.getAll()).thenReturn(Arrays.asList(heartOfGold, puzzle));
+
+    RepositoryIndexer.ReIndexAll reIndexAll = new RepositoryIndexer.ReIndexAll(indexLogStore, repositoryManager);
+    reIndexAll.update(index);
+
+    verify(index.delete()).all();
+    verify(index).store(Id.of(heartOfGold), RepositoryPermissions.read(heartOfGold).asShiroString(), heartOfGold);
+    verify(index).store(Id.of(puzzle), RepositoryPermissions.read(puzzle).asShiroString(), puzzle);
+  }
+
+  @Test
+  void shouldHandleEvents() {
+    Repository heartOfGold = RepositoryTestData.createHeartOfGold();
+    RepositoryEvent event = new RepositoryEvent(HandlerEventType.DELETE, heartOfGold);
+
+    indexer.handleEvent(event);
+
+    verify(searchEngine.forType(Repository.class)).update(captor.capture());
+    captor.getValue().update(index);
+    verify(index.delete()).byRepository(heartOfGold);
+  }
+
 }

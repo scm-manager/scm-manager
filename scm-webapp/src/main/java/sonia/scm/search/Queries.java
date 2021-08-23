@@ -47,6 +47,7 @@ final class Queries {
   static Query filter(Query query, LuceneSearchableType searchableType, QueryBuilder.QueryParams params) {
     BooleanQuery.Builder builder = new BooleanQuery.Builder()
       .add(query, MUST)
+      // TODO remove
       .add(typeQuery(searchableType), MUST);
     params.getRepositoryId().ifPresent(repo -> builder.add(repositoryQuery(repo), MUST));
     return builder.build();

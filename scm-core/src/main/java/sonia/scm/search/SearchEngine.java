@@ -25,8 +25,10 @@
 package sonia.scm.search;
 
 import com.google.common.annotations.Beta;
+import sonia.scm.ModelObject;
 
 import java.util.Collection;
+import java.util.function.Predicate;
 
 /**
  * The {@link SearchEngine} is the main entry point for indexing and searching.
@@ -61,6 +63,24 @@ public interface SearchEngine {
    */
   ForType<Object> forType(String name);
 
+
+  ForIndices forIndices();
+
+  interface ForIndices {
+
+    ForIndices withPredicate(Predicate<IndexDetails> predicate);
+    ForIndices forResource(String resource);
+    default ForIndices forResource(ModelObject resource) {
+      return forResource(resource.getId());
+    }
+
+    ForIndices withOptions(IndexOptions options);
+
+    void batch(IndexTask<?> task);
+    void batch(Class<? extends IndexTask<?>> task);
+  }
+
+
   /**
    * Search and index api.
    *
@@ -86,11 +106,21 @@ public interface SearchEngine {
      */
     ForType<T> withIndex(String name);
 
+    default ForType<T> forResource(ModelObject resource) {
+      return forResource(resource.getId());
+    }
+
+    ForType<T> forResource(String id);
+
     /**
-     * Returns an index object which provides method to update the search index.
-     * @return index object
+     * TODO
      */
-    Index<T> getOrCreate();
+    void update(IndexTask<T> task);
+
+    /**
+     * TODO
+     */
+    void update(Class<? extends IndexTask<T>> task);
 
     /**
      * Returns a query builder object which can be used to search the index.

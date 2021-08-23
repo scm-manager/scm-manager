@@ -42,7 +42,6 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.ByteBuffersDirectory;
 import org.apache.lucene.store.Directory;
-import org.apache.shiro.authz.AuthorizationException;
 import org.github.sdorra.jse.ShiroExtension;
 import org.github.sdorra.jse.SubjectAware;
 import org.junit.jupiter.api.BeforeEach;
@@ -70,7 +69,7 @@ class LuceneQueryBuilderTest {
   private Directory directory;
 
   @Mock
-  private IndexOpener opener;
+  private IndexManager opener;
 
   @BeforeEach
   void setUpDirectory() {
@@ -302,10 +301,11 @@ class LuceneQueryBuilderTest {
 
     QueryResult result;
     try (DirectoryReader reader = DirectoryReader.open(directory)) {
-      when(opener.openForRead("default")).thenReturn(reader);
       SearchableTypeResolver resolver = new SearchableTypeResolver(Simple.class);
+      LuceneSearchableType searchableType = resolver.resolve(Simple.class);
+      when(opener.openForRead(searchableType, "default")).thenReturn(reader);
       LuceneQueryBuilder<Simple> builder = new LuceneQueryBuilder<>(
-        opener, "default", resolver.resolve(Simple.class), new StandardAnalyzer()
+        opener, "default", searchableType, new StandardAnalyzer()
       );
       result = builder.repository("cde").execute("content:awesome");
     }
@@ -560,9 +560,9 @@ class LuceneQueryBuilderTest {
 
   private <T> long count(Class<T> type, String queryString) throws IOException {
     try (DirectoryReader reader = DirectoryReader.open(directory)) {
-      lenient().when(opener.openForRead("default")).thenReturn(reader);
       SearchableTypeResolver resolver = new SearchableTypeResolver(type);
       LuceneSearchableType searchableType = resolver.resolve(type);
+      lenient().when(opener.openForRead(searchableType, "default")).thenReturn(reader);
       LuceneQueryBuilder<T> builder = new LuceneQueryBuilder<T>(
         opener, "default", searchableType, new StandardAnalyzer()
       );
@@ -572,10 +572,11 @@ class LuceneQueryBuilderTest {
 
   private <T> QueryResult query(Class<?> type, String queryString, Integer start, Integer limit) throws IOException {
     try (DirectoryReader reader = DirectoryReader.open(directory)) {
-      lenient().when(opener.openForRead("default")).thenReturn(reader);
       SearchableTypeResolver resolver = new SearchableTypeResolver(type);
       LuceneSearchableType searchableType = resolver.resolve(type);
-      LuceneQueryBuilder<T> builder = new LuceneQueryBuilder<T>(
+
+      lenient().when(opener.openForRead(searchableType, "default")).thenReturn(reader);
+      LuceneQueryBuilder<T> builder = new LuceneQueryBuilder<>(
         opener, "default", searchableType, new StandardAnalyzer()
       );
       if (start != null) {

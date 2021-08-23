@@ -24,44 +24,19 @@
 
 package sonia.scm.search;
 
-import sonia.scm.HandlerEventType;
-import sonia.scm.event.HandlerEvent;
+import sonia.scm.work.Task;
 
-/**
- * Keep index in sync with {@link HandlerEvent}.
- *
- * @param <T> type of indexed item
- * @since 2.22.0
- */
-public final class HandlerEventIndexSyncer<T> {
+public final class LuceneSimpleIndexingTask extends LuceneIndexTask implements Task {
 
-  private final SearchEngine searchEngine;
-  private final Indexer<T> indexer;
+  private final IndexTask<?> task;
 
-  public HandlerEventIndexSyncer(SearchEngine searchEngine, Indexer<T> indexer) {
-    this.searchEngine = searchEngine;
-    this.indexer = indexer;
+  LuceneSimpleIndexingTask(IndexParams params, IndexTask<?> task) {
+    super(params);
+    this.task = task;
   }
 
-  /**
-   * Update index based on {@link HandlerEvent}.
-   *
-   * @param event handler event
-   */
-  public void handleEvent(HandlerEvent<T> event) {
-    HandlerEventType type = event.getEventType();
-    if (type.isPost()) {
-      IndexTask<T> task = createTask(type, event.getItem());
-      searchEngine.forType(indexer.getType()).update(task);
-    }
+  @Override
+  public void run() {
+    update(task);
   }
-
-  private IndexTask<T> createTask(HandlerEventType type, T item) {
-    if (type == HandlerEventType.DELETE) {
-      return indexer.createDeleteTask(item);
-    } else {
-      return indexer.createStoreTask(item);
-    }
-  }
-
 }

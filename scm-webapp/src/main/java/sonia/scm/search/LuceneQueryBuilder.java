@@ -54,12 +54,12 @@ public class LuceneQueryBuilder<T> extends QueryBuilder<T> {
 
   private static final Logger LOG = LoggerFactory.getLogger(LuceneQueryBuilder.class);
 
-  private final IndexOpener opener;
+  private final IndexManager opener;
   private final LuceneSearchableType searchableType;
   private final String indexName;
   private final Analyzer analyzer;
 
-  LuceneQueryBuilder(IndexOpener opener, String indexName, LuceneSearchableType searchableType, Analyzer analyzer) {
+  LuceneQueryBuilder(IndexManager opener, String indexName, LuceneSearchableType searchableType, Analyzer analyzer) {
     this.opener = opener;
     this.indexName = indexName;
     this.searchableType = searchableType;
@@ -92,7 +92,7 @@ public class LuceneQueryBuilder<T> extends QueryBuilder<T> {
     if (LOG.isDebugEnabled()) {
       LOG.debug("execute lucene query: {}", query);
     }
-    try (IndexReader reader = opener.openForRead(indexName)) {
+    try (IndexReader reader = opener.openForRead(searchableType, indexName)) {
       IndexSearcher searcher = new IndexSearcher(reader);
 
       searcher.search(query, new PermissionAwareCollector(reader, collector));

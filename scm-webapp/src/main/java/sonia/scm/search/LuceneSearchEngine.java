@@ -24,24 +24,34 @@
 
 package sonia.scm.search;
 
+import com.google.common.base.Joiner;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
+import sonia.scm.work.CentralWorkQueue;
+import sonia.scm.work.CentralWorkQueue.Enqueue;
+import sonia.scm.work.Task;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class LuceneSearchEngine implements SearchEngine {
 
+  private final IndexManager indexManager;
   private final SearchableTypeResolver resolver;
-  private final IndexQueue indexQueue;
   private final LuceneQueryBuilderFactory queryBuilderFactory;
+  private final CentralWorkQueue centralWorkQueue;
 
   @Inject
-  public LuceneSearchEngine(SearchableTypeResolver resolver, IndexQueue indexQueue, LuceneQueryBuilderFactory queryBuilderFactory) {
+  public LuceneSearchEngine(IndexManager indexManager, SearchableTypeResolver resolver, LuceneQueryBuilderFactory queryBuilderFactory, CentralWorkQueue centralWorkQueue) {
+    this.indexManager = indexManager;
     this.resolver = resolver;
-    this.indexQueue = indexQueue;
     this.queryBuilderFactory = queryBuilderFactory;
+    this.centralWorkQueue = centralWorkQueue;
   }
 
   @Override
@@ -67,11 +77,79 @@ public class LuceneSearchEngine implements SearchEngine {
     return new LuceneForType<>(searchableType);
   }
 
+  private void enqueue(LuceneSearchableType searchableType, String index, List<String> resources, Task task) {
+    Enqueue enqueuer = centralWorkQueue.append();
+
+    String resourceName = Joiner.on('-').join(searchableType.getName(), index, "index");
+    if (resources.isEmpty()) {
+      enqueuer.locks(resourceName);
+    } else {
+      for (String resource : resources) {
+        enqueuer.locks(resourceName, resource);
+      }
+    }
+
+    enqueuer.runAsAdmin().enqueue(task);
+  }
+
+  @Override
+  public ForIndices forIndices() {
+    return new LuceneForIndices();
+  }
+
+  class LuceneForIndices implements ForIndices {
+
+    private final List<String> resources = new ArrayList<>();
+    private Predicate<IndexDetails> predicate = details -> true;
+    private IndexOptions options = IndexOptions.defaults();
+
+    @Override
+    public ForIndices withPredicate(Predicate<IndexDetails> predicate) {
+      this.predicate = predicate;
+      return this;
+    }
+
+    @Override
+    public ForIndices withOptions(IndexOptions options) {
+      this.options = options;
+      return this;
+    }
+
+    @Override
+    public ForIndices forResource(String resource) {
+      this.resources.add(resource);
+      return this;
+    }
+
+    @Override
+    public void batch(IndexTask<?> task) {
+      exec(params -> batch(params, new LuceneSimpleIndexingTask(params, task)));
+    }
+
+    @Override
+    public void batch(Class<? extends IndexTask<?>> task) {
+      exec(params -> batch(params, new LuceneInjectingIndexingTask(params, task)));
+    }
+
+    private void exec(Consumer<IndexParams> consumer) {
+      indexManager.all()
+        .stream()
+        .filter(predicate)
+        .map(details -> new IndexParams(details.getName(), resolver.resolve(details.getType()), options))
+        .forEach(consumer);
+    }
+
+    private void batch(IndexParams params, Task task) {
+      LuceneSearchEngine.this.enqueue(params.getSearchableType(), params.getIndex(), resources, task);
+    }
+  }
+
   class LuceneForType<T> implements ForType<T> {
 
     private final LuceneSearchableType searchableType;
     private IndexOptions options = IndexOptions.defaults();
     private String index = "default";
+    private final List<String> resources = new ArrayList<>();
 
     private LuceneForType(LuceneSearchableType searchableType) {
       this.searchableType = searchableType;
@@ -94,8 +172,23 @@ public class LuceneSearchEngine implements SearchEngine {
     }
 
     @Override
-    public Index<T> getOrCreate() {
-      return indexQueue.getQueuedIndex(params());
+    public ForType<T> forResource(String resource) {
+      resources.add(resource);
+      return this;
+    }
+
+    @Override
+    public void update(Class<? extends IndexTask<T>> task) {
+      enqueue(new LuceneInjectingIndexingTask(params(), task));
+    }
+
+    @Override
+    public void update(IndexTask<T> task) {
+      enqueue(new LuceneSimpleIndexingTask(params(), task));
+    }
+
+    private void enqueue(Task task) {
+      LuceneSearchEngine.this.enqueue(searchableType, index, resources, task);
     }
 
     @Override

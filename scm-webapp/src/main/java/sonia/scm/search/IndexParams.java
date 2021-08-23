@@ -27,10 +27,19 @@ package sonia.scm.search;
 import lombok.Value;
 
 @Value
-public class IndexParams {
+public class IndexParams implements IndexDetails {
 
   String index;
   LuceneSearchableType searchableType;
   IndexOptions options;
 
+  @Override
+  public Class<?> getType() {
+    return searchableType.getType();
+  }
+
+  @Override
+  public String getName() {
+    return index;
+  }
 }

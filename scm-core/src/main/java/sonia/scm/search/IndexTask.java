@@ -24,53 +24,15 @@
 
 package sonia.scm.search;
 
-import com.google.common.annotations.VisibleForTesting;
+import java.io.Serializable;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import java.io.Closeable;
-import java.io.IOException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicLong;
+@FunctionalInterface
+public interface IndexTask<T> extends Serializable {
 
-@Singleton
-public class IndexQueue implements Closeable {
+  void update(Index<T> index);
 
-  private final ExecutorService executor = Executors.newSingleThreadExecutor();
+  default void afterUpdate() {
 
-  private final AtomicLong size = new AtomicLong(0);
-
-  private final LuceneIndexFactory indexFactory;
-
-  @Inject
-  public IndexQueue(LuceneIndexFactory indexFactory) {
-    this.indexFactory = indexFactory;
   }
 
-  public <T> Index<T> getQueuedIndex(IndexParams indexParams) {
-    return new QueuedIndex<>(this, indexParams);
-  }
-
-  public LuceneIndexFactory getIndexFactory() {
-    return indexFactory;
-  }
-
-  <T> void enqueue(IndexQueueTaskWrapper<T> task) {
-    size.incrementAndGet();
-    executor.execute(() -> {
-      task.run();
-      size.decrementAndGet();
-    });
-  }
-
-  @VisibleForTesting
-  long getSize() {
-    return size.get();
-  }
-
-  @Override
-  public void close() throws IOException {
-    executor.shutdown();
-  }
 }

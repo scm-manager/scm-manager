@@ -29,16 +29,16 @@ import java.io.IOException;
 
 public class LuceneIndexFactory {
 
-  private final IndexOpener indexOpener;
+  private final IndexManager indexManager;
 
   @Inject
-  public LuceneIndexFactory(IndexOpener indexOpener) {
-    this.indexOpener = indexOpener;
+  public LuceneIndexFactory(IndexManager indexManager) {
+    this.indexManager = indexManager;
   }
 
   public <T> LuceneIndex<T> create(IndexParams indexParams) {
     try {
-      return new LuceneIndex<>(indexParams.getSearchableType(), indexOpener.openForWrite(indexParams));
+      return new LuceneIndex<>(indexParams, indexManager.openForWrite(indexParams));
     } catch (IOException ex) {
       throw new SearchEngineException("failed to open index " + indexParams.getIndex(), ex);
     }

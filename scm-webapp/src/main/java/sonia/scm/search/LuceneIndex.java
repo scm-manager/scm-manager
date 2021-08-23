@@ -42,14 +42,21 @@ import static sonia.scm.search.FieldNames.REPOSITORY;
 import static sonia.scm.search.FieldNames.TYPE;
 import static sonia.scm.search.FieldNames.UID;
 
-class LuceneIndex<T> implements Index<T> {
+class LuceneIndex<T> implements Index<T>, AutoCloseable {
 
+  private final IndexDetails details;
   private final LuceneSearchableType searchableType;
   private final IndexWriter writer;
 
-  LuceneIndex(LuceneSearchableType searchableType, IndexWriter writer) {
-    this.searchableType = searchableType;
+  LuceneIndex(IndexParams params, IndexWriter writer) {
+    this.details = params;
+    this.searchableType = params.getSearchableType();
     this.writer = writer;
+  }
+
+  @Override
+  public IndexDetails getDetails() {
+    return details;
   }
 
   @Override
@@ -57,6 +64,7 @@ class LuceneIndex<T> implements Index<T> {
     String uid = createUid(id, searchableType);
     Document document = searchableType.getTypeConverter().convert(object);
     try {
+      // TODO remove
       field(document, UID, uid);
       field(document, ID, id.getValue());
       id.getRepository().ifPresent(repository -> field(document, REPOSITORY, repository));
@@ -64,6 +72,7 @@ class LuceneIndex<T> implements Index<T> {
       if (!Strings.isNullOrEmpty(permission)) {
         field(document, PERMISSION, permission);
       }
+      // TODO use id instead of uid
       writer.updateDocument(new Term(UID, uid), document);
     } catch (IOException e) {
       throw new SearchEngineException("failed to add document to index", e);
@@ -71,6 +80,7 @@ class LuceneIndex<T> implements Index<T> {
   }
 
   private String createUid(Id id, LuceneSearchableType type) {
+    // TODO remove
     return id.asString() + "/" + type.getName();
   }
 
@@ -95,22 +105,9 @@ class LuceneIndex<T> implements Index<T> {
   private class LuceneDeleter implements Deleter {
 
     @Override
-    public ByTypeDeleter byType() {
-      return new LuceneByTypeDeleter();
-    }
-
-    @Override
-    public AllTypesDeleter allTypes() {
-      return new LuceneAllTypesDelete();
-    }
-  }
-
-  @SuppressWarnings("java:S1192")
-  private class LuceneByTypeDeleter implements ByTypeDeleter {
-
-    @Override
     public void byId(Id id) {
       try {
+        // TODO use id instead of uid
         writer.deleteDocuments(new Term(UID, createUid(id, searchableType)));
       } catch (IOException e) {
         throw new SearchEngineException("failed to delete document from index", e);
@@ -120,6 +117,7 @@ class LuceneIndex<T> implements Index<T> {
     @Override
     public void all() {
       try {
+        // TODO remove all
         writer.deleteDocuments(new Term(TYPE, searchableType.getName()));
       } catch (IOException ex) {
         throw new SearchEngineException("failed to delete documents by type " + searchableType.getName() + " from index", ex);
@@ -130,33 +128,13 @@ class LuceneIndex<T> implements Index<T> {
     public void byRepository(String repositoryId) {
       try {
         BooleanQuery query = new BooleanQuery.Builder()
+          // TODO remove
           .add(new TermQuery(new Term(TYPE, searchableType.getName())), BooleanClause.Occur.MUST)
           .add(new TermQuery(new Term(REPOSITORY, repositoryId)), BooleanClause.Occur.MUST)
           .build();
         writer.deleteDocuments(query);
       } catch (IOException ex) {
         throw new SearchEngineException("failed to delete documents by repository " + repositoryId + " from index", ex);
-      }
-    }
-  }
-
-  private class LuceneAllTypesDelete implements AllTypesDeleter {
-
-    @Override
-    public void byRepository(String repositoryId) {
-      try {
-        writer.deleteDocuments(new Term(REPOSITORY, repositoryId));
-      } catch (IOException ex) {
-        throw new SearchEngineException("failed to delete all documents by repository " + repositoryId + " from index", ex);
-      }
-    }
-
-    @Override
-    public void byTypeName(String typeName) {
-      try {
-        writer.deleteDocuments(new Term(TYPE, typeName));
-      } catch (IOException ex) {
-        throw new SearchEngineException("failed to delete documents by type " + typeName + " from index", ex);
       }
     }
   }

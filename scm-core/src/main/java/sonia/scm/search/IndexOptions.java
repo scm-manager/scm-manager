@@ -27,6 +27,7 @@ package sonia.scm.search;
 import com.google.common.annotations.Beta;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serializable;
 import java.util.Locale;
 
 /**
@@ -36,7 +37,7 @@ import java.util.Locale;
  */
 @Beta
 @EqualsAndHashCode
-public class IndexOptions {
+public class IndexOptions implements Serializable {
 
   private final Type type;
   private final Locale locale;

@@ -24,44 +24,40 @@
 
 package sonia.scm.search;
 
-import sonia.scm.HandlerEventType;
-import sonia.scm.event.HandlerEvent;
+import javax.inject.Inject;
+import java.io.Serializable;
 
-/**
- * Keep index in sync with {@link HandlerEvent}.
- *
- * @param <T> type of indexed item
- * @since 2.22.0
- */
-public final class HandlerEventIndexSyncer<T> {
+public class LuceneIndexTask implements Serializable {
 
-  private final SearchEngine searchEngine;
-  private final Indexer<T> indexer;
+  private final Class<?> type;
+  private final String indexName;
+  private final IndexOptions options;
 
-  public HandlerEventIndexSyncer(SearchEngine searchEngine, Indexer<T> indexer) {
-    this.searchEngine = searchEngine;
-    this.indexer = indexer;
+  private transient LuceneIndexFactory indexFactory;
+  private transient SearchableTypeResolver searchableTypeResolver;
+
+  protected LuceneIndexTask(IndexParams params) {
+    this.type = params.getSearchableType().getType();
+    this.indexName = params.getIndex();
+    this.options = params.getOptions();
   }
 
-  /**
-   * Update index based on {@link HandlerEvent}.
-   *
-   * @param event handler event
-   */
-  public void handleEvent(HandlerEvent<T> event) {
-    HandlerEventType type = event.getEventType();
-    if (type.isPost()) {
-      IndexTask<T> task = createTask(type, event.getItem());
-      searchEngine.forType(indexer.getType()).update(task);
+  @Inject
+  public void setIndexFactory(LuceneIndexFactory indexFactory) {
+    this.indexFactory = indexFactory;
+  }
+
+  @Inject
+  public void setSearchableTypeResolver(SearchableTypeResolver searchableTypeResolver) {
+    this.searchableTypeResolver = searchableTypeResolver;
+  }
+
+  @SuppressWarnings({"rawtypes", "unchecked"})
+  protected void update(IndexTask task) {
+    LuceneSearchableType searchableType = searchableTypeResolver.resolve(type);
+    try (LuceneIndex index = indexFactory.create(new IndexParams(indexName, searchableType, options))) {
+      task.update(index);
     }
+    task.afterUpdate();
   }
-
-  private IndexTask<T> createTask(HandlerEventType type, T item) {
-    if (type == HandlerEventType.DELETE) {
-      return indexer.createDeleteTask(item);
-    } else {
-      return indexer.createStoreTask(item);
-    }
-  }
-
 }

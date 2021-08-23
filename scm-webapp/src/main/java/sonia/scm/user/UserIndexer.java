@@ -30,6 +30,8 @@ import sonia.scm.plugin.Extension;
 import sonia.scm.search.HandlerEventIndexSyncer;
 import sonia.scm.search.Id;
 import sonia.scm.search.Index;
+import sonia.scm.search.IndexLogStore;
+import sonia.scm.search.IndexTask;
 import sonia.scm.search.Indexer;
 import sonia.scm.search.SearchEngine;
 
@@ -43,12 +45,10 @@ public class UserIndexer implements Indexer<User> {
   @VisibleForTesting
   static final int VERSION = 1;
 
-  private final UserManager userManager;
   private final SearchEngine searchEngine;
 
   @Inject
-  public UserIndexer(UserManager userManager, SearchEngine searchEngine) {
-    this.userManager = userManager;
+  public UserIndexer(SearchEngine searchEngine) {
     this.searchEngine = searchEngine;
   }
 
@@ -62,47 +62,46 @@ public class UserIndexer implements Indexer<User> {
     return VERSION;
   }
 
-  @Subscribe(async = false)
-  public void handleEvent(UserEvent event) {
-    new HandlerEventIndexSyncer<>(this).handleEvent(event);
+  @Override
+  public Class<? extends ReIndexAllTask<User>> getReIndexAllTask() {
+    return ReIndexAll.class;
   }
 
   @Override
-  public Updater<User> open() {
-    return new UserIndexUpdater(userManager, searchEngine.forType(User.class).getOrCreate());
+  public IndexTask<User> createStoreTask(User user) {
+    return index -> store(index, user);
   }
 
-  public static class UserIndexUpdater implements Updater<User> {
+  @Override
+  public IndexTask<User> createDeleteTask(User item) {
+    return index -> index.delete().byId(Id.of(item));
+  }
+
+  @Subscribe(async = false)
+  public void handleEvent(UserEvent event) {
+    new HandlerEventIndexSyncer<>(searchEngine, this).handleEvent(event);
+  }
+
+  private static void store(Index<User> index, User user) {
+    index.store(Id.of(user), UserPermissions.read(user).asShiroString(), user);
+  }
+
+  public static class ReIndexAll extends ReIndexAllTask<User> {
 
     private final UserManager userManager;
-    private final Index<User> index;
 
-    private UserIndexUpdater(UserManager userManager, Index<User> index) {
+    @Inject
+    public ReIndexAll(IndexLogStore logStore, UserManager userManager) {
+      super(logStore, User.class, VERSION);
       this.userManager = userManager;
-      this.index = index;
     }
 
     @Override
-    public void store(User user) {
-      index.store(Id.of(user), UserPermissions.read(user).asShiroString(), user);
-    }
-
-    @Override
-    public void delete(User user) {
-      index.delete().byType().byId(Id.of(user));
-    }
-
-    @Override
-    public void reIndexAll() {
-      index.delete().byType().all();
+    public void update(Index<User> index) {
+      index.delete().all();
       for (User user : userManager.getAll()) {
-        store(user);
+        store(index, user);
       }
-    }
-
-    @Override
-    public void close() {
-      index.close();
     }
   }
 }
