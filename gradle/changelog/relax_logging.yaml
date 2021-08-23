@@ -1,0 +1,2 @@
+- type: fixed
+  description: Too heavy logging of SchemeBasedWebTokenGenerator ([#1772](https://github.com/scm-manager/scm-manager/issues/1772) and [#1777](https://github.com/scm-manager/scm-manager/pull/1777))
