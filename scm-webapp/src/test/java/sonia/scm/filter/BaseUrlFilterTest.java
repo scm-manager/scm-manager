@@ -89,7 +89,8 @@ class BaseUrlFilterTest {
     filter.doFilter(request, response, chain);
 
     verifyNoInteractions(chain);
-    verify(response).sendRedirect("https://hitchhiker.com:443/scm/api/v2");
+    verify(response).setStatus(307);
+    verify(response).setHeader("Location", "https://hitchhiker.com:443/scm/api/v2");
   }
 
   @Test

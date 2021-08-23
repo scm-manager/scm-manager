@@ -73,7 +73,8 @@ public class BaseUrlFilter extends HttpFilter {
       chain.doFilter(request, response);
     } else {
       String url = HttpUtil.getCompleteUrl(configuration, HttpUtil.getStrippedURI(request));
-      response.sendRedirect(url);
+      response.setStatus(HttpServletResponse.SC_TEMPORARY_REDIRECT);
+      response.setHeader(HttpUtil.HEADER_LOCATION, url);
     }
   }
 
