@@ -21,12 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.store;
 
 /**
  * Store constants for xml implementations.
- * 
+ *
  * @author Sebastian Sdorra
  */
 public class StoreConstants
@@ -35,6 +35,24 @@ public class StoreConstants
   private StoreConstants() {  }
 
   public static final String CONFIG_DIRECTORY_NAME = "config";
+
+  /**
+   * Name of the parent of data or blob directories.
+   * @since 2.23.0
+   */
+  public static final String VARIABLE_DATA_DIRECTORY_NAME = "var";
+
+  /**
+   * Name of data directories.
+   * @since 2.23.0
+   */
+  public static final String DATA_DIRECTORY_NAME = "data";
+
+  /**
+   * Name of blob directories.
+   * @since 2.23.0
+   */
+  public static final String BLOG_DIRECTORY_NAME = "data";
 
   public static final String REPOSITORY_METADATA = "metadata";
 
