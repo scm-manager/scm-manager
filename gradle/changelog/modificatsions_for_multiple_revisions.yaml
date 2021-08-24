@@ -1,2 +1,2 @@
 - type: Added
-  description: "Base" revision in modificatsions command to compute modifications between revisions ([#1761](https://github.com/scm-manager/scm-manager/pull/1761))
+  description: Base revision in modificatsions command to compute modifications between revisions ([#1761](https://github.com/scm-manager/scm-manager/pull/1761))
