@@ -43,13 +43,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryTestData;
+import sonia.scm.repository.RepositoryType;
 
 import java.io.IOException;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.in;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
@@ -121,6 +122,22 @@ class LuceneIndexTest {
   }
 
   @Test
+  void shouldDeleteByIdAndRepository() throws IOException {
+    Repository heartOfGold = RepositoryTestData.createHeartOfGold();
+    Repository puzzle42 = RepositoryTestData.createHeartOfGold();
+    try (LuceneIndex<Storable> index = createIndex(Storable.class)) {
+      index.store(ONE.withRepository(heartOfGold), null, new Storable("content"));
+      index.store(ONE.withRepository(puzzle42), null, new Storable("content"));
+    }
+
+    try (LuceneIndex<Storable> index = createIndex(Storable.class)) {
+      index.delete().byId(ONE.withRepository(heartOfGold));
+    }
+
+    assertHits("value", "content", 1);
+  }
+
+  @Test
   void shouldDeleteAll() throws IOException {
     try (LuceneIndex<Storable> index = createIndex(Storable.class)) {
       index.store(ONE, null, new Storable("content"));
@@ -137,15 +154,15 @@ class LuceneIndexTest {
   @Test
   void shouldDeleteByRepository() throws IOException {
     try (LuceneIndex<Storable> index = createIndex(Storable.class)) {
-      index.store(ONE.withRepository("4211"), null, new Storable("Some other text"));
-      index.store(TWO.withRepository("4212"), null, new Storable("New stuff"));
+      index.store(ONE.withRepository("4211"), null, new Storable("content"));
+      index.store(TWO.withRepository("4212"), null, new Storable("content"));
     }
 
     try (LuceneIndex<Storable> index = createIndex(Storable.class)) {
       index.delete().byRepository("4212");
     }
 
-    assertHits(ID, "one", 1);
+    assertHits("value", "content", 1);
   }
 
   @Test
@@ -158,7 +175,7 @@ class LuceneIndexTest {
   }
 
   @Test
-  void shouldReturnDetails() throws IOException {
+  void shouldReturnDetails() {
     try (LuceneIndex<Storable> index = createIndex(Storable.class)) {
       IndexDetails details = index.getDetails();
       assertThat(details.getType()).isEqualTo(Storable.class);

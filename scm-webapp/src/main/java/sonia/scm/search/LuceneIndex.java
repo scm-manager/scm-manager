@@ -75,7 +75,7 @@ class LuceneIndex<T> implements Index<T>, AutoCloseable {
   public void store(Id id, String permission, Object object) {
     Document document = searchableType.getTypeConverter().convert(object);
     try {
-      field(document, ID, id.getValue());
+      field(document, ID, id.asString());
       id.getRepository().ifPresent(repository -> field(document, REPOSITORY, repository));
       if (!Strings.isNullOrEmpty(permission)) {
         field(document, PERMISSION, permission);
@@ -88,7 +88,7 @@ class LuceneIndex<T> implements Index<T>, AutoCloseable {
 
   @Nonnull
   private Term idTerm(Id id) {
-    return new Term(ID, id.getValue());
+    return new Term(ID, id.asString());
   }
 
   private void field(Document document, String type, String name) {
