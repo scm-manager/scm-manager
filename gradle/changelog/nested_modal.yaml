@@ -1,0 +1,2 @@
+- type: Fixed
+  description: Remove deletion of empty modalRoot node to allow a different modal to continue to exist ([#1779](https://github.com/scm-manager/scm-manager/pull/1779))
