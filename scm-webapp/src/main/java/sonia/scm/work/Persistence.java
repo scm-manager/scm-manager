@@ -97,7 +97,7 @@ class Persistence {
 
       unitOfWork.assignStorageId(blob.getId());
     } catch (IOException ex) {
-      LOG.error("failed to persist task {}", unitOfWork, ex);
+      throw new NonPersistableTaskException("Failed to persist task", ex);
     }
   }
 

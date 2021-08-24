@@ -43,6 +43,7 @@ import java.io.ObjectOutputStream;
 import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -107,13 +108,14 @@ class PersistenceTest {
     }
 
     @Test
-    void shouldNotFailForSingleItems() {
+    void shouldFailIfNotSerializable() {
       store(1);
-      persistence.store(new SimpleUnitOfWork(
-        2L, principal, Collections.emptySet(), new NotSerializable())
+
+      SimpleUnitOfWork unitOfWork = new SimpleUnitOfWork(
+        2L, principal, Collections.emptySet(), new NotSerializable()
       );
 
-      assertThat(persistence.loadAll()).hasSize(1);
+      assertThrows(NonPersistableTaskException.class, () -> persistence.store(unitOfWork));
     }
 
     @Test
