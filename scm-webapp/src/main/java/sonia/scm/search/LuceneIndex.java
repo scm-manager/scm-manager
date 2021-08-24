@@ -30,19 +30,19 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.search.BooleanClause;
-import org.apache.lucene.search.BooleanQuery;
-import org.apache.lucene.search.TermQuery;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 
 import static sonia.scm.search.FieldNames.ID;
 import static sonia.scm.search.FieldNames.PERMISSION;
 import static sonia.scm.search.FieldNames.REPOSITORY;
-import static sonia.scm.search.FieldNames.TYPE;
-import static sonia.scm.search.FieldNames.UID;
 
 class LuceneIndex<T> implements Index<T>, AutoCloseable {
+
+  private static final Logger LOG = LoggerFactory.getLogger(LuceneIndex.class);
 
   private final IndexDetails details;
   private final LuceneSearchableType searchableType;
@@ -61,27 +61,22 @@ class LuceneIndex<T> implements Index<T>, AutoCloseable {
 
   @Override
   public void store(Id id, String permission, Object object) {
-    String uid = createUid(id, searchableType);
     Document document = searchableType.getTypeConverter().convert(object);
     try {
-      // TODO remove
-      field(document, UID, uid);
       field(document, ID, id.getValue());
       id.getRepository().ifPresent(repository -> field(document, REPOSITORY, repository));
-      field(document, TYPE, searchableType.getName());
       if (!Strings.isNullOrEmpty(permission)) {
         field(document, PERMISSION, permission);
       }
-      // TODO use id instead of uid
-      writer.updateDocument(new Term(UID, uid), document);
+      writer.updateDocument(idTerm(id), document);
     } catch (IOException e) {
       throw new SearchEngineException("failed to add document to index", e);
     }
   }
 
-  private String createUid(Id id, LuceneSearchableType type) {
-    // TODO remove
-    return id.asString() + "/" + type.getName();
+  @Nonnull
+  private Term idTerm(Id id) {
+    return new Term(ID, id.getValue());
   }
 
   private void field(Document document, String type, String name) {
@@ -107,8 +102,8 @@ class LuceneIndex<T> implements Index<T>, AutoCloseable {
     @Override
     public void byId(Id id) {
       try {
-        // TODO use id instead of uid
-        writer.deleteDocuments(new Term(UID, createUid(id, searchableType)));
+        long count = writer.deleteDocuments(idTerm(id));
+        LOG.debug("delete {} document by id {}", count, id);
       } catch (IOException e) {
         throw new SearchEngineException("failed to delete document from index", e);
       }
@@ -117,8 +112,8 @@ class LuceneIndex<T> implements Index<T>, AutoCloseable {
     @Override
     public void all() {
       try {
-        // TODO remove all
-        writer.deleteDocuments(new Term(TYPE, searchableType.getName()));
+        long count = writer.deleteAll();
+        LOG.debug("deleted all {} documents", count);
       } catch (IOException ex) {
         throw new SearchEngineException("failed to delete documents by type " + searchableType.getName() + " from index", ex);
       }
@@ -127,15 +122,16 @@ class LuceneIndex<T> implements Index<T>, AutoCloseable {
     @Override
     public void byRepository(String repositoryId) {
       try {
-        BooleanQuery query = new BooleanQuery.Builder()
-          // TODO remove
-          .add(new TermQuery(new Term(TYPE, searchableType.getName())), BooleanClause.Occur.MUST)
-          .add(new TermQuery(new Term(REPOSITORY, repositoryId)), BooleanClause.Occur.MUST)
-          .build();
-        writer.deleteDocuments(query);
+        long count = writer.deleteDocuments(repositoryTerm(repositoryId));
+        LOG.debug("deleted {} documents by repository {}", count, repositoryId);
       } catch (IOException ex) {
         throw new SearchEngineException("failed to delete documents by repository " + repositoryId + " from index", ex);
       }
+    }
+
+    @Nonnull
+    private Term repositoryTerm(String repositoryId) {
+      return new Term(REPOSITORY, repositoryId);
     }
   }
 }

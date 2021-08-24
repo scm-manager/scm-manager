@@ -88,7 +88,7 @@ public class LuceneQueryBuilder<T> extends QueryBuilder<T> {
     String queryString = Strings.nullToEmpty(queryParams.getQueryString());
 
     Query parsedQuery = createQuery(searchableType, queryParams, queryString);
-    Query query = Queries.filter(parsedQuery, searchableType, queryParams);
+    Query query = Queries.filter(parsedQuery, queryParams);
     if (LOG.isDebugEnabled()) {
       LOG.debug("execute lucene query: {}", query);
     }

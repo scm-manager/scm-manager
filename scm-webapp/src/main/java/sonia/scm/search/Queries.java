@@ -29,6 +29,8 @@ import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TermQuery;
 
+import java.util.Optional;
+
 import static org.apache.lucene.search.BooleanClause.Occur.MUST;
 
 final class Queries {
@@ -36,20 +38,18 @@ final class Queries {
   private Queries() {
   }
 
-  private static Query typeQuery(LuceneSearchableType type) {
-    return new TermQuery(new Term(FieldNames.TYPE, type.getName()));
-  }
-
   private static Query repositoryQuery(String repositoryId) {
     return new TermQuery(new Term(FieldNames.REPOSITORY, repositoryId));
   }
 
-  static Query filter(Query query, LuceneSearchableType searchableType, QueryBuilder.QueryParams params) {
-    BooleanQuery.Builder builder = new BooleanQuery.Builder()
-      .add(query, MUST)
-      // TODO remove
-      .add(typeQuery(searchableType), MUST);
-    params.getRepositoryId().ifPresent(repo -> builder.add(repositoryQuery(repo), MUST));
-    return builder.build();
+  static Query filter(Query query, QueryBuilder.QueryParams params) {
+    Optional<String> repositoryId = params.getRepositoryId();
+    if (repositoryId.isPresent()) {
+      return new BooleanQuery.Builder()
+        .add(query, MUST)
+        .add(repositoryQuery(repositoryId.get()), MUST)
+        .build();
+    }
+    return query;
   }
 }

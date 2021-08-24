@@ -181,17 +181,6 @@ class LuceneQueryBuilderTest {
   }
 
   @Test
-  void shouldIgnoreHitsOfOtherType() throws IOException {
-    try (IndexWriter writer = writer()) {
-      writer.addDocument(inetOrgPersonDoc("Arthur", "Dent", "Arthur Dent", "4211"));
-      writer.addDocument(personDoc("Dent"));
-    }
-
-    QueryResult result = query(InetOrgPerson.class, "Dent");
-    assertThat(result.getTotalHits()).isOne();
-  }
-
-  @Test
   void shouldThrowQueryParseExceptionOnInvalidQuery() throws IOException {
     try (IndexWriter writer = writer()) {
       writer.addDocument(personDoc("Dent"));
@@ -248,17 +237,6 @@ class LuceneQueryBuilderTest {
     QueryResult result = query(Simple.class, "content:awesome");
     assertThat(result.getTotalHits()).isEqualTo(3L);
     assertThat(result.getHits()).hasSize(3);
-  }
-
-  @Test
-  void shouldReturnOnlyHitsOfTypeForExpertQuery() throws IOException {
-    try (IndexWriter writer = writer()) {
-      writer.addDocument(inetOrgPersonDoc("Ford", "Prefect", "Ford Prefect", "4211"));
-      writer.addDocument(personDoc("Prefect"));
-    }
-
-    QueryResult result = query(InetOrgPerson.class, "lastName:prefect");
-    assertThat(result.getTotalHits()).isEqualTo(1L);
   }
 
   @Test
@@ -598,14 +576,14 @@ class LuceneQueryBuilderTest {
   private Document simpleDoc(String content) {
     Document document = new Document();
     document.add(new TextField("content", content, Field.Store.YES));
-    document.add(new StringField(FieldNames.TYPE, "simple", Field.Store.YES));
+//    document.add(new StringField(FieldNames.TYPE, "simple", Field.Store.YES));
     return document;
   }
 
   private Document permissionDoc(String content, String permission) {
     Document document = new Document();
     document.add(new TextField("content", content, Field.Store.YES));
-    document.add(new StringField(FieldNames.TYPE, "simple", Field.Store.YES));
+//    document.add(new StringField(FieldNames.TYPE, "simple", Field.Store.YES));
     document.add(new StringField(FieldNames.PERMISSION, permission, Field.Store.YES));
     return document;
   }
@@ -613,7 +591,7 @@ class LuceneQueryBuilderTest {
   private Document repositoryDoc(String content, String repository) {
     Document document = new Document();
     document.add(new TextField("content", content, Field.Store.YES));
-    document.add(new StringField(FieldNames.TYPE, "simple", Field.Store.YES));
+//    document.add(new StringField(FieldNames.TYPE, "simple", Field.Store.YES));
     document.add(new StringField(FieldNames.REPOSITORY, repository, Field.Store.YES));
     return document;
   }
@@ -625,14 +603,14 @@ class LuceneQueryBuilderTest {
     document.add(new TextField("displayName", displayName, Field.Store.YES));
     document.add(new TextField("carLicense", carLicense, Field.Store.YES));
     document.add(new StringField(FieldNames.ID, lastName, Field.Store.YES));
-    document.add(new StringField(FieldNames.TYPE, "inetOrgPerson", Field.Store.YES));
+//    document.add(new StringField(FieldNames.TYPE, "inetOrgPerson", Field.Store.YES));
     return document;
   }
 
   private Document personDoc(String lastName) {
     Document document = new Document();
     document.add(new TextField("lastName", lastName, Field.Store.YES));
-    document.add(new StringField(FieldNames.TYPE, "person", Field.Store.YES));
+//    document.add(new StringField(FieldNames.TYPE, "person", Field.Store.YES));
     return document;
   }
 
@@ -645,14 +623,14 @@ class LuceneQueryBuilderTest {
     document.add(new StringField("boolValue", String.valueOf(boolValue), Field.Store.YES));
     document.add(new LongPoint("instantValue", instantValue.toEpochMilli()));
     document.add(new StoredField("instantValue", instantValue.toEpochMilli()));
-    document.add(new StringField(FieldNames.TYPE, "types", Field.Store.YES));
+//    document.add(new StringField(FieldNames.TYPE, "types", Field.Store.YES));
     return document;
   }
 
   private Document denyDoc(String value) {
     Document document = new Document();
     document.add(new TextField("value", value, Field.Store.YES));
-    document.add(new StringField(FieldNames.TYPE, "deny", Field.Store.YES));
+//    document.add(new StringField(FieldNames.TYPE, "deny", Field.Store.YES));
     return document;
   }
 
