@@ -1,0 +1,2 @@
+- type: Fixed
+  description: Fix disabled local proxy configuration being used over global config ([#1780](https://github.com/scm-manager/scm-manager/pull/1780))
