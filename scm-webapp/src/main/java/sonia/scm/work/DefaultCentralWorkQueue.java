@@ -33,7 +33,6 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.ModelObject;
 import sonia.scm.metrics.Metrics;
 import sonia.scm.web.security.DefaultAdministrationContext;
 
@@ -172,8 +171,8 @@ public class DefaultCentralWorkQueue implements CentralWorkQueue, Closeable {
     private boolean runAsAdmin = false;
 
     @Override
-    public Enqueue locks(String resource) {
-      locks.add(new Resource(resource));
+    public Enqueue locks(String resourceType) {
+      locks.add(new Resource(resourceType));
       return this;
     }
 
@@ -181,11 +180,6 @@ public class DefaultCentralWorkQueue implements CentralWorkQueue, Closeable {
     public Enqueue locks(String resource, @Nullable String id) {
       locks.add(new Resource(resource, id));
       return this;
-    }
-
-    @Override
-    public Enqueue locks(String resource, ModelObject object) {
-      return locks(resource, object.getId());
     }
 
     @Override

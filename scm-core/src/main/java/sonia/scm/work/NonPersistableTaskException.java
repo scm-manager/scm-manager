@@ -27,6 +27,8 @@ package sonia.scm.work;
 import com.google.common.annotations.Beta;
 
 /**
+ * Exception thrown when a task is enqueued to the {@link CentralWorkQueue} which cannot persisted.
+ *
  * @since 2.23.0
  */
 @Beta

@@ -28,6 +28,11 @@ import com.google.common.annotations.Beta;
 
 import java.io.Serializable;
 
+/**
+ * Serializable task which can be enqueued to the {@link CentralWorkQueue}.
+ *
+ * @since 2.23.0
+ */
 @Beta
 public interface Task extends Runnable, Serializable {
 }
