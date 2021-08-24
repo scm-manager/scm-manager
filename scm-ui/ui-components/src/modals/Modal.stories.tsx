@@ -72,7 +72,7 @@ const withFormElementsFooter = (
 );
 
 storiesOf("Modal|Modal", module)
-  .addDecorator(story => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
+  .addDecorator((story) => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
   .add("Default", () => (
     <NonCloseableModal>
       <p>{text}</p>
@@ -82,6 +82,11 @@ storiesOf("Modal|Modal", module)
     <CloseableModal>
       <p>{text}</p>
     </CloseableModal>
+  ))
+  .add("Nested", () => (
+    <NestedModal>
+      <p>{text}</p>
+    </NestedModal>
   ))
   .add("With form elements", () => (
     <Modal
@@ -220,4 +225,36 @@ const CloseableModal: FC = ({ children }) => {
   };
 
   return <Modal body={children} closeFunction={toggleModal} active={show} title={"Hitchhiker Modal"} />;
+};
+
+const NestedModal: FC = ({ children }) => {
+  const [showOuter, setShowOuter] = useState(true);
+  const [showInner, setShowInner] = useState(false);
+  const outerBody = (
+    <Button title="Open inner modal" className="button" action={() => setShowInner(true)}>
+      Open inner modal
+    </Button>
+  );
+
+  return (
+    <>
+      {showOuter && (
+        <Modal
+          body={outerBody}
+          closeFunction={() => setShowOuter(!showOuter)}
+          active={showOuter}
+          title="Outer Hitchhiker Modal"
+          size="M"
+        />
+      )}
+      {showInner && (
+        <Modal
+          body={children}
+          closeFunction={() => setShowInner(!showInner)}
+          active={showInner}
+          title="Inner Hitchhiker Modal"
+        />
+      )}
+    </>
+  );
 };

@@ -44,9 +44,6 @@ const usePortalRootElement = (id: string) => {
     }
     setRootElement(element);
     return () => {
-      if (element) {
-        element.remove();
-      }
       setRootElement(undefined);
     };
   }, [id]);
