@@ -80,7 +80,7 @@ class ImpersonatorTest {
     void shouldBindAndRestoreWebThread() {
       assertPrincipal("trillian");
 
-      try (Session session = impersonator.impersonate(principal("dent"))) {
+      try (Session session = impersonator.impersonate(principal("slarti"))) {
         assertPrincipal("slarti");
       }
 
