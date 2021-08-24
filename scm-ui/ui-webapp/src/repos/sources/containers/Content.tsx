@@ -57,10 +57,6 @@ const FullWidthTitleHeader = styled.div`
   max-width: 100%;
 `;
 
-const AlignRight = styled.div`
-  margin-left: auto;
-`;
-
 const BorderLessDiv = styled.div`
   margin: -1.25rem;
   border: none;
@@ -114,7 +110,7 @@ const Content: FC<Props> = ({ file, repository, revision, breadcrumb, error }) =
             <Icon className={classNames("is-inline", "mr-2")} name={`${icon} fa-fw`} color="inherit" />
             {file.name}
           </FullWidthTitleHeader>
-          <AlignRight className={classNames("level-right", "buttons")}>
+          <div className={classNames("level-right", "buttons", "ml-auto")}>
             {selector}
             <OpenInFullscreenButton
               modalTitle={file?.name}
@@ -131,7 +127,7 @@ const Content: FC<Props> = ({ file, repository, revision, breadcrumb, error }) =
               }}
               renderAll={true}
             />
-          </AlignRight>
+          </div>
         </div>
       </HeaderWrapper>
     );

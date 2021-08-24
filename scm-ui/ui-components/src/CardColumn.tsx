@@ -44,27 +44,10 @@ const NoEventWrapper = styled.article`
   z-index: 1;
 `;
 
-const AvatarWrapper = styled.figure`
-  margin-top: 0.8em;
-  margin-left: 1em !important;
-`;
-
 const FlexFullHeight = styled.div`
   flex-direction: column;
   justify-content: space-around;
   align-self: stretch;
-`;
-
-const FooterWrapper = styled.div`
-  padding-bottom: 1rem;
-`;
-
-const ContentRight = styled.div`
-  margin-left: auto;
-`;
-
-const RightMarginDiv = styled.div`
-  margin-right: 0.5rem;
 `;
 
 const InheritFlexShrinkDiv = styled.div`
@@ -81,11 +64,11 @@ const CardColumn: FC<Props> = ({
   footerLeft,
   footerRight,
   action,
-  className
+  className,
 }) => {
-  const renderAvatar = avatar ? <AvatarWrapper className="media-left">{avatar}</AvatarWrapper> : null;
+  const renderAvatar = avatar ? <figure className="media-left mt-3 ml-4">{avatar}</figure> : null;
   const renderDescription = description ? <p className="shorten-text">{description}</p> : null;
-  const renderContentRight = contentRight ? <ContentRight>{contentRight}</ContentRight> : null;
+  const renderContentRight = contentRight ? <div className="ml-auto">{contentRight}</div> : null;
 
   let createLink = null;
   if (link) {
@@ -94,7 +77,7 @@ const CardColumn: FC<Props> = ({
     createLink = (
       <a
         className="overlay-column"
-        onClick={e => {
+        onClick={(e) => {
           e.preventDefault();
           action();
         }}
@@ -116,12 +99,12 @@ const CardColumn: FC<Props> = ({
             </div>
             {renderContentRight}
           </div>
-          <FooterWrapper className={classNames("level", "is-flex")}>
-            <RightMarginDiv className="level-left is-hidden-mobile">{footerLeft}</RightMarginDiv>
+          <div className={classNames("level", "is-flex", "pb-4")}>
+            <div className={classNames("level-left", "is-hidden-mobile", "mr-2")}>{footerLeft}</div>
             <InheritFlexShrinkDiv className="level-right is-block is-mobile m-0 shorten-text">
               {footerRight}
             </InheritFlexShrinkDiv>
-          </FooterWrapper>
+          </div>
         </FlexFullHeight>
       </NoEventWrapper>
     </>

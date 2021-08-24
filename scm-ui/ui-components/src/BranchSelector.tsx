@@ -44,10 +44,6 @@ const MinWidthControl = styled.div`
   min-width: 10rem;
 `;
 
-const NoBottomMarginField = styled.div`
-  margin-bottom: 0 !important;
-`;
-
 const BranchSelector: FC<Props> = ({ branches, onSelectBranch, selectedBranch, label, disabled }) => {
   if (branches) {
     return (
@@ -56,7 +52,7 @@ const BranchSelector: FC<Props> = ({ branches, onSelectBranch, selectedBranch, l
           <label className={classNames("label", "is-size-6")}>{label}</label>
         </ZeroflexFieldLabel>
         <div className="field-body">
-          <NoBottomMarginField className={classNames("field", "is-narrow")}>
+          <div className={classNames("field", "is-narrow", "mb-0")}>
             <MinWidthControl className="control">
               <Select
                 className="is-fullwidth"
@@ -67,7 +63,7 @@ const BranchSelector: FC<Props> = ({ branches, onSelectBranch, selectedBranch, l
                 addValueToOptions={true}
               />
             </MinWidthControl>
-          </NoBottomMarginField>
+          </div>
         </div>
       </div>
     );

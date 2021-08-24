@@ -43,7 +43,7 @@ type ContainerProps = {
 const PopoverContainer = styled.div<ContainerProps>`
   position: absolute;
   z-index: 100;
-  width: ${props => props.width}px;
+  width: ${(props) => props.width}px;
   display: block;
 
   &:before {
@@ -54,7 +54,7 @@ const PopoverContainer = styled.div<ContainerProps>`
     height: 0;
     width: 0;
     top: 100%;
-    left: ${props => props.width / 2}px;
+    left: ${(props) => props.width / 2}px;
     border-color: transparent;
     border-bottom-color: white;
     border-left-color: white;
@@ -67,15 +67,11 @@ const PopoverContainer = styled.div<ContainerProps>`
   }
 `;
 
-const SmallHr = styled.hr`
-  margin: 0.5em 0;
-`;
-
 const PopoverHeading = styled.div`
   height: 1.5em;
 `;
 
-const Popover: FC<Props> = props => {
+const Popover: FC<Props> = (props) => {
   if (!props.show) {
     return null;
   }
@@ -93,13 +89,13 @@ const InnerPopover: FC<Props> = ({ title, show, width, offsetTop, offsetLeft, di
 
   const onMouseEnter = () => {
     dispatch({
-      type: "enter-popover"
+      type: "enter-popover",
     });
   };
 
   const onMouseLeave = () => {
     dispatch({
-      type: "leave-popover"
+      type: "leave-popover",
     });
   };
 
@@ -115,14 +111,14 @@ const InnerPopover: FC<Props> = ({ title, show, width, offsetTop, offsetLeft, di
       ref={ref}
     >
       <PopoverHeading>{title}</PopoverHeading>
-      <SmallHr />
+      <hr className="my-2" />
       {children}
     </PopoverContainer>
   );
 };
 
 Popover.defaultProps = {
-  width: 120
+  width: 120,
 };
 
 export default Popover;
