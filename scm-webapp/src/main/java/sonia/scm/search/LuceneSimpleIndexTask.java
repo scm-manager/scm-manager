@@ -24,19 +24,21 @@
 
 package sonia.scm.search;
 
+import com.google.inject.Injector;
 import sonia.scm.work.Task;
 
-public final class LuceneSimpleIndexingTask extends LuceneIndexTask implements Task {
+public final class LuceneSimpleIndexTask extends LuceneIndexTask implements Task {
 
   private final SerializableIndexTask<?> task;
 
-  LuceneSimpleIndexingTask(IndexParams params, SerializableIndexTask<?> task) {
+  LuceneSimpleIndexTask(IndexParams params, SerializableIndexTask<?> task) {
     super(params);
     this.task = task;
   }
 
   @Override
-  public void run() {
-    update(task);
+  public IndexTask<?> task(Injector injector) {
+    injector.injectMembers(task);
+    return task;
   }
 }

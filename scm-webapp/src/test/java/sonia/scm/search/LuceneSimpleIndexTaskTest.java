@@ -40,7 +40,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class LuceneSimpleIndexingTaskTest {
+class LuceneSimpleIndexTaskTest {
 
   @Mock
   private LuceneIndexFactory indexFactory;
@@ -59,7 +59,7 @@ class LuceneSimpleIndexingTaskTest {
     IndexParams params = new IndexParams("default", searchableType, IndexOptions.defaults());
 
     AtomicReference<Index<?>> ref = new AtomicReference<>();
-    LuceneSimpleIndexingTask task = new LuceneSimpleIndexingTask(params, ref::set);
+    LuceneSimpleIndexTask task = new LuceneSimpleIndexTask(params, ref::set);
     injector.injectMembers(task);
 
     when(indexFactory.create(params)).then(ic -> index);

@@ -25,7 +25,6 @@
 package sonia.scm.search;
 
 import org.apache.shiro.authz.AuthorizationException;
-import org.checkerframework.checker.units.qual.C;
 import org.github.sdorra.jse.ShiroExtension;
 import org.github.sdorra.jse.SubjectAware;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,7 +48,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.Assert.assertThrows;
@@ -221,7 +219,7 @@ class LuceneSearchEngineTest {
 
       searchEngine.forType(Repository.class).update(index -> {});
 
-      verifyTaskSubmitted(LuceneSimpleIndexingTask.class);
+      verifyTaskSubmitted(LuceneSimpleIndexTask.class);
     }
 
     @Test
@@ -230,7 +228,7 @@ class LuceneSearchEngineTest {
 
       searchEngine.forType(Repository.class).update(DummyIndexTask.class);
 
-      verifyTaskSubmitted(LuceneInjectingIndexingTask.class);
+      verifyTaskSubmitted(LuceneInjectingIndexTask.class);
     }
 
     @Test
@@ -279,7 +277,7 @@ class LuceneSearchEngineTest {
 
       searchEngine.forIndices().batch(index -> {});
 
-      verifyTaskSubmitted(LuceneSimpleIndexingTask.class);
+      verifyTaskSubmitted(LuceneSimpleIndexTask.class);
     }
 
     @Test
@@ -316,7 +314,7 @@ class LuceneSearchEngineTest {
 
       searchEngine.forIndices().batch(DummyIndexTask.class);
 
-      verifyTaskSubmitted(LuceneInjectingIndexingTask.class);
+      verifyTaskSubmitted(LuceneInjectingIndexTask.class);
     }
 
     @Test

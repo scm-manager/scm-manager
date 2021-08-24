@@ -24,10 +24,12 @@
 
 package sonia.scm.search;
 
+import com.google.inject.Injector;
+
 import javax.inject.Inject;
 import java.io.Serializable;
 
-public class LuceneIndexTask implements Serializable {
+public abstract class LuceneIndexTask implements Runnable, Serializable {
 
   private final Class<?> type;
   private final String indexName;
@@ -35,6 +37,7 @@ public class LuceneIndexTask implements Serializable {
 
   private transient LuceneIndexFactory indexFactory;
   private transient SearchableTypeResolver searchableTypeResolver;
+  private transient Injector injector;
 
   protected LuceneIndexTask(IndexParams params) {
     this.type = params.getSearchableType().getType();
@@ -52,12 +55,22 @@ public class LuceneIndexTask implements Serializable {
     this.searchableTypeResolver = searchableTypeResolver;
   }
 
-  @SuppressWarnings({"rawtypes", "unchecked"})
-  protected void update(IndexTask task) {
+  @Inject
+  public void setInjector(Injector injector) {
+    this.injector = injector;
+  }
+
+  public abstract IndexTask<?> task(Injector injector);
+
+  @SuppressWarnings({"unchecked", "rawtypes"})
+  public void run() {
     LuceneSearchableType searchableType = searchableTypeResolver.resolve(type);
+    IndexTask<?> task = task(injector);
     try (LuceneIndex index = indexFactory.create(new IndexParams(indexName, searchableType, options))) {
       task.update(index);
     }
     task.afterUpdate();
   }
+
+
 }

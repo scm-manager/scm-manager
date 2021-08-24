@@ -123,12 +123,12 @@ public class LuceneSearchEngine implements SearchEngine {
 
     @Override
     public void batch(SerializableIndexTask<?> task) {
-      exec(params -> batch(params, new LuceneSimpleIndexingTask(params, task)));
+      exec(params -> batch(params, new LuceneSimpleIndexTask(params, task)));
     }
 
     @Override
     public void batch(Class<? extends IndexTask<?>> task) {
-      exec(params -> batch(params, new LuceneInjectingIndexingTask(params, task)));
+      exec(params -> batch(params, new LuceneInjectingIndexTask(params, task)));
     }
 
     private void exec(Consumer<IndexParams> consumer) {
@@ -179,12 +179,12 @@ public class LuceneSearchEngine implements SearchEngine {
 
     @Override
     public void update(Class<? extends IndexTask<T>> task) {
-      enqueue(new LuceneInjectingIndexingTask(params(), task));
+      enqueue(new LuceneInjectingIndexTask(params(), task));
     }
 
     @Override
     public void update(SerializableIndexTask<T> task) {
-      enqueue(new LuceneSimpleIndexingTask(params(), task));
+      enqueue(new LuceneSimpleIndexTask(params(), task));
     }
 
     private void enqueue(Task task) {

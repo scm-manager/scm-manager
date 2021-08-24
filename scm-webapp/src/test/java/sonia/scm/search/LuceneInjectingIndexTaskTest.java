@@ -40,7 +40,7 @@ import javax.inject.Inject;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
-class LuceneInjectingIndexingTaskTest {
+class LuceneInjectingIndexTaskTest {
 
   @Mock(answer = Answers.RETURNS_DEEP_STUBS)
   private LuceneIndexFactory indexFactory;
@@ -61,7 +61,7 @@ class LuceneInjectingIndexingTaskTest {
     LuceneSearchableType searchableType = resolver.resolve(User.class);
     IndexParams params = new IndexParams("default", searchableType, IndexOptions.defaults());
 
-    LuceneInjectingIndexingTask task = new LuceneInjectingIndexingTask(params, InjectingTask.class);
+    LuceneInjectingIndexTask task = new LuceneInjectingIndexTask(params, InjectingTask.class);
     injector.injectMembers(task);
 
     task.run();

@@ -27,26 +27,18 @@ package sonia.scm.search;
 import com.google.inject.Injector;
 import sonia.scm.work.Task;
 
-import javax.inject.Inject;
-
 @SuppressWarnings("rawtypes")
-public class LuceneInjectingIndexingTask extends LuceneIndexTask implements Task {
+public class LuceneInjectingIndexTask extends LuceneIndexTask implements Task {
 
   private final Class<? extends IndexTask> taskClass;
-  private transient Injector injector;
 
-  LuceneInjectingIndexingTask(IndexParams params, Class<? extends IndexTask> taskClass) {
+  LuceneInjectingIndexTask(IndexParams params, Class<? extends IndexTask> taskClass) {
     super(params);
     this.taskClass = taskClass;
   }
 
-  @Inject
-  public void setInjector(Injector injector) {
-    this.injector = injector;
-  }
-
   @Override
-  public void run() {
-    update(injector.getInstance(taskClass));
+  public IndexTask<?> task(Injector injector) {
+    return injector.getInstance(taskClass);
   }
 }
