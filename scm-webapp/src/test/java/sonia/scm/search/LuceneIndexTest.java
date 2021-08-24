@@ -45,9 +45,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
-import static org.assertj.core.api.Assertions.anyOf;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.in;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
@@ -175,7 +177,7 @@ class LuceneIndexTest {
 
     @BeforeEach
     void setUpIndex() {
-      index = createIndex(Storable.class, writer);
+      index = createIndex(Storable.class, () -> writer);
     }
 
     @Test
@@ -228,21 +230,25 @@ class LuceneIndexTest {
     }
   }
 
-  private <T> LuceneIndex<T> createIndex(Class<T> type) throws IOException {
-    return createIndex(type, createWriter());
+  private <T> LuceneIndex<T> createIndex(Class<T> type) {
+    return createIndex(type, this::createWriter);
   }
 
-  private <T> LuceneIndex<T> createIndex(Class<T> type, IndexWriter writer) {
+  private <T> LuceneIndex<T> createIndex(Class<T> type, Supplier<IndexWriter> writerFactor) {
     SearchableTypeResolver resolver = new SearchableTypeResolver(type);
     return new LuceneIndex<>(
-      new IndexParams("default", resolver.resolve(type), IndexOptions.defaults()), writer
+      new IndexParams("default", resolver.resolve(type), IndexOptions.defaults()), writerFactor
     );
   }
 
-  private IndexWriter createWriter() throws IOException {
+  private IndexWriter createWriter() {
     IndexWriterConfig config = new IndexWriterConfig(new StandardAnalyzer());
     config.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
-    return new IndexWriter(directory, config);
+    try {
+      return new IndexWriter(directory, config);
+    } catch (IOException ex) {
+      throw new SearchEngineException("failed to open index writer", ex);
+    }
   }
 
   @Value

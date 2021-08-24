@@ -24,6 +24,7 @@
 
 package sonia.scm.search;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -35,6 +36,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
+import java.util.function.Supplier;
 
 import static sonia.scm.search.FieldNames.ID;
 import static sonia.scm.search.FieldNames.PERMISSION;
@@ -46,12 +48,22 @@ class LuceneIndex<T> implements Index<T>, AutoCloseable {
 
   private final IndexDetails details;
   private final LuceneSearchableType searchableType;
-  private final IndexWriter writer;
+  private final SharableIndexWriter writer;
 
-  LuceneIndex(IndexParams params, IndexWriter writer) {
+  LuceneIndex(IndexParams params, Supplier<IndexWriter> writerFactory) {
     this.details = params;
     this.searchableType = params.getSearchableType();
-    this.writer = writer;
+    this.writer = new SharableIndexWriter(writerFactory);
+    this.open();
+  }
+
+  void open() {
+    writer.open();
+  }
+
+  @VisibleForTesting
+  SharableIndexWriter getWriter() {
+    return writer;
   }
 
   @Override

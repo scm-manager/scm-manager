@@ -78,7 +78,7 @@ public class IndexManager {
     return DirectoryReader.open(FSDirectory.open(path));
   }
 
-  public IndexWriter openForWrite(IndexParams indexParams) throws IOException {
+  public IndexWriter openForWrite(IndexParams indexParams) {
     IndexWriterConfig config = new IndexWriterConfig(analyzerFactory.create(indexParams.getSearchableType(), indexParams.getOptions()));
     config.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
 
@@ -88,7 +88,11 @@ public class IndexManager {
       store();
     }
 
-    return new IndexWriter(FSDirectory.open(path), config);
+    try {
+      return new IndexWriter(FSDirectory.open(path), config);
+    } catch (IOException ex) {
+      throw new SearchEngineException("failed to open index at " + path, ex);
+    }
   }
 
   private Path resolveIndexDirectory(IndexParams indexParams) {
