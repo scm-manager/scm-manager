@@ -63,23 +63,79 @@ public interface SearchEngine {
    */
   ForType<Object> forType(String name);
 
-
+  /**
+   * Returns an api which allows the modification of multiple indices at once.
+   * @return api to modify multiple indices
+   * @since 2.23.0
+   */
   ForIndices forIndices();
 
+  /**
+   * Api for modifying multiple indices at once.
+   * @since 2.23.0
+   */
   interface ForIndices {
 
+    /**
+     * This method can be used to filter the indices.
+     * If no predicate is used the tasks are enqueued for every existing index.
+     *
+     * @param predicate predicate to filter indices
+     * @return {@code this}
+     */
     ForIndices withPredicate(Predicate<IndexDetails> predicate);
+
+    /**
+     * Apply a lock for a specific resource. By default, a lock for the whole index is used.
+     * If one or more specific resources are locked, than the lock is applied only for those resources
+     * and tasks which targets other resources of the same index can run in parallel.
+     *
+     * @param resource specific resource to lock
+     * @return {@code this}
+     */
     ForIndices forResource(String resource);
+
+    /**
+     * This method is a shortcut for {@link #forResource(String)} with the id of the given resource.
+     *
+     * @param resource resource in form of model object
+     * @return {@code this}
+     */
     default ForIndices forResource(ModelObject resource) {
       return forResource(resource.getId());
     }
 
+    /**
+     * Specify options for the index.
+     * If not used the default options will be used.
+     * @param options index options
+     * @return {@code this}
+     * @see IndexOptions#defaults()
+     */
     ForIndices withOptions(IndexOptions options);
 
+    /**
+     * Submits the task and execute it for every index
+     * which is not excluded by the predicate ({@link #withPredicate(Predicate)}.
+     * The task is executed asynchronous and will be finished some time in the future.
+     * <strong>Note:</strong> the task must be serializable because it is submitted to the
+     * {@link sonia.scm.work.CentralWorkQueue},
+     * for more information about the task serialization have a look at the
+     * {@link sonia.scm.work.CentralWorkQueue} documentation.
+     *
+     * @param task serializable task for updating multiple indices
+     */
     void batch(SerializableIndexTask<?> task);
+
+    /**
+     * Submits the task and execute it for every index
+     * which is not excluded by the predicate ({@link #withPredicate(Predicate)}.
+     * The task is executed asynchronous and will be finished some time in the future.
+     *
+     * @param task task for updating multiple indices
+     */
     void batch(Class<? extends IndexTask<?>> task);
   }
-
 
   /**
    * Search and index api.
@@ -106,19 +162,43 @@ public interface SearchEngine {
      */
     ForType<T> withIndex(String name);
 
+    /**
+     * Apply a lock for a specific resource. By default, a lock for the whole index is used.
+     * If one or more specific resources are locked, than the lock is applied only for those resources
+     * and tasks which targets other resources of the same index can run in parallel.
+     *
+     * @param resource specific resource to lock
+     * @return {@code this}
+     */
+    ForType<T> forResource(String resource);
+
+    /**
+     * This method is a shortcut for {@link #forResource(String)} with the id of the given resource.
+     *
+     * @param resource resource in form of model object
+     * @return {@code this}
+     */
     default ForType<T> forResource(ModelObject resource) {
       return forResource(resource.getId());
     }
 
-    ForType<T> forResource(String id);
-
     /**
-     * TODO
+     * Submits a task to update the index.
+     * The task is executed asynchronous and will be finished some time in the future.
+     * <strong>Note:</strong> the task must be serializable because it is submitted to the
+     * {@link sonia.scm.work.CentralWorkQueue},
+     * for more information about the task serialization have a look at the
+     * {@link sonia.scm.work.CentralWorkQueue} documentation.
+     *
+     * @param task serializable task for updating the index
      */
     void update(SerializableIndexTask<T> task);
 
     /**
-     * TODO
+     * Submits a task to update the index.
+     * The task is executed asynchronous and will be finished some time in the future.
+     *
+     * @param task task for updating multiple indices
      */
     void update(Class<? extends IndexTask<T>> task);
 

@@ -24,10 +24,24 @@
 
 package sonia.scm.search;
 
+import com.google.common.annotations.Beta;
+
+/**
+ * Details of an index.
+ * @since 2.23.0
+ */
+@Beta
 public interface IndexDetails {
 
+  /**
+   * Returns type of objects which are indexed.
+   * @return type of objects
+   */
   Class<?> getType();
 
+  /**
+   * Returns name of the index
+   * @return name
+   */
   String getName();
-
 }

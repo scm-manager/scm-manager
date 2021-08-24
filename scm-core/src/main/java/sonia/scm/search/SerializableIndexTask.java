@@ -28,6 +28,12 @@ import com.google.common.annotations.Beta;
 
 import java.io.Serializable;
 
+/**
+ * A serializable version of {@link IndexTask}.
+ *
+ * @param <T> type of indexed objects
+ * @since 2.23.0
+ */
 @Beta
 @FunctionalInterface
 public interface SerializableIndexTask<T> extends IndexTask<T>, Serializable {

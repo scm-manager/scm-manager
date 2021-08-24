@@ -26,12 +26,24 @@ package sonia.scm.search;
 
 import com.google.common.annotations.Beta;
 
+/**
+ * A task which updates an index.
+ * @param <T> type of indexed objects
+ * @since 2.23.0
+ */
 @Beta
 @FunctionalInterface
 public interface IndexTask<T> {
 
+  /**
+   * Execute operations on the index.
+   * @param index index to update
+   */
   void update(Index<T> index);
 
+  /**
+   * This method is called after work is committed to the index.
+   */
   default void afterUpdate() {
 
   }

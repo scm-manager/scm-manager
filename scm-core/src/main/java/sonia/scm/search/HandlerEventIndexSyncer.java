@@ -24,6 +24,7 @@
 
 package sonia.scm.search;
 
+import com.google.common.annotations.Beta;
 import sonia.scm.HandlerEventType;
 import sonia.scm.event.HandlerEvent;
 
@@ -33,6 +34,7 @@ import sonia.scm.event.HandlerEvent;
  * @param <T> type of indexed item
  * @since 2.22.0
  */
+@Beta
 public final class HandlerEventIndexSyncer<T> {
 
   private final SearchEngine searchEngine;

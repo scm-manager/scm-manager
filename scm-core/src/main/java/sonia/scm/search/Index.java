@@ -36,6 +36,14 @@ import sonia.scm.repository.Repository;
 public interface Index<T>  {
 
   /**
+   * Returns details such as name and type of index.
+   *
+   * @return details of index
+   * @since 2.23.0
+   */
+  IndexDetails getDetails();
+
+  /**
    * Store the given object in the index.
    * All fields of the object annotated with {@link Indexed} will be stored in the index.
    *
@@ -53,8 +61,6 @@ public interface Index<T>  {
    * @since 2.23.0
    */
   Deleter delete();
-
-  IndexDetails getDetails();
 
   /**
    * Deleter provides an api to delete object from index.

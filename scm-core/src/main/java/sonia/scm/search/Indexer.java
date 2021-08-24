@@ -55,12 +55,34 @@ public interface Indexer<T> {
    */
   int getVersion();
 
+  /**
+   * Returns task which re index all items.
+   * @return task to re index all
+   * @since 2.23.0
+   */
   Class<? extends ReIndexAllTask<T>> getReIndexAllTask();
 
+  /**
+   * Creates a task which store the given item in the index.
+   * @param item item to store
+   * @return task which stores the item
+   * @since 2.23.0
+   */
   SerializableIndexTask<T> createStoreTask(T item);
 
+  /**
+   * Creates a task which deletes the given item from index.
+   * @param item item to delete
+   * @return task which deletes the item
+   * @since 2.23.0
+   */
   SerializableIndexTask<T> createDeleteTask(T item);
 
+  /**
+   * Abstract class which builds the foundation for tasks which re index all items.
+   *
+   * @since 2.23.0
+   */
   abstract class ReIndexAllTask<T> implements IndexTask<T> {
 
     private final IndexLogStore logStore;
