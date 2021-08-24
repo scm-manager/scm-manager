@@ -110,6 +110,7 @@ footer.footer {
 // 6. Import the rest of Bulma
 @import "bulma/bulma";
 @import "bulma-tooltip/dist/css/bulma-tooltip.min";
+@import "bulma-popover/css/bulma-popover";
 
 $dark-75: scale-color($dark, $lightness: 25%);
 $dark-50: scale-color($dark, $lightness: 50%);
@@ -194,7 +195,10 @@ $light-25: darken($high-contrast-light-gray, 45%);
 }
 
 .has-text-blue-light {
-  color: $blue-light !important;
+  color: $blue-light;
+}
+.has-background-blue-light {
+  background-color: $blue-light;
 }
 
 .has-text-high-contrast-warning {
@@ -286,10 +290,6 @@ $light-25: darken($high-contrast-light-gray, 45%);
   background-color: $high-contrast-danger-25;
 }
 
-.has-background-blue-light {
-  background-color: $blue-light;
-}
-
 .has-background-high-contrast-light-gray {
   background-color: $high-contrast-light-gray;
 }
@@ -312,7 +312,7 @@ $light-25: darken($high-contrast-light-gray, 45%);
     background-color: $light;
   }
 
-  +.is-delete {
+  + .is-delete {
     border-color: #aaa;
     border-width: 1px 1px 1px 0;
   }
@@ -520,7 +520,7 @@ $fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
   color: #666;
 }
 .has-border-white {
-  border-color: #fff !important;
+  border-color: $white !important;
 }
 ul.is-separated {
   > li:after {
@@ -603,7 +603,7 @@ ul.is-separated {
   width: 100%;
   td,
   th {
-    border-color: #eee;
+    border-color: $white-ter;
     padding: 1rem;
   }
 }
@@ -805,7 +805,6 @@ form .field:not(.is-grouped) {
 .menu {
   div {
     height: 100%;
-    /*border: 1px solid #eee;*/
     margin-bottom: 1rem;
   }
 }
@@ -816,7 +815,7 @@ form .field:not(.is-grouped) {
   color: #fff;
   font-size: 1em;
   font-weight: 600;
-  background-color: #bbb;
+  background-color: $blue;
   border-radius: 5px 5px 0 0;
   padding: 0.5rem 1rem;
   text-transform: none;
@@ -825,9 +824,6 @@ form .field:not(.is-grouped) {
   &:not(:last-child) {
     margin-bottom: 0;
   }
-}
-.menu div:first-child .menu-label {
-  background-color: $blue;
 }
 .menu-list {
   a {
@@ -843,7 +839,7 @@ form .field:not(.is-grouped) {
   > li {
     ul {
       margin: 0;
-      border-top: 1px solid #eee;
+      border-top: 1px solid $white-ter;
 
       li {
         border-right: none;
@@ -866,15 +862,15 @@ form .field:not(.is-grouped) {
     }
 
     border-radius: 0;
-    border-top: 1px solid #eee;
-    border-left: 1px solid #eee;
-    border-right: 1px solid #eee;
+    border-top: 1px solid $white-ter;
+    border-left: 1px solid $white-ter;
+    border-right: 1px solid $white-ter;
   }
   > li:first-child {
     border-top: none;
   }
   li:last-child {
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid $white-ter;
   }
   div {
     margin-bottom: 0;
@@ -952,5 +948,3 @@ form .field:not(.is-grouped) {
     @include loader;
   }
 }
-
-@import "bulma-popover/css/bulma-popover";
