@@ -36,8 +36,8 @@ import sonia.scm.HandlerEventType;
 import sonia.scm.search.Id;
 import sonia.scm.search.Index;
 import sonia.scm.search.IndexLogStore;
-import sonia.scm.search.IndexTask;
 import sonia.scm.search.SearchEngine;
+import sonia.scm.search.SerializableIndexTask;
 
 import java.util.Arrays;
 
@@ -65,7 +65,7 @@ class UserIndexerTest {
   private IndexLogStore indexLogStore;
 
   @Captor
-  private ArgumentCaptor<IndexTask<User>> captor;
+  private ArgumentCaptor<SerializableIndexTask<User>> captor;
 
   @Test
   void shouldReturnType() {

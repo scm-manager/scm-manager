@@ -24,8 +24,6 @@
 
 package sonia.scm.group;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Answers;
@@ -35,21 +33,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.HandlerEventType;
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryEvent;
-import sonia.scm.repository.RepositoryIndexer;
-import sonia.scm.repository.RepositoryPermissions;
-import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.search.Id;
 import sonia.scm.search.Index;
 import sonia.scm.search.IndexLogStore;
-import sonia.scm.search.IndexTask;
 import sonia.scm.search.SearchEngine;
+import sonia.scm.search.SerializableIndexTask;
 
 import java.util.Arrays;
 
-import static java.util.Collections.singletonList;
-import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -74,7 +65,7 @@ class GroupIndexerTest {
   private IndexLogStore indexLogStore;
 
   @Captor
-  private ArgumentCaptor<IndexTask<Group>> captor;
+  private ArgumentCaptor<SerializableIndexTask<Group>> captor;
 
   private final Group astronauts = new Group("xml", "astronauts");
   private final Group planetCreators = new Group("xml", "planet-creators");

@@ -31,9 +31,9 @@ import sonia.scm.search.HandlerEventIndexSyncer;
 import sonia.scm.search.Id;
 import sonia.scm.search.Index;
 import sonia.scm.search.IndexLogStore;
-import sonia.scm.search.IndexTask;
 import sonia.scm.search.Indexer;
 import sonia.scm.search.SearchEngine;
+import sonia.scm.search.SerializableIndexTask;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -68,12 +68,12 @@ public class GroupIndexer implements Indexer<Group> {
   }
 
   @Override
-  public IndexTask<Group> createStoreTask(Group group) {
+  public SerializableIndexTask<Group> createStoreTask(Group group) {
     return index -> store(index, group);
   }
 
   @Override
-  public IndexTask<Group> createDeleteTask(Group group) {
+  public SerializableIndexTask<Group> createDeleteTask(Group group) {
     return index -> index.delete().byId(Id.of(group));
   }
 

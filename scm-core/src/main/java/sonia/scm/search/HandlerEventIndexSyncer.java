@@ -51,12 +51,12 @@ public final class HandlerEventIndexSyncer<T> {
   public void handleEvent(HandlerEvent<T> event) {
     HandlerEventType type = event.getEventType();
     if (type.isPost()) {
-      IndexTask<T> task = createTask(type, event.getItem());
+      SerializableIndexTask<T> task = createTask(type, event.getItem());
       searchEngine.forType(indexer.getType()).update(task);
     }
   }
 
-  private IndexTask<T> createTask(HandlerEventType type, T item) {
+  private SerializableIndexTask<T> createTask(HandlerEventType type, T item) {
     if (type == HandlerEventType.DELETE) {
       return indexer.createDeleteTask(item);
     } else {

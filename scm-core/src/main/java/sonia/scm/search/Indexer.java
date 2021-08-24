@@ -57,9 +57,9 @@ public interface Indexer<T> {
 
   Class<? extends ReIndexAllTask<T>> getReIndexAllTask();
 
-  IndexTask<T> createStoreTask(T item);
+  SerializableIndexTask<T> createStoreTask(T item);
 
-  IndexTask<T> createDeleteTask(T item);
+  SerializableIndexTask<T> createDeleteTask(T item);
 
   abstract class ReIndexAllTask<T> implements IndexTask<T> {
 

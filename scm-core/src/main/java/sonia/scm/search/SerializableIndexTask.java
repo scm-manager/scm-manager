@@ -22,31 +22,13 @@
  * SOFTWARE.
  */
 
-package sonia.scm.work;
+package sonia.scm.search;
 
 import com.google.common.annotations.Beta;
-import sonia.scm.ModelObject;
 
-import javax.annotation.Nullable;
+import java.io.Serializable;
 
 @Beta
-public interface CentralWorkQueue {
-
-  Enqueue append();
-
-  int getSize();
-
-  interface Enqueue {
-
-    Enqueue locks(String resource);
-    Enqueue locks(String resource, @Nullable String id);
-    Enqueue locks(String resource, ModelObject object);
-
-    Enqueue runAsAdmin();
-
-    void enqueue(Task task);
-    void enqueue(Class<? extends Runnable> task);
-
-  }
-
+@FunctionalInterface
+public interface SerializableIndexTask<T> extends IndexTask<T>, Serializable {
 }

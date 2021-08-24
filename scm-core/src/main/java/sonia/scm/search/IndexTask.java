@@ -24,10 +24,11 @@
 
 package sonia.scm.search;
 
-import java.io.Serializable;
+import com.google.common.annotations.Beta;
 
+@Beta
 @FunctionalInterface
-public interface IndexTask<T> extends Serializable {
+public interface IndexTask<T> {
 
   void update(Index<T> index);
 

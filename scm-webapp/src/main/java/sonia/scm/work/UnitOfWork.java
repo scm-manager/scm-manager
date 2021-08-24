@@ -59,7 +59,7 @@ abstract class UnitOfWork implements Runnable, Serializable, Comparable<UnitOfWo
   private final PrincipalCollection principal;
 
   private transient Finalizer finalizer;
-  private transient Task task;
+  private transient Runnable task;
   private transient MeterRegistry meterRegistry;
   private transient Impersonator impersonator;
 
@@ -110,7 +110,7 @@ abstract class UnitOfWork implements Runnable, Serializable, Comparable<UnitOfWo
     this.impersonator = injector.getInstance(Impersonator.class);
   }
 
-  protected abstract Task task(Injector injector);
+  protected abstract Runnable task(Injector injector);
 
   @Override
   public void run() {

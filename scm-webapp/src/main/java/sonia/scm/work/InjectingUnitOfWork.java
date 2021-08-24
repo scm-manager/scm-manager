@@ -33,15 +33,15 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true)
 class InjectingUnitOfWork extends UnitOfWork {
 
-  private final Class<? extends Task> task;
+  private final Class<? extends Runnable> task;
 
-  InjectingUnitOfWork(long order, PrincipalCollection principal, Set<Resource> locks, Class<? extends Task> task) {
+  InjectingUnitOfWork(long order, PrincipalCollection principal, Set<Resource> locks, Class<? extends Runnable> task) {
     super(order, principal, locks);
     this.task = task;
   }
 
   @Override
-  protected Task task(Injector injector) {
+  protected Runnable task(Injector injector) {
     return injector.getInstance(task);
   }
 }

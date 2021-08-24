@@ -206,7 +206,7 @@ public class DefaultCentralWorkQueue implements CentralWorkQueue, Closeable {
     }
 
     @Override
-    public void enqueue(Class<? extends Task> task) {
+    public void enqueue(Class<? extends Runnable> task) {
       appendAndRun(new InjectingUnitOfWork(order.incrementAndGet(), principal(), locks, task));
     }
 

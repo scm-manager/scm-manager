@@ -69,7 +69,7 @@ class HandlerEventIndexSyncerTest {
   @ParameterizedTest
   @EnumSource(value = HandlerEventType.class, mode = EnumSource.Mode.INCLUDE, names = {"CREATE", "MODIFY"})
   void shouldStore(HandlerEventType type) {
-    IndexTask<Repository> store = index -> {};
+    SerializableIndexTask<Repository> store = index -> {};
 
     Repository puzzle = RepositoryTestData.create42Puzzle();
     when(indexer.createStoreTask(puzzle)).thenReturn(store);
@@ -83,7 +83,7 @@ class HandlerEventIndexSyncerTest {
 
   @Test
   void shouldDelete() {
-    IndexTask<Repository> delete = index -> {};
+    SerializableIndexTask<Repository> delete = index -> {};
 
     Repository puzzle = RepositoryTestData.create42Puzzle();
     when(indexer.createDeleteTask(puzzle)).thenReturn(delete);

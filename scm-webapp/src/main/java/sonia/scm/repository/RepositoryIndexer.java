@@ -31,9 +31,9 @@ import sonia.scm.search.HandlerEventIndexSyncer;
 import sonia.scm.search.Id;
 import sonia.scm.search.Index;
 import sonia.scm.search.IndexLogStore;
-import sonia.scm.search.IndexTask;
 import sonia.scm.search.Indexer;
 import sonia.scm.search.SearchEngine;
+import sonia.scm.search.SerializableIndexTask;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -73,12 +73,12 @@ public class RepositoryIndexer implements Indexer<Repository> {
   }
 
   @Override
-  public IndexTask<Repository> createStoreTask(Repository repository) {
+  public SerializableIndexTask<Repository> createStoreTask(Repository repository) {
     return index -> store(index, repository);
   }
 
   @Override
-  public IndexTask<Repository> createDeleteTask(Repository repository) {
+  public SerializableIndexTask<Repository> createDeleteTask(Repository repository) {
     return index -> index.delete().byRepository(repository);
   }
 

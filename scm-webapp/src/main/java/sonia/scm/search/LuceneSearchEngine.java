@@ -122,7 +122,7 @@ public class LuceneSearchEngine implements SearchEngine {
     }
 
     @Override
-    public void batch(IndexTask<?> task) {
+    public void batch(SerializableIndexTask<?> task) {
       exec(params -> batch(params, new LuceneSimpleIndexingTask(params, task)));
     }
 
@@ -183,7 +183,7 @@ public class LuceneSearchEngine implements SearchEngine {
     }
 
     @Override
-    public void update(IndexTask<T> task) {
+    public void update(SerializableIndexTask<T> task) {
       enqueue(new LuceneSimpleIndexingTask(params(), task));
     }
 

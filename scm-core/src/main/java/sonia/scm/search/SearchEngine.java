@@ -76,7 +76,7 @@ public interface SearchEngine {
 
     ForIndices withOptions(IndexOptions options);
 
-    void batch(IndexTask<?> task);
+    void batch(SerializableIndexTask<?> task);
     void batch(Class<? extends IndexTask<?>> task);
   }
 
@@ -115,7 +115,7 @@ public interface SearchEngine {
     /**
      * TODO
      */
-    void update(IndexTask<T> task);
+    void update(SerializableIndexTask<T> task);
 
     /**
      * TODO

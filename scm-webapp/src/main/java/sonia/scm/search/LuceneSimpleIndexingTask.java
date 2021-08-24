@@ -28,9 +28,9 @@ import sonia.scm.work.Task;
 
 public final class LuceneSimpleIndexingTask extends LuceneIndexTask implements Task {
 
-  private final IndexTask<?> task;
+  private final SerializableIndexTask<?> task;
 
-  LuceneSimpleIndexingTask(IndexParams params, IndexTask<?> task) {
+  LuceneSimpleIndexingTask(IndexParams params, SerializableIndexTask<?> task) {
     super(params);
     this.task = task;
   }
