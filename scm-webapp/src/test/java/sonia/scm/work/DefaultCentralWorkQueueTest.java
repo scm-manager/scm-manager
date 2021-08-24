@@ -282,7 +282,7 @@ class DefaultCentralWorkQueueTest {
       Guice.createInjector(new SecurityModule(), binder -> binder.bind(Context.class).toInstance(ctx)),
       persistence,
       new SimpleMeterRegistry(),
-      () -> 1
+      () -> 2
     );
 
     queue.append().enqueue(InjectingTask.class);

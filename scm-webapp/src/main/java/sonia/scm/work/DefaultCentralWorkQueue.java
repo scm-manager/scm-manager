@@ -24,6 +24,7 @@
 
 package sonia.scm.work;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
@@ -67,21 +68,22 @@ public class DefaultCentralWorkQueue implements CentralWorkQueue, Closeable {
 
   @Inject
   public DefaultCentralWorkQueue(Injector injector, Persistence persistence, MeterRegistry meterRegistry) {
-    this(injector, persistence, meterRegistry, () -> Runtime.getRuntime().availableProcessors());
+    this(injector, persistence, meterRegistry, new ThreadCountProvider());
   }
 
-  DefaultCentralWorkQueue(Injector injector, Persistence persistence, MeterRegistry meterRegistry, IntSupplier availableProcessorResolver) {
+  @VisibleForTesting
+  DefaultCentralWorkQueue(Injector injector, Persistence persistence, MeterRegistry meterRegistry, IntSupplier threadCountProvider) {
     this.injector = injector;
     this.persistence = persistence;
-    this.executor = createExecutorService(meterRegistry, poolSize(availableProcessorResolver));
+    this.executor = createExecutorService(meterRegistry, threadCountProvider.getAsInt());
     this.meterRegistry = meterRegistry;
 
     loadFromDisk();
   }
 
-  private static ExecutorService createExecutorService(MeterRegistry registry, int fixed) {
+  private static ExecutorService createExecutorService(MeterRegistry registry, int threadCount) {
     ExecutorService executorService = Executors.newFixedThreadPool(
-      fixed,
+      threadCount,
       new ThreadFactoryBuilder()
         .setNameFormat("CentralWorkQueue-%d")
         .build()
@@ -111,14 +113,6 @@ public class DefaultCentralWorkQueue implements CentralWorkQueue, Closeable {
       append(unitOfWork);
     }
     run();
-  }
-
-  private int poolSize(IntSupplier availableProcessorResolver) {
-    if (availableProcessorResolver.getAsInt() > 1) {
-      return 4;
-    } else {
-      return 2;
-    }
   }
 
   private synchronized void append(UnitOfWork unitOfWork) {
