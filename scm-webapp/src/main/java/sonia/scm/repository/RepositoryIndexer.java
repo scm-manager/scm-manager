@@ -26,8 +26,8 @@ package sonia.scm.repository;
 
 import com.github.legman.Subscribe;
 import com.google.common.annotations.VisibleForTesting;
+import sonia.scm.HandlerEventType;
 import sonia.scm.plugin.Extension;
-import sonia.scm.search.HandlerEventIndexSyncer;
 import sonia.scm.search.Id;
 import sonia.scm.search.Index;
 import sonia.scm.search.IndexLogStore;
@@ -69,7 +69,18 @@ public class RepositoryIndexer implements Indexer<Repository> {
 
   @Subscribe(async = false)
   public void handleEvent(RepositoryEvent event) {
-    new HandlerEventIndexSyncer<>(searchEngine, this).handleEvent(event);
+    HandlerEventType type = event.getEventType();
+    if (type.isPost()) {
+      Repository repository = event.getItem();
+      if (type == HandlerEventType.DELETE) {
+        searchEngine.forIndices()
+          .forResource(repository)
+          .batch(createDeleteTask(repository));
+      } else {
+        searchEngine.forType(Repository.class)
+          .update(createStoreTask(repository));
+      }
+    }
   }
 
   @Override

@@ -26,6 +26,8 @@ package sonia.scm.repository;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.Answers;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -114,15 +116,27 @@ class RepositoryIndexerTest {
   }
 
   @Test
-  void shouldHandleEvents() {
+  void shouldHandleDeleteEvents() {
     Repository heartOfGold = RepositoryTestData.createHeartOfGold();
     RepositoryEvent event = new RepositoryEvent(HandlerEventType.DELETE, heartOfGold);
 
     indexer.handleEvent(event);
 
-    verify(searchEngine.forType(Repository.class)).update(captor.capture());
+    verify(searchEngine.forIndices().forResource(heartOfGold)).batch(captor.capture());
     captor.getValue().update(index);
     verify(index.delete()).byRepository(heartOfGold);
+  }
+
+  @Test
+  void shouldHandleUpdateEvents() {
+    Repository heartOfGold = RepositoryTestData.createHeartOfGold();
+    RepositoryEvent event = new RepositoryEvent(HandlerEventType.CREATE, heartOfGold);
+
+    indexer.handleEvent(event);
+
+    verify(searchEngine.forType(Repository.class)).update(captor.capture());
+    captor.getValue().update(index);
+    verify(index).store(Id.of(heartOfGold), RepositoryPermissions.read(heartOfGold).asShiroString(), heartOfGold);
   }
 
 }
