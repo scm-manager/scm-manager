@@ -32,7 +32,7 @@ const ActionWrapper = styled.div`
   justify-content: center;
   margin-top: 2em;
   padding: 1em 1em;
-  border: 2px solid #e9f7df;
+  border: 2px solid whitesmoke;
 `;
 
 export default class PluginBottomActions extends React.Component<Props> {

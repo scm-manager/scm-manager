@@ -49,14 +49,6 @@ const HeaderWrapper = styled.div`
   padding: 0.5em 0.75em;
 `;
 
-const LighterGreyBackgroundPanelBlock = styled.div`
-  background-color: #fbfbfb;
-`;
-
-const LighterGreyBackgroundTable = styled.table`
-  background-color: #fbfbfb;
-`;
-
 const BorderBottom = styled.div`
   border-bottom: solid 1px #dbdbdb;
 `;
@@ -163,8 +155,8 @@ const Content: FC<Props> = ({ file, repository, revision, breadcrumb, error }) =
     if (!collapsed) {
       return (
         <>
-          <LighterGreyBackgroundPanelBlock className="panel-block">
-            <LighterGreyBackgroundTable className="table">
+          <div className="panel-block has-background-white-bis">
+            <table className="table has-background-white-bis">
               <tbody>
                 <tr>
                   <td>{t("sources.content.path")}</td>
@@ -198,8 +190,8 @@ const Content: FC<Props> = ({ file, repository, revision, breadcrumb, error }) =
                   }}
                 />
               </tbody>
-            </LighterGreyBackgroundTable>
-          </LighterGreyBackgroundPanelBlock>
+            </table>
+          </div>
           <BorderBottom />
         </>
       );

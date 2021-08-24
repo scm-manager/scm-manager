@@ -24,17 +24,12 @@
 import React, { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
-import styled from "styled-components";
 
 type Props = {
   icon: string;
   text: string;
   onClick: () => Promise<any>;
 };
-
-const ExpandLink = styled.span`
-  cursor: pointer;
-`;
 
 const HunkExpandLink: FC<Props> = ({ icon, text, onClick }) => {
   const [t] = useTranslation("repos");
@@ -49,9 +44,9 @@ const HunkExpandLink: FC<Props> = ({ icon, text, onClick }) => {
   };
 
   return (
-    <ExpandLink onClick={onClickWithLoadingMarker}>
+    <span className="is-clickable" onClick={onClickWithLoadingMarker}>
       <i className={classNames("fa", icon)} /> {loading ? t("diff.expanding") : text}
-    </ExpandLink>
+    </span>
   );
 };
 

@@ -28,7 +28,7 @@ import Button, { ButtonProps } from "./Button";
 const Wrapper = styled.div`
   margin-top: 2em;
   padding: 1em 1em;
-  border: 2px solid #e9f7fd;
+  border: 2px solid whitesmoke;
 `;
 
 export default class CreateButton extends React.Component<ButtonProps> {

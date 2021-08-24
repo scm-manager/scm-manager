@@ -28,10 +28,6 @@ import { Button, ButtonAddons, Icon, Level, urls } from "@scm-manager/ui-compone
 import { useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-const MarginIcon = styled(Icon)`
-  padding-right: 0.5rem;
-`;
-
 const SmallButton = styled(Button)`
   border-radius: 4px;
   font-size: 1rem;
@@ -63,7 +59,7 @@ const RepositoryFormButton: FC<RepositoryForm> = ({ path, icon, label }) => {
 
   return (
     <SmallButton color={isSelected ? "link is-selected" : undefined} link={!isSelected ? href : undefined}>
-      <MarginIcon name={icon} color={isSelected ? "white" : "default"} />
+      <Icon className="pr-2" name={icon} color={isSelected ? "white" : "default"} />
       <p className="is-hidden-mobile is-hidden-tablet-only">{t(`plugins:${label}`, label)}</p>
     </SmallButton>
   );

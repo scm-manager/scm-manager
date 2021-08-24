@@ -51,11 +51,6 @@ const Bell = styled(Icon)`
   font-size: 1.5rem;
 `;
 
-const Container = styled.div`
-  display: flex;
-  cursor: pointer;
-`;
-
 const DropDownMenu = styled.div`
   min-width: 35rem;
 
@@ -357,9 +352,9 @@ const Notifications: FC<NotificationProps> = ({ className }) => {
         )}
         onClick={(e) => e.stopPropagation()}
       >
-        <Container className="dropdown-trigger">
+        <div className="is-flex dropdown-trigger is-clickable">
           <BellNotificationIcon data={data} onClick={() => setOpen((o) => !o)} />
-        </Container>
+        </div>
         <DropDownMenu className="dropdown-menu" id="dropdown-menu" role="menu">
           <ErrorBox error={error} />
           {isLoading ? <LoadingBox /> : null}

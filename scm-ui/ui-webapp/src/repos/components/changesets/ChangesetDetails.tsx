@@ -42,7 +42,7 @@ import {
   Icon,
   Level,
   SignatureIcon,
-  Tooltip
+  Tooltip,
 } from "@scm-manager/ui-components";
 import ContributorTable from "./ContributorTable";
 import { Link as ReactLink } from "react-router-dom";
@@ -54,30 +54,12 @@ type Props = {
   fileControlFactory?: FileControlFactory;
 };
 
-const RightMarginP = styled.p`
-  margin-right: 1em;
-`;
-
-const BottomMarginLevel = styled(Level)`
-  margin-bottom: 1rem !important;
-`;
-
 const countContributors = (changeset: Changeset) => {
   if (changeset.contributors) {
     return changeset.contributors.length + 1;
   }
   return 1;
 };
-
-const FlexRow = styled.div`
-  display: flex;
-  flex-direction: row;
-`;
-
-const ContributorLine = styled.div`
-  display: flex;
-  cursor: pointer;
-`;
 
 const ContributorColumn = styled.p`
   flex-grow: 0;
@@ -92,25 +74,7 @@ const CountColumn = styled.p`
   white-space: nowrap;
 `;
 
-const ContributorDetails = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 1rem;
-`;
-
-const ContributorToggleLine = styled.p`
-  cursor: pointer;
-  /** margin-bottom is inherit from content p **/
-  margin-bottom: 0.5rem !important;
-`;
-
-const ChangesetSummary = styled.div`
-  display: flex;
-`;
-
 const SeparatedParents = styled.div`
-  margin-left: 1em;
-
   a + a:before {
     content: ",\\00A0";
     color: #4a4a4a;
@@ -126,21 +90,21 @@ const Contributors: FC<{ changeset: Changeset }> = ({ changeset }) => {
 
   if (open) {
     return (
-      <ContributorDetails>
-        <FlexRow>
-          <ContributorToggleLine onClick={e => setOpen(!open)} className="is-ellipsis-overflow">
+      <div className="is-flex is-flex-direction-column mb-4">
+        <div className="is-flex is-flex-direction-row">
+          <p className="is-ellipsis-overflow is-clickable mb-2" onClick={(e) => setOpen(!open)}>
             <Icon name="angle-down" /> {t("changeset.contributors.list")}
-          </ContributorToggleLine>
+          </p>
           {signatureIcon}
-        </FlexRow>
+        </div>
         <ContributorTable changeset={changeset} />
-      </ContributorDetails>
+      </div>
     );
   }
 
   return (
     <>
-      <ContributorLine onClick={e => setOpen(!open)}>
+      <div className="is-flex is-clickable" onClick={(e) => setOpen(!open)}>
         <ContributorColumn className="is-ellipsis-overflow">
           <Icon name="angle-right" /> <ChangesetAuthor changeset={changeset} />
         </ContributorColumn>
@@ -152,7 +116,7 @@ const Contributors: FC<{ changeset: Changeset }> = ({ changeset }) => {
           </span>
           )
         </CountColumn>
-      </ContributorLine>
+      </div>
     </>
   );
 };
@@ -184,7 +148,7 @@ const ChangesetDetails: FC<Props> = ({ changeset, repository, fileControlFactory
             name="changeset.description"
             props={{
               changeset,
-              value: description.title
+              value: description.title,
             }}
             renderAll={false}
           >
@@ -193,23 +157,23 @@ const ChangesetDetails: FC<Props> = ({ changeset, repository, fileControlFactory
         </h4>
         <article className="media">
           <AvatarWrapper>
-            <RightMarginP className={classNames("image", "is-64x64")}>
+            <p className={classNames("image", "is-64x64", "mr-4")}>
               <AvatarImage person={changeset.author} />
-            </RightMarginP>
+            </p>
           </AvatarWrapper>
           <div className="media-content">
             <Contributors changeset={changeset} />
-            <ChangesetSummary className="is-ellipsis-overflow">
+            <div className="is-flex is-ellipsis-overflow">
               <p>
                 <Trans i18nKey="repos:changeset.summary" components={[id, date]} />
               </p>
               {parents && parents?.length > 0 ? (
-                <SeparatedParents>
+                <SeparatedParents className="ml-4">
                   {t("changeset.parents.label", { count: parents?.length }) + ": "}
                   {parents}
                 </SeparatedParents>
               ) : null}
-            </ChangesetSummary>
+            </div>
           </div>
           <div className="media-right">
             <ChangesetTags changeset={changeset} />
@@ -244,7 +208,7 @@ const ChangesetDetails: FC<Props> = ({ changeset, repository, fileControlFactory
                   name="changeset.description"
                   props={{
                     changeset,
-                    value: item
+                    value: item,
                   }}
                   renderAll={false}
                 >
@@ -257,7 +221,8 @@ const ChangesetDetails: FC<Props> = ({ changeset, repository, fileControlFactory
         </p>
       </div>
       <div>
-        <BottomMarginLevel
+        <Level
+          className="mb-4"
           right={
             <Button
               action={collapseDiffs}
