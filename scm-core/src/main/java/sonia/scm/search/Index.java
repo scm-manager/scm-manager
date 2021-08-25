@@ -87,6 +87,11 @@ public interface Index<T>  {
      */
     void byRepository(String repositoryId);
 
+    /**
+     * Delete all objects which are related the given type and repository from index.
+     *
+     * @param repository repository
+     */
     default void byRepository(Repository repository) {
       byRepository(repository.getId());
     }
