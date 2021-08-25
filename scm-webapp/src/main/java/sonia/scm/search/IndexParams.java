@@ -42,4 +42,9 @@ public class IndexParams implements IndexDetails {
   public String getName() {
     return index;
   }
+
+  @Override
+  public String toString() {
+    return searchableType.getName() + "/" + index;
+  }
 }

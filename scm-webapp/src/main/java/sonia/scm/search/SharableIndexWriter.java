@@ -50,10 +50,10 @@ class SharableIndexWriter {
   synchronized void open() {
     usageCounter++;
     if (usageCounter == 1) {
-      LOG.debug("open writer, because usage increased from zero to one");
+      LOG.trace("open writer, because usage increased from zero to one");
       writer = writerFactory.get();
     } else {
-      LOG.debug("new task is using the writer, counter is now at {}", usageCounter);
+      LOG.trace("new task is using the writer, counter is now at {}", usageCounter);
     }
   }
 
@@ -77,11 +77,11 @@ class SharableIndexWriter {
   synchronized void close() throws IOException {
     usageCounter--;
     if (usageCounter == 0) {
-      LOG.debug("no one seems to use index any longer, closing underlying writer");
+      LOG.trace("no one seems to use index any longer, closing underlying writer");
       writer.close();
       writer = null;
     } else if (usageCounter > 0) {
-      LOG.debug("index is still used by {} task(s), commit work but keep writer open", usageCounter);
+      LOG.trace("index is still used by {} task(s), commit work but keep writer open", usageCounter);
       writer.commit();
     } else {
       LOG.warn("index is already closed");
