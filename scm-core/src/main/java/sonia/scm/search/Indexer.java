@@ -63,7 +63,7 @@ public interface Indexer<T> {
   Class<? extends ReIndexAllTask<T>> getReIndexAllTask();
 
   /**
-   * Creates a task which store the given item in the index.
+   * Creates a task which stores the given item in the index.
    * @param item item to store
    * @return task which stores the item
    * @since 2.23.0
@@ -79,7 +79,7 @@ public interface Indexer<T> {
   SerializableIndexTask<T> createDeleteTask(T item);
 
   /**
-   * Abstract class which builds the foundation for tasks which re index all items.
+   * Abstract class which builds the foundation for tasks which re-index all items.
    *
    * @since 2.23.0
    */

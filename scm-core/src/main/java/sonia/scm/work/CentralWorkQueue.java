@@ -32,15 +32,15 @@ import javax.annotation.Nullable;
 /**
  * The {@link CentralWorkQueue} provides an api to submit and coordinate long-running or resource intensive tasks.
  *
- * The tasks are executed in parallel, but if some task access the same resource this can become a problem.
+ * The tasks are executed in parallel, but if some tasks access the same resource this can become a problem.
  * To avoid this problem a task can be enqueued with a lock e.g.:
  *
  * <pre>{@code
  *   queue.append().locks("my-resources").enqueue(MyTask.class)
  * }</pre>
  *
- * No task with the same lock will run in parallel. The example above lock a whole group of resources,
- * it is possible to assign the lock to a more specific resource by adding the id parameter to lock e.g.:
+ * No tasks with the same lock will run in parallel. The example above locks a whole group of resources.
+ * It is possible to assign the lock to a more specific resource by adding the id parameter to the lock e.g.:
  *
  * <pre>{@code
  *   queue.append().locks("my-resources", "42").enqueue(MyTask.class)
@@ -48,19 +48,19 @@ import javax.annotation.Nullable;
  *
  * This will ensure, that no task with a lock for the <i>my-resource 42</i> or for <i>my-resources</i> will run at the
  * same time as the task which is enqueued in the example above.
- * But this will also ensure that a task for <i>my-resources</i> with another id than <i>42</i> can run in parallel.
+ * But this will also allow a task for <i>my-resources</i> with an id other than <i>42</i> can run in parallel.
  *
- * All tasks are executed with the permissions of user which enqueues the task,
- * if the task should run as admin the {@link Enqueue#runAsAdmin()} method can be used.
+ * All tasks are executed with the permissions of the user which enqueues the task.
+ * If the task should run as admin, the {@link Enqueue#runAsAdmin()} method can be used.
  *
  * Tasks which could not be finished,
- * before a restart of shutdown of the server will be restored and executed on startup.
- * In order to archive this persistence of the tasks,
+ * before a restart of shutdown of the server, will be restored and executed on startup.
+ * In order to achieve the persistence of tasks,
  * the enqueued task must be provided as a class or it must be serializable.
  * This could become unhandy if the task has parameters and dependencies which must be injected.
  * The injected objects should not be serialized with the task.
- * In order to avoid the dependencies should be declared as {@code transient}
- * and injected via setter instead of constructor e.g.:
+ * In order to avoid this, dependencies should be declared as {@code transient}
+ * and injected via setters instead of the constructor parameters e.g.:
  *
  * <pre><code>
  *   public class MyTask implements Task {
@@ -108,7 +108,7 @@ public interface CentralWorkQueue {
   int getSize();
 
   /**
-   * Builder interface for the enqueueing a new task.
+   * Builder interface for the enqueueing of a new task.
    */
   interface Enqueue {
 

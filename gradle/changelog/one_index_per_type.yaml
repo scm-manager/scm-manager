@@ -1,7 +1,7 @@
 - type: Added
   description: Central Work Queue for coordinating long-running tasks ([#1781](https://github.com/scm-manager/scm-manager/pull/1781))
 - type: Changed
-  description: One index per type ([#1781](https://github.com/scm-manager/scm-manager/pull/1781))
+  description: One index per type instead of one index for all types ([#1781](https://github.com/scm-manager/scm-manager/pull/1781))
 - type: Added
   description: Api to modify mutliple indices at once ([#1781](https://github.com/scm-manager/scm-manager/pull/1781))
 - type: Changed

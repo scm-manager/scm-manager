@@ -40,7 +40,7 @@ public interface IndexDetails {
   Class<?> getType();
 
   /**
-   * Returns name of the index
+   * Returns the name of the index (e.g. `default`)
    * @return name
    */
   String getName();

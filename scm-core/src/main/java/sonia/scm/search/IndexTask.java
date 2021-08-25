@@ -45,7 +45,7 @@ public interface IndexTask<T> {
    * This method is called after work is committed to the index.
    */
   default void afterUpdate() {
-
+// Do nothing
   }
 
 }

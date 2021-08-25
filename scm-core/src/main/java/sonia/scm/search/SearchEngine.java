@@ -120,7 +120,7 @@ public interface SearchEngine {
      * The task is executed asynchronous and will be finished some time in the future.
      * <strong>Note:</strong> the task must be serializable because it is submitted to the
      * {@link sonia.scm.work.CentralWorkQueue},
-     * for more information about the task serialization have a look at the
+     * For more information on task serialization have a look at the
      * {@link sonia.scm.work.CentralWorkQueue} documentation.
      *
      * @param task serializable task for updating multiple indices
@@ -128,9 +128,9 @@ public interface SearchEngine {
     void batch(SerializableIndexTask<?> task);
 
     /**
-     * Submits the task and execute it for every index
+     * Submits the task and executes it for every index
      * which is not excluded by the predicate ({@link #withPredicate(Predicate)}.
-     * The task is executed asynchronous and will be finished some time in the future.
+     * The task is executed asynchronously and will finish at some unknown point in the future.
      *
      * @param task task for updating multiple indices
      */
@@ -164,8 +164,8 @@ public interface SearchEngine {
 
     /**
      * Apply a lock for a specific resource. By default, a lock for the whole index is used.
-     * If one or more specific resources are locked, than the lock is applied only for those resources
-     * and tasks which targets other resources of the same index can run in parallel.
+     * If one or more specific resources are locked, then the lock is applied only for those resources
+     * and tasks which target other resources of the same index can run in parallel.
      *
      * @param resource specific resource to lock
      * @return {@code this}
@@ -184,7 +184,7 @@ public interface SearchEngine {
 
     /**
      * Submits a task to update the index.
-     * The task is executed asynchronous and will be finished some time in the future.
+     * The task is executed asynchronously and will finish at some unknown point in the future.
      * <strong>Note:</strong> the task must be serializable because it is submitted to the
      * {@link sonia.scm.work.CentralWorkQueue},
      * for more information about the task serialization have a look at the
