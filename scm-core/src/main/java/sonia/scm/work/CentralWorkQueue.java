@@ -85,7 +85,7 @@ import javax.annotation.Nullable;
  *   }
  * </code></pre>
  *
- * The {@link CentralWorkQueue} will inject the requested members before the run method of the task is executed.
+ * The {@link CentralWorkQueue} will inject the requested members before the {@code run} method of the task is executed.
  *
  * @since 2.23.0
  */
