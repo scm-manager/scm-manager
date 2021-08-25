@@ -53,6 +53,7 @@ import java.util.function.Consumer;
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static sonia.scm.repository.api.MirrorCommandResult.ResultType.OK;
@@ -197,11 +198,31 @@ public class SvnMirrorCommandTest extends AbstractSvnCommandTestBase {
     assertThat(authenticationManager.getProxyPasswordValue()).isNull();
   }
 
+  @Test
+  public void shouldNotApplyDisabledLocalProxySettings() throws SVNException {
+    MirrorCommandRequest request = new MirrorCommandRequest();
+    request.setProxyConfiguration(createDisabledProxyConfiguration());
+
+    BasicAuthenticationManager authenticationManager = createAuthenticationManager(request);
+    assertThat(authenticationManager.getProxyHost()).isNull();
+    assertThat(authenticationManager.getProxyPort()).isZero();
+    assertThat(authenticationManager.getProxyUserName()).isNull();
+    assertThat(authenticationManager.getProxyPasswordValue()).isNull();
+  }
+
   private ProxyConfiguration createProxyConfiguration() {
     ProxyConfiguration configuration = mock(ProxyConfiguration.class);
     when(configuration.isEnabled()).thenReturn(true);
     when(configuration.getHost()).thenReturn("proxy.hitchhiker.com");
     when(configuration.getPort()).thenReturn(3128);
+    return configuration;
+  }
+
+  private ProxyConfiguration createDisabledProxyConfiguration() {
+    ProxyConfiguration configuration = mock(ProxyConfiguration.class);
+    when(configuration.isEnabled()).thenReturn(false);
+    lenient().when(configuration.getHost()).thenReturn("proxy.hitchhiker.com");
+    lenient().when(configuration.getPort()).thenReturn(3128);
     return configuration;
   }
 

@@ -147,7 +147,7 @@ public class SvnMirrorCommand extends AbstractSvnCommand implements MirrorComman
       }
     };
     checkAndApplyProxyConfiguration(
-      authManager, mirrorCommandRequest.getProxyConfiguration().orElse(globalProxyConfiguration), url
+      authManager, mirrorCommandRequest.getProxyConfiguration().filter(ProxyConfiguration::isEnabled).orElse(globalProxyConfiguration), url
     );
     return authManager;
   }

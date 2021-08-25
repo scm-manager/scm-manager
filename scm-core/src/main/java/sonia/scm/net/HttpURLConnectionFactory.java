@@ -129,7 +129,7 @@ public final class HttpURLConnectionFactory {
       // because we are not able to remove the authentication from thread local
       ThreadLocalAuthenticator.clear();
 
-      ProxyConfiguration proxyConfiguration = options.getProxyConfiguration().orElse(globalProxyConfiguration);
+      ProxyConfiguration proxyConfiguration = options.getProxyConfiguration().filter(ProxyConfiguration::isEnabled).orElse(globalProxyConfiguration);
       if (isProxyEnabled(proxyConfiguration, url)) {
         return openProxyConnection(proxyConfiguration, url);
       }
