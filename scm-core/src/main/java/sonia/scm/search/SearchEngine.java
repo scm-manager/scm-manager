@@ -119,7 +119,7 @@ public interface SearchEngine {
      * which are matching the predicate ({@link #matching(Predicate)}.
      * The task is executed asynchronous and will be finished some time in the future.
      * <strong>Note:</strong> the task must be serializable because it is submitted to the
-     * {@link sonia.scm.work.CentralWorkQueue},
+     * {@link sonia.scm.work.CentralWorkQueue}.
      * For more information on task serialization have a look at the
      * {@link sonia.scm.work.CentralWorkQueue} documentation.
      *
