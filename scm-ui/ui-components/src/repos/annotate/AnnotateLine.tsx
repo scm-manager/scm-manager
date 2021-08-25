@@ -28,9 +28,10 @@ import DateShort from "../../DateShort";
 import { Action } from "./actions";
 import { AnnotatedLine } from "@scm-manager/ui-types";
 
-const LineElement = styled.div.attrs((props) => ({
-  className: "is-inline-block m-0 p-0",
-}))`
+const LineElement = styled.div`
+  display: inline-block;
+  margin: 0;
+  padding: 0;
   height: 100%;
   vertical-align: top;
 `;

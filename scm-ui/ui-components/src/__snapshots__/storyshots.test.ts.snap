@@ -63,18 +63,18 @@ exports[`Storyshots Annotate Default 1`] = `
           className="AnnotateLine__Line-h9c4md-4 ePpBEX"
         >
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Metadata-h9c4md-5 eQYlOQ hNclWk has-text-info is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Metadata-h9c4md-5 egJUkB hNclWk has-text-info"
             onMouseOut={[Function]}
             onMouseOver={[Function]}
           >
             <div
-              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Author-h9c4md-1 eQYlOQ bgGaBs is-inline-block m-0 p-0"
+              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Author-h9c4md-1 egJUkB bgGaBs"
             >
               Arthur Dent
             </div>
              
             <div
-              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 eQYlOQ iiVwcn is-inline-block m-0 p-0"
+              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 egJUkB iiVwcn"
             >
               <time
                 className="DateElement-sc-1schp8c-0 cinWxa"
@@ -86,13 +86,13 @@ exports[`Storyshots Annotate Default 1`] = `
              
           </div>
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 eQYlOQ iInEwJ is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 egJUkB iInEwJ"
           >
             1
           </div>
            
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 eQYlOQ is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 egJUkB"
           >
             <span
               style={Object {}}
@@ -120,16 +120,16 @@ exports[`Storyshots Annotate Default 1`] = `
           className="AnnotateLine__Line-h9c4md-4 ePpBEX"
         >
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__EmptyMetadata-h9c4md-6 eQYlOQ ktCVFA is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__EmptyMetadata-h9c4md-6 egJUkB ktCVFA"
           />
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 eQYlOQ iInEwJ is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 egJUkB iInEwJ"
           >
             2
           </div>
            
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 eQYlOQ is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 egJUkB"
           >
             <span
               style={Object {}}
@@ -143,18 +143,18 @@ exports[`Storyshots Annotate Default 1`] = `
           className="AnnotateLine__Line-h9c4md-4 ePpBEX"
         >
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Metadata-h9c4md-5 eQYlOQ hNclWk has-text-info is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Metadata-h9c4md-5 egJUkB hNclWk has-text-info"
             onMouseOut={[Function]}
             onMouseOver={[Function]}
           >
             <div
-              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Author-h9c4md-1 eQYlOQ bgGaBs is-inline-block m-0 p-0"
+              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Author-h9c4md-1 egJUkB bgGaBs"
             >
               Tricia Marie McMillan
             </div>
              
             <div
-              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 eQYlOQ iiVwcn is-inline-block m-0 p-0"
+              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 egJUkB iiVwcn"
             >
               <time
                 className="DateElement-sc-1schp8c-0 cinWxa"
@@ -166,13 +166,13 @@ exports[`Storyshots Annotate Default 1`] = `
              
           </div>
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 eQYlOQ iInEwJ is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 egJUkB iInEwJ"
           >
             3
           </div>
            
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 eQYlOQ is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 egJUkB"
           >
             <span
               style={Object {}}
@@ -220,16 +220,16 @@ exports[`Storyshots Annotate Default 1`] = `
           className="AnnotateLine__Line-h9c4md-4 ePpBEX"
         >
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__EmptyMetadata-h9c4md-6 eQYlOQ ktCVFA is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__EmptyMetadata-h9c4md-6 egJUkB ktCVFA"
           />
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 eQYlOQ iInEwJ is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 egJUkB iInEwJ"
           >
             4
           </div>
            
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 eQYlOQ is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 egJUkB"
           >
             <span
               style={Object {}}
@@ -243,18 +243,18 @@ exports[`Storyshots Annotate Default 1`] = `
           className="AnnotateLine__Line-h9c4md-4 ePpBEX"
         >
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Metadata-h9c4md-5 eQYlOQ hNclWk has-text-info is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Metadata-h9c4md-5 egJUkB hNclWk has-text-info"
             onMouseOut={[Function]}
             onMouseOver={[Function]}
           >
             <div
-              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Author-h9c4md-1 eQYlOQ bgGaBs is-inline-block m-0 p-0"
+              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Author-h9c4md-1 egJUkB bgGaBs"
             >
               Arthur Dent
             </div>
              
             <div
-              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 eQYlOQ iiVwcn is-inline-block m-0 p-0"
+              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 egJUkB iiVwcn"
             >
               <time
                 className="DateElement-sc-1schp8c-0 cinWxa"
@@ -266,13 +266,13 @@ exports[`Storyshots Annotate Default 1`] = `
              
           </div>
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 eQYlOQ iInEwJ is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 egJUkB iInEwJ"
           >
             5
           </div>
            
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 eQYlOQ is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 egJUkB"
           >
             <span
               style={Object {}}
@@ -355,18 +355,18 @@ exports[`Storyshots Annotate Default 1`] = `
           className="AnnotateLine__Line-h9c4md-4 ePpBEX"
         >
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Metadata-h9c4md-5 eQYlOQ hNclWk has-text-info is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Metadata-h9c4md-5 egJUkB hNclWk has-text-info"
             onMouseOut={[Function]}
             onMouseOver={[Function]}
           >
             <div
-              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Author-h9c4md-1 eQYlOQ bgGaBs is-inline-block m-0 p-0"
+              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Author-h9c4md-1 egJUkB bgGaBs"
             >
               Ford Prefect
             </div>
              
             <div
-              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 eQYlOQ iiVwcn is-inline-block m-0 p-0"
+              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 egJUkB iiVwcn"
             >
               <time
                 className="DateElement-sc-1schp8c-0 cinWxa"
@@ -378,13 +378,13 @@ exports[`Storyshots Annotate Default 1`] = `
              
           </div>
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 eQYlOQ iInEwJ is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 egJUkB iInEwJ"
           >
             6
           </div>
            
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 eQYlOQ is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 egJUkB"
           >
             <span
               style={Object {}}
@@ -457,18 +457,18 @@ exports[`Storyshots Annotate Default 1`] = `
           className="AnnotateLine__Line-h9c4md-4 ePpBEX"
         >
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Metadata-h9c4md-5 eQYlOQ hNclWk has-text-info is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Metadata-h9c4md-5 egJUkB hNclWk has-text-info"
             onMouseOut={[Function]}
             onMouseOver={[Function]}
           >
             <div
-              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Author-h9c4md-1 eQYlOQ bgGaBs is-inline-block m-0 p-0"
+              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Author-h9c4md-1 egJUkB bgGaBs"
             >
               Arthur Dent
             </div>
              
             <div
-              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 eQYlOQ iiVwcn is-inline-block m-0 p-0"
+              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 egJUkB iiVwcn"
             >
               <time
                 className="DateElement-sc-1schp8c-0 cinWxa"
@@ -480,13 +480,13 @@ exports[`Storyshots Annotate Default 1`] = `
              
           </div>
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 eQYlOQ iInEwJ is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 egJUkB iInEwJ"
           >
             7
           </div>
            
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 eQYlOQ is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 egJUkB"
           >
             <span
               style={Object {}}
@@ -519,16 +519,16 @@ exports[`Storyshots Annotate Default 1`] = `
           className="AnnotateLine__Line-h9c4md-4 ePpBEX"
         >
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__EmptyMetadata-h9c4md-6 eQYlOQ ktCVFA is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__EmptyMetadata-h9c4md-6 egJUkB ktCVFA"
           />
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 eQYlOQ iInEwJ is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 egJUkB iInEwJ"
           >
             8
           </div>
            
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 eQYlOQ is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 egJUkB"
           >
             <span
               style={Object {}}
@@ -613,18 +613,18 @@ exports[`Storyshots Annotate Markdown 1`] = `
           className="AnnotateLine__Line-h9c4md-4 ePpBEX"
         >
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Metadata-h9c4md-5 eQYlOQ hNclWk has-text-info is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Metadata-h9c4md-5 egJUkB hNclWk has-text-info"
             onMouseOut={[Function]}
             onMouseOver={[Function]}
           >
             <div
-              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Author-h9c4md-1 eQYlOQ bgGaBs is-inline-block m-0 p-0"
+              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Author-h9c4md-1 egJUkB bgGaBs"
             >
               Arthur Dent
             </div>
              
             <div
-              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 eQYlOQ iiVwcn is-inline-block m-0 p-0"
+              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 egJUkB iiVwcn"
             >
               <time
                 className="DateElement-sc-1schp8c-0 cinWxa"
@@ -636,13 +636,13 @@ exports[`Storyshots Annotate Markdown 1`] = `
              
           </div>
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 eQYlOQ iInEwJ is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 egJUkB iInEwJ"
           >
             1
           </div>
            
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 eQYlOQ is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 egJUkB"
           >
             <span
               style={Object {}}
@@ -682,16 +682,16 @@ exports[`Storyshots Annotate Markdown 1`] = `
           className="AnnotateLine__Line-h9c4md-4 ePpBEX"
         >
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__EmptyMetadata-h9c4md-6 eQYlOQ ktCVFA is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__EmptyMetadata-h9c4md-6 egJUkB ktCVFA"
           />
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 eQYlOQ iInEwJ is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 egJUkB iInEwJ"
           >
             2
           </div>
            
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 eQYlOQ is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 egJUkB"
           >
             <span
               style={Object {}}
@@ -705,18 +705,18 @@ exports[`Storyshots Annotate Markdown 1`] = `
           className="AnnotateLine__Line-h9c4md-4 ePpBEX"
         >
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Metadata-h9c4md-5 eQYlOQ hNclWk has-text-info is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Metadata-h9c4md-5 egJUkB hNclWk has-text-info"
             onMouseOut={[Function]}
             onMouseOver={[Function]}
           >
             <div
-              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Author-h9c4md-1 eQYlOQ bgGaBs is-inline-block m-0 p-0"
+              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Author-h9c4md-1 egJUkB bgGaBs"
             >
               Tricia Marie McMillan
             </div>
              
             <div
-              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 eQYlOQ iiVwcn is-inline-block m-0 p-0"
+              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 egJUkB iiVwcn"
             >
               <time
                 className="DateElement-sc-1schp8c-0 cinWxa"
@@ -728,13 +728,13 @@ exports[`Storyshots Annotate Markdown 1`] = `
              
           </div>
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 eQYlOQ iInEwJ is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 egJUkB iInEwJ"
           >
             3
           </div>
            
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 eQYlOQ is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 egJUkB"
           >
             <span
               style={Object {}}
@@ -748,16 +748,16 @@ exports[`Storyshots Annotate Markdown 1`] = `
           className="AnnotateLine__Line-h9c4md-4 ePpBEX"
         >
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__EmptyMetadata-h9c4md-6 eQYlOQ ktCVFA is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__EmptyMetadata-h9c4md-6 egJUkB ktCVFA"
           />
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 eQYlOQ iInEwJ is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 egJUkB iInEwJ"
           >
             4
           </div>
            
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 eQYlOQ is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 egJUkB"
           >
             <span
               style={Object {}}
@@ -771,18 +771,18 @@ exports[`Storyshots Annotate Markdown 1`] = `
           className="AnnotateLine__Line-h9c4md-4 ePpBEX"
         >
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Metadata-h9c4md-5 eQYlOQ hNclWk has-text-info is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Metadata-h9c4md-5 egJUkB hNclWk has-text-info"
             onMouseOut={[Function]}
             onMouseOver={[Function]}
           >
             <div
-              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Author-h9c4md-1 eQYlOQ bgGaBs is-inline-block m-0 p-0"
+              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Author-h9c4md-1 egJUkB bgGaBs"
             >
               Arthur Dent
             </div>
              
             <div
-              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 eQYlOQ iiVwcn is-inline-block m-0 p-0"
+              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 egJUkB iiVwcn"
             >
               <time
                 className="DateElement-sc-1schp8c-0 cinWxa"
@@ -794,13 +794,13 @@ exports[`Storyshots Annotate Markdown 1`] = `
              
           </div>
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 eQYlOQ iInEwJ is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 egJUkB iInEwJ"
           >
             5
           </div>
            
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 eQYlOQ is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 egJUkB"
           >
             <span
               style={Object {}}
@@ -892,18 +892,18 @@ exports[`Storyshots Annotate Markdown 1`] = `
           className="AnnotateLine__Line-h9c4md-4 ePpBEX"
         >
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Metadata-h9c4md-5 eQYlOQ hNclWk has-text-info is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Metadata-h9c4md-5 egJUkB hNclWk has-text-info"
             onMouseOut={[Function]}
             onMouseOver={[Function]}
           >
             <div
-              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Author-h9c4md-1 eQYlOQ bgGaBs is-inline-block m-0 p-0"
+              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Author-h9c4md-1 egJUkB bgGaBs"
             >
               Ford Prefect
             </div>
              
             <div
-              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 eQYlOQ iiVwcn is-inline-block m-0 p-0"
+              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 egJUkB iiVwcn"
             >
               <time
                 className="DateElement-sc-1schp8c-0 cinWxa"
@@ -915,13 +915,13 @@ exports[`Storyshots Annotate Markdown 1`] = `
              
           </div>
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 eQYlOQ iInEwJ is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 egJUkB iInEwJ"
           >
             6
           </div>
            
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 eQYlOQ is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 egJUkB"
           >
             <span
               style={Object {}}
@@ -935,18 +935,18 @@ exports[`Storyshots Annotate Markdown 1`] = `
           className="AnnotateLine__Line-h9c4md-4 ePpBEX"
         >
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Metadata-h9c4md-5 eQYlOQ hNclWk has-text-info is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Metadata-h9c4md-5 egJUkB hNclWk has-text-info"
             onMouseOut={[Function]}
             onMouseOver={[Function]}
           >
             <div
-              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Author-h9c4md-1 eQYlOQ bgGaBs is-inline-block m-0 p-0"
+              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Author-h9c4md-1 egJUkB bgGaBs"
             >
               Arthur Dent
             </div>
              
             <div
-              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 eQYlOQ iiVwcn is-inline-block m-0 p-0"
+              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 egJUkB iiVwcn"
             >
               <time
                 className="DateElement-sc-1schp8c-0 cinWxa"
@@ -958,13 +958,13 @@ exports[`Storyshots Annotate Markdown 1`] = `
              
           </div>
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 eQYlOQ iInEwJ is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 egJUkB iInEwJ"
           >
             7
           </div>
            
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 eQYlOQ is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 egJUkB"
           >
             <span
               style={Object {}}
@@ -997,16 +997,16 @@ exports[`Storyshots Annotate Markdown 1`] = `
           className="AnnotateLine__Line-h9c4md-4 ePpBEX"
         >
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__EmptyMetadata-h9c4md-6 eQYlOQ ktCVFA is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__EmptyMetadata-h9c4md-6 egJUkB ktCVFA"
           />
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 eQYlOQ iInEwJ is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 egJUkB iInEwJ"
           >
             8
           </div>
            
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 eQYlOQ is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 egJUkB"
           >
             <span
               style={Object {}}
@@ -1091,12 +1091,12 @@ exports[`Storyshots Annotate With Avatars 1`] = `
           className="AnnotateLine__Line-h9c4md-4 ePpBEX"
         >
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Metadata-h9c4md-5 eQYlOQ hNclWk has-text-info is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Metadata-h9c4md-5 egJUkB hNclWk has-text-info"
             onMouseOut={[Function]}
             onMouseOver={[Function]}
           >
             <div
-              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Author-h9c4md-1 eQYlOQ bgGaBs is-inline-block m-0 p-0"
+              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Author-h9c4md-1 egJUkB bgGaBs"
             >
               <img
                 alt="Arthur Dent"
@@ -1107,7 +1107,7 @@ exports[`Storyshots Annotate With Avatars 1`] = `
             </div>
              
             <div
-              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 eQYlOQ iiVwcn is-inline-block m-0 p-0"
+              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 egJUkB iiVwcn"
             >
               <time
                 className="DateElement-sc-1schp8c-0 cinWxa"
@@ -1119,13 +1119,13 @@ exports[`Storyshots Annotate With Avatars 1`] = `
              
           </div>
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 eQYlOQ iInEwJ is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 egJUkB iInEwJ"
           >
             1
           </div>
            
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 eQYlOQ is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 egJUkB"
           >
             <span
               style={Object {}}
@@ -1153,16 +1153,16 @@ exports[`Storyshots Annotate With Avatars 1`] = `
           className="AnnotateLine__Line-h9c4md-4 ePpBEX"
         >
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__EmptyMetadata-h9c4md-6 eQYlOQ ktCVFA is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__EmptyMetadata-h9c4md-6 egJUkB ktCVFA"
           />
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 eQYlOQ iInEwJ is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 egJUkB iInEwJ"
           >
             2
           </div>
            
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 eQYlOQ is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 egJUkB"
           >
             <span
               style={Object {}}
@@ -1176,12 +1176,12 @@ exports[`Storyshots Annotate With Avatars 1`] = `
           className="AnnotateLine__Line-h9c4md-4 ePpBEX"
         >
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Metadata-h9c4md-5 eQYlOQ hNclWk has-text-info is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Metadata-h9c4md-5 egJUkB hNclWk has-text-info"
             onMouseOut={[Function]}
             onMouseOver={[Function]}
           >
             <div
-              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Author-h9c4md-1 eQYlOQ bgGaBs is-inline-block m-0 p-0"
+              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Author-h9c4md-1 egJUkB bgGaBs"
             >
               <img
                 alt="Tricia Marie McMillan"
@@ -1192,7 +1192,7 @@ exports[`Storyshots Annotate With Avatars 1`] = `
             </div>
              
             <div
-              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 eQYlOQ iiVwcn is-inline-block m-0 p-0"
+              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 egJUkB iiVwcn"
             >
               <time
                 className="DateElement-sc-1schp8c-0 cinWxa"
@@ -1204,13 +1204,13 @@ exports[`Storyshots Annotate With Avatars 1`] = `
              
           </div>
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 eQYlOQ iInEwJ is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 egJUkB iInEwJ"
           >
             3
           </div>
            
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 eQYlOQ is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 egJUkB"
           >
             <span
               style={Object {}}
@@ -1258,16 +1258,16 @@ exports[`Storyshots Annotate With Avatars 1`] = `
           className="AnnotateLine__Line-h9c4md-4 ePpBEX"
         >
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__EmptyMetadata-h9c4md-6 eQYlOQ ktCVFA is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__EmptyMetadata-h9c4md-6 egJUkB ktCVFA"
           />
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 eQYlOQ iInEwJ is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 egJUkB iInEwJ"
           >
             4
           </div>
            
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 eQYlOQ is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 egJUkB"
           >
             <span
               style={Object {}}
@@ -1281,12 +1281,12 @@ exports[`Storyshots Annotate With Avatars 1`] = `
           className="AnnotateLine__Line-h9c4md-4 ePpBEX"
         >
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Metadata-h9c4md-5 eQYlOQ hNclWk has-text-info is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Metadata-h9c4md-5 egJUkB hNclWk has-text-info"
             onMouseOut={[Function]}
             onMouseOver={[Function]}
           >
             <div
-              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Author-h9c4md-1 eQYlOQ bgGaBs is-inline-block m-0 p-0"
+              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Author-h9c4md-1 egJUkB bgGaBs"
             >
               <img
                 alt="Arthur Dent"
@@ -1297,7 +1297,7 @@ exports[`Storyshots Annotate With Avatars 1`] = `
             </div>
              
             <div
-              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 eQYlOQ iiVwcn is-inline-block m-0 p-0"
+              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 egJUkB iiVwcn"
             >
               <time
                 className="DateElement-sc-1schp8c-0 cinWxa"
@@ -1309,13 +1309,13 @@ exports[`Storyshots Annotate With Avatars 1`] = `
              
           </div>
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 eQYlOQ iInEwJ is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 egJUkB iInEwJ"
           >
             5
           </div>
            
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 eQYlOQ is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 egJUkB"
           >
             <span
               style={Object {}}
@@ -1398,12 +1398,12 @@ exports[`Storyshots Annotate With Avatars 1`] = `
           className="AnnotateLine__Line-h9c4md-4 ePpBEX"
         >
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Metadata-h9c4md-5 eQYlOQ hNclWk has-text-info is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Metadata-h9c4md-5 egJUkB hNclWk has-text-info"
             onMouseOut={[Function]}
             onMouseOver={[Function]}
           >
             <div
-              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Author-h9c4md-1 eQYlOQ bgGaBs is-inline-block m-0 p-0"
+              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Author-h9c4md-1 egJUkB bgGaBs"
             >
               <img
                 alt="Ford Prefect"
@@ -1414,7 +1414,7 @@ exports[`Storyshots Annotate With Avatars 1`] = `
             </div>
              
             <div
-              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 eQYlOQ iiVwcn is-inline-block m-0 p-0"
+              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 egJUkB iiVwcn"
             >
               <time
                 className="DateElement-sc-1schp8c-0 cinWxa"
@@ -1426,13 +1426,13 @@ exports[`Storyshots Annotate With Avatars 1`] = `
              
           </div>
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 eQYlOQ iInEwJ is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 egJUkB iInEwJ"
           >
             6
           </div>
            
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 eQYlOQ is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 egJUkB"
           >
             <span
               style={Object {}}
@@ -1505,12 +1505,12 @@ exports[`Storyshots Annotate With Avatars 1`] = `
           className="AnnotateLine__Line-h9c4md-4 ePpBEX"
         >
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Metadata-h9c4md-5 eQYlOQ hNclWk has-text-info is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Metadata-h9c4md-5 egJUkB hNclWk has-text-info"
             onMouseOut={[Function]}
             onMouseOver={[Function]}
           >
             <div
-              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Author-h9c4md-1 eQYlOQ bgGaBs is-inline-block m-0 p-0"
+              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Author-h9c4md-1 egJUkB bgGaBs"
             >
               <img
                 alt="Arthur Dent"
@@ -1521,7 +1521,7 @@ exports[`Storyshots Annotate With Avatars 1`] = `
             </div>
              
             <div
-              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 eQYlOQ iiVwcn is-inline-block m-0 p-0"
+              className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 egJUkB iiVwcn"
             >
               <time
                 className="DateElement-sc-1schp8c-0 cinWxa"
@@ -1533,13 +1533,13 @@ exports[`Storyshots Annotate With Avatars 1`] = `
              
           </div>
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 eQYlOQ iInEwJ is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 egJUkB iInEwJ"
           >
             7
           </div>
            
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 eQYlOQ is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 egJUkB"
           >
             <span
               style={Object {}}
@@ -1572,16 +1572,16 @@ exports[`Storyshots Annotate With Avatars 1`] = `
           className="AnnotateLine__Line-h9c4md-4 ePpBEX"
         >
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__EmptyMetadata-h9c4md-6 eQYlOQ ktCVFA is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__EmptyMetadata-h9c4md-6 egJUkB ktCVFA"
           />
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 eQYlOQ iInEwJ is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 egJUkB iInEwJ"
           >
             8
           </div>
            
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 eQYlOQ is-inline-block m-0 p-0"
+            className="AnnotateLine__LineElement-h9c4md-0 egJUkB"
           >
             <span
               style={Object {}}
