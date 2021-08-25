@@ -38,6 +38,7 @@ import org.junit.jupiter.api.io.TempDir;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.SCMContextProvider;
+import sonia.scm.plugin.PluginLoader;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -63,6 +64,9 @@ class IndexManagerTest {
   @Mock
   private SCMContextProvider context;
 
+  @Mock
+  private PluginLoader pluginLoader;
+
   private IndexManager indexManager;
 
   @BeforeEach
@@ -70,7 +74,8 @@ class IndexManagerTest {
     this.directory = tempDirectory;
     when(context.resolve(Paths.get("index"))).thenReturn(tempDirectory.resolve("index"));
     when(analyzerFactory.create(any(LuceneSearchableType.class), any(IndexOptions.class))).thenReturn(new SimpleAnalyzer());
-    indexManager = new IndexManager(context, analyzerFactory);
+    when(pluginLoader.getUberClassLoader()).thenReturn(IndexManagerTest.class.getClassLoader());
+    indexManager = new IndexManager(context, pluginLoader, analyzerFactory);
   }
 
   @Test
@@ -122,7 +127,7 @@ class IndexManagerTest {
       addDoc(writer, "Trillian");
     }
 
-    assertThat(new IndexManager(context, analyzerFactory).all())
+    assertThat(new IndexManager(context, pluginLoader, analyzerFactory).all())
       .anySatisfy(details -> {
         AssertionsForClassTypes.assertThat(details.getType()).isEqualTo(Songs.class);
         AssertionsForClassTypes.assertThat(details.getName()).isEqualTo("special");

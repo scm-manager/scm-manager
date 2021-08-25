@@ -31,6 +31,7 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.FSDirectory;
 import sonia.scm.SCMContextProvider;
+import sonia.scm.plugin.PluginLoader;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -56,16 +57,22 @@ public class IndexManager {
   private final IndexXml indexXml;
 
   @Inject
-  public IndexManager(SCMContextProvider context, AnalyzerFactory analyzerFactory) {
+  public IndexManager(SCMContextProvider context, PluginLoader pluginLoader, AnalyzerFactory analyzerFactory) {
     directory = context.resolve(Paths.get("index"));
     this.analyzerFactory = analyzerFactory;
-    this.indexXml = readIndexXml();
+    this.indexXml = readIndexXml(pluginLoader.getUberClassLoader());
   }
 
-  private IndexXml readIndexXml() {
+  private IndexXml readIndexXml(ClassLoader uberClassLoader) {
     Path path = directory.resolve("index.xml");
     if (Files.exists(path)) {
-      return JAXB.unmarshal(path.toFile(), IndexXml.class);
+      ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+      try {
+        Thread.currentThread().setContextClassLoader(uberClassLoader);
+        return JAXB.unmarshal(path.toFile(), IndexXml.class);
+      } finally {
+        Thread.currentThread().setContextClassLoader(contextClassLoader);
+      }
     }
     return new IndexXml();
   }
