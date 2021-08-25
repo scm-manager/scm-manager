@@ -83,7 +83,7 @@ public interface SearchEngine {
      * @param predicate predicate to filter indices
      * @return {@code this}
      */
-    ForIndices withPredicate(Predicate<IndexDetails> predicate);
+    ForIndices matching(Predicate<IndexDetails> predicate);
 
     /**
      * Apply a lock for a specific resource. By default, a lock for the whole index is used.
@@ -116,7 +116,7 @@ public interface SearchEngine {
 
     /**
      * Submits the task and execute it for every index
-     * which is not excluded by the predicate ({@link #withPredicate(Predicate)}.
+     * which are matching the predicate ({@link #matching(Predicate)}.
      * The task is executed asynchronous and will be finished some time in the future.
      * <strong>Note:</strong> the task must be serializable because it is submitted to the
      * {@link sonia.scm.work.CentralWorkQueue},
@@ -129,7 +129,7 @@ public interface SearchEngine {
 
     /**
      * Submits the task and executes it for every index
-     * which is not excluded by the predicate ({@link #withPredicate(Predicate)}.
+     * which are matching the predicate ({@link #matching(Predicate)}.
      * The task is executed asynchronously and will finish at some unknown point in the future.
      *
      * @param task task for updating multiple indices

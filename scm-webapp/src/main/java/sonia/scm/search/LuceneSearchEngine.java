@@ -104,7 +104,7 @@ public class LuceneSearchEngine implements SearchEngine {
     private IndexOptions options = IndexOptions.defaults();
 
     @Override
-    public ForIndices withPredicate(Predicate<IndexDetails> predicate) {
+    public ForIndices matching(Predicate<IndexDetails> predicate) {
       this.predicate = predicate;
       return this;
     }

@@ -337,7 +337,7 @@ class LuceneSearchEngineTest {
       );
 
       searchEngine.forIndices()
-        .withPredicate(details -> details.getType() == Repository.class)
+        .matching(details -> details.getType() == Repository.class)
         .batch(index -> {});
 
       verify(enqueue.runAsAdmin()).enqueue(any(Task.class));
