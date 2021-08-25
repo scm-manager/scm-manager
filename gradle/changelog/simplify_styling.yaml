@@ -1,0 +1,2 @@
+- type: Changed
+  description: Replace styled-components with bulma helpers ([#1783](https://github.com/scm-manager/scm-manager/pull/1783))
