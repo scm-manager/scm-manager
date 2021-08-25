@@ -27,9 +27,7 @@ package sonia.scm.search;
 final class FieldNames {
   private FieldNames(){}
 
-  static final String UID = "_uid";
   static final String ID = "_id";
-  static final String TYPE = "_type";
   static final String REPOSITORY = "_repository";
   static final String PERMISSION = "_permission";
 }

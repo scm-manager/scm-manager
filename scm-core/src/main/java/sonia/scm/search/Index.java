@@ -25,6 +25,7 @@
 package sonia.scm.search;
 
 import com.google.common.annotations.Beta;
+import sonia.scm.repository.Repository;
 
 /**
  * Can be used to index objects for full text searches.
@@ -32,7 +33,15 @@ import com.google.common.annotations.Beta;
  * @since 2.21.0
  */
 @Beta
-public interface Index<T> extends AutoCloseable {
+public interface Index<T>  {
+
+  /**
+   * Returns details such as name and type of index.
+   *
+   * @return details of index
+   * @since 2.23.0
+   */
+  IndexDetails getDetails();
 
   /**
    * Store the given object in the index.
@@ -54,38 +63,11 @@ public interface Index<T> extends AutoCloseable {
   Deleter delete();
 
   /**
-   * Close index and commit changes.
-   */
-  @Override
-  void close();
-
-  /**
    * Deleter provides an api to delete object from index.
    *
    * @since 2.23.0
    */
   interface Deleter {
-
-    /**
-     * Returns an api which allows deletion of objects from the type of this index.
-     * @return type restricted delete api
-     */
-    ByTypeDeleter byType();
-
-    /**
-     * Returns an api which allows deletion of objects of every type.
-     * @return unrestricted delete api for all types.
-     */
-    AllTypesDeleter allTypes();
-  }
-
-  /**
-   * Delete api for the type of the index. This means, that only entries for this
-   * type will be deleted.
-   *
-   * @since 2.23.0
-   */
-  interface ByTypeDeleter {
 
     /**
      * Delete the object with the given id and type from index.
@@ -104,27 +86,15 @@ public interface Index<T> extends AutoCloseable {
      * @param repositoryId id of repository
      */
     void byRepository(String repositoryId);
-  }
-
-  /**
-   * Delete api for the overall index regarding all types.
-   *
-   * @since 2.23.0
-   */
-  interface AllTypesDeleter {
 
     /**
-     * Delete all objects which are related to the given repository from index regardless of their type.
-     * @param repositoryId repository id
+     * Delete all objects which are related the given type and repository from index.
+     *
+     * @param repository repository
      */
-    void byRepository(String repositoryId);
-
-    /**
-     * Delete all objects with the given type from index.
-     * This method is mostly useful if the index type has changed and the old type (in form of a class)
-     * is no longer available.
-     * @param typeName type name of objects
-     */
-    void byTypeName(String typeName);
+    default void byRepository(Repository repository) {
+      byRepository(repository.getId());
+    }
   }
+
 }

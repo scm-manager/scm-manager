@@ -24,23 +24,50 @@
 
 package sonia.scm.search;
 
-import javax.inject.Inject;
-import java.io.IOException;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+@Singleton
+@SuppressWarnings("unchecked")
 public class LuceneIndexFactory {
 
-  private final IndexOpener indexOpener;
+  private final IndexManager indexManager;
+  @SuppressWarnings("rawtypes")
+  private final Map<IndexKey, LuceneIndex> indexes = new ConcurrentHashMap<>();
 
   @Inject
-  public LuceneIndexFactory(IndexOpener indexOpener) {
-    this.indexOpener = indexOpener;
+  public LuceneIndexFactory(IndexManager indexManager) {
+    this.indexManager = indexManager;
   }
 
   public <T> LuceneIndex<T> create(IndexParams indexParams) {
-    try {
-      return new LuceneIndex<>(indexParams.getSearchableType(), indexOpener.openForWrite(indexParams));
-    } catch (IOException ex) {
-      throw new SearchEngineException("failed to open index " + indexParams.getIndex(), ex);
-    }
+    return indexes.compute(keyOf(indexParams), (key, index) -> {
+      if (index != null) {
+        index.open();
+        return index;
+      }
+      return new LuceneIndex<>(
+        indexParams,
+        () -> indexManager.openForWrite(indexParams)
+      );
+    });
+  }
+
+  private IndexKey keyOf(IndexParams indexParams) {
+    return new IndexKey(
+      indexParams.getSearchableType().getName(), indexParams.getIndex()
+    );
+  }
+
+  @EqualsAndHashCode
+  @AllArgsConstructor
+  private static class IndexKey {
+    String type;
+    String name;
   }
 }

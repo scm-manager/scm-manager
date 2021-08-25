@@ -30,8 +30,10 @@ import sonia.scm.plugin.Extension;
 import sonia.scm.search.HandlerEventIndexSyncer;
 import sonia.scm.search.Id;
 import sonia.scm.search.Index;
+import sonia.scm.search.IndexLogStore;
 import sonia.scm.search.Indexer;
 import sonia.scm.search.SearchEngine;
+import sonia.scm.search.SerializableIndexTask;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -43,12 +45,10 @@ public class GroupIndexer implements Indexer<Group> {
   @VisibleForTesting
   static final int VERSION = 1;
 
-  private final GroupManager groupManager;
   private final SearchEngine searchEngine;
 
   @Inject
-  public GroupIndexer(GroupManager groupManager, SearchEngine searchEngine) {
-    this.groupManager = groupManager;
+  public GroupIndexer(SearchEngine searchEngine) {
     this.searchEngine = searchEngine;
   }
 
@@ -62,47 +62,47 @@ public class GroupIndexer implements Indexer<Group> {
     return VERSION;
   }
 
-  @Subscribe(async = false)
-  public void handleEvent(GroupEvent event) {
-    new HandlerEventIndexSyncer<>(this).handleEvent(event);
+  @Override
+  public Class<? extends ReIndexAllTask<Group>> getReIndexAllTask() {
+    return ReIndexAll.class;
   }
 
   @Override
-  public Updater<Group> open() {
-    return new GroupIndexUpdater(groupManager, searchEngine.forType(Group.class).getOrCreate());
+  public SerializableIndexTask<Group> createStoreTask(Group group) {
+    return index -> store(index, group);
   }
 
-  public static class GroupIndexUpdater implements Updater<Group> {
+  @Override
+  public SerializableIndexTask<Group> createDeleteTask(Group group) {
+    return index -> index.delete().byId(Id.of(group));
+  }
+
+  @Subscribe(async = false)
+  public void handleEvent(GroupEvent event) {
+    new HandlerEventIndexSyncer<>(searchEngine, this).handleEvent(event);
+  }
+
+  public static void store(Index<Group> index, Group group) {
+    index.store(Id.of(group), GroupPermissions.read(group).asShiroString(), group);
+  }
+
+  public static class ReIndexAll extends ReIndexAllTask<Group> {
 
     private final GroupManager groupManager;
-    private final Index<Group> index;
 
-    private GroupIndexUpdater(GroupManager groupManager, Index<Group> index) {
+    @Inject
+    public ReIndexAll(IndexLogStore logStore, GroupManager groupManager) {
+      super(logStore, Group.class, VERSION);
       this.groupManager = groupManager;
-      this.index = index;
     }
 
     @Override
-    public void store(Group group) {
-      index.store(Id.of(group), GroupPermissions.read(group).asShiroString(), group);
-    }
-
-    @Override
-    public void delete(Group group) {
-      index.delete().byType().byId(Id.of(group));
-    }
-
-    @Override
-    public void reIndexAll() {
-      index.delete().byType().all();
+    public void update(Index<Group> index) {
+      index.delete().all();
       for (Group group : groupManager.getAll()) {
-        store(group);
+        store(index, group);
       }
     }
-
-    @Override
-    public void close() {
-      index.close();
-    }
   }
+
 }

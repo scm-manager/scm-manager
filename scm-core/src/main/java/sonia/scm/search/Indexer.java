@@ -24,6 +24,7 @@
 
 package sonia.scm.search;
 
+import com.google.common.annotations.Beta;
 import sonia.scm.plugin.ExtensionPoint;
 
 /**
@@ -35,6 +36,7 @@ import sonia.scm.plugin.ExtensionPoint;
  * @since 2.22.0
  * @see HandlerEventIndexSyncer
  */
+@Beta
 @ExtensionPoint
 public interface Indexer<T> {
 
@@ -54,42 +56,48 @@ public interface Indexer<T> {
   int getVersion();
 
   /**
-   * Opens the index and return an updater for the given type.
-   *
-   * @return updater with open index
+   * Returns task which re index all items.
+   * @return task to re index all
+   * @since 2.23.0
    */
-  Updater<T> open();
+  Class<? extends ReIndexAllTask<T>> getReIndexAllTask();
 
   /**
-   * Updater for index.
-   *
-   * @param <T> type to index
+   * Creates a task which stores the given item in the index.
+   * @param item item to store
+   * @return task which stores the item
+   * @since 2.23.0
    */
-  interface Updater<T> extends AutoCloseable {
+  SerializableIndexTask<T> createStoreTask(T item);
 
-    /**
-     * Stores the given item in the index.
-     *
-     * @param item item to index
-     */
-    void store(T item);
+  /**
+   * Creates a task which deletes the given item from index.
+   * @param item item to delete
+   * @return task which deletes the item
+   * @since 2.23.0
+   */
+  SerializableIndexTask<T> createDeleteTask(T item);
 
-    /**
-     * Delete the given item from the index
-     *
-     * @param item item to delete
-     */
-    void delete(T item);
+  /**
+   * Abstract class which builds the foundation for tasks which re-index all items.
+   *
+   * @since 2.23.0
+   */
+  abstract class ReIndexAllTask<T> implements IndexTask<T> {
 
-    /**
-     * Re index all existing items.
-     */
-    void reIndexAll();
+    private final IndexLogStore logStore;
+    private final Class<T> type;
+    private final int version;
 
-    /**
-     * Close the given index.
-     */
-    void close();
+    protected ReIndexAllTask(IndexLogStore logStore, Class<T> type, int version) {
+      this.logStore = logStore;
+      this.type = type;
+      this.version = version;
+    }
+
+    @Override
+    public void afterUpdate() {
+      logStore.defaultIndex().log(type, version);
+    }
   }
-
 }

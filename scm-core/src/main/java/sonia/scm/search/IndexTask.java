@@ -24,31 +24,28 @@
 
 package sonia.scm.search;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.google.common.annotations.Beta;
 
-public final class IndexQueueTaskWrapper<T> implements Runnable {
+/**
+ * A task which updates an index.
+ * @param <T> type of indexed objects
+ * @since 2.23.0
+ */
+@Beta
+@FunctionalInterface
+public interface IndexTask<T> {
 
-  private static final Logger LOG = LoggerFactory.getLogger(IndexQueueTaskWrapper.class);
+  /**
+   * Execute operations on the index.
+   * @param index index to update
+   */
+  void update(Index<T> index);
 
-  private final LuceneIndexFactory indexFactory;
-  private final IndexParams indexParams;
-  private final Iterable<IndexQueueTask<T>> tasks;
-
-  IndexQueueTaskWrapper(LuceneIndexFactory indexFactory, IndexParams indexParams, Iterable<IndexQueueTask<T>> tasks) {
-    this.indexFactory = indexFactory;
-    this.indexParams = indexParams;
-    this.tasks = tasks;
+  /**
+   * This method is called after work is committed to the index.
+   */
+  default void afterUpdate() {
+// Do nothing
   }
 
-  @Override
-  public void run() {
-    try (Index<T> index = indexFactory.create(indexParams)) {
-      for (IndexQueueTask<T> task : tasks) {
-        task.updateIndex(index);
-      }
-    } catch (Exception e) {
-      LOG.warn("failure during execution of index task for index {}", indexParams.getIndex(), e);
-    }
-  }
 }

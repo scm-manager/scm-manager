@@ -27,7 +27,6 @@ package sonia.scm.search;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.plugin.Extension;
-import sonia.scm.web.security.AdministrationContext;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -43,13 +42,13 @@ public class IndexBootstrapListener implements ServletContextListener {
 
   private static final Logger LOG = LoggerFactory.getLogger(IndexBootstrapListener.class);
 
-  private final AdministrationContext administrationContext;
+  private final SearchEngine searchEngine;
   private final IndexLogStore indexLogStore;
   private final Set<Indexer> indexers;
 
   @Inject
-  public IndexBootstrapListener(AdministrationContext administrationContext, IndexLogStore indexLogStore, Set<Indexer> indexers) {
-    this.administrationContext = administrationContext;
+  public IndexBootstrapListener(SearchEngine searchEngine, IndexLogStore indexLogStore, Set<Indexer> indexers) {
+    this.searchEngine = searchEngine;
     this.indexLogStore = indexLogStore;
     this.indexers = indexers;
   }
@@ -65,8 +64,11 @@ public class IndexBootstrapListener implements ServletContextListener {
     Optional<IndexLog> indexLog = indexLogStore.defaultIndex().get(indexer.getType());
     if (indexLog.isPresent()) {
       int version = indexLog.get().getVersion();
-      if (version < indexer.getVersion()) {
-        LOG.debug("index version {} is older then {}, start reindexing of all {}", version, indexer.getVersion(), indexer.getType());
+      if (version != indexer.getVersion()) {
+        LOG.debug(
+          "index version {} is older then {}, start reindexing of all {}",
+          version, indexer.getVersion(), indexer.getType()
+        );
         indexAll(indexer);
       }
     } else {
@@ -75,14 +77,9 @@ public class IndexBootstrapListener implements ServletContextListener {
     }
   }
 
+  @SuppressWarnings("unchecked")
   private void indexAll(Indexer indexer) {
-    administrationContext.runAsAdmin(() -> {
-      try (Indexer.Updater updater = indexer.open()) {
-        updater.reIndexAll();
-      }
-    });
-
-    indexLogStore.defaultIndex().log(indexer.getType(), indexer.getVersion());
+    searchEngine.forType(indexer.getType()).update(indexer.getReIndexAllTask());
   }
 
   @Override

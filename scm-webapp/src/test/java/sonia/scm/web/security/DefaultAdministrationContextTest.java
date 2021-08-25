@@ -37,6 +37,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.security.Authentications;
+import sonia.scm.security.Impersonator;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -54,7 +55,7 @@ class DefaultAdministrationContextTest {
     Injector injector = Guice.createInjector();
     SecurityManager securityManager = new DefaultSecurityManager();
 
-    context = new DefaultAdministrationContext(injector, securityManager);
+    context = new DefaultAdministrationContext(injector, new Impersonator(securityManager));
   }
 
   @Test

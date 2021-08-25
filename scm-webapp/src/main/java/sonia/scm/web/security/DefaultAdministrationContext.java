@@ -24,223 +24,70 @@
 
 package sonia.scm.web.security;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
-import org.apache.shiro.subject.Subject;
-import org.apache.shiro.subject.support.SubjectThreadState;
-import org.apache.shiro.util.ThreadContext;
-import org.apache.shiro.util.ThreadState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.SCMContext;
 import sonia.scm.security.Authentications;
-import sonia.scm.security.Role;
+import sonia.scm.security.Impersonator;
 import sonia.scm.user.User;
 import sonia.scm.util.AssertUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
 /**
- *
  * @author Sebastian Sdorra
  */
 @Singleton
-public class DefaultAdministrationContext implements AdministrationContext
-{
+public class DefaultAdministrationContext implements AdministrationContext {
 
-  /** Field description */
   private static final User SYSTEM_ACCOUNT = new User(
     Authentications.PRINCIPAL_SYSTEM,
     "SCM-Manager System Account",
     null
   );
 
-
-
-  /** Field description */
   static final String REALM = "AdminRealm";
 
-  /** the logger for DefaultAdministrationContext */
-  private static final Logger logger =
-    LoggerFactory.getLogger(DefaultAdministrationContext.class);
+  private static final Logger LOG = LoggerFactory.getLogger(DefaultAdministrationContext.class);
 
-  //~--- constructors ---------------------------------------------------------
+  private final Injector injector;
+  private final Impersonator impersonator;
+  private final PrincipalCollection adminPrincipal;
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param injector
-   * @param securityManager
-   */
   @Inject
-  public DefaultAdministrationContext(Injector injector,
-    org.apache.shiro.mgt.SecurityManager securityManager)
-  {
+  public DefaultAdministrationContext(Injector injector, Impersonator impersonator) {
     this.injector = injector;
-    this.securityManager = securityManager;
-
-    principalCollection = createAdminCollection(SYSTEM_ACCOUNT);
+    this.impersonator = impersonator;
+    this.adminPrincipal = createAdminPrincipal();
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param action
-   */
-  @Override
-  public void runAsAdmin(PrivilegedAction action)
-  {
-    AssertUtil.assertIsNotNull(action);
-
-    if (ThreadContext.getSecurityManager() != null)
-    {
-      doRunAsInWebSessionContext(action);
-    }
-    else
-    {
-      doRunAsInNonWebSessionContext(action);
-    }
-
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param actionClass
-   */
-  @Override
-  public void runAsAdmin(Class<? extends PrivilegedAction> actionClass)
-  {
-    PrivilegedAction action = injector.getInstance(actionClass);
-
-    runAsAdmin(action);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param adminUser
-   *
-   * @return
-   */
-  private PrincipalCollection createAdminCollection(User adminUser)
-  {
+  public static PrincipalCollection createAdminPrincipal() {
     SimplePrincipalCollection collection = new SimplePrincipalCollection();
 
-    collection.add(adminUser.getId(), REALM);
-    collection.add(adminUser, REALM);
+    collection.add(SYSTEM_ACCOUNT.getId(), REALM);
+    collection.add(SYSTEM_ACCOUNT, REALM);
     collection.add(AdministrationContextMarker.MARKER, REALM);
 
     return collection;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  private Subject createAdminSubject()
-  {
-    //J-
-    return new Subject.Builder(securityManager)
-      .authenticated(true)
-      .principals(principalCollection)
-      .buildSubject();
-    //J+
-  }
-
-  private void doRunAsInNonWebSessionContext(PrivilegedAction action) {
-    logger.trace("bind shiro security manager to current thread");
-
-    try {
-      SecurityUtils.setSecurityManager(securityManager);
-
-      Subject subject = createAdminSubject();
-      ThreadState state = new SubjectThreadState(subject);
-
-      state.bind();
-      try
-      {
-        logger.debug("execute action {} in administration context", action.getClass().getName());
-
-        action.run();
-      } finally {
-        logger.trace("restore current thread state");
-        state.restore();
-      }
-    } finally {
-      SecurityUtils.setSecurityManager(null);
-    }
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param action
-   */
-  private void doRunAsInWebSessionContext(PrivilegedAction action)
-  {
-    Subject subject = SecurityUtils.getSubject();
-
-    String principal = (String) subject.getPrincipal();
-
-    if (logger.isInfoEnabled())
-    {
-      String username;
-
-      if (subject.hasRole(Role.USER))
-      {
-        username = principal;
-      }
-      else
-      {
-        username = SCMContext.USER_ANONYMOUS;
-      }
-
-      logger.debug("user {} executes {} as admin", username, action.getClass().getName());
-    }
-
-    Subject adminSubject = createAdminSubject();
-
-    // do not use runas, because we want only execute this action in this
-    // thread as administrator. Runas could affect other threads
-
-    ThreadContext.bind(adminSubject);
-
-    try
-    {
+  @Override
+  public void runAsAdmin(PrivilegedAction action) {
+    AssertUtil.assertIsNotNull(action);
+    LOG.debug("execute action {} in administration context", action.getClass().getName());
+    try (Impersonator.Session session = impersonator.impersonate(adminPrincipal)) {
       action.run();
     }
-    finally
-    {
-      logger.debug("release administration context for user {}/{}", principal,
-        subject.getPrincipal());
-      ThreadContext.bind(subject);
-    }
   }
 
-  //~--- fields ---------------------------------------------------------------
+  @Override
+  public void runAsAdmin(Class<? extends PrivilegedAction> actionClass) {
+    PrivilegedAction action = injector.getInstance(actionClass);
+    runAsAdmin(action);
+  }
 
-  /** Field description */
-  private final Injector injector;
-
-  /** Field description */
-  private final org.apache.shiro.mgt.SecurityManager securityManager;
-
-  /** Field description */
-  private PrincipalCollection principalCollection;
 }

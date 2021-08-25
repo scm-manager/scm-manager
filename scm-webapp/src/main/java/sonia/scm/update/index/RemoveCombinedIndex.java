@@ -22,44 +22,59 @@
  * SOFTWARE.
  */
 
-package sonia.scm.search;
+package sonia.scm.update.index;
 
-import org.apache.lucene.index.DirectoryReader;
-import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.FSDirectory;
 import sonia.scm.SCMContextProvider;
+import sonia.scm.migration.UpdateStep;
+import sonia.scm.plugin.Extension;
+import sonia.scm.util.IOUtil;
+import sonia.scm.version.Version;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class IndexOpener {
+import static sonia.scm.store.StoreConstants.DATA_DIRECTORY_NAME;
+import static sonia.scm.store.StoreConstants.VARIABLE_DATA_DIRECTORY_NAME;
 
-  private final Path directory;
-  private final AnalyzerFactory analyzerFactory;
+@Extension
+public class RemoveCombinedIndex implements UpdateStep {
+
+  private final SCMContextProvider contextProvider;
 
   @Inject
-  public IndexOpener(SCMContextProvider context, AnalyzerFactory analyzerFactory) {
-    directory = context.resolve(Paths.get("index"));
-    this.analyzerFactory = analyzerFactory;
+  public RemoveCombinedIndex(SCMContextProvider contextProvider) {
+    this.contextProvider = contextProvider;
   }
 
-  public IndexReader openForRead(String name) throws IOException {
-    return DirectoryReader.open(directory(name));
+  @Override
+  public void doUpdate() throws IOException {
+    Path index = contextProvider.resolve(Paths.get("index"));
+    if (Files.exists(index)) {
+      IOUtil.delete(index.toFile());
+    }
+
+    Path indexLog = contextProvider.resolve(indexLogPath());
+    if (Files.exists(indexLog)) {
+      IOUtil.delete(indexLog.toFile());
+    }
   }
 
-  public IndexWriter openForWrite(IndexParams indexParams) throws IOException {
-    IndexWriterConfig config = new IndexWriterConfig(analyzerFactory.create(indexParams.getSearchableType(), indexParams.getOptions()));
-    config.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
-    return new IndexWriter(directory(indexParams.getIndex()), config);
+  @Nonnull
+  private Path indexLogPath() {
+    return Paths.get(VARIABLE_DATA_DIRECTORY_NAME).resolve(DATA_DIRECTORY_NAME).resolve("index-log");
   }
 
-  private Directory directory(String name) throws IOException {
-    return FSDirectory.open(directory.resolve(name));
+  @Override
+  public Version getTargetVersion() {
+    return Version.parse("2.0.0");
   }
 
+  @Override
+  public String getAffectedDataType() {
+    return "sonia.scm.index";
+  }
 }
