@@ -44,7 +44,7 @@ const RepositoryHit: FC<HitProps> = ({ hit }) => {
 
   // the embedded repository is only a subset of the repository (RepositoryCoordinates),
   // so we should use the fields to get more information
-  const repository = hit._embedded.repository;
+  const repository = hit._embedded?.repository;
   if (!namespace || !name || !type || !repository) {
     return null;
   }

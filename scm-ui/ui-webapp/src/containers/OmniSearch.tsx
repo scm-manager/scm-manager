@@ -87,7 +87,7 @@ const AvatarSection: FC<HitProps> = ({ hit }) => {
   const name = useStringHitFieldValue(hit, "name");
   const type = useStringHitFieldValue(hit, "type");
 
-  const repository = hit._embedded.repository;
+  const repository = hit._embedded?.repository;
   if (!namespace || !name || !type || !repository) {
     return null;
   }

@@ -32,8 +32,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.group.Group;
 import sonia.scm.repository.Repository;
 import sonia.scm.user.User;
-import sonia.scm.web.security.AdministrationContext;
-import sonia.scm.web.security.PrivilegedAction;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -42,47 +40,39 @@ import java.util.HashSet;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class IndexBootstrapListenerTest {
 
-  @Mock
-  private AdministrationContext administrationContext;
+  @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+  private SearchEngine searchEngine;
 
   @Mock(answer = Answers.RETURNS_DEEP_STUBS)
   private IndexLogStore indexLogStore;
 
   @Test
   void shouldReIndexWithoutLog() {
-    mockAdminContext();
     Indexer<Repository> indexer = indexer(Repository.class, 1);
-    Indexer.Updater<Repository> updater = updater(indexer);
 
     mockEmptyIndexLog(Repository.class);
     doInitialization(indexer);
 
-    verify(updater).reIndexAll();
-    verify(updater).close();
-    verify(indexLogStore.defaultIndex()).log(Repository.class, 1);
+    verify(searchEngine.forType(Repository.class)).update(RepositoryReIndexAllTask.class);
   }
 
   @Test
   void shouldReIndexIfVersionWasUpdated() {
-    mockAdminContext();
     Indexer<User> indexer = indexer(User.class, 2);
-    Indexer.Updater<User> updater = updater(indexer);
 
     mockIndexLog(User.class, 1);
     doInitialization(indexer);
 
-    verify(updater).reIndexAll();
-    verify(updater).close();
-    verify(indexLogStore.defaultIndex()).log(User.class, 2);
+    verify(searchEngine.forType(User.class)).update(UserReIndexAllTask.class);
   }
 
   @Test
@@ -92,7 +82,7 @@ class IndexBootstrapListenerTest {
     mockIndexLog(Group.class, 3);
     doInitialization(indexer);
 
-    verify(indexer, never()).open();
+    verifyNoInteractions(searchEngine);
   }
 
   private <T> void mockIndexLog(Class<T> type, int version) {
@@ -107,13 +97,6 @@ class IndexBootstrapListenerTest {
     when(indexLogStore.defaultIndex().get(type)).thenReturn(Optional.ofNullable(indexLog));
   }
 
-  private void mockAdminContext() {
-    doAnswer(ic -> {
-      PrivilegedAction action = ic.getArgument(0);
-      action.run();
-      return null;
-    }).when(administrationContext).runAsAdmin(any(PrivilegedAction.class));
-  }
 
   @SuppressWarnings("rawtypes")
   private void doInitialization(Indexer... indexers) {
@@ -125,7 +108,7 @@ class IndexBootstrapListenerTest {
   @SuppressWarnings("rawtypes")
   private IndexBootstrapListener listener(Indexer... indexers) {
     return new IndexBootstrapListener(
-      administrationContext, indexLogStore, new HashSet<>(Arrays.asList(indexers))
+      searchEngine, indexLogStore, new HashSet<>(Arrays.asList(indexers))
     );
   }
 
@@ -133,15 +116,38 @@ class IndexBootstrapListenerTest {
   private <T> Indexer<T> indexer(Class<T> type, int version) {
     Indexer<T> indexer = mock(Indexer.class);
     when(indexer.getType()).thenReturn(type);
-    when(indexer.getVersion()).thenReturn(version);
+    lenient().when(indexer.getVersion()).thenReturn(version);
+    lenient().when(indexer.getReIndexAllTask()).thenAnswer(ic -> {
+      if (type == User.class) {
+        return UserReIndexAllTask.class;
+      }
+      return RepositoryReIndexAllTask.class;
+    });
     return indexer;
   }
 
-  @SuppressWarnings("unchecked")
-  private <T> Indexer.Updater<T> updater(Indexer<T> indexer) {
-    Indexer.Updater<T> updater = mock(Indexer.Updater.class);
-    when(indexer.open()).thenReturn(updater);
-    return updater;
+  public static class RepositoryReIndexAllTask extends Indexer.ReIndexAllTask<Repository> {
+
+    public RepositoryReIndexAllTask(IndexLogStore logStore, Class<Repository> type, int version) {
+      super(logStore, type, version);
+    }
+
+    @Override
+    public void update(Index<Repository> index) {
+
+    }
+  }
+
+  public static class UserReIndexAllTask extends Indexer.ReIndexAllTask<User> {
+
+    public UserReIndexAllTask(IndexLogStore logStore, Class<User> type, int version) {
+      super(logStore, type, version);
+    }
+
+    @Override
+    public void update(Index<User> index) {
+
+    }
   }
 
 }

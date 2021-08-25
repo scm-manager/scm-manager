@@ -24,53 +24,24 @@
 
 package sonia.scm.search;
 
-import com.google.common.annotations.VisibleForTesting;
+import com.google.common.annotations.Beta;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import java.io.Closeable;
-import java.io.IOException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicLong;
+/**
+ * Details of an index.
+ * @since 2.23.0
+ */
+@Beta
+public interface IndexDetails {
 
-@Singleton
-public class IndexQueue implements Closeable {
+  /**
+   * Returns type of objects which are indexed.
+   * @return type of objects
+   */
+  Class<?> getType();
 
-  private final ExecutorService executor = Executors.newSingleThreadExecutor();
-
-  private final AtomicLong size = new AtomicLong(0);
-
-  private final LuceneIndexFactory indexFactory;
-
-  @Inject
-  public IndexQueue(LuceneIndexFactory indexFactory) {
-    this.indexFactory = indexFactory;
-  }
-
-  public <T> Index<T> getQueuedIndex(IndexParams indexParams) {
-    return new QueuedIndex<>(this, indexParams);
-  }
-
-  public LuceneIndexFactory getIndexFactory() {
-    return indexFactory;
-  }
-
-  <T> void enqueue(IndexQueueTaskWrapper<T> task) {
-    size.incrementAndGet();
-    executor.execute(() -> {
-      task.run();
-      size.decrementAndGet();
-    });
-  }
-
-  @VisibleForTesting
-  long getSize() {
-    return size.get();
-  }
-
-  @Override
-  public void close() throws IOException {
-    executor.shutdown();
-  }
+  /**
+   * Returns the name of the index (e.g. `default`)
+   * @return name
+   */
+  String getName();
 }

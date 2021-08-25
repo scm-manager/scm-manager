@@ -27,7 +27,6 @@ package sonia.scm.search;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import lombok.Value;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
@@ -39,12 +38,26 @@ import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.ByteBuffersDirectory;
 import org.apache.lucene.store.Directory;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryTestData;
+import sonia.scm.repository.RepositoryType;
 
 import java.io.IOException;
+import java.util.function.Supplier;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static sonia.scm.search.FieldNames.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
+import static sonia.scm.search.FieldNames.ID;
+import static sonia.scm.search.FieldNames.PERMISSION;
+import static sonia.scm.search.FieldNames.REPOSITORY;
 
 class LuceneIndexTest {
 
@@ -78,15 +91,6 @@ class LuceneIndexTest {
   }
 
   @Test
-  void shouldStoreUidOfObject() throws IOException {
-    try (LuceneIndex<Storable> index = createIndex(Storable.class)) {
-      index.store(ONE, null, new Storable("Awesome content which should be indexed"));
-    }
-
-    assertHits(UID, "one/storable", 1);
-  }
-
-  @Test
   void shouldStoreIdOfObject() throws IOException {
     try (LuceneIndex<Storable> index = createIndex(Storable.class)) {
       index.store(ONE, null, new Storable("Some text"));
@@ -105,146 +109,60 @@ class LuceneIndexTest {
   }
 
   @Test
-  void shouldStoreTypeOfObject() throws IOException {
-    try (LuceneIndex<Storable> index = createIndex(Storable.class)) {
-      index.store(ONE, null, new Storable("Some other text"));
-    }
-
-    assertHits(TYPE, "storable", 1);
-  }
-
-  @Test
   void shouldDeleteById() throws IOException {
     try (LuceneIndex<Storable> index = createIndex(Storable.class)) {
       index.store(ONE, null, new Storable("Some other text"));
     }
 
     try (LuceneIndex<Storable> index = createIndex(Storable.class)) {
-      index.delete().byType().byId(ONE);
+      index.delete().byId(ONE);
     }
 
     assertHits(ID, "one", 0);
   }
 
   @Test
-  void shouldDeleteAllByType() throws IOException {
+  void shouldDeleteByIdAndRepository() throws IOException {
+    Repository heartOfGold = RepositoryTestData.createHeartOfGold();
+    Repository puzzle42 = RepositoryTestData.createHeartOfGold();
     try (LuceneIndex<Storable> index = createIndex(Storable.class)) {
-      index.store(ONE, null, new Storable("content"));
-      index.store(Id.of("two"), null, new Storable("content"));
-    }
-
-    try (LuceneIndex<OtherStorable> index = createIndex(OtherStorable.class)) {
-      index.store(Id.of("three"), null, new OtherStorable("content"));
+      index.store(ONE.withRepository(heartOfGold), null, new Storable("content"));
+      index.store(ONE.withRepository(puzzle42), null, new Storable("content"));
     }
 
     try (LuceneIndex<Storable> index = createIndex(Storable.class)) {
-      index.delete().byType().all();
+      index.delete().byId(ONE.withRepository(heartOfGold));
     }
 
     assertHits("value", "content", 1);
   }
 
   @Test
-  void shouldDeleteByIdAnyType() throws IOException {
+  void shouldDeleteAll() throws IOException {
     try (LuceneIndex<Storable> index = createIndex(Storable.class)) {
-      index.store(ONE, null, new Storable("Some text"));
-    }
-
-    try (LuceneIndex<OtherStorable> index = createIndex(OtherStorable.class)) {
-      index.store(ONE, null, new OtherStorable("Some other text"));
+      index.store(ONE, null, new Storable("content"));
+      index.store(TWO, null, new Storable("content"));
     }
 
     try (LuceneIndex<Storable> index = createIndex(Storable.class)) {
-      index.delete().byType().byId(ONE);
+      index.delete().all();
     }
 
-    assertHits(ID, "one", 1);
-    ScoreDoc[] docs = assertHits(ID, "one", 1);
-    Document doc = doc(docs[0].doc);
-    assertThat(doc.get("value")).isEqualTo("Some other text");
-  }
-
-  @Test
-  void shouldDeleteByIdAndRepository() throws IOException {
-    Id withRepository = ONE.withRepository("4211");
-    try (LuceneIndex<Storable> index = createIndex(Storable.class)) {
-      index.store(ONE, null, new Storable("Some other text"));
-      index.store(withRepository, null, new Storable("New stuff"));
-    }
-
-    try (LuceneIndex<Storable> index = createIndex(Storable.class)) {
-      index.delete().byType().byId(withRepository);
-    }
-
-    ScoreDoc[] docs = assertHits(ID, "one", 1);
-    Document doc = doc(docs[0].doc);
-    assertThat(doc.get("value")).isEqualTo("Some other text");
+    assertHits("value", "content", 0);
   }
 
   @Test
   void shouldDeleteByRepository() throws IOException {
     try (LuceneIndex<Storable> index = createIndex(Storable.class)) {
-      index.store(ONE.withRepository("4211"), null, new Storable("Some other text"));
-      index.store(ONE.withRepository("4212"), null, new Storable("New stuff"));
+      index.store(ONE.withRepository("4211"), null, new Storable("content"));
+      index.store(TWO.withRepository("4212"), null, new Storable("content"));
     }
 
     try (LuceneIndex<Storable> index = createIndex(Storable.class)) {
-      index.delete().byType().byRepository("4212");
+      index.delete().byRepository("4212");
     }
 
-    assertHits(ID, "one", 1);
-  }
-
-  @Test
-  void shouldDeleteByRepositoryAndType() throws IOException {
-    try (LuceneIndex<Storable> index = createIndex(Storable.class)) {
-      index.store(ONE.withRepository("4211"), null, new Storable("some text"));
-      index.store(TWO.withRepository("4211"), null, new Storable("some text"));
-    }
-
-    try (LuceneIndex<OtherStorable> index = createIndex(OtherStorable.class)) {
-      index.store(ONE.withRepository("4211"), null, new OtherStorable("some text"));
-    }
-
-    try (LuceneIndex<Storable> index = createIndex(Storable.class)) {
-      index.delete().byType().byRepository("4211");
-    }
-
-    ScoreDoc[] docs = assertHits("value", "text", 1);
-    Document doc = doc(docs[0].doc);
-    assertThat(doc.get(TYPE)).isEqualTo("otherStorable");
-  }
-
-  @Test
-  void shouldDeleteAllByRepository() throws IOException {
-    try (LuceneIndex<Storable> index = createIndex(Storable.class)) {
-      index.store(ONE.withRepository("4211"), null, new Storable("some text"));
-      index.store(TWO.withRepository("4211"), null, new Storable("some text"));
-    }
-
-    try (LuceneIndex<OtherStorable> index = createIndex(OtherStorable.class)) {
-      index.store(ONE.withRepository("4211"), null, new OtherStorable("some text"));
-    }
-
-    try (LuceneIndex<Storable> index = createIndex(Storable.class)) {
-      index.delete().allTypes().byRepository("4211");
-    }
-
-    assertHits("value", "text", 0);
-  }
-
-  @Test
-  void shouldDeleteAllByTypeName() throws IOException {
-    try (LuceneIndex<Storable> index = createIndex(Storable.class)) {
-      index.store(ONE, null, new Storable("some text"));
-      index.store(TWO, null, new Storable("some text"));
-    }
-
-    try (LuceneIndex<OtherStorable> index = createIndex(OtherStorable.class)) {
-      index.delete().allTypes().byTypeName("storable");
-    }
-
-    assertHits("value", "text", 0);
+    assertHits("value", "content", 1);
   }
 
   @Test
@@ -256,10 +174,67 @@ class LuceneIndexTest {
     assertHits(PERMISSION, "repo:4211:read", 1);
   }
 
-  private Document doc(int doc) throws IOException {
-    try (DirectoryReader reader = DirectoryReader.open(directory)) {
-      return reader.document(doc);
+  @Test
+  void shouldReturnDetails() {
+    try (LuceneIndex<Storable> index = createIndex(Storable.class)) {
+      IndexDetails details = index.getDetails();
+      assertThat(details.getType()).isEqualTo(Storable.class);
+      assertThat(details.getName()).isEqualTo("default");
     }
+  }
+
+  @Nested
+  @ExtendWith(MockitoExtension.class)
+  class ExceptionTests {
+
+    @Mock
+    private IndexWriter writer;
+
+    private LuceneIndex<Storable> index;
+
+    @BeforeEach
+    void setUpIndex() {
+      index = createIndex(Storable.class, () -> writer);
+    }
+
+    @Test
+    void shouldThrowSearchEngineExceptionOnStore() throws IOException {
+      when(writer.updateDocument(any(), any())).thenThrow(new IOException("failed to store"));
+
+      Storable storable = new Storable("Some other text");
+      assertThrows(SearchEngineException.class, () -> index.store(ONE, null, storable));
+    }
+
+    @Test
+    void shouldThrowSearchEngineExceptionOnDeleteById() throws IOException {
+      when(writer.deleteDocuments(any(Term.class))).thenThrow(new IOException("failed to delete"));
+
+      Index.Deleter deleter = index.delete();
+      assertThrows(SearchEngineException.class, () -> deleter.byId(ONE));
+    }
+
+    @Test
+    void shouldThrowSearchEngineExceptionOnDeleteAll() throws IOException {
+      when(writer.deleteAll()).thenThrow(new IOException("failed to delete"));
+
+      Index.Deleter deleter = index.delete();
+      assertThrows(SearchEngineException.class, deleter::all);
+    }
+
+    @Test
+    void shouldThrowSearchEngineExceptionOnDeleteByRepository() throws IOException {
+      when(writer.deleteDocuments(any(Term.class))).thenThrow(new IOException("failed to delete"));
+
+      Index.Deleter deleter = index.delete();
+      assertThrows(SearchEngineException.class, () -> deleter.byRepository("42"));
+    }
+
+    @Test
+    void shouldThrowSearchEngineExceptionOnClose() throws IOException {
+      doThrow(new IOException("failed to delete")).when(writer).close();
+      assertThrows(SearchEngineException.class, () -> index.close());
+    }
+
   }
 
   @CanIgnoreReturnValue
@@ -272,27 +247,30 @@ class LuceneIndexTest {
     }
   }
 
-  private <T> LuceneIndex<T> createIndex(Class<T> type) throws IOException {
-    SearchableTypeResolver resolver = new SearchableTypeResolver(type);
-    return new LuceneIndex<>(resolver.resolve(type), createWriter());
+  private <T> LuceneIndex<T> createIndex(Class<T> type) {
+    return createIndex(type, this::createWriter);
   }
 
-  private IndexWriter createWriter() throws IOException {
+  private <T> LuceneIndex<T> createIndex(Class<T> type, Supplier<IndexWriter> writerFactor) {
+    SearchableTypeResolver resolver = new SearchableTypeResolver(type);
+    return new LuceneIndex<>(
+      new IndexParams("default", resolver.resolve(type), IndexOptions.defaults()), writerFactor
+    );
+  }
+
+  private IndexWriter createWriter() {
     IndexWriterConfig config = new IndexWriterConfig(new StandardAnalyzer());
     config.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
-    return new IndexWriter(directory, config);
+    try {
+      return new IndexWriter(directory, config);
+    } catch (IOException ex) {
+      throw new SearchEngineException("failed to open index writer", ex);
+    }
   }
 
   @Value
   @IndexedType
   private static class Storable {
-    @Indexed
-    String value;
-  }
-
-  @Value
-  @IndexedType
-  private static class OtherStorable {
     @Indexed
     String value;
   }

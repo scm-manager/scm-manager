@@ -24,54 +24,71 @@
 
 package sonia.scm.search;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.search.BooleanClause;
-import org.apache.lucene.search.BooleanQuery;
-import org.apache.lucene.search.TermQuery;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
+import java.util.function.Supplier;
 
 import static sonia.scm.search.FieldNames.ID;
 import static sonia.scm.search.FieldNames.PERMISSION;
 import static sonia.scm.search.FieldNames.REPOSITORY;
-import static sonia.scm.search.FieldNames.TYPE;
-import static sonia.scm.search.FieldNames.UID;
 
-class LuceneIndex<T> implements Index<T> {
+class LuceneIndex<T> implements Index<T>, AutoCloseable {
 
+  private static final Logger LOG = LoggerFactory.getLogger(LuceneIndex.class);
+
+  private final IndexDetails details;
   private final LuceneSearchableType searchableType;
-  private final IndexWriter writer;
+  private final SharableIndexWriter writer;
 
-  LuceneIndex(LuceneSearchableType searchableType, IndexWriter writer) {
-    this.searchableType = searchableType;
-    this.writer = writer;
+  LuceneIndex(IndexParams params, Supplier<IndexWriter> writerFactory) {
+    this.details = params;
+    this.searchableType = params.getSearchableType();
+    this.writer = new SharableIndexWriter(writerFactory);
+    this.open();
+  }
+
+  void open() {
+    writer.open();
+  }
+
+  @VisibleForTesting
+  SharableIndexWriter getWriter() {
+    return writer;
+  }
+
+  @Override
+  public IndexDetails getDetails() {
+    return details;
   }
 
   @Override
   public void store(Id id, String permission, Object object) {
-    String uid = createUid(id, searchableType);
     Document document = searchableType.getTypeConverter().convert(object);
     try {
-      field(document, UID, uid);
-      field(document, ID, id.getValue());
+      field(document, ID, id.asString());
       id.getRepository().ifPresent(repository -> field(document, REPOSITORY, repository));
-      field(document, TYPE, searchableType.getName());
       if (!Strings.isNullOrEmpty(permission)) {
         field(document, PERMISSION, permission);
       }
-      writer.updateDocument(new Term(UID, uid), document);
+      writer.updateDocument(idTerm(id), document);
     } catch (IOException e) {
       throw new SearchEngineException("failed to add document to index", e);
     }
   }
 
-  private String createUid(Id id, LuceneSearchableType type) {
-    return id.asString() + "/" + type.getName();
+  @Nonnull
+  private Term idTerm(Id id) {
+    return new Term(ID, id.asString());
   }
 
   private void field(Document document, String type, String name) {
@@ -95,23 +112,10 @@ class LuceneIndex<T> implements Index<T> {
   private class LuceneDeleter implements Deleter {
 
     @Override
-    public ByTypeDeleter byType() {
-      return new LuceneByTypeDeleter();
-    }
-
-    @Override
-    public AllTypesDeleter allTypes() {
-      return new LuceneAllTypesDelete();
-    }
-  }
-
-  @SuppressWarnings("java:S1192")
-  private class LuceneByTypeDeleter implements ByTypeDeleter {
-
-    @Override
     public void byId(Id id) {
       try {
-        writer.deleteDocuments(new Term(UID, createUid(id, searchableType)));
+        long count = writer.deleteDocuments(idTerm(id));
+        LOG.debug("delete {} document(s) by id {} from index {}", count, id, details);
       } catch (IOException e) {
         throw new SearchEngineException("failed to delete document from index", e);
       }
@@ -120,7 +124,8 @@ class LuceneIndex<T> implements Index<T> {
     @Override
     public void all() {
       try {
-        writer.deleteDocuments(new Term(TYPE, searchableType.getName()));
+        long count = writer.deleteAll();
+        LOG.debug("deleted all {} documents from index {}", count, details);
       } catch (IOException ex) {
         throw new SearchEngineException("failed to delete documents by type " + searchableType.getName() + " from index", ex);
       }
@@ -129,35 +134,16 @@ class LuceneIndex<T> implements Index<T> {
     @Override
     public void byRepository(String repositoryId) {
       try {
-        BooleanQuery query = new BooleanQuery.Builder()
-          .add(new TermQuery(new Term(TYPE, searchableType.getName())), BooleanClause.Occur.MUST)
-          .add(new TermQuery(new Term(REPOSITORY, repositoryId)), BooleanClause.Occur.MUST)
-          .build();
-        writer.deleteDocuments(query);
+        long count = writer.deleteDocuments(repositoryTerm(repositoryId));
+        LOG.debug("deleted {} documents by repository {} from index {}", count, repositoryId, details);
       } catch (IOException ex) {
         throw new SearchEngineException("failed to delete documents by repository " + repositoryId + " from index", ex);
       }
     }
-  }
 
-  private class LuceneAllTypesDelete implements AllTypesDeleter {
-
-    @Override
-    public void byRepository(String repositoryId) {
-      try {
-        writer.deleteDocuments(new Term(REPOSITORY, repositoryId));
-      } catch (IOException ex) {
-        throw new SearchEngineException("failed to delete all documents by repository " + repositoryId + " from index", ex);
-      }
-    }
-
-    @Override
-    public void byTypeName(String typeName) {
-      try {
-        writer.deleteDocuments(new Term(TYPE, typeName));
-      } catch (IOException ex) {
-        throw new SearchEngineException("failed to delete documents by type " + typeName + " from index", ex);
-      }
+    @Nonnull
+    private Term repositoryTerm(String repositoryId) {
+      return new Term(REPOSITORY, repositoryId);
     }
   }
 }

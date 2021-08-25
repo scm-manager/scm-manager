@@ -181,6 +181,22 @@ class HttpURLConnectionFactoryTest {
     }
 
     @Test
+    void shouldUseGlobalProxyConfigurationIfLocalOneIsDisabled() throws IOException {
+      configuration.setProxyServer("proxy.hitchhiker.com");
+      configuration.setProxyPort(3128);
+      configuration.setEnableProxy(true);
+
+      ScmConfiguration localProxyConf = new ScmConfiguration();
+      localProxyConf.setEnableProxy(false);
+      localProxyConf.setProxyServer("prox.hitchhiker.net");
+      localProxyConf.setProxyPort(3127);
+
+      connectionFactory.create(new URL("https://hitchhiker.org"), new HttpConnectionOptions().withProxyConfiguration(new GlobalProxyConfiguration(localProxyConf)));
+
+      assertUsedProxy("proxy.hitchhiker.com", 3128);
+    }
+
+    @Test
     void shouldCreateProxyConnection() throws IOException {
       configuration.setEnableProxy(true);
       configuration.setProxyServer("proxy.hitchhiker.com");
@@ -340,7 +356,6 @@ class HttpURLConnectionFactoryTest {
 
       return captor.getValue();
     }
-
 
     private void assertUsedProxy(String host, int port) {
       assertThat(usedProxy).isNotNull();

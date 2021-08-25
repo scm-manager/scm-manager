@@ -22,11 +22,26 @@
  * SOFTWARE.
  */
 
-package sonia.scm.search;
+package sonia.scm.work;
 
-@FunctionalInterface
-public interface IndexQueueTask<T> {
+import com.google.inject.Injector;
+import lombok.EqualsAndHashCode;
+import org.apache.shiro.subject.PrincipalCollection;
 
-  void updateIndex(Index<T> index);
+import java.util.Set;
 
+@EqualsAndHashCode(callSuper = true)
+class InjectingUnitOfWork extends UnitOfWork {
+
+  private final Class<? extends Runnable> task;
+
+  InjectingUnitOfWork(long order, PrincipalCollection principal, Set<Resource> locks, Class<? extends Runnable> task) {
+    super(order, principal, locks);
+    this.task = task;
+  }
+
+  @Override
+  protected Runnable task(Injector injector) {
+    return injector.getInstance(task);
+  }
 }

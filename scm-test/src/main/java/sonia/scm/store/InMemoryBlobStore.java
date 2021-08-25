@@ -24,6 +24,8 @@
 
 package sonia.scm.store;
 
+import com.google.common.collect.ImmutableList;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -59,7 +61,7 @@ public class InMemoryBlobStore implements BlobStore {
 
   @Override
   public List<Blob> getAll() {
-    return blobs;
+    return ImmutableList.copyOf(blobs);
   }
 
   @Override

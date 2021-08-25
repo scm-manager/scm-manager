@@ -21,10 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web.security;
 
-final class AdministrationContextMarker {
+import java.io.Serializable;
+
+final class AdministrationContextMarker implements Serializable {
 
   static final AdministrationContextMarker MARKER = new AdministrationContextMarker();
 

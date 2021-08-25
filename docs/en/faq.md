@@ -4,8 +4,8 @@ title: Frequently Asked Questions
 
 ### What are the username and the password in the default installation?
 
-Username: `scmadmin`\
-Password: `scmadmin`
+On first startup, you have to create the initial administration user.
+Learn more at [first startup](../first-startup/).
 
 ### Where does SCM-Manager store its configuration, data and repositories?
 
@@ -43,4 +43,4 @@ Find the plugin you like to install at [plugins](/plugins#categories) and follow
 
 ### How can I import my existing (git|mercurial|subversion) repository
 
-Please have a look on [these](../import/) detailed instructions.
+Please have a look on [these detailed instructions](../import/).

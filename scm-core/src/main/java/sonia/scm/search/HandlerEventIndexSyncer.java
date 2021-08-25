@@ -24,6 +24,7 @@
 
 package sonia.scm.search;
 
+import com.google.common.annotations.Beta;
 import sonia.scm.HandlerEventType;
 import sonia.scm.event.HandlerEvent;
 
@@ -33,11 +34,14 @@ import sonia.scm.event.HandlerEvent;
  * @param <T> type of indexed item
  * @since 2.22.0
  */
+@Beta
 public final class HandlerEventIndexSyncer<T> {
 
+  private final SearchEngine searchEngine;
   private final Indexer<T> indexer;
 
-  public HandlerEventIndexSyncer(Indexer<T> indexer) {
+  public HandlerEventIndexSyncer(SearchEngine searchEngine, Indexer<T> indexer) {
+    this.searchEngine = searchEngine;
     this.indexer = indexer;
   }
 
@@ -49,17 +53,16 @@ public final class HandlerEventIndexSyncer<T> {
   public void handleEvent(HandlerEvent<T> event) {
     HandlerEventType type = event.getEventType();
     if (type.isPost()) {
-      updateIndex(type, event.getItem());
+      SerializableIndexTask<T> task = createTask(type, event.getItem());
+      searchEngine.forType(indexer.getType()).update(task);
     }
   }
 
-  private void updateIndex(HandlerEventType type, T item) {
-    try (Indexer.Updater<T> updater = indexer.open()) {
-      if (type == HandlerEventType.DELETE) {
-        updater.delete(item);
-      } else {
-        updater.store(item);
-      }
+  private SerializableIndexTask<T> createTask(HandlerEventType type, T item) {
+    if (type == HandlerEventType.DELETE) {
+      return indexer.createDeleteTask(item);
+    } else {
+      return indexer.createStoreTask(item);
     }
   }
 
