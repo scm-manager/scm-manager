@@ -24,7 +24,6 @@
 import React, { FC } from "react";
 import { File } from "@scm-manager/ui-types";
 import { ErrorNotification, Loading, MarkdownView } from "@scm-manager/ui-components";
-import styled from "styled-components";
 import replaceBranchWithRevision from "../../ReplaceBranchWithRevision";
 import { useLocation } from "react-router-dom";
 import { useFileContent } from "@scm-manager/ui-api";
@@ -33,10 +32,6 @@ type Props = {
   file: File;
   basePath: string;
 };
-
-const MarkdownContent = styled.div`
-  padding: 0.5rem;
-`;
 
 const MarkdownViewer: FC<Props> = ({ file, basePath }) => {
   const { isLoading, error, data: content } = useFileContent(file);
@@ -53,9 +48,9 @@ const MarkdownViewer: FC<Props> = ({ file, basePath }) => {
   const permalink = replaceBranchWithRevision(location.pathname, file.revision);
 
   return (
-    <MarkdownContent>
+    <div className="p-2">
       <MarkdownView content={content} basePath={basePath} permalink={permalink} enableAnchorHeadings={true} />
-    </MarkdownContent>
+    </div>
   );
 };
 

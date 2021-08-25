@@ -24,8 +24,8 @@
 import React from "react";
 import classNames from "classnames";
 import styled from "styled-components";
-import PermissionCheckbox from "./PermissionCheckbox";
 import { Loading } from "@scm-manager/ui-components";
+import PermissionCheckbox from "./PermissionCheckbox";
 
 type Props = {
   permissions: {
@@ -37,8 +37,6 @@ type Props = {
 };
 
 const StyledWrapper = styled.div`
-  padding-bottom: 0;
-
   & .field .control {
     width: 100%;
     word-wrap: break-word;
@@ -56,7 +54,7 @@ export default class PermissionsWrapper extends React.Component<Props> {
     const permissionArray = Object.keys(permissions);
     return (
       <div className="columns">
-        <StyledWrapper className={classNames("column", "is-half")}>
+        <StyledWrapper className={classNames("column", "is-half", "pb-0")}>
           {permissionArray.slice(0, permissionArray.length / 2 + 1).map(p => (
             <PermissionCheckbox
               key={p}

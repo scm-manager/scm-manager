@@ -22,16 +22,12 @@
  * SOFTWARE.
  */
 import React, { FC, ReactNode } from "react";
+import classNames from "classnames";
 import styled from "styled-components";
 
 type Props = {
   title: ReactNode;
 };
-
-const Title = styled.div`
-  font-weight: bold;
-  margin-bottom: 0.5rem;
-`;
 
 const Menu = styled.ul`
   padding-left: 1.1rem;
@@ -39,8 +35,8 @@ const Menu = styled.ul`
 
 const FooterSection: FC<Props> = ({ title, children }) => {
   return (
-    <section className="column is-one-third">
-      <Title>{title}</Title>
+    <section className={classNames("column", "is-one-third")}>
+      <div className={classNames("has-text-weight-bold", "mb-2")}>{title}</div>
       <Menu>{children}</Menu>
     </section>
   );

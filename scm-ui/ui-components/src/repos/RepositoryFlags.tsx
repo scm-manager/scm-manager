@@ -21,26 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 import React, { FC, useState } from "react";
-import RepositoryFlag from "./RepositoryFlag";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
-import { Repository } from "@scm-manager/ui-types";
 import { useTranslation } from "react-i18next";
+import classNames from "classnames";
 import styled from "styled-components";
-import HealthCheckFailureDetail from "./HealthCheckFailureDetail";
+import { Repository } from "@scm-manager/ui-types";
+import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import { TooltipLocation } from "../Tooltip";
+import RepositoryFlag from "./RepositoryFlag";
+import HealthCheckFailureDetail from "./HealthCheckFailureDetail";
 
 type Props = {
   repository: Repository;
   className?: string;
   tooltipLocation?: TooltipLocation;
 };
-
-const Wrapper = styled.span`
-  display: flex;
-  align-items: center;
-`;
 
 const RepositoryFlagContainer = styled.div`
   .tag {
@@ -91,13 +86,13 @@ const RepositoryFlags: FC<Props> = ({ repository, className, tooltipLocation = "
   );
 
   return (
-    <Wrapper>
+    <span className={classNames("is-flex", "is-align-items-center", className)}>
       {modal}
       <RepositoryFlagContainer>
         {repositoryFlags}
         <ExtensionPoint name="repository.flags" props={{ repository, tooltipLocation }} renderAll={true} />
       </RepositoryFlagContainer>
-    </Wrapper>
+    </span>
   );
 };
 

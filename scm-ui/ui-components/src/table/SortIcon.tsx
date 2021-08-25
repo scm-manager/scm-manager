@@ -32,11 +32,10 @@ type Props = {
 
 const IconWithMarginLeft = styled(Icon)`
   visibility: ${(props: Props) => (props.isVisible ? "visible" : "hidden")};
-  margin-left: 0.25em;
 `;
 
 const SortIcon: FC<Props> = (props: Props) => {
-  return <IconWithMarginLeft name={props.name} isVisible={props.isVisible} />;
+  return <IconWithMarginLeft className="ml-1" name={props.name} isVisible={props.isVisible} />;
 };
 
 export default SortIcon;

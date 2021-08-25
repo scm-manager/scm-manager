@@ -21,18 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 import React, { FC, ReactNode } from "react";
 import { Link } from "react-router-dom";
+import classNames from "classnames";
 import styled from "styled-components";
 
 const StyledGroupEntry = styled.div`
   max-height: calc(90px - 1.5rem);
   width: 100%;
-  display: flex;
-  justify-content: space-between;
-  padding: 0.5rem;
-  align-items: center;
   pointer-events: all;
 `;
 
@@ -49,7 +45,6 @@ const OverlayLink = styled(Link)`
 `;
 
 const Avatar = styled.div`
-  padding-right: 1rem;
   .predefined-avatar {
     height: 48px;
     width: 48px;
@@ -57,12 +52,7 @@ const Avatar = styled.div`
   }
 `;
 
-const Name = styled.div`
-  padding: 0 0.25rem;
-`;
-
 const Description = styled.p`
-  padding: 0 0.25rem;
   height: 1.5rem;
   text-overflow: ellipsis;
   overflow-x: hidden;
@@ -72,28 +62,19 @@ const Description = styled.p`
 `;
 
 const ContentLeft = styled.div`
-  display: flex;
   flex: 1 1 auto;
-  align-items: center;
   min-width: 0;
 `;
 
 const ContentRight = styled.div`
-  display: flex;
   flex: 0 0 auto;
-  justify-content: flex-end;
   pointer-events: all;
-  padding-left: 2rem;
   margin-bottom: -10px;
 `;
 
 const NameDescriptionWrapper = styled.div`
   overflow: hidden;
   flex: 1 1 auto;
-`;
-
-const Wrapper = styled.div`
-  position: relative;
 `;
 
 type Props = {
@@ -107,19 +88,24 @@ type Props = {
 
 const GroupEntry: FC<Props> = ({ link, avatar, title, name, description, contentRight }) => {
   return (
-    <Wrapper>
+    <div className="is-relative">
       <OverlayLink to={link} />
-      <StyledGroupEntry title={title}>
-        <ContentLeft>
-          <Avatar>{avatar}</Avatar>
+      <StyledGroupEntry
+        className={classNames("is-flex", "is-justify-content-space-between", "is-align-items-center", "p-2")}
+        title={title}
+      >
+        <ContentLeft className={classNames("is-flex", "is-align-items-center")}>
+          <Avatar className="mr-4">{avatar}</Avatar>
           <NameDescriptionWrapper>
-            <Name>{name}</Name>
-            <Description>{description}</Description>
+            <div className="mx-1">{name}</div>
+            <Description className="mx-1">{description}</Description>
           </NameDescriptionWrapper>
         </ContentLeft>
-        <ContentRight className="is-hidden-touch">{contentRight}</ContentRight>
+        <ContentRight className={classNames("is-hidden-touch", "is-flex", "is-justify-content-flex-end", "pl-5")}>
+          {contentRight}
+        </ContentRight>
       </StyledGroupEntry>
-    </Wrapper>
+    </div>
   );
 };
 

@@ -34,17 +34,12 @@ type Props = WithTranslation & {
 };
 
 const FixedSizedIconWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
   width: 160px;
   height: 160px;
 `;
 
 const ContentWrapper = styled.div`
   min-height: 10.5rem;
-  margin-left: 1.5em;
 `;
 
 class InfoBox extends React.Component<Props> {
@@ -54,7 +49,7 @@ class InfoBox extends React.Component<Props> {
     const summary = item ? item.summary : t("login.loading");
 
     return (
-      <ContentWrapper className={classNames("media-content", "content")}>
+      <ContentWrapper className={classNames("media-content", "content", "ml-5")}>
         <h4 className="has-text-link">{title}</h4>
         <p>{summary}</p>
       </ContentWrapper>
@@ -69,7 +64,17 @@ class InfoBox extends React.Component<Props> {
         <div className="box media">
           <figure className="media-left">
             <FixedSizedIconWrapper
-              className={classNames("image", "box", "has-text-weight-bold", "has-text-white", "has-background-info")}
+              className={classNames(
+                "image",
+                "box",
+                "has-text-weight-bold",
+                "has-text-white",
+                "has-background-info",
+                "is-flex",
+                "is-flex-direction-column",
+                "is-justify-content-center",
+                "is-align-items-center"
+              )}
             >
               <Icon className="has-text-blue-light mb-2 fa-2x" name={icon} color="inherit" />
               <div className="is-size-4">{t("login." + type)}</div>

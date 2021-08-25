@@ -21,37 +21,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 import React from "react";
+import { Icon } from "@scm-manager/ui-components";
 import { storiesOf } from "@storybook/react";
 import SplitAndReplace from "./SplitAndReplace";
-import { Icon } from "@scm-manager/ui-components";
-import styled from "styled-components";
-
-const Wrapper = styled.div`
-  margin: 2rem;
-`;
 
 storiesOf("SplitAndReplace", module).add("Simple replacement", () => {
   const replacements = [
     {
       textToReplace: "'",
       replacement: <Icon name={"quote-left"} />,
-      replaceAll: true
+      replaceAll: true,
     },
     {
       textToReplace: "`",
       replacement: <Icon name={"quote-right"} />,
-      replaceAll: true
-    }
+      replaceAll: true,
+    },
   ];
   return (
     <>
-      <Wrapper>
+      <div className="m-6">
         <SplitAndReplace text={"'So this is it,` said Arthur, 'We are going to die.`"} replacements={replacements} />
-      </Wrapper>
-      <Wrapper>
+      </div>
+      <div className="m-6">
         <SplitAndReplace text={"'Yes,` said Ford, 'except... no! Wait a minute!`"} replacements={replacements} />
-      </Wrapper>
+      </div>
     </>
   );
 });

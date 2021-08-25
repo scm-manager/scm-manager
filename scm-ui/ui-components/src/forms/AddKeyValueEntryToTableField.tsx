@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 import React, { FC, useState } from "react";
 import styled from "styled-components";
 import InputField from "./InputField";
@@ -39,8 +38,7 @@ type Props = {
   validateEntry?: (p: string) => boolean;
 };
 
-const StyledInputField = styled(InputField)`
-  margin-right: 1.5rem;
+const FullWidthInputField = styled(InputField)`
   width: 100%;
 `;
 
@@ -78,7 +76,8 @@ const AddKeyValueEntryToTableField: FC<Props> = ({
 
   return (
     <div className="is-flex is-justify-content-space-between">
-      <StyledInputField
+      <FullWidthInputField
+        className="mr-5"
         label={keyFieldLabel}
         errorMessage={errorMessage}
         onChange={setKey}
@@ -88,7 +87,8 @@ const AddKeyValueEntryToTableField: FC<Props> = ({
         disabled={disabled}
         helpText={keyHelpText}
       />
-      <StyledInputField
+      <FullWidthInputField
+        className="mr-5"
         label={valueFieldLabel}
         errorMessage={errorMessage}
         onChange={setValue}

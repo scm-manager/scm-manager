@@ -27,16 +27,8 @@ import styled from "styled-components";
 import { ErrorNotification, Image, Loading, Subtitle, Title } from "@scm-manager/ui-components";
 import { useUpdateInfo, useVersion } from "@scm-manager/ui-api";
 
-const BottomMarginDiv = styled.div`
-  margin-bottom: 1.5rem;
-`;
-
 const BoxShadowBox = styled.div`
   box-shadow: 0 2px 3px rgba(40, 177, 232, 0.1), 0 0 0 2px rgba(40, 177, 232, 0.2);
-`;
-
-const NoBottomMarginSubtitle = styled(Subtitle)`
-  margin-bottom: 0.25rem !important;
 `;
 
 const ImageWrapper = styled.div`
@@ -68,7 +60,7 @@ const AdminDetails: FC = () => {
               <h3 className="has-text-weight-medium">{t("admin.info.newRelease.title")}</h3>
               <p>
                 {t("admin.info.newRelease.description", {
-                  version: updateInfo?.latestVersion
+                  version: updateInfo?.latestVersion,
                 })}
               </p>
               <a className="button is-warning is-pulled-right" target="_blank" href={updateInfo?.link}>
@@ -85,8 +77,8 @@ const AdminDetails: FC = () => {
   return (
     <>
       <Title title={t("admin.info.title")} />
-      <NoBottomMarginSubtitle subtitle={t("admin.info.currentAppVersion")} />
-      <BottomMarginDiv>{version}</BottomMarginDiv>
+      <Subtitle className="mb-1" subtitle={t("admin.info.currentAppVersion")} />
+      <div className="mb-5">{version}</div>
       {updateInfo ? renderUpdateInfo() : null}
       <BoxShadowBox className="box">
         <article className="media">

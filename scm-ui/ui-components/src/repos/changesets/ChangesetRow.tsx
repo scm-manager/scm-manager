@@ -52,37 +52,13 @@ const Wrapper = styled.div`
   }
 `;
 
-const AvatarFigure = styled.figure`
-  margin-top: 0.5rem;
-  margin-right: 0.5rem;
-`;
-
 const FixedSizedAvatar = styled.div`
   width: 35px;
   height: 35px;
 `;
 
-const Metadata = styled.div`
-  margin-left: 0;
+const FullWidthDiv = styled.div`
   width: 100%;
-`;
-
-const AuthorWrapper = styled.p`
-  margin-top: 0.5rem;
-`;
-
-const VCenteredColumn = styled.div`
-  align-self: center;
-`;
-
-const VCenteredChildColumn = styled.div`
-  align-items: center;
-  justify-content: flex-end;
-`;
-
-const FlexRow = styled.div`
-  display: flex;
-  flex-direction: row;
 `;
 
 class ChangesetRow extends React.Component<Props> {
@@ -99,25 +75,25 @@ class ChangesetRow extends React.Component<Props> {
 
     return (
       <Wrapper>
-        <div className="columns is-gapless is-mobile">
-          <div className="column is-three-fifths">
-            <div className="columns is-gapless">
-              <div className="column is-four-fifths">
+        <div className={classNames("columns", "is-gapless", "is-mobile")}>
+          <div className={classNames("column", "is-three-fifths")}>
+            <div className={classNames("columns", "is-gapless")}>
+              <div className={classNames("column", "is-four-fifths")}>
                 <div className="media">
                   <AvatarWrapper>
-                    <AvatarFigure className="media-left">
+                    <figure className={classNames("media-left", "mt-2", "mr-2")}>
                       <FixedSizedAvatar className="image">
                         <AvatarImage person={changeset.author} />
                       </FixedSizedAvatar>
-                    </AvatarFigure>
+                    </figure>
                   </AvatarWrapper>
-                  <Metadata className="media-right">
-                    <h4 className="has-text-weight-bold is-ellipsis-overflow">
+                  <FullWidthDiv className={classNames("media-right", "ml-0")}>
+                    <h4 className={classNames("has-text-weight-bold", "is-ellipsis-overflow")}>
                       <ExtensionPoint
                         name="changeset.description"
                         props={{
                           changeset,
-                          value: description.title
+                          value: description.title,
                         }}
                         renderAll={false}
                       >
@@ -130,36 +106,33 @@ class ChangesetRow extends React.Component<Props> {
                     <p className="is-hidden-desktop">
                       <Trans i18nKey="repos:changeset.shortSummary" components={[changesetId, dateFromNow]} />
                     </p>
-                    <FlexRow>
-                      <AuthorWrapper className="is-size-7 is-ellipsis-overflow">
+                    <div className={classNames("is-flex", "is-flex-direction-row")}>
+                      <p className={classNames("is-size-7", "is-ellipsis-overflow", "mt-2")}>
                         <ChangesetAuthor changeset={changeset} />
-                      </AuthorWrapper>
+                      </p>
                       {changeset?.signatures && changeset.signatures.length > 0 && (
-                        <SignatureIcon
-                          className="mx-2 pt-1"
-                          signatures={changeset.signatures}
-                        />
+                        <SignatureIcon className={classNames("mx-2", "pt-1")} signatures={changeset.signatures} />
                       )}
-                    </FlexRow>
-                  </Metadata>
+                    </div>
+                  </FullWidthDiv>
                 </div>
               </div>
-              <VCenteredColumn className="column">
+              <div className={classNames("column", "is-align-self-center")}>
                 <ChangesetTags changeset={changeset} />
-              </VCenteredColumn>
+              </div>
             </div>
           </div>
-          <VCenteredChildColumn className={classNames("column", "is-flex")}>
+          <div className={classNames("column", "is-flex", "is-justify-content-flex-end", "is-align-items-center")}>
             <ChangesetButtonGroup repository={repository} changeset={changeset} />
             <ExtensionPoint
               name="changeset.right"
               props={{
                 repository,
-                changeset
+                changeset,
               }}
               renderAll={true}
             />
-          </VCenteredChildColumn>
+          </div>
         </div>
       </Wrapper>
     );

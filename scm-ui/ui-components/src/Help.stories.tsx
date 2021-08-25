@@ -21,19 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-import styled from "styled-components";
 import * as React from "react";
 import { storiesOf } from "@storybook/react";
 import Help from "./Help";
-
-const Wrapper = styled.div`
-  margin: 5rem;
-`;
-
-const Spacing = styled.div`
-  margin-top: 1rem;
-`;
 
 const longContent =
   "Cleverness nuclear genuine static irresponsibility invited President Zaphod\n" +
@@ -42,17 +32,17 @@ const longContent =
   "imaginative generator sweep.";
 
 storiesOf("Help", module)
-  .addDecorator(storyFn => <Wrapper>{storyFn()}</Wrapper>)
+  .addDecorator((storyFn) => <div className="m-6">{storyFn()}</div>)
   .add("Default", () => <Help message="This is a help message" />)
   .add("Multiline", () => (
     <>
-      <Spacing>
+      <div className="mt-4">
         <label>With multiline (default):</label>
         <Help message={longContent} />
-      </Spacing>
-      <Spacing>
+      </div>
+      <div className="mt-4">
         <label>Without multiline:</label>
         <Help message={longContent} multiline={false} />
-      </Spacing>
+      </div>
     </>
   ));

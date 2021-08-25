@@ -24,9 +24,7 @@
 import React, { FC } from "react";
 import styled from "styled-components";
 
-const Buttons = styled.div`
-  display: flex;
-  padding-top: 0.5rem;
+const FullWidthDiv = styled.div`
   width: 100%;
 
   & > * {
@@ -38,6 +36,6 @@ const Buttons = styled.div`
   }
 `;
 
-const ToastButtons: FC = ({ children }) => <Buttons>{children}</Buttons>;
+const ToastButtons: FC = ({ children }) => <FullWidthDiv className="is-flex pt-2">{children}</FullWidthDiv>;
 
 export default ToastButtons;

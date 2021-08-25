@@ -44,12 +44,6 @@ const NoEventWrapper = styled.article`
   z-index: 1;
 `;
 
-const FlexFullHeight = styled.div`
-  flex-direction: column;
-  justify-content: space-around;
-  align-self: stretch;
-`;
-
 const InheritFlexShrinkDiv = styled.div`
   flex-shrink: inherit;
   pointer-events: all;
@@ -91,7 +85,16 @@ const CardColumn: FC<Props> = ({
       {createLink}
       <NoEventWrapper className={classNames("media", className)}>
         {renderAvatar}
-        <FlexFullHeight className={classNames("media-content", "text-box", "is-flex")}>
+        <div
+          className={classNames(
+            "media-content",
+            "text-box",
+            "is-flex",
+            "is-flex-direction-column",
+            "is-justify-content-space-around",
+            "is-align-self-stretch"
+          )}
+        >
           <div className="is-flex">
             <div className="is-clipped mb-0">
               <p className="shorten-text m-0">{title}</p>
@@ -105,7 +108,7 @@ const CardColumn: FC<Props> = ({
               {footerRight}
             </InheritFlexShrinkDiv>
           </div>
-        </FlexFullHeight>
+        </div>
       </NoEventWrapper>
     </>
   );

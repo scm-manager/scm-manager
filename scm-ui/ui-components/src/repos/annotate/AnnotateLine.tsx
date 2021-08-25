@@ -28,10 +28,9 @@ import DateShort from "../../DateShort";
 import { Action } from "./actions";
 import { AnnotatedLine } from "@scm-manager/ui-types";
 
-const LineElement = styled.div`
-  display: inline-block;
-  margin: 0;
-  padding: 0;
+const LineElement = styled.div.attrs((props) => ({
+  className: "is-inline-block m-0 p-0",
+}))`
   height: 100%;
   vertical-align: top;
 `;
@@ -44,8 +43,6 @@ const Author = styled(LineElement)`
 `;
 
 const When = styled(LineElement)`
-  display: inline-block;
-
   width: 6.5em;
   overflow: hidden;
   text-overflow: ellipsis;

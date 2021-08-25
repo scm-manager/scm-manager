@@ -22,14 +22,15 @@
  * SOFTWARE.
  */
 import React, { FC, useEffect, useState } from "react";
-import { Branch, Repository } from "@scm-manager/ui-types";
 import { Link, useHistory, useLocation, useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import classNames from "classnames";
+import styled from "styled-components";
+import { Branch, Repository } from "@scm-manager/ui-types";
 import { urls, usePaths } from "@scm-manager/ui-api";
 import { ErrorNotification, FilterInput, Help, Icon, Loading } from "@scm-manager/ui-components";
 import CodeActionBar from "../components/CodeActionBar";
-import styled from "styled-components";
 import FileSearchResults from "../components/FileSearchResults";
-import { useTranslation } from "react-i18next";
 import { filepathSearch } from "../utils/filepathSearch";
 
 type Props = {
@@ -43,17 +44,8 @@ type Params = {
   revision: string;
 };
 
-const InputContainer = styled.div`
-  padding: 1rem 1.75rem 0 1.75rem;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-`;
-
 const HomeLink = styled(Link)`
   border-right: 1px solid lightgray;
-  margin-right: 0.75rem;
-  padding-right: 0.75em;
 `;
 
 const HomeIcon = styled(Icon)`
@@ -109,8 +101,18 @@ const FileSearch: FC<Props> = ({ repository, baseUrl, branches, selectedBranch }
         switchViewLink={evaluateSwitchViewLink}
       />
       <div className="panel">
-        <InputContainer>
-          <HomeLink to={contentBaseUrl}>
+        <div
+          className={classNames(
+            "is-flex",
+            "is-justify-content-flex-start",
+            "is-align-items-center",
+            "pt-4",
+            "mx-3",
+            "px-4",
+            "pb-0"
+          )}
+        >
+          <HomeLink className={classNames("mr-3", "pr-3")} to={contentBaseUrl}>
             <HomeIcon title={t("filesearch.home")} name="home" color="inherit" />
           </HomeLink>
           <FilterInput
@@ -121,7 +123,7 @@ const FileSearch: FC<Props> = ({ repository, baseUrl, branches, selectedBranch }
             autoFocus={true}
           />
           <Help className="ml-3" message={t("filesearch.input.help")} />
-        </InputContainer>
+        </div>
         <ErrorNotification error={error} />
         {isLoading ? <Loading /> : <FileSearchResults contentBaseUrl={contentBaseUrl} query={query} paths={result} />}
       </div>

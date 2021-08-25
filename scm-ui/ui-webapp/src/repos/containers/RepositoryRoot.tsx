@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 import React, { useState } from "react";
-import { Link as RouteLink, match, Redirect, Route, Switch, useRouteMatch } from "react-router-dom";
+import { Link as RouteLink, Redirect, Route, Switch, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
 import { Changeset, Link } from "@scm-manager/ui-types";
@@ -61,7 +61,6 @@ import { useIndexLinks, useRepository } from "@scm-manager/ui-api";
 import styled from "styled-components";
 
 const TagGroup = styled.span`
-  font-weight: bold;
   & > * {
     margin-right: 0.25rem;
   }
@@ -220,7 +219,7 @@ const RepositoryRoot = () => {
         afterTitle={
           <div className="is-flex">
             <ExtensionPoint name={"repository.afterTitle"} props={{ repository }} />
-            <TagGroup>
+            <TagGroup className="has-text-weight-bold">
               <RepositoryFlags repository={repository} tooltipLocation="bottom" />
             </TagGroup>
           </div>

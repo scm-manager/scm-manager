@@ -21,12 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 import React, { FC, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { RepositoryUrlImport } from "@scm-manager/ui-types";
 import { InputField, validation } from "@scm-manager/ui-components";
-import { useTranslation } from "react-i18next";
-import styled from "styled-components";
 
 type Props = {
   repository: RepositoryUrlImport;
@@ -34,14 +32,6 @@ type Props = {
   setValid: (valid: boolean) => void;
   disabled?: boolean;
 };
-
-const Column = styled.div`
-  padding: 0 0.75rem;
-`;
-
-const Columns = styled.div`
-  padding: 0.75rem 0 0;
-`;
 
 const ImportFromUrlForm: FC<Props> = ({ repository, onChange, setValid, disabled }) => {
   const [t] = useTranslation("repos");
@@ -65,8 +55,8 @@ const ImportFromUrlForm: FC<Props> = ({ repository, onChange, setValid, disabled
   };
 
   return (
-    <Columns className="columns is-multiline">
-      <Column className="column is-full">
+    <div className="columns is-multiline pt-3">
+      <div className="column is-full px-3">
         <InputField
           label={t("import.importUrl")}
           onChange={handleImportUrlChange}
@@ -77,27 +67,27 @@ const ImportFromUrlForm: FC<Props> = ({ repository, onChange, setValid, disabled
           disabled={disabled}
           onBlur={handleImportUrlBlur}
         />
-      </Column>
-      <Column className="column is-half">
+      </div>
+      <div className="column is-half px-3">
         <InputField
           label={t("import.username")}
-          onChange={username => onChange({ ...repository, username })}
+          onChange={(username) => onChange({ ...repository, username })}
           value={repository.username}
           helpText={t("help.usernameHelpText")}
           disabled={disabled}
         />
-      </Column>
-      <Column className="column is-half">
+      </div>
+      <div className="column is-half px-3">
         <InputField
           label={t("import.password")}
-          onChange={password => onChange({ ...repository, password })}
+          onChange={(password) => onChange({ ...repository, password })}
           value={repository.password}
           type="password"
           helpText={t("help.passwordHelpText")}
           disabled={disabled}
         />
-      </Column>
-    </Columns>
+      </div>
+    </div>
   );
 };
 

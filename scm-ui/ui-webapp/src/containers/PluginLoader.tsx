@@ -22,9 +22,10 @@
  * SOFTWARE.
  */
 import React, { ReactNode } from "react";
+import classNames from "classnames";
+import styled from "styled-components";
 import { apiClient, Loading, ErrorNotification, ErrorBoundary, Icon } from "@scm-manager/ui-components";
 import loadBundle from "./loadBundle";
-import styled from "styled-components";
 
 type Props = {
   loaded: boolean;
@@ -48,23 +49,11 @@ const BigIcon = styled(Icon)`
   font-size: 10rem;
 `;
 
-const Centered = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-`;
-
-const ErrorMessage = styled.span`
-  font-size: 20px;
-  margin: 1.5rem 0;
-`;
-
 class PluginLoader extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      message: "booting"
+      message: "booting",
     };
   }
 
@@ -72,7 +61,7 @@ class PluginLoader extends React.Component<Props, State> {
     const { loaded } = this.props;
     if (!loaded) {
       this.setState({
-        message: "loading plugin information"
+        message: "loading plugin information",
       });
 
       this.getPlugins(this.props.link);
@@ -82,16 +71,16 @@ class PluginLoader extends React.Component<Props, State> {
   getPlugins = (link: string): Promise<any> => {
     return apiClient
       .get(link)
-      .then(response => response.text())
+      .then((response) => response.text())
       .then(JSON.parse)
-      .then(pluginCollection => pluginCollection._embedded.plugins)
+      .then((pluginCollection) => pluginCollection._embedded.plugins)
       .then(this.loadPlugins)
       .then(this.props.callback);
   };
 
   loadPlugins = (plugins: Plugin[]) => {
     this.setState({
-      message: "loading plugins"
+      message: "loading plugins",
     });
 
     const promises = [];
@@ -100,21 +89,21 @@ class PluginLoader extends React.Component<Props, State> {
       promises.push(this.loadPlugin(plugin));
     }
     return promises.reduce((chain, current) => {
-      return chain.then(chainResults => {
-        return current.then(currentResult => [...chainResults, currentResult]);
+      return chain.then((chainResults) => {
+        return current.then((currentResult) => [...chainResults, currentResult]);
       });
     }, Promise.resolve([]));
   };
 
   loadPlugin = (plugin: Plugin) => {
     this.setState({
-      message: `loading ${plugin.name}`
+      message: `loading ${plugin.name}`,
     });
 
     const promises = [];
     for (const bundle of plugin.bundles) {
       promises.push(
-        loadBundle(bundle).catch(error => this.setState({ error, errorMessage: `loading ${plugin.name} failed` }))
+        loadBundle(bundle).catch((error) => this.setState({ error, errorMessage: `loading ${plugin.name} failed` }))
       );
     }
     return Promise.all(promises);
@@ -129,10 +118,17 @@ class PluginLoader extends React.Component<Props, State> {
         <section className="section">
           <div className="container">
             <ErrorBoundary>
-              <Centered>
+              <div
+                className={classNames(
+                  "is-flex",
+                  "is-flex-direction-column",
+                  "is-justify-content-space-between",
+                  "is-align-items-center"
+                )}
+              >
                 <BigIcon name="exclamation-triangle" color="danger" />
-                <ErrorMessage>{errorMessage}</ErrorMessage>
-              </Centered>
+                <div className={classNames("my-5", "is-size-5")}>{errorMessage}</div>
+              </div>
               <ErrorNotification error={error} />
             </ErrorBoundary>
           </div>

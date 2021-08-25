@@ -46,10 +46,6 @@ const LeftOverflowTd = styled.td`
   text-align: left !important;
 `;
 
-const ResultNotification = styled(Notification)`
-  margin: 1rem;
-`;
-
 type PathResultRowProps = {
   contentBaseUrl: string;
   path: string;
@@ -81,7 +77,7 @@ type ResultTableProps = {
 const ResultTable: FC<ResultTableProps> = ({ contentBaseUrl, paths }) => (
   <table className="table table-hover table-sm is-fullwidth">
     <tbody>
-      {paths.map(path => (
+      {paths.map((path) => (
         <PathResultRow contentBaseUrl={contentBaseUrl} path={path} />
       ))}
     </tbody>
@@ -92,13 +88,17 @@ const FileSearchResults: FC<Props> = ({ query, contentBaseUrl, paths = [] }) => 
   const [t] = useTranslation("repos");
   let body;
   if (query.length <= 1) {
-    body = <ResultNotification type="info">{t("filesearch.notifications.queryToShort")}</ResultNotification>;
+    body = (
+      <Notification className="m-4" type="info">
+        {t("filesearch.notifications.queryToShort")}
+      </Notification>
+    );
   } else if (paths.length === 0) {
     const queryCmp = <strong>{query}</strong>;
     body = (
-      <ResultNotification type="info">
+      <Notification className="m-4" type="info">
         <Trans i18nKey="repos:filesearch.notifications.emptyResult" values={{ query }} components={[queryCmp]} />
-      </ResultNotification>
+      </Notification>
     );
   } else {
     body = <ResultTable contentBaseUrl={contentBaseUrl} paths={paths} />;

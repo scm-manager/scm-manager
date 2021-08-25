@@ -67,7 +67,6 @@ const PopoverHeading = styled.div`
 `;
 
 const PopoverDescription = styled.p`
-  margin-top: 0.5em;
   overflow-wrap: break-word;
 `;
 
@@ -131,7 +130,7 @@ const Popover: FC<PopoverProps> = ({ annotation, offsetTop, repository, baseDate
           {shortRevision(annotation.revision)}
         </Link>
       </p>
-      <PopoverDescription className="content">{annotation.description}</PopoverDescription>
+      <PopoverDescription className="content mt-2">{annotation.description}</PopoverDescription>
     </PopoverContainer>
   );
 };

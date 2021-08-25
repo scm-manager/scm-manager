@@ -21,37 +21,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-import styled from "styled-components";
-import { storiesOf } from "@storybook/react";
 import React from "react";
-import AddKeyValueEntryToTableField from "./AddKeyValueEntryToTableField";
 import { MemoryRouter } from "react-router-dom";
-
-const Spacing = styled.div`
-  padding: 2em;
-`;
+import { storiesOf } from "@storybook/react";
+import AddKeyValueEntryToTableField from "./AddKeyValueEntryToTableField";
 
 storiesOf("Forms|AddKeyValueEntryToTableField", module)
-  .addDecorator(story => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
+  .addDecorator((story) => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
   .add("Default", () => (
-    <Spacing>
+    <div className="m-6">
       <AddKeyValueEntryToTableField
         keyFieldLabel="Key"
         valueFieldLabel="Value"
-        buttonLabel="Add to table"
-        addEntry={(key, value) => {console.log(key, value)}}
+        buttonLabel="Add to Table"
+        addEntry={() => null}
       />
-    </Spacing>
+    </div>
   ))
   .add("Disabled", () => (
-    <Spacing>
+    <div className="m-6">
       <AddKeyValueEntryToTableField
         keyFieldLabel="Key"
         valueFieldLabel="Value"
-        buttonLabel="Add to table"
-        addEntry={() => {}}
+        buttonLabel="Add to Table"
+        addEntry={() => null}
         disabled={true}
       />
-    </Spacing>
+    </div>
   ));

@@ -41,10 +41,10 @@ type ParentWithPluginAction = {
   pluginAction?: PluginAction;
 };
 
-const ListParent = styled.div.attrs((props) => ({}))<ParentWithPluginAction>`
-  margin-right: 0;
+const ListParent = styled.div.attrs((props) => ({
+  className: "field-label is-inline-flex mr-0 has-text-left",
+}))<ParentWithPluginAction>`
   min-width: ${(props) => (props.pluginAction === PluginAction.INSTALL ? "5.5em" : "10em")};
-  text-align: left;
 `;
 
 const ListChild = styled.div`
@@ -194,9 +194,7 @@ const PluginModal: FC<Props> = ({ onClose, pluginAction, plugin }) => {
       <div className="media">
         <div className="media-content">
           <div className="field is-horizontal">
-            <ListParent className={classNames("field-label", "is-inline-flex")} pluginAction={pluginAction}>
-              {t("plugins.modal.author")}:
-            </ListParent>
+            <ListParent pluginAction={pluginAction}>{t("plugins.modal.author")}:</ListParent>
             <ListChild className={classNames("field-body", "is-inline-flex")}>{plugin.author}</ListChild>
           </div>
           {pluginAction === PluginAction.CLOUDOGU && (
@@ -208,25 +206,19 @@ const PluginModal: FC<Props> = ({ onClose, pluginAction, plugin }) => {
           )}
           {pluginAction === PluginAction.INSTALL && (
             <div className="field is-horizontal">
-              <ListParent className={classNames("field-label", "is-inline-flex")} pluginAction={pluginAction}>
-                {t("plugins.modal.version")}:
-              </ListParent>
+              <ListParent pluginAction={pluginAction}>{t("plugins.modal.version")}:</ListParent>
               <ListChild className={classNames("field-body", "is-inline-flex")}>{plugin.version}</ListChild>
             </div>
           )}
           {(pluginAction === PluginAction.UPDATE || pluginAction === PluginAction.UNINSTALL) && (
             <div className="field is-horizontal">
-              <ListParent className={classNames("field-label", "is-inline-flex")}>
-                {t("plugins.modal.currentVersion")}:
-              </ListParent>
+              <ListParent>{t("plugins.modal.currentVersion")}:</ListParent>
               <ListChild className={classNames("field-body", "is-inline-flex")}>{plugin.version}</ListChild>
             </div>
           )}
           {pluginAction === PluginAction.UPDATE && (
             <div className="field is-horizontal">
-              <ListParent className={classNames("field-label", "is-inline-flex")}>
-                {t("plugins.modal.newVersion")}:
-              </ListParent>
+              <ListParent>{t("plugins.modal.newVersion")}:</ListParent>
               <ListChild className={classNames("field-body", "is-inline-flex")}>{plugin.newVersion}</ListChild>
             </div>
           )}

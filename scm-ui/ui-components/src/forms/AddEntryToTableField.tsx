@@ -39,13 +39,6 @@ type Props = {
 
 const FullWidthInputField = styled(InputField)`
   width: 100%;
-  margin-right: 1.5rem;
-`;
-
-const StyledField = styled.div.attrs(() => ({
-  className: "field",
-}))`
-  align-self: flex-end;
 `;
 
 const AddEntryToTableField: FC<Props> = ({
@@ -88,6 +81,7 @@ const AddEntryToTableField: FC<Props> = ({
       className="is-align-items-stretch mb-4"
       children={
         <FullWidthInputField
+          className="mr-5"
           label={fieldLabel}
           errorMessage={errorMessage}
           onChange={handleAddEntryChange}
@@ -99,13 +93,13 @@ const AddEntryToTableField: FC<Props> = ({
         />
       }
       right={
-        <StyledField>
+        <div className="field is-align-self-flex-end">
           <AddButton
             label={buttonLabel}
             action={addButtonClicked}
             disabled={disabled || entryToAdd === "" || !isValid()}
           />
-        </StyledField>
+        </div>
       }
     />
   );

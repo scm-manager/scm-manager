@@ -23,14 +23,9 @@
  */
 import React, { FC } from "react";
 import { Redirect, useLocation } from "react-router-dom";
-import styled from "styled-components";
 import LoginInfo from "../components/LoginInfo";
 import { parse } from "query-string";
 import { useIndexLink, useLogin } from "@scm-manager/ui-api";
-
-const HeroSection = styled.section`
-  padding-top: 2em;
-`;
 
 interface FromObject {
   from?: string;
@@ -62,7 +57,7 @@ const Login: FC = () => {
   }
 
   return (
-    <HeroSection className="hero">
+    <section className="hero pt-6">
       <div className="hero-body">
         <div className="container">
           <div className="columns is-centered">
@@ -70,7 +65,7 @@ const Login: FC = () => {
           </div>
         </div>
       </div>
-    </HeroSection>
+    </section>
   );
 };
 

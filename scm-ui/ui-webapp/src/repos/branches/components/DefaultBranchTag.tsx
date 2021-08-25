@@ -30,9 +30,8 @@ type Props = WithTranslation & {
   defaultBranch?: boolean;
 };
 
-const LeftMarginTag = styled(Tag)`
+const InheritVerticalAlignTag = styled(Tag)`
   vertical-align: inherit;
-  margin-left: 0.75rem;
 `;
 
 class DefaultBranchTag extends React.Component<Props> {
@@ -40,7 +39,7 @@ class DefaultBranchTag extends React.Component<Props> {
     const { defaultBranch, t } = this.props;
 
     if (defaultBranch) {
-      return <LeftMarginTag color="dark" label={t("branch.defaultTag")} />;
+      return <InheritVerticalAlignTag className="ml-3" color="dark" label={t("branch.defaultTag")} />;
     }
     return null;
   }

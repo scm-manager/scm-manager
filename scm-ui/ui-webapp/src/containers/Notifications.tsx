@@ -21,8 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 import React, { FC, useEffect, useState } from "react";
+import { useHistory, Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import classNames from "classnames";
+import styled from "styled-components";
+import {
+  useClearNotifications,
+  useDismissNotification,
+  useNotifications,
+  useNotificationSubscription,
+} from "@scm-manager/ui-api";
+import { Notification, NotificationCollection } from "@scm-manager/ui-types";
 import {
   Button,
   Notification as InfoNotification,
@@ -35,21 +45,6 @@ import {
   DateFromNow,
   devices,
 } from "@scm-manager/ui-components";
-import styled from "styled-components";
-import {
-  useClearNotifications,
-  useDismissNotification,
-  useNotifications,
-  useNotificationSubscription,
-} from "@scm-manager/ui-api";
-import { Notification, NotificationCollection } from "@scm-manager/ui-types";
-import { useHistory, Link } from "react-router-dom";
-import classNames from "classnames";
-import { useTranslation } from "react-i18next";
-
-const Bell = styled(Icon)`
-  font-size: 1.5rem;
-`;
 
 const DropDownMenu = styled.div`
   min-width: 35rem;
@@ -167,7 +162,7 @@ const ClearEntry: FC<ClearEntryProps> = ({ notifications, clearToasts }) => {
     clearStore();
   };
   return (
-    <div className="dropdown-item has-text-centered">
+    <div className={classNames("dropdown-item", "has-text-centered")}>
       <ErrorNotification error={error} />
       <DismissAllButton className="is-outlined" color="link" loading={isLoading} action={clear}>
         <Icon color="link" name="trash" className="mr-1" /> {t("notifications.dismissAll")}
@@ -184,8 +179,8 @@ const NotificationList: FC<Props> = ({ data, clear, remove }) => {
   const top = all.slice(0, 6);
 
   return (
-    <div className="dropdown-content p-0">
-      <table className="table mb-0 card-table">
+    <div className={classNames("dropdown-content", "p-0")}>
+      <table className={classNames("table", "card-table", "mb-0")}>
         <tbody>
           {top.map((n, i) => (
             <NotificationEntry key={i} notification={n} removeToast={remove} />
@@ -193,14 +188,18 @@ const NotificationList: FC<Props> = ({ data, clear, remove }) => {
         </tbody>
       </table>
       {all.length > 6 ? (
-        <p className="has-text-centered has-text-grey">{t("notifications.xMore", { count: all.length - 6 })}</p>
+        <p className={classNames("has-text-centered", "has-text-grey")}>
+          {t("notifications.xMore", { count: all.length - 6 })}
+        </p>
       ) : null}
       {clearLink ? <ClearEntry notifications={data} clearToasts={clear} /> : null}
     </div>
   );
 };
 
-const DropdownMenuContainer: FC = ({ children }) => <div className="dropdown-content p-4">{children}</div>;
+const DropdownMenuContainer: FC = ({ children }) => (
+  <div className={classNames("dropdown-content", "p-4")}>{children}</div>
+);
 
 const NoNotifications: FC = () => {
   const [t] = useTranslation("commons");
@@ -273,12 +272,8 @@ const NotificationSubscription: FC<SubscriptionProps> = ({ notifications, remove
 };
 
 const BellNotificationContainer = styled.div`
-  position: relative;
   width: 2rem;
   height: 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 `;
 
 type NotificationCounterProps = {
@@ -299,8 +294,11 @@ type BellNotificationIconProps = {
 const BellNotificationIcon: FC<BellNotificationIconProps> = ({ data, onClick }) => {
   const counter = data?._embedded.notifications.length || 0;
   return (
-    <BellNotificationContainer onClick={onClick}>
-      <Bell iconStyle={counter === 0 ? "far" : "fas"} name="bell" color="white" />
+    <BellNotificationContainer
+      className={classNames("is-relative", "is-flex", "is-justify-content-center", "is-align-items-center")}
+      onClick={onClick}
+    >
+      <Icon className="is-size-4" iconStyle={counter === 0 ? "far" : "fas"} name="bell" color="white" />
       {counter > 0 ? <NotificationCounter count={counter}>{counter < 100 ? counter : "∞"}</NotificationCounter> : null}
     </BellNotificationContainer>
   );
@@ -352,7 +350,7 @@ const Notifications: FC<NotificationProps> = ({ className }) => {
         )}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="is-flex dropdown-trigger is-clickable">
+        <div className={classNames("is-flex", "dropdown-trigger", "is-clickable")}>
           <BellNotificationIcon data={data} onClick={() => setOpen((o) => !o)} />
         </div>
         <DropDownMenu className="dropdown-menu" id="dropdown-menu" role="menu">

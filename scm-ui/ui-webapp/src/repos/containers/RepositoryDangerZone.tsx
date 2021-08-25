@@ -21,14 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
+import styled from "styled-components";
 import { Repository } from "@scm-manager/ui-types";
+import { Subtitle } from "@scm-manager/ui-components";
 import RenameRepository from "./RenameRepository";
 import DeleteRepo from "./DeleteRepo";
-import styled from "styled-components";
-import { Subtitle } from "@scm-manager/ui-components";
-import { useTranslation } from "react-i18next";
 import ArchiveRepo from "./ArchiveRepo";
 import UnarchiveRepo from "./UnarchiveRepo";
 
@@ -37,7 +36,6 @@ type Props = {
 };
 
 export const DangerZoneContainer = styled.div`
-  padding: 1.5rem 1rem;
   border: 1px solid #ff6a88;
   border-radius: 5px;
 
@@ -83,7 +81,7 @@ const RepositoryDangerZone: FC<Props> = ({ repository }) => {
     <>
       <hr />
       <Subtitle subtitle={t("repositoryForm.dangerZone")} />
-      <DangerZoneContainer>{dangerZone}</DangerZoneContainer>
+      <DangerZoneContainer className="px-4 py-5">{dangerZone}</DangerZoneContainer>
     </>
   );
 };

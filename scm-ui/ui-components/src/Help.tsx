@@ -33,22 +33,21 @@ type Props = {
   className?: string;
 };
 
-const HelpTooltip = styled(Tooltip)`
+const AbsolutePositionTooltip = styled(Tooltip)`
   position: absolute;
-  padding-left: 3px;
 `;
 
 const Help: FC<Props> = ({ message, multiline, className }) => (
-  <HelpTooltip
-    className={classNames("is-inline-block", multiline ? "has-tooltip-multiline" : undefined, className)}
+  <AbsolutePositionTooltip
+    className={classNames("is-inline-block", "pl-1", multiline ? "has-tooltip-multiline" : undefined, className)}
     message={message}
   >
     <HelpIcon />
-  </HelpTooltip>
+  </AbsolutePositionTooltip>
 );
 
 Help.defaultProps = {
-  multiline: true
+  multiline: true,
 };
 
 export default Help;

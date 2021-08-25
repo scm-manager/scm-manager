@@ -24,17 +24,16 @@
 import React from "react";
 import styled from "styled-components";
 import Button, { ButtonProps } from "./Button";
+import classNames from "classnames";
 
 const Wrapper = styled.div`
-  margin-top: 2em;
-  padding: 1em 1em;
-  border: 2px solid whitesmoke;
+  border: 2px solid #e9f7fd;
 `;
 
 export default class CreateButton extends React.Component<ButtonProps> {
   render() {
     return (
-      <Wrapper className="has-text-centered">
+      <Wrapper className={classNames("has-text-centered", "mt-5", "p-4")}>
         <Button color="primary" {...this.props} />
       </Wrapper>
     );
