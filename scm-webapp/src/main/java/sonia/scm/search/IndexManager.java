@@ -43,9 +43,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Singleton
 public class IndexManager {
@@ -69,8 +70,8 @@ public class IndexManager {
     return new IndexXml();
   }
 
-  public List<? extends IndexDetails> all() {
-    return Collections.unmodifiableList(indexXml.indices);
+  public Collection<? extends IndexDetails> all() {
+    return Collections.unmodifiableSet(indexXml.indices);
   }
 
   public IndexReader openForRead(LuceneSearchableType type, String indexName) throws IOException {
@@ -84,8 +85,7 @@ public class IndexManager {
 
     Path path = resolveIndexDirectory(indexParams);
     if (!Files.exists(path)) {
-      indexXml.getIndices().add(new LuceneIndexDetails(indexParams.getType(), indexParams.getIndex()));
-      store();
+      store(new LuceneIndexDetails(indexParams.getType(), indexParams.getIndex()));
     }
 
     try {
@@ -103,14 +103,19 @@ public class IndexManager {
     return directory.resolve(searchableType.getName()).resolve(indexName);
   }
 
-  private void store() {
+  private synchronized void store(LuceneIndexDetails details) {
+    if (!indexXml.getIndices().add(details)) {
+      return;
+    }
+
     if (!Files.exists(directory)) {
       try {
         Files.createDirectory(directory);
       } catch (IOException e) {
-        throw new SearchEngineException("failed to create index directory");
+        throw new SearchEngineException("failed to create index directory", e);
       }
     }
+
     Path path = directory.resolve("index.xml");
     JAXB.marshal(indexXml, path.toFile());
   }
@@ -121,7 +126,7 @@ public class IndexManager {
   public static class IndexXml {
 
     @XmlElement(name = "index")
-    private List<LuceneIndexDetails> indices = new ArrayList<>();
+    private Set<LuceneIndexDetails> indices = new HashSet<>();
 
   }
 }
