@@ -24,31 +24,20 @@
 
 package sonia.scm.repository.spi;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Stopwatch;
-import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNURL;
 import org.tmatesoft.svn.core.auth.BasicAuthenticationManager;
-import org.tmatesoft.svn.core.auth.SVNAuthentication;
-import org.tmatesoft.svn.core.auth.SVNPasswordAuthentication;
-import org.tmatesoft.svn.core.auth.SVNSSLAuthentication;
 import org.tmatesoft.svn.core.wc.SVNWCUtil;
 import org.tmatesoft.svn.core.wc.admin.SVNAdminClient;
 import sonia.scm.net.GlobalProxyConfiguration;
-import sonia.scm.net.ProxyConfiguration;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.api.MirrorCommandResult;
-import sonia.scm.repository.api.Pkcs12ClientCertificateCredential;
-import sonia.scm.repository.api.UsernamePasswordCredential;
 
-import javax.annotation.Nonnull;
 import javax.net.ssl.TrustManager;
-import java.util.ArrayList;
-import java.util.Collection;
 
 import static java.util.Arrays.asList;
 import static sonia.scm.repository.api.MirrorCommandResult.ResultType.FAILED;
@@ -57,44 +46,62 @@ import static sonia.scm.repository.api.MirrorCommandResult.ResultType.OK;
 public class SvnMirrorCommand extends AbstractSvnCommand implements MirrorCommand {
 
   private static final Logger LOG = LoggerFactory.getLogger(SvnMirrorCommand.class);
+  private static final int TARGET_NOT_INITIALIZED_ERROR_CODE = 204899;
 
-  private final TrustManager trustManager;
-  private final GlobalProxyConfiguration globalProxyConfiguration;
+  private final SvnMirrorAuthenticationFactory authenticationFactory;
 
   SvnMirrorCommand(SvnContext context, TrustManager trustManager, GlobalProxyConfiguration globalProxyConfiguration) {
+    this(context, new SvnMirrorAuthenticationFactory(trustManager, globalProxyConfiguration));
+  }
+
+  SvnMirrorCommand(SvnContext context, SvnMirrorAuthenticationFactory authenticationFactory) {
     super(context);
-    this.trustManager = trustManager;
-    this.globalProxyConfiguration = globalProxyConfiguration;
+    this.authenticationFactory = authenticationFactory;
   }
 
   @Override
   public MirrorCommandResult mirror(MirrorCommandRequest mirrorCommandRequest) {
-    SVNURL url = createUrlForLocalRepository();
-    return withAdminClient(mirrorCommandRequest, admin -> {
-      SVNURL source = SVNURL.parseURIEncoded(mirrorCommandRequest.getSourceUrl());
-      admin.doCompleteSynchronize(source, url);
-    });
+    return mirror(mirrorCommandRequest, SVNAdminClient::doCompleteSynchronize);
   }
 
   @Override
   public MirrorCommandResult update(MirrorCommandRequest mirrorCommandRequest) {
-    SVNURL url = createUrlForLocalRepository();
-    return withAdminClient(mirrorCommandRequest, admin -> admin.doSynchronize(url));
+    return mirror(mirrorCommandRequest, this::doUpdate);
   }
 
-  private MirrorCommandResult withAdminClient(MirrorCommandRequest mirrorCommandRequest, AdminConsumer consumer) {
+  private void doUpdate(SVNAdminClient admin, SVNURL sourceUrl, SVNURL targetUrl) throws SVNException {
+    try {
+      admin.doSynchronize(targetUrl);
+    } catch (SVNException e) {
+      if (isTargetNotInitializedException(e)) {
+        LOG.warn("update failed, because destination repository has not been initialized, start complete synchronize");
+        admin.doCompleteSynchronize(sourceUrl, targetUrl);
+      } else {
+        throw e;
+      }
+    }
+  }
+
+  private boolean isTargetNotInitializedException(SVNException e) {
+    return e.getErrorMessage().getErrorCode().getCode() == TARGET_NOT_INITIALIZED_ERROR_CODE;
+  }
+
+  private MirrorCommandResult mirror(MirrorCommandRequest mirrorCommandRequest, Worker worker) {
     Stopwatch stopwatch = Stopwatch.createStarted();
     long beforeUpdate;
     long afterUpdate;
     try {
       beforeUpdate = context.open().getLatestRevision();
-      SVNURL url = createUrlForLocalRepository();
-      SVNAdminClient admin = createAdminClient(url, mirrorCommandRequest);
 
-      handleConsumer(mirrorCommandRequest, consumer, url, admin);
+      SVNURL sourceUrl = SVNURL.parseURIEncoded(mirrorCommandRequest.getSourceUrl());
+      SVNURL targetUrl = createUrlForLocalRepository();
+      SVNAdminClient admin = createAdminClient(sourceUrl, mirrorCommandRequest);
+
+      worker.doWork(admin, sourceUrl, targetUrl);
+
       afterUpdate = context.open().getLatestRevision();
     } catch (SVNException e) {
-      LOG.info("Could not mirror svn repository", e);
+      LOG.warn("Could not mirror svn repository", e);
       return new MirrorCommandResult(
         FAILED,
         asList(
@@ -110,19 +117,6 @@ public class SvnMirrorCommand extends AbstractSvnCommand implements MirrorComman
     );
   }
 
-  private void handleConsumer(MirrorCommandRequest mirrorCommandRequest, AdminConsumer consumer, SVNURL url, SVNAdminClient admin) throws SVNException {
-    try {
-      consumer.accept(admin);
-    } catch (SVNException e) {
-      if (e.getMessage().equals("svn: E204899: Destination repository has not been initialized")) {
-        SVNURL source = SVNURL.parseURIEncoded(mirrorCommandRequest.getSourceUrl());
-        admin.doCompleteSynchronize(source, url);
-      } else {
-        throw e;
-      }
-    }
-  }
-
   private SVNURL createUrlForLocalRepository() {
     try {
       return SVNURL.fromFile(context.getDirectory());
@@ -131,68 +125,12 @@ public class SvnMirrorCommand extends AbstractSvnCommand implements MirrorComman
     }
   }
 
-  private SVNAdminClient createAdminClient(SVNURL url, MirrorCommandRequest mirrorCommandRequest) {
-    BasicAuthenticationManager authenticationManager = createAuthenticationManager(url, mirrorCommandRequest);
+  private SVNAdminClient createAdminClient(SVNURL sourceUrl, MirrorCommandRequest mirrorCommandRequest) {
+    BasicAuthenticationManager authenticationManager = authenticationFactory.create(sourceUrl, mirrorCommandRequest);
     return new SVNAdminClient(authenticationManager, SVNWCUtil.createDefaultOptions(true));
   }
 
-  @VisibleForTesting
-  BasicAuthenticationManager createAuthenticationManager(SVNURL url, MirrorCommandRequest mirrorCommandRequest) {
-    SVNAuthentication[] authentications = createAuthentications(url, mirrorCommandRequest);
-
-    BasicAuthenticationManager authManager = new BasicAuthenticationManager(authentications) {
-      @Override
-      public TrustManager getTrustManager(SVNURL url) {
-        return trustManager;
-      }
-    };
-    checkAndApplyProxyConfiguration(
-      authManager, mirrorCommandRequest.getProxyConfiguration().filter(ProxyConfiguration::isEnabled).orElse(globalProxyConfiguration), url
-    );
-    return authManager;
-  }
-
-  @Nonnull
-  private SVNAuthentication[] createAuthentications(SVNURL url, MirrorCommandRequest mirrorCommandRequest) {
-    Collection<SVNAuthentication> authentications = new ArrayList<>();
-    mirrorCommandRequest.getCredential(Pkcs12ClientCertificateCredential.class)
-      .map(c -> createTlsAuth(url, c))
-      .ifPresent(authentications::add);
-    mirrorCommandRequest.getCredential(UsernamePasswordCredential.class)
-      .map(c -> SVNPasswordAuthentication.newInstance(c.username(), c.password(), false, url, false))
-      .ifPresent(authentications::add);
-    return authentications.toArray(new SVNAuthentication[0]);
-  }
-
-  private void checkAndApplyProxyConfiguration(BasicAuthenticationManager authManager, ProxyConfiguration proxyConfiguration, SVNURL url) {
-    if (proxyConfiguration.isEnabled() && !proxyConfiguration.getExcludes().contains(url.getHost())) {
-      applyProxyConfiguration(authManager, proxyConfiguration);
-    }
-  }
-
-  private void applyProxyConfiguration(BasicAuthenticationManager authManager, ProxyConfiguration proxyConfiguration) {
-    char[] password = null;
-    if (!Strings.isNullOrEmpty(proxyConfiguration.getPassword())){
-      password = proxyConfiguration.getPassword().toCharArray();
-    }
-    authManager.setProxy(
-      proxyConfiguration.getHost(),
-      proxyConfiguration.getPort(),
-      Strings.emptyToNull(proxyConfiguration.getUsername()),
-      password
-    );
-  }
-
-  private SVNSSLAuthentication createTlsAuth(SVNURL url, Pkcs12ClientCertificateCredential c) {
-    return SVNSSLAuthentication.newInstance(
-      c.getCertificate(),
-      c.getPassword(),
-      false,
-      url,
-      true);
-  }
-
-  private interface AdminConsumer {
-    void accept(SVNAdminClient adminClient) throws SVNException;
+  private interface Worker {
+    void doWork(SVNAdminClient adminClient, SVNURL sourceUrl, SVNURL targetUrl) throws SVNException;
   }
 }
