@@ -1,0 +1,2 @@
+- type: Fixed
+  description: Fetch clone modal data on first opening ([#1784](https://github.com/scm-manager/scm-manager/pull/1784))
