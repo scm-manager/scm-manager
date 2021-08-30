@@ -54,7 +54,7 @@ public class LuceneSearchableType implements SearchableType {
 
   public LuceneSearchableType(Class<?> type, @Nonnull IndexedType annotation, List<LuceneSearchableField> fields) {
     this.type = type;
-    this.name = createName(type, annotation);
+    this.name = Names.create(type, annotation);
     this.permission = Strings.emptyToNull(annotation.permission());
     this.fields = fields;
     this.fieldNames = fieldNames(fields);
@@ -65,18 +65,6 @@ public class LuceneSearchableType implements SearchableType {
 
   public Optional<String> getPermission() {
     return Optional.ofNullable(permission);
-  }
-
-  static String createName(Class<?> type, @Nullable IndexedType annotation) {
-    String nameFromAnnotation = null;
-    if (annotation != null) {
-      nameFromAnnotation = annotation.value();
-    }
-    if (Strings.isNullOrEmpty(nameFromAnnotation)) {
-      String simpleName = type.getSimpleName();
-      return Character.toLowerCase(simpleName.charAt(0)) + simpleName.substring(1);
-    }
-    return nameFromAnnotation;
   }
 
   private String[] fieldNames(List<LuceneSearchableField> fields) {

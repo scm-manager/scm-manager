@@ -24,43 +24,25 @@
 
 package sonia.scm.search;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.stream.Collectors;
+import org.junit.jupiter.api.Test;
 
-final class Ids {
+import static org.assertj.core.api.Assertions.assertThat;
 
-  private Ids() {
+class NamesTest {
+
+  @Test
+  void shouldUseNameFromAnnotation() {
+    assertThat(Names.create(WithAlias.class)).isEqualTo("alias");
   }
 
-  static Map<String,String> others(Id<?> id) {
-    Map<String,String> result = new TreeMap<>();
-
-    Map<Class<?>, String> others = id.getOthers();
-    for (Map.Entry<Class<?>, String> e : others.entrySet()) {
-      result.put(name(e.getKey()), e.getValue());
-    }
-
-    return result;
+  @Test
+  void shouldUseNameFromClass() {
+    assertThat(Names.create(Simple.class)).isEqualTo("simple");
   }
 
-  static String id(String mainId, Map<String,String> others) {
-    List<String> values = new ArrayList<>();
-    values.add(mainId);
-    values.addAll(others.values());
-    return values.stream()
-      .map(v -> v.replace(";", "\\;" ))
-      .collect(Collectors.joining(";"));
-  }
+  private static class Simple {}
 
-  static String asString(Id<?> id) {
-    return id(id.getMainId(), others(id));
-  }
-
-  private static String name(Class<?> key) {
-    return Names.create(key, key.getAnnotation(IndexedType.class));
-  }
+  @IndexedType("alias")
+  private static class WithAlias {}
 
 }

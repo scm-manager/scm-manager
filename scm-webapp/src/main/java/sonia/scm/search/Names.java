@@ -24,43 +24,28 @@
 
 package sonia.scm.search;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.stream.Collectors;
+import com.google.common.base.Strings;
 
-final class Ids {
+import javax.annotation.Nullable;
 
-  private Ids() {
+final class Names {
+
+  private Names() {
   }
 
-  static Map<String,String> others(Id<?> id) {
-    Map<String,String> result = new TreeMap<>();
+  static String create(Class<?> type) {
+    return create(type, type.getAnnotation(IndexedType.class));
+  }
 
-    Map<Class<?>, String> others = id.getOthers();
-    for (Map.Entry<Class<?>, String> e : others.entrySet()) {
-      result.put(name(e.getKey()), e.getValue());
+  static String create(Class<?> type, @Nullable IndexedType annotation) {
+    String nameFromAnnotation = null;
+    if (annotation != null) {
+      nameFromAnnotation = annotation.value();
     }
-
-    return result;
+    if (Strings.isNullOrEmpty(nameFromAnnotation)) {
+      String simpleName = type.getSimpleName();
+      return Character.toLowerCase(simpleName.charAt(0)) + simpleName.substring(1);
+    }
+    return nameFromAnnotation;
   }
-
-  static String id(String mainId, Map<String,String> others) {
-    List<String> values = new ArrayList<>();
-    values.add(mainId);
-    values.addAll(others.values());
-    return values.stream()
-      .map(v -> v.replace(";", "\\;" ))
-      .collect(Collectors.joining(";"));
-  }
-
-  static String asString(Id<?> id) {
-    return id(id.getMainId(), others(id));
-  }
-
-  private static String name(Class<?> key) {
-    return Names.create(key, key.getAnnotation(IndexedType.class));
-  }
-
 }
