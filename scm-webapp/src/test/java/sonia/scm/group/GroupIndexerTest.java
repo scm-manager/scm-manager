@@ -90,14 +90,14 @@ class GroupIndexerTest {
   void shouldCreateGroup() {
     indexer.createStoreTask(astronauts).update(index);
 
-    verify(index).store(Id.of(astronauts), GroupPermissions.read(astronauts).asShiroString(), astronauts);
+    verify(index).store(Id.of(Group.class, astronauts), GroupPermissions.read(astronauts).asShiroString(), astronauts);
   }
 
   @Test
   void shouldDeleteGroup() {
     indexer.createDeleteTask(astronauts).update(index);
 
-    verify(index.delete()).byId(Id.of(astronauts));
+    verify(index.delete()).byId(Id.of(Group.class, astronauts));
   }
 
   @Test
@@ -108,8 +108,8 @@ class GroupIndexerTest {
     reIndexAll.update(index);
 
     verify(index.delete()).all();
-    verify(index).store(Id.of(astronauts), GroupPermissions.read(astronauts).asShiroString(), astronauts);
-    verify(index).store(Id.of(planetCreators), GroupPermissions.read(planetCreators).asShiroString(), planetCreators);
+    verify(index).store(Id.of(Group.class, astronauts), GroupPermissions.read(astronauts).asShiroString(), astronauts);
+    verify(index).store(Id.of(Group.class, planetCreators), GroupPermissions.read(planetCreators).asShiroString(), planetCreators);
   }
 
   @Test
@@ -120,7 +120,7 @@ class GroupIndexerTest {
 
     verify(searchEngine.forType(Group.class)).update(captor.capture());
     captor.getValue().update(index);
-    verify(index.delete()).byId(Id.of(astronauts));
+    verify(index.delete()).byId(Id.of(Group.class, astronauts));
   }
 
 }

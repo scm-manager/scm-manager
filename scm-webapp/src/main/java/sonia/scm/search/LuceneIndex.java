@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
+import java.util.Map;
 import java.util.function.Supplier;
 
 import static sonia.scm.search.FieldNames.ID;
@@ -72,14 +73,23 @@ class LuceneIndex<T> implements Index<T>, AutoCloseable {
   }
 
   @Override
-  public void store(Id id, String permission, Object object) {
+  public void store(Id<T> id, String permission, T object) {
     Document document = searchableType.getTypeConverter().convert(object);
+
+    String mainId = id.getMainId();
+    Map<String,String> others = Ids.others(id);
+
     try {
-      field(document, ID, id.asString());
-      id.getRepository().ifPresent(repository -> field(document, REPOSITORY, repository));
+      field(document, ID, Ids.id(mainId, others));
+
+      for (Map.Entry<String, String> e : others.entrySet()) {
+        field(document, "_" + e.getKey(), e.getValue());
+      }
+
       if (!Strings.isNullOrEmpty(permission)) {
         field(document, PERMISSION, permission);
       }
+
       writer.updateDocument(idTerm(id), document);
     } catch (IOException e) {
       throw new SearchEngineException("failed to add document to index", e);
@@ -87,16 +97,19 @@ class LuceneIndex<T> implements Index<T>, AutoCloseable {
   }
 
   @Nonnull
-  private Term idTerm(Id id) {
-    return new Term(ID, id.asString());
+  private Term idTerm(Id<T> id) {
+    String mainId = id.getMainId();
+    Map<String,String> others = Ids.others(id);
+    return new Term(ID, Ids.id(mainId, others));
   }
+
 
   private void field(Document document, String type, String name) {
     document.add(new StringField(type, name, Field.Store.YES));
   }
 
   @Override
-  public Deleter delete() {
+  public Deleter<T> delete() {
     return new LuceneDeleter();
   }
 
@@ -109,10 +122,10 @@ class LuceneIndex<T> implements Index<T>, AutoCloseable {
     }
   }
 
-  private class LuceneDeleter implements Deleter {
+  private class LuceneDeleter implements Deleter<T> {
 
     @Override
-    public void byId(Id id) {
+    public void byId(Id<T> id) {
       try {
         long count = writer.deleteDocuments(idTerm(id));
         LOG.debug("delete {} document(s) by id {} from index {}", count, id, details);

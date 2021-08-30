@@ -28,6 +28,8 @@ import com.google.common.base.Strings;
 import lombok.Value;
 import org.apache.lucene.queryparser.flexible.standard.config.PointsConfig;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -50,9 +52,9 @@ public class LuceneSearchableType implements SearchableType {
   Map<String, PointsConfig> pointsConfig;
   TypeConverter typeConverter;
 
-  public LuceneSearchableType(Class<?> type, IndexedType annotation, List<LuceneSearchableField> fields) {
+  public LuceneSearchableType(Class<?> type, @Nonnull IndexedType annotation, List<LuceneSearchableField> fields) {
     this.type = type;
-    this.name = name(type, annotation);
+    this.name = createName(type, annotation);
     this.permission = Strings.emptyToNull(annotation.permission());
     this.fields = fields;
     this.fieldNames = fieldNames(fields);
@@ -65,8 +67,11 @@ public class LuceneSearchableType implements SearchableType {
     return Optional.ofNullable(permission);
   }
 
-  private String name(Class<?> type, IndexedType annotation) {
-    String nameFromAnnotation = annotation.value();
+  static String createName(Class<?> type, @Nullable IndexedType annotation) {
+    String nameFromAnnotation = null;
+    if (annotation != null) {
+      nameFromAnnotation = annotation.value();
+    }
     if (Strings.isNullOrEmpty(nameFromAnnotation)) {
       String simpleName = type.getSimpleName();
       return Character.toLowerCase(simpleName.charAt(0)) + simpleName.substring(1);

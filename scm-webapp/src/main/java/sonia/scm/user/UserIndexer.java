@@ -74,7 +74,7 @@ public class UserIndexer implements Indexer<User> {
 
   @Override
   public SerializableIndexTask<User> createDeleteTask(User item) {
-    return index -> index.delete().byId(Id.of(item));
+    return index -> index.delete().byId(Id.of(User.class, item));
   }
 
   @Subscribe(async = false)
@@ -83,7 +83,7 @@ public class UserIndexer implements Indexer<User> {
   }
 
   private static void store(Index<User> index, User user) {
-    index.store(Id.of(user), UserPermissions.read(user).asShiroString(), user);
+    index.store(Id.of(User.class, user), UserPermissions.read(user).asShiroString(), user);
   }
 
   public static class ReIndexAll extends ReIndexAllTask<User> {
