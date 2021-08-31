@@ -53,27 +53,27 @@ public interface Index<T>  {
    *
    * @see Indexed
    */
-  void store(Id id, String permission, T object);
+  void store(Id<T> id, String permission, T object);
 
   /**
    * Delete provides an api to delete objects from the index
    * @return delete api
    * @since 2.23.0
    */
-  Deleter delete();
+  Deleter<T> delete();
 
   /**
    * Deleter provides an api to delete object from index.
    *
    * @since 2.23.0
    */
-  interface Deleter {
+  interface Deleter<T> {
 
     /**
      * Delete the object with the given id and type from index.
      * @param id id of object
      */
-    void byId(Id id);
+    void byId(Id<T> id);
 
     /**
      * Delete all objects of the given type from index.

@@ -74,7 +74,7 @@ public class GroupIndexer implements Indexer<Group> {
 
   @Override
   public SerializableIndexTask<Group> createDeleteTask(Group group) {
-    return index -> index.delete().byId(Id.of(group));
+    return index -> index.delete().byId(Id.of(Group.class, group));
   }
 
   @Subscribe(async = false)
@@ -83,7 +83,7 @@ public class GroupIndexer implements Indexer<Group> {
   }
 
   public static void store(Index<Group> index, Group group) {
-    index.store(Id.of(group), GroupPermissions.read(group).asShiroString(), group);
+    index.store(Id.of(Group.class, group), GroupPermissions.read(group).asShiroString(), group);
   }
 
   public static class ReIndexAll extends ReIndexAllTask<Group> {

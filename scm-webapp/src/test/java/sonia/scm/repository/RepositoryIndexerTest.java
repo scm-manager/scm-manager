@@ -89,13 +89,24 @@ class RepositoryIndexerTest {
 
     indexer.createStoreTask(heartOfGold).update(index);
 
-    verify(index).store(Id.of(heartOfGold), RepositoryPermissions.read(heartOfGold).asShiroString(), heartOfGold);
+    verify(index).store(Id.of(Repository.class, heartOfGold), RepositoryPermissions.read(heartOfGold).asShiroString(), heartOfGold);
   }
 
   @Test
-  void shouldDeleteRepository() {
+  void shouldDeleteRepositoryById() {
     Repository heartOfGold = RepositoryTestData.createHeartOfGold();
 
+    when(index.getDetails().getType()).then(ic -> Repository.class);
+    indexer.createDeleteTask(heartOfGold).update(index);
+
+    verify(index.delete()).byId(Id.of(Repository.class, heartOfGold));
+  }
+
+  @Test
+  void shouldDeleteAllByRepository() {
+    Repository heartOfGold = RepositoryTestData.createHeartOfGold();
+
+    when(index.getDetails().getType()).then(ic -> String.class);
     indexer.createDeleteTask(heartOfGold).update(index);
 
     verify(index.delete()).byRepository(heartOfGold);
@@ -111,8 +122,8 @@ class RepositoryIndexerTest {
     reIndexAll.update(index);
 
     verify(index.delete()).all();
-    verify(index).store(Id.of(heartOfGold), RepositoryPermissions.read(heartOfGold).asShiroString(), heartOfGold);
-    verify(index).store(Id.of(puzzle), RepositoryPermissions.read(puzzle).asShiroString(), puzzle);
+    verify(index).store(Id.of(Repository.class, heartOfGold), RepositoryPermissions.read(heartOfGold).asShiroString(), heartOfGold);
+    verify(index).store(Id.of(Repository.class, puzzle), RepositoryPermissions.read(puzzle).asShiroString(), puzzle);
   }
 
   @Test
@@ -136,7 +147,7 @@ class RepositoryIndexerTest {
 
     verify(searchEngine.forType(Repository.class)).update(captor.capture());
     captor.getValue().update(index);
-    verify(index).store(Id.of(heartOfGold), RepositoryPermissions.read(heartOfGold).asShiroString(), heartOfGold);
+    verify(index).store(Id.of(Repository.class, heartOfGold), RepositoryPermissions.read(heartOfGold).asShiroString(), heartOfGold);
   }
 
 }

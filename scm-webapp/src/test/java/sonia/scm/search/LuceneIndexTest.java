@@ -24,7 +24,6 @@
 
 package sonia.scm.search;
 
-import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import lombok.Value;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.DirectoryReader;
@@ -32,7 +31,6 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.ByteBuffersDirectory;
@@ -43,9 +41,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.group.Group;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryTestData;
-import sonia.scm.repository.RepositoryType;
+import sonia.scm.user.User;
 
 import java.io.IOException;
 import java.util.function.Supplier;
@@ -61,8 +60,8 @@ import static sonia.scm.search.FieldNames.REPOSITORY;
 
 class LuceneIndexTest {
 
-  private static final Id ONE = Id.of("one");
-  private static final Id TWO = Id.of("two");
+  private static final Id<Storable> ONE = Id.of(Storable.class, "one");
+  private static final Id<Storable> TWO = Id.of(Storable.class, "two");
 
   private Directory directory;
 
@@ -102,7 +101,7 @@ class LuceneIndexTest {
   @Test
   void shouldStoreRepositoryOfId() throws IOException {
     try (LuceneIndex<Storable> index = createIndex(Storable.class)) {
-      index.store(ONE.withRepository("4211"), null, new Storable("Some text"));
+      index.store(ONE.and(Repository.class, "4211"), null, new Storable("Some text"));
     }
 
     assertHits(REPOSITORY, "4211", 1);
@@ -126,12 +125,12 @@ class LuceneIndexTest {
     Repository heartOfGold = RepositoryTestData.createHeartOfGold();
     Repository puzzle42 = RepositoryTestData.createHeartOfGold();
     try (LuceneIndex<Storable> index = createIndex(Storable.class)) {
-      index.store(ONE.withRepository(heartOfGold), null, new Storable("content"));
-      index.store(ONE.withRepository(puzzle42), null, new Storable("content"));
+      index.store(ONE.and(Repository.class, heartOfGold), null, new Storable("content"));
+      index.store(ONE.and(Repository.class, puzzle42), null, new Storable("content"));
     }
 
     try (LuceneIndex<Storable> index = createIndex(Storable.class)) {
-      index.delete().byId(ONE.withRepository(heartOfGold));
+      index.delete().byId(ONE.and(Repository.class, heartOfGold));
     }
 
     assertHits("value", "content", 1);
@@ -154,8 +153,8 @@ class LuceneIndexTest {
   @Test
   void shouldDeleteByRepository() throws IOException {
     try (LuceneIndex<Storable> index = createIndex(Storable.class)) {
-      index.store(ONE.withRepository("4211"), null, new Storable("content"));
-      index.store(TWO.withRepository("4212"), null, new Storable("content"));
+      index.store(ONE.and(Repository.class, "4211"), null, new Storable("content"));
+      index.store(TWO.and(Repository.class, "4212"), null, new Storable("content"));
     }
 
     try (LuceneIndex<Storable> index = createIndex(Storable.class)) {
@@ -168,7 +167,7 @@ class LuceneIndexTest {
   @Test
   void shouldStorePermission() throws IOException {
     try (LuceneIndex<Storable> index = createIndex(Storable.class)) {
-      index.store(ONE.withRepository("4211"), "repo:4211:read", new Storable("Some other text"));
+      index.store(ONE.and(Repository.class, "4211"), "repo:4211:read", new Storable("Some other text"));
     }
 
     assertHits(PERMISSION, "repo:4211:read", 1);
@@ -181,6 +180,18 @@ class LuceneIndexTest {
       assertThat(details.getType()).isEqualTo(Storable.class);
       assertThat(details.getName()).isEqualTo("default");
     }
+  }
+
+  @Test
+  void shouldStoreIdFields() throws IOException {
+    Id<Storable> id = ONE.and(User.class, "trillian").and(Group.class, "heart-of-gold");
+    try (LuceneIndex<Storable> index = createIndex(Storable.class)) {
+      index.store(id, "repo:4211:read", new Storable("Some other text"));
+    }
+
+    assertHits("_id", "one;heart-of-gold;trillian", 1);
+    assertHits("_user", "trillian", 1);
+    assertHits("_group", "heart-of-gold", 1);
   }
 
   @Nested
@@ -209,7 +220,7 @@ class LuceneIndexTest {
     void shouldThrowSearchEngineExceptionOnDeleteById() throws IOException {
       when(writer.deleteDocuments(any(Term.class))).thenThrow(new IOException("failed to delete"));
 
-      Index.Deleter deleter = index.delete();
+      Index.Deleter<Storable> deleter = index.delete();
       assertThrows(SearchEngineException.class, () -> deleter.byId(ONE));
     }
 
@@ -217,7 +228,7 @@ class LuceneIndexTest {
     void shouldThrowSearchEngineExceptionOnDeleteAll() throws IOException {
       when(writer.deleteAll()).thenThrow(new IOException("failed to delete"));
 
-      Index.Deleter deleter = index.delete();
+      Index.Deleter<Storable> deleter = index.delete();
       assertThrows(SearchEngineException.class, deleter::all);
     }
 
@@ -225,7 +236,7 @@ class LuceneIndexTest {
     void shouldThrowSearchEngineExceptionOnDeleteByRepository() throws IOException {
       when(writer.deleteDocuments(any(Term.class))).thenThrow(new IOException("failed to delete"));
 
-      Index.Deleter deleter = index.delete();
+      Index.Deleter<Storable> deleter = index.delete();
       assertThrows(SearchEngineException.class, () -> deleter.byRepository("42"));
     }
 
@@ -237,13 +248,11 @@ class LuceneIndexTest {
 
   }
 
-  @CanIgnoreReturnValue
-  private ScoreDoc[] assertHits(String field, String value, int expectedHits) throws IOException {
+  private void assertHits(String field, String value, int expectedHits) throws IOException {
     try (DirectoryReader reader = DirectoryReader.open(directory)) {
       IndexSearcher searcher = new IndexSearcher(reader);
       TopDocs docs = searcher.search(new TermQuery(new Term(field, value)), 10);
       assertThat(docs.totalHits.value).isEqualTo(expectedHits);
-      return docs.scoreDocs;
     }
   }
 
