@@ -31,7 +31,6 @@ public class IndexParams implements IndexDetails {
 
   String index;
   LuceneSearchableType searchableType;
-  IndexOptions options;
 
   @Override
   public Class<?> getType() {
@@ -43,8 +42,5 @@ public class IndexParams implements IndexDetails {
     return index;
   }
 
-  @Override
-  public String toString() {
-    return searchableType.getName() + "/" + index;
-  }
+
 }

@@ -106,15 +106,6 @@ public interface SearchEngine {
     }
 
     /**
-     * Specify options for the index.
-     * If not used the default options will be used.
-     * @param options index options
-     * @return {@code this}
-     * @see IndexOptions#defaults()
-     */
-    ForIndices withOptions(IndexOptions options);
-
-    /**
      * Submits the task and execute it for every index
      * which are matching the predicate ({@link #matching(Predicate)}.
      * The task is executed asynchronous and will be finished some time in the future.
@@ -144,15 +135,6 @@ public interface SearchEngine {
    * @since 2.23.0
    */
   interface ForType<T> {
-
-    /**
-     * Specify options for the index.
-     * If not used the default options will be used.
-     * @param options index options
-     * @return {@code this}
-     * @see IndexOptions#defaults()
-     */
-    ForType<T> withOptions(IndexOptions options);
 
     /**
      * Name of the index which should be used.

@@ -82,6 +82,6 @@ class LuceneIndexFactoryTest {
   }
 
   private IndexParams params(String indexName, Class<?> type) {
-    return new IndexParams(indexName, SearchableTypes.create(type), IndexOptions.defaults());
+    return new IndexParams(indexName, SearchableTypes.create(type));
   }
 }

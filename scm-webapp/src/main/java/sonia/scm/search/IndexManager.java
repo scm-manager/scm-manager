@@ -87,7 +87,7 @@ public class IndexManager {
   }
 
   public IndexWriter openForWrite(IndexParams indexParams) {
-    IndexWriterConfig config = new IndexWriterConfig(analyzerFactory.create(indexParams.getSearchableType(), indexParams.getOptions()));
+    IndexWriterConfig config = new IndexWriterConfig(analyzerFactory.create(indexParams.getSearchableType()));
     config.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
 
     Path path = resolveIndexDirectory(indexParams);
