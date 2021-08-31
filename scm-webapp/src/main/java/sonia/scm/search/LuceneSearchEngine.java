@@ -101,17 +101,10 @@ public class LuceneSearchEngine implements SearchEngine {
 
     private final List<String> resources = new ArrayList<>();
     private Predicate<IndexDetails> predicate = details -> true;
-    private IndexOptions options = IndexOptions.defaults();
 
     @Override
     public ForIndices matching(Predicate<IndexDetails> predicate) {
       this.predicate = predicate;
-      return this;
-    }
-
-    @Override
-    public ForIndices withOptions(IndexOptions options) {
-      this.options = options;
       return this;
     }
 
@@ -135,7 +128,7 @@ public class LuceneSearchEngine implements SearchEngine {
       indexManager.all()
         .stream()
         .filter(predicate)
-        .map(details -> new IndexParams(details.getName(), resolver.resolve(details.getType()), options))
+        .map(details -> new IndexParams(details.getName(), resolver.resolve(details.getType())))
         .forEach(consumer);
     }
 
@@ -147,18 +140,11 @@ public class LuceneSearchEngine implements SearchEngine {
   class LuceneForType<T> implements ForType<T> {
 
     private final LuceneSearchableType searchableType;
-    private IndexOptions options = IndexOptions.defaults();
     private String index = "default";
     private final List<String> resources = new ArrayList<>();
 
     private LuceneForType(LuceneSearchableType searchableType) {
       this.searchableType = searchableType;
-    }
-
-    @Override
-    public ForType<T> withOptions(IndexOptions options) {
-      this.options = options;
-      return this;
     }
 
     @Override
@@ -168,7 +154,7 @@ public class LuceneSearchEngine implements SearchEngine {
     }
 
     private IndexParams params() {
-      return new IndexParams(index, searchableType, options);
+      return new IndexParams(index, searchableType);
     }
 
     @Override

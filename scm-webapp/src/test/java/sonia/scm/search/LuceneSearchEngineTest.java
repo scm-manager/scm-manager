@@ -128,7 +128,7 @@ class LuceneSearchEngineTest {
       LuceneQueryBuilder<Repository> mockedBuilder = mock(LuceneQueryBuilder.class);
       when(resolver.resolve(Repository.class)).thenReturn(searchableType);
 
-      IndexParams params = new IndexParams("default", searchableType, IndexOptions.defaults());
+      IndexParams params = new IndexParams("default", searchableType);
       when(queryBuilderFactory.<Repository>create(params)).thenReturn(mockedBuilder);
 
       QueryBuilder<Repository> queryBuilder = searchEngine.forType(Repository.class).search();
@@ -139,15 +139,13 @@ class LuceneSearchEngineTest {
     @Test
     @SuppressWarnings("unchecked")
     void shouldDelegateSearch() {
-      IndexOptions options = IndexOptions.naturalLanguage(Locale.GERMAN);
-
       LuceneQueryBuilder<Repository> mockedBuilder = mock(LuceneQueryBuilder.class);
       when(resolver.resolve(Repository.class)).thenReturn(searchableType);
 
-      IndexParams params = new IndexParams("idx", searchableType, options);
+      IndexParams params = new IndexParams("idx", searchableType);
       when(queryBuilderFactory.<Repository>create(params)).thenReturn(mockedBuilder);
 
-      QueryBuilder<Repository> queryBuilder = searchEngine.forType(Repository.class).withIndex("idx").withOptions(options).search();
+      QueryBuilder<Repository> queryBuilder = searchEngine.forType(Repository.class).withIndex("idx").search();
 
       assertThat(queryBuilder).isSameAs(mockedBuilder);
     }

@@ -33,7 +33,6 @@ public abstract class LuceneIndexTask implements Runnable, Serializable {
 
   private final Class<?> type;
   private final String indexName;
-  private final IndexOptions options;
 
   private transient LuceneIndexFactory indexFactory;
   private transient SearchableTypeResolver searchableTypeResolver;
@@ -42,7 +41,6 @@ public abstract class LuceneIndexTask implements Runnable, Serializable {
   protected LuceneIndexTask(IndexParams params) {
     this.type = params.getSearchableType().getType();
     this.indexName = params.getIndex();
-    this.options = params.getOptions();
   }
 
   @Inject
@@ -66,7 +64,7 @@ public abstract class LuceneIndexTask implements Runnable, Serializable {
   public void run() {
     LuceneSearchableType searchableType = searchableTypeResolver.resolve(type);
     IndexTask<?> task = task(injector);
-    try (LuceneIndex index = indexFactory.create(new IndexParams(indexName, searchableType, options))) {
+    try (LuceneIndex index = indexFactory.create(new IndexParams(indexName, searchableType))) {
       task.update(index);
     }
     task.afterUpdate();

@@ -25,45 +25,16 @@
 package sonia.scm.search;
 
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.de.GermanAnalyzer;
-import org.apache.lucene.analysis.en.EnglishAnalyzer;
-import org.apache.lucene.analysis.es.SpanishAnalyzer;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 
-import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 
 public class AnalyzerFactory {
 
-  @Nonnull
-  public Analyzer create(IndexOptions options) {
-    if (options.getType() == IndexOptions.Type.NATURAL_LANGUAGE) {
-      return createNaturalLanguageAnalyzer(options.getLocale().getLanguage());
-    }
-    return createDefaultAnalyzer();
-  }
-
-  private Analyzer createDefaultAnalyzer() {
-    return new StandardAnalyzer();
-  }
-
-  private Analyzer createNaturalLanguageAnalyzer(String lang) {
-    switch (lang) {
-      case "en":
-        return new EnglishAnalyzer();
-      case "de":
-        return new GermanAnalyzer();
-      case "es":
-        return new SpanishAnalyzer();
-      default:
-        return createDefaultAnalyzer();
-    }
-  }
-
-  public Analyzer create(LuceneSearchableType type, IndexOptions options) {
-    Analyzer defaultAnalyzer = create(options);
+  public Analyzer create(LuceneSearchableType type) {
+    Analyzer defaultAnalyzer = createDefaultAnalyzer();
 
     Map<String, Analyzer> analyzerMap = new HashMap<>();
     for (LuceneSearchableField field : type.getAllFields()) {
@@ -71,6 +42,10 @@ public class AnalyzerFactory {
     }
 
     return new PerFieldAnalyzerWrapper(defaultAnalyzer, analyzerMap);
+  }
+
+  private Analyzer createDefaultAnalyzer() {
+    return new StandardAnalyzer();
   }
 
   private void addFieldAnalyzer(Map<String, Analyzer> analyzerMap, LuceneSearchableField field) {
