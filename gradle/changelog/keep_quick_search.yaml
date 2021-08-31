@@ -1,0 +1,2 @@
+- type: fixed
+  description: Keep quicks earch input on page reload ([#1788](https://github.com/scm-manager/scm-manager/pull/1788))
