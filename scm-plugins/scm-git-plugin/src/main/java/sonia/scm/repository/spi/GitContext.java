@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.spi;
 
+import com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
@@ -117,6 +118,11 @@ public class GitContext implements Closeable, RepositoryProvider
 
   void setConfig(GitRepositoryConfig newConfig) {
     storeProvider.get(repository).set(newConfig);
+  }
+
+  @VisibleForTesting
+  void setGitRepository(org.eclipse.jgit.lib.Repository gitRepository) {
+    this.gitRepository = gitRepository;
   }
 
   GitConfig getGlobalConfig() {

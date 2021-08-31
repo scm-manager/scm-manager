@@ -25,13 +25,14 @@
 package sonia.scm.repository.spi;
 
 import com.google.common.io.Files;
+import org.eclipse.jgit.lib.Repository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
-import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.GitRepositoryConfig;
 import sonia.scm.repository.GitTestHelper;
 import sonia.scm.repository.Modifications;
@@ -42,11 +43,13 @@ import java.io.IOException;
 
 import static java.nio.charset.Charset.defaultCharset;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -89,6 +92,28 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
     assertEquals("592d797cd36432e591416e8b2b98154f4f163411", result.getChangesets().get(1).getId());
     assertEquals("435df2f061add3589cb326cc64be9b9c3897ceca", result.getChangesets().get(2).getId());
     assertTrue(result.getChangesets().stream().allMatch(r -> r.getBranches().isEmpty()));
+  }
+
+  @Test
+  public void shouldNotCloseRepositoryForChangesetCollection() throws IOException {
+    final GitLogCommand logCommand = createCommandWithContextSpy();
+    final Repository repository = Mockito.spy(logCommand.context.open());
+    logCommand.context.setGitRepository(repository);
+    logCommand.getChangesets(new LogCommandRequest());
+
+    verify(repository, never()).close();
+    verify(logCommand.context, times(2)).open();
+  }
+
+  @Test
+  public void shouldNotCloseRepositoryForSingleChangeset() throws IOException {
+    final GitLogCommand logCommand = createCommandWithContextSpy();
+    final Repository repository = Mockito.spy(logCommand.context.open());
+    logCommand.context.setGitRepository(repository);
+    logCommand.getChangeset("435df2f061add3589cb3", null);
+
+    verify(repository, never()).close();
+    verify(logCommand.context, times(2)).open();
   }
 
   @Test
@@ -297,5 +322,9 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
 
   private GitLogCommand createCommand() {
     return new GitLogCommand(createContext(), GitTestHelper.createConverterFactory());
+  }
+
+  private GitLogCommand createCommandWithContextSpy() {
+    return new GitLogCommand(Mockito.spy(createContext()), GitTestHelper.createConverterFactory());
   }
 }
