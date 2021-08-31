@@ -81,21 +81,23 @@ const RepositoryEntry: FC<Props> = ({ repository, baseDate }) => {
 
   const createContentRight = () => (
     <ContentRightContainer>
-      <Modal
-        size="L"
-        active={openCloneModal}
-        title={t("overview.clone")}
-        body={
-          <ExtensionPoint
-            name="repos.repository-details.information"
-            renderAll={true}
-            props={{
-              repository,
-            }}
-          />
-        }
-        closeFunction={() => setOpenCloneModal(false)}
-      />
+      {openCloneModal && (
+        <Modal
+          size="L"
+          active={openCloneModal}
+          title={t("overview.clone")}
+          body={
+            <ExtensionPoint
+              name="repos.repository-details.information"
+              renderAll={true}
+              props={{
+                repository,
+              }}
+            />
+          }
+          closeFunction={() => setOpenCloneModal(false)}
+        />
+      )}
       <QuickActionbar>
         <QuickAction
           name="download"
