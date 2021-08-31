@@ -31,17 +31,21 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.TermQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
 import static sonia.scm.search.FieldNames.ID;
 import static sonia.scm.search.FieldNames.PERMISSION;
-import static sonia.scm.search.FieldNames.REPOSITORY;
 
 class LuceneIndex<T> implements Index<T>, AutoCloseable {
 
@@ -145,18 +149,48 @@ class LuceneIndex<T> implements Index<T>, AutoCloseable {
     }
 
     @Override
-    public void byRepository(String repositoryId) {
+    public DeleteBy by(Class<?> type, String id) {
+      return new LuceneDeleteBy(type, id);
+    }
+  }
+
+  private class LuceneDeleteBy implements DeleteBy {
+
+    private final Map<Class<?>, String> map = new HashMap<>();
+
+    private LuceneDeleteBy(Class<?> type, String id) {
+      map.put(type, id);
+    }
+
+    @Override
+    public DeleteBy and(Class<?> type, String id) {
+      map.put(type, id);
+      return this;
+    }
+
+    @Override
+    public void execute() {
+      Query query = createQuery();
       try {
-        long count = writer.deleteDocuments(repositoryTerm(repositoryId));
-        LOG.debug("deleted {} documents by repository {} from index {}", count, repositoryId, details);
-      } catch (IOException ex) {
-        throw new SearchEngineException("failed to delete documents by repository " + repositoryId + " from index", ex);
+        long count = writer.deleteDocuments(query);
+        LOG.debug("delete {} document(s) by query {} from index {}", count, query, details);
+      } catch (IOException e) {
+        throw new SearchEngineException("failed to delete document from index", e);
       }
     }
 
-    @Nonnull
-    private Term repositoryTerm(String repositoryId) {
-      return new Term(REPOSITORY, repositoryId);
+    private Query createQuery() {
+      BooleanQuery.Builder builder = new BooleanQuery.Builder();
+      for (Map.Entry<Class<?>, String> e : map.entrySet()) {
+        Term term = createTerm(e.getKey(), e.getValue());
+        builder.add(new TermQuery(term), BooleanClause.Occur.MUST);
+      }
+      return builder.build();
+    }
+
+    private Term createTerm(Class<?> type, String id) {
+      String name = "_" + Names.create(type);
+      return new Term(name, id);
     }
   }
 }

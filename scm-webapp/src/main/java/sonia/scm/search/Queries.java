@@ -28,6 +28,7 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TermQuery;
+import sonia.scm.repository.Repository;
 
 import java.util.Optional;
 
@@ -39,7 +40,7 @@ final class Queries {
   }
 
   private static Query repositoryQuery(String repositoryId) {
-    return new TermQuery(new Term(FieldNames.REPOSITORY, repositoryId));
+    return new TermQuery(new Term("_" + Names.create(Repository.class), repositoryId));
   }
 
   static Query filter(Query query, QueryBuilder.QueryParams params) {

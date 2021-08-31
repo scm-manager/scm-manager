@@ -26,8 +26,6 @@ package sonia.scm.repository;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.Answers;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -109,7 +107,7 @@ class RepositoryIndexerTest {
     when(index.getDetails().getType()).then(ic -> String.class);
     indexer.createDeleteTask(heartOfGold).update(index);
 
-    verify(index.delete()).byRepository(heartOfGold);
+    verify(index.delete().by(Repository.class, heartOfGold)).execute();
   }
 
   @Test
@@ -135,7 +133,8 @@ class RepositoryIndexerTest {
 
     verify(searchEngine.forIndices().forResource(heartOfGold)).batch(captor.capture());
     captor.getValue().update(index);
-    verify(index.delete()).byRepository(heartOfGold);
+
+    verify(index.delete().by(Repository.class, heartOfGold)).execute();
   }
 
   @Test

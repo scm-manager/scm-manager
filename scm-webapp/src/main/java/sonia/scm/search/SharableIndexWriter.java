@@ -28,6 +28,7 @@ import com.google.common.annotations.VisibleForTesting;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.search.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,6 +69,10 @@ class SharableIndexWriter {
 
   long deleteDocuments(Term term) throws IOException {
     return writer.deleteDocuments(term);
+  }
+
+  long deleteDocuments(Query query) throws IOException {
+    return writer.deleteDocuments(query);
   }
 
   long deleteAll() throws IOException {

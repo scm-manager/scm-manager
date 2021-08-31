@@ -25,7 +25,7 @@
 package sonia.scm.search;
 
 import com.google.common.annotations.Beta;
-import sonia.scm.repository.Repository;
+import sonia.scm.ModelObject;
 
 /**
  * Can be used to index objects for full text searches.
@@ -81,20 +81,55 @@ public interface Index<T>  {
     void all();
 
     /**
-     * Delete all objects which are related the given type and repository from index.
-     *
-     * @param repositoryId id of repository
+     * Returns a builder api to delete objects with the given part of the id.
+     * @param type type of id part
+     * @param id value of id part
+     * @return builder delete api
+     * @see Id#and(Class, String)
      */
-    void byRepository(String repositoryId);
+    DeleteBy by(Class<?> type, String id);
 
     /**
-     * Delete all objects which are related the given type and repository from index.
-     *
-     * @param repository repository
+     * Returns a builder api to delete objects with the given part of the id.
+     * @param type type of id part
+     * @param idObject object which holds the id value
+     * @return builder delete api
+     * @see Id#and(Class, ModelObject)
      */
-    default void byRepository(Repository repository) {
-      byRepository(repository.getId());
+    default DeleteBy by(Class<?> type, ModelObject idObject) {
+      return by(type, idObject.getId());
     }
+  }
+
+  /**
+   * Builder api to delete all objects which match parts of their id.
+   * @since 2.23.0
+   * @see Id#and(Class, String)
+   */
+  interface DeleteBy {
+
+    /**
+     * Select only objects for deletion which are matching the previous id parts and the given one.
+     * @param type type of id part
+     * @param id value of id part
+     * @return {@code this}
+     */
+    DeleteBy and(Class<?> type, String id);
+
+    /**
+     * Select only objects for deletion which are matching the previous id parts and the given one.
+     * @param type type of id part
+     * @param idObject object which holds the id value
+     * @return {@code this}
+     */
+    default DeleteBy and(Class<?> type, ModelObject idObject) {
+      return and(type, idObject.getId());
+    }
+
+    /**
+     * Delete all matching objects from index.
+     */
+    void execute();
   }
 
 }

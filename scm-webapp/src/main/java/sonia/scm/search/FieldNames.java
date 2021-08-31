@@ -24,10 +24,12 @@
 
 package sonia.scm.search;
 
+import sonia.scm.repository.Repository;
+
 final class FieldNames {
   private FieldNames(){}
 
   static final String ID = "_id";
-  static final String REPOSITORY = "_repository";
+  static final String REPOSITORY = "_" + Names.create(Repository.class);
   static final String PERMISSION = "_permission";
 }
