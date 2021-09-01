@@ -73,6 +73,8 @@ class IndexableFields {
       return new BooleanFieldFactory(indexType);
     } else if (isInstant(fieldType)) {
       return new InstantFieldFactory(indexType);
+    } else if (fieldType.isEnum()) {
+      return new EnumFieldFactory(indexType);
     } else {
       throw new UnsupportedTypeOfFieldException(fieldType, field.getName());
     }
@@ -166,6 +168,25 @@ class IndexableFields {
     public Iterable<IndexableField> create(String name, Object value) {
       Instant instant = (Instant) value;
       return super.create(name, instant.toEpochMilli());
+    }
+  }
+
+  private static class EnumFieldFactory implements IndexableFieldFactory {
+
+    private final Indexed.Type type;
+
+    public EnumFieldFactory(Indexed.Type type) {
+      this.type = type;
+    }
+
+    @Override
+    public Iterable<IndexableField> create(String name, Object value) {
+      String stringValue = value.toString();
+      if (type.isSearchable()) {
+        return singleton(new StringField(name, stringValue, Store.YES));
+      } else {
+        return singleton(new StoredField(name, stringValue));
+      }
     }
   }
 
