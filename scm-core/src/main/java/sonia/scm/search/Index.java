@@ -26,6 +26,7 @@ package sonia.scm.search;
 
 import com.google.common.annotations.Beta;
 import sonia.scm.ModelObject;
+import sonia.scm.repository.Repository;
 
 /**
  * Can be used to index objects for full text searches.
@@ -99,6 +100,16 @@ public interface Index<T>  {
     default DeleteBy by(Class<?> type, ModelObject idObject) {
       return by(type, idObject.getId());
     }
+
+    /**
+     * Returns a builder api to delete objects with the given repository part of the id.
+     * @param repository repository part of the id
+     * @return builder delete api
+     * @see Id#and(Class, ModelObject)
+     */
+    default DeleteBy by(Repository repository) {
+      return by(Repository.class, repository);
+    }
   }
 
   /**
@@ -124,6 +135,15 @@ public interface Index<T>  {
      */
     default DeleteBy and(Class<?> type, ModelObject idObject) {
       return and(type, idObject.getId());
+    }
+
+    /**
+     * Select only objects for deletion which are matching the previous id parts and the given repository part.
+     * @param repository repository part of the id
+     * @return {@code this}
+     */
+    default DeleteBy and(Repository repository) {
+      return and(Repository.class, repository.getId());
     }
 
     /**

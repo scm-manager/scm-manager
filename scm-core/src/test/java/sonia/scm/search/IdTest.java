@@ -92,9 +92,12 @@ class IdTest {
 
   @Test
   void shouldCreateIdWithOthers() {
+    Repository repository = new Repository();
+    repository.setId("heart-of-gold");
+
     Id<User> id = Id.of(User.class, "trillian")
       .and(Group.class, "hog")
-      .and(Repository.class, "heart-of-gold");
+      .and(repository);
 
     assertThat(id.getMainType()).isEqualTo(User.class);
     assertThat(id.getMainId()).isEqualTo("trillian");
@@ -125,6 +128,12 @@ class IdTest {
   void shouldFailIfOtherIdObjectIsNull() {
     Id<User> id = Id.of(User.class, "trillian");
     assertThrows(IllegalArgumentException.class, () -> id.and(Group.class, (ModelObject) null));
+  }
+
+  @Test
+  void shouldFailIfRepositoryIsNull() {
+    Id<User> id = Id.of(User.class, "trillian");
+    assertThrows(IllegalArgumentException.class, () -> id.and(null));
   }
 
 }

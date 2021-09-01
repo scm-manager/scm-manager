@@ -27,6 +27,7 @@ package sonia.scm.search;
 import com.google.common.annotations.Beta;
 import lombok.Value;
 import sonia.scm.ModelObject;
+import sonia.scm.repository.Repository;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -55,6 +56,18 @@ public abstract class QueryBuilder<T> {
    */
   public QueryBuilder<T> filter(Class<?> type, String id) {
     filters.put(type, id);
+    return this;
+  }
+
+  /**
+   * Return only results which are related to the given repository.
+   * @param repository repository for filter
+   * @return {@code this}
+   * @since 2.23.0
+   * @see Id#and(Class, String)
+   */
+  public QueryBuilder<T> filter(Repository repository) {
+    filters.put(Repository.class, repository.getId());
     return this;
   }
 
