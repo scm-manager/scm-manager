@@ -31,10 +31,7 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.search.BooleanClause;
-import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.Query;
-import org.apache.lucene.search.TermQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -170,7 +167,7 @@ class LuceneIndex<T> implements Index<T>, AutoCloseable {
 
     @Override
     public void execute() {
-      Query query = createQuery();
+      Query query = Queries.filterQuery(map);
       try {
         long count = writer.deleteDocuments(query);
         LOG.debug("delete {} document(s) by query {} from index {}", count, query, details);
@@ -179,18 +176,5 @@ class LuceneIndex<T> implements Index<T>, AutoCloseable {
       }
     }
 
-    private Query createQuery() {
-      BooleanQuery.Builder builder = new BooleanQuery.Builder();
-      for (Map.Entry<Class<?>, String> e : map.entrySet()) {
-        Term term = createTerm(e.getKey(), e.getValue());
-        builder.add(new TermQuery(term), BooleanClause.Occur.MUST);
-      }
-      return builder.build();
-    }
-
-    private Term createTerm(Class<?> type, String id) {
-      String name = "_" + Names.create(type);
-      return new Term(name, id);
-    }
   }
 }

@@ -28,9 +28,8 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TermQuery;
-import sonia.scm.repository.Repository;
 
-import java.util.Optional;
+import java.util.Map;
 
 import static org.apache.lucene.search.BooleanClause.Occur.MUST;
 
@@ -39,18 +38,30 @@ final class Queries {
   private Queries() {
   }
 
-  private static Query repositoryQuery(String repositoryId) {
-    return new TermQuery(new Term("_" + Names.create(Repository.class), repositoryId));
-  }
-
   static Query filter(Query query, QueryBuilder.QueryParams params) {
-    Optional<String> repositoryId = params.getRepositoryId();
-    if (repositoryId.isPresent()) {
-      return new BooleanQuery.Builder()
-        .add(query, MUST)
-        .add(repositoryQuery(repositoryId.get()), MUST)
-        .build();
+    Map<Class<?>, String> filters = params.getFilters();
+    if (!filters.isEmpty()) {
+      BooleanQuery.Builder builder = builder(filters);
+      builder.add(query, MUST);
+      return builder.build();
     }
     return query;
+  }
+
+  static Query filterQuery(Map<Class<?>, String> filters) {
+    return builder(filters).build();
+  }
+
+  private static BooleanQuery.Builder builder(Map<Class<?>, String> filters) {
+    BooleanQuery.Builder builder = new BooleanQuery.Builder();
+    for (Map.Entry<Class<?>, String> e : filters.entrySet()) {
+      Term term = createTerm(e.getKey(), e.getValue());
+      builder.add(new TermQuery(term), MUST);
+    }
+    return builder;
+  }
+
+  private static Term createTerm(Class<?> type, String id) {
+    return new Term(Names.field(type), id);
   }
 }

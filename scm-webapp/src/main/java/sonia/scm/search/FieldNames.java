@@ -30,6 +30,6 @@ final class FieldNames {
   private FieldNames(){}
 
   static final String ID = "_id";
-  static final String REPOSITORY = "_" + Names.create(Repository.class);
+  static final String REPOSITORY = Names.field(Repository.class);
   static final String PERMISSION = "_permission";
 }

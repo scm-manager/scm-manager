@@ -48,4 +48,8 @@ final class Names {
     }
     return nameFromAnnotation;
   }
+
+  public static String field(Class<?> type) {
+    return "_" + create(type);
+  }
 }

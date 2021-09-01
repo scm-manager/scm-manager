@@ -26,13 +26,10 @@ package sonia.scm.search;
 
 import com.google.common.annotations.Beta;
 import lombok.Value;
-import sonia.scm.NotFoundException;
-import sonia.scm.repository.Repository;
+import sonia.scm.ModelObject;
 
-import java.util.Optional;
-
-import static sonia.scm.ContextEntry.ContextBuilder.entity;
-import static sonia.scm.NotFoundException.notFound;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Build and execute queries against an index.
@@ -43,27 +40,35 @@ import static sonia.scm.NotFoundException.notFound;
 @Beta
 public abstract class QueryBuilder<T> {
 
-  private String repositoryId;
+  private final Map<Class<?>, String> filters = new HashMap<>();
   private int start = 0;
   private int limit = 10;
 
   /**
-   * Return only results which are related to the given repository.
-   * @param repository repository
+   * Return only results which are related to the given part of the id.
+   * Note: this function can be called multiple times.
+   * @param type type of id part
+   * @param id value of id part
    * @return {@code this}
+   * @since 2.23.0
+   * @see Id#and(Class, String)
    */
-  public QueryBuilder<T> repository(Repository repository) {
-    return repository(repository.getId());
+  public QueryBuilder<T> filter(Class<?> type, String id) {
+    filters.put(type, id);
+    return this;
   }
 
   /**
-   * Return only results which are related to the repository with the given id.
-   * @param repositoryId id of the repository
+   * Return only results which are related to the given part of the id.
+   * Note: this function can be called multiple times.
+   * @param type type of id part
+   * @param idObject object which holds the id value
    * @return {@code this}
+   * @since 2.23.0
+   * @see Id#and(Class, ModelObject)
    */
-  public QueryBuilder<T> repository(String repositoryId) {
-    this.repositoryId = repositoryId;
-    return this;
+  public QueryBuilder<T> filter(Class<?> type, ModelObject idObject) {
+    return filter(type, idObject.getId());
   }
 
   /**
@@ -94,7 +99,7 @@ public abstract class QueryBuilder<T> {
    * @return result of query
    */
   public QueryResult execute(String queryString){
-    return execute(new QueryParams(repositoryId, queryString, start, limit));
+    return execute(new QueryParams(queryString, filters, start, limit));
   }
 
 
@@ -107,7 +112,7 @@ public abstract class QueryBuilder<T> {
    * @since 2.22.0
    */
   public QueryCountResult count(String queryString) {
-    return count(new QueryParams(repositoryId, queryString, start, limit));
+    return count(new QueryParams(queryString, filters, start, limit));
   }
 
 
@@ -133,13 +138,10 @@ public abstract class QueryBuilder<T> {
    */
   @Value
   static class QueryParams {
-    String repositoryId;
     String queryString;
+    Map<Class<?>, String> filters;
     int start;
     int limit;
 
-    public Optional<String> getRepositoryId() {
-      return Optional.ofNullable(repositoryId);
-    }
   }
 }
