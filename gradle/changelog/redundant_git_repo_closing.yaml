@@ -1,0 +1,2 @@
+- type: Fixed
+  description: redundant git repo closing in some commands ([#1789](https://github.com/scm-manager/scm-manager/pull/1789))

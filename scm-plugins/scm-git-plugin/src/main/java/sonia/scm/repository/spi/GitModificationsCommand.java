@@ -62,6 +62,7 @@ public class GitModificationsCommand extends AbstractGitCommand implements Modif
   }
 
   @Override
+  @SuppressWarnings("java:S2093")
   public Modifications getModifications(String baseRevision, String revision) {
     org.eclipse.jgit.lib.Repository gitRepository = null;
     RevWalk revWalk = null;
@@ -84,7 +85,6 @@ public class GitModificationsCommand extends AbstractGitCommand implements Modif
       throw new InternalRepositoryException(entity(repository), "could not open repository", ex);
     } finally {
       GitUtil.release(revWalk);
-      GitUtil.close(gitRepository);
     }
     return null;
   }

@@ -24,9 +24,14 @@
 
 package sonia.scm.repository.spi;
 
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.repository.GitConfig;
 import sonia.scm.repository.Modifications;
 
@@ -35,7 +40,10 @@ import java.io.IOException;
 import java.util.function.Consumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 
+@RunWith(MockitoJUnitRunner.class)
 public class GitModificationsCommandTest extends AbstractRemoteCommandTestBase {
 
   private GitModificationsCommand incomingModificationsCommand;
@@ -43,8 +51,25 @@ public class GitModificationsCommandTest extends AbstractRemoteCommandTestBase {
 
   @Before
   public void init() {
-    incomingModificationsCommand = new GitModificationsCommand(new GitContext(incomingDirectory, incomingRepository, null, new GitConfig()));
-    outgoingModificationsCommand = new GitModificationsCommand(new GitContext(outgoingDirectory, outgoingRepository, null, new GitConfig()));
+    incomingModificationsCommand = new GitModificationsCommand(Mockito.spy(new GitContext(incomingDirectory, incomingRepository, null, new GitConfig())));
+    outgoingModificationsCommand = new GitModificationsCommand(Mockito.spy(new GitContext(outgoingDirectory, outgoingRepository, null, new GitConfig())));
+  }
+
+  @Test
+  public void shouldNotCloseRepository() throws IOException, GitAPIException {
+    write(outgoing, outgoingDirectory, "a.txt", "bal bla");
+    RevCommit addedFileCommit = commit(outgoing, "add file");
+    String revision = addedFileCommit.getName();
+
+    final GitModificationsCommand command = new GitModificationsCommand(Mockito.spy(new GitContext(outgoingDirectory, outgoingRepository, null, new GitConfig())));
+    final Repository repository = Mockito.spy(command.context.open());
+    command.context.setGitRepository(repository);
+
+    command.getModifications(revision);
+
+    Mockito.verify(command.context, times(3)).open();
+    Mockito.verify(repository, never()).close();
+
   }
 
   @Test

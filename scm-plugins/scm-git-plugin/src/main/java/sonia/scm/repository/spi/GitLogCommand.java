@@ -91,6 +91,7 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
    * @return
    */
   @Override
+  @SuppressWarnings("java:S2093")
   public Changeset getChangeset(String revision, LogCommandRequest request)
   {
     if (logger.isDebugEnabled())
@@ -147,7 +148,6 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
     {
       IOUtil.close(converter);
       GitUtil.release(revWalk);
-      GitUtil.close(gr);
     }
 
     return changeset;
@@ -176,13 +176,13 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
    * @throws IOException
    */
   @Override
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("java:S2093")
   public ChangesetPagingResult getChangesets(LogCommandRequest request) {
-    try (org.eclipse.jgit.lib.Repository gitRepository = open()) {
+    try {
       if (Strings.isNullOrEmpty(request.getBranch())) {
         request.setBranch(context.getConfig().getDefaultBranch());
       }
-      return new GitLogComputer(this.repository.getId(), gitRepository, converterFactory).compute(request);
+      return new GitLogComputer(this.repository.getId(), open(), converterFactory).compute(request);
     } catch (IOException e) {
       throw new InternalRepositoryException(repository, "could not create change log", e);
     }
