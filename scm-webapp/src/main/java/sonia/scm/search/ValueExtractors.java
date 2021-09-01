@@ -45,9 +45,16 @@ final class ValueExtractors {
       return booleanExtractor(name);
     } else if (TypeCheck.isInstant(type)) {
       return instantExtractor(name);
+    } else if (type.isEnum()) {
+      return enumExtractor(name, type);
     } else {
       throw new UnsupportedTypeOfFieldException(type, name);
     }
+  }
+
+  @SuppressWarnings({"unchecked", "rawtypes"})
+  private static ValueExtractor enumExtractor(String name, Class type) {
+    return doc -> Enum.valueOf(type, doc.get(name));
   }
 
   @Nonnull
