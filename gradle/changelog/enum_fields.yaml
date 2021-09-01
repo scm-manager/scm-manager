@@ -1,0 +1,2 @@
+- type: added
+  description: Support for enum fields during indexing ([#1792](https://github.com/scm-manager/scm-manager/pull/1792))
