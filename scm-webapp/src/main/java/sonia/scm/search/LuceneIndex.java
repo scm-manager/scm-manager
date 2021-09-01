@@ -128,8 +128,8 @@ class LuceneIndex<T> implements Index<T>, AutoCloseable {
     @Override
     public void byId(Id<T> id) {
       try {
-        long count = writer.deleteDocuments(idTerm(id));
-        LOG.debug("delete {} document(s) by id {} from index {}", count, id, details);
+        LOG.debug("delete document(s) by id {} from index {}", id, details);
+        writer.deleteDocuments(idTerm(id));
       } catch (IOException e) {
         throw new SearchEngineException("failed to delete document from index", e);
       }
@@ -138,8 +138,8 @@ class LuceneIndex<T> implements Index<T>, AutoCloseable {
     @Override
     public void all() {
       try {
-        long count = writer.deleteAll();
-        LOG.debug("deleted all {} documents from index {}", count, details);
+        LOG.debug("deleted all documents from index {}", details);
+        writer.deleteAll();
       } catch (IOException ex) {
         throw new SearchEngineException("failed to delete documents by type " + searchableType.getName() + " from index", ex);
       }
@@ -169,8 +169,8 @@ class LuceneIndex<T> implements Index<T>, AutoCloseable {
     public void execute() {
       Query query = Queries.filterQuery(map);
       try {
-        long count = writer.deleteDocuments(query);
-        LOG.debug("delete {} document(s) by query {} from index {}", count, query, details);
+        LOG.debug("delete document(s) by query {} from index {}", query, details);
+        writer.deleteDocuments(query);
       } catch (IOException e) {
         throw new SearchEngineException("failed to delete document from index", e);
       }
