@@ -31,6 +31,7 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.ByteBuffersDirectory;
@@ -158,7 +159,24 @@ class LuceneIndexTest {
     }
 
     try (LuceneIndex<Storable> index = createIndex(Storable.class)) {
-      index.delete().byRepository("4212");
+      index.delete().by(Repository.class, "4212").execute();
+    }
+
+    assertHits("value", "content", 1);
+  }
+
+  @Test
+  void shouldDeleteByMultipleFields() throws IOException {
+    Id<Storable> base = ONE.and(Repository.class, "4211");
+
+    try (LuceneIndex<Storable> index = createIndex(Storable.class)) {
+      index.store(base.and(String.class, "1"), null, new Storable("content"));
+      index.store(base.and(String.class, "2"), null, new Storable("content"));
+      index.store(base.and(String.class, "2"), null, new Storable("content"));
+    }
+
+    try (LuceneIndex<Storable> index = createIndex(Storable.class)) {
+      index.delete().by(Repository.class, "4211").and(String.class, "2").execute();
     }
 
     assertHits("value", "content", 1);
@@ -233,11 +251,11 @@ class LuceneIndexTest {
     }
 
     @Test
-    void shouldThrowSearchEngineExceptionOnDeleteByRepository() throws IOException {
-      when(writer.deleteDocuments(any(Term.class))).thenThrow(new IOException("failed to delete"));
+    void shouldThrowSearchEngineExceptionOnDeleteBy() throws IOException {
+      when(writer.deleteDocuments(any(Query.class))).thenThrow(new IOException("failed to delete"));
 
-      Index.Deleter<Storable> deleter = index.delete();
-      assertThrows(SearchEngineException.class, () -> deleter.byRepository("42"));
+      Index.DeleteBy deleter = index.delete().by(Repository.class, "42");
+      assertThrows(SearchEngineException.class, deleter::execute);
     }
 
     @Test

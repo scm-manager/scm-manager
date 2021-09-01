@@ -33,6 +33,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import sonia.scm.ModelObject;
+import sonia.scm.repository.Repository;
 
 import java.util.Collections;
 import java.util.Map;
@@ -88,6 +89,17 @@ public final class Id<T> {
   public Id<T> and(Class<?> type, ModelObject idObject) {
     Preconditions.checkArgument(idObject != null, "id object is required");
     return and(type, idObject.getId());
+  }
+
+  /**
+   * Creates a new combined id by adding the given repository.
+   * @param repository repository to add
+   * @return new combined id
+   * @since 2.23.0
+   */
+  public Id<T> and(Repository repository) {
+    Preconditions.checkArgument(repository != null, "repository is required");
+    return and(Repository.class, repository);
   }
 
   /**

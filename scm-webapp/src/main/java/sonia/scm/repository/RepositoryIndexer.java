@@ -94,7 +94,7 @@ public class RepositoryIndexer implements Indexer<Repository> {
       if (Repository.class.equals(index.getDetails().getType())) {
         index.delete().byId(Id.of(Repository.class, repository.getId()));
       } else {
-        index.delete().byRepository(repository);
+        index.delete().by(Repository.class, repository).execute();
       }
     };
   }
