@@ -38,7 +38,7 @@ class ProtocolInformation extends React.Component<Props> {
       return null;
     }
     return (
-      <div>
+      <div className="content">
         <h4>{t("scm-svn-plugin.information.checkout")}</h4>
         <pre>
           <code>svn checkout {href}</code>

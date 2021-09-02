@@ -44,10 +44,10 @@ const ProtocolInformation: FC<Props> = ({ repository }) => {
     return <Loading />;
   }
 
-  const emptyRepository = data?._embedded?.changesets.length === 0;
+  const emptyRepository = (data?._embedded?.changesets.length || 0) === 0;
 
   return (
-    <div>
+    <div className="content">
       <ErrorNotification error={error} />
       <h4>{t("scm-hg-plugin.information.clone")}</h4>
       <pre>
