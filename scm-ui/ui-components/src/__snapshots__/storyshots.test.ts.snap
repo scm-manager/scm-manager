@@ -56539,6 +56539,11 @@ Array [
         value="uscss-prometheus"
       >
         <option
+          value="uscss-prometheus"
+        >
+          uscss-prometheus
+        </option>
+        <option
           value="millennium-falcon"
         >
           Millennium Falcon
