@@ -87,7 +87,7 @@ class RepositoryIndexerTest {
 
     indexer.createStoreTask(heartOfGold).update(index);
 
-    verify(index).store(Id.of(Repository.class, heartOfGold), RepositoryPermissions.read(heartOfGold).asShiroString(), heartOfGold);
+    verify(index).store(idFor(heartOfGold), RepositoryPermissions.read(heartOfGold).asShiroString(), heartOfGold);
   }
 
   @Test
@@ -120,8 +120,8 @@ class RepositoryIndexerTest {
     reIndexAll.update(index);
 
     verify(index.delete()).all();
-    verify(index).store(Id.of(Repository.class, heartOfGold), RepositoryPermissions.read(heartOfGold).asShiroString(), heartOfGold);
-    verify(index).store(Id.of(Repository.class, puzzle), RepositoryPermissions.read(puzzle).asShiroString(), puzzle);
+    verify(index).store(idFor(heartOfGold), RepositoryPermissions.read(heartOfGold).asShiroString(), heartOfGold);
+    verify(index).store(idFor(puzzle), RepositoryPermissions.read(puzzle).asShiroString(), puzzle);
   }
 
   @Test
@@ -146,7 +146,10 @@ class RepositoryIndexerTest {
 
     verify(searchEngine.forType(Repository.class)).update(captor.capture());
     captor.getValue().update(index);
-    verify(index).store(Id.of(Repository.class, heartOfGold), RepositoryPermissions.read(heartOfGold).asShiroString(), heartOfGold);
+    verify(index).store(idFor(heartOfGold), RepositoryPermissions.read(heartOfGold).asShiroString(), heartOfGold);
   }
 
+  private Id<Repository> idFor(Repository heartOfGold) {
+    return Id.of(Repository.class, heartOfGold).and(heartOfGold);
+  }
 }

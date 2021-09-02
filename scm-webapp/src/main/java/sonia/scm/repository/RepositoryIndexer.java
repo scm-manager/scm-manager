@@ -100,7 +100,10 @@ public class RepositoryIndexer implements Indexer<Repository> {
   }
 
   private static void store(Index<Repository> index, Repository repository) {
-    index.store(Id.of(Repository.class, repository), RepositoryPermissions.read(repository).asShiroString(), repository);
+    index.store(
+      Id.of(Repository.class, repository).and(repository),
+      RepositoryPermissions.read(repository).asShiroString(),
+      repository);
   }
 
   public static class ReIndexAll extends ReIndexAllTask<Repository> {
