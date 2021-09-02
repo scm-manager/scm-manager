@@ -67,7 +67,7 @@ export const useChangesets = (
   const key = branchQueryKey(repository, branch, "changesets", request?.page || 0);
   return useQuery<ChangesetCollection, Error>(key, () => apiClient.get(link).then((response) => response.json()), {
     onSuccess: (changesetCollection) => {
-      changesetCollection._embedded.changesets.forEach((changeset) => {
+      changesetCollection._embedded?.changesets.forEach((changeset) => {
         queryClient.setQueryData(changesetQueryKey(repository, changeset.id), changeset);
       });
     },

@@ -53,7 +53,7 @@ export const useHistory = (
     {
       keepPreviousData: true,
       onSuccess: (changesets: ChangesetCollection) => {
-        changesets._embedded.changesets.forEach((changeset: Changeset) =>
+        changesets._embedded?.changesets.forEach((changeset: Changeset) =>
           queryClient.setQueryData(changesetQueryKey(repository, changeset.id), changeset)
         );
       },

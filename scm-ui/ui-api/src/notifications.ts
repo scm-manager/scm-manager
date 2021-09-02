@@ -34,21 +34,21 @@ export const useNotifications = () => {
   const link = (me?._links["notifications"] as Link)?.href;
   const { data, error, isLoading, refetch } = useQuery<NotificationCollection, Error>(
     "notifications",
-    () => apiClient.get(link).then(response => response.json()),
+    () => apiClient.get(link).then((response) => response.json()),
     {
-      enabled: !!link
+      enabled: !!link,
     }
   );
 
   const memoizedRefetch = useCallback(() => {
-    return refetch().then(r => r.data);
+    return refetch().then((r) => r.data);
   }, [refetch]);
 
   return {
     data,
     error,
     isLoading,
-    refetch: memoizedRefetch
+    refetch: memoizedRefetch,
   };
 };
 
@@ -58,13 +58,13 @@ export const useDismissNotification = (notification: Notification) => {
   const { data, isLoading, error, mutate } = useMutation<Response, Error>(() => apiClient.delete(link), {
     onSuccess: () => {
       queryClient.invalidateQueries("notifications");
-    }
+    },
   });
   return {
     isLoading,
     error,
     dismiss: () => mutate(),
-    isCleared: !!data
+    isCleared: !!data,
   };
 };
 
@@ -74,13 +74,13 @@ export const useClearNotifications = (notificationCollection: NotificationCollec
   const { data, isLoading, error, mutate } = useMutation<Response, Error>(() => apiClient.delete(link), {
     onSuccess: () => {
       queryClient.invalidateQueries("notifications");
-    }
+    },
   });
   return {
     isLoading,
     error,
     clear: () => mutate(),
-    isCleared: !!data
+    isCleared: !!data,
   };
 };
 
@@ -99,13 +99,13 @@ export const useNotificationSubscription = (
   const onVisible = useCallback(() => {
     // we don't need to catch the error,
     // because if the refetch throws an error the parent useNotifications should catch it
-    refetch().then(collection => {
+    refetch().then((collection) => {
       if (collection) {
-        const newNotifications = collection._embedded.notifications.filter(n => {
+        const newNotifications = collection._embedded?.notifications.filter((n) => {
           return disconnectedAt && disconnectedAt < new Date(n.createdAt);
         });
-        if (newNotifications.length > 0) {
-          setNotifications(previous => [...previous, ...newNotifications]);
+        if (newNotifications && newNotifications.length > 0) {
+          setNotifications((previous) => [...previous, ...newNotifications]);
         }
         setDisconnectedAt(undefined);
       }
@@ -118,7 +118,7 @@ export const useNotificationSubscription = (
 
   const received = useCallback(
     (notification: Notification) => {
-      setNotifications(previous => [...previous, notification]);
+      setNotifications((previous) => [...previous, notification]);
       refetch();
     },
     [refetch]
@@ -137,9 +137,9 @@ export const useNotificationSubscription = (
       const connect = () => {
         disconnect();
         cancel = apiClient.subscribe(link, {
-          notification: event => {
+          notification: (event) => {
             received(JSON.parse(event.data));
-          }
+          },
         });
       };
 
@@ -166,7 +166,7 @@ export const useNotificationSubscription = (
 
   const remove = useCallback(
     (notification: Notification) => {
-      setNotifications(oldNotifications => [...oldNotifications.filter(n => !isEqual(n, notification))]);
+      setNotifications((oldNotifications) => [...oldNotifications.filter((n) => !isEqual(n, notification))]);
     },
     [setNotifications]
   );
@@ -178,6 +178,6 @@ export const useNotificationSubscription = (
   return {
     notifications,
     remove,
-    clear
+    clear,
   };
 };

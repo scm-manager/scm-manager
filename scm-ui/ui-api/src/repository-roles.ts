@@ -43,13 +43,13 @@ export const useRepositoryRoles = (request?: UseRepositoryRolesRequest): ApiResu
 
   return useQuery<RepositoryRoleCollection, Error>(
     ["repositoryRoles", request?.page || 0],
-    () => apiClient.get(`${indexLink}?${createQueryString(queryParams)}`).then(response => response.json()),
+    () => apiClient.get(`${indexLink}?${createQueryString(queryParams)}`).then((response) => response.json()),
     {
       onSuccess: (repositoryRoles: RepositoryRoleCollection) => {
-        repositoryRoles._embedded.repositoryRoles.forEach((repositoryRole: RepositoryRole) =>
+        repositoryRoles._embedded?.repositoryRoles.forEach((repositoryRole: RepositoryRole) =>
           queryClient.setQueryData(["repositoryRole", repositoryRole.name], repositoryRole)
         );
-      }
+      },
     }
   );
 };
@@ -57,7 +57,7 @@ export const useRepositoryRoles = (request?: UseRepositoryRolesRequest): ApiResu
 export const useRepositoryRole = (name: string): ApiResult<RepositoryRole> => {
   const indexLink = useRequiredIndexLink("repositoryRoles");
   return useQuery<RepositoryRole, Error>(["repositoryRole", name], () =>
-    apiClient.get(urls.concat(indexLink, name)).then(response => response.json())
+    apiClient.get(urls.concat(indexLink, name)).then((response) => response.json())
   );
 };
 
@@ -65,14 +65,14 @@ const createRepositoryRole = (link: string) => {
   return (repositoryRole: RepositoryRoleCreation) => {
     return apiClient
       .post(link, repositoryRole, "application/vnd.scmm-repositoryRole+json;v=2")
-      .then(response => {
+      .then((response) => {
         const location = response.headers.get("Location");
         if (!location) {
           throw new Error("Server does not return required Location header");
         }
         return apiClient.get(location);
       })
-      .then(response => response.json());
+      .then((response) => response.json());
   };
 };
 
@@ -82,24 +82,24 @@ export const useCreateRepositoryRole = () => {
   const { mutate, data, isLoading, error } = useMutation<RepositoryRole, Error, RepositoryRoleCreation>(
     createRepositoryRole(link),
     {
-      onSuccess: repositoryRole => {
+      onSuccess: (repositoryRole) => {
         queryClient.setQueryData(["repositoryRole", repositoryRole.name], repositoryRole);
         return queryClient.invalidateQueries(["repositoryRoles"]);
-      }
+      },
     }
   );
   return {
     create: (repositoryRole: RepositoryRoleCreation) => mutate(repositoryRole),
     isLoading,
     error,
-    repositoryRole: data
+    repositoryRole: data,
   };
 };
 
 export const useUpdateRepositoryRole = () => {
   const queryClient = useQueryClient();
   const { mutate, isLoading, error, data } = useMutation<unknown, Error, RepositoryRole>(
-    repositoryRole => {
+    (repositoryRole) => {
       const updateUrl = requiredLink(repositoryRole, "update");
       return apiClient.put(updateUrl, repositoryRole, "application/vnd.scmm-repositoryRole+json;v=2");
     },
@@ -107,21 +107,21 @@ export const useUpdateRepositoryRole = () => {
       onSuccess: async (_, repositoryRole) => {
         await queryClient.invalidateQueries(["repositoryRole", repositoryRole.name]);
         await queryClient.invalidateQueries(["repositoryRoles"]);
-      }
+      },
     }
   );
   return {
     update: (repositoryRole: RepositoryRole) => mutate(repositoryRole),
     isLoading,
     error,
-    isUpdated: !!data
+    isUpdated: !!data,
   };
 };
 
 export const useDeleteRepositoryRole = () => {
   const queryClient = useQueryClient();
   const { mutate, isLoading, error, data } = useMutation<unknown, Error, RepositoryRole>(
-    repositoryRole => {
+    (repositoryRole) => {
       const deleteUrl = requiredLink(repositoryRole, "delete");
       return apiClient.delete(deleteUrl);
     },
@@ -129,13 +129,13 @@ export const useDeleteRepositoryRole = () => {
       onSuccess: async (_, name) => {
         await queryClient.invalidateQueries(["repositoryRole", name]);
         await queryClient.invalidateQueries(["repositoryRoles"]);
-      }
+      },
     }
   );
   return {
     remove: (repositoryRole: RepositoryRole) => mutate(repositoryRole),
     isLoading,
     error,
-    isDeleted: !!data
+    isDeleted: !!data,
   };
 };

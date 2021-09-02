@@ -1,0 +1,2 @@
+- type: Fixed
+  description: Fix HalRepresentationWithEmbedded type ([#1793](https://github.com/scm-manager/scm-manager/pull/1793))

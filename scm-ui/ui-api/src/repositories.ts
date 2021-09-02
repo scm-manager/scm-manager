@@ -71,7 +71,7 @@ export const useRepositories = (request?: UseRepositoriesRequest): ApiResult<Rep
       enabled: !request?.disabled,
       onSuccess: (repositories: RepositoryCollection) => {
         // prepare single repository cache
-        repositories._embedded.repositories.forEach((repository: Repository) => {
+        repositories._embedded?.repositories.forEach((repository: Repository) => {
           queryClient.setQueryData(["repository", repository.namespace, repository.name], repository);
         });
       },
@@ -363,7 +363,7 @@ export const useRenameRepository = (repository: Repository) => {
   const { mutate, isLoading, error, data } = useMutation<unknown, Error, RenameRepositoryRequest>(
     ({ name, namespace }) => apiClient.post(url, { namespace, name }, "application/vnd.scmm-repository+json;v=2"),
     {
-      onSuccess: () => queryClient.removeQueries(repoQueryKey(repository))
+      onSuccess: () => queryClient.removeQueries(repoQueryKey(repository)),
     }
   );
 

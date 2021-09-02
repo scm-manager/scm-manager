@@ -44,7 +44,7 @@ export type HalRepresentation = {
 };
 
 export type HalRepresentationWithEmbedded<T extends Embedded> = HalRepresentation & {
-  _embedded: T;
+  _embedded?: T;
 };
 
 export type PagedCollection<T extends Embedded = Embedded> = HalRepresentationWithEmbedded<T> & {
