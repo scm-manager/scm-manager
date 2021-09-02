@@ -24,7 +24,7 @@
 
 import { ApiResult, useRequiredIndexLink } from "./base";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import {Link, Me, User, UserCollection, UserCreation} from "@scm-manager/ui-types";
+import { Link, Me, User, UserCollection, UserCreation } from "@scm-manager/ui-types";
 import { apiClient } from "./apiclient";
 import { createQueryString } from "./utils";
 import { concat } from "./urls";
@@ -52,7 +52,7 @@ export const useUsers = (request?: UseUsersRequest): ApiResult<UserCollection> =
     () => apiClient.get(`${indexLink}?${createQueryString(queryParams)}`).then((response) => response.json()),
     {
       onSuccess: (users: UserCollection) => {
-        users._embedded.users.forEach((user: User) => queryClient.setQueryData(["user", user.name], user));
+        users._embedded?.users.forEach((user: User) => queryClient.setQueryData(["user", user.name], user));
       },
     }
   );
@@ -215,7 +215,7 @@ export const useSetUserPassword = (user: User) => {
     passwordOverwritten: !!data,
     isLoading,
     error,
-    reset
+    reset,
   };
 };
 
@@ -235,6 +235,6 @@ export const useChangeUserPassword = (user: User | Me) => {
     passwordChanged: !!data,
     isLoading,
     error,
-    reset
+    reset,
   };
 };

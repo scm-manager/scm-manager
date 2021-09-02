@@ -44,7 +44,7 @@ const ProtocolInformation: FC<Props> = ({ repository }) => {
     return <Loading />;
   }
 
-  const emptyRepository = data?._embedded.changesets.length === 0;
+  const emptyRepository = data?._embedded?.changesets.length === 0;
 
   return (
     <div>

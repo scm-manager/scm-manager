@@ -53,7 +53,7 @@ export const useAvailablePermissions = () => {
   if (roles.data && verbs.data) {
     data = {
       repositoryVerbs: verbs.data.verbs,
-      repositoryRoles: roles.data._embedded.repositoryRoles,
+      repositoryRoles: roles.data._embedded?.repositoryRoles,
     };
   }
 

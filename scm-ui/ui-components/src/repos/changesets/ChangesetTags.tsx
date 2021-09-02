@@ -33,7 +33,7 @@ type Props = {
 class ChangesetTags extends React.Component<Props> {
   getTags = () => {
     const { changeset } = this.props;
-    return changeset._embedded.tags || [];
+    return changeset._embedded?.tags || [];
   };
 
   render() {

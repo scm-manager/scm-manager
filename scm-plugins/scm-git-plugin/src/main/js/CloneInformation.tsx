@@ -51,7 +51,7 @@ const CloneInformation: FC<Props> = ({ url, repository }) => {
 
   const error = changesetsError || defaultBranchError;
   const branch = defaultBranchData?.defaultBranch;
-  const emptyRepository = changesets?._embedded.changesets.length === 0;
+  const emptyRepository = changesets?._embedded?.changesets.length === 0;
 
   return (
     <div className="content">
