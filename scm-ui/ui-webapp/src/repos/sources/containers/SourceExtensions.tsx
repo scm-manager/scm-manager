@@ -22,13 +22,13 @@
  * SOFTWARE.
  */
 import React, { FC } from "react";
-import { Repository } from "@scm-manager/ui-types";
+import { File, Repository } from "@scm-manager/ui-types";
 import { useParams } from "react-router-dom";
 
 import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
 import { ErrorNotification, Loading, Notification } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
-import { useSources } from "@scm-manager/ui-api";
+import { useBranch, useSources } from "@scm-manager/ui-api";
 
 const extensionPointName = "repos.sources.extensions";
 
@@ -48,14 +48,84 @@ const useUrlParams = () => {
   return {
     revision: revision ? decodeURIComponent(revision) : undefined,
     path: path,
-    extension
+    extension,
   };
+};
+
+type PropsWithoutBranches = Props & {
+  revision?: string;
+  extension: string;
+  path: string;
+  sources?: File;
+};
+
+type PropsWithBranches = PropsWithoutBranches & {
+  revision: string;
+};
+
+const SourceExtensionsWithBranches: FC<PropsWithBranches> = ({
+  repository,
+  baseUrl,
+  revision,
+  extension,
+  sources,
+  path,
+}) => {
+  const { isLoading: isLoadingBranch, data: branch } = useBranch(repository, revision);
+  const [t] = useTranslation("repos");
+
+  if (isLoadingBranch) {
+    return <Loading />;
+  }
+
+  const resolvedBranchRevision = branch?.revision;
+
+  const extprops = {
+    extension,
+    repository,
+    revision: revision ? encodeURIComponent(revision) : "",
+    resolvedBranchRevision,
+    path,
+    sources,
+    baseUrl,
+  };
+
+  if (!binder.hasExtension(extensionPointName, extprops)) {
+    return <Notification type="warning">{t("sources.extension.notBound")}</Notification>;
+  }
+
+  return <ExtensionPoint name={extensionPointName} props={extprops} />;
+};
+
+const SourceExtensionsWithoutBranches: FC<PropsWithoutBranches> = ({
+  repository,
+  baseUrl,
+  revision,
+  extension,
+  sources,
+  path,
+}) => {
+  const [t] = useTranslation("repos");
+
+  const extprops = {
+    extension,
+    repository,
+    revision: revision ? encodeURIComponent(revision) : "",
+    path,
+    sources,
+    baseUrl,
+  };
+
+  if (!binder.hasExtension(extensionPointName, extprops)) {
+    return <Notification type="warning">{t("sources.extension.notBound")}</Notification>;
+  }
+
+  return <ExtensionPoint name={extensionPointName} props={extprops} />;
 };
 
 const SourceExtensions: FC<Props> = ({ repository, baseUrl }) => {
   const { revision, path, extension } = useUrlParams();
   const { error, isLoading, data: sources } = useSources(repository, { revision, path });
-  const [t] = useTranslation("repos");
 
   if (error) {
     return <ErrorNotification error={error} />;
@@ -64,20 +134,29 @@ const SourceExtensions: FC<Props> = ({ repository, baseUrl }) => {
     return <Loading />;
   }
 
-  const extprops = {
-    extension,
-    repository,
-    revision: revision ? encodeURIComponent(revision) : "",
-    path,
-    sources,
-    baseUrl
-  };
-
-  if (!binder.hasExtension(extensionPointName, extprops)) {
-    return <Notification type="warning">{t("sources.extension.notBound")}</Notification>;
+  if (revision && repository._links.branches) {
+    return (
+      <SourceExtensionsWithBranches
+        repository={repository}
+        baseUrl={baseUrl}
+        revision={revision}
+        extension={extension}
+        sources={sources}
+        path={path}
+      />
+    );
+  } else {
+    return (
+      <SourceExtensionsWithoutBranches
+        repository={repository}
+        baseUrl={baseUrl}
+        revision={revision}
+        extension={extension}
+        sources={sources}
+        path={path}
+      />
+    );
   }
-
-  return <ExtensionPoint name={extensionPointName} props={extprops} />;
 };
 
 export default SourceExtensions;
