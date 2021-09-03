@@ -278,8 +278,8 @@ class AbstractGitCommand {
       logger.debug("pushed changes");
     }
 
-    Ref getCurrentRevision() throws IOException {
-      return getClone().getRepository().getRefDatabase().findRef("HEAD");
+    ObjectId getCurrentObjectId() throws IOException {
+      return getClone().getRepository().getRefDatabase().findRef("HEAD").getObjectId();
     }
 
     private Person determineAuthor(Person author) {
