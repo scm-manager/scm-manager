@@ -28,7 +28,7 @@ import { useParams } from "react-router-dom";
 import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
 import { ErrorNotification, Loading, Notification } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
-import { useBranch, useSources } from "@scm-manager/ui-api";
+import { useBranch, useChangesets, useSources } from "@scm-manager/ui-api";
 
 const extensionPointName = "repos.sources.extensions";
 
@@ -78,13 +78,13 @@ const SourceExtensionsWithBranches: FC<PropsWithBranches> = ({
     return <Loading />;
   }
 
-  const resolvedBranchRevision = branch?.revision;
+  const resolvedRevision = branch?.revision;
 
   const extprops = {
     extension,
     repository,
     revision: revision ? encodeURIComponent(revision) : "",
-    resolvedBranchRevision,
+    resolvedRevision,
     path,
     sources,
     baseUrl,
@@ -107,10 +107,19 @@ const SourceExtensionsWithoutBranches: FC<PropsWithoutBranches> = ({
 }) => {
   const [t] = useTranslation("repos");
 
+  const { isLoading, data: headChangeset } = useChangesets(repository, { limit: 1 });
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  const resolvedRevision = headChangeset?._embedded.changesets[0]?.id;
+
   const extprops = {
     extension,
     repository,
     revision: revision ? encodeURIComponent(revision) : "",
+    resolvedRevision,
     path,
     sources,
     baseUrl,
