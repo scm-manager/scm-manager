@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.spi;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.tmatesoft.svn.core.SVNCommitInfo;
 import org.tmatesoft.svn.core.SVNDepth;
@@ -32,6 +33,8 @@ import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.wc.SVNClientManager;
 import org.tmatesoft.svn.core.wc.SVNWCClient;
 import org.tmatesoft.svn.core.wc.SVNWCUtil;
+import sonia.scm.ConcurrentModificationException;
+import sonia.scm.ContextEntry;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.SvnWorkingCopyFactory;
@@ -43,6 +46,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.regex.Pattern;
 
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.repository.spi.IntegrateChangesFromWorkdirException.withPattern;
 
 public class SvnModifyCommand implements ModifyCommand {
@@ -64,11 +68,23 @@ public class SvnModifyCommand implements ModifyCommand {
     SVNClientManager clientManager = SVNClientManager.newInstance();
     try (WorkingCopy<File, File> workingCopy = workingCopyFactory.createWorkingCopy(context, null)) {
       File workingDirectory = workingCopy.getDirectory();
+      if (!StringUtils.isEmpty(request.getExpectedRevision())
+        && !request.getExpectedRevision().equals(getCurrentRevision(clientManager, workingCopy))) {
+        throw new ConcurrentModificationException(entity(repository).build());
+      }
       if (request.isDefaultPath()) {
         workingDirectory = Paths.get(workingDirectory.toString() + "/trunk").toFile();
       }
       modifyWorkingDirectory(request, clientManager, workingDirectory);
       return commitChanges(clientManager, workingDirectory, request.getCommitMessage());
+    }
+  }
+
+  private String getCurrentRevision(SVNClientManager clientManager, WorkingCopy<File, File> workingCopy) {
+    try {
+      return Integer.toString(clientManager.getStatusClient().doStatus(workingCopy.getWorkingRepository(), false).getRevision().getID());
+    } catch (SVNException e) {
+      throw new InternalRepositoryException(entity(repository), "Could not read status of working repository", e);
     }
   }
 
