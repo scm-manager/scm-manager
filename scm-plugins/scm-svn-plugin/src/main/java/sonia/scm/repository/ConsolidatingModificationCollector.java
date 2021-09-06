@@ -116,7 +116,7 @@ class ConsolidatedModifications {
   void modified(Modified modified) {
     Modification earlierModification = modifications.get(modified.getPath());
     if (!(earlierModification instanceof Added)) { // added should still be added
-      modified.getEffectedPaths().forEach(path -> modifications.put(path, modified));
+      modifications.put(modified.getPath(), modified);
     }
   }
 
