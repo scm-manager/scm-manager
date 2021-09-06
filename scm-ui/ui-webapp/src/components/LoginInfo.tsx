@@ -39,21 +39,54 @@ type State = {
   loading?: boolean;
 };
 
+type NoOpErrorBoundaryProps = {};
+
+type NoOpErrorBoundaryState = {
+  error?: Error;
+};
+
+class NoOpErrorBoundary extends React.Component<NoOpErrorBoundaryProps, NoOpErrorBoundaryState> {
+  constructor(props: NoOpErrorBoundaryProps) {
+    super(props);
+    this.state = {};
+  }
+
+  static getDerivedStateFromError(error: Error) {
+    return { error };
+  }
+
+  componentDidCatch(error: Error) {
+    // eslint-disable-next-line no-console
+    if (console && console.error) {
+      // eslint-disable-next-line no-console
+      console.error("failed to render login info", error);
+    }
+  }
+
+  render() {
+    if (this.state.error) {
+      return null;
+    }
+
+    return this.props.children;
+  }
+}
+
 class LoginInfo extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      loading: !!props.loginInfoLink
+      loading: !!props.loginInfoLink,
     };
   }
 
   fetchLoginInfo = (url: string) => {
     return fetch(url)
-      .then(response => response.json())
-      .then(info => {
+      .then((response) => response.json())
+      .then((info) => {
         this.setState({
           info,
-          loading: false
+          loading: false,
         });
       });
   };
@@ -74,16 +107,18 @@ class LoginInfo extends React.Component<Props, State> {
     }
     this.timeout(1000, this.fetchLoginInfo(loginInfoLink)).catch(() => {
       this.setState({
-        loading: false
+        loading: false,
       });
     });
   }
 
   createInfoPanel = (info: LoginInfoResponse) => (
-    <div className="column is-7 is-offset-1 is-paddingless">
-      <InfoBox item={info.feature} type="feature" />
-      <InfoBox item={info.plugin} type="plugin" />
-    </div>
+    <NoOpErrorBoundary>
+      <div className="column is-7 is-offset-1 is-paddingless">
+        <InfoBox item={info.feature} type="feature" />
+        <InfoBox item={info.plugin} type="plugin" />
+      </div>
+    </NoOpErrorBoundary>
   );
 
   render() {
