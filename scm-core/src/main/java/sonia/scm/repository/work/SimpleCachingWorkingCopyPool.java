@@ -34,6 +34,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.util.IOUtil;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -81,6 +82,7 @@ import static java.util.Optional.of;
  *   <li>Wait for a cached directory on parallel requests</li>
  * </ul>
  */
+@Singleton
 public class SimpleCachingWorkingCopyPool implements WorkingCopyPool {
 
   public static final int DEFAULT_WORKING_COPY_POOL_SIZE = 5;

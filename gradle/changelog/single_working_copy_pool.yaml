@@ -1,0 +1,2 @@
+- type: fixed
+  description: Prevent multiple working copy pools ([#1797](https://github.com/scm-manager/scm-manager/issues/1797))
