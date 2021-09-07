@@ -204,7 +204,7 @@ class TypeConvertersTest {
   void shouldCreateEnumField() {
     Document document = convert(new TypeWithEnum(Color.GREEN));
 
-    assertThat(document.get("color")).isEqualTo("GREEN");
+    assertThat(document.get("color")).isEqualTo("green");
   }
 
   private void assertPointField(Document document, String name, Consumer<IndexableField> consumer) {

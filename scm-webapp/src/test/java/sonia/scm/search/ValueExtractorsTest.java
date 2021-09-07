@@ -43,6 +43,17 @@ class ValueExtractorsTest {
     assertThat(value).isEqualTo(Animal.PENGUIN);
   }
 
+  @Test
+  void shouldExtractEnumLowerCaseValue() {
+    Document document = new Document();
+    document.add(new StoredField("animal", "alpaca"));
+
+    ValueExtractor extractor = ValueExtractors.create("animal", Animal.class);
+    Object value = extractor.extract(document);
+
+    assertThat(value).isEqualTo(Animal.ALPACA);
+  }
+
   enum Animal {
     PENGUIN, ALPACA
   }

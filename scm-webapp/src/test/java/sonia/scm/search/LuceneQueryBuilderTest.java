@@ -55,6 +55,7 @@ import java.io.IOException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Locale;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -545,6 +546,26 @@ class LuceneQueryBuilderTest {
     assertThat(hit.getRepositoryId()).contains("4211");
   }
 
+  @Test
+  void shouldQueryByEnumField() throws IOException {
+    try (IndexWriter writer = writer()) {
+      writer.addDocument(animalPerson("Trillian", Animal.PENGUIN));
+    }
+
+    QueryResult result = query(PersonWithAnimal.class, "animal:penguin");
+    assertThat(result.getTotalHits()).isOne();
+  }
+
+  @Test
+  void shouldQueryByEnumFieldAndIgnoreCase() throws IOException {
+    try (IndexWriter writer = writer()) {
+      writer.addDocument(animalPerson("Arthur", Animal.ALPACA));
+    }
+
+    QueryResult result = query(PersonWithAnimal.class, "animal:AlPaCa");
+    assertThat(result.getTotalHits()).isOne();
+  }
+
   private QueryResult query(Class<?> type, String queryString) throws IOException {
     return query(type, queryString, null, null);
   }
@@ -555,7 +576,7 @@ class LuceneQueryBuilderTest {
       LuceneSearchableType searchableType = resolver.resolve(type);
       lenient().when(opener.openForRead(searchableType, "default")).thenReturn(reader);
       LuceneQueryBuilder<T> builder = new LuceneQueryBuilder<T>(
-        opener, "default", searchableType, new StandardAnalyzer()
+        opener, "default", searchableType, new AnalyzerFactory().create(searchableType)
       );
       return builder.count(queryString).getTotalHits();
     }
@@ -579,7 +600,7 @@ class LuceneQueryBuilderTest {
 
       lenient().when(opener.openForRead(searchableType, "default")).thenReturn(reader);
       LuceneQueryBuilder<T> builder = new LuceneQueryBuilder<>(
-        opener, "default", searchableType, new StandardAnalyzer()
+        opener, "default", searchableType, new AnalyzerFactory().create(searchableType)
       );
       consumer.accept(builder);
       return builder.execute(queryString);
@@ -648,6 +669,13 @@ class LuceneQueryBuilderTest {
     return document;
   }
 
+  private Document animalPerson(String name, Animal animal) {
+    Document document = new Document();
+    document.add(new TextField("name", name, Field.Store.YES));
+    document.add(new StringField("animal", animal.name().toLowerCase(Locale.ENGLISH), Field.Store.YES));
+    return document;
+  }
+
   @Getter
   @IndexedType
   static class Types {
@@ -691,6 +719,20 @@ class LuceneQueryBuilderTest {
   static class Simple {
     @Indexed(defaultQuery = true)
     private String content;
+  }
+
+  enum Animal {
+    PENGUIN, ALPACA
+  }
+
+  @Getter
+  @IndexedType
+  static class PersonWithAnimal {
+    @Indexed(defaultQuery = true)
+    private String name;
+
+    @Indexed
+    private Animal animal;
   }
 
 }
