@@ -39,7 +39,7 @@ type Params = {
 
 const BranchRoot: FC<Props> = ({ repository }) => {
   const match = useRouteMatch<Params>();
-  const { isLoading, error, data: branch } = useBranch(repository, match.params.branch);
+  const { isLoading, error, data: branch } = useBranch(repository, decodeURIComponent(match.params.branch));
   const location = useLocation();
 
   if (isLoading) {

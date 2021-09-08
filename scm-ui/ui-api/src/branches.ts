@@ -43,7 +43,7 @@ export const useBranches = (repository: Repository): ApiResult<BranchCollection>
 export const useBranch = (repository: Repository, name: string): ApiResult<Branch> => {
   const link = requiredLink(repository, "branches");
   return useQuery<Branch, Error>(branchQueryKey(repository, name), () =>
-    apiClient.get(concat(link, name)).then((response) => response.json())
+    apiClient.get(concat(link, encodeURIComponent(name))).then((response) => response.json())
   );
 };
 
