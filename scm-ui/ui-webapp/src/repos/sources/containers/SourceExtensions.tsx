@@ -63,17 +63,11 @@ type PropsWithBranches = PropsWithoutBranches & {
   revision: string;
 };
 
-const SourceExtensionsWithBranches: FC<PropsWithBranches> = ({
-  repository,
-  baseUrl,
-  revision,
-  extension,
-  sources,
-  path,
-}) => {
-  const { isFetching, data: branch } = useBranch(repository, revision);
-  const [t] = useTranslation("repos");
+type WaitForInitialLoadProps = {
+  isFetching: boolean;
+};
 
+const WaitForInitialLoad: FC<WaitForInitialLoadProps> = ({ isFetching, children } ) => {
   const [renderedOnce, setRenderedOnce] = useState(false);
 
   useEffect(() => {
@@ -85,6 +79,20 @@ const SourceExtensionsWithBranches: FC<PropsWithBranches> = ({
   if (!renderedOnce && isFetching) {
     return <Loading />;
   }
+
+  return children;
+};
+
+const SourceExtensionsWithBranches: FC<PropsWithBranches> = ({
+  repository,
+  baseUrl,
+  revision,
+  extension,
+  sources,
+  path,
+}) => {
+  const { isFetching, data: branch } = useBranch(repository, revision);
+  const [t] = useTranslation("repos");
 
   const resolvedRevision = branch?.revision;
 
@@ -99,10 +107,18 @@ const SourceExtensionsWithBranches: FC<PropsWithBranches> = ({
   };
 
   if (!binder.hasExtension(extensionPointName, extprops)) {
-    return <Notification type="warning">{t("sources.extension.notBound")}</Notification>;
+    return (
+      <WaitForInitialLoad isFetching={isFetching}>
+        <Notification type="warning">{t("sources.extension.notBound")}</Notification>;
+      </WaitForInitialLoad>
+    );
   }
 
-  return <ExtensionPoint name={extensionPointName} props={extprops} />;
+  return (
+    <WaitForInitialLoad isFetching={isFetching}>
+      <ExtensionPoint name={extensionPointName} props={extprops} />
+    </WaitForInitialLoad>
+  );
 };
 
 const SourceExtensionsWithoutBranches: FC<PropsWithoutBranches> = ({
@@ -115,21 +131,12 @@ const SourceExtensionsWithoutBranches: FC<PropsWithoutBranches> = ({
 }) => {
   const [t] = useTranslation("repos");
 
-  const { isFetching, data: headChangeset } = useChangesets(repository, { limit: 1, branch: revision? {name: revision}: undefined });
+  const { isFetching, data: headChangeset } = useChangesets(repository, {
+    limit: 1,
+    branch: revision ? { name: revision } : undefined,
+  });
 
-  const [renderedOnce, setRenderedOnce] = useState(false);
-
-  useEffect(() => {
-    if (!isFetching) {
-      setRenderedOnce(true);
-    }
-  }, [isFetching]);
-
-  if (!renderedOnce && isFetching) {
-    return <Loading />;
-  }
-
-  const resolvedRevision = headChangeset?._embedded.changesets[0]?.id;
+  const resolvedRevision = headChangeset?._embedded?.changesets[0]?.id;
 
   const extprops = {
     extension,
@@ -142,10 +149,18 @@ const SourceExtensionsWithoutBranches: FC<PropsWithoutBranches> = ({
   };
 
   if (!binder.hasExtension(extensionPointName, extprops)) {
-    return <Notification type="warning">{t("sources.extension.notBound")}</Notification>;
+    return (
+      <WaitForInitialLoad isFetching={isFetching}>
+        <Notification type="warning">{t("sources.extension.notBound")}</Notification>
+      </WaitForInitialLoad>
+    );
   }
 
-  return <ExtensionPoint name={extensionPointName} props={extprops} />;
+  return (
+    <WaitForInitialLoad isFetching={isFetching}>
+      <ExtensionPoint name={extensionPointName} props={extprops} />
+    </WaitForInitialLoad>
+  );
 };
 
 const SourceExtensions: FC<Props> = ({ repository, baseUrl }) => {
