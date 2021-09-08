@@ -672,7 +672,7 @@ class LuceneQueryBuilderTest {
   private Document animalPerson(String name, Animal animal) {
     Document document = new Document();
     document.add(new TextField("name", name, Field.Store.YES));
-    document.add(new StringField("animal", animal.name().toLowerCase(Locale.ENGLISH), Field.Store.YES));
+    document.add(new StringField("animal", animal.name(), Field.Store.YES));
     return document;
   }
 

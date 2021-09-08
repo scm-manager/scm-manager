@@ -39,7 +39,6 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 import static java.util.Collections.singleton;
 import static sonia.scm.search.TypeCheck.isBoolean;
@@ -182,7 +181,7 @@ class IndexableFields {
 
     @Override
     public Iterable<IndexableField> create(String name, Object value) {
-      String stringValue = value.toString().toLowerCase(Locale.ENGLISH);
+      String stringValue = value.toString();
       if (type.isSearchable()) {
         return singleton(new StringField(name, stringValue, Store.YES));
       } else {
