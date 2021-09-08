@@ -5,6 +5,49 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.23.0] - 2021-09-08
+### Added
+- Embedded repository in search result hit ([#1756](https://github.com/scm-manager/scm-manager/pull/1756))
+- Base revision in modifications command to compute modifications between revisions ([#1761](https://github.com/scm-manager/scm-manager/pull/1761))
+- Bounding box for plugin avatar ([#1749](https://github.com/scm-manager/scm-manager/pull/1749))
+- Support for enum fields during indexing ([#1792](https://github.com/scm-manager/scm-manager/pull/1792))
+- Central Work Queue for coordinating long-running tasks ([#1781](https://github.com/scm-manager/scm-manager/pull/1781))
+- Api to modify multiple indices at once ([#1781](https://github.com/scm-manager/scm-manager/pull/1781))
+- Event which is fired whenever the default branch of a repository changes ([#1763](https://github.com/scm-manager/scm-manager/pull/1763))
+- Proxy support for pull, push and mirror commands ([#1773](https://github.com/scm-manager/scm-manager/pull/1773))
+- Option for local proxy configuration to mirror command ([#1773](https://github.com/scm-manager/scm-manager/pull/1773))
+- Show repository avatar in quick search ([#1759](https://github.com/scm-manager/scm-manager/issues/1759))
+- Add additional help to quick search and an advanced search documentation page ([#1757](https://github.com/scm-manager/scm-manager/pull/1757)
+- Support for different types of analyzer per field ([#1755](https://github.com/scm-manager/scm-manager/pull/1755))
+
+### Fixed
+- Missing encoding of useBranch api ([#1798](https://github.com/scm-manager/scm-manager/pull/1798))
+- Post 'post receive repository hook event' after import ([#1754](https://github.com/scm-manager/scm-manager/pull/1754))
+- Preserve request method on force base url ([#1771](https://github.com/scm-manager/scm-manager/issues/1771) and [#1778](https://github.com/scm-manager/scm-manager/pull/1778))
+- Search queries containing hypens ([#1743](https://github.com/scm-manager/scm-manager/issues/1743) and [#1753](https://github.com/scm-manager/scm-manager/pull/1753))
+- Proxy authentication ([#1773](https://github.com/scm-manager/scm-manager/pull/1773))
+- Fix disabled local proxy configuration being used over global config ([#1780](https://github.com/scm-manager/scm-manager/pull/1780))
+- Fix HalRepresentationWithEmbedded type ([#1793](https://github.com/scm-manager/scm-manager/pull/1793))
+- Error message for parse error on search result page ([#1768](https://github.com/scm-manager/scm-manager/pull/1768))
+- Remove deletion of empty modalRoot node to allow a different modal to continue to exist ([#1779](https://github.com/scm-manager/scm-manager/pull/1779))
+- Broken login page if login info response could not be parsed ([#1791](https://github.com/scm-manager/scm-manager/issues/1791) and [#1795](https://github.com/scm-manager/scm-manager/pull/1795))
+- Submission of empty search queries ([#1769](https://github.com/scm-manager/scm-manager/pull/1769))
+- Too heavy logging of SchemeBasedWebTokenGenerator ([#1772](https://github.com/scm-manager/scm-manager/issues/1772) and [#1777](https://github.com/scm-manager/scm-manager/pull/1777))
+- Prevent multiple working copy pools ([#1797](https://github.com/scm-manager/scm-manager/issues/1797))
+- Repository viewer filename with hash ([#1766](https://github.com/scm-manager/scm-manager/issues/1766) and [#1776](https://github.com/scm-manager/scm-manager/pull/1776))
+- Fetch clone modal data on first opening ([#1784](https://github.com/scm-manager/scm-manager/pull/1784))
+- Branch selector display revision if selected instead of first branch ([#1767](https://github.com/scm-manager/scm-manager/pull/1767))
+- Show empty files instead of endless loading spinner ([#1762](https://github.com/scm-manager/scm-manager/pull/1762))
+- redundant git repo closing in some commands ([#1789](https://github.com/scm-manager/scm-manager/pull/1789))
+- Keep quick search input on page reload ([#1788](https://github.com/scm-manager/scm-manager/pull/1788))
+
+### Changed
+- One index per type instead of one index for all types ([#1781](https://github.com/scm-manager/scm-manager/pull/1781))
+- Use central work queue for all indexing tasks ([#1781](https://github.com/scm-manager/scm-manager/pull/1781))
+- Keep search result type if searched from result page ([#1764](https://github.com/scm-manager/scm-manager/pull/1764))
+- Expose content type resolver api to plugins ([#1752](https://github.com/scm-manager/scm-manager/pull/1752))
+- Improve Search API ([#1755](https://github.com/scm-manager/scm-manager/pull/1755))
+
 ## [2.22.0] - 2021-07-30
 ### Added
 - Add users and groups to default search index ([#1738](https://github.com/scm-manager/scm-manager/pull/1738))
@@ -711,3 +754,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.20.0]: https://www.scm-manager.org/download/2.20.0
 [2.21.0]: https://www.scm-manager.org/download/2.21.0
 [2.22.0]: https://www.scm-manager.org/download/2.22.0
+[2.23.0]: https://www.scm-manager.org/download/2.23.0

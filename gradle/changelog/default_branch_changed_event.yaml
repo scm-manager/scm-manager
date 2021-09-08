@@ -1,2 +1,0 @@
-- type: Added
-  description: Event which is fired whenever the default branch of a repository changes ([#1763](https://github.com/scm-manager/scm-manager/pull/1763))

@@ -1,2 +1,0 @@
-- type: Fixed
-  description: Missing encoding of useBranch api ([#1798](https://github.com/scm-manager/scm-manager/pull/1798))

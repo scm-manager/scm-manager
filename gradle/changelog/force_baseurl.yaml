@@ -1,2 +1,0 @@
-- type: fixed
-  description: Preserve request method on force base url ([#1771](https://github.com/scm-manager/scm-manager/issues/1771) and [#1778](https://github.com/scm-manager/scm-manager/pull/1778))

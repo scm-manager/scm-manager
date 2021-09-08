@@ -1,2 +1,0 @@
-- type: Changed
-  description: Expose content type resolver api to plugins ([#1752](https://github.com/scm-manager/scm-manager/pull/1752))

@@ -1,2 +1,0 @@
-- type: fixed
-  description: Broken login page if login info response could not be parsed ([#1791](https://github.com/scm-manager/scm-manager/issues/1791) and [#1795](https://github.com/scm-manager/scm-manager/pull/1795))
