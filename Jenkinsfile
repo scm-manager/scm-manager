@@ -213,6 +213,11 @@ void isBuildSuccess() {
 }
 
 void withCheckEnvironment(Closure<Void> closure) {
+  // surround call withChromaticEnvironment to enable chromatic analyzation
+  closure.call()
+}
+
+void withChromaticEnvironment(Closure<Void> closure) {
   // apply chromatic environment only if we are on a pr build or on the develop branch
   if (env.CHANGE_ID || env.BRANCH_NAME == 'develop') {
     withCredentials([
