@@ -48,7 +48,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
-import java.util.Locale;
 
 public class LuceneQueryBuilder<T> extends QueryBuilder<T> {
 
@@ -138,7 +137,7 @@ public class LuceneQueryBuilder<T> extends QueryBuilder<T> {
       throw new NoDefaultQueryFieldsFoundException(searchableType.getType());
     }
 
-    String queryString = queryParams.getQueryString().toLowerCase(Locale.ENGLISH);
+    String queryString = queryParams.getQueryString();
     boolean hasWildcard = containsWildcard(queryString);
 
     BooleanQuery.Builder builder = new BooleanQuery.Builder();
