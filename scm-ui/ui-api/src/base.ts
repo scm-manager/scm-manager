@@ -31,6 +31,7 @@ import { requiredLink } from "./links";
 
 export type ApiResult<T> = {
   isLoading: boolean;
+  isFetching: boolean;
   error: Error | null;
   data?: T;
 };

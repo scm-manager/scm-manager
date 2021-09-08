@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { File, Repository } from "@scm-manager/ui-types";
 import { useParams } from "react-router-dom";
 
@@ -71,10 +71,18 @@ const SourceExtensionsWithBranches: FC<PropsWithBranches> = ({
   sources,
   path,
 }) => {
-  const { isLoading: isLoadingBranch, data: branch } = useBranch(repository, revision);
+  const { isFetching, data: branch } = useBranch(repository, revision);
   const [t] = useTranslation("repos");
 
-  if (isLoadingBranch) {
+  const [renderedOnce, setRenderedOnce] = useState(false);
+
+  useEffect(() => {
+    if (!isFetching) {
+      setRenderedOnce(true);
+    }
+  }, [isFetching]);
+
+  if (!renderedOnce && isFetching) {
     return <Loading />;
   }
 
@@ -107,9 +115,17 @@ const SourceExtensionsWithoutBranches: FC<PropsWithoutBranches> = ({
 }) => {
   const [t] = useTranslation("repos");
 
-  const { isLoading, data: headChangeset } = useChangesets(repository, { limit: 1 });
+  const { isFetching, data: headChangeset } = useChangesets(repository, { limit: 1, branch: revision? {name: revision}: undefined });
 
-  if (isLoading) {
+  const [renderedOnce, setRenderedOnce] = useState(false);
+
+  useEffect(() => {
+    if (!isFetching) {
+      setRenderedOnce(true);
+    }
+  }, [isFetching]);
+
+  if (!renderedOnce && isFetching) {
     return <Loading />;
   }
 
