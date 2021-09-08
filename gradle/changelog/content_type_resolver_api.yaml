@@ -1,0 +1,2 @@
+- type: Changed
+  description: Resolved branch revision in source extension point ([#1803](https://github.com/scm-manager/scm-manager/pull/1803))
