@@ -1922,7 +1922,7 @@ exports[`Storyshots BreadCrumb With prefix button 1`] = `
       className="Breadcrumb__BreadcrumbNav-zvtb4t-1 eupowG breadcrumb sources-breadcrumb mx-2 my-4"
     >
       <div
-        className="Breadcrumb__PrefixButton-zvtb4t-4 fMVpTW"
+        className="Breadcrumb__PrefixButton-zvtb4t-4 fsMznZ mr-2"
       >
         <a
           href="#link"
@@ -4918,7 +4918,7 @@ exports[`Storyshots Diff Binaries 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="Main.java"
           >
@@ -5140,7 +5140,7 @@ exports[`Storyshots Diff Binaries 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="conflict.png"
           >
@@ -5212,7 +5212,7 @@ exports[`Storyshots Diff Changing Content 1`] = `
             className="level is-flex-wrap-wrap"
           >
             <div
-              className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+              className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
               onClick={[Function]}
               title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
             >
@@ -5830,7 +5830,7 @@ exports[`Storyshots Diff Changing Content 1`] = `
             className="level is-flex-wrap-wrap"
           >
             <div
-              className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+              className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
               onClick={[Function]}
               title="src/main/js/ChangeNotification.tsx"
             >
@@ -6785,7 +6785,7 @@ exports[`Storyshots Diff Changing Content 1`] = `
             className="level is-flex-wrap-wrap"
           >
             <div
-              className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+              className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
               onClick={[Function]}
               title="src/main/resources/locales/de/plugins.json"
             >
@@ -7311,7 +7311,7 @@ exports[`Storyshots Diff Changing Content 1`] = `
             className="level is-flex-wrap-wrap"
           >
             <div
-              className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+              className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
               onClick={[Function]}
               title="src/main/resources/locales/en/plugins.json"
             >
@@ -7837,7 +7837,7 @@ exports[`Storyshots Diff Changing Content 1`] = `
             className="level is-flex-wrap-wrap"
           >
             <div
-              className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+              className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
               onClick={[Function]}
               title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
             >
@@ -9053,7 +9053,7 @@ exports[`Storyshots Diff Changing Content 1`] = `
             className="level is-flex-wrap-wrap"
           >
             <div
-              className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+              className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
               onClick={[Function]}
               title="Main.java"
             >
@@ -9629,7 +9629,7 @@ exports[`Storyshots Diff Collapsed 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
           >
@@ -9742,7 +9742,7 @@ exports[`Storyshots Diff Collapsed 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/js/ChangeNotification.tsx"
           >
@@ -9855,7 +9855,7 @@ exports[`Storyshots Diff Collapsed 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/resources/locales/de/plugins.json"
           >
@@ -9968,7 +9968,7 @@ exports[`Storyshots Diff Collapsed 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/resources/locales/en/plugins.json"
           >
@@ -10081,7 +10081,7 @@ exports[`Storyshots Diff Collapsed 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
           >
@@ -10194,7 +10194,7 @@ exports[`Storyshots Diff Collapsed 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="Main.java"
           >
@@ -10316,7 +10316,7 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
           >
@@ -10391,7 +10391,7 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/js/ChangeNotification.tsx"
           >
@@ -11249,7 +11249,7 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/resources/locales/de/plugins.json"
           >
@@ -11703,7 +11703,7 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/resources/locales/en/plugins.json"
           >
@@ -12157,7 +12157,7 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
           >
@@ -12232,7 +12232,7 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="Main.java"
           >
@@ -12316,7 +12316,7 @@ exports[`Storyshots Diff Default 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
           >
@@ -12897,7 +12897,7 @@ exports[`Storyshots Diff Default 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/js/ChangeNotification.tsx"
           >
@@ -13755,7 +13755,7 @@ exports[`Storyshots Diff Default 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/resources/locales/de/plugins.json"
           >
@@ -14209,7 +14209,7 @@ exports[`Storyshots Diff Default 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/resources/locales/en/plugins.json"
           >
@@ -14663,7 +14663,7 @@ exports[`Storyshots Diff Default 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
           >
@@ -15724,7 +15724,7 @@ exports[`Storyshots Diff Default 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="Main.java"
           >
@@ -16262,7 +16262,7 @@ exports[`Storyshots Diff Expandable 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
           >
@@ -16880,7 +16880,7 @@ exports[`Storyshots Diff Expandable 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/js/ChangeNotification.tsx"
           >
@@ -17835,7 +17835,7 @@ exports[`Storyshots Diff Expandable 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/resources/locales/de/plugins.json"
           >
@@ -18361,7 +18361,7 @@ exports[`Storyshots Diff Expandable 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/resources/locales/en/plugins.json"
           >
@@ -18887,7 +18887,7 @@ exports[`Storyshots Diff Expandable 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
           >
@@ -20103,7 +20103,7 @@ exports[`Storyshots Diff Expandable 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="Main.java"
           >
@@ -20678,7 +20678,7 @@ exports[`Storyshots Diff External state management 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
           >
@@ -21296,7 +21296,7 @@ exports[`Storyshots Diff External state management 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/js/ChangeNotification.tsx"
           >
@@ -22251,7 +22251,7 @@ exports[`Storyshots Diff External state management 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/resources/locales/de/plugins.json"
           >
@@ -22777,7 +22777,7 @@ exports[`Storyshots Diff External state management 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/resources/locales/en/plugins.json"
           >
@@ -23303,7 +23303,7 @@ exports[`Storyshots Diff External state management 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
           >
@@ -24519,7 +24519,7 @@ exports[`Storyshots Diff External state management 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="Main.java"
           >
@@ -25094,7 +25094,7 @@ exports[`Storyshots Diff File Annotation 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
           >
@@ -25679,7 +25679,7 @@ exports[`Storyshots Diff File Annotation 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/js/ChangeNotification.tsx"
           >
@@ -26541,7 +26541,7 @@ exports[`Storyshots Diff File Annotation 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/resources/locales/de/plugins.json"
           >
@@ -26999,7 +26999,7 @@ exports[`Storyshots Diff File Annotation 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/resources/locales/en/plugins.json"
           >
@@ -27457,7 +27457,7 @@ exports[`Storyshots Diff File Annotation 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
           >
@@ -28522,7 +28522,7 @@ exports[`Storyshots Diff File Annotation 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="Main.java"
           >
@@ -29064,7 +29064,7 @@ exports[`Storyshots Diff File Controls 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
           >
@@ -29663,7 +29663,7 @@ exports[`Storyshots Diff File Controls 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/js/ChangeNotification.tsx"
           >
@@ -30539,7 +30539,7 @@ exports[`Storyshots Diff File Controls 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/resources/locales/de/plugins.json"
           >
@@ -31011,7 +31011,7 @@ exports[`Storyshots Diff File Controls 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/resources/locales/en/plugins.json"
           >
@@ -31483,7 +31483,7 @@ exports[`Storyshots Diff File Controls 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
           >
@@ -32562,7 +32562,7 @@ exports[`Storyshots Diff File Controls 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="Main.java"
           >
@@ -33118,7 +33118,7 @@ exports[`Storyshots Diff Hunks 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/java/com/cloudogu/scm/review/pullrequest/service/DefaultPullRequestService.java"
           >
@@ -33963,7 +33963,7 @@ exports[`Storyshots Diff Line Annotation 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
           >
@@ -34556,7 +34556,7 @@ exports[`Storyshots Diff Line Annotation 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/js/ChangeNotification.tsx"
           >
@@ -35426,7 +35426,7 @@ exports[`Storyshots Diff Line Annotation 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/resources/locales/de/plugins.json"
           >
@@ -35880,7 +35880,7 @@ exports[`Storyshots Diff Line Annotation 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/resources/locales/en/plugins.json"
           >
@@ -36334,7 +36334,7 @@ exports[`Storyshots Diff Line Annotation 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
           >
@@ -37395,7 +37395,7 @@ exports[`Storyshots Diff Line Annotation 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="Main.java"
           >
@@ -37945,7 +37945,7 @@ exports[`Storyshots Diff OnClick 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
           >
@@ -38566,7 +38566,7 @@ exports[`Storyshots Diff OnClick 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/js/ChangeNotification.tsx"
           >
@@ -39486,7 +39486,7 @@ exports[`Storyshots Diff OnClick 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/resources/locales/de/plugins.json"
           >
@@ -39970,7 +39970,7 @@ exports[`Storyshots Diff OnClick 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/resources/locales/en/plugins.json"
           >
@@ -40454,7 +40454,7 @@ exports[`Storyshots Diff OnClick 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
           >
@@ -41591,7 +41591,7 @@ exports[`Storyshots Diff OnClick 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="Main.java"
           >
@@ -42165,7 +42165,7 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
           >
@@ -42839,7 +42839,7 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/js/ChangeNotification.tsx"
           >
@@ -43787,7 +43787,7 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/resources/locales/de/plugins.json"
           >
@@ -44293,7 +44293,7 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/resources/locales/en/plugins.json"
           >
@@ -44799,7 +44799,7 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
           >
@@ -46029,7 +46029,7 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="Main.java"
           >
@@ -46640,7 +46640,7 @@ exports[`Storyshots Diff SyntaxHighlighting (Markdown) 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="CHANGELOG.md"
           >
@@ -47003,7 +47003,7 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
           >
@@ -47584,7 +47584,7 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/js/ChangeNotification.tsx"
           >
@@ -48442,7 +48442,7 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/resources/locales/de/plugins.json"
           >
@@ -48896,7 +48896,7 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/resources/locales/en/plugins.json"
           >
@@ -49350,7 +49350,7 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
           >
@@ -50411,7 +50411,7 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="Main.java"
           >
@@ -50949,7 +50949,7 @@ exports[`Storyshots Diff WithLinkToFile 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
           >
@@ -51567,7 +51567,7 @@ exports[`Storyshots Diff WithLinkToFile 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/js/ChangeNotification.tsx"
           >
@@ -52522,7 +52522,7 @@ exports[`Storyshots Diff WithLinkToFile 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/resources/locales/de/plugins.json"
           >
@@ -53048,7 +53048,7 @@ exports[`Storyshots Diff WithLinkToFile 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/resources/locales/en/plugins.json"
           >
@@ -53574,7 +53574,7 @@ exports[`Storyshots Diff WithLinkToFile 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
           >
@@ -54790,7 +54790,7 @@ exports[`Storyshots Diff WithLinkToFile 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex has-cursor-pointer"
+            className="DiffFile__FullWidthTitleHeader-sc-10deuqx-1 ivlFSy level-left is-flex is-clickable"
             onClick={[Function]}
             title="Main.java"
           >
@@ -72373,7 +72373,7 @@ exports[`Storyshots Navigation|Secondary Active when match 1`] = `
     >
       <div>
         <p
-          className="SecondaryNavigation__MenuLabel-sc-8p1rgi-2 fCZGGb menu-label has-cursor-pointer"
+          className="SecondaryNavigation__MenuLabel-sc-8p1rgi-2 fCZGGb menu-label is-clickable"
           onClick={[Function]}
         >
           <i
@@ -72435,7 +72435,7 @@ exports[`Storyshots Navigation|Secondary Default 1`] = `
     >
       <div>
         <p
-          className="SecondaryNavigation__MenuLabel-sc-8p1rgi-2 fCZGGb menu-label has-cursor-pointer"
+          className="SecondaryNavigation__MenuLabel-sc-8p1rgi-2 fCZGGb menu-label is-clickable"
           onClick={[Function]}
         >
           <i
@@ -72497,7 +72497,7 @@ exports[`Storyshots Navigation|Secondary Extension Point 1`] = `
     >
       <div>
         <p
-          className="SecondaryNavigation__MenuLabel-sc-8p1rgi-2 fCZGGb menu-label has-cursor-pointer"
+          className="SecondaryNavigation__MenuLabel-sc-8p1rgi-2 fCZGGb menu-label is-clickable"
           onClick={[Function]}
         >
           <i
@@ -72585,7 +72585,7 @@ exports[`Storyshots Navigation|Secondary Sub Navigation 1`] = `
     >
       <div>
         <p
-          className="SecondaryNavigation__MenuLabel-sc-8p1rgi-2 fCZGGb menu-label has-cursor-pointer"
+          className="SecondaryNavigation__MenuLabel-sc-8p1rgi-2 fCZGGb menu-label is-clickable"
           onClick={[Function]}
         >
           <i
@@ -72848,7 +72848,7 @@ exports[`Storyshots RepositoryEntry Archived 1`] = `
             className="is-flex is-justify-content-flex-end is-align-items-flex-end"
           >
             <i
-              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 khGtCz has-cursor-pointer is-size-5"
+              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 khGtCz is-clickable is-size-5"
               onClick={[Function]}
               title="overview.clone"
             />
@@ -72941,7 +72941,7 @@ exports[`Storyshots RepositoryEntry Avatar EP 1`] = `
             className="is-flex is-justify-content-flex-end is-align-items-flex-end"
           >
             <i
-              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 khGtCz has-cursor-pointer is-size-5"
+              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 khGtCz is-clickable is-size-5"
               onClick={[Function]}
               title="overview.clone"
             />
@@ -73037,7 +73037,7 @@ exports[`Storyshots RepositoryEntry Before Title EP 1`] = `
             className="is-flex is-justify-content-flex-end is-align-items-flex-end"
           >
             <i
-              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 khGtCz has-cursor-pointer is-size-5"
+              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 khGtCz is-clickable is-size-5"
               onClick={[Function]}
               title="overview.clone"
             />
@@ -73130,7 +73130,7 @@ exports[`Storyshots RepositoryEntry Default 1`] = `
             className="is-flex is-justify-content-flex-end is-align-items-flex-end"
           >
             <i
-              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 khGtCz has-cursor-pointer is-size-5"
+              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 khGtCz is-clickable is-size-5"
               onClick={[Function]}
               title="overview.clone"
             />
@@ -73234,7 +73234,7 @@ exports[`Storyshots RepositoryEntry Exporting 1`] = `
             className="is-flex is-justify-content-flex-end is-align-items-flex-end"
           >
             <i
-              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 khGtCz has-cursor-pointer is-size-5"
+              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 khGtCz is-clickable is-size-5"
               onClick={[Function]}
               title="overview.clone"
             />
@@ -73312,7 +73312,7 @@ exports[`Storyshots RepositoryEntry HealthCheck Failure 1`] = `
                     data-tooltip="healthCheckFailure.tooltip"
                   >
                     <span
-                      className="tag is-danger is-small has-cursor-pointer p-1 is-size-7 has-text-weight-bold"
+                      className="tag is-danger is-small is-clickable p-1 is-size-7 has-text-weight-bold"
                       onClick={[Function]}
                     >
                       repository.healthCheckFailure
@@ -73339,7 +73339,7 @@ exports[`Storyshots RepositoryEntry HealthCheck Failure 1`] = `
             className="is-flex is-justify-content-flex-end is-align-items-flex-end"
           >
             <i
-              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 khGtCz has-cursor-pointer is-size-5"
+              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 khGtCz is-clickable is-size-5"
               onClick={[Function]}
               title="overview.clone"
             />
@@ -73453,7 +73453,7 @@ exports[`Storyshots RepositoryEntry MultiRepositoryTags 1`] = `
             className="is-flex is-justify-content-flex-end is-align-items-flex-end"
           >
             <i
-              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 khGtCz has-cursor-pointer is-size-5"
+              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 khGtCz is-clickable is-size-5"
               onClick={[Function]}
               title="overview.clone"
             />
@@ -73531,7 +73531,7 @@ exports[`Storyshots RepositoryEntry RepositoryFlag EP 1`] = `
                     data-tooltip="healthCheckFailure.tooltip"
                   >
                     <span
-                      className="tag is-danger is-small has-cursor-pointer p-1 is-size-7 has-text-weight-bold"
+                      className="tag is-danger is-small is-clickable p-1 is-size-7 has-text-weight-bold"
                       onClick={[Function]}
                     >
                       repository.healthCheckFailure
@@ -73558,7 +73558,7 @@ exports[`Storyshots RepositoryEntry RepositoryFlag EP 1`] = `
             className="is-flex is-justify-content-flex-end is-align-items-flex-end"
           >
             <i
-              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 khGtCz has-cursor-pointer is-size-5"
+              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 khGtCz is-clickable is-size-5"
               onClick={[Function]}
               title="overview.clone"
             />
@@ -73651,7 +73651,7 @@ exports[`Storyshots RepositoryEntry With long texts 1`] = `
             className="is-flex is-justify-content-flex-end is-align-items-flex-end"
           >
             <i
-              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 khGtCz has-cursor-pointer is-size-5"
+              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 khGtCz is-clickable is-size-5"
               onClick={[Function]}
               title="overview.clone"
             />
@@ -87952,7 +87952,7 @@ exports[`Storyshots Table|Table Default 1`] = `
         First Name
       </th>
       <th
-        className="has-cursor-pointer"
+        className="is-clickable"
         onClick={[Function]}
         onMouseEnter={[Function]}
         onMouseLeave={[Function]}
@@ -88037,7 +88037,7 @@ exports[`Storyshots Table|Table Table with Word-Break 1`] = `
   <thead>
     <tr>
       <th
-        className="has-cursor-pointer"
+        className="is-clickable"
         onClick={[Function]}
         onMouseEnter={[Function]}
         onMouseLeave={[Function]}
@@ -88048,7 +88048,7 @@ exports[`Storyshots Table|Table Table with Word-Break 1`] = `
         />
       </th>
       <th
-        className="has-cursor-pointer"
+        className="is-clickable"
         onClick={[Function]}
         onMouseEnter={[Function]}
         onMouseLeave={[Function]}
@@ -88088,7 +88088,7 @@ exports[`Storyshots Table|Table TextColumn 1`] = `
   <thead>
     <tr>
       <th
-        className="has-cursor-pointer"
+        className="is-clickable"
         onClick={[Function]}
         onMouseEnter={[Function]}
         onMouseLeave={[Function]}
@@ -88099,7 +88099,7 @@ exports[`Storyshots Table|Table TextColumn 1`] = `
         />
       </th>
       <th
-        className="has-cursor-pointer"
+        className="is-clickable"
         onClick={[Function]}
         onMouseEnter={[Function]}
         onMouseLeave={[Function]}
@@ -88110,7 +88110,7 @@ exports[`Storyshots Table|Table TextColumn 1`] = `
         />
       </th>
       <th
-        className="has-cursor-pointer"
+        className="is-clickable"
         onClick={[Function]}
         onMouseEnter={[Function]}
         onMouseLeave={[Function]}
@@ -88165,7 +88165,7 @@ exports[`Storyshots Tag Clickable 1`] = `
   className="Tagstories__Wrapper-wsn8kx-0 biUGWd"
 >
   <span
-    className="tag is-light is-normal has-cursor-pointer"
+    className="tag is-light is-normal is-clickable"
     onClick={[Function]}
   >
     Click here
