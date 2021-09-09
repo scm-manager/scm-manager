@@ -44,46 +44,6 @@ class AnalyzerFactoryTest {
   private final AnalyzerFactory analyzerFactory = new AnalyzerFactory();
 
   @Nested
-  class FromIndexOptionsTests {
-
-    @Test
-    void shouldReturnStandardAnalyzer() {
-      Analyzer analyzer = analyzerFactory.create(IndexOptions.defaults());
-      assertThat(analyzer).isInstanceOf(StandardAnalyzer.class);
-    }
-
-    @Test
-    void shouldReturnStandardAnalyzerForUnknownLocale() {
-      Analyzer analyzer = analyzerFactory.create(IndexOptions.naturalLanguage(Locale.CHINESE));
-      assertThat(analyzer).isInstanceOf(StandardAnalyzer.class);
-    }
-
-    @Test
-    void shouldReturnEnglishAnalyzer() {
-      Analyzer analyzer = analyzerFactory.create(IndexOptions.naturalLanguage(Locale.ENGLISH));
-      assertThat(analyzer).isInstanceOf(EnglishAnalyzer.class);
-    }
-
-    @Test
-    void shouldReturnGermanAnalyzer() {
-      Analyzer analyzer = analyzerFactory.create(IndexOptions.naturalLanguage(Locale.GERMAN));
-      assertThat(analyzer).isInstanceOf(GermanAnalyzer.class);
-    }
-
-    @Test
-    void shouldReturnGermanAnalyzerForLocaleGermany() {
-      Analyzer analyzer = analyzerFactory.create(IndexOptions.naturalLanguage(Locale.GERMANY));
-      assertThat(analyzer).isInstanceOf(GermanAnalyzer.class);
-    }
-
-    @Test
-    void shouldReturnSpanishAnalyzer() {
-      Analyzer analyzer = analyzerFactory.create(IndexOptions.naturalLanguage(new Locale("es", "ES")));
-      assertThat(analyzer).isInstanceOf(SpanishAnalyzer.class);
-    }
-  }
-
-  @Nested
   class FromSearchableTypeTests {
 
     @Test
@@ -98,8 +58,7 @@ class AnalyzerFactoryTest {
 
     private void analyze(Class<?> type, String text, String field, String... expectedTokens) throws IOException {
       LuceneSearchableType searchableType = SearchableTypes.create(type);
-      IndexOptions defaults = IndexOptions.defaults();
-      Analyzer analyzer = analyzerFactory.create(searchableType, defaults);
+      Analyzer analyzer = analyzerFactory.create(searchableType);
       List<String> tokens = Analyzers.tokenize(analyzer, field, text);
       assertThat(tokens).containsOnly(expectedTokens);
     }

@@ -73,7 +73,7 @@ class IndexManagerTest {
   void createIndexWriterFactory(@TempDir Path tempDirectory) {
     this.directory = tempDirectory;
     when(context.resolve(Paths.get("index"))).thenReturn(tempDirectory.resolve("index"));
-    when(analyzerFactory.create(any(LuceneSearchableType.class), any(IndexOptions.class))).thenReturn(new SimpleAnalyzer());
+    when(analyzerFactory.create(any(LuceneSearchableType.class))).thenReturn(new SimpleAnalyzer());
     when(pluginLoader.getUberClassLoader()).thenReturn(IndexManagerTest.class.getClassLoader());
     indexManager = new IndexManager(context, pluginLoader, analyzerFactory);
   }
@@ -139,10 +139,10 @@ class IndexManagerTest {
   }
 
   @SuppressWarnings({"rawtypes", "unchecked"})
-  private IndexWriter open(Class type, String indexName) throws IOException {
+  private IndexWriter open(Class type, String indexName) {
     lenient().when(searchableType.getType()).thenReturn(type);
     when(searchableType.getName()).thenReturn(type.getSimpleName().toLowerCase(Locale.ENGLISH));
-    return indexManager.openForWrite(new IndexParams(indexName, searchableType, IndexOptions.defaults()));
+    return indexManager.openForWrite(new IndexParams(indexName, searchableType));
   }
 
   @Test

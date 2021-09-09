@@ -66,7 +66,7 @@ const InnerSelect: FC<FieldProps<BaseProps, HTMLSelectElement, string>> = ({
   const field = useInnerRef(props.innerRef);
 
   let opts = options;
-  if (value && addValueToOptions && options.some((o) => o.value === value)) {
+  if (value && addValueToOptions && !options.some((o) => o.value === value)) {
     opts = [{ label: value, value }, ...options];
   }
 

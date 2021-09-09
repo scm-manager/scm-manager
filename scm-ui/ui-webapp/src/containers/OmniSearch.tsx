@@ -32,6 +32,7 @@ import { Button, HitProps, Notification, RepositoryAvatar, useStringHitFieldValu
 import SyntaxHelp from "../search/SyntaxHelp";
 import SyntaxModal from "../search/SyntaxModal";
 import SearchErrorNotification from "../search/SearchErrorNotification";
+import queryString from "query-string";
 
 const Input = styled.input`
   border-radius: 4px !important;
@@ -281,31 +282,39 @@ const useShowResultsOnFocus = () => {
   };
 };
 
-const useSearchType = () => {
+const useSearchParams = () => {
   const location = useLocation();
   const pathname = location.pathname;
 
-  let type = "repository";
+  let searchType = "repository";
+  let initialQuery = "";
   if (pathname.startsWith("/search/")) {
     const path = pathname.substring("/search/".length);
     const index = path.indexOf("/");
     if (index > 0) {
-      type = path.substring(0, index);
+      searchType = path.substring(0, index);
     } else {
-      type = path;
+      searchType = path;
     }
+
+    const queryParams = queryString.parse(location.search);
+    initialQuery = queryParams.q || "";
   }
-  return type;
+
+  return {
+    searchType,
+    initialQuery,
+  };
 };
 
 const OmniSearch: FC = () => {
-  const [query, setQuery] = useState("");
+  const { searchType, initialQuery } = useSearchParams();
+  const [query, setQuery] = useState(initialQuery);
   const debouncedQuery = useDebounce(query, 250);
   const { data, isLoading, error } = useSearch(debouncedQuery, { type: "repository", pageSize: 5 });
   const { showResults, hideResults, ...handlers } = useShowResultsOnFocus();
   const [showHelp, setShowHelp] = useState(false);
   const history = useHistory();
-  const searchType = useSearchType();
 
   const openHelp = () => setShowHelp(true);
   const closeHelp = () => setShowHelp(false);

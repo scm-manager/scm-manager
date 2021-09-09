@@ -43,6 +43,7 @@ class LuceneSearchableField implements SearchableField {
   private final PointsConfig pointsConfig;
   private final Indexed.Analyzer analyzer;
   private final boolean searchable;
+  private final boolean tokenized;
 
   LuceneSearchableField(Field field, Indexed indexed) {
     this.name = name(field, indexed);
@@ -54,6 +55,7 @@ class LuceneSearchableField implements SearchableField {
     this.pointsConfig = IndexableFields.pointConfig(field);
     this.analyzer = indexed.analyzer();
     this.searchable = indexed.type().isSearchable();
+    this.tokenized = indexed.type().isTokenized() && String.class.isAssignableFrom(type);
   }
 
   Object value(Document document) {

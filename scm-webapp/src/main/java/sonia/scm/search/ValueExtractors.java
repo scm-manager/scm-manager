@@ -28,6 +28,7 @@ import org.apache.lucene.index.IndexableField;
 
 import javax.annotation.Nonnull;
 import java.time.Instant;
+import java.util.Locale;
 
 final class ValueExtractors {
 
@@ -45,9 +46,22 @@ final class ValueExtractors {
       return booleanExtractor(name);
     } else if (TypeCheck.isInstant(type)) {
       return instantExtractor(name);
+    } else if (type.isEnum()) {
+      return enumExtractor(name, type);
     } else {
       throw new UnsupportedTypeOfFieldException(type, name);
     }
+  }
+
+  @SuppressWarnings({"unchecked", "rawtypes"})
+  private static ValueExtractor enumExtractor(String name, Class type) {
+    return doc -> {
+      String value = doc.get(name);
+      if (value != null) {
+        return Enum.valueOf(type, value.toUpperCase(Locale.ENGLISH));
+      }
+      return null;
+    };
   }
 
   @Nonnull

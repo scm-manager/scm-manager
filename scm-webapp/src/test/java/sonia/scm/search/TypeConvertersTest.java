@@ -200,6 +200,13 @@ class TypeConvertersTest {
     assertThat(document.getField("lastName")).isNull();
   }
 
+  @Test
+  void shouldCreateEnumField() {
+    Document document = convert(new TypeWithEnum(Color.GREEN));
+
+    assertThat(document.get("color")).isEqualTo("GREEN");
+  }
+
   private void assertPointField(Document document, String name, Consumer<IndexableField> consumer) {
     IndexableField[] fields = document.getFields(name);
     assertThat(fields)
@@ -290,5 +297,20 @@ class TypeConvertersTest {
       this.instant = instant;
       this.storedOnlyInstant = instant;
     }
+  }
+
+  @Getter
+  @IndexedType
+  private static class TypeWithEnum {
+    @Indexed
+    private final Color color;
+
+    private TypeWithEnum(Color color) {
+      this.color = color;
+    }
+  }
+
+  private enum Color {
+    GREEN, RED, BLUE, YELLOW
   }
 }

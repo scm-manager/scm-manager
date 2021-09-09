@@ -49,11 +49,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.repository.Repository;
 
 import java.io.IOException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Locale;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -277,16 +280,9 @@ class LuceneQueryBuilderTest {
       writer.addDocument(repositoryDoc("Awesome content three", "fgh"));
     }
 
-    QueryResult result;
-    try (DirectoryReader reader = DirectoryReader.open(directory)) {
-      SearchableTypeResolver resolver = new SearchableTypeResolver(Simple.class);
-      LuceneSearchableType searchableType = resolver.resolve(Simple.class);
-      when(opener.openForRead(searchableType, "default")).thenReturn(reader);
-      LuceneQueryBuilder<Simple> builder = new LuceneQueryBuilder<>(
-        opener, "default", searchableType, new StandardAnalyzer()
-      );
-      result = builder.repository("cde").execute("content:awesome");
-    }
+    QueryResult result = query(
+      Simple.class, "content:awesome", builder -> builder.filter(Repository.class, "cde")
+    );
 
     assertThat(result.getTotalHits()).isOne();
 
@@ -295,6 +291,24 @@ class LuceneQueryBuilderTest {
       assertValueField(hit, "content", "Awesome content two");
       assertThat(hit.getScore()).isGreaterThan(0f);
     });
+  }
+
+  @Test
+  void shouldFilterByIdParts() throws IOException {
+    try (IndexWriter writer = writer()) {
+      writer.addDocument(idPartsDoc("Awesome content one", "abc", "one"));
+      writer.addDocument(idPartsDoc("Awesome content two", "abc", "two"));
+      writer.addDocument(idPartsDoc("Awesome content three", "cde", "two"));
+    }
+
+    QueryResult result = query(
+      Simple.class, "content:awesome",
+      builder -> builder.filter(Repository.class, "abc").filter(String.class, "two")
+    );
+
+    List<Hit> hits = result.getHits();
+    assertThat(hits).hasSize(1)
+      .allSatisfy(hit -> assertValueField(hit, "content", "Awesome content two"));
   }
 
   @Test
@@ -532,6 +546,26 @@ class LuceneQueryBuilderTest {
     assertThat(hit.getRepositoryId()).contains("4211");
   }
 
+  @Test
+  void shouldQueryByEnumField() throws IOException {
+    try (IndexWriter writer = writer()) {
+      writer.addDocument(animalPerson("Trillian", Animal.PENGUIN));
+    }
+
+    QueryResult result = query(PersonWithAnimal.class, "animal:penguin");
+    assertThat(result.getTotalHits()).isOne();
+  }
+
+  @Test
+  void shouldQueryByEnumFieldAndIgnoreCase() throws IOException {
+    try (IndexWriter writer = writer()) {
+      writer.addDocument(animalPerson("Arthur", Animal.ALPACA));
+    }
+
+    QueryResult result = query(PersonWithAnimal.class, "animal:AlPaCa");
+    assertThat(result.getTotalHits()).isOne();
+  }
+
   private QueryResult query(Class<?> type, String queryString) throws IOException {
     return query(type, queryString, null, null);
   }
@@ -542,27 +576,33 @@ class LuceneQueryBuilderTest {
       LuceneSearchableType searchableType = resolver.resolve(type);
       lenient().when(opener.openForRead(searchableType, "default")).thenReturn(reader);
       LuceneQueryBuilder<T> builder = new LuceneQueryBuilder<T>(
-        opener, "default", searchableType, new StandardAnalyzer()
+        opener, "default", searchableType, new AnalyzerFactory().create(searchableType)
       );
       return builder.count(queryString).getTotalHits();
     }
   }
 
   private <T> QueryResult query(Class<?> type, String queryString, Integer start, Integer limit) throws IOException {
-    try (DirectoryReader reader = DirectoryReader.open(directory)) {
-      SearchableTypeResolver resolver = new SearchableTypeResolver(type);
-      LuceneSearchableType searchableType = resolver.resolve(type);
-
-      lenient().when(opener.openForRead(searchableType, "default")).thenReturn(reader);
-      LuceneQueryBuilder<T> builder = new LuceneQueryBuilder<>(
-        opener, "default", searchableType, new StandardAnalyzer()
-      );
+    return query(type, queryString, builder -> {
       if (start != null) {
         builder.start(start);
       }
       if (limit != null) {
         builder.limit(limit);
       }
+    });
+  }
+
+  private <T> QueryResult query(Class<T> type, String queryString, Consumer<LuceneQueryBuilder<T>> consumer) throws IOException {
+    try (DirectoryReader reader = DirectoryReader.open(directory)) {
+      SearchableTypeResolver resolver = new SearchableTypeResolver(type);
+      LuceneSearchableType searchableType = resolver.resolve(type);
+
+      lenient().when(opener.openForRead(searchableType, "default")).thenReturn(reader);
+      LuceneQueryBuilder<T> builder = new LuceneQueryBuilder<>(
+        opener, "default", searchableType, new AnalyzerFactory().create(searchableType)
+      );
+      consumer.accept(builder);
       return builder.execute(queryString);
     }
   }
@@ -576,14 +616,12 @@ class LuceneQueryBuilderTest {
   private Document simpleDoc(String content) {
     Document document = new Document();
     document.add(new TextField("content", content, Field.Store.YES));
-//    document.add(new StringField(FieldNames.TYPE, "simple", Field.Store.YES));
     return document;
   }
 
   private Document permissionDoc(String content, String permission) {
     Document document = new Document();
     document.add(new TextField("content", content, Field.Store.YES));
-//    document.add(new StringField(FieldNames.TYPE, "simple", Field.Store.YES));
     document.add(new StringField(FieldNames.PERMISSION, permission, Field.Store.YES));
     return document;
   }
@@ -591,8 +629,15 @@ class LuceneQueryBuilderTest {
   private Document repositoryDoc(String content, String repository) {
     Document document = new Document();
     document.add(new TextField("content", content, Field.Store.YES));
-//    document.add(new StringField(FieldNames.TYPE, "simple", Field.Store.YES));
     document.add(new StringField(FieldNames.REPOSITORY, repository, Field.Store.YES));
+    return document;
+  }
+
+  private Document idPartsDoc(String content, String repository, String other) {
+    Document document = new Document();
+    document.add(new TextField("content", content, Field.Store.YES));
+    document.add(new StringField(FieldNames.REPOSITORY, repository, Field.Store.YES));
+    document.add(new StringField("_string", other, Field.Store.YES));
     return document;
   }
 
@@ -603,14 +648,12 @@ class LuceneQueryBuilderTest {
     document.add(new TextField("displayName", displayName, Field.Store.YES));
     document.add(new TextField("carLicense", carLicense, Field.Store.YES));
     document.add(new StringField(FieldNames.ID, lastName, Field.Store.YES));
-//    document.add(new StringField(FieldNames.TYPE, "inetOrgPerson", Field.Store.YES));
     return document;
   }
 
   private Document personDoc(String lastName) {
     Document document = new Document();
     document.add(new TextField("lastName", lastName, Field.Store.YES));
-//    document.add(new StringField(FieldNames.TYPE, "person", Field.Store.YES));
     return document;
   }
 
@@ -623,14 +666,13 @@ class LuceneQueryBuilderTest {
     document.add(new StringField("boolValue", String.valueOf(boolValue), Field.Store.YES));
     document.add(new LongPoint("instantValue", instantValue.toEpochMilli()));
     document.add(new StoredField("instantValue", instantValue.toEpochMilli()));
-//    document.add(new StringField(FieldNames.TYPE, "types", Field.Store.YES));
     return document;
   }
 
-  private Document denyDoc(String value) {
+  private Document animalPerson(String name, Animal animal) {
     Document document = new Document();
-    document.add(new TextField("value", value, Field.Store.YES));
-//    document.add(new StringField(FieldNames.TYPE, "deny", Field.Store.YES));
+    document.add(new TextField("name", name, Field.Store.YES));
+    document.add(new StringField("animal", animal.name(), Field.Store.YES));
     return document;
   }
 
@@ -679,11 +721,18 @@ class LuceneQueryBuilderTest {
     private String content;
   }
 
+  enum Animal {
+    PENGUIN, ALPACA
+  }
+
   @Getter
-  @IndexedType(permission = "deny:4711")
-  static class Deny {
+  @IndexedType
+  static class PersonWithAnimal {
     @Indexed(defaultQuery = true)
-    private String value;
+    private String name;
+
+    @Indexed
+    private Animal animal;
   }
 
 }

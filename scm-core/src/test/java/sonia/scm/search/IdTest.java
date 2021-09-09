@@ -26,6 +26,7 @@ package sonia.scm.search;
 
 import org.junit.jupiter.api.Test;
 import sonia.scm.ModelObject;
+import sonia.scm.group.Group;
 import sonia.scm.repository.Repository;
 import sonia.scm.user.User;
 
@@ -35,94 +36,104 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class IdTest {
 
   @Test
-  void shouldCreateIdFromPrimary() {
-    Id id = Id.of("one");
-    assertThat(id.getValue()).isEqualTo("one");
+  void shouldCreateSimpleId() {
+    Id<Repository> id = Id.of(Repository.class, "42");
+    assertThat(id.getMainType()).isEqualTo(Repository.class);
+    assertThat(id.getMainId()).isEqualTo("42");
+    assertThat(id.getOthers()).isEmpty();
   }
 
   @Test
-  void shouldCreateIdWithoutRepository() {
-    Id id = Id.of("one");
-    assertThat(id.getRepository()).isEmpty();
+  void shouldFailWithNullType() {
+    assertThrows(IllegalArgumentException.class, () -> Id.of(null, "42"));
   }
 
   @Test
-  void shouldFailWithoutPrimaryValue() {
-    assertThrows(IllegalArgumentException.class, () -> Id.of((String) null));
+  void shouldFailWithEmptyId() {
+    assertThrows(IllegalArgumentException.class, () -> Id.of(Repository.class, ""));
   }
 
   @Test
-  void shouldFailWithEmptyPrimaryValue() {
-    assertThrows(IllegalArgumentException.class, () -> Id.of(""));
+  void shouldFailWithNullId() {
+    assertThrows(IllegalArgumentException.class, () -> Id.of(Repository.class, (String) null));
   }
 
   @Test
-  void shouldCreateCombinedValue() {
-    Id id = Id.of("one", "two", "three");
-    assertThat(id.getValue()).isEqualTo("one:two:three");
+  void shouldFailWithNullIdObject() {
+    assertThrows(IllegalArgumentException.class, () -> Id.of(Repository.class, (ModelObject) null));
   }
 
   @Test
-  void shouldAddRepositoryId() {
-    Id id = Id.of("one").withRepository("4211");
-    assertThat(id.getRepository()).contains("4211");
-  }
-
-  @Test
-  void shouldAddRepository() {
+  void shouldCreateSimpleFromModelObject() {
     Repository repository = new Repository();
-    repository.setId("4211");
-    Id id = Id.of("one").withRepository(repository);
-    assertThat(id.getRepository()).contains("4211");
+    repository.setId("42");
+    Id<Repository> id = Id.of(Repository.class, repository);
+    assertThat(id.getMainType()).isEqualTo(Repository.class);
+    assertThat(id.getMainId()).isEqualTo("42");
+    assertThat(id.getOthers()).isEmpty();
   }
 
   @Test
-  void shouldCreateIdFromRepository() {
+  void shouldCreateIdWithOneOther() {
+    Id<User> id = Id.of(User.class, "trillian").and(Group.class, "hog");
+    assertThat(id.getMainType()).isEqualTo(User.class);
+    assertThat(id.getMainId()).isEqualTo("trillian");
+    assertThat(id.getOthers()).containsEntry(Group.class, "hog");
+  }
+
+  @Test
+  void shouldCreateIdWithOtherFromModelObject() {
+    Group group = new Group("xml", "hog");
+    Id<User> id = Id.of(User.class, "trillian").and(Group.class, group);
+    assertThat(id.getMainType()).isEqualTo(User.class);
+    assertThat(id.getMainId()).isEqualTo("trillian");
+    assertThat(id.getOthers()).containsEntry(Group.class, "hog");
+  }
+
+  @Test
+  void shouldCreateIdWithOthers() {
     Repository repository = new Repository();
-    repository.setId("4211");
-    Id id = Id.of(repository);
-    assertThat(id.getRepository()).contains("4211");
+    repository.setId("heart-of-gold");
+
+    Id<User> id = Id.of(User.class, "trillian")
+      .and(Group.class, "hog")
+      .and(repository);
+
+    assertThat(id.getMainType()).isEqualTo(User.class);
+    assertThat(id.getMainId()).isEqualTo("trillian");
+    assertThat(id.getOthers())
+      .containsEntry(Group.class, "hog")
+      .containsEntry(Repository.class, "heart-of-gold");
   }
 
   @Test
-  void shouldFailWithoutRepository() {
-    Id id = Id.of("one");
-    assertThrows(IllegalArgumentException.class, () -> id.withRepository((Repository) null));
+  void shouldFailIfOtherTypeIsNull() {
+    Id<User> id = Id.of(User.class, "trillian");
+    assertThrows(IllegalArgumentException.class, () -> id.and(null, "hog"));
   }
 
   @Test
-  void shouldFailWithoutRepositoryId() {
-    Id id = Id.of("one");
-    assertThrows(IllegalArgumentException.class, () -> id.withRepository((String) null));
+  void shouldFailIfOtherIdIsNull() {
+    Id<User> id = Id.of(User.class, "trillian");
+    assertThrows(IllegalArgumentException.class, () -> id.and(Group.class, (String) null));
   }
 
   @Test
-  void shouldFailWithEmptyRepositoryId() {
-    Id id = Id.of("one");
-    assertThrows(IllegalArgumentException.class, () -> id.withRepository((String) null));
+  void shouldFailIfOtherIdIsEmpty() {
+    Id<User> id = Id.of(User.class, "trillian");
+    assertThrows(IllegalArgumentException.class, () -> id.and(Group.class, ""));
   }
 
   @Test
-  void shouldCreateIdFromModelObject() {
-    Id id = Id.of(new User("trillian"));
-    assertThat(id.getValue()).isEqualTo("trillian");
+  void shouldFailIfOtherIdObjectIsNull() {
+    Id<User> id = Id.of(User.class, "trillian");
+    assertThrows(IllegalArgumentException.class, () -> id.and(Group.class, (ModelObject) null));
   }
 
   @Test
-  void shouldFailWithoutModelObject() {
-    assertThrows(IllegalArgumentException.class, () -> Id.of((ModelObject) null));
-  }
-
-  @Test
-  void shouldReturnSimpleIdAsString() {
-    Id id = Id.of("one", "two");
-    assertThat(id.asString()).isEqualTo("one:two");
-  }
-
-  @Test
-  void shouldReturnIdWithRepositoryAsString() {
-    Id id = Id.of("one", "two").withRepository("4211");
-    assertThat(id.asString()).isEqualTo("one:two/4211");
+  void shouldFailIfRepositoryIsNull() {
+    Id<User> id = Id.of(User.class, "trillian");
+    assertThrows(IllegalArgumentException.class, () -> id.and(null));
   }
 
 }

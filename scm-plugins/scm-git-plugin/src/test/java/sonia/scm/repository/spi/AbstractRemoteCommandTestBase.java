@@ -50,8 +50,8 @@ import java.io.File;
 import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -83,9 +83,9 @@ public class AbstractRemoteCommandTestBase {
     eventFactory = mock(GitRepositoryHookEventFactory.class);
 
     handler = mock(GitRepositoryHandler.class);
-    when(handler.getDirectory(incomingRepository.getId())).thenReturn(
+    lenient().when(handler.getDirectory(incomingRepository.getId())).thenReturn(
       incomingDirectory);
-    when(handler.getDirectory(outgoingRepository.getId())).thenReturn(
+    lenient().when(handler.getDirectory(outgoingRepository.getId())).thenReturn(
       outgoingDirectory);
   }
 

@@ -25,17 +25,18 @@
 package sonia.scm.search;
 
 import com.google.common.annotations.Beta;
-import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableMap;
+import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.ToString;
 import sonia.scm.ModelObject;
 import sonia.scm.repository.Repository;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Optional;
+import java.util.Collections;
+import java.util.Map;
 
 /**
  * Describes the id of an indexed object.
@@ -45,114 +46,86 @@ import java.util.Optional;
 @Beta
 @ToString
 @EqualsAndHashCode
-public final class Id {
+@Getter(AccessLevel.PACKAGE)
+public final class Id<T> {
 
-  private final String value;
-  private final String repository;
+  private final Class<T> mainType;
+  private final String mainId;
+  private final Map<Class<?>, String> others;
 
-  private Id(@Nonnull String value, @Nullable String repository) {
-    this.value = value;
-    this.repository = repository;
+  private Id(Class<T> mainType, String mainId, Map<Class<?>, String> others) {
+    this.mainType = mainType;
+    this.mainId = mainId;
+    this.others = others;
   }
 
   /**
-   * Returns the string representation of the id without the repository part.
-   *
-   * @return string representation without repository.
+   * Creates a new combined id by adding a new type and value.
+   * @param type other type
+   * @param id other id
+   * @return new combined id
+   * @since 2.23.0
    */
-  public String getValue() {
-    return value;
+  public Id<T> and(Class<?> type, String id) {
+    Preconditions.checkArgument(type != null, "type is required");
+    Preconditions.checkArgument(!Strings.isNullOrEmpty(id), "id is required");
+    return new Id<>(
+      mainType,
+      mainId,
+      ImmutableMap.<Class<?>, String>builder()
+        .putAll(others)
+        .put(type, id)
+        .build()
+    );
   }
 
   /**
-   * Returns the repository id part of the id or an empty optional if the id does not belong to a repository.
-   * @return repository id or empty
+   * Creates a new combined id by adding a new type and value.
+   * @param type other type
+   * @param idObject object which holds id
+   * @return new combined id
+   * @since 2.23.0
    */
-  public Optional<String> getRepository() {
-    return Optional.ofNullable(repository);
+  public Id<T> and(Class<?> type, ModelObject idObject) {
+    Preconditions.checkArgument(idObject != null, "id object is required");
+    return and(type, idObject.getId());
   }
 
   /**
-   * Creates the id with the id of the given repository.
-   * @param repository repository
-   * @return id with repository id
+   * Creates a new combined id by adding the given repository.
+   * @param repository repository to add
+   * @return new combined id
+   * @since 2.23.0
    */
-  public Id withRepository(@Nonnull Repository repository) {
-    checkRepository(repository);
-    return withRepository(repository.getId());
-  }
-
-  /**
-   * Creates the id with the  given repository id.
-   * @param repository repository id
-   * @return id with repository id
-   */
-  public Id withRepository(@Nonnull String repository) {
-    checkRepository(repository);
-    return new Id(value, repository);
-  }
-
-  /**
-   * Returns the string representation of the id including the repository.
-   * @return string representation
-   */
-  public String asString() {
-    if (repository != null) {
-      return value + "/" + repository;
-    }
-    return value;
+  public Id<T> and(Repository repository) {
+    Preconditions.checkArgument(repository != null, "repository is required");
+    return and(Repository.class, repository);
   }
 
   /**
    * Creates a new id.
    *
-   * @param value primary value of the id
-   * @param others additional values which should be part of the id
+   * @param mainType main type of the id
+   * @param mainId main id of the id
    *
    * @return new id
    */
-  public static Id of(@Nonnull String value, String... others) {
-    Preconditions.checkArgument(!Strings.isNullOrEmpty(value), "primary value is required");
-    String idValue = value;
-    if (others.length > 0) {
-      idValue += ":" + Joiner.on(':').join(others);
-    }
-    return new Id(idValue, null);
+  public static <T> Id<T> of(Class<T> mainType, String mainId) {
+    Preconditions.checkArgument(mainType != null, "main type is required");
+    Preconditions.checkArgument(!Strings.isNullOrEmpty(mainId), "main id is required");
+    return new Id<>(mainType, mainId, Collections.emptyMap());
   }
 
   /**
-   * Creates a new id for the given repository.
+   * Creates a new id.
    *
-   * @param repository repository
-   * @return id of repository
+   * @param mainType main type of the id
+   * @param mainIdObject object which holds the main id
+   *
+   * @return new id
    */
-  public static Id of(@Nonnull Repository repository) {
-    checkRepository(repository);
-    String id = repository.getId();
-    checkRepository(id);
-    return new Id(id, id);
-  }
-
-  /**
-   * Creates a new id for the given model object.
-   * @param object model object
-   * @param others additional values which should be part of the id
-   * @return new id from model object
-   */
-  public static Id of(@Nonnull ModelObject object, String... others) {
-    checkObject(object);
-    return of(object.getId(), others);
-  }
-
-  private static void checkRepository(Repository repository) {
-    Preconditions.checkArgument(repository != null, "repository is required");
-  }
-
-  private static void checkRepository(String repository) {
-    Preconditions.checkArgument(!Strings.isNullOrEmpty(repository), "repository id is required");
-  }
-
-  private static void checkObject(@Nonnull ModelObject object) {
-    Preconditions.checkArgument(object != null, "object is required");
+  public static <T> Id<T> of(Class<T> mainType, ModelObject mainIdObject) {
+    Preconditions.checkArgument(mainIdObject != null, "main id object is required");
+    return of(mainType, mainIdObject.getId());
   }
 }

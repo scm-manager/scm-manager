@@ -90,11 +90,20 @@ public class RepositoryIndexer implements Indexer<Repository> {
 
   @Override
   public SerializableIndexTask<Repository> createDeleteTask(Repository repository) {
-    return index -> index.delete().byRepository(repository);
+    return index -> {
+      if (Repository.class.equals(index.getDetails().getType())) {
+        index.delete().byId(Id.of(Repository.class, repository.getId()));
+      } else {
+        index.delete().by(Repository.class, repository).execute();
+      }
+    };
   }
 
   private static void store(Index<Repository> index, Repository repository) {
-    index.store(Id.of(repository), RepositoryPermissions.read(repository).asShiroString(), repository);
+    index.store(
+      Id.of(Repository.class, repository).and(repository),
+      RepositoryPermissions.read(repository).asShiroString(),
+      repository);
   }
 
   public static class ReIndexAll extends ReIndexAllTask<Repository> {

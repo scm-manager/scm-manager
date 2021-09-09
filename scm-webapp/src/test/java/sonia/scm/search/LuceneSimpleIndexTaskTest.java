@@ -56,7 +56,7 @@ class LuceneSimpleIndexTaskTest {
 
     LuceneSearchableType searchableType = resolver.resolve(Repository.class);
 
-    IndexParams params = new IndexParams("default", searchableType, IndexOptions.defaults());
+    IndexParams params = new IndexParams("default", searchableType);
 
     AtomicReference<Index<?>> ref = new AtomicReference<>();
     LuceneSimpleIndexTask task = new LuceneSimpleIndexTask(params, ref::set);

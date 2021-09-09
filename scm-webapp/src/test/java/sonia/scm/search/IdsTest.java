@@ -21,31 +21,46 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { withTranslation, WithTranslation } from "react-i18next";
-import { Repository } from "@scm-manager/ui-types";
-import { repositories } from "@scm-manager/ui-components";
 
-type Props = WithTranslation & {
-  repository: Repository;
-};
+package sonia.scm.search;
 
-class ProtocolInformation extends React.Component<Props> {
-  render() {
-    const { repository, t } = this.props;
-    const href = repositories.getProtocolLinkByType(repository, "http");
-    if (!href) {
-      return null;
-    }
-    return (
-      <div className="content">
-        <h4>{t("scm-svn-plugin.information.checkout")}</h4>
-        <pre>
-          <code>svn checkout {href}</code>
-        </pre>
-      </div>
-    );
+import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static sonia.scm.search.Ids.asString;
+
+class IdsTest {
+
+  @Test
+  void shouldUseNameFromAnnotation() {
+    Id<String> id = Id.of(String.class, "0")
+      .and(Z.class, "zzz");
+    assertThat(Ids.others(id)).containsEntry("c", "zzz");
   }
-}
 
-export default withTranslation("plugins")(ProtocolInformation);
+  @Test
+  void shouldEscapeSemicolon() {
+    Id<String> id = Id.of(String.class, "a;b;c");
+    assertThat(Ids.asString(id)).isEqualTo("a\\;b\\;c");
+  }
+
+  @Test
+  void shouldSortInAlphabeticalOrder() {
+    Id<String> id = Id.of(String.class, "0")
+      .and(D.class, "4")
+      .and(A.class, "1")
+      .and(B.class, "2")
+      .and(Z.class, "3");
+
+    assertThat(asString(id)).isEqualTo("0;1;2;3;4");
+  }
+
+  private static class A {}
+
+  private static class B {}
+
+  @IndexedType("c")
+  private static class Z {}
+
+  private static class D {}
+}

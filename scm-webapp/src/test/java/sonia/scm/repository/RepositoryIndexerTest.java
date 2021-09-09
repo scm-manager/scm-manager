@@ -26,8 +26,6 @@ package sonia.scm.repository;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.Answers;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -89,16 +87,27 @@ class RepositoryIndexerTest {
 
     indexer.createStoreTask(heartOfGold).update(index);
 
-    verify(index).store(Id.of(heartOfGold), RepositoryPermissions.read(heartOfGold).asShiroString(), heartOfGold);
+    verify(index).store(idFor(heartOfGold), RepositoryPermissions.read(heartOfGold).asShiroString(), heartOfGold);
   }
 
   @Test
-  void shouldDeleteRepository() {
+  void shouldDeleteRepositoryById() {
     Repository heartOfGold = RepositoryTestData.createHeartOfGold();
 
+    when(index.getDetails().getType()).then(ic -> Repository.class);
     indexer.createDeleteTask(heartOfGold).update(index);
 
-    verify(index.delete()).byRepository(heartOfGold);
+    verify(index.delete()).byId(Id.of(Repository.class, heartOfGold));
+  }
+
+  @Test
+  void shouldDeleteAllByRepository() {
+    Repository heartOfGold = RepositoryTestData.createHeartOfGold();
+
+    when(index.getDetails().getType()).then(ic -> String.class);
+    indexer.createDeleteTask(heartOfGold).update(index);
+
+    verify(index.delete().by(Repository.class, heartOfGold)).execute();
   }
 
   @Test
@@ -111,8 +120,8 @@ class RepositoryIndexerTest {
     reIndexAll.update(index);
 
     verify(index.delete()).all();
-    verify(index).store(Id.of(heartOfGold), RepositoryPermissions.read(heartOfGold).asShiroString(), heartOfGold);
-    verify(index).store(Id.of(puzzle), RepositoryPermissions.read(puzzle).asShiroString(), puzzle);
+    verify(index).store(idFor(heartOfGold), RepositoryPermissions.read(heartOfGold).asShiroString(), heartOfGold);
+    verify(index).store(idFor(puzzle), RepositoryPermissions.read(puzzle).asShiroString(), puzzle);
   }
 
   @Test
@@ -124,7 +133,8 @@ class RepositoryIndexerTest {
 
     verify(searchEngine.forIndices().forResource(heartOfGold)).batch(captor.capture());
     captor.getValue().update(index);
-    verify(index.delete()).byRepository(heartOfGold);
+
+    verify(index.delete().by(Repository.class, heartOfGold)).execute();
   }
 
   @Test
@@ -136,7 +146,10 @@ class RepositoryIndexerTest {
 
     verify(searchEngine.forType(Repository.class)).update(captor.capture());
     captor.getValue().update(index);
-    verify(index).store(Id.of(heartOfGold), RepositoryPermissions.read(heartOfGold).asShiroString(), heartOfGold);
+    verify(index).store(idFor(heartOfGold), RepositoryPermissions.read(heartOfGold).asShiroString(), heartOfGold);
   }
 
+  private Id<Repository> idFor(Repository heartOfGold) {
+    return Id.of(Repository.class, heartOfGold).and(heartOfGold);
+  }
 }

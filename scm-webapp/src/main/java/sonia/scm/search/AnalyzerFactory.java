@@ -25,45 +25,21 @@
 package sonia.scm.search;
 
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.de.GermanAnalyzer;
-import org.apache.lucene.analysis.en.EnglishAnalyzer;
-import org.apache.lucene.analysis.es.SpanishAnalyzer;
+import org.apache.lucene.analysis.core.KeywordAnalyzer;
+import org.apache.lucene.analysis.core.KeywordTokenizerFactory;
+import org.apache.lucene.analysis.core.UpperCaseFilterFactory;
+import org.apache.lucene.analysis.custom.CustomAnalyzer;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 
-import javax.annotation.Nonnull;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class AnalyzerFactory {
 
-  @Nonnull
-  public Analyzer create(IndexOptions options) {
-    if (options.getType() == IndexOptions.Type.NATURAL_LANGUAGE) {
-      return createNaturalLanguageAnalyzer(options.getLocale().getLanguage());
-    }
-    return createDefaultAnalyzer();
-  }
-
-  private Analyzer createDefaultAnalyzer() {
-    return new StandardAnalyzer();
-  }
-
-  private Analyzer createNaturalLanguageAnalyzer(String lang) {
-    switch (lang) {
-      case "en":
-        return new EnglishAnalyzer();
-      case "de":
-        return new GermanAnalyzer();
-      case "es":
-        return new SpanishAnalyzer();
-      default:
-        return createDefaultAnalyzer();
-    }
-  }
-
-  public Analyzer create(LuceneSearchableType type, IndexOptions options) {
-    Analyzer defaultAnalyzer = create(options);
+  public Analyzer create(LuceneSearchableType type) {
+    Analyzer defaultAnalyzer = createNonTokenizedAnalyzer();
 
     Map<String, Analyzer> analyzerMap = new HashMap<>();
     for (LuceneSearchableField field : type.getAllFields()) {
@@ -73,9 +49,42 @@ public class AnalyzerFactory {
     return new PerFieldAnalyzerWrapper(defaultAnalyzer, analyzerMap);
   }
 
+  private Analyzer createNonTokenizedAnalyzer() {
+    return new KeywordAnalyzer();
+  }
+
   private void addFieldAnalyzer(Map<String, Analyzer> analyzerMap, LuceneSearchableField field) {
-    if (field.getAnalyzer() != Indexed.Analyzer.DEFAULT) {
-      analyzerMap.put(field.getName(), new NonNaturalLanguageAnalyzer());
+    Analyzer analyzer = createAnalyzer(field);
+    if (analyzer != null) {
+      analyzerMap.put(field.getName(), analyzer);
+    }
+  }
+
+  private Analyzer createAnalyzer(LuceneSearchableField field) {
+    if (field.isTokenized()) {
+      return createTokenizedAnalyzer(field.getAnalyzer());
+    } else if (field.getType().isEnum()) {
+      return createEnumAnalyzer();
+    } else {
+      return null;
+    }
+  }
+
+  private Analyzer createTokenizedAnalyzer(Indexed.Analyzer analyzer) {
+    if (analyzer == Indexed.Analyzer.DEFAULT) {
+      return new StandardAnalyzer();
+    }
+    return new NonNaturalLanguageAnalyzer();
+  }
+
+  private Analyzer createEnumAnalyzer() {
+    try {
+      return CustomAnalyzer.builder()
+        .withTokenizer(KeywordTokenizerFactory.class)
+        .addTokenFilter(UpperCaseFilterFactory.class)
+        .build();
+    } catch (IOException ex) {
+      throw new IllegalStateException("failed to create enum analyzer", ex);
     }
   }
 

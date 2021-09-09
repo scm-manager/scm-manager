@@ -73,21 +73,23 @@ const RepositoryEntry: FC<Props> = ({ repository, baseDate }) => {
         "mr-4"
       )}
     >
-      <Modal
-        size="L"
-        active={openCloneModal}
-        title={t("overview.clone")}
-        body={
-          <ExtensionPoint
-            name="repos.repository-details.information"
-            renderAll={true}
-            props={{
-              repository,
-            }}
-          />
-        }
-        closeFunction={() => setOpenCloneModal(false)}
-      />
+      {openCloneModal && (
+        <Modal
+          size="L"
+          active={openCloneModal}
+          title={t("overview.clone")}
+          body={
+            <ExtensionPoint
+              name="repos.repository-details.information"
+              renderAll={true}
+              props={{
+                repository,
+              }}
+            />
+          }
+          closeFunction={() => setOpenCloneModal(false)}
+        />
+      )}
       <span className={classNames("is-flex", "is-justify-content-flex-end", "is-align-items-flex-end")}>
         <QuickAction
           className={classNames("is-clickable", "is-size-5")}

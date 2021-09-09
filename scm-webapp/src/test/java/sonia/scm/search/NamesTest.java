@@ -21,31 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { withTranslation, WithTranslation } from "react-i18next";
-import { Repository } from "@scm-manager/ui-types";
-import { repositories } from "@scm-manager/ui-components";
 
-type Props = WithTranslation & {
-  repository: Repository;
-};
+package sonia.scm.search;
 
-class ProtocolInformation extends React.Component<Props> {
-  render() {
-    const { repository, t } = this.props;
-    const href = repositories.getProtocolLinkByType(repository, "http");
-    if (!href) {
-      return null;
-    }
-    return (
-      <div className="content">
-        <h4>{t("scm-svn-plugin.information.checkout")}</h4>
-        <pre>
-          <code>svn checkout {href}</code>
-        </pre>
-      </div>
-    );
+import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+class NamesTest {
+
+  @Test
+  void shouldUseNameFromAnnotation() {
+    assertThat(Names.create(WithAlias.class)).isEqualTo("alias");
   }
-}
 
-export default withTranslation("plugins")(ProtocolInformation);
+  @Test
+  void shouldUseNameFromClass() {
+    assertThat(Names.create(Simple.class)).isEqualTo("simple");
+  }
+
+  private static class Simple {}
+
+  @IndexedType("alias")
+  private static class WithAlias {}
+
+}

@@ -30,7 +30,7 @@ import {
   Repository,
   RepositoryRole,
   RepositoryRoleCollection,
-  RepositoryVerbs
+  RepositoryVerbs,
 } from "@scm-manager/ui-types";
 import fetchMock from "fetch-mock-jest";
 import { renderHook } from "@testing-library/react-hooks";
@@ -41,7 +41,7 @@ import {
   useDeletePermission,
   usePermissions,
   useRepositoryVerbs,
-  useUpdatePermission
+  useUpdatePermission,
 } from "./permissions";
 import { act } from "react-test-renderer";
 
@@ -49,21 +49,21 @@ describe("permission hooks test", () => {
   const readRole: RepositoryRole = {
     name: "READ",
     verbs: ["read", "pull"],
-    _links: {}
+    _links: {},
   };
 
   const roleCollection: RepositoryRoleCollection = {
     _embedded: {
-      repositoryRoles: [readRole]
+      repositoryRoles: [readRole],
     },
     _links: {},
     page: 1,
-    pageTotal: 1
+    pageTotal: 1,
   };
 
   const verbCollection: RepositoryVerbs = {
     verbs: ["read", "pull"],
-    _links: {}
+    _links: {},
   };
 
   const readPermission: Permission = {
@@ -73,9 +73,9 @@ describe("permission hooks test", () => {
     groupPermission: false,
     _links: {
       update: {
-        href: "/p/trillian"
-      }
-    }
+        href: "/p/trillian",
+      },
+    },
   };
 
   const writePermission: Permission = {
@@ -85,32 +85,32 @@ describe("permission hooks test", () => {
     groupPermission: false,
     _links: {
       delete: {
-        href: "/p/dent"
-      }
-    }
+        href: "/p/dent",
+      },
+    },
   };
 
   const permissionsRead: PermissionCollection = {
     _embedded: {
-      permissions: [readPermission]
+      permissions: [readPermission],
     },
-    _links: {}
+    _links: {},
   };
 
   const permissionsWrite: PermissionCollection = {
     _embedded: {
-      permissions: [writePermission]
+      permissions: [writePermission],
     },
-    _links: {}
+    _links: {},
   };
 
   const namespace: Namespace = {
     namespace: "spaceships",
     _links: {
       permissions: {
-        href: "/ns/spaceships/permissions"
-      }
-    }
+        href: "/ns/spaceships/permissions",
+      },
+    },
   };
 
   const repository: Repository = {
@@ -119,9 +119,9 @@ describe("permission hooks test", () => {
     type: "git",
     _links: {
       permissions: {
-        href: "/r/heart-of-gold/permissions"
-      }
-    }
+        href: "/r/heart-of-gold/permissions",
+      },
+    },
   };
 
   const queryClient = createInfiniteCachingClient();
@@ -137,7 +137,7 @@ describe("permission hooks test", () => {
       fetchMock.get("/api/v2/verbs", verbCollection);
 
       const { result, waitFor } = renderHook(() => useRepositoryVerbs(), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
       await waitFor(() => {
         return !!result.current.data;
@@ -152,23 +152,23 @@ describe("permission hooks test", () => {
         version: "x.y.z",
         _links: {
           repositoryRoles: {
-            href: "/roles"
+            href: "/roles",
           },
           repositoryVerbs: {
-            href: "/verbs"
-          }
-        }
+            href: "/verbs",
+          },
+        },
       });
       fetchMock.get("/api/v2/roles", roleCollection);
       fetchMock.get("/api/v2/verbs", verbCollection);
 
       const { result, waitFor } = renderHook(() => useAvailablePermissions(), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
       await waitFor(() => {
         return !!result.current.data;
       });
-      expect(result.current.data?.repositoryRoles).toEqual(roleCollection._embedded.repositoryRoles);
+      expect(result.current.data?.repositoryRoles).toEqual(roleCollection._embedded?.repositoryRoles);
       expect(result.current.data?.repositoryVerbs).toEqual(verbCollection.verbs);
     });
   });
@@ -176,7 +176,7 @@ describe("permission hooks test", () => {
   describe("usePermissions tests", () => {
     const fetchPermissions = async (namespaceOrRepository: Namespace | Repository) => {
       const { result, waitFor } = renderHook(() => usePermissions(namespaceOrRepository), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
       await waitFor(() => {
         return !!result.current.data;
@@ -216,14 +216,14 @@ describe("permission hooks test", () => {
       fetchMock.postOnce("/api/v2/ns/spaceships/permissions", {
         status: 201,
         headers: {
-          Location: "/ns/spaceships/permissions/42"
-        }
+          Location: "/ns/spaceships/permissions/42",
+        },
       });
 
       fetchMock.getOnce("/api/v2/ns/spaceships/permissions/42", readPermission);
 
       const { result, waitForNextUpdate } = renderHook(() => useCreatePermission(namespace), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
 
       await act(() => {
@@ -241,11 +241,11 @@ describe("permission hooks test", () => {
 
     it("should fail without location header", async () => {
       fetchMock.postOnce("/api/v2/ns/spaceships/permissions", {
-        status: 201
+        status: 201,
       });
 
       const { result, waitForNextUpdate } = renderHook(() => useCreatePermission(namespace), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
 
       await act(() => {
@@ -270,11 +270,11 @@ describe("permission hooks test", () => {
   describe("useDeletePermission tests", () => {
     const deletePermission = async () => {
       fetchMock.deleteOnce("/api/v2/p/dent", {
-        status: 204
+        status: 204,
       });
 
       const { result, waitForNextUpdate } = renderHook(() => useDeletePermission(repository), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
 
       await act(() => {
@@ -308,11 +308,11 @@ describe("permission hooks test", () => {
   describe("useUpdatePermission tests", () => {
     const updatePermission = async () => {
       fetchMock.putOnce("/api/v2/p/trillian", {
-        status: 204
+        status: 204,
       });
 
       const { result, waitForNextUpdate } = renderHook(() => useUpdatePermission(repository), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
 
       await act(() => {

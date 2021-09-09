@@ -308,7 +308,7 @@ describe("Test repository hooks", () => {
       });
       expect(result.current.data).toBeDefined();
       if (result.current?.data) {
-        expect(result.current?.data._embedded.repositoryTypes[0].name).toEqual("git");
+        expect(result.current?.data._embedded?.repositoryTypes[0].name).toEqual("git");
       }
     });
   });

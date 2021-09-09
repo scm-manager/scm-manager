@@ -26,12 +26,8 @@ This branch (`develop`) is for the development of SCM-Manager 2.x. If you are in
 
 All news regarding SCM-Manager will be published in our [blog](https://www.scm-manager.org/blog/).
 
-## Mailing List
-
--   <scmmanager@googlegroups.com> -
-    [archive](http://groups.google.com/group/scmmanager) \|
-    [subscribe](mailto:scmmanager+subscribe@googlegroups.com) \|
-    [unsubscribe](mailto:scmmanager+unsubscribe@googlegroups.com)
+## Support / Community
+ [Contact the SCM-Manager community support](https://scm-manager.org/support/)
 
 ## Documentation
 

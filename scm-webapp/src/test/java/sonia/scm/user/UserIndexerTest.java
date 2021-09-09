@@ -89,7 +89,7 @@ class UserIndexerTest {
 
     indexer.createStoreTask(trillian).update(index);
 
-    verify(index).store(Id.of(trillian), UserPermissions.read(trillian).asShiroString(), trillian);
+    verify(index).store(Id.of(User.class, trillian), UserPermissions.read(trillian).asShiroString(), trillian);
   }
 
   @Test
@@ -98,7 +98,7 @@ class UserIndexerTest {
 
     indexer.createDeleteTask(trillian).update(index);
 
-    verify(index.delete()).byId(Id.of(trillian));
+    verify(index.delete()).byId(Id.of(User.class, trillian));
   }
 
   @Test
@@ -111,8 +111,8 @@ class UserIndexerTest {
     reIndexAll.update(index);
 
     verify(index.delete()).all();
-    verify(index).store(Id.of(trillian), UserPermissions.read(trillian).asShiroString(), trillian);
-    verify(index).store(Id.of(slarti), UserPermissions.read(slarti).asShiroString(), slarti);
+    verify(index).store(Id.of(User.class, trillian), UserPermissions.read(trillian).asShiroString(), trillian);
+    verify(index).store(Id.of(User.class, slarti), UserPermissions.read(slarti).asShiroString(), slarti);
   }
 
   @Test
@@ -124,7 +124,7 @@ class UserIndexerTest {
 
     verify(searchEngine.forType(User.class)).update(captor.capture());
     captor.getValue().update(index);
-    verify(index.delete()).byId(Id.of(trillian));
+    verify(index.delete()).byId(Id.of(User.class, trillian));
   }
 
 }

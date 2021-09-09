@@ -21,31 +21,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { withTranslation, WithTranslation } from "react-i18next";
-import { Repository } from "@scm-manager/ui-types";
-import { repositories } from "@scm-manager/ui-components";
 
-type Props = WithTranslation & {
-  repository: Repository;
-};
+package sonia.scm.search;
 
-class ProtocolInformation extends React.Component<Props> {
-  render() {
-    const { repository, t } = this.props;
-    const href = repositories.getProtocolLinkByType(repository, "http");
-    if (!href) {
-      return null;
+import com.google.common.base.Strings;
+
+import javax.annotation.Nullable;
+
+final class Names {
+
+  private Names() {
+  }
+
+  static String create(Class<?> type) {
+    return create(type, type.getAnnotation(IndexedType.class));
+  }
+
+  static String create(Class<?> type, @Nullable IndexedType annotation) {
+    String nameFromAnnotation = null;
+    if (annotation != null) {
+      nameFromAnnotation = annotation.value();
     }
-    return (
-      <div className="content">
-        <h4>{t("scm-svn-plugin.information.checkout")}</h4>
-        <pre>
-          <code>svn checkout {href}</code>
-        </pre>
-      </div>
-    );
+    if (Strings.isNullOrEmpty(nameFromAnnotation)) {
+      String simpleName = type.getSimpleName();
+      return Character.toLowerCase(simpleName.charAt(0)) + simpleName.substring(1);
+    }
+    return nameFromAnnotation;
+  }
+
+  public static String field(Class<?> type) {
+    return "_" + create(type);
   }
 }
-
-export default withTranslation("plugins")(ProtocolInformation);

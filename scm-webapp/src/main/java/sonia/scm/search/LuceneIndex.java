@@ -31,16 +31,18 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.search.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Supplier;
 
 import static sonia.scm.search.FieldNames.ID;
 import static sonia.scm.search.FieldNames.PERMISSION;
-import static sonia.scm.search.FieldNames.REPOSITORY;
 
 class LuceneIndex<T> implements Index<T>, AutoCloseable {
 
@@ -72,14 +74,23 @@ class LuceneIndex<T> implements Index<T>, AutoCloseable {
   }
 
   @Override
-  public void store(Id id, String permission, Object object) {
+  public void store(Id<T> id, String permission, T object) {
     Document document = searchableType.getTypeConverter().convert(object);
+
+    String mainId = id.getMainId();
+    Map<String,String> others = Ids.others(id);
+
     try {
-      field(document, ID, id.asString());
-      id.getRepository().ifPresent(repository -> field(document, REPOSITORY, repository));
+      field(document, ID, Ids.id(mainId, others));
+
+      for (Map.Entry<String, String> e : others.entrySet()) {
+        field(document, "_" + e.getKey(), e.getValue());
+      }
+
       if (!Strings.isNullOrEmpty(permission)) {
         field(document, PERMISSION, permission);
       }
+
       writer.updateDocument(idTerm(id), document);
     } catch (IOException e) {
       throw new SearchEngineException("failed to add document to index", e);
@@ -87,16 +98,19 @@ class LuceneIndex<T> implements Index<T>, AutoCloseable {
   }
 
   @Nonnull
-  private Term idTerm(Id id) {
-    return new Term(ID, id.asString());
+  private Term idTerm(Id<T> id) {
+    String mainId = id.getMainId();
+    Map<String,String> others = Ids.others(id);
+    return new Term(ID, Ids.id(mainId, others));
   }
+
 
   private void field(Document document, String type, String name) {
     document.add(new StringField(type, name, Field.Store.YES));
   }
 
   @Override
-  public Deleter delete() {
+  public Deleter<T> delete() {
     return new LuceneDeleter();
   }
 
@@ -109,13 +123,13 @@ class LuceneIndex<T> implements Index<T>, AutoCloseable {
     }
   }
 
-  private class LuceneDeleter implements Deleter {
+  private class LuceneDeleter implements Deleter<T> {
 
     @Override
-    public void byId(Id id) {
+    public void byId(Id<T> id) {
       try {
-        long count = writer.deleteDocuments(idTerm(id));
-        LOG.debug("delete {} document(s) by id {} from index {}", count, id, details);
+        LOG.debug("delete document(s) by id {} from index {}", id, details);
+        writer.deleteDocuments(idTerm(id));
       } catch (IOException e) {
         throw new SearchEngineException("failed to delete document from index", e);
       }
@@ -124,26 +138,43 @@ class LuceneIndex<T> implements Index<T>, AutoCloseable {
     @Override
     public void all() {
       try {
-        long count = writer.deleteAll();
-        LOG.debug("deleted all {} documents from index {}", count, details);
+        LOG.debug("deleted all documents from index {}", details);
+        writer.deleteAll();
       } catch (IOException ex) {
         throw new SearchEngineException("failed to delete documents by type " + searchableType.getName() + " from index", ex);
       }
     }
 
     @Override
-    public void byRepository(String repositoryId) {
+    public DeleteBy by(Class<?> type, String id) {
+      return new LuceneDeleteBy(type, id);
+    }
+  }
+
+  private class LuceneDeleteBy implements DeleteBy {
+
+    private final Map<Class<?>, String> map = new HashMap<>();
+
+    private LuceneDeleteBy(Class<?> type, String id) {
+      map.put(type, id);
+    }
+
+    @Override
+    public DeleteBy and(Class<?> type, String id) {
+      map.put(type, id);
+      return this;
+    }
+
+    @Override
+    public void execute() {
+      Query query = Queries.filterQuery(map);
       try {
-        long count = writer.deleteDocuments(repositoryTerm(repositoryId));
-        LOG.debug("deleted {} documents by repository {} from index {}", count, repositoryId, details);
-      } catch (IOException ex) {
-        throw new SearchEngineException("failed to delete documents by repository " + repositoryId + " from index", ex);
+        LOG.debug("delete document(s) by query {} from index {}", query, details);
+        writer.deleteDocuments(query);
+      } catch (IOException e) {
+        throw new SearchEngineException("failed to delete document from index", e);
       }
     }
 
-    @Nonnull
-    private Term repositoryTerm(String repositoryId) {
-      return new Term(REPOSITORY, repositoryId);
-    }
   }
 }

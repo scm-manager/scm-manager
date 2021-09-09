@@ -21,31 +21,46 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { withTranslation, WithTranslation } from "react-i18next";
-import { Repository } from "@scm-manager/ui-types";
-import { repositories } from "@scm-manager/ui-components";
 
-type Props = WithTranslation & {
-  repository: Repository;
-};
+package sonia.scm.search;
 
-class ProtocolInformation extends React.Component<Props> {
-  render() {
-    const { repository, t } = this.props;
-    const href = repositories.getProtocolLinkByType(repository, "http");
-    if (!href) {
-      return null;
-    }
-    return (
-      <div className="content">
-        <h4>{t("scm-svn-plugin.information.checkout")}</h4>
-        <pre>
-          <code>svn checkout {href}</code>
-        </pre>
-      </div>
-    );
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
+
+final class Ids {
+
+  private Ids() {
   }
-}
 
-export default withTranslation("plugins")(ProtocolInformation);
+  static Map<String,String> others(Id<?> id) {
+    Map<String,String> result = new TreeMap<>();
+
+    Map<Class<?>, String> others = id.getOthers();
+    for (Map.Entry<Class<?>, String> e : others.entrySet()) {
+      result.put(name(e.getKey()), e.getValue());
+    }
+
+    return result;
+  }
+
+  static String id(String mainId, Map<String,String> others) {
+    List<String> values = new ArrayList<>();
+    values.add(mainId);
+    values.addAll(others.values());
+    return values.stream()
+      .map(v -> v.replace(";", "\\;" ))
+      .collect(Collectors.joining(";"));
+  }
+
+  static String asString(Id<?> id) {
+    return id(id.getMainId(), others(id));
+  }
+
+  private static String name(Class<?> key) {
+    return Names.create(key, key.getAnnotation(IndexedType.class));
+  }
+
+}

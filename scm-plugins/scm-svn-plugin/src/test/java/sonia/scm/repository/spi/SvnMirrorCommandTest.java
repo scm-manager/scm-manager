@@ -32,30 +32,21 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNURL;
 import org.tmatesoft.svn.core.auth.BasicAuthenticationManager;
-import org.tmatesoft.svn.core.auth.ISVNAuthenticationManager;
 import org.tmatesoft.svn.core.auth.SVNAuthentication;
-import org.tmatesoft.svn.core.auth.SVNPasswordAuthentication;
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
 import org.tmatesoft.svn.core.wc.SVNWCUtil;
 import org.tmatesoft.svn.core.wc.admin.SVNAdminClient;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.net.GlobalProxyConfiguration;
-import sonia.scm.net.ProxyConfiguration;
 import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.repository.api.MirrorCommandResult;
-import sonia.scm.repository.api.SimpleUsernamePasswordCredential;
 
 import javax.net.ssl.X509TrustManager;
 import java.io.File;
 import java.io.IOException;
-import java.util.function.Consumer;
 
-import static java.util.Collections.singleton;
-import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
 import static sonia.scm.repository.api.MirrorCommandResult.ResultType.OK;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -63,6 +54,9 @@ public class SvnMirrorCommandTest extends AbstractSvnCommandTestBase {
 
   @Mock
   private X509TrustManager trustManager;
+
+  @Mock
+  private SvnMirrorAuthenticationFactory authenticationFactory;
 
   private SvnContext emptyContext;
 
@@ -75,8 +69,7 @@ public class SvnMirrorCommandTest extends AbstractSvnCommandTestBase {
 
   @Test
   public void shouldDoInitialMirror() {
-    MirrorCommandResult result = callMirror(emptyContext, repositoryDirectory, c -> {
-    });
+    MirrorCommandResult result = callMirror(emptyContext, repositoryDirectory);
 
     assertThat(result.getResult()).isEqualTo(OK);
   }
@@ -102,139 +95,13 @@ public class SvnMirrorCommandTest extends AbstractSvnCommandTestBase {
   }
 
   @Test
-  public void shouldUseCredentials() throws SVNException {
-    SVNURL url = SVNURL.parseURIEncoded("https://svn.hitchhiker.com");
+  public void shouldUseSourceUrlForAuthentication() throws SVNException, IOException {
+    SvnMirrorCommand command = new SvnMirrorCommand(createEmptyContext(), authenticationFactory);
+    MirrorCommandRequest request = createRequest(repositoryDirectory);
 
-    MirrorCommandRequest request = new MirrorCommandRequest();
-    request.setCredentials(
-      singletonList(new SimpleUsernamePasswordCredential("trillian", "secret".toCharArray()))
-    );
+    command.mirror(request);
 
-    SvnMirrorCommand mirrorCommand = createMirrorCommand(emptyContext);
-    BasicAuthenticationManager authenticationManager = mirrorCommand.createAuthenticationManager(url, request);
-
-    SVNAuthentication authentication = authenticationManager.getFirstAuthentication(
-      ISVNAuthenticationManager.PASSWORD, "Hitchhiker Auth Gate", url
-    );
-
-    assertThat(authentication).isInstanceOfSatisfying(SVNPasswordAuthentication.class, passwordAuth -> {
-      assertThat(passwordAuth.getUserName()).isEqualTo("trillian");
-      assertThat(passwordAuth.getPasswordValue()).isEqualTo("secret".toCharArray());
-    });
-  }
-
-  @Test
-  public void shouldUseTrustManager() throws SVNException {
-    SVNURL url = SVNURL.parseURIEncoded("https://svn.hitchhiker.com");
-
-    SvnMirrorCommand mirrorCommand = createMirrorCommand(emptyContext);
-    BasicAuthenticationManager authenticationManager = mirrorCommand.createAuthenticationManager(url, new MirrorCommandRequest());
-
-    assertThat(authenticationManager.getTrustManager(url)).isSameAs(trustManager);
-  }
-
-  @Test
-  public void shouldApplySimpleProxySettings() throws SVNException {
-    configuration.setEnableProxy(true);
-    configuration.setProxyServer("proxy.hitchhiker.com");
-    configuration.setProxyPort(3128);
-
-    BasicAuthenticationManager authenticationManager = createAuthenticationManager();
-
-    assertThat(authenticationManager.getProxyHost()).isEqualTo("proxy.hitchhiker.com");
-    assertThat(authenticationManager.getProxyPort()).isEqualTo(3128);
-    assertThat(authenticationManager.getProxyUserName()).isNull();
-    assertThat(authenticationManager.getProxyPasswordValue()).isNull();
-  }
-
-  @Test
-  public void shouldApplyProxySettingsWithCredentials() throws SVNException {
-    configuration.setEnableProxy(true);
-    configuration.setProxyServer("proxy.hitchhiker.com");
-    configuration.setProxyPort(3128);
-    configuration.setProxyUser("trillian");
-    configuration.setProxyPassword("secret");
-
-    BasicAuthenticationManager authenticationManager = createAuthenticationManager();
-
-    assertThat(authenticationManager.getProxyHost()).isEqualTo("proxy.hitchhiker.com");
-    assertThat(authenticationManager.getProxyPort()).isEqualTo(3128);
-    assertThat(authenticationManager.getProxyUserName()).isEqualTo("trillian");
-    assertThat(authenticationManager.getProxyPasswordValue()).isEqualTo("secret".toCharArray());
-  }
-
-  @Test
-  public void shouldSkipProxySettingsIfDisabled() throws SVNException {
-    configuration.setEnableProxy(false);
-    configuration.setProxyServer("proxy.hitchhiker.com");
-    configuration.setProxyPort(3128);
-
-    BasicAuthenticationManager authenticationManager = createAuthenticationManager();
-
-    assertThat(authenticationManager.getProxyHost()).isNull();
-  }
-
-  @Test
-  public void shouldSkipProxySettingsIfHostIsOnExcludeList() throws SVNException {
-    configuration.setEnableProxy(true);
-    configuration.setProxyServer("proxy.hitchhiker.com");
-    configuration.setProxyPort(3128);
-    configuration.setProxyExcludes(singleton("svn.hitchhiker.com"));
-
-    BasicAuthenticationManager authenticationManager = createAuthenticationManager();
-
-    assertThat(authenticationManager.getProxyHost()).isNull();
-  }
-
-  @Test
-  public void shouldApplyLocalProxySettings() throws SVNException {
-    MirrorCommandRequest request = new MirrorCommandRequest();
-    request.setProxyConfiguration(createProxyConfiguration());
-
-    BasicAuthenticationManager authenticationManager = createAuthenticationManager(request);
-    assertThat(authenticationManager.getProxyHost()).isEqualTo("proxy.hitchhiker.com");
-    assertThat(authenticationManager.getProxyPort()).isEqualTo(3128);
-    assertThat(authenticationManager.getProxyUserName()).isNull();
-    assertThat(authenticationManager.getProxyPasswordValue()).isNull();
-  }
-
-  @Test
-  public void shouldNotApplyDisabledLocalProxySettings() throws SVNException {
-    MirrorCommandRequest request = new MirrorCommandRequest();
-    request.setProxyConfiguration(createDisabledProxyConfiguration());
-
-    BasicAuthenticationManager authenticationManager = createAuthenticationManager(request);
-    assertThat(authenticationManager.getProxyHost()).isNull();
-    assertThat(authenticationManager.getProxyPort()).isZero();
-    assertThat(authenticationManager.getProxyUserName()).isNull();
-    assertThat(authenticationManager.getProxyPasswordValue()).isNull();
-  }
-
-  private ProxyConfiguration createProxyConfiguration() {
-    ProxyConfiguration configuration = mock(ProxyConfiguration.class);
-    when(configuration.isEnabled()).thenReturn(true);
-    when(configuration.getHost()).thenReturn("proxy.hitchhiker.com");
-    when(configuration.getPort()).thenReturn(3128);
-    return configuration;
-  }
-
-  private ProxyConfiguration createDisabledProxyConfiguration() {
-    ProxyConfiguration configuration = mock(ProxyConfiguration.class);
-    when(configuration.isEnabled()).thenReturn(false);
-    lenient().when(configuration.getHost()).thenReturn("proxy.hitchhiker.com");
-    lenient().when(configuration.getPort()).thenReturn(3128);
-    return configuration;
-  }
-
-  private BasicAuthenticationManager createAuthenticationManager() throws SVNException {
-    return createAuthenticationManager(new MirrorCommandRequest());
-  }
-
-  private BasicAuthenticationManager createAuthenticationManager(MirrorCommandRequest request) throws SVNException {
-    SVNURL url = SVNURL.parseURIEncoded("https://svn.hitchhiker.com");
-
-    SvnMirrorCommand mirrorCommand = createMirrorCommand(emptyContext);
-    return mirrorCommand.createAuthenticationManager(url, request);
+    verify(authenticationFactory).create(SVNURL.parseURIEncoded(request.getSourceUrl()), request);
   }
 
   private MirrorCommandResult callMirrorUpdate(SvnContext context, File source) {
@@ -242,10 +109,8 @@ public class SvnMirrorCommandTest extends AbstractSvnCommandTestBase {
     return createMirrorCommand(context).update(request);
   }
 
-  private MirrorCommandResult callMirror(SvnContext context, File source, Consumer<MirrorCommandRequest> consumer) {
-    MirrorCommandRequest request = createRequest(source);
-    consumer.accept(request);
-    return createMirrorCommand(context).mirror(request);
+  private MirrorCommandResult callMirror(SvnContext context, File source) {
+    return createMirrorCommand(context).mirror(createRequest(source));
   }
 
   private MirrorCommandRequest createRequest(File source) {

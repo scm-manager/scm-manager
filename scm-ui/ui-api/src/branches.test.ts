@@ -51,6 +51,16 @@ describe("Test branches hooks", () => {
     },
   };
 
+  const feature: Branch = {
+    name: "feature/something-special",
+    revision: "42",
+    _links: {
+      delete: {
+        href: "/hog/branches/feature%2Fsomething-special",
+      },
+    },
+  };
+
   const branches: BranchCollection = {
     _embedded: {
       branches: [develop],
@@ -101,10 +111,10 @@ describe("Test branches hooks", () => {
   });
 
   describe("useBranch tests", () => {
-    const fetchBranch = async () => {
-      fetchMock.getOnce("/api/v2/hog/branches/develop", develop);
+    const fetchBranch = async (name: string, branch: Branch) => {
+      fetchMock.getOnce("/api/v2/hog/branches/" + encodeURIComponent(name), branch);
 
-      const { result, waitFor } = renderHook(() => useBranch(repository, "develop"), {
+      const { result, waitFor } = renderHook(() => useBranch(repository, name), {
         wrapper: createWrapper(undefined, queryClient),
       });
 
@@ -118,8 +128,13 @@ describe("Test branches hooks", () => {
     };
 
     it("should return branch", async () => {
-      const branch = await fetchBranch();
+      const branch = await fetchBranch("develop", develop);
       expect(branch).toEqual(develop);
+    });
+
+    it("should escape branch name", async () => {
+      const branch = await fetchBranch("feature/something-special", feature);
+      expect(branch).toEqual(feature);
     });
   });
 

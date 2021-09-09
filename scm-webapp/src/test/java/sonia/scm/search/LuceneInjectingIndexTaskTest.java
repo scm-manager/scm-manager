@@ -59,7 +59,7 @@ class LuceneInjectingIndexTaskTest {
     Injector injector = createInjector();
 
     LuceneSearchableType searchableType = resolver.resolve(User.class);
-    IndexParams params = new IndexParams("default", searchableType, IndexOptions.defaults());
+    IndexParams params = new IndexParams("default", searchableType);
 
     LuceneInjectingIndexTask task = new LuceneInjectingIndexTask(params, InjectingTask.class);
     injector.injectMembers(task);

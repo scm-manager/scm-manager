@@ -42,7 +42,7 @@ public class LuceneQueryBuilderFactory {
       indexManager,
       indexParams.getIndex(),
       indexParams.getSearchableType(),
-      analyzerFactory.create(indexParams.getSearchableType(), indexParams.getOptions())
+      analyzerFactory.create(indexParams.getSearchableType())
     );
   }
 
