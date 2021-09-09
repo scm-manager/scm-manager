@@ -120,7 +120,7 @@ const NotificationEntry: FC<EntryProps> = ({ notification, removeToast }) => {
   }
   return (
     <tr className={`is-${color(notification)}`}>
-      <VerticalCenteredTd onClick={() => history.push(notification.link)} className="has-cursor-pointer">
+      <VerticalCenteredTd onClick={() => history.push(notification.link)} className="is-clickable">
         <NotificationMessage message={notification.message} />
       </VerticalCenteredTd>
       <DateColumn className="has-text-right">
@@ -133,7 +133,7 @@ const NotificationEntry: FC<EntryProps> = ({ notification, removeToast }) => {
           <Icon
             name="trash"
             color="black"
-            className="has-cursor-pointer"
+            className="is-clickable"
             title={t("notifications.dismiss")}
             onClick={remove}
           />

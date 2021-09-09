@@ -109,7 +109,7 @@ const Table: FC<Props> = ({ data, sortable, children, emptyMessage, className })
         <tr>
           {React.Children.map(children, (child, index) => (
             <th
-              className={isSortable(child) && "has-cursor-pointer"}
+              className={isSortable(child) && "is-clickable"}
               onClick={isSortable(child) ? () => tableSort(index) : undefined}
               onMouseEnter={() => setHoveredColumnIndex(index)}
               onMouseLeave={() => setHoveredColumnIndex(undefined)}

@@ -77,7 +77,7 @@ const Tag: FC<Props> = ({
           {
             "is-outlined": outlined,
             "is-rounded": rounded,
-            "has-cursor-pointer": onClick,
+            "is-clickable": onClick,
           },
           size === "small" && smallClassNames
         )}

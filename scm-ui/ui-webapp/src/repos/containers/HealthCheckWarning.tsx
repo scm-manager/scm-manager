@@ -51,7 +51,7 @@ const HealthCheckWarning: FC<Props> = ({ repository }) => {
   return (
     <Notification type="danger">
       {modal}
-      <div className={"has-cursor-pointer"} onClick={() => setShowHealthCheck(true)}>
+      <div className={"is-clickable"} onClick={() => setShowHealthCheck(true)}>
         <div>{t("repositoryForm.healthCheckWarning.title")}</div>
         <div className={"is-small"}>{t("repositoryForm.healthCheckWarning.subtitle")}</div>
       </div>

@@ -490,7 +490,7 @@ class DiffFile extends React.Component<Props, State> {
         <div className="panel-heading">
           <div className={classNames("level", "is-flex-wrap-wrap")}>
             <FullWidthTitleHeader
-              className={classNames("level-left", "is-flex", "has-cursor-pointer")}
+              className={classNames("level-left", "is-flex", "is-clickable")}
               onClick={this.toggleCollapse}
               title={this.hoverFileTitle(file)}
             >

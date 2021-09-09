@@ -104,7 +104,7 @@ const Content: FC<Props> = ({ file, repository, revision, breadcrumb, error }) =
       <HeaderWrapper>
         <div className={classNames("level", "is-flex-wrap-wrap")}>
           <FullWidthTitleHeader
-            className={classNames("level-left", "is-flex", "has-cursor-pointer", "is-word-break", "mr-2")}
+            className={classNames("level-left", "is-flex", "is-clickable", "is-word-break", "mr-2")}
             onClick={toggleCollapse}
           >
             <Icon className={classNames("is-inline", "mr-2")} name={`${icon} fa-fw`} color="inherit" />

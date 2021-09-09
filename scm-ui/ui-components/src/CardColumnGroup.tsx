@@ -82,7 +82,7 @@ export default class CardColumnGroup extends React.Component<Props, State> {
     return (
       <div className="mb-4">
         <h2>
-          <span className={classNames("is-size-4", "has-cursor-pointer")} onClick={this.toggleCollapse}>
+          <span className={classNames("is-size-4", "is-clickable")} onClick={this.toggleCollapse}>
             <i className={classNames("fa", icon)} />
           </span>{" "}
           {url ? (

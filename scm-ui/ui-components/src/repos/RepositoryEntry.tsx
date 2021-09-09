@@ -90,7 +90,7 @@ const RepositoryEntry: FC<Props> = ({ repository, baseDate }) => {
       />
       <span className={classNames("is-flex", "is-justify-content-flex-end", "is-align-items-flex-end")}>
         <QuickAction
-          className={classNames("has-cursor-pointer", "is-size-5")}
+          className={classNames("is-clickable", "is-size-5")}
           name="download"
           color="info"
           onClick={() => setOpenCloneModal(true)}

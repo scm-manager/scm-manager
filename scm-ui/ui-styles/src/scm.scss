@@ -917,7 +917,7 @@ form .field:not(.is-grouped) {
   margin-left: 0;
 }
 
-// cursor
+// NOTE: use .is-clickable instead!
 .has-cursor-pointer {
   cursor: pointer;
 }
