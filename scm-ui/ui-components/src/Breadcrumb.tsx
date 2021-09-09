@@ -237,7 +237,7 @@ const Breadcrumb: FC<Props> = ({
           </ActionBar>
         }
       </div>
-      <hr className="is-marginless" />
+      <hr className="m-0" />
     </>
   );
 };

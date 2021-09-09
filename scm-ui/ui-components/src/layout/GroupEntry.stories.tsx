@@ -37,10 +37,10 @@ const Wrapper = styled.div`
 
 const link = "/foo/bar";
 const icon = <Icon name="icons fa-2x fa-fw" />;
-const name = <strong className="is-marginless">main content</strong>;
+const name = <strong className="m-0">main content</strong>;
 const description = <small>more text</small>;
 const longName = (
-  <strong className="is-marginless">
+  <strong className="m-0">
     Very-important-repository-with-a-particular-long-but-easily-rememberable-name-which-also-is-written-in-kebab-case
   </strong>
 );

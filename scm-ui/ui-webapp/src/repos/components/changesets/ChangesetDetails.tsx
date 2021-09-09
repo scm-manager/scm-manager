@@ -142,7 +142,7 @@ const ChangesetDetails: FC<Props> = ({ changeset, repository, fileControlFactory
 
   return (
     <>
-      <div className={classNames("content", "is-marginless")}>
+      <div className={classNames("content", "m-0")}>
         <h4>
           <ExtensionPoint
             name="changeset.description"

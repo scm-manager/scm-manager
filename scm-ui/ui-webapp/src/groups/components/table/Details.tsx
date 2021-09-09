@@ -81,7 +81,7 @@ class Details extends React.Component<Props> {
       member = (
         <tr>
           <th>{t("group.members")}</th>
-          <td className="is-paddingless">
+          <td className="p-0">
             <ul className="ml-4">
               {group._embedded.members.map((member, index) => {
                 return <GroupMember key={index} member={member} />;
