@@ -106,7 +106,6 @@ const ActionBar = styled.div`
 
 const PrefixButton = styled.div`
   border-right: 1px solid lightgray;
-  margin-right: 0.5rem;
 `;
 
 const Breadcrumb: FC<Props> = ({
@@ -169,7 +168,7 @@ const Breadcrumb: FC<Props> = ({
   const renderBreadcrumbNav = () => {
     let prefixButtons = null;
     if (preButtons) {
-      prefixButtons = <PrefixButton>{preButtons}</PrefixButton>;
+      prefixButtons = <PrefixButton className="mr-2">{preButtons}</PrefixButton>;
     }
 
     let homeUrl = baseUrl + "/";
