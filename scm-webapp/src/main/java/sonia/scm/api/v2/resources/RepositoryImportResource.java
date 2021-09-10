@@ -31,6 +31,7 @@ import com.google.common.base.Strings;
 import com.google.common.io.ByteSource;
 import com.google.inject.Inject;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -130,9 +131,10 @@ public class RepositoryImportResource {
   @ApiResponse(
     responseCode = "201",
     description = "Repository import was successful",
-    content = @Content(
-      mediaType = VndMediaType.REPOSITORY,
-      schema = @Schema(implementation = ImportRepositoryFromUrlDto.class)
+    headers = @Header(
+      name = "Location",
+      description = "uri to the created repository",
+      schema = @Schema(type = "string")
     )
   )
   @ApiResponse(
