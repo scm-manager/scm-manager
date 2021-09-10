@@ -1,0 +1,2 @@
+- type: Fixed
+  description: Use correct logger for mercurial internal commands ([#1804](https://github.com/scm-manager/scm-manager/pull/1804))
