@@ -256,7 +256,7 @@ export const useRunHealthCheck = () => {
 export const useExportInfo = (repository: Repository): ApiResult<ExportInfo> => {
   const link = requiredLink(repository, "exportInfo");
   //TODO Refetch while exporting to update the page
-  const { isLoading, error, data } = useQuery<ExportInfo, Error>(
+  const { isLoading, isFetching, error, data } = useQuery<ExportInfo, Error>(
     ["repository", repository.namespace, repository.name, "exportInfo"],
     () => apiClient.get(link).then((response) => response.json()),
     {}
@@ -264,6 +264,7 @@ export const useExportInfo = (repository: Repository): ApiResult<ExportInfo> => 
 
   return {
     isLoading,
+    isFetching,
     error: error instanceof NotFoundError ? null : error,
     data,
   };

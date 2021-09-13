@@ -62,6 +62,7 @@ export const useSearchCounts = (types: string[], query: string) => {
   queries.forEach((q, i) => {
     result[types[i]] = {
       isLoading: q.isLoading,
+      isFetching: q.isFetching,
       error: q.error as Error,
       data: (q.data as QueryResult)?.totalHits,
     };

@@ -40,9 +40,10 @@ function getContentType(url: string): Promise<ContentType> {
 }
 
 export const useContentType = (url: string): ApiResult<ContentType> => {
-  const { isLoading, error, data } = useQuery<ContentType, Error>(["contentType", url], () => getContentType(url));
+  const { isLoading, isFetching, error, data } = useQuery<ContentType, Error>(["contentType", url], () => getContentType(url));
   return {
     isLoading,
+    isFetching,
     error,
     data,
   };

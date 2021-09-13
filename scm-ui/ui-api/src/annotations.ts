@@ -28,12 +28,13 @@ import { ApiResult } from "./base";
 import { repoQueryKey } from "./keys";
 
 export const useAnnotations = (repository: Repository, revision: string, file: File): ApiResult<AnnotatedSource> => {
-  const { isLoading, error, data } = useQuery<AnnotatedSource, Error>(
+  const { isLoading, isFetching, error, data } = useQuery<AnnotatedSource, Error>(
     repoQueryKey(repository, "annotations", revision, file.path),
     () => apiClient.get((file._links.annotate as Link).href).then((response) => response.json())
   );
   return {
     isLoading,
+    isFetching,
     error,
     data,
   };
