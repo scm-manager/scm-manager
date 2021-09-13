@@ -24,8 +24,6 @@
 
 package sonia.scm.plugin;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.common.collect.ImmutableSet;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -34,93 +32,70 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Set;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
- *
  * @author Sebastian Sdorra
  * @since 2.0.0
  */
 @XmlRootElement(name = "module")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class ScmModule
-{
-  //~--- get methods ----------------------------------------------------------
+public class ScmModule {
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Iterable<ClassElement> getEvents()
-  {
+  @XmlElement(name = "indexed-type")
+  private Set<ClassElement> indexedTypes;
+
+  @XmlElement(name = "event")
+  private Set<ClassElement> events;
+
+  @XmlElement(name = "extension-point")
+  private Set<ExtensionPointElement> extensionPoints;
+
+  @XmlElement(name = "extension")
+  private Set<ClassElement> extensions;
+
+  @XmlElement(name = "rest-provider")
+  private Set<ClassElement> restProviders;
+
+  @XmlElement(name = "rest-resource")
+  private Set<ClassElement> restResources;
+
+  @XmlElement(name = "mapper-modules")
+  private Set<ClassElement> mapperModules;
+
+  @XmlElement(name = "subscriber")
+  private Set<SubscriberElement> subscribers;
+
+  @XmlElement(name = "web-element")
+  private Set<WebElementDescriptor> webElements;
+
+  public Iterable<ClassElement> getEvents() {
     return nonNull(events);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Iterable<ExtensionPointElement> getExtensionPoints()
-  {
+  public Iterable<ExtensionPointElement> getExtensionPoints() {
     return nonNull(extensionPoints);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Iterable<ClassElement> getExtensions()
-  {
+  public Iterable<ClassElement> getExtensions() {
     return nonNull(extensions);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Iterable<ClassElement> getRestProviders()
-  {
+  public Iterable<ClassElement> getRestProviders() {
     return nonNull(restProviders);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Iterable<ClassElement> getRestResources()
-  {
+  public Iterable<ClassElement> getRestResources() {
     return nonNull(restResources);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Iterable<SubscriberElement> getSubscribers()
-  {
+  public Iterable<ClassElement> getMapperModules() {
+    return nonNull(mapperModules);
+  }
+
+  public Iterable<SubscriberElement> getSubscribers() {
     return nonNull(subscribers);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Iterable<WebElementDescriptor> getWebElements()
-  {
+  public Iterable<WebElementDescriptor> getWebElements() {
     return nonNull(webElements);
   }
 
@@ -128,58 +103,11 @@ public class ScmModule
     return nonNull(indexedTypes);
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param iterable
-   * @param <T>
-   *
-   * @return
-   */
-  private <T> Iterable<T> nonNull(Iterable<T> iterable)
-  {
-    if (iterable == null)
-    {
+  private <T> Iterable<T> nonNull(Iterable<T> iterable) {
+    if (iterable == null) {
       iterable = ImmutableSet.of();
     }
 
     return iterable;
   }
-
-
-  //~--- fields ---------------------------------------------------------------
-
-  @XmlElement(name = "indexed-type")
-  private Set<ClassElement> indexedTypes;
-
-  /** Field description */
-  @XmlElement(name = "event")
-  private Set<ClassElement> events;
-
-  /** Field description */
-  @XmlElement(name = "extension-point")
-  private Set<ExtensionPointElement> extensionPoints;
-
-  /** Field description */
-  @XmlElement(name = "extension")
-  private Set<ClassElement> extensions;
-
-  /** Field description */
-  @XmlElement(name = "rest-provider")
-  private Set<ClassElement> restProviders;
-
-  /** Field description */
-  @XmlElement(name = "rest-resource")
-  private Set<ClassElement> restResources;
-
-  /** Field description */
-  @XmlElement(name = "subscriber")
-  private Set<SubscriberElement> subscribers;
-
-  /** Field description */
-  @XmlElement(name = "web-element")
-  private Set<WebElementDescriptor> webElements;
 }

@@ -37,6 +37,9 @@ dependencies {
   // rest api
   implementation libraries.jaxRs
 
+  // mapper
+  implementation libraries.mapstruct
+
   // events
   implementation libraries.legman
 

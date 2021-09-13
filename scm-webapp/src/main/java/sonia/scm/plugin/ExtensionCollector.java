@@ -24,8 +24,6 @@
 
 package sonia.scm.plugin;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
@@ -42,19 +40,21 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-//~--- JDK imports ------------------------------------------------------------
-
-/**
- *
- * @author Sebastian Sdorra
- */
-@SuppressWarnings("unchecked")
-public final class ExtensionCollector
-{
+@SuppressWarnings({"unchecked", "rawtypes", "java:S3740"})
+public final class ExtensionCollector {
 
   private static final Logger LOG = LoggerFactory.getLogger(ExtensionCollector.class);
 
   private final Set<String> pluginIndex;
+
+  private final Set<WebElementExtension> webElements = Sets.newHashSet();
+  private final Set<Class<?>> indexedTypes = Sets.newHashSet();
+  private final Set<Class> restResources = Sets.newHashSet();
+  private final Set<Class> restProviders = Sets.newHashSet();
+  private final Set<Class> mapperModules = Sets.newHashSet();
+  private final Set<Class> looseExtensions = Sets.newHashSet();
+  private final Multimap<ExtensionPointElement, Class> extensions = HashMultimap.create();
+  private final Map<Class, ExtensionPointElement> extensionPointIndex = Maps.newHashMap();
 
   public ExtensionCollector(ClassLoader moduleClassLoader, Set<ScmModule> modules, Set<InstalledPlugin> installedPlugins) {
     this.pluginIndex = createPluginIndex(installedPlugins);
@@ -82,144 +82,62 @@ public final class ExtensionCollector
       .collect(Collectors.toSet());
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param epe
-   *
-   * @return
-   */
-  public Collection<Class> byExtensionPoint(ExtensionPointElement epe)
-  {
+  public Collection<Class> byExtensionPoint(ExtensionPointElement epe) {
     Collection<Class> collection = extensions.get(epe);
 
-    if (collection == null)
-    {
+    if (collection == null) {
       collection = Collections.emptySet();
     }
 
     return collection;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param clazz
-   *
-   * @return
-   */
-  public Collection<Class> byExtensionPoint(Class clazz)
-  {
+  public Collection<Class> byExtensionPoint(Class clazz) {
     Collection<Class> exts;
     ExtensionPointElement epe = extensionPointIndex.get(clazz);
 
-    if (epe != null)
-    {
+    if (epe != null) {
       exts = byExtensionPoint(epe);
-    }
-    else
-    {
+    } else {
       exts = Collections.emptySet();
     }
 
     return exts;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param epe
-   *
-   * @return
-   */
-  public Class oneByExtensionPoint(ExtensionPointElement epe)
-  {
+  public Class oneByExtensionPoint(ExtensionPointElement epe) {
     return Iterables.getFirst(byExtensionPoint(epe), null);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param clazz
-   *
-   * @return
-   */
-  public Class oneByExtensionPoint(Class clazz)
-  {
+  public Class oneByExtensionPoint(Class clazz) {
     return Iterables.getFirst(byExtensionPoint(clazz), null);
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Iterable<ExtensionPointElement> getExtensionPointElements()
-  {
+  public Iterable<ExtensionPointElement> getExtensionPointElements() {
     return extensionPointIndex.values();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Multimap<ExtensionPointElement, Class> getExtensions()
-  {
+  public Multimap<ExtensionPointElement, Class> getExtensions() {
     return extensions;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Set<Class> getLooseExtensions()
-  {
+  public Set<Class> getLooseExtensions() {
     return looseExtensions;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Set<Class> getRestProviders()
-  {
+  public Set<Class> getRestProviders() {
     return restProviders;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Set<Class> getRestResources()
-  {
+  public Set<Class> getRestResources() {
     return restResources;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Set<WebElementExtension> getWebElements()
-  {
+  public Set<Class> getMapperModules() {
+    return mapperModules;
+  }
+
+  public Set<WebElementExtension> getWebElements() {
     return webElements;
   }
 
@@ -227,22 +145,11 @@ public final class ExtensionCollector
     return indexedTypes;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param extension
-   */
-  private void appendExtension(Class extension)
-  {
+  private void appendExtension(Class extension) {
     boolean found = false;
 
-    for (Entry<Class, ExtensionPointElement> e : extensionPointIndex.entrySet())
-    {
-      if (e.getKey().isAssignableFrom(extension))
-      {
+    for (Entry<Class, ExtensionPointElement> e : extensionPointIndex.entrySet()) {
+      if (e.getKey().isAssignableFrom(extension)) {
         extensions.put(e.getValue(), extension);
         found = true;
 
@@ -250,8 +157,7 @@ public final class ExtensionCollector
       }
     }
 
-    if (!found)
-    {
+    if (!found) {
       looseExtensions.add(extension);
     }
   }
@@ -316,47 +222,16 @@ public final class ExtensionCollector
     return true;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param module
-   */
-  private void collectRootElements(ClassLoader classLoader, ScmModule module)
-  {
-    for (ExtensionPointElement epe : module.getExtensionPoints())
-    {
+  private void collectRootElements(ClassLoader classLoader, ScmModule module) {
+    for (ExtensionPointElement epe : module.getExtensionPoints()) {
       extensionPointIndex.put(epe.getClazz(), epe);
     }
 
     restProviders.addAll(collectClasses(classLoader, module.getRestProviders()));
     restResources.addAll(collectClasses(classLoader, module.getRestResources()));
+    mapperModules.addAll(collectClasses(classLoader, module.getMapperModules()));
 
     webElements.addAll(collectWebElementExtensions(classLoader, module.getWebElements()));
     indexedTypes.addAll(collectIndexedTypes(classLoader, module.getIndexedTypes()));
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final Set<WebElementExtension> webElements = Sets.newHashSet();
-
-  private final Set<Class<?>> indexedTypes = Sets.newHashSet();
-
-  /** Field description */
-  private final Set<Class> restResources = Sets.newHashSet();
-
-  /** Field description */
-  private final Set<Class> restProviders = Sets.newHashSet();
-
-  /** Field description */
-  private final Set<Class> looseExtensions = Sets.newHashSet();
-
-  /** Field description */
-  private final Multimap<ExtensionPointElement, Class> extensions =
-    HashMultimap.create();
-
-  /** Field description */
-  private final Map<Class, ExtensionPointElement> extensionPointIndex =
-    Maps.newHashMap();
 }
