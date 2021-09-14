@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-import styled from "styled-components";
 import Icon from "../Icon";
 import { storiesOf } from "@storybook/react";
 import { MemoryRouter } from "react-router-dom";
@@ -30,10 +29,6 @@ import React from "react";
 import GroupEntry from "./GroupEntry";
 import { Button, ButtonGroup } from "../buttons";
 import copyToClipboard from "../CopyToClipboard";
-
-const Wrapper = styled.div`
-  margin: 2rem;
-`;
 
 const link = "/foo/bar";
 const icon = <Icon name="icons fa-2x fa-fw" />;
@@ -56,7 +51,7 @@ const contentRight = (
 
 storiesOf("GroupEntry", module)
   .addDecorator((story) => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
-  .addDecorator((storyFn) => <Wrapper>{storyFn()}</Wrapper>)
+  .addDecorator((storyFn) => <div className="m-5">{storyFn()}</div>)
   .add("Default", () => (
     <GroupEntry link={link} avatar={icon} name={name} description={description} contentRight={contentRight} />
   ))

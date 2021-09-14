@@ -86,7 +86,7 @@ export default class CardColumnGroup extends React.Component<Props, State> {
             <i className={classNames("fa", icon)} />
           </span>{" "}
           {url ? (
-            <Link to={url} className={"has-text-dark"}>
+            <Link to={url} className="has-text-dark">
               {name}
             </Link>
           ) : (

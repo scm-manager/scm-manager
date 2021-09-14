@@ -91,7 +91,7 @@ const Contributors: FC<{ changeset: Changeset }> = ({ changeset }) => {
   if (open) {
     return (
       <div className="is-flex is-flex-direction-column mb-4">
-        <div className="is-flex is-flex-direction-row">
+        <div className="is-flex">
           <p className="is-ellipsis-overflow is-clickable mb-2" onClick={(e) => setOpen(!open)}>
             <Icon name="angle-down" /> {t("changeset.contributors.list")}
           </p>
@@ -109,7 +109,7 @@ const Contributors: FC<{ changeset: Changeset }> = ({ changeset }) => {
           <Icon name="angle-right" /> <ChangesetAuthor changeset={changeset} />
         </ContributorColumn>
         {signatureIcon}
-        <CountColumn className={"is-hidden-mobile is-hidden-tablet-only is-hidden-desktop-only"}>
+        <CountColumn className="is-hidden-mobile is-hidden-tablet-only is-hidden-desktop-only">
           (
           <span className="has-text-link">
             {t("changeset.contributors.count", { count: countContributors(changeset) })}

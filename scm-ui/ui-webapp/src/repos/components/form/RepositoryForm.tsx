@@ -23,16 +23,12 @@
  */
 import React, { FC, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import styled from "styled-components";
+import classNames from "classnames";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import { IndexResources, Repository, RepositoryType, CUSTOM_NAMESPACE_STRATEGY } from "@scm-manager/ui-types";
 import { Checkbox, Level, Select, SubmitButton } from "@scm-manager/ui-components";
 import NamespaceAndNameFields from "../NamespaceAndNameFields";
 import RepositoryInformationForm from "../RepositoryInformationForm";
-
-const FlexibleDiv = styled.div`
-  flex: 1;
-`;
 
 type Props = {
   createRepository?: (repo: RepositoryCreation, shouldInit: boolean) => void;
@@ -137,8 +133,8 @@ const RepositoryForm: FC<Props> = ({
           setValid={(namespaceAndName) => setValid({ ...valid, namespaceAndName })}
           disabled={disabled}
         />
-        <div className="is-flex is-justify-content-space-between">
-          <FlexibleDiv>
+        <div className="columns">
+          <div className={classNames("column", "is-half")}>
             <Select
               label={t("repository.type")}
               onChange={(type) => setRepo({ ...repo, type })}
@@ -147,8 +143,8 @@ const RepositoryForm: FC<Props> = ({
               helpText={t("help.typeHelpText")}
               disabled={disabled}
             />
-          </FlexibleDiv>
-          <FlexibleDiv className="mt-5">
+          </div>
+          <div className={classNames("column", "is-half", "is-align-self-flex-end")}>
             <Checkbox
               label={t("repositoryForm.initializeRepository")}
               checked={initRepository}
@@ -159,7 +155,7 @@ const RepositoryForm: FC<Props> = ({
             {initRepository && (
               <ExtensionPoint name="repos.create.initialize" props={extensionProps} renderAll={true} />
             )}
-          </FlexibleDiv>
+          </div>
         </div>
       </>
     );

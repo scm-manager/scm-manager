@@ -62,19 +62,12 @@ const Description = styled.p`
 `;
 
 const ContentLeft = styled.div`
-  flex: 1 1 auto;
   min-width: 0;
 `;
 
 const ContentRight = styled.div`
-  flex: 0 0 auto;
   pointer-events: all;
   margin-bottom: -10px;
-`;
-
-const NameDescriptionWrapper = styled.div`
-  overflow: hidden;
-  flex: 1 1 auto;
 `;
 
 type Props = {
@@ -94,14 +87,22 @@ const GroupEntry: FC<Props> = ({ link, avatar, title, name, description, content
         className={classNames("is-flex", "is-justify-content-space-between", "is-align-items-center", "p-2")}
         title={title}
       >
-        <ContentLeft className={classNames("is-flex", "is-align-items-center")}>
+        <ContentLeft className={classNames("is-flex", "is-flex-grow-1", "is-align-items-center")}>
           <Avatar className="mr-4">{avatar}</Avatar>
-          <NameDescriptionWrapper>
+          <div className={classNames("is-flex-grow-1", "is-clipped")}>
             <div className="mx-1">{name}</div>
             <Description className="mx-1">{description}</Description>
-          </NameDescriptionWrapper>
+          </div>
         </ContentLeft>
-        <ContentRight className={classNames("is-hidden-touch", "is-flex", "is-justify-content-flex-end", "pl-5")}>
+        <ContentRight
+          className={classNames(
+            "is-hidden-touch",
+            "is-flex",
+            "is-flex-shrink-0",
+            "is-justify-content-flex-end",
+            "pl-5"
+          )}
+        >
           {contentRight}
         </ContentRight>
       </StyledGroupEntry>

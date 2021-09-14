@@ -23,23 +23,18 @@
  */
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
-import styled from "styled-components";
 import { Tag } from "@scm-manager/ui-components";
 
 type Props = WithTranslation & {
   defaultBranch?: boolean;
 };
 
-const InheritVerticalAlignTag = styled(Tag)`
-  vertical-align: inherit;
-`;
-
 class DefaultBranchTag extends React.Component<Props> {
   render() {
     const { defaultBranch, t } = this.props;
 
     if (defaultBranch) {
-      return <InheritVerticalAlignTag className="ml-3" color="dark" label={t("branch.defaultTag")} />;
+      return <Tag className="ml-3" color="dark" label={t("branch.defaultTag")} />;
     }
     return null;
   }

@@ -38,6 +38,8 @@ type Props = {
   onRemove?: () => void;
 };
 
+const smallClassNames = classNames("p-1", "is-size-7", "has-text-weight-bold");
+
 const Tag: FC<Props> = ({
   className,
   color = "light",
@@ -64,7 +66,6 @@ const Tag: FC<Props> = ({
   if (onRemove) {
     showDelete = <a className="tag is-delete" onClick={onRemove} />;
   }
-  const smallClassNames = classNames("p-1", "is-size-7", "has-text-weight-bold");
 
   return (
     <>

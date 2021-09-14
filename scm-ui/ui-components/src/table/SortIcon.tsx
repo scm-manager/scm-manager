@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 import React, { FC } from "react";
-import styled from "styled-components";
+import classNames from "classnames";
 import Icon from "../Icon";
 
 type Props = {
@@ -30,12 +30,8 @@ type Props = {
   isVisible: boolean;
 };
 
-const IconWithMarginLeft = styled(Icon)`
-  visibility: ${(props: Props) => (props.isVisible ? "visible" : "hidden")};
-`;
-
 const SortIcon: FC<Props> = (props: Props) => {
-  return <IconWithMarginLeft className="ml-1" name={props.name} isVisible={props.isVisible} />;
+  return <Icon className={classNames("ml-1", { "is-invisible": !props.isVisible })} name={props.name} />;
 };
 
 export default SortIcon;

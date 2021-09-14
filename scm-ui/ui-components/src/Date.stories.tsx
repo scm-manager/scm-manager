@@ -40,7 +40,7 @@ const dates = [
 
 storiesOf("Date", module)
   .add("Date from now", () => (
-    <div className="m-6">
+    <div className="p-5">
       {dates.map((d) => (
         <p>
           <DateFromNow date={d} {...baseProps} />
@@ -49,7 +49,7 @@ storiesOf("Date", module)
     </div>
   ))
   .add("Short", () => (
-    <div className="m-6">
+    <div className="p-5">
       {dates.map((d) => (
         <p>
           <DateShort date={d} {...baseProps} />

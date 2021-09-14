@@ -106,7 +106,7 @@ class ChangesetRow extends React.Component<Props> {
                     <p className="is-hidden-desktop">
                       <Trans i18nKey="repos:changeset.shortSummary" components={[changesetId, dateFromNow]} />
                     </p>
-                    <div className={classNames("is-flex", "is-flex-direction-row")}>
+                    <div className="is-flex">
                       <p className={classNames("is-size-7", "is-ellipsis-overflow", "mt-2")}>
                         <ChangesetAuthor changeset={changeset} />
                       </p>
