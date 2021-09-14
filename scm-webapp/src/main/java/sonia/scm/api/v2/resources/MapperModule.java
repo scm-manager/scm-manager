@@ -27,56 +27,14 @@ package sonia.scm.api.v2.resources;
 import com.google.inject.AbstractModule;
 import com.google.inject.servlet.ServletScopes;
 import org.mapstruct.factory.Mappers;
-import sonia.scm.security.gpg.PublicKeyMapper;
 import sonia.scm.web.api.RepositoryToHalMapper;
 
 public class MapperModule extends AbstractModule {
   @Override
   protected void configure() {
-    bind(UserDtoToUserMapper.class).to(Mappers.getMapperClass(UserDtoToUserMapper.class));
-    bind(UserToUserDtoMapper.class).to(Mappers.getMapperClass(UserToUserDtoMapper.class));
-    bind(UserCollectionToDtoMapper.class);
-    bind(PublicKeyMapper.class).to(Mappers.getMapperClass(PublicKeyMapper.class));
-
-    bind(GroupDtoToGroupMapper.class).to(Mappers.getMapperClass(GroupDtoToGroupMapper.class));
-    bind(GroupToGroupDtoMapper.class).to(Mappers.getMapperClass(GroupToGroupDtoMapper.class));
-    bind(GroupCollectionToDtoMapper.class);
-
-    bind(ScmConfigurationToConfigDtoMapper.class).to(Mappers.getMapperClass(ScmConfigurationToConfigDtoMapper.class));
-    bind(ConfigDtoToScmConfigurationMapper.class).to(Mappers.getMapperClass(ConfigDtoToScmConfigurationMapper.class));
-
-    bind(RepositoryToRepositoryDtoMapper.class).to(Mappers.getMapperClass(RepositoryToRepositoryDtoMapper.class));
-    bind(RepositoryDtoToRepositoryMapper.class).to(Mappers.getMapperClass(RepositoryDtoToRepositoryMapper.class));
-
-    bind(RepositoryTypeToRepositoryTypeDtoMapper.class).to(Mappers.getMapperClass(RepositoryTypeToRepositoryTypeDtoMapper.class));
-    bind(RepositoryTypeCollectionToDtoMapper.class);
-
-    bind(BranchToBranchDtoMapper.class).to(Mappers.getMapperClass(BranchToBranchDtoMapper.class));
-    bind(RepositoryPermissionDtoToRepositoryPermissionMapper.class).to(Mappers.getMapperClass(RepositoryPermissionDtoToRepositoryPermissionMapper.class));
-    bind(RepositoryPermissionToRepositoryPermissionDtoMapper.class).to(Mappers.getMapperClass(RepositoryPermissionToRepositoryPermissionDtoMapper.class));
-
-    bind(RepositoryRoleToRepositoryRoleDtoMapper.class).to(Mappers.getMapperClass(RepositoryRoleToRepositoryRoleDtoMapper.class));
-    bind(RepositoryRoleDtoToRepositoryRoleMapper.class).to(Mappers.getMapperClass(RepositoryRoleDtoToRepositoryRoleMapper.class));
-    bind(RepositoryRoleCollectionToDtoMapper.class);
-
+    // These mappers are special and cannot be bound automatically by the annotation processor
     bind(ChangesetToChangesetDtoMapper.class).to(Mappers.getMapperClass(DefaultChangesetToChangesetDtoMapper.class));
-    bind(ChangesetToParentDtoMapper.class).to(Mappers.getMapperClass(ChangesetToParentDtoMapper.class));
-
-    bind(TagToTagDtoMapper.class).to(Mappers.getMapperClass(TagToTagDtoMapper.class));
-
-    bind(BrowserResultToFileObjectDtoMapper.class).to(Mappers.getMapperClass(BrowserResultToFileObjectDtoMapper.class));
-    bind(ModificationsToDtoMapper.class).to(Mappers.getMapperClass(ModificationsToDtoMapper.class));
-
-    bind(ReducedObjectModelToDtoMapper.class).to(Mappers.getMapperClass(ReducedObjectModelToDtoMapper.class));
-
-    bind(ResteasyViolationExceptionToErrorDtoMapper.class).to(Mappers.getMapperClass(ResteasyViolationExceptionToErrorDtoMapper.class));
-    bind(ScmViolationExceptionToErrorDtoMapper.class).to(Mappers.getMapperClass(ScmViolationExceptionToErrorDtoMapper.class));
-    bind(ExceptionWithContextToErrorDtoMapper.class).to(Mappers.getMapperClass(ExceptionWithContextToErrorDtoMapper.class));
-
     bind(RepositoryToHalMapper.class).to(Mappers.getMapperClass(RepositoryToRepositoryDtoMapper.class));
-
-    bind(BlameResultToBlameDtoMapper.class).to(Mappers.getMapperClass(BlameResultToBlameDtoMapper.class));
-    bind(UpdateInfoMapper.class).to(Mappers.getMapperClass(UpdateInfoMapper.class));
 
     // no mapstruct required
     bind(MeDtoFactory.class);
@@ -84,16 +42,5 @@ public class MapperModule extends AbstractModule {
     bind(UIPluginDtoCollectionMapper.class);
 
     bind(ScmPathInfoStore.class).in(ServletScopes.REQUEST);
-
-    bind(PluginDtoMapper.class).to(Mappers.getMapperClass(PluginDtoMapper.class));
-
-    bind(ApiKeyToApiKeyDtoMapper.class).to(Mappers.getMapperClass(ApiKeyToApiKeyDtoMapper.class));
-
-    bind(RepositoryExportInformationToDtoMapper.class).to(Mappers.getMapperClass(RepositoryExportInformationToDtoMapper.class));
-    bind(RepositoryImportDtoToRepositoryImportParametersMapper.class).to(Mappers.getMapperClass(RepositoryImportDtoToRepositoryImportParametersMapper.class));
-
-    bind(QueryResultMapper.class).to(Mappers.getMapperClass(QueryResultMapper.class));
-    bind(SearchableTypeMapper.class).to(Mappers.getMapperClass(SearchableTypeMapper.class));
-
   }
 }

@@ -24,38 +24,19 @@
 
 package sonia.scm.annotation;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.github.legman.Subscribe;
-
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-
 import org.kohsuke.MetaInfServices;
-
+import org.mapstruct.Mapper;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
-
 import org.xml.sax.SAXException;
-
 import sonia.scm.annotation.ClassSetElement.ClassWithAttributes;
 import sonia.scm.plugin.PluginAnnotation;
 import sonia.scm.plugin.Requires;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.File;
-import java.io.IOException;
-
-import java.lang.annotation.Annotation;
-
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Filer;
@@ -63,7 +44,6 @@ import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
-
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
@@ -72,14 +52,11 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
-
 import javax.tools.Diagnostic.Kind;
 import javax.tools.FileObject;
 import javax.tools.StandardLocation;
-
 import javax.ws.rs.Path;
 import javax.ws.rs.ext.Provider;
-
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -91,6 +68,14 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import java.io.File;
+import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import static javax.lang.model.util.ElementFilter.methodsIn;
 
@@ -112,7 +97,8 @@ public final class ScmAnnotationProcessor extends AbstractProcessor {
     ImmutableSet.of(Subscribe.class.getName());
   private static final Set<ClassAnnotation> CLASS_ANNOTATIONS =
     ImmutableSet.of(new ClassAnnotation("rest-resource", Path.class),
-      new ClassAnnotation("rest-provider", Provider.class));
+      new ClassAnnotation("rest-provider", Provider.class),
+      new ClassAnnotation("mapper", Mapper.class));
 
   @Override
   public boolean process(Set<? extends TypeElement> annotations,
