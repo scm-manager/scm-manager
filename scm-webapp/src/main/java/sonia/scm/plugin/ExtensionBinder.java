@@ -38,7 +38,7 @@ import sonia.scm.util.Util;
 /**
  * @author Sebastian Sdorra
  */
-@SuppressWarnings({"unchecked", "rawTypes", "java:S3740"})
+@SuppressWarnings({"unchecked", "rawtypes"})
 public final class ExtensionBinder {
 
   private static final String TYPE_LOOSE_EXT = "loose extension";
