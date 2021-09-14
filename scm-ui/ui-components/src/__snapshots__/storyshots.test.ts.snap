@@ -2776,7 +2776,7 @@ exports[`Storyshots Changesets Co-Authors with avatar 1`] = `
                   className="is-hidden-desktop"
                 />
                 <div
-                  className="is-flex is-flex-direction-row"
+                  className="is-flex"
                 >
                   <p
                     className="is-size-7 is-ellipsis-overflow mt-2"
@@ -2946,7 +2946,7 @@ exports[`Storyshots Changesets Commiter and Co-Authors with avatar 1`] = `
                   className="is-hidden-desktop"
                 />
                 <div
-                  className="is-flex is-flex-direction-row"
+                  className="is-flex"
                 >
                   <p
                     className="is-size-7 is-ellipsis-overflow mt-2"
@@ -3092,7 +3092,7 @@ exports[`Storyshots Changesets Default 1`] = `
                   className="is-hidden-desktop"
                 />
                 <div
-                  className="is-flex is-flex-direction-row"
+                  className="is-flex"
                 >
                   <p
                     className="is-size-7 is-ellipsis-overflow mt-2"
@@ -3219,7 +3219,7 @@ exports[`Storyshots Changesets Replacements 1`] = `
                   className="is-hidden-desktop"
                 />
                 <div
-                  className="is-flex is-flex-direction-row"
+                  className="is-flex"
                 >
                   <p
                     className="is-size-7 is-ellipsis-overflow mt-2"
@@ -3336,7 +3336,7 @@ exports[`Storyshots Changesets With Committer 1`] = `
                   className="is-hidden-desktop"
                 />
                 <div
-                  className="is-flex is-flex-direction-row"
+                  className="is-flex"
                 >
                   <p
                     className="is-size-7 is-ellipsis-overflow mt-2"
@@ -3465,7 +3465,7 @@ exports[`Storyshots Changesets With Committer and Co-Author 1`] = `
                   className="is-hidden-desktop"
                 />
                 <div
-                  className="is-flex is-flex-direction-row"
+                  className="is-flex"
                 >
                   <p
                     className="is-size-7 is-ellipsis-overflow mt-2"
@@ -3616,7 +3616,7 @@ exports[`Storyshots Changesets With avatar 1`] = `
                   className="is-hidden-desktop"
                 />
                 <div
-                  className="is-flex is-flex-direction-row"
+                  className="is-flex"
                 >
                   <p
                     className="is-size-7 is-ellipsis-overflow mt-2"
@@ -3733,7 +3733,7 @@ exports[`Storyshots Changesets With contactless signature 1`] = `
                   className="is-hidden-desktop"
                 />
                 <div
-                  className="is-flex is-flex-direction-row"
+                  className="is-flex"
                 >
                   <p
                     className="is-size-7 is-ellipsis-overflow mt-2"
@@ -3858,7 +3858,7 @@ exports[`Storyshots Changesets With invalid signature 1`] = `
                   className="is-hidden-desktop"
                 />
                 <div
-                  className="is-flex is-flex-direction-row"
+                  className="is-flex"
                 >
                   <p
                     className="is-size-7 is-ellipsis-overflow mt-2"
@@ -3983,7 +3983,7 @@ exports[`Storyshots Changesets With multiple Co-Authors 1`] = `
                   className="is-hidden-desktop"
                 />
                 <div
-                  className="is-flex is-flex-direction-row"
+                  className="is-flex"
                 >
                   <p
                     className="is-size-7 is-ellipsis-overflow mt-2"
@@ -4113,7 +4113,7 @@ exports[`Storyshots Changesets With multiple signatures and invalid status 1`] =
                   className="is-hidden-desktop"
                 />
                 <div
-                  className="is-flex is-flex-direction-row"
+                  className="is-flex"
                 >
                   <p
                     className="is-size-7 is-ellipsis-overflow mt-2"
@@ -4238,7 +4238,7 @@ exports[`Storyshots Changesets With multiple signatures and not found status 1`]
                   className="is-hidden-desktop"
                 />
                 <div
-                  className="is-flex is-flex-direction-row"
+                  className="is-flex"
                 >
                   <p
                     className="is-size-7 is-ellipsis-overflow mt-2"
@@ -4363,7 +4363,7 @@ exports[`Storyshots Changesets With multiple signatures and valid status 1`] = `
                   className="is-hidden-desktop"
                 />
                 <div
-                  className="is-flex is-flex-direction-row"
+                  className="is-flex"
                 >
                   <p
                     className="is-size-7 is-ellipsis-overflow mt-2"
@@ -4488,7 +4488,7 @@ exports[`Storyshots Changesets With unknown signature 1`] = `
                   className="is-hidden-desktop"
                 />
                 <div
-                  className="is-flex is-flex-direction-row"
+                  className="is-flex"
                 >
                   <p
                     className="is-size-7 is-ellipsis-overflow mt-2"
@@ -4613,7 +4613,7 @@ exports[`Storyshots Changesets With unowned signature 1`] = `
                   className="is-hidden-desktop"
                 />
                 <div
-                  className="is-flex is-flex-direction-row"
+                  className="is-flex"
                 >
                   <p
                     className="is-size-7 is-ellipsis-overflow mt-2"
@@ -4738,7 +4738,7 @@ exports[`Storyshots Changesets With valid signature 1`] = `
                   className="is-hidden-desktop"
                 />
                 <div
-                  className="is-flex is-flex-direction-row"
+                  className="is-flex"
                 >
                   <p
                     className="is-size-7 is-ellipsis-overflow mt-2"
@@ -4826,7 +4826,7 @@ exports[`Storyshots Changesets With valid signature 1`] = `
 
 exports[`Storyshots Date Date from now 1`] = `
 <div
-  className="m-6"
+  className="p-5"
 >
   <p>
     <time
@@ -4865,7 +4865,7 @@ exports[`Storyshots Date Date from now 1`] = `
 
 exports[`Storyshots Date Short 1`] = `
 <div
-  className="m-6"
+  className="p-5"
 >
   <p>
     <time
@@ -57269,7 +57269,7 @@ Array [
 
 exports[`Storyshots GroupEntry Default 1`] = `
 <div
-  className="GroupEntrystories__Wrapper-sc-6ytotm-0 cFuNvv"
+  className="m-5"
 >
   <div
     className="is-relative"
@@ -57283,7 +57283,7 @@ exports[`Storyshots GroupEntry Default 1`] = `
       className="GroupEntry__StyledGroupEntry-sc-1f902yu-0 pJvZK is-flex is-justify-content-space-between is-align-items-center p-2"
     >
       <div
-        className="GroupEntry__ContentLeft-sc-1f902yu-4 cLAlIc is-flex is-align-items-center"
+        className="GroupEntry__ContentLeft-sc-1f902yu-4 fIVVkl is-flex is-flex-grow-1 is-align-items-center"
       >
         <div
           className="GroupEntry__Avatar-sc-1f902yu-2 iFzhlu mr-4"
@@ -57293,7 +57293,7 @@ exports[`Storyshots GroupEntry Default 1`] = `
           />
         </div>
         <div
-          className="GroupEntry__NameDescriptionWrapper-sc-1f902yu-6 iPEOup"
+          className="is-flex-grow-1 is-clipped"
         >
           <div
             className="mx-1"
@@ -57314,7 +57314,7 @@ exports[`Storyshots GroupEntry Default 1`] = `
         </div>
       </div>
       <div
-        className="GroupEntry__ContentRight-sc-1f902yu-5 hFCryW is-hidden-touch is-flex is-justify-content-flex-end pl-5"
+        className="GroupEntry__ContentRight-sc-1f902yu-5 joMVND is-hidden-touch is-flex is-flex-shrink-0 is-justify-content-flex-end pl-5"
       >
         <div
           className="field is-grouped"
@@ -57346,7 +57346,7 @@ exports[`Storyshots GroupEntry Default 1`] = `
 
 exports[`Storyshots GroupEntry With long texts 1`] = `
 <div
-  className="GroupEntrystories__Wrapper-sc-6ytotm-0 cFuNvv"
+  className="m-5"
 >
   <div
     className="is-relative"
@@ -57360,7 +57360,7 @@ exports[`Storyshots GroupEntry With long texts 1`] = `
       className="GroupEntry__StyledGroupEntry-sc-1f902yu-0 pJvZK is-flex is-justify-content-space-between is-align-items-center p-2"
     >
       <div
-        className="GroupEntry__ContentLeft-sc-1f902yu-4 cLAlIc is-flex is-align-items-center"
+        className="GroupEntry__ContentLeft-sc-1f902yu-4 fIVVkl is-flex is-flex-grow-1 is-align-items-center"
       >
         <div
           className="GroupEntry__Avatar-sc-1f902yu-2 iFzhlu mr-4"
@@ -57370,7 +57370,7 @@ exports[`Storyshots GroupEntry With long texts 1`] = `
           />
         </div>
         <div
-          className="GroupEntry__NameDescriptionWrapper-sc-1f902yu-6 iPEOup"
+          className="is-flex-grow-1 is-clipped"
         >
           <div
             className="mx-1"
@@ -57391,7 +57391,7 @@ exports[`Storyshots GroupEntry With long texts 1`] = `
         </div>
       </div>
       <div
-        className="GroupEntry__ContentRight-sc-1f902yu-5 hFCryW is-hidden-touch is-flex is-justify-content-flex-end pl-5"
+        className="GroupEntry__ContentRight-sc-1f902yu-5 joMVND is-hidden-touch is-flex is-flex-shrink-0 is-justify-content-flex-end pl-5"
       >
         <div
           className="field is-grouped"
@@ -72787,7 +72787,7 @@ exports[`Storyshots RepositoryEntry Archived 1`] = `
       className="GroupEntry__StyledGroupEntry-sc-1f902yu-0 pJvZK is-flex is-justify-content-space-between is-align-items-center p-2"
     >
       <div
-        className="GroupEntry__ContentLeft-sc-1f902yu-4 cLAlIc is-flex is-align-items-center"
+        className="GroupEntry__ContentLeft-sc-1f902yu-4 fIVVkl is-flex is-flex-grow-1 is-align-items-center"
       >
         <div
           className="GroupEntry__Avatar-sc-1f902yu-2 iFzhlu mr-4"
@@ -72802,7 +72802,7 @@ exports[`Storyshots RepositoryEntry Archived 1`] = `
           </div>
         </div>
         <div
-          className="GroupEntry__NameDescriptionWrapper-sc-1f902yu-6 iPEOup"
+          className="is-flex-grow-1 is-clipped"
         >
           <div
             className="mx-1"
@@ -72844,7 +72844,7 @@ exports[`Storyshots RepositoryEntry Archived 1`] = `
         </div>
       </div>
       <div
-        className="GroupEntry__ContentRight-sc-1f902yu-5 hFCryW is-hidden-touch is-flex is-justify-content-flex-end pl-5"
+        className="GroupEntry__ContentRight-sc-1f902yu-5 joMVND is-hidden-touch is-flex is-flex-shrink-0 is-justify-content-flex-end pl-5"
       >
         <div
           className="RepositoryEntry__ContentRightContainer-sc-6jys82-0 wkQgn is-flex is-flex-direction-column is-justify-content-space-between is-relative mr-4"
@@ -72891,7 +72891,7 @@ exports[`Storyshots RepositoryEntry Avatar EP 1`] = `
       className="GroupEntry__StyledGroupEntry-sc-1f902yu-0 pJvZK is-flex is-justify-content-space-between is-align-items-center p-2"
     >
       <div
-        className="GroupEntry__ContentLeft-sc-1f902yu-4 cLAlIc is-flex is-align-items-center"
+        className="GroupEntry__ContentLeft-sc-1f902yu-4 fIVVkl is-flex is-flex-grow-1 is-align-items-center"
       >
         <div
           className="GroupEntry__Avatar-sc-1f902yu-2 iFzhlu mr-4"
@@ -72906,7 +72906,7 @@ exports[`Storyshots RepositoryEntry Avatar EP 1`] = `
           </div>
         </div>
         <div
-          className="GroupEntry__NameDescriptionWrapper-sc-1f902yu-6 iPEOup"
+          className="is-flex-grow-1 is-clipped"
         >
           <div
             className="mx-1"
@@ -72937,7 +72937,7 @@ exports[`Storyshots RepositoryEntry Avatar EP 1`] = `
         </div>
       </div>
       <div
-        className="GroupEntry__ContentRight-sc-1f902yu-5 hFCryW is-hidden-touch is-flex is-justify-content-flex-end pl-5"
+        className="GroupEntry__ContentRight-sc-1f902yu-5 joMVND is-hidden-touch is-flex is-flex-shrink-0 is-justify-content-flex-end pl-5"
       >
         <div
           className="RepositoryEntry__ContentRightContainer-sc-6jys82-0 wkQgn is-flex is-flex-direction-column is-justify-content-space-between is-relative mr-4"
@@ -72984,7 +72984,7 @@ exports[`Storyshots RepositoryEntry Before Title EP 1`] = `
       className="GroupEntry__StyledGroupEntry-sc-1f902yu-0 pJvZK is-flex is-justify-content-space-between is-align-items-center p-2"
     >
       <div
-        className="GroupEntry__ContentLeft-sc-1f902yu-4 cLAlIc is-flex is-align-items-center"
+        className="GroupEntry__ContentLeft-sc-1f902yu-4 fIVVkl is-flex is-flex-grow-1 is-align-items-center"
       >
         <div
           className="GroupEntry__Avatar-sc-1f902yu-2 iFzhlu mr-4"
@@ -72999,7 +72999,7 @@ exports[`Storyshots RepositoryEntry Before Title EP 1`] = `
           </div>
         </div>
         <div
-          className="GroupEntry__NameDescriptionWrapper-sc-1f902yu-6 iPEOup"
+          className="is-flex-grow-1 is-clipped"
         >
           <div
             className="mx-1"
@@ -73033,7 +73033,7 @@ exports[`Storyshots RepositoryEntry Before Title EP 1`] = `
         </div>
       </div>
       <div
-        className="GroupEntry__ContentRight-sc-1f902yu-5 hFCryW is-hidden-touch is-flex is-justify-content-flex-end pl-5"
+        className="GroupEntry__ContentRight-sc-1f902yu-5 joMVND is-hidden-touch is-flex is-flex-shrink-0 is-justify-content-flex-end pl-5"
       >
         <div
           className="RepositoryEntry__ContentRightContainer-sc-6jys82-0 wkQgn is-flex is-flex-direction-column is-justify-content-space-between is-relative mr-4"
@@ -73080,7 +73080,7 @@ exports[`Storyshots RepositoryEntry Default 1`] = `
       className="GroupEntry__StyledGroupEntry-sc-1f902yu-0 pJvZK is-flex is-justify-content-space-between is-align-items-center p-2"
     >
       <div
-        className="GroupEntry__ContentLeft-sc-1f902yu-4 cLAlIc is-flex is-align-items-center"
+        className="GroupEntry__ContentLeft-sc-1f902yu-4 fIVVkl is-flex is-flex-grow-1 is-align-items-center"
       >
         <div
           className="GroupEntry__Avatar-sc-1f902yu-2 iFzhlu mr-4"
@@ -73095,7 +73095,7 @@ exports[`Storyshots RepositoryEntry Default 1`] = `
           </div>
         </div>
         <div
-          className="GroupEntry__NameDescriptionWrapper-sc-1f902yu-6 iPEOup"
+          className="is-flex-grow-1 is-clipped"
         >
           <div
             className="mx-1"
@@ -73126,7 +73126,7 @@ exports[`Storyshots RepositoryEntry Default 1`] = `
         </div>
       </div>
       <div
-        className="GroupEntry__ContentRight-sc-1f902yu-5 hFCryW is-hidden-touch is-flex is-justify-content-flex-end pl-5"
+        className="GroupEntry__ContentRight-sc-1f902yu-5 joMVND is-hidden-touch is-flex is-flex-shrink-0 is-justify-content-flex-end pl-5"
       >
         <div
           className="RepositoryEntry__ContentRightContainer-sc-6jys82-0 wkQgn is-flex is-flex-direction-column is-justify-content-space-between is-relative mr-4"
@@ -73173,7 +73173,7 @@ exports[`Storyshots RepositoryEntry Exporting 1`] = `
       className="GroupEntry__StyledGroupEntry-sc-1f902yu-0 pJvZK is-flex is-justify-content-space-between is-align-items-center p-2"
     >
       <div
-        className="GroupEntry__ContentLeft-sc-1f902yu-4 cLAlIc is-flex is-align-items-center"
+        className="GroupEntry__ContentLeft-sc-1f902yu-4 fIVVkl is-flex is-flex-grow-1 is-align-items-center"
       >
         <div
           className="GroupEntry__Avatar-sc-1f902yu-2 iFzhlu mr-4"
@@ -73188,7 +73188,7 @@ exports[`Storyshots RepositoryEntry Exporting 1`] = `
           </div>
         </div>
         <div
-          className="GroupEntry__NameDescriptionWrapper-sc-1f902yu-6 iPEOup"
+          className="is-flex-grow-1 is-clipped"
         >
           <div
             className="mx-1"
@@ -73230,7 +73230,7 @@ exports[`Storyshots RepositoryEntry Exporting 1`] = `
         </div>
       </div>
       <div
-        className="GroupEntry__ContentRight-sc-1f902yu-5 hFCryW is-hidden-touch is-flex is-justify-content-flex-end pl-5"
+        className="GroupEntry__ContentRight-sc-1f902yu-5 joMVND is-hidden-touch is-flex is-flex-shrink-0 is-justify-content-flex-end pl-5"
       >
         <div
           className="RepositoryEntry__ContentRightContainer-sc-6jys82-0 wkQgn is-flex is-flex-direction-column is-justify-content-space-between is-relative mr-4"
@@ -73277,7 +73277,7 @@ exports[`Storyshots RepositoryEntry HealthCheck Failure 1`] = `
       className="GroupEntry__StyledGroupEntry-sc-1f902yu-0 pJvZK is-flex is-justify-content-space-between is-align-items-center p-2"
     >
       <div
-        className="GroupEntry__ContentLeft-sc-1f902yu-4 cLAlIc is-flex is-align-items-center"
+        className="GroupEntry__ContentLeft-sc-1f902yu-4 fIVVkl is-flex is-flex-grow-1 is-align-items-center"
       >
         <div
           className="GroupEntry__Avatar-sc-1f902yu-2 iFzhlu mr-4"
@@ -73292,7 +73292,7 @@ exports[`Storyshots RepositoryEntry HealthCheck Failure 1`] = `
           </div>
         </div>
         <div
-          className="GroupEntry__NameDescriptionWrapper-sc-1f902yu-6 iPEOup"
+          className="is-flex-grow-1 is-clipped"
         >
           <div
             className="mx-1"
@@ -73335,7 +73335,7 @@ exports[`Storyshots RepositoryEntry HealthCheck Failure 1`] = `
         </div>
       </div>
       <div
-        className="GroupEntry__ContentRight-sc-1f902yu-5 hFCryW is-hidden-touch is-flex is-justify-content-flex-end pl-5"
+        className="GroupEntry__ContentRight-sc-1f902yu-5 joMVND is-hidden-touch is-flex is-flex-shrink-0 is-justify-content-flex-end pl-5"
       >
         <div
           className="RepositoryEntry__ContentRightContainer-sc-6jys82-0 wkQgn is-flex is-flex-direction-column is-justify-content-space-between is-relative mr-4"
@@ -73382,7 +73382,7 @@ exports[`Storyshots RepositoryEntry MultiRepositoryTags 1`] = `
       className="GroupEntry__StyledGroupEntry-sc-1f902yu-0 pJvZK is-flex is-justify-content-space-between is-align-items-center p-2"
     >
       <div
-        className="GroupEntry__ContentLeft-sc-1f902yu-4 cLAlIc is-flex is-align-items-center"
+        className="GroupEntry__ContentLeft-sc-1f902yu-4 fIVVkl is-flex is-flex-grow-1 is-align-items-center"
       >
         <div
           className="GroupEntry__Avatar-sc-1f902yu-2 iFzhlu mr-4"
@@ -73397,7 +73397,7 @@ exports[`Storyshots RepositoryEntry MultiRepositoryTags 1`] = `
           </div>
         </div>
         <div
-          className="GroupEntry__NameDescriptionWrapper-sc-1f902yu-6 iPEOup"
+          className="is-flex-grow-1 is-clipped"
         >
           <div
             className="mx-1"
@@ -73449,7 +73449,7 @@ exports[`Storyshots RepositoryEntry MultiRepositoryTags 1`] = `
         </div>
       </div>
       <div
-        className="GroupEntry__ContentRight-sc-1f902yu-5 hFCryW is-hidden-touch is-flex is-justify-content-flex-end pl-5"
+        className="GroupEntry__ContentRight-sc-1f902yu-5 joMVND is-hidden-touch is-flex is-flex-shrink-0 is-justify-content-flex-end pl-5"
       >
         <div
           className="RepositoryEntry__ContentRightContainer-sc-6jys82-0 wkQgn is-flex is-flex-direction-column is-justify-content-space-between is-relative mr-4"
@@ -73496,7 +73496,7 @@ exports[`Storyshots RepositoryEntry RepositoryFlag EP 1`] = `
       className="GroupEntry__StyledGroupEntry-sc-1f902yu-0 pJvZK is-flex is-justify-content-space-between is-align-items-center p-2"
     >
       <div
-        className="GroupEntry__ContentLeft-sc-1f902yu-4 cLAlIc is-flex is-align-items-center"
+        className="GroupEntry__ContentLeft-sc-1f902yu-4 fIVVkl is-flex is-flex-grow-1 is-align-items-center"
       >
         <div
           className="GroupEntry__Avatar-sc-1f902yu-2 iFzhlu mr-4"
@@ -73511,7 +73511,7 @@ exports[`Storyshots RepositoryEntry RepositoryFlag EP 1`] = `
           </div>
         </div>
         <div
-          className="GroupEntry__NameDescriptionWrapper-sc-1f902yu-6 iPEOup"
+          className="is-flex-grow-1 is-clipped"
         >
           <div
             className="mx-1"
@@ -73554,7 +73554,7 @@ exports[`Storyshots RepositoryEntry RepositoryFlag EP 1`] = `
         </div>
       </div>
       <div
-        className="GroupEntry__ContentRight-sc-1f902yu-5 hFCryW is-hidden-touch is-flex is-justify-content-flex-end pl-5"
+        className="GroupEntry__ContentRight-sc-1f902yu-5 joMVND is-hidden-touch is-flex is-flex-shrink-0 is-justify-content-flex-end pl-5"
       >
         <div
           className="RepositoryEntry__ContentRightContainer-sc-6jys82-0 wkQgn is-flex is-flex-direction-column is-justify-content-space-between is-relative mr-4"
@@ -73601,7 +73601,7 @@ exports[`Storyshots RepositoryEntry With long texts 1`] = `
       className="GroupEntry__StyledGroupEntry-sc-1f902yu-0 pJvZK is-flex is-justify-content-space-between is-align-items-center p-2"
     >
       <div
-        className="GroupEntry__ContentLeft-sc-1f902yu-4 cLAlIc is-flex is-align-items-center"
+        className="GroupEntry__ContentLeft-sc-1f902yu-4 fIVVkl is-flex is-flex-grow-1 is-align-items-center"
       >
         <div
           className="GroupEntry__Avatar-sc-1f902yu-2 iFzhlu mr-4"
@@ -73616,7 +73616,7 @@ exports[`Storyshots RepositoryEntry With long texts 1`] = `
           </div>
         </div>
         <div
-          className="GroupEntry__NameDescriptionWrapper-sc-1f902yu-6 iPEOup"
+          className="is-flex-grow-1 is-clipped"
         >
           <div
             className="mx-1"
@@ -73647,7 +73647,7 @@ exports[`Storyshots RepositoryEntry With long texts 1`] = `
         </div>
       </div>
       <div
-        className="GroupEntry__ContentRight-sc-1f902yu-5 hFCryW is-hidden-touch is-flex is-justify-content-flex-end pl-5"
+        className="GroupEntry__ContentRight-sc-1f902yu-5 joMVND is-hidden-touch is-flex is-flex-shrink-0 is-justify-content-flex-end pl-5"
       >
         <div
           className="RepositoryEntry__ContentRightContainer-sc-6jys82-0 wkQgn is-flex is-flex-direction-column is-justify-content-space-between is-relative mr-4"
@@ -87964,7 +87964,7 @@ exports[`Storyshots Table|Table Default 1`] = `
       >
         Last Name
         <i
-          className="fas fa-sort-amount-down has-text-grey-light SortIcon__IconWithMarginLeft-izn5p7-0 hYNVZd ml-1"
+          className="fas fa-sort-amount-down has-text-grey-light ml-1 is-invisible"
         />
       </th>
       <th
@@ -88049,7 +88049,7 @@ exports[`Storyshots Table|Table Table with Word-Break 1`] = `
       >
         Id
         <i
-          className="fas fa-sort-alpha-down has-text-grey-light SortIcon__IconWithMarginLeft-izn5p7-0 hYNVZd ml-1"
+          className="fas fa-sort-alpha-down has-text-grey-light ml-1 is-invisible"
         />
       </th>
       <th
@@ -88060,7 +88060,7 @@ exports[`Storyshots Table|Table Table with Word-Break 1`] = `
       >
         Name
         <i
-          className="fas fa-sort-alpha-down has-text-grey-light SortIcon__IconWithMarginLeft-izn5p7-0 hYNVZd ml-1"
+          className="fas fa-sort-alpha-down has-text-grey-light ml-1 is-invisible"
         />
       </th>
     </tr>
@@ -88100,7 +88100,7 @@ exports[`Storyshots Table|Table TextColumn 1`] = `
       >
         Id
         <i
-          className="fas fa-sort-alpha-down has-text-grey-light SortIcon__IconWithMarginLeft-izn5p7-0 hYNVZd ml-1"
+          className="fas fa-sort-alpha-down has-text-grey-light ml-1 is-invisible"
         />
       </th>
       <th
@@ -88111,7 +88111,7 @@ exports[`Storyshots Table|Table TextColumn 1`] = `
       >
         Name
         <i
-          className="fas fa-sort-alpha-down has-text-grey-light SortIcon__IconWithMarginLeft-izn5p7-0 hYNVZd ml-1"
+          className="fas fa-sort-alpha-down has-text-grey-light ml-1 is-invisible"
         />
       </th>
       <th
@@ -88122,7 +88122,7 @@ exports[`Storyshots Table|Table TextColumn 1`] = `
       >
         Description
         <i
-          className="fas fa-sort-alpha-down has-text-grey-light SortIcon__IconWithMarginLeft-izn5p7-0 hYNVZd ml-1"
+          className="fas fa-sort-alpha-down has-text-grey-light ml-1 is-invisible"
         />
       </th>
     </tr>
