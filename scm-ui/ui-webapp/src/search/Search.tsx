@@ -53,7 +53,7 @@ type CountProps = {
 
 const Count: FC<CountProps> = ({ isLoading, isSelected, count }) => {
   if (isLoading) {
-    return <span className={"small-loading-spinner"} />;
+    return <span className="small-loading-spinner" />;
   }
   return (
     <Tag rounded={true} color={isSelected ? "info" : "light"}>

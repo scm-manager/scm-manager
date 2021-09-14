@@ -105,7 +105,7 @@ const InnerPopover: FC<Props> = ({ title, show, width, offsetTop, offsetLeft, di
     <PopoverContainer
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
-      className={"box"}
+      className="box"
       style={{ top: `${top}px`, left: `${left}px` }}
       width={width!}
       ref={ref}

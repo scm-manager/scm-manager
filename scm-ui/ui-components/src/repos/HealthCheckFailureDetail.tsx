@@ -43,7 +43,7 @@ const HealthCheckFailureDetail: FC<Props> = ({ active, closeFunction, failures }
   return (
     <Modal
       body={
-        <div className={"content"}>
+        <div className="content">
           <HealthCheckFailureList failures={failures} />
         </div>
       }

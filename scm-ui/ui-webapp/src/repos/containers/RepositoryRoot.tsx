@@ -158,7 +158,7 @@ const RepositoryRoot = () => {
 
   const titleComponent = (
     <>
-      <RouteLink to={`/repos/${repository.namespace}/`} className={"has-text-dark"}>
+      <RouteLink to={`/repos/${repository.namespace}/`} className="has-text-dark">
         {repository.namespace}
       </RouteLink>
       /{repository.name}

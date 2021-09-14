@@ -60,9 +60,9 @@ const OverviewPageActions: FC<Props> = ({
   const link = createAbsoluteLink(inputLink);
 
   const groupSelector = groups && (
-    <div className={"column is-flex"}>
+    <div className="column is-flex">
       <Select
-        className={"is-fullwidth"}
+        className="is-fullwidth"
         options={groups.map((g) => ({ value: g, label: g }))}
         value={currentGroup}
         onChange={groupSelected}
@@ -89,9 +89,9 @@ const OverviewPageActions: FC<Props> = ({
   };
 
   return (
-    <div className={"columns is-tablet"}>
+    <div className="columns is-tablet">
       {groupSelector}
-      <div className={"column"}>
+      <div className="column">
         <FilterInput
           placeholder={searchPlaceholder}
           value={urls.getQueryStringFromLocation(location)}
