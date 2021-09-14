@@ -27,12 +27,14 @@ package sonia.scm.api.v2.resources;
 import com.google.inject.AbstractModule;
 import com.google.inject.servlet.ServletScopes;
 import org.mapstruct.factory.Mappers;
+import sonia.scm.web.api.RepositoryToHalMapper;
 
 public class MapperModule extends AbstractModule {
   @Override
   protected void configure() {
-    // This mapper is special and cannot be bound automatically by the annotation processor
+    // These mappers are special and cannot be bound automatically by the annotation processor
     bind(ChangesetToChangesetDtoMapper.class).to(Mappers.getMapperClass(DefaultChangesetToChangesetDtoMapper.class));
+    bind(RepositoryToHalMapper.class).to(Mappers.getMapperClass(RepositoryToRepositoryDtoMapper.class));
 
     // no mapstruct required
     bind(MeDtoFactory.class);

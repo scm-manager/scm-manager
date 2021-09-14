@@ -65,7 +65,7 @@ public final class ExtensionBinder {
     logger.debug("bind rest resources");
     bindRestResource(collector.getRestResources());
     logger.debug("bind mapper modules");
-    bindMapperModules(collector.getMapperModules());
+    bindMapperModules(collector.getMappers());
   }
 
   private void bindExtensionPoint(ExtensionCollector collector,

@@ -58,8 +58,8 @@ public class ScmModule {
   @XmlElement(name = "rest-resource")
   private Set<ClassElement> restResources;
 
-  @XmlElement(name = "mapper-modules")
-  private Set<ClassElement> mapperModules;
+  @XmlElement(name = "mapper")
+  private Set<ClassElement> mappers;
 
   @XmlElement(name = "subscriber")
   private Set<SubscriberElement> subscribers;
@@ -87,8 +87,8 @@ public class ScmModule {
     return nonNull(restResources);
   }
 
-  public Iterable<ClassElement> getMapperModules() {
-    return nonNull(mapperModules);
+  public Iterable<ClassElement> getMappers() {
+    return nonNull(mappers);
   }
 
   public Iterable<SubscriberElement> getSubscribers() {

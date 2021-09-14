@@ -40,7 +40,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@SuppressWarnings({"unchecked", "rawtypes", "java:S3740"})
+@SuppressWarnings({"unchecked", "rawtypes"})
 public final class ExtensionCollector {
 
   private static final Logger LOG = LoggerFactory.getLogger(ExtensionCollector.class);
@@ -51,7 +51,7 @@ public final class ExtensionCollector {
   private final Set<Class<?>> indexedTypes = Sets.newHashSet();
   private final Set<Class> restResources = Sets.newHashSet();
   private final Set<Class> restProviders = Sets.newHashSet();
-  private final Set<Class> mapperModules = Sets.newHashSet();
+  private final Set<Class> mappers = Sets.newHashSet();
   private final Set<Class> looseExtensions = Sets.newHashSet();
   private final Multimap<ExtensionPointElement, Class> extensions = HashMultimap.create();
   private final Map<Class, ExtensionPointElement> extensionPointIndex = Maps.newHashMap();
@@ -133,8 +133,8 @@ public final class ExtensionCollector {
     return restResources;
   }
 
-  public Set<Class> getMapperModules() {
-    return mapperModules;
+  public Set<Class> getMappers() {
+    return mappers;
   }
 
   public Set<WebElementExtension> getWebElements() {
@@ -229,7 +229,7 @@ public final class ExtensionCollector {
 
     restProviders.addAll(collectClasses(classLoader, module.getRestProviders()));
     restResources.addAll(collectClasses(classLoader, module.getRestResources()));
-    mapperModules.addAll(collectClasses(classLoader, module.getMapperModules()));
+    mappers.addAll(collectClasses(classLoader, module.getMappers()));
 
     webElements.addAll(collectWebElementExtensions(classLoader, module.getWebElements()));
     indexedTypes.addAll(collectIndexedTypes(classLoader, module.getIndexedTypes()));

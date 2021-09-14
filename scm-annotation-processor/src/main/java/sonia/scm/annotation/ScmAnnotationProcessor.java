@@ -24,8 +24,6 @@
 
 package sonia.scm.annotation;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.github.legman.Subscribe;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableSet;
@@ -100,7 +98,7 @@ public final class ScmAnnotationProcessor extends AbstractProcessor {
   private static final Set<ClassAnnotation> CLASS_ANNOTATIONS =
     ImmutableSet.of(new ClassAnnotation("rest-resource", Path.class),
       new ClassAnnotation("rest-provider", Provider.class),
-      new ClassAnnotation("mapper-modules", Mapper.class));
+      new ClassAnnotation("mapper", Mapper.class));
 
   @Override
   public boolean process(Set<? extends TypeElement> annotations,
