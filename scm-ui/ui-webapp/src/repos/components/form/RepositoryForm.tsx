@@ -22,27 +22,13 @@
  * SOFTWARE.
  */
 import React, { FC, useCallback, useEffect, useState } from "react";
-import styled from "styled-components";
 import { useTranslation } from "react-i18next";
+import classNames from "classnames";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import { IndexResources, Repository, RepositoryType, CUSTOM_NAMESPACE_STRATEGY } from "@scm-manager/ui-types";
 import { Checkbox, Level, Select, SubmitButton } from "@scm-manager/ui-components";
 import NamespaceAndNameFields from "../NamespaceAndNameFields";
 import RepositoryInformationForm from "../RepositoryInformationForm";
-
-const CheckboxWrapper = styled.div`
-  margin-top: 2em;
-  flex: 1;
-`;
-
-const SelectWrapper = styled.div`
-  flex: 1;
-`;
-
-const SpaceBetween = styled.div`
-  display: flex;
-  justify-content: space-between;
-`;
 
 type Props = {
   createRepository?: (repo: RepositoryCreation, shouldInit: boolean) => void;
@@ -65,7 +51,7 @@ const RepositoryForm: FC<Props> = ({
   repositoryTypes,
   namespaceStrategy,
   loading,
-  indexResources
+  indexResources,
 }) => {
   const [repo, setRepo] = useState<Repository>({
     name: "",
@@ -73,15 +59,15 @@ const RepositoryForm: FC<Props> = ({
     type: "",
     contact: "",
     description: "",
-    _links: {}
+    _links: {},
   });
   const [initRepository, setInitRepository] = useState(false);
   const [contextEntries, setContextEntries] = useState({});
   const setCreationContextEntry = useCallback(
     (key: string, value: any) => {
-      setContextEntries(entries => ({
+      setContextEntries((entries) => ({
         ...entries,
-        [key]: value
+        [key]: value,
       }));
     },
     [setContextEntries]
@@ -102,7 +88,7 @@ const RepositoryForm: FC<Props> = ({
   const isValid = () => {
     return (
       !(!repo.name || (namespaceStrategy === CUSTOM_NAMESPACE_STRATEGY && !repo.namespace)) &&
-      Object.values(valid).every(v => v)
+      Object.values(valid).every((v) => v)
     );
   };
 
@@ -119,10 +105,10 @@ const RepositoryForm: FC<Props> = ({
 
   const createSelectOptions = (repositoryTypes?: RepositoryType[]) => {
     if (repositoryTypes) {
-      return repositoryTypes.map(repositoryType => {
+      return repositoryTypes.map((repositoryType) => {
         return {
           label: repositoryType.displayName,
-          value: repositoryType.name
+          value: repositoryType.name,
         };
       });
     }
@@ -137,28 +123,28 @@ const RepositoryForm: FC<Props> = ({
     const extensionProps = {
       repository: repo,
       setCreationContextEntry: setCreationContextEntry,
-      indexResources: indexResourcesWithLinks
+      indexResources: indexResourcesWithLinks,
     };
     return (
       <>
         <NamespaceAndNameFields
           repository={repo}
           onChange={setRepo}
-          setValid={namespaceAndName => setValid({ ...valid, namespaceAndName })}
+          setValid={(namespaceAndName) => setValid({ ...valid, namespaceAndName })}
           disabled={disabled}
         />
-        <SpaceBetween>
-          <SelectWrapper>
+        <div className="columns">
+          <div className={classNames("column", "is-half")}>
             <Select
               label={t("repository.type")}
-              onChange={type => setRepo({ ...repo, type })}
+              onChange={(type) => setRepo({ ...repo, type })}
               value={repo ? repo.type : ""}
               options={createSelectOptions(repositoryTypes)}
               helpText={t("help.typeHelpText")}
               disabled={disabled}
             />
-          </SelectWrapper>
-          <CheckboxWrapper>
+          </div>
+          <div className={classNames("column", "is-half", "is-align-self-flex-end")}>
             <Checkbox
               label={t("repositoryForm.initializeRepository")}
               checked={initRepository}
@@ -169,8 +155,8 @@ const RepositoryForm: FC<Props> = ({
             {initRepository && (
               <ExtensionPoint name="repos.create.initialize" props={extensionProps} renderAll={true} />
             )}
-          </CheckboxWrapper>
-        </SpaceBetween>
+          </div>
+        </div>
       </>
     );
   };
@@ -199,7 +185,7 @@ const RepositoryForm: FC<Props> = ({
         repository={repo}
         onChange={setRepo}
         disabled={disabled}
-        setValid={contact => setValid({ ...valid, contact })}
+        setValid={(contact) => setValid({ ...valid, contact })}
       />
       {submitButton()}
     </form>

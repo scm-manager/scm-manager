@@ -23,7 +23,6 @@
  */
 import React from "react";
 import { Link } from "react-router-dom";
-import styled from "styled-components";
 import { Icon } from "@scm-manager/ui-components";
 import Tooltip from "../Tooltip";
 
@@ -32,10 +31,6 @@ type Props = {
   icon: string;
   tooltip?: string;
 };
-
-const PointerEventsLink = styled(Link)`
-  pointer-events: all;
-`;
 
 class RepositoryEntryLink extends React.Component<Props> {
   render() {
@@ -51,9 +46,9 @@ class RepositoryEntryLink extends React.Component<Props> {
     }
 
     return (
-      <PointerEventsLink className="level-item" to={to}>
+      <Link className="level-item is-clickable" to={to}>
         {content}
-      </PointerEventsLink>
+      </Link>
     );
   }
 }

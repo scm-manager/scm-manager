@@ -24,13 +24,11 @@
 import React, { FC } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import { useTranslation } from "react-i18next";
 import Tooltip from "../Tooltip";
 import Icon from "../Icon";
 
 const Button = styled(Link)`
   width: 50px;
-  cursor: pointer;
   &:hover {
     color: #33b2e8;
   }
@@ -44,7 +42,7 @@ type Props = {
 const JumpToFileButton: FC<Props> = ({ link, tooltip }) => {
   return (
     <Tooltip message={tooltip} location="top">
-      <Button aria-label={tooltip} className="button" to={link}>
+      <Button aria-label={tooltip} className="button is-clickable" to={link}>
         <Icon name="file-code" color="inherit" />
       </Button>
     </Tooltip>

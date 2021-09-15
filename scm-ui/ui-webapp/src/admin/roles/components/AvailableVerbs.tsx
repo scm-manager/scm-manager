@@ -36,7 +36,7 @@ class AvailableVerbs extends React.Component<Props> {
     let verbs = null;
     if (role.verbs.length > 0) {
       verbs = (
-        <td className="is-paddingless">
+        <td className="p-0">
           <ul>
             {role.verbs.map((verb, key) => {
               return <li key={key}>{t("verbs.repository." + verb + ".displayName")}</li>;

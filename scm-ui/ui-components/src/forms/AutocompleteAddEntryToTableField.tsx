@@ -42,7 +42,6 @@ type Props = {
 
 const FullWidthAutocomplete = styled(Autocomplete)`
   width: 100%;
-  margin-right: 1.5rem;
 `;
 
 const AutocompleteAddEntryToTableField: FC<Props> = ({
@@ -79,6 +78,7 @@ const AutocompleteAddEntryToTableField: FC<Props> = ({
     <Level
       children={
         <FullWidthAutocomplete
+          className="mr-5"
           label={fieldLabel}
           loadSuggestions={loadSuggestions}
           valueSelected={handleAddEntryChange}

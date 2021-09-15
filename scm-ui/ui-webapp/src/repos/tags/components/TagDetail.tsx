@@ -21,12 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
+import classNames from "classnames";
 import { Repository, Tag } from "@scm-manager/ui-types";
 import { DateFromNow, SignatureIcon } from "@scm-manager/ui-components";
-import styled from "styled-components";
 import TagButtonGroup from "./TagButtonGroup";
 
 type Props = {
@@ -34,37 +33,22 @@ type Props = {
   tag: Tag;
 };
 
-const FlexRow = styled.div`
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-`;
-
-const Created = styled.div`
-  margin-left: 0.5rem;
-  font-size: 0.8rem;
-`;
-
-const Label = styled.strong`
-  margin-right: 0.3rem;
-`;
-
-const Date = styled(DateFromNow)`
-  font-size: 0.8rem;
-`;
-
 const TagDetail: FC<Props> = ({ tag, repository }) => {
   const [t] = useTranslation("repos");
 
   return (
     <div className="media">
-      <FlexRow className="media-content">
-        <Label className="subtitle has-text-weight-bold has-text-black">{t("tag.name") + ": "} </Label> <span className="subtitle">{tag.name}</span>
+      <div className={classNames("media-content", "is-flex", "is-flex-wrap-wrap", "is-align-items-center")}>
+        <strong className={classNames("subtitle", "has-text-weight-bold", "has-text-black", "mr-1")}>
+          {t("tag.name") + ": "}{" "}
+        </strong>{" "}
+        <span className="subtitle">{tag.name}</span>
         <SignatureIcon signatures={tag.signatures} className="ml-2 mb-5" />
-        <Created className="is-ellipsis-overflow mb-5">
-          {t("tags.overview.created")} <Date date={tag.date} className="has-text-grey" />
-        </Created>
-      </FlexRow>
+        <div className={classNames("is-ellipsis-overflow", "mb-5", "ml-2", "is-size-7")}>
+          {t("tags.overview.created")}{" "}
+          <DateFromNow className={classNames("has-text-grey", "is-size-7")} date={tag.date} />
+        </div>
+      </div>
       <div className="media-right">
         <TagButtonGroup repository={repository} tag={tag} />
       </div>

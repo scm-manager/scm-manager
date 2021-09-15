@@ -59,11 +59,6 @@ const Container = styled.div<Themeable>`
   }
 `;
 
-const Title = styled.h1<Themeable>`
-  margin-bottom: 0.25rem;
-  font-weight: bold;
-`;
-
 const Toast: FC<Props> = ({ children, title, type }) => {
   const rootElement = usePortalRootElement("toastRoot");
   if (!rootElement) {
@@ -74,7 +69,7 @@ const Toast: FC<Props> = ({ children, title, type }) => {
   const theme = getTheme(type);
   const content = (
     <Container theme={theme}>
-      <Title theme={theme}>{title}</Title>
+      <h1 className="mb-1 has-text-weight-bold">{title}</h1>
       <ToastThemeContext.Provider value={theme}>{children}</ToastThemeContext.Provider>
     </Container>
   );

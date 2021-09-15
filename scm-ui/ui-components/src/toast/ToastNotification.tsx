@@ -21,10 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-import { getTheme, Themeable, ToastThemeContext, Type } from "./themes";
-import styled from "styled-components";
 import React, { FC } from "react";
+import classNames from "classnames";
+import styled from "styled-components";
+import { getTheme, Themeable, ToastThemeContext, Type } from "./themes";
 
 type Props = {
   type: Type;
@@ -33,31 +33,22 @@ type Props = {
 };
 
 const Container = styled.div<Themeable>`
-  color: ${props => props.theme.primary};
-  background-color: ${props => props.theme.secondary};
+  color: ${(props) => props.theme.primary};
+  background-color: ${(props) => props.theme.secondary};
   max-width: 18rem;
-  font-size: 0.75rem;
   border-radius: 5px;
-  padding: 1.5rem;
-  margin-top: 0.5rem;
-  margin-bottom: 0 !important;
 
   & > p {
     margin-bottom: 0.5rem;
   }
 `;
 
-const Title = styled.h1<Themeable>`
-  margin-bottom: 0.25rem;
-  font-weight: bold;
-`;
-
 const ToastNotification: FC<Props> = ({ children, title, type, close }) => {
   const theme = getTheme(type);
   return (
-    <Container className="notification" theme={theme}>
-      { close ? <button className="delete" onClick={close} /> : null }
-      <Title theme={theme}>{title}</Title>
+    <Container className={classNames("notification", "mt-2", "mb-0", "p-5", "is-size-7")} theme={theme}>
+      {close ? <button className="delete" onClick={close} /> : null}
+      <h1 className={classNames("mb-1", "has-text-weight-bold")}>{title}</h1>
       <ToastThemeContext.Provider value={theme}>{children}</ToastThemeContext.Provider>
     </Container>
   );

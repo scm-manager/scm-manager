@@ -24,7 +24,6 @@
 import React, { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import classNames from "classnames";
-import styled from "styled-components";
 
 type Props = {
   name: ReactNode;
@@ -36,25 +35,17 @@ type State = {
   collapsed: boolean;
 };
 
-const Container = styled.div`
-  margin-bottom: 1em;
-`;
-
-const Wrapper = styled.div`
-  padding: 0 0.75rem;
-`;
-
 export default class CardColumnGroup extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      collapsed: false
+      collapsed: false,
     };
   }
 
   toggleCollapse = () => {
-    this.setState(prevState => ({
-      collapsed: !prevState.collapsed
+    this.setState((prevState) => ({
+      collapsed: !prevState.collapsed,
     }));
   };
 
@@ -89,13 +80,13 @@ export default class CardColumnGroup extends React.Component<Props, State> {
     }
 
     return (
-      <Container>
+      <div className="mb-4">
         <h2>
-          <span className={classNames("is-size-4", "has-cursor-pointer")} onClick={this.toggleCollapse}>
+          <span className={classNames("is-size-4", "is-clickable")} onClick={this.toggleCollapse}>
             <i className={classNames("fa", icon)} />
           </span>{" "}
           {url ? (
-            <Link to={url} className={"has-text-dark"}>
+            <Link to={url} className="has-text-dark">
               {name}
             </Link>
           ) : (
@@ -103,9 +94,9 @@ export default class CardColumnGroup extends React.Component<Props, State> {
           )}
         </h2>
         <hr />
-        <Wrapper className={classNames("columns", "card-columns", "is-multiline")}>{content}</Wrapper>
+        <div className={classNames("columns", "card-columns", "is-multiline", "mx-3", "my-0")}>{content}</div>
         <div className="is-clearfix" />
-      </Container>
+      </div>
     );
   }
 }

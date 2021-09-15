@@ -22,18 +22,9 @@
  * SOFTWARE.
  */
 import React, { ChangeEvent, FC, FocusEvent } from "react";
-import { Help } from "../index";
-import styled from "styled-components";
-import { createFormFieldWrapper, FieldProps, FieldType, isLegacy, isUsingRef } from "./FormFieldTypes";
 import classNames from "classnames";
-
-const StyledRadio = styled.label`
-  margin-right: 0.5em;
-`;
-
-const InlineFieldset = styled.fieldset`
-  display: inline-block;
-`;
+import { Help } from "../index";
+import { createFormFieldWrapper, FieldProps, FieldType, isLegacy, isUsingRef } from "./FormFieldTypes";
 
 type BaseProps = {
   label?: string;
@@ -47,7 +38,12 @@ type BaseProps = {
   readOnly?: boolean;
 };
 
-const InnerRadio: FC<FieldProps<BaseProps, HTMLInputElement, boolean>> = ({ name, defaultChecked, readOnly, ...props }) => {
+const InnerRadio: FC<FieldProps<BaseProps, HTMLInputElement, boolean>> = ({
+  name,
+  defaultChecked,
+  readOnly,
+  ...props
+}) => {
   const renderHelp = () => {
     const helpText = props.helpText;
     if (helpText) {
@@ -76,13 +72,13 @@ const InnerRadio: FC<FieldProps<BaseProps, HTMLInputElement, boolean>> = ({ name
   };
 
   return (
-    <InlineFieldset disabled={readOnly}>
+    <fieldset className="is-inline-block" disabled={readOnly}>
       {/*
         we have to ignore the next line,
         because jsx label does not the custom disabled attribute
         but bulma does.
         // @ts-ignore */}
-      <StyledRadio className={classNames("radio", props.className)} disabled={props.disabled}>
+      <label className={classNames("radio", "mr-2", props.className)} disabled={props.disabled}>
         <input
           type="radio"
           name={name}
@@ -96,8 +92,8 @@ const InnerRadio: FC<FieldProps<BaseProps, HTMLInputElement, boolean>> = ({ name
         />{" "}
         {props.label}
         {renderHelp()}
-      </StyledRadio>
-    </InlineFieldset>
+      </label>
+    </fieldset>
   );
 };
 

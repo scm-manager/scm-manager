@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 import * as React from "react";
+import classNames from "classnames";
 import styled from "styled-components";
 
 type Props = {
@@ -29,15 +30,16 @@ type Props = {
 };
 
 const ActionWrapper = styled.div`
-  justify-content: center;
-  margin-top: 2em;
-  padding: 1em 1em;
-  border: 2px solid #e9f7df;
+  border: 2px solid #e9f7fd;
 `;
 
 export default class PluginBottomActions extends React.Component<Props> {
   render() {
     const { children } = this.props;
-    return <ActionWrapper className="is-flex">{children}</ActionWrapper>;
+    return (
+      <ActionWrapper className={classNames("is-flex", "is-justify-content-center", "mt-5", "p-4")}>
+        {children}
+      </ActionWrapper>
+    );
   }
 }

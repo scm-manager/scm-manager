@@ -27,18 +27,14 @@ import { Repository, Link } from "@scm-manager/ui-types";
 import { ButtonAddons, Button } from "@scm-manager/ui-components";
 import CloneInformation from "./CloneInformation";
 
-const Wrapper = styled.div`
-  position: relative;
-`;
-
 const Switcher = styled(ButtonAddons)`
   position: absolute;
   top: 0;
   right: 0;
 `;
 
-const SmallButton = styled(Button).attrs(props => ({
-  className: "is-small"
+const SmallButton = styled(Button).attrs((props) => ({
+  className: "is-small",
 }))`
   height: inherit;
 `;
@@ -70,13 +66,13 @@ export default class ProtocolInformation extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      selected: selectHttpOrFirst(props.repository)
+      selected: selectHttpOrFirst(props.repository),
     };
   }
 
   selectProtocol = (protocol: Link) => {
     this.setState({
-      selected: protocol
+      selected: protocol,
     });
   };
 
@@ -116,10 +112,10 @@ export default class ProtocolInformation extends React.Component<Props, State> {
     }
 
     return (
-      <Wrapper>
+      <div className="is-relative">
         <Switcher>{protocols.map(this.renderProtocolButton)}</Switcher>
         {cloneInformation}
-      </Wrapper>
+      </div>
     );
   }
 }

@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import styled from "styled-components";
@@ -30,6 +29,7 @@ import repository from "./__resources__/repository";
 // @ts-ignore ignore unknown png
 import Git from "./__resources__/git-logo.png";
 import { MemoryRouter } from "react-router-dom";
+import Icon from "./Icon";
 
 const Wrapper = styled.div`
   margin: 2rem;
@@ -42,10 +42,15 @@ const longPath =
   "dream-path/src/main/scm-plugins/javaUtilityHomeHousingLinkReferrer/sonia/scm/repositoryUndergroundSupportManager/spi/SvnRepositoryServiceResolver.java";
 const baseUrl = "scm-manager.org/scm/repo/hitchhiker/heartOfGold/sources";
 const sources = Git;
+const prefix = (
+  <a href="#link">
+    <Icon name="heart" color="danger" />
+  </a>
+);
 
 storiesOf("BreadCrumb", module)
-  .addDecorator(story => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
-  .addDecorator(storyFn => <Wrapper>{storyFn()}</Wrapper>)
+  .addDecorator((story) => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
+  .addDecorator((storyFn) => <Wrapper>{storyFn()}</Wrapper>)
   .add("Default", () => (
     <Breadcrumb
       repository={repository}
@@ -68,5 +73,18 @@ storiesOf("BreadCrumb", module)
       sources={sources}
       revision={"1"}
       permalink={"/" + longPath}
+    />
+  ))
+  .add("With prefix button", () => (
+    <Breadcrumb
+      repository={repository}
+      defaultBranch={master}
+      branch={master}
+      path={path}
+      baseUrl={baseUrl}
+      sources={sources}
+      revision={"1"}
+      permalink={"/" + path}
+      preButtons={prefix}
     />
   ));

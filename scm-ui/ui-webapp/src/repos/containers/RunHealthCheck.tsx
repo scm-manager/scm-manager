@@ -26,15 +26,10 @@ import { useTranslation } from "react-i18next";
 import { Repository } from "@scm-manager/ui-types";
 import { Button, ErrorNotification, Level, Subtitle } from "@scm-manager/ui-components";
 import { useRunHealthCheck } from "@scm-manager/ui-api";
-import styled from "styled-components";
 
 type Props = {
   repository: Repository;
 };
-
-const MarginTopButton = styled(Button)`
-  margin-top: 1rem;
-`;
 
 const RunHealthCheck: FC<Props> = ({ repository }) => {
   const { isLoading, error, runHealthCheck } = useRunHealthCheck();
@@ -56,7 +51,8 @@ const RunHealthCheck: FC<Props> = ({ repository }) => {
       </p>
       <Level
         right={
-          <MarginTopButton
+          <Button
+            className="mt-4"
             color="warning"
             icon="heartbeat"
             label={t("runHealthCheck.button")}

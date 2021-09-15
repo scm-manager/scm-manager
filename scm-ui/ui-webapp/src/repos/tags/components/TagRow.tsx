@@ -21,12 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 import React, { FC } from "react";
-import { useTranslation } from "react-i18next";
 import { Link as RouterLink } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import classNames from "classnames";
 import { Tag, Link } from "@scm-manager/ui-types";
-import styled from "styled-components";
 import { DateFromNow, Icon } from "@scm-manager/ui-components";
 
 type Props = {
@@ -35,11 +34,6 @@ type Props = {
   onDelete: (tag: Tag) => void;
   // deleting: boolean;
 };
-
-const Created = styled.span`
-  margin-left: 1rem;
-  font-size: 0.8rem;
-`;
 
 const TagRow: FC<Props> = ({ tag, baseUrl, onDelete }) => {
   const [t] = useTranslation("repos");
@@ -61,9 +55,9 @@ const TagRow: FC<Props> = ({ tag, baseUrl, onDelete }) => {
       <td>
         <RouterLink to={to} title={tag.name}>
           {tag.name}
-          <Created className="has-text-grey is-ellipsis-overflow">
+          <span className={classNames("has-text-grey", "is-ellipsis-overflow", "ml-2", "is-size-7")}>
             {t("tags.overview.created")} <DateFromNow date={tag.date} />
-          </Created>
+          </span>
         </RouterLink>
       </td>
       <td className="is-darker">{deleteButton}</td>

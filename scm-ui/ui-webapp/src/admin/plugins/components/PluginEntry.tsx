@@ -40,13 +40,11 @@ const ActionbarWrapper = styled.div`
   }
 `;
 
-const IconWrapper = styled.span`
-  margin-bottom: 0 !important;
-  padding: 0.5rem;
+const IconWrapper = styled.span.attrs((props) => ({
+  className: "level-item mb-0 p-2 is-clickable",
+}))`
   border: 1px solid #cdcdcd; // $dark-25
   border-radius: 4px;
-  cursor: pointer;
-  pointer-events: all;
 
   &:hover {
     border-color: #9a9a9a; // $dark-50
@@ -78,22 +76,22 @@ const PluginEntry: FC<Props> = ({ plugin, openModal }) => {
   const actionBar = () => (
     <ActionbarWrapper className="is-flex">
       {isCloudoguPlugin && (
-        <IconWrapper className="level-item" onClick={() => openModal({ plugin, action: PluginAction.CLOUDOGU })}>
+        <IconWrapper onClick={() => openModal({ plugin, action: PluginAction.CLOUDOGU })}>
           <Icon title={t("plugins.modal.cloudoguInstall")} name="link" color="success-dark" />
         </IconWrapper>
       )}
       {isInstallable && (
-        <IconWrapper className="level-item" onClick={() => openModal({ plugin, action: PluginAction.INSTALL })}>
+        <IconWrapper onClick={() => openModal({ plugin, action: PluginAction.INSTALL })}>
           <Icon title={t("plugins.modal.install")} name="download" color="info" />
         </IconWrapper>
       )}
       {isUninstallable && (
-        <IconWrapper className="level-item" onClick={() => openModal({ plugin, action: PluginAction.UNINSTALL })}>
+        <IconWrapper onClick={() => openModal({ plugin, action: PluginAction.UNINSTALL })}>
           <Icon title={t("plugins.modal.uninstall")} name="trash" color="info" />
         </IconWrapper>
       )}
       {isUpdatable && (
-        <IconWrapper className="level-item" onClick={() => openModal({ plugin, action: PluginAction.UPDATE })}>
+        <IconWrapper onClick={() => openModal({ plugin, action: PluginAction.UPDATE })}>
           <Icon title={t("plugins.modal.update")} name="sync-alt" color="info" />
         </IconWrapper>
       )}

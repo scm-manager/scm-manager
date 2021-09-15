@@ -44,8 +44,6 @@ const Author = styled(LineElement)`
 `;
 
 const When = styled(LineElement)`
-  display: inline-block;
-
   width: 6.5em;
   overflow: hidden;
   text-overflow: ellipsis;

@@ -35,22 +35,6 @@ type Props = {
   footer?: ReactNode;
 };
 
-const FlexFullHeight = styled.div`
-  flex-direction: column;
-  justify-content: space-around;
-  align-self: stretch;
-`;
-
-const ContentLeft = styled.div`
-  margin-bottom: 0 !important;
-  overflow: hidden;
-`;
-
-const ContentRight = styled.div`
-  margin-left: auto;
-  align-items: start;
-`;
-
 const StyledLink = styled(Link)`
   color: inherit;
   :hover {
@@ -58,25 +42,30 @@ const StyledLink = styled(Link)`
   }
 `;
 
-const AvatarWrapper = styled.figure`
-  margin-right: 0.5rem;
-`;
-
 const CardColumnSmall: FC<Props> = ({ link, avatar, contentLeft, contentRight, footer }) => {
-  const renderAvatar = avatar ? <AvatarWrapper className="media-left">{avatar}</AvatarWrapper> : null;
+  const renderAvatar = avatar ? <figure className={classNames("media-left", "mr-2")}>{avatar}</figure> : null;
   const renderFooter = footer ? <small>{footer}</small> : null;
 
   return (
     <StyledLink to={link}>
       <div className="media">
         {renderAvatar}
-        <FlexFullHeight className={classNames("media-content", "text-box", "is-flex")}>
-          <div className="is-flex is-align-items-center">
-            <ContentLeft>{contentLeft}</ContentLeft>
-            <ContentRight>{contentRight}</ContentRight>
+        <div
+          className={classNames(
+            "media-content",
+            "text-box",
+            "is-flex",
+            "is-flex-direction-column",
+            "is-justify-content-space-around",
+            "is-align-self-stretch"
+          )}
+        >
+          <div className={classNames("is-flex", "is-align-items-center")}>
+            <div className={classNames("is-clipped", "mb-0")}>{contentLeft}</div>
+            <div className={classNames("is-align-items-start", "ml-auto")}>{contentRight}</div>
           </div>
           {renderFooter}
-        </FlexFullHeight>
+        </div>
       </div>
     </StyledLink>
   );

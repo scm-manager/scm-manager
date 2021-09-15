@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 import React, { FC, useState } from "react";
 import styled from "styled-components";
 import InputField from "./InputField";
@@ -39,13 +38,7 @@ type Props = {
   validateEntry?: (p: string) => boolean;
 };
 
-const InputLevel = styled.div`
-  display: flex;
-  justify-content: space-between;
-`;
-
-const StyledInputField = styled(InputField)`
-  margin-right: 1.5rem;
+const FullWidthInputField = styled(InputField)`
   width: 100%;
 `;
 
@@ -62,7 +55,7 @@ const AddKeyValueEntryToTableField: FC<Props> = ({
   valueHelpText,
   validateEntry,
   errorMessage,
-  addEntry
+  addEntry,
 }) => {
   const [key, setKey] = useState("");
   const [value, setValue] = useState("");
@@ -77,13 +70,14 @@ const AddKeyValueEntryToTableField: FC<Props> = ({
 
   const add = () => {
     addEntry(key, value);
-    setKey("")
+    setKey("");
     setValue("");
-  }
+  };
 
   return (
-    <InputLevel>
-      <StyledInputField
+    <div className="is-flex is-justify-content-space-between">
+      <FullWidthInputField
+        className="mr-5"
         label={keyFieldLabel}
         errorMessage={errorMessage}
         onChange={setKey}
@@ -93,7 +87,8 @@ const AddKeyValueEntryToTableField: FC<Props> = ({
         disabled={disabled}
         helpText={keyHelpText}
       />
-      <StyledInputField
+      <FullWidthInputField
+        className="mr-5"
         label={valueFieldLabel}
         errorMessage={errorMessage}
         onChange={setValue}
@@ -108,7 +103,7 @@ const AddKeyValueEntryToTableField: FC<Props> = ({
         action={add}
         disabled={disabled || !key || !value || !isValid(key) || !isValid(value)}
       />
-    </InputLevel>
+    </div>
   );
 };
 

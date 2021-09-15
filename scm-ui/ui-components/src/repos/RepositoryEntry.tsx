@@ -31,6 +31,7 @@ import RepositoryFlags from "./RepositoryFlags";
 import styled from "styled-components";
 import Icon from "../Icon";
 import { useTranslation } from "react-i18next";
+import classNames from "classnames";
 
 type DateProp = Date | string;
 
@@ -43,26 +44,9 @@ type Props = {
 
 const ContentRightContainer = styled.div`
   height: calc(80px - 1.5rem);
-  margin-right: 1rem;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-`;
-
-const DateWrapper = styled.small`
-  padding-bottom: 0.25rem;
-`;
-
-const QuickActionbar = styled.span`
-  display: flex;
-  justify-content: flex-end;
-  align-items: flex-end;
 `;
 
 const QuickAction = styled(Icon)`
-  font-size: 1.25rem;
-
   :hover {
     color: #363636 !important;
   }
@@ -80,7 +64,15 @@ const RepositoryEntry: FC<Props> = ({ repository, baseDate }) => {
   const [openCloneModal, setOpenCloneModal] = useState(false);
 
   const createContentRight = () => (
-    <ContentRightContainer>
+    <ContentRightContainer
+      className={classNames(
+        "is-flex",
+        "is-flex-direction-column",
+        "is-justify-content-space-between",
+        "is-relative",
+        "mr-4"
+      )}
+    >
       {openCloneModal && (
         <Modal
           size="L"
@@ -98,18 +90,18 @@ const RepositoryEntry: FC<Props> = ({ repository, baseDate }) => {
           closeFunction={() => setOpenCloneModal(false)}
         />
       )}
-      <QuickActionbar>
+      <span className={classNames("is-flex", "is-justify-content-flex-end", "is-align-items-flex-end")}>
         <QuickAction
+          className={classNames("is-clickable", "is-size-5")}
           name="download"
           color="info"
-          className="has-cursor-pointer"
           onClick={() => setOpenCloneModal(true)}
           title={t("overview.clone")}
         />
-      </QuickActionbar>
-      <DateWrapper>
+      </span>
+      <small className="pb-1">
         <DateFromNow baseDate={baseDate} date={repository.lastModified || repository.creationDate} />
-      </DateWrapper>
+      </small>
     </ContentRightContainer>
   );
 

@@ -114,7 +114,7 @@ class LoginInfo extends React.Component<Props, State> {
 
   createInfoPanel = (info: LoginInfoResponse) => (
     <NoOpErrorBoundary>
-      <div className="column is-7 is-offset-1 is-paddingless">
+      <div className="column is-7 is-offset-1 p-0">
         <InfoBox item={info.feature} type="feature" />
         <InfoBox item={info.plugin} type="plugin" />
       </div>

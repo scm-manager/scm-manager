@@ -22,24 +22,18 @@
  * SOFTWARE.
  */
 import React, { FC, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import classNames from "classnames";
+import { User } from "@scm-manager/ui-types";
+import { useConvertToExternal, useConvertToInternal } from "@scm-manager/ui-api";
 import {
   Button,
   ErrorNotification,
   Level,
   Modal,
   PasswordConfirmation,
-  SubmitButton
+  SubmitButton,
 } from "@scm-manager/ui-components";
-import { useTranslation } from "react-i18next";
-import { User } from "@scm-manager/ui-types";
-import styled from "styled-components";
-import { useConvertToExternal, useConvertToInternal } from "@scm-manager/ui-api";
-
-const ExternalDescription = styled.div`
-  display: flex;
-  align-items: center;
-  font-weight: 400;
-`;
 
 type Props = {
   user: User;
@@ -53,12 +47,12 @@ const UserConverter: FC<Props> = ({ user }) => {
   const {
     isLoading: isConvertingToInternal,
     error: convertingToInternalError,
-    convertToInternal
+    convertToInternal,
   } = useConvertToInternal();
   const {
     isLoading: isConvertingToExternal,
     error: convertingToExternalError,
-    convertToExternal
+    convertToExternal,
   } = useConvertToExternal();
   const error = convertingToExternalError || convertingToInternalError || undefined;
   const isLoading = isConvertingToExternal || isConvertingToInternal;
@@ -135,7 +129,9 @@ const UserConverter: FC<Props> = ({ user }) => {
       {showPasswordModal && passwordModal}
       {error && <ErrorNotification error={error} />}
       <div className="columns is-multiline">
-        <ExternalDescription className="column is-half">{getUserExternalDescription()}</ExternalDescription>
+        <div className={classNames("column", "is-half", "is-flex", "is-align-items-center")}>
+          {getUserExternalDescription()}
+        </div>
         <div className="column is-half">
           <Level right={getConvertButton()} />
         </div>

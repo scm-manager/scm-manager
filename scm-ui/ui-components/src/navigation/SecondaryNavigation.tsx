@@ -82,7 +82,7 @@ const SecondaryNavigation: FC<Props> = ({ label, children, collapsible = true })
     <SectionContainer className="menu">
       <div>
         <MenuLabel
-          className={classNames("menu-label", { "has-cursor-pointer": collapsible })}
+          className={classNames("menu-label", { "is-clickable": collapsible })}
           collapsed={isCollapsed}
           onClick={toggleCollapseState}
         >

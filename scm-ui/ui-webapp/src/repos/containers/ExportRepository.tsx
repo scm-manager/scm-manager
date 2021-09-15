@@ -31,18 +31,17 @@ import {
   InputField,
   Level,
   Notification,
-  Subtitle
+  Subtitle,
 } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 import { ExportInfo, Link, Repository } from "@scm-manager/ui-types";
 import { useExportInfo, useExportRepository } from "@scm-manager/ui-api";
 import styled from "styled-components";
+import classNames from "classnames";
 
 const InfoBox = styled.div`
   white-space: pre-line;
   background-color: #ccecf9;
-  margin: 1rem 0;
-  padding: 1rem;
   border-radius: 2px;
   border-left: 0.2rem solid;
   border-color: #33b2e8;
@@ -60,7 +59,7 @@ const ExportInterruptedNotification = () => {
 const ExportInfoBox: FC<{ exportInfo: ExportInfo }> = ({ exportInfo }) => {
   const [t] = useTranslation("repos");
   return (
-    <InfoBox>
+    <InfoBox className={classNames("my-4", "p-4")}>
       <strong>{t("export.exportInfo.infoBoxTitle")}</strong>
       <p>{t("export.exportInfo.exporter", { username: exportInfo.exporterName })}</p>
       <p>
@@ -90,7 +89,7 @@ const ExportRepository: FC<Props> = ({ repository }) => {
     isLoading: isLoadingExport,
     error: errorExport,
     data: exportedInfo,
-    exportRepository
+    exportRepository,
   } = useExportRepository();
 
   useEffect(() => {
@@ -144,7 +143,7 @@ const ExportRepository: FC<Props> = ({ repository }) => {
         helpText={t("export.encrypt.helpText")}
       />
       {encrypt && (
-        <div className="columns column is-half">
+        <div className={classNames("columns", "column", "is-half")}>
           <InputField
             label={t("export.password.label")}
             helpText={t("export.password.helpText")}
@@ -172,7 +171,7 @@ const ExportRepository: FC<Props> = ({ repository }) => {
                 exportRepository(repository, {
                   compressed,
                   password: encrypt ? password : "",
-                  withMetadata: fullExport
+                  withMetadata: fullExport,
                 })
               }
               loading={isLoadingInfo || isLoadingExport}

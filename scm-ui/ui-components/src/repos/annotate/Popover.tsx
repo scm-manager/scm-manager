@@ -31,7 +31,7 @@ import { DateInput } from "../../useDateFormatter";
 import { Repository, AnnotatedLine } from "@scm-manager/ui-types";
 import AuthorImage from "./AuthorImage";
 import { Action } from "./actions";
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 const PopoverContainer = styled.div`
   position: absolute;
@@ -62,16 +62,11 @@ const PopoverContainer = styled.div`
   }
 `;
 
-const SmallHr = styled.hr`
-  margin: 0.5em 0;
-`;
-
 const PopoverHeading = styled.div`
   height: 1.5em;
 `;
 
 const PopoverDescription = styled.p`
-  margin-top: 0.5em;
   overflow-wrap: break-word;
 `;
 
@@ -102,13 +97,13 @@ const Popover: FC<PopoverProps> = ({ annotation, offsetTop, repository, baseDate
 
   const onMouseEnter = () => {
     dispatch({
-      type: "enter-popover"
+      type: "enter-popover",
     });
   };
 
   const OnMouseLeave = () => {
     dispatch({
-      type: "leave-popover"
+      type: "leave-popover",
     });
   };
 
@@ -128,14 +123,14 @@ const Popover: FC<PopoverProps> = ({ annotation, offsetTop, repository, baseDate
         </span>
         <DateFromNow className="is-pulled-right" date={annotation.when} baseDate={baseDate} />
       </PopoverHeading>
-      <SmallHr />
+      <hr className="my-2" />
       <p>
         {t("changeset.label") + " "}
         <Link to={`/repo/${repository.namespace}/${repository.name}/code/changeset/${annotation.revision}`}>
           {shortRevision(annotation.revision)}
         </Link>
       </p>
-      <PopoverDescription className="content">{annotation.description}</PopoverDescription>
+      <PopoverDescription className="content mt-2">{annotation.description}</PopoverDescription>
     </PopoverContainer>
   );
 };

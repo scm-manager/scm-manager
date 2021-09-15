@@ -22,14 +22,15 @@
  * SOFTWARE.
  */
 import React, { FC, ReactNode, useEffect } from "react";
-import ErrorNotification from "./ErrorNotification";
-import { MissingLinkError, urls, useIndexLink } from "@scm-manager/ui-api";
 import { RouteComponentProps, useLocation, withRouter } from "react-router-dom";
-import ErrorPage from "./ErrorPage";
 import { useTranslation } from "react-i18next";
+import classNames from "classnames";
+import styled from "styled-components";
+import { MissingLinkError, urls, useIndexLink } from "@scm-manager/ui-api";
+import ErrorNotification from "./ErrorNotification";
+import ErrorPage from "./ErrorPage";
 import { Subtitle, Title } from "./layout";
 import Icon from "./Icon";
-import styled from "styled-components";
 
 type State = {
   error?: Error;
@@ -54,9 +55,6 @@ type ErrorDisplayProps = {
 };
 
 const RedirectIconContainer = styled.div`
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
   min-height: 256px;
 `;
 
@@ -69,7 +67,14 @@ const RedirectPage = () => {
       <div className="container">
         <Title>{t("errorBoundary.redirect.title")}</Title>
         <Subtitle>{t("errorBoundary.redirect.subtitle")}</Subtitle>
-        <RedirectIconContainer className="is-flex">
+        <RedirectIconContainer
+          className={classNames(
+            "is-flex",
+            "is-flex-direction-column",
+            "is-justify-content-center",
+            "is-align-items-center"
+          )}
+        >
           <Icon name="directions" className="fa-7x" />
         </RedirectIconContainer>
       </div>
@@ -108,7 +113,7 @@ const ErrorDisplay: FC<ErrorDisplayProps> = ({ error, errorInfo, fallback: Fallb
 
   const fallbackProps = {
     error,
-    errorInfo
+    errorInfo,
   };
 
   return <FallbackComponent {...fallbackProps} />;
@@ -130,7 +135,7 @@ class ErrorBoundary extends React.Component<Props, State> {
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     this.setState({
       error,
-      errorInfo
+      errorInfo,
     });
   }
 

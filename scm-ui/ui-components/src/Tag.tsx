@@ -21,10 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, HTMLAttributes } from "react";
+import React, { FC } from "react";
 import classNames from "classnames";
 import { Color, Size } from "./styleConstants";
-import styled, { css } from "styled-components";
 
 type Props = {
   className?: string;
@@ -39,19 +38,7 @@ type Props = {
   onRemove?: () => void;
 };
 
-type InnerTagProps = HTMLAttributes<HTMLSpanElement> & {
-  small: boolean;
-};
-
-const smallMixin = css`
-  font-size: 0.7rem !important;
-  padding: 0.25rem !important;
-  font-weight: bold;
-`;
-
-const InnerTag = styled.span<InnerTagProps>`
-  ${(props) => props.small && smallMixin};
-`;
+const smallClassNames = classNames("p-1", "is-size-7", "has-text-weight-bold");
 
 const Tag: FC<Props> = ({
   className,
@@ -82,20 +69,26 @@ const Tag: FC<Props> = ({
 
   return (
     <>
-      <InnerTag
-        className={classNames("tag", `is-${color}`, `is-${size}`, className, {
-          "is-outlined": outlined,
-          "is-rounded": rounded,
-          "has-cursor-pointer": onClick,
-        })}
+      <span
+        className={classNames(
+          "tag",
+          `is-${color}`,
+          `is-${size}`,
+          className,
+          {
+            "is-outlined": outlined,
+            "is-rounded": rounded,
+            "is-clickable": onClick,
+          },
+          size === "small" && smallClassNames
+        )}
         title={title}
         onClick={onClick}
-        small={size === "small"}
       >
         {showIcon}
         {label}
         {children}
-      </InnerTag>
+      </span>
       {showDelete}
     </>
   );

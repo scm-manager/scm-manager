@@ -22,16 +22,14 @@
  * SOFTWARE.
  */
 import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
 import { NotFoundError, useDiff } from "@scm-manager/ui-api";
 import ErrorNotification from "../ErrorNotification";
-import Notification from "../Notification";
-
 import Loading from "../Loading";
+import Notification from "../Notification";
+import Button from "../buttons/Button";
 import Diff from "./Diff";
 import { DiffObjectProps } from "./DiffTypes";
-import { useTranslation } from "react-i18next";
-import Button from "../buttons/Button";
-import styled from "styled-components";
 
 type Props = DiffObjectProps & {
   url: string;
@@ -44,19 +42,15 @@ type NotificationProps = {
   isFetchingNextPage: boolean;
 };
 
-const StyledNotification = styled(Notification)`
-  margin-top: 1.5rem;
-`;
-
 const PartialNotification: FC<NotificationProps> = ({ fetchNextPage, isFetchingNextPage }) => {
   const [t] = useTranslation("repos");
   return (
-    <StyledNotification type="info">
+    <Notification className="mt-5" type="info">
       <div className="columns is-centered">
         <div className="column">{t("changesets.moreDiffsAvailable")}</div>
         <Button label={t("changesets.loadMore")} action={fetchNextPage} loading={isFetchingNextPage} />
       </div>
-    </StyledNotification>
+    </Notification>
   );
 };
 

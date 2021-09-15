@@ -56,19 +56,19 @@ const ApiKeyCreatedModal: FC<Props> = ({ addedKey, close }) => {
   };
 
   const newPassphraseModalContent = (
-    <div className={"media-content"}>
+    <div className="media-content">
       <p>{t("apiKey.modal.text1")}</p>
       <p>
         <b>{t("apiKey.modal.text2")}</b>
       </p>
       <hr />
-      <div className={"columns"}>
-        <div className={"column is-11"}>
-          <KeyArea wrap={"soft"} ref={keyRef} className={"input"} value={addedKey.token} />
+      <div className="columns">
+        <div className="column is-11">
+          <KeyArea wrap={"soft"} ref={keyRef} className="input" value={addedKey.token} />
         </div>
-        <NoLeftMargin className={"column is-1"}>
+        <NoLeftMargin className="column is-1">
           <Icon
-            className={"is-hidden-mobile fa-2x"}
+            className="is-hidden-mobile fa-2x"
             name={copied ? "clipboard-check" : "clipboard"}
             title={t("apiKey.modal.clipboard")}
             onClick={copy}

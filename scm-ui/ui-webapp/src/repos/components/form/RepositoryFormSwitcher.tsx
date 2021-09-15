@@ -21,22 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 import React, { FC } from "react";
-import styled from "styled-components";
-import { Button, ButtonAddons, Icon, Level, urls } from "@scm-manager/ui-components";
 import { useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-
-const MarginIcon = styled(Icon)`
-  padding-right: 0.5rem;
-`;
-
-const SmallButton = styled(Button)`
-  border-radius: 4px;
-  font-size: 1rem;
-  font-weight: 600;
-`;
+import classNames from "classnames";
+import styled from "styled-components";
+import { Button, ButtonAddons, Icon, Level, urls } from "@scm-manager/ui-components";
 
 const TopLevel = styled(Level)`
   margin-top: 1.5rem;
@@ -62,10 +52,14 @@ const RepositoryFormButton: FC<RepositoryForm> = ({ path, icon, label }) => {
   const [t] = useTranslation(["repos", "plugins"]);
 
   return (
-    <SmallButton color={isSelected ? "link is-selected" : undefined} link={!isSelected ? href : undefined}>
-      <MarginIcon name={icon} color={isSelected ? "white" : "default"} />
-      <p className="is-hidden-mobile is-hidden-tablet-only">{t(`plugins:${label}`, label)}</p>
-    </SmallButton>
+    <Button
+      className="is-size-6"
+      color={isSelected ? "link is-selected" : undefined}
+      link={!isSelected ? href : undefined}
+    >
+      <Icon className="pr-2" name={icon} color={isSelected ? "white" : "default"} />
+      <p className={classNames("is-hidden-mobile", "is-hidden-tablet-only")}>{t(`plugins:${label}`, label)}</p>
+    </Button>
   );
 };
 

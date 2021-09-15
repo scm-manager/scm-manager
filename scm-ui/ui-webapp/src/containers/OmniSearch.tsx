@@ -34,10 +34,6 @@ import SyntaxModal from "../search/SyntaxModal";
 import SearchErrorNotification from "../search/SearchErrorNotification";
 import queryString from "query-string";
 
-const Field = styled.div`
-  margin-bottom: 0 !important;
-`;
-
 const Input = styled.input`
   border-radius: 4px !important;
 `;
@@ -77,12 +73,6 @@ const EmptyHits: FC = () => {
 
 const ResultHeading = styled.h3`
   border-bottom: 1px solid lightgray;
-  margin: 0 0.5rem;
-  padding: 0.375rem 0.5rem;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
 `;
 
 const DropdownMenu = styled.div`
@@ -91,8 +81,6 @@ const DropdownMenu = styled.div`
 
 const ResultFooter = styled.div`
   border-top: 1px solid lightgray;
-  margin: 0 0.5rem;
-  padding: 0.375rem 0.5rem;
 `;
 
 const AvatarSection: FC<HitProps> = ({ hit }) => {
@@ -115,7 +103,7 @@ const AvatarSection: FC<HitProps> = ({ hit }) => {
 const MoreResults: FC<GotoProps> = ({ gotoDetailSearch }) => {
   const [t] = useTranslation("commons");
   return (
-    <ResultFooter className="dropdown-item has-text-centered">
+    <ResultFooter className={classNames("dropdown-item", "has-text-centered", "mx-2", "px-2", "py-1")}>
       <Button action={gotoDetailSearch} color="primary" data-omnisearch="true">
         {t("search.quickSearch.moreResults")}
       </Button>
@@ -156,7 +144,18 @@ const Hits: FC<HitsProps> = ({ showHelp, gotoDetailSearch, ...rest }) => {
   return (
     <>
       <div aria-expanded="true" role="listbox" className="dropdown-content">
-        <ResultHeading className="dropdown-item">
+        <ResultHeading
+          className={classNames(
+            "dropdown-item",
+            "is-flex",
+            "is-justify-content-space-between",
+            "is-align-items-center",
+            "mx-2",
+            "px-2",
+            "py-1",
+            "has-text-weight-bold"
+          )}
+        >
           <span>{t("search.quickSearch.resultHeading")}</span>
           <SyntaxHelp onClick={showHelp} />
         </ResultHeading>
@@ -331,7 +330,7 @@ const OmniSearch: FC = () => {
   const { onKeyDown, index } = useKeyBoardNavigation(gotoDetailSearch, clearQuery, data?._embedded.hits);
 
   return (
-    <Field className="navbar-item field">
+    <div className={classNames("navbar-item", "field", "mb-0")}>
       {showHelp ? <SyntaxModal close={closeHelp} /> : null}
       <div
         className={classNames("control", "has-icons-right", {
@@ -376,7 +375,7 @@ const OmniSearch: FC = () => {
           </DropdownMenu>
         </div>
       </div>
-    </Field>
+    </div>
   );
 };
 

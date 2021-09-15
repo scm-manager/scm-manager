@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-import styled from "styled-components";
 import Icon from "../Icon";
 import { storiesOf } from "@storybook/react";
 import { MemoryRouter } from "react-router-dom";
@@ -31,16 +30,12 @@ import GroupEntry from "./GroupEntry";
 import { Button, ButtonGroup } from "../buttons";
 import copyToClipboard from "../CopyToClipboard";
 
-const Wrapper = styled.div`
-  margin: 2rem;
-`;
-
 const link = "/foo/bar";
 const icon = <Icon name="icons fa-2x fa-fw" />;
-const name = <strong className="is-marginless">main content</strong>;
+const name = <strong className="m-0">main content</strong>;
 const description = <small>more text</small>;
 const longName = (
-  <strong className="is-marginless">
+  <strong className="m-0">
     Very-important-repository-with-a-particular-long-but-easily-rememberable-name-which-also-is-written-in-kebab-case
   </strong>
 );
@@ -56,7 +51,7 @@ const contentRight = (
 
 storiesOf("GroupEntry", module)
   .addDecorator((story) => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
-  .addDecorator((storyFn) => <Wrapper>{storyFn()}</Wrapper>)
+  .addDecorator((storyFn) => <div className="m-5">{storyFn()}</div>)
   .add("Default", () => (
     <GroupEntry link={link} avatar={icon} name={name} description={description} contentRight={contentRight} />
   ))

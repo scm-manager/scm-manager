@@ -28,14 +28,12 @@ import styled from "styled-components";
 
 const HunkDivider = styled.div`
   background: #98d8f3;
-  font-size: 0.7rem;
-  padding-left: 1.78em;
 `;
 
 const HunkExpandDivider: FC = ({ children }) => {
   return (
     <Decoration>
-      <HunkDivider>{children}</HunkDivider>
+      <HunkDivider className="is-size-7 pl-5">{children}</HunkDivider>
     </Decoration>
   );
 };

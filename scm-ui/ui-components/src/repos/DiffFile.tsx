@@ -69,22 +69,6 @@ const FullWidthTitleHeader = styled.div`
   max-width: 100%;
 `;
 
-const TitleWrapper = styled.span`
-  margin-left: 0.25rem;
-`;
-
-const AlignRight = styled.div`
-  margin-left: auto;
-`;
-
-const HunkDivider = styled.hr`
-  margin: 0.5rem 0;
-`;
-
-const ChangeTypeTag = styled(Tag)`
-  margin-left: 0.75rem;
-`;
-
 const MarginlessModalContent = styled.div`
   margin: -1.25rem;
 
@@ -319,7 +303,7 @@ class DiffFile extends React.Component<Props, State> {
     } else if (i > 0) {
       items.push(
         <Decoration>
-          <HunkDivider />
+          <hr className="my-2" />
         </Decoration>
       );
     }
@@ -403,8 +387,8 @@ class DiffFile extends React.Component<Props, State> {
 
     const color = value === "added" ? "success" : value === "deleted" ? "danger" : "info";
     return (
-      <ChangeTypeTag
-        className={classNames("has-text-weight-normal")}
+      <Tag
+        className={classNames("has-text-weight-normal", "ml-3")}
         rounded={true}
         outlined={true}
         color={color}
@@ -431,7 +415,7 @@ class DiffFile extends React.Component<Props, State> {
 
     const fileAnnotations = fileAnnotationFactory ? fileAnnotationFactory(file) : null;
     const innerContent = (
-      <div className="panel-block is-paddingless">
+      <div className="panel-block p-0">
         {fileAnnotations}
         <TokenizedDiffView className={viewType} viewType={viewType} file={file}>
           {(hunks: HunkType[]) =>
@@ -475,13 +459,13 @@ class DiffFile extends React.Component<Props, State> {
       </MenuContext.Consumer>
     );
     const headerButtons = (
-      <AlignRight className={classNames("level-right", "is-flex")}>
+      <div className={classNames("level-right", "is-flex", "ml-auto")}>
         <ButtonGroup>
           {sideBySideToggle}
           {openInFullscreen}
           {fileControls}
         </ButtonGroup>
-      </AlignRight>
+      </div>
     );
 
     let errorModal;
@@ -506,14 +490,14 @@ class DiffFile extends React.Component<Props, State> {
         <div className="panel-heading">
           <div className={classNames("level", "is-flex-wrap-wrap")}>
             <FullWidthTitleHeader
-              className={classNames("level-left", "is-flex", "has-cursor-pointer")}
+              className={classNames("level-left", "is-flex", "is-clickable")}
               onClick={this.toggleCollapse}
               title={this.hoverFileTitle(file)}
             >
               {collapseIcon}
-              <TitleWrapper className={classNames("is-ellipsis-overflow", "is-size-6")}>
+              <span className={classNames("is-ellipsis-overflow", "is-size-6", "ml-1")}>
                 {this.renderFileTitle(file)}
-              </TitleWrapper>
+              </span>
               {this.renderChangeTag(file)}
             </FullWidthTitleHeader>
             {headerButtons}

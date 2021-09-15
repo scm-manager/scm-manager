@@ -27,7 +27,6 @@ import Tooltip from "../Tooltip";
 
 const Button = styled.a`
   width: 50px;
-  cursor: pointer;
   &:hover {
     color: #33b2e8;
   }
@@ -47,7 +46,7 @@ const DiffButton: FC<Props> = ({ icon, tooltip, onClick }) => {
 
   return (
     <Tooltip message={tooltip} location="top">
-      <Button aria-label={tooltip} className="button" onClick={handleClick}>
+      <Button aria-label={tooltip} className="button is-clickable" onClick={handleClick}>
         <i className={`fas fa-${icon}`} />
       </Button>
     </Tooltip>

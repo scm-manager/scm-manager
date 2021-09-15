@@ -35,7 +35,7 @@ const Wrapper = styled.div`
 
 const link = "/foo/bar";
 const icon = <Icon name="icons fa-2x fa-fw" />;
-const contentLeft = <strong className="is-marginless">main content</strong>;
+const contentLeft = <strong className="m-0">main content</strong>;
 const contentRight = <small>more text</small>;
 
 storiesOf("CardColumnSmall", module)

@@ -131,12 +131,12 @@ const InitializationAdminAccountStep: FC<Props> = ({ data }) => {
         <h3 className="title">{t("title")}</h3>
         <h4 className="subtitle">{t("adminStep.title")}</h4>
         <p>{t("adminStep.description")}</p>
-        <div className={"columns"}>
+        <div className="columns">
           <div className="column is-full-width">
             <InputField placeholder={t("adminStep.startupToken")} autofocus={true} {...register("startupToken")} />
           </div>
         </div>
-        <div className={"columns"}>
+        <div className="columns">
           <div className="column is-half">
             <InputField
               testId="username-input"
@@ -154,7 +154,7 @@ const InitializationAdminAccountStep: FC<Props> = ({ data }) => {
             />
           </div>
         </div>
-        <div className={"columns"}>
+        <div className="columns">
           <div className="column is-full-width">
             <InputField
               label={t("adminStep.email")}
@@ -163,7 +163,7 @@ const InitializationAdminAccountStep: FC<Props> = ({ data }) => {
             />
           </div>
         </div>
-        <div className={"columns"}>
+        <div className="columns">
           <div className="column is-half">
             <InputField
               testId="password-input"
@@ -184,7 +184,7 @@ const InitializationAdminAccountStep: FC<Props> = ({ data }) => {
           </div>
         </div>
         {errorComponent}
-        <div className={"columns"}>
+        <div className="columns">
           <div className="column is-full-width">
             <SubmitButton
               label={t("adminStep.submit")}

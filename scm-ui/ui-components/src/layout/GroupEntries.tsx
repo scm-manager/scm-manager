@@ -21,25 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 import React, { FC, ReactNode } from "react";
+import classNames from "classnames";
 import styled from "styled-components";
-
-const TitleWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  padding: 0.75rem;
-  font-size: 1rem;
-  font-weight: bold;
-`;
 
 const Separator = styled.div`
   border-bottom: 1px solid rgb(219, 219, 219, 0.5);
-  margin: 0 1rem;
-`;
-
-const Box = styled.div`
-  padding: 0.5rem;
 `;
 
 type Props = {
@@ -51,14 +38,16 @@ const GroupEntries: FC<Props> = ({ namespaceHeader, elements }) => {
   const content = elements.map((entry, index) => (
     <React.Fragment key={index}>
       <div>{entry}</div>
-      {index + 1 !== elements.length ? <Separator /> : null}
+      {index + 1 !== elements.length ? <Separator className="mx-4" /> : null}
     </React.Fragment>
   ));
 
   return (
     <>
-      <TitleWrapper>{namespaceHeader}</TitleWrapper>
-      <Box className="box">{content}</Box>
+      <div className={classNames("is-flex", "is-align-items-center", "is-size-6", "has-text-weight-bold", "p-3")}>
+        {namespaceHeader}
+      </div>
+      <div className={classNames("box", "p-2")}>{content}</div>
       <div className="is-clearfix" />
     </>
   );

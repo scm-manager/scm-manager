@@ -45,22 +45,14 @@ type Props = {
 };
 
 const PageActionContainer = styled.div`
-  justify-content: flex-end;
-  align-items: center;
-
   // every child except first
   > * ~ * {
     margin-left: 1.25rem;
   }
 `;
 
-const MarginLeft = styled.div`
-  margin-left: 0.5rem;
-`;
-
-const FlexContainer = styled.div`
-  display: flex;
-  flex-direction: row;
+const MaxTitleHeight = styled.div`
+  // remove blank space in repo create form
   height: 2.25rem;
 `;
 
@@ -98,12 +90,19 @@ export default class Page extends React.Component<Props> {
 
     let pageActions = null;
     let pageActionsExists = false;
-    React.Children.forEach(children, child => {
+    React.Children.forEach(children, (child) => {
       if (child && !error) {
         if (this.isPageAction(child)) {
           pageActions = (
             <PageActionContainer
-              className={classNames("column", "is-three-fifths", "is-mobile-action-spacing", "is-flex-tablet")}
+              className={classNames(
+                "column",
+                "is-three-fifths",
+                "is-mobile-action-spacing",
+                "is-flex-tablet",
+                "is-justify-content-flex-end",
+                "is-align-items-center"
+              )}
             >
               {child}
             </PageActionContainer>
@@ -119,10 +118,10 @@ export default class Page extends React.Component<Props> {
         <>
           <div className="columns">
             <div className="column">
-              <FlexContainer>
+              <MaxTitleHeight className="is-flex">
                 <Title title={this.getTextualTitle()}>{this.getTitleComponent()}</Title>
-                {afterTitle && <MarginLeft>{afterTitle}</MarginLeft>}
-              </FlexContainer>
+                {afterTitle && <div className="ml-2">{afterTitle}</div>}
+              </MaxTitleHeight>
               {subtitle ? <Subtitle>{subtitle}</Subtitle> : null}
             </div>
             {pageActions}
@@ -145,7 +144,7 @@ export default class Page extends React.Component<Props> {
     }
 
     const content: ReactNode[] = [];
-    React.Children.forEach(children, child => {
+    React.Children.forEach(children, (child) => {
       if (child) {
         if (!this.isPageAction(child)) {
           content.push(child);

@@ -80,7 +80,7 @@ class ProfileInfo extends React.Component<Props> {
       groups = (
         <tr>
           <th>{t("profile.groups")}</th>
-          <td className="is-paddingless">
+          <td className="p-0">
             <ul>
               {me.groups.map(group => {
                 return <li>{group}</li>;

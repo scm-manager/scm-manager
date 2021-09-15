@@ -36,7 +36,6 @@ import Popover from "./Popover";
 import AnnotateLine from "./AnnotateLine";
 import { Action } from "./actions";
 import { determineLanguage } from "../../languages";
-import styled from "styled-components";
 
 type Props = {
   source: AnnotatedSource;
@@ -56,11 +55,6 @@ const initialState = {
   onPopover: false,
   onLine: false,
 };
-
-const NoSpacingReactSyntaxHighlighter = styled(ReactSyntaxHighlighter)`
-  margin: 0 !important;
-  padding: 0 !important;
-`;
 
 const reducer = (state: State, action: Action): State => {
   switch (action.type) {
@@ -152,14 +146,15 @@ const Annotate: FC<Props> = ({ source, repository, baseDate }) => {
   return (
     <div className="panel-block">
       {popover}
-      <NoSpacingReactSyntaxHighlighter
+      <ReactSyntaxHighlighter
+        className="m-0 p-0"
         showLineNumbers={false}
         language={determineLanguage(source.language)}
         style={highlightingTheme}
         renderer={defaultRenderer}
       >
         {code}
-      </NoSpacingReactSyntaxHighlighter>
+      </ReactSyntaxHighlighter>
     </div>
   );
 };

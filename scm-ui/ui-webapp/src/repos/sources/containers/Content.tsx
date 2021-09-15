@@ -49,24 +49,12 @@ const HeaderWrapper = styled.div`
   padding: 0.5em 0.75em;
 `;
 
-const LighterGreyBackgroundPanelBlock = styled.div`
-  background-color: #fbfbfb;
-`;
-
-const LighterGreyBackgroundTable = styled.table`
-  background-color: #fbfbfb;
-`;
-
 const BorderBottom = styled.div`
   border-bottom: solid 1px #dbdbdb;
 `;
 
 const FullWidthTitleHeader = styled.div`
   max-width: 100%;
-`;
-
-const AlignRight = styled.div`
-  margin-left: auto;
 `;
 
 const BorderLessDiv = styled.div`
@@ -116,13 +104,13 @@ const Content: FC<Props> = ({ file, repository, revision, breadcrumb, error }) =
       <HeaderWrapper>
         <div className={classNames("level", "is-flex-wrap-wrap")}>
           <FullWidthTitleHeader
-            className={classNames("level-left", "is-flex", "has-cursor-pointer", "is-word-break", "mr-2")}
+            className={classNames("level-left", "is-flex", "is-clickable", "is-word-break", "mr-2")}
             onClick={toggleCollapse}
           >
             <Icon className={classNames("is-inline", "mr-2")} name={`${icon} fa-fw`} color="inherit" />
             {file.name}
           </FullWidthTitleHeader>
-          <AlignRight className={classNames("level-right", "buttons")}>
+          <div className={classNames("level-right", "buttons", "ml-auto")}>
             {selector}
             <OpenInFullscreenButton
               modalTitle={file?.name}
@@ -139,7 +127,7 @@ const Content: FC<Props> = ({ file, repository, revision, breadcrumb, error }) =
               }}
               renderAll={true}
             />
-          </AlignRight>
+          </div>
         </div>
       </HeaderWrapper>
     );
@@ -163,8 +151,8 @@ const Content: FC<Props> = ({ file, repository, revision, breadcrumb, error }) =
     if (!collapsed) {
       return (
         <>
-          <LighterGreyBackgroundPanelBlock className="panel-block">
-            <LighterGreyBackgroundTable className="table">
+          <div className="panel-block has-background-white-bis">
+            <table className="table has-background-white-bis">
               <tbody>
                 <tr>
                   <td>{t("sources.content.path")}</td>
@@ -198,8 +186,8 @@ const Content: FC<Props> = ({ file, repository, revision, breadcrumb, error }) =
                   }}
                 />
               </tbody>
-            </LighterGreyBackgroundTable>
-          </LighterGreyBackgroundPanelBlock>
+            </table>
+          </div>
           <BorderBottom />
         </>
       );

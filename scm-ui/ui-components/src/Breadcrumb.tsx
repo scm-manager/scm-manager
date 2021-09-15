@@ -93,14 +93,7 @@ const HomeIcon = styled(Icon)`
 `;
 
 const ActionBar = styled.div`
-  align-self: center;
-
-  /* order actionbar items horizontal */
-  display: flex;
-  justify-content: flex-start;
-
   /* ensure space between action bar items */
-
   & > * {
     /* 
      * We have to use important, because plugins could use field or control classes like the editor-plugin does.
@@ -113,7 +106,6 @@ const ActionBar = styled.div`
 
 const PrefixButton = styled.div`
   border-right: 1px solid lightgray;
-  margin-right: 0.5rem;
 `;
 
 const Breadcrumb: FC<Props> = ({
@@ -176,7 +168,7 @@ const Breadcrumb: FC<Props> = ({
   const renderBreadcrumbNav = () => {
     let prefixButtons = null;
     if (preButtons) {
-      prefixButtons = <PrefixButton>{preButtons}</PrefixButton>;
+      prefixButtons = <PrefixButton className="mr-2">{preButtons}</PrefixButton>;
     }
 
     let homeUrl = baseUrl + "/";
@@ -227,13 +219,7 @@ const Breadcrumb: FC<Props> = ({
       binder.hasExtension<extensionPoints.ReposSourcesEmptyActionbar>("repos.sources.empty.actionbar") &&
       sources?._embedded?.children?.length === 0
     ) {
-      return (
-        <ExtensionPoint
-          name="repos.sources.empty.actionbar"
-          props={{ repository, sources }}
-          renderAll={true}
-        />
-      );
+      return <ExtensionPoint name="repos.sources.empty.actionbar" props={{ repository, sources }} renderAll={true} />;
     }
     if (binder.hasExtension<extensionPoints.ReposSourcesActionbar>("repos.sources.actionbar")) {
       return <ExtensionPoint name="repos.sources.actionbar" props={extProps} renderAll={true} />;
@@ -243,11 +229,15 @@ const Breadcrumb: FC<Props> = ({
 
   return (
     <>
-      <div className="is-flex is-align-items-center is-justify-content-flex-end">
+      <div className={classNames("is-flex", "is-justify-content-flex-end", "is-align-items-center")}>
         {renderBreadcrumbNav()}
-        {<ActionBar className="my-2">{renderExtensionPoints()}</ActionBar>}
+        {
+          <ActionBar className={classNames("is-flex", "is-justify-content-flex-start", "is-align-self-center", "my-2")}>
+            {renderExtensionPoints()}
+          </ActionBar>
+        }
       </div>
-      <hr className="is-marginless" />
+      <hr className="m-0" />
     </>
   );
 };

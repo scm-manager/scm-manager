@@ -21,13 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, {FC, useState} from "react";
+import React, { FC, useState } from "react";
 import styled from "styled-components";
 import MarkdownViewer from "./MarkdownViewer";
 import SourcecodeViewer from "./SourcecodeViewer";
-import {File} from "@scm-manager/ui-types";
-import {Button} from "@scm-manager/ui-components";
-import {useTranslation} from "react-i18next";
+import { File } from "@scm-manager/ui-types";
+import { Button } from "@scm-manager/ui-components";
+import { useTranslation } from "react-i18next";
 
 const ToggleButton = styled(Button)`
   max-width: 1rem;
@@ -37,17 +37,13 @@ const ToggleButton = styled(Button)`
   z-index: 30;
 `;
 
-const Container = styled.div`
-  position: relative;
-`;
-
 type Props = {
   file: File;
   basePath: string;
 };
 
-const SwitchableMarkdownViewer: FC<Props> = ({file, basePath}) => {
-  const {t} = useTranslation("repos");
+const SwitchableMarkdownViewer: FC<Props> = ({ file, basePath }) => {
+  const { t } = useTranslation("repos");
   const [renderMarkdown, setRenderMarkdown] = useState(true);
 
   const toggleMarkdown = () => {
@@ -55,7 +51,7 @@ const SwitchableMarkdownViewer: FC<Props> = ({file, basePath}) => {
   };
 
   return (
-    <Container>
+    <div className="is-relative">
       <ToggleButton
         color={renderMarkdown ? "link" : ""}
         action={toggleMarkdown}
@@ -65,11 +61,14 @@ const SwitchableMarkdownViewer: FC<Props> = ({file, basePath}) => {
             : t("sources.content.toggleButton.showMarkdown")
         }
       >
-        <i className="fab fa-markdown"/>
+        <i className="fab fa-markdown" />
       </ToggleButton>
-      {renderMarkdown ? <MarkdownViewer file={file} basePath={basePath}/> :
-        <SourcecodeViewer file={file} language={"MARKDOWN"}/>}
-    </Container>
+      {renderMarkdown ? (
+        <MarkdownViewer file={file} basePath={basePath} />
+      ) : (
+        <SourcecodeViewer file={file} language={"MARKDOWN"} />
+      )}
+    </div>
   );
 };
 

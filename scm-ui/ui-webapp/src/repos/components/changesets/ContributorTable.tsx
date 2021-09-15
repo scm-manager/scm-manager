@@ -97,7 +97,7 @@ const ContributorTable: FC<Props> = ({ changeset }) => {
       {getContributorsByType().map(contributor => (
         <tr key={contributor.type}>
           <SizedTd>{t("changeset.contributor.type." + contributor.type)}:</SizedTd>
-          <td className="is-ellipsis-overflow is-marginless">
+          <td className="is-ellipsis-overflow m-0">
             <CommaSeparatedList>
               {contributor.persons!.map(person => (
                 <Contributor key={person.name} person={person} />

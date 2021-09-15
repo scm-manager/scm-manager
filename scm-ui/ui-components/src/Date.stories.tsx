@@ -22,43 +22,38 @@
  * SOFTWARE.
  */
 import React from "react";
-import DateFromNow from "./DateFromNow";
 import { storiesOf } from "@storybook/react";
+import DateFromNow from "./DateFromNow";
 import DateShort from "./DateShort";
-import styled from "styled-components";
 
 const baseProps = {
   timeZone: "Europe/Berlin",
-  baseDate: "2019-10-12T13:56:42+02:00"
+  baseDate: "2019-10-12T13:56:42+02:00",
 };
 
 const dates = [
   "2009-06-30T18:30:00+02:00",
   "2019-06-30T18:30:00+02:00",
   "2019-10-12T13:56:40+02:00",
-  "2019-10-11T13:56:40+02:00"
+  "2019-10-11T13:56:40+02:00",
 ];
-
-const Wrapper = styled.div`
-  padding: 2rem;
-`;
 
 storiesOf("Date", module)
   .add("Date from now", () => (
-    <Wrapper>
-      {dates.map(d => (
+    <div className="p-5">
+      {dates.map((d) => (
         <p>
           <DateFromNow date={d} {...baseProps} />
         </p>
       ))}
-    </Wrapper>
+    </div>
   ))
   .add("Short", () => (
-    <Wrapper>
-      {dates.map(d => (
+    <div className="p-5">
+      {dates.map((d) => (
         <p>
           <DateShort date={d} {...baseProps} />
         </p>
       ))}
-    </Wrapper>
+    </div>
   ));
