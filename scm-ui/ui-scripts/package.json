@@ -23,8 +23,8 @@
     "script-loader": "^0.7.2",
     "style-loader": "^1.0.0",
     "webpack": "^4.41.5",
-    "webpack-cli": "^3.3.10",
-    "webpack-dev-server": "^3.10.1",
+    "webpack-cli": "^4.0.0",
+    "webpack-dev-server": "^4.0.0",
     "worker-plugin": "^3.2.0"
   },
   "devDependencies": {
