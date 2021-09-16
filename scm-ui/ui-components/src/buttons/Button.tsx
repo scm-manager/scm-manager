@@ -78,9 +78,6 @@ class Button extends React.Component<Props> {
       children,
       testId
     } = this.props;
-    const loadingClass = loading ? "is-loading" : "";
-    const fullWidthClass = fullWidth ? "is-fullwidth" : "";
-    const reducedMobileClass = reducedMobile ? "is-reduced-mobile" : "";
     if (icon) {
       return (
         <button
@@ -88,7 +85,14 @@ class Button extends React.Component<Props> {
           title={title}
           disabled={disabled}
           onClick={this.onClick}
-          className={classNames("button", "is-" + color, loadingClass, fullWidthClass, reducedMobileClass, className)}
+          className={classNames(
+            "button",
+            "is-" + color,
+            { "is-loading": loading },
+            { "is-fullwidth": fullWidth },
+            { "is-reduced-mobile": reducedMobile },
+            className
+          )}
           {...createAttributesForTesting(testId)}
         >
           <span className="icon is-medium">
@@ -109,7 +113,13 @@ class Button extends React.Component<Props> {
         title={title}
         disabled={disabled}
         onClick={this.onClick}
-        className={classNames("button", "is-" + color, loadingClass, fullWidthClass, className)}
+        className={classNames(
+          "button",
+          "is-" + color,
+          { "is-loading": loading },
+          { "is-fullwidth": fullWidth },
+          className
+        )}
         {...createAttributesForTesting(testId)}
       >
         {label} {children}
