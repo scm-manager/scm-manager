@@ -51,7 +51,7 @@ const TagDangerZone: FC<Props> = ({ repository, tag }) => {
     <>
       <hr />
       <Subtitle subtitle={t("tag.dangerZone")} />
-      <DangerZoneContainer>{dangerZone}</DangerZoneContainer>
+      <DangerZoneContainer className="px-4 py-5">{dangerZone}</DangerZoneContainer>
     </>
   );
 };

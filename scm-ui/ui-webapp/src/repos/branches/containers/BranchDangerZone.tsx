@@ -51,7 +51,7 @@ const BranchDangerZone: FC<Props> = ({ repository, branch }) => {
     <>
       <hr />
       <Subtitle subtitle={t("branch.dangerZone")} />
-      <DangerZoneContainer>{dangerZone}</DangerZoneContainer>
+      <DangerZoneContainer className="px-4 py-5">{dangerZone}</DangerZoneContainer>
     </>
   );
 };
