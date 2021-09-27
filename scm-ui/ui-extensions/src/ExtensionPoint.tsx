@@ -21,9 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import * as React from "react";
+import React, { FC, ReactNode } from "react";
 import { Binder } from "./binder";
-import { Component, FC, ReactNode } from "react";
 import useBinder from "./useBinder";
 
 type PropTransformer = (props: object) => object;
@@ -33,12 +32,13 @@ type Props = {
   renderAll?: boolean;
   props?: object;
   propTransformer?: PropTransformer;
+  wrapper?: boolean;
 };
 
 const createInstance = (Component: any, props: object, key?: number) => {
   const instanceProps = {
     ...props,
-    key
+    key,
   };
   if (React.isValidElement(Component)) {
     return React.cloneElement(Component, instanceProps);
@@ -51,12 +51,28 @@ const renderAllExtensions = (binder: Binder, name: string, props: object) => {
   return <>{extensions.map((cmp, index) => createInstance(cmp, props, index))}</>;
 };
 
+const renderWrapperExtensions = (binder: Binder, name: string, props: object) => {
+  const extensions = [...(binder.getExtensions(name, props) || [])];
+  extensions.reverse();
+
+  let instance: any = null;
+  extensions.forEach((cmp, index) => {
+    let instanceProps = props;
+    if (instance) {
+      instanceProps = { ...props, children: instance };
+    }
+    instance = createInstance(cmp, instanceProps, index);
+  });
+
+  return instance;
+};
+
 const renderSingleExtension = (binder: Binder, name: string, props: object) => {
   const cmp = binder.getExtension(name, props);
   if (!cmp) {
     return null;
   }
-  return createInstance(cmp, props, undefined);
+  return createInstance(cmp, props);
 };
 
 const renderDefault = (children: ReactNode) => {
@@ -67,11 +83,11 @@ const renderDefault = (children: ReactNode) => {
 };
 
 const createRenderProps = (propTransformer?: PropTransformer, props?: object) => {
-  const transform = (props: object) => {
+  const transform = (untransformedProps: object) => {
     if (!propTransformer) {
-      return props;
+      return untransformedProps;
     }
-    return propTransformer(props);
+    return propTransformer(untransformedProps);
   };
 
   return transform(props || {});
@@ -80,12 +96,15 @@ const createRenderProps = (propTransformer?: PropTransformer, props?: object) =>
 /**
  * ExtensionPoint renders components which are bound to an extension point.
  */
-const ExtensionPoint: FC<Props> = ({ name, propTransformer, props, renderAll, children }) => {
+const ExtensionPoint: FC<Props> = ({ name, propTransformer, props, renderAll, wrapper, children }) => {
   const binder = useBinder();
-  const renderProps = createRenderProps(propTransformer, props);
+  const renderProps = createRenderProps(propTransformer, { ...(props || {}), children });
   if (!binder.hasExtension(name, renderProps)) {
     return renderDefault(children);
   } else if (renderAll) {
+    if (wrapper) {
+      return renderWrapperExtensions(binder, name, renderProps);
+    }
     return renderAllExtensions(binder, name, renderProps);
   }
   return renderSingleExtension(binder, name, renderProps);

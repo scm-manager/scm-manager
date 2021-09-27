@@ -21,9 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
+import React, { FC } from "react";
 import ExtensionPoint from "./ExtensionPoint";
 import { shallow, mount } from "enzyme";
+// eslint-disable-next-line no-restricted-imports
 import "@scm-manager/ui-tests/enzyme";
 import binder from "./binder";
 
@@ -89,7 +90,7 @@ describe("ExtensionPoint test", () => {
       <ExtensionPoint
         name="something.special"
         props={{
-          value: "Awesome"
+          value: "Awesome",
         }}
       />
     );
@@ -126,7 +127,7 @@ describe("ExtensionPoint test", () => {
 
   it("should pass the context of the parent component", () => {
     const UserContext = React.createContext({
-      name: "anonymous"
+      name: "anonymous",
     });
 
     type HelloProps = {
@@ -148,7 +149,7 @@ describe("ExtensionPoint test", () => {
       return (
         <UserContext.Provider
           value={{
-            name: "Trillian"
+            name: "Trillian",
           }}
         >
           <ExtensionPoint name="hello" />
@@ -203,11 +204,60 @@ describe("ExtensionPoint test", () => {
     const transformer = (props: object) => {
       return {
         ...props,
-        name: "Two"
+        name: "Two",
       };
     };
 
     const rendered = mount(<ExtensionPoint name="something.special" propTransformer={transformer} />);
     expect(rendered.text()).toBe("Extension Two");
+  });
+
+  it("should pass children as props", () => {
+    const label: FC = ({ children }) => {
+      return (
+        <>
+          <label>Bound Extension</label>
+          <details>{children}</details>
+        </>
+      );
+    };
+    mockedBinder.hasExtension.mockReturnValue(true);
+    mockedBinder.getExtension.mockReturnValue(label);
+
+    const rendered = mount(
+      <ExtensionPoint name="something.special">
+        <p>Cool stuff</p>
+      </ExtensionPoint>
+    );
+    const text = rendered.text();
+    expect(text).toContain("Bound Extension");
+    expect(text).toContain("Cool stuff");
+  });
+
+  it("should wrap children with multiple extensions", () => {
+    const w1: FC = ({ children }) => (
+      <>
+        <label>Outer {"-> "}</label>
+        <details>{children}</details>
+      </>
+    );
+
+    const w2: FC = ({ children }) => (
+      <>
+        <label>Inner {"-> "}</label>
+        <details>{children}</details>
+      </>
+    );
+
+    mockedBinder.hasExtension.mockReturnValue(true);
+    mockedBinder.getExtensions.mockReturnValue([w1, w2]);
+
+    const rendered = mount(
+      <ExtensionPoint name="something.special" renderAll={true} wrapper={true}>
+        <p>Children</p>
+      </ExtensionPoint>
+    );
+    const text = rendered.text();
+    expect(text).toEqual("Outer -> Inner -> Children");;
   });
 });
