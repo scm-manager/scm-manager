@@ -1,0 +1,2 @@
+- type: Added
+  description: Add method to delete whole configuration store ([#1814](https://github.com/scm-manager/scm-manager/pull/1814))
