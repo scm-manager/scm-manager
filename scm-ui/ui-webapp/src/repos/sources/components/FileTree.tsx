@@ -25,12 +25,12 @@
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-import { binder } from "@scm-manager/ui-extensions";
+import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
 import { File } from "@scm-manager/ui-types";
-import { Notification } from "@scm-manager/ui-components";
 import FileTreeLeaf from "./FileTreeLeaf";
 import TruncatedNotification from "./TruncatedNotification";
-import {isRootPath} from "../utils/files";
+import { isRootPath } from "../utils/files";
+import { extensionPoints } from "@scm-manager/ui-extensions";
 
 type Props = {
   directory: File;
@@ -69,8 +69,8 @@ const FileTree: FC<Props> = ({ directory, baseUrl, revision, fetchNextPage, isFe
       revision,
       _links: {},
       _embedded: {
-        children: []
-      }
+        children: [],
+      },
     });
   }
 
@@ -78,30 +78,38 @@ const FileTree: FC<Props> = ({ directory, baseUrl, revision, fetchNextPage, isFe
 
   const baseUrlWithRevision = baseUrl + "/" + encodeURIComponent(revision);
 
+  const extProps: extensionPoints.ReposSourcesTreeWrapperProps = {
+    directory,
+    baseUrl,
+    revision,
+  };
+
   return (
     <div className="panel-block">
-      <table className="table table-hover table-sm is-fullwidth">
-        <thead>
-          <tr>
-            <FixedWidthTh />
-            <th>{t("sources.fileTree.name")}</th>
-            <th className="is-hidden-mobile">{t("sources.fileTree.length")}</th>
-            <th className="is-hidden-mobile">{t("sources.fileTree.commitDate")}</th>
-            <th className="is-hidden-touch">{t("sources.fileTree.description")}</th>
-            {binder.hasExtension("repos.sources.tree.row.right") && <th className="is-hidden-mobile" />}
-          </tr>
-        </thead>
-        <tbody>
-          {files.map((file: File) => (
-            <FileTreeLeaf key={file.name} file={file} baseUrl={baseUrlWithRevision} />
-          ))}
-        </tbody>
-      </table>
-      <TruncatedNotification
-        directory={directory}
-        fetchNextPage={fetchNextPage}
-        isFetchingNextPage={isFetchingNextPage}
-      />
+      <ExtensionPoint name="repos.source.tree.wrapper" props={extProps} renderAll={true} wrapper={true}>
+        <table className="table table-hover table-sm is-fullwidth">
+          <thead>
+            <tr>
+              <FixedWidthTh />
+              <th>{t("sources.fileTree.name")}</th>
+              <th className="is-hidden-mobile">{t("sources.fileTree.length")}</th>
+              <th className="is-hidden-mobile">{t("sources.fileTree.commitDate")}</th>
+              <th className="is-hidden-touch">{t("sources.fileTree.description")}</th>
+              {binder.hasExtension("repos.sources.tree.row.right") && <th className="is-hidden-mobile" />}
+            </tr>
+          </thead>
+          <tbody>
+            {files.map((file: File) => (
+              <FileTreeLeaf key={file.name} file={file} baseUrl={baseUrlWithRevision} />
+            ))}
+          </tbody>
+        </table>
+        <TruncatedNotification
+          directory={directory}
+          fetchNextPage={fetchNextPage}
+          isFetchingNextPage={isFetchingNextPage}
+        />
+      </ExtensionPoint>
     </div>
   );
 };
