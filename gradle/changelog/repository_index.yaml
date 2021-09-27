@@ -1,0 +1,2 @@
+- type: Fixed
+  description: Deletion of repositories from search index ([#1813](https://github.com/scm-manager/scm-manager/pull/1813))

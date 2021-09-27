@@ -43,7 +43,7 @@ import javax.inject.Singleton;
 public class RepositoryIndexer implements Indexer<Repository> {
 
   @VisibleForTesting
-  static final int VERSION = 3;
+  static final int VERSION = 4;
 
   private final SearchEngine searchEngine;
 
@@ -92,7 +92,7 @@ public class RepositoryIndexer implements Indexer<Repository> {
   public SerializableIndexTask<Repository> createDeleteTask(Repository repository) {
     return index -> {
       if (Repository.class.equals(index.getDetails().getType())) {
-        index.delete().byId(Id.of(Repository.class, repository.getId()));
+        index.delete().byId(id(repository));
       } else {
         index.delete().by(Repository.class, repository).execute();
       }
@@ -101,9 +101,14 @@ public class RepositoryIndexer implements Indexer<Repository> {
 
   private static void store(Index<Repository> index, Repository repository) {
     index.store(
-      Id.of(Repository.class, repository).and(repository),
+      id(repository),
       RepositoryPermissions.read(repository).asShiroString(),
-      repository);
+      repository
+    );
+  }
+
+  private static Id<Repository> id(Repository repository) {
+    return Id.of(Repository.class, repository).and(repository);
   }
 
   public static class ReIndexAll extends ReIndexAllTask<Repository> {
