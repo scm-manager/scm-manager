@@ -88,29 +88,38 @@ class FileTreeLeaf extends React.Component<Props> {
     const renderFileSize = (file: File) => <FileSize bytes={file?.length ? file.length : 0} />;
     const renderCommitDate = (file: File) => <DateFromNow date={file.commitDate} />;
 
-    const extProps: extensionPoints.ReposSourcesTreeRowRightProps = {
+    const extProps: extensionPoints.ReposSourcesTreeRowProps = {
       file,
     };
 
     return (
-      <tr>
-        <td>{this.createFileIcon(file)}</td>
-        <MinWidthTd className="is-word-break">{this.createFileName(file)}</MinWidthTd>
-        <NoWrapTd className="is-hidden-mobile">
-          {file.directory ? "" : this.contentIfPresent(file, "length", renderFileSize)}
-        </NoWrapTd>
-        <td className="is-hidden-mobile">{this.contentIfPresent(file, "commitDate", renderCommitDate)}</td>
-        <MinWidthTd className={classNames("is-word-break", "is-hidden-touch")}>
-          {this.contentIfPresent(file, "description", (file) => file.description)}
-        </MinWidthTd>
-        {binder.hasExtension("repos.sources.tree.row.right") && (
-          <td className="is-hidden-mobile">
-            {!file.directory && (
-              <ExtensionPoint name="repos.sources.tree.row.right" props={extProps} renderAll={true} />
-            )}
-          </td>
-        )}
-      </tr>
+      <>
+        <tr>
+          <td>{this.createFileIcon(file)}</td>
+          <MinWidthTd className="is-word-break">{this.createFileName(file)}</MinWidthTd>
+          <NoWrapTd className="is-hidden-mobile">
+            {file.directory ? "" : this.contentIfPresent(file, "length", renderFileSize)}
+          </NoWrapTd>
+          <td className="is-hidden-mobile">{this.contentIfPresent(file, "commitDate", renderCommitDate)}</td>
+          <MinWidthTd className={classNames("is-word-break", "is-hidden-touch")}>
+            {this.contentIfPresent(file, "description", (file) => file.description)}
+          </MinWidthTd>
+          {binder.hasExtension("repos.sources.tree.row.right") && (
+            <td className="is-hidden-mobile">
+              {!file.directory && (
+                <ExtensionPoint name="repos.sources.tree.row.right" props={extProps} renderAll={true} />
+              )}
+            </td>
+          )}
+        </tr>
+        {binder.hasExtension("repos.sources.tree.row.after") ? (
+          <tr>
+            <td colSpan={0}>
+              <ExtensionPoint name="repos.sources.tree.row.after" props={extProps} renderAll={true} />
+            </td>
+          </tr>
+        ) : null}
+      </>
     );
   }
 }

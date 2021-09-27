@@ -92,11 +92,12 @@ export type ReposSourcesTreeWrapperProps = {
 
 export type ReposSourcesTreeWrapperExtension = ExtensionPointDefinition<"repos.source.tree.wrapper", ReposSourcesTreeWrapperProps>;
 
-export type ReposSourcesTreeRowRightProps = {
+export type ReposSourcesTreeRowProps = {
   file: File;
 };
 
-export type ReposSourcesTreeRowRightExtension = ExtensionPointDefinition<"repos.sources.tree.row.right", ReposSourcesTreeWrapperProps>;
+export type ReposSourcesTreeRowRightExtension = ExtensionPointDefinition<"repos.sources.tree.row.right", ReposSourcesTreeRowProps>;
+export type ReposSourcesTreeRowAfterExtension = ExtensionPointDefinition<"repos.sources.tree.row.after", ReposSourcesTreeRowProps>;
 
 export type PrimaryNavigationLoginButtonProps = {
   links: Links;
