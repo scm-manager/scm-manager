@@ -97,7 +97,7 @@ class RepositoryIndexerTest {
     when(index.getDetails().getType()).then(ic -> Repository.class);
     indexer.createDeleteTask(heartOfGold).update(index);
 
-    verify(index.delete()).byId(Id.of(Repository.class, heartOfGold));
+    verify(index.delete()).byId(Id.of(Repository.class, heartOfGold).and(heartOfGold));
   }
 
   @Test
