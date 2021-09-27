@@ -25,7 +25,7 @@ import * as React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
-import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
+import { binder, ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import { File } from "@scm-manager/ui-types";
 import { DateFromNow, FileSize, Tooltip, Icon } from "@scm-manager/ui-components";
 import FileIcon from "./FileIcon";
@@ -88,6 +88,10 @@ class FileTreeLeaf extends React.Component<Props> {
     const renderFileSize = (file: File) => <FileSize bytes={file?.length ? file.length : 0} />;
     const renderCommitDate = (file: File) => <DateFromNow date={file.commitDate} />;
 
+    const extProps: extensionPoints.ReposSourcesTreeRowRightProps = {
+      file,
+    };
+
     return (
       <tr>
         <td>{this.createFileIcon(file)}</td>
@@ -97,18 +101,12 @@ class FileTreeLeaf extends React.Component<Props> {
         </NoWrapTd>
         <td className="is-hidden-mobile">{this.contentIfPresent(file, "commitDate", renderCommitDate)}</td>
         <MinWidthTd className={classNames("is-word-break", "is-hidden-touch")}>
-          {this.contentIfPresent(file, "description", file => file.description)}
+          {this.contentIfPresent(file, "description", (file) => file.description)}
         </MinWidthTd>
         {binder.hasExtension("repos.sources.tree.row.right") && (
           <td className="is-hidden-mobile">
             {!file.directory && (
-              <ExtensionPoint
-                name="repos.sources.tree.row.right"
-                props={{
-                  file
-                }}
-                renderAll={true}
-              />
+              <ExtensionPoint name="repos.sources.tree.row.right" props={extProps} renderAll={true} />
             )}
           </td>
         )}
