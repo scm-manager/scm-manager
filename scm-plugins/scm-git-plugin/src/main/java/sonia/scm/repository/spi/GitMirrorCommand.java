@@ -34,6 +34,7 @@ import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.RefDatabase;
 import org.eclipse.jgit.lib.RefUpdate;
+import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevObject;
 import org.eclipse.jgit.revwalk.RevTag;
@@ -48,6 +49,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.GitChangesetConverter;
 import sonia.scm.repository.GitChangesetConverterFactory;
+import sonia.scm.repository.GitHeadModifier;
 import sonia.scm.repository.GitWorkingCopyFactory;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Tag;
@@ -99,14 +101,16 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
   private final GitChangesetConverterFactory converterFactory;
   private final GitTagConverter gitTagConverter;
   private final GitWorkingCopyFactory workingCopyFactory;
+  private final GitHeadModifier gitHeadModifier;
 
   @Inject
-  GitMirrorCommand(GitContext context, MirrorHttpConnectionProvider mirrorHttpConnectionProvider, GitChangesetConverterFactory converterFactory, GitTagConverter gitTagConverter, GitWorkingCopyFactory workingCopyFactory) {
+  GitMirrorCommand(GitContext context, MirrorHttpConnectionProvider mirrorHttpConnectionProvider, GitChangesetConverterFactory converterFactory, GitTagConverter gitTagConverter, GitWorkingCopyFactory workingCopyFactory, GitHeadModifier gitHeadModifier) {
     super(context);
     this.mirrorHttpConnectionProvider = mirrorHttpConnectionProvider;
     this.converterFactory = converterFactory;
     this.gitTagConverter = gitTagConverter;
     this.workingCopyFactory = workingCopyFactory;
+    this.gitHeadModifier = gitHeadModifier;
   }
 
   @Override
@@ -116,7 +120,23 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
 
   @Override
   public MirrorCommandResult update(MirrorCommandRequest mirrorCommandRequest) {
-    return inClone(git -> new Worker(context, mirrorCommandRequest, repository, git), workingCopyFactory, null);
+    // we have to select an existing branch here (and we cannot depend on a correct "default branch" in the
+    // configuration), because otherwise the clone will fail with an unresolvable branch.
+    String headBranch = resolveHeadBranch();
+    return inClone(git -> new Worker(context, mirrorCommandRequest, this.repository, git), workingCopyFactory, headBranch);
+  }
+
+  private String resolveHeadBranch() {
+    try {
+      Repository repository = context.open();
+      Ref headRef = repository.findRef(Constants.HEAD);
+      if (headRef == null) {
+        throw new InternalRepositoryException(context.getRepository(), "Cannot handle missing HEAD in repository");
+      }
+      return headRef.getTarget().getName().substring("refs/heads/".length());
+    } catch (IOException e) {
+      throw new InternalRepositoryException(context.getRepository(), "could not resolve HEAD", e);
+    }
   }
 
   private class Worker extends GitCloneWorker<MirrorCommandResult> {
@@ -146,6 +166,11 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
      * pushing an empty ref to the central repository.
      */
     private boolean deleteMasterAfterInitialSync = false;
+    /**
+     * We store a branch that has not been rejected here, so we can easily correct the HEAD reference
+     * afterwards (see #setHeadIfMirroredBranchExists)
+     */
+    private String acceptedBranch;
 
     private Worker(GitContext context, MirrorCommandRequest mirrorCommandRequest, sonia.scm.repository.Repository repository, Git git) {
       super(git, context, repository);
@@ -179,12 +204,37 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       }
 
       push(generatePushRefSpecs().toArray(new String[0]));
+      setHeadIfMirroredBranchExists();
       cleanUpMasterIfNecessary();
       return new MirrorCommandResult(result, mirrorLog, stopwatch.stop().elapsed());
     }
 
+    private void setHeadIfMirroredBranchExists() {
+      if (acceptedBranch != null) {
+        // Ensures that HEAD is set to an existing mirrored branch in the working copy (if this is set to a branch that
+        // should not have been mirrored, this branch cannot be deleted otherwise; see #cleanupMasterIfNecessary) and
+        // in the "real" mirror repository (here a HEAD with a not existing branch will lead to errors in the next clone
+        // call).
+        try {
+          RefUpdate refUpdate = git.getRepository().getRefDatabase().newUpdate(Constants.HEAD, true);
+          refUpdate.setForceUpdate(true);
+          refUpdate.link(acceptedBranch);
+        } catch (IOException e) {
+          throw new InternalRepositoryException(getRepository(), "Error while setting HEAD", e);
+        }
+        gitHeadModifier.ensure(repository, acceptedBranch.substring("refs/heads/".length()));
+      }
+    }
+
     private void cleanUpMasterIfNecessary() {
       if (deleteMasterAfterInitialSync) {
+        try {
+          // we have to delete the master branch in the working copy, because otherwise it may be pushed
+          // to the mirror in the next synchronization call, when the working directory is cached.
+          git.branchDelete().setBranchNames("master").setForce(true).call();
+        } catch (GitAPIException e) {
+          LOG.error("Could not delete master branch in mirror repository {}", getRepository().getNamespaceAndName(), e);
+        }
         push(":refs/heads/master");
       }
     }
@@ -269,7 +319,11 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
 
       private Result testFilterForBranch() {
         try {
-          return filter.acceptBranch(filterContext.getBranchUpdate(ref.getLocalName()));
+          Result filterResult = filter.acceptBranch(filterContext.getBranchUpdate(ref.getLocalName()));
+          if (filterResult.isAccepted()) {
+            acceptedBranch = ref.getLocalName();
+          }
+          return filterResult;
         } catch (Exception e) {
           return handleExceptionFromFilter(e);
         }

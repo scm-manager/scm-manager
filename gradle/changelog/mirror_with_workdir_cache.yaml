@@ -1,0 +1,2 @@
+- type: Fixed
+  description: Edge cases in mirror command with cached workdirs ([#1812](https://github.com/scm-manager/scm-manager/pull/1812))

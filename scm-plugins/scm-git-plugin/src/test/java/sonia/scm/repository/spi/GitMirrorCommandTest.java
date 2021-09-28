@@ -30,10 +30,13 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.junit.http.AppServer;
 import org.eclipse.jgit.junit.http.SimpleHttpServer;
+import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevObject;
 import org.eclipse.jgit.revwalk.RevWalk;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -43,13 +46,17 @@ import sonia.scm.net.GlobalProxyConfiguration;
 import sonia.scm.net.HttpURLConnectionFactory;
 import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.GitConfig;
+import sonia.scm.repository.GitHeadModifier;
+import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.api.MirrorCommandResult;
 import sonia.scm.repository.api.MirrorFilter;
 import sonia.scm.repository.api.SimpleUsernamePasswordCredential;
 import sonia.scm.repository.work.NoneCachingWorkingCopyPool;
+import sonia.scm.repository.work.SimpleWorkingCopyFactory;
 import sonia.scm.repository.work.WorkdirProvider;
 import sonia.scm.security.GPG;
 import sonia.scm.store.InMemoryConfigurationStoreFactory;
+import sonia.scm.util.IOUtil;
 
 import javax.net.ssl.TrustManager;
 import java.io.File;
@@ -80,9 +87,10 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
   private final GitTagConverter gitTagConverter = new GitTagConverter(gpg);
 
   private File clone;
+  private File workdirAfterClose;
   private GitMirrorCommand command;
 
-
+  private final GitHeadModifier gitHeadModifier = mock(GitHeadModifier.class);
 
   @Before
   public void bendContextToNewRepository() throws IOException, GitAPIException {
@@ -92,7 +100,9 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     GitContext emptyContext = createMirrorContext(clone);
     SimpleGitWorkingCopyFactory workingCopyFactory =
       new SimpleGitWorkingCopyFactory(
-        new NoneCachingWorkingCopyPool(new WorkdirProvider(repositoryLocationResolver)), new SimpleMeterRegistry());
+        new KeepingWorkingCopyPool(new WorkdirProvider(repositoryLocationResolver)),
+        new SimpleMeterRegistry()
+      );
 
     MirrorHttpConnectionProvider mirrorHttpConnectionProvider = new MirrorHttpConnectionProvider(
       new HttpURLConnectionFactory(
@@ -106,7 +116,15 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
       mirrorHttpConnectionProvider,
       gitChangesetConverterFactory,
       gitTagConverter,
-      workingCopyFactory);
+      workingCopyFactory,
+      gitHeadModifier);
+  }
+
+  @After
+  public void cleanupWorkdir() {
+    if (workdirAfterClose != null) {
+      IOUtil.deleteSilently(workdirAfterClose);
+    }
   }
 
   @Test
@@ -154,6 +172,10 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
       assertThat(createdMirror.branchList().call().stream().filter(r -> r.getName().contains("master")).findAny())
         .isEmpty();
     }
+    try (Repository workdirRepository = GitUtil.open(workdirAfterClose)) {
+      assertThat(workdirRepository.findRef(Constants.HEAD).getTarget().getName()).isEqualTo("refs/heads/test-branch");
+    }
+    verify(gitHeadModifier).ensure(repository, "test-branch");
   }
 
   @Test
@@ -839,5 +861,17 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
 
   private interface InvocationCheck {
     void invoked();
+  }
+
+  private class KeepingWorkingCopyPool extends NoneCachingWorkingCopyPool {
+
+    public KeepingWorkingCopyPool(WorkdirProvider workdirProvider) {
+      super(workdirProvider);
+    }
+
+    @Override
+    public void contextClosed(SimpleWorkingCopyFactory<?, ?, ?>.WorkingCopyContext workingCopyContext, File workdir) {
+      workdirAfterClose = workdir;
+    }
   }
 }
