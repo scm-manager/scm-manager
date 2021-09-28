@@ -26,13 +26,14 @@ import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
-import { File } from "@scm-manager/ui-types";
+import { File, Repository } from "@scm-manager/ui-types";
 import FileTreeLeaf from "./FileTreeLeaf";
 import TruncatedNotification from "./TruncatedNotification";
 import { isRootPath } from "../utils/files";
 import { extensionPoints } from "@scm-manager/ui-extensions";
 
 type Props = {
+  repository: Repository;
   directory: File;
   baseUrl: string;
   revision: string;
@@ -56,7 +57,7 @@ export function findParent(path: string) {
   return "";
 }
 
-const FileTree: FC<Props> = ({ directory, baseUrl, revision, fetchNextPage, isFetchingNextPage }) => {
+const FileTree: FC<Props> = ({ repository, directory, baseUrl, revision, fetchNextPage, isFetchingNextPage }) => {
   const [t] = useTranslation("repos");
   const { path } = directory;
   const files: File[] = [];
@@ -79,6 +80,7 @@ const FileTree: FC<Props> = ({ directory, baseUrl, revision, fetchNextPage, isFe
   const baseUrlWithRevision = baseUrl + "/" + encodeURIComponent(revision);
 
   const extProps: extensionPoints.ReposSourcesTreeWrapperProps = {
+    repository,
     directory,
     baseUrl,
     revision,

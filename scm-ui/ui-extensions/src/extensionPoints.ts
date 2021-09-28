@@ -85,6 +85,7 @@ export type ReposSourcesEmptyActionbar = ExtensionPointDefinition<
 >;
 
 export type ReposSourcesTreeWrapperProps = {
+  repository: Repository;
   directory: File;
   baseUrl: string;
   revision: string;
