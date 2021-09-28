@@ -44,6 +44,14 @@ const NoWrapTd = styled.td`
   white-space: nowrap;
 `;
 
+const ExtensionTd = styled.td`
+  white-space: nowrap;
+
+  > *:not(:last-child) {
+    margin-right: 0.5rem;
+  }
+`;
+
 class FileTreeLeaf extends React.Component<Props> {
   createFileIcon = (file: File) => {
     return (
@@ -105,11 +113,11 @@ class FileTreeLeaf extends React.Component<Props> {
             {this.contentIfPresent(file, "description", (file) => file.description)}
           </MinWidthTd>
           {binder.hasExtension("repos.sources.tree.row.right") && (
-            <td className="is-hidden-mobile">
+            <ExtensionTd className="is-hidden-mobile">
               {!file.directory && (
                 <ExtensionPoint name="repos.sources.tree.row.right" props={extProps} renderAll={true} />
               )}
-            </td>
+            </ExtensionTd>
           )}
         </tr>
         <ExtensionPoint name="repos.sources.tree.row.after" props={extProps} renderAll={true} />
