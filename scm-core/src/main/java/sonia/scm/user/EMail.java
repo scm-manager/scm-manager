@@ -50,6 +50,15 @@ public class EMail {
    * @return email address or fallback
    */
   public String getMailOrFallback(User user) {
+    return getMailOrFallback(DisplayUser.from(user));
+  }
+
+  /**
+   * Returns the email address of the given user or a generated fallback address.
+   * @param user user to resolve address from
+   * @return email address or fallback
+   */
+  public String getMailOrFallback(DisplayUser user) {
     if (Strings.isNullOrEmpty(user.getMail())) {
       if (isMailUsedAsId(user)) {
         return user.getId();
@@ -61,11 +70,11 @@ public class EMail {
     }
   }
 
-  private boolean isMailUsedAsId(User user) {
+  private boolean isMailUsedAsId(DisplayUser user) {
     return ValidationUtil.isMailAddressValid(user.getId());
   }
 
-  private String createFallbackMail(User user) {
+  private String createFallbackMail(DisplayUser user) {
     return user.getId() + "@" + scmConfiguration.getMailDomainName();
   }
 }
