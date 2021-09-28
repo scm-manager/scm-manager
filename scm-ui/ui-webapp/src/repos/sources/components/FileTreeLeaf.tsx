@@ -112,13 +112,7 @@ class FileTreeLeaf extends React.Component<Props> {
             </td>
           )}
         </tr>
-        {binder.hasExtension("repos.sources.tree.row.after") ? (
-          <tr>
-            <td colSpan={0}>
-              <ExtensionPoint name="repos.sources.tree.row.after" props={extProps} renderAll={true} />
-            </td>
-          </tr>
-        ) : null}
+        <ExtensionPoint name="repos.sources.tree.row.after" props={extProps} renderAll={true} />
       </>
     );
   }

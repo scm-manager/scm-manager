@@ -90,14 +90,23 @@ export type ReposSourcesTreeWrapperProps = {
   revision: string;
 };
 
-export type ReposSourcesTreeWrapperExtension = ExtensionPointDefinition<"repos.source.tree.wrapper", ReposSourcesTreeWrapperProps>;
+export type ReposSourcesTreeWrapperExtension = ExtensionPointDefinition<
+  "repos.source.tree.wrapper",
+  React.ComponentType<ReposSourcesTreeWrapperProps>
+>;
 
 export type ReposSourcesTreeRowProps = {
   file: File;
 };
 
-export type ReposSourcesTreeRowRightExtension = ExtensionPointDefinition<"repos.sources.tree.row.right", ReposSourcesTreeRowProps>;
-export type ReposSourcesTreeRowAfterExtension = ExtensionPointDefinition<"repos.sources.tree.row.after", ReposSourcesTreeRowProps>;
+export type ReposSourcesTreeRowRightExtension = ExtensionPointDefinition<
+  "repos.sources.tree.row.right",
+  React.ComponentType<ReposSourcesTreeRowProps>
+>;
+export type ReposSourcesTreeRowAfterExtension = ExtensionPointDefinition<
+  "repos.sources.tree.row.after",
+  React.ComponentType<ReposSourcesTreeRowProps>
+>;
 
 export type PrimaryNavigationLoginButtonProps = {
   links: Links;
