@@ -45,7 +45,7 @@ public class JAXBConfigurationStoreTest extends StoreTestBase {
   private final RepositoryReadOnlyChecker readOnlyChecker = mock(RepositoryReadOnlyChecker.class);
 
   @Override
-  protected ConfigurationStoreFactory createStoreFactory() {
+  protected JAXBConfigurationStoreFactory createStoreFactory() {
     return new JAXBConfigurationStoreFactory(contextProvider, repositoryLocationResolver, readOnlyChecker);
   }
 
@@ -91,13 +91,9 @@ public class JAXBConfigurationStoreTest extends StoreTestBase {
       .build();
 
     store.set(new StoreObject("value"));
-    StoreObject storeObject = store.get();
-
-    assertThat(storeObject).isNotNull();
-    assertThat(storeObject.getValue()).isEqualTo("value");
 
     store.delete();
-    storeObject = store.get();
+    StoreObject storeObject = store.get();
 
     assertThat(storeObject).isNull();
   }
@@ -105,13 +101,17 @@ public class JAXBConfigurationStoreTest extends StoreTestBase {
   @Test
   public void shouldNotDeleteStoreForArchivedRepository() {
     Repository repository = new Repository("id", "git", "ns", "n");
-    when(readOnlyChecker.isReadOnly("id")).thenReturn(true);
+    when(readOnlyChecker.isReadOnly("id")).thenReturn(false);
     ConfigurationStore<StoreObject> store = createStoreFactory()
       .withType(StoreObject.class)
       .withName("test")
       .forRepository(repository)
       .build();
 
-    assertThrows(RuntimeException.class, store::delete);
+    store.set(new StoreObject());
+    when(readOnlyChecker.isReadOnly("id")).thenReturn(true);
+
+    assertThrows(StoreReadOnlyException.class, store::delete);
+    assertThat(store.getOptional()).isPresent();
   }
 }

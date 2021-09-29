@@ -46,6 +46,11 @@ public class StoreReadOnlyException extends ExceptionWithContext {
     LOG.error(getMessage());
   }
 
+  public StoreReadOnlyException() {
+    super(noContext(), "Store is read only, could not delete store");
+    LOG.error(getMessage());
+  }
+
     @Override
     public String getCode () {
       return CODE;

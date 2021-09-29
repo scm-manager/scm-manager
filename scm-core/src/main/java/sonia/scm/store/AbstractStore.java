@@ -67,7 +67,7 @@ public abstract class AbstractStore<T> implements ConfigurationStore<T> {
   @Override
   public void delete() {
     if (readOnly.getAsBoolean()) {
-      throw new StoreReadOnlyException(storeObject);
+      throw new StoreReadOnlyException();
     }
     deleteObject();
     this.storeObject = null;

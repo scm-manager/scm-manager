@@ -26,10 +26,10 @@ package sonia.scm.store;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.util.IOUtil;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.function.BooleanSupplier;
 
 /**
@@ -88,7 +88,7 @@ public class JAXBConfigurationStore<T> extends AbstractStore<T> {
   protected void deleteObject() {
     LOG.debug("deletes {}", configFile.getPath());
     try {
-      Files.deleteIfExists(configFile.toPath());
+      IOUtil.delete(configFile);
     } catch (IOException e) {
       throw new StoreException("Failed to delete store object " + configFile.getPath(), e);
     }
