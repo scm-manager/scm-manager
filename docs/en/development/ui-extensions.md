@@ -105,7 +105,7 @@ binder.bind("repo.avatar", GitAvatar, (props) => props.type === "git");
 ```
 
 ```javascript
-<ExtensionPoint name="repo.avatar" props={type: "git"} />
+<ExtensionPoint name="repo.avatar" props={{type: "git"}} />
 ```
 
 ### Typings
@@ -141,3 +141,75 @@ Negative Example:
 
 This code for example, would lead to a compile time type error because we made a typo in the `name` of the extension when binding it.
 If we had used the `bind` method without the type parameter, we would not have gotten an error but run into problems at runtime.
+
+### Children
+
+If an extension point defines children those children are propagated to the extensions as children prop e.g:
+
+```tsx
+const MyExtension:FC = ({children}) => (
+  <div className="fancy-box">{children}</div>
+)
+const App = () => {
+  binder.bind("box", MyExtension);
+  return (
+    <ExtensionPoint name="box">
+      <p>Box Content</p>
+    </ExtensionPoint>
+  );
+}
+```
+
+The example above renders the following html code:
+
+```html
+<div class="fancy-box">
+  <p>Box Content</p>
+</div>
+```
+
+An exception is when the extension already has a children property, this could be the case if jsx is directly bind.
+This exception applies not only to the children property it applies to every property.
+The example below renders `Ahoi`, because the property of the jsx overwrites the one from the extension point.  
+
+```tsx
+type Props = {
+  greeting: string;
+}
+
+const GreetingExtension:FC<Props> = ({greeting}) => (
+  <>{greeting}</>
+);
+
+const App = () => {
+  binder.bind("greet", <GreetingExtension greeting="Ahoi" />);
+  return <ExtensionPoint name="greet" props={{greeting: "Moin"}} />;
+};
+```
+
+### Wrapper
+
+Sometimes it can be useful to allow plugin developers to wrap an existing component.
+The `wrapper` property is exactly for this case, it allows to wrap an existing component with multiple extensions e.g.:
+
+```tsx
+const Outer: FC = ({ children }) => (
+  <>Outer -> {children}</>
+);
+
+const Inner: FC = ({ children }) => (
+  <>Outer -> {children}</>
+);
+
+const App = () => {
+  binder.bind("wrapped", Outer);
+  binder.bind("wrapped", Inner);
+  return (
+    <ExtensionPoint name="wrapped" renderAll={true} wrapper={true}>
+      Children
+    </ExtensionPoint>
+  );
+}
+```
+
+The example above renders `Outer -> Inner -> Children`, because each extension is passed as children to the parent extension.

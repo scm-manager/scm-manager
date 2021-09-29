@@ -188,7 +188,7 @@ describe("ExtensionPoint test", () => {
     };
 
     mockedBinder.hasExtension.mockReturnValue(true);
-    mockedBinder.getExtension.mockReturnValue(<Label name="One" />);
+    mockedBinder.getExtension.mockReturnValue(Label);
 
     const rendered = mount(<ExtensionPoint name="something.special" props={{ name: "Two" }} />);
     expect(rendered.text()).toBe("Extension Two");
@@ -258,6 +258,25 @@ describe("ExtensionPoint test", () => {
       </ExtensionPoint>
     );
     const text = rendered.text();
-    expect(text).toEqual("Outer -> Inner -> Children");;
+    expect(text).toEqual("Outer -> Inner -> Children");
+  });
+
+  it("should render children of non fc", () => {
+    const nonfc = (
+      <div>
+        <label>Non fc with children</label>
+      </div>
+    );
+
+    mockedBinder.hasExtension.mockReturnValue(true);
+    mockedBinder.getExtension.mockReturnValue(nonfc);
+
+    const rendered = mount(
+      <ExtensionPoint name="something.special">
+        <p>Children</p>
+      </ExtensionPoint>
+    );
+    const text = rendered.text();
+    expect(text).toEqual("Non fc with children");
   });
 });

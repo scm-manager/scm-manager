@@ -38,6 +38,7 @@ type Props = {
 const createInstance = (Component: any, props: object, key?: number) => {
   const instanceProps = {
     ...props,
+    ...(Component.props || {}),
     key,
   };
   if (React.isValidElement(Component)) {
