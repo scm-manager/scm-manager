@@ -22,37 +22,28 @@
  * SOFTWARE.
  */
 
-import React, { FC } from "react";
-import { Repository, Tag } from "@scm-manager/ui-types";
-import { DangerZone, Subtitle } from "@scm-manager/ui-components";
-import { useTranslation } from "react-i18next";
-import DeleteTag from "./DeleteTag";
+import styled from "styled-components";
 
-type Props = {
-  repository: Repository;
-  tag: Tag;
-};
+export const DangerZone = styled.div`
+  border: 1px solid #ff6a88;
+  border-radius: 5px;
 
-const TagDangerZone: FC<Props> = ({ repository, tag }) => {
-  const [t] = useTranslation("repos");
+  > .level {
+    flex-flow: wrap;
 
-  const dangerZone = [];
+    .level-left {
+      max-width: 100%;
+    }
 
-  if (tag?._links?.delete) {
-    dangerZone.push(<DeleteTag repository={repository} tag={tag} key={dangerZone.length} />);
+    .level-right {
+      margin-top: 0.75rem;
+    }
   }
 
-  if (dangerZone.length === 0) {
-    return null;
+  > *:not(:last-child) {
+    padding-bottom: 1.5rem;
+    border-bottom: solid 2px whitesmoke;
   }
+`;
 
-  return (
-    <>
-      <hr />
-      <Subtitle subtitle={t("tag.dangerZone")} />
-      <DangerZone className="px-4 py-5">{dangerZone}</DangerZone>
-    </>
-  );
-};
-
-export default TagDangerZone;
+export default DangerZone;

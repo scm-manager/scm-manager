@@ -57,6 +57,7 @@ export { default as Paginator } from "./Paginator";
 export { default as LinkPaginator } from "./LinkPaginator";
 export { default as StatePaginator } from "./StatePaginator";
 
+export { default as DangerZone } from "./DangerZone";
 export { default as FileSize } from "./FileSize";
 export { default as ProtectedRoute } from "./ProtectedRoute";
 export { default as Help } from "./Help";
