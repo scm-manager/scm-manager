@@ -1,0 +1,2 @@
+- type: Added
+  description: Extension points for source tree ([#1816](https://github.com/scm-manager/scm-manager/pull/1816))

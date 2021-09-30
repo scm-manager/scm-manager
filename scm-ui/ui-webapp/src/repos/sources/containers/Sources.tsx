@@ -149,6 +149,7 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
       } else {
         body = (
           <FileTree
+            repository={repository}
             directory={file}
             revision={revision || file.revision}
             baseUrl={baseUrl + "/sources"}

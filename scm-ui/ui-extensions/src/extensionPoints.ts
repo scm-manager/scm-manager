@@ -24,6 +24,7 @@
 
 import React from "react";
 import {
+  File,
   Branch,
   IndexResources,
   Links,
@@ -81,6 +82,31 @@ export type ReposSourcesEmptyActionbarExtension = ReposSourcesActionbarExtension
 export type ReposSourcesEmptyActionbar = ExtensionPointDefinition<
   "repos.sources.empty.actionbar",
   ReposSourcesEmptyActionbarExtension
+>;
+
+export type ReposSourcesTreeWrapperProps = {
+  repository: Repository;
+  directory: File;
+  baseUrl: string;
+  revision: string;
+};
+
+export type ReposSourcesTreeWrapperExtension = ExtensionPointDefinition<
+  "repos.source.tree.wrapper",
+  React.ComponentType<ReposSourcesTreeWrapperProps>
+>;
+
+export type ReposSourcesTreeRowProps = {
+  file: File;
+};
+
+export type ReposSourcesTreeRowRightExtension = ExtensionPointDefinition<
+  "repos.sources.tree.row.right",
+  React.ComponentType<ReposSourcesTreeRowProps>
+>;
+export type ReposSourcesTreeRowAfterExtension = ExtensionPointDefinition<
+  "repos.sources.tree.row.after",
+  React.ComponentType<ReposSourcesTreeRowProps>
 >;
 
 export type PrimaryNavigationLoginButtonProps = {
