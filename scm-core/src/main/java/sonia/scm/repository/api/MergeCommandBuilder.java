@@ -30,6 +30,7 @@ import sonia.scm.repository.spi.MergeCommand;
 import sonia.scm.repository.spi.MergeCommandRequest;
 import sonia.scm.repository.spi.MergeConflictResult;
 import sonia.scm.repository.util.AuthorUtil;
+import sonia.scm.user.DisplayUser;
 import sonia.scm.user.EMail;
 
 import javax.annotation.Nullable;
@@ -131,15 +132,33 @@ public class MergeCommandBuilder {
   }
 
   /**
-   * Use this to set the author of the merge commit manually. If this is omitted, the currently logged in user will be
+   * Use this to set the author of the merge commit manually. If this is omitted, the currently logged-in user will be
    * used instead.
    *
    * This is optional and for {@link #executeMerge()} only.
    *
    * @return This builder instance.
+   * @deprecated Use {@link #setAuthor(DisplayUser)} instead to enable fallback email computation.
    */
+  @Deprecated
   public MergeCommandBuilder setAuthor(Person author) {
     request.setAuthor(author);
+    return this;
+  }
+
+  /**
+   * Use this to set the author of the merge commit manually. If this is omitted, the currently logged-in user will be
+   * used instead. If the given user object does not have an email address, we will use {@link EMail} to compute a
+   * fallback address.
+   *
+   * This is optional and for {@link #executeMerge()} only.
+   *
+   * @return This builder instance.
+   */
+  public MergeCommandBuilder setAuthor(DisplayUser author) {
+    String mailAddress = eMail == null ? author.getMail() : eMail.getMailOrFallback(author);
+    Person person = new Person(author.getDisplayName(), mailAddress);
+    request.setAuthor(person);
     return this;
   }
 
