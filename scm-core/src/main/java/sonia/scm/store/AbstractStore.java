@@ -29,10 +29,9 @@ import java.util.function.BooleanSupplier;
 /**
  * Base class for {@link ConfigurationStore}.
  *
+ * @param <T> type of store objects
  * @author Sebastian Sdorra
  * @since 1.16
- *
- * @param <T> type of store objects
  */
 public abstract class AbstractStore<T> implements ConfigurationStore<T> {
 
@@ -64,9 +63,18 @@ public abstract class AbstractStore<T> implements ConfigurationStore<T> {
     this.storeObject = object;
   }
 
+
+  @Override
+  public void delete() {
+    if (readOnly.getAsBoolean()) {
+      throw new StoreReadOnlyException();
+    }
+    deleteObject();
+    this.storeObject = null;
+  }
+
   /**
    * Read the stored object.
-   *
    *
    * @return stored object
    */
@@ -75,8 +83,14 @@ public abstract class AbstractStore<T> implements ConfigurationStore<T> {
   /**
    * Write object to the store.
    *
-   *
    * @param object object to write
    */
   protected abstract void writeObject(T object);
+
+  /**
+   * Deletes store object.
+   *
+   * @since 2.24.0
+   */
+  protected abstract void deleteObject();
 }

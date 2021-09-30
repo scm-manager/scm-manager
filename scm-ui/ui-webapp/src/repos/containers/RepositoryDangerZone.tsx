@@ -23,9 +23,8 @@
  */
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
-import styled from "styled-components";
 import { Repository } from "@scm-manager/ui-types";
-import { Subtitle } from "@scm-manager/ui-components";
+import { DangerZone, Subtitle } from "@scm-manager/ui-components";
 import RenameRepository from "./RenameRepository";
 import DeleteRepo from "./DeleteRepo";
 import ArchiveRepo from "./ArchiveRepo";
@@ -34,28 +33,6 @@ import UnarchiveRepo from "./UnarchiveRepo";
 type Props = {
   repository: Repository;
 };
-
-export const DangerZoneContainer = styled.div`
-  border: 1px solid #ff6a88;
-  border-radius: 5px;
-
-  > .level {
-    flex-flow: wrap;
-
-    .level-left {
-      max-width: 100%;
-    }
-
-    .level-right {
-      margin-top: 0.75rem;
-    }
-  }
-
-  > *:not(:last-child) {
-    padding-bottom: 1.5rem;
-    border-bottom: solid 2px whitesmoke;
-  }
-`;
 
 const RepositoryDangerZone: FC<Props> = ({ repository }) => {
   const [t] = useTranslation("repos");
@@ -81,7 +58,7 @@ const RepositoryDangerZone: FC<Props> = ({ repository }) => {
     <>
       <hr />
       <Subtitle subtitle={t("repositoryForm.dangerZone")} />
-      <DangerZoneContainer className="px-4 py-5">{dangerZone}</DangerZoneContainer>
+      <DangerZone className="px-4 py-5">{dangerZone}</DangerZone>
     </>
   );
 };

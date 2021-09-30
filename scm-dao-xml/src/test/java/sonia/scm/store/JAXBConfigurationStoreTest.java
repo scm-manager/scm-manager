@@ -28,6 +28,7 @@ import org.junit.Test;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryReadOnlyChecker;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThrows;
@@ -44,15 +45,13 @@ public class JAXBConfigurationStoreTest extends StoreTestBase {
   private final RepositoryReadOnlyChecker readOnlyChecker = mock(RepositoryReadOnlyChecker.class);
 
   @Override
-  protected ConfigurationStoreFactory createStoreFactory()
-  {
+  protected JAXBConfigurationStoreFactory createStoreFactory() {
     return new JAXBConfigurationStoreFactory(contextProvider, repositoryLocationResolver, readOnlyChecker);
   }
 
 
   @Test
-  public void shouldStoreAndLoadInRepository()
-  {
+  public void shouldStoreAndLoadInRepository() {
     Repository repository = new Repository("id", "git", "ns", "n");
     ConfigurationStore<StoreObject> store = createStoreFactory()
       .withType(StoreObject.class)
@@ -69,8 +68,7 @@ public class JAXBConfigurationStoreTest extends StoreTestBase {
 
 
   @Test
-  public void shouldNotWriteArchivedRepository()
-  {
+  public void shouldNotWriteArchivedRepository() {
     Repository repository = new Repository("id", "git", "ns", "n");
     when(readOnlyChecker.isReadOnly("id")).thenReturn(true);
     ConfigurationStore<StoreObject> store = createStoreFactory()
@@ -81,5 +79,39 @@ public class JAXBConfigurationStoreTest extends StoreTestBase {
 
     StoreObject storeObject = new StoreObject("value");
     assertThrows(RuntimeException.class, () -> store.set(storeObject));
+  }
+
+  @Test
+  public void shouldDeleteConfigStore() {
+    Repository repository = new Repository("id", "git", "ns", "n");
+    ConfigurationStore<StoreObject> store = createStoreFactory()
+      .withType(StoreObject.class)
+      .withName("test")
+      .forRepository(repository)
+      .build();
+
+    store.set(new StoreObject("value"));
+
+    store.delete();
+    StoreObject storeObject = store.get();
+
+    assertThat(storeObject).isNull();
+  }
+
+  @Test
+  public void shouldNotDeleteStoreForArchivedRepository() {
+    Repository repository = new Repository("id", "git", "ns", "n");
+    when(readOnlyChecker.isReadOnly("id")).thenReturn(false);
+    ConfigurationStore<StoreObject> store = createStoreFactory()
+      .withType(StoreObject.class)
+      .withName("test")
+      .forRepository(repository)
+      .build();
+
+    store.set(new StoreObject());
+    when(readOnlyChecker.isReadOnly("id")).thenReturn(true);
+
+    assertThrows(StoreReadOnlyException.class, store::delete);
+    assertThat(store.getOptional()).isPresent();
   }
 }

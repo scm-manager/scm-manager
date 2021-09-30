@@ -24,9 +24,8 @@
 
 import React, { FC } from "react";
 import { Branch, Repository } from "@scm-manager/ui-types";
-import { Subtitle } from "@scm-manager/ui-components";
+import { DangerZone, Subtitle } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
-import { DangerZoneContainer } from "../../containers/RepositoryDangerZone";
 import DeleteBranch from "./DeleteBranch";
 
 type Props = {
@@ -51,7 +50,7 @@ const BranchDangerZone: FC<Props> = ({ repository, branch }) => {
     <>
       <hr />
       <Subtitle subtitle={t("branch.dangerZone")} />
-      <DangerZoneContainer className="px-4 py-5">{dangerZone}</DangerZoneContainer>
+      <DangerZone className="px-4 py-5">{dangerZone}</DangerZone>
     </>
   );
 };

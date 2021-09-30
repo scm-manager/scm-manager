@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.store;
 
 import java.util.Optional;
@@ -32,16 +32,13 @@ import static java.util.Optional.ofNullable;
  * ConfigurationStore for configuration objects. <strong>Note:</strong> the default
  * implementation use JAXB to marshall the configuration objects.
  *
- * @author Sebastian Sdorra
- *
  * @param <T> type of the configuration objects
+ * @author Sebastian Sdorra
  */
-public interface ConfigurationStore<T>
-{
+public interface ConfigurationStore<T> {
 
   /**
    * Returns the configuration object from store.
-   *
    *
    * @return configuration object from store
    */
@@ -50,20 +47,24 @@ public interface ConfigurationStore<T>
   /**
    * Returns the configuration object from store.
    *
-   *
    * @return configuration object from store
    */
   default Optional<T> getOptional() {
     return ofNullable(get());
   }
 
-  //~--- set methods ----------------------------------------------------------
-
   /**
    * Stores the given configuration object to the store.
-   *
    *
    * @param object configuration object to store
    */
   void set(T object);
+
+  /**
+   * Deletes the configuration.
+   * @since 2.24.0
+   */
+  default void delete() {
+    throw new StoreException("Delete operation is not implemented by the store");
+  }
 }
