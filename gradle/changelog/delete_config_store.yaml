@@ -1,4 +1,4 @@
 - type: Added
   description: Add method to delete whole configuration store ([#1814](https://github.com/scm-manager/scm-manager/pull/1814))
-- type: Changed
+- type: Added
   description: Move DangerZone styling to ui-components (([#1814](https://github.com/scm-manager/scm-manager/pull/1814)))
