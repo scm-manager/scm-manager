@@ -25,6 +25,7 @@
 package sonia.scm.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.jboss.resteasy.mock.MockDispatcherFactory;
@@ -95,6 +96,7 @@ public class RestDispatcher {
       registerException(ConcurrentModificationException.class, Status.CONFLICT);
       registerException(UnauthorizedException.class, Status.FORBIDDEN);
       registerException(AuthorizationException.class, Status.FORBIDDEN);
+      registerException(AuthenticationException.class, Status.UNAUTHORIZED);
       registerException(BadRequestException.class, Status.BAD_REQUEST);
       registerException(ScmConstraintViolationException.class, Status.BAD_REQUEST);
     }
