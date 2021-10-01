@@ -63,8 +63,8 @@ describe("create folder link tests", () => {
     expect(createFolderLink("src", dir(""))).toBe("src/");
   });
 
-  it("should encode folder names with percent", () => {
-    expect(createFolderLink("src", dir("a%20b"))).toBe("src/a%2520b");
+  it("should double encode folder names with percent", () => {
+    expect(createFolderLink("src", dir("a%20b"))).toBe("src/a%252520b/");
   });
 });
 
