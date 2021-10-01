@@ -128,7 +128,7 @@ const Breadcrumb: FC<Props> = ({
     if (path) {
       const paths = path.split("/");
       return paths.map((pathFragment, index) => {
-        let currPath = paths.slice(0, index + 1).join("/");
+        let currPath = paths.slice(0, index + 1).map(encodeURIComponent).join("/");
         if (!currPath.endsWith("/")) {
           currPath = currPath + "/";
         }
