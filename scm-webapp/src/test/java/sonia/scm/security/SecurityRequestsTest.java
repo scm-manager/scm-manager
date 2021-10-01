@@ -21,41 +21,51 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.security;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 /**
  * Created by masuewer on 04.07.18.
  */
-@RunWith(MockitoJUnitRunner.class)
-public class SecurityRequestsTest {
+@ExtendWith(MockitoExtension.class)
+class SecurityRequestsTest {
 
   @Mock
   private HttpServletRequest request;
 
   @Test
-  public void testIsAuthenticationRequestWithContextPath() {
+  void shouldReturnTrueWithContextPath() {
     when(request.getRequestURI()).thenReturn("/scm/api/auth/access_token");
     when(request.getContextPath()).thenReturn("/scm");
 
-    assertTrue(SecurityRequests.isAuthenticationRequest(request));
+    assertThat(SecurityRequests.isAuthenticationRequest(request)).isTrue();
   }
 
   @Test
-  public void testIsAuthenticationRequest() throws Exception {
-    assertTrue(SecurityRequests.isAuthenticationRequest("/api/auth/access_token"));
-    assertTrue(SecurityRequests.isAuthenticationRequest("/api/v2/auth/access_token"));
-    assertFalse(SecurityRequests.isAuthenticationRequest("/api/repositories"));
-    assertFalse(SecurityRequests.isAuthenticationRequest("/api/v2/repositories"));
+  void shouldDetectAuthenticationResource() {
+    assertThat(SecurityRequests.isAuthenticationRequest("/api/auth/access_token")).isTrue();
+    assertThat(SecurityRequests.isAuthenticationRequest("/api/v2/auth/access_token")).isTrue();
+    assertThat(SecurityRequests.isAuthenticationRequest("/api/repositories")).isFalse();
+    assertThat(SecurityRequests.isAuthenticationRequest("/api/v2/repositories")).isFalse();
   }
+
+  @Test
+  void shouldReturnFalseForLogout() {
+    when(request.getRequestURI()).thenReturn("/scm/api/auth/access_token");
+    when(request.getContextPath()).thenReturn("/scm");
+    when(request.getMethod()).thenReturn("DELETE");
+
+    assertThat(SecurityRequests.isAuthenticationRequest(request)).isFalse();
+  }
+
 }

@@ -24,6 +24,7 @@
 
 package sonia.scm.api.v2.resources;
 
+import com.github.legman.EventBus;
 import com.google.inject.Inject;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
@@ -40,6 +41,7 @@ import io.swagger.v3.oas.annotations.security.SecuritySchemes;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,6 +51,7 @@ import sonia.scm.security.AccessTokenBuilder;
 import sonia.scm.security.AccessTokenBuilderFactory;
 import sonia.scm.security.AccessTokenCookieIssuer;
 import sonia.scm.security.AllowAnonymousAccess;
+import sonia.scm.security.LogoutEvent;
 import sonia.scm.security.Scope;
 import sonia.scm.security.Tokens;
 import sonia.scm.web.VndMediaType;
@@ -86,7 +89,6 @@ import java.util.Optional;
   @Tag(name = "Authentication", description = "Authentication related endpoints")
 })
 @Path(AuthenticationResource.PATH)
-@AllowAnonymousAccess
 public class AuthenticationResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(AuthenticationResource.class);
@@ -99,17 +101,19 @@ public class AuthenticationResource {
   private final Counter loginAttemptsCounter;
   private final Counter loginFailedCounter;
   private final Counter logoutCounter;
+  private final EventBus eventBus;
 
   @Inject(optional = true)
   private LogoutRedirection logoutRedirection;
 
   @Inject
-  public AuthenticationResource(AccessTokenBuilderFactory tokenBuilderFactory, AccessTokenCookieIssuer cookieIssuer, MeterRegistry meterRegistry) {
+  public AuthenticationResource(AccessTokenBuilderFactory tokenBuilderFactory, AccessTokenCookieIssuer cookieIssuer, MeterRegistry meterRegistry, EventBus eventBus) {
     this.tokenBuilderFactory = tokenBuilderFactory;
     this.cookieIssuer = cookieIssuer;
     this.loginAttemptsCounter = AuthenticationMetrics.loginAttempts(meterRegistry, AUTH_METRIC_TYPE);
     this.loginFailedCounter = AuthenticationMetrics.loginFailed(meterRegistry, AUTH_METRIC_TYPE);
     this.logoutCounter = AuthenticationMetrics.logout(meterRegistry, AUTH_METRIC_TYPE);
+    this.eventBus = eventBus;
   }
 
   @POST
@@ -134,6 +138,7 @@ public class AuthenticationResource {
       schema = @Schema(implementation = ErrorDto.class)
     )
   )
+  @AllowAnonymousAccess
   public Response authenticateViaForm(
     @Context HttpServletRequest request,
     @Context HttpServletResponse response,
@@ -174,6 +179,7 @@ public class AuthenticationResource {
       schema = @Schema(implementation = ErrorDto.class)
     )
   )
+  @AllowAnonymousAccess
   public Response authenticateViaJSONBody(
     @Context HttpServletRequest request,
     @Context HttpServletResponse response,
@@ -238,7 +244,14 @@ public class AuthenticationResource {
   public Response logout(@Context HttpServletRequest request, @Context HttpServletResponse response) {
     logoutCounter.increment();
 
-    SecurityUtils.getSubject().logout();
+    Subject subject = SecurityUtils.getSubject();
+
+    PrincipalCollection principals = subject.getPrincipals();
+
+    subject.logout();
+
+    eventBus.post(new LogoutEvent(principals));
+
     // remove authentication cookie
     cookieIssuer.invalidate(request, response);
 

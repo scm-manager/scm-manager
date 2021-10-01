@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.security;
 
 import javax.servlet.http.HttpServletRequest;
@@ -41,7 +41,11 @@ public final class SecurityRequests {
 
   public static boolean isAuthenticationRequest(HttpServletRequest request) {
     String uri = request.getRequestURI().substring(request.getContextPath().length());
-    return isAuthenticationRequest(uri);
+    return isAuthenticationRequest(uri) && !isLogoutMethod(request);
+  }
+
+  private static boolean isLogoutMethod(HttpServletRequest request) {
+    return "DELETE".equals(request.getMethod());
   }
 
   public static boolean isAuthenticationRequest(String uri) {
