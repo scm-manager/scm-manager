@@ -46,6 +46,14 @@ const isLocalRepository = (repositoryUrl: string) => {
   return host === window.location.hostname;
 };
 
+export const encodePart = (part: string) => {
+  const encoded = encodeURIComponent(part);
+  if (part.includes("%")) {
+    return encodeURIComponent(encoded);
+  }
+  return encoded;
+};
+
 export const createRelativeLink = (repositoryUrl: string) => {
   const paths = repositoryUrl.split("/");
   return "/" + paths.slice(3).join("/");
@@ -54,7 +62,7 @@ export const createRelativeLink = (repositoryUrl: string) => {
 export const createFolderLink = (base: string, file: File) => {
   let link = base;
   if (file.path) {
-    let path = file.path.split("/").map(encodeURIComponent).join("/");
+    let path = file.path.split("/").map(encodePart).join("/");
     if (path.startsWith("/")) {
       path = path.substring(1);
     }
