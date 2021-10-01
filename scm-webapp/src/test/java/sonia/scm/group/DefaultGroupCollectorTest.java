@@ -26,6 +26,7 @@ package sonia.scm.group;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
+import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -36,6 +37,7 @@ import sonia.scm.SCMContext;
 import sonia.scm.cache.MapCache;
 import sonia.scm.cache.MapCacheManager;
 import sonia.scm.security.Authentications;
+import sonia.scm.security.LogoutEvent;
 
 import java.util.HashSet;
 import java.util.List;
@@ -96,6 +98,17 @@ class DefaultGroupCollectorTest {
     assertThat(groups).containsOnly("_authenticated", "awesome", "incredible");
 
     verify(groupResolver, never()).resolve("trillian");
+  }
+
+  @Test
+  void shouldClearCacheOnLogout() {
+    MapCache<String, Set<String>> cache = mapCacheManager.getCache(DefaultGroupCollector.CACHE_NAME);
+    cache.put("trillian", ImmutableSet.of("awesome", "incredible"));
+
+    SimplePrincipalCollection principal = new SimplePrincipalCollection("trillian", "Test");
+    collector.clearCacheOn(new LogoutEvent(principal));
+
+    assertThat(cache.get("trillian")).isNull();
   }
 
   @Test

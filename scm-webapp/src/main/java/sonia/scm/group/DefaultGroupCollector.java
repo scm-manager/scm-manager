@@ -25,12 +25,14 @@
 package sonia.scm.group;
 
 import com.cronutils.utils.VisibleForTesting;
+import com.github.legman.Subscribe;
 import com.google.common.collect.ImmutableSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.security.Authentications;
+import sonia.scm.security.LogoutEvent;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -76,6 +78,12 @@ public class DefaultGroupCollector implements GroupCollector {
     Set<String> groups = builder.build();
     LOG.debug("collected following groups for principal {}: {}", principal, groups);
     return groups;
+  }
+
+  @Subscribe(async = false)
+  public void clearCacheOn(LogoutEvent event) {
+    String principal = event.getPrincipal().getPrimaryPrincipal().toString();
+    cache.remove(principal);
   }
 
   private void appendInternalGroups(String principal, ImmutableSet.Builder<String> builder) {
