@@ -22,7 +22,8 @@
  * SOFTWARE.
  */
 
-import { createRelativeLink, createFolderLink } from "./FileLink";
+import { createRelativeLink, createFolderLink, encodePart } from "./FileLink";
+import { createLocation } from "history";
 import { File } from "@scm-manager/ui-types";
 
 describe("create relative link tests", () => {
@@ -47,8 +48,8 @@ describe("create folder link tests", () => {
       revision: "1a",
       _links: {},
       _embedded: {
-        children: []
-      }
+        children: [],
+      },
     };
   }
 
@@ -60,5 +61,21 @@ describe("create folder link tests", () => {
 
   it("should return base url if the directory path is empty", () => {
     expect(createFolderLink("src", dir(""))).toBe("src/");
+  });
+
+  it("should double encode folder names with percent", () => {
+    expect(createFolderLink("src", dir("a%20b"))).toBe("src/a%252520b/");
+  });
+});
+
+describe("link should keep encoded percentages", () => {
+  it("history should create a location with encoded pathname", () => {
+    // For version 4.x of history we have to double encode uri components with a '%',
+    // because of the following issue https://github.com/remix-run/history/issues/505
+    // The issue is fixed with 5.x, but react-router-dom seams not to work with 5.x.
+    // So we have to stick with 4.x and the double encoding, until react-router-dom uses version 5.x.
+    // This test is mainly to remind us to remove the double encoding after update to 5.x.
+    const location = createLocation(encodePart("a%20b"));
+    expect(location.pathname).toBe("a%2520b");
   });
 });
