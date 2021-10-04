@@ -29,10 +29,12 @@ import com.github.legman.Subscribe;
 import com.google.common.collect.ImmutableSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.HandlerEventType;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.security.Authentications;
 import sonia.scm.security.LogoutEvent;
+import sonia.scm.user.UserEvent;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -81,9 +83,16 @@ public class DefaultGroupCollector implements GroupCollector {
   }
 
   @Subscribe(async = false)
-  public void clearCacheOn(LogoutEvent event) {
+  public void clearCacheOnLogOut(LogoutEvent event) {
     String principal = event.getPrincipal().getPrimaryPrincipal().toString();
     cache.remove(principal);
+  }
+
+  @Subscribe(async = false)
+  public void clearCacheOnUserDeletion(UserEvent event) {
+    if (event.getEventType().equals(HandlerEventType.DELETE)) {
+      cache.remove(event.getItem().getName());
+    }
   }
 
   private void appendInternalGroups(String principal, ImmutableSet.Builder<String> builder) {
