@@ -25,7 +25,6 @@
 package sonia.scm.security;
 
 import lombok.Value;
-import org.apache.shiro.subject.PrincipalCollection;
 import sonia.scm.event.Event;
 
 /**
@@ -33,10 +32,10 @@ import sonia.scm.event.Event;
  * The event is not fired if a session expires or a token is blacklisted,
  * the event is only fired if the user calls the rest method for the logout.
  *
- * @since 2.14.0
+ * @since 2.24.0
  */
 @Value
 @Event
 public class LogoutEvent {
-  PrincipalCollection principal;
+  String primaryPrincipal;
 }

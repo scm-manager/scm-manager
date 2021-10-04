@@ -26,7 +26,6 @@ package sonia.scm.group;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
-import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -106,8 +105,7 @@ class DefaultGroupCollectorTest {
     MapCache<String, Set<String>> cache = mapCacheManager.getCache(DefaultGroupCollector.CACHE_NAME);
     cache.put("trillian", ImmutableSet.of("awesome", "incredible"));
 
-    SimplePrincipalCollection principal = new SimplePrincipalCollection("trillian", "Test");
-    collector.clearCacheOnLogOut(new LogoutEvent(principal));
+    collector.clearCacheOnLogOut(new LogoutEvent("trillian"));
 
     assertThat(cache.get("trillian")).isNull();
   }

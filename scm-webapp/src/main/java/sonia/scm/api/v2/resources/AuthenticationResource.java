@@ -245,12 +245,10 @@ public class AuthenticationResource {
     logoutCounter.increment();
 
     Subject subject = SecurityUtils.getSubject();
-
-    PrincipalCollection principals = subject.getPrincipals();
-
+    String primaryPrincipal = subject.getPrincipals().getPrimaryPrincipal().toString();
     subject.logout();
 
-    eventBus.post(new LogoutEvent(principals));
+    eventBus.post(new LogoutEvent(primaryPrincipal));
 
     // remove authentication cookie
     cookieIssuer.invalidate(request, response);

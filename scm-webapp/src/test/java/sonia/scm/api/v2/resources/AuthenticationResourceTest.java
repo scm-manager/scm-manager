@@ -29,7 +29,6 @@ import com.github.sdorra.shiro.SubjectAware;
 import io.micrometer.core.instrument.Meter;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
-import org.apache.shiro.subject.PrincipalCollection;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.Before;
@@ -272,12 +271,12 @@ public class AuthenticationResourceTest {
 
     Object event = captor.getValue();
     assertThat(event).isInstanceOfSatisfying(LogoutEvent.class, logoutEvent -> {
-      PrincipalCollection principal = logoutEvent.getPrincipal();
-      assertThat(principal.getPrimaryPrincipal()).isEqualTo("trillian");
+      assertThat(logoutEvent.getPrimaryPrincipal()).isEqualTo("trillian");
     });
   }
 
   @Test
+  @SubjectAware(username = "trillian", password = "secret")
   public void shouldHandleLogoutRedirection() throws URISyntaxException, UnsupportedEncodingException {
     authenticationResource.setLogoutRedirection(() -> of(create("http://example.com/cas/logout")));
 
@@ -290,6 +289,7 @@ public class AuthenticationResourceTest {
   }
 
   @Test
+  @SubjectAware(username = "trillian", password = "secret")
   public void shouldHandleDisabledLogoutRedirection() throws URISyntaxException {
     authenticationResource.setLogoutRedirection(Optional::empty);
 

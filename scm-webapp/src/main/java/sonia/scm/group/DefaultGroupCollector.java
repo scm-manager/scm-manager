@@ -84,7 +84,7 @@ public class DefaultGroupCollector implements GroupCollector {
 
   @Subscribe(async = false)
   public void clearCacheOnLogOut(LogoutEvent event) {
-    String principal = event.getPrincipal().getPrimaryPrincipal().toString();
+    String principal = event.getPrimaryPrincipal();
     cache.remove(principal);
   }
 
