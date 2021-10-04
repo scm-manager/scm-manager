@@ -24,7 +24,6 @@
 
 package sonia.scm.api.v2.resources;
 
-import com.github.legman.EventBus;
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
 import io.micrometer.core.instrument.Meter;
@@ -41,6 +40,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.event.ScmEventBus;
 import sonia.scm.security.AccessToken;
 import sonia.scm.security.AccessTokenBuilder;
 import sonia.scm.security.AccessTokenBuilderFactory;
@@ -61,7 +61,7 @@ import static java.net.URI.create;
 import static java.util.Optional.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -84,7 +84,7 @@ public class AuthenticationResourceTest {
   private AccessTokenBuilder accessTokenBuilder;
 
   @Mock
-  private EventBus eventBus;
+  private ScmEventBus eventBus;
 
   private MeterRegistry meterRegistry;
 
@@ -255,6 +255,8 @@ public class AuthenticationResourceTest {
     Optional<Meter> logoutMeter = meters.stream().filter(m -> m.getId().getName().equals("scm.auth.logout")).findFirst();
     assertThat(logoutMeter).isPresent();
     assertThat(logoutMeter.get().measure().iterator().next().getValue()).isEqualTo(1);
+
+    verify(eventBus).post(any(LogoutEvent.class));
   }
 
   @Test

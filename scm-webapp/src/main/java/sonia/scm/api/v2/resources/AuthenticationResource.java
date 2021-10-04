@@ -24,7 +24,6 @@
 
 package sonia.scm.api.v2.resources;
 
-import com.github.legman.EventBus;
 import com.google.inject.Inject;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
@@ -45,6 +44,7 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.event.ScmEventBus;
 import sonia.scm.metrics.AuthenticationMetrics;
 import sonia.scm.security.AccessToken;
 import sonia.scm.security.AccessTokenBuilder;
@@ -101,13 +101,13 @@ public class AuthenticationResource {
   private final Counter loginAttemptsCounter;
   private final Counter loginFailedCounter;
   private final Counter logoutCounter;
-  private final EventBus eventBus;
+  private final ScmEventBus eventBus;
 
   @Inject(optional = true)
   private LogoutRedirection logoutRedirection;
 
   @Inject
-  public AuthenticationResource(AccessTokenBuilderFactory tokenBuilderFactory, AccessTokenCookieIssuer cookieIssuer, MeterRegistry meterRegistry, EventBus eventBus) {
+  public AuthenticationResource(AccessTokenBuilderFactory tokenBuilderFactory, AccessTokenCookieIssuer cookieIssuer, MeterRegistry meterRegistry, ScmEventBus eventBus) {
     this.tokenBuilderFactory = tokenBuilderFactory;
     this.cookieIssuer = cookieIssuer;
     this.loginAttemptsCounter = AuthenticationMetrics.loginAttempts(meterRegistry, AUTH_METRIC_TYPE);
