@@ -32,10 +32,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import sonia.scm.SCMContext;
+import sonia.scm.HandlerEventType;
 import sonia.scm.cache.MapCache;
 import sonia.scm.cache.MapCacheManager;
-import sonia.scm.security.Authentications;
+import sonia.scm.security.LogoutEvent;
+import sonia.scm.user.User;
+import sonia.scm.user.UserEvent;
 
 import java.util.HashSet;
 import java.util.List;
@@ -96,6 +98,27 @@ class DefaultGroupCollectorTest {
     assertThat(groups).containsOnly("_authenticated", "awesome", "incredible");
 
     verify(groupResolver, never()).resolve("trillian");
+  }
+
+  @Test
+  void shouldClearCacheOnLogout() {
+    MapCache<String, Set<String>> cache = mapCacheManager.getCache(DefaultGroupCollector.CACHE_NAME);
+    cache.put("trillian", ImmutableSet.of("awesome", "incredible"));
+
+    collector.clearCacheOnLogOut(new LogoutEvent("trillian"));
+
+    assertThat(cache.get("trillian")).isNull();
+  }
+
+
+  @Test
+  void shouldClearCacheOnUserDeletion() {
+    MapCache<String, Set<String>> cache = mapCacheManager.getCache(DefaultGroupCollector.CACHE_NAME);
+    cache.put("trillian", ImmutableSet.of("awesome", "incredible"));
+
+    collector.clearCacheOnUserDeletion(new UserEvent(HandlerEventType.DELETE, new User("trillian")));
+
+    assertThat(cache.get("trillian")).isNull();
   }
 
   @Test

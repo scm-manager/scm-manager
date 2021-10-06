@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import com.github.sdorra.shiro.ShiroRule;
@@ -35,14 +35,17 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.event.ScmEventBus;
 import sonia.scm.security.AccessToken;
 import sonia.scm.security.AccessTokenBuilder;
 import sonia.scm.security.AccessTokenBuilderFactory;
 import sonia.scm.security.AccessTokenCookieIssuer;
 import sonia.scm.security.DefaultAccessTokenCookieIssuer;
+import sonia.scm.security.LogoutEvent;
 import sonia.scm.web.RestDispatcher;
 
 import javax.servlet.http.HttpServletRequest;
@@ -52,14 +55,14 @@ import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import static java.net.URI.create;
 import static java.util.Optional.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SubjectAware(
@@ -78,6 +81,9 @@ public class AuthenticationResourceTest {
 
   @Mock
   private AccessTokenBuilder accessTokenBuilder;
+
+  @Mock
+  private ScmEventBus eventBus;
 
   private MeterRegistry meterRegistry;
 
@@ -142,7 +148,7 @@ public class AuthenticationResourceTest {
   @Before
   public void prepareEnvironment() {
     meterRegistry = new SimpleMeterRegistry();
-    authenticationResource = new AuthenticationResource(accessTokenBuilderFactory, cookieIssuer, meterRegistry);
+    authenticationResource = new AuthenticationResource(accessTokenBuilderFactory, cookieIssuer, meterRegistry, eventBus);
     dispatcher.addSingletonResource(authenticationResource);
 
     AccessToken accessToken = mock(AccessToken.class);
@@ -248,9 +254,29 @@ public class AuthenticationResourceTest {
     Optional<Meter> logoutMeter = meters.stream().filter(m -> m.getId().getName().equals("scm.auth.logout")).findFirst();
     assertThat(logoutMeter).isPresent();
     assertThat(logoutMeter.get().measure().iterator().next().getValue()).isEqualTo(1);
+
+    verify(eventBus).post(any(LogoutEvent.class));
   }
 
   @Test
+  @SubjectAware(username = "trillian", password = "secret")
+  public void shouldFireLogoutEvent() throws URISyntaxException {
+    MockHttpRequest request = MockHttpRequest.delete("/" + AuthenticationResource.PATH + "/access_token");
+
+    dispatcher.invoke(request, response);
+    assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
+
+    ArgumentCaptor<Object> captor = ArgumentCaptor.forClass(Object.class);
+    verify(eventBus).post(captor.capture());
+
+    Object event = captor.getValue();
+    assertThat(event).isInstanceOfSatisfying(LogoutEvent.class, logoutEvent -> {
+      assertThat(logoutEvent.getPrimaryPrincipal()).isEqualTo("trillian");
+    });
+  }
+
+  @Test
+  @SubjectAware(username = "trillian", password = "secret")
   public void shouldHandleLogoutRedirection() throws URISyntaxException, UnsupportedEncodingException {
     authenticationResource.setLogoutRedirection(() -> of(create("http://example.com/cas/logout")));
 
@@ -263,6 +289,7 @@ public class AuthenticationResourceTest {
   }
 
   @Test
+  @SubjectAware(username = "trillian", password = "secret")
   public void shouldHandleDisabledLogoutRedirection() throws URISyntaxException {
     authenticationResource.setLogoutRedirection(Optional::empty);
 
