@@ -128,14 +128,24 @@ public class ModifyCommandRequest implements Resetable, Validateable, CommandWit
 
   public static class DeleteFileRequest implements PartialRequest {
     private final String path;
+    private final boolean recursive;
 
+    /**
+     * @deprecated This is kept for compatibility, only. Use {@link #DeleteFileRequest(String, boolean)} instead.
+     */
+    @Deprecated
     public DeleteFileRequest(String path) {
+      this(path, false);
+    }
+
+    public DeleteFileRequest(String path, boolean recursive) {
       this.path = path;
+      this.recursive = recursive;
     }
 
     @Override
     public void execute(ModifyCommand.Worker worker) throws IOException {
-      worker.delete(path);
+      worker.delete(path, recursive);
     }
   }
 

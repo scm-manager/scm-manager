@@ -77,7 +77,7 @@ public class SvnModifyCommandTest extends AbstractSvnCommandTestBase {
   @Test
   public void shouldRemoveFiles() {
     ModifyCommandRequest request = new ModifyCommandRequest();
-    request.addRequest(new ModifyCommandRequest.DeleteFileRequest("a.txt"));
+    request.addRequest(new ModifyCommandRequest.DeleteFileRequest("a.txt", false));
     request.setCommitMessage("this is great");
     request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
 
@@ -85,6 +85,19 @@ public class SvnModifyCommandTest extends AbstractSvnCommandTestBase {
     WorkingCopy<File, File> workingCopy = workingCopyFactory.createWorkingCopy(context, null);
     assertThat(new File(workingCopy.getWorkingRepository().getAbsolutePath() + "/a.txt")).doesNotExist();
     assertThat(new File(workingCopy.getWorkingRepository().getAbsolutePath() + "/c")).exists();
+  }
+
+  @Test
+  public void shouldRemoveDirectory() {
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.addRequest(new ModifyCommandRequest.DeleteFileRequest("c", true));
+    request.setCommitMessage("this is great");
+    request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
+
+    svnModifyCommand.execute(request);
+    WorkingCopy<File, File> workingCopy = workingCopyFactory.createWorkingCopy(context, null);
+    assertThat(new File(workingCopy.getWorkingRepository().getAbsolutePath() + "/a.txt")).exists();
+    assertThat(new File(workingCopy.getWorkingRepository().getAbsolutePath() + "/c")).doesNotExist();
   }
 
   @Test

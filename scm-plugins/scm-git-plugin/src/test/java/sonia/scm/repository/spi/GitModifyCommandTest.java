@@ -29,6 +29,7 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.treewalk.TreeWalk;
 import org.junit.Test;
 import sonia.scm.AlreadyExistsException;
 import sonia.scm.BadRequestException;
@@ -46,6 +47,7 @@ import java.nio.file.Files;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.awaitility.Awaitility.await;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.description;
@@ -244,7 +246,7 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
 
     ModifyCommandRequest request = new ModifyCommandRequest();
     request.setCommitMessage("test commit");
-    request.addRequest(new ModifyCommandRequest.DeleteFileRequest("a.txt"));
+    request.addRequest(new ModifyCommandRequest.DeleteFileRequest("a.txt", false));
     request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
 
     command.execute(request);
@@ -254,13 +256,41 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
     assertInTree(assertions);
   }
 
+  @Test
+  public void shouldDeleteExistingDirectory() throws IOException, GitAPIException {
+    GitModifyCommand command = createCommand();
+
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.setCommitMessage("test commit");
+    request.addRequest(new ModifyCommandRequest.DeleteFileRequest("c", true));
+    request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
+
+    command.execute(request);
+
+    try (Git git = new Git(createContext().open())) {
+      RevCommit lastCommit = getLastCommit(git);
+      try (RevWalk walk = new RevWalk(git.getRepository())) {
+        RevCommit commit = walk.parseCommit(lastCommit);
+        ObjectId treeId = commit.getTree().getId();
+        TreeWalk treeWalk = new TreeWalk(git.getRepository());
+        treeWalk.setRecursive(true);
+        treeWalk.addTree(treeId);
+        while (treeWalk.next()) {
+          if (treeWalk.getPathString().startsWith("c/")) {
+            fail("directory should be deleted");
+          }
+        }
+      }
+    }
+  }
+
   @Test(expected = NotFoundException.class)
   public void shouldThrowNotFoundExceptionWhenFileToDeleteDoesNotExist() {
     GitModifyCommand command = createCommand();
 
     ModifyCommandRequest request = new ModifyCommandRequest();
     request.setCommitMessage("test commit");
-    request.addRequest(new ModifyCommandRequest.DeleteFileRequest("no/such/file"));
+    request.addRequest(new ModifyCommandRequest.DeleteFileRequest("no/such/file", false));
     request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
 
     command.execute(request);
@@ -273,7 +303,7 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
     ModifyCommandRequest request = new ModifyCommandRequest();
     request.setBranch("does-not-exist");
     request.setCommitMessage("test commit");
-    request.addRequest(new ModifyCommandRequest.DeleteFileRequest("a.txt"));
+    request.addRequest(new ModifyCommandRequest.DeleteFileRequest("a.txt", false));
     request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
 
     command.execute(request);
