@@ -1,4 +1,0 @@
-- type: Added
-  description: Internal api to determine email address for DisplayUser ([#1815](https://github.com/scm-manager/scm-manager/pull/1815))
-- type: Added
-  description: Set author for merge as DisplayUser ([#1815](https://github.com/scm-manager/scm-manager/pull/1815))

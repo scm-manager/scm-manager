@@ -1,2 +1,0 @@
-- type: Changed
-  description: Bind mappers automatically to mapper implementations ([#1807](https://github.com/scm-manager/scm-manager/pull/1807))

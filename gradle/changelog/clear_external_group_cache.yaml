@@ -1,2 +1,0 @@
-- type: Changed
-  description: Clear external group cache on explicit user logout ([#1819](https://github.com/scm-manager/scm-manager/pull/1819))

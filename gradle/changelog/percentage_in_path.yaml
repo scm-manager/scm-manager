@@ -1,2 +1,0 @@
-- type: Fixed
-  description: Bugs in svn and source tree for folders with a % in the name ([#1817](https://github.com/scm-manager/scm-manager/issues/1817) and [#1818](https://github.com/scm-manager/scm-manager/pull/1818))

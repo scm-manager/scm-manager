@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.24.0] - 2021-10-07
+### Added
+- Method to delete files recursively in modify command ([#1821](https://github.com/scm-manager/scm-manager/pull/1821))
+- Internal api to determine email address for DisplayUser ([#1815](https://github.com/scm-manager/scm-manager/pull/1815))
+- Set author for merge as DisplayUser ([#1815](https://github.com/scm-manager/scm-manager/pull/1815))
+- Add method to delete whole configuration store ([#1814](https://github.com/scm-manager/scm-manager/pull/1814))
+- Move DangerZone styling to ui-components (([#1814](https://github.com/scm-manager/scm-manager/pull/1814)))
+- Extension points for source tree ([#1816](https://github.com/scm-manager/scm-manager/pull/1816))
+
+### Fixed
+- Bugs in svn and source tree for folders with a % in the name ([#1817](https://github.com/scm-manager/scm-manager/issues/1817) and [#1818](https://github.com/scm-manager/scm-manager/pull/1818))
+- Edge cases in mirror command with cached workdirs ([#1812](https://github.com/scm-manager/scm-manager/pull/1812))
+- Use correct logger for mercurial internal commands ([#1804](https://github.com/scm-manager/scm-manager/pull/1804))
+- Deletion of repositories from search index ([#1813](https://github.com/scm-manager/scm-manager/pull/1813))
+
+### Changed
+- Bind mappers automatically to mapper implementations ([#1807](https://github.com/scm-manager/scm-manager/pull/1807))
+- Clear external group cache on explicit user logout ([#1819](https://github.com/scm-manager/scm-manager/pull/1819))
+- Replace styled-components with bulma helpers ([#1783](https://github.com/scm-manager/scm-manager/pull/1783))
+
 ## [2.23.0] - 2021-09-08
 ### Added
 - Embedded repository in search result hit ([#1756](https://github.com/scm-manager/scm-manager/pull/1756))
@@ -755,3 +775,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.21.0]: https://www.scm-manager.org/download/2.21.0
 [2.22.0]: https://www.scm-manager.org/download/2.22.0
 [2.23.0]: https://www.scm-manager.org/download/2.23.0
+[2.24.0]: https://www.scm-manager.org/download/2.24.0
