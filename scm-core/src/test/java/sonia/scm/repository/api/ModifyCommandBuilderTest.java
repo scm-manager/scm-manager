@@ -157,7 +157,16 @@ class ModifyCommandBuilderTest {
         .deleteFile("toBeDeleted")
         .execute();
 
-      verify(worker).delete("toBeDeleted");
+      verify(worker).delete("toBeDeleted", false);
+    }
+
+    @Test
+    void shouldExecuteRecursiveDelete() throws IOException {
+      initCommand()
+        .deleteFile("toBeDeleted", true)
+        .execute();
+
+      verify(worker).delete("toBeDeleted", true);
     }
 
     @Test

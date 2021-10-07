@@ -29,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.ContextEntry;
 import sonia.scm.repository.Repository;
+import sonia.scm.util.IOUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,12 +53,16 @@ public interface ModifyWorkerHelper extends ModifyCommand.Worker {
   Logger LOG = LoggerFactory.getLogger(ModifyWorkerHelper.class);
 
   @Override
-  default void delete(String toBeDeleted) throws IOException {
+  default void delete(String toBeDeleted, boolean recursive) throws IOException {
     Path fileToBeDeleted = getTargetFile(toBeDeleted);
-    try {
-      Files.delete(fileToBeDeleted);
-    } catch (NoSuchFileException e) {
-      throw notFound(createFileContext(toBeDeleted));
+    if (recursive) {
+      IOUtil.delete(fileToBeDeleted.toFile());
+    } else {
+      try {
+        Files.delete(fileToBeDeleted);
+      } catch (NoSuchFileException e) {
+        throw notFound(createFileContext(toBeDeleted));
+      }
     }
     doScmDelete(toBeDeleted);
   }

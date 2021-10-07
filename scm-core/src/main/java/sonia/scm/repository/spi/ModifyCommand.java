@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import java.io.File;
@@ -32,7 +32,7 @@ public interface ModifyCommand {
   String execute(ModifyCommandRequest request);
 
   interface Worker {
-    void delete(String toBeDeleted) throws IOException;
+    void delete(String toBeDeleted, boolean recursive) throws IOException;
 
     void create(String toBeCreated, File file, boolean overwrite) throws IOException;
 

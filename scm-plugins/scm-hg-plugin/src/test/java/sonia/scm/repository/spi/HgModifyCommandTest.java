@@ -65,13 +65,27 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
   @Test
   public void shouldRemoveFiles() {
     ModifyCommandRequest request = new ModifyCommandRequest();
-    request.addRequest(new ModifyCommandRequest.DeleteFileRequest("a.txt"));
+    request.addRequest(new ModifyCommandRequest.DeleteFileRequest("a.txt", false));
     request.setCommitMessage("this is great");
     request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
 
     String result = hgModifyCommand.execute(request);
 
     assertThat(cmdContext.open().tip().getNode()).isEqualTo(result);
+    assertThat(cmdContext.open().tip().getDeletedFiles().size()).isEqualTo(1);
+  }
+
+  @Test
+  public void shouldRemoveDirectoriesRecursively() {
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.addRequest(new ModifyCommandRequest.DeleteFileRequest("c", true));
+    request.setCommitMessage("this is great");
+    request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
+
+    String result = hgModifyCommand.execute(request);
+
+    assertThat(cmdContext.open().tip().getNode()).isEqualTo(result);
+    assertThat(cmdContext.open().tip().getDeletedFiles().size()).isEqualTo(2);
   }
 
   @Test

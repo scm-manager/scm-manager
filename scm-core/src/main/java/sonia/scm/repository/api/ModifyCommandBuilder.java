@@ -120,7 +120,11 @@ public class ModifyCommandBuilder {
    * @return This builder instance.
    */
   public ModifyCommandBuilder deleteFile(String path) {
-    request.addRequest(new ModifyCommandRequest.DeleteFileRequest(path));
+    return this.deleteFile(path, false);
+  }
+
+  public ModifyCommandBuilder deleteFile(String path, boolean recursive) {
+    request.addRequest(new ModifyCommandRequest.DeleteFileRequest(path, recursive));
     return this;
   }
 
