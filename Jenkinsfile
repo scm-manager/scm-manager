@@ -109,6 +109,9 @@ pipeline {
         withPublishEnivronment {
           gradle "-PenablePackaging publish"
         }
+        build wait: false, propagate: false, job: 'scm-manager-github/homebrew-tap/master', parameters: [
+          string(name: 'Version', value: getReleaseVersion())
+        ]
       }
     }
 
