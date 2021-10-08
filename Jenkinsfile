@@ -109,6 +109,15 @@ pipeline {
         withPublishEnivronment {
           gradle "-PenablePackaging publish"
         }
+      }
+    }
+
+    stage('Update tap') {
+      when {
+        branch pattern: 'release/*', comparator: 'GLOB'
+        expression { return isBuildSuccess() }
+      }
+      steps {
         build wait: false, propagate: false, job: 'scm-manager-github/homebrew-tap/master', parameters: [
           string(name: 'Version', value: getReleaseVersion())
         ]
