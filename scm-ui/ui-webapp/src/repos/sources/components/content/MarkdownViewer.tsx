@@ -22,36 +22,18 @@
  * SOFTWARE.
  */
 import React, { FC } from "react";
-import { File } from "@scm-manager/ui-types";
-import { ErrorNotification, Loading, MarkdownView } from "@scm-manager/ui-components";
-import replaceBranchWithRevision from "../../ReplaceBranchWithRevision";
-import { useLocation } from "react-router-dom";
-import { useFileContent } from "@scm-manager/ui-api";
+import { MarkdownView } from "@scm-manager/ui-components";
 
 type Props = {
-  file: File;
+  content: string;
+  permalink: string;
   basePath: string;
 };
 
-const MarkdownViewer: FC<Props> = ({ file, basePath }) => {
-  const { isLoading, error, data: content } = useFileContent(file);
-  const location = useLocation();
-
-  if (!content || isLoading) {
-    return <Loading />;
-  }
-
-  if (error) {
-    return <ErrorNotification error={error} />;
-  }
-
-  const permalink = replaceBranchWithRevision(location.pathname, file.revision);
-
-  return (
-    <div className="p-2">
-      <MarkdownView content={content} basePath={basePath} permalink={permalink} enableAnchorHeadings={true} />
-    </div>
-  );
-};
+const MarkdownViewer: FC<Props> = ({ content, basePath, permalink }) => (
+  <div className="p-2">
+    <MarkdownView content={content} basePath={basePath} permalink={permalink} enableAnchorHeadings={true} />
+  </div>
+);
 
 export default MarkdownViewer;
