@@ -24,10 +24,12 @@
 import React, { FC, useState } from "react";
 import styled from "styled-components";
 import MarkdownViewer from "./MarkdownViewer";
-import SourcecodeViewer from "./SourcecodeViewer";
 import { File } from "@scm-manager/ui-types";
-import { Button } from "@scm-manager/ui-components";
+import { Button, ErrorNotification, Loading, SyntaxHighlighter } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
+import { useFileContent } from "@scm-manager/ui-api";
+import replaceBranchWithRevision from "../../ReplaceBranchWithRevision";
+import { useLocation } from "react-router-dom";
 
 const ToggleButton = styled(Button)`
   max-width: 1rem;
@@ -43,12 +45,23 @@ type Props = {
 };
 
 const SwitchableMarkdownViewer: FC<Props> = ({ file, basePath }) => {
+  const { isLoading, error, data: content } = useFileContent(file);
   const { t } = useTranslation("repos");
+  const location = useLocation();
   const [renderMarkdown, setRenderMarkdown] = useState(true);
 
   const toggleMarkdown = () => {
     setRenderMarkdown(!renderMarkdown);
   };
+
+  if (isLoading) {
+    return <Loading />;
+  }
+  if (error) {
+    return <ErrorNotification error={error} />;
+  }
+
+  const permalink = replaceBranchWithRevision(location.pathname, file.revision);
 
   return (
     <div className="is-relative">
@@ -64,9 +77,9 @@ const SwitchableMarkdownViewer: FC<Props> = ({ file, basePath }) => {
         <i className="fab fa-markdown" />
       </ToggleButton>
       {renderMarkdown ? (
-        <MarkdownViewer file={file} basePath={basePath} />
+        <MarkdownViewer content={content || ""} basePath={basePath} permalink={permalink} />
       ) : (
-        <SourcecodeViewer file={file} language={"MARKDOWN"} />
+        <SyntaxHighlighter language="MARKDOWN" value={content || ""} permalink={permalink} />
       )}
     </div>
   );
