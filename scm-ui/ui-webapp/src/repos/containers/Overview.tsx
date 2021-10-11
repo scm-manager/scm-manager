@@ -38,6 +38,12 @@ import { useNamespaces, useRepositories } from "@scm-manager/ui-api";
 import { NamespaceCollection, RepositoryCollection } from "@scm-manager/ui-types";
 import { extensionPoints, useBinder } from "@scm-manager/ui-extensions";
 import classNames from "classnames";
+import styled from "styled-components";
+
+const StickyContainer = styled.div`
+  position: sticky;
+  top: 1rem;
+`;
 
 const useUrlParams = () => {
   const params = useParams();
@@ -147,7 +153,9 @@ const Overview: FC = () => {
     <Page title={t("overview.title")} subtitle={t("overview.subtitle")} loading={isLoading} error={error}>
       <div className="columns">
         {hasExtensions ? (
-          <div className="column is-one-third">{extensions.map((extension) => React.createElement(extension))}</div>
+          <div className="column is-one-third">
+            <StickyContainer>{extensions.map((extension) => React.createElement(extension))}</StickyContainer>
+          </div>
         ) : null}
         <div className={classNames("column", { "is-two-thirds": hasExtensions })}>
           <Repositories namespaces={namespaces} repositories={repositories} search={search} page={page} />
