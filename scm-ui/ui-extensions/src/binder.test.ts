@@ -74,7 +74,7 @@ describe("binder tests", () => {
     binder.bind("hitchhiker.trillian", "earth2", (props: Props) => props.category === "a");
 
     const extensions = binder.getExtensions("hitchhiker.trillian", {
-      category: "b"
+      category: "b",
     });
     expect(extensions).toEqual(["earth"]);
   });
@@ -109,7 +109,7 @@ describe("binder tests", () => {
     expect(binderExtensionA).not.toBeNull();
     binder.bind<TestExtensionPointB>("test.extension.b", 2);
     const binderExtensionsB = binder.getExtensions<TestExtensionPointB>("test.extension.b", {
-      testProp: [true, false]
+      testProp: [true, false],
     });
     expect(binderExtensionsB).toHaveLength(1);
     binder.bind("test.extension.c", 2, () => false);
@@ -123,24 +123,78 @@ describe("binder tests", () => {
       value: string;
     };
 
-    type MarkdownCodeLanguageRendererExtensionPoint<
-      S extends string | undefined = undefined
-    > = SimpleDynamicExtensionPointDefinition<
-      "markdown-renderer.code.",
-      (props: any) => any,
-      MarkdownCodeLanguageRendererProps,
-      S
-    >;
+    type MarkdownCodeLanguageRendererExtensionPoint<S extends string | undefined = undefined> =
+      SimpleDynamicExtensionPointDefinition<
+        "markdown-renderer.code.",
+        (props: any) => any,
+        MarkdownCodeLanguageRendererProps,
+        S
+      >;
     type UmlExtensionPoint = MarkdownCodeLanguageRendererExtensionPoint<"uml">;
 
-    binder.bind<UmlExtensionPoint>("markdown-renderer.code.uml", props => props.value);
+    binder.bind<UmlExtensionPoint>("markdown-renderer.code.uml", (props) => props.value);
 
     const language = "uml";
     const extensionPointName = `markdown-renderer.code.${language}` as const;
     const dynamicExtension = binder.getExtension<MarkdownCodeLanguageRendererExtensionPoint>(extensionPointName, {
       language: "uml",
-      value: "const a = 2;"
+      value: "const a = 2;",
     });
     expect(dynamicExtension).not.toBeNull();
+  });
+
+  it("should allow options parameter", () => {
+    binder.bind("hitchhiker.trillian", "planetA", {
+      predicate: () => true,
+      extensionName: "zeroWaste",
+    });
+
+    const extensions = binder.getExtensions("hitchhiker.trillian");
+    expect(extensions).toEqual(["planetA"]);
+  });
+
+  it("should allow empty options parameter", () => {
+    binder.bind("hitchhiker.trillian", "planetA", {});
+
+    const extensions = binder.getExtensions("hitchhiker.trillian");
+    expect(extensions).toEqual(["planetA"]);
+  });
+
+  it("should allow options parameter with only predicate", () => {
+    binder.bind("hitchhiker.trillian", "planetA", {
+      predicate: () => true,
+    });
+
+    const extensions = binder.getExtensions("hitchhiker.trillian");
+    expect(extensions).toEqual(["planetA"]);
+  });
+
+  it("should allow options parameter with only extensionName", () => {
+    binder.bind("hitchhiker.trillian", "planetA", {
+      extensionName: "zeroWaste",
+    });
+
+    const extensions = binder.getExtensions("hitchhiker.trillian");
+    expect(extensions).toEqual(["planetA"]);
+  });
+
+  it("should order by priority in descending order", () => {
+    binder.bind("hitchhiker.trillian", "planetA", { priority: 10 });
+    binder.bind("hitchhiker.trillian", "planetB", { priority: 50 });
+    binder.bind("hitchhiker.trillian", "planetC", { priority: 100 });
+    binder.bind("hitchhiker.trillian", "planetD", { priority: 75 });
+
+    const extensions = binder.getExtensions("hitchhiker.trillian");
+    expect(extensions).toEqual(["planetC", "planetD", "planetB", "planetA"]);
+  });
+
+  it("should order by priority over ordering by name", () => {
+    binder.bind("hitchhiker.trillian", "planetA", { priority: 10, extensionName: "ignore" });
+    binder.bind("hitchhiker.trillian", "planetB", { priority: 50 });
+    binder.bind("hitchhiker.trillian", "planetC", { priority: 100, extensionName: "me" });
+    binder.bind("hitchhiker.trillian", "planetD", { priority: 75 });
+
+    const extensions = binder.getExtensions("hitchhiker.trillian");
+    expect(extensions).toEqual(["planetC", "planetD", "planetB", "planetA"]);
   });
 });

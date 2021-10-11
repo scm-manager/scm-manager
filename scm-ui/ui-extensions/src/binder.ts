@@ -28,6 +28,7 @@ type ExtensionRegistration<P, T> = {
   predicate: Predicate<P>;
   extension: T;
   extensionName: string;
+  priority: number;
 };
 
 export type ExtensionPointDefinition<N extends string, T, P = undefined> = {
@@ -36,7 +37,28 @@ export type ExtensionPointDefinition<N extends string, T, P = undefined> = {
   props: P;
 };
 
-export type SimpleDynamicExtensionPointDefinition<P extends string, T, Props, S extends string | undefined> = ExtensionPointDefinition<S extends string ? `${P}${S}` : `${P}${string}`, T, Props>;
+export type SimpleDynamicExtensionPointDefinition<P extends string, T, Props, S extends string | undefined> =
+  ExtensionPointDefinition<S extends string ? `${P}${S}` : `${P}${string}`, T, Props>;
+
+export type BindOptions<E extends ExtensionPointDefinition<string, unknown, any>> = {
+  predicate?: Predicate<E>;
+
+  /**
+   * Extensions are ordered by name (ASC).
+   */
+  extensionName?: string;
+
+  /**
+   * Extensions are ordered by priority (DESC).
+   */
+  priority?: number;
+};
+
+function isBindOptions<E extends ExtensionPointDefinition<string, unknown, any>>(
+  input?: Predicate<E> | BindOptions<E>
+): input is BindOptions<E> {
+  return typeof input !== "function" && typeof input === "object";
+}
 
 /**
  * Binder is responsible for binding plugin extensions to their corresponding extension points.
@@ -60,10 +82,7 @@ export class Binder {
    * @param extension provided extension
    * @param predicate to decide if the extension gets rendered for the given props
    */
-  bind<E extends ExtensionPointDefinition<string, unknown, undefined>>(
-    extensionPoint: E["name"],
-    extension: E["type"]
-  ): void;
+  bind<E extends ExtensionPointDefinition<string, unknown>>(extensionPoint: E["name"], extension: E["type"]): void;
   bind<E extends ExtensionPointDefinition<string, unknown, any>>(
     extensionPoint: E["name"],
     extension: E["type"],
@@ -73,17 +92,38 @@ export class Binder {
   bind<E extends ExtensionPointDefinition<string, unknown, any>>(
     extensionPoint: E["name"],
     extension: E["type"],
-    predicate?: Predicate<E["props"]>,
+    options?: BindOptions<E>
+  ): void;
+  bind<E extends ExtensionPointDefinition<string, unknown, any>>(
+    extensionPoint: E["name"],
+    extension: E["type"],
+    predicateOrOptions?: Predicate<E["props"]> | BindOptions<E>,
     extensionName?: string
   ) {
+    let predicate: Predicate<E["props"]> = () => true;
+    let priority = 0;
+    if (isBindOptions(predicateOrOptions)) {
+      if (predicateOrOptions.predicate) {
+        predicate = predicateOrOptions.predicate;
+      }
+      if (predicateOrOptions.extensionName) {
+        extensionName = predicateOrOptions.extensionName;
+      }
+      if (typeof predicateOrOptions.priority === "number") {
+        priority = predicateOrOptions.priority;
+      }
+    } else if (predicateOrOptions) {
+      predicate = predicateOrOptions as Predicate<E["props"]>;
+    }
     if (!this.extensionPoints[extensionPoint]) {
       this.extensionPoints[extensionPoint] = [];
     }
     const registration = {
-      predicate: predicate ? predicate : () => true,
+      predicate,
       extension,
-      extensionName: extensionName ? extensionName : ""
-    };
+      extensionName: extensionName ? extensionName : "",
+      priority,
+    } as ExtensionRegistration<E["props"], E["type"]>;
     this.extensionPoints[extensionPoint].push(registration);
   }
 
@@ -128,10 +168,10 @@ export class Binder {
   ): Array<E["type"]> {
     let registrations = this.extensionPoints[extensionPoint] || [];
     if (props) {
-      registrations = registrations.filter(reg => reg.predicate(props));
+      registrations = registrations.filter((reg) => reg.predicate(props));
     }
     registrations.sort(this.sortExtensions);
-    return registrations.map(reg => reg.extension);
+    return registrations.map((reg) => reg.extension);
   }
 
   /**
@@ -151,7 +191,11 @@ export class Binder {
     const regA = a.extensionName ? a.extensionName.toUpperCase() : "";
     const regB = b.extensionName ? b.extensionName.toUpperCase() : "";
 
-    if (regA === "" && regB !== "") {
+    if (a.priority > b.priority) {
+      return -1;
+    } else if (a.priority < b.priority) {
+      return 1;
+    } else if (regA === "" && regB !== "") {
       return 1;
     } else if (regA !== "" && regB === "") {
       return -1;
