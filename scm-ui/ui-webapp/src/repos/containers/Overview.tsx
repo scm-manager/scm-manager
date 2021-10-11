@@ -37,6 +37,7 @@ import RepositoryList from "../components/list";
 import { useNamespaces, useRepositories } from "@scm-manager/ui-api";
 import { NamespaceCollection, RepositoryCollection } from "@scm-manager/ui-types";
 import { extensionPoints, useBinder } from "@scm-manager/ui-extensions";
+import classNames from "classnames";
 
 const useUrlParams = () => {
   const params = useParams();
@@ -140,13 +141,15 @@ const Overview: FC = () => {
     }
   };
 
+  const hasExtensions = extensions.length > 0;
+
   return (
     <Page title={t("overview.title")} subtitle={t("overview.subtitle")} loading={isLoading} error={error}>
       <div className="columns">
-        {extensions.length > 0 ? (
+        {hasExtensions ? (
           <div className="column is-one-third">{extensions.map((extension) => React.createElement(extension))}</div>
         ) : null}
-        <div className="column">
+        <div className={classNames("column", { "is-two-thirds": hasExtensions })}>
           <Repositories namespaces={namespaces} repositories={repositories} search={search} page={page} />
           {showCreateButton ? <CreateButton label={t("overview.createButton")} link="/repos/create/" /> : null}
         </div>
