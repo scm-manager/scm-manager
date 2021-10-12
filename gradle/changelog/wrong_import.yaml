@@ -1,0 +1,2 @@
+- type: Fixed
+  description: Correct import in RepositoryGroupEntry ([#1825](https://github.com/scm-manager/scm-manager/pull/1825))
