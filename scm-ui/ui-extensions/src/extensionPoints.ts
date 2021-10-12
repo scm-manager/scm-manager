@@ -148,3 +148,11 @@ export type RepositoryOverviewTopExtension = ExtensionPointDefinition<
   RepositoryOverviewTopExtensionProps
 >;
 export type RepositoryOverviewLeftExtension = ExtensionPointDefinition<"repository.overview.left", React.ComponentType>;
+export type RepositoryOverviewTitleExtension = ExtensionPointDefinition<
+  "repository.overview.title",
+  React.ComponentType
+>;
+export type RepositoryOverviewSubtitleExtension = ExtensionPointDefinition<
+  "repository.overview.subtitle",
+  React.ComponentType
+>;

@@ -36,7 +36,7 @@ import {
 import RepositoryList from "../components/list";
 import { useNamespaces, useRepositories } from "@scm-manager/ui-api";
 import { NamespaceCollection, RepositoryCollection } from "@scm-manager/ui-types";
-import { extensionPoints, useBinder } from "@scm-manager/ui-extensions";
+import { ExtensionPoint, extensionPoints, useBinder } from "@scm-manager/ui-extensions";
 import classNames from "classnames";
 import styled from "styled-components";
 
@@ -157,7 +157,12 @@ const Overview: FC = () => {
   const hasExtensions = extensions.length > 0;
 
   return (
-    <Page title={t("overview.title")} subtitle={t("overview.subtitle")} loading={isLoading} error={error}>
+    <Page
+      title={<ExtensionPoint name="repository.overview.title">{t("overview.title")}</ExtensionPoint>}
+      subtitle={<ExtensionPoint name="repository.overview.subtitle">{t("overview.subtitle")}</ExtensionPoint>}
+      loading={isLoading}
+      error={error}
+    >
       <div className="columns">
         {hasExtensions ? (
           <div className="column is-one-third">
