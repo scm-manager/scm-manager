@@ -32,16 +32,27 @@ import { ExtensionPoint } from "@scm-manager/ui-extensions";
 type Props = {
   repositories: Repository[];
   namespaces: NamespaceCollection;
+  page: number;
+  search: string;
+  namespace?: string;
 };
 
 class RepositoryList extends React.Component<Props> {
   render() {
-    const { repositories, namespaces } = this.props;
+    const { repositories, namespaces, namespace, page, search } = this.props;
 
     const groups = groupByNamespace(repositories, namespaces);
     return (
       <div className="content">
-        <ExtensionPoint name="repository.overview.top" renderAll={true} />
+        <ExtensionPoint
+          name="repository.overview.top"
+          renderAll={true}
+          props={{
+            page,
+            search,
+            namespace,
+          }}
+        />
         {groups.map((group) => {
           return <RepositoryGroupEntry group={group} key={group.name} />;
         })}

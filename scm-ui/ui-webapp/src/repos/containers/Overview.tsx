@@ -87,15 +87,22 @@ type RepositoriesProps = {
   repositories?: RepositoryCollection;
   search: string;
   page: number;
+  namespace?: string;
 };
 
-const Repositories: FC<RepositoriesProps> = ({ namespaces, repositories, search, page }) => {
+const Repositories: FC<RepositoriesProps> = ({ namespaces, namespace, repositories, search, page }) => {
   const [t] = useTranslation("repos");
   if (namespaces && repositories) {
     if (repositories._embedded && repositories._embedded.repositories.length > 0) {
       return (
         <>
-          <RepositoryList repositories={repositories._embedded.repositories} namespaces={namespaces} />
+          <RepositoryList
+            repositories={repositories._embedded.repositories}
+            namespaces={namespaces}
+            page={page}
+            search={search}
+            namespace={namespace}
+          />
           <LinkPaginator collection={repositories} page={page} filter={search} />
         </>
       );
@@ -158,7 +165,13 @@ const Overview: FC = () => {
           </div>
         ) : null}
         <div className={classNames("column", { "is-two-thirds": hasExtensions })}>
-          <Repositories namespaces={namespaces} repositories={repositories} search={search} page={page} />
+          <Repositories
+            namespaces={namespaces}
+            namespace={namespace}
+            repositories={repositories}
+            search={search}
+            page={page}
+          />
           {showCreateButton ? <CreateButton label={t("overview.createButton")} link="/repos/create/" /> : null}
         </div>
       </div>
