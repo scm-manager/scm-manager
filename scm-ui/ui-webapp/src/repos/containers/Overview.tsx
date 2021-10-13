@@ -37,12 +37,16 @@ import RepositoryList from "../components/list";
 import { useNamespaces, useRepositories } from "@scm-manager/ui-api";
 import { NamespaceCollection, RepositoryCollection } from "@scm-manager/ui-types";
 import { ExtensionPoint, extensionPoints, useBinder } from "@scm-manager/ui-extensions";
-import classNames from "classnames";
 import styled from "styled-components";
 
-const StickyContainer = styled.div`
+const StickyColumn = styled.div`
+  align-self: flex-start;
   position: sticky;
   top: 1rem;
+
+  &:empty {
+    display: none;
+  }
 `;
 
 const useUrlParams = () => {
@@ -165,11 +169,11 @@ const Overview: FC = () => {
     >
       <div className="columns">
         {hasExtensions ? (
-          <div className="column is-one-third">
-            <StickyContainer>{extensions.map((extension) => React.createElement(extension))}</StickyContainer>
-          </div>
+          <StickyColumn className="column is-one-third">
+            {extensions.map((extension) => React.createElement(extension))}
+          </StickyColumn>
         ) : null}
-        <div className={classNames("column", { "is-two-thirds": hasExtensions })}>
+        <div className="column is-clipped">
           <Repositories
             namespaces={namespaces}
             namespace={namespace}
