@@ -47,6 +47,7 @@ import sonia.scm.net.HttpURLConnectionFactory;
 import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.GitConfig;
 import sonia.scm.repository.GitHeadModifier;
+import sonia.scm.repository.GitRepositoryConfig;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.api.MirrorCommandResult;
 import sonia.scm.repository.api.MirrorFilter;
@@ -55,6 +56,7 @@ import sonia.scm.repository.work.NoneCachingWorkingCopyPool;
 import sonia.scm.repository.work.SimpleWorkingCopyFactory;
 import sonia.scm.repository.work.WorkdirProvider;
 import sonia.scm.security.GPG;
+import sonia.scm.store.ConfigurationStore;
 import sonia.scm.store.InMemoryConfigurationStoreFactory;
 import sonia.scm.util.IOUtil;
 
@@ -66,10 +68,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertThrows;
+import static org.mockito.AdditionalMatchers.not;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static sonia.scm.repository.api.MirrorCommandResult.ResultType.FAILED;
 import static sonia.scm.repository.api.MirrorCommandResult.ResultType.OK;
 import static sonia.scm.repository.api.MirrorCommandResult.ResultType.REJECTED_UPDATES;
@@ -91,6 +99,9 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
   private GitMirrorCommand command;
 
   private final GitHeadModifier gitHeadModifier = mock(GitHeadModifier.class);
+
+  private final GitRepositoryConfigStoreProvider storeProvider = mock(GitRepositoryConfigStoreProvider.class);
+  private final GitRepositoryConfig gitRepositoryConfig = new GitRepositoryConfig();
 
   @Before
   public void bendContextToNewRepository() throws IOException, GitAPIException {
@@ -117,7 +128,15 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
       gitChangesetConverterFactory,
       gitTagConverter,
       workingCopyFactory,
-      gitHeadModifier);
+      gitHeadModifier,
+      storeProvider);
+  }
+
+  @Before
+  public void initializeStore() {
+    ConfigurationStore configurationStore = mock(ConfigurationStore.class);
+    when(storeProvider.get(repository)).thenReturn(configurationStore);
+    when(configurationStore.get()).thenReturn(gitRepositoryConfig);
   }
 
   @After
@@ -173,9 +192,10 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
         .isEmpty();
     }
     try (Repository workdirRepository = GitUtil.open(workdirAfterClose)) {
-      assertThat(workdirRepository.findRef(Constants.HEAD).getTarget().getName()).isEqualTo("refs/heads/test-branch");
+      assertThat(workdirRepository.findRef(Constants.HEAD).getTarget().getName()).isNotEqualTo("refs/heads/master");
     }
-    verify(gitHeadModifier).ensure(repository, "test-branch");
+    verify(gitHeadModifier)
+      .ensure(eq(repository), not(eq("master")));
   }
 
   @Test
@@ -725,6 +745,120 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
       });
   }
 
+  @Test
+  public void shouldSelectNewHeadIfOldHeadIsDeleted() throws IOException, GitAPIException {
+    callMirrorCommand();
+
+    try (Git updatedSource = Git.open(repositoryDirectory)) {
+      updatedSource.checkout().setName("test-branch").call();
+      updatedSource.branchDelete().setBranchNames("master").setForce(true).call();
+    }
+
+    List<MirrorFilter.BranchUpdate> collectedBranchUpdates = callMirrorAndCollectUpdates().branchUpdates;
+
+    assertThat(collectedBranchUpdates)
+      .anySatisfy(update -> {
+        assertThat(update.getBranchName()).isEqualTo("master");
+        assertThat(update.getNewRevision()).isEmpty();
+      });
+  }
+
+  public static class DefaultBranchSelectorTest {
+
+    public static final List<String> BRANCHES = asList("master", "one", "two", "three");
+
+    @Test
+    public void shouldKeepMasterIfMirroredInFirstSync() {
+      GitMirrorCommand.DefaultBranchSelector selector =
+        new GitMirrorCommand.DefaultBranchSelector("master", emptyList());
+
+      selector.accepted("master");
+      selector.accepted("something");
+
+      assertThat(selector.newDefault()).isEmpty();
+    }
+
+    @Test
+    public void shouldKeepDefaultIfNotDeleted() {
+      GitMirrorCommand.DefaultBranchSelector selector =
+        new GitMirrorCommand.DefaultBranchSelector("master", BRANCHES);
+
+      selector.accepted("new");
+      selector.deleted("two");
+
+      assertThat(selector.newDefault()).isEmpty();
+    }
+
+    @Test
+    public void shouldChangeDefaultIfInitialOneIsDeleted() {
+      GitMirrorCommand.DefaultBranchSelector selector =
+        new GitMirrorCommand.DefaultBranchSelector("master", BRANCHES);
+
+      selector.deleted("master");
+
+      assertThat(selector.newDefault()).get().isIn("one", "two", "three");
+    }
+
+    @Test
+    public void shouldChangeDefaultIfInitialOneIsDeletedButNotFromDeleted() {
+      GitMirrorCommand.DefaultBranchSelector selector =
+        new GitMirrorCommand.DefaultBranchSelector("master", BRANCHES);
+
+      selector.deleted("master");
+      selector.deleted("one");
+      selector.deleted("three");
+
+      assertThat(selector.newDefault()).get().isEqualTo("two");
+    }
+
+    @Test
+    public void shouldChangeDefaultToRemainingBranchIfInitialOneIsDeleted() {
+      GitMirrorCommand.DefaultBranchSelector selector =
+        new GitMirrorCommand.DefaultBranchSelector("master", BRANCHES);
+
+      selector.deleted("master");
+      selector.deleted("one");
+      selector.deleted("three");
+
+      assertThat(selector.newDefault()).get().isEqualTo("two");
+    }
+
+    @Test
+    public void shouldFailIfAllInitialBranchesAreDeleted() {
+      GitMirrorCommand.DefaultBranchSelector selector =
+        new GitMirrorCommand.DefaultBranchSelector("master", BRANCHES);
+
+      selector.deleted("master");
+      selector.deleted("one");
+      selector.deleted("two");
+      selector.accepted("new");
+      selector.deleted("three");
+
+      assertThrows(IllegalStateException.class, selector::newDefault);
+    }
+
+    @Test
+    public void shouldChangeDefaultOnInitialSyncIfMasterIsRejected() {
+      GitMirrorCommand.DefaultBranchSelector selector =
+        new GitMirrorCommand.DefaultBranchSelector("master", emptyList());
+
+      selector.accepted("main");
+      selector.deleted("master");
+
+      assertThat(selector.newDefault()).get().isEqualTo("main");
+    }
+
+    @Test
+    public void shouldChangeDefaultOnInitialSyncIfMasterIsNotAvailable() {
+      GitMirrorCommand.DefaultBranchSelector selector =
+        new GitMirrorCommand.DefaultBranchSelector("master", emptyList());
+
+      selector.accepted("main");
+
+      assertThat(selector.newDefault()).get().isEqualTo("main");
+    }
+  }
+
   private Updates callMirrorAndCollectUpdates() {
     Updates updates = new Updates();
 
@@ -740,6 +874,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
             updates.tagUpdates.add(tagUpdate);
             return Result.accept();
           }
+
           @Override
           public Result acceptBranch(BranchUpdate branchUpdate) {
             branchUpdate.getChangeset();

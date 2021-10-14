@@ -28,6 +28,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -92,7 +93,7 @@ class DefaultBranchDeleteProtectionTest {
 
     @Mock
     private RepositoryService service;
-    @Mock
+    @Mock(answer = Answers.RETURNS_SELF)
     private BranchesCommandBuilder branchesCommand;
 
     @BeforeEach
@@ -113,14 +114,14 @@ class DefaultBranchDeleteProtectionTest {
     }
 
     @Test
-    @SuppressWarnings("java:S2699")
-      // we just need to make sure not exception is thrown
     void shouldDoNothingIfDefaultBranchIsNotDeleted() throws IOException {
       mockDeletedBranches(singletonList("anything"));
       mockExistingBranches(branch("anything"), defaultBranch());
 
       PreReceiveRepositoryHookEvent event = new PreReceiveRepositoryHookEvent(new RepositoryHookEvent(context, REPOSITORY, PRE_RECEIVE));
       defaultBranchDeleteProtection.protectDefaultBranch(event);
+
+      verify(branchesCommand).setDisableCache(true);
     }
 
     @Test

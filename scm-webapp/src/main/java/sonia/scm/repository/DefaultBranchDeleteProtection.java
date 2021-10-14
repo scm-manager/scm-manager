@@ -76,7 +76,7 @@ public class DefaultBranchDeleteProtection {
 
   private Branches getBranches(RepositoryService service) {
     try {
-      return service.getBranchesCommand().getBranches();
+      return service.getBranchesCommand().setDisableCache(true).getBranches();
     } catch (IOException e) {
       LOG.warn("Could not read branches in repository {} to check for default branch", service.getRepository());
       return new Branches();
