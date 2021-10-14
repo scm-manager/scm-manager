@@ -1,0 +1,2 @@
+- type: changed
+  descripion: Always show SCM-Manager footer ([#1826](https://github.com/scm-manager/scm-manager/pull/1826))
