@@ -197,13 +197,16 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       filter = mirrorCommandRequest.getFilter().getFilter(filterContext);
 
       if (fetchResult.getTrackingRefUpdates().isEmpty()) {
+        LOG.trace("No updates found for mirror repository {}", repository);
         mirrorLog.add("No updates found");
       } else {
         handleBranches();
         handleTags();
       }
 
-      push(generatePushRefSpecs().toArray(new String[0]));
+      String[] pushRefSpecs = generatePushRefSpecs().toArray(new String[0]);
+      LOG.trace("Pushing mirror result to repository {} with refspec '{}'", repository, pushRefSpecs);
+      push(pushRefSpecs);
       setHeadIfMirroredBranchExists();
       cleanUpMasterIfNecessary();
       return new MirrorCommandResult(result, mirrorLog, stopwatch.stop().elapsed());
@@ -215,6 +218,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
         // should not have been mirrored, this branch cannot be deleted otherwise; see #cleanupMasterIfNecessary) and
         // in the "real" mirror repository (here a HEAD with a not existing branch will lead to errors in the next clone
         // call).
+        LOG.trace("Setting branch {} as new HEAD and default branch in repository {}", acceptedBranch, repository);
         try {
           RefUpdate refUpdate = git.getRepository().getRefDatabase().newUpdate(Constants.HEAD, true);
           refUpdate.setForceUpdate(true);
@@ -228,6 +232,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
 
     private void cleanUpMasterIfNecessary() {
       if (deleteMasterAfterInitialSync) {
+        LOG.trace("Deleting branch master in mirror working directory for repository {}", repository);
         try {
           // we have to delete the master branch in the working copy, because otherwise it may be pushed
           // to the mirror in the next synchronization call, when the working directory is cached.
@@ -248,6 +253,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
     }
 
     private void copyRemoteRefsToMain() {
+      LOG.trace("Copy remote refs to main");
       try {
         RefDatabase refDatabase = git.getRepository().getRefDatabase();
         refDatabase.getRefs()
@@ -256,6 +262,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
           .forEach(
           ref -> {
             try {
+              LOG.trace("Copying reference {}", ref);
               String baseName = ref.getName().substring("refs/remotes/origin/".length());
               RefUpdate refUpdate = refDatabase.newUpdate("refs/heads/" + baseName, true);
               refUpdate.setNewObjectId(ref.getObjectId());
@@ -304,12 +311,15 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       }
 
       private void handleRef(Function<TrackingRefUpdate, Result> filter) {
+        LOG.trace("Handling {}", ref.getLocalName());
         Result filterResult = filter.apply(ref);
         try {
           String referenceName = ref.getLocalName().substring("refs/".length() + refType.length());
           if (filterResult.isAccepted()) {
+            LOG.trace("Accepted ref {}", ref.getLocalName());
             handleAcceptedReference(referenceName);
           } else {
+            LOG.trace("Rejected ref {}", ref.getLocalName());
             handleRejectedRef(referenceName, filterResult);
           }
         } catch (Exception e) {
