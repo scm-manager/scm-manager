@@ -63,7 +63,7 @@ const App: FC = () => {
         <NavigationBar links={index._links} />
       </Header>
       {content}
-      {authenticated ? <Footer me={me} version={index.version} links={index._links} /> : null}
+      <Footer me={me} version={index.version} links={index._links} />
     </div>
   );
 };

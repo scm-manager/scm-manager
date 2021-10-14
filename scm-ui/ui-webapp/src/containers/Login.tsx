@@ -26,6 +26,7 @@ import { Redirect, useLocation } from "react-router-dom";
 import LoginInfo from "../components/LoginInfo";
 import { parse } from "query-string";
 import { useIndexLink, useLogin } from "@scm-manager/ui-api";
+import styled from "styled-components";
 
 interface FromObject {
   from?: string;
@@ -38,6 +39,10 @@ export const from = (queryString?: string, stateParams?: FromObject | null): str
   const queryParams = parse(queryString || "");
   return queryParams?.from || stateParams?.from || "/";
 };
+
+const StyledSection = styled.section`
+  padding-bottom: 3.5rem;
+`;
 
 const Login: FC = () => {
   const location = useLocation<FromObject>();
@@ -57,7 +62,7 @@ const Login: FC = () => {
   }
 
   return (
-    <section className="hero pt-6">
+    <StyledSection className="hero pt-6">
       <div className="hero-body">
         <div className="container">
           <div className="columns is-centered">
@@ -65,7 +70,7 @@ const Login: FC = () => {
           </div>
         </div>
       </div>
-    </section>
+    </StyledSection>
   );
 };
 
