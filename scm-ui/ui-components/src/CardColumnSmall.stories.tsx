@@ -27,6 +27,7 @@ import { storiesOf } from "@storybook/react";
 import CardColumnSmall from "./CardColumnSmall";
 import Icon from "./Icon";
 import styled from "styled-components";
+import DateFromNow from "./DateFromNow";
 
 const Wrapper = styled.div`
   margin: 2rem;
@@ -39,9 +40,22 @@ const contentLeft = <strong className="m-0">main content</strong>;
 const contentRight = <small>more text</small>;
 
 storiesOf("CardColumnSmall", module)
-  .addDecorator(story => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
-  .addDecorator(storyFn => <Wrapper>{storyFn()}</Wrapper>)
+  .addDecorator((story) => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
+  .addDecorator((storyFn) => <Wrapper>{storyFn()}</Wrapper>)
   .add("Default", () => (
     <CardColumnSmall link={link} avatar={icon} contentLeft={contentLeft} contentRight={contentRight} />
   ))
-  .add("Minimal", () => <CardColumnSmall link={link} contentLeft={contentLeft} contentRight={contentRight} />);
+  .add("Minimal", () => <CardColumnSmall link={link} contentLeft={contentLeft} contentRight={contentRight} />)
+  .add("Task", () => (
+    <CardColumnSmall
+      link={link}
+      avatar={<Icon name="exchange-alt" className="fa-fw fa-lg" color="inherit" />}
+      contentLeft={<strong>Repository created</strong>}
+      contentRight={
+        <small>
+          <DateFromNow date={new Date()} />
+        </small>
+      }
+      footer="New: scmadmin/spaceship"
+    />
+  ));

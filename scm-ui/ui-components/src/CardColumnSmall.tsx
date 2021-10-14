@@ -37,18 +37,22 @@ type Props = {
 
 const StyledLink = styled(Link)`
   color: inherit;
+`;
+
+const StyledDiv = styled.div`
   :hover {
-    color: #33b2e8 !important;
+    background-color: rgba(51, 178, 232, 0.1);
+    border-radius: 4px;
   }
 `;
 
 const CardColumnSmall: FC<Props> = ({ link, avatar, contentLeft, contentRight, footer }) => {
-  const renderAvatar = avatar ? <figure className={classNames("media-left", "mr-2")}>{avatar}</figure> : null;
+  const renderAvatar = avatar ? <figure className="media-left mr-2 mt-1">{avatar}</figure> : null;
   const renderFooter = footer ? <small>{footer}</small> : null;
 
   return (
     <StyledLink to={link}>
-      <div className="media">
+      <StyledDiv className="p-2 media">
         {renderAvatar}
         <div
           className={classNames(
@@ -66,7 +70,7 @@ const CardColumnSmall: FC<Props> = ({ link, avatar, contentLeft, contentRight, f
           </div>
           {renderFooter}
         </div>
-      </div>
+      </StyledDiv>
     </StyledLink>
   );
 };
