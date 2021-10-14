@@ -26,6 +26,7 @@ import { useHistory, useLocation, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
   CreateButton,
+  devices,
   LinkPaginator,
   Notification,
   OverviewPageActions,
@@ -41,11 +42,14 @@ import styled from "styled-components";
 
 const StickyColumn = styled.div`
   align-self: flex-start;
-  position: sticky;
-  top: 1rem;
 
   &:empty {
     display: none;
+  }
+
+  @media (min-width: ${devices.mobile.width}px) {
+    position: sticky;
+    top: 1rem;
   }
 `;
 
