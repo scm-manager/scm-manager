@@ -2645,7 +2645,7 @@ exports[`Storyshots CardColumnSmall Default 1`] = `
     onClick={[Function]}
   >
     <div
-      className="CardColumnSmall__StyledDiv-tk9h0o-1 lbZxBE p-2 media"
+      className="CardColumnSmall__StyledDiv-tk9h0o-1 gEutBg p-2 media has-hover-background-blue"
     >
       <figure
         className="media-left mr-2 mt-1"
@@ -2693,7 +2693,7 @@ exports[`Storyshots CardColumnSmall Minimal 1`] = `
     onClick={[Function]}
   >
     <div
-      className="CardColumnSmall__StyledDiv-tk9h0o-1 lbZxBE p-2 media"
+      className="CardColumnSmall__StyledDiv-tk9h0o-1 gEutBg p-2 media has-hover-background-blue"
     >
       <div
         className="media-content text-box is-flex is-flex-direction-column is-justify-content-space-around is-align-self-stretch"
@@ -2734,7 +2734,7 @@ exports[`Storyshots CardColumnSmall Task 1`] = `
     onClick={[Function]}
   >
     <div
-      className="CardColumnSmall__StyledDiv-tk9h0o-1 lbZxBE p-2 media"
+      className="CardColumnSmall__StyledDiv-tk9h0o-1 gEutBg p-2 media has-hover-background-blue"
     >
       <figure
         className="media-left mr-2 mt-1"
@@ -57329,7 +57329,7 @@ exports[`Storyshots GroupEntry Default 1`] = `
     className="is-relative"
   >
     <a
-      className="GroupEntry__OverlayLink-sc-1f902yu-1 RhDcq"
+      className="GroupEntry__OverlayLink-sc-1f902yu-1 dVnuiR has-hover-background-blue"
       href="/foo/bar"
       onClick={[Function]}
     />
@@ -57406,7 +57406,7 @@ exports[`Storyshots GroupEntry With long texts 1`] = `
     className="is-relative"
   >
     <a
-      className="GroupEntry__OverlayLink-sc-1f902yu-1 RhDcq"
+      className="GroupEntry__OverlayLink-sc-1f902yu-1 dVnuiR has-hover-background-blue"
       href="/foo/bar"
       onClick={[Function]}
     />
@@ -72833,7 +72833,7 @@ exports[`Storyshots RepositoryEntry Archived 1`] = `
     className="is-relative"
   >
     <a
-      className="GroupEntry__OverlayLink-sc-1f902yu-1 RhDcq"
+      className="GroupEntry__OverlayLink-sc-1f902yu-1 dVnuiR has-hover-background-blue"
       href="/repo/hitchhiker/heartOfGold/"
       onClick={[Function]}
     />
@@ -72937,7 +72937,7 @@ exports[`Storyshots RepositoryEntry Avatar EP 1`] = `
     className="is-relative"
   >
     <a
-      className="GroupEntry__OverlayLink-sc-1f902yu-1 RhDcq"
+      className="GroupEntry__OverlayLink-sc-1f902yu-1 dVnuiR has-hover-background-blue"
       href="/repo/hitchhiker/heartOfGold/"
       onClick={[Function]}
     />
@@ -73030,7 +73030,7 @@ exports[`Storyshots RepositoryEntry Before Title EP 1`] = `
     className="is-relative"
   >
     <a
-      className="GroupEntry__OverlayLink-sc-1f902yu-1 RhDcq"
+      className="GroupEntry__OverlayLink-sc-1f902yu-1 dVnuiR has-hover-background-blue"
       href="/repo/hitchhiker/heartOfGold/"
       onClick={[Function]}
     />
@@ -73126,7 +73126,7 @@ exports[`Storyshots RepositoryEntry Default 1`] = `
     className="is-relative"
   >
     <a
-      className="GroupEntry__OverlayLink-sc-1f902yu-1 RhDcq"
+      className="GroupEntry__OverlayLink-sc-1f902yu-1 dVnuiR has-hover-background-blue"
       href="/repo/hitchhiker/heartOfGold/"
       onClick={[Function]}
     />
@@ -73219,7 +73219,7 @@ exports[`Storyshots RepositoryEntry Exporting 1`] = `
     className="is-relative"
   >
     <a
-      className="GroupEntry__OverlayLink-sc-1f902yu-1 RhDcq"
+      className="GroupEntry__OverlayLink-sc-1f902yu-1 dVnuiR has-hover-background-blue"
       href="/repo/hitchhiker/heartOfGold/"
       onClick={[Function]}
     />
@@ -73323,7 +73323,7 @@ exports[`Storyshots RepositoryEntry HealthCheck Failure 1`] = `
     className="is-relative"
   >
     <a
-      className="GroupEntry__OverlayLink-sc-1f902yu-1 RhDcq"
+      className="GroupEntry__OverlayLink-sc-1f902yu-1 dVnuiR has-hover-background-blue"
       href="/repo/hitchhiker/heartOfGold/"
       onClick={[Function]}
     />
@@ -73428,7 +73428,7 @@ exports[`Storyshots RepositoryEntry MultiRepositoryTags 1`] = `
     className="is-relative"
   >
     <a
-      className="GroupEntry__OverlayLink-sc-1f902yu-1 RhDcq"
+      className="GroupEntry__OverlayLink-sc-1f902yu-1 dVnuiR has-hover-background-blue"
       href="/repo/hitchhiker/heartOfGold/"
       onClick={[Function]}
     />
@@ -73542,7 +73542,7 @@ exports[`Storyshots RepositoryEntry RepositoryFlag EP 1`] = `
     className="is-relative"
   >
     <a
-      className="GroupEntry__OverlayLink-sc-1f902yu-1 RhDcq"
+      className="GroupEntry__OverlayLink-sc-1f902yu-1 dVnuiR has-hover-background-blue"
       href="/repo/hitchhiker/heartOfGold/"
       onClick={[Function]}
     />
@@ -73647,7 +73647,7 @@ exports[`Storyshots RepositoryEntry With long texts 1`] = `
     className="is-relative"
   >
     <a
-      className="GroupEntry__OverlayLink-sc-1f902yu-1 RhDcq"
+      className="GroupEntry__OverlayLink-sc-1f902yu-1 dVnuiR has-hover-background-blue"
       href="/repo/hitchhiker/veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery-loooooooooooooooooooooooooooooooooooooooooooooooooooong-repooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo-naaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaame/"
       onClick={[Function]}
     />
