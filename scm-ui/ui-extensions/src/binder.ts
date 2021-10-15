@@ -40,8 +40,8 @@ export type ExtensionPointDefinition<N extends string, T, P = undefined> = {
 export type SimpleDynamicExtensionPointDefinition<P extends string, T, Props, S extends string | undefined> =
   ExtensionPointDefinition<S extends string ? `${P}${S}` : `${P}${string}`, T, Props>;
 
-export type BindOptions<E extends ExtensionPointDefinition<string, unknown, any>> = {
-  predicate?: Predicate<E>;
+export type BindOptions<Props> = {
+  predicate?: Predicate<Props>;
 
   /**
    * Extensions are ordered by name (ASC).
@@ -54,9 +54,7 @@ export type BindOptions<E extends ExtensionPointDefinition<string, unknown, any>
   priority?: number;
 };
 
-function isBindOptions<E extends ExtensionPointDefinition<string, unknown, any>>(
-  input?: Predicate<E> | BindOptions<E>
-): input is BindOptions<E> {
+function isBindOptions<Props>(input?: Predicate<Props> | BindOptions<Props>): input is BindOptions<Props> {
   return typeof input !== "function" && typeof input === "object";
 }
 
@@ -92,12 +90,12 @@ export class Binder {
   bind<E extends ExtensionPointDefinition<string, unknown, any>>(
     extensionPoint: E["name"],
     extension: E["type"],
-    options?: BindOptions<E>
+    options?: BindOptions<E["props"]>
   ): void;
   bind<E extends ExtensionPointDefinition<string, unknown, any>>(
     extensionPoint: E["name"],
     extension: E["type"],
-    predicateOrOptions?: Predicate<E["props"]> | BindOptions<E>,
+    predicateOrOptions?: Predicate<E["props"]> | BindOptions<E["props"]>,
     extensionName?: string
   ) {
     let predicate: Predicate<E["props"]> = () => true;
@@ -113,7 +111,7 @@ export class Binder {
         priority = predicateOrOptions.priority;
       }
     } else if (predicateOrOptions) {
-      predicate = predicateOrOptions as Predicate<E["props"]>;
+      predicate = predicateOrOptions;
     }
     if (!this.extensionPoints[extensionPoint]) {
       this.extensionPoints[extensionPoint] = [];
