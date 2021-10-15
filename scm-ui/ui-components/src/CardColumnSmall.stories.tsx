@@ -53,7 +53,7 @@ storiesOf("CardColumnSmall", module)
       contentLeft={<strong>Repository created</strong>}
       contentRight={
         <small>
-          <DateFromNow date={new Date()} />
+          <DateFromNow date={new Date(1634287231)} />
         </small>
       }
       footer="New: scmadmin/spaceship"
