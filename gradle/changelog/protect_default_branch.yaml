@@ -1,2 +1,2 @@
 - type: Changed
-  description: The default branch of a repository cannot be deleted ([#TODO](https://github.com/scm-manager/scm-manager/pull/TODO))
+  description: The default branch of a repository cannot be deleted ([#1827](https://github.com/scm-manager/scm-manager/pull/1827))
