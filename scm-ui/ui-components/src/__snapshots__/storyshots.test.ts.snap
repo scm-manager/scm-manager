@@ -2640,15 +2640,15 @@ exports[`Storyshots CardColumnSmall Default 1`] = `
   className="CardColumnSmallstories__Wrapper-ofr817-0 hUFZIW"
 >
   <a
-    className="CardColumnSmall__StyledLink-tk9h0o-0 eXYQYs"
+    className="CardColumnSmall__StyledLink-tk9h0o-0 gNZuIT"
     href="/foo/bar"
     onClick={[Function]}
   >
     <div
-      className="media"
+      className="CardColumnSmall__StyledDiv-tk9h0o-1 lbZxBE p-2 media"
     >
       <figure
-        className="media-left mr-2"
+        className="media-left mr-2 mt-1"
       >
         <i
           className="fas fa-icons fa-2x fa-fw has-text-grey-light"
@@ -2688,12 +2688,12 @@ exports[`Storyshots CardColumnSmall Minimal 1`] = `
   className="CardColumnSmallstories__Wrapper-ofr817-0 hUFZIW"
 >
   <a
-    className="CardColumnSmall__StyledLink-tk9h0o-0 eXYQYs"
+    className="CardColumnSmall__StyledLink-tk9h0o-0 gNZuIT"
     href="/foo/bar"
     onClick={[Function]}
   >
     <div
-      className="media"
+      className="CardColumnSmall__StyledDiv-tk9h0o-1 lbZxBE p-2 media"
     >
       <div
         className="media-content text-box is-flex is-flex-direction-column is-justify-content-space-around is-align-self-stretch"
@@ -2718,6 +2718,60 @@ exports[`Storyshots CardColumnSmall Minimal 1`] = `
             </small>
           </div>
         </div>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`Storyshots CardColumnSmall Task 1`] = `
+<div
+  className="CardColumnSmallstories__Wrapper-ofr817-0 hUFZIW"
+>
+  <a
+    className="CardColumnSmall__StyledLink-tk9h0o-0 gNZuIT"
+    href="/foo/bar"
+    onClick={[Function]}
+  >
+    <div
+      className="CardColumnSmall__StyledDiv-tk9h0o-1 lbZxBE p-2 media"
+    >
+      <figure
+        className="media-left mr-2 mt-1"
+      >
+        <i
+          className="fas fa-exchange-alt has-text-inherit fa-fw fa-lg"
+        />
+      </figure>
+      <div
+        className="media-content text-box is-flex is-flex-direction-column is-justify-content-space-around is-align-self-stretch"
+      >
+        <div
+          className="is-flex is-align-items-center"
+        >
+          <div
+            className="is-clipped mb-0"
+          >
+            <strong>
+              Repository created
+            </strong>
+          </div>
+          <div
+            className="is-align-items-start ml-auto"
+          >
+            <small>
+              <time
+                className="DateElement-sc-1schp8c-0 cinWxa"
+                title="2021-10-15 09:49:38"
+              >
+                less than a minute ago
+              </time>
+            </small>
+          </div>
+        </div>
+        <small>
+          New: scmadmin/spaceship
+        </small>
       </div>
     </div>
   </a>
