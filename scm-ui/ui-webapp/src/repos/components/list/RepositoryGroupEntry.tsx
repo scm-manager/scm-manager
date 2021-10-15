@@ -23,9 +23,10 @@
  */
 import React, { FC } from "react";
 import { Link } from "react-router-dom";
-import { Icon, RepositoryEntry, GroupEntries } from "@scm-manager/ui-components";
+import { Icon, RepositoryEntry } from "@scm-manager/ui-components";
 import { RepositoryGroup } from "@scm-manager/ui-types";
 import { useTranslation } from "react-i18next";
+import GroupEntries from "./GroupEntries";
 
 type Props = {
   group: RepositoryGroup;
