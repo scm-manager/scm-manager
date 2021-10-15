@@ -40,10 +40,7 @@ const StyledLink = styled(Link)`
 `;
 
 const StyledDiv = styled.div`
-  :hover {
-    background-color: rgba(51, 178, 232, 0.1);
-    border-radius: 4px;
-  }
+  border-radius: 4px;
 `;
 
 const CardColumnSmall: FC<Props> = ({ link, avatar, contentLeft, contentRight, footer }) => {
@@ -52,7 +49,7 @@ const CardColumnSmall: FC<Props> = ({ link, avatar, contentLeft, contentRight, f
 
   return (
     <StyledLink to={link}>
-      <StyledDiv className="p-2 media">
+      <StyledDiv className="p-2 media has-hover-background-blue">
         {renderAvatar}
         <div
           className={classNames(
