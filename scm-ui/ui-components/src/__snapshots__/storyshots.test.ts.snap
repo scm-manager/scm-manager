@@ -2645,7 +2645,7 @@ exports[`Storyshots CardColumnSmall Default 1`] = `
     onClick={[Function]}
   >
     <div
-      className="CardColumnSmall__StyledDiv-tk9h0o-1 gEutBg p-2 media has-hover-background-blue"
+      className="p-2 media has-hover-background-blue"
     >
       <figure
         className="media-left mr-2 mt-1"
@@ -2658,10 +2658,10 @@ exports[`Storyshots CardColumnSmall Default 1`] = `
         className="media-content text-box is-flex is-flex-direction-column is-justify-content-space-around is-align-self-stretch"
       >
         <div
-          className="is-flex is-align-items-center"
+          className="is-flex is-flex-direction-column is-flex-align-items-start"
         >
           <div
-            className="is-clipped mb-0"
+            className="is-clipped"
           >
             <strong
               className="m-0"
@@ -2669,9 +2669,7 @@ exports[`Storyshots CardColumnSmall Default 1`] = `
               main content
             </strong>
           </div>
-          <div
-            className="is-align-items-start ml-auto"
-          >
+          <div>
             <small>
               more text
             </small>
@@ -2693,16 +2691,16 @@ exports[`Storyshots CardColumnSmall Minimal 1`] = `
     onClick={[Function]}
   >
     <div
-      className="CardColumnSmall__StyledDiv-tk9h0o-1 gEutBg p-2 media has-hover-background-blue"
+      className="p-2 media has-hover-background-blue"
     >
       <div
         className="media-content text-box is-flex is-flex-direction-column is-justify-content-space-around is-align-self-stretch"
       >
         <div
-          className="is-flex is-align-items-center"
+          className="is-flex is-flex-direction-column is-flex-align-items-start"
         >
           <div
-            className="is-clipped mb-0"
+            className="is-clipped"
           >
             <strong
               className="m-0"
@@ -2710,9 +2708,7 @@ exports[`Storyshots CardColumnSmall Minimal 1`] = `
               main content
             </strong>
           </div>
-          <div
-            className="is-align-items-start ml-auto"
-          >
+          <div>
             <small>
               more text
             </small>
@@ -2734,7 +2730,7 @@ exports[`Storyshots CardColumnSmall Task 1`] = `
     onClick={[Function]}
   >
     <div
-      className="CardColumnSmall__StyledDiv-tk9h0o-1 gEutBg p-2 media has-hover-background-blue"
+      className="p-2 media has-hover-background-blue"
     >
       <figure
         className="media-left mr-2 mt-1"
@@ -2747,18 +2743,16 @@ exports[`Storyshots CardColumnSmall Task 1`] = `
         className="media-content text-box is-flex is-flex-direction-column is-justify-content-space-around is-align-self-stretch"
       >
         <div
-          className="is-flex is-align-items-center"
+          className="is-flex is-flex-direction-column is-flex-align-items-start"
         >
           <div
-            className="is-clipped mb-0"
+            className="is-clipped"
           >
             <strong>
               Repository created
             </strong>
           </div>
-          <div
-            className="is-align-items-start ml-auto"
-          >
+          <div>
             <small>
               <time
                 className="DateElement-sc-1schp8c-0 cinWxa"
