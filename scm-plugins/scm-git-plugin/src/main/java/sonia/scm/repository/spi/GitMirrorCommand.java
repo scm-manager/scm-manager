@@ -51,6 +51,7 @@ import sonia.scm.repository.Changeset;
 import sonia.scm.repository.GitChangesetConverter;
 import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.GitHeadModifier;
+import sonia.scm.repository.GitRepositoryConfig;
 import sonia.scm.repository.GitWorkingCopyFactory;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Tag;
@@ -59,6 +60,7 @@ import sonia.scm.repository.api.MirrorCommandResult.ResultType;
 import sonia.scm.repository.api.MirrorFilter;
 import sonia.scm.repository.api.MirrorFilter.Result;
 import sonia.scm.repository.api.UsernamePasswordCredential;
+import sonia.scm.store.ConfigurationStore;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -225,7 +227,10 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       }
 
       gitHeadModifier.ensure(repository, newDefaultBranch);
-      storeProvider.get(repository).get().setDefaultBranch(newDefaultBranch);
+      ConfigurationStore<GitRepositoryConfig> configStore = storeProvider.get(repository);
+      GitRepositoryConfig gitRepositoryConfig = configStore.get();
+      gitRepositoryConfig.setDefaultBranch(newDefaultBranch);
+      configStore.set(gitRepositoryConfig);
     }
 
     private Collection<String> generatePushRefSpecs() {

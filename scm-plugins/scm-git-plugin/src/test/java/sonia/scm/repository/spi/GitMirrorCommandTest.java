@@ -74,6 +74,7 @@ import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.AdditionalMatchers.not;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -101,6 +102,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
   private final GitHeadModifier gitHeadModifier = mock(GitHeadModifier.class);
 
   private final GitRepositoryConfigStoreProvider storeProvider = mock(GitRepositoryConfigStoreProvider.class);
+  private final ConfigurationStore<GitRepositoryConfig> configurationStore = mock(ConfigurationStore.class);
   private final GitRepositoryConfig gitRepositoryConfig = new GitRepositoryConfig();
 
   @Before
@@ -134,7 +136,6 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
 
   @Before
   public void initializeStore() {
-    ConfigurationStore configurationStore = mock(ConfigurationStore.class);
     when(storeProvider.get(repository)).thenReturn(configurationStore);
     when(configurationStore.get()).thenReturn(gitRepositoryConfig);
   }
@@ -761,6 +762,10 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
         assertThat(update.getBranchName()).isEqualTo("master");
         assertThat(update.getNewRevision()).isEmpty();
       });
+    verify(configurationStore).set(argThat(argument -> {
+      assertThat(argument.getDefaultBranch()).isNotEqualTo("master");
+      return true;
+    }));
   }
 
   public static class DefaultBranchSelectorTest {
