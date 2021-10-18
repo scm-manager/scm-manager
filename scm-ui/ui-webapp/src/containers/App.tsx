@@ -29,7 +29,13 @@ import { binder } from "@scm-manager/ui-extensions";
 import Login from "./Login";
 import { useIndex, useSubject } from "@scm-manager/ui-api";
 import NavigationBar from "./NavigationBar";
+import styled from "styled-components";
 
+const AppWrapper = styled.div`
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+`;
 const App: FC = () => {
   const { data: index } = useIndex();
   const { isLoading, error, isAuthenticated, isAnonymous, me } = useSubject();
@@ -54,17 +60,17 @@ const App: FC = () => {
   } else if (error) {
     content = <ErrorPage title={t("app.error.title")} subtitle={t("app.error.subtitle")} error={error} />;
   } else if (me) {
-    content = <Main authenticated={authenticated} links={index._links} me={me} />;
+    content = <Main authenticated={authenticated} me={me} />;
   }
 
   return (
-    <div className="App">
+    <AppWrapper className="App">
       <Header authenticated={authenticated} links={index._links}>
         <NavigationBar links={index._links} />
       </Header>
-      {content}
+      <div className="is-flex-grow-1">{content}</div>
       <Footer me={me} version={index.version} links={index._links} />
-    </div>
+    </AppWrapper>
   );
 };
 

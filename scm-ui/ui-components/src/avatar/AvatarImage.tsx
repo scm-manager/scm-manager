@@ -23,8 +23,7 @@
  */
 import React, { FC } from "react";
 import { Image } from "..";
-import { Person } from "./Avatar";
-import { EXTENSION_POINT } from "./Avatar";
+import { EXTENSION_POINT, Person } from "./Avatar";
 import { useBinder } from "@scm-manager/ui-extensions";
 
 type Props = {
