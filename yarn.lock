@@ -18800,6 +18800,11 @@ systemjs@0.21.6:
   resolved "https://registry.yarnpkg.com/systemjs/-/systemjs-0.21.6.tgz#9d15e79d9f60abbac23f0d179f887ec01f260a1b"
   integrity sha512-R+5S9eV9vcQgWOoS4D87joZ4xkFJHb19ZsyKY07D1+VBDE9bwYcU+KXE0r5XlDA8mFoJGyuWDbfrNoh90JsA8g==
 
+tabbable@^5.2.1:
+  version "5.2.1"
+  resolved "https://registry.yarnpkg.com/tabbable/-/tabbable-5.2.1.tgz#e3fda7367ddbb172dcda9f871c0fdb36d1c4cd9c"
+  integrity sha512-40pEZ2mhjaZzK0BnI+QGNjJO8UYx9pP5v7BGe17SORTO0OEuuaAwQTkAp8whcZvqon44wKFOikD+Al11K3JICQ==
+
 table@^6.0.4:
   version "6.7.0"
   resolved "https://registry.yarnpkg.com/table/-/table-6.7.0.tgz#26274751f0ee099c547f6cb91d3eff0d61d155b2"
@@ -20060,10 +20065,8 @@ watchpack@^1.7.4:
   resolved "https://registry.yarnpkg.com/watchpack/-/watchpack-1.7.5.tgz#1267e6c55e0b9b5be44c2023aed5437a2c26c453"
   integrity sha512-9P3MWk6SrKjHsGkLT2KHXdQ/9SNkyoJbabxnKOoJepsvJjJG8uYTR3yTPxPQvNDI3w4Nz1xnE0TLHK4RIVe/MQ==
   dependencies:
-    chokidar "^3.4.1"
     graceful-fs "^4.1.2"
     neo-async "^2.5.0"
-    watchpack-chokidar2 "^2.0.1"
   optionalDependencies:
     chokidar "^3.4.1"
     watchpack-chokidar2 "^2.0.1"

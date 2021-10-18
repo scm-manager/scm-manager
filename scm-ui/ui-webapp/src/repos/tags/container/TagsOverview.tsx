@@ -47,7 +47,7 @@ const TagsOverview: FC<Props> = ({ repository, baseUrl }) => {
     return <Loading />;
   }
 
-  const tags = data?._embedded.tags || [];
+  const tags = data?._embedded?.tags || [];
   orderTags(tags);
 
   return (

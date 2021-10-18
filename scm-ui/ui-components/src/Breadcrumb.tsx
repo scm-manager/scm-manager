@@ -23,11 +23,11 @@
  */
 import React, { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory, useLocation, Link } from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
 import classNames from "classnames";
 import styled from "styled-components";
 import { urls } from "@scm-manager/ui-api";
-import { Branch, Repository, File } from "@scm-manager/ui-types";
+import { Branch, File, Repository } from "@scm-manager/ui-types";
 import { binder, ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import Icon from "./Icon";
 import Tooltip from "./Tooltip";
@@ -128,7 +128,10 @@ const Breadcrumb: FC<Props> = ({
     if (path) {
       const paths = path.split("/");
       return paths.map((pathFragment, index) => {
-        let currPath = paths.slice(0, index + 1).map(encodeURIComponent).join("/");
+        let currPath = paths
+          .slice(0, index + 1)
+          .map(encodeURIComponent)
+          .join("/");
         if (!currPath.endsWith("/")) {
           currPath = currPath + "/";
         }
@@ -192,7 +195,7 @@ const Breadcrumb: FC<Props> = ({
           </li>
           {pathSection()}
         </ul>
-        <PermaLinkWrapper className="ml-1">
+        <PermaLinkWrapper className="ml-1" tabIndex={0} onKeyDown={(e) => e.key === "Enter" && copySource()}>
           {copying ? (
             <Icon name="spinner fa-spin" />
           ) : (

@@ -46,15 +46,15 @@ const BranchesOverview: FC<Props> = ({ repository, baseUrl }) => {
     return <Loading />;
   }
 
-  const branches = data._embedded.branches || [];
+  const branches = data?._embedded?.branches || [];
 
   if (branches.length === 0) {
     return <Notification type="info">{t("branches.overview.noBranches")}</Notification>;
   }
 
   orderBranches(branches);
-  const staleBranches = branches.filter(b => b.stale);
-  const activeBranches = branches.filter(b => !b.stale);
+  const staleBranches = branches.filter((b) => b.stale);
+  const activeBranches = branches.filter((b) => !b.stale);
 
   const showCreateButton = !!data._links.create;
 
