@@ -39,17 +39,13 @@ const StyledLink = styled(Link)`
   color: inherit;
 `;
 
-const StyledDiv = styled.div`
-  border-radius: 4px;
-`;
-
 const CardColumnSmall: FC<Props> = ({ link, avatar, contentLeft, contentRight, footer }) => {
   const renderAvatar = avatar ? <figure className="media-left mr-2 mt-1">{avatar}</figure> : null;
   const renderFooter = footer ? <small>{footer}</small> : null;
 
   return (
     <StyledLink to={link}>
-      <StyledDiv className="p-2 media has-hover-background-blue">
+      <div className="p-2 media has-hover-background-blue">
         {renderAvatar}
         <div
           className={classNames(
@@ -61,13 +57,13 @@ const CardColumnSmall: FC<Props> = ({ link, avatar, contentLeft, contentRight, f
             "is-align-self-stretch"
           )}
         >
-          <div className={classNames("is-flex", "is-align-items-center")}>
-            <div className={classNames("is-clipped", "mb-0")}>{contentLeft}</div>
-            <div className={classNames("is-align-items-start", "ml-auto")}>{contentRight}</div>
+          <div className="is-flex is-flex-direction-column is-flex-align-items-start">
+            <div className="is-clipped">{contentLeft}</div>
+            <div>{contentRight}</div>
           </div>
           {renderFooter}
         </div>
-      </StyledDiv>
+      </div>
     </StyledLink>
   );
 };
