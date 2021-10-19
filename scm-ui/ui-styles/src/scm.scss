@@ -186,6 +186,10 @@ $light-25: darken($high-contrast-light-gray, 45%);
 }
 */
 
+.has-hover-background-blue:hover {
+  background-color: scale-color($blue, $alpha: -90%);
+}
+
 // readability issues with original color
 .has-text-warning {
   color: #ffb600 !important;

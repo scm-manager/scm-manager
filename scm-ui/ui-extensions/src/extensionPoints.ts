@@ -135,3 +135,24 @@ export type PrimaryNavigationLogoutButtonExtension = ExtensionPointDefinition<
   "primary-navigation.logout",
   PrimaryNavigationLogoutButtonProps
 >;
+
+export type RepositoryOverviewTopExtensionProps = {
+  page: number;
+  search: string;
+  namespace?: string;
+};
+
+export type RepositoryOverviewTopExtension = ExtensionPointDefinition<
+  "repository.overview.top",
+  React.ComponentType<RepositoryOverviewTopExtensionProps>,
+  RepositoryOverviewTopExtensionProps
+>;
+export type RepositoryOverviewLeftExtension = ExtensionPointDefinition<"repository.overview.left", React.ComponentType>;
+export type RepositoryOverviewTitleExtension = ExtensionPointDefinition<
+  "repository.overview.title",
+  React.ComponentType
+>;
+export type RepositoryOverviewSubtitleExtension = ExtensionPointDefinition<
+  "repository.overview.subtitle",
+  React.ComponentType
+>;

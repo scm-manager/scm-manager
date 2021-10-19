@@ -2640,15 +2640,15 @@ exports[`Storyshots CardColumnSmall Default 1`] = `
   className="CardColumnSmallstories__Wrapper-ofr817-0 hUFZIW"
 >
   <a
-    className="CardColumnSmall__StyledLink-tk9h0o-0 eXYQYs"
+    className="CardColumnSmall__StyledLink-tk9h0o-0 gNZuIT"
     href="/foo/bar"
     onClick={[Function]}
   >
     <div
-      className="media"
+      className="p-2 media has-hover-background-blue"
     >
       <figure
-        className="media-left mr-2"
+        className="media-left mr-2 mt-1"
       >
         <i
           className="fas fa-icons fa-2x fa-fw has-text-grey-light"
@@ -2658,10 +2658,10 @@ exports[`Storyshots CardColumnSmall Default 1`] = `
         className="media-content text-box is-flex is-flex-direction-column is-justify-content-space-around is-align-self-stretch"
       >
         <div
-          className="is-flex is-align-items-center"
+          className="is-flex is-flex-direction-column is-flex-align-items-start"
         >
           <div
-            className="is-clipped mb-0"
+            className="is-clipped"
           >
             <strong
               className="m-0"
@@ -2669,9 +2669,7 @@ exports[`Storyshots CardColumnSmall Default 1`] = `
               main content
             </strong>
           </div>
-          <div
-            className="is-align-items-start ml-auto"
-          >
+          <div>
             <small>
               more text
             </small>
@@ -2688,21 +2686,21 @@ exports[`Storyshots CardColumnSmall Minimal 1`] = `
   className="CardColumnSmallstories__Wrapper-ofr817-0 hUFZIW"
 >
   <a
-    className="CardColumnSmall__StyledLink-tk9h0o-0 eXYQYs"
+    className="CardColumnSmall__StyledLink-tk9h0o-0 gNZuIT"
     href="/foo/bar"
     onClick={[Function]}
   >
     <div
-      className="media"
+      className="p-2 media has-hover-background-blue"
     >
       <div
         className="media-content text-box is-flex is-flex-direction-column is-justify-content-space-around is-align-self-stretch"
       >
         <div
-          className="is-flex is-align-items-center"
+          className="is-flex is-flex-direction-column is-flex-align-items-start"
         >
           <div
-            className="is-clipped mb-0"
+            className="is-clipped"
           >
             <strong
               className="m-0"
@@ -2710,14 +2708,64 @@ exports[`Storyshots CardColumnSmall Minimal 1`] = `
               main content
             </strong>
           </div>
-          <div
-            className="is-align-items-start ml-auto"
-          >
+          <div>
             <small>
               more text
             </small>
           </div>
         </div>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`Storyshots CardColumnSmall Task 1`] = `
+<div
+  className="CardColumnSmallstories__Wrapper-ofr817-0 hUFZIW"
+>
+  <a
+    className="CardColumnSmall__StyledLink-tk9h0o-0 gNZuIT"
+    href="/foo/bar"
+    onClick={[Function]}
+  >
+    <div
+      className="p-2 media has-hover-background-blue"
+    >
+      <figure
+        className="media-left mr-2 mt-1"
+      >
+        <i
+          className="fas fa-exchange-alt has-text-inherit fa-fw fa-lg"
+        />
+      </figure>
+      <div
+        className="media-content text-box is-flex is-flex-direction-column is-justify-content-space-around is-align-self-stretch"
+      >
+        <div
+          className="is-flex is-flex-direction-column is-flex-align-items-start"
+        >
+          <div
+            className="is-clipped"
+          >
+            <strong>
+              Repository created
+            </strong>
+          </div>
+          <div>
+            <small>
+              <time
+                className="DateElement-sc-1schp8c-0 cinWxa"
+                title="1970-01-19 22:58:07"
+              >
+                over 51 years ago
+              </time>
+            </small>
+          </div>
+        </div>
+        <small>
+          New: scmadmin/spaceship
+        </small>
       </div>
     </div>
   </a>
@@ -57275,7 +57323,7 @@ exports[`Storyshots GroupEntry Default 1`] = `
     className="is-relative"
   >
     <a
-      className="GroupEntry__OverlayLink-sc-1f902yu-1 RhDcq"
+      className="GroupEntry__OverlayLink-sc-1f902yu-1 dVnuiR has-hover-background-blue"
       href="/foo/bar"
       onClick={[Function]}
     />
@@ -57352,7 +57400,7 @@ exports[`Storyshots GroupEntry With long texts 1`] = `
     className="is-relative"
   >
     <a
-      className="GroupEntry__OverlayLink-sc-1f902yu-1 RhDcq"
+      className="GroupEntry__OverlayLink-sc-1f902yu-1 dVnuiR has-hover-background-blue"
       href="/foo/bar"
       onClick={[Function]}
     />
@@ -72779,7 +72827,7 @@ exports[`Storyshots RepositoryEntry Archived 1`] = `
     className="is-relative"
   >
     <a
-      className="GroupEntry__OverlayLink-sc-1f902yu-1 RhDcq"
+      className="GroupEntry__OverlayLink-sc-1f902yu-1 dVnuiR has-hover-background-blue"
       href="/repo/hitchhiker/heartOfGold/"
       onClick={[Function]}
     />
@@ -72883,7 +72931,7 @@ exports[`Storyshots RepositoryEntry Avatar EP 1`] = `
     className="is-relative"
   >
     <a
-      className="GroupEntry__OverlayLink-sc-1f902yu-1 RhDcq"
+      className="GroupEntry__OverlayLink-sc-1f902yu-1 dVnuiR has-hover-background-blue"
       href="/repo/hitchhiker/heartOfGold/"
       onClick={[Function]}
     />
@@ -72976,7 +73024,7 @@ exports[`Storyshots RepositoryEntry Before Title EP 1`] = `
     className="is-relative"
   >
     <a
-      className="GroupEntry__OverlayLink-sc-1f902yu-1 RhDcq"
+      className="GroupEntry__OverlayLink-sc-1f902yu-1 dVnuiR has-hover-background-blue"
       href="/repo/hitchhiker/heartOfGold/"
       onClick={[Function]}
     />
@@ -73072,7 +73120,7 @@ exports[`Storyshots RepositoryEntry Default 1`] = `
     className="is-relative"
   >
     <a
-      className="GroupEntry__OverlayLink-sc-1f902yu-1 RhDcq"
+      className="GroupEntry__OverlayLink-sc-1f902yu-1 dVnuiR has-hover-background-blue"
       href="/repo/hitchhiker/heartOfGold/"
       onClick={[Function]}
     />
@@ -73165,7 +73213,7 @@ exports[`Storyshots RepositoryEntry Exporting 1`] = `
     className="is-relative"
   >
     <a
-      className="GroupEntry__OverlayLink-sc-1f902yu-1 RhDcq"
+      className="GroupEntry__OverlayLink-sc-1f902yu-1 dVnuiR has-hover-background-blue"
       href="/repo/hitchhiker/heartOfGold/"
       onClick={[Function]}
     />
@@ -73269,7 +73317,7 @@ exports[`Storyshots RepositoryEntry HealthCheck Failure 1`] = `
     className="is-relative"
   >
     <a
-      className="GroupEntry__OverlayLink-sc-1f902yu-1 RhDcq"
+      className="GroupEntry__OverlayLink-sc-1f902yu-1 dVnuiR has-hover-background-blue"
       href="/repo/hitchhiker/heartOfGold/"
       onClick={[Function]}
     />
@@ -73374,7 +73422,7 @@ exports[`Storyshots RepositoryEntry MultiRepositoryTags 1`] = `
     className="is-relative"
   >
     <a
-      className="GroupEntry__OverlayLink-sc-1f902yu-1 RhDcq"
+      className="GroupEntry__OverlayLink-sc-1f902yu-1 dVnuiR has-hover-background-blue"
       href="/repo/hitchhiker/heartOfGold/"
       onClick={[Function]}
     />
@@ -73488,7 +73536,7 @@ exports[`Storyshots RepositoryEntry RepositoryFlag EP 1`] = `
     className="is-relative"
   >
     <a
-      className="GroupEntry__OverlayLink-sc-1f902yu-1 RhDcq"
+      className="GroupEntry__OverlayLink-sc-1f902yu-1 dVnuiR has-hover-background-blue"
       href="/repo/hitchhiker/heartOfGold/"
       onClick={[Function]}
     />
@@ -73593,7 +73641,7 @@ exports[`Storyshots RepositoryEntry With long texts 1`] = `
     className="is-relative"
   >
     <a
-      className="GroupEntry__OverlayLink-sc-1f902yu-1 RhDcq"
+      className="GroupEntry__OverlayLink-sc-1f902yu-1 dVnuiR has-hover-background-blue"
       href="/repo/hitchhiker/veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery-loooooooooooooooooooooooooooooooooooooooooooooooooooong-repooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo-naaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaame/"
       onClick={[Function]}
     />

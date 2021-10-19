@@ -26,16 +26,32 @@ import { useHistory, useLocation, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
   CreateButton,
+  devices,
   LinkPaginator,
   Notification,
   OverviewPageActions,
   Page,
   PageActions,
-  urls
+  urls,
 } from "@scm-manager/ui-components";
 import RepositoryList from "../components/list";
 import { useNamespaces, useRepositories } from "@scm-manager/ui-api";
 import { NamespaceCollection, RepositoryCollection } from "@scm-manager/ui-types";
+import { ExtensionPoint, extensionPoints, useBinder } from "@scm-manager/ui-extensions";
+import styled from "styled-components";
+
+const StickyColumn = styled.div`
+  align-self: flex-start;
+
+  &:empty {
+    display: none;
+  }
+
+  @media (min-width: ${devices.mobile.width}px) {
+    position: sticky;
+    top: 1rem;
+  }
+`;
 
 const useUrlParams = () => {
   const params = useParams();
@@ -49,7 +65,7 @@ const useOverviewData = () => {
   const search = urls.getQueryStringFromLocation(location);
 
   const request = {
-    namespace: namespaces?._embedded.namespaces.find(n => n.namespace === namespace),
+    namespace: namespaces?._embedded.namespaces.find((n) => n.namespace === namespace),
     // ui starts counting by 1,
     // but backend starts counting by 0
     page: page - 1,
@@ -59,7 +75,7 @@ const useOverviewData = () => {
     // also do not fetch repositories if an invalid namespace is selected
     disabled:
       (!!namespace && !namespaces) ||
-      (!!namespace && !namespaces?._embedded.namespaces.some(n => n.namespace === namespace))
+      (!!namespace && !namespaces?._embedded.namespaces.some((n) => n.namespace === namespace)),
   };
   const { isLoading: isLoadingRepositories, error: errorRepositories, data: repositories } = useRepositories(request);
 
@@ -70,7 +86,7 @@ const useOverviewData = () => {
     namespace,
     repositories,
     search,
-    page
+    page,
   };
 };
 
@@ -79,15 +95,22 @@ type RepositoriesProps = {
   repositories?: RepositoryCollection;
   search: string;
   page: number;
+  namespace?: string;
 };
 
-const Repositories: FC<RepositoriesProps> = ({ namespaces, repositories, search, page }) => {
+const Repositories: FC<RepositoriesProps> = ({ namespaces, namespace, repositories, search, page }) => {
   const [t] = useTranslation("repos");
   if (namespaces && repositories) {
     if (repositories._embedded && repositories._embedded.repositories.length > 0) {
       return (
         <>
-          <RepositoryList repositories={repositories._embedded.repositories} namespaces={namespaces} />
+          <RepositoryList
+            repositories={repositories._embedded.repositories}
+            namespaces={namespaces}
+            page={page}
+            search={search}
+            namespace={namespace}
+          />
           <LinkPaginator collection={repositories} page={page} filter={search} />
         </>
       );
@@ -103,6 +126,9 @@ const Overview: FC = () => {
   const { isLoading, error, namespace, namespaces, repositories, search, page } = useOverviewData();
   const history = useHistory();
   const [t] = useTranslation("repos");
+  const binder = useBinder();
+
+  const extensions = binder.getExtensions<extensionPoints.RepositoryOverviewLeftExtension>("repository.overview.left");
 
   // we keep the create permission in the state,
   // because it does not change during searching or paging
@@ -126,7 +152,7 @@ const Overview: FC = () => {
   const allNamespacesPlaceholder = t("overview.allNamespaces");
   let namespacesToRender: string[] = [];
   if (namespaces) {
-    namespacesToRender = [allNamespacesPlaceholder, ...namespaces._embedded.namespaces.map(n => n.namespace).sort()];
+    namespacesToRender = [allNamespacesPlaceholder, ...namespaces._embedded.namespaces.map((n) => n.namespace).sort()];
   }
   const namespaceSelected = (newNamespace: string) => {
     if (newNamespace === allNamespacesPlaceholder) {
@@ -136,16 +162,38 @@ const Overview: FC = () => {
     }
   };
 
+  const hasExtensions = extensions.length > 0;
+
   return (
-    <Page title={t("overview.title")} subtitle={t("overview.subtitle")} loading={isLoading} error={error}>
-      <Repositories namespaces={namespaces} repositories={repositories} search={search} page={page} />
-      {showCreateButton ? <CreateButton label={t("overview.createButton")} link="/repos/create/" /> : null}
+    <Page
+      title={<ExtensionPoint name="repository.overview.title">{t("overview.title")}</ExtensionPoint>}
+      subtitle={<ExtensionPoint name="repository.overview.subtitle">{t("overview.subtitle")}</ExtensionPoint>}
+      loading={isLoading}
+      error={error}
+    >
+      <div className="columns">
+        {hasExtensions ? (
+          <StickyColumn className="column is-one-third">
+            {extensions.map((extension) => React.createElement(extension))}
+          </StickyColumn>
+        ) : null}
+        <div className="column is-clipped">
+          <Repositories
+            namespaces={namespaces}
+            namespace={namespace}
+            repositories={repositories}
+            search={search}
+            page={page}
+          />
+          {showCreateButton ? <CreateButton label={t("overview.createButton")} link="/repos/create/" /> : null}
+        </div>
+      </div>
       <PageActions>
         {showActions ? (
           <OverviewPageActions
             showCreateButton={showCreateButton}
             currentGroup={
-              namespace && namespaces?._embedded.namespaces.some(n => n.namespace === namespace) ? namespace : ""
+              namespace && namespaces?._embedded.namespaces.some((n) => n.namespace === namespace) ? namespace : ""
             }
             groups={namespacesToRender}
             groupSelected={namespaceSelected}

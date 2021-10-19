@@ -1,0 +1,4 @@
+- type: Added
+  description: Extension points for repository overview ([#1828](https://github.com/scm-manager/scm-manager/pull/1828))
+- type: Added
+  description: Binder option to sort by priority ([#1828](https://github.com/scm-manager/scm-manager/pull/1828))

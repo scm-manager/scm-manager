@@ -39,7 +39,6 @@ const OverlayLink = styled(Link)`
   pointer-events: all;
   border-radius: 4px;
   :hover {
-    background-color: rgb(51, 178, 232, 0.1);
     cursor: pointer;
   }
 `;
@@ -82,7 +81,7 @@ type Props = {
 const GroupEntry: FC<Props> = ({ link, avatar, title, name, description, contentRight }) => {
   return (
     <div className="is-relative">
-      <OverlayLink to={link} />
+      <OverlayLink to={link} className="has-hover-background-blue" />
       <StyledGroupEntry
         className={classNames("is-flex", "is-justify-content-space-between", "is-align-items-center", "p-2")}
         title={title}

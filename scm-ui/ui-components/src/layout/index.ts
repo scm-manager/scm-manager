@@ -34,3 +34,4 @@ export { default as Title } from "./Title";
 export { default as CustomQueryFlexWrappedColumns } from "./CustomQueryFlexWrappedColumns";
 export { default as PrimaryContentColumn } from "./PrimaryContentColumn";
 export { default as SecondaryNavigationColumn } from "./SecondaryNavigationColumn";
+export { default as GroupEntries } from "./GroupEntries";
