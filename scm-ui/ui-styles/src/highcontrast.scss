@@ -26,7 +26,22 @@
  
 // $text: $white;
 $scheme-main: #050514;
-$danger: #e63453;
+$background: $grey-dark;
+$text: $white-ter;
+$text-strong: $white-bis;
+
+$red: #e63453;
+// TODO check if we could replace red in commons, 
+// without breaking the light mode
+$danger: $red;
+
+$code: lighten($red, 25%);
+$primary-invert: #050514;
+$info-invert: #050514;
+$link-invert: #050514;
+$link-hover: $white-bis;
+$success-invert: #050514;
+$danger-invert: #050514;
 
 $light-gray: #f2f2f2;
 
@@ -35,4 +50,17 @@ $high-contrast-background-color: #050514;
 $high-contrast-light-gray: #f2f2f2;
 
 @import "utils/post.scss";
- 
+
+.button {
+
+  &.is-danger:hover,
+  &.is-danger.is-hovered {
+    background-color: scale-color($danger, $lightness: -2.5%);
+  }
+
+  &.is-danger:active,
+  &.is-danger.is-active {
+    background-color: scale-color($danger, $lightness: -4%);
+  }
+
+}

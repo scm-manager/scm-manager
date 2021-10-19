@@ -262,10 +262,6 @@ footer.footer {
   height: 2.5rem;
   font-weight: $weight-semibold;
 
-  &[disabled] {
-    opacity: 1;
-  }
-
   &.is-primary,
   &.is-info,
   &.is-link,
@@ -275,10 +271,6 @@ footer.footer {
     &.is-outlined {
       background-color: $white;
     }
-  }
-
-  &.is-warning {
-    color: #88550D;
   }
 
   &.is-primary:hover,
@@ -291,10 +283,6 @@ footer.footer {
     background-color: scale-color($primary, $lightness: -20%);
   }
 
-  &.is-primary[disabled] {
-    background-color: scale-color($primary, $lightness: 75%);
-  }
-
   &.is-info:hover,
   &.is-info.is-hovered {
     background-color: scale-color($info, $lightness: -10%);
@@ -303,10 +291,6 @@ footer.footer {
   &.is-info:active,
   &.is-info.is-active {
     background-color: scale-color($info, $lightness: -20%);
-  }
-
-  &.is-info[disabled] {
-    background-color: scale-color($info, $lightness: 75%);
   }
 
   &.is-link:hover,
@@ -319,10 +303,6 @@ footer.footer {
     background-color: scale-color($link, $lightness: -20%);
   }
 
-  &.is-link[disabled] {
-    background-color: scale-color($link, $lightness: 75%);
-  }
-
   &.is-success:hover,
   &.is-success.is-hovered {
     background-color: scale-color($success, $lightness: -10%);
@@ -331,10 +311,6 @@ footer.footer {
   &.is-success:active,
   &.is-success.is-active {
     background-color: scale-color($success, $lightness: -20%);
-  }
-
-  &.is-success[disabled] {
-    background-color: scale-color($success, $lightness: 75%);
   }
 
   &.is-warning:hover,
@@ -347,11 +323,6 @@ footer.footer {
     background-color: scale-color($warning, $lightness: -20%);
   }
 
-  &.is-warning[disabled] {
-    background-color: scale-color($warning, $lightness: 75%);
-    color: #e1d4c2;
-  }
-
   &.is-danger:hover,
   &.is-danger.is-hovered {
     background-color: scale-color($danger, $lightness: -10%);
@@ -360,10 +331,6 @@ footer.footer {
   &.is-danger:active,
   &.is-danger.is-active {
     background-color: scale-color($danger, $lightness: -20%);
-  }
-
-  &.is-danger[disabled] {
-    background-color: scale-color($danger, $lightness: 75%);
   }
 
   &.is-reduced-mobile,
@@ -409,9 +376,6 @@ $fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
 // NEW STYLES
 
 //typography
-.subtitle {
-  color: #666;
-}
 .has-border-white {
   border-color: $white !important;
 }

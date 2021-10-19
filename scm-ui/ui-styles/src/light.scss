@@ -24,4 +24,8 @@
 
 @import "utils/pre.scss";
 // colors defined in variables/commons.scss
+$subtitle-color: #666;
+$warning-invert: #88550D;
+$button-disabled-opacity: .25;
+
 @import "utils/post.scss";
