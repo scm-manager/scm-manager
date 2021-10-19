@@ -21,42 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-const path = require("path");
 
-module.exports = {
-  entry: {
-    light: "./src/light.scss",
-    highcontrast: "./src/highcontrast.scss",
-  },
-  devtool: "cheap-module-eval-source-map",
-  target: "web",
-  module: {
-    rules: [
-      {
-        test: /\.(css|scss|sass)$/i,
-        use: [
-          // Creates `style` nodes from JS strings
-          "style-loader",
-          // Translates CSS into CommonJS
-          "css-loader",
-          // Compiles Sass to CSS
-          "sass-loader",
-        ],
-      },
-      {
-        test: /\.(png|svg|jpg|gif|woff2?|eot|ttf)$/,
-        use: ["file-loader"],
-      },
-    ],
-  },
-  output: {
-    filename: "theme-[name].bundle.js",
-  },
-  devServer: {
-    contentBase: [path.join(__dirname, "public"), path.join(__dirname, "..", "ui-webapp", "public")],
-    contentBasePublicPath: ["/", "/ui-webapp"],
-    compress: false,
-    overlay: true,
-    port: 5000,
-  },
-};
+@import "utils/pre.scss";
+ 
+// $text: $white;
+$scheme-main: #050514;
+$danger: #e63453;
+
+$light-gray: #f2f2f2;
+
+// WTF
+$high-contrast-background-color: #050514;
+$high-contrast-light-gray: #f2f2f2;
+
+@import "utils/post.scss";
+ 
