@@ -1738,6 +1738,8 @@ exports[`Storyshots BreadCrumb Default 1`] = `
       </ul>
       <span
         className="Breadcrumb__PermaLinkWrapper-zvtb4t-0 OWytj ml-1"
+        onKeyDown={[Function]}
+        tabIndex={0}
       >
         <span
           className="tooltip has-tooltip-right"
@@ -1888,6 +1890,8 @@ exports[`Storyshots BreadCrumb Long path 1`] = `
       </ul>
       <span
         className="Breadcrumb__PermaLinkWrapper-zvtb4t-0 OWytj ml-1"
+        onKeyDown={[Function]}
+        tabIndex={0}
       >
         <span
           className="tooltip has-tooltip-right"
@@ -1999,6 +2003,8 @@ exports[`Storyshots BreadCrumb With prefix button 1`] = `
       </ul>
       <span
         className="Breadcrumb__PermaLinkWrapper-zvtb4t-0 OWytj ml-1"
+        onKeyDown={[Function]}
+        tabIndex={0}
       >
         <span
           className="tooltip has-tooltip-right"
@@ -2028,6 +2034,7 @@ exports[`Storyshots Buttons|AddButton Default 1`] = `
   <button
     className="button is-default"
     onClick={[Function]}
+    onKeyDown={[Function]}
     type="button"
   >
     <span
@@ -2371,6 +2378,7 @@ exports[`Storyshots Buttons|DeleteButton Default 1`] = `
   <button
     className="button is-warning"
     onClick={[Function]}
+    onKeyDown={[Function]}
     type="button"
   >
     <span
@@ -2851,6 +2859,7 @@ exports[`Storyshots Changesets Co-Authors with avatar 1`] = `
             <button
               className="button is-default is-reduced-mobile"
               onClick={[Function]}
+              onKeyDown={[Function]}
               type="button"
             >
               <span
@@ -2872,6 +2881,7 @@ exports[`Storyshots Changesets Co-Authors with avatar 1`] = `
             <button
               className="button is-default is-reduced-mobile"
               onClick={[Function]}
+              onKeyDown={[Function]}
               type="button"
             >
               <span
@@ -3010,6 +3020,7 @@ exports[`Storyshots Changesets Commiter and Co-Authors with avatar 1`] = `
             <button
               className="button is-default is-reduced-mobile"
               onClick={[Function]}
+              onKeyDown={[Function]}
               type="button"
             >
               <span
@@ -3031,6 +3042,7 @@ exports[`Storyshots Changesets Commiter and Co-Authors with avatar 1`] = `
             <button
               className="button is-default is-reduced-mobile"
               onClick={[Function]}
+              onKeyDown={[Function]}
               type="button"
             >
               <span
@@ -3127,6 +3139,7 @@ exports[`Storyshots Changesets Default 1`] = `
             <button
               className="button is-default is-reduced-mobile"
               onClick={[Function]}
+              onKeyDown={[Function]}
               type="button"
             >
               <span
@@ -3148,6 +3161,7 @@ exports[`Storyshots Changesets Default 1`] = `
             <button
               className="button is-default is-reduced-mobile"
               onClick={[Function]}
+              onKeyDown={[Function]}
               type="button"
             >
               <span
@@ -3254,6 +3268,7 @@ exports[`Storyshots Changesets Replacements 1`] = `
             <button
               className="button is-default is-reduced-mobile"
               onClick={[Function]}
+              onKeyDown={[Function]}
               type="button"
             >
               <span
@@ -3275,6 +3290,7 @@ exports[`Storyshots Changesets Replacements 1`] = `
             <button
               className="button is-default is-reduced-mobile"
               onClick={[Function]}
+              onKeyDown={[Function]}
               type="button"
             >
               <span
@@ -3383,6 +3399,7 @@ exports[`Storyshots Changesets With Committer 1`] = `
             <button
               className="button is-default is-reduced-mobile"
               onClick={[Function]}
+              onKeyDown={[Function]}
               type="button"
             >
               <span
@@ -3404,6 +3421,7 @@ exports[`Storyshots Changesets With Committer 1`] = `
             <button
               className="button is-default is-reduced-mobile"
               onClick={[Function]}
+              onKeyDown={[Function]}
               type="button"
             >
               <span
@@ -3521,6 +3539,7 @@ exports[`Storyshots Changesets With Committer and Co-Author 1`] = `
             <button
               className="button is-default is-reduced-mobile"
               onClick={[Function]}
+              onKeyDown={[Function]}
               type="button"
             >
               <span
@@ -3542,6 +3561,7 @@ exports[`Storyshots Changesets With Committer and Co-Author 1`] = `
             <button
               className="button is-default is-reduced-mobile"
               onClick={[Function]}
+              onKeyDown={[Function]}
               type="button"
             >
               <span
@@ -3651,6 +3671,7 @@ exports[`Storyshots Changesets With avatar 1`] = `
             <button
               className="button is-default is-reduced-mobile"
               onClick={[Function]}
+              onKeyDown={[Function]}
               type="button"
             >
               <span
@@ -3672,6 +3693,7 @@ exports[`Storyshots Changesets With avatar 1`] = `
             <button
               className="button is-default is-reduced-mobile"
               onClick={[Function]}
+              onKeyDown={[Function]}
               type="button"
             >
               <span
@@ -3776,6 +3798,7 @@ exports[`Storyshots Changesets With contactless signature 1`] = `
             <button
               className="button is-default is-reduced-mobile"
               onClick={[Function]}
+              onKeyDown={[Function]}
               type="button"
             >
               <span
@@ -3797,6 +3820,7 @@ exports[`Storyshots Changesets With contactless signature 1`] = `
             <button
               className="button is-default is-reduced-mobile"
               onClick={[Function]}
+              onKeyDown={[Function]}
               type="button"
             >
               <span
@@ -3901,6 +3925,7 @@ exports[`Storyshots Changesets With invalid signature 1`] = `
             <button
               className="button is-default is-reduced-mobile"
               onClick={[Function]}
+              onKeyDown={[Function]}
               type="button"
             >
               <span
@@ -3922,6 +3947,7 @@ exports[`Storyshots Changesets With invalid signature 1`] = `
             <button
               className="button is-default is-reduced-mobile"
               onClick={[Function]}
+              onKeyDown={[Function]}
               type="button"
             >
               <span
@@ -4031,6 +4057,7 @@ exports[`Storyshots Changesets With multiple Co-Authors 1`] = `
             <button
               className="button is-default is-reduced-mobile"
               onClick={[Function]}
+              onKeyDown={[Function]}
               type="button"
             >
               <span
@@ -4052,6 +4079,7 @@ exports[`Storyshots Changesets With multiple Co-Authors 1`] = `
             <button
               className="button is-default is-reduced-mobile"
               onClick={[Function]}
+              onKeyDown={[Function]}
               type="button"
             >
               <span
@@ -4156,6 +4184,7 @@ exports[`Storyshots Changesets With multiple signatures and invalid status 1`] =
             <button
               className="button is-default is-reduced-mobile"
               onClick={[Function]}
+              onKeyDown={[Function]}
               type="button"
             >
               <span
@@ -4177,6 +4206,7 @@ exports[`Storyshots Changesets With multiple signatures and invalid status 1`] =
             <button
               className="button is-default is-reduced-mobile"
               onClick={[Function]}
+              onKeyDown={[Function]}
               type="button"
             >
               <span
@@ -4281,6 +4311,7 @@ exports[`Storyshots Changesets With multiple signatures and not found status 1`]
             <button
               className="button is-default is-reduced-mobile"
               onClick={[Function]}
+              onKeyDown={[Function]}
               type="button"
             >
               <span
@@ -4302,6 +4333,7 @@ exports[`Storyshots Changesets With multiple signatures and not found status 1`]
             <button
               className="button is-default is-reduced-mobile"
               onClick={[Function]}
+              onKeyDown={[Function]}
               type="button"
             >
               <span
@@ -4406,6 +4438,7 @@ exports[`Storyshots Changesets With multiple signatures and valid status 1`] = `
             <button
               className="button is-default is-reduced-mobile"
               onClick={[Function]}
+              onKeyDown={[Function]}
               type="button"
             >
               <span
@@ -4427,6 +4460,7 @@ exports[`Storyshots Changesets With multiple signatures and valid status 1`] = `
             <button
               className="button is-default is-reduced-mobile"
               onClick={[Function]}
+              onKeyDown={[Function]}
               type="button"
             >
               <span
@@ -4531,6 +4565,7 @@ exports[`Storyshots Changesets With unknown signature 1`] = `
             <button
               className="button is-default is-reduced-mobile"
               onClick={[Function]}
+              onKeyDown={[Function]}
               type="button"
             >
               <span
@@ -4552,6 +4587,7 @@ exports[`Storyshots Changesets With unknown signature 1`] = `
             <button
               className="button is-default is-reduced-mobile"
               onClick={[Function]}
+              onKeyDown={[Function]}
               type="button"
             >
               <span
@@ -4656,6 +4692,7 @@ exports[`Storyshots Changesets With unowned signature 1`] = `
             <button
               className="button is-default is-reduced-mobile"
               onClick={[Function]}
+              onKeyDown={[Function]}
               type="button"
             >
               <span
@@ -4677,6 +4714,7 @@ exports[`Storyshots Changesets With unowned signature 1`] = `
             <button
               className="button is-default is-reduced-mobile"
               onClick={[Function]}
+              onKeyDown={[Function]}
               type="button"
             >
               <span
@@ -4781,6 +4819,7 @@ exports[`Storyshots Changesets With valid signature 1`] = `
             <button
               className="button is-default is-reduced-mobile"
               onClick={[Function]}
+              onKeyDown={[Function]}
               type="button"
             >
               <span
@@ -4802,6 +4841,7 @@ exports[`Storyshots Changesets With valid signature 1`] = `
             <button
               className="button is-default is-reduced-mobile"
               onClick={[Function]}
+              onKeyDown={[Function]}
               type="button"
             >
               <span
@@ -55458,6 +55498,7 @@ exports[`Storyshots Forms|AddKeyValueEntryToTableField Default 1`] = `
       className="button is-default AddKeyValueEntryToTableField__MarginTopButton-kiarql-1 cPBcKY"
       disabled={true}
       onClick={[Function]}
+      onKeyDown={[Function]}
       type="button"
     >
       <span
@@ -55531,6 +55572,7 @@ exports[`Storyshots Forms|AddKeyValueEntryToTableField Disabled 1`] = `
       className="button is-default AddKeyValueEntryToTableField__MarginTopButton-kiarql-1 cPBcKY"
       disabled={true}
       onClick={[Function]}
+      onKeyDown={[Function]}
       type="button"
     >
       <span
@@ -57325,6 +57367,7 @@ exports[`Storyshots GroupEntry Default 1`] = `
             <button
               className="button is-default"
               onClick={[Function]}
+              onKeyDown={[Function]}
               title="Copy clone command to clipboard"
               type="button"
             >
@@ -57402,6 +57445,7 @@ exports[`Storyshots GroupEntry With long texts 1`] = `
             <button
               className="button is-default"
               onClick={[Function]}
+              onKeyDown={[Function]}
               title="Copy clone command to clipboard"
               type="button"
             >
