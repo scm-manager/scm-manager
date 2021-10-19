@@ -49,7 +49,7 @@ class Tooltip extends React.Component<Props> {
     }
 
     return (
-      <span className={classes} data-tooltip={message}>
+      <span className={classes} data-tooltip={message} tabIndex={0}>
         {children}
       </span>
     );
