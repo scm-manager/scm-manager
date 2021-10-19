@@ -23,7 +23,7 @@
  */
 import { apiClient } from "./apiclient";
 import { useQuery } from "react-query";
-import { ApiResult } from "./base";
+import { ApiResultWithFetching } from "./base";
 
 export type ContentType = {
   type: string;
@@ -39,8 +39,10 @@ function getContentType(url: string): Promise<ContentType> {
   });
 }
 
-export const useContentType = (url: string): ApiResult<ContentType> => {
-  const { isLoading, isFetching, error, data } = useQuery<ContentType, Error>(["contentType", url], () => getContentType(url));
+export const useContentType = (url: string): ApiResultWithFetching<ContentType> => {
+  const { isLoading, isFetching, error, data } = useQuery<ContentType, Error>(["contentType", url], () =>
+    getContentType(url)
+  );
   return {
     isLoading,
     isFetching,

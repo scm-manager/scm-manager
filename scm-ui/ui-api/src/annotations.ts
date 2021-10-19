@@ -24,10 +24,14 @@
 import { AnnotatedSource, File, Link, Repository } from "@scm-manager/ui-types";
 import { useQuery } from "react-query";
 import { apiClient } from "./apiclient";
-import { ApiResult } from "./base";
+import { ApiResultWithFetching } from "./base";
 import { repoQueryKey } from "./keys";
 
-export const useAnnotations = (repository: Repository, revision: string, file: File): ApiResult<AnnotatedSource> => {
+export const useAnnotations = (
+  repository: Repository,
+  revision: string,
+  file: File
+): ApiResultWithFetching<AnnotatedSource> => {
   const { isLoading, isFetching, error, data } = useQuery<AnnotatedSource, Error>(
     repoQueryKey(repository, "annotations", revision, file.path),
     () => apiClient.get((file._links.annotate as Link).href).then((response) => response.json())

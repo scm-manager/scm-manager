@@ -31,10 +31,14 @@ import { requiredLink } from "./links";
 
 export type ApiResult<T> = {
   isLoading: boolean;
-  isFetching: boolean;
   error: Error | null;
   data?: T;
 };
+
+export type ApiResultWithFetching<T> = ApiResult<T> & {
+  isFetching: boolean;
+};
+
 export type DeleteFunction<T> = (entity: T) => void;
 
 export const useIndex = (): ApiResult<IndexResources> => {

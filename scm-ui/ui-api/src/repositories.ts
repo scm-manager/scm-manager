@@ -34,7 +34,7 @@ import {
 } from "@scm-manager/ui-types";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { apiClient } from "./apiclient";
-import { ApiResult, useIndexJsonResource, useRequiredIndexLink } from "./base";
+import { ApiResult, ApiResultWithFetching, useIndexJsonResource, useRequiredIndexLink } from "./base";
 import { createQueryString } from "./utils";
 import { objectLink, requiredLink } from "./links";
 import { repoQueryKey } from "./keys";
@@ -253,7 +253,7 @@ export const useRunHealthCheck = () => {
   };
 };
 
-export const useExportInfo = (repository: Repository): ApiResult<ExportInfo> => {
+export const useExportInfo = (repository: Repository): ApiResultWithFetching<ExportInfo> => {
   const link = requiredLink(repository, "exportInfo");
   //TODO Refetch while exporting to update the page
   const { isLoading, isFetching, error, data } = useQuery<ExportInfo, Error>(
