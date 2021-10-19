@@ -91,13 +91,7 @@ export const Modal: FC<Props> = ({
       <SizedModal className="modal-card" size={size}>
         <header className={classNames("modal-card-head", `has-background-${headColor}`)}>
           <p className={`modal-card-title m-0 has-text-${headTextColor}`}>{title}</p>
-          <button
-            className="delete"
-            aria-label="close"
-            onClick={closeFunction}
-            ref={initialFocusRef}
-            autoFocus={true}
-          />
+          <button className="delete" aria-label="close" onClick={closeFunction} ref={initialFocusRef} autoFocus />
         </header>
         <section className="modal-card-body">{body}</section>
         {showFooter}

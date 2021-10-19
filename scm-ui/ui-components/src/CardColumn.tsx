@@ -76,6 +76,7 @@ const CardColumn: FC<Props> = ({
           action();
         }}
         href="#"
+        tabIndex={0}
       />
     );
   }
