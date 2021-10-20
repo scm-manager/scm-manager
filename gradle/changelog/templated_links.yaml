@@ -1,0 +1,2 @@
+- type: fixed
+  description: Fix link templating for diff links ([#1834](https://github.com/scm-manager/scm-manager/pull/1834))
