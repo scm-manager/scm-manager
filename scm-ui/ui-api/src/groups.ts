@@ -48,11 +48,11 @@ export const useGroups = (request?: UseGroupsRequest): ApiResult<GroupCollection
 
   return useQuery<GroupCollection, Error>(
     ["groups", request?.search || "", request?.page || 0],
-    () => apiClient.get(`${indexLink}?${createQueryString(queryParams)}`).then(response => response.json()),
+    () => apiClient.get(`${indexLink}?${createQueryString(queryParams)}`).then((response) => response.json()),
     {
       onSuccess: (groups: GroupCollection) => {
         groups._embedded.groups.forEach((group: Group) => queryClient.setQueryData(["group", group.name], group));
-      }
+      },
     }
   );
 };
@@ -60,7 +60,7 @@ export const useGroups = (request?: UseGroupsRequest): ApiResult<GroupCollection
 export const useGroup = (name: string): ApiResult<Group> => {
   const indexLink = useRequiredIndexLink("groups");
   return useQuery<Group, Error>(["group", name], () =>
-    apiClient.get(concat(indexLink, name)).then(response => response.json())
+    apiClient.get(concat(indexLink, name)).then((response) => response.json())
   );
 };
 
@@ -68,14 +68,14 @@ const createGroup = (link: string) => {
   return (group: GroupCreation) => {
     return apiClient
       .post(link, group, "application/vnd.scmm-group+json;v=2")
-      .then(response => {
+      .then((response) => {
         const location = response.headers.get("Location");
         if (!location) {
           throw new Error("Server does not return required Location header");
         }
         return apiClient.get(location);
       })
-      .then(response => response.json());
+      .then((response) => response.json());
   };
 };
 
@@ -83,23 +83,23 @@ export const useCreateGroup = () => {
   const queryClient = useQueryClient();
   const link = useRequiredIndexLink("groups");
   const { mutate, data, isLoading, error } = useMutation<Group, Error, GroupCreation>(createGroup(link), {
-    onSuccess: group => {
+    onSuccess: (group) => {
       queryClient.setQueryData(["group", group.name], group);
       return queryClient.invalidateQueries(["groups"]);
-    }
+    },
   });
   return {
     create: (group: GroupCreation) => mutate(group),
     isLoading,
     error,
-    group: data
+    group: data,
   };
 };
 
 export const useUpdateGroup = () => {
   const queryClient = useQueryClient();
   const { mutate, isLoading, error, data } = useMutation<unknown, Error, Group>(
-    group => {
+    (group) => {
       const updateUrl = (group._links.update as Link).href;
       return apiClient.put(updateUrl, group, "application/vnd.scmm-group+json;v=2");
     },
@@ -107,35 +107,35 @@ export const useUpdateGroup = () => {
       onSuccess: async (_, group) => {
         await queryClient.invalidateQueries(["group", group.name]);
         await queryClient.invalidateQueries(["groups"]);
-      }
+      },
     }
   );
   return {
     update: (group: Group) => mutate(group),
     isLoading,
     error,
-    isUpdated: !!data
+    isUpdated: !!data,
   };
 };
 
 export const useDeleteGroup = () => {
   const queryClient = useQueryClient();
   const { mutate, isLoading, error, data } = useMutation<unknown, Error, Group>(
-    group => {
+    (group) => {
       const deleteUrl = (group._links.delete as Link).href;
       return apiClient.delete(deleteUrl);
     },
     {
       onSuccess: async (_, name) => {
-        await queryClient.invalidateQueries(["group", name]);
+        await queryClient.removeQueries(["group", name]);
         await queryClient.invalidateQueries(["groups"]);
-      }
+      },
     }
   );
   return {
     remove: (group: Group) => mutate(group),
     isLoading,
     error,
-    isDeleted: !!data
+    isDeleted: !!data,
   };
 };

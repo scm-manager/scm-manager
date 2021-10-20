@@ -127,7 +127,7 @@ export const useDeleteRepositoryRole = () => {
     },
     {
       onSuccess: async (_, name) => {
-        await queryClient.invalidateQueries(["repositoryRole", name]);
+        await queryClient.removeQueries(["repositoryRole", name]);
         await queryClient.invalidateQueries(["repositoryRoles"]);
       },
     }

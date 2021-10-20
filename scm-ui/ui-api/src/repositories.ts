@@ -153,7 +153,7 @@ export const useDeleteRepository = (options?: UseDeleteRepositoryOptions) => {
         if (options?.onSuccess) {
           options.onSuccess(repository);
         }
-        await queryClient.invalidateQueries(repoQueryKey(repository));
+        await queryClient.removeQueries(repoQueryKey(repository));
         await queryClient.invalidateQueries(["repositories"]);
       },
     }
