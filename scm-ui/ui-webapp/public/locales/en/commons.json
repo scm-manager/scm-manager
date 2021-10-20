@@ -95,7 +95,23 @@
     "error-title": "Error",
     "error-subtitle": "Cannot display profile",
     "error": "Error",
-    "error-message": "'me' is undefined"
+    "error-message": "'me' is undefined",
+    "theme": {
+      "nav": {
+        "label": "Theme",
+        "title": "Choose your theme"
+      },
+      "subtitle": "Choose your theme",
+      "submit": "Activate",
+      "light": {
+        "displayName": "Light",
+        "description": "The light mode is the SCM-Manager default theme"
+      },
+      "highcontrast": {
+        "displayName": "High contrast",
+        "description": "The high contrast mode is a dark theme ..."
+      }
+    }
   },
   "password": {
     "subtitle": "Change Password",

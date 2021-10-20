@@ -44,6 +44,7 @@ import SetPublicKeysNavLink from "../users/components/navLinks/SetPublicKeysNavL
 import SetApiKeys from "../users/components/apiKeys/SetApiKeys";
 import SetApiKeysNavLink from "../users/components/navLinks/SetApiKeysNavLink";
 import { useRequiredMe } from "@scm-manager/ui-api";
+import Theme from "./Theme";
 
 const Profile: FC = () => {
   const match = useRouteMatch();
@@ -85,7 +86,12 @@ const Profile: FC = () => {
       <Page title={me.displayName}>
         <CustomQueryFlexWrappedColumns>
           <PrimaryContentColumn>
-            <Route path={url} exact render={() => <ProfileInfo me={me} />} />
+            <Route path={url} exact>
+              <ProfileInfo me={me} />
+            </Route>
+            <Route path={`${url}/theme`} exact>
+              <Theme />
+            </Route>
             {shouldRenderNavigation && (
               <Switch>
                 {mayChangePassword && <Redirect exact from={`${url}/settings/`} to={`${url}/settings/password`} />}
@@ -117,6 +123,12 @@ const Profile: FC = () => {
                 icon="fas fa-info-circle"
                 label={t("profile.informationNavLink")}
                 title={t("profile.informationNavLink")}
+              />
+              <NavLink
+                to={`${url}/theme`}
+                icon="fas fa-palette"
+                label={t("profile.theme.nav.label")}
+                title={t("profile.theme.nav.title")}
               />
               {shouldRenderNavigation && (
                 <SubNavigation
