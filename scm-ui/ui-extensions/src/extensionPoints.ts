@@ -24,8 +24,8 @@
 
 import React from "react";
 import {
+  Branch,
   File,
-  Branch, File,
   IndexResources,
   Links,
   NamespaceStrategies,
@@ -156,13 +156,13 @@ export type RepositoryOverviewTopExtension = ExtensionPointDefinition<
   "repository.overview.top",
   React.ComponentType<RepositoryOverviewTopExtensionProps>,
   RepositoryOverviewTopExtensionProps
-  >;
+>;
 export type RepositoryOverviewLeftExtension = ExtensionPointDefinition<"repository.overview.left", React.ComponentType>;
 export type RepositoryOverviewTitleExtension = ExtensionPointDefinition<
   "repository.overview.title",
   React.ComponentType
-  >;
+>;
 export type RepositoryOverviewSubtitleExtension = ExtensionPointDefinition<
   "repository.overview.subtitle",
   React.ComponentType
-  >;
+>;
