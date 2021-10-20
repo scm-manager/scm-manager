@@ -283,7 +283,7 @@ public class GitBrowseCommand extends AbstractGitCommand
     parents.push(parent);
     while (treeWalk.next()) {
       final String currentPath = treeWalk.getPathString();
-      while (!currentPath.startsWith(parents.peek().pathString)) {
+      while (!currentPath.startsWith(appendTrailingSlashIfNeeded(parents))) {
         parents.pop();
       }
       TreeEntry currentParent = parents.peek();
@@ -298,6 +298,11 @@ public class GitBrowseCommand extends AbstractGitCommand
         logger.warn("failed to find tree entry for {}", currentPath);
       }
     }
+  }
+
+  private String appendTrailingSlashIfNeeded(Deque<TreeEntry> parents) {
+    String path = parents.peek().pathString;
+    return path.length() == 0? path: path + "/";
   }
 
   private FileObject findFirstMatch(TreeWalk treeWalk) throws IOException {
