@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 import React, { FC } from "react";
-import { Redirect, Route, Switch, useRouteMatch } from "react-router-dom";
+import { Redirect, Route, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
   CustomQueryFlexWrappedColumns,
@@ -38,7 +38,7 @@ import {
 } from "@scm-manager/ui-components";
 import ChangeUserPassword from "./ChangeUserPassword";
 import ProfileInfo from "./ProfileInfo";
-import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
+import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import SetPublicKeys from "../users/components/publicKeys/SetPublicKeys";
 import SetPublicKeysNavLink from "../users/components/navLinks/SetPublicKeysNavLink";
 import SetApiKeys from "../users/components/apiKeys/SetApiKeys";
@@ -55,13 +55,6 @@ const Profile: FC = () => {
   const mayChangePassword = !!me._links.password;
   const canManagePublicKeys = !!me._links.publicKeys;
   const canManageApiKeys = !!me._links.apiKeys;
-
-  const shouldRenderNavigation = !!(
-    me._links.password ||
-    me._links.publicKeys ||
-    me._links.apiKeys ||
-    binder.hasExtension("profile.route")
-  );
 
   if (!me) {
     return (
@@ -89,16 +82,10 @@ const Profile: FC = () => {
             <Route path={url} exact>
               <ProfileInfo me={me} />
             </Route>
-            <Route path={`${url}/theme`} exact>
+            <Redirect exact from={`${url}/settings/`} to={`${url}/settings/theme`} />
+            <Route path={`${url}/settings/theme`} exact>
               <Theme />
             </Route>
-            {shouldRenderNavigation && (
-              <Switch>
-                {mayChangePassword && <Redirect exact from={`${url}/settings/`} to={`${url}/settings/password`} />}
-                {canManagePublicKeys && <Redirect exact from={`${url}/settings/`} to={`${url}/settings/publicKeys`} />}
-                {canManageApiKeys && <Redirect exact from={`${url}/settings/`} to={`${url}/settings/apiKeys`} />}
-              </Switch>
-            )}
             {mayChangePassword && (
               <Route path={`${url}/settings/password`}>
                 <ChangeUserPassword me={me} />
@@ -124,26 +111,24 @@ const Profile: FC = () => {
                 label={t("profile.informationNavLink")}
                 title={t("profile.informationNavLink")}
               />
-              <NavLink
-                to={`${url}/theme`}
-                icon="fas fa-palette"
-                label={t("profile.theme.nav.label")}
-                title={t("profile.theme.nav.title")}
-              />
-              {shouldRenderNavigation && (
-                <SubNavigation
-                  to={`${url}/settings/`}
-                  label={t("profile.settingsNavLink")}
-                  title={t("profile.settingsNavLink")}
-                >
-                  {mayChangePassword && (
-                    <NavLink to={`${url}/settings/password`} label={t("profile.changePasswordNavLink")} />
-                  )}
-                  <SetPublicKeysNavLink user={me} publicKeyUrl={`${url}/settings/publicKeys`} />
-                  <SetApiKeysNavLink user={me} apiKeyUrl={`${url}/settings/apiKeys`} />
-                  <ExtensionPoint name="profile.setting" props={extensionProps} renderAll={true} />
-                </SubNavigation>
-              )}
+              <SubNavigation
+                to={`${url}/settings/theme`}
+                label={t("profile.settingsNavLink")}
+                title={t("profile.settingsNavLink")}
+              >
+                <NavLink
+                  to={`${url}/settings/theme`}
+                  icon="fas fa-palette"
+                  label={t("profile.theme.nav.label")}
+                  title={t("profile.theme.nav.title")}
+                />
+                {mayChangePassword && (
+                  <NavLink to={`${url}/settings/password`} label={t("profile.changePasswordNavLink")} />
+                )}
+                <SetPublicKeysNavLink user={me} publicKeyUrl={`${url}/settings/publicKeys`} />
+                <SetApiKeysNavLink user={me} apiKeyUrl={`${url}/settings/apiKeys`} />
+                <ExtensionPoint name="profile.setting" props={extensionProps} renderAll={true} />
+              </SubNavigation>
             </SecondaryNavigation>
           </SecondaryNavigationColumn>
         </CustomQueryFlexWrappedColumns>
