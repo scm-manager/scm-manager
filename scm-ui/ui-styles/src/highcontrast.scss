@@ -45,6 +45,18 @@ $danger-invert: #050514;
 
 $light-gray: #f2f2f2;
 
+$footer-background-color: $grey-dark;
+$footer-color: $white-ter;
+
+$box-background-color: scale-color($scheme-main, $lightness: 15%);
+$box-background-color: $grey-darker;
+
+$modal-card-head-background-color: $grey-dark;
+$modal-card-body-background-color: $scheme-main;
+
+$input-placeholder-color: $white;
+
+
 // WTF
 $high-contrast-background-color: #050514;
 $high-contrast-light-gray: #f2f2f2;
@@ -63,4 +75,90 @@ $high-contrast-light-gray: #f2f2f2;
     background-color: scale-color($danger, $lightness: -4%);
   }
 
+  &.is-primary,
+  &.is-info,
+  &.is-link,
+  &.is-success,
+  &.is-warning,
+  &.is-danger {
+    &.is-outlined {
+      background-color: inherit;
+    }
+  }
 }
+
+.menu-label {
+  color: $scheme-main;
+}
+
+.menu-list {
+  a {
+    color: $white-ter;
+
+    &.is-active {
+      background-color: $high-contrast-background-color;
+    }
+  }
+}
+//footer is overwritten in _main.scss TODO Check, if it may be replaced in _main
+footer.footer {
+  background-color: $grey-dark;
+  a{
+    color: scale-color($link, $lightness:25%);
+  }
+}
+
+.modal-card {
+  border: 1px solid $white-ter;
+ .modal-close::before, .delete::before, .modal-close::after, .delete::after { //TODO Refactor to target base element delete
+  background-color: $white-bis;
+  }
+}
+
+//card tables
+.card-table {
+  tr {
+    a {
+      color: $white-bis;
+    }
+
+    &:hover {
+      td {
+        background-color: $grey-darker;
+
+        &.is-darker {
+          background-color: $grey-darker;
+        }
+      }
+      a {
+        color: $link;
+      }
+    }
+  }
+  td {
+    background-color: $grey-dark;
+    border-bottom: 1px solid $grey;
+    &.is-darker {
+      background-color: $grey-dark;
+    }
+  }
+
+  &.is-hoverable tbody tr:not(.is-selected):hover {
+    background-color: $grey-darker;
+  }
+}
+
+//inline member tags
+.tag:not(body) {
+  border: 1px solid transparent;
+  background-color: $white;
+  .is-delete::before, .is-delete::after {
+    background-color: $scheme-main;
+  }
+}
+//blue text in light tags
+.tag.is-light .has-text-link {
+  color: scale-color($link, $lightness: -50%) !important;
+}
+
+//TODO fix :focus :hover for buttons, closing addon for inline member field, meta-data for card-tables (branches), check head
