@@ -2754,12 +2754,7 @@ exports[`Storyshots CardColumnSmall Task 1`] = `
           </div>
           <div>
             <small>
-              <time
-                className="DateElement-sc-1schp8c-0 cinWxa"
-                title="1970-01-19 22:58:07"
-              >
-                over 51 years ago
-              </time>
+              over 42 years ago
             </small>
           </div>
         </div>

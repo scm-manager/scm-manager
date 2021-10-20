@@ -27,7 +27,6 @@ import { storiesOf } from "@storybook/react";
 import CardColumnSmall from "./CardColumnSmall";
 import Icon from "./Icon";
 import styled from "styled-components";
-import DateFromNow from "./DateFromNow";
 
 const Wrapper = styled.div`
   margin: 2rem;
@@ -51,11 +50,7 @@ storiesOf("CardColumnSmall", module)
       link={link}
       avatar={<Icon name="exchange-alt" className="fa-fw fa-lg" color="inherit" />}
       contentLeft={<strong>Repository created</strong>}
-      contentRight={
-        <small>
-          <DateFromNow date={new Date(1634287231)} />
-        </small>
-      }
+      contentRight={<small>over 42 years ago</small>}
       footer="New: scmadmin/spaceship"
     />
   ));
