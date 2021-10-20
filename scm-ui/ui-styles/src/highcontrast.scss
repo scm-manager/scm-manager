@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-@import "utils/pre.scss";
+@import "utils/_pre.scss";
  
 // $text: $white;
 $scheme-main: #050514;
@@ -49,7 +49,7 @@ $light-gray: #f2f2f2;
 $high-contrast-background-color: #050514;
 $high-contrast-light-gray: #f2f2f2;
 
-@import "utils/post.scss";
+@import "utils/_post.scss";
 
 .button {
 
