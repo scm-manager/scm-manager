@@ -92,7 +92,7 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
       boolean initialCommit = getClone().getRepository().getRefDatabase().getRefs().isEmpty();
 
       if (!StringUtils.isEmpty(request.getExpectedRevision())
-        && !request.getExpectedRevision().equals(getCurrentRevision().getName())) {
+        && !request.getExpectedRevision().equals(getCurrentObjectId().getName())) {
         throw new ConcurrentModificationException(ContextEntry.ContextBuilder.entity("Branch", request.getBranch() == null ? "default" : request.getBranch()).in(repository).build());
       }
       for (ModifyCommandRequest.PartialRequest r : request.getRequests()) {

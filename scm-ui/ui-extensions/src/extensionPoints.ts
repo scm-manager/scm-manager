@@ -24,8 +24,8 @@
 
 import React from "react";
 import {
-  File,
   Branch,
+  File,
   IndexResources,
   Links,
   NamespaceStrategies,
@@ -135,6 +135,16 @@ export type PrimaryNavigationLogoutButtonExtension = ExtensionPointDefinition<
   "primary-navigation.logout",
   PrimaryNavigationLogoutButtonProps
 >;
+
+export type SourceExtensionProps = {
+  repository: Repository;
+  baseUrl: string;
+  revision: string;
+  extension: string;
+  sources: File | undefined;
+  path: string;
+};
+export type SourceExtension = ExtensionPointDefinition<"repos.sources.extensions", SourceExtensionProps>;
 
 export type RepositoryOverviewTopExtensionProps = {
   page: number;

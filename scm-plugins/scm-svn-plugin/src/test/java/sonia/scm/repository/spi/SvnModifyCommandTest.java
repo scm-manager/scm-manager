@@ -33,6 +33,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import sonia.scm.AlreadyExistsException;
+import sonia.scm.ConcurrentModificationException;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.work.NoneCachingWorkingCopyPool;
 import sonia.scm.repository.work.WorkdirProvider;
@@ -157,5 +158,37 @@ public class SvnModifyCommandTest extends AbstractSvnCommandTestBase {
     WorkingCopy<File, File> workingCopy = workingCopyFactory.createWorkingCopy(context, null);
     assertThat(new File(workingCopy.getWorkingRepository(), "a.txt")).exists();
     assertThat(new File(workingCopy.getWorkingRepository(), "a.txt")).hasContent("");
+  }
+
+  @Test
+  public void shouldThrowExceptionIfExpectedRevisionDoesNotMatch() throws IOException {
+    File testfile = temporaryFolder.newFile("Test123");
+
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.addRequest(new ModifyCommandRequest.CreateFileRequest("Test123", testfile, false));
+    request.setCommitMessage("this should not pass");
+    request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
+    request.setExpectedRevision("42");
+
+    assertThrows(ConcurrentModificationException.class, () -> svnModifyCommand.execute(request));
+
+    WorkingCopy<File, File> workingCopy = workingCopyFactory.createWorkingCopy(context, null);
+    assertThat(new File(workingCopy.getWorkingRepository(), "Test123")).doesNotExist();
+  }
+
+  @Test
+  @SuppressWarnings("java:S2699") // we just want to ensure that no exception is thrown
+  public void shouldPassIfExpectedRevisionMatchesCurrentRevision() throws IOException {
+    File testfile = temporaryFolder.newFile("Test123");
+
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.addRequest(new ModifyCommandRequest.CreateFileRequest("Test123", testfile, false));
+    request.setCommitMessage("this should not pass");
+    request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
+    request.setExpectedRevision("10");
+
+    svnModifyCommand.execute(request);
+
+    // nothing to check here; we just want to ensure that no exception is thrown
   }
 }
