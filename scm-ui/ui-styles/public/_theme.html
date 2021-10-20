@@ -32,10 +32,14 @@
   <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
   <meta content="#000000" name="theme-color">
   <link href="ui-webapp/favicon.ico" rel="shortcut icon">
-  <script data-type="theme" src="/theme-light.bundle.js" type="application/javascript"></script>
+  <script data-type="theme" src="/theme-<%= htmlWebpackPlugin.options.theme %>.bundle.js" type="application/javascript"></script>
 </head>
 <body>
-  <main></main>
+  <div class="container mt-5">
+    <h1 class="title is-1">Styleguide SCM-Manager 2</h1>
+    <h2 class="subtitle">Theme <%= htmlWebpackPlugin.options.theme %></h2>
+  </div>
+  <%= require('raw-loader!./_styleguide.html').default %>
   <script data-type="theme" src="js/styleguide.js" type="application/javascript"></script>
 </body>
 </html>

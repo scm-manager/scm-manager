@@ -22,12 +22,36 @@
  * SOFTWARE.
  */
 const path = require("path");
+const fs = require("fs");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+
+const themes = fs
+  .readdirSync("src")
+  .map((filename) => path.parse(filename))
+  .filter((p) => p.ext === ".scss")
+  .reduce((entries, current) => ({ ...entries, [current.name]: `./src/${current.base}` }), {});
+
+const plugins = Object.keys(themes).map(
+  (theme) =>
+    new HtmlWebpackPlugin({
+      filename: `${theme}.html`,
+      template: "./public/_theme.html",
+      inject: false,
+      theme,
+    })
+);
+
+plugins.push(
+  new HtmlWebpackPlugin({
+    filename: "index.html",
+    template: "./public/_index.html",
+    inject: false,
+    themes: Object.keys(themes),
+  })
+);
 
 module.exports = {
-  entry: {
-    light: "./src/light.scss",
-    highcontrast: "./src/highcontrast.scss",
-  },
+  entry: themes,
   devtool: "cheap-module-eval-source-map",
   target: "web",
   module: {
@@ -52,11 +76,13 @@ module.exports = {
   output: {
     filename: "theme-[name].bundle.js",
   },
+  plugins,
   devServer: {
     contentBase: [path.join(__dirname, "public"), path.join(__dirname, "..", "ui-webapp", "public")],
     contentBasePublicPath: ["/", "/ui-webapp"],
     compress: false,
     overlay: true,
     port: 5000,
+    hot: true,
   },
 };

@@ -25,6 +25,7 @@
 -->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <title>SCM-Manager Styleguide</title>
   <meta content="text/html; charset=UTF-8" http-equiv="content-type">
@@ -37,10 +38,21 @@
       min-height: 100vh;
       align-items: center;
       justify-content: center;
+      text-align: center;
+
+      font-family: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+    }
+
+    h1 {
+      font-size: 3rem;
+    }
+
+    h2 {
+      font-size: 2rem;
     }
 
     a {
-      background-color: #FF4500;
+      background-color: #00d1df;
       border: none;
       color: white;
       padding: 20px 34px;
@@ -50,11 +62,23 @@
       font-size: 20px;
       margin: 4px 2px;
       cursor: pointer;
+      border-radius: 5px;
     }
   </style>
 </head>
+
 <body>
-  <a href="light.html">Light</a>
-  <a href="highcontrast.html">High Contrast</a>
+  <main>
+    <h1>SCM-Manager Styleguide</h1>
+    <h2>Choose your Theme</h2>
+    <div class="themes">
+      <% _.each(htmlWebpackPlugin.options.themes, function(theme){ %>
+        <a href="<%= theme %>.html">
+          <%= theme %>
+        </a>
+        <% }); %>
+    </div>
+  </main>
 </body>
+
 </html>

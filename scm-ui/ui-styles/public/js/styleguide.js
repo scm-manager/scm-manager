@@ -20,10 +20,6 @@ function onClickColorButton(e) {
   }
 }
 
-fetch('styleguide.html').then(resp => resp.text()).then(content => {
-  document.querySelector("main").innerHTML = content;
-
-  document.querySelectorAll("table.colors span.button").forEach((button) => {
-    button.addEventListener("click", onClickColorButton);
-  });
+document.querySelectorAll("table.colors span.button").forEach((button) => {
+  button.addEventListener("click", onClickColorButton);
 });
