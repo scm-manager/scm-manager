@@ -81,6 +81,20 @@ $high-contrast-light-gray: #f2f2f2;
   --sh-selected-color: #7fe3cd;
   --sh-highlight-background: #f5f5f5;
   --sh-highlight-accent: #99d8f3;
+
+  --diff-background-color: #fff;
+  --diff-text-color: #000;
+  --diff-font-family: Consolas, Courier, monospace;
+  --diff-selection-background-color: #b3d7ff;
+  --diff-gutter-insert-background-color: #d6fedb;
+  --diff-gutter-delete-background-color: #fadde0;
+  --diff-gutter-selected-background-color: #fffce0;
+  --diff-code-insert-background-color: #eaffee;
+  --diff-code-delete-background-color: #fdeff0;
+  --diff-code-insert-edit-background-color: #c0dc91;
+  --diff-code-delete-edit-background-color: #000;
+  --diff-code-selected-background-color: #fffce0;
+  --diff-omit-gutter-line-color: #cb2a1d;
 }
 
 
