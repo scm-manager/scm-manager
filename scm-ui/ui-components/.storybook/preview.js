@@ -72,7 +72,7 @@ const Decorator = ({children, themeName}) => {
   useEffect(() => {
     const link = document.querySelector("#ui-theme");
     if (link["data-theme"] !== themeName) {
-      link.href = `/themes/ui-theme-${themeName}.css`;
+      link.href = `/ui-theme-${themeName}.css`;
       link["data-theme"] = themeName;
     }
   }, [themeName]);
@@ -86,8 +86,8 @@ export const parameters = {
     clearable: false,
     default: "light",
     list: [
-      { name: "light", color: "#fff", css: "/themes/ui-theme-light.css" },
-      { name: "highcontrast", color: "#000", css: "/themes/ui-theme-highcontrast.css" },
+      { name: "light", color: "#fff" },
+      { name: "highcontrast", color: "#000" },
     ],
   },
 };

@@ -25,6 +25,7 @@
 const path = require("path");
 const fs = require("fs");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const RemoveThemesPlugin = require("./RemoveThemesPlugin");
 
 const root = path.resolve("..");
 
@@ -40,25 +41,34 @@ module.exports = {
   stories: ["../src/**/*.stories.tsx"],
   addons: ["storybook-addon-i18next", "storybook-addon-themes"],
   webpackFinal: async (config) => {
+    // add our themes to webpack entry points
     config.entry = {
       main: config.entry,
       ...themes,
     };
 
+    // create separate css files for our themes
+    config.plugins.push(
+      new MiniCssExtractPlugin({
+        filename: "ui-theme-[name].css",
+        ignoreOrder: false
+      }),
+    );
+
     config.module.rules.push({
       test: /\.scss$/,
       use: [
+        MiniCssExtractPlugin.loader,
         "css-loader",
         "sass-loader",
       ],
     });
 
-    config.plugins.push(
-      new MiniCssExtractPlugin({
-        filename: "ui-theme-[name].css",
-        ignoreOrder: false,
-      })
-    );
+    // the html-webpack-plugin adds the generated css to iframe,
+    // which overrides our manually loaded css files.
+    // So we use a custom plugin which uses a hook of html-webpack-plugin
+    // to filter our themes from the output.
+    config.plugins.push(new RemoveThemesPlugin());
 
     return config;
   },
