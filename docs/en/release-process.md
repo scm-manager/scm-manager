@@ -26,7 +26,7 @@ All unreleased changes are stored in the `gradle/changelog` directory.
 The changelog can be updated with the `updateChangelog` gradle task.
 
 ```bash
-./gradlew updateChangelog --release=<version>
+./gradlew :updateChangelog --release=<version>
 ```
 
 Now we should manually check if the changelog looks good.

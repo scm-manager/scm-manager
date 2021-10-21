@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.25.0] - 2021-10-21
+### Added
+- Extension points for repository overview ([#1828](https://github.com/scm-manager/scm-manager/pull/1828))
+- Binder option to sort by priority ([#1828](https://github.com/scm-manager/scm-manager/pull/1828))
+
+### Fixed
+- Refetching of content on switching between source and md view ([#1823](https://github.com/scm-manager/scm-manager/pull/1823))
+- Recursive git browse ([#1833](https://github.com/scm-manager/scm-manager/pull/1833))
+- remove query keys when deleting individual entities ([#1832](https://github.com/scm-manager/scm-manager/pull/1832))
+- Fix link templating for diff links ([#1834](https://github.com/scm-manager/scm-manager/pull/1834))
+- Correct import in RepositoryGroupEntry ([#1825](https://github.com/scm-manager/scm-manager/pull/1825))
+
+### Changed
+- Always show SCM-Manager footer ([#1826](https://github.com/scm-manager/scm-manager/pull/1826))
+- Resolved branch revision in source extension point ([#1803](https://github.com/scm-manager/scm-manager/pull/1803))
+- The default branch of a repository cannot be deleted ([#1827](https://github.com/scm-manager/scm-manager/pull/1827))
+
 ## [2.24.0] - 2021-10-07
 ### Added
 - Method to delete files recursively in modify command ([#1821](https://github.com/scm-manager/scm-manager/pull/1821))
@@ -776,3 +793,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.22.0]: https://www.scm-manager.org/download/2.22.0
 [2.23.0]: https://www.scm-manager.org/download/2.23.0
 [2.24.0]: https://www.scm-manager.org/download/2.24.0
+[2.25.0]: https://www.scm-manager.org/download/2.25.0
