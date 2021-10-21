@@ -26,6 +26,7 @@ const path = require("path");
 const fs = require("fs");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const RemoveThemesPlugin = require("./RemoveThemesPlugin");
+const WorkerPlugin = require("worker-plugin");
 
 const root = path.resolve("..");
 
@@ -46,6 +47,10 @@ module.exports = {
       main: config.entry,
       ...themes,
     };
+
+    // fix usage of web workers
+    // required for diff with syntax highlighting
+    config.plugins.push(new WorkerPlugin());
 
     // create separate css files for our themes
     config.plugins.push(
