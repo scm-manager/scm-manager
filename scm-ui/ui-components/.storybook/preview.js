@@ -68,11 +68,8 @@ export const decorators = [
   withThemes
 ];
 
-// .storybook/preview.js
-
 const Decorator = ({children, themeName}) => {
   useEffect(() => {
-    console.log("change theme to", themeName)
     const link = document.querySelector("#ui-theme");
     if (link["data-theme"] !== themeName) {
       link.href = `/themes/ui-theme-${themeName}.css`;
