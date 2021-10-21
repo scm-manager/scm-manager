@@ -112,7 +112,7 @@ const LegacyEvents: FC = () => {
   );
 };
 
-storiesOf("Forms|Radio", module)
+storiesOf("Forms/Radio", module)
   .addDecorator(storyFn => <MemoryRouter>{storyFn()}</MemoryRouter>)
   .add("Default", () => (
     <Spacing>

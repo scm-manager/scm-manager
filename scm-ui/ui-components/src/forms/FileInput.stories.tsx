@@ -63,7 +63,7 @@ const ReactHookForm: FC = () => {
   );
 };
 
-storiesOf("Forms|FileInput", module)
+storiesOf("Forms/FileInput", module)
   .addDecorator((storyFn) => <Decorator>{storyFn()}</Decorator>)
   .addDecorator((storyFn) => <MemoryRouter>{storyFn()}</MemoryRouter>)
   .add("Default", () => <ReactHookForm />);

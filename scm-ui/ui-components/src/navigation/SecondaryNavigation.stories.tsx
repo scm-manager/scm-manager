@@ -52,7 +52,7 @@ const withRoute = (route: string) => {
   return (story: ReactElement<any>) => <MemoryRouter initialEntries={[route]}>{story}</MemoryRouter>;
 };
 
-storiesOf("Navigation|Secondary", module)
+storiesOf("Secondary Navigation", module)
   .addDecorator(story => <StateMenuContextProvider>{story()}</StateMenuContextProvider>)
   .addDecorator(story => (
     <Columns className="columns">

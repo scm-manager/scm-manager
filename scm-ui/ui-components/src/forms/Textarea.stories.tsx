@@ -170,7 +170,7 @@ const LegacyEvents: FC = () => {
   );
 };
 
-storiesOf("Forms|Textarea", module)
+storiesOf("Forms/Textarea", module)
   .addDecorator((storyFn) => <MemoryRouter>{storyFn()}</MemoryRouter>)
   .add("OnChange", () => <OnChangeTextarea />)
   .add("OnSubmit", () => <OnSubmitTextare />)

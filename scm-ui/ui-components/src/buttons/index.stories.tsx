@@ -31,7 +31,6 @@ import DeleteButton from "./DeleteButton";
 import DownloadButton from "./DownloadButton";
 import EditButton from "./EditButton";
 import SubmitButton from "./SubmitButton";
-import { ReactElement } from "react";
 import { MemoryRouter } from "react-router-dom";
 
 const colors = ["primary", "link", "info", "success", "warning", "danger", "white", "light", "dark", "black", "text"];
@@ -43,7 +42,7 @@ const Spacing = styled.div`
 const SpacingDecorator = (story: () => ReactNode) => <Spacing>{story()}</Spacing>;
 const RoutingDecorator = (story: () => ReactNode) => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>;
 
-storiesOf("Buttons|Button", module)
+storiesOf("Buttons/Button", module)
   .addDecorator(RoutingDecorator)
   .add("Colors", () => (
     <div>
@@ -72,7 +71,7 @@ storiesOf("Buttons|Button", module)
   ));
 
 const buttonStory = (name: string, storyFn: () => ReactElement) => {
-  return storiesOf("Buttons|" + name, module)
+  return storiesOf("Buttons/" + name, module)
     .addDecorator(RoutingDecorator)
     .addDecorator(SpacingDecorator)
     .add("Default", storyFn);
