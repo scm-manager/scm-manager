@@ -23,11 +23,10 @@
  */
 import i18next from "i18next";
 import { initReactI18next } from "react-i18next";
-import { addDecorator, configure } from "@storybook/react";
 import { withI18next } from "storybook-addon-i18next";
-import "!style-loader!css-loader!sass-loader!../../ui-styles/src/scm.scss";
-import React from "react";
+import React, {useEffect} from "react";
 import withApiProvider from "./withApiProvider";
+import { withThemes } from 'storybook-addon-themes/react';
 
 let i18n = i18next;
 
@@ -43,30 +42,55 @@ i18n.use(initReactI18next).init({
   lng: "en",
   fallbackLng: "en",
   interpolation: {
-    escapeValue: false
+    escapeValue: false,
   },
   react: {
-    useSuspense: false
+    useSuspense: false,
   },
   backend: {
     loadPath: "/locales/{{lng}}/{{ns}}.json",
     init: {
-      credentials: "same-origin"
-    }
-  }
+      credentials: "same-origin",
+    },
+  },
 });
 
-addDecorator(
+export const decorators = [
   withI18next({
     i18n,
     languages: {
       en: "English",
       de: "Deutsch",
-      es: "Spanisch"
+      es: "Spanisch",
+    },
+  }),
+  withApiProvider,
+  withThemes
+];
+
+// .storybook/preview.js
+
+const Decorator = ({children, themeName}) => {
+  useEffect(() => {
+    console.log("change theme to", themeName)
+    const link = document.querySelector("#ui-theme");
+    if (link["data-theme"] !== themeName) {
+      link.href = `/themes/ui-theme-${themeName}.css`;
+      link["data-theme"] = themeName;
     }
-  })
-);
+  }, [themeName]);
+  return <>{children}</>
+};
 
-addDecorator(withApiProvider);
-
-configure(require.context("../src", true, /\.stories\.tsx?$/), module);
+export const parameters = {
+  actions: { argTypesRegex: "^on[A-Z].*" },
+  themes: {
+    Decorator,
+    clearable: false,
+    default: "light",
+    list: [
+      { name: "light", color: "#fff", css: "/themes/ui-theme-light.css" },
+      { name: "highcontrast", color: "#000", css: "/themes/ui-theme-highcontrast.css" },
+    ],
+  },
+};
