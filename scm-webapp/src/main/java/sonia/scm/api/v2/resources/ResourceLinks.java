@@ -588,7 +588,7 @@ class ResourceLinks {
     }
 
     public String changesets(String namespace, String name) {
-      return incomingLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("incoming").parameters().method("incomingChangesets").parameters("{source}", "{target}").href();
+      return toTemplateParams(incomingLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("incoming").parameters().method("incomingChangesets").parameters("source", "target").href());
     }
 
     public String changesets(String namespace, String name, String source, String target) {
@@ -596,11 +596,11 @@ class ResourceLinks {
     }
 
     public String diff(String namespace, String name) {
-      return incomingLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("incoming").parameters().method("incomingDiff").parameters("{source}", "{target}").href();
+      return toTemplateParams(incomingLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("incoming").parameters().method("incomingDiff").parameters("source", "target").href());
     }
 
     public String diffParsed(String namespace, String name) {
-      return diffParsed(namespace, name, "{source}", "{target}");
+      return toTemplateParams(diffParsed(namespace, name, "source", "target"));
     }
 
     public String diffParsed(String namespace, String name, String source, String target) {
@@ -612,6 +612,10 @@ class ResourceLinks {
         .method("incomingDiffParsed")
         .parameters(source, target)
         .href();
+    }
+
+    public String toTemplateParams(String href) {
+      return href.replace("source", "{source}").replace("target", "{target}");
     }
   }
 
