@@ -182,37 +182,15 @@ resolve {
   classpath = sourceSets.main.runtimeClasspath
   resourcePackages = ['sonia.scm.api.v2.resources']
   outputDir = file('build/openapi')
-  openApiFile = file('build/tmp/openapi.yml')
+  openApiFile = file('build/openapi_tmp/openapi.yml')
 }
 
 task prepareOpenAPI(type: Copy) {
   from 'src/main/doc/openapi.yml'
-  into 'build/tmp'
+  into 'build/openapi_tmp'
   expand(version: project.version)
 }
 
 tasks.getByName("resolve").configure {
   dependsOn 'prepareOpenAPI'
 }
-
-/**
-WTF???
-<!-- fix javadoc -->
-
-<dependency>
-  <groupId>javax.transaction</groupId>
-  <artifactId>jta</artifactId>
-  <version>1.1</version>
-  <scope>provided</scope>
-</dependency>
-
-<!--
-fix java.lang.NoClassDefFoundError org/w3c/dom/ElementTraversal
--->
-
-<dependency>
-  <groupId>xml-apis</groupId>
-  <artifactId>xml-apis</artifactId>
-  <version>1.4.01</version>
-</dependency>
-**/
