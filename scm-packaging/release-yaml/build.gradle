@@ -1,5 +1,3 @@
-import com.cloudogu.scm.GitHubUploadTask
-
 /*
  * MIT License
  *
@@ -24,9 +22,11 @@ import com.cloudogu.scm.GitHubUploadTask
  * SOFTWARE.
  */
 
+import com.cloudogu.scm.GitHubUploadTask
+
 plugins {
   id 'org.scm-manager.packaging'
-  id 'com.github.hierynomus.license-base' version '0.15.0'
+  id 'org.cadixdev.licenser' version '0.6.1'
 }
 
 configurations {
@@ -68,15 +68,15 @@ task publish(type: GitHubUploadTask) {
 
 license {
   header rootProject.file("LICENSE.txt")
-  strictCheck true
-
-  mapping {
-    gradle = 'SLASHSTAR_STYLE'
+  tasks {
+    gradle {
+      files.from('build.gradle')
+    }
   }
-
-  include 'build.gradle'
 }
 
-task license(type: com.hierynomus.gradle.license.tasks.LicenseCheck) {
-  source = fileTree('.')
+
+task check {
+  dependsOn checkLicenses
 }
+
