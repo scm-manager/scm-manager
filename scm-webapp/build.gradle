@@ -147,6 +147,7 @@ war {
   into('WEB-INF/classes/META-INF/scm') {
     from('build/openapi')
   }
+  duplicatesStrategy 'WARN'
   dependsOn 'copy-core-plugins', 'resolve'
 }
 
@@ -161,6 +162,7 @@ task 'dev-war' (type: War) {
   into('WEB-INF/classes/META-INF/scm') {
     from('build/openapi')
   }
+  duplicatesStrategy 'WARN'
   dependsOn 'copy-core-plugins', 'resolve'
 }
 
@@ -188,6 +190,7 @@ resolve {
 task prepareOpenAPI(type: Copy) {
   from 'src/main/doc/openapi.yml'
   into 'build/openapi_tmp'
+  duplicatesStrategy 'WARN'
   expand(version: project.version)
 }
 
