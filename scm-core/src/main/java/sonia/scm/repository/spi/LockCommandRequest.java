@@ -24,5 +24,11 @@
 
 package sonia.scm.repository.spi;
 
-public class LockCommandRequest {
+import lombok.Data;
+
+@Data
+public final class LockCommandRequest {
+
+  private String file;
+  private boolean force;
 }

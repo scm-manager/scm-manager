@@ -28,11 +28,13 @@ import sonia.scm.repository.api.FileLock;
 import sonia.scm.repository.api.LockCommandResult;
 import sonia.scm.repository.api.UnlockCommandResult;
 
+import java.util.Optional;
+
 public interface LockCommand {
 
   LockCommandResult lock(LockCommandRequest request);
 
   UnlockCommandResult unlock(UnlockCommandRequest request);
 
-  FileLock status(LockStatusCommandRequest request);
+  Optional<FileLock> status(LockStatusCommandRequest request);
 }

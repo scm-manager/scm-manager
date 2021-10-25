@@ -24,5 +24,9 @@
 
 package sonia.scm.repository.spi;
 
-public class LockStatusCommandRequest {
+import lombok.Data;
+
+@Data
+public final class LockStatusCommandRequest {
+  private String file;
 }

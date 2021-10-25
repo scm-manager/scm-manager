@@ -24,16 +24,19 @@
 
 package sonia.scm.repository.api;
 
-import sonia.scm.repository.Repository;
 import sonia.scm.repository.spi.LockCommand;
+import sonia.scm.repository.spi.LockCommandRequest;
+import sonia.scm.repository.spi.LockStatusCommandRequest;
+import sonia.scm.repository.spi.UnlockCommandRequest;
 
 import java.util.Optional;
 
 public final class LockCommandBuilder {
 
+  private final LockCommand lockCommand;
 
-  public LockCommandBuilder(LockCommand mirrorCommand, Repository repository) {
-
+  public LockCommandBuilder(LockCommand lockCommand) {
+    this.lockCommand = lockCommand;
   }
 
   public InnerLockCommandBuilder lock() {
@@ -41,38 +44,56 @@ public final class LockCommandBuilder {
   }
 
   public InnerUnlockCommandBuilder unlock() {
-    return null;
+    return new InnerUnlockCommandBuilder();
   }
 
   public Optional<FileLock> status(String file) {
-    return Optional.empty();
+    LockStatusCommandRequest lockStatusCommandRequest = new LockStatusCommandRequest();
+    lockStatusCommandRequest.setFile(file);
+    return lockCommand.status(lockStatusCommandRequest);
   }
 
   public class InnerLockCommandBuilder {
-    InnerLockCommandBuilder setFile(String file) {
+    private String file;
+    private boolean force;
+
+    public InnerLockCommandBuilder setFile(String file) {
+      this.file = file;
       return this;
     }
 
     public InnerLockCommandBuilder force(boolean force) {
+      this.force = force;
       return this;
     }
 
     public LockCommandResult execute() {
-      return new LockCommandResult(true);
+      LockCommandRequest lockCommandRequest = new LockCommandRequest();
+      lockCommandRequest.setFile(file);
+      lockCommandRequest.setForce(force);
+      return lockCommand.lock(lockCommandRequest);
     }
   }
 
   public class InnerUnlockCommandBuilder {
-    InnerUnlockCommandBuilder setFile(String file) {
+    private String file;
+    private boolean force;
+
+    public InnerUnlockCommandBuilder setFile(String file) {
+      this.file = file;
       return this;
     }
 
     public InnerUnlockCommandBuilder force(boolean force) {
+      this.force = force;
       return this;
     }
 
     public UnlockCommandResult execute() {
-      return new UnlockCommandResult(true);
+      UnlockCommandRequest unlockCommandRequest = new UnlockCommandRequest();
+      unlockCommandRequest.setFile(file);
+      unlockCommandRequest.setForce(force);
+      return lockCommand.unlock(unlockCommandRequest);
     }
   }
 
