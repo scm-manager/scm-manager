@@ -24,13 +24,17 @@
 
 package sonia.scm.repository.api;
 
-import lombok.Value;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.spi.LockCommand;
 
-import java.time.Instant;
 import java.util.Optional;
 
 public final class LockCommandBuilder {
 
+
+  public LockCommandBuilder(LockCommand mirrorCommand, Repository repository) {
+
+  }
 
   public InnerLockCommandBuilder lock() {
     return new InnerLockCommandBuilder();
@@ -53,8 +57,8 @@ public final class LockCommandBuilder {
       return this;
     }
 
-    public LockResult execute() {
-      return new LockResult(true);
+    public LockCommandResult execute() {
+      return new LockCommandResult(true);
     }
   }
 
@@ -67,24 +71,9 @@ public final class LockCommandBuilder {
       return this;
     }
 
-    public UnlockResult execute() {
-      return new UnlockResult(true);
+    public UnlockCommandResult execute() {
+      return new UnlockCommandResult(true);
     }
   }
 
-  @Value
-  public static class LockResult {
-    private boolean successful;
-  }
-
-  @Value
-  public static class UnlockResult {
-    private boolean successful;
-  }
-
-  @Value
-  public static class FileLock {
-    private String userId;
-    private Instant timestamp;
-  }
 }

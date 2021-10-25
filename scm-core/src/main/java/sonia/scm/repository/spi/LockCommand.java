@@ -22,65 +22,17 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.api;
+package sonia.scm.repository.spi;
 
-/**
- * Enumeration of available commands.
- *
- * @author Sebastian Sdorra
- * @since 1.17
- */
-public enum Command
-{
-  LOG, BROWSE, CAT, DIFF, BLAME,
+import sonia.scm.repository.api.FileLock;
+import sonia.scm.repository.api.LockCommandResult;
+import sonia.scm.repository.api.UnlockCommandResult;
 
-  /**
-   * @since 1.18
-   */
-  TAGS,
+public interface LockCommand {
 
-  /**
-   * @since 1.18
-   */
-  BRANCHES,
+  LockCommandResult lock(LockCommandRequest request);
 
-  /**
-   * @since 1.31
-   */
-  INCOMING, OUTGOING, PUSH, PULL,
+  UnlockCommandResult unlock(UnlockCommandRequest request);
 
-  /**
-   * @since 1.43
-   */
-  BUNDLE, UNBUNDLE,
-
-  /**
-   * @since 2.0
-   */
-  MODIFICATIONS, MERGE, DIFF_RESULT, BRANCH, MODIFY,
-
-  /**
-   * @since 2.10.0
-   */
-  LOOKUP,
-
-  /**
-   * @since 2.11.0
-   */
-  TAG,
-
-  /**
-   * @since 2.17.0
-   */
-  FULL_HEALTH_CHECK,
-
-  /**
-   * @since 2.19.0
-   */
-  MIRROR,
-
-  /**
-   * @since 2.26.0
-   */
-  LOCK;
+  FileLock status(LockStatusCommandRequest request);
 }
