@@ -109,11 +109,11 @@ const Footer: FC<Props> = ({ me, version, links }) => {
             </FooterSection>
           ) : null}
           <FooterSection title={<TitleWithIcon title={t("footer.information.title")} icon="info-circle" />}>
-            <ExternalNavLink to="https://www.scm-manager.org/" label={`SCM-Manager ${version}`} />
+            <ExternalNavLink to="https://scm-manager.org/" label={`SCM-Manager ${version}`} />
             <ExtensionPoint name="footer.information" props={extensionProps} renderAll={true} />
           </FooterSection>
           <FooterSection title={<TitleWithIcon title={t("footer.support.title")} icon="life-ring" />}>
-            <ExternalNavLink to="https://www.scm-manager.org/support/" label={t("footer.support.community")} />
+            <ExternalNavLink to="https://scm-manager.org/support/" label={t("footer.support.community")} />
             <ExternalNavLink
               to="https://cloudogu.com/en/scm-manager-enterprise/"
               label={t("footer.support.enterprise")}

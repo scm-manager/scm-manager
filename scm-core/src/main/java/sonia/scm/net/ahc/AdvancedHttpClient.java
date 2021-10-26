@@ -37,7 +37,7 @@ import java.io.IOException;
  * <b>Http GET example:</b>
  *
  * <pre><code>
- * AdvancedHttpResponse response = client.get("https://www.scm-manager.org")
+ * AdvancedHttpResponse response = client.get("https://scm-manager.org")
  *                                       .decodeGZip(true)
  *                                       .request();
  *
@@ -48,7 +48,7 @@ import java.io.IOException;
  * <b>Http POST example:</b>
  *
  * <pre><code>
- * AdvancedHttpResponse response = client.post("https://www.scm-manager.org")
+ * AdvancedHttpResponse response = client.post("https://scm-manager.org")
  *                                       .formContent()
  *                                       .field("firstname", "Tricia")
  *                                       .field("lastname", "McMillan")
