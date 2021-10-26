@@ -32,11 +32,8 @@ import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.spi.ScmProviderHttpServlet;
 import sonia.scm.util.HttpUtil;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.WriteListener;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import static org.hamcrest.Matchers.containsString;
@@ -131,36 +128,6 @@ public class GitPermissionFilterTest {
     HttpServletRequest request = mockRequestWithMethodAndRequestURI("GET", "/git/info/refs");
     when(request.getParameter("service")).thenReturn("git-receive-pack");
     return request;
-  }
-
-  private static class CapturingServletOutputStream extends ServletOutputStream {
-
-    private final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-    @Override
-    public void write(int b) throws IOException {
-      baos.write(b);
-    }
-
-    @Override
-    public void close() throws IOException {
-      baos.close();
-    }
-
-    @Override
-    public String toString() {
-      return baos.toString();
-    }
-
-    @Override
-    public boolean isReady() {
-      return true;
-    }
-
-    @Override
-    public void setWriteListener(WriteListener writeListener) {
-
-    }
   }
 
 }

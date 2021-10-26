@@ -109,6 +109,9 @@ public class ScmGitServlet extends GitServlet implements ScmProviderHttpServlet
       HttpServlet servlet = lfsServletFactory.createFileLfsServletFor(repository, request);
       logger.trace("handle lfs file transfer request");
       handleGitLfsRequest(servlet, request, response, repository);
+    } else if (isLfsLockingAPIRequest(request)) {
+      HttpServlet servlet = lfsServletFactory.createLockServletFor(repository);
+      handleGitLfsLockingRequest(servlet, request, response, repository);
     } else if (isRegularGitAPIRequest(request)) {
       logger.trace("handle regular git request");
       // continue with the regular git Backend
@@ -119,8 +122,21 @@ public class ScmGitServlet extends GitServlet implements ScmProviderHttpServlet
     }
   }
 
+  private void handleGitLfsLockingRequest(HttpServlet servlet, HttpServletRequest request, HttpServletResponse response, Repository repository) throws ServletException, IOException {
+    if (repositoryRequestListenerUtil.callListeners(request, response, repository)) {
+      servlet.service(request, response);
+    } else if (logger.isDebugEnabled()) {
+      logger.debug("request aborted by repository request listener");
+    }
+  }
+
   private boolean isRegularGitAPIRequest(HttpServletRequest request) {
     return REGEX_GITHTTPBACKEND.matcher(HttpUtil.getStrippedURI(request)).matches();
+  }
+
+  private boolean isLfsLockingAPIRequest(HttpServletRequest request) {
+    return "application/vnd.git-lfs+json".equals(request.getHeader("Content-Type"))
+      || "application/vnd.git-lfs+json".equals(request.getHeader("Accept"));
   }
 
   private void handleGitLfsRequest(HttpServlet servlet, HttpServletRequest request, HttpServletResponse response, Repository repository) throws ServletException, IOException {

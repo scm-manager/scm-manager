@@ -30,6 +30,7 @@ import org.apache.shiro.SecurityUtils;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.FileLock;
 import sonia.scm.repository.api.FileLockedException;
+import sonia.scm.security.KeyGenerator;
 import sonia.scm.store.DataStore;
 import sonia.scm.store.DataStoreFactory;
 
@@ -38,13 +39,15 @@ import javax.inject.Singleton;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.time.Clock;
 import java.time.Instant;
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
+import java.util.TreeMap;
 import java.util.function.Supplier;
 
 import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toList;
 
 @Singleton
 public final class GitLockStoreFactory {
@@ -52,16 +55,18 @@ public final class GitLockStoreFactory {
   private static final String STORE_ID = "locks";
 
   private final DataStoreFactory dataStoreFactory;
+  private final KeyGenerator keyGenerator;
   private final Clock clock;
   private final Supplier<String> currentUser;
 
   @Inject
-  public GitLockStoreFactory(DataStoreFactory dataStoreFactory) {
-    this(dataStoreFactory, Clock.systemDefaultZone(), () -> SecurityUtils.getSubject().getPrincipals().oneByType(String.class));
+  public GitLockStoreFactory(DataStoreFactory dataStoreFactory, KeyGenerator keyGenerator) {
+    this(dataStoreFactory, keyGenerator, Clock.systemDefaultZone(), () -> SecurityUtils.getSubject().getPrincipals().oneByType(String.class));
   }
 
-  GitLockStoreFactory(DataStoreFactory dataStoreFactory, Clock clock, Supplier<String> currentUser) {
+  GitLockStoreFactory(DataStoreFactory dataStoreFactory, KeyGenerator keyGenerator, Clock clock, Supplier<String> currentUser) {
     this.dataStoreFactory = dataStoreFactory;
+    this.keyGenerator = keyGenerator;
     this.clock = clock;
     this.currentUser = currentUser;
   }
@@ -85,16 +90,18 @@ public final class GitLockStoreFactory {
           .build();
     }
 
-    void put(String file, boolean force) {
+    public FileLock put(String file, boolean force) {
       StoreEntry storeEntry = readEntry();
       if (!force && storeEntry.get(file).isPresent()) {
         throw new FileLockedException(repository.getNamespaceAndName(), file);
       }
-      storeEntry.add(file, new FileLock(currentUser.get(), Instant.now(clock)));
+      FileLock newLock = new FileLock(file, keyGenerator.createKey(), currentUser.get(), Instant.now(clock));
+      storeEntry.add(newLock);
       store(storeEntry);
+      return newLock;
     }
 
-    void remove(String file, boolean force) {
+    public void remove(String file, boolean force) {
       StoreEntry storeEntry = readEntry();
       Optional<FileLock> existingFileLock = storeEntry.get(file);
       if (existingFileLock.isPresent()) {
@@ -106,8 +113,12 @@ public final class GitLockStoreFactory {
       }
     }
 
-    Optional<FileLock> getLock(String file) {
+    public Optional<FileLock> getLock(String file) {
       return readEntry().get(file);
+    }
+
+    public Collection<FileLock> getAll() {
+      return readEntry().getAll();
     }
 
     private StoreEntry readEntry() {
@@ -128,14 +139,14 @@ public final class GitLockStoreFactory {
       if (files == null) {
         return empty();
       }
-      return ofNullable(files.get(file)).map(StoredFileLock::toFileLock);
+      return ofNullable(files.get(file)).map(lock -> lock.toFileLock(file));
     }
 
-    void add(String file, FileLock lock) {
+    void add(FileLock lock) {
       if (files == null) {
-        files = new HashMap<>();
+        files = new TreeMap<>();
       }
-      files.put(file, new StoredFileLock(lock));
+      files.put(lock.getPath(), new StoredFileLock(lock));
     }
 
     void remove(String file) {
@@ -144,21 +155,27 @@ public final class GitLockStoreFactory {
       }
       files.remove(file);
     }
+
+    public Collection<FileLock> getAll() {
+      return files.entrySet().stream().map(entry -> entry.getValue().toFileLock(entry.getKey())).collect(toList());
+    }
   }
 
   @Data
   @NoArgsConstructor
   private static class StoredFileLock {
+    private String id;
     private String userId;
     private long timestamp;
 
     StoredFileLock(FileLock fileLock) {
+      this.id = fileLock.getId();
       this.userId = fileLock.getUserId();
       this.timestamp = fileLock.getTimestamp().getEpochSecond();
     }
 
-    FileLock toFileLock() {
-      return new FileLock(userId, Instant.ofEpochSecond(timestamp));
+    FileLock toFileLock(String path) {
+      return new FileLock(path, id, userId, Instant.ofEpochSecond(timestamp));
     }
   }
 }

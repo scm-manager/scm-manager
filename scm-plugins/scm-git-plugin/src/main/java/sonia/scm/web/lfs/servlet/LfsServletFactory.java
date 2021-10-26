@@ -31,8 +31,11 @@ import org.eclipse.jgit.lfs.server.fs.FileLfsServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.spi.GitLockStoreFactory;
 import sonia.scm.store.BlobStore;
+import sonia.scm.user.UserDisplayManager;
 import sonia.scm.util.HttpUtil;
+import sonia.scm.web.LfsLockingProtocolServlet;
 import sonia.scm.web.lfs.LfsAccessTokenFactory;
 import sonia.scm.web.lfs.LfsBlobStoreFactory;
 import sonia.scm.web.lfs.ScmBlobLfsRepository;
@@ -56,11 +59,15 @@ public class LfsServletFactory {
 
   private final LfsBlobStoreFactory lfsBlobStoreFactory;
   private final LfsAccessTokenFactory tokenFactory;
+  private final GitLockStoreFactory lockStoreFactory;
+  private final UserDisplayManager userDisplayManager;
 
   @Inject
-  public LfsServletFactory(LfsBlobStoreFactory lfsBlobStoreFactory, LfsAccessTokenFactory tokenFactory) {
+  public LfsServletFactory(LfsBlobStoreFactory lfsBlobStoreFactory, LfsAccessTokenFactory tokenFactory, GitLockStoreFactory lockStoreFactory, UserDisplayManager userDisplayManager) {
     this.lfsBlobStoreFactory = lfsBlobStoreFactory;
     this.tokenFactory = tokenFactory;
+    this.lockStoreFactory = lockStoreFactory;
+    this.userDisplayManager = userDisplayManager;
   }
 
   /**
@@ -89,6 +96,10 @@ public class LfsServletFactory {
   public HttpServlet createFileLfsServletFor(Repository repository, HttpServletRequest request) {
     LOG.trace("create lfs file servlet for repository {}", repository);
     return new ScmFileTransferServlet(lfsBlobStoreFactory.getLfsBlobStore(repository));
+  }
+
+  public LfsLockingProtocolServlet createLockServletFor(Repository repository) {
+    return new LfsLockingProtocolServlet(lockStoreFactory.create(repository), userDisplayManager);
   }
 
   /**

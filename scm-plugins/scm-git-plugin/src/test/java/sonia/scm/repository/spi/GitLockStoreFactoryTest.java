@@ -37,6 +37,7 @@ import sonia.scm.store.InMemoryByteDataStoreFactory;
 
 import java.time.Clock;
 import java.time.Instant;
+import java.util.Optional;
 
 import static java.time.temporal.ChronoUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -51,7 +52,9 @@ class GitLockStoreFactoryTest {
   private final DataStoreFactory dataStoreFactory = new InMemoryByteDataStoreFactory();
   private final Clock clock = mock(Clock.class);
   private String currentUser = "dent";
-  private final GitLockStoreFactory gitLockStoreFactory = new GitLockStoreFactory(dataStoreFactory, clock, () -> currentUser);
+  private int nextId = 0;
+  private final GitLockStoreFactory gitLockStoreFactory =
+    new GitLockStoreFactory(dataStoreFactory, () -> "id-" + (nextId++), clock, () -> currentUser);
 
   private final Repository repository = RepositoryTestData.createHeartOfGold();
 
@@ -82,16 +85,23 @@ class GitLockStoreFactoryTest {
   void shouldStoreAndRetrieveLock() {
     GitLockStoreFactory.GitLockStore gitLockStore = gitLockStoreFactory.create(repository);
 
-    gitLockStore.put("some/file.txt", false);
+    FileLock createdLock = gitLockStore.put("some/file.txt", false);
 
-    AbstractObjectAssert<?, FileLock> lockAssert = assertThat(gitLockStore.getLock("some/file.txt"))
+    Optional<FileLock> retrievedLock = gitLockStore.getLock("some/file.txt");
+    AbstractObjectAssert<?, FileLock> lockAssert = assertThat(retrievedLock)
       .get();
     lockAssert
       .extracting("userId")
       .isEqualTo("dent");
     lockAssert
+      .extracting("id")
+      .isEqualTo("id-0");
+    lockAssert
       .extracting("timestamp")
       .isEqualTo(NOW);
+    lockAssert
+      .usingRecursiveComparison()
+      .isEqualTo(createdLock);
   }
 
   @Test

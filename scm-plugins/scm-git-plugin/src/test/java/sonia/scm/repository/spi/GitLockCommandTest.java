@@ -121,7 +121,7 @@ class GitLockCommandTest {
   @Test
   void shouldGetStatus() {
     when(lockStore.getLock("some/file.txt"))
-      .thenReturn(of(new FileLock("dent", NOW)));
+      .thenReturn(of(new FileLock("some/file.txt", "42", "dent", NOW)));
 
     LockStatusCommandRequest request = new LockStatusCommandRequest();
     request.setFile("some/file.txt");
@@ -129,6 +129,12 @@ class GitLockCommandTest {
     Optional<FileLock> status = lockCommand.status(request);
 
     AbstractObjectAssert<?, FileLock> statusAssert = assertThat(status).get();
+    statusAssert
+      .extracting("id")
+      .isEqualTo("42");
+    statusAssert
+      .extracting("path")
+      .isEqualTo("some/file.txt");
     statusAssert
       .extracting("userId")
       .isEqualTo("dent");

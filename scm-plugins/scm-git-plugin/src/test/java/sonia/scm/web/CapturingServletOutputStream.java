@@ -22,16 +22,39 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.api;
+package sonia.scm.web;
 
-import lombok.Value;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.WriteListener;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
-import java.time.Instant;
+public class CapturingServletOutputStream extends ServletOutputStream {
 
-@Value
-public class FileLock {
-  private String path;
-  private String id;
-  private String userId;
-  private Instant timestamp;
+  private final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+  @Override
+  public void write(int b) throws IOException {
+    baos.write(b);
+  }
+
+  @Override
+  public void close() throws IOException {
+    baos.close();
+  }
+
+  @Override
+  public String toString() {
+    return baos.toString();
+  }
+
+  @Override
+  public boolean isReady() {
+    return true;
+  }
+
+  @Override
+  public void setWriteListener(WriteListener writeListener) {
+
+  }
 }

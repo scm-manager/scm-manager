@@ -22,16 +22,14 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.api;
+package sonia.scm.web;
 
-import lombok.Value;
+import sonia.scm.plugin.ExtensionPoint;
 
-import java.time.Instant;
+import javax.servlet.http.HttpServletRequest;
 
-@Value
-public class FileLock {
-  private String path;
-  private String id;
-  private String userId;
-  private Instant timestamp;
+@ExtensionPoint
+public interface ScmClientDetector {
+
+  boolean isScmClient(HttpServletRequest request, UserAgent userAgent);
 }

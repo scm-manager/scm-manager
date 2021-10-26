@@ -40,6 +40,7 @@ import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.repository.spi.HttpScmProtocol;
 import sonia.scm.security.Authentications;
 import sonia.scm.util.HttpUtil;
+import sonia.scm.web.ScmClientDetector;
 import sonia.scm.web.UserAgent;
 import sonia.scm.web.UserAgentParser;
 
@@ -49,6 +50,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
+import java.util.Set;
 
 @Singleton
 @WebElement(value = HttpProtocolServlet.PATTERN)
@@ -63,21 +65,27 @@ public class HttpProtocolServlet extends HttpServlet {
   private final NamespaceAndNameFromPathExtractor pathExtractor;
   private final PushStateDispatcher dispatcher;
   private final UserAgentParser userAgentParser;
-
+  private final Set<ScmClientDetector> scmClientDetectors;
 
   @Inject
-  public HttpProtocolServlet(ScmConfiguration configuration, RepositoryServiceFactory serviceFactory, NamespaceAndNameFromPathExtractor pathExtractor, PushStateDispatcher dispatcher, UserAgentParser userAgentParser) {
+  public HttpProtocolServlet(ScmConfiguration configuration,
+                             RepositoryServiceFactory serviceFactory,
+                             NamespaceAndNameFromPathExtractor pathExtractor,
+                             PushStateDispatcher dispatcher,
+                             UserAgentParser userAgentParser,
+                             Set<ScmClientDetector> scmClientDetectors) {
     this.configuration = configuration;
     this.serviceFactory = serviceFactory;
     this.pathExtractor = pathExtractor;
     this.dispatcher = dispatcher;
     this.userAgentParser = userAgentParser;
+    this.scmClientDetectors = scmClientDetectors;
   }
 
   @Override
   protected void service(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
     UserAgent userAgent = userAgentParser.parse(request);
-    if (userAgent.isScmClient()) {
+    if (isScmClient(userAgent, request)) {
       String pathInfo = request.getPathInfo();
       Optional<NamespaceAndName> namespaceAndName = pathExtractor.fromUri(pathInfo);
       if (namespaceAndName.isPresent()) {
@@ -90,6 +98,10 @@ public class HttpProtocolServlet extends HttpServlet {
       log.trace("dispatch non-scm-client request for user agent {}", userAgent);
       dispatcher.dispatch(request, response, request.getRequestURI());
     }
+  }
+
+  private boolean isScmClient(UserAgent userAgent, HttpServletRequest request) {
+    return userAgent.isScmClient() || scmClientDetectors.stream().anyMatch(detector -> detector.isScmClient(request, userAgent));
   }
 
   private void service(HttpServletRequest req, HttpServletResponse resp, NamespaceAndName namespaceAndName) throws IOException, ServletException {

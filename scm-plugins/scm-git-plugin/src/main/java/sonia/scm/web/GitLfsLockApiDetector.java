@@ -22,16 +22,20 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.api;
+package sonia.scm.web;
 
-import lombok.Value;
+import sonia.scm.plugin.Extension;
 
-import java.time.Instant;
+import javax.servlet.http.HttpServletRequest;
 
-@Value
-public class FileLock {
-  private String path;
-  private String id;
-  private String userId;
-  private Instant timestamp;
+@Extension
+public class GitLfsLockApiDetector implements ScmClientDetector {
+
+  public static final String LOCK_APPLICATION_TYPE = "application/vnd.git-lfs+json";
+
+  @Override
+  public boolean isScmClient(HttpServletRequest request, UserAgent userAgent) {
+    return LOCK_APPLICATION_TYPE.equals(request.getHeader("Content-Type"))
+      || LOCK_APPLICATION_TYPE.equals(request.getHeader("Accept"));
+  }
 }
