@@ -25,15 +25,13 @@
 package sonia.scm.repository.spi;
 
 import org.assertj.core.api.AbstractObjectAssert;
-import org.github.sdorra.jse.ShiroExtension;
-import org.github.sdorra.jse.SubjectAware;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.repository.api.FileLock;
+import sonia.scm.repository.api.FileLockedException;
 import sonia.scm.store.DataStoreFactory;
 import sonia.scm.store.InMemoryByteDataStoreFactory;
 

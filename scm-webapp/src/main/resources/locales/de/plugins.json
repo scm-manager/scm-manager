@@ -421,6 +421,10 @@
     "5FSV2kreE1": {
       "summary": "'svn verify' fehlgeschlagen",
       "description": "Die Prüfung 'svn verify' ist für das Repository fehlgeschlagen."
+    },
+    "3mSmwOtOd1": {
+      "displayName": "Datei gesperrt",
+      "description": "Die Datei oder ihre Sperre kann nicht bearbeitet werden, da eine andere Sperre existiert. Die andere Sperre kann ggf. durch eine 'forcierte' Aktion umgangen werden."
     }
   },
   "namespaceStrategies": {

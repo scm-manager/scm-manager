@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.spi;
+package sonia.scm.repository.api;
 
 import sonia.scm.ExceptionWithContext;
 import sonia.scm.repository.NamespaceAndName;
@@ -30,12 +30,15 @@ import sonia.scm.repository.NamespaceAndName;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 
 public class FileLockedException extends ExceptionWithContext {
-  protected FileLockedException(NamespaceAndName namespaceAndName, String file) {
+
+  private static final String CODE = "3mSmwOtOd1";
+
+  public FileLockedException(NamespaceAndName namespaceAndName, String file) {
     super(entity("File Lock", file).in(namespaceAndName).build(), "Lock exists");
   }
 
   @Override
   public String getCode() {
-    return null;
+    return CODE;
   }
 }

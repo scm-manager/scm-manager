@@ -29,6 +29,7 @@ import lombok.NoArgsConstructor;
 import org.apache.shiro.SecurityUtils;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.FileLock;
+import sonia.scm.repository.api.FileLockedException;
 import sonia.scm.store.DataStore;
 import sonia.scm.store.DataStoreFactory;
 
