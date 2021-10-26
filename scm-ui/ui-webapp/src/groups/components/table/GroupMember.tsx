@@ -41,7 +41,7 @@ export default class GroupMember extends React.Component<Props> {
   renderLink(to: string, label: string) {
     return (
       <Link to={to}>
-        <Icon name="user" color="inherit" /> {label}
+        <Icon name="user" color="inherit" alt="" /> {label}
       </Link>
     );
   }

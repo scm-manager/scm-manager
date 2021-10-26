@@ -71,7 +71,12 @@ const PluginEntry: FC<Props> = ({ plugin, openModal }) => {
   };
 
   const pendingSpinner = () => (
-    <Icon className="fa-spin fa-lg" name="spinner" color={plugin.markedForUninstall ? "danger" : "info"} />
+    <Icon
+      className="fa-spin fa-lg"
+      name="spinner"
+      color={plugin.markedForUninstall ? "danger" : "info"}
+      alt={t("plugins.markedAsPending")}
+    />
   );
   const actionBar = () => (
     <ActionbarWrapper className="is-flex">

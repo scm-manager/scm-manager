@@ -46,7 +46,7 @@
   },
   "add-member-autocomplete": {
     "placeholder": "Add Member",
-    "loading": "Loading...",
+    "loading": "Loading ...",
     "no-options": "No suggestion available"
   },
   "groupForm": {

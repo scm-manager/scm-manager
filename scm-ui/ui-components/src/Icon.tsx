@@ -21,44 +21,50 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
+import React, { FC } from "react";
 import classNames from "classnames";
 import { createAttributesForTesting } from "./devBuild";
 
 type Props = {
   title?: string;
-  iconStyle: string;
+  iconStyle?: string;
   name: string;
-  color: string;
+  color?: string;
   className?: string;
   onClick?: (event: React.MouseEvent) => void;
   testId?: string;
+  alt: string;
 };
 
-export default class Icon extends React.Component<Props> {
-  static defaultProps = {
-    iconStyle: "fas",
-    color: "grey-light"
-  };
-
-  render() {
-    const { title, iconStyle, name, color, className, onClick, testId } = this.props;
-    if (title) {
-      return (
-        <i
-          onClick={onClick}
-          title={title}
-          className={classNames(iconStyle, "fa-fw", "fa-" + name, `has-text-${color}`, className)}
-          {...createAttributesForTesting(testId)}
-        />
-      );
-    }
+const Icon: FC<Props> = ({
+  title,
+  iconStyle = "fas",
+  name,
+  color = "grey-light",
+  className,
+  onClick,
+  testId,
+  alt = title,
+}) => {
+  if (title) {
     return (
       <i
         onClick={onClick}
-        className={classNames(iconStyle, "fa-" + name, `has-text-${color}`, className)}
+        title={title}
+        className={classNames(iconStyle, "fa-fw", `fa-${name}`, `has-text-${color}`, className)}
+        aria-label={alt}
         {...createAttributesForTesting(testId)}
       />
     );
   }
-}
+  return (
+    <i
+      onClick={onClick}
+      className={classNames(iconStyle, `fa-${name}`, `has-text-${color}`, className)}
+      aria-label={alt}
+      {...createAttributesForTesting(testId)}
+    />
+  );
+};
+
+export default Icon;

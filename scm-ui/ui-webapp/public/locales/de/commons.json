@@ -25,7 +25,8 @@
   },
   "breadcrumb": {
     "home": "Hauptseite",
-    "copyPermalink": "Link in Zwischenablage kopieren"
+    "copyPermalink": "Link in Zwischenablage kopieren",
+    "loading": "Lade ..."
   },
   "errorNotification": {
     "prefix": "Fehler",
@@ -37,7 +38,8 @@
   "errorBoundary": {
     "redirect": {
       "title": "Weiterleitung",
-      "subtitle": "Sie werden in kürze zur Anmeldeseite weitergeleitet"
+      "subtitle": "Sie werden in kürze zur Anmeldeseite weitergeleitet",
+      "alt": "Weiterleitungs-Icon"
     }
   },
   "markdownErrorNotification": {
@@ -133,6 +135,8 @@
     "toastTitle": "Benachrichtigung",
     "xMore": "+{{ count }} Benachrichtigung",
     "xMore_plural": "+{{ count }} Benachrichtigungen",
+    "loading": "Lade ...",
+    "bellTitle": "Benachrichtigungen",
     "empty": "Keine Benachrichtigungen",
     "dismiss": "Löschen",
     "dismissAll": "Alle löschen"

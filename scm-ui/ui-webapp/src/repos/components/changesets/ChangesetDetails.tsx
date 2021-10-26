@@ -93,7 +93,7 @@ const Contributors: FC<{ changeset: Changeset }> = ({ changeset }) => {
       <div className="is-flex is-flex-direction-column mb-4">
         <div className="is-flex">
           <p className="is-ellipsis-overflow is-clickable mb-2" onClick={(e) => setOpen(!open)}>
-            <Icon name="angle-down" /> {t("changeset.contributors.list")}
+            <Icon name="angle-down" alt={t("changeset.contributors.hideList")} /> {t("changeset.contributors.list")}
           </p>
           {signatureIcon}
         </div>
@@ -106,7 +106,8 @@ const Contributors: FC<{ changeset: Changeset }> = ({ changeset }) => {
     <>
       <div className="is-flex is-clickable" onClick={(e) => setOpen(!open)}>
         <ContributorColumn className="is-ellipsis-overflow">
-          <Icon name="angle-right" /> <ChangesetAuthor changeset={changeset} />
+          <Icon name="angle-right" alt={t("changeset.contributors.showList")} />{" "}
+          <ChangesetAuthor changeset={changeset} />
         </ContributorColumn>
         {signatureIcon}
         <CountColumn className="is-hidden-mobile is-hidden-tablet-only is-hidden-desktop-only">

@@ -96,7 +96,7 @@ class Button extends React.Component<Props> {
           {...createAttributesForTesting(testId)}
         >
           <span className="icon is-medium">
-            <Icon name={icon} color="inherit" />
+            <i className={`fas fa-${icon}`} />
           </span>
           {(label || children) && (
             <span>

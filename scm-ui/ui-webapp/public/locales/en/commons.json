@@ -26,7 +26,8 @@
   },
   "breadcrumb": {
     "home": "Main page",
-    "copyPermalink": "Copy Permalink to Clipboard"
+    "copyPermalink": "Copy Permalink to Clipboard",
+    "loading": "Loading ..."
   },
   "errorNotification": {
     "prefix": "Error",
@@ -38,7 +39,8 @@
   "errorBoundary": {
     "redirect": {
       "title": "Redirecting",
-      "subtitle": "You will be redirected to the login page shortly"
+      "subtitle": "You will be redirected to the login page shortly",
+      "alt": "Redirect icon"
     }
   },
   "markdownErrorNotification": {
@@ -134,6 +136,8 @@
     "toastTitle": "Notification",
     "xMore": "+{{ count }} Notification",
     "xMore_plural": "+{{ count }} Notifications",
+    "loading": "Loading ...",
+    "bellTitle": "Notifications",
     "empty": "No notifications",
     "dismiss": "Dismiss",
     "dismissAll": "Dismiss all"

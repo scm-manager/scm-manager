@@ -236,6 +236,8 @@
     },
     "contributors": {
       "mailto": "Mail senden an",
+      "showList": "Liste der Mitwirkenden einblenden",
+      "hideList": "Liste der Mitwirkenden ausblenden",
       "list": "Liste der Mitwirkenden",
       "authoredBy": "Verfasst von",
       "committedBy": "Committed von",
@@ -323,12 +325,15 @@
         "showMarkdown": "Markdown rendern",
         "showSources": "Sources anzeigen"
       },
+      "showMore": "Mehr Informationen einblenden",
+      "hideMore": "Mehr Informationen ausblenden",
       "path": "Pfad",
       "branch": "Branch",
       "commitDate": "Commitdatum",
       "description": "Beschreibung",
       "size": "Größe",
-      "copyPermalink": "Link in Zwischenablage kopieren"
+      "copyPermalink": "Link in Zwischenablage kopieren",
+      "loading": "Lade ..."
     },
     "noSources": "Keine Sources in diesem Branch gefunden.",
     "extension": {
@@ -469,7 +474,10 @@
     "fullscreen": {
       "open": "In Vollbildansicht öffnen",
       "close": "Schließen"
-    }
+    },
+    "renamedTo": "umbenannt in",
+    "showContent": "Inhalt des Diffs einblenden",
+    "hideContent": "Inhalt des Diffs ausblenden"
   },
   "fileUpload": {
     "clickHere": "Klicken Sie hier um Ihre Datei hochzuladen.",

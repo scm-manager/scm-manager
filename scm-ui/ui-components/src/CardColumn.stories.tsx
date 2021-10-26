@@ -36,7 +36,7 @@ const Wrapper = styled.div`
 `;
 
 const link = "/foo/bar";
-const avatar = <Icon name="icons fa-2x fa-fw" />;
+const avatar = <Icon name="icons fa-2x fa-fw" alt="avatar" />;
 const title = <strong>title</strong>;
 const footerLeft = <small>left footer</small>;
 const footerRight = <small>right footer</small>;
