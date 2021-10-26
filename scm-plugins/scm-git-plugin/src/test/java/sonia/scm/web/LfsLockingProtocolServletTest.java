@@ -29,19 +29,30 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.repository.api.FileLock;
 import sonia.scm.repository.spi.GitLockStoreFactory.GitLockStore;
+import sonia.scm.user.DisplayUser;
+import sonia.scm.user.User;
 import sonia.scm.user.UserDisplayManager;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.Instant;
 
+import static java.time.temporal.ChronoUnit.DAYS;
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
+import static java.util.Optional.of;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class LfsLockingProtocolServletTest {
+
+  private static final Instant NOW = Instant.ofEpochSecond(-562031958);
 
   @Mock
   private GitLockStore lockStore;
@@ -62,6 +73,14 @@ class LfsLockingProtocolServletTest {
     when(response.getOutputStream()).thenReturn(responseStream);
   }
 
+  @BeforeEach
+  void setUpUserDisplayManager() {
+    lenient().when( userDisplayManager.get("dent"))
+      .thenReturn(of(DisplayUser.from(new User("dent", "Arthur Dent", "irrelevant"))));
+    lenient().when(userDisplayManager.get("trillian"))
+      .thenReturn(of(DisplayUser.from(new User("trillian", "Tricia McMillan", "irrelevant"))));
+  }
+
   @Test
   void shouldGetEmptyArrayForNoFileLocks() throws IOException {
     when(request.getPathInfo()).thenReturn("repo/hitchhiker/hog.git/info/lfs/locks");
@@ -69,5 +88,41 @@ class LfsLockingProtocolServletTest {
     servlet.doGet(request, response);
 
     assertThat(responseStream).hasToString("{\"locks\":[]}");
+  }
+
+  @Test
+  void shouldGetAllExistingFileLocks() throws IOException {
+    when(request.getPathInfo()).thenReturn("repo/hitchhiker/hog.git/info/lfs/locks");
+    when(lockStore.getAll())
+      .thenReturn(
+        asList(
+          new FileLock("some/file", "42", "dent", NOW),
+          new FileLock("other/file", "1337", "trillian", NOW.plus(42, DAYS))
+        ));
+
+    servlet.doGet(request, response);
+
+    assertThat(responseStream).hasToString(
+      "{\"locks\":[" +
+        "{\"id\":\"42\",\"path\":\"some/file\",\"owner\":{\"name\":\"Arthur Dent\"},\"locked_at\":\"1952-03-11T00:00:42Z\"}," +
+        "{\"id\":\"1337\",\"path\":\"other/file\",\"owner\":{\"name\":\"Tricia McMillan\"},\"locked_at\":\"1952-04-22T00:00:42Z\"}" +
+        "]}");
+  }
+
+  @Test
+  void shouldUseUserIdIfUserIsUnknown() throws IOException {
+    when(request.getPathInfo()).thenReturn("repo/hitchhiker/hog.git/info/lfs/locks");
+    when(lockStore.getAll())
+      .thenReturn(
+        singletonList(
+          new FileLock("some/file", "42", "marvin", NOW)
+        ));
+
+    servlet.doGet(request, response);
+
+    assertThat(responseStream).hasToString(
+      "{\"locks\":[" +
+        "{\"id\":\"42\",\"path\":\"some/file\",\"owner\":{\"name\":\"marvin\"},\"locked_at\":\"1952-03-11T00:00:42Z\"}" +
+        "]}");
   }
 }

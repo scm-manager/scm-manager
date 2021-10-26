@@ -24,6 +24,7 @@
 
 package sonia.scm.web;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import sonia.scm.repository.api.FileLock;
@@ -68,7 +69,7 @@ public class LfsLockingProtocolServlet extends HttpServlet {
     private String name;
 
     Owner(String userId) {
-      this.name = userDisplayManager.get(name).map(DisplayUser::getDisplayName).orElse(name);
+      this.name = userDisplayManager.get(userId).map(DisplayUser::getDisplayName).orElse(userId);
     }
   }
 
@@ -76,13 +77,14 @@ public class LfsLockingProtocolServlet extends HttpServlet {
   private class Lock {
     private String id;
     private String path;
-    private String locked_at;
+    @JsonProperty("locked_at")
+    private String lockedAt;
     private Owner owner;
 
     Lock(FileLock lock) {
       this.id = lock.getId();
       this.path = lock.getPath();
-      this.locked_at = lock.getTimestamp().toString();
+      this.lockedAt = lock.getTimestamp().toString();
       this.owner = new Owner(lock.getUserId());
     }
   }
