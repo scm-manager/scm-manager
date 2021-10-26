@@ -52,12 +52,13 @@ type PathResultRowProps = {
 };
 
 const PathResultRow: FC<PathResultRowProps> = ({ contentBaseUrl, path }) => {
+  const [t] = useTranslation("repos");
   const link = urls.concat(contentBaseUrl, path);
   return (
     <tr>
       <IconColumn>
         <Link to={link}>
-          <Icon title="File" name="file" color="inherit" />
+          <Icon title={t("fileSearch.file")} name="file" color="inherit" />
         </Link>
       </IconColumn>
       <LeftOverflowTd>
@@ -90,14 +91,14 @@ const FileSearchResults: FC<Props> = ({ query, contentBaseUrl, paths = [] }) => 
   if (query.length <= 1) {
     body = (
       <Notification className="m-4" type="info">
-        {t("filesearch.notifications.queryToShort")}
+        {t("fileSearch.notifications.queryToShort")}
       </Notification>
     );
   } else if (paths.length === 0) {
     const queryCmp = <strong>{query}</strong>;
     body = (
       <Notification className="m-4" type="info">
-        <Trans i18nKey="repos:filesearch.notifications.emptyResult" values={{ query }} components={[queryCmp]} />
+        <Trans i18nKey="repos:fileSearch.notifications.emptyResult" values={{ query }} components={[queryCmp]} />
       </Notification>
     );
   } else {

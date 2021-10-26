@@ -482,10 +482,11 @@
     "clickHere": "Click here to select your file",
     "dragAndDrop": "Drag 'n' drop some files here"
   },
-  "filesearch": {
+  "fileSearch": {
     "button": {
       "title": "Search filepath"
     },
+    "file": "File",
     "home": "Go back to source root",
     "input": {
       "placeholder": "Search filepath",

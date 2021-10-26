@@ -475,10 +475,11 @@
     "clickHere": "Klicken Sie hier um Ihre Datei hochzuladen.",
     "dragAndDrop": "Sie können Ihre Datei auch direkt in die Dropzone ziehen."
   },
-  "filesearch": {
+  "fileSearch": {
     "button": {
       "title": "Dateipfad Suche"
     },
+    "file": "Datei",
     "home": "Zurück zu Sources",
     "input": {
       "placeholder": "Dateipfad Suche",
