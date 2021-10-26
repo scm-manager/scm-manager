@@ -97,6 +97,7 @@ export type ReposSourcesTreeWrapperExtension = ExtensionPointDefinition<
 >;
 
 export type ReposSourcesTreeRowProps = {
+  repository: Repository;
   file: File;
 };
 

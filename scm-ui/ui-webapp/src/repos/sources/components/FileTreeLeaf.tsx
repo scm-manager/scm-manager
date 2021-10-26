@@ -26,12 +26,13 @@ import { WithTranslation, withTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
 import { binder, ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
-import { File } from "@scm-manager/ui-types";
-import { DateFromNow, FileSize, Tooltip, Icon } from "@scm-manager/ui-components";
+import { File, Repository } from "@scm-manager/ui-types";
+import { DateFromNow, FileSize, Icon, Tooltip } from "@scm-manager/ui-components";
 import FileIcon from "./FileIcon";
 import FileLink from "./content/FileLink";
 
 type Props = WithTranslation & {
+  repository: Repository;
   file: File;
   baseUrl: string;
 };
@@ -91,12 +92,13 @@ class FileTreeLeaf extends React.Component<Props> {
   };
 
   render() {
-    const { file } = this.props;
+    const { repository, file } = this.props;
 
     const renderFileSize = (file: File) => <FileSize bytes={file?.length ? file.length : 0} />;
     const renderCommitDate = (file: File) => <DateFromNow date={file.commitDate} />;
 
     const extProps: extensionPoints.ReposSourcesTreeRowProps = {
+      repository,
       file,
     };
 
