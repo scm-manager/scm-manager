@@ -24,10 +24,16 @@
 
 package sonia.scm.web;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.sdorra.ssp.PermissionCheck;
 import lombok.Data;
 import lombok.Getter;
+import lombok.Value;
+import sonia.scm.TransactionId;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.api.FileLock;
 import sonia.scm.repository.spi.GitLockStoreFactory.GitLockStore;
 import sonia.scm.user.DisplayUser;
@@ -48,33 +54,69 @@ public class LfsLockingProtocolServlet extends HttpServlet {
 
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
+  private final Repository repository;
   private final GitLockStore lockStore;
   private final UserDisplayManager userDisplayManager;
 
-  public LfsLockingProtocolServlet(GitLockStore lockStore, UserDisplayManager userDisplayManager) {
+  public LfsLockingProtocolServlet(Repository repository, GitLockStore lockStore, UserDisplayManager userDisplayManager) {
+    this.repository = repository;
     this.lockStore = lockStore;
     this.userDisplayManager = userDisplayManager;
   }
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-    verifyPath(req, resp);
+    if (!verifyRequest(req, resp, RepositoryPermissions.pull(repository))) {
+      return;
+    }
     OBJECT_MAPPER.writeValue(resp.getOutputStream(), new LocksList(lockStore.getAll()));
     resp.setStatus(SC_OK);
   }
 
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-    verifyPath(req, resp);
+    if (!verifyRequest(req, resp, RepositoryPermissions.push(repository))) {
+      return;
+    }
     LockCreate lockCreate = OBJECT_MAPPER.readValue(req.getInputStream(), LockCreate.class);
     FileLock createdLock = lockStore.put(lockCreate.getPath(), false);
     OBJECT_MAPPER.writeValue(resp.getOutputStream(), new SingleLock(createdLock));
     resp.setStatus(SC_CREATED);
   }
 
-  private void verifyPath(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+  private boolean verifyRequest(HttpServletRequest req, HttpServletResponse resp, PermissionCheck permission) throws IOException {
+    return verifyPath(req, resp) && verifyPermission(resp, permission);
+  }
+
+  private boolean verifyPermission(HttpServletResponse resp, PermissionCheck permission) throws IOException {
+    if (!permission.isPermitted()) {
+      sendError(resp, HttpServletResponse.SC_FORBIDDEN, "You must have push access to create a lock");
+      return false;
+    }
+    return true;
+  }
+
+  private boolean verifyPath(HttpServletRequest req, HttpServletResponse resp) throws IOException {
     if (!req.getPathInfo().endsWith(".git/info/lfs/locks")) {
-      resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "wrong URL for locks api");
+      sendError(resp, HttpServletResponse.SC_BAD_REQUEST, "wrong URL for locks api");
+      return false;
+    }
+    return true;
+  }
+
+  private void sendError(HttpServletResponse resp, int statusCode, String message) throws IOException {
+    resp.sendError(statusCode, OBJECT_MAPPER.writeValueAsString(new ErrorMessage(message)));
+  }
+
+  @Value
+  class ErrorMessage {
+    private String message;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String requestId;
+
+    public ErrorMessage(String message) {
+      this.message = message;
+      this.requestId = TransactionId.get().orElse(null);
     }
   }
 

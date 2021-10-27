@@ -32,7 +32,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.NotFoundException;
@@ -56,6 +55,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
 
+import static java.util.Collections.emptySet;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -78,7 +78,6 @@ class HttpProtocolServletTest {
   @Mock
   private ScmConfiguration configuration;
 
-  @InjectMocks
   private HttpProtocolServlet servlet;
 
   @Mock
@@ -95,6 +94,18 @@ class HttpProtocolServletTest {
 
   @Mock
   private HttpScmProtocol protocol;
+
+  @BeforeEach
+  void initServlet() {
+    servlet = new HttpProtocolServlet(
+      configuration,
+      serviceFactory,
+      extractor,
+      dispatcher,
+      userAgentParser,
+      emptySet()
+    );
+  }
 
   @Nested
   class Browser {

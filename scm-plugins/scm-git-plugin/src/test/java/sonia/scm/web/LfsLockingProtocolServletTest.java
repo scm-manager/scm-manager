@@ -26,12 +26,15 @@ package sonia.scm.web;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.assertj.core.api.Condition;
+import org.github.sdorra.jse.ShiroExtension;
+import org.github.sdorra.jse.SubjectAware;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.FileLock;
 import sonia.scm.repository.spi.GitLockStoreFactory.GitLockStore;
 import sonia.scm.user.DisplayUser;
@@ -48,15 +51,20 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.Optional.of;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
+@ExtendWith(ShiroExtension.class)
 class LfsLockingProtocolServletTest {
 
+  private static final Repository REPOSITORY = new Repository("23", "git", "hitchhiker", "hog");
   private static final Instant NOW = Instant.ofEpochSecond(-562031958);
 
   @Mock
@@ -74,7 +82,7 @@ class LfsLockingProtocolServletTest {
 
   @BeforeEach
   void setUpServlet() throws IOException {
-    servlet = new LfsLockingProtocolServlet(lockStore, userDisplayManager);
+    servlet = new LfsLockingProtocolServlet(REPOSITORY, lockStore, userDisplayManager);
     lenient().when(response.getOutputStream()).thenReturn(responseStream);
   }
 
@@ -95,60 +103,86 @@ class LfsLockingProtocolServletTest {
     }
 
     @Test
-    void shouldGetEmptyArrayForNoFileLocks() throws IOException {
+    void shouldNotBeAuthorizedToReadLocks() throws IOException {
       servlet.doGet(request, response);
 
-      verify(response).setStatus(200);
-      assertThat(responseStream).hasToString("{\"locks\":[]}");
+      verify(response).sendError(eq(403), any());
+      verify(lockStore, never()).getAll();
     }
 
-    @Test
-    void shouldGetAllExistingFileLocks() throws IOException {
-      when(lockStore.getAll())
-        .thenReturn(
-          asList(
-            new FileLock("some/file", "42", "dent", NOW),
-            new FileLock("other/file", "1337", "trillian", NOW.plus(42, DAYS))
-          ));
+    @Nested
+    @SubjectAware(value = "trillian", permissions = "repository:read,pull:23")
+    class WithReadPermission {
 
-      servlet.doGet(request, response);
+      @Test
+      void shouldGetEmptyArrayForNoFileLocks() throws IOException {
+        servlet.doGet(request, response);
 
-      verify(response).setStatus(200);
-      JsonNode locks = responseStream.getContentAsJson().get("locks");
-      assertThat(locks.get(0))
-        .is(lockNodeWith("42", "some/file", "Arthur Dent", "1952-03-11T00:00:42Z"));
-      assertThat(locks.get(1))
-        .is(lockNodeWith("1337", "other/file", "Tricia McMillan", "1952-04-22T00:00:42Z"));
+        verify(response).setStatus(200);
+        assertThat(responseStream).hasToString("{\"locks\":[]}");
+      }
+
+      @Test
+      void shouldGetAllExistingFileLocks() throws IOException {
+        when(lockStore.getAll())
+          .thenReturn(
+            asList(
+              new FileLock("some/file", "42", "dent", NOW),
+              new FileLock("other/file", "1337", "trillian", NOW.plus(42, DAYS))
+            ));
+
+        servlet.doGet(request, response);
+
+        verify(response).setStatus(200);
+        JsonNode locks = responseStream.getContentAsJson().get("locks");
+        assertThat(locks.get(0))
+          .is(lockNodeWith("42", "some/file", "Arthur Dent", "1952-03-11T00:00:42Z"));
+        assertThat(locks.get(1))
+          .is(lockNodeWith("1337", "other/file", "Tricia McMillan", "1952-04-22T00:00:42Z"));
+      }
+
+      @Test
+      void shouldUseUserIdIfUserIsUnknown() throws IOException {
+        when(lockStore.getAll())
+          .thenReturn(
+            singletonList(
+              new FileLock("some/file", "42", "marvin", NOW)
+            ));
+
+        servlet.doGet(request, response);
+
+        JsonNode locks = responseStream.getContentAsJson().get("locks");
+        assertThat(locks.get(0))
+          .is(lockNodeWith("42", "some/file", "marvin", "1952-03-11T00:00:42Z"));
+      }
+
+      @Test
+      void shouldNotBeAuthorizedToCreateNewLock() throws IOException {
+        servlet.doPost(request, response);
+
+        verify(response).sendError(eq(403), any());
+        verify(lockStore, never()).put(any(), anyBoolean());
+      }
     }
 
-    @Test
-    void shouldUseUserIdIfUserIsUnknown() throws IOException {
-      when(lockStore.getAll())
-        .thenReturn(
-          singletonList(
-            new FileLock("some/file", "42", "marvin", NOW)
-          ));
+    @Nested
+    @SubjectAware(value = "trillian", permissions = "repository:read,write,pull,push:23")
+    class WithWritePermission {
 
-      servlet.doGet(request, response);
+      @Test
+      void shouldCreateNewLock() throws IOException {
+        when(request.getInputStream()).thenReturn(new BufferedServletInputStream("{\n" +
+          "  \"path\": \"some/file.txt\"\n" +
+          "}"));
+        when(lockStore.put("some/file.txt", false))
+          .thenReturn(new FileLock("some/file.txt", "42", "Tricia", NOW));
 
-      JsonNode locks = responseStream.getContentAsJson().get("locks");
-      assertThat(locks.get(0))
-        .is(lockNodeWith("42", "some/file", "marvin", "1952-03-11T00:00:42Z"));
-    }
+        servlet.doPost(request, response);
 
-    @Test
-    void shouldCreateNewLock() throws IOException {
-      when(request.getInputStream()).thenReturn(new BufferedServletInputStream("{\n" +
-        "  \"path\": \"some/file.txt\"\n" +
-        "}"));
-      when(lockStore.put("some/file.txt", false))
-        .thenReturn(new FileLock("some/file.txt", "42", "Tricia", NOW));
-
-      servlet.doPost(request, response);
-
-      verify(response).setStatus(201);
-      assertThat(responseStream.getContentAsJson().get("lock"))
-        .is(lockNodeWith("42", "some/file.txt", "Tricia", "1952-03-11T00:00:42Z"));
+        verify(response).setStatus(201);
+        assertThat(responseStream.getContentAsJson().get("lock"))
+          .is(lockNodeWith("42", "some/file.txt", "Tricia", "1952-03-11T00:00:42Z"));
+      }
     }
   }
 

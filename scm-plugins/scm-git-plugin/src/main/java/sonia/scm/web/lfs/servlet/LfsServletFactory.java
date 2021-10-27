@@ -99,7 +99,7 @@ public class LfsServletFactory {
   }
 
   public LfsLockingProtocolServlet createLockServletFor(Repository repository) {
-    return new LfsLockingProtocolServlet(lockStoreFactory.create(repository), userDisplayManager);
+    return new LfsLockingProtocolServlet(repository, lockStoreFactory.create(repository), userDisplayManager);
   }
 
   /**
