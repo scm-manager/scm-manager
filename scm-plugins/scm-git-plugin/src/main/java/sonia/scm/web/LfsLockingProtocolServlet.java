@@ -51,8 +51,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static java.util.Optional.empty;
-import static java.util.Optional.of;
+import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static javax.servlet.http.HttpServletResponse.SC_CONFLICT;
@@ -61,17 +62,18 @@ import static javax.servlet.http.HttpServletResponse.SC_OK;
 
 public class LfsLockingProtocolServlet extends HttpServlet {
 
-  private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
   private static final Logger LOG = LoggerFactory.getLogger(LfsLockingProtocolServlet.class);
 
   private final Repository repository;
   private final GitLockStore lockStore;
   private final UserDisplayManager userDisplayManager;
+  private final ObjectMapper objectMapper;
 
-  public LfsLockingProtocolServlet(Repository repository, GitLockStore lockStore, UserDisplayManager userDisplayManager) {
+  public LfsLockingProtocolServlet(Repository repository, GitLockStore lockStore, UserDisplayManager userDisplayManager, ObjectMapper objectMapper) {
     this.repository = repository;
     this.lockStore = lockStore;
     this.userDisplayManager = userDisplayManager;
+    this.objectMapper = objectMapper;
   }
 
   @Override
@@ -89,12 +91,16 @@ public class LfsLockingProtocolServlet extends HttpServlet {
     }
     readObject(req, resp, LockCreateDto.class).ifPresent(
       lockCreate -> {
-        try {
-          FileLock createdLock = lockStore.put(lockCreate.getPath(), false);
-          sendResult(resp, SC_CREATED, new SingleLockDto(createdLock));
-        } catch (FileLockedException e) {
-          FileLock conflictingLock = e.getConflictingLock();
-          sendError(resp, SC_CONFLICT, new ConflictDto("already created lock", conflictingLock));
+        if (isNullOrEmpty(lockCreate.path)) {
+          sendError(resp, SC_BAD_REQUEST, "Illegal input");
+        } else {
+          try {
+            FileLock createdLock = lockStore.put(lockCreate.getPath(), false);
+            sendResult(resp, SC_CREATED, new SingleLockDto(createdLock));
+          } catch (FileLockedException e) {
+            FileLock conflictingLock = e.getConflictingLock();
+            sendError(resp, SC_CONFLICT, new ConflictDto("already created lock", conflictingLock));
+          }
         }
       }
     );
@@ -102,7 +108,7 @@ public class LfsLockingProtocolServlet extends HttpServlet {
 
   private <T> Optional<T> readObject(HttpServletRequest req, HttpServletResponse resp, Class<T> resultType) {
     try {
-      return of(OBJECT_MAPPER.readValue(req.getInputStream(), resultType));
+      return ofNullable(objectMapper.readValue(req.getInputStream(), resultType));
     } catch (IOException e) {
       sendError(resp, SC_BAD_REQUEST, "Could not read input");
       return empty();
@@ -132,7 +138,7 @@ public class LfsLockingProtocolServlet extends HttpServlet {
   private void sendResult(HttpServletResponse resp, int statusCode, Object result) {
     resp.setStatus(statusCode);
     try {
-      OBJECT_MAPPER.writeValue(resp.getOutputStream(), result);
+      objectMapper.writeValue(resp.getOutputStream(), result);
     } catch (IOException e) {
       LOG.error("Failed to send result to client", e);
     }
@@ -145,7 +151,7 @@ public class LfsLockingProtocolServlet extends HttpServlet {
   private void sendError(HttpServletResponse resp, int statusCode, Object error) {
     resp.setStatus(statusCode);
     try {
-      OBJECT_MAPPER.writeValue(resp.getOutputStream(), error);
+      objectMapper.writeValue(resp.getOutputStream(), error);
     } catch (IOException e) {
       LOG.error("Failed to send error to client", e);
     }

@@ -24,6 +24,7 @@
 
 package sonia.scm.web.lfs.servlet;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
 import org.eclipse.jgit.lfs.server.LargeFileRepository;
 import org.eclipse.jgit.lfs.server.LfsProtocolServlet;
@@ -61,13 +62,15 @@ public class LfsServletFactory {
   private final LfsAccessTokenFactory tokenFactory;
   private final GitLockStoreFactory lockStoreFactory;
   private final UserDisplayManager userDisplayManager;
+  private final ObjectMapper objectMapper;
 
   @Inject
-  public LfsServletFactory(LfsBlobStoreFactory lfsBlobStoreFactory, LfsAccessTokenFactory tokenFactory, GitLockStoreFactory lockStoreFactory, UserDisplayManager userDisplayManager) {
+  public LfsServletFactory(LfsBlobStoreFactory lfsBlobStoreFactory, LfsAccessTokenFactory tokenFactory, GitLockStoreFactory lockStoreFactory, UserDisplayManager userDisplayManager, ObjectMapper objectMapper) {
     this.lfsBlobStoreFactory = lfsBlobStoreFactory;
     this.tokenFactory = tokenFactory;
     this.lockStoreFactory = lockStoreFactory;
     this.userDisplayManager = userDisplayManager;
+    this.objectMapper = objectMapper;
   }
 
   /**
@@ -99,7 +102,7 @@ public class LfsServletFactory {
   }
 
   public LfsLockingProtocolServlet createLockServletFor(Repository repository) {
-    return new LfsLockingProtocolServlet(repository, lockStoreFactory.create(repository), userDisplayManager);
+    return new LfsLockingProtocolServlet(repository, lockStoreFactory.create(repository), userDisplayManager, objectMapper);
   }
 
   /**

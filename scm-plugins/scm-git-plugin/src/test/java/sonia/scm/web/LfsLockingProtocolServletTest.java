@@ -24,7 +24,10 @@
 
 package sonia.scm.web;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.assertj.core.api.Condition;
 import org.github.sdorra.jse.ShiroExtension;
 import org.github.sdorra.jse.SubjectAware;
@@ -81,7 +84,12 @@ class LfsLockingProtocolServletTest {
 
   @BeforeEach
   void setUpServlet() throws IOException {
-    servlet = new LfsLockingProtocolServlet(REPOSITORY, lockStore, userDisplayManager);
+    ObjectMapper mapper = new ObjectMapper();
+    mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+    mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
+    mapper.configure(SerializationFeature.WRITE_DATES_WITH_ZONE_ID, true);
+    servlet = new LfsLockingProtocolServlet(REPOSITORY, lockStore, userDisplayManager, mapper);
     lenient().when(response.getOutputStream()).thenReturn(responseStream);
   }
 
@@ -181,6 +189,34 @@ class LfsLockingProtocolServletTest {
         verify(response).setStatus(201);
         assertThat(responseStream.getContentAsJson().get("lock"))
           .is(lockNodeWith("42", "some/file.txt", "Tricia", "1952-03-11T00:00:42Z"));
+      }
+
+      @Test
+      void shouldIgnoreUnknownAttributed() throws IOException {
+        when(request.getInputStream()).thenReturn(new BufferedServletInputStream("{\n" +
+          "  \"path\": \"some/file.txt\",\n" +
+          "  \"unknown\": \"attribute\"\n" +
+          "}"));
+        when(lockStore.put("some/file.txt", false))
+          .thenReturn(new FileLock("some/file.txt", "42", "Tricia", NOW));
+
+        servlet.doPost(request, response);
+
+        verify(response).setStatus(201);
+        assertThat(responseStream.getContentAsJson().get("lock"))
+          .is(lockNodeWith("42", "some/file.txt", "Tricia", "1952-03-11T00:00:42Z"));
+      }
+
+      @Test
+      void shouldHandleInvalidInput() throws IOException {
+        when(request.getInputStream()).thenReturn(new BufferedServletInputStream("{\n" +
+          "  \"invalidAttribute\": \"some value\"\n" +
+          "}"));
+
+        servlet.doPost(request, response);
+
+        verify(response).setStatus(400);
+        verify(lockStore, never()).put(any(), anyBoolean());
       }
 
       @Test
