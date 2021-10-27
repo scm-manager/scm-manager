@@ -73,7 +73,7 @@ public class LfsLockingProtocolServlet extends HttpServlet {
       return;
     }
     resp.setStatus(SC_OK);
-    OBJECT_MAPPER.writeValue(resp.getOutputStream(), new LocksList(lockStore.getAll()));
+    OBJECT_MAPPER.writeValue(resp.getOutputStream(), new LocksListDto(lockStore.getAll()));
   }
 
   @Override
@@ -81,14 +81,14 @@ public class LfsLockingProtocolServlet extends HttpServlet {
     if (!verifyRequest(req, resp, RepositoryPermissions.push(repository))) {
       return;
     }
-    LockCreate lockCreate = OBJECT_MAPPER.readValue(req.getInputStream(), LockCreate.class);
+    LockCreateDto lockCreate = OBJECT_MAPPER.readValue(req.getInputStream(), LockCreateDto.class);
     try {
       FileLock createdLock = lockStore.put(lockCreate.getPath(), false);
       resp.setStatus(SC_CREATED);
-      OBJECT_MAPPER.writeValue(resp.getOutputStream(), new SingleLock(createdLock));
+      OBJECT_MAPPER.writeValue(resp.getOutputStream(), new SingleLockDto(createdLock));
     } catch (FileLockedException e) {
       FileLock conflictingLock = e.getConflictingLock();
-      sendError(resp, SC_CONFLICT, new Conflict("already created lock", conflictingLock));
+      sendError(resp, SC_CONFLICT, new ConflictDto("already created lock", conflictingLock));
     }
   }
 
@@ -113,82 +113,83 @@ public class LfsLockingProtocolServlet extends HttpServlet {
   }
 
   private void sendError(HttpServletResponse resp, int statusCode, String message) throws IOException {
-    Object error = new ErrorMessage(message);
+    Object error = new ErrorMessageDto(message);
     sendError(resp, statusCode, error);
   }
 
   private void sendError(HttpServletResponse resp, int statusCode, Object error) throws IOException {
-    resp.sendError(statusCode, OBJECT_MAPPER.writeValueAsString(error));
+    resp.setStatus(statusCode);
+    OBJECT_MAPPER.writeValue(resp.getOutputStream(), error);
   }
 
   @Value
-  private class Conflict extends ErrorMessage {
-    private Lock lock;
+  private class ConflictDto extends ErrorMessageDto {
+    private LockDto lock;
 
-    public Conflict(String message, FileLock lock) {
+    public ConflictDto(String message, FileLock lock) {
       super(message);
-      this.lock = new Lock(lock);
+      this.lock = new LockDto(lock);
     }
   }
 
   @Getter
   @AllArgsConstructor
-  private class ErrorMessage {
+  private class ErrorMessageDto {
     private String message;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String requestId;
 
-    public ErrorMessage(String message) {
+    public ErrorMessageDto(String message) {
       this.message = message;
       this.requestId = TransactionId.get().orElse(null);
     }
   }
 
   @Data
-  static class LockCreate {
+  static class LockCreateDto {
     private String path;
   }
 
   @Getter
-  private class Owner {
+  private class OwnerDto {
     private String name;
 
-    Owner(String userId) {
+    OwnerDto(String userId) {
       this.name = userDisplayManager.get(userId).map(DisplayUser::getDisplayName).orElse(userId);
     }
   }
 
   @Getter
-  private class SingleLock {
-    private Lock lock;
+  private class SingleLockDto {
+    private LockDto lock;
 
-    SingleLock(FileLock lock) {
-      this.lock = new Lock(lock);
+    SingleLockDto(FileLock lock) {
+      this.lock = new LockDto(lock);
     }
   }
 
   @Getter
-  private class Lock {
+  private class LockDto {
     private String id;
     private String path;
     @JsonProperty("locked_at")
     private String lockedAt;
-    private Owner owner;
+    private OwnerDto owner;
 
-    Lock(FileLock lock) {
+    LockDto(FileLock lock) {
       this.id = lock.getId();
       this.path = lock.getPath();
       this.lockedAt = lock.getTimestamp().toString();
-      this.owner = new Owner(lock.getUserId());
+      this.owner = new OwnerDto(lock.getUserId());
     }
   }
 
   @Getter
-  private class LocksList {
-    private List<Lock> locks;
+  private class LocksListDto {
+    private List<LockDto> locks;
 
-    LocksList(Collection<FileLock> locks) {
-      this.locks = locks.stream().map(Lock::new).collect(toList());
+    LocksListDto(Collection<FileLock> locks) {
+      this.locks = locks.stream().map(LockDto::new).collect(toList());
     }
   }
 }

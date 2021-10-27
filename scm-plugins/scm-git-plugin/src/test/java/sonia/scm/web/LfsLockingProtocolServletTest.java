@@ -86,10 +86,6 @@ class LfsLockingProtocolServletTest {
   void setUpServlet() throws IOException {
     servlet = new LfsLockingProtocolServlet(REPOSITORY, lockStore, userDisplayManager);
     lenient().when(response.getOutputStream()).thenReturn(responseStream);
-    lenient().doAnswer(invocation -> {
-      responseStream.print(invocation.getArgument(1, String.class));
-      return null;
-    }).when(response).sendError(anyInt(), anyString());
   }
 
   @BeforeEach
@@ -112,7 +108,7 @@ class LfsLockingProtocolServletTest {
     void shouldNotBeAuthorizedToReadLocks() throws IOException {
       servlet.doGet(request, response);
 
-      verify(response).sendError(eq(403), any());
+      verify(response).setStatus(403);
       verify(lockStore, never()).getAll();
     }
 
@@ -166,7 +162,7 @@ class LfsLockingProtocolServletTest {
       void shouldNotBeAuthorizedToCreateNewLock() throws IOException {
         servlet.doPost(request, response);
 
-        verify(response).sendError(eq(403), any());
+        verify(response).setStatus(403);
         verify(lockStore, never()).put(any(), anyBoolean());
       }
     }
@@ -200,7 +196,7 @@ class LfsLockingProtocolServletTest {
 
         servlet.doPost(request, response);
 
-        verify(response).sendError(eq(409), any());
+        verify(response).setStatus(409);
         JsonNode contentAsJson = responseStream.getContentAsJson();
         assertThat(contentAsJson.get("lock"))
           .is(lockNodeWith("42", "some/file.txt", "Tricia", "1952-03-11T00:00:42Z"));
@@ -215,7 +211,7 @@ class LfsLockingProtocolServletTest {
 
     servlet.doGet(request, response);
 
-    verify(response).sendError(eq(400), anyString());
+    verify(response).setStatus(400);
   }
 
   private Condition<? super Iterable<? extends JsonNode>> lockNodeWith(String expectedId, String expectedPath, String expectedName, String expectedTimestamp) {
