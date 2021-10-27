@@ -32,6 +32,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Value;
+import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.TransactionId;
@@ -50,6 +51,8 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static java.util.Optional.empty;
@@ -58,11 +61,13 @@ import static java.util.stream.Collectors.toList;
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static javax.servlet.http.HttpServletResponse.SC_CONFLICT;
 import static javax.servlet.http.HttpServletResponse.SC_CREATED;
+import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
 
 public class LfsLockingProtocolServlet extends HttpServlet {
 
   private static final Logger LOG = LoggerFactory.getLogger(LfsLockingProtocolServlet.class);
+  private static final Pattern URL_PATTERN = Pattern.compile(".*\\.git/info/lfs/locks(?:/(verify|(\\w+)/unlock))?");
 
   private final Repository repository;
   private final GitLockStore lockStore;
@@ -89,6 +94,22 @@ public class LfsLockingProtocolServlet extends HttpServlet {
     if (!verifyRequest(req, resp, RepositoryPermissions.push(repository))) {
       return;
     }
+    Matcher matcher = URL_PATTERN.matcher(req.getPathInfo());
+    matcher.matches();
+    if (matcher.group(1) == null) {
+      handleLockRequest(req, resp);
+      return;
+    }
+    String subPath = matcher.group(1);
+    if (subPath.equals("verify")) {
+      handleVerifyRequest(req, resp);
+    } else {
+      String lockId = matcher.group(2);
+      handleUnlockRequest(req, resp, lockId);
+    }
+  }
+
+  private void handleLockRequest(HttpServletRequest req, HttpServletResponse resp) {
     readObject(req, resp, LockCreateDto.class).ifPresent(
       lockCreate -> {
         if (isNullOrEmpty(lockCreate.path)) {
@@ -101,6 +122,28 @@ public class LfsLockingProtocolServlet extends HttpServlet {
             FileLock conflictingLock = e.getConflictingLock();
             sendError(resp, SC_CONFLICT, new ConflictDto("already created lock", conflictingLock));
           }
+        }
+      }
+    );
+  }
+
+  private void handleVerifyRequest(HttpServletRequest req, HttpServletResponse resp) {
+    readObject(req, resp, VerifyDto.class).ifPresent(
+      verify -> {
+        Collection<FileLock> allLocks = lockStore.getAll();
+        sendResult(resp, SC_OK, new VerifyResultDto(allLocks));
+      }
+    );
+  }
+
+  private void handleUnlockRequest(HttpServletRequest req, HttpServletResponse resp, String lockId) {
+    readObject(req, resp, UnlockDto.class).ifPresent(
+      unlock -> {
+        Optional<FileLock> deletedLock = lockStore.removeById(lockId, unlock.isForce());
+        if (deletedLock.isPresent()) {
+          sendResult(resp, SC_OK, new SingleLockDto(deletedLock.get()));
+        } else {
+          sendError(resp, SC_NOT_FOUND, "No such lock");
         }
       }
     );
@@ -128,7 +171,7 @@ public class LfsLockingProtocolServlet extends HttpServlet {
   }
 
   private boolean verifyPath(HttpServletRequest req, HttpServletResponse resp) {
-    if (!req.getPathInfo().matches(".*\\.git/info/lfs/locks(/verify)?")) {
+    if (!URL_PATTERN.matcher(req.getPathInfo()).matches()) {
       sendError(resp, HttpServletResponse.SC_BAD_REQUEST, "wrong URL for locks api");
       return false;
     }
@@ -183,6 +226,27 @@ public class LfsLockingProtocolServlet extends HttpServlet {
   @Data
   static class LockCreateDto {
     private String path;
+  }
+
+  @Data
+  static class VerifyDto {
+  }
+
+  @Data
+  static class UnlockDto {
+    private boolean force;
+  }
+
+  @Value
+  private class VerifyResultDto {
+    private Collection<LockDto> ours;
+    private Collection<LockDto> theirs;
+
+    VerifyResultDto(Collection<FileLock> locks) {
+      String userId = SecurityUtils.getSubject().getPrincipals().oneByType(String.class);
+      ours = locks.stream().filter(lock -> userId.equals(lock.getUserId())).map(LockDto::new).collect(toList());
+      theirs = locks.stream().filter(lock -> !userId.equals(lock.getUserId())).map(LockDto::new).collect(toList());
+    }
   }
 
   @Getter

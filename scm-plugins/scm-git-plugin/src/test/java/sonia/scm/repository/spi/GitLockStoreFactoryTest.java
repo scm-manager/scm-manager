@@ -112,24 +112,55 @@ class GitLockStoreFactoryTest {
   }
 
   @Test
+  void shouldRetrieveLockById() {
+    GitLockStoreFactory.GitLockStore gitLockStore = gitLockStoreFactory.create(repository);
+
+    FileLock createdLock = gitLockStore.put("some/file.txt", false);
+
+    Optional<FileLock> retrievedLock = gitLockStore.getById(createdLock.getId());
+
+    assertThat(retrievedLock)
+      .get()
+      .usingRecursiveComparison()
+      .isEqualTo(createdLock);
+  }
+
+  @Test
   void shouldRemoveLock() {
     GitLockStoreFactory.GitLockStore gitLockStore = gitLockStoreFactory.create(repository);
-    gitLockStore.put("some/file.txt", false);
+    FileLock createdLock = gitLockStore.put("some/file.txt", false);
 
     gitLockStore.remove("some/file.txt", false);
 
     assertThat(gitLockStore.getLock("some/file.txt"))
+      .isEmpty();
+    assertThat(gitLockStore.getById(createdLock.getId()))
+      .isEmpty();
+  }
+
+  @Test
+  void shouldRemoveLockById() {
+    GitLockStoreFactory.GitLockStore gitLockStore = gitLockStoreFactory.create(repository);
+    FileLock createdLock = gitLockStore.put("some/file.txt", false);
+
+    gitLockStore.removeById(createdLock.getId(), false);
+
+    assertThat(gitLockStore.getLock("some/file.txt"))
+      .isEmpty();
+    assertThat(gitLockStore.getById(createdLock.getId()))
       .isEmpty();
   }
 
   @Nested
   class WithExistingLockFromOtherUser {
 
+    private FileLock existingLock;
+
     @BeforeEach
     void setLock() {
       currentUser = "trillian";
       GitLockStoreFactory.GitLockStore gitLockStore = gitLockStoreFactory.create(repository);
-      gitLockStore.put("some/file.txt", false);
+      existingLock = gitLockStore.put("some/file.txt", false);
       currentUser = "dent";
     }
 
@@ -171,12 +202,15 @@ class GitLockStoreFactoryTest {
     void shouldOverrideExistingLockWithForce() {
       GitLockStoreFactory.GitLockStore gitLockStore = gitLockStoreFactory.create(repository);
 
+      assertThat(gitLockStore.getById(existingLock.getId())).isPresent();
+
       gitLockStore.put("some/file.txt", true);
 
       assertThat(gitLockStore.getLock("some/file.txt"))
         .get()
         .extracting("userId")
         .isEqualTo("dent");
+      assertThat(gitLockStore.getById(existingLock.getId())).isEmpty();
     }
   }
 

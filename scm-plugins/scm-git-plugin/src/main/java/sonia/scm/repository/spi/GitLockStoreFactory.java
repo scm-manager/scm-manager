@@ -36,10 +36,14 @@ import sonia.scm.store.DataStoreFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import java.time.Clock;
 import java.time.Instant;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
@@ -103,7 +107,7 @@ public final class GitLockStoreFactory {
       return newLock;
     }
 
-    public void remove(String file, boolean force) {
+    public Optional<FileLock> remove(String file, boolean force) {
       StoreEntry storeEntry = readEntry();
       Optional<FileLock> existingFileLock = storeEntry.get(file);
       if (existingFileLock.isPresent()) {
@@ -113,10 +117,20 @@ public final class GitLockStoreFactory {
         storeEntry.remove(file);
         store(storeEntry);
       }
+      return existingFileLock;
+    }
+
+    public Optional<FileLock> removeById(String id, boolean force) {
+      StoreEntry storeEntry = readEntry();
+      return storeEntry.getById(id).flatMap(lock -> remove(lock.getPath(), force));
     }
 
     public Optional<FileLock> getLock(String file) {
       return readEntry().get(file);
+    }
+
+    public Optional<FileLock> getById(String id) {
+      return readEntry().getById(id);
     }
 
     public Collection<FileLock> getAll() {
@@ -132,37 +146,62 @@ public final class GitLockStoreFactory {
     }
   }
 
-  @Data
   @XmlRootElement(name = "file-locks")
+  @XmlAccessorType(XmlAccessType.PROPERTY)
   private static class StoreEntry {
-    private Map<String, StoredFileLock> files;
+    private Map<String, StoredFileLock> files = new TreeMap<>();
+    @XmlTransient
+    private final Map<String, StoredFileLock> ids = new HashMap<>();
+
+    public void setFiles(Map<String, StoredFileLock> files) {
+      this.files = files;
+      files.values().forEach(
+        lock -> ids.put(lock.getId(), lock)
+      );
+    }
+
+    public Map<String, StoredFileLock> getFiles() {
+      return files;
+    }
 
     Optional<FileLock> get(String file) {
       if (files == null) {
         return empty();
       }
-      return ofNullable(files.get(file)).map(lock -> lock.toFileLock(file));
+      return ofNullable(files.get(file)).map(StoredFileLock::toFileLock);
+    }
+
+    Optional<FileLock> getById(String id) {
+      if (files == null) {
+        return empty();
+      }
+      return ofNullable(ids.get(id)).map(StoredFileLock::toFileLock);
     }
 
     void add(FileLock lock) {
       if (files == null) {
         files = new TreeMap<>();
       }
-      files.put(lock.getPath(), new StoredFileLock(lock));
+      StoredFileLock newLock = new StoredFileLock(lock);
+      files.put(lock.getPath(), newLock);
+      ids.put(lock.getId(), newLock);
     }
 
     void remove(String file) {
       if (files == null) {
         return;
       }
-      files.remove(file);
+      StoredFileLock existingLock = files.remove(file);
+      if (existingLock != null) {
+        ids.remove(existingLock.getId());
+      }
     }
 
     public Collection<FileLock> getAll() {
       if (files == null) {
         return emptyList();
       }
-      return files.entrySet().stream().map(entry -> entry.getValue().toFileLock(entry.getKey())).collect(toList());
+      return files.values().stream().map(StoredFileLock::toFileLock).collect(toList());
     }
   }
 
@@ -170,16 +209,18 @@ public final class GitLockStoreFactory {
   @NoArgsConstructor
   private static class StoredFileLock {
     private String id;
+    private String path;
     private String userId;
     private long timestamp;
 
     StoredFileLock(FileLock fileLock) {
       this.id = fileLock.getId();
+      this.path = fileLock.getPath();
       this.userId = fileLock.getUserId();
       this.timestamp = fileLock.getTimestamp().getEpochSecond();
     }
 
-    FileLock toFileLock(String path) {
+    FileLock toFileLock() {
       return new FileLock(path, id, userId, Instant.ofEpochSecond(timestamp));
     }
   }

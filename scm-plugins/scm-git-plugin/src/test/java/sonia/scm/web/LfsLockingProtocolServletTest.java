@@ -126,7 +126,8 @@ class LfsLockingProtocolServletTest {
         servlet.doGet(request, response);
 
         verify(response).setStatus(200);
-        assertThat(responseStream).hasToString("{\"locks\":[]}");
+        JsonNode locks = responseStream.getContentAsJson().get("locks");
+        assertThat(locks).isEmpty();
       }
 
       @Test
@@ -234,6 +235,56 @@ class LfsLockingProtocolServletTest {
         assertThat(contentAsJson.get("lock"))
           .is(lockNodeWith("42", "some/file.txt", "Tricia", "1952-03-11T00:00:42Z"));
         assertThat(contentAsJson.get("message")).isNotNull();
+      }
+
+      @Test
+      void shouldGetVerifyResult() throws IOException {
+        when(request.getPathInfo()).thenReturn("repo/hitchhiker/hog.git/info/lfs/locks/verify");
+        when(request.getInputStream()).thenReturn(new BufferedServletInputStream("{}"));
+        when(lockStore.getAll())
+          .thenReturn(
+            asList(
+              new FileLock("some/file", "42", "dent", NOW),
+              new FileLock("other/file", "1337", "trillian", NOW.plus(42, DAYS))
+            ));
+
+        servlet.doPost(request, response);
+
+        verify(response).setStatus(200);
+        JsonNode ourLocks = responseStream.getContentAsJson().get("ours");
+        assertThat(ourLocks.get(0))
+          .is(lockNodeWith("1337", "other/file", "Tricia McMillan", "1952-04-22T00:00:42Z"));
+        JsonNode theirLocks = responseStream.getContentAsJson().get("theirs");
+        assertThat(theirLocks.get(0))
+          .is(lockNodeWith("42", "some/file", "Arthur Dent", "1952-03-11T00:00:42Z"));
+      }
+
+      @Test
+      void shouldGetVerifyResultForNoFileLocks() throws IOException {
+        when(request.getPathInfo()).thenReturn("repo/hitchhiker/hog.git/info/lfs/locks/verify");
+        when(request.getInputStream()).thenReturn(new BufferedServletInputStream("{\"force\":false}"));
+
+        servlet.doPost(request, response);
+
+        verify(response).setStatus(200);
+        JsonNode ourLocks = responseStream.getContentAsJson().get("ours");
+        assertThat(ourLocks).isEmpty();
+        JsonNode theirLocks = responseStream.getContentAsJson().get("theirs");
+        assertThat(theirLocks).isEmpty();
+      }
+
+      @Test
+      void shouldDeleteExistingFileLock() throws IOException {
+        when(request.getPathInfo()).thenReturn("repo/hitchhiker/hog.git/info/lfs/locks/42/unlock");
+        when(request.getInputStream()).thenReturn(new BufferedServletInputStream("{}"));
+        when(lockStore.removeById("42", false))
+          .thenReturn(of(new FileLock("some/file.txt", "42", "trillian", NOW)));
+
+        servlet.doPost(request, response);
+
+        verify(response).setStatus(200);
+        JsonNode deletedLock = responseStream.getContentAsJson().get("lock");
+        assertThat(deletedLock).is(lockNodeWith("42", "some/file.txt", "Tricia McMillan", "1952-03-11T00:00:42Z"));
       }
     }
   }
