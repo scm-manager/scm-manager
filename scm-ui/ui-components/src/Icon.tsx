@@ -33,14 +33,25 @@ type Props = {
   className?: string;
   onClick?: (event: React.MouseEvent) => void;
   testId?: string;
+  tabIndex?: number;
 };
 
-const Icon: FC<Props> = ({ iconStyle = "fas", color = "grey-light", title, name, className, onClick, testId }) => {
+const Icon: FC<Props> = ({
+  iconStyle = "fas",
+  color = "grey-light",
+  title,
+  name,
+  className,
+  onClick,
+  testId,
+  tabIndex = -1,
+}) => {
   return (
     <i
       onClick={onClick}
       title={title}
       className={classNames(iconStyle, "fa-fw", "fa-" + name, `has-text-${color}`, className)}
+      tabIndex={tabIndex}
       {...createAttributesForTesting(testId)}
     />
   );
