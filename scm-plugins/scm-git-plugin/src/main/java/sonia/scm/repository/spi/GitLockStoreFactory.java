@@ -45,6 +45,7 @@ import java.util.Optional;
 import java.util.TreeMap;
 import java.util.function.Supplier;
 
+import static java.util.Collections.emptyList;
 import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
@@ -157,6 +158,9 @@ public final class GitLockStoreFactory {
     }
 
     public Collection<FileLock> getAll() {
+      if (files == null) {
+        return emptyList();
+      }
       return files.entrySet().stream().map(entry -> entry.getValue().toFileLock(entry.getKey())).collect(toList());
     }
   }

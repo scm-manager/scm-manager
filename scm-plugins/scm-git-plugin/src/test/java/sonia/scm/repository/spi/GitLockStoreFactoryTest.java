@@ -69,6 +69,8 @@ class GitLockStoreFactoryTest {
 
     assertThat(gitLockStore.getLock("some/file.txt"))
       .isEmpty();
+    assertThat(gitLockStore.getAll())
+      .isEmpty();
   }
 
   @Test
@@ -88,6 +90,7 @@ class GitLockStoreFactoryTest {
     FileLock createdLock = gitLockStore.put("some/file.txt", false);
 
     Optional<FileLock> retrievedLock = gitLockStore.getLock("some/file.txt");
+
     AbstractObjectAssert<?, FileLock> lockAssert = assertThat(retrievedLock)
       .get();
     lockAssert
@@ -102,6 +105,10 @@ class GitLockStoreFactoryTest {
     lockAssert
       .usingRecursiveComparison()
       .isEqualTo(createdLock);
+
+    assertThat(gitLockStore.getAll())
+      .extracting("userId")
+      .containsExactly("dent");
   }
 
   @Test

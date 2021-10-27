@@ -69,8 +69,8 @@ public class LfsLockingProtocolServlet extends HttpServlet {
     if (!verifyRequest(req, resp, RepositoryPermissions.pull(repository))) {
       return;
     }
-    OBJECT_MAPPER.writeValue(resp.getOutputStream(), new LocksList(lockStore.getAll()));
     resp.setStatus(SC_OK);
+    OBJECT_MAPPER.writeValue(resp.getOutputStream(), new LocksList(lockStore.getAll()));
   }
 
   @Override
@@ -80,8 +80,8 @@ public class LfsLockingProtocolServlet extends HttpServlet {
     }
     LockCreate lockCreate = OBJECT_MAPPER.readValue(req.getInputStream(), LockCreate.class);
     FileLock createdLock = lockStore.put(lockCreate.getPath(), false);
-    OBJECT_MAPPER.writeValue(resp.getOutputStream(), new SingleLock(createdLock));
     resp.setStatus(SC_CREATED);
+    OBJECT_MAPPER.writeValue(resp.getOutputStream(), new SingleLock(createdLock));
   }
 
   private boolean verifyRequest(HttpServletRequest req, HttpServletResponse resp, PermissionCheck permission) throws IOException {
@@ -97,7 +97,7 @@ public class LfsLockingProtocolServlet extends HttpServlet {
   }
 
   private boolean verifyPath(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-    if (!req.getPathInfo().endsWith(".git/info/lfs/locks")) {
+    if (!req.getPathInfo().matches(".*\\.git/info/lfs/locks(/verify)?")) {
       sendError(resp, HttpServletResponse.SC_BAD_REQUEST, "wrong URL for locks api");
       return false;
     }
