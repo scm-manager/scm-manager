@@ -180,6 +180,7 @@ public class LfsLockingProtocolServlet extends HttpServlet {
 
   private void sendResult(HttpServletResponse resp, int statusCode, Object result) {
     resp.setStatus(statusCode);
+    resp.setContentType("application/vnd.git-lfs+json");
     try {
       objectMapper.writeValue(resp.getOutputStream(), result);
     } catch (IOException e) {

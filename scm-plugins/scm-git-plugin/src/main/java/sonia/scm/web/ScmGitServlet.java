@@ -40,6 +40,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
@@ -65,6 +66,7 @@ public class ScmGitServlet extends GitServlet implements ScmProviderHttpServlet
 
   /** the logger for ScmGitServlet */
   private static final Logger logger = getLogger(ScmGitServlet.class);
+  public static final MediaType LFS_LOCKING_MEDIA_TYPE = MediaType.valueOf("application/vnd.git-lfs+json");
 
   //~--- constructors ---------------------------------------------------------
 
@@ -135,8 +137,16 @@ public class ScmGitServlet extends GitServlet implements ScmProviderHttpServlet
   }
 
   private boolean isLfsLockingAPIRequest(HttpServletRequest request) {
-    return "application/vnd.git-lfs+json".equals(request.getHeader("Content-Type"))
-      || "application/vnd.git-lfs+json".equals(request.getHeader("Accept"));
+      return isLfsLockingMediaType(request, "Content-Type")
+        || isLfsLockingMediaType(request, "Accept");
+  }
+
+  private boolean isLfsLockingMediaType(HttpServletRequest request, String header) {
+    try {
+      return LFS_LOCKING_MEDIA_TYPE.isCompatible(MediaType.valueOf(request.getHeader(header)));
+    } catch (IllegalArgumentException e) {
+      return false;
+    }
   }
 
   private void handleGitLfsRequest(HttpServlet servlet, HttpServletRequest request, HttpServletResponse response, Repository repository) throws ServletException, IOException {
