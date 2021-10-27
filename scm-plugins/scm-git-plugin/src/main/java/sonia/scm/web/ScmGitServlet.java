@@ -143,7 +143,10 @@ public class ScmGitServlet extends GitServlet implements ScmProviderHttpServlet
 
   private boolean isLfsLockingMediaType(HttpServletRequest request, String header) {
     try {
-      return LFS_LOCKING_MEDIA_TYPE.isCompatible(MediaType.valueOf(request.getHeader(header)));
+      MediaType requestMediaType = MediaType.valueOf(request.getHeader(header));
+      return !requestMediaType.isWildcardType()
+        && !requestMediaType.isWildcardSubtype()
+        && LFS_LOCKING_MEDIA_TYPE.isCompatible(requestMediaType);
     } catch (IllegalArgumentException e) {
       return false;
     }
