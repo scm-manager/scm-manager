@@ -28,6 +28,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.sdorra.ssp.PermissionCheck;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Value;
@@ -35,6 +36,7 @@ import sonia.scm.TransactionId;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.api.FileLock;
+import sonia.scm.repository.api.FileLockedException;
 import sonia.scm.repository.spi.GitLockStoreFactory.GitLockStore;
 import sonia.scm.user.DisplayUser;
 import sonia.scm.user.UserDisplayManager;
@@ -47,6 +49,7 @@ import java.util.Collection;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
+import static javax.servlet.http.HttpServletResponse.SC_CONFLICT;
 import static javax.servlet.http.HttpServletResponse.SC_CREATED;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
 
@@ -79,9 +82,14 @@ public class LfsLockingProtocolServlet extends HttpServlet {
       return;
     }
     LockCreate lockCreate = OBJECT_MAPPER.readValue(req.getInputStream(), LockCreate.class);
-    FileLock createdLock = lockStore.put(lockCreate.getPath(), false);
-    resp.setStatus(SC_CREATED);
-    OBJECT_MAPPER.writeValue(resp.getOutputStream(), new SingleLock(createdLock));
+    try {
+      FileLock createdLock = lockStore.put(lockCreate.getPath(), false);
+      resp.setStatus(SC_CREATED);
+      OBJECT_MAPPER.writeValue(resp.getOutputStream(), new SingleLock(createdLock));
+    } catch (FileLockedException e) {
+      FileLock conflictingLock = e.getConflictingLock();
+      sendError(resp, SC_CONFLICT, new Conflict("already created lock", conflictingLock));
+    }
   }
 
   private boolean verifyRequest(HttpServletRequest req, HttpServletResponse resp, PermissionCheck permission) throws IOException {
@@ -105,11 +113,27 @@ public class LfsLockingProtocolServlet extends HttpServlet {
   }
 
   private void sendError(HttpServletResponse resp, int statusCode, String message) throws IOException {
-    resp.sendError(statusCode, OBJECT_MAPPER.writeValueAsString(new ErrorMessage(message)));
+    Object error = new ErrorMessage(message);
+    sendError(resp, statusCode, error);
+  }
+
+  private void sendError(HttpServletResponse resp, int statusCode, Object error) throws IOException {
+    resp.sendError(statusCode, OBJECT_MAPPER.writeValueAsString(error));
   }
 
   @Value
-  class ErrorMessage {
+  private class Conflict extends ErrorMessage {
+    private Lock lock;
+
+    public Conflict(String message, FileLock lock) {
+      super(message);
+      this.lock = new Lock(lock);
+    }
+  }
+
+  @Getter
+  @AllArgsConstructor
+  private class ErrorMessage {
     private String message;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String requestId;

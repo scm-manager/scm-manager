@@ -33,12 +33,19 @@ public class FileLockedException extends ExceptionWithContext {
 
   private static final String CODE = "3mSmwOtOd1";
 
-  public FileLockedException(NamespaceAndName namespaceAndName, String file) {
-    super(entity("File Lock", file).in(namespaceAndName).build(), "Lock exists");
+  private final FileLock conflictingLock;
+
+  public FileLockedException(NamespaceAndName namespaceAndName, FileLock lock) {
+    super(entity("File Lock", lock.getPath()).in(namespaceAndName).build(), "Lock exists");
+    this.conflictingLock = lock;
   }
 
   @Override
   public String getCode() {
     return CODE;
+  }
+
+  public FileLock getConflictingLock() {
+    return conflictingLock;
   }
 }

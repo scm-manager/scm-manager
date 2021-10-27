@@ -93,8 +93,9 @@ public final class GitLockStoreFactory {
 
     public FileLock put(String file, boolean force) {
       StoreEntry storeEntry = readEntry();
-      if (!force && storeEntry.get(file).isPresent()) {
-        throw new FileLockedException(repository.getNamespaceAndName(), file);
+      Optional<FileLock> existingLock = storeEntry.get(file);
+      if (!force && existingLock.isPresent()) {
+        throw new FileLockedException(repository.getNamespaceAndName(), existingLock.get());
       }
       FileLock newLock = new FileLock(file, keyGenerator.createKey(), currentUser.get(), Instant.now(clock));
       storeEntry.add(newLock);
@@ -107,7 +108,7 @@ public final class GitLockStoreFactory {
       Optional<FileLock> existingFileLock = storeEntry.get(file);
       if (existingFileLock.isPresent()) {
         if (!force && !currentUser.get().equals(existingFileLock.get().getUserId())) {
-          throw new FileLockedException(repository.getNamespaceAndName(), file);
+          throw new FileLockedException(repository.getNamespaceAndName(), existingFileLock.get());
         }
         storeEntry.remove(file);
         store(storeEntry);

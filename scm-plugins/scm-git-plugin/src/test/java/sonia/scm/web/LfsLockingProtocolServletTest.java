@@ -36,6 +36,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.FileLock;
+import sonia.scm.repository.api.FileLockedException;
 import sonia.scm.repository.spi.GitLockStoreFactory.GitLockStore;
 import sonia.scm.user.DisplayUser;
 import sonia.scm.user.User;
@@ -53,6 +54,7 @@ import static java.util.Optional.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.lenient;
@@ -84,6 +86,10 @@ class LfsLockingProtocolServletTest {
   void setUpServlet() throws IOException {
     servlet = new LfsLockingProtocolServlet(REPOSITORY, lockStore, userDisplayManager);
     lenient().when(response.getOutputStream()).thenReturn(responseStream);
+    lenient().doAnswer(invocation -> {
+      responseStream.print(invocation.getArgument(1, String.class));
+      return null;
+    }).when(response).sendError(anyInt(), anyString());
   }
 
   @BeforeEach
@@ -182,6 +188,23 @@ class LfsLockingProtocolServletTest {
         verify(response).setStatus(201);
         assertThat(responseStream.getContentAsJson().get("lock"))
           .is(lockNodeWith("42", "some/file.txt", "Tricia", "1952-03-11T00:00:42Z"));
+      }
+
+      @Test
+      void shouldFailToCreateExistingLock() throws IOException {
+        when(request.getInputStream()).thenReturn(new BufferedServletInputStream("{\n" +
+          "  \"path\": \"some/file.txt\"\n" +
+          "}"));
+        when(lockStore.put("some/file.txt", false))
+          .thenThrow(new FileLockedException(REPOSITORY.getNamespaceAndName(), new FileLock("some/file.txt", "42", "Tricia", NOW)));
+
+        servlet.doPost(request, response);
+
+        verify(response).sendError(eq(409), any());
+        JsonNode contentAsJson = responseStream.getContentAsJson();
+        assertThat(contentAsJson.get("lock"))
+          .is(lockNodeWith("42", "some/file.txt", "Tricia", "1952-03-11T00:00:42Z"));
+        assertThat(contentAsJson.get("message")).isNotNull();
       }
     }
   }
