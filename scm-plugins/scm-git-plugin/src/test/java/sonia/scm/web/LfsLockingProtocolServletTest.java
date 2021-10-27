@@ -54,9 +54,6 @@ import static java.util.Optional.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -105,7 +102,7 @@ class LfsLockingProtocolServletTest {
     }
 
     @Test
-    void shouldNotBeAuthorizedToReadLocks() throws IOException {
+    void shouldNotBeAuthorizedToReadLocks() {
       servlet.doGet(request, response);
 
       verify(response).setStatus(403);
@@ -117,7 +114,7 @@ class LfsLockingProtocolServletTest {
     class WithReadPermission {
 
       @Test
-      void shouldGetEmptyArrayForNoFileLocks() throws IOException {
+      void shouldGetEmptyArrayForNoFileLocks() {
         servlet.doGet(request, response);
 
         verify(response).setStatus(200);
@@ -125,7 +122,7 @@ class LfsLockingProtocolServletTest {
       }
 
       @Test
-      void shouldGetAllExistingFileLocks() throws IOException {
+      void shouldGetAllExistingFileLocks() {
         when(lockStore.getAll())
           .thenReturn(
             asList(
@@ -144,7 +141,7 @@ class LfsLockingProtocolServletTest {
       }
 
       @Test
-      void shouldUseUserIdIfUserIsUnknown() throws IOException {
+      void shouldUseUserIdIfUserIsUnknown() {
         when(lockStore.getAll())
           .thenReturn(
             singletonList(
@@ -159,7 +156,7 @@ class LfsLockingProtocolServletTest {
       }
 
       @Test
-      void shouldNotBeAuthorizedToCreateNewLock() throws IOException {
+      void shouldNotBeAuthorizedToCreateNewLock() {
         servlet.doPost(request, response);
 
         verify(response).setStatus(403);
@@ -206,7 +203,7 @@ class LfsLockingProtocolServletTest {
   }
 
   @Test
-  void shouldFailForIllegalPath() throws IOException {
+  void shouldFailForIllegalPath() {
     when(request.getPathInfo()).thenReturn("repo/hitchhiker/hog.git/info/lfs/other");
 
     servlet.doGet(request, response);

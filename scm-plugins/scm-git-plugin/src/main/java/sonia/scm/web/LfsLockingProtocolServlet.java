@@ -32,6 +32,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Value;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.TransactionId;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPermissions;
@@ -47,8 +49,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 import static java.util.stream.Collectors.toList;
+import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static javax.servlet.http.HttpServletResponse.SC_CONFLICT;
 import static javax.servlet.http.HttpServletResponse.SC_CREATED;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
@@ -56,6 +62,7 @@ import static javax.servlet.http.HttpServletResponse.SC_OK;
 public class LfsLockingProtocolServlet extends HttpServlet {
 
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+  private static final Logger LOG = LoggerFactory.getLogger(LfsLockingProtocolServlet.class);
 
   private final Repository repository;
   private final GitLockStore lockStore;
@@ -68,35 +75,45 @@ public class LfsLockingProtocolServlet extends HttpServlet {
   }
 
   @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
     if (!verifyRequest(req, resp, RepositoryPermissions.pull(repository))) {
       return;
     }
-    resp.setStatus(SC_OK);
-    OBJECT_MAPPER.writeValue(resp.getOutputStream(), new LocksListDto(lockStore.getAll()));
+    sendResult(resp, SC_OK, new LocksListDto(lockStore.getAll()));
   }
 
   @Override
-  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+  protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
     if (!verifyRequest(req, resp, RepositoryPermissions.push(repository))) {
       return;
     }
-    LockCreateDto lockCreate = OBJECT_MAPPER.readValue(req.getInputStream(), LockCreateDto.class);
+    readObject(req, resp, LockCreateDto.class).ifPresent(
+      lockCreate -> {
+        try {
+          FileLock createdLock = lockStore.put(lockCreate.getPath(), false);
+          sendResult(resp, SC_CREATED, new SingleLockDto(createdLock));
+        } catch (FileLockedException e) {
+          FileLock conflictingLock = e.getConflictingLock();
+          sendError(resp, SC_CONFLICT, new ConflictDto("already created lock", conflictingLock));
+        }
+      }
+    );
+  }
+
+  private <T> Optional<T> readObject(HttpServletRequest req, HttpServletResponse resp, Class<T> resultType) {
     try {
-      FileLock createdLock = lockStore.put(lockCreate.getPath(), false);
-      resp.setStatus(SC_CREATED);
-      OBJECT_MAPPER.writeValue(resp.getOutputStream(), new SingleLockDto(createdLock));
-    } catch (FileLockedException e) {
-      FileLock conflictingLock = e.getConflictingLock();
-      sendError(resp, SC_CONFLICT, new ConflictDto("already created lock", conflictingLock));
+      return of(OBJECT_MAPPER.readValue(req.getInputStream(), resultType));
+    } catch (IOException e) {
+      sendError(resp, SC_BAD_REQUEST, "Could not read input");
+      return empty();
     }
   }
 
-  private boolean verifyRequest(HttpServletRequest req, HttpServletResponse resp, PermissionCheck permission) throws IOException {
+  private boolean verifyRequest(HttpServletRequest req, HttpServletResponse resp, PermissionCheck permission) {
     return verifyPath(req, resp) && verifyPermission(resp, permission);
   }
 
-  private boolean verifyPermission(HttpServletResponse resp, PermissionCheck permission) throws IOException {
+  private boolean verifyPermission(HttpServletResponse resp, PermissionCheck permission) {
     if (!permission.isPermitted()) {
       sendError(resp, HttpServletResponse.SC_FORBIDDEN, "You must have push access to create a lock");
       return false;
@@ -104,7 +121,7 @@ public class LfsLockingProtocolServlet extends HttpServlet {
     return true;
   }
 
-  private boolean verifyPath(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+  private boolean verifyPath(HttpServletRequest req, HttpServletResponse resp) {
     if (!req.getPathInfo().matches(".*\\.git/info/lfs/locks(/verify)?")) {
       sendError(resp, HttpServletResponse.SC_BAD_REQUEST, "wrong URL for locks api");
       return false;
@@ -112,14 +129,26 @@ public class LfsLockingProtocolServlet extends HttpServlet {
     return true;
   }
 
-  private void sendError(HttpServletResponse resp, int statusCode, String message) throws IOException {
-    Object error = new ErrorMessageDto(message);
-    sendError(resp, statusCode, error);
+  private void sendResult(HttpServletResponse resp, int statusCode, Object result) {
+    resp.setStatus(statusCode);
+    try {
+      OBJECT_MAPPER.writeValue(resp.getOutputStream(), result);
+    } catch (IOException e) {
+      LOG.error("Failed to send result to client", e);
+    }
   }
 
-  private void sendError(HttpServletResponse resp, int statusCode, Object error) throws IOException {
+  private void sendError(HttpServletResponse resp, int statusCode, String message) {
+    sendError(resp, statusCode, new ErrorMessageDto(message));
+  }
+
+  private void sendError(HttpServletResponse resp, int statusCode, Object error) {
     resp.setStatus(statusCode);
-    OBJECT_MAPPER.writeValue(resp.getOutputStream(), error);
+    try {
+      OBJECT_MAPPER.writeValue(resp.getOutputStream(), error);
+    } catch (IOException e) {
+      LOG.error("Failed to send error to client", e);
+    }
   }
 
   @Value
