@@ -28,6 +28,7 @@ import sonia.scm.repository.api.FileLock;
 import sonia.scm.repository.api.LockCommandResult;
 import sonia.scm.repository.api.UnlockCommandResult;
 
+import java.util.Collection;
 import java.util.Optional;
 
 public interface LockCommand {
@@ -37,4 +38,6 @@ public interface LockCommand {
   UnlockCommandResult unlock(UnlockCommandRequest request);
 
   Optional<FileLock> status(LockStatusCommandRequest request);
+
+  Collection<FileLock> getAll();
 }

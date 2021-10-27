@@ -39,6 +39,8 @@ import sonia.scm.repository.api.UnlockCommandResult;
 import sonia.scm.repository.spi.GitLockStoreFactory.GitLockStore;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Optional;
 
 import static java.util.Optional.of;
@@ -141,5 +143,15 @@ class GitLockCommandTest {
     statusAssert
       .extracting("timestamp")
       .isEqualTo(NOW);
+  }
+
+  @Test
+  void shouldGetAll() {
+    ArrayList<FileLock> existingLocks = new ArrayList<>();
+    when(lockStore.getAll()).thenReturn(existingLocks);
+
+    Collection<FileLock> all = lockCommand.getAll();
+
+    assertThat(all).isSameAs(existingLocks);
   }
 }

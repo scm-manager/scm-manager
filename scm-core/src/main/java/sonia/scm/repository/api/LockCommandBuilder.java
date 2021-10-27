@@ -29,6 +29,7 @@ import sonia.scm.repository.spi.LockCommandRequest;
 import sonia.scm.repository.spi.LockStatusCommandRequest;
 import sonia.scm.repository.spi.UnlockCommandRequest;
 
+import java.util.Collection;
 import java.util.Optional;
 
 public final class LockCommandBuilder {
@@ -51,6 +52,10 @@ public final class LockCommandBuilder {
     LockStatusCommandRequest lockStatusCommandRequest = new LockStatusCommandRequest();
     lockStatusCommandRequest.setFile(file);
     return lockCommand.status(lockStatusCommandRequest);
+  }
+
+  public Collection<FileLock> getAll() {
+    return lockCommand.getAll();
   }
 
   public class InnerLockCommandBuilder {

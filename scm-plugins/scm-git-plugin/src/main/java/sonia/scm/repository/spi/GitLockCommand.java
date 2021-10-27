@@ -30,6 +30,7 @@ import sonia.scm.repository.api.UnlockCommandResult;
 import sonia.scm.repository.spi.GitLockStoreFactory.GitLockStore;
 
 import javax.inject.Inject;
+import java.util.Collection;
 import java.util.Optional;
 
 public class GitLockCommand implements LockCommand {
@@ -61,6 +62,12 @@ public class GitLockCommand implements LockCommand {
   public Optional<FileLock> status(LockStatusCommandRequest request) {
     GitLockStore lockStore = getLockStore();
     return lockStore.getLock(request.getFile());
+  }
+
+  @Override
+  public Collection<FileLock> getAll() {
+    GitLockStore lockStore = getLockStore();
+    return lockStore.getAll();
   }
 
   private GitLockStore getLockStore() {
