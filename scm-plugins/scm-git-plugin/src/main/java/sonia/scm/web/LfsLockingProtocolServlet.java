@@ -49,12 +49,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static java.util.Collections.emptyList;
 import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
@@ -86,7 +88,13 @@ public class LfsLockingProtocolServlet extends HttpServlet {
     if (!verifyRequest(req, resp, RepositoryPermissions.pull(repository))) {
       return;
     }
-    sendResult(resp, SC_OK, new LocksListDto(lockStore.getAll()));
+    if (!isNullOrEmpty(req.getParameter("path"))) {
+      sendResult(resp, SC_OK, new LocksListDto(lockStore.getLock(req.getParameter("path"))));
+    } else if (!isNullOrEmpty(req.getParameter("id"))) {
+      sendResult(resp, SC_OK, new LocksListDto(lockStore.getById(req.getParameter("id"))));
+    } else {
+      sendResult(resp, SC_OK, new LocksListDto(lockStore.getAll()));
+    }
   }
 
   @Override
@@ -287,6 +295,10 @@ public class LfsLockingProtocolServlet extends HttpServlet {
   @Getter
   private class LocksListDto {
     private List<LockDto> locks;
+
+    LocksListDto(Optional<FileLock> locks) {
+      this.locks = locks.map(LockDto::new).map(Collections::singletonList).orElse(emptyList());
+    }
 
     LocksListDto(Collection<FileLock> locks) {
       this.locks = locks.stream().map(LockDto::new).collect(toList());

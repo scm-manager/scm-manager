@@ -53,6 +53,7 @@ import java.time.Instant;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -147,6 +148,62 @@ class LfsLockingProtocolServletTest {
           .is(lockNodeWith("42", "some/file", "Arthur Dent", "1952-03-11T00:00:42Z"));
         assertThat(locks.get(1))
           .is(lockNodeWith("1337", "other/file", "Tricia McMillan", "1952-04-22T00:00:42Z"));
+      }
+
+      @Test
+      void shouldGetExistingLockByPath() {
+        when(request.getParameter("path")).thenReturn("some/file");
+        when(lockStore.getLock("some/file"))
+          .thenReturn(of(new FileLock("some/file", "42", "dent", NOW)));
+
+        servlet.doGet(request, response);
+
+        verify(response).setStatus(200);
+        JsonNode locks = responseStream.getContentAsJson().get("locks");
+        assertThat(locks.get(0))
+          .is(lockNodeWith("42", "some/file", "Arthur Dent", "1952-03-11T00:00:42Z"));
+      }
+
+      @Test
+      void shouldGetEmptyListForNotExistingLockByPath() {
+        when(request.getParameter("path")).thenReturn("some/file");
+        when(lockStore.getLock("some/file"))
+          .thenReturn(empty());
+
+        servlet.doGet(request, response);
+
+        verify(response).setStatus(200);
+        JsonNode locks = responseStream.getContentAsJson().get("locks");
+        assertThat(locks).isEmpty();
+      }
+
+      @Test
+      void shouldGetExistingLockById() {
+        when(request.getParameter("path")).thenReturn(null);
+        when(request.getParameter("id")).thenReturn("42");
+        when(lockStore.getById("42"))
+          .thenReturn(of(new FileLock("some/file", "42", "dent", NOW)));
+
+        servlet.doGet(request, response);
+
+        verify(response).setStatus(200);
+        JsonNode locks = responseStream.getContentAsJson().get("locks");
+        assertThat(locks.get(0))
+          .is(lockNodeWith("42", "some/file", "Arthur Dent", "1952-03-11T00:00:42Z"));
+      }
+
+      @Test
+      void shouldGetEmptyListForNotExistingLockById() {
+        when(request.getParameter("path")).thenReturn(null);
+        when(request.getParameter("id")).thenReturn("42");
+        when(lockStore.getById("42"))
+          .thenReturn(empty());
+
+        servlet.doGet(request, response);
+
+        verify(response).setStatus(200);
+        JsonNode locks = responseStream.getContentAsJson().get("locks");
+        assertThat(locks).isEmpty();
       }
 
       @Test
