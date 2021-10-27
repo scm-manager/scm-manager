@@ -24,32 +24,28 @@
 
 package sonia.scm.web;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Charsets;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.WriteListener;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import javax.servlet.ReadListener;
+import javax.servlet.ServletInputStream;
+import java.io.ByteArrayInputStream;
 
-public class CapturingServletOutputStream extends ServletOutputStream {
+public class BufferedServletInputStream extends ServletInputStream {
 
-  private final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+  private ByteArrayInputStream input;
 
-  @Override
-  public void write(int b) throws IOException {
-    baos.write(b);
+  BufferedServletInputStream(String content) {
+    this.input = new ByteArrayInputStream(content.getBytes(Charsets.US_ASCII));
   }
 
   @Override
-  public void close() throws IOException {
-    baos.close();
+  public int read() {
+    return input.read();
   }
 
   @Override
-  public String toString() {
-    return baos.toString();
+  public boolean isFinished() {
+    return false;
   }
 
   @Override
@@ -58,14 +54,6 @@ public class CapturingServletOutputStream extends ServletOutputStream {
   }
 
   @Override
-  public void setWriteListener(WriteListener writeListener) {
-  }
-
-  public JsonNode getContentAsJson() {
-    try {
-      return new ObjectMapper().readTree(toString());
-    } catch (JsonProcessingException e) {
-      throw new RuntimeException("could not unmarshal json content", e);
-    }
+  public void setReadListener(ReadListener readListener) {
   }
 }

@@ -24,7 +24,10 @@
 
 package sonia.scm.web;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -35,7 +38,6 @@ import sonia.scm.user.DisplayUser;
 import sonia.scm.user.User;
 import sonia.scm.user.UserDisplayManager;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -46,7 +48,10 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.Optional.of;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -65,12 +70,12 @@ class LfsLockingProtocolServletTest {
   private HttpServletRequest request;
   @Mock
   private HttpServletResponse response;
-  private ServletOutputStream responseStream = new CapturingServletOutputStream();
+  private final CapturingServletOutputStream responseStream = new CapturingServletOutputStream();
 
   @BeforeEach
   void setUpServlet() throws IOException {
     servlet = new LfsLockingProtocolServlet(lockStore, userDisplayManager);
-    when(response.getOutputStream()).thenReturn(responseStream);
+    lenient().when(response.getOutputStream()).thenReturn(responseStream);
   }
 
   @BeforeEach
@@ -81,48 +86,92 @@ class LfsLockingProtocolServletTest {
       .thenReturn(of(DisplayUser.from(new User("trillian", "Tricia McMillan", "irrelevant"))));
   }
 
-  @Test
-  void shouldGetEmptyArrayForNoFileLocks() throws IOException {
-    when(request.getPathInfo()).thenReturn("repo/hitchhiker/hog.git/info/lfs/locks");
+  @Nested
+  class WithValidLocksPath {
 
-    servlet.doGet(request, response);
+    @BeforeEach
+    void mockValidPath() {
+      when(request.getPathInfo()).thenReturn("repo/hitchhiker/hog.git/info/lfs/locks");
+    }
 
-    assertThat(responseStream).hasToString("{\"locks\":[]}");
+    @Test
+    void shouldGetEmptyArrayForNoFileLocks() throws IOException {
+      servlet.doGet(request, response);
+
+      verify(response).setStatus(200);
+      assertThat(responseStream).hasToString("{\"locks\":[]}");
+    }
+
+    @Test
+    void shouldGetAllExistingFileLocks() throws IOException {
+      when(lockStore.getAll())
+        .thenReturn(
+          asList(
+            new FileLock("some/file", "42", "dent", NOW),
+            new FileLock("other/file", "1337", "trillian", NOW.plus(42, DAYS))
+          ));
+
+      servlet.doGet(request, response);
+
+      verify(response).setStatus(200);
+      JsonNode locks = responseStream.getContentAsJson().get("locks");
+      assertThat(locks.get(0))
+        .is(lockNodeWith("42", "some/file", "Arthur Dent", "1952-03-11T00:00:42Z"));
+      assertThat(locks.get(1))
+        .is(lockNodeWith("1337", "other/file", "Tricia McMillan", "1952-04-22T00:00:42Z"));
+    }
+
+    @Test
+    void shouldUseUserIdIfUserIsUnknown() throws IOException {
+      when(lockStore.getAll())
+        .thenReturn(
+          singletonList(
+            new FileLock("some/file", "42", "marvin", NOW)
+          ));
+
+      servlet.doGet(request, response);
+
+      JsonNode locks = responseStream.getContentAsJson().get("locks");
+      assertThat(locks.get(0))
+        .is(lockNodeWith("42", "some/file", "marvin", "1952-03-11T00:00:42Z"));
+    }
+
+    @Test
+    void shouldCreateNewLock() throws IOException {
+      when(request.getInputStream()).thenReturn(new BufferedServletInputStream("{\n" +
+        "  \"path\": \"some/file.txt\"\n" +
+        "}"));
+      when(lockStore.put("some/file.txt", false))
+        .thenReturn(new FileLock("some/file.txt", "42", "Tricia", NOW));
+
+      servlet.doPost(request, response);
+
+      verify(response).setStatus(201);
+      assertThat(responseStream.getContentAsJson().get("lock"))
+        .is(lockNodeWith("42", "some/file.txt", "Tricia", "1952-03-11T00:00:42Z"));
+    }
   }
 
   @Test
-  void shouldGetAllExistingFileLocks() throws IOException {
-    when(request.getPathInfo()).thenReturn("repo/hitchhiker/hog.git/info/lfs/locks");
-    when(lockStore.getAll())
-      .thenReturn(
-        asList(
-          new FileLock("some/file", "42", "dent", NOW),
-          new FileLock("other/file", "1337", "trillian", NOW.plus(42, DAYS))
-        ));
+  void shouldFailForIllegalPath() throws IOException {
+    when(request.getPathInfo()).thenReturn("repo/hitchhiker/hog.git/info/lfs/other");
 
     servlet.doGet(request, response);
 
-    assertThat(responseStream).hasToString(
-      "{\"locks\":[" +
-        "{\"id\":\"42\",\"path\":\"some/file\",\"owner\":{\"name\":\"Arthur Dent\"},\"locked_at\":\"1952-03-11T00:00:42Z\"}," +
-        "{\"id\":\"1337\",\"path\":\"other/file\",\"owner\":{\"name\":\"Tricia McMillan\"},\"locked_at\":\"1952-04-22T00:00:42Z\"}" +
-        "]}");
+    verify(response).sendError(eq(400), anyString());
   }
 
-  @Test
-  void shouldUseUserIdIfUserIsUnknown() throws IOException {
-    when(request.getPathInfo()).thenReturn("repo/hitchhiker/hog.git/info/lfs/locks");
-    when(lockStore.getAll())
-      .thenReturn(
-        singletonList(
-          new FileLock("some/file", "42", "marvin", NOW)
-        ));
-
-    servlet.doGet(request, response);
-
-    assertThat(responseStream).hasToString(
-      "{\"locks\":[" +
-        "{\"id\":\"42\",\"path\":\"some/file\",\"owner\":{\"name\":\"marvin\"},\"locked_at\":\"1952-03-11T00:00:42Z\"}" +
-        "]}");
+  private Condition<? super Iterable<? extends JsonNode>> lockNodeWith(String expectedId, String expectedPath, String expectedName, String expectedTimestamp) {
+    return new Condition<Iterable<? extends JsonNode>>() {
+      @Override
+      public boolean matches(Iterable<? extends JsonNode> value) {
+        JsonNode node = (JsonNode) value;
+        assertThat(node.get("id").asText()).isEqualTo(expectedId);
+        assertThat(node.get("path").asText()).isEqualTo(expectedPath);
+        assertThat(node.get("owner").get("name").asText()).isEqualTo(expectedName);
+        assertThat(node.get("locked_at").asText()).isEqualTo(expectedTimestamp);
+        return true;
+      }
+    };
   }
 }

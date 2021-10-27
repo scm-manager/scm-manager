@@ -24,17 +24,13 @@
 
 package sonia.scm.web;
 
-import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import javax.servlet.ReadListener;
-import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
@@ -167,34 +163,6 @@ public class WireProtocolTest {
     List<String> commands = WireProtocol.commandsOf(request);
     assertEquals(1, commands.size());
     assertTrue(commands.contains(expected));
-  }
-
-  private static class BufferedServletInputStream extends ServletInputStream {
-
-    private ByteArrayInputStream input;
-
-    BufferedServletInputStream(String content) {
-      this.input = new ByteArrayInputStream(content.getBytes(Charsets.US_ASCII));
-    }
-
-    @Override
-    public int read() {
-      return input.read();
-    }
-
-    @Override
-    public boolean isFinished() {
-      return false;
-    }
-
-    @Override
-    public boolean isReady() {
-      return false;
-    }
-
-    @Override
-    public void setReadListener(ReadListener readListener) {
-    }
   }
 
 }

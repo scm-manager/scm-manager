@@ -26,6 +26,7 @@ package sonia.scm.web;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Data;
 import lombok.Getter;
 import sonia.scm.repository.api.FileLock;
 import sonia.scm.repository.spi.GitLockStoreFactory.GitLockStore;
@@ -40,6 +41,7 @@ import java.util.Collection;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
+import static javax.servlet.http.HttpServletResponse.SC_CREATED;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
 
 public class LfsLockingProtocolServlet extends HttpServlet {
@@ -56,12 +58,29 @@ public class LfsLockingProtocolServlet extends HttpServlet {
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-    if (req.getPathInfo().endsWith(".git/info/lfs/locks")) {
-      OBJECT_MAPPER.writeValue(resp.getOutputStream(), new LocksList(lockStore.getAll()));
-      resp.setStatus(SC_OK);
-    } else {
+    verifyPath(req, resp);
+    OBJECT_MAPPER.writeValue(resp.getOutputStream(), new LocksList(lockStore.getAll()));
+    resp.setStatus(SC_OK);
+  }
+
+  @Override
+  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    verifyPath(req, resp);
+    LockCreate lockCreate = OBJECT_MAPPER.readValue(req.getInputStream(), LockCreate.class);
+    FileLock createdLock = lockStore.put(lockCreate.getPath(), false);
+    OBJECT_MAPPER.writeValue(resp.getOutputStream(), new SingleLock(createdLock));
+    resp.setStatus(SC_CREATED);
+  }
+
+  private void verifyPath(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    if (!req.getPathInfo().endsWith(".git/info/lfs/locks")) {
       resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "wrong URL for locks api");
     }
+  }
+
+  @Data
+  static class LockCreate {
+    private String path;
   }
 
   @Getter
@@ -70,6 +89,15 @@ public class LfsLockingProtocolServlet extends HttpServlet {
 
     Owner(String userId) {
       this.name = userDisplayManager.get(userId).map(DisplayUser::getDisplayName).orElse(userId);
+    }
+  }
+
+  @Getter
+  private class SingleLock {
+    private Lock lock;
+
+    SingleLock(FileLock lock) {
+      this.lock = new Lock(lock);
     }
   }
 
