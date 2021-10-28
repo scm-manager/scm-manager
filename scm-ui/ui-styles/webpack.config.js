@@ -51,8 +51,9 @@ plugins.push(
 );
 
 module.exports = {
+  mode: "development",
   entry: themes,
-  devtool: "cheap-module-eval-source-map",
+  devtool: "eval-cheap-module-source-map",
   target: "web",
   module: {
     rules: [
@@ -68,21 +69,27 @@ module.exports = {
         ],
       },
       {
-        test: /\.(png|svg|jpg|gif|woff2?|eot|ttf)$/,
-        use: ["file-loader"],
-      },
-    ],
+        test: /\.(png|svg|jpg|gif)$/,
+        use: ["file-loader"]
+      }
+    ]
   },
   output: {
     filename: "theme-[name].bundle.js",
   },
   plugins,
   devServer: {
-    contentBase: [path.join(__dirname, "public"), path.join(__dirname, "..", "ui-webapp", "public")],
-    contentBasePublicPath: ["/", "/ui-webapp"],
-    compress: false,
-    overlay: true,
+    static: [{
+      directory: path.join(__dirname, "public"),
+      publicPath: "/",
+    }, {
+      directory: path.join(__dirname, "..", "ui-webapp", "public"),
+      publicPath: "/ui-webapp",
+    }],
     port: 5000,
+    client: {
+      overlay: true,
+    },
     hot: true,
   },
 };
