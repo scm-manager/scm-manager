@@ -76,7 +76,8 @@ import static javax.servlet.http.HttpServletResponse.SC_OK;
 public class LfsLockingProtocolServlet extends HttpServlet {
 
   private static final Logger LOG = LoggerFactory.getLogger(LfsLockingProtocolServlet.class);
-  private static final Pattern URL_PATTERN = Pattern.compile(".*\\.git/info/lfs/locks(?:/(verify|(\\w+)/unlock))?");
+  private static final Pattern GET_PATH_PATTERN = Pattern.compile(".*\\.git/info/lfs/locks");
+  private static final Pattern POST_PATH_PATTERN = Pattern.compile(".*\\.git/info/lfs/locks(?:/(verify|(\\w+)/unlock))?");
 
   private static final int DEFAULT_LIMIT = 1000;
   private static final int LOWER_LIMIT = 10;
@@ -104,31 +105,43 @@ public class LfsLockingProtocolServlet extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
     LOG.trace("processing GET request");
-    if (!verifyRequest(req, resp, RepositoryPermissions.pull(repository))) {
+    if (!new GetRequestValidator(req, resp).verifyRequest()) {
       return;
     }
     if (!isNullOrEmpty(req.getParameter("path"))) {
-      LOG.trace("request limited to path: {}", req.getParameter("path"));
-      sendResult(resp, SC_OK, new LocksListDto(lockStore.getLock(req.getParameter("path"))));
+      handleSinglePathRequest(req, resp);
     } else if (!isNullOrEmpty(req.getParameter("id"))) {
-      LOG.trace("request limited to id: {}", req.getParameter("id"));
-      sendResult(resp, SC_OK, new LocksListDto(lockStore.getById(req.getParameter("id"))));
+      handleSingleIdRequest(req, resp);
     } else {
-      int limit = getLimit(req, resp);
-      int cursor = getCursor(req, resp);
-      if (limit < 0 || cursor < 0) {
-        return;
-      }
-      Collection<FileLock> allLocks = lockStore.getAll();
-      Stream<FileLock> resultLocks = limit(allLocks, limit, cursor);
-      LocksListDto result = new LocksListDto(resultLocks, computeNextCursor(limit, cursor, allLocks));
-      LOG.trace("created list result with {} locks and next cursor {}", result.getLocks().size(), result.getNextCursor());
-      sendResult(resp, SC_OK, result);
+      handleGetAllRequest(req, resp);
     }
   }
 
+  private void handleSinglePathRequest(HttpServletRequest req, HttpServletResponse resp) {
+    LOG.trace("request limited to path: {}", req.getParameter("path"));
+    sendResult(resp, SC_OK, new LocksListDto(lockStore.getLock(req.getParameter("path"))));
+  }
+
+  private void handleSingleIdRequest(HttpServletRequest req, HttpServletResponse resp) {
+    LOG.trace("request limited to id: {}", req.getParameter("id"));
+    sendResult(resp, SC_OK, new LocksListDto(lockStore.getById(req.getParameter("id"))));
+  }
+
+  private void handleGetAllRequest(HttpServletRequest req, HttpServletResponse resp) {
+    int limit = getLimit(req, resp);
+    int cursor = getCursor(req, resp);
+    if (limit < 0 || cursor < 0) {
+      return;
+    }
+    Collection<FileLock> allLocks = lockStore.getAll();
+    Stream<FileLock> resultLocks = limit(allLocks, limit, cursor);
+    LocksListDto result = new LocksListDto(resultLocks, computeNextCursor(limit, cursor, allLocks));
+    LOG.trace("created list result with {} locks and next cursor {}", result.getLocks().size(), result.getNextCursor());
+    sendResult(resp, SC_OK, result);
+  }
+
   private String computeNextCursor(int limit, int cursor, Collection<FileLock> allLocks) {
-    return allLocks.size() > cursor + limit ?Integer.toString(cursor + limit): null;
+    return allLocks.size() > cursor + limit ? Integer.toString(cursor + limit) : null;
   }
 
   private Stream<FileLock> limit(Collection<FileLock> allLocks, int limit, int cursor) {
@@ -179,21 +192,16 @@ public class LfsLockingProtocolServlet extends HttpServlet {
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
     LOG.trace("processing POST request");
-    if (!verifyRequest(req, resp, RepositoryPermissions.push(repository))) {
+    PostRequestValidator validator = new PostRequestValidator(req, resp);
+    if (!validator.verifyRequest()) {
       return;
     }
-    Matcher matcher = URL_PATTERN.matcher(req.getPathInfo());
-    matcher.matches();
-    if (matcher.group(1) == null) {
+    if (validator.isLockRequest()) {
       handleLockRequest(req, resp);
-      return;
-    }
-    String subPath = matcher.group(1);
-    if (subPath.equals("verify")) {
+    } else if (validator.isVerifyRequest()) {
       handleVerifyRequest(req, resp);
     } else {
-      String lockId = matcher.group(2);
-      handleUnlockRequest(req, resp, lockId);
+      handleUnlockRequest(req, resp, validator.getLockId());
     }
   }
 
@@ -258,25 +266,89 @@ public class LfsLockingProtocolServlet extends HttpServlet {
     }
   }
 
-  private boolean verifyRequest(HttpServletRequest req, HttpServletResponse resp, PermissionCheck permission) {
-    return verifyPath(req, resp) && verifyPermission(resp, permission);
+  private abstract class RequestValidator {
+    private final HttpServletRequest req;
+    private final HttpServletResponse resp;
+
+    public RequestValidator(HttpServletRequest req, HttpServletResponse resp) {
+      this.req = req;
+      this.resp = resp;
+    }
+
+    boolean verifyRequest() {
+      return verifyPath() && verifyPermission();
+    }
+
+    private boolean verifyPermission() {
+      if (!getPermission().isPermitted()) {
+        sendError(resp, HttpServletResponse.SC_FORBIDDEN, "You must have push access to create a lock");
+        return false;
+      }
+      return true;
+    }
+
+    abstract PermissionCheck getPermission();
+
+    private boolean verifyPath() {
+      if (!isPathValid(req.getPathInfo())) {
+        LOG.trace("got illegal path {}", req.getPathInfo());
+        sendError(resp, HttpServletResponse.SC_BAD_REQUEST, "wrong URL for locks api");
+        return false;
+      }
+      return true;
+    }
+
+    abstract boolean isPathValid(String path);
   }
 
-  private boolean verifyPermission(HttpServletResponse resp, PermissionCheck permission) {
-    if (!permission.isPermitted()) {
-      sendError(resp, HttpServletResponse.SC_FORBIDDEN, "You must have push access to create a lock");
-      return false;
+  private class GetRequestValidator extends RequestValidator {
+
+    public GetRequestValidator(HttpServletRequest req, HttpServletResponse resp) {
+      super(req, resp);
     }
-    return true;
+
+    @Override
+    PermissionCheck getPermission() {
+      return RepositoryPermissions.pull(repository);
+    }
+
+    @Override
+    boolean isPathValid(String path) {
+      return GET_PATH_PATTERN.matcher(path).matches();
+    }
   }
 
-  private boolean verifyPath(HttpServletRequest req, HttpServletResponse resp) {
-    if (!URL_PATTERN.matcher(req.getPathInfo()).matches()) {
-      LOG.trace("got illegal path {}", req.getPathInfo());
-      sendError(resp, HttpServletResponse.SC_BAD_REQUEST, "wrong URL for locks api");
-      return false;
+  private class PostRequestValidator extends RequestValidator {
+
+    private Matcher matcher;
+
+    public PostRequestValidator(HttpServletRequest req, HttpServletResponse resp) {
+      super(req, resp);
     }
-    return true;
+
+    @Override
+    PermissionCheck getPermission() {
+      return RepositoryPermissions.push(repository);
+    }
+
+    @Override
+    boolean isPathValid(String path) {
+      matcher = POST_PATH_PATTERN.matcher(path);
+      return matcher.matches();
+    }
+
+    boolean isLockRequest() {
+      return matcher.group(1) == null;
+    }
+
+    boolean isVerifyRequest() {
+      String subPath = matcher.group(1);
+      return subPath.equals("verify");
+    }
+
+    public String getLockId() {
+      return matcher.group(2);
+    }
   }
 
   private void sendResult(HttpServletResponse resp, int statusCode, Object result) {
