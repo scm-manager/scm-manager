@@ -58,8 +58,10 @@ public class FileLockPreCommitHook {
   @Subscribe(async = false)
   public void checkForLocks(PreReceiveRepositoryHookEvent event) {
     Repository repository = event.getRepository();
+    LOG.trace("checking for locks during push in repository {}", repository);
     GitLockStoreFactory.GitLockStore gitLockStore = lockStoreFactory.create(repository);
     if (!gitLockStore.hasLocks()) {
+      LOG.trace("no locks found in repository {}", repository);
       return;
     }
     try (RepositoryService service = serviceFactory.create(repository)) {

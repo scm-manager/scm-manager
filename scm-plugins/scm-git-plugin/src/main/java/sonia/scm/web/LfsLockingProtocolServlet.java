@@ -106,280 +106,290 @@ public class LfsLockingProtocolServlet extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
     LOG.trace("processing GET request");
-    if (!new GetRequestValidator(req, resp).verifyRequest()) {
-      return;
-    }
-    if (!isNullOrEmpty(req.getParameter("path"))) {
-      handleSinglePathRequest(req, resp);
-    } else if (!isNullOrEmpty(req.getParameter("id"))) {
-      handleSingleIdRequest(req, resp);
-    } else {
-      handleGetAllRequest(req, resp);
-    }
-  }
-
-  private void handleSinglePathRequest(HttpServletRequest req, HttpServletResponse resp) {
-    LOG.trace("request limited to path: {}", req.getParameter("path"));
-    sendResult(resp, SC_OK, new LocksListDto(lockStore.getLock(req.getParameter("path"))));
-  }
-
-  private void handleSingleIdRequest(HttpServletRequest req, HttpServletResponse resp) {
-    LOG.trace("request limited to id: {}", req.getParameter("id"));
-    sendResult(resp, SC_OK, new LocksListDto(lockStore.getById(req.getParameter("id"))));
-  }
-
-  private void handleGetAllRequest(HttpServletRequest req, HttpServletResponse resp) {
-    int limit = getLimit(req, resp);
-    int cursor = getCursor(req, resp);
-    if (limit < 0 || cursor < 0) {
-      return;
-    }
-    Collection<FileLock> allLocks = lockStore.getAll();
-    Stream<FileLock> resultLocks = limit(allLocks, limit, cursor);
-    LocksListDto result = new LocksListDto(resultLocks, computeNextCursor(limit, cursor, allLocks));
-    LOG.trace("created list result with {} locks and next cursor {}", result.getLocks().size(), result.getNextCursor());
-    sendResult(resp, SC_OK, result);
-  }
-
-  private String computeNextCursor(int limit, int cursor, Collection<FileLock> allLocks) {
-    return allLocks.size() > cursor + limit ? Integer.toString(cursor + limit) : null;
-  }
-
-  private Stream<FileLock> limit(Collection<FileLock> allLocks, int limit, int cursor) {
-    return allLocks.stream().skip(cursor).limit(limit);
-  }
-
-  private int getLimit(HttpServletRequest req, HttpServletResponse resp) {
-    String limitString = req.getParameter("limit");
-    if (isNullOrEmpty(limitString)) {
-      LOG.trace("using default limit {}", defaultLimit);
-      return defaultLimit;
-    }
-    try {
-      return getEffectiveLimit(parseInt(limitString));
-    } catch (NumberFormatException e) {
-      LOG.trace("illegal limit parameter '{}'", limitString);
-      sendError(resp, SC_BAD_REQUEST, "Illegal limit parameter");
-      return -1;
-    }
-  }
-
-  private int getEffectiveLimit(int limit) {
-    int effectiveLimit = max(lowerLimit, min(defaultLimit, limit));
-    LOG.trace("using limit {}", effectiveLimit);
-    return effectiveLimit;
-  }
-
-  private int getCursor(HttpServletRequest req, HttpServletResponse resp) {
-    String cursor = req.getParameter("cursor");
-    return getCursor(resp, cursor);
-  }
-
-  private int getCursor(HttpServletResponse resp, String cursor) {
-    if (isNullOrEmpty(cursor)) {
-      return 0;
-    }
-    try {
-      int effectiveCursor = parseInt(cursor);
-      LOG.trace("starting at position {}", effectiveCursor);
-      return effectiveCursor;
-    } catch (NumberFormatException e) {
-      LOG.trace("illegal cursor parameter '{}'", cursor);
-      sendError(resp, SC_BAD_REQUEST, "Illegal cursor parameter");
-      return -1;
-    }
+    new Handler(req, resp).handleGet();
   }
 
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
     LOG.trace("processing POST request");
-    PostRequestValidator validator = new PostRequestValidator(req, resp);
-    if (!validator.verifyRequest()) {
-      return;
-    }
-    if (validator.isLockRequest()) {
-      handleLockRequest(req, resp);
-    } else if (validator.isVerifyRequest()) {
-      handleVerifyRequest(req, resp);
-    } else {
-      handleUnlockRequest(req, resp, validator.getLockId());
-    }
+    new Handler(req, resp).handlePost();
   }
 
-  private void handleLockRequest(HttpServletRequest req, HttpServletResponse resp) {
-    LOG.trace("processing lock request");
-    readObject(req, resp, LockCreateDto.class).ifPresent(
-      lockCreate -> {
-        if (isNullOrEmpty(lockCreate.path)) {
-          sendError(resp, SC_BAD_REQUEST, "Illegal input");
-        } else {
-          try {
-            FileLock createdLock = lockStore.put(lockCreate.getPath(), false);
-            sendResult(resp, SC_CREATED, new SingleLockDto(createdLock));
-          } catch (FileLockedException e) {
-            FileLock conflictingLock = e.getConflictingLock();
-            sendError(resp, SC_CONFLICT, new ConflictDto("already created lock", conflictingLock));
-          }
-        }
-      }
-    );
-  }
-
-  private void handleVerifyRequest(HttpServletRequest req, HttpServletResponse resp) {
-    LOG.trace("processing verify request");
-    readObject(req, resp, VerifyDto.class).ifPresent(
-      verify -> {
-        Collection<FileLock> allLocks = lockStore.getAll();
-        int cursor = getCursor(resp, verify.getCursor());
-        int limit = getEffectiveLimit(verify.getLimit());
-        if (limit < 0 || cursor < 0) {
-          return;
-        }
-        Stream<FileLock> resultLocks = limit(allLocks, limit, cursor);
-        VerifyResultDto result = new VerifyResultDto(resultLocks, computeNextCursor(limit, cursor, allLocks));
-        LOG.trace("created list result with {} 'our' locks, {} 'their' locks, and next cursor {}", result.getOurs().size(), result.getTheirs().size(), result.getNextCursor());
-        sendResult(resp, SC_OK, result);
-      }
-    );
-  }
-
-  private void handleUnlockRequest(HttpServletRequest req, HttpServletResponse resp, String lockId) {
-    LOG.trace("processing unlock request");
-    readObject(req, resp, UnlockDto.class).ifPresent(
-      unlock -> {
-        try {
-          Optional<FileLock> deletedLock = lockStore.removeById(lockId, unlock.isForce());
-          if (deletedLock.isPresent()) {
-            sendResult(resp, SC_OK, new SingleLockDto(deletedLock.get()));
-          } else {
-            sendError(resp, SC_NOT_FOUND, "No such lock");
-          }
-        } catch (FileLockedException e) {
-          FileLock conflictingLock = e.getConflictingLock();
-          sendError(resp, SC_FORBIDDEN, "locked by " + conflictingLock.getUserId());
-        }
-      }
-    );
-  }
-
-  private <T> Optional<T> readObject(HttpServletRequest req, HttpServletResponse resp, Class<T> resultType) {
-    try {
-      return ofNullable(objectMapper.readValue(req.getInputStream(), resultType));
-    } catch (IOException e) {
-      LOG.info("got exception reading input", e);
-      sendError(resp, SC_BAD_REQUEST, "Could not read input");
-      return empty();
-    }
-  }
-
-  private abstract class RequestValidator {
+  private class Handler {
     private final HttpServletRequest req;
     private final HttpServletResponse resp;
 
-    public RequestValidator(HttpServletRequest req, HttpServletResponse resp) {
+    public Handler(HttpServletRequest req, HttpServletResponse resp) {
       this.req = req;
       this.resp = resp;
     }
 
-    boolean verifyRequest() {
-      return verifyPath() && verifyPermission();
-    }
-
-    private boolean verifyPermission() {
-      if (!getPermission().isPermitted()) {
-        sendError(resp, HttpServletResponse.SC_FORBIDDEN, "You must have push access to create a lock");
-        return false;
+    private void handleGet() {
+      if (getRequestValidator().verifyRequest()) {
+        if (!isNullOrEmpty(req.getParameter("path"))) {
+          handleSinglePathRequest();
+        } else if (!isNullOrEmpty(req.getParameter("id"))) {
+          handleSingleIdRequest();
+        } else {
+          handleGetAllRequest();
+        }
       }
-      return true;
     }
 
-    abstract PermissionCheck getPermission();
-
-    private boolean verifyPath() {
-      if (!isPathValid(req.getPathInfo())) {
-        LOG.trace("got illegal path {}", req.getPathInfo());
-        sendError(resp, HttpServletResponse.SC_BAD_REQUEST, "wrong URL for locks api");
-        return false;
+    private void handlePost() {
+      PostRequestValidator validator = postRequestValidator();
+      if (validator.verifyRequest()) {
+        if (validator.isLockRequest()) {
+          handleLockRequest();
+        } else if (validator.isVerifyRequest()) {
+          handleVerifyRequest();
+        } else {
+          handleUnlockRequest(validator.getLockId());
+        }
       }
-      return true;
     }
 
-    abstract boolean isPathValid(String path);
-  }
-
-  private class GetRequestValidator extends RequestValidator {
-
-    public GetRequestValidator(HttpServletRequest req, HttpServletResponse resp) {
-      super(req, resp);
+    private void handleSinglePathRequest() {
+      LOG.trace("request limited to path: {}", req.getParameter("path"));
+      sendResult(SC_OK, new LocksListDto(lockStore.getLock(req.getParameter("path"))));
     }
 
-    @Override
-    PermissionCheck getPermission() {
-      return RepositoryPermissions.pull(repository);
+    private void handleSingleIdRequest() {
+      String id = req.getParameter("id");
+      LOG.trace("request limited to id: {}", id);
+      sendResult(SC_OK, new LocksListDto(lockStore.getById(id)));
     }
 
-    @Override
-    boolean isPathValid(String path) {
-      return GET_PATH_PATTERN.matcher(path).matches();
-    }
-  }
-
-  private class PostRequestValidator extends RequestValidator {
-
-    private Matcher matcher;
-
-    public PostRequestValidator(HttpServletRequest req, HttpServletResponse resp) {
-      super(req, resp);
-    }
-
-    @Override
-    PermissionCheck getPermission() {
-      return RepositoryPermissions.push(repository);
+    private void handleGetAllRequest() {
+      int limit = getLimit();
+      int cursor = getCursor();
+      if (limit < 0 || cursor < 0) {
+        return;
+      }
+      Collection<FileLock> allLocks = lockStore.getAll();
+      Stream<FileLock> resultLocks = limit(allLocks, limit, cursor);
+      LocksListDto result = new LocksListDto(resultLocks, computeNextCursor(limit, cursor, allLocks));
+      LOG.trace("created list result with {} locks and next cursor {}", result.getLocks().size(), result.getNextCursor());
+      sendResult(SC_OK, result);
     }
 
-    @Override
-    boolean isPathValid(String path) {
-      matcher = POST_PATH_PATTERN.matcher(path);
-      return matcher.matches();
+    private String computeNextCursor(int limit, int cursor, Collection<FileLock> allLocks) {
+      return allLocks.size() > cursor + limit ? Integer.toString(cursor + limit) : null;
     }
 
-    boolean isLockRequest() {
-      return matcher.group(1) == null;
+    private Stream<FileLock> limit(Collection<FileLock> allLocks, int limit, int cursor) {
+      return allLocks.stream().skip(cursor).limit(limit);
     }
 
-    boolean isVerifyRequest() {
-      String subPath = matcher.group(1);
-      return subPath.equals("verify");
+    private int getLimit() {
+      String limitString = req.getParameter("limit");
+      if (isNullOrEmpty(limitString)) {
+        LOG.trace("using default limit {}", defaultLimit);
+        return defaultLimit;
+      }
+      try {
+        return getEffectiveLimit(parseInt(limitString));
+      } catch (NumberFormatException e) {
+        LOG.trace("illegal limit parameter '{}'", limitString);
+        sendError(SC_BAD_REQUEST, "Illegal limit parameter");
+        return -1;
+      }
     }
 
-    public String getLockId() {
-      return matcher.group(2);
+    private int getEffectiveLimit(int limit) {
+      int effectiveLimit = max(lowerLimit, min(defaultLimit, limit));
+      LOG.trace("using limit {}", effectiveLimit);
+      return effectiveLimit;
     }
-  }
 
-  private void sendResult(HttpServletResponse resp, int statusCode, Object result) {
-    LOG.trace("Completing with status code {}", statusCode);
-    resp.setStatus(statusCode);
-    resp.setContentType("application/vnd.git-lfs+json");
-    try {
-      objectMapper.writeValue(resp.getOutputStream(), result);
-    } catch (IOException e) {
-      LOG.warn("Failed to send result to client", e);
+    private int getCursor() {
+      String cursor = req.getParameter("cursor");
+      return getCursor(cursor);
     }
-  }
 
-  private void sendError(HttpServletResponse resp, int statusCode, String message) {
-    LOG.trace("Sending error message '{}'", message);
-    sendError(resp, statusCode, new ErrorMessageDto(message));
-  }
+    private int getCursor(String cursor) {
+      if (isNullOrEmpty(cursor)) {
+        return 0;
+      }
+      try {
+        int effectiveCursor = parseInt(cursor);
+        LOG.trace("starting at position {}", effectiveCursor);
+        return effectiveCursor;
+      } catch (NumberFormatException e) {
+        LOG.trace("illegal cursor parameter '{}'", cursor);
+        sendError(SC_BAD_REQUEST, "Illegal cursor parameter");
+        return -1;
+      }
+    }
 
-  private void sendError(HttpServletResponse resp, int statusCode, Object error) {
-    LOG.trace("Completing with error, status code {}", statusCode);
-    resp.setStatus(statusCode);
-    try {
-      objectMapper.writeValue(resp.getOutputStream(), error);
-    } catch (IOException e) {
-      LOG.warn("Failed to send error to client", e);
+    private void handleLockRequest() {
+      LOG.trace("processing lock request");
+      readObject(LockCreateDto.class).ifPresent(
+        lockCreate -> {
+          if (isNullOrEmpty(lockCreate.path)) {
+            sendError(SC_BAD_REQUEST, "Illegal input");
+          } else {
+            try {
+              FileLock createdLock = lockStore.put(lockCreate.getPath(), false);
+              sendResult(SC_CREATED, new SingleLockDto(createdLock));
+            } catch (FileLockedException e) {
+              FileLock conflictingLock = e.getConflictingLock();
+              sendError(SC_CONFLICT, new ConflictDto("already created lock", conflictingLock));
+            }
+          }
+        }
+      );
+    }
+
+    private void handleVerifyRequest() {
+      LOG.trace("processing verify request");
+      readObject(VerifyDto.class).ifPresent(
+        verify -> {
+          Collection<FileLock> allLocks = lockStore.getAll();
+          int cursor = getCursor(verify.getCursor());
+          int limit = getEffectiveLimit(verify.getLimit());
+          if (limit < 0 || cursor < 0) {
+            return;
+          }
+          Stream<FileLock> resultLocks = limit(allLocks, limit, cursor);
+          VerifyResultDto result = new VerifyResultDto(resultLocks, computeNextCursor(limit, cursor, allLocks));
+          LOG.trace("created list result with {} 'our' locks, {} 'their' locks, and next cursor {}", result.getOurs().size(), result.getTheirs().size(), result.getNextCursor());
+          sendResult(SC_OK, result);
+        }
+      );
+    }
+
+    private void handleUnlockRequest(String lockId) {
+      LOG.trace("processing unlock request");
+      readObject(UnlockDto.class).ifPresent(
+        unlock -> {
+          try {
+            Optional<FileLock> deletedLock = lockStore.removeById(lockId, unlock.isForce());
+            if (deletedLock.isPresent()) {
+              sendResult(SC_OK, new SingleLockDto(deletedLock.get()));
+            } else {
+              sendError(SC_NOT_FOUND, "No such lock");
+            }
+          } catch (FileLockedException e) {
+            FileLock conflictingLock = e.getConflictingLock();
+            sendError(SC_FORBIDDEN, "locked by " + conflictingLock.getUserId());
+          }
+        }
+      );
+    }
+
+    private <T> Optional<T> readObject(Class<T> resultType) {
+      try {
+        return ofNullable(objectMapper.readValue(req.getInputStream(), resultType));
+      } catch (IOException e) {
+        LOG.info("got exception reading input", e);
+        sendError(SC_BAD_REQUEST, "Could not read input");
+        return empty();
+      }
+    }
+
+    private GetRequestValidator getRequestValidator() {
+      return new GetRequestValidator();
+    }
+
+    private PostRequestValidator postRequestValidator() {
+      return new PostRequestValidator();
+    }
+
+    private abstract class RequestValidator {
+
+      boolean verifyRequest() {
+        return verifyPath() && verifyPermission();
+      }
+
+      private boolean verifyPermission() {
+        if (!getPermission().isPermitted()) {
+          sendError(HttpServletResponse.SC_FORBIDDEN, "You must have push access to create a lock");
+          return false;
+        }
+        return true;
+      }
+
+      abstract PermissionCheck getPermission();
+
+      private boolean verifyPath() {
+        if (!isPathValid(req.getPathInfo())) {
+          LOG.trace("got illegal path {}", req.getPathInfo());
+          sendError(HttpServletResponse.SC_BAD_REQUEST, "wrong URL for locks api");
+          return false;
+        }
+        return true;
+      }
+
+      abstract boolean isPathValid(String path);
+    }
+
+    private class GetRequestValidator extends RequestValidator {
+
+      @Override
+      PermissionCheck getPermission() {
+        return RepositoryPermissions.pull(repository);
+      }
+
+      @Override
+      boolean isPathValid(String path) {
+        return GET_PATH_PATTERN.matcher(path).matches();
+      }
+    }
+
+    private class PostRequestValidator extends RequestValidator {
+
+      private Matcher matcher;
+
+      @Override
+      PermissionCheck getPermission() {
+        return RepositoryPermissions.push(repository);
+      }
+
+      @Override
+      boolean isPathValid(String path) {
+        matcher = POST_PATH_PATTERN.matcher(path);
+        return matcher.matches();
+      }
+
+      boolean isLockRequest() {
+        return matcher.group(1) == null;
+      }
+
+      boolean isVerifyRequest() {
+        String subPath = matcher.group(1);
+        return subPath.equals("verify");
+      }
+
+      public String getLockId() {
+        return matcher.group(2);
+      }
+    }
+
+    private void sendResult(int statusCode, Object result) {
+      LOG.trace("Completing with status code {}", statusCode);
+      resp.setStatus(statusCode);
+      resp.setContentType("application/vnd.git-lfs+json");
+      try {
+        objectMapper.writeValue(resp.getOutputStream(), result);
+      } catch (IOException e) {
+        LOG.warn("Failed to send result to client", e);
+      }
+    }
+
+    private void sendError(int statusCode, String message) {
+      LOG.trace("Sending error message '{}'", message);
+      sendError(statusCode, new ErrorMessageDto(message));
+    }
+
+    private void sendError(int statusCode, Object error) {
+      LOG.trace("Completing with error, status code {}", statusCode);
+      resp.setStatus(statusCode);
+      try {
+        objectMapper.writeValue(resp.getOutputStream(), error);
+      } catch (IOException e) {
+        LOG.warn("Failed to send error to client", e);
+      }
     }
   }
 
