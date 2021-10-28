@@ -457,14 +457,42 @@ class LfsLockingProtocolServletTest {
       void shouldDeleteExistingFileLock() throws IOException {
         when(request.getPathInfo()).thenReturn("repo/hitchhiker/hog.git/info/lfs/locks/42/unlock");
         when(request.getInputStream()).thenReturn(new BufferedServletInputStream("{}"));
+        FileLock expectedLock = new FileLock("some/file.txt", "42", "trillian", NOW);
         when(lockStore.removeById("42", false))
-          .thenReturn(of(new FileLock("some/file.txt", "42", "trillian", NOW)));
+          .thenReturn(of(expectedLock));
 
         servlet.doPost(request, response);
 
         verify(response).setStatus(200);
         JsonNode deletedLock = responseStream.getContentAsJson().get("lock");
-        assertThat(deletedLock).is(lockNodeWith("42", "some/file.txt", "Tricia McMillan", "1952-03-11T00:00:42Z"));
+        assertThat(deletedLock).is(lockNodeWith(expectedLock, "Tricia McMillan"));
+      }
+
+      @Test
+      void shouldFailToDeleteFileLockByAnotherUser() throws IOException {
+        when(request.getPathInfo()).thenReturn("repo/hitchhiker/hog.git/info/lfs/locks/42/unlock");
+        when(request.getInputStream()).thenReturn(new BufferedServletInputStream("{}"));
+        when(lockStore.removeById("42", false))
+          .thenThrow(new FileLockedException(REPOSITORY.getNamespaceAndName(), new FileLock("some/file.txt", "42", "dent", NOW)));
+
+        servlet.doPost(request, response);
+
+        verify(response).setStatus(403);
+      }
+
+      @Test
+      void shouldDeleteExistingLockWithForceFlag() throws IOException {
+        when(request.getPathInfo()).thenReturn("repo/hitchhiker/hog.git/info/lfs/locks/42/unlock");
+        when(request.getInputStream()).thenReturn(new BufferedServletInputStream("{\"force\":true}"));
+        FileLock expectedLock = new FileLock("some/file.txt", "42", "dent", NOW);
+        when(lockStore.removeById("42", true))
+          .thenReturn(of(expectedLock));
+
+        servlet.doPost(request, response);
+
+        verify(response).setStatus(200);
+        JsonNode deletedLock = responseStream.getContentAsJson().get("lock");
+        assertThat(deletedLock).is(lockNodeWith(expectedLock, "Arthur Dent"));
       }
     }
   }
@@ -476,6 +504,20 @@ class LfsLockingProtocolServletTest {
     servlet.doGet(request, response);
 
     verify(response).setStatus(400);
+  }
+
+  private Condition<? super Iterable<? extends JsonNode>> lockNodeWith(FileLock lock, String expectedName) {
+    return new Condition<Iterable<? extends JsonNode>>() {
+      @Override
+      public boolean matches(Iterable<? extends JsonNode> value) {
+        JsonNode node = (JsonNode) value;
+        assertThat(node.get("id").asText()).isEqualTo(lock.getId());
+        assertThat(node.get("path").asText()).isEqualTo(lock.getPath());
+        assertThat(node.get("owner").get("name").asText()).isEqualTo(expectedName);
+        assertThat(node.get("locked_at").asText()).isEqualTo(lock.getTimestamp().toString());
+        return true;
+      }
+    };
   }
 
   private Condition<? super Iterable<? extends JsonNode>> lockNodeWith(String expectedId, String expectedPath, String expectedName, String expectedTimestamp) {

@@ -70,6 +70,7 @@ import static java.util.stream.Collectors.toList;
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static javax.servlet.http.HttpServletResponse.SC_CONFLICT;
 import static javax.servlet.http.HttpServletResponse.SC_CREATED;
+import static javax.servlet.http.HttpServletResponse.SC_FORBIDDEN;
 import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
 
@@ -246,11 +247,16 @@ public class LfsLockingProtocolServlet extends HttpServlet {
     LOG.trace("processing unlock request");
     readObject(req, resp, UnlockDto.class).ifPresent(
       unlock -> {
-        Optional<FileLock> deletedLock = lockStore.removeById(lockId, unlock.isForce());
-        if (deletedLock.isPresent()) {
-          sendResult(resp, SC_OK, new SingleLockDto(deletedLock.get()));
-        } else {
-          sendError(resp, SC_NOT_FOUND, "No such lock");
+        try {
+          Optional<FileLock> deletedLock = lockStore.removeById(lockId, unlock.isForce());
+          if (deletedLock.isPresent()) {
+            sendResult(resp, SC_OK, new SingleLockDto(deletedLock.get()));
+          } else {
+            sendError(resp, SC_NOT_FOUND, "No such lock");
+          }
+        } catch (FileLockedException e) {
+          FileLock conflictingLock = e.getConflictingLock();
+          sendError(resp, SC_FORBIDDEN, "locked by " + conflictingLock.getUserId());
         }
       }
     );
