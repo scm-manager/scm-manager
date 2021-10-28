@@ -26,10 +26,13 @@ package sonia.scm.repository.api;
 
 import lombok.Value;
 
+import java.io.Serializable;
 import java.time.Instant;
 
 @Value
-public class FileLock {
+public class FileLock implements Serializable {
+  private static final long serialVersionUID = 1902345795392347027L;
+
   private String path;
   private String id;
   private String userId;

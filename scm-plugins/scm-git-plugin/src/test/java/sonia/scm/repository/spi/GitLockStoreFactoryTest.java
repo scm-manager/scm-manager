@@ -71,6 +71,8 @@ class GitLockStoreFactoryTest {
       .isEmpty();
     assertThat(gitLockStore.getAll())
       .isEmpty();
+    assertThat(gitLockStore.hasLocks())
+      .isFalse();
   }
 
   @Test
@@ -123,6 +125,31 @@ class GitLockStoreFactoryTest {
       .get()
       .usingRecursiveComparison()
       .isEqualTo(createdLock);
+  }
+
+  @Test
+  void shouldHaveLock() {
+    GitLockStoreFactory.GitLockStore gitLockStore = gitLockStoreFactory.create(repository);
+
+    gitLockStore.put("some/file.txt", false);
+
+    assertThat(gitLockStore.hasLocks())
+      .isTrue();
+  }
+
+  @Test
+  void shouldBeModifiableWithoutLock() {
+    GitLockStoreFactory.GitLockStore gitLockStore = gitLockStoreFactory.create(repository);
+
+    gitLockStore.assertModifiable("some/file.txt");
+  }
+
+  @Test
+  void shouldBeModifiableWithOwnLock() {
+    GitLockStoreFactory.GitLockStore gitLockStore = gitLockStoreFactory.create(repository);
+    gitLockStore.put("some/file.txt", false);
+
+    gitLockStore.assertModifiable("some/file.txt");
   }
 
   @Test
@@ -184,6 +211,13 @@ class GitLockStoreFactoryTest {
 
       assertThat(gitLockStore.getLock("some/file.txt"))
         .isEmpty();
+    }
+
+    @Test
+    void shouldNotBeModifiableWithOwnLock() {
+      GitLockStoreFactory.GitLockStore gitLockStore = gitLockStoreFactory.create(repository);
+
+      assertThrows(FileLockedException.class, () -> gitLockStore.assertModifiable("some/file.txt"));
     }
 
     @Test

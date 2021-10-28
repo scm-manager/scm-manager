@@ -95,6 +95,10 @@ public final class GitLockStoreFactory {
           .build();
     }
 
+    public boolean hasLocks() {
+      return !readEntry().isEmpty();
+    }
+
     public FileLock put(String file, boolean force) {
       StoreEntry storeEntry = readEntry();
       Optional<FileLock> existingLock = storeEntry.get(file);
@@ -127,6 +131,14 @@ public final class GitLockStoreFactory {
 
     public Optional<FileLock> getLock(String file) {
       return readEntry().get(file);
+    }
+
+    public void assertModifiable(String file) {
+      getLock(file)
+        .filter(lock -> !lock.getUserId().equals(currentUser.get()))
+        .ifPresent(lock -> {
+          throw new FileLockedException(repository.getNamespaceAndName(), lock);
+        });
     }
 
     public Optional<FileLock> getById(String id) {
@@ -197,11 +209,15 @@ public final class GitLockStoreFactory {
       }
     }
 
-    public Collection<FileLock> getAll() {
+    Collection<FileLock> getAll() {
       if (files == null) {
         return emptyList();
       }
       return files.values().stream().map(StoredFileLock::toFileLock).collect(toList());
+    }
+
+    boolean isEmpty() {
+      return files == null || files.isEmpty();
     }
   }
 

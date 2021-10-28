@@ -36,7 +36,7 @@ public class FileLockedException extends ExceptionWithContext {
   private final FileLock conflictingLock;
 
   public FileLockedException(NamespaceAndName namespaceAndName, FileLock lock) {
-    super(entity("File Lock", lock.getPath()).in(namespaceAndName).build(), "Lock exists");
+    super(entity("File Lock", lock.getPath()).in(namespaceAndName).build(), "File " + lock.getPath() + " locked by " + lock.getUserId());
     this.conflictingLock = lock;
   }
 
