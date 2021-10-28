@@ -24,6 +24,7 @@
 
 package sonia.scm.web;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -51,14 +52,20 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static java.lang.Integer.parseInt;
+import static java.lang.Math.max;
+import static java.lang.Math.min;
 import static java.util.Collections.emptyList;
 import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static javax.servlet.http.HttpServletResponse.SC_CONFLICT;
@@ -71,34 +78,107 @@ public class LfsLockingProtocolServlet extends HttpServlet {
   private static final Logger LOG = LoggerFactory.getLogger(LfsLockingProtocolServlet.class);
   private static final Pattern URL_PATTERN = Pattern.compile(".*\\.git/info/lfs/locks(?:/(verify|(\\w+)/unlock))?");
 
+  private static final int DEFAULT_LIMIT = 1000;
+  private static final int LOWER_LIMIT = 10;
+
   private final Repository repository;
   private final GitLockStore lockStore;
   private final UserDisplayManager userDisplayManager;
   private final ObjectMapper objectMapper;
+  private final int defaultLimit;
+  private final int lowerLimit;
 
   public LfsLockingProtocolServlet(Repository repository, GitLockStore lockStore, UserDisplayManager userDisplayManager, ObjectMapper objectMapper) {
+    this(repository, lockStore, userDisplayManager, objectMapper, DEFAULT_LIMIT, LOWER_LIMIT);
+  }
+
+  LfsLockingProtocolServlet(Repository repository, GitLockStore lockStore, UserDisplayManager userDisplayManager, ObjectMapper objectMapper, int defaultLimit, int lowerLimit) {
     this.repository = repository;
     this.lockStore = lockStore;
     this.userDisplayManager = userDisplayManager;
     this.objectMapper = objectMapper;
+    this.defaultLimit = defaultLimit;
+    this.lowerLimit = lowerLimit;
   }
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
+    LOG.trace("processing GET request");
     if (!verifyRequest(req, resp, RepositoryPermissions.pull(repository))) {
       return;
     }
     if (!isNullOrEmpty(req.getParameter("path"))) {
+      LOG.trace("request limited to path: {}", req.getParameter("path"));
       sendResult(resp, SC_OK, new LocksListDto(lockStore.getLock(req.getParameter("path"))));
     } else if (!isNullOrEmpty(req.getParameter("id"))) {
+      LOG.trace("request limited to id: {}", req.getParameter("id"));
       sendResult(resp, SC_OK, new LocksListDto(lockStore.getById(req.getParameter("id"))));
     } else {
-      sendResult(resp, SC_OK, new LocksListDto(lockStore.getAll()));
+      int limit = getLimit(req, resp);
+      int cursor = getCursor(req, resp);
+      if (limit < 0 || cursor < 0) {
+        return;
+      }
+      Collection<FileLock> allLocks = lockStore.getAll();
+      Stream<FileLock> resultLocks = limit(allLocks, limit, cursor);
+      LocksListDto result = new LocksListDto(resultLocks, computeNextCursor(limit, cursor, allLocks));
+      LOG.trace("created list result with {} locks and next cursor {}", result.getLocks().size(), result.getNextCursor());
+      sendResult(resp, SC_OK, result);
+    }
+  }
+
+  private String computeNextCursor(int limit, int cursor, Collection<FileLock> allLocks) {
+    return allLocks.size() > cursor + limit ?Integer.toString(cursor + limit): null;
+  }
+
+  private Stream<FileLock> limit(Collection<FileLock> allLocks, int limit, int cursor) {
+    return allLocks.stream().skip(cursor).limit(limit);
+  }
+
+  private int getLimit(HttpServletRequest req, HttpServletResponse resp) {
+    String limitString = req.getParameter("limit");
+    if (isNullOrEmpty(limitString)) {
+      LOG.trace("using default limit {}", defaultLimit);
+      return defaultLimit;
+    }
+    try {
+      return getEffectiveLimit(parseInt(limitString));
+    } catch (NumberFormatException e) {
+      LOG.trace("illegal limit parameter '{}'", limitString);
+      sendError(resp, SC_BAD_REQUEST, "Illegal limit parameter");
+      return -1;
+    }
+  }
+
+  private int getEffectiveLimit(int limit) {
+    int effectiveLimit = max(lowerLimit, min(defaultLimit, limit));
+    LOG.trace("using limit {}", effectiveLimit);
+    return effectiveLimit;
+  }
+
+  private int getCursor(HttpServletRequest req, HttpServletResponse resp) {
+    String cursor = req.getParameter("cursor");
+    return getCursor(resp, cursor);
+  }
+
+  private int getCursor(HttpServletResponse resp, String cursor) {
+    if (isNullOrEmpty(cursor)) {
+      return 0;
+    }
+    try {
+      int effectiveCursor = parseInt(cursor);
+      LOG.trace("starting at position {}", effectiveCursor);
+      return effectiveCursor;
+    } catch (NumberFormatException e) {
+      LOG.trace("illegal cursor parameter '{}'", cursor);
+      sendError(resp, SC_BAD_REQUEST, "Illegal cursor parameter");
+      return -1;
     }
   }
 
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
+    LOG.trace("processing POST request");
     if (!verifyRequest(req, resp, RepositoryPermissions.push(repository))) {
       return;
     }
@@ -118,6 +198,7 @@ public class LfsLockingProtocolServlet extends HttpServlet {
   }
 
   private void handleLockRequest(HttpServletRequest req, HttpServletResponse resp) {
+    LOG.trace("processing lock request");
     readObject(req, resp, LockCreateDto.class).ifPresent(
       lockCreate -> {
         if (isNullOrEmpty(lockCreate.path)) {
@@ -136,15 +217,25 @@ public class LfsLockingProtocolServlet extends HttpServlet {
   }
 
   private void handleVerifyRequest(HttpServletRequest req, HttpServletResponse resp) {
+    LOG.trace("processing verify request");
     readObject(req, resp, VerifyDto.class).ifPresent(
       verify -> {
         Collection<FileLock> allLocks = lockStore.getAll();
-        sendResult(resp, SC_OK, new VerifyResultDto(allLocks));
+        int cursor = getCursor(resp, verify.getCursor());
+        int limit = getEffectiveLimit(verify.getLimit());
+        if (limit < 0 || cursor < 0) {
+          return;
+        }
+        Stream<FileLock> resultLocks = limit(allLocks, limit, cursor);
+        VerifyResultDto result = new VerifyResultDto(resultLocks, computeNextCursor(limit, cursor, allLocks));
+        LOG.trace("created list result with {} 'our' locks, {} 'their' locks, and next cursor {}", result.getOurs().size(), result.getTheirs().size(), result.getNextCursor());
+        sendResult(resp, SC_OK, result);
       }
     );
   }
 
   private void handleUnlockRequest(HttpServletRequest req, HttpServletResponse resp, String lockId) {
+    LOG.trace("processing unlock request");
     readObject(req, resp, UnlockDto.class).ifPresent(
       unlock -> {
         Optional<FileLock> deletedLock = lockStore.removeById(lockId, unlock.isForce());
@@ -161,6 +252,7 @@ public class LfsLockingProtocolServlet extends HttpServlet {
     try {
       return ofNullable(objectMapper.readValue(req.getInputStream(), resultType));
     } catch (IOException e) {
+      LOG.info("got exception reading input", e);
       sendError(resp, SC_BAD_REQUEST, "Could not read input");
       return empty();
     }
@@ -180,6 +272,7 @@ public class LfsLockingProtocolServlet extends HttpServlet {
 
   private boolean verifyPath(HttpServletRequest req, HttpServletResponse resp) {
     if (!URL_PATTERN.matcher(req.getPathInfo()).matches()) {
+      LOG.trace("got illegal path {}", req.getPathInfo());
       sendError(resp, HttpServletResponse.SC_BAD_REQUEST, "wrong URL for locks api");
       return false;
     }
@@ -187,25 +280,28 @@ public class LfsLockingProtocolServlet extends HttpServlet {
   }
 
   private void sendResult(HttpServletResponse resp, int statusCode, Object result) {
+    LOG.trace("Completing with status code {}", statusCode);
     resp.setStatus(statusCode);
     resp.setContentType("application/vnd.git-lfs+json");
     try {
       objectMapper.writeValue(resp.getOutputStream(), result);
     } catch (IOException e) {
-      LOG.error("Failed to send result to client", e);
+      LOG.warn("Failed to send result to client", e);
     }
   }
 
   private void sendError(HttpServletResponse resp, int statusCode, String message) {
+    LOG.trace("Sending error message '{}'", message);
     sendError(resp, statusCode, new ErrorMessageDto(message));
   }
 
   private void sendError(HttpServletResponse resp, int statusCode, Object error) {
+    LOG.trace("Completing with error, status code {}", statusCode);
     resp.setStatus(statusCode);
     try {
       objectMapper.writeValue(resp.getOutputStream(), error);
     } catch (IOException e) {
-      LOG.error("Failed to send error to client", e);
+      LOG.warn("Failed to send error to client", e);
     }
   }
 
@@ -239,6 +335,8 @@ public class LfsLockingProtocolServlet extends HttpServlet {
 
   @Data
   static class VerifyDto {
+    private String cursor;
+    private int limit = Integer.MAX_VALUE;
   }
 
   @Data
@@ -250,11 +348,16 @@ public class LfsLockingProtocolServlet extends HttpServlet {
   private class VerifyResultDto {
     private Collection<LockDto> ours;
     private Collection<LockDto> theirs;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @JsonProperty("next_cursor")
+    private String nextCursor;
 
-    VerifyResultDto(Collection<FileLock> locks) {
+    VerifyResultDto(Stream<FileLock> locks, String nextCursor) {
       String userId = SecurityUtils.getSubject().getPrincipals().oneByType(String.class);
-      ours = locks.stream().filter(lock -> userId.equals(lock.getUserId())).map(LockDto::new).collect(toList());
-      theirs = locks.stream().filter(lock -> !userId.equals(lock.getUserId())).map(LockDto::new).collect(toList());
+      Map<Boolean, List<LockDto>> groupedLocks = locks.map(LockDto::new).collect(groupingBy(lock -> userId.equals(lock.getUserId())));
+      ours = groupedLocks.getOrDefault(true, emptyList());
+      theirs = groupedLocks.getOrDefault(false, emptyList());
+      this.nextCursor = nextCursor;
     }
   }
 
@@ -283,25 +386,32 @@ public class LfsLockingProtocolServlet extends HttpServlet {
     @JsonProperty("locked_at")
     private String lockedAt;
     private OwnerDto owner;
+    @JsonIgnore
+    private String userId;
 
     LockDto(FileLock lock) {
       this.id = lock.getId();
       this.path = lock.getPath();
       this.lockedAt = lock.getTimestamp().toString();
       this.owner = new OwnerDto(lock.getUserId());
+      this.userId = lock.getUserId();
     }
   }
 
   @Getter
   private class LocksListDto {
     private List<LockDto> locks;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @JsonProperty("next_cursor")
+    private String nextCursor;
 
     LocksListDto(Optional<FileLock> locks) {
       this.locks = locks.map(LockDto::new).map(Collections::singletonList).orElse(emptyList());
     }
 
-    LocksListDto(Collection<FileLock> locks) {
-      this.locks = locks.stream().map(LockDto::new).collect(toList());
+    LocksListDto(Stream<FileLock> locks, String nextCursor) {
+      this.locks = locks.map(LockDto::new).collect(toList());
+      this.nextCursor = nextCursor;
     }
   }
 }

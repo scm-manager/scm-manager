@@ -90,7 +90,7 @@ class LfsLockingProtocolServletTest {
     mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
     mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
     mapper.configure(SerializationFeature.WRITE_DATES_WITH_ZONE_ID, true);
-    servlet = new LfsLockingProtocolServlet(REPOSITORY, lockStore, userDisplayManager, mapper);
+    servlet = new LfsLockingProtocolServlet(REPOSITORY, lockStore, userDisplayManager, mapper, 3, 2);
     lenient().when(response.getOutputStream()).thenReturn(responseStream);
   }
 
@@ -228,6 +228,62 @@ class LfsLockingProtocolServletTest {
         verify(response).setStatus(403);
         verify(lockStore, never()).put(any(), anyBoolean());
       }
+
+      @Nested
+      class WithLimiting {
+
+        @BeforeEach
+        void mockManyResults() {
+          when(lockStore.getAll())
+            .thenReturn(
+              asList(
+                new FileLock("empty/file", "2", "zaphod", NOW),
+                new FileLock("some/file", "23", "dent", NOW),
+                new FileLock("any/file", "42", "marvin", NOW),
+                new FileLock("other/file", "1337", "trillian", NOW.plus(42, DAYS))
+              ));
+        }
+
+        @Test
+        void shouldLimitFileLocksByDefault() {
+          servlet.doGet(request, response);
+
+          verify(response).setStatus(200);
+          JsonNode contentAsJson = responseStream.getContentAsJson();
+          JsonNode locks = contentAsJson.get("locks");
+          assertThat(locks).hasSize(3);
+          assertThat(locks.get(0).get("id").asText()).isEqualTo("2");
+          assertThat(contentAsJson.get("next_cursor").asText()).isEqualTo("3");
+        }
+
+        @Test
+        void shouldUseLimitFromRequest() {
+          lenient().doReturn("2").when(request).getParameter("limit");
+
+          servlet.doGet(request, response);
+
+          verify(response).setStatus(200);
+          JsonNode contentAsJson = responseStream.getContentAsJson();
+          JsonNode locks = contentAsJson.get("locks");
+          assertThat(locks).hasSize(2);
+          assertThat(locks.get(0).get("id").asText()).isEqualTo("2");
+          assertThat(contentAsJson.get("next_cursor").asText()).isEqualTo("2");
+        }
+
+        @Test
+        void shouldUseCursorFromRequest() {
+          lenient().doReturn("3").when(request).getParameter("cursor");
+
+          servlet.doGet(request, response);
+
+          verify(response).setStatus(200);
+          JsonNode contentAsJson = responseStream.getContentAsJson();
+          JsonNode locks = contentAsJson.get("locks");
+          assertThat(locks).hasSize(1);
+          assertThat(locks.get(0).get("id").asText()).isEqualTo("1337");
+          assertThat(contentAsJson.get("next_cursor")).isNull();
+        }
+      }
     }
 
     @Nested
@@ -319,7 +375,7 @@ class LfsLockingProtocolServletTest {
       @Test
       void shouldGetVerifyResultForNoFileLocks() throws IOException {
         when(request.getPathInfo()).thenReturn("repo/hitchhiker/hog.git/info/lfs/locks/verify");
-        when(request.getInputStream()).thenReturn(new BufferedServletInputStream("{\"force\":false}"));
+        when(request.getInputStream()).thenReturn(new BufferedServletInputStream("{}"));
 
         servlet.doPost(request, response);
 
@@ -328,6 +384,73 @@ class LfsLockingProtocolServletTest {
         assertThat(ourLocks).isEmpty();
         JsonNode theirLocks = responseStream.getContentAsJson().get("theirs");
         assertThat(theirLocks).isEmpty();
+      }
+
+      @Nested
+      class VerifyWithLimiting {
+
+        @BeforeEach
+        void mockManyResults() {
+          when(lockStore.getAll())
+            .thenReturn(
+              asList(
+                new FileLock("empty/file", "2", "zaphod", NOW),
+                new FileLock("some/file", "23", "dent", NOW),
+                new FileLock("any/file", "42", "marvin", NOW),
+                new FileLock("other/file", "1337", "trillian", NOW.plus(42, DAYS))
+              ));
+        }
+
+        @Test
+        void shouldLimitVerifyByDefault() throws IOException {
+          when(request.getPathInfo()).thenReturn("repo/hitchhiker/hog.git/info/lfs/locks/verify");
+          when(request.getInputStream()).thenReturn(new BufferedServletInputStream("{}"));
+
+          servlet.doPost(request, response);
+
+          verify(response).setStatus(200);
+          JsonNode contentAsJson = responseStream.getContentAsJson();
+          JsonNode ourLocks = contentAsJson.get("ours");
+          assertThat(ourLocks).isEmpty();
+          JsonNode theirLocks = contentAsJson.get("theirs");
+          assertThat(theirLocks).hasSize(3);
+          assertThat(theirLocks.get(0).get("id").asText()).isEqualTo("2");
+          assertThat(contentAsJson.get("next_cursor").asText()).isEqualTo("3");
+        }
+
+        @Test
+        void shouldUseLimitFromRequest() throws IOException {
+          when(request.getPathInfo()).thenReturn("repo/hitchhiker/hog.git/info/lfs/locks/verify");
+          when(request.getInputStream()).thenReturn(new BufferedServletInputStream("{\"limit\":2}"));
+
+          servlet.doPost(request, response);
+
+          verify(response).setStatus(200);
+          JsonNode contentAsJson = responseStream.getContentAsJson();
+          JsonNode ourLocks = contentAsJson.get("ours");
+          assertThat(ourLocks).isEmpty();
+          JsonNode theirLocks = contentAsJson.get("theirs");
+          assertThat(theirLocks).hasSize(2);
+          assertThat(theirLocks.get(0).get("id").asText()).isEqualTo("2");
+          assertThat(contentAsJson.get("next_cursor").asText()).isEqualTo("2");
+        }
+
+        @Test
+        void shouldUseCursorFromRequest() throws IOException {
+          when(request.getPathInfo()).thenReturn("repo/hitchhiker/hog.git/info/lfs/locks/verify");
+          when(request.getInputStream()).thenReturn(new BufferedServletInputStream("{\"cursor\":\"3\"}"));
+
+          servlet.doPost(request, response);
+
+          verify(response).setStatus(200);
+          JsonNode contentAsJson = responseStream.getContentAsJson();
+          JsonNode ourLocks = contentAsJson.get("ours");
+          assertThat(ourLocks).hasSize(1);
+          assertThat(ourLocks.get(0).get("id").asText()).isEqualTo("1337");
+          JsonNode theirLocks = contentAsJson.get("theirs");
+          assertThat(theirLocks).isEmpty();
+          assertThat(contentAsJson.get("next_cursor")).isNull();
+        }
       }
 
       @Test
