@@ -31,11 +31,12 @@ type Props = {
   onClose?: () => void;
   className?: string;
   children?: ReactNode;
+  role?: string;
 };
 
 class Notification extends React.Component<Props> {
   static defaultProps = {
-    type: "info"
+    type: "info",
   };
 
   renderCloseButton() {
@@ -47,12 +48,12 @@ class Notification extends React.Component<Props> {
   }
 
   render() {
-    const { type, className, children } = this.props;
+    const { type, className, children, role } = this.props;
 
     const color = type !== "inherit" ? "is-" + type : "";
 
     return (
-      <div className={classNames("notification", color, className)}>
+      <div className={classNames("notification", color, className)} role={role}>
         {this.renderCloseButton()}
         {children}
       </div>
