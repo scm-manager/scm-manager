@@ -57741,7 +57741,7 @@ exports[`Storyshots Layout|Footer Default 1`] = `
           <li>
             <a
               className=""
-              href="https://www.scm-manager.org/"
+              href="https://scm-manager.org/"
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -57769,7 +57769,7 @@ exports[`Storyshots Layout|Footer Default 1`] = `
           <li>
             <a
               className=""
-              href="https://www.scm-manager.org/support/"
+              href="https://scm-manager.org/support/"
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -57867,7 +57867,7 @@ exports[`Storyshots Layout|Footer Full 1`] = `
           <li>
             <a
               className=""
-              href="https://www.scm-manager.org/"
+              href="https://scm-manager.org/"
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -57915,7 +57915,7 @@ exports[`Storyshots Layout|Footer Full 1`] = `
           <li>
             <a
               className=""
-              href="https://www.scm-manager.org/support/"
+              href="https://scm-manager.org/support/"
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -58014,7 +58014,7 @@ exports[`Storyshots Layout|Footer With Avatar 1`] = `
           <li>
             <a
               className=""
-              href="https://www.scm-manager.org/"
+              href="https://scm-manager.org/"
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -58042,7 +58042,7 @@ exports[`Storyshots Layout|Footer With Avatar 1`] = `
           <li>
             <a
               className=""
-              href="https://www.scm-manager.org/support/"
+              href="https://scm-manager.org/support/"
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -58132,7 +58132,7 @@ exports[`Storyshots Layout|Footer With Plugin Links 1`] = `
           <li>
             <a
               className=""
-              href="https://www.scm-manager.org/"
+              href="https://scm-manager.org/"
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -58180,7 +58180,7 @@ exports[`Storyshots Layout|Footer With Plugin Links 1`] = `
           <li>
             <a
               className=""
-              href="https://www.scm-manager.org/support/"
+              href="https://scm-manager.org/support/"
               rel="noopener noreferrer"
               target="_blank"
             >

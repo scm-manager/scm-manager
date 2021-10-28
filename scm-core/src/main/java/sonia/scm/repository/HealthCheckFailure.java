@@ -47,7 +47,7 @@ import java.text.MessageFormat;
 public final class HealthCheckFailure
 {
 
-  private static final String URL_TEMPLATE = "https://www.scm-manager.org/docs/{0}/en/user/repo/health-checks/%s";
+  private static final String URL_TEMPLATE = "https://scm-manager.org/docs/{0}/en/user/repo/health-checks/%s";
   private static final String LATEST_VERSION = "latest";
 
   /**
