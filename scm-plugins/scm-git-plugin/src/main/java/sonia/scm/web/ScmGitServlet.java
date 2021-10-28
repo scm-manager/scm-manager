@@ -113,6 +113,7 @@ public class ScmGitServlet extends GitServlet implements ScmProviderHttpServlet
       handleGitLfsRequest(servlet, request, response, repository);
     } else if (isLfsLockingAPIRequest(request)) {
       HttpServlet servlet = lfsServletFactory.createLockServletFor(repository);
+      logger.trace("handle lfs lock request");
       handleGitLfsLockingRequest(servlet, request, response, repository);
     } else if (isRegularGitAPIRequest(request)) {
       logger.trace("handle regular git request");

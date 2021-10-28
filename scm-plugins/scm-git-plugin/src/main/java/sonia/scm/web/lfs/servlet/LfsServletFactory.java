@@ -102,6 +102,7 @@ public class LfsServletFactory {
   }
 
   public LfsLockingProtocolServlet createLockServletFor(Repository repository) {
+    LOG.trace("create lfs lock servlet for repository {}", repository);
     return new LfsLockingProtocolServlet(repository, lockStoreFactory.create(repository), userDisplayManager, objectMapper);
   }
 
