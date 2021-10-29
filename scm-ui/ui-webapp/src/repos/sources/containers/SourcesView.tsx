@@ -80,7 +80,7 @@ const SourcesView: FC<Props> = ({ file, repository, revision }) => {
           basePath,
         }}
       >
-        <DownloadViewer file={file} />
+        <DownloadViewer repository={repository} file={file} />
       </ExtensionPoint>
     );
   }
