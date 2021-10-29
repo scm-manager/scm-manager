@@ -134,7 +134,17 @@ public final class LockCommandBuilder {
     }
 
     /**
-     * Set whether to force the unlock or not. A lock from a different user can only
+     * Set the command to force unlock. Shortcur for <code>force(true)</code>.
+     *
+     * @return This builder instance.
+     * @see #force(boolean)
+     */
+    public InnerUnlockCommandBuilder force() {
+      return force(true);
+    }
+
+    /**
+     * Set whether to force unlock or not. A lock from a different user can only
      * be removed with force set to <code>true</code>.
      *
      * @param force Whether to force unlock or not.

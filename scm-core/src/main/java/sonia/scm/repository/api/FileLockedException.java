@@ -29,12 +29,23 @@ import sonia.scm.repository.NamespaceAndName;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 
+/**
+ * Exception thrown whenever a locked file should be modified or locked/unlocked by a user that does not hold the lock.
+ *
+ * @since 2.26.0
+ */
 public class FileLockedException extends ExceptionWithContext {
 
   private static final String CODE = "3mSmwOtOd1";
 
   private final FileLock conflictingLock;
 
+  /**
+   * Creates the exception.
+   *
+   * @param namespaceAndName The namespace and name of the repository.
+   * @param lock             The lock causing this exception.
+   */
   public FileLockedException(NamespaceAndName namespaceAndName, FileLock lock) {
     super(entity("File Lock", lock.getPath()).in(namespaceAndName).build(), "File " + lock.getPath() + " locked by " + lock.getUserId());
     this.conflictingLock = lock;
@@ -45,6 +56,9 @@ public class FileLockedException extends ExceptionWithContext {
     return CODE;
   }
 
+  /**
+   * The lock that caused this exception.
+   */
   public FileLock getConflictingLock() {
     return conflictingLock;
   }

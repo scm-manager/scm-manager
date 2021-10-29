@@ -28,8 +28,20 @@ import sonia.scm.plugin.ExtensionPoint;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * This can be used to determine, whether a web request should be handled as a scm client request.
+ *
+ * @since 2.26.0
+ */
 @ExtensionPoint
 public interface ScmClientDetector {
 
+  /**
+   * Checks whether the given request and/or the userAgent imply a request from a scm client.
+   *
+   * @param request The request to check.
+   * @param userAgent The {@link UserAgent} for the request.
+   * @return <code>true</code> if the given request was sent by an scm client.
+   */
   boolean isScmClient(HttpServletRequest request, UserAgent userAgent);
 }

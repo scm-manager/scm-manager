@@ -66,7 +66,10 @@ public final class GitLockStoreFactory {
 
   @Inject
   public GitLockStoreFactory(DataStoreFactory dataStoreFactory, KeyGenerator keyGenerator) {
-    this(dataStoreFactory, keyGenerator, Clock.systemDefaultZone(), () -> SecurityUtils.getSubject().getPrincipals().oneByType(String.class));
+    this(dataStoreFactory,
+      keyGenerator,
+      Clock.systemDefaultZone(),
+      () -> SecurityUtils.getSubject().getPrincipals().getPrimaryPrincipal().toString());
   }
 
   GitLockStoreFactory(DataStoreFactory dataStoreFactory, KeyGenerator keyGenerator, Clock clock, Supplier<String> currentUser) {

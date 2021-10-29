@@ -24,9 +24,22 @@
 
 package sonia.scm.repository.api;
 
+import lombok.AllArgsConstructor;
 import lombok.Value;
 
-@Value
+/**
+ * Result of a unlock command.
+ *
+ * @since 2.26.0
+ */
+@AllArgsConstructor
 public class UnlockCommandResult {
   private boolean successful;
+
+  /**
+   * If <code>true</code>, the lock has been removed successfully.
+   */
+  public boolean isSuccessful() {
+    return successful;
+  }
 }
