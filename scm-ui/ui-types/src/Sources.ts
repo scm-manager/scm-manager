@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import { HalRepresentation } from "./hal";
+import { HalRepresentation, HalRepresentationWithEmbedded } from "./hal";
 
 export type SubRepository = {
   repositoryUrl: string;
@@ -30,7 +30,9 @@ export type SubRepository = {
   revision: string;
 };
 
-export type File = HalRepresentation & {
+export type File = HalRepresentationWithEmbedded<{
+  children: File[];
+}> & {
   name: string;
   path: string;
   directory: boolean;
