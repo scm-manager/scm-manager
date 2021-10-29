@@ -1,4 +1,7 @@
 {
+  "error": {
+    "subtitle": "Error"
+  },
   "changeset": {
     "contributor": {
       "type": {
@@ -467,4 +470,3 @@
     }
   }
 }
-
