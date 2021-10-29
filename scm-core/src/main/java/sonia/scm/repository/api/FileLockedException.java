@@ -47,7 +47,20 @@ public class FileLockedException extends ExceptionWithContext {
    * @param lock             The lock causing this exception.
    */
   public FileLockedException(NamespaceAndName namespaceAndName, FileLock lock) {
-    super(entity("File Lock", lock.getPath()).in(namespaceAndName).build(), "File " + lock.getPath() + " locked by " + lock.getUserId());
+    this(namespaceAndName, lock, "");
+  }
+
+  /**
+   * Creates the exception with an additional message.
+   *
+   * @param namespaceAndName  The namespace and name of the repository.
+   * @param lock              The lock causing this exception.
+   * @param additionalMessage An additional message that will be appended to the default message.
+   */
+  public FileLockedException(NamespaceAndName namespaceAndName, FileLock lock, String additionalMessage) {
+    super(
+      entity("File Lock", lock.getPath()).in(namespaceAndName).build(),
+      ("File " + lock.getPath() + " locked by " + lock.getUserId() + ". " + additionalMessage).trim());
     this.conflictingLock = lock;
   }
 

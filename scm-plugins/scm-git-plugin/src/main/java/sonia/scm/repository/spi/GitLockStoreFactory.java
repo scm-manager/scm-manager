@@ -106,7 +106,7 @@ public final class GitLockStoreFactory {
       StoreEntry storeEntry = readEntry();
       Optional<FileLock> existingLock = storeEntry.get(file);
       if (existingLock.isPresent() && !existingLock.get().getUserId().equals(currentUser.get())) {
-        throw new FileLockedException(repository.getNamespaceAndName(), existingLock.get());
+        throw createLockException(existingLock.get());
       }
       FileLock newLock = new FileLock(file, keyGenerator.createKey(), currentUser.get(), Instant.now(clock));
       storeEntry.add(newLock);
@@ -119,7 +119,7 @@ public final class GitLockStoreFactory {
       Optional<FileLock> existingFileLock = storeEntry.get(file);
       if (existingFileLock.isPresent()) {
         if (!force && !currentUser.get().equals(existingFileLock.get().getUserId())) {
-          throw new FileLockedException(repository.getNamespaceAndName(), existingFileLock.get());
+          throw createLockException(existingFileLock.get());
         }
         storeEntry.remove(file);
         store(storeEntry);
@@ -140,7 +140,7 @@ public final class GitLockStoreFactory {
       getLock(file)
         .filter(lock -> !lock.getUserId().equals(currentUser.get()))
         .ifPresent(lock -> {
-          throw new FileLockedException(repository.getNamespaceAndName(), lock);
+          throw createLockException(lock);
         });
     }
 
@@ -158,6 +158,10 @@ public final class GitLockStoreFactory {
 
     private void store(StoreEntry storeEntry) {
       store.put(STORE_ID, storeEntry);
+    }
+
+    private FileLockedException createLockException(FileLock lock) {
+      return new FileLockedException(repository.getNamespaceAndName(), lock, "Lock or unlock with git lfs lock/unlock <file>.");
     }
   }
 
