@@ -42,9 +42,11 @@ import java.util.Optional;
 public final class LockCommandBuilder {
 
   private final LockCommand lockCommand;
+  private final Repository repository;
 
-  public LockCommandBuilder(LockCommand lockCommand) {
+  public LockCommandBuilder(LockCommand lockCommand, Repository repository) {
     this.lockCommand = lockCommand;
+    this.repository = repository;
   }
 
   /**
@@ -53,6 +55,7 @@ public final class LockCommandBuilder {
    * @return Builder for lock creation.
    */
   public InnerLockCommandBuilder lock() {
+    RepositoryPermissions.push(repository).check();
     return new InnerLockCommandBuilder();
   }
 
@@ -62,6 +65,7 @@ public final class LockCommandBuilder {
    * @return Builder to remove a lock.
    */
   public InnerUnlockCommandBuilder unlock() {
+    RepositoryPermissions.push(repository).check();
     return new InnerUnlockCommandBuilder();
   }
 

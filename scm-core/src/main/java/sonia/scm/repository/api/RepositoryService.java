@@ -487,7 +487,7 @@ public final class RepositoryService implements Closeable {
    */
   public LockCommandBuilder getLockCommand() {
     LOG.debug("create lock command for repository {}", repository);
-    return new LockCommandBuilder(provider.getLockCommand());
+    return new LockCommandBuilder(provider.getLockCommand(), repository);
   }
 
   /**
