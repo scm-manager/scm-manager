@@ -24,6 +24,8 @@
 
 package sonia.scm.repository.api;
 
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.spi.LockCommand;
 import sonia.scm.repository.spi.LockCommandRequest;
 import sonia.scm.repository.spi.LockStatusCommandRequest;
@@ -32,6 +34,11 @@ import sonia.scm.repository.spi.UnlockCommandRequest;
 import java.util.Collection;
 import java.util.Optional;
 
+/**
+ * Can lock and unlock files and check lock states. Locked files can only be modified by the user holding the lock.
+ *
+ * @since 2.26.0
+ */
 public final class LockCommandBuilder {
 
   private final LockCommand lockCommand;
@@ -40,20 +47,42 @@ public final class LockCommandBuilder {
     this.lockCommand = lockCommand;
   }
 
+  /**
+   * Creates builder to lock a file.
+   *
+   * @return Builder for lock creation.
+   */
   public InnerLockCommandBuilder lock() {
     return new InnerLockCommandBuilder();
   }
 
+  /**
+   * Creates builder to unlock a file.
+   *
+   * @return Builder to remove a lock.
+   */
   public InnerUnlockCommandBuilder unlock() {
     return new InnerUnlockCommandBuilder();
   }
 
+  /**
+   * Retrieves the lock for a file, if it is locked.
+   *
+   * @param file The file to get the lock for.
+   * @return {@link Optional} with the lock, if the file is locked,
+   * or {@link Optional#empty()}, if the file is not locked
+   */
   public Optional<FileLock> status(String file) {
     LockStatusCommandRequest lockStatusCommandRequest = new LockStatusCommandRequest();
     lockStatusCommandRequest.setFile(file);
     return lockCommand.status(lockStatusCommandRequest);
   }
 
+  /**
+   * Retrieves all locks for the repository.
+   *
+   * @return Collection of all locks for the repository.
+   */
   public Collection<FileLock> getAll() {
     return lockCommand.getAll();
   }
@@ -62,16 +91,23 @@ public final class LockCommandBuilder {
     private String file;
     private boolean force;
 
+    /**
+     * Set the path of the file that should be locked.
+     *
+     * @param file The file to lock.
+     * @return This builder instance.
+     */
     public InnerLockCommandBuilder setFile(String file) {
       this.file = file;
       return this;
     }
 
-    public InnerLockCommandBuilder force(boolean force) {
-      this.force = force;
-      return this;
-    }
-
+    /**
+     * Creates the lock.
+     *
+     * @return The result of the lock creation.
+     * @throws FileLockedException if the file is already locked.
+     */
     public LockCommandResult execute() {
       LockCommandRequest lockCommandRequest = new LockCommandRequest();
       lockCommandRequest.setFile(file);
@@ -84,16 +120,36 @@ public final class LockCommandBuilder {
     private String file;
     private boolean force;
 
+    /**
+     * Set the path of the file that should be unlocked.
+     *
+     * @param file The file to unlock.
+     * @return This builder instance.
+     */
     public InnerUnlockCommandBuilder setFile(String file) {
       this.file = file;
       return this;
     }
 
+    /**
+     * Set whether to force the unlock or not. A lock from a different user can only
+     * be removed with force set to <code>true</code>.
+     *
+     * @param force Whether to force unlock or not.
+     * @return This builder instance.
+     */
     public InnerUnlockCommandBuilder force(boolean force) {
       this.force = force;
       return this;
     }
 
+    /**
+     * Remove the lock.
+     *
+     * @return The result of the lock removal.
+     * @throws FileLockedException if the file is locked by another user and {@link #force(boolean)} has not been
+     *                             set to <code>true</code>.
+     */
     public UnlockCommandResult execute() {
       UnlockCommandRequest unlockCommandRequest = new UnlockCommandRequest();
       unlockCommandRequest.setFile(file);
@@ -101,5 +157,4 @@ public final class LockCommandBuilder {
       return lockCommand.unlock(unlockCommandRequest);
     }
   }
-
 }
