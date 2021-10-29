@@ -32,6 +32,7 @@ type Props = {
   color?: string;
   className?: string;
   onClick?: (event: React.MouseEvent) => void;
+  onEnter?: (event: React.KeyboardEvent) => void;
   testId?: string;
   tabIndex?: number;
 };
@@ -45,10 +46,12 @@ const Icon: FC<Props> = ({
   onClick,
   testId,
   tabIndex = -1,
+  onEnter,
 }) => {
   return (
     <i
       onClick={onClick}
+      onKeyPress={(event) => event.key === "Enter" && onEnter && onEnter(event)}
       title={title}
       className={classNames(iconStyle, "fa-fw", "fa-" + name, `has-text-${color}`, className)}
       tabIndex={tabIndex}
