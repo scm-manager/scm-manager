@@ -99,10 +99,10 @@ public final class GitLockStoreFactory {
       return !readEntry().isEmpty();
     }
 
-    public FileLock put(String file, boolean force) {
+    public FileLock put(String file) {
       StoreEntry storeEntry = readEntry();
       Optional<FileLock> existingLock = storeEntry.get(file);
-      if (!force && existingLock.isPresent()) {
+      if (existingLock.isPresent() && !existingLock.get().getUserId().equals(currentUser.get())) {
         throw new FileLockedException(repository.getNamespaceAndName(), existingLock.get());
       }
       FileLock newLock = new FileLock(file, keyGenerator.createKey(), currentUser.get(), Instant.now(clock));

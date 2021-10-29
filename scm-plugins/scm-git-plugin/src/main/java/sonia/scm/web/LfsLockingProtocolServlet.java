@@ -230,7 +230,7 @@ public class LfsLockingProtocolServlet extends HttpServlet {
             sendError(SC_BAD_REQUEST, "Illegal input");
           } else {
             try {
-              FileLock createdLock = lockStore.put(lockCreate.getPath(), false);
+              FileLock createdLock = lockStore.put(lockCreate.getPath());
               sendResult(SC_CREATED, new SingleLockDto(createdLock));
             } catch (FileLockedException e) {
               FileLock conflictingLock = e.getConflictingLock();

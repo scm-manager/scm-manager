@@ -30,5 +30,4 @@ import lombok.Data;
 public final class LockCommandRequest {
 
   private String file;
-  private boolean force;
 }

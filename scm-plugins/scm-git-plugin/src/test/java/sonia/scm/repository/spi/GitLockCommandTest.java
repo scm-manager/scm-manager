@@ -82,19 +82,7 @@ class GitLockCommandTest {
     LockCommandResult lock = lockCommand.lock(request);
 
     assertThat(lock.isSuccessful()).isTrue();
-    verify(lockStore).put("some/file.txt", false);
-  }
-
-  @Test
-  void shouldSetLockWithForceOnLockRequestWithForce() {
-    LockCommandRequest request = new LockCommandRequest();
-    request.setFile("some/file.txt");
-    request.setForce(true);
-
-    LockCommandResult lock = lockCommand.lock(request);
-
-    assertThat(lock.isSuccessful()).isTrue();
-    verify(lockStore).put("some/file.txt", true);
+    verify(lockStore).put("some/file.txt");
   }
 
   @Test

@@ -226,7 +226,7 @@ class LfsLockingProtocolServletTest {
         servlet.doPost(request, response);
 
         verify(response).setStatus(403);
-        verify(lockStore, never()).put(any(), anyBoolean());
+        verify(lockStore, never()).put(any());
       }
 
       @Nested
@@ -295,7 +295,7 @@ class LfsLockingProtocolServletTest {
         when(request.getInputStream()).thenReturn(new BufferedServletInputStream("{\n" +
           "  \"path\": \"some/file.txt\"\n" +
           "}"));
-        when(lockStore.put("some/file.txt", false))
+        when(lockStore.put("some/file.txt"))
           .thenReturn(new FileLock("some/file.txt", "42", "Tricia", NOW));
 
         servlet.doPost(request, response);
@@ -311,7 +311,7 @@ class LfsLockingProtocolServletTest {
           "  \"path\": \"some/file.txt\",\n" +
           "  \"unknown\": \"attribute\"\n" +
           "}"));
-        when(lockStore.put("some/file.txt", false))
+        when(lockStore.put("some/file.txt"))
           .thenReturn(new FileLock("some/file.txt", "42", "Tricia", NOW));
 
         servlet.doPost(request, response);
@@ -330,7 +330,7 @@ class LfsLockingProtocolServletTest {
         servlet.doPost(request, response);
 
         verify(response).setStatus(400);
-        verify(lockStore, never()).put(any(), anyBoolean());
+        verify(lockStore, never()).put(any());
       }
 
       @Test
@@ -338,7 +338,7 @@ class LfsLockingProtocolServletTest {
         when(request.getInputStream()).thenReturn(new BufferedServletInputStream("{\n" +
           "  \"path\": \"some/file.txt\"\n" +
           "}"));
-        when(lockStore.put("some/file.txt", false))
+        when(lockStore.put("some/file.txt"))
           .thenThrow(new FileLockedException(REPOSITORY.getNamespaceAndName(), new FileLock("some/file.txt", "42", "Tricia", NOW)));
 
         servlet.doPost(request, response);

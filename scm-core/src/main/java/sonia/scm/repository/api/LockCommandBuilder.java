@@ -93,7 +93,6 @@ public final class LockCommandBuilder {
 
   public class InnerLockCommandBuilder {
     private String file;
-    private boolean force;
 
     /**
      * Set the path of the file that should be locked.
@@ -115,7 +114,6 @@ public final class LockCommandBuilder {
     public LockCommandResult execute() {
       LockCommandRequest lockCommandRequest = new LockCommandRequest();
       lockCommandRequest.setFile(file);
-      lockCommandRequest.setForce(force);
       return lockCommand.lock(lockCommandRequest);
     }
   }

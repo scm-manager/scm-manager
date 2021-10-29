@@ -47,7 +47,7 @@ public class GitLockCommand implements LockCommand {
   @Override
   public LockCommandResult lock(LockCommandRequest request) {
     GitLockStore lockStore = getLockStore();
-    lockStore.put(request.getFile(), request.isForce());
+    lockStore.put(request.getFile());
     return new LockCommandResult(true);
   }
 
