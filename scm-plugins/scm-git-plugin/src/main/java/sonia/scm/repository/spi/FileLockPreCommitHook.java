@@ -46,12 +46,12 @@ public class FileLockPreCommitHook {
 
   private static final Logger LOG = LoggerFactory.getLogger(FileLockPreCommitHook.class);
 
-  private final GitLockStoreFactory lockStoreFactory;
+  private final GitFileLockStoreFactory fileLockStoreFactory;
   private final RepositoryServiceFactory serviceFactory;
 
   @Inject
-  public FileLockPreCommitHook(GitLockStoreFactory lockStoreFactory, RepositoryServiceFactory serviceFactory) {
-    this.lockStoreFactory = lockStoreFactory;
+  public FileLockPreCommitHook(GitFileLockStoreFactory fileLockStoreFactory, RepositoryServiceFactory serviceFactory) {
+    this.fileLockStoreFactory = fileLockStoreFactory;
     this.serviceFactory = serviceFactory;
   }
 
@@ -59,30 +59,30 @@ public class FileLockPreCommitHook {
   public void checkForLocks(PreReceiveRepositoryHookEvent event) {
     Repository repository = event.getRepository();
     LOG.trace("checking for locks during push in repository {}", repository);
-    GitLockStoreFactory.GitLockStore gitLockStore = lockStoreFactory.create(repository);
-    if (!gitLockStore.hasLocks()) {
+    GitFileLockStoreFactory.GitFileLockStore gitFileLockStore = fileLockStoreFactory.create(repository);
+    if (!gitFileLockStore.hasLocks()) {
       LOG.trace("no locks found in repository {}", repository);
       return;
     }
     try (RepositoryService service = serviceFactory.create(repository)) {
-      checkPaths(event, gitLockStore, service);
+      checkPaths(event, gitFileLockStore, service);
     } catch (IOException e) {
       throw new InternalRepositoryException(repository, "could not check locks", e);
     }
   }
 
-  private void checkPaths(PreReceiveRepositoryHookEvent event, GitLockStoreFactory.GitLockStore gitLockStore, RepositoryService service) throws IOException {
-    new Checker(gitLockStore, service)
+  private void checkPaths(PreReceiveRepositoryHookEvent event, GitFileLockStoreFactory.GitFileLockStore gitFileLockStore, RepositoryService service) throws IOException {
+    new Checker(gitFileLockStore, service)
       .checkPaths(event.getContext().getChangesetProvider().getChangesets());
   }
 
   private static class Checker {
 
-    private final GitLockStoreFactory.GitLockStore lockStore;
+    private final GitFileLockStoreFactory.GitFileLockStore fileLockStore;
     private final RepositoryService service;
 
-    private Checker(GitLockStoreFactory.GitLockStore lockStore, RepositoryService service) {
-      this.lockStore = lockStore;
+    private Checker(GitFileLockStoreFactory.GitFileLockStore fileLockStore, RepositoryService service) {
+      this.fileLockStore = fileLockStore;
       this.service = service;
     }
 
@@ -111,7 +111,7 @@ public class FileLockPreCommitHook {
 
     private void check(Iterable<String> modifiedPaths) {
       for (String path : modifiedPaths) {
-        lockStore.assertModifiable(path);
+        fileLockStore.assertModifiable(path);
       }
     }
   }

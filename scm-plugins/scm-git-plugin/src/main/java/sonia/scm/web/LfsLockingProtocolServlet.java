@@ -41,7 +41,7 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.api.FileLock;
 import sonia.scm.repository.api.FileLockedException;
-import sonia.scm.repository.spi.GitLockStoreFactory.GitLockStore;
+import sonia.scm.repository.spi.GitFileLockStoreFactory.GitFileLockStore;
 import sonia.scm.user.DisplayUser;
 import sonia.scm.user.UserDisplayManager;
 
@@ -84,17 +84,17 @@ public class LfsLockingProtocolServlet extends HttpServlet {
   private static final int LOWER_LIMIT = 10;
 
   private final Repository repository;
-  private final GitLockStore lockStore;
+  private final GitFileLockStore lockStore;
   private final UserDisplayManager userDisplayManager;
   private final ObjectMapper objectMapper;
   private final int defaultLimit;
   private final int lowerLimit;
 
-  public LfsLockingProtocolServlet(Repository repository, GitLockStore lockStore, UserDisplayManager userDisplayManager, ObjectMapper objectMapper) {
+  public LfsLockingProtocolServlet(Repository repository, GitFileLockStore lockStore, UserDisplayManager userDisplayManager, ObjectMapper objectMapper) {
     this(repository, lockStore, userDisplayManager, objectMapper, DEFAULT_LIMIT, LOWER_LIMIT);
   }
 
-  LfsLockingProtocolServlet(Repository repository, GitLockStore lockStore, UserDisplayManager userDisplayManager, ObjectMapper objectMapper, int defaultLimit, int lowerLimit) {
+  LfsLockingProtocolServlet(Repository repository, GitFileLockStore lockStore, UserDisplayManager userDisplayManager, ObjectMapper objectMapper, int defaultLimit, int lowerLimit) {
     this.repository = repository;
     this.lockStore = lockStore;
     this.userDisplayManager = userDisplayManager;

@@ -55,7 +55,7 @@ import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 
 @Singleton
-public final class GitLockStoreFactory {
+public final class GitFileLockStoreFactory {
 
   private static final String STORE_ID = "locks";
 
@@ -65,30 +65,30 @@ public final class GitLockStoreFactory {
   private final Supplier<String> currentUser;
 
   @Inject
-  public GitLockStoreFactory(DataStoreFactory dataStoreFactory, KeyGenerator keyGenerator) {
+  public GitFileLockStoreFactory(DataStoreFactory dataStoreFactory, KeyGenerator keyGenerator) {
     this(dataStoreFactory,
       keyGenerator,
       Clock.systemDefaultZone(),
       () -> SecurityUtils.getSubject().getPrincipals().getPrimaryPrincipal().toString());
   }
 
-  GitLockStoreFactory(DataStoreFactory dataStoreFactory, KeyGenerator keyGenerator, Clock clock, Supplier<String> currentUser) {
+  GitFileLockStoreFactory(DataStoreFactory dataStoreFactory, KeyGenerator keyGenerator, Clock clock, Supplier<String> currentUser) {
     this.dataStoreFactory = dataStoreFactory;
     this.keyGenerator = keyGenerator;
     this.clock = clock;
     this.currentUser = currentUser;
   }
 
-  public GitLockStore create(Repository repository) {
-    return new GitLockStore(repository);
+  public GitFileLockStore create(Repository repository) {
+    return new GitFileLockStore(repository);
   }
 
-  public final class GitLockStore {
+  public final class GitFileLockStore {
 
     private final Repository repository;
     private final DataStore<StoreEntry> store;
 
-    public GitLockStore(Repository repository) {
+    public GitFileLockStore(Repository repository) {
       this.repository = repository;
       this.store =
         dataStoreFactory

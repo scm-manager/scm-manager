@@ -26,7 +26,7 @@ package sonia.scm.repository.api;
 
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPermissions;
-import sonia.scm.repository.spi.LockCommand;
+import sonia.scm.repository.spi.FileLockCommand;
 import sonia.scm.repository.spi.LockCommandRequest;
 import sonia.scm.repository.spi.LockStatusCommandRequest;
 import sonia.scm.repository.spi.UnlockCommandRequest;
@@ -39,13 +39,13 @@ import java.util.Optional;
  *
  * @since 2.26.0
  */
-public final class LockCommandBuilder {
+public final class FileLockCommandBuilder {
 
-  private final LockCommand lockCommand;
+  private final FileLockCommand fileLockCommand;
   private final Repository repository;
 
-  public LockCommandBuilder(LockCommand lockCommand, Repository repository) {
-    this.lockCommand = lockCommand;
+  public FileLockCommandBuilder(FileLockCommand fileLockCommand, Repository repository) {
+    this.fileLockCommand = fileLockCommand;
     this.repository = repository;
   }
 
@@ -79,7 +79,7 @@ public final class LockCommandBuilder {
   public Optional<FileLock> status(String file) {
     LockStatusCommandRequest lockStatusCommandRequest = new LockStatusCommandRequest();
     lockStatusCommandRequest.setFile(file);
-    return lockCommand.status(lockStatusCommandRequest);
+    return fileLockCommand.status(lockStatusCommandRequest);
   }
 
   /**
@@ -88,7 +88,7 @@ public final class LockCommandBuilder {
    * @return Collection of all locks for the repository.
    */
   public Collection<FileLock> getAll() {
-    return lockCommand.getAll();
+    return fileLockCommand.getAll();
   }
 
   public class InnerLockCommandBuilder {
@@ -114,7 +114,7 @@ public final class LockCommandBuilder {
     public LockCommandResult execute() {
       LockCommandRequest lockCommandRequest = new LockCommandRequest();
       lockCommandRequest.setFile(file);
-      return lockCommand.lock(lockCommandRequest);
+      return fileLockCommand.lock(lockCommandRequest);
     }
   }
 
@@ -166,7 +166,7 @@ public final class LockCommandBuilder {
       UnlockCommandRequest unlockCommandRequest = new UnlockCommandRequest();
       unlockCommandRequest.setFile(file);
       unlockCommandRequest.setForce(force);
-      return lockCommand.unlock(unlockCommandRequest);
+      return fileLockCommand.unlock(unlockCommandRequest);
     }
   }
 }

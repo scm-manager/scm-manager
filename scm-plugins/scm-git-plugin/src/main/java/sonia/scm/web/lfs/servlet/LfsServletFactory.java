@@ -32,7 +32,7 @@ import org.eclipse.jgit.lfs.server.fs.FileLfsServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.spi.GitLockStoreFactory;
+import sonia.scm.repository.spi.GitFileLockStoreFactory;
 import sonia.scm.store.BlobStore;
 import sonia.scm.user.UserDisplayManager;
 import sonia.scm.util.HttpUtil;
@@ -60,12 +60,12 @@ public class LfsServletFactory {
 
   private final LfsBlobStoreFactory lfsBlobStoreFactory;
   private final LfsAccessTokenFactory tokenFactory;
-  private final GitLockStoreFactory lockStoreFactory;
+  private final GitFileLockStoreFactory lockStoreFactory;
   private final UserDisplayManager userDisplayManager;
   private final ObjectMapper objectMapper;
 
   @Inject
-  public LfsServletFactory(LfsBlobStoreFactory lfsBlobStoreFactory, LfsAccessTokenFactory tokenFactory, GitLockStoreFactory lockStoreFactory, UserDisplayManager userDisplayManager, ObjectMapper objectMapper) {
+  public LfsServletFactory(LfsBlobStoreFactory lfsBlobStoreFactory, LfsAccessTokenFactory tokenFactory, GitFileLockStoreFactory lockStoreFactory, UserDisplayManager userDisplayManager, ObjectMapper objectMapper) {
     this.lfsBlobStoreFactory = lfsBlobStoreFactory;
     this.tokenFactory = tokenFactory;
     this.lockStoreFactory = lockStoreFactory;

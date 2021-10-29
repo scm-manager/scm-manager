@@ -61,9 +61,9 @@ class FileLockPreCommitHookTest {
   private static final Repository REPOSITORY = RepositoryTestData.createHeartOfGold();
 
   @Mock
-  private GitLockStoreFactory lockStoreFactory;
+  private GitFileLockStoreFactory fileLockStoreFactory;
   @Mock
-  private GitLockStoreFactory.GitLockStore lockStore;
+  private GitFileLockStoreFactory.GitFileLockStore fileLockStore;
   @Mock
   private RepositoryServiceFactory serviceFactory;
   @Mock
@@ -77,8 +77,8 @@ class FileLockPreCommitHookTest {
 
   @BeforeEach
   void initLockStore() {
-    when(lockStoreFactory.create(REPOSITORY))
-      .thenReturn(lockStore);
+    when(fileLockStoreFactory.create(REPOSITORY))
+      .thenReturn(fileLockStore);
   }
 
   @Test
@@ -112,7 +112,7 @@ class FileLockPreCommitHookTest {
 
     @BeforeEach
     void initLocks() {
-      when(lockStore.hasLocks()).thenReturn(true);
+      when(fileLockStore.hasLocks()).thenReturn(true);
     }
 
     @BeforeEach
@@ -142,10 +142,10 @@ class FileLockPreCommitHookTest {
 
       hook.checkForLocks(event);
 
-      verify(lockStore).assertModifiable("path-1-1");
-      verify(lockStore).assertModifiable("path-2-1");
-      verify(lockStore).assertModifiable("path-1-2");
-      verify(lockStore).assertModifiable("path-2-2");
+      verify(fileLockStore).assertModifiable("path-1-1");
+      verify(fileLockStore).assertModifiable("path-2-1");
+      verify(fileLockStore).assertModifiable("path-1-2");
+      verify(fileLockStore).assertModifiable("path-2-2");
     }
   }
 }

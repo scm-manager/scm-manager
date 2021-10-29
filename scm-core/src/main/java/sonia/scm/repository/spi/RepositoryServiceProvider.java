@@ -229,10 +229,9 @@ public abstract class RepositoryServiceProvider implements Closeable
    *
    * @return
    */
-  @SuppressWarnings("unchecked")
   public Set<Feature> getSupportedFeatures()
   {
-    return Collections.EMPTY_SET;
+    return Collections.emptySet();
   }
 
   /**
@@ -309,7 +308,7 @@ public abstract class RepositoryServiceProvider implements Closeable
   /**
    * @since 2.26.0
    */
-  public LockCommand getLockCommand() {
-    throw new CommandNotSupportedException(Command.LOCK);
+  public FileLockCommand getFileLockCommand() {
+    throw new CommandNotSupportedException(Command.FILE_LOCK);
   }
 }

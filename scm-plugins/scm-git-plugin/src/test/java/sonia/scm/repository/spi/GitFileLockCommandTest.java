@@ -36,7 +36,7 @@ import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.repository.api.FileLock;
 import sonia.scm.repository.api.LockCommandResult;
 import sonia.scm.repository.api.UnlockCommandResult;
-import sonia.scm.repository.spi.GitLockStoreFactory.GitLockStore;
+import sonia.scm.repository.spi.GitFileLockStoreFactory.GitFileLockStore;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -49,7 +49,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class GitLockCommandTest {
+class GitFileLockCommandTest {
 
   private static final Repository REPOSITORY = RepositoryTestData.createHeartOfGold();
   private static final Instant NOW = Instant.ofEpochSecond(-562031958);
@@ -57,12 +57,12 @@ class GitLockCommandTest {
   @Mock
   private GitContext context;
   @Mock
-  private GitLockStoreFactory lockStoreFactory;
+  private GitFileLockStoreFactory lockStoreFactory;
   @Mock
-  private GitLockStore lockStore;
+  private GitFileLockStore lockStore;
 
   @InjectMocks
-  private GitLockCommand lockCommand;
+  private GitFileLockCommand lockCommand;
 
   @BeforeEach
   void initContext() {

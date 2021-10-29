@@ -27,50 +27,50 @@ package sonia.scm.repository.spi;
 import sonia.scm.repository.api.FileLock;
 import sonia.scm.repository.api.LockCommandResult;
 import sonia.scm.repository.api.UnlockCommandResult;
-import sonia.scm.repository.spi.GitLockStoreFactory.GitLockStore;
+import sonia.scm.repository.spi.GitFileLockStoreFactory.GitFileLockStore;
 
 import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Optional;
 
-public class GitLockCommand implements LockCommand {
+public class GitFileLockCommand implements FileLockCommand {
 
   private final GitContext context;
-  private final GitLockStoreFactory lockStoreFactory;
+  private final GitFileLockStoreFactory lockStoreFactory;
 
   @Inject
-  public GitLockCommand(GitContext context, GitLockStoreFactory lockStoreFactory) {
+  public GitFileLockCommand(GitContext context, GitFileLockStoreFactory lockStoreFactory) {
     this.context = context;
     this.lockStoreFactory = lockStoreFactory;
   }
 
   @Override
   public LockCommandResult lock(LockCommandRequest request) {
-    GitLockStore lockStore = getLockStore();
+    GitFileLockStore lockStore = getLockStore();
     lockStore.put(request.getFile());
     return new LockCommandResult(true);
   }
 
   @Override
   public UnlockCommandResult unlock(UnlockCommandRequest request) {
-    GitLockStore lockStore = getLockStore();
+    GitFileLockStore lockStore = getLockStore();
     lockStore.remove(request.getFile(), request.isForce());
     return new UnlockCommandResult(true);
   }
 
   @Override
   public Optional<FileLock> status(LockStatusCommandRequest request) {
-    GitLockStore lockStore = getLockStore();
+    GitFileLockStore lockStore = getLockStore();
     return lockStore.getLock(request.getFile());
   }
 
   @Override
   public Collection<FileLock> getAll() {
-    GitLockStore lockStore = getLockStore();
+    GitFileLockStore lockStore = getLockStore();
     return lockStore.getAll();
   }
 
-  private GitLockStore getLockStore() {
+  private GitFileLockStore getLockStore() {
     return lockStoreFactory.create(context.getRepository());
   }
 }

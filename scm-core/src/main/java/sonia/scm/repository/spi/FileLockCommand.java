@@ -36,7 +36,7 @@ import java.util.Optional;
  *
  * @since 2.26.0
  */
-public interface LockCommand {
+public interface FileLockCommand {
 
   /**
    * Locks a given file.

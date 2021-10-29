@@ -82,5 +82,5 @@ public enum Command
   /**
    * @since 2.26.0
    */
-  LOCK;
+  FILE_LOCK
 }

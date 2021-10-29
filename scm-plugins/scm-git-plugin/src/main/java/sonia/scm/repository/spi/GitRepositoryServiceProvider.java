@@ -58,7 +58,7 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider {
     Command.BUNDLE,
     Command.UNBUNDLE,
     Command.MIRROR,
-    Command.LOCK
+    Command.FILE_LOCK
   );
 
   protected static final Set<Feature> FEATURES = EnumSet.of(
@@ -182,8 +182,8 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider {
   }
 
   @Override
-  public LockCommand getLockCommand() {
-    return commandInjector.getInstance(GitLockCommand.class);
+  public FileLockCommand getFileLockCommand() {
+    return commandInjector.getInstance(GitFileLockCommand.class);
   }
 
   @Override

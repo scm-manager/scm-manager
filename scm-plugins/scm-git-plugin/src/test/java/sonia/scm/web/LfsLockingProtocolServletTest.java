@@ -40,7 +40,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.FileLock;
 import sonia.scm.repository.api.FileLockedException;
-import sonia.scm.repository.spi.GitLockStoreFactory.GitLockStore;
+import sonia.scm.repository.spi.GitFileLockStoreFactory.GitFileLockStore;
 import sonia.scm.user.DisplayUser;
 import sonia.scm.user.User;
 import sonia.scm.user.UserDisplayManager;
@@ -57,7 +57,6 @@ import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -71,7 +70,7 @@ class LfsLockingProtocolServletTest {
   private static final Instant NOW = Instant.ofEpochSecond(-562031958);
 
   @Mock
-  private GitLockStore lockStore;
+  private GitFileLockStore lockStore;
   @Mock
   private UserDisplayManager userDisplayManager;
 

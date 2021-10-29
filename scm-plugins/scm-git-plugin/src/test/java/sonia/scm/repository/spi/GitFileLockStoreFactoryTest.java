@@ -44,7 +44,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-class GitLockStoreFactoryTest {
+class GitFileLockStoreFactoryTest {
 
   private static final Instant NOW = Instant.ofEpochSecond(-562031958);
 
@@ -52,8 +52,8 @@ class GitLockStoreFactoryTest {
   private final Clock clock = mock(Clock.class);
   private String currentUser = "dent";
   private int nextId = 0;
-  private final GitLockStoreFactory gitLockStoreFactory =
-    new GitLockStoreFactory(dataStoreFactory, () -> "id-" + (nextId++), clock, () -> currentUser);
+  private final GitFileLockStoreFactory gitFileLockStoreFactory =
+    new GitFileLockStoreFactory(dataStoreFactory, () -> "id-" + (nextId++), clock, () -> currentUser);
 
   private final Repository repository = RepositoryTestData.createHeartOfGold();
 
@@ -64,33 +64,33 @@ class GitLockStoreFactoryTest {
 
   @Test
   void shouldHaveNoLockOnStartup() {
-    GitLockStoreFactory.GitLockStore gitLockStore = gitLockStoreFactory.create(repository);
+    GitFileLockStoreFactory.GitFileLockStore gitFileLockStore = gitFileLockStoreFactory.create(repository);
 
-    assertThat(gitLockStore.getLock("some/file.txt"))
+    assertThat(gitFileLockStore.getLock("some/file.txt"))
       .isEmpty();
-    assertThat(gitLockStore.getAll())
+    assertThat(gitFileLockStore.getAll())
       .isEmpty();
-    assertThat(gitLockStore.hasLocks())
+    assertThat(gitFileLockStore.hasLocks())
       .isFalse();
   }
 
   @Test
   void shouldNotFailOnRemovingNonExistingLock() {
-    GitLockStoreFactory.GitLockStore gitLockStore = gitLockStoreFactory.create(repository);
+    GitFileLockStoreFactory.GitFileLockStore gitFileLockStore = gitFileLockStoreFactory.create(repository);
 
-    gitLockStore.remove("some/file.txt", false);
+    gitFileLockStore.remove("some/file.txt", false);
 
-    assertThat(gitLockStore.getLock("some/file.txt"))
+    assertThat(gitFileLockStore.getLock("some/file.txt"))
       .isEmpty();
   }
 
   @Test
   void shouldStoreAndRetrieveLock() {
-    GitLockStoreFactory.GitLockStore gitLockStore = gitLockStoreFactory.create(repository);
+    GitFileLockStoreFactory.GitFileLockStore gitFileLockStore = gitFileLockStoreFactory.create(repository);
 
-    FileLock createdLock = gitLockStore.put("some/file.txt");
+    FileLock createdLock = gitFileLockStore.put("some/file.txt");
 
-    Optional<FileLock> retrievedLock = gitLockStore.getLock("some/file.txt");
+    Optional<FileLock> retrievedLock = gitFileLockStore.getLock("some/file.txt");
 
     AbstractObjectAssert<?, FileLock> lockAssert = assertThat(retrievedLock)
       .get();
@@ -107,18 +107,18 @@ class GitLockStoreFactoryTest {
       .usingRecursiveComparison()
       .isEqualTo(createdLock);
 
-    assertThat(gitLockStore.getAll())
+    assertThat(gitFileLockStore.getAll())
       .extracting("userId")
       .containsExactly("dent");
   }
 
   @Test
   void shouldRetrieveLockById() {
-    GitLockStoreFactory.GitLockStore gitLockStore = gitLockStoreFactory.create(repository);
+    GitFileLockStoreFactory.GitFileLockStore gitFileLockStore = gitFileLockStoreFactory.create(repository);
 
-    FileLock createdLock = gitLockStore.put("some/file.txt");
+    FileLock createdLock = gitFileLockStore.put("some/file.txt");
 
-    Optional<FileLock> retrievedLock = gitLockStore.getById(createdLock.getId());
+    Optional<FileLock> retrievedLock = gitFileLockStore.getById(createdLock.getId());
 
     assertThat(retrievedLock)
       .get()
@@ -128,52 +128,52 @@ class GitLockStoreFactoryTest {
 
   @Test
   void shouldHaveLock() {
-    GitLockStoreFactory.GitLockStore gitLockStore = gitLockStoreFactory.create(repository);
+    GitFileLockStoreFactory.GitFileLockStore gitFileLockStore = gitFileLockStoreFactory.create(repository);
 
-    gitLockStore.put("some/file.txt");
+    gitFileLockStore.put("some/file.txt");
 
-    assertThat(gitLockStore.hasLocks())
+    assertThat(gitFileLockStore.hasLocks())
       .isTrue();
   }
 
   @Test
   void shouldBeModifiableWithoutLock() {
-    GitLockStoreFactory.GitLockStore gitLockStore = gitLockStoreFactory.create(repository);
+    GitFileLockStoreFactory.GitFileLockStore gitFileLockStore = gitFileLockStoreFactory.create(repository);
 
-    gitLockStore.assertModifiable("some/file.txt");
+    gitFileLockStore.assertModifiable("some/file.txt");
   }
 
   @Test
   void shouldBeModifiableWithOwnLock() {
-    GitLockStoreFactory.GitLockStore gitLockStore = gitLockStoreFactory.create(repository);
-    gitLockStore.put("some/file.txt");
+    GitFileLockStoreFactory.GitFileLockStore gitFileLockStore = gitFileLockStoreFactory.create(repository);
+    gitFileLockStore.put("some/file.txt");
 
-    gitLockStore.assertModifiable("some/file.txt");
+    gitFileLockStore.assertModifiable("some/file.txt");
   }
 
   @Test
   void shouldRemoveLock() {
-    GitLockStoreFactory.GitLockStore gitLockStore = gitLockStoreFactory.create(repository);
-    FileLock createdLock = gitLockStore.put("some/file.txt");
+    GitFileLockStoreFactory.GitFileLockStore gitFileLockStore = gitFileLockStoreFactory.create(repository);
+    FileLock createdLock = gitFileLockStore.put("some/file.txt");
 
-    gitLockStore.remove("some/file.txt", false);
+    gitFileLockStore.remove("some/file.txt", false);
 
-    assertThat(gitLockStore.getLock("some/file.txt"))
+    assertThat(gitFileLockStore.getLock("some/file.txt"))
       .isEmpty();
-    assertThat(gitLockStore.getById(createdLock.getId()))
+    assertThat(gitFileLockStore.getById(createdLock.getId()))
       .isEmpty();
   }
 
   @Test
   void shouldRemoveLockById() {
-    GitLockStoreFactory.GitLockStore gitLockStore = gitLockStoreFactory.create(repository);
-    FileLock createdLock = gitLockStore.put("some/file.txt");
+    GitFileLockStoreFactory.GitFileLockStore gitFileLockStore = gitFileLockStoreFactory.create(repository);
+    FileLock createdLock = gitFileLockStore.put("some/file.txt");
 
-    gitLockStore.removeById(createdLock.getId(), false);
+    gitFileLockStore.removeById(createdLock.getId(), false);
 
-    assertThat(gitLockStore.getLock("some/file.txt"))
+    assertThat(gitFileLockStore.getLock("some/file.txt"))
       .isEmpty();
-    assertThat(gitLockStore.getById(createdLock.getId()))
+    assertThat(gitFileLockStore.getById(createdLock.getId()))
       .isEmpty();
   }
 
@@ -183,18 +183,18 @@ class GitLockStoreFactoryTest {
     @BeforeEach
     void setLock() {
       currentUser = "trillian";
-      GitLockStoreFactory.GitLockStore gitLockStore = gitLockStoreFactory.create(repository);
-      gitLockStore.put("some/file.txt");
+      GitFileLockStoreFactory.GitFileLockStore gitFileLockStore = gitFileLockStoreFactory.create(repository);
+      gitFileLockStore.put("some/file.txt");
       currentUser = "dent";
     }
 
     @Test
     void shouldNotRemoveExistingLockWithoutForce() {
-      GitLockStoreFactory.GitLockStore gitLockStore = gitLockStoreFactory.create(repository);
+      GitFileLockStoreFactory.GitFileLockStore gitFileLockStore = gitFileLockStoreFactory.create(repository);
 
-      assertThrows(FileLockedException.class, () -> gitLockStore.remove("some/file.txt", false));
+      assertThrows(FileLockedException.class, () -> gitFileLockStore.remove("some/file.txt", false));
 
-      assertThat(gitLockStore.getLock("some/file.txt"))
+      assertThat(gitFileLockStore.getLock("some/file.txt"))
         .get()
         .extracting("userId")
         .isEqualTo("trillian");
@@ -202,28 +202,28 @@ class GitLockStoreFactoryTest {
 
     @Test
     void shouldRemoveExistingLockWithForce() {
-      GitLockStoreFactory.GitLockStore gitLockStore = gitLockStoreFactory.create(repository);
+      GitFileLockStoreFactory.GitFileLockStore gitFileLockStore = gitFileLockStoreFactory.create(repository);
 
-      gitLockStore.remove("some/file.txt", true);
+      gitFileLockStore.remove("some/file.txt", true);
 
-      assertThat(gitLockStore.getLock("some/file.txt"))
+      assertThat(gitFileLockStore.getLock("some/file.txt"))
         .isEmpty();
     }
 
     @Test
     void shouldNotBeModifiableWithOwnLock() {
-      GitLockStoreFactory.GitLockStore gitLockStore = gitLockStoreFactory.create(repository);
+      GitFileLockStoreFactory.GitFileLockStore gitFileLockStore = gitFileLockStoreFactory.create(repository);
 
-      assertThrows(FileLockedException.class, () -> gitLockStore.assertModifiable("some/file.txt"));
+      assertThrows(FileLockedException.class, () -> gitFileLockStore.assertModifiable("some/file.txt"));
     }
 
     @Test
     void shouldNotOverrideExistingLock() {
-      GitLockStoreFactory.GitLockStore gitLockStore = gitLockStoreFactory.create(repository);
+      GitFileLockStoreFactory.GitFileLockStore gitFileLockStore = gitFileLockStoreFactory.create(repository);
 
-      assertThrows(FileLockedException.class, () -> gitLockStore.put("some/file.txt"));
+      assertThrows(FileLockedException.class, () -> gitFileLockStore.put("some/file.txt"));
 
-      assertThat(gitLockStore.getLock("some/file.txt"))
+      assertThat(gitFileLockStore.getLock("some/file.txt"))
         .get()
         .extracting("userId")
         .isEqualTo("trillian");
