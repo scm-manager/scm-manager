@@ -82,6 +82,7 @@ import static org.mockito.Mockito.when;
 import static sonia.scm.repository.api.MirrorCommandResult.ResultType.FAILED;
 import static sonia.scm.repository.api.MirrorCommandResult.ResultType.OK;
 import static sonia.scm.repository.api.MirrorCommandResult.ResultType.REJECTED_UPDATES;
+import static sonia.scm.repository.spi.GitMirrorCommand.RefType.BRANCH;
 
 public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
 
@@ -356,7 +357,8 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     assertThat(result.getResult()).isEqualTo(REJECTED_UPDATES);
     assertThat(result.getLog()).containsExactly(
       "Branches:",
-      "- 000000000..fcd0ef183 added-branch (rejected due to filter)"
+      "- 000000000..fcd0ef183 added-branch (rejected due to filter)",
+      "No changes; nothing to push."
     );
 
     try (Git updatedMirror = Git.open(clone)) {
@@ -378,7 +380,8 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     assertThat(result.getResult()).isEqualTo(REJECTED_UPDATES);
     assertThat(result.getLog()).containsExactly(
       "Branches:",
-      "- 3f76a12f0..9e93d8631 test-branch (rejected due to filter)"
+      "- 3f76a12f0..9e93d8631 test-branch (rejected due to filter)",
+      "No changes; nothing to push."
     );
 
     try (Git updatedMirror = Git.open(clone)) {
@@ -400,7 +403,8 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     assertThat(result.getResult()).isEqualTo(REJECTED_UPDATES);
     assertThat(result.getLog()).containsExactly(
       "Branches:",
-      "- 3f76a12f0..000000000 test-branch (rejected due to filter)"
+      "- 3f76a12f0..000000000 test-branch (rejected due to filter)",
+      "No changes; nothing to push."
     );
 
     try (Git updatedMirror = Git.open(clone)) {
@@ -423,7 +427,8 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     assertThat(result.getResult()).isEqualTo(REJECTED_UPDATES);
     assertThat(result.getLog()).containsExactly(
       "Tags:",
-      "- 000000000..9e93d8631 added-tag (rejected due to filter)"
+      "- 000000000..9e93d8631 added-tag (rejected due to filter)",
+      "No changes; nothing to push."
     );
 
     try (Git updatedMirror = Git.open(clone)) {
@@ -446,7 +451,8 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     assertThat(result.getResult()).isEqualTo(REJECTED_UPDATES);
     assertThat(result.getLog()).containsExactly(
       "Tags:",
-      "- 86a6645ec..9e93d8631 test-tag (rejected due to filter)"
+      "- 86a6645ec..9e93d8631 test-tag (rejected due to filter)",
+      "No changes; nothing to push."
     );
 
     try (Git updatedMirror = Git.open(clone)) {
@@ -468,7 +474,8 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     assertThat(result.getResult()).isEqualTo(REJECTED_UPDATES);
     assertThat(result.getLog()).containsExactly(
       "Tags:",
-      "- 86a6645ec..000000000 test-tag (rejected due to filter)"
+      "- 86a6645ec..000000000 test-tag (rejected due to filter)",
+      "No changes; nothing to push."
     );
 
     try (Git updatedMirror = Git.open(clone)) {
@@ -490,7 +497,8 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     assertThat(result.getResult()).isEqualTo(REJECTED_UPDATES);
     assertThat(result.getLog()).containsExactly(
       "Tags:",
-      "- 86a6645ec..000000000 test-tag (thou shalt not pass)"
+      "- 86a6645ec..000000000 test-tag (thou shalt not pass)",
+      "No changes; nothing to push."
     );
   }
 
@@ -508,7 +516,8 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     assertThat(result.getLog()).containsExactly(
       "! got error checking filter for update: this tag creates an exception",
       "Tags:",
-      "- 86a6645ec..000000000 test-tag (exception in filter)"
+      "- 86a6645ec..000000000 test-tag (exception in filter)",
+      "No changes; nothing to push."
     );
   }
 
@@ -777,10 +786,10 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
       GitMirrorCommand.DefaultBranchSelector selector =
         new GitMirrorCommand.DefaultBranchSelector("master", emptyList());
 
-      selector.accepted("master");
-      selector.accepted("something");
+      selector.accepted(BRANCH, "master");
+      selector.accepted(BRANCH, "something");
 
-      assertThat(selector.newDefault()).isEmpty();
+      assertThat(selector.newDefaultBranch()).isEmpty();
     }
 
     @Test
@@ -788,10 +797,10 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
       GitMirrorCommand.DefaultBranchSelector selector =
         new GitMirrorCommand.DefaultBranchSelector("master", BRANCHES);
 
-      selector.accepted("new");
-      selector.deleted("two");
+      selector.accepted(BRANCH, "new");
+      selector.deleted(BRANCH, "two");
 
-      assertThat(selector.newDefault()).isEmpty();
+      assertThat(selector.newDefaultBranch()).isEmpty();
     }
 
     @Test
@@ -799,9 +808,9 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
       GitMirrorCommand.DefaultBranchSelector selector =
         new GitMirrorCommand.DefaultBranchSelector("master", BRANCHES);
 
-      selector.deleted("master");
+      selector.deleted(BRANCH, "master");
 
-      assertThat(selector.newDefault()).get().isIn("one", "two", "three");
+      assertThat(selector.newDefaultBranch()).get().isIn("one", "two", "three");
     }
 
     @Test
@@ -809,11 +818,11 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
       GitMirrorCommand.DefaultBranchSelector selector =
         new GitMirrorCommand.DefaultBranchSelector("master", BRANCHES);
 
-      selector.deleted("master");
-      selector.deleted("one");
-      selector.deleted("three");
+      selector.deleted(BRANCH, "master");
+      selector.deleted(BRANCH, "one");
+      selector.deleted(BRANCH, "three");
 
-      assertThat(selector.newDefault()).get().isEqualTo("two");
+      assertThat(selector.newDefaultBranch()).get().isEqualTo("two");
     }
 
     @Test
@@ -821,11 +830,11 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
       GitMirrorCommand.DefaultBranchSelector selector =
         new GitMirrorCommand.DefaultBranchSelector("master", BRANCHES);
 
-      selector.deleted("master");
-      selector.deleted("one");
-      selector.deleted("three");
+      selector.deleted(BRANCH, "master");
+      selector.deleted(BRANCH, "one");
+      selector.deleted(BRANCH, "three");
 
-      assertThat(selector.newDefault()).get().isEqualTo("two");
+      assertThat(selector.newDefaultBranch()).get().isEqualTo("two");
     }
 
     @Test
@@ -833,13 +842,13 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
       GitMirrorCommand.DefaultBranchSelector selector =
         new GitMirrorCommand.DefaultBranchSelector("master", BRANCHES);
 
-      selector.deleted("master");
-      selector.deleted("one");
-      selector.deleted("two");
-      selector.accepted("new");
-      selector.deleted("three");
+      selector.deleted(BRANCH, "master");
+      selector.deleted(BRANCH, "one");
+      selector.deleted(BRANCH, "two");
+      selector.accepted(BRANCH, "new");
+      selector.deleted(BRANCH, "three");
 
-      assertThrows(IllegalStateException.class, selector::newDefault);
+      assertThrows(IllegalStateException.class, selector::newDefaultBranch);
     }
 
     @Test
@@ -847,10 +856,10 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
       GitMirrorCommand.DefaultBranchSelector selector =
         new GitMirrorCommand.DefaultBranchSelector("master", emptyList());
 
-      selector.accepted("main");
-      selector.deleted("master");
+      selector.accepted(BRANCH, "main");
+      selector.deleted(BRANCH, "master");
 
-      assertThat(selector.newDefault()).get().isEqualTo("main");
+      assertThat(selector.newDefaultBranch()).get().isEqualTo("main");
     }
 
     @Test
@@ -858,9 +867,9 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
       GitMirrorCommand.DefaultBranchSelector selector =
         new GitMirrorCommand.DefaultBranchSelector("master", emptyList());
 
-      selector.accepted("main");
+      selector.accepted(BRANCH, "main");
 
-      assertThat(selector.newDefault()).get().isEqualTo("main");
+      assertThat(selector.newDefaultBranch()).get().isEqualTo("main");
     }
   }
 
