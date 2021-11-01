@@ -22,31 +22,20 @@
  * SOFTWARE.
  */
 
-import { HalRepresentation, HalRepresentationWithEmbedded } from "./hal";
+package sonia.scm.web;
 
-export type SubRepository = {
-  repositoryUrl: string;
-  browserUrl: string;
-  revision: string;
-};
+import sonia.scm.plugin.Extension;
 
-export type File = HalRepresentationWithEmbedded<{
-  children?: File[];
-}> & {
-  name: string;
-  path: string;
-  directory: boolean;
-  description?: string;
-  revision: string;
-  length?: number;
-  commitDate?: string;
-  subRepository?: SubRepository;
-  partialResult?: boolean;
-  computationAborted?: boolean;
-  truncated?: boolean;
-};
+import javax.servlet.http.HttpServletRequest;
 
-export type Paths = HalRepresentation & {
-  revision: string;
-  paths: string[];
-};
+@Extension
+public class GitLfsLockApiDetector implements ScmClientDetector {
+
+  public static final String LOCK_APPLICATION_TYPE = "application/vnd.git-lfs+json";
+
+  @Override
+  public boolean isScmClient(HttpServletRequest request, UserAgent userAgent) {
+    return LOCK_APPLICATION_TYPE.equals(request.getHeader("Content-Type"))
+      || LOCK_APPLICATION_TYPE.equals(request.getHeader("Accept"));
+  }
+}

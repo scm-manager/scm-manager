@@ -22,31 +22,23 @@
  * SOFTWARE.
  */
 
-import { HalRepresentation, HalRepresentationWithEmbedded } from "./hal";
+package sonia.scm.repository.api;
 
-export type SubRepository = {
-  repositoryUrl: string;
-  browserUrl: string;
-  revision: string;
-};
+import lombok.AllArgsConstructor;
 
-export type File = HalRepresentationWithEmbedded<{
-  children?: File[];
-}> & {
-  name: string;
-  path: string;
-  directory: boolean;
-  description?: string;
-  revision: string;
-  length?: number;
-  commitDate?: string;
-  subRepository?: SubRepository;
-  partialResult?: boolean;
-  computationAborted?: boolean;
-  truncated?: boolean;
-};
+/**
+ * Result of a lock command.
+ *
+ * @since 2.26.0
+ */
+@AllArgsConstructor
+public class LockCommandResult {
+  private final boolean successful;
 
-export type Paths = HalRepresentation & {
-  revision: string;
-  paths: string[];
-};
+  /**
+   * If <code>true</code>, the lock has been set successfully.
+   */
+  public boolean isSuccessful() {
+    return successful;
+  }
+}

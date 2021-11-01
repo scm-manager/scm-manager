@@ -24,6 +24,7 @@
 
 package sonia.scm.web.lfs.servlet;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
 import org.eclipse.jgit.lfs.server.LargeFileRepository;
 import org.eclipse.jgit.lfs.server.LfsProtocolServlet;
@@ -31,8 +32,11 @@ import org.eclipse.jgit.lfs.server.fs.FileLfsServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.spi.GitFileLockStoreFactory;
 import sonia.scm.store.BlobStore;
+import sonia.scm.user.UserDisplayManager;
 import sonia.scm.util.HttpUtil;
+import sonia.scm.web.LfsLockingProtocolServlet;
 import sonia.scm.web.lfs.LfsAccessTokenFactory;
 import sonia.scm.web.lfs.LfsBlobStoreFactory;
 import sonia.scm.web.lfs.ScmBlobLfsRepository;
@@ -56,11 +60,17 @@ public class LfsServletFactory {
 
   private final LfsBlobStoreFactory lfsBlobStoreFactory;
   private final LfsAccessTokenFactory tokenFactory;
+  private final GitFileLockStoreFactory lockStoreFactory;
+  private final UserDisplayManager userDisplayManager;
+  private final ObjectMapper objectMapper;
 
   @Inject
-  public LfsServletFactory(LfsBlobStoreFactory lfsBlobStoreFactory, LfsAccessTokenFactory tokenFactory) {
+  public LfsServletFactory(LfsBlobStoreFactory lfsBlobStoreFactory, LfsAccessTokenFactory tokenFactory, GitFileLockStoreFactory lockStoreFactory, UserDisplayManager userDisplayManager, ObjectMapper objectMapper) {
     this.lfsBlobStoreFactory = lfsBlobStoreFactory;
     this.tokenFactory = tokenFactory;
+    this.lockStoreFactory = lockStoreFactory;
+    this.userDisplayManager = userDisplayManager;
+    this.objectMapper = objectMapper;
   }
 
   /**
@@ -89,6 +99,11 @@ public class LfsServletFactory {
   public HttpServlet createFileLfsServletFor(Repository repository, HttpServletRequest request) {
     LOG.trace("create lfs file servlet for repository {}", repository);
     return new ScmFileTransferServlet(lfsBlobStoreFactory.getLfsBlobStore(repository));
+  }
+
+  public LfsLockingProtocolServlet createLockServletFor(Repository repository) {
+    LOG.trace("create lfs lock servlet for repository {}", repository);
+    return new LfsLockingProtocolServlet(repository, lockStoreFactory.create(repository), userDisplayManager, objectMapper);
   }
 
   /**
