@@ -62,6 +62,10 @@
     "groups": "Groups",
     "admin": "Administration"
   },
+  "secondaryNavigation": {
+    "showContent": "Enlarge navigation",
+    "hideContent": "Reduce navigation"
+  },
   "filterEntries": "filter entries",
   "autocomplete": {
     "group": "Group",
@@ -142,6 +146,10 @@
     "dismiss": "Dismiss",
     "dismissAll": "Dismiss all"
   },
+  "cardColumnGroup": {
+    "showContent": "Show content",
+    "hideContent": "Hide content"
+  },
   "duration": {
     "ms": "{{count}} millisecond",
     "ms_plural": "{{count}} milliseconds",
@@ -183,6 +191,10 @@
         "type": "Type",
         "exampleValue": "Example Value",
         "hints": "Hints"
+      },
+      "expandable": {
+        "showMore": "Show more information",
+        "hideMore": "Hide more information"
       },
       "exampleQueries": {
         "title": "Example Queries",

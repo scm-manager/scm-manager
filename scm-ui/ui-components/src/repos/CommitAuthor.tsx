@@ -40,9 +40,9 @@ const CommitAuthor: FC = () => {
   return (
     <>
       {!me.mail && <Notification type="warning">{t("commit.commitAuthor.noMail")}</Notification>}
-      <span className="mb-2">
+      <div className="mb-2">
         <strong>{t("commit.commitAuthor.author")}</strong> {`${me.displayName} <${mail}>`}
-      </span>
+      </div>
     </>
   );
 };

@@ -230,6 +230,7 @@ const ChangesetDetails: FC<Props> = ({ changeset, repository, fileControlFactory
               color="default"
               icon={collapsed ? "eye" : "eye-slash"}
               label={t("changesets.collapseDiffs")}
+              title={t("changesets.collapseDiffs")}
               reducedMobile={true}
             />
           }

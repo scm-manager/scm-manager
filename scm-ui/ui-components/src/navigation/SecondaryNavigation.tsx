@@ -26,6 +26,7 @@ import React, { FC } from "react";
 import styled from "styled-components";
 import useMenuContext from "./MenuContext";
 import classNames from "classnames";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   label: string;
@@ -61,6 +62,7 @@ const MenuLabel = styled.p<CollapsedProps>`
 `;
 
 const SecondaryNavigation: FC<Props> = ({ label, children, collapsible = true }) => {
+  const [t] = useTranslation("commons");
   const menuContext = useMenuContext();
   const isCollapsed = collapsible && menuContext.isCollapsed();
 
@@ -77,6 +79,7 @@ const SecondaryNavigation: FC<Props> = ({ label, children, collapsible = true })
   };
 
   const arrowIcon = isCollapsed ? <i className="fas fa-caret-down" /> : <i className="fas fa-caret-right" />;
+  const menuAriaLabel = isCollapsed ? t("secondaryNavigation.showContent") : t("secondaryNavigation.hideContent");
 
   return (
     <SectionContainer className="menu">
@@ -85,6 +88,7 @@ const SecondaryNavigation: FC<Props> = ({ label, children, collapsible = true })
           className={classNames("menu-label", { "is-clickable": collapsible })}
           collapsed={isCollapsed}
           onClick={toggleCollapseState}
+          aria-label={menuAriaLabel}
         >
           {collapsible ? (
             <Icon color="info" className="is-medium" collapsed={isCollapsed}>

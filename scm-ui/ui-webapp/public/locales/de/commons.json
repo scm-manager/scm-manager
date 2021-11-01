@@ -61,6 +61,10 @@
     "groups": "Gruppen",
     "admin": "Administration"
   },
+  "secondaryNavigation": {
+    "showContent": "Navigation vergrößern",
+    "hideContent": "Navigation verkleinern"
+  },
   "filterEntries": "Einträge filtern",
   "autocomplete": {
     "group": "Gruppe",
@@ -141,6 +145,10 @@
     "dismiss": "Löschen",
     "dismissAll": "Alle löschen"
   },
+  "cardColumnGroup": {
+    "showContent": "Inhalt einblenden",
+    "hideContent": "Inhalt ausblenden"
+  },
   "duration": {
     "ms": "{{count}} Millisekunde",
     "ms_plural": "{{count}} Millisekunden",
@@ -182,6 +190,10 @@
         "type": "Typ",
         "exampleValue": "Beispielwert",
         "hints": "Hinweise"
+      },
+      "expandable": {
+        "showMore": "Mehr Informationen einblenden",
+        "hideMore": "Mehr Informationen ausblenden"
       },
       "exampleQueries": {
         "title": "Beispielabfragen",
