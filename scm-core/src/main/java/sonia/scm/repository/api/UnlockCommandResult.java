@@ -25,7 +25,6 @@
 package sonia.scm.repository.api;
 
 import lombok.AllArgsConstructor;
-import lombok.Value;
 
 /**
  * Result of a unlock command.

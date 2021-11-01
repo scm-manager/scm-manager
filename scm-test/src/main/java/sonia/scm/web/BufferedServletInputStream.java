@@ -24,18 +24,17 @@
 
 package sonia.scm.web;
 
-import com.google.common.base.Charsets;
-
 import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
 import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
 
 public class BufferedServletInputStream extends ServletInputStream {
 
   private ByteArrayInputStream input;
 
   BufferedServletInputStream(String content) {
-    this.input = new ByteArrayInputStream(content.getBytes(Charsets.US_ASCII));
+    this.input = new ByteArrayInputStream(content.getBytes(StandardCharsets.US_ASCII));
   }
 
   @Override
@@ -55,5 +54,6 @@ public class BufferedServletInputStream extends ServletInputStream {
 
   @Override
   public void setReadListener(ReadListener readListener) {
+    // not necessary for tests
   }
 }
