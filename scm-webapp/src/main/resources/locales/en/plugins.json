@@ -1,6 +1,7 @@
 {
   "error": {
-    "subtitle": "Error"
+    "subtitle": "Error",
+    "link": "Link for more information"
   },
   "changeset": {
     "contributor": {

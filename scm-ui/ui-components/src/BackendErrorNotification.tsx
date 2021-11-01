@@ -132,7 +132,7 @@ const BackendErrorNotification: FC<Props> = ({ error }) => {
       return (
         <p>
           {t("errors.moreInfo")}{" "}
-          <a href={error.url} target="_blank" rel="noreferrer" aria-hidden={true}>
+          <a href={error.url} target="_blank" rel="noreferrer" aria-label={t("error.link")}>
             {error.errorCode}
           </a>
         </p>
