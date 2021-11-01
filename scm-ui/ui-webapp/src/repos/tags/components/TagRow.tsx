@@ -41,7 +41,7 @@ const TagRow: FC<Props> = ({ tag, baseUrl, onDelete }) => {
   let deleteButton;
   if ((tag?._links?.delete as Link)?.href) {
     deleteButton = (
-      <span className="icon is-small level-item" onClick={() => onDelete(tag)}>
+      <span className="icon is-small" onClick={() => onDelete(tag)}>
         <Icon name="trash" className="fas" title={t("tag.delete.button")} />
       </span>
     );
@@ -58,7 +58,7 @@ const TagRow: FC<Props> = ({ tag, baseUrl, onDelete }) => {
           </span>
         </RouterLink>
       </td>
-      <td className="is-darker">{deleteButton}</td>
+      <td className="is-darker has-text-centered">{deleteButton}</td>
     </tr>
   );
 };
