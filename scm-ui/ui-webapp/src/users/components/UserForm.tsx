@@ -23,7 +23,7 @@
  */
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
-import { Link, User } from "@scm-manager/ui-types";
+import { User } from "@scm-manager/ui-types";
 import {
   Checkbox,
   ErrorNotification,
