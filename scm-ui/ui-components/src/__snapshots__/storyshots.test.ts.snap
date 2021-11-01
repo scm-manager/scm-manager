@@ -72709,7 +72709,6 @@ exports[`Storyshots Notification Danger 1`] = `
   <div
     className="notification is-danger"
   >
-    
     Cleverness nuclear genuine static irresponsibility invited President Zaphod
 Beeblebrox hyperspace ship. Another custard through computer-generated universe
 shapes field strong disaster parties Russell’s ancestors infinite colour
@@ -72725,7 +72724,6 @@ exports[`Storyshots Notification Info 1`] = `
   <div
     className="notification is-info"
   >
-    
     Cleverness nuclear genuine static irresponsibility invited President Zaphod
 Beeblebrox hyperspace ship. Another custard through computer-generated universe
 shapes field strong disaster parties Russell’s ancestors infinite colour
@@ -72741,7 +72739,6 @@ exports[`Storyshots Notification Primary 1`] = `
   <div
     className="notification is-primary"
   >
-    
     Cleverness nuclear genuine static irresponsibility invited President Zaphod
 Beeblebrox hyperspace ship. Another custard through computer-generated universe
 shapes field strong disaster parties Russell’s ancestors infinite colour
@@ -72757,7 +72754,6 @@ exports[`Storyshots Notification Success 1`] = `
   <div
     className="notification is-success"
   >
-    
     Cleverness nuclear genuine static irresponsibility invited President Zaphod
 Beeblebrox hyperspace ship. Another custard through computer-generated universe
 shapes field strong disaster parties Russell’s ancestors infinite colour
@@ -72773,7 +72769,6 @@ exports[`Storyshots Notification Warning 1`] = `
   <div
     className="notification is-warning"
   >
-    
     Cleverness nuclear genuine static irresponsibility invited President Zaphod
 Beeblebrox hyperspace ship. Another custard through computer-generated universe
 shapes field strong disaster parties Russell’s ancestors infinite colour
@@ -88073,7 +88068,6 @@ exports[`Storyshots Table|Table Empty 1`] = `
 <div
   className="notification is-info"
 >
-  
   No data found.
 </div>
 `;
