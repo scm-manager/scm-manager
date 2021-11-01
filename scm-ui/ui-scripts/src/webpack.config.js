@@ -25,7 +25,6 @@ const path = require("path");
 const fs = require("fs");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
-const WorkerPlugin = require("worker-plugin");
 
 const createIndexMiddleware = require("./middleware/IndexMiddleware");
 const createContextPathMiddleware = require("./middleware/ContextPathMiddleware");
@@ -34,7 +33,7 @@ const isDevelopment = process.env.NODE_ENV === "development";
 const root = path.resolve(process.cwd(), "scm-ui");
 
 const babelPlugins = [];
-const webpackPlugins = [new WorkerPlugin()];
+const webpackPlugins = [];
 
 let mode = "production";
 
@@ -56,29 +55,33 @@ const themes = fs
 
 console.log(`build ${mode} bundles`);
 
+const base = {
+  mode,
+  // stats: "minimal",
+  context: root,
+  target: "web",
+  resolveLoader: {
+    modules: [path.join(__dirname, "..", "node_modules"), "node_modules"],
+    extensions: [".js", ".json"],
+    mainFields: ["loader", "main"]
+  }
+};
+
 module.exports = [
   {
-    mode,
-    stats: "minimal",
-    context: root,
+    ...base,
     entry: {
       webapp: [path.resolve(__dirname, "webpack-public-path.js"), "./ui-webapp/src/index.tsx"]
     },
-    devtool: "cheap-module-eval-source-map",
-    target: "web",
-    node: {
-      fs: "empty",
-      net: "empty",
-      tls: "empty"
-    },
+    devtool: "eval-cheap-module-source-map",
     module: {
       rules: [
-        {
+        /*{
           parser: {
             system: false,
             systemjs: false
           }
-        },
+        },*/
         {
           test: /\.(js|ts|jsx|tsx)$/i,
           exclude: /node_modules/,
@@ -119,7 +122,12 @@ module.exports = [
       ]
     },
     resolve: {
-      extensions: [".ts", ".tsx", ".js", ".jsx", ".css", ".scss", ".json"]
+      extensions: [".ts", ".tsx", ".js", ".jsx", ".css", ".scss", ".json"],
+      fallback: {
+        fs: false,
+        net: false,
+        tls: false
+      }
     },
     output: {
       path: path.join(root, "build", "webapp", "assets"),
@@ -127,16 +135,25 @@ module.exports = [
       chunkFilename: "[name].bundle.js"
     },
     devServer: {
-      contentBase: path.join(root, "ui-webapp", "public"),
-      compress: false,
+      static: [
+        {
+          directory: path.join(root, "ui-webapp", "public")
+        }
+      ],
+      client: {
+        overlay: true
+      },
       historyApiFallback: true,
-      overlay: true,
       port: 3000,
       hot: true,
-      before: app => {
+      devMiddleware: {
+        index: false,
+        publicPath: "/assets/"
+      },
+      onBeforeSetupMiddleware: ({ app }) => {
         app.use(createContextPathMiddleware("/scm"));
       },
-      after: app => {
+      onAfterSetupMiddleware: ({ app }) => {
         const templatePath = path.join(root, "ui-webapp", "public", "index.mustache");
         const stage = process.env.NODE_ENV || "DEVELOPMENT";
         const renderParams = {
@@ -144,18 +161,18 @@ module.exports = [
           scmStage: stage.toUpperCase()
         };
         app.use(createIndexMiddleware(templatePath, renderParams));
-      },
-      publicPath: "/assets/"
+      }
     },
     optimization: {
       runtimeChunk: "single",
-      namedChunks: true,
+      moduleIds: "named",
       splitChunks: {
         chunks: "all",
         cacheGroups: {
-          vendors: {
+          defaultVendors: {
             test: /[\\/]node_modules[\\/]/,
-            priority: -10
+            priority: -10,
+            // TODO filename are going wild
             // chunks: chunk => chunk.name !== "polyfill"
           },
           default: {
@@ -169,8 +186,7 @@ module.exports = [
     plugins: webpackPlugins
   },
   {
-    mode,
-    context: root,
+    ...base,
     entry: themes,
     module: {
       rules: [
@@ -197,16 +213,17 @@ module.exports = [
       })
     ],
     optimization: {
+      // TODO only on production?
       minimizer: [new OptimizeCSSAssetsPlugin({})]
     },
+    // TODO resolveLoader ?
     output: {
       path: path.join(root, "build", "webapp", "assets"),
       filename: "ui-theme-[name].bundle.js"
     }
   },
   {
-    mode,
-    context: path.resolve(root),
+    ...base,
     entry: {
       polyfills: "./ui-polyfill/src/index.js"
     },
