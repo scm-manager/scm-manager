@@ -100,7 +100,7 @@ public final class FileLockCommandBuilder {
      * @param file The file to lock.
      * @return This builder instance.
      */
-    public InnerLockCommandBuilder setFile(String file) {
+    public InnerLockCommandBuilder file(String file) {
       this.file = file;
       return this;
     }
@@ -128,7 +128,7 @@ public final class FileLockCommandBuilder {
      * @param file The file to unlock.
      * @return This builder instance.
      */
-    public InnerUnlockCommandBuilder setFile(String file) {
+    public InnerUnlockCommandBuilder file(String file) {
       this.file = file;
       return this;
     }
