@@ -64,15 +64,7 @@ const Button: FC<Props> = ({
   color = "default",
 }) => {
   const renderIcon = () => {
-    return (
-      <>
-        {icon ? (
-          <span className="icon is-medium">
-            <Icon name={icon} color="inherit" />
-          </span>
-        ) : null}
-      </>
-    );
+    return <>{icon ? <Icon name={icon} color="inherit" className="is-medium pr-1" /> : null}</>;
   };
 
   if (link) {
@@ -89,7 +81,7 @@ const Button: FC<Props> = ({
         to={link}
         aria-label={label}
       >
-        {renderIcon()}
+        {renderIcon()}{" "}
         {(label || children) && (
           <>
             {label} {children}
@@ -115,7 +107,7 @@ const Button: FC<Props> = ({
       )}
       {...createAttributesForTesting(testId)}
     >
-      {renderIcon()}
+      {renderIcon()}{" "}
       {(label || children) && (
         <>
           {label} {children}
