@@ -56,12 +56,20 @@ $modal-card-body-background-color: $scheme-main;
 
 $input-placeholder-color: $white;
 
+$popover-background-color: $grey-dark;
+
+$table-row-hover-background-color: $grey-darker;
+
+$tooltip-background-color: $white-bis;
+$tooltip-background-opacity: 0.9 !default;
+$tooltip-color: $scheme-main;
 
 // WTF
 $high-contrast-background-color: #050514;
 $high-contrast-light-gray: #f2f2f2;
 
 @import "utils/_post.scss";
+
 
 :root {
   --sh-base-color: #fff;
@@ -70,27 +78,27 @@ $high-contrast-light-gray: #f2f2f2;
   --sh-inline-code-color: #ff3860;
   --sh-inline-code-background: #fbe7eb;
   --sh-comment-color: #9a9a9a;
-  --sh-punctuation-color: #9a9a9a;
+  --sh-punctuation-color: #999999;
   --sh-property-color: #2c99c7;
-  --sh-selector-color: #005f9a;
-  --sh-operator-color: #686868;
+  --sh-selector-color: #009dff;
+  --sh-operator-color: #999999;
   --sh-operator-bg: inherit;
-  --sh-variable-color: #a74eb2;
-  --sh-function-color: #ff3860;
+  --sh-variable-color: #C386CA;
+  --sh-function-color: #FF6181;
   --sh-keyword-color: #00a984;
   --sh-selected-color: #7fe3cd;
   --sh-highlight-background: #f5f5f5;
   --sh-highlight-accent: #99d8f3;
 
-  --diff-background-color: #fff;
-  --diff-text-color: #000;
+  --diff-background-color: $scheme-main;
+  --diff-text-color: $white-bis;
   --diff-font-family: Consolas, Courier, monospace;
   --diff-selection-background-color: #b3d7ff;
-  --diff-gutter-insert-background-color: #d6fedb;
-  --diff-gutter-delete-background-color: #fadde0;
+  --diff-gutter-insert-background-color: #05C71D;
+  --diff-gutter-delete-background-color: #EB7A85;
   --diff-gutter-selected-background-color: #fffce0;
-  --diff-code-insert-background-color: #eaffee;
-  --diff-code-delete-background-color: #fdeff0;
+  --diff-code-insert-background-color: #05240B;
+  --diff-code-delete-background-color: #230608;
   --diff-code-insert-edit-background-color: #c0dc91;
   --diff-code-delete-edit-background-color: #000;
   --diff-code-selected-background-color: #fffce0;
@@ -142,6 +150,7 @@ footer.footer {
     color: scale-color($link, $lightness:25%);
   }
 }
+//card
 
 .modal-card {
   border: 1px solid $white-ter;
@@ -183,6 +192,73 @@ footer.footer {
   }
 }
 
+// panels
+.panel {
+  border: 1px solid $white-bis;
+  border-radius: 0.25rem;
+
+  .panel-heading {
+    border: none;
+    border-bottom: 1px solid $border;
+    border-radius: 0.25rem 0.25rem 0 0;
+    background-color: $grey-darker;
+  }
+
+  .panel-footer {
+    background-color: $grey-darker;
+    color: $white-bis;
+    font-size: 1.25em;
+    font-weight: 300;
+    line-height: 1.25;
+    padding: 0.5em 0.75em;
+    border: none;
+    border-top: 1px solid $border;
+    border-radius: 0 0 0.25rem 0.25rem;
+  }
+}
+
+//diffs
+.diff-code-conflict {
+  background-color: #332900;
+}
+
+.diff-gutter-conflict {
+  background-color: #FFD11A;
+}
+
+.diff-gutter-delete,.diff-gutter-insert, .diff-gutter-conflict {
+  color: $scheme-main;
+}
+
+/* transport meaning with more than color */
+td:nth-child(2).diff-gutter-delete:before {
+  content: "-";
+}
+
+td:first-child.diff-gutter-insert:before {
+  content: "+";
+}
+
+td:first-child.diff-gutter-conflict:before {
+  content: "!";
+}
+
+.diff-split td:nth-child(3).diff-gutter-insert:before {
+  content: "+";
+}
+
+.diff-split td:first-child.diff-gutter-delete:before {
+  content: "-";
+}
+
+.diff-split td:nth-child(3).diff-gutter-conflict:before {
+  content: "!";
+}
+
+.diff-decoration-content div {
+  color: $scheme-main;
+}
+
 //inline member tags
 .tag:not(body) {
   border: 1px solid transparent;
@@ -191,9 +267,55 @@ footer.footer {
     background-color: $scheme-main;
   }
 }
+
+.tag:not(body).is-delete::before, .tag:not(body).is-delete::after {
+  background-color: $scheme-main;
+}
+.tag:not(body).is-delete:hover::before, .tag:not(body).is-delete:hover::after {
+  background-color: $white-bis;
+}
+
+//dark tags have light borders to separate from background
+.tag:not(body).is-dark, .tag:not(body).is-black {
+  border: 1px solid $white-bis;
+}
+
 //blue text in light tags
 .tag.is-light .has-text-link {
   color: scale-color($link, $lightness: -50%) !important;
 }
+//outline-tags
+.tag:not(body).is-outlined {
+  background-color: $scheme-main;
+}
 
+//cards receive white border
+.box-link-shadow {
+  box-shadow: 0 0 0 1px $white-bis;
+}
+
+//some modals have lighter backgrounds in head
+.has-background-light {
+  background-color: $grey-dark !important;
+}
+
+//they also often have black text, this is a stop-gap
+.modal-card-title.has-text-black {
+  color: $white-bis !important;
+}
+
+//fix triangle for pop-overs
+.popover {
+  color: #00a984;
+}
+.popover .popover-content::before
+{
+  border-bottom-color: $grey-dark !important;
+  border-left-color: $grey-dark !important;
+}
+
+//make horizontal lines pop more
+hr {
+  background-color: $white-bis;
+}
 //TODO fix :focus :hover for buttons, closing addon for inline member field, meta-data for card-tables (branches), check head
