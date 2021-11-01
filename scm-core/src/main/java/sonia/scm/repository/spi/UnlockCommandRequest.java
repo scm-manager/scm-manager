@@ -26,6 +26,11 @@ package sonia.scm.repository.spi;
 
 import lombok.Data;
 
+/**
+ * Request to unlock a file.
+ *
+ * @since 2.26.0
+ */
 @Data
 public final class UnlockCommandRequest {
 

@@ -69,7 +69,7 @@ public final class GitFileLockStoreFactory {
     this(dataStoreFactory,
       keyGenerator,
       Clock.systemDefaultZone(),
-      () -> SecurityUtils.getSubject().getPrincipals().getPrimaryPrincipal().toString());
+      () -> SecurityUtils.getSubject().getPrincipal().toString());
   }
 
   GitFileLockStoreFactory(DataStoreFactory dataStoreFactory, KeyGenerator keyGenerator, Clock clock, Supplier<String> currentUser) {
