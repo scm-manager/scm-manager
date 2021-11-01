@@ -38,11 +38,9 @@ export const ApiKeyEntry: FC<Props> = ({ apiKey, onDelete }) => {
   let deleteButton;
   if (apiKey?._links?.delete) {
     deleteButton = (
-      <a className="level-item" onClick={() => onDelete(apiKey)}>
-        <span className="icon">
-          <Icon name="trash" title={t("apiKey.delete")} color="inherit" />
-        </span>
-      </a>
+      <span className="icon level-item" onClick={() => onDelete(apiKey)}>
+        <Icon name="trash" title={t("apiKey.delete")} color="inherit" />
+      </span>
     );
   }
 

@@ -24,7 +24,7 @@
 import { RepositoryRole } from "@scm-manager/ui-types";
 
 const findVerbsForRole = (availableRepositoryRoles: RepositoryRole[], roleName: string) => {
-  const matchingRole = availableRepositoryRoles.find(role => roleName === role.name);
+  const matchingRole = availableRepositoryRoles.find((role) => roleName === role.name);
   if (matchingRole) {
     return matchingRole.verbs;
   } else {

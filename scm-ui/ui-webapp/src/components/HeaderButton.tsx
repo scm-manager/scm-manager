@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-import React from "react";
 import styled from "styled-components";
 import { devices } from "@scm-manager/ui-components";
 

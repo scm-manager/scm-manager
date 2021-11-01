@@ -35,10 +35,10 @@ type Props = {
 };
 
 const createSelectOptions = (roles: string[]) => {
-  return roles.map(role => {
+  return roles.map((role) => {
     return {
       label: role,
-      value: role
+      value: role,
     };
   });
 };

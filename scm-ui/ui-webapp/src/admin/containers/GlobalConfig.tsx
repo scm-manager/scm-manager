@@ -34,7 +34,7 @@ const GlobalConfig: FC = () => {
   const {
     data: namespaceStrategies,
     error: namespaceStrategiesLoadingError,
-    isLoading: isLoadingNamespaceStrategies
+    isLoading: isLoadingNamespaceStrategies,
   } = useNamespaceStrategies();
   const [t] = useTranslation("config");
   const error = configLoadingError || namespaceStrategiesLoadingError || updateError || undefined;

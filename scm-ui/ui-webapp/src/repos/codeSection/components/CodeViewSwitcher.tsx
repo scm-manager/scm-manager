@@ -38,7 +38,7 @@ const ButtonAddonsMarginRight = styled(ButtonAddons)`
 
 type Type = "sources" | "changesets";
 
-export type SwitchViewLink = string | ((type: Type) => string)
+export type SwitchViewLink = string | ((type: Type) => string);
 
 type Props = {
   currentUrl: string;

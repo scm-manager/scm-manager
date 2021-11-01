@@ -35,7 +35,7 @@ const Logout: FC = ({}) => {
     if (logout) {
       logout();
     }
-  }, []);
+  }, [logout]);
 
   if (!logout) {
     return <Redirect to={"/login"} />;

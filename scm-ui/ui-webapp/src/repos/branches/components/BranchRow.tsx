@@ -42,11 +42,9 @@ const BranchRow: FC<Props> = ({ baseUrl, branch, onDelete }) => {
   let deleteButton;
   if ((branch?._links?.delete as Link)?.href) {
     deleteButton = (
-      <a className="level-item" onClick={() => onDelete(branch)}>
-        <span className="icon is-small">
-          <Icon name="trash" className="fas" title={t("branch.delete.button")} />
-        </span>
-      </a>
+      <span className="icon is-small level-item" onClick={() => onDelete(branch)}>
+        <Icon name="trash" className="fas" title={t("branch.delete.button")} />
+      </span>
     );
   }
 

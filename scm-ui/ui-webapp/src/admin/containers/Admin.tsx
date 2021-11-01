@@ -34,7 +34,7 @@ import {
   SecondaryNavigationColumn,
   StateMenuContextProvider,
   SubNavigation,
-  urls
+  urls,
 } from "@scm-manager/ui-components";
 import AdminDetails from "./AdminDetails";
 import PluginsOverview from "../plugins/containers/PluginsOverview";
@@ -60,7 +60,7 @@ const Admin: FC = () => {
   const url = urls.matchedUrlFromMatch(match);
   const extensionProps = {
     links,
-    url
+    url,
   };
 
   return (

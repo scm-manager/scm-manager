@@ -39,11 +39,9 @@ export const PublicKeyEntry: FC<Props> = ({ publicKey, onDelete }) => {
   let deleteButton;
   if (publicKey?._links?.delete) {
     deleteButton = (
-      <a className="level-item" onClick={() => onDelete(publicKey)}>
-        <span className="icon">
-          <Icon name="trash" title={t("publicKey.delete")} color="inherit" />
-        </span>
-      </a>
+      <span className="icon level-item" onClick={() => onDelete(publicKey)}>
+        <Icon name="trash" title={t("publicKey.delete")} color="inherit" />
+      </span>
     );
   }
 

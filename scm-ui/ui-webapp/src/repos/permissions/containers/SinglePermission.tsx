@@ -61,7 +61,7 @@ const SinglePermission: FC<Props> = ({
   namespaceOrRepository,
   availableRoles,
   availableVerbs,
-  permission: defaultPermission
+  permission: defaultPermission,
 }) => {
   const [permission, setPermission] = useState(defaultPermission);
   const [showAdvancedDialog, setShowAdvancedDialog] = useState(false);
@@ -71,7 +71,7 @@ const SinglePermission: FC<Props> = ({
     setPermission(defaultPermission);
   }, [defaultPermission]);
 
-  const availableRoleNames = !!availableRoles && availableRoles.map(r => r.name);
+  const availableRoleNames = !!availableRoles && availableRoles.map((r) => r.name);
   const readOnly = !permission._links.update;
   const selectedVerbs = permission.role ? findVerbsForRole(availableRoles, permission.role) : permission.verbs;
 
@@ -79,7 +79,7 @@ const SinglePermission: FC<Props> = ({
     const newPermission = {
       ...permission,
       verbs: [],
-      role
+      role,
     };
     setPermission(newPermission);
     update(newPermission);
@@ -89,7 +89,7 @@ const SinglePermission: FC<Props> = ({
     const newPermission = {
       ...permission,
       role: undefined,
-      verbs
+      verbs,
     };
     setPermission(newPermission);
     update(newPermission);
