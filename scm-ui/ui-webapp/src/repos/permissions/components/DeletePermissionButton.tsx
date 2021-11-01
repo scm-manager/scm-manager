@@ -24,7 +24,7 @@
 import React, { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Namespace, Permission, Repository } from "@scm-manager/ui-types";
-import { ConfirmAlert, ErrorNotification } from "@scm-manager/ui-components";
+import { ConfirmAlert, ErrorNotification, Icon } from "@scm-manager/ui-components";
 import { useDeletePermission } from "@scm-manager/ui-api";
 
 type Props = {
@@ -78,9 +78,7 @@ const DeletePermissionButton: FC<Props> = ({ namespaceOrRepository, permission, 
   return (
     <>
       <ErrorNotification error={error} />
-      <span className="icon is-small level-item" onClick={action}>
-        <i className="fas fa-trash" />
-      </span>
+      <Icon name="trash" onClick={action} />
     </>
   );
 };
