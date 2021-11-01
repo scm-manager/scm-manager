@@ -31,7 +31,7 @@ export type SubRepository = {
 };
 
 export type File = HalRepresentationWithEmbedded<{
-  children: File[];
+  children?: File[];
 }> & {
   name: string;
   path: string;
