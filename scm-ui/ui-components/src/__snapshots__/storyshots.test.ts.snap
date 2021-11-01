@@ -1679,6 +1679,7 @@ exports[`Storyshots BreadCrumb Default 1`] = `
           >
             <i
               className="fas fa-fw fa-home has-text-inherit Breadcrumb__HomeIcon-zvtb4t-2 inWuJD"
+              onKeyPress={[Function]}
               tabIndex={-1}
               title="breadcrumb.home"
             />
@@ -1747,6 +1748,7 @@ exports[`Storyshots BreadCrumb Default 1`] = `
           <i
             className="fas fa-fw fa-link has-text-inherit"
             onClick={[Function]}
+            onKeyPress={[Function]}
             tabIndex={-1}
           />
         </span>
@@ -1781,6 +1783,7 @@ exports[`Storyshots BreadCrumb Long path 1`] = `
           >
             <i
               className="fas fa-fw fa-home has-text-inherit Breadcrumb__HomeIcon-zvtb4t-2 inWuJD"
+              onKeyPress={[Function]}
               tabIndex={-1}
               title="breadcrumb.home"
             />
@@ -1899,6 +1902,7 @@ exports[`Storyshots BreadCrumb Long path 1`] = `
           <i
             className="fas fa-fw fa-link has-text-inherit"
             onClick={[Function]}
+            onKeyPress={[Function]}
             tabIndex={-1}
           />
         </span>
@@ -1933,6 +1937,7 @@ exports[`Storyshots BreadCrumb With prefix button 1`] = `
         >
           <i
             className="fas fa-fw fa-heart has-text-danger"
+            onKeyPress={[Function]}
             tabIndex={-1}
           />
         </a>
@@ -1945,6 +1950,7 @@ exports[`Storyshots BreadCrumb With prefix button 1`] = `
           >
             <i
               className="fas fa-fw fa-home has-text-inherit Breadcrumb__HomeIcon-zvtb4t-2 inWuJD"
+              onKeyPress={[Function]}
               tabIndex={-1}
               title="breadcrumb.home"
             />
@@ -2013,6 +2019,7 @@ exports[`Storyshots BreadCrumb With prefix button 1`] = `
           <i
             className="fas fa-fw fa-link has-text-inherit"
             onClick={[Function]}
+            onKeyPress={[Function]}
             tabIndex={-1}
           />
         </span>
@@ -2042,6 +2049,7 @@ exports[`Storyshots Buttons|AddButton Default 1`] = `
     >
       <i
         className="fas fa-fw fa-plus has-text-inherit"
+        onKeyPress={[Function]}
         tabIndex={-1}
       />
     </span>
@@ -2386,6 +2394,7 @@ exports[`Storyshots Buttons|DeleteButton Default 1`] = `
     >
       <i
         className="fas fa-fw fa-times has-text-inherit"
+        onKeyPress={[Function]}
         tabIndex={-1}
       />
     </span>
@@ -2493,6 +2502,7 @@ exports[`Storyshots CardColumn Default 1`] = `
     >
       <i
         className="fas fa-fw fa-icons fa-2x fa-fw has-text-grey-light"
+        onKeyPress={[Function]}
         tabIndex={-1}
       />
     </figure>
@@ -2662,6 +2672,7 @@ exports[`Storyshots CardColumnSmall Default 1`] = `
       >
         <i
           className="fas fa-fw fa-icons fa-2x fa-fw has-text-grey-light"
+          onKeyPress={[Function]}
           tabIndex={-1}
         />
       </figure>
@@ -2748,6 +2759,7 @@ exports[`Storyshots CardColumnSmall Task 1`] = `
       >
         <i
           className="fas fa-fw fa-exchange-alt has-text-inherit fa-fw fa-lg"
+          onKeyPress={[Function]}
           tabIndex={-1}
         />
       </figure>
@@ -2913,6 +2925,7 @@ exports[`Storyshots Changesets Co-Authors with avatar 1`] = `
               >
                 <i
                   className="fas fa-fw fa-exchange-alt has-text-inherit"
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -2935,6 +2948,7 @@ exports[`Storyshots Changesets Co-Authors with avatar 1`] = `
               >
                 <i
                   className="fas fa-fw fa-code has-text-inherit"
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -3074,6 +3088,7 @@ exports[`Storyshots Changesets Commiter and Co-Authors with avatar 1`] = `
               >
                 <i
                   className="fas fa-fw fa-exchange-alt has-text-inherit"
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -3096,6 +3111,7 @@ exports[`Storyshots Changesets Commiter and Co-Authors with avatar 1`] = `
               >
                 <i
                   className="fas fa-fw fa-code has-text-inherit"
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -3193,6 +3209,7 @@ exports[`Storyshots Changesets Default 1`] = `
               >
                 <i
                   className="fas fa-fw fa-exchange-alt has-text-inherit"
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -3215,6 +3232,7 @@ exports[`Storyshots Changesets Default 1`] = `
               >
                 <i
                   className="fas fa-fw fa-code has-text-inherit"
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -3322,6 +3340,7 @@ exports[`Storyshots Changesets Replacements 1`] = `
               >
                 <i
                   className="fas fa-fw fa-exchange-alt has-text-inherit"
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -3344,6 +3363,7 @@ exports[`Storyshots Changesets Replacements 1`] = `
               >
                 <i
                   className="fas fa-fw fa-code has-text-inherit"
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -3453,6 +3473,7 @@ exports[`Storyshots Changesets With Committer 1`] = `
               >
                 <i
                   className="fas fa-fw fa-exchange-alt has-text-inherit"
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -3475,6 +3496,7 @@ exports[`Storyshots Changesets With Committer 1`] = `
               >
                 <i
                   className="fas fa-fw fa-code has-text-inherit"
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -3593,6 +3615,7 @@ exports[`Storyshots Changesets With Committer and Co-Author 1`] = `
               >
                 <i
                   className="fas fa-fw fa-exchange-alt has-text-inherit"
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -3615,6 +3638,7 @@ exports[`Storyshots Changesets With Committer and Co-Author 1`] = `
               >
                 <i
                   className="fas fa-fw fa-code has-text-inherit"
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -3725,6 +3749,7 @@ exports[`Storyshots Changesets With avatar 1`] = `
               >
                 <i
                   className="fas fa-fw fa-exchange-alt has-text-inherit"
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -3747,6 +3772,7 @@ exports[`Storyshots Changesets With avatar 1`] = `
               >
                 <i
                   className="fas fa-fw fa-code has-text-inherit"
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -3822,6 +3848,7 @@ exports[`Storyshots Changesets With contactless signature 1`] = `
                   >
                     <i
                       className="fas fa-fw fa-key has-text-success SignatureIcon__StyledIcon-sc-1mwf1m5-0 iaXXnw mx-2 pt-1"
+                      onKeyPress={[Function]}
                       tabIndex={-1}
                     />
                   </div>
@@ -3853,6 +3880,7 @@ exports[`Storyshots Changesets With contactless signature 1`] = `
               >
                 <i
                   className="fas fa-fw fa-exchange-alt has-text-inherit"
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -3875,6 +3903,7 @@ exports[`Storyshots Changesets With contactless signature 1`] = `
               >
                 <i
                   className="fas fa-fw fa-code has-text-inherit"
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -3950,6 +3979,7 @@ exports[`Storyshots Changesets With invalid signature 1`] = `
                   >
                     <i
                       className="fas fa-fw fa-key has-text-danger SignatureIcon__StyledIcon-sc-1mwf1m5-0 iaXXnw mx-2 pt-1"
+                      onKeyPress={[Function]}
                       tabIndex={-1}
                     />
                   </div>
@@ -3981,6 +4011,7 @@ exports[`Storyshots Changesets With invalid signature 1`] = `
               >
                 <i
                   className="fas fa-fw fa-exchange-alt has-text-inherit"
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -4003,6 +4034,7 @@ exports[`Storyshots Changesets With invalid signature 1`] = `
               >
                 <i
                   className="fas fa-fw fa-code has-text-inherit"
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -4113,6 +4145,7 @@ exports[`Storyshots Changesets With multiple Co-Authors 1`] = `
               >
                 <i
                   className="fas fa-fw fa-exchange-alt has-text-inherit"
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -4135,6 +4168,7 @@ exports[`Storyshots Changesets With multiple Co-Authors 1`] = `
               >
                 <i
                   className="fas fa-fw fa-code has-text-inherit"
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -4210,6 +4244,7 @@ exports[`Storyshots Changesets With multiple signatures and invalid status 1`] =
                   >
                     <i
                       className="fas fa-fw fa-key has-text-danger SignatureIcon__StyledIcon-sc-1mwf1m5-0 iaXXnw mx-2 pt-1"
+                      onKeyPress={[Function]}
                       tabIndex={-1}
                     />
                   </div>
@@ -4241,6 +4276,7 @@ exports[`Storyshots Changesets With multiple signatures and invalid status 1`] =
               >
                 <i
                   className="fas fa-fw fa-exchange-alt has-text-inherit"
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -4263,6 +4299,7 @@ exports[`Storyshots Changesets With multiple signatures and invalid status 1`] =
               >
                 <i
                   className="fas fa-fw fa-code has-text-inherit"
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -4338,6 +4375,7 @@ exports[`Storyshots Changesets With multiple signatures and not found status 1`]
                   >
                     <i
                       className="fas fa-fw fa-key has-text-grey-light SignatureIcon__StyledIcon-sc-1mwf1m5-0 iaXXnw mx-2 pt-1"
+                      onKeyPress={[Function]}
                       tabIndex={-1}
                     />
                   </div>
@@ -4369,6 +4407,7 @@ exports[`Storyshots Changesets With multiple signatures and not found status 1`]
               >
                 <i
                   className="fas fa-fw fa-exchange-alt has-text-inherit"
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -4391,6 +4430,7 @@ exports[`Storyshots Changesets With multiple signatures and not found status 1`]
               >
                 <i
                   className="fas fa-fw fa-code has-text-inherit"
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -4466,6 +4506,7 @@ exports[`Storyshots Changesets With multiple signatures and valid status 1`] = `
                   >
                     <i
                       className="fas fa-fw fa-key has-text-success SignatureIcon__StyledIcon-sc-1mwf1m5-0 iaXXnw mx-2 pt-1"
+                      onKeyPress={[Function]}
                       tabIndex={-1}
                     />
                   </div>
@@ -4497,6 +4538,7 @@ exports[`Storyshots Changesets With multiple signatures and valid status 1`] = `
               >
                 <i
                   className="fas fa-fw fa-exchange-alt has-text-inherit"
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -4519,6 +4561,7 @@ exports[`Storyshots Changesets With multiple signatures and valid status 1`] = `
               >
                 <i
                   className="fas fa-fw fa-code has-text-inherit"
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -4594,6 +4637,7 @@ exports[`Storyshots Changesets With unknown signature 1`] = `
                   >
                     <i
                       className="fas fa-fw fa-key has-text-grey-light SignatureIcon__StyledIcon-sc-1mwf1m5-0 iaXXnw mx-2 pt-1"
+                      onKeyPress={[Function]}
                       tabIndex={-1}
                     />
                   </div>
@@ -4625,6 +4669,7 @@ exports[`Storyshots Changesets With unknown signature 1`] = `
               >
                 <i
                   className="fas fa-fw fa-exchange-alt has-text-inherit"
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -4647,6 +4692,7 @@ exports[`Storyshots Changesets With unknown signature 1`] = `
               >
                 <i
                   className="fas fa-fw fa-code has-text-inherit"
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -4722,6 +4768,7 @@ exports[`Storyshots Changesets With unowned signature 1`] = `
                   >
                     <i
                       className="fas fa-fw fa-key has-text-success SignatureIcon__StyledIcon-sc-1mwf1m5-0 iaXXnw mx-2 pt-1"
+                      onKeyPress={[Function]}
                       tabIndex={-1}
                     />
                   </div>
@@ -4753,6 +4800,7 @@ exports[`Storyshots Changesets With unowned signature 1`] = `
               >
                 <i
                   className="fas fa-fw fa-exchange-alt has-text-inherit"
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -4775,6 +4823,7 @@ exports[`Storyshots Changesets With unowned signature 1`] = `
               >
                 <i
                   className="fas fa-fw fa-code has-text-inherit"
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -4850,6 +4899,7 @@ exports[`Storyshots Changesets With valid signature 1`] = `
                   >
                     <i
                       className="fas fa-fw fa-key has-text-success SignatureIcon__StyledIcon-sc-1mwf1m5-0 iaXXnw mx-2 pt-1"
+                      onKeyPress={[Function]}
                       tabIndex={-1}
                     />
                   </div>
@@ -4881,6 +4931,7 @@ exports[`Storyshots Changesets With valid signature 1`] = `
               >
                 <i
                   className="fas fa-fw fa-exchange-alt has-text-inherit"
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -4903,6 +4954,7 @@ exports[`Storyshots Changesets With valid signature 1`] = `
               >
                 <i
                   className="fas fa-fw fa-code has-text-inherit"
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -5019,6 +5071,7 @@ exports[`Storyshots Diff Binaries 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -5314,6 +5367,7 @@ exports[`Storyshots Diff Changing Content 1`] = `
             >
               <i
                 className="fas fa-fw fa-angle-down has-text-inherit"
+                onKeyPress={[Function]}
                 tabIndex={-1}
               />
               <span
@@ -5933,6 +5987,7 @@ exports[`Storyshots Diff Changing Content 1`] = `
             >
               <i
                 className="fas fa-fw fa-angle-down has-text-inherit"
+                onKeyPress={[Function]}
                 tabIndex={-1}
               />
               <span
@@ -6889,6 +6944,7 @@ exports[`Storyshots Diff Changing Content 1`] = `
             >
               <i
                 className="fas fa-fw fa-angle-down has-text-inherit"
+                onKeyPress={[Function]}
                 tabIndex={-1}
               />
               <span
@@ -7416,6 +7472,7 @@ exports[`Storyshots Diff Changing Content 1`] = `
             >
               <i
                 className="fas fa-fw fa-angle-down has-text-inherit"
+                onKeyPress={[Function]}
                 tabIndex={-1}
               />
               <span
@@ -7943,6 +8000,7 @@ exports[`Storyshots Diff Changing Content 1`] = `
             >
               <i
                 className="fas fa-fw fa-angle-down has-text-inherit"
+                onKeyPress={[Function]}
                 tabIndex={-1}
               />
               <span
@@ -9160,6 +9218,7 @@ exports[`Storyshots Diff Changing Content 1`] = `
             >
               <i
                 className="fas fa-fw fa-angle-down has-text-inherit"
+                onKeyPress={[Function]}
                 tabIndex={-1}
               />
               <span
@@ -9737,6 +9796,7 @@ exports[`Storyshots Diff Collapsed 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-right has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -9806,6 +9866,7 @@ exports[`Storyshots Diff Collapsed 1`] = `
                   >
                     <i
                       className="fas fa-fw fa-file-code has-text-inherit"
+                      onKeyPress={[Function]}
                       tabIndex={-1}
                     />
                   </a>
@@ -9826,6 +9887,7 @@ exports[`Storyshots Diff Collapsed 1`] = `
                   >
                     <i
                       className="fas fa-fw fa-file-code has-text-inherit"
+                      onKeyPress={[Function]}
                       tabIndex={-1}
                     />
                   </a>
@@ -9853,6 +9915,7 @@ exports[`Storyshots Diff Collapsed 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-right has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -9922,6 +9985,7 @@ exports[`Storyshots Diff Collapsed 1`] = `
                   >
                     <i
                       className="fas fa-fw fa-file-code has-text-inherit"
+                      onKeyPress={[Function]}
                       tabIndex={-1}
                     />
                   </a>
@@ -9942,6 +10006,7 @@ exports[`Storyshots Diff Collapsed 1`] = `
                   >
                     <i
                       className="fas fa-fw fa-file-code has-text-inherit"
+                      onKeyPress={[Function]}
                       tabIndex={-1}
                     />
                   </a>
@@ -9969,6 +10034,7 @@ exports[`Storyshots Diff Collapsed 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-right has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -10038,6 +10104,7 @@ exports[`Storyshots Diff Collapsed 1`] = `
                   >
                     <i
                       className="fas fa-fw fa-file-code has-text-inherit"
+                      onKeyPress={[Function]}
                       tabIndex={-1}
                     />
                   </a>
@@ -10058,6 +10125,7 @@ exports[`Storyshots Diff Collapsed 1`] = `
                   >
                     <i
                       className="fas fa-fw fa-file-code has-text-inherit"
+                      onKeyPress={[Function]}
                       tabIndex={-1}
                     />
                   </a>
@@ -10085,6 +10153,7 @@ exports[`Storyshots Diff Collapsed 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-right has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -10154,6 +10223,7 @@ exports[`Storyshots Diff Collapsed 1`] = `
                   >
                     <i
                       className="fas fa-fw fa-file-code has-text-inherit"
+                      onKeyPress={[Function]}
                       tabIndex={-1}
                     />
                   </a>
@@ -10174,6 +10244,7 @@ exports[`Storyshots Diff Collapsed 1`] = `
                   >
                     <i
                       className="fas fa-fw fa-file-code has-text-inherit"
+                      onKeyPress={[Function]}
                       tabIndex={-1}
                     />
                   </a>
@@ -10201,6 +10272,7 @@ exports[`Storyshots Diff Collapsed 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-right has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -10270,6 +10342,7 @@ exports[`Storyshots Diff Collapsed 1`] = `
                   >
                     <i
                       className="fas fa-fw fa-file-code has-text-inherit"
+                      onKeyPress={[Function]}
                       tabIndex={-1}
                     />
                   </a>
@@ -10290,6 +10363,7 @@ exports[`Storyshots Diff Collapsed 1`] = `
                   >
                     <i
                       className="fas fa-fw fa-file-code has-text-inherit"
+                      onKeyPress={[Function]}
                       tabIndex={-1}
                     />
                   </a>
@@ -10317,6 +10391,7 @@ exports[`Storyshots Diff Collapsed 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-right has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -10386,6 +10461,7 @@ exports[`Storyshots Diff Collapsed 1`] = `
                   >
                     <i
                       className="fas fa-fw fa-file-code has-text-inherit"
+                      onKeyPress={[Function]}
                       tabIndex={-1}
                     />
                   </a>
@@ -10406,6 +10482,7 @@ exports[`Storyshots Diff Collapsed 1`] = `
                   >
                     <i
                       className="fas fa-fw fa-file-code has-text-inherit"
+                      onKeyPress={[Function]}
                       tabIndex={-1}
                     />
                   </a>
@@ -10442,6 +10519,7 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-right has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -10518,6 +10596,7 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -11377,6 +11456,7 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -11832,6 +11912,7 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -12287,6 +12368,7 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-right has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -12363,6 +12445,7 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-right has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -12448,6 +12531,7 @@ exports[`Storyshots Diff Default 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -13030,6 +13114,7 @@ exports[`Storyshots Diff Default 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -13889,6 +13974,7 @@ exports[`Storyshots Diff Default 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -14344,6 +14430,7 @@ exports[`Storyshots Diff Default 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -14799,6 +14886,7 @@ exports[`Storyshots Diff Default 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -15861,6 +15949,7 @@ exports[`Storyshots Diff Default 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -16400,6 +16489,7 @@ exports[`Storyshots Diff Expandable 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -17019,6 +17109,7 @@ exports[`Storyshots Diff Expandable 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -17975,6 +18066,7 @@ exports[`Storyshots Diff Expandable 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -18502,6 +18594,7 @@ exports[`Storyshots Diff Expandable 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -19029,6 +19122,7 @@ exports[`Storyshots Diff Expandable 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -20246,6 +20340,7 @@ exports[`Storyshots Diff Expandable 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -20822,6 +20917,7 @@ exports[`Storyshots Diff External state management 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -21441,6 +21537,7 @@ exports[`Storyshots Diff External state management 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -22397,6 +22494,7 @@ exports[`Storyshots Diff External state management 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -22924,6 +23022,7 @@ exports[`Storyshots Diff External state management 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -23451,6 +23550,7 @@ exports[`Storyshots Diff External state management 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -24668,6 +24768,7 @@ exports[`Storyshots Diff External state management 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -25244,6 +25345,7 @@ exports[`Storyshots Diff File Annotation 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -25830,6 +25932,7 @@ exports[`Storyshots Diff File Annotation 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -26693,6 +26796,7 @@ exports[`Storyshots Diff File Annotation 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -27152,6 +27256,7 @@ exports[`Storyshots Diff File Annotation 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -27611,6 +27716,7 @@ exports[`Storyshots Diff File Annotation 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -28677,6 +28783,7 @@ exports[`Storyshots Diff File Annotation 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -29220,6 +29327,7 @@ exports[`Storyshots Diff File Controls 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -29820,6 +29928,7 @@ exports[`Storyshots Diff File Controls 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -30697,6 +30806,7 @@ exports[`Storyshots Diff File Controls 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -31170,6 +31280,7 @@ exports[`Storyshots Diff File Controls 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -31643,6 +31754,7 @@ exports[`Storyshots Diff File Controls 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -32723,6 +32835,7 @@ exports[`Storyshots Diff File Controls 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -33280,6 +33393,7 @@ exports[`Storyshots Diff Hunks 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -34126,6 +34240,7 @@ exports[`Storyshots Diff Line Annotation 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -34720,6 +34835,7 @@ exports[`Storyshots Diff Line Annotation 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -35591,6 +35707,7 @@ exports[`Storyshots Diff Line Annotation 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -36046,6 +36163,7 @@ exports[`Storyshots Diff Line Annotation 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -36501,6 +36619,7 @@ exports[`Storyshots Diff Line Annotation 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -37563,6 +37682,7 @@ exports[`Storyshots Diff Line Annotation 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -38114,6 +38234,7 @@ exports[`Storyshots Diff OnClick 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -38736,6 +38857,7 @@ exports[`Storyshots Diff OnClick 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -39657,6 +39779,7 @@ exports[`Storyshots Diff OnClick 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -40142,6 +40265,7 @@ exports[`Storyshots Diff OnClick 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -40627,6 +40751,7 @@ exports[`Storyshots Diff OnClick 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -41765,6 +41890,7 @@ exports[`Storyshots Diff OnClick 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -42340,6 +42466,7 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -43015,6 +43142,7 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -43964,6 +44092,7 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -44471,6 +44600,7 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -44978,6 +45108,7 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -46209,6 +46340,7 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -46821,6 +46953,7 @@ exports[`Storyshots Diff SyntaxHighlighting (Markdown) 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -47185,6 +47318,7 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -47767,6 +47901,7 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -48626,6 +48761,7 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -49081,6 +49217,7 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -49536,6 +49673,7 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -50598,6 +50736,7 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -51137,6 +51276,7 @@ exports[`Storyshots Diff WithLinkToFile 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -51756,6 +51896,7 @@ exports[`Storyshots Diff WithLinkToFile 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -52712,6 +52853,7 @@ exports[`Storyshots Diff WithLinkToFile 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -53239,6 +53381,7 @@ exports[`Storyshots Diff WithLinkToFile 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -53766,6 +53909,7 @@ exports[`Storyshots Diff WithLinkToFile 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -54983,6 +55127,7 @@ exports[`Storyshots Diff WithLinkToFile 1`] = `
           >
             <i
               className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
             <span
@@ -55653,6 +55798,7 @@ exports[`Storyshots Forms|AddKeyValueEntryToTableField Default 1`] = `
       >
         <i
           className="fas fa-fw fa-plus has-text-inherit"
+          onKeyPress={[Function]}
           tabIndex={-1}
         />
       </span>
@@ -55727,6 +55873,7 @@ exports[`Storyshots Forms|AddKeyValueEntryToTableField Disabled 1`] = `
       >
         <i
           className="fas fa-fw fa-plus has-text-inherit"
+          onKeyPress={[Function]}
           tabIndex={-1}
         />
       </span>
@@ -56039,6 +56186,7 @@ exports[`Storyshots Forms|Checkbox With HelpText 1`] = `
         >
           <i
             className="fas fa-fw fa-question-circle has-text-blue-light"
+            onKeyPress={[Function]}
             tabIndex={-1}
           />
         </span>
@@ -56069,6 +56217,7 @@ exports[`Storyshots Forms|Checkbox With HelpText 1`] = `
         >
           <i
             className="fas fa-fw fa-question-circle has-text-blue-light"
+            onKeyPress={[Function]}
             tabIndex={-1}
           />
         </span>
@@ -56204,6 +56353,7 @@ exports[`Storyshots Forms|FileInput Default 1`] = `
         >
           <i
             className="fas fa-fw fa-question-circle has-text-blue-light"
+            onKeyPress={[Function]}
             tabIndex={-1}
           />
         </span>
@@ -56797,6 +56947,7 @@ exports[`Storyshots Forms|Radio With HelpText 1`] = `
       >
         <i
           className="fas fa-fw fa-question-circle has-text-blue-light"
+          onKeyPress={[Function]}
           tabIndex={-1}
         />
       </span>
@@ -56822,6 +56973,7 @@ exports[`Storyshots Forms|Radio With HelpText 1`] = `
       >
         <i
           className="fas fa-fw fa-question-circle has-text-blue-light"
+          onKeyPress={[Function]}
           tabIndex={-1}
         />
       </span>
@@ -57485,6 +57637,7 @@ exports[`Storyshots GroupEntry Default 1`] = `
         >
           <i
             className="fas fa-fw fa-icons fa-2x fa-fw has-text-grey-light"
+            onKeyPress={[Function]}
             tabIndex={-1}
           />
         </div>
@@ -57529,6 +57682,7 @@ exports[`Storyshots GroupEntry Default 1`] = `
               >
                 <i
                   className="fas fa-fw fa-download has-text-inherit"
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -57564,6 +57718,7 @@ exports[`Storyshots GroupEntry With long texts 1`] = `
         >
           <i
             className="fas fa-fw fa-icons fa-2x fa-fw has-text-grey-light"
+            onKeyPress={[Function]}
             tabIndex={-1}
           />
         </div>
@@ -57608,6 +57763,7 @@ exports[`Storyshots GroupEntry With long texts 1`] = `
               >
                 <i
                   className="fas fa-fw fa-download has-text-inherit"
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -57630,6 +57786,7 @@ exports[`Storyshots Help Default 1`] = `
   >
     <i
       className="fas fa-fw fa-question-circle has-text-blue-light"
+      onKeyPress={[Function]}
       tabIndex={-1}
     />
   </span>
@@ -57655,6 +57812,7 @@ imaginative generator sweep."
     >
       <i
         className="fas fa-fw fa-question-circle has-text-blue-light"
+        onKeyPress={[Function]}
         tabIndex={-1}
       />
     </span>
@@ -57674,6 +57832,7 @@ imaginative generator sweep."
     >
       <i
         className="fas fa-fw fa-question-circle has-text-blue-light"
+        onKeyPress={[Function]}
         tabIndex={-1}
       />
     </span>
@@ -57687,61 +57846,73 @@ exports[`Storyshots Icon Colors 1`] = `
 >
   <i
     className="fas fa-fw fa-cat has-text-grey-light"
+    onKeyPress={[Function]}
     tabIndex={-1}
     title="default color"
   />
   <i
     className="fas fa-fw fa-cat has-text-primary"
+    onKeyPress={[Function]}
     tabIndex={-1}
     title="primary"
   />
   <i
     className="fas fa-fw fa-cat has-text-link"
+    onKeyPress={[Function]}
     tabIndex={-1}
     title="link"
   />
   <i
     className="fas fa-fw fa-cat has-text-info"
+    onKeyPress={[Function]}
     tabIndex={-1}
     title="info"
   />
   <i
     className="fas fa-fw fa-cat has-text-success"
+    onKeyPress={[Function]}
     tabIndex={-1}
     title="success"
   />
   <i
     className="fas fa-fw fa-cat has-text-warning"
+    onKeyPress={[Function]}
     tabIndex={-1}
     title="warning"
   />
   <i
     className="fas fa-fw fa-cat has-text-danger"
+    onKeyPress={[Function]}
     tabIndex={-1}
     title="danger"
   />
   <i
     className="fas fa-fw fa-cat has-text-white"
+    onKeyPress={[Function]}
     tabIndex={-1}
     title="white"
   />
   <i
     className="fas fa-fw fa-cat has-text-light"
+    onKeyPress={[Function]}
     tabIndex={-1}
     title="light"
   />
   <i
     className="fas fa-fw fa-cat has-text-dark"
+    onKeyPress={[Function]}
     tabIndex={-1}
     title="dark"
   />
   <i
     className="fas fa-fw fa-cat has-text-black"
+    onKeyPress={[Function]}
     tabIndex={-1}
     title="black"
   />
   <i
     className="fas fa-fw fa-cat has-text-text"
+    onKeyPress={[Function]}
     tabIndex={-1}
     title="text"
   />
@@ -57754,20 +57925,24 @@ exports[`Storyshots Icon Default 1`] = `
 >
   <i
     className="fas fa-fw fa-cat has-text-grey-light"
+    onKeyPress={[Function]}
     tabIndex={-1}
   />
   <i
     className="fas fa-fw fa-download has-text-info"
+    onKeyPress={[Function]}
     tabIndex={-1}
     title="Download"
   />
   <i
     className="fas fa-fw fa-code-branch fa-rotate-180 has-text-warning"
+    onKeyPress={[Function]}
     tabIndex={-1}
     title="Pull Request"
   />
   <i
     className="far fa-fw fa-star has-text-inherit"
+    onKeyPress={[Function]}
     tabIndex={-1}
     title="Star"
   />
@@ -57780,16 +57955,19 @@ exports[`Storyshots Icon Icon styles 1`] = `
 >
   <i
     className="fas fa-fw fa-star has-text-inherit"
+    onKeyPress={[Function]}
     tabIndex={-1}
     title="solid style"
   />
   <i
     className="far fa-fw fa-star has-text-inherit"
+    onKeyPress={[Function]}
     tabIndex={-1}
     title="regular style"
   />
   <i
     className="fab fa-fw fa-react has-text-inherit"
+    onKeyPress={[Function]}
     tabIndex={-1}
     title="brand style"
   />
@@ -57802,21 +57980,25 @@ exports[`Storyshots Icon More options 1`] = `
 >
   <i
     className="fas fa-fw fa-snowboarding fa-rotate-270 has-text-grey-light"
+    onKeyPress={[Function]}
     tabIndex={-1}
     title="rotate-270"
   />
   <i
     className="fas fa-fw fa-spinner fa-spin has-text-grey-light"
+    onKeyPress={[Function]}
     tabIndex={-1}
     title="spin"
   />
   <i
     className="fas fa-fw fa-cat has-text-grey-light is-size-4"
+    onKeyPress={[Function]}
     tabIndex={-1}
     title="custom sizing"
   />
   <i
     className="fas fa-fw fa-hand-sparkles has-text-grey-light has-background-primary-25"
+    onKeyPress={[Function]}
     tabIndex={-1}
     title="custom background"
   />
@@ -57829,46 +58011,55 @@ exports[`Storyshots Icon Sizing 1`] = `
 >
   <i
     className="fas fa-fw fa-cat has-text-grey-light"
+    onKeyPress={[Function]}
     tabIndex={-1}
     title="default size"
   />
   <i
     className="fas fa-fw fa-cat fa-xs has-text-grey-light"
+    onKeyPress={[Function]}
     tabIndex={-1}
     title="fa-xs"
   />
   <i
     className="fas fa-fw fa-cat fa-sm has-text-grey-light"
+    onKeyPress={[Function]}
     tabIndex={-1}
     title="fa-sm"
   />
   <i
     className="fas fa-fw fa-cat fa-lg has-text-grey-light"
+    onKeyPress={[Function]}
     tabIndex={-1}
     title="fa-lg"
   />
   <i
     className="fas fa-fw fa-cat fa-2x has-text-grey-light"
+    onKeyPress={[Function]}
     tabIndex={-1}
     title="fa-2x"
   />
   <i
     className="fas fa-fw fa-cat fa-3x has-text-grey-light"
+    onKeyPress={[Function]}
     tabIndex={-1}
     title="fa-3x"
   />
   <i
     className="fas fa-fw fa-cat fa-5x has-text-grey-light"
+    onKeyPress={[Function]}
     tabIndex={-1}
     title="fa-5x"
   />
   <i
     className="fas fa-fw fa-cat fa-7x has-text-grey-light"
+    onKeyPress={[Function]}
     tabIndex={-1}
     title="fa-7x"
   />
   <i
     className="fas fa-fw fa-cat fa-10x has-text-grey-light"
+    onKeyPress={[Function]}
     tabIndex={-1}
     title="fa-10x"
   />
@@ -58520,6 +58711,7 @@ exports[`Storyshots MarkdownView Code without Lang 1`] = `
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -58551,6 +58743,7 @@ exports[`Storyshots MarkdownView Code without Lang 1`] = `
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -59684,6 +59877,7 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -59725,6 +59919,7 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -59752,6 +59947,7 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -59813,6 +60009,7 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -59859,6 +60056,7 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -59905,6 +60103,7 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -59951,6 +60150,7 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -59978,6 +60178,7 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -60139,6 +60340,7 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -60330,6 +60532,7 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -60376,6 +60579,7 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -60403,6 +60607,7 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -60499,6 +60704,7 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -60600,6 +60806,7 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -60711,6 +60918,7 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -60757,6 +60965,7 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -60931,6 +61140,7 @@ exports[`Storyshots MarkdownView Header Anchor Links 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -60980,6 +61190,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -61009,6 +61220,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -61031,6 +61243,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -61163,6 +61376,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -61269,6 +61483,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -61343,6 +61558,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -61365,6 +61581,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -61515,6 +61732,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -61537,6 +61755,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -61630,6 +61849,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -61704,6 +61924,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -61726,6 +61947,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -61831,6 +62053,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -61853,6 +62076,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -61985,6 +62209,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -62104,6 +62329,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -62217,6 +62443,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -62239,6 +62466,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -62397,6 +62625,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -62521,6 +62750,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -62595,6 +62825,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -62617,6 +62848,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -62684,6 +62916,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -62725,6 +62958,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -62833,6 +63067,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -62855,6 +63090,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -62911,6 +63147,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -62933,6 +63170,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -63073,6 +63311,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -63114,6 +63353,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -63187,6 +63427,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -63209,6 +63450,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -63270,6 +63512,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -63292,6 +63535,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -63385,6 +63629,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -63471,6 +63716,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -63493,6 +63739,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -63533,6 +63780,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -63555,6 +63803,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -63639,6 +63888,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -63765,6 +64015,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -63787,6 +64038,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -63854,6 +64106,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -63908,6 +64161,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -63982,6 +64236,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -64004,6 +64259,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -64052,6 +64308,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -64074,6 +64331,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -64128,6 +64386,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -64176,6 +64435,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -64198,6 +64458,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -64246,6 +64507,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -64268,6 +64530,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -64309,6 +64572,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -64383,6 +64647,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -64405,6 +64670,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -64453,6 +64719,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -64475,6 +64742,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -64555,6 +64823,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -64596,6 +64865,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -64748,6 +65018,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -64770,6 +65041,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -64863,6 +65135,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -64942,6 +65215,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -64964,6 +65238,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -65005,6 +65280,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -65183,6 +65459,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -65205,6 +65482,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -65324,6 +65602,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -65411,6 +65690,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -65433,6 +65713,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -65474,6 +65755,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -65515,6 +65797,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -65576,6 +65859,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -65598,6 +65882,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -65665,6 +65950,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -65724,6 +66010,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -65850,6 +66137,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -65872,6 +66160,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -65948,6 +66237,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -66023,6 +66313,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -66177,6 +66468,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -66199,6 +66491,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -66281,6 +66574,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -66303,6 +66597,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -66396,6 +66691,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -66624,6 +66920,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -66646,6 +66943,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -66726,6 +67024,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -66800,6 +67099,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -66822,6 +67122,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -66906,6 +67207,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -67011,6 +67313,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -67119,6 +67422,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -67141,6 +67445,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -67195,6 +67500,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -67249,6 +67555,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -67310,6 +67617,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -67332,6 +67640,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -67438,6 +67747,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -67494,6 +67804,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -67540,6 +67851,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -67630,6 +67942,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -67652,6 +67965,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -67710,6 +68024,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -67758,6 +68073,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -67806,6 +68122,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -67851,6 +68168,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -67873,6 +68191,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -67916,6 +68235,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -67993,6 +68313,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -68039,6 +68360,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -68061,6 +68383,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -68106,6 +68429,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -68128,6 +68452,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -68186,6 +68511,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -68224,6 +68550,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -68294,6 +68621,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -68316,6 +68644,7 @@ and this project adheres to
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -68509,6 +68838,7 @@ exports[`Storyshots MarkdownView Inline Xml 1`] = `
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -68540,6 +68870,7 @@ exports[`Storyshots MarkdownView Inline Xml 1`] = `
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -68567,6 +68898,7 @@ exports[`Storyshots MarkdownView Inline Xml 1`] = `
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -68594,6 +68926,7 @@ exports[`Storyshots MarkdownView Inline Xml 1`] = `
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -68621,6 +68954,7 @@ exports[`Storyshots MarkdownView Inline Xml 1`] = `
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -68648,6 +68982,7 @@ exports[`Storyshots MarkdownView Inline Xml 1`] = `
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -68675,6 +69010,7 @@ exports[`Storyshots MarkdownView Inline Xml 1`] = `
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -68702,6 +69038,7 @@ exports[`Storyshots MarkdownView Inline Xml 1`] = `
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -68729,6 +69066,7 @@ exports[`Storyshots MarkdownView Inline Xml 1`] = `
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -68756,6 +69094,7 @@ exports[`Storyshots MarkdownView Inline Xml 1`] = `
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -68783,6 +69122,7 @@ exports[`Storyshots MarkdownView Inline Xml 1`] = `
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -68810,6 +69150,7 @@ exports[`Storyshots MarkdownView Inline Xml 1`] = `
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -70067,6 +70408,7 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -70108,6 +70450,7 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -70135,6 +70478,7 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -70196,6 +70540,7 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -70242,6 +70587,7 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -70288,6 +70634,7 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -70334,6 +70681,7 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -70361,6 +70709,7 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -70522,6 +70871,7 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -70713,6 +71063,7 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -70759,6 +71110,7 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -70786,6 +71138,7 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -70882,6 +71235,7 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -70983,6 +71337,7 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -71094,6 +71449,7 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -71140,6 +71496,7 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -71417,6 +71774,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -71498,6 +71856,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -71525,6 +71884,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -71552,6 +71912,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -71579,6 +71940,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -71645,6 +72007,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -71711,6 +72074,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -71738,6 +72102,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -71765,6 +72130,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -71792,6 +72158,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -71858,6 +72225,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -71959,6 +72327,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -72060,6 +72429,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -72126,6 +72496,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -72192,6 +72563,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -72293,6 +72665,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -72394,6 +72767,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -72460,6 +72834,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -72526,6 +72901,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -72592,6 +72968,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -72619,6 +72996,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -72646,6 +73024,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -72673,6 +73052,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -72739,6 +73119,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
                 <i
                   className="fas fa-fw fa-link has-text-grey-light"
                   onClick={[Function]}
+                  onKeyPress={[Function]}
                   tabIndex={-1}
                 />
               </span>
@@ -73279,6 +73660,7 @@ exports[`Storyshots RepositoryEntry Archived 1`] = `
             <i
               className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 khGtCz is-clickable is-size-5"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
               title="overview.clone"
             />
@@ -73373,6 +73755,7 @@ exports[`Storyshots RepositoryEntry Avatar EP 1`] = `
             <i
               className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 khGtCz is-clickable is-size-5"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
               title="overview.clone"
             />
@@ -73470,6 +73853,7 @@ exports[`Storyshots RepositoryEntry Before Title EP 1`] = `
             <i
               className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 khGtCz is-clickable is-size-5"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
               title="overview.clone"
             />
@@ -73564,6 +73948,7 @@ exports[`Storyshots RepositoryEntry Default 1`] = `
             <i
               className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 khGtCz is-clickable is-size-5"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
               title="overview.clone"
             />
@@ -73669,6 +74054,7 @@ exports[`Storyshots RepositoryEntry Exporting 1`] = `
             <i
               className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 khGtCz is-clickable is-size-5"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
               title="overview.clone"
             />
@@ -73775,6 +74161,7 @@ exports[`Storyshots RepositoryEntry HealthCheck Failure 1`] = `
             <i
               className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 khGtCz is-clickable is-size-5"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
               title="overview.clone"
             />
@@ -73890,6 +74277,7 @@ exports[`Storyshots RepositoryEntry MultiRepositoryTags 1`] = `
             <i
               className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 khGtCz is-clickable is-size-5"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
               title="overview.clone"
             />
@@ -73996,6 +74384,7 @@ exports[`Storyshots RepositoryEntry RepositoryFlag EP 1`] = `
             <i
               className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 khGtCz is-clickable is-size-5"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
               title="overview.clone"
             />
@@ -74090,6 +74479,7 @@ exports[`Storyshots RepositoryEntry With long texts 1`] = `
             <i
               className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 khGtCz is-clickable is-size-5"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
               title="overview.clone"
             />
@@ -74118,6 +74508,7 @@ Array [
   >
     <i
       className="fas fa-fw fa-quote-left has-text-grey-light"
+      onKeyPress={[Function]}
       tabIndex={-1}
     />
     
@@ -74125,6 +74516,7 @@ Array [
     
     <i
       className="fas fa-fw fa-quote-right has-text-grey-light"
+      onKeyPress={[Function]}
       tabIndex={-1}
     />
      
@@ -74132,6 +74524,7 @@ Array [
      
     <i
       className="fas fa-fw fa-quote-left has-text-grey-light"
+      onKeyPress={[Function]}
       tabIndex={-1}
     />
     
@@ -74139,6 +74532,7 @@ Array [
     
     <i
       className="fas fa-fw fa-quote-right has-text-grey-light"
+      onKeyPress={[Function]}
       tabIndex={-1}
     />
   </div>,
@@ -74147,6 +74541,7 @@ Array [
   >
     <i
       className="fas fa-fw fa-quote-left has-text-grey-light"
+      onKeyPress={[Function]}
       tabIndex={-1}
     />
     
@@ -74154,6 +74549,7 @@ Array [
     
     <i
       className="fas fa-fw fa-quote-right has-text-grey-light"
+      onKeyPress={[Function]}
       tabIndex={-1}
     />
      
@@ -74161,6 +74557,7 @@ Array [
      
     <i
       className="fas fa-fw fa-quote-left has-text-grey-light"
+      onKeyPress={[Function]}
       tabIndex={-1}
     />
     
@@ -74168,6 +74565,7 @@ Array [
     
     <i
       className="fas fa-fw fa-quote-right has-text-grey-light"
+      onKeyPress={[Function]}
       tabIndex={-1}
     />
   </div>,
@@ -74241,6 +74639,7 @@ exports[`Storyshots SyntaxHighlighter Go 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -74282,6 +74681,7 @@ exports[`Storyshots SyntaxHighlighter Go 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -74309,6 +74709,7 @@ exports[`Storyshots SyntaxHighlighter Go 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -74370,6 +74771,7 @@ exports[`Storyshots SyntaxHighlighter Go 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -74416,6 +74818,7 @@ exports[`Storyshots SyntaxHighlighter Go 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -74462,6 +74865,7 @@ exports[`Storyshots SyntaxHighlighter Go 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -74508,6 +74912,7 @@ exports[`Storyshots SyntaxHighlighter Go 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -74535,6 +74940,7 @@ exports[`Storyshots SyntaxHighlighter Go 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -74631,6 +75037,7 @@ exports[`Storyshots SyntaxHighlighter Go 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -74837,6 +75244,7 @@ exports[`Storyshots SyntaxHighlighter Go 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -74943,6 +75351,7 @@ exports[`Storyshots SyntaxHighlighter Go 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -74999,6 +75408,7 @@ exports[`Storyshots SyntaxHighlighter Go 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -75026,6 +75436,7 @@ exports[`Storyshots SyntaxHighlighter Go 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -75172,6 +75583,7 @@ exports[`Storyshots SyntaxHighlighter Go 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -75338,6 +75750,7 @@ exports[`Storyshots SyntaxHighlighter Go 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -75365,6 +75778,7 @@ exports[`Storyshots SyntaxHighlighter Go 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -75476,6 +75890,7 @@ exports[`Storyshots SyntaxHighlighter Go 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -75522,6 +75937,7 @@ exports[`Storyshots SyntaxHighlighter Go 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -75705,6 +76121,7 @@ exports[`Storyshots SyntaxHighlighter Javascript 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -75816,6 +76233,7 @@ exports[`Storyshots SyntaxHighlighter Javascript 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -75843,6 +76261,7 @@ exports[`Storyshots SyntaxHighlighter Javascript 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -75981,6 +76400,7 @@ exports[`Storyshots SyntaxHighlighter Javascript 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -76147,6 +76567,7 @@ exports[`Storyshots SyntaxHighlighter Javascript 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -76243,6 +76664,7 @@ exports[`Storyshots SyntaxHighlighter Javascript 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -76329,6 +76751,7 @@ exports[`Storyshots SyntaxHighlighter Javascript 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -76445,6 +76868,7 @@ exports[`Storyshots SyntaxHighlighter Javascript 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -76534,6 +76958,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -76587,6 +77012,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -76614,6 +77040,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -76695,6 +77122,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -76776,6 +77204,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -76857,6 +77286,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -76938,6 +77368,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -77019,6 +77450,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -77100,6 +77532,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -77181,6 +77614,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -77262,6 +77696,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -77289,6 +77724,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -77335,6 +77771,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -77362,6 +77799,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -77420,6 +77858,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -77447,6 +77886,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -77505,6 +77945,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -77532,6 +77973,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -77559,6 +78001,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -77586,6 +78029,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -77644,6 +78088,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -77671,6 +78116,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -77698,6 +78144,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -77725,6 +78172,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -77783,6 +78231,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -77810,6 +78259,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -77837,6 +78287,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -77864,6 +78315,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -77922,6 +78374,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -77949,6 +78402,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -77976,6 +78430,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -78003,6 +78458,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -78061,6 +78517,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -78088,6 +78545,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -78115,6 +78573,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -78142,6 +78601,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -78200,6 +78660,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -78227,6 +78688,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -78254,6 +78716,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -78281,6 +78744,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -78308,6 +78772,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -78335,6 +78800,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -78362,6 +78828,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -78420,6 +78887,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -78447,6 +78915,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -78474,6 +78943,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -78501,6 +78971,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -78528,6 +78999,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -78555,6 +79027,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -78582,6 +79055,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -78609,6 +79083,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -78636,6 +79111,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -78663,6 +79139,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -78721,6 +79198,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -78748,6 +79226,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -78775,6 +79254,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -78802,6 +79282,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -78848,6 +79329,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -78875,6 +79357,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -78902,6 +79385,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -78929,6 +79413,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -78975,6 +79460,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -79002,6 +79488,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -79029,6 +79516,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -79056,6 +79544,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -79102,6 +79591,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -79129,6 +79619,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -79156,6 +79647,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -79183,6 +79675,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -79210,6 +79703,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -79237,6 +79731,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -79295,6 +79790,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -79322,6 +79818,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -79380,6 +79877,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -79407,6 +79905,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -79453,6 +79952,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -79499,6 +79999,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -79545,6 +80046,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -79572,6 +80074,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -79618,6 +80121,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -79664,6 +80168,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -79710,6 +80215,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -79756,6 +80262,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -79802,6 +80309,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -79848,6 +80356,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -79894,6 +80403,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -79921,6 +80431,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -79979,6 +80490,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -80006,6 +80518,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -80052,6 +80565,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -80098,6 +80612,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -80144,6 +80659,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -80190,6 +80706,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -80236,6 +80753,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -80282,6 +80800,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -80328,6 +80847,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -80355,6 +80875,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -80382,6 +80903,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -80409,6 +80931,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -80467,6 +80990,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -80494,6 +81018,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -80521,6 +81046,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -80548,6 +81074,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -80594,6 +81121,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -80621,6 +81149,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -80648,6 +81177,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -80675,6 +81205,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -80702,6 +81233,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -80729,6 +81261,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -80787,6 +81320,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -80814,6 +81348,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -80841,6 +81376,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -80868,6 +81404,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -81020,6 +81557,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -81228,6 +81766,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -81356,6 +81895,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -81484,6 +82024,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -81612,6 +82153,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -81740,6 +82282,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -81868,6 +82411,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -81905,6 +82449,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -81932,6 +82477,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -81959,6 +82505,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -81986,6 +82533,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -82013,6 +82561,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -82071,6 +82620,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -82098,6 +82648,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -82156,6 +82707,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -82183,6 +82735,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -82244,6 +82797,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -82271,6 +82825,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -82329,6 +82884,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -82356,6 +82912,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -82383,6 +82940,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -82410,6 +82968,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -82463,6 +83022,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -82511,6 +83071,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -82538,6 +83099,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -82602,6 +83164,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -82650,6 +83213,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -82698,6 +83262,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -82746,6 +83311,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -82773,6 +83339,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -82943,6 +83510,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -83141,6 +83709,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -83189,6 +83758,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -83216,6 +83786,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -83316,6 +83887,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -83420,6 +83992,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -83534,6 +84107,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -83582,6 +84156,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -83629,6 +84204,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -83656,6 +84232,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -83683,6 +84260,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -83710,6 +84288,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -83737,6 +84316,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -83764,6 +84344,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -83822,6 +84403,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -83849,6 +84431,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -84026,6 +84609,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -84053,6 +84637,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -84119,6 +84704,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -84146,6 +84732,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -84264,6 +84851,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -84291,6 +84879,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -84357,6 +84946,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -84384,6 +84974,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -84569,6 +85160,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -84596,6 +85188,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -84662,6 +85255,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -84689,6 +85283,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -84755,6 +85350,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -84844,6 +85440,7 @@ exports[`Storyshots SyntaxHighlighter Python 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -84915,6 +85512,7 @@ exports[`Storyshots SyntaxHighlighter Python 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -84942,6 +85540,7 @@ exports[`Storyshots SyntaxHighlighter Python 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -85003,6 +85602,7 @@ exports[`Storyshots SyntaxHighlighter Python 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -85030,6 +85630,7 @@ exports[`Storyshots SyntaxHighlighter Python 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -85122,6 +85723,7 @@ exports[`Storyshots SyntaxHighlighter Python 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -85149,6 +85751,7 @@ exports[`Storyshots SyntaxHighlighter Python 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -85245,6 +85848,7 @@ exports[`Storyshots SyntaxHighlighter Python 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -85326,6 +85930,7 @@ exports[`Storyshots SyntaxHighlighter Python 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -85427,6 +86032,7 @@ exports[`Storyshots SyntaxHighlighter Python 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -85498,6 +86104,7 @@ exports[`Storyshots SyntaxHighlighter Python 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -85594,6 +86201,7 @@ exports[`Storyshots SyntaxHighlighter Python 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -85640,6 +86248,7 @@ exports[`Storyshots SyntaxHighlighter Python 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -85667,6 +86276,7 @@ exports[`Storyshots SyntaxHighlighter Python 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -85723,6 +86333,7 @@ exports[`Storyshots SyntaxHighlighter Python 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -85854,6 +86465,7 @@ exports[`Storyshots SyntaxHighlighter Python 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -85930,6 +86542,7 @@ exports[`Storyshots SyntaxHighlighter Python 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -86001,6 +86614,7 @@ exports[`Storyshots SyntaxHighlighter Python 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -86062,6 +86676,7 @@ exports[`Storyshots SyntaxHighlighter Python 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -86123,6 +86738,7 @@ exports[`Storyshots SyntaxHighlighter Python 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -86209,6 +86825,7 @@ exports[`Storyshots SyntaxHighlighter Python 1`] = `
             <i
               className="fas fa-fw fa-link has-text-grey-light"
               onClick={[Function]}
+              onKeyPress={[Function]}
               tabIndex={-1}
             />
           </span>
@@ -88625,6 +89242,7 @@ exports[`Storyshots Table|Table Default 1`] = `
         Last Name
         <i
           className="fas fa-fw fa-sort-amount-down has-text-grey-light ml-1 is-invisible"
+          onKeyPress={[Function]}
           tabIndex={-1}
         />
       </th>
@@ -88711,6 +89329,7 @@ exports[`Storyshots Table|Table Table with Word-Break 1`] = `
         Id
         <i
           className="fas fa-fw fa-sort-alpha-down has-text-grey-light ml-1 is-invisible"
+          onKeyPress={[Function]}
           tabIndex={-1}
         />
       </th>
@@ -88723,6 +89342,7 @@ exports[`Storyshots Table|Table Table with Word-Break 1`] = `
         Name
         <i
           className="fas fa-fw fa-sort-alpha-down has-text-grey-light ml-1 is-invisible"
+          onKeyPress={[Function]}
           tabIndex={-1}
         />
       </th>
@@ -88764,6 +89384,7 @@ exports[`Storyshots Table|Table TextColumn 1`] = `
         Id
         <i
           className="fas fa-fw fa-sort-alpha-down has-text-grey-light ml-1 is-invisible"
+          onKeyPress={[Function]}
           tabIndex={-1}
         />
       </th>
@@ -88776,6 +89397,7 @@ exports[`Storyshots Table|Table TextColumn 1`] = `
         Name
         <i
           className="fas fa-fw fa-sort-alpha-down has-text-grey-light ml-1 is-invisible"
+          onKeyPress={[Function]}
           tabIndex={-1}
         />
       </th>
@@ -88788,6 +89410,7 @@ exports[`Storyshots Table|Table TextColumn 1`] = `
         Description
         <i
           className="fas fa-fw fa-sort-alpha-down has-text-grey-light ml-1 is-invisible"
+          onKeyPress={[Function]}
           tabIndex={-1}
         />
       </th>
