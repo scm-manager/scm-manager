@@ -50,23 +50,25 @@ public final class FileLockCommandBuilder {
   }
 
   /**
-   * Creates builder to lock a file.
+   * Creates builder to lock the given file.
    *
+   * @param file The file to lock.
    * @return Builder for lock creation.
    */
-  public InnerLockCommandBuilder lock() {
+  public InnerLockCommandBuilder lock(String file) {
     RepositoryPermissions.push(repository).check();
-    return new InnerLockCommandBuilder();
+    return new InnerLockCommandBuilder(file);
   }
 
   /**
-   * Creates builder to unlock a file.
+   * Creates builder to unlock the given file.
    *
-   * @return Builder to remove a lock.
+   * @param file The file to unlock.
+   * @return Builder to unlock a file.
    */
-  public InnerUnlockCommandBuilder unlock() {
+  public InnerUnlockCommandBuilder unlock(String file) {
     RepositoryPermissions.push(repository).check();
-    return new InnerUnlockCommandBuilder();
+    return new InnerUnlockCommandBuilder(file);
   }
 
   /**
@@ -92,17 +94,10 @@ public final class FileLockCommandBuilder {
   }
 
   public class InnerLockCommandBuilder {
-    private String file;
+    private final String file;
 
-    /**
-     * Set the path of the file that should be locked.
-     *
-     * @param file The file to lock.
-     * @return This builder instance.
-     */
-    public InnerLockCommandBuilder file(String file) {
+    public InnerLockCommandBuilder(String file) {
       this.file = file;
-      return this;
     }
 
     /**
@@ -119,18 +114,11 @@ public final class FileLockCommandBuilder {
   }
 
   public class InnerUnlockCommandBuilder {
-    private String file;
+    private final String file;
     private boolean force;
 
-    /**
-     * Set the path of the file that should be unlocked.
-     *
-     * @param file The file to unlock.
-     * @return This builder instance.
-     */
-    public InnerUnlockCommandBuilder file(String file) {
+    public InnerUnlockCommandBuilder(String file) {
       this.file = file;
-      return this;
     }
 
     /**
