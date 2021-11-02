@@ -735,8 +735,11 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
         return empty();
       } else if (!newBranches.isEmpty() && initialBranches.isEmpty()) {
         return of(newBranches.iterator().next());
+      } else if (initialDefaultBranch == null && newBranches.isEmpty()) {
+        LOG.info("Could not mirror repository with tags only.");
+        throw new IllegalStateException("No branch could be mirrored. Initial mirror without accepted branch is not supported. Make sure that at least one branch can be mirrored.");
       } else if (remainingBranches.isEmpty()) {
-        LOG.warn("Could not compute new default branch.");
+        LOG.info("Could not compute new default branch.");
         throw new IllegalStateException("Deleting all existing branches is not supported. Please restore branch '" + initialDefaultBranch + "' or recreate the mirror.");
       } else {
         return of(remainingBranches.iterator().next());

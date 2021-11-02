@@ -166,6 +166,58 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
   }
 
   @Test
+  public void shouldAcceptEmptyInitialMirror() throws IOException, GitAPIException {
+    MirrorCommandResult result = callMirrorCommand(repositoryDirectory.getAbsolutePath(), c -> {
+      c.setFilter(new MirrorFilter() {
+        @Override
+        public Filter getFilter(FilterContext context) {
+          return new Filter() {
+            @Override
+            public Result acceptBranch(BranchUpdate branch) {
+              return Result.reject("nothing accepted");
+            }
+
+            @Override
+            public Result acceptTag(TagUpdate tag) {
+              return Result.reject("nothing accepted");
+            }
+          };
+        }
+      });
+    });
+
+    assertThat(result.getResult()).isEqualTo(REJECTED_UPDATES);
+    assertThat(result.getLog()).contains("Branches:")
+      .contains("- 000000000..fcd0ef183 master (nothing accepted)")
+      .contains("- 000000000..3f76a12f0 test-branch (nothing accepted)")
+      .contains("Tags:")
+      .contains("- 000000000..86a6645ec test-tag (nothing accepted)");
+
+    try (Git createdMirror = Git.open(clone)) {
+      assertThat(createdMirror.branchList().call()).isEmpty();
+      assertThat(createdMirror.tagList().call()).isEmpty();
+    }
+  }
+
+  @Test
+  public void shouldAcceptOnlyTagInInitialMirror() {
+    assertThrows(IllegalStateException.class, () ->
+      callMirrorCommand(repositoryDirectory.getAbsolutePath(), c -> {
+        c.setFilter(new MirrorFilter() {
+          @Override
+          public Filter getFilter(FilterContext context) {
+            return new Filter() {
+              @Override
+              public Result acceptBranch(BranchUpdate branch) {
+                return Result.reject("nothing accepted");
+              }
+            };
+          }
+        });
+      }));
+  }
+
+  @Test
   public void shouldFilterMasterBranchWhenFilteredOnInitialMirror() throws IOException, GitAPIException {
     MirrorCommandResult result = callMirrorCommand(repositoryDirectory.getAbsolutePath(), c -> {
       c.setFilter(new MirrorFilter() {
@@ -358,7 +410,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     assertThat(result.getLog()).containsExactly(
       "Branches:",
       "- 000000000..fcd0ef183 added-branch (rejected due to filter)",
-      "No changes; nothing to push."
+      "No effective changes detected"
     );
 
     try (Git updatedMirror = Git.open(clone)) {
@@ -381,7 +433,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     assertThat(result.getLog()).containsExactly(
       "Branches:",
       "- 3f76a12f0..9e93d8631 test-branch (rejected due to filter)",
-      "No changes; nothing to push."
+      "No effective changes detected"
     );
 
     try (Git updatedMirror = Git.open(clone)) {
@@ -404,7 +456,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     assertThat(result.getLog()).containsExactly(
       "Branches:",
       "- 3f76a12f0..000000000 test-branch (rejected due to filter)",
-      "No changes; nothing to push."
+      "No effective changes detected"
     );
 
     try (Git updatedMirror = Git.open(clone)) {
@@ -428,7 +480,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     assertThat(result.getLog()).containsExactly(
       "Tags:",
       "- 000000000..9e93d8631 added-tag (rejected due to filter)",
-      "No changes; nothing to push."
+      "No effective changes detected"
     );
 
     try (Git updatedMirror = Git.open(clone)) {
@@ -452,7 +504,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     assertThat(result.getLog()).containsExactly(
       "Tags:",
       "- 86a6645ec..9e93d8631 test-tag (rejected due to filter)",
-      "No changes; nothing to push."
+      "No effective changes detected"
     );
 
     try (Git updatedMirror = Git.open(clone)) {
@@ -475,7 +527,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     assertThat(result.getLog()).containsExactly(
       "Tags:",
       "- 86a6645ec..000000000 test-tag (rejected due to filter)",
-      "No changes; nothing to push."
+      "No effective changes detected"
     );
 
     try (Git updatedMirror = Git.open(clone)) {
@@ -498,7 +550,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     assertThat(result.getLog()).containsExactly(
       "Tags:",
       "- 86a6645ec..000000000 test-tag (thou shalt not pass)",
-      "No changes; nothing to push."
+      "No effective changes detected"
     );
   }
 
@@ -517,7 +569,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
       "! got error checking filter for update: this tag creates an exception",
       "Tags:",
       "- 86a6645ec..000000000 test-tag (exception in filter)",
-      "No changes; nothing to push."
+      "No effective changes detected"
     );
   }
 
