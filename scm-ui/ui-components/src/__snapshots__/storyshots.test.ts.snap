@@ -2044,19 +2044,14 @@ exports[`Storyshots Buttons|AddButton Default 1`] = `
     onClick={[Function]}
     type="button"
   >
-    <span
-      className="icon is-medium"
-    >
-      <i
-        className="fas fa-fw fa-plus has-text-inherit"
-        onKeyPress={[Function]}
-        tabIndex={-1}
-      />
-    </span>
-    <span>
-       
-      Add
-    </span>
+    <i
+      className="fas fa-fw fa-plus has-text-inherit is-medium pr-1"
+      onKeyPress={[Function]}
+      tabIndex={-1}
+    />
+     
+     
+    Add
   </button>
 </div>
 `;
@@ -2071,6 +2066,7 @@ exports[`Storyshots Buttons|Button Colors 1`] = `
       onClick={[Function]}
       type="button"
     >
+       
       primary
        
     </button>
@@ -2083,6 +2079,7 @@ exports[`Storyshots Buttons|Button Colors 1`] = `
       onClick={[Function]}
       type="button"
     >
+       
       link
        
     </button>
@@ -2095,6 +2092,7 @@ exports[`Storyshots Buttons|Button Colors 1`] = `
       onClick={[Function]}
       type="button"
     >
+       
       info
        
     </button>
@@ -2107,6 +2105,7 @@ exports[`Storyshots Buttons|Button Colors 1`] = `
       onClick={[Function]}
       type="button"
     >
+       
       success
        
     </button>
@@ -2119,6 +2118,7 @@ exports[`Storyshots Buttons|Button Colors 1`] = `
       onClick={[Function]}
       type="button"
     >
+       
       warning
        
     </button>
@@ -2131,6 +2131,7 @@ exports[`Storyshots Buttons|Button Colors 1`] = `
       onClick={[Function]}
       type="button"
     >
+       
       danger
        
     </button>
@@ -2143,6 +2144,7 @@ exports[`Storyshots Buttons|Button Colors 1`] = `
       onClick={[Function]}
       type="button"
     >
+       
       white
        
     </button>
@@ -2155,6 +2157,7 @@ exports[`Storyshots Buttons|Button Colors 1`] = `
       onClick={[Function]}
       type="button"
     >
+       
       light
        
     </button>
@@ -2167,6 +2170,7 @@ exports[`Storyshots Buttons|Button Colors 1`] = `
       onClick={[Function]}
       type="button"
     >
+       
       dark
        
     </button>
@@ -2179,6 +2183,7 @@ exports[`Storyshots Buttons|Button Colors 1`] = `
       onClick={[Function]}
       type="button"
     >
+       
       black
        
     </button>
@@ -2191,6 +2196,7 @@ exports[`Storyshots Buttons|Button Colors 1`] = `
       onClick={[Function]}
       type="button"
     >
+       
       text
        
     </button>
@@ -2209,6 +2215,7 @@ exports[`Storyshots Buttons|Button Disabled 1`] = `
       onClick={[Function]}
       type="button"
     >
+       
       primary
        
     </button>
@@ -2222,6 +2229,7 @@ exports[`Storyshots Buttons|Button Disabled 1`] = `
       onClick={[Function]}
       type="button"
     >
+       
       link
        
     </button>
@@ -2235,6 +2243,7 @@ exports[`Storyshots Buttons|Button Disabled 1`] = `
       onClick={[Function]}
       type="button"
     >
+       
       info
        
     </button>
@@ -2248,6 +2257,7 @@ exports[`Storyshots Buttons|Button Disabled 1`] = `
       onClick={[Function]}
       type="button"
     >
+       
       success
        
     </button>
@@ -2261,6 +2271,7 @@ exports[`Storyshots Buttons|Button Disabled 1`] = `
       onClick={[Function]}
       type="button"
     >
+       
       warning
        
     </button>
@@ -2274,6 +2285,7 @@ exports[`Storyshots Buttons|Button Disabled 1`] = `
       onClick={[Function]}
       type="button"
     >
+       
       danger
        
     </button>
@@ -2287,6 +2299,7 @@ exports[`Storyshots Buttons|Button Disabled 1`] = `
       onClick={[Function]}
       type="button"
     >
+       
       white
        
     </button>
@@ -2300,6 +2313,7 @@ exports[`Storyshots Buttons|Button Disabled 1`] = `
       onClick={[Function]}
       type="button"
     >
+       
       light
        
     </button>
@@ -2313,6 +2327,7 @@ exports[`Storyshots Buttons|Button Disabled 1`] = `
       onClick={[Function]}
       type="button"
     >
+       
       dark
        
     </button>
@@ -2326,6 +2341,7 @@ exports[`Storyshots Buttons|Button Disabled 1`] = `
       onClick={[Function]}
       type="button"
     >
+       
       black
        
     </button>
@@ -2339,6 +2355,7 @@ exports[`Storyshots Buttons|Button Disabled 1`] = `
       onClick={[Function]}
       type="button"
     >
+       
       text
        
     </button>
@@ -2355,6 +2372,7 @@ exports[`Storyshots Buttons|Button Loading 1`] = `
     onClick={[Function]}
     type="button"
   >
+     
      
     Loading Button
   </button>
@@ -2374,6 +2392,7 @@ exports[`Storyshots Buttons|CreateButton Default 1`] = `
       type="button"
     >
        
+       
       Create
     </button>
   </div>
@@ -2389,19 +2408,14 @@ exports[`Storyshots Buttons|DeleteButton Default 1`] = `
     onClick={[Function]}
     type="button"
   >
-    <span
-      className="icon is-medium"
-    >
-      <i
-        className="fas fa-fw fa-times has-text-inherit"
-        onKeyPress={[Function]}
-        tabIndex={-1}
-      />
-    </span>
-    <span>
-       
-      Delete
-    </span>
+    <i
+      className="fas fa-fw fa-times has-text-inherit is-medium pr-1"
+      onKeyPress={[Function]}
+      tabIndex={-1}
+    />
+     
+     
+    Delete
   </button>
 </div>
 `;
@@ -2464,6 +2478,7 @@ exports[`Storyshots Buttons|EditButton Default 1`] = `
     type="button"
   >
      
+     
     Edit
   </button>
 </div>
@@ -2479,6 +2494,7 @@ exports[`Storyshots Buttons|SubmitButton Default 1`] = `
     onClick={[Function]}
     type="submit"
   >
+     
      
     Submit
   </button>
@@ -2915,48 +2931,40 @@ exports[`Storyshots Changesets Co-Authors with avatar 1`] = `
           <p
             className="control"
           >
-            <button
+            <a
+              aria-label="changeset.buttons.details"
               className="button is-default is-reduced-mobile"
+              href="/repo/hitchhiker/heartOfGold/code/changeset/b6c6f8fbd0d490936fae7d26ffdd4695cc2a0930"
               onClick={[Function]}
-              type="button"
             >
-              <span
-                className="icon is-medium"
-              >
-                <i
-                  className="fas fa-fw fa-exchange-alt has-text-inherit"
-                  onKeyPress={[Function]}
-                  tabIndex={-1}
-                />
-              </span>
-              <span>
-                changeset.buttons.details
-                 
-              </span>
-            </button>
+              <i
+                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-1"
+                onKeyPress={[Function]}
+                tabIndex={-1}
+              />
+               
+              changeset.buttons.details
+               
+            </a>
           </p>
           <p
             className="control"
           >
-            <button
+            <a
+              aria-label="changeset.buttons.sources"
               className="button is-default is-reduced-mobile"
+              href="/repo/hitchhiker/heartOfGold/code/sources/b6c6f8fbd0d490936fae7d26ffdd4695cc2a0930"
               onClick={[Function]}
-              type="button"
             >
-              <span
-                className="icon is-medium"
-              >
-                <i
-                  className="fas fa-fw fa-code has-text-inherit"
-                  onKeyPress={[Function]}
-                  tabIndex={-1}
-                />
-              </span>
-              <span>
-                changeset.buttons.sources
-                 
-              </span>
-            </button>
+              <i
+                className="fas fa-fw fa-code has-text-inherit is-medium pr-1"
+                onKeyPress={[Function]}
+                tabIndex={-1}
+              />
+               
+              changeset.buttons.sources
+               
+            </a>
           </p>
         </div>
       </div>
@@ -3078,48 +3086,40 @@ exports[`Storyshots Changesets Commiter and Co-Authors with avatar 1`] = `
           <p
             className="control"
           >
-            <button
+            <a
+              aria-label="changeset.buttons.details"
               className="button is-default is-reduced-mobile"
+              href="/repo/hitchhiker/heartOfGold/code/changeset/a88567ef1e9528a700555cad8c4576b72fc7c6dd"
               onClick={[Function]}
-              type="button"
             >
-              <span
-                className="icon is-medium"
-              >
-                <i
-                  className="fas fa-fw fa-exchange-alt has-text-inherit"
-                  onKeyPress={[Function]}
-                  tabIndex={-1}
-                />
-              </span>
-              <span>
-                changeset.buttons.details
-                 
-              </span>
-            </button>
+              <i
+                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-1"
+                onKeyPress={[Function]}
+                tabIndex={-1}
+              />
+               
+              changeset.buttons.details
+               
+            </a>
           </p>
           <p
             className="control"
           >
-            <button
+            <a
+              aria-label="changeset.buttons.sources"
               className="button is-default is-reduced-mobile"
+              href="/repo/hitchhiker/heartOfGold/code/sources/a88567ef1e9528a700555cad8c4576b72fc7c6dd"
               onClick={[Function]}
-              type="button"
             >
-              <span
-                className="icon is-medium"
-              >
-                <i
-                  className="fas fa-fw fa-code has-text-inherit"
-                  onKeyPress={[Function]}
-                  tabIndex={-1}
-                />
-              </span>
-              <span>
-                changeset.buttons.sources
-                 
-              </span>
-            </button>
+              <i
+                className="fas fa-fw fa-code has-text-inherit is-medium pr-1"
+                onKeyPress={[Function]}
+                tabIndex={-1}
+              />
+               
+              changeset.buttons.sources
+               
+            </a>
           </p>
         </div>
       </div>
@@ -3199,48 +3199,40 @@ exports[`Storyshots Changesets Default 1`] = `
           <p
             className="control"
           >
-            <button
+            <a
+              aria-label="changeset.buttons.details"
               className="button is-default is-reduced-mobile"
+              href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
-              type="button"
             >
-              <span
-                className="icon is-medium"
-              >
-                <i
-                  className="fas fa-fw fa-exchange-alt has-text-inherit"
-                  onKeyPress={[Function]}
-                  tabIndex={-1}
-                />
-              </span>
-              <span>
-                changeset.buttons.details
-                 
-              </span>
-            </button>
+              <i
+                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-1"
+                onKeyPress={[Function]}
+                tabIndex={-1}
+              />
+               
+              changeset.buttons.details
+               
+            </a>
           </p>
           <p
             className="control"
           >
-            <button
+            <a
+              aria-label="changeset.buttons.sources"
               className="button is-default is-reduced-mobile"
+              href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
-              type="button"
             >
-              <span
-                className="icon is-medium"
-              >
-                <i
-                  className="fas fa-fw fa-code has-text-inherit"
-                  onKeyPress={[Function]}
-                  tabIndex={-1}
-                />
-              </span>
-              <span>
-                changeset.buttons.sources
-                 
-              </span>
-            </button>
+              <i
+                className="fas fa-fw fa-code has-text-inherit is-medium pr-1"
+                onKeyPress={[Function]}
+                tabIndex={-1}
+              />
+               
+              changeset.buttons.sources
+               
+            </a>
           </p>
         </div>
       </div>
@@ -3330,48 +3322,40 @@ exports[`Storyshots Changesets Replacements 1`] = `
           <p
             className="control"
           >
-            <button
+            <a
+              aria-label="changeset.buttons.details"
               className="button is-default is-reduced-mobile"
+              href="/repo/hitchhiker/heartOfGold/code/changeset/d21cc6c359270aef2196796f4d96af65f51866dc"
               onClick={[Function]}
-              type="button"
             >
-              <span
-                className="icon is-medium"
-              >
-                <i
-                  className="fas fa-fw fa-exchange-alt has-text-inherit"
-                  onKeyPress={[Function]}
-                  tabIndex={-1}
-                />
-              </span>
-              <span>
-                changeset.buttons.details
-                 
-              </span>
-            </button>
+              <i
+                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-1"
+                onKeyPress={[Function]}
+                tabIndex={-1}
+              />
+               
+              changeset.buttons.details
+               
+            </a>
           </p>
           <p
             className="control"
           >
-            <button
+            <a
+              aria-label="changeset.buttons.sources"
               className="button is-default is-reduced-mobile"
+              href="/repo/hitchhiker/heartOfGold/code/sources/d21cc6c359270aef2196796f4d96af65f51866dc"
               onClick={[Function]}
-              type="button"
             >
-              <span
-                className="icon is-medium"
-              >
-                <i
-                  className="fas fa-fw fa-code has-text-inherit"
-                  onKeyPress={[Function]}
-                  tabIndex={-1}
-                />
-              </span>
-              <span>
-                changeset.buttons.sources
-                 
-              </span>
-            </button>
+              <i
+                className="fas fa-fw fa-code has-text-inherit is-medium pr-1"
+                onKeyPress={[Function]}
+                tabIndex={-1}
+              />
+               
+              changeset.buttons.sources
+               
+            </a>
           </p>
         </div>
       </div>
@@ -3463,48 +3447,40 @@ exports[`Storyshots Changesets With Committer 1`] = `
           <p
             className="control"
           >
-            <button
+            <a
+              aria-label="changeset.buttons.details"
               className="button is-default is-reduced-mobile"
+              href="/repo/hitchhiker/heartOfGold/code/changeset/d21cc6c359270aef2196796f4d96af65f51866dc"
               onClick={[Function]}
-              type="button"
             >
-              <span
-                className="icon is-medium"
-              >
-                <i
-                  className="fas fa-fw fa-exchange-alt has-text-inherit"
-                  onKeyPress={[Function]}
-                  tabIndex={-1}
-                />
-              </span>
-              <span>
-                changeset.buttons.details
-                 
-              </span>
-            </button>
+              <i
+                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-1"
+                onKeyPress={[Function]}
+                tabIndex={-1}
+              />
+               
+              changeset.buttons.details
+               
+            </a>
           </p>
           <p
             className="control"
           >
-            <button
+            <a
+              aria-label="changeset.buttons.sources"
               className="button is-default is-reduced-mobile"
+              href="/repo/hitchhiker/heartOfGold/code/sources/d21cc6c359270aef2196796f4d96af65f51866dc"
               onClick={[Function]}
-              type="button"
             >
-              <span
-                className="icon is-medium"
-              >
-                <i
-                  className="fas fa-fw fa-code has-text-inherit"
-                  onKeyPress={[Function]}
-                  tabIndex={-1}
-                />
-              </span>
-              <span>
-                changeset.buttons.sources
-                 
-              </span>
-            </button>
+              <i
+                className="fas fa-fw fa-code has-text-inherit is-medium pr-1"
+                onKeyPress={[Function]}
+                tabIndex={-1}
+              />
+               
+              changeset.buttons.sources
+               
+            </a>
           </p>
         </div>
       </div>
@@ -3605,48 +3581,40 @@ exports[`Storyshots Changesets With Committer and Co-Author 1`] = `
           <p
             className="control"
           >
-            <button
+            <a
+              aria-label="changeset.buttons.details"
               className="button is-default is-reduced-mobile"
+              href="/repo/hitchhiker/heartOfGold/code/changeset/a88567ef1e9528a700555cad8c4576b72fc7c6dd"
               onClick={[Function]}
-              type="button"
             >
-              <span
-                className="icon is-medium"
-              >
-                <i
-                  className="fas fa-fw fa-exchange-alt has-text-inherit"
-                  onKeyPress={[Function]}
-                  tabIndex={-1}
-                />
-              </span>
-              <span>
-                changeset.buttons.details
-                 
-              </span>
-            </button>
+              <i
+                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-1"
+                onKeyPress={[Function]}
+                tabIndex={-1}
+              />
+               
+              changeset.buttons.details
+               
+            </a>
           </p>
           <p
             className="control"
           >
-            <button
+            <a
+              aria-label="changeset.buttons.sources"
               className="button is-default is-reduced-mobile"
+              href="/repo/hitchhiker/heartOfGold/code/sources/a88567ef1e9528a700555cad8c4576b72fc7c6dd"
               onClick={[Function]}
-              type="button"
             >
-              <span
-                className="icon is-medium"
-              >
-                <i
-                  className="fas fa-fw fa-code has-text-inherit"
-                  onKeyPress={[Function]}
-                  tabIndex={-1}
-                />
-              </span>
-              <span>
-                changeset.buttons.sources
-                 
-              </span>
-            </button>
+              <i
+                className="fas fa-fw fa-code has-text-inherit is-medium pr-1"
+                onKeyPress={[Function]}
+                tabIndex={-1}
+              />
+               
+              changeset.buttons.sources
+               
+            </a>
           </p>
         </div>
       </div>
@@ -3739,48 +3707,40 @@ exports[`Storyshots Changesets With avatar 1`] = `
           <p
             className="control"
           >
-            <button
+            <a
+              aria-label="changeset.buttons.details"
               className="button is-default is-reduced-mobile"
+              href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
-              type="button"
             >
-              <span
-                className="icon is-medium"
-              >
-                <i
-                  className="fas fa-fw fa-exchange-alt has-text-inherit"
-                  onKeyPress={[Function]}
-                  tabIndex={-1}
-                />
-              </span>
-              <span>
-                changeset.buttons.details
-                 
-              </span>
-            </button>
+              <i
+                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-1"
+                onKeyPress={[Function]}
+                tabIndex={-1}
+              />
+               
+              changeset.buttons.details
+               
+            </a>
           </p>
           <p
             className="control"
           >
-            <button
+            <a
+              aria-label="changeset.buttons.sources"
               className="button is-default is-reduced-mobile"
+              href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
-              type="button"
             >
-              <span
-                className="icon is-medium"
-              >
-                <i
-                  className="fas fa-fw fa-code has-text-inherit"
-                  onKeyPress={[Function]}
-                  tabIndex={-1}
-                />
-              </span>
-              <span>
-                changeset.buttons.sources
-                 
-              </span>
-            </button>
+              <i
+                className="fas fa-fw fa-code has-text-inherit is-medium pr-1"
+                onKeyPress={[Function]}
+                tabIndex={-1}
+              />
+               
+              changeset.buttons.sources
+               
+            </a>
           </p>
         </div>
       </div>
@@ -3870,48 +3830,40 @@ exports[`Storyshots Changesets With contactless signature 1`] = `
           <p
             className="control"
           >
-            <button
+            <a
+              aria-label="changeset.buttons.details"
               className="button is-default is-reduced-mobile"
+              href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
-              type="button"
             >
-              <span
-                className="icon is-medium"
-              >
-                <i
-                  className="fas fa-fw fa-exchange-alt has-text-inherit"
-                  onKeyPress={[Function]}
-                  tabIndex={-1}
-                />
-              </span>
-              <span>
-                changeset.buttons.details
-                 
-              </span>
-            </button>
+              <i
+                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-1"
+                onKeyPress={[Function]}
+                tabIndex={-1}
+              />
+               
+              changeset.buttons.details
+               
+            </a>
           </p>
           <p
             className="control"
           >
-            <button
+            <a
+              aria-label="changeset.buttons.sources"
               className="button is-default is-reduced-mobile"
+              href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
-              type="button"
             >
-              <span
-                className="icon is-medium"
-              >
-                <i
-                  className="fas fa-fw fa-code has-text-inherit"
-                  onKeyPress={[Function]}
-                  tabIndex={-1}
-                />
-              </span>
-              <span>
-                changeset.buttons.sources
-                 
-              </span>
-            </button>
+              <i
+                className="fas fa-fw fa-code has-text-inherit is-medium pr-1"
+                onKeyPress={[Function]}
+                tabIndex={-1}
+              />
+               
+              changeset.buttons.sources
+               
+            </a>
           </p>
         </div>
       </div>
@@ -4001,48 +3953,40 @@ exports[`Storyshots Changesets With invalid signature 1`] = `
           <p
             className="control"
           >
-            <button
+            <a
+              aria-label="changeset.buttons.details"
               className="button is-default is-reduced-mobile"
+              href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
-              type="button"
             >
-              <span
-                className="icon is-medium"
-              >
-                <i
-                  className="fas fa-fw fa-exchange-alt has-text-inherit"
-                  onKeyPress={[Function]}
-                  tabIndex={-1}
-                />
-              </span>
-              <span>
-                changeset.buttons.details
-                 
-              </span>
-            </button>
+              <i
+                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-1"
+                onKeyPress={[Function]}
+                tabIndex={-1}
+              />
+               
+              changeset.buttons.details
+               
+            </a>
           </p>
           <p
             className="control"
           >
-            <button
+            <a
+              aria-label="changeset.buttons.sources"
               className="button is-default is-reduced-mobile"
+              href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
-              type="button"
             >
-              <span
-                className="icon is-medium"
-              >
-                <i
-                  className="fas fa-fw fa-code has-text-inherit"
-                  onKeyPress={[Function]}
-                  tabIndex={-1}
-                />
-              </span>
-              <span>
-                changeset.buttons.sources
-                 
-              </span>
-            </button>
+              <i
+                className="fas fa-fw fa-code has-text-inherit is-medium pr-1"
+                onKeyPress={[Function]}
+                tabIndex={-1}
+              />
+               
+              changeset.buttons.sources
+               
+            </a>
           </p>
         </div>
       </div>
@@ -4135,48 +4079,40 @@ exports[`Storyshots Changesets With multiple Co-Authors 1`] = `
           <p
             className="control"
           >
-            <button
+            <a
+              aria-label="changeset.buttons.details"
               className="button is-default is-reduced-mobile"
+              href="/repo/hitchhiker/heartOfGold/code/changeset/b6c6f8fbd0d490936fae7d26ffdd4695cc2a0930"
               onClick={[Function]}
-              type="button"
             >
-              <span
-                className="icon is-medium"
-              >
-                <i
-                  className="fas fa-fw fa-exchange-alt has-text-inherit"
-                  onKeyPress={[Function]}
-                  tabIndex={-1}
-                />
-              </span>
-              <span>
-                changeset.buttons.details
-                 
-              </span>
-            </button>
+              <i
+                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-1"
+                onKeyPress={[Function]}
+                tabIndex={-1}
+              />
+               
+              changeset.buttons.details
+               
+            </a>
           </p>
           <p
             className="control"
           >
-            <button
+            <a
+              aria-label="changeset.buttons.sources"
               className="button is-default is-reduced-mobile"
+              href="/repo/hitchhiker/heartOfGold/code/sources/b6c6f8fbd0d490936fae7d26ffdd4695cc2a0930"
               onClick={[Function]}
-              type="button"
             >
-              <span
-                className="icon is-medium"
-              >
-                <i
-                  className="fas fa-fw fa-code has-text-inherit"
-                  onKeyPress={[Function]}
-                  tabIndex={-1}
-                />
-              </span>
-              <span>
-                changeset.buttons.sources
-                 
-              </span>
-            </button>
+              <i
+                className="fas fa-fw fa-code has-text-inherit is-medium pr-1"
+                onKeyPress={[Function]}
+                tabIndex={-1}
+              />
+               
+              changeset.buttons.sources
+               
+            </a>
           </p>
         </div>
       </div>
@@ -4266,48 +4202,40 @@ exports[`Storyshots Changesets With multiple signatures and invalid status 1`] =
           <p
             className="control"
           >
-            <button
+            <a
+              aria-label="changeset.buttons.details"
               className="button is-default is-reduced-mobile"
+              href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
-              type="button"
             >
-              <span
-                className="icon is-medium"
-              >
-                <i
-                  className="fas fa-fw fa-exchange-alt has-text-inherit"
-                  onKeyPress={[Function]}
-                  tabIndex={-1}
-                />
-              </span>
-              <span>
-                changeset.buttons.details
-                 
-              </span>
-            </button>
+              <i
+                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-1"
+                onKeyPress={[Function]}
+                tabIndex={-1}
+              />
+               
+              changeset.buttons.details
+               
+            </a>
           </p>
           <p
             className="control"
           >
-            <button
+            <a
+              aria-label="changeset.buttons.sources"
               className="button is-default is-reduced-mobile"
+              href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
-              type="button"
             >
-              <span
-                className="icon is-medium"
-              >
-                <i
-                  className="fas fa-fw fa-code has-text-inherit"
-                  onKeyPress={[Function]}
-                  tabIndex={-1}
-                />
-              </span>
-              <span>
-                changeset.buttons.sources
-                 
-              </span>
-            </button>
+              <i
+                className="fas fa-fw fa-code has-text-inherit is-medium pr-1"
+                onKeyPress={[Function]}
+                tabIndex={-1}
+              />
+               
+              changeset.buttons.sources
+               
+            </a>
           </p>
         </div>
       </div>
@@ -4397,48 +4325,40 @@ exports[`Storyshots Changesets With multiple signatures and not found status 1`]
           <p
             className="control"
           >
-            <button
+            <a
+              aria-label="changeset.buttons.details"
               className="button is-default is-reduced-mobile"
+              href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
-              type="button"
             >
-              <span
-                className="icon is-medium"
-              >
-                <i
-                  className="fas fa-fw fa-exchange-alt has-text-inherit"
-                  onKeyPress={[Function]}
-                  tabIndex={-1}
-                />
-              </span>
-              <span>
-                changeset.buttons.details
-                 
-              </span>
-            </button>
+              <i
+                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-1"
+                onKeyPress={[Function]}
+                tabIndex={-1}
+              />
+               
+              changeset.buttons.details
+               
+            </a>
           </p>
           <p
             className="control"
           >
-            <button
+            <a
+              aria-label="changeset.buttons.sources"
               className="button is-default is-reduced-mobile"
+              href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
-              type="button"
             >
-              <span
-                className="icon is-medium"
-              >
-                <i
-                  className="fas fa-fw fa-code has-text-inherit"
-                  onKeyPress={[Function]}
-                  tabIndex={-1}
-                />
-              </span>
-              <span>
-                changeset.buttons.sources
-                 
-              </span>
-            </button>
+              <i
+                className="fas fa-fw fa-code has-text-inherit is-medium pr-1"
+                onKeyPress={[Function]}
+                tabIndex={-1}
+              />
+               
+              changeset.buttons.sources
+               
+            </a>
           </p>
         </div>
       </div>
@@ -4528,48 +4448,40 @@ exports[`Storyshots Changesets With multiple signatures and valid status 1`] = `
           <p
             className="control"
           >
-            <button
+            <a
+              aria-label="changeset.buttons.details"
               className="button is-default is-reduced-mobile"
+              href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
-              type="button"
             >
-              <span
-                className="icon is-medium"
-              >
-                <i
-                  className="fas fa-fw fa-exchange-alt has-text-inherit"
-                  onKeyPress={[Function]}
-                  tabIndex={-1}
-                />
-              </span>
-              <span>
-                changeset.buttons.details
-                 
-              </span>
-            </button>
+              <i
+                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-1"
+                onKeyPress={[Function]}
+                tabIndex={-1}
+              />
+               
+              changeset.buttons.details
+               
+            </a>
           </p>
           <p
             className="control"
           >
-            <button
+            <a
+              aria-label="changeset.buttons.sources"
               className="button is-default is-reduced-mobile"
+              href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
-              type="button"
             >
-              <span
-                className="icon is-medium"
-              >
-                <i
-                  className="fas fa-fw fa-code has-text-inherit"
-                  onKeyPress={[Function]}
-                  tabIndex={-1}
-                />
-              </span>
-              <span>
-                changeset.buttons.sources
-                 
-              </span>
-            </button>
+              <i
+                className="fas fa-fw fa-code has-text-inherit is-medium pr-1"
+                onKeyPress={[Function]}
+                tabIndex={-1}
+              />
+               
+              changeset.buttons.sources
+               
+            </a>
           </p>
         </div>
       </div>
@@ -4659,48 +4571,40 @@ exports[`Storyshots Changesets With unknown signature 1`] = `
           <p
             className="control"
           >
-            <button
+            <a
+              aria-label="changeset.buttons.details"
               className="button is-default is-reduced-mobile"
+              href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
-              type="button"
             >
-              <span
-                className="icon is-medium"
-              >
-                <i
-                  className="fas fa-fw fa-exchange-alt has-text-inherit"
-                  onKeyPress={[Function]}
-                  tabIndex={-1}
-                />
-              </span>
-              <span>
-                changeset.buttons.details
-                 
-              </span>
-            </button>
+              <i
+                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-1"
+                onKeyPress={[Function]}
+                tabIndex={-1}
+              />
+               
+              changeset.buttons.details
+               
+            </a>
           </p>
           <p
             className="control"
           >
-            <button
+            <a
+              aria-label="changeset.buttons.sources"
               className="button is-default is-reduced-mobile"
+              href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
-              type="button"
             >
-              <span
-                className="icon is-medium"
-              >
-                <i
-                  className="fas fa-fw fa-code has-text-inherit"
-                  onKeyPress={[Function]}
-                  tabIndex={-1}
-                />
-              </span>
-              <span>
-                changeset.buttons.sources
-                 
-              </span>
-            </button>
+              <i
+                className="fas fa-fw fa-code has-text-inherit is-medium pr-1"
+                onKeyPress={[Function]}
+                tabIndex={-1}
+              />
+               
+              changeset.buttons.sources
+               
+            </a>
           </p>
         </div>
       </div>
@@ -4790,48 +4694,40 @@ exports[`Storyshots Changesets With unowned signature 1`] = `
           <p
             className="control"
           >
-            <button
+            <a
+              aria-label="changeset.buttons.details"
               className="button is-default is-reduced-mobile"
+              href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
-              type="button"
             >
-              <span
-                className="icon is-medium"
-              >
-                <i
-                  className="fas fa-fw fa-exchange-alt has-text-inherit"
-                  onKeyPress={[Function]}
-                  tabIndex={-1}
-                />
-              </span>
-              <span>
-                changeset.buttons.details
-                 
-              </span>
-            </button>
+              <i
+                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-1"
+                onKeyPress={[Function]}
+                tabIndex={-1}
+              />
+               
+              changeset.buttons.details
+               
+            </a>
           </p>
           <p
             className="control"
           >
-            <button
+            <a
+              aria-label="changeset.buttons.sources"
               className="button is-default is-reduced-mobile"
+              href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
-              type="button"
             >
-              <span
-                className="icon is-medium"
-              >
-                <i
-                  className="fas fa-fw fa-code has-text-inherit"
-                  onKeyPress={[Function]}
-                  tabIndex={-1}
-                />
-              </span>
-              <span>
-                changeset.buttons.sources
-                 
-              </span>
-            </button>
+              <i
+                className="fas fa-fw fa-code has-text-inherit is-medium pr-1"
+                onKeyPress={[Function]}
+                tabIndex={-1}
+              />
+               
+              changeset.buttons.sources
+               
+            </a>
           </p>
         </div>
       </div>
@@ -4921,48 +4817,40 @@ exports[`Storyshots Changesets With valid signature 1`] = `
           <p
             className="control"
           >
-            <button
+            <a
+              aria-label="changeset.buttons.details"
               className="button is-default is-reduced-mobile"
+              href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
-              type="button"
             >
-              <span
-                className="icon is-medium"
-              >
-                <i
-                  className="fas fa-fw fa-exchange-alt has-text-inherit"
-                  onKeyPress={[Function]}
-                  tabIndex={-1}
-                />
-              </span>
-              <span>
-                changeset.buttons.details
-                 
-              </span>
-            </button>
+              <i
+                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-1"
+                onKeyPress={[Function]}
+                tabIndex={-1}
+              />
+               
+              changeset.buttons.details
+               
+            </a>
           </p>
           <p
             className="control"
           >
-            <button
+            <a
+              aria-label="changeset.buttons.sources"
               className="button is-default is-reduced-mobile"
+              href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
-              type="button"
             >
-              <span
-                className="icon is-medium"
-              >
-                <i
-                  className="fas fa-fw fa-code has-text-inherit"
-                  onKeyPress={[Function]}
-                  tabIndex={-1}
-                />
-              </span>
-              <span>
-                changeset.buttons.sources
-                 
-              </span>
-            </button>
+              <i
+                className="fas fa-fw fa-code has-text-inherit is-medium pr-1"
+                onKeyPress={[Function]}
+                tabIndex={-1}
+              />
+               
+              changeset.buttons.sources
+               
+            </a>
           </p>
         </div>
       </div>
@@ -5346,6 +5234,7 @@ exports[`Storyshots Diff Changing Content 1`] = `
       onClick={[Function]}
       type="button"
     >
+       
        
       Change content
     </button>
@@ -55793,19 +55682,14 @@ exports[`Storyshots Forms|AddKeyValueEntryToTableField Default 1`] = `
       onClick={[Function]}
       type="button"
     >
-      <span
-        className="icon is-medium"
-      >
-        <i
-          className="fas fa-fw fa-plus has-text-inherit"
-          onKeyPress={[Function]}
-          tabIndex={-1}
-        />
-      </span>
-      <span>
-        Add to Table
-         
-      </span>
+      <i
+        className="fas fa-fw fa-plus has-text-inherit is-medium pr-1"
+        onKeyPress={[Function]}
+        tabIndex={-1}
+      />
+       
+      Add to Table
+       
     </button>
   </div>
 </div>
@@ -55868,19 +55752,14 @@ exports[`Storyshots Forms|AddKeyValueEntryToTableField Disabled 1`] = `
       onClick={[Function]}
       type="button"
     >
-      <span
-        className="icon is-medium"
-      >
-        <i
-          className="fas fa-fw fa-plus has-text-inherit"
-          onKeyPress={[Function]}
-          tabIndex={-1}
-        />
-      </span>
-      <span>
-        Add to Table
-         
-      </span>
+      <i
+        className="fas fa-fw fa-plus has-text-inherit is-medium pr-1"
+        onKeyPress={[Function]}
+        tabIndex={-1}
+      />
+       
+      Add to Table
+       
     </button>
   </div>
 </div>
@@ -56118,6 +55997,7 @@ exports[`Storyshots Forms|Checkbox ReactHookForm 1`] = `
       type="submit"
     >
        
+       
       Submit
     </button>
   </div>
@@ -56152,6 +56032,7 @@ Array [
     onClick={[Function]}
     type="button"
   >
+     
      
     Toggle Checkbox
   </button>,
@@ -56411,6 +56292,7 @@ exports[`Storyshots Forms|FileInput Default 1`] = `
           type="submit"
         >
            
+           
           Submit
         </button>
       </div>
@@ -56487,6 +56369,7 @@ exports[`Storyshots Forms|InputField AutoFocusAndRef 1`] = `
     onClick={[Function]}
     type="button"
   >
+     
      
     Focus First InputField
   </button>
@@ -56655,6 +56538,7 @@ exports[`Storyshots Forms|InputField React Hook Form 1`] = `
         type="submit"
       >
          
+         
         Submit
       </button>
     </div>
@@ -56687,6 +56571,7 @@ exports[`Storyshots Forms|InputField Ref 1`] = `
     onClick={[Function]}
     type="button"
   >
+     
      
     Focus InputField
   </button>
@@ -56888,6 +56773,7 @@ exports[`Storyshots Forms|Radio ReactHookForm 1`] = `
       type="submit"
     >
        
+       
       Submit
     </button>
   </div>
@@ -56917,6 +56803,7 @@ Array [
     onClick={[Function]}
     type="button"
   >
+     
      
     Check InputField
   </button>,
@@ -57232,6 +57119,7 @@ exports[`Storyshots Forms|Select ReactHookForm 1`] = `
       type="submit"
     >
        
+       
       Submit
     </button>
   </div>
@@ -57275,6 +57163,7 @@ Array [
     onClick={[Function]}
     type="button"
   >
+     
      
     Focus Select Field
   </button>,
@@ -57344,6 +57233,7 @@ Array [
     onClick={[Function]}
     type="button"
   >
+     
      
     Focus First InputField
   </button>,
@@ -57580,6 +57470,7 @@ exports[`Storyshots Forms|Textarea ReactHookForm 1`] = `
       type="submit"
     >
        
+       
       Submit
     </button>
   </div>
@@ -57608,6 +57499,7 @@ Array [
     onClick={[Function]}
     type="button"
   >
+     
      
     Focus InputField
   </button>,
@@ -57677,15 +57569,12 @@ exports[`Storyshots GroupEntry Default 1`] = `
               title="Copy clone command to clipboard"
               type="button"
             >
-              <span
-                className="icon is-medium"
-              >
-                <i
-                  className="fas fa-fw fa-download has-text-inherit"
-                  onKeyPress={[Function]}
-                  tabIndex={-1}
-                />
-              </span>
+              <i
+                className="fas fa-fw fa-download has-text-inherit is-medium pr-1"
+                onKeyPress={[Function]}
+                tabIndex={-1}
+              />
+               
             </button>
           </div>
         </div>
@@ -57758,15 +57647,12 @@ exports[`Storyshots GroupEntry With long texts 1`] = `
               title="Copy clone command to clipboard"
               type="button"
             >
-              <span
-                className="icon is-medium"
-              >
-                <i
-                  className="fas fa-fw fa-download has-text-inherit"
-                  onKeyPress={[Function]}
-                  tabIndex={-1}
-                />
-              </span>
+              <i
+                className="fas fa-fw fa-download has-text-inherit is-medium pr-1"
+                onKeyPress={[Function]}
+                tabIndex={-1}
+              />
+               
             </button>
           </div>
         </div>
@@ -89748,6 +89634,7 @@ exports[`Storyshots Tooltip Default 1`] = `
         onClick={[Function]}
         type="button"
       >
+         
         right
          
       </button>
@@ -89766,6 +89653,7 @@ exports[`Storyshots Tooltip Default 1`] = `
         onClick={[Function]}
         type="button"
       >
+         
         top
          
       </button>
@@ -89784,6 +89672,7 @@ exports[`Storyshots Tooltip Default 1`] = `
         onClick={[Function]}
         type="button"
       >
+         
         left
          
       </button>
@@ -89802,6 +89691,7 @@ exports[`Storyshots Tooltip Default 1`] = `
         onClick={[Function]}
         type="button"
       >
+         
         bottom
          
       </button>
@@ -89834,6 +89724,7 @@ exports[`Storyshots Tooltip Multiline 1`] = `
         onClick={[Function]}
         type="button"
       >
+         
         right
          
       </button>
@@ -89859,6 +89750,7 @@ exports[`Storyshots Tooltip Multiline 1`] = `
         onClick={[Function]}
         type="button"
       >
+         
         top
          
       </button>
@@ -89884,6 +89776,7 @@ exports[`Storyshots Tooltip Multiline 1`] = `
         onClick={[Function]}
         type="button"
       >
+         
         left
          
       </button>
@@ -89909,6 +89802,7 @@ exports[`Storyshots Tooltip Multiline 1`] = `
         onClick={[Function]}
         type="button"
       >
+         
         bottom
          
       </button>
@@ -89936,6 +89830,7 @@ exports[`Storyshots Tooltip Short Multiline 1`] = `
         onClick={[Function]}
         type="button"
       >
+         
         right
          
       </button>
@@ -89956,6 +89851,7 @@ exports[`Storyshots Tooltip Short Multiline 1`] = `
         onClick={[Function]}
         type="button"
       >
+         
         top
          
       </button>
@@ -89976,6 +89872,7 @@ exports[`Storyshots Tooltip Short Multiline 1`] = `
         onClick={[Function]}
         type="button"
       >
+         
         left
          
       </button>
@@ -89996,6 +89893,7 @@ exports[`Storyshots Tooltip Short Multiline 1`] = `
         onClick={[Function]}
         type="button"
       >
+         
         bottom
          
       </button>
