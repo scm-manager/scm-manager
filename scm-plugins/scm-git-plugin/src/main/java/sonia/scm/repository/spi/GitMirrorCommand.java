@@ -205,7 +205,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       }
 
       if (!defaultBranchSelector.isChanged()) {
-        mirrorLog.add("No changes; nothing to push.");
+        mirrorLog.add("No effective changes detected");
         return new MirrorCommandResult(result, mirrorLog, stopwatch.stop().elapsed());
       }
 
