@@ -21,44 +21,43 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
+import React, { FC } from "react";
 import classNames from "classnames";
 import { createAttributesForTesting } from "./devBuild";
 
 type Props = {
   title?: string;
-  iconStyle: string;
+  iconStyle?: string;
   name: string;
-  color: string;
+  color?: string;
   className?: string;
   onClick?: (event: React.MouseEvent) => void;
+  onEnter?: (event: React.KeyboardEvent) => void;
   testId?: string;
+  tabIndex?: number;
 };
 
-export default class Icon extends React.Component<Props> {
-  static defaultProps = {
-    iconStyle: "fas",
-    color: "grey-light"
-  };
+const Icon: FC<Props> = ({
+  iconStyle = "fas",
+  color = "grey-light",
+  title,
+  name,
+  className,
+  onClick,
+  testId,
+  tabIndex = -1,
+  onEnter,
+}) => {
+  return (
+    <i
+      onClick={onClick}
+      onKeyPress={(event) => event.key === "Enter" && onEnter && onEnter(event)}
+      title={title}
+      className={classNames(iconStyle, "fa-fw", "fa-" + name, `has-text-${color}`, className)}
+      tabIndex={tabIndex}
+      {...createAttributesForTesting(testId)}
+    />
+  );
+};
 
-  render() {
-    const { title, iconStyle, name, color, className, onClick, testId } = this.props;
-    if (title) {
-      return (
-        <i
-          onClick={onClick}
-          title={title}
-          className={classNames(iconStyle, "fa-fw", "fa-" + name, `has-text-${color}`, className)}
-          {...createAttributesForTesting(testId)}
-        />
-      );
-    }
-    return (
-      <i
-        onClick={onClick}
-        className={classNames(iconStyle, "fa-" + name, `has-text-${color}`, className)}
-        {...createAttributesForTesting(testId)}
-      />
-    );
-  }
-}
+export default Icon;

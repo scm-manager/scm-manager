@@ -22,31 +22,19 @@
  * SOFTWARE.
  */
 
-import { HalRepresentation, HalRepresentationWithEmbedded } from "./hal";
+package sonia.scm.api.rest;
 
-export type SubRepository = {
-  repositoryUrl: string;
-  browserUrl: string;
-  revision: string;
-};
+import sonia.scm.api.v2.resources.ExceptionWithContextToErrorDtoMapper;
+import sonia.scm.repository.api.FileLockedException;
 
-export type File = HalRepresentationWithEmbedded<{
-  children?: File[];
-}> & {
-  name: string;
-  path: string;
-  directory: boolean;
-  description?: string;
-  revision: string;
-  length?: number;
-  commitDate?: string;
-  subRepository?: SubRepository;
-  partialResult?: boolean;
-  computationAborted?: boolean;
-  truncated?: boolean;
-};
+import javax.inject.Inject;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.Provider;
 
-export type Paths = HalRepresentation & {
-  revision: string;
-  paths: string[];
-};
+@Provider
+public class FileLockedExceptionMapper extends ContextualExceptionMapper<FileLockedException> {
+  @Inject
+  public FileLockedExceptionMapper(ExceptionWithContextToErrorDtoMapper mapper) {
+    super(FileLockedException.class, Response.Status.CONFLICT, mapper);
+  }
+}

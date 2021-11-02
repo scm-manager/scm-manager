@@ -22,31 +22,26 @@
  * SOFTWARE.
  */
 
-import { HalRepresentation, HalRepresentationWithEmbedded } from "./hal";
+package sonia.scm.web;
 
-export type SubRepository = {
-  repositoryUrl: string;
-  browserUrl: string;
-  revision: string;
-};
+import sonia.scm.plugin.ExtensionPoint;
 
-export type File = HalRepresentationWithEmbedded<{
-  children?: File[];
-}> & {
-  name: string;
-  path: string;
-  directory: boolean;
-  description?: string;
-  revision: string;
-  length?: number;
-  commitDate?: string;
-  subRepository?: SubRepository;
-  partialResult?: boolean;
-  computationAborted?: boolean;
-  truncated?: boolean;
-};
+import javax.servlet.http.HttpServletRequest;
 
-export type Paths = HalRepresentation & {
-  revision: string;
-  paths: string[];
-};
+/**
+ * This can be used to determine, whether a web request should be handled as a scm client request.
+ *
+ * @since 2.26.0
+ */
+@ExtensionPoint
+public interface ScmClientDetector {
+
+  /**
+   * Checks whether the given request and/or the userAgent imply a request from a scm client.
+   *
+   * @param request The request to check.
+   * @param userAgent The {@link UserAgent} for the request.
+   * @return <code>true</code> if the given request was sent by an scm client.
+   */
+  boolean isScmClient(HttpServletRequest request, UserAgent userAgent);
+}

@@ -478,6 +478,19 @@ public final class RepositoryService implements Closeable {
   }
 
   /**
+   * Lock and unlock files.
+   *
+   * @return instance of {@link FileLockCommandBuilder}
+   * @throws CommandNotSupportedException if the command is not supported
+   *                                      by the implementation of the repository service provider.
+   * @since 2.26.0
+   */
+  public FileLockCommandBuilder getLockCommand() {
+    LOG.debug("create lock command for repository {}", repository);
+    return new FileLockCommandBuilder(provider.getFileLockCommand(), repository);
+  }
+
+  /**
    * Returns true if the command is supported by the repository service.
    *
    * @param command command

@@ -23,19 +23,24 @@
  */
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
-import { File } from "@scm-manager/ui-types";
+import { File, Link, Repository } from "@scm-manager/ui-types";
 import { DownloadButton } from "@scm-manager/ui-components";
+import { ExtensionPoint } from "@scm-manager/ui-extensions";
 
 type Props = WithTranslation & {
+  repository: Repository;
   file: File;
 };
 
 class DownloadViewer extends React.Component<Props> {
   render() {
-    const { t, file } = this.props;
+    const { t, repository, file } = this.props;
+
     return (
       <div className="has-text-centered">
-        <DownloadButton url={file._links.self.href} displayName={t("sources.content.downloadButton")} />
+        <ExtensionPoint name="repos.sources.content.downloadButton" props={{ repository, file }}>
+          <DownloadButton url={(file._links.self as Link).href} displayName={t("sources.content.downloadButton")} />
+        </ExtensionPoint>
       </div>
     );
   }

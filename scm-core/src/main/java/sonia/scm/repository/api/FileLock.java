@@ -22,31 +22,56 @@
  * SOFTWARE.
  */
 
-import { HalRepresentation, HalRepresentationWithEmbedded } from "./hal";
+package sonia.scm.repository.api;
 
-export type SubRepository = {
-  repositoryUrl: string;
-  browserUrl: string;
-  revision: string;
-};
+import java.io.Serializable;
+import java.time.Instant;
 
-export type File = HalRepresentationWithEmbedded<{
-  children?: File[];
-}> & {
-  name: string;
-  path: string;
-  directory: boolean;
-  description?: string;
-  revision: string;
-  length?: number;
-  commitDate?: string;
-  subRepository?: SubRepository;
-  partialResult?: boolean;
-  computationAborted?: boolean;
-  truncated?: boolean;
-};
+/**
+ * Detailes of a file lock.
+ *
+ * @since 2.26.0
+ */
+public class FileLock implements Serializable {
+  private static final long serialVersionUID = 1902345795392347027L;
 
-export type Paths = HalRepresentation & {
-  revision: string;
-  paths: string[];
-};
+  private final String path;
+  private final String id;
+  private final String userId;
+  private final Instant timestamp;
+
+  public FileLock(String path, String id, String userId, Instant timestamp) {
+    this.path = path;
+    this.id = id;
+    this.userId = userId;
+    this.timestamp = timestamp;
+  }
+
+  /**
+   * The path of the locked file.
+   */
+  public String getPath() {
+    return path;
+  }
+
+  /**
+   * The id of the lock.
+   */
+  public String getId() {
+    return id;
+  }
+
+  /**
+   * The id of the user that created the lock.
+   */
+  public String getUserId() {
+    return userId;
+  }
+
+  /**
+   * The time the lock was created.
+   */
+  public Instant getTimestamp() {
+    return timestamp;
+  }
+}

@@ -22,31 +22,38 @@
  * SOFTWARE.
  */
 
-import { HalRepresentation, HalRepresentationWithEmbedded } from "./hal";
+package sonia.scm.web;
 
-export type SubRepository = {
-  repositoryUrl: string;
-  browserUrl: string;
-  revision: string;
-};
+import javax.servlet.ReadListener;
+import javax.servlet.ServletInputStream;
+import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
 
-export type File = HalRepresentationWithEmbedded<{
-  children?: File[];
-}> & {
-  name: string;
-  path: string;
-  directory: boolean;
-  description?: string;
-  revision: string;
-  length?: number;
-  commitDate?: string;
-  subRepository?: SubRepository;
-  partialResult?: boolean;
-  computationAborted?: boolean;
-  truncated?: boolean;
-};
+public class BufferedServletInputStream extends ServletInputStream {
 
-export type Paths = HalRepresentation & {
-  revision: string;
-  paths: string[];
-};
+  private ByteArrayInputStream input;
+
+  BufferedServletInputStream(String content) {
+    this.input = new ByteArrayInputStream(content.getBytes(StandardCharsets.US_ASCII));
+  }
+
+  @Override
+  public int read() {
+    return input.read();
+  }
+
+  @Override
+  public boolean isFinished() {
+    return false;
+  }
+
+  @Override
+  public boolean isReady() {
+    return true;
+  }
+
+  @Override
+  public void setReadListener(ReadListener readListener) {
+    // not necessary for tests
+  }
+}
