@@ -35,7 +35,7 @@ type Props = {
   onEnter?: (event: React.KeyboardEvent) => void;
   testId?: string;
   tabIndex?: number;
-  alt: string;
+  alt?: string;
 };
 
 const Icon: FC<Props> = ({
