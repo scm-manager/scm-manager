@@ -38,8 +38,7 @@
   "errorBoundary": {
     "redirect": {
       "title": "Weiterleitung",
-      "subtitle": "Sie werden in kürze zur Anmeldeseite weitergeleitet",
-      "alt": "Weiterleitungs-Icon"
+      "subtitle": "Sie werden in kürze zur Anmeldeseite weitergeleitet"
     }
   },
   "markdownErrorNotification": {
@@ -207,7 +206,7 @@
       "utilities": {
         "title": "Hilfsmittel",
         "description": "Wandeln Sie menschlich-lesbare Zeitmarken in standard Millisekunden um, um diese in Ihren Queries zu verwenden. Das Datum ist ein Pflichtfeld, Stunde, Minute und Sekunde sind optional.",
-        "datetime":{
+        "datetime": {
           "label": "Datum in Standardzeitstempel umwandeln",
           "format": "yyyy-mm-dd hh:mm:ss",
           "convertButtonLabel": "Konvertieren"
