@@ -3,8 +3,8 @@ title: Caching for Working Directories
 ---
 
 SCM-Manager offers commands to modify repositories on the server side. For example this is used by the
-[Editor Plugin](https://www.scm-manager.org/plugins/scm-editor-plugin/) and the
-[Review Plugin](https://www.scm-manager.org/plugins/scm-review-plugin/). Without further configuration, this is done
+[Editor Plugin](https://scm-manager.org/plugins/scm-editor-plugin/) and the
+[Review Plugin](https://scm-manager.org/plugins/scm-review-plugin/). Without further configuration, this is done
 by cloning/checking out the repository temporarily, performing the change, creating a commit and pushing the changes
 back to the central repository. The larger the repositories, the longer this may take.
 

@@ -36,14 +36,14 @@ class HealthCheckFailureTest {
   void shouldCreateTemplatedUrl() {
     HealthCheckFailure failure = new HealthCheckFailure("1", "hyperdrive", urlForTitle("hyperdrive"), "Far too fast");
 
-    assertThat(failure.getUrl()).isEqualTo("https://www.scm-manager.org/docs/latest/en/user/repo/health-checks/hyperdrive");
+    assertThat(failure.getUrl()).isEqualTo("https://scm-manager.org/docs/latest/en/user/repo/health-checks/hyperdrive");
   }
 
   @Test
   void shouldCreateTemplatedUrlForGivenVersion() {
     HealthCheckFailure failure = new HealthCheckFailure("1", "hyperdrive", urlForTitle("hyperdrive"), "Far too fast");
 
-    assertThat(failure.getUrl("1.17.x")).isEqualTo("https://www.scm-manager.org/docs/1.17.x/en/user/repo/health-checks/hyperdrive");
+    assertThat(failure.getUrl("1.17.x")).isEqualTo("https://scm-manager.org/docs/1.17.x/en/user/repo/health-checks/hyperdrive");
   }
 
   @Test

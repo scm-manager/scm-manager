@@ -57,7 +57,8 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider {
     Command.MODIFY,
     Command.BUNDLE,
     Command.UNBUNDLE,
-    Command.MIRROR
+    Command.MIRROR,
+    Command.FILE_LOCK
   );
 
   protected static final Set<Feature> FEATURES = EnumSet.of(
@@ -178,6 +179,11 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider {
   @Override
   public MirrorCommand getMirrorCommand() {
     return commandInjector.getInstance(GitMirrorCommand.class);
+  }
+
+  @Override
+  public FileLockCommand getFileLockCommand() {
+    return commandInjector.getInstance(GitFileLockCommand.class);
   }
 
   @Override

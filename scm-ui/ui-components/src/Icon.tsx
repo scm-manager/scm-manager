@@ -32,35 +32,31 @@ type Props = {
   color?: string;
   className?: string;
   onClick?: (event: React.MouseEvent) => void;
+  onEnter?: (event: React.KeyboardEvent) => void;
   testId?: string;
+  tabIndex?: number;
   alt: string;
 };
 
 const Icon: FC<Props> = ({
-  title,
   iconStyle = "fas",
-  name,
   color = "grey-light",
+  title,
+  name,
   className,
   onClick,
   testId,
+  tabIndex = -1,
+  onEnter,
   alt = title,
 }) => {
-  if (title) {
-    return (
-      <i
-        onClick={onClick}
-        title={title}
-        className={classNames(iconStyle, "fa-fw", `fa-${name}`, `has-text-${color}`, className)}
-        aria-label={alt}
-        {...createAttributesForTesting(testId)}
-      />
-    );
-  }
   return (
     <i
       onClick={onClick}
-      className={classNames(iconStyle, `fa-${name}`, `has-text-${color}`, className)}
+      onKeyPress={(event) => event.key === "Enter" && onEnter && onEnter(event)}
+      title={title}
+      className={classNames(iconStyle, "fa-fw", "fa-" + name, `has-text-${color}`, className)}
+      tabIndex={tabIndex}
       aria-label={alt}
       {...createAttributesForTesting(testId)}
     />

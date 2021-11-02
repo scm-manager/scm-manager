@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://www.scm-manager.org/">
+  <a href="https://scm-manager.org/">
     <img alt="SCM-Manager" src="https://download.scm-manager.org/images/logo/scm-manager_logo.png" width="500" />
   </a>
 </p>
@@ -24,14 +24,14 @@ This branch (`develop`) is for the development of SCM-Manager 2.x. If you are in
 
 ## News
 
-All news regarding SCM-Manager will be published in our [blog](https://www.scm-manager.org/blog/).
+All news regarding SCM-Manager will be published in our [blog](https://scm-manager.org/blog/).
 
 ## Support / Community
  [Contact the SCM-Manager community support](https://scm-manager.org/support/)
 
 ## Documentation
 
-You can find the complete documentation on our [homepage](https://www.scm-manager.org/docs/).
+You can find the complete documentation on our [homepage](https://scm-manager.org/docs/).
 
 ## Development
 
@@ -137,11 +137,11 @@ Those properties should be stored in `~/.gradle/gradle.properties`.
 
 ## Need help?
 
-Looking for more guidance? Full documentation lives on our [homepage](https://www.scm-manager.org/docs/) or the
-dedicated pages for our [plugins](https://www.scm-manager.org/plugins/). Do you have further ideas or need support?
+Looking for more guidance? Full documentation lives on our [homepage](https://scm-manager.org/docs/) or the
+dedicated pages for our [plugins](https://scm-manager.org/plugins/). Do you have further ideas or need support?
 
 - **Community Support** - Contact the SCM-Manager support team for questions about SCM-Manager, to report bugs or to
-    request features through the official channels. [Find more about this here](https://www.scm-manager.org/support/).
+    request features through the official channels. [Find more about this here](https://scm-manager.org/support/).
 
 - **Enterprise Support** - Do you require support with the integration of SCM-Manager into your processes, with the
     customization of the tool or simply a service level agreement (SLA)? **Contact our development partner Cloudogu!

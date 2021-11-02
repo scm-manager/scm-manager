@@ -22,31 +22,50 @@
  * SOFTWARE.
  */
 
-import { HalRepresentation, HalRepresentationWithEmbedded } from "./hal";
+package sonia.scm.web;
 
-export type SubRepository = {
-  repositoryUrl: string;
-  browserUrl: string;
-  revision: string;
-};
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-export type File = HalRepresentationWithEmbedded<{
-  children?: File[];
-}> & {
-  name: string;
-  path: string;
-  directory: boolean;
-  description?: string;
-  revision: string;
-  length?: number;
-  commitDate?: string;
-  subRepository?: SubRepository;
-  partialResult?: boolean;
-  computationAborted?: boolean;
-  truncated?: boolean;
-};
+import javax.servlet.ServletOutputStream;
+import javax.servlet.WriteListener;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
-export type Paths = HalRepresentation & {
-  revision: string;
-  paths: string[];
-};
+public class CapturingServletOutputStream extends ServletOutputStream {
+
+  private final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+  @Override
+  public void write(int b) throws IOException {
+    baos.write(b);
+  }
+
+  @Override
+  public void close() throws IOException {
+    baos.close();
+  }
+
+  @Override
+  public String toString() {
+    return baos.toString();
+  }
+
+  @Override
+  public boolean isReady() {
+    return true;
+  }
+
+  @Override
+  public void setWriteListener(WriteListener writeListener) {
+  }
+
+  public JsonNode getContentAsJson() {
+    try {
+      return new ObjectMapper().readTree(toString());
+    } catch (JsonProcessingException e) {
+      throw new RuntimeException("could not unmarshal json content", e);
+    }
+  }
+}

@@ -40,6 +40,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
@@ -65,6 +66,7 @@ public class ScmGitServlet extends GitServlet implements ScmProviderHttpServlet
 
   /** the logger for ScmGitServlet */
   private static final Logger logger = getLogger(ScmGitServlet.class);
+  public static final MediaType LFS_LOCKING_MEDIA_TYPE = MediaType.valueOf("application/vnd.git-lfs+json");
 
   //~--- constructors ---------------------------------------------------------
 
@@ -109,6 +111,10 @@ public class ScmGitServlet extends GitServlet implements ScmProviderHttpServlet
       HttpServlet servlet = lfsServletFactory.createFileLfsServletFor(repository, request);
       logger.trace("handle lfs file transfer request");
       handleGitLfsRequest(servlet, request, response, repository);
+    } else if (isLfsLockingAPIRequest(request)) {
+      HttpServlet servlet = lfsServletFactory.createLockServletFor(repository);
+      logger.trace("handle lfs lock request");
+      handleGitLfsLockingRequest(servlet, request, response, repository);
     } else if (isRegularGitAPIRequest(request)) {
       logger.trace("handle regular git request");
       // continue with the regular git Backend
@@ -119,8 +125,32 @@ public class ScmGitServlet extends GitServlet implements ScmProviderHttpServlet
     }
   }
 
+  private void handleGitLfsLockingRequest(HttpServlet servlet, HttpServletRequest request, HttpServletResponse response, Repository repository) throws ServletException, IOException {
+    if (repositoryRequestListenerUtil.callListeners(request, response, repository)) {
+      servlet.service(request, response);
+    } else if (logger.isDebugEnabled()) {
+      logger.debug("request aborted by repository request listener");
+    }
+  }
+
   private boolean isRegularGitAPIRequest(HttpServletRequest request) {
     return REGEX_GITHTTPBACKEND.matcher(HttpUtil.getStrippedURI(request)).matches();
+  }
+
+  private boolean isLfsLockingAPIRequest(HttpServletRequest request) {
+      return isLfsLockingMediaType(request, "Content-Type")
+        || isLfsLockingMediaType(request, "Accept");
+  }
+
+  private boolean isLfsLockingMediaType(HttpServletRequest request, String header) {
+    try {
+      MediaType requestMediaType = MediaType.valueOf(request.getHeader(header));
+      return !requestMediaType.isWildcardType()
+        && !requestMediaType.isWildcardSubtype()
+        && LFS_LOCKING_MEDIA_TYPE.isCompatible(requestMediaType);
+    } catch (IllegalArgumentException e) {
+      return false;
+    }
   }
 
   private void handleGitLfsRequest(HttpServlet servlet, HttpServletRequest request, HttpServletResponse response, Repository repository) throws ServletException, IOException {

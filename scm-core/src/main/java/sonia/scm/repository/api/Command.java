@@ -77,5 +77,10 @@ public enum Command
   /**
    * @since 2.19.0
    */
-  MIRROR;
+  MIRROR,
+
+  /**
+   * @since 2.26.0
+   */
+  FILE_LOCK
 }

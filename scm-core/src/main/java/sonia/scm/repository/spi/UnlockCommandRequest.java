@@ -22,31 +22,18 @@
  * SOFTWARE.
  */
 
-import { HalRepresentation, HalRepresentationWithEmbedded } from "./hal";
+package sonia.scm.repository.spi;
 
-export type SubRepository = {
-  repositoryUrl: string;
-  browserUrl: string;
-  revision: string;
-};
+import lombok.Data;
 
-export type File = HalRepresentationWithEmbedded<{
-  children?: File[];
-}> & {
-  name: string;
-  path: string;
-  directory: boolean;
-  description?: string;
-  revision: string;
-  length?: number;
-  commitDate?: string;
-  subRepository?: SubRepository;
-  partialResult?: boolean;
-  computationAborted?: boolean;
-  truncated?: boolean;
-};
+/**
+ * Request to unlock a file.
+ *
+ * @since 2.26.0
+ */
+@Data
+public final class UnlockCommandRequest {
 
-export type Paths = HalRepresentation & {
-  revision: string;
-  paths: string[];
-};
+  private String file;
+  private boolean force;
+}

@@ -28,11 +28,11 @@
 <Configure id="ScmServer" class="org.eclipse.jetty.server.Server">
 
   <!--
-    This default configuration should match 90% of the use cases, 
+    This default configuration should match 90% of the use cases,
     if you have to change something ensure you know what you are doing.
 
     For further information on configuration scm-server have a look at:
-    https://www.scm-manager.org/docs/${version.major}.${version.minor}.x/en/administration/scm-server/
+    https://scm-manager.org/docs/${version.major}.${version.minor}.x/en/administration/scm-server/
   -->
 
   <New id="httpConfig" class="org.eclipse.jetty.server.HttpConfiguration">
@@ -44,7 +44,7 @@
       <Arg><New class="org.eclipse.jetty.server.ForwardedRequestCustomizer"/></Arg>
     </Call>
   </New>
-  
+
   <!--
   Connectors
   -->
@@ -106,7 +106,7 @@
       <SystemProperty name="basedir" default="."/>/work/docroot
     </Set>
   </New>
-  
+
   <Set name="handler">
     <New class="org.eclipse.jetty.server.handler.HandlerCollection">
       <Set name="handlers">

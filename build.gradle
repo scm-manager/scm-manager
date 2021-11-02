@@ -30,7 +30,7 @@ plugins {
 }
 
 changelog {
-  versionUrlPattern = "https://www.scm-manager.org/download/{0}"
+  versionUrlPattern = "https://scm-manager.org/download/{0}"
 }
 
 subprojects { s ->
