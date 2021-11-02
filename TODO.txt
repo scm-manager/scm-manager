@@ -1,3 +1,0 @@
-* vendor chunk names
-* plugin-scripts releasen
-* webpack cli fuckup on yarn run build

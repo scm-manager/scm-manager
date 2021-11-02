@@ -25,6 +25,7 @@ const path = require("path");
 const fs = require("fs");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 
 const createIndexMiddleware = require("./middleware/IndexMiddleware");
 const createContextPathMiddleware = require("./middleware/ContextPathMiddleware");
@@ -33,7 +34,7 @@ const isDevelopment = process.env.NODE_ENV === "development";
 const root = path.resolve(process.cwd(), "scm-ui");
 
 const babelPlugins = [];
-const webpackPlugins = [];
+const webpackPlugins = [/*new BundleAnalyzerPlugin()*/];
 
 let mode = "production";
 
@@ -57,7 +58,6 @@ console.log(`build ${mode} bundles`);
 
 const base = {
   mode,
-  // stats: "minimal",
   context: root,
   target: "web",
   resolveLoader: {
@@ -76,12 +76,6 @@ module.exports = [
     devtool: "eval-cheap-module-source-map",
     module: {
       rules: [
-        /*{
-          parser: {
-            system: false,
-            systemjs: false
-          }
-        },*/
         {
           test: /\.(js|ts|jsx|tsx)$/i,
           exclude: /node_modules/,
@@ -141,7 +135,10 @@ module.exports = [
         }
       ],
       client: {
-        overlay: true
+        overlay: {
+          errors: true,
+          warnings: false
+        }
       },
       historyApiFallback: true,
       port: 3000,
@@ -165,15 +162,14 @@ module.exports = [
     },
     optimization: {
       runtimeChunk: "single",
-      moduleIds: "named",
       splitChunks: {
-        chunks: "all",
+        chunks: "initial",
         cacheGroups: {
           defaultVendors: {
             test: /[\\/]node_modules[\\/]/,
             priority: -10,
-            // TODO filename are going wild
-            // chunks: chunk => chunk.name !== "polyfill"
+            filename: "vendors~webapp.bundle.js",
+            reuseExistingChunk: true
           },
           default: {
             minChunks: 2,
@@ -199,10 +195,6 @@ module.exports = [
             "css-loader",
             "sass-loader"
           ]
-        },
-        {
-          test: /\.(png|svg|jpg|gif|woff2?|eot|ttf)$/,
-          use: ["file-loader"]
         }
       ]
     },
@@ -216,7 +208,6 @@ module.exports = [
       // TODO only on production?
       minimizer: [new OptimizeCSSAssetsPlugin({})]
     },
-    // TODO resolveLoader ?
     output: {
       path: path.join(root, "build", "webapp", "assets"),
       filename: "ui-theme-[name].bundle.js"

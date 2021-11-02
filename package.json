@@ -5,16 +5,11 @@
     "packages": [
       "scm-ui/*",
       "scm-plugins/*"
-    ],
-    "nohoist": [
-      "@storybook",
-      "**/@storybook",
-      "**/@storybook/**"
     ]
   },
   "scripts": {
     "build": "webpack-cli --mode=production --config=scm-ui/ui-scripts/src/webpack.config.js",
-    "build:dev": "webpack --mode=development --config=scm-ui/ui-scripts/src/webpack.config.js",
+    "build:dev": "webpack-cli --mode=development --config=scm-ui/ui-scripts/src/webpack.config.js",
     "test": "lerna run --scope '@scm-manager/ui-*' test",
     "e2e-tests": "lerna run --scope '@scm-manager/e2e-tests' ci",
     "typecheck": "lerna run --scope '@scm-manager/ui-*' typecheck",
@@ -35,8 +30,7 @@
     "babel-core": "7.0.0-bridge.0",
     "gitdiff-parser": "https://github.com/scm-manager/gitdiff-parser#420d6cfa17a6a8f9bf1a517a2c629dcb332dbe13",
     "refractor": "3.2.0",
-    "prismjs": "1.22.0",
-    "@scm-manager/plugin-scripts": "link:../plugin-scripts"
+    "prismjs": "1.22.0"
   },
   "babel": {
     "presets": [
