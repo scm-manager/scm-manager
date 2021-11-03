@@ -22,39 +22,13 @@
  * SOFTWARE.
  */
 
-import React, { FC } from "react";
-import { File, Link } from "@scm-manager/ui-types";
-import { Notification } from "@scm-manager/ui-components";
-import { Trans, useTranslation } from "react-i18next";
+import React from "react";
+import PdfViewer from "./PdfViewer";
+// @ts-ignore no need to declare module for a single import
+import pdf from "./__resources__/doc.pdf";
+import { storiesOf } from "@storybook/react";
 
-type Props = {
-  src: string | File;
-  download?: string | File;
-  height?: string;
-};
-
-const createHref = (src: string | File): string => {
-  if (typeof src === "string") {
-    return src;
-  }
-  return (src._links.self as Link).href;
-};
-
-const PdfViewer: FC<Props> = ({ src, download, height = "50rem" }) => {
-  const [t] = useTranslation("commons");
-  const href = createHref(src);
-  const downloadHref = download ? createHref(download) : href;
-  return (
-    <div style={{ height }}>
-      <object height="100%" width="100%" type="application/pdf" data={href + "#toolbar=0&navpanes=0&scrollbar=0"}>
-        <Notification type="warning">
-          <Trans t={t} i18nKey="pdfViewer.error">
-            Failed to display the document. Please download it from <a href={downloadHref}>here</a>.
-          </Trans>
-        </Notification>
-      </object>
-    </div>
-  );
-};
-
-export default PdfViewer;
+storiesOf("PdfViewer", module)
+  .add("Simple", () => <PdfViewer src={pdf} />)
+  .add("Error", () => <PdfViewer src="/does/not/exists" />)
+  .add("Error with download URL", () => <PdfViewer src="/does/not/exists" download={pdf} />);
