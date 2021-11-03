@@ -1,0 +1,2 @@
+- type: fixed
+  descripion: Initial mirror with no accepted branch ([#1842](https://github.com/scm-manager/scm-manager/pull/1842))
