@@ -111,6 +111,7 @@
       "title": "Schlüssel erzeugt",
       "text1": "Ihr neuer API-Schlüssel ist bereit. Sie können diesen als Token für Zugriffe auf die REST-Schnittstelle nutzen oder anstelle Ihres Passworts zum Login mit SCM-Clients nutzen.",
       "text2": "Sichern Sie Ihren API-Schlüssel jetzt! Er wird hier einmalig angezeigt und kann später nicht mehr wiederbeschafft werden.",
+      "alt": "Api Key",
       "clipboard": "In die Zwischenablage kopieren",
       "close": "Schließen"
     }

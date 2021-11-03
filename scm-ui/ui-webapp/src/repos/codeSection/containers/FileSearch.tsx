@@ -113,16 +113,16 @@ const FileSearch: FC<Props> = ({ repository, baseUrl, branches, selectedBranch }
           )}
         >
           <HomeLink className={classNames("mr-3", "pr-3")} to={contentBaseUrl}>
-            <HomeIcon title={t("filesearch.home")} name="home" color="inherit" />
+            <HomeIcon title={t("fileSearch.home")} name="home" color="inherit" />
           </HomeLink>
           <FilterInput
             className="is-full-width"
-            placeholder={t("filesearch.input.placeholder")}
+            placeholder={t("fileSearch.input.placeholder")}
             value={query}
             filter={search}
             autoFocus={true}
           />
-          <Help className="ml-3" message={t("filesearch.input.help")} />
+          <Help className="ml-3" message={t("fileSearch.input.help")} />
         </div>
         <ErrorNotification error={error} />
         {isLoading ? <Loading /> : <FileSearchResults contentBaseUrl={contentBaseUrl} query={query} paths={result} />}

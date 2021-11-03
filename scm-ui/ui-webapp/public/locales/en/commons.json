@@ -26,7 +26,8 @@
   },
   "breadcrumb": {
     "home": "Main page",
-    "copyPermalink": "Copy Permalink to Clipboard"
+    "copyPermalink": "Copy Permalink to Clipboard",
+    "loading": "Loading ..."
   },
   "errorNotification": {
     "prefix": "Error",
@@ -59,6 +60,10 @@
     "login": "Login",
     "groups": "Groups",
     "admin": "Administration"
+  },
+  "secondaryNavigation": {
+    "showContent": "Enlarge navigation",
+    "hideContent": "Reduce navigation"
   },
   "filterEntries": "filter entries",
   "autocomplete": {
@@ -134,9 +139,15 @@
     "toastTitle": "Notification",
     "xMore": "+{{ count }} Notification",
     "xMore_plural": "+{{ count }} Notifications",
+    "loading": "Loading ...",
+    "bellTitle": "Notifications",
     "empty": "No notifications",
     "dismiss": "Dismiss",
     "dismissAll": "Dismiss all"
+  },
+  "cardColumnGroup": {
+    "showContent": "Show content",
+    "hideContent": "Hide content"
   },
   "duration": {
     "ms": "{{count}} millisecond",
@@ -180,6 +191,10 @@
         "exampleValue": "Example Value",
         "hints": "Hints"
       },
+      "expandable": {
+        "showMore": "Show more information",
+        "hideMore": "Hide more information"
+      },
       "exampleQueries": {
         "title": "Example Queries",
         "description": "Combine Fields with Modifiers and Operators to find your repositories.",
@@ -192,7 +207,7 @@
       "utilities": {
         "title": "Utilities",
         "description": "Convert human-readable timestamps to Epoch Milliseconds to use in your query. Date is mandatory, hour, minute and seconds are optional.",
-        "datetime":{
+        "datetime": {
           "label": "Convert timestamps to Epoch Milliseconds",
           "format": "yyyy-mm-dd hh:mm:ss",
           "convertButtonLabel": "Convert"

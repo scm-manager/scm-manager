@@ -1,0 +1,2 @@
+- type: added
+  descripion: Add alternative text to controls to allow screen readers to read them aloud ([#1840](https://github.com/scm-manager/scm-manager/pull/1840))

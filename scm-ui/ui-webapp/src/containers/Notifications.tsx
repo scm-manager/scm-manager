@@ -128,7 +128,7 @@ const NotificationEntry: FC<EntryProps> = ({ notification, removeToast }) => {
       </DateColumn>
       <DismissColumn className="is-darker">
         {isLoading ? (
-          <div className="small-loading-spinner" />
+          <div className="small-loading-spinner" aria-label={t("notifications.loading")} />
         ) : (
           <Icon
             name="trash"
@@ -165,7 +165,7 @@ const ClearEntry: FC<ClearEntryProps> = ({ notifications, clearToasts }) => {
     <div className={classNames("dropdown-item", "has-text-centered")}>
       <ErrorNotification error={error} />
       <DismissAllButton className="is-outlined" color="link" loading={isLoading} action={clear}>
-        <Icon color="link" name="trash" className="mr-1" /> {t("notifications.dismissAll")}
+        <Icon color="link" name="trash" className="mr-1" alt="" /> {t("notifications.dismissAll")}
       </DismissAllButton>
     </div>
   );
@@ -292,13 +292,20 @@ type BellNotificationIconProps = {
 };
 
 const BellNotificationIcon: FC<BellNotificationIconProps> = ({ data, onClick }) => {
+  const [t] = useTranslation("commons");
   const counter = data?._embedded.notifications.length || 0;
   return (
     <BellNotificationContainer
       className={classNames("is-relative", "is-flex", "is-justify-content-center", "is-align-items-center")}
       onClick={onClick}
     >
-      <Icon className="is-size-4" iconStyle={counter === 0 ? "far" : "fas"} name="bell" color="white" />
+      <Icon
+        className="is-size-4"
+        iconStyle={counter === 0 ? "far" : "fas"}
+        name="bell"
+        color="white"
+        alt={t("notifications.bellTitle")}
+      />
       {counter > 0 ? <NotificationCounter count={counter}>{counter < 100 ? counter : "∞"}</NotificationCounter> : null}
     </BellNotificationContainer>
   );

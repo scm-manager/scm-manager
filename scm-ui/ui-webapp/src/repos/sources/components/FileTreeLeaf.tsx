@@ -78,13 +78,13 @@ class FileTreeLeaf extends React.Component<Props> {
     } else if (file.computationAborted) {
       return (
         <Tooltip location="top" message={t("sources.fileTree.computationAborted")}>
-          <Icon name="question-circle" />
+          <Icon name="question-circle" alt={t("sources.fileTree.computationAborted")} />
         </Tooltip>
       );
     } else if (file.partialResult) {
       return (
         <Tooltip location="top" message={t("sources.fileTree.notYetComputed")}>
-          <Icon name="hourglass" />
+          <Icon name="hourglass" alt={t("sources.fileTree.notYetComputed")} />
         </Tooltip>
       );
     } else {

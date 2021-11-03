@@ -25,7 +25,7 @@ import React, { FC, MouseEvent } from "react";
 import styled from "styled-components";
 import Tooltip from "../Tooltip";
 
-const Button = styled.a`
+const Button = styled.button`
   width: 50px;
   &:hover {
     color: #33b2e8;

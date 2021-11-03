@@ -78,7 +78,7 @@ const SyntaxHighlighterRenderer: FC<Props> = ({
   stylesheet,
   useInlineStyles,
   createLinePermaLink,
-  showLineNumbers = true
+  showLineNumbers = true,
 }) => {
   const location = useLocation();
   const history = useHistory();
@@ -108,7 +108,7 @@ const SyntaxHighlighterRenderer: FC<Props> = ({
           node,
           stylesheet,
           useInlineStyles,
-          key: `code-segment${i}`
+          key: `code-segment${i}`,
         });
         return (
           <RowContainer
@@ -119,10 +119,14 @@ const SyntaxHighlighterRenderer: FC<Props> = ({
             {showLineNumbers && (
               <>
                 {copying ? (
-                  <Icon name="spinner fa-spin" />
+                  <Icon name="spinner fa-spin" alt={t("sources.content.loading")} />
                 ) : (
                   <Tooltip message={t("sources.content.copyPermalink")}>
-                    <Icon name="link" onClick={() => lineNumberClick(lineNumber)} />
+                    <Icon
+                      name="link"
+                      onClick={() => lineNumberClick(lineNumber)}
+                      alt={t("sources.content.copyPermalink")}
+                    />
                   </Tooltip>
                 )}
                 <span
@@ -143,7 +147,7 @@ const SyntaxHighlighterRenderer: FC<Props> = ({
 
 //
 export const create = (createLinePermaLink: CreateLinePermaLinkFn, showLineNumbers = false): FC<Props> => {
-  return props => (
+  return (props) => (
     <SyntaxHighlighterRenderer {...props} createLinePermaLink={createLinePermaLink} showLineNumbers={showLineNumbers} />
   );
 };

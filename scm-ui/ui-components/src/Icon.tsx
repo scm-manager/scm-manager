@@ -35,6 +35,7 @@ type Props = {
   onEnter?: (event: React.KeyboardEvent) => void;
   testId?: string;
   tabIndex?: number;
+  alt?: string;
 };
 
 const Icon: FC<Props> = ({
@@ -47,6 +48,7 @@ const Icon: FC<Props> = ({
   testId,
   tabIndex = -1,
   onEnter,
+  alt = title,
 }) => {
   return (
     <i
@@ -55,6 +57,7 @@ const Icon: FC<Props> = ({
       title={title}
       className={classNames(iconStyle, "fa-fw", "fa-" + name, `has-text-${color}`, className)}
       tabIndex={tabIndex}
+      aria-label={alt}
       {...createAttributesForTesting(testId)}
     />
   );

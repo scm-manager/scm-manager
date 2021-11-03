@@ -353,10 +353,11 @@ class DiffFile extends React.Component<Props, State> {
   }
 
   renderFileTitle = (file: FileDiff) => {
+    const { t } = this.props;
     if (file.oldPath !== file.newPath && (file.type === "copy" || file.type === "rename")) {
       return (
         <>
-          {file.oldPath} <Icon name="arrow-right" color="inherit" /> {file.newPath}
+          {file.oldPath} <Icon name="arrow-right" color="inherit" alt={t("diff.renamedTo")} /> {file.newPath}
         </>
       );
     } else if (file.type === "delete") {
@@ -426,13 +427,13 @@ class DiffFile extends React.Component<Props, State> {
         </TokenizedDiffView>
       </div>
     );
-    let icon = "angle-right";
+    let icon = <Icon name="angle-right" color="inherit" alt={t("diff.showContent")} />;
     let body = null;
     if (!collapsed) {
-      icon = "angle-down";
+      icon = <Icon name="angle-down" color="inherit" alt={t("diff.hideContent")} />;
       body = innerContent;
     }
-    const collapseIcon = this.hasContent(file) ? <Icon name={icon} color="inherit" /> : null;
+    const collapseIcon = this.hasContent(file) ? icon : null;
     const fileControls = fileControlFactory ? fileControlFactory(file, this.setCollapse) : null;
     const modalTitle = file.type === "delete" ? file.oldPath : file.newPath;
     const openInFullscreen = file?.hunks?.length ? (

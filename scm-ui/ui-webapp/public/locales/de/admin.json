@@ -36,6 +36,7 @@
       "installedNavLink": "Installiert",
       "availableNavLink": "Verfügbar"
     },
+    "markedAsPending": "Als ausstehend markiert",
     "showPending": "Änderungen anzeigen",
     "executePending": "Änderungen ausführen",
     "outdatedPlugins": "{{count}} Plugin aktualisieren",
