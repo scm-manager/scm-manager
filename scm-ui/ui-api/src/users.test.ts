@@ -36,7 +36,7 @@ import {
   useDeleteUser,
   useUpdateUser,
   useUser,
-  useUsers
+  useUsers,
 } from "./users";
 
 describe("Test user hooks", () => {
@@ -48,21 +48,21 @@ describe("Test user hooks", () => {
     name: "yoda",
     _links: {
       delete: {
-        href: "/users/yoda"
+        href: "/users/yoda",
       },
       update: {
-        href: "/users/yoda"
+        href: "/users/yoda",
       },
       convertToInternal: {
-        href: "/users/yoda/convertToInternal"
+        href: "/users/yoda/convertToInternal",
       },
       convertToExternal: {
-        href: "/users/yoda/convertToExternal"
-      }
+        href: "/users/yoda/convertToExternal",
+      },
     },
     _embedded: {
-      members: []
-    }
+      members: [],
+    },
   };
 
   const userCollection: UserCollection = {
@@ -70,8 +70,8 @@ describe("Test user hooks", () => {
     page: 0,
     pageTotal: 0,
     _embedded: {
-      users: [yoda]
-    }
+      users: [yoda],
+    },
   };
 
   afterEach(() => {
@@ -84,7 +84,7 @@ describe("Test user hooks", () => {
       setIndexLink(queryClient, "users", "/users");
       fetchMock.get("/api/v2/users", userCollection);
       const { result, waitFor } = renderHook(() => useUsers(), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
       await waitFor(() => !!result.current.data);
       expect(result.current.data).toEqual(userCollection);
@@ -95,11 +95,11 @@ describe("Test user hooks", () => {
       setIndexLink(queryClient, "users", "/users");
       fetchMock.get("/api/v2/users", userCollection, {
         query: {
-          page: "42"
-        }
+          page: "42",
+        },
       });
       const { result, waitFor } = renderHook(() => useUsers({ page: 42 }), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
       await waitFor(() => !!result.current.data);
       expect(result.current.data).toEqual(userCollection);
@@ -110,11 +110,11 @@ describe("Test user hooks", () => {
       setIndexLink(queryClient, "users", "/users");
       fetchMock.get("/api/v2/users", userCollection, {
         query: {
-          q: "yoda"
-        }
+          q: "yoda",
+        },
       });
       const { result, waitFor } = renderHook(() => useUsers({ search: "yoda" }), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
       await waitFor(() => !!result.current.data);
       expect(result.current.data).toEqual(userCollection);
@@ -125,7 +125,7 @@ describe("Test user hooks", () => {
       setIndexLink(queryClient, "users", "/users");
       fetchMock.get("/api/v2/users", userCollection);
       const { result, waitFor } = renderHook(() => useUsers(), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
       await waitFor(() => !!result.current.data);
       expect(queryClient.getQueryData(["user", "yoda"])).toEqual(yoda);
@@ -138,7 +138,7 @@ describe("Test user hooks", () => {
       setIndexLink(queryClient, "users", "/users");
       fetchMock.get("/api/v2/users/yoda", yoda);
       const { result, waitFor } = renderHook(() => useUser("yoda"), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
       await waitFor(() => !!result.current.data);
       expect(result.current.data).toEqual(yoda);
@@ -153,14 +153,14 @@ describe("Test user hooks", () => {
       fetchMock.postOnce("/api/v2/users", {
         status: 201,
         headers: {
-          Location: "/users/yoda"
-        }
+          Location: "/users/yoda",
+        },
       });
 
       fetchMock.getOnce("/api/v2/users/yoda", yoda);
 
       const { result, waitForNextUpdate } = renderHook(() => useCreateUser(), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
 
       await act(() => {
@@ -177,13 +177,13 @@ describe("Test user hooks", () => {
       setIndexLink(queryClient, "users", "/users");
 
       fetchMock.postOnce("/api/v2/users", {
-        status: 201
+        status: 201,
       });
 
       fetchMock.getOnce("/api/v2/users/yoda", yoda);
 
       const { result, waitForNextUpdate } = renderHook(() => useCreateUser(), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
 
       await act(() => {
@@ -202,11 +202,11 @@ describe("Test user hooks", () => {
       setIndexLink(queryClient, "users", "/users");
 
       fetchMock.deleteOnce("/api/v2/users/yoda", {
-        status: 200
+        status: 200,
       });
 
       const { result, waitForNextUpdate } = renderHook(() => useDeleteUser(), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
 
       await act(() => {
@@ -229,17 +229,17 @@ describe("Test user hooks", () => {
 
       const newJedis = {
         ...yoda,
-        description: "may the 4th be with you"
+        description: "may the 4th be with you",
       };
 
       fetchMock.putOnce("/api/v2/users/yoda", {
-        status: 200
+        status: 200,
       });
 
       fetchMock.getOnce("/api/v2/users/yoda", newJedis);
 
       const { result, waitForNextUpdate } = renderHook(() => useUpdateUser(), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
 
       await act(() => {
@@ -261,11 +261,11 @@ describe("Test user hooks", () => {
       const queryClient = createInfiniteCachingClient();
 
       fetchMock.putOnce("/api/v2/users/yoda/convertToInternal", {
-        status: 200
+        status: 200,
       });
 
       const { result, waitForNextUpdate } = renderHook(() => useConvertToInternal(), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
 
       await act(() => {
@@ -287,11 +287,11 @@ describe("Test user hooks", () => {
       const queryClient = createInfiniteCachingClient();
 
       fetchMock.putOnce("/api/v2/users/yoda/convertToExternal", {
-        status: 200
+        status: 200,
       });
 
       const { result, waitForNextUpdate } = renderHook(() => useConvertToExternal(), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
 
       await act(() => {

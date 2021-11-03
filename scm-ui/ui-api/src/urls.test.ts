@@ -22,12 +22,7 @@
  * SOFTWARE.
  */
 
-import {
-  concat,
-  getNamespaceAndPageFromMatch,
-  getQueryStringFromLocation,
-  withEndingSlash
-} from "./urls";
+import { concat, getNamespaceAndPageFromMatch, getQueryStringFromLocation, withEndingSlash } from "./urls";
 
 describe("tests for withEndingSlash", () => {
   it("should append missing slash", () => {
@@ -50,7 +45,7 @@ describe("concat tests", () => {
 describe("tests for getNamespaceAndPageFromMatch", () => {
   function createMatch(namespace?: string, page?: string) {
     return {
-      params: { namespace, page }
+      params: { namespace, page },
     };
   }
 
@@ -88,7 +83,7 @@ describe("tests for getNamespaceAndPageFromMatch", () => {
 describe("tests for getQueryStringFromLocation", () => {
   function createLocation(search: string) {
     return {
-      search
+      search,
     };
   }
 

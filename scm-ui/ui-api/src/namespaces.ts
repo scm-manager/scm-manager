@@ -34,7 +34,7 @@ export const useNamespaces = () => {
 export const useNamespace = (name: string): ApiResult<Namespace> => {
   const namespacesLink = useRequiredIndexLink("namespaces");
   return useQuery<Namespace, Error>(["namespace", name], () =>
-    apiClient.get(concat(namespacesLink, name)).then(response => response.json())
+    apiClient.get(concat(namespacesLink, name)).then((response) => response.json())
   );
 };
 
