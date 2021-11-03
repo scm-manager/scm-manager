@@ -52,7 +52,7 @@ const HgRepositoryConfigurationForm: FC<Props> = ({ repository }) => {
     const encoding = value ? value : undefined;
     setConfiguration({
       ...configuration,
-      encoding
+      encoding,
     });
   };
 
