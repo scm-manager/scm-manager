@@ -125,9 +125,9 @@ const Contributors: FC<PersonsProps> = ({ persons, label, displayTextOnly }) => 
     return (
       <>
         {t(label)}{" "}
-        <a title={persons.map((person) => "- " + person.name).join("\n")}>
+        <span title={persons.map((person) => "- " + person.name).join("\n")}>
           {t("changeset.contributors.more", { count: persons.length })}
-        </a>
+        </span>
       </>
     );
   }

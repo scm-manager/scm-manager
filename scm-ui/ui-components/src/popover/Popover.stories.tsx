@@ -68,9 +68,7 @@ storiesOf("Popover", module)
               which lets the ship pass through every point in every universe simultaneously.
             </p>
           </Popover>
-          <a href="#" {...triggerProps}>
-            Trigger
-          </a>
+          <button {...triggerProps}>Trigger</button>
         </div>
       );
     })

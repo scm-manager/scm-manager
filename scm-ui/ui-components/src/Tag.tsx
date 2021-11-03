@@ -64,7 +64,7 @@ const Tag: FC<Props> = ({
   }
   let showDelete = null;
   if (onRemove) {
-    showDelete = <a className="tag is-delete" onClick={onRemove} />;
+    showDelete = <button className="tag is-delete" onClick={onRemove} />;
   }
 
   return (

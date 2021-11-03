@@ -69,13 +69,12 @@ const CardColumn: FC<Props> = ({
     createLink = <Link className="overlay-column" to={link} />;
   } else if (action) {
     createLink = (
-      <a
+      <button
         className="overlay-column"
         onClick={(e) => {
           e.preventDefault();
           action();
         }}
-        href="#"
       />
     );
   }

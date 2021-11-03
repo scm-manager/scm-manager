@@ -63,7 +63,7 @@ storiesOf("Table|Table", module)
       >
         {(row: any) => <b style={{ color: "red" }}>{row.lastname}</b>}
       </Column>
-      <Column header={"E-Mail"}>{(row: any) => <a>{row.email}</a>}</Column>
+      <Column header={"E-Mail"}>{(row: any) => <span>{row.email}</span>}</Column>
     </Table>
   ))
   .add("TextColumn", () => (
