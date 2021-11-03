@@ -71,6 +71,7 @@ export { default as UserAutocomplete } from "./UserAutocomplete";
 export { default as BranchSelector } from "./BranchSelector";
 export { default as Breadcrumb } from "./Breadcrumb";
 export { default as MarkdownView } from "./markdown/MarkdownView";
+export { default as PdfViewer } from "./PdfViewer";
 export { default as SyntaxHighlighter } from "./SyntaxHighlighter";
 export { default as ErrorBoundary } from "./ErrorBoundary";
 export { default as OverviewPageActions } from "./OverviewPageActions";
