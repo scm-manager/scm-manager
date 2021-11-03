@@ -23,7 +23,7 @@
  */
 import React, { MouseEvent, ReactNode } from "react";
 import classNames from "classnames";
-import { withRouter, RouteComponentProps } from "react-router-dom";
+import { RouteComponentProps, withRouter } from "react-router-dom";
 import Icon from "../Icon";
 import { createAttributesForTesting } from "../devBuild";
 
@@ -51,7 +51,7 @@ type Props = ButtonProps &
 class Button extends React.Component<Props> {
   static defaultProps: Partial<Props> = {
     type: "button",
-    color: "default"
+    color: "default",
   };
 
   onClick = (event: React.MouseEvent) => {
@@ -76,7 +76,7 @@ class Button extends React.Component<Props> {
       fullWidth,
       reducedMobile,
       children,
-      testId
+      testId,
     } = this.props;
     if (icon) {
       return (
@@ -96,7 +96,7 @@ class Button extends React.Component<Props> {
           {...createAttributesForTesting(testId)}
         >
           <span className="icon is-medium">
-            <i className={`fas fa-${icon}`} />
+            <Icon name={icon} color="inherit" />
           </span>
           {(label || children) && (
             <span>
