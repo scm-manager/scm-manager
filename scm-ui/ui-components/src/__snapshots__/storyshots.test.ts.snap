@@ -4062,13 +4062,13 @@ exports[`Storyshots Changesets With multiple Co-Authors 1`] = `
                      
                     changeset.contributors.coAuthoredBy
                      
-                    <a
+                    <span
                       title="- Ford Prefect
 - Zaphod Beeblebrox
 - Tricia Marie McMillan"
                     >
                       changeset.contributors.more
-                    </a>
+                    </span>
                      
                   </p>
                 </div>
@@ -73865,13 +73865,12 @@ exports[`Storyshots Popover Link 1`] = `
   className="Popoverstories__Wrapper-sc-2pld2j-0 hcbLvl"
 >
   <div>
-    <a
-      href="#"
+    <button
       onMouseLeave={[Function]}
       onMouseOver={[Function]}
     >
       Trigger
-    </a>
+    </button>
   </div>
 </div>
 `;
@@ -89810,9 +89809,9 @@ exports[`Storyshots Table|Table Default 1`] = `
         </b>
       </td>
       <td>
-        <a>
+        <span>
           tricia@hitchhiker.com
-        </a>
+        </span>
       </td>
     </tr>
     <tr>
@@ -89833,9 +89832,9 @@ exports[`Storyshots Table|Table Default 1`] = `
         </b>
       </td>
       <td>
-        <a>
+        <span>
           arthur@hitchhiker.com
-        </a>
+        </span>
       </td>
     </tr>
   </tbody>
