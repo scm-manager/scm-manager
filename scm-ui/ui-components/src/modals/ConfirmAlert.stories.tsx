@@ -37,15 +37,15 @@ const buttons = [
   {
     className: "is-outlined",
     label: "Cancel",
-    onClick: () => null
+    onClick: () => null,
   },
   {
-    label: "Submit"
-  }
+    label: "Submit",
+  },
 ];
 
 storiesOf("Modal|ConfirmAlert", module)
-  .addDecorator(story => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
+  .addDecorator((story) => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
   .add("Default", () => <ConfirmAlert message={body} title={"Are you sure about that?"} buttons={buttons} />)
   .add("WithButton", () => {
     const buttonClick = () => {

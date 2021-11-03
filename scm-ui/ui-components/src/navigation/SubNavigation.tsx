@@ -44,7 +44,7 @@ const SubNavigation: FC<Props> = ({
   title,
   label,
   children,
-  testId
+  testId,
 }) => {
   const context = useMenuContext();
   const collapsed = context.isCollapsed();
@@ -56,7 +56,7 @@ const SubNavigation: FC<Props> = ({
   const active = useActiveMatch({
     to: parent,
     activeOnlyWhenExact,
-    activeWhenMatch
+    activeWhenMatch,
   });
 
   let defaultIcon = "fas fa-cog";

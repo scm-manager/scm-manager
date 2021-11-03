@@ -37,31 +37,31 @@ export default {
     permissions: { href: "http://localhost:8081/scm/api/v2/repositories/scmadmin/Git/permissions/" },
     protocol: [
       { href: "ssh://scmadmin@localhost:4567/repo/scmadmin/Git", name: "ssh" },
-      { href: "http://localhost:8081/scm/repo/scmadmin/Git", name: "http" }
+      { href: "http://localhost:8081/scm/repo/scmadmin/Git", name: "http" },
     ],
     tags: { href: "http://localhost:8081/scm/api/v2/repositories/scmadmin/Git/tags/" },
     branches: { href: "http://localhost:8081/scm/api/v2/repositories/scmadmin/Git/branches/" },
     incomingChangesets: {
       href: "http://localhost:8081/scm/api/v2/repositories/scmadmin/Git/incoming/{source}/{target}/changesets",
-      templated: true
+      templated: true,
     },
     incomingDiff: {
       href: "http://localhost:8081/scm/api/v2/repositories/scmadmin/Git/incoming/{source}/{target}/diff",
-      templated: true
+      templated: true,
     },
     incomingDiffParsed: {
       href: "http://localhost:8081/scm/api/v2/repositories/scmadmin/Git/incoming/{source}/{target}/diff/parsed",
-      templated: true
+      templated: true,
     },
     changesets: { href: "http://localhost:8081/scm/api/v2/repositories/scmadmin/Git/changesets/" },
     sources: { href: "http://localhost:8081/scm/api/v2/repositories/scmadmin/Git/sources/" },
     authorMappingConfig: {
-      href: "http://localhost:8081/scm/api/v2/authormapping/configuration/scmadmin/Git"
+      href: "http://localhost:8081/scm/api/v2/authormapping/configuration/scmadmin/Git",
     },
     unfavorize: { href: "http://localhost:8081/scm/api/v2/unfavorize/scmadmin/Git" },
     favorites: [
       { href: "http://localhost:8081/scm/api/v2/unfavorize/scmadmin/Git", name: "unfavorize" },
-      { href: "http://localhost:8081/scm/api/v2/favorize/scmadmin/Git", name: "favorize" }
-    ]
-  }
+      { href: "http://localhost:8081/scm/api/v2/favorize/scmadmin/Git", name: "favorize" },
+    ],
+  },
 };

@@ -136,7 +136,7 @@ const MarkdownLinkRenderer: FC<Props> = ({ href = "", base, children, ...props }
 // we use a factory method, because react-markdown does not pass
 // base as prop down to our link component.
 export const create = (base?: string, protocolExtensions: ProtocolLinkRendererExtensionMap = {}): FC<LinkProps> => {
-  return props => {
+  return (props) => {
     const protocolLinkContext = isLinkWithProtocol(props.href || "");
     if (protocolLinkContext) {
       const { link, protocol } = protocolLinkContext;

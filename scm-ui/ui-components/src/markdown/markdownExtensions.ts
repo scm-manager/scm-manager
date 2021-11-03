@@ -35,4 +35,4 @@ export type ProtocolLinkRendererExtension = {
 
 export type ProtocolLinkRendererExtensionMap = {
   [protocol: string]: FC<ProtocolLinkRendererProps>;
-}
+};

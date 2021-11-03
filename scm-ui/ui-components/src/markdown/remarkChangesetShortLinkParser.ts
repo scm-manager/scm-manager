@@ -59,7 +59,7 @@ export const createTransformer = (t: TFunction): AstPlugin => {
           if (i > 0) {
             children.push({
               type: "text",
-              value: nodeText.substring(0, i)
+              value: nodeText.substring(0, i),
             });
           }
 
@@ -69,14 +69,14 @@ export const createTransformer = (t: TFunction): AstPlugin => {
             title: t("changeset.shortlink.title", {
               namespace: m[1],
               name: m[2],
-              id: m[3]
+              id: m[3],
             }),
             children: [
               {
                 type: "text",
-                value: m[0]
-              }
-            ]
+                value: m[0],
+              },
+            ],
           });
 
           nodeText = nodeText.substring(i + m[0].length);
@@ -85,13 +85,13 @@ export const createTransformer = (t: TFunction): AstPlugin => {
         if (nodeText.length > 0) {
           children.push({
             type: "text",
-            value: nodeText
+            value: nodeText,
           });
         }
 
         parent.children[index] = {
           type: "text",
-          children
+          children,
         };
       }
     });

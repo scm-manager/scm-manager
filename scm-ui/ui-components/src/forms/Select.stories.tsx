@@ -187,8 +187,8 @@ const PreselectOption: FC = () => {
           },
           {
             label: "USCSS Prometheus",
-            value: "uscss-prometheus"
-          }
+            value: "uscss-prometheus",
+          },
         ]}
         onChange={setValue}
         value={value}
@@ -204,5 +204,4 @@ storiesOf("Forms|Select", module)
   .add("Ref", () => <Ref />)
   .add("Legacy Events", () => <LegacyEvents />)
   .add("ReactHookForm", () => <ReactHookForm />)
-  .add("Preselect option", () => <PreselectOption />)
-;
+  .add("Preselect option", () => <PreselectOption />);

@@ -38,7 +38,7 @@ TextColumn.defaultProps = {
     return comparators.byKey(props.dataKey);
   },
   ascendingIcon: "sort-alpha-down-alt",
-  descendingIcon: "sort-alpha-down"
+  descendingIcon: "sort-alpha-down",
 };
 
 export default TextColumn;

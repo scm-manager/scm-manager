@@ -94,7 +94,7 @@ const MarkdownHeadingRenderer: FC<Props> = ({ children, level, permalink, id }) 
       <Icon name="link" onClick={copyPermalink} alt={t("sources.content.copyPermalink")} />
     </Tooltip>
   );
-  const headingElement = React.createElement("h" + level, {id: anchorId}, [...reactChildren, CopyButton]);
+  const headingElement = React.createElement("h" + level, { id: anchorId }, [...reactChildren, CopyButton]);
   const href = urls.withContextPath(location.pathname + "#" + anchorId);
   const permalinkHref =
     window.location.protocol +
@@ -110,7 +110,7 @@ const MarkdownHeadingRenderer: FC<Props> = ({ children, level, permalink, id }) 
 };
 
 export const create = (permalink: string): FC<Props> => {
-  return props => <MarkdownHeadingRenderer {...props} permalink={permalink} />;
+  return (props) => <MarkdownHeadingRenderer {...props} permalink={permalink} />;
 };
 
 export default MarkdownHeadingRenderer;

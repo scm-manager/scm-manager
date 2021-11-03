@@ -47,7 +47,7 @@ class Autocomplete extends React.Component<Props, State> {
   static defaultProps = {
     placeholder: "Type here",
     loadingMessage: "Loading...",
-    noOptionsMessage: "No suggestion available"
+    noOptionsMessage: "No suggestion available",
   };
 
   handleInputChange = (newValue: ValueType<SelectValue>, action: ActionMeta) => {
@@ -64,7 +64,7 @@ class Autocomplete extends React.Component<Props, State> {
     selectValue: ValueType<SelectValue>,
     selectOptions: readonly SelectValue[]
   ): boolean => {
-    const isNotDuplicated = !selectOptions.map(option => option.label).includes(inputValue);
+    const isNotDuplicated = !selectOptions.map((option) => option.label).includes(inputValue);
     const isNotEmpty = inputValue !== "";
     return isNotEmpty && isNotDuplicated;
   };
@@ -79,7 +79,7 @@ class Autocomplete extends React.Component<Props, State> {
       noOptionsMessage,
       loadSuggestions,
       creatable,
-      className
+      className,
     } = this.props;
     return (
       <div className={classNames("field", className)}>
@@ -95,13 +95,13 @@ class Autocomplete extends React.Component<Props, State> {
               loadingMessage={() => loadingMessage}
               noOptionsMessage={() => noOptionsMessage}
               isValidNewOption={this.isValidNewOption}
-              onCreateOption={value => {
+              onCreateOption={(value) => {
                 this.selectValue({
                   label: value,
                   value: {
                     id: value,
-                    displayName: value
-                  }
+                    displayName: value,
+                  },
                 });
               }}
             />

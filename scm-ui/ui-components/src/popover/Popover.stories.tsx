@@ -34,40 +34,44 @@ const Wrapper = styled.div`
 `;
 
 storiesOf("Popover", module)
-  .addDecorator(storyFn => <Wrapper>{storyFn()}</Wrapper>)
-  .add("Default", () => React.createElement(() => {
-    const { triggerProps, popoverProps } = usePopover();
+  .addDecorator((storyFn) => <Wrapper>{storyFn()}</Wrapper>)
+  .add("Default", () =>
+    React.createElement(() => {
+      const { triggerProps, popoverProps } = usePopover();
 
-    return (
-      <div>
-        <Popover title={<strong>Spaceship Heart of Gold</strong>} width={512} {...popoverProps}>
-          <p>
-            The Heart of Gold is the sleekest, most advanced, coolest spaceship in the galaxy. Its stunning good looks
-            mirror its awesome speed and power. It is powered by the revolutionary new Infinite Improbability Drive,
-            which lets the ship pass through every point in every universe simultaneously.
-          </p>
-        </Popover>
-        <button className="button" {...triggerProps}>
-          Trigger
-        </button>
-      </div>
-    );
-  }))
-  .add("Link", () => React.createElement(() => {
-    const { triggerProps, popoverProps } = usePopover();
+      return (
+        <div>
+          <Popover title={<strong>Spaceship Heart of Gold</strong>} width={512} {...popoverProps}>
+            <p>
+              The Heart of Gold is the sleekest, most advanced, coolest spaceship in the galaxy. Its stunning good looks
+              mirror its awesome speed and power. It is powered by the revolutionary new Infinite Improbability Drive,
+              which lets the ship pass through every point in every universe simultaneously.
+            </p>
+          </Popover>
+          <button className="button" {...triggerProps}>
+            Trigger
+          </button>
+        </div>
+      );
+    })
+  )
+  .add("Link", () =>
+    React.createElement(() => {
+      const { triggerProps, popoverProps } = usePopover();
 
-    return (
-      <div>
-        <Popover title={<strong>Spaceship Heart of Gold</strong>} width={512} {...popoverProps}>
-          <p>
-            The Heart of Gold is the sleekest, most advanced, coolest spaceship in the galaxy. Its stunning good looks
-            mirror its awesome speed and power. It is powered by the revolutionary new Infinite Improbability Drive,
-            which lets the ship pass through every point in every universe simultaneously.
-          </p>
-        </Popover>
-        <a href="#" {...triggerProps}>
-          Trigger
-        </a>
-      </div>
-    );
-  }));
+      return (
+        <div>
+          <Popover title={<strong>Spaceship Heart of Gold</strong>} width={512} {...popoverProps}>
+            <p>
+              The Heart of Gold is the sleekest, most advanced, coolest spaceship in the galaxy. Its stunning good looks
+              mirror its awesome speed and power. It is powered by the revolutionary new Infinite Improbability Drive,
+              which lets the ship pass through every point in every universe simultaneously.
+            </p>
+          </Popover>
+          <a href="#" {...triggerProps}>
+            Trigger
+          </a>
+        </div>
+      );
+    })
+  );

@@ -47,7 +47,7 @@ storiesOf("Buttons|Button", module)
   .addDecorator(RoutingDecorator)
   .add("Colors", () => (
     <div>
-      {colors.map(color => (
+      {colors.map((color) => (
         <Spacing key={color}>
           <Button color={color} label={color} />
         </Spacing>
@@ -63,7 +63,7 @@ storiesOf("Buttons|Button", module)
   ))
   .add("Disabled", () => (
     <div>
-      {colors.map(color => (
+      {colors.map((color) => (
         <Spacing key={color}>
           <Button color={color} label={color} disabled={true} />
         </Spacing>

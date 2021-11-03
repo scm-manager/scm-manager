@@ -44,7 +44,7 @@ class PasswordConfirmation extends React.Component<Props, State> {
       password: "",
       confirmedPassword: "",
       passwordValid: true,
-      passwordConfirmationFailed: false
+      passwordConfirmationFailed: false,
     };
   }
 
@@ -53,7 +53,7 @@ class PasswordConfirmation extends React.Component<Props, State> {
       password: "",
       confirmedPassword: "",
       passwordValid: true,
-      passwordConfirmationFailed: false
+      passwordConfirmationFailed: false,
     });
   }
 
@@ -101,7 +101,7 @@ class PasswordConfirmation extends React.Component<Props, State> {
     this.setState(
       {
         confirmedPassword,
-        passwordConfirmationFailed: !passwordConfirmed
+        passwordConfirmationFailed: !passwordConfirmed,
       },
       this.propagateChange
     );
@@ -114,7 +114,7 @@ class PasswordConfirmation extends React.Component<Props, State> {
       {
         passwordValid: this.validatePassword(password),
         passwordConfirmationFailed,
-        password: password
+        password: password,
       },
       this.propagateChange
     );

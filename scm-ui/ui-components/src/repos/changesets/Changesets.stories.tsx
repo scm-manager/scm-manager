@@ -22,19 +22,19 @@
  * SOFTWARE.
  */
 
-import {storiesOf} from "@storybook/react";
+import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import styled from "styled-components";
-import {MemoryRouter} from "react-router-dom";
+import { MemoryRouter } from "react-router-dom";
 import repository from "../../__resources__/repository";
 import ChangesetRow from "./ChangesetRow";
-import {one, two, three, four, five} from "../../__resources__/changesets";
-import {Binder, BinderContext} from "@scm-manager/ui-extensions";
+import { one, two, three, four, five } from "../../__resources__/changesets";
+import { Binder, BinderContext } from "@scm-manager/ui-extensions";
 // @ts-ignore
 import hitchhiker from "../../__resources__/hitchhiker.png";
-import {Person} from "../../avatar/Avatar";
-import {Changeset} from "@scm-manager/ui-types";
-import {Replacement} from "../../SplitAndReplace";
+import { Person } from "../../avatar/Avatar";
+import { Changeset } from "@scm-manager/ui-types";
+import { Replacement } from "../../SplitAndReplace";
 
 const Wrapper = styled.div`
   margin: 25rem 4rem;
@@ -49,7 +49,7 @@ const withAvatarFactory = (factory: (person: Person) => string, changeset: Chang
   binder.bind("avatar.factory", factory);
   return (
     <BinderContext.Provider value={binder}>
-      <ChangesetRow repository={repository} changeset={changeset}/>
+      <ChangesetRow repository={repository} changeset={changeset} />
     </BinderContext.Provider>
   );
 };
@@ -59,10 +59,10 @@ const withReplacements = (
   changeset: Changeset
 ) => {
   const binder = new Binder("changeset stories");
-  replacements.forEach(replacement => binder.bind("changeset.description.tokens", replacement));
+  replacements.forEach((replacement) => binder.bind("changeset.description.tokens", replacement));
   return (
     <BinderContext.Provider value={binder}>
-      <ChangesetRow repository={repository} changeset={changeset}/>
+      <ChangesetRow repository={repository} changeset={changeset} />
     </BinderContext.Provider>
   );
 };
@@ -72,12 +72,12 @@ function copy<T>(input: T): T {
 }
 
 storiesOf("Changesets", module)
-  .addDecorator(story => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
-  .addDecorator(storyFn => <Wrapper className="box box-link-shadow">{storyFn()}</Wrapper>)
-  .add("Default", () => <ChangesetRow repository={repository} changeset={three}/>)
-  .add("With Committer", () => <ChangesetRow repository={repository} changeset={two}/>)
-  .add("With Committer and Co-Author", () => <ChangesetRow repository={repository} changeset={one}/>)
-  .add("With multiple Co-Authors", () => <ChangesetRow repository={repository} changeset={four}/>)
+  .addDecorator((story) => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
+  .addDecorator((storyFn) => <Wrapper className="box box-link-shadow">{storyFn()}</Wrapper>)
+  .add("Default", () => <ChangesetRow repository={repository} changeset={three} />)
+  .add("With Committer", () => <ChangesetRow repository={repository} changeset={two} />)
+  .add("With Committer and Co-Author", () => <ChangesetRow repository={repository} changeset={one} />)
+  .add("With multiple Co-Authors", () => <ChangesetRow repository={repository} changeset={four} />)
   .add("With avatar", () => {
     return withAvatarFactory(() => hitchhiker, three);
   })
@@ -92,156 +92,199 @@ storiesOf("Changesets", module)
     const mail = <a href={"mailto:hog@example.com"}>Arthur</a>;
     return withReplacements(
       [
-        () => [{textToReplace: "HOG-42", replacement: link}],
-        () => [{textToReplace: "arthur@guide.galaxy", replacement: mail}]
+        () => [{ textToReplace: "HOG-42", replacement: link }],
+        () => [{ textToReplace: "arthur@guide.galaxy", replacement: mail }],
       ],
       five
     );
   })
   .add("With unknown signature", () => {
     const changeset = copy(three);
-    changeset.signatures = [{
-      keyId: "0x247E908C6FD35473",
-      type: "gpg",
-      status: "NOT_FOUND"
-    }];
-    return <ChangesetRow repository={repository} changeset={changeset}/>;
+    changeset.signatures = [
+      {
+        keyId: "0x247E908C6FD35473",
+        type: "gpg",
+        status: "NOT_FOUND",
+      },
+    ];
+    return <ChangesetRow repository={repository} changeset={changeset} />;
   })
   .add("With valid signature", () => {
     const changeset = copy(three);
-    changeset.signatures = [{
-      keyId: "0x247E908C6FD35473",
-      type: "gpg",
-      status: "VERIFIED",
-      owner: "trillian",
-      contacts: [{
-        name: "Tricia Marie McMilla",
-        mail: "trillian@hitchhiker.com"
-      }]
-    }];
-    return <ChangesetRow repository={repository} changeset={changeset}/>;
+    changeset.signatures = [
+      {
+        keyId: "0x247E908C6FD35473",
+        type: "gpg",
+        status: "VERIFIED",
+        owner: "trillian",
+        contacts: [
+          {
+            name: "Tricia Marie McMilla",
+            mail: "trillian@hitchhiker.com",
+          },
+        ],
+      },
+    ];
+    return <ChangesetRow repository={repository} changeset={changeset} />;
   })
   .add("With unowned signature", () => {
     const changeset = copy(three);
-    changeset.signatures = [{
-      keyId: "0x247E908C6FD35473",
-      type: "gpg",
-      status: "VERIFIED",
-      contacts: [{
-        name: "Tricia Marie McMilla",
-        mail: "trillian@hitchhiker.com"
-      }]
-    }];
-    return <ChangesetRow repository={repository} changeset={changeset}/>;
+    changeset.signatures = [
+      {
+        keyId: "0x247E908C6FD35473",
+        type: "gpg",
+        status: "VERIFIED",
+        contacts: [
+          {
+            name: "Tricia Marie McMilla",
+            mail: "trillian@hitchhiker.com",
+          },
+        ],
+      },
+    ];
+    return <ChangesetRow repository={repository} changeset={changeset} />;
   })
   .add("With contactless signature", () => {
     const changeset = copy(three);
-    changeset.signatures = [{
-      keyId: "0x247E908C6FD35473",
-      type: "gpg",
-      status: "VERIFIED",
-      owner: "trillian"
-    }];
-    return <ChangesetRow repository={repository} changeset={changeset}/>;
+    changeset.signatures = [
+      {
+        keyId: "0x247E908C6FD35473",
+        type: "gpg",
+        status: "VERIFIED",
+        owner: "trillian",
+      },
+    ];
+    return <ChangesetRow repository={repository} changeset={changeset} />;
   })
   .add("With invalid signature", () => {
     const changeset = copy(three);
-    changeset.signatures = [{
-      keyId: "0x247E908C6FD35473",
-      type: "gpg",
-      status: "INVALID",
-      owner: "trillian",
-      contacts: [{
-        name: "Tricia Marie McMilla",
-        mail: "trillian@hitchhiker.com"
-      }]
-    }];
-    return <ChangesetRow repository={repository} changeset={changeset}/>;
+    changeset.signatures = [
+      {
+        keyId: "0x247E908C6FD35473",
+        type: "gpg",
+        status: "INVALID",
+        owner: "trillian",
+        contacts: [
+          {
+            name: "Tricia Marie McMilla",
+            mail: "trillian@hitchhiker.com",
+          },
+        ],
+      },
+    ];
+    return <ChangesetRow repository={repository} changeset={changeset} />;
   })
   .add("With multiple signatures and invalid status", () => {
     const changeset = copy(three);
-    changeset.signatures = [{
-      keyId: "0x912389FJIQW8W223",
-      type: "gpg",
-      status: "INVALID",
-      owner: "trillian",
-      contacts: [{
-        name: "Tricia Marie McMilla",
-        mail: "trillian@hitchhiker.com"
-      }]
-    }, {
-      keyId: "0x247E908C6FD35473",
-      type: "gpg",
-      status: "VERIFIED",
-      owner: "trillian",
-      contacts: [{
-        name: "Tricia Marie McMilla",
-        mail: "trillian@hitchhiker.com"
-      }]
-    }, {
-      keyId: "0x9123891239VFIA33",
-      type: "gpg",
-      status: "NOT_FOUND",
-      owner: "trillian",
-      contacts: [{
-        name: "Tricia Marie McMilla",
-        mail: "trillian@hitchhiker.com"
-      }]
-    }];
-    return <ChangesetRow repository={repository} changeset={changeset}/>;
+    changeset.signatures = [
+      {
+        keyId: "0x912389FJIQW8W223",
+        type: "gpg",
+        status: "INVALID",
+        owner: "trillian",
+        contacts: [
+          {
+            name: "Tricia Marie McMilla",
+            mail: "trillian@hitchhiker.com",
+          },
+        ],
+      },
+      {
+        keyId: "0x247E908C6FD35473",
+        type: "gpg",
+        status: "VERIFIED",
+        owner: "trillian",
+        contacts: [
+          {
+            name: "Tricia Marie McMilla",
+            mail: "trillian@hitchhiker.com",
+          },
+        ],
+      },
+      {
+        keyId: "0x9123891239VFIA33",
+        type: "gpg",
+        status: "NOT_FOUND",
+        owner: "trillian",
+        contacts: [
+          {
+            name: "Tricia Marie McMilla",
+            mail: "trillian@hitchhiker.com",
+          },
+        ],
+      },
+    ];
+    return <ChangesetRow repository={repository} changeset={changeset} />;
   })
   .add("With multiple signatures and valid status", () => {
     const changeset = copy(three);
-    changeset.signatures = [{
-      keyId: "0x912389FJIQW8W223",
-      type: "gpg",
-      status: "NOT_FOUND",
-      owner: "trillian",
-      contacts: [{
-        name: "Tricia Marie McMilla",
-        mail: "trillian@hitchhiker.com"
-      }]
-    }, {
-      keyId: "0x247E908C6FD35473",
-      type: "gpg",
-      status: "VERIFIED",
-      owner: "trillian",
-      contacts: [{
-        name: "Tricia Marie McMilla",
-        mail: "trillian@hitchhiker.com"
-      }]
-    }, {
-      keyId: "0x9123891239VFIA33",
-      type: "gpg",
-      status: "NOT_FOUND",
-      owner: "trillian",
-      contacts: [{
-        name: "Tricia Marie McMilla",
-        mail: "trillian@hitchhiker.com"
-      }]
-    }];
-    return <ChangesetRow repository={repository} changeset={changeset}/>;
+    changeset.signatures = [
+      {
+        keyId: "0x912389FJIQW8W223",
+        type: "gpg",
+        status: "NOT_FOUND",
+        owner: "trillian",
+        contacts: [
+          {
+            name: "Tricia Marie McMilla",
+            mail: "trillian@hitchhiker.com",
+          },
+        ],
+      },
+      {
+        keyId: "0x247E908C6FD35473",
+        type: "gpg",
+        status: "VERIFIED",
+        owner: "trillian",
+        contacts: [
+          {
+            name: "Tricia Marie McMilla",
+            mail: "trillian@hitchhiker.com",
+          },
+        ],
+      },
+      {
+        keyId: "0x9123891239VFIA33",
+        type: "gpg",
+        status: "NOT_FOUND",
+        owner: "trillian",
+        contacts: [
+          {
+            name: "Tricia Marie McMilla",
+            mail: "trillian@hitchhiker.com",
+          },
+        ],
+      },
+    ];
+    return <ChangesetRow repository={repository} changeset={changeset} />;
   })
   .add("With multiple signatures and not found status", () => {
     const changeset = copy(three);
-    changeset.signatures = [{
-      keyId: "0x912389FJIQW8W223",
-      type: "gpg",
-      status: "NOT_FOUND",
-      owner: "trillian",
-      contacts: [{
-        name: "Tricia Marie McMilla",
-        mail: "trillian@hitchhiker.com"
-      }]
-    }, {
-      keyId: "0x9123891239VFIA33",
-      type: "gpg",
-      status: "NOT_FOUND",
-      owner: "trillian",
-      contacts: [{
-        name: "Tricia Marie McMilla",
-        mail: "trillian@hitchhiker.com"
-      }]
-    }];
-    return <ChangesetRow repository={repository} changeset={changeset}/>;
+    changeset.signatures = [
+      {
+        keyId: "0x912389FJIQW8W223",
+        type: "gpg",
+        status: "NOT_FOUND",
+        owner: "trillian",
+        contacts: [
+          {
+            name: "Tricia Marie McMilla",
+            mail: "trillian@hitchhiker.com",
+          },
+        ],
+      },
+      {
+        keyId: "0x9123891239VFIA33",
+        type: "gpg",
+        status: "NOT_FOUND",
+        owner: "trillian",
+        contacts: [
+          {
+            name: "Tricia Marie McMilla",
+            mail: "trillian@hitchhiker.com",
+          },
+        ],
+      },
+    ];
+    return <ChangesetRow repository={repository} changeset={changeset} />;
   });

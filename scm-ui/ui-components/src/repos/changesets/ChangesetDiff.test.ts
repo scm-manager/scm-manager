@@ -29,9 +29,9 @@ describe("isDiffSupported tests", () => {
     const supported = isDiffSupported({
       _links: {
         diff: {
-          href: "http://diff"
-        }
-      }
+          href: "http://diff",
+        },
+      },
     });
 
     expect(supported).toBe(true);
@@ -41,9 +41,9 @@ describe("isDiffSupported tests", () => {
     const supported = isDiffSupported({
       _links: {
         diffParsed: {
-          href: "http://diff"
-        }
-      }
+          href: "http://diff",
+        },
+      },
     });
 
     expect(supported).toBe(true);
@@ -51,7 +51,7 @@ describe("isDiffSupported tests", () => {
 
   it("should return false if not diff link was provided", () => {
     const supported = isDiffSupported({
-      _links: {}
+      _links: {},
     });
 
     expect(supported).toBe(false);
@@ -63,9 +63,9 @@ describe("createUrl tests", () => {
     const url = createUrl({
       _links: {
         diff: {
-          href: "http://diff"
-        }
-      }
+          href: "http://diff",
+        },
+      },
     });
 
     expect(url).toBe("http://diff?format=GIT");
@@ -75,9 +75,9 @@ describe("createUrl tests", () => {
     const url = createUrl({
       _links: {
         diffParsed: {
-          href: "http://diff-parsed"
-        }
-      }
+          href: "http://diff-parsed",
+        },
+      },
     });
 
     expect(url).toBe("http://diff-parsed");
@@ -87,12 +87,12 @@ describe("createUrl tests", () => {
     const url = createUrl({
       _links: {
         diff: {
-          href: "http://diff"
+          href: "http://diff",
         },
         diffParsed: {
-          href: "http://diff-parsed"
-        }
-      }
+          href: "http://diff-parsed",
+        },
+      },
     });
 
     expect(url).toBe("http://diff-parsed");
@@ -101,7 +101,7 @@ describe("createUrl tests", () => {
   it("should throw an error if no diff link is defined", () => {
     expect(() =>
       createUrl({
-        _links: {}
+        _links: {},
       })
     ).toThrow();
   });

@@ -33,7 +33,7 @@ export const MenuContext = React.createContext<MenuContext>({
   isCollapsed() {
     return false;
   },
-  setCollapsed() {}
+  setCollapsed() {},
 });
 
 export const StateMenuContextProvider: FC = ({ children }) => {
@@ -43,7 +43,7 @@ export const StateMenuContextProvider: FC = ({ children }) => {
     isCollapsed() {
       return collapsed;
     },
-    setCollapsed
+    setCollapsed,
   };
 
   return <MenuContext.Provider value={context}>{children}</MenuContext.Provider>;

@@ -42,28 +42,28 @@ const themes: { [name in Type]: ToastTheme } = {
   info: {
     primary: "#363636",
     secondary: "#99d8f3",
-    tertiary: "white"
+    tertiary: "white",
   },
   primary: {
     primary: "#363636",
     secondary: "#7fe8ef",
-    tertiary: "white"
+    tertiary: "white",
   },
   success: {
     primary: "#363636",
     secondary: "#7fe3cd",
-    tertiary: "white"
+    tertiary: "white",
   },
   warning: {
     primary: "#905515",
     secondary: "#ffeeab",
-    tertiary: "white"
+    tertiary: "white",
   },
   danger: {
     primary: "#363636",
     secondary: "#ff9baf",
-    tertiary: "white"
-  }
+    tertiary: "white",
+  },
 };
 
 export const getTheme = (name: Type) => {

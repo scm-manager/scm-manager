@@ -115,7 +115,7 @@ const Contributors: FC<PersonsProps> = ({ persons, label, displayTextOnly }) => 
       <>
         {t(label)}{" "}
         <AvatarList>
-          {persons.map(p => (
+          {persons.map((p) => (
             <ContributorWithAvatar key={p.name} person={p} avatar={avatarFactory(p)} />
           ))}
         </AvatarList>
@@ -125,7 +125,7 @@ const Contributors: FC<PersonsProps> = ({ persons, label, displayTextOnly }) => 
     return (
       <>
         {t(label)}{" "}
-        <a title={persons.map(person => "- " + person.name).join("\n")}>
+        <a title={persons.map((person) => "- " + person.name).join("\n")}>
           {t("changeset.contributors.more", { count: persons.length })}
         </a>
       </>
@@ -148,7 +148,7 @@ const ChangesetAuthor: FC<Props> = ({ changeset }) => {
 
   const filterContributorsByType = (type: string) => {
     if (changeset.contributors) {
-      return changeset.contributors.filter(p => p.type === type).map(contributor => contributor.person);
+      return changeset.contributors.filter((p) => p.type === type).map((contributor) => contributor.person);
     }
     return emptyListOfContributors;
   };

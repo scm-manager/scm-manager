@@ -95,5 +95,5 @@ export const byNestedKeys = (key: string, nestedKey: string) => {
 export default {
   byKey,
   byValueLength,
-  byNestedKeys
+  byNestedKeys,
 };

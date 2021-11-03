@@ -53,7 +53,7 @@ type State = {
 
 const initialState = {
   onPopover: false,
-  onTrigger: false
+  onTrigger: false,
 };
 
 const reducer = (state: State, action: Action): State => {
@@ -66,14 +66,14 @@ const reducer = (state: State, action: Action): State => {
         offsetTop: action.offsetTop,
         offsetLeft: action.offsetLeft,
         onTrigger: true,
-        onPopover: false
+        onPopover: false,
       };
     }
     case "leave-trigger": {
       if (state.onPopover) {
         return {
           ...state,
-          onTrigger: false
+          onTrigger: false,
         };
       }
       return initialState;
@@ -81,14 +81,14 @@ const reducer = (state: State, action: Action): State => {
     case "enter-popover": {
       return {
         ...state,
-        onPopover: true
+        onPopover: true,
       };
     }
     case "leave-popover": {
       if (state.onTrigger) {
         return {
           ...state,
-          onPopover: false
+          onPopover: false,
         };
       }
       return initialState;
@@ -109,13 +109,13 @@ const usePopover = () => {
     dispatchDeferred(dispatch, {
       type: "enter-trigger",
       offsetTop: current.offsetTop,
-      offsetLeft: current.offsetLeft + current.offsetWidth / 2
+      offsetLeft: current.offsetLeft + current.offsetWidth / 2,
     });
   };
 
   const onMouseLeave = () => {
     dispatchDeferred(dispatch, {
-      type: "leave-trigger"
+      type: "leave-trigger",
     });
   };
 
@@ -123,14 +123,14 @@ const usePopover = () => {
     triggerProps: {
       onMouseOver,
       onMouseLeave,
-      ref: (node: HTMLElement | null) => (triggerRef.current = node)
+      ref: (node: HTMLElement | null) => (triggerRef.current = node),
     },
     popoverProps: {
       dispatch,
       show: state.onPopover || state.onTrigger,
       offsetTop: state.offsetTop,
-      offsetLeft: state.offsetLeft
-    }
+      offsetLeft: state.offsetLeft,
+    },
   };
 };
 

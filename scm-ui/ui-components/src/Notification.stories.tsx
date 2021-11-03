@@ -44,7 +44,7 @@ const RoutingDecorator = (story: () => ReactNode) => <MemoryRouter initialEntrie
 
 storiesOf("Notification", module)
   .addDecorator(RoutingDecorator)
-  .addDecorator(storyFn => <Wrapper>{storyFn()}</Wrapper>)
+  .addDecorator((storyFn) => <Wrapper>{storyFn()}</Wrapper>)
   .add("Primary", () => <Notification type="primary">{content}</Notification>)
   .add("Success", () => <Notification type="success">{content}</Notification>)
   .add("Info", () => <Notification type="info">{content}</Notification>)

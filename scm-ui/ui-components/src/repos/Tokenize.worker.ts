@@ -49,7 +49,7 @@ function runTokenize({ id, payload }: TokenizeMessage) {
   const options = {
     highlight: language !== "text",
     language: language,
-    refractor
+    refractor,
   };
 
   const doTokenization = (worker: Worker) => {
@@ -57,13 +57,13 @@ function runTokenize({ id, payload }: TokenizeMessage) {
       const tokens = tokenize(hunks, options);
       const payload = {
         success: true,
-        tokens: tokens
+        tokens: tokens,
       };
       worker.postMessage({ id, payload });
     } catch (ex) {
       const payload = {
         success: false,
-        reason: ex.message
+        reason: ex.message,
       };
       worker.postMessage({ id, payload });
     }

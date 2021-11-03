@@ -34,7 +34,7 @@ export const supportedLocales: LocaleMap = {
   enUS,
   en: enUS,
   de,
-  es
+  es,
 };
 
 type Options = {
@@ -77,7 +77,7 @@ export type DateProps = {
 const createOptions = (locale: Locale, timeZone?: string) => {
   const options: Options = {
     addSuffix: true,
-    locale
+    locale,
   };
   if (timeZone) {
     options.timeZone = timeZone;
@@ -119,7 +119,7 @@ const useDateFormatter = ({ date, baseDate, timeZone }: DateProps) => {
     },
     formatDistance() {
       return formatDistance(isoDate, base, options);
-    }
+    },
   };
 };
 

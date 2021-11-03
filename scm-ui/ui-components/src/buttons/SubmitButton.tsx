@@ -31,7 +31,7 @@ type SubmitButtonProps = ButtonProps & {
 
 class SubmitButton extends React.Component<SubmitButtonProps> {
   static defaultProps = {
-    scrollToTop: true
+    scrollToTop: true,
   };
 
   render() {

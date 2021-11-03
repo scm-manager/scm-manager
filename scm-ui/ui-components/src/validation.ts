@@ -45,10 +45,7 @@ export const isNumberValid = (number: any) => {
 };
 
 export const isPathValid = (path: string) => {
-  return path !== "."
-    && !path.includes("../")
-    && !path.includes("//")
-    && path !== "..";
+  return path !== "." && !path.includes("../") && !path.includes("//") && path !== "..";
 };
 
 const urlRegex = /^[A-Za-z0-9]+:\/\/[^\s$.?#].[^\s]*$/;

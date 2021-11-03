@@ -53,6 +53,6 @@ export function parseDescription(description?: string): Description {
 
   return {
     title,
-    message
+    message,
   };
 }
