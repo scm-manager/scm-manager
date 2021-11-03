@@ -143,7 +143,7 @@ $high-contrast-light-gray: #f2f2f2;
     }
   }
 }
-//footer is overwritten in _main.scss TODO Check, if it may be replaced in _main
+//footer is overwritten in _main.scss
 footer.footer {
   background-color: $grey-dark;
   a{
@@ -154,7 +154,7 @@ footer.footer {
 
 .modal-card {
   border: 1px solid $white-ter;
- .modal-close::before, .delete::before, .modal-close::after, .delete::after { //TODO Refactor to target base element delete
+ .modal-close::before, .delete::before, .modal-close::after, .delete::after {
   background-color: $white-bis;
   }
 }
@@ -295,11 +295,13 @@ td:first-child.diff-gutter-conflict:before {
 }
 
 //some modals have lighter backgrounds in head
+//TODO: fix with meta-class (contains light color in light-mode, dark color in dark mode
 .has-background-light {
   background-color: $grey-dark !important;
 }
 
 //they also often have black text, this is a stop-gap
+//TODO: fix with meta-class (contains dark color in light-mode, light color in dark mode
 .modal-card-title.has-text-black {
   color: $white-bis !important;
 }
@@ -318,4 +320,15 @@ td:first-child.diff-gutter-conflict:before {
 hr {
   background-color: $white-bis;
 }
-//TODO fix :focus :hover for buttons, closing addon for inline member field, meta-data for card-tables (branches), check head
+
+//Login and logout overwrite white-ter background
+.hero-body .has-background-white-ter {
+  background-color: $grey-dark !important;
+}
+
+//Display darker version of background image
+.has-scm-background {
+  background-image: url(images/scmManagerHeroDark.jpg) !important;
+  background-size: cover;
+  background-position: top center;
+}
