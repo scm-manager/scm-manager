@@ -1,4 +1,8 @@
 {
+  "error": {
+    "subtitle": "Error",
+    "link": "Link for more information"
+  },
   "changeset": {
     "contributor": {
       "type": {
@@ -471,4 +475,3 @@
     }
   }
 }
-

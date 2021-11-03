@@ -31,7 +31,13 @@ type Props = {
 };
 
 const SortIcon: FC<Props> = (props: Props) => {
-  return <Icon className={classNames("ml-1", { "is-invisible": !props.isVisible })} name={props.name} />;
+  return (
+    <Icon
+      className={classNames("ml-1", { "is-invisible": !props.isVisible })}
+      name={props.name}
+      alt={`${props.name} icon`}
+    />
+  );
 };
 
 export default SortIcon;

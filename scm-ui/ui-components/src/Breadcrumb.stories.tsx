@@ -44,7 +44,7 @@ const baseUrl = "scm-manager.org/scm/repo/hitchhiker/heartOfGold/sources";
 const sources = Git;
 const prefix = (
   <a href="#link">
-    <Icon name="heart" color="danger" />
+    <Icon name="heart" color="danger" alt="heart icon" />
   </a>
 );
 

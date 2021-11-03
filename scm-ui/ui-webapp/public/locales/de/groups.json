@@ -46,7 +46,7 @@
   },
   "add-member-autocomplete": {
     "placeholder": "Mitglied hinzufügen",
-    "loading": "Suche...",
+    "loading": "Suche ...",
     "no-options": "Kein Vorschlag für Benutzername verfügbar"
   },
   "groupForm": {

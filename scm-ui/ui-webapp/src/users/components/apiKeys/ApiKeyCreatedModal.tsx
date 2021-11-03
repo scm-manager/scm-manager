@@ -35,7 +35,8 @@ type Props = {
 
 const KeyArea = styled.textarea`
   white-space: nowrap;
-  overflow: auto;
+  overflow-x: auto;
+  overflow-y: hidden;
   font-family: "Courier New", Monaco, Menlo, "Ubuntu Mono", "source-code-pro", monospace;
   height: 3rem;
 `;
@@ -64,7 +65,13 @@ const ApiKeyCreatedModal: FC<Props> = ({ addedKey, close }) => {
       <hr />
       <div className="columns">
         <div className="column is-11">
-          <KeyArea wrap={"soft"} ref={keyRef} className="input" value={addedKey.token} />
+          <KeyArea
+            wrap={"soft"}
+            ref={keyRef}
+            className="input"
+            value={addedKey.token}
+            aria-label={t("apiKey.modal.alt")}
+          />
         </div>
         <NoLeftMargin className="column is-1">
           <Icon

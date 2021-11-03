@@ -50,13 +50,18 @@ type ExpandableProps = {
 };
 
 const Expandable: FC<ExpandableProps> = ({ header, children, className }) => {
+  const [t] = useTranslation("commons");
   const [expanded, setExpanded] = useState(false);
   return (
     <div className={classNames("card", className)}>
       <header onClick={() => setExpanded(!expanded)} className="card-header is-clickable">
         <span className="card-header-title">{header}</span>
         <span className="card-header-icon">
-          <Icon name={expanded ? "chevron-down" : "chevron-left"} />
+          {expanded ? (
+            <Icon name="chevron-down" alt={t("search.syntax.expandable.hideMore")} />
+          ) : (
+            <Icon name="chevron-left" alt={t("search.syntax.expandable.showMore")} />
+          )}
         </span>
       </header>
       {expanded ? <div className="card-content">{children}</div> : null}
@@ -201,7 +206,13 @@ const TimestampConverter: FC = () => {
           {copying ? (
             <span className="small-loading-spinner" />
           ) : (
-            <Icon name="clipboard" color="inherit" className="is-size-4 fa-fw is-clickable" onClick={copyTimestamp} />
+            <Icon
+              name="clipboard"
+              color="inherit"
+              className="is-size-4 fa-fw is-clickable"
+              onClick={copyTimestamp}
+              alt={t("search.syntax.utilities.copyTimestampTooltip")}
+            />
           )}
         </StyledTooltip>
       </span>

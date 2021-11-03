@@ -88,10 +88,10 @@ const MarkdownHeadingRenderer: FC<Props> = ({ children, level, permalink, id }) 
       .finally(() => setCopying(false));
   };
   const CopyButton = copying ? (
-    <Icon name="spinner fa-spin" />
+    <Icon name="spinner fa-spin" alt={t("sources.content.loading")} />
   ) : (
     <Tooltip message={t("sources.content.copyPermalink")}>
-      <Icon name="link" onClick={copyPermalink} />
+      <Icon name="link" onClick={copyPermalink} alt={t("sources.content.copyPermalink")} />
     </Tooltip>
   );
   const headingElement = React.createElement("h" + level, {id: anchorId}, [...reactChildren, CopyButton]);

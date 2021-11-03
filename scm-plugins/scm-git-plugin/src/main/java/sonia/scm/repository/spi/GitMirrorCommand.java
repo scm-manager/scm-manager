@@ -198,12 +198,18 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       if (fetchResult.getTrackingRefUpdates().isEmpty()) {
         LOG.trace("No updates found for mirror repository {}", repository);
         mirrorLog.add("No updates found");
+        return new MirrorCommandResult(result, mirrorLog, stopwatch.stop().elapsed());
       } else {
         handleBranches();
         handleTags();
       }
 
-      defaultBranchSelector.newDefault().ifPresent(this::setNewDefaultBranch);
+      if (!defaultBranchSelector.isChanged()) {
+        mirrorLog.add("No effective changes detected");
+        return new MirrorCommandResult(result, mirrorLog, stopwatch.stop().elapsed());
+      }
+
+      defaultBranchSelector.newDefaultBranch().ifPresent(this::setNewDefaultBranch);
 
       String[] pushRefSpecs = generatePushRefSpecs().toArray(new String[0]);
       push(pushRefSpecs);
@@ -272,7 +278,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
     }
 
     private void handleBranch(LoggerWithHeader logger, TrackingRefUpdate ref) {
-      MirrorReferenceUpdateHandler refHandler = new MirrorReferenceUpdateHandler(logger, ref, "heads/", "branch");
+      MirrorReferenceUpdateHandler refHandler = new MirrorReferenceUpdateHandler(logger, ref, RefType.BRANCH);
       refHandler.handleRef(ref1 -> refHandler.testFilterForBranch());
     }
 
@@ -282,28 +288,26 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
     }
 
     private void handleTag(LoggerWithHeader logger, TrackingRefUpdate ref) {
-      MirrorReferenceUpdateHandler refHandler = new MirrorReferenceUpdateHandler(logger, ref, "tags/", "tag");
+      MirrorReferenceUpdateHandler refHandler = new MirrorReferenceUpdateHandler(logger, ref, RefType.TAG);
       refHandler.handleRef(ref1 -> refHandler.testFilterForTag());
     }
 
     private class MirrorReferenceUpdateHandler {
       private final LoggerWithHeader logger;
       private final TrackingRefUpdate ref;
-      private final String refType;
-      private final String typeForLog;
+      private final RefType refType;
 
-      public MirrorReferenceUpdateHandler(LoggerWithHeader logger, TrackingRefUpdate ref, String refType, String typeForLog) {
+      public MirrorReferenceUpdateHandler(LoggerWithHeader logger, TrackingRefUpdate ref, RefType refType) {
         this.logger = logger;
         this.ref = ref;
         this.refType = refType;
-        this.typeForLog = typeForLog;
       }
 
       private void handleRef(Function<TrackingRefUpdate, Result> filter) {
         LOG.trace("Handling {}", ref.getLocalName());
         Result filterResult = filter.apply(ref);
         try {
-          String referenceName = ref.getLocalName().substring("refs/".length() + refType.length());
+          String referenceName = ref.getLocalName().substring("refs/".length() + refType.refPath.length());
           if (filterResult.isAccepted()) {
             LOG.trace("Accepted ref {}", ref.getLocalName());
             handleAcceptedReference(referenceName);
@@ -332,7 +336,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
 
       private void handleRejectedRef(String referenceName, Result filterResult) throws IOException {
         result = REJECTED_UPDATES;
-        LOG.trace("{} ref rejected in {}: {}", typeForLog, GitMirrorCommand.this.repository, ref.getLocalName());
+        LOG.trace("{} ref rejected in {}: {}", refType.typeForLog, GitMirrorCommand.this.repository, ref.getLocalName());
         if (ref.getResult() == NEW) {
           deleteReference(ref.getLocalName());
         } else {
@@ -342,16 +346,16 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       }
 
       private void handleAcceptedReference(String referenceName) throws IOException {
-        String targetRef = "refs/" + refType + referenceName;
+        String targetRef = "refs/" + refType.refPath + referenceName;
         if (isDeletedReference(ref)) {
-          LOG.trace("deleting {} ref in {}: {}", typeForLog, GitMirrorCommand.this.repository, targetRef);
-          defaultBranchSelector.deleted(referenceName);
+          LOG.trace("deleting {} ref in {}: {}", refType.typeForLog, GitMirrorCommand.this.repository, targetRef);
+          defaultBranchSelector.deleted(refType, referenceName);
           logger.logChange(ref, referenceName, "deleted");
           deleteReference(targetRef);
           deletedRefs.add(targetRef);
         } else {
-          LOG.trace("updating {} ref in {}: {}", typeForLog, GitMirrorCommand.this.repository, targetRef);
-          defaultBranchSelector.accepted(referenceName);
+          LOG.trace("updating {} ref in {}: {}", refType.typeForLog, GitMirrorCommand.this.repository, targetRef);
+          defaultBranchSelector.accepted(refType, referenceName);
           logger.logChange(ref, referenceName, getUpdateType(ref));
         }
       }
@@ -665,6 +669,8 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
     private final Set<String> remainingBranches;
     private final Set<String> newBranches = new HashSet<>();
 
+    private boolean changed = false;
+
     DefaultBranchSelector(String initialDefaultBranch, Collection<String> initialBranches) {
       this.initialDefaultBranch = initialBranches.isEmpty() ? null : initialDefaultBranch;
       this.initialBranches = new HashSet<>(initialBranches);
@@ -706,25 +712,50 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       }
     }
 
-    public void accepted(String branch) {
-      newBranches.add(branch);
+    public void accepted(RefType refType, String ref) {
+      changed = true;
+      if (refType == RefType.BRANCH) {
+        newBranches.add(ref);
+      }
     }
 
-    public void deleted(String branch) {
-      remainingBranches.remove(branch);
+    public void deleted(RefType refType, String ref) {
+      changed = true;
+      if (refType == RefType.BRANCH) {
+        remainingBranches.remove(ref);
+      }
     }
 
-    public Optional<String> newDefault() {
+    public boolean isChanged() {
+      return changed;
+    }
+
+    public Optional<String> newDefaultBranch() {
       if (initialDefaultBranch == null && newBranches.contains("master") || remainingBranches.contains(initialDefaultBranch)) {
         return empty();
       } else if (!newBranches.isEmpty() && initialBranches.isEmpty()) {
         return of(newBranches.iterator().next());
+      } else if (initialDefaultBranch == null && newBranches.isEmpty()) {
+        LOG.info("Could not mirror repository with tags only.");
+        throw new IllegalStateException("No branch could be mirrored. Initial mirror without accepted branch is not supported. Make sure that at least one branch can be mirrored.");
       } else if (remainingBranches.isEmpty()) {
-        LOG.warn("Could not compute new default branch.");
+        LOG.info("Could not compute new default branch.");
         throw new IllegalStateException("Deleting all existing branches is not supported. Please restore branch '" + initialDefaultBranch + "' or recreate the mirror.");
       } else {
         return of(remainingBranches.iterator().next());
       }
+    }
+  }
+
+  enum RefType {
+    BRANCH("heads/", "branch"), TAG("tags/", "tag");
+
+    private final String refPath;
+    private final String typeForLog;
+
+    RefType(String refPath, String typeForLog) {
+      this.refPath = refPath;
+      this.typeForLog = typeForLog;
     }
   }
 }

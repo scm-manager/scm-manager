@@ -31,7 +31,7 @@ import { Button, ButtonGroup } from "../buttons";
 import copyToClipboard from "../CopyToClipboard";
 
 const link = "/foo/bar";
-const icon = <Icon name="icons fa-2x fa-fw" />;
+const avatar = <Icon name="icons fa-2x fa-fw" alt="avatar" />;
 const name = <strong className="m-0">main content</strong>;
 const description = <small>more text</small>;
 const longName = (
@@ -53,12 +53,12 @@ storiesOf("GroupEntry", module)
   .addDecorator((story) => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
   .addDecorator((storyFn) => <div className="m-5">{storyFn()}</div>)
   .add("Default", () => (
-    <GroupEntry link={link} avatar={icon} name={name} description={description} contentRight={contentRight} />
+    <GroupEntry link={link} avatar={avatar} name={name} description={description} contentRight={contentRight} />
   ))
   .add("With long texts", () => (
     <GroupEntry
       link={link}
-      avatar={icon}
+      avatar={avatar}
       name={longName}
       description={
         <small>

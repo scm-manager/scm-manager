@@ -111,6 +111,7 @@
       "title": "Key Created",
       "text1": "Your new API key is ready. You can use it as a bearer token for REST calls or as a password for SCM clients.",
       "text2": "Store your API key in a safe place now! It is only displayed now and cannot be recovered later.",
+      "alt": "Api Key",
       "clipboard": "Copy to clipboard",
       "close": "Close"
     }

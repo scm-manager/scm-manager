@@ -25,7 +25,8 @@
   },
   "breadcrumb": {
     "home": "Hauptseite",
-    "copyPermalink": "Link in Zwischenablage kopieren"
+    "copyPermalink": "Link in Zwischenablage kopieren",
+    "loading": "Lade ..."
   },
   "errorNotification": {
     "prefix": "Fehler",
@@ -58,6 +59,10 @@
     "login": "Anmelden",
     "groups": "Gruppen",
     "admin": "Administration"
+  },
+  "secondaryNavigation": {
+    "showContent": "Navigation vergrößern",
+    "hideContent": "Navigation verkleinern"
   },
   "filterEntries": "Einträge filtern",
   "autocomplete": {
@@ -133,9 +138,15 @@
     "toastTitle": "Benachrichtigung",
     "xMore": "+{{ count }} Benachrichtigung",
     "xMore_plural": "+{{ count }} Benachrichtigungen",
+    "loading": "Lade ...",
+    "bellTitle": "Benachrichtigungen",
     "empty": "Keine Benachrichtigungen",
     "dismiss": "Löschen",
     "dismissAll": "Alle löschen"
+  },
+  "cardColumnGroup": {
+    "showContent": "Inhalt einblenden",
+    "hideContent": "Inhalt ausblenden"
   },
   "duration": {
     "ms": "{{count}} Millisekunde",
@@ -179,6 +190,10 @@
         "exampleValue": "Beispielwert",
         "hints": "Hinweise"
       },
+      "expandable": {
+        "showMore": "Mehr Informationen einblenden",
+        "hideMore": "Mehr Informationen ausblenden"
+      },
       "exampleQueries": {
         "title": "Beispielabfragen",
         "description": "Felder mit Modifikatoren und Operatoren um Repositories zu finden.",
@@ -191,7 +206,7 @@
       "utilities": {
         "title": "Hilfsmittel",
         "description": "Wandeln Sie menschlich-lesbare Zeitmarken in standard Millisekunden um, um diese in Ihren Queries zu verwenden. Das Datum ist ein Pflichtfeld, Stunde, Minute und Sekunde sind optional.",
-        "datetime":{
+        "datetime": {
           "label": "Datum in Standardzeitstempel umwandeln",
           "format": "yyyy-mm-dd hh:mm:ss",
           "convertButtonLabel": "Konvertieren"

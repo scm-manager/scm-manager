@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { ReactNode } from "react";
+import React, { FC, ReactNode } from "react";
 import classNames from "classnames";
 
 type NotificationType = "primary" | "info" | "success" | "warning" | "danger" | "inherit";
@@ -31,33 +31,25 @@ type Props = {
   onClose?: () => void;
   className?: string;
   children?: ReactNode;
+  role?: string;
 };
 
-class Notification extends React.Component<Props> {
-  static defaultProps = {
-    type: "info"
-  };
-
-  renderCloseButton() {
-    const { onClose } = this.props;
+const Notification: FC<Props> = ({ type = "info", onClose, className, children, role }) => {
+  const renderCloseButton = () => {
     if (onClose) {
       return <button className="delete" onClick={onClose} />;
     }
-    return "";
-  }
+    return null;
+  };
 
-  render() {
-    const { type, className, children } = this.props;
+  const color = type !== "inherit" ? "is-" + type : "";
 
-    const color = type !== "inherit" ? "is-" + type : "";
-
-    return (
-      <div className={classNames("notification", color, className)}>
-        {this.renderCloseButton()}
-        {children}
-      </div>
-    );
-  }
-}
+  return (
+    <div className={classNames("notification", color, className)} role={role}>
+      {renderCloseButton()}
+      {children}
+    </div>
+  );
+};
 
 export default Notification;
