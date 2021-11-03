@@ -38,7 +38,7 @@ class RunPlugin implements Plugin<Project> {
     def nodeExt = NodeExtension.get(project)
     nodeExt.setDownload(true)
     nodeExt.setVersion('14.15.1')
-    nodeExt.setYarnVersion('1.22.5')
+    nodeExt.setYarnVersion('1.22.15')
     nodeExt.setNodeModulesDir( project.rootProject.projectDir )
 
     project.tasks.register('write-server-config', WriteServerConfigTask) {

@@ -24,7 +24,7 @@ ext {
   micrometerVersion = '1.6.4'
 
   nodeVersion = '14.15.1'
-  yarnVersion = '1.22.5'
+  yarnVersion = '1.22.15'
 
   libraries = [
     // lombok
