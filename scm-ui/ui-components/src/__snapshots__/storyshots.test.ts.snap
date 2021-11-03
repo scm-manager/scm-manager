@@ -2055,7 +2055,9 @@ exports[`Storyshots Buttons|AddButton Default 1`] = `
       className="icon is-medium"
     >
       <i
-        className="fas fa-plus"
+        className="fas fa-fw fa-plus has-text-inherit"
+        onKeyPress={[Function]}
+        tabIndex={-1}
       />
     </span>
     <span>
@@ -2398,7 +2400,9 @@ exports[`Storyshots Buttons|DeleteButton Default 1`] = `
       className="icon is-medium"
     >
       <i
-        className="fas fa-times"
+        className="fas fa-fw fa-times has-text-inherit"
+        onKeyPress={[Function]}
+        tabIndex={-1}
       />
     </span>
     <span>
@@ -2930,7 +2934,9 @@ exports[`Storyshots Changesets Co-Authors with avatar 1`] = `
                 className="icon is-medium"
               >
                 <i
-                  className="fas fa-exchange-alt"
+                  className="fas fa-fw fa-exchange-alt has-text-inherit"
+                  onKeyPress={[Function]}
+                  tabIndex={-1}
                 />
               </span>
               <span>
@@ -2951,7 +2957,9 @@ exports[`Storyshots Changesets Co-Authors with avatar 1`] = `
                 className="icon is-medium"
               >
                 <i
-                  className="fas fa-code"
+                  className="fas fa-fw fa-code has-text-inherit"
+                  onKeyPress={[Function]}
+                  tabIndex={-1}
                 />
               </span>
               <span>
@@ -3089,7 +3097,9 @@ exports[`Storyshots Changesets Commiter and Co-Authors with avatar 1`] = `
                 className="icon is-medium"
               >
                 <i
-                  className="fas fa-exchange-alt"
+                  className="fas fa-fw fa-exchange-alt has-text-inherit"
+                  onKeyPress={[Function]}
+                  tabIndex={-1}
                 />
               </span>
               <span>
@@ -3110,7 +3120,9 @@ exports[`Storyshots Changesets Commiter and Co-Authors with avatar 1`] = `
                 className="icon is-medium"
               >
                 <i
-                  className="fas fa-code"
+                  className="fas fa-fw fa-code has-text-inherit"
+                  onKeyPress={[Function]}
+                  tabIndex={-1}
                 />
               </span>
               <span>
@@ -3206,7 +3218,9 @@ exports[`Storyshots Changesets Default 1`] = `
                 className="icon is-medium"
               >
                 <i
-                  className="fas fa-exchange-alt"
+                  className="fas fa-fw fa-exchange-alt has-text-inherit"
+                  onKeyPress={[Function]}
+                  tabIndex={-1}
                 />
               </span>
               <span>
@@ -3227,7 +3241,9 @@ exports[`Storyshots Changesets Default 1`] = `
                 className="icon is-medium"
               >
                 <i
-                  className="fas fa-code"
+                  className="fas fa-fw fa-code has-text-inherit"
+                  onKeyPress={[Function]}
+                  tabIndex={-1}
                 />
               </span>
               <span>
@@ -3333,7 +3349,9 @@ exports[`Storyshots Changesets Replacements 1`] = `
                 className="icon is-medium"
               >
                 <i
-                  className="fas fa-exchange-alt"
+                  className="fas fa-fw fa-exchange-alt has-text-inherit"
+                  onKeyPress={[Function]}
+                  tabIndex={-1}
                 />
               </span>
               <span>
@@ -3354,7 +3372,9 @@ exports[`Storyshots Changesets Replacements 1`] = `
                 className="icon is-medium"
               >
                 <i
-                  className="fas fa-code"
+                  className="fas fa-fw fa-code has-text-inherit"
+                  onKeyPress={[Function]}
+                  tabIndex={-1}
                 />
               </span>
               <span>
@@ -3462,7 +3482,9 @@ exports[`Storyshots Changesets With Committer 1`] = `
                 className="icon is-medium"
               >
                 <i
-                  className="fas fa-exchange-alt"
+                  className="fas fa-fw fa-exchange-alt has-text-inherit"
+                  onKeyPress={[Function]}
+                  tabIndex={-1}
                 />
               </span>
               <span>
@@ -3483,7 +3505,9 @@ exports[`Storyshots Changesets With Committer 1`] = `
                 className="icon is-medium"
               >
                 <i
-                  className="fas fa-code"
+                  className="fas fa-fw fa-code has-text-inherit"
+                  onKeyPress={[Function]}
+                  tabIndex={-1}
                 />
               </span>
               <span>
@@ -3600,7 +3624,9 @@ exports[`Storyshots Changesets With Committer and Co-Author 1`] = `
                 className="icon is-medium"
               >
                 <i
-                  className="fas fa-exchange-alt"
+                  className="fas fa-fw fa-exchange-alt has-text-inherit"
+                  onKeyPress={[Function]}
+                  tabIndex={-1}
                 />
               </span>
               <span>
@@ -3621,7 +3647,9 @@ exports[`Storyshots Changesets With Committer and Co-Author 1`] = `
                 className="icon is-medium"
               >
                 <i
-                  className="fas fa-code"
+                  className="fas fa-fw fa-code has-text-inherit"
+                  onKeyPress={[Function]}
+                  tabIndex={-1}
                 />
               </span>
               <span>
@@ -3730,7 +3758,9 @@ exports[`Storyshots Changesets With avatar 1`] = `
                 className="icon is-medium"
               >
                 <i
-                  className="fas fa-exchange-alt"
+                  className="fas fa-fw fa-exchange-alt has-text-inherit"
+                  onKeyPress={[Function]}
+                  tabIndex={-1}
                 />
               </span>
               <span>
@@ -3751,7 +3781,9 @@ exports[`Storyshots Changesets With avatar 1`] = `
                 className="icon is-medium"
               >
                 <i
-                  className="fas fa-code"
+                  className="fas fa-fw fa-code has-text-inherit"
+                  onKeyPress={[Function]}
+                  tabIndex={-1}
                 />
               </span>
               <span>
@@ -3857,7 +3889,9 @@ exports[`Storyshots Changesets With contactless signature 1`] = `
                 className="icon is-medium"
               >
                 <i
-                  className="fas fa-exchange-alt"
+                  className="fas fa-fw fa-exchange-alt has-text-inherit"
+                  onKeyPress={[Function]}
+                  tabIndex={-1}
                 />
               </span>
               <span>
@@ -3878,7 +3912,9 @@ exports[`Storyshots Changesets With contactless signature 1`] = `
                 className="icon is-medium"
               >
                 <i
-                  className="fas fa-code"
+                  className="fas fa-fw fa-code has-text-inherit"
+                  onKeyPress={[Function]}
+                  tabIndex={-1}
                 />
               </span>
               <span>
@@ -3984,7 +4020,9 @@ exports[`Storyshots Changesets With invalid signature 1`] = `
                 className="icon is-medium"
               >
                 <i
-                  className="fas fa-exchange-alt"
+                  className="fas fa-fw fa-exchange-alt has-text-inherit"
+                  onKeyPress={[Function]}
+                  tabIndex={-1}
                 />
               </span>
               <span>
@@ -4005,7 +4043,9 @@ exports[`Storyshots Changesets With invalid signature 1`] = `
                 className="icon is-medium"
               >
                 <i
-                  className="fas fa-code"
+                  className="fas fa-fw fa-code has-text-inherit"
+                  onKeyPress={[Function]}
+                  tabIndex={-1}
                 />
               </span>
               <span>
@@ -4114,7 +4154,9 @@ exports[`Storyshots Changesets With multiple Co-Authors 1`] = `
                 className="icon is-medium"
               >
                 <i
-                  className="fas fa-exchange-alt"
+                  className="fas fa-fw fa-exchange-alt has-text-inherit"
+                  onKeyPress={[Function]}
+                  tabIndex={-1}
                 />
               </span>
               <span>
@@ -4135,7 +4177,9 @@ exports[`Storyshots Changesets With multiple Co-Authors 1`] = `
                 className="icon is-medium"
               >
                 <i
-                  className="fas fa-code"
+                  className="fas fa-fw fa-code has-text-inherit"
+                  onKeyPress={[Function]}
+                  tabIndex={-1}
                 />
               </span>
               <span>
@@ -4241,7 +4285,9 @@ exports[`Storyshots Changesets With multiple signatures and invalid status 1`] =
                 className="icon is-medium"
               >
                 <i
-                  className="fas fa-exchange-alt"
+                  className="fas fa-fw fa-exchange-alt has-text-inherit"
+                  onKeyPress={[Function]}
+                  tabIndex={-1}
                 />
               </span>
               <span>
@@ -4262,7 +4308,9 @@ exports[`Storyshots Changesets With multiple signatures and invalid status 1`] =
                 className="icon is-medium"
               >
                 <i
-                  className="fas fa-code"
+                  className="fas fa-fw fa-code has-text-inherit"
+                  onKeyPress={[Function]}
+                  tabIndex={-1}
                 />
               </span>
               <span>
@@ -4368,7 +4416,9 @@ exports[`Storyshots Changesets With multiple signatures and not found status 1`]
                 className="icon is-medium"
               >
                 <i
-                  className="fas fa-exchange-alt"
+                  className="fas fa-fw fa-exchange-alt has-text-inherit"
+                  onKeyPress={[Function]}
+                  tabIndex={-1}
                 />
               </span>
               <span>
@@ -4389,7 +4439,9 @@ exports[`Storyshots Changesets With multiple signatures and not found status 1`]
                 className="icon is-medium"
               >
                 <i
-                  className="fas fa-code"
+                  className="fas fa-fw fa-code has-text-inherit"
+                  onKeyPress={[Function]}
+                  tabIndex={-1}
                 />
               </span>
               <span>
@@ -4495,7 +4547,9 @@ exports[`Storyshots Changesets With multiple signatures and valid status 1`] = `
                 className="icon is-medium"
               >
                 <i
-                  className="fas fa-exchange-alt"
+                  className="fas fa-fw fa-exchange-alt has-text-inherit"
+                  onKeyPress={[Function]}
+                  tabIndex={-1}
                 />
               </span>
               <span>
@@ -4516,7 +4570,9 @@ exports[`Storyshots Changesets With multiple signatures and valid status 1`] = `
                 className="icon is-medium"
               >
                 <i
-                  className="fas fa-code"
+                  className="fas fa-fw fa-code has-text-inherit"
+                  onKeyPress={[Function]}
+                  tabIndex={-1}
                 />
               </span>
               <span>
@@ -4622,7 +4678,9 @@ exports[`Storyshots Changesets With unknown signature 1`] = `
                 className="icon is-medium"
               >
                 <i
-                  className="fas fa-exchange-alt"
+                  className="fas fa-fw fa-exchange-alt has-text-inherit"
+                  onKeyPress={[Function]}
+                  tabIndex={-1}
                 />
               </span>
               <span>
@@ -4643,7 +4701,9 @@ exports[`Storyshots Changesets With unknown signature 1`] = `
                 className="icon is-medium"
               >
                 <i
-                  className="fas fa-code"
+                  className="fas fa-fw fa-code has-text-inherit"
+                  onKeyPress={[Function]}
+                  tabIndex={-1}
                 />
               </span>
               <span>
@@ -4749,7 +4809,9 @@ exports[`Storyshots Changesets With unowned signature 1`] = `
                 className="icon is-medium"
               >
                 <i
-                  className="fas fa-exchange-alt"
+                  className="fas fa-fw fa-exchange-alt has-text-inherit"
+                  onKeyPress={[Function]}
+                  tabIndex={-1}
                 />
               </span>
               <span>
@@ -4770,7 +4832,9 @@ exports[`Storyshots Changesets With unowned signature 1`] = `
                 className="icon is-medium"
               >
                 <i
-                  className="fas fa-code"
+                  className="fas fa-fw fa-code has-text-inherit"
+                  onKeyPress={[Function]}
+                  tabIndex={-1}
                 />
               </span>
               <span>
@@ -4876,7 +4940,9 @@ exports[`Storyshots Changesets With valid signature 1`] = `
                 className="icon is-medium"
               >
                 <i
-                  className="fas fa-exchange-alt"
+                  className="fas fa-fw fa-exchange-alt has-text-inherit"
+                  onKeyPress={[Function]}
+                  tabIndex={-1}
                 />
               </span>
               <span>
@@ -4897,7 +4963,9 @@ exports[`Storyshots Changesets With valid signature 1`] = `
                 className="icon is-medium"
               >
                 <i
-                  className="fas fa-code"
+                  className="fas fa-fw fa-code has-text-inherit"
+                  onKeyPress={[Function]}
+                  tabIndex={-1}
                 />
               </span>
               <span>
@@ -55913,7 +55981,9 @@ exports[`Storyshots Forms|AddKeyValueEntryToTableField Default 1`] = `
         className="icon is-medium"
       >
         <i
-          className="fas fa-plus"
+          className="fas fa-fw fa-plus has-text-inherit"
+          onKeyPress={[Function]}
+          tabIndex={-1}
         />
       </span>
       <span>
@@ -55986,7 +56056,9 @@ exports[`Storyshots Forms|AddKeyValueEntryToTableField Disabled 1`] = `
         className="icon is-medium"
       >
         <i
-          className="fas fa-plus"
+          className="fas fa-fw fa-plus has-text-inherit"
+          onKeyPress={[Function]}
+          tabIndex={-1}
         />
       </span>
       <span>
@@ -57799,7 +57871,9 @@ exports[`Storyshots GroupEntry Default 1`] = `
                 className="icon is-medium"
               >
                 <i
-                  className="fas fa-download"
+                  className="fas fa-fw fa-download has-text-inherit"
+                  onKeyPress={[Function]}
+                  tabIndex={-1}
                 />
               </span>
             </button>
@@ -57879,7 +57953,9 @@ exports[`Storyshots GroupEntry With long texts 1`] = `
                 className="icon is-medium"
               >
                 <i
-                  className="fas fa-download"
+                  className="fas fa-fw fa-download has-text-inherit"
+                  onKeyPress={[Function]}
+                  tabIndex={-1}
                 />
               </span>
             </button>
