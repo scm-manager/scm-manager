@@ -116,9 +116,27 @@ Check if all plugin dependencies are proper versions and not SNAPSHOT!
 
 Wait for Jenkins to be green.
 
-## Modify Changelog
+## Update Changelog
 
-Change "Unreleased" header in `CHANGELOG.md` to  `<version> - <current date>`
+The changelog must be updated to reflect the changes for the new release.
+All unreleased changes are stored in the `gradle/changelog` directory.
+The changelog can be updated with the `updateChangelog` gradle task.
+
+```bash
+./gradlew :updateChangelog --release=<version>
+```
+
+Now we should manually check if the changelog looks good.
+
+```bash
+git diff CHANGELOG.md
+```
+
+If everything looks fine, we can remove the changelog directory.
+
+```bash
+rm -rf gradle/changelog
+```
 
 ## Create, commit and push release branch
 
