@@ -1,4 +1,0 @@
-- type: fixed
-  description: Fix <a> tags without hrefs ([#1841](https://github.com/scm-manager/scm-manager/pull/1841))
-- type: fixed
-  description: Fix eslint errors and warnings ([#1841](https://github.com/scm-manager/scm-manager/pull/1841))

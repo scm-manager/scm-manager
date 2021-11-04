@@ -1,2 +1,0 @@
-- type: added
-  descripion: File lock implementation for git (lfs) ([#1838](https://github.com/scm-manager/scm-manager/pull/1838))

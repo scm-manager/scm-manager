@@ -1,2 +1,0 @@
-- type: fixed
-  description: Removed NODE_ENV from yarn serve command to be compatible with windows ([#1844](https://github.com/scm-manager/scm-manager/pull/1844))

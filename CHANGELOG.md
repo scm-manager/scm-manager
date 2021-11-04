@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.26.0] - 2021-11-04
+### Added
+- Viewer for pdf files ([#1843](https://github.com/scm-manager/scm-manager/pull/1843))
+- Add alternative text to controls to allow screen readers to read them aloud ([#1840](https://github.com/scm-manager/scm-manager/pull/1840))
+- File lock implementation for git (lfs) ([#1838](https://github.com/scm-manager/scm-manager/pull/1838))
+- Experimental high contrast mode ([#1845](https://github.com/scm-manager/scm-manager/pull/1845))
+- Read all errors with screen readers ([#1839](https://github.com/scm-manager/scm-manager/pull/1839))
+
+### Fixed
+- Fix <a> tags without hrefs ([#1841](https://github.com/scm-manager/scm-manager/pull/1841))
+- Fix eslint errors and warnings ([#1841](https://github.com/scm-manager/scm-manager/pull/1841))
+- Removed NODE_ENV from yarn serve command to be compatible with windows ([#1844](https://github.com/scm-manager/scm-manager/pull/1844))
+- Initial mirror with no accepted branch ([#1842](https://github.com/scm-manager/scm-manager/pull/1842))
+
 ## [2.25.0] - 2021-10-21
 ### Added
 - Extension points for repository overview ([#1828](https://github.com/scm-manager/scm-manager/pull/1828))
@@ -794,3 +808,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.23.0]: https://scm-manager.org/download/2.23.0
 [2.24.0]: https://scm-manager.org/download/2.24.0
 [2.25.0]: https://scm-manager.org/download/2.25.0
+[2.26.0]: https://scm-manager.org/download/2.26.0
