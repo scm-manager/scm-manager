@@ -97,18 +97,18 @@
     "error-message": "'me' ist nicht definiert",
     "theme": {
       "nav": {
-        "label": "Theme",
-        "title": "Wähle dein Theme"
+        "label": "Design",
+        "title": "Wähle dein Design"
       },
-      "subtitle": "Wähle dein Theme",
+      "subtitle": "Wähle dein Design",
       "submit": "Anwenden",
       "light": {
-        "displayName": "Light",
-        "description": "Light is das Standard Thema des SCM-Managers"
+        "displayName": "Hell",
+        "description": "'Hell' is das Standard-Design des SCM-Managers"
       },
       "highcontrast": {
-        "displayName": "High contrast",
-        "description": "High contrast ist ein dunkles Thema mit einem hohen Kontrast"
+        "displayName": "Hoher Kontrast",
+        "description": "'Hoher Kontrast' ist ein dunkles Design mit einem hohen Kontrast"
       }
     }
   },

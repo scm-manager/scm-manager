@@ -99,9 +99,9 @@
     "theme": {
       "nav": {
         "label": "Theme",
-        "title": "Choose your theme"
+        "title": "Choose your Theme"
       },
-      "subtitle": "Choose your theme",
+      "subtitle": "Choose your Theme",
       "submit": "Activate",
       "light": {
         "displayName": "Light",
