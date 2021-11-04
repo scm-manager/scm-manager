@@ -125,7 +125,7 @@ class RunTask extends DefaultTask {
 
   private Closure<Void> createFrontend() {
     def frontend = project.tasks.create('boot-frontend', NodeTask) {
-      script = new File('scm-ui/ui-scripts/bin/ui-scripts.js')
+      script = new File(project.rootProject.projectDir, 'scm-ui/ui-scripts/bin/ui-scripts.js')
       args = ['serve']
       environment = [
         'NODE_ENV': 'development'
