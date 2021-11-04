@@ -761,7 +761,7 @@ form .field:not(.is-grouped) {
   }
 
   a:before {
-    font-family: "Font Awesome 5 Free";
+    font-family: "Font Awesome 5 Free"; /* NOSONAR */
     font-weight: 900;
     -webkit-font-smoothing: antialiased;
     display: inline-block;
