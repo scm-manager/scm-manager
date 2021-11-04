@@ -26,7 +26,7 @@ import { MemoryRouter } from "react-router-dom";
 import { storiesOf } from "@storybook/react";
 import AddKeyValueEntryToTableField from "./AddKeyValueEntryToTableField";
 
-storiesOf("Forms|AddKeyValueEntryToTableField", module)
+storiesOf("Forms/AddKeyValueEntryToTableField", module)
   .addDecorator((story) => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
   .add("Default", () => (
     <div className="m-6">

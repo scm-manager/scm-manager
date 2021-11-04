@@ -22,35 +22,39 @@
  * SOFTWARE.
  */
 
+import React, { FC } from "react";
+import { File, Link } from "@scm-manager/ui-types";
+import { Notification } from "@scm-manager/ui-components";
+import { Trans, useTranslation } from "react-i18next";
 
-package com.cloudogu.scm
+type Props = {
+  src: string | File;
+  download?: string | File;
+  height?: string;
+};
 
-import org.gradle.api.Plugin
-import org.gradle.api.Project
-import com.moowork.gradle.node.NodeExtension
-
-class RunPlugin implements Plugin<Project> {
-
-  void apply(Project project) {
-    def extension = project.extensions.create("scmServer", ScmServerExtension, project)
-
-    project.plugins.apply("com.github.node-gradle.node")
-    def nodeExt = NodeExtension.get(project)
-    nodeExt.setDownload(true)
-    nodeExt.setVersion('14.15.1')
-    nodeExt.setYarnVersion('1.22.15')
-    nodeExt.setNodeModulesDir( project.rootProject.projectDir )
-
-    project.tasks.register('write-server-config', WriteServerConfigTask) {
-      it.extension = extension
-    }
-    project.tasks.register('prepare-home', PrepareHomeTask) {
-      it.extension = extension
-    }
-    project.tasks.register("run", RunTask) {
-      it.extension = extension
-      dependsOn 'write-server-config', 'prepare-home', 'yarnSetup'
-    }
+const createHref = (src: string | File): string => {
+  if (typeof src === "string") {
+    return src;
   }
+  return (src._links.self as Link).href;
+};
 
-}
+const PdfViewer: FC<Props> = ({ src, download, height = "50rem" }) => {
+  const [t] = useTranslation("commons");
+  const href = createHref(src);
+  const downloadHref = download ? createHref(download) : href;
+  return (
+    <div style={{ height }}>
+      <object height="100%" width="100%" type="application/pdf" data={href + "#toolbar=0&navpanes=0&scrollbar=0"}>
+        <Notification type="warning">
+          <Trans t={t} i18nKey="pdfViewer.error">
+            Failed to display the document. Please download it from <a href={downloadHref}>here</a>.
+          </Trans>
+        </Notification>
+      </object>
+    </div>
+  );
+};
+
+export default PdfViewer;

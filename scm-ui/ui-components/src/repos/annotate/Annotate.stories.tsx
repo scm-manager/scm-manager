@@ -164,7 +164,7 @@ const Robohash: FC = ({ children }) => {
   return <BinderContext.Provider value={binder}>{children}</BinderContext.Provider>;
 };
 
-storiesOf("Annotate", module)
+storiesOf("Repositories/Annotate", module)
   .addDecorator((storyFn) => <MemoryRouter initialEntries={["/"]}>{storyFn()}</MemoryRouter>)
   .addDecorator((storyFn) => <Wrapper className="box">{storyFn()}</Wrapper>)
   .add("Default", () => (

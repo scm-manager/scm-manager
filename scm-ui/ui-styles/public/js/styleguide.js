@@ -21,36 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+const rgb2hex = (c) => "#" + c.match(/\d+/g).map((x) => (+x).toString(16).padStart(2, 0)).join``;
 
+function onClickColorButton(e) {
+  const button = e.target;
 
-package com.cloudogu.scm
+  const cell = button.parentElement;
 
-import org.gradle.api.Plugin
-import org.gradle.api.Project
-import com.moowork.gradle.node.NodeExtension
+  const div = cell.querySelector("div.color-text");
+  if (div) {
+    div.remove();
+  } else {
+    let color = window.getComputedStyle(button).backgroundColor;
+    color = rgb2hex(color);
 
-class RunPlugin implements Plugin<Project> {
+    const colorText = document.createElement("div");
+    colorText.className = "color-text";
+    colorText.innerText = color;
 
-  void apply(Project project) {
-    def extension = project.extensions.create("scmServer", ScmServerExtension, project)
-
-    project.plugins.apply("com.github.node-gradle.node")
-    def nodeExt = NodeExtension.get(project)
-    nodeExt.setDownload(true)
-    nodeExt.setVersion('14.15.1')
-    nodeExt.setYarnVersion('1.22.15')
-    nodeExt.setNodeModulesDir( project.rootProject.projectDir )
-
-    project.tasks.register('write-server-config', WriteServerConfigTask) {
-      it.extension = extension
-    }
-    project.tasks.register('prepare-home', PrepareHomeTask) {
-      it.extension = extension
-    }
-    project.tasks.register("run", RunTask) {
-      it.extension = extension
-      dependsOn 'write-server-config', 'prepare-home', 'yarnSetup'
-    }
+    cell.appendChild(colorText);
   }
-
 }
+
+document.querySelectorAll("table.colors span.button").forEach((button) => {
+  button.addEventListener("click", onClickColorButton);
+});

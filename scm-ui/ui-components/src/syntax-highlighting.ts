@@ -27,10 +27,10 @@
 
 export default {
   'pre[class*="language-"]': {
-    color: "#363636",
+    color: "var(--sh-base-color)",
     fontSize: "1rem",
     textShadow: "none",
-    fontFamily: "Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace",
+    fontFamily: "var(--sh-font-family)",
     direction: "ltr",
     textAlign: "left",
     whiteSpace: "pre",
@@ -47,13 +47,13 @@ export default {
     padding: "1em",
     margin: ".5em 0",
     overflow: "auto",
-    background: "#ffffff",
+    background: "var(--sh-block-background)",
   },
   'code[class*="language-"]': {
-    color: "#363636",
+    color: "var(--sh-base-color)",
     fontSize: "1rem",
     textShadow: "none",
-    fontFamily: "Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace",
+    fontFamily: "var(--sh-font-family)",
     direction: "ltr",
     textAlign: "left",
     whiteSpace: "pre",
@@ -70,120 +70,125 @@ export default {
   },
   'pre[class*="language-"]::selection': {
     textShadow: "none",
-    background: "#7fe3cd",
+    background: "var(--sh-selected-color)",
   },
   'code[class*="language-"]::selection': {
     textShadow: "none",
-    background: "#7fe3cd",
+    background: "var(--sh-selected-color)",
   },
   'pre[class*="language-"]::-moz-selection': {
     textShadow: "none",
-    background: "#7fe3cd",
+    background: "var(--sh-selected-color)",
   },
   'code[class*="language-"]::-moz-selection': {
     textShadow: "none",
-    background: "#7fe3cd",
+    background: "var(--sh-selected-color)",
   },
   ':not(pre) > code[class*="language-"]': {
     padding: ".1em .3em",
     borderRadius: ".3em",
-    color: "#ff3860",
-    background: "#fbe7eb",
+    color: "var(--sh-inline-code-color)",
+    background: "var(--sh-inline-code-background)",
   },
   ".namespace": {
     Opacity: ".7",
   },
   comment: {
-    color: "#9a9a9a",
+    color: "var(--sh-comment-color)",
   },
   prolog: {
-    color: "#9a9a9a",
+    color: "var(--sh-comment-color)",
   },
   doctype: {
-    color: "#9a9a9a",
+    color: "var(--sh-comment-color)",
   },
   cdata: {
-    color: "#9a9a9a",
+    color: "var(--sh-comment-color)",
   },
   punctuation: {
-    color: "#9a9a9a",
+    color: "var(--sh-punctuation-color)",
   },
   property: {
-    color: "#2c99c7",
+    color: "var(--sh-property-color)",
   },
   tag: {
-    color: "#2c99c7",
+    color: "var(--sh-property-color)",
   },
   boolean: {
-    color: "#2c99c7",
+    color: "var(--sh-property-color)",
   },
   number: {
-    color: "#2c99c7",
+    color: "var(--sh-property-color)",
   },
   constant: {
-    color: "#2c99c7",
+    color: "var(--sh-property-color)",
   },
   symbol: {
-    color: "#2c99c7",
+    color: "var(--sh-property-color)",
   },
   deleted: {
-    color: "#2c99c7",
+    color: "var(--sh-property-color)",
   },
   selector: {
-    color: "#005f9a",
+    color: "var(--sh-selector-color)",
   },
   "attr-name": {
-    color: "#005f9a",
+    color: "var(--sh-selector-color)",
   },
   string: {
-    color: "#005f9a",
+    color: "var(--sh-selector-color)",
   },
   char: {
-    color: "#005f9a",
+    color: "var(--sh-selector-color)",
   },
   builtin: {
-    color: "#005f9a",
+    color: "var(--sh-selector-color)",
   },
   inserted: {
-    color: "#005f9a",
+    color: "var(--sh-selector-color)",
   },
   operator: {
-    color: "#686868",
+    color: "var(--sh-operator-color)",
+    background: "var(--sh-operator-bg)",
   },
   entity: {
-    color: "#686868",
+    color: "var(--sh-operator-color)",
+    background: "var(--sh-operator-bg)",
     cursor: "help",
   },
   url: {
-    color: "#686868",
+    color: "var(--sh-operator-color)",
+    background: "var(--sh-operator-bg)",
   },
   ".language-css .token.string": {
-    color: "#686868",
+    color: "var(--sh-operator-color)",
+    background: "var(--sh-operator-bg)",
   },
   ".style .token.string": {
-    color: "#686868",
+    color: "var(--sh-operator-color)",
+    background: "var(--sh-operator-bg)",
   },
   atrule: {
-    color: "#00a984",
+    color: "var(--sh-keyword-color)",
   },
   "attr-value": {
-    color: "#00a984",
+    color: "var(--sh-keyword-color)",
   },
   keyword: {
-    color: "#00a984",
+    color: "var(--sh-keyword-color)",
   },
   function: {
-    color: "#ff3860",
+    color: "var(--sh-function-color)",
   },
   regex: {
-    color: "#a74eb2",
+    color: "var(--sh-variable-color)",
   },
   important: {
-    color: "#a74eb2",
+    color: "var(--sh-variable-color)",
     fontWeight: "bold",
   },
   variable: {
-    color: "#a74eb2",
+    color: "var(--sh-variable-color)",
   },
   bold: {
     fontWeight: "bold",
@@ -207,8 +212,8 @@ export default {
     right: "0",
     padding: "inherit 0",
     marginTop: "1em",
-    background: "#f5f5f5",
-    boxShadow: "inset 5px 0 0 #99d8f3",
+    background: "var(--sh-highlight-background)",
+    boxShadow: "inset 5px 0 0 var(--sh-highlight-accent)",
     zIndex: "0",
     pointerEvents: "none",
     lineHeight: "inherit",

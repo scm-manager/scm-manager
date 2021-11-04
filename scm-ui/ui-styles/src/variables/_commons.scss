@@ -21,36 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+//$link: #007EB0;
+$info: #33b2e8;
+$turquoise: #00d1df;
+$blue: #33b2e8;
+$cyan: $blue;
+$green: #00c79b;
+$warning: #ffdd57;
+$blue-light: #98d8f3;
+$danger: #ff3860;
 
-
-package com.cloudogu.scm
-
-import org.gradle.api.Plugin
-import org.gradle.api.Project
-import com.moowork.gradle.node.NodeExtension
-
-class RunPlugin implements Plugin<Project> {
-
-  void apply(Project project) {
-    def extension = project.extensions.create("scmServer", ScmServerExtension, project)
-
-    project.plugins.apply("com.github.node-gradle.node")
-    def nodeExt = NodeExtension.get(project)
-    nodeExt.setDownload(true)
-    nodeExt.setVersion('14.15.1')
-    nodeExt.setYarnVersion('1.22.15')
-    nodeExt.setNodeModulesDir( project.rootProject.projectDir )
-
-    project.tasks.register('write-server-config', WriteServerConfigTask) {
-      it.extension = extension
-    }
-    project.tasks.register('prepare-home', PrepareHomeTask) {
-      it.extension = extension
-    }
-    project.tasks.register("run", RunTask) {
-      it.extension = extension
-      dependsOn 'write-server-config', 'prepare-home', 'yarnSetup'
-    }
-  }
-
-}
+$family-monospace: "Courier New", Monaco, Menlo, "Ubuntu Mono", "source-code-pro", monospace;

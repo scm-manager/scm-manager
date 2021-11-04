@@ -21,52 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import i18next from "i18next";
-import { initReactI18next } from "react-i18next";
-import { addDecorator, configure } from "@storybook/react";
-import { withI18next } from "storybook-addon-i18next";
-import "!style-loader!css-loader!sass-loader!../../ui-styles/src/scm.scss";
-import React from "react";
-import withApiProvider from "./withApiProvider";
 
-let i18n = i18next;
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-// only use fetch backend for storybook
-// and not for storyshots
-if (!process.env.JEST_WORKER_ID) {
-  const Backend = require("i18next-fetch-backend");
-  i18n = i18n.use(Backend.default);
+class RemoveThemesPlugin {
+  apply (compiler) {
+    compiler.hooks.compilation.tap('RemoveThemesPlugin', (compilation) => {
+
+      HtmlWebpackPlugin.getHooks(compilation).beforeAssetTagGeneration.tapAsync(
+        'RemoveThemesPlugin',
+        (data, cb) => {
+          if (data.assets.css) {
+            data.assets.css = data.assets.css.filter(css => css.startsWith("ui-theme-"))
+          }
+          data.assets.css = [];
+          // Tell webpack to move on
+          cb(null, data)
+        }
+      )
+    })
+  }
 }
 
-i18n.use(initReactI18next).init({
-  whitelist: ["en", "de", "es"],
-  lng: "en",
-  fallbackLng: "en",
-  interpolation: {
-    escapeValue: false
-  },
-  react: {
-    useSuspense: false
-  },
-  backend: {
-    loadPath: "/locales/{{lng}}/{{ns}}.json",
-    init: {
-      credentials: "same-origin"
-    }
-  }
-});
-
-addDecorator(
-  withI18next({
-    i18n,
-    languages: {
-      en: "English",
-      de: "Deutsch",
-      es: "Spanisch"
-    }
-  })
-);
-
-addDecorator(withApiProvider);
-
-configure(require.context("../src", true, /\.stories\.tsx?$/), module);
+module.exports = RemoveThemesPlugin

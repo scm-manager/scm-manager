@@ -85,7 +85,7 @@ const fileControlFactory: (changeset: Changeset) => FileControlFactory = (change
   return links.map(({ url, label }) => <JumpToFileButton tooltip={label} link={url} />);
 };
 
-storiesOf("Diff", module)
+storiesOf("Repositories/Diff", module)
   .addDecorator(RoutingDecorator)
   .addDecorator((storyFn) => <Container>{storyFn()}</Container>)
   .add("Default", () => <Diff diff={diffFiles} />)

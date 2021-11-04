@@ -64,7 +64,7 @@ const withBinder = (binder: Binder) => {
   );
 };
 
-storiesOf("Layout|Footer", module)
+storiesOf("Footer", module)
   .addDecorator((story) => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
   .add("Default", () => {
     return <Footer me={trillian} version="2.0.0" links={{}} />;

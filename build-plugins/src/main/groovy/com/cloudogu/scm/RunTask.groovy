@@ -25,7 +25,7 @@
 
 package com.cloudogu.scm
 
-import com.moowork.gradle.node.yarn.YarnTask
+import com.moowork.gradle.node.task.NodeTask
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.tasks.Input
@@ -124,8 +124,9 @@ class RunTask extends DefaultTask {
   }
 
   private Closure<Void> createFrontend() {
-    def frontend = project.tasks.create('boot-frontend', YarnTask) {
-      args = ['run', 'serve']
+    def frontend = project.tasks.create('boot-frontend', NodeTask) {
+      script = new File('scm-ui/ui-scripts/bin/ui-scripts.js')
+      args = ['serve']
       environment = [
         'NODE_ENV': 'development'
       ]

@@ -71,13 +71,13 @@ function copy<T>(input: T): T {
   return JSON.parse(JSON.stringify(input));
 }
 
-storiesOf("Changesets", module)
+storiesOf("Repositories/Changesets", module)
   .addDecorator((story) => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
   .addDecorator((storyFn) => <Wrapper className="box box-link-shadow">{storyFn()}</Wrapper>)
-  .add("Default", () => <ChangesetRow repository={repository} changeset={three} />)
-  .add("With Committer", () => <ChangesetRow repository={repository} changeset={two} />)
-  .add("With Committer and Co-Author", () => <ChangesetRow repository={repository} changeset={one} />)
-  .add("With multiple Co-Authors", () => <ChangesetRow repository={repository} changeset={four} />)
+  .add("Default", () => <ChangesetRow repository={repository} changeset={three}/>)
+  .add("With Committer", () => <ChangesetRow repository={repository} changeset={two}/>)
+  .add("With Committer and Co-Author", () => <ChangesetRow repository={repository} changeset={one}/>)
+  .add("With multiple Co-Authors", () => <ChangesetRow repository={repository} changeset={four}/>)
   .add("With avatar", () => {
     return withAvatarFactory(() => hitchhiker, three);
   })

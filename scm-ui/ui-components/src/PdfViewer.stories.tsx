@@ -21,4 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import "storybook-addon-i18next/register";
+
+import React from "react";
+import PdfViewer from "./PdfViewer";
+// @ts-ignore no need to declare module for a single import
+import pdf from "./__resources__/doc.pdf";
+import { storiesOf } from "@storybook/react";
+
+storiesOf("PdfViewer", module)
+  .add("Simple", () => <PdfViewer src={pdf} />)
+  .add("Error", () => <PdfViewer src="/does/not/exists" />)
+  .add("Error with download URL", () => <PdfViewer src="/does/not/exists" download={pdf} />);

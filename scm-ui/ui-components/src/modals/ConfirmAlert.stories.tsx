@@ -44,7 +44,7 @@ const buttons = [
   },
 ];
 
-storiesOf("Modal|ConfirmAlert", module)
+storiesOf("Modal/ConfirmAlert", module)
   .addDecorator((story) => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
   .add("Default", () => <ConfirmAlert message={body} title={"Are you sure about that?"} buttons={buttons} />)
   .add("WithButton", () => {

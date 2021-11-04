@@ -127,7 +127,7 @@ const LegacyEvents: FC = () => {
   );
 };
 
-storiesOf("Forms|InputField", module)
+storiesOf("Forms/InputField", module)
   .addDecorator((storyFn) => <Decorator>{storyFn()}</Decorator>)
   .addDecorator((storyFn) => <MemoryRouter>{storyFn()}</MemoryRouter>)
   .add("AutoFocus", () => <InputField label="Field with AutoFocus" autofocus={true} />)

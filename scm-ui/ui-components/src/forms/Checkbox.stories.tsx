@@ -105,7 +105,7 @@ const LegacyEvents: FC = () => {
   );
 };
 
-storiesOf("Forms|Checkbox", module)
+storiesOf("Forms/Checkbox", module)
   .addDecorator((storyFn) => <MemoryRouter>{storyFn()}</MemoryRouter>)
   .add("Default", () => (
     <Spacing>
