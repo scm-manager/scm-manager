@@ -41,10 +41,10 @@ storiesOf("Forms/DropDown", module)
       options={[
         "The Hitchhiker's Guide to the Galaxy",
         "Dirk Gently’s Holistic Detective Agency",
-        "The Meaning Of Liff"
+        "The Meaning Of Liff",
       ]}
       preselectedOption={"dirk"}
-      optionSelected={selection => {
+      optionSelected={(selection) => {
         // nothing to do
       }}
     />
@@ -54,7 +54,7 @@ storiesOf("Forms/DropDown", module)
       optionValues={["alpha", "beta", "gamma"]}
       options={["A", "B", "C"]}
       preselectedOption={"D"}
-      optionSelected={selection => {
+      optionSelected={(selection) => {
         // nothing to do
       }}
     />

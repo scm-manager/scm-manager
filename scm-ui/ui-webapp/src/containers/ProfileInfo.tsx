@@ -24,12 +24,7 @@
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { Me } from "@scm-manager/ui-types";
-import {
-  AvatarImage,
-  AvatarWrapper,
-  MailLink,
-  createAttributesForTesting
-} from "@scm-manager/ui-components";
+import { AvatarImage, AvatarWrapper, MailLink, createAttributesForTesting } from "@scm-manager/ui-components";
 
 type Props = WithTranslation & {
   me: Me;
@@ -82,7 +77,7 @@ class ProfileInfo extends React.Component<Props> {
           <th>{t("profile.groups")}</th>
           <td className="p-0">
             <ul>
-              {me.groups.map(group => {
+              {me.groups.map((group) => {
                 return <li>{group}</li>;
               })}
             </ul>

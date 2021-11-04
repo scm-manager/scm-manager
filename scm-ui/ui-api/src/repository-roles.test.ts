@@ -32,8 +32,9 @@ import { act } from "react-test-renderer";
 import {
   useCreateRepositoryRole,
   useDeleteRepositoryRole,
-  useRepositoryRole, useRepositoryRoles,
-  useUpdateRepositoryRole
+  useRepositoryRole,
+  useRepositoryRoles,
+  useUpdateRepositoryRole,
 } from "./repository-roles";
 
 describe("Test repository-roles hooks", () => {
@@ -43,12 +44,12 @@ describe("Test repository-roles hooks", () => {
     verbs: ["rocking"],
     _links: {
       delete: {
-        href: "/repositoryRoles/theroleingstones"
+        href: "/repositoryRoles/theroleingstones",
       },
       update: {
-        href: "/repositoryRoles/theroleingstones"
-      }
-    }
+        href: "/repositoryRoles/theroleingstones",
+      },
+    },
   };
 
   const roleCollection: RepositoryRoleCollection = {
@@ -56,8 +57,8 @@ describe("Test repository-roles hooks", () => {
     pageTotal: 0,
     _links: {},
     _embedded: {
-      repositoryRoles: [role]
-    }
+      repositoryRoles: [role],
+    },
   };
 
   afterEach(() => {
@@ -70,7 +71,7 @@ describe("Test repository-roles hooks", () => {
       setIndexLink(queryClient, "repositoryRoles", "/repositoryRoles");
       fetchMock.get("/api/v2/repositoryRoles", roleCollection);
       const { result, waitFor } = renderHook(() => useRepositoryRoles(), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
       await waitFor(() => !!result.current.data);
       expect(result.current.data).toEqual(roleCollection);
@@ -81,11 +82,11 @@ describe("Test repository-roles hooks", () => {
       setIndexLink(queryClient, "repositoryRoles", "/repositoryRoles");
       fetchMock.get("/api/v2/repositoryRoles", roleCollection, {
         query: {
-          page: "42"
-        }
+          page: "42",
+        },
       });
       const { result, waitFor } = renderHook(() => useRepositoryRoles({ page: 42 }), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
       await waitFor(() => !!result.current.data);
       expect(result.current.data).toEqual(roleCollection);
@@ -96,7 +97,7 @@ describe("Test repository-roles hooks", () => {
       setIndexLink(queryClient, "repositoryRoles", "/repositoryRoles");
       fetchMock.get("/api/v2/repositoryRoles", roleCollection);
       const { result, waitFor } = renderHook(() => useRepositoryRoles(), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
       await waitFor(() => !!result.current.data);
       expect(queryClient.getQueryData(["repositoryRole", roleName])).toEqual(role);
@@ -109,7 +110,7 @@ describe("Test repository-roles hooks", () => {
       setIndexLink(queryClient, "repositoryRoles", "/repositoryRoles");
       fetchMock.get("/api/v2/repositoryRoles/" + roleName, role);
       const { result, waitFor } = renderHook(() => useRepositoryRole(roleName), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
       await waitFor(() => !!result.current.data);
       expect(result.current.data).toEqual(role);
@@ -124,14 +125,14 @@ describe("Test repository-roles hooks", () => {
       fetchMock.postOnce("/api/v2/repositoryRoles", {
         status: 201,
         headers: {
-          Location: "/repositoryRoles/" + roleName
-        }
+          Location: "/repositoryRoles/" + roleName,
+        },
       });
 
       fetchMock.getOnce("/api/v2/repositoryRoles/" + roleName, role);
 
       const { result, waitForNextUpdate } = renderHook(() => useCreateRepositoryRole(), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
 
       await act(() => {
@@ -148,13 +149,13 @@ describe("Test repository-roles hooks", () => {
       setIndexLink(queryClient, "repositoryRoles", "/repositoryRoles");
 
       fetchMock.postOnce("/api/v2/repositoryRoles", {
-        status: 201
+        status: 201,
       });
 
       fetchMock.getOnce("/api/v2/repositoryRoles/" + roleName, role);
 
       const { result, waitForNextUpdate } = renderHook(() => useCreateRepositoryRole(), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
 
       await act(() => {
@@ -173,11 +174,11 @@ describe("Test repository-roles hooks", () => {
       setIndexLink(queryClient, "repositoryRoles", "/repositoryRoles");
 
       fetchMock.deleteOnce("/api/v2/repositoryRoles/" + roleName, {
-        status: 200
+        status: 200,
       });
 
       const { result, waitForNextUpdate } = renderHook(() => useDeleteRepositoryRole(), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
 
       await act(() => {
@@ -200,15 +201,15 @@ describe("Test repository-roles hooks", () => {
 
       const newRole: RepositoryRole = {
         ...role,
-        name: "newname"
+        name: "newname",
       };
 
       fetchMock.putOnce("/api/v2/repositoryRoles/" + roleName, {
-        status: 200
+        status: 200,
       });
 
       const { result, waitForNextUpdate } = renderHook(() => useUpdateRepositoryRole(), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
 
       await act(() => {

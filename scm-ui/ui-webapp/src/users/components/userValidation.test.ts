@@ -36,7 +36,7 @@ describe("test displayName validation", () => {
       "Tricia.McMillan@hitchhiker.com",
       "Ford Prefect (ford.prefect@hitchhiker.com)",
       "Zaphod Beeblebrox <zaphod.beeblebrox@hitchhiker.com>",
-      "Marvin, der depressive Roboter"
+      "Marvin, der depressive Roboter",
     ];
     for (const name of validNames) {
       expect(validator.isDisplayNameValid(name)).toBe(true);

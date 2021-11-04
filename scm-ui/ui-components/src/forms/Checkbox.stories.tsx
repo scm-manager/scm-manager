@@ -64,8 +64,8 @@ const ReactHookForm: FC = () => {
   const { register, handleSubmit } = useForm<Settings>({
     defaultValues: {
       disabled: true,
-      readonly: true
-    }
+      readonly: true,
+    },
   });
   const [stored, setStored] = useState<Settings>();
 
@@ -106,7 +106,7 @@ const LegacyEvents: FC = () => {
 };
 
 storiesOf("Forms/Checkbox", module)
-  .addDecorator(storyFn => <MemoryRouter>{storyFn()}</MemoryRouter>)
+  .addDecorator((storyFn) => <MemoryRouter>{storyFn()}</MemoryRouter>)
   .add("Default", () => (
     <Spacing>
       <Checkbox label="Not checked" checked={false} />

@@ -43,7 +43,7 @@ class NamespaceStrategySelect extends React.Component<Props> {
       available = namespaceStrategies.available;
     }
 
-    return available.map(ns => {
+    return available.map((ns) => {
       const key = "namespaceStrategies." + ns;
       let label = t(key);
       if (label === key) {
@@ -51,7 +51,7 @@ class NamespaceStrategySelect extends React.Component<Props> {
       }
       return {
         value: ns,
-        label: label
+        label: label,
       };
     });
   };

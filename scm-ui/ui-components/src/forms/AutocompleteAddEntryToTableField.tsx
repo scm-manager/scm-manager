@@ -53,7 +53,7 @@ const AutocompleteAddEntryToTableField: FC<Props> = ({
   loadSuggestions,
   placeholder,
   loadingMessage,
-  noOptionsMessage
+  noOptionsMessage,
 }) => {
   const [selectedValue, setSelectedValue] = useState<SelectValue | undefined>(undefined);
 

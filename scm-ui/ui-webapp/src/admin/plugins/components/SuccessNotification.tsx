@@ -23,7 +23,7 @@
  */
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
-import { Notification } from "@scm-manager/ui-components";
+import { NoStyleButton, Notification } from "@scm-manager/ui-components";
 import { PluginAction } from "../containers/PluginsOverview";
 
 type Props = WithTranslation & {
@@ -48,7 +48,9 @@ class InstallSuccessNotification extends React.Component<Props> {
     return (
       <Notification type="success">
         {this.createMessageForPluginAction()}{" "}
-        <a onClick={_ => window.location.reload(true)}>{t("plugins.modal.reload")}</a>
+        <NoStyleButton onClick={(_) => window.location.reload(true)} className="has-text-info">
+          {t("plugins.modal.reload")}
+        </NoStyleButton>
       </Notification>
     );
   }

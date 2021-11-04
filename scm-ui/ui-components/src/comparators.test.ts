@@ -26,12 +26,12 @@ import { byKey, byValueLength, byNestedKeys } from "./comparators";
 
 const createObject = (key: string, value?: string) => {
   return {
-    [key]: value
+    [key]: value,
   };
 };
 
 const createObjects = (key: string, values: Array<string | undefined>) => {
-  return values.map(v => createObject(key, v));
+  return values.map((v) => createObject(key, v));
 };
 
 describe("key comparator tests", () => {
@@ -98,18 +98,18 @@ describe("nested key comparator tests", () => {
   const createObject = (key: string, nested?: string, value?: string) => {
     if (!nested) {
       return {
-        [key]: undefined
+        [key]: undefined,
       };
     }
     return {
       [key]: {
-        [nested]: value
-      }
+        [nested]: value,
+      },
     };
   };
 
   const createObjects = (key: string, nested: string, values: Array<string | undefined>) => {
-    return values.map(v => createObject(key, nested, v));
+    return values.map((v) => createObject(key, nested, v));
   };
 
   it("should sort array", () => {

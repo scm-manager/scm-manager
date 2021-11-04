@@ -73,7 +73,7 @@ type Props = {
 const TokenizedDiffView: FC<Props> = ({ file, viewType, className, children }) => {
   const { tokens } = useTokenizeWorker(tokenize, {
     hunks: file.hunks,
-    language: determineLanguage(file.language)
+    language: determineLanguage(file.language),
   });
 
   return (

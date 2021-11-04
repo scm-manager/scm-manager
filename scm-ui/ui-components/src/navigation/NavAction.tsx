@@ -39,17 +39,17 @@ class NavAction extends React.Component<Props> {
     if (icon) {
       showIcon = (
         <>
-          <i className={icon}></i>{" "}
+          <i className={icon} />{" "}
         </>
       );
     }
 
     return (
       <li>
-        <a onClick={action} href="javascript:void(0);">
+        <button onClick={action}>
           {showIcon}
           {label}
-        </a>
+        </button>
       </li>
     );
   }

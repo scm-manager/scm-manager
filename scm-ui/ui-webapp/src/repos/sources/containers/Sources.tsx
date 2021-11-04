@@ -65,7 +65,7 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
       const defaultBranch = branches?.filter((b) => b.defaultBranch === true)[0];
       history.replace(`${baseUrl}/sources/${encodeURIComponent(defaultBranch.name)}/`);
     }
-  }, [branches, selectedBranch]);
+  }, [branches, selectedBranch, history, baseUrl]);
   const {
     isLoading,
     error,

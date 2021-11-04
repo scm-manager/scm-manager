@@ -28,7 +28,7 @@ import { Changeset } from "@scm-manager/ui-types";
 import { Replacement, changesetShortLinkRegex } from "@scm-manager/ui-components";
 
 const ChangesetShortLink: (changeset: Changeset, value: string) => Replacement[] = (changeset, value) => {
-  const regex = new RegExp(changesetShortLinkRegex, "g")
+  const regex = new RegExp(changesetShortLinkRegex, "g");
 
   const replacements: Replacement[] = [];
 
@@ -40,7 +40,7 @@ const ChangesetShortLink: (changeset: Changeset, value: string) => Replacement[]
     const link = `/repo/${namespace}/${name}/code/changeset/${revision}`;
     replacements.push({
       textToReplace: m[0],
-      replacement: <Link to={link}>{m[0]}</Link>
+      replacement: <Link to={link}>{m[0]}</Link>,
     });
     m = regex.exec(value);
   }

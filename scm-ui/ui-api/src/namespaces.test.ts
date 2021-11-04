@@ -38,14 +38,14 @@ describe("Test namespace hooks", () => {
           namespaces: [
             {
               namespace: "spaceships",
-              _links: {}
-            }
-          ]
-        }
+              _links: {},
+            },
+          ],
+        },
       });
 
       const { result, waitFor } = renderHook(() => useNamespaces(), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
       await waitFor(() => {
         return !!result.current.data;
@@ -61,11 +61,11 @@ describe("Test namespace hooks", () => {
       fetchMock.get("/api/v2/ns", {
         current: "awesome",
         available: [],
-        _links: {}
+        _links: {},
       });
 
       const { result, waitFor } = renderHook(() => useNamespaceStrategies(), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
       await waitFor(() => {
         return !!result.current.data;
@@ -80,11 +80,11 @@ describe("Test namespace hooks", () => {
       setIndexLink(queryClient, "namespaces", "/ns");
       fetchMock.get("/api/v2/ns/awesome", {
         namespace: "awesome",
-        _links: {}
+        _links: {},
       });
 
       const { result, waitFor } = renderHook(() => useNamespace("awesome"), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
       await waitFor(() => {
         return !!result.current.data;

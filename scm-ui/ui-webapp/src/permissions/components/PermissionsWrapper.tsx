@@ -55,7 +55,7 @@ export default class PermissionsWrapper extends React.Component<Props> {
     return (
       <div className="columns">
         <StyledWrapper className={classNames("column", "is-half", "pb-0")}>
-          {permissionArray.slice(0, permissionArray.length / 2 + 1).map(p => (
+          {permissionArray.slice(0, permissionArray.length / 2 + 1).map((p) => (
             <PermissionCheckbox
               key={p}
               name={p}
@@ -67,7 +67,7 @@ export default class PermissionsWrapper extends React.Component<Props> {
           ))}
         </StyledWrapper>
         <StyledWrapper className={classNames("column", "is-half")}>
-          {permissionArray.slice(permissionArray.length / 2 + 1, permissionArray.length).map(p => (
+          {permissionArray.slice(permissionArray.length / 2 + 1, permissionArray.length).map((p) => (
             <PermissionCheckbox
               key={p}
               name={p}

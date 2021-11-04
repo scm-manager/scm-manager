@@ -28,7 +28,7 @@ import Paginator from "./Paginator";
 
 xdescribe("paginator rendering tests", () => {
   const dummyLink = {
-    href: "https://dummy"
+    href: "https://dummy",
   };
 
   it("should render all buttons but disabled, without links", () => {
@@ -36,13 +36,13 @@ xdescribe("paginator rendering tests", () => {
       page: 10,
       pageTotal: 20,
       _links: {},
-      _embedded: {}
+      _embedded: {},
     };
 
     const paginator = shallow(<Paginator collection={collection} />);
     const buttons = paginator.find("Button");
     expect(buttons.length).toBe(7);
-    buttons.forEach(button => {
+    buttons.forEach((button) => {
       // @ts-ignore ???
       expect(button.props.disabled).toBeTruthy();
     });
@@ -55,9 +55,9 @@ xdescribe("paginator rendering tests", () => {
       _links: {
         first: dummyLink,
         next: dummyLink,
-        last: dummyLink
+        last: dummyLink,
       },
-      _embedded: {}
+      _embedded: {},
     };
 
     const paginator = shallow(<Paginator collection={collection} />);
@@ -92,9 +92,9 @@ xdescribe("paginator rendering tests", () => {
         first: dummyLink,
         prev: dummyLink,
         next: dummyLink,
-        last: dummyLink
+        last: dummyLink,
       },
-      _embedded: {}
+      _embedded: {},
     };
 
     const paginator = shallow(<Paginator collection={collection} />);
@@ -132,9 +132,9 @@ xdescribe("paginator rendering tests", () => {
       pageTotal: 148,
       _links: {
         first: dummyLink,
-        prev: dummyLink
+        prev: dummyLink,
       },
-      _embedded: {}
+      _embedded: {},
     };
 
     const paginator = shallow(<Paginator collection={collection} />);
@@ -169,9 +169,9 @@ xdescribe("paginator rendering tests", () => {
         first: dummyLink,
         prev: dummyLink,
         next: dummyLink,
-        last: dummyLink
+        last: dummyLink,
       },
-      _embedded: {}
+      _embedded: {},
     };
 
     const paginator = shallow(<Paginator collection={collection} />);
@@ -211,9 +211,9 @@ xdescribe("paginator rendering tests", () => {
         first: dummyLink,
         prev: dummyLink,
         next: dummyLink,
-        last: dummyLink
+        last: dummyLink,
       },
-      _embedded: {}
+      _embedded: {},
     };
 
     const paginator = shallow(<Paginator collection={collection} />);
@@ -258,12 +258,12 @@ xdescribe("paginator rendering tests", () => {
       _links: {
         first: dummyLink,
         prev: {
-          href: "https://www.scm-manager.org"
+          href: "https://www.scm-manager.org",
         },
         next: dummyLink,
-        last: dummyLink
+        last: dummyLink,
       },
-      _embedded: {}
+      _embedded: {},
     };
 
     let urlToOpen;

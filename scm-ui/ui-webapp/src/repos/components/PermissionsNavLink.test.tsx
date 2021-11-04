@@ -30,7 +30,7 @@ import PermissionsNavLink from "./PermissionsNavLink";
 describe("PermissionsNavLink", () => {
   it("should render nothing, if the modify link is missing", () => {
     const repository = {
-      _links: {}
+      _links: {},
     };
 
     const navLink = shallow(<PermissionsNavLink repository={repository} permissionUrl="" />);
@@ -41,9 +41,9 @@ describe("PermissionsNavLink", () => {
     const repository = {
       _links: {
         permissions: {
-          href: "/permissions"
-        }
-      }
+          href: "/permissions",
+        },
+      },
     };
 
     const navLink = mount(<PermissionsNavLink repository={repository} permissionUrl="" />);

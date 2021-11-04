@@ -29,9 +29,9 @@ describe("requireLink tests", () => {
       {
         _links: {
           spaceship: {
-            href: "/v2/ship"
-          }
-        }
+            href: "/v2/ship",
+          },
+        },
       },
       "spaceship"
     );
@@ -49,14 +49,14 @@ describe("requireLink tests", () => {
         spaceship: [
           {
             name: "one",
-            href: "/v2/one"
+            href: "/v2/one",
           },
           {
             name: "two",
-            href: "/v2/two"
-          }
-        ]
-      }
+            href: "/v2/two",
+          },
+        ],
+      },
     };
     expect(() => requiredLink(object, "spaceship")).toThrowError();
   });
@@ -67,14 +67,14 @@ describe("requireLink tests", () => {
         spaceship: [
           {
             name: "one",
-            href: "/v2/one"
+            href: "/v2/one",
           },
           {
             name: "two",
-            href: "/v2/two"
-          }
-        ]
-      }
+            href: "/v2/two",
+          },
+        ],
+      },
     };
     expect(requiredLink(object, "spaceship", "one")).toBe("/v2/one");
   });
@@ -85,14 +85,14 @@ describe("requireLink tests", () => {
         spaceship: [
           {
             name: "one",
-            href: "/v2/one"
+            href: "/v2/one",
           },
           {
             name: "two",
-            href: "/v2/two"
-          }
-        ]
-      }
+            href: "/v2/two",
+          },
+        ],
+      },
     };
     expect(() => requiredLink(object, "spaceship", "three")).toThrowError();
   });

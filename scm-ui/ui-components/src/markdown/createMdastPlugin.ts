@@ -34,7 +34,7 @@ export default function createMdastPlugin(plugin: AstPlugin): any {
   return function attach() {
     return function transform(tree: any) {
       plugin({
-        visit: (type, visitor) => visit(tree, type, visitor)
+        visit: (type, visitor) => visit(tree, type, visitor),
       });
       return tree;
     };

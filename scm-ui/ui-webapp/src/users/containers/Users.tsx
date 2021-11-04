@@ -31,7 +31,7 @@ import {
   OverviewPageActions,
   Page,
   PageActions,
-  urls
+  urls,
 } from "@scm-manager/ui-components";
 import { UserTable } from "./../components/table";
 import { useUsers } from "@scm-manager/ui-api";
@@ -60,7 +60,7 @@ const Users: FC = () => {
 
   const renderCreateButton = () => {
     if (canAddUsers) {
-      return <CreateButton label={t("users.createButton")} link="/users/create" />;
+      return <CreateButton link="/users/create" label={t("users.createButton")} />;
     }
     return null;
   };

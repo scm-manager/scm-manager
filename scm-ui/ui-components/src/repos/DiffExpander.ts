@@ -75,7 +75,7 @@ class DiffExpander {
   expandHead: (n: number, count: number) => Promise<FileDiff> = (n, count) => {
     const start = this.minLineNumber(n) - Math.min(count, this.computeMaxExpandHeadRange(n)) - 1;
     const end = this.minLineNumber(n) - 1;
-    return this.loadLines(start, end).then(lines => {
+    return this.loadLines(start, end).then((lines) => {
       const hunk = this.file.hunks![n];
 
       const newHunk = this.createNewHunk(
@@ -96,7 +96,7 @@ class DiffExpander {
       count > 0
         ? start + Math.min(count, maxExpandBottomRange > 0 ? maxExpandBottomRange : Number.MAX_SAFE_INTEGER)
         : -1;
-    return this.loadLines(start, end).then(lines => {
+    return this.loadLines(start, end).then((lines) => {
       const hunk = this.file.hunks![n];
 
       const newHunk: Hunk = this.createNewHunk(
@@ -116,9 +116,9 @@ class DiffExpander {
       .replace("{end}", end.toString());
     return apiClient
       .get(lineRequestUrl)
-      .then(response => response.text())
-      .then(text => text.split("\n"))
-      .then(lines => (lines[lines.length - 1] === "" ? lines.slice(0, lines.length - 1) : lines));
+      .then((response) => response.text())
+      .then((text) => text.split("\n"))
+      .then((lines) => (lines[lines.length - 1] === "" ? lines.slice(0, lines.length - 1) : lines));
   };
 
   addHunkToFile = (newHunk: Hunk, position: number) => {
@@ -141,13 +141,13 @@ class DiffExpander {
     let oldLineNumber: number = oldFirstLineNumber;
     let newLineNumber: number = newFirstLineNumber;
 
-    lines.forEach(line => {
+    lines.forEach((line) => {
       newChanges.push({
         content: line,
         type: "normal",
         oldLineNumber,
         newLineNumber,
-        isNormal: true
+        isNormal: true,
       });
       oldLineNumber += 1;
       newLineNumber += 1;
@@ -161,7 +161,7 @@ class DiffExpander {
       oldLines: lines.length,
       newLines: lines.length,
       expansion: true,
-      fullyExpanded: requestedLines < 0 || lines.length < requestedLines
+      fullyExpanded: requestedLines < 0 || lines.length < requestedLines,
     };
   };
 
@@ -175,13 +175,13 @@ class DiffExpander {
     return lastChange.newLineNumber || lastChange.lineNumber!;
   };
 
-  getHunk: (n: number) => ExpandableHunk = n => {
+  getHunk: (n: number) => ExpandableHunk = (n) => {
     return {
       maxExpandHeadRange: this.computeMaxExpandHeadRange(n),
       maxExpandBottomRange: this.computeMaxExpandBottomRange(n),
       expandHead: (count: number) => this.expandHead(n, count),
       expandBottom: (count: number) => this.expandBottom(n, count),
-      hunk: this.file?.hunks![n]
+      hunk: this.file?.hunks![n],
     };
   };
 }

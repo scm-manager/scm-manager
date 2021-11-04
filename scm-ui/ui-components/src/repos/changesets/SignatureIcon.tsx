@@ -58,11 +58,11 @@ const SignatureIcon: FC<Props> = ({ signatures, className }) => {
   }
 
   const getColor = (signaturesToVerify: Signature[]) => {
-    const invalid = signaturesToVerify.some(sig => sig.status === "INVALID");
+    const invalid = signaturesToVerify.some((sig) => sig.status === "INVALID");
     if (invalid) {
       return "danger";
     }
-    const verified = signaturesToVerify.some(sig => sig.status === "VERIFIED");
+    const verified = signaturesToVerify.some((sig) => sig.status === "VERIFIED");
     if (verified) {
       return "success";
     }
@@ -109,7 +109,7 @@ const SignatureIcon: FC<Props> = ({ signatures, className }) => {
           <>
             <div>{t("changeset.keyContacts")}:</div>
             {signature.contacts &&
-              signature.contacts.map(contact => (
+              signature.contacts.map((contact) => (
                 <div>
                   - {contact.name}
                   {contact.mail && ` <${contact.mail}>`}
@@ -121,7 +121,7 @@ const SignatureIcon: FC<Props> = ({ signatures, className }) => {
     );
   };
 
-  const signatureElements = signatures.map(signature => createSignatureBlock(signature));
+  const signatureElements = signatures.map((signature) => createSignatureBlock(signature));
 
   return (
     <>

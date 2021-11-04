@@ -37,13 +37,7 @@ export const ApiKeyEntry: FC<Props> = ({ apiKey, onDelete }) => {
   const [t] = useTranslation("users");
   let deleteButton;
   if (apiKey?._links?.delete) {
-    deleteButton = (
-      <a className="level-item" onClick={() => onDelete(apiKey)}>
-        <span className="icon">
-          <Icon name="trash" title={t("apiKey.delete")} color="inherit" />
-        </span>
-      </a>
-    );
+    deleteButton = <Icon name="trash" title={t("apiKey.delete")} color="inherit" onClick={() => onDelete(apiKey)} />;
   }
 
   return (
@@ -54,7 +48,7 @@ export const ApiKeyEntry: FC<Props> = ({ apiKey, onDelete }) => {
         <td className="is-hidden-mobile">
           <DateFromNow date={apiKey.created} />
         </td>
-        <td className="is-darker">{deleteButton}</td>
+        <td className="is-darker has-text-centered">{deleteButton}</td>
       </tr>
     </>
   );

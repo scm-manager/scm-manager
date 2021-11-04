@@ -40,21 +40,21 @@ describe("Test group hooks", () => {
     type: "xml",
     _links: {
       delete: {
-        href: "/groups/jedis"
+        href: "/groups/jedis",
       },
       update: {
-        href: "/groups/jedis"
-      }
+        href: "/groups/jedis",
+      },
     },
     _embedded: {
-      members: []
-    }
+      members: [],
+    },
   };
 
   const jedisCollection = {
     _embedded: {
-      groups: [jedis]
-    }
+      groups: [jedis],
+    },
   };
 
   afterEach(() => {
@@ -67,7 +67,7 @@ describe("Test group hooks", () => {
       setIndexLink(queryClient, "groups", "/groups");
       fetchMock.get("/api/v2/groups", jedisCollection);
       const { result, waitFor } = renderHook(() => useGroups(), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
       await waitFor(() => !!result.current.data);
       expect(result.current.data).toEqual(jedisCollection);
@@ -78,11 +78,11 @@ describe("Test group hooks", () => {
       setIndexLink(queryClient, "groups", "/groups");
       fetchMock.get("/api/v2/groups", jedisCollection, {
         query: {
-          page: "42"
-        }
+          page: "42",
+        },
       });
       const { result, waitFor } = renderHook(() => useGroups({ page: 42 }), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
       await waitFor(() => !!result.current.data);
       expect(result.current.data).toEqual(jedisCollection);
@@ -93,11 +93,11 @@ describe("Test group hooks", () => {
       setIndexLink(queryClient, "groups", "/groups");
       fetchMock.get("/api/v2/groups", jedisCollection, {
         query: {
-          q: "jedis"
-        }
+          q: "jedis",
+        },
       });
       const { result, waitFor } = renderHook(() => useGroups({ search: "jedis" }), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
       await waitFor(() => !!result.current.data);
       expect(result.current.data).toEqual(jedisCollection);
@@ -108,7 +108,7 @@ describe("Test group hooks", () => {
       setIndexLink(queryClient, "groups", "/groups");
       fetchMock.get("/api/v2/groups", jedisCollection);
       const { result, waitFor } = renderHook(() => useGroups(), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
       await waitFor(() => !!result.current.data);
       expect(queryClient.getQueryData(["group", "jedis"])).toEqual(jedis);
@@ -121,7 +121,7 @@ describe("Test group hooks", () => {
       setIndexLink(queryClient, "groups", "/groups");
       fetchMock.get("/api/v2/groups/jedis", jedis);
       const { result, waitFor } = renderHook(() => useGroup("jedis"), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
       await waitFor(() => !!result.current.data);
       expect(result.current.data).toEqual(jedis);
@@ -136,14 +136,14 @@ describe("Test group hooks", () => {
       fetchMock.postOnce("/api/v2/groups", {
         status: 201,
         headers: {
-          Location: "/groups/jedis"
-        }
+          Location: "/groups/jedis",
+        },
       });
 
       fetchMock.getOnce("/api/v2/groups/jedis", jedis);
 
       const { result, waitForNextUpdate } = renderHook(() => useCreateGroup(), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
 
       await act(() => {
@@ -160,13 +160,13 @@ describe("Test group hooks", () => {
       setIndexLink(queryClient, "groups", "/groups");
 
       fetchMock.postOnce("/api/v2/groups", {
-        status: 201
+        status: 201,
       });
 
       fetchMock.getOnce("/api/v2/groups/jedis", jedis);
 
       const { result, waitForNextUpdate } = renderHook(() => useCreateGroup(), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
 
       await act(() => {
@@ -185,11 +185,11 @@ describe("Test group hooks", () => {
       setIndexLink(queryClient, "groups", "/groups");
 
       fetchMock.deleteOnce("/api/v2/groups/jedis", {
-        status: 200
+        status: 200,
       });
 
       const { result, waitForNextUpdate } = renderHook(() => useDeleteGroup(), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
 
       await act(() => {
@@ -212,17 +212,17 @@ describe("Test group hooks", () => {
 
       const newJedis = {
         ...jedis,
-        description: "may the 4th be with you"
+        description: "may the 4th be with you",
       };
 
       fetchMock.putOnce("/api/v2/groups/jedis", {
-        status: 200
+        status: 200,
       });
 
       fetchMock.getOnce("/api/v2/groups/jedis", newJedis);
 
       const { result, waitForNextUpdate } = renderHook(() => useUpdateGroup(), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
 
       await act(() => {

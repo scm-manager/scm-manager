@@ -50,26 +50,25 @@ describe("Test diff", () => {
                 content: "0",
                 type: "insert",
                 lineNumber: 1,
-                isInsert: true
-              }
-            ]
-          }
+                isInsert: true,
+              },
+            ],
+          },
         ],
         _links: {
           lines: {
-            href:
-              "/api/v2/repositories/scmadmin/HeartOfGold-git/content/one_to_onehundred/0.txt?start={start}&end={end}",
-            templated: true
-          }
-        }
-      }
+            href: "/api/v2/repositories/scmadmin/HeartOfGold-git/content/one_to_onehundred/0.txt?start={start}&end={end}",
+            templated: true,
+          },
+        },
+      },
     ],
     partial: false,
     _links: {
       self: {
-        href: "/api/v2/diff"
-      }
-    }
+        href: "/api/v2/diff",
+      },
+    },
   };
 
   const partialDiff1: Diff = {
@@ -93,29 +92,28 @@ describe("Test diff", () => {
                 content: "0",
                 type: "insert",
                 lineNumber: 1,
-                isInsert: true
-              }
-            ]
-          }
+                isInsert: true,
+              },
+            ],
+          },
         ],
         _links: {
           lines: {
-            href:
-              "/api/v2/repositories/scmadmin/HeartOfGold-git/content/one_to_onehundred/0.txt?start={start}&end={end}",
-            templated: true
-          }
-        }
-      }
+            href: "/api/v2/repositories/scmadmin/HeartOfGold-git/content/one_to_onehundred/0.txt?start={start}&end={end}",
+            templated: true,
+          },
+        },
+      },
     ],
     partial: true,
     _links: {
       self: {
-        href: "/diff"
+        href: "/diff",
       },
       next: {
-        href: "/diff?offset=1&limit=1"
-      }
-    }
+        href: "/diff?offset=1&limit=1",
+      },
+    },
   };
 
   const partialDiff2: Diff = {
@@ -139,26 +137,25 @@ describe("Test diff", () => {
                 content: "1",
                 type: "insert",
                 lineNumber: 1,
-                isInsert: true
-              }
-            ]
-          }
+                isInsert: true,
+              },
+            ],
+          },
         ],
         _links: {
           lines: {
-            href:
-              "/api/v2/repositories/scmadmin/HeartOfGold-git/content/one_to_onehundred/1.txt?start={start}&end={end}",
-            templated: true
-          }
-        }
-      }
+            href: "/api/v2/repositories/scmadmin/HeartOfGold-git/content/one_to_onehundred/1.txt?start={start}&end={end}",
+            templated: true,
+          },
+        },
+      },
     ],
     partial: false,
     _links: {
       self: {
-        href: "/diff"
-      }
-    }
+        href: "/diff",
+      },
+    },
   };
 
   beforeEach(() => {
@@ -168,10 +165,10 @@ describe("Test diff", () => {
   it("should return simple parsed diff", async () => {
     fetchMock.getOnce("/api/v2/diff", {
       body: simpleDiff,
-      headers: { "Content-Type": "application/vnd.scmm-diffparsed+json;v=2" }
+      headers: { "Content-Type": "application/vnd.scmm-diffparsed+json;v=2" },
     });
     const { result, waitFor } = renderHook(() => useDiff("/diff"), {
-      wrapper: createWrapper()
+      wrapper: createWrapper(),
     });
     await waitFor(() => !!result.current.data);
     expect(result.current.data).toEqual(simpleDiff);
@@ -188,10 +185,10 @@ describe("Test diff", () => {
 +i am new!
 \\ No newline at end of file
 `,
-      headers: { "Content-Type": "text/plain" }
+      headers: { "Content-Type": "text/plain" },
     });
     const { result, waitFor } = renderHook(() => useDiff("/diff"), {
-      wrapper: createWrapper()
+      wrapper: createWrapper(),
     });
     await waitFor(() => !!result.current.data);
     expect(result.current.data?.files).toHaveLength(1);
@@ -200,14 +197,14 @@ describe("Test diff", () => {
   it("should return parsed diff in multiple chunks", async () => {
     fetchMock.getOnce("/api/v2/diff?limit=1", {
       body: partialDiff1,
-      headers: { "Content-Type": "application/vnd.scmm-diffparsed+json;v=2" }
+      headers: { "Content-Type": "application/vnd.scmm-diffparsed+json;v=2" },
     });
     fetchMock.getOnce("/api/v2/diff?offset=1&limit=1", {
       body: partialDiff2,
-      headers: { "Content-Type": "application/vnd.scmm-diffparsed+json;v=2" }
+      headers: { "Content-Type": "application/vnd.scmm-diffparsed+json;v=2" },
     });
     const { result, waitFor, waitForNextUpdate } = renderHook(() => useDiff("/diff?limit=1"), {
-      wrapper: createWrapper()
+      wrapper: createWrapper(),
     });
     await waitFor(() => !!result.current.data);
     expect(result.current.data).toEqual(partialDiff1);
@@ -226,10 +223,10 @@ describe("Test diff", () => {
   it("should append query parameters to url which has already query params", async () => {
     fetchMock.getOnce("/api/v2/diff?format=GIT&limit=25", {
       body: simpleDiff,
-      headers: { "Content-Type": "application/vnd.scmm-diffparsed+json;v=2" }
+      headers: { "Content-Type": "application/vnd.scmm-diffparsed+json;v=2" },
     });
     const { result, waitFor } = renderHook(() => useDiff("/diff?format=GIT", { limit: 25 }), {
-      wrapper: createWrapper()
+      wrapper: createWrapper(),
     });
     await waitFor(() => !!result.current.data);
     expect(result.current.data).toEqual(simpleDiff);

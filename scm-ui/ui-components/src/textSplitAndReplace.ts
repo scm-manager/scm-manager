@@ -36,7 +36,7 @@ type PartToReplace<T> = {
 
 function hasConflict<T>(alreadyFoundReplacements: PartToReplace<T>[], newReplacement: PartToReplace<T>) {
   return !!alreadyFoundReplacements.find(
-    existing =>
+    (existing) =>
       (existing.start <= newReplacement.start && existing.start + existing.length > newReplacement.start) ||
       (newReplacement.start <= existing.start && newReplacement.start + newReplacement.length > existing.start)
   );
@@ -49,7 +49,7 @@ export default function textSplitAndReplace<T>(
 ): T[] {
   const partsToReplace: PartToReplace<T>[] = [];
 
-  replacements.forEach(replacement => {
+  replacements.forEach((replacement) => {
     let lastIndex = -1;
     do {
       const start = text.indexOf(replacement.textToReplace, lastIndex);

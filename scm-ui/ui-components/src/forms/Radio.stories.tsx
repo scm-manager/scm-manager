@@ -113,7 +113,7 @@ const LegacyEvents: FC = () => {
 };
 
 storiesOf("Forms/Radio", module)
-  .addDecorator(storyFn => <MemoryRouter>{storyFn()}</MemoryRouter>)
+  .addDecorator((storyFn) => <MemoryRouter>{storyFn()}</MemoryRouter>)
   .add("Default", () => (
     <Spacing>
       <Radio label="Not checked" checked={false} />

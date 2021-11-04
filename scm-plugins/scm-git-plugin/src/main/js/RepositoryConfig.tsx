@@ -32,7 +32,7 @@ import {
   Loading,
   Subtitle,
   Level,
-  SubmitButton
+  SubmitButton,
 } from "@scm-manager/ui-components";
 
 type Props = WithTranslation & {
@@ -67,40 +67,40 @@ class RepositoryConfig extends React.Component<Props, State> {
       nonFastForwardDisallowed: false,
       changesSubmitted: false,
       disabled: true,
-      changed: false
+      changed: false,
     };
   }
 
   componentDidMount() {
     const { repository } = this.props;
     this.setState({
-      loadingBranches: true
+      loadingBranches: true,
     });
     const branchesLink = repository._links.branches as Link;
     apiClient
       .get(branchesLink.href)
-      .then(response => response.json())
-      .then(payload => payload._embedded.branches)
-      .then(branches =>
+      .then((response) => response.json())
+      .then((payload) => payload._embedded.branches)
+      .then((branches) =>
         this.setState({
           branches,
-          loadingBranches: false
+          loadingBranches: false,
         })
       )
-      .catch(error =>
+      .catch((error) =>
         this.setState({
-          error
+          error,
         })
       );
 
     const configurationLink = repository._links.configuration as Link;
     this.setState({
-      loadingDefaultBranch: true
+      loadingDefaultBranch: true,
     });
     apiClient
       .get(configurationLink.href)
-      .then(response => response.json())
-      .then(payload => {
+      .then((response) => response.json())
+      .then((payload) => {
         const defaultBranch =
           payload.defaultBranch || this.state.branches?.filter((b: Branch) => b.defaultBranch)[0]?.name;
         this.setState({
@@ -108,12 +108,12 @@ class RepositoryConfig extends React.Component<Props, State> {
           nonFastForwardDisallowed: payload.nonFastForwardDisallowed,
           disabled: !payload._links.update,
           loadingDefaultBranch: false,
-          changed: false
+          changed: false,
         });
       })
-      .catch(error =>
+      .catch((error) =>
         this.setState({
-          error
+          error,
         })
       );
   }
@@ -123,13 +123,13 @@ class RepositoryConfig extends React.Component<Props, State> {
       this.setState({
         selectedBranchName: "",
         changesSubmitted: false,
-        changed: true
+        changed: true,
       });
     } else {
       this.setState({
         selectedBranchName: branch.name,
         changesSubmitted: false,
-        changed: true
+        changed: true,
       });
     }
   };
@@ -137,7 +137,7 @@ class RepositoryConfig extends React.Component<Props, State> {
   onNonFastForwardDisallowed = (value: boolean) => {
     this.setState({
       nonFastForwardDisallowed: value,
-      changed: true
+      changed: true,
     });
   };
 
@@ -148,10 +148,10 @@ class RepositoryConfig extends React.Component<Props, State> {
     const { selectedBranchName, nonFastForwardDisallowed } = this.state;
     const newConfig = {
       defaultBranch: selectedBranchName,
-      nonFastForwardDisallowed
+      nonFastForwardDisallowed,
     };
     this.setState({
-      submitPending: true
+      submitPending: true,
     });
     const configurationLink = repository._links.configuration as Link;
     apiClient
@@ -160,12 +160,12 @@ class RepositoryConfig extends React.Component<Props, State> {
         this.setState({
           submitPending: false,
           changesSubmitted: true,
-          changed: false
+          changed: false,
         })
       )
-      .catch(error =>
+      .catch((error) =>
         this.setState({
-          error
+          error,
         })
       );
   };
@@ -233,7 +233,7 @@ class RepositoryConfig extends React.Component<Props, State> {
             onClick={() =>
               this.setState({
                 changesSubmitted: false,
-                changed: false
+                changed: false,
               })
             }
           />

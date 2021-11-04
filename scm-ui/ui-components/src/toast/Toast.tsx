@@ -38,8 +38,8 @@ const Container = styled.div<Themeable>`
   padding: 1.5rem;
   right: 1.5rem;
   bottom: 1.5rem;
-  color: ${props => props.theme.primary};
-  background-color: ${props => props.theme.secondary};
+  color: ${(props) => props.theme.primary};
+  background-color: ${(props) => props.theme.secondary};
   max-width: 18rem;
   font-size: 0.75rem;
   border-radius: 5px;

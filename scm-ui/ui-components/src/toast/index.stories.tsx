@@ -77,7 +77,7 @@ const Closeable = () => {
 toastStories.add("Open/Close", () => <Animator />);
 toastStories.add("Click to close", () => <Closeable />);
 
-types.forEach(type => {
+types.forEach((type) => {
   toastStories.add(type.charAt(0).toUpperCase() + type.slice(1), () => (
     <Toast type={type} title="New Changes">
       <p>The underlying Pull-Request has changed. Press reload to see the changes.</p>
@@ -92,7 +92,7 @@ types.forEach(type => {
 
 toastStories.add("Multiple", () => (
   <ToastArea>
-    {types.map(type => (
+    {types.map((type) => (
       <ToastNotification key={type} type={type} title="New notification">
         <p>The notification received.</p>
       </ToastNotification>

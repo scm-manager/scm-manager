@@ -42,8 +42,8 @@ const HUNK_0: Hunk = {
     { content: "line", type: "insert", lineNumber: 5, isInsert: true },
     { content: "line", type: "normal", oldLineNumber: 6, newLineNumber: 6, isNormal: true },
     { content: "line", type: "normal", oldLineNumber: 7, newLineNumber: 7, isNormal: true },
-    { content: "line", type: "normal", oldLineNumber: 8, newLineNumber: 8, isNormal: true }
-  ]
+    { content: "line", type: "normal", oldLineNumber: 8, newLineNumber: 8, isNormal: true },
+  ],
 };
 const HUNK_1: Hunk = {
   content: "@@ -14,6 +14,7 @@",
@@ -58,8 +58,8 @@ const HUNK_1: Hunk = {
     { content: "line", type: "insert", lineNumber: 17, isInsert: true },
     { content: "line", type: "normal", oldLineNumber: 17, newLineNumber: 18, isNormal: true },
     { content: "line", type: "normal", oldLineNumber: 18, newLineNumber: 19, isNormal: true },
-    { content: "line", type: "normal", oldLineNumber: 19, newLineNumber: 20, isNormal: true }
-  ]
+    { content: "line", type: "normal", oldLineNumber: 19, newLineNumber: 20, isNormal: true },
+  ],
 };
 const HUNK_2: Hunk = {
   content: "@@ -21,7 +22,7 @@",
@@ -75,8 +75,8 @@ const HUNK_2: Hunk = {
     { content: "line", type: "insert", lineNumber: 25, isInsert: true },
     { content: "line", type: "normal", oldLineNumber: 25, newLineNumber: 26, isNormal: true },
     { content: "line", type: "normal", oldLineNumber: 26, newLineNumber: 27, isNormal: true },
-    { content: "line", type: "normal", oldLineNumber: 27, newLineNumber: 28, isNormal: true }
-  ]
+    { content: "line", type: "normal", oldLineNumber: 27, newLineNumber: 28, isNormal: true },
+  ],
 };
 const HUNK_3: Hunk = {
   content: "@@ -33,6 +34,7 @@",
@@ -91,8 +91,8 @@ const HUNK_3: Hunk = {
     { content: "line", type: "insert", lineNumber: 37, isInsert: true },
     { content: "line", type: "normal", oldLineNumber: 36, newLineNumber: 38, isNormal: true },
     { content: "line", type: "normal", oldLineNumber: 37, newLineNumber: 39, isNormal: true },
-    { content: "line", type: "normal", oldLineNumber: 38, newLineNumber: 40, isNormal: true }
-  ]
+    { content: "line", type: "normal", oldLineNumber: 38, newLineNumber: 40, isNormal: true },
+  ],
 };
 const TEST_CONTENT_WITH_HUNKS: FileDiff = {
   hunks: [HUNK_0, HUNK_1, HUNK_2, HUNK_3],
@@ -107,9 +107,9 @@ const TEST_CONTENT_WITH_HUNKS: FileDiff = {
   _links: {
     lines: {
       href: "http://localhost:8081/scm/api/v2/content/abc/CommitMessage.js?start={start}&end={end}",
-      templated: true
-    }
-  }
+      templated: true,
+    },
+  },
 };
 
 const TEST_CONTENT_WITH_NEW_BINARY_FILE: FileDiff = {
@@ -119,7 +119,7 @@ const TEST_CONTENT_WITH_NEW_BINARY_FILE: FileDiff = {
   newEndingNewLine: true,
   oldRevision: "0000000000000000000000000000000000000000",
   newRevision: "86c370aae0727d628a5438f79a5cdd45752b9d99",
-  type: "add"
+  type: "add",
 };
 
 const TEST_CONTENT_WITH_NEW_TEXT_FILE: FileDiff = {
@@ -138,17 +138,16 @@ const TEST_CONTENT_WITH_NEW_TEXT_FILE: FileDiff = {
       newLines: 2,
       changes: [
         { content: "line 1", type: "insert", lineNumber: 1, isInsert: true },
-        { content: "line 2", type: "insert", lineNumber: 2, isInsert: true }
-      ]
-    }
+        { content: "line 2", type: "insert", lineNumber: 2, isInsert: true },
+      ],
+    },
   ],
   _links: {
     lines: {
-      href:
-        "http://localhost:8081/scm/api/v2/repositories/scm-manager/scm-editor-plugin/content/c63898d35520ee47bcc3a8291660979918715762/src/main/markdown/README.md?start={start}&end={end}",
-      templated: true
-    }
-  }
+      href: "http://localhost:8081/scm/api/v2/repositories/scm-manager/scm-editor-plugin/content/c63898d35520ee47bcc3a8291660979918715762/src/main/markdown/README.md?start={start}&end={end}",
+      templated: true,
+    },
+  },
 };
 
 const TEST_CONTENT_WITH_DELETED_TEXT_FILE: FileDiff = {
@@ -165,10 +164,10 @@ const TEST_CONTENT_WITH_DELETED_TEXT_FILE: FileDiff = {
       content: "@@ -1 +0,0 @@",
       oldStart: 1,
       oldLines: 1,
-      changes: [{ content: "# scm-editor-plugin", type: "delete", lineNumber: 1, isDelete: true }]
-    }
+      changes: [{ content: "# scm-editor-plugin", type: "delete", lineNumber: 1, isDelete: true }],
+    },
   ],
-  _links: { lines: { href: "http://localhost:8081/dev/null?start={start}&end={end}", templated: true } }
+  _links: { lines: { href: "http://localhost:8081/dev/null?start={start}&end={end}", templated: true } },
 };
 
 const TEST_CONTENT_WITH_DELETED_LINES_AT_END: FileDiff = {
@@ -202,16 +201,16 @@ const TEST_CONTENT_WITH_DELETED_LINES_AT_END: FileDiff = {
         { content: "line", type: "delete", lineNumber: 119, isDelete: true },
         { content: "line", type: "delete", lineNumber: 120, isDelete: true },
         { content: "line", type: "delete", lineNumber: 121, isDelete: true },
-        { content: "line", type: "delete", lineNumber: 122, isDelete: true }
-      ]
-    }
+        { content: "line", type: "delete", lineNumber: 122, isDelete: true },
+      ],
+    },
   ],
   _links: {
     lines: {
       href: "http://localhost:8081/scm/api/v2/content/abc/CommitMessage.js?start={start}&end={end}",
-      templated: true
-    }
-  }
+      templated: true,
+    },
+  },
 };
 
 const TEST_CONTENT_WITH_ALL_LINES_REMOVED_FROM_FILE: FileDiff = {
@@ -231,17 +230,16 @@ const TEST_CONTENT_WITH_ALL_LINES_REMOVED_FROM_FILE: FileDiff = {
       changes: [
         { content: "line", type: "delete", lineNumber: 1, isDelete: true },
         { content: "line", type: "delete", lineNumber: 2, isDelete: true },
-        { content: "line", type: "delete", lineNumber: 3, isDelete: true }
-      ]
-    }
+        { content: "line", type: "delete", lineNumber: 3, isDelete: true },
+      ],
+    },
   ],
   _links: {
     lines: {
-      href:
-        "http://localhost:8081/scm/api/v2/repositories/scm-manager/scm-editor-plugin/content/b313a7690f028c77df98417c1ed6cba67e5692ec/pom.xml?start={start}&end={end}",
-      templated: true
-    }
-  }
+      href: "http://localhost:8081/scm/api/v2/repositories/scm-manager/scm-editor-plugin/content/b313a7690f028c77df98417c1ed6cba67e5692ec/pom.xml?start={start}&end={end}",
+      templated: true,
+    },
+  },
 };
 
 describe("with hunks the diff expander", () => {
@@ -285,7 +283,7 @@ describe("with hunks the diff expander", () => {
     await diffExpander
       .getHunk(1)
       .expandBottom(1)
-      .then(file => (newFile = file));
+      .then((file) => (newFile = file));
     expect(fetchMock.done()).toBe(true);
     expect(newFile!.hunks!.length).toBe(oldHunkCount + 1);
     expect(newFile!.hunks![1]).toBe(expandedHunk);
@@ -310,7 +308,7 @@ describe("with hunks the diff expander", () => {
     await diffExpander
       .getHunk(1)
       .expandHead(5)
-      .then(file => (newFile = file));
+      .then((file) => (newFile = file));
     expect(fetchMock.done()).toBe(true);
     expect(newFile!.hunks!.length).toBe(oldHunkCount + 1);
     expect(newFile!.hunks![0]).toBe(preceedingHunk);
@@ -339,7 +337,7 @@ describe("with hunks the diff expander", () => {
     await diffExpander
       .getHunk(3)
       .expandBottom(10)
-      .then(file => (newFile = file));
+      .then((file) => (newFile = file));
     expect(newFile!.hunks!.length).toBe(oldHunkCount + 1);
     expect(newFile!.hunks![4].fullyExpanded).toBe(true);
   });
@@ -352,7 +350,7 @@ describe("with hunks the diff expander", () => {
     await diffExpander
       .getHunk(3)
       .expandBottom(-1)
-      .then(file => (newFile = file));
+      .then((file) => (newFile = file));
     await fetchMock.flush(true);
     expect(newFile!.hunks![4].fullyExpanded).toBe(true);
   });

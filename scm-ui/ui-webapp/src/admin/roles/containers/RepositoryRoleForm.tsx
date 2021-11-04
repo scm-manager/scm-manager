@@ -42,8 +42,8 @@ const RepositoryRoleForm: FC<Props> = ({ role: initialRole, submitForm }) => {
       name: "",
       verbs: [],
       _links: {
-        create: { href: createLink }
-      }
+        create: { href: createLink },
+      },
     }
   );
   const availableVerbs = data?.verbs;
@@ -58,7 +58,7 @@ const RepositoryRoleForm: FC<Props> = ({ role: initialRole, submitForm }) => {
   const handleVerbChange = (value: boolean, name: string) =>
     setRole({
       ...role,
-      verbs: value ? [...role.verbs, name] : role.verbs.filter(v => v !== name)
+      verbs: value ? [...role.verbs, name] : role.verbs.filter((v) => v !== name),
     });
 
   const submit = (event: FormEvent<HTMLFormElement>) => {

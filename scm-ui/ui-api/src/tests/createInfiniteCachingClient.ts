@@ -28,9 +28,9 @@ const createInfiniteCachingClient = () => {
   return new QueryClient({
     defaultOptions: {
       queries: {
-        staleTime: Infinity
-      }
-    }
+        staleTime: Infinity,
+      },
+    },
   });
 };
 

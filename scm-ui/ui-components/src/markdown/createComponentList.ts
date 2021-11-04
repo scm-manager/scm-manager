@@ -24,7 +24,7 @@
 import {
   createRemark2RehypeCodeRendererAdapter,
   createRemark2RehypeHeadingRendererAdapterFactory,
-  createRemark2RehypeLinkRendererAdapter
+  createRemark2RehypeLinkRendererAdapter,
 } from "./remarkToRehypeRendererAdapters";
 
 export type CreateComponentListOptions = {

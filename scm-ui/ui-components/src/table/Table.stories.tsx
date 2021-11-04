@@ -43,7 +43,7 @@ storiesOf("Table", module)
     <Table
       data={[
         { firstname: "Tricia", lastname: "McMillan", email: "tricia@hitchhiker.com" },
-        { firstname: "Arthur", lastname: "Dent", email: "arthur@hitchhiker.com" }
+        { firstname: "Arthur", lastname: "Dent", email: "arthur@hitchhiker.com" },
       ]}
     >
       <Column header={"First Name"}>{(row: any) => <h4>{row.firstname}</h4>}</Column>
@@ -63,7 +63,7 @@ storiesOf("Table", module)
       >
         {(row: any) => <b style={{ color: "red" }}>{row.lastname}</b>}
       </Column>
-      <Column header={"E-Mail"}>{(row: any) => <a>{row.email}</a>}</Column>
+      <Column header={"E-Mail"}>{(row: any) => <span>{row.email}</span>}</Column>
     </Table>
   ))
   .add("TextColumn", () => (
@@ -71,7 +71,7 @@ storiesOf("Table", module)
       data={[
         { id: "21", title: "Pommes", desc: "Fried potato sticks" },
         { id: "42", title: "Quarter-Pounder", desc: "Big burger" },
-        { id: "-84", title: "Icecream", desc: "Cold dessert" }
+        { id: "-84", title: "Icecream", desc: "Cold dessert" },
       ]}
     >
       <TextColumn header="Id" dataKey="id" />
@@ -90,12 +90,12 @@ storiesOf("Table", module)
       data={[
         {
           id: "42",
-          name: "herp_derp_schlerp_ferp_gerp_nerp_terp_ierp_perp_lerp_merp_oerp_zerp_serp_verp_herp"
+          name: "herp_derp_schlerp_ferp_gerp_nerp_terp_ierp_perp_lerp_merp_oerp_zerp_serp_verp_herp",
         },
         {
           id: "17",
-          name: "herp_derp_schlerp_ferp_gerp_nerp_terp_ierp_perp_lerp_merp_oerp_zerp_serp_verp"
-        }
+          name: "herp_derp_schlerp_ferp_gerp_nerp_terp_ierp_perp_lerp_merp_oerp_zerp_serp_verp",
+        },
       ]}
       emptyMessage="No data found."
     >

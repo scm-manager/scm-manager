@@ -34,7 +34,7 @@ type Props = {
 
 export default class ChangesetId extends React.Component<Props> {
   static defaultProps = {
-    link: true
+    link: true,
   };
 
   shortId = (changeset: Changeset) => {

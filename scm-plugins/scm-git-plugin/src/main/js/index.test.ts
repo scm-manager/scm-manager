@@ -31,14 +31,14 @@ describe("test git predicate", () => {
     expect(gitPredicate({})).toBe(false);
     expect(
       gitPredicate({
-        repository: {}
+        repository: {},
       })
     ).toBe(false);
     expect(
       gitPredicate({
         repository: {
-          type: "hg"
-        }
+          type: "hg",
+        },
       })
     ).toBe(false);
   });
@@ -47,8 +47,8 @@ describe("test git predicate", () => {
     expect(
       gitPredicate({
         repository: {
-          type: "git"
-        }
+          type: "git",
+        },
       })
     ).toBe(true);
   });

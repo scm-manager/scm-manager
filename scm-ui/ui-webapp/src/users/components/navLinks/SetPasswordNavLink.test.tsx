@@ -29,7 +29,7 @@ import ChangePasswordNavLink from "./SetPasswordNavLink";
 
 it("should render nothing, if the password link is missing", () => {
   const user = {
-    _links: {}
+    _links: {},
   };
 
   const navLink = shallow(<ChangePasswordNavLink user={user} passwordUrl="/user/password" />);
@@ -40,9 +40,9 @@ it("should render the navLink", () => {
   const user = {
     _links: {
       password: {
-        href: "/password"
-      }
-    }
+        href: "/password",
+      },
+    },
   };
 
   const navLink = shallow(<ChangePasswordNavLink user={user} passwordUrl="/user/password" />);

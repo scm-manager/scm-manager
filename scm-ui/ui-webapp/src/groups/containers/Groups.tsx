@@ -31,7 +31,7 @@ import {
   OverviewPageActions,
   Page,
   PageActions,
-  urls
+  urls,
 } from "@scm-manager/ui-components";
 import { GroupTable } from "./../components/table";
 import { useGroups } from "@scm-manager/ui-api";

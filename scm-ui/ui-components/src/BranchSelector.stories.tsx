@@ -41,5 +41,5 @@ const Wrapper = styled.div`
 `;
 
 storiesOf("BranchSelector", module)
-  .addDecorator(storyFn => <Wrapper>{storyFn()}</Wrapper>)
+  .addDecorator((storyFn) => <Wrapper>{storyFn()}</Wrapper>)
   .add("Default", () => <BranchSelector branches={branches} onSelectBranch={branchSelected} label="Select Branch" />);
