@@ -21,26 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-@import "bulma/sass/utilities/initial-variables";
-@import "bulma/sass/utilities/functions";
-//$link: #007EB0;
-$info: #33b2e8;
-$turquoise: #00d1df;
-$blue: #33b2e8;
-$cyan: $blue;
-$green: #00c79b;
-$warning: #ffdd57;
-$blue-light: #98d8f3;
-$danger: #ff3860;
-$high-contrast-danger: #e63453;
-$family-monospace: "Courier New", Monaco, Menlo, "Ubuntu Mono", "source-code-pro", monospace;
-$high-contrast-background-color: #050514;
-$high-contrast-light-gray: #f2f2f2;
-
-.table.high-contrast, .table.high-contrast thead td, .table.high-contrast thead th {
-  background-color: $high-contrast-background-color;
-  color: $high-contrast-light-gray;
-}
+// TODO split into multiple files
 
 .is-ellipsis-overflow {
   overflow: hidden;
@@ -89,6 +70,7 @@ hr.header-with-actions {
       width: 100%;
     }
     .input-button {
+      // TODO color def
       border: 2px solid #e9f7fd;
       padding: 1em 1em;
       margin-top: 0 !important;
@@ -107,84 +89,6 @@ footer.footer {
   }
 }
 
-// 6. Import the rest of Bulma
-@import "bulma/bulma";
-@import "bulma-tooltip/dist/css/bulma-tooltip.min";
-@import "bulma-popover/css/bulma-popover";
-
-$dark-75: scale-color($dark, $lightness: 25%);
-$dark-50: scale-color($dark, $lightness: 50%);
-$dark-25: scale-color($dark, $lightness: 75%);
-$info-75: scale-color($info, $lightness: 25%);
-$info-50: scale-color($info, $lightness: 50%);
-$info-25: scale-color($info, $lightness: 75%);
-$link-75: scale-color($link, $lightness: 25%);
-$link-50: scale-color($link, $lightness: 50%);
-$link-25: scale-color($link, $lightness: 75%);
-$primary-75: scale-color($primary, $lightness: 25%);
-$primary-50: scale-color($primary, $lightness: 50%);
-$primary-25: scale-color($primary, $lightness: 75%);
-$success-75: scale-color($success, $lightness: 25%);
-$success-50: scale-color($success, $lightness: 50%);
-$success-25: scale-color($success, $lightness: 75%);
-$warning-75: scale-color($warning, $lightness: 25%);
-$warning-50: scale-color($warning, $lightness: 50%);
-$warning-25: scale-color($warning, $lightness: 75%);
-$danger-75: scale-color($danger, $lightness: 25%);
-$danger-50: scale-color($danger, $lightness: 50%);
-$danger-25: scale-color($danger, $lightness: 75%);
-
-$high-contrast-danger-75: scale-color($high-contrast-danger, $lightness: 25%);
-$high-contrast-danger-50: scale-color($high-contrast-danger, $lightness: 50%);
-$high-contrast-danger-25: scale-color($high-contrast-danger, $lightness: 75%);
-
-//high-contrast light gray
-$light-75: darken($high-contrast-light-gray, 15%);
-$light-50: darken($high-contrast-light-gray, 30%);
-$light-25: darken($high-contrast-light-gray, 45%);
-/*
-// not supported by ie
-// css vars for external reuse
-:root {
-  // asc sorted initial variables
-  --black: #{$black};
-  --white: #{$white};
-
-  // asc sorted derived-variables
-  --primary: #{$primary};
-  --primary-75: #{$primary-75};
-  --primary-50: #{$primary-50};
-  --primary-25: #{$primary-25};
-  --info: #{$info};
-  --info-75: #{$info-75};
-  --info-50: #{$info-50};
-  --info-25: #{$info-25};
-  --success: #{$success};
-  --success-75: #{$success-75};
-  --success-50: #{$success-50};
-  --success-25: #{$success-25};
-  --warning: #{$warning};
-  --warning-75: #{$warning-75};
-  --warning-50: #{$warning-50};
-  --warning-25: #{$warning-25};
-  --danger: #{$danger};
-  --danger-75: #{$danger-75};
-  --danger-50: #{$danger-50};
-  --danger-25: #{$danger-25};
-  --light: #{$light};
-  --dark: #{$dark};
-  --dark-75: #{$dark-75};
-  --dark-50: #{$dark-50};
-  --dark-25: #{$dark-25};
-  --background: #{$background};
-  --border: #{$border};
-  --text: #{$text};
-  --link: #{$link};
-  --link-75: #{$link-75};
-  --link-50: #{$link-50};
-  --link-25: #{$link-25};
-}
-*/
 
 .has-hover-background-blue:hover {
   background-color: scale-color($blue, $alpha: -90%);
@@ -192,6 +96,7 @@ $light-25: darken($high-contrast-light-gray, 45%);
 
 // readability issues with original color
 .has-text-warning {
+  // TODO color def
   color: #ffb600 !important;
 }
 .has-text-warning-invert {
@@ -205,6 +110,8 @@ $light-25: darken($high-contrast-light-gray, 45%);
   background-color: $blue-light;
 }
 
+// TODO
+/*
 .has-text-high-contrast-warning {
   color: $warning;
 }
@@ -213,7 +120,7 @@ $light-25: darken($high-contrast-light-gray, 45%);
 }
 .has-text-high-contrast-light-gray {
   color: $high-contrast-light-gray;
-}
+}*/
 
 
 // border and background colors
@@ -281,7 +188,8 @@ $light-25: darken($high-contrast-light-gray, 45%);
   background-color: $danger-25;
 }
 
-.has-background-danger-high-contrast {
+// TODO
+/*.has-background-danger-high-contrast {
   background-color: $high-contrast-danger;
 }
 .has-background-danger-high-contrast-75 {
@@ -305,7 +213,7 @@ $light-25: darken($high-contrast-light-gray, 45%);
 }
 .has-background-high-contrast-light-gray-25 {
   background-color: $light-25;
-}
+}*/
 
 // tags
 .tag:not(body) {
@@ -373,10 +281,6 @@ $light-25: darken($high-contrast-light-gray, 45%);
   height: 2.5rem;
   font-weight: $weight-semibold;
 
-  &[disabled] {
-    opacity: 1;
-  }
-
   &.is-primary,
   &.is-info,
   &.is-link,
@@ -386,10 +290,6 @@ $light-25: darken($high-contrast-light-gray, 45%);
     &.is-outlined {
       background-color: $white;
     }
-  }
-
-  &.is-warning {
-    color: #88550D;
   }
 
   &.is-primary:hover,
@@ -402,10 +302,6 @@ $light-25: darken($high-contrast-light-gray, 45%);
     background-color: scale-color($primary, $lightness: -20%);
   }
 
-  &.is-primary[disabled] {
-    background-color: scale-color($primary, $lightness: 75%);
-  }
-
   &.is-info:hover,
   &.is-info.is-hovered {
     background-color: scale-color($info, $lightness: -10%);
@@ -414,10 +310,6 @@ $light-25: darken($high-contrast-light-gray, 45%);
   &.is-info:active,
   &.is-info.is-active {
     background-color: scale-color($info, $lightness: -20%);
-  }
-
-  &.is-info[disabled] {
-    background-color: scale-color($info, $lightness: 75%);
   }
 
   &.is-link:hover,
@@ -430,10 +322,6 @@ $light-25: darken($high-contrast-light-gray, 45%);
     background-color: scale-color($link, $lightness: -20%);
   }
 
-  &.is-link[disabled] {
-    background-color: scale-color($link, $lightness: 75%);
-  }
-
   &.is-success:hover,
   &.is-success.is-hovered {
     background-color: scale-color($success, $lightness: -10%);
@@ -442,10 +330,6 @@ $light-25: darken($high-contrast-light-gray, 45%);
   &.is-success:active,
   &.is-success.is-active {
     background-color: scale-color($success, $lightness: -20%);
-  }
-
-  &.is-success[disabled] {
-    background-color: scale-color($success, $lightness: 75%);
   }
 
   &.is-warning:hover,
@@ -458,11 +342,6 @@ $light-25: darken($high-contrast-light-gray, 45%);
     background-color: scale-color($warning, $lightness: -20%);
   }
 
-  &.is-warning[disabled] {
-    background-color: scale-color($warning, $lightness: 75%);
-    color: #e1d4c2;
-  }
-
   &.is-danger:hover,
   &.is-danger.is-hovered {
     background-color: scale-color($danger, $lightness: -10%);
@@ -471,10 +350,6 @@ $light-25: darken($high-contrast-light-gray, 45%);
   &.is-danger:active,
   &.is-danger.is-active {
     background-color: scale-color($danger, $lightness: -20%);
-  }
-
-  &.is-danger[disabled] {
-    background-color: scale-color($danger, $lightness: 75%);
   }
 
   &.is-reduced-mobile,
@@ -520,9 +395,6 @@ $fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
 // NEW STYLES
 
 //typography
-.subtitle {
-  color: #666;
-}
 .has-border-white {
   border-color: $white !important;
 }
@@ -889,7 +761,7 @@ form .field:not(.is-grouped) {
   }
 
   a:before {
-    font-family: "Font Awesome 5 Free";
+    font-family: "Font Awesome 5 Free"; /* NOSONAR */
     font-weight: 900;
     -webkit-font-smoothing: antialiased;
     display: inline-block;
@@ -951,4 +823,8 @@ form .field:not(.is-grouped) {
   &:after {
     @include loader;
   }
+}
+
+.sg-sub-section + .sg-sub-section {
+  margin-top: 2.5rem;
 }

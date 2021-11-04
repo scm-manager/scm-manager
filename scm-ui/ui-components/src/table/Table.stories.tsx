@@ -38,7 +38,7 @@ const StyledTable = styled(Table)`
   }
 `;
 
-storiesOf("Table|Table", module)
+storiesOf("Table", module)
   .add("Default", () => (
     <Table
       data={[

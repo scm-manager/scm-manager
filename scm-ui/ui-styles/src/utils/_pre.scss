@@ -21,31 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { MemoryRouter } from "react-router-dom";
-import { storiesOf } from "@storybook/react";
-import AddKeyValueEntryToTableField from "./AddKeyValueEntryToTableField";
-
-storiesOf("Forms/AddKeyValueEntryToTableField", module)
-  .addDecorator((story) => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
-  .add("Default", () => (
-    <div className="m-6">
-      <AddKeyValueEntryToTableField
-        keyFieldLabel="Key"
-        valueFieldLabel="Value"
-        buttonLabel="Add to Table"
-        addEntry={() => null}
-      />
-    </div>
-  ))
-  .add("Disabled", () => (
-    <div className="m-6">
-      <AddKeyValueEntryToTableField
-        keyFieldLabel="Key"
-        valueFieldLabel="Value"
-        buttonLabel="Add to Table"
-        addEntry={() => null}
-        disabled={true}
-      />
-    </div>
-  ));
+@import "bulma/sass/utilities/initial-variables";
+@import "bulma/sass/utilities/functions";
+@import "../variables/_commons.scss";

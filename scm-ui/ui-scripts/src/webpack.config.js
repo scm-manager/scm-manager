@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 const path = require("path");
+const fs = require("fs");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const WorkerPlugin = require("worker-plugin");
@@ -45,6 +46,13 @@ if (isDevelopment) {
   const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
   webpackPlugins.push(new ReactRefreshWebpackPlugin());
 }
+
+const themedir = path.join(root, "ui-styles", "src");
+const themes = fs
+  .readdirSync(themedir)
+  .map((filename) => path.parse(filename))
+  .filter((p) => p.ext === ".scss")
+  .reduce((entries, current) => ({ ...entries, [current.name]: path.join(themedir, current.base) }), {});
 
 console.log(`build ${mode} bundles`);
 
@@ -163,7 +171,7 @@ module.exports = [
   {
     mode,
     context: root,
-    entry: "./ui-styles/src/scm.scss",
+    entry: themes,
     module: {
       rules: [
         {
@@ -184,7 +192,7 @@ module.exports = [
     },
     plugins: [
       new MiniCssExtractPlugin({
-        filename: "ui-styles.css",
+        filename: "ui-theme-[name].css",
         ignoreOrder: false
       })
     ],
@@ -193,7 +201,7 @@ module.exports = [
     },
     output: {
       path: path.join(root, "build", "webapp", "assets"),
-      filename: "ui-styles.bundle.js"
+      filename: "ui-theme-[name].bundle.js"
     }
   },
   {

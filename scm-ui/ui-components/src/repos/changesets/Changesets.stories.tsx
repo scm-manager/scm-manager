@@ -71,7 +71,7 @@ function copy<T>(input: T): T {
   return JSON.parse(JSON.stringify(input));
 }
 
-storiesOf("Changesets", module)
+storiesOf("Repositories/Changesets", module)
   .addDecorator(story => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
   .addDecorator(storyFn => <Wrapper className="box box-link-shadow">{storyFn()}</Wrapper>)
   .add("Default", () => <ChangesetRow repository={repository} changeset={three}/>)

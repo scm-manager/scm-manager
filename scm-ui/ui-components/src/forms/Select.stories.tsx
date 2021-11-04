@@ -198,7 +198,7 @@ const PreselectOption: FC = () => {
   );
 };
 
-storiesOf("Forms|Select", module)
+storiesOf("Forms/Select", module)
   .addDecorator((storyFn) => <MemoryRouter>{storyFn()}</MemoryRouter>)
   .add("Add no existing value", () => <AddNoExistingValue />)
   .add("Ref", () => <Ref />)

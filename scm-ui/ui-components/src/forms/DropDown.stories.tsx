@@ -25,7 +25,7 @@ import React from "react";
 import { storiesOf } from "@storybook/react";
 import DropDown from "./DropDown";
 
-storiesOf("Forms|DropDown", module)
+storiesOf("Forms/DropDown", module)
   .add("Default", () => (
     <DropDown
       options={["en", "de", "es"]}

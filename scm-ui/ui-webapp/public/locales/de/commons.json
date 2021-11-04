@@ -94,7 +94,23 @@
     "error-title": "Fehler",
     "error-subtitle": "Das Profil kann nicht angezeigt werden.",
     "error": "Fehler",
-    "error-message": "'me' ist nicht definiert"
+    "error-message": "'me' ist nicht definiert",
+    "theme": {
+      "nav": {
+        "label": "Design",
+        "title": "Wähle dein Design"
+      },
+      "subtitle": "Wähle dein Design",
+      "submit": "Anwenden",
+      "light": {
+        "displayName": "Hell",
+        "description": "'Hell' is das Standard-Design des SCM-Managers"
+      },
+      "highcontrast": {
+        "displayName": "Hoher Kontrast",
+        "description": "'Hoher Kontrast' ist ein dunkles Design mit einem hohen Kontrast"
+      }
+    }
   },
   "password": {
     "subtitle": "Passwort ändern",

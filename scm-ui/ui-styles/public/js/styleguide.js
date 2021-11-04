@@ -21,31 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { MemoryRouter } from "react-router-dom";
-import { storiesOf } from "@storybook/react";
-import AddKeyValueEntryToTableField from "./AddKeyValueEntryToTableField";
+const rgb2hex = (c) => "#" + c.match(/\d+/g).map((x) => (+x).toString(16).padStart(2, 0)).join``;
 
-storiesOf("Forms/AddKeyValueEntryToTableField", module)
-  .addDecorator((story) => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
-  .add("Default", () => (
-    <div className="m-6">
-      <AddKeyValueEntryToTableField
-        keyFieldLabel="Key"
-        valueFieldLabel="Value"
-        buttonLabel="Add to Table"
-        addEntry={() => null}
-      />
-    </div>
-  ))
-  .add("Disabled", () => (
-    <div className="m-6">
-      <AddKeyValueEntryToTableField
-        keyFieldLabel="Key"
-        valueFieldLabel="Value"
-        buttonLabel="Add to Table"
-        addEntry={() => null}
-        disabled={true}
-      />
-    </div>
-  ));
+function onClickColorButton(e) {
+  const button = e.target;
+
+  const cell = button.parentElement;
+
+  const div = cell.querySelector("div.color-text");
+  if (div) {
+    div.remove();
+  } else {
+    let color = window.getComputedStyle(button).backgroundColor;
+    color = rgb2hex(color);
+
+    const colorText = document.createElement("div");
+    colorText.className = "color-text";
+    colorText.innerText = color;
+
+    cell.appendChild(colorText);
+  }
+}
+
+document.querySelectorAll("table.colors span.button").forEach((button) => {
+  button.addEventListener("click", onClickColorButton);
+});

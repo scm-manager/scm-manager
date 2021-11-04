@@ -21,4 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import "storybook-addon-i18next/register";
+
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+class RemoveThemesPlugin {
+  apply (compiler) {
+    compiler.hooks.compilation.tap('RemoveThemesPlugin', (compilation) => {
+
+      HtmlWebpackPlugin.getHooks(compilation).beforeAssetTagGeneration.tapAsync(
+        'RemoveThemesPlugin',
+        (data, cb) => {
+          if (data.assets.css) {
+            data.assets.css = data.assets.css.filter(css => css.startsWith("ui-theme-"))
+          }
+          data.assets.css = [];
+          // Tell webpack to move on
+          cb(null, data)
+        }
+      )
+    })
+  }
+}
+
+module.exports = RemoveThemesPlugin
