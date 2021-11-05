@@ -19,6 +19,8 @@
     "@scm-manager/eslint-config": "^2.13.0",
     "@scm-manager/prettier-config": "^2.11.1",
     "css-loader": "^6.5.0",
+    "html-webpack-plugin": "^5.5.0",
+    "raw-loader": "^4.0.2",
     "sass": "^1.43.4",
     "sass-loader": "^12.3.0",
     "style-loader": "^3.3.1",
