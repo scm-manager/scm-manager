@@ -34,47 +34,44 @@ const themedir = path.join(root, "ui-styles", "src");
 
 const themes = fs
   .readdirSync(themedir)
-  .map((filename) => path.parse(filename))
-  .filter((p) => p.ext === ".scss")
-  .reduce((entries, current) => ({ ...entries, [current.name]: path.join(themedir, current.base) }), {});
+  .map(filename => path.parse(filename))
+  .filter(p => p.ext === ".scss")
+  .reduce((entries, current) => ({ ...entries, [`ui-theme-${current.name}`]: path.join(themedir, current.base) }), {});
+// .map(f => path.join(themedir, f.base));
 
 module.exports = {
+  core: {
+    builder: "webpack5"
+  },
+  typescript: { reactDocgen: false },
   stories: ["../src/**/*.stories.tsx"],
   addons: ["storybook-addon-i18next", "storybook-addon-themes"],
-  webpackFinal: async (config) => {
+  webpackFinal: async config => {
     // add our themes to webpack entry points
     config.entry = {
       main: config.entry,
       ...themes,
     };
 
-    // fix usage of web workers
-    // required for diff with syntax highlighting
-    config.plugins.push(new WorkerPlugin());
-
     // create separate css files for our themes
     config.plugins.push(
       new MiniCssExtractPlugin({
-        filename: "ui-theme-[name].css",
+        filename: "[name].css",
         ignoreOrder: false
-      }),
+      })
     );
 
     config.module.rules.push({
       test: /\.scss$/,
-      use: [
-        MiniCssExtractPlugin.loader,
-        "css-loader",
-        "sass-loader",
-      ],
+      use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"]
     });
 
-    // the html-webpack-plugin adds the generated css to iframe,
+    // the html-webpack-plugin adds the generated css and js files to the iframe,
     // which overrides our manually loaded css files.
     // So we use a custom plugin which uses a hook of html-webpack-plugin
     // to filter our themes from the output.
     config.plugins.push(new RemoveThemesPlugin());
 
     return config;
-  },
+  }
 };
