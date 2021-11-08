@@ -101,7 +101,7 @@ ext {
     ssp: "com.github.sdorra:ssp-lib:${sspVersion}",
     sspProcessor: "com.github.sdorra:ssp-processor:${sspVersion}",
 
-    shiroUnit: 'com.github.sdorra:shiro-unit:1.0.1',
+    shiroUnit: 'com.github.sdorra:shiro-unit:1.0.2',
     shiroExtension: 'com.github.sdorra:junit-shiro-extension:1.0.1',
 
     // jwt
