@@ -27,7 +27,6 @@ package sonia.scm.repository.spi;
 import org.apache.shiro.SecurityUtils;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNLock;
-import org.tmatesoft.svn.core.auth.BasicAuthenticationManager;
 import org.tmatesoft.svn.core.auth.ISVNAuthenticationManager;
 import org.tmatesoft.svn.core.io.SVNRepository;
 import sonia.scm.repository.InternalRepositoryException;
@@ -43,6 +42,7 @@ import java.util.Optional;
 import static java.util.Collections.singletonMap;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
+import static org.tmatesoft.svn.core.auth.BasicAuthenticationManager.newInstance;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 
 public class SvnFileLockCommand extends AbstractSvnCommand implements FileLockCommand {
@@ -55,32 +55,44 @@ public class SvnFileLockCommand extends AbstractSvnCommand implements FileLockCo
   public LockCommandResult lock(LockCommandRequest request) {
     String fileToLock = request.getFile();
     try {
-      SVNRepository svnRepository = open();
-      ISVNAuthenticationManager authenticationManager = BasicAuthenticationManager.newInstance(SecurityUtils.getSubject().getPrincipals().getPrimaryPrincipal().toString(), null);
-      svnRepository.setAuthenticationManager(authenticationManager);
-      SVNLock lock = svnRepository.getLock(fileToLock);
-      if (lock != null) {
-        throw new FileLockedException(repository.getNamespaceAndName(), createLock(lock));
-      }
-      svnRepository.lock(singletonMap(fileToLock, null), "locked by SCM-Manager", false, null);
+      doLock(fileToLock);
       return new LockCommandResult(true);
     } catch (SVNException e) {
       throw new InternalRepositoryException(entity("File", fileToLock).in(repository), "failed to lock file", e);
     }
   }
 
+  private void doLock(String fileToLock) throws SVNException {
+    SVNRepository svnRepository = open();
+    String currentUser = getCurrentUser();
+    ISVNAuthenticationManager authenticationManager = newInstance(currentUser, null);
+    svnRepository.setAuthenticationManager(authenticationManager);
+    getFileLock(fileToLock, svnRepository)
+      .ifPresent(lock -> {
+        throw new FileLockedException(repository.getNamespaceAndName(), lock);
+      });
+    svnRepository.lock(singletonMap(fileToLock, null), "locked by SCM-Manager for " + currentUser, false, null);
+  }
+
   @Override
   public UnlockCommandResult unlock(UnlockCommandRequest request) {
     String fileToUnlock = request.getFile();
     try {
-      SVNRepository svnRepository = open();
-      SVNLock lock = svnRepository.getLock(fileToUnlock);
-      if (lock != null) {
-        svnRepository.unlock(singletonMap(fileToUnlock, lock.getID()), request.isForce(), null);
-      }
+      doUnlock(request, fileToUnlock);
       return new UnlockCommandResult(true);
     } catch (SVNException e) {
       throw new InternalRepositoryException(entity("File", fileToUnlock).in(repository), "failed to lock file", e);
+    }
+  }
+
+  private void doUnlock(UnlockCommandRequest request, String fileToUnlock) throws SVNException {
+    SVNRepository svnRepository = open();
+    Optional<FileLock> fileLock = getFileLock(fileToUnlock, svnRepository);
+    if (fileLock.isPresent()) {
+      if (!request.isForce() && !getCurrentUser().equals(fileLock.get().getUserId())) {
+        throw new FileLockedException(repository.getNamespaceAndName(), fileLock.get());
+      }
+      svnRepository.unlock(singletonMap(fileToUnlock, fileLock.get().getId()), request.isForce(), null);
     }
   }
 
@@ -88,8 +100,7 @@ public class SvnFileLockCommand extends AbstractSvnCommand implements FileLockCo
   public Optional<FileLock> status(LockStatusCommandRequest request) {
     String file = request.getFile();
     try {
-      SVNRepository svnRepository = open();
-      return ofNullable(svnRepository.getLock(file)).map(this::createLock);
+      return getFileLock(file, open());
     } catch (SVNException e) {
       throw new InternalRepositoryException(entity("File", file).in(repository), "failed to read lock status", e);
     }
@@ -107,11 +118,19 @@ public class SvnFileLockCommand extends AbstractSvnCommand implements FileLockCo
     }
   }
 
+  private Optional<FileLock> getFileLock(String file, SVNRepository svnRepository) throws SVNException {
+    return ofNullable(svnRepository.getLock(file)).map(this::createLock);
+  }
+
   private FileLock createLock(SVNLock lock) {
     String path = lock.getPath();
     if (path.startsWith("/")) {
       path = path.substring(1);
     }
     return new FileLock(path, lock.getID(), lock.getOwner(), lock.getCreationDate().toInstant());
+  }
+
+  private String getCurrentUser() {
+    return SecurityUtils.getSubject().getPrincipals().getPrimaryPrincipal().toString();
   }
 }

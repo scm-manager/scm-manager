@@ -107,6 +107,40 @@ public class SvnFileLockCommandTest extends AbstractSvnCommandTestBase {
   }
 
   @Test
+  public void shouldFailToUnlockFileLockedByOtherUser() throws SVNException {
+    mockSubject("dent");
+    createLock("a.txt");
+    mockDefaultSubject();
+
+    SvnFileLockCommand lockCommand = new SvnFileLockCommand(createContext());
+    UnlockCommandRequest request = new UnlockCommandRequest();
+    request.setFile("a.txt");
+
+    assertThrows(
+      "File a.txt locked by dent.",
+      FileLockedException.class,
+      () -> lockCommand.unlock(request));
+    assertThat(getLocks("a.txt")).isNotEmpty();
+  }
+
+  @Test
+  public void shouldUnlockFileLockedByOtherUserWithForce() throws SVNException {
+    mockSubject("dent");
+    createLock("a.txt");
+    mockDefaultSubject();
+
+    SvnFileLockCommand lockCommand = new SvnFileLockCommand(createContext());
+    UnlockCommandRequest request = new UnlockCommandRequest();
+    request.setFile("a.txt");
+    request.setForce(true);
+
+    UnlockCommandResult unlockResult = lockCommand.unlock(request);
+
+    assertThat(unlockResult.isSuccessful()).isTrue();
+    assertThat(getLocks("a.txt")).isEmpty();
+  }
+
+  @Test
   public void shouldNotOverwriteLockFromOtherUser() {
     mockSubject("dent");
     createLock("a.txt");
