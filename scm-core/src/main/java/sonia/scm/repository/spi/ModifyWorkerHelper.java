@@ -24,11 +24,11 @@
 
 package sonia.scm.repository.spi;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.ContextEntry;
+import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
 import sonia.scm.util.IOUtil;
 
@@ -38,6 +38,7 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
+import java.util.stream.Stream;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static sonia.scm.AlreadyExistsException.alreadyExists;
@@ -83,8 +84,24 @@ public interface ModifyWorkerHelper extends ModifyCommand.Worker {
    * @since 2.27.0
    */
   default void doScmMove(String path, String newPath) {
-    // TODO: Implement
-    throw new NotImplementedException();
+    doScmDelete(path);
+    addRecursive(newPath);
+  }
+
+  /**
+   * @since 2.27.0
+   */
+  default void addRecursive(String path) {
+    Path targetPath = getTargetFile(path);
+    if (Files.isDirectory(targetPath)) {
+      try (Stream<Path> list = Files.list(targetPath)) {
+        list.forEach(subPath -> addRecursive(path + File.separator + subPath.getFileName()));
+      } catch (IOException e) {
+        throw new InternalRepositoryException(getRepository(), "Could not add files to scm", e);
+      }
+    } else {
+      addFileToScm(path, targetPath);
+    }
   }
 
   void doScmDelete(String toBeDeleted);
