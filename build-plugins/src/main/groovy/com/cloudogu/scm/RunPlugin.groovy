@@ -37,7 +37,7 @@ class RunPlugin implements Plugin<Project> {
     project.plugins.apply("com.github.node-gradle.node")
     def nodeExt = NodeExtension.get(project)
     nodeExt.setDownload(true)
-    nodeExt.setVersion('14.15.1')
+    nodeExt.setVersion('16.13.0')
     nodeExt.setYarnVersion('1.22.15')
     nodeExt.setNodeModulesDir( project.rootProject.projectDir )
 
