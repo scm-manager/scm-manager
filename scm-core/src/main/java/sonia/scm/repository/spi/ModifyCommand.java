@@ -38,6 +38,9 @@ public interface ModifyCommand {
 
     void modify(String path, File file) throws IOException;
 
+    /**
+     * @since 2.27.0
+     */
     void move(String path, String newPath) throws IOException;
   }
 }

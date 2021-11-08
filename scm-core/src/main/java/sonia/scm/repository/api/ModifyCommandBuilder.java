@@ -115,6 +115,14 @@ public class ModifyCommandBuilder {
   }
 
   /**
+   * @since 2.27.0
+   */
+  public ModifyCommandBuilder move(String fromPath, String toPath) {
+    request.addRequest(new ModifyCommandRequest.MoveRequest(fromPath, toPath));
+    return this;
+  }
+
+  /**
    * Delete an existing file.
    * @param path The path and the name of the file that should be deleted.
    * @return This builder instance.

@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.spi;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,6 +66,25 @@ public interface ModifyWorkerHelper extends ModifyCommand.Worker {
       }
     }
     doScmDelete(toBeDeleted);
+  }
+
+  /**
+   * @since 2.27.0
+   */
+  @Override
+  default void move(String path, String newPath) throws IOException {
+    Path fileToBeMoved = getTargetFile(path);
+    Path targetPath = getTargetFile(newPath);
+    Files.move(fileToBeMoved, targetPath);
+    doScmMove(path, newPath);
+  }
+
+  /**
+   * @since 2.27.0
+   */
+  default void doScmMove(String path, String newPath) {
+    // TODO: Implement
+    throw new NotImplementedException();
   }
 
   void doScmDelete(String toBeDeleted);
