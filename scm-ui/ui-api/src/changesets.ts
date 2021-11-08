@@ -56,11 +56,11 @@ export const useChangesets = (
 
   if (request?.page || request?.limit) {
     if (request?.page && request?.limit) {
-      link = `${link}?page=${request.page}&limit=${request.limit}`;
+      link = `${link}?page=${request.page}&pageSize=${request.limit}`;
     } else if (request.page) {
       link = `${link}?page=${request.page}`;
     } else if (request.limit) {
-      link = `${link}?limit=${request.limit}`;
+      link = `${link}?pageSize=${request.limit}`;
     }
   }
 

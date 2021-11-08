@@ -20765,7 +20765,7 @@ exports[`Storyshots Repositories/Changesets Co-Authors with avatar 1`] = `
                 className="media-left mt-2 mr-2"
               >
                 <div
-                  className="ChangesetRow__FixedSizedAvatar-tkpti5-1 cavgTa image"
+                  className="SingleChangeset__FixedSizedAvatar-ytpqp9-0 cFkYuh image"
                 >
                   <img
                     alt="SCM Administrator"
@@ -20775,7 +20775,7 @@ exports[`Storyshots Repositories/Changesets Co-Authors with avatar 1`] = `
                 </div>
               </figure>
               <div
-                className="ChangesetRow__FullWidthDiv-tkpti5-2 fkpYZP media-right ml-0"
+                className="SingleChangeset__FullWidthDiv-ytpqp9-1 dYhvFy media-right ml-0"
               >
                 <h4
                   className="has-text-weight-bold is-ellipsis-overflow"
@@ -20931,7 +20931,7 @@ exports[`Storyshots Repositories/Changesets Commiter and Co-Authors with avatar 
                 className="media-left mt-2 mr-2"
               >
                 <div
-                  className="ChangesetRow__FixedSizedAvatar-tkpti5-1 cavgTa image"
+                  className="SingleChangeset__FixedSizedAvatar-ytpqp9-0 cFkYuh image"
                 >
                   <img
                     alt="SCM Administrator"
@@ -20941,7 +20941,7 @@ exports[`Storyshots Repositories/Changesets Commiter and Co-Authors with avatar 
                 </div>
               </figure>
               <div
-                className="ChangesetRow__FullWidthDiv-tkpti5-2 fkpYZP media-right ml-0"
+                className="SingleChangeset__FullWidthDiv-ytpqp9-1 dYhvFy media-right ml-0"
               >
                 <h4
                   className="has-text-weight-bold is-ellipsis-overflow"
@@ -21083,7 +21083,7 @@ exports[`Storyshots Repositories/Changesets Default 1`] = `
               className="media"
             >
               <div
-                className="ChangesetRow__FullWidthDiv-tkpti5-2 fkpYZP media-right ml-0"
+                className="SingleChangeset__FullWidthDiv-ytpqp9-1 dYhvFy media-right ml-0"
               >
                 <h4
                   className="has-text-weight-bold is-ellipsis-overflow"
@@ -21196,7 +21196,7 @@ exports[`Storyshots Repositories/Changesets Replacements 1`] = `
               className="media"
             >
               <div
-                className="ChangesetRow__FullWidthDiv-tkpti5-2 fkpYZP media-right ml-0"
+                className="SingleChangeset__FullWidthDiv-ytpqp9-1 dYhvFy media-right ml-0"
               >
                 <h4
                   className="has-text-weight-bold is-ellipsis-overflow"
@@ -21319,7 +21319,7 @@ exports[`Storyshots Repositories/Changesets With Committer 1`] = `
               className="media"
             >
               <div
-                className="ChangesetRow__FullWidthDiv-tkpti5-2 fkpYZP media-right ml-0"
+                className="SingleChangeset__FullWidthDiv-ytpqp9-1 dYhvFy media-right ml-0"
               >
                 <h4
                   className="has-text-weight-bold is-ellipsis-overflow"
@@ -21444,7 +21444,7 @@ exports[`Storyshots Repositories/Changesets With Committer and Co-Author 1`] = `
               className="media"
             >
               <div
-                className="ChangesetRow__FullWidthDiv-tkpti5-2 fkpYZP media-right ml-0"
+                className="SingleChangeset__FullWidthDiv-ytpqp9-1 dYhvFy media-right ml-0"
               >
                 <h4
                   className="has-text-weight-bold is-ellipsis-overflow"
@@ -21581,7 +21581,7 @@ exports[`Storyshots Repositories/Changesets With avatar 1`] = `
                 className="media-left mt-2 mr-2"
               >
                 <div
-                  className="ChangesetRow__FixedSizedAvatar-tkpti5-1 cavgTa image"
+                  className="SingleChangeset__FixedSizedAvatar-ytpqp9-0 cFkYuh image"
                 >
                   <img
                     alt="SCM Administrator"
@@ -21591,7 +21591,7 @@ exports[`Storyshots Repositories/Changesets With avatar 1`] = `
                 </div>
               </figure>
               <div
-                className="ChangesetRow__FullWidthDiv-tkpti5-2 fkpYZP media-right ml-0"
+                className="SingleChangeset__FullWidthDiv-ytpqp9-1 dYhvFy media-right ml-0"
               >
                 <h4
                   className="has-text-weight-bold is-ellipsis-overflow"
@@ -21704,7 +21704,7 @@ exports[`Storyshots Repositories/Changesets With contactless signature 1`] = `
               className="media"
             >
               <div
-                className="ChangesetRow__FullWidthDiv-tkpti5-2 fkpYZP media-right ml-0"
+                className="SingleChangeset__FullWidthDiv-ytpqp9-1 dYhvFy media-right ml-0"
               >
                 <h4
                   className="has-text-weight-bold is-ellipsis-overflow"
@@ -21827,7 +21827,7 @@ exports[`Storyshots Repositories/Changesets With invalid signature 1`] = `
               className="media"
             >
               <div
-                className="ChangesetRow__FullWidthDiv-tkpti5-2 fkpYZP media-right ml-0"
+                className="SingleChangeset__FullWidthDiv-ytpqp9-1 dYhvFy media-right ml-0"
               >
                 <h4
                   className="has-text-weight-bold is-ellipsis-overflow"
@@ -21950,7 +21950,7 @@ exports[`Storyshots Repositories/Changesets With multiple Co-Authors 1`] = `
               className="media"
             >
               <div
-                className="ChangesetRow__FullWidthDiv-tkpti5-2 fkpYZP media-right ml-0"
+                className="SingleChangeset__FullWidthDiv-ytpqp9-1 dYhvFy media-right ml-0"
               >
                 <h4
                   className="has-text-weight-bold is-ellipsis-overflow"
@@ -22076,7 +22076,7 @@ exports[`Storyshots Repositories/Changesets With multiple signatures and invalid
               className="media"
             >
               <div
-                className="ChangesetRow__FullWidthDiv-tkpti5-2 fkpYZP media-right ml-0"
+                className="SingleChangeset__FullWidthDiv-ytpqp9-1 dYhvFy media-right ml-0"
               >
                 <h4
                   className="has-text-weight-bold is-ellipsis-overflow"
@@ -22199,7 +22199,7 @@ exports[`Storyshots Repositories/Changesets With multiple signatures and not fou
               className="media"
             >
               <div
-                className="ChangesetRow__FullWidthDiv-tkpti5-2 fkpYZP media-right ml-0"
+                className="SingleChangeset__FullWidthDiv-ytpqp9-1 dYhvFy media-right ml-0"
               >
                 <h4
                   className="has-text-weight-bold is-ellipsis-overflow"
@@ -22322,7 +22322,7 @@ exports[`Storyshots Repositories/Changesets With multiple signatures and valid s
               className="media"
             >
               <div
-                className="ChangesetRow__FullWidthDiv-tkpti5-2 fkpYZP media-right ml-0"
+                className="SingleChangeset__FullWidthDiv-ytpqp9-1 dYhvFy media-right ml-0"
               >
                 <h4
                   className="has-text-weight-bold is-ellipsis-overflow"
@@ -22445,7 +22445,7 @@ exports[`Storyshots Repositories/Changesets With unknown signature 1`] = `
               className="media"
             >
               <div
-                className="ChangesetRow__FullWidthDiv-tkpti5-2 fkpYZP media-right ml-0"
+                className="SingleChangeset__FullWidthDiv-ytpqp9-1 dYhvFy media-right ml-0"
               >
                 <h4
                   className="has-text-weight-bold is-ellipsis-overflow"
@@ -22568,7 +22568,7 @@ exports[`Storyshots Repositories/Changesets With unowned signature 1`] = `
               className="media"
             >
               <div
-                className="ChangesetRow__FullWidthDiv-tkpti5-2 fkpYZP media-right ml-0"
+                className="SingleChangeset__FullWidthDiv-ytpqp9-1 dYhvFy media-right ml-0"
               >
                 <h4
                   className="has-text-weight-bold is-ellipsis-overflow"
@@ -22691,7 +22691,7 @@ exports[`Storyshots Repositories/Changesets With valid signature 1`] = `
               className="media"
             >
               <div
-                className="ChangesetRow__FullWidthDiv-tkpti5-2 fkpYZP media-right ml-0"
+                className="SingleChangeset__FullWidthDiv-ytpqp9-1 dYhvFy media-right ml-0"
               >
                 <h4
                   className="has-text-weight-bold is-ellipsis-overflow"
