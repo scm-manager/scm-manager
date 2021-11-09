@@ -61,6 +61,7 @@ const DiffView = styled(Diff)`
 `;
 
 // WebWorker which creates tokens for syntax highlighting
+// @ts-ignore
 const tokenize = new Worker(new URL("./Tokenize.worker.ts", import.meta.url), { name: "tokenizer", type: "module" });
 tokenize.postMessage({ theme });
 
