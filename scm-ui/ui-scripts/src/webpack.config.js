@@ -25,7 +25,6 @@ const path = require("path");
 const fs = require("fs");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
-const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 
 const createIndexMiddleware = require("./middleware/IndexMiddleware");
 const createContextPathMiddleware = require("./middleware/ContextPathMiddleware");
@@ -34,7 +33,7 @@ const isDevelopment = process.env.NODE_ENV === "development";
 const root = path.resolve(process.cwd(), "scm-ui");
 
 const babelPlugins = [];
-const webpackPlugins = [/*new BundleAnalyzerPlugin()*/];
+const webpackPlugins = [];
 
 let mode = "production";
 
