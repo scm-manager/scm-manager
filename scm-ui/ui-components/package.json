@@ -15,7 +15,7 @@
     "typecheck": "tsc",
     "build-storybook": "build-storybook",
     "chromatic": "chromatic --project-token=${CHROMATIC_PROJECT_TOKEN} --skip '@(snyk-**|dependabot/**)'",
-    "storybook": "start-storybook -s ../ui-webapp/public --debug-webpack",
+    "storybook": "start-storybook -s ../ui-webapp/public",
     "storyshots": "jest --testPathPattern=\"storyshots.test.ts\" --collectCoverage=false",
     "update-storyshots": "jest --testPathPattern=\"storyshots.test.ts\" --collectCoverage=false -u"
   },
