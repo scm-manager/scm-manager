@@ -82,7 +82,7 @@ public class SvnModifyCommand implements ModifyCommand {
 
   private String getCurrentRevision(SVNClientManager clientManager, WorkingCopy<File, File> workingCopy) {
     try {
-      return Integer.toString(clientManager.getStatusClient().doStatus(workingCopy.getWorkingRepository(), false).getRevision().getID());
+      return Long.toString(clientManager.getStatusClient().doStatus(workingCopy.getWorkingRepository(), false).getRevision().getNumber());
     } catch (SVNException e) {
       throw new InternalRepositoryException(entity(repository), "Could not read status of working repository", e);
     }
