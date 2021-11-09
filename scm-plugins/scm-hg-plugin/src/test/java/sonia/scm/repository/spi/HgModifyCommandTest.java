@@ -223,4 +223,70 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
 
     hgModifyCommand.execute(request2);
   }
+
+  @Test
+  public void shouldRenameFile() {
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "g.txt"));
+    request.setCommitMessage("Now i really found the answer");
+    request.setAuthor(new Person("Trillian Astra", "trillian@hitchhiker.com"));
+
+    hgModifyCommand.execute(request);
+    assertThat(cmdContext.open().tip().getDeletedFiles().contains("a.txt")).isTrue();
+    assertThat(cmdContext.open().tip().getAddedFiles().contains("g.txt")).isTrue();
+  }
+
+  @Test
+  public void shouldRenameFolder() {
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.addRequest(new ModifyCommandRequest.MoveRequest("c", "notc"));
+    request.setCommitMessage("Now i really found the answer");
+    request.setAuthor(new Person("Trillian Astra", "trillian@hitchhiker.com"));
+
+    hgModifyCommand.execute(request);
+    assertThat(cmdContext.open().tip().getDeletedFiles().contains("c/d.txt")).isTrue();
+    assertThat(cmdContext.open().tip().getDeletedFiles().contains("c/e.txt")).isTrue();
+    assertThat(cmdContext.open().tip().getAddedFiles().contains("notc/d.txt")).isTrue();
+    assertThat(cmdContext.open().tip().getAddedFiles().contains("notc/e.txt")).isTrue();
+  }
+
+  @Test
+  public void shouldMoveFileToExistingFolder() {
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "c/z.txt"));
+    request.setCommitMessage("Now i really found the answer");
+    request.setAuthor(new Person("Trillian Astra", "trillian@hitchhiker.com"));
+
+    hgModifyCommand.execute(request);
+    assertThat(cmdContext.open().tip().getDeletedFiles().contains("a.txt")).isTrue();
+    assertThat(cmdContext.open().tip().getAddedFiles().contains("c/z.txt")).isTrue();
+    assertThat(cmdContext.open().tip().getDeletedFiles().contains("c/d.txt")).isFalse();
+    assertThat(cmdContext.open().tip().getDeletedFiles().contains("c/e.txt")).isFalse();
+  }
+
+  @Test
+  public void shouldMoveFileToNonExistentFolder() {
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "y/z.txt"));
+    request.setCommitMessage("Now i really found the answer");
+    request.setAuthor(new Person("Trillian Astra", "trillian@hitchhiker.com"));
+
+    hgModifyCommand.execute(request);
+    assertThat(cmdContext.open().tip().getDeletedFiles().contains("a.txt")).isTrue();
+    assertThat(cmdContext.open().tip().getAddedFiles().contains("y/z.txt")).isTrue();
+  }
+
+  @Test
+  public void shouldMoveFolderToNonExistentFolder() {
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.addRequest(new ModifyCommandRequest.MoveRequest("c", "j/k/c"));
+    request.setCommitMessage("Now i really found the answer");
+    request.setAuthor(new Person("Trillian Astra", "trillian@hitchhiker.com"));
+
+    hgModifyCommand.execute(request);
+    assertThat(cmdContext.open().tip().getDeletedFiles().contains("c/d.txt")).isTrue();
+    assertThat(cmdContext.open().tip().getDeletedFiles().contains("c/e.txt")).isTrue();
+    assertThat(cmdContext.open().tip().getAddedFiles().contains("j/k/c/d.txt")).isTrue();
+    assertThat(cmdContext.open().tip().getAddedFiles().contains("j/k/c/e.txt")).isTrue();
+  }
 }

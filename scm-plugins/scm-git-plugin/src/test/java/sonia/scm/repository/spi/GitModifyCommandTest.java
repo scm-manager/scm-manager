@@ -455,6 +455,8 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
     TreeAssertions assertions = canonicalTreeParser -> {
       assertThat(canonicalTreeParser.findFile("a.txt")).isFalse();
       assertThat(canonicalTreeParser.findFile("c/z.txt")).isTrue();
+      assertThat(canonicalTreeParser.findFile("c/d.txt")).isTrue();
+      assertThat(canonicalTreeParser.findFile("c/e.txt")).isTrue();
     };
 
     assertInTree(assertions);
@@ -471,9 +473,30 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
 
     command.execute(request);
 
-    TreeAssertions assertions = canonicalTreeParser -> {
-      assertThat(canonicalTreeParser.findFile("a.txt")).isFalse();
-      assertThat(canonicalTreeParser.findFile("y/z.txt")).isTrue();
+    TreeAssertions assertions = fileFinder -> {
+      assertThat(fileFinder.findFile("a.txt")).isFalse();
+      assertThat(fileFinder.findFile("y/z.txt")).isTrue();
+    };
+
+    assertInTree(assertions);
+  }
+
+  @Test
+  public void shouldMoveFolderToNonExistentFolder() throws GitAPIException, IOException {
+    GitModifyCommand command = createCommand();
+
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.setCommitMessage("please move this file");
+    request.setAuthor(new Person("Peter Pan", "peter@pan.net"));
+    request.addRequest(new ModifyCommandRequest.MoveRequest("c", "j/k/c"));
+
+    command.execute(request);
+
+    TreeAssertions assertions = fileFinder -> {
+      assertThat(fileFinder.findFile("c/d.txt")).isFalse();
+      assertThat(fileFinder.findFile("c/e.txt")).isFalse();
+      assertThat(fileFinder.findFile("j/k/c/d.txt")).isTrue();
+      assertThat(fileFinder.findFile("j/k/c/e.txt")).isTrue();
     };
 
     assertInTree(assertions);

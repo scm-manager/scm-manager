@@ -76,6 +76,7 @@ public interface ModifyWorkerHelper extends ModifyCommand.Worker {
   default void move(String path, String newPath) throws IOException {
     Path fileToBeMoved = getTargetFile(path);
     Path targetPath = getTargetFile(newPath);
+    Files.createDirectories(targetPath.getParent());
     Files.move(fileToBeMoved, targetPath);
     doScmMove(path, newPath);
   }

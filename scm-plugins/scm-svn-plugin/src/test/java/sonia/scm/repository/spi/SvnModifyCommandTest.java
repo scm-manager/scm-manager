@@ -196,6 +196,82 @@ public class SvnModifyCommandTest extends AbstractSvnCommandTestBase {
   }
 
   @Test
+  public void shouldRenameFile() {
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "b.txt"));
+    request.setCommitMessage("please rename my file pretty please");
+    request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
+
+    svnModifyCommand.execute(request);
+
+    WorkingCopy<File, File> workingCopy = workingCopyFactory.createWorkingCopy(context, null);
+    assertThat(new File(workingCopy.getWorkingRepository(), "a.txt")).doesNotExist();
+    assertThat(new File(workingCopy.getWorkingRepository(), "b.txt")).exists();
+  }
+
+  @Test
+  public void shouldRenameFolder() {
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.addRequest(new ModifyCommandRequest.MoveRequest("c", "notc"));
+    request.setCommitMessage("please rename my file pretty please");
+    request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
+
+    svnModifyCommand.execute(request);
+
+    WorkingCopy<File, File> workingCopy = workingCopyFactory.createWorkingCopy(context, null);
+    assertThat(new File(workingCopy.getWorkingRepository(), "c/d.txt")).doesNotExist();
+    assertThat(new File(workingCopy.getWorkingRepository(), "c/e.txt")).doesNotExist();
+    assertThat(new File(workingCopy.getWorkingRepository(), "notc/d.txt")).exists();
+    assertThat(new File(workingCopy.getWorkingRepository(), "notc/e.txt")).exists();
+  }
+
+  @Test
+  public void shouldMoveFileToExistingFolder() {
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "c/z.txt"));
+    request.setCommitMessage("please rename my file pretty please");
+    request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
+
+    svnModifyCommand.execute(request);
+
+    WorkingCopy<File, File> workingCopy = workingCopyFactory.createWorkingCopy(context, null);
+    assertThat(new File(workingCopy.getWorkingRepository(), "a.txt")).doesNotExist();
+    assertThat(new File(workingCopy.getWorkingRepository(), "c/z.txt")).exists();
+    assertThat(new File(workingCopy.getWorkingRepository(), "c/d.txt")).exists();
+    assertThat(new File(workingCopy.getWorkingRepository(), "c/e.txt")).exists();
+  }
+
+  @Test
+  public void shouldMoveFileToNonExistentFolder() {
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "y/z.txt"));
+    request.setCommitMessage("please rename my file pretty please");
+    request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
+
+    svnModifyCommand.execute(request);
+
+    WorkingCopy<File, File> workingCopy = workingCopyFactory.createWorkingCopy(context, null);
+    assertThat(new File(workingCopy.getWorkingRepository(), "a.txt")).doesNotExist();
+    assertThat(new File(workingCopy.getWorkingRepository(), "y/z.txt")).exists();
+  }
+
+  @Test
+  public void shouldMoveFolderToNonExistentFolder() {
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.addRequest(new ModifyCommandRequest.MoveRequest("c", "j/k/c"));
+    request.setCommitMessage("please rename my file pretty please");
+    request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
+
+    svnModifyCommand.execute(request);
+
+    WorkingCopy<File, File> workingCopy = workingCopyFactory.createWorkingCopy(context, null);
+    assertThat(new File(workingCopy.getWorkingRepository(), "c/d.txt")).doesNotExist();
+    assertThat(new File(workingCopy.getWorkingRepository(), "c/e.txt")).doesNotExist();
+    assertThat(new File(workingCopy.getWorkingRepository(), "j/k/c/d.txt")).exists();
+    assertThat(new File(workingCopy.getWorkingRepository(), "j/k/c/e.txt")).exists();
+  }
+
+  @Test
   public void shouldFailIfLockedByOtherPerson() {
     Subject subject = mock(Subject.class);
     when(subject.getPrincipal()).thenReturn("Perrin");

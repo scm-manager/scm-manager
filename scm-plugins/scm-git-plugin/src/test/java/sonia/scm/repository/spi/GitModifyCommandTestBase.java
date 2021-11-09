@@ -29,16 +29,13 @@ import com.github.sdorra.shiro.SubjectAware;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.errors.CorruptObjectException;
 import org.eclipse.jgit.lib.GpgSigner;
 import org.eclipse.jgit.lib.ObjectId;
-import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
-import org.eclipse.jgit.treewalk.CanonicalTreeParser;
+import org.eclipse.jgit.treewalk.TreeWalk;
 import org.junit.BeforeClass;
 import org.junit.Rule;
-import org.junit.rules.TemporaryFolder;
 import sonia.scm.repository.GitTestHelper;
 import sonia.scm.repository.work.NoneCachingWorkingCopyPool;
 import sonia.scm.repository.work.WorkdirProvider;
@@ -82,15 +79,18 @@ class GitModifyCommandTestBase extends AbstractGitCommandTestBase {
       try (RevWalk walk = new RevWalk(git.getRepository())) {
         RevCommit commit = walk.parseCommit(lastCommit);
         ObjectId treeId = commit.getTree().getId();
-        try (ObjectReader reader = git.getRepository().newObjectReader()) {
-          assertions.checkAssertions(new CanonicalTreeParser(null, reader, treeId));
-        }
+        assertions.checkAssertions(path -> TreeWalk.forPath(git.getRepository(), path, treeId) != null);
       }
     }
   }
 
   @FunctionalInterface
   interface TreeAssertions {
-    void checkAssertions(CanonicalTreeParser treeParser) throws CorruptObjectException;
+    void checkAssertions(FileFinder fileFinder) throws IOException;
+  }
+
+  @FunctionalInterface
+  interface FileFinder {
+    boolean findFile(String path) throws IOException;
   }
 }
