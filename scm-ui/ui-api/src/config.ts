@@ -25,7 +25,7 @@
 import { ApiResult, useIndexLink } from "./base";
 import { Config } from "@scm-manager/ui-types";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { apiClient } from "@scm-manager/ui-components";
+import { apiClient } from "./apiclient";
 import { requiredLink } from "./links";
 
 export const useConfig = (): ApiResult<Config> => {
