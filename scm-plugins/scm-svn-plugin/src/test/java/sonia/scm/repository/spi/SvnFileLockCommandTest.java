@@ -92,6 +92,21 @@ public class SvnFileLockCommandTest extends AbstractSvnCommandTestBase {
   }
 
   @Test
+  public void shouldUnlockFileOnlyIfPredicateMatches() throws SVNException {
+    createLock("a.txt");
+
+    SvnFileLockCommand lockCommand = new SvnFileLockCommand(createContext());
+    UnlockCommandRequest request = new UnlockCommandRequest();
+    request.setFile("a.txt");
+
+    assertThrows(FileLockedException.class, () -> lockCommand.unlock(request, lock -> false));
+    assertThat(getLocks("a.txt")).isNotEmpty();
+
+    lockCommand.unlock(request, lock -> true);
+    assertThat(getLocks("a.txt")).isEmpty();
+  }
+
+  @Test
   public void shouldNotFailUnlockingNotLockedFile() throws SVNException {
     SvnFileLockCommand lockCommand = new SvnFileLockCommand(createContext());
     UnlockCommandRequest request = new UnlockCommandRequest();
@@ -105,9 +120,7 @@ public class SvnFileLockCommandTest extends AbstractSvnCommandTestBase {
 
   @Test
   public void shouldFailToUnlockFileLockedByOtherUser() throws SVNException {
-    mockSubject("dent");
-    createLock("a.txt");
-    mockDefaultSubject();
+    createLockFromOtherUser();
 
     SvnFileLockCommand lockCommand = new SvnFileLockCommand(createContext());
     UnlockCommandRequest request = new UnlockCommandRequest();
@@ -122,9 +135,7 @@ public class SvnFileLockCommandTest extends AbstractSvnCommandTestBase {
 
   @Test
   public void shouldUnlockFileLockedByOtherUserWithForce() throws SVNException {
-    mockSubject("dent");
-    createLock("a.txt");
-    mockDefaultSubject();
+    createLockFromOtherUser();
 
     SvnFileLockCommand lockCommand = new SvnFileLockCommand(createContext());
     UnlockCommandRequest request = new UnlockCommandRequest();
@@ -139,9 +150,7 @@ public class SvnFileLockCommandTest extends AbstractSvnCommandTestBase {
 
   @Test
   public void shouldNotOverwriteLockFromOtherUser() {
-    mockSubject("dent");
-    createLock("a.txt");
-    mockDefaultSubject();
+    createLockFromOtherUser();
 
     SvnFileLockCommand lockCommand = new SvnFileLockCommand(createContext());
 
@@ -152,6 +161,21 @@ public class SvnFileLockCommandTest extends AbstractSvnCommandTestBase {
       "File a.txt locked by dent.",
       FileLockedException.class,
       () -> lockCommand.lock(request));
+  }
+
+  @Test
+  public void shouldNotRemoveLockFromOtherUserEvenWithPredicate() {
+    createLockFromOtherUser();
+
+    SvnFileLockCommand lockCommand = new SvnFileLockCommand(createContext());
+
+    UnlockCommandRequest request = new UnlockCommandRequest();
+    request.setFile("a.txt");
+
+    assertThrows(
+      "File a.txt locked by dent.",
+      FileLockedException.class,
+      () -> lockCommand.unlock(request, lock -> true));
   }
 
   @Test
@@ -203,6 +227,12 @@ public class SvnFileLockCommandTest extends AbstractSvnCommandTestBase {
       .get()
       .extracting("userId")
       .isEqualTo("trillian");
+  }
+
+  private void createLockFromOtherUser() {
+    mockSubject("dent");
+    createLock("a.txt");
+    mockDefaultSubject();
   }
 
   private void createLock(String path) {
