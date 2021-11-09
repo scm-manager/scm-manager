@@ -185,7 +185,7 @@ public class SvnModifyCommandTest extends AbstractSvnCommandTestBase {
     request.addRequest(new ModifyCommandRequest.CreateFileRequest("Test123", testfile, false));
     request.setCommitMessage("this should not pass");
     request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
-    request.setExpectedRevision("10");
+    request.setExpectedRevision("5");
 
     svnModifyCommand.execute(request);
 
