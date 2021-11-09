@@ -64,9 +64,7 @@ public class SvnFileLockCommand extends AbstractSvnCommand implements FileLockCo
 
   private void doLock(String fileToLock) throws SVNException {
     SVNRepository svnRepository = open();
-    String currentUser = getCurrentUser();
-    ISVNAuthenticationManager authenticationManager = newInstance(currentUser, null);
-    svnRepository.setAuthenticationManager(authenticationManager);
+    String currentUser = initializeAuthentication(svnRepository);
     getFileLock(fileToLock, svnRepository)
       .ifPresent(lock -> {
         throw new FileLockedException(repository.getNamespaceAndName(), lock);
@@ -81,12 +79,13 @@ public class SvnFileLockCommand extends AbstractSvnCommand implements FileLockCo
       doUnlock(request, fileToUnlock);
       return new UnlockCommandResult(true);
     } catch (SVNException e) {
-      throw new InternalRepositoryException(entity("File", fileToUnlock).in(repository), "failed to lock file", e);
+      throw new InternalRepositoryException(entity("File", fileToUnlock).in(repository), "failed to unlock file", e);
     }
   }
 
   private void doUnlock(UnlockCommandRequest request, String fileToUnlock) throws SVNException {
     SVNRepository svnRepository = open();
+    initializeAuthentication(svnRepository);
     Optional<FileLock> fileLock = getFileLock(fileToUnlock, svnRepository);
     if (fileLock.isPresent()) {
       if (!request.isForce() && !getCurrentUser().equals(fileLock.get().getUserId())) {
@@ -130,7 +129,14 @@ public class SvnFileLockCommand extends AbstractSvnCommand implements FileLockCo
     return new FileLock(path, lock.getID(), lock.getOwner(), lock.getCreationDate().toInstant());
   }
 
+  private String initializeAuthentication(SVNRepository svnRepository) {
+    String currentUser = getCurrentUser();
+    ISVNAuthenticationManager authenticationManager = newInstance(currentUser, null);
+    svnRepository.setAuthenticationManager(authenticationManager);
+    return currentUser;
+  }
+
   private String getCurrentUser() {
-    return SecurityUtils.getSubject().getPrincipals().getPrimaryPrincipal().toString();
+    return SecurityUtils.getSubject().getPrincipal().toString();
   }
 }

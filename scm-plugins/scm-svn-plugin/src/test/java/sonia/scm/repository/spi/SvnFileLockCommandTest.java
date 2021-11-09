@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.spi;
 
-import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
 import org.junit.After;
@@ -56,9 +55,7 @@ public class SvnFileLockCommandTest extends AbstractSvnCommandTestBase {
   private Subject mockSubject(String name) {
     Subject subject = mock(Subject.class);
     ThreadContext.bind(subject);
-    PrincipalCollection principalCollection = mock(PrincipalCollection.class);
-    when(principalCollection.getPrimaryPrincipal()).thenReturn(name);
-    when(subject.getPrincipals()).thenReturn(principalCollection);
+    when(subject.getPrincipal()).thenReturn(name);
     return subject;
   }
 
