@@ -1,12 +1,10 @@
 {
   "name": "root",
   "private": true,
-  "workspaces": {
-    "packages": [
-      "scm-ui/*",
-      "scm-plugins/*"
-    ]
-  },
+  "workspaces": [
+    "scm-ui/*",
+    "scm-plugins/*"
+  ],
   "scripts": {
     "build": "webpack-cli --mode=production --config=scm-ui/ui-scripts/src/webpack.config.js",
     "build:dev": "webpack-cli --mode=development --config=scm-ui/ui-scripts/src/webpack.config.js",
