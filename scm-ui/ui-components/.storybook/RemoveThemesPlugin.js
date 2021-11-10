@@ -31,10 +31,21 @@ class RemoveThemesPlugin {
       HtmlWebpackPlugin.getHooks(compilation).beforeAssetTagGeneration.tapAsync(
         'RemoveThemesPlugin',
         (data, cb) => {
-          if (data.assets.css) {
-            data.assets.css = data.assets.css.filter(css => css.startsWith("ui-theme-"))
+          
+          // remove generated style-loader bundles from the page
+          // there should be a better way, which does not generate the bundles at all
+          // but for now it works
+          if (data.assets.js) {
+            data.assets.js = data.assets.js.filter(bundle => !bundle.startsWith("ui-theme-"))
+                                           .filter(bundle => !bundle.startsWith("runtime~ui-theme-"))
           }
-          data.assets.css = [];
+
+          // remove css links to avoid conflicts with the themes
+          // so we remove all and add our own via preview-head.html
+          if (data.assets.css) {
+            data.assets.css = data.assets.css.filter(css => !css.startsWith("ui-theme-"))
+          }
+
           // Tell webpack to move on
           cb(null, data)
         }

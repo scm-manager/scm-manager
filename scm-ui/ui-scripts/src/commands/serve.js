@@ -29,9 +29,9 @@ const webpackConfig = require("../webpack.config");
 module.exports = () => {
   const compiler = Webpack(webpackConfig);
   const devServerConfig = webpackConfig[0].devServer;
-  const server = new WebpackDevServer(compiler, devServerConfig);
+  const server = new WebpackDevServer(devServerConfig, compiler);
 
-  server.listen(devServerConfig.port, "127.0.0.1", () => {
+  server.startCallback(() => {
     console.log(`Starting server on http://localhost:${devServerConfig.port}`);
   });
 

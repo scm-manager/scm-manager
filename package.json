@@ -6,8 +6,8 @@
     "scm-plugins/*"
   ],
   "scripts": {
-    "build": "webpack --mode=production --config=scm-ui/ui-scripts/src/webpack.config.js",
-    "build:dev": "webpack --mode=development --config=scm-ui/ui-scripts/src/webpack.config.js",
+    "build": "webpack-cli --mode=production --config=scm-ui/ui-scripts/src/webpack.config.js",
+    "build:dev": "webpack-cli --mode=development --config=scm-ui/ui-scripts/src/webpack.config.js",
     "test": "lerna run --scope '@scm-manager/ui-*' test",
     "e2e-tests": "lerna run --scope '@scm-manager/e2e-tests' ci",
     "typecheck": "lerna run --scope '@scm-manager/ui-*' typecheck",

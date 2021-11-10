@@ -23,7 +23,8 @@
  */
 import { File, Link, Repository } from "@scm-manager/ui-types";
 import { requiredLink } from "./links";
-import { apiClient, urls } from "@scm-manager/ui-components";
+import { apiClient } from "./apiclient";
+import * as urls from "./urls";
 import { useInfiniteQuery } from "react-query";
 import { repoQueryKey } from "./keys";
 import { useEffect } from "react";

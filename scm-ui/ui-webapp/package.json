@@ -28,7 +28,7 @@
     "test": "jest"
   },
   "devDependencies": {
-    "@scm-manager/jest-preset": "^2.12.7",
+    "@scm-manager/jest-preset": "^2.13.0",
     "@scm-manager/ui-tests": "^2.26.2-SNAPSHOT",
     "@types/classnames": "^2.2.9",
     "@types/enzyme": "^3.10.3",
