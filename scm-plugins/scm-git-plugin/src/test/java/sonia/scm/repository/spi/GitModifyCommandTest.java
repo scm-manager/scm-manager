@@ -55,6 +55,11 @@ import static org.mockito.Mockito.verify;
 
 public class GitModifyCommandTest extends GitModifyCommandTestBase {
 
+  @Override
+  protected String getZippedRepositoryResource() {
+    return "sonia/scm/repository/spi/scm-git-spi-move-test.zip";
+  }
+
   @Test
   public void shouldCreateCommit() throws IOException, GitAPIException {
     File newFile = Files.write(tempFolder.newFile().toPath(), "new content".getBytes()).toFile();
@@ -401,12 +406,84 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
     command.execute(request);
   }
 
+  /*
+    # Ordner verschieben/umbenennen
+
+    Ordner: /g/h
+    Move: /
+    Oder Move: ..
+    Erwartet: Alle Dateien/Ordner aus /g/h liegen unter /h
+
+    Ordner: /g/k
+    Move: /g/h
+    Oder Move: h
+    Ordner /g/h existiert bereits
+    Erwartet: Alle Dateien/Ordner aus /g/k liegen unter /g/h/k
+
+    Ordner: /g/k
+    Move: /g/y
+    Oder Move: y
+    Ordner /g/y existiert nicht
+    Erwartet: Alle Dateien/Ordner aus /g/k liegen unter /g/y
+
+    Ordner: /g/k
+    Move: /x/y
+    Oder Move: ../../x/y (???)
+    Ordner /x existiert nicht
+    Erwartet: Alle Dateien/Ordner aus /g/k liegen unter /x/y
+
+    # Datei verschieben/umbenennen
+
+    Datei: /g/h/c
+    Move: /
+    Oder Move: ../..
+    Erwartet: Die Datei c liegt unter /
+
+    Datei: /g/h/j.txt
+    Move: i
+    Oder Move: /g/h/i
+    Datei i existiert bereits
+    Erwartet: Fehler!
+
+    Datei: /g/h/j.txt
+    Move: x.txt
+    Oder Move: ./x.txt
+    Oder Move: /g/h/x.txt
+    Datei x.txt existiert nicht
+    Erwartet: Die Datei wurde umbenannt in /g/h/x.txt
+
+    Datei: /g/h/c
+    Move: /
+    Oder Move: ../..
+    Ordner c existiert bereits
+    Erwartet: Fehler!
+
+    Datei: /g/h/c
+    Move: /y.txt
+    Oder Move: ../../y.txt
+    Datei /y.txt existiert nicht
+    Erwartet: Die Datei c wurde nach / verschoben und in y.txt umbenannt
+
+    Datei: /g/h/c
+    Move: /g/k
+    Oder Move: ../k
+    Ordner /g/k existiert bereits
+    Erwartet: Die Datei c wurde nach /g/k verschoben
+
+
+    # Sonderfall
+
+    Ordner: /g/h/c
+    Move: ../../../..
+    Erwartet: Fehler vom Backend, da Datei/Ordner aus dem Repo verschoben wurde
+
+   */
   @Test
   public void shouldRenameFile() throws GitAPIException, IOException {
     GitModifyCommand command = createCommand();
 
     ModifyCommandRequest request = new ModifyCommandRequest();
-    request.setCommitMessage("please move this file");
+    request.setCommitMessage("please rename this file");
     request.setAuthor(new Person("Peter Pan", "peter@pan.net"));
     request.addRequest(new ModifyCommandRequest.MoveRequest("b.txt", "d.txt"));
 
