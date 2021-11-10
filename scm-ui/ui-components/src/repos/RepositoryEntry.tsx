@@ -47,9 +47,16 @@ const ContentRightContainer = styled.div`
 `;
 
 const QuickAction = styled(Icon)`
+  margin-top: 0.2rem;
   :hover {
     color: #363636 !important;
   }
+`;
+
+const ContactActionWrapper = styled.a`
+  height: 20px;
+  width: 20px;
+  padding-right: 2rem;
 `;
 
 const Name = styled.strong`
@@ -83,14 +90,25 @@ const RepositoryEntry: FC<Props> = ({ repository, baseDate }) => {
               name="repos.repository-details.information"
               renderAll={true}
               props={{
-                repository,
+                repository
               }}
             />
           }
           closeFunction={() => setOpenCloneModal(false)}
         />
       )}
-      <span className={classNames("is-flex", "is-justify-content-flex-end", "is-align-items-flex-end")}>
+      <span className={classNames("is-flex", "is-justify-content-flex-end", "is-align-items-center")}>
+        {repository.contact ? (
+          <ContactActionWrapper href={`mailto:${repository.contact}`} target="_blank" className={"is-size-5"}>
+            <QuickAction
+              className={classNames("is-clickable")}
+              name="envelope"
+              color="info"
+              title={t("overview.contact", { contact: repository.contact })}
+              tabIndex={1}
+            />
+          </ContactActionWrapper>
+        ) : null}
         <QuickAction
           className={classNames("is-clickable", "is-size-5")}
           name="download"
