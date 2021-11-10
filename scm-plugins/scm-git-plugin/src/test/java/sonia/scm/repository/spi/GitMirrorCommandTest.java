@@ -109,7 +109,11 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
   @Before
   public void bendContextToNewRepository() throws IOException, GitAPIException {
     clone = tempFolder.newFolder();
-    Git.init().setBare(true).setDirectory(clone).call();
+    Git.init()
+      .setInitialBranch("master")
+      .setBare(true)
+      .setDirectory(clone)
+      .call();
 
     GitContext emptyContext = createMirrorContext(clone);
     SimpleGitWorkingCopyFactory workingCopyFactory =
