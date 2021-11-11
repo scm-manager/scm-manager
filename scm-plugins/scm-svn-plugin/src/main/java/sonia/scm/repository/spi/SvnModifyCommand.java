@@ -34,7 +34,6 @@ import org.tmatesoft.svn.core.wc.SVNClientManager;
 import org.tmatesoft.svn.core.wc.SVNWCClient;
 import org.tmatesoft.svn.core.wc.SVNWCUtil;
 import sonia.scm.ConcurrentModificationException;
-import sonia.scm.ContextEntry;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.SvnWorkingCopyFactory;
@@ -57,10 +56,13 @@ public class SvnModifyCommand implements ModifyCommand {
   private final SvnWorkingCopyFactory workingCopyFactory;
   private final Repository repository;
 
+  private final SvnFileLockCommand lockCommand;
+
   SvnModifyCommand(SvnContext context, SvnWorkingCopyFactory workingCopyFactory) {
     this.context = context;
     this.repository = context.getRepository();
     this.workingCopyFactory = workingCopyFactory;
+    this.lockCommand = new SvnFileLockCommand(context);
   }
 
   @Override
@@ -137,6 +139,7 @@ public class SvnModifyCommand implements ModifyCommand {
 
     @Override
     public void doScmDelete(String toBeDeleted) {
+      unlock(toBeDeleted);
       try {
         wcClient.doDelete(new File(workingDirectory, toBeDeleted), true, true, false);
       } catch (SVNException e) {
@@ -146,6 +149,7 @@ public class SvnModifyCommand implements ModifyCommand {
 
     @Override
     public void addFileToScm(String name, Path file) {
+      unlock(name);
       try {
         wcClient.doAdd(
           file.toFile(),
@@ -159,6 +163,19 @@ public class SvnModifyCommand implements ModifyCommand {
       } catch (SVNException e) {
         throw new InternalRepositoryException(repository, "could not add file to repository");
       }
+    }
+
+    private void unlock(String toBeDeleted) {
+      lockCommand.unlock(
+        createUnlockRequest(toBeDeleted),
+        SvnFileLockCommand.SvnFileLock::isCreatedByScmManager
+      );
+    }
+
+    private UnlockCommandRequest createUnlockRequest(String toBeDeleted) {
+      UnlockCommandRequest request = new UnlockCommandRequest();
+      request.setFile(toBeDeleted);
+      return request;
     }
 
     @Override

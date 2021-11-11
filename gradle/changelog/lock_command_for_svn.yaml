@@ -1,0 +1,2 @@
+- type: added
+  description: Lock and unlock command for SVN ([#1847](https://github.com/scm-manager/scm-manager/pull/1847))

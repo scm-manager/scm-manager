@@ -26,6 +26,7 @@ package sonia.scm.repository.api;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.Optional;
 
 /**
  * Detailes of a file lock.
@@ -39,12 +40,18 @@ public class FileLock implements Serializable {
   private final String id;
   private final String userId;
   private final Instant timestamp;
+  private final String message;
 
   public FileLock(String path, String id, String userId, Instant timestamp) {
+    this(path, id, userId, timestamp, null);
+  }
+
+  public FileLock(String path, String id, String userId, Instant timestamp, String message) {
     this.path = path;
     this.id = id;
     this.userId = userId;
     this.timestamp = timestamp;
+    this.message = message;
   }
 
   /**
@@ -73,5 +80,9 @@ public class FileLock implements Serializable {
    */
   public Instant getTimestamp() {
     return timestamp;
+  }
+
+  public Optional<String> getMessage() {
+    return Optional.ofNullable(message);
   }
 }
