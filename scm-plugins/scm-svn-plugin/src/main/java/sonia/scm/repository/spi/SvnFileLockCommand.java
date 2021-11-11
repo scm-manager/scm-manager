@@ -98,7 +98,7 @@ public class SvnFileLockCommand extends AbstractSvnCommand implements FileLockCo
     Optional<SvnFileLock> fileLock = getFileLock(fileToUnlock, svnRepository);
     if (fileLock.isPresent()) {
       SvnFileLock lock = fileLock.get();
-      if (!request.isForce() && !getCurrentUser().equals(lock.getUserId()) || !predicate.test(lock)) {
+      if (shouldPreventUnlock(request, predicate, lock)) {
         throw new FileLockedException(repository.getNamespaceAndName(), lock);
       }
       svnRepository.unlock(singletonMap(fileToUnlock, lock.getId()), request.isForce(), null);
@@ -137,6 +137,10 @@ public class SvnFileLockCommand extends AbstractSvnCommand implements FileLockCo
       path = path.substring(1);
     }
     return new SvnFileLock(path, lock.getID(), lock.getOwner(), lock.getCreationDate().toInstant(), lock.getComment());
+  }
+
+  private boolean shouldPreventUnlock(UnlockCommandRequest request, Predicate<SvnFileLock> predicate, SvnFileLock lock) {
+    return !request.isForce() && !getCurrentUser().equals(lock.getUserId()) || !predicate.test(lock);
   }
 
   private String initializeAuthentication(SVNRepository svnRepository) {

@@ -49,14 +49,13 @@ public class SvnFileLockCommandTest extends AbstractSvnCommandTestBase {
 
   @Before
   public void mockDefaultSubject() {
-    ThreadContext.bind(mockSubject("trillian"));
+    mockSubject("trillian");
   }
 
-  private Subject mockSubject(String name) {
+  private void mockSubject(String name) {
     Subject subject = mock(Subject.class);
     ThreadContext.bind(subject);
     when(subject.getPrincipal()).thenReturn(name);
-    return subject;
   }
 
   @After
