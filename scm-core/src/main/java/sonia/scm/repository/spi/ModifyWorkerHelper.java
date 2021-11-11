@@ -38,6 +38,7 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.stream.Stream;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
@@ -73,12 +74,28 @@ public interface ModifyWorkerHelper extends ModifyCommand.Worker {
    * @since 2.27.0
    */
   @Override
-  default void move(String path, String newPath) throws IOException {
-    Path fileToBeMoved = getTargetFile(path);
-    Path targetPath = getTargetFile(newPath);
-    Files.createDirectories(targetPath.getParent());
-    Files.move(fileToBeMoved, targetPath);
-    doScmMove(path, newPath);
+  default void move(String sourcePathString, String inputTargetPathString) throws IOException {
+    // Determine Target path
+    String targetPath;
+
+    Path sourcePath = Paths.get(sourcePathString);
+    File inputTargetFile = new File(inputTargetPathString);
+
+    String inputTargetPathStringWithSourceFileName = inputTargetPathString + File.separator + sourcePath.getFileName();
+    if (inputTargetFile.isAbsolute()) {
+      // => workdir + absolutePath
+      targetPath = inputTargetPathStringWithSourceFileName;
+    } else {
+      // => sourcePathOfParent (/g) + relativePath (..) + sourceFileName (/h)
+      String sourceFileParentPath = sourcePath.getParent().toString();
+      String relativePathWithFilename = inputTargetPathStringWithSourceFileName;
+      targetPath = new File(sourceFileParentPath, relativePathWithFilename).getPath();
+    }
+
+    Path targetFile = getTargetFile(targetPath);
+    Files.createDirectories(targetFile.getParent());
+    Path pathAfterMove = Files.move(getTargetFile(sourcePathString), targetFile);
+    doScmMove(sourcePathString, getWorkDir().toPath().relativize(pathAfterMove).normalize().toString());
   }
 
   /**
