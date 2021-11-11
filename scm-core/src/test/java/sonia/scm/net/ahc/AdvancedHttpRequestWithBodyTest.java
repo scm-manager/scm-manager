@@ -35,6 +35,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.file.Path;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -110,6 +111,12 @@ class AdvancedHttpRequestWithBodyTest {
     request.stringContent("test", Charsets.UTF_8);
     assertThat(request.getContent()).isInstanceOf(StringContent.class);
   }
+
+  @Test
+  void shouldReturnCustomContent(){
+    request.content(new CustomContent());
+    assertThat(request.getContent()).isInstanceOf(CustomContent.class);
+  }
   
   @Test
   void shouldReturnXmlContent() throws IOException {
@@ -159,6 +166,18 @@ class AdvancedHttpRequestWithBodyTest {
   @Test
   void shouldReturnSelf() {
     assertThat(request.self().getClass()).isEqualTo(AdvancedHttpRequestWithBody.class);
+  }
+
+  private static class CustomContent implements Content {
+    @Override
+    public void prepare(AdvancedHttpRequestWithBody request) throws IOException {
+
+    }
+
+    @Override
+    public void process(OutputStream output) throws IOException {
+
+    }
   }
   
 }
