@@ -25,21 +25,23 @@
 package sonia.scm.net.ahc;
 
 import com.google.common.collect.Lists;
-import org.junit.Test;
-import static org.junit.Assert.*;
-import org.junit.runner.RunWith;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import static org.mockito.Mockito.*;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@RunWith(MockitoJUnitRunner.class)
-public class FormContentBuilderTest {
+@ExtendWith(MockitoExtension.class)
+class FormContentBuilderTest {
 
   @Mock
   private AdvancedHttpRequestWithBody request;
@@ -48,31 +50,29 @@ public class FormContentBuilderTest {
   private FormContentBuilder builder;
 
   @Test
-  public void testFieldEncoding()
-  {
+  void shouldEncodeFieldValues() {
     builder.field("a", "ü", "ä", "ö").build();
     assertContent("a=%C3%BC&a=%C3%A4&a=%C3%B6");
   }
   
   @Test
-  public void testBuild()
-  {
+  void shouldApplySimpleUrlEncoded() {
     builder.field("a", "b").build();
+
     assertContent("a=b");
+
     verify(request).contentType("application/x-www-form-urlencoded");
   }
 
   @Test
-  public void testFieldWithArray()
-  { 
+  void shouldCreateValuesFromVarargs() {
     builder.field("a", "b").field("c", "d", "e").build();
     assertContent("a=b&c=d&c=e");
   }
   
   @Test
-  public void testFieldWithIterable()
-  { 
-    Iterable<? extends Object> i1 = Lists.newArrayList("b");
+  void shouldCreateValuesFromIterables() {
+    Iterable<Object> i1 = Lists.newArrayList("b");
     builder.fields("a", i1)
            .fields("c", Lists.newArrayList("d", "e"))
            .build();
@@ -82,7 +82,7 @@ public class FormContentBuilderTest {
   private void assertContent(String content){
     ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
     verify(request).stringContent(captor.capture());
-    assertEquals(content, captor.getValue());
+    assertThat(captor.getValue()).isEqualTo(content);
   }
 
 }
