@@ -459,11 +459,6 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
     Ordner /g/k existiert bereits
     Erwartet: Die Datei c wurde nach /g/k verschoben
 
-
-    # Sonderfall
-
-
-
    */
 
 
@@ -473,7 +468,7 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
    *     Erwartet: Alle Dateien/Ordner aus /g/h liegen unter /h
    */
   @Test
-  public void moveFileCaseA1() throws GitAPIException, IOException {
+  public void moveFolderCaseA1() throws GitAPIException, IOException {
     GitModifyCommand command = createCommand();
 
     ModifyCommandRequest request = new ModifyCommandRequest();
@@ -498,7 +493,7 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
    *     Erwartet: Alle Dateien/Ordner aus /g/h liegen unter /h
    */
   @Test
-  public void moveFileCaseA2() throws GitAPIException, IOException {
+  public void moveFolderCaseA2() throws GitAPIException, IOException {
     GitModifyCommand command = createCommand();
 
     ModifyCommandRequest request = new ModifyCommandRequest();
@@ -522,7 +517,7 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
    *     Erwartet: Alle Dateien/Ordner aus /g/k liegen unter /g/h/k
    */
   @Test
-  public void moveFileCaseB1() throws GitAPIException, IOException {
+  public void moveFolderCaseB1() throws GitAPIException, IOException {
     GitModifyCommand command = createCommand();
 
     ModifyCommandRequest request = new ModifyCommandRequest();
@@ -546,7 +541,7 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
    *     Erwartet: Alle Dateien/Ordner aus /g/k liegen unter /g/h/k
    */
   @Test
-  public void moveFileCaseB2() throws GitAPIException, IOException {
+  public void moveFolderCaseB2() throws GitAPIException, IOException {
     GitModifyCommand command = createCommand();
 
     ModifyCommandRequest request = new ModifyCommandRequest();
@@ -558,6 +553,54 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
 
     TreeAssertions assertions = canonicalTreeParser -> {
       assertThat(canonicalTreeParser.findFile("g/h/k/l.txt")).isTrue();
+    };
+
+    assertInTree(assertions);
+  }
+
+  /**
+   *     Ordner: /g/k
+   *     Move: /g/y
+   *     Ordner /g/y existiert nicht
+   *     Erwartet: Alle Dateien/Ordner aus /g/k liegen unter /g/y
+   */
+  @Test
+  public void moveFolderCaseC1() throws GitAPIException, IOException {
+    GitModifyCommand command = createCommand();
+
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.setCommitMessage("please rename this file");
+    request.setAuthor(new Person("Peter Pan", "peter@pan.net"));
+    request.addRequest(new ModifyCommandRequest.MoveRequest("/g/k", "/g/y"));
+
+    command.execute(request);
+
+    TreeAssertions assertions = canonicalTreeParser -> {
+      assertThat(canonicalTreeParser.findFile("g/y/l.txt")).isTrue();
+    };
+
+    assertInTree(assertions);
+  }
+
+  /**
+   *     Ordner: /g/k
+   *     Move: y
+   *     Ordner /g/y existiert nicht
+   *     Erwartet: Alle Dateien/Ordner aus /g/k liegen unter /g/y
+   */
+  @Test
+  public void moveFolderCaseC2() throws GitAPIException, IOException {
+    GitModifyCommand command = createCommand();
+
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.setCommitMessage("please rename this file");
+    request.setAuthor(new Person("Peter Pan", "peter@pan.net"));
+    request.addRequest(new ModifyCommandRequest.MoveRequest("/g/k", "y"));
+
+    command.execute(request);
+
+    TreeAssertions assertions = canonicalTreeParser -> {
+      assertThat(canonicalTreeParser.findFile("g/y/l.txt")).isTrue();
     };
 
     assertInTree(assertions);
