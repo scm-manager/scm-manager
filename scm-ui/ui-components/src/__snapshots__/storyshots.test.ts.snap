@@ -73639,7 +73639,7 @@ exports[`Storyshots Repositories/RepositoryEntry Archived 1`] = `
               className="is-flex"
             >
               <strong
-                className="RepositoryEntry__Name-sc-6jys82-2 gIldrI"
+                className="RepositoryEntry__Name-sc-6jys82-4 flPsOa"
               >
                 heartOfGold
               </strong>
@@ -73678,11 +73678,24 @@ exports[`Storyshots Repositories/RepositoryEntry Archived 1`] = `
           className="RepositoryEntry__ContentRightContainer-sc-6jys82-0 wkQgn is-flex is-flex-direction-column is-justify-content-space-between is-relative mr-4"
         >
           <span
-            className="is-flex is-justify-content-flex-end is-align-items-flex-end"
+            className="is-flex is-justify-content-flex-end is-align-items-center"
           >
+            <a
+              className="RepositoryEntry__ContactActionWrapper-sc-6jys82-3 kIKRYU is-size-5"
+              href="mailto:heart-of-gold@hitchhiker.com"
+              tabIndex={1}
+              target="_blank"
+              title="overview.contact"
+            >
+              <i
+                className="fas fa-fw fa-envelope has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 jDQqzI is-clickable"
+                onKeyPress={[Function]}
+                tabIndex={-1}
+              />
+            </a>
             <i
               aria-label="overview.clone"
-              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 khGtCz is-clickable is-size-5"
+              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 jDQqzI is-clickable is-size-5"
               onClick={[Function]}
               onKeyPress={[Function]}
               tabIndex={-1}
@@ -73746,7 +73759,7 @@ exports[`Storyshots Repositories/RepositoryEntry Avatar EP 1`] = `
               className="is-flex"
             >
               <strong
-                className="RepositoryEntry__Name-sc-6jys82-2 gIldrI"
+                className="RepositoryEntry__Name-sc-6jys82-4 flPsOa"
               >
                 heartOfGold
               </strong>
@@ -73774,11 +73787,24 @@ exports[`Storyshots Repositories/RepositoryEntry Avatar EP 1`] = `
           className="RepositoryEntry__ContentRightContainer-sc-6jys82-0 wkQgn is-flex is-flex-direction-column is-justify-content-space-between is-relative mr-4"
         >
           <span
-            className="is-flex is-justify-content-flex-end is-align-items-flex-end"
+            className="is-flex is-justify-content-flex-end is-align-items-center"
           >
+            <a
+              className="RepositoryEntry__ContactActionWrapper-sc-6jys82-3 kIKRYU is-size-5"
+              href="mailto:heart-of-gold@hitchhiker.com"
+              tabIndex={1}
+              target="_blank"
+              title="overview.contact"
+            >
+              <i
+                className="fas fa-fw fa-envelope has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 jDQqzI is-clickable"
+                onKeyPress={[Function]}
+                tabIndex={-1}
+              />
+            </a>
             <i
               aria-label="overview.clone"
-              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 khGtCz is-clickable is-size-5"
+              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 jDQqzI is-clickable is-size-5"
               onClick={[Function]}
               onKeyPress={[Function]}
               tabIndex={-1}
@@ -73845,7 +73871,7 @@ exports[`Storyshots Repositories/RepositoryEntry Before Title EP 1`] = `
                 className="far fa-star"
               />
               <strong
-                className="RepositoryEntry__Name-sc-6jys82-2 gIldrI"
+                className="RepositoryEntry__Name-sc-6jys82-4 flPsOa"
               >
                 heartOfGold
               </strong>
@@ -73873,11 +73899,24 @@ exports[`Storyshots Repositories/RepositoryEntry Before Title EP 1`] = `
           className="RepositoryEntry__ContentRightContainer-sc-6jys82-0 wkQgn is-flex is-flex-direction-column is-justify-content-space-between is-relative mr-4"
         >
           <span
-            className="is-flex is-justify-content-flex-end is-align-items-flex-end"
+            className="is-flex is-justify-content-flex-end is-align-items-center"
           >
+            <a
+              className="RepositoryEntry__ContactActionWrapper-sc-6jys82-3 kIKRYU is-size-5"
+              href="mailto:heart-of-gold@hitchhiker.com"
+              tabIndex={1}
+              target="_blank"
+              title="overview.contact"
+            >
+              <i
+                className="fas fa-fw fa-envelope has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 jDQqzI is-clickable"
+                onKeyPress={[Function]}
+                tabIndex={-1}
+              />
+            </a>
             <i
               aria-label="overview.clone"
-              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 khGtCz is-clickable is-size-5"
+              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 jDQqzI is-clickable is-size-5"
               onClick={[Function]}
               onKeyPress={[Function]}
               tabIndex={-1}
@@ -73941,7 +73980,7 @@ exports[`Storyshots Repositories/RepositoryEntry Default 1`] = `
               className="is-flex"
             >
               <strong
-                className="RepositoryEntry__Name-sc-6jys82-2 gIldrI"
+                className="RepositoryEntry__Name-sc-6jys82-4 flPsOa"
               >
                 heartOfGold
               </strong>
@@ -73969,11 +74008,24 @@ exports[`Storyshots Repositories/RepositoryEntry Default 1`] = `
           className="RepositoryEntry__ContentRightContainer-sc-6jys82-0 wkQgn is-flex is-flex-direction-column is-justify-content-space-between is-relative mr-4"
         >
           <span
-            className="is-flex is-justify-content-flex-end is-align-items-flex-end"
+            className="is-flex is-justify-content-flex-end is-align-items-center"
           >
+            <a
+              className="RepositoryEntry__ContactActionWrapper-sc-6jys82-3 kIKRYU is-size-5"
+              href="mailto:heart-of-gold@hitchhiker.com"
+              tabIndex={1}
+              target="_blank"
+              title="overview.contact"
+            >
+              <i
+                className="fas fa-fw fa-envelope has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 jDQqzI is-clickable"
+                onKeyPress={[Function]}
+                tabIndex={-1}
+              />
+            </a>
             <i
               aria-label="overview.clone"
-              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 khGtCz is-clickable is-size-5"
+              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 jDQqzI is-clickable is-size-5"
               onClick={[Function]}
               onKeyPress={[Function]}
               tabIndex={-1}
@@ -74037,7 +74089,7 @@ exports[`Storyshots Repositories/RepositoryEntry Exporting 1`] = `
               className="is-flex"
             >
               <strong
-                className="RepositoryEntry__Name-sc-6jys82-2 gIldrI"
+                className="RepositoryEntry__Name-sc-6jys82-4 flPsOa"
               >
                 heartOfGold
               </strong>
@@ -74076,11 +74128,24 @@ exports[`Storyshots Repositories/RepositoryEntry Exporting 1`] = `
           className="RepositoryEntry__ContentRightContainer-sc-6jys82-0 wkQgn is-flex is-flex-direction-column is-justify-content-space-between is-relative mr-4"
         >
           <span
-            className="is-flex is-justify-content-flex-end is-align-items-flex-end"
+            className="is-flex is-justify-content-flex-end is-align-items-center"
           >
+            <a
+              className="RepositoryEntry__ContactActionWrapper-sc-6jys82-3 kIKRYU is-size-5"
+              href="mailto:heart-of-gold@hitchhiker.com"
+              tabIndex={1}
+              target="_blank"
+              title="overview.contact"
+            >
+              <i
+                className="fas fa-fw fa-envelope has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 jDQqzI is-clickable"
+                onKeyPress={[Function]}
+                tabIndex={-1}
+              />
+            </a>
             <i
               aria-label="overview.clone"
-              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 khGtCz is-clickable is-size-5"
+              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 jDQqzI is-clickable is-size-5"
               onClick={[Function]}
               onKeyPress={[Function]}
               tabIndex={-1}
@@ -74144,7 +74209,7 @@ exports[`Storyshots Repositories/RepositoryEntry HealthCheck Failure 1`] = `
               className="is-flex"
             >
               <strong
-                className="RepositoryEntry__Name-sc-6jys82-2 gIldrI"
+                className="RepositoryEntry__Name-sc-6jys82-4 flPsOa"
               >
                 heartOfGold
               </strong>
@@ -74184,11 +74249,24 @@ exports[`Storyshots Repositories/RepositoryEntry HealthCheck Failure 1`] = `
           className="RepositoryEntry__ContentRightContainer-sc-6jys82-0 wkQgn is-flex is-flex-direction-column is-justify-content-space-between is-relative mr-4"
         >
           <span
-            className="is-flex is-justify-content-flex-end is-align-items-flex-end"
+            className="is-flex is-justify-content-flex-end is-align-items-center"
           >
+            <a
+              className="RepositoryEntry__ContactActionWrapper-sc-6jys82-3 kIKRYU is-size-5"
+              href="mailto:heart-of-gold@hitchhiker.com"
+              tabIndex={1}
+              target="_blank"
+              title="overview.contact"
+            >
+              <i
+                className="fas fa-fw fa-envelope has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 jDQqzI is-clickable"
+                onKeyPress={[Function]}
+                tabIndex={-1}
+              />
+            </a>
             <i
               aria-label="overview.clone"
-              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 khGtCz is-clickable is-size-5"
+              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 jDQqzI is-clickable is-size-5"
               onClick={[Function]}
               onKeyPress={[Function]}
               tabIndex={-1}
@@ -74252,7 +74330,7 @@ exports[`Storyshots Repositories/RepositoryEntry MultiRepositoryTags 1`] = `
               className="is-flex"
             >
               <strong
-                className="RepositoryEntry__Name-sc-6jys82-2 gIldrI"
+                className="RepositoryEntry__Name-sc-6jys82-4 flPsOa"
               >
                 heartOfGold
               </strong>
@@ -74301,11 +74379,24 @@ exports[`Storyshots Repositories/RepositoryEntry MultiRepositoryTags 1`] = `
           className="RepositoryEntry__ContentRightContainer-sc-6jys82-0 wkQgn is-flex is-flex-direction-column is-justify-content-space-between is-relative mr-4"
         >
           <span
-            className="is-flex is-justify-content-flex-end is-align-items-flex-end"
+            className="is-flex is-justify-content-flex-end is-align-items-center"
           >
+            <a
+              className="RepositoryEntry__ContactActionWrapper-sc-6jys82-3 kIKRYU is-size-5"
+              href="mailto:heart-of-gold@hitchhiker.com"
+              tabIndex={1}
+              target="_blank"
+              title="overview.contact"
+            >
+              <i
+                className="fas fa-fw fa-envelope has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 jDQqzI is-clickable"
+                onKeyPress={[Function]}
+                tabIndex={-1}
+              />
+            </a>
             <i
               aria-label="overview.clone"
-              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 khGtCz is-clickable is-size-5"
+              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 jDQqzI is-clickable is-size-5"
               onClick={[Function]}
               onKeyPress={[Function]}
               tabIndex={-1}
@@ -74369,7 +74460,7 @@ exports[`Storyshots Repositories/RepositoryEntry RepositoryFlag EP 1`] = `
               className="is-flex"
             >
               <strong
-                className="RepositoryEntry__Name-sc-6jys82-2 gIldrI"
+                className="RepositoryEntry__Name-sc-6jys82-4 flPsOa"
               >
                 heartOfGold
               </strong>
@@ -74409,11 +74500,24 @@ exports[`Storyshots Repositories/RepositoryEntry RepositoryFlag EP 1`] = `
           className="RepositoryEntry__ContentRightContainer-sc-6jys82-0 wkQgn is-flex is-flex-direction-column is-justify-content-space-between is-relative mr-4"
         >
           <span
-            className="is-flex is-justify-content-flex-end is-align-items-flex-end"
+            className="is-flex is-justify-content-flex-end is-align-items-center"
           >
+            <a
+              className="RepositoryEntry__ContactActionWrapper-sc-6jys82-3 kIKRYU is-size-5"
+              href="mailto:heart-of-gold@hitchhiker.com"
+              tabIndex={1}
+              target="_blank"
+              title="overview.contact"
+            >
+              <i
+                className="fas fa-fw fa-envelope has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 jDQqzI is-clickable"
+                onKeyPress={[Function]}
+                tabIndex={-1}
+              />
+            </a>
             <i
               aria-label="overview.clone"
-              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 khGtCz is-clickable is-size-5"
+              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 jDQqzI is-clickable is-size-5"
               onClick={[Function]}
               onKeyPress={[Function]}
               tabIndex={-1}
@@ -74477,7 +74581,7 @@ exports[`Storyshots Repositories/RepositoryEntry With long texts 1`] = `
               className="is-flex"
             >
               <strong
-                className="RepositoryEntry__Name-sc-6jys82-2 gIldrI"
+                className="RepositoryEntry__Name-sc-6jys82-4 flPsOa"
               >
                 veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery-loooooooooooooooooooooooooooooooooooooooooooooooooooong-repooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo-naaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaame
               </strong>
@@ -74505,11 +74609,24 @@ exports[`Storyshots Repositories/RepositoryEntry With long texts 1`] = `
           className="RepositoryEntry__ContentRightContainer-sc-6jys82-0 wkQgn is-flex is-flex-direction-column is-justify-content-space-between is-relative mr-4"
         >
           <span
-            className="is-flex is-justify-content-flex-end is-align-items-flex-end"
+            className="is-flex is-justify-content-flex-end is-align-items-center"
           >
+            <a
+              className="RepositoryEntry__ContactActionWrapper-sc-6jys82-3 kIKRYU is-size-5"
+              href="mailto:heart-of-gold@hitchhiker.com"
+              tabIndex={1}
+              target="_blank"
+              title="overview.contact"
+            >
+              <i
+                className="fas fa-fw fa-envelope has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 jDQqzI is-clickable"
+                onKeyPress={[Function]}
+                tabIndex={-1}
+              />
+            </a>
             <i
               aria-label="overview.clone"
-              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 khGtCz is-clickable is-size-5"
+              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-1 jDQqzI is-clickable is-size-5"
               onClick={[Function]}
               onKeyPress={[Function]}
               tabIndex={-1}

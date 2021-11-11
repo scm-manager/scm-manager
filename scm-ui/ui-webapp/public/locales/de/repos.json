@@ -61,7 +61,8 @@
     "createButton": "Repository hinzufügen",
     "filterRepositories": "Repositories filtern",
     "allNamespaces": "Alle Namespaces",
-    "clone": "Clone/Checkout"
+    "clone": "Clone/Checkout",
+    "contact": "E-Mail senden an {{contact}}"
   },
   "create": {
     "title": "Repository hinzufügen",
