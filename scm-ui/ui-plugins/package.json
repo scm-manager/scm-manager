@@ -27,6 +27,7 @@
     "@scm-manager/ui-scripts": "^2.26.2-SNAPSHOT",
     "@scm-manager/ui-tests": "^2.26.2-SNAPSHOT",
     "@scm-manager/ui-types": "^2.26.2-SNAPSHOT",
+    "@scm-manager/plugin-scripts": "^1.2.1",
     "@types/classnames": "^2.2.9",
     "@types/enzyme": "^3.10.3",
     "@types/fetch-mock": "^7.3.1",
