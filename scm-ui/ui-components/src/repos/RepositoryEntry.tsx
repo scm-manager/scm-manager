@@ -79,7 +79,7 @@ const RepositoryEntry: FC<Props> = ({ repository, baseDate }) => {
 
   const renderContactIcon = () => {
     if (avatarFactory) {
-      return <ContactAvatar src={avatarFactory({ mail: repository.contact })} alt={repository.contact} />;
+      return <ContactAvatar className="has-rounded-border" src={avatarFactory({ mail: repository.contact })} alt={repository.contact} />;
     }
     return <QuickAction className={classNames("is-clickable")} name="envelope" color="info" />;
   };
