@@ -67,12 +67,6 @@ const Button: FC<Props> = ({
     return <>{icon ? <Icon name={icon} color="inherit" className="is-medium pr-1" /> : null}</>;
   };
 
-  const onKeyDown = (event: KeyboardEvent) => {
-    if (event.key === "Enter" && action) {
-        action(event);
-    }
-  };
-
   if (link) {
     return (
       <Link
@@ -103,7 +97,7 @@ const Button: FC<Props> = ({
       title={title}
       disabled={disabled}
       onClick={(event) => action && action(event)}
-      onKeyDown={onKeyDown}
+      onKeyDown={(event) => event.key === "Enter" && action && action(event)}
       className={classNames(
         "button",
         "is-" + color,

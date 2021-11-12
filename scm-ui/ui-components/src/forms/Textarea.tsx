@@ -21,12 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, {ChangeEvent, FC, FocusEvent, KeyboardEvent} from "react";
+import React, { ChangeEvent, FC, FocusEvent, KeyboardEvent } from "react";
 import LabelWithHelpIcon from "./LabelWithHelpIcon";
 import useAutofocus from "./useAutofocus";
 import classNames from "classnames";
-import {createFormFieldWrapper, FieldProps, FieldType, isLegacy, isUsingRef} from "./FormFieldTypes";
-import {useA11yId} from "../useA11yId";
+import { createFormFieldWrapper, FieldProps, FieldType, isLegacy, isUsingRef } from "./FormFieldTypes";
+import { useA11yId } from "../useA11yId";
 
 type BaseProps = {
   name?: string;

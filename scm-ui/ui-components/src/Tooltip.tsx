@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, {ReactNode} from "react";
+import React, { ReactNode } from "react";
 
 type Props = {
   message: string;

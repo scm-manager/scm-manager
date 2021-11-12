@@ -21,10 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, {FC} from "react";
-import {File} from "@scm-manager/ui-types";
-import {Icon} from "@scm-manager/ui-components";
-import {useTranslation} from "react-i18next";
+import React, { FC } from "react";
+import { File } from "@scm-manager/ui-types";
+import { Icon } from "@scm-manager/ui-components";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   file: File;

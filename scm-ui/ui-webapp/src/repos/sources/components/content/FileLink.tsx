@@ -21,11 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, {FC, ReactNode} from "react";
-import {Link} from "react-router-dom";
-import {useTranslation} from "react-i18next";
-import {File} from "@scm-manager/ui-types";
-import {Tooltip} from "@scm-manager/ui-components";
+import React, { FC, ReactNode } from "react";
+import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { File } from "@scm-manager/ui-types";
+import { Tooltip } from "@scm-manager/ui-components";
 
 type Props = {
   baseUrl: string;

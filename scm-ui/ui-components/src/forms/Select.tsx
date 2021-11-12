@@ -21,13 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, {ChangeEvent, FC, FocusEvent, useEffect} from "react";
+import React, { ChangeEvent, FC, FocusEvent, useEffect } from "react";
 import classNames from "classnames";
 import LabelWithHelpIcon from "./LabelWithHelpIcon";
-import {createAttributesForTesting} from "../devBuild";
+import { createAttributesForTesting } from "../devBuild";
 import useInnerRef from "./useInnerRef";
-import {createFormFieldWrapper, FieldProps, FieldType, isLegacy, isUsingRef} from "./FormFieldTypes";
-import {useA11yId} from "../useA11yId";
+import { createFormFieldWrapper, FieldProps, FieldType, isLegacy, isUsingRef } from "./FormFieldTypes";
+import { useA11yId } from "../useA11yId";
 
 export type SelectItem = {
   value: string;

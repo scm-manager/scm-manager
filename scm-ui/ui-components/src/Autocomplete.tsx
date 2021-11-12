@@ -23,10 +23,10 @@
  */
 import React from "react";
 import classNames from "classnames";
-import {Async, AsyncCreatable} from "react-select";
-import {SelectValue} from "@scm-manager/ui-types";
+import { Async, AsyncCreatable } from "react-select";
+import { SelectValue } from "@scm-manager/ui-types";
 import LabelWithHelpIcon from "./forms/LabelWithHelpIcon";
-import {ActionMeta, ValueType} from "react-select/lib/types";
+import { ActionMeta, ValueType } from "react-select/lib/types";
 
 type Props = {
   loadSuggestions: (p: string) => Promise<SelectValue[]>;

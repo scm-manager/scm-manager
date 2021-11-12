@@ -21,12 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, {FC} from "react";
+import React, { FC } from "react";
 import classNames from "classnames";
 import styled from "styled-components";
-import {Branch} from "@scm-manager/ui-types";
-import {Select} from "./forms";
-import {useA11yId} from "./useA11yId";
+import { Branch } from "@scm-manager/ui-types";
+import { Select } from "./forms";
+import { useA11yId } from "./useA11yId";
 
 type Props = {
   branches: Branch[];

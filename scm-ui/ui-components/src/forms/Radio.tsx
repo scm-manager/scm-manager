@@ -21,11 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, {ChangeEvent, FC, FocusEvent} from "react";
+import React, { ChangeEvent, FC, FocusEvent } from "react";
 import classNames from "classnames";
-import {Help} from "../index";
-import {createFormFieldWrapper, FieldProps, FieldType, isLegacy, isUsingRef} from "./FormFieldTypes";
-import {useA11yId} from "../useA11yId";
+import { Help } from "../index";
+import { createFormFieldWrapper, FieldProps, FieldType, isLegacy, isUsingRef } from "./FormFieldTypes";
+import { useA11yId } from "../useA11yId";
 
 type BaseProps = {
   label?: string;

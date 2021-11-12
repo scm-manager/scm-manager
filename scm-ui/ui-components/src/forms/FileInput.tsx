@@ -21,12 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, {ChangeEvent, FC, FocusEvent, useState} from "react";
-import {useTranslation} from "react-i18next";
+import React, { ChangeEvent, FC, FocusEvent, useState } from "react";
+import { useTranslation } from "react-i18next";
 import classNames from "classnames";
-import {createAttributesForTesting} from "../devBuild";
+import { createAttributesForTesting } from "../devBuild";
 import LabelWithHelpIcon from "./LabelWithHelpIcon";
-import {useA11yId} from "../useA11yId";
+import { useA11yId } from "../useA11yId";
 
 type Props = {
   name?: string;
