@@ -411,13 +411,11 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
 
     Ordner: /g/k
     Move: /g/y
-    Oder Move: y
     Ordner /g/y existiert nicht
     Erwartet: Alle Dateien/Ordner aus /g/k liegen unter /g/y
 
     Ordner: /g/k
     Move: /x/y
-    Oder Move: ../../x/y (???)
     Ordner /x existiert nicht
     Erwartet: Alle Dateien/Ordner aus /g/k liegen unter /x/y
 
@@ -425,56 +423,43 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
 
     Datei: /g/h/c
     Move: /
-    Oder Move: ../..
     Erwartet: Die Datei c liegt unter /
 
     Datei: /g/h/j.txt
-    Move: i
     Oder Move: /g/h/i
     Datei i existiert bereits
     Erwartet: Fehler!
 
     Datei: /g/h/j.txt
-    Move: x.txt
-    Oder Move: ./x.txt
     Oder Move: /g/h/x.txt
     Datei x.txt existiert nicht
     Erwartet: Die Datei wurde umbenannt in /g/h/x.txt
 
     Datei: /g/h/c
     Move: /
-    Oder Move: ../..
     Ordner c existiert bereits
     Erwartet: Fehler!
 
     Datei: /g/h/c
     Move: /y.txt
-    Oder Move: ../../y.txt
     Datei /y.txt existiert nicht
     Erwartet: Die Datei c wurde nach / verschoben und in y.txt umbenannt
 
     Datei: /g/h/c
     Move: /g/k
-    Oder Move: ../k
     Ordner /g/k existiert bereits
     Erwartet: Die Datei c wurde nach /g/k verschoben
 
    */
 
-
-  /**
-   *     Ordner: /g/h
-   *     Move: ..
-   *     Erwartet: Alle Dateien/Ordner aus /g/h liegen unter /h
-   */
   @Test
-  public void moveFolderCaseA1() throws GitAPIException, IOException {
+  public void shouldMoveFolder() throws GitAPIException, IOException {
     GitModifyCommand command = createCommand();
 
     ModifyCommandRequest request = new ModifyCommandRequest();
     request.setCommitMessage("please rename this file");
     request.setAuthor(new Person("Peter Pan", "peter@pan.net"));
-    request.addRequest(new ModifyCommandRequest.MoveRequest("/g/h", ".."));
+    request.addRequest(new ModifyCommandRequest.MoveRequest("/g/h", "/h"));
 
     command.execute(request);
 
@@ -485,87 +470,26 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
     assertInTree(assertions);
   }
 
-  /**
-   *     Ordner: /g/h
-   *     Move: /
-   *
-   *     /h
-   *     Erwartet: Alle Dateien/Ordner aus /g/h liegen unter /h
-   */
   @Test
-  public void moveFolderCaseA2() throws GitAPIException, IOException {
+  public void shouldMoveFolderInExistingFolderAndRename() throws GitAPIException, IOException {
     GitModifyCommand command = createCommand();
 
     ModifyCommandRequest request = new ModifyCommandRequest();
     request.setCommitMessage("please rename this file");
     request.setAuthor(new Person("Peter Pan", "peter@pan.net"));
-    request.addRequest(new ModifyCommandRequest.MoveRequest("/g/h", "/")); // "/ + h"
+    request.addRequest(new ModifyCommandRequest.MoveRequest("/g/k", "/g/h/z"));
 
     command.execute(request);
 
     TreeAssertions assertions = canonicalTreeParser -> {
-      assertThat(canonicalTreeParser.findFile("h/j.txt")).isTrue();
+      assertThat(canonicalTreeParser.findFile("g/h/z/l.txt")).isTrue();
     };
 
     assertInTree(assertions);
   }
 
-  /**
-   *     Ordner: /g/k
-   *     Move: /g/h
-   *     Ordner /g/h existiert bereits
-   *     Erwartet: Alle Dateien/Ordner aus /g/k liegen unter /g/h/k
-   */
   @Test
-  public void moveFolderCaseB1() throws GitAPIException, IOException {
-    GitModifyCommand command = createCommand();
-
-    ModifyCommandRequest request = new ModifyCommandRequest();
-    request.setCommitMessage("please rename this file");
-    request.setAuthor(new Person("Peter Pan", "peter@pan.net"));
-    request.addRequest(new ModifyCommandRequest.MoveRequest("/g/k", "/g/h"));
-
-    command.execute(request);
-
-    TreeAssertions assertions = canonicalTreeParser -> {
-      assertThat(canonicalTreeParser.findFile("g/h/k/l.txt")).isTrue();
-    };
-
-    assertInTree(assertions);
-  }
-
-  /**
-   *     Ordner: /g/k
-   *     Move: h
-   *     Ordner /g/h existiert bereits
-   *     Erwartet: Alle Dateien/Ordner aus /g/k liegen unter /g/h/k
-   */
-  @Test
-  public void moveFolderCaseB2() throws GitAPIException, IOException {
-    GitModifyCommand command = createCommand();
-
-    ModifyCommandRequest request = new ModifyCommandRequest();
-    request.setCommitMessage("please rename this file");
-    request.setAuthor(new Person("Peter Pan", "peter@pan.net"));
-    request.addRequest(new ModifyCommandRequest.MoveRequest("/g/k", "h"));
-
-    command.execute(request);
-
-    TreeAssertions assertions = canonicalTreeParser -> {
-      assertThat(canonicalTreeParser.findFile("g/h/k/l.txt")).isTrue();
-    };
-
-    assertInTree(assertions);
-  }
-
-  /**
-   *     Ordner: /g/k
-   *     Move: /g/y
-   *     Ordner /g/y existiert nicht
-   *     Erwartet: Alle Dateien/Ordner aus /g/k liegen unter /g/y
-   */
-  @Test
-  public void moveFolderCaseC1() throws GitAPIException, IOException {
+  public void shouldRenameFolderInPlace() throws GitAPIException, IOException {
     GitModifyCommand command = createCommand();
 
     ModifyCommandRequest request = new ModifyCommandRequest();
@@ -582,35 +506,6 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
     assertInTree(assertions);
   }
 
-  /**
-   *     Ordner: /g/k
-   *     Move: y
-   *     Ordner /g/y existiert nicht
-   *     Erwartet: Alle Dateien/Ordner aus /g/k liegen unter /g/y
-   */
-  @Test
-  public void moveFolderCaseC2() throws GitAPIException, IOException {
-    GitModifyCommand command = createCommand();
-
-    ModifyCommandRequest request = new ModifyCommandRequest();
-    request.setCommitMessage("please rename this file");
-    request.setAuthor(new Person("Peter Pan", "peter@pan.net"));
-    request.addRequest(new ModifyCommandRequest.MoveRequest("/g/k", "y"));
-
-    command.execute(request);
-
-    TreeAssertions assertions = canonicalTreeParser -> {
-      assertThat(canonicalTreeParser.findFile("g/y/l.txt")).isTrue();
-    };
-
-    assertInTree(assertions);
-  }
-
-  /**
-   *     Ordner: /g/h/c
-   *     Move: ../../../..
-   *     Erwartet: Fehler vom Backend, da Datei/Ordner aus dem Repo verschoben wurde
-   */
   @Test(expected = ScmConstraintViolationException.class)
   public void shouldThrowErrorIfRelativePathIsOutsideOfWorkdir() {
     GitModifyCommand command = createCommand();
@@ -632,7 +527,7 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
     ModifyCommandRequest request = new ModifyCommandRequest();
     request.setCommitMessage("please rename this file");
     request.setAuthor(new Person("Peter Pan", "peter@pan.net"));
-    request.addRequest(new ModifyCommandRequest.MoveRequest("b.txt", "d.txt"));
+    request.addRequest(new ModifyCommandRequest.MoveRequest("b.txt", "/d.txt"));
 
     command.execute(request);
 
@@ -651,7 +546,7 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
     ModifyCommandRequest request = new ModifyCommandRequest();
     request.setCommitMessage("please move this folder");
     request.setAuthor(new Person("Peter Pan", "peter@pan.net"));
-    request.addRequest(new ModifyCommandRequest.MoveRequest("c", "notc"));
+    request.addRequest(new ModifyCommandRequest.MoveRequest("/c", "/notc"));
 
     command.execute(request);
 

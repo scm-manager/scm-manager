@@ -74,28 +74,11 @@ public interface ModifyWorkerHelper extends ModifyCommand.Worker {
    * @since 2.27.0
    */
   @Override
-  default void move(String sourcePathString, String inputTargetPathString) throws IOException {
-    // Determine Target path
-    String targetPath;
-
-    Path sourcePath = Paths.get(sourcePathString);
-    File inputTargetFile = new File(inputTargetPathString);
-
-    String inputTargetPathStringWithSourceFileName = inputTargetPathString + File.separator + sourcePath.getFileName();
-    if (inputTargetFile.isAbsolute()) {
-      // => workdir + absolutePath
-      targetPath = inputTargetPathStringWithSourceFileName;
-    } else {
-      // => sourcePathOfParent (/g) + relativePath (..) + sourceFileName (/h)
-      String sourceFileParentPath = sourcePath.getParent().toString();
-      String relativePathWithFilename = inputTargetPathStringWithSourceFileName;
-      targetPath = new File(sourceFileParentPath, relativePathWithFilename).getPath();
-    }
-
-    Path targetFile = getTargetFile(targetPath);
+  default void move(String source, String target) throws IOException {
+    Path targetFile = getTargetFile(target);
     Files.createDirectories(targetFile.getParent());
-    Path pathAfterMove = Files.move(getTargetFile(sourcePathString), targetFile);
-    doScmMove(sourcePathString, getWorkDir().toPath().relativize(pathAfterMove).normalize().toString());
+    Path pathAfterMove = Files.move(getTargetFile(source), targetFile);
+    doScmMove(source, getWorkDir().toPath().relativize(pathAfterMove).normalize().toString());
   }
 
   /**
