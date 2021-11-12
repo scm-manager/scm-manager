@@ -65,7 +65,7 @@ const PluginModal: FC<Props> = ({ onClose, pluginAction, plugin }) => {
     if (isDone && !shouldRestart) {
       onClose();
     }
-  }, [isDone]);
+  }, [isDone, onClose, shouldRestart]);
 
   const handlePluginAction = (e: React.MouseEvent<Element, MouseEvent>) => {
     e.preventDefault();

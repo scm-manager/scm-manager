@@ -14,8 +14,6 @@
 
     <base href="{{ contextPath }}">
     <title>SCM-Manager</title>
-
-    <link rel="stylesheet" type="text/css" href="{{ contextPath }}/assets/ui-styles.css">
     <script>
       var modernBrowser = (
         'fetch' in window &&
@@ -27,6 +25,16 @@
         scriptElement.src = "{{ contextPath }}/assets/polyfills.bundle.js";
         document.head.appendChild(scriptElement);
       }
+      var linkElement = document.createElement("link");
+      linkElement.rel = 'stylesheet';
+      linkElement.type = 'text/css';
+      var theme = localStorage.getItem('scm.theme');
+      if (theme === 'highcontrast') {
+        linkElement.href = "{{ contextPath }}/assets/ui-theme-highcontrast.css"
+      } else {
+        linkElement.href = "{{ contextPath }}/assets/ui-theme-light.css"
+      }
+      document.head.appendChild(linkElement);
     </script>
   </head>
   <body>
@@ -36,16 +44,6 @@
     <div id="root"></div>
     <div id="modalRoot"></div>
 
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
-
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
     <script>
       window.ctxPath = "{{ contextPath }}";
       window.scmStage = "{{ scmStage }}";

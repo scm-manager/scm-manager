@@ -61,7 +61,8 @@
     "createButton": "Add Repository",
     "filterRepositories": "Filter repositories",
     "allNamespaces": "All namespaces",
-    "clone": "Clone/Checkout"
+    "clone": "Clone/Checkout",
+    "contact": "Send mail to {{contact}}"
   },
   "create": {
     "title": "Add Repository",
@@ -240,6 +241,8 @@
     },
     "contributors": {
       "mailto": "Send mail to",
+      "showList": "Show list of contributors",
+      "hideList": "Hide list of contributors",
       "list": "List of contributors",
       "authoredBy": "Authored by",
       "committedBy": "committed by",
@@ -323,12 +326,15 @@
         "showMarkdown": "Render markdown",
         "showSources": "Show sources"
       },
+      "showMore": "Show more information",
+      "hideMore": "Hide more information",
       "path": "Path",
       "branch": "Branch",
       "commitDate": "Commit Date",
       "description": "Description",
       "size": "Size",
-      "copyPermalink": "Copy Permalink to Clipboard"
+      "copyPermalink": "Copy Permalink to Clipboard",
+      "loading": "Loading ..."
     },
     "noSources": "No sources found for this branch.",
     "extension": {
@@ -476,16 +482,20 @@
     "fullscreen": {
       "open": "Open in Fullscreen",
       "close": "Close"
-    }
+    },
+    "renamedTo": "renamed to",
+    "showContent": "Show diff content",
+    "hideContent": "Hide diff content"
   },
   "fileUpload": {
     "clickHere": "Click here to select your file",
     "dragAndDrop": "Drag 'n' drop some files here"
   },
-  "filesearch": {
+  "fileSearch": {
     "button": {
       "title": "Search filepath"
     },
+    "file": "File",
     "home": "Go back to source root",
     "input": {
       "placeholder": "Search filepath",

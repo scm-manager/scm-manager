@@ -21,17 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, {FC, useEffect, useState} from "react";
-import {Link, useHistory, useLocation, useParams} from "react-router-dom";
-import {useTranslation} from "react-i18next";
+import React, { FC, useEffect, useState } from "react";
+import { Link, useHistory, useLocation, useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
-import {Branch, Repository} from "@scm-manager/ui-types";
-import {urls, usePaths} from "@scm-manager/ui-api";
-import {ErrorNotification, FilterInput, Help, Icon, Loading, useA11yId} from "@scm-manager/ui-components";
+import { Branch, Repository } from "@scm-manager/ui-types";
+import { urls, usePaths } from "@scm-manager/ui-api";
+import { ErrorNotification, FilterInput, Help, Icon, Loading } from "@scm-manager/ui-components";
 import CodeActionBar from "../components/CodeActionBar";
 import FileSearchResults from "../components/FileSearchResults";
-import {filepathSearch} from "../utils/filepathSearch";
+import { filepathSearch } from "../utils/filepathSearch";
 
 type Props = {
   repository: Repository;
@@ -114,17 +114,17 @@ const FileSearch: FC<Props> = ({ repository, baseUrl, branches, selectedBranch }
           )}
         >
           <HomeLink className={classNames("mr-3", "pr-3")} to={contentBaseUrl}>
-            <HomeIcon title={t("filesearch.home")} name="home" color="inherit" />
+            <HomeIcon title={t("fileSearch.home")} name="home" color="inherit" />
           </HomeLink>
           <FilterInput
             className="is-full-width"
-            placeholder={t("filesearch.input.placeholder")}
+            placeholder={t("fileSearch.input.placeholder")}
             value={query}
             filter={search}
             autoFocus={true}
             id={id}
           />
-          <Help className="ml-3" message={t("filesearch.input.help")} id={id} />
+          <Help className="ml-3" message={t("fileSearch.input.help")} id={id} />
         </div>
         <ErrorNotification error={error} />
         {isLoading ? <Loading /> : <FileSearchResults contentBaseUrl={contentBaseUrl} query={query} paths={result} />}

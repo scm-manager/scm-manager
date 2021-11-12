@@ -48,8 +48,8 @@ const CreateTagModal: FC<Props> = ({ t, onClose, tagCreationLink, existingTagsLi
   useEffect(() => {
     apiClient
       .get(existingTagsLink)
-      .then(response => response.json())
-      .then(json => setTagNames(json._embedded.tags.map((tag: Tag) => tag.name)));
+      .then((response) => response.json())
+      .then((json) => setTagNames(json._embedded.tags.map((tag: Tag) => tag.name)));
   }, [existingTagsLink]);
 
   const createTag = () => {
@@ -57,7 +57,7 @@ const CreateTagModal: FC<Props> = ({ t, onClose, tagCreationLink, existingTagsLi
     apiClient
       .post(tagCreationLink, {
         revision,
-        name: newTagName
+        name: newTagName,
       })
       .then(onCreated)
       .catch(onError)
@@ -83,7 +83,7 @@ const CreateTagModal: FC<Props> = ({ t, onClose, tagCreationLink, existingTagsLi
           <InputField
             name="name"
             label={t("tags.create.form.field.name.label")}
-            onChange={val => setNewTagName(val)}
+            onChange={(val) => setNewTagName(val)}
             value={newTagName}
             validationError={!!validationError}
             errorMessage={t(validationError)}

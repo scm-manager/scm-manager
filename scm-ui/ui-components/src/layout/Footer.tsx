@@ -80,35 +80,40 @@ const TitleWithAvatar: FC<TitleWithAvatarProps> = ({ me }) => (
 const Footer: FC<Props> = ({ me, version, links }) => {
   const [t] = useTranslation("commons");
   const binder = useBinder();
-  if (!me) {
-    return null;
-  }
 
   const extensionProps = { me, url: "/me", links };
   let meSectionTile;
-  if (binder.hasExtension(EXTENSION_POINT)) {
-    meSectionTile = <TitleWithAvatar me={me} />;
-  } else {
-    meSectionTile = <TitleWithIcon title={me.displayName} icon="user-circle" />;
+  if (me) {
+    if (binder.hasExtension(EXTENSION_POINT)) {
+      meSectionTile = <TitleWithAvatar me={me} />;
+    } else {
+      meSectionTile = <TitleWithIcon title={me.displayName} icon="user-circle" />;
+    }
   }
 
   return (
     <footer className="footer">
       <section className="section container">
         <div className="columns is-size-7">
-          <FooterSection title={meSectionTile}>
-            <NavLink to="/me" label={t("footer.user.profile")} testId="footer-user-profile" />
-            {me?._links?.password && <NavLink to="/me/settings/password" label={t("profile.changePasswordNavLink")} />}
-            {me?._links?.publicKeys && <NavLink to="/me/settings/publicKeys" label={t("profile.publicKeysNavLink")} />}
-            {me?._links?.apiKeys && <NavLink to="/me/settings/apiKeys" label={t("profile.apiKeysNavLink")} />}
-            <ExtensionPoint name="profile.setting" props={extensionProps} renderAll={true} />
-          </FooterSection>
+          {me ? (
+            <FooterSection title={meSectionTile}>
+              <NavLink to="/me" label={t("footer.user.profile")} testId="footer-user-profile" />
+              {me?._links?.password && (
+                <NavLink to="/me/settings/password" label={t("profile.changePasswordNavLink")} />
+              )}
+              {me?._links?.publicKeys && (
+                <NavLink to="/me/settings/publicKeys" label={t("profile.publicKeysNavLink")} />
+              )}
+              {me?._links?.apiKeys && <NavLink to="/me/settings/apiKeys" label={t("profile.apiKeysNavLink")} />}
+              <ExtensionPoint name="profile.setting" props={extensionProps} renderAll={true} />
+            </FooterSection>
+          ) : null}
           <FooterSection title={<TitleWithIcon title={t("footer.information.title")} icon="info-circle" />}>
-            <ExternalNavLink to="https://www.scm-manager.org/" label={`SCM-Manager ${version}`} />
+            <ExternalNavLink to="https://scm-manager.org/" label={`SCM-Manager ${version}`} />
             <ExtensionPoint name="footer.information" props={extensionProps} renderAll={true} />
           </FooterSection>
           <FooterSection title={<TitleWithIcon title={t("footer.support.title")} icon="life-ring" />}>
-            <ExternalNavLink to="https://www.scm-manager.org/support/" label={t("footer.support.community")} />
+            <ExternalNavLink to="https://scm-manager.org/support/" label={t("footer.support.community")} />
             <ExternalNavLink
               to="https://cloudogu.com/en/scm-manager-enterprise/"
               label={t("footer.support.enterprise")}

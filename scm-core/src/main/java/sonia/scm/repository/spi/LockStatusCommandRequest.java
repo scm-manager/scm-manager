@@ -21,4 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import "storybook-addon-i18next/register";
+
+package sonia.scm.repository.spi;
+
+import lombok.Data;
+
+@Data
+public final class LockStatusCommandRequest {
+  private String file;
+}

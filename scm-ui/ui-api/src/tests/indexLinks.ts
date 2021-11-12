@@ -22,22 +22,22 @@
  * SOFTWARE.
  */
 
-import { QueryClient} from "react-query";
+import { QueryClient } from "react-query";
 
 export const setIndexLink = (queryClient: QueryClient, name: string, href: string) => {
   queryClient.setQueryData("index", {
     version: "x.y.z",
     _links: {
       [name]: {
-        href: href
-      }
-    }
+        href: href,
+      },
+    },
   });
 };
 
 export const setEmptyIndex = (queryClient: QueryClient) => {
   queryClient.setQueryData("index", {
     version: "x.y.z",
-    _links: {}
+    _links: {},
   });
 };

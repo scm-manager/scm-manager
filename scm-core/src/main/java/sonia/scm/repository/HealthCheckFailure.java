@@ -32,6 +32,7 @@ import com.google.common.base.Objects;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Serializable;
 import java.text.MessageFormat;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -44,10 +45,10 @@ import java.text.MessageFormat;
  */
 @XmlRootElement(name = "healthCheckFailure")
 @XmlAccessorType(XmlAccessType.FIELD)
-public final class HealthCheckFailure
+public final class HealthCheckFailure implements Serializable
 {
 
-  private static final String URL_TEMPLATE = "https://www.scm-manager.org/docs/{0}/en/user/repo/health-checks/%s";
+  private static final String URL_TEMPLATE = "https://scm-manager.org/docs/{0}/en/user/repo/health-checks/%s";
   private static final String LATEST_VERSION = "latest";
 
   /**

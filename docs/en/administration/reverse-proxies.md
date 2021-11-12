@@ -26,6 +26,9 @@ location /scm {
 
 ## Apache
 
+If you use `VirtualHost` sections, please make sure to put the directives `AllowEncodedSlashes`, `RequestHeader`,
+`ProxyPass`, and `ProxyPassReverse` into the same section as the `Location` for SCM-Manager.
+
 ```apacheconf
 # Ensure mod_proxy and mod_proxy_http modules are loaded
 LoadModule proxy_module modules/mod_proxy.so
@@ -41,7 +44,6 @@ RequestHeader set "X-Forwarded-SSL" expr=%{HTTPS}
 # assuming scm-manager is running on localhost at port 8080
 ProxyPass /scm http://localhost:8080/scm nocanon
 ProxyPassReverse /scm http://localhost:8080/scm
-ProxyPassReverse  /scm  http://localhost:8080/scm
 
 <Location /scm>
     Order allow,deny

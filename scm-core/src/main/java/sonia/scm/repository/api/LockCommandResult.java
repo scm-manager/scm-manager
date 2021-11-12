@@ -21,52 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import i18next from "i18next";
-import { initReactI18next } from "react-i18next";
-import { addDecorator, configure } from "@storybook/react";
-import { withI18next } from "storybook-addon-i18next";
-import "!style-loader!css-loader!sass-loader!../../ui-styles/src/scm.scss";
-import React from "react";
-import withApiProvider from "./withApiProvider";
 
-let i18n = i18next;
+package sonia.scm.repository.api;
 
-// only use fetch backend for storybook
-// and not for storyshots
-if (!process.env.JEST_WORKER_ID) {
-  const Backend = require("i18next-fetch-backend");
-  i18n = i18n.use(Backend.default);
-}
+import lombok.AllArgsConstructor;
 
-i18n.use(initReactI18next).init({
-  whitelist: ["en", "de", "es"],
-  lng: "en",
-  fallbackLng: "en",
-  interpolation: {
-    escapeValue: false
-  },
-  react: {
-    useSuspense: false
-  },
-  backend: {
-    loadPath: "/locales/{{lng}}/{{ns}}.json",
-    init: {
-      credentials: "same-origin"
-    }
+/**
+ * Result of a lock command.
+ *
+ * @since 2.26.0
+ */
+@AllArgsConstructor
+public class LockCommandResult {
+  private final boolean successful;
+
+  /**
+   * If <code>true</code>, the lock has been set successfully.
+   */
+  public boolean isSuccessful() {
+    return successful;
   }
-});
-
-addDecorator(
-  withI18next({
-    i18n,
-    languages: {
-      en: "English",
-      de: "Deutsch",
-      es: "Spanisch"
-    }
-  })
-);
-
-addDecorator(withApiProvider);
-
-configure(require.context("../src", true, /\.stories\.tsx?$/), module);
+}

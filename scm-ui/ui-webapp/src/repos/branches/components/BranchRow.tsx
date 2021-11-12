@@ -42,11 +42,9 @@ const BranchRow: FC<Props> = ({ baseUrl, branch, onDelete }) => {
   let deleteButton;
   if ((branch?._links?.delete as Link)?.href) {
     deleteButton = (
-      <a className="level-item" onClick={() => onDelete(branch)}>
-        <span className="icon is-small" onKeyDown={(e) => e.key === "Enter" && onDelete(branch)} tabIndex={0}>
-          <Icon name="trash" className="fas" title={t("branch.delete.button")} />
-        </span>
-      </a>
+      <span className="icon is-small is-hovered" onClick={() => onDelete(branch)} onKeyDown={(e) => e.key === "Enter" && onDelete(branch)} tabIndex={0}>
+        <Icon name="trash" className="fas " title={t("branch.delete.button")} />
+      </span>
     );
   }
 
@@ -63,7 +61,7 @@ const BranchRow: FC<Props> = ({ baseUrl, branch, onDelete }) => {
           </span>
         )}
       </td>
-      <td className="is-darker">{deleteButton}</td>
+      <td className="is-darker has-text-centered">{deleteButton}</td>
     </tr>
   );
 };

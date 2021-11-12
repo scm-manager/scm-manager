@@ -23,6 +23,7 @@
  */
 
 import * as changesets from "./changesets";
+
 export { changesets };
 
 export { default as ChangesetAuthor, SingleContributor } from "./ChangesetAuthor";
@@ -37,3 +38,4 @@ export { default as ChangesetTags } from "./ChangesetTags";
 export { default as ChangesetTagsCollapsed } from "./ChangesetTagsCollapsed";
 export { default as ContributorAvatar } from "./ContributorAvatar";
 export { default as SignatureIcon } from "./SignatureIcon";
+export { default as SingleChangeset } from "./SingleChangeset";

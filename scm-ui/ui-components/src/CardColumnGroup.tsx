@@ -24,8 +24,10 @@
 import React, { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import classNames from "classnames";
+import Icon from "./Icon";
+import { withTranslation, WithTranslation } from "react-i18next";
 
-type Props = {
+type Props = WithTranslation & {
   name: ReactNode;
   url?: string;
   elements: ReactNode[];
@@ -35,7 +37,7 @@ type State = {
   collapsed: boolean;
 };
 
-export default class CardColumnGroup extends React.Component<Props, State> {
+class CardColumnGroup extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -62,12 +64,13 @@ export default class CardColumnGroup extends React.Component<Props, State> {
   };
 
   render() {
-    const { name, url, elements } = this.props;
+    const { name, url, elements, t } = this.props;
     const { collapsed } = this.state;
 
-    const icon = collapsed ? "fa-angle-right" : "fa-angle-down";
+    let icon = <Icon name="angle-right" color="inherit" alt={t("cardColumnGroup.showContent")} />;
     let content = null;
     if (!collapsed) {
+      icon = <Icon name="angle-down" color="inherit" alt={t("cardColumnGroup.hideContent")} />;
       content = elements.map((entry, index) => {
         const fullColumnWidth = this.isFullSize(elements, index);
         const sizeClass = fullColumnWidth ? "is-full" : "is-half";
@@ -83,7 +86,7 @@ export default class CardColumnGroup extends React.Component<Props, State> {
       <div className="mb-4">
         <h2>
           <span className={classNames("is-size-4", "is-clickable")} onClick={this.toggleCollapse}>
-            <i className={classNames("fa", icon)} />
+            {icon}
           </span>{" "}
           {url ? (
             <Link to={url} className="has-text-dark">
@@ -100,3 +103,5 @@ export default class CardColumnGroup extends React.Component<Props, State> {
     );
   }
 }
+
+export default withTranslation("commons")(CardColumnGroup);

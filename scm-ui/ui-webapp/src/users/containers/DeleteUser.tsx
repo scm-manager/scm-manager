@@ -62,12 +62,12 @@ const DeleteUser: FC<Props> = ({ confirmDialog = true, user }) => {
           {
             className: "is-outlined",
             label: t("deleteUser.confirmAlert.submit"),
-            onClick: deleteUserCallback
+            onClick: deleteUserCallback,
           },
           {
             label: t("deleteUser.confirmAlert.cancel"),
-            onClick: () => null
-          }
+            onClick: () => null,
+          },
         ]}
         close={() => setShowConfirmAlert(false)}
       />

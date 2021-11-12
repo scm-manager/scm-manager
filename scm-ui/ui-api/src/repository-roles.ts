@@ -24,7 +24,8 @@
 import { ApiResult, useRequiredIndexLink } from "./base";
 import { RepositoryRole, RepositoryRoleCollection, RepositoryRoleCreation } from "@scm-manager/ui-types";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { apiClient, urls } from "@scm-manager/ui-components";
+import { apiClient } from "./apiclient";
+import * as urls from "./urls";
 import { createQueryString } from "./utils";
 import { requiredLink } from "./links";
 
@@ -127,7 +128,7 @@ export const useDeleteRepositoryRole = () => {
     },
     {
       onSuccess: async (_, name) => {
-        await queryClient.invalidateQueries(["repositoryRole", name]);
+        await queryClient.removeQueries(["repositoryRole", name]);
         await queryClient.invalidateQueries(["repositoryRoles"]);
       },
     }

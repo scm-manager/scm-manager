@@ -50,7 +50,7 @@ class HgConfigurationForm extends React.Component<Props, State> {
     super(props);
     this.state = {
       ...props.initialConfiguration,
-      validationErrors: []
+      validationErrors: [],
     };
   }
 
@@ -66,7 +66,7 @@ class HgConfigurationForm extends React.Component<Props, State> {
     }
 
     this.setState({
-      validationErrors
+      validationErrors,
     });
 
     return validationErrors.length === 0;
@@ -83,7 +83,7 @@ class HgConfigurationForm extends React.Component<Props, State> {
     this.setState(
       // @ts-ignore
       {
-        [name]: value
+        [name]: value,
       },
       () => this.props.onConfigurationChange(this.state, this.updateValidationStatus())
     );
@@ -99,7 +99,7 @@ class HgConfigurationForm extends React.Component<Props, State> {
       .then(() =>
         apiClient
           .get((this.props.initialConfiguration._links.self as Link).href)
-          .then(r => r.json())
+          .then((r) => r.json())
           .then((config: Configuration) => this.setState({ hgBinary: config.hgBinary }))
       )
       .then(() => this.updateValidationStatus());

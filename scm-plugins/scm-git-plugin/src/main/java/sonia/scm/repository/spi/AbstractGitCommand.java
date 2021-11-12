@@ -55,10 +55,14 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static java.util.stream.Collectors.toList;
+import static org.eclipse.jgit.transport.RemoteRefUpdate.Status.NON_EXISTING;
+import static org.eclipse.jgit.transport.RemoteRefUpdate.Status.OK;
+import static org.eclipse.jgit.transport.RemoteRefUpdate.Status.UP_TO_DATE;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
 import static sonia.scm.repository.GitUtil.getBranchIdOrCurrentHead;
@@ -75,6 +79,7 @@ class AbstractGitCommand {
    * the logger for AbstractGitCommand
    */
   private static final Logger logger = LoggerFactory.getLogger(AbstractGitCommand.class);
+  private static final Collection<RemoteRefUpdate.Status> ACCEPTED_UPDATE_STATUS = asList(OK, UP_TO_DATE, NON_EXISTING);
 
   /**
    * Constructs ...
@@ -242,6 +247,7 @@ class AbstractGitCommand {
     }
 
     void push(String... refSpecs) {
+      logger.trace("Pushing mirror result to repository {} with refspec '{}'", repository, refSpecs);
       try {
         Iterable<PushResult> pushResults =
           clone
@@ -260,10 +266,10 @@ class AbstractGitCommand {
         }
         remoteUpdates
           .stream()
-          .filter(remoteRefUpdate -> remoteRefUpdate.getStatus() != RemoteRefUpdate.Status.OK && remoteRefUpdate.getStatus() != RemoteRefUpdate.Status.UP_TO_DATE)
+          .filter(remoteRefUpdate -> !ACCEPTED_UPDATE_STATUS.contains(remoteRefUpdate.getStatus()))
           .findAny()
           .ifPresent(remoteRefUpdate -> {
-            logger.info("message for failed push: {}", pushResult.getMessages());
+            logger.info("message for unexpected push result {} for remote {}: {}", remoteRefUpdate.getStatus(), remoteRefUpdate.getRemoteName(), pushResult.getMessages());
             throw forMessage(repository, pushResult.getMessages());
           });
       } catch (GitAPIException e) {
@@ -272,8 +278,8 @@ class AbstractGitCommand {
       logger.debug("pushed changes");
     }
 
-    Ref getCurrentRevision() throws IOException {
-      return getClone().getRepository().getRefDatabase().findRef("HEAD");
+    ObjectId getCurrentObjectId() throws IOException {
+      return getClone().getRepository().getRefDatabase().findRef("HEAD").getObjectId();
     }
 
     private Person determineAuthor(Person author) {

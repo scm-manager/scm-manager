@@ -23,8 +23,8 @@ ext {
   jerseyClientVersion = '1.19.4'
   micrometerVersion = '1.6.4'
 
-  nodeVersion = '14.15.1'
-  yarnVersion = '1.22.5'
+  nodeVersion = '16.13.0'
+  yarnVersion = '1.22.15'
 
   libraries = [
     // lombok
@@ -101,7 +101,7 @@ ext {
     ssp: "com.github.sdorra:ssp-lib:${sspVersion}",
     sspProcessor: "com.github.sdorra:ssp-processor:${sspVersion}",
 
-    shiroUnit: 'com.github.sdorra:shiro-unit:1.0.1',
+    shiroUnit: 'com.github.sdorra:shiro-unit:1.0.2',
     shiroExtension: 'com.github.sdorra:junit-shiro-extension:1.0.1',
 
     // jwt

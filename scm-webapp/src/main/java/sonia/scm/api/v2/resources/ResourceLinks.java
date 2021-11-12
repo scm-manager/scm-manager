@@ -583,12 +583,15 @@ class ResourceLinks {
   static class IncomingLinks {
     private final LinkBuilder incomingLinkBuilder;
 
+    private static final String SOURCE_PLACEHOLDER = "sourcebranchplaceholderfortemplating";
+    private static final String TARGET_PLACEHOLDER = "targetbranchplaceholderfortemplating";
+
     IncomingLinks(ScmPathInfo pathInfo) {
       incomingLinkBuilder = new LinkBuilder(pathInfo, RepositoryRootResource.class, RepositoryResource.class, IncomingRootResource.class);
     }
 
     public String changesets(String namespace, String name) {
-      return toTemplateParams(incomingLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("incoming").parameters().method("incomingChangesets").parameters("source", "target").href());
+      return toTemplateParams(incomingLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("incoming").parameters().method("incomingChangesets").parameters(SOURCE_PLACEHOLDER, TARGET_PLACEHOLDER).href());
     }
 
     public String changesets(String namespace, String name, String source, String target) {
@@ -596,11 +599,11 @@ class ResourceLinks {
     }
 
     public String diff(String namespace, String name) {
-      return toTemplateParams(incomingLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("incoming").parameters().method("incomingDiff").parameters("source", "target").href());
+      return toTemplateParams(incomingLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("incoming").parameters().method("incomingDiff").parameters(SOURCE_PLACEHOLDER, TARGET_PLACEHOLDER).href());
     }
 
     public String diffParsed(String namespace, String name) {
-      return toTemplateParams(diffParsed(namespace, name, "source", "target"));
+      return toTemplateParams(diffParsed(namespace, name, SOURCE_PLACEHOLDER, TARGET_PLACEHOLDER));
     }
 
     public String diffParsed(String namespace, String name, String source, String target) {
@@ -615,7 +618,7 @@ class ResourceLinks {
     }
 
     public String toTemplateParams(String href) {
-      return href.replace("source", "{source}").replace("target", "{target}");
+      return href.replace(SOURCE_PLACEHOLDER, "{source}").replace(TARGET_PLACEHOLDER, "{target}");
     }
   }
 
@@ -1128,7 +1131,10 @@ class ResourceLinks {
     public String query(String type) {
       return searchLinkBuilder.method("query").parameters(type).href();
     }
-    public String searchableTypes() { return searchLinkBuilder.method("searchableTypes").parameters().href(); }
+
+    public String searchableTypes() {
+      return searchLinkBuilder.method("searchableTypes").parameters().href();
+    }
   }
 
   public InitialAdminAccountLinks initialAdminAccount() {

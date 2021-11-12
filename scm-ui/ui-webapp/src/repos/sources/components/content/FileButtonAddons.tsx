@@ -56,27 +56,33 @@ class FileButtonAddons extends React.Component<Props> {
 
     return (
       <ButtonAddons className={className}>
-        <div title={t("sources.content.sourcesButton")}>
-          <Button action={showSources} color={this.color(selected === "source")}>
-            <span className="icon">
-              <i className="fas fa-code" />
-            </span>
-          </Button>
-        </div>
-        <div title={t("sources.content.annotateButton")}>
-          <Button action={showAnnotations} color={this.color(selected === "annotations")}>
-            <span className="icon">
-              <i className="fas fa-user-clock" />
-            </span>
-          </Button>
-        </div>
-        <div title={t("sources.content.historyButton")}>
-          <Button action={showHistory} color={this.color(selected === "history")}>
-            <span className="icon">
-              <i className="fas fa-history" />
-            </span>
-          </Button>
-        </div>
+        <Button
+          action={showSources}
+          color={this.color(selected === "source")}
+          title={t("sources.content.sourcesButton")}
+        >
+          <span className="icon">
+            <i className="fas fa-code" />
+          </span>
+        </Button>
+        <Button
+          action={showAnnotations}
+          color={this.color(selected === "annotations")}
+          title={t("sources.content.annotateButton")}
+        >
+          <span className="icon">
+            <i className="fas fa-user-clock" />
+          </span>
+        </Button>
+        <Button
+          action={showHistory}
+          color={this.color(selected === "history")}
+          title={t("sources.content.historyButton")}
+        >
+          <span className="icon">
+            <i className="fas fa-history" />
+          </span>
+        </Button>
       </ButtonAddons>
     );
   }

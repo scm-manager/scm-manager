@@ -83,7 +83,7 @@ describe("text split and replace", () => {
       "'So this is it,' said Arthur, 'We are going to die.'",
       [
         { textToReplace: "'", replacement: { text: "“" }, replaceAll: true },
-        { textToReplace: "Arthur", replacement: { text: "Dent" }, replaceAll: true }
+        { textToReplace: "Arthur", replacement: { text: "Dent" }, replaceAll: true },
       ],
       testWrapper
     );
@@ -106,7 +106,7 @@ describe("text split and replace", () => {
         { textToReplace: "said Arthur", replacement: { text: "to be replaced" } },
         { textToReplace: " said", replacement: { text: "to be ignored 1" }, replaceAll: true },
         { textToReplace: "d A", replacement: { text: "to be ignored 2" }, replaceAll: true },
-        { textToReplace: "Arthur,", replacement: { text: "to be ignored 3" }, replaceAll: true }
+        { textToReplace: "Arthur,", replacement: { text: "to be ignored 3" }, replaceAll: true },
       ],
       testWrapper
     );
@@ -122,7 +122,7 @@ describe("text split and replace", () => {
       [
         { textToReplace: "'So this is it,'", replacement: { text: "one" } },
         { textToReplace: " said Arthur, ", replacement: { text: "two" } },
-        { textToReplace: "'We are going to die.'", replacement: { text: "three" } }
+        { textToReplace: "'We are going to die.'", replacement: { text: "three" } },
       ],
       testWrapper
     );

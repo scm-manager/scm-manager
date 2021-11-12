@@ -213,3 +213,28 @@ const App = () => {
 ```
 
 The example above renders `Outer -> Inner -> Children`, because each extension is passed as children to the parent extension.
+
+### Sorting
+
+Extensions are automatically sorted on retrieval based on either their `extensionName` (ASC) and/or their `priority` (DESC),
+which can be passed upon binding an extension.
+
+Example:
+
+```tsx
+    binder.bind("extension.point.example", <div>Hello World the fourth</div>, { priority: 10, extensionName: "ignore" });
+    binder.bind("extension.point.example", <div>Hello World the third</div>, { priority: 50 });
+    binder.bind("extension.point.example", <div>Hello World the first</div>, { priority: 100, extensionName: "me" });
+    binder.bind("extension.point.example", <div>Hello World the second</div>, { priority: 75 });
+
+    const extensions = binder.getExtensions("extension.point.example");
+    
+    /**
+     * Output =>
+     * 
+     * Hello World the first
+     * Hello World the second
+     * Hello World the third
+     * Hello World the fourth
+     */
+```

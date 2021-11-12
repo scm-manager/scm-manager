@@ -1,4 +1,8 @@
 {
+  "error": {
+    "subtitle": "Error",
+    "link": "Link for more information"
+  },
   "changeset": {
     "contributor": {
       "type": {
@@ -362,6 +366,10 @@
     "CISPvega31": {
       "displayName": "Illegal repository type for import",
       "description": "The import is not possible for the given repository type."
+    },
+    "3mSmwOtOd1": {
+      "displayName": "File locked",
+      "description": "The file or its lock cannot be modified, because another lock exists. This other lock may be ignored by using a 'forced' action."
     }
   },
   "healthChecksFailures": {
@@ -467,4 +475,3 @@
     }
   }
 }
-

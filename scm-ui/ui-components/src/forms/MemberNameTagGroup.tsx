@@ -36,11 +36,11 @@ type Props = WithTranslation & {
 class MemberNameTagGroup extends React.Component<Props> {
   render() {
     const { members, label, helpText, t } = this.props;
-    const membersExtended = members.map(id => {
+    const membersExtended = members.map((id) => {
       return {
         id,
         displayName: id,
-        mail: ""
+        mail: "",
       };
     });
     return (
@@ -54,7 +54,7 @@ class MemberNameTagGroup extends React.Component<Props> {
   }
 
   removeEntry = (membersExtended: DisplayedUser[]) => {
-    const members = membersExtended.map(function(item) {
+    const members = membersExtended.map(function (item) {
       return item["id"];
     });
     this.props.memberListChanged(members);

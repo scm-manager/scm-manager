@@ -22,16 +22,17 @@
  * SOFTWARE.
  */
 import * as React from "react";
-import {WithTranslation, withTranslation} from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
-import {binder, ExtensionPoint, extensionPoints} from "@scm-manager/ui-extensions";
-import {File} from "@scm-manager/ui-types";
-import {DateFromNow, FileSize, Icon, Tooltip} from "@scm-manager/ui-components";
+import { binder, ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
+import { File, Repository } from "@scm-manager/ui-types";
+import { DateFromNow, FileSize, Icon, Tooltip } from "@scm-manager/ui-components";
 import FileIcon from "./FileIcon";
 import FileLink from "./content/FileLink";
 
 type Props = WithTranslation & {
+  repository: Repository;
   file: File;
   baseUrl: string;
 };
@@ -46,6 +47,7 @@ const NoWrapTd = styled.td`
 
 const ExtensionTd = styled.td`
   white-space: nowrap;
+  text-align: right;
 
   > *:not(:last-child) {
     margin-right: 0.5rem;
@@ -76,13 +78,13 @@ class FileTreeLeaf extends React.Component<Props> {
     } else if (file.computationAborted) {
       return (
         <Tooltip location="top" message={t("sources.fileTree.computationAborted")}>
-          <Icon name="question-circle" />
+          <Icon name="question-circle" alt={t("sources.fileTree.computationAborted")} />
         </Tooltip>
       );
     } else if (file.partialResult) {
       return (
         <Tooltip location="top" message={t("sources.fileTree.notYetComputed")}>
-          <Icon name="hourglass" />
+          <Icon name="hourglass" alt={t("sources.fileTree.notYetComputed")} />
         </Tooltip>
       );
     } else {
@@ -91,12 +93,13 @@ class FileTreeLeaf extends React.Component<Props> {
   };
 
   render() {
-    const { file } = this.props;
+    const { repository, file } = this.props;
 
     const renderFileSize = (file: File) => <FileSize bytes={file?.length ? file.length : 0} />;
     const renderCommitDate = (file: File) => <DateFromNow date={file.commitDate} />;
 
     const extProps: extensionPoints.ReposSourcesTreeRowProps = {
+      repository,
       file,
     };
 

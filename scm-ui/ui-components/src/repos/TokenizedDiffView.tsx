@@ -61,7 +61,8 @@ const DiffView = styled(Diff)`
 `;
 
 // WebWorker which creates tokens for syntax highlighting
-const tokenize = new Worker("./Tokenize.worker.ts", { name: "tokenizer", type: "module" });
+// @ts-ignore
+const tokenize = new Worker(new URL("./Tokenize.worker.ts", import.meta.url), { name: "tokenizer", type: "module" });
 tokenize.postMessage({ theme });
 
 type Props = {
@@ -73,7 +74,7 @@ type Props = {
 const TokenizedDiffView: FC<Props> = ({ file, viewType, className, children }) => {
   const { tokens } = useTokenizeWorker(tokenize, {
     hunks: file.hunks,
-    language: determineLanguage(file.language)
+    language: determineLanguage(file.language),
   });
 
   return (

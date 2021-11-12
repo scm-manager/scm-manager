@@ -128,7 +128,7 @@ export const useDeleteUser = () => {
     },
     {
       onSuccess: async (_, name) => {
-        await queryClient.invalidateQueries(["user", name]);
+        await queryClient.removeQueries(["user", name]);
         await queryClient.invalidateQueries(["users"]);
       },
     }

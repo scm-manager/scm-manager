@@ -39,11 +39,11 @@ const ChangesetDescription: FC<Props> = ({ changeset, value }) => {
     "changeset.description.tokens",
     {
       changeset,
-      value
+      value,
     }
   );
 
-  return <SplitAndReplace text={value} replacements={replacements.flatMap(r => r(changeset, value))} />;
+  return <SplitAndReplace text={value} replacements={replacements.flatMap((r) => r(changeset, value))} />;
 };
 
 export default ChangesetDescription;

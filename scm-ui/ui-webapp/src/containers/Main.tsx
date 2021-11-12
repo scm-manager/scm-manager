@@ -24,7 +24,7 @@
 import React, { FC } from "react";
 
 import { Redirect, Route, Switch } from "react-router-dom";
-import { Links, Me } from "@scm-manager/ui-types";
+import { Me } from "@scm-manager/ui-types";
 
 import Overview from "../repos/containers/Overview";
 import Users from "../users/containers/Users";
@@ -48,26 +48,16 @@ import Profile from "./Profile";
 import NamespaceRoot from "../repos/namespaces/containers/NamespaceRoot";
 import ImportLog from "../repos/importlog/ImportLog";
 import CreateRepositoryRoot from "../repos/containers/CreateRepositoryRoot";
-import styled from "styled-components";
 import Search from "../search/Search";
 import Syntax from "../search/Syntax";
 
 type Props = {
   me: Me;
   authenticated?: boolean;
-  links: Links;
 };
-
-type StyledMainProps = {
-  isSmallHeader: boolean;
-};
-
-const StyledMain = styled.div<StyledMainProps>`
-  min-height: calc(100vh - ${(props) => (props.isSmallHeader ? 250 : 210)}px);
-`;
 
 const Main: FC<Props> = (props) => {
-  const { authenticated, me, links } = props;
+  const { authenticated, me } = props;
   const redirectUrlFactory = binder.getExtension("main.redirect", props);
   let url = "/";
   if (authenticated) {
@@ -81,7 +71,7 @@ const Main: FC<Props> = (props) => {
   }
   return (
     <ErrorBoundary>
-      <StyledMain className="main" isSmallHeader={!!links.logout}>
+      <div className="main">
         <Switch>
           <Redirect exact from="/" to={url} />
           <Route exact path="/login" component={Login} />
@@ -113,7 +103,7 @@ const Main: FC<Props> = (props) => {
           <ProtectedRoute path="/help/search-syntax/" component={Syntax} authenticated={authenticated} />
           <ExtensionPoint name="main.route" renderAll={true} props={props} />
         </Switch>
-      </StyledMain>
+      </div>
     </ErrorBoundary>
   );
 };

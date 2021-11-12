@@ -33,7 +33,7 @@ class ProtectedRoute extends Component<Props> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      error: undefined
+      error: undefined,
     };
   }
 
@@ -49,8 +49,8 @@ class ProtectedRoute extends Component<Props> {
             to={{
               pathname: "/login",
               state: {
-                from: routeProps.location
-              }
+                from: routeProps.location,
+              },
             }}
           />
         );

@@ -88,7 +88,26 @@ const Content: FC<Props> = ({ file, repository, revision, breadcrumb, error }) =
   };
 
   const showHeader = (content: ReactNode) => {
-    const icon = collapsed ? "angle-right" : "angle-down";
+    let icon;
+    if (collapsed) {
+      icon = (
+        <Icon
+          className={classNames("is-inline", "mr-2")}
+          name="angle-right fa-fw"
+          color="inherit"
+          alt={t("sources.content.showMore")}
+        />
+      );
+    } else {
+      icon = (
+        <Icon
+          className={classNames("is-inline", "mr-2")}
+          name="angle-down fa-fw"
+          color="inherit"
+          alt={t("sources.content.hideMore")}
+        />
+      );
+    }
 
     const selector = file._links.history ? (
       <FileButtonAddons
@@ -107,7 +126,7 @@ const Content: FC<Props> = ({ file, repository, revision, breadcrumb, error }) =
             className={classNames("level-left", "is-flex", "is-clickable", "is-word-break", "mr-2")}
             onClick={toggleCollapse}
           >
-            <Icon className={classNames("is-inline", "mr-2")} name={`${icon} fa-fw`} color="inherit" />
+            {icon}
             {file.name}
           </FullWidthTitleHeader>
           <div className={classNames("level-right", "buttons", "ml-auto")}>

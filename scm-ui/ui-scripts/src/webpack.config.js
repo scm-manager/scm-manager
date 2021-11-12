@@ -22,9 +22,9 @@
  * SOFTWARE.
  */
 const path = require("path");
+const fs = require("fs");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
-const WorkerPlugin = require("worker-plugin");
 
 const createIndexMiddleware = require("./middleware/IndexMiddleware");
 const createContextPathMiddleware = require("./middleware/ContextPathMiddleware");
@@ -33,7 +33,7 @@ const isDevelopment = process.env.NODE_ENV === "development";
 const root = path.resolve(process.cwd(), "scm-ui");
 
 const babelPlugins = [];
-const webpackPlugins = [new WorkerPlugin()];
+const webpackPlugins = [];
 
 let mode = "production";
 
@@ -46,31 +46,35 @@ if (isDevelopment) {
   webpackPlugins.push(new ReactRefreshWebpackPlugin());
 }
 
+const themedir = path.join(root, "ui-styles", "src");
+const themes = fs
+  .readdirSync(themedir)
+  .map((filename) => path.parse(filename))
+  .filter((p) => p.ext === ".scss")
+  .reduce((entries, current) => ({ ...entries, [current.name]: path.join(themedir, current.base) }), {});
+
 console.log(`build ${mode} bundles`);
+
+const base = {
+  mode,
+  context: root,
+  target: "web",
+  resolveLoader: {
+    modules: [path.join(__dirname, "..", "node_modules"), "node_modules"],
+    extensions: [".js", ".json"],
+    mainFields: ["loader", "main"]
+  }
+};
 
 module.exports = [
   {
-    mode,
-    stats: "minimal",
-    context: root,
+    ...base,
     entry: {
       webapp: [path.resolve(__dirname, "webpack-public-path.js"), "./ui-webapp/src/index.tsx"]
     },
-    devtool: "cheap-module-eval-source-map",
-    target: "web",
-    node: {
-      fs: "empty",
-      net: "empty",
-      tls: "empty"
-    },
+    devtool: "eval-cheap-module-source-map",
     module: {
       rules: [
-        {
-          parser: {
-            system: false,
-            systemjs: false
-          }
-        },
         {
           test: /\.(js|ts|jsx|tsx)$/i,
           exclude: /node_modules/,
@@ -111,7 +115,12 @@ module.exports = [
       ]
     },
     resolve: {
-      extensions: [".ts", ".tsx", ".js", ".jsx", ".css", ".scss", ".json"]
+      extensions: [".ts", ".tsx", ".js", ".jsx", ".css", ".scss", ".json"],
+      fallback: {
+        fs: false,
+        net: false,
+        tls: false
+      }
     },
     output: {
       path: path.join(root, "build", "webapp", "assets"),
@@ -119,16 +128,28 @@ module.exports = [
       chunkFilename: "[name].bundle.js"
     },
     devServer: {
-      contentBase: path.join(root, "ui-webapp", "public"),
-      compress: false,
+      static: [
+        {
+          directory: path.join(root, "ui-webapp", "public")
+        }
+      ],
+      client: {
+        overlay: {
+          errors: true,
+          warnings: false
+        }
+      },
       historyApiFallback: true,
-      overlay: true,
       port: 3000,
       hot: true,
-      before: app => {
+      devMiddleware: {
+        index: false,
+        publicPath: "/assets/"
+      },
+      onBeforeSetupMiddleware: ({ app }) => {
         app.use(createContextPathMiddleware("/scm"));
       },
-      after: app => {
+      onAfterSetupMiddleware: ({ app }) => {
         const templatePath = path.join(root, "ui-webapp", "public", "index.mustache");
         const stage = process.env.NODE_ENV || "DEVELOPMENT";
         const renderParams = {
@@ -136,19 +157,18 @@ module.exports = [
           scmStage: stage.toUpperCase()
         };
         app.use(createIndexMiddleware(templatePath, renderParams));
-      },
-      publicPath: "/assets/"
+      }
     },
     optimization: {
       runtimeChunk: "single",
-      namedChunks: true,
       splitChunks: {
-        chunks: "all",
+        chunks: "initial",
         cacheGroups: {
-          vendors: {
+          defaultVendors: {
             test: /[\\/]node_modules[\\/]/,
-            priority: -10
-            // chunks: chunk => chunk.name !== "polyfill"
+            priority: -10,
+            filename: "vendors~webapp.bundle.js",
+            reuseExistingChunk: true
           },
           default: {
             minChunks: 2,
@@ -161,9 +181,8 @@ module.exports = [
     plugins: webpackPlugins
   },
   {
-    mode,
-    context: root,
-    entry: "./ui-styles/src/scm.scss",
+    ...base,
+    entry: themes,
     module: {
       rules: [
         {
@@ -175,30 +194,26 @@ module.exports = [
             "css-loader",
             "sass-loader"
           ]
-        },
-        {
-          test: /\.(png|svg|jpg|gif|woff2?|eot|ttf)$/,
-          use: ["file-loader"]
         }
       ]
     },
     plugins: [
       new MiniCssExtractPlugin({
-        filename: "ui-styles.css",
+        filename: "ui-theme-[name].css",
         ignoreOrder: false
       })
     ],
     optimization: {
+      // TODO only on production?
       minimizer: [new OptimizeCSSAssetsPlugin({})]
     },
     output: {
       path: path.join(root, "build", "webapp", "assets"),
-      filename: "ui-styles.bundle.js"
+      filename: "ui-theme-[name].bundle.js"
     }
   },
   {
-    mode,
-    context: path.resolve(root),
+    ...base,
     entry: {
       polyfills: "./ui-polyfill/src/index.js"
     },

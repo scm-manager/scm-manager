@@ -26,7 +26,7 @@ import {
   isExternalLink,
   isLinkWithProtocol,
   createLocalLink,
-  isInternalScmRepoLink
+  isInternalScmRepoLink,
 } from "./MarkdownLinkRenderer";
 
 describe("test isAnchorLink", () => {

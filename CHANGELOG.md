@@ -5,6 +5,42 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.26.1] - 2021-11-09
+### Fixed
+- Concurrent modification error in SVN modify command ([#1849](https://github.com/scm-manager/scm-manager/pull/1849))
+- Fix endless loop on logout with slow connections
+
+## [2.26.0] - 2021-11-04
+### Added
+- Viewer for pdf files ([#1843](https://github.com/scm-manager/scm-manager/pull/1843))
+- Add alternative text to controls to allow screen readers to read them aloud ([#1840](https://github.com/scm-manager/scm-manager/pull/1840))
+- File lock implementation for git (lfs) ([#1838](https://github.com/scm-manager/scm-manager/pull/1838))
+- Experimental high contrast mode ([#1845](https://github.com/scm-manager/scm-manager/pull/1845))
+- Read all errors with screen readers ([#1839](https://github.com/scm-manager/scm-manager/pull/1839))
+
+### Fixed
+- Fix <a> tags without hrefs ([#1841](https://github.com/scm-manager/scm-manager/pull/1841))
+- Fix eslint errors and warnings ([#1841](https://github.com/scm-manager/scm-manager/pull/1841))
+- Removed NODE_ENV from yarn serve command to be compatible with windows ([#1844](https://github.com/scm-manager/scm-manager/pull/1844))
+- Initial mirror with no accepted branch ([#1842](https://github.com/scm-manager/scm-manager/pull/1842))
+
+## [2.25.0] - 2021-10-21
+### Added
+- Extension points for repository overview ([#1828](https://github.com/scm-manager/scm-manager/pull/1828))
+- Binder option to sort by priority ([#1828](https://github.com/scm-manager/scm-manager/pull/1828))
+
+### Fixed
+- Refetching of content on switching between source and md view ([#1823](https://github.com/scm-manager/scm-manager/pull/1823))
+- Recursive git browse ([#1833](https://github.com/scm-manager/scm-manager/pull/1833))
+- remove query keys when deleting individual entities ([#1832](https://github.com/scm-manager/scm-manager/pull/1832))
+- Fix link templating for diff links ([#1834](https://github.com/scm-manager/scm-manager/pull/1834))
+- Correct import in RepositoryGroupEntry ([#1825](https://github.com/scm-manager/scm-manager/pull/1825))
+
+### Changed
+- Always show SCM-Manager footer ([#1826](https://github.com/scm-manager/scm-manager/pull/1826))
+- Resolved branch revision in source extension point ([#1803](https://github.com/scm-manager/scm-manager/pull/1803))
+- The default branch of a repository cannot be deleted ([#1827](https://github.com/scm-manager/scm-manager/pull/1827))
+
 ## [2.24.0] - 2021-10-07
 ### Added
 - Method to delete files recursively in modify command ([#1821](https://github.com/scm-manager/scm-manager/pull/1821))
@@ -729,50 +765,53 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Cache and x-requested-with header to bundle requests
 - remove public flag from repository and migrate permissions to anonymous user
 
-[2.0.0-rc1]: https://www.scm-manager.org/download/2.0.0-rc1
-[2.0.0-rc2]: https://www.scm-manager.org/download/2.0.0-rc2
-[2.0.0-rc3]: https://www.scm-manager.org/download/2.0.0-rc3
-[2.0.0-rc4]: https://www.scm-manager.org/download/2.0.0-rc4
-[2.0.0-rc5]: https://www.scm-manager.org/download/2.0.0-rc5
-[2.0.0-rc6]: https://www.scm-manager.org/download/2.0.0-rc6
-[2.0.0-rc7]: https://www.scm-manager.org/download/2.0.0-rc7
-[2.0.0-rc8]: https://www.scm-manager.org/download/2.0.0-rc8
-[2.0.0]: https://www.scm-manager.org/download/2.0.0
-[2.1.0]: https://www.scm-manager.org/download/2.1.0
-[2.1.1]: https://www.scm-manager.org/download/2.1.1
-[2.2.0]: https://www.scm-manager.org/download/2.2.0
-[2.3.0]: https://www.scm-manager.org/download/2.3.0
-[2.3.1]: https://www.scm-manager.org/download/2.3.1
-[2.4.0]: https://www.scm-manager.org/download/2.4.0
-[2.4.1]: https://www.scm-manager.org/download/2.4.1
-[2.5.0]: https://www.scm-manager.org/download/2.5.0
-[2.6.0]: https://www.scm-manager.org/download/2.6.0
-[2.6.1]: https://www.scm-manager.org/download/2.6.1
-[2.6.2]: https://www.scm-manager.org/download/2.6.2
-[2.6.3]: https://www.scm-manager.org/download/2.6.3
-[2.7.0]: https://www.scm-manager.org/download/2.7.0
-[2.7.1]: https://www.scm-manager.org/download/2.7.1
-[2.8.0]: https://www.scm-manager.org/download/2.8.0
-[2.9.0]: https://www.scm-manager.org/download/2.9.0
-[2.9.1]: https://www.scm-manager.org/download/2.9.1
-[2.10.0]: https://www.scm-manager.org/download/2.10.0
-[2.10.1]: https://www.scm-manager.org/download/2.10.1
-[2.11.0]: https://www.scm-manager.org/download/2.11.0
-[2.11.1]: https://www.scm-manager.org/download/2.11.1
-[2.12.0]: https://www.scm-manager.org/download/2.12.0
-[2.13.0]: https://www.scm-manager.org/download/2.13.0
-[2.14.0]: https://www.scm-manager.org/download/2.14.0
-[2.14.1]: https://www.scm-manager.org/download/2.14.1
-[2.15.0]: https://www.scm-manager.org/download/2.15.0
-[2.15.1]: https://www.scm-manager.org/download/2.15.1
-[2.16.0]: https://www.scm-manager.org/download/2.16.0
-[2.17.0]: https://www.scm-manager.org/download/2.17.0
-[2.17.1]: https://www.scm-manager.org/download/2.17.1
-[2.18.0]: https://www.scm-manager.org/download/2.18.0
-[2.19.0]: https://www.scm-manager.org/download/2.19.0
-[2.19.1]: https://www.scm-manager.org/download/2.19.1
-[2.20.0]: https://www.scm-manager.org/download/2.20.0
-[2.21.0]: https://www.scm-manager.org/download/2.21.0
-[2.22.0]: https://www.scm-manager.org/download/2.22.0
-[2.23.0]: https://www.scm-manager.org/download/2.23.0
-[2.24.0]: https://www.scm-manager.org/download/2.24.0
+[2.0.0-rc1]: https://scm-manager.org/download/2.0.0-rc1
+[2.0.0-rc2]: https://scm-manager.org/download/2.0.0-rc2
+[2.0.0-rc3]: https://scm-manager.org/download/2.0.0-rc3
+[2.0.0-rc4]: https://scm-manager.org/download/2.0.0-rc4
+[2.0.0-rc5]: https://scm-manager.org/download/2.0.0-rc5
+[2.0.0-rc6]: https://scm-manager.org/download/2.0.0-rc6
+[2.0.0-rc7]: https://scm-manager.org/download/2.0.0-rc7
+[2.0.0-rc8]: https://scm-manager.org/download/2.0.0-rc8
+[2.0.0]: https://scm-manager.org/download/2.0.0
+[2.1.0]: https://scm-manager.org/download/2.1.0
+[2.1.1]: https://scm-manager.org/download/2.1.1
+[2.2.0]: https://scm-manager.org/download/2.2.0
+[2.3.0]: https://scm-manager.org/download/2.3.0
+[2.3.1]: https://scm-manager.org/download/2.3.1
+[2.4.0]: https://scm-manager.org/download/2.4.0
+[2.4.1]: https://scm-manager.org/download/2.4.1
+[2.5.0]: https://scm-manager.org/download/2.5.0
+[2.6.0]: https://scm-manager.org/download/2.6.0
+[2.6.1]: https://scm-manager.org/download/2.6.1
+[2.6.2]: https://scm-manager.org/download/2.6.2
+[2.6.3]: https://scm-manager.org/download/2.6.3
+[2.7.0]: https://scm-manager.org/download/2.7.0
+[2.7.1]: https://scm-manager.org/download/2.7.1
+[2.8.0]: https://scm-manager.org/download/2.8.0
+[2.9.0]: https://scm-manager.org/download/2.9.0
+[2.9.1]: https://scm-manager.org/download/2.9.1
+[2.10.0]: https://scm-manager.org/download/2.10.0
+[2.10.1]: https://scm-manager.org/download/2.10.1
+[2.11.0]: https://scm-manager.org/download/2.11.0
+[2.11.1]: https://scm-manager.org/download/2.11.1
+[2.12.0]: https://scm-manager.org/download/2.12.0
+[2.13.0]: https://scm-manager.org/download/2.13.0
+[2.14.0]: https://scm-manager.org/download/2.14.0
+[2.14.1]: https://scm-manager.org/download/2.14.1
+[2.15.0]: https://scm-manager.org/download/2.15.0
+[2.15.1]: https://scm-manager.org/download/2.15.1
+[2.16.0]: https://scm-manager.org/download/2.16.0
+[2.17.0]: https://scm-manager.org/download/2.17.0
+[2.17.1]: https://scm-manager.org/download/2.17.1
+[2.18.0]: https://scm-manager.org/download/2.18.0
+[2.19.0]: https://scm-manager.org/download/2.19.0
+[2.19.1]: https://scm-manager.org/download/2.19.1
+[2.20.0]: https://scm-manager.org/download/2.20.0
+[2.21.0]: https://scm-manager.org/download/2.21.0
+[2.22.0]: https://scm-manager.org/download/2.22.0
+[2.23.0]: https://scm-manager.org/download/2.23.0
+[2.24.0]: https://scm-manager.org/download/2.24.0
+[2.25.0]: https://scm-manager.org/download/2.25.0
+[2.26.0]: https://scm-manager.org/download/2.26.0
+[2.26.1]: https://scm-manager.org/download/2.26.1

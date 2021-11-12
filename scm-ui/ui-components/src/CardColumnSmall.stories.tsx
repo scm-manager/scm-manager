@@ -34,14 +34,23 @@ const Wrapper = styled.div`
 `;
 
 const link = "/foo/bar";
-const icon = <Icon name="icons fa-2x fa-fw" />;
+const avatar = <Icon name="icons fa-2x fa-fw" alt="avatar" />;
 const contentLeft = <strong className="m-0">main content</strong>;
 const contentRight = <small>more text</small>;
 
 storiesOf("CardColumnSmall", module)
-  .addDecorator(story => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
-  .addDecorator(storyFn => <Wrapper>{storyFn()}</Wrapper>)
+  .addDecorator((story) => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
+  .addDecorator((storyFn) => <Wrapper>{storyFn()}</Wrapper>)
   .add("Default", () => (
-    <CardColumnSmall link={link} avatar={icon} contentLeft={contentLeft} contentRight={contentRight} />
+    <CardColumnSmall link={link} avatar={avatar} contentLeft={contentLeft} contentRight={contentRight} />
   ))
-  .add("Minimal", () => <CardColumnSmall link={link} contentLeft={contentLeft} contentRight={contentRight} />);
+  .add("Minimal", () => <CardColumnSmall link={link} contentLeft={contentLeft} contentRight={contentRight} />)
+  .add("Task", () => (
+    <CardColumnSmall
+      link={link}
+      avatar={<Icon name="exchange-alt" className="fa-fw fa-lg" color="inherit" alt="avatar" />}
+      contentLeft={<strong>Repository created</strong>}
+      contentRight={<small>over 42 years ago</small>}
+      footer="New: scmadmin/spaceship"
+    />
+  ));

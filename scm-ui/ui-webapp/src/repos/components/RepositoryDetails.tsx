@@ -42,7 +42,7 @@ class RepositoryDetails extends React.Component<Props> {
             name="repos.repository-details.information"
             renderAll={true}
             props={{
-              repository
+              repository,
             }}
           />
         </div>

@@ -45,7 +45,7 @@ class SvnConfigurationForm extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      ...props.initialConfiguration
+      ...props.initialConfiguration,
     };
   }
 
@@ -56,7 +56,7 @@ class SvnConfigurationForm extends React.Component<Props, State> {
     this.setState(
       // @ts-ignore
       {
-        [name]: value
+        [name]: value,
       },
       () => this.props.onConfigurationChange(this.state, true)
     );
@@ -73,7 +73,7 @@ class SvnConfigurationForm extends React.Component<Props, State> {
   compatibilityOption = (value: string) => {
     return {
       value,
-      label: this.props.t("scm-svn-plugin.config.compatibility-values." + value.toLowerCase())
+      label: this.props.t("scm-svn-plugin.config.compatibility-values." + value.toLowerCase()),
     };
   };
 

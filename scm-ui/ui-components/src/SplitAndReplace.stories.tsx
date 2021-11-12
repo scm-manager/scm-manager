@@ -31,12 +31,12 @@ storiesOf("SplitAndReplace", module).add("Simple replacement", () => {
   const replacements = [
     {
       textToReplace: "'",
-      replacement: <Icon name={"quote-left"} />,
+      replacement: <Icon name="quote-left" alt="" />,
       replaceAll: true,
     },
     {
       textToReplace: "`",
-      replacement: <Icon name={"quote-right"} />,
+      replacement: <Icon name="quote-right" alt="" />,
       replaceAll: true,
     },
   ];

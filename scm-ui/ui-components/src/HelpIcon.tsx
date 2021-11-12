@@ -28,6 +28,8 @@ type Props = {
   className?: string;
 };
 
-const HelpIcon: FC<Props> = ({ className }) => <Icon name="question-circle" color="blue-light" className={className} />;
+const HelpIcon: FC<Props> = ({ className }) => (
+  <Icon name="question-circle" color="blue-light" className={className} alt="" />
+);
 
 export default HelpIcon;

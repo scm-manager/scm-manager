@@ -24,6 +24,6 @@
 
 export const createQueryString = (params: Record<string, string>) => {
   return Object.keys(params)
-    .map(k => encodeURIComponent(k) + "=" + encodeURIComponent(params[k]))
+    .map((k) => encodeURIComponent(k) + "=" + encodeURIComponent(params[k]))
     .join("&");
 };

@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import { ApiResult, useIndexJsonResource, useIndexLinks } from "./base";
+import { ApiResult, ApiResultWithFetching, useIndexJsonResource, useIndexLinks } from "./base";
 import { Link, QueryResult, SearchableType } from "@scm-manager/ui-types";
 import { apiClient } from "./apiclient";
 import { createQueryString } from "./utils";
@@ -58,10 +58,11 @@ export const useSearchCounts = (types: string[], query: string) => {
         apiClient.get(`${findLink(searchLinks, type)}?q=${query}&countOnly=true`).then((response) => response.json()),
     }))
   );
-  const result: { [type: string]: ApiResult<number> } = {};
+  const result: { [type: string]: ApiResultWithFetching<number> } = {};
   queries.forEach((q, i) => {
     result[types[i]] = {
       isLoading: q.isLoading,
+      isFetching: q.isFetching,
       error: q.error as Error,
       data: (q.data as QueryResult)?.totalHits,
     };
@@ -141,6 +142,12 @@ const pickLang = (language: string) => {
 };
 
 export const useSearchHelpContent = (language: string) =>
-  useObserveAsync((lang) => import(`./help/search/modal.${pickLang(lang)}`).then((module) => module.default), [language]);
+  useObserveAsync(
+    (lang) => import(`./help/search/modal.${pickLang(lang)}`).then((module) => module.default),
+    [language]
+  );
 export const useSearchSyntaxContent = (language: string) =>
-  useObserveAsync((lang) => import(`./help/search/syntax.${pickLang(lang)}`).then((module) => module.default), [language]);
+  useObserveAsync(
+    (lang) => import(`./help/search/syntax.${pickLang(lang)}`).then((module) => module.default),
+    [language]
+  );

@@ -33,13 +33,17 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import sonia.scm.AlreadyExistsException;
+import sonia.scm.ConcurrentModificationException;
 import sonia.scm.repository.Person;
+import sonia.scm.repository.api.FileLock;
+import sonia.scm.repository.api.FileLockedException;
 import sonia.scm.repository.work.NoneCachingWorkingCopyPool;
 import sonia.scm.repository.work.WorkdirProvider;
 import sonia.scm.repository.work.WorkingCopy;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -157,5 +161,87 @@ public class SvnModifyCommandTest extends AbstractSvnCommandTestBase {
     WorkingCopy<File, File> workingCopy = workingCopyFactory.createWorkingCopy(context, null);
     assertThat(new File(workingCopy.getWorkingRepository(), "a.txt")).exists();
     assertThat(new File(workingCopy.getWorkingRepository(), "a.txt")).hasContent("");
+  }
+
+  @Test
+  public void shouldThrowExceptionIfExpectedRevisionDoesNotMatch() throws IOException {
+    File testfile = temporaryFolder.newFile("Test123");
+
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.addRequest(new ModifyCommandRequest.CreateFileRequest("Test123", testfile, false));
+    request.setCommitMessage("this should not pass");
+    request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
+    request.setExpectedRevision("42");
+
+    assertThrows(ConcurrentModificationException.class, () -> svnModifyCommand.execute(request));
+
+    WorkingCopy<File, File> workingCopy = workingCopyFactory.createWorkingCopy(context, null);
+    assertThat(new File(workingCopy.getWorkingRepository(), "Test123")).doesNotExist();
+  }
+
+  @Test
+  @SuppressWarnings("java:S2699") // we just want to ensure that no exception is thrown
+  public void shouldPassIfExpectedRevisionMatchesCurrentRevision() throws IOException {
+    File testfile = temporaryFolder.newFile("Test123");
+
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.addRequest(new ModifyCommandRequest.CreateFileRequest("Test123", testfile, false));
+    request.setCommitMessage("this should not pass");
+    request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
+    request.setExpectedRevision("5");
+
+    svnModifyCommand.execute(request);
+
+    // nothing to check here; we just want to ensure that no exception is thrown
+  }
+
+  @Test
+  public void shouldFailIfLockedByOtherPerson() {
+    Subject subject = mock(Subject.class);
+    when(subject.getPrincipal()).thenReturn("Perrin");
+    ThreadContext.bind(subject);
+
+    lockFile();
+
+    initSecurityManager();
+
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.addRequest(new ModifyCommandRequest.DeleteFileRequest("a.txt", false));
+    request.setCommitMessage("this should not happen");
+    request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
+
+    assertThrows(FileLockedException.class, () -> svnModifyCommand.execute(request));
+    WorkingCopy<File, File> workingCopy = workingCopyFactory.createWorkingCopy(context, null);
+    assertThat(new File(workingCopy.getWorkingRepository().getAbsolutePath() + "/a.txt")).exists();
+  }
+
+  @Test
+  public void shouldSucceedIfLockedByUser() {
+    lockFile();
+
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.addRequest(new ModifyCommandRequest.DeleteFileRequest("a.txt", false));
+    request.setCommitMessage("this should not happen");
+    request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
+
+    svnModifyCommand.execute(request);
+
+    WorkingCopy<File, File> workingCopy = workingCopyFactory.createWorkingCopy(context, null);
+    assertThat(new File(workingCopy.getWorkingRepository().getAbsolutePath() + "/a.txt")).doesNotExist();
+    assertThat(getLock()).isEmpty();
+  }
+
+  private void lockFile() {
+    SvnFileLockCommand svnFileLockCommand = new SvnFileLockCommand(context);
+    LockCommandRequest lockRequest = new LockCommandRequest();
+    lockRequest.setFile("a.txt");
+    svnFileLockCommand.lock(lockRequest);
+  }
+
+  private Optional<FileLock> getLock() {
+    SvnFileLockCommand svnFileLockCommand = new SvnFileLockCommand(context);
+    LockStatusCommandRequest request = new LockStatusCommandRequest();
+    request.setFile("a.txt");
+    return svnFileLockCommand.status(request);
   }
 }

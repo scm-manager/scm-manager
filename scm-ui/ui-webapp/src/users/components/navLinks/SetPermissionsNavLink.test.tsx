@@ -29,7 +29,7 @@ import { shallow } from "enzyme";
 
 it("should render nothing, if the permissions link is missing", () => {
   const user = {
-    _links: {}
+    _links: {},
   };
 
   const navLink = shallow(<SetPermissionsNavLink user={user} permissionsUrl="/user/permissions" />);
@@ -40,9 +40,9 @@ it("should render the navLink", () => {
   const user = {
     _links: {
       permissions: {
-        href: "/permissions"
-      }
-    }
+        href: "/permissions",
+      },
+    },
   };
 
   const navLink = shallow(<SetPermissionsNavLink user={user} permissionsUrl="/user/permissions" />);

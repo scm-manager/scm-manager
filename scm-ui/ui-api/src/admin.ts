@@ -25,7 +25,7 @@
 import { ApiResult, useIndexLink } from "./base";
 import { UpdateInfo } from "@scm-manager/ui-types";
 import { useQuery } from "react-query";
-import { apiClient } from "@scm-manager/ui-components";
+import { apiClient } from "./apiclient";
 
 export const useUpdateInfo = (): ApiResult<UpdateInfo | null> => {
   const indexLink = useIndexLink("updateInfo");

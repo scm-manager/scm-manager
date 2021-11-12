@@ -1,0 +1,2 @@
+- type: fixed
+  description: Fix logout endless loop on slow connections

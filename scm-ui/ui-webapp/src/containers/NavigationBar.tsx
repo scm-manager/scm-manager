@@ -133,7 +133,6 @@ const NavigationBar: FC<Props> = ({ links }) => {
           <Logo withText={false} className="image is-32x32" />
         </LogoItem>
         <button
-          role="button"
           className={classNames("navbar-burger", { "is-active": burgerActive })}
           aria-expanded="true"
           onClick={() => setBurgerActive((active) => !active)}

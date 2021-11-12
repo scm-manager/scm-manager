@@ -40,6 +40,16 @@ const LoginLink: FC = () => {
   return <a href={urls.withContextPath(`/login?from=${from}`)}>{t("errorNotification.loginLink")}</a>;
 };
 
+const BasicErrorMessage: FC = ({ children }) => {
+  const [t] = useTranslation("commons");
+
+  return (
+    <Notification type="danger" role="alert">
+      <strong>{t("errorNotification.prefix")}:</strong> {children}
+    </Notification>
+  );
+};
+
 const ErrorNotification: FC<Props> = ({ error }) => {
   const [t] = useTranslation("commons");
   if (error) {
@@ -47,22 +57,14 @@ const ErrorNotification: FC<Props> = ({ error }) => {
       return <BackendErrorNotification error={error} />;
     } else if (error instanceof UnauthorizedError) {
       return (
-        <Notification type="danger">
-          <strong>{t("errorNotification.prefix")}:</strong> {t("errorNotification.timeout")} <LoginLink />
-        </Notification>
+        <BasicErrorMessage>
+          {t("errorNotification.timeout")} <LoginLink />
+        </BasicErrorMessage>
       );
     } else if (error instanceof ForbiddenError) {
-      return (
-        <Notification type="danger">
-          <strong>{t("errorNotification.prefix")}:</strong> {t("errorNotification.forbidden")}
-        </Notification>
-      );
+      return <BasicErrorMessage>{t("errorNotification.forbidden")}</BasicErrorMessage>;
     } else {
-      return (
-        <Notification type="danger">
-          <strong>{t("errorNotification.prefix")}:</strong> {error.message}
-        </Notification>
-      );
+      return <BasicErrorMessage>{error.message}</BasicErrorMessage>;
     }
   }
   return null;

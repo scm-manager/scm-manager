@@ -36,7 +36,7 @@ class RepositoryEntryLink extends React.Component<Props> {
   render() {
     const { to, icon, tooltip } = this.props;
 
-    let content = <Icon className="fa-lg" name={icon} color="inherit" />;
+    let content = <Icon className="fa-lg" name={icon} color="inherit" alt={`${icon} icon`} />;
     if (tooltip) {
       content = (
         <Tooltip message={tooltip} location="top">

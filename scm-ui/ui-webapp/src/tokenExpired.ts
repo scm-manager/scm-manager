@@ -29,7 +29,7 @@ let tokenExpired = false;
 // This error should be displayed with the state (e.g. navigation) of the previous logged in user.
 // But if the user navigates away, we want to reset the state to an anonymous one.
 
-apiClient.onError(error => {
+apiClient.onError((error) => {
   if (error instanceof TokenExpiredError) {
     tokenExpired = true;
   }

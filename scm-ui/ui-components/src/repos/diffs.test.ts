@@ -33,7 +33,7 @@ describe("tests for diff util functions", () => {
       oldPath,
       newPath,
       newEndingNewLine: true,
-      oldEndingNewLine: true
+      oldEndingNewLine: true,
     };
   };
 
@@ -52,7 +52,7 @@ describe("tests for diff util functions", () => {
   const createHunk = (content: string): Hunk => {
     return {
       content,
-      changes: []
+      changes: [],
     };
   };
 
@@ -83,7 +83,7 @@ describe("tests for diff util functions", () => {
     it("should create identifier", () => {
       const identifier = createHunkIdentifierFromContext({
         file: rm("/etc/passwd"),
-        hunk: createHunk("@@ -1,42 +1,39 @@")
+        hunk: createHunk("@@ -1,42 +1,39 @@"),
       });
       expect(identifier).toBe("delete_/etc/passwd_@@ -1,42 +1,39 @@");
     });

@@ -33,7 +33,7 @@ export default function groupByCategory(plugins: Plugin[]): PluginGroup[] {
     if (!group) {
       group = {
         name: groupName,
-        plugins: []
+        plugins: [],
       };
       groups[groupName] = group;
     }

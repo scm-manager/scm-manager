@@ -58,7 +58,7 @@ const ImportFullRepository: FC<Props> = ({
   const [t] = useTranslation("repos");
   const { importFullRepository, importedRepository, isLoading, error } = useImportFullRepository(repositoryType);
 
-  useEffect(() => setRepo({...repo, type: repositoryType.name}), [repositoryType]);
+  useEffect(() => setRepo({ ...repo, type: repositoryType.name }), [repositoryType]);
   useEffect(() => setImportPending(isLoading), [isLoading]);
   useEffect(() => {
     if (importedRepository) {

@@ -39,11 +39,7 @@ export const PublicKeyEntry: FC<Props> = ({ publicKey, onDelete }) => {
   let deleteButton;
   if (publicKey?._links?.delete) {
     deleteButton = (
-      <a className="level-item" onClick={() => onDelete(publicKey)}>
-        <span className="icon">
-          <Icon name="trash" title={t("publicKey.delete")} color="inherit" />
-        </span>
-      </a>
+      <Icon name="trash" title={t("publicKey.delete")} color="inherit" onClick={() => onDelete(publicKey)} />
     );
   }
 
@@ -63,7 +59,7 @@ export const PublicKeyEntry: FC<Props> = ({ publicKey, onDelete }) => {
             publicKey.id
           )}
         </td>
-        <td className="is-darker">{deleteButton}</td>
+        <td className="is-darker has-text-centered">{deleteButton}</td>
       </tr>
     </>
   );

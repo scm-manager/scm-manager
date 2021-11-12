@@ -21,9 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { KeyboardEvent, MouseEvent, ReactNode } from "react";
+import React, { FC, MouseEvent, ReactNode } from "react";
 import classNames from "classnames";
-import { RouteComponentProps, withRouter } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Icon from "../Icon";
 import { createAttributesForTesting } from "../devBuild";
 
@@ -42,102 +42,86 @@ export type ButtonProps = {
   testId?: string;
 };
 
-type Props = ButtonProps &
-  RouteComponentProps & {
-    type?: "button" | "submit" | "reset";
-    color?: string;
+type Props = ButtonProps & {
+  type?: "button" | "submit" | "reset";
+  color?: string;
+};
+
+const Button: FC<Props> = ({
+  link,
+  className,
+  icon,
+  fullWidth,
+  reducedMobile,
+  testId,
+  children,
+  label,
+  type = "button",
+  title,
+  loading,
+  disabled,
+  action,
+  color = "default",
+}) => {
+  const renderIcon = () => {
+    return <>{icon ? <Icon name={icon} color="inherit" className="is-medium pr-1" /> : null}</>;
   };
 
-class Button extends React.Component<Props> {
-  static defaultProps: Partial<Props> = {
-    type: "button",
-    color: "default",
-  };
-
-  onClick = (event: React.MouseEvent) => {
-    const { action, link, history } = this.props;
-    if (action) {
-      action(event);
-    } else if (link) {
-      history.push(link);
-    }
-  };
-
-  onKeyDown = (event: KeyboardEvent) => {
-    const { action, link, history } = this.props;
-    if (event.key === "Enter") {
-      if (action) {
+  const onKeyDown = (event: KeyboardEvent) => {
+    if (event.key === "Enter" && action) {
         action(event);
-      } else if (link) {
-        history.push(link);
-      }
     }
   };
 
-  render() {
-    const {
-      label,
-      title,
-      loading,
-      disabled,
-      type,
-      color,
-      className,
-      icon,
-      fullWidth,
-      reducedMobile,
-      children,
-      testId,
-    } = this.props;
-    if (icon) {
-      return (
-        <button
-          type={type}
-          title={title}
-          disabled={disabled}
-          onClick={this.onClick}
-          onKeyDown={this.onKeyDown}
-          className={classNames(
-            "button",
-            "is-" + color,
-            { "is-loading": loading },
-            { "is-fullwidth": fullWidth },
-            { "is-reduced-mobile": reducedMobile },
-            className
-          )}
-          {...createAttributesForTesting(testId)}
-        >
-          <span className="icon is-medium">
-            <Icon name={icon} color="inherit" />
-          </span>
-          {(label || children) && (
-            <span>
-              {label} {children}
-            </span>
-          )}
-        </button>
-      );
-    }
-
+  if (link) {
     return (
-      <button
-        type={type}
-        title={title}
-        disabled={disabled}
-        onClick={this.onClick}
+      <Link
         className={classNames(
           "button",
           "is-" + color,
           { "is-loading": loading },
           { "is-fullwidth": fullWidth },
+          { "is-reduced-mobile": reducedMobile },
           className
         )}
-        {...createAttributesForTesting(testId)}
+        to={link}
+        aria-label={label}
       >
-        {label} {children}
-      </button>
+        {renderIcon()}{" "}
+        {(label || children) && (
+          <>
+            {label} {children}
+          </>
+        )}
+      </Link>
     );
   }
-}
 
-export default withRouter(Button);
+  return (
+    <button
+      type={type}
+      title={title}
+      disabled={disabled}
+      onClick={(event) => action && action(event)}
+      onKeyDown={onKeyDown}
+      className={classNames(
+        "button",
+        "is-" + color,
+        { "is-loading": loading },
+        { "is-fullwidth": fullWidth },
+        { "is-reduced-mobile": reducedMobile },
+        className
+      )}
+      {...createAttributesForTesting(testId)}
+    >
+      {renderIcon()}{" "}
+      {(label || children) && (
+        <>
+          {label} {children}
+        </>
+      )}
+    </button>
+  );
+};
+
+export default Button;

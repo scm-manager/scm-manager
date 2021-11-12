@@ -32,10 +32,10 @@ describe("test createBackendError", () => {
     context: [
       {
         type: "planet",
-        id: "earth"
-      }
+        id: "earth",
+      },
     ],
-    violations: []
+    violations: [],
   };
 
   it("should return a default backend error", () => {

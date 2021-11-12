@@ -30,7 +30,7 @@ const createNodeMock = (element: any) => {
   if (element.type === "tr") {
     return {
       // eslint-disable-next-line @typescript-eslint/no-empty-function
-      querySelector: (selector: string) => {}
+      querySelector: (selector: string) => {},
     };
   }
 };
@@ -41,6 +41,6 @@ initStoryshots({
   // @see https://github.com/storybookjs/storybook/pull/1090
   test: snapshotWithOptions({
     // @ts-ignore types seems not to match
-    createNodeMock
-  })
+    createNodeMock,
+  }),
 });

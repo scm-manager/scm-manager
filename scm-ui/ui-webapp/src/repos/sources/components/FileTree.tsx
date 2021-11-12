@@ -25,12 +25,11 @@
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
+import { binder, ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import { File, Repository } from "@scm-manager/ui-types";
 import FileTreeLeaf from "./FileTreeLeaf";
 import TruncatedNotification from "./TruncatedNotification";
 import { isRootPath } from "../utils/files";
-import { extensionPoints } from "@scm-manager/ui-extensions";
 
 type Props = {
   repository: Repository;
@@ -102,7 +101,7 @@ const FileTree: FC<Props> = ({ repository, directory, baseUrl, revision, fetchNe
           </thead>
           <tbody>
             {files.map((file: File) => (
-              <FileTreeLeaf key={file.name} file={file} baseUrl={baseUrlWithRevision} />
+              <FileTreeLeaf key={file.name} file={file} baseUrl={baseUrlWithRevision} repository={repository} />
             ))}
           </tbody>
         </table>

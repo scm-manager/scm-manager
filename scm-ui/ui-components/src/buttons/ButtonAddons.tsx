@@ -41,7 +41,7 @@ class ButtonAddons extends React.Component<Props> {
     const { className, children } = this.props;
 
     const childWrapper: ReactNode[] = [];
-    React.Children.forEach(children, child => {
+    React.Children.forEach(children, (child) => {
       if (child) {
         childWrapper.push(
           <p className="control" key={childWrapper.length}>

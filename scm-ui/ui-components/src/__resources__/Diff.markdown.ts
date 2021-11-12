@@ -46,40 +46,40 @@ export default {
               type: "normal",
               oldLineNumber: 5,
               newLineNumber: 5,
-              isNormal: true
+              isNormal: true,
             },
             {
               content: "and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).",
               type: "normal",
               oldLineNumber: 6,
               newLineNumber: 6,
-              isNormal: true
+              isNormal: true,
             },
             {
               content: "",
               type: "normal",
               oldLineNumber: 7,
               newLineNumber: 7,
-              isNormal: true
+              isNormal: true,
             },
             {
               content: "## Unreleased",
               type: "delete",
               lineNumber: 8,
-              isDelete: true
+              isDelete: true,
             },
             {
               content: "## [2.7.1] - 2020-10-14",
               type: "insert",
               lineNumber: 8,
-              isInsert: true
+              isInsert: true,
             },
             {
               content: "### Fixed",
               type: "normal",
               oldLineNumber: 9,
               newLineNumber: 9,
-              isNormal: true
+              isNormal: true,
             },
             {
               content:
@@ -87,7 +87,7 @@ export default {
               type: "normal",
               oldLineNumber: 10,
               newLineNumber: 10,
-              isNormal: true
+              isNormal: true,
             },
             {
               content:
@@ -95,24 +95,22 @@ export default {
               type: "normal",
               oldLineNumber: 11,
               newLineNumber: 11,
-              isNormal: true
-            }
-          ]
-        }
+              isNormal: true,
+            },
+          ],
+        },
       ],
       _links: {
         lines: {
-          href:
-            "http://localhost:8081/scm/api/v2/repositories/scmadmin/scm-manager/content/fbffdea2a566dc4ac54ea38d4aade5aaf541e7f2/CHANGELOG.md?start={start}&end={end}",
-          templated: true
-        }
-      }
-    }
+          href: "http://localhost:8081/scm/api/v2/repositories/scmadmin/scm-manager/content/fbffdea2a566dc4ac54ea38d4aade5aaf541e7f2/CHANGELOG.md?start={start}&end={end}",
+          templated: true,
+        },
+      },
+    },
   ],
   _links: {
     self: {
-      href:
-        "http://localhost:8081/scm/api/v2/repositories/scmadmin/scm-manager/diff/fbffdea2a566dc4ac54ea38d4aade5aaf541e7f2/parsed"
-    }
-  }
+      href: "http://localhost:8081/scm/api/v2/repositories/scmadmin/scm-manager/diff/fbffdea2a566dc4ac54ea38d4aade5aaf541e7f2/parsed",
+    },
+  },
 };

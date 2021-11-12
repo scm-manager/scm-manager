@@ -31,7 +31,7 @@ type Props = {
   className?: string;
 };
 
-const Title: FC<Props> = ({ title, preventRefreshingPageTitle, customPageTitle, className , children}) => {
+const Title: FC<Props> = ({ title, preventRefreshingPageTitle, customPageTitle, className, children }) => {
   useEffect(() => {
     if (!preventRefreshingPageTitle) {
       if (customPageTitle) {
@@ -51,7 +51,7 @@ const Title: FC<Props> = ({ title, preventRefreshingPageTitle, customPageTitle, 
 };
 
 Title.defaultProps = {
-  preventRefreshingPageTitle: false
+  preventRefreshingPageTitle: false,
 };
 
 export default Title;

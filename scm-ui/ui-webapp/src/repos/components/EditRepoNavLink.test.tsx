@@ -31,7 +31,7 @@ import EditRepoNavLink from "./EditRepoNavLink";
 describe("GeneralNavLink", () => {
   it("should render nothing, if the modify link is missing", () => {
     const repository = {
-      _links: {}
+      _links: {},
     };
 
     const navLink = shallow(<EditRepoNavLink repository={repository} editUrl="" />);
@@ -42,9 +42,9 @@ describe("GeneralNavLink", () => {
     const repository = {
       _links: {
         update: {
-          href: "/repositories"
-        }
-      }
+          href: "/repositories",
+        },
+      },
     };
 
     const navLink = mount(<EditRepoNavLink repository={repository} editUrl="" />);

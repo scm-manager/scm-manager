@@ -43,7 +43,7 @@ class LoginAttempt extends React.Component<Props, State> {
 
     this.state = {
       loginAttemptLimitError: false,
-      loginAttemptLimitTimeoutError: false
+      loginAttemptLimitTimeoutError: false,
     };
   }
   render() {
@@ -84,7 +84,7 @@ class LoginAttempt extends React.Component<Props, State> {
   handleLoginAttemptLimitChange = (value: string) => {
     this.setState({
       ...this.state,
-      loginAttemptLimitError: !validator.isNumberValid(value)
+      loginAttemptLimitError: !validator.isNumberValid(value),
     });
     this.props.onChange(validator.isNumberValid(value), value, "loginAttemptLimit");
   };
@@ -92,7 +92,7 @@ class LoginAttempt extends React.Component<Props, State> {
   handleLoginAttemptLimitTimeoutChange = (value: string) => {
     this.setState({
       ...this.state,
-      loginAttemptLimitTimeoutError: !validator.isNumberValid(value)
+      loginAttemptLimitTimeoutError: !validator.isNumberValid(value),
     });
     this.props.onChange(validator.isNumberValid(value), value, "loginAttemptLimitTimeout");
   };

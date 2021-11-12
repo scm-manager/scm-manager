@@ -40,7 +40,7 @@ const trillian: Me = {
   displayName: "Trillian McMillian",
   mail: "tricia@hitchhiker.com",
   groups: ["crew"],
-  _links: {}
+  _links: {},
 };
 
 const bindAvatar = (binder: Binder, avatar: string) => {
@@ -64,8 +64,8 @@ const withBinder = (binder: Binder) => {
   );
 };
 
-storiesOf("Layout|Footer", module)
-  .addDecorator(story => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
+storiesOf("Footer", module)
+  .addDecorator((story) => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
   .add("Default", () => {
     return <Footer me={trillian} version="2.0.0" links={{}} />;
   })

@@ -50,7 +50,7 @@ const SingleRepositoryRole: FC = () => {
 
   const extensionProps = {
     role,
-    url
+    url,
   };
 
   return (

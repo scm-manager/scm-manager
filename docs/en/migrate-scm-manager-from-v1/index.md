@@ -49,7 +49,7 @@ For version 2 of SCM-Manager we introduced a new way to store data for repositor
 
 # Manual plugin installation
 
-If however you have to install plugins manually (for example because you cannot log in without the LDAP plugin), you can download them from the [plugins section](https://www.scm-manager.org/plugins/#categories) on our homepage. The download can be found in the "Releases" section of each plugin. Just store the `smp` file in the `plugin` directory of your SCM home and restart your server.
+If however you have to install plugins manually (for example because you cannot log in without the LDAP plugin), you can download them from the [plugins section](https://scm-manager.org/plugins/#categories) on our homepage. The download can be found in the "Releases" section of each plugin. Just store the `smp` file in the `plugin` directory of your SCM home and restart your server.
 
 # Huge number of repositories
 

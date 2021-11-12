@@ -197,10 +197,10 @@ const Breadcrumb: FC<Props> = ({
         </ul>
         <PermaLinkWrapper className="ml-1" tabIndex={0} onKeyDown={(e) => e.key === "Enter" && copySource()}>
           {copying ? (
-            <Icon name="spinner fa-spin" />
+            <Icon name="spinner fa-spin" alt={t("breadcrumb.loading")} />
           ) : (
             <Tooltip message={t("breadcrumb.copyPermalink")}>
-              <Icon name="link" color="inherit" onClick={() => copySource()} />
+              <Icon name="link" color="inherit" onClick={() => copySource()} alt={t("breadcrumb.copyPermalink")} />
             </Tooltip>
           )}
         </PermaLinkWrapper>

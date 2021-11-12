@@ -21,10 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, {FC} from "react";
-import {useTranslation} from "react-i18next";
-import {Link} from "react-router-dom";
-import {Icon} from "@scm-manager/ui-components";
+import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
+import { Icon } from "@scm-manager/ui-components";
 import styled from "styled-components";
 
 type Props = {
@@ -40,7 +40,7 @@ const FileSearchButton: FC<Props> = ({ baseUrl, revision }) => {
   const [t] = useTranslation("repos");
   return (
     <Link to={`${baseUrl}/search/${encodeURIComponent(revision)}`} aria-label={t("filesearch.button.title")}>
-      <SearchIcon title={t("filesearch.button.title")} name="search" color="inherit" />
+      <SearchIcon title={t("fileSearch.button.title")} name="search" color="inherit" />
     </Link>
   );
 };

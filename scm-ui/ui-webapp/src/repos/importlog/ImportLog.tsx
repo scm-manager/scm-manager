@@ -30,16 +30,18 @@ import { useTranslation } from "react-i18next";
 
 type Params = {
   logId: string;
-}
+};
 
 const ImportLog: FC = () => {
-  const {logId} = useParams<Params>();
-  const {isLoading, data, error} = useImportLog(logId);
+  const { logId } = useParams<Params>();
+  const { isLoading, data, error } = useImportLog(logId);
   const [t] = useTranslation("commons");
 
-  return <Page title={t("importLog.title")} loading={isLoading} error={error}>
-    <pre>{data ? data : null}</pre>
-  </Page>;
-}
+  return (
+    <Page title={t("importLog.title")} loading={isLoading} error={error}>
+      <pre>{data ? data : null}</pre>
+    </Page>
+  );
+};
 
 export default ImportLog;

@@ -28,14 +28,14 @@ import { ErrorPage, Loading } from "@scm-manager/ui-components";
 import { Redirect } from "react-router-dom";
 import { useLogout } from "@scm-manager/ui-api";
 
-const Logout: FC = ({}) => {
+const Logout: FC = () => {
   const { error, logout } = useLogout();
   const [t] = useTranslation("commons");
   useEffect(() => {
     if (logout) {
       logout();
     }
-  }, []);
+  }, [logout]);
 
   if (!logout) {
     return <Redirect to={"/login"} />;

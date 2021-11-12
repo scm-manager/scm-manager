@@ -55,7 +55,8 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider {
     Command.MODIFY,
     Command.LOOKUP,
     Command.FULL_HEALTH_CHECK,
-    Command.MIRROR
+    Command.MIRROR,
+    Command.FILE_LOCK
   );
 
   public static final Set<Feature> FEATURES = EnumSet.of(
@@ -154,5 +155,10 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider {
   @Override
   public MirrorCommand getMirrorCommand() {
     return new SvnMirrorCommand(context, trustManager, globalProxyConfiguration);
+  }
+
+  @Override
+  public FileLockCommand getFileLockCommand() {
+    return new SvnFileLockCommand(context);
   }
 }

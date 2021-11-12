@@ -28,6 +28,7 @@ import { apiClient } from "./apiclient";
 import { ApiResult, useIndexLink } from "./base";
 import { useLegacyContext } from "./LegacyContext";
 import { useReset } from "./reset";
+import { useCallback } from "react";
 
 export const useMe = (): ApiResult<Me> => {
   const legacy = useLegacyContext();
@@ -115,9 +116,9 @@ export const useLogout = () => {
     }
   );
 
-  const logout = () => {
+  const logout = useCallback(() => {
     mutate({});
-  };
+  }, [mutate]);
 
   return {
     logout: link && !data ? logout : undefined,

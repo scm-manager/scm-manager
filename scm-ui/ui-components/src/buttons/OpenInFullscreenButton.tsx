@@ -34,7 +34,7 @@ type Props = {
   tooltipStyle?: "tooltipComponent" | "htmlTitle";
 };
 
-const Button = styled.a`
+const Button = styled.button`
   width: 50px;
   &:hover {
     color: #33b2e8;
@@ -52,6 +52,7 @@ const OpenInFullscreenButton: FC<Props> = ({ modalTitle, modalBody, tooltipStyle
         title={tooltipStyle === "htmlTitle" ? tooltip : undefined}
         className="button"
         onClick={() => setShowModal(true)}
+        aria-label={tooltip}
       >
         <i className="fas fa-search-plus" />
       </Button>

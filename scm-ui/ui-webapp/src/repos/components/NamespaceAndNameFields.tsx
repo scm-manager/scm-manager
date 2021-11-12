@@ -96,7 +96,7 @@ const NamespaceAndNameFields: FC<Props> = ({ repository, onChange, setValid, dis
       errorMessage: t("validation.namespace-invalid"),
       validationError: namespaceValidationError,
       disabled: disabled,
-      informationMessage
+      informationMessage,
     };
 
     if (namespaceStrategy === CUSTOM_NAMESPACE_STRATEGY) {

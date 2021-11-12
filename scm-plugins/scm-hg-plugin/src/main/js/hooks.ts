@@ -41,11 +41,11 @@ export const useHgRepositoryConfiguration = (repository: Repository) => {
       setLoading(true);
       apiClient
         .get(link)
-        .then(response => response.json())
+        .then((response) => response.json())
         .then((config: HgRepositoryConfiguration) => {
           setData(config);
         })
-        .catch(e => setError(e))
+        .catch((e) => setError(e))
         .finally(() => setLoading(false));
     }
   }, [link]);
@@ -53,7 +53,7 @@ export const useHgRepositoryConfiguration = (repository: Repository) => {
   return {
     isLoading,
     error,
-    data
+    data,
   };
 };
 
@@ -73,7 +73,7 @@ export const useUpdateHgRepositoryConfiguration = () => {
     apiClient
       .put(link, configuration, "application/vnd.scmm-hgConfig-repo+json;v=2")
       .then(() => setUpdated(true))
-      .catch(e => setError(e))
+      .catch((e) => setError(e))
       .finally(() => setLoading(false));
   };
 
@@ -81,6 +81,6 @@ export const useUpdateHgRepositoryConfiguration = () => {
     isLoading,
     error,
     update,
-    updated
+    updated,
   };
 };

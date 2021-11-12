@@ -71,7 +71,7 @@ const withFormElementsFooter = (
   </ButtonGroup>
 );
 
-storiesOf("Modal|Modal", module)
+storiesOf("Modal/Modal", module)
   .addDecorator((story) => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
   .add("Default", () => (
     <NonCloseableModal>

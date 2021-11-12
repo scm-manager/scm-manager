@@ -35,9 +35,9 @@ describe("Test sources hooks", () => {
     type: "git",
     _links: {
       sources: {
-        href: "/src"
-      }
-    }
+        href: "/src",
+      },
+    },
   };
 
   const readmeMd: File = {
@@ -49,8 +49,8 @@ describe("Test sources hooks", () => {
     description: "Awesome readme",
     _links: {},
     _embedded: {
-      children: []
-    }
+      children: [],
+    },
   };
 
   const rootDirectory: File = {
@@ -60,8 +60,8 @@ describe("Test sources hooks", () => {
     revision: "abc",
     _links: {},
     _embedded: {
-      children: [readmeMd]
-    }
+      children: [readmeMd],
+    },
   };
 
   const sepecialMd: File = {
@@ -73,20 +73,20 @@ describe("Test sources hooks", () => {
     description: "Awesome special file",
     _links: {},
     _embedded: {
-      children: []
-    }
+      children: [],
+    },
   };
 
   const sepecialMdPartial: File = {
     ...sepecialMd,
     partialResult: true,
-    computationAborted: false
+    computationAborted: false,
   };
 
   const sepecialMdComputationAborted: File = {
     ...sepecialMd,
     partialResult: true,
-    computationAborted: true
+    computationAborted: true,
   };
 
   const mainDirectoryTruncated: File = {
@@ -97,20 +97,20 @@ describe("Test sources hooks", () => {
     truncated: true,
     _links: {
       proceed: {
-        href: "src/2"
-      }
+        href: "src/2",
+      },
     },
     _embedded: {
-      children: []
-    }
+      children: [],
+    },
   };
 
   const mainDirectory: File = {
     ...mainDirectoryTruncated,
     truncated: false,
     _embedded: {
-      children: [sepecialMd]
-    }
+      children: [sepecialMd],
+    },
   };
 
   beforeEach(() => {
@@ -128,7 +128,7 @@ describe("Test sources hooks", () => {
       const queryClient = createInfiniteCachingClient();
       fetchMock.getOnce("/api/v2/src", rootDirectory);
       const { result, waitFor } = renderHook(() => useSources(puzzle42), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
       await waitFor(() => !!result.current.data);
       expect(result.current.data).toEqual(rootDirectory);
@@ -138,7 +138,7 @@ describe("Test sources hooks", () => {
       const queryClient = createInfiniteCachingClient();
       fetchMock.getOnce("/api/v2/src/abc/README.md", readmeMd);
       const { result, waitFor } = renderHook(() => useSources(puzzle42, { revision: "abc", path: "README.md" }), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
       await waitFor(() => !!result.current.data);
       expect(result.current.data).toEqual(readmeMd);
@@ -149,7 +149,7 @@ describe("Test sources hooks", () => {
       fetchMock.getOnce("/api/v2/src", mainDirectoryTruncated);
       fetchMock.getOnce("/api/v2/src/2", mainDirectory);
       const { result, waitFor, waitForNextUpdate } = renderHook(() => useSources(puzzle42), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
       await waitFor(() => !!result.current.data);
 
@@ -172,11 +172,11 @@ describe("Test sources hooks", () => {
         {
           ...mainDirectory,
           _embedded: {
-            children: [sepecialMdPartial]
-          }
+            children: [sepecialMdPartial],
+          },
         },
         {
-          repeat: 1
+          repeat: 1,
         }
       );
       fetchMock.get(
@@ -184,17 +184,17 @@ describe("Test sources hooks", () => {
         {
           ...mainDirectory,
           _embedded: {
-            children: [sepecialMd]
-          }
+            children: [sepecialMd],
+          },
         },
         {
           repeat: 1,
-          overwriteRoutes: false
+          overwriteRoutes: false,
         }
       );
 
       const { result, waitFor } = renderHook(() => useSources(puzzle42, { refetchPartialInterval: 100 }), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
 
       await waitFor(() => !!firstChild(result.current.data));
@@ -210,23 +210,23 @@ describe("Test sources hooks", () => {
       // should never be called
       fetchMock.getOnce("/api/v2/src/abc/main/special.md", sepecialMd, {
         repeat: 1,
-        overwriteRoutes: false
+        overwriteRoutes: false,
       });
       const { result, waitFor } = renderHook(
         () =>
           useSources(puzzle42, {
             revision: "abc",
             path: "main/special.md",
-            refetchPartialInterval: 100
+            refetchPartialInterval: 100,
           }),
         {
-          wrapper: createWrapper(undefined, queryClient)
+          wrapper: createWrapper(undefined, queryClient),
         }
       );
       await waitFor(() => !!result.current.data);
       expect(result.current.data).toEqual(sepecialMdComputationAborted);
 
-      await new Promise(r => setTimeout(r, 200));
+      await new Promise((r) => setTimeout(r, 200));
       expect(result.current.data).toEqual(sepecialMdComputationAborted);
     });
   });

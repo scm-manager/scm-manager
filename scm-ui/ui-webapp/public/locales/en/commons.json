@@ -26,7 +26,8 @@
   },
   "breadcrumb": {
     "home": "Main page",
-    "copyPermalink": "Copy Permalink to Clipboard"
+    "copyPermalink": "Copy Permalink to Clipboard",
+    "loading": "Loading ..."
   },
   "errorNotification": {
     "prefix": "Error",
@@ -60,6 +61,10 @@
     "groups": "Groups",
     "admin": "Administration"
   },
+  "secondaryNavigation": {
+    "showContent": "Enlarge navigation",
+    "hideContent": "Reduce navigation"
+  },
   "filterEntries": "filter entries",
   "autocomplete": {
     "group": "Group",
@@ -90,7 +95,23 @@
     "error-title": "Error",
     "error-subtitle": "Cannot display profile",
     "error": "Error",
-    "error-message": "'me' is undefined"
+    "error-message": "'me' is undefined",
+    "theme": {
+      "nav": {
+        "label": "Theme",
+        "title": "Choose your Theme"
+      },
+      "subtitle": "Choose your Theme",
+      "submit": "Activate",
+      "light": {
+        "displayName": "Light",
+        "description": "The light mode is the SCM-Manager default theme"
+      },
+      "highcontrast": {
+        "displayName": "High contrast",
+        "description": "The high contrast mode is a dark theme with a high contrast between the colors"
+      }
+    }
   },
   "password": {
     "subtitle": "Change Password",
@@ -134,9 +155,15 @@
     "toastTitle": "Notification",
     "xMore": "+{{ count }} Notification",
     "xMore_plural": "+{{ count }} Notifications",
+    "loading": "Loading ...",
+    "bellTitle": "Notifications",
     "empty": "No notifications",
     "dismiss": "Dismiss",
     "dismissAll": "Dismiss all"
+  },
+  "cardColumnGroup": {
+    "showContent": "Show content",
+    "hideContent": "Hide content"
   },
   "duration": {
     "ms": "{{count}} millisecond",
@@ -180,6 +207,10 @@
         "exampleValue": "Example Value",
         "hints": "Hints"
       },
+      "expandable": {
+        "showMore": "Show more information",
+        "hideMore": "Hide more information"
+      },
       "exampleQueries": {
         "title": "Example Queries",
         "description": "Combine Fields with Modifiers and Operators to find your repositories.",
@@ -192,7 +223,7 @@
       "utilities": {
         "title": "Utilities",
         "description": "Convert human-readable timestamps to Epoch Milliseconds to use in your query. Date is mandatory, hour, minute and seconds are optional.",
-        "datetime":{
+        "datetime": {
           "label": "Convert timestamps to Epoch Milliseconds",
           "format": "yyyy-mm-dd hh:mm:ss",
           "convertButtonLabel": "Convert"
@@ -201,5 +232,8 @@
         "copyTimestampTooltip": "Copy Timestamp to Clipboard"
       }
     }
+  },
+  "pdfViewer": {
+    "error": "Failed to display the document. Please download it from <1>here</1>."
   }
 }

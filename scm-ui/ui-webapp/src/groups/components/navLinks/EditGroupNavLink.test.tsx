@@ -29,7 +29,7 @@ import EditGroupNavLink from "./EditGroupNavLink";
 
 it("should render nothing, if the edit link is missing", () => {
   const group = {
-    _links: {}
+    _links: {},
   };
 
   const navLink = shallow(<EditGroupNavLink group={group} editUrl="/group/edit" />);
@@ -40,9 +40,9 @@ it("should render the navLink", () => {
   const group = {
     _links: {
       update: {
-        href: "/groups"
-      }
-    }
+        href: "/groups",
+      },
+    },
   };
 
   const navLink = shallow(<EditGroupNavLink group={group} editUrl="/group/edit" />);

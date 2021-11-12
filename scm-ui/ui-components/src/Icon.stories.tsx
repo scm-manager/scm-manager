@@ -36,7 +36,7 @@ const colors = ["primary", "link", "info", "success", "warning", "danger", "whit
 const sizing = ["xs", "sm", "lg", "2x", "3x", "5x", "7x", "10x"];
 
 storiesOf("Icon", module)
-  .addDecorator(storyFn => <Wrapper>{storyFn()}</Wrapper>)
+  .addDecorator((storyFn) => <Wrapper>{storyFn()}</Wrapper>)
   .add("Default", () => (
     <>
       <Icon name="cat" />
@@ -48,7 +48,7 @@ storiesOf("Icon", module)
   .add("Colors", () => (
     <>
       <Icon title="default color" name="cat" />
-      {colors.map(color => (
+      {colors.map((color) => (
         <Icon key={color} title={color} name="cat" color={color} />
       ))}
     </>
@@ -56,7 +56,7 @@ storiesOf("Icon", module)
   .add("Sizing", () => (
     <>
       <Icon title="default size" name="cat" />
-      {sizing.map(size => (
+      {sizing.map((size) => (
         <Icon key={size} title={"fa-" + size} name={"cat fa-" + size} />
       ))}
     </>

@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import {Changeset, ChangesetCollection, PagedCollection} from "@scm-manager/ui-types";
+import { Changeset, ChangesetCollection, PagedCollection } from "@scm-manager/ui-types";
 
 const one: Changeset = {
   id: "a88567ef1e9528a700555cad8c4576b72fc7c6dd",
@@ -33,31 +33,26 @@ const one: Changeset = {
   contributors: [
     {
       type: "Committed-by",
-      person: { mail: "zaphod.beeblebrox@hitchhiker.cm", name: "Zaphod Beeblebrox" }
+      person: { mail: "zaphod.beeblebrox@hitchhiker.cm", name: "Zaphod Beeblebrox" },
     },
-    { type: "Co-authored-by", person: { mail: "ford.prefect@hitchhiker.com", name: "Ford Prefect" } }
+    { type: "Co-authored-by", person: { mail: "ford.prefect@hitchhiker.com", name: "Ford Prefect" } },
   ],
   _links: {
     self: {
-      href:
-        "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/changesets/a88567ef1e9528a700555cad8c4576b72fc7c6dd"
+      href: "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/changesets/a88567ef1e9528a700555cad8c4576b72fc7c6dd",
     },
     diff: {
-      href:
-        "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/diff/a88567ef1e9528a700555cad8c4576b72fc7c6dd"
+      href: "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/diff/a88567ef1e9528a700555cad8c4576b72fc7c6dd",
     },
     sources: {
-      href:
-        "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/sources/a88567ef1e9528a700555cad8c4576b72fc7c6dd"
+      href: "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/sources/a88567ef1e9528a700555cad8c4576b72fc7c6dd",
     },
     modifications: {
-      href:
-        "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/modifications/a88567ef1e9528a700555cad8c4576b72fc7c6dd"
+      href: "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/modifications/a88567ef1e9528a700555cad8c4576b72fc7c6dd",
     },
     diffParsed: {
-      href:
-        "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/diff/a88567ef1e9528a700555cad8c4576b72fc7c6dd/parsed"
-    }
+      href: "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/diff/a88567ef1e9528a700555cad8c4576b72fc7c6dd/parsed",
+    },
   },
   _embedded: {
     tags: [],
@@ -67,17 +62,15 @@ const one: Changeset = {
         id: "d21cc6c359270aef2196796f4d96af65f51866dc",
         _links: {
           self: {
-            href:
-              "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/changesets/d21cc6c359270aef2196796f4d96af65f51866dc"
+            href: "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/changesets/d21cc6c359270aef2196796f4d96af65f51866dc",
           },
           diff: {
-            href:
-              "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/diff/d21cc6c359270aef2196796f4d96af65f51866dc"
-          }
-        }
-      }
-    ]
-  }
+            href: "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/diff/d21cc6c359270aef2196796f4d96af65f51866dc",
+          },
+        },
+      },
+    ],
+  },
 };
 
 const two: Changeset = {
@@ -88,30 +81,25 @@ const two: Changeset = {
   contributors: [
     {
       type: "Committed-by",
-      person: { mail: "zaphod.beeblebrox@hitchhiker.cm", name: "Zaphod Beeblebrox" }
-    }
+      person: { mail: "zaphod.beeblebrox@hitchhiker.cm", name: "Zaphod Beeblebrox" },
+    },
   ],
   _links: {
     self: {
-      href:
-        "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/changesets/d21cc6c359270aef2196796f4d96af65f51866dc"
+      href: "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/changesets/d21cc6c359270aef2196796f4d96af65f51866dc",
     },
     diff: {
-      href:
-        "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/diff/d21cc6c359270aef2196796f4d96af65f51866dc"
+      href: "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/diff/d21cc6c359270aef2196796f4d96af65f51866dc",
     },
     sources: {
-      href:
-        "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/sources/d21cc6c359270aef2196796f4d96af65f51866dc"
+      href: "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/sources/d21cc6c359270aef2196796f4d96af65f51866dc",
     },
     modifications: {
-      href:
-        "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/modifications/d21cc6c359270aef2196796f4d96af65f51866dc"
+      href: "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/modifications/d21cc6c359270aef2196796f4d96af65f51866dc",
     },
     diffParsed: {
-      href:
-        "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/diff/d21cc6c359270aef2196796f4d96af65f51866dc/parsed"
-    }
+      href: "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/diff/d21cc6c359270aef2196796f4d96af65f51866dc/parsed",
+    },
   },
   _embedded: {
     tags: [],
@@ -121,17 +109,15 @@ const two: Changeset = {
         id: "e163c8f632db571c9aa51a8eb440e37cf550b825",
         _links: {
           self: {
-            href:
-              "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/changesets/e163c8f632db571c9aa51a8eb440e37cf550b825"
+            href: "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/changesets/e163c8f632db571c9aa51a8eb440e37cf550b825",
           },
           diff: {
-            href:
-              "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/diff/e163c8f632db571c9aa51a8eb440e37cf550b825"
-          }
-        }
-      }
-    ]
-  }
+            href: "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/diff/e163c8f632db571c9aa51a8eb440e37cf550b825",
+          },
+        },
+      },
+    ],
+  },
 };
 
 const three: Changeset = {
@@ -142,27 +128,22 @@ const three: Changeset = {
   contributors: [],
   _links: {
     self: {
-      href:
-        "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/changesets/e163c8f632db571c9aa51a8eb440e37cf550b825"
+      href: "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/changesets/e163c8f632db571c9aa51a8eb440e37cf550b825",
     },
     diff: {
-      href:
-        "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/diff/e163c8f632db571c9aa51a8eb440e37cf550b825"
+      href: "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/diff/e163c8f632db571c9aa51a8eb440e37cf550b825",
     },
     sources: {
-      href:
-        "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
+      href: "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/sources/e163c8f632db571c9aa51a8eb440e37cf550b825",
     },
     modifications: {
-      href:
-        "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/modifications/e163c8f632db571c9aa51a8eb440e37cf550b825"
+      href: "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/modifications/e163c8f632db571c9aa51a8eb440e37cf550b825",
     },
     diffParsed: {
-      href:
-        "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/diff/e163c8f632db571c9aa51a8eb440e37cf550b825/parsed"
-    }
+      href: "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/diff/e163c8f632db571c9aa51a8eb440e37cf550b825/parsed",
+    },
   },
-  _embedded: { tags: [], branches: [], parents: [] }
+  _embedded: { tags: [], branches: [], parents: [] },
 };
 
 const four: Changeset = {
@@ -173,29 +154,24 @@ const four: Changeset = {
   contributors: [
     { type: "Co-authored-by", person: { mail: "ford.prefect@hitchhiker.com", name: "Ford Prefect" } },
     { type: "Co-authored-by", person: { mail: "zaphod.beeblebrox@hitchhiker.cm", name: "Zaphod Beeblebrox" } },
-    { type: "Co-authored-by", person: { mail: "trillian@hitchhiker.cm", name: "Tricia Marie McMillan" } }
+    { type: "Co-authored-by", person: { mail: "trillian@hitchhiker.cm", name: "Tricia Marie McMillan" } },
   ],
   _links: {
     self: {
-      href:
-        "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/changesets/b6c6f8fbd0d490936fae7d26ffdd4695cc2a0930"
+      href: "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/changesets/b6c6f8fbd0d490936fae7d26ffdd4695cc2a0930",
     },
     diff: {
-      href:
-        "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/diff/b6c6f8fbd0d490936fae7d26ffdd4695cc2a0930"
+      href: "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/diff/b6c6f8fbd0d490936fae7d26ffdd4695cc2a0930",
     },
     sources: {
-      href:
-        "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/sources/b6c6f8fbd0d490936fae7d26ffdd4695cc2a0930"
+      href: "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/sources/b6c6f8fbd0d490936fae7d26ffdd4695cc2a0930",
     },
     modifications: {
-      href:
-        "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/modifications/b6c6f8fbd0d490936fae7d26ffdd4695cc2a0930"
+      href: "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/modifications/b6c6f8fbd0d490936fae7d26ffdd4695cc2a0930",
     },
     diffParsed: {
-      href:
-        "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/diff/b6c6f8fbd0d490936fae7d26ffdd4695cc2a0930/parsed"
-    }
+      href: "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/diff/b6c6f8fbd0d490936fae7d26ffdd4695cc2a0930/parsed",
+    },
   },
   _embedded: {
     tags: [],
@@ -205,17 +181,15 @@ const four: Changeset = {
         id: "a88567ef1e9528a700555cad8c4576b72fc7c6dd",
         _links: {
           self: {
-            href:
-              "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/changesets/a88567ef1e9528a700555cad8c4576b72fc7c6dd"
+            href: "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/changesets/a88567ef1e9528a700555cad8c4576b72fc7c6dd",
           },
           diff: {
-            href:
-              "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/diff/a88567ef1e9528a700555cad8c4576b72fc7c6dd"
-          }
-        }
-      }
-    ]
-  }
+            href: "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/diff/a88567ef1e9528a700555cad8c4576b72fc7c6dd",
+          },
+        },
+      },
+    ],
+  },
 };
 
 const five: Changeset = {
@@ -225,25 +199,20 @@ const five: Changeset = {
   description: "HOG-42 Change mail to arthur@guide.galaxy\n\n",
   _links: {
     self: {
-      href:
-        "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/changesets/d21cc6c359270aef2196796f4d96af65f51866dc"
+      href: "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/changesets/d21cc6c359270aef2196796f4d96af65f51866dc",
     },
     diff: {
-      href:
-        "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/diff/d21cc6c359270aef2196796f4d96af65f51866dc"
+      href: "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/diff/d21cc6c359270aef2196796f4d96af65f51866dc",
     },
     sources: {
-      href:
-        "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/sources/d21cc6c359270aef2196796f4d96af65f51866dc"
+      href: "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/sources/d21cc6c359270aef2196796f4d96af65f51866dc",
     },
     modifications: {
-      href:
-        "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/modifications/d21cc6c359270aef2196796f4d96af65f51866dc"
+      href: "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/modifications/d21cc6c359270aef2196796f4d96af65f51866dc",
     },
     diffParsed: {
-      href:
-        "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/diff/d21cc6c359270aef2196796f4d96af65f51866dc/parsed"
-    }
+      href: "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/diff/d21cc6c359270aef2196796f4d96af65f51866dc/parsed",
+    },
   },
   _embedded: {
     tags: [],
@@ -253,17 +222,15 @@ const five: Changeset = {
         id: "e163c8f632db571c9aa51a8eb440e37cf550b825",
         _links: {
           self: {
-            href:
-              "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/changesets/e163c8f632db571c9aa51a8eb440e37cf550b825"
+            href: "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/changesets/e163c8f632db571c9aa51a8eb440e37cf550b825",
           },
           diff: {
-            href:
-              "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/diff/e163c8f632db571c9aa51a8eb440e37cf550b825"
-          }
-        }
-      }
-    ]
-  }
+            href: "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/diff/e163c8f632db571c9aa51a8eb440e37cf550b825",
+          },
+        },
+      },
+    ],
+  },
 };
 
 const changesets: ChangesetCollection = {
@@ -271,27 +238,24 @@ const changesets: ChangesetCollection = {
   pageTotal: 1,
   _links: {
     self: {
-      href:
-        "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/branches/master/changesets/?page=0&pageSize=10"
+      href: "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/branches/master/changesets/?page=0&pageSize=10",
     },
     first: {
-      href:
-        "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/branches/master/changesets/?page=0&pageSize=10"
+      href: "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/branches/master/changesets/?page=0&pageSize=10",
     },
     last: {
-      href:
-        "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/branches/master/changesets/?page=0&pageSize=10"
-    }
+      href: "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/branches/master/changesets/?page=0&pageSize=10",
+    },
   },
   _embedded: {
     changesets: [one, two, three, four],
     branch: {
       name: "master",
       _links: {
-        self: { href: "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/branches/master" }
-      }
-    }
-  }
+        self: { href: "http://localhost:8081/scm/api/v2/repositories/hitchhiker/heart-of-gold/branches/master" },
+      },
+    },
+  },
 };
 
 export { one, two, three, four, five };

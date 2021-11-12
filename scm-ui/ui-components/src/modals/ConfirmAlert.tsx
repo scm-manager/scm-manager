@@ -65,7 +65,7 @@ export const ConfirmAlert: FC<Props> = ({ title, message, buttons, close }) => {
     <div className="field is-grouped">
       {buttons.map((button, index) => (
         <p className="control" key={index}>
-          <a
+          <button
             className={classNames("button", "is-info", button.className, button.isLoading ? "is-loading" : "")}
             key={index}
             onClick={() => handleClickButton(button)}
@@ -73,7 +73,7 @@ export const ConfirmAlert: FC<Props> = ({ title, message, buttons, close }) => {
             tabIndex={0}
           >
             {button.label}
-          </a>
+          </button>
         </p>
       ))}
     </div>

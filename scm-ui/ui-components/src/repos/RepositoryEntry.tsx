@@ -25,13 +25,14 @@ import React, { FC, useState } from "react";
 import { Repository } from "@scm-manager/ui-types";
 import { DateFromNow, Modal } from "@scm-manager/ui-components";
 import RepositoryAvatar from "./RepositoryAvatar";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
 import GroupEntry from "../layout/GroupEntry";
 import RepositoryFlags from "./RepositoryFlags";
 import styled from "styled-components";
 import Icon from "../Icon";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
+import { EXTENSION_POINT } from "../avatar/Avatar";
 
 type DateProp = Date | string;
 
@@ -47,9 +48,20 @@ const ContentRightContainer = styled.div`
 `;
 
 const QuickAction = styled(Icon)`
+  margin-top: 0.2rem;
   :hover {
     color: #363636 !important;
   }
+`;
+
+const ContactAvatar = styled.img`
+  max-width: 20px;
+`;
+
+const ContactActionWrapper = styled.a`
+  height: 20px;
+  width: 20px;
+  padding-right: 2rem;
 `;
 
 const Name = styled.strong`
@@ -62,6 +74,15 @@ const Name = styled.strong`
 const RepositoryEntry: FC<Props> = ({ repository, baseDate }) => {
   const [t] = useTranslation("repos");
   const [openCloneModal, setOpenCloneModal] = useState(false);
+
+  const avatarFactory = binder.getExtension(EXTENSION_POINT);
+
+  const renderContactIcon = () => {
+    if (avatarFactory) {
+      return <ContactAvatar src={avatarFactory({ mail: repository.contact })} alt={repository.contact} />;
+    }
+    return <QuickAction className={classNames("is-clickable")} name="envelope" color="info" />;
+  };
 
   const createContentRight = () => (
     <ContentRightContainer
@@ -83,14 +104,25 @@ const RepositoryEntry: FC<Props> = ({ repository, baseDate }) => {
               name="repos.repository-details.information"
               renderAll={true}
               props={{
-                repository,
+                repository
               }}
             />
           }
           closeFunction={() => setOpenCloneModal(false)}
         />
       )}
-      <span className={classNames("is-flex", "is-justify-content-flex-end", "is-align-items-flex-end")}>
+      <span className={classNames("is-flex", "is-justify-content-flex-end", "is-align-items-center")}>
+        {repository.contact ? (
+          <ContactActionWrapper
+            href={`mailto:${repository.contact}`}
+            target="_blank"
+            className={"is-size-5"}
+            title={t("overview.contact", { contact: repository.contact })}
+            tabIndex={1}
+          >
+            {renderContactIcon()}
+          </ContactActionWrapper>
+        ) : null}
         <QuickAction
           className={classNames("is-clickable", "is-size-5")}
           name="download"

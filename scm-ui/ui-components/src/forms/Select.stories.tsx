@@ -187,8 +187,8 @@ const PreselectOption: FC = () => {
           },
           {
             label: "USCSS Prometheus",
-            value: "uscss-prometheus"
-          }
+            value: "uscss-prometheus",
+          },
         ]}
         onChange={setValue}
         value={value}
@@ -198,11 +198,10 @@ const PreselectOption: FC = () => {
   );
 };
 
-storiesOf("Forms|Select", module)
+storiesOf("Forms/Select", module)
   .addDecorator((storyFn) => <MemoryRouter>{storyFn()}</MemoryRouter>)
   .add("Add no existing value", () => <AddNoExistingValue />)
   .add("Ref", () => <Ref />)
   .add("Legacy Events", () => <LegacyEvents />)
   .add("ReactHookForm", () => <ReactHookForm />)
-  .add("Preselect option", () => <PreselectOption />)
-;
+  .add("Preselect option", () => <PreselectOption />);

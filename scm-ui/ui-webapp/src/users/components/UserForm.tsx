@@ -23,7 +23,7 @@
  */
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
-import { Link, User } from "@scm-manager/ui-types";
+import { User } from "@scm-manager/ui-types";
 import {
   Checkbox,
   ErrorNotification,
@@ -32,7 +32,7 @@ import {
   PasswordConfirmation,
   SubmitButton,
   Subtitle,
-  validation as validator
+  validation as validator,
 } from "@scm-manager/ui-components";
 import * as userValidator from "./userValidation";
 
@@ -63,12 +63,12 @@ class UserForm extends React.Component<Props, State> {
         password: "",
         active: true,
         external: false,
-        _links: {}
+        _links: {},
       },
       mailValidationError: false,
       displayNameValidationError: false,
       nameValidationError: false,
-      passwordValid: false
+      passwordValid: false,
     };
   }
 
@@ -77,8 +77,8 @@ class UserForm extends React.Component<Props, State> {
     if (user) {
       this.setState({
         user: {
-          ...user
-        }
+          ...user,
+        },
       });
     }
   }
@@ -209,7 +209,9 @@ class UserForm extends React.Component<Props, State> {
             </>
           )}
           {error && <ErrorNotification error={error} />}
-          <Level right={<SubmitButton disabled={this.isInvalid()} loading={loading} label={t("userForm.button.submit")} />} />
+          <Level
+            right={<SubmitButton disabled={this.isInvalid()} loading={loading} label={t("userForm.button.submit")} />}
+          />
         </form>
       </>
     );
@@ -220,8 +222,8 @@ class UserForm extends React.Component<Props, State> {
       nameValidationError: !validator.isNameValid(name),
       user: {
         ...this.state.user,
-        name
-      }
+        name,
+      },
     });
   };
 
@@ -230,8 +232,8 @@ class UserForm extends React.Component<Props, State> {
       displayNameValidationError: !userValidator.isDisplayNameValid(displayName),
       user: {
         ...this.state.user,
-        displayName
-      }
+        displayName,
+      },
     });
   };
 
@@ -240,8 +242,8 @@ class UserForm extends React.Component<Props, State> {
       mailValidationError: !!mail && !validator.isMailValid(mail),
       user: {
         ...this.state.user,
-        mail
-      }
+        mail,
+      },
     });
   };
 
@@ -249,9 +251,9 @@ class UserForm extends React.Component<Props, State> {
     this.setState({
       user: {
         ...this.state.user,
-        password
+        password,
       },
-      passwordValid: !!password && passwordValid
+      passwordValid: !!password && passwordValid,
     });
   };
 
@@ -259,8 +261,8 @@ class UserForm extends React.Component<Props, State> {
     this.setState({
       user: {
         ...this.state.user,
-        active
-      }
+        active,
+      },
     });
   };
 
@@ -268,8 +270,8 @@ class UserForm extends React.Component<Props, State> {
     this.setState({
       user: {
         ...this.state.user,
-        external
-      }
+        external,
+      },
     });
   };
 }

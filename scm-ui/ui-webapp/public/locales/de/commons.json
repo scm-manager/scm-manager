@@ -25,7 +25,8 @@
   },
   "breadcrumb": {
     "home": "Hauptseite",
-    "copyPermalink": "Link in Zwischenablage kopieren"
+    "copyPermalink": "Link in Zwischenablage kopieren",
+    "loading": "Lade ..."
   },
   "errorNotification": {
     "prefix": "Fehler",
@@ -59,6 +60,10 @@
     "groups": "Gruppen",
     "admin": "Administration"
   },
+  "secondaryNavigation": {
+    "showContent": "Navigation vergrößern",
+    "hideContent": "Navigation verkleinern"
+  },
   "filterEntries": "Einträge filtern",
   "autocomplete": {
     "group": "Gruppe",
@@ -89,7 +94,23 @@
     "error-title": "Fehler",
     "error-subtitle": "Das Profil kann nicht angezeigt werden.",
     "error": "Fehler",
-    "error-message": "'me' ist nicht definiert"
+    "error-message": "'me' ist nicht definiert",
+    "theme": {
+      "nav": {
+        "label": "Design",
+        "title": "Wähle dein Design"
+      },
+      "subtitle": "Wähle dein Design",
+      "submit": "Anwenden",
+      "light": {
+        "displayName": "Hell",
+        "description": "'Hell' is das Standard-Design des SCM-Managers"
+      },
+      "highcontrast": {
+        "displayName": "Hoher Kontrast",
+        "description": "'Hoher Kontrast' ist ein dunkles Design mit einem hohen Kontrast"
+      }
+    }
   },
   "password": {
     "subtitle": "Passwort ändern",
@@ -133,9 +154,15 @@
     "toastTitle": "Benachrichtigung",
     "xMore": "+{{ count }} Benachrichtigung",
     "xMore_plural": "+{{ count }} Benachrichtigungen",
+    "loading": "Lade ...",
+    "bellTitle": "Benachrichtigungen",
     "empty": "Keine Benachrichtigungen",
     "dismiss": "Löschen",
     "dismissAll": "Alle löschen"
+  },
+  "cardColumnGroup": {
+    "showContent": "Inhalt einblenden",
+    "hideContent": "Inhalt ausblenden"
   },
   "duration": {
     "ms": "{{count}} Millisekunde",
@@ -179,6 +206,10 @@
         "exampleValue": "Beispielwert",
         "hints": "Hinweise"
       },
+      "expandable": {
+        "showMore": "Mehr Informationen einblenden",
+        "hideMore": "Mehr Informationen ausblenden"
+      },
       "exampleQueries": {
         "title": "Beispielabfragen",
         "description": "Felder mit Modifikatoren und Operatoren um Repositories zu finden.",
@@ -191,7 +222,7 @@
       "utilities": {
         "title": "Hilfsmittel",
         "description": "Wandeln Sie menschlich-lesbare Zeitmarken in standard Millisekunden um, um diese in Ihren Queries zu verwenden. Das Datum ist ein Pflichtfeld, Stunde, Minute und Sekunde sind optional.",
-        "datetime":{
+        "datetime": {
           "label": "Datum in Standardzeitstempel umwandeln",
           "format": "yyyy-mm-dd hh:mm:ss",
           "convertButtonLabel": "Konvertieren"
@@ -200,5 +231,8 @@
         "copyTimestampTooltip": "Zeitstempel in Zwischenablage kopieren"
       }
     }
+  },
+  "pdfViewer": {
+    "error": "Das Dokument konnte nicht angezeigt werden. Es kann <1>hier</1> heruntergeladen werden."
   }
 }

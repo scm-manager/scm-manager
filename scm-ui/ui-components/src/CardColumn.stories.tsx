@@ -36,15 +36,15 @@ const Wrapper = styled.div`
 `;
 
 const link = "/foo/bar";
-const avatar = <Icon name="icons fa-2x fa-fw" />;
+const avatar = <Icon name="icons fa-2x fa-fw" alt="avatar" />;
 const title = <strong>title</strong>;
 const footerLeft = <small>left footer</small>;
 const footerRight = <small>right footer</small>;
 const baseDate = "2020-03-26T12:13:42+02:00";
 
 storiesOf("CardColumn", module)
-  .addDecorator(story => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
-  .addDecorator(storyFn => <Wrapper>{storyFn()}</Wrapper>)
+  .addDecorator((story) => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
+  .addDecorator((storyFn) => <Wrapper>{storyFn()}</Wrapper>)
   .add("Default", () => (
     <CardColumn
       link={link}

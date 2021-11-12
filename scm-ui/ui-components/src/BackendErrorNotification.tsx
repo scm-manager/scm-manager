@@ -21,37 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
+import React, { FC } from "react";
 import { BackendError } from "@scm-manager/ui-api";
 import Notification from "./Notification";
+import { useTranslation } from "react-i18next";
 
-import { WithTranslation, withTranslation } from "react-i18next";
-
-type Props = WithTranslation & {
+type Props = {
   error: BackendError;
 };
 
-class BackendErrorNotification extends React.Component<Props> {
-  constructor(props: Props) {
-    super(props);
-  }
+const BackendErrorNotification: FC<Props> = ({ error }) => {
+  const [t] = useTranslation("plugins");
 
-  render() {
-    return (
-      <Notification type="danger">
-        <div className="content">
-          <p className="subtitle">{this.renderErrorName()}</p>
-          <p>{this.renderErrorDescription()}</p>
-          {this.renderAdditionalMessages()}
-          <p>{this.renderViolations()}</p>
-          {this.renderMetadata()}
-        </div>
-      </Notification>
-    );
-  }
-
-  renderErrorName = () => {
-    const { error, t } = this.props;
+  const renderErrorName = () => {
     const translation = t(`errors.${error.errorCode}.displayName`);
     if (translation === error.errorCode) {
       return error.message;
@@ -59,8 +41,7 @@ class BackendErrorNotification extends React.Component<Props> {
     return translation;
   };
 
-  renderErrorDescription = () => {
-    const { error, t } = this.props;
+  const renderErrorDescription = () => {
     const translation = t(`errors.${error.errorCode}.description`);
     if (translation === error.errorCode) {
       return "";
@@ -68,17 +49,16 @@ class BackendErrorNotification extends React.Component<Props> {
     return translation;
   };
 
-  renderAdditionalMessages = () => {
-    const { error, t } = this.props;
+  const renderAdditionalMessages = () => {
     if (error.additionalMessages) {
       return (
         <>
           <hr />
           {error.additionalMessages
-            .map(additionalMessage =>
+            .map((additionalMessage) =>
               additionalMessage.key ? t(`errors.${additionalMessage.key}.description`) : additionalMessage.message
             )
-            .map(message => (
+            .map((message) => (
               <p>{message}</p>
             ))}
           <hr />
@@ -87,8 +67,7 @@ class BackendErrorNotification extends React.Component<Props> {
     }
   };
 
-  renderViolations = () => {
-    const { error, t } = this.props;
+  const renderViolations = () => {
     if (error.violations) {
       return (
         <>
@@ -110,17 +89,16 @@ class BackendErrorNotification extends React.Component<Props> {
     }
   };
 
-  renderMetadata = () => {
-    const { error, t } = this.props;
+  const renderMetadata = () => {
     return (
       <>
-        {this.renderContext()}
-        {this.renderMoreInformationLink()}
+        {renderContext()}
+        {renderMoreInformationLink()}
         <div className="level is-size-7">
-          <div className="left">
+          <div className="left" aria-hidden={true}>
             {t("errors.transactionId")} {error.transactionId}
           </div>
-          <div className="right">
+          <div className="right" aria-hidden={true}>
             {t("errors.errorCode")} {error.errorCode}
           </div>
         </div>
@@ -128,8 +106,7 @@ class BackendErrorNotification extends React.Component<Props> {
     );
   };
 
-  renderContext = () => {
-    const { error, t } = this.props;
+  const renderContext = () => {
     if (error.context) {
       return (
         <>
@@ -150,19 +127,34 @@ class BackendErrorNotification extends React.Component<Props> {
     }
   };
 
-  renderMoreInformationLink = () => {
-    const { error, t } = this.props;
+  const renderMoreInformationLink = () => {
     if (error.url) {
       return (
         <p>
           {t("errors.moreInfo")}{" "}
-          <a href={error.url} target="_blank">
+          <a href={error.url} target="_blank" rel="noreferrer" aria-label={t("error.link")}>
             {error.errorCode}
           </a>
         </p>
       );
     }
   };
-}
 
-export default withTranslation("plugins")(BackendErrorNotification);
+  return (
+    <Notification type="danger" role="alert">
+      <div className="content">
+        <p className="subtitle">
+          {t("error.subtitle")}
+          {": "}
+          {renderErrorName()}
+        </p>
+        <p>{renderErrorDescription()}</p>
+        {renderAdditionalMessages()}
+        <p>{renderViolations()}</p>
+        {renderMetadata()}
+      </div>
+    </Notification>
+  );
+};
+
+export default BackendErrorNotification;

@@ -25,7 +25,7 @@ import React, { FC } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
-import { Link, Tag } from "@scm-manager/ui-types";
+import { Tag, Link } from "@scm-manager/ui-types";
 import { DateFromNow, Icon } from "@scm-manager/ui-components";
 
 type Props = {
@@ -41,11 +41,9 @@ const TagRow: FC<Props> = ({ tag, baseUrl, onDelete }) => {
   let deleteButton;
   if ((tag?._links?.delete as Link)?.href) {
     deleteButton = (
-      <a className="level-item" onClick={() => onDelete(tag)}>
-        <span className="icon is-small" onKeyDown={(e) => e.key === "Enter" && onDelete(tag)} tabIndex={0}>
-          <Icon name="trash" className="fas" title={t("tag.delete.button")} />
-        </span>
-      </a>
+      <span className="icon is-small" onClick={() => onDelete(tag)} onKeyDown={(e) => e.key === "Enter" && onDelete(tag)} tabIndex={0}>
+        <Icon name="trash" className="fas" title={t("tag.delete.button")} />
+      </span>
     );
   }
 
@@ -60,7 +58,7 @@ const TagRow: FC<Props> = ({ tag, baseUrl, onDelete }) => {
           </span>
         </RouterLink>
       </td>
-      <td className="is-darker">{deleteButton}</td>
+      <td className="is-darker has-text-centered">{deleteButton}</td>
     </tr>
   );
 };

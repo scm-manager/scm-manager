@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-scripts",
-  "version": "2.24.1-SNAPSHOT",
+  "version": "2.26.2-SNAPSHOT",
   "description": "Build scripts for SCM-Manager",
   "main": "src/index.js",
   "author": "Sebastian Sdorra <sebastian.sdorra@cloudogu.com>",
@@ -10,22 +10,21 @@
     "ui-scripts": "./bin/ui-scripts.js"
   },
   "dependencies": {
-    "@pmmmwh/react-refresh-webpack-plugin": "^0.4.0",
-    "babel-loader": "^8.0.6",
-    "css-loader": "^3.2.0",
-    "file-loader": "^4.2.0",
-    "mini-css-extract-plugin": "^0.12.0",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.1",
+    "babel-loader": "^8.2.3",
+    "css-loader": "^6.5.0",
+    "file-loader": "^6.2.0",
+    "mini-css-extract-plugin": "^2.4.3",
     "mustache": "^3.1.0",
-    "optimize-css-assets-webpack-plugin": "^5.0.3",
+    "optimize-css-assets-webpack-plugin": "^6.0.1",
     "react-refresh": "^0.10.0",
-    "sass": "^1.26.3",
-    "sass-loader": "^8.0.0",
+    "sass": "^1.43.4",
+    "sass-loader": "^12.3.0",
     "script-loader": "^0.7.2",
-    "style-loader": "^1.0.0",
-    "webpack": "^4.41.5",
-    "webpack-cli": "^3.3.10",
-    "webpack-dev-server": "^3.10.1",
-    "worker-plugin": "^3.2.0"
+    "style-loader": "^3.3.1",
+    "webpack": "^5.60.0",
+    "webpack-cli": "^4.9.1",
+    "webpack-dev-server": "^4.4.0"
   },
   "devDependencies": {
     "@scm-manager/eslint-config": "^2.12.0",

@@ -63,7 +63,7 @@ const AdminDetails: FC = () => {
                   version: updateInfo?.latestVersion,
                 })}
               </p>
-              <a className="button is-warning is-pulled-right" target="_blank" href={updateInfo?.link}>
+              <a className="button is-warning is-pulled-right" target="_blank" href={updateInfo?.link} rel="noreferrer">
                 {t("admin.info.newRelease.downloadButton")}
               </a>
             </div>
@@ -89,7 +89,12 @@ const AdminDetails: FC = () => {
             <div className="content">
               <h3 className="has-text-weight-medium">{t("admin.info.communityTitle")}</h3>
               <p>{t("admin.info.communityInfo")}</p>
-              <a className="button is-info is-pulled-right" target="_blank" href="https://scm-manager.org/support/">
+              <a
+                className="button is-info is-pulled-right"
+                target="_blank"
+                href="https://scm-manager.org/support/"
+                rel="noreferrer"
+              >
                 {t("admin.info.communityButton")}
               </a>
             </div>
@@ -113,6 +118,7 @@ const AdminDetails: FC = () => {
                 className="button is-info is-pulled-right is-normal"
                 target="_blank"
                 href={t("admin.info.enterpriseLink")}
+                rel="noreferrer"
               >
                 {t("admin.info.enterpriseButton")}
               </a>

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -98,7 +98,8 @@ public final class ProxyPushStateDispatcher implements PushStateDispatcher {
     response.setStatus(responseCode);
 
     copyResponseHeaders(response, connection);
-    if (connection.getContentLength() > 0) {
+    int contentLength = connection.getContentLength();
+    if (contentLength > 0 || contentLength == -1) {
       copyResponseBody(response, connection);
     }
   }

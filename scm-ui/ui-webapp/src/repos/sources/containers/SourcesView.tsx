@@ -28,7 +28,7 @@ import ImageViewer from "../components/content/ImageViewer";
 import DownloadViewer from "../components/content/DownloadViewer";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import { File, Link, Repository } from "@scm-manager/ui-types";
-import { ErrorNotification, Loading } from "@scm-manager/ui-components";
+import { ErrorNotification, Loading, PdfViewer } from "@scm-manager/ui-components";
 import SwitchableMarkdownViewer from "../components/content/SwitchableMarkdownViewer";
 import styled from "styled-components";
 import { useContentType } from "@scm-manager/ui-api";
@@ -69,6 +69,8 @@ const SourcesView: FC<Props> = ({ file, repository, revision }) => {
     sources = <SourcecodeViewer file={file} language={language} />;
   } else if (contentType.startsWith("text/")) {
     sources = <SourcecodeViewer file={file} language="none" />;
+  } else if (contentType.startsWith("application/pdf")) {
+    sources = <PdfViewer src={file} />;
   } else {
     sources = (
       <ExtensionPoint
@@ -80,7 +82,7 @@ const SourcesView: FC<Props> = ({ file, repository, revision }) => {
           basePath,
         }}
       >
-        <DownloadViewer file={file} />
+        <DownloadViewer repository={repository} file={file} />
       </ExtensionPoint>
     );
   }

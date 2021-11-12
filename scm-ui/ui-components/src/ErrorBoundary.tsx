@@ -75,7 +75,7 @@ const RedirectPage = () => {
             "is-align-items-center"
           )}
         >
-          <Icon name="directions" className="fa-7x" />
+          <Icon name="directions" className="fa-7x" alt="" />
         </RedirectIconContainer>
       </div>
     </section>

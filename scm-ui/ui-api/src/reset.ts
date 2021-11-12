@@ -25,7 +25,7 @@ import { QueryClient, useQueryClient } from "react-query";
 
 export const reset = (queryClient: QueryClient) => {
   queryClient.removeQueries({
-    predicate: ({ queryKey }) => queryKey !== "index"
+    predicate: ({ queryKey }) => queryKey !== "index",
   });
   return queryClient.invalidateQueries("index");
 };

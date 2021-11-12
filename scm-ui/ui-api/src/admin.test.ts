@@ -35,7 +35,7 @@ describe("Test admin hooks", () => {
     it("should get update info", async () => {
       const updateInfo: UpdateInfo = {
         latestVersion: "x.y.z",
-        link: "http://heartofgold@hitchhiker.com/x.y.z"
+        link: "http://heartofgold@hitchhiker.com/x.y.z",
       };
       fetchMock.getOnce("/api/v2/updateInfo", updateInfo);
 
@@ -43,7 +43,7 @@ describe("Test admin hooks", () => {
       setIndexLink(queryClient, "updateInfo", "/updateInfo");
 
       const { result, waitFor } = renderHook(() => useUpdateInfo(), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
       await waitFor(() => {
         return !!result.current.data;

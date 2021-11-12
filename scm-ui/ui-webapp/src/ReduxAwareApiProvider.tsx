@@ -40,7 +40,7 @@ const mapDispatchToProps = (dispatch: Dispatch<ActionTypes>) => {
     },
     onMeFetched: (me: Me) => {
       dispatch(fetchMeSuccess(me));
-    }
+    },
   };
 };
 

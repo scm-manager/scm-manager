@@ -46,7 +46,7 @@ const createAdapter = (theme: { [key: string]: string }): RefractorAdapter => {
       import(
         /* webpackChunkName: "tokenizer-refractor-[request]" */
         `refractor/lang/${lang}`
-      ).then(loadedLanguage => {
+      ).then((loadedLanguage) => {
         refractor.register(loadedLanguage.default);
         callback();
       });
@@ -58,7 +58,7 @@ const createAdapter = (theme: { [key: string]: string }): RefractorAdapter => {
   const runHook = (name: string, env: RunHookEnv) => {
     originalRunHook.apply(name, env);
     if (env.classes) {
-      env.classes = env.classes.map(className => theme[className] || className);
+      env.classes = env.classes.map((className) => theme[className] || className);
     }
   };
   // @ts-ignore hooks are not in the type definition
@@ -67,7 +67,7 @@ const createAdapter = (theme: { [key: string]: string }): RefractorAdapter => {
   return {
     isLanguageRegistered,
     loadLanguage,
-    ...refractor
+    ...refractor,
   };
 };
 

@@ -58,7 +58,7 @@ class PermissionRoleDetails extends React.Component<Props> {
           name="repositoryRole.role-details.information"
           renderAll={true}
           props={{
-            role
+            role,
           }}
         />
       </>

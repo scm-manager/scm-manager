@@ -31,7 +31,7 @@ export const createAttributesForTesting = (testId?: string) => {
     return undefined;
   }
   return {
-    "data-testid": normalizeTestId(testId)
+    "data-testid": normalizeTestId(testId),
   };
 };
 

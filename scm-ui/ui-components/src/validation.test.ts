@@ -40,7 +40,7 @@ describe("test name validation", () => {
     " invalid_name",
     "%",
     "test%name",
-    "test\\name"
+    "test\\name",
   ];
   for (const name of invalidNames) {
     it(`should return false for '${name}'`, () => {
@@ -75,7 +75,7 @@ describe("test name validation", () => {
     "법률",
     "المدن",
     "אחד",
-    "Hu-rëm"
+    "Hu-rëm",
   ];
   for (const name of validNames) {
     it(`should return true for '${name}'`, () => {
@@ -92,7 +92,7 @@ describe("test mail validation", () => {
     "s.sdorra@",
     "s.sdorra@ostfalia",
     "s.sdorra@ ostfalia.de",
-    "s.sdorra@[ostfalia.de"
+    "s.sdorra@[ostfalia.de",
   ];
   for (const mail of invalid) {
     it(`should return false for '${mail}'`, () => {
@@ -111,7 +111,7 @@ describe("test mail validation", () => {
     "s.sdorra@example.xn--p1ai",
     "s.sdorra@scm.solutions",
     "s'sdorra@scm.solutions",
-    '"S Sdorra"@scm.solutions'
+    '"S Sdorra"@scm.solutions',
   ];
   for (const mail of valid) {
     it(`should return true for '${mail}'`, () => {
@@ -172,7 +172,7 @@ describe("test url validation", () => {
     ":// should fail",
     "http://foo.bar/foo(bar)baz quux",
     "http://.www.foo.bar/",
-    "http://.www.foo.bar./"
+    "http://.www.foo.bar./",
   ];
   for (const url of invalid) {
     it(`should return false for '${url}'`, () => {
@@ -225,7 +225,7 @@ describe("test url validation", () => {
     "http://1337.net",
     "http://a.b-c.de",
     "http://223.255.255.254",
-    "http://0.0.0.0"
+    "http://0.0.0.0",
   ];
   for (const url of valid) {
     it(`should return true for '${url}'`, () => {

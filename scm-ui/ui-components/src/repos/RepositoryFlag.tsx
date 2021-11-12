@@ -24,7 +24,7 @@
 
 import React, { FC } from "react";
 import { Color, Size } from "../styleConstants";
-import Tooltip, {TooltipLocation} from "../Tooltip";
+import Tooltip, { TooltipLocation } from "../Tooltip";
 import Tag from "../Tag";
 
 type Props = {

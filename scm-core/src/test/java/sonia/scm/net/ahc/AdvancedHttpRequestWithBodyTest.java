@@ -26,27 +26,27 @@ package sonia.scm.net.ahc;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.ByteSource;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-
-import org.junit.Test;
-import static org.junit.Assert.*;
-import static org.hamcrest.Matchers.*;
-import static org.mockito.Mockito.*;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.rules.TemporaryFolder;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.io.TempDir;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Path;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@RunWith(MockitoJUnitRunner.class)
-public class AdvancedHttpRequestWithBodyTest {
+@ExtendWith(MockitoExtension.class)
+class AdvancedHttpRequestWithBodyTest {
 
   @Mock
   private AdvancedHttpClient ahc;
@@ -55,108 +55,129 @@ public class AdvancedHttpRequestWithBodyTest {
   private ContentTransformer transformer;
   
   private AdvancedHttpRequestWithBody request;
-  
-  @Rule
-  public TemporaryFolder tempFolder = new TemporaryFolder();
-  
-  @Before
-  public void before(){
+
+  @BeforeEach
+  void before(){
     request = new AdvancedHttpRequestWithBody(ahc, HttpMethod.PUT, "https://www.scm-manager.org");
   }
 
   @Test
-  public void testContentLength()
-  {
-    request.contentLength(12l);
-    assertEquals("12", request.getHeaders().get("Content-Length").iterator().next());
+  void shouldReturnContentLength() {
+    request.contentLength(12L);
+    assertThat(request.getHeaders().get("Content-Length").iterator().next()).isEqualTo("12");
   }
   
   @Test
-  public void testContentType(){
+  void shouldReturnContentType(){
     request.contentType("text/plain");
-    assertEquals("text/plain", request.getHeaders().get("Content-Type").iterator().next());
+    assertThat(request.getHeaders().get("Content-Type").iterator().next()).isEqualTo("text/plain");
   }
   
   @Test
-  public void testFileContent() throws IOException{
-    File file = tempFolder.newFile();
-    request.fileContent(file);
-    assertThat(request.getContent(), instanceOf(FileContent.class));
+  void shouldReturnFileContent(@TempDir Path path) {
+    request.fileContent(path.toFile());
+    assertThat(request.getContent()).isInstanceOf(FileContent.class);
   }
 
   @Test
-  public void testRawContent() throws IOException {
+  void shouldReturnRawContent() {
     request.rawContent("test".getBytes(Charsets.UTF_8));
-    assertThat(request.getContent(), instanceOf(RawContent.class));
+    assertThat(request.getContent()).isInstanceOf(RawContent.class);
   }
   
   @Test
-  public void testRawContentWithByteSource() throws IOException {
+  void shouldReturnRawContentFromByteSource() {
     ByteSource bs = ByteSource.wrap("test".getBytes(Charsets.UTF_8));
     request.rawContent(bs);
-    assertThat(request.getContent(), instanceOf(ByteSourceContent.class));
+    assertThat(request.getContent()).isInstanceOf(ByteSourceContent.class);
   }
   
   @Test
-  public void testFormContent(){
+  void shouldApplyFormContent(){
     FormContentBuilder builder = request.formContent();
-    assertNotNull(builder);
+    assertThat(builder).isNotNull();
     builder.build();
-    assertThat(request.getContent(), instanceOf(StringContent.class));
+    assertThat(request.getContent()).isInstanceOf(StringContent.class);
   }
   
   @Test
-  public void testStringContent(){
+  void shouldReturnStringContent(){
     request.stringContent("test");
-    assertThat(request.getContent(), instanceOf(StringContent.class));
+    assertThat(request.getContent()).isInstanceOf(StringContent.class);
   }
   
   @Test
-  public void testStringContentWithCharset(){
+  void shouldReturnStringContentFormStringContentWithCharset(){
     request.stringContent("test", Charsets.UTF_8);
-    assertThat(request.getContent(), instanceOf(StringContent.class));
+    assertThat(request.getContent()).isInstanceOf(StringContent.class);
+  }
+
+  @Test
+  void shouldReturnCustomContent(){
+    request.content(new CustomContent());
+    assertThat(request.getContent()).isInstanceOf(CustomContent.class);
   }
   
   @Test
-  public void testXmlContent() throws IOException{
+  void shouldReturnXmlContent() throws IOException {
     when(ahc.createTransformer(String.class, ContentType.XML)).thenReturn(transformer);
     when(transformer.marshall("<root />")).thenReturn(ByteSource.wrap("<root></root>".getBytes(Charsets.UTF_8)));
+
     Content content = request.xmlContent("<root />").getContent();
-    assertThat(content, instanceOf(ByteSourceContent.class));
+    assertThat(content).isInstanceOf(ByteSourceContent.class);
+
     ByteSourceContent bsc = (ByteSourceContent) content;
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     bsc.process(baos);
-    assertEquals("<root></root>", baos.toString("UTF-8"));
+
+    assertThat(baos.toString("UTF-8")).isEqualTo("<root></root>");
   }
   
   @Test
-  public void testJsonContent() throws IOException{
+  void shouldReturnJsonContent() throws IOException{
     when(ahc.createTransformer(String.class, ContentType.JSON)).thenReturn(transformer);
     when(transformer.marshall("{}")).thenReturn(ByteSource.wrap("{'root': {}}".getBytes(Charsets.UTF_8)));
+
     Content content = request.jsonContent("{}").getContent();
-    assertThat(content, instanceOf(ByteSourceContent.class));
+    assertThat(content).isInstanceOf(ByteSourceContent.class);
+
     ByteSourceContent bsc = (ByteSourceContent) content;
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     bsc.process(baos);
-    assertEquals("{'root': {}}", baos.toString("UTF-8"));
-  }
-  
- @Test
-  public void testTransformedContent() throws IOException{
-    when(ahc.createTransformer(String.class, "text/plain")).thenReturn(transformer);
-    when(transformer.marshall("hello")).thenReturn(ByteSource.wrap("hello world".getBytes(Charsets.UTF_8)));
-    Content content = request.transformedContent("text/plain", "hello").getContent();
-    assertThat(content, instanceOf(ByteSourceContent.class));
-    ByteSourceContent bsc = (ByteSourceContent) content;
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    bsc.process(baos);
-    assertEquals("hello world", baos.toString("UTF-8"));
+
+    assertThat(baos.toString("UTF-8")).isEqualTo("{'root': {}}");
   }
   
   @Test
-  public void testSelf()
-  {
-    assertEquals(AdvancedHttpRequestWithBody.class, request.self().getClass());
+  void shouldReturnTransformedContent() throws IOException{
+    when(ahc.createTransformer(String.class, "text/plain")).thenReturn(transformer);
+    when(transformer.marshall("hello")).thenReturn(ByteSource.wrap("hello world".getBytes(Charsets.UTF_8)));
+
+    Content content = request.transformedContent("text/plain", "hello").getContent();
+    assertThat(content).isInstanceOf(ByteSourceContent.class);
+
+    ByteSourceContent bsc = (ByteSourceContent) content;
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    bsc.process(baos);
+
+   assertThat(baos.toString("UTF-8")).isEqualTo("hello world");
+  }
+  
+  @Test
+  void shouldReturnSelf() {
+    assertThat(request.self().getClass()).isEqualTo(AdvancedHttpRequestWithBody.class);
+  }
+
+  private static class CustomContent implements Content {
+    @Override
+    public void prepare(AdvancedHttpRequestWithBody request) throws IOException {
+
+    }
+
+    @Override
+    public void process(OutputStream output) throws IOException {
+
+    }
   }
   
 }

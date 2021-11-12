@@ -45,7 +45,7 @@ class BranchView extends React.Component<Props> {
             renderAll={true}
             props={{
               repository,
-              branch
+              branch,
             }}
           />
         </div>

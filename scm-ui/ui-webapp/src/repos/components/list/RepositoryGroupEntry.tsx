@@ -23,10 +23,9 @@
  */
 import React, { FC } from "react";
 import { Link } from "react-router-dom";
-import { Icon, RepositoryEntry } from "@scm-manager/ui-components";
+import { Icon, RepositoryEntry, GroupEntries } from "@scm-manager/ui-components";
 import { RepositoryGroup } from "@scm-manager/ui-types";
 import { useTranslation } from "react-i18next";
-import GroupEntries from "./GroupEntries";
 
 type Props = {
   group: RepositoryGroup;
@@ -37,7 +36,7 @@ const RepositoryGroupEntry: FC<Props> = ({ group }) => {
 
   const settingsLink = group.namespace?._links?.permissions && (
     <Link to={`/namespace/${group.name}/settings`}>
-      <Icon color="is-link" name="cog" title={t("repositoryOverview.settings.tooltip")} className="is-size-6 ml-2" />
+      <Icon color="inherit" name="cog" title={t("repositoryOverview.settings.tooltip")} className="is-size-6 ml-2" />
     </Link>
   );
   const namespaceHeader = (

@@ -65,16 +65,16 @@ const reducer = (state: State = initialState, action: ActionTypes = { type: ACTI
         ...state,
         indexResources: {
           version: action.payload.version,
-          links: action.payload._links
-        }
+          links: action.payload._links,
+        },
       };
     }
     case "scm/me_success": {
       return {
         ...state,
         auth: {
-          me: action.payload
-        }
+          me: action.payload,
+        },
       };
     }
     default: {
@@ -90,14 +90,14 @@ const store = createStore(reducer, initialState);
 export const fetchIndexResourcesSuccess = (index: IndexResources): ActionTypes => {
   return {
     type: ACTION_TYPE_INDEX,
-    payload: index
+    payload: index,
   };
 };
 
 export const fetchMeSuccess = (me: Me): ActionTypes => {
   return {
     type: ACTION_TYPE_ME,
-    payload: me
+    payload: me,
   };
 };
 

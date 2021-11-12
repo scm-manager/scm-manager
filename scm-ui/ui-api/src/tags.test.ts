@@ -36,9 +36,9 @@ describe("Test Tag hooks", () => {
     type: "git",
     _links: {
       tags: {
-        href: "/hog/tags"
-      }
-    }
+        href: "/hog/tags",
+      },
+    },
   };
 
   const changeset: Changeset = {
@@ -46,14 +46,14 @@ describe("Test Tag hooks", () => {
     description: "Awesome change",
     date: new Date(),
     author: {
-      name: "Arthur Dent"
+      name: "Arthur Dent",
     },
     _embedded: {},
     _links: {
       tag: {
-        href: "/hog/tag"
-      }
-    }
+        href: "/hog/tag",
+      },
+    },
   };
 
   const tagOneDotZero = {
@@ -61,17 +61,17 @@ describe("Test Tag hooks", () => {
     revision: "42",
     signatures: [],
     _links: {
-      "delete": {
-        href: "/hog/tags/1.0"
-      }
-    }
+      delete: {
+        href: "/hog/tags/1.0",
+      },
+    },
   };
 
   const tags: TagCollection = {
     _embedded: {
-      tags: [tagOneDotZero]
+      tags: [tagOneDotZero],
     },
-    _links: {}
+    _links: {},
   };
 
   const queryClient = createInfiniteCachingClient();
@@ -87,7 +87,7 @@ describe("Test Tag hooks", () => {
       fetchMock.getOnce("/api/v2/hog/tags", tags);
 
       const { result, waitFor } = renderHook(() => useTags(repository), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
       await waitFor(() => {
         return !!result.current.data;
@@ -114,7 +114,7 @@ describe("Test Tag hooks", () => {
       fetchMock.getOnce("/api/v2/hog/tags/1.0", tagOneDotZero);
 
       const { result, waitFor } = renderHook(() => useTag(repository, "1.0"), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
       await waitFor(() => {
         return !!result.current.data;
@@ -141,14 +141,14 @@ describe("Test Tag hooks", () => {
       fetchMock.postOnce("/api/v2/hog/tag", {
         status: 201,
         headers: {
-          Location: "/hog/tags/1.0"
-        }
+          Location: "/hog/tags/1.0",
+        },
       });
 
       fetchMock.getOnce("/api/v2/hog/tags/1.0", tagOneDotZero);
 
       const { result, waitForNextUpdate } = renderHook(() => useCreateTag(repository, changeset), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
 
       await act(() => {
@@ -195,11 +195,11 @@ describe("Test Tag hooks", () => {
 
     it("should fail without location header", async () => {
       fetchMock.postOnce("/api/v2/hog/tag", {
-        status: 201
+        status: 201,
       });
 
       const { result, waitForNextUpdate } = renderHook(() => useCreateTag(repository, changeset), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
 
       await act(() => {
@@ -215,11 +215,11 @@ describe("Test Tag hooks", () => {
   describe("useDeleteTags tests", () => {
     const deleteTag = async () => {
       fetchMock.deleteOnce("/api/v2/hog/tags/1.0", {
-        status: 204
+        status: 204,
       });
 
       const { result, waitForNextUpdate } = renderHook(() => useDeleteTag(repository), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
 
       await act(() => {

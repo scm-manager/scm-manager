@@ -39,16 +39,8 @@ type Props = WithTranslation & {
 
 class ProxySettings extends React.Component<Props> {
   render() {
-    const {
-      t,
-      proxyPassword,
-      proxyPort,
-      proxyServer,
-      proxyUser,
-      enableProxy,
-      proxyExcludes,
-      hasUpdatePermission,
-    } = this.props;
+    const { t, proxyPassword, proxyPort, proxyServer, proxyUser, enableProxy, proxyExcludes, hasUpdatePermission } =
+      this.props;
 
     return (
       <div>

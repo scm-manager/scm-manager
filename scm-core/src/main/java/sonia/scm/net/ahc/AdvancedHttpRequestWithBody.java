@@ -26,7 +26,6 @@ package sonia.scm.net.ahc;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Charsets;
 import com.google.common.io.ByteSource;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -34,6 +33,7 @@ import com.google.common.io.ByteSource;
 import java.io.File;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Http request with body.
@@ -170,7 +170,7 @@ public class AdvancedHttpRequestWithBody
    */
   public AdvancedHttpRequestWithBody stringContent(String content)
   {
-    return stringContent(content, Charsets.UTF_8);
+    return stringContent(content, StandardCharsets.UTF_8);
   }
 
   /**
@@ -213,6 +213,17 @@ public class AdvancedHttpRequestWithBody
     contentType(contentType);
 
     return rawContent(value);
+  }
+
+  /**
+   * Use custom implementation of {@link Content} to create request content.
+   * @param content content implementation
+   * @return {@code this}
+   * @since 2.27.0
+   */
+  AdvancedHttpRequestWithBody content(Content content) {
+    this.content = content;
+    return this;
   }
 
   /**

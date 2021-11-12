@@ -23,7 +23,8 @@
  */
 import { File, Link, Repository } from "@scm-manager/ui-types";
 import { requiredLink } from "./links";
-import { apiClient, urls } from "@scm-manager/ui-components";
+import { apiClient } from "./apiclient";
+import * as urls from "./urls";
 import { useInfiniteQuery } from "react-query";
 import { repoQueryKey } from "./keys";
 import { useEffect } from "react";
@@ -37,25 +38,25 @@ export type UseSourcesOptions = {
 
 const UseSourcesDefaultOptions: UseSourcesOptions = {
   enabled: true,
-  refetchPartialInterval: 3000
+  refetchPartialInterval: 3000,
 };
 
 export const useSources = (repository: Repository, opts: UseSourcesOptions = UseSourcesDefaultOptions) => {
   const options = {
     ...UseSourcesDefaultOptions,
-    ...opts
+    ...opts,
   };
   const link = createSourcesLink(repository, options);
   const { isLoading, error, data, isFetchingNextPage, fetchNextPage, refetch } = useInfiniteQuery<File, Error, File>(
     repoQueryKey(repository, "sources", options.revision || "", options.path || ""),
     ({ pageParam }) => {
-      return apiClient.get(pageParam || link).then(response => response.json());
+      return apiClient.get(pageParam || link).then((response) => response.json());
     },
     {
       enabled: options.enabled,
-      getNextPageParam: lastPage => {
+      getNextPageParam: (lastPage) => {
         return (lastPage._links.proceed as Link)?.href;
-      }
+      },
     }
   );
 
@@ -64,7 +65,7 @@ export const useSources = (repository: Repository, opts: UseSourcesOptions = Use
     const intervalId = setInterval(() => {
       if (isPartial(file)) {
         refetch({
-          throwOnError: true
+          throwOnError: true,
         });
       }
     }, options.refetchPartialInterval);
@@ -79,7 +80,7 @@ export const useSources = (repository: Repository, opts: UseSourcesOptions = Use
     fetchNextPage: () => {
       // wrapped because we do not want to leak react-query types in our api
       fetchNextPage();
-    }
+    },
   };
 };
 
@@ -108,8 +109,8 @@ const merge = (files?: File[]): File | undefined => {
     ...lastPage,
     _embedded: {
       ...lastPage._embedded,
-      children
-    }
+      children,
+    },
   };
 };
 

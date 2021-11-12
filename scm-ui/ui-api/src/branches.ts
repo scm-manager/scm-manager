@@ -24,7 +24,7 @@
 import { Branch, BranchCollection, BranchCreation, Link, Repository } from "@scm-manager/ui-types";
 import { requiredLink } from "./links";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { ApiResult } from "./base";
+import { ApiResult, ApiResultWithFetching } from "./base";
 import { branchQueryKey, repoQueryKey } from "./keys";
 import { apiClient } from "./apiclient";
 import { concat } from "./urls";
@@ -40,7 +40,7 @@ export const useBranches = (repository: Repository): ApiResult<BranchCollection>
   );
 };
 
-export const useBranch = (repository: Repository, name: string): ApiResult<Branch> => {
+export const useBranch = (repository: Repository, name: string): ApiResultWithFetching<Branch> => {
   const link = requiredLink(repository, "branches");
   return useQuery<Branch, Error>(branchQueryKey(repository, name), () =>
     apiClient.get(concat(link, encodeURIComponent(name))).then((response) => response.json())
