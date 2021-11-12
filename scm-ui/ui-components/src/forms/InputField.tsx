@@ -21,12 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { ChangeEvent, FC, FocusEvent, KeyboardEvent } from "react";
+import React, {ChangeEvent, FC, FocusEvent, KeyboardEvent} from "react";
 import classNames from "classnames";
 import LabelWithHelpIcon from "./LabelWithHelpIcon";
-import { createAttributesForTesting } from "../devBuild";
+import {createAttributesForTesting} from "../devBuild";
 import useAutofocus from "./useAutofocus";
-import { createFormFieldWrapper, FieldProps, FieldType, isLegacy, isUsingRef } from "./FormFieldTypes";
+import {createFormFieldWrapper, FieldProps, FieldType, isLegacy, isUsingRef} from "./FormFieldTypes";
+import {useA11yId} from "../useA11yId";
 
 type BaseProps = {
   label?: string;
@@ -102,11 +103,15 @@ export const InnerInputField: FC<FieldProps<BaseProps, HTMLInputElement, string>
   } else if (informationMessage) {
     helper = <p className="help is-info">{informationMessage}</p>;
   }
+
+  const id = useA11yId("input");
   return (
     <fieldset className={classNames("field", className)} disabled={readOnly}>
-      <LabelWithHelpIcon label={label} helpText={helpText} />
+      <LabelWithHelpIcon label={label} helpText={helpText} id={id} />
       <div className="control">
         <input
+          aria-describedby={id}
+          aria-labelledby={id}
           ref={field}
           name={name}
           className={classNames("input", errorView)}

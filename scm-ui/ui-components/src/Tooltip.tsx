@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { ReactNode } from "react";
+import React, {ReactNode} from "react";
 
 type Props = {
   message: string;
@@ -29,6 +29,7 @@ type Props = {
   location: TooltipLocation;
   multiline?: boolean;
   children: ReactNode;
+  id?: string;
 };
 
 export type TooltipLocation = "bottom" | "right" | "top" | "left";
@@ -39,7 +40,7 @@ class Tooltip extends React.Component<Props> {
   };
 
   render() {
-    const { className, message, location, multiline, children } = this.props;
+    const { className, message, location, multiline, children, id } = this.props;
     let classes = `tooltip has-tooltip-${location}`;
     if (multiline) {
       classes += " has-tooltip-multiline";
@@ -49,7 +50,7 @@ class Tooltip extends React.Component<Props> {
     }
 
     return (
-      <span className={classes} data-tooltip={message} tabIndex={0}>
+      <span className={classes} data-tooltip={message} aria-label={message} id={id}>
         {children}
       </span>
     );

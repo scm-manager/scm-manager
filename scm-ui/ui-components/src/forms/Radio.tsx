@@ -21,10 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { ChangeEvent, FC, FocusEvent } from "react";
+import React, {ChangeEvent, FC, FocusEvent} from "react";
 import classNames from "classnames";
-import { Help } from "../index";
-import { createFormFieldWrapper, FieldProps, FieldType, isLegacy, isUsingRef } from "./FormFieldTypes";
+import {Help} from "../index";
+import {createFormFieldWrapper, FieldProps, FieldType, isLegacy, isUsingRef} from "./FormFieldTypes";
+import {useA11yId} from "../useA11yId";
 
 type BaseProps = {
   label?: string;
@@ -44,10 +45,12 @@ const InnerRadio: FC<FieldProps<BaseProps, HTMLInputElement, boolean>> = ({
   readOnly,
   ...props
 }) => {
+  const id = useA11yId("radio");
+
   const renderHelp = () => {
     const helpText = props.helpText;
     if (helpText) {
-      return <Help message={helpText} />;
+      return <Help message={helpText} id={id} />;
     }
   };
 
@@ -89,6 +92,8 @@ const InnerRadio: FC<FieldProps<BaseProps, HTMLInputElement, boolean>> = ({
           disabled={props.disabled}
           ref={props.innerRef}
           defaultChecked={defaultChecked}
+          aria-labelledby={id}
+          aria-describedby={id}
         />{" "}
         {props.label}
         {renderHelp()}

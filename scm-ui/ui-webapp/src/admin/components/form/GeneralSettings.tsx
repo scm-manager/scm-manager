@@ -21,15 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
-import { useTranslation } from "react-i18next";
-import { useUserSuggestions } from "@scm-manager/ui-api";
-import { NamespaceStrategies, AnonymousMode, SelectValue } from "@scm-manager/ui-types";
+import React, {FC} from "react";
+import {useTranslation} from "react-i18next";
+import {useUserSuggestions} from "@scm-manager/ui-api";
+import {AnonymousMode, NamespaceStrategies, SelectValue} from "@scm-manager/ui-types";
 import {
+  AutocompleteAddEntryToTableField,
   Checkbox,
   InputField,
   MemberNameTagGroup,
-  AutocompleteAddEntryToTableField,
   Select
 } from "@scm-manager/ui-components";
 import NamespaceStrategySelect from "./NamespaceStrategySelect";
@@ -243,6 +243,7 @@ const GeneralSettings: FC<Props> = ({
             buttonLabel={t("general-settings.emergencyContacts.addButton")}
             loadSuggestions={userSuggestions}
             placeholder={t("general-settings.emergencyContacts.autocompletePlaceholder")}
+            helpText={t("general-settings.emergencyContacts.helpText")}
           />
         </div>
       </div>

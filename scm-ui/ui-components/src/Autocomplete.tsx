@@ -23,10 +23,10 @@
  */
 import React from "react";
 import classNames from "classnames";
-import { Async, AsyncCreatable } from "react-select";
-import { SelectValue } from "@scm-manager/ui-types";
+import {Async, AsyncCreatable} from "react-select";
+import {SelectValue} from "@scm-manager/ui-types";
 import LabelWithHelpIcon from "./forms/LabelWithHelpIcon";
-import { ActionMeta, ValueType } from "react-select/lib/types";
+import {ActionMeta, ValueType} from "react-select/lib/types";
 
 type Props = {
   loadSuggestions: (p: string) => Promise<SelectValue[]>;
@@ -47,7 +47,7 @@ class Autocomplete extends React.Component<Props, State> {
   static defaultProps = {
     placeholder: "Type here",
     loadingMessage: "Loading...",
-    noOptionsMessage: "No suggestion available"
+    noOptionsMessage: "No suggestion available",
   };
 
   handleInputChange = (newValue: ValueType<SelectValue>, action: ActionMeta) => {
@@ -64,7 +64,7 @@ class Autocomplete extends React.Component<Props, State> {
     selectValue: ValueType<SelectValue>,
     selectOptions: readonly SelectValue[]
   ): boolean => {
-    const isNotDuplicated = !selectOptions.map(option => option.label).includes(inputValue);
+    const isNotDuplicated = !selectOptions.map((option) => option.label).includes(inputValue);
     const isNotEmpty = inputValue !== "";
     return isNotEmpty && isNotDuplicated;
   };
@@ -79,8 +79,9 @@ class Autocomplete extends React.Component<Props, State> {
       noOptionsMessage,
       loadSuggestions,
       creatable,
-      className
+      className,
     } = this.props;
+
     return (
       <div className={classNames("field", className)}>
         <LabelWithHelpIcon label={label} helpText={helpText} />
@@ -95,15 +96,16 @@ class Autocomplete extends React.Component<Props, State> {
               loadingMessage={() => loadingMessage}
               noOptionsMessage={() => noOptionsMessage}
               isValidNewOption={this.isValidNewOption}
-              onCreateOption={value => {
+              onCreateOption={(value) => {
                 this.selectValue({
                   label: value,
                   value: {
                     id: value,
-                    displayName: value
-                  }
+                    displayName: value,
+                  },
                 });
               }}
+              aria-label={helpText || label}
             />
           ) : (
             <Async
@@ -114,6 +116,7 @@ class Autocomplete extends React.Component<Props, State> {
               placeholder={placeholder}
               loadingMessage={() => loadingMessage}
               noOptionsMessage={() => noOptionsMessage}
+              aria-label={helpText || label}
             />
           )}
         </div>

@@ -22,12 +22,12 @@
  * SOFTWARE.
  */
 import * as React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
+import {WithTranslation, withTranslation} from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
-import { binder, ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
-import { File } from "@scm-manager/ui-types";
-import { DateFromNow, FileSize, Tooltip, Icon } from "@scm-manager/ui-components";
+import {binder, ExtensionPoint, extensionPoints} from "@scm-manager/ui-extensions";
+import {File} from "@scm-manager/ui-types";
+import {DateFromNow, FileSize, Icon, Tooltip} from "@scm-manager/ui-components";
 import FileIcon from "./FileIcon";
 import FileLink from "./content/FileLink";
 
@@ -55,7 +55,7 @@ const ExtensionTd = styled.td`
 class FileTreeLeaf extends React.Component<Props> {
   createFileIcon = (file: File) => {
     return (
-      <FileLink baseUrl={this.props.baseUrl} file={file}>
+      <FileLink baseUrl={this.props.baseUrl} file={file} tabIndex={-1}>
         <FileIcon file={file} />
       </FileLink>
     );
@@ -63,7 +63,7 @@ class FileTreeLeaf extends React.Component<Props> {
 
   createFileName = (file: File) => {
     return (
-      <FileLink baseUrl={this.props.baseUrl} file={file}>
+      <FileLink baseUrl={this.props.baseUrl} file={file} tabIndex={0}>
         {file.name}
       </FileLink>
     );

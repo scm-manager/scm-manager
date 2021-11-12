@@ -25,7 +25,7 @@
 import * as validation from "./validation";
 import * as repositories from "./repositories";
 
-import { urls } from "@scm-manager/ui-api";
+import {urls} from "@scm-manager/ui-api";
 
 // not sure if it is required
 import {
@@ -83,6 +83,7 @@ export { regExpPattern as changesetShortLinkRegex } from "./markdown/remarkChang
 export * from "./markdown/PluginApi";
 export * from "./devices";
 export { default as copyToClipboard } from "./CopyToClipboard";
+export { useA11yId } from "./useA11yId";
 
 export { default as comparators } from "./comparators";
 

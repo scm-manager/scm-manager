@@ -21,12 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { ChangeEvent, FC, FocusEvent, useEffect } from "react";
+import React, {ChangeEvent, FC, FocusEvent, useEffect} from "react";
 import classNames from "classnames";
 import LabelWithHelpIcon from "./LabelWithHelpIcon";
-import { createAttributesForTesting } from "../devBuild";
+import {createAttributesForTesting} from "../devBuild";
 import useInnerRef from "./useInnerRef";
-import { createFormFieldWrapper, FieldProps, FieldType, isLegacy, isUsingRef } from "./FormFieldTypes";
+import {createFormFieldWrapper, FieldProps, FieldType, isLegacy, isUsingRef} from "./FormFieldTypes";
+import {useA11yId} from "../useA11yId";
 
 export type SelectItem = {
   value: string;
@@ -46,6 +47,7 @@ type BaseProps = {
   readOnly?: boolean;
   className?: string;
   addValueToOptions?: boolean;
+  id?: string;
 };
 
 const InnerSelect: FC<FieldProps<BaseProps, HTMLSelectElement, string>> = ({
@@ -61,6 +63,7 @@ const InnerSelect: FC<FieldProps<BaseProps, HTMLSelectElement, string>> = ({
   className,
   options,
   addValueToOptions,
+  id,
   ...props
 }) => {
   const field = useInnerRef(props.innerRef);
@@ -106,10 +109,11 @@ const InnerSelect: FC<FieldProps<BaseProps, HTMLSelectElement, string>> = ({
   }, [field, value, name]);
 
   const loadingClass = loading ? "is-loading" : "";
+  const a11yId = useA11yId("select");
 
   return (
     <fieldset className="field" disabled={readOnly}>
-      <LabelWithHelpIcon label={label} helpText={helpText} />
+      <LabelWithHelpIcon label={label} helpText={helpText} id={id || a11yId} />
       <div className={classNames("control select", loadingClass, className)}>
         <select
           name={name}
@@ -119,6 +123,7 @@ const InnerSelect: FC<FieldProps<BaseProps, HTMLSelectElement, string>> = ({
           onChange={handleInput}
           onBlur={handleBlur}
           disabled={disabled}
+          aria-describedby={id || a11yId}
           {...createAttributesForTesting(testId)}
         >
           {opts.map((opt) => {

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
+import React, {FC} from "react";
 import classNames from "classnames";
 import styled from "styled-components";
 import Tooltip from "./Tooltip";
@@ -31,16 +31,18 @@ type Props = {
   message: string;
   multiline?: boolean;
   className?: string;
+  id?: string;
 };
 
 const AbsolutePositionTooltip = styled(Tooltip)`
   position: absolute;
 `;
 
-const Help: FC<Props> = ({ message, multiline, className }) => (
+const Help: FC<Props> = ({ message, multiline, className, id }) => (
   <AbsolutePositionTooltip
     className={classNames("is-inline-block", "pl-1", multiline ? "has-tooltip-multiline" : undefined, className)}
     message={message}
+    id={id}
   >
     <HelpIcon />
   </AbsolutePositionTooltip>

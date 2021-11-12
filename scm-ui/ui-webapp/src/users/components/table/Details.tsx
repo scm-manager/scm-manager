@@ -22,14 +22,9 @@
  * SOFTWARE.
  */
 import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
-import { User } from "@scm-manager/ui-types";
-import {
-  Checkbox,
-  DateFromNow,
-  MailLink,
-  createAttributesForTesting
-} from "@scm-manager/ui-components";
+import {WithTranslation, withTranslation} from "react-i18next";
+import {User} from "@scm-manager/ui-types";
+import {Checkbox, createAttributesForTesting, DateFromNow, MailLink} from "@scm-manager/ui-components";
 
 type Props = WithTranslation & {
   user: User;
@@ -58,13 +53,13 @@ class Details extends React.Component<Props> {
           <tr>
             <th>{t("user.active")}</th>
             <td>
-              <Checkbox checked={user.active} />
+              <Checkbox checked={user.active} readOnly={true} />
             </td>
           </tr>
           <tr>
             <th>{t("user.externalFlag")}</th>
             <td>
-              <Checkbox checked={!!user.external} />
+              <Checkbox checked={user.external} readOnly={true} />
             </td>
           </tr>
           <tr>

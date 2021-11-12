@@ -21,12 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { ChangeEvent, FC, FocusEvent, useEffect } from "react";
-import { createAttributesForTesting, Help } from "../index";
+import React, {ChangeEvent, FC, FocusEvent, useEffect} from "react";
+import {createAttributesForTesting, Help} from "../index";
 import LabelWithHelpIcon from "./LabelWithHelpIcon";
 import useInnerRef from "./useInnerRef";
-import { createFormFieldWrapper, FieldProps, FieldType, isLegacy, isUsingRef } from "./FormFieldTypes";
+import {createFormFieldWrapper, FieldProps, FieldType, isLegacy, isUsingRef} from "./FormFieldTypes";
 import classNames from "classnames";
+import {useA11yId} from "../useA11yId";
 
 export interface CheckboxElement extends HTMLElement {
   value: boolean;
@@ -83,17 +84,19 @@ const InnerCheckbox: FC<FieldProps<BaseProps, HTMLInputElement, boolean>> = ({
     }
   };
 
+  const id = useA11yId("checkbox");
+
   const renderHelp = () => {
     const { title, helpText } = props;
     if (helpText && !title) {
-      return <Help message={helpText} />;
+      return <Help message={helpText} id={id} />;
     }
   };
 
   const renderLabelWithHelp = () => {
     const { title, helpText } = props;
     if (title) {
-      return <LabelWithHelpIcon label={title} helpText={helpText} />;
+      return <LabelWithHelpIcon label={title} helpText={helpText} id={id} />;
     }
   };
   return (
@@ -116,6 +119,8 @@ const InnerCheckbox: FC<FieldProps<BaseProps, HTMLInputElement, boolean>> = ({
             checked={props.checked}
             disabled={disabled}
             readOnly={readOnly}
+            aria-describedby={id}
+            aria-labelledby={id}
             {...createAttributesForTesting(testId)}
           />{" "}
           {label}

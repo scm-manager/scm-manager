@@ -21,47 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import classNames from "classnames";
-import {createAttributesForTesting} from "./devBuild";
 
-type Props = {
-  title?: string;
-  iconStyle: string;
-  name: string;
-  color: string;
-  className?: string;
-  onClick?: (event: React.MouseEvent) => void;
-  testId?: string;
-  tabIndex?: number;
-};
+let counter = 0;
 
-export default class Icon extends React.Component<Props> {
-  static defaultProps = {
-    iconStyle: "fas",
-    color: "grey-light",
-  };
-
-  render() {
-    const { title, iconStyle, name, color, className, onClick, testId, tabIndex = -1 } = this.props;
-    if (title) {
-      return (
-        <i
-          onClick={onClick}
-          title={title}
-          tabIndex={tabIndex}
-          className={classNames(iconStyle, "fa-fw", "fa-" + name, `has-text-${color}`, className)}
-          {...createAttributesForTesting(testId)}
-        />
-      );
-    }
-    return (
-      <i
-        onClick={onClick}
-        className={classNames(iconStyle, "fa-" + name, `has-text-${color}`, className)}
-        tabIndex={tabIndex}
-        {...createAttributesForTesting(testId)}
-      />
-    );
-  }
-}
+export const useA11yId = (prefix: string) => prefix + "_" + counter++;

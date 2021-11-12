@@ -21,14 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { Link, useHistory, useLocation } from "react-router-dom";
+import React, {FC, useState} from "react";
+import {useTranslation} from "react-i18next";
+import {Link, useHistory, useLocation} from "react-router-dom";
 import classNames from "classnames";
 import styled from "styled-components";
-import { urls } from "@scm-manager/ui-api";
-import { Branch, File, Repository } from "@scm-manager/ui-types";
-import { binder, ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
+import {urls} from "@scm-manager/ui-api";
+import {Branch, File, Repository} from "@scm-manager/ui-types";
+import {binder, ExtensionPoint, extensionPoints} from "@scm-manager/ui-extensions";
 import Icon from "./Icon";
 import Tooltip from "./Tooltip";
 import copyToClipboard from "./CopyToClipboard";
@@ -189,7 +189,7 @@ const Breadcrumb: FC<Props> = ({
         {prefixButtons}
         <ul>
           <li>
-            <Link to={homeUrl}>
+            <Link to={homeUrl} aria-label={t("breadcrumb.home")}>
               <HomeIcon title={t("breadcrumb.home")} name="home" color="inherit" />
             </Link>
           </li>

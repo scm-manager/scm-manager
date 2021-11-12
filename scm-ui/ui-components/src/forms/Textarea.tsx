@@ -21,11 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { ChangeEvent, FC, FocusEvent, KeyboardEvent } from "react";
+import React, {ChangeEvent, FC, FocusEvent, KeyboardEvent} from "react";
 import LabelWithHelpIcon from "./LabelWithHelpIcon";
 import useAutofocus from "./useAutofocus";
 import classNames from "classnames";
-import { createFormFieldWrapper, FieldProps, FieldType, isLegacy, isUsingRef } from "./FormFieldTypes";
+import {createFormFieldWrapper, FieldProps, FieldType, isLegacy, isUsingRef} from "./FormFieldTypes";
+import {useA11yId} from "../useA11yId";
 
 type BaseProps = {
   name?: string;
@@ -102,9 +103,11 @@ const InnerTextarea: FC<FieldProps<BaseProps, HTMLTextAreaElement, string>> = ({
     helper = <p className="help is-info">{informationMessage}</p>;
   }
 
+  const id = useA11yId("textarea");
+
   return (
     <fieldset className="field" disabled={readOnly}>
-      <LabelWithHelpIcon label={label} helpText={helpText} />
+      <LabelWithHelpIcon label={label} helpText={helpText} id={id} />
       <div className="control">
         <textarea
           className={classNames("textarea", errorView)}
@@ -117,6 +120,8 @@ const InnerTextarea: FC<FieldProps<BaseProps, HTMLTextAreaElement, string>> = ({
           disabled={disabled}
           onKeyDown={onKeyDown}
           defaultValue={defaultValue}
+          aria-describedby={id}
+          aria-labelledby={id}
         />
       </div>
       {helper}

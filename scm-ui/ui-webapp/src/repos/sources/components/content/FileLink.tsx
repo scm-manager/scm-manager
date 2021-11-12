@@ -21,16 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, ReactNode } from "react";
-import { Link } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import { File } from "@scm-manager/ui-types";
-import { Tooltip } from "@scm-manager/ui-components";
+import React, {FC, ReactNode} from "react";
+import {Link} from "react-router-dom";
+import {useTranslation} from "react-i18next";
+import {File} from "@scm-manager/ui-types";
+import {Tooltip} from "@scm-manager/ui-components";
 
 type Props = {
   baseUrl: string;
   file: File;
   children: ReactNode;
+  tabIndex?: number;
 };
 
 const isLocalRepository = (repositoryUrl: string) => {
@@ -74,7 +75,7 @@ export const createFolderLink = (base: string, file: File) => {
   return link;
 };
 
-const FileLink: FC<Props> = ({ baseUrl, file, children }) => {
+const FileLink: FC<Props> = ({ baseUrl, file, children, tabIndex }) => {
   const [t] = useTranslation("repos");
   if (file?.subRepository?.repositoryUrl) {
     // file link represents a subRepository
@@ -87,13 +88,21 @@ const FileLink: FC<Props> = ({ baseUrl, file, children }) => {
       if (file.subRepository.revision && isLocalRepository(link)) {
         link += "/code/sources/" + file.subRepository.revision;
       }
-      return <a href={link}>{children}</a>;
+      return (
+        <a href={link} tabIndex={tabIndex}>
+          {children}
+        </a>
+      );
     } else if (link.startsWith("ssh://") && isLocalRepository(link)) {
       link = createRelativeLink(link);
       if (file.subRepository.revision) {
         link += "/code/sources/" + file.subRepository.revision;
       }
-      return <Link to={link}>{children}</Link>;
+      return (
+        <Link to={link} tabIndex={tabIndex}>
+          {children}
+        </Link>
+      );
     } else {
       // subRepository url cannot be linked
       return (
@@ -104,7 +113,11 @@ const FileLink: FC<Props> = ({ baseUrl, file, children }) => {
     }
   }
   // normal file or folder
-  return <Link to={createFolderLink(baseUrl, file)}>{children}</Link>;
+  return (
+    <Link to={createFolderLink(baseUrl, file)} tabIndex={tabIndex}>
+      {children}
+    </Link>
+  );
 };
 
 export default FileLink;

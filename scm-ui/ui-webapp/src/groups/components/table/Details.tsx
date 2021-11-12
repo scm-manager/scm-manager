@@ -22,9 +22,9 @@
  * SOFTWARE.
  */
 import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
-import { Group } from "@scm-manager/ui-types";
-import { Checkbox, DateFromNow } from "@scm-manager/ui-components";
+import {WithTranslation, withTranslation} from "react-i18next";
+import {Group} from "@scm-manager/ui-types";
+import {Checkbox, DateFromNow} from "@scm-manager/ui-components";
 import GroupMember from "./GroupMember";
 
 type Props = WithTranslation & {
@@ -48,7 +48,7 @@ class Details extends React.Component<Props> {
           <tr>
             <th>{t("group.external")}</th>
             <td>
-              <Checkbox checked={group.external} />
+              <Checkbox checked={group.external} readOnly={true} />
             </td>
           </tr>
           <tr>
