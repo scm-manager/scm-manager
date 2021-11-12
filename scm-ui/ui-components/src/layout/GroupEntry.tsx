@@ -25,6 +25,7 @@ import React, { FC, ReactNode } from "react";
 import { Link } from "react-router-dom";
 import classNames from "classnames";
 import styled from "styled-components";
+import { useTranslation } from "react-i18next";
 
 const StyledGroupEntry = styled.div`
   max-height: calc(90px - 1.5rem);
@@ -76,12 +77,18 @@ type Props = {
   description?: string | ReactNode;
   contentRight?: ReactNode;
   link: string;
+  ariaLabel?: string;
 };
 
-const GroupEntry: FC<Props> = ({ link, avatar, title, name, description, contentRight }) => {
+const GroupEntry: FC<Props> = ({ link, avatar, title, name, description, contentRight, ariaLabel }) => {
+  const [t] = useTranslation("repos");
   return (
     <div className="is-relative">
-      <OverlayLink to={link} className="has-hover-background-blue" />
+      <OverlayLink
+        to={link}
+        className="has-hover-background-blue"
+        aria-label={t("overview.ariaLabel", { name: ariaLabel })}
+      />
       <StyledGroupEntry
         className={classNames("is-flex", "is-justify-content-space-between", "is-align-items-center", "p-2")}
         title={title}

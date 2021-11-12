@@ -154,6 +154,7 @@ const RepositoryEntry: FC<Props> = ({ repository, baseDate }) => {
         description={repository.description}
         contentRight={actions}
         link={repositoryLink}
+        ariaLabel={repository.name}
       />
     </>
   );

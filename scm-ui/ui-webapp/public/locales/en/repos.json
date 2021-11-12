@@ -62,7 +62,8 @@
     "filterRepositories": "Filter repositories",
     "allNamespaces": "All namespaces",
     "clone": "Clone/Checkout",
-    "contact": "Send mail to {{contact}}"
+    "contact": "Send mail to {{contact}}",
+    "ariaLabel": "Repository {{name}}"
   },
   "create": {
     "title": "Add Repository",
