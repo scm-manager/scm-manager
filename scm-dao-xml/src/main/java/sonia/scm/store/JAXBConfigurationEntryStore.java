@@ -37,6 +37,10 @@ import javax.xml.bind.Marshaller;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamReader;
 import java.io.File;
+import java.io.Reader;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -138,8 +142,9 @@ public class JAXBConfigurationEntryStore<V> implements ConfigurationEntryStore<V
 
     context.withUnmarshaller(u -> {
       XMLStreamReader reader = null;
-      try {
-        reader = XmlStreams.createReader(file);
+
+      try (Reader inputReader = Files.newBufferedReader(file.toPath(), StandardCharsets.UTF_8)) {
+        reader = XmlStreams.createReader(inputReader);
 
         // configuration
         reader.nextTag();
@@ -186,42 +191,44 @@ public class JAXBConfigurationEntryStore<V> implements ConfigurationEntryStore<V
     LOG.debug("store configuration to {}", file);
 
     context.withMarshaller(m -> {
-      m.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
+        m.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
 
       CopyOnWrite.withTemporaryFile(
         temp -> {
-          try (IndentXMLStreamWriter writer = XmlStreams.createWriter(temp)) {
-            writer.writeStartDocument();
+          try (Writer ioWriter = Files.newBufferedWriter(temp, StandardCharsets.UTF_8)) {
+            try (IndentXMLStreamWriter writer = XmlStreams.createWriter(ioWriter)) {
+              writer.writeStartDocument();
 
-            // configuration start
-            writer.writeStartElement(TAG_CONFIGURATION);
-            writer.writeAttribute("type", "config-entry");
+              // configuration start
+              writer.writeStartElement(TAG_CONFIGURATION);
+              writer.writeAttribute("type", "config-entry");
 
-            for (Entry<String, V> e : entries.entrySet()) {
+              for (Entry<String, V> e : entries.entrySet()) {
 
-              // entry start
-              writer.writeStartElement(TAG_ENTRY);
+                // entry start
+                writer.writeStartElement(TAG_ENTRY);
 
-              // key start
-              writer.writeStartElement(TAG_KEY);
-              writer.writeCharacters(e.getKey());
+                // key start
+                writer.writeStartElement(TAG_KEY);
+                writer.writeCharacters(e.getKey());
 
-              // key end
+                // key end
+                writer.writeEndElement();
+
+                // value
+                JAXBElement<V> je = new JAXBElement<>(QName.valueOf(TAG_VALUE), type,
+                        e.getValue());
+
+                m.marshal(je, writer);
+
+                // entry end
+                writer.writeEndElement();
+              }
+
+              // configuration end
               writer.writeEndElement();
-
-              // value
-              JAXBElement<V> je = new JAXBElement<>(QName.valueOf(TAG_VALUE), type,
-                e.getValue());
-
-              m.marshal(je, writer);
-
-              // entry end
-              writer.writeEndElement();
+              writer.writeEndDocument();
             }
-
-            // configuration end
-            writer.writeEndElement();
-            writer.writeEndDocument();
           }
         },
         file.toPath()

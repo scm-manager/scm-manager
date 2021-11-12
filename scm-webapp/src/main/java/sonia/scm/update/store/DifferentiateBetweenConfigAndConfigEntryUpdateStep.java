@@ -34,17 +34,19 @@ import sonia.scm.version.Version;
 import sonia.scm.xml.XmlStreams;
 
 import javax.xml.XMLConstants;
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.stream.Stream;
@@ -74,8 +76,8 @@ abstract class DifferentiateBetweenConfigAndConfigEntryUpdateStep {
   private boolean isConfigEntryFile(Path potentialFile) {
     LOG.trace("Testing whether file is config entry file without mark: {}", potentialFile);
     XMLStreamReader reader = null;
-    try {
-      reader = XmlStreams.createReader(potentialFile);
+    try (Reader inputReader = Files.newBufferedReader(potentialFile, StandardCharsets.UTF_8)) {
+      reader = XmlStreams.createReader(inputReader);
       reader.nextTag();
       if ("configuration".equals(reader.getLocalName())) {
         reader.nextTag();
@@ -104,26 +106,25 @@ abstract class DifferentiateBetweenConfigAndConfigEntryUpdateStep {
   }
 
   private void writeXmlDocument(Document configEntryDocument, Path temporaryFile) throws TransformerException {
-    try {
-      TransformerFactory factory = TransformerFactory.newInstance();
+    try (OutputStream os = Files.newOutputStream(temporaryFile)) {
+      final TransformerFactory factory = TransformerFactory.newInstance();
       factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
       factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
-      Transformer transformer = factory.newTransformer();
-      DOMSource domSource = new DOMSource(configEntryDocument);
-      StreamResult streamResult = new StreamResult(Files.newOutputStream(temporaryFile));
-      transformer.transform(domSource, streamResult);
+      final DOMSource domSource = new DOMSource(configEntryDocument);
+
+      factory.newTransformer().transform(domSource, new StreamResult(os));
     } catch (IOException e) {
       throw new UpdateException("Could not write modified config entry file", e);
     }
   }
 
   private Document readAsXmlDocument(Path configFile) {
-    try {
-      DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-      factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-      factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
-      DocumentBuilder builder = factory.newDocumentBuilder();
-      return builder.parse(Files.newInputStream(configFile));
+    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+    factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+
+    try (InputStream is = Files.newInputStream(configFile)) {
+      return factory.newDocumentBuilder().parse(is);
     } catch (ParserConfigurationException | SAXException | IOException e) {
       throw new UpdateException("Could not read config entry file", e);
     }

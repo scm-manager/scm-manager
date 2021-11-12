@@ -35,6 +35,8 @@ import javax.inject.Inject;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import java.io.IOException;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -135,8 +137,8 @@ public class FileStoreExporter implements StoreExporter {
 
   private StoreType determineConfigType(Path storePath) {
     XMLStreamReader reader = null;
-    try {
-      reader = XmlStreams.createReader(storePath);
+    try (Reader inputReader = Files.newBufferedReader(storePath, StandardCharsets.UTF_8)) {
+      reader = XmlStreams.createReader(inputReader);
       reader.nextTag();
       if (
         "configuration".equals(reader.getLocalName())

@@ -30,6 +30,7 @@ import org.junit.jupiter.api.io.TempDir;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -43,9 +44,11 @@ class CopyOnWriteTest {
   void shouldCreateNewFile(@TempDir Path tempDir) {
     Path expectedFile = tempDir.resolve("toBeCreated.txt");
 
-    withTemporaryFile(
-      file -> new FileOutputStream(file.toFile()).write("great success".getBytes()),
-      expectedFile);
+    withTemporaryFile(file -> {
+      try (OutputStream os = new FileOutputStream(file.toFile())) {
+        os.write("great success".getBytes());
+      }
+    }, expectedFile);
 
     Assertions.assertThat(expectedFile).hasContent("great success");
   }
@@ -55,34 +58,40 @@ class CopyOnWriteTest {
     Path expectedFile = tempDir.resolve("toBeOverwritten.txt");
     Files.createFile(expectedFile);
 
-    withTemporaryFile(
-      file -> new FileOutputStream(file.toFile()).write("great success".getBytes()),
-      expectedFile);
+    withTemporaryFile(file -> {
+      try (OutputStream os = new FileOutputStream(file.toFile())) {
+        os.write("great success".getBytes());
+      }
+    }, expectedFile);
 
     Assertions.assertThat(expectedFile).hasContent("great success");
   }
 
   @Test
   void shouldFailForDirectory(@TempDir Path tempDir) {
-    assertThrows(IllegalArgumentException.class,
-      () -> withTemporaryFile(
-        file -> new FileOutputStream(file.toFile()).write("should not be written".getBytes()),
-        tempDir));
+    assertThrows(IllegalArgumentException.class, () -> withTemporaryFile(file -> {
+        try (OutputStream os = new FileOutputStream(file.toFile())) {
+          os.write("should not be written".getBytes());
+        }
+      }, tempDir));
   }
 
   @Test
   void shouldFailForMissingDirectory() {
-    assertThrows(
-      IllegalArgumentException.class,
-      () -> withTemporaryFile(
-        file -> new FileOutputStream(file.toFile()).write("should not be written".getBytes()),
-        Paths.get("someFile")));
+    assertThrows(IllegalArgumentException.class, () -> withTemporaryFile(file -> {
+      try (OutputStream os = new FileOutputStream(file.toFile())) {
+        os.write("should not be written".getBytes());
+      }
+    }, Paths.get("someFile")));
   }
 
   @Test
   void shouldKeepBackupIfTemporaryFileCouldNotBeWritten(@TempDir Path tempDir) throws IOException {
     Path unchangedOriginalFile = tempDir.resolve("notToBeDeleted.txt");
-    new FileOutputStream(unchangedOriginalFile.toFile()).write("this should be kept".getBytes());
+
+    try (OutputStream unchangedOriginalOs = new FileOutputStream(unchangedOriginalFile.toFile())) {
+      unchangedOriginalOs.write("this should be kept".getBytes());
+    }
 
     assertThrows(
       StoreException.class,
@@ -111,7 +120,10 @@ class CopyOnWriteTest {
   @Test
   void shouldKeepBackupIfTemporaryFileIsMissing(@TempDir Path tempDir) throws IOException {
     Path backedUpFile = tempDir.resolve("notToBeDeleted.txt");
-    new FileOutputStream(backedUpFile.toFile()).write("this should be kept".getBytes());
+
+    try (OutputStream backedUpOs = new FileOutputStream(backedUpFile.toFile())) {
+      backedUpOs.write("this should be kept".getBytes());
+    }
 
     assertThrows(
       StoreException.class,
@@ -125,11 +137,16 @@ class CopyOnWriteTest {
   @Test
   void shouldDeleteExistingFile(@TempDir Path tempDir) throws IOException {
     Path expectedFile = tempDir.resolve("toBeReplaced.txt");
-    new FileOutputStream(expectedFile.toFile()).write("this should be removed".getBytes());
 
-    withTemporaryFile(
-      file -> new FileOutputStream(file.toFile()).write("overwritten".getBytes()),
-      expectedFile);
+    try (OutputStream expectedOs = new FileOutputStream(expectedFile.toFile())) {
+      expectedOs.write("this should be removed".getBytes());
+    }
+
+    withTemporaryFile(file -> {
+      try (OutputStream os = new FileOutputStream(file.toFile())) {
+        os.write("overwritten".getBytes()) ;
+      }
+    }, expectedFile);
 
     Assertions.assertThat(Files.list(tempDir)).hasSize(1);
   }

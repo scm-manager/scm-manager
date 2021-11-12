@@ -91,14 +91,8 @@ class CopyMigrationStrategyTest {
   }
 
   private void assertDirectoriesEqual(Path targetDataDir, Path originalDataDir) {
-    Stream<Path> list = null;
-    try {
-      list = Files.list(originalDataDir);
-    } catch (IOException e) {
-      fail("could not read original directory", e);
-    }
-    list.forEach(
-      original -> {
+    try (Stream<Path> list = Files.list(originalDataDir)) {
+      list.forEach(original -> {
         Path expectedTarget = targetDataDir.resolve(original.getFileName());
         assertThat(expectedTarget).exists();
         if (Files.isDirectory(original)) {
@@ -106,7 +100,9 @@ class CopyMigrationStrategyTest {
         } else {
           assertThat(expectedTarget).hasSameContentAs(original);
         }
-      }
-    );
+      });
+    } catch (IOException e) {
+      fail("could not read original directory", e);
+    }
   }
 }

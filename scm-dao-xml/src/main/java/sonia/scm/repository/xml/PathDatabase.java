@@ -36,6 +36,9 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 import java.io.IOException;
+import java.io.Reader;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -67,22 +70,24 @@ class PathDatabase {
 
     CopyOnWrite.withTemporaryFile(
       temp -> {
-        try (IndentXMLStreamWriter writer = XmlStreams.createWriter(temp)) {
-          writer.writeStartDocument(ENCODING, VERSION);
+        try (Writer ioWriter = Files.newBufferedWriter(temp, StandardCharsets.UTF_8)) {
+          try (IndentXMLStreamWriter writer = XmlStreams.createWriter(ioWriter)) {
+            writer.writeStartDocument(ENCODING, VERSION);
 
-          writeRepositoriesStart(writer, creationTime, lastModified);
-          for (Map.Entry<String, Path> e : pathDatabase.entrySet()) {
-            writeRepository(writer, e.getKey(), e.getValue());
+            writeRepositoriesStart(writer, creationTime, lastModified);
+            for (Map.Entry<String, Path> e : pathDatabase.entrySet()) {
+              writeRepository(writer, e.getKey(), e.getValue());
+            }
+            writer.writeEndElement();
+
+            writer.writeEndDocument();
+          } catch (XMLStreamException ex) {
+            throw new InternalRepositoryException(
+                    ContextEntry.ContextBuilder.entity(Path.class, storePath.toString()).build(),
+                    "failed to write repository path database",
+                    ex
+            );
           }
-          writer.writeEndElement();
-
-          writer.writeEndDocument();
-        } catch (XMLStreamException | IOException ex) {
-          throw new InternalRepositoryException(
-            ContextEntry.ContextBuilder.entity(Path.class, storePath.toString()).build(),
-            "failed to write repository path database",
-            ex
-          );
         }
       },
       storePath
@@ -121,8 +126,8 @@ class PathDatabase {
   void read(OnRepositories onRepositories, OnRepository onRepository) {
     LOG.trace("read repository path database from {}", storePath);
     XMLStreamReader reader = null;
-    try {
-      reader = XmlStreams.createReader(storePath);
+    try (Reader inputReader = Files.newBufferedReader(storePath, StandardCharsets.UTF_8)) {
+      reader = XmlStreams.createReader(inputReader);
 
       while (reader.hasNext()) {
         int eventType = reader.next();

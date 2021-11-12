@@ -32,13 +32,8 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
-import java.io.File;
-import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 public final class XmlStreams {
 
@@ -67,31 +62,13 @@ public final class XmlStreams {
     }
   }
 
-  public static XMLStreamReader createReader(Path path) throws IOException, XMLStreamException {
-    return createReader(Files.newBufferedReader(path, StandardCharsets.UTF_8));
-  }
-
-  public static XMLStreamReader createReader(File file) throws IOException, XMLStreamException {
-    return createReader(file.toPath());
-  }
-
-  private static XMLStreamReader createReader(Reader reader) throws XMLStreamException {
+  public static XMLStreamReader createReader(Reader reader) throws XMLStreamException {
     XMLInputFactory factory = XMLInputFactory.newInstance();
     factory.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, Boolean.FALSE);
     return factory.createXMLStreamReader(reader);
   }
 
-
-  public static IndentXMLStreamWriter createWriter(Path path) throws IOException, XMLStreamException {
-    return createWriter(Files.newBufferedWriter(path, StandardCharsets.UTF_8));
-  }
-
-  public static IndentXMLStreamWriter createWriter(File file) throws IOException, XMLStreamException {
-    return createWriter(file.toPath());
-  }
-
-  private static IndentXMLStreamWriter createWriter(Writer writer) throws XMLStreamException {
+  public static IndentXMLStreamWriter createWriter(Writer writer) throws XMLStreamException {
     return new IndentXMLStreamWriter(XMLOutputFactory.newFactory().createXMLStreamWriter(writer));
   }
-
 }

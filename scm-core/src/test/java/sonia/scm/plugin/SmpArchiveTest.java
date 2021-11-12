@@ -43,6 +43,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.file.Path;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -137,17 +138,14 @@ class SmpArchiveTest {
     return archiveFile;
   }
 
-  private XMLStreamWriter createStreamWriter(File file) throws IOException, XMLStreamException {
-    return XMLOutputFactory.newFactory().createXMLStreamWriter(new FileOutputStream(file));
-  }
-
   private void writeDescriptor(File descriptor, String name, String version) throws IOException, XMLStreamException {
     IOUtil.mkdirs(descriptor.getParentFile());
 
     XMLStreamWriter writer = null;
 
-    try {
-      writer = createStreamWriter(descriptor);
+    try (OutputStream os = new FileOutputStream(descriptor)) {
+      writer = XMLOutputFactory.newFactory().createXMLStreamWriter(os);
+
       writer.writeStartDocument();
       writer.writeStartElement("plugin");
       writer.writeStartElement("information");
@@ -157,10 +155,7 @@ class SmpArchiveTest {
       writer.writeEndElement();
       writer.writeEndElement();
       writer.writeEndDocument();
-    } finally {
-      if (writer != null) {
-        writer.close();
-      }
+      writer.close();
     }
   }
 
