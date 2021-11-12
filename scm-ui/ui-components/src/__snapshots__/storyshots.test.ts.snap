@@ -3970,6 +3970,7 @@ exports[`Storyshots GroupEntry Default 1`] = `
     className="is-relative"
   >
     <a
+      aria-label="overview.ariaLabel"
       className="GroupEntry__OverlayLink-sc-1f902yu-1 dVnuiR has-hover-background-blue"
       href="/foo/bar"
       onClick={[Function]}
@@ -4050,6 +4051,7 @@ exports[`Storyshots GroupEntry With long texts 1`] = `
     className="is-relative"
   >
     <a
+      aria-label="overview.ariaLabel"
       className="GroupEntry__OverlayLink-sc-1f902yu-1 dVnuiR has-hover-background-blue"
       href="/foo/bar"
       onClick={[Function]}
@@ -74189,6 +74191,7 @@ exports[`Storyshots Repositories/RepositoryEntry Archived 1`] = `
     className="is-relative"
   >
     <a
+      aria-label="overview.ariaLabel"
       className="GroupEntry__OverlayLink-sc-1f902yu-1 dVnuiR has-hover-background-blue"
       href="/repo/hitchhiker/heartOfGold/"
       onClick={[Function]}
@@ -74310,6 +74313,7 @@ exports[`Storyshots Repositories/RepositoryEntry Avatar EP 1`] = `
     className="is-relative"
   >
     <a
+      aria-label="overview.ariaLabel"
       className="GroupEntry__OverlayLink-sc-1f902yu-1 dVnuiR has-hover-background-blue"
       href="/repo/hitchhiker/heartOfGold/"
       onClick={[Function]}
@@ -74419,6 +74423,7 @@ exports[`Storyshots Repositories/RepositoryEntry Before Title EP 1`] = `
     className="is-relative"
   >
     <a
+      aria-label="overview.ariaLabel"
       className="GroupEntry__OverlayLink-sc-1f902yu-1 dVnuiR has-hover-background-blue"
       href="/repo/hitchhiker/heartOfGold/"
       onClick={[Function]}
@@ -74531,6 +74536,7 @@ exports[`Storyshots Repositories/RepositoryEntry Default 1`] = `
     className="is-relative"
   >
     <a
+      aria-label="overview.ariaLabel"
       className="GroupEntry__OverlayLink-sc-1f902yu-1 dVnuiR has-hover-background-blue"
       href="/repo/hitchhiker/heartOfGold/"
       onClick={[Function]}
@@ -74640,6 +74646,7 @@ exports[`Storyshots Repositories/RepositoryEntry Exporting 1`] = `
     className="is-relative"
   >
     <a
+      aria-label="overview.ariaLabel"
       className="GroupEntry__OverlayLink-sc-1f902yu-1 dVnuiR has-hover-background-blue"
       href="/repo/hitchhiker/heartOfGold/"
       onClick={[Function]}
@@ -74761,6 +74768,7 @@ exports[`Storyshots Repositories/RepositoryEntry HealthCheck Failure 1`] = `
     className="is-relative"
   >
     <a
+      aria-label="overview.ariaLabel"
       className="GroupEntry__OverlayLink-sc-1f902yu-1 dVnuiR has-hover-background-blue"
       href="/repo/hitchhiker/heartOfGold/"
       onClick={[Function]}
@@ -74883,6 +74891,7 @@ exports[`Storyshots Repositories/RepositoryEntry MultiRepositoryTags 1`] = `
     className="is-relative"
   >
     <a
+      aria-label="overview.ariaLabel"
       className="GroupEntry__OverlayLink-sc-1f902yu-1 dVnuiR has-hover-background-blue"
       href="/repo/hitchhiker/heartOfGold/"
       onClick={[Function]}
@@ -75015,6 +75024,7 @@ exports[`Storyshots Repositories/RepositoryEntry RepositoryFlag EP 1`] = `
     className="is-relative"
   >
     <a
+      aria-label="overview.ariaLabel"
       className="GroupEntry__OverlayLink-sc-1f902yu-1 dVnuiR has-hover-background-blue"
       href="/repo/hitchhiker/heartOfGold/"
       onClick={[Function]}
@@ -75137,6 +75147,7 @@ exports[`Storyshots Repositories/RepositoryEntry With long texts 1`] = `
     className="is-relative"
   >
     <a
+      aria-label="overview.ariaLabel"
       className="GroupEntry__OverlayLink-sc-1f902yu-1 dVnuiR has-hover-background-blue"
       href="/repo/hitchhiker/veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery-loooooooooooooooooooooooooooooooooooooooooooooooooooong-repooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo-naaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaame/"
       onClick={[Function]}
