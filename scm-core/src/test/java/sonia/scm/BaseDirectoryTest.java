@@ -52,7 +52,7 @@ class BaseDirectoryTest {
   @Test
   void shouldGetFromEnvironmentVariable() {
     BaseDirectory directory = builder().withEnvironment(BaseDirectory.ENVIRONMENT_VARIABLE, "/tmp/scm_home").create();
-    assertThat(directory.find().toString()).isEqualTo(new File("/tmp/scm_home").getPath());
+    assertThat(directory.find()).isEqualTo(Paths.get("/tmp/scm_home"));
   }
 
   @Nested
