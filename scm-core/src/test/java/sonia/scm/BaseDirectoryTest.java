@@ -61,7 +61,7 @@ class BaseDirectoryTest {
     @Test
     void linux() {
       BaseDirectory directory = builder().withSystemProperty("user.home", "/tmp").create();
-      assertThat(directory.find().toString()).isEqualTo(new File("/tmp/.scm").getPath());
+      assertThat(directory.find()).isEqualTo(Paths.get("/tmp/.scm"));
     }
 
     @Test
