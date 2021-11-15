@@ -224,6 +224,16 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
     hgModifyCommand.execute(request2);
   }
 
+  @Test(expected = ScmConstraintViolationException.class)
+  public void shouldThrowErrorIfRelativePathIsOutsideOfWorkdir() {
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "/../../../../g.txt"));
+    request.setCommitMessage("Now i really found the answer");
+    request.setAuthor(new Person("Trillian Astra", "trillian@hitchhiker.com"));
+
+    hgModifyCommand.execute(request);
+  }
+
   @Test
   public void shouldRenameFile() {
     ModifyCommandRequest request = new ModifyCommandRequest();
@@ -262,6 +272,18 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
     assertThat(cmdContext.open().tip().getAddedFiles().contains("c/z.txt")).isTrue();
     assertThat(cmdContext.open().tip().getDeletedFiles().contains("c/d.txt")).isFalse();
     assertThat(cmdContext.open().tip().getDeletedFiles().contains("c/e.txt")).isFalse();
+  }
+
+  @Test
+  public void shouldMoveFolderToExistingFolder() {
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.addRequest(new ModifyCommandRequest.MoveRequest("/g/h", "/h"));
+    request.setCommitMessage("Now i really found the answer");
+    request.setAuthor(new Person("Trillian Astra", "trillian@hitchhiker.com"));
+
+    hgModifyCommand.execute(request);
+    assertThat(cmdContext.open().tip().getDeletedFiles().contains("g/h/j.txt")).isTrue();
+    assertThat(cmdContext.open().tip().getAddedFiles().contains("h/j.txt")).isTrue();
   }
 
   @Test

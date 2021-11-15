@@ -406,60 +406,6 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
     command.execute(request);
   }
 
-  @Test
-  public void shouldMoveFolder() throws GitAPIException, IOException {
-    GitModifyCommand command = createCommand();
-
-    ModifyCommandRequest request = new ModifyCommandRequest();
-    request.setCommitMessage("please rename this file");
-    request.setAuthor(new Person("Peter Pan", "peter@pan.net"));
-    request.addRequest(new ModifyCommandRequest.MoveRequest("/g/h", "/h"));
-
-    command.execute(request);
-
-    TreeAssertions assertions = canonicalTreeParser -> {
-      assertThat(canonicalTreeParser.findFile("h/j.txt")).isTrue();
-    };
-
-    assertInTree(assertions);
-  }
-
-  @Test
-  public void shouldMoveFolderInExistingFolderAndRename() throws GitAPIException, IOException {
-    GitModifyCommand command = createCommand();
-
-    ModifyCommandRequest request = new ModifyCommandRequest();
-    request.setCommitMessage("please rename this file");
-    request.setAuthor(new Person("Peter Pan", "peter@pan.net"));
-    request.addRequest(new ModifyCommandRequest.MoveRequest("/g/k", "/g/h/z"));
-
-    command.execute(request);
-
-    TreeAssertions assertions = canonicalTreeParser -> {
-      assertThat(canonicalTreeParser.findFile("g/h/z/l.txt")).isTrue();
-    };
-
-    assertInTree(assertions);
-  }
-
-  @Test
-  public void shouldRenameFolderInPlace() throws GitAPIException, IOException {
-    GitModifyCommand command = createCommand();
-
-    ModifyCommandRequest request = new ModifyCommandRequest();
-    request.setCommitMessage("please rename this file");
-    request.setAuthor(new Person("Peter Pan", "peter@pan.net"));
-    request.addRequest(new ModifyCommandRequest.MoveRequest("/g/k", "/g/y"));
-
-    command.execute(request);
-
-    TreeAssertions assertions = canonicalTreeParser -> {
-      assertThat(canonicalTreeParser.findFile("g/y/l.txt")).isTrue();
-    };
-
-    assertInTree(assertions);
-  }
-
   @Test(expected = ScmConstraintViolationException.class)
   public void shouldThrowErrorIfRelativePathIsOutsideOfWorkdir() {
     GitModifyCommand command = createCommand();
@@ -528,6 +474,25 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
       assertThat(canonicalTreeParser.findFile("c/z.txt")).isTrue();
       assertThat(canonicalTreeParser.findFile("c/d.txt")).isTrue();
       assertThat(canonicalTreeParser.findFile("c/e.txt")).isTrue();
+    };
+
+    assertInTree(assertions);
+  }
+
+  @Test
+  public void shouldMoveFolderToExistingFolder() throws GitAPIException, IOException {
+    GitModifyCommand command = createCommand();
+
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.setCommitMessage("please rename this file");
+    request.setAuthor(new Person("Peter Pan", "peter@pan.net"));
+    request.addRequest(new ModifyCommandRequest.MoveRequest("/g/h", "/h"));
+
+    command.execute(request);
+
+    TreeAssertions assertions = canonicalTreeParser -> {
+      assertThat(canonicalTreeParser.findFile("g/h/j.txt")).isFalse();
+      assertThat(canonicalTreeParser.findFile("h/j.txt")).isTrue();
     };
 
     assertInTree(assertions);

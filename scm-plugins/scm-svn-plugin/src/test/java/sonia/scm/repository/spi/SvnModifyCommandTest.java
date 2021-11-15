@@ -34,6 +34,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import sonia.scm.AlreadyExistsException;
 import sonia.scm.ConcurrentModificationException;
+import sonia.scm.ScmConstraintViolationException;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.api.FileLock;
 import sonia.scm.repository.api.FileLockedException;
@@ -195,6 +196,16 @@ public class SvnModifyCommandTest extends AbstractSvnCommandTestBase {
     // nothing to check here; we just want to ensure that no exception is thrown
   }
 
+  @Test(expected = ScmConstraintViolationException.class)
+  public void shouldThrowErrorIfRelativePathIsOutsideOfWorkdir() {
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "/../../../../b.txt"));
+    request.setCommitMessage("please rename my file pretty please");
+    request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
+
+    svnModifyCommand.execute(request);
+  }
+
   @Test
   public void shouldRenameFile() {
     ModifyCommandRequest request = new ModifyCommandRequest();
@@ -239,6 +250,20 @@ public class SvnModifyCommandTest extends AbstractSvnCommandTestBase {
     assertThat(new File(workingCopy.getWorkingRepository(), "c/z.txt")).exists();
     assertThat(new File(workingCopy.getWorkingRepository(), "c/d.txt")).exists();
     assertThat(new File(workingCopy.getWorkingRepository(), "c/e.txt")).exists();
+  }
+
+  @Test
+  public void shouldMoveFolderToExistentFolder() {
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.addRequest(new ModifyCommandRequest.MoveRequest("/g/h", "/h"));
+    request.setCommitMessage("please rename my file pretty please");
+    request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
+
+    svnModifyCommand.execute(request);
+
+    WorkingCopy<File, File> workingCopy = workingCopyFactory.createWorkingCopy(context, null);
+    assertThat(new File(workingCopy.getWorkingRepository(), "g/h/j.txt")).doesNotExist();
+    assertThat(new File(workingCopy.getWorkingRepository(), "h/j.txt")).exists();
   }
 
   @Test
