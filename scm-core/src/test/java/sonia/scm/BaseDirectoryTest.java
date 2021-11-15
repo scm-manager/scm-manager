@@ -46,7 +46,7 @@ class BaseDirectoryTest {
   @Test
   void shouldGetFromSystemProperty() {
     BaseDirectory directory = builder().withSystemProperty(BaseDirectory.SYSTEM_PROPERTY, "/tmp/scm_home").create();
-    assertThat(directory.find().toString()).isEqualTo(new File("/tmp/scm_home").getPath());
+    assertThat(directory.find()).isEqualTo(Paths.get("/tmp/scm_home"));
   }
 
   @Test
