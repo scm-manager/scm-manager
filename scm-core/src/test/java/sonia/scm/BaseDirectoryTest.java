@@ -40,7 +40,7 @@ class BaseDirectoryTest {
   @Test
   void shouldGetFromClassPathResource() {
     BaseDirectory directory = builder().withClassPathResource("/sonia/scm/basedirectory.properties").create();
-    assertThat(directory.find().toString()).isEqualTo(new File("/tmp/scm_home").getPath());
+    assertThat(directory.find()).isEqualTo(Paths.get("/tmp/scm_home"));
   }
 
   @Test
