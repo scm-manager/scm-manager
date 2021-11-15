@@ -73,7 +73,7 @@ class BaseDirectoryTest {
     @Test
     void windows() {
       BaseDirectory directory = builder().withWindows().withEnvironment("APPDATA", "/tmp").create();
-      assertThat(directory.find().toString()).isEqualTo(new File("/tmp\\SCM-Manager").getPath());
+      assertThat(directory.find()).isEqualTo(Paths.get("/tmp\\SCM-Manager"));
     }
 
   }
