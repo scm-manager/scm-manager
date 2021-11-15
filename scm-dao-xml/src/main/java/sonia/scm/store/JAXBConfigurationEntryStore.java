@@ -29,18 +29,14 @@ import com.google.common.collect.Maps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.security.KeyGenerator;
-import sonia.scm.xml.IndentXMLStreamWriter;
 import sonia.scm.xml.XmlStreams;
+import sonia.scm.xml.XmlStreams.AutoCloseableXMLReader;
+import sonia.scm.xml.XmlStreams.AutoCloseableXMLWriter;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Marshaller;
 import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamReader;
 import java.io.File;
-import java.io.Reader;
-import java.io.Writer;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -141,10 +137,7 @@ public class JAXBConfigurationEntryStore<V> implements ConfigurationEntryStore<V
     LOG.debug("load configuration from {}", file);
 
     context.withUnmarshaller(u -> {
-      XMLStreamReader reader = null;
-
-      try (Reader inputReader = Files.newBufferedReader(file.toPath(), StandardCharsets.UTF_8)) {
-        reader = XmlStreams.createReader(inputReader);
+      try (AutoCloseableXMLReader reader = XmlStreams.createReader(file)) {
 
         // configuration
         reader.nextTag();
@@ -181,8 +174,6 @@ public class JAXBConfigurationEntryStore<V> implements ConfigurationEntryStore<V
             reader.nextTag();
           }
         }
-      } finally {
-        XmlStreams.close(reader);
       }
     });
   }
@@ -191,12 +182,11 @@ public class JAXBConfigurationEntryStore<V> implements ConfigurationEntryStore<V
     LOG.debug("store configuration to {}", file);
 
     context.withMarshaller(m -> {
-        m.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
+      m.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
 
       CopyOnWrite.withTemporaryFile(
         temp -> {
-          try (Writer ioWriter = Files.newBufferedWriter(temp, StandardCharsets.UTF_8);
-               IndentXMLStreamWriter writer = XmlStreams.createWriter(ioWriter)) {
+          try (AutoCloseableXMLWriter writer = XmlStreams.createWriter(temp)) {
             writer.writeStartDocument();
 
             // configuration start
@@ -217,7 +207,7 @@ public class JAXBConfigurationEntryStore<V> implements ConfigurationEntryStore<V
 
               // value
               JAXBElement<V> je = new JAXBElement<>(QName.valueOf(TAG_VALUE), type,
-                      e.getValue());
+                e.getValue());
 
               m.marshal(je, writer);
 

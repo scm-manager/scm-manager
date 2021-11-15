@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.xml;
 
 import org.slf4j.Logger;
@@ -29,16 +29,15 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.ContextEntry;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.store.CopyOnWrite;
-import sonia.scm.xml.IndentXMLStreamWriter;
 import sonia.scm.xml.XmlStreams;
+import sonia.scm.xml.XmlStreams.AutoCloseableXMLReader;
+import sonia.scm.xml.XmlStreams.AutoCloseableXMLWriter;
 
+import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -70,24 +69,22 @@ class PathDatabase {
 
     CopyOnWrite.withTemporaryFile(
       temp -> {
-        try (Writer ioWriter = Files.newBufferedWriter(temp, StandardCharsets.UTF_8)) {
-          try (IndentXMLStreamWriter writer = XmlStreams.createWriter(ioWriter)) {
-            writer.writeStartDocument(ENCODING, VERSION);
+        try (AutoCloseableXMLWriter writer = XmlStreams.createWriter(temp)) {
+          writer.writeStartDocument(ENCODING, VERSION);
 
-            writeRepositoriesStart(writer, creationTime, lastModified);
-            for (Map.Entry<String, Path> e : pathDatabase.entrySet()) {
-              writeRepository(writer, e.getKey(), e.getValue());
-            }
-            writer.writeEndElement();
-
-            writer.writeEndDocument();
-          } catch (XMLStreamException ex) {
-            throw new InternalRepositoryException(
-                    ContextEntry.ContextBuilder.entity(Path.class, storePath.toString()).build(),
-                    "failed to write repository path database",
-                    ex
-            );
+          writeRepositoriesStart(writer, creationTime, lastModified);
+          for (Map.Entry<String, Path> e : pathDatabase.entrySet()) {
+            writeRepository(writer, e.getKey(), e.getValue());
           }
+          writer.writeEndElement();
+
+          writer.writeEndDocument();
+        } catch (XMLStreamException | IOException ex) {
+          throw new InternalRepositoryException(
+            ContextEntry.ContextBuilder.entity(Path.class, storePath.toString()).build(),
+            "failed to write repository path database",
+            ex
+          );
         }
       },
       storePath
@@ -125,14 +122,12 @@ class PathDatabase {
 
   void read(OnRepositories onRepositories, OnRepository onRepository) {
     LOG.trace("read repository path database from {}", storePath);
-    XMLStreamReader reader = null;
-    try (Reader inputReader = Files.newBufferedReader(storePath, StandardCharsets.UTF_8)) {
-      reader = XmlStreams.createReader(inputReader);
+    try (AutoCloseableXMLReader reader = XmlStreams.createReader(storePath)) {
 
       while (reader.hasNext()) {
         int eventType = reader.next();
 
-        if (eventType == XMLStreamReader.START_ELEMENT) {
+        if (eventType == XMLStreamConstants.START_ELEMENT) {
           String element = reader.getLocalName();
           if (ELEMENT_REPOSITORIES.equals(element)) {
             readRepositories(reader, onRepositories);
@@ -147,8 +142,6 @@ class PathDatabase {
         "failed to read repository path database",
         ex
       );
-    } finally {
-      XmlStreams.close(reader);
     }
   }
 

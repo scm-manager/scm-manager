@@ -32,12 +32,12 @@ import sonia.scm.migration.UpdateException;
 import sonia.scm.store.CopyOnWrite;
 import sonia.scm.version.Version;
 import sonia.scm.xml.XmlStreams;
+import sonia.scm.xml.XmlStreams.AutoCloseableXMLReader;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -45,8 +45,6 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.Reader;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.stream.Stream;
@@ -75,9 +73,7 @@ abstract class DifferentiateBetweenConfigAndConfigEntryUpdateStep {
 
   private boolean isConfigEntryFile(Path potentialFile) {
     LOG.trace("Testing whether file is config entry file without mark: {}", potentialFile);
-    XMLStreamReader reader = null;
-    try (Reader inputReader = Files.newBufferedReader(potentialFile, StandardCharsets.UTF_8)) {
-      reader = XmlStreams.createReader(inputReader);
+    try (AutoCloseableXMLReader reader = XmlStreams.createReader(potentialFile)) {
       reader.nextTag();
       if ("configuration".equals(reader.getLocalName())) {
         reader.nextTag();
@@ -87,8 +83,6 @@ abstract class DifferentiateBetweenConfigAndConfigEntryUpdateStep {
       }
     } catch (XMLStreamException | IOException e) {
       throw new UpdateException("Error reading file " + potentialFile, e);
-    } finally {
-      XmlStreams.close(reader);
     }
     return false;
   }
@@ -106,12 +100,11 @@ abstract class DifferentiateBetweenConfigAndConfigEntryUpdateStep {
   }
 
   private void writeXmlDocument(Document configEntryDocument, Path temporaryFile) throws TransformerException {
+    TransformerFactory factory = TransformerFactory.newInstance();
+    factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+    factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+    DOMSource domSource = new DOMSource(configEntryDocument);
     try (OutputStream os = Files.newOutputStream(temporaryFile)) {
-      final TransformerFactory factory = TransformerFactory.newInstance();
-      factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-      factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
-      final DOMSource domSource = new DOMSource(configEntryDocument);
-
       factory.newTransformer().transform(domSource, new StreamResult(os));
     } catch (IOException e) {
       throw new UpdateException("Could not write modified config entry file", e);
