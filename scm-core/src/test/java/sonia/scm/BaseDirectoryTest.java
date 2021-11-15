@@ -67,7 +67,7 @@ class BaseDirectoryTest {
     @Test
     void osx() {
       BaseDirectory directory = builder().withOsx().withSystemProperty("user.home", "/tmp").create();
-      assertThat(directory.find().toString()).isEqualTo(new File("/tmp/Library/Application Support/SCM-Manager").getPath());
+      assertThat(directory.find()).isEqualTo(Paths.get("/tmp/Library/Application Support/SCM-Manager"));
     }
 
     @Test
