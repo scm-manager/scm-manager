@@ -27,6 +27,7 @@ package sonia.scm.repository.spi;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.AlreadyExistsException;
 import sonia.scm.ContextEntry;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
@@ -77,8 +78,12 @@ public interface ModifyWorkerHelper extends ModifyCommand.Worker {
   default void move(String source, String target) throws IOException {
     Path targetFile = getTargetFile(target);
     Files.createDirectories(targetFile.getParent());
-    Path pathAfterMove = Files.move(getTargetFile(source), targetFile);
-    doScmMove(source, getWorkDir().toPath().relativize(pathAfterMove).normalize().toString());
+    try {
+      Path pathAfterMove = Files.move(getTargetFile(source), targetFile);
+      doScmMove(source, getWorkDir().toPath().relativize(pathAfterMove).normalize().toString());
+    } catch(FileAlreadyExistsException e) {
+      throw AlreadyExistsException.alreadyExists(ContextEntry.ContextBuilder.entity("File", target).in(getRepository()));
+    }
   }
 
   /**
