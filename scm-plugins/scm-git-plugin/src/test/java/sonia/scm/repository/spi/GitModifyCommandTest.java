@@ -406,52 +406,6 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
     command.execute(request);
   }
 
-  /*
-    # Ordner verschieben/umbenennen
-
-    Ordner: /g/k
-    Move: /g/y
-    Ordner /g/y existiert nicht
-    Erwartet: Alle Dateien/Ordner aus /g/k liegen unter /g/y
-
-    Ordner: /g/k
-    Move: /x/y
-    Ordner /x existiert nicht
-    Erwartet: Alle Dateien/Ordner aus /g/k liegen unter /x/y
-
-    # Datei verschieben/umbenennen
-
-    Datei: /g/h/c
-    Move: /
-    Erwartet: Die Datei c liegt unter /
-
-    Datei: /g/h/j.txt
-    Oder Move: /g/h/i
-    Datei i existiert bereits
-    Erwartet: Fehler!
-
-    Datei: /g/h/j.txt
-    Oder Move: /g/h/x.txt
-    Datei x.txt existiert nicht
-    Erwartet: Die Datei wurde umbenannt in /g/h/x.txt
-
-    Datei: /g/h/c
-    Move: /
-    Ordner c existiert bereits
-    Erwartet: Fehler!
-
-    Datei: /g/h/c
-    Move: /y.txt
-    Datei /y.txt existiert nicht
-    Erwartet: Die Datei c wurde nach / verschoben und in y.txt umbenannt
-
-    Datei: /g/h/c
-    Move: /g/k
-    Ordner /g/k existiert bereits
-    Erwartet: Die Datei c wurde nach /g/k verschoben
-
-   */
-
   @Test
   public void shouldMoveFolder() throws GitAPIException, IOException {
     GitModifyCommand command = createCommand();
@@ -513,12 +467,10 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
     ModifyCommandRequest request = new ModifyCommandRequest();
     request.setCommitMessage("please rename this file");
     request.setAuthor(new Person("Peter Pan", "peter@pan.net"));
-    request.addRequest(new ModifyCommandRequest.MoveRequest("/g/h/c", "../../../.."));
+    request.addRequest(new ModifyCommandRequest.MoveRequest("/g/h/c", "/../../../../b"));
 
     command.execute(request);
   }
-
-  // Simple cases
 
   @Test
   public void shouldRenameFile() throws GitAPIException, IOException {
