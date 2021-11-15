@@ -195,8 +195,8 @@ public class JAXBConfigurationEntryStore<V> implements ConfigurationEntryStore<V
 
       CopyOnWrite.withTemporaryFile(
         temp -> {
-          try (Writer ioWriter = Files.newBufferedWriter(temp, StandardCharsets.UTF_8)) {
-            try (IndentXMLStreamWriter writer = XmlStreams.createWriter(ioWriter)) {
+          try (Writer ioWriter = Files.newBufferedWriter(temp, StandardCharsets.UTF_8);
+               IndentXMLStreamWriter writer = XmlStreams.createWriter(ioWriter)) {
               writer.writeStartDocument();
 
               // configuration start
