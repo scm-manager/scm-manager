@@ -67,7 +67,7 @@ const Button: FC<Props> = ({
     return <>{icon ? <Icon name={icon} color="inherit" className="is-medium pr-1" /> : null}</>;
   };
 
-  if (link) {
+  if (link && !disabled) {
     return (
       <Link
         className={classNames(
