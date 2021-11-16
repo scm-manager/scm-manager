@@ -828,3 +828,11 @@ form .field:not(.is-grouped) {
 .sg-sub-section + .sg-sub-section {
   margin-top: 2.5rem;
 }
+
+.has-text-inherit {
+  color: inherit !important;
+}
+
+.has-text-default {
+  color: $text !important;
+}
