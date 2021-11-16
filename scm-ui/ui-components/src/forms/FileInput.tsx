@@ -26,6 +26,7 @@ import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import { createAttributesForTesting } from "../devBuild";
 import LabelWithHelpIcon from "./LabelWithHelpIcon";
+import { createA11yId } from "../createA11yId";
 
 type Props = {
   name?: string;
@@ -73,9 +74,11 @@ const FileInput: FC<Props> = ({
     }
   };
 
+  const id = createA11yId("file-input");
+
   return (
     <div className={classNames("field", className)}>
-      <LabelWithHelpIcon label={label} helpText={helpText} />
+      <LabelWithHelpIcon label={label} helpText={helpText} id={id} />
       <div className="file is-info has-name is-fullwidth">
         <label className="file-label">
           <input
@@ -87,6 +90,7 @@ const FileInput: FC<Props> = ({
             disabled={disabled}
             onChange={handleChange}
             onBlur={handleBlur}
+            aria-describedby={id}
             {...createAttributesForTesting(testId)}
           />
           <span className="file-cta">

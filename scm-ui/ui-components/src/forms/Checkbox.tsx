@@ -27,6 +27,7 @@ import LabelWithHelpIcon from "./LabelWithHelpIcon";
 import useInnerRef from "./useInnerRef";
 import { createFormFieldWrapper, FieldProps, FieldType, isLegacy, isUsingRef } from "./FormFieldTypes";
 import classNames from "classnames";
+import { createA11yId } from "../createA11yId";
 
 export interface CheckboxElement extends HTMLElement {
   value: boolean;
@@ -83,17 +84,20 @@ const InnerCheckbox: FC<FieldProps<BaseProps, HTMLInputElement, boolean>> = ({
     }
   };
 
+  const id = createA11yId("checkbox");
+  const helpId = createA11yId("checkbox");
+
   const renderHelp = () => {
     const { title, helpText } = props;
     if (helpText && !title) {
-      return <Help message={helpText} />;
+      return <Help message={helpText} id={helpId} />;
     }
   };
 
   const renderLabelWithHelp = () => {
     const { title, helpText } = props;
     if (title) {
-      return <LabelWithHelpIcon label={title} helpText={helpText} />;
+      return <LabelWithHelpIcon label={title} helpText={helpText} id={id} helpId={helpId} />;
     }
   };
   return (
@@ -116,6 +120,8 @@ const InnerCheckbox: FC<FieldProps<BaseProps, HTMLInputElement, boolean>> = ({
             checked={props.checked}
             disabled={disabled}
             readOnly={readOnly}
+            aria-labelledby={id}
+            aria-describedby={helpId}
             {...createAttributesForTesting(testId)}
           />{" "}
           {label}

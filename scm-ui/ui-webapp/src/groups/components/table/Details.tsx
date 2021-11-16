@@ -48,7 +48,7 @@ class Details extends React.Component<Props> {
           <tr>
             <th>{t("group.external")}</th>
             <td>
-              <Checkbox checked={group.external} />
+              <Checkbox checked={group.external} readOnly={true} />
             </td>
           </tr>
           <tr>

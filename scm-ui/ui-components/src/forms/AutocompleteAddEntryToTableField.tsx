@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, useState, MouseEvent } from "react";
+import React, { FC, useState, MouseEvent, KeyboardEvent } from "react";
 import styled from "styled-components";
 import { SelectValue } from "@scm-manager/ui-types";
 import Level from "../layout/Level";
@@ -61,7 +61,7 @@ const AutocompleteAddEntryToTableField: FC<Props> = ({
     setSelectedValue(selection);
   };
 
-  const addButtonClicked = (event: MouseEvent) => {
+  const addButtonClicked = (event: MouseEvent | KeyboardEvent) => {
     event.preventDefault();
     appendEntry();
   };

@@ -22,12 +22,12 @@
  * SOFTWARE.
  */
 import React, { FC } from "react";
-import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { Link, Plugin } from "@scm-manager/ui-types";
 import { CardColumn, Icon } from "@scm-manager/ui-components";
-import PluginAvatar from "./PluginAvatar";
 import { PluginAction, PluginModalContent } from "../containers/PluginsOverview";
+import { useTranslation } from "react-i18next";
+import PluginAvatar from "./PluginAvatar";
 
 type Props = {
   plugin: Plugin;
@@ -40,7 +40,7 @@ const ActionbarWrapper = styled.div`
   }
 `;
 
-const IconWrapper = styled.span.attrs((props) => ({
+const IconWrapperStyle = styled.span.attrs((props) => ({
   className: "level-item mb-0 p-2 is-clickable",
 }))`
   border: 1px solid #cdcdcd; // $dark-25
@@ -50,6 +50,14 @@ const IconWrapper = styled.span.attrs((props) => ({
     border-color: #9a9a9a; // $dark-50
   }
 `;
+
+const IconWrapper: FC<{ action: () => void }> = ({ action, children }) => {
+  return (
+    <IconWrapperStyle onClick={action} onKeyDown={(e) => e.key === "Enter" && action()} tabIndex={0}>
+      {children}
+    </IconWrapperStyle>
+  );
+};
 
 const PluginEntry: FC<Props> = ({ plugin, openModal }) => {
   const [t] = useTranslation("admin");
@@ -81,22 +89,22 @@ const PluginEntry: FC<Props> = ({ plugin, openModal }) => {
   const actionBar = () => (
     <ActionbarWrapper className="is-flex">
       {isCloudoguPlugin && (
-        <IconWrapper onClick={() => openModal({ plugin, action: PluginAction.CLOUDOGU })}>
+        <IconWrapper action={() => openModal({ plugin, action: PluginAction.CLOUDOGU })}>
           <Icon title={t("plugins.modal.cloudoguInstall")} name="link" color="success-dark" />
         </IconWrapper>
       )}
       {isInstallable && (
-        <IconWrapper onClick={() => openModal({ plugin, action: PluginAction.INSTALL })}>
+        <IconWrapper action={() => openModal({ plugin, action: PluginAction.INSTALL })}>
           <Icon title={t("plugins.modal.install")} name="download" color="info" />
         </IconWrapper>
       )}
       {isUninstallable && (
-        <IconWrapper onClick={() => openModal({ plugin, action: PluginAction.UNINSTALL })}>
+        <IconWrapper action={() => openModal({ plugin, action: PluginAction.UNINSTALL })}>
           <Icon title={t("plugins.modal.uninstall")} name="trash" color="info" />
         </IconWrapper>
       )}
       {isUpdatable && (
-        <IconWrapper onClick={() => openModal({ plugin, action: PluginAction.UPDATE })}>
+        <IconWrapper action={() => openModal({ plugin, action: PluginAction.UPDATE })}>
           <Icon title={t("plugins.modal.update")} name="sync-alt" color="info" />
         </IconWrapper>
       )}

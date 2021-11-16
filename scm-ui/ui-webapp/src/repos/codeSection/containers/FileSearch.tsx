@@ -91,6 +91,7 @@ const FileSearch: FC<Props> = ({ repository, baseUrl, branches, selectedBranch }
   };
 
   const contentBaseUrl = `${baseUrl}/sources/${revision}/`;
+  const id = useA11yId("file-search");
 
   return (
     <>
@@ -121,8 +122,9 @@ const FileSearch: FC<Props> = ({ repository, baseUrl, branches, selectedBranch }
             value={query}
             filter={search}
             autoFocus={true}
+            id={id}
           />
-          <Help className="ml-3" message={t("fileSearch.input.help")} />
+          <Help className="ml-3" message={t("fileSearch.input.help")} id={id} />
         </div>
         <ErrorNotification error={error} />
         {isLoading ? <Loading /> : <FileSearchResults contentBaseUrl={contentBaseUrl} query={query} paths={result} />}

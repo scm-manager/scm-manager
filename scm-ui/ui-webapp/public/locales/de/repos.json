@@ -62,7 +62,8 @@
     "filterRepositories": "Repositories filtern",
     "allNamespaces": "Alle Namespaces",
     "clone": "Clone/Checkout",
-    "contact": "E-Mail senden an {{contact}}"
+    "contact": "E-Mail senden an {{contact}}",
+    "ariaLabel": "Repository {{name}}"
   },
   "create": {
     "title": "Repository hinzufügen",

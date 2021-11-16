@@ -23,7 +23,7 @@
  */
 
 import React, { FC, useState } from "react";
-import { Radio, SubmitButton, Subtitle } from "@scm-manager/ui-components";
+import { createA11yId, Radio, SubmitButton, Subtitle } from "@scm-manager/ui-components";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
@@ -60,12 +60,12 @@ const Theme: FC = () => {
     register,
     setValue,
     handleSubmit,
-    formState: { isDirty },
+    formState: { isDirty }
   } = useForm<ThemeForm>({
     mode: "onChange",
     defaultValues: {
-      theme,
-    },
+      theme
+    }
   });
   const [t] = useTranslation("commons");
 
@@ -77,21 +77,24 @@ const Theme: FC = () => {
     <>
       <Subtitle>{t("profile.theme.subtitle")}</Subtitle>
       <form onSubmit={handleSubmit(onSubmit)}>
-        {themes.map((theme) => (
-          <div
-            key={theme}
-            onClick={() => setValue("theme", theme, { shouldDirty: true })}
-            className="card ml-1 mb-5 control columns is-vcentered has-cursor-pointer"
-          >
-            <RadioColumn className="column">
-              <Radio {...register("theme")} value={theme} disabled={isLoading} />
-            </RadioColumn>
-            <div className="column content">
-              <h3>{t(`profile.theme.${theme}.displayName`)}</h3>
-              <p>{t(`profile.theme.${theme}.description`)}</p>
+        {themes.map(theme => {
+          const a11yId = createA11yId("theme");
+          return (
+            <div
+              key={theme}
+              onClick={() => setValue("theme", theme, { shouldDirty: true })}
+              className="card ml-1 mb-5 control columns is-vcentered has-cursor-pointer"
+            >
+              <RadioColumn className="column">
+                <Radio {...register("theme")} value={theme} disabled={isLoading} ariaLabelledby={a11yId} />
+              </RadioColumn>
+              <div id={a11yId} className="column content">
+                <h3>{t(`profile.theme.${theme}.displayName`)}</h3>
+                <p>{t(`profile.theme.${theme}.description`)}</p>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
         <SubmitButton label={t("profile.theme.submit")} loading={isLoading} disabled={!isDirty} />
       </form>
     </>

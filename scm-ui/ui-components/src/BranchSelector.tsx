@@ -26,6 +26,7 @@ import classNames from "classnames";
 import styled from "styled-components";
 import { Branch } from "@scm-manager/ui-types";
 import { Select } from "./forms";
+import { createA11yId } from "./createA11yId";
 
 type Props = {
   branches: Branch[];
@@ -45,11 +46,15 @@ const MinWidthControl = styled.div`
 `;
 
 const BranchSelector: FC<Props> = ({ branches, onSelectBranch, selectedBranch, label, disabled }) => {
+  const a11yId = createA11yId("branch-select");
+
   if (branches) {
     return (
       <div className={classNames("field", "is-horizontal")}>
         <ZeroflexFieldLabel className={classNames("field-label", "is-normal")}>
-          <label className={classNames("label", "is-size-6")}>{label}</label>
+          <label className={classNames("label", "is-size-6")} id={a11yId}>
+            {label}
+          </label>
         </ZeroflexFieldLabel>
         <div className="field-body">
           <div className={classNames("field", "is-narrow", "mb-0")}>
@@ -61,6 +66,7 @@ const BranchSelector: FC<Props> = ({ branches, onSelectBranch, selectedBranch, l
                 disabled={!!disabled}
                 value={selectedBranch}
                 addValueToOptions={true}
+                ariaLabelledby={a11yId}
               />
             </MinWidthControl>
           </div>

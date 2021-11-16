@@ -21,40 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { ReactNode } from "react";
 
-type Props = {
-  message: string;
-  className?: string;
-  location: TooltipLocation;
-  multiline?: boolean;
-  children: ReactNode;
-  id?: string;
-};
+let counter = 0;
 
-export type TooltipLocation = "bottom" | "right" | "top" | "left";
-
-class Tooltip extends React.Component<Props> {
-  static defaultProps = {
-    location: "right",
-  };
-
-  render() {
-    const { className, message, location, multiline, children, id } = this.props;
-    let classes = `tooltip has-tooltip-${location}`;
-    if (multiline) {
-      classes += " has-tooltip-multiline";
-    }
-    if (className) {
-      classes += " " + className;
-    }
-
-    return (
-      <span className={classes} data-tooltip={message} aria-label={message} id={id}>
-        {children}
-      </span>
-    );
-  }
-}
-
-export default Tooltip;
+export const createA11yId = (prefix: string) => prefix + "_" + counter++;

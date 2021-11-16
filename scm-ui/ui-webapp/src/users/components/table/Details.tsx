@@ -53,13 +53,13 @@ class Details extends React.Component<Props> {
           <tr>
             <th>{t("user.active")}</th>
             <td>
-              <Checkbox checked={user.active} />
+              <Checkbox checked={user.active} readOnly={true} />
             </td>
           </tr>
           <tr>
             <th>{t("user.externalFlag")}</th>
             <td>
-              <Checkbox checked={!!user.external} />
+              <Checkbox checked={user.external} readOnly={true} />
             </td>
           </tr>
           <tr>

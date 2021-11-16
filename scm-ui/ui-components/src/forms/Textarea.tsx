@@ -26,6 +26,7 @@ import LabelWithHelpIcon from "./LabelWithHelpIcon";
 import useAutofocus from "./useAutofocus";
 import classNames from "classnames";
 import { createFormFieldWrapper, FieldProps, FieldType, isLegacy, isUsingRef } from "./FormFieldTypes";
+import { createA11yId } from "../createA11yId";
 
 type BaseProps = {
   name?: string;
@@ -102,9 +103,12 @@ const InnerTextarea: FC<FieldProps<BaseProps, HTMLTextAreaElement, string>> = ({
     helper = <p className="help is-info">{informationMessage}</p>;
   }
 
+  const id = createA11yId("textarea");
+  const helpId = createA11yId("textarea");
+
   return (
     <fieldset className="field" disabled={readOnly}>
-      <LabelWithHelpIcon label={label} helpText={helpText} />
+      <LabelWithHelpIcon label={label} helpText={helpText} id={id} helpId={helpId} />
       <div className="control">
         <textarea
           className={classNames("textarea", errorView)}
@@ -117,6 +121,8 @@ const InnerTextarea: FC<FieldProps<BaseProps, HTMLTextAreaElement, string>> = ({
           disabled={disabled}
           onKeyDown={onKeyDown}
           defaultValue={defaultValue}
+          aria-labelledby={id}
+          aria-describedby={helpId}
         />
       </div>
       {helper}

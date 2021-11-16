@@ -27,6 +27,7 @@ import LabelWithHelpIcon from "./LabelWithHelpIcon";
 import { createAttributesForTesting } from "../devBuild";
 import useInnerRef from "./useInnerRef";
 import { createFormFieldWrapper, FieldProps, FieldType, isLegacy, isUsingRef } from "./FormFieldTypes";
+import { createA11yId } from "../createA11yId";
 
 export type SelectItem = {
   value: string;
@@ -46,6 +47,7 @@ type BaseProps = {
   readOnly?: boolean;
   className?: string;
   addValueToOptions?: boolean;
+  ariaLabelledby?: string;
 };
 
 const InnerSelect: FC<FieldProps<BaseProps, HTMLSelectElement, string>> = ({
@@ -61,6 +63,7 @@ const InnerSelect: FC<FieldProps<BaseProps, HTMLSelectElement, string>> = ({
   className,
   options,
   addValueToOptions,
+  ariaLabelledby,
   ...props
 }) => {
   const field = useInnerRef(props.innerRef);
@@ -106,10 +109,12 @@ const InnerSelect: FC<FieldProps<BaseProps, HTMLSelectElement, string>> = ({
   }, [field, value, name]);
 
   const loadingClass = loading ? "is-loading" : "";
+  const a11yId = ariaLabelledby || createA11yId("select");
+  const helpId = createA11yId("select");
 
   return (
     <fieldset className="field" disabled={readOnly}>
-      <LabelWithHelpIcon label={label} helpText={helpText} />
+      <LabelWithHelpIcon label={label} helpText={helpText} id={a11yId} helpId={helpId} />
       <div className={classNames("control select", loadingClass, className)}>
         <select
           name={name}
@@ -119,6 +124,8 @@ const InnerSelect: FC<FieldProps<BaseProps, HTMLSelectElement, string>> = ({
           onChange={handleInput}
           onBlur={handleBlur}
           disabled={disabled}
+          aria-labelledby={a11yId}
+          aria-describedby={helpId}
           {...createAttributesForTesting(testId)}
         >
           {opts.map((opt) => {

@@ -46,7 +46,7 @@ const BranchesOverview: FC<Props> = ({ repository, baseUrl }) => {
     return <Loading />;
   }
 
-  const branches = data._embedded.branches || [];
+  const branches = data?._embedded?.branches || [];
 
   if (branches.length === 0) {
     return <Notification type="info">{t("branches.overview.noBranches")}</Notification>;

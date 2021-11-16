@@ -34,13 +34,14 @@ type Props = {
   placeholder?: string;
   autoFocus?: boolean;
   className?: string;
+  id?: string;
 };
 
 const FixedHeightInput = styled.input`
   height: 2.5rem;
 `;
 
-const FilterInput: FC<Props> = ({ filter, value, testId, placeholder, autoFocus, className }) => {
+const FilterInput: FC<Props> = ({ filter, value, testId, placeholder, autoFocus, className, id }) => {
   const [stateValue, setStateValue] = useState(value || "");
   const [timeoutId, setTimeoutId] = useState<ReturnType<typeof setTimeout>>();
   const [t] = useTranslation("commons");
@@ -79,6 +80,7 @@ const FilterInput: FC<Props> = ({ filter, value, testId, placeholder, autoFocus,
           value={stateValue}
           onChange={(event) => setStateValue(event.target.value)}
           autoFocus={autoFocus || false}
+          aria-describedby={id}
         />
         <span className="icon is-small is-left">
           <i className="fas fa-filter" />

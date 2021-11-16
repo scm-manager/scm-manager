@@ -57,7 +57,7 @@ const ExtensionTd = styled.td`
 class FileTreeLeaf extends React.Component<Props> {
   createFileIcon = (file: File) => {
     return (
-      <FileLink baseUrl={this.props.baseUrl} file={file}>
+      <FileLink baseUrl={this.props.baseUrl} file={file} tabIndex={-1}>
         <FileIcon file={file} />
       </FileLink>
     );
@@ -65,7 +65,7 @@ class FileTreeLeaf extends React.Component<Props> {
 
   createFileName = (file: File) => {
     return (
-      <FileLink baseUrl={this.props.baseUrl} file={file}>
+      <FileLink baseUrl={this.props.baseUrl} file={file} tabIndex={0}>
         {file.name}
       </FileLink>
     );

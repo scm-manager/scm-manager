@@ -27,24 +27,26 @@ import Help from "../Help";
 type Props = {
   label?: string;
   helpText?: string;
+  id?: string;
+  helpId?: string;
 };
 
 class LabelWithHelpIcon extends React.Component<Props> {
   renderHelp() {
-    const { helpText } = this.props;
+    const { helpText, helpId } = this.props;
     if (helpText) {
-      return <Help message={helpText} />;
+      return <Help message={helpText} id={helpId} />;
     }
   }
 
   render() {
-    const { label } = this.props;
+    const { label, id } = this.props;
 
     if (label) {
       const help = this.renderHelp();
       return (
         <label className="label">
-          {label} {help}
+          <span id={id}>{label}</span> {help}
         </label>
       );
     }

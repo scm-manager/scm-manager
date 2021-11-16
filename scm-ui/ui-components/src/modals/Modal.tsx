@@ -21,11 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
+import React, { FC, KeyboardEvent, useRef } from "react";
 import classNames from "classnames";
 import usePortalRootElement from "../usePortalRootElement";
 import ReactDOM from "react-dom";
 import styled from "styled-components";
+import { useTrapFocus } from "../useTrapFocus";
 
 type ModalSize = "S" | "M" | "L";
 
@@ -59,6 +60,13 @@ export const Modal: FC<Props> = ({
   size,
 }) => {
   const portalRootElement = usePortalRootElement("modalsRoot");
+  const initialFocusRef = useRef(null);
+  const trapRef = useTrapFocus({
+    includeContainer: true,
+    initialFocus: initialFocusRef.current,
+    returnFocus: true,
+    updateNodes: false,
+  });
 
   if (!portalRootElement) {
     return null;
@@ -71,13 +79,19 @@ export const Modal: FC<Props> = ({
     showFooter = <footer className="modal-card-foot">{footer}</footer>;
   }
 
+  const onKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (closeFunction && "Escape" === event.key) {
+      closeFunction();
+    }
+  };
+
   const modalElement = (
-    <div className={classNames("modal", className, isActive)}>
+    <div className={classNames("modal", className, isActive)} ref={trapRef} onKeyDown={onKeyDown}>
       <div className="modal-background" onClick={closeFunction} />
       <SizedModal className="modal-card" size={size}>
         <header className={classNames("modal-card-head", `has-background-${headColor}`)}>
           <p className={`modal-card-title m-0 has-text-${headTextColor}`}>{title}</p>
-          <button className="delete" aria-label="close" onClick={closeFunction} />
+          <button className="delete" aria-label="close" onClick={closeFunction} ref={initialFocusRef} autoFocus />
         </header>
         <section className="modal-card-body">{body}</section>
         {showFooter}

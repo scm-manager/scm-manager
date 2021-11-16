@@ -81,6 +81,7 @@ class Autocomplete extends React.Component<Props, State> {
       creatable,
       className,
     } = this.props;
+
     return (
       <div className={classNames("field", className)}>
         <LabelWithHelpIcon label={label} helpText={helpText} />
@@ -104,6 +105,7 @@ class Autocomplete extends React.Component<Props, State> {
                   },
                 });
               }}
+              aria-label={helpText || label}
             />
           ) : (
             <Async
@@ -114,6 +116,7 @@ class Autocomplete extends React.Component<Props, State> {
               placeholder={placeholder}
               loadingMessage={() => loadingMessage}
               noOptionsMessage={() => noOptionsMessage}
+              aria-label={helpText || label}
             />
           )}
         </div>

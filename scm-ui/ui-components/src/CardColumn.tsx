@@ -75,6 +75,7 @@ const CardColumn: FC<Props> = ({
           e.preventDefault();
           action();
         }}
+        tabIndex={0}
       />
     );
   }

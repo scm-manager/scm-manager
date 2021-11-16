@@ -243,6 +243,7 @@ const GeneralSettings: FC<Props> = ({
             buttonLabel={t("general-settings.emergencyContacts.addButton")}
             loadSuggestions={userSuggestions}
             placeholder={t("general-settings.emergencyContacts.autocompletePlaceholder")}
+            helpText={t("general-settings.emergencyContacts.helpText")}
           />
         </div>
       </div>
