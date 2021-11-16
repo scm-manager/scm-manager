@@ -34,6 +34,8 @@ interface UseTrapFocus {
   updateNodes?: boolean;
 }
 
+// Based on https://tobbelindstrom.com/blog/useTrapFocus/
+
 export const useTrapFocus = (options?: UseTrapFocus): MutableRefObject<Node> => {
   const node = useRef<Node>(null);
   const { includeContainer, initialFocus, returnFocus, updateNodes } = useMemo<UseTrapFocus>(
