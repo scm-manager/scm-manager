@@ -189,7 +189,7 @@ public class SvnModifyCommandTest extends AbstractSvnCommandTestBase {
     request.addRequest(new ModifyCommandRequest.CreateFileRequest("Test123", testfile, false));
     request.setCommitMessage("this should not pass");
     request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
-    request.setExpectedRevision("5");
+    request.setExpectedRevision("6");
 
     svnModifyCommand.execute(request);
 
@@ -209,7 +209,7 @@ public class SvnModifyCommandTest extends AbstractSvnCommandTestBase {
   @Test
   public void shouldRenameFile() {
     ModifyCommandRequest request = new ModifyCommandRequest();
-    request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "b.txt"));
+    request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "/b.txt"));
     request.setCommitMessage("please rename my file pretty please");
     request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
 
@@ -223,7 +223,7 @@ public class SvnModifyCommandTest extends AbstractSvnCommandTestBase {
   @Test(expected = AlreadyExistsException.class)
   public void shouldThrowAlreadyExistsException() {
     ModifyCommandRequest request = new ModifyCommandRequest();
-    request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "c"));
+    request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "/c"));
     request.setCommitMessage("please rename my file pretty please");
     request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
 
@@ -233,7 +233,7 @@ public class SvnModifyCommandTest extends AbstractSvnCommandTestBase {
   @Test
   public void shouldRenameFolder() {
     ModifyCommandRequest request = new ModifyCommandRequest();
-    request.addRequest(new ModifyCommandRequest.MoveRequest("c", "notc"));
+    request.addRequest(new ModifyCommandRequest.MoveRequest("c", "/notc"));
     request.setCommitMessage("please rename my file pretty please");
     request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
 
@@ -249,7 +249,7 @@ public class SvnModifyCommandTest extends AbstractSvnCommandTestBase {
   @Test
   public void shouldMoveFileToExistingFolder() {
     ModifyCommandRequest request = new ModifyCommandRequest();
-    request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "c/z.txt"));
+    request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "/c/z.txt"));
     request.setCommitMessage("please rename my file pretty please");
     request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
 
@@ -263,9 +263,9 @@ public class SvnModifyCommandTest extends AbstractSvnCommandTestBase {
   }
 
   @Test
-  public void shouldMoveFolderToExistentFolder() {
+  public void shouldMoveFolderToExistingFolder() {
     ModifyCommandRequest request = new ModifyCommandRequest();
-    request.addRequest(new ModifyCommandRequest.MoveRequest("/g/h", "/h"));
+    request.addRequest(new ModifyCommandRequest.MoveRequest("g/h", "/h/h"));
     request.setCommitMessage("please rename my file pretty please");
     request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
 
@@ -273,13 +273,13 @@ public class SvnModifyCommandTest extends AbstractSvnCommandTestBase {
 
     WorkingCopy<File, File> workingCopy = workingCopyFactory.createWorkingCopy(context, null);
     assertThat(new File(workingCopy.getWorkingRepository(), "g/h/j.txt")).doesNotExist();
-    assertThat(new File(workingCopy.getWorkingRepository(), "h/j.txt")).exists();
+    assertThat(new File(workingCopy.getWorkingRepository(), "h/h/j.txt")).exists();
   }
 
   @Test
   public void shouldMoveFileToNonExistentFolder() {
     ModifyCommandRequest request = new ModifyCommandRequest();
-    request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "y/z.txt"));
+    request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "/y/z.txt"));
     request.setCommitMessage("please rename my file pretty please");
     request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
 
@@ -293,7 +293,7 @@ public class SvnModifyCommandTest extends AbstractSvnCommandTestBase {
   @Test
   public void shouldMoveFolderToNonExistentFolder() {
     ModifyCommandRequest request = new ModifyCommandRequest();
-    request.addRequest(new ModifyCommandRequest.MoveRequest("c", "j/k/c"));
+    request.addRequest(new ModifyCommandRequest.MoveRequest("c", "/j/k/c"));
     request.setCommitMessage("please rename my file pretty please");
     request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
 
