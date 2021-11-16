@@ -24,4 +24,4 @@
 
 let counter = 0;
 
-export const useA11yId = (prefix: string) => prefix + "_" + counter++;
+export const createA11yId = (prefix: string) => prefix + "_" + counter++;

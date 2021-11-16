@@ -85,7 +85,7 @@ export { regExpPattern as changesetShortLinkRegex } from "./markdown/remarkChang
 export * from "./markdown/PluginApi";
 export * from "./devices";
 export { default as copyToClipboard } from "./CopyToClipboard";
-export { useA11yId } from "./useA11yId";
+export { createA11yId } from "./createA11yId";
 
 export { default as comparators } from "./comparators";
 

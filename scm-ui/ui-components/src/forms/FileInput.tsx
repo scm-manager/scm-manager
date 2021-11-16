@@ -26,7 +26,7 @@ import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import { createAttributesForTesting } from "../devBuild";
 import LabelWithHelpIcon from "./LabelWithHelpIcon";
-import { useA11yId } from "../useA11yId";
+import { createA11yId } from "../createA11yId";
 
 type Props = {
   name?: string;
@@ -74,7 +74,7 @@ const FileInput: FC<Props> = ({
     }
   };
 
-  const id = useA11yId("file-input");
+  const id = createA11yId("file-input");
 
   return (
     <div className={classNames("field", className)}>

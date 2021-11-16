@@ -27,7 +27,7 @@ import LabelWithHelpIcon from "./LabelWithHelpIcon";
 import useInnerRef from "./useInnerRef";
 import { createFormFieldWrapper, FieldProps, FieldType, isLegacy, isUsingRef } from "./FormFieldTypes";
 import classNames from "classnames";
-import { useA11yId } from "../useA11yId";
+import { createA11yId } from "../createA11yId";
 
 export interface CheckboxElement extends HTMLElement {
   value: boolean;
@@ -84,8 +84,8 @@ const InnerCheckbox: FC<FieldProps<BaseProps, HTMLInputElement, boolean>> = ({
     }
   };
 
-  const id = useA11yId("checkbox");
-  const helpId = useA11yId("checkbox");
+  const id = createA11yId("checkbox");
+  const helpId = createA11yId("checkbox");
 
   const renderHelp = () => {
     const { title, helpText } = props;

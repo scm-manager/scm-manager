@@ -25,7 +25,7 @@ import React, { ChangeEvent, FC, FocusEvent } from "react";
 import classNames from "classnames";
 import { Help } from "../index";
 import { createFormFieldWrapper, FieldProps, FieldType, isLegacy, isUsingRef } from "./FormFieldTypes";
-import { useA11yId } from "../useA11yId";
+import { createA11yId } from "../createA11yId";
 
 type BaseProps = {
   label?: string;
@@ -37,20 +37,23 @@ type BaseProps = {
   defaultChecked?: boolean;
   className?: string;
   readOnly?: boolean;
+  ariaLabelledby?: string;
 };
 
 const InnerRadio: FC<FieldProps<BaseProps, HTMLInputElement, boolean>> = ({
   name,
   defaultChecked,
   readOnly,
+  ariaLabelledby,
   ...props
 }) => {
-  const id = useA11yId("radio");
+  const id = ariaLabelledby || createA11yId("radio");
+  const helpId = createA11yId("radio");
 
   const renderHelp = () => {
     const helpText = props.helpText;
     if (helpText) {
-      return <Help message={helpText} id={id} />;
+      return <Help message={helpText} id={helpId} />;
     }
   };
 
@@ -74,6 +77,8 @@ const InnerRadio: FC<FieldProps<BaseProps, HTMLInputElement, boolean>> = ({
     }
   };
 
+  const labelElement = props.label ? (<span id={id}>{props.label}</span>) : null;
+
   return (
     <fieldset className="is-inline-block" disabled={readOnly}>
       {/*
@@ -93,9 +98,9 @@ const InnerRadio: FC<FieldProps<BaseProps, HTMLInputElement, boolean>> = ({
           ref={props.innerRef}
           defaultChecked={defaultChecked}
           aria-labelledby={id}
-          aria-describedby={id}
+          aria-describedby={helpId}
         />{" "}
-        {props.label}
+        {labelElement}
         {renderHelp()}
       </label>
     </fieldset>

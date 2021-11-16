@@ -27,7 +27,7 @@ import LabelWithHelpIcon from "./LabelWithHelpIcon";
 import { createAttributesForTesting } from "../devBuild";
 import useAutofocus from "./useAutofocus";
 import { createFormFieldWrapper, FieldProps, FieldType, isLegacy, isUsingRef } from "./FormFieldTypes";
-import { useA11yId } from "../useA11yId";
+import { createA11yId } from "../createA11yId";
 
 type BaseProps = {
   label?: string;
@@ -104,8 +104,8 @@ export const InnerInputField: FC<FieldProps<BaseProps, HTMLInputElement, string>
     helper = <p className="help is-info">{informationMessage}</p>;
   }
 
-  const id = useA11yId("input");
-  const helpId = useA11yId("input");
+  const id = createA11yId("input");
+  const helpId = createA11yId("input");
   return (
     <fieldset className={classNames("field", className)} disabled={readOnly}>
       <LabelWithHelpIcon label={label} helpText={helpText} id={id} helpId={helpId} />

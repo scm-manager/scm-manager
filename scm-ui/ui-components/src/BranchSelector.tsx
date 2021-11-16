@@ -26,7 +26,7 @@ import classNames from "classnames";
 import styled from "styled-components";
 import { Branch } from "@scm-manager/ui-types";
 import { Select } from "./forms";
-import { useA11yId } from "./useA11yId";
+import { createA11yId } from "./createA11yId";
 
 type Props = {
   branches: Branch[];
@@ -46,7 +46,7 @@ const MinWidthControl = styled.div`
 `;
 
 const BranchSelector: FC<Props> = ({ branches, onSelectBranch, selectedBranch, label, disabled }) => {
-  const a11yId = useA11yId("branch-select");
+  const a11yId = createA11yId("branch-select");
 
   if (branches) {
     return (
@@ -66,7 +66,7 @@ const BranchSelector: FC<Props> = ({ branches, onSelectBranch, selectedBranch, l
                 disabled={!!disabled}
                 value={selectedBranch}
                 addValueToOptions={true}
-                id={a11yId}
+                ariaLabelledby={a11yId}
               />
             </MinWidthControl>
           </div>
