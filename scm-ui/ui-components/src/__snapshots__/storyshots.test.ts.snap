@@ -34,7 +34,8 @@ exports[`Storyshots BranchSelector Default 1`] = `
               className="control select is-fullwidth"
             >
               <select
-                aria-describedby="branch-select_0"
+                aria-describedby="select_1"
+                aria-labelledby="branch-select_0"
                 disabled={false}
                 onBlur={[Function]}
                 onChange={[Function]}
@@ -460,7 +461,6 @@ exports[`Storyshots Buttons/AddButton Default 1`] = `
   <button
     className="button is-default"
     onClick={[Function]}
-    onKeyDown={[Function]}
     type="button"
   >
     <i
@@ -483,7 +483,6 @@ exports[`Storyshots Buttons/Button Colors 1`] = `
     <button
       className="button is-primary"
       onClick={[Function]}
-      onKeyDown={[Function]}
       type="button"
     >
        
@@ -497,7 +496,6 @@ exports[`Storyshots Buttons/Button Colors 1`] = `
     <button
       className="button is-link"
       onClick={[Function]}
-      onKeyDown={[Function]}
       type="button"
     >
        
@@ -511,7 +509,6 @@ exports[`Storyshots Buttons/Button Colors 1`] = `
     <button
       className="button is-info"
       onClick={[Function]}
-      onKeyDown={[Function]}
       type="button"
     >
        
@@ -525,7 +522,6 @@ exports[`Storyshots Buttons/Button Colors 1`] = `
     <button
       className="button is-success"
       onClick={[Function]}
-      onKeyDown={[Function]}
       type="button"
     >
        
@@ -539,7 +535,6 @@ exports[`Storyshots Buttons/Button Colors 1`] = `
     <button
       className="button is-warning"
       onClick={[Function]}
-      onKeyDown={[Function]}
       type="button"
     >
        
@@ -553,7 +548,6 @@ exports[`Storyshots Buttons/Button Colors 1`] = `
     <button
       className="button is-danger"
       onClick={[Function]}
-      onKeyDown={[Function]}
       type="button"
     >
        
@@ -567,7 +561,6 @@ exports[`Storyshots Buttons/Button Colors 1`] = `
     <button
       className="button is-white"
       onClick={[Function]}
-      onKeyDown={[Function]}
       type="button"
     >
        
@@ -581,7 +574,6 @@ exports[`Storyshots Buttons/Button Colors 1`] = `
     <button
       className="button is-light"
       onClick={[Function]}
-      onKeyDown={[Function]}
       type="button"
     >
        
@@ -595,7 +587,6 @@ exports[`Storyshots Buttons/Button Colors 1`] = `
     <button
       className="button is-dark"
       onClick={[Function]}
-      onKeyDown={[Function]}
       type="button"
     >
        
@@ -609,7 +600,6 @@ exports[`Storyshots Buttons/Button Colors 1`] = `
     <button
       className="button is-black"
       onClick={[Function]}
-      onKeyDown={[Function]}
       type="button"
     >
        
@@ -623,7 +613,6 @@ exports[`Storyshots Buttons/Button Colors 1`] = `
     <button
       className="button is-text"
       onClick={[Function]}
-      onKeyDown={[Function]}
       type="button"
     >
        
@@ -643,7 +632,6 @@ exports[`Storyshots Buttons/Button Disabled 1`] = `
       className="button is-primary"
       disabled={true}
       onClick={[Function]}
-      onKeyDown={[Function]}
       type="button"
     >
        
@@ -658,7 +646,6 @@ exports[`Storyshots Buttons/Button Disabled 1`] = `
       className="button is-link"
       disabled={true}
       onClick={[Function]}
-      onKeyDown={[Function]}
       type="button"
     >
        
@@ -673,7 +660,6 @@ exports[`Storyshots Buttons/Button Disabled 1`] = `
       className="button is-info"
       disabled={true}
       onClick={[Function]}
-      onKeyDown={[Function]}
       type="button"
     >
        
@@ -688,7 +674,6 @@ exports[`Storyshots Buttons/Button Disabled 1`] = `
       className="button is-success"
       disabled={true}
       onClick={[Function]}
-      onKeyDown={[Function]}
       type="button"
     >
        
@@ -703,7 +688,6 @@ exports[`Storyshots Buttons/Button Disabled 1`] = `
       className="button is-warning"
       disabled={true}
       onClick={[Function]}
-      onKeyDown={[Function]}
       type="button"
     >
        
@@ -718,7 +702,6 @@ exports[`Storyshots Buttons/Button Disabled 1`] = `
       className="button is-danger"
       disabled={true}
       onClick={[Function]}
-      onKeyDown={[Function]}
       type="button"
     >
        
@@ -733,7 +716,6 @@ exports[`Storyshots Buttons/Button Disabled 1`] = `
       className="button is-white"
       disabled={true}
       onClick={[Function]}
-      onKeyDown={[Function]}
       type="button"
     >
        
@@ -748,7 +730,6 @@ exports[`Storyshots Buttons/Button Disabled 1`] = `
       className="button is-light"
       disabled={true}
       onClick={[Function]}
-      onKeyDown={[Function]}
       type="button"
     >
        
@@ -763,7 +744,6 @@ exports[`Storyshots Buttons/Button Disabled 1`] = `
       className="button is-dark"
       disabled={true}
       onClick={[Function]}
-      onKeyDown={[Function]}
       type="button"
     >
        
@@ -778,7 +758,6 @@ exports[`Storyshots Buttons/Button Disabled 1`] = `
       className="button is-black"
       disabled={true}
       onClick={[Function]}
-      onKeyDown={[Function]}
       type="button"
     >
        
@@ -793,7 +772,6 @@ exports[`Storyshots Buttons/Button Disabled 1`] = `
       className="button is-text"
       disabled={true}
       onClick={[Function]}
-      onKeyDown={[Function]}
       type="button"
     >
        
@@ -811,7 +789,6 @@ exports[`Storyshots Buttons/Button Loading 1`] = `
   <button
     className="button is-primary is-loading"
     onClick={[Function]}
-    onKeyDown={[Function]}
     type="button"
   >
      
@@ -831,7 +808,6 @@ exports[`Storyshots Buttons/CreateButton Default 1`] = `
     <button
       className="button is-primary"
       onClick={[Function]}
-      onKeyDown={[Function]}
       type="button"
     >
        
@@ -849,7 +825,6 @@ exports[`Storyshots Buttons/DeleteButton Default 1`] = `
   <button
     className="button is-warning"
     onClick={[Function]}
-    onKeyDown={[Function]}
     type="button"
   >
     <i
@@ -919,7 +894,6 @@ exports[`Storyshots Buttons/EditButton Default 1`] = `
   <button
     className="button is-default"
     onClick={[Function]}
-    onKeyDown={[Function]}
     type="button"
   >
      
@@ -937,7 +911,6 @@ exports[`Storyshots Buttons/SubmitButton Default 1`] = `
     className="button is-primary"
     data-testid="submit-button"
     onClick={[Function]}
-    onKeyDown={[Function]}
     type="submit"
   >
      
@@ -1932,16 +1905,19 @@ exports[`Storyshots Forms/AddKeyValueEntryToTableField Default 1`] = `
     >
       <label
         className="label"
-        id="input_2"
       >
-        Key
+        <span
+          id="input_2"
+        >
+          Key
+        </span>
          
       </label>
       <div
         className="control"
       >
         <input
-          aria-describedby="input_2"
+          aria-describedby="input_3"
           aria-labelledby="input_2"
           className="input"
           onBlur={[Function]}
@@ -1956,17 +1932,20 @@ exports[`Storyshots Forms/AddKeyValueEntryToTableField Default 1`] = `
     >
       <label
         className="label"
-        id="input_3"
       >
-        Value
+        <span
+          id="input_4"
+        >
+          Value
+        </span>
          
       </label>
       <div
         className="control"
       >
         <input
-          aria-describedby="input_3"
-          aria-labelledby="input_3"
+          aria-describedby="input_5"
+          aria-labelledby="input_4"
           className="input"
           onBlur={[Function]}
           onChange={[Function]}
@@ -1979,7 +1958,6 @@ exports[`Storyshots Forms/AddKeyValueEntryToTableField Default 1`] = `
       className="button is-default AddKeyValueEntryToTableField__MarginTopButton-kiarql-1 cPBcKY"
       disabled={true}
       onClick={[Function]}
-      onKeyDown={[Function]}
       type="button"
     >
       <i
@@ -2007,17 +1985,20 @@ exports[`Storyshots Forms/AddKeyValueEntryToTableField Disabled 1`] = `
     >
       <label
         className="label"
-        id="input_4"
       >
-        Key
+        <span
+          id="input_6"
+        >
+          Key
+        </span>
          
       </label>
       <div
         className="control"
       >
         <input
-          aria-describedby="input_4"
-          aria-labelledby="input_4"
+          aria-describedby="input_7"
+          aria-labelledby="input_6"
           className="input"
           disabled={true}
           onBlur={[Function]}
@@ -2032,17 +2013,20 @@ exports[`Storyshots Forms/AddKeyValueEntryToTableField Disabled 1`] = `
     >
       <label
         className="label"
-        id="input_5"
       >
-        Value
+        <span
+          id="input_8"
+        >
+          Value
+        </span>
          
       </label>
       <div
         className="control"
       >
         <input
-          aria-describedby="input_5"
-          aria-labelledby="input_5"
+          aria-describedby="input_9"
+          aria-labelledby="input_8"
           className="input"
           disabled={true}
           onBlur={[Function]}
@@ -2056,7 +2040,6 @@ exports[`Storyshots Forms/AddKeyValueEntryToTableField Disabled 1`] = `
       className="button is-default AddKeyValueEntryToTableField__MarginTopButton-kiarql-1 cPBcKY"
       disabled={true}
       onClick={[Function]}
-      onKeyDown={[Function]}
       type="button"
     >
       <i
@@ -2086,8 +2069,8 @@ exports[`Storyshots Forms/Checkbox Default 1`] = `
         className="checkbox"
       >
         <input
-          aria-describedby="checkbox_6"
-          aria-labelledby="checkbox_6"
+          aria-describedby="checkbox_11"
+          aria-labelledby="checkbox_10"
           checked={false}
           className="checkbox"
           onBlur={[Function]}
@@ -2109,8 +2092,8 @@ exports[`Storyshots Forms/Checkbox Default 1`] = `
         className="checkbox"
       >
         <input
-          aria-describedby="checkbox_7"
-          aria-labelledby="checkbox_7"
+          aria-describedby="checkbox_13"
+          aria-labelledby="checkbox_12"
           checked={true}
           className="checkbox"
           onBlur={[Function]}
@@ -2132,8 +2115,8 @@ exports[`Storyshots Forms/Checkbox Default 1`] = `
         className="checkbox"
       >
         <input
-          aria-describedby="checkbox_8"
-          aria-labelledby="checkbox_8"
+          aria-describedby="checkbox_15"
+          aria-labelledby="checkbox_14"
           checked={true}
           className="checkbox"
           onBlur={[Function]}
@@ -2163,8 +2146,8 @@ exports[`Storyshots Forms/Checkbox Disabled 1`] = `
         disabled={true}
       >
         <input
-          aria-describedby="checkbox_9"
-          aria-labelledby="checkbox_9"
+          aria-describedby="checkbox_17"
+          aria-labelledby="checkbox_16"
           checked={true}
           className="checkbox"
           disabled={true}
@@ -2192,8 +2175,8 @@ Array [
         className="checkbox"
       >
         <input
-          aria-describedby="checkbox_13"
-          aria-labelledby="checkbox_13"
+          aria-describedby="checkbox_25"
+          aria-labelledby="checkbox_24"
           checked={false}
           className="checkbox"
           onBlur={[Function]}
@@ -2226,8 +2209,8 @@ exports[`Storyshots Forms/Checkbox ReactHookForm 1`] = `
         className="checkbox"
       >
         <input
-          aria-describedby="checkbox_14"
-          aria-labelledby="checkbox_14"
+          aria-describedby="checkbox_27"
+          aria-labelledby="checkbox_26"
           className="checkbox"
           name="rememberMe"
           onBlur={[Function]}
@@ -2249,8 +2232,8 @@ exports[`Storyshots Forms/Checkbox ReactHookForm 1`] = `
         className="checkbox"
       >
         <input
-          aria-describedby="checkbox_15"
-          aria-labelledby="checkbox_15"
+          aria-describedby="checkbox_29"
+          aria-labelledby="checkbox_28"
           className="checkbox"
           name="scramblePassword"
           onBlur={[Function]}
@@ -2273,8 +2256,8 @@ exports[`Storyshots Forms/Checkbox ReactHookForm 1`] = `
         disabled={true}
       >
         <input
-          aria-describedby="checkbox_16"
-          aria-labelledby="checkbox_16"
+          aria-describedby="checkbox_31"
+          aria-labelledby="checkbox_30"
           className="checkbox"
           disabled={true}
           name="disabled"
@@ -2298,8 +2281,8 @@ exports[`Storyshots Forms/Checkbox ReactHookForm 1`] = `
         className="checkbox"
       >
         <input
-          aria-describedby="checkbox_17"
-          aria-labelledby="checkbox_17"
+          aria-describedby="checkbox_33"
+          aria-labelledby="checkbox_32"
           className="checkbox"
           name="readonly"
           onBlur={[Function]}
@@ -2319,7 +2302,6 @@ exports[`Storyshots Forms/Checkbox ReactHookForm 1`] = `
       className="button is-primary"
       data-testid="submit-button"
       onClick={[Function]}
-      onKeyDown={[Function]}
       type="submit"
     >
        
@@ -2342,8 +2324,8 @@ Array [
         className="checkbox"
       >
         <input
-          aria-describedby="checkbox_12"
-          aria-labelledby="checkbox_12"
+          aria-describedby="checkbox_23"
+          aria-labelledby="checkbox_22"
           checked={false}
           className="checkbox"
           onBlur={[Function]}
@@ -2358,7 +2340,6 @@ Array [
   <button
     className="button is-primary"
     onClick={[Function]}
-    onKeyDown={[Function]}
     type="button"
   >
      
@@ -2382,8 +2363,8 @@ exports[`Storyshots Forms/Checkbox With HelpText 1`] = `
         className="checkbox"
       >
         <input
-          aria-describedby="checkbox_10"
-          aria-labelledby="checkbox_10"
+          aria-describedby="checkbox_19"
+          aria-labelledby="checkbox_18"
           checked={false}
           className="checkbox"
           onBlur={[Function]}
@@ -2396,7 +2377,7 @@ exports[`Storyshots Forms/Checkbox With HelpText 1`] = `
           aria-label="This is a classic help text."
           className="tooltip has-tooltip-right Help__AbsolutePositionTooltip-ykmmew-0 fpvHMo is-inline-block pl-1 has-tooltip-multiline"
           data-tooltip="This is a classic help text."
-          id="checkbox_10"
+          id="checkbox_19"
         >
           <i
             aria-label=""
@@ -2418,8 +2399,8 @@ exports[`Storyshots Forms/Checkbox With HelpText 1`] = `
         className="checkbox"
       >
         <input
-          aria-describedby="checkbox_11"
-          aria-labelledby="checkbox_11"
+          aria-describedby="checkbox_21"
+          aria-labelledby="checkbox_20"
           checked={true}
           className="checkbox"
           onBlur={[Function]}
@@ -2432,7 +2413,7 @@ exports[`Storyshots Forms/Checkbox With HelpText 1`] = `
           aria-label="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."
           className="tooltip has-tooltip-right Help__AbsolutePositionTooltip-ykmmew-0 fpvHMo is-inline-block pl-1 has-tooltip-multiline"
           data-tooltip="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."
-          id="checkbox_11"
+          id="checkbox_21"
         >
           <i
             aria-label=""
@@ -2564,15 +2545,17 @@ exports[`Storyshots Forms/FileInput Default 1`] = `
     >
       <label
         className="label"
-        id="file-input_18"
       >
-        Upload File
+        <span
+          id="file-input_34"
+        >
+          Upload File
+        </span>
          
         <span
           aria-label="Select your most loved file"
           className="tooltip has-tooltip-right Help__AbsolutePositionTooltip-ykmmew-0 fpvHMo is-inline-block pl-1 has-tooltip-multiline"
           data-tooltip="Select your most loved file"
-          id="file-input_18"
         >
           <i
             aria-label=""
@@ -2589,7 +2572,7 @@ exports[`Storyshots Forms/FileInput Default 1`] = `
           className="file-label"
         >
           <input
-            aria-describedby="file-input_18"
+            aria-describedby="file-input_34"
             className="file-input"
             name="uploadFile"
             onBlur={[Function]}
@@ -2633,7 +2616,6 @@ exports[`Storyshots Forms/FileInput Default 1`] = `
           className="button is-primary"
           data-testid="submit-button"
           onClick={[Function]}
-          onKeyDown={[Function]}
           type="submit"
         >
            
@@ -2655,17 +2637,20 @@ exports[`Storyshots Forms/InputField AutoFocus 1`] = `
   >
     <label
       className="label"
-      id="input_19"
     >
-      Field with AutoFocus
+      <span
+        id="input_35"
+      >
+        Field with AutoFocus
+      </span>
        
     </label>
     <div
       className="control"
     >
       <input
-        aria-describedby="input_19"
-        aria-labelledby="input_19"
+        aria-describedby="input_36"
+        aria-labelledby="input_35"
         className="input"
         onBlur={[Function]}
         onChange={[Function]}
@@ -2688,8 +2673,8 @@ exports[`Storyshots Forms/InputField AutoFocusAndRef 1`] = `
       className="control"
     >
       <input
-        aria-describedby="input_23"
-        aria-labelledby="input_23"
+        aria-describedby="input_44"
+        aria-labelledby="input_43"
         className="input"
         onBlur={[Function]}
         onChange={[Function]}
@@ -2706,8 +2691,8 @@ exports[`Storyshots Forms/InputField AutoFocusAndRef 1`] = `
       className="control"
     >
       <input
-        aria-describedby="input_24"
-        aria-labelledby="input_24"
+        aria-describedby="input_46"
+        aria-labelledby="input_45"
         className="input"
         onBlur={[Function]}
         onChange={[Function]}
@@ -2719,7 +2704,6 @@ exports[`Storyshots Forms/InputField AutoFocusAndRef 1`] = `
   <button
     className="button is-primary"
     onClick={[Function]}
-    onKeyDown={[Function]}
     type="button"
   >
      
@@ -2738,17 +2722,20 @@ exports[`Storyshots Forms/InputField Default Value 1`] = `
   >
     <label
       className="label"
-      id="input_20"
     >
-      Field with Default Value
+      <span
+        id="input_37"
+      >
+        Field with Default Value
+      </span>
        
     </label>
     <div
       className="control"
     >
       <input
-        aria-describedby="input_20"
-        aria-labelledby="input_20"
+        aria-describedby="input_38"
+        aria-labelledby="input_37"
         className="input"
         defaultValue="I am a default value"
         onBlur={[Function]}
@@ -2772,8 +2759,8 @@ exports[`Storyshots Forms/InputField Legacy Events 1`] = `
       className="control"
     >
       <input
-        aria-describedby="input_22"
-        aria-labelledby="input_22"
+        aria-describedby="input_42"
+        aria-labelledby="input_41"
         className="input"
         onBlur={[Function]}
         onChange={[Function]}
@@ -2804,17 +2791,20 @@ exports[`Storyshots Forms/InputField React Hook Form 1`] = `
     >
       <label
         className="label"
-        id="input_25"
       >
-        Readonly
+        <span
+          id="input_47"
+        >
+          Readonly
+        </span>
          
       </label>
       <div
         className="control"
       >
         <input
-          aria-describedby="input_25"
-          aria-labelledby="input_25"
+          aria-describedby="input_48"
+          aria-labelledby="input_47"
           className="input"
           defaultValue="I am readonly but still show up on submit!"
           name="readonly"
@@ -2829,17 +2819,20 @@ exports[`Storyshots Forms/InputField React Hook Form 1`] = `
     >
       <label
         className="label"
-        id="input_26"
       >
-        Disabled
+        <span
+          id="input_49"
+        >
+          Disabled
+        </span>
          
       </label>
       <div
         className="control"
       >
         <input
-          aria-describedby="input_26"
-          aria-labelledby="input_26"
+          aria-describedby="input_50"
+          aria-labelledby="input_49"
           className="input"
           defaultValue="I am disabled and dont show up on submit!"
           disabled={true}
@@ -2855,17 +2848,20 @@ exports[`Storyshots Forms/InputField React Hook Form 1`] = `
     >
       <label
         className="label"
-        id="input_27"
       >
-        First Name
+        <span
+          id="input_51"
+        >
+          First Name
+        </span>
          
       </label>
       <div
         className="control"
       >
         <input
-          aria-describedby="input_27"
-          aria-labelledby="input_27"
+          aria-describedby="input_52"
+          aria-labelledby="input_51"
           className="input"
           name="firstName"
           onBlur={[Function]}
@@ -2879,17 +2875,20 @@ exports[`Storyshots Forms/InputField React Hook Form 1`] = `
     >
       <label
         className="label"
-        id="input_28"
       >
-        Last Name
+        <span
+          id="input_53"
+        >
+          Last Name
+        </span>
          
       </label>
       <div
         className="control"
       >
         <input
-          aria-describedby="input_28"
-          aria-labelledby="input_28"
+          aria-describedby="input_54"
+          aria-labelledby="input_53"
           className="input"
           name="lastName"
           onBlur={[Function]}
@@ -2905,7 +2904,6 @@ exports[`Storyshots Forms/InputField React Hook Form 1`] = `
         className="button is-primary"
         data-testid="submit-button"
         onClick={[Function]}
-        onKeyDown={[Function]}
         type="submit"
       >
          
@@ -2929,8 +2927,8 @@ exports[`Storyshots Forms/InputField Ref 1`] = `
       className="control"
     >
       <input
-        aria-describedby="input_21"
-        aria-labelledby="input_21"
+        aria-describedby="input_40"
+        aria-labelledby="input_39"
         className="input"
         onBlur={[Function]}
         onChange={[Function]}
@@ -2942,7 +2940,6 @@ exports[`Storyshots Forms/InputField Ref 1`] = `
   <button
     className="button is-primary"
     onClick={[Function]}
-    onKeyDown={[Function]}
     type="button"
   >
      
@@ -2963,15 +2960,19 @@ exports[`Storyshots Forms/Radio Default 1`] = `
       className="radio mr-2"
     >
       <input
-        aria-describedby="radio_29"
-        aria-labelledby="radio_29"
+        aria-describedby="radio_56"
+        aria-labelledby="radio_55"
         checked={false}
         onBlur={[Function]}
         onChange={[Function]}
         type="radio"
       />
        
-      Not checked
+      <span
+        id="radio_55"
+      >
+        Not checked
+      </span>
     </label>
   </fieldset>
   <fieldset
@@ -2981,15 +2982,19 @@ exports[`Storyshots Forms/Radio Default 1`] = `
       className="radio mr-2"
     >
       <input
-        aria-describedby="radio_30"
-        aria-labelledby="radio_30"
+        aria-describedby="radio_58"
+        aria-labelledby="radio_57"
         checked={true}
         onBlur={[Function]}
         onChange={[Function]}
         type="radio"
       />
        
-      Checked
+      <span
+        id="radio_57"
+      >
+        Checked
+      </span>
     </label>
   </fieldset>
 </div>
@@ -3007,8 +3012,8 @@ exports[`Storyshots Forms/Radio Disabled 1`] = `
       disabled={true}
     >
       <input
-        aria-describedby="radio_31"
-        aria-labelledby="radio_31"
+        aria-describedby="radio_60"
+        aria-labelledby="radio_59"
         checked={true}
         disabled={true}
         onBlur={[Function]}
@@ -3016,7 +3021,11 @@ exports[`Storyshots Forms/Radio Disabled 1`] = `
         type="radio"
       />
        
-      Checked but disabled
+      <span
+        id="radio_59"
+      >
+        Checked but disabled
+      </span>
     </label>
   </fieldset>
 </div>
@@ -3031,8 +3040,8 @@ Array [
       className="radio mr-2"
     >
       <input
-        aria-describedby="radio_35"
-        aria-labelledby="radio_35"
+        aria-describedby="radio_68"
+        aria-labelledby="radio_67"
         checked={false}
         onBlur={[Function]}
         onChange={[Function]}
@@ -3063,8 +3072,8 @@ exports[`Storyshots Forms/Radio ReactHookForm 1`] = `
         className="radio mr-2"
       >
         <input
-          aria-describedby="radio_36"
-          aria-labelledby="radio_36"
+          aria-describedby="radio_70"
+          aria-labelledby="radio_69"
           defaultChecked={true}
           name="rememberMe"
           onBlur={[Function]}
@@ -3073,7 +3082,11 @@ exports[`Storyshots Forms/Radio ReactHookForm 1`] = `
           value="true"
         />
          
-        Remember Me
+        <span
+          id="radio_69"
+        >
+          Remember Me
+        </span>
       </label>
     </fieldset>
     <fieldset
@@ -3083,8 +3096,8 @@ exports[`Storyshots Forms/Radio ReactHookForm 1`] = `
         className="radio mr-2"
       >
         <input
-          aria-describedby="radio_37"
-          aria-labelledby="radio_37"
+          aria-describedby="radio_72"
+          aria-labelledby="radio_71"
           name="rememberMe"
           onBlur={[Function]}
           onChange={[Function]}
@@ -3092,7 +3105,11 @@ exports[`Storyshots Forms/Radio ReactHookForm 1`] = `
           value="false"
         />
          
-        Dont Remember Me
+        <span
+          id="radio_71"
+        >
+          Dont Remember Me
+        </span>
       </label>
     </fieldset>
   </div>
@@ -3103,8 +3120,8 @@ exports[`Storyshots Forms/Radio ReactHookForm 1`] = `
       className="radio mr-2 ml-2"
     >
       <input
-        aria-describedby="radio_38"
-        aria-labelledby="radio_38"
+        aria-describedby="radio_74"
+        aria-labelledby="radio_73"
         name="scramblePassword"
         onBlur={[Function]}
         onChange={[Function]}
@@ -3112,7 +3129,11 @@ exports[`Storyshots Forms/Radio ReactHookForm 1`] = `
         value="false"
       />
        
-      Scramble Password
+      <span
+        id="radio_73"
+      >
+        Scramble Password
+      </span>
     </label>
   </fieldset>
   <fieldset
@@ -3123,8 +3144,8 @@ exports[`Storyshots Forms/Radio ReactHookForm 1`] = `
       disabled={true}
     >
       <input
-        aria-describedby="radio_39"
-        aria-labelledby="radio_39"
+        aria-describedby="radio_76"
+        aria-labelledby="radio_75"
         disabled={true}
         name="disabled"
         onBlur={[Function]}
@@ -3133,7 +3154,11 @@ exports[`Storyshots Forms/Radio ReactHookForm 1`] = `
         value="false"
       />
        
-      Disabled wont be submitted
+      <span
+        id="radio_75"
+      >
+        Disabled wont be submitted
+      </span>
     </label>
   </fieldset>
   <fieldset
@@ -3143,8 +3168,8 @@ exports[`Storyshots Forms/Radio ReactHookForm 1`] = `
       className="radio mr-2"
     >
       <input
-        aria-describedby="radio_40"
-        aria-labelledby="radio_40"
+        aria-describedby="radio_78"
+        aria-labelledby="radio_77"
         name="readonly"
         onBlur={[Function]}
         onChange={[Function]}
@@ -3152,7 +3177,11 @@ exports[`Storyshots Forms/Radio ReactHookForm 1`] = `
         value="false"
       />
        
-      Readonly will be submitted
+      <span
+        id="radio_77"
+      >
+        Readonly will be submitted
+      </span>
     </label>
   </fieldset>
   <div
@@ -3162,7 +3191,6 @@ exports[`Storyshots Forms/Radio ReactHookForm 1`] = `
       className="button is-primary"
       data-testid="submit-button"
       onClick={[Function]}
-      onKeyDown={[Function]}
       type="submit"
     >
        
@@ -3182,21 +3210,24 @@ Array [
       className="radio mr-2"
     >
       <input
-        aria-describedby="radio_34"
-        aria-labelledby="radio_34"
+        aria-describedby="radio_66"
+        aria-labelledby="radio_65"
         checked={false}
         onBlur={[Function]}
         onChange={[Function]}
         type="radio"
       />
        
-      Ref Radio Button
+      <span
+        id="radio_65"
+      >
+        Ref Radio Button
+      </span>
     </label>
   </fieldset>,
   <button
     className="button is-primary"
     onClick={[Function]}
-    onKeyDown={[Function]}
     type="button"
   >
      
@@ -3217,20 +3248,24 @@ exports[`Storyshots Forms/Radio With HelpText 1`] = `
       className="radio mr-2"
     >
       <input
-        aria-describedby="radio_32"
-        aria-labelledby="radio_32"
+        aria-describedby="radio_62"
+        aria-labelledby="radio_61"
         checked={false}
         onBlur={[Function]}
         onChange={[Function]}
         type="radio"
       />
        
-      Classic helpText
+      <span
+        id="radio_61"
+      >
+        Classic helpText
+      </span>
       <span
         aria-label="This is a classic help text."
         className="tooltip has-tooltip-right Help__AbsolutePositionTooltip-ykmmew-0 fpvHMo is-inline-block pl-1 has-tooltip-multiline"
         data-tooltip="This is a classic help text."
-        id="radio_32"
+        id="radio_62"
       >
         <i
           aria-label=""
@@ -3248,20 +3283,24 @@ exports[`Storyshots Forms/Radio With HelpText 1`] = `
       className="radio mr-2"
     >
       <input
-        aria-describedby="radio_33"
-        aria-labelledby="radio_33"
+        aria-describedby="radio_64"
+        aria-labelledby="radio_63"
         checked={true}
         onBlur={[Function]}
         onChange={[Function]}
         type="radio"
       />
        
-      Long helpText
+      <span
+        id="radio_63"
+      >
+        Long helpText
+      </span>
       <span
         aria-label="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."
         className="tooltip has-tooltip-right Help__AbsolutePositionTooltip-ykmmew-0 fpvHMo is-inline-block pl-1 has-tooltip-multiline"
         data-tooltip="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."
-        id="radio_33"
+        id="radio_64"
       >
         <i
           aria-label=""
@@ -3285,7 +3324,8 @@ Array [
       className="control select"
     >
       <select
-        aria-describedby="select_41"
+        aria-describedby="select_80"
+        aria-labelledby="select_79"
         onBlur={[Function]}
         onChange={[Function]}
         value="uscss-prometheus"
@@ -3326,7 +3366,8 @@ Array [
       className="control select"
     >
       <select
-        aria-describedby="select_43"
+        aria-describedby="select_84"
+        aria-labelledby="select_83"
         onBlur={[Function]}
         onChange={[Function]}
       >
@@ -3359,7 +3400,8 @@ Array [
       className="control select"
     >
       <select
-        aria-describedby="select_48"
+        aria-describedby="select_94"
+        aria-labelledby="select_93"
         onBlur={[Function]}
         onChange={[Function]}
         value="razor-crest"
@@ -3399,16 +3441,20 @@ exports[`Storyshots Forms/Select ReactHookForm 1`] = `
   >
     <label
       className="label"
-      id="select_44"
     >
-      Remember Me
+      <span
+        id="select_85"
+      >
+        Remember Me
+      </span>
        
     </label>
     <div
       className="control select"
     >
       <select
-        aria-describedby="select_44"
+        aria-describedby="select_86"
+        aria-labelledby="select_85"
         name="rememberMe"
         onBlur={[Function]}
         onChange={[Function]}
@@ -3431,16 +3477,20 @@ exports[`Storyshots Forms/Select ReactHookForm 1`] = `
   >
     <label
       className="label"
-      id="select_45"
     >
-      Scramble Password
+      <span
+        id="select_87"
+      >
+        Scramble Password
+      </span>
        
     </label>
     <div
       className="control select"
     >
       <select
-        aria-describedby="select_45"
+        aria-describedby="select_88"
+        aria-labelledby="select_87"
         name="scramblePassword"
         onBlur={[Function]}
         onChange={[Function]}
@@ -3463,16 +3513,20 @@ exports[`Storyshots Forms/Select ReactHookForm 1`] = `
   >
     <label
       className="label"
-      id="select_46"
     >
-      Disabled wont be submitted
+      <span
+        id="select_89"
+      >
+        Disabled wont be submitted
+      </span>
        
     </label>
     <div
       className="control select"
     >
       <select
-        aria-describedby="select_46"
+        aria-describedby="select_90"
+        aria-labelledby="select_89"
         defaultValue="false"
         disabled={true}
         name="disabled"
@@ -3498,16 +3552,20 @@ exports[`Storyshots Forms/Select ReactHookForm 1`] = `
   >
     <label
       className="label"
-      id="select_47"
     >
-      Readonly will be submitted
+      <span
+        id="select_91"
+      >
+        Readonly will be submitted
+      </span>
        
     </label>
     <div
       className="control select"
     >
       <select
-        aria-describedby="select_47"
+        aria-describedby="select_92"
+        aria-labelledby="select_91"
         defaultValue="false"
         name="readonly"
         onBlur={[Function]}
@@ -3533,7 +3591,6 @@ exports[`Storyshots Forms/Select ReactHookForm 1`] = `
       className="button is-primary"
       data-testid="submit-button"
       onClick={[Function]}
-      onKeyDown={[Function]}
       type="submit"
     >
        
@@ -3551,16 +3608,20 @@ Array [
   >
     <label
       className="label"
-      id="select_42"
     >
-      Ref Radio Button
+      <span
+        id="select_81"
+      >
+        Ref Radio Button
+      </span>
        
     </label>
     <div
       className="control select"
     >
       <select
-        aria-describedby="select_42"
+        aria-describedby="select_82"
+        aria-labelledby="select_81"
         onBlur={[Function]}
         onChange={[Function]}
         value="false"
@@ -3581,7 +3642,6 @@ Array [
   <button
     className="button is-primary"
     onClick={[Function]}
-    onKeyDown={[Function]}
     type="button"
   >
      
@@ -3598,17 +3658,20 @@ exports[`Storyshots Forms/Textarea AutoFocus 1`] = `
 >
   <label
     className="label"
-    id="textarea_52"
   >
-    Field with AutoFocus
+    <span
+      id="textarea_101"
+    >
+      Field with AutoFocus
+    </span>
      
   </label>
   <div
     className="control"
   >
     <textarea
-      aria-describedby="textarea_52"
-      aria-labelledby="textarea_52"
+      aria-describedby="textarea_102"
+      aria-labelledby="textarea_101"
       className="textarea"
       onBlur={[Function]}
       onChange={[Function]}
@@ -3628,8 +3691,8 @@ Array [
       className="control"
     >
       <textarea
-        aria-describedby="textarea_56"
-        aria-labelledby="textarea_56"
+        aria-describedby="textarea_110"
+        aria-labelledby="textarea_109"
         className="textarea"
         onBlur={[Function]}
         onChange={[Function]}
@@ -3646,8 +3709,8 @@ Array [
       className="control"
     >
       <textarea
-        aria-describedby="textarea_57"
-        aria-labelledby="textarea_57"
+        aria-describedby="textarea_112"
+        aria-labelledby="textarea_111"
         className="textarea"
         onBlur={[Function]}
         onChange={[Function]}
@@ -3659,7 +3722,6 @@ Array [
   <button
     className="button is-primary"
     onClick={[Function]}
-    onKeyDown={[Function]}
     type="button"
   >
      
@@ -3675,17 +3737,20 @@ exports[`Storyshots Forms/Textarea Default Value 1`] = `
 >
   <label
     className="label"
-    id="textarea_53"
   >
-    Field with Default Value
+    <span
+      id="textarea_103"
+    >
+      Field with Default Value
+    </span>
      
   </label>
   <div
     className="control"
   >
     <textarea
-      aria-describedby="textarea_53"
-      aria-labelledby="textarea_53"
+      aria-describedby="textarea_104"
+      aria-labelledby="textarea_103"
       className="textarea"
       defaultValue="I am a text area with so much default value its crazy!"
       onBlur={[Function]}
@@ -3706,8 +3771,8 @@ Array [
       className="control"
     >
       <textarea
-        aria-describedby="textarea_55"
-        aria-labelledby="textarea_55"
+        aria-describedby="textarea_108"
+        aria-labelledby="textarea_107"
         className="textarea"
         onBlur={[Function]}
         onChange={[Function]}
@@ -3737,8 +3802,8 @@ exports[`Storyshots Forms/Textarea OnCancel 1`] = `
       className="control"
     >
       <textarea
-        aria-describedby="textarea_51"
-        aria-labelledby="textarea_51"
+        aria-describedby="textarea_100"
+        aria-labelledby="textarea_99"
         className="textarea"
         onBlur={[Function]}
         onChange={[Function]}
@@ -3762,8 +3827,8 @@ exports[`Storyshots Forms/Textarea OnChange 1`] = `
       className="control"
     >
       <textarea
-        aria-describedby="textarea_49"
-        aria-labelledby="textarea_49"
+        aria-describedby="textarea_96"
+        aria-labelledby="textarea_95"
         className="textarea"
         onBlur={[Function]}
         onChange={[Function]}
@@ -3791,8 +3856,8 @@ exports[`Storyshots Forms/Textarea OnSubmit 1`] = `
       className="control"
     >
       <textarea
-        aria-describedby="textarea_50"
-        aria-labelledby="textarea_50"
+        aria-describedby="textarea_98"
+        aria-labelledby="textarea_97"
         className="textarea"
         onBlur={[Function]}
         onChange={[Function]}
@@ -3817,17 +3882,20 @@ exports[`Storyshots Forms/Textarea ReactHookForm 1`] = `
   >
     <label
       className="label"
-      id="textarea_58"
     >
-      Message
+      <span
+        id="textarea_113"
+      >
+        Message
+      </span>
        
     </label>
     <div
       className="control"
     >
       <textarea
-        aria-describedby="textarea_58"
-        aria-labelledby="textarea_58"
+        aria-describedby="textarea_114"
+        aria-labelledby="textarea_113"
         className="textarea"
         name="message"
         onBlur={[Function]}
@@ -3841,17 +3909,20 @@ exports[`Storyshots Forms/Textarea ReactHookForm 1`] = `
   >
     <label
       className="label"
-      id="textarea_59"
     >
-      Footer
+      <span
+        id="textarea_115"
+      >
+        Footer
+      </span>
        
     </label>
     <div
       className="control"
     >
       <textarea
-        aria-describedby="textarea_59"
-        aria-labelledby="textarea_59"
+        aria-describedby="textarea_116"
+        aria-labelledby="textarea_115"
         className="textarea"
         name="footer"
         onBlur={[Function]}
@@ -3866,17 +3937,20 @@ exports[`Storyshots Forms/Textarea ReactHookForm 1`] = `
   >
     <label
       className="label"
-      id="textarea_60"
     >
-      Readonly
+      <span
+        id="textarea_117"
+      >
+        Readonly
+      </span>
        
     </label>
     <div
       className="control"
     >
       <textarea
-        aria-describedby="textarea_60"
-        aria-labelledby="textarea_60"
+        aria-describedby="textarea_118"
+        aria-labelledby="textarea_117"
         className="textarea"
         defaultValue="I am readonly but still show up on submit!"
         name="readonly"
@@ -3891,17 +3965,20 @@ exports[`Storyshots Forms/Textarea ReactHookForm 1`] = `
   >
     <label
       className="label"
-      id="textarea_61"
     >
-      Disabled
+      <span
+        id="textarea_119"
+      >
+        Disabled
+      </span>
        
     </label>
     <div
       className="control"
     >
       <textarea
-        aria-describedby="textarea_61"
-        aria-labelledby="textarea_61"
+        aria-describedby="textarea_120"
+        aria-labelledby="textarea_119"
         className="textarea"
         defaultValue="I am disabled and dont show up on submit!"
         disabled={true}
@@ -3919,7 +3996,6 @@ exports[`Storyshots Forms/Textarea ReactHookForm 1`] = `
       className="button is-primary"
       data-testid="submit-button"
       onClick={[Function]}
-      onKeyDown={[Function]}
       type="submit"
     >
        
@@ -3940,8 +4016,8 @@ Array [
       className="control"
     >
       <textarea
-        aria-describedby="textarea_54"
-        aria-labelledby="textarea_54"
+        aria-describedby="textarea_106"
+        aria-labelledby="textarea_105"
         className="textarea"
         onBlur={[Function]}
         onChange={[Function]}
@@ -3952,7 +4028,6 @@ Array [
   <button
     className="button is-primary"
     onClick={[Function]}
-    onKeyDown={[Function]}
     type="button"
   >
      
@@ -4024,7 +4099,6 @@ exports[`Storyshots GroupEntry Default 1`] = `
             <button
               className="button is-default"
               onClick={[Function]}
-              onKeyDown={[Function]}
               title="Copy clone command to clipboard"
               type="button"
             >
@@ -4105,7 +4179,6 @@ exports[`Storyshots GroupEntry With long texts 1`] = `
             <button
               className="button is-default"
               onClick={[Function]}
-              onKeyDown={[Function]}
               title="Copy clone command to clipboard"
               type="button"
             >
@@ -23493,7 +23566,6 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
     <button
       className="button is-default mb-5"
       onClick={[Function]}
-      onKeyDown={[Function]}
       type="button"
     >
        
@@ -91276,7 +91348,6 @@ exports[`Storyshots Tooltip Default 1`] = `
       <button
         className="button is-info"
         onClick={[Function]}
-        onKeyDown={[Function]}
         type="button"
       >
          
@@ -91297,7 +91368,6 @@ exports[`Storyshots Tooltip Default 1`] = `
       <button
         className="button is-info"
         onClick={[Function]}
-        onKeyDown={[Function]}
         type="button"
       >
          
@@ -91318,7 +91388,6 @@ exports[`Storyshots Tooltip Default 1`] = `
       <button
         className="button is-info"
         onClick={[Function]}
-        onKeyDown={[Function]}
         type="button"
       >
          
@@ -91339,7 +91408,6 @@ exports[`Storyshots Tooltip Default 1`] = `
       <button
         className="button is-info"
         onClick={[Function]}
-        onKeyDown={[Function]}
         type="button"
       >
          
@@ -91381,7 +91449,6 @@ exports[`Storyshots Tooltip Multiline 1`] = `
       <button
         className="button is-info"
         onClick={[Function]}
-        onKeyDown={[Function]}
         type="button"
       >
          
@@ -91416,7 +91483,6 @@ exports[`Storyshots Tooltip Multiline 1`] = `
       <button
         className="button is-info"
         onClick={[Function]}
-        onKeyDown={[Function]}
         type="button"
       >
          
@@ -91451,7 +91517,6 @@ exports[`Storyshots Tooltip Multiline 1`] = `
       <button
         className="button is-info"
         onClick={[Function]}
-        onKeyDown={[Function]}
         type="button"
       >
          
@@ -91486,7 +91551,6 @@ exports[`Storyshots Tooltip Multiline 1`] = `
       <button
         className="button is-info"
         onClick={[Function]}
-        onKeyDown={[Function]}
         type="button"
       >
          
@@ -91518,7 +91582,6 @@ exports[`Storyshots Tooltip Short Multiline 1`] = `
       <button
         className="button is-info"
         onClick={[Function]}
-        onKeyDown={[Function]}
         type="button"
       >
          
@@ -91543,7 +91606,6 @@ exports[`Storyshots Tooltip Short Multiline 1`] = `
       <button
         className="button is-info"
         onClick={[Function]}
-        onKeyDown={[Function]}
         type="button"
       >
          
@@ -91568,7 +91630,6 @@ exports[`Storyshots Tooltip Short Multiline 1`] = `
       <button
         className="button is-info"
         onClick={[Function]}
-        onKeyDown={[Function]}
         type="button"
       >
          
@@ -91593,7 +91654,6 @@ exports[`Storyshots Tooltip Short Multiline 1`] = `
       <button
         className="button is-info"
         onClick={[Function]}
-        onKeyDown={[Function]}
         type="button"
       >
          
