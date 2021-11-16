@@ -28,40 +28,39 @@ plugins {
 }
 
 dependencies {
-  api platform(project(':'))
   api project(':scm-core')
 
   // tests
-  api libraries.junitJupiterApi
-  api libraries.junitJupiterParams
-  api libraries.junitJupiterEngine
+  api "org.junit.jupiter:junit-jupiter-api"
+  api "org.junit.jupiter:junit-jupiter-params"
+  api "org.junit.jupiter:junit-jupiter-engine"
 
   // junit 4 support
-  api libraries.junitVintageEngine
-  api libraries.junit
+  api "org.junit.vintage:junit-vintage-engine"
+  api "junit:junit"
 
   // assertions
-  api libraries.hamcrestCore
-  api libraries.hamcrestLibrary
-  api libraries.assertj
+  api "org.hamcrest:hamcrest-core"
+  api "org.hamcrest:hamcrest-library"
+  api "org.assertj:assertj-core"
 
   // mocking
-  api libraries.mockitoCore
-  api libraries.mockitoJunitJupiter
+  api "org.mockito:mockito-core"
+  api "org.mockito:mockito-junit-jupiter"
 
   // shiro
-  api libraries.shiroExtension
-  api libraries.shiroUnit
+  api "com.github.sdorra:junit-shiro-extension"
+  api "com.github.sdorra:shiro-unit"
 
   // test rest api's
-  api libraries.resteasyCore
-  api libraries.resteasyValidatorProvider
+  api "org.jboss.resteasy:resteasy-core"
+  api "org.jboss.resteasy:resteasy-validator-provider"
 
   // test servlet api
-  api libraries.servletApi
+  api "javax.servlet:javax.servlet-api"
 
   //validator
-  api libraries.validator
-  api libraries.elApi
-  api libraries.elRuntime
+  api "org.hibernate.validator:hibernate-validator"
+  api "javax.el:javax.el-api"
+  api "org.glassfish:javax.el"
 }

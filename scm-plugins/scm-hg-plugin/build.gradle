@@ -32,15 +32,15 @@ dependencies {
     exclude group: 'com.google.guava', module: 'guava'
     exclude group: 'org.slf4j'
   }
-  implementation libraries.commonsCompress
-  testImplementation libraries.shiroUnit
-  testImplementation libraries.logback
+  implementation"org.apache.commons:commons-compress"
+  testImplementation"com.github.sdorra:shiro-unit"
+  testImplementation "ch.qos.logback:logback-classic"
 
   // validation api
-  testImplementation libraries.validator
-  testImplementation libraries.elApi
-  testImplementation libraries.elRuntime
-  testImplementation libraries.resteasyValidatorProvider
+  testImplementation"org.hibernate.validator:hibernate-validator"
+  testImplementation"javax.el:javax.el-api"
+  testImplementation"org.glassfish:javax.el"
+  testImplementation "org.jboss.resteasy:resteasy-validator-provider"
 }
 
 scmPlugin {

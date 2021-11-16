@@ -34,7 +34,7 @@ dependencies {
     exclude group: 'org.tmatesoft.svnkit', module: 'trilead-ssh2'
   }
   implementation "sonia.svnkit:svnkit-dav:${svnkitVersion}"
-  testImplementation libraries.shiroUnit
+  testImplementation"com.github.sdorra:shiro-unit"
 }
 
 scmPlugin {

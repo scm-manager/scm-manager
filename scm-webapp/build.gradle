@@ -39,7 +39,7 @@ configurations {
 }
 
 dependencies {
-  implementation platform(project(':'))
+  providedCompile platform(rootProject)
 
   corePlugin project(path: ':scm-plugins:scm-git-plugin', configuration: 'smp')
   corePlugin project(path: ':scm-plugins:scm-hg-plugin', configuration: 'smp')
@@ -53,92 +53,92 @@ dependencies {
   annotationProcessor project(':scm-annotation-processor')
 
   // servlet api
-  providedCompile libraries.servletApi
-  testImplementation libraries.servletApi
+  providedCompile "javax.servlet:javax.servlet-api"
+  testImplementation "javax.servlet:javax.servlet-api"
 
   // security
-  implementation libraries.shiroWeb
-  implementation libraries.shiroGuice
+  implementation "org.apache.shiro:shiro-web"
+  implementation "org.apache.shiro:shiro-guice"
 
   // jwt
-  implementation libraries.jjwtApi
-  implementation libraries.jjwtRuntime
-  implementation libraries.jjwtJackson
+  implementation "io.jsonwebtoken:jjwt-api"
+  implementation "io.jsonwebtoken:jjwt-impl"
+  implementation "io.jsonwebtoken:jjwt-jackson"
 
   // gpg
-  implementation libraries.bouncycastlePg
-  implementation libraries.bouncycastleProv
-  implementation libraries.bouncycastlePkix
+  implementation "org.bouncycastle:bcpg-jdk15on"
+  implementation "org.bouncycastle:bcprov-jdk15on"
+  implementation "org.bouncycastle:bcpkix-jdk15on"
 
   // json
-  implementation libraries.jacksonJaxbAnnotations
-  implementation libraries.jacksonJaxRsBase
-  implementation libraries.jacksonJaxRsJsonProvider
-  implementation libraries.jacksonDatatypeJdk8
-  implementation libraries.jacksonDatatypeJsr310
+  implementation "com.fasterxml.jackson.core:jackson-annotations"
+  implementation "com.fasterxml.jackson.jaxrs:jackson-jaxrs-base"
+  implementation "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider"
+  implementation "com.fasterxml.jackson.datatype:jackson-datatype-jdk8"
+  implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
 
   // rest api
-  implementation libraries.resteasyJaxbProvider
-  implementation libraries.resteasyJackson2Provider
-  implementation libraries.resteasyMultiartProvider
-  implementation libraries.resteasyGuice
-  implementation libraries.resteasyServletInitializer
-  implementation libraries.resteasyValidatorProvider
+  implementation "org.jboss.resteasy:resteasy-jaxb-provider"
+  implementation "org.jboss.resteasy:resteasy-jackson2-provider"
+  implementation "org.jboss.resteasy:resteasy-multipart-provider"
+  implementation "org.jboss.resteasy:resteasy-guice"
+  implementation "org.jboss.resteasy:resteasy-servlet-initializer"
+  implementation "org.jboss.resteasy:resteasy-validator-provider"
 
   // openapi
-  compileOnly libraries.swaggerJaxRs
+  compileOnly "io.swagger.core.v3:swagger-jaxrs2"
 
   // logging
-  implementation libraries.logback
+  implementation "ch.qos.logback:logback-classic"
 
   // cron expression
-  implementation libraries.cronUtils
+  implementation "com.cronutils:cron-utils"
 
   // templates
-  implementation libraries.mustache
+  implementation "com.github.spullara.mustache.java:compiler"
 
   // static resources
-  implementation libraries.webResources
+  implementation "com.github.sdorra:web-resources"
 
   // content type detection
-  implementation libraries.spotter
-  implementation libraries.tika
+  implementation "com.github.sdorra:spotter-core"
+  implementation "org.apache.tika:tika-core"
 
   // restart on unix
-  implementation libraries.akuma
+  implementation "org.kohsuke:akuma"
 
   // native access
-  implementation libraries.jna
+  implementation "net.java.dev.jna:jna"
 
   // util
-  implementation libraries.commonsCompress
+  implementation"org.apache.commons:commons-compress"
 
   // events
-  implementation libraries.legmanShiro
-  implementation libraries.legmanMicrometer
+  implementation "com.cloudogu.legman.support:shiro"
+  implementation "com.cloudogu.legman.support:micrometer"
 
   // metrics
-  implementation libraries.micrometerExtra
+  implementation "io.github.mweirauch:micrometer-jvm-extras"
 
-  implementation libraries.luceneCore
-  implementation libraries.luceneQueryParser
-  implementation libraries.luceneHighlighter
-  implementation libraries.luceneAnalyzersCommon
+  implementation "org.apache.lucene:lucene-core"
+  implementation "org.apache.lucene:lucene-queryparser"
+  implementation "org.apache.lucene:lucene-highlighter"
+  implementation "org.apache.lucene:lucene-analyzers-common"
 
   // lombok
-  compileOnly libraries.lombok
-  testCompileOnly libraries.lombok
-  annotationProcessor libraries.lombok
-  testAnnotationProcessor libraries.lombok
+  compileOnly"org.projectlombok:lombok"
+  testCompileOnly"org.projectlombok:lombok"
+  annotationProcessor"org.projectlombok:lombok"
+  testAnnotationProcessor"org.projectlombok:lombok"
 
   // dto mapping
-  annotationProcessor libraries.mapstructProcessor
+  annotationProcessor "org.mapstruct:mapstruct-processor"
 
   // testing async code
-  testImplementation libraries.awaitility
+  testImplementation "org.awaitility:awaitility"
 
   // shiro unit
-  testImplementation libraries.shiroUnit
+  testImplementation"com.github.sdorra:shiro-unit"
 }
 
 war {

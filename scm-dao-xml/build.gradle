@@ -34,6 +34,6 @@ dependencies {
   testImplementation project(':scm-test')
 
   // lombok
-  compileOnly libraries.lombok
-  annotationProcessor libraries.lombok
+  compileOnly"org.projectlombok:lombok"
+  annotationProcessor"org.projectlombok:lombok"
 }

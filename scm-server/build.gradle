@@ -30,9 +30,9 @@ plugins {
 dependencies {
   api platform(project(':'))
   
-  implementation libraries.commonsDaemon
-  implementation libraries.jettyServer
-  implementation libraries.jettyWebapp
+  implementation "commons-daemon:commons-daemon"
+  implementation "org.eclipse.jetty:jetty-server"
+  implementation "org.eclipse.jetty:jetty-webapp"
   // TODO do we need jetty jmx?
-  implementation libraries.jettyJmx
+  implementation "org.eclipse.jetty:jetty-jmx"
 }

@@ -35,11 +35,11 @@ dependencies {
   implementation "sonia.jgit:org.eclipse.jgit.http.server:${jgitVersion}"
   implementation "sonia.jgit:org.eclipse.jgit.lfs.server:${jgitVersion}"
   implementation "sonia.jgit:org.eclipse.jgit.gpg.bc:${jgitVersion}"
-  implementation libraries.commonsCompress
+  implementation"org.apache.commons:commons-compress"
 
   testImplementation "sonia.jgit:org.eclipse.jgit.junit.http:${jgitVersion}"
-  testImplementation libraries.shiroUnit
-  testImplementation libraries.awaitility
+  testImplementation"com.github.sdorra:shiro-unit"
+  testImplementation "org.awaitility:awaitility"
 }
 
 scmPlugin {

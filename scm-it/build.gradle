@@ -54,9 +54,9 @@ dependencies {
 
   // dependencies for tests in sonia.scm.it.webapp
   testImplementation project(':scm-webapp')
-  testImplementation libraries.jerseyClientApi
-  testImplementation libraries.jerseyClientRuntime
-  testImplementation libraries.jacksonJaxbAnnotations
+  testImplementation "com.sun.jersey:jersey-client"
+  testImplementation "com.sun.jersey.contribs:jersey-apache-client"
+  testImplementation "com.fasterxml.jackson.module:jackson-module-jaxb-annotations"
 
   itWebApp project(path: ':scm-webapp', configuration: 'webapp')
   itPlugin project(path: ':scm-plugins:scm-integration-test-plugin', configuration: 'smp')
@@ -88,8 +88,9 @@ task javaIntegrationTests(type: Test) {
 
 node {
   download = true
-  version = nodeVersion
-  yarnVersion = yarnVersion
+  // TODO
+  version = '16.13.0'
+  yarnVersion = '1.22.15'
   nodeModulesDir = file(project.rootProject.projectDir)
 }
 

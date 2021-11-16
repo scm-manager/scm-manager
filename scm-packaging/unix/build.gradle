@@ -41,9 +41,11 @@ configurations {
 }
 
 dependencies {
+  jsvc platform(rootProject)
+
   server project(':scm-server')
   webapp project(path: ':scm-webapp', configuration: 'webapp')
-  jsvc libraries.jsvc
+  jsvc "commons-daemon:commons-daemon-native@tar.gz"
 }
 
 task unix(type: Tar) {

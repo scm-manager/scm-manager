@@ -61,6 +61,14 @@ class JavaModulePlugin implements Plugin<Project> {
       }
     }
 
+    project.dependencies {
+      compileOnly platform(project.rootProject)
+      testCompileOnly platform(project.rootProject)
+      implementation platform(project.rootProject)
+      annotationProcessor platform(project.rootProject)
+      testAnnotationProcessor platform(project.rootProject)
+    }
+
     project.afterEvaluate {
       if (project.isCI) {
         project.plugins.apply("jacoco")

@@ -31,8 +31,9 @@ plugins {
 
 node {
   download = true
-  version = nodeVersion
-  yarnVersion = yarnVersion
+  // TODO
+  version = '16.13.0'
+  yarnVersion = '1.22.15'
   nodeModulesDir = file(project.rootProject.projectDir)
 }
 

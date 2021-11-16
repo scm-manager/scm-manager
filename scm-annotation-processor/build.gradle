@@ -28,25 +28,24 @@ plugins {
 }
 
 dependencies {
-  implementation platform(project(':'))
   implementation project(':scm-annotations')
 
   // injection
-  implementation libraries.guice
+  implementation "com.google.inject:guice"
 
   // rest api
-  implementation libraries.jaxRs
+  implementation "javax.ws.rs:javax.ws.rs-api"
 
   // mapper
-  implementation libraries.mapstruct
+  implementation "org.mapstruct:mapstruct-jdk8"
 
   // events
-  implementation libraries.legman
+  implementation "com.cloudogu.legman:core"
 
   // utils
-  implementation libraries.guava
+  implementation "com.google.guava:guava"
 
   // service registration
-  compileOnly libraries.metainfServices
-  annotationProcessor libraries.metainfServices
+  compileOnly "org.kohsuke.metainf-services:metainf-services"
+  annotationProcessor "org.kohsuke.metainf-services:metainf-services"
 }
