@@ -104,10 +104,11 @@ const InnerTextarea: FC<FieldProps<BaseProps, HTMLTextAreaElement, string>> = ({
   }
 
   const id = useA11yId("textarea");
+  const helpId = useA11yId("textarea");
 
   return (
     <fieldset className="field" disabled={readOnly}>
-      <LabelWithHelpIcon label={label} helpText={helpText} id={id} />
+      <LabelWithHelpIcon label={label} helpText={helpText} id={id} helpId={helpId} />
       <div className="control">
         <textarea
           className={classNames("textarea", errorView)}
@@ -120,8 +121,8 @@ const InnerTextarea: FC<FieldProps<BaseProps, HTMLTextAreaElement, string>> = ({
           disabled={disabled}
           onKeyDown={onKeyDown}
           defaultValue={defaultValue}
-          aria-describedby={id}
           aria-labelledby={id}
+          aria-describedby={helpId}
         />
       </div>
       {helper}

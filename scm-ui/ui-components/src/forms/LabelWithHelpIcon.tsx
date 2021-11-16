@@ -28,13 +28,14 @@ type Props = {
   label?: string;
   helpText?: string;
   id?: string;
+  helpId?: string;
 };
 
 class LabelWithHelpIcon extends React.Component<Props> {
   renderHelp() {
-    const { helpText, id } = this.props;
+    const { helpText, helpId } = this.props;
     if (helpText) {
-      return <Help message={helpText} id={id} />;
+      return <Help message={helpText} id={helpId} />;
     }
   }
 
@@ -44,8 +45,8 @@ class LabelWithHelpIcon extends React.Component<Props> {
     if (label) {
       const help = this.renderHelp();
       return (
-        <label className="label" id={id}>
-          {label} {help}
+        <label className="label">
+          <span id={id}>{label}</span> {help}
         </label>
       );
     }

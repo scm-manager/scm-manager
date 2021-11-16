@@ -105,13 +105,14 @@ export const InnerInputField: FC<FieldProps<BaseProps, HTMLInputElement, string>
   }
 
   const id = useA11yId("input");
+  const helpId = useA11yId("input");
   return (
     <fieldset className={classNames("field", className)} disabled={readOnly}>
-      <LabelWithHelpIcon label={label} helpText={helpText} id={id} />
+      <LabelWithHelpIcon label={label} helpText={helpText} id={id} helpId={helpId} />
       <div className="control">
         <input
-          aria-describedby={id}
           aria-labelledby={id}
+          aria-describedby={helpId}
           ref={field}
           name={name}
           className={classNames("input", errorView)}

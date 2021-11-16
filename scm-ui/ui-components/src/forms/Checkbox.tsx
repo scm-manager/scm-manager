@@ -85,18 +85,19 @@ const InnerCheckbox: FC<FieldProps<BaseProps, HTMLInputElement, boolean>> = ({
   };
 
   const id = useA11yId("checkbox");
+  const helpId = useA11yId("checkbox");
 
   const renderHelp = () => {
     const { title, helpText } = props;
     if (helpText && !title) {
-      return <Help message={helpText} id={id} />;
+      return <Help message={helpText} id={helpId} />;
     }
   };
 
   const renderLabelWithHelp = () => {
     const { title, helpText } = props;
     if (title) {
-      return <LabelWithHelpIcon label={title} helpText={helpText} id={id} />;
+      return <LabelWithHelpIcon label={title} helpText={helpText} id={id} helpId={helpId} />;
     }
   };
   return (
@@ -119,8 +120,8 @@ const InnerCheckbox: FC<FieldProps<BaseProps, HTMLInputElement, boolean>> = ({
             checked={props.checked}
             disabled={disabled}
             readOnly={readOnly}
-            aria-describedby={id}
             aria-labelledby={id}
+            aria-describedby={helpId}
             {...createAttributesForTesting(testId)}
           />{" "}
           {label}

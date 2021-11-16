@@ -110,10 +110,11 @@ const InnerSelect: FC<FieldProps<BaseProps, HTMLSelectElement, string>> = ({
 
   const loadingClass = loading ? "is-loading" : "";
   const a11yId = useA11yId("select");
+  const helpId = useA11yId("select");
 
   return (
     <fieldset className="field" disabled={readOnly}>
-      <LabelWithHelpIcon label={label} helpText={helpText} id={id || a11yId} />
+      <LabelWithHelpIcon label={label} helpText={helpText} id={id || a11yId} helpId={helpId} />
       <div className={classNames("control select", loadingClass, className)}>
         <select
           name={name}
@@ -123,7 +124,8 @@ const InnerSelect: FC<FieldProps<BaseProps, HTMLSelectElement, string>> = ({
           onChange={handleInput}
           onBlur={handleBlur}
           disabled={disabled}
-          aria-describedby={id || a11yId}
+          aria-labelledby={id || a11yId}
+          aria-describedby={helpId}
           {...createAttributesForTesting(testId)}
         >
           {opts.map((opt) => {
