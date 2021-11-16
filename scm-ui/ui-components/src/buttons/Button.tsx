@@ -97,7 +97,6 @@ const Button: FC<Props> = ({
       title={title}
       disabled={disabled}
       onClick={(event) => action && action(event)}
-      onKeyDown={(event) => event.key === "Enter" && action && action(event)}
       className={classNames(
         "button",
         "is-" + color,

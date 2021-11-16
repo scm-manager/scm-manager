@@ -68,20 +68,25 @@ const BreadcrumbNav = styled.nav`
   width: 100%;
 
   /* move slash to end */
+
   li + li::before {
     content: none;
   }
+
   li:not(:last-child)::after {
     color: #b5b5b5; //$breadcrumb-item-separator-color
     content: "\\0002f";
   }
+
   li:first-child {
     margin-left: 0.75rem;
   }
 
   /* sizing of each item */
+
   li {
     max-width: 375px;
+
     a {
       display: initial;
     }
@@ -94,6 +99,7 @@ const HomeIcon = styled(Icon)`
 
 const ActionBar = styled.div`
   /* ensure space between action bar items */
+
   & > * {
     /* 
      * We have to use important, because plugins could use field or control classes like the editor-plugin does.
@@ -117,7 +123,7 @@ const Breadcrumb: FC<Props> = ({
   baseUrl,
   sources,
   permalink,
-  preButtons,
+  preButtons
 }) => {
   const location = useLocation();
   const history = useHistory();
@@ -195,7 +201,7 @@ const Breadcrumb: FC<Props> = ({
           </li>
           {pathSection()}
         </ul>
-        <PermaLinkWrapper className="ml-1" tabIndex={0} onKeyDown={(e) => e.key === "Enter" && copySource()}>
+        <PermaLinkWrapper className="ml-1" tabIndex={0} onKeyDown={e => e.key === "Enter" && copySource()}>
           {copying ? (
             <Icon name="spinner fa-spin" alt={t("breadcrumb.loading")} />
           ) : (
@@ -214,7 +220,7 @@ const Breadcrumb: FC<Props> = ({
     branch: branch ? branch : defaultBranch,
     path,
     sources,
-    repository,
+    repository
   };
 
   const renderExtensionPoints = () => {
