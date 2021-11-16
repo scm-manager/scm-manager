@@ -88,9 +88,9 @@ public class SvnUnbundleCommandTest extends AbstractSvnCommandTestBase {
       .unbundle(request);
 
     assertThat(res).isNotNull();
-    assertThat(res.getChangesetCount()).isEqualTo(5);
+    assertThat(res.getChangesetCount()).isEqualTo(6);
     SVNRepository repo = ctx.open();
-    assertThat(repo.getLatestRevision()).isEqualTo(5);
+    assertThat(repo.getLatestRevision()).isEqualTo(6);
 
     RepositoryHookEvent event = eventSink.get();
     List<Changeset> changesets = event.getContext().getChangesetProvider().getChangesetList();

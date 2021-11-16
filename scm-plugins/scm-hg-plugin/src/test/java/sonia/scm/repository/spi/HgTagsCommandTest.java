@@ -39,7 +39,7 @@ public class HgTagsCommandTest extends AbstractHgCommandTestBase {
     final List<Tag> tags = hgTagsCommand.getTags();
     assertThat(tags).hasSize(1);
     assertThat(tags.get(0).getName()).isEqualTo("tip");
-    assertThat(tags.get(0).getDate()).contains(1339586381000L);
+    assertThat(tags.get(0).getDate()).contains(1637058574000L);
   }
 
 }

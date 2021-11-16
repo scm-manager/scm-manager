@@ -75,12 +75,16 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase {
 
     Collection<FileObject> foList = result.getFile().getChildren();
 
-    assertThat(foList).extracting("name").containsExactly("c", "a.txt");
+    assertThat(foList).extracting("name").containsExactly("c", "g", "h", "a.txt");
 
     Iterator<FileObject> iterator = foList.iterator();
     FileObject c = iterator.next();
+    FileObject g = iterator.next();
+    FileObject h = iterator.next();
     FileObject a = iterator.next();
 
+    assertTrue(g.isDirectory());
+    assertTrue(h.isDirectory());
     assertFalse(a.isDirectory());
     assertEquals("a.txt", a.getName());
     assertEquals("a.txt", a.getPath());
@@ -145,7 +149,7 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase {
 
     assertNotNull(foList1);
     assertFalse(foList1.isEmpty());
-    assertEquals(2, foList1.size());
+    assertEquals(4, foList1.size());
 
     Collection<FileObject> foList = foList1;
 
@@ -167,7 +171,7 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase {
 
     assertNotNull(foList);
     assertFalse(foList.isEmpty());
-    assertEquals(2, foList.size());
+    assertEquals(4, foList.size());
 
     FileObject c = getFileObject(foList, "c");
     assertEquals("c", c.getName());
@@ -185,7 +189,7 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase {
 
     Collection<FileObject> foList = result.getFile().getChildren();
 
-    assertThat(foList).extracting("name").containsExactly("c", "a.txt");
+    assertThat(foList).extracting("name").containsExactly("c", "g", "h", "a.txt");
     assertThat(result.getFile().isTruncated()).isTrue();
   }
 
@@ -215,7 +219,7 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase {
 
     assertThat(foList)
       .extracting("name")
-      .containsExactly("c", "a.txt");
+      .containsExactly("c", "g", "h", "a.txt");
 
     FileObject c = getFileObject(foList, "c");
 
@@ -261,7 +265,7 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase {
 
     assertThat(foList)
       .extracting("name")
-      .containsExactly("c", "a.txt");
+      .containsExactly("c", "g", "h", "a.txt");
 
     FileObject c = getFileObject(foList, "c");
 
