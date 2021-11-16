@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, MouseEvent, ReactNode } from "react";
+import React, { FC, MouseEvent, ReactNode, KeyboardEvent } from "react";
 import classNames from "classnames";
 import { Link } from "react-router-dom";
 import Icon from "../Icon";

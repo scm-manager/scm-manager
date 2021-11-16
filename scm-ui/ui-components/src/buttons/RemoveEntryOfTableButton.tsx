@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { MouseEvent } from "react";
+import React, { MouseEvent, KeyboardEvent } from "react";
 import { DeleteButton } from ".";
 import classNames from "classnames";
 
@@ -41,7 +41,7 @@ class RemoveEntryOfTableButton extends React.Component<Props, State> {
       <div className={classNames("is-pulled-right")}>
         <DeleteButton
           label={label}
-          action={(event: MouseEvent) => {
+          action={(event: MouseEvent | KeyboardEvent) => {
             event.preventDefault();
             removeEntry(entryname);
           }}

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { MouseEvent } from "react";
+import React, { MouseEvent, KeyboardEvent } from "react";
 import Button, { ButtonProps } from "./Button";
 
 type SubmitButtonProps = ButtonProps & {
@@ -41,7 +41,7 @@ class SubmitButton extends React.Component<SubmitButtonProps> {
         type="submit"
         color="primary"
         {...this.props}
-        action={(event: MouseEvent) => {
+        action={(event: MouseEvent | KeyboardEvent) => {
           if (action) {
             action(event);
           }

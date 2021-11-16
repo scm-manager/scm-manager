@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, useState, MouseEvent } from "react";
+import React, { FC, useState, MouseEvent, KeyboardEvent } from "react";
 import styled from "styled-components";
 import Level from "../layout/Level";
 import AddButton from "../buttons/AddButton";
@@ -56,7 +56,7 @@ const AddEntryToTableField: FC<Props> = ({
     setEntryToAdd(entryName);
   };
 
-  const addButtonClicked = (event: MouseEvent) => {
+  const addButtonClicked = (event: MouseEvent | KeyboardEvent) => {
     event.preventDefault();
     appendEntry();
   };

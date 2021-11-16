@@ -25,7 +25,7 @@
 import * as validation from "./validation";
 import * as repositories from "./repositories";
 
-import {urls} from "@scm-manager/ui-api";
+import { urls } from "@scm-manager/ui-api";
 
 // not sure if it is required
 import {
