@@ -220,6 +220,16 @@ public class SvnModifyCommandTest extends AbstractSvnCommandTestBase {
     assertThat(new File(workingCopy.getWorkingRepository(), "b.txt")).exists();
   }
 
+  @Test(expected = AlreadyExistsException.class)
+  public void shouldThrowAlreadyExistsException() {
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "c"));
+    request.setCommitMessage("please rename my file pretty please");
+    request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
+
+    svnModifyCommand.execute(request);
+  }
+
   @Test
   public void shouldRenameFolder() {
     ModifyCommandRequest request = new ModifyCommandRequest();

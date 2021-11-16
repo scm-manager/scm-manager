@@ -437,6 +437,18 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
     assertInTree(assertions);
   }
 
+  @Test(expected = AlreadyExistsException.class)
+  public void shouldThrowAlreadyExistsException() {
+    GitModifyCommand command = createCommand();
+
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "c"));
+    request.setCommitMessage("please rename my file pretty please");
+    request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
+
+    command.execute(request);
+  }
+
   @Test
   public void shouldRenameFolder() throws GitAPIException, IOException {
     GitModifyCommand command = createCommand();

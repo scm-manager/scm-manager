@@ -246,6 +246,16 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
     assertThat(cmdContext.open().tip().getAddedFiles().contains("g.txt")).isTrue();
   }
 
+  @Test(expected = AlreadyExistsException.class)
+  public void shouldThrowAlreadyExistsException() {
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "c"));
+    request.setCommitMessage("please rename my file pretty please");
+    request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
+
+    hgModifyCommand.execute(request);
+  }
+
   @Test
   public void shouldRenameFolder() {
     ModifyCommandRequest request = new ModifyCommandRequest();
