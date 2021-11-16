@@ -1,2 +1,4 @@
 - type: changed
   description: Improve keyboard access by adding tab stops ([#1831](https://github.com/scm-manager/scm-manager/pull/1831))
+- type: changed
+  description: Improve aria lables for better screen reader support ([#1831](https://github.com/scm-manager/scm-manager/pull/1831))
