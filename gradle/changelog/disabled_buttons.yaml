@@ -1,2 +1,0 @@
-- type: fixed
-  description: Disabled buttons are rendered as disabled buttons, again ([#1858](https://github.com/scm-manager/scm-manager/pull/1858))

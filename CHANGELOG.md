@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.27.0] - 2021-11-16
+### Added
+- Add contact icon to repository overview ([#1855](https://github.com/scm-manager/scm-manager/pull/1855))
+- Support for multipart form data to AdvancedHttpClient ([#1856](https://github.com/scm-manager/scm-manager/pull/1856))
+- Lock and unlock command for SVN ([#1847](https://github.com/scm-manager/scm-manager/pull/1847))
+
+### Fixed
+- Disabled buttons are rendered as disabled buttons, again ([#1858](https://github.com/scm-manager/scm-manager/pull/1858))
+- Color for available plugins, namespace and code header
+
+### Changed
+- Improve keyboard access by adding tab stops ([#1831](https://github.com/scm-manager/scm-manager/pull/1831))
+- Improve aria lables for better screen reader support ([#1831](https://github.com/scm-manager/scm-manager/pull/1831))
+
 ## [2.26.1] - 2021-11-09
 ### Fixed
 - Concurrent modification error in SVN modify command ([#1849](https://github.com/scm-manager/scm-manager/pull/1849))
@@ -815,3 +829,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.25.0]: https://scm-manager.org/download/2.25.0
 [2.26.0]: https://scm-manager.org/download/2.26.0
 [2.26.1]: https://scm-manager.org/download/2.26.1
+[2.27.0]: https://scm-manager.org/download/2.27.0

@@ -1,2 +1,0 @@
-- type: added
-  description: Support for multipart form data to AdvancedHttpClient ([#1856](https://github.com/scm-manager/scm-manager/pull/1856))
