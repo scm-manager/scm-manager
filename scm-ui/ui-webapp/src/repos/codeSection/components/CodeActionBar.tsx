@@ -30,10 +30,8 @@ import { useTranslation } from "react-i18next";
 import { Branch } from "@scm-manager/ui-types";
 
 const ActionBar = styled.div`
-  background-color: whitesmoke;
   border: 1px solid #dbdbdb;
   border-radius: 4px;
-  color: #363636;
   font-size: 1.25em;
   font-weight: 300;
   line-height: 1.25;
@@ -60,7 +58,7 @@ const CodeActionBar: FC<Props> = ({ selectedBranch, branches, onSelectBranch, sw
   const location = useLocation();
 
   return (
-    <ActionBar>
+    <ActionBar className={"has-background-accent"}>
       <FlexShrinkLevel
         left={
           branches &&
