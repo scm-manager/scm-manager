@@ -39,7 +39,7 @@ const SearchIcon = styled(Icon)`
 const FileSearchButton: FC<Props> = ({ baseUrl, revision }) => {
   const [t] = useTranslation("repos");
   return (
-    <Link to={`${baseUrl}/search/${encodeURIComponent(revision)}`} aria-label={t("filesearch.button.title")}>
+    <Link to={`${baseUrl}/search/${encodeURIComponent(revision)}`} aria-label={t("fileSearch.button.title")}>
       <SearchIcon title={t("fileSearch.button.title")} name="search" color="inherit" />
     </Link>
   );
