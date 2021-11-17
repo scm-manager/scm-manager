@@ -207,7 +207,7 @@ public class ModifyCommandRequest implements Resetable, Validateable, CommandWit
   }
 
   /**
-   * @since 2.27.0
+   * @since 2.28.0
    */
   public static class MoveRequest implements PartialRequest {
 

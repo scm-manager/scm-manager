@@ -71,7 +71,7 @@ public interface ModifyWorkerHelper extends ModifyCommand.Worker {
   }
 
   /**
-   * @since 2.27.0
+   * @since 2.28.0
    */
   @Override
   default void move(String source, String target) throws IOException {
@@ -86,7 +86,7 @@ public interface ModifyWorkerHelper extends ModifyCommand.Worker {
   }
 
   /**
-   * @since 2.27.0
+   * @since 2.28.0
    */
   default void doScmMove(String path, String newPath) {
     doScmDelete(path);
@@ -94,7 +94,7 @@ public interface ModifyWorkerHelper extends ModifyCommand.Worker {
   }
 
   /**
-   * @since 2.27.0
+   * @since 2.28.0
    */
   default void addRecursive(String path) {
     Path targetPath = getTargetFile(path);
