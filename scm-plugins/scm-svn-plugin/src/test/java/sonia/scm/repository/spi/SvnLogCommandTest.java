@@ -51,8 +51,8 @@ public class SvnLogCommandTest extends AbstractSvnCommandTestBase
       createCommand().getChangesets(new LogCommandRequest());
 
     assertNotNull(result);
-    assertEquals(6, result.getTotal());
-    assertEquals(6, result.getChangesets().size());
+    assertEquals(5, result.getTotal());
+    assertEquals(5, result.getChangesets().size());
   }
 
   @Test
@@ -112,18 +112,18 @@ public class SvnLogCommandTest extends AbstractSvnCommandTestBase
     ChangesetPagingResult result = createCommand().getChangesets(request);
 
     assertNotNull(result);
-    assertEquals(6, result.getTotal());
+    assertEquals(5, result.getTotal());
     assertEquals(2, result.getChangesets().size());
 
     Changeset c1 = result.getChangesets().get(0);
 
     assertNotNull(c1);
-    assertEquals("6", c1.getId());
+    assertEquals("5", c1.getId());
 
     Changeset c2 = result.getChangesets().get(1);
 
     assertNotNull(c2);
-    assertEquals("5", c2.getId());
+    assertEquals("4", c2.getId());
   }
 
   @Test
@@ -136,18 +136,18 @@ public class SvnLogCommandTest extends AbstractSvnCommandTestBase
     ChangesetPagingResult result = createCommand().getChangesets(request);
 
     assertNotNull(result);
-    assertEquals(6, result.getTotal());
+    assertEquals(5, result.getTotal());
     assertEquals(2, result.getChangesets().size());
 
     Changeset c1 = result.getChangesets().get(0);
 
     assertNotNull(c1);
-    assertEquals("5", c1.getId());
+    assertEquals("4", c1.getId());
 
     Changeset c2 = result.getChangesets().get(1);
 
     assertNotNull(c2);
-    assertEquals("4", c2.getId());
+    assertEquals("3", c2.getId());
   }
 
   @Test

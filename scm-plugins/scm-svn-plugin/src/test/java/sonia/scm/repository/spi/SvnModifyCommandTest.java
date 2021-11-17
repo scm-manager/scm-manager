@@ -57,6 +57,11 @@ public class SvnModifyCommandTest extends AbstractSvnCommandTestBase {
   private SvnContext context;
   private SimpleSvnWorkingCopyFactory workingCopyFactory;
 
+  @Override
+  protected String getZippedRepositoryResource() {
+    return "sonia/scm/repository/spi/scm-svn-spi-modify-test.zip";
+  }
+
   @Rule
   public TemporaryFolder temporaryFolder = new TemporaryFolder();
 

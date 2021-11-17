@@ -83,7 +83,7 @@ public class SvnMirrorCommandTest extends AbstractSvnCommandTestBase {
     MirrorCommandResult result = callMirrorUpdate(emptyContext, repositoryDirectory);
 
     assertThat(result.getResult()).isEqualTo(OK);
-    assertThat(result.getLog()).contains("Updated from revision 0 to revision 6");
+    assertThat(result.getLog()).contains("Updated from revision 0 to revision 5");
   }
 
   @Test
@@ -91,7 +91,7 @@ public class SvnMirrorCommandTest extends AbstractSvnCommandTestBase {
     MirrorCommandResult result = callMirrorUpdate(emptyContext, repositoryDirectory);
 
     assertThat(result.getResult()).isEqualTo(OK);
-    assertThat(result.getLog()).contains("Updated from revision 0 to revision 6");
+    assertThat(result.getLog()).contains("Updated from revision 0 to revision 5");
   }
 
   @Test
