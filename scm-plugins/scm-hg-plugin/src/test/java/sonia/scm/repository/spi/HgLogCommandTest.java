@@ -54,8 +54,8 @@ public class HgLogCommandTest extends AbstractHgCommandTestBase
       createComamnd().getChangesets(new LogCommandRequest());
 
     assertNotNull(result);
-    assertEquals(6, result.getTotal());
-    assertEquals(6, result.getChangesets().size());
+    assertEquals(5, result.getTotal());
+    assertEquals(5, result.getChangesets().size());
   }
 
   @Test
@@ -101,18 +101,18 @@ public class HgLogCommandTest extends AbstractHgCommandTestBase
     ChangesetPagingResult result = createComamnd().getChangesets(request);
 
     assertNotNull(result);
-    assertEquals(6, result.getTotal());
+    assertEquals(5, result.getTotal());
     assertEquals(2, result.getChangesets().size());
 
     Changeset c1 = result.getChangesets().get(0);
 
     assertNotNull(c1);
-    assertEquals("b991188f44ae452922f658d9f109c9b8ee3a67ae", c1.getId());
+    assertEquals("2baab8e80280ef05a9aa76c49c76feca2872afb7", c1.getId());
 
     Changeset c2 = result.getChangesets().get(1);
 
     assertNotNull(c2);
-    assertEquals("2baab8e80280ef05a9aa76c49c76feca2872afb7", c2.getId());
+    assertEquals("542bf4893dd2ff58a0eb719551d75ddeb919608b", c2.getId());
   }
 
   @Test
@@ -125,18 +125,18 @@ public class HgLogCommandTest extends AbstractHgCommandTestBase
     ChangesetPagingResult result = createComamnd().getChangesets(request);
 
     assertNotNull(result);
-    assertEquals(6, result.getTotal());
+    assertEquals(5, result.getTotal());
     assertEquals(2, result.getChangesets().size());
 
     Changeset c1 = result.getChangesets().get(0);
 
     assertNotNull(c1);
-    assertEquals("2baab8e80280ef05a9aa76c49c76feca2872afb7", c1.getId());
+    assertEquals("542bf4893dd2ff58a0eb719551d75ddeb919608b", c1.getId());
 
     Changeset c2 = result.getChangesets().get(1);
 
     assertNotNull(c2);
-    assertEquals("542bf4893dd2ff58a0eb719551d75ddeb919608b", c2.getId());
+    assertEquals("79b6baf49711ae675568e0698d730b97ef13e84a", c2.getId());
   }
 
   @Test

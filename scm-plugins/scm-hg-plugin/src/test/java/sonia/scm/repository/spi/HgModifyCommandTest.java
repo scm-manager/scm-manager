@@ -51,6 +51,11 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
   @Rule
   public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
+  @Override
+  protected String getZippedRepositoryResource() {
+    return "sonia/scm/repository/spi/scm-hg-spi-modify-test.zip";
+  }
+
   @Before
   public void initHgModifyCommand() {
     SimpleHgWorkingCopyFactory workingCopyFactory = new SimpleHgWorkingCopyFactory(new NoneCachingWorkingCopyPool(new WorkdirProvider(repositoryLocationResolver)), new SimpleMeterRegistry()) {

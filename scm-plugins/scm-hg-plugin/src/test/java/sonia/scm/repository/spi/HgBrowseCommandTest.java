@@ -60,7 +60,7 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
 
     assertThat(foList)
       .extracting("name")
-      .containsExactly("c", "g", "y", "a.txt", "b.txt", "f.txt");
+      .containsExactly("c", "a.txt", "b.txt", "f.txt");
 
     FileObject a = getFileObject(foList, "a.txt");
     FileObject c = getFileObject(foList, "c");
@@ -170,7 +170,7 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
 
     assertNotNull(foList);
     assertFalse(foList.isEmpty());
-    assertEquals(6, foList.size());
+    assertEquals(4, foList.size());
 
     FileObject c = getFileObject(foList, "c");
     assertTrue(c.isDirectory());
@@ -187,7 +187,7 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
 
     Collection<FileObject> foList = root.getChildren();
 
-    assertThat(foList).extracting("name").containsExactly("c", "g", "y", "a.txt");
+    assertThat(foList).extracting("name").containsExactly("c", "a.txt");
     assertThat(root.isTruncated()).isTrue();
   }
 
@@ -220,7 +220,7 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
 
     assertThat(foList)
       .extracting("name")
-      .containsExactly("c", "g", "y");
+      .containsExactly("c", "a.txt");
 
     FileObject c = getFileObject(foList, "c");
 
@@ -243,7 +243,7 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
 
     assertThat(foList)
       .extracting("name")
-      .containsExactly("c", "g", "y");
+      .containsExactly("c");
 
     FileObject c = getFileObject(foList, "c");
 
@@ -266,7 +266,7 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
 
     assertThat(foList)
       .extracting("name")
-      .containsExactly("c", "g", "y", "a.txt", "b.txt", "f.txt");
+      .containsExactly("c", "a.txt", "b.txt", "f.txt");
 
     FileObject c = getFileObject(foList, "c");
 
@@ -304,7 +304,7 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
     Collection<FileObject> foList = root.getChildren();
 
     assertNotNull(foList);
-    assertThat(foList).extracting("name").containsExactly("c", "g", "y", "a.txt", "b.txt", "f.txt");
+    assertThat(foList).extracting("name").containsExactly("c", "a.txt", "b.txt", "f.txt");
 
     return foList;
   }

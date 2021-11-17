@@ -39,9 +39,9 @@ public class HgLazyChangesetResolverTest extends AbstractHgCommandTestBase {
     Iterable<Changeset> changesets = changesetResolver.call();
 
     Changeset firstChangeset = changesets.iterator().next();
-    assertThat(firstChangeset.getId()).isEqualTo("b991188f44ae452922f658d9f109c9b8ee3a67ae");
-    assertThat(firstChangeset.getDate()).isEqualTo(1637058574000L);
-    assertThat(firstChangeset.getAuthor()).isEqualTo(Person.toPerson("Konstantin Schaper <konstantin.schaper@cloudogu.com>"));
-    assertThat(firstChangeset.getDescription()).isEqualTo("Add folders for move operations");
+    assertThat(firstChangeset.getId()).isEqualTo("2baab8e80280ef05a9aa76c49c76feca2872afb7");
+    assertThat(firstChangeset.getDate()).isEqualTo(1339586381000L);
+    assertThat(firstChangeset.getAuthor()).isEqualTo(Person.toPerson("Zaphod Beeblebrox <zaphod.beeblebrox@hitchhiker.com>"));
+    assertThat(firstChangeset.getDescription()).isEqualTo("added new line for blame");
   }
 }
