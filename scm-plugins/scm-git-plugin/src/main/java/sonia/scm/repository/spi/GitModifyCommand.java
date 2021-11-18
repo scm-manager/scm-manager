@@ -163,6 +163,15 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
       }
     }
 
+    @Override
+    public void addMovedFileToScm(String path, Path targetPath) {
+      try {
+        addFileToGit(path);
+      } catch (GitAPIException e) {
+        throwInternalRepositoryException("could not add file to index", e);
+      }
+    }
+
     private void addFileToGit(String toBeCreated) throws GitAPIException {
       getClone().add().addFilepattern(removeStartingPathSeparators(toBeCreated)).call();
     }

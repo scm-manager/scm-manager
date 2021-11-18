@@ -105,8 +105,12 @@ public interface ModifyWorkerHelper extends ModifyCommand.Worker {
         throw new InternalRepositoryException(getRepository(), "Could not add files to scm", e);
       }
     } else {
-      addFileToScm(path, targetPath);
+      addMovedFileToScm(path, targetPath);
     }
+  }
+
+  default void addMovedFileToScm(String path, Path targetPath) {
+    addFileToScm(path, targetPath);
   }
 
   void doScmDelete(String toBeDeleted);
