@@ -834,3 +834,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.26.0]: https://scm-manager.org/download/2.26.0
 [2.26.1]: https://scm-manager.org/download/2.26.1
 [2.27.0]: https://scm-manager.org/download/2.27.0
+[2.27.1]: https://scm-manager.org/download/2.27.1
