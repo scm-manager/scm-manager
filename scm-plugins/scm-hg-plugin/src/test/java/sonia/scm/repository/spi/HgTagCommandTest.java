@@ -24,7 +24,7 @@
 
 package sonia.scm.repository.spi;
 
-import com.aragost.javahg.commands.PullCommand;
+import org.javahg.commands.PullCommand;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.junit.Before;
 import org.junit.Test;

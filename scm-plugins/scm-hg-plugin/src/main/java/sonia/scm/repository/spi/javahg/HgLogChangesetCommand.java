@@ -24,9 +24,9 @@
 
 package sonia.scm.repository.spi.javahg;
 
-import com.aragost.javahg.Repository;
-import com.aragost.javahg.internals.HgInputStream;
-import com.aragost.javahg.internals.Utils;
+import org.javahg.Repository;
+import org.javahg.internals.HgInputStream;
+import org.javahg.internals.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.Changeset;

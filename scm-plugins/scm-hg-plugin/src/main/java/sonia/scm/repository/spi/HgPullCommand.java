@@ -24,8 +24,8 @@
 
 package sonia.scm.repository.spi;
 
-import com.aragost.javahg.Changeset;
-import com.aragost.javahg.commands.ExecutionException;
+import org.javahg.Changeset;
+import org.javahg.commands.ExecutionException;
 import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,7 +78,7 @@ public class HgPullCommand extends AbstractHgPushOrPullCommand implements PullCo
     List<Changeset> result;
 
     try {
-      result = builder.call(() -> com.aragost.javahg.commands.PullCommand.on(open()).execute(url));
+      result = builder.call(() -> org.javahg.commands.PullCommand.on(open()).execute(url));
     } catch (ExecutionException ex) {
       throw new ImportFailedException(entity(getRepository()).build(), "could not execute pull command", ex);
     }

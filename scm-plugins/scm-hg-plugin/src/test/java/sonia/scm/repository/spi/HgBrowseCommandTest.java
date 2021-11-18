@@ -24,7 +24,7 @@
 
 package sonia.scm.repository.spi;
 
-import com.aragost.javahg.commands.LogCommand;
+import org.javahg.commands.LogCommand;
 import org.junit.Test;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.FileObject;

@@ -24,7 +24,7 @@
 
 package sonia.scm.repository.spi;
 
-import com.aragost.javahg.Repository;
+import org.javahg.Repository;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
 import org.apache.shiro.SecurityUtils;
@@ -61,7 +61,7 @@ public class HgTagCommand extends AbstractWorkingCopyCommand implements TagComma
       if (Strings.isNullOrEmpty(rev)) {
         rev = repository.tip().getNode();
       }
-      com.aragost.javahg.commands.TagCommand.on(workingCopy.getWorkingRepository())
+      org.javahg.commands.TagCommand.on(workingCopy.getWorkingRepository())
         .rev(rev)
         .user(getUserStringFor(SecurityUtils.getSubject().getPrincipals().oneByType(User.class)))
         .execute(request.getName());
@@ -73,7 +73,7 @@ public class HgTagCommand extends AbstractWorkingCopyCommand implements TagComma
   @Override
   public void delete(TagDeleteRequest request) {
     try (WorkingCopy<Repository, Repository> workingCopy = workingCopyFactory.createWorkingCopy(getContext(), DEFAULT_BRANCH_NAME)) {
-      com.aragost.javahg.commands.TagCommand.on(workingCopy.getWorkingRepository())
+      org.javahg.commands.TagCommand.on(workingCopy.getWorkingRepository())
         .user(getUserStringFor(SecurityUtils.getSubject().getPrincipals().oneByType(User.class)))
         .remove()
         .execute(request.getName());

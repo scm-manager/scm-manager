@@ -24,7 +24,7 @@
 
 package sonia.scm.log;
 
-import com.aragost.javahg.log.LoggerFactory;
+import org.javahg.log.LoggerFactory;
 import sonia.scm.plugin.Extension;
 
 import javax.servlet.ServletContextEvent;

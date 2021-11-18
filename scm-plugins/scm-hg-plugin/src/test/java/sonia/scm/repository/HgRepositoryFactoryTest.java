@@ -24,7 +24,7 @@
 
 package sonia.scm.repository;
 
-import com.aragost.javahg.Repository;
+import org.javahg.Repository;
 import com.google.common.collect.ImmutableMap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

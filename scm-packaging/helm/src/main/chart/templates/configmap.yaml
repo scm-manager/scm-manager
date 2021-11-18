@@ -43,7 +43,7 @@ data:
         <Set name="responseHeaderSize">16384</Set>
 
         {{- if .Values.ingress.enabled -}}
-        <!-- 
+        <!--
         We have to enable ForwardedRequestCustomizer in order to understand X-Forwarded-xxx headers.
         Without the ForwardedRequestCustomizer, scm will possibly generate wrong links
         -->
@@ -52,7 +52,7 @@ data:
         </Call>
         {{- end }}
       </New>
-      
+
       <!--
       Connectors
       -->
@@ -110,7 +110,7 @@ data:
           <SystemProperty name="basedir" default="."/>/work/docroot
         </Set>
       </New>
-      
+
       <Set name="handler">
         <New class="org.eclipse.jetty.server.handler.HandlerCollection">
           <Set name="handlers">
@@ -169,7 +169,7 @@ data:
 
       <!-- javahg -->
       <!--
-      <logger name="com.aragost.javahg" level="DEBUG" />
+      <logger name="org.javahg" level="DEBUG" />
       -->
 
       <!-- ehcache -->

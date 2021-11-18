@@ -24,8 +24,8 @@
     
 package sonia.scm.repository.client.spi;
 
-import com.aragost.javahg.Repository;
-import com.aragost.javahg.commands.ExecutionException;
+import org.javahg.Repository;
+import org.javahg.commands.ExecutionException;
 import sonia.scm.repository.client.api.RepositoryClientException;
 
 import java.io.IOException;
@@ -50,7 +50,7 @@ public class HgPushCommand implements PushCommand
   @Override
   public void push() throws IOException
   {
-    com.aragost.javahg.commands.PushCommand cmd = com.aragost.javahg.commands.PushCommand.on(repository);
+    org.javahg.commands.PushCommand cmd = org.javahg.commands.PushCommand.on(repository);
     cmd.cmdAppend("--new-branch");
     try {
       cmd.execute(url);

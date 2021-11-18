@@ -26,7 +26,7 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.aragost.javahg.commands.ExecutionException;
+import org.javahg.commands.ExecutionException;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.HgRepositoryHandler;
@@ -75,7 +75,7 @@ public class HgOutgoingCommand extends AbstractCommand
   {
     File remoteRepository = handler.getDirectory(request.getRemoteRepository().getId());
 
-    com.aragost.javahg.Repository repository = open();
+    org.javahg.Repository repository = open();
 
     // TODO implement paging
 
@@ -111,7 +111,7 @@ public class HgOutgoingCommand extends AbstractCommand
    * @return
    */
   private HgOutgoingChangesetCommand on(
-    com.aragost.javahg.Repository repository)
+    org.javahg.Repository repository)
   {
     return HgOutgoingChangesetCommand.on(repository, getContext().getConfig());
   }

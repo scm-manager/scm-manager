@@ -26,7 +26,7 @@ package sonia.scm.log;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.aragost.javahg.log.Logger;
+import org.javahg.log.Logger;
 
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Sebastian Sdorra
  */
-public class HgLoggerFactory extends com.aragost.javahg.log.LoggerFactory
+public class HgLoggerFactory extends org.javahg.log.LoggerFactory
 {
 
   /**

@@ -55,7 +55,7 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
   public void initHgModifyCommand() {
     SimpleHgWorkingCopyFactory workingCopyFactory = new SimpleHgWorkingCopyFactory(new NoneCachingWorkingCopyPool(new WorkdirProvider(repositoryLocationResolver)), new SimpleMeterRegistry()) {
       @Override
-      public void configure(com.aragost.javahg.commands.PullCommand pullCommand) {
+      public void configure(org.javahg.commands.PullCommand pullCommand) {
         // we do not want to configure http hooks in this unit test
       }
     };

@@ -24,15 +24,15 @@
 
 package sonia.scm.repository.spi;
 
-import com.aragost.javahg.BaseRepository;
-import com.aragost.javahg.Repository;
-import com.aragost.javahg.commands.CloneCommand;
-import com.aragost.javahg.commands.ExecutionException;
-import com.aragost.javahg.commands.PullCommand;
-import com.aragost.javahg.commands.StatusCommand;
-import com.aragost.javahg.commands.UpdateCommand;
-import com.aragost.javahg.commands.flags.CloneCommandFlags;
-import com.aragost.javahg.ext.purge.PurgeCommand;
+import org.javahg.BaseRepository;
+import org.javahg.Repository;
+import org.javahg.commands.CloneCommand;
+import org.javahg.commands.ExecutionException;
+import org.javahg.commands.PullCommand;
+import org.javahg.commands.StatusCommand;
+import org.javahg.commands.UpdateCommand;
+import org.javahg.commands.flags.CloneCommandFlags;
+import org.javahg.ext.purge.PurgeCommand;
 import io.micrometer.core.instrument.MeterRegistry;
 import sonia.scm.repository.HgExtensions;
 import sonia.scm.repository.InternalRepositoryException;

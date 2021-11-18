@@ -24,7 +24,7 @@
 
 package sonia.scm.repository.spi;
 
-import com.aragost.javahg.commands.LogCommand;
+import org.javahg.commands.LogCommand;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.HgRepositoryFactory;
 import sonia.scm.repository.Person;

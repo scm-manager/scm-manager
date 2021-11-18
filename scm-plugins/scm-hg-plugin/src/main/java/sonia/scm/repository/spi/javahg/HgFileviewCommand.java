@@ -26,9 +26,9 @@ package sonia.scm.repository.spi.javahg;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.aragost.javahg.Repository;
-import com.aragost.javahg.internals.AbstractCommand;
-import com.aragost.javahg.internals.HgInputStream;
+import org.javahg.Repository;
+import org.javahg.internals.AbstractCommand;
+import org.javahg.internals.HgInputStream;
 import sonia.scm.repository.FileObject;
 
 //~--- JDK imports ------------------------------------------------------------

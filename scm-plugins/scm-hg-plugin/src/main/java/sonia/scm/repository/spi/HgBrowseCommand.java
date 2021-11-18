@@ -26,8 +26,8 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.aragost.javahg.Changeset;
-import com.aragost.javahg.commands.LogCommand;
+import org.javahg.Changeset;
+import org.javahg.commands.LogCommand;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Strings;
 import sonia.scm.repository.BrowserResult;

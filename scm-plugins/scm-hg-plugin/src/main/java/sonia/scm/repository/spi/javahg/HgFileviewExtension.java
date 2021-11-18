@@ -26,7 +26,7 @@ package sonia.scm.repository.spi.javahg;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.aragost.javahg.MercurialExtension;
+import org.javahg.MercurialExtension;
 import sonia.scm.repository.HgExtensions;
 
 /**

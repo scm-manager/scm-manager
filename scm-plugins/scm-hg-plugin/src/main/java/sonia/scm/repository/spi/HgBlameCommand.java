@@ -26,9 +26,9 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.aragost.javahg.Changeset;
-import com.aragost.javahg.commands.AnnotateCommand;
-import com.aragost.javahg.AnnotateLine;
+import org.javahg.Changeset;
+import org.javahg.commands.AnnotateCommand;
+import org.javahg.AnnotateLine;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;

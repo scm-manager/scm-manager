@@ -24,7 +24,7 @@
 
 package sonia.scm.repository.spi;
 
-import com.aragost.javahg.commands.ExecutionException;
+import org.javahg.commands.ExecutionException;
 import org.junit.Test;
 import sonia.scm.repository.HealthCheckResult;
 

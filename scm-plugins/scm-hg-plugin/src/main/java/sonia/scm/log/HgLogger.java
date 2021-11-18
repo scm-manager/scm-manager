@@ -32,7 +32,7 @@ import org.slf4j.Logger;
  *
  * @author Sebastian Sdorra
  */
-public class HgLogger implements com.aragost.javahg.log.Logger
+public class HgLogger implements org.javahg.log.Logger
 {
 
   /**

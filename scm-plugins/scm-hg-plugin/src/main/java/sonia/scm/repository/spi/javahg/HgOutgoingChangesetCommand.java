@@ -26,7 +26,7 @@ package sonia.scm.repository.spi.javahg;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.aragost.javahg.Repository;
+import org.javahg.Repository;
 import sonia.scm.repository.HgConfig;
 
 /**

@@ -24,7 +24,7 @@
 
 package sonia.scm.repository.spi;
 
-import com.aragost.javahg.commands.ExecutionException;
+import org.javahg.commands.ExecutionException;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Closeables;
 import org.slf4j.Logger;
@@ -57,8 +57,8 @@ public class HgCatCommand extends AbstractCommand implements CatCommand {
 
   @Override
   public InputStream getCatResultStream(CatCommandRequest request) throws IOException {
-    com.aragost.javahg.commands.CatCommand cmd =
-      com.aragost.javahg.commands.CatCommand.on(open());
+    org.javahg.commands.CatCommand cmd =
+      org.javahg.commands.CatCommand.on(open());
 
     cmd.rev(HgUtil.getRevision(request.getRevision()));
 

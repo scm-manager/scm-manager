@@ -24,7 +24,7 @@
 
 package sonia.scm.repository.spi.javahg;
 
-import com.aragost.javahg.internals.HgInputStream;
+import org.javahg.internals.HgInputStream;
 import org.junit.jupiter.api.Test;
 import sonia.scm.repository.FileObject;
 

@@ -24,7 +24,7 @@
     
 package sonia.scm.repository.client.spi;
 
-import com.aragost.javahg.Repository;
+import org.javahg.Repository;
 import java.io.IOException;
 
 /**
@@ -45,7 +45,7 @@ public final class HgAddCommand implements AddCommand
   @Override
   public void add(String path) throws IOException
   {
-    com.aragost.javahg.commands.AddCommand.on(repository).execute(path);
+    org.javahg.commands.AddCommand.on(repository).execute(path);
   }
   
 }

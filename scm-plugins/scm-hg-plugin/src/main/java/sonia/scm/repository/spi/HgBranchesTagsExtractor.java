@@ -24,7 +24,7 @@
 
 package sonia.scm.repository.spi;
 
-import com.aragost.javahg.Branch;
+import org.javahg.Branch;
 import sonia.scm.repository.Tag;
 
 import java.util.List;
@@ -37,13 +37,13 @@ final class HgBranchesTagsExtractor {
   }
 
   static List<Tag> extractTags(HgCommandContext context) {
-    return com.aragost.javahg.commands.TagsCommand.on(context.open()).execute().stream()
+    return org.javahg.commands.TagsCommand.on(context.open()).execute().stream()
       .map(t -> new Tag(t.getName(), t.getChangeset().toString()))
       .collect(Collectors.toList());
   }
 
   static List<String> extractBranches(HgCommandContext context) {
-    return com.aragost.javahg.commands.BranchesCommand.on(context.open()).execute().stream()
+    return org.javahg.commands.BranchesCommand.on(context.open()).execute().stream()
       .map(Branch::getName)
       .collect(Collectors.toList());
   }

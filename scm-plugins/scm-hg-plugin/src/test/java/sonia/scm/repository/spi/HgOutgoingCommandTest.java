@@ -26,7 +26,7 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.aragost.javahg.Changeset;
+import org.javahg.Changeset;
 import org.junit.Test;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.HgConfigResolver;
