@@ -127,7 +127,7 @@ const NavigationBar: FC<Props> = ({ links }) => {
   }, [burgerActive]);
 
   return (
-    <StyledNavBar className="navbar mb-0 container" role="navigation" aria-label="main navigation">
+    <StyledNavBar className="navbar mb-0 container" aria-label="main navigation">
       <div className="navbar-brand">
         <LogoItem className="navbar-item logo">
           <Logo withText={false} className="image is-32x32" />
@@ -135,7 +135,7 @@ const NavigationBar: FC<Props> = ({ links }) => {
         <button
           className={classNames("navbar-burger", { "is-active": burgerActive })}
           aria-expanded="true"
-          onClick={() => setBurgerActive((active) => !active)}
+          onClick={() => setBurgerActive(active => !active)}
         >
           <span aria-hidden="true" />
           <span aria-hidden="true" />

@@ -119,10 +119,10 @@ const HitsList: FC<HitsProps> = ({ hits, index, clear, gotoDetailSearch }) => {
   return (
     <>
       {hits.map((hit, idx) => (
-        <div key={id(hit)} onMouseDown={(e) => e.preventDefault()} onClick={clear}>
+        <div key={id(hit)} onMouseDown={e => e.preventDefault()} onClick={clear}>
           <Link
             className={classNames("is-flex", "dropdown-item", "has-text-weight-medium", "is-ellipsis-overflow", {
-              "is-active": idx === index,
+              "is-active": idx === index
             })}
             title={id(hit)}
             to={`/repo/${id(hit)}`}
@@ -179,7 +179,7 @@ const useKeyBoardNavigation = (gotoDetailSearch: () => void, clear: () => void, 
     switch (e.which) {
       case 40: // e.code: ArrowDown
         if (hits) {
-          setIndex((idx) => {
+          setIndex(idx => {
             if (idx + 1 < hits.length) {
               return idx + 1;
             }
@@ -189,7 +189,7 @@ const useKeyBoardNavigation = (gotoDetailSearch: () => void, clear: () => void, 
         break;
       case 38: // e.code: ArrowUp
         if (hits) {
-          setIndex((idx) => {
+          setIndex(idx => {
             if (idx > 0) {
               return idx - 1;
             }
@@ -219,7 +219,7 @@ const useKeyBoardNavigation = (gotoDetailSearch: () => void, clear: () => void, 
 
   return {
     onKeyDown,
-    index,
+    index
   };
 };
 
@@ -278,7 +278,7 @@ const useShowResultsOnFocus = () => {
     },
     onKeyPress: () => setShowResults(true),
     onFocus: () => setShowResults(true),
-    hideResults: () => setShowResults(false),
+    hideResults: () => setShowResults(false)
   };
 };
 
@@ -303,7 +303,7 @@ const useSearchParams = () => {
 
   return {
     searchType,
-    initialQuery,
+    initialQuery
   };
 };
 
@@ -334,7 +334,7 @@ const OmniSearch: FC = () => {
       {showHelp ? <SyntaxModal close={closeHelp} /> : null}
       <div
         className={classNames("control", "has-icons-right", {
-          "is-loading": isLoading,
+          "is-loading": isLoading
         })}
       >
         <div className={classNames("dropdown", { "is-active": (!!data || error) && showResults })}>
@@ -343,12 +343,13 @@ const OmniSearch: FC = () => {
               className="input is-small"
               type="text"
               placeholder="Search ..."
-              onChange={(e) => setQuery(e.target.value)}
+              onChange={e => setQuery(e.target.value)}
               onKeyDown={onKeyDown}
               value={query}
               role="combobox"
               aria-autocomplete="list"
               data-omnisearch="true"
+              aria-expanded={query.length > 2}
               {...handlers}
             />
             {isLoading ? null : (
@@ -357,7 +358,7 @@ const OmniSearch: FC = () => {
               </span>
             )}
           </div>
-          <DropdownMenu className="dropdown-menu" onMouseDown={(e) => e.preventDefault()}>
+          <DropdownMenu className="dropdown-menu" onMouseDown={e => e.preventDefault()}>
             {error ? (
               <QuickSearchNotification>
                 <SearchErrorNotification error={error} showHelp={openHelp} />

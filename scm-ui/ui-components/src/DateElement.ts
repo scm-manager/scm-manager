@@ -23,7 +23,7 @@
  */
 import styled from "styled-components";
 
-const DateElement = styled.time`
+const DateElement = styled.span`
   border-bottom: 1px dotted rgb(219, 219, 219);
   cursor: help;
 `;

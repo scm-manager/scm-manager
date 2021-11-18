@@ -36,7 +36,7 @@ export type TooltipLocation = "bottom" | "right" | "top" | "left";
 
 class Tooltip extends React.Component<Props> {
   static defaultProps = {
-    location: "right",
+    location: "right"
   };
 
   render() {
@@ -50,9 +50,9 @@ class Tooltip extends React.Component<Props> {
     }
 
     return (
-      <span className={classes} data-tooltip={message} aria-label={message} id={id}>
+      <div className={classes} data-tooltip={message} aria-label={message} id={id}>
         {children}
-      </span>
+      </div>
     );
   }
 }

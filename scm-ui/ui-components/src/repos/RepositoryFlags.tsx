@@ -86,13 +86,13 @@ const RepositoryFlags: FC<Props> = ({ repository, className, tooltipLocation = "
   );
 
   return (
-    <span className={classNames("is-flex", "is-align-items-center", className)}>
+    <div className={classNames("is-flex", "is-align-items-center", className)}>
       {modal}
       <RepositoryFlagContainer>
         {repositoryFlags}
         <ExtensionPoint name="repository.flags" props={{ repository, tooltipLocation }} renderAll={true} />
       </RepositoryFlagContainer>
-    </span>
+    </div>
   );
 };
 
