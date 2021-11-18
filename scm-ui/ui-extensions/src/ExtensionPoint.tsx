@@ -122,7 +122,7 @@ const createRenderProps = (propTransformer?: PropTransformer, props?: object) =>
 /**
  * ExtensionPoint renders components which are bound to an extension point.
  */
-const ExtensionPoint = <E extends RenderableExtensionPointDefinition>({
+const ExtensionPoint = <E extends RenderableExtensionPointDefinition<string, any>>({
   name,
   propTransformer,
   props,
