@@ -30,7 +30,7 @@ type ExtensionRegistration<P, T> = {
   priority: number;
 };
 
-export type ExtensionPointDefinition<N extends string, T, P = undefined | {}> = {
+export type ExtensionPointDefinition<N extends string, T, P = undefined> = {
   name: N;
   type: T;
   props: P;
@@ -196,6 +196,14 @@ export class Binder {
   /**
    * Returns true if at least one extension is bound to the extension point and its props.
    */
+  hasExtension<E extends ExtensionPointDefinition<string, unknown>>(extensionPoint: E["name"]): boolean;
+  /**
+   * Returns true if at least one extension is bound to the extension point and its props.
+   */
+  hasExtension<E extends ExtensionPointDefinition<string, unknown, any>>(
+    extensionPoint: E["name"],
+    props: E["props"]
+  ): boolean;
   hasExtension<E extends ExtensionPointDefinition<any, unknown, any>>(
     extensionPoint: E["name"],
     props?: E["props"]
