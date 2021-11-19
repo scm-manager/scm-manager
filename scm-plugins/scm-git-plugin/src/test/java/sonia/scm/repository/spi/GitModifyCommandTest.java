@@ -55,6 +55,11 @@ import static org.mockito.Mockito.verify;
 
 public class GitModifyCommandTest extends GitModifyCommandTestBase {
 
+  @Override
+  protected String getZippedRepositoryResource() {
+    return "sonia/scm/repository/spi/scm-git-spi-move-test.zip";
+  }
+
   @Test
   public void shouldCreateCommit() throws IOException, GitAPIException {
     File newFile = Files.write(tempFolder.newFile().toPath(), "new content".getBytes()).toFile();
@@ -399,5 +404,149 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
     request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
 
     command.execute(request);
+  }
+
+  @Test(expected = ScmConstraintViolationException.class)
+  public void shouldThrowErrorIfRelativePathIsOutsideOfWorkdir() {
+    GitModifyCommand command = createCommand();
+
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.setCommitMessage("please rename this file");
+    request.setAuthor(new Person("Peter Pan", "peter@pan.net"));
+    request.addRequest(new ModifyCommandRequest.MoveRequest("g/h/c", "/../../../../b"));
+
+    command.execute(request);
+  }
+
+  @Test
+  public void shouldRenameFile() throws GitAPIException, IOException {
+    GitModifyCommand command = createCommand();
+
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.setCommitMessage("please rename this file");
+    request.setAuthor(new Person("Peter Pan", "peter@pan.net"));
+    request.addRequest(new ModifyCommandRequest.MoveRequest("b.txt", "/d.txt"));
+
+    command.execute(request);
+
+    TreeAssertions assertions = canonicalTreeParser -> {
+      assertThat(canonicalTreeParser.findFile("b.txt")).isFalse();
+      assertThat(canonicalTreeParser.findFile("d.txt")).isTrue();
+    };
+
+    assertInTree(assertions);
+  }
+
+  @Test(expected = AlreadyExistsException.class)
+  public void shouldThrowAlreadyExistsException() {
+    GitModifyCommand command = createCommand();
+
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "/c"));
+    request.setCommitMessage("please rename my file pretty please");
+    request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
+
+    command.execute(request);
+  }
+
+  @Test
+  public void shouldRenameFolder() throws GitAPIException, IOException {
+    GitModifyCommand command = createCommand();
+
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.setCommitMessage("please move this folder");
+    request.setAuthor(new Person("Peter Pan", "peter@pan.net"));
+    request.addRequest(new ModifyCommandRequest.MoveRequest("c", "/notc"));
+
+    command.execute(request);
+
+    TreeAssertions assertions = canonicalTreeParser -> {
+      assertThat(canonicalTreeParser.findFile("c/d.txt")).isFalse();
+      assertThat(canonicalTreeParser.findFile("c/e.txt")).isFalse();
+      assertThat(canonicalTreeParser.findFile("notc/d.txt")).isTrue();
+      assertThat(canonicalTreeParser.findFile("notc/e.txt")).isTrue();
+    };
+
+    assertInTree(assertions);
+  }
+
+  @Test
+  public void shouldMoveFileToExistingFolder() throws GitAPIException, IOException {
+    GitModifyCommand command = createCommand();
+
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.setCommitMessage("please move this file");
+    request.setAuthor(new Person("Peter Pan", "peter@pan.net"));
+    request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "/c/z.txt"));
+
+    command.execute(request);
+
+    TreeAssertions assertions = canonicalTreeParser -> {
+      assertThat(canonicalTreeParser.findFile("a.txt")).isFalse();
+      assertThat(canonicalTreeParser.findFile("c/z.txt")).isTrue();
+      assertThat(canonicalTreeParser.findFile("c/d.txt")).isTrue();
+      assertThat(canonicalTreeParser.findFile("c/e.txt")).isTrue();
+    };
+
+    assertInTree(assertions);
+  }
+
+  @Test
+  public void shouldMoveFolderToExistingFolder() throws GitAPIException, IOException {
+    GitModifyCommand command = createCommand();
+
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.setCommitMessage("please rename this file");
+    request.setAuthor(new Person("Peter Pan", "peter@pan.net"));
+    request.addRequest(new ModifyCommandRequest.MoveRequest("g/h", "/g/k/h"));
+
+    command.execute(request);
+
+    TreeAssertions assertions = canonicalTreeParser -> {
+      assertThat(canonicalTreeParser.findFile("g/h/j.txt")).isFalse();
+      assertThat(canonicalTreeParser.findFile("g/k/h/j.txt")).isTrue();
+    };
+
+    assertInTree(assertions);
+  }
+
+  @Test
+  public void shouldMoveFileToNonExistentFolder() throws GitAPIException, IOException {
+    GitModifyCommand command = createCommand();
+
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.setCommitMessage("please move this file");
+    request.setAuthor(new Person("Peter Pan", "peter@pan.net"));
+    request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "/y/z.txt"));
+
+    command.execute(request);
+
+    TreeAssertions assertions = fileFinder -> {
+      assertThat(fileFinder.findFile("a.txt")).isFalse();
+      assertThat(fileFinder.findFile("y/z.txt")).isTrue();
+    };
+
+    assertInTree(assertions);
+  }
+
+  @Test
+  public void shouldMoveFolderToNonExistentFolder() throws GitAPIException, IOException {
+    GitModifyCommand command = createCommand();
+
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.setCommitMessage("please move this file");
+    request.setAuthor(new Person("Peter Pan", "peter@pan.net"));
+    request.addRequest(new ModifyCommandRequest.MoveRequest("c", "/j/k/c"));
+
+    command.execute(request);
+
+    TreeAssertions assertions = fileFinder -> {
+      assertThat(fileFinder.findFile("c/d.txt")).isFalse();
+      assertThat(fileFinder.findFile("c/e.txt")).isFalse();
+      assertThat(fileFinder.findFile("j/k/c/d.txt")).isTrue();
+      assertThat(fileFinder.findFile("j/k/c/e.txt")).isTrue();
+    };
+
+    assertInTree(assertions);
   }
 }

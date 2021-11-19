@@ -115,6 +115,14 @@ public class ModifyCommandBuilder {
   }
 
   /**
+   * @since 2.28.0
+   */
+  public ModifyCommandBuilder move(String fromPath, String toPath) {
+    request.addRequest(new ModifyCommandRequest.MoveRequest(fromPath, toPath));
+    return this;
+  }
+
+  /**
    * Delete an existing file.
    * @param path The path and the name of the file that should be deleted.
    * @return This builder instance.
@@ -269,14 +277,12 @@ public class ModifyCommandBuilder {
     }
   }
 
-  @SuppressWarnings("UnstableApiUsage") // Files only used internal
   private File loadData(ByteSource data) throws IOException {
     File file = createTemporaryFile();
     data.copyTo(Files.asByteSink(file));
     return file;
   }
 
-  @SuppressWarnings("UnstableApiUsage") // Files and ByteStreams only used internal
   private File loadData(InputStream data) throws IOException {
     File file = createTemporaryFile();
     try (OutputStream out = Files.asByteSink(file).openBufferedStream()) {
