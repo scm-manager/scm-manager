@@ -197,38 +197,37 @@ public class JAXBConfigurationEntryStore<V> implements ConfigurationEntryStore<V
         temp -> {
           try (Writer ioWriter = Files.newBufferedWriter(temp, StandardCharsets.UTF_8);
                IndentXMLStreamWriter writer = XmlStreams.createWriter(ioWriter)) {
-              writer.writeStartDocument();
+            writer.writeStartDocument();
 
-              // configuration start
-              writer.writeStartElement(TAG_CONFIGURATION);
-              writer.writeAttribute("type", "config-entry");
+            // configuration start
+            writer.writeStartElement(TAG_CONFIGURATION);
+            writer.writeAttribute("type", "config-entry");
 
-              for (Entry<String, V> e : entries.entrySet()) {
+            for (Entry<String, V> e : entries.entrySet()) {
 
-                // entry start
-                writer.writeStartElement(TAG_ENTRY);
+              // entry start
+              writer.writeStartElement(TAG_ENTRY);
 
-                // key start
-                writer.writeStartElement(TAG_KEY);
-                writer.writeCharacters(e.getKey());
+              // key start
+              writer.writeStartElement(TAG_KEY);
+              writer.writeCharacters(e.getKey());
 
-                // key end
-                writer.writeEndElement();
-
-                // value
-                JAXBElement<V> je = new JAXBElement<>(QName.valueOf(TAG_VALUE), type,
-                        e.getValue());
-
-                m.marshal(je, writer);
-
-                // entry end
-                writer.writeEndElement();
-              }
-
-              // configuration end
+              // key end
               writer.writeEndElement();
-              writer.writeEndDocument();
+
+              // value
+              JAXBElement<V> je = new JAXBElement<>(QName.valueOf(TAG_VALUE), type,
+                      e.getValue());
+
+              m.marshal(je, writer);
+
+              // entry end
+              writer.writeEndElement();
             }
+
+            // configuration end
+            writer.writeEndElement();
+            writer.writeEndDocument();
           }
         },
         file.toPath()
