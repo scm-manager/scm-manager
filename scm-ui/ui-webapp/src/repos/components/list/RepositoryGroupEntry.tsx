@@ -35,7 +35,7 @@ const RepositoryGroupEntry: FC<Props> = ({ group }) => {
   const [t] = useTranslation("namespaces");
 
   const settingsLink = group.namespace?._links?.permissions && (
-    <Link to={`/namespace/${group.name}/settings`}>
+    <Link to={`/namespace/${group.name}/settings`} aria-label={t("repositoryOverview.settings.tooltip")}>
       <Icon color="inherit" name="cog" title={t("repositoryOverview.settings.tooltip")} className="is-size-6 ml-2" />
     </Link>
   );

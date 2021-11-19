@@ -308,6 +308,7 @@ const useSearchParams = () => {
 };
 
 const OmniSearch: FC = () => {
+  const [t] = useTranslation("commons");
   const { searchType, initialQuery } = useSearchParams();
   const [query, setQuery] = useState(initialQuery);
   const debouncedQuery = useDebounce(query, 250);
@@ -342,7 +343,7 @@ const OmniSearch: FC = () => {
             <Input
               className="input is-small"
               type="text"
-              placeholder="Search ..."
+              placeholder={t("search.placeholder")}
               onChange={e => setQuery(e.target.value)}
               onKeyDown={onKeyDown}
               value={query}
@@ -350,6 +351,7 @@ const OmniSearch: FC = () => {
               aria-autocomplete="list"
               data-omnisearch="true"
               aria-expanded={query.length > 2}
+              aria-label={t("search.ariaLabel")}
               {...handlers}
             />
             {isLoading ? null : (

@@ -179,6 +179,8 @@
     "w_plural": "{{count}} Wochen"
   },
   "search": {
+    "ariaLabel": "Globale Suche",
+    "placeholder": "Suche...",
     "title": "Suche",
     "subtitle": "{{type}} Ergebnisse für \"{{query}}\"",
     "types": "Ergebnisse",

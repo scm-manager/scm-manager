@@ -180,6 +180,8 @@
     "w_plural": "{{count}} weeks"
   },
   "search": {
+    "ariaLabel": "Global search",
+    "placeholder": "Search...",
     "title": "Search",
     "subtitle": "{{type}} results for \"{{query}}\"",
     "types": "Results",
