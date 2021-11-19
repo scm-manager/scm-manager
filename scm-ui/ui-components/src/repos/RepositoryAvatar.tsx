@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 import React, { FC } from "react";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import { Repository } from "@scm-manager/ui-types";
 import { Image } from "@scm-manager/ui-components";
 import styled from "styled-components";
@@ -38,13 +38,13 @@ type Props = {
 
 const renderExtensionPoint = (repository: Repository) => {
   return (
-    <ExtensionPoint
+    <ExtensionPoint<extensionPoints.PrimaryRepositoryAvatar>
       name="repos.repository-avatar.primary"
       props={{
         repository,
       }}
     >
-      <ExtensionPoint
+      <ExtensionPoint<extensionPoints.RepositoryAvatar>
         name="repos.repository-avatar"
         props={{
           repository,

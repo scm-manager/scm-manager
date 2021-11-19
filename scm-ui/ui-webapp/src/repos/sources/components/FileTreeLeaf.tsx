@@ -49,7 +49,6 @@ const NoWrapTd = styled.td`
 const ExtensionTd = styled.td`
   white-space: nowrap;
   text-align: right;
-
   > *:not(:last-child) {
     margin-right: 0.5rem;
   }
@@ -116,15 +115,24 @@ class FileTreeLeaf extends React.Component<Props> {
           <MinWidthTd className={classNames("is-word-break", "is-hidden-touch")}>
             {this.contentIfPresent(file, "description", file => file.description)}
           </MinWidthTd>
-          {binder.hasExtension("repos.sources.tree.row.right") && (
+
+          {binder.hasExtension<extensionPoints.ReposSourcesTreeRowRight>("repos.sources.tree.row.right", extProps) && (
             <ExtensionTd className="is-hidden-mobile">
               {!file.directory && (
-                <ExtensionPoint name="repos.sources.tree.row.right" props={extProps} renderAll={true} />
+                <ExtensionPoint<extensionPoints.ReposSourcesTreeRowRight>
+                  name="repos.sources.tree.row.right"
+                  props={extProps}
+                  renderAll={true}
+                />
               )}
             </ExtensionTd>
           )}
         </tr>
-        <ExtensionPoint name="repos.sources.tree.row.after" props={extProps} renderAll={true} />
+        <ExtensionPoint<extensionPoints.ReposSourcesTreeRowAfter>
+          name="repos.sources.tree.row.after"
+          props={extProps}
+          renderAll={true}
+        />
       </>
     );
   }

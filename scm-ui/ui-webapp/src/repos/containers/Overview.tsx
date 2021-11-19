@@ -42,11 +42,9 @@ import styled from "styled-components";
 
 const StickyColumn = styled.div`
   align-self: flex-start;
-
   &:empty {
     display: none;
   }
-
   @media (min-width: ${devices.mobile.width}px) {
     position: sticky;
     top: 1rem;
@@ -128,7 +126,7 @@ const Overview: FC = () => {
   const [t] = useTranslation("repos");
   const binder = useBinder();
 
-  const extensions = binder.getExtensions<extensionPoints.RepositoryOverviewLeftExtension>("repository.overview.left");
+  const extensions = binder.getExtensions<extensionPoints.RepositoryOverviewLeft>("repository.overview.left");
 
   // we keep the create permission in the state,
   // because it does not change during searching or paging
@@ -167,8 +165,16 @@ const Overview: FC = () => {
   return (
     <Page
       documentTitle={t("overview.title")}
-      title={<ExtensionPoint name="repository.overview.title">{t("overview.title")}</ExtensionPoint>}
-      subtitle={<ExtensionPoint name="repository.overview.subtitle">{t("overview.subtitle")}</ExtensionPoint>}
+      title={
+        <ExtensionPoint<extensionPoints.RepositoryOverviewTitle> name="repository.overview.title">
+          {t("overview.title")}
+        </ExtensionPoint>
+      }
+      subtitle={
+        <ExtensionPoint<extensionPoints.RepositoryOverviewSubtitle> name="repository.overview.subtitle">
+          {t("overview.subtitle")}
+        </ExtensionPoint>
+      }
       loading={isLoading}
       error={error}
     >

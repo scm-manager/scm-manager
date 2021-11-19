@@ -30,6 +30,7 @@ import { File, Repository } from "@scm-manager/ui-types";
 import FileTreeLeaf from "./FileTreeLeaf";
 import TruncatedNotification from "./TruncatedNotification";
 import { isRootPath } from "../utils/files";
+import { ReposSourcesTreeWrapperExtension } from "@scm-manager/ui-extensions/src/extensionPoints";
 
 type Props = {
   repository: Repository;
@@ -78,7 +79,7 @@ const FileTree: FC<Props> = ({ repository, directory, baseUrl, revision, fetchNe
 
   const baseUrlWithRevision = baseUrl + "/" + encodeURIComponent(revision);
 
-  const extProps: extensionPoints.ReposSourcesTreeWrapperProps = {
+  const extProps = {
     repository,
     directory,
     baseUrl,
@@ -87,7 +88,12 @@ const FileTree: FC<Props> = ({ repository, directory, baseUrl, revision, fetchNe
 
   return (
     <div className="panel-block">
-      <ExtensionPoint name="repos.source.tree.wrapper" props={extProps} renderAll={true} wrapper={true}>
+      <ExtensionPoint<extensionPoints.ReposSourcesTreeWrapperExtension>
+        name="repos.source.tree.wrapper"
+        props={extProps}
+        renderAll={true}
+        wrapper={true}
+      >
         <table className="table table-hover table-sm is-fullwidth">
           <thead>
             <tr>
@@ -96,7 +102,10 @@ const FileTree: FC<Props> = ({ repository, directory, baseUrl, revision, fetchNe
               <th className="is-hidden-mobile">{t("sources.fileTree.length")}</th>
               <th className="is-hidden-mobile">{t("sources.fileTree.commitDate")}</th>
               <th className="is-hidden-touch">{t("sources.fileTree.description")}</th>
-              {binder.hasExtension("repos.sources.tree.row.right") && <th className="is-hidden-mobile" />}
+              {/* TODO Add support for this use-case of extension points */}
+              {binder.hasExtension<extensionPoints.ReposSourcesTreeRowRightExtension>(
+                "repos.sources.tree.row.right"
+              ) && <th className="is-hidden-mobile" />}{" "}
             </tr>
           </thead>
           <tbody>

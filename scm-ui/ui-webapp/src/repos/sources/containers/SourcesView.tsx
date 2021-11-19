@@ -26,7 +26,7 @@ import React, { FC } from "react";
 import SourcecodeViewer from "../components/content/SourcecodeViewer";
 import ImageViewer from "../components/content/ImageViewer";
 import DownloadViewer from "../components/content/DownloadViewer";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import { File, Link, Repository } from "@scm-manager/ui-types";
 import { ErrorNotification, Loading, PdfViewer } from "@scm-manager/ui-components";
 import SwitchableMarkdownViewer from "../components/content/SwitchableMarkdownViewer";
@@ -75,7 +75,7 @@ const SourcesView: FC<Props> = ({ file, repository, revision }) => {
     sources = <PdfViewer src={file} />;
   } else {
     sources = (
-      <ExtensionPoint
+      <ExtensionPoint<extensionPoints.RepositorySourcesView>
         name="repos.sources.view"
         props={{
           file,

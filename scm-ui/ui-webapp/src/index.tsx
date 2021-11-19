@@ -31,14 +31,14 @@ import i18n from "./i18n";
 import { BrowserRouter as Router } from "react-router-dom";
 
 import { urls } from "@scm-manager/ui-components";
-import { binder } from "@scm-manager/ui-extensions";
+import { binder, extensionPoints } from "@scm-manager/ui-extensions";
 import ChangesetShortLink from "./repos/components/changesets/ChangesetShortLink";
 
 import "./tokenExpired";
 import LegacyReduxProvider from "./LegacyReduxProvider";
 import ReduxAwareApiProvider from "./ReduxAwareApiProvider";
 
-binder.bind("changeset.description.tokens", ChangesetShortLink);
+binder.bind<extensionPoints.ChangesetDescriptionTokensExtension>("changeset.description.tokens", ChangesetShortLink);
 
 const root = document.getElementById("root");
 if (!root) {

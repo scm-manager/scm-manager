@@ -24,7 +24,7 @@
 import React, { FC } from "react";
 import { Route, useParams, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import {
   CustomQueryFlexWrappedColumns,
   ErrorPage,
@@ -43,6 +43,7 @@ import { EditGroupNavLink, SetPermissionsNavLink } from "./../components/navLink
 import EditGroup from "./EditGroup";
 import { useGroup } from "@scm-manager/ui-api";
 import SetGroupPermissions from "../../permissions/components/SetGroupPermissions";
+import { GroupNavigation, GroupRoute, GroupSetting } from "@scm-manager/ui-extensions/src/extensionPoints";
 
 const SingleGroup: FC = () => {
   const { name } = useParams<{ name: string }>();
@@ -79,7 +80,11 @@ const SingleGroup: FC = () => {
             <Route path={`${url}/settings/permissions`} exact>
               <SetGroupPermissions group={group} />
             </Route>
-            <ExtensionPoint name="group.route" props={extensionProps} renderAll={true} />
+            <ExtensionPoint<extensionPoints.GroupRouteExtension>
+              name="group.route"
+              props={extensionProps}
+              renderAll={true}
+            />
           </PrimaryContentColumn>
           <SecondaryNavigationColumn>
             <SecondaryNavigation label={t("singleGroup.menu.navigationLabel")}>
@@ -89,7 +94,11 @@ const SingleGroup: FC = () => {
                 label={t("singleGroup.menu.informationNavLink")}
                 title={t("singleGroup.menu.informationNavLink")}
               />
-              <ExtensionPoint name="group.navigation" props={extensionProps} renderAll={true} />
+              <ExtensionPoint<extensionPoints.GroupNavigationExtension>
+                name="group.navigation"
+                props={extensionProps}
+                renderAll={true}
+              />
               <SubNavigation
                 to={`${url}/settings/general`}
                 label={t("singleGroup.menu.settingsNavLink")}
@@ -97,7 +106,11 @@ const SingleGroup: FC = () => {
               >
                 <EditGroupNavLink group={group} editUrl={`${url}/settings/general`} />
                 <SetPermissionsNavLink group={group} permissionsUrl={`${url}/settings/permissions`} />
-                <ExtensionPoint name="group.setting" props={extensionProps} renderAll={true} />
+                <ExtensionPoint<extensionPoints.GroupSettingExtension>
+                  name="group.setting"
+                  props={extensionProps}
+                  renderAll={true}
+                />
               </SubNavigation>
             </SecondaryNavigation>
           </SecondaryNavigationColumn>

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-type Predicate<P extends Record<any, any> = Record<any, any>> = (props: P) => boolean;
+type Predicate<P extends Record<any, any> = Record<any, any>> = (props?: P) => boolean;
 
 type ExtensionRegistration<P, T> = {
   predicate: Predicate<P>;
@@ -170,14 +170,14 @@ export class Binder {
    *
    * @param extensionPoint name of extension point
    */
-  getExtensions<E extends ExtensionPointDefinition<string, any>>(extensionPoint: E["name"]): Array<E["type"]>;
+  getExtensions<E extends ExtensionPointDefinition<string, unknown>>(extensionPoint: E["name"]): Array<E["type"]>;
   /**
    * Returns all registered extensions for the given extension point and its props.
    *
    * @param extensionPoint name of extension point
    * @param props of the extension point
    */
-  getExtensions<E extends ExtensionPointDefinition<string, any, any>>(
+  getExtensions<E extends ExtensionPointDefinition<string, unknown, any>>(
     extensionPoint: E["name"],
     props: E["props"]
   ): Array<E["type"]>;
@@ -208,7 +208,7 @@ export class Binder {
     extensionPoint: E["name"],
     props?: E["props"]
   ): boolean {
-    return this.getExtensions<E>(extensionPoint, props).length > 0;
+    return this.getExtensions(extensionPoint, props).length > 0;
   }
 
   /**

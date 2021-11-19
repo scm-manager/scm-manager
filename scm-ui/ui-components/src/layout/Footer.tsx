@@ -23,7 +23,7 @@
  */
 import React, { FC } from "react";
 import { Links, Me } from "@scm-manager/ui-types";
-import { ExtensionPoint, useBinder } from "@scm-manager/ui-extensions";
+import { ExtensionPoint, extensionPoints, useBinder } from "@scm-manager/ui-extensions";
 import { AvatarImage } from "../avatar";
 import NavLink from "../navigation/NavLink";
 import FooterSection from "./FooterSection";
@@ -105,7 +105,11 @@ const Footer: FC<Props> = ({ me, version, links }) => {
                 <NavLink to="/me/settings/publicKeys" label={t("profile.publicKeysNavLink")} />
               )}
               {me?._links?.apiKeys && <NavLink to="/me/settings/apiKeys" label={t("profile.apiKeysNavLink")} />}
-              <ExtensionPoint name="profile.setting" props={extensionProps} renderAll={true} />
+              <ExtensionPoint<extensionPoints.ProfileSettingExtension>
+                name="profile.setting"
+                props={extensionProps}
+                renderAll={true}
+              />
             </FooterSection>
           ) : null}
           <FooterSection title={<TitleWithIcon title={t("footer.information.title")} icon="info-circle" />}>

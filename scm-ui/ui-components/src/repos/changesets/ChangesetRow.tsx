@@ -24,10 +24,11 @@
 import React, { FC } from "react";
 import classNames from "classnames";
 import styled from "styled-components";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import { Changeset, File, Repository } from "@scm-manager/ui-types";
 import ChangesetButtonGroup from "./ChangesetButtonGroup";
 import SingleChangeset from "./SingleChangeset";
+import { ChangesetRight } from "@scm-manager/ui-extensions/src/extensionPoints";
 
 type Props = {
   repository: Repository;
@@ -36,8 +37,97 @@ type Props = {
 };
 
 const Wrapper = styled.div`
+  
+  
   // & references parent rule
   // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
   & + & {
     margin-top: 1rem;
     padding-top: 1rem;
@@ -54,7 +144,7 @@ const ChangesetRow: FC<Props> = ({ repository, changeset, file }) => {
         </div>
         <div className={classNames("column", "is-flex", "is-justify-content-flex-end", "is-align-items-center")}>
           <ChangesetButtonGroup repository={repository} changeset={changeset} file={file} />
-          <ExtensionPoint
+          <ExtensionPoint<extensionPoints.ChangesetRightExtension>
             name="changeset.right"
             props={{
               repository,

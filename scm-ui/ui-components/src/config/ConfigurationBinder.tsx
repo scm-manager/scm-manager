@@ -22,11 +22,11 @@
  * SOFTWARE.
  */
 import React from "react";
-import { binder } from "@scm-manager/ui-extensions";
+import { binder, extensionPoints } from "@scm-manager/ui-extensions";
 import { NavLink } from "../navigation";
 import { Route } from "react-router-dom";
-import { WithTranslation, withTranslation } from "react-i18next";
-import { Repository, Links, Link } from "@scm-manager/ui-types";
+import { useTranslation, WithTranslation, withTranslation } from "react-i18next";
+import { Link, Links, Repository } from "@scm-manager/ui-types";
 
 type GlobalRouteProps = {
   url: string;
@@ -63,12 +63,13 @@ class ConfigurationBinder {
     };
 
     // create NavigationLink with translated label
-    const ConfigNavLink = withTranslation(this.i18nNamespace)(({ t }) => {
+    const ConfigNavLink = () => {
+      const [t] = useTranslation(this.i18nNamespace);
       return this.navLink("/admin/settings" + to, labelI18nKey, t);
-    });
+    };
 
     // bind navigation link to extension point
-    binder.bind("admin.setting", ConfigNavLink, configPredicate, labelI18nKey);
+    binder.bind<extensionPoints.AdminSetting>("admin.setting", ConfigNavLink, configPredicate, labelI18nKey);
 
     // route for global configuration, passes the link from the index resource to component
     const ConfigRoute = ({ url, links, ...additionalProps }: GlobalRouteProps) => {
@@ -98,7 +99,7 @@ class ConfigurationBinder {
     });
 
     // bind navigation link to extension point
-    binder.bind("repository.navigation", RepoNavLink, repoPredicate);
+    binder.bind<extensionPoints.RepositoryNavigation>("repository.navigation", RepoNavLink, repoPredicate);
 
     // route for global configuration, passes the current repository to component
     const RepoRoute = ({ url, repository, ...additionalProps }: RepositoryRouteProps) => {
@@ -128,7 +129,7 @@ class ConfigurationBinder {
     });
 
     // bind navigation link to extension point
-    binder.bind("repository.setting", RepoNavLink, repoPredicate);
+    binder.bind<extensionPoints.RepositorySetting>("repository.setting", RepoNavLink, repoPredicate);
 
     // route for global configuration, passes the current repository to component
     const RepoRoute = ({ url, repository, ...additionalProps }: RepositoryRouteProps) => {

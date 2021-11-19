@@ -25,7 +25,7 @@ import React, { FC, useState } from "react";
 import { Repository } from "@scm-manager/ui-types";
 import { DateFromNow, Modal } from "@scm-manager/ui-components";
 import RepositoryAvatar from "./RepositoryAvatar";
-import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
+import { binder, ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import GroupEntry from "../layout/GroupEntry";
 import RepositoryFlags from "./RepositoryFlags";
 import styled from "styled-components";
@@ -103,11 +103,11 @@ const RepositoryEntry: FC<Props> = ({ repository, baseDate }) => {
           active={openCloneModal}
           title={t("overview.clone")}
           body={
-            <ExtensionPoint
+            <ExtensionPoint<extensionPoints.RepositoryDetailsInformation>
               name="repos.repository-details.information"
               renderAll={true}
               props={{
-                repository
+                repository,
               }}
             />
           }

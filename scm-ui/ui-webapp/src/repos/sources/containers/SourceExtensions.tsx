@@ -25,12 +25,10 @@ import React, { FC, useEffect, useState } from "react";
 import { File, Repository } from "@scm-manager/ui-types";
 import { useParams } from "react-router-dom";
 
-import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
+import { binder, ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import { ErrorNotification, Loading, Notification } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 import { useBranch, useChangesets, useSources } from "@scm-manager/ui-api";
-
-const extensionPointName = "repos.sources.extensions";
 
 type Props = {
   repository: Repository;
@@ -101,14 +99,14 @@ const SourceExtensionsWithBranches: FC<PropsWithBranches> = ({
     resolvedRevision,
     path,
     sources,
-    baseUrl
+    baseUrl: baseUrl ?? "",
   };
 
-  if (!binder.hasExtension(extensionPointName, extprops)) {
+  if (!binder.hasExtension<extensionPoints.SourceExtension>("repos.sources.extensions", extprops)) {
     return <Notification type="warning">{t("sources.extension.notBound")}</Notification>;
   }
 
-  return <ExtensionPoint name={extensionPointName} props={extprops} />;
+  return <ExtensionPoint<extensionPoints.SourceExtension> name="repos.sources.extensions" props={extprops} />;
 };
 
 const SourceExtensionsWithoutBranches: FC<PropsWithoutBranches> = ({
@@ -137,14 +135,14 @@ const SourceExtensionsWithoutBranches: FC<PropsWithoutBranches> = ({
     resolvedRevision,
     path,
     sources,
-    baseUrl
+    baseUrl: baseUrl ?? "",
   };
 
-  if (!binder.hasExtension(extensionPointName, extprops)) {
+  if (!binder.hasExtension<extensionPoints.SourceExtension>("repos.sources.extensions", extprops)) {
     return <Notification type="warning">{t("sources.extension.notBound")}</Notification>;
   }
 
-  return <ExtensionPoint name={extensionPointName} props={extprops} />;
+  return <ExtensionPoint<extensionPoints.SourceExtension> name="repos.sources.extensions" props={extprops} />;
 };
 
 const SourceExtensions: FC<Props> = ({ repository, baseUrl }) => {

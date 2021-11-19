@@ -24,11 +24,12 @@
 import React, { FC } from "react";
 import { Changeset, Person } from "@scm-manager/ui-types";
 import { useTranslation } from "react-i18next";
-import { useBinder } from "@scm-manager/ui-extensions";
+import { extensionPoints, useBinder } from "@scm-manager/ui-extensions";
 import { EXTENSION_POINT } from "../../avatar/Avatar";
 import styled from "styled-components";
 import CommaSeparatedList from "../../CommaSeparatedList";
 import ContributorAvatar from "./ContributorAvatar";
+import { ChangesetsAuthorSuffix } from "@scm-manager/ui-extensions/src/extensionPoints";
 
 type Props = {
   changeset: Changeset;
@@ -171,7 +172,9 @@ const ChangesetAuthor: FC<Props> = ({ changeset }) => {
   }
 
   // extensions
-  const extensions = binder.getExtensions("changesets.author.suffix", { changeset });
+  const extensions = binder.getExtensions<extensionPoints.ChangesetsAuthorSuffixExtension>("changesets.author.suffix", {
+    changeset,
+  });
   if (extensions) {
     authorLine.push(...extensions);
   }

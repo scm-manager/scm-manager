@@ -23,7 +23,7 @@
  */
 import React from "react";
 import styled from "styled-components";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import { Plugin } from "@scm-manager/ui-types";
 import { Image } from "@scm-manager/ui-components";
 
@@ -44,7 +44,7 @@ export default class PluginAvatar extends React.Component<Props> {
     const { plugin } = this.props;
     return (
       <BoundingBox className="image is-64x64">
-        <ExtensionPoint
+        <ExtensionPoint<extensionPoints.PluginAvatarExtension>
           name="plugins.plugin-avatar"
           props={{
             plugin

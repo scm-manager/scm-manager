@@ -25,7 +25,7 @@ import React, { useState } from "react";
 import { match as Match } from "react-router";
 import { Link as RouteLink, Redirect, Route, RouteProps, Switch, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
+import { binder, ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import { Changeset, Link } from "@scm-manager/ui-types";
 import {
   CustomQueryFlexWrappedColumns,
@@ -293,7 +293,11 @@ const RepositoryRoot = () => {
           </PrimaryContentColumn>
           <SecondaryNavigationColumn>
             <SecondaryNavigation label={t("repositoryRoot.menu.navigationLabel")}>
-              <ExtensionPoint name="repository.navigation.topLevel" props={extensionProps} renderAll={true} />
+              <ExtensionPoint<extensionPoints.RepositoryNavigationTopLevelExtension>
+                name="repository.navigation.topLevel"
+                props={extensionProps}
+                renderAll={true}
+              />
               <NavLink
                 to={`${url}/info`}
                 icon="fas fa-info-circle"
@@ -330,7 +334,11 @@ const RepositoryRoot = () => {
                 activeOnlyWhenExact={false}
                 title={t("repositoryRoot.menu.sourcesNavLink")}
               />
-              <ExtensionPoint name="repository.navigation" props={extensionProps} renderAll={true} />
+              <ExtensionPoint<extensionPoints.RepositoryNavigationExtension>
+                name="repository.navigation"
+                props={extensionProps}
+                renderAll={true}
+              />
               <SubNavigation
                 to={`${url}/settings/general`}
                 label={t("repositoryRoot.menu.settingsNavLink")}
@@ -338,7 +346,11 @@ const RepositoryRoot = () => {
               >
                 <EditRepoNavLink repository={repository} editUrl={`${url}/settings/general`} />
                 <PermissionsNavLink permissionUrl={`${url}/settings/permissions`} repository={repository} />
-                <ExtensionPoint name="repository.setting" props={extensionProps} renderAll={true} />
+                <ExtensionPoint<extensionPoints.RepositorySettingExtension>
+                  name="repository.setting"
+                  props={extensionProps}
+                  renderAll={true}
+                />
               </SubNavigation>
             </SecondaryNavigation>
           </SecondaryNavigationColumn>

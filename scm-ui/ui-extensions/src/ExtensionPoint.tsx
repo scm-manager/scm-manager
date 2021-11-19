@@ -31,6 +31,12 @@ export type RenderableExtensionPointDefinition<
   P extends Record<string, unknown> | undefined = undefined
 > = ExtensionPointDefinition<Name, Renderable<P>, P>;
 
+export type SimpleRenderableDynamicExtensionPointDefinition<
+  Prefix extends string,
+  Suffix extends string | undefined,
+  Properties extends Record<string, unknown> | undefined
+> = RenderableExtensionPointDefinition<Suffix extends string ? `${Prefix}${Suffix}` : `${Prefix}${string}`, Properties>;
+
 /**
  * @deprecated Obsolete type
  */

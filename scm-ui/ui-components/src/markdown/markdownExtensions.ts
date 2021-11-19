@@ -21,18 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import { FC } from "react";
-
-export type ProtocolLinkRendererProps = {
-  protocol: string;
-  href: string;
-};
-
-export type ProtocolLinkRendererExtension = {
-  protocol: string;
-  renderer: FC<ProtocolLinkRendererProps>;
-};
+import { extensionPoints } from "@scm-manager/ui-extensions";
 
 export type ProtocolLinkRendererExtensionMap = {
-  [protocol: string]: FC<ProtocolLinkRendererProps>;
+  [protocol: string]: extensionPoints.MarkdownLinkProtocolRenderer["type"]["renderer"] | undefined;
 };

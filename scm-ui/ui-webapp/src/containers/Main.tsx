@@ -32,7 +32,7 @@ import Login from "../containers/Login";
 import Logout from "../containers/Logout";
 
 import { ErrorBoundary, ProtectedRoute } from "@scm-manager/ui-components";
-import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
+import { binder, ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 
 import CreateUser from "../users/containers/CreateUser";
 import SingleUser from "../users/containers/SingleUser";
@@ -104,7 +104,7 @@ const Main: FC<Props> = props => {
           <ProtectedRoute path="/search/:type/:page" component={Search} authenticated={authenticated} />
           <ProtectedRoute path="/search/:type/" component={Search} authenticated={authenticated} />
           <ProtectedRoute path="/help/search-syntax/" component={Syntax} authenticated={authenticated} />
-          <ExtensionPoint name="main.route" renderAll={true} props={props} />
+          <ExtensionPoint<extensionPoints.MainRouteExtension> name="main.route" renderAll={true} props={props} />
         </Switch>
       </div>
     </ErrorBoundary>

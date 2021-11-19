@@ -25,7 +25,7 @@ import React, { FC, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import { Changeset, ParentChangeset, Repository } from "@scm-manager/ui-types";
 import {
   AvatarImage,
@@ -146,7 +146,7 @@ const ChangesetDetails: FC<Props> = ({ changeset, repository, fileControlFactory
     <>
       <div className={classNames("content", "m-0")}>
         <SubSubtitle>
-          <ExtensionPoint
+          <ExtensionPoint<extensionPoints.ChangesetDescriptionExtension>
             name="changeset.description"
             props={{
               changeset,

@@ -28,6 +28,7 @@ import { NamespaceCollection, Repository } from "@scm-manager/ui-types";
 import groupByNamespace from "./groupByNamespace";
 import RepositoryGroupEntry from "./RepositoryGroupEntry";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import { RepositoryOverviewTopExtension } from "@scm-manager/ui-extensions/src/extensionPoints";
 
 type Props = {
   repositories: Repository[];
@@ -44,7 +45,7 @@ class RepositoryList extends React.Component<Props> {
     const groups = groupByNamespace(repositories, namespaces);
     return (
       <div className="content">
-        <ExtensionPoint
+        <ExtensionPoint<RepositoryOverviewTopExtension>
           name="repository.overview.top"
           renderAll={true}
           props={{

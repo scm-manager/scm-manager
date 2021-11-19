@@ -32,6 +32,7 @@ import classNames from "classnames";
 import HeaderButton from "../components/HeaderButton";
 import { Link } from "react-router-dom";
 import HeaderButtonContent, { headerButtonContentClassName } from "../components/HeaderButtonContent";
+import { PrimaryNavigationLoginButtonExtension } from "@scm-manager/ui-extensions/src/extensionPoints";
 
 type Props = {
   className?: string;
@@ -52,7 +53,7 @@ const LoginButton: FC<Props> = ({ burgerMode, links, className }) => {
 
   const content = <HeaderButtonContent burgerMode={burgerMode} label={label} icon="sign-in-alt" />;
 
-  const extensionProps: extensionPoints.PrimaryNavigationLoginButtonProps = {
+  const extensionProps = {
     links,
     label,
     loginUrl: urls.withContextPath(loginPath),
@@ -63,14 +64,20 @@ const LoginButton: FC<Props> = ({ burgerMode, links, className }) => {
   };
 
   if (links?.login) {
-    const shouldRenderExtension = binder.hasExtension("primary-navigation.login", extensionProps);
+    const shouldRenderExtension = binder.hasExtension<PrimaryNavigationLoginButtonExtension>(
+      "primary-navigation.login",
+      extensionProps
+    );
     return (
       <HeaderButton
         data-testid="primary-navigation-login"
         className={classNames("is-flex-start", "navbar-item", className)}
       >
         {shouldRenderExtension ? (
-          <ExtensionPoint name="primary-navigation.login" props={extensionProps} />
+          <ExtensionPoint<PrimaryNavigationLoginButtonExtension>
+            name="primary-navigation.login"
+            props={extensionProps}
+          />
         ) : (
           <Link to={to} className={headerButtonContentClassName}>
             {content}
