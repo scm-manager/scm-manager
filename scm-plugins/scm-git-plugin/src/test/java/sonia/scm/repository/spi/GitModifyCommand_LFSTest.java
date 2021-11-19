@@ -26,7 +26,10 @@ package sonia.scm.repository.spi;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.treewalk.TreeWalk;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -42,6 +45,8 @@ import java.nio.file.Files;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class GitModifyCommand_LFSTest extends GitModifyCommandTestBase {
@@ -68,7 +73,7 @@ public class GitModifyCommand_LFSTest extends GitModifyCommandTestBase {
       assertThat(newRef).isEqualTo(lastCommit.toObjectId().name());
     }
 
-    assertThat(outputStream.toString()).isEqualTo("new content");
+    assertThat(outputStream).hasToString("new content");
   }
 
   @Test
@@ -85,13 +90,41 @@ public class GitModifyCommand_LFSTest extends GitModifyCommandTestBase {
       assertThat(newRef).isEqualTo(lastCommit.toObjectId().name());
     }
 
-    assertThat(outputStream.toString()).isEqualTo("more content");
+    assertThat(outputStream).hasToString("more content");
+  }
+
+  @Test
+  public void shouldMoveLfsFile() throws IOException, GitAPIException {
+    BlobStore blobStore = mockBlobStore();
+
+    createCommit("new_lfs.png", "new content", "fe32608c9ef5b6cf7e3f946480253ff76f24f4ec0678f3d0f07f9844cbff9601", new ByteArrayOutputStream());
+
+    GitModifyCommand command = createCommand();
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.setCommitMessage("Move file");
+    request.addRequest(new ModifyCommandRequest.MoveRequest("new_lfs.png", "moved_lfs.png"));
+    request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
+    command.execute(request);
+
+    verify(blobStore, never()).get(any());
+
+    // we have to assert, that the content of the new file has not changed (that is, the lfs pointer
+    // has only been moved. Therefore, we ensure that the object id (aka hash) of "moved_lfs.png"
+    // stays the same (182f...)
+    try (Git git = new Git(createContext().open())) {
+      RevCommit lastCommit = getLastCommit(git);
+      try (RevWalk walk = new RevWalk(git.getRepository())) {
+        RevCommit commit = walk.parseCommit(lastCommit);
+        ObjectId treeId = commit.getTree().getId();
+        TreeWalk treeWalk = TreeWalk.forPath(git.getRepository(), "moved_lfs.png", treeId);
+        assertThat(treeWalk.getObjectId(0).getName()).isEqualTo("182fd989777cad6d7e4c887e39e518f6a4acc5bd");
+      }
+    }
   }
 
   private String createCommit(String fileName, String content, String hashOfContent, ByteArrayOutputStream outputStream) throws IOException {
-    BlobStore blobStore = mock(BlobStore.class);
+    BlobStore blobStore = mockBlobStore();
     Blob blob = mock(Blob.class);
-    when(lfsBlobStoreFactory.getLfsBlobStore(any())).thenReturn(blobStore);
     when(blobStore.create(hashOfContent)).thenReturn(blob);
     when(blobStore.get(hashOfContent)).thenReturn(null, blob);
     when(blob.getOutputStream()).thenReturn(outputStream);
@@ -107,6 +140,12 @@ public class GitModifyCommand_LFSTest extends GitModifyCommandTestBase {
     request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
 
     return command.execute(request);
+  }
+
+  private BlobStore mockBlobStore() {
+    BlobStore blobStore = mock(BlobStore.class);
+    when(lfsBlobStoreFactory.getLfsBlobStore(any())).thenReturn(blobStore);
+    return blobStore;
   }
 
   @Override

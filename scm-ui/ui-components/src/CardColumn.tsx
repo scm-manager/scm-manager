@@ -49,6 +49,12 @@ const InheritFlexShrinkDiv = styled.div`
   pointer-events: all;
 `;
 
+const InvisibleButton = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+`;
+
 const CardColumn: FC<Props> = ({
   link,
   avatar,
@@ -69,7 +75,7 @@ const CardColumn: FC<Props> = ({
     createLink = <Link className="overlay-column" to={link} />;
   } else if (action) {
     createLink = (
-      <button
+      <InvisibleButton
         className="overlay-column"
         onClick={(e) => {
           e.preventDefault();

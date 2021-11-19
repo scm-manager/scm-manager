@@ -51,6 +51,11 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
   @Rule
   public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
+  @Override
+  protected String getZippedRepositoryResource() {
+    return "sonia/scm/repository/spi/scm-hg-spi-modify-test.zip";
+  }
+
   @Before
   public void initHgModifyCommand() {
     SimpleHgWorkingCopyFactory workingCopyFactory = new SimpleHgWorkingCopyFactory(new NoneCachingWorkingCopyPool(new WorkdirProvider(repositoryLocationResolver)), new SimpleMeterRegistry()) {
@@ -222,5 +227,103 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
     request2.setAuthor(new Person("Trillian Astra", "trillian@hitchhiker.com"));
 
     hgModifyCommand.execute(request2);
+  }
+
+  @Test(expected = ScmConstraintViolationException.class)
+  public void shouldThrowErrorIfRelativePathIsOutsideOfWorkdir() {
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "/../../../../g.txt"));
+    request.setCommitMessage("Now i really found the answer");
+    request.setAuthor(new Person("Trillian Astra", "trillian@hitchhiker.com"));
+
+    hgModifyCommand.execute(request);
+  }
+
+  @Test
+  public void shouldRenameFile() {
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "/g.txt"));
+    request.setCommitMessage("Now i really found the answer");
+    request.setAuthor(new Person("Trillian Astra", "trillian@hitchhiker.com"));
+
+    hgModifyCommand.execute(request);
+    assertThat(cmdContext.open().tip().getDeletedFiles().contains("a.txt")).isTrue();
+    assertThat(cmdContext.open().tip().getAddedFiles().contains("g.txt")).isTrue();
+  }
+
+  @Test(expected = AlreadyExistsException.class)
+  public void shouldThrowAlreadyExistsException() {
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "/c"));
+    request.setCommitMessage("please rename my file pretty please");
+    request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
+
+    hgModifyCommand.execute(request);
+  }
+
+  @Test
+  public void shouldRenameFolder() {
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.addRequest(new ModifyCommandRequest.MoveRequest("c", "/notc"));
+    request.setCommitMessage("Now i really found the answer");
+    request.setAuthor(new Person("Trillian Astra", "trillian@hitchhiker.com"));
+
+    hgModifyCommand.execute(request);
+    assertThat(cmdContext.open().tip().getDeletedFiles().contains("c/d.txt")).isTrue();
+    assertThat(cmdContext.open().tip().getDeletedFiles().contains("c/e.txt")).isTrue();
+    assertThat(cmdContext.open().tip().getAddedFiles().contains("notc/d.txt")).isTrue();
+    assertThat(cmdContext.open().tip().getAddedFiles().contains("notc/e.txt")).isTrue();
+  }
+
+  @Test
+  public void shouldMoveFileToExistingFolder() {
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "/c/z.txt"));
+    request.setCommitMessage("Now i really found the answer");
+    request.setAuthor(new Person("Trillian Astra", "trillian@hitchhiker.com"));
+
+    hgModifyCommand.execute(request);
+    assertThat(cmdContext.open().tip().getDeletedFiles().contains("a.txt")).isTrue();
+    assertThat(cmdContext.open().tip().getAddedFiles().contains("c/z.txt")).isTrue();
+    assertThat(cmdContext.open().tip().getDeletedFiles().contains("c/d.txt")).isFalse();
+    assertThat(cmdContext.open().tip().getDeletedFiles().contains("c/e.txt")).isFalse();
+  }
+
+  @Test
+  public void shouldMoveFolderToExistingFolder() {
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.addRequest(new ModifyCommandRequest.MoveRequest("g/h", "/y/h"));
+    request.setCommitMessage("Now i really found the answer");
+    request.setAuthor(new Person("Trillian Astra", "trillian@hitchhiker.com"));
+
+    hgModifyCommand.execute(request);
+    assertThat(cmdContext.open().tip().getDeletedFiles().contains("g/h/j.txt")).isTrue();
+    assertThat(cmdContext.open().tip().getAddedFiles().contains("y/h/j.txt")).isTrue();
+  }
+
+  @Test
+  public void shouldMoveFileToNonExistentFolder() {
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "/y/z.txt"));
+    request.setCommitMessage("Now i really found the answer");
+    request.setAuthor(new Person("Trillian Astra", "trillian@hitchhiker.com"));
+
+    hgModifyCommand.execute(request);
+    assertThat(cmdContext.open().tip().getDeletedFiles().contains("a.txt")).isTrue();
+    assertThat(cmdContext.open().tip().getAddedFiles().contains("y/z.txt")).isTrue();
+  }
+
+  @Test
+  public void shouldMoveFolderToNonExistentFolder() {
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.addRequest(new ModifyCommandRequest.MoveRequest("c", "/j/k/c"));
+    request.setCommitMessage("Now i really found the answer");
+    request.setAuthor(new Person("Trillian Astra", "trillian@hitchhiker.com"));
+
+    hgModifyCommand.execute(request);
+    assertThat(cmdContext.open().tip().getDeletedFiles().contains("c/d.txt")).isTrue();
+    assertThat(cmdContext.open().tip().getDeletedFiles().contains("c/e.txt")).isTrue();
+    assertThat(cmdContext.open().tip().getAddedFiles().contains("j/k/c/d.txt")).isTrue();
+    assertThat(cmdContext.open().tip().getAddedFiles().contains("j/k/c/e.txt")).isTrue();
   }
 }

@@ -205,4 +205,23 @@ public class ModifyCommandRequest implements Resetable, Validateable, CommandWit
       cleanup();
     }
   }
+
+  /**
+   * @since 2.28.0
+   */
+  public static class MoveRequest implements PartialRequest {
+
+    private final String fromPath;
+    private final String toPath;
+
+    public MoveRequest(String fromPath, String toPath) {
+      this.toPath = toPath;
+      this.fromPath = fromPath;
+    }
+
+    @Override
+    public void execute(ModifyCommand.Worker worker) throws IOException {
+      worker.move(fromPath, toPath);
+    }
+  }
 }

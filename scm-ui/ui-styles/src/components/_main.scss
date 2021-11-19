@@ -110,19 +110,6 @@ footer.footer {
   background-color: $blue-light;
 }
 
-// TODO
-/*
-.has-text-high-contrast-warning {
-  color: $warning;
-}
-.has-text-high-contrast-danger{
-  color: $high-contrast-danger-50;
-}
-.has-text-high-contrast-light-gray {
-  color: $high-contrast-light-gray;
-}*/
-
-
 // border and background colors
 .has-background-dark-75 {
   background-color: $dark-75;
@@ -827,4 +814,16 @@ form .field:not(.is-grouped) {
 
 .sg-sub-section + .sg-sub-section {
   margin-top: 2.5rem;
+}
+
+.has-text-inherit {
+  color: inherit !important;
+}
+
+.has-text-default {
+  color: $text !important;
+}
+
+.has-background-accent {
+  background: $background-accent;
 }

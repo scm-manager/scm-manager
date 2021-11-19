@@ -41,7 +41,7 @@ const RepositoryGroupEntry: FC<Props> = ({ group }) => {
   );
   const namespaceHeader = (
     <>
-      <Link to={`/repos/${group.name}/`} className="has-text-dark">
+      <Link to={`/repos/${group.name}/`} className="has-text-inherit">
         {group.name}
       </Link>{" "}
       {settingsLink}

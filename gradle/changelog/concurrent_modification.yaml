@@ -1,2 +1,0 @@
-- type: fixed
-  description: Concurrent modification error in SVN modify command ([#1849](https://github.com/scm-manager/scm-manager/pull/1849))
