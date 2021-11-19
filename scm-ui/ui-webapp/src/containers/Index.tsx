@@ -69,7 +69,7 @@ const Index: FC = () => {
 
 export default Index;
 
-binder.bind<extensionPoints.InitializationStepAdminAccount>(
+binder.bind<extensionPoints.InitializationStep<"adminAccount">>(
   "initialization.step.adminAccount",
   InitializationAdminAccountStep
 );

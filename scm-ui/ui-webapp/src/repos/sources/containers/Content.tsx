@@ -136,7 +136,7 @@ const Content: FC<Props> = ({ file, repository, revision, breadcrumb, error }) =
               modalBody={<BorderLessDiv className="panel">{content}</BorderLessDiv>}
               tooltipStyle="htmlTitle"
             />
-            <ExtensionPoint<extensionPoints.ReposSourcesContentActionBarExtension>
+            <ExtensionPoint<extensionPoints.ReposSourcesContentActionBar>
               name="repos.sources.content.actionbar"
               props={{
                 repository,
@@ -195,7 +195,7 @@ const Content: FC<Props> = ({ file, repository, revision, breadcrumb, error }) =
                   <td>{t("sources.content.description")}</td>
                   <td className="is-word-break">{description}</td>
                 </tr>
-                <ExtensionPoint<extensionPoints.ReposContentMetaDataExtension>
+                <ExtensionPoint<extensionPoints.ReposContentMetaData>
                   name="repos.content.metadata"
                   renderAll={true}
                   props={{

@@ -60,13 +60,13 @@ const EditRepo: FC<Props> = ({ repository }) => {
       <Subtitle subtitle={t("repositoryForm.subtitle")} />
       <ErrorNotification error={error} />
       <RepositoryForm repository={repository} loading={isLoading} modifyRepository={update} />
-      <ExtensionPoint<extensionPoints.RepoConfigDetailsExtension>
+      <ExtensionPoint<extensionPoints.RepoConfigDetails>
         name="repo-config.details"
         props={extensionProps}
         renderAll={true}
       />
       {repository._links.exportInfo && <ExportRepository repository={repository} />}
-      <ExtensionPoint<extensionPoints.RepoConfigRouteExtension>
+      <ExtensionPoint<extensionPoints.RepoConfigRoute>
         name="repo-config.route"
         props={extensionProps}
         renderAll={true}

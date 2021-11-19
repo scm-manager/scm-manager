@@ -585,13 +585,6 @@ export type RepositoryRoute = RenderableExtensionPointDefinition<
   { repository: Repository; url: string; indexLinks: Links }
 >;
 
-export type InitializationStepAdminAccount = RenderableExtensionPointDefinition<
-  "initialization.step.adminAccount",
-  {
-    data: HalRepresentation;
-  }
->;
-
 type RepositoryRedirectProps = {
   namespace: string;
   name: string;
@@ -616,3 +609,12 @@ export type RepositoryRedirect = ExtensionPointDefinition<
   (props: RepositoryRedirectProps) => string,
   RepositoryRedirectProps
 >;
+
+export type InitializationStep<Step extends string | undefined = undefined> =
+  SimpleRenderableDynamicExtensionPointDefinition<
+    "initialization.step.",
+    Step,
+    {
+      data: HalRepresentation;
+    }
+  >;

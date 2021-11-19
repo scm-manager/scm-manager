@@ -44,7 +44,7 @@ export default class PluginAvatar extends React.Component<Props> {
     const { plugin } = this.props;
     return (
       <BoundingBox className="image is-64x64">
-        <ExtensionPoint<extensionPoints.PluginAvatarExtension>
+        <ExtensionPoint<extensionPoints.PluginAvatar>
           name="plugins.plugin-avatar"
           props={{
             plugin

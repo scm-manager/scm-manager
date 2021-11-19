@@ -41,7 +41,7 @@ class BranchView extends React.Component<Props> {
         <BranchDetail repository={repository} branch={branch} />
         <hr />
         <div className="content">
-          <ExtensionPoint<extensionPoints.ReposBranchDetailsInformationExtension>
+          <ExtensionPoint<extensionPoints.ReposBranchDetailsInformation>
             name="repos.branch-details.information"
             renderAll={true}
             props={{

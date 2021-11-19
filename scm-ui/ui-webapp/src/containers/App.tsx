@@ -25,11 +25,12 @@ import React, { FC } from "react";
 import Main from "./Main";
 import { useTranslation } from "react-i18next";
 import { ErrorPage, Footer, Header, Loading } from "@scm-manager/ui-components";
-import { binder } from "@scm-manager/ui-extensions";
+import { binder, ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import Login from "./Login";
 import { useIndex, useSubject } from "@scm-manager/ui-api";
 import NavigationBar from "./NavigationBar";
 import styled from "styled-components";
+import { HalRepresentation } from "@scm-manager/ui-types";
 
 const AppWrapper = styled.div`
   min-height: 100vh;
@@ -51,8 +52,13 @@ const App: FC = () => {
   const authenticated = isAuthenticated || isAnonymous;
 
   if (index?.initialization) {
-    const Extension = binder.getExtension(`initialization.step.${index.initialization}`);
-    content = <Extension data={index?._embedded ? index._embedded[index.initialization] : undefined} />;
+    const data = (index?._embedded ? index._embedded[index.initialization] : { _links: {} }) as HalRepresentation;
+    content = (
+      <ExtensionPoint<extensionPoints.InitializationStep>
+        name={`initialization.step.${index.initialization}`}
+        props={{ data }}
+      />
+    );
   } else if (!authenticated && !isLoading) {
     content = <Login />;
   } else if (isLoading) {

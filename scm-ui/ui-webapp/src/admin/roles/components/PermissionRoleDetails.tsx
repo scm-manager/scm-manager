@@ -54,7 +54,7 @@ class PermissionRoleDetails extends React.Component<Props> {
       <>
         <PermissionRoleDetailsTable role={role} />
         {this.renderEditButton()}
-        <ExtensionPoint<extensionPoints.RepositoryRoleDetailsInformationExtension>
+        <ExtensionPoint<extensionPoints.RepositoryRoleDetailsInformation>
           name="repositoryRole.role-details.information"
           renderAll={true}
           props={{

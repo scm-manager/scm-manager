@@ -80,11 +80,7 @@ const SingleGroup: FC = () => {
             <Route path={`${url}/settings/permissions`} exact>
               <SetGroupPermissions group={group} />
             </Route>
-            <ExtensionPoint<extensionPoints.GroupRouteExtension>
-              name="group.route"
-              props={extensionProps}
-              renderAll={true}
-            />
+            <ExtensionPoint<extensionPoints.GroupRoute> name="group.route" props={extensionProps} renderAll={true} />
           </PrimaryContentColumn>
           <SecondaryNavigationColumn>
             <SecondaryNavigation label={t("singleGroup.menu.navigationLabel")}>
@@ -94,7 +90,7 @@ const SingleGroup: FC = () => {
                 label={t("singleGroup.menu.informationNavLink")}
                 title={t("singleGroup.menu.informationNavLink")}
               />
-              <ExtensionPoint<extensionPoints.GroupNavigationExtension>
+              <ExtensionPoint<extensionPoints.GroupNavigation>
                 name="group.navigation"
                 props={extensionProps}
                 renderAll={true}
@@ -106,7 +102,7 @@ const SingleGroup: FC = () => {
               >
                 <EditGroupNavLink group={group} editUrl={`${url}/settings/general`} />
                 <SetPermissionsNavLink group={group} permissionsUrl={`${url}/settings/permissions`} />
-                <ExtensionPoint<extensionPoints.GroupSettingExtension>
+                <ExtensionPoint<extensionPoints.GroupSetting>
                   name="group.setting"
                   props={extensionProps}
                   renderAll={true}

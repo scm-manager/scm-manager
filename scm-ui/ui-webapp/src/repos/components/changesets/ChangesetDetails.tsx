@@ -146,7 +146,7 @@ const ChangesetDetails: FC<Props> = ({ changeset, repository, fileControlFactory
     <>
       <div className={classNames("content", "m-0")}>
         <SubSubtitle>
-          <ExtensionPoint<extensionPoints.ChangesetDescriptionExtension>
+          <ExtensionPoint<extensionPoints.ChangesetDescription>
             name="changeset.description"
             props={{
               changeset,

@@ -38,7 +38,7 @@ import "./tokenExpired";
 import LegacyReduxProvider from "./LegacyReduxProvider";
 import ReduxAwareApiProvider from "./ReduxAwareApiProvider";
 
-binder.bind<extensionPoints.ChangesetDescriptionTokensExtension>("changeset.description.tokens", ChangesetShortLink);
+binder.bind<extensionPoints.ChangesetDescriptionTokens>("changeset.description.tokens", ChangesetShortLink);
 
 const root = document.getElementById("root");
 if (!root) {
