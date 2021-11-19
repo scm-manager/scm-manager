@@ -21,6 +21,15 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #
-group = sonia.scm
-version = 2.27.2
-org.gradle.jvmargs=-Xmx1024M
+
+Feature: Repository File Search
+
+  Background:
+    Given User is authenticated
+    And A git repository exists
+
+  Scenario: Search file inside repository
+    Given User has permission to read and write repository
+    When User visits repository
+    And User performs file search inside repository
+    Then The search results are found

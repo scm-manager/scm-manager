@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.27.2] - 2021-11-19
+### Fixed
+- Repository file search ([#1867](https://github.com/scm-manager/scm-manager/pull/1867))
+
 ## [2.27.1] - 2021-11-18
 ### Fixed
 - Sporadic error "Automatic publicPath is not supported in this browser" (updated plugin-scripts to v1.2.2)
@@ -835,3 +839,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.26.1]: https://scm-manager.org/download/2.26.1
 [2.27.0]: https://scm-manager.org/download/2.27.0
 [2.27.1]: https://scm-manager.org/download/2.27.1
+[2.27.2]: https://scm-manager.org/download/2.27.2
