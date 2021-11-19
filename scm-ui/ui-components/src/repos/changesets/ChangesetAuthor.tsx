@@ -29,7 +29,6 @@ import { EXTENSION_POINT } from "../../avatar/Avatar";
 import styled from "styled-components";
 import CommaSeparatedList from "../../CommaSeparatedList";
 import ContributorAvatar from "./ContributorAvatar";
-import { ChangesetsAuthorSuffix } from "@scm-manager/ui-extensions/src/extensionPoints";
 
 type Props = {
   changeset: Changeset;
@@ -43,7 +42,7 @@ type PersonProps = {
 
 const useAvatar = (person: Person): string | undefined => {
   const binder = useBinder();
-  const factory: (person: Person) => string | undefined = binder.getExtension(EXTENSION_POINT);
+  const factory = binder.getExtension<extensionPoints.AvatarFactory>(EXTENSION_POINT);
   if (factory) {
     return factory(person);
   }
@@ -110,7 +109,7 @@ const Contributors: FC<PersonsProps> = ({ persons, label, displayTextOnly }) => 
     );
   }
 
-  const avatarFactory = binder.getExtension(EXTENSION_POINT);
+  const avatarFactory = binder.getExtension<extensionPoints.AvatarFactory>(EXTENSION_POINT);
   if (avatarFactory) {
     return (
       <>
@@ -172,7 +171,7 @@ const ChangesetAuthor: FC<Props> = ({ changeset }) => {
   }
 
   // extensions
-  const extensions = binder.getExtensions<extensionPoints.ChangesetsAuthorSuffixExtension>("changesets.author.suffix", {
+  const extensions = binder.getExtensions<extensionPoints.ChangesetsAuthorSuffix>("changesets.author.suffix", {
     changeset,
   });
   if (extensions) {

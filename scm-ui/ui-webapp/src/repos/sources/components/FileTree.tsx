@@ -103,9 +103,9 @@ const FileTree: FC<Props> = ({ repository, directory, baseUrl, revision, fetchNe
               <th className="is-hidden-mobile">{t("sources.fileTree.commitDate")}</th>
               <th className="is-hidden-touch">{t("sources.fileTree.description")}</th>
               {/* TODO Add support for this use-case of extension points */}
-              {binder.hasExtension<extensionPoints.ReposSourcesTreeRowRightExtension>(
-                "repos.sources.tree.row.right"
-              ) && <th className="is-hidden-mobile" />}{" "}
+              {binder.hasExtension<extensionPoints.ReposSourcesTreeRowRight>("repos.sources.tree.row.right") && (
+                <th className="is-hidden-mobile" />
+              )}{" "}
             </tr>
           </thead>
           <tbody>

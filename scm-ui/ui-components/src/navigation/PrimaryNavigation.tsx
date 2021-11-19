@@ -66,13 +66,10 @@ const PrimaryNavigation: FC<Props> = ({ links }) => {
 
     const append = createNavigationAppender(navItems);
     if (
-      binder.hasExtension<extensionPoints.PrimaryNavigationFirstMenuExtension>(
-        "primary-navigation.first-menu",
-        extensionProps
-      )
+      binder.hasExtension<extensionPoints.PrimaryNavigationFirstMenu>("primary-navigation.first-menu", extensionProps)
     ) {
       navItems.push(
-        <ExtensionPoint<extensionPoints.PrimaryNavigationFirstMenuExtension>
+        <ExtensionPoint<extensionPoints.PrimaryNavigationFirstMenu>
           key="primary-navigation.first-menu"
           name="primary-navigation.first-menu"
           props={extensionProps}
@@ -85,7 +82,7 @@ const PrimaryNavigation: FC<Props> = ({ links }) => {
     append("/admin", "/admin", "primary-navigation.admin", "config");
 
     navItems.push(
-      <ExtensionPoint<extensionPoints.PrimaryNavigationExtension>
+      <ExtensionPoint<extensionPoints.PrimaryNavigation>
         key="primary-navigation"
         name="primary-navigation"
         renderAll={true}

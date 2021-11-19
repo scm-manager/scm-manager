@@ -23,14 +23,14 @@
  */
 import React, { FC, useState } from "react";
 import App from "./App";
-import { ErrorBoundary, Loading, Header } from "@scm-manager/ui-components";
+import { ErrorBoundary, Header, Loading } from "@scm-manager/ui-components";
 import PluginLoader from "./PluginLoader";
 import ScrollToTop from "./ScrollToTop";
 import IndexErrorPage from "./IndexErrorPage";
 import { useIndex } from "@scm-manager/ui-api";
 import { Link } from "@scm-manager/ui-types";
 import i18next from "i18next";
-import { binder } from "@scm-manager/ui-extensions";
+import { binder, extensionPoints } from "@scm-manager/ui-extensions";
 import InitializationAdminAccountStep from "./InitializationAdminAccountStep";
 
 const Index: FC = () => {
@@ -69,4 +69,7 @@ const Index: FC = () => {
 
 export default Index;
 
-binder.bind("initialization.step.adminAccount", InitializationAdminAccountStep);
+binder.bind<extensionPoints.InitializationStepAdminAccount>(
+  "initialization.step.adminAccount",
+  InitializationAdminAccountStep
+);

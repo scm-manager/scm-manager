@@ -60,7 +60,7 @@ type Props = {
 
 const Main: FC<Props> = props => {
   const { authenticated, me } = props;
-  const redirectUrlFactory = binder.getExtension("main.redirect", props);
+  const redirectUrlFactory = binder.getExtension<extensionPoints.MainRedirect>("main.redirect", props);
   let url = "/";
   if (authenticated) {
     url = "/repos/";
@@ -104,7 +104,7 @@ const Main: FC<Props> = props => {
           <ProtectedRoute path="/search/:type/:page" component={Search} authenticated={authenticated} />
           <ProtectedRoute path="/search/:type/" component={Search} authenticated={authenticated} />
           <ProtectedRoute path="/help/search-syntax/" component={Syntax} authenticated={authenticated} />
-          <ExtensionPoint<extensionPoints.MainRouteExtension> name="main.route" renderAll={true} props={props} />
+          <ExtensionPoint<extensionPoints.MainRoute> name="main.route" renderAll={true} props={props} />
         </Switch>
       </div>
     </ErrorBoundary>

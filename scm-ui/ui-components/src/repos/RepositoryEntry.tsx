@@ -33,6 +33,7 @@ import Icon from "../Icon";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import { EXTENSION_POINT } from "../avatar/Avatar";
+import { RepositoryCardBeforeTitle } from "@scm-manager/ui-extensions/src/extensionPoints";
 
 type DateProp = Date | string;
 
@@ -72,14 +73,15 @@ const RepositoryEntry: FC<Props> = ({ repository, baseDate }) => {
   const [t] = useTranslation("repos");
   const [openCloneModal, setOpenCloneModal] = useState(false);
 
-  const avatarFactory = binder.getExtension(EXTENSION_POINT);
+  const avatarFactory = binder.getExtension<extensionPoints.AvatarFactory>(EXTENSION_POINT);
 
   const renderContactIcon = () => {
     if (avatarFactory) {
+      // TODO: Add default for name
       return (
         <ContactAvatar
           className="has-rounded-border"
-          src={avatarFactory({ mail: repository.contact })}
+          src={avatarFactory({ mail: repository.contact, name: "" })}
           alt={repository.contact}
         />
       );
@@ -144,7 +146,10 @@ const RepositoryEntry: FC<Props> = ({ repository, baseDate }) => {
   const actions = createContentRight();
   const name = (
     <div className="is-flex">
-      <ExtensionPoint name="repository.card.beforeTitle" props={{ repository }} />
+      <ExtensionPoint<extensionPoints.RepositoryCardBeforeTitle>
+        name="repository.card.beforeTitle"
+        props={{ repository }}
+      />
       <Name>{repository.name}</Name> <RepositoryFlags repository={repository} className="is-hidden-mobile" />
     </div>
   );

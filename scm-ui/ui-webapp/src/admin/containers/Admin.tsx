@@ -43,7 +43,6 @@ import RepositoryRoles from "../roles/containers/RepositoryRoles";
 import SingleRepositoryRole from "../roles/containers/SingleRepositoryRole";
 import CreateRepositoryRole from "../roles/containers/CreateRepositoryRole";
 import { useIndexLinks } from "@scm-manager/ui-api";
-import { AdminNavigation, AdminRoute } from "@scm-manager/ui-extensions/src/extensionPoints";
 
 const Admin: FC = () => {
   const links = useIndexLinks();
@@ -98,7 +97,7 @@ const Admin: FC = () => {
               <Route path={`${url}/roles/:page`} exact>
                 <RepositoryRoles baseUrl={`${url}/roles`} />
               </Route>
-              <ExtensionPoint<AdminRoute> name="admin.route" props={extensionProps} renderAll={true} />
+              <ExtensionPoint<extensionPoints.AdminRoute> name="admin.route" props={extensionProps} renderAll={true} />
             </Switch>
           </PrimaryContentColumn>
           <SecondaryNavigationColumn>
@@ -143,7 +142,11 @@ const Admin: FC = () => {
                 activeWhenMatch={matchesRoles}
                 activeOnlyWhenExact={false}
               />
-              <ExtensionPoint<AdminNavigation> name="admin.navigation" props={extensionProps} renderAll={true} />
+              <ExtensionPoint<extensionPoints.AdminNavigation>
+                name="admin.navigation"
+                props={extensionProps}
+                renderAll={true}
+              />
               <SubNavigation
                 to={`${url}/settings/general`}
                 label={t("admin.menu.settingsNavLink")}
@@ -155,7 +158,7 @@ const Admin: FC = () => {
                   label={t("admin.menu.generalNavLink")}
                   testId="admin-settings-general-link"
                 />
-                <ExtensionPoint<extensionPoints.AdminSettingExtension>
+                <ExtensionPoint<extensionPoints.AdminSetting>
                   name="admin.setting"
                   props={extensionProps}
                   renderAll={true}

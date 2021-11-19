@@ -84,7 +84,7 @@ const Footer: FC<Props> = ({ me, version, links }) => {
   const extensionProps = { me, url: "/me", links };
   let meSectionTile;
   if (me) {
-    if (binder.hasExtension(EXTENSION_POINT)) {
+    if (binder.hasExtension<extensionPoints.AvatarFactory>(EXTENSION_POINT)) {
       meSectionTile = <TitleWithAvatar me={me} />;
     } else {
       meSectionTile = <TitleWithIcon title={me.displayName} icon="user-circle" />;
@@ -105,7 +105,7 @@ const Footer: FC<Props> = ({ me, version, links }) => {
                 <NavLink to="/me/settings/publicKeys" label={t("profile.publicKeysNavLink")} />
               )}
               {me?._links?.apiKeys && <NavLink to="/me/settings/apiKeys" label={t("profile.apiKeysNavLink")} />}
-              <ExtensionPoint<extensionPoints.ProfileSettingExtension>
+              <ExtensionPoint<extensionPoints.ProfileSetting>
                 name="profile.setting"
                 props={extensionProps}
                 renderAll={true}

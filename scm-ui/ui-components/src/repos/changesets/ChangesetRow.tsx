@@ -39,6 +39,103 @@ type Props = {
 const Wrapper = styled.div`
   
   
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  
   // & references parent rule
   // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
   & + & {
@@ -113,6 +210,1425 @@ const Wrapper = styled.div`
   } 
   // & references parent rule
   // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  } 
+  // & references parent rule
+  // have a look at https://cssinjs.org/jss-plugin-nested?v=v10.0.0-alpha.9
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
+  & + & {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(219, 219, 219, 0.5);
+  }
   & + & {
     margin-top: 1rem;
     padding-top: 1rem;
@@ -144,7 +1660,7 @@ const ChangesetRow: FC<Props> = ({ repository, changeset, file }) => {
         </div>
         <div className={classNames("column", "is-flex", "is-justify-content-flex-end", "is-align-items-center")}>
           <ChangesetButtonGroup repository={repository} changeset={changeset} file={file} />
-          <ExtensionPoint<extensionPoints.ChangesetRightExtension>
+          <ExtensionPoint<extensionPoints.ChangesetRight>
             name="changeset.right"
             props={{
               repository,

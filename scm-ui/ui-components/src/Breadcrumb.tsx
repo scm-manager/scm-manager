@@ -32,6 +32,7 @@ import { binder, ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensi
 import Icon from "./Icon";
 import Tooltip from "./Tooltip";
 import copyToClipboard from "./CopyToClipboard";
+import { ReposSourcesEmptyActionbar } from "@scm-manager/ui-extensions/src/extensionPoints";
 
 type Props = {
   repository: Repository;
@@ -50,12 +51,10 @@ const PermaLinkWrapper = styled.span`
   width: 16px;
   height: 16px;
   font-size: 13px;
-
   i {
     color: #dbdbdb;
     opacity: 0.75;
   }
-
   &:hover i {
     color: #b5b5b5;
     opacity: 1;
@@ -63,6 +62,670 @@ const PermaLinkWrapper = styled.span`
 `;
 
 const BreadcrumbNav = styled.nav`
+  flex: 1;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  width: 100%; 
+  flex: 1;
+  display: flex;
+  align-items: center;
+  width: 100%; 
+  flex: 1;
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  /* move slash to end */
+
+  li + li::before {
+    content: none;
+  }
+
+  li:not(:last-child)::after {
+    color: #b5b5b5; //$breadcrumb-item-separator-color
+    content: "\\0002f";
+  }
+
+  li:first-child {
+    margin-left: 0.75rem;
+  }
+
+  /* sizing of each item */
+
+  li {
+    max-width: 375px;
+
+    a {
+      display: initial;
+    }
+  }
+
+  li + li::before {
+    content: none;
+  }
+  li:not(:last-child)::after {
+    color: #b5b5b5; 
+  flex: 1;
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  /* move slash to end */
+
+  li + li::before {
+    content: none;
+  }
+
+  li:not(:last-child)::after {
+    color: #b5b5b5; //$breadcrumb-item-separator-color
+    content: "\\0002f";
+  }
+
+  li:first-child {
+    margin-left: 0.75rem;
+  }
+
+  /* sizing of each item */
+
+  li {
+    max-width: 375px;
+
+    a {
+      display: initial;
+    }
+  }
+    content: "\\0002f";
+  }
+  li:first-child {
+    margin-left: 0.75rem;
+  } 
+  flex: 1;
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  /* move slash to end */
+
+  li + li::before {
+    content: none;
+  }
+
+  li:not(:last-child)::after {
+    color: #b5b5b5; //$breadcrumb-item-separator-color
+    content: "\\0002f";
+  }
+
+  li:first-child {
+    margin-left: 0.75rem;
+  }
+
+  /* sizing of each item */
+
+  li {
+    max-width: 375px;
+
+    a {
+      display: initial;
+    }
+  }
+
+  li {
+    max-width: 375px;
+    a {
+      display: initial;
+    }
+  }
+
+  li + li::before {
+    content: none;
+  }
+  li:not(:last-child)::after {
+    color: #b5b5b5; 
+  flex: 1;
+  display: flex;
+  align-items: center;
+  width: 100%; 
+  flex: 1;
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  /* move slash to end */
+
+  li + li::before {
+    content: none;
+  }
+
+  li:not(:last-child)::after {
+    color: #b5b5b5; //$breadcrumb-item-separator-color
+    content: "\\0002f";
+  }
+
+  li:first-child {
+    margin-left: 0.75rem;
+  }
+
+  /* sizing of each item */
+
+  li {
+    max-width: 375px;
+
+    a {
+      display: initial;
+    }
+  }
+
+  li + li::before {
+    content: none;
+  }
+  li:not(:last-child)::after {
+    color: #b5b5b5; 
+  flex: 1;
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  /* move slash to end */
+
+  li + li::before {
+    content: none;
+  }
+
+  li:not(:last-child)::after {
+    color: #b5b5b5; //$breadcrumb-item-separator-color
+    content: "\\0002f";
+  }
+
+  li:first-child {
+    margin-left: 0.75rem;
+  }
+
+  /* sizing of each item */
+
+  li {
+    max-width: 375px;
+
+    a {
+      display: initial;
+    }
+  }
+    content: "\\0002f";
+  }
+  li:first-child {
+    margin-left: 0.75rem;
+  } 
+  flex: 1;
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  /* move slash to end */
+
+  li + li::before {
+    content: none;
+  }
+
+  li:not(:last-child)::after {
+    color: #b5b5b5; //$breadcrumb-item-separator-color
+    content: "\\0002f";
+  }
+
+  li:first-child {
+    margin-left: 0.75rem;
+  }
+
+  /* sizing of each item */
+
+  li {
+    max-width: 375px;
+
+    a {
+      display: initial;
+    }
+  }
+
+  li {
+    max-width: 375px;
+    a {
+      display: initial;
+    }
+  }
+    content: "\\0002f";
+  }
+  li:first-child {
+    margin-left: 0.75rem;
+  } 
+  flex: 1;
+  display: flex;
+  align-items: center;
+  width: 100%; 
+  flex: 1;
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  /* move slash to end */
+
+  li + li::before {
+    content: none;
+  }
+
+  li:not(:last-child)::after {
+    color: #b5b5b5; //$breadcrumb-item-separator-color
+    content: "\\0002f";
+  }
+
+  li:first-child {
+    margin-left: 0.75rem;
+  }
+
+  /* sizing of each item */
+
+  li {
+    max-width: 375px;
+
+    a {
+      display: initial;
+    }
+  }
+
+  li + li::before {
+    content: none;
+  }
+  li:not(:last-child)::after {
+    color: #b5b5b5; 
+  flex: 1;
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  /* move slash to end */
+
+  li + li::before {
+    content: none;
+  }
+
+  li:not(:last-child)::after {
+    color: #b5b5b5; //$breadcrumb-item-separator-color
+    content: "\\0002f";
+  }
+
+  li:first-child {
+    margin-left: 0.75rem;
+  }
+
+  /* sizing of each item */
+
+  li {
+    max-width: 375px;
+
+    a {
+      display: initial;
+    }
+  }
+    content: "\\0002f";
+  }
+  li:first-child {
+    margin-left: 0.75rem;
+  } 
+  flex: 1;
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  /* move slash to end */
+
+  li + li::before {
+    content: none;
+  }
+
+  li:not(:last-child)::after {
+    color: #b5b5b5; //$breadcrumb-item-separator-color
+    content: "\\0002f";
+  }
+
+  li:first-child {
+    margin-left: 0.75rem;
+  }
+
+  /* sizing of each item */
+
+  li {
+    max-width: 375px;
+
+    a {
+      display: initial;
+    }
+  }
+
+  li {
+    max-width: 375px;
+    a {
+      display: initial;
+    }
+  }
+
+  li {
+    max-width: 375px;
+    a {
+      display: initial;
+    }
+  }
+  li + li::before {
+    content: none;
+  }
+  li:not(:last-child)::after {
+    color: #b5b5b5;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    width: 100%; 
+  flex: 1;
+  display: flex;
+  align-items: center;
+  width: 100%; 
+  flex: 1;
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  /* move slash to end */
+
+  li + li::before {
+    content: none;
+  }
+
+  li:not(:last-child)::after {
+    color: #b5b5b5; //$breadcrumb-item-separator-color
+    content: "\\0002f";
+  }
+
+  li:first-child {
+    margin-left: 0.75rem;
+  }
+
+  /* sizing of each item */
+
+  li {
+    max-width: 375px;
+
+    a {
+      display: initial;
+    }
+  }
+
+  li + li::before {
+    content: none;
+  }
+  li:not(:last-child)::after {
+    color: #b5b5b5; 
+  flex: 1;
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  /* move slash to end */
+
+  li + li::before {
+    content: none;
+  }
+
+  li:not(:last-child)::after {
+    color: #b5b5b5; //$breadcrumb-item-separator-color
+    content: "\\0002f";
+  }
+
+  li:first-child {
+    margin-left: 0.75rem;
+  }
+
+  /* sizing of each item */
+
+  li {
+    max-width: 375px;
+
+    a {
+      display: initial;
+    }
+  }
+    content: "\\0002f";
+  }
+  li:first-child {
+    margin-left: 0.75rem;
+  } 
+  flex: 1;
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  /* move slash to end */
+
+  li + li::before {
+    content: none;
+  }
+
+  li:not(:last-child)::after {
+    color: #b5b5b5; //$breadcrumb-item-separator-color
+    content: "\\0002f";
+  }
+
+  li:first-child {
+    margin-left: 0.75rem;
+  }
+
+  /* sizing of each item */
+
+  li {
+    max-width: 375px;
+
+    a {
+      display: initial;
+    }
+  }
+
+  li {
+    max-width: 375px;
+    a {
+      display: initial;
+    }
+  }
+
+    li + li::before {
+      content: none;
+    }
+    li:not(:last-child)::after {
+      color: #b5b5b5; 
+  flex: 1;
+  display: flex;
+  align-items: center;
+  width: 100%; 
+  flex: 1;
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  /* move slash to end */
+
+  li + li::before {
+    content: none;
+  }
+
+  li:not(:last-child)::after {
+    color: #b5b5b5; //$breadcrumb-item-separator-color
+    content: "\\0002f";
+  }
+
+  li:first-child {
+    margin-left: 0.75rem;
+  }
+
+  /* sizing of each item */
+
+  li {
+    max-width: 375px;
+
+    a {
+      display: initial;
+    }
+  }
+
+  li + li::before {
+    content: none;
+  }
+  li:not(:last-child)::after {
+    color: #b5b5b5; 
+  flex: 1;
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  /* move slash to end */
+
+  li + li::before {
+    content: none;
+  }
+
+  li:not(:last-child)::after {
+    color: #b5b5b5; //$breadcrumb-item-separator-color
+    content: "\\0002f";
+  }
+
+  li:first-child {
+    margin-left: 0.75rem;
+  }
+
+  /* sizing of each item */
+
+  li {
+    max-width: 375px;
+
+    a {
+      display: initial;
+    }
+  }
+    content: "\\0002f";
+  }
+  li:first-child {
+    margin-left: 0.75rem;
+  } 
+  flex: 1;
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  /* move slash to end */
+
+  li + li::before {
+    content: none;
+  }
+
+  li:not(:last-child)::after {
+    color: #b5b5b5; //$breadcrumb-item-separator-color
+    content: "\\0002f";
+  }
+
+  li:first-child {
+    margin-left: 0.75rem;
+  }
+
+  /* sizing of each item */
+
+  li {
+    max-width: 375px;
+
+    a {
+      display: initial;
+    }
+  }
+
+  li {
+    max-width: 375px;
+    a {
+      display: initial;
+    }
+  }
+      content: "\\0002f";
+    }
+    li:first-child {
+      margin-left: 0.75rem;
+    } 
+  flex: 1;
+  display: flex;
+  align-items: center;
+  width: 100%; 
+  flex: 1;
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  /* move slash to end */
+
+  li + li::before {
+    content: none;
+  }
+
+  li:not(:last-child)::after {
+    color: #b5b5b5; //$breadcrumb-item-separator-color
+    content: "\\0002f";
+  }
+
+  li:first-child {
+    margin-left: 0.75rem;
+  }
+
+  /* sizing of each item */
+
+  li {
+    max-width: 375px;
+
+    a {
+      display: initial;
+    }
+  }
+
+  li + li::before {
+    content: none;
+  }
+  li:not(:last-child)::after {
+    color: #b5b5b5; 
+  flex: 1;
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  /* move slash to end */
+
+  li + li::before {
+    content: none;
+  }
+
+  li:not(:last-child)::after {
+    color: #b5b5b5; //$breadcrumb-item-separator-color
+    content: "\\0002f";
+  }
+
+  li:first-child {
+    margin-left: 0.75rem;
+  }
+
+  /* sizing of each item */
+
+  li {
+    max-width: 375px;
+
+    a {
+      display: initial;
+    }
+  }
+    content: "\\0002f";
+  }
+  li:first-child {
+    margin-left: 0.75rem;
+  } 
   flex: 1;
   display: flex;
   align-items: center;
@@ -85,6 +748,380 @@ const BreadcrumbNav = styled.nav`
       display: initial;
     }
   }
+
+  li {
+    max-width: 375px;
+    a {
+      display: initial;
+    }
+  }
+
+    li {
+      max-width: 375px;
+      a {
+        display: initial;
+      }
+    }
+    content: "\\0002f";
+  }
+  li:first-child {
+    margin-left: 0.75rem;
+  }
+  flex: 1;
+  display: flex;
+  align-items: center;
+  width: 100%; 
+  flex: 1;
+  display: flex;
+  align-items: center;
+  width: 100%; 
+  flex: 1;
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  /* move slash to end */
+
+  li + li::before {
+    content: none;
+  }
+
+  li:not(:last-child)::after {
+    color: #b5b5b5; //$breadcrumb-item-separator-color
+    content: "\\0002f";
+  }
+
+  li:first-child {
+    margin-left: 0.75rem;
+  }
+
+  /* sizing of each item */
+
+  li {
+    max-width: 375px;
+
+    a {
+      display: initial;
+    }
+  }
+
+  li + li::before {
+    content: none;
+  }
+  li:not(:last-child)::after {
+    color: #b5b5b5; 
+  flex: 1;
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  /* move slash to end */
+
+  li + li::before {
+    content: none;
+  }
+
+  li:not(:last-child)::after {
+    color: #b5b5b5; //$breadcrumb-item-separator-color
+    content: "\\0002f";
+  }
+
+  li:first-child {
+    margin-left: 0.75rem;
+  }
+
+  /* sizing of each item */
+
+  li {
+    max-width: 375px;
+
+    a {
+      display: initial;
+    }
+  }
+    content: "\\0002f";
+  }
+  li:first-child {
+    margin-left: 0.75rem;
+  } 
+  flex: 1;
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  /* move slash to end */
+
+  li + li::before {
+    content: none;
+  }
+
+  li:not(:last-child)::after {
+    color: #b5b5b5; //$breadcrumb-item-separator-color
+    content: "\\0002f";
+  }
+
+  li:first-child {
+    margin-left: 0.75rem;
+  }
+
+  /* sizing of each item */
+
+  li {
+    max-width: 375px;
+
+    a {
+      display: initial;
+    }
+  }
+
+  li {
+    max-width: 375px;
+    a {
+      display: initial;
+    }
+  }
+
+  li + li::before {
+    content: none;
+  }
+  li:not(:last-child)::after {
+    color: #b5b5b5; 
+  flex: 1;
+  display: flex;
+  align-items: center;
+  width: 100%; 
+  flex: 1;
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  /* move slash to end */
+
+  li + li::before {
+    content: none;
+  }
+
+  li:not(:last-child)::after {
+    color: #b5b5b5; //$breadcrumb-item-separator-color
+    content: "\\0002f";
+  }
+
+  li:first-child {
+    margin-left: 0.75rem;
+  }
+
+  /* sizing of each item */
+
+  li {
+    max-width: 375px;
+
+    a {
+      display: initial;
+    }
+  }
+
+  li + li::before {
+    content: none;
+  }
+  li:not(:last-child)::after {
+    color: #b5b5b5; 
+  flex: 1;
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  /* move slash to end */
+
+  li + li::before {
+    content: none;
+  }
+
+  li:not(:last-child)::after {
+    color: #b5b5b5; //$breadcrumb-item-separator-color
+    content: "\\0002f";
+  }
+
+  li:first-child {
+    margin-left: 0.75rem;
+  }
+
+  /* sizing of each item */
+
+  li {
+    max-width: 375px;
+
+    a {
+      display: initial;
+    }
+  }
+    content: "\\0002f";
+  }
+  li:first-child {
+    margin-left: 0.75rem;
+  } 
+  flex: 1;
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  /* move slash to end */
+
+  li + li::before {
+    content: none;
+  }
+
+  li:not(:last-child)::after {
+    color: #b5b5b5; //$breadcrumb-item-separator-color
+    content: "\\0002f";
+  }
+
+  li:first-child {
+    margin-left: 0.75rem;
+  }
+
+  /* sizing of each item */
+
+  li {
+    max-width: 375px;
+
+    a {
+      display: initial;
+    }
+  }
+
+  li {
+    max-width: 375px;
+    a {
+      display: initial;
+    }
+  }
+    content: "\\0002f";
+  }
+  li:first-child {
+    margin-left: 0.75rem;
+  } 
+  flex: 1;
+  display: flex;
+  align-items: center;
+  width: 100%; 
+  flex: 1;
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  /* move slash to end */
+
+  li + li::before {
+    content: none;
+  }
+
+  li:not(:last-child)::after {
+    color: #b5b5b5; //$breadcrumb-item-separator-color
+    content: "\\0002f";
+  }
+
+  li:first-child {
+    margin-left: 0.75rem;
+  }
+
+  /* sizing of each item */
+
+  li {
+    max-width: 375px;
+
+    a {
+      display: initial;
+    }
+  }
+
+  li + li::before {
+    content: none;
+  }
+  li:not(:last-child)::after {
+    color: #b5b5b5; 
+  flex: 1;
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  /* move slash to end */
+
+  li + li::before {
+    content: none;
+  }
+
+  li:not(:last-child)::after {
+    color: #b5b5b5; //$breadcrumb-item-separator-color
+    content: "\\0002f";
+  }
+
+  li:first-child {
+    margin-left: 0.75rem;
+  }
+
+  /* sizing of each item */
+
+  li {
+    max-width: 375px;
+
+    a {
+      display: initial;
+    }
+  }
+    content: "\\0002f";
+  }
+  li:first-child {
+    margin-left: 0.75rem;
+  } 
+  flex: 1;
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  /* move slash to end */
+
+  li + li::before {
+    content: none;
+  }
+
+  li:not(:last-child)::after {
+    color: #b5b5b5; //$breadcrumb-item-separator-color
+    content: "\\0002f";
+  }
+
+  li:first-child {
+    margin-left: 0.75rem;
+  }
+
+  /* sizing of each item */
+
+  li {
+    max-width: 375px;
+
+    a {
+      display: initial;
+    }
+  }
+
+  li {
+    max-width: 375px;
+    a {
+      display: initial;
+    }
+  }
+
+  li {
+    max-width: 375px;
+    a {
+      display: initial;
+    }
+  }
+  li {
+    max-width: 375px;
+    a {
+      display: initial;
+    }
+  }
 `;
 
 const HomeIcon = styled(Icon)`
@@ -92,6 +1129,8 @@ const HomeIcon = styled(Icon)`
 `;
 
 const ActionBar = styled.div`
+  
+  
   /* ensure space between action bar items */
 
   & > * {
@@ -100,6 +1139,119 @@ const ActionBar = styled.div`
      * Those classes overwrite the margin which is ok, if the plugin is the only one which is using the actionbar.
      * But it looks terrible if another plugin use the actionbar, which does not use field and control classes.
      */
+    margin: 0 0.75rem 0 0 !important;
+  }
+
+  & > * {
+    
+  /* ensure space between action bar items */
+
+  & > * {
+    /* 
+     * We have to use important, because plugins could use field or control classes like the editor-plugin does.
+     * Those classes overwrite the margin which is ok, if the plugin is the only one which is using the actionbar.
+     * But it looks terrible if another plugin use the actionbar, which does not use field and control classes.
+     */
+    margin: 0 0.75rem 0 0 !important;
+  }
+
+    margin: 0 0.75rem 0 0 !important;
+  }
+
+  & > * {
+    
+  
+  /* ensure space between action bar items */
+
+  & > * {
+    /* 
+     * We have to use important, because plugins could use field or control classes like the editor-plugin does.
+     * Those classes overwrite the margin which is ok, if the plugin is the only one which is using the actionbar.
+     * But it looks terrible if another plugin use the actionbar, which does not use field and control classes.
+     */
+    margin: 0 0.75rem 0 0 !important;
+  }
+
+  & > * {
+    
+  /* ensure space between action bar items */
+
+  & > * {
+    /* 
+     * We have to use important, because plugins could use field or control classes like the editor-plugin does.
+     * Those classes overwrite the margin which is ok, if the plugin is the only one which is using the actionbar.
+     * But it looks terrible if another plugin use the actionbar, which does not use field and control classes.
+     */
+    margin: 0 0.75rem 0 0 !important;
+  }
+
+    margin: 0 0.75rem 0 0 !important;
+  }
+
+    margin: 0 0.75rem 0 0 !important;
+  }
+  & > * {
+    
+  
+  /* ensure space between action bar items */
+
+  & > * {
+    /* 
+     * We have to use important, because plugins could use field or control classes like the editor-plugin does.
+     * Those classes overwrite the margin which is ok, if the plugin is the only one which is using the actionbar.
+     * But it looks terrible if another plugin use the actionbar, which does not use field and control classes.
+     */
+    margin: 0 0.75rem 0 0 !important;
+  }
+
+  & > * {
+    
+  /* ensure space between action bar items */
+
+  & > * {
+    /* 
+     * We have to use important, because plugins could use field or control classes like the editor-plugin does.
+     * Those classes overwrite the margin which is ok, if the plugin is the only one which is using the actionbar.
+     * But it looks terrible if another plugin use the actionbar, which does not use field and control classes.
+     */
+    margin: 0 0.75rem 0 0 !important;
+  }
+
+    margin: 0 0.75rem 0 0 !important;
+  }
+
+    & > * {
+      
+  
+  /* ensure space between action bar items */
+
+  & > * {
+    /* 
+     * We have to use important, because plugins could use field or control classes like the editor-plugin does.
+     * Those classes overwrite the margin which is ok, if the plugin is the only one which is using the actionbar.
+     * But it looks terrible if another plugin use the actionbar, which does not use field and control classes.
+     */
+    margin: 0 0.75rem 0 0 !important;
+  }
+
+  & > * {
+    
+  /* ensure space between action bar items */
+
+  & > * {
+    /* 
+     * We have to use important, because plugins could use field or control classes like the editor-plugin does.
+     * Those classes overwrite the margin which is ok, if the plugin is the only one which is using the actionbar.
+     * But it looks terrible if another plugin use the actionbar, which does not use field and control classes.
+     */
+    margin: 0 0.75rem 0 0 !important;
+  }
+
+    margin: 0 0.75rem 0 0 !important;
+  }
+
+      margin: 0 0.75rem 0 0 !important;
+    }
     margin: 0 0.75rem 0 0 !important;
   }
 `;
@@ -214,7 +1366,7 @@ const Breadcrumb: FC<Props> = ({
           </li>
           {pathSection()}
         </ul>
-        <PermaLinkWrapper className="ml-1" tabIndex={0} onKeyDown={e => e.key === "Enter" && copySource()}>
+        <PermaLinkWrapper className="ml-1" tabIndex={0} onKeyDown={(e) => e.key === "Enter" && copySource()}>
           {copying ? (
             <Icon name="spinner fa-spin" alt={t("breadcrumb.loading")} />
           ) : (
@@ -233,18 +1385,30 @@ const Breadcrumb: FC<Props> = ({
     branch: branch ? branch : defaultBranch,
     path,
     sources,
-    repository
+    repository,
   };
 
   const renderExtensionPoints = () => {
     if (
-      binder.hasExtension<extensionPoints.ReposSourcesEmptyActionbar>("repos.sources.empty.actionbar") &&
+      binder.hasExtension<extensionPoints.ReposSourcesEmptyActionbar>("repos.sources.empty.actionbar", extProps) &&
       sources?._embedded?.children?.length === 0
     ) {
-      return <ExtensionPoint name="repos.sources.empty.actionbar" props={{ repository, sources }} renderAll={true} />;
+      return (
+        <ExtensionPoint<extensionPoints.ReposSourcesEmptyActionbar>
+          name="repos.sources.empty.actionbar"
+          props={extProps}
+          renderAll={true}
+        />
+      );
     }
-    if (binder.hasExtension<extensionPoints.ReposSourcesActionbar>("repos.sources.actionbar")) {
-      return <ExtensionPoint name="repos.sources.actionbar" props={extProps} renderAll={true} />;
+    if (binder.hasExtension<extensionPoints.ReposSourcesActionbar>("repos.sources.actionbar", extProps)) {
+      return (
+        <ExtensionPoint<extensionPoints.ReposSourcesActionbar>
+          name="repos.sources.actionbar"
+          props={extProps}
+          renderAll={true}
+        />
+      );
     }
     return null;
   };

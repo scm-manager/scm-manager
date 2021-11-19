@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-type Predicate<P extends Record<any, any> = Record<any, any>> = (props?: P) => boolean;
+type Predicate<P extends Record<any, any> = Record<any, any>> = (props: P) => unknown;
 
 type ExtensionRegistration<P, T> = {
   predicate: Predicate<P>;

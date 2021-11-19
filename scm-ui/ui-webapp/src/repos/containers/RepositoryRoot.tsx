@@ -115,7 +115,7 @@ const RepositoryRoot = () => {
     match
   };
 
-  const redirectUrlFactory = binder.getExtension("repository.redirect", props);
+  const redirectUrlFactory = binder.getExtension<extensionPoints.RepositoryRedirect>("repository.redirect", props);
   let redirectedUrl;
   if (redirectUrlFactory) {
     redirectedUrl = url + redirectUrlFactory(props);
@@ -288,12 +288,16 @@ const RepositoryRoot = () => {
               <Route path={`${url}/compare/:sourceType/:sourceName`}>
                 <CompareRoot repository={repository} baseUrl={`${url}/compare`} />
               </Route>
-              <ExtensionPoint name="repository.route" props={extensionProps} renderAll={true} />
+              <ExtensionPoint<extensionPoints.RepositoryRoute>
+                name="repository.route"
+                props={extensionProps}
+                renderAll={true}
+              />
             </Switch>
           </PrimaryContentColumn>
           <SecondaryNavigationColumn>
             <SecondaryNavigation label={t("repositoryRoot.menu.navigationLabel")}>
-              <ExtensionPoint<extensionPoints.RepositoryNavigationTopLevelExtension>
+              <ExtensionPoint<extensionPoints.RepositoryNavigationTopLevel>
                 name="repository.navigation.topLevel"
                 props={extensionProps}
                 renderAll={true}
@@ -334,7 +338,7 @@ const RepositoryRoot = () => {
                 activeOnlyWhenExact={false}
                 title={t("repositoryRoot.menu.sourcesNavLink")}
               />
-              <ExtensionPoint<extensionPoints.RepositoryNavigationExtension>
+              <ExtensionPoint<extensionPoints.RepositoryNavigation>
                 name="repository.navigation"
                 props={extensionProps}
                 renderAll={true}
@@ -346,7 +350,7 @@ const RepositoryRoot = () => {
               >
                 <EditRepoNavLink repository={repository} editUrl={`${url}/settings/general`} />
                 <PermissionsNavLink permissionUrl={`${url}/settings/permissions`} repository={repository} />
-                <ExtensionPoint<extensionPoints.RepositorySettingExtension>
+                <ExtensionPoint<extensionPoints.RepositorySetting>
                   name="repository.setting"
                   props={extensionProps}
                   renderAll={true}

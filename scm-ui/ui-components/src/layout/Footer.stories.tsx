@@ -24,7 +24,7 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
 import Footer from "./Footer";
-import { Binder, BinderContext } from "@scm-manager/ui-extensions";
+import { Binder, BinderContext, extensionPoints } from "@scm-manager/ui-extensions";
 import { Me } from "@scm-manager/ui-types";
 import { EXTENSION_POINT } from "../avatar/Avatar";
 // @ts-ignore ignore unknown png
@@ -43,11 +43,8 @@ const trillian: Me = {
   _links: {},
 };
 
-const bindAvatar = (binder: Binder, avatar: string) => {
-  binder.bind(EXTENSION_POINT, () => {
-    return avatar;
-  });
-};
+const bindAvatar = (binder: Binder, avatar: string) =>
+  binder.bind<extensionPoints.AvatarFactory>(EXTENSION_POINT, () => avatar);
 
 const bindLinks = (binder: Binder) => {
   binder.bind("footer.information", () => <ExternalNavLink to="#" label="REST API" />);

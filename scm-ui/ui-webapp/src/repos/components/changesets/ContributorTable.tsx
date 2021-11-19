@@ -25,8 +25,8 @@ import React, { FC } from "react";
 import { Changeset, Person } from "@scm-manager/ui-types";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
-import { useBinder } from "@scm-manager/ui-extensions";
-import { ContributorAvatar, CommaSeparatedList } from "@scm-manager/ui-components";
+import { extensionPoints, useBinder } from "@scm-manager/ui-extensions";
+import { CommaSeparatedList, ContributorAvatar } from "@scm-manager/ui-components";
 
 type Props = {
   changeset: Changeset;
@@ -39,7 +39,7 @@ const SizedTd = styled.td`
 const Contributor: FC<{ person: Person }> = ({ person }) => {
   const [t] = useTranslation("repos");
   const binder = useBinder();
-  const avatarFactory = binder.getExtension("avatar.factory");
+  const avatarFactory = binder.getExtension<extensionPoints.AvatarFactory>("avatar.factory");
   let prefix = null;
   if (avatarFactory) {
     const avatar = avatarFactory(person);

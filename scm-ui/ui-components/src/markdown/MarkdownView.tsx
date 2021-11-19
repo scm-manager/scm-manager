@@ -47,6 +47,7 @@ import slug from "rehype-slug";
 import merge from "deepmerge";
 import { createComponentList } from "./createComponentList";
 import { ProtocolLinkRendererExtensionMap } from "./markdownExtensions";
+import { MarkdownRendererFactory } from "@scm-manager/ui-extensions/src/extensionPoints";
 
 type Props = RouteComponentProps &
   WithTranslation & {
@@ -147,8 +148,9 @@ class MarkdownView extends React.Component<Props, State> {
       mdastPlugins = [],
     } = this.props;
 
-    const rendererFactory = this.context.getExtension("markdown-renderer-factory");
-    let remarkRendererList = renderers;
+    const rendererFactory =
+      this.context.getExtension<extensionPoints.MarkdownRendererFactory>("markdown-renderer-factory");
+    let remarkRendererList: Record<string, React.ComponentType<any>> = renderers;
 
     if (rendererFactory) {
       remarkRendererList = rendererFactory(renderContext);

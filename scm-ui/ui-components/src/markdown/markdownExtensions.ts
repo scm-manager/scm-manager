@@ -21,7 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import { extensionPoints } from "@scm-manager/ui-extensions";
+import { extensionPoints, ExtractProps } from "@scm-manager/ui-extensions";
+
+export type ProtocolLinkRendererProps<Protocol extends string | undefined = undefined> = ExtractProps<
+  extensionPoints.MarkdownLinkProtocolRenderer<Protocol>["type"]["renderer"]
+>;
+
+/**
+ * @deprecated use {@link MarkdownLinkProtocolRenderer}`["type"]` instead
+ */
+export type ProtocolLinkRendererExtension = extensionPoints.MarkdownLinkProtocolRenderer["type"];
 
 export type ProtocolLinkRendererExtensionMap = {
   [protocol: string]: extensionPoints.MarkdownLinkProtocolRenderer["type"]["renderer"] | undefined;

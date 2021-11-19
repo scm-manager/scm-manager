@@ -28,9 +28,9 @@ import RepositoryHit from "./RepositoryHit";
 import GenericHit from "./GenericHit";
 import UserHit from "./UserHit";
 import GroupHit from "./GroupHit";
-import { Notification, HitProps } from "@scm-manager/ui-components";
+import { HitProps, Notification } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 
 type Props = {
   type: string;
@@ -62,7 +62,7 @@ const InternalHitRenderer: FC<HitComponentProps> = ({ type, hit }) => {
 };
 
 const HitComponent: FC<HitComponentProps> = ({ hit, type }) => (
-  <ExtensionPoint name={`search.hit.${type}.renderer`} props={{ hit }}>
+  <ExtensionPoint<extensionPoints.SearchHitRenderer> name={`search.hit.${type}.renderer`} props={{ hit }}>
     <InternalHitRenderer type={type} hit={hit} />
   </ExtensionPoint>
 );

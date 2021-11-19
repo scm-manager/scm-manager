@@ -36,7 +36,7 @@ const ChangesetDescription: FC<Props> = ({ changeset, value }) => {
   const binder = useBinder();
 
   const replacements: ((changeset: Changeset, value: string) => Replacement[])[] =
-    binder.getExtensions<extensionPoints.ChangesetDescriptionTokensExtension>("changeset.description.tokens", {
+    binder.getExtensions<extensionPoints.ChangesetDescriptionTokens>("changeset.description.tokens", {
       changeset,
       value,
     });

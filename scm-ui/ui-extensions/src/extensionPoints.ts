@@ -30,23 +30,27 @@ import {
   File,
   Group,
   HalRepresentation,
+  Hit,
   IndexResources,
   Links,
   Me,
+  Namespace,
   NamespaceStrategies,
+  Person,
   Plugin,
   Repository,
   RepositoryCreation,
   RepositoryRole,
   RepositoryRoleBase,
   RepositoryTypeCollection,
+  Tag,
   User,
 } from "@scm-manager/ui-types";
 import { ExtensionPointDefinition } from "./binder";
 import { RenderableExtensionPointDefinition, SimpleRenderableDynamicExtensionPointDefinition } from "./ExtensionPoint";
 import { Replacement } from "@scm-manager/ui-components";
-
-type ExtractProps<T> = T extends React.ComponentType<infer U> ? U : never;
+import ExtractProps from "./extractProps";
+import { TooltipLocation } from "@scm-manager/ui-components/src/Tooltip";
 
 type RepositoryCreatorSubFormProps = {
   repository: RepositoryCreation;
@@ -79,7 +83,10 @@ export type RepositoryCreator = ExtensionPointDefinition<
   }
 >;
 
-export type RepositoryFlags = ExtensionPointDefinition<"repository.flags", { repository: Repository }>;
+export type RepositoryFlags = RenderableExtensionPointDefinition<
+  "repository.flags",
+  { repository: Repository; tooltipLocation?: TooltipLocation }
+>;
 
 /**
  * @deprecated use {@link ReposSourcesActionbar}`["props"]` instead
@@ -88,8 +95,8 @@ export type ReposSourcesActionbarExtensionProps = ReposSourcesActionbar["props"]
 /**
  * @deprecated use {@link ReposSourcesActionbar} instead
  */
-export type ReposSourcesActionbarExtension = React.ComponentType<ReposSourcesActionbarExtensionProps>;
-export type ReposSourcesActionbar = ExtensionPointDefinition<
+export type ReposSourcesActionbarExtension = ReposSourcesActionbar;
+export type ReposSourcesActionbar = RenderableExtensionPointDefinition<
   "repos.sources.actionbar",
   {
     baseUrl: string;
@@ -109,7 +116,7 @@ export type ReposSourcesEmptyActionbarExtensionProps = ReposSourcesEmptyActionba
  * @deprecated use {@link ReposSourcesEmptyActionbar} instead
  */
 export type ReposSourcesEmptyActionbarExtension = ReposSourcesEmptyActionbar;
-export type ReposSourcesEmptyActionbar = ExtensionPointDefinition<
+export type ReposSourcesEmptyActionbar = RenderableExtensionPointDefinition<
   "repos.sources.empty.actionbar",
   {
     sources: File;
@@ -425,6 +432,10 @@ export type RepositoryDetailsInformation = RenderableExtensionPointDefinition<
   { repository: Repository }
 >;
 
+/**
+ * - Location: At sources viewer
+ * - can  be used to render a special source that is not an image or a source code
+ */
 export type RepositorySourcesView = RenderableExtensionPointDefinition<
   "repos.sources.view",
   { file: File; contentType: string; revision: string; basePath: string }
@@ -475,4 +486,133 @@ export type MarkdownLinkProtocolRenderer<Protocol extends string | undefined = u
       href: string;
     }>;
   }
+>;
+
+/**
+ * Used to determine an avatar image url from a given {@link Person}.
+ *
+ * @see https://github.com/scm-manager/scm-gravatar-plugin
+ */
+export type AvatarFactory = ExtensionPointDefinition<"avatar.factory", (person: Person) => string | undefined>;
+
+/**
+ * - Location: At every changeset (detailed view as well as changeset overview)
+ * - can be used to add avatar (such as gravatar) for each changeset
+ *
+ * @deprecated Has no effect, use {@link AvatarFactory} instead
+ */
+export type ChangesetAvatarFactory = ExtensionPointDefinition<
+  "changeset.avatar-factory",
+  (changeset: Changeset) => void
+>;
+
+type MainRedirectProps = {
+  me: Me;
+  authenticated?: boolean;
+};
+
+/**
+ * - Extension Point for a link factory that provide the Redirect Link
+ * - Actually used from the activity plugin: binder.bind("main.redirect", () => "/activity");
+ */
+export type MainRedirect = ExtensionPointDefinition<
+  "main.redirect",
+  (props: MainRedirectProps) => string,
+  MainRedirectProps
+>;
+
+/**
+ * - A Factory function to create markdown [renderer](https://github.com/rexxars/react-markdown#node-types)
+ * - The factory function will be called with a renderContext parameter of type Object. this parameter is given as a prop for the {@link MarkdownView} component.
+ *
+ * @deprecated Use {@link MarkdownCodeRenderer} or {@link MarkdownLinkProtocolRenderer} instead
+ */
+export type MarkdownRendererFactory = ExtensionPointDefinition<
+  "markdown-renderer-factory",
+  (renderContext: unknown) => Record<string, React.ComponentType<any>>
+>;
+
+export type RepositoryCardBeforeTitle = RenderableExtensionPointDefinition<
+  "repository.card.beforeTitle",
+  { repository: Repository }
+>;
+
+export type RepositoryCreationInitialization = RenderableExtensionPointDefinition<
+  "repos.create.initialize",
+  {
+    repository: Repository;
+    setCreationContextEntry: (key: string, value: any) => void;
+    indexResources: Partial<HalRepresentation> & {
+      links?: Links;
+      version?: string;
+      initialization?: string;
+    };
+  }
+>;
+
+export type NamespaceTopLevelNavigation = RenderableExtensionPointDefinition<
+  "namespace.navigation.topLevel",
+  { namespace: Namespace; url: string }
+>;
+
+export type NamespaceRoute = RenderableExtensionPointDefinition<
+  "namespace.route",
+  { namespace: Namespace; url: string }
+>;
+
+export type NamespaceSetting = RenderableExtensionPointDefinition<
+  "namespace.setting",
+  { namespace: Namespace; url: string }
+>;
+
+export type RepositoryTagDetailsInformation = RenderableExtensionPointDefinition<
+  "repos.tag-details.information",
+  { repository: Repository; tag: Tag }
+>;
+
+export type SearchHitRenderer<Type extends string | undefined = undefined> = RenderableExtensionPointDefinition<
+  Type extends string ? `search.hit.${Type}.renderer` : `search.hit.${string}.renderer`,
+  { hit: Hit }
+>;
+
+export type RepositorySourcesContentDownloadButton = RenderableExtensionPointDefinition<
+  "repos.sources.content.downloadButton",
+  { repository: Repository; file: File }
+>;
+
+export type RepositoryRoute = RenderableExtensionPointDefinition<
+  "repository.route",
+  { repository: Repository; url: string; indexLinks: Links }
+>;
+
+export type InitializationStepAdminAccount = RenderableExtensionPointDefinition<
+  "initialization.step.adminAccount",
+  {
+    data: HalRepresentation;
+  }
+>;
+
+type RepositoryRedirectProps = {
+  namespace: string;
+  name: string;
+  repository: Repository;
+  loading: false;
+  error: null;
+  repoLink: string;
+  indexLinks: Links;
+  match: {
+    params: {
+      namespace: string;
+      name: string;
+    };
+    isExact: boolean;
+    path: string;
+    url: string;
+  };
+};
+
+export type RepositoryRedirect = ExtensionPointDefinition<
+  "repository.redirect",
+  (props: RepositoryRedirectProps) => string,
+  RepositoryRedirectProps
 >;

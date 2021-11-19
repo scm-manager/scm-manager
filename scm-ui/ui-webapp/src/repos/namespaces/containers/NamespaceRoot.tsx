@@ -34,12 +34,12 @@ import {
   SecondaryNavigation,
   SecondaryNavigationColumn,
   StateMenuContextProvider,
-  SubNavigation
+  SubNavigation,
+  urls,
 } from "@scm-manager/ui-components";
 import Permissions from "../../permissions/containers/Permissions";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import PermissionsNavLink from "./PermissionsNavLink";
-import { urls } from "@scm-manager/ui-components";
 import { useNamespace } from "@scm-manager/ui-api";
 
 type Params = {
@@ -81,15 +81,27 @@ const NamespaceRoot: FC = () => {
           </PrimaryContentColumn>
           <SecondaryNavigationColumn>
             <SecondaryNavigation label={t("namespaceRoot.menu.navigationLabel")}>
-              <ExtensionPoint name="namespace.navigation.topLevel" props={extensionProps} renderAll={true} />
-              <ExtensionPoint name="namespace.route" props={extensionProps} renderAll={true} />
+              <ExtensionPoint<extensionPoints.NamespaceTopLevelNavigation>
+                name="namespace.navigation.topLevel"
+                props={extensionProps}
+                renderAll={true}
+              />
+              <ExtensionPoint<extensionPoints.NamespaceRoute>
+                name="namespace.route"
+                props={extensionProps}
+                renderAll={true}
+              />
               <SubNavigation
                 to={`${url}/settings`}
                 label={t("namespaceRoot.menu.settingsNavLink")}
                 title={t("namespaceRoot.menu.settingsNavLink")}
               >
                 <PermissionsNavLink permissionUrl={`${url}/settings/permissions`} namespace={namespace} />
-                <ExtensionPoint name="namespace.setting" props={extensionProps} renderAll={true} />
+                <ExtensionPoint<extensionPoints.NamespaceSetting>
+                  name="namespace.setting"
+                  props={extensionProps}
+                  renderAll={true}
+                />
               </SubNavigation>
             </SecondaryNavigation>
           </SecondaryNavigationColumn>

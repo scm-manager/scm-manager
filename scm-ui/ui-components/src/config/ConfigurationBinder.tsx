@@ -27,6 +27,7 @@ import { NavLink } from "../navigation";
 import { Route } from "react-router-dom";
 import { useTranslation, WithTranslation, withTranslation } from "react-i18next";
 import { Link, Links, Repository } from "@scm-manager/ui-types";
+import { RepositoryRoute } from "@scm-manager/ui-extensions/src/extensionPoints";
 
 type GlobalRouteProps = {
   url: string;
@@ -58,7 +59,7 @@ class ConfigurationBinder {
   bindGlobal(to: string, labelI18nKey: string, linkName: string, ConfigurationComponent: any) {
     // create predicate based on the link name of the index resource
     // if the linkname is not available, the navigation link and the route are not bound to the extension points
-    const configPredicate = (props: any) => {
+    const configPredicate = (props: extensionPoints.AdminSetting["props"]) => {
       return props.links && props.links[linkName];
     };
 
@@ -83,13 +84,13 @@ class ConfigurationBinder {
     };
 
     // bind config route to extension point
-    binder.bind("admin.route", ConfigRoute, configPredicate);
+    binder.bind<extensionPoints.AdminRoute>("admin.route", ConfigRoute, configPredicate);
   }
 
   bindRepository(to: string, labelI18nKey: string, linkName: string, RepositoryComponent: any) {
     // create predicate based on the link name of the current repository route
     // if the linkname is not available, the navigation link and the route are not bound to the extension points
-    const repoPredicate = (props: any) => {
+    const repoPredicate = (props: extensionPoints.RepositoryRoute["props"]) => {
       return props.repository && props.repository._links && props.repository._links[linkName];
     };
 
@@ -113,13 +114,13 @@ class ConfigurationBinder {
     };
 
     // bind config route to extension point
-    binder.bind("repository.route", RepoRoute, repoPredicate);
+    binder.bind<extensionPoints.RepositoryRoute>("repository.route", RepoRoute, repoPredicate);
   }
 
   bindRepositorySetting(to: string, labelI18nKey: string, linkName: string, RepositoryComponent: any) {
     // create predicate based on the link name of the current repository route
     // if the linkname is not available, the navigation link and the route are not bound to the extension points
-    const repoPredicate = (props: any) => {
+    const repoPredicate = (props: extensionPoints.RepositoryRoute["props"]) => {
       return props.repository && props.repository._links && props.repository._links[linkName];
     };
 
@@ -143,7 +144,7 @@ class ConfigurationBinder {
     };
 
     // bind config route to extension point
-    binder.bind("repository.route", RepoRoute, repoPredicate);
+    binder.bind<extensionPoints.RepositoryRoute>("repository.route", RepoRoute, repoPredicate);
   }
 }
 

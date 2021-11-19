@@ -206,7 +206,7 @@ const ChangesetDetails: FC<Props> = ({ changeset, repository, fileControlFactory
           {description.message.split("\n").map((item, key) => {
             return (
               <span key={key}>
-                <ExtensionPoint
+                <ExtensionPoint<extensionPoints.ChangesetDescription>
                   name="changeset.description"
                   props={{
                     changeset,

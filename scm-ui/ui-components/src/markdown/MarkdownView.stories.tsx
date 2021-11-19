@@ -39,7 +39,7 @@ import Title from "../layout/Title";
 import { Subtitle } from "../layout";
 import { MemoryRouter } from "react-router-dom";
 import { Binder, BinderContext, extensionPoints } from "@scm-manager/ui-extensions";
-import { MarkdownLinkProtocolRenderer } from "@scm-manager/ui-extensions/src/extensionPoints";
+import { ProtocolLinkRendererProps } from "./markdownExtensions";
 
 const Spacing = styled.div`
   padding: 2em;
@@ -116,7 +116,7 @@ storiesOf("MarkdownView", module)
   })
   .add("XSS Prevention", () => <MarkdownView content={MarkdownXss} skipHtml={false} />);
 
-export const ProtocolLinkRenderer: FC<ProtocolLinkRendererProps> = ({ protocol, href, children }) => {
+export const ProtocolLinkRenderer: FC<ProtocolLinkRendererProps<"scw">> = ({ protocol, href, children }) => {
   return (
     <div style={{ border: "1px dashed lightgray", padding: "2px" }}>
       <h4>

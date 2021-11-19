@@ -24,15 +24,12 @@
 import React, { FC, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
-import {
-  CUSTOM_NAMESPACE_STRATEGY,
+import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
+import { CUSTOM_NAMESPACE_STRATEGY,
   IndexResources,
   Repository,
   RepositoryBase,
-  RepositoryCreation,
-  RepositoryType
-} from "@scm-manager/ui-types";
+  RepositoryCreation, RepositoryType } from "@scm-manager/ui-types";
 import { Checkbox, Level, Select, SubmitButton } from "@scm-manager/ui-components";
 import NamespaceAndNameFields from "../NamespaceAndNameFields";
 import RepositoryInformationForm from "../RepositoryInformationForm";
@@ -166,7 +163,11 @@ const RepositoryForm: FC<Props> = ({
               disabled={disabled}
             />
             {initRepository && (
-              <ExtensionPoint name="repos.create.initialize" props={extensionProps} renderAll={true} />
+              <ExtensionPoint<extensionPoints.RepositoryCreationInitialization>
+                name="repos.create.initialize"
+                props={extensionProps}
+                renderAll={true}
+              />
             )}
           </div>
         </div>

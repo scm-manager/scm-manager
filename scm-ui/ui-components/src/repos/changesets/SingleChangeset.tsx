@@ -72,7 +72,7 @@ const SingleChangeset: FC<Props> = ({ repository, changeset }) => {
           </AvatarWrapper>
           <FullWidthDiv className={classNames("media-right", "ml-0")}>
             <h4 className={classNames("has-text-weight-bold", "is-ellipsis-overflow")}>
-              <ExtensionPoint<extensionPoints.ChangesetDescriptionExtension>
+              <ExtensionPoint<extensionPoints.ChangesetDescription>
                 name="changeset.description"
                 props={{
                   changeset,

@@ -27,12 +27,10 @@ import { urls } from "@scm-manager/ui-components";
 import { binder, ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import { useTranslation } from "react-i18next";
 import { Links } from "@scm-manager/ui-types";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import classNames from "classnames";
 import HeaderButton from "../components/HeaderButton";
-import { Link } from "react-router-dom";
 import HeaderButtonContent, { headerButtonContentClassName } from "../components/HeaderButtonContent";
-import { PrimaryNavigationLoginButtonExtension } from "@scm-manager/ui-extensions/src/extensionPoints";
 
 type Props = {
   className?: string;
@@ -64,7 +62,7 @@ const LoginButton: FC<Props> = ({ burgerMode, links, className }) => {
   };
 
   if (links?.login) {
-    const shouldRenderExtension = binder.hasExtension<PrimaryNavigationLoginButtonExtension>(
+    const shouldRenderExtension = binder.hasExtension<extensionPoints.PrimaryNavigationLoginButton>(
       "primary-navigation.login",
       extensionProps
     );
@@ -74,7 +72,7 @@ const LoginButton: FC<Props> = ({ burgerMode, links, className }) => {
         className={classNames("is-flex-start", "navbar-item", className)}
       >
         {shouldRenderExtension ? (
-          <ExtensionPoint<PrimaryNavigationLoginButtonExtension>
+          <ExtensionPoint<extensionPoints.PrimaryNavigationLoginButton>
             name="primary-navigation.login"
             props={extensionProps}
           />
