@@ -55,9 +55,7 @@ class UserRow extends React.Component<Props> {
           {iconType} {this.renderLink(to, user.name)}
         </td>
         <td className="is-hidden-mobile">{this.renderLink(to, user.displayName)}</td>
-        <td>
-          <a href={`mailto:${user.mail}`}>{user.mail}</a>
-        </td>
+        <td>{user.mail ? <a href={`mailto:${user.mail}`}>{user.mail}</a> : null}</td>
       </tr>
     );
   }
