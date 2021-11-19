@@ -28,7 +28,7 @@ import classNames from "classnames";
 import styled from "styled-components";
 import { Branch, Repository } from "@scm-manager/ui-types";
 import { urls, usePaths } from "@scm-manager/ui-api";
-import { ErrorNotification, FilterInput, Help, Icon, Loading } from "@scm-manager/ui-components";
+import { createA11yId, ErrorNotification, FilterInput, Help, Icon, Loading } from "@scm-manager/ui-components";
 import CodeActionBar from "../components/CodeActionBar";
 import FileSearchResults from "../components/FileSearchResults";
 import { filepathSearch } from "../utils/filepathSearch";
@@ -91,7 +91,7 @@ const FileSearch: FC<Props> = ({ repository, baseUrl, branches, selectedBranch }
   };
 
   const contentBaseUrl = `${baseUrl}/sources/${revision}/`;
-  const id = useA11yId("file-search");
+  const id = createA11yId("file-search");
 
   return (
     <>
