@@ -62,7 +62,7 @@ const PathResultRow: FC<PathResultRowProps> = ({ contentBaseUrl, path }) => {
         </Link>
       </IconColumn>
       <LeftOverflowTd>
-        <Link title={path} to={link}>
+        <Link title={path} to={link} data-testid="file_search_single_result">
           {path}
         </Link>
       </LeftOverflowTd>
@@ -78,7 +78,7 @@ type ResultTableProps = {
 const ResultTable: FC<ResultTableProps> = ({ contentBaseUrl, paths }) => (
   <table className="table table-hover table-sm is-fullwidth">
     <tbody>
-      {paths.map((path) => (
+      {paths.map(path => (
         <PathResultRow contentBaseUrl={contentBaseUrl} path={path} />
       ))}
     </tbody>

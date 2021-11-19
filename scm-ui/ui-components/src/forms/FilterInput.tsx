@@ -67,20 +67,17 @@ const FilterInput: FC<Props> = ({ filter, value, testId, placeholder, autoFocus,
   };
 
   return (
-    <form
-      className={classNames("input-field", className)}
-      onSubmit={handleSubmit}
-      {...createAttributesForTesting(testId)}
-    >
+    <form className={classNames("input-field", className)} onSubmit={handleSubmit}>
       <div className="control has-icons-left">
         <FixedHeightInput
           className="input"
           type="search"
           placeholder={placeholder || t("filterEntries")}
           value={stateValue}
-          onChange={(event) => setStateValue(event.target.value)}
+          onChange={event => setStateValue(event.target.value)}
           autoFocus={autoFocus || false}
           aria-describedby={id}
+          {...createAttributesForTesting(testId)}
         />
         <span className="icon is-small is-left">
           <i className="fas fa-filter" />
