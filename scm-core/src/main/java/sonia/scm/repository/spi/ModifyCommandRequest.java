@@ -139,7 +139,7 @@ public class ModifyCommandRequest implements Resetable, Validateable, CommandWit
     }
 
     public DeleteFileRequest(String path, boolean recursive) {
-      this.path = path;
+      this.path = sanitizePath(path);
       this.recursive = recursive;
     }
 
@@ -179,7 +179,7 @@ public class ModifyCommandRequest implements Resetable, Validateable, CommandWit
 
     public CreateFileRequest(String path, File content, boolean overwrite) {
       super(content);
-      this.path = path;
+      this.path = sanitizePath(path);
       this.overwrite = overwrite;
     }
 
@@ -196,7 +196,7 @@ public class ModifyCommandRequest implements Resetable, Validateable, CommandWit
 
     public ModifyFileRequest(String path, File content) {
       super(content);
-      this.path = path;
+      this.path = sanitizePath(path);
     }
 
     @Override
@@ -215,13 +215,17 @@ public class ModifyCommandRequest implements Resetable, Validateable, CommandWit
     private final String toPath;
 
     public MoveRequest(String fromPath, String toPath) {
-      this.toPath = toPath;
-      this.fromPath = fromPath;
+      this.toPath = sanitizePath(toPath);
+      this.fromPath = sanitizePath(fromPath);
     }
 
     @Override
     public void execute(ModifyCommand.Worker worker) throws IOException {
       worker.move(fromPath, toPath);
     }
+  }
+
+  private static String sanitizePath(String path) {
+    return path.trim().replace("\\", "/");
   }
 }

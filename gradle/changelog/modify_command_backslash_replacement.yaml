@@ -1,0 +1,2 @@
+- type: changed
+  description: Replace backslash in ModifyCommand ([#1866](https://github.com/scm-manager/scm-manager/pull/1866))
