@@ -35,18 +35,26 @@ const hgPredicate = (props: any) => {
   return props.repository && props.repository.type === "hg";
 };
 
-binder.bind("repos.repository-details.information", ProtocolInformation, hgPredicate);
-binder.bind<extensionPoints.ReposBranchDetailsInformationExtension>(
+binder.bind<extensionPoints.RepositoryDetailsInformation>(
+  "repos.repository-details.information",
+  ProtocolInformation,
+  hgPredicate
+);
+binder.bind<extensionPoints.ReposBranchDetailsInformation>(
   "repos.branch-details.information",
   HgBranchInformation,
  { priority: 100, predicate: hgPredicate
 });
-binder.bind("repos.tag-details.information", HgTagInformation, hgPredicate);
-binder.bind("repos.repository-avatar", HgAvatar, hgPredicate);
+binder.bind<extensionPoints.RepositoryTagDetailsInformation>(
+  "repos.tag-details.information",
+  HgTagInformation,
+  hgPredicate
+);
+binder.bind<extensionPoints.RepositoryAvatar>("repos.repository-avatar", HgAvatar, hgPredicate);
 
 // bind repository specific configuration
 
-binder.bind<extensionPoints.RepoConfigRouteExtension>("repo-config.route", HgRepositoryConfigurationForm, hgPredicate);
+binder.bind<extensionPoints.RepoConfigRoute>("repo-config.route", HgRepositoryConfigurationForm, hgPredicate);
 
 // bind global configuration
 

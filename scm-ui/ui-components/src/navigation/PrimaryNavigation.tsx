@@ -26,7 +26,6 @@ import PrimaryNavigationLink from "./PrimaryNavigationLink";
 import { Links } from "@scm-manager/ui-types";
 import { binder, ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import { useTranslation } from "react-i18next";
-import { PrimaryNavigationFirstMenu } from "@scm-manager/ui-extensions/src/extensionPoints";
 
 type Props = {
   links: Links;
@@ -61,7 +60,7 @@ const PrimaryNavigation: FC<Props> = ({ links }) => {
 
     const extensionProps = {
       links,
-      label: t("primary-navigation.first-menu"),
+      label: t("primary-navigation.first-menu")
     };
 
     const append = createNavigationAppender(navItems);
@@ -87,7 +86,7 @@ const PrimaryNavigation: FC<Props> = ({ links }) => {
         name="primary-navigation"
         renderAll={true}
         props={{
-          links,
+          links
         }}
       />
     );

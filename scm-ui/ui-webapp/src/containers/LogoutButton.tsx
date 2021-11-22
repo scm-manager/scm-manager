@@ -51,7 +51,7 @@ const LogoutButton: FC<Props> = ({ burgerMode, links, className }) => {
   };
 
   if (links?.logout) {
-    const shouldRenderExtension = binder.hasExtension<extensionPoints.PrimaryNavigationLogoutButtonExtension>(
+    const shouldRenderExtension = binder.hasExtension<extensionPoints.PrimaryNavigationLogoutButton>(
       "primary-navigation.logout",
       extensionProps
     );
@@ -62,7 +62,7 @@ const LogoutButton: FC<Props> = ({ burgerMode, links, className }) => {
         className={classNames("is-flex-start", "navbar-item", className)}
       >
         {shouldRenderExtension ? (
-          <ExtensionPoint<extensionPoints.PrimaryNavigationLogoutButtonExtension>
+          <ExtensionPoint<extensionPoints.PrimaryNavigationLogoutButton>
             name="primary-navigation.logout"
             props={extensionProps}
           />

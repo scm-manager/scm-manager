@@ -41,13 +41,13 @@ class LegacyRepositoryRedirect extends React.Component<Props, State> {
   constructor(props: Props, state: State) {
     super(props, state);
     this.state = {
-      error: undefined,
+      error: undefined
     };
   }
 
   handleError = (error: Error) => {
     this.setState({
-      error,
+      error
     });
   };
 
@@ -64,10 +64,8 @@ class LegacyRepositoryRedirect extends React.Component<Props, State> {
 
       apiClient
         .get(namespaceAndNameLink.href.replace("{id}", repoId))
-        .then((response) => response.json())
-        .then((payload) =>
-          history.push("/repo/" + payload.namespace + "/" + payload.name + "/changeset/" + changeSetId)
-        )
+        .then(response => response.json())
+        .then(payload => history.push("/repo/" + payload.namespace + "/" + payload.name + "/changeset/" + changeSetId))
         .catch(this.handleError);
     }
   }
@@ -100,4 +98,4 @@ class LegacyRepositoryRedirect extends React.Component<Props, State> {
   }
 }
 
-binder.bind<extensionPoints.MainRouteExtension>("main.route", withRouter(LegacyRepositoryRedirect));
+binder.bind<extensionPoints.MainRoute>("main.route", withRouter(LegacyRepositoryRedirect));

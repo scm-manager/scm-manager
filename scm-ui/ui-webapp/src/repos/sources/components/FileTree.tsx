@@ -30,7 +30,6 @@ import { File, Repository } from "@scm-manager/ui-types";
 import FileTreeLeaf from "./FileTreeLeaf";
 import TruncatedNotification from "./TruncatedNotification";
 import { isRootPath } from "../utils/files";
-import { ReposSourcesTreeWrapperExtension } from "@scm-manager/ui-extensions/src/extensionPoints";
 
 type Props = {
   repository: Repository;
@@ -88,7 +87,7 @@ const FileTree: FC<Props> = ({ repository, directory, baseUrl, revision, fetchNe
 
   return (
     <div className="panel-block">
-      <ExtensionPoint<extensionPoints.ReposSourcesTreeWrapperExtension>
+      <ExtensionPoint<extensionPoints.ReposSourcesTreeWrapper>
         name="repos.source.tree.wrapper"
         props={extProps}
         renderAll={true}

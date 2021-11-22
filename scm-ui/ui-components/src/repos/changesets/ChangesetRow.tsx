@@ -28,7 +28,6 @@ import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import { Changeset, File, Repository } from "@scm-manager/ui-types";
 import ChangesetButtonGroup from "./ChangesetButtonGroup";
 import SingleChangeset from "./SingleChangeset";
-import { ChangesetRight } from "@scm-manager/ui-extensions/src/extensionPoints";
 
 type Props = {
   repository: Repository;
