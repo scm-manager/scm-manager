@@ -30,6 +30,7 @@ import Notifications from "./Notifications";
 import OmniSearch from "./OmniSearch";
 import LogoutButton from "./LogoutButton";
 import LoginButton from "./LoginButton";
+import { useTranslation } from "react-i18next";
 
 const StyledMenuBar = styled.div`
   background-color: transparent !important;
@@ -116,6 +117,7 @@ type Props = {
 
 const NavigationBar: FC<Props> = ({ links }) => {
   const [burgerActive, setBurgerActive] = useState(false);
+  const [t] = useTranslation("commons");
   useEffect(() => {
     const close = () => {
       if (burgerActive) {
@@ -136,7 +138,7 @@ const NavigationBar: FC<Props> = ({ links }) => {
           className={classNames("navbar-burger", { "is-active": burgerActive })}
           aria-expanded="true"
           onClick={() => setBurgerActive(active => !active)}
-          aria-label="navbar-burger"
+          aria-label={t("primary-navigation.navbarBurger")}
         >
           <span aria-hidden="true" />
           <span aria-hidden="true" />

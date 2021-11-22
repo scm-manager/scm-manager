@@ -58,7 +58,8 @@
     "logout": "Abmelden",
     "login": "Anmelden",
     "groups": "Gruppen",
-    "admin": "Administration"
+    "admin": "Administration",
+    "navbarBurger": "Navigation öffnen"
   },
   "secondaryNavigation": {
     "showContent": "Navigation vergrößern",
