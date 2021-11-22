@@ -28,7 +28,6 @@ import com.google.common.collect.ImmutableMap;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
 import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Properties;
