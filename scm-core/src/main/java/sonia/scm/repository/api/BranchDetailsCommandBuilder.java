@@ -24,68 +24,28 @@
 
 package sonia.scm.repository.api;
 
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.spi.BranchDetailsCommand;
+import sonia.scm.repository.spi.BranchDetailsCommandRequest;
+
 /**
- * Enumeration of available commands.
- *
- * @author Sebastian Sdorra
- * @since 1.17
+ * @since 2.28.0
  */
-public enum Command
-{
-  LOG, BROWSE, CAT, DIFF, BLAME,
+public final class BranchDetailsCommandBuilder {
 
-  /**
-   * @since 1.18
-   */
-  TAGS,
+  private final Repository repository;
+  private final BranchDetailsCommand command;
 
-  /**
-   * @since 1.18
-   */
-  BRANCHES,
+  public BranchDetailsCommandBuilder(Repository repository, BranchDetailsCommand command) {
+    this.repository = repository;
+    this.command = command;
+  }
 
-  /**
-   * @since 1.31
-   */
-  INCOMING, OUTGOING, PUSH, PULL,
+  // TODO Caching
 
-  /**
-   * @since 1.43
-   */
-  BUNDLE, UNBUNDLE,
-
-  /**
-   * @since 2.0
-   */
-  MODIFICATIONS, MERGE, DIFF_RESULT, BRANCH, MODIFY,
-
-  /**
-   * @since 2.10.0
-   */
-  LOOKUP,
-
-  /**
-   * @since 2.11.0
-   */
-  TAG,
-
-  /**
-   * @since 2.17.0
-   */
-  FULL_HEALTH_CHECK,
-
-  /**
-   * @since 2.19.0
-   */
-  MIRROR,
-
-  /**
-   * @since 2.26.0
-   */
-  FILE_LOCK,
-
-  /**
-   * @since 2.28.0
-   */
-  BRANCH_DETAILS
+  public BranchDetailsCommandResult execute(String branchName) {
+    BranchDetailsCommandRequest branchDetailsCommandRequest = new BranchDetailsCommandRequest();
+    branchDetailsCommandRequest.setBranchName(branchName);
+    return command.execute(branchDetailsCommandRequest);
+  }
 }
