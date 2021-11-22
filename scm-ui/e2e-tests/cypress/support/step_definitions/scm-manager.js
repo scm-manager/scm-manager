@@ -21,32 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
-import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
-import { Icon } from "@scm-manager/ui-components";
-import styled from "styled-components";
 
-type Props = {
-  revision: string;
-  baseUrl: string;
-};
+When("User visits repository", function() {
+  cy.visit(`/repo/${this.repository.namespace}/${this.repository.name}/code/sources`);
+});
 
-const SearchIcon = styled(Icon)`
-  line-height: 1.5rem;
-`;
+When("User performs file search inside repository", function() {
+  cy.byTestId("file_search_button").click();
+  cy.url().should("include", `/repo/${this.repository.namespace}/${this.repository.name}/code/search/main?q=`);
+  cy.get("[data-testid=file_search_filter_input]").type("README");
+});
 
-const FileSearchButton: FC<Props> = ({ baseUrl, revision }) => {
-  const [t] = useTranslation("repos");
-  return (
-    <Link
-      to={`${baseUrl}/search/${encodeURIComponent(revision)}`}
-      aria-label={t("fileSearch.button.title")}
-      data-testid="file_search_button"
-    >
-      <SearchIcon title={t("fileSearch.button.title")} name="search" color="inherit" />
-    </Link>
-  );
-};
-
-export default FileSearchButton;
+Then("The search results are found", function() {
+  cy.get("[data-testid=file_search_single_result]").contains("README.md");
+});

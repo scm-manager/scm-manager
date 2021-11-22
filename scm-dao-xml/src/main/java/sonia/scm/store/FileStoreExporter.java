@@ -30,10 +30,10 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.repository.api.ExportFailedException;
 import sonia.scm.xml.XmlStreams;
+import sonia.scm.xml.XmlStreams.AutoCloseableXMLReader;
 
 import javax.inject.Inject;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -134,9 +134,7 @@ public class FileStoreExporter implements StoreExporter {
   }
 
   private StoreType determineConfigType(Path storePath) {
-    XMLStreamReader reader = null;
-    try {
-      reader = XmlStreams.createReader(storePath);
+    try (AutoCloseableXMLReader reader = XmlStreams.createReader(storePath)) {
       reader.nextTag();
       if (
         "configuration".equals(reader.getLocalName())
@@ -148,8 +146,6 @@ public class FileStoreExporter implements StoreExporter {
       }
     } catch (XMLStreamException | IOException e) {
       throw new ExportFailedException(noContext(), "Failed to read store file " + storePath, e);
-    } finally {
-      XmlStreams.close(reader);
     }
   }
 }

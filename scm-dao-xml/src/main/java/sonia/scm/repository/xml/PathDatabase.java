@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.xml;
 
 import org.slf4j.Logger;
@@ -29,9 +29,11 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.ContextEntry;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.store.CopyOnWrite;
-import sonia.scm.xml.IndentXMLStreamWriter;
 import sonia.scm.xml.XmlStreams;
+import sonia.scm.xml.XmlStreams.AutoCloseableXMLReader;
+import sonia.scm.xml.XmlStreams.AutoCloseableXMLWriter;
 
+import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
@@ -67,7 +69,7 @@ class PathDatabase {
 
     CopyOnWrite.withTemporaryFile(
       temp -> {
-        try (IndentXMLStreamWriter writer = XmlStreams.createWriter(temp)) {
+        try (AutoCloseableXMLWriter writer = XmlStreams.createWriter(temp)) {
           writer.writeStartDocument(ENCODING, VERSION);
 
           writeRepositoriesStart(writer, creationTime, lastModified);
@@ -120,14 +122,12 @@ class PathDatabase {
 
   void read(OnRepositories onRepositories, OnRepository onRepository) {
     LOG.trace("read repository path database from {}", storePath);
-    XMLStreamReader reader = null;
-    try {
-      reader = XmlStreams.createReader(storePath);
+    try (AutoCloseableXMLReader reader = XmlStreams.createReader(storePath)) {
 
       while (reader.hasNext()) {
         int eventType = reader.next();
 
-        if (eventType == XMLStreamReader.START_ELEMENT) {
+        if (eventType == XMLStreamConstants.START_ELEMENT) {
           String element = reader.getLocalName();
           if (ELEMENT_REPOSITORIES.equals(element)) {
             readRepositories(reader, onRepositories);
@@ -142,8 +142,6 @@ class PathDatabase {
         "failed to read repository path database",
         ex
       );
-    } finally {
-      XmlStreams.close(reader);
     }
   }
 

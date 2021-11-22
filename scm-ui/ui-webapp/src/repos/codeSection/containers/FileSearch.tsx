@@ -123,6 +123,7 @@ const FileSearch: FC<Props> = ({ repository, baseUrl, branches, selectedBranch }
             filter={search}
             autoFocus={true}
             id={id}
+            testId="file_search_filter_input"
           />
           <Help className="ml-3" message={t("fileSearch.input.help")} id={id} />
         </div>

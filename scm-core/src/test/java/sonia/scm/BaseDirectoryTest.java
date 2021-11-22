@@ -28,6 +28,7 @@ import com.google.common.collect.ImmutableMap;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Properties;
 
@@ -38,19 +39,19 @@ class BaseDirectoryTest {
   @Test
   void shouldGetFromClassPathResource() {
     BaseDirectory directory = builder().withClassPathResource("/sonia/scm/basedirectory.properties").create();
-    assertThat(directory.find().toString()).isEqualTo("/tmp/scm_home");
+    assertThat(directory.find()).isEqualTo(Paths.get("/tmp/scm_home"));
   }
 
   @Test
   void shouldGetFromSystemProperty() {
     BaseDirectory directory = builder().withSystemProperty(BaseDirectory.SYSTEM_PROPERTY, "/tmp/scm_home").create();
-    assertThat(directory.find().toString()).isEqualTo("/tmp/scm_home");
+    assertThat(directory.find()).isEqualTo(Paths.get("/tmp/scm_home"));
   }
 
   @Test
   void shouldGetFromEnvironmentVariable() {
     BaseDirectory directory = builder().withEnvironment(BaseDirectory.ENVIRONMENT_VARIABLE, "/tmp/scm_home").create();
-    assertThat(directory.find().toString()).isEqualTo("/tmp/scm_home");
+    assertThat(directory.find()).isEqualTo(Paths.get("/tmp/scm_home"));
   }
 
   @Nested
@@ -59,19 +60,19 @@ class BaseDirectoryTest {
     @Test
     void linux() {
       BaseDirectory directory = builder().withSystemProperty("user.home", "/tmp").create();
-      assertThat(directory.find().toString()).isEqualTo("/tmp/.scm");
+      assertThat(directory.find()).isEqualTo(Paths.get("/tmp/.scm"));
     }
 
     @Test
     void osx() {
       BaseDirectory directory = builder().withOsx().withSystemProperty("user.home", "/tmp").create();
-      assertThat(directory.find().toString()).isEqualTo("/tmp/Library/Application Support/SCM-Manager");
+      assertThat(directory.find()).isEqualTo(Paths.get("/tmp/Library/Application Support/SCM-Manager"));
     }
 
     @Test
     void windows() {
       BaseDirectory directory = builder().withWindows().withEnvironment("APPDATA", "/tmp").create();
-      assertThat(directory.find().toString()).isEqualTo("/tmp\\SCM-Manager");
+      assertThat(directory.find()).isEqualTo(Paths.get("/tmp\\SCM-Manager"));
     }
 
   }
