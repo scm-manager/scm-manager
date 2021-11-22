@@ -93,8 +93,8 @@ class RepositoryImportStep implements ImportStep {
   private void importFromTemporaryPath(ImportState state, Path path) {
     LOG.debug("Importing repository from temporary location in work dir");
     state.getLogger().step("importing repository from temporary location");
-    try {
-      unbundleRepository(state, Files.newInputStream(path));
+    try (InputStream is = Files.newInputStream(path)) {
+      unbundleRepository(state, is);
     } catch (IOException e) {
       throw new ImportFailedException(
         entity(state.getRepository()).build(),

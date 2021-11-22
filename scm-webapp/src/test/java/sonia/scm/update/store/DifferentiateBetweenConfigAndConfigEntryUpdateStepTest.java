@@ -29,6 +29,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -43,15 +45,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 class DifferentiateBetweenConfigAndConfigEntryUpdateStepTest {
 
   @Test
-  void shouldNotModifyConfigFile(@TempDir Path temp) throws IOException {
+  void shouldNotModifyConfigFile(@TempDir Path temp) throws IOException, URISyntaxException {
     Path configFile = temp.resolve("some.store.xml");
-    copy(
-      getResource("sonia/scm/update/store/config_file.xml.content"),
-      newOutputStream(configFile));
 
-    new DifferentiateBetweenConfigAndConfigEntryUpdateStep() {}.updateAllInDirectory(temp);
+    try (OutputStream os = newOutputStream(configFile)) {
+      copy(getResource("sonia/scm/update/store/config_file.xml.content"), os);
 
-    assertContent(configFile, "sonia/scm/update/store/config_file.xml.content");
+      new DifferentiateBetweenConfigAndConfigEntryUpdateStep() {}.updateAllInDirectory(temp);
+
+      assertContent(configFile, "sonia/scm/update/store/config_file.xml.content");
+    }
   }
 
   @Test
@@ -77,33 +80,35 @@ class DifferentiateBetweenConfigAndConfigEntryUpdateStepTest {
   }
 
   @Test
-  void shouldIgnoreFilesWithoutXmlSuffix(@TempDir Path temp) throws IOException {
+  void shouldIgnoreFilesWithoutXmlSuffix(@TempDir Path temp) throws IOException, URISyntaxException {
     Path otherFile = temp.resolve("some.other.file");
-    copy(
-      getResource("sonia/scm/update/store/config_entry_file_without_mark.xml.content"),
-      newOutputStream(otherFile));
 
-    new DifferentiateBetweenConfigAndConfigEntryUpdateStep() {}.updateAllInDirectory(temp);
+    try (OutputStream os = newOutputStream(otherFile)) {
+      copy(getResource("sonia/scm/update/store/config_entry_file_without_mark.xml.content"), os);
 
-    assertContent(otherFile, "sonia/scm/update/store/config_entry_file_without_mark.xml.content");
+      new DifferentiateBetweenConfigAndConfigEntryUpdateStep() {}.updateAllInDirectory(temp);
+
+      assertContent(otherFile, "sonia/scm/update/store/config_entry_file_without_mark.xml.content");
+    }
   }
 
   @Test
-  void shouldHandleConfigEntryFile(@TempDir Path temp) throws IOException {
+  void shouldHandleConfigEntryFile(@TempDir Path temp) throws IOException, URISyntaxException {
     Path configFile = temp.resolve("some.store.xml");
-    copy(
-      getResource("sonia/scm/update/store/config_entry_file_without_mark.xml.content"),
-      newOutputStream(configFile));
 
-    new DifferentiateBetweenConfigAndConfigEntryUpdateStep() {}.updateAllInDirectory(temp);
+    try (OutputStream os = newOutputStream(configFile)) {
+      copy(getResource("sonia/scm/update/store/config_entry_file_without_mark.xml.content"), os);
 
-    assertThat(Files.readAllLines(configFile))
-      .areAtLeastOne(new Condition<>(line -> line.contains("<configuration type=\"config-entry\">"), "line containing start tag with attribute"))
-      .endsWith(Files.readAllLines(Paths.get(getResource("sonia/scm/update/store/config_entry_file.xml.content").getFile())).toArray(new String[9]));
+      new DifferentiateBetweenConfigAndConfigEntryUpdateStep() {}.updateAllInDirectory(temp);
+
+      assertThat(Files.readAllLines(configFile))
+        .areAtLeastOne(new Condition<>(line -> line.contains("<configuration type=\"config-entry\">"), "line containing start tag with attribute"))
+        .endsWith(Files.readAllLines(Paths.get(getResource("sonia/scm/update/store/config_entry_file.xml.content").toURI())).toArray(new String[9]));
+    }
   }
 
-  private void assertContent(Path configFile, String expectedContentResource) {
+  private void assertContent(Path configFile, String expectedContentResource) throws URISyntaxException {
     assertThat(configFile)
-      .hasSameTextualContentAs(Paths.get(getResource(expectedContentResource).getFile()));
+      .hasSameTextualContentAs(Paths.get(getResource(expectedContentResource).toURI()));
   }
 }

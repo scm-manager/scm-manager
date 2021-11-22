@@ -391,20 +391,17 @@ public final class IOUtil
       }
     }
 
-    for (int i = 20; !file.delete(); i--)
+    for (int i = 20; !file.delete() && i > 0; i--)
     {
-      if (i <= 20)
-      {
-        String message = "could not delete file ".concat(file.getPath());
+      String message = "could not delete file ".concat(file.getPath());
 
-        if (silent)
-        {
-          logger.error(message);
-        }
-        else
-        {
-          throw new IOException(message);
-        }
+      if (silent)
+      {
+        logger.error(message);
+      }
+      else
+      {
+        throw new IOException(message);
       }
 
       try
