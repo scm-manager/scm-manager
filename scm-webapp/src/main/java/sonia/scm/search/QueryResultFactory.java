@@ -30,10 +30,7 @@ import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
-import org.apache.lucene.search.highlight.Highlighter;
 import org.apache.lucene.search.highlight.InvalidTokenOffsetsException;
-import org.apache.lucene.search.highlight.QueryScorer;
-import org.apache.lucene.search.highlight.SimpleHTMLFormatter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -47,23 +44,14 @@ import static java.util.Optional.of;
 
 public class QueryResultFactory {
 
-  private final Analyzer analyzer;
-  private final Highlighter highlighter;
+  private final LuceneHighlighter highlighter;
   private final IndexSearcher searcher;
   private final LuceneSearchableType searchableType;
 
   public QueryResultFactory(Analyzer analyzer, IndexSearcher searcher, LuceneSearchableType searchableType, Query query) {
-    this.analyzer = analyzer;
     this.searcher = searcher;
     this.searchableType = searchableType;
-    this.highlighter = createHighlighter(query);
-  }
-
-  private Highlighter createHighlighter(Query query) {
-    return new Highlighter(
-      new SimpleHTMLFormatter("<>", "</>"),
-      new QueryScorer(query)
-    );
+    this.highlighter = new LuceneHighlighter(analyzer, query);
   }
 
   public QueryResult create(TopDocs topDocs) throws IOException, InvalidTokenOffsetsException {
@@ -98,7 +86,7 @@ public class QueryResultFactory {
   }
 
   private String[] createFragments(LuceneSearchableField field, String value) throws InvalidTokenOffsetsException, IOException {
-    return highlighter.getBestFragments(analyzer, field.getName(), value, 5);
+    return highlighter.highlight(field.getName(), field.getAnalyzer(), value);
   }
 
 }
