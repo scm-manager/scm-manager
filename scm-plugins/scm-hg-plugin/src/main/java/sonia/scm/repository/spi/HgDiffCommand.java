@@ -24,7 +24,7 @@
 
 package sonia.scm.repository.spi;
 
-import com.aragost.javahg.Repository;
+import org.javahg.Repository;
 import com.google.common.base.Strings;
 import com.google.common.io.ByteStreams;
 import sonia.scm.repository.api.DiffCommandBuilder;

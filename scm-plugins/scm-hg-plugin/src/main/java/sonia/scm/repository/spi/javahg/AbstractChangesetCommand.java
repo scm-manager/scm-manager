@@ -26,12 +26,12 @@ package sonia.scm.repository.spi.javahg;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.aragost.javahg.DateTime;
-import com.aragost.javahg.Repository;
-import com.aragost.javahg.internals.AbstractCommand;
-import com.aragost.javahg.internals.HgInputStream;
-import com.aragost.javahg.internals.RuntimeIOException;
-import com.aragost.javahg.internals.Utils;
+import org.javahg.DateTime;
+import org.javahg.Repository;
+import org.javahg.internals.AbstractCommand;
+import org.javahg.internals.HgInputStream;
+import org.javahg.internals.RuntimeIOException;
+import org.javahg.internals.Utils;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import sonia.scm.repository.Changeset;

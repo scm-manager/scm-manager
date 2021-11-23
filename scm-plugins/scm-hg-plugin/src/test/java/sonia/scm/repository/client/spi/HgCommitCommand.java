@@ -24,7 +24,7 @@
     
 package sonia.scm.repository.client.spi;
 
-import com.aragost.javahg.Repository;
+import org.javahg.Repository;
 import com.google.common.collect.Lists;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Person;
@@ -49,7 +49,7 @@ public class HgCommitCommand implements CommitCommand
   @Override
   public Changeset commit(CommitRequest request) throws IOException
   {
-    com.aragost.javahg.Changeset c = com.aragost.javahg.commands.CommitCommand
+    org.javahg.Changeset c = org.javahg.commands.CommitCommand
       .on(repository)
       .user(request.getAuthor().toString())
       .message(request.getMessage())

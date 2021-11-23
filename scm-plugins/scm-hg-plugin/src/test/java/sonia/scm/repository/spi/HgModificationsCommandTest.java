@@ -24,12 +24,12 @@
 
 package sonia.scm.repository.spi;
 
-import com.aragost.javahg.Changeset;
-import com.aragost.javahg.commands.BranchCommand;
-import com.aragost.javahg.commands.CopyCommand;
-import com.aragost.javahg.commands.RemoveCommand;
-import com.aragost.javahg.commands.RenameCommand;
-import com.aragost.javahg.commands.UpdateCommand;
+import org.javahg.Changeset;
+import org.javahg.commands.BranchCommand;
+import org.javahg.commands.CopyCommand;
+import org.javahg.commands.RemoveCommand;
+import org.javahg.commands.RenameCommand;
+import org.javahg.commands.UpdateCommand;
 import org.junit.Before;
 import org.junit.Test;
 import sonia.scm.repository.HgConfigResolver;

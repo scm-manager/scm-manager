@@ -58,7 +58,7 @@ public class HgLogCommand extends AbstractCommand implements LogCommand
 
   @Override
   public Changeset getChangeset(String id, LogCommandRequest request) {
-    com.aragost.javahg.Repository repository = open();
+    org.javahg.Repository repository = open();
     HgLogChangesetCommand cmd = on(repository);
 
     return cmd.rev(id).single();
@@ -68,7 +68,7 @@ public class HgLogCommand extends AbstractCommand implements LogCommand
   public ChangesetPagingResult getChangesets(LogCommandRequest request) {
     ChangesetPagingResult result = null;
 
-    com.aragost.javahg.Repository repository = open();
+    org.javahg.Repository repository = open();
 
     if (!Strings.isNullOrEmpty(request.getPath())
       ||!Strings.isNullOrEmpty(request.getBranch()))
@@ -150,7 +150,7 @@ public class HgLogCommand extends AbstractCommand implements LogCommand
    * @return
    */
   private ChangesetPagingResult collectSafely(
-    com.aragost.javahg.Repository repository, LogCommandRequest request)
+    org.javahg.Repository repository, LogCommandRequest request)
   {
     HgLogChangesetCommand cmd = on(repository);
     String startChangeset = request.getStartChangeset();
@@ -239,7 +239,7 @@ public class HgLogCommand extends AbstractCommand implements LogCommand
    *
    * @return
    */
-  private HgLogChangesetCommand on(com.aragost.javahg.Repository repository)
+  private HgLogChangesetCommand on(org.javahg.Repository repository)
   {
     return HgLogChangesetCommand.on(repository, getContext().getConfig());
   }

@@ -24,10 +24,10 @@
     
 package sonia.scm.repository.client.spi;
 
-import com.aragost.javahg.Repository;
-import com.aragost.javahg.RepositoryConfiguration;
-import com.aragost.javahg.commands.ExecutionException;
-import com.aragost.javahg.commands.PullCommand;
+import org.javahg.Repository;
+import org.javahg.RepositoryConfiguration;
+import org.javahg.commands.ExecutionException;
+import org.javahg.commands.PullCommand;
 import com.google.common.base.Strings;
 import java.io.File;
 import java.io.IOException;

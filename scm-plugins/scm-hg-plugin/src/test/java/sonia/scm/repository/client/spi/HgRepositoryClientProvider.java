@@ -24,7 +24,7 @@
     
 package sonia.scm.repository.client.spi;
 
-import com.aragost.javahg.Repository;
+import org.javahg.Repository;
 import com.google.common.collect.ImmutableSet;
 import sonia.scm.repository.client.api.ClientCommand;
 

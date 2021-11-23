@@ -24,7 +24,7 @@
     
 package sonia.scm.repository.client.spi;
 
-import com.aragost.javahg.Repository;
+import org.javahg.Repository;
 import java.io.IOException;
 import sonia.scm.repository.Branch;
 
@@ -46,7 +46,7 @@ public class HgBranchCommand implements BranchCommand
   @Override
   public Branch branch(String name) throws IOException
   {
-    com.aragost.javahg.commands.BranchCommand.on(repository).set(name);
+    org.javahg.commands.BranchCommand.on(repository).set(name);
     return Branch.normalBranch(name, repository.tip().getNode());
   }
   

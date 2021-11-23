@@ -24,8 +24,8 @@
 
 package sonia.scm.repository.spi.javahg;
 
-import com.aragost.javahg.DateTime;
-import com.aragost.javahg.internals.HgInputStream;
+import org.javahg.DateTime;
+import org.javahg.internals.HgInputStream;
 import com.google.common.base.Strings;
 import sonia.scm.repository.FileObject;
 import sonia.scm.repository.SubRepository;

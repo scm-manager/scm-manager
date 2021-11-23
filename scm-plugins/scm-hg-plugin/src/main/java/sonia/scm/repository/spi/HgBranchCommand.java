@@ -24,8 +24,8 @@
 
 package sonia.scm.repository.spi;
 
-import com.aragost.javahg.Changeset;
-import com.aragost.javahg.commands.CommitCommand;
+import org.javahg.Changeset;
+import org.javahg.commands.CommitCommand;
 import com.google.common.annotations.VisibleForTesting;
 import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
@@ -60,8 +60,8 @@ public class HgBranchCommand extends AbstractWorkingCopyCommand implements Branc
 
   @Override
   public Branch branch(BranchRequest request) {
-    try (WorkingCopy<com.aragost.javahg.Repository, com.aragost.javahg.Repository> workingCopy = workingCopyFactory.createWorkingCopy(getContext(), request.getParentBranch())) {
-      com.aragost.javahg.Repository repository = workingCopy.getWorkingRepository();
+    try (WorkingCopy<org.javahg.Repository, org.javahg.Repository> workingCopy = workingCopyFactory.createWorkingCopy(getContext(), request.getParentBranch())) {
+      org.javahg.Repository repository = workingCopy.getWorkingRepository();
 
       Changeset emptyChangeset = createNewBranchWithEmptyCommit(request, repository);
 
@@ -76,12 +76,12 @@ public class HgBranchCommand extends AbstractWorkingCopyCommand implements Branc
 
   @Override
   public void deleteOrClose(String branchName) {
-    try (WorkingCopy<com.aragost.javahg.Repository, com.aragost.javahg.Repository> workingCopy = workingCopyFactory.createWorkingCopy(getContext(), branchName)) {
+    try (WorkingCopy<org.javahg.Repository, org.javahg.Repository> workingCopy = workingCopyFactory.createWorkingCopy(getContext(), branchName)) {
       User currentUser = SecurityUtils.getSubject().getPrincipals().oneByType(User.class);
 
       LOG.debug("Closing branch '{}' in repository {}", branchName, getRepository());
 
-      com.aragost.javahg.commands.CommitCommand
+      org.javahg.commands.CommitCommand
         .on(workingCopy.getWorkingRepository())
         .user(getFormattedUser(currentUser))
         .message(String.format("Close branch: %s", branchName))
@@ -97,8 +97,8 @@ public class HgBranchCommand extends AbstractWorkingCopyCommand implements Branc
     return String.format("%s <%s>", currentUser.getDisplayName(), currentUser.getMail());
   }
 
-  private Changeset createNewBranchWithEmptyCommit(BranchRequest request, com.aragost.javahg.Repository repository) {
-    com.aragost.javahg.commands.BranchCommand.on(repository).set(request.getNewBranch());
+  private Changeset createNewBranchWithEmptyCommit(BranchRequest request, org.javahg.Repository repository) {
+    org.javahg.commands.BranchCommand.on(repository).set(request.getNewBranch());
     User currentUser = SecurityUtils.getSubject().getPrincipals().oneByType(User.class);
     return CommitCommand
       .on(repository)

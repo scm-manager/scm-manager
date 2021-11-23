@@ -24,8 +24,8 @@
 
 package sonia.scm.repository;
 
-import com.aragost.javahg.RepositoryConfiguration;
-import com.aragost.javahg.ext.purge.PurgeExtension;
+import org.javahg.RepositoryConfiguration;
+import org.javahg.ext.purge.PurgeExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.hooks.HookEnvironment;
@@ -55,15 +55,15 @@ public class HgRepositoryFactory {
     this.environmentBuilder = environmentBuilder;
   }
 
-  public com.aragost.javahg.Repository openForRead(Repository repository) {
+  public org.javahg.Repository openForRead(Repository repository) {
     return open(repository, environmentBuilder.read(repository));
   }
 
-  public com.aragost.javahg.Repository openForWrite(Repository repository) {
+  public org.javahg.Repository openForWrite(Repository repository) {
     return open(repository, environmentBuilder.write(repository));
   }
 
-  private com.aragost.javahg.Repository open(Repository repository, Map<String, String> environment) {
+  private org.javahg.Repository open(Repository repository, Map<String, String> environment) {
     HgConfig config = configResolver.resolve(repository);
     File directory = config.getDirectory();
 
@@ -82,7 +82,7 @@ public class HgRepositoryFactory {
 
     LOG.trace("open hg repository {}: encoding: {}, pending: {}", directory, encoding, pending);
 
-    return com.aragost.javahg.Repository.open(repoConfiguration, directory);
+    return org.javahg.Repository.open(repoConfiguration, directory);
   }
 
   private Charset encoding(HgConfig config) {

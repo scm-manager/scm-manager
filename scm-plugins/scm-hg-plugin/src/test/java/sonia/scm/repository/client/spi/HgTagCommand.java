@@ -24,7 +24,7 @@
     
 package sonia.scm.repository.client.spi;
 
-import com.aragost.javahg.Repository;
+import org.javahg.Repository;
 import com.google.common.base.Strings;
 import sonia.scm.repository.Tag;
 
@@ -50,7 +50,7 @@ public class HgTagCommand implements TagCommand
     if ( Strings.isNullOrEmpty(rev) ){
       rev = repository.tip().getNode();
     }
-    com.aragost.javahg.commands.TagCommand.on(repository)
+    org.javahg.commands.TagCommand.on(repository)
       .rev(rev)
       .user(request.getUserName())
       .execute(request.getName());

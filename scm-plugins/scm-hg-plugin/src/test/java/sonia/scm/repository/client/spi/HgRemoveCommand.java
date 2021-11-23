@@ -24,7 +24,7 @@
     
 package sonia.scm.repository.client.spi;
 
-import com.aragost.javahg.Repository;
+import org.javahg.Repository;
 import java.io.IOException;
 
 /**
@@ -45,7 +45,7 @@ public class HgRemoveCommand implements RemoveCommand
   @Override
   public void remove(String path) throws IOException
   {
-    com.aragost.javahg.commands.RemoveCommand.on(repository).execute(path);
+    org.javahg.commands.RemoveCommand.on(repository).execute(path);
   }
   
 }

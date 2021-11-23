@@ -44,7 +44,7 @@ public class AbstractCommand
     this.repository = context.getScmRepository();
   }
 
-  public com.aragost.javahg.Repository open()
+  public org.javahg.Repository open()
   {
     return context.open();
   }

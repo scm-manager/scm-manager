@@ -62,7 +62,7 @@
     <encoder>
       <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [%-10X{transaction_id}] %-5level %logger - %msg%n</pattern>
     </encoder>
-    
+
   </appender>
 
   <logger name="sonia.scm" level="INFO" />
@@ -71,30 +71,30 @@
   <!-- suppress massive gzip logging -->
   <logger name="sonia.scm.filter.GZipFilter" level="WARN" />
   <logger name="sonia.scm.filter.GZipResponseStream" level="WARN" />
-  
+
   <logger name="sonia.scm.util.ServiceUtil" level="WARN" />
-  
+
   <!-- event bus -->
   <logger name="sonia.scm.event.LegmanScmEventBus" level="INFO" />
-  
+
   <!-- shiro -->
   <!--
   <logger name="org.apache.shiro" level="INFO" />
   <logger name="org.apache.shiro.authc.pam.ModularRealmAuthenticator" level="DEBUG" />
   -->
-  
+
   <!-- svnkit -->
   <!--
   <logger name="svnkit" level="WARN" />
   <logger name="svnkit.network" level="DEBUG" />
   <logger name="svnkit.fsfs" level="WARN" />
   -->
-  
+
   <!-- javahg -->
   <!--
-  <logger name="com.aragost.javahg" level="DEBUG" />
+  <logger name="org.javahg" level="DEBUG" />
   -->
-  
+
   <!-- ehcache -->
   <!--
   <logger name="net.sf.ehcache" level="DEBUG" />

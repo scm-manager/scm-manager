@@ -80,7 +80,7 @@
 
   <!-- javahg -->
   <!--
-  <logger name="com.aragost.javahg" level="DEBUG" />
+  <logger name="org.javahg" level="DEBUG" />
   -->
 
   <!-- ehcache -->

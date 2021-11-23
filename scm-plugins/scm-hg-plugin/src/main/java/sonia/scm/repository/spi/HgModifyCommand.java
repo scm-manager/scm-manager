@@ -24,12 +24,12 @@
 
 package sonia.scm.repository.spi;
 
-import com.aragost.javahg.Changeset;
-import com.aragost.javahg.Repository;
-import com.aragost.javahg.commands.CommitCommand;
-import com.aragost.javahg.commands.ExecutionException;
-import com.aragost.javahg.commands.RemoveCommand;
-import com.aragost.javahg.commands.StatusCommand;
+import org.javahg.Changeset;
+import org.javahg.Repository;
+import org.javahg.commands.CommitCommand;
+import org.javahg.commands.ExecutionException;
+import org.javahg.commands.RemoveCommand;
+import org.javahg.commands.StatusCommand;
 import com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,7 +63,7 @@ public class HgModifyCommand extends AbstractWorkingCopyCommand implements Modif
 
   @Override
   public String execute(ModifyCommandRequest request) {
-    try (WorkingCopy<com.aragost.javahg.Repository, com.aragost.javahg.Repository> workingCopy = workingCopyFactory.createWorkingCopy(context, request.getBranch())) {
+    try (WorkingCopy<org.javahg.Repository, org.javahg.Repository> workingCopy = workingCopyFactory.createWorkingCopy(context, request.getBranch())) {
       Repository workingRepository = workingCopy.getWorkingRepository();
       request.getRequests().forEach(
         partialRequest -> {

@@ -26,12 +26,12 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.aragost.javahg.BaseRepository;
-import com.aragost.javahg.Changeset;
-import com.aragost.javahg.Repository;
-import com.aragost.javahg.RepositoryConfiguration;
-import com.aragost.javahg.commands.AddCommand;
-import com.aragost.javahg.commands.CommitCommand;
+import org.javahg.BaseRepository;
+import org.javahg.Changeset;
+import org.javahg.Repository;
+import org.javahg.RepositoryConfiguration;
+import org.javahg.commands.AddCommand;
+import org.javahg.commands.CommitCommand;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 import org.junit.Before;

@@ -24,8 +24,8 @@
 
 package sonia.scm.repository.spi;
 
-import com.aragost.javahg.Repository;
-import com.aragost.javahg.internals.AbstractCommand;
+import org.javahg.Repository;
+import org.javahg.internals.AbstractCommand;
 
 public class HgVerifyCommand extends AbstractCommand {
 

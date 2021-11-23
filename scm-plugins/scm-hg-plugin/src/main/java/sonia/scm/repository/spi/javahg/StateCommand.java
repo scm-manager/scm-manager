@@ -24,14 +24,14 @@
 
 package sonia.scm.repository.spi.javahg;
 
-import com.aragost.javahg.Repository;
-import com.aragost.javahg.internals.HgInputStream;
+import org.javahg.Repository;
+import org.javahg.internals.HgInputStream;
 import sonia.scm.repository.Modification;
 
 import java.io.IOException;
 import java.util.Collection;
 
-public class StateCommand extends com.aragost.javahg.internals.AbstractCommand {
+public class StateCommand extends org.javahg.internals.AbstractCommand {
   public StateCommand(Repository repository) {
     super(repository);
   }

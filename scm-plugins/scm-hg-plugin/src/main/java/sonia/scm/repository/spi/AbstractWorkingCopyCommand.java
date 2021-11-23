@@ -24,10 +24,10 @@
 
 package sonia.scm.repository.spi;
 
-import com.aragost.javahg.Changeset;
-import com.aragost.javahg.Repository;
-import com.aragost.javahg.commands.ExecutionException;
-import com.aragost.javahg.commands.PullCommand;
+import org.javahg.Changeset;
+import org.javahg.Repository;
+import org.javahg.commands.ExecutionException;
+import org.javahg.commands.PullCommand;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.work.WorkingCopy;
 
@@ -48,7 +48,7 @@ public class AbstractWorkingCopyCommand extends AbstractCommand {
 
   protected List<Changeset> pullChangesIntoCentralRepository(WorkingCopy<Repository, Repository> workingCopy, String branch) {
     try {
-      com.aragost.javahg.commands.PullCommand pullCommand = PullCommand.on(workingCopy.getCentralRepository());
+      org.javahg.commands.PullCommand pullCommand = PullCommand.on(workingCopy.getCentralRepository());
       workingCopyFactory.configure(pullCommand);
       return pullCommand.execute(workingCopy.getDirectory().getAbsolutePath());
     } catch (ExecutionException e) {
