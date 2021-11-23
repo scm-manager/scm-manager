@@ -31,16 +31,17 @@ COPY . /
 RUN set -x \
  # ttf-dejavu graphviz are required for the plantuml plugin
  && apk add --no-cache ttf-dejavu graphviz mercurial bash ca-certificates \
- && addgroup -S -g 1000 scm \
- && adduser -S -s /bin/false -G scm -h ${SCM_HOME} -D -H -u 1000 scm \
+ && adduser -S -s /bin/false -h ${SCM_HOME} -D -H -u 1000 scm \
  && mkdir -p ${SCM_HOME} ${CACHE_DIR} \
  && chmod +x /opt/scm-server/bin/scm-server \
- && chown scm:scm ${SCM_HOME} ${CACHE_DIR}
+ # set permissions to group 0 for openshift compatibility
+ && chown 1000:0 ${SCM_HOME} ${CACHE_DIR} \
+ && chmod -R g=u ${SCM_HOME} ${CACHE_DIR}
 
 WORKDIR "/opt/scm-server"
 VOLUME ["${SCM_HOME}", "${CACHE_DIR}"]
 EXPOSE 8080
-USER scm
+USER 1000
 
 # we us a high relative high start period,
 # because the start time depends on the number of installed plugins

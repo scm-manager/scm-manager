@@ -162,3 +162,8 @@ extraVolumeMounts: |
 #  - name: bucket-service-account
 #    mountPath: "{{.Values.bucket.mountPath}}"
 #    readOnly: true
+
+# extraArgs -- Add additional arguments on startup
+extraArgs: []
+#  - "-Dscm.initialPassword=admin"
+#  - "-Dscm.initialUser=admin"
