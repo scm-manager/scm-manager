@@ -24,15 +24,15 @@
 
 package sonia.scm.repository.spi;
 
-import com.aragost.javahg.Changeset;
-import com.aragost.javahg.Repository;
+import org.javahg.Changeset;
+import org.javahg.Repository;
 import sonia.scm.repository.api.BranchDetailsCommandResult;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.aragost.javahg.commands.flags.LogCommandFlags.on;
+import static org.javahg.commands.flags.LogCommandFlags.on;
 
 public class HgBranchDetailsCommand implements BranchDetailsCommand {
 
