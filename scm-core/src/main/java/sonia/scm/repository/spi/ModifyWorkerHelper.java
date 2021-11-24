@@ -79,10 +79,21 @@ public interface ModifyWorkerHelper extends ModifyCommand.Worker {
     Files.createDirectories(targetFile.getParent());
     try {
       Path pathAfterMove = Files.move(getTargetFile(source), targetFile);
-      doScmMove(source, getWorkDir().toPath().relativize(pathAfterMove).normalize().toString());
-    } catch(FileAlreadyExistsException e) {
+      doScmMove(source, toScmPath(pathAfterMove));
+    } catch (FileAlreadyExistsException e) {
       throw AlreadyExistsException.alreadyExists(ContextEntry.ContextBuilder.entity("File", target).in(getRepository()));
     }
+  }
+
+  /**
+   * @since 2.28.0
+   */
+  default String toScmPath(Path pathAfterMove) {
+    String path = getWorkDir().toPath().relativize(pathAfterMove).normalize().toString();
+    if (File.separator.equals("/")) {
+      return path;
+    }
+    return path.replace(File.separator, "/");
   }
 
   /**
@@ -100,7 +111,7 @@ public interface ModifyWorkerHelper extends ModifyCommand.Worker {
     Path targetPath = getTargetFile(path);
     if (Files.isDirectory(targetPath)) {
       try (Stream<Path> list = Files.list(targetPath)) {
-        list.forEach(subPath -> addRecursive(path + File.separator + subPath.getFileName()));
+        list.forEach(subPath -> addRecursive(path + "/" + subPath.getFileName()));
       } catch (IOException e) {
         throw new InternalRepositoryException(getRepository(), "Could not add files to scm", e);
       }
@@ -171,7 +182,7 @@ public interface ModifyWorkerHelper extends ModifyCommand.Worker {
     // mind whether 'path' starts with a '/', the nio api does.
     // So using the file api the two paths '/file' and 'file'
     // lead to the same result, whereas the nio api would
-    // lead to an absolute path starting at the ssytem root in the
+    // lead to an absolute path starting at the system root in the
     // first example starting with a '/'.
     Path targetFile = new File(workDir, path).toPath().normalize();
     doThrow()
