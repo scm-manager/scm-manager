@@ -34,7 +34,7 @@ class DefaultBranchTag extends React.Component<Props> {
     const { defaultBranch, t } = this.props;
 
     if (defaultBranch) {
-      return <Tag className="ml-3" color="dark" label={t("branch.defaultTag")} />;
+      return <Tag color="dark" label={t("branch.defaultTag")} size="small" />;
     }
     return null;
   }

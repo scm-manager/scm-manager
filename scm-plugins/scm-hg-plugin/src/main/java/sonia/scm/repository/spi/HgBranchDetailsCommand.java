@@ -49,6 +49,10 @@ public class HgBranchDetailsCommand implements BranchDetailsCommand {
   public BranchDetailsCommandResult execute(BranchDetailsCommandRequest request) {
     Repository repository = context.open();
 
+    if (request.getBranchName().equals(DEFAULT_BRANCH_NAME)) {
+      return new BranchDetailsCommandResult(0,0);
+    }
+
     // To get the latest shared ancestor
     // hg log --rev "ancestor('2.0.0-m3','feature/ui_deviation')"
 

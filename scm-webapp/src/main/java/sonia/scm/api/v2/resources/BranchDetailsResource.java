@@ -175,10 +175,10 @@ public class BranchDetailsResource {
   private List<BranchDetailsDto> getBranchDetailsDtos(RepositoryService service, String branches) {
     List<BranchDetailsDto> dtos = new ArrayList<>();
     if (!Strings.isNullOrEmpty(branches)) {
-      for (String branch : branches.split(",")) {
-        String decodeBranch = HttpUtil.decode(branch);
-        BranchDetailsCommandResult result = service.getBranchDetailsCommand().execute(decodeBranch);
-        dtos.add(mapper.map(service.getRepository(), decodeBranch, result));
+      String decodedBranches = HttpUtil.decode(branches);
+      for (String branch : decodedBranches.split(",")) {
+        BranchDetailsCommandResult result = service.getBranchDetailsCommand().execute(branch);
+        dtos.add(mapper.map(service.getRepository(), branch, result));
       }
     }
     return dtos;

@@ -26,7 +26,7 @@ import { useTranslation } from "react-i18next";
 import BranchRow from "./BranchRow";
 import { Branch, Repository } from "@scm-manager/ui-types";
 import { ConfirmAlert, ErrorNotification } from "@scm-manager/ui-components";
-import { useDeleteBranch } from "@scm-manager/ui-api";
+import { useBranchDetailsCollection, useDeleteBranch } from "@scm-manager/ui-api";
 
 type Props = {
   baseUrl: string;
@@ -37,6 +37,10 @@ type Props = {
 
 const BranchTable: FC<Props> = ({ repository, baseUrl, branches, type }) => {
   const { isLoading, error, remove, isDeleted } = useDeleteBranch(repository);
+  const { isLoading: isLoadingDetails, error: errorDetails, data: branchDetails } = useBranchDetailsCollection(
+    repository,
+    branches
+  );
   const [t] = useTranslation("repos");
   const [showConfirmAlert, setShowConfirmAlert] = useState(false);
   const [branchToBeDeleted, setBranchToBeDeleted] = useState<Branch | undefined>();
@@ -77,12 +81,12 @@ const BranchTable: FC<Props> = ({ repository, baseUrl, branches, type }) => {
               className: "is-outlined",
               label: t("branch.delete.confirmAlert.submit"),
               isLoading,
-              onClick: () => deleteBranch(),
+              onClick: () => deleteBranch()
             },
             {
               label: t("branch.delete.confirmAlert.cancel"),
-              onClick: () => abortDelete(),
-            },
+              onClick: () => abortDelete()
+            }
           ]}
           close={() => abortDelete()}
         />
@@ -95,8 +99,14 @@ const BranchTable: FC<Props> = ({ repository, baseUrl, branches, type }) => {
           </tr>
         </thead>
         <tbody>
-          {(branches || []).map((branch) => (
-            <BranchRow key={branch.name} baseUrl={baseUrl} branch={branch} onDelete={onDelete} />
+          {(branches || []).map(branch => (
+            <BranchRow
+              key={branch.name}
+              baseUrl={baseUrl}
+              branch={branch}
+              onDelete={onDelete}
+              details={branchDetails?._embedded?.branchDetails.filter(b => b.branchName === branch.name)[0]}
+            />
           ))}
         </tbody>
       </table>
