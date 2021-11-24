@@ -58,13 +58,7 @@ class LuceneHighlighterTest {
 
   @Test
   void shouldHighlightCodeAndKeepLines() throws IOException, InvalidTokenOffsetsException {
-    NonNaturalLanguageAnalyzer analyzer = new NonNaturalLanguageAnalyzer();
-    Query query = new TermQuery(new Term("content", "die"));
-
-    String content = content("GameOfLife.java");
-
-    LuceneHighlighter highlighter = new LuceneHighlighter(analyzer, query);
-    String[] snippets = highlighter.highlight("content", Indexed.Analyzer.CODE, content);
+    String[] snippets = highlightCode("GameOfLife.java", "die");
 
     assertThat(snippets).hasSize(1).allSatisfy(
       snippet -> assertThat(snippet.split("\n")).contains(
@@ -79,13 +73,7 @@ class LuceneHighlighterTest {
 
   @Test
   void shouldHighlightCodeInTsx() throws IOException, InvalidTokenOffsetsException {
-    NonNaturalLanguageAnalyzer analyzer = new NonNaturalLanguageAnalyzer();
-    Query query = new TermQuery(new Term("content", "inherit"));
-
-    String content = content("Button.tsx");
-
-    LuceneHighlighter highlighter = new LuceneHighlighter(analyzer, query);
-    String[] snippets = highlighter.highlight("content", Indexed.Analyzer.CODE, content);
+    String[] snippets = highlightCode("Button.tsx", "inherit");
 
     assertThat(snippets).hasSize(1).allSatisfy(
       snippet -> assertThat(snippet.split("\n")).contains(
@@ -95,6 +83,30 @@ class LuceneHighlighterTest {
         "  };"
       )
     );
+  }
+
+  @Test
+  void shouldHighlightFirstCodeLine() throws InvalidTokenOffsetsException, IOException {
+    String[] snippets = highlightCode("GameOfLife.java", "gameoflife");
+
+    assertThat(snippets).hasSize(1);
+  }
+
+  @Test
+  void shouldHighlightLastCodeLine() throws InvalidTokenOffsetsException, IOException {
+    String[] snippets = highlightCode("Button.tsx", "default");
+
+    assertThat(snippets).hasSize(1);
+  }
+
+  private String[] highlightCode(String resource, String search) throws IOException, InvalidTokenOffsetsException {
+    NonNaturalLanguageAnalyzer analyzer = new NonNaturalLanguageAnalyzer();
+    Query query = new TermQuery(new Term("content", search));
+
+    String content = content(resource);
+
+    LuceneHighlighter highlighter = new LuceneHighlighter(analyzer, query);
+    return highlighter.highlight("content", Indexed.Analyzer.CODE, content);
   }
 
   @SuppressWarnings("UnstableApiUsage")
