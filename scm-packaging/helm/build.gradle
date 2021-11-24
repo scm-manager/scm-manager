@@ -26,7 +26,7 @@ plugins {
   id 'org.unbroken-dome.helm' version '1.5.0'
   id 'org.unbroken-dome.helm-publish' version '1.5.0'
   id 'org.scm-manager.packaging'
-  id 'org.scm-manager.license' version '0.6.1'
+  id 'org.scm-manager.license' version '0.7.0'
 }
 
 configurations {
@@ -103,7 +103,7 @@ license {
 
   tasks {
     build {
-      files.from("build.gradle", "Dockerfile")
+      files.from("build.gradle")
     }
     main {
       files.from("src")
