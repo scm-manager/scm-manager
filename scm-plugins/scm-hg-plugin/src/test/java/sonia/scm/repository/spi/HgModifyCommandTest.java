@@ -259,8 +259,8 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
     request.setAuthor(new Person("Trillian Astra", "trillian@hitchhiker.com"));
 
     hgModifyCommand.execute(request);
-    assertThat(cmdContext.open().tip().getDeletedFiles().contains("a.txt")).isTrue();
-    assertThat(cmdContext.open().tip().getAddedFiles().contains("g.txt")).isTrue();
+    assertThat(cmdContext.open().tip().getDeletedFiles()).contains(new File("a.txt").toString());
+    assertThat(cmdContext.open().tip().getAddedFiles()).contains(new File("g.txt").toString());
   }
 
   @Test(expected = AlreadyExistsException.class)
@@ -281,10 +281,10 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
     request.setAuthor(new Person("Trillian Astra", "trillian@hitchhiker.com"));
 
     hgModifyCommand.execute(request);
-    assertThat(cmdContext.open().tip().getDeletedFiles().contains("c/d.txt")).isTrue();
-    assertThat(cmdContext.open().tip().getDeletedFiles().contains("c/e.txt")).isTrue();
-    assertThat(cmdContext.open().tip().getAddedFiles().contains("notc/d.txt")).isTrue();
-    assertThat(cmdContext.open().tip().getAddedFiles().contains("notc/e.txt")).isTrue();
+    assertThat(cmdContext.open().tip().getDeletedFiles()).contains(new File("c/d.txt").toString());
+    assertThat(cmdContext.open().tip().getDeletedFiles()).contains(new File("c/e.txt").toString());
+    assertThat(cmdContext.open().tip().getAddedFiles()).contains(new File("notc/d.txt").toString());
+    assertThat(cmdContext.open().tip().getAddedFiles()).contains(new File("notc/e.txt").toString());
   }
 
   @Test
@@ -295,10 +295,10 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
     request.setAuthor(new Person("Trillian Astra", "trillian@hitchhiker.com"));
 
     hgModifyCommand.execute(request);
-    assertThat(cmdContext.open().tip().getDeletedFiles().contains("a.txt")).isTrue();
-    assertThat(cmdContext.open().tip().getAddedFiles().contains("c/z.txt")).isTrue();
-    assertThat(cmdContext.open().tip().getDeletedFiles().contains("c/d.txt")).isFalse();
-    assertThat(cmdContext.open().tip().getDeletedFiles().contains("c/e.txt")).isFalse();
+    assertThat(cmdContext.open().tip().getDeletedFiles()).contains(new File("a.txt").toString());
+    assertThat(cmdContext.open().tip().getAddedFiles()).contains(new File("c/z.txt").toString());
+    assertThat(cmdContext.open().tip().getDeletedFiles()).doesNotContain(new File("c/d.txt").toString());
+    assertThat(cmdContext.open().tip().getDeletedFiles()).doesNotContain(new File("c/e.txt").toString());
   }
 
   @Test
@@ -309,8 +309,8 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
     request.setAuthor(new Person("Trillian Astra", "trillian@hitchhiker.com"));
 
     hgModifyCommand.execute(request);
-    assertThat(cmdContext.open().tip().getDeletedFiles().contains("g/h/j.txt")).isTrue();
-    assertThat(cmdContext.open().tip().getAddedFiles().contains("y/h/j.txt")).isTrue();
+    assertThat(cmdContext.open().tip().getDeletedFiles()).contains(new File("g/h/j.txt").toString());
+    assertThat(cmdContext.open().tip().getAddedFiles()).contains(new File("y/h/j.txt").toString());
   }
 
   @Test
@@ -321,8 +321,8 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
     request.setAuthor(new Person("Trillian Astra", "trillian@hitchhiker.com"));
 
     hgModifyCommand.execute(request);
-    assertThat(cmdContext.open().tip().getDeletedFiles().contains("a.txt")).isTrue();
-    assertThat(cmdContext.open().tip().getAddedFiles().contains("y/z.txt")).isTrue();
+    assertThat(cmdContext.open().tip().getDeletedFiles()).contains(new File("a.txt").toString());
+    assertThat(cmdContext.open().tip().getAddedFiles()).contains(new File("y/z.txt").toString());
   }
 
   @Test
@@ -333,9 +333,9 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
     request.setAuthor(new Person("Trillian Astra", "trillian@hitchhiker.com"));
 
     hgModifyCommand.execute(request);
-    assertThat(cmdContext.open().tip().getDeletedFiles().contains("c/d.txt")).isTrue();
-    assertThat(cmdContext.open().tip().getDeletedFiles().contains("c/e.txt")).isTrue();
-    assertThat(cmdContext.open().tip().getAddedFiles().contains("j/k/c/d.txt")).isTrue();
-    assertThat(cmdContext.open().tip().getAddedFiles().contains("j/k/c/e.txt")).isTrue();
+    assertThat(cmdContext.open().tip().getDeletedFiles()).contains(new File("c/d.txt").toString());
+    assertThat(cmdContext.open().tip().getDeletedFiles()).contains(new File("c/e.txt").toString());
+    assertThat(cmdContext.open().tip().getAddedFiles()).contains(new File("j/k/c/d.txt").toString());
+    assertThat(cmdContext.open().tip().getAddedFiles()).contains(new File("j/k/c/e.txt").toString());
   }
 }
