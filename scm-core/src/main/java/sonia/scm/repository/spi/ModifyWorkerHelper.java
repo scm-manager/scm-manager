@@ -79,10 +79,21 @@ public interface ModifyWorkerHelper extends ModifyCommand.Worker {
     Files.createDirectories(targetFile.getParent());
     try {
       Path pathAfterMove = Files.move(getTargetFile(source), targetFile);
-      doScmMove(source, getWorkDir().toPath().relativize(pathAfterMove).normalize().toString().replace("\\", "/"));
+      doScmMove(source, toScmPath(pathAfterMove));
     } catch (FileAlreadyExistsException e) {
       throw AlreadyExistsException.alreadyExists(ContextEntry.ContextBuilder.entity("File", target).in(getRepository()));
     }
+  }
+
+  /**
+   * @since 2.28.0
+   */
+  default String toScmPath(Path pathAfterMove) {
+    String path = getWorkDir().toPath().relativize(pathAfterMove).normalize().toString();
+    if (File.separator.equals("/")) {
+      return path;
+    }
+    return path.replace(File.separator, "/");
   }
 
   /**
