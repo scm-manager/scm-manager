@@ -24,6 +24,10 @@
 
 package sonia.scm.api.v2.resources;
 
+import com.google.common.base.Strings;
+import de.otto.edison.hal.Embedded;
+import de.otto.edison.hal.HalRepresentation;
+import de.otto.edison.hal.Links;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -33,6 +37,7 @@ import sonia.scm.repository.api.BranchDetailsCommandResult;
 import sonia.scm.repository.api.CommandNotSupportedException;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
+import sonia.scm.util.HttpUtil;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
@@ -40,22 +45,27 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
+import java.util.List;
 
 @Path("")
 public class BranchDetailsResource {
 
   private final RepositoryServiceFactory serviceFactory;
   private final BranchDetailsMapper mapper;
+  private final ResourceLinks resourceLinks;
 
   @Inject
-  public BranchDetailsResource(RepositoryServiceFactory serviceFactory, BranchDetailsMapper mapper) {
+  public BranchDetailsResource(RepositoryServiceFactory serviceFactory, BranchDetailsMapper mapper, ResourceLinks resourceLinks) {
     this.serviceFactory = serviceFactory;
     this.mapper = mapper;
+    this.resourceLinks = resourceLinks;
   }
 
   /**
-   * Returns branch details for given branches.
+   * Returns branch details for given branch.
    *
    * <strong>Note:</strong> This method requires "repository" privilege.
    *
@@ -66,13 +76,13 @@ public class BranchDetailsResource {
   @GET
   @Path("{branch}")
   @Produces(VndMediaType.BRANCH_DETAILS)
-  @Operation(summary = "Get single branch", description = "Returns a branch for a repository.", tags = "Repository")
+  @Operation(summary = "Get single branch details", description = "Returns details of a single branch.", tags = "Repository")
   @ApiResponse(
     responseCode = "200",
     description = "success",
     content = @Content(
       mediaType = VndMediaType.BRANCH_DETAILS,
-      schema = @Schema(implementation = BranchDto.class)
+      schema = @Schema(implementation = BranchDetailsDto.class)
     )
   )
   @ApiResponse(responseCode = "400", description = "branches not supported for given repository")
@@ -105,5 +115,72 @@ public class BranchDetailsResource {
     } catch (CommandNotSupportedException ex) {
       return Response.status(Response.Status.BAD_REQUEST).build();
     }
+  }
+
+  /**
+   * Returns branch details for given branch.
+   *
+   * <strong>Note:</strong> This method requires "repository" privilege.
+   *
+   * @param namespace the namespace of the repository
+   * @param name      the name of the repository
+   * @param branches  a comma-seperated list of branches
+   */
+  @GET
+  @Path("")
+  @Produces(VndMediaType.BRANCH_DETAILS_COLLECTION)
+  @Operation(summary = "Get multiple branch details", description = "Returns a collection of branch details.", tags = "Repository")
+  @ApiResponse(
+    responseCode = "200",
+    description = "success",
+    content = @Content(
+      mediaType = VndMediaType.BRANCH_DETAILS_COLLECTION,
+      schema = @Schema(implementation = HalRepresentation.class)
+    )
+  )
+  @ApiResponse(responseCode = "400", description = "branches not supported for given repository")
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current user has no privileges to read the branch")
+  @ApiResponse(
+    responseCode = "404",
+    description = "not found, no branch with the specified name for the repository available or repository found",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
+  public Response getBranchDetailsCollection(
+    @PathParam("namespace") String namespace,
+    @PathParam("name") String name,
+    @QueryParam("branches") String branches
+  ) {
+    try (RepositoryService service = serviceFactory.create(new NamespaceAndName(namespace, name))) {
+      List<BranchDetailsDto> dtos = getBranchDetailsDtos(branches, service);
+      Links links = Links.linkingTo().self(resourceLinks.branchDetailsCollection().self(namespace, name)).build();
+      Embedded embedded = Embedded.embeddedBuilder().with("branchDetails", dtos).build();
+
+      return Response.ok(new HalRepresentation(links, embedded)).build();
+    } catch (CommandNotSupportedException ex) {
+      return Response.status(Response.Status.BAD_REQUEST).build();
+    }
+  }
+
+  private List<BranchDetailsDto> getBranchDetailsDtos(String branches, RepositoryService service) {
+    List<BranchDetailsDto> dtos = new ArrayList<>();
+    if (!Strings.isNullOrEmpty(branches)) {
+      for (String branch : branches.split(",")) {
+        String decodeBranch = HttpUtil.decode(branch);
+        BranchDetailsCommandResult result = service.getBranchDetailsCommand().execute(decodeBranch);
+        dtos.add(mapper.map(service.getRepository(), decodeBranch, result));
+      }
+    }
+    return dtos;
   }
 }

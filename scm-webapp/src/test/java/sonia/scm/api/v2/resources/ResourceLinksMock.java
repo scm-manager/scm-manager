@@ -83,6 +83,8 @@ public class ResourceLinksMock {
     lenient().when(resourceLinks.apiKeyCollection()).thenReturn(new ResourceLinks.ApiKeyCollectionLinks(pathInfo));
     lenient().when(resourceLinks.apiKey()).thenReturn(new ResourceLinks.ApiKeyLinks(pathInfo));
     lenient().when(resourceLinks.search()).thenReturn(new ResourceLinks.SearchLinks(pathInfo));
+    lenient().when(resourceLinks.branchDetails()).thenReturn(new ResourceLinks.BranchDetailsLinks(pathInfo));
+    lenient().when(resourceLinks.branchDetailsCollection()).thenReturn(new ResourceLinks.BranchDetailsCollectionLinks(pathInfo));
 
     return resourceLinks;
   }

@@ -592,6 +592,22 @@ class ResourceLinks {
     }
   }
 
+  public BranchDetailsCollectionLinks branchDetailsCollection() {
+    return new BranchDetailsCollectionLinks(scmPathInfoStore.get());
+  }
+
+  static class BranchDetailsCollectionLinks {
+    private final LinkBuilder branchDetailsLinkBuilder;
+
+    BranchDetailsCollectionLinks(ScmPathInfo pathInfo) {
+      branchDetailsLinkBuilder = new LinkBuilder(pathInfo, RepositoryRootResource.class, RepositoryResource.class, BranchDetailsResource.class);
+    }
+
+    String self(String namespace, String name) {
+      return branchDetailsLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("branchDetails").parameters().method("getBranchDetailsCollection").parameters().href();
+    }
+  }
+
   public IncomingLinks incoming() {
     return new IncomingLinks(scmPathInfoStore.get());
   }

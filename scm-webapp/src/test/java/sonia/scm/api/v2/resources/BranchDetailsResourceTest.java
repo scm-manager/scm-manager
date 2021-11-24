@@ -54,6 +54,7 @@ public class BranchDetailsResourceTest extends RepositoryTestBase {
 
   private final RestDispatcher dispatcher = new RestDispatcher();
   private final Repository repository = RepositoryTestData.create42Puzzle();
+  private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(URI.create("/"));
 
   @Mock
   private RepositoryServiceFactory serviceFactory;
@@ -67,7 +68,7 @@ public class BranchDetailsResourceTest extends RepositoryTestBase {
 
   @Before
   public void prepareEnvironment() {
-    super.branchDetailsResource = new BranchDetailsResource(serviceFactory, mapper);
+    super.branchDetailsResource = new BranchDetailsResource(serviceFactory, mapper, resourceLinks);
     dispatcher.addSingletonResource(getRepositoryRootResource());
     ScmPathInfoStore scmPathInfoStore = new ScmPathInfoStore();
     scmPathInfoStore.set(() -> URI.create("/scm/api/"));
@@ -103,6 +104,38 @@ public class BranchDetailsResourceTest extends RepositoryTestBase {
     assertThat(response.getStatus()).isEqualTo(200);
     assertThat(response.getContentAsString())
       .isEqualTo("{\"branchName\":\"master\",\"changesetsAhead\":42,\"changesetsBehind\":21,\"_links\":{\"self\":{\"href\":\"/scm/api/v2/repositories/hitchhiker/42Puzzle/branch-details/master\"}}}");
+  }
+
+  @Test
+  public void shouldGetEmptyDetailsCollection() throws URISyntaxException, UnsupportedEncodingException {
+    when(serviceFactory.create(repository.getNamespaceAndName())).thenReturn(service);
+    when(service.getRepository()).thenReturn(repository);
+    when(service.getBranchDetailsCommand()).thenReturn(branchDetailsCommandBuilder);
+
+    MockHttpRequest request = MockHttpRequest
+      .get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + repository.getNamespaceAndName() + "/branch-details/");
+
+    dispatcher.invoke(request, response);
+
+    assertThat(response.getStatus()).isEqualTo(200);
+    assertThat(response.getContentAsString()).isEqualTo("{\"_links\":{\"self\":{\"href\":\"/v2/repositories/hitchhiker/42Puzzle/branch-details/\"}},\"_embedded\":{\"branchDetails\":[]}}");
+  }
+
+  @Test
+  public void shouldGetDetailsCollection() throws URISyntaxException, UnsupportedEncodingException {
+    when(serviceFactory.create(repository.getNamespaceAndName())).thenReturn(service);
+    when(service.getRepository()).thenReturn(repository);
+    when(service.getBranchDetailsCommand()).thenReturn(branchDetailsCommandBuilder);
+
+    MockHttpRequest request = MockHttpRequest
+      .get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + repository.getNamespaceAndName() + "/branch-details?branches=master,develop,feature%2Fhitchhiker42");
+
+    dispatcher.invoke(request, response);
+
+    assertThat(response.getStatus()).isEqualTo(200);
+    assertThat(response.getContentAsString()).contains("{\"branchDetails\":[{\"branchName\":\"master\",\"changesetsAhead\":0,\"changesetsBehind\":0,\"_links\":{\"self\":{\"href\":\"/scm/api/v2/repositories/hitchhiker/42Puzzle/branch-details/master\"}}}");
+    assertThat(response.getContentAsString()).contains("{\"branchName\":\"develop\",\"changesetsAhead\":0,\"changesetsBehind\":0,\"_links\":{\"self\":{\"href\":\"/scm/api/v2/repositories/hitchhiker/42Puzzle/branch-details/develop\"}}}");
+    assertThat(response.getContentAsString()).contains("{\"branchName\":\"feature/hitchhiker42\",\"changesetsAhead\":0,\"changesetsBehind\":0,\"_links\":{\"self\":{\"href\":\"/scm/api/v2/repositories/hitchhiker/42Puzzle/branch-details/feature%2Fhitchhiker42\"}}}");
   }
 }
 
