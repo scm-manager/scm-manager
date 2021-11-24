@@ -31,7 +31,6 @@ import lombok.Value;
  */
 @Value
 public class BranchDetailsCommandResult {
-
   int changesetsAhead;
   int changesetsBehind;
 }

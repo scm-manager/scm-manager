@@ -25,6 +25,7 @@
 package sonia.scm.repository.api;
 
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.spi.BranchDetailsCommand;
 import sonia.scm.repository.spi.BranchDetailsCommandRequest;
 
@@ -44,6 +45,7 @@ public final class BranchDetailsCommandBuilder {
   // TODO Caching
 
   public BranchDetailsCommandResult execute(String branchName) {
+    RepositoryPermissions.read(repository).check();
     BranchDetailsCommandRequest branchDetailsCommandRequest = new BranchDetailsCommandRequest();
     branchDetailsCommandRequest.setBranchName(branchName);
     return command.execute(branchDetailsCommandRequest);

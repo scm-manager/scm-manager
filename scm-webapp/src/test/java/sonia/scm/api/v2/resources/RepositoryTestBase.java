@@ -36,6 +36,7 @@ abstract class RepositoryTestBase {
   RepositoryManager manager;
   TagRootResource tagRootResource;
   BranchRootResource branchRootResource;
+  BranchDetailsResource branchDetailsResource;
   ChangesetRootResource changesetRootResource;
   SourceRootResource sourceRootResource;
   ContentResource contentResource;
@@ -55,6 +56,7 @@ abstract class RepositoryTestBase {
     RepositoryBasedResourceProvider repositoryBasedResourceProvider = new RepositoryBasedResourceProvider(
       of(tagRootResource),
       of(branchRootResource),
+      of(branchDetailsResource),
       of(changesetRootResource),
       of(sourceRootResource),
       of(contentResource),

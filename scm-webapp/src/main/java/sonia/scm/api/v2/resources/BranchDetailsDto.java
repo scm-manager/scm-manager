@@ -22,29 +22,32 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.spi;
+package sonia.scm.api.v2.resources;
 
-import org.junit.Test;
-import sonia.scm.repository.api.BranchDetailsCommandResult;
+import de.otto.edison.hal.Embedded;
+import de.otto.edison.hal.HalRepresentation;
+import de.otto.edison.hal.Links;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import javax.validation.constraints.Min;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode(callSuper = true)
+public class BranchDetailsDto extends HalRepresentation {
+  private String branchName;
+  @Min(0)
+  private int changesetsAhead;
+  @Min(0)
+  private int changesetsBehind;
 
-public class HgBranchDetailsCommandTest extends AbstractHgCommandTestBase {
-
-  @Test
-  public void shouldGetSingleBranchDetails() {
-    BranchDetailsCommandRequest branchRequest = new BranchDetailsCommandRequest();
-    branchRequest.setBranchName("testbranch");
-
-    BranchDetailsCommandResult result = new HgBranchDetailsCommand(cmdContext).execute(branchRequest);
-
-    assertThat(result.getChangesetsAhead()).isEqualTo(1);
-    assertThat(result.getChangesetsBehind()).isEqualTo(1);
-  }
-
-  @Override
-  protected String getZippedRepositoryResource() {
-    return "sonia/scm/repository/spi/scm-hg-ahead-behind-test.zip";
+  BranchDetailsDto(Links links, Embedded embedded) {
+    super(links, embedded);
   }
 }

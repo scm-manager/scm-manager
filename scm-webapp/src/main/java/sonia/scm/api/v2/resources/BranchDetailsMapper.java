@@ -22,29 +22,46 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.spi;
+package sonia.scm.api.v2.resources;
 
-import org.junit.Test;
+import com.google.common.annotations.VisibleForTesting;
+import de.otto.edison.hal.Embedded;
+import de.otto.edison.hal.Links;
+import org.mapstruct.Context;
+import org.mapstruct.Mapper;
+import org.mapstruct.ObjectFactory;
+import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.BranchDetailsCommandResult;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import javax.inject.Inject;
 
+@Mapper
+public abstract class BranchDetailsMapper {
 
-public class HgBranchDetailsCommandTest extends AbstractHgCommandTestBase {
+  @Inject
+  private ResourceLinks resourceLinks;
 
-  @Test
-  public void shouldGetSingleBranchDetails() {
-    BranchDetailsCommandRequest branchRequest = new BranchDetailsCommandRequest();
-    branchRequest.setBranchName("testbranch");
+  abstract BranchDetailsDto map(@Context Repository repository, String branchName, BranchDetailsCommandResult result);
 
-    BranchDetailsCommandResult result = new HgBranchDetailsCommand(cmdContext).execute(branchRequest);
-
-    assertThat(result.getChangesetsAhead()).isEqualTo(1);
-    assertThat(result.getChangesetsBehind()).isEqualTo(1);
+  @ObjectFactory
+  BranchDetailsDto createDto(@Context Repository repository, String branchName) {
+    return new BranchDetailsDto(createLinks(repository, branchName), Embedded.emptyEmbedded());
   }
 
-  @Override
-  protected String getZippedRepositoryResource() {
-    return "sonia/scm/repository/spi/scm-hg-ahead-behind-test.zip";
+  private Links createLinks(@Context Repository repository, String branch) {
+    return Links.linkingTo()
+      .self(
+        resourceLinks.branchDetails()
+          .self(
+            repository.getNamespace(),
+            repository.getName(),
+            branch)
+      )
+      .build();
+  }
+
+  @VisibleForTesting
+  void setResourceLinks(ResourceLinks resourceLinks) {
+    this.resourceLinks = resourceLinks;
   }
 }

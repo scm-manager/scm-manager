@@ -1,0 +1,109 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2020-present Cloudogu GmbH and Contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+package sonia.scm.api.v2.resources;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import sonia.scm.repository.NamespaceAndName;
+import sonia.scm.repository.api.BranchDetailsCommandResult;
+import sonia.scm.repository.api.CommandNotSupportedException;
+import sonia.scm.repository.api.RepositoryService;
+import sonia.scm.repository.api.RepositoryServiceFactory;
+import sonia.scm.web.VndMediaType;
+
+import javax.inject.Inject;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Response;
+
+@Path("")
+public class BranchDetailsResource {
+
+  private final RepositoryServiceFactory serviceFactory;
+  private final BranchDetailsMapper mapper;
+
+  @Inject
+  public BranchDetailsResource(RepositoryServiceFactory serviceFactory, BranchDetailsMapper mapper) {
+    this.serviceFactory = serviceFactory;
+    this.mapper = mapper;
+  }
+
+  /**
+   * Returns branch details for given branches.
+   *
+   * <strong>Note:</strong> This method requires "repository" privilege.
+   *
+   * @param namespace  the namespace of the repository
+   * @param name       the name of the repository
+   * @param branchName the name of the branch
+   */
+  @GET
+  @Path("{branch}")
+  @Produces(VndMediaType.BRANCH_DETAILS)
+  @Operation(summary = "Get single branch", description = "Returns a branch for a repository.", tags = "Repository")
+  @ApiResponse(
+    responseCode = "200",
+    description = "success",
+    content = @Content(
+      mediaType = VndMediaType.BRANCH_DETAILS,
+      schema = @Schema(implementation = BranchDto.class)
+    )
+  )
+  @ApiResponse(responseCode = "400", description = "branches not supported for given repository")
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current user has no privileges to read the branch")
+  @ApiResponse(
+    responseCode = "404",
+    description = "not found, no branch with the specified name for the repository available or repository found",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
+  public Response getBranchDetails(
+    @PathParam("namespace") String namespace,
+    @PathParam("name") String name,
+    @PathParam("branch") String branchName
+  ) {
+    try (RepositoryService service = serviceFactory.create(new NamespaceAndName(namespace, name))) {
+      BranchDetailsCommandResult result = service.getBranchDetailsCommand().execute(branchName);
+      BranchDetailsDto dto = mapper.map(service.getRepository(), branchName, result);
+      return Response.ok(dto).build();
+    } catch (CommandNotSupportedException ex) {
+      return Response.status(Response.Status.BAD_REQUEST).build();
+    }
+  }
+}

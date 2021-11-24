@@ -34,6 +34,7 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryExportingCheck;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.RepositoryReadOnlyChecker;
+import sonia.scm.repository.spi.BranchDetailsCommand;
 import sonia.scm.repository.spi.RepositoryServiceProvider;
 import sonia.scm.repository.work.WorkdirProvider;
 import sonia.scm.security.Authentications;
@@ -488,6 +489,19 @@ public final class RepositoryService implements Closeable {
   public FileLockCommandBuilder getLockCommand() {
     LOG.debug("create lock command for repository {}", repository);
     return new FileLockCommandBuilder(provider.getFileLockCommand(), repository);
+  }
+
+  /**
+   * Get branch details
+   *
+   * @return instance of {@link BranchDetailsCommand}
+   * @throws CommandNotSupportedException if the command is not supported
+   *                                      by the implementation of the repository service provider.
+   * @since 2.28.0
+   */
+  public BranchDetailsCommandBuilder getBranchDetailsCommand() {
+    LOG.debug("create branch details command for repository {}", repository);
+    return provider.getBranchDetailsCommand();
   }
 
   /**

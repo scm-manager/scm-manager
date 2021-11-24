@@ -22,29 +22,43 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.spi;
+package sonia.scm.api.v2.resources;
 
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.repository.api.BranchDetailsCommandResult;
+
+import java.net.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+class BranchDetailsMapperTest {
 
-public class HgBranchDetailsCommandTest extends AbstractHgCommandTestBase {
+  private final Repository repository = RepositoryTestData.create42Puzzle();
 
-  @Test
-  public void shouldGetSingleBranchDetails() {
-    BranchDetailsCommandRequest branchRequest = new BranchDetailsCommandRequest();
-    branchRequest.setBranchName("testbranch");
+  BranchDetailsMapper mapper = new BranchDetailsMapperImpl();
 
-    BranchDetailsCommandResult result = new HgBranchDetailsCommand(cmdContext).execute(branchRequest);
-
-    assertThat(result.getChangesetsAhead()).isEqualTo(1);
-    assertThat(result.getChangesetsBehind()).isEqualTo(1);
+  @BeforeEach
+  void configureMapper() {
+    ScmPathInfoStore scmPathInfoStore = new ScmPathInfoStore();
+    scmPathInfoStore.set(() -> URI.create("/scm/api/"));
+    mapper.setResourceLinks(new ResourceLinks(scmPathInfoStore));
   }
 
-  @Override
-  protected String getZippedRepositoryResource() {
-    return "sonia/scm/repository/spi/scm-hg-ahead-behind-test.zip";
+  @Test
+  void shouldMapDto() {
+    BranchDetailsDto dto = mapper.map(
+      repository,
+      "master",
+      new BranchDetailsCommandResult(42, 21)
+    );
+
+    assertThat(dto.getBranchName()).isEqualTo("master");
+    assertThat(dto.getChangesetsAhead()).isEqualTo(42);
+    assertThat(dto.getChangesetsBehind()).isEqualTo(21);
+    assertThat(dto.getLinks().getLinkBy("self").get().getHref())
+      .isEqualTo("/scm/api/v2/repositories/hitchhiker/42Puzzle/branch-details/master");
   }
 }
