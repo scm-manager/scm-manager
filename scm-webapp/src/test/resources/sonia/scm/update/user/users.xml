@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <!--
-
     MIT License
 
     Copyright (c) 2020-present Cloudogu GmbH and Contributors
@@ -22,8 +21,8 @@
     LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
-
 -->
+
 <user-db>
     <creationTime>1558597074729</creationTime>
     <lastModified>1558597185919</lastModified>

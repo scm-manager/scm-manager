@@ -23,7 +23,6 @@
 # SOFTWARE.
 #
 
-
 for f in * ; do
 	ls $f
 done

@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-
 plugins {
   id 'org.scm-manager.smp' version '0.9.4'
 }

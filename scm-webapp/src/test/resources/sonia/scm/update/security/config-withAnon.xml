@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <!--
-
     MIT License
 
     Copyright (c) 2020-present Cloudogu GmbH and Contributors
@@ -22,8 +21,8 @@
     LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
-
 -->
+
 <scm-config>
   <admin-groups>admins,vogons</admin-groups>
   <admin-users>arthur,dent,ldap-admin</admin-users>
