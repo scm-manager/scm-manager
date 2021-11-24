@@ -29,9 +29,7 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.highlight.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public final class LuceneHighlighter {
 
@@ -61,12 +59,10 @@ public final class LuceneHighlighter {
       .toArray(String[]::new);
   }
 
-  private String[] keepWholeLine(String value, String[] fragments) {
-    List<String> snippets = new ArrayList<>();
-    for (String fragment : fragments) {
-      snippets.add(keepWholeLine(value, fragment));
-    }
-    return snippets.toArray(new String[0]);
+  private String[] keepWholeLine(String content, String[] fragments) {
+    return Arrays.stream(fragments)
+      .map(fragment -> keepWholeLine(content, fragment))
+      .toArray(String[]::new);
   }
 
   private String keepWholeLine(String content, String fragment) {
@@ -83,15 +79,13 @@ public final class LuceneHighlighter {
 
     String snippet = content.substring(c, index) + fragment;
 
-    c = index + raw.length();
-    while (c < content.length()) {
-      c++;
-      if (content.charAt(c) == '\n') {
-        break;
-      }
+    int end = content.indexOf('\n', index + raw.length());
+    if (end < 0) {
+      // reached end
+      end = content.length();
     }
 
-    return snippet + content.substring(index + raw.length(), c) + "\n";
+    return snippet + content.substring(index + raw.length(), end) + "\n";
   }
 
 }
