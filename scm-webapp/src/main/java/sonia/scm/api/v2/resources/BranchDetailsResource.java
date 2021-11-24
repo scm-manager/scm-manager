@@ -162,7 +162,7 @@ public class BranchDetailsResource {
     @QueryParam("branches") String branches
   ) {
     try (RepositoryService service = serviceFactory.create(new NamespaceAndName(namespace, name))) {
-      List<BranchDetailsDto> dtos = getBranchDetailsDtos(branches, service);
+      List<BranchDetailsDto> dtos = getBranchDetailsDtos(service, branches);
       Links links = Links.linkingTo().self(resourceLinks.branchDetailsCollection().self(namespace, name)).build();
       Embedded embedded = Embedded.embeddedBuilder().with("branchDetails", dtos).build();
 
@@ -172,7 +172,7 @@ public class BranchDetailsResource {
     }
   }
 
-  private List<BranchDetailsDto> getBranchDetailsDtos(String branches, RepositoryService service) {
+  private List<BranchDetailsDto> getBranchDetailsDtos(RepositoryService service, String branches) {
     List<BranchDetailsDto> dtos = new ArrayList<>();
     if (!Strings.isNullOrEmpty(branches)) {
       for (String branch : branches.split(",")) {
