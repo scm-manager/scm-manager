@@ -29,6 +29,7 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.attributes.FilterCommandRegistry;
+import org.eclipse.jgit.dircache.DirCache;
 import org.eclipse.jgit.revwalk.RevCommit;
 import sonia.scm.ConcurrentModificationException;
 import sonia.scm.ContextEntry;
@@ -173,13 +174,19 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
     }
 
     private void addFileToGit(String toBeCreated) throws GitAPIException {
-      getClone().add().addFilepattern(removeStartingPathSeparators(toBeCreated)).call();
+      DirCache addResult = getClone().add().addFilepattern(removeStartingPathSeparators(toBeCreated)).call();
+      if (addResult.findEntry(toBeCreated.startsWith("/")? toBeCreated.substring(1): toBeCreated) < 0) {
+        throw new ModificationFailedException(ContextEntry.ContextBuilder.entity("File", toBeCreated).in(repository).build(), "Could not add file to repository");
+      }
     }
 
     @Override
     public void doScmDelete(String toBeDeleted) {
       try {
-        getClone().rm().addFilepattern(removeStartingPathSeparators(toBeDeleted)).call();
+        DirCache deleteResult = getClone().rm().addFilepattern(removeStartingPathSeparators(toBeDeleted)).call();
+        if (deleteResult.findEntry(toBeDeleted) >= 0) {
+          throw new ModificationFailedException(ContextEntry.ContextBuilder.entity("File", toBeDeleted).in(repository).build(), "Could not delete file from repository");
+        }
       } catch (GitAPIException e) {
         throwInternalRepositoryException("could not remove file from index", e);
       }

@@ -311,6 +311,16 @@ public class SvnModifyCommandTest extends AbstractSvnCommandTestBase {
     assertThat(new File(workingCopy.getWorkingRepository(), "j/k/c/e.txt")).exists();
   }
 
+  @Test(expected = ModificationFailedException.class)
+  public void shouldFailMoveAndKeepFilesWhenSourceAndTargetAreTheSame() {
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.addRequest(new ModifyCommandRequest.MoveRequest("c", "c"));
+    request.setCommitMessage("please rename my file pretty please");
+    request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
+
+    svnModifyCommand.execute(request);
+  }
+
   @Test
   public void shouldFailIfLockedByOtherPerson() {
     Subject subject = mock(Subject.class);

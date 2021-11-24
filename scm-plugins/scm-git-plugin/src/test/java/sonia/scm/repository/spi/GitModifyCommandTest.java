@@ -549,4 +549,16 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
 
     assertInTree(assertions);
   }
+
+  @Test(expected = ModificationFailedException.class)
+  public void shouldFailMoveAndKeepFilesWhenSourceAndTargetAreTheSame() throws GitAPIException, IOException {
+    GitModifyCommand command = createCommand();
+
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.setCommitMessage("please move this file");
+    request.setAuthor(new Person("Peter Pan", "peter@pan.net"));
+    request.addRequest(new ModifyCommandRequest.MoveRequest("c", "c"));
+
+    command.execute(request);
+  }
 }
