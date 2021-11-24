@@ -112,7 +112,9 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
   public void shouldOverwriteExistingFiles() throws IOException {
     File testFile = temporaryFolder.newFile();
 
-    new FileOutputStream(testFile).write(42);
+    try (FileOutputStream fos = new FileOutputStream(testFile)) {
+      fos.write(42);
+    }
     ModifyCommandRequest request2 = new ModifyCommandRequest();
     request2.addRequest(new ModifyCommandRequest.CreateFileRequest("a.txt", testFile, true));
     request2.setCommitMessage(" Now i really found the answer");
@@ -129,7 +131,9 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
   public void shouldThrowFileAlreadyExistsException() throws IOException {
 
     File testFile = temporaryFolder.newFile();
-    new FileOutputStream(testFile).write(21);
+    try (FileOutputStream fos = new FileOutputStream(testFile)) {
+      fos.write(21);
+    }
 
     ModifyCommandRequest request = new ModifyCommandRequest();
     request.addRequest(new ModifyCommandRequest.CreateFileRequest("Answer.txt", testFile, false));
@@ -138,7 +142,9 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
 
     hgModifyCommand.execute(request);
 
-    new FileOutputStream(testFile).write(42);
+    try (FileOutputStream fos = new FileOutputStream(testFile)) {
+      fos.write(42);
+    }
     ModifyCommandRequest request2 = new ModifyCommandRequest();
     request2.addRequest(new ModifyCommandRequest.CreateFileRequest("Answer.txt", testFile, false));
     request2.setCommitMessage(" Now i really found the answer");
@@ -151,7 +157,9 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
   public void shouldModifyExistingFile() throws IOException {
     File testFile = temporaryFolder.newFile("a.txt");
 
-    new FileOutputStream(testFile).write(42);
+    try (FileOutputStream fos = new FileOutputStream(testFile)) {
+      fos.write(42);
+    }
     ModifyCommandRequest request2 = new ModifyCommandRequest();
     request2.addRequest(new ModifyCommandRequest.ModifyFileRequest("a.txt", testFile));
     request2.setCommitMessage(" Now i really found the answer");
@@ -168,7 +176,9 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
   public void shouldThrowNotFoundExceptionIfFileDoesNotExist() throws IOException {
     File testFile = temporaryFolder.newFile("Answer.txt");
 
-    new FileOutputStream(testFile).write(42);
+    try (FileOutputStream fos = new FileOutputStream(testFile)) {
+      fos.write(42);
+    }
     ModifyCommandRequest request2 = new ModifyCommandRequest();
     request2.addRequest(new ModifyCommandRequest.ModifyFileRequest("Answer.txt", testFile));
     request2.setCommitMessage(" Now i really found the answer");
@@ -220,7 +230,9 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
   public void shouldFailIfPathInHgMetadata() throws IOException {
     File testFile = temporaryFolder.newFile("a.txt");
 
-    new FileOutputStream(testFile).write(42);
+    try (FileOutputStream fos = new FileOutputStream(testFile)) {
+      fos.write(42);
+    }
     ModifyCommandRequest request2 = new ModifyCommandRequest();
     request2.addRequest(new ModifyCommandRequest.CreateFileRequest(".hg/some.txt", testFile, true));
     request2.setCommitMessage("Now i really found the answer");
