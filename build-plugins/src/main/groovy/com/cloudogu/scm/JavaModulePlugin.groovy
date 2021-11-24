@@ -35,7 +35,7 @@ class JavaModulePlugin implements Plugin<Project> {
   void apply(Project project) {
     project.plugins.apply("java")
     project.plugins.apply("maven-publish")
-    project.plugins.apply("org.cadixdev.licenser")
+    project.plugins.apply("org.scm-manager.license")
 
     project.java {
       toolchain {
@@ -109,6 +109,8 @@ class JavaModulePlugin implements Plugin<Project> {
 
     project.license {
       header project.rootProject.file('LICENSE.txt')
+      newLine = true
+      ignoreNewLine = true
 
       exclude "**/*.mustache"
       exclude "**/*.json"

@@ -24,7 +24,7 @@
 
 plugins {
   id 'com.github.node-gradle.node' version '2.2.4'
-  id 'org.cadixdev.licenser' version '0.6.1'
+  id 'org.scm-manager.license' version '0.6.1'
   id 'org.scm-manager.ci'
 }
 
@@ -222,11 +222,10 @@ task setVersionToNextSnapshot(type: YarnTask) {
 
 license {
   header rootProject.file("LICENSE.txt")
+  newLine = true
+  ignoreNewLine = true
 
   style {
-    tsx = 'BLOCK_COMMENT'
-    ts = 'BLOCK_COMMENT'
-    js = 'BLOCK_COMMENT'
     feature = 'HASH'
     scss = 'BLOCK_COMMENT'
   }
