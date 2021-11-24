@@ -69,19 +69,15 @@ public final class LuceneHighlighter {
     String raw = fragment.replace(PRE_TAG, "").replace(POST_TAG, "");
     int index = content.indexOf(raw);
 
-    int c = index;
-    while (c > 0) {
-      c--;
-      if (content.charAt(c) == '\n') {
-        break;
-      }
+    int start = content.lastIndexOf('\n', index);
+    if (start < 0) {
+      start = 0;
     }
 
-    String snippet = content.substring(c, index) + fragment;
+    String snippet = content.substring(start, index) + fragment;
 
     int end = content.indexOf('\n', index + raw.length());
     if (end < 0) {
-      // reached end
       end = content.length();
     }
 
