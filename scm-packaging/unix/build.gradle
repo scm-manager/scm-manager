@@ -28,7 +28,7 @@ plugins {
   id 'org.scm-manager.packaging'
   id 'signing'
   id 'maven-publish'
-  id 'org.scm-manager.license' version '0.7.0'
+  id 'org.scm-manager.license' version '0.7.1'
 }
 
 configurations {

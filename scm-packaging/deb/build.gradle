@@ -27,7 +27,7 @@ import org.gradle.util.VersionNumber
 plugins {
   id 'nebula.ospackage' version '8.5.6'
   id 'org.scm-manager.packaging'
-  id 'org.scm-manager.license' version '0.7.0'
+  id 'org.scm-manager.license' version '0.7.1'
 }
 
 configurations {
