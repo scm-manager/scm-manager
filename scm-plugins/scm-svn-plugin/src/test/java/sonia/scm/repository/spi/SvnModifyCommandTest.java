@@ -86,10 +86,8 @@ public class SvnModifyCommandTest extends AbstractSvnCommandTestBase {
 
   @Test
   public void shouldRemoveFiles() {
-    ModifyCommandRequest request = new ModifyCommandRequest();
+    ModifyCommandRequest request = prepareModifyCommandRequest();
     request.addRequest(new ModifyCommandRequest.DeleteFileRequest("a.txt", false));
-    request.setCommitMessage("this is great");
-    request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
 
     svnModifyCommand.execute(request);
     WorkingCopy<File, File> workingCopy = workingCopyFactory.createWorkingCopy(context, null);
@@ -99,10 +97,8 @@ public class SvnModifyCommandTest extends AbstractSvnCommandTestBase {
 
   @Test
   public void shouldRemoveDirectory() {
-    ModifyCommandRequest request = new ModifyCommandRequest();
+    ModifyCommandRequest request = prepareModifyCommandRequest();
     request.addRequest(new ModifyCommandRequest.DeleteFileRequest("c", true));
-    request.setCommitMessage("this is great");
-    request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
 
     svnModifyCommand.execute(request);
     WorkingCopy<File, File> workingCopy = workingCopyFactory.createWorkingCopy(context, null);
@@ -114,10 +110,8 @@ public class SvnModifyCommandTest extends AbstractSvnCommandTestBase {
   public void shouldAddNewFile() throws IOException {
     File testfile = temporaryFolder.newFile("Test123");
 
-    ModifyCommandRequest request = new ModifyCommandRequest();
+    ModifyCommandRequest request = prepareModifyCommandRequest();
     request.addRequest(new ModifyCommandRequest.CreateFileRequest("Test123", testfile, false));
-    request.setCommitMessage("this is great");
-    request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
 
     svnModifyCommand.execute(request);
 
@@ -129,11 +123,9 @@ public class SvnModifyCommandTest extends AbstractSvnCommandTestBase {
   public void shouldAddNewFileInDefaultPath() throws IOException {
     File testfile = temporaryFolder.newFile("Test123");
 
-    ModifyCommandRequest request = new ModifyCommandRequest();
+    ModifyCommandRequest request = prepareModifyCommandRequest();
     request.setDefaultPath(true);
     request.addRequest(new ModifyCommandRequest.CreateFileRequest("Test123", testfile, false));
-    request.setCommitMessage("this is great");
-    request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
 
     svnModifyCommand.execute(request);
 
@@ -145,10 +137,8 @@ public class SvnModifyCommandTest extends AbstractSvnCommandTestBase {
   public void shouldThrowFileAlreadyExistsException() throws IOException {
     File testfile = temporaryFolder.newFile("a.txt");
 
-    ModifyCommandRequest request = new ModifyCommandRequest();
+    ModifyCommandRequest request = prepareModifyCommandRequest();
     request.addRequest(new ModifyCommandRequest.CreateFileRequest("a.txt", testfile, false));
-    request.setCommitMessage("this is great");
-    request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
 
     assertThrows(AlreadyExistsException.class, () -> svnModifyCommand.execute(request));
   }
@@ -157,10 +147,8 @@ public class SvnModifyCommandTest extends AbstractSvnCommandTestBase {
   public void shouldUpdateExistingFile() throws IOException {
     File testfile = temporaryFolder.newFile("a.txt");
 
-    ModifyCommandRequest request = new ModifyCommandRequest();
+    ModifyCommandRequest request = prepareModifyCommandRequest();
     request.addRequest(new ModifyCommandRequest.CreateFileRequest("a.txt", testfile, true));
-    request.setCommitMessage("this is great");
-    request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
 
     svnModifyCommand.execute(request);
 
@@ -173,10 +161,8 @@ public class SvnModifyCommandTest extends AbstractSvnCommandTestBase {
   public void shouldThrowExceptionIfExpectedRevisionDoesNotMatch() throws IOException {
     File testfile = temporaryFolder.newFile("Test123");
 
-    ModifyCommandRequest request = new ModifyCommandRequest();
+    ModifyCommandRequest request = prepareModifyCommandRequest();
     request.addRequest(new ModifyCommandRequest.CreateFileRequest("Test123", testfile, false));
-    request.setCommitMessage("this should not pass");
-    request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
     request.setExpectedRevision("42");
 
     assertThrows(ConcurrentModificationException.class, () -> svnModifyCommand.execute(request));
@@ -190,10 +176,8 @@ public class SvnModifyCommandTest extends AbstractSvnCommandTestBase {
   public void shouldPassIfExpectedRevisionMatchesCurrentRevision() throws IOException {
     File testfile = temporaryFolder.newFile("Test123");
 
-    ModifyCommandRequest request = new ModifyCommandRequest();
+    ModifyCommandRequest request = prepareModifyCommandRequest();
     request.addRequest(new ModifyCommandRequest.CreateFileRequest("Test123", testfile, false));
-    request.setCommitMessage("this should not pass");
-    request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
     request.setExpectedRevision("6");
 
     svnModifyCommand.execute(request);
@@ -203,20 +187,16 @@ public class SvnModifyCommandTest extends AbstractSvnCommandTestBase {
 
   @Test(expected = ScmConstraintViolationException.class)
   public void shouldThrowErrorIfRelativePathIsOutsideOfWorkdir() {
-    ModifyCommandRequest request = new ModifyCommandRequest();
+    ModifyCommandRequest request = prepareModifyCommandRequest();
     request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "/../../../../b.txt", false));
-    request.setCommitMessage("please rename my file pretty please");
-    request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
 
     svnModifyCommand.execute(request);
   }
 
   @Test
   public void shouldRenameFile() {
-    ModifyCommandRequest request = new ModifyCommandRequest();
+    ModifyCommandRequest request = prepareModifyCommandRequest();
     request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "/b.txt", false));
-    request.setCommitMessage("please rename my file pretty please");
-    request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
 
     svnModifyCommand.execute(request);
 
@@ -227,20 +207,16 @@ public class SvnModifyCommandTest extends AbstractSvnCommandTestBase {
 
   @Test(expected = AlreadyExistsException.class)
   public void shouldThrowAlreadyExistsException() {
-    ModifyCommandRequest request = new ModifyCommandRequest();
+    ModifyCommandRequest request = prepareModifyCommandRequest();
     request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "/c", false));
-    request.setCommitMessage("please rename my file pretty please");
-    request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
 
     svnModifyCommand.execute(request);
   }
 
   @Test
   public void shouldRenameFolder() {
-    ModifyCommandRequest request = new ModifyCommandRequest();
+    ModifyCommandRequest request = prepareModifyCommandRequest();
     request.addRequest(new ModifyCommandRequest.MoveRequest("c", "/notc", false));
-    request.setCommitMessage("please rename my file pretty please");
-    request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
 
     svnModifyCommand.execute(request);
 
@@ -253,10 +229,8 @@ public class SvnModifyCommandTest extends AbstractSvnCommandTestBase {
 
   @Test
   public void shouldMoveFileToExistingFolder() {
-    ModifyCommandRequest request = new ModifyCommandRequest();
+    ModifyCommandRequest request = prepareModifyCommandRequest();
     request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "/c/z.txt", false));
-    request.setCommitMessage("please rename my file pretty please");
-    request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
 
     svnModifyCommand.execute(request);
 
@@ -269,10 +243,8 @@ public class SvnModifyCommandTest extends AbstractSvnCommandTestBase {
 
   @Test
   public void shouldMoveFolderToExistingFolder() {
-    ModifyCommandRequest request = new ModifyCommandRequest();
+    ModifyCommandRequest request = prepareModifyCommandRequest();
     request.addRequest(new ModifyCommandRequest.MoveRequest("g/h", "/h/h", false));
-    request.setCommitMessage("please rename my file pretty please");
-    request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
 
     svnModifyCommand.execute(request);
 
@@ -283,10 +255,8 @@ public class SvnModifyCommandTest extends AbstractSvnCommandTestBase {
 
   @Test
   public void shouldMoveFileToNonExistentFolder() {
-    ModifyCommandRequest request = new ModifyCommandRequest();
+    ModifyCommandRequest request = prepareModifyCommandRequest();
     request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "/y/z.txt", false));
-    request.setCommitMessage("please rename my file pretty please");
-    request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
 
     svnModifyCommand.execute(request);
 
@@ -296,11 +266,21 @@ public class SvnModifyCommandTest extends AbstractSvnCommandTestBase {
   }
 
   @Test
+  public void shouldMoveFileWithOverwrite() {
+    ModifyCommandRequest request = prepareModifyCommandRequest();
+    request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "b.txt", true));
+
+    svnModifyCommand.execute(request);
+
+    WorkingCopy<File, File> workingCopy = workingCopyFactory.createWorkingCopy(context, null);
+    assertThat(new File(workingCopy.getWorkingRepository(), "a.txt")).doesNotExist();
+    assertThat(new File(workingCopy.getWorkingRepository(), "b.txt")).exists();
+  }
+
+  @Test
   public void shouldMoveFolderToNonExistentFolder() {
-    ModifyCommandRequest request = new ModifyCommandRequest();
+    ModifyCommandRequest request = prepareModifyCommandRequest();
     request.addRequest(new ModifyCommandRequest.MoveRequest("c", "/j/k/c", false));
-    request.setCommitMessage("please rename my file pretty please");
-    request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
 
     svnModifyCommand.execute(request);
 
@@ -313,10 +293,8 @@ public class SvnModifyCommandTest extends AbstractSvnCommandTestBase {
 
   @Test(expected = AlreadyExistsException.class)
   public void shouldFailMoveAndKeepFilesWhenSourceAndTargetAreTheSame() {
-    ModifyCommandRequest request = new ModifyCommandRequest();
+    ModifyCommandRequest request = prepareModifyCommandRequest();
     request.addRequest(new ModifyCommandRequest.MoveRequest("c", "c", false));
-    request.setCommitMessage("please rename my file pretty please");
-    request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
 
     svnModifyCommand.execute(request);
   }
@@ -331,10 +309,8 @@ public class SvnModifyCommandTest extends AbstractSvnCommandTestBase {
 
     initSecurityManager();
 
-    ModifyCommandRequest request = new ModifyCommandRequest();
+    ModifyCommandRequest request = prepareModifyCommandRequest();
     request.addRequest(new ModifyCommandRequest.DeleteFileRequest("a.txt", false));
-    request.setCommitMessage("this should not happen");
-    request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
 
     assertThrows(FileLockedException.class, () -> svnModifyCommand.execute(request));
     WorkingCopy<File, File> workingCopy = workingCopyFactory.createWorkingCopy(context, null);
@@ -345,16 +321,21 @@ public class SvnModifyCommandTest extends AbstractSvnCommandTestBase {
   public void shouldSucceedIfLockedByUser() {
     lockFile();
 
-    ModifyCommandRequest request = new ModifyCommandRequest();
+    ModifyCommandRequest request = prepareModifyCommandRequest();
     request.addRequest(new ModifyCommandRequest.DeleteFileRequest("a.txt", false));
-    request.setCommitMessage("this should not happen");
-    request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
 
     svnModifyCommand.execute(request);
 
     WorkingCopy<File, File> workingCopy = workingCopyFactory.createWorkingCopy(context, null);
     assertThat(new File(workingCopy.getWorkingRepository().getAbsolutePath() + "/a.txt")).doesNotExist();
     assertThat(getLock()).isEmpty();
+  }
+
+  private ModifyCommandRequest prepareModifyCommandRequest() {
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.setCommitMessage("modify some things");
+    request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
+    return request;
   }
 
   private void lockFile() {

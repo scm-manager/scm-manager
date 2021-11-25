@@ -69,10 +69,8 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
 
   @Test
   public void shouldRemoveFiles() {
-    ModifyCommandRequest request = new ModifyCommandRequest();
+    ModifyCommandRequest request = prepareModifyCommandRequest();
     request.addRequest(new ModifyCommandRequest.DeleteFileRequest("a.txt", false));
-    request.setCommitMessage("this is great");
-    request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
 
     String result = hgModifyCommand.execute(request);
 
@@ -82,10 +80,8 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
 
   @Test
   public void shouldRemoveDirectoriesRecursively() {
-    ModifyCommandRequest request = new ModifyCommandRequest();
+    ModifyCommandRequest request = prepareModifyCommandRequest();
     request.addRequest(new ModifyCommandRequest.DeleteFileRequest("c", true));
-    request.setCommitMessage("this is great");
-    request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
 
     String result = hgModifyCommand.execute(request);
 
@@ -97,10 +93,8 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
   public void shouldCreateFilesWithoutOverwrite() throws IOException {
     File testFile = temporaryFolder.newFile();
 
-    ModifyCommandRequest request = new ModifyCommandRequest();
+    ModifyCommandRequest request = prepareModifyCommandRequest();
     request.addRequest(new ModifyCommandRequest.CreateFileRequest("Answer.txt", testFile, false));
-    request.setCommitMessage("I found the answer");
-    request.setAuthor(new Person("Trillian Astra", "trillian@hitchhiker.com"));
 
     String changeSet = hgModifyCommand.execute(request);
 
@@ -115,12 +109,10 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
     try (FileOutputStream fos = new FileOutputStream(testFile)) {
       fos.write(42);
     }
-    ModifyCommandRequest request2 = new ModifyCommandRequest();
-    request2.addRequest(new ModifyCommandRequest.CreateFileRequest("a.txt", testFile, true));
-    request2.setCommitMessage(" Now i really found the answer");
-    request2.setAuthor(new Person("Trillian Astra", "trillian@hitchhiker.com"));
+    ModifyCommandRequest request = prepareModifyCommandRequest();
+    request.addRequest(new ModifyCommandRequest.CreateFileRequest("a.txt", testFile, true));
 
-    String changeSet2 = hgModifyCommand.execute(request2);
+    String changeSet2 = hgModifyCommand.execute(request);
 
     assertThat(cmdContext.open().tip().getNode()).isEqualTo(changeSet2);
     assertThat(cmdContext.open().tip().getModifiedFiles().size()).isEqualTo(1);
@@ -135,10 +127,8 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
       fos.write(21);
     }
 
-    ModifyCommandRequest request = new ModifyCommandRequest();
+    ModifyCommandRequest request = prepareModifyCommandRequest();
     request.addRequest(new ModifyCommandRequest.CreateFileRequest("Answer.txt", testFile, false));
-    request.setCommitMessage("I found the answer");
-    request.setAuthor(new Person("Trillian Astra", "trillian@hitchhiker.com"));
 
     hgModifyCommand.execute(request);
 
@@ -146,9 +136,9 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
       fos.write(42);
     }
     ModifyCommandRequest request2 = new ModifyCommandRequest();
-    request2.addRequest(new ModifyCommandRequest.CreateFileRequest("Answer.txt", testFile, false));
     request2.setCommitMessage(" Now i really found the answer");
-    request2.setAuthor(new Person("Trillian Astra", "trillian@hitchhiker.com"));
+    request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
+    request2.addRequest(new ModifyCommandRequest.CreateFileRequest("Answer.txt", testFile, false));
 
     hgModifyCommand.execute(request2);
   }
@@ -160,12 +150,10 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
     try (FileOutputStream fos = new FileOutputStream(testFile)) {
       fos.write(42);
     }
-    ModifyCommandRequest request2 = new ModifyCommandRequest();
-    request2.addRequest(new ModifyCommandRequest.ModifyFileRequest("a.txt", testFile));
-    request2.setCommitMessage(" Now i really found the answer");
-    request2.setAuthor(new Person("Trillian Astra", "trillian@hitchhiker.com"));
+    ModifyCommandRequest request = prepareModifyCommandRequest();
+    request.addRequest(new ModifyCommandRequest.ModifyFileRequest("a.txt", testFile));
 
-    String changeSet2 = hgModifyCommand.execute(request2);
+    String changeSet2 = hgModifyCommand.execute(request);
 
     assertThat(cmdContext.open().tip().getNode()).isEqualTo(changeSet2);
     assertThat(cmdContext.open().tip().getModifiedFiles().size()).isEqualTo(1);
@@ -179,12 +167,10 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
     try (FileOutputStream fos = new FileOutputStream(testFile)) {
       fos.write(42);
     }
-    ModifyCommandRequest request2 = new ModifyCommandRequest();
-    request2.addRequest(new ModifyCommandRequest.ModifyFileRequest("Answer.txt", testFile));
-    request2.setCommitMessage(" Now i really found the answer");
-    request2.setAuthor(new Person("Trillian Astra", "trillian@hitchhiker.com"));
+    ModifyCommandRequest request = prepareModifyCommandRequest();
+    request.addRequest(new ModifyCommandRequest.ModifyFileRequest("Answer.txt", testFile));
 
-    hgModifyCommand.execute(request2);
+    hgModifyCommand.execute(request);
   }
 
   @Test(expected = NullPointerException.class)
@@ -203,7 +189,7 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
 
     ModifyCommandRequest request = new ModifyCommandRequest();
     request.addRequest(new ModifyCommandRequest.CreateFileRequest("Answer.txt", testFile, false));
-    request.setAuthor(new Person("Trillian Astra", "trillian@hitchhiker.com"));
+    request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
     hgModifyCommand.execute(request);
   }
 
@@ -233,30 +219,24 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
     try (FileOutputStream fos = new FileOutputStream(testFile)) {
       fos.write(42);
     }
-    ModifyCommandRequest request2 = new ModifyCommandRequest();
-    request2.addRequest(new ModifyCommandRequest.CreateFileRequest(".hg/some.txt", testFile, true));
-    request2.setCommitMessage("Now i really found the answer");
-    request2.setAuthor(new Person("Trillian Astra", "trillian@hitchhiker.com"));
+    ModifyCommandRequest request = prepareModifyCommandRequest();
+    request.addRequest(new ModifyCommandRequest.CreateFileRequest(".hg/some.txt", testFile, true));
 
-    hgModifyCommand.execute(request2);
+    hgModifyCommand.execute(request);
   }
 
   @Test(expected = ScmConstraintViolationException.class)
   public void shouldThrowErrorIfRelativePathIsOutsideOfWorkdir() {
-    ModifyCommandRequest request = new ModifyCommandRequest();
+    ModifyCommandRequest request = prepareModifyCommandRequest();
     request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "/../../../../g.txt", false));
-    request.setCommitMessage("Now i really found the answer");
-    request.setAuthor(new Person("Trillian Astra", "trillian@hitchhiker.com"));
 
     hgModifyCommand.execute(request);
   }
 
   @Test
   public void shouldRenameFile() {
-    ModifyCommandRequest request = new ModifyCommandRequest();
+    ModifyCommandRequest request = prepareModifyCommandRequest();
     request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "/g.txt", false));
-    request.setCommitMessage("Now i really found the answer");
-    request.setAuthor(new Person("Trillian Astra", "trillian@hitchhiker.com"));
 
     hgModifyCommand.execute(request);
     assertThat(cmdContext.open().tip().getDeletedFiles()).contains(new File("a.txt").toString());
@@ -265,20 +245,16 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
 
   @Test(expected = AlreadyExistsException.class)
   public void shouldThrowAlreadyExistsException() {
-    ModifyCommandRequest request = new ModifyCommandRequest();
+    ModifyCommandRequest request = prepareModifyCommandRequest();
     request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "/c", false));
-    request.setCommitMessage("please rename my file pretty please");
-    request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
 
     hgModifyCommand.execute(request);
   }
 
   @Test
   public void shouldRenameFolder() {
-    ModifyCommandRequest request = new ModifyCommandRequest();
+    ModifyCommandRequest request = prepareModifyCommandRequest();
     request.addRequest(new ModifyCommandRequest.MoveRequest("c", "/notc", false));
-    request.setCommitMessage("Now i really found the answer");
-    request.setAuthor(new Person("Trillian Astra", "trillian@hitchhiker.com"));
 
     hgModifyCommand.execute(request);
     assertThat(cmdContext.open().tip().getDeletedFiles()).contains(new File("c/d.txt").toString());
@@ -289,10 +265,8 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
 
   @Test
   public void shouldMoveFileToExistingFolder() {
-    ModifyCommandRequest request = new ModifyCommandRequest();
+    ModifyCommandRequest request = prepareModifyCommandRequest();
     request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "/c/z.txt", false));
-    request.setCommitMessage("Now i really found the answer");
-    request.setAuthor(new Person("Trillian Astra", "trillian@hitchhiker.com"));
 
     hgModifyCommand.execute(request);
     assertThat(cmdContext.open().tip().getDeletedFiles()).contains(new File("a.txt").toString());
@@ -303,10 +277,8 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
 
   @Test
   public void shouldMoveFolderToExistingFolder() {
-    ModifyCommandRequest request = new ModifyCommandRequest();
+    ModifyCommandRequest request = prepareModifyCommandRequest();
     request.addRequest(new ModifyCommandRequest.MoveRequest("g/h", "/y/h", false));
-    request.setCommitMessage("Now i really found the answer");
-    request.setAuthor(new Person("Trillian Astra", "trillian@hitchhiker.com"));
 
     hgModifyCommand.execute(request);
     assertThat(cmdContext.open().tip().getDeletedFiles()).contains(new File("g/h/j.txt").toString());
@@ -315,10 +287,8 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
 
   @Test
   public void shouldMoveFileToNonExistentFolder() {
-    ModifyCommandRequest request = new ModifyCommandRequest();
+    ModifyCommandRequest request = prepareModifyCommandRequest();
     request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "/y/z.txt", false));
-    request.setCommitMessage("Now i really found the answer");
-    request.setAuthor(new Person("Trillian Astra", "trillian@hitchhiker.com"));
 
     hgModifyCommand.execute(request);
     assertThat(cmdContext.open().tip().getDeletedFiles()).contains(new File("a.txt").toString());
@@ -327,10 +297,8 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
 
   @Test
   public void shouldMoveFolderToNonExistentFolder() {
-    ModifyCommandRequest request = new ModifyCommandRequest();
+    ModifyCommandRequest request = prepareModifyCommandRequest();
     request.addRequest(new ModifyCommandRequest.MoveRequest("c", "/j/k/c", false));
-    request.setCommitMessage("Now i really found the answer");
-    request.setAuthor(new Person("Trillian Astra", "trillian@hitchhiker.com"));
 
     hgModifyCommand.execute(request);
     assertThat(cmdContext.open().tip().getDeletedFiles()).contains(new File("c/d.txt").toString());
@@ -339,13 +307,28 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
     assertThat(cmdContext.open().tip().getAddedFiles()).contains(new File("j/k/c/e.txt").toString());
   }
 
-  @Test(expected = AlreadyExistsException.class)
-  public void shouldFailMoveAndKeepFilesWhenSourceAndTargetAreTheSame() {
-    ModifyCommandRequest request = new ModifyCommandRequest();
-    request.addRequest(new ModifyCommandRequest.MoveRequest("c", "c", false));
-    request.setCommitMessage("Now i really found the answer");
-    request.setAuthor(new Person("Trillian Astra", "trillian@hitchhiker.com"));
+  @Test
+  public void shouldMoveFileWithOverwrite() {
+    ModifyCommandRequest request = prepareModifyCommandRequest();
+    request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "b.txt", true));
 
     hgModifyCommand.execute(request);
+    assertThat(cmdContext.open().tip().getDeletedFiles()).contains(new File("a.txt").toString());
+    assertThat(cmdContext.open().tip().getModifiedFiles()).contains(new File("b.txt").toString());
+  }
+
+  @Test(expected = AlreadyExistsException.class)
+  public void shouldFailMoveAndKeepFilesWhenSourceAndTargetAreTheSame() {
+    ModifyCommandRequest request = prepareModifyCommandRequest();
+    request.addRequest(new ModifyCommandRequest.MoveRequest("c", "c", false));
+
+    hgModifyCommand.execute(request);
+  }
+
+  private ModifyCommandRequest prepareModifyCommandRequest() {
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.setCommitMessage("Make some changes");
+    request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
+    return request;
   }
 }
