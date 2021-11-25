@@ -77,7 +77,8 @@ const BranchRow: FC<Props> = ({ baseUrl, branch, onDelete, details }) => {
         </ReactLink>
         {branch.lastCommitDate && (
           <span className={classNames("has-text-grey", "is-ellipsis-overflow", "is-size-7", "ml-4")}>
-            {t("branches.table.lastCommit")} <DateFromNow date={branch.lastCommitDate} />
+            {t("branches.table.lastCommit")} <DateFromNow date={branch.lastCommitDate} />{" "}
+            {t("branches.table.lastCommitter", { name: branch.lastCommitter.name })}
           </span>
         )}
       </td>

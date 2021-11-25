@@ -26,10 +26,13 @@ package sonia.scm.repository.spi;
 
 import org.junit.Test;
 import sonia.scm.repository.Branch;
+import sonia.scm.repository.Person;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.ArgumentMatchers.eq;
 import static sonia.scm.repository.Branch.defaultBranch;
 import static sonia.scm.repository.Branch.normalBranch;
 
@@ -42,8 +45,17 @@ public class HgBranchesCommandTest extends AbstractHgCommandTestBase {
     List<Branch> branches = command.getBranches();
 
     assertThat(branches).contains(
-      defaultBranch("default", "2baab8e80280ef05a9aa76c49c76feca2872afb7", 1339586381000L),
-      normalBranch("test-branch", "79b6baf49711ae675568e0698d730b97ef13e84a", 1339586299000L)
+      defaultBranch(eq("default"), eq("2baab8e80280ef05a9aa76c49c76feca2872afb7"), eq(1339586381000L), argThat(person -> {
+        assertThat(person.getName()).isEqualTo("");
+        assertThat(person.getMail()).isEqualTo("");
+        return true;
+      })),
+      normalBranch(eq("test-branch"), ("79b6baf49711ae675568e0698d730b97ef13e84a"), eq(1339586299000L), argThat(person -> {
+        assertThat(person.getName()).isEqualTo("");
+        assertThat(person.getMail()).isEqualTo("");
+
+        return true;
+      }))
     );
   }
 }

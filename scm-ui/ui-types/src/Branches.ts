@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+import { Person } from ".";
 import { Embedded, HalRepresentation, HalRepresentationWithEmbedded, Links } from "./hal";
 
 type EmbeddedBranches = {
@@ -35,6 +36,7 @@ export type Branch = {
   revision: string;
   defaultBranch?: boolean;
   lastCommitDate?: string;
+  lastCommitter: Person;
   stale?: boolean;
   _links: Links;
 };

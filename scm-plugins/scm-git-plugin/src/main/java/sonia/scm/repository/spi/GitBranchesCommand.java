@@ -29,14 +29,17 @@ import com.google.common.base.Strings;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.Branch;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.InternalRepositoryException;
+import sonia.scm.repository.Person;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -52,8 +55,7 @@ public class GitBranchesCommand extends AbstractGitCommand implements BranchesCo
   private static final Logger LOG = LoggerFactory.getLogger(GitBranchesCommand.class);
 
   @Inject
-  public GitBranchesCommand(GitContext context)
-  {
+  public GitBranchesCommand(GitContext context) {
     super(context);
   }
 
@@ -89,21 +91,20 @@ public class GitBranchesCommand extends AbstractGitCommand implements BranchesCo
       LOG.warn("could not determine branch name for branch name {} at revision {}", ref.getName(), ref.getObjectId());
       return null;
     } else {
-      Long lastCommitDate = getCommitDate(repository, refWalk, branchName, ref);
-      if (branchName.equals(defaultBranchName)) {
-        return Branch.defaultBranch(branchName, GitUtil.getId(ref.getObjectId()), lastCommitDate);
-      } else {
-        return Branch.normalBranch(branchName, GitUtil.getId(ref.getObjectId()), lastCommitDate);
+      try {
+        RevCommit commit = getCommit(repository, refWalk, ref);
+        Long lastCommitDate = getCommitTime(commit);
+        PersonIdent authorIdent = commit.getAuthorIdent();
+        Person lastCommitter = new Person(authorIdent.getName(), authorIdent.getEmailAddress());
+        if (branchName.equals(defaultBranchName)) {
+          return Branch.defaultBranch(branchName, GitUtil.getId(ref.getObjectId()), lastCommitDate, lastCommitter);
+        } else {
+          return Branch.normalBranch(branchName, GitUtil.getId(ref.getObjectId()), lastCommitDate, lastCommitter);
+        }
+      } catch (IOException e) {
+        LOG.info("failed to read commit date of branch {} with revision {}", branchName, ref.getName());
+        return null;
       }
-    }
-  }
-
-  private Long getCommitDate(Repository repository, RevWalk refWalk, String branchName, Ref ref) {
-    try {
-      return getCommitTime(getCommit(repository, refWalk, ref));
-    } catch (IOException e) {
-      LOG.info("failed to read commit date of branch {} with revision {}", branchName, ref.getName());
-      return null;
     }
   }
 

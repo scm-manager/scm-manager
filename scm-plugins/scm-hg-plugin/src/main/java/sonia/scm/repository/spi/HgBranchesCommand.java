@@ -29,6 +29,7 @@ package sonia.scm.repository.spi;
 import org.javahg.Changeset;
 import com.google.common.collect.Lists;
 import sonia.scm.repository.Branch;
+import sonia.scm.repository.Person;
 
 import java.util.List;
 
@@ -72,11 +73,12 @@ public class HgBranchesCommand extends AbstractCommand
           node = changeset.getNode();
         }
 
+        Person lastCommitter = Person.toPerson(changeset.getUser());
         long lastCommitDate = changeset.getTimestamp().getDate().getTime();
         if (DEFAULT_BRANCH_NAME.equals(hgBranch.getName())) {
-          return Branch.defaultBranch(hgBranch.getName(), node, lastCommitDate);
+          return Branch.defaultBranch(hgBranch.getName(), node, lastCommitDate, lastCommitter);
         } else {
-          return Branch.normalBranch(hgBranch.getName(), node, lastCommitDate);
+          return Branch.normalBranch(hgBranch.getName(), node, lastCommitDate, lastCommitter);
         }
       });
   }

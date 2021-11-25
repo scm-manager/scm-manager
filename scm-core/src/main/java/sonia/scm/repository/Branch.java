@@ -59,6 +59,7 @@ public final class Branch implements Serializable, Validateable {
   private boolean defaultBranch;
 
   private Long lastCommitDate;
+  private Person lastCommitter;
 
   private boolean stale = false;
 
@@ -90,11 +91,29 @@ public final class Branch implements Serializable, Validateable {
    * @param defaultBranch Whether this branch is the default branch for the repository
    * @param lastCommitDate The date of the commit this branch points to (if computed). May be <code>null</code>
    */
+  @Deprecated
   Branch(String name, String revision, boolean defaultBranch, Long lastCommitDate) {
     this.name = name;
     this.revision = revision;
     this.defaultBranch = defaultBranch;
     this.lastCommitDate = lastCommitDate;
+  }
+
+  /**
+   * Constructs a new branch.
+   *
+   * @param name name of the branch
+   * @param revision latest revision of the branch
+   * @param defaultBranch Whether this branch is the default branch for the repository
+   * @param lastCommitDate The date of the commit this branch points to (if computed). May be <code>null</code>
+   * @param lastCommitter The user of the commit this branch points to (if computed). May be <code>null</code>
+   */
+  Branch(String name, String revision, boolean defaultBranch, Long lastCommitDate, Person lastCommitter) {
+    this.name = name;
+    this.revision = revision;
+    this.defaultBranch = defaultBranch;
+    this.lastCommitDate = lastCommitDate;
+    this.lastCommitter = lastCommitter;
   }
 
   /**
@@ -105,8 +124,16 @@ public final class Branch implements Serializable, Validateable {
     return normalBranch(name, revision, null);
   }
 
+  /**
+   * @deprecated Use {@link #normalBranch(String, String, Long, Person)} instead to set the author of the last commit, too.
+   */
+  @Deprecated
   public static Branch normalBranch(String name, String revision, Long lastCommitDate) {
     return new Branch(name, revision, false, lastCommitDate);
+  }
+
+  public static Branch normalBranch(String name, String revision, Long lastCommitDate, Person lastCommitter) {
+    return new Branch(name, revision, false, lastCommitDate, lastCommitter);
   }
 
   /**
@@ -117,8 +144,16 @@ public final class Branch implements Serializable, Validateable {
     return defaultBranch(name, revision, null);
   }
 
+  /**
+   * @deprecated Use {@link #defaultBranch(String, String, Long, Person)} instead to set the author of the last commit, too.
+   */
+  @Deprecated
   public static Branch defaultBranch(String name, String revision, Long lastCommitDate) {
     return new Branch(name, revision, true, lastCommitDate);
+  }
+
+  public static Branch defaultBranch(String name, String revision, Long lastCommitDate, Person lastCommitter) {
+    return new Branch(name, revision, true, lastCommitDate, lastCommitter);
   }
 
   public void setStale(boolean stale) {
@@ -195,6 +230,16 @@ public final class Branch implements Serializable, Validateable {
    */
   public Optional<Long> getLastCommitDate() {
     return Optional.ofNullable(lastCommitDate);
+  }
+
+
+  /**
+   * The author of the last commit this branch points to.
+   *
+   * @since 2.28.0
+   */
+  public Person getLastCommitter() {
+    return lastCommitter;
   }
 
   public boolean isStale() {

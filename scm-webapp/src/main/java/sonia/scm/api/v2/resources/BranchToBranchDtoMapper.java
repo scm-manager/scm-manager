@@ -32,6 +32,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.ObjectFactory;
 import sonia.scm.repository.Branch;
 import sonia.scm.repository.NamespaceAndName;
+import sonia.scm.repository.Person;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.web.EdisonHalAppender;
@@ -52,6 +53,8 @@ public abstract class BranchToBranchDtoMapper extends HalAppenderMapper implemen
 
   @Mapping(target = "attributes", ignore = true) // We do not map HAL attributes
   public abstract BranchDto map(Branch branch, @Context Repository repository);
+
+  abstract PersonDto map(Person person);
 
   @ObjectFactory
   BranchDto createDto(@Context Repository repository, Branch branch) {

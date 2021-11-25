@@ -127,7 +127,8 @@
         "active": "Active Branches",
         "stale": "Stale Branches"
       },
-      "lastCommit": "Last commit"
+      "lastCommit": "Last commit",
+      "lastCommitter": "by {{name}}"
     },
     "create": {
       "title": "Create Branch",
