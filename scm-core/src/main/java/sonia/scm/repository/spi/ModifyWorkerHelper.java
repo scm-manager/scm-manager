@@ -27,7 +27,6 @@ package sonia.scm.repository.spi;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.AlreadyExistsException;
 import sonia.scm.ContextEntry;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
@@ -87,12 +86,16 @@ public interface ModifyWorkerHelper extends ModifyCommand.Worker {
       throw alreadyExists(entity("Path", target).in(getRepository()));
     }
 
+    doThrow()
+      .violation("Cannot move if new path would be a child directory of path")
+      .when(Files.isDirectory(sourceFile) && targetFile.startsWith(sourceFile));
+
     Files.createDirectories(targetFile.getParent());
     try {
       Path pathAfterMove = Files.move(sourceFile, targetFile, REPLACE_EXISTING);
       doScmMove(source, toScmPath(pathAfterMove));
     } catch (FileAlreadyExistsException e) {
-      throw AlreadyExistsException.alreadyExists(ContextEntry.ContextBuilder.entity("File", target).in(getRepository()));
+      throw alreadyExists(entity("File", target).in(getRepository()));
     }
   }
 

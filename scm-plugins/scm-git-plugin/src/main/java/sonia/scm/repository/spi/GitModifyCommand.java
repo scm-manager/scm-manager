@@ -174,8 +174,9 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
     }
 
     private void addFileToGit(String toBeCreated) throws GitAPIException {
-      DirCache addResult = getClone().add().addFilepattern(removeStartingPathSeparators(toBeCreated)).call();
-      if (addResult.findEntry(toBeCreated.startsWith("/")? toBeCreated.substring(1): toBeCreated) < 0) {
+      String toBeCreatedWithoutLeadingSlash = removeStartingPathSeparators(toBeCreated);
+      DirCache addResult = getClone().add().addFilepattern(toBeCreatedWithoutLeadingSlash).call();
+      if (addResult.findEntry(toBeCreatedWithoutLeadingSlash) < 0) {
         throw new ModificationFailedException(ContextEntry.ContextBuilder.entity("File", toBeCreated).in(repository).build(), "Could not add file to repository");
       }
     }
@@ -183,8 +184,9 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
     @Override
     public void doScmDelete(String toBeDeleted) {
       try {
-        DirCache deleteResult = getClone().rm().addFilepattern(removeStartingPathSeparators(toBeDeleted)).call();
-        if (deleteResult.findEntry(toBeDeleted) >= 0) {
+        String toBeDeletedWithoutLeadingSlash = removeStartingPathSeparators(toBeDeleted);
+        DirCache deleteResult = getClone().rm().addFilepattern(toBeDeletedWithoutLeadingSlash).call();
+        if (deleteResult.findEntry(toBeDeletedWithoutLeadingSlash) >= 0) {
           throw new ModificationFailedException(ContextEntry.ContextBuilder.entity("File", toBeDeleted).in(repository).build(), "Could not delete file from repository");
         }
       } catch (GitAPIException e) {
@@ -213,8 +215,8 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
     }
 
     private String removeStartingPathSeparators(String path) {
-      while (path.startsWith(File.separator)) {
-        path = path.substring(1);
+      if (path.startsWith("/")) {
+        return path.substring(1);
       }
       return path;
     }
