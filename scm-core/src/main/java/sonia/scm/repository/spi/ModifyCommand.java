@@ -47,8 +47,6 @@ public interface ModifyCommand {
     /**
      * @since 2.28.0
      */
-    default void move(String path, String newPath, boolean overwrite) throws IOException {
-      throw new FeatureNotSupportedException(Feature.MODIFY_SUPPORTS_MOVE.name());
-    }
+    void move(String path, String newPath, boolean overwrite) throws IOException;
   }
 }

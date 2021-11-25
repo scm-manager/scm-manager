@@ -115,8 +115,7 @@ public class ModifyCommandBuilder {
   }
 
   /**
-   * Move existing directories or files. Only supported, when the repository supports feature
-   * {@link sonia.scm.repository.Feature#MODIFY_SUPPORTS_MOVE}.
+   * Move existing directories or files.
    *
    * @param fromPath The source file or directory.
    * @return A sub builder to specify the target and further options for the move.

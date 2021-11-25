@@ -60,8 +60,7 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider {
   );
 
   public static final Set<Feature> FEATURES = EnumSet.of(
-    Feature.MODIFICATIONS_BETWEEN_REVISIONS,
-    Feature.MODIFY_SUPPORTS_MOVE
+    Feature.MODIFICATIONS_BETWEEN_REVISIONS
   );
 
   private final SvnContext context;

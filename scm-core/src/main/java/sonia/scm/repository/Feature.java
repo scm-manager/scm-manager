@@ -47,12 +47,5 @@ public enum Feature {
    *
    * @since 2.23.0
    */
-  MODIFICATIONS_BETWEEN_REVISIONS,
-  /**
-   * The repository supports move of files in the modify command
-   * ({@link sonia.scm.repository.api.ModifyCommandBuilder#move(String, String)})
-   *
-   * @since 2.28.0
-   */
-  MODIFY_SUPPORTS_MOVE
+  MODIFICATIONS_BETWEEN_REVISIONS
 }
