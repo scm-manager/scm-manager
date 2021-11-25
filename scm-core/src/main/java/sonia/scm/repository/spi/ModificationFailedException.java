@@ -33,7 +33,7 @@ public class ModificationFailedException extends ExceptionWithContext {
 
   public static final String CODE = "8wSpi62oJ1";
 
-  protected ModificationFailedException(List<ContextEntry> context, String message) {
+  public ModificationFailedException(List<ContextEntry> context, String message) {
     super(context, message);
   }
 

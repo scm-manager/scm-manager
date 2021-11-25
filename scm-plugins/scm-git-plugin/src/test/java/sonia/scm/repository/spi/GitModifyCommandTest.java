@@ -413,7 +413,7 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
     ModifyCommandRequest request = new ModifyCommandRequest();
     request.setCommitMessage("please rename this file");
     request.setAuthor(new Person("Peter Pan", "peter@pan.net"));
-    request.addRequest(new ModifyCommandRequest.MoveRequest("g/h/c", "/../../../../b"));
+    request.addRequest(new ModifyCommandRequest.MoveRequest("g/h/c", "/../../../../b", false));
 
     command.execute(request);
   }
@@ -425,7 +425,7 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
     ModifyCommandRequest request = new ModifyCommandRequest();
     request.setCommitMessage("please rename this file");
     request.setAuthor(new Person("Peter Pan", "peter@pan.net"));
-    request.addRequest(new ModifyCommandRequest.MoveRequest("b.txt", "/d.txt"));
+    request.addRequest(new ModifyCommandRequest.MoveRequest("b.txt", "/d.txt", false));
 
     command.execute(request);
 
@@ -442,7 +442,7 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
     GitModifyCommand command = createCommand();
 
     ModifyCommandRequest request = new ModifyCommandRequest();
-    request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "/c"));
+    request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "/c", false));
     request.setCommitMessage("please rename my file pretty please");
     request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
 
@@ -456,7 +456,7 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
     ModifyCommandRequest request = new ModifyCommandRequest();
     request.setCommitMessage("please move this folder");
     request.setAuthor(new Person("Peter Pan", "peter@pan.net"));
-    request.addRequest(new ModifyCommandRequest.MoveRequest("c", "/notc"));
+    request.addRequest(new ModifyCommandRequest.MoveRequest("c", "/notc", false));
 
     command.execute(request);
 
@@ -477,7 +477,7 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
     ModifyCommandRequest request = new ModifyCommandRequest();
     request.setCommitMessage("please move this file");
     request.setAuthor(new Person("Peter Pan", "peter@pan.net"));
-    request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "/c/z.txt"));
+    request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "/c/z.txt", false));
 
     command.execute(request);
 
@@ -498,7 +498,7 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
     ModifyCommandRequest request = new ModifyCommandRequest();
     request.setCommitMessage("please rename this file");
     request.setAuthor(new Person("Peter Pan", "peter@pan.net"));
-    request.addRequest(new ModifyCommandRequest.MoveRequest("g/h", "/g/k/h"));
+    request.addRequest(new ModifyCommandRequest.MoveRequest("g/h", "/g/k/h", false));
 
     command.execute(request);
 
@@ -517,7 +517,7 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
     ModifyCommandRequest request = new ModifyCommandRequest();
     request.setCommitMessage("please move this file");
     request.setAuthor(new Person("Peter Pan", "peter@pan.net"));
-    request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "/y/z.txt"));
+    request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "/y/z.txt", false));
 
     command.execute(request);
 
@@ -536,7 +536,7 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
     ModifyCommandRequest request = new ModifyCommandRequest();
     request.setCommitMessage("please move this file");
     request.setAuthor(new Person("Peter Pan", "peter@pan.net"));
-    request.addRequest(new ModifyCommandRequest.MoveRequest("c", "/j/k/c"));
+    request.addRequest(new ModifyCommandRequest.MoveRequest("c", "/j/k/c", false));
 
     command.execute(request);
 
@@ -550,14 +550,14 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
     assertInTree(assertions);
   }
 
-  @Test(expected = ModificationFailedException.class)
+  @Test(expected = AlreadyExistsException.class)
   public void shouldFailMoveAndKeepFilesWhenSourceAndTargetAreTheSame() throws GitAPIException, IOException {
     GitModifyCommand command = createCommand();
 
     ModifyCommandRequest request = new ModifyCommandRequest();
     request.setCommitMessage("please move this file");
     request.setAuthor(new Person("Peter Pan", "peter@pan.net"));
-    request.addRequest(new ModifyCommandRequest.MoveRequest("c", "c"));
+    request.addRequest(new ModifyCommandRequest.MoveRequest("c", "c", false));
 
     command.execute(request);
   }

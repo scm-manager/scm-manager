@@ -244,7 +244,7 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
   @Test(expected = ScmConstraintViolationException.class)
   public void shouldThrowErrorIfRelativePathIsOutsideOfWorkdir() {
     ModifyCommandRequest request = new ModifyCommandRequest();
-    request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "/../../../../g.txt"));
+    request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "/../../../../g.txt", false));
     request.setCommitMessage("Now i really found the answer");
     request.setAuthor(new Person("Trillian Astra", "trillian@hitchhiker.com"));
 
@@ -254,7 +254,7 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
   @Test
   public void shouldRenameFile() {
     ModifyCommandRequest request = new ModifyCommandRequest();
-    request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "/g.txt"));
+    request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "/g.txt", false));
     request.setCommitMessage("Now i really found the answer");
     request.setAuthor(new Person("Trillian Astra", "trillian@hitchhiker.com"));
 
@@ -266,7 +266,7 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
   @Test(expected = AlreadyExistsException.class)
   public void shouldThrowAlreadyExistsException() {
     ModifyCommandRequest request = new ModifyCommandRequest();
-    request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "/c"));
+    request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "/c", false));
     request.setCommitMessage("please rename my file pretty please");
     request.setAuthor(new Person("Arthur Dent", "dent@hitchhiker.com"));
 
@@ -276,7 +276,7 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
   @Test
   public void shouldRenameFolder() {
     ModifyCommandRequest request = new ModifyCommandRequest();
-    request.addRequest(new ModifyCommandRequest.MoveRequest("c", "/notc"));
+    request.addRequest(new ModifyCommandRequest.MoveRequest("c", "/notc", false));
     request.setCommitMessage("Now i really found the answer");
     request.setAuthor(new Person("Trillian Astra", "trillian@hitchhiker.com"));
 
@@ -290,7 +290,7 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
   @Test
   public void shouldMoveFileToExistingFolder() {
     ModifyCommandRequest request = new ModifyCommandRequest();
-    request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "/c/z.txt"));
+    request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "/c/z.txt", false));
     request.setCommitMessage("Now i really found the answer");
     request.setAuthor(new Person("Trillian Astra", "trillian@hitchhiker.com"));
 
@@ -304,7 +304,7 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
   @Test
   public void shouldMoveFolderToExistingFolder() {
     ModifyCommandRequest request = new ModifyCommandRequest();
-    request.addRequest(new ModifyCommandRequest.MoveRequest("g/h", "/y/h"));
+    request.addRequest(new ModifyCommandRequest.MoveRequest("g/h", "/y/h", false));
     request.setCommitMessage("Now i really found the answer");
     request.setAuthor(new Person("Trillian Astra", "trillian@hitchhiker.com"));
 
@@ -316,7 +316,7 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
   @Test
   public void shouldMoveFileToNonExistentFolder() {
     ModifyCommandRequest request = new ModifyCommandRequest();
-    request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "/y/z.txt"));
+    request.addRequest(new ModifyCommandRequest.MoveRequest("a.txt", "/y/z.txt", false));
     request.setCommitMessage("Now i really found the answer");
     request.setAuthor(new Person("Trillian Astra", "trillian@hitchhiker.com"));
 
@@ -328,7 +328,7 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
   @Test
   public void shouldMoveFolderToNonExistentFolder() {
     ModifyCommandRequest request = new ModifyCommandRequest();
-    request.addRequest(new ModifyCommandRequest.MoveRequest("c", "/j/k/c"));
+    request.addRequest(new ModifyCommandRequest.MoveRequest("c", "/j/k/c", false));
     request.setCommitMessage("Now i really found the answer");
     request.setAuthor(new Person("Trillian Astra", "trillian@hitchhiker.com"));
 
@@ -342,7 +342,7 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
   @Test(expected = ModificationFailedException.class)
   public void shouldFailMoveAndKeepFilesWhenSourceAndTargetAreTheSame() {
     ModifyCommandRequest request = new ModifyCommandRequest();
-    request.addRequest(new ModifyCommandRequest.MoveRequest("c", "c"));
+    request.addRequest(new ModifyCommandRequest.MoveRequest("c", "c", false));
     request.setCommitMessage("Now i really found the answer");
     request.setAuthor(new Person("Trillian Astra", "trillian@hitchhiker.com"));
 

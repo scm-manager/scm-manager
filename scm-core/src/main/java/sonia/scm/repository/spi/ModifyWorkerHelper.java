@@ -74,11 +74,22 @@ public interface ModifyWorkerHelper extends ModifyCommand.Worker {
    * @since 2.28.0
    */
   @Override
-  default void move(String source, String target) throws IOException {
+  default void move(String source, String target, boolean overwrite) throws IOException {
+    Path sourceFile = getTargetFile(source);
+
+    if (!Files.exists(sourceFile)) {
+      throw notFound(entity("Path", source).in(getRepository()));
+    }
+
     Path targetFile = getTargetFile(target);
+
+    if (!overwrite && Files.exists(targetFile)) {
+      throw alreadyExists(entity("Path", target).in(getRepository()));
+    }
+
     Files.createDirectories(targetFile.getParent());
     try {
-      Path pathAfterMove = Files.move(getTargetFile(source), targetFile);
+      Path pathAfterMove = Files.move(sourceFile, targetFile, REPLACE_EXISTING);
       doScmMove(source, toScmPath(pathAfterMove));
     } catch (FileAlreadyExistsException e) {
       throw AlreadyExistsException.alreadyExists(ContextEntry.ContextBuilder.entity("File", target).in(getRepository()));

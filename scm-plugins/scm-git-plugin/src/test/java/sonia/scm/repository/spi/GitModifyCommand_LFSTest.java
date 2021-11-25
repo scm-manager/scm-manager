@@ -102,7 +102,7 @@ public class GitModifyCommand_LFSTest extends GitModifyCommandTestBase {
     GitModifyCommand command = createCommand();
     ModifyCommandRequest request = new ModifyCommandRequest();
     request.setCommitMessage("Move file");
-    request.addRequest(new ModifyCommandRequest.MoveRequest("new_lfs.png", "moved_lfs.png"));
+    request.addRequest(new ModifyCommandRequest.MoveRequest("new_lfs.png", "moved_lfs.png", false));
     request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
     command.execute(request);
 

@@ -30,8 +30,7 @@ package sonia.scm.repository;
  * @author Sebastian Sdorra
  * @since 1.25
  */
-public enum Feature
-{
+public enum Feature {
 
   /**
    * The default branch of the repository is a combined branch of all
@@ -48,5 +47,12 @@ public enum Feature
    *
    * @since 2.23.0
    */
-  MODIFICATIONS_BETWEEN_REVISIONS
+  MODIFICATIONS_BETWEEN_REVISIONS,
+  /**
+   * The repository supports move of files in the modify command
+   * ({@link sonia.scm.repository.api.ModifyCommandBuilder#move(String, String)})
+   *
+   * @since 2.28.0
+   */
+  MODIFY_SUPPORTS_MOVE
 }

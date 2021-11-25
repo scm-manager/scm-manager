@@ -63,7 +63,8 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider {
 
   protected static final Set<Feature> FEATURES = EnumSet.of(
     Feature.INCOMING_REVISION,
-    Feature.MODIFICATIONS_BETWEEN_REVISIONS
+    Feature.MODIFICATIONS_BETWEEN_REVISIONS,
+    Feature.MODIFY_SUPPORTS_MOVE
   );
 
   private final GitContext context;
