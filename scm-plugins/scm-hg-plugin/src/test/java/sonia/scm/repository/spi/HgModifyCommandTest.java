@@ -339,7 +339,7 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
     assertThat(cmdContext.open().tip().getAddedFiles()).contains(new File("j/k/c/e.txt").toString());
   }
 
-  @Test(expected = ModificationFailedException.class)
+  @Test(expected = AlreadyExistsException.class)
   public void shouldFailMoveAndKeepFilesWhenSourceAndTargetAreTheSame() {
     ModifyCommandRequest request = new ModifyCommandRequest();
     request.addRequest(new ModifyCommandRequest.MoveRequest("c", "c", false));

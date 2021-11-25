@@ -311,7 +311,7 @@ public class SvnModifyCommandTest extends AbstractSvnCommandTestBase {
     assertThat(new File(workingCopy.getWorkingRepository(), "j/k/c/e.txt")).exists();
   }
 
-  @Test(expected = ModificationFailedException.class)
+  @Test(expected = AlreadyExistsException.class)
   public void shouldFailMoveAndKeepFilesWhenSourceAndTargetAreTheSame() {
     ModifyCommandRequest request = new ModifyCommandRequest();
     request.addRequest(new ModifyCommandRequest.MoveRequest("c", "c", false));
