@@ -34,7 +34,7 @@ class DefaultBranchTag extends React.Component<Props> {
     const { defaultBranch, t } = this.props;
 
     if (defaultBranch) {
-      return <Tag color="dark" label={t("branch.defaultTag")} size="small" />;
+      return <Tag className="is-unselectable" color="dark" label={t("branch.defaultTag")} />;
     }
     return null;
   }

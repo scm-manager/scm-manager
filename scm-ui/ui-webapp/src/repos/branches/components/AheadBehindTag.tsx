@@ -26,6 +26,7 @@ import { Branch, BranchDetails } from "@scm-manager/ui-types";
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
+import { Tooltip } from "@scm-manager/ui-components";
 
 type Props = {
   branch: Branch;
@@ -34,23 +35,26 @@ type Props = {
 
 type BarProps = {
   width: number;
+  direction: "right" | "left";
 };
 
 const Ahead = styled.div`
-  margin-left: 2px;
-  padding: 3px 0 0 0;
   border-left: 1px solid gray;
 `;
 
-const Behind = styled.div`
-  padding: 3px 0 0 0;
+const Behind = styled.div``;
+
+const Count = styled.div`
+  word-break: keep-all;
 `;
 
 const Bar = styled.span.attrs(props => ({}))<BarProps>`
-  position: absolute;
-  right: 0;
   height: 3px;
-  width: ${props => props.width};
+  max-width: 100%;
+  margin-top: -2px;
+  margin-bottom: 2px;
+  width: ${props => props.width}%;
+  border-radius: ${props => (props.direction === "left" ? "25px 0 0 25px" : "0 25px 25px 0")};
 `;
 
 const AheadBehindTag: FC<Props> = ({ branch, details }) => {
@@ -60,19 +64,45 @@ const AheadBehindTag: FC<Props> = ({ branch, details }) => {
     return null;
   }
 
+  const calculateBarLength = (part: number) => {
+    let lengthInPercent = 5;
+
+    if (part < 10) {
+      lengthInPercent += part;
+    }
+    if (part < 50) {
+      lengthInPercent += part / 5;
+    }
+    if (part < 500) {
+      lengthInPercent += part / 10;
+    }
+    if (part > 500) {
+      lengthInPercent += part / 25;
+    }
+    return lengthInPercent;
+  };
+
   return (
-    // <Tooltip message={t("branch.aheadBehind.tooltip")} location="top">
-    <div className="columns is-flex mr-3 is-unselectable">
-      <Behind className="column is-half is-flex is-justify-content-flex-end">
-        <div className="has-text-grey-light is-size-7">{details.changesetsBehind}</div>
-        <Bar className="has-rounded-border has-background-blue-light" width={5} />
-      </Behind>
-      <Ahead className="column is-half is-flex">
-        <div className="has-text-grey-light is-size-7">{details.changesetsAhead}</div>
-        <Bar className="has-rounded-border has-background-blue-light" width={5} />
-      </Ahead>
-    </div>
-    // </Tooltip>
+    <Tooltip message={t("branch.aheadBehind.tooltip")} location="top">
+      <div className="columns is-flex is-unselectable is-hidden-mobile">
+        <Behind className="column is-half is-flex is-flex-direction-column is-align-items-flex-end p-0">
+          <Count className="is-size-7 pr-1">{details.changesetsBehind}</Count>
+          <Bar
+            className="has-rounded-border-left has-background-grey"
+            width={calculateBarLength(details.changesetsBehind)}
+            direction="left"
+          />
+        </Behind>
+        <Ahead className="column is-half is-flex is-flex-direction-column is-align-items-flex-start p-0">
+          <Count className="is-size-7 pl-1">{details.changesetsAhead}</Count>
+          <Bar
+            className="has-rounded-border-right has-background-grey"
+            width={calculateBarLength(details.changesetsAhead)}
+            direction="right"
+          />
+        </Ahead>
+      </div>
+    </Tooltip>
   );
 };
 

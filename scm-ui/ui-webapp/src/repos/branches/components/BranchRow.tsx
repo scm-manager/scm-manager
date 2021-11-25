@@ -78,7 +78,7 @@ const BranchRow: FC<Props> = ({ baseUrl, branch, onDelete, details }) => {
           </span>
         )}
       </td>
-      <td>{renderBranchTag()}</td>
+      <td className="has-text-centered">{renderBranchTag()}</td>
       <td className="is-darker has-text-centered">{deleteButton}</td>
     </tr>
   );
