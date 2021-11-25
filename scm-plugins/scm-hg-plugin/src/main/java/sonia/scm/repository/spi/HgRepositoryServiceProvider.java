@@ -26,6 +26,7 @@ package sonia.scm.repository.spi;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
+import sonia.scm.cache.CacheManager;
 import sonia.scm.repository.Feature;
 import sonia.scm.repository.api.BranchDetailsCommandBuilder;
 import sonia.scm.repository.api.Command;
@@ -68,8 +69,10 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider {
 
   private final Injector commandInjector;
   private final HgCommandContext context;
+  private final CacheManager cacheManager;
 
-  HgRepositoryServiceProvider(Injector injector, HgCommandContext context) {
+  HgRepositoryServiceProvider(Injector injector, HgCommandContext context, CacheManager cacheManager) {
+    this.cacheManager = cacheManager;
     this.commandInjector = injector.createChildInjector(new AbstractModule() {
       @Override
       protected void configure() {
@@ -192,6 +195,6 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider {
 
   @Override
   public BranchDetailsCommandBuilder getBranchDetailsCommand() {
-    return new BranchDetailsCommandBuilder(context.get(), new HgBranchDetailsCommand(context));
+    return new BranchDetailsCommandBuilder(context.get(), new HgBranchDetailsCommand(context), cacheManager);
   }
 }

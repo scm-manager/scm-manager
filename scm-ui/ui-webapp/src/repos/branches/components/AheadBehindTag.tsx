@@ -83,7 +83,10 @@ const AheadBehindTag: FC<Props> = ({ branch, details }) => {
   };
 
   return (
-    <Tooltip message={t("branch.aheadBehind.tooltip")} location="top">
+    <Tooltip
+      message={t("branch.aheadBehind.tooltip", { ahead: details.changesetsAhead, behind: details.changesetsBehind })}
+      location="top"
+    >
       <div className="columns is-flex is-unselectable is-hidden-mobile">
         <Behind className="column is-half is-flex is-flex-direction-column is-align-items-flex-end p-0">
           <Count className="is-size-7 pr-1">{details.changesetsBehind}</Count>

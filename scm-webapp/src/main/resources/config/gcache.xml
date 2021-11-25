@@ -85,6 +85,15 @@
     expireAfterWrite="5400"
   />
 
+  <!--
+  Search cache for branch details
+-->
+  <cache
+    name="sonia.cache.cmd.branch-details"
+    maximumSize="10000"
+    expireAfterAccess="60000"
+  />
+
   <!-- 
     Search cache for groups
     average: 0.5K

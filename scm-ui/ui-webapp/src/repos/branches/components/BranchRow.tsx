@@ -62,8 +62,11 @@ const BranchRow: FC<Props> = ({ baseUrl, branch, onDelete, details }) => {
     if (details) {
       return <AheadBehindTag branch={branch} details={details} />;
     }
-    //TODO add small loading spinner
-    return null;
+    return (
+      <div className="loader-wrapper">
+        <div className="loader is-loading" />
+      </div>
+    );
   };
 
   return (

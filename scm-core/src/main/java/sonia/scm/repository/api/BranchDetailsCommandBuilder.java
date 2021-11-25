@@ -24,30 +24,74 @@
 
 package sonia.scm.repository.api;
 
+import com.github.legman.Subscribe;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import sonia.scm.cache.Cache;
+import sonia.scm.cache.CacheManager;
+import sonia.scm.repository.PostReceiveRepositoryHookEvent;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryCacheKey;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.spi.BranchDetailsCommand;
 import sonia.scm.repository.spi.BranchDetailsCommandRequest;
+
+import javax.annotation.Nonnull;
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * @since 2.28.0
  */
 public final class BranchDetailsCommandBuilder {
 
+  static final String CACHE_NAME = "sonia.cache.cmd.branch-details";
+
   private final Repository repository;
   private final BranchDetailsCommand command;
+  private final Cache<CacheKey, BranchDetailsCommandResult> cache;
 
-  public BranchDetailsCommandBuilder(Repository repository, BranchDetailsCommand command) {
+  public BranchDetailsCommandBuilder(Repository repository, BranchDetailsCommand command, CacheManager cacheManager) {
     this.repository = repository;
     this.command = command;
+    this.cache = cacheManager.getCache(CACHE_NAME);
   }
-
-  // TODO Caching
 
   public BranchDetailsCommandResult execute(String branchName) {
     RepositoryPermissions.read(repository).check();
     BranchDetailsCommandRequest branchDetailsCommandRequest = new BranchDetailsCommandRequest();
     branchDetailsCommandRequest.setBranchName(branchName);
-    return command.execute(branchDetailsCommandRequest);
+    BranchDetailsCommandResult cachedResult = cache.get(createCacheKey(branchName));
+    if (cachedResult != null) {
+      return cachedResult;
+    }
+
+    BranchDetailsCommandResult result = command.execute(branchDetailsCommandRequest);
+    cache.put(createCacheKey(branchName), result);
+    return result;
+  }
+
+  private CacheKey createCacheKey(String branchName) {
+    return new CacheKey(repository, branchName);
+  }
+
+
+  @Subscribe
+  public void invalidateBranchDetails(PostReceiveRepositoryHookEvent event) {
+    cache.removeAll(cacheKey -> cacheKey.getRepositoryId().equals(event.getRepository().getId()));
+  }
+
+  @AllArgsConstructor
+  @Getter
+  @EqualsAndHashCode
+  static class CacheKey implements RepositoryCacheKey, Serializable {
+    private Repository repository;
+    private String branchName;
+
+    @Override
+    public String getRepositoryId() {
+      return repository.getId();
+    }
   }
 }

@@ -29,12 +29,13 @@ import {
   Link,
   Repository
 } from "@scm-manager/ui-types";
-import { objectLink, requiredLink } from "./links";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { requiredLink } from "./links";
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "react-query";
 import { ApiResult, ApiResultWithFetching } from "./base";
 import { branchQueryKey, repoQueryKey } from "./keys";
 import { apiClient } from "./apiclient";
 import { concat } from "./urls";
+import { useEffect } from "react";
 
 export const useBranches = (repository: Repository): ApiResult<BranchCollection> => {
   const link = requiredLink(repository, "branches");
@@ -61,12 +62,55 @@ export const useBranchDetails = (repository: Repository, branch: string) => {
   );
 };
 
+function chunkBranches(branches: Branch[]) {
+  const chunks: Branch[][] = [];
+  const chunkSize = 5;
+  let chunkIndex = 0;
+  for (const branch of branches) {
+    if (!chunks[chunkIndex]) {
+      chunks[chunkIndex] = [];
+    }
+    chunks[chunkIndex].push(branch);
+    if (chunks[chunkIndex].length >= chunkSize) {
+      chunkIndex = chunkIndex + 1;
+    }
+  }
+  return chunks;
+}
+
 export const useBranchDetailsCollection = (repository: Repository, branches: Branch[]) => {
   const link = requiredLink(repository, "branchDetailsCollection");
-  const encodedBranches = encodeURIComponent(branches.map(b => b.name).join(","));
-  return useQuery<BranchDetailsCollection, Error>(branchQueryKey(repository, encodedBranches, "details"), () =>
-    apiClient.get(concat(link, `?branches=${encodedBranches}`)).then(response => response.json())
+  const chunks = chunkBranches(branches);
+
+  const { data, isLoading, error, fetchNextPage } = useInfiniteQuery<
+    BranchDetailsCollection,
+    Error,
+    BranchDetailsCollection
+  >(
+    branchQueryKey(repository, "details"),
+    ({ pageParam = 0 }) => {
+      const encodedBranches = encodeURIComponent(chunks[pageParam].map(b => b.name).join(","));
+      return apiClient.get(concat(link, `?branches=${encodedBranches}`)).then(response => response.json());
+    },
+    {
+      getNextPageParam: (lastPage, allPages) => {
+        if (allPages.length >= chunks.length) {
+          return undefined;
+        }
+        return allPages.length;
+      }
+    }
   );
+
+  useEffect(() => {
+    fetchNextPage();
+  }, [data, fetchNextPage]);
+
+  return {
+    data: data?.pages.map(d => d._embedded?.branchDetails).flat(1),
+    isLoading,
+    error
+  };
 };
 
 const createBranch = (link: string) => {

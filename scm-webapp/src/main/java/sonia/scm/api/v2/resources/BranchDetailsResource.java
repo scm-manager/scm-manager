@@ -33,6 +33,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import sonia.scm.repository.NamespaceAndName;
+import sonia.scm.repository.api.BranchDetailsCommandBuilder;
 import sonia.scm.repository.api.BranchDetailsCommandResult;
 import sonia.scm.repository.api.CommandNotSupportedException;
 import sonia.scm.repository.api.RepositoryService;
@@ -176,8 +177,9 @@ public class BranchDetailsResource {
     List<BranchDetailsDto> dtos = new ArrayList<>();
     if (!Strings.isNullOrEmpty(branches)) {
       String decodedBranches = HttpUtil.decode(branches);
+      BranchDetailsCommandBuilder branchDetailsCommand = service.getBranchDetailsCommand();
       for (String branch : decodedBranches.split(",")) {
-        BranchDetailsCommandResult result = service.getBranchDetailsCommand().execute(branch);
+        BranchDetailsCommandResult result = branchDetailsCommand.execute(branch);
         dtos.add(mapper.map(service.getRepository(), branch, result));
       }
     }
