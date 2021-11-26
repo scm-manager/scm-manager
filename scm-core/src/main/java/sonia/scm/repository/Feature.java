@@ -30,7 +30,8 @@ package sonia.scm.repository;
  * @author Sebastian Sdorra
  * @since 1.25
  */
-public enum Feature {
+public enum Feature
+{
 
   /**
    * The default branch of the repository is a combined branch of all
