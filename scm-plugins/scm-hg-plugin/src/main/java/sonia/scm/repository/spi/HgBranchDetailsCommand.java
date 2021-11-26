@@ -26,18 +26,18 @@ package sonia.scm.repository.spi;
 
 import org.javahg.Changeset;
 import org.javahg.Repository;
+import org.javahg.commands.LogCommand;
 import sonia.scm.repository.api.BranchDetailsCommandResult;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.javahg.commands.flags.LogCommandFlags.on;
+import static sonia.scm.repository.spi.javahg.AbstractChangesetCommand.CHANGESET_LAZY_STYLE_PATH;
 
 public class HgBranchDetailsCommand implements BranchDetailsCommand {
 
   private static final String DEFAULT_BRANCH_NAME = "default";
-  private static final int CHANGESET_LIMIT = 9999999;
 
   private final HgCommandContext context;
 
@@ -48,32 +48,26 @@ public class HgBranchDetailsCommand implements BranchDetailsCommand {
 
   @Override
   public BranchDetailsCommandResult execute(BranchDetailsCommandRequest request) {
-    Repository repository = context.open();
-
     if (request.getBranchName().equals(DEFAULT_BRANCH_NAME)) {
       return new BranchDetailsCommandResult(0,0);
     }
 
-    // To get the latest shared ancestor
-    // hg log --rev "ancestor('2.0.0-m3','feature/ui_deviation')"
-
-    List<Changeset> latestAncestor = on(repository).rev(String.format("'%s' + '%s' and merge()", DEFAULT_BRANCH_NAME, request.getBranchName())).execute();
-    List<Changeset> headChangesets = on(repository).limit(CHANGESET_LIMIT).branch(DEFAULT_BRANCH_NAME).execute();
-    List<Changeset> branchChangesets = on(repository).limit(CHANGESET_LIMIT).branch(request.getBranchName()).execute();
-
-    List<Changeset> behind = on(repository).rev(
-      String.format(
-        "%s:%s", 
-        latestAncestor.get(0).getRevision(), 
-        branchChangesets.get(0).getRevision()
-      )
-    ).execute();
-    behind.removeAll(branchChangesets);
-
-    List<Changeset> ahead = new ArrayList<>(branchChangesets);
-    ahead.removeAll(headChangesets);
+    List<Changeset> behind = getChangesetsSolelyOnBranch(DEFAULT_BRANCH_NAME, request.getBranchName());
+    List<Changeset> ahead = getChangesetsSolelyOnBranch(request.getBranchName(), DEFAULT_BRANCH_NAME);
 
     return new BranchDetailsCommandResult(ahead.size(), behind.size());
+  }
+
+  private List<Changeset> getChangesetsSolelyOnBranch(String branch, String reference) {
+    LogCommand logCommand = on(context.open()).rev(
+      String.format(
+        "'%s' %% '%s'",
+        branch,
+        reference
+      )
+    );
+    logCommand.cmdAppend("--style", CHANGESET_LAZY_STYLE_PATH);
+    return logCommand.execute();
   }
 
 }

@@ -29,7 +29,6 @@ import sonia.scm.repository.api.BranchDetailsCommandResult;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-
 public class HgBranchDetailsCommandTest extends AbstractHgCommandTestBase {
 
   @Test
