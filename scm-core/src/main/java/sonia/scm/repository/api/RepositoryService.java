@@ -501,7 +501,7 @@ public final class RepositoryService implements Closeable {
    */
   public BranchDetailsCommandBuilder getBranchDetailsCommand() {
     LOG.debug("create branch details command for repository {}", repository);
-    return provider.getBranchDetailsCommand();
+    return new BranchDetailsCommandBuilder(repository, provider.getBranchDetailsCommand(), cacheManager);
   }
 
   /**

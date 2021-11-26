@@ -25,7 +25,6 @@
 package sonia.scm.repository.spi;
 
 import sonia.scm.repository.Feature;
-import sonia.scm.repository.api.BranchDetailsCommandBuilder;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.CommandNotSupportedException;
 
@@ -316,7 +315,7 @@ public abstract class RepositoryServiceProvider implements Closeable
   /**
    * @since 2.28.0
    */
-  public BranchDetailsCommandBuilder getBranchDetailsCommand() {
+  public BranchDetailsCommand getBranchDetailsCommand() {
     throw new CommandNotSupportedException(Command.BRANCH_DETAILS);
   }
 }

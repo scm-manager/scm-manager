@@ -194,7 +194,7 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider {
   }
 
   @Override
-  public BranchDetailsCommandBuilder getBranchDetailsCommand() {
-    return new BranchDetailsCommandBuilder(context.get(), new HgBranchDetailsCommand(context), cacheManager);
+  public BranchDetailsCommand getBranchDetailsCommand() {
+    return new HgBranchDetailsCommand(context);
   }
 }
