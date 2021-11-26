@@ -44,18 +44,23 @@ public class HgBranchesCommandTest extends AbstractHgCommandTestBase {
 
     List<Branch> branches = command.getBranches();
 
-    assertThat(branches).contains(
-      defaultBranch(eq("default"), eq("2baab8e80280ef05a9aa76c49c76feca2872afb7"), eq(1339586381000L), argThat(person -> {
-        assertThat(person.getName()).isEqualTo("");
-        assertThat(person.getMail()).isEqualTo("");
-        return true;
-      })),
-      normalBranch(eq("test-branch"), ("79b6baf49711ae675568e0698d730b97ef13e84a"), eq(1339586299000L), argThat(person -> {
-        assertThat(person.getName()).isEqualTo("");
-        assertThat(person.getMail()).isEqualTo("");
-
-        return true;
-      }))
+    assertThat(branches).hasSize(2);
+    assertThat(branches.get(0)).isEqualTo(
+      defaultBranch(
+        "default",
+        "2baab8e80280ef05a9aa76c49c76feca2872afb7",
+        1339586381000L,
+        new Person("Zaphod Beeblebrox", "zaphod.beeblebrox@hitchhiker.com")
+      )
+    );
+    assertThat(branches.get(1)).isEqualTo(
+      normalBranch(
+        "test-branch",
+        "79b6baf49711ae675568e0698d730b97ef13e84a",
+        1339586299000L,
+        new Person("Ford Prefect",
+          "ford.perfect@hitchhiker.com")
+      )
     );
   }
 }

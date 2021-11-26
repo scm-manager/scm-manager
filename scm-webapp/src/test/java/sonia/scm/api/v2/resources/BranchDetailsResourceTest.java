@@ -109,8 +109,6 @@ public class BranchDetailsResourceTest extends RepositoryTestBase {
   @Test
   public void shouldGetEmptyDetailsCollection() throws URISyntaxException, UnsupportedEncodingException {
     when(serviceFactory.create(repository.getNamespaceAndName())).thenReturn(service);
-    when(service.getRepository()).thenReturn(repository);
-    when(service.getBranchDetailsCommand()).thenReturn(branchDetailsCommandBuilder);
 
     MockHttpRequest request = MockHttpRequest
       .get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + repository.getNamespaceAndName() + "/branch-details/");

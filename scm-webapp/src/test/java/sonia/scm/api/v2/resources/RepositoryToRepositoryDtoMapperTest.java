@@ -341,8 +341,7 @@ public class RepositoryToRepositoryDtoMapperTest {
     Repository testRepository = createTestRepository();
     when(repositoryService.isSupported(Command.BRANCH_DETAILS)).thenReturn(true);
     RepositoryDto dto = mapper.map(testRepository);
-    assertFalse(dto.getLinks().getLinkBy("branchDetails").isPresent());
-    assertFalse(dto.getLinks().getLinkBy("branchDetailsCollection").isPresent());
+    assertTrue(dto.getLinks().getLinkBy("branchDetailsCollection").isPresent());
   }
 
   @Test

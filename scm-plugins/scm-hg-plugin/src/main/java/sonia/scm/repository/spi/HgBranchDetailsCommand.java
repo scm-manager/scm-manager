@@ -37,6 +37,7 @@ import static org.javahg.commands.flags.LogCommandFlags.on;
 public class HgBranchDetailsCommand implements BranchDetailsCommand {
 
   private static final String DEFAULT_BRANCH_NAME = "default";
+  private static final int CHANGESET_LIMIT = 9999999;
 
   private final HgCommandContext context;
 
@@ -57,10 +58,16 @@ public class HgBranchDetailsCommand implements BranchDetailsCommand {
     // hg log --rev "ancestor('2.0.0-m3','feature/ui_deviation')"
 
     List<Changeset> latestAncestor = on(repository).rev(String.format("'%s' + '%s' and merge()", DEFAULT_BRANCH_NAME, request.getBranchName())).execute();
-    List<Changeset> headChangesets = on(repository).branch(DEFAULT_BRANCH_NAME).execute();
-    List<Changeset> branchChangesets = on(repository).branch(request.getBranchName()).execute();
+    List<Changeset> headChangesets = on(repository).limit(CHANGESET_LIMIT).branch(DEFAULT_BRANCH_NAME).execute();
+    List<Changeset> branchChangesets = on(repository).limit(CHANGESET_LIMIT).branch(request.getBranchName()).execute();
 
-    List<Changeset> behind = on(repository).rev(String.format("%s:%s", latestAncestor.get(0).getRevision(), branchChangesets.get(0).getRevision())).execute();
+    List<Changeset> behind = on(repository).rev(
+      String.format(
+        "%s:%s", 
+        latestAncestor.get(0).getRevision(), 
+        branchChangesets.get(0).getRevision()
+      )
+    ).execute();
     behind.removeAll(branchChangesets);
 
     List<Changeset> ahead = new ArrayList<>(branchChangesets);
