@@ -40,6 +40,6 @@ public class GitBranchDetailsCommandTest extends AbstractGitCommandTestBase {
     BranchDetailsCommandResult result = command.execute(request);
 
     assertThat(result.getChangesetsAhead()).isEqualTo(1);
-    assertThat(result.getChangesetsBehind()).isZero();
+    assertThat(result.getChangesetsBehind()).isEqualTo(2);
   }
 }
