@@ -31,12 +31,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.GET;
 import java.util.Optional;
 
 import static org.junit.Assert.assertFalse;
@@ -65,7 +63,7 @@ class XsrfAccessTokenValidatorTest {
    */
   @BeforeEach
   void prepareObjectUnderTest() {
-    validator = new XsrfAccessTokenValidator(() -> request);
+    validator = new XsrfAccessTokenValidator(() -> request, new XsrfExcludes());
   }
 
   @Nested
