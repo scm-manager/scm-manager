@@ -64,10 +64,10 @@ spec:
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          { { - with .Values.extraArgs } }
+          {{- with .Values.extraArgs }}
           args:
-          { { - . | toYaml | nindent 8 } }
-          { { - end } }
+          {{- . | toYaml | nindent 12 }}
+          {{- end }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           {{- if .Values.lifecycleHooks }}
           lifecycle:
