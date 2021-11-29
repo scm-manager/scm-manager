@@ -39,7 +39,29 @@ public class HgBranchDetailsCommandTest extends AbstractHgCommandTestBase {
     BranchDetailsCommandResult result = new HgBranchDetailsCommand(cmdContext).execute(branchRequest);
 
     assertThat(result.getChangesetsAhead()).isEqualTo(1);
+    assertThat(result.getChangesetsBehind()).isEqualTo(3);
+  }
+
+  @Test
+  public void shouldGetSingleBranchDetailsWithMerge() {
+    BranchDetailsCommandRequest branchRequest = new BranchDetailsCommandRequest();
+    branchRequest.setBranchName("with_merge");
+
+    BranchDetailsCommandResult result = new HgBranchDetailsCommand(cmdContext).execute(branchRequest);
+
+    assertThat(result.getChangesetsAhead()).isEqualTo(5);
     assertThat(result.getChangesetsBehind()).isEqualTo(1);
+  }
+
+  @Test
+  public void shouldGetSingleBranchDetailsWithAnotherMerge() {
+    BranchDetailsCommandRequest branchRequest = new BranchDetailsCommandRequest();
+    branchRequest.setBranchName("next_merge");
+
+    BranchDetailsCommandResult result = new HgBranchDetailsCommand(cmdContext).execute(branchRequest);
+
+    assertThat(result.getChangesetsAhead()).isEqualTo(3);
+    assertThat(result.getChangesetsBehind()).isZero();
   }
 
   @Override
