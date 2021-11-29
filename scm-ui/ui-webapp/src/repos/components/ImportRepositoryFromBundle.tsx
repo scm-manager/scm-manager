@@ -60,7 +60,7 @@ const ImportRepositoryFromBundle: FC<Props> = ({
     repositoryType
   );
 
-  useEffect(() => setRepo({ ...repo, type: repositoryType.name }), [repositoryType, repo]);
+  useEffect(() => setRepo({ ...repo, type: repositoryType.name }), [repositoryType]);
   useEffect(() => setImportPending(isLoading), [isLoading, setImportPending]);
   useEffect(() => {
     if (importedRepository) {

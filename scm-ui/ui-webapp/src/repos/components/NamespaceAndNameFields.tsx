@@ -68,7 +68,7 @@ const NamespaceAndNameFields: FC<Props> = ({ repository, onChange, setValid, dis
     } else {
       setValid(false);
     }
-  }, [repository.name, repository.namespace, namespaceStrategy, setValid]);
+  }, [repository.name, repository.namespace, namespaceStrategy]);
 
   const handleNamespaceChange = (namespace: string) => {
     const valid = validator.isNamespaceValid(namespace);

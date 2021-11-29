@@ -59,7 +59,7 @@ const ImportRepositoryFromUrl: FC<Props> = ({
   const [t] = useTranslation("repos");
   const { importRepositoryFromUrl, importedRepository, error, isLoading } = useImportRepositoryFromUrl(repositoryType);
 
-  useEffect(() => setRepo({ ...repo, type: repositoryType.name }), [repositoryType, repo]);
+  useEffect(() => setRepo({ ...repo, type: repositoryType.name }), [repositoryType]);
   useEffect(() => setImportPending(isLoading), [isLoading, setImportPending]);
   useEffect(() => {
     if (importedRepository) {
