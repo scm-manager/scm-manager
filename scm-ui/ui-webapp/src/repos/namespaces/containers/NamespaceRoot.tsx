@@ -34,7 +34,7 @@ import {
   SecondaryNavigation,
   SecondaryNavigationColumn,
   StateMenuContextProvider,
-  SubNavigation,
+  SubNavigation
 } from "@scm-manager/ui-components";
 import Permissions from "../../permissions/containers/Permissions";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
@@ -64,7 +64,7 @@ const NamespaceRoot: FC = () => {
 
   const extensionProps = {
     namespace,
-    url,
+    url
   };
 
   return (

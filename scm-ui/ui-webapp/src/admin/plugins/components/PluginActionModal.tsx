@@ -72,8 +72,8 @@ class PluginActionModal extends React.Component<Props> {
             <strong>{t("plugins.modal.updateQueue")}</strong>
             <ul>
               {installedPlugins._embedded.plugins
-                .filter((plugin) => plugin._links && plugin._links.update)
-                .map((plugin) => (
+                .filter(plugin => plugin._links && plugin._links.update)
+                .map(plugin => (
                   <li key={plugin.name}>{plugin.name}</li>
                 ))}
             </ul>
@@ -91,7 +91,7 @@ class PluginActionModal extends React.Component<Props> {
           <>
             <strong>{t("plugins.modal.installQueue")}</strong>
             <ul>
-              {pendingPlugins._embedded.new.map((plugin) => (
+              {pendingPlugins._embedded.new.map(plugin => (
                 <li key={plugin.name}>{plugin.name}</li>
               ))}
             </ul>
@@ -109,7 +109,7 @@ class PluginActionModal extends React.Component<Props> {
           <>
             <strong>{t("plugins.modal.updateQueue")}</strong>
             <ul>
-              {pendingPlugins._embedded.update.map((plugin) => (
+              {pendingPlugins._embedded.update.map(plugin => (
                 <li key={plugin.name}>{plugin.name}</li>
               ))}
             </ul>
@@ -127,7 +127,7 @@ class PluginActionModal extends React.Component<Props> {
           <>
             <strong>{t("plugins.modal.uninstallQueue")}</strong>
             <ul>
-              {pendingPlugins._embedded.uninstall.map((plugin) => (
+              {pendingPlugins._embedded.uninstall.map(plugin => (
                 <li key={plugin.name}>{plugin.name}</li>
               ))}
             </ul>

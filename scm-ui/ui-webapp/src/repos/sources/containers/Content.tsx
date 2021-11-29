@@ -142,7 +142,7 @@ const Content: FC<Props> = ({ file, repository, revision, breadcrumb, error }) =
                 repository,
                 file,
                 revision: revision ? encodeURIComponent(revision) : "",
-                handleExtensionError: setErrorFromExtension,
+                handleExtensionError: setErrorFromExtension
               }}
               renderAll={true}
             />
@@ -201,7 +201,7 @@ const Content: FC<Props> = ({ file, repository, revision, breadcrumb, error }) =
                   props={{
                     file,
                     repository,
-                    revision,
+                    revision
                   }}
                 />
               </tbody>

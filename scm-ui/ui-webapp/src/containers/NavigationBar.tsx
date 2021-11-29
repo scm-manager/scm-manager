@@ -135,7 +135,7 @@ const NavigationBar: FC<Props> = ({ links }) => {
         <button
           className={classNames("navbar-burger", { "is-active": burgerActive })}
           aria-expanded="true"
-          onClick={() => setBurgerActive((active) => !active)}
+          onClick={() => setBurgerActive(active => !active)}
         >
           <span aria-hidden="true" />
           <span aria-hidden="true" />

@@ -42,7 +42,7 @@ const ImportRepositoryFromUrl: FC<Props> = ({
   setImportPending,
   setImportedRepository,
   nameForm: NameForm,
-  informationForm: InformationForm,
+  informationForm: InformationForm
 }) => {
   const [repo, setRepo] = useState<RepositoryUrlImport>({
     name: "",
@@ -53,7 +53,7 @@ const ImportRepositoryFromUrl: FC<Props> = ({
     importUrl: "",
     username: "",
     password: "",
-    contextEntries: [],
+    contextEntries: []
   });
 
   const [valid, setValid] = useState({ namespaceAndName: false, contact: true, importUrl: false });
@@ -68,7 +68,7 @@ const ImportRepositoryFromUrl: FC<Props> = ({
     }
   }, [importedRepository]);
 
-  const isValid = () => Object.values(valid).every((v) => v);
+  const isValid = () => Object.values(valid).every(v => v);
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();

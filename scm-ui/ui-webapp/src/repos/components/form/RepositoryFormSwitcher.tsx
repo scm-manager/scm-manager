@@ -71,7 +71,7 @@ const RepositoryFormSwitcher: FC<Props> = ({ forms }) => (
   <TopLevel
     right={
       <ButtonAddons>
-        {(forms || []).map((form) => (
+        {(forms || []).map(form => (
           <RepositoryFormButton key={form.path} {...form} />
         ))}
       </ButtonAddons>

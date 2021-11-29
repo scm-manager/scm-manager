@@ -40,8 +40,8 @@ const ActionbarWrapper = styled.div`
   }
 `;
 
-const IconWrapperStyle = styled.span.attrs((props) => ({
-  className: "level-item mb-0 p-2 is-clickable",
+const IconWrapperStyle = styled.span.attrs(props => ({
+  className: "level-item mb-0 p-2 is-clickable"
 }))`
   border: 1px solid #cdcdcd; // $dark-25
   border-radius: 4px;
@@ -53,7 +53,7 @@ const IconWrapperStyle = styled.span.attrs((props) => ({
 
 const IconWrapper: FC<{ action: () => void }> = ({ action, children }) => {
   return (
-    <IconWrapperStyle onClick={action} onKeyDown={(e) => e.key === "Enter" && action()} tabIndex={0}>
+    <IconWrapperStyle onClick={action} onKeyDown={e => e.key === "Enter" && action()} tabIndex={0}>
       {children}
     </IconWrapperStyle>
   );

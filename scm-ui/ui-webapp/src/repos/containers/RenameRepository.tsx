@@ -46,7 +46,7 @@ const RenameRepository: FC<Props> = ({ repository }) => {
   const {
     isLoading: isLoadingNamespaceStrategies,
     error: namespaceStrategyLoadError,
-    data: namespaceStrategies,
+    data: namespaceStrategies
   } = useNamespaceStrategies();
 
   if (isRenamed) {
@@ -83,10 +83,10 @@ const RenameRepository: FC<Props> = ({ repository }) => {
       value: namespace,
       onChange: handleNamespaceChange,
       errorMessage: t("validation.namespace-invalid"),
-      validationError: namespaceValidationError,
+      validationError: namespaceValidationError
     };
 
-    if (namespaceStrategies!.current === CUSTOM_NAMESPACE_STRATEGY) {
+    if (namespaceStrategies?.current === CUSTOM_NAMESPACE_STRATEGY) {
       return <InputField {...props} />;
     }
 

@@ -77,12 +77,12 @@ const BranchTable: FC<Props> = ({ repository, baseUrl, branches, type }) => {
               className: "is-outlined",
               label: t("branch.delete.confirmAlert.submit"),
               isLoading,
-              onClick: () => deleteBranch(),
+              onClick: () => deleteBranch()
             },
             {
               label: t("branch.delete.confirmAlert.cancel"),
-              onClick: () => abortDelete(),
-            },
+              onClick: () => abortDelete()
+            }
           ]}
           close={() => abortDelete()}
         />
@@ -95,7 +95,7 @@ const BranchTable: FC<Props> = ({ repository, baseUrl, branches, type }) => {
           </tr>
         </thead>
         <tbody>
-          {(branches || []).map((branch) => (
+          {(branches || []).map(branch => (
             <BranchRow key={branch.name} baseUrl={baseUrl} branch={branch} onDelete={onDelete} />
           ))}
         </tbody>

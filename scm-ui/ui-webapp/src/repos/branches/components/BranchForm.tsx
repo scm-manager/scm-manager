@@ -48,7 +48,7 @@ class BranchForm extends React.Component<Props, State> {
 
     this.state = {
       nameValidationError: false,
-      name: props.transmittedName,
+      name: props.transmittedName
     };
   }
 
@@ -66,7 +66,7 @@ class BranchForm extends React.Component<Props, State> {
     if (this.isValid()) {
       this.props.submitForm({
         name: this.state.name!,
-        parent: this.state.source!,
+        parent: this.state.source!
       });
     }
   };
@@ -75,9 +75,9 @@ class BranchForm extends React.Component<Props, State> {
     const { t, branches, loading, transmittedName, disabled } = this.props;
     const { name } = this.state;
     orderBranches(branches);
-    const options = branches.map((branch) => ({
+    const options = branches.map(branch => ({
       label: branch.name,
-      value: branch.name,
+      value: branch.name
     }));
 
     return (
@@ -124,14 +124,14 @@ class BranchForm extends React.Component<Props, State> {
 
   handleSourceChange = (source: string) => {
     this.setState({
-      source,
+      source
     });
   };
 
   handleNameChange = (name: string) => {
     this.setState({
       nameValidationError: !validator.isBranchValid(name),
-      name,
+      name
     });
   };
 }

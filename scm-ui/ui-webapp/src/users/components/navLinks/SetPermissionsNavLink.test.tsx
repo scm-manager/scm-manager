@@ -22,14 +22,21 @@
  * SOFTWARE.
  */
 import React from "react";
+// eslint-disable-next-line no-restricted-imports
 import "@scm-manager/ui-tests/enzyme";
+// eslint-disable-next-line no-restricted-imports
 import "@scm-manager/ui-tests/i18n";
 import SetPermissionsNavLink from "./SetPermissionsNavLink";
 import { shallow } from "enzyme";
 
 it("should render nothing, if the permissions link is missing", () => {
   const user = {
-    _links: {},
+    displayName: "User",
+    name: "User",
+    password: "hitchhiker",
+    external: true,
+    active: true,
+    _links: {}
   };
 
   const navLink = shallow(<SetPermissionsNavLink user={user} permissionsUrl="/user/permissions" />);
@@ -38,11 +45,16 @@ it("should render nothing, if the permissions link is missing", () => {
 
 it("should render the navLink", () => {
   const user = {
+    displayName: "User",
+    name: "User",
+    password: "hitchhiker",
+    external: true,
+    active: true,
     _links: {
       permissions: {
-        href: "/permissions",
-      },
-    },
+        href: "/permissions"
+      }
+    }
   };
 
   const navLink = shallow(<SetPermissionsNavLink user={user} permissionsUrl="/user/permissions" />);

@@ -33,7 +33,7 @@ type BaseProps = {
   label?: string;
   name?: string;
   placeholder?: string;
-  value?: string;
+  value?: string | number;
   type?: string;
   autofocus?: boolean;
   onReturnPressed?: () => void;
@@ -44,7 +44,7 @@ type BaseProps = {
   helpText?: string;
   className?: string;
   testId?: string;
-  defaultValue?: string;
+  defaultValue?: string | number;
   readOnly?: boolean;
 };
 

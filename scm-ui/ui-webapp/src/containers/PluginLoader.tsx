@@ -53,7 +53,7 @@ class PluginLoader extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      message: "booting",
+      message: "booting"
     };
   }
 
@@ -61,7 +61,7 @@ class PluginLoader extends React.Component<Props, State> {
     const { loaded } = this.props;
     if (!loaded) {
       this.setState({
-        message: "loading plugin information",
+        message: "loading plugin information"
       });
 
       this.getPlugins(this.props.link);
@@ -71,16 +71,16 @@ class PluginLoader extends React.Component<Props, State> {
   getPlugins = (link: string): Promise<any> => {
     return apiClient
       .get(link)
-      .then((response) => response.text())
+      .then(response => response.text())
       .then(JSON.parse)
-      .then((pluginCollection) => pluginCollection._embedded.plugins)
+      .then(pluginCollection => pluginCollection._embedded.plugins)
       .then(this.loadPlugins)
       .then(this.props.callback);
   };
 
   loadPlugins = (plugins: Plugin[]) => {
     this.setState({
-      message: "loading plugins",
+      message: "loading plugins"
     });
 
     const promises = [];
@@ -89,21 +89,21 @@ class PluginLoader extends React.Component<Props, State> {
       promises.push(this.loadPlugin(plugin));
     }
     return promises.reduce((chain, current) => {
-      return chain.then((chainResults) => {
-        return current.then((currentResult) => [...chainResults, currentResult]);
+      return chain.then(chainResults => {
+        return current.then(currentResult => [...chainResults, currentResult]);
       });
     }, Promise.resolve([]));
   };
 
   loadPlugin = (plugin: Plugin) => {
     this.setState({
-      message: `loading ${plugin.name}`,
+      message: `loading ${plugin.name}`
     });
 
     const promises = [];
     for (const bundle of plugin.bundles) {
       promises.push(
-        loadBundle(bundle).catch((error) => this.setState({ error, errorMessage: `loading ${plugin.name} failed` }))
+        loadBundle(bundle).catch(error => this.setState({ error, errorMessage: `loading ${plugin.name} failed` }))
       );
     }
     return Promise.all(promises);

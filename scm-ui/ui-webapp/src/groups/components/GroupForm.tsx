@@ -32,7 +32,7 @@ import {
   MemberNameTagGroup,
   SubmitButton,
   Subtitle,
-  Textarea,
+  Textarea
 } from "@scm-manager/ui-components";
 import * as validator from "./groupValidation";
 
@@ -56,14 +56,14 @@ class GroupForm extends React.Component<Props, State> {
         name: "",
         description: "",
         _embedded: {
-          members: [],
+          members: []
         },
         _links: {},
         members: [],
         type: "",
-        external: false,
+        external: false
       },
-      nameValidationError: false,
+      nameValidationError: false
     };
   }
 
@@ -73,8 +73,8 @@ class GroupForm extends React.Component<Props, State> {
       this.setState({
         ...this.state,
         group: {
-          ...group,
-        },
+          ...group
+        }
       });
     }
   }
@@ -183,13 +183,13 @@ class GroupForm extends React.Component<Props, State> {
     );
   }
 
-  memberListChanged = (membernames) => {
+  memberListChanged = membernames => {
     this.setState({
       ...this.state,
       group: {
         ...this.state.group,
-        members: membernames,
-      },
+        members: membernames
+      }
     });
   };
 
@@ -202,8 +202,8 @@ class GroupForm extends React.Component<Props, State> {
       ...this.state,
       group: {
         ...this.state.group,
-        members: [...this.state.group.members, value.value.id],
-      },
+        members: [...this.state.group.members, value.value.id]
+      }
     });
   };
 
@@ -216,8 +216,8 @@ class GroupForm extends React.Component<Props, State> {
       nameValidationError: !validator.isNameValid(name),
       group: {
         ...this.state.group,
-        name,
-      },
+        name
+      }
     });
   };
 
@@ -225,8 +225,8 @@ class GroupForm extends React.Component<Props, State> {
     this.setState({
       group: {
         ...this.state.group,
-        description,
-      },
+        description
+      }
     });
   };
 
@@ -234,8 +234,8 @@ class GroupForm extends React.Component<Props, State> {
     this.setState({
       group: {
         ...this.state.group,
-        external,
-      },
+        external
+      }
     });
   };
 }

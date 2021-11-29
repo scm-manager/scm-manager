@@ -57,12 +57,12 @@ const DeleteBranch: FC<Props> = ({ repository, branch }: Props) => {
             className: "is-outlined",
             label: t("branch.delete.confirmAlert.submit"),
             onClick: () => remove(branch),
-            isLoading,
+            isLoading
           },
           {
             label: t("branch.delete.confirmAlert.cancel"),
-            onClick: () => null,
-          },
+            onClick: () => null
+          }
         ]}
         close={() => setShowConfirmAlert(false)}
       />

@@ -41,10 +41,10 @@ type ParentWithPluginAction = {
   pluginAction?: PluginAction;
 };
 
-const ListParent = styled.div.attrs((props) => ({
-  className: "field-label is-inline-flex mr-0 has-text-left",
+const ListParent = styled.div.attrs(props => ({
+  className: "field-label is-inline-flex mr-0 has-text-left"
 }))<ParentWithPluginAction>`
-  min-width: ${(props) => (props.pluginAction === PluginAction.INSTALL ? "5.5em" : "10em")};
+  min-width: ${props => (props.pluginAction === PluginAction.INSTALL ? "5.5em" : "10em")};
 `;
 
 const ListChild = styled.div`
@@ -236,7 +236,7 @@ const PluginModal: FC<Props> = ({ onClose, pluginAction, plugin }) => {
   return (
     <Modal
       title={t(`plugins.modal.title.${pluginAction}`, {
-        name: plugin.displayName ? plugin.displayName : plugin.name,
+        name: plugin.displayName ? plugin.displayName : plugin.name
       })}
       closeFunction={onClose}
       body={body}

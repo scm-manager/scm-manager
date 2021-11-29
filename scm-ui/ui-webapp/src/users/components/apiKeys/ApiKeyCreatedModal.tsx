@@ -51,7 +51,7 @@ const ApiKeyCreatedModal: FC<Props> = ({ addedKey, close }) => {
   const keyRef = useRef<HTMLTextAreaElement>(null);
 
   const copy = () => {
-    keyRef.current!.select();
+    keyRef.current?.select();
     document.execCommand("copy");
     setCopied(true);
   };

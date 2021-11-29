@@ -51,7 +51,7 @@ type AdminAccountCreation = {
 const createAdmin = (link: string) => {
   return (data: AdminAccountCreation) => {
     return apiClient.post(link, data, "application/json").then(() => {
-      return new Promise<void>((resolve) => resolve());
+      return new Promise<void>(resolve => resolve());
     });
   };
 };
@@ -62,7 +62,7 @@ const useCreateAdmin = (link: string) => {
     create: mutate,
     isLoading,
     error,
-    isCreated: isSuccess,
+    isCreated: isSuccess
   };
 };
 
@@ -74,9 +74,9 @@ const InitializationAdminAccountStep: FC<Props> = ({ data }) => {
       displayName: "SCM Administrator",
       email: "",
       password: "",
-      passwordConfirmation: "",
+      passwordConfirmation: ""
     },
-    mode: "onChange",
+    mode: "onChange"
   });
 
   const { create, isLoading, error, isCreated } = useCreateAdmin((data._links.initialAdminUser as Link).href);

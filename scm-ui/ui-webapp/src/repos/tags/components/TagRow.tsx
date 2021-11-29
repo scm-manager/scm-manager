@@ -41,7 +41,12 @@ const TagRow: FC<Props> = ({ tag, baseUrl, onDelete }) => {
   let deleteButton;
   if ((tag?._links?.delete as Link)?.href) {
     deleteButton = (
-      <span className="icon is-small" onClick={() => onDelete(tag)} onKeyDown={(e) => e.key === "Enter" && onDelete(tag)} tabIndex={0}>
+      <span
+        className="icon is-small"
+        onClick={() => onDelete(tag)}
+        onKeyDown={e => e.key === "Enter" && onDelete(tag)}
+        tabIndex={0}
+      >
         <Icon name="trash" className="fas" title={t("tag.delete.button")} />
       </span>
     );

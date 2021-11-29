@@ -42,7 +42,7 @@ const ImportFullRepository: FC<Props> = ({
   setImportPending,
   setImportedRepository,
   nameForm: NameForm,
-  informationForm: InformationForm,
+  informationForm: InformationForm
 }) => {
   const [repo, setRepo] = useState<RepositoryCreation>({
     name: "",
@@ -50,7 +50,7 @@ const ImportFullRepository: FC<Props> = ({
     type: repositoryType.name,
     contact: "",
     description: "",
-    contextEntries: [],
+    contextEntries: []
   });
   const [password, setPassword] = useState("");
   const [valid, setValid] = useState({ namespaceAndName: false, contact: true, file: false });
@@ -66,7 +66,7 @@ const ImportFullRepository: FC<Props> = ({
     }
   }, [importedRepository]);
 
-  const isValid = () => Object.values(valid).every((v) => v);
+  const isValid = () => Object.values(valid).every(v => v);
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();

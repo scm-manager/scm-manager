@@ -63,12 +63,12 @@ const DeletePermissionButton: FC<Props> = ({ namespaceOrRepository, permission, 
             className: "is-outlined",
             label: t("permission.delete-permission-button.confirm-alert.submit"),
             isLoading,
-            onClick: () => deletePermission(),
+            onClick: () => deletePermission()
           },
           {
             label: t("permission.delete-permission-button.confirm-alert.cancel"),
-            onClick: () => null,
-          },
+            onClick: () => null
+          }
         ]}
         close={() => setShowConfirmAlert(false)}
       />

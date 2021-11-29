@@ -42,7 +42,7 @@ const ImportRepositoryFromBundle: FC<Props> = ({
   setImportPending,
   setImportedRepository,
   nameForm: NameForm,
-  informationForm: InformationForm,
+  informationForm: InformationForm
 }) => {
   const [repo, setRepo] = useState<RepositoryCreation>({
     name: "",
@@ -50,15 +50,16 @@ const ImportRepositoryFromBundle: FC<Props> = ({
     type: repositoryType.name,
     contact: "",
     description: "",
-    contextEntries: [],
+    contextEntries: []
   });
   const [password, setPassword] = useState("");
   const [valid, setValid] = useState({ namespaceAndName: false, contact: true, file: false });
   const [file, setFile] = useState<File | null>(null);
   const [compressed, setCompressed] = useState(true);
   const [t] = useTranslation("repos");
-  const { importRepositoryFromBundle, importedRepository, error, isLoading } =
-    useImportRepositoryFromBundle(repositoryType);
+  const { importRepositoryFromBundle, importedRepository, error, isLoading } = useImportRepositoryFromBundle(
+    repositoryType
+  );
 
   useEffect(() => setRepo({ ...repo, type: repositoryType.name }), [repositoryType]);
   useEffect(() => setImportPending(isLoading), [isLoading]);
@@ -68,7 +69,7 @@ const ImportRepositoryFromBundle: FC<Props> = ({
     }
   }, [importedRepository]);
 
-  const isValid = () => Object.values(valid).every((v) => v);
+  const isValid = () => Object.values(valid).every(v => v);
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();

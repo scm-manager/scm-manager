@@ -22,8 +22,10 @@
  * SOFTWARE.
  */
 
+import { RouteProps } from "react-router-dom";
+
 export type RoutingProps = {
   to: string;
   activeOnlyWhenExact?: boolean;
-  activeWhenMatch?: (route: any) => boolean;
+  activeWhenMatch?: (route: RouteProps) => boolean;
 };
