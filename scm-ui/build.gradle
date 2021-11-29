@@ -22,10 +22,9 @@
  * SOFTWARE.
  */
 
-
 plugins {
   id 'com.github.node-gradle.node' version '2.2.4'
-  id 'com.github.hierynomus.license-base' version '0.15.0'
+  id 'org.scm-manager.license' version '0.7.1'
   id 'org.scm-manager.ci'
 }
 
@@ -104,7 +103,7 @@ task updateUiTestTimestamps(type: TouchFiles) {
 }
 
 task check {
-  dependsOn('typecheck', 'test', 'chromatic', 'license')
+  dependsOn('typecheck', 'test', 'chromatic', 'checkLicenses')
 }
 
 yarn_install {
@@ -223,14 +222,12 @@ task setVersionToNextSnapshot(type: YarnTask) {
 
 license {
   header rootProject.file("LICENSE.txt")
-  strictCheck true
+  newLine = true
+  ignoreNewLine = true
 
-  mapping {
-    tsx = 'SLASHSTAR_STYLE'
-    ts = 'SLASHSTAR_STYLE'
-    gradle = 'SLASHSTAR_STYLE'
-    feature = 'SCRIPT_STYLE'
-    scss = 'SLASHSTAR_STYLE'
+  style {
+    feature = 'HASH'
+    scss = 'BLOCK_COMMENT'
   }
 
   exclude '**/node_modules/**'
@@ -249,14 +246,11 @@ license {
   exclude '**/*.iml'
   exclude '**/.babelrc'
 
-}
-
-task license(type: com.hierynomus.gradle.license.tasks.LicenseCheck) {
-  source = fileTree('.')
-}
-
-task licenseFormat(type: com.hierynomus.gradle.license.tasks.LicenseFormat) {
-  source = fileTree('.')
+  tasks {
+    modules {
+      files.from(".")
+    }
+  }
 }
 
 sonarqube {

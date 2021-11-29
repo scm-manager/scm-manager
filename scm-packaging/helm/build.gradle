@@ -26,7 +26,7 @@ plugins {
   id 'org.unbroken-dome.helm' version '1.5.0'
   id 'org.unbroken-dome.helm-publish' version '1.5.0'
   id 'org.scm-manager.packaging'
-  id 'com.github.hierynomus.license-base' version '0.15.0'
+  id 'org.scm-manager.license' version '0.7.1'
 }
 
 configurations {
@@ -97,23 +97,20 @@ task publish {
 
 license {
   header rootProject.file("LICENSE.txt")
-  strictCheck true
 
-  mapping {
-    gradle = 'SLASHSTAR_STYLE'
-  }
-
-  // TODO
-  // we get a strange build error with the license header,
-  // so we remove it for now
   exclude '**/Chart.yaml'
-
-  exclude '**/build/**'
   exclude '**/*.txt'
-  include '**/src/**'
-  include 'build.gradle'
+
+  tasks {
+    build {
+      files.from("build.gradle")
+    }
+    main {
+      files.from("src")
+    }
+  }
 }
 
-task license(type: com.hierynomus.gradle.license.tasks.LicenseCheck) {
-  source = fileTree('.')
+task check {
+  dependsOn checkLicenses
 }

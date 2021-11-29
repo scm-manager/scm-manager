@@ -21,6 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 import org.gradle.util.VersionNumber
 
 plugins {
@@ -28,7 +29,7 @@ plugins {
   id 'org.scm-manager.packaging'
   id 'signing'
   id 'maven-publish'
-  id 'com.github.hierynomus.license-base' version '0.15.0'
+  id 'org.scm-manager.license' version '0.7.1'
 }
 
 configurations {
@@ -131,18 +132,13 @@ project.rootProject.publishing.repositories.each { r ->
 
 license {
   header rootProject.file("LICENSE.txt")
-  strictCheck true
 
-  mapping {
-    gradle = 'SLASHSTAR_STYLE'
+  tasks {
+    build {
+      files.from("build.gradle", "Dockerfile")
+    }
+    main {
+      files.from("src")
+    }
   }
-
-  exclude '**/build/**'
-  exclude '**/*.txt'
-  include '**/src/**'
-  include 'build.gradle'
-}
-
-task license(type: com.hierynomus.gradle.license.tasks.LicenseCheck) {
-  source = fileTree('.')
 }

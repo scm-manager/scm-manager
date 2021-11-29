@@ -21,12 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 import org.gradle.util.VersionNumber
 
 plugins {
   id 'nebula.ospackage' version '8.5.6'
   id 'org.scm-manager.packaging'
-  id 'com.github.hierynomus.license-base' version '0.15.0'
+  id 'org.scm-manager.license' version '0.7.1'
 }
 
 configurations {
@@ -168,20 +169,15 @@ artifacts {
 
 license {
   header rootProject.file("LICENSE.txt")
-  strictCheck true
 
-  mapping {
-    gradle = 'SLASHSTAR_STYLE'
+  tasks {
+    build {
+      files.from("build.gradle", "Vagrantfile")
+    }
+    main {
+      files.from("src")
+    }
   }
-
-  exclude '**/build/**'
-  include '**/src/**'
-  include 'build.gradle'
-  include 'Vagrantfile'
-}
-
-task license(type: com.hierynomus.gradle.license.tasks.LicenseCheck) {
-  source = fileTree('.')
 }
 
 task publish(type: HttpUploadTask) {

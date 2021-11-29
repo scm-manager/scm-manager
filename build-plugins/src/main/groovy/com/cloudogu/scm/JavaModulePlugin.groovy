@@ -23,7 +23,6 @@
  */
 package com.cloudogu.scm
 
-import com.hierynomus.gradle.license.tasks.LicenseCheck
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.publish.maven.MavenPublication
@@ -36,7 +35,7 @@ class JavaModulePlugin implements Plugin<Project> {
   void apply(Project project) {
     project.plugins.apply("java")
     project.plugins.apply("maven-publish")
-    project.plugins.apply("com.github.hierynomus.license")
+    project.plugins.apply("org.scm-manager.license")
 
     project.java {
       toolchain {
@@ -110,14 +109,8 @@ class JavaModulePlugin implements Plugin<Project> {
 
     project.license {
       header project.rootProject.file('LICENSE.txt')
-      strictCheck true
-
-      mapping {
-        tsx = 'SLASHSTAR_STYLE'
-        ts = 'SLASHSTAR_STYLE'
-        java = 'SLASHSTAR_STYLE'
-        gradle = 'SLASHSTAR_STYLE'
-      }
+      newLine = true
+      ignoreNewLine = true
 
       exclude "**/*.mustache"
       exclude "**/*.json"
@@ -133,17 +126,14 @@ class JavaModulePlugin implements Plugin<Project> {
       exclude "**/*.jpg"
       exclude "**/*.gif"
       exclude "**/*.dump"
+
+      tasks {
+        gradle {
+          files.from("build.gradle", "settings.gradle", "gradle.properties")
+        }
+      }
     }
 
-    project.tasks.register("licenseBuild", LicenseCheck) {
-      source = project.fileTree(dir: ".").include("build.gradle", "settings.gradle", "gradle.properties")
-      enabled = true
-    }
-
-    project.tasks.getByName("license").configure {
-      dependsOn("licenseBuild")
-      enabled = true
-    }
   }
 
 }

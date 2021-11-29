@@ -128,7 +128,7 @@ dependencies {
 }
 
 jar {
-  from project.buildDirectory.dir('info')
+  from project.layout.buildDirectory.dir('info')
   dependsOn 'build-info'
 }
 

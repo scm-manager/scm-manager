@@ -33,7 +33,7 @@ apply from: file( '../gradle/dependencies.gradle' )
 dependencies {
   implementation gradleApi()
   implementation 'com.github.node-gradle:gradle-node-plugin:2.2.4'
-  implementation 'gradle.plugin.com.hierynomus.gradle.plugins:license-gradle-plugin:0.15.0'
+  implementation 'org.scm-manager:gradle-license-plugin:0.7.1'
 
   implementation libraries.guava
   implementation libraries.jettyServer
