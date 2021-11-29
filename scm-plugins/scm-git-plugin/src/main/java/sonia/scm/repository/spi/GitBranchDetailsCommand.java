@@ -47,13 +47,15 @@ public class GitBranchDetailsCommand extends AbstractGitCommand implements Branc
   @Override
   public BranchDetailsCommandResult execute(BranchDetailsCommandRequest branchDetailsCommandRequest) {
     String defaultBranch = context.getConfig().getDefaultBranch();
+    if (branchDetailsCommandRequest.getBranchName().equals(defaultBranch)) {
+      return new BranchDetailsCommandResult(0, 0);
+    }
     try {
       Repository repository = open();
       ObjectId branchCommit = getCommitOrDefault(repository, branchDetailsCommandRequest.getBranchName());
       ObjectId defaultCommit = getCommitOrDefault(repository, defaultBranch);
       return computeAheadBehind(repository, branchCommit, defaultCommit);
     } catch (IOException e) {
-      e.printStackTrace();
       throw new InternalRepositoryException(context.getRepository(), "could not compute ahead/behind", e);
     }
   }

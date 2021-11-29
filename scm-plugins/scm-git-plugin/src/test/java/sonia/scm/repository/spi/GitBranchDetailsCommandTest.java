@@ -32,7 +32,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class GitBranchDetailsCommandTest extends AbstractGitCommandTestBase {
 
   @Test
-  public void shouldCountAheadAndBehind() {
+  public void shouldGetZerosForDefaultBranch() {
+    GitBranchDetailsCommand command = new GitBranchDetailsCommand(createContext());
+
+    BranchDetailsCommandRequest request = new BranchDetailsCommandRequest();
+    request.setBranchName("master");
+    BranchDetailsCommandResult result = command.execute(request);
+
+    assertThat(result.getChangesetsAhead()).isZero();
+    assertThat(result.getChangesetsBehind()).isZero();
+  }
+
+  @Test
+  public void shouldCountSimpleAheadAndBehind() {
     GitBranchDetailsCommand command = new GitBranchDetailsCommand(createContext());
 
     BranchDetailsCommandRequest request = new BranchDetailsCommandRequest();
@@ -41,5 +53,17 @@ public class GitBranchDetailsCommandTest extends AbstractGitCommandTestBase {
 
     assertThat(result.getChangesetsAhead()).isEqualTo(1);
     assertThat(result.getChangesetsBehind()).isEqualTo(2);
+  }
+
+  @Test
+  public void shouldCountMoreComplexAheadAndBehind() {
+    GitBranchDetailsCommand command = new GitBranchDetailsCommand(createContext());
+
+    BranchDetailsCommandRequest request = new BranchDetailsCommandRequest();
+    request.setBranchName("partially_merged");
+    BranchDetailsCommandResult result = command.execute(request);
+
+    assertThat(result.getChangesetsAhead()).isEqualTo(3);
+    assertThat(result.getChangesetsBehind()).isEqualTo(1);
   }
 }
