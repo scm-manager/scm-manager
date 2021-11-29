@@ -61,6 +61,13 @@ class BaseHttpRequestTest {
     Multimap<String,String> headers = request.getHeaders();
     assertThat(headers.get("Authorization").iterator().next()).isEqualTo("Basic dHJpY2lhOm1jbWlsbGlhbjEyMw==");
   }
+
+  @Test
+  void shouldAddAuthorizationHeaderWithBearerScheme() {
+    request.bearerAuth("awesome-access-token");
+    Multimap<String,String> headers = request.getHeaders();
+    assertThat(headers.get("Authorization").iterator().next()).isEqualTo("Bearer awesome-access-token");
+  }
   
   @Test
   void shouldAppendQueryString(){

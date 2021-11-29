@@ -107,6 +107,18 @@ public abstract class BaseHttpRequest<T extends BaseHttpRequest>
   }
 
   /**
+   * Enable authentication with a bearer token.
+   * @param bearerToken bearer token
+   * @return http request instance
+   * @since 2.28.0
+   */
+  public T bearerAuth(String bearerToken) {
+    headers.put("Authorization", "Bearer ".concat(bearerToken));
+
+    return self();
+  }
+
+  /**
    * Enable or disabled gzip decoding. The default value is false.
    *
    *
