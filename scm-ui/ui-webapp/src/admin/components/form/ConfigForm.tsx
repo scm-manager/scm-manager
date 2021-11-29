@@ -29,6 +29,7 @@ import ProxySettings from "./ProxySettings";
 import GeneralSettings from "./GeneralSettings";
 import BaseUrlSettings from "./BaseUrlSettings";
 import LoginAttempt from "./LoginAttempt";
+import PluginSettings from "./PluginSettings";
 
 type Props = {
   submitForm: (p: Config) => void;
@@ -45,7 +46,7 @@ const ConfigForm: FC<Props> = ({
   loading,
   configReadPermission,
   configUpdatePermission,
-  namespaceStrategies,
+  namespaceStrategies
 }) => {
   const [t] = useTranslation("config");
   const [innerConfig, setInnerConfig] = useState<Config>({
@@ -65,6 +66,7 @@ const ConfigForm: FC<Props> = ({
     proxyExcludes: [],
     skipFailedAuthenticators: false,
     pluginUrl: "",
+    pluginAuthUrl: "",
     loginAttemptLimitTimeout: 0,
     enabledXsrfProtection: true,
     enabledUserConverter: false,
@@ -74,7 +76,7 @@ const ConfigForm: FC<Props> = ({
     mailDomainName: "",
     emergencyContacts: [],
     enabledApiKeys: true,
-    _links: {},
+    _links: {}
   });
   const [showNotification, setShowNotification] = useState(false);
   const [changed, setChanged] = useState(false);
@@ -83,7 +85,7 @@ const ConfigForm: FC<Props> = ({
     loginAttemptLimit: boolean;
   }>({
     loginAttemptLimitTimeout: false,
-    loginAttemptLimit: false,
+    loginAttemptLimit: false
   });
 
   useEffect(() => {
@@ -164,6 +166,13 @@ const ConfigForm: FC<Props> = ({
       <BaseUrlSettings
         baseUrl={innerConfig.baseUrl}
         forceBaseUrl={innerConfig.forceBaseUrl}
+        onChange={(isValid, changedValue, name) => onChange(isValid, changedValue, name)}
+        hasUpdatePermission={configUpdatePermission}
+      />
+      <hr />
+      <PluginSettings
+        pluginUrl={innerConfig.pluginUrl}
+        pluginAuthUrl={innerConfig.pluginAuthUrl}
         onChange={(isValid, changedValue, name) => onChange(isValid, changedValue, name)}
         hasUpdatePermission={configUpdatePermission}
       />

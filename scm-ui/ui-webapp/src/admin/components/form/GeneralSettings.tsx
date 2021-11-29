@@ -41,7 +41,6 @@ type Props = {
   dateFormat: string;
   anonymousMode: AnonymousMode;
   skipFailedAuthenticators: boolean;
-  pluginUrl: string;
   releaseFeedUrl: string;
   mailDomainName: string;
   enabledXsrfProtection: boolean;
@@ -58,7 +57,6 @@ const GeneralSettings: FC<Props> = ({
   realmDescription,
   loginInfoUrl,
   anonymousMode,
-  pluginUrl,
   releaseFeedUrl,
   mailDomainName,
   enabledXsrfProtection,
@@ -90,9 +88,6 @@ const GeneralSettings: FC<Props> = ({
   };
   const handleNamespaceStrategyChange = (value: string) => {
     onChange(true, value, "namespaceStrategy");
-  };
-  const handlePluginCenterUrlChange = (value: string) => {
-    onChange(true, value, "pluginUrl");
   };
   const handleReleaseFeedUrlChange = (value: string) => {
     onChange(true, value, "releaseFeedUrl");
@@ -164,20 +159,12 @@ const GeneralSettings: FC<Props> = ({
       </div>
       <div className="columns">
         <div className="column is-half">
-          <InputField
-            label={t("general-settings.plugin-url")}
-            onChange={handlePluginCenterUrlChange}
-            value={pluginUrl}
-            disabled={!hasUpdatePermission}
-            helpText={t("help.pluginUrlHelpText")}
-          />
-        </div>
-        <div className="column is-half">
           <Select
             label={t("general-settings.anonymousMode.title")}
             onChange={handleAnonymousMode}
             value={anonymousMode}
             disabled={!hasUpdatePermission}
+            className="is-fullwidth"
             options={[
               { label: t("general-settings.anonymousMode.full"), value: "FULL" },
               { label: t("general-settings.anonymousMode.protocolOnly"), value: "PROTOCOL_ONLY" },
@@ -185,17 +172,6 @@ const GeneralSettings: FC<Props> = ({
             ]}
             helpText={t("help.allowAnonymousAccessHelpText")}
             testId={"anonymous-mode-select"}
-          />
-        </div>
-      </div>
-      <div className="columns">
-        <div className="column is-half">
-          <InputField
-            label={t("general-settings.release-feed-url")}
-            onChange={handleReleaseFeedUrlChange}
-            value={releaseFeedUrl}
-            disabled={!hasUpdatePermission}
-            helpText={t("help.releaseFeedUrlHelpText")}
           />
         </div>
         <div className="column is-half">
@@ -227,6 +203,17 @@ const GeneralSettings: FC<Props> = ({
             title={t("general-settings.enabled-api-keys")}
             disabled={!hasUpdatePermission}
             helpText={t("help.enabledApiKeysHelpText")}
+          />
+        </div>
+      </div>
+      <div className="columns">
+        <div className="column">
+          <InputField
+            label={t("general-settings.release-feed-url")}
+            onChange={handleReleaseFeedUrlChange}
+            value={releaseFeedUrl}
+            disabled={!hasUpdatePermission}
+            helpText={t("help.releaseFeedUrlHelpText")}
           />
         </div>
       </div>
