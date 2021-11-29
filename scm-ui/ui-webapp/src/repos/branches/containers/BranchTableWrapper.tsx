@@ -40,14 +40,13 @@ const BranchTableWrapper: FC<Props> = ({ repository, baseUrl, data }) => {
   const [t] = useTranslation("repos");
   const branches: Branch[] = (data?._embedded?.branches as Branch[]) || [];
   orderBranches(branches);
-  const { error, data: detailsData } = useBranchDetailsCollection(repository, branches);
+  const staleBranches = branches.filter(b => b.stale);
+  const activeBranches = branches.filter(b => !b.stale);
+  const { error, data: detailsData } = useBranchDetailsCollection(repository, [...activeBranches, ...staleBranches]);
 
   if (branches.length === 0) {
     return <Notification type="info">{t("branches.overview.noBranches")}</Notification>;
   }
-
-  const staleBranches = branches.filter(b => b.stale);
-  const activeBranches = branches.filter(b => !b.stale);
 
   const showCreateButton = !!data._links.create;
 
