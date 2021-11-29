@@ -22,12 +22,10 @@
  * SOFTWARE.
  */
 import React, { FC } from "react";
-import { useTranslation } from "react-i18next";
 import { Repository } from "@scm-manager/ui-types";
-import { CreateButton, ErrorNotification, Loading, Notification, Subtitle } from "@scm-manager/ui-components";
-import { orderBranches } from "../util/orderBranches";
-import BranchTable from "../components/BranchTable";
+import { ErrorNotification, Loading } from "@scm-manager/ui-components";
 import { useBranches } from "@scm-manager/ui-api";
+import BranchTableWrapper from "./BranchTableWrapper";
 
 type Props = {
   repository: Repository;
@@ -36,7 +34,6 @@ type Props = {
 
 const BranchesOverview: FC<Props> = ({ repository, baseUrl }) => {
   const { isLoading, error, data } = useBranches(repository);
-  const [t] = useTranslation("repos");
 
   if (error) {
     return <ErrorNotification error={error} />;
@@ -46,30 +43,7 @@ const BranchesOverview: FC<Props> = ({ repository, baseUrl }) => {
     return <Loading />;
   }
 
-  const branches = data?._embedded?.branches || [];
-
-  if (branches.length === 0) {
-    return <Notification type="info">{t("branches.overview.noBranches")}</Notification>;
-  }
-
-  orderBranches(branches);
-  const staleBranches = branches.filter((b) => b.stale);
-  const activeBranches = branches.filter((b) => !b.stale);
-
-  const showCreateButton = !!data._links.create;
-
-  return (
-    <>
-      <Subtitle subtitle={t("branches.overview.title")} />
-      {activeBranches.length > 0 ? (
-        <BranchTable repository={repository} baseUrl={baseUrl} type="active" branches={activeBranches} />
-      ) : null}
-      {staleBranches.length > 0 ? (
-        <BranchTable repository={repository} baseUrl={baseUrl} type="stale" branches={staleBranches} />
-      ) : null}
-      {showCreateButton ? <CreateButton label={t("branches.overview.createButton")} link="./create" /> : null}
-    </>
-  );
+  return <BranchTableWrapper repository={repository} baseUrl={baseUrl} data={data} />;
 };
 
 export default BranchesOverview;

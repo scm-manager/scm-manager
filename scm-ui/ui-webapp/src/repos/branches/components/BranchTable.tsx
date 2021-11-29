@@ -26,18 +26,18 @@ import { useTranslation } from "react-i18next";
 import BranchRow from "./BranchRow";
 import { Branch, BranchDetails, Repository } from "@scm-manager/ui-types";
 import { ConfirmAlert, ErrorNotification } from "@scm-manager/ui-components";
-import { useBranchDetailsCollection, useDeleteBranch } from "@scm-manager/ui-api";
+import { useDeleteBranch } from "@scm-manager/ui-api";
 
 type Props = {
   baseUrl: string;
   repository: Repository;
   branches: Branch[];
   type: string;
+  branchDetails: BranchDetails[];
 };
 
-const BranchTable: FC<Props> = ({ repository, baseUrl, branches, type }) => {
+const BranchTable: FC<Props> = ({ repository, baseUrl, branches, type, branchDetails }) => {
   const { isLoading, error, remove, isDeleted } = useDeleteBranch(repository);
-  const { error: errorDetails, data: branchDetails } = useBranchDetailsCollection(repository, branches);
   const [t] = useTranslation("repos");
   const [showConfirmAlert, setShowConfirmAlert] = useState(false);
   const [branchToBeDeleted, setBranchToBeDeleted] = useState<Branch | undefined>();
@@ -88,7 +88,7 @@ const BranchTable: FC<Props> = ({ repository, baseUrl, branches, type }) => {
           close={() => abortDelete()}
         />
       ) : null}
-      <ErrorNotification error={error || errorDetails} />
+      <ErrorNotification error={error} />
       <table className="card-table table is-hoverable is-fullwidth is-word-break">
         <thead>
           <tr>
