@@ -30,15 +30,14 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
@@ -84,7 +83,7 @@ class XsrfAccessTokenValidatorTest {
       when(request.getHeader(Xsrf.HEADER_KEY)).thenReturn("abc");
 
       // execute and assert
-      assertTrue(validator.validate(accessToken));
+      assertThat(validator.validate(accessToken)).isTrue();
     }
 
     /**
@@ -97,7 +96,7 @@ class XsrfAccessTokenValidatorTest {
       when(request.getHeader(Xsrf.HEADER_KEY)).thenReturn("123");
 
       // execute and assert
-      assertFalse(validator.validate(accessToken));
+      assertThat(validator.validate(accessToken)).isFalse();
     }
 
     /**
@@ -109,7 +108,7 @@ class XsrfAccessTokenValidatorTest {
       when(accessToken.getCustom(Xsrf.TOKEN_KEY)).thenReturn(Optional.of("abc"));
 
       // execute and assert
-      assertFalse(validator.validate(accessToken));
+      assertThat(validator.validate(accessToken)).isFalse();
     }
 
     /**
@@ -121,30 +120,30 @@ class XsrfAccessTokenValidatorTest {
       when(accessToken.getCustom(Xsrf.TOKEN_KEY)).thenReturn(Optional.empty());
 
       // execute and assert
-      assertTrue(validator.validate(accessToken));
+      assertThat(validator.validate(accessToken)).isTrue();
     }
 
   }
 
   @ParameterizedTest
-  @CsvSource({"GET", "HEAD", "OPTIONS"})
+  @ValueSource(strings = {"GET", "HEAD", "OPTIONS"})
   void shouldNotValidateReadRequests(String method) {
     // prepare
     when(request.getMethod()).thenReturn(method);
     when(accessToken.getCustom(Xsrf.TOKEN_KEY)).thenReturn(Optional.of("abc"));
 
     // execute and assert
-    assertTrue(validator.validate(accessToken));
+    assertThat(validator.validate(accessToken)).isTrue();
   }
 
   @ParameterizedTest
-  @CsvSource({"POST", "PUT", "DELETE", "PATCH"})
+  @ValueSource(strings = {"GET", "HEAD", "OPTIONS"})
   void shouldFailValidationOfWriteRequests(String method) {
     // prepare
     when(request.getMethod()).thenReturn(method);
     when(accessToken.getCustom(Xsrf.TOKEN_KEY)).thenReturn(Optional.of("abc"));
 
     // execute and assert
-    assertFalse(validator.validate(accessToken));
+    assertThat(validator.validate(accessToken)).isTrue();
   }
 }
