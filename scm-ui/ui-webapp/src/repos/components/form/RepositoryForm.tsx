@@ -25,7 +25,13 @@ import React, { FC, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
-import { IndexResources, Repository, RepositoryType, CUSTOM_NAMESPACE_STRATEGY } from "@scm-manager/ui-types";
+import {
+  IndexResources,
+  Repository,
+  RepositoryType,
+  CUSTOM_NAMESPACE_STRATEGY,
+  OnChangeType
+} from "@scm-manager/ui-types";
 import { Checkbox, Level, Select, SubmitButton } from "@scm-manager/ui-components";
 import NamespaceAndNameFields from "../NamespaceAndNameFields";
 import RepositoryInformationForm from "../RepositoryInformationForm";
@@ -41,7 +47,7 @@ type Props = {
 };
 
 type RepositoryCreation = Repository & {
-  contextEntries: object;
+  contextEntries?: object;
 };
 
 const RepositoryForm: FC<Props> = ({
@@ -53,7 +59,7 @@ const RepositoryForm: FC<Props> = ({
   loading,
   indexResources
 }) => {
-  const [repo, setRepo] = useState<Repository>({
+  const [repo, setRepo] = useState<RepositoryCreation>({
     name: "",
     namespace: "",
     type: "",
@@ -64,7 +70,7 @@ const RepositoryForm: FC<Props> = ({
   const [initRepository, setInitRepository] = useState(false);
   const [contextEntries, setContextEntries] = useState({});
   const setCreationContextEntry = useCallback(
-    (key: string, value: any) => {
+    (key: string, value: OnChangeType) => {
       setContextEntries(entries => ({
         ...entries,
         [key]: value

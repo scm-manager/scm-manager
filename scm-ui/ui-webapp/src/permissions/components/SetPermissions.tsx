@@ -98,7 +98,9 @@ const SetPermissions: FC<Props> = ({
       const selectedPermissions = Object.entries(permissions)
         .filter(e => e[1])
         .map(e => e[0]);
-      updatePermissions!(selectedPermissions);
+      if (updatePermissions) {
+        updatePermissions(selectedPermissions);
+      }
     }
   };
 

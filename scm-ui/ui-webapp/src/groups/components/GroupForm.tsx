@@ -40,7 +40,7 @@ type Props = WithTranslation & {
   submitForm: (p: Group) => void;
   loading?: boolean;
   group?: Group;
-  loadUserSuggestions: (p: string) => any;
+  loadUserSuggestions: (p: string) => Promise<SelectValue[]>;
 };
 
 type State = {

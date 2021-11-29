@@ -49,8 +49,7 @@ const ImportFullRepository: FC<Props> = ({
     namespace: "",
     type: repositoryType.name,
     contact: "",
-    description: "",
-    contextEntries: []
+    description: ""
   });
   const [password, setPassword] = useState("");
   const [valid, setValid] = useState({ namespaceAndName: false, contact: true, file: false });
@@ -58,19 +57,22 @@ const ImportFullRepository: FC<Props> = ({
   const [t] = useTranslation("repos");
   const { importFullRepository, importedRepository, isLoading, error } = useImportFullRepository(repositoryType);
 
-  useEffect(() => setRepo({ ...repo, type: repositoryType.name }), [repositoryType]);
-  useEffect(() => setImportPending(isLoading), [isLoading]);
+  useEffect(() => setRepo({ ...repo, type: repositoryType.name }), [repositoryType, repo]);
+  useEffect(() => setImportPending(isLoading), [isLoading, setImportPending]);
   useEffect(() => {
     if (importedRepository) {
       setImportedRepository(importedRepository);
     }
-  }, [importedRepository]);
+  }, [importedRepository, setImportedRepository]);
 
   const isValid = () => Object.values(valid).every(v => v);
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    importFullRepository(repo, file!, password);
+    if (!file) {
+      return;
+    }
+    importFullRepository(repo, file, password);
   };
 
   return (

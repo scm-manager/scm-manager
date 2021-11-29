@@ -47,7 +47,7 @@ const ImportFromUrlForm: FC<Props> = ({ repository, onChange, setValid, disabled
   const handleImportUrlBlur = (importUrl: string) => {
     if (!repository.name) {
       // If the repository name is not fill we set a name suggestion
-      const match = importUrl.match(/([^\/]+?)(?:.git)?$/);
+      const match = importUrl.match(/([^/]+?)(?:.git)?$/);
       if (match && match[1]) {
         onChange({ ...repository, name: match[1] });
       }

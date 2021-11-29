@@ -89,7 +89,7 @@ const CreatePermissionForm: FC<Props> = ({
   const [t] = useTranslation("repos");
   useEffect(() => {
     setPermission(initialPermissionState);
-  }, [createdPermission]);
+  }, [createdPermission, initialPermissionState]);
   const selectedVerbs = permission.role ? findVerbsForRole(availableRoles, permission.role) : permission.verbs;
 
   const selectName = (value: SelectValue) => {
@@ -100,7 +100,7 @@ const CreatePermissionForm: FC<Props> = ({
       valid: validator.isPermissionValid(
         value.value.id,
         permission.groupPermission,
-        currentPermissions._embedded.permissions
+        currentPermissions._embedded?.permissions || []
       )
     });
   };
@@ -154,6 +154,8 @@ const CreatePermissionForm: FC<Props> = ({
     return availableRoles.find(role => role.name === roleName);
   };
 
+  const empty = { value: { id: "", displayName: "" }, label: "" };
+
   return (
     <>
       <hr />
@@ -193,14 +195,14 @@ const CreatePermissionForm: FC<Props> = ({
               <GroupAutocomplete
                 autocompleteLink={links.groups.href}
                 valueSelected={selectName}
-                value={permission.value || ""}
+                value={permission.value || empty}
               />
             ) : null}
             {!permission.groupPermission && links.users ? (
               <UserAutocomplete
                 autocompleteLink={links.users.href}
                 valueSelected={selectName}
-                value={permission.value || ""}
+                value={permission.value || empty}
               />
             ) : null}
           </div>

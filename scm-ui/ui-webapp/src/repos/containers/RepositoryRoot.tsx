@@ -22,7 +22,9 @@
  * SOFTWARE.
  */
 import React, { useState } from "react";
-import { Link as RouteLink, Redirect, Route, Switch, useRouteMatch } from "react-router-dom";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { match } from "react-router";
+import { Link as RouteLink, Redirect, Route, RouteProps, Switch, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
 import { Changeset, Link } from "@scm-manager/ui-types";
@@ -41,7 +43,7 @@ import {
   SecondaryNavigationColumn,
   StateMenuContextProvider,
   SubNavigation,
-  urls,
+  urls
 } from "@scm-manager/ui-components";
 import RepositoryDetails from "../components/RepositoryDetails";
 import EditRepo from "./EditRepo";
@@ -76,7 +78,7 @@ const useRepositoryFromUrl = (match: match<UrlParams>) => {
   const { data: repository, ...rest } = useRepository(namespace, name);
   return {
     repository,
-    ...rest,
+    ...rest
   };
 };
 
@@ -110,7 +112,7 @@ const RepositoryRoot = () => {
     error,
     repoLink: (indexLinks.repositories as Link)?.href,
     indexLinks,
-    match,
+    match
   };
 
   const redirectUrlFactory = binder.getExtension("repository.redirect", props);
@@ -121,16 +123,16 @@ const RepositoryRoot = () => {
     redirectedUrl = url + "/code/sources/";
   }
 
-  const fileControlFactoryFactory: (changeset: Changeset) => FileControlFactory = (changeset) => (file) => {
+  const fileControlFactoryFactory: (changeset: Changeset) => FileControlFactory = changeset => file => {
     const baseUrl = `${url}/code/sources`;
     const sourceLink = file.newPath && {
       url: `${baseUrl}/${changeset.id}/${file.newPath}/`,
-      label: t("diff.jumpToSource"),
+      label: t("diff.jumpToSource")
     };
     const targetLink = file.oldPath &&
       changeset._embedded?.parents?.length === 1 && {
         url: `${baseUrl}/${changeset._embedded.parents[0].id}/${file.oldPath}`,
-        label: t("diff.jumpToTarget"),
+        label: t("diff.jumpToTarget")
       };
 
     const links = [];
@@ -168,22 +170,31 @@ const RepositoryRoot = () => {
   const extensionProps = {
     repository,
     url,
-    indexLinks,
+    indexLinks
   };
 
-  const matchesBranches = (route: any) => {
+  const matchesBranches = (route: RouteProps) => {
     const regex = new RegExp(`${url}/branch/.+/info`);
-    return route.location.pathname.match(regex);
+    if (!route.location) {
+      return false;
+    }
+    return !!route.location.pathname.match(regex);
   };
 
-  const matchesTags = (route: any) => {
+  const matchesTags = (route: RouteProps) => {
     const regex = new RegExp(`${url}/tag/.+/info`);
-    return route.location.pathname.match(regex);
+    if (!route.location) {
+      return false;
+    }
+    return !!route.location.pathname.match(regex);
   };
 
-  const matchesCode = (route: any) => {
+  const matchesCode = (route: RouteProps) => {
     const regex = new RegExp(`${url}(/code)/.*`);
-    return route.location.pathname.match(regex);
+    if (!route.location) {
+      return false;
+    }
+    return !!route.location.pathname.match(regex);
   };
 
   const getCodeLinkname = () => {

@@ -52,21 +52,20 @@ const ImportRepositoryFromUrl: FC<Props> = ({
     description: "",
     importUrl: "",
     username: "",
-    password: "",
-    contextEntries: []
+    password: ""
   });
 
   const [valid, setValid] = useState({ namespaceAndName: false, contact: true, importUrl: false });
   const [t] = useTranslation("repos");
   const { importRepositoryFromUrl, importedRepository, error, isLoading } = useImportRepositoryFromUrl(repositoryType);
 
-  useEffect(() => setRepo({ ...repo, type: repositoryType.name }), [repositoryType]);
-  useEffect(() => setImportPending(isLoading), [isLoading]);
+  useEffect(() => setRepo({ ...repo, type: repositoryType.name }), [repositoryType, repo]);
+  useEffect(() => setImportPending(isLoading), [isLoading, setImportPending]);
   useEffect(() => {
     if (importedRepository) {
       setImportedRepository(importedRepository);
     }
-  }, [importedRepository]);
+  }, [importedRepository, setImportedRepository]);
 
   const isValid = () => Object.values(valid).every(v => v);
 

@@ -49,8 +49,7 @@ const ImportRepositoryFromBundle: FC<Props> = ({
     namespace: "",
     type: repositoryType.name,
     contact: "",
-    description: "",
-    contextEntries: []
+    description: ""
   });
   const [password, setPassword] = useState("");
   const [valid, setValid] = useState({ namespaceAndName: false, contact: true, file: false });
@@ -61,19 +60,22 @@ const ImportRepositoryFromBundle: FC<Props> = ({
     repositoryType
   );
 
-  useEffect(() => setRepo({ ...repo, type: repositoryType.name }), [repositoryType]);
-  useEffect(() => setImportPending(isLoading), [isLoading]);
+  useEffect(() => setRepo({ ...repo, type: repositoryType.name }), [repositoryType, repo]);
+  useEffect(() => setImportPending(isLoading), [isLoading, setImportPending]);
   useEffect(() => {
     if (importedRepository) {
       setImportedRepository(importedRepository);
     }
-  }, [importedRepository]);
+  }, [importedRepository, setImportedRepository]);
 
   const isValid = () => Object.values(valid).every(v => v);
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    importRepositoryFromBundle(repo, file!, compressed, password);
+    if (!file) {
+      return;
+    }
+    importRepositoryFromBundle(repo, file, compressed, password);
   };
 
   return (

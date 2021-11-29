@@ -23,6 +23,7 @@
  */
 
 import i18n from "i18next";
+// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import Backend from "i18next-fetch-backend";
 import LanguageDetector from "i18next-browser-languagedetector";

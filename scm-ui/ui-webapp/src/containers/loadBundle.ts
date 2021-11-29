@@ -69,6 +69,7 @@ SystemJS.config({
   baseURL: urls.withContextPath("/assets"),
   meta: {
     "/*": {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
       // @ts-ignore typing missing, but seems required
       esModule: true,
       authorization: true,
@@ -100,6 +101,7 @@ SystemJS.resolveSync = function(key, parentName) {
   return defaultResolveSync.apply(this, [module, parentName]);
 };
 
+//eslint-disable-next-line @typescript-eslint/no-explicit-any
 const expose = (name: string, cmp: any, defaultCmp?: any) => {
   let mod = cmp;
   if (defaultCmp) {

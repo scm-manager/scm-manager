@@ -91,6 +91,7 @@ class LoginInfo extends React.Component<Props, State> {
       });
   };
 
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
   timeout = (ms: number, promise: Promise<any>) => {
     return new Promise<LoginInfoResponse>((resolve, reject) => {
       setTimeout(() => {

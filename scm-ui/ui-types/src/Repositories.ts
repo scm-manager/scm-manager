@@ -23,6 +23,7 @@
  */
 
 import { PagedCollection, Links, HalRepresentation } from "./hal";
+import { OnChangeType } from "./General";
 
 export type NamespaceAndName = {
   namespace: string;
@@ -53,7 +54,7 @@ export type Repository = HalRepresentation &
   };
 
 export type RepositoryCreation = RepositoryBase & {
-  contextEntries: { [key: string]: any };
+  contextEntries?: { [key: string]: object | undefined };
 };
 
 export type RepositoryUrlImport = RepositoryCreation & {
