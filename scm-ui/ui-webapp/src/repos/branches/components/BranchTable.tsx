@@ -33,10 +33,10 @@ type Props = {
   repository: Repository;
   branches: Branch[];
   type: string;
-  branchDetails: BranchDetails[];
+  branchesDetails: BranchDetails[];
 };
 
-const BranchTable: FC<Props> = ({ repository, baseUrl, branches, type, branchDetails }) => {
+const BranchTable: FC<Props> = ({ repository, baseUrl, branches, type, branchesDetails }) => {
   const { isLoading, error, remove, isDeleted } = useDeleteBranch(repository);
   const [t] = useTranslation("repos");
   const [showConfirmAlert, setShowConfirmAlert] = useState(false);
@@ -102,7 +102,7 @@ const BranchTable: FC<Props> = ({ repository, baseUrl, branches, type, branchDet
               baseUrl={baseUrl}
               branch={branch}
               onDelete={onDelete}
-              details={branchDetails?.filter((b: BranchDetails) => b.branchName === branch.name)[0]}
+              details={branchesDetails?.filter((b: BranchDetails) => b.branchName === branch.name)[0]}
             />
           ))}
         </tbody>

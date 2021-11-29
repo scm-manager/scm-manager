@@ -42,17 +42,20 @@ const BranchTableWrapper: FC<Props> = ({ repository, baseUrl, data }) => {
   orderBranches(branches);
   const staleBranches = branches.filter(b => b.stale);
   const activeBranches = branches.filter(b => !b.stale);
-  const { error, data: detailsData } = useBranchDetailsCollection(repository, [...activeBranches, ...staleBranches]);
+  const { error, data: branchesDetails } = useBranchDetailsCollection(repository, [
+    ...activeBranches,
+    ...staleBranches
+  ]);
+
+  if (error) {
+    return <ErrorNotification error={error} />;
+  }
 
   if (branches.length === 0) {
     return <Notification type="info">{t("branches.overview.noBranches")}</Notification>;
   }
 
   const showCreateButton = !!data._links.create;
-
-  if (error) {
-    return <ErrorNotification error={error} />;
-  }
 
   return (
     <>
@@ -63,7 +66,7 @@ const BranchTableWrapper: FC<Props> = ({ repository, baseUrl, data }) => {
           baseUrl={baseUrl}
           type="active"
           branches={activeBranches}
-          branchDetails={detailsData}
+          branchesDetails={branchesDetails}
         />
       ) : null}
       {staleBranches.length > 0 ? (
@@ -72,7 +75,7 @@ const BranchTableWrapper: FC<Props> = ({ repository, baseUrl, data }) => {
           baseUrl={baseUrl}
           type="stale"
           branches={staleBranches}
-          branchDetails={detailsData}
+          branchesDetails={branchesDetails}
         />
       ) : null}
       {showCreateButton ? <CreateButton label={t("branches.overview.createButton")} link="./create" /> : null}

@@ -31,6 +31,5 @@ import lombok.Data;
  */
 @Data
 public final class BranchDetailsCommandRequest {
-
   private String branchName;
 }

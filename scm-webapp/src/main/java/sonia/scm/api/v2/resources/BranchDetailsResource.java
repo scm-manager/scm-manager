@@ -119,7 +119,7 @@ public class BranchDetailsResource {
   }
 
   /**
-   * Returns branch details for given branch.
+   * Returns branch details for given branches.
    *
    * <strong>Note:</strong> This method requires "repository" privilege.
    *

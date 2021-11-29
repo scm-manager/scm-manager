@@ -67,16 +67,16 @@ public final class Branch implements Serializable, Validateable {
    * Constructs a new instance of branch.
    * This constructor should only be called from JAXB.
    */
-  Branch() {}
+  Branch() {
+  }
 
   /**
    * Constructs a new branch.
    *
-   * @param name name of the branch
-   * @param revision latest revision of the branch
+   * @param name          name of the branch
+   * @param revision      latest revision of the branch
    * @param defaultBranch Whether this branch is the default branch for the repository
-   *
-   * @deprecated Use {@link Branch#Branch(String, String, boolean, Long)} instead.
+   * @deprecated Use {@link Branch#Branch(String, String, boolean, Long, Person)} instead.
    */
   @Deprecated
   Branch(String name, String revision, boolean defaultBranch) {
@@ -86,9 +86,9 @@ public final class Branch implements Serializable, Validateable {
   /**
    * Constructs a new branch.
    *
-   * @param name name of the branch
-   * @param revision latest revision of the branch
-   * @param defaultBranch Whether this branch is the default branch for the repository
+   * @param name           name of the branch
+   * @param revision       latest revision of the branch
+   * @param defaultBranch  Whether this branch is the default branch for the repository
    * @param lastCommitDate The date of the commit this branch points to (if computed). May be <code>null</code>
    */
   @Deprecated
@@ -102,11 +102,11 @@ public final class Branch implements Serializable, Validateable {
   /**
    * Constructs a new branch.
    *
-   * @param name name of the branch
-   * @param revision latest revision of the branch
-   * @param defaultBranch Whether this branch is the default branch for the repository
+   * @param name           name of the branch
+   * @param revision       latest revision of the branch
+   * @param defaultBranch  Whether this branch is the default branch for the repository
    * @param lastCommitDate The date of the commit this branch points to (if computed). May be <code>null</code>
-   * @param lastCommitter The user of the commit this branch points to (if computed). May be <code>null</code>
+   * @param lastCommitter  The user of the commit this branch points to (if computed). May be <code>null</code>
    */
   Branch(String name, String revision, boolean defaultBranch, Long lastCommitDate, Person lastCommitter) {
     this.name = name;
@@ -117,7 +117,7 @@ public final class Branch implements Serializable, Validateable {
   }
 
   /**
-   * @deprecated Use {@link #normalBranch(String, String, Long)} instead to set the date of the last commit, too.
+   * @deprecated Use {@link #normalBranch(String, String, Long, Person)} instead to set the date of the last commit, too.
    */
   @Deprecated
   public static Branch normalBranch(String name, String revision) {
@@ -180,7 +180,8 @@ public final class Branch implements Serializable, Validateable {
     return Objects.equal(name, other.name)
       && Objects.equal(revision, other.revision)
       && Objects.equal(defaultBranch, other.defaultBranch)
-      && Objects.equal(lastCommitDate, other.lastCommitDate);
+      && Objects.equal(lastCommitDate, other.lastCommitDate)
+      && Objects.equal(lastCommitter, other.lastCommitter);
   }
 
   @Override
@@ -191,11 +192,12 @@ public final class Branch implements Serializable, Validateable {
   @Override
   public String toString() {
     return MoreObjects.toStringHelper(this)
-                  .add("name", name)
-                  .add("revision", revision)
-                  .add("defaultBranch", defaultBranch)
-                  .add("lastCommitDate", lastCommitDate)
-                  .toString();
+      .add("name", name)
+      .add("revision", revision)
+      .add("defaultBranch", defaultBranch)
+      .add("lastCommitDate", lastCommitDate)
+      .add("lastCommitter", lastCommitter)
+      .toString();
   }
 
   /**

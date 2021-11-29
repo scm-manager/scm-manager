@@ -33,8 +33,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.Min;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -42,9 +40,7 @@ import javax.validation.constraints.Min;
 @EqualsAndHashCode(callSuper = true)
 public class BranchDetailsDto extends HalRepresentation {
   private String branchName;
-  @Min(0)
   private int changesetsAhead;
-  @Min(0)
   private int changesetsBehind;
 
   BranchDetailsDto(Links links, Embedded embedded) {
