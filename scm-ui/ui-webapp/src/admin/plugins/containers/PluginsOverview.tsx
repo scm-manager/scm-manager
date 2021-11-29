@@ -32,7 +32,7 @@ import {
   Loading,
   Notification,
   Subtitle,
-  Title,
+  Title
 } from "@scm-manager/ui-components";
 import PluginsList from "../components/PluginList";
 import PluginTopActions from "../components/PluginTopActions";
@@ -41,14 +41,19 @@ import ExecutePendingActionModal from "../components/ExecutePendingActionModal";
 import CancelPendingActionModal from "../components/CancelPendingActionModal";
 import UpdateAllActionModal from "../components/UpdateAllActionModal";
 import ShowPendingModal from "../components/ShowPendingModal";
-import { useAvailablePlugins, useInstalledPlugins, usePendingPlugins } from "@scm-manager/ui-api";
+import { useAvailablePlugins, useInstalledPlugins, usePendingPlugins, usePluginCenterLogin } from "@scm-manager/ui-api";
 import PluginModal from "../components/PluginModal";
+import styled from "styled-components";
+
+const MyCloudoguBannerWrapper = styled.div`
+  border: 1px solid #123;
+`;
 
 export enum PluginAction {
   INSTALL = "install",
   UPDATE = "update",
   UNINSTALL = "uninstall",
-  CLOUDOGU = "cloudoguInstall",
+  CLOUDOGU = "cloudoguInstall"
 }
 
 export type PluginModalContent = {
@@ -65,12 +70,12 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
   const {
     data: availablePlugins,
     isLoading: isLoadingAvailablePlugins,
-    error: availablePluginsError,
+    error: availablePluginsError
   } = useAvailablePlugins({ enabled: !installed });
   const {
     data: installedPlugins,
     isLoading: isLoadingInstalledPlugins,
-    error: installedPluginsError,
+    error: installedPluginsError
   } = useInstalledPlugins({ enabled: installed });
   const { data: pendingPlugins, isLoading: isLoadingPendingPlugins, error: pendingPluginsError } = usePendingPlugins();
   const [showPendingModal, setShowPendingModal] = useState(false);
@@ -78,9 +83,14 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
   const [showUpdateAllModal, setShowUpdateAllModal] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [pluginModalContent, setPluginModalContent] = useState<PluginModalContent | null>(null);
+  const { login, isLoading: isLoggingIntoPluginCenter, error: pluginCenterAuthError } = usePluginCenterLogin();
   const collection = installed ? installedPlugins : availablePlugins;
-  const error = (installed ? installedPluginsError : availablePluginsError) || pendingPluginsError;
-  const loading = (installed ? isLoadingInstalledPlugins : isLoadingAvailablePlugins) || isLoadingPendingPlugins;
+  const error =
+    (installed ? installedPluginsError : availablePluginsError) || pendingPluginsError || pluginCenterAuthError;
+  const loading =
+    (installed ? isLoadingInstalledPlugins : isLoadingAvailablePlugins) ||
+    isLoadingPendingPlugins ||
+    isLoggingIntoPluginCenter;
 
   const renderHeader = (actions: React.ReactNode) => {
     return (
@@ -167,7 +177,7 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
   const computeUpdateAllSize = () => {
     const outdatedPlugins = collection?._embedded.plugins.filter((p: Plugin) => p._links.update).length;
     return t("plugins.outdatedPlugins", {
-      count: outdatedPlugins,
+      count: outdatedPlugins
     });
   };
 
@@ -208,11 +218,26 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
     return <Loading />;
   }
 
+  const MyCloudoguBanner = () => (
+    <MyCloudoguBannerWrapper className="has-rounded-border is-flex is-flex-direction-column is-align-items-center p-5 mb-4">
+      <Button
+        className="mb-5"
+        color="primary"
+        reducedMobile={true}
+        icon="cloud"
+        label={t("plugins.myCloudogu.login.button.label")}
+        action={login}
+      />
+      <p className="is-align-self-flex-start is-size-7">{t("plugins.myCloudogu.login.description")}</p>
+    </MyCloudoguBannerWrapper>
+  );
+
   const actions = createActions();
   return (
     <>
       {renderHeader(actions)}
       <hr className="header-with-actions" />
+      {login ? <MyCloudoguBanner /> : null}
       {renderPluginsList()}
       {renderFooter(actions)}
       {renderModals()}

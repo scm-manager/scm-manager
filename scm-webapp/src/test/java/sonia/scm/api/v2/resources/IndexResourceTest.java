@@ -33,6 +33,7 @@ import org.junit.Test;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.initialization.InitializationFinisher;
+import sonia.scm.plugin.PluginCenterAuthenticator;
 import sonia.scm.search.SearchEngine;
 
 import java.net.URI;
@@ -51,6 +52,7 @@ public class IndexResourceTest {
   private SCMContextProvider scmContextProvider;
   private IndexResource indexResource;
 
+  private PluginCenterAuthenticator pluginCenterAuthenticator;
 
   @Before
   public void setUpObjectUnderTest() {
@@ -59,12 +61,46 @@ public class IndexResourceTest {
     InitializationFinisher initializationFinisher = mock(InitializationFinisher.class);
     when(initializationFinisher.isFullyInitialized()).thenReturn(true);
     SearchEngine searchEngine = mock(SearchEngine.class);
+    this.pluginCenterAuthenticator = mock(PluginCenterAuthenticator.class);
     IndexDtoGenerator generator = new IndexDtoGenerator(
       ResourceLinksMock.createMock(URI.create("/")),
       scmContextProvider,
       configuration,
-      initializationFinisher, searchEngine);
+      initializationFinisher,
+      searchEngine,
+      pluginCenterAuthenticator);
     this.indexResource = new IndexResource(generator);
+  }
+
+  @Test
+  @SubjectAware(username = "trillian", password = "secret")
+  public void shouldRenderPluginCenterLoginLink() {
+    when(pluginCenterAuthenticator.isAuthenticated()).thenReturn(false);
+    configuration.setPluginAuthUrl(ScmConfiguration.DEFAULT_PLUGIN_AUTH_URL);
+
+    IndexDto index = indexResource.getIndex();
+
+    Assertions.assertThat(index.getLinks().getLinkBy("pluginCenterLogin")).isPresent();
+  }
+
+  @Test
+  @SubjectAware(username = "trillian", password = "secret")
+  public void shouldNotRenderPluginCenterLoginLinkIfAlreadyAuthenticated() {
+    when(pluginCenterAuthenticator.isAuthenticated()).thenReturn(true);
+
+    IndexDto index = indexResource.getIndex();
+
+    Assertions.assertThat(index.getLinks().getLinkBy("pluginCenterLogin")).isNotPresent();
+  }
+
+  @Test
+  @SubjectAware(username = "trillian", password = "secret")
+  public void shouldNotRenderPluginCenterLoginLinkIfNotDefaultAuthLinkConfigured() {
+    configuration.setPluginAuthUrl("https://hitchhiker.com/auth");
+
+    IndexDto index = indexResource.getIndex();
+
+    Assertions.assertThat(index.getLinks().getLinkBy("pluginCenterLogin")).isNotPresent();
   }
 
   @Test

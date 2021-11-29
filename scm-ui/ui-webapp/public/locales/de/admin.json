@@ -85,6 +85,14 @@
       "updateAllInfo": "Die folgenden Plugins werden aktualisiert. Die Änderungen werden nach dem nächsten Neustart wirksam.",
       "manualRestartRequired": "Nachdem die Plugin-Änderung durchgeführt wurde, muss SCM-Manager neu gestartet werden.",
       "showPending": "Um die folgenden Plugin-Änderungen auszuführen, muss SCM-Manager neu gestartet werden."
+    },
+    "myCloudogu": {
+      "login": {
+        "button": {
+          "label": "Verbinden mit mycloudogu"
+        },
+        "description": "Verbinden Sie Ihren SCM-Manager mit myCloudogu um besondere Plugins zu installieren. myCloudogu ist die Heimat der SCM-Manager Community, getragen von Maintainern des SCM-Managers. Sie haben noch kein Konto? Erstellen Sie während der Verbindung der SCM-Manager-Instanz kostenfrei ein myCloudogu-Konto."
+      }
     }
   },
   "repositoryRole": {
