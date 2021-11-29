@@ -24,41 +24,55 @@
 
 package sonia.scm.api.v2.resources;
 
-import lombok.Data;
+import com.google.common.base.Strings;
+import sonia.scm.config.ScmConfiguration;
+import sonia.scm.plugin.PluginCenterAuthenticator;
 import sonia.scm.security.XsrfExcludes;
-import sonia.scm.store.ConfigurationStore;
-import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.util.HttpUtil;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.net.URI;
 import java.util.UUID;
 
+@Singleton
 public class PluginCenterAuthResource {
 
-  private final ConfigurationStore<Configuration> configurationStore;
+  private final PluginCenterAuthenticator authenticator;
+  private final ScmConfiguration configuration;
   private final XsrfExcludes excludes;
 
+  private String challenge;
+
   @Inject
-  public PluginCenterAuthResource(ConfigurationStoreFactory configurationStoreFactory, XsrfExcludes excludes) {
-    this.configurationStore = configurationStoreFactory.withType(Configuration.class).withName("plugin-center-auth").build();
+  public PluginCenterAuthResource(PluginCenterAuthenticator authenticator, ScmConfiguration scmConfiguration, XsrfExcludes excludes) {
+    this.authenticator = authenticator;
+    this.configuration = scmConfiguration;
     this.excludes = excludes;
   }
 
   @GET
   @Path("")
-  public Response auth(@Context UriInfo uriInfo, @QueryParam("source") String sourceUri) {
-    // TODO check if already authenticated
+  public synchronized Response auth(@Context UriInfo uriInfo, @QueryParam("source") String sourceUri) {
+    String pluginAuthUrl = configuration.getPluginAuthUrl();
 
-    String challenge = UUID.randomUUID().toString();
+    if (Strings.isNullOrEmpty(pluginAuthUrl)) {
+      // TODO better exception
+      throw new IllegalStateException("plugin authentication is disabled");
+    }
+
+    if (authenticator.isAuthenticated()) {
+      // TODO better exception
+      throw new IllegalStateException("already authenticated");
+    }
+
+    challenge = UUID.randomUUID().toString();
 
     URI callbackUri = uriInfo.getAbsolutePathBuilder()
       .path("callback")
@@ -68,20 +82,18 @@ public class PluginCenterAuthResource {
 
     excludes.add(callbackUri.getPath());
 
-    Configuration configuration = new Configuration();
-    configuration.setChallenge(challenge);
-    configurationStore.set(configuration);
-
-    // TODO read from scm configuration
-    URI authUri = URI.create("http://localhost:8000/api/v1/auth/oidc?instance=" + HttpUtil.encode(callbackUri.toASCIIString()));
+    URI authUri = UriBuilder.fromUri(pluginAuthUrl).queryParam("instance", callbackUri.toASCIIString()).build();
     return Response.temporaryRedirect(authUri).build();
   }
 
   @GET
   @Path("callback")
-  public Response callbackAbort(@Context HttpServletRequest request, @QueryParam("challenge") String challenge, @QueryParam("source") String source) {
+  public Response callbackAbort(
+    @Context HttpServletRequest request,
+    @QueryParam("challenge") String challenge,
+    @QueryParam("source") String source
+  ) {
     checkChallenge(challenge);
-
     excludes.remove(request.getRequestURI());
     return redirect(request, source);
   }
@@ -92,9 +104,12 @@ public class PluginCenterAuthResource {
     return Response.status(Response.Status.SEE_OTHER).location(URI.create(completeUrl)).build();
   }
 
-  private void checkChallenge(String challenge) {
-    Configuration configuration = configurationStore.getOptional().orElse(new Configuration());
-    if (!challenge.equals(configuration.getChallenge())) {
+  private void checkChallenge(String challengeFromRequest) {
+    if (Strings.isNullOrEmpty(challenge)) {
+      // TODO better exception
+      throw new IllegalArgumentException("challenge not available");
+    }
+    if (!challenge.equals(challengeFromRequest)) {
       // TODO better exception
       throw new IllegalArgumentException("challenge does not match");
     }
@@ -102,26 +117,16 @@ public class PluginCenterAuthResource {
 
   @POST
   @Path("callback")
-  public Response callback(@Context HttpServletRequest request, @QueryParam("challenge") String challenge, @QueryParam("source") String source, @FormParam("refresh_token") String refreshToken) {
+  public Response callback(
+    @Context HttpServletRequest request,
+    @QueryParam("challenge") String challenge,
+    @QueryParam("source") String source,
+    @FormParam("refresh_token") String refreshToken
+  ) {
     checkChallenge(challenge);
-
     excludes.remove(request.getRequestURI());
-
-    Configuration configuration = new Configuration();
-    configuration.setRefreshToken(refreshToken);
-    configurationStore.set(configuration);
-
+    authenticator.authenticate(refreshToken);
     return redirect(request, source);
-  }
-
-  @Data
-  @XmlRootElement
-  @XmlAccessorType(XmlAccessType.FIELD)
-  public static class Configuration {
-
-    private String challenge;
-    private String refreshToken;
-
   }
 
 }
