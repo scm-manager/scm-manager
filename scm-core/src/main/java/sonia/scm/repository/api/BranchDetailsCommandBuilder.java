@@ -24,22 +24,20 @@
 
 package sonia.scm.repository.api;
 
-import com.github.legman.Subscribe;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
-import sonia.scm.repository.PostReceiveRepositoryHookEvent;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryCacheKey;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.spi.BranchDetailsCommand;
 import sonia.scm.repository.spi.BranchDetailsCommandRequest;
 
-import javax.annotation.Nonnull;
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * @since 2.28.0
@@ -47,6 +45,7 @@ import java.util.List;
 public final class BranchDetailsCommandBuilder {
 
   static final String CACHE_NAME = "sonia.cache.cmd.branch-details";
+  private static final Logger LOG = LoggerFactory.getLogger(BranchDetailsCommandBuilder.class);
 
   private final Repository repository;
   private final BranchDetailsCommand command;
@@ -59,11 +58,13 @@ public final class BranchDetailsCommandBuilder {
   }
 
   public BranchDetailsCommandResult execute(String branchName) {
+    LOG.debug("get branch details for repository {} and branch {}", repository, branchName);
     RepositoryPermissions.read(repository).check();
     BranchDetailsCommandRequest branchDetailsCommandRequest = new BranchDetailsCommandRequest();
     branchDetailsCommandRequest.setBranchName(branchName);
     BranchDetailsCommandResult cachedResult = cache.get(createCacheKey(branchName));
     if (cachedResult != null) {
+      LOG.debug("got result from cache for repository {} and branch {}", repository, branchName);
       return cachedResult;
     }
 
@@ -74,12 +75,6 @@ public final class BranchDetailsCommandBuilder {
 
   private CacheKey createCacheKey(String branchName) {
     return new CacheKey(repository, branchName);
-  }
-
-
-  @Subscribe
-  public void invalidateBranchDetails(PostReceiveRepositoryHookEvent event) {
-    cache.removeAll(cacheKey -> cacheKey.getRepositoryId().equals(event.getRepository().getId()));
   }
 
   @AllArgsConstructor
