@@ -98,6 +98,10 @@ public class IndexDtoGenerator extends HalAppenderMapper {
     if (shouldAppendSubjectRelatedLinks()) {
       builder.single(link("me", resourceLinks.me().self()));
 
+      if (configuration.isDefaultPluginAuthUrl()) {
+        builder.single(link("pluginAuth", resourceLinks.pluginCenterAuth().auth()));
+      }
+
       if (Authentications.isAuthenticatedSubjectAnonymous()) {
         builder.single(link("login", resourceLinks.authentication().jsonLogin()));
       } else {
