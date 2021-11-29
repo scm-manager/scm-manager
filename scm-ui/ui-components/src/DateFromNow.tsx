@@ -36,8 +36,9 @@ const DateFromNow: FC<Props> = ({ className, ...dateProps }) => {
     return null;
   }
 
+  const dateTime = formatter.formatFull();
   return (
-    <DateElement className={className} title={formatter.formatFull()}>
+    <DateElement className={className} dateTime={dateTime} title={dateTime}>
       {formatter.formatDistance()}
     </DateElement>
   );

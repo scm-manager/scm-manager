@@ -1065,12 +1065,13 @@ exports[`Storyshots CardColumn With hoverable date 1`] = `
           <small
             className="level-item"
           >
-            <span
+            <time
               className="DateElement-sc-1schp8c-0 cinWxa"
+              dateTime="2020-03-23 09:26:01"
               title="2020-03-23 09:26:01"
             >
               3 days ago
-            </span>
+            </time>
           </small>
         </div>
       </div>
@@ -1220,36 +1221,40 @@ exports[`Storyshots Date Date from now 1`] = `
   className="p-5"
 >
   <p>
-    <span
+    <time
       className="DateElement-sc-1schp8c-0 cinWxa"
+      dateTime="2009-06-30 18:30:00"
       title="2009-06-30 18:30:00"
     >
       over 10 years ago
-    </span>
+    </time>
   </p>
   <p>
-    <span
+    <time
       className="DateElement-sc-1schp8c-0 cinWxa"
+      dateTime="2019-06-30 18:30:00"
       title="2019-06-30 18:30:00"
     >
       3 months ago
-    </span>
+    </time>
   </p>
   <p>
-    <span
+    <time
       className="DateElement-sc-1schp8c-0 cinWxa"
+      dateTime="2019-10-12 13:56:40"
       title="2019-10-12 13:56:40"
     >
       less than a minute ago
-    </span>
+    </time>
   </p>
   <p>
-    <span
+    <time
       className="DateElement-sc-1schp8c-0 cinWxa"
+      dateTime="2019-10-11 13:56:40"
       title="2019-10-11 13:56:40"
     >
       1 day ago
-    </span>
+    </time>
   </p>
 </div>
 `;
@@ -1259,36 +1264,40 @@ exports[`Storyshots Date Short 1`] = `
   className="p-5"
 >
   <p>
-    <span
+    <time
       className="DateElement-sc-1schp8c-0 cinWxa"
+      dateTime="2009-06-30 18:30:00"
       title="2009-06-30 18:30:00"
     >
       2009-06-30
-    </span>
+    </time>
   </p>
   <p>
-    <span
+    <time
       className="DateElement-sc-1schp8c-0 cinWxa"
+      dateTime="2019-06-30 18:30:00"
       title="2019-06-30 18:30:00"
     >
       2019-06-30
-    </span>
+    </time>
   </p>
   <p>
-    <span
+    <time
       className="DateElement-sc-1schp8c-0 cinWxa"
+      dateTime="2019-10-12 13:56:40"
       title="2019-10-12 13:56:40"
     >
       2019-10-12
-    </span>
+    </time>
   </p>
   <p>
-    <span
+    <time
       className="DateElement-sc-1schp8c-0 cinWxa"
+      dateTime="2019-10-11 13:56:40"
       title="2019-10-11 13:56:40"
     >
       2019-10-11
-    </span>
+    </time>
   </p>
 </div>
 `;
@@ -19427,12 +19436,13 @@ exports[`Storyshots Repositories/Annotate Default 1`] = `
             <div
               className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 egJUkB iiVwcn"
             >
-              <span
+              <time
                 className="DateElement-sc-1schp8c-0 cinWxa"
+                dateTime="2020-04-09 15:07:42"
                 title="2020-04-09 15:07:42"
               >
                 2020-04-09
-              </span>
+              </time>
             </div>
              
           </div>
@@ -19507,12 +19517,13 @@ exports[`Storyshots Repositories/Annotate Default 1`] = `
             <div
               className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 egJUkB iiVwcn"
             >
-              <span
+              <time
                 className="DateElement-sc-1schp8c-0 cinWxa"
+                dateTime="2020-05-10 11:18:42"
                 title="2020-05-10 11:18:42"
               >
                 2020-05-10
-              </span>
+              </time>
             </div>
              
           </div>
@@ -19607,12 +19618,13 @@ exports[`Storyshots Repositories/Annotate Default 1`] = `
             <div
               className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 egJUkB iiVwcn"
             >
-              <span
+              <time
                 className="DateElement-sc-1schp8c-0 cinWxa"
+                dateTime="2020-04-09 15:07:42"
                 title="2020-04-09 15:07:42"
               >
                 2020-04-09
-              </span>
+              </time>
             </div>
              
           </div>
@@ -19719,12 +19731,13 @@ exports[`Storyshots Repositories/Annotate Default 1`] = `
             <div
               className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 egJUkB iiVwcn"
             >
-              <span
+              <time
                 className="DateElement-sc-1schp8c-0 cinWxa"
+                dateTime="2020-04-12 18:29:42"
                 title="2020-04-12 18:29:42"
               >
                 2020-04-12
-              </span>
+              </time>
             </div>
              
           </div>
@@ -19821,12 +19834,13 @@ exports[`Storyshots Repositories/Annotate Default 1`] = `
             <div
               className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 egJUkB iiVwcn"
             >
-              <span
+              <time
                 className="DateElement-sc-1schp8c-0 cinWxa"
+                dateTime="2020-04-09 15:07:42"
                 title="2020-04-09 15:07:42"
               >
                 2020-04-09
-              </span>
+              </time>
             </div>
              
           </div>
@@ -19977,12 +19991,13 @@ exports[`Storyshots Repositories/Annotate Markdown 1`] = `
             <div
               className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 egJUkB iiVwcn"
             >
-              <span
+              <time
                 className="DateElement-sc-1schp8c-0 cinWxa"
+                dateTime="2020-04-09 15:07:42"
                 title="2020-04-09 15:07:42"
               >
                 2020-04-09
-              </span>
+              </time>
             </div>
              
           </div>
@@ -20069,12 +20084,13 @@ exports[`Storyshots Repositories/Annotate Markdown 1`] = `
             <div
               className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 egJUkB iiVwcn"
             >
-              <span
+              <time
                 className="DateElement-sc-1schp8c-0 cinWxa"
+                dateTime="2020-05-10 11:18:42"
                 title="2020-05-10 11:18:42"
               >
                 2020-05-10
-              </span>
+              </time>
             </div>
              
           </div>
@@ -20135,12 +20151,13 @@ exports[`Storyshots Repositories/Annotate Markdown 1`] = `
             <div
               className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 egJUkB iiVwcn"
             >
-              <span
+              <time
                 className="DateElement-sc-1schp8c-0 cinWxa"
+                dateTime="2020-04-09 15:07:42"
                 title="2020-04-09 15:07:42"
               >
                 2020-04-09
-              </span>
+              </time>
             </div>
              
           </div>
@@ -20256,12 +20273,13 @@ exports[`Storyshots Repositories/Annotate Markdown 1`] = `
             <div
               className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 egJUkB iiVwcn"
             >
-              <span
+              <time
                 className="DateElement-sc-1schp8c-0 cinWxa"
+                dateTime="2020-04-12 18:29:42"
                 title="2020-04-12 18:29:42"
               >
                 2020-04-12
-              </span>
+              </time>
             </div>
              
           </div>
@@ -20299,12 +20317,13 @@ exports[`Storyshots Repositories/Annotate Markdown 1`] = `
             <div
               className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 egJUkB iiVwcn"
             >
-              <span
+              <time
                 className="DateElement-sc-1schp8c-0 cinWxa"
+                dateTime="2020-04-09 15:07:42"
                 title="2020-04-09 15:07:42"
               >
                 2020-04-09
-              </span>
+              </time>
             </div>
              
           </div>
@@ -20460,12 +20479,13 @@ exports[`Storyshots Repositories/Annotate With Avatars 1`] = `
             <div
               className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 egJUkB iiVwcn"
             >
-              <span
+              <time
                 className="DateElement-sc-1schp8c-0 cinWxa"
+                dateTime="2020-04-09 15:07:42"
                 title="2020-04-09 15:07:42"
               >
                 2020-04-09
-              </span>
+              </time>
             </div>
              
           </div>
@@ -20545,12 +20565,13 @@ exports[`Storyshots Repositories/Annotate With Avatars 1`] = `
             <div
               className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 egJUkB iiVwcn"
             >
-              <span
+              <time
                 className="DateElement-sc-1schp8c-0 cinWxa"
+                dateTime="2020-05-10 11:18:42"
                 title="2020-05-10 11:18:42"
               >
                 2020-05-10
-              </span>
+              </time>
             </div>
              
           </div>
@@ -20650,12 +20671,13 @@ exports[`Storyshots Repositories/Annotate With Avatars 1`] = `
             <div
               className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 egJUkB iiVwcn"
             >
-              <span
+              <time
                 className="DateElement-sc-1schp8c-0 cinWxa"
+                dateTime="2020-04-09 15:07:42"
                 title="2020-04-09 15:07:42"
               >
                 2020-04-09
-              </span>
+              </time>
             </div>
              
           </div>
@@ -20767,12 +20789,13 @@ exports[`Storyshots Repositories/Annotate With Avatars 1`] = `
             <div
               className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 egJUkB iiVwcn"
             >
-              <span
+              <time
                 className="DateElement-sc-1schp8c-0 cinWxa"
+                dateTime="2020-04-12 18:29:42"
                 title="2020-04-12 18:29:42"
               >
                 2020-04-12
-              </span>
+              </time>
             </div>
              
           </div>
@@ -20874,12 +20897,13 @@ exports[`Storyshots Repositories/Annotate With Avatars 1`] = `
             <div
               className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__When-h9c4md-2 egJUkB iiVwcn"
             >
-              <span
+              <time
                 className="DateElement-sc-1schp8c-0 cinWxa"
+                dateTime="2020-04-09 15:07:42"
                 title="2020-04-09 15:07:42"
               >
                 2020-04-09
-              </span>
+              </time>
             </div>
              
           </div>
@@ -73967,12 +73991,13 @@ exports[`Storyshots Repositories/RepositoryEntry Archived 1`] = `
           <small
             className="pb-1"
           >
-            <span
+            <time
               className="DateElement-sc-1schp8c-0 cinWxa"
+              dateTime="2020-03-23 09:26:01"
               title="2020-03-23 09:26:01"
             >
               3 days ago
-            </span>
+            </time>
           </small>
         </div>
       </div>
@@ -74075,12 +74100,13 @@ exports[`Storyshots Repositories/RepositoryEntry Avatar EP 1`] = `
           <small
             className="pb-1"
           >
-            <span
+            <time
               className="DateElement-sc-1schp8c-0 cinWxa"
+              dateTime="2020-03-23 09:26:01"
               title="2020-03-23 09:26:01"
             >
               3 days ago
-            </span>
+            </time>
           </small>
         </div>
       </div>
@@ -74186,12 +74212,13 @@ exports[`Storyshots Repositories/RepositoryEntry Before Title EP 1`] = `
           <small
             className="pb-1"
           >
-            <span
+            <time
               className="DateElement-sc-1schp8c-0 cinWxa"
+              dateTime="2020-03-23 09:26:01"
               title="2020-03-23 09:26:01"
             >
               3 days ago
-            </span>
+            </time>
           </small>
         </div>
       </div>
@@ -74294,12 +74321,13 @@ exports[`Storyshots Repositories/RepositoryEntry Default 1`] = `
           <small
             className="pb-1"
           >
-            <span
+            <time
               className="DateElement-sc-1schp8c-0 cinWxa"
+              dateTime="2020-03-23 09:26:01"
               title="2020-03-23 09:26:01"
             >
               3 days ago
-            </span>
+            </time>
           </small>
         </div>
       </div>
@@ -74414,12 +74442,13 @@ exports[`Storyshots Repositories/RepositoryEntry Exporting 1`] = `
           <small
             className="pb-1"
           >
-            <span
+            <time
               className="DateElement-sc-1schp8c-0 cinWxa"
+              dateTime="2020-03-23 09:26:01"
               title="2020-03-23 09:26:01"
             >
               3 days ago
-            </span>
+            </time>
           </small>
         </div>
       </div>
@@ -74535,12 +74564,13 @@ exports[`Storyshots Repositories/RepositoryEntry HealthCheck Failure 1`] = `
           <small
             className="pb-1"
           >
-            <span
+            <time
               className="DateElement-sc-1schp8c-0 cinWxa"
+              dateTime="2020-03-23 09:26:01"
               title="2020-03-23 09:26:01"
             >
               3 days ago
-            </span>
+            </time>
           </small>
         </div>
       </div>
@@ -74666,12 +74696,13 @@ exports[`Storyshots Repositories/RepositoryEntry MultiRepositoryTags 1`] = `
           <small
             className="pb-1"
           >
-            <span
+            <time
               className="DateElement-sc-1schp8c-0 cinWxa"
+              dateTime="2020-03-23 09:26:01"
               title="2020-03-23 09:26:01"
             >
               3 days ago
-            </span>
+            </time>
           </small>
         </div>
       </div>
@@ -74787,12 +74818,13 @@ exports[`Storyshots Repositories/RepositoryEntry RepositoryFlag EP 1`] = `
           <small
             className="pb-1"
           >
-            <span
+            <time
               className="DateElement-sc-1schp8c-0 cinWxa"
+              dateTime="2020-03-23 09:26:01"
               title="2020-03-23 09:26:01"
             >
               3 days ago
-            </span>
+            </time>
           </small>
         </div>
       </div>
@@ -74895,12 +74927,13 @@ exports[`Storyshots Repositories/RepositoryEntry With long texts 1`] = `
           <small
             className="pb-1"
           >
-            <span
+            <time
               className="DateElement-sc-1schp8c-0 cinWxa"
+              dateTime="2020-03-23 09:26:01"
               title="2020-03-23 09:26:01"
             >
               3 days ago
-            </span>
+            </time>
           </small>
         </div>
       </div>
