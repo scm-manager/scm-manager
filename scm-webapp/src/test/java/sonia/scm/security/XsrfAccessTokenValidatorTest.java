@@ -55,6 +55,8 @@ class XsrfAccessTokenValidatorTest {
   @Mock
   private AccessToken accessToken;
 
+  private final XsrfExcludes excludes = new XsrfExcludes();
+
   private XsrfAccessTokenValidator validator;
 
   /**
@@ -62,7 +64,7 @@ class XsrfAccessTokenValidatorTest {
    */
   @BeforeEach
   void prepareObjectUnderTest() {
-    validator = new XsrfAccessTokenValidator(() -> request, new XsrfExcludes());
+    validator = new XsrfAccessTokenValidator(() -> request, excludes);
   }
 
   @Nested
@@ -122,6 +124,19 @@ class XsrfAccessTokenValidatorTest {
       // execute and assert
       assertThat(validator.validate(accessToken)).isTrue();
     }
+
+    @Test
+    void shouldNotValidateExcludedRequest() {
+      excludes.add("/excluded");
+
+      // prepare
+      when(accessToken.getCustom(Xsrf.TOKEN_KEY)).thenReturn(Optional.of("abc"));
+      when(request.getRequestURI()).thenReturn("/excluded");
+
+      // execute and assert
+      assertThat(validator.validate(accessToken)).isTrue();
+    }
+
 
   }
 
