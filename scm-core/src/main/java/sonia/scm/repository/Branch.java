@@ -90,6 +90,7 @@ public final class Branch implements Serializable, Validateable {
    * @param revision       latest revision of the branch
    * @param defaultBranch  Whether this branch is the default branch for the repository
    * @param lastCommitDate The date of the commit this branch points to (if computed). May be <code>null</code>
+   * @deprecated Use {@link Branch#Branch(String, String, boolean, Long, Person)} instead.
    */
   @Deprecated
   Branch(String name, String revision, boolean defaultBranch, Long lastCommitDate) {
