@@ -84,8 +84,13 @@ function parsePageNumber(pageAsString: string) {
   return page;
 }
 
-export function getQueryStringFromLocation(location: any) {
-  return location.search ? queryString.parse(location.search).q : undefined;
+export function getQueryStringFromLocation(location: { search?: string }): string | undefined {
+  if (location.search) {
+    const query = queryString.parse(location.search).q;
+    if (query && !Array.isArray(query)) {
+      return query;
+    }
+  }
 }
 
 export function stripEndingSlash(url: string) {
