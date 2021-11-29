@@ -33,13 +33,11 @@ type Props = {
 const FileIcon: FC<Props> = ({ file }) => {
   const [t] = useTranslation("repos");
   if (file.subRepository) {
-    return (
-      <Icon title={t("sources.fileTree.subRepository")} iconStyle="far" name="folder" color="inherit" tabIndex={-1} />
-    );
+    return <Icon title={t("sources.fileTree.subRepository")} iconStyle="far" name="folder" color="inherit" />;
   } else if (file.directory) {
-    return <Icon title={t("sources.fileTree.folder")} name="folder" color="inherit" tabIndex={-1} />;
+    return <Icon title={t("sources.fileTree.folder")} name="folder" color="inherit" />;
   }
-  return <Icon title={t("sources.fileTree.file")} name="file" color="inherit" tabIndex={-1} />;
+  return <Icon title={t("sources.fileTree.file")} name="file" color="inherit" />;
 };
 
 export default FileIcon;

@@ -52,7 +52,7 @@ const OverviewPageActions: FC<Props> = ({
   groupSelected,
   label,
   testId,
-  searchPlaceholder,
+  searchPlaceholder
 }) => {
   const history = useHistory();
   const location = useLocation();
@@ -63,7 +63,7 @@ const OverviewPageActions: FC<Props> = ({
     <div className="column is-flex">
       <Select
         className="is-fullwidth"
-        options={groups.map((g) => ({ value: g, label: g }))}
+        options={groups.map(g => ({ value: g, label: g }))}
         value={currentGroup}
         onChange={groupSelected}
       />
