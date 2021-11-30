@@ -375,6 +375,10 @@
       "displayName": "Modification failed",
       "description": "The modification could not be applied. This can have many reasons, for example a file that could not be moved, invalid file names, etc."
     },
+    "5DSqG6Mcg1": {
+      "displayName": "Source missing",
+      "description": "The source parameter is missing."
+    },
     "8tSqFDot11": {
       "displayName": "Authentication disabled",
       "description": "Plugin center authentication is disabled."

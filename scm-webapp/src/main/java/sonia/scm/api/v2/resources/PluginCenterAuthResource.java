@@ -34,7 +34,6 @@ import sonia.scm.util.HttpUtil;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
@@ -48,6 +47,8 @@ import java.util.UUID;
 public class PluginCenterAuthResource {
 
   @VisibleForTesting
+  static final String ERROR_SOURCE_MISSING = "5DSqG6Mcg1";
+  @VisibleForTesting
   static final String ERROR_AUTHENTICATION_DISABLED = "8tSqFDot11";
   @VisibleForTesting
   static final String ERROR_ALREADY_AUTHENTICATED = "8XSqFEBd41";
@@ -56,33 +57,52 @@ public class PluginCenterAuthResource {
   @VisibleForTesting
   static final String ERROR_CHALLENGE_DOES_NOT_MATCH = "8ESqFElpI1";
 
+  private final ScmPathInfoStore pathInfoStore;
   private final PluginCenterAuthenticator authenticator;
   private final ScmConfiguration configuration;
   private final XsrfExcludes excludes;
+  private final ChallengeGenerator challengeGenerator;
 
   private String challenge;
 
   @Inject
-  public PluginCenterAuthResource(PluginCenterAuthenticator authenticator, ScmConfiguration scmConfiguration, XsrfExcludes excludes) {
+  public PluginCenterAuthResource(ScmPathInfoStore pathInfoStore, PluginCenterAuthenticator authenticator, ScmConfiguration scmConfiguration, XsrfExcludes excludes) {
+    this(pathInfoStore, authenticator, scmConfiguration, excludes, () -> UUID.randomUUID().toString());
+  }
+
+  @VisibleForTesting
+  PluginCenterAuthResource(
+    ScmPathInfoStore pathInfoStore,
+    PluginCenterAuthenticator authenticator,
+    ScmConfiguration configuration,
+    XsrfExcludes excludes,
+    ChallengeGenerator challengeGenerator
+  ) {
+    this.pathInfoStore = pathInfoStore;
     this.authenticator = authenticator;
-    this.configuration = scmConfiguration;
+    this.configuration = configuration;
     this.excludes = excludes;
+    this.challengeGenerator = challengeGenerator;
   }
 
   @GET
   @Path("")
-  public Response auth(@Context HttpServletRequest request, @Context UriInfo uriInfo, @QueryParam("source") String sourceUri) {
+  public Response auth(@Context UriInfo uriInfo, @QueryParam("source") String sourceUri) {
     String pluginAuthUrl = configuration.getPluginAuthUrl();
 
+    if (Strings.isNullOrEmpty(sourceUri)) {
+      return error(ERROR_SOURCE_MISSING);
+    }
+
     if (Strings.isNullOrEmpty(pluginAuthUrl)) {
-      return error(request, ERROR_AUTHENTICATION_DISABLED);
+      return error(ERROR_AUTHENTICATION_DISABLED);
     }
 
     if (authenticator.isAuthenticated()) {
-      return error(request, ERROR_ALREADY_AUTHENTICATED);
+      return error(ERROR_ALREADY_AUTHENTICATED);
     }
 
-    challenge = UUID.randomUUID().toString();
+    challenge = challengeGenerator.create();
 
     URI callbackUri = uriInfo.getAbsolutePathBuilder()
       .path("callback")
@@ -99,50 +119,59 @@ public class PluginCenterAuthResource {
   @POST
   @Path("callback")
   public Response callback(
-    @Context HttpServletRequest request,
+    @Context UriInfo uriInfo,
     @QueryParam("challenge") String challenge,
     @QueryParam("source") String source,
     @FormParam("refresh_token") String refreshToken
   ) {
     Optional<String> error = checkChallenge(challenge);
     if (error.isPresent()) {
-      return error(request, error.get());
+      return error(error.get());
     }
-    excludes.remove(request.getRequestURI());
+
+    excludes.remove(uriInfo.getPath());
+
     try {
       authenticator.authenticate(refreshToken);
     } catch (ExceptionWithContext ex) {
-      return error(request, ex.getCode());
+      return error(ex.getCode());
     }
 
-    return redirect(request, source);
+    return redirect(source);
   }
 
   @GET
   @Path("callback")
   public Response callbackAbort(
-    @Context HttpServletRequest request,
+    @Context UriInfo uriInfo,
     @QueryParam("challenge") String challenge,
     @QueryParam("source") String source
   ) {
     Optional<String> error = checkChallenge(challenge);
     if (error.isPresent()) {
-      return error(request, error.get());
+      return error(error.get());
     }
-    excludes.remove(request.getRequestURI());
-    return redirect(request, source);
+
+    excludes.remove(uriInfo.getPath());
+
+    return redirect(source);
   }
 
-  private Response error(HttpServletRequest request, String code) {
-    return redirect(HttpUtil.getCompleteUrl(request, "error", code));
-  }
-
-  private Response redirect(HttpServletRequest request, String source) {
-    return redirect(HttpUtil.getCompleteUrl(request, source));
+  private Response error(String code) {
+    return redirect("error/" + code);
   }
 
   private Response redirect(String location) {
-    return Response.status(Response.Status.SEE_OTHER).location(URI.create(location)).build();
+    URI rootUri = pathInfoStore.get().getRootUri();
+    String path = rootUri.getPath();
+    if (!Strings.isNullOrEmpty(location)) {
+      path = HttpUtil.concatenate(path, location);
+    }
+    return redirect(rootUri.resolve(path));
+  }
+
+  private Response redirect(URI location) {
+    return Response.status(Response.Status.SEE_OTHER).location(location).build();
   }
 
   private Optional<String> checkChallenge(String challengeFromRequest) {
@@ -153,6 +182,11 @@ public class PluginCenterAuthResource {
       return Optional.of(ERROR_CHALLENGE_DOES_NOT_MATCH);
     }
     return Optional.empty();
+  }
+
+  @FunctionalInterface
+  interface ChallengeGenerator {
+    String create();
   }
 
 }

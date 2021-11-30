@@ -367,6 +367,10 @@
       "displayName": "Ungültiger Repository-Typ für Import",
       "description": "Der Import ist für den gegebenen Repository-Typen nicht möglich."
     },
+    "5DSqG6Mcg1": {
+      "displayName": "Fehlender Source Parameter",
+      "description": "Der Source Parameter wird für die Authentifizierung benötigt."
+    },
     "8tSqFDot11": {
       "displayName": "Authentifizierung ist deaktiviert",
       "description": "Die Plugin Center Authentifizierung ist deaktiviert."
