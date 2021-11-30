@@ -59,7 +59,6 @@ const ImportRepositoryFromUrl: FC<Props> = ({
   const [t] = useTranslation("repos");
   const { importRepositoryFromUrl, importedRepository, error, isLoading } = useImportRepositoryFromUrl(repositoryType);
 
-  useEffect(() => setRepo({ ...repo, type: repositoryType.name }), [repositoryType]);
   useEffect(() => setImportPending(isLoading), [isLoading, setImportPending]);
   useEffect(() => {
     if (importedRepository) {
@@ -71,7 +70,7 @@ const ImportRepositoryFromUrl: FC<Props> = ({
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    importRepositoryFromUrl(repo);
+    importRepositoryFromUrl({ ...repo, type: repositoryType.name });
   };
 
   return (

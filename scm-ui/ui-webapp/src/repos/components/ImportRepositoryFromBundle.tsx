@@ -60,7 +60,6 @@ const ImportRepositoryFromBundle: FC<Props> = ({
     repositoryType
   );
 
-  useEffect(() => setRepo({ ...repo, type: repositoryType.name }), [repositoryType]);
   useEffect(() => setImportPending(isLoading), [isLoading, setImportPending]);
   useEffect(() => {
     if (importedRepository) {
@@ -75,7 +74,7 @@ const ImportRepositoryFromBundle: FC<Props> = ({
     if (!file) {
       return;
     }
-    importRepositoryFromBundle(repo, file, compressed, password);
+    importRepositoryFromBundle({ ...repo, type: repositoryType.name }, file, compressed, password);
   };
 
   return (

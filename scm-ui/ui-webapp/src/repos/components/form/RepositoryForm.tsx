@@ -26,11 +26,11 @@ import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import {
-  IndexResources,
-  Repository,
-  RepositoryType,
   CUSTOM_NAMESPACE_STRATEGY,
-  OnChangeType
+  IndexResources,
+  OnChangeType,
+  Repository,
+  RepositoryType
 } from "@scm-manager/ui-types";
 import { Checkbox, Level, Select, SubmitButton } from "@scm-manager/ui-components";
 import NamespaceAndNameFields from "../NamespaceAndNameFields";
@@ -47,7 +47,7 @@ type Props = {
 };
 
 type RepositoryCreation = Repository & {
-  contextEntries?: object;
+  contextEntries?: { [key: string]: object | undefined };
 };
 
 const RepositoryForm: FC<Props> = ({
@@ -80,6 +80,7 @@ const RepositoryForm: FC<Props> = ({
   );
   const [valid, setValid] = useState({ namespaceAndName: true, contact: true });
   const [t] = useTranslation("repos");
+  const validate = useCallback(setValid, [setValid]);
 
   useEffect(() => {
     if (repository) {
@@ -136,7 +137,7 @@ const RepositoryForm: FC<Props> = ({
         <NamespaceAndNameFields
           repository={repo}
           onChange={setRepo}
-          setValid={namespaceAndName => setValid({ ...valid, namespaceAndName })}
+          setValid={namespaceAndName => validate({ ...valid, namespaceAndName })}
           disabled={disabled}
         />
         <div className="columns">
@@ -191,7 +192,7 @@ const RepositoryForm: FC<Props> = ({
         repository={repo}
         onChange={setRepo}
         disabled={disabled}
-        setValid={contact => setValid({ ...valid, contact })}
+        setValid={contact => validate({ ...valid, contact })}
       />
       {submitButton()}
     </form>

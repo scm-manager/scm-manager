@@ -22,8 +22,7 @@
  * SOFTWARE.
  */
 
-import { PagedCollection, Links, HalRepresentation } from "./hal";
-import { OnChangeType } from "./General";
+import { HalRepresentation, Links, PagedCollection } from "./hal";
 
 export type NamespaceAndName = {
   namespace: string;

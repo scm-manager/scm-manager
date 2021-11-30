@@ -25,7 +25,7 @@
 import { FC, ReactElement, useEffect, useRef } from "react";
 
 type Props = {
-  location: Location;
+  location?: Location;
   children: ReactElement;
 };
 

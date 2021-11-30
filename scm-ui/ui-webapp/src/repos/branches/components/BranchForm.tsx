@@ -52,7 +52,7 @@ const BranchForm: FC<Props> = ({ submitForm, repository, branches, disabled, tra
     setNameValid(validator.isBranchValid(name));
   }, [name]);
 
-  const isValid = () => !(nameValid || !source || !name);
+  const isValid = () => nameValid && source && name;
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
