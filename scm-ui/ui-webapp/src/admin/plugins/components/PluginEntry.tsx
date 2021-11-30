@@ -28,11 +28,16 @@ import { CardColumn, Icon } from "@scm-manager/ui-components";
 import { PluginAction, PluginModalContent } from "../containers/PluginsOverview";
 import { useTranslation } from "react-i18next";
 import PluginAvatar from "./PluginAvatar";
+import classNames from "classnames";
 
 type Props = {
   plugin: Plugin;
   openModal: (content: PluginModalContent) => void;
 };
+
+const MyCloudoguTag = styled.span`
+  border: solid 1px;
+`;
 
 const ActionbarWrapper = styled.div`
   & span + span {
@@ -40,8 +45,8 @@ const ActionbarWrapper = styled.div`
   }
 `;
 
-const IconWrapperStyle = styled.span.attrs((props) => ({
-  className: "level-item mb-0 p-2 is-clickable",
+const IconWrapperStyle = styled.span.attrs(props => ({
+  className: "level-item mb-0 p-2 is-clickable"
 }))`
   border: 1px solid #cdcdcd; // $dark-25
   border-radius: 4px;
@@ -53,7 +58,7 @@ const IconWrapperStyle = styled.span.attrs((props) => ({
 
 const IconWrapper: FC<{ action: () => void }> = ({ action, children }) => {
   return (
-    <IconWrapperStyle onClick={action} onKeyDown={(e) => e.key === "Enter" && action()} tabIndex={0}>
+    <IconWrapperStyle onClick={action} onKeyDown={e => e.key === "Enter" && action()} tabIndex={0}>
       {children}
     </IconWrapperStyle>
   );
@@ -120,8 +125,21 @@ const PluginEntry: FC<Props> = ({ plugin, openModal }) => {
         description={plugin.description}
         contentRight={plugin.pending || plugin.markedForUninstall ? pendingSpinner() : actionBar()}
         footerLeft={<small>{plugin.version}</small>}
-        footerRight={<small className="level-item is-block shorten-text">{plugin.author}</small>}
+        footerRight={null}
       />
+      <div
+        className={classNames("is-flex", {
+          "is-justify-content-space-between": isCloudoguPlugin,
+          "is-justify-content-end": !isCloudoguPlugin
+        })}
+      >
+        {isCloudoguPlugin ? (
+          <MyCloudoguTag className="has-text-info has-border-info has-rounded-border p-1 is-size-7">
+            myCloudogu
+          </MyCloudoguTag>
+        ) : null}
+        <small className="level-item is-block shorten-text is-align-self-flex-end">{plugin.author}</small>
+      </div>
     </>
   );
 };

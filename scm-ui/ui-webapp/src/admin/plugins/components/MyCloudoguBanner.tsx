@@ -1,4 +1,4 @@
-import { Button, Image } from "@scm-manager/ui-components";
+import { Button } from "@scm-manager/ui-components";
 import * as React from "react";
 import styled from "styled-components";
 import { Trans, useTranslation } from "react-i18next";
