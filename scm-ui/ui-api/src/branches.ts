@@ -38,10 +38,16 @@ import { concat } from "./urls";
 import { useEffect } from "react";
 
 export const useBranches = (repository: Repository): ApiResult<BranchCollection> => {
+  const queryClient = useQueryClient();
   const link = requiredLink(repository, "branches");
   return useQuery<BranchCollection, Error>(
     repoQueryKey(repository, "branches"),
-    () => apiClient.get(link).then(response => response.json())
+    () => apiClient.get(link).then(response => response.json()),
+    {
+      onSuccess: () => {
+        return queryClient.invalidateQueries(branchQueryKey(repository, "details"));
+      }
+    }
     // we do not populate the cache for a single branch,
     // because we have no pagination for branches and if we have a lot of them
     // the population slows us down
