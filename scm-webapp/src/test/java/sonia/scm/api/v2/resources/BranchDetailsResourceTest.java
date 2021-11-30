@@ -131,9 +131,9 @@ public class BranchDetailsResourceTest extends RepositoryTestBase {
     dispatcher.invoke(request, response);
 
     assertThat(response.getStatus()).isEqualTo(200);
-    assertThat(response.getContentAsString()).contains("{\"branchDetails\":[{\"branchName\":\"master\",\"changesetsAhead\":0,\"changesetsBehind\":0,\"_links\":{\"self\":{\"href\":\"/scm/api/v2/repositories/hitchhiker/42Puzzle/branch-details/master\"}}}");
-    assertThat(response.getContentAsString()).contains("{\"branchName\":\"develop\",\"changesetsAhead\":0,\"changesetsBehind\":0,\"_links\":{\"self\":{\"href\":\"/scm/api/v2/repositories/hitchhiker/42Puzzle/branch-details/develop\"}}}");
-    assertThat(response.getContentAsString()).contains("{\"branchName\":\"feature/hitchhiker42\",\"changesetsAhead\":0,\"changesetsBehind\":0,\"_links\":{\"self\":{\"href\":\"/scm/api/v2/repositories/hitchhiker/42Puzzle/branch-details/feature%2Fhitchhiker42\"}}}");
+    assertThat(response.getContentAsString()).contains("{\"branchDetails\":[{\"branchName\":\"master\",\"_links\":{\"self\":{\"href\":\"/scm/api/v2/repositories/hitchhiker/42Puzzle/branch-details/master\"}}}");
+    assertThat(response.getContentAsString()).contains("{\"branchName\":\"develop\",\"_links\":{\"self\":{\"href\":\"/scm/api/v2/repositories/hitchhiker/42Puzzle/branch-details/develop\"}}}");
+    assertThat(response.getContentAsString()).contains("{\"branchName\":\"feature/hitchhiker42\",\"_links\":{\"self\":{\"href\":\"/scm/api/v2/repositories/hitchhiker/42Puzzle/branch-details/feature%2Fhitchhiker42\"}}}");
   }
 }
 
