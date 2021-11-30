@@ -29,7 +29,20 @@ import lombok.Data;
 /**
  * @since 2.28.0
  */
-@Data
 public final class BranchDetailsCommandRequest {
   private String branchName;
+
+  /**
+   * The name of the branch the details should be computed for.
+   */
+  public String getBranchName() {
+    return branchName;
+  }
+
+  /**
+   * Sets the name of the branch the details should be computed for.
+   */
+  public void setBranchName(String branchName) {
+    this.branchName = branchName;
+  }
 }

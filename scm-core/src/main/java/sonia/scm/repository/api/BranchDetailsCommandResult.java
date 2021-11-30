@@ -29,8 +29,36 @@ import lombok.Value;
 /**
  * @since 2.28.0
  */
-@Value
 public class BranchDetailsCommandResult {
-  int changesetsAhead;
-  int changesetsBehind;
+  private final int changesetsAhead;
+  private final int changesetsBehind;
+
+  /**
+   * Creates the result object
+   *
+   * @param changesetsAhead  The number of changesets this branch is ahead of the default branch (that is
+   *                         the number of changesets on this branch that are not reachable from the default branch).
+   * @param changesetsBehind The number of changesets the default branch is ahead of this branch (that is
+   *                         the number of changesets on the default branch that are not reachable from this branch).
+   */
+  public BranchDetailsCommandResult(int changesetsAhead, int changesetsBehind) {
+    this.changesetsAhead = changesetsAhead;
+    this.changesetsBehind = changesetsBehind;
+  }
+
+  /**
+   * The number of changesets this branch is ahead of the default branch (that is
+   * the number of changesets on this branch that are not reachable from the default branch).
+   */
+  public int getChangesetsAhead() {
+    return changesetsAhead;
+  }
+
+  /**
+   * The number of changesets the default branch is ahead of this branch (that is
+   * the number of changesets on the default branch that are not reachable from this branch).
+   */
+  public int getChangesetsBehind() {
+    return changesetsBehind;
+  }
 }

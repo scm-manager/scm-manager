@@ -492,7 +492,7 @@ public final class RepositoryService implements Closeable {
   }
 
   /**
-   * Get branch details
+   * Get details for a branch.
    *
    * @return instance of {@link BranchDetailsCommand}
    * @throws CommandNotSupportedException if the command is not supported

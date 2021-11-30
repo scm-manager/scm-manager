@@ -57,6 +57,12 @@ public final class BranchDetailsCommandBuilder {
     this.cache = cacheManager.getCache(CACHE_NAME);
   }
 
+  /**
+   * Computes the details for the given branch.
+   *
+   * @param branchName Tha name of the branch the details should be computed for.
+   * @return The result object containing the details for the branch.
+   */
   public BranchDetailsCommandResult execute(String branchName) {
     LOG.debug("get branch details for repository {} and branch {}", repository, branchName);
     RepositoryPermissions.read(repository).check();

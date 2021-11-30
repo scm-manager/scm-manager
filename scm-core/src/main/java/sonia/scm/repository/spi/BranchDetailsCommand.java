@@ -30,5 +30,8 @@ import sonia.scm.repository.api.BranchDetailsCommandResult;
  * @since 2.28.0
  */
 public interface BranchDetailsCommand {
+  /**
+   * Computes the details for the given request.
+   */
   BranchDetailsCommandResult execute(BranchDetailsCommandRequest branchDetailsCommandRequest);
 }
