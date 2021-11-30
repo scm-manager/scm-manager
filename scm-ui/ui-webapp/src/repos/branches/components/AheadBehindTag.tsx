@@ -49,13 +49,16 @@ const Count = styled.div`
   word-break: keep-all;
 `;
 
-const Bar = styled.span.attrs(props => ({}))<BarProps>`
+const Bar = styled.span.attrs<BarProps>(props => ({
+  style: {
+    width: props.width + "%",
+    borderRadius: props.direction === "left" ? "25px 0 0 25px" : "0 25px 25px 0"
+  }
+}))<BarProps>`
   height: 3px;
   max-width: 100%;
   margin-top: -2px;
   margin-bottom: 2px;
-  width: ${props => props.width}%;
-  border-radius: ${props => (props.direction === "left" ? "25px 0 0 25px" : "0 25px 25px 0")};
 `;
 
 const AheadBehindTag: FC<Props> = ({ branch, details }) => {
