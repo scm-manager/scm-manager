@@ -53,8 +53,8 @@ const withRoute = (route: string) => {
 };
 
 storiesOf("Secondary Navigation", module)
-  .addDecorator((story) => <StateMenuContextProvider>{story()}</StateMenuContextProvider>)
-  .addDecorator((story) => (
+  .addDecorator(story => <StateMenuContextProvider>{story()}</StateMenuContextProvider>)
+  .addDecorator(story => (
     <Columns className="columns">
       <div className="column is-3">{story()}</div>
     </Columns>
@@ -92,7 +92,7 @@ storiesOf("Secondary Navigation", module)
       <SecondaryNavigation label="Hitchhiker">
         <SecondaryNavigationItem to="/42" icon="fas fa-puzzle-piece" label="Puzzle 42" title="Puzzle 42" />
         <SecondaryNavigationItem
-          activeWhenMatch={(route) => route.location.pathname === "/hog"}
+          activeWhenMatch={route => route.location?.pathname === "/hog"}
           to="/heart-of-gold"
           icon="fas fa-star"
           label="Heart Of Gold"
