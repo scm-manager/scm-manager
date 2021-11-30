@@ -49,7 +49,7 @@
         "install": "{{name}} Plugin installieren",
         "update": "{{name}} Plugin aktualisieren",
         "uninstall": "{{name}} Plugin deinstallieren",
-        "cloudoguInstall": "Plugin über myCloudogu installieren"
+        "cloudoguInstall": "{{name}} Plugin installieren"
       },
       "restart": "Neustarten, um Plugin-Änderungen wirksam zu machen",
       "install": "Installieren",
@@ -69,8 +69,8 @@
       "version": "Version",
       "currentVersion": "Installierte Version",
       "newVersion": "Neue Version",
-      "cloudoguInstallInfo": "Dieses Plugin ist exklusiv über myCloudogu erhältlich. Zum Installieren folgen Sie bitte der Anleitung.",
-      "cloudoguInstall": "Zur Installationsanleitung",
+      "cloudoguInstallInfo": "Verbinden Sie Ihre SCM-Manager-Instanz mit ihrem myCloudogu-Account um Zugriff auf myCloudogu-Plugins zu erhalten. Falls Sie noch über keinen Account verfügen, können Sie sich einfach kostenlos registrieren.",
+      "cloudoguInstall": "Mit myCloudogu verbinden und installieren",
       "dependencyNotification": "Mit diesem Plugin werden folgende Abhängigkeiten mit installiert bzw. aktualisiert, wenn sie noch nicht in der aktuellen Version vorhanden sind!",
       "optionalDependencyNotification": "Mit diesem Plugin werden folgende optionale Abhängigkeiten mit aktualisiert, falls sie installiert sind!",
       "dependencies": "Abhängigkeiten",

@@ -29,6 +29,7 @@ import {
   Button,
   ButtonGroup,
   ErrorNotification,
+  Icon,
   Loading,
   Notification,
   Subtitle,
@@ -41,7 +42,7 @@ import ExecutePendingActionModal from "../components/ExecutePendingActionModal";
 import CancelPendingActionModal from "../components/CancelPendingActionModal";
 import UpdateAllActionModal from "../components/UpdateAllActionModal";
 import ShowPendingModal from "../components/ShowPendingModal";
-import { useAvailablePlugins, useInstalledPlugins, usePendingPlugins } from "@scm-manager/ui-api";
+import { useAvailablePlugins, useInstalledPlugins, usePendingPlugins, usePluginCenterLogin } from "@scm-manager/ui-api";
 import PluginModal from "../components/PluginModal";
 import MyCloudoguBanner from "../components/MyCloudoguBanner";
 
@@ -87,7 +88,10 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
     return (
       <div className="columns">
         <div className="column">
-          <Title title={t("plugins.title")} />
+          <Title>
+            {t("plugins.title")}
+            <Icon name="check-circle" color="info" className="is-size-5 ml-1" />
+          </Title>
           <Subtitle subtitle={installed ? t("plugins.installedSubtitle") : t("plugins.availableSubtitle")} />
         </div>
         <PluginTopActions>{actions}</PluginTopActions>

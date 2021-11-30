@@ -28,8 +28,10 @@ import styled from "styled-components";
 import { Link, Plugin } from "@scm-manager/ui-types";
 import { Button, ButtonGroup, Checkbox, ErrorNotification, Modal, Notification } from "@scm-manager/ui-components";
 import SuccessNotification from "./SuccessNotification";
-import { useInstallPlugin, useUninstallPlugin, useUpdatePlugins } from "@scm-manager/ui-api";
+import { useInstallPlugin, usePluginCenterLogin, useUninstallPlugin, useUpdatePlugins } from "@scm-manager/ui-api";
 import { PluginAction } from "../containers/PluginsOverview";
+import MyCloudoguTag from "./MyCloudoguTag";
+import { useHistory, useLocation } from "react-router-dom";
 
 type Props = {
   plugin: Plugin;
@@ -41,10 +43,10 @@ type ParentWithPluginAction = {
   pluginAction?: PluginAction;
 };
 
-const ListParent = styled.div.attrs((props) => ({
-  className: "field-label is-inline-flex mr-0 has-text-left",
+const ListParent = styled.div.attrs(props => ({
+  className: "field-label is-inline-flex mr-0 has-text-left"
 }))<ParentWithPluginAction>`
-  min-width: ${(props) => (props.pluginAction === PluginAction.INSTALL ? "5.5em" : "10em")};
+  min-width: ${props => (props.pluginAction === PluginAction.INSTALL ? "5.5em" : "10em")};
 `;
 
 const ListChild = styled.div`
@@ -57,6 +59,7 @@ const PluginModal: FC<Props> = ({ onClose, pluginAction, plugin }) => {
   const { isLoading: isInstalling, error: installError, install, isInstalled } = useInstallPlugin();
   const { isLoading: isUninstalling, error: uninstallError, uninstall, isUninstalled } = useUninstallPlugin();
   const { isLoading: isUpdating, error: updateError, update, isUpdated } = useUpdatePlugins();
+  const pluginCenterLoginLink = usePluginCenterLogin();
   const error = installError || uninstallError || updateError;
   const loading = isInstalling || isUninstalling || isUpdating;
   const isDone = isInstalled || isUninstalled || isUpdated;
@@ -71,7 +74,7 @@ const PluginModal: FC<Props> = ({ onClose, pluginAction, plugin }) => {
     e.preventDefault();
     switch (pluginAction) {
       case PluginAction.CLOUDOGU:
-        window.open((plugin._links.cloudoguInstall as Link).href, "_blank");
+        window.open(pluginCenterLoginLink!, "_self");
         break;
       case PluginAction.INSTALL:
         install(plugin, { restart: shouldRestart });
@@ -198,11 +201,16 @@ const PluginModal: FC<Props> = ({ onClose, pluginAction, plugin }) => {
             <ListChild className={classNames("field-body", "is-inline-flex")}>{plugin.author}</ListChild>
           </div>
           {pluginAction === PluginAction.CLOUDOGU && (
-            <div className="field is-horizontal">
-              <Notification type="info" className="is-full-width">
-                {t("plugins.modal.cloudoguInstallInfo")}
-              </Notification>
-            </div>
+            <>
+              <div className="field is-horizontal">
+                <MyCloudoguTag />
+              </div>
+              <div className="field is-horizontal">
+                <Notification type="info" className="is-full-width">
+                  {t("plugins.modal.cloudoguInstallInfo")}
+                </Notification>
+              </div>
+            </>
           )}
           {pluginAction === PluginAction.INSTALL && (
             <div className="field is-horizontal">
@@ -236,7 +244,7 @@ const PluginModal: FC<Props> = ({ onClose, pluginAction, plugin }) => {
   return (
     <Modal
       title={t(`plugins.modal.title.${pluginAction}`, {
-        name: plugin.displayName ? plugin.displayName : plugin.name,
+        name: plugin.displayName ? plugin.displayName : plugin.name
       })}
       closeFunction={onClose}
       body={body}

@@ -29,15 +29,13 @@ import { PluginAction, PluginModalContent } from "../containers/PluginsOverview"
 import { useTranslation } from "react-i18next";
 import PluginAvatar from "./PluginAvatar";
 import classNames from "classnames";
+import { usePluginCenterLogin } from "@scm-manager/ui-api";
+import MyCloudoguTag from "./MyCloudoguTag";
 
 type Props = {
   plugin: Plugin;
   openModal: (content: PluginModalContent) => void;
 };
-
-const MyCloudoguTag = styled.span`
-  border: solid 1px;
-`;
 
 const ActionbarWrapper = styled.div`
   & span + span {
@@ -70,6 +68,7 @@ const PluginEntry: FC<Props> = ({ plugin, openModal }) => {
   const isUpdatable = plugin._links.update && (plugin._links.update as Link).href;
   const isUninstallable = plugin._links.uninstall && (plugin._links.uninstall as Link).href;
   const isCloudoguPlugin = plugin.type === "CLOUDOGU";
+  const pluginCenterLoginLink = usePluginCenterLogin();
 
   const evaluateAction = () => {
     if (isInstallable) {
@@ -93,7 +92,7 @@ const PluginEntry: FC<Props> = ({ plugin, openModal }) => {
   );
   const actionBar = () => (
     <ActionbarWrapper className="is-flex">
-      {isCloudoguPlugin && (
+      {isCloudoguPlugin && pluginCenterLoginLink && (
         <IconWrapper action={() => openModal({ plugin, action: PluginAction.CLOUDOGU })}>
           <Icon title={t("plugins.modal.cloudoguInstall")} name="link" color="success-dark" />
         </IconWrapper>
@@ -133,11 +132,7 @@ const PluginEntry: FC<Props> = ({ plugin, openModal }) => {
           "is-justify-content-end": !isCloudoguPlugin
         })}
       >
-        {isCloudoguPlugin ? (
-          <MyCloudoguTag className="has-text-info has-border-info has-rounded-border p-1 is-size-7">
-            myCloudogu
-          </MyCloudoguTag>
-        ) : null}
+        {isCloudoguPlugin ? <MyCloudoguTag /> : null}
         <small className="level-item is-block shorten-text is-align-self-flex-end">{plugin.author}</small>
       </div>
     </>
