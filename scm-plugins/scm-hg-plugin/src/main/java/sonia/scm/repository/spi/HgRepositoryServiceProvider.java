@@ -26,9 +26,7 @@ package sonia.scm.repository.spi;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
-import sonia.scm.cache.CacheManager;
 import sonia.scm.repository.Feature;
-import sonia.scm.repository.api.BranchDetailsCommandBuilder;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.CommandNotSupportedException;
 
@@ -69,10 +67,8 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider {
 
   private final Injector commandInjector;
   private final HgCommandContext context;
-  private final CacheManager cacheManager;
 
-  HgRepositoryServiceProvider(Injector injector, HgCommandContext context, CacheManager cacheManager) {
-    this.cacheManager = cacheManager;
+  HgRepositoryServiceProvider(Injector injector, HgCommandContext context) {
     this.commandInjector = injector.createChildInjector(new AbstractModule() {
       @Override
       protected void configure() {

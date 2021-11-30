@@ -26,7 +26,6 @@ package sonia.scm.repository.spi;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import sonia.scm.cache.CacheManager;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
@@ -39,19 +38,17 @@ public class HgRepositoryServiceResolver implements RepositoryServiceResolver {
 
   private final Injector injector;
   private final HgCommandContextFactory commandContextFactory;
-  private final CacheManager cacheManager;
 
   @Inject
-  public HgRepositoryServiceResolver(Injector injector, HgCommandContextFactory commandContextFactory, CacheManager cacheManager) {
+  public HgRepositoryServiceResolver(Injector injector, HgCommandContextFactory commandContextFactory) {
     this.injector = injector;
     this.commandContextFactory = commandContextFactory;
-    this.cacheManager = cacheManager;
   }
 
   @Override
   public HgRepositoryServiceProvider resolve(Repository repository) {
     if (HgRepositoryHandler.TYPE_NAME.equalsIgnoreCase(repository.getType())) {
-      return new HgRepositoryServiceProvider(injector, commandContextFactory.create(repository), cacheManager);
+      return new HgRepositoryServiceProvider(injector, commandContextFactory.create(repository));
     }
     return null;
   }
