@@ -35,6 +35,7 @@ import sonia.scm.repository.api.BranchDetailsCommandResult;
 import sonia.scm.web.EdisonHalAppender;
 
 import javax.inject.Inject;
+import java.util.Optional;
 
 @Mapper
 public abstract class BranchDetailsMapper extends BaseMapper<BranchDetailsCommandResult, BranchDetailsDto> {
@@ -52,6 +53,10 @@ public abstract class BranchDetailsMapper extends BaseMapper<BranchDetailsComman
     applyEnrichers(new EdisonHalAppender(linksBuilder, embeddedBuilder), repository);
 
     return new BranchDetailsDto(linksBuilder.build(), embeddedBuilder.build());
+  }
+
+  Integer map(Optional<Integer> o) {
+    return o.orElse(null);
   }
 
   private Links.Builder createLinks(@Context Repository repository, String branch) {

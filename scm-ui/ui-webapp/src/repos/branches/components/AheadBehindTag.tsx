@@ -60,26 +60,26 @@ const Bar = styled.span.attrs(props => ({}))<BarProps>`
 const AheadBehindTag: FC<Props> = ({ branch, details }) => {
   const [t] = useTranslation("repos");
 
-  if (branch.defaultBranch) {
+  if (
+    branch.defaultBranch ||
+    typeof details.changesetsBehind !== "number" ||
+    typeof details.changesetsAhead !== "number"
+  ) {
     return null;
   }
 
   const calculateBarLength = (part: number) => {
-    let lengthInPercent = 5;
-
-    if (part < 10) {
-      lengthInPercent += part;
+    if (part <= 10) {
+      return part + 5;
+    } else if (part <= 50) {
+      return (part - 10) / 5 + 15;
+    } else if (part <= 500) {
+      return (part - 50) / 10 + 23;
+    } else if (part <= 3700) {
+      return (part - 500) / 100 + 68;
+    } else {
+      return 100;
     }
-    if (part < 50) {
-      lengthInPercent += part / 5;
-    }
-    if (part < 500) {
-      lengthInPercent += part / 10;
-    }
-    if (part > 500) {
-      lengthInPercent += part / 25;
-    }
-    return lengthInPercent;
   };
 
   return (

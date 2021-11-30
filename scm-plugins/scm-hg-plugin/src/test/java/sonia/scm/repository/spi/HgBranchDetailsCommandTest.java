@@ -38,8 +38,8 @@ public class HgBranchDetailsCommandTest extends AbstractHgCommandTestBase {
 
     BranchDetailsCommandResult result = new HgBranchDetailsCommand(cmdContext).execute(branchRequest);
 
-    assertThat(result.getChangesetsAhead()).isEqualTo(1);
-    assertThat(result.getChangesetsBehind()).isEqualTo(3);
+    assertThat(result.getChangesetsAhead()).get().isEqualTo(1);
+    assertThat(result.getChangesetsBehind()).get().isEqualTo(3);
   }
 
   @Test
@@ -49,8 +49,8 @@ public class HgBranchDetailsCommandTest extends AbstractHgCommandTestBase {
 
     BranchDetailsCommandResult result = new HgBranchDetailsCommand(cmdContext).execute(branchRequest);
 
-    assertThat(result.getChangesetsAhead()).isEqualTo(5);
-    assertThat(result.getChangesetsBehind()).isEqualTo(1);
+    assertThat(result.getChangesetsAhead()).get().isEqualTo(5);
+    assertThat(result.getChangesetsBehind()).get().isEqualTo(1);
   }
 
   @Test
@@ -60,8 +60,8 @@ public class HgBranchDetailsCommandTest extends AbstractHgCommandTestBase {
 
     BranchDetailsCommandResult result = new HgBranchDetailsCommand(cmdContext).execute(branchRequest);
 
-    assertThat(result.getChangesetsAhead()).isEqualTo(3);
-    assertThat(result.getChangesetsBehind()).isZero();
+    assertThat(result.getChangesetsAhead()).get().isEqualTo(3);
+    assertThat(result.getChangesetsBehind()).get().isEqualTo(0);
   }
 
   @Override

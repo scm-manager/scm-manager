@@ -39,8 +39,8 @@ public class GitBranchDetailsCommandTest extends AbstractGitCommandTestBase {
     request.setBranchName("master");
     BranchDetailsCommandResult result = command.execute(request);
 
-    assertThat(result.getChangesetsAhead()).isZero();
-    assertThat(result.getChangesetsBehind()).isZero();
+    assertThat(result.getChangesetsAhead()).get().isEqualTo(0);
+    assertThat(result.getChangesetsBehind()).get().isEqualTo(0);
   }
 
   @Test
@@ -51,8 +51,8 @@ public class GitBranchDetailsCommandTest extends AbstractGitCommandTestBase {
     request.setBranchName("test-branch");
     BranchDetailsCommandResult result = command.execute(request);
 
-    assertThat(result.getChangesetsAhead()).isEqualTo(1);
-    assertThat(result.getChangesetsBehind()).isEqualTo(2);
+    assertThat(result.getChangesetsAhead()).get().isEqualTo(1);
+    assertThat(result.getChangesetsBehind()).get().isEqualTo(2);
   }
 
   @Test
@@ -63,7 +63,7 @@ public class GitBranchDetailsCommandTest extends AbstractGitCommandTestBase {
     request.setBranchName("partially_merged");
     BranchDetailsCommandResult result = command.execute(request);
 
-    assertThat(result.getChangesetsAhead()).isEqualTo(3);
-    assertThat(result.getChangesetsBehind()).isEqualTo(1);
+    assertThat(result.getChangesetsAhead()).get().isEqualTo(3);
+    assertThat(result.getChangesetsBehind()).get().isEqualTo(1);
   }
 }

@@ -24,6 +24,7 @@
 
 package sonia.scm.api.v2.resources;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Links;
@@ -33,6 +34,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -40,8 +43,10 @@ import lombok.Setter;
 @EqualsAndHashCode(callSuper = true)
 public class BranchDetailsDto extends HalRepresentation {
   private String branchName;
-  private int changesetsAhead;
-  private int changesetsBehind;
+  @JsonInclude(NON_NULL)
+  private Integer changesetsAhead;
+  @JsonInclude(NON_NULL)
+  private Integer changesetsBehind;
 
   BranchDetailsDto(Links links, Embedded embedded) {
     super(links, embedded);

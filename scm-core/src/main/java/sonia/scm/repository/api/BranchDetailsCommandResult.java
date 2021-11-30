@@ -24,14 +24,16 @@
 
 package sonia.scm.repository.api;
 
-import lombok.Value;
+import java.util.Optional;
+
+import static java.util.Optional.ofNullable;
 
 /**
  * @since 2.28.0
  */
 public class BranchDetailsCommandResult {
-  private final int changesetsAhead;
-  private final int changesetsBehind;
+  private final Integer changesetsAhead;
+  private final Integer changesetsBehind;
 
   /**
    * Creates the result object
@@ -41,7 +43,7 @@ public class BranchDetailsCommandResult {
    * @param changesetsBehind The number of changesets the default branch is ahead of this branch (that is
    *                         the number of changesets on the default branch that are not reachable from this branch).
    */
-  public BranchDetailsCommandResult(int changesetsAhead, int changesetsBehind) {
+  public BranchDetailsCommandResult(Integer changesetsAhead, Integer changesetsBehind) {
     this.changesetsAhead = changesetsAhead;
     this.changesetsBehind = changesetsBehind;
   }
@@ -50,15 +52,15 @@ public class BranchDetailsCommandResult {
    * The number of changesets this branch is ahead of the default branch (that is
    * the number of changesets on this branch that are not reachable from the default branch).
    */
-  public int getChangesetsAhead() {
-    return changesetsAhead;
+  public Optional<Integer> getChangesetsAhead() {
+    return ofNullable(changesetsAhead);
   }
 
   /**
    * The number of changesets the default branch is ahead of this branch (that is
    * the number of changesets on the default branch that are not reachable from this branch).
    */
-  public int getChangesetsBehind() {
-    return changesetsBehind;
+  public Optional<Integer> getChangesetsBehind() {
+    return ofNullable(changesetsBehind);
   }
 }

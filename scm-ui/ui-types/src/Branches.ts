@@ -43,8 +43,8 @@ export type Branch = {
 
 export type BranchDetails = HalRepresentation & {
   branchName: string;
-  changesetsAhead: number;
-  changesetsBehind: number;
+  changesetsAhead?: number;
+  changesetsBehind?: number;
 };
 
 type EmbeddedBranchDetails = {
