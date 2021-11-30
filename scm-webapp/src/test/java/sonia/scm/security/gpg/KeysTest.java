@@ -29,6 +29,7 @@ import org.bouncycastle.openpgp.PGPPublicKey;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.ScmConstraintViolationException;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -63,12 +64,12 @@ class KeysTest {
     PGPPublicKey one = mockMasterKey(42L);
     PGPPublicKey two = mockMasterKey(21L);
 
-    assertThrows(IllegalArgumentException.class, () -> Keys.resolve("", raw -> ImmutableList.of(one, two)));
+    assertThrows(ScmConstraintViolationException.class, () -> Keys.resolve("", raw -> ImmutableList.of(one, two)));
   }
 
   @Test
   void shouldThrowIllegalArgumentExceptionWithoutMasterKey() {
-    assertThrows(IllegalArgumentException.class, () -> Keys.resolve("", raw -> Collections.emptyList()));
+    assertThrows(ScmConstraintViolationException.class, () -> Keys.resolve("", raw -> Collections.emptyList()));
   }
 
   private PGPPublicKey mockMasterKey(long id) {
