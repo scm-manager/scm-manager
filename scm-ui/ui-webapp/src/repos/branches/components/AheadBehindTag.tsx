@@ -27,6 +27,7 @@ import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { Tooltip } from "@scm-manager/ui-components";
+import { calculateBarLength } from "./aheadBehind";
 
 type Props = {
   branch: Branch;
@@ -67,20 +68,6 @@ const AheadBehindTag: FC<Props> = ({ branch, details }) => {
   ) {
     return null;
   }
-
-  const calculateBarLength = (part: number) => {
-    if (part <= 10) {
-      return part + 5;
-    } else if (part <= 50) {
-      return (part - 10) / 5 + 15;
-    } else if (part <= 500) {
-      return (part - 50) / 10 + 23;
-    } else if (part <= 3700) {
-      return (part - 500) / 100 + 68;
-    } else {
-      return 100;
-    }
-  };
 
   return (
     <Tooltip
