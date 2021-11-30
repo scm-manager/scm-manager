@@ -8,11 +8,6 @@ const MyCloudoguBannerWrapper = styled.div`
   border: 1px solid;
 `;
 
-const TextImage = styled(Image)`
-  padding-top: 3px;
-  height: 1.25em;
-`;
-
 const MyCloudoguBanner = () => {
   const login = usePluginCenterLogin();
   const [t] = useTranslation("admin");
@@ -22,7 +17,7 @@ const MyCloudoguBanner = () => {
         <Trans
           t={t}
           i18nKey="plugins.myCloudogu.login.button.label"
-          components={[<TextImage alt="myCloudogu" src="/images/myCloudogu.svg" className="mx-1" />]}
+          components={[<span className="mx-1 has-text-info">myCloudogu</span>]}
         />
       </Button>
       <p className="is-align-self-flex-start is-size-7">
