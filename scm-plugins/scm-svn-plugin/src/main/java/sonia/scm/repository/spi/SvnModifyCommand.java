@@ -34,6 +34,7 @@ import org.tmatesoft.svn.core.wc.SVNClientManager;
 import org.tmatesoft.svn.core.wc.SVNWCClient;
 import org.tmatesoft.svn.core.wc.SVNWCUtil;
 import sonia.scm.ConcurrentModificationException;
+import sonia.scm.ContextEntry;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.SvnWorkingCopyFactory;
@@ -143,6 +144,9 @@ public class SvnModifyCommand implements ModifyCommand {
       try {
         wcClient.doDelete(new File(workingDirectory, toBeDeleted), true, true, false);
       } catch (SVNException e) {
+        if (e.getErrorMessage().getErrorCode().getCode() == 125001) {
+          throw new ModificationFailedException(ContextEntry.ContextBuilder.entity("File", toBeDeleted).in(repository).build(), "Could not remove file from repository");
+        }
         throw new InternalRepositoryException(repository, "could not delete file from repository");
       }
     }
@@ -161,6 +165,9 @@ public class SvnModifyCommand implements ModifyCommand {
           true
         );
       } catch (SVNException e) {
+        if (e.getErrorMessage().getErrorCode().getCode() == 155010) {
+          throw new ModificationFailedException(ContextEntry.ContextBuilder.entity("File", name).in(repository).build(), "Could not add file to repository");
+        }
         throw new InternalRepositoryException(repository, "could not add file to repository");
       }
     }

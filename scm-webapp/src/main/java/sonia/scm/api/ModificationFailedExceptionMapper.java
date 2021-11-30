@@ -22,31 +22,19 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.spi;
+package sonia.scm.api;
 
-import sonia.scm.FeatureNotSupportedException;
-import sonia.scm.repository.Feature;
+import sonia.scm.api.rest.ContextualExceptionMapper;
+import sonia.scm.api.v2.resources.ExceptionWithContextToErrorDtoMapper;
+import sonia.scm.repository.spi.ModificationFailedException;
 
-import java.io.File;
-import java.io.IOException;
+import javax.inject.Inject;
+import javax.ws.rs.core.Response;
 
-public interface ModifyCommand {
+public class ModificationFailedExceptionMapper extends ContextualExceptionMapper<ModificationFailedException> {
 
-  String execute(ModifyCommandRequest request);
-
-  /**
-   * Implementations should use the {@link ModifyWorkerHelper} for this.
-   */
-  interface Worker {
-    void delete(String toBeDeleted, boolean recursive) throws IOException;
-
-    void create(String toBeCreated, File file, boolean overwrite) throws IOException;
-
-    void modify(String path, File file) throws IOException;
-
-    /**
-     * @since 2.28.0
-     */
-    void move(String path, String newPath, boolean overwrite) throws IOException;
+  @Inject
+  public ModificationFailedExceptionMapper(ExceptionWithContextToErrorDtoMapper mapper) {
+    super(ModificationFailedException.class, Response.Status.BAD_REQUEST, mapper);
   }
 }

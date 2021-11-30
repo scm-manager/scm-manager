@@ -69,6 +69,7 @@ class ValidationUtilTest {
   @ValueSource(strings = {
     "..",
     "../",
+    "some\\windows",
     "../../",
     "../ka",
     "test/../.."

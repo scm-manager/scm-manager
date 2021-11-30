@@ -24,29 +24,21 @@
 
 package sonia.scm.repository.spi;
 
-import sonia.scm.FeatureNotSupportedException;
-import sonia.scm.repository.Feature;
+import sonia.scm.ContextEntry;
+import sonia.scm.ExceptionWithContext;
 
-import java.io.File;
-import java.io.IOException;
+import java.util.List;
 
-public interface ModifyCommand {
+public class ModificationFailedException extends ExceptionWithContext {
 
-  String execute(ModifyCommandRequest request);
+  public static final String CODE = "8wSpi62oJ1";
 
-  /**
-   * Implementations should use the {@link ModifyWorkerHelper} for this.
-   */
-  interface Worker {
-    void delete(String toBeDeleted, boolean recursive) throws IOException;
+  public ModificationFailedException(List<ContextEntry> context, String message) {
+    super(context, message);
+  }
 
-    void create(String toBeCreated, File file, boolean overwrite) throws IOException;
-
-    void modify(String path, File file) throws IOException;
-
-    /**
-     * @since 2.28.0
-     */
-    void move(String path, String newPath, boolean overwrite) throws IOException;
+  @Override
+  public String getCode() {
+    return CODE;
   }
 }

@@ -212,16 +212,18 @@ public class ModifyCommandRequest implements Resetable, Validateable, CommandWit
   public static class MoveRequest implements PartialRequest {
 
     private final String fromPath;
+    private final boolean overwrite;
     private final String toPath;
 
-    public MoveRequest(String fromPath, String toPath) {
+    public MoveRequest(String fromPath, String toPath, boolean overwrite) {
       this.toPath = toPath;
       this.fromPath = fromPath;
+      this.overwrite = overwrite;
     }
 
     @Override
     public void execute(ModifyCommand.Worker worker) throws IOException {
-      worker.move(fromPath, toPath);
+      worker.move(fromPath, toPath, overwrite);
     }
   }
 }
