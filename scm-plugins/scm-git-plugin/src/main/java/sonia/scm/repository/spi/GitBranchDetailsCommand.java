@@ -24,13 +24,14 @@
 
 package sonia.scm.repository.spi;
 
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.errors.IncorrectObjectTypeException;
 import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.revwalk.RevWalkUtils;
+import org.eclipse.jgit.revwalk.filter.RevFilter;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.api.BranchDetailsCommandResult;
 
@@ -61,30 +62,25 @@ public class GitBranchDetailsCommand extends AbstractGitCommand implements Branc
   }
 
   private BranchDetailsCommandResult computeAheadBehind(Repository repository, ObjectId branchCommit, ObjectId defaultCommit) throws MissingObjectException, IncorrectObjectTypeException {
-    try (Git git = new Git(repository)) {
-      int ahead = count(git.log().addRange(defaultCommit, branchCommit).call());
-      int behind = count(git.log().addRange(branchCommit, defaultCommit).call());
-      return new BranchDetailsCommandResult(ahead, behind);
-    } catch (GitAPIException e) {
+    // this implementation is a copy of the implementation in org.eclipse.jgit.lib.BranchTrackingStatus
+    try (RevWalk walk = new RevWalk(repository)) {
+
+      RevCommit localCommit = walk.parseCommit(branchCommit);
+      RevCommit trackingCommit = walk.parseCommit(defaultCommit);
+
+      walk.setRevFilter(RevFilter.MERGE_BASE);
+      walk.markStart(localCommit);
+      walk.markStart(trackingCommit);
+      RevCommit mergeBase = walk.next();
+
+      walk.reset();
+      walk.setRevFilter(RevFilter.ALL);
+      int aheadCount = RevWalkUtils.count(walk, localCommit, mergeBase);
+      int behindCount = RevWalkUtils.count(walk, trackingCommit, mergeBase);
+
+      return new BranchDetailsCommandResult(aheadCount, behindCount);
+    } catch (IOException e) {
       throw new InternalRepositoryException(context.getRepository(), "could not compute ahead/behind", e);
-    }
-  }
-
-  private int count(Iterable<RevCommit> commits) {
-    Counter counter = new Counter();
-    commits.forEach(c -> counter.inc());
-    return counter.getCount();
-  }
-
-  private static class Counter {
-    int count = 0;
-
-    private void inc() {
-      ++count;
-    }
-
-    public int getCount() {
-      return count;
     }
   }
 }
