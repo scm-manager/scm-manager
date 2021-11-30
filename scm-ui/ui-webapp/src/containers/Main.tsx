@@ -50,6 +50,7 @@ import ImportLog from "../repos/importlog/ImportLog";
 import CreateRepositoryRoot from "../repos/containers/CreateRepositoryRoot";
 import Search from "../search/Search";
 import Syntax from "../search/Syntax";
+import ExternalError from "./ExternalError";
 
 type Props = {
   me: Me;
@@ -76,6 +77,7 @@ const Main: FC<Props> = (props) => {
           <Redirect exact from="/" to={url} />
           <Route exact path="/login" component={Login} />
           <Route path="/logout" component={Logout} />
+          <Route path="/error/:code" component={ExternalError} />
           <Redirect exact strict from="/repos" to="/repos/" />
           <ProtectedRoute exact path="/repos/" component={Overview} authenticated={authenticated} />
           <ProtectedRoute path="/repos/create" component={CreateRepositoryRoot} authenticated={authenticated} />

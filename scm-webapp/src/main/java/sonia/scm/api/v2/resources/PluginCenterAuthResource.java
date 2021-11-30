@@ -24,7 +24,9 @@
 
 package sonia.scm.api.v2.resources;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
+import sonia.scm.ExceptionWithContext;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.plugin.PluginCenterAuthenticator;
 import sonia.scm.security.XsrfExcludes;
@@ -39,10 +41,20 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
+import java.util.Optional;
 import java.util.UUID;
 
 @Singleton
 public class PluginCenterAuthResource {
+
+  @VisibleForTesting
+  static final String ERROR_AUTHENTICATION_DISABLED = "8tSqFDot11";
+  @VisibleForTesting
+  static final String ERROR_ALREADY_AUTHENTICATED = "8XSqFEBd41";
+  @VisibleForTesting
+  static final String ERROR_CHALLENGE_MISSING = "FNSqFKQIR1";
+  @VisibleForTesting
+  static final String ERROR_CHALLENGE_DOES_NOT_MATCH = "8ESqFElpI1";
 
   private final PluginCenterAuthenticator authenticator;
   private final ScmConfiguration configuration;
@@ -59,17 +71,15 @@ public class PluginCenterAuthResource {
 
   @GET
   @Path("")
-  public synchronized Response auth(@Context UriInfo uriInfo, @QueryParam("source") String sourceUri) {
+  public Response auth(@Context HttpServletRequest request, @Context UriInfo uriInfo, @QueryParam("source") String sourceUri) {
     String pluginAuthUrl = configuration.getPluginAuthUrl();
 
     if (Strings.isNullOrEmpty(pluginAuthUrl)) {
-      // TODO better exception
-      throw new IllegalStateException("plugin authentication is disabled");
+      return error(request, ERROR_AUTHENTICATION_DISABLED);
     }
 
     if (authenticator.isAuthenticated()) {
-      // TODO better exception
-      throw new IllegalStateException("already authenticated");
+      return error(request, ERROR_ALREADY_AUTHENTICATED);
     }
 
     challenge = UUID.randomUUID().toString();
@@ -83,36 +93,7 @@ public class PluginCenterAuthResource {
     excludes.add(callbackUri.getPath());
 
     URI authUri = UriBuilder.fromUri(pluginAuthUrl).queryParam("instance", callbackUri.toASCIIString()).build();
-    return Response.temporaryRedirect(authUri).build();
-  }
-
-  @GET
-  @Path("callback")
-  public Response callbackAbort(
-    @Context HttpServletRequest request,
-    @QueryParam("challenge") String challenge,
-    @QueryParam("source") String source
-  ) {
-    checkChallenge(challenge);
-    excludes.remove(request.getRequestURI());
-    return redirect(request, source);
-  }
-
-  private Response redirect(HttpServletRequest request, String source) {
-    String completeUrl = HttpUtil.getCompleteUrl(request, source);
-
-    return Response.status(Response.Status.SEE_OTHER).location(URI.create(completeUrl)).build();
-  }
-
-  private void checkChallenge(String challengeFromRequest) {
-    if (Strings.isNullOrEmpty(challenge)) {
-      // TODO better exception
-      throw new IllegalArgumentException("challenge not available");
-    }
-    if (!challenge.equals(challengeFromRequest)) {
-      // TODO better exception
-      throw new IllegalArgumentException("challenge does not match");
-    }
+    return Response.seeOther(authUri).build();
   }
 
   @POST
@@ -123,10 +104,55 @@ public class PluginCenterAuthResource {
     @QueryParam("source") String source,
     @FormParam("refresh_token") String refreshToken
   ) {
-    checkChallenge(challenge);
+    Optional<String> error = checkChallenge(challenge);
+    if (error.isPresent()) {
+      return error(request, error.get());
+    }
     excludes.remove(request.getRequestURI());
-    authenticator.authenticate(refreshToken);
+    try {
+      authenticator.authenticate(refreshToken);
+    } catch (ExceptionWithContext ex) {
+      return error(request, ex.getCode());
+    }
+
     return redirect(request, source);
+  }
+
+  @GET
+  @Path("callback")
+  public Response callbackAbort(
+    @Context HttpServletRequest request,
+    @QueryParam("challenge") String challenge,
+    @QueryParam("source") String source
+  ) {
+    Optional<String> error = checkChallenge(challenge);
+    if (error.isPresent()) {
+      return error(request, error.get());
+    }
+    excludes.remove(request.getRequestURI());
+    return redirect(request, source);
+  }
+
+  private Response error(HttpServletRequest request, String code) {
+    return redirect(HttpUtil.getCompleteUrl(request, "error", code));
+  }
+
+  private Response redirect(HttpServletRequest request, String source) {
+    return redirect(HttpUtil.getCompleteUrl(request, source));
+  }
+
+  private Response redirect(String location) {
+    return Response.status(Response.Status.SEE_OTHER).location(URI.create(location)).build();
+  }
+
+  private Optional<String> checkChallenge(String challengeFromRequest) {
+    if (Strings.isNullOrEmpty(challenge)) {
+      return Optional.of(ERROR_CHALLENGE_MISSING);
+    }
+    if (!challenge.equals(challengeFromRequest)) {
+      return Optional.of(ERROR_CHALLENGE_DOES_NOT_MATCH);
+    }
+    return Optional.empty();
   }
 
 }
