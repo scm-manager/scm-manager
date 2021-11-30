@@ -25,14 +25,17 @@
 package sonia.scm.repository.spi;
 
 import org.javahg.Changeset;
-import org.javahg.Repository;
+import org.javahg.commands.ExecutionException;
 import org.javahg.commands.LogCommand;
+import sonia.scm.repository.Branch;
 import sonia.scm.repository.api.BranchDetailsCommandResult;
 
 import javax.inject.Inject;
 import java.util.List;
 
 import static org.javahg.commands.flags.LogCommandFlags.on;
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import static sonia.scm.NotFoundException.notFound;
 import static sonia.scm.repository.spi.javahg.AbstractChangesetCommand.CHANGESET_LAZY_STYLE_PATH;
 
 public class HgBranchDetailsCommand implements BranchDetailsCommand {
@@ -52,10 +55,17 @@ public class HgBranchDetailsCommand implements BranchDetailsCommand {
       return new BranchDetailsCommandResult(0,0);
     }
 
-    List<Changeset> behind = getChangesetsSolelyOnBranch(DEFAULT_BRANCH_NAME, request.getBranchName());
-    List<Changeset> ahead = getChangesetsSolelyOnBranch(request.getBranchName(), DEFAULT_BRANCH_NAME);
+    try {
+      List<Changeset> behind = getChangesetsSolelyOnBranch(DEFAULT_BRANCH_NAME, request.getBranchName());
+      List<Changeset> ahead = getChangesetsSolelyOnBranch(request.getBranchName(), DEFAULT_BRANCH_NAME);
 
-    return new BranchDetailsCommandResult(ahead.size(), behind.size());
+      return new BranchDetailsCommandResult(ahead.size(), behind.size());
+    } catch (ExecutionException e) {
+      if (e.getMessage().matches("unknown revision '.*'!")) {
+        throw notFound(entity(Branch.class, request.getBranchName()).in(context.getScmRepository()));
+      }
+      throw e;
+    }
   }
 
   private List<Changeset> getChangesetsSolelyOnBranch(String branch, String reference) {

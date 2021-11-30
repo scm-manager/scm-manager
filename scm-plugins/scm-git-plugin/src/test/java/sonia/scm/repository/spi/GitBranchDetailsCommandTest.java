@@ -25,6 +25,7 @@
 package sonia.scm.repository.spi;
 
 import org.junit.Test;
+import sonia.scm.NotFoundException;
 import sonia.scm.repository.api.BranchDetailsCommandResult;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -65,5 +66,14 @@ public class GitBranchDetailsCommandTest extends AbstractGitCommandTestBase {
 
     assertThat(result.getChangesetsAhead()).get().isEqualTo(3);
     assertThat(result.getChangesetsBehind()).get().isEqualTo(1);
+  }
+
+  @Test(expected = NotFoundException.class)
+  public void shouldThrowNotFoundExceptionForUnknownBranch() {
+    GitBranchDetailsCommand command = new GitBranchDetailsCommand(createContext());
+
+    BranchDetailsCommandRequest request = new BranchDetailsCommandRequest();
+    request.setBranchName("no-such-branch");
+    command.execute(request);
   }
 }

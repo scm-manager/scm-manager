@@ -102,7 +102,7 @@ public class GitBranchesCommand extends AbstractGitCommand implements BranchesCo
           return Branch.normalBranch(branchName, GitUtil.getId(ref.getObjectId()), lastCommitDate, lastCommitter);
         }
       } catch (IOException e) {
-        LOG.info("failed to read commit date of branch {} with revision {}", branchName, ref.getName());
+        LOG.info("failed to read commit date/author of branch {} with revision {}", branchName, ref.getName());
         return null;
       }
     }

@@ -32,11 +32,15 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.revwalk.RevWalkUtils;
 import org.eclipse.jgit.revwalk.filter.RevFilter;
+import sonia.scm.repository.Branch;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.api.BranchDetailsCommandResult;
 
 import javax.inject.Inject;
 import java.io.IOException;
+
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import static sonia.scm.NotFoundException.notFound;
 
 public class GitBranchDetailsCommand extends AbstractGitCommand implements BranchDetailsCommand {
 
@@ -53,12 +57,20 @@ public class GitBranchDetailsCommand extends AbstractGitCommand implements Branc
     }
     try {
       Repository repository = open();
-      ObjectId branchCommit = getCommitOrDefault(repository, branchDetailsCommandRequest.getBranchName());
-      ObjectId defaultCommit = getCommitOrDefault(repository, defaultBranch);
+      ObjectId branchCommit = getObjectId(branchDetailsCommandRequest.getBranchName(), repository);
+      ObjectId defaultCommit = getObjectId(defaultBranch, repository);
       return computeAheadBehind(repository, branchCommit, defaultCommit);
     } catch (IOException e) {
       throw new InternalRepositoryException(context.getRepository(), "could not compute ahead/behind", e);
     }
+  }
+
+  private ObjectId getObjectId(String branch, Repository repository) throws IOException {
+    ObjectId branchCommit = getCommitOrDefault(repository, branch);
+    if (branchCommit == null) {
+      throw notFound(entity(Branch.class, branch).in(context.getRepository()));
+    }
+    return branchCommit;
   }
 
   private BranchDetailsCommandResult computeAheadBehind(Repository repository, ObjectId branchCommit, ObjectId defaultCommit) throws MissingObjectException, IncorrectObjectTypeException {

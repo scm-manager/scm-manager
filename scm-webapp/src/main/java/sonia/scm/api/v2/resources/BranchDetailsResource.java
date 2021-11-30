@@ -32,6 +32,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import sonia.scm.NotFoundException;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.api.BranchDetailsCommandBuilder;
 import sonia.scm.repository.api.BranchDetailsCommandResult;
@@ -179,8 +180,12 @@ public class BranchDetailsResource {
       String decodedBranches = HttpUtil.decode(branches);
       BranchDetailsCommandBuilder branchDetailsCommand = service.getBranchDetailsCommand();
       for (String branch : decodedBranches.split(",")) {
-        BranchDetailsCommandResult result = branchDetailsCommand.execute(branch);
-        dtos.add(mapper.map(service.getRepository(), branch, result));
+        try {
+          BranchDetailsCommandResult result = branchDetailsCommand.execute(branch);
+          dtos.add(mapper.map(service.getRepository(), branch, result));
+        } catch (NotFoundException e) {
+          // we simply omit details for branches that do not exist
+        }
       }
     }
     return dtos;

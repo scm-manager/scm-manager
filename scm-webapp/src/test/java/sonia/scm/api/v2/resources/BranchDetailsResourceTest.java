@@ -25,12 +25,12 @@
 package sonia.scm.api.v2.resources;
 
 import org.jboss.resteasy.mock.MockHttpRequest;
-import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import sonia.scm.NotFoundException;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.repository.api.BranchDetailsCommandBuilder;
@@ -38,6 +38,7 @@ import sonia.scm.repository.api.BranchDetailsCommandResult;
 import sonia.scm.repository.api.CommandNotSupportedException;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
+import sonia.scm.web.JsonMockHttpResponse;
 import sonia.scm.web.RestDispatcher;
 
 import java.io.UnsupportedEncodingException;
@@ -48,7 +49,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
-@SuppressWarnings("UnstableApiUsage")
 @RunWith(MockitoJUnitRunner.class)
 public class BranchDetailsResourceTest extends RepositoryTestBase {
 
@@ -64,7 +64,7 @@ public class BranchDetailsResourceTest extends RepositoryTestBase {
   private BranchDetailsCommandBuilder branchDetailsCommandBuilder;
   private final BranchDetailsMapperImpl mapper = new BranchDetailsMapperImpl();
 
-  private final MockHttpResponse response = new MockHttpResponse();
+  private final JsonMockHttpResponse response = new JsonMockHttpResponse();
 
   @Before
   public void prepareEnvironment() {
@@ -134,6 +134,21 @@ public class BranchDetailsResourceTest extends RepositoryTestBase {
     assertThat(response.getContentAsString()).contains("{\"branchDetails\":[{\"branchName\":\"master\",\"_links\":{\"self\":{\"href\":\"/scm/api/v2/repositories/hitchhiker/42Puzzle/branch-details/master\"}}}");
     assertThat(response.getContentAsString()).contains("{\"branchName\":\"develop\",\"_links\":{\"self\":{\"href\":\"/scm/api/v2/repositories/hitchhiker/42Puzzle/branch-details/develop\"}}}");
     assertThat(response.getContentAsString()).contains("{\"branchName\":\"feature/hitchhiker42\",\"_links\":{\"self\":{\"href\":\"/scm/api/v2/repositories/hitchhiker/42Puzzle/branch-details/feature%2Fhitchhiker42\"}}}");
+  }
+
+  @Test
+  public void shouldIgnoreMissingBranchesInCollection() throws URISyntaxException {
+    when(serviceFactory.create(repository.getNamespaceAndName())).thenReturn(service);
+    when(service.getBranchDetailsCommand()).thenReturn(branchDetailsCommandBuilder);
+    when(branchDetailsCommandBuilder.execute("no-such-branch")).thenThrow(NotFoundException.class);
+
+    MockHttpRequest request = MockHttpRequest
+      .get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + repository.getNamespaceAndName() + "/branch-details?branches=no-such-branch");
+
+    dispatcher.invoke(request, response);
+
+    assertThat(response.getStatus()).isEqualTo(200);
+    assertThat(response.getContentAsJson().get("_embedded").get("branchDetails")).isEmpty();
   }
 }
 
