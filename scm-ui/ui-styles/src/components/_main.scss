@@ -384,6 +384,15 @@ $fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
 .has-border-white {
   border-color: $white !important;
 }
+
+.has-border-success {
+  border-color: $success !important;
+}
+
+.has-border-info {
+  border-color: $info !important;
+}
+
 ul.is-separated {
   > li:after {
     content: ",\2800";
