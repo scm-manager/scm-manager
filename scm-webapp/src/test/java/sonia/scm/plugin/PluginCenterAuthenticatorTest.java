@@ -25,7 +25,11 @@
 package sonia.scm.plugin;
 
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import org.apache.shiro.authz.AuthorizationException;
+import org.github.sdorra.jse.ShiroExtension;
+import org.github.sdorra.jse.SubjectAware;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Answers;
@@ -49,7 +53,7 @@ import static org.mockito.Mockito.*;
 import static sonia.scm.plugin.PluginCenterAuthenticator.*;
 import static sonia.scm.plugin.PluginCenterAuthenticator.RefreshRequest;
 
-@ExtendWith(MockitoExtension.class)
+@ExtendWith({MockitoExtension.class, ShiroExtension.class})
 class PluginCenterAuthenticatorTest {
 
   private PluginCenterAuthenticator authenticator;
@@ -69,6 +73,22 @@ class PluginCenterAuthenticatorTest {
     scmConfiguration =  new ScmConfiguration();
     authenticator = new PluginCenterAuthenticator(factory, scmConfiguration, advancedHttpClient);
   }
+
+  @Test
+  @SubjectAware("marvin")
+  void shouldFailAuthenticationWithoutPermission() {
+    assertThrows(AuthorizationException.class, () -> authenticator.authenticate("refresh-token"));
+  }
+
+  @Test
+  @SubjectAware("marvin")
+  void shouldFailToFetchAccessTokenWithoutPermission() {
+    assertThrows(AuthorizationException.class, () -> authenticator.fetchAccessToken());
+  }
+
+  @Nested
+  @SubjectAware(value = "trillian", permissions = "plugin:write")
+  class WithPermissions {
 
   @Test
   void shouldReturnFalseWithoutRefreshToken() {
@@ -172,6 +192,7 @@ class PluginCenterAuthenticatorTest {
   @SuppressWarnings("unchecked")
   private void preAuth(String refreshToken) {
     Authentication authentication = new Authentication();
+    authentication.setPrincipal("trillian");
     authentication.setRefreshToken(refreshToken);
     factory.get(STORE_NAME, null).set(authentication);
   }
@@ -189,6 +210,8 @@ class PluginCenterAuthenticatorTest {
     when(response.contentFromJson(RefreshResponse.class)).thenReturn(refreshResponse);
 
     when(response.isSuccessful()).thenReturn(true);
+  }
+
   }
 
 }

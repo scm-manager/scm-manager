@@ -31,6 +31,7 @@ import com.google.common.base.Strings;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import lombok.Data;
 import lombok.Value;
+import org.apache.shiro.SecurityUtils;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.net.ahc.AdvancedHttpClient;
 import sonia.scm.net.ahc.AdvancedHttpResponse;
@@ -66,28 +67,26 @@ public class PluginCenterAuthenticator {
   }
 
   public void authenticate(String refreshToken) {
+    PluginPermissions.write().check();
+
     Preconditions.checkArgument(!Strings.isNullOrEmpty(refreshToken), "refresh token is required");
     // check if refresh token is valid
-    fetchAccessToken(refreshToken);
-
-    Authentication authentication = new Authentication();
-    authentication.setRefreshToken(refreshToken);
-    this.configurationStore.set(authentication);
+    fetchAccessToken(principal(), refreshToken);
   }
 
   public boolean isAuthenticated() {
-    return getRefreshToken().isPresent();
+    return getAuthentication().isPresent();
   }
 
-
   public String fetchAccessToken() {
-    String refreshToken = getRefreshToken()
+    PluginPermissions.write().check();
+    Authentication authentication = getAuthentication()
       .orElseThrow(() -> new IllegalStateException("An access token can only be obtained, after a prior authentication"));
-    return fetchAccessToken(refreshToken);
+    return fetchAccessToken(authentication.getPrincipal(), authentication.getRefreshToken());
   }
 
   @CanIgnoreReturnValue
-  private String fetchAccessToken(String refreshToken) {
+  private String fetchAccessToken(String principal, String refreshToken) {
     String pluginAuthUrl = scmConfiguration.getPluginAuthUrl();
     Preconditions.checkState(!Strings.isNullOrEmpty(pluginAuthUrl), "plugin auth url is not configured");
 
@@ -104,6 +103,7 @@ public class PluginCenterAuthenticator {
       RefreshResponse refresh = response.contentFromJson(RefreshResponse.class);
 
       Authentication authentication = new Authentication();
+      authentication.setPrincipal(principal);
       authentication.setRefreshToken(refresh.getRefreshToken());
       configurationStore.set(authentication);
 
@@ -113,12 +113,12 @@ public class PluginCenterAuthenticator {
     }
   }
 
-  private Optional<String> getRefreshToken() {
-    Authentication authentication = configurationStore.get();
-    if (authentication != null) {
-      return Optional.ofNullable(authentication.getRefreshToken());
-    }
-    return Optional.empty();
+  private String principal() {
+    return SecurityUtils.getSubject().getPrincipal().toString();
+  }
+
+  private Optional<Authentication> getAuthentication() {
+    return configurationStore.getOptional();
   }
 
   @Data
@@ -126,6 +126,7 @@ public class PluginCenterAuthenticator {
   @VisibleForTesting
   @XmlAccessorType(XmlAccessType.FIELD)
   static class Authentication {
+    private String principal;
     private String refreshToken;
   }
 
