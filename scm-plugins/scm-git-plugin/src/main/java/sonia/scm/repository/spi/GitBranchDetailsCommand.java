@@ -78,9 +78,6 @@ public class GitBranchDetailsCommand extends AbstractGitCommand implements Branc
       int aheadCount = RevWalkUtils.count(walk, localCommit, mergeBase);
       int behindCount = RevWalkUtils.count(walk, trackingCommit, mergeBase);
 
-      if (behindCount > 1000) {
-        return new BranchDetailsCommandResult(null, null);
-      }
       return new BranchDetailsCommandResult(aheadCount, behindCount);
     } catch (IOException e) {
       throw new InternalRepositoryException(context.getRepository(), "could not compute ahead/behind", e);
