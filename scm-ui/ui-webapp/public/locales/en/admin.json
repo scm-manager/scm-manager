@@ -89,7 +89,7 @@
     "myCloudogu": {
       "login": {
         "button": {
-          "label": "Connect to mycloudogu"
+          "label": "Connect to"
         },
         "description": "Connect your SCM-Manager with myCloudogu to install special plugins. myCloudogu is the home of the SCM-Manager Community, sustained by the maintainers of the SCM-Manager. You don't have an account yet ? Create a free myCloudogu account while connecting your SCM-Manager instance."
       }

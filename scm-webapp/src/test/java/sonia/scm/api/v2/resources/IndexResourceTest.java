@@ -73,7 +73,7 @@ public class IndexResourceTest {
   }
 
   @Test
-  @SubjectAware(username = "trillian", password = "secret")
+  @SubjectAware(username = "dent", password = "secret")
   public void shouldRenderPluginCenterLoginLink() {
     when(pluginCenterAuthenticator.isAuthenticated()).thenReturn(false);
     configuration.setPluginAuthUrl(ScmConfiguration.DEFAULT_PLUGIN_AUTH_URL);
@@ -84,7 +84,7 @@ public class IndexResourceTest {
   }
 
   @Test
-  @SubjectAware(username = "trillian", password = "secret")
+  @SubjectAware(username = "dent", password = "secret")
   public void shouldNotRenderPluginCenterLoginLinkIfAlreadyAuthenticated() {
     when(pluginCenterAuthenticator.isAuthenticated()).thenReturn(true);
 
@@ -94,10 +94,18 @@ public class IndexResourceTest {
   }
 
   @Test
-  @SubjectAware(username = "trillian", password = "secret")
+  @SubjectAware(username = "dent", password = "secret")
   public void shouldNotRenderPluginCenterLoginLinkIfNotDefaultAuthLinkConfigured() {
     configuration.setPluginAuthUrl("https://hitchhiker.com/auth");
 
+    IndexDto index = indexResource.getIndex();
+
+    Assertions.assertThat(index.getLinks().getLinkBy("pluginCenterLogin")).isNotPresent();
+  }
+
+  @Test
+  @SubjectAware(username = "trillian", password = "secret")
+  public void shouldNotRenderPluginCenterLoginLinkIfPermissionsAreMissing() {
     IndexDto index = indexResource.getIndex();
 
     Assertions.assertThat(index.getLinks().getLinkBy("pluginCenterLogin")).isNotPresent();

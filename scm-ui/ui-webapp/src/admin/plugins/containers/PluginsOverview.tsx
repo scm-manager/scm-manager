@@ -41,13 +41,9 @@ import ExecutePendingActionModal from "../components/ExecutePendingActionModal";
 import CancelPendingActionModal from "../components/CancelPendingActionModal";
 import UpdateAllActionModal from "../components/UpdateAllActionModal";
 import ShowPendingModal from "../components/ShowPendingModal";
-import { useAvailablePlugins, useInstalledPlugins, usePendingPlugins, usePluginCenterLogin } from "@scm-manager/ui-api";
+import { useAvailablePlugins, useInstalledPlugins, usePendingPlugins } from "@scm-manager/ui-api";
 import PluginModal from "../components/PluginModal";
-import styled from "styled-components";
-
-const MyCloudoguBannerWrapper = styled.div`
-  border: 1px solid #123;
-`;
+import MyCloudoguBanner from "../components/MyCloudoguBanner";
 
 export enum PluginAction {
   INSTALL = "install",
@@ -83,7 +79,6 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
   const [showUpdateAllModal, setShowUpdateAllModal] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [pluginModalContent, setPluginModalContent] = useState<PluginModalContent | null>(null);
-  const login = usePluginCenterLogin();
   const collection = installed ? installedPlugins : availablePlugins;
   const error = (installed ? installedPluginsError : availablePluginsError) || pendingPluginsError;
   const loading = (installed ? isLoadingInstalledPlugins : isLoadingAvailablePlugins) || isLoadingPendingPlugins;
@@ -214,26 +209,12 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
     return <Loading />;
   }
 
-  const MyCloudoguBanner = () => (
-    <MyCloudoguBannerWrapper className="has-rounded-border is-flex is-flex-direction-column is-align-items-center p-5 mb-4">
-      <Button
-        className="mb-5"
-        color="primary"
-        reducedMobile={true}
-        icon="cloud"
-        label={t("plugins.myCloudogu.login.button.label")}
-        link={login}
-      />
-      <p className="is-align-self-flex-start is-size-7">{t("plugins.myCloudogu.login.description")}</p>
-    </MyCloudoguBannerWrapper>
-  );
-
   const actions = createActions();
   return (
     <>
       {renderHeader(actions)}
       <hr className="header-with-actions" />
-      {login ? <MyCloudoguBanner /> : null}
+      <MyCloudoguBanner />
       {renderPluginsList()}
       {renderFooter(actions)}
       {renderModals()}

@@ -102,7 +102,7 @@ public class IndexDtoGenerator extends HalAppenderMapper {
     if (shouldAppendSubjectRelatedLinks()) {
       builder.single(link("me", resourceLinks.me().self()));
 
-      if (!pluginCenterAuthenticator.isAuthenticated() && configuration.isDefaultPluginAuthUrl()) {
+      if (PluginPermissions.write().isPermitted() && !pluginCenterAuthenticator.isAuthenticated() && configuration.isDefaultPluginAuthUrl()) {
         builder.single(link("pluginCenterLogin", resourceLinks.pluginCenterAuth().auth()));
       }
 
