@@ -26,7 +26,7 @@ import { Link as ReactLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import { Branch, BranchDetails, Link } from "@scm-manager/ui-types";
-import { DateFromNow, Icon, Loading } from "@scm-manager/ui-components";
+import { DateFromNow, Icon } from "@scm-manager/ui-components";
 import DefaultBranchTag from "./DefaultBranchTag";
 import AheadBehindTag from "./AheadBehindTag";
 
@@ -69,6 +69,23 @@ const BranchRow: FC<Props> = ({ baseUrl, branch, onDelete, details }) => {
     );
   };
 
+  const committedAt = (
+    <>
+      {t("branches.table.lastCommit")} <DateFromNow date={branch.lastCommitDate} />
+    </>
+  );
+
+  let committedAtBy;
+  if (branch.lastCommitter?.name) {
+    committedAtBy = (
+      <>
+        {committedAt} {t("branches.table.lastCommitter", { name: branch.lastCommitter?.name })}
+      </>
+    );
+  } else {
+    committedAtBy = committedAt;
+  }
+
   return (
     <tr>
       <td className="is-flex">
@@ -77,8 +94,7 @@ const BranchRow: FC<Props> = ({ baseUrl, branch, onDelete, details }) => {
         </ReactLink>
         {branch.lastCommitDate && (
           <span className={classNames("has-text-grey", "is-ellipsis-overflow", "is-size-7", "ml-4")}>
-            {t("branches.table.lastCommit")} <DateFromNow date={branch.lastCommitDate} />{" "}
-            {t("branches.table.lastCommitter", { name: branch.lastCommitter.name })}
+            {committedAtBy}
           </span>
         )}
       </td>
