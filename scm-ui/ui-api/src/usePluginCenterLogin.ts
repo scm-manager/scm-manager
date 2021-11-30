@@ -23,22 +23,12 @@
  */
 
 import { useIndexLink } from "./base";
-import { useMutation } from "react-query";
-import { apiClient } from "./apiclient";
 import { useLocation } from "react-router-dom";
 
 export const usePluginCenterLogin = () => {
   const link = useIndexLink("pluginCenterLogin");
-  const location = useLocation();
-  const { mutate, isLoading, error } = useMutation<unknown, Error, void>(() =>
-    apiClient.get(`${link}?source=${location.pathname}`)
-  );
-
-  const login = () => mutate();
-
-  return {
-    login: link ? login : undefined,
-    isLoading,
-    error
-  };
+  if (link) {
+    const location = useLocation();
+    return `${link}?source=${location.pathname}`;
+  }
 };

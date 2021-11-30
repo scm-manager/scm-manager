@@ -61,32 +61,43 @@ const Button: FC<Props> = ({
   loading,
   disabled,
   action,
-  color = "default",
+  color = "default"
 }) => {
   const renderIcon = () => {
     return <>{icon ? <Icon name={icon} color="inherit" className="is-medium pr-1" /> : null}</>;
   };
 
+  const classes = classNames(
+    "button",
+    "is-" + color,
+    { "is-loading": loading },
+    { "is-fullwidth": fullWidth },
+    { "is-reduced-mobile": reducedMobile },
+    className
+  );
+
+  const content = (
+    <>
+      {renderIcon()}{" "}
+      {(label || children) && (
+        <>
+          {label} {children}
+        </>
+      )}
+    </>
+  );
+
   if (link && !disabled) {
+    if (link.includes("://")) {
+      return (
+        <a className={classes} href={link} aria-label={label}>
+          {content}
+        </a>
+      );
+    }
     return (
-      <Link
-        className={classNames(
-          "button",
-          "is-" + color,
-          { "is-loading": loading },
-          { "is-fullwidth": fullWidth },
-          { "is-reduced-mobile": reducedMobile },
-          className
-        )}
-        to={link}
-        aria-label={label}
-      >
-        {renderIcon()}{" "}
-        {(label || children) && (
-          <>
-            {label} {children}
-          </>
-        )}
+      <Link className={classes} to={link} aria-label={label}>
+        {content}
       </Link>
     );
   }
@@ -96,23 +107,11 @@ const Button: FC<Props> = ({
       type={type}
       title={title}
       disabled={disabled}
-      onClick={(event) => action && action(event)}
-      className={classNames(
-        "button",
-        "is-" + color,
-        { "is-loading": loading },
-        { "is-fullwidth": fullWidth },
-        { "is-reduced-mobile": reducedMobile },
-        className
-      )}
+      onClick={event => action && action(event)}
+      className={classes}
       {...createAttributesForTesting(testId)}
     >
-      {renderIcon()}{" "}
-      {(label || children) && (
-        <>
-          {label} {children}
-        </>
-      )}
+      {content}
     </button>
   );
 };

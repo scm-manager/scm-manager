@@ -83,14 +83,10 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
   const [showUpdateAllModal, setShowUpdateAllModal] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [pluginModalContent, setPluginModalContent] = useState<PluginModalContent | null>(null);
-  const { login, isLoading: isLoggingIntoPluginCenter, error: pluginCenterAuthError } = usePluginCenterLogin();
+  const login = usePluginCenterLogin();
   const collection = installed ? installedPlugins : availablePlugins;
-  const error =
-    (installed ? installedPluginsError : availablePluginsError) || pendingPluginsError || pluginCenterAuthError;
-  const loading =
-    (installed ? isLoadingInstalledPlugins : isLoadingAvailablePlugins) ||
-    isLoadingPendingPlugins ||
-    isLoggingIntoPluginCenter;
+  const error = (installed ? installedPluginsError : availablePluginsError) || pendingPluginsError;
+  const loading = (installed ? isLoadingInstalledPlugins : isLoadingAvailablePlugins) || isLoadingPendingPlugins;
 
   const renderHeader = (actions: React.ReactNode) => {
     return (
@@ -175,7 +171,7 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
   };
 
   const computeUpdateAllSize = () => {
-    const outdatedPlugins = collection?._embedded.plugins.filter((p: Plugin) => p._links.update).length;
+    const outdatedPlugins = collection?._embedded?.plugins.filter((p: Plugin) => p._links.update).length;
     return t("plugins.outdatedPlugins", {
       count: outdatedPlugins
     });
@@ -226,7 +222,7 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
         reducedMobile={true}
         icon="cloud"
         label={t("plugins.myCloudogu.login.button.label")}
-        action={login}
+        link={login}
       />
       <p className="is-align-self-flex-start is-size-7">{t("plugins.myCloudogu.login.description")}</p>
     </MyCloudoguBannerWrapper>
