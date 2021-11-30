@@ -70,13 +70,19 @@ class PluginCenterAuthenticatorTest {
 
   @BeforeEach
   void setUpObjectUnderTest() {
-    scmConfiguration =  new ScmConfiguration();
+    scmConfiguration = new ScmConfiguration();
     authenticator = new PluginCenterAuthenticator(factory, scmConfiguration, advancedHttpClient);
   }
 
   @Test
   @SubjectAware("marvin")
-  void shouldFailAuthenticationWithoutPermission() {
+  void shouldFailAuthenticationWithoutPermissions() {
+    assertThrows(AuthorizationException.class, () -> authenticator.authenticate("refresh-token"));
+  }
+
+  @Test
+  @SubjectAware(value = "marvin", permissions = "plugin:read")
+  void shouldFailAuthenticationWithReadPermissions() {
     assertThrows(AuthorizationException.class, () -> authenticator.authenticate("refresh-token"));
   }
 
@@ -87,130 +93,130 @@ class PluginCenterAuthenticatorTest {
   }
 
   @Nested
-  @SubjectAware(value = "trillian", permissions = "plugin:write")
+  @SubjectAware(value = "trillian", permissions = {"plugin:read", "plugin:write"})
   class WithPermissions {
 
-  @Test
-  void shouldReturnFalseWithoutRefreshToken() {
-    assertThat(authenticator.isAuthenticated()).isFalse();
-  }
+    @Test
+    void shouldReturnFalseWithoutRefreshToken() {
+      assertThat(authenticator.isAuthenticated()).isFalse();
+    }
 
-  @Test
-  void shouldFailWithoutRefreshToken() {
-    assertThrows(IllegalArgumentException.class, () -> authenticator.authenticate(null));
-  }
+    @Test
+    void shouldFailWithoutRefreshToken() {
+      assertThrows(IllegalArgumentException.class, () -> authenticator.authenticate(null));
+    }
 
-  @Test
-  void shouldFailWithEmptyRefreshToken() {
-    assertThrows(IllegalArgumentException.class, () -> authenticator.authenticate(""));
-  }
+    @Test
+    void shouldFailWithEmptyRefreshToken() {
+      assertThrows(IllegalArgumentException.class, () -> authenticator.authenticate(""));
+    }
 
-  @Test
-  void shouldFailWithoutPluginAuthUrl() {
-    scmConfiguration.setPluginAuthUrl(null);
-    // TODO
-    assertThrows(IllegalStateException.class, () -> authenticator.authenticate("my-awesome-refresh-token"));
-  }
+    @Test
+    void shouldFailWithoutPluginAuthUrl() {
+      scmConfiguration.setPluginAuthUrl(null);
+      // TODO
+      assertThrows(IllegalStateException.class, () -> authenticator.authenticate("my-awesome-refresh-token"));
+    }
 
-  @Test
-  void shouldAuthenticate() throws IOException {
-    mockAuthProtocol("https://plugin-center-api.scm-manager.org/api/v1/auth/oidc/refresh", "access", "refresh");
+    @Test
+    void shouldAuthenticate() throws IOException {
+      mockAuthProtocol("https://plugin-center-api.scm-manager.org/api/v1/auth/oidc/refresh", "access", "refresh");
 
-    authenticator.authenticate("my-awesome-refresh-token");
-    assertThat(authenticator.isAuthenticated()).isTrue();
-  }
+      authenticator.authenticate("my-awesome-refresh-token");
+      assertThat(authenticator.isAuthenticated()).isTrue();
+    }
 
-  @Test
-  void shouldFailFetchWithoutPriorAuthentication() {
-    assertThrows(IllegalStateException.class, () -> authenticator.fetchAccessToken());
-  }
+    @Test
+    void shouldFailFetchWithoutPriorAuthentication() {
+      assertThrows(IllegalStateException.class, () -> authenticator.fetchAccessToken());
+    }
 
-  @Test
-  void shouldUseUrlFromScmConfiguration() throws IOException {
-    preAuth("cool-refresh-token");
-    scmConfiguration.setPluginAuthUrl("https://pca.org/oidc/");
-    mockAuthProtocol("https://pca.org/oidc/refresh", "access", "refresh");
+    @Test
+    void shouldUseUrlFromScmConfiguration() throws IOException {
+      preAuth("cool-refresh-token");
+      scmConfiguration.setPluginAuthUrl("https://pca.org/oidc/");
+      mockAuthProtocol("https://pca.org/oidc/refresh", "access", "refresh");
 
-    String accessToken = authenticator.fetchAccessToken();
-    assertThat(accessToken).isEqualTo("access");
-  }
+      String accessToken = authenticator.fetchAccessToken();
+      assertThat(accessToken).isEqualTo("access");
+    }
 
-  @Test
-  void shouldFailIfFetchFails() throws IOException {
-    preAuth("cool-refresh-token");
-    scmConfiguration.setPluginAuthUrl("https://plug.ins/oidc/");
+    @Test
+    void shouldFailIfFetchFails() throws IOException {
+      preAuth("cool-refresh-token");
+      scmConfiguration.setPluginAuthUrl("https://plug.ins/oidc/");
 
-    when(advancedHttpClient.post("https://plug.ins/oidc/refresh")).thenReturn(request);
-    when(request.request()).thenThrow(new IOException("network down down down"));
+      when(advancedHttpClient.post("https://plug.ins/oidc/refresh")).thenReturn(request);
+      when(request.request()).thenThrow(new IOException("network down down down"));
 
-    assertThrows(FetchAccessTokenFailedException.class, () -> authenticator.fetchAccessToken());
-  }
+      assertThrows(FetchAccessTokenFailedException.class, () -> authenticator.fetchAccessToken());
+    }
 
-  @Test
-  void shouldFailIfFetchResponseIsNotSuccessful() throws IOException {
-    preAuth("cool-refresh-token");
-    scmConfiguration.setPluginAuthUrl("https://plug.ins/oidc/");
+    @Test
+    void shouldFailIfFetchResponseIsNotSuccessful() throws IOException {
+      preAuth("cool-refresh-token");
+      scmConfiguration.setPluginAuthUrl("https://plug.ins/oidc/");
 
-    when(advancedHttpClient.post("https://plug.ins/oidc/refresh")).thenReturn(request);
+      when(advancedHttpClient.post("https://plug.ins/oidc/refresh")).thenReturn(request);
 
-    AdvancedHttpResponse response = mock(AdvancedHttpResponse.class);
-    when(request.request()).thenReturn(response);
+      AdvancedHttpResponse response = mock(AdvancedHttpResponse.class);
+      when(request.request()).thenReturn(response);
 
-    when(response.isSuccessful()).thenReturn(false);
+      when(response.isSuccessful()).thenReturn(false);
 
-    assertThrows(FetchAccessTokenFailedException.class, () -> authenticator.fetchAccessToken());
-  }
+      assertThrows(FetchAccessTokenFailedException.class, () -> authenticator.fetchAccessToken());
+    }
 
-  @Test
-  void shouldFetchAccessToken() throws IOException {
-    preAuth("cool-refresh-token");
-    mockAuthProtocol("https://plugin-center-api.scm-manager.org/api/v1/auth/oidc/refresh", "access", "refresh");
+    @Test
+    void shouldFetchAccessToken() throws IOException {
+      preAuth("cool-refresh-token");
+      mockAuthProtocol("https://plugin-center-api.scm-manager.org/api/v1/auth/oidc/refresh", "access", "refresh");
 
-    String accessToken = authenticator.fetchAccessToken();
-    assertThat(accessToken).isEqualTo("access");
-  }
+      String accessToken = authenticator.fetchAccessToken();
+      assertThat(accessToken).isEqualTo("access");
+    }
 
-  @Test
-  void shouldStoreRefreshTokenAfterFetch() throws IOException {
-    preAuth("refreshOne");
-    mockAuthProtocol("https://plugin-center-api.scm-manager.org/api/v1/auth/oidc/refresh", "accessTwo", "refreshTwo");
+    @Test
+    void shouldStoreRefreshTokenAfterFetch() throws IOException {
+      preAuth("refreshOne");
+      mockAuthProtocol("https://plugin-center-api.scm-manager.org/api/v1/auth/oidc/refresh", "accessTwo", "refreshTwo");
 
-    authenticator.fetchAccessToken();
-    authenticator.fetchAccessToken();
+      authenticator.fetchAccessToken();
+      authenticator.fetchAccessToken();
 
-    ArgumentCaptor<RefreshRequest> captor = ArgumentCaptor.forClass(RefreshRequest.class);
-    verify(request, times(2)).jsonContent(captor.capture());
+      ArgumentCaptor<RefreshRequest> captor = ArgumentCaptor.forClass(RefreshRequest.class);
+      verify(request, times(2)).jsonContent(captor.capture());
 
-    List<String> refreshTokens = captor.getAllValues()
-      .stream()
-      .map(RefreshRequest::getRefreshToken)
-      .collect(Collectors.toList());
+      List<String> refreshTokens = captor.getAllValues()
+        .stream()
+        .map(RefreshRequest::getRefreshToken)
+        .collect(Collectors.toList());
 
-    assertThat(refreshTokens).containsExactlyInAnyOrder("refreshOne", "refreshTwo");
-  }
+      assertThat(refreshTokens).containsExactlyInAnyOrder("refreshOne", "refreshTwo");
+    }
 
-  @SuppressWarnings("unchecked")
-  private void preAuth(String refreshToken) {
-    Authentication authentication = new Authentication();
-    authentication.setPrincipal("trillian");
-    authentication.setRefreshToken(refreshToken);
-    factory.get(STORE_NAME, null).set(authentication);
-  }
+    @SuppressWarnings("unchecked")
+    private void preAuth(String refreshToken) {
+      Authentication authentication = new Authentication();
+      authentication.setPrincipal("trillian");
+      authentication.setRefreshToken(refreshToken);
+      factory.get(STORE_NAME, null).set(authentication);
+    }
 
-  @CanIgnoreReturnValue
-  private void mockAuthProtocol(String url, String accessToken, String refreshToken) throws IOException {
-    when(advancedHttpClient.post(url)).thenReturn(request);
+    @CanIgnoreReturnValue
+    private void mockAuthProtocol(String url, String accessToken, String refreshToken) throws IOException {
+      when(advancedHttpClient.post(url)).thenReturn(request);
 
-    AdvancedHttpResponse response = mock(AdvancedHttpResponse.class);
-    when(request.request()).thenReturn(response);
+      AdvancedHttpResponse response = mock(AdvancedHttpResponse.class);
+      when(request.request()).thenReturn(response);
 
-    RefreshResponse refreshResponse = new RefreshResponse();
-    refreshResponse.setAccessToken(accessToken);
-    refreshResponse.setRefreshToken(refreshToken);
-    when(response.contentFromJson(RefreshResponse.class)).thenReturn(refreshResponse);
+      RefreshResponse refreshResponse = new RefreshResponse();
+      refreshResponse.setAccessToken(accessToken);
+      refreshResponse.setRefreshToken(refreshToken);
+      when(response.contentFromJson(RefreshResponse.class)).thenReturn(refreshResponse);
 
-    when(response.isSuccessful()).thenReturn(true);
-  }
+      when(response.isSuccessful()).thenReturn(true);
+    }
 
   }
 

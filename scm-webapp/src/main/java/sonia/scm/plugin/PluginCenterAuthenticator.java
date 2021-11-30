@@ -67,6 +67,7 @@ public class PluginCenterAuthenticator {
   }
 
   public void authenticate(String refreshToken) {
+    // only a user which is able to manage plugins, sho
     PluginPermissions.write().check();
 
     Preconditions.checkArgument(!Strings.isNullOrEmpty(refreshToken), "refresh token is required");
@@ -79,7 +80,7 @@ public class PluginCenterAuthenticator {
   }
 
   public String fetchAccessToken() {
-    PluginPermissions.write().check();
+    PluginPermissions.read().check();
     Authentication authentication = getAuthentication()
       .orElseThrow(() -> new IllegalStateException("An access token can only be obtained, after a prior authentication"));
     return fetchAccessToken(authentication.getPrincipal(), authentication.getRefreshToken());
