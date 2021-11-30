@@ -47,10 +47,6 @@ const BranchTableWrapper: FC<Props> = ({ repository, baseUrl, data }) => {
     ...staleBranches
   ]);
 
-  if (error) {
-    return <ErrorNotification error={error} />;
-  }
-
   if (branches.length === 0) {
     return <Notification type="info">{t("branches.overview.noBranches")}</Notification>;
   }
@@ -60,6 +56,7 @@ const BranchTableWrapper: FC<Props> = ({ repository, baseUrl, data }) => {
   return (
     <>
       <Subtitle subtitle={t("branches.overview.title")} />
+      <ErrorNotification error={error} />
       {activeBranches.length > 0 ? (
         <BranchTable
           repository={repository}
