@@ -26,19 +26,23 @@ package sonia.scm.api.v2.resources;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
+import de.otto.edison.hal.Link;
+import de.otto.edison.hal.Links;
 import sonia.scm.ExceptionWithContext;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.plugin.AuthenticationInfo;
 import sonia.scm.plugin.PluginCenterAuthenticator;
+import sonia.scm.plugin.PluginPermissions;
 import sonia.scm.security.XsrfExcludes;
+import sonia.scm.user.DisplayUser;
+import sonia.scm.user.UserDisplayManager;
 import sonia.scm.util.HttpUtil;
+import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.*;
 import java.net.URI;
 import java.util.Optional;
 import java.util.UUID;
@@ -60,20 +64,30 @@ public class PluginCenterAuthResource {
   private final ScmPathInfoStore pathInfoStore;
   private final PluginCenterAuthenticator authenticator;
   private final ScmConfiguration configuration;
+  private final UserDisplayManager userDisplayManager;
   private final XsrfExcludes excludes;
   private final ChallengeGenerator challengeGenerator;
 
   private String challenge;
 
   @Inject
-  public PluginCenterAuthResource(ScmPathInfoStore pathInfoStore, PluginCenterAuthenticator authenticator, ScmConfiguration scmConfiguration, XsrfExcludes excludes) {
-    this(pathInfoStore, authenticator, scmConfiguration, excludes, () -> UUID.randomUUID().toString());
+  public PluginCenterAuthResource(
+    ScmPathInfoStore pathInfoStore,
+    PluginCenterAuthenticator authenticator,
+    UserDisplayManager userDisplayManager,
+    ScmConfiguration scmConfiguration,
+    XsrfExcludes excludes
+  ) {
+    this(
+      pathInfoStore, authenticator, userDisplayManager, scmConfiguration, excludes, () -> UUID.randomUUID().toString()
+    );
   }
 
   @VisibleForTesting
   PluginCenterAuthResource(
     ScmPathInfoStore pathInfoStore,
     PluginCenterAuthenticator authenticator,
+    UserDisplayManager userDisplayManager,
     ScmConfiguration configuration,
     XsrfExcludes excludes,
     ChallengeGenerator challengeGenerator
@@ -81,12 +95,14 @@ public class PluginCenterAuthResource {
     this.pathInfoStore = pathInfoStore;
     this.authenticator = authenticator;
     this.configuration = configuration;
+    this.userDisplayManager = userDisplayManager;
     this.excludes = excludes;
     this.challengeGenerator = challengeGenerator;
   }
 
   @GET
   @Path("")
+  @Produces(MediaType.TEXT_HTML)
   public Response auth(@Context UriInfo uriInfo, @QueryParam("source") String sourceUri) {
     String pluginAuthUrl = configuration.getPluginAuthUrl();
 
@@ -114,6 +130,44 @@ public class PluginCenterAuthResource {
 
     URI authUri = UriBuilder.fromUri(pluginAuthUrl).queryParam("instance", callbackUri.toASCIIString()).build();
     return Response.seeOther(authUri).build();
+  }
+
+  @GET
+  @Path("")
+  @Produces(VndMediaType.PLUGIN_CENTER_AUTH_INFO)
+  public Response authenticationInfo(@Context UriInfo uriInfo) {
+    Optional<AuthenticationInfo> authentication = authenticator.getAuthenticationInfo();
+    if (authentication.isPresent()) {
+      AuthenticationInfo info = authentication.get();
+      PluginCenterAuthenticationInfoDto dto = new PluginCenterAuthenticationInfoDto(
+        createLinks(uriInfo)
+      );
+      dto.setPrincipal(getPrincipalDisplayName(info.getPrincipal()));
+      dto.setPluginCenterSubject(info.getPluginCenterSubject());
+      dto.setDate(info.getDate());
+      return Response.ok(dto).build();
+    }
+    return Response.status(Response.Status.NOT_FOUND).build();
+  }
+
+  private Links createLinks(UriInfo uriInfo) {
+    String self = uriInfo.getAbsolutePath().toASCIIString();
+    Links.Builder builder = Links.linkingTo().self(self);
+    if (PluginPermissions.write().isPermitted()) {
+      builder.single(Link.link("logout", self));
+    }
+    return builder.build();
+  }
+
+  private String getPrincipalDisplayName(String principal) {
+    return userDisplayManager.get(principal).map(DisplayUser::getDisplayName).orElse(principal);
+  }
+
+  @DELETE
+  @Path("")
+  public Response logout() {
+    authenticator.logout();
+    return Response.noContent().build();
   }
 
   @POST

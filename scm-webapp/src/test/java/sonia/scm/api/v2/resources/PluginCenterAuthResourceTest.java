@@ -24,8 +24,14 @@
 
 package sonia.scm.api.v2.resources;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.inject.util.Providers;
+import lombok.Value;
+import org.github.sdorra.jse.ShiroExtension;
+import org.github.sdorra.jse.SubjectAware;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,21 +41,30 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.plugin.AuthenticationInfo;
 import sonia.scm.plugin.FetchAccessTokenFailedException;
 import sonia.scm.plugin.PluginCenterAuthenticator;
 import sonia.scm.security.XsrfExcludes;
+import sonia.scm.user.DisplayUser;
+import sonia.scm.user.UserDisplayManager;
+import sonia.scm.user.UserTestData;
 import sonia.scm.web.RestDispatcher;
+import sonia.scm.web.VndMediaType;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.Instant;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 import static sonia.scm.api.v2.resources.PluginCenterAuthResource.*;
 
-@ExtendWith(MockitoExtension.class)
+@ExtendWith({MockitoExtension.class, ShiroExtension.class})
 class PluginCenterAuthResourceTest {
 
   private final RestDispatcher dispatcher = new RestDispatcher();
@@ -65,6 +80,9 @@ class PluginCenterAuthResourceTest {
   @Mock
   private ChallengeGenerator challengeGenerator;
 
+  @Mock
+  private UserDisplayManager userDisplayManager;
+
   @BeforeEach
   void setUpDispatcher() {
     ScmPathInfoStore pathInfoStore = new ScmPathInfoStore();
@@ -74,9 +92,74 @@ class PluginCenterAuthResourceTest {
         null,
         null,
         null,
-        Providers.of(new PluginCenterAuthResource(pathInfoStore, authenticator, scmConfiguration, excludes, challengeGenerator))
+        Providers.of(new PluginCenterAuthResource(pathInfoStore, authenticator, userDisplayManager, scmConfiguration, excludes, challengeGenerator))
       )
     );
+  }
+
+  @Nested
+  class GetAuthenticationInfo {
+
+    @Test
+    void shouldReturnNotFoundIfNotAuthenticated() throws URISyntaxException {
+      MockHttpResponse response = get("/v2/plugins/auth", VndMediaType.PLUGIN_CENTER_AUTH_INFO);
+      assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_NOT_FOUND);
+    }
+
+    @Test
+    void shouldReturnAuthenticationInfo() throws IOException, URISyntaxException {
+      JsonNode root = requestAuthInfo();
+
+      assertThat(root.get("principal").asText()).isEqualTo("Tricia McMillan");
+      assertThat(root.get("pluginCenterSubject").asText()).isEqualTo("tricia.mcmillan@hitchhiker.com");
+      assertThat(root.get("date").asText()).isNotEmpty();
+      assertThat(root.get("_links").get("self").get("href").asText()).isEqualTo("/v2/plugins/auth");
+    }
+
+    @Test
+    void shouldNotReturnLogoutLinkWithoutWritePermission() throws IOException, URISyntaxException {
+      JsonNode root = requestAuthInfo();
+
+      assertThat(root.get("_links").has("logout")).isFalse();
+    }
+
+    @Test
+    @SubjectAware(value = "marvin", permissions = "plugin:write")
+    void shouldNotReturnLogoutLinkIfPermitted() throws IOException, URISyntaxException {
+      JsonNode root = requestAuthInfo();
+
+      assertThat(root.get("_links").get("logout").get("href").asText()).isEqualTo("/v2/plugins/auth");
+    }
+
+    private JsonNode requestAuthInfo() throws IOException, URISyntaxException {
+      AuthenticationInfo info = new SimpleAuthenticationInfo(
+        "trillian", "tricia.mcmillan@hitchhiker.com", Instant.now()
+      );
+      when(authenticator.getAuthenticationInfo()).thenReturn(Optional.of(info));
+
+      DisplayUser user = DisplayUser.from(UserTestData.createTrillian());
+      when(userDisplayManager.get("trillian")).thenReturn(Optional.of(user));
+
+      MockHttpResponse response = get("/v2/plugins/auth", VndMediaType.PLUGIN_CENTER_AUTH_INFO);
+
+      ObjectMapper mapper = new ObjectMapper();
+      return mapper.readTree(response.getContentAsString());
+    }
+
+  }
+
+  @Nested
+  class Logout {
+
+    @Test
+    void shouldLogout() throws URISyntaxException {
+      MockHttpResponse response = request(MockHttpRequest.delete("/v2/plugins/auth"));
+
+      verify(authenticator).logout();
+
+      assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_NO_CONTENT);
+    }
+
   }
 
   @Nested
@@ -233,7 +316,19 @@ class PluginCenterAuthResourceTest {
 
   @CanIgnoreReturnValue
   private MockHttpResponse get(String uri) throws URISyntaxException {
+    return get(uri, null);
+  }
+
+  @CanIgnoreReturnValue
+  private MockHttpResponse get(String uri, String accept) throws URISyntaxException {
     MockHttpRequest request = MockHttpRequest.get(uri);
+    if (accept != null) {
+      request.accept(accept);
+    }
+    return request(request);
+  }
+
+  private MockHttpResponse request(MockHttpRequest request) {
     MockHttpResponse response = new MockHttpResponse();
     dispatcher.invoke(request, response);
     return response;
@@ -250,6 +345,13 @@ class PluginCenterAuthResourceTest {
   private void assertRedirect(MockHttpResponse response, Consumer<String> location) {
     assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_SEE_OTHER);
     location.accept(response.getOutputHeaders().getFirst("Location").toString());
+  }
+
+  @Value
+  private static class SimpleAuthenticationInfo implements AuthenticationInfo {
+    String principal;
+    String pluginCenterSubject;
+    Instant date;
   }
 
   private static final ScmPathInfo rootPathInfo = new ScmPathInfo() {
