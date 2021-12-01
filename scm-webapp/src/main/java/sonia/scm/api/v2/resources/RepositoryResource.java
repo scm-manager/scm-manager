@@ -248,6 +248,7 @@ public class RepositoryResource {
     Repository repository = loadBy(namespace, name).get();
     manager.archive(repository);
   }
+
   /**
    * Marks the given repository as not "archived".
    *
@@ -312,6 +313,11 @@ public class RepositoryResource {
   @Path("branches/")
   public BranchRootResource branches() {
     return resourceProvider.getBranchRootResource();
+  }
+
+  @Path("branch-details/")
+  public BranchDetailsResource branchDetails() {
+    return resourceProvider.getBranchDetailsResource();
   }
 
   @Path("changesets/")

@@ -100,8 +100,7 @@ public final class BranchesCommandBuilder
     {
       if (logger.isDebugEnabled())
       {
-        logger.debug("get branches for repository {} with disabled cache",
-          repository.getName());
+        logger.debug("get branches for repository {} with disabled cache", repository);
       }
 
       branches = getBranchesFromCommand();
@@ -125,8 +124,7 @@ public final class BranchesCommandBuilder
       }
       else if (logger.isDebugEnabled())
       {
-        logger.debug("get branches for repository {} from cache",
-          repository.getName());
+        logger.debug("get branches for repository {} from cache", repository);
       }
     }
 

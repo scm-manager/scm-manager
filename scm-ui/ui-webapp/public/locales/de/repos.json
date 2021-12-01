@@ -127,7 +127,8 @@
         "active": "Aktive Branches",
         "stale": "Stale Branches"
       },
-      "lastCommit": "Letzter Commit"
+      "lastCommit": "Letzter Commit",
+      "lastCommitter": "von {{name}}"
     },
     "create": {
       "title": "Branch erstellen",
@@ -142,6 +143,9 @@
     "sources": "Sources",
     "defaultTag": "Default",
     "dangerZone": "Branch löschen",
+    "aheadBehind": {
+      "tooltip": "{{ahead}} Commit(s) vor, {{behind}} Commit(s) hinter dem Default Branch"
+    },
     "delete": {
       "button": "Branch löschen",
       "subtitle": "Branch löschen",

@@ -21,29 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
-import { Repository } from "@scm-manager/ui-types";
-import { ErrorNotification, Loading } from "@scm-manager/ui-components";
-import { useBranches } from "@scm-manager/ui-api";
-import BranchTableWrapper from "./BranchTableWrapper";
 
-type Props = {
-  repository: Repository;
-  baseUrl: string;
-};
+import { calculateBarLength } from "./aheadBehind";
 
-const BranchesOverview: FC<Props> = ({ repository, baseUrl }) => {
-  const { isLoading, error, data } = useBranches(repository);
+describe("ahead/behind percentage", () => {
+  it("0 should have percentage value of 5", () => {
+    const percentage = calculateBarLength(0);
+    expect(percentage).toEqual(5);
+  });
 
-  if (error) {
-    return <ErrorNotification error={error} />;
+  let lastPercentage = 5;
+  for (let changesets = 1; changesets < 4000; changesets++) {
+    it(`${changesets} should have percentage value less or equal to last value`, () => {
+      const percentage = calculateBarLength(changesets);
+      expect(percentage).toBeGreaterThanOrEqual(lastPercentage);
+      lastPercentage = percentage;
+    });
   }
 
-  if (!data || isLoading) {
-    return <Loading />;
-  }
-
-  return <BranchTableWrapper repository={repository} baseUrl={baseUrl} data={data} />;
-};
-
-export default BranchesOverview;
+  it("10000 should not have percentage value bigger than 100", () => {
+    const percentage = calculateBarLength(10000);
+    expect(percentage).toEqual(100);
+  });
+});

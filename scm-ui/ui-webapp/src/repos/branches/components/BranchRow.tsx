@@ -25,42 +25,80 @@ import React, { FC } from "react";
 import { Link as ReactLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
-import { Branch, Link } from "@scm-manager/ui-types";
+import { Branch, BranchDetails, Link } from "@scm-manager/ui-types";
 import { DateFromNow, Icon } from "@scm-manager/ui-components";
 import DefaultBranchTag from "./DefaultBranchTag";
+import AheadBehindTag from "./AheadBehindTag";
 
 type Props = {
   baseUrl: string;
   branch: Branch;
   onDelete: (branch: Branch) => void;
+  details?: BranchDetails;
 };
 
-const BranchRow: FC<Props> = ({ baseUrl, branch, onDelete }) => {
+const BranchRow: FC<Props> = ({ baseUrl, branch, onDelete, details }) => {
   const to = `${baseUrl}/${encodeURIComponent(branch.name)}/info`;
   const [t] = useTranslation("repos");
 
   let deleteButton;
   if ((branch?._links?.delete as Link)?.href) {
     deleteButton = (
-      <span className="icon is-small is-hovered" onClick={() => onDelete(branch)} onKeyDown={(e) => e.key === "Enter" && onDelete(branch)} tabIndex={0}>
+      <span
+        className="icon is-small is-hovered is-clickable"
+        onClick={() => onDelete(branch)}
+        onKeyDown={e => e.key === "Enter" && onDelete(branch)}
+        tabIndex={0}
+      >
         <Icon name="trash" className="fas " title={t("branch.delete.button")} />
       </span>
     );
   }
 
+  const renderBranchTag = () => {
+    if (branch.defaultBranch) {
+      return <DefaultBranchTag defaultBranch={branch.defaultBranch} />;
+    }
+    if (details) {
+      return <AheadBehindTag branch={branch} details={details} />;
+    }
+    return (
+      <div className="loader-wrapper">
+        <div className="loader is-loading" />
+      </div>
+    );
+  };
+
+  const committedAt = (
+    <>
+      {t("branches.table.lastCommit")} <DateFromNow date={branch.lastCommitDate} />
+    </>
+  );
+
+  let committedAtBy;
+  if (branch.lastCommitter?.name) {
+    committedAtBy = (
+      <>
+        {committedAt} {t("branches.table.lastCommitter", { name: branch.lastCommitter?.name })}
+      </>
+    );
+  } else {
+    committedAtBy = committedAt;
+  }
+
   return (
     <tr>
-      <td>
+      <td className="is-flex">
         <ReactLink to={to} title={branch.name}>
           {branch.name}
-          <DefaultBranchTag defaultBranch={branch.defaultBranch} />
         </ReactLink>
         {branch.lastCommitDate && (
           <span className={classNames("has-text-grey", "is-ellipsis-overflow", "is-size-7", "ml-4")}>
-            {t("branches.table.lastCommit")} <DateFromNow date={branch.lastCommitDate} />
+            {committedAtBy}
           </span>
         )}
       </td>
+      <td className="has-text-centered">{renderBranchTag()}</td>
       <td className="is-darker has-text-centered">{deleteButton}</td>
     </tr>
   );

@@ -31,7 +31,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 @SuppressWarnings("squid:S1192")
-  // string literals should not be duplicated
+// string literals should not be duplicated
 class ResourceLinks {
 
   private final ScmPathInfoStore scmPathInfoStore;
@@ -573,6 +573,38 @@ class ResourceLinks {
 
     public String delete(String namespace, String name, String branch) {
       return branchLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("branches").parameters().method("delete").parameters(branch).href();
+    }
+  }
+
+  public BranchDetailsLinks branchDetails() {
+    return new BranchDetailsLinks(scmPathInfoStore.get());
+  }
+
+  static class BranchDetailsLinks {
+    private final LinkBuilder branchDetailsLinkBuilder;
+
+    BranchDetailsLinks(ScmPathInfo pathInfo) {
+      branchDetailsLinkBuilder = new LinkBuilder(pathInfo, RepositoryRootResource.class, RepositoryResource.class, BranchDetailsResource.class);
+    }
+
+    String self(String namespace, String name, String branch) {
+      return branchDetailsLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("branchDetails").parameters().method("getBranchDetails").parameters(branch).href();
+    }
+  }
+
+  public BranchDetailsCollectionLinks branchDetailsCollection() {
+    return new BranchDetailsCollectionLinks(scmPathInfoStore.get());
+  }
+
+  static class BranchDetailsCollectionLinks {
+    private final LinkBuilder branchDetailsLinkBuilder;
+
+    BranchDetailsCollectionLinks(ScmPathInfo pathInfo) {
+      branchDetailsLinkBuilder = new LinkBuilder(pathInfo, RepositoryRootResource.class, RepositoryResource.class, BranchDetailsResource.class);
+    }
+
+    String self(String namespace, String name) {
+      return branchDetailsLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("branchDetails").parameters().method("getBranchDetailsCollection").parameters().href();
     }
   }
 

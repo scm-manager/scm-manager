@@ -24,17 +24,22 @@
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { Tag } from "@scm-manager/ui-components";
+import styled from "styled-components";
 
 type Props = WithTranslation & {
   defaultBranch?: boolean;
 };
+
+const DefaultTag = styled(Tag)`
+  max-height: 1.5em;
+`;
 
 class DefaultBranchTag extends React.Component<Props> {
   render() {
     const { defaultBranch, t } = this.props;
 
     if (defaultBranch) {
-      return <Tag className="ml-3" color="dark" label={t("branch.defaultTag")} />;
+      return <DefaultTag className="is-unselectable" color="dark" label={t("branch.defaultTag")} />;
     }
     return null;
   }

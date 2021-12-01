@@ -21,29 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
-import { Repository } from "@scm-manager/ui-types";
-import { ErrorNotification, Loading } from "@scm-manager/ui-components";
-import { useBranches } from "@scm-manager/ui-api";
-import BranchTableWrapper from "./BranchTableWrapper";
 
-type Props = {
-  repository: Repository;
-  baseUrl: string;
-};
-
-const BranchesOverview: FC<Props> = ({ repository, baseUrl }) => {
-  const { isLoading, error, data } = useBranches(repository);
-
-  if (error) {
-    return <ErrorNotification error={error} />;
+export const calculateBarLength = (changesets: number) => {
+  if (changesets <= 10) {
+    return changesets + 5;
+  } else if (changesets <= 50) {
+    return (changesets - 10) / 5 + 15;
+  } else if (changesets <= 500) {
+    return (changesets - 50) / 10 + 23;
+  } else if (changesets <= 3700) {
+    return (changesets - 500) / 100 + 68;
+  } else {
+    return 100;
   }
-
-  if (!data || isLoading) {
-    return <Loading />;
-  }
-
-  return <BranchTableWrapper repository={repository} baseUrl={baseUrl} data={data} />;
 };
-
-export default BranchesOverview;
