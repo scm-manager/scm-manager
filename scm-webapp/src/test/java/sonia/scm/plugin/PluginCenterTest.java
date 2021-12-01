@@ -45,6 +45,7 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -104,6 +105,16 @@ class PluginCenterTest {
     assertThat(pluginCenter.getAvailable()).isSameAs(first);
     pluginCenter.handle(new PluginCenterLoginEvent(null));
     assertThat(pluginCenter.getAvailable()).isNotSameAs(first);
+  }
+
+  @Test
+  void shouldLoadOnRefresh() {
+    Set<AvailablePlugin> plugins = new HashSet<>();
+    when(loader.load(PLUGIN_URL_BASE + "2.0.0")).thenReturn(plugins);
+
+    pluginCenter.refresh();
+
+    verify(loader).load(PLUGIN_URL_BASE + "2.0.0");
   }
 
 }

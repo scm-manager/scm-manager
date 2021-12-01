@@ -25,6 +25,7 @@
 package sonia.scm.plugin;
 
 import com.github.legman.Subscribe;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContextProvider;
@@ -69,12 +70,24 @@ public class PluginCenter {
     Set<AvailablePlugin> plugins = cache.get(url);
     if (plugins == null) {
       LOG.debug("no cached available plugins found, start fetching");
-      plugins = loader.load(url);
-      cache.put(url, plugins);
+      plugins = fetchAvailablePlugins(url);
     } else {
       LOG.debug("return available plugins from cache");
     }
     return plugins;
+  }
+
+  @CanIgnoreReturnValue
+  private Set<AvailablePlugin> fetchAvailablePlugins(String url) {
+    Set<AvailablePlugin> plugins = loader.load(url);
+    cache.put(url, plugins);
+    return plugins;
+  }
+
+  synchronized void refresh() {
+    LOG.debug("refresh plugin center cache");
+    String url = buildPluginUrl(configuration.getPluginUrl());
+    fetchAvailablePlugins(url);
   }
 
   private String buildPluginUrl(String url) {
