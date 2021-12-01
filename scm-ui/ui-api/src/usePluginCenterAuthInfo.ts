@@ -26,16 +26,26 @@ import { ApiResult, useIndexLink } from "./base";
 import { Link, PluginCenterAuthenticationInfo } from "@scm-manager/ui-types";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { apiClient } from "./apiclient";
+import { useLocation } from "react-router-dom";
 
 export const usePluginCenterAuthInfo = (): ApiResult<PluginCenterAuthenticationInfo> => {
   const link = useIndexLink("pluginCenterAuth");
+  const location = useLocation();
   return useQuery<PluginCenterAuthenticationInfo, Error>(
     ["pluginCenterAuth"],
     () => {
       if (!link) {
         throw new Error("no such plugin center auth link");
       }
-      return apiClient.get(link).then(response => response.json());
+      return apiClient
+        .get(link)
+        .then(response => response.json())
+        .then((result: PluginCenterAuthenticationInfo) => {
+          if (result._links?.login) {
+            (result._links.login as Link).href += `?source=${location.pathname}`;
+          }
+          return result;
+        });
     },
     {
       enabled: !!link
