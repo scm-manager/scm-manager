@@ -27,7 +27,6 @@ package sonia.scm.repository.spi;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.AlreadyExistsException;
 import sonia.scm.ContextEntry;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
@@ -74,14 +73,29 @@ public interface ModifyWorkerHelper extends ModifyCommand.Worker {
    * @since 2.28.0
    */
   @Override
-  default void move(String source, String target) throws IOException {
+  default void move(String source, String target, boolean overwrite) throws IOException {
+    Path sourceFile = getTargetFile(source);
+
+    if (!Files.exists(sourceFile)) {
+      throw notFound(entity("Path", source).in(getRepository()));
+    }
+
     Path targetFile = getTargetFile(target);
+
+    if (!overwrite && Files.exists(targetFile)) {
+      throw alreadyExists(entity("Path", target).in(getRepository()));
+    }
+
+    doThrow()
+      .violation("Cannot move if new path would be a child directory of path")
+      .when(Files.isDirectory(sourceFile) && targetFile.startsWith(sourceFile));
+
     Files.createDirectories(targetFile.getParent());
     try {
-      Path pathAfterMove = Files.move(getTargetFile(source), targetFile);
+      Path pathAfterMove = Files.move(sourceFile, targetFile, REPLACE_EXISTING);
       doScmMove(source, toScmPath(pathAfterMove));
     } catch (FileAlreadyExistsException e) {
-      throw AlreadyExistsException.alreadyExists(ContextEntry.ContextBuilder.entity("File", target).in(getRepository()));
+      throw alreadyExists(entity("File", target).in(getRepository()));
     }
   }
 

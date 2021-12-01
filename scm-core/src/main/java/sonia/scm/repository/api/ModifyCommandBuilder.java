@@ -115,11 +115,14 @@ public class ModifyCommandBuilder {
   }
 
   /**
+   * Move existing directories or files.
+   *
+   * @param fromPath The source file or directory.
+   * @return A sub builder to specify the target and further options for the move.
    * @since 2.28.0
    */
-  public ModifyCommandBuilder move(String fromPath, String toPath) {
-    request.addRequest(new ModifyCommandRequest.MoveRequest(fromPath, toPath));
-    return this;
+  public MoveBuilder move(String fromPath) {
+    return new MoveBuilder(fromPath);
   }
 
   /**
@@ -274,6 +277,35 @@ public class ModifyCommandBuilder {
     @Override
     public ModifyCommandBuilder withData(InputStream data) throws IOException {
       return contentLoader.withData(data);
+    }
+  }
+
+  public class MoveBuilder {
+
+    private final String fromPath;
+    private boolean overwrite = false;
+
+    public MoveBuilder(String fromPath) {
+      this.fromPath = fromPath;
+    }
+
+    /**
+     * Set this to <code>true</code> to overwrite the path if it already exists. Otherwise an
+     * {@link sonia.scm.AlreadyExistsException} will be thrown.
+     * @return This move builder instance.
+     */
+    public MoveBuilder withOverwrite(boolean overwrite) {
+      this.overwrite = overwrite;
+      return this;
+    }
+
+    /**
+     * Sets the target path the file or directory should be moved to.
+     * @return The builder instance.
+     */
+    public ModifyCommandBuilder to(String toPath) {
+      request.addRequest(new ModifyCommandRequest.MoveRequest(fromPath, toPath, overwrite));
+      return ModifyCommandBuilder.this;
     }
   }
 

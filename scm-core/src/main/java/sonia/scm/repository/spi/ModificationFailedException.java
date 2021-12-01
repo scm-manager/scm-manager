@@ -22,34 +22,23 @@
  * SOFTWARE.
  */
 
-plugins {
-  id 'org.scm-manager.smp' version '0.10.1'
-}
+package sonia.scm.repository.spi;
 
-dependencies {
-}
+import sonia.scm.ContextEntry;
+import sonia.scm.ExceptionWithContext;
 
-scmPlugin {
-  scmVersion = project.version
-  core = true
-  name = 'scm-integration-test-plugin'
-  displayName = 'Integration Test Support'
-  description = 'Add functions for integration tests. This is not intended for production systems.'
-  author = 'Cloudogu GmbH'
-  category = 'Source Code Management'
+import java.util.List;
 
-  openapi {
-    packages = [
-      'sonia.scm.it.resource'
-    ]
+public class ModificationFailedException extends ExceptionWithContext {
+
+  public static final String CODE = "8wSpi62oJ1";
+
+  public ModificationFailedException(List<ContextEntry> context, String message) {
+    super(context, message);
   }
 
-}
-
-sonarqube {
-  // TODO
-  skipProject = true
-  properties {
-    property 'sonar.tests', ''
+  @Override
+  public String getCode() {
+    return CODE;
   }
 }

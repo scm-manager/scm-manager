@@ -63,6 +63,7 @@ public final class ValidationUtil {
     return !path.equals(".")
       && !path.contains("../")
       && !path.contains("//")
+      && !path.contains("\\")
       && !path.equals("..");
   }
 

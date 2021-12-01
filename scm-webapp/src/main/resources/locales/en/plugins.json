@@ -370,6 +370,10 @@
     "3mSmwOtOd1": {
       "displayName": "File locked",
       "description": "The file or its lock cannot be modified, because another lock exists. This other lock may be ignored by using a 'forced' action."
+    },
+    "8wSpi62oJ1": {
+      "displayName": "Modification failed",
+      "description": "The modification could not be applied. This can have many reasons, for example a file that could not be moved, invalid file names, etc."
     }
   },
   "healthChecksFailures": {

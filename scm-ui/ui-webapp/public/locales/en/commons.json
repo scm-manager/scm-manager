@@ -59,7 +59,8 @@
     "logout": "Logout",
     "login": "Login",
     "groups": "Groups",
-    "admin": "Administration"
+    "admin": "Administration",
+    "navbarBurger": "Open navigation"
   },
   "secondaryNavigation": {
     "showContent": "Enlarge navigation",
@@ -180,6 +181,8 @@
     "w_plural": "{{count}} weeks"
   },
   "search": {
+    "ariaLabel": "Global search",
+    "placeholder": "Search...",
     "title": "Search",
     "subtitle": "{{type}} results for \"{{query}}\"",
     "types": "Results",

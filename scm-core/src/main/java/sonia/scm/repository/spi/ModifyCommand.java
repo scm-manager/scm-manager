@@ -24,6 +24,9 @@
 
 package sonia.scm.repository.spi;
 
+import sonia.scm.FeatureNotSupportedException;
+import sonia.scm.repository.Feature;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -31,6 +34,9 @@ public interface ModifyCommand {
 
   String execute(ModifyCommandRequest request);
 
+  /**
+   * Implementations should use the {@link ModifyWorkerHelper} for this.
+   */
   interface Worker {
     void delete(String toBeDeleted, boolean recursive) throws IOException;
 
@@ -41,6 +47,6 @@ public interface ModifyCommand {
     /**
      * @since 2.28.0
      */
-    void move(String path, String newPath) throws IOException;
+    void move(String path, String newPath, boolean overwrite) throws IOException;
   }
 }

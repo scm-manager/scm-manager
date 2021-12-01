@@ -22,34 +22,19 @@
  * SOFTWARE.
  */
 
-plugins {
-  id 'org.scm-manager.smp' version '0.10.1'
-}
+package sonia.scm.api;
 
-dependencies {
-}
+import sonia.scm.api.rest.ContextualExceptionMapper;
+import sonia.scm.api.v2.resources.ExceptionWithContextToErrorDtoMapper;
+import sonia.scm.repository.spi.ModificationFailedException;
 
-scmPlugin {
-  scmVersion = project.version
-  core = true
-  name = 'scm-integration-test-plugin'
-  displayName = 'Integration Test Support'
-  description = 'Add functions for integration tests. This is not intended for production systems.'
-  author = 'Cloudogu GmbH'
-  category = 'Source Code Management'
+import javax.inject.Inject;
+import javax.ws.rs.core.Response;
 
-  openapi {
-    packages = [
-      'sonia.scm.it.resource'
-    ]
-  }
+public class ModificationFailedExceptionMapper extends ContextualExceptionMapper<ModificationFailedException> {
 
-}
-
-sonarqube {
-  // TODO
-  skipProject = true
-  properties {
-    property 'sonar.tests', ''
+  @Inject
+  public ModificationFailedExceptionMapper(ExceptionWithContextToErrorDtoMapper mapper) {
+    super(ModificationFailedException.class, Response.Status.BAD_REQUEST, mapper);
   }
 }

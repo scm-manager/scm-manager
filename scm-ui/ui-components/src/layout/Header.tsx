@@ -37,7 +37,7 @@ const SmallHeader: FC<{ children: ReactNode }> = ({ children }) => {
 
 const LargeHeader: FC = () => {
   return (
-    <section className="hero has-scm-background is-small">
+    <div className="hero has-scm-background is-small">
       <div className="hero-body">
         <div className="container">
           <div className="columns is-vcentered">
@@ -47,7 +47,7 @@ const LargeHeader: FC = () => {
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 };
 

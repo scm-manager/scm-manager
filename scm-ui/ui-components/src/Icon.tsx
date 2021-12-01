@@ -46,14 +46,14 @@ const Icon: FC<Props> = ({
   className,
   onClick,
   testId,
-  tabIndex = -1,
+  tabIndex,
   onEnter,
-  alt = title,
+  alt = title
 }) => {
   return (
     <i
       onClick={onClick}
-      onKeyPress={(event) => event.key === "Enter" && onEnter && onEnter(event)}
+      onKeyPress={event => event.key === "Enter" && onEnter && onEnter(event)}
       title={title}
       className={classNames(iconStyle, "fa-fw", "fa-" + name, `has-text-${color}`, className)}
       tabIndex={tabIndex}

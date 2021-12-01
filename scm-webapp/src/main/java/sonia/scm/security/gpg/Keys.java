@@ -33,6 +33,7 @@ import org.bouncycastle.openpgp.PGPPublicKeyRingCollection;
 import org.bouncycastle.openpgp.PGPUtil;
 import org.bouncycastle.openpgp.operator.KeyFingerPrintCalculator;
 import org.bouncycastle.openpgp.operator.jcajce.JcaKeyFingerprintCalculator;
+import sonia.scm.ScmConstraintViolationException;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -45,6 +46,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.function.Function;
+
+import static sonia.scm.ScmConstraintViolationException.Builder.doThrow;
 
 @Value
 final class Keys {
@@ -71,18 +74,18 @@ final class Keys {
 
     for (PGPPublicKey key : parsedKeys) {
       if (key.isMasterKey()) {
-        if (master != null) {
-          throw new IllegalArgumentException("Found more than one master key");
-        }
+        doThrow()
+          .violation("Found more than one master key")
+          .when(master != null);
         master = createId(key);
       } else {
         subs.add(createId(key));
       }
     }
 
-    if (master == null) {
-      throw new IllegalArgumentException("No master key found");
-    }
+    doThrow()
+      .violation("No master key found")
+      .when(master == null);
 
     return new Keys(master, Collections.unmodifiableSet(subs));
   }

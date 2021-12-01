@@ -91,7 +91,7 @@ const SecondaryNavigation: FC<Props> = ({ label, children, collapsible = true })
           aria-label={menuAriaLabel}
         >
           {collapsible ? (
-            <Icon color="info" className="is-medium" collapsed={isCollapsed}>
+            <Icon className="is-medium" collapsed={isCollapsed}>
               {arrowIcon}
             </Icon>
           ) : null}

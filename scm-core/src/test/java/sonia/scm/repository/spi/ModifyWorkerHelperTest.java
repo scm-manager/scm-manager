@@ -26,6 +26,8 @@ package sonia.scm.repository.spi;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import sonia.scm.AlreadyExistsException;
+import sonia.scm.NotFoundException;
 import sonia.scm.ScmConstraintViolationException;
 import sonia.scm.repository.Repository;
 
@@ -38,6 +40,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ModifyWorkerHelperTest {
+
+  private static final Repository REPOSITORY = new Repository("42", "git", "hitchhiker", "hog");
 
   private boolean pathProtected = false;
 
@@ -83,6 +87,27 @@ class ModifyWorkerHelperTest {
     );
   }
 
+  @Test
+  void shouldNotMoveNotExistingFile(@TempDir Path temp) throws IOException {
+    ModifyWorkerHelper helper = new MinimalModifyWorkerHelper(temp);
+
+    assertThrows(
+      NotFoundException.class,
+      () -> helper.move("no-such-file", "irrelevant", false));
+  }
+
+  @Test
+  void shouldNotOverwriteExistingFileInMoveWithoutOverwrite(@TempDir Path temp) throws IOException {
+    createFile(temp, "existing-source.txt");
+    createFile(temp, "existing-target.txt");
+
+    ModifyWorkerHelper helper = new MinimalModifyWorkerHelper(temp);
+
+    assertThrows(
+      AlreadyExistsException.class,
+      () -> helper.move("existing-source.txt", "existing-target.txt", false));
+  }
+
   private File createFile(Path temp, String fileName) throws IOException {
     File file = new File(temp.toFile(), fileName);
     FileWriter source = new FileWriter(file);
@@ -116,7 +141,7 @@ class ModifyWorkerHelperTest {
 
     @Override
     public Repository getRepository() {
-      return null;
+      return REPOSITORY;
     }
 
     @Override

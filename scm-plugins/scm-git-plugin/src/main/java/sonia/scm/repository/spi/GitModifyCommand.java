@@ -29,6 +29,7 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.attributes.FilterCommandRegistry;
+import org.eclipse.jgit.dircache.DirCache;
 import org.eclipse.jgit.revwalk.RevCommit;
 import sonia.scm.ConcurrentModificationException;
 import sonia.scm.ContextEntry;
@@ -173,13 +174,21 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
     }
 
     private void addFileToGit(String toBeCreated) throws GitAPIException {
-      getClone().add().addFilepattern(removeStartingPathSeparators(toBeCreated)).call();
+      String toBeCreatedWithoutLeadingSlash = removeStartingPathSeparators(toBeCreated);
+      DirCache addResult = getClone().add().addFilepattern(toBeCreatedWithoutLeadingSlash).call();
+      if (addResult.findEntry(toBeCreatedWithoutLeadingSlash) < 0) {
+        throw new ModificationFailedException(ContextEntry.ContextBuilder.entity("File", toBeCreated).in(repository).build(), "Could not add file to repository");
+      }
     }
 
     @Override
     public void doScmDelete(String toBeDeleted) {
       try {
-        getClone().rm().addFilepattern(removeStartingPathSeparators(toBeDeleted)).call();
+        String toBeDeletedWithoutLeadingSlash = removeStartingPathSeparators(toBeDeleted);
+        DirCache deleteResult = getClone().rm().addFilepattern(toBeDeletedWithoutLeadingSlash).call();
+        if (deleteResult.findEntry(toBeDeletedWithoutLeadingSlash) >= 0) {
+          throw new ModificationFailedException(ContextEntry.ContextBuilder.entity("File", toBeDeleted).in(repository).build(), "Could not delete file from repository");
+        }
       } catch (GitAPIException e) {
         throwInternalRepositoryException("could not remove file from index", e);
       }
@@ -206,8 +215,8 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
     }
 
     private String removeStartingPathSeparators(String path) {
-      while (path.startsWith(File.separator)) {
-        path = path.substring(1);
+      if (path.startsWith("/")) {
+        return path.substring(1);
       }
       return path;
     }

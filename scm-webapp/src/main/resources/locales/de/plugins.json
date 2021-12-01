@@ -429,6 +429,10 @@
     "3mSmwOtOd1": {
       "displayName": "Datei gesperrt",
       "description": "Die Datei oder ihre Sperre kann nicht bearbeitet werden, da eine andere Sperre existiert. Die andere Sperre kann ggf. durch eine 'forcierte' Aktion umgangen werden."
+    },
+    "8wSpi62oJ1": {
+      "displayName": "Änderung fehlgeschlagen",
+      "description": "Die Änderung konnte nicht durchgeführt werden. Dieses kann mehrere Ursachen haben, z. B. eine Datei die nicht verschoben werden kann, ungültige Dateinamen o. ä."
     }
   },
   "namespaceStrategies": {

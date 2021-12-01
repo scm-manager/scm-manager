@@ -26,6 +26,7 @@ package sonia.scm.repository.spi;
 
 import org.javahg.Changeset;
 import org.javahg.Repository;
+import org.javahg.commands.AddCommand;
 import org.javahg.commands.CommitCommand;
 import org.javahg.commands.ExecutionException;
 import org.javahg.commands.RemoveCommand;
@@ -33,6 +34,7 @@ import org.javahg.commands.StatusCommand;
 import com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.ContextEntry;
 import sonia.scm.NoChangesMadeException;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.InternalRepositoryException;
@@ -81,7 +83,10 @@ public class HgModifyCommand extends AbstractWorkingCopyCommand implements Modif
 
               @Override
               public void doScmDelete(String toBeDeleted) {
-                RemoveCommand.on(workingRepository).execute(toBeDeleted);
+                List<String> execute = RemoveCommand.on(workingRepository).execute(toBeDeleted);
+                if (execute.isEmpty()) {
+                  throw new ModificationFailedException(ContextEntry.ContextBuilder.entity("File", toBeDeleted).in(repository).build(), "Could not delete file from repository");
+                }
               }
 
               @Override
@@ -99,7 +104,10 @@ public class HgModifyCommand extends AbstractWorkingCopyCommand implements Modif
               }
 
               private void addFileToHg(File file) {
-                workingRepository.workingCopy().add(file.getAbsolutePath());
+                List<String> execute = AddCommand.on(workingRepository).execute(file.getAbsolutePath());
+                if (execute.isEmpty()) {
+                  throw new ModificationFailedException(ContextEntry.ContextBuilder.entity("File", file.getName()).in(repository).build(), "Could not add file to repository");
+                }
               }
 
               @Override

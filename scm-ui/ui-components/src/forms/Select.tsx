@@ -69,7 +69,7 @@ const InnerSelect: FC<FieldProps<BaseProps, HTMLSelectElement, string>> = ({
   const field = useInnerRef(props.innerRef);
 
   let opts = options;
-  if (value && addValueToOptions && !options.some((o) => o.value === value)) {
+  if (value && addValueToOptions && !options.some(o => o.value === value)) {
     opts = [{ label: value, value }, ...options];
   }
 
@@ -124,11 +124,11 @@ const InnerSelect: FC<FieldProps<BaseProps, HTMLSelectElement, string>> = ({
           onChange={handleInput}
           onBlur={handleBlur}
           disabled={disabled}
-          aria-labelledby={a11yId}
-          aria-describedby={helpId}
+          aria-labelledby={label ? a11yId : undefined}
+          aria-describedby={helpText ? helpId : undefined}
           {...createAttributesForTesting(testId)}
         >
-          {opts.map((opt) => {
+          {opts.map(opt => {
             return (
               <option value={opt.value} key={"KEY_" + opt.value}>
                 {opt.label}

@@ -21,35 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import { ApiResult, useIndexLink } from "./base";
+import { useQuery } from "react-query";
+import { LoginInfo } from "@scm-manager/ui-types";
 
-plugins {
-  id 'org.scm-manager.smp' version '0.10.1'
-}
-
-dependencies {
-}
-
-scmPlugin {
-  scmVersion = project.version
-  core = true
-  name = 'scm-integration-test-plugin'
-  displayName = 'Integration Test Support'
-  description = 'Add functions for integration tests. This is not intended for production systems.'
-  author = 'Cloudogu GmbH'
-  category = 'Source Code Management'
-
-  openapi {
-    packages = [
-      'sonia.scm.it.resource'
-    ]
-  }
-
-}
-
-sonarqube {
-  // TODO
-  skipProject = true
-  properties {
-    property 'sonar.tests', ''
-  }
-}
+export const useLoginInfo = (disabled = false): ApiResult<LoginInfo> => {
+  const loginInfoLink = useIndexLink("loginInfo");
+  const { error, isLoading, data } = useQuery<LoginInfo, Error>(
+    ["loginInfo"],
+    () => fetch(loginInfoLink!).then(response => response.json()),
+    {
+      enabled: !disabled && !!loginInfoLink,
+      refetchOnWindowFocus: false
+    }
+  );
+  return {
+    data,
+    error,
+    isLoading
+  };
+};
