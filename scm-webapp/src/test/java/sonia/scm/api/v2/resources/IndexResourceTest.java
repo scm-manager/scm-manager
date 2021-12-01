@@ -52,8 +52,6 @@ public class IndexResourceTest {
   private SCMContextProvider scmContextProvider;
   private IndexResource indexResource;
 
-  private PluginCenterAuthenticator pluginCenterAuthenticator;
-
   @Before
   public void setUpObjectUnderTest() {
     this.configuration = new ScmConfiguration();
@@ -61,46 +59,22 @@ public class IndexResourceTest {
     InitializationFinisher initializationFinisher = mock(InitializationFinisher.class);
     when(initializationFinisher.isFullyInitialized()).thenReturn(true);
     SearchEngine searchEngine = mock(SearchEngine.class);
-    this.pluginCenterAuthenticator = mock(PluginCenterAuthenticator.class);
     IndexDtoGenerator generator = new IndexDtoGenerator(
       ResourceLinksMock.createMock(URI.create("/")),
       scmContextProvider,
       configuration,
       initializationFinisher,
-      searchEngine,
-      pluginCenterAuthenticator);
+      searchEngine
+    );
     this.indexResource = new IndexResource(generator);
   }
 
   @Test
   @SubjectAware(username = "dent", password = "secret")
-  public void shouldRenderPluginCenterLoginLink() {
-    when(pluginCenterAuthenticator.isAuthenticated()).thenReturn(false);
-    configuration.setPluginAuthUrl(ScmConfiguration.DEFAULT_PLUGIN_AUTH_URL);
-
+  public void shouldRenderPluginCenterAuthLink() {
     IndexDto index = indexResource.getIndex();
 
-    Assertions.assertThat(index.getLinks().getLinkBy("pluginCenterLogin")).isPresent();
-  }
-
-  @Test
-  @SubjectAware(username = "dent", password = "secret")
-  public void shouldNotRenderPluginCenterLoginLinkIfAlreadyAuthenticated() {
-    when(pluginCenterAuthenticator.isAuthenticated()).thenReturn(true);
-
-    IndexDto index = indexResource.getIndex();
-
-    Assertions.assertThat(index.getLinks().getLinkBy("pluginCenterLogin")).isNotPresent();
-  }
-
-  @Test
-  @SubjectAware(username = "dent", password = "secret")
-  public void shouldNotRenderPluginCenterLoginLinkIfNotDefaultAuthLinkConfigured() {
-    configuration.setPluginAuthUrl("https://hitchhiker.com/auth");
-
-    IndexDto index = indexResource.getIndex();
-
-    Assertions.assertThat(index.getLinks().getLinkBy("pluginCenterLogin")).isNotPresent();
+    Assertions.assertThat(index.getLinks().getLinkBy("pluginCenterAuth")).isPresent();
   }
 
   @Test
@@ -108,7 +82,7 @@ public class IndexResourceTest {
   public void shouldNotRenderPluginCenterLoginLinkIfPermissionsAreMissing() {
     IndexDto index = indexResource.getIndex();
 
-    Assertions.assertThat(index.getLinks().getLinkBy("pluginCenterLogin")).isNotPresent();
+    Assertions.assertThat(index.getLinks().getLinkBy("pluginCenterAuth")).isNotPresent();
   }
 
   @Test

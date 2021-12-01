@@ -108,6 +108,22 @@ class PluginCenterAuthResourceTest {
     }
 
     @Test
+    void shouldReturnTrueForIsDefault() throws URISyntaxException, IOException {
+      JsonNode root = getJson("/v2/plugins/auth");
+
+      assertThat(root.get("default").asBoolean()).isTrue();
+    }
+
+    @Test
+    void shouldReturnFalseIfTheAuthUrlIsNotDefault() throws URISyntaxException, IOException {
+      scmConfiguration.setPluginAuthUrl("https://plug.ins");
+
+      JsonNode root = getJson("/v2/plugins/auth");
+
+      assertThat(root.get("default").asBoolean()).isFalse();
+    }
+
+    @Test
     @SubjectAware(value = "marvin", permissions = "plugin:write")
     void shouldReturnLoginLinkIfPermitted() throws URISyntaxException, IOException {
       JsonNode root = getJson("/v2/plugins/auth");

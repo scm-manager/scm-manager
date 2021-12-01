@@ -36,7 +36,6 @@ import sonia.scm.config.ScmConfiguration;
 import sonia.scm.group.GroupPermissions;
 import sonia.scm.initialization.InitializationFinisher;
 import sonia.scm.initialization.InitializationStep;
-import sonia.scm.plugin.PluginCenterAuthenticator;
 import sonia.scm.plugin.PluginPermissions;
 import sonia.scm.search.SearchEngine;
 import sonia.scm.search.SearchableType;
@@ -61,21 +60,18 @@ public class IndexDtoGenerator extends HalAppenderMapper {
   private final ScmConfiguration configuration;
   private final InitializationFinisher initializationFinisher;
   private final SearchEngine searchEngine;
-  private final PluginCenterAuthenticator pluginCenterAuthenticator;
 
   @Inject
   public IndexDtoGenerator(ResourceLinks resourceLinks,
                            SCMContextProvider scmContextProvider,
                            ScmConfiguration configuration,
                            InitializationFinisher initializationFinisher,
-                           SearchEngine searchEngine,
-                           PluginCenterAuthenticator pluginCenterAuthenticator) {
+                           SearchEngine searchEngine) {
     this.resourceLinks = resourceLinks;
     this.scmContextProvider = scmContextProvider;
     this.configuration = configuration;
     this.initializationFinisher = initializationFinisher;
     this.searchEngine = searchEngine;
-    this.pluginCenterAuthenticator = pluginCenterAuthenticator;
   }
 
   public IndexDto generate() {
@@ -109,10 +105,7 @@ public class IndexDtoGenerator extends HalAppenderMapper {
       }
 
       if (PluginPermissions.read().isPermitted()) {
-        if (configuration.isDefaultPluginAuthUrl()) {
-          builder.single(link("pluginCenterAuth", resourceLinks.pluginCenterAuth().auth()));
-        }
-
+        builder.single(link("pluginCenterAuth", resourceLinks.pluginCenterAuth().auth()));
         builder.single(link("installedPlugins", resourceLinks.installedPluginCollection().self()));
         builder.single(link("availablePlugins", resourceLinks.availablePluginCollection().self()));
       }

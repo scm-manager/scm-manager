@@ -64,4 +64,5 @@ export type PluginCenterAuthenticationInfo = HalRepresentation & {
   principal?: string;
   pluginCenterSubject?: string;
   date?: string;
+  default: boolean;
 };

@@ -108,7 +108,9 @@ public class PluginCenterAuthResource {
     if (authentication.isPresent()) {
       return Response.ok(createAuthenticatedDto(uriInfo, authentication.get())).build();
     }
-    return Response.ok(new PluginCenterAuthenticationInfoDto(createLinks(uriInfo, false))).build();
+    PluginCenterAuthenticationInfoDto dto = new PluginCenterAuthenticationInfoDto(createLinks(uriInfo, false));
+    dto.setDefault(configuration.isDefaultPluginAuthUrl());
+    return Response.ok(dto).build();
   }
 
   private PluginCenterAuthenticationInfoDto createAuthenticatedDto(@Context UriInfo uriInfo, AuthenticationInfo info) {
@@ -119,6 +121,7 @@ public class PluginCenterAuthResource {
     dto.setPrincipal(getPrincipalDisplayName(info.getPrincipal()));
     dto.setPluginCenterSubject(info.getPluginCenterSubject());
     dto.setDate(info.getDate());
+    dto.setDefault(configuration.isDefaultPluginAuthUrl());
     return dto;
   }
 
