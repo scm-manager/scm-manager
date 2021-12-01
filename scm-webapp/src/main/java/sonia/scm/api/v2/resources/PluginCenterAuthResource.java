@@ -102,8 +102,29 @@ public class PluginCenterAuthResource {
 
   @GET
   @Path("")
-  @Produces(MediaType.TEXT_HTML)
-  public Response auth(@Context UriInfo uriInfo, @QueryParam("source") String sourceUri) {
+  @Produces(VndMediaType.PLUGIN_CENTER_AUTH_INFO)
+  public Response authenticationInfo(@Context UriInfo uriInfo) {
+    Optional<AuthenticationInfo> authentication = authenticator.getAuthenticationInfo();
+    if (authentication.isPresent()) {
+      return Response.ok(createAuthenticatedDto(uriInfo, authentication.get())).build();
+    }
+    return Response.ok(new PluginCenterAuthenticationInfoDto(createLinks(uriInfo, false))).build();
+  }
+
+  private PluginCenterAuthenticationInfoDto createAuthenticatedDto(@Context UriInfo uriInfo, AuthenticationInfo info) {
+    PluginCenterAuthenticationInfoDto dto = new PluginCenterAuthenticationInfoDto(
+      createLinks(uriInfo, true)
+    );
+
+    dto.setPrincipal(getPrincipalDisplayName(info.getPrincipal()));
+    dto.setPluginCenterSubject(info.getPluginCenterSubject());
+    dto.setDate(info.getDate());
+    return dto;
+  }
+
+  @GET
+  @Path("login")
+  public Response login(@Context UriInfo uriInfo, @QueryParam("source") String sourceUri) {
     String pluginAuthUrl = configuration.getPluginAuthUrl();
 
     if (Strings.isNullOrEmpty(sourceUri)) {
@@ -120,8 +141,9 @@ public class PluginCenterAuthResource {
 
     challenge = challengeGenerator.create();
 
-    URI callbackUri = uriInfo.getAbsolutePathBuilder()
-      .path("callback")
+    String path = uriInfo.getAbsolutePath().getPath().replace("/login", "/callback");
+    URI callbackUri = uriInfo.getBaseUriBuilder()
+      .path(path)
       .queryParam("source", sourceUri)
       .queryParam("challenge", challenge)
       .build();
@@ -132,29 +154,16 @@ public class PluginCenterAuthResource {
     return Response.seeOther(authUri).build();
   }
 
-  @GET
-  @Path("")
-  @Produces(VndMediaType.PLUGIN_CENTER_AUTH_INFO)
-  public Response authenticationInfo(@Context UriInfo uriInfo) {
-    Optional<AuthenticationInfo> authentication = authenticator.getAuthenticationInfo();
-    if (authentication.isPresent()) {
-      AuthenticationInfo info = authentication.get();
-      PluginCenterAuthenticationInfoDto dto = new PluginCenterAuthenticationInfoDto(
-        createLinks(uriInfo)
-      );
-      dto.setPrincipal(getPrincipalDisplayName(info.getPrincipal()));
-      dto.setPluginCenterSubject(info.getPluginCenterSubject());
-      dto.setDate(info.getDate());
-      return Response.ok(dto).build();
-    }
-    return Response.status(Response.Status.NOT_FOUND).build();
-  }
-
-  private Links createLinks(UriInfo uriInfo) {
+  private Links createLinks(UriInfo uriInfo, boolean authenticated) {
     String self = uriInfo.getAbsolutePath().toASCIIString();
     Links.Builder builder = Links.linkingTo().self(self);
     if (PluginPermissions.write().isPermitted()) {
-      builder.single(Link.link("logout", self));
+      if (authenticated) {
+        builder.single(Link.link("logout", self));
+      } else {
+        URI login = uriInfo.getAbsolutePathBuilder().path("login").build();
+        builder.single(Link.link("login", login.toASCIIString()));
+      }
     }
     return builder.build();
   }

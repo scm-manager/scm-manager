@@ -24,6 +24,7 @@
 
 package sonia.scm.api.v2.resources;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Links;
 import lombok.Getter;
@@ -31,13 +32,18 @@ import lombok.Setter;
 
 import java.time.Instant;
 
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+
 @Getter
 @Setter
 @SuppressWarnings("java:S2160") // we need no equals here
 public class PluginCenterAuthenticationInfoDto extends HalRepresentation {
 
+  @JsonInclude(NON_NULL)
   private String principal;
+  @JsonInclude(NON_NULL)
   private String pluginCenterSubject;
+  @JsonInclude(NON_NULL)
   private Instant date;
 
   public PluginCenterAuthenticationInfoDto(Links links) {

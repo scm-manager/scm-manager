@@ -24,7 +24,6 @@
 
 package sonia.scm.api.v2.resources;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
@@ -49,11 +48,9 @@ import sonia.scm.user.DisplayUser;
 import sonia.scm.user.UserDisplayManager;
 import sonia.scm.user.UserTestData;
 import sonia.scm.web.RestDispatcher;
-import sonia.scm.web.VndMediaType;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Instant;
@@ -101,9 +98,21 @@ class PluginCenterAuthResourceTest {
   class GetAuthenticationInfo {
 
     @Test
-    void shouldReturnNotFoundIfNotAuthenticated() throws URISyntaxException {
-      MockHttpResponse response = get("/v2/plugins/auth", VndMediaType.PLUGIN_CENTER_AUTH_INFO);
-      assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_NOT_FOUND);
+    void shouldReturnEmptyAuthenticationInfo() throws URISyntaxException, IOException {
+      JsonNode root = getJson("/v2/plugins/auth");
+
+      assertThat(root.has("principal")).isFalse();
+      assertThat(root.has("pluginCenterSubject")).isFalse();
+      assertThat(root.has("date")).isFalse();
+      assertThat(root.get("_links").get("self").get("href").asText()).isEqualTo("/v2/plugins/auth");
+    }
+
+    @Test
+    @SubjectAware(value = "marvin", permissions = "plugin:write")
+    void shouldReturnLoginLinkIfPermitted() throws URISyntaxException, IOException {
+      JsonNode root = getJson("/v2/plugins/auth");
+
+      assertThat(root.get("_links").get("login").get("href").asText()).isEqualTo("/v2/plugins/auth/login");
     }
 
     @Test
@@ -125,6 +134,14 @@ class PluginCenterAuthResourceTest {
 
     @Test
     @SubjectAware(value = "marvin", permissions = "plugin:write")
+    void shouldReturnLogoutLinkIfPermitted() throws IOException, URISyntaxException {
+      JsonNode root = requestAuthInfo();
+
+      assertThat(root.get("_links").get("logout").get("href").asText()).isEqualTo("/v2/plugins/auth");
+    }
+
+    @Test
+    @SubjectAware(value = "marvin", permissions = "plugin:write")
     void shouldNotReturnLogoutLinkIfPermitted() throws IOException, URISyntaxException {
       JsonNode root = requestAuthInfo();
 
@@ -140,10 +157,7 @@ class PluginCenterAuthResourceTest {
       DisplayUser user = DisplayUser.from(UserTestData.createTrillian());
       when(userDisplayManager.get("trillian")).thenReturn(Optional.of(user));
 
-      MockHttpResponse response = get("/v2/plugins/auth", VndMediaType.PLUGIN_CENTER_AUTH_INFO);
-
-      ObjectMapper mapper = new ObjectMapper();
-      return mapper.readTree(response.getContentAsString());
+      return getJson("/v2/plugins/auth");
     }
 
   }
@@ -167,7 +181,7 @@ class PluginCenterAuthResourceTest {
 
     @Test
     void shouldReturnErrorRedirectWithoutSourceParameter() throws URISyntaxException {
-      MockHttpResponse response = get("/v2/plugins/auth");
+      MockHttpResponse response = get("/v2/plugins/auth/login");
       assertError(response, ERROR_SOURCE_MISSING);
     }
 
@@ -175,7 +189,7 @@ class PluginCenterAuthResourceTest {
     void shouldReturnErrorRedirectWithoutPluginAuthUrlParameter() throws URISyntaxException {
       scmConfiguration.setPluginAuthUrl("");
 
-      MockHttpResponse response = get("/v2/plugins/auth?source=/admin/plugins");
+      MockHttpResponse response = get("/v2/plugins/auth/login?source=/admin/plugins");
       assertError(response, ERROR_AUTHENTICATION_DISABLED);
     }
 
@@ -183,7 +197,7 @@ class PluginCenterAuthResourceTest {
     void shouldReturnErrorRedirectIfAlreadyAuthenticated() throws URISyntaxException {
       when(authenticator.isAuthenticated()).thenReturn(true);
 
-      MockHttpResponse response = get("/v2/plugins/auth?source=/admin/plugins");
+      MockHttpResponse response = get("/v2/plugins/auth/login?source=/admin/plugins");
       assertError(response, ERROR_ALREADY_AUTHENTICATED);
     }
 
@@ -192,7 +206,7 @@ class PluginCenterAuthResourceTest {
       when(challengeGenerator.create()).thenReturn("abcd");
       scmConfiguration.setPluginAuthUrl("https://plug.ins");
 
-      MockHttpResponse response = get("/v2/plugins/auth?source=/admin/plugins");
+      MockHttpResponse response = get("/v2/plugins/auth/login?source=/admin/plugins");
       assertRedirect(response, "https://plug.ins?instance=%2Fv2%2Fplugins%2Fauth%2Fcallback?source%3D%2Fadmin%2Fplugins%26challenge%3Dabcd");
     }
 
@@ -201,7 +215,7 @@ class PluginCenterAuthResourceTest {
       when(challengeGenerator.create()).thenReturn("1234");
       scmConfiguration.setPluginAuthUrl("https://plug.ins");
 
-      get("/v2/plugins/auth?source=/admin/plugins");
+      get("/v2/plugins/auth/login?source=/admin/plugins");
 
       verify(excludes).add("/v2/plugins/auth/callback");
     }
@@ -220,7 +234,7 @@ class PluginCenterAuthResourceTest {
     @Test
     void shouldReturnErrorRedirectWithChallengeMismatch() throws URISyntaxException {
       when(challengeGenerator.create()).thenReturn("xyz");
-      get("/v2/plugins/auth?source=/repos");
+      get("/v2/plugins/auth/login?source=/repos");
       MockHttpResponse response = get("/v2/plugins/auth/callback?challenge=abc");
       assertError(response, ERROR_CHALLENGE_DOES_NOT_MATCH);
     }
@@ -228,7 +242,7 @@ class PluginCenterAuthResourceTest {
     @Test
     void shouldRedirectToRoot() throws URISyntaxException {
       when(challengeGenerator.create()).thenReturn("xyz");
-      get("/v2/plugins/auth?source=/repos");
+      get("/v2/plugins/auth/login?source=/repos");
       MockHttpResponse response = get("/v2/plugins/auth/callback?challenge=xyz");
       assertRedirect(response, "/");
     }
@@ -236,7 +250,7 @@ class PluginCenterAuthResourceTest {
     @Test
     void shouldRedirectToSource() throws URISyntaxException {
       when(challengeGenerator.create()).thenReturn("xyz");
-      get("/v2/plugins/auth?source=/repos");
+      get("/v2/plugins/auth/login?source=/repos");
       MockHttpResponse response = get("/v2/plugins/auth/callback?challenge=xyz&source=/repos");
       assertRedirect(response, "/repos");
     }
@@ -244,7 +258,7 @@ class PluginCenterAuthResourceTest {
     @Test
     void shouldRemoveCallbackFromXsrf() throws URISyntaxException {
       when(challengeGenerator.create()).thenReturn("xyz");
-      get("/v2/plugins/auth?source=/repos");
+      get("/v2/plugins/auth/login?source=/repos");
       get("/v2/plugins/auth/callback?challenge=xyz");
       verify(excludes).remove("/v2/plugins/auth/callback");
     }
@@ -263,7 +277,7 @@ class PluginCenterAuthResourceTest {
     @Test
     void shouldReturnErrorRedirectWithChallengeMismatch() throws URISyntaxException {
       when(challengeGenerator.create()).thenReturn("xyz");
-      get("/v2/plugins/auth?source=/repos");
+      get("/v2/plugins/auth/login?source=/repos");
       MockHttpResponse response = post("/v2/plugins/auth/callback?challenge=abc", "trillian", "rf");
       assertError(response, ERROR_CHALLENGE_DOES_NOT_MATCH);
     }
@@ -273,7 +287,7 @@ class PluginCenterAuthResourceTest {
       FetchAccessTokenFailedException exception = new FetchAccessTokenFailedException("failed ...");
       doThrow(exception).when(authenticator).authenticate("trillian", "rf");
       when(challengeGenerator.create()).thenReturn("xyz");
-      get("/v2/plugins/auth?source=/repos");
+      get("/v2/plugins/auth/login?source=/repos");
       MockHttpResponse response = post("/v2/plugins/auth/callback?challenge=xyz", "trillian", "rf");
       assertError(response, exception.getCode());
     }
@@ -281,7 +295,7 @@ class PluginCenterAuthResourceTest {
     @Test
     void shouldAuthenticate() throws URISyntaxException {
       when(challengeGenerator.create()).thenReturn("xyz");
-      get("/v2/plugins/auth?source=/repos");
+      get("/v2/plugins/auth/login?source=/repos");
       post("/v2/plugins/auth/callback?challenge=xyz", "trillian", "refresh_token");
       verify(authenticator).authenticate("trillian", "refresh_token");
     }
@@ -289,7 +303,7 @@ class PluginCenterAuthResourceTest {
     @Test
     void shouldRedirectToSource() throws URISyntaxException {
       when(challengeGenerator.create()).thenReturn("xyz");
-      get("/v2/plugins/auth?source=/users");
+      get("/v2/plugins/auth/login?source=/users");
       MockHttpResponse response = post("/v2/plugins/auth/callback?challenge=xyz&source=/users", "tricia", "rrrrf");
       assertRedirect(response, "/users");
     }
@@ -297,7 +311,7 @@ class PluginCenterAuthResourceTest {
     @Test
     void shouldRemoveCallbackFromXsrf() throws URISyntaxException {
       when(challengeGenerator.create()).thenReturn("xyz");
-      get("/v2/plugins/auth?source=/repos");
+      get("/v2/plugins/auth/login?source=/repos");
       post("/v2/plugins/auth/callback?challenge=xyz", "trillian", "rf");
       verify(excludes).remove("/v2/plugins/auth/callback");
     }
@@ -316,16 +330,15 @@ class PluginCenterAuthResourceTest {
 
   @CanIgnoreReturnValue
   private MockHttpResponse get(String uri) throws URISyntaxException {
-    return get(uri, null);
+    MockHttpRequest request = MockHttpRequest.get(uri);
+    return request(request);
   }
 
-  @CanIgnoreReturnValue
-  private MockHttpResponse get(String uri, String accept) throws URISyntaxException {
-    MockHttpRequest request = MockHttpRequest.get(uri);
-    if (accept != null) {
-      request.accept(accept);
-    }
-    return request(request);
+  private final ObjectMapper mapper = new ObjectMapper();
+
+  private JsonNode getJson(String uri) throws URISyntaxException, IOException {
+    MockHttpResponse response = get(uri);
+    return mapper.readTree(response.getContentAsString());
   }
 
   private MockHttpResponse request(MockHttpRequest request) {
