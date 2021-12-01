@@ -25,7 +25,7 @@ import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import { Repository, Tag } from "@scm-manager/ui-types";
-import { DateFromNow, SignatureIcon } from "@scm-manager/ui-components";
+import { Subtitle, DateFromNow, SignatureIcon } from "@scm-manager/ui-components";
 import TagButtonGroup from "./TagButtonGroup";
 
 type Props = {
@@ -33,20 +33,26 @@ type Props = {
   tag: Tag;
 };
 
-const TagDetail: FC<Props> = ({ tag, repository }) => {
+const TagDetail: FC<Props> = ({ repository, tag }) => {
   const [t] = useTranslation("repos");
 
   return (
-    <div className="media">
-      <div className={classNames("media-content", "is-flex", "is-flex-wrap-wrap", "is-align-items-center")}>
-        <strong className={classNames("subtitle", "has-text-weight-bold", "has-text-black", "mr-1")}>
-          {t("tag.name") + ": "}{" "}
-        </strong>{" "}
-        <span className="subtitle">{tag.name}</span>
+    <div className="media is-align-items-center">
+      <div
+        className={classNames(
+          "media-content",
+          "subtitle",
+          "is-flex",
+          "is-flex-wrap-wrap",
+          "is-align-items-center",
+          "mb-0"
+        )}
+      >
+        <strong className="mr-1">{t("tag.name") + ": "}</strong> <Subtitle className="mb-0">{tag.name}</Subtitle>
         <SignatureIcon signatures={tag.signatures} className="ml-2 mb-5" />
-        <div className={classNames("is-ellipsis-overflow", "mb-5", "ml-2", "is-size-7")}>
+        <div className={classNames("is-ellipsis-overflow", "is-size-7", "ml-2")}>
           {t("tags.overview.created")}{" "}
-          <DateFromNow className={classNames("has-text-grey", "is-size-7")} date={tag.date} />
+          <DateFromNow className={classNames("is-size-7", "has-text-grey")} date={tag.date} />
         </div>
       </div>
       <div className="media-right">
