@@ -36,6 +36,7 @@ import java.util.List;
 import static org.javahg.commands.flags.LogCommandFlags.on;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
+import static sonia.scm.repository.spi.javahg.AbstractChangesetCommand.CHANGESET_LAZY_STYLE_PATH;
 
 public class HgBranchDetailsCommand implements BranchDetailsCommand {
 
@@ -75,6 +76,7 @@ public class HgBranchDetailsCommand implements BranchDetailsCommand {
         reference
       )
     );
+    logCommand.cmdAppend("--style", CHANGESET_LAZY_STYLE_PATH);
     return logCommand.execute();
   }
 
