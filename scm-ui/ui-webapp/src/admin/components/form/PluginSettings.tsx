@@ -24,6 +24,7 @@
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { InputField, Subtitle } from "@scm-manager/ui-components";
+import PluginCenterAuthentication from "./PluginCenterAuthentication";
 
 type Props = {
   pluginUrl: string;
@@ -66,6 +67,7 @@ const PluginSettings: FC<Props> = ({ pluginUrl, pluginAuthUrl, onChange, hasUpda
           />
         </div>
       </div>
+      <PluginCenterAuthentication />
     </div>
   );
 };

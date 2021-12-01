@@ -1200,7 +1200,7 @@ class ResourceLinks {
     }
 
     String auth() {
-      return indexLinkBuilder.method("authResource").parameters().method("auth").parameters().href();
+      return indexLinkBuilder.method("authResource").parameters().method("authenticationInfo").parameters().href();
     }
   }
 }

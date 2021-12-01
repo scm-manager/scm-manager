@@ -102,10 +102,6 @@ public class IndexDtoGenerator extends HalAppenderMapper {
     if (shouldAppendSubjectRelatedLinks()) {
       builder.single(link("me", resourceLinks.me().self()));
 
-      if (PluginPermissions.write().isPermitted() && !pluginCenterAuthenticator.isAuthenticated() && configuration.isDefaultPluginAuthUrl()) {
-        builder.single(link("pluginCenterLogin", resourceLinks.pluginCenterAuth().auth()));
-      }
-
       if (Authentications.isAuthenticatedSubjectAnonymous()) {
         builder.single(link("login", resourceLinks.authentication().jsonLogin()));
       } else {
@@ -113,6 +109,10 @@ public class IndexDtoGenerator extends HalAppenderMapper {
       }
 
       if (PluginPermissions.read().isPermitted()) {
+        if (configuration.isDefaultPluginAuthUrl()) {
+          builder.single(link("pluginCenterAuth", resourceLinks.pluginCenterAuth().auth()));
+        }
+
         builder.single(link("installedPlugins", resourceLinks.installedPluginCollection().self()));
         builder.single(link("availablePlugins", resourceLinks.availablePluginCollection().self()));
       }
