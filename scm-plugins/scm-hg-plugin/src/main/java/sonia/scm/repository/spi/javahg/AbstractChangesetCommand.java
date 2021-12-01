@@ -64,7 +64,7 @@ public abstract class AbstractChangesetCommand extends AbstractCommand
   private static final byte[] CHANGESET_PATTERN = Utils.randomBytes();
 
   /** Field description */
-  public static final String CHANGESET_LAZY_STYLE_PATH =
+  protected static final String CHANGESET_LAZY_STYLE_PATH =
     Utils.resourceAsFile("/sonia/scm/styles/changesets-lazy.style",
       ImmutableMap.of("pattern", CHANGESET_PATTERN)).getPath();
 
