@@ -7,7 +7,7 @@ Auf der Branches-Übersicht sind die bereits existierenden Branches aufgeführt.
 Die Branches sind in zwei Listen aufgeteilt: Unter "Aktive Branches" sind Branches aufgelistet, deren letzter Commit
 nicht 30 Tage älter als der Stand des Default-Branches ist. Alle älteren Branches sind in der Liste "Stale Branches" zu finden.
 Neben dem Datum der letzten Änderung und dem Autor dieser Änderung werden auch die Anzahl der Commits vor bzw. nach dem Default Branch angezeigt. 
-Mit diesen zwei Zahlen lässt sich in etwa einschätzen, wie weit dieser Branch vom Default Branch entfernt liegt.
+Mit diesen zwei Zahlen wird ersichtlich, wie weit sich dieser Branch vom Default Branch entfernt hat.
 
 Der Tag "Default" gibt an, welcher Branch aktuell als Standard-Branch dieses Repository im SCM-Manager markiert ist. Der Standard-Branch wird immer zuerst angezeigt, sobald das Repository im SCM-Manager geöffnet wird.
 Alle Branches mit Ausnahme des Default Branches können über das Mülleimer-Icon unwiderruflich gelöscht werden.
