@@ -24,24 +24,57 @@
 
 import React, { FC } from "react";
 import { usePluginCenterAuthInfo, usePluginCenterLogout } from "@scm-manager/ui-api";
-import { Button, ErrorNotification, Notification} from "@scm-manager/ui-components";
+import { Button, ErrorNotification, Notification, Tooltip, useDateFormatter } from "@scm-manager/ui-components";
 import { Link, PluginCenterAuthenticationInfo } from "@scm-manager/ui-types";
-import {useLocation} from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import styled from "styled-components";
+import { Trans, useTranslation } from "react-i18next";
 
 type AuthenticatedInfoProps = {
   authenticationInfo: PluginCenterAuthenticationInfo;
 };
 
+const Message = styled.p`
+  line-height: 2.5rem;
+`;
+
+type PluginCenterSubjectProps = {
+  authenticationInfo: PluginCenterAuthenticationInfo;
+};
+
+const PluginCenterSubject: FC<PluginCenterSubjectProps> = ({ authenticationInfo }) => {
+  const formatter = useDateFormatter({ date: authenticationInfo.date });
+  const [t] = useTranslation("config");
+  return (
+    <>
+      <Tooltip
+        location="top"
+        message={t("pluginSettings.auth.subjectTooltip", {
+          principal: authenticationInfo.principal,
+          ago: formatter?.formatDistance()
+        })}
+      >
+        <strong>{authenticationInfo.pluginCenterSubject}</strong>
+      </Tooltip>
+    </>
+  );
+};
+
 const AuthenticatedInfo: FC<AuthenticatedInfoProps> = ({ authenticationInfo }) => {
   const { logout, isLoading, error } = usePluginCenterLogout(authenticationInfo);
+  const [t] = useTranslation("config");
+
+  const subject = <PluginCenterSubject authenticationInfo={authenticationInfo} />;
 
   return (
     <Notification type="inherit">
       <div className="is-full-width is-flex is-justify-content-space-between is-align-content-center">
-        <p>Plugin Center is authenticated as {authenticationInfo.principal}</p>
+        <Message>
+          <Trans t={t} i18nKey="pluginSettings.auth.authenticated" components={[subject]} />
+        </Message>
         {authenticationInfo._links.logout ? (
           <Button color="warning" loading={isLoading} action={logout}>
-            Logout
+            {t("pluginSettings.auth.logout")}
           </Button>
         ) : null}
       </div>
@@ -57,13 +90,13 @@ const AuthenticatedInfo: FC<AuthenticatedInfoProps> = ({ authenticationInfo }) =
 const PluginCenterAuthentication: FC = () => {
   const { data, isLoading, error } = usePluginCenterAuthInfo();
   const location = useLocation();
+  const [t] = useTranslation("config");
 
   if (isLoading) {
-    // TODO i18n
     return (
       <div className="is-flex is-align-content-center">
         <span className="small-loading-spinner pt-1 pr-3" />
-        <p>Loading authentication info ...</p>
+        <p>{t("pluginSettings.auth.loading")}</p>
       </div>
     );
   }
@@ -82,10 +115,10 @@ const PluginCenterAuthentication: FC = () => {
 
   return (
     <Notification type="inherit" className="is-flex is-justify-content-space-between is-align-content-center">
-      <p>Plugin Center is not authenticated</p>
+      <Message>{t("pluginSettings.auth.notAuthenticated")}</Message>
       {data._links.login ? (
         <Button color="primary" link={(data._links.login as Link).href + "?source=" + location.pathname}>
-          Authenticate
+          {t("pluginSettings.auth.authenticate")}
         </Button>
       ) : null}
     </Notification>

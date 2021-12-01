@@ -14,7 +14,15 @@
   "pluginSettings": {
     "subtitle": "Plugin Einstellungen",
     "pluginUrl": "Plugin Center URL",
-    "pluginAuthUrl": "Plugin Center authentifizierungs URL"
+    "pluginAuthUrl": "Plugin Center authentifizierungs URL",
+    "auth": {
+      "loading": "Lade Authentifizierungs Informationen ...",
+      "notAuthenticated": "Das Plugin Center is nicht authentifiziert",
+      "authenticate": "Authentifizieren",
+      "authenticated": "as Plugin Center ist als <0 /> authentifiziert",
+      "subjectTooltip": "Authentifiziert als {{ principal }} {{ ago }}",
+      "logout": "Abmelden"
+    }
   },
   "proxySettings": {
     "subtitle": "Proxy Einstellungen",
