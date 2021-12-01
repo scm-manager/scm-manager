@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import org.apache.shiro.subject.Subject;
@@ -54,7 +54,6 @@ public class BrowserResultToFileObjectDtoMapperTest {
 
   private FileObject fileObject1 = new FileObject();
   private FileObject fileObject2 = new FileObject();
-  private FileObject partialFileObject = new FileObject();
 
 
   @Before
@@ -115,18 +114,36 @@ public class BrowserResultToFileObjectDtoMapperTest {
     assertThat(dto.getLinks().getLinkBy("self").get().getHref()).contains("path");
   }
 
-  private BrowserResult createBrowserResult() {
-    return new BrowserResult("Revision", createFileObject());
+  @Test
+  public void shouldEncodeFileLinks() {
+    BrowserResult browserResult = new BrowserResult("Revision", createFileObject("c:file"));
+    NamespaceAndName namespaceAndName = new NamespaceAndName("foo", "bar");
+
+    FileObjectDto dto = mapper.map(browserResult, namespaceAndName, 0);
+
+    assertThat(dto.getLinks().getLinkBy("self").get().getHref()).isEqualTo("http://example.com/base/v2/repositories/foo/bar/content/Revision/c%3Afile");
   }
 
-  private FileObject createFileObject() {
+  private BrowserResult createBrowserResult() {
+    return new BrowserResult("Revision", createDirectoryObject());
+  }
+
+  private FileObject createDirectoryObject() {
+    FileObject directory = new FileObject();
+    directory.setName("");
+    directory.setPath("/path");
+    directory.setDirectory(true);
+
+    directory.addChild(fileObject1);
+    directory.addChild(fileObject2);
+    return directory;
+  }
+
+  private FileObject createFileObject(String name) {
     FileObject file = new FileObject();
     file.setName("");
-    file.setPath("/path");
-    file.setDirectory(true);
-
-    file.addChild(fileObject1);
-    file.addChild(fileObject2);
+    file.setPath(name);
+    file.setDirectory(false);
     return file;
   }
 
