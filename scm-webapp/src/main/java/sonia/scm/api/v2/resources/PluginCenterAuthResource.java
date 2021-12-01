@@ -122,6 +122,7 @@ public class PluginCenterAuthResource {
     @Context UriInfo uriInfo,
     @QueryParam("challenge") String challenge,
     @QueryParam("source") String source,
+    @FormParam("subject") String subject,
     @FormParam("refresh_token") String refreshToken
   ) {
     Optional<String> error = checkChallenge(challenge);
@@ -132,7 +133,7 @@ public class PluginCenterAuthResource {
     excludes.remove(uriInfo.getPath());
 
     try {
-      authenticator.authenticate(refreshToken);
+      authenticator.authenticate(subject, refreshToken);
     } catch (ExceptionWithContext ex) {
       return error(ex.getCode());
     }

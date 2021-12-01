@@ -29,7 +29,9 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.Value;
 import org.apache.shiro.SecurityUtils;
 import sonia.scm.config.ScmConfiguration;
@@ -66,13 +68,15 @@ public class PluginCenterAuthenticator {
     this.advancedHttpClient = advancedHttpClient;
   }
 
-  public void authenticate(String refreshToken) {
+  public void authenticate(String pluginCenterSubject, String refreshToken) {
+    Preconditions.checkArgument(!Strings.isNullOrEmpty(pluginCenterSubject), "pluginCenterSubject is required");
+    Preconditions.checkArgument(!Strings.isNullOrEmpty(refreshToken), "refresh token is required");
+
     // only a user which is able to manage plugins, sho
     PluginPermissions.write().check();
 
-    Preconditions.checkArgument(!Strings.isNullOrEmpty(refreshToken), "refresh token is required");
     // check if refresh token is valid
-    fetchAccessToken(principal(), refreshToken);
+    fetchAccessToken(new Authentication(principal(), pluginCenterSubject, refreshToken));
   }
 
   public boolean isAuthenticated() {
@@ -83,18 +87,18 @@ public class PluginCenterAuthenticator {
     PluginPermissions.read().check();
     Authentication authentication = getAuthentication()
       .orElseThrow(() -> new IllegalStateException("An access token can only be obtained, after a prior authentication"));
-    return fetchAccessToken(authentication.getPrincipal(), authentication.getRefreshToken());
+    return fetchAccessToken(authentication);
   }
 
   @CanIgnoreReturnValue
-  private String fetchAccessToken(String principal, String refreshToken) {
+  private String fetchAccessToken(Authentication authentication) {
     String pluginAuthUrl = scmConfiguration.getPluginAuthUrl();
     Preconditions.checkState(!Strings.isNullOrEmpty(pluginAuthUrl), "plugin auth url is not configured");
 
     try {
       AdvancedHttpResponse response = advancedHttpClient.post(HttpUtil.concatenate(pluginAuthUrl, "refresh"))
         .spanKind(SPAN_KIND)
-        .jsonContent(new RefreshRequest(refreshToken))
+        .jsonContent(new RefreshRequest(authentication.getRefreshToken()))
         .request();
 
       if (!response.isSuccessful()) {
@@ -103,8 +107,6 @@ public class PluginCenterAuthenticator {
 
       RefreshResponse refresh = response.contentFromJson(RefreshResponse.class);
 
-      Authentication authentication = new Authentication();
-      authentication.setPrincipal(principal);
       authentication.setRefreshToken(refresh.getRefreshToken());
       configurationStore.set(authentication);
 
@@ -125,9 +127,12 @@ public class PluginCenterAuthenticator {
   @Data
   @XmlRootElement
   @VisibleForTesting
+  @AllArgsConstructor
+  @NoArgsConstructor
   @XmlAccessorType(XmlAccessType.FIELD)
   static class Authentication {
     private String principal;
+    private String pluginCenterSubject;
     private String refreshToken;
   }
 

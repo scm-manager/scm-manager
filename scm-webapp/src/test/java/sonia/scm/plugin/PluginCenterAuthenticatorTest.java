@@ -77,13 +77,13 @@ class PluginCenterAuthenticatorTest {
   @Test
   @SubjectAware("marvin")
   void shouldFailAuthenticationWithoutPermissions() {
-    assertThrows(AuthorizationException.class, () -> authenticator.authenticate("refresh-token"));
+    assertThrows(AuthorizationException.class, () -> authenticator.authenticate("marvin@hitchhiker.com", "refresh-token"));
   }
 
   @Test
   @SubjectAware(value = "marvin", permissions = "plugin:read")
   void shouldFailAuthenticationWithReadPermissions() {
-    assertThrows(AuthorizationException.class, () -> authenticator.authenticate("refresh-token"));
+    assertThrows(AuthorizationException.class, () -> authenticator.authenticate("marvin@hitchhiker.com", "refresh-token"));
   }
 
   @Test
@@ -103,26 +103,36 @@ class PluginCenterAuthenticatorTest {
 
     @Test
     void shouldFailWithoutRefreshToken() {
-      assertThrows(IllegalArgumentException.class, () -> authenticator.authenticate(null));
+      assertThrows(IllegalArgumentException.class, () -> authenticator.authenticate("tricia.mcmillan@hitchhiker.com", null));
     }
 
     @Test
     void shouldFailWithEmptyRefreshToken() {
-      assertThrows(IllegalArgumentException.class, () -> authenticator.authenticate(""));
+      assertThrows(IllegalArgumentException.class, () -> authenticator.authenticate("tricia.mcmillan@hitchhiker.com", ""));
+    }
+
+    @Test
+    void shouldFailWithoutSubject() {
+      assertThrows(IllegalArgumentException.class, () -> authenticator.authenticate(null, "rf"));
+    }
+
+    @Test
+    void shouldFailWithEmptySubject() {
+      assertThrows(IllegalArgumentException.class, () -> authenticator.authenticate("", "rf"));
     }
 
     @Test
     void shouldFailWithoutPluginAuthUrl() {
       scmConfiguration.setPluginAuthUrl(null);
       // TODO
-      assertThrows(IllegalStateException.class, () -> authenticator.authenticate("my-awesome-refresh-token"));
+      assertThrows(IllegalStateException.class, () -> authenticator.authenticate("tricia.mcmillan@hitchhiker.com", "my-awesome-refresh-token"));
     }
 
     @Test
     void shouldAuthenticate() throws IOException {
       mockAuthProtocol("https://plugin-center-api.scm-manager.org/api/v1/auth/oidc/refresh", "access", "refresh");
 
-      authenticator.authenticate("my-awesome-refresh-token");
+      authenticator.authenticate("tricia.mcmillan@hitchhiker.com", "my-awesome-refresh-token");
       assertThat(authenticator.isAuthenticated()).isTrue();
     }
 

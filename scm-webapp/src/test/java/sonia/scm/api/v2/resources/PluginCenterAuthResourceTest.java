@@ -173,7 +173,7 @@ class PluginCenterAuthResourceTest {
 
     @Test
     void shouldReturnErrorRedirectWithoutChallengeParameter() throws URISyntaxException {
-      MockHttpResponse response = post("/v2/plugins/auth/callback", "rf");
+      MockHttpResponse response = post("/v2/plugins/auth/callback", "trillian", "rf");
       assertError(response, ERROR_CHALLENGE_MISSING);
     }
 
@@ -181,17 +181,17 @@ class PluginCenterAuthResourceTest {
     void shouldReturnErrorRedirectWithChallengeMismatch() throws URISyntaxException {
       when(challengeGenerator.create()).thenReturn("xyz");
       get("/v2/plugins/auth?source=/repos");
-      MockHttpResponse response = post("/v2/plugins/auth/callback?challenge=abc", "rf");
+      MockHttpResponse response = post("/v2/plugins/auth/callback?challenge=abc", "trillian", "rf");
       assertError(response, ERROR_CHALLENGE_DOES_NOT_MATCH);
     }
 
     @Test
     void shouldReturnErrorRedirectFromFailedAuthentication() throws URISyntaxException {
       FetchAccessTokenFailedException exception = new FetchAccessTokenFailedException("failed ...");
-      doThrow(exception).when(authenticator).authenticate("rf");
+      doThrow(exception).when(authenticator).authenticate("trillian", "rf");
       when(challengeGenerator.create()).thenReturn("xyz");
       get("/v2/plugins/auth?source=/repos");
-      MockHttpResponse response = post("/v2/plugins/auth/callback?challenge=xyz", "rf");
+      MockHttpResponse response = post("/v2/plugins/auth/callback?challenge=xyz", "trillian", "rf");
       assertError(response, exception.getCode());
     }
 
@@ -199,15 +199,15 @@ class PluginCenterAuthResourceTest {
     void shouldAuthenticate() throws URISyntaxException {
       when(challengeGenerator.create()).thenReturn("xyz");
       get("/v2/plugins/auth?source=/repos");
-      post("/v2/plugins/auth/callback?challenge=xyz", "refresh_token");
-      verify(authenticator).authenticate("refresh_token");
+      post("/v2/plugins/auth/callback?challenge=xyz", "trillian", "refresh_token");
+      verify(authenticator).authenticate("trillian", "refresh_token");
     }
 
     @Test
     void shouldRedirectToSource() throws URISyntaxException {
       when(challengeGenerator.create()).thenReturn("xyz");
       get("/v2/plugins/auth?source=/users");
-      MockHttpResponse response = post("/v2/plugins/auth/callback?challenge=xyz&source=/users", "rrrrf");
+      MockHttpResponse response = post("/v2/plugins/auth/callback?challenge=xyz&source=/users", "tricia", "rrrrf");
       assertRedirect(response, "/users");
     }
 
@@ -215,15 +215,16 @@ class PluginCenterAuthResourceTest {
     void shouldRemoveCallbackFromXsrf() throws URISyntaxException {
       when(challengeGenerator.create()).thenReturn("xyz");
       get("/v2/plugins/auth?source=/repos");
-      post("/v2/plugins/auth/callback?challenge=xyz", "rf");
+      post("/v2/plugins/auth/callback?challenge=xyz", "trillian", "rf");
       verify(excludes).remove("/v2/plugins/auth/callback");
     }
 
   }
 
   @CanIgnoreReturnValue
-  private MockHttpResponse post(String uri, String refreshToken) throws URISyntaxException {
+  private MockHttpResponse post(String uri, String subject, String refreshToken) throws URISyntaxException {
     MockHttpRequest request = MockHttpRequest.post(uri);
+    request.addFormHeader("subject", subject);
     request.addFormHeader("refresh_token", refreshToken);
     MockHttpResponse response = new MockHttpResponse();
     dispatcher.invoke(request, response);
