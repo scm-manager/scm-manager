@@ -24,6 +24,7 @@
 
 package sonia.scm.plugin;
 
+import com.github.legman.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContextProvider;
@@ -34,8 +35,10 @@ import sonia.scm.util.HttpUtil;
 import sonia.scm.util.SystemUtil;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Set;
 
+@Singleton
 public class PluginCenter {
 
   private static final String CACHE_NAME = "sonia.cache.plugins";
@@ -53,6 +56,12 @@ public class PluginCenter {
     this.configuration = configuration;
     this.loader = loader;
     this.cache = cacheManager.getCache(CACHE_NAME);
+  }
+
+  @Subscribe
+  public void handle(PluginCenterAuthenticationEvent event) {
+    LOG.debug("clear plugin center cache, because of {}", event);
+    cache.clear();
   }
 
   synchronized Set<AvailablePlugin> getAvailable() {

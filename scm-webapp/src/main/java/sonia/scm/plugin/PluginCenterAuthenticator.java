@@ -35,6 +35,7 @@ import lombok.NoArgsConstructor;
 import lombok.Value;
 import org.apache.shiro.SecurityUtils;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.event.ScmEventBus;
 import sonia.scm.net.ahc.AdvancedHttpClient;
 import sonia.scm.net.ahc.AdvancedHttpResponse;
 import sonia.scm.store.ConfigurationStore;
@@ -63,12 +64,17 @@ public class PluginCenterAuthenticator {
   private final ConfigurationStore<Authentication> configurationStore;
   private final ScmConfiguration scmConfiguration;
   private final AdvancedHttpClient advancedHttpClient;
+  private final ScmEventBus eventBus;
 
   @Inject
-  public PluginCenterAuthenticator(ConfigurationStoreFactory configurationStore, ScmConfiguration scmConfiguration, AdvancedHttpClient advancedHttpClient) {
+  public PluginCenterAuthenticator(
+    ConfigurationStoreFactory configurationStore, ScmConfiguration scmConfiguration,
+    AdvancedHttpClient advancedHttpClient, ScmEventBus eventBus
+  ) {
     this.configurationStore = configurationStore.withType(Authentication.class).withName(STORE_NAME).build();
     this.scmConfiguration = scmConfiguration;
     this.advancedHttpClient = advancedHttpClient;
+    this.eventBus = eventBus;
   }
 
   public void authenticate(String pluginCenterSubject, String refreshToken) {
@@ -79,13 +85,18 @@ public class PluginCenterAuthenticator {
     PluginPermissions.write().check();
 
     // check if refresh token is valid
-    fetchAccessToken(new Authentication(principal(), pluginCenterSubject, refreshToken, Instant.now()));
+    Authentication authentication = new Authentication(principal(), pluginCenterSubject, refreshToken, Instant.now());
+    fetchAccessToken(authentication);
+    eventBus.post(new PluginCenterLoginEvent(authentication));
   }
 
   public void logout() {
     PluginPermissions.write().check();
 
-    configurationStore.delete();
+    getAuthenticationInfo().ifPresent(authenticationInfo -> {
+      eventBus.post(new PluginCenterLogoutEvent(authenticationInfo));
+      configurationStore.delete();
+    });
   }
 
   public boolean isAuthenticated() {

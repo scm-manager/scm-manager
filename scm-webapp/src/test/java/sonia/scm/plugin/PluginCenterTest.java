@@ -86,12 +86,24 @@ class PluginCenterTest {
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   void shouldCache() {
     Set<AvailablePlugin> first = new HashSet<>();
     when(loader.load(anyString())).thenReturn(first, new HashSet<>());
 
     assertThat(pluginCenter.getAvailable()).isSameAs(first);
     assertThat(pluginCenter.getAvailable()).isSameAs(first);
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
+  void shouldClearCache() {
+    Set<AvailablePlugin> first = new HashSet<>();
+    when(loader.load(anyString())).thenReturn(first, new HashSet<>());
+
+    assertThat(pluginCenter.getAvailable()).isSameAs(first);
+    pluginCenter.handle(new PluginCenterLoginEvent(null));
+    assertThat(pluginCenter.getAvailable()).isNotSameAs(first);
   }
 
 }

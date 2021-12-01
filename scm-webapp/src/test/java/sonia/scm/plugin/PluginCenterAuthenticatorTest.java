@@ -37,6 +37,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.event.ScmEventBus;
 import sonia.scm.net.ahc.AdvancedHttpClient;
 import sonia.scm.net.ahc.AdvancedHttpRequestWithBody;
 import sonia.scm.net.ahc.AdvancedHttpResponse;
@@ -48,7 +49,6 @@ import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
@@ -68,12 +68,15 @@ class PluginCenterAuthenticatorTest {
 
   private ScmConfiguration scmConfiguration;
 
+  @Mock
+  private ScmEventBus eventBus;
+
   private final InMemoryConfigurationStoreFactory factory = InMemoryConfigurationStoreFactory.create();
 
   @BeforeEach
   void setUpObjectUnderTest() {
     scmConfiguration = new ScmConfiguration();
-    authenticator = new PluginCenterAuthenticator(factory, scmConfiguration, advancedHttpClient);
+    authenticator = new PluginCenterAuthenticator(factory, scmConfiguration, advancedHttpClient, eventBus);
   }
 
   @Test
@@ -138,7 +141,6 @@ class PluginCenterAuthenticatorTest {
     @Test
     void shouldFailWithoutPluginAuthUrl() {
       scmConfiguration.setPluginAuthUrl(null);
-      // TODO
       assertThrows(IllegalStateException.class, () -> authenticator.authenticate("tricia.mcmillan@hitchhiker.com", "my-awesome-refresh-token"));
     }
 
@@ -148,6 +150,19 @@ class PluginCenterAuthenticatorTest {
 
       authenticator.authenticate("tricia.mcmillan@hitchhiker.com", "my-awesome-refresh-token");
       assertThat(authenticator.isAuthenticated()).isTrue();
+    }
+
+    @Test
+    void shouldFireLoginEvent() throws IOException {
+      mockAuthProtocol("https://plugin-center-api.scm-manager.org/api/v1/auth/oidc/refresh", "access", "refresh");
+
+      authenticator.authenticate("tricia.mcmillan@hitchhiker.com", "my-awesome-refresh-token");
+
+      ArgumentCaptor<PluginCenterLoginEvent> captor = ArgumentCaptor.forClass(PluginCenterLoginEvent.class);
+      verify(eventBus).post(captor.capture());
+
+      AuthenticationInfo info = captor.getValue().getAuthenticationInfo();
+      assertThat(info.getPluginCenterSubject()).isEqualTo("tricia.mcmillan@hitchhiker.com");
     }
 
     @Test
@@ -242,6 +257,19 @@ class PluginCenterAuthenticatorTest {
 
       assertThat(authenticator.isAuthenticated()).isFalse();
       assertThat(authenticator.getAuthenticationInfo()).isEmpty();
+    }
+
+    @Test
+    void shouldFireLogoutEventAfterLogout() {
+      preAuth("refresh_token");
+
+      authenticator.logout();
+
+      ArgumentCaptor<PluginCenterLogoutEvent> captor = ArgumentCaptor.forClass(PluginCenterLogoutEvent.class);
+      verify(eventBus).post(captor.capture());
+
+      AuthenticationInfo info = captor.getValue().getPriorAuthenticationInfo();
+      assertThat(info.getPluginCenterSubject()).isEqualTo("tricia.mcmillan@hitchhiker.com");
     }
 
     @SuppressWarnings("unchecked")
