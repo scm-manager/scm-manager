@@ -40,13 +40,16 @@ import sonia.scm.net.ahc.AdvancedHttpResponse;
 import sonia.scm.store.ConfigurationStore;
 import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.util.HttpUtil;
+import sonia.scm.xml.XmlInstantAdapter;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.Optional;
 
 import static sonia.scm.plugin.Tracing.SPAN_KIND;
@@ -72,15 +75,26 @@ public class PluginCenterAuthenticator {
     Preconditions.checkArgument(!Strings.isNullOrEmpty(pluginCenterSubject), "pluginCenterSubject is required");
     Preconditions.checkArgument(!Strings.isNullOrEmpty(refreshToken), "refresh token is required");
 
-    // only a user which is able to manage plugins, sho
+    // only a user which is able to manage plugins, can authenticate the plugin center
     PluginPermissions.write().check();
 
     // check if refresh token is valid
-    fetchAccessToken(new Authentication(principal(), pluginCenterSubject, refreshToken));
+    fetchAccessToken(new Authentication(principal(), pluginCenterSubject, refreshToken, Instant.now()));
+  }
+
+  public void logout() {
+    PluginPermissions.write().check();
+
+    configurationStore.delete();
   }
 
   public boolean isAuthenticated() {
     return getAuthentication().isPresent();
+  }
+
+  public Optional<AuthenticationInfo> getAuthenticationInfo() {
+    PluginPermissions.read().check();
+    return getAuthentication().map(a -> a);
   }
 
   public String fetchAccessToken() {
@@ -130,10 +144,12 @@ public class PluginCenterAuthenticator {
   @AllArgsConstructor
   @NoArgsConstructor
   @XmlAccessorType(XmlAccessType.FIELD)
-  static class Authentication {
+  static class Authentication implements AuthenticationInfo {
     private String principal;
     private String pluginCenterSubject;
     private String refreshToken;
+    @XmlJavaTypeAdapter(XmlInstantAdapter.class)
+    private Instant date;
   }
 
   @Value

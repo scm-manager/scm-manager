@@ -44,9 +44,11 @@ import sonia.scm.plugin.PluginCenterAuthenticator.RefreshResponse;
 import sonia.scm.store.InMemoryConfigurationStoreFactory;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
@@ -90,6 +92,18 @@ class PluginCenterAuthenticatorTest {
   @SubjectAware("marvin")
   void shouldFailToFetchAccessTokenWithoutPermission() {
     assertThrows(AuthorizationException.class, () -> authenticator.fetchAccessToken());
+  }
+
+  @Test
+  @SubjectAware("marvin")
+  void shouldFailGetAuthenticationInfoWithoutPermission() {
+    assertThrows(AuthorizationException.class, () -> authenticator.getAuthenticationInfo());
+  }
+
+  @Test
+  @SubjectAware("marvin")
+  void shouldFailLogoutWithoutPermission() {
+    assertThrows(AuthorizationException.class, () -> authenticator.logout());
   }
 
   @Nested
@@ -205,11 +219,38 @@ class PluginCenterAuthenticatorTest {
       assertThat(refreshTokens).containsExactlyInAnyOrder("refreshOne", "refreshTwo");
     }
 
+    @Test
+    void shouldReturnEmptyWithoutPriorAuthentication() {
+      assertThat(authenticator.getAuthenticationInfo()).isEmpty();
+    }
+
+    @Test
+    void shouldReturnAuthenticationInfo() {
+      preAuth("refresh_token");
+      assertThat(authenticator.getAuthenticationInfo()).hasValueSatisfying(info -> {
+        assertThat(info.getPluginCenterSubject()).isEqualTo("tricia.mcmillan@hitchhiker.com");
+        assertThat(info.getPrincipal()).isEqualTo("trillian");
+        assertThat(info.getDate()).isNotNull();
+      });
+    }
+
+    @Test
+    void shouldLogout() {
+      preAuth("refresh_token");
+
+      authenticator.logout();
+
+      assertThat(authenticator.isAuthenticated()).isFalse();
+      assertThat(authenticator.getAuthenticationInfo()).isEmpty();
+    }
+
     @SuppressWarnings("unchecked")
     private void preAuth(String refreshToken) {
       Authentication authentication = new Authentication();
+      authentication.setPluginCenterSubject("tricia.mcmillan@hitchhiker.com");
       authentication.setPrincipal("trillian");
       authentication.setRefreshToken(refreshToken);
+      authentication.setDate(Instant.now());
       factory.get(STORE_NAME, null).set(authentication);
     }
 

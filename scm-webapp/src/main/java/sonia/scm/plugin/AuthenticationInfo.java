@@ -21,32 +21,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.store;
+
+package sonia.scm.plugin;
+
+import java.time.Instant;
 
 /**
- * In memory store implementation of {@link ConfigurationStore}.
- * 
- * @author Sebastian Sdorra
- *
- * @param <T> type of stored object
+ * Information about the plugin center authentication.
+ * @since 2.28.0
  */
-public class InMemoryConfigurationStore<T> implements ConfigurationStore<T> {
+public interface AuthenticationInfo {
 
-  private T object;
+  /**
+   * Returns the username of the SCM-Manager user which has authenticated the plugin center.
+   * @return SCM-Manager username
+   */
+  String getPrincipal();
 
-  @Override
-  public T get() {
-    return object;
-  }
+  /**
+   * Returns the subject of the plugin center user.
+   * @return plugin center subject
+   */
+  String getPluginCenterSubject();
 
-  @Override
-  public void set(T obejct) {
-    this.object = obejct;
-  }
-
-  @Override
-  public void delete() {
-    object = null;
-  }
+  /**
+   * Returns the date on which the authentication was performed.
+   * @return authentication date
+   */
+  Instant getDate();
 }
