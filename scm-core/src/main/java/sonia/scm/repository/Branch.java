@@ -130,7 +130,7 @@ public final class Branch implements Serializable, Validateable {
    */
   @Deprecated
   public static Branch normalBranch(String name, String revision, Long lastCommitDate) {
-    return new Branch(name, revision, false, lastCommitDate);
+    return normalBranch(name, revision, false, lastCommitDate, null);
   }
 
   public static Branch normalBranch(String name, String revision, Long lastCommitDate, Person lastCommitter) {
@@ -150,7 +150,7 @@ public final class Branch implements Serializable, Validateable {
    */
   @Deprecated
   public static Branch defaultBranch(String name, String revision, Long lastCommitDate) {
-    return new Branch(name, revision, true, lastCommitDate);
+    return defaultBranch(name, revision, true, lastCommitDate, null);
   }
 
   public static Branch defaultBranch(String name, String revision, Long lastCommitDate, Person lastCommitter) {
