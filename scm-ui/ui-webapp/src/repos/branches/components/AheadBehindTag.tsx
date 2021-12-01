@@ -61,6 +61,10 @@ const Bar = styled.span.attrs<BarProps>(props => ({
   margin-bottom: 2px;
 `;
 
+const TooltipWithDefaultCursor = styled(Tooltip)`
+  cursor: default !important;
+`;
+
 const AheadBehindTag: FC<Props> = ({ branch, details }) => {
   const [t] = useTranslation("repos");
 
@@ -73,7 +77,7 @@ const AheadBehindTag: FC<Props> = ({ branch, details }) => {
   }
 
   return (
-    <Tooltip
+    <TooltipWithDefaultCursor
       message={t("branch.aheadBehind.tooltip", { ahead: details.changesetsAhead, behind: details.changesetsBehind })}
       location="top"
     >
@@ -95,7 +99,7 @@ const AheadBehindTag: FC<Props> = ({ branch, details }) => {
           />
         </Ahead>
       </div>
-    </Tooltip>
+    </TooltipWithDefaultCursor>
   );
 };
 

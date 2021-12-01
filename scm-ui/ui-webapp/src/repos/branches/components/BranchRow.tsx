@@ -45,7 +45,7 @@ const BranchRow: FC<Props> = ({ baseUrl, branch, onDelete, details }) => {
   if ((branch?._links?.delete as Link)?.href) {
     deleteButton = (
       <span
-        className="icon is-small is-hovered"
+        className="icon is-small is-hovered is-clickable"
         onClick={() => onDelete(branch)}
         onKeyDown={e => e.key === "Enter" && onDelete(branch)}
         tabIndex={0}
