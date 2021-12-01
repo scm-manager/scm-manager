@@ -148,6 +148,9 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
       if (repositoryService.isSupported(Command.BRANCHES)) {
         linksBuilder.single(link("branches", resourceLinks.branchCollection().self(repository.getNamespace(), repository.getName())));
       }
+      if (repositoryService.isSupported(Command.BRANCH_DETAILS)) {
+        linksBuilder.single(link("branchDetailsCollection", resourceLinks.branchDetailsCollection().self(repository.getNamespace(), repository.getName())));
+      }
       if (repositoryService.isSupported(Feature.INCOMING_REVISION)) {
         linksBuilder.single(link("incomingChangesets", resourceLinks.incoming().changesets(repository.getNamespace(), repository.getName())));
         linksBuilder.single(link("incomingDiff", resourceLinks.incoming().diff(repository.getNamespace(), repository.getName())));

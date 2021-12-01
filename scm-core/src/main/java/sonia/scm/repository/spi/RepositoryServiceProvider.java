@@ -311,4 +311,11 @@ public abstract class RepositoryServiceProvider implements Closeable
   public FileLockCommand getFileLockCommand() {
     throw new CommandNotSupportedException(Command.FILE_LOCK);
   }
+
+  /**
+   * @since 2.28.0
+   */
+  public BranchDetailsCommand getBranchDetailsCommand() {
+    throw new CommandNotSupportedException(Command.BRANCH_DETAILS);
+  }
 }

@@ -24,7 +24,7 @@
 import React, { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import BranchRow from "./BranchRow";
-import { Branch, Repository } from "@scm-manager/ui-types";
+import { Branch, BranchDetails, Repository } from "@scm-manager/ui-types";
 import { ConfirmAlert, ErrorNotification } from "@scm-manager/ui-components";
 import { useDeleteBranch } from "@scm-manager/ui-api";
 
@@ -33,9 +33,10 @@ type Props = {
   repository: Repository;
   branches: Branch[];
   type: string;
+  branchesDetails: BranchDetails[];
 };
 
-const BranchTable: FC<Props> = ({ repository, baseUrl, branches, type }) => {
+const BranchTable: FC<Props> = ({ repository, baseUrl, branches, type, branchesDetails }) => {
   const { isLoading, error, remove, isDeleted } = useDeleteBranch(repository);
   const [t] = useTranslation("repos");
   const [showConfirmAlert, setShowConfirmAlert] = useState(false);
@@ -87,7 +88,7 @@ const BranchTable: FC<Props> = ({ repository, baseUrl, branches, type }) => {
           close={() => abortDelete()}
         />
       ) : null}
-      {error ? <ErrorNotification error={error} /> : null}
+      <ErrorNotification error={error} />
       <table className="card-table table is-hoverable is-fullwidth is-word-break">
         <thead>
           <tr>
@@ -96,7 +97,13 @@ const BranchTable: FC<Props> = ({ repository, baseUrl, branches, type }) => {
         </thead>
         <tbody>
           {(branches || []).map(branch => (
-            <BranchRow key={branch.name} baseUrl={baseUrl} branch={branch} onDelete={onDelete} />
+            <BranchRow
+              key={branch.name}
+              baseUrl={baseUrl}
+              branch={branch}
+              onDelete={onDelete}
+              details={branchesDetails?.filter((b: BranchDetails) => b.branchName === branch.name)[0]}
+            />
           ))}
         </tbody>
       </table>

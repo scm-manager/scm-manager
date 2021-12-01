@@ -337,6 +337,14 @@ public class RepositoryToRepositoryDtoMapperTest {
   }
 
   @Test
+  public void shouldAppendBranchDetailsLinkIfSupported() {
+    Repository testRepository = createTestRepository();
+    when(repositoryService.isSupported(Command.BRANCH_DETAILS)).thenReturn(true);
+    RepositoryDto dto = mapper.map(testRepository);
+    assertTrue(dto.getLinks().getLinkBy("branchDetailsCollection").isPresent());
+  }
+
+  @Test
   public void shouldCreateCorrectLinksForHealthChecks() {
     when(scmContextProvider.getDocumentationVersion()).thenReturn("2.17.x");
 

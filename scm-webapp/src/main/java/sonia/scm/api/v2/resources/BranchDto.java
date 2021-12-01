@@ -55,6 +55,7 @@ public class BranchDto extends HalRepresentation {
   private boolean defaultBranch;
   @JsonInclude(NON_NULL)
   private Instant lastCommitDate;
+  private PersonDto lastCommitter;
   private boolean stale;
 
   BranchDto(Links links, Embedded embedded) {

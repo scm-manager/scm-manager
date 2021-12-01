@@ -53,6 +53,8 @@ public class VndMediaType {
   public static final String TAG_COLLECTION = PREFIX + "tagCollection" + SUFFIX;
   public static final String TAG_REQUEST = PREFIX + "tagRequest" + SUFFIX;
   public static final String BRANCH = PREFIX + "branch" + SUFFIX;
+  public static final String BRANCH_DETAILS = PREFIX + "branchDetails" + SUFFIX;
+  public static final String BRANCH_DETAILS_COLLECTION = PREFIX + "branchDetailsCollection" + SUFFIX;
   public static final String BRANCH_REQUEST = PREFIX + "branchRequest" + SUFFIX;
   public static final String DIFF = PLAIN_TEXT_PREFIX + "diff" + PLAIN_TEXT_SUFFIX;
   public static final String DIFF_PARSED = PREFIX + "diffParsed" + SUFFIX;

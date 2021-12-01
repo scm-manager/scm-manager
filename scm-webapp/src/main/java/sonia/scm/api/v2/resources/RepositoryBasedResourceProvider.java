@@ -30,6 +30,7 @@ import javax.inject.Provider;
 public class RepositoryBasedResourceProvider {
   private final Provider<TagRootResource> tagRootResource;
   private final Provider<BranchRootResource> branchRootResource;
+  private final Provider<BranchDetailsResource> branchDetailsResource;
   private final Provider<ChangesetRootResource> changesetRootResource;
   private final Provider<SourceRootResource> sourceRootResource;
   private final Provider<ContentResource> contentResource;
@@ -46,6 +47,7 @@ public class RepositoryBasedResourceProvider {
   public RepositoryBasedResourceProvider(
     Provider<TagRootResource> tagRootResource,
     Provider<BranchRootResource> branchRootResource,
+    Provider<BranchDetailsResource> branchDetailsResource,
     Provider<ChangesetRootResource> changesetRootResource,
     Provider<SourceRootResource> sourceRootResource,
     Provider<ContentResource> contentResource,
@@ -59,6 +61,7 @@ public class RepositoryBasedResourceProvider {
     Provider<RepositoryPathsResource> repositoryPathResource) {
     this.tagRootResource = tagRootResource;
     this.branchRootResource = branchRootResource;
+    this.branchDetailsResource = branchDetailsResource;
     this.changesetRootResource = changesetRootResource;
     this.sourceRootResource = sourceRootResource;
     this.contentResource = contentResource;
@@ -122,5 +125,9 @@ public class RepositoryBasedResourceProvider {
 
   public RepositoryPathsResource getRepositoryPathResource() {
     return repositoryPathResource.get();
+  }
+
+  public BranchDetailsResource getBranchDetailsResource() {
+    return branchDetailsResource.get();
   }
 }

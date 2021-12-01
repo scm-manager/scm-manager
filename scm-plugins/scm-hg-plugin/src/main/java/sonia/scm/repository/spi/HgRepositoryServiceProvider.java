@@ -56,7 +56,8 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider {
     Command.MODIFY,
     Command.BUNDLE,
     Command.UNBUNDLE,
-    Command.FULL_HEALTH_CHECK
+    Command.FULL_HEALTH_CHECK,
+    Command.BRANCH_DETAILS
   );
 
   public static final Set<Feature> FEATURES = EnumSet.of(
@@ -186,5 +187,10 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider {
   @Override
   public FullHealthCheckCommand getFullHealthCheckCommand() {
     return new HgFullHealthCheckCommand(context);
+  }
+
+  @Override
+  public BranchDetailsCommand getBranchDetailsCommand() {
+    return new HgBranchDetailsCommand(context);
   }
 }

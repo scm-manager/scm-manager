@@ -21,29 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
-import { Repository } from "@scm-manager/ui-types";
-import { ErrorNotification, Loading } from "@scm-manager/ui-components";
-import { useBranches } from "@scm-manager/ui-api";
-import BranchTableWrapper from "./BranchTableWrapper";
 
-type Props = {
-  repository: Repository;
-  baseUrl: string;
-};
+package sonia.scm.repository.spi;
 
-const BranchesOverview: FC<Props> = ({ repository, baseUrl }) => {
-  const { isLoading, error, data } = useBranches(repository);
+import lombok.Data;
 
-  if (error) {
-    return <ErrorNotification error={error} />;
+/**
+ * @since 2.28.0
+ */
+public final class BranchDetailsCommandRequest {
+  private String branchName;
+
+  /**
+   * The name of the branch the details should be computed for.
+   */
+  public String getBranchName() {
+    return branchName;
   }
 
-  if (!data || isLoading) {
-    return <Loading />;
+  /**
+   * Sets the name of the branch the details should be computed for.
+   */
+  public void setBranchName(String branchName) {
+    this.branchName = branchName;
   }
-
-  return <BranchTableWrapper repository={repository} baseUrl={baseUrl} data={data} />;
-};
-
-export default BranchesOverview;
+}

@@ -21,29 +21,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
-import { Repository } from "@scm-manager/ui-types";
-import { ErrorNotification, Loading } from "@scm-manager/ui-components";
-import { useBranches } from "@scm-manager/ui-api";
-import BranchTableWrapper from "./BranchTableWrapper";
 
-type Props = {
-  repository: Repository;
-  baseUrl: string;
-};
+package sonia.scm.api.v2.resources;
 
-const BranchesOverview: FC<Props> = ({ repository, baseUrl }) => {
-  const { isLoading, error, data } = useBranches(repository);
+import com.fasterxml.jackson.annotation.JsonInclude;
+import de.otto.edison.hal.Embedded;
+import de.otto.edison.hal.HalRepresentation;
+import de.otto.edison.hal.Links;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-  if (error) {
-    return <ErrorNotification error={error} />;
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode(callSuper = true)
+public class BranchDetailsDto extends HalRepresentation {
+  private String branchName;
+  @JsonInclude(NON_NULL)
+  private Integer changesetsAhead;
+  @JsonInclude(NON_NULL)
+  private Integer changesetsBehind;
+
+  BranchDetailsDto(Links links, Embedded embedded) {
+    super(links, embedded);
   }
-
-  if (!data || isLoading) {
-    return <Loading />;
-  }
-
-  return <BranchTableWrapper repository={repository} baseUrl={baseUrl} data={data} />;
-};
-
-export default BranchesOverview;
+}

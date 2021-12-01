@@ -22,7 +22,8 @@
  * SOFTWARE.
  */
 
-import { Embedded, HalRepresentationWithEmbedded, Links } from "./hal";
+import { Person } from ".";
+import { Embedded, HalRepresentation, HalRepresentationWithEmbedded, Links } from "./hal";
 
 type EmbeddedBranches = {
   branches: Branch[];
@@ -35,9 +36,22 @@ export type Branch = {
   revision: string;
   defaultBranch?: boolean;
   lastCommitDate?: string;
+  lastCommitter?: Person;
   stale?: boolean;
   _links: Links;
 };
+
+export type BranchDetails = HalRepresentation & {
+  branchName: string;
+  changesetsAhead?: number;
+  changesetsBehind?: number;
+};
+
+type EmbeddedBranchDetails = {
+  branchDetails: BranchDetails[];
+} & Embedded;
+
+export type BranchDetailsCollection = HalRepresentationWithEmbedded<EmbeddedBranchDetails>;
 
 export type BranchCreation = {
   name: string;

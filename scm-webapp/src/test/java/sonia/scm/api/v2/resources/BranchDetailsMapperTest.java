@@ -22,45 +22,43 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.spi;
+package sonia.scm.api.v2.resources;
 
-import org.junit.Test;
-import sonia.scm.repository.Branch;
-import sonia.scm.repository.Person;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryTestData;
+import sonia.scm.repository.api.BranchDetailsCommandResult;
 
-import java.util.List;
+import java.net.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.ArgumentMatchers.eq;
-import static sonia.scm.repository.Branch.defaultBranch;
-import static sonia.scm.repository.Branch.normalBranch;
 
-public class HgBranchesCommandTest extends AbstractHgCommandTestBase {
+class BranchDetailsMapperTest {
+
+  private final Repository repository = RepositoryTestData.create42Puzzle();
+
+  BranchDetailsMapper mapper = new BranchDetailsMapperImpl();
+
+  @BeforeEach
+  void configureMapper() {
+    ScmPathInfoStore scmPathInfoStore = new ScmPathInfoStore();
+    scmPathInfoStore.set(() -> URI.create("/scm/api/"));
+    mapper.setResourceLinks(new ResourceLinks(scmPathInfoStore));
+  }
 
   @Test
-  public void shouldReadBranches() {
-    HgBranchesCommand command = new HgBranchesCommand(cmdContext);
-
-    List<Branch> branches = command.getBranches();
-
-    assertThat(branches).hasSize(2);
-    assertThat(branches.get(0)).isEqualTo(
-      defaultBranch(
-        "default",
-        "2baab8e80280ef05a9aa76c49c76feca2872afb7",
-        1339586381000L,
-        new Person("Zaphod Beeblebrox", "zaphod.beeblebrox@hitchhiker.com")
-      )
+  void shouldMapDto() {
+    BranchDetailsDto dto = mapper.map(
+      repository,
+      "master",
+      new BranchDetailsCommandResult(42, 21)
     );
-    assertThat(branches.get(1)).isEqualTo(
-      normalBranch(
-        "test-branch",
-        "79b6baf49711ae675568e0698d730b97ef13e84a",
-        1339586299000L,
-        new Person("Ford Prefect",
-          "ford.perfect@hitchhiker.com")
-      )
-    );
+
+    assertThat(dto.getBranchName()).isEqualTo("master");
+    assertThat(dto.getChangesetsAhead()).isEqualTo(42);
+    assertThat(dto.getChangesetsBehind()).isEqualTo(21);
+    assertThat(dto.getLinks().getLinkBy("self").get().getHref())
+      .isEqualTo("/scm/api/v2/repositories/hitchhiker/42Puzzle/branch-details/master");
   }
 }

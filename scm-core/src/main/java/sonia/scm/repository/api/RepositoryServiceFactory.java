@@ -325,6 +325,7 @@ public final class RepositoryServiceFactory {
       this.caches.add(cacheManager.getCache(LogCommandBuilder.CACHE_NAME));
       this.caches.add(cacheManager.getCache(TagsCommandBuilder.CACHE_NAME));
       this.caches.add(cacheManager.getCache(BranchesCommandBuilder.CACHE_NAME));
+      this.caches.add(cacheManager.getCache(BranchDetailsCommandBuilder.CACHE_NAME));
     }
 
     /**

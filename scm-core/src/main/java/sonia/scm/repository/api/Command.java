@@ -82,5 +82,10 @@ public enum Command
   /**
    * @since 2.26.0
    */
-  FILE_LOCK
+  FILE_LOCK,
+
+  /**
+   * @since 2.28.0
+   */
+  BRANCH_DETAILS
 }
