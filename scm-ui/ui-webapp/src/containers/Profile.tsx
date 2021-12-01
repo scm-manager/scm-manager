@@ -79,7 +79,7 @@ const Profile: FC = () => {
       <Page title={me.displayName}>
         <CustomQueryFlexWrappedColumns>
           <PrimaryContentColumn>
-            <Route path={`${url}`} exact>
+            <Route path={url} exact>
               <ProfileInfo me={me} />
             </Route>
             <Route path={`${url}/settings/theme`} exact>
