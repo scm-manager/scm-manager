@@ -46,7 +46,7 @@ const RenameRepository: FC<Props> = ({ repository }) => {
   const {
     isLoading: isLoadingNamespaceStrategies,
     error: namespaceStrategyLoadError,
-    data: namespaceStrategies,
+    data: namespaceStrategies
   } = useNamespaceStrategies();
 
   if (isRenamed) {
@@ -83,7 +83,7 @@ const RenameRepository: FC<Props> = ({ repository }) => {
       value: namespace,
       onChange: handleNamespaceChange,
       errorMessage: t("validation.namespace-invalid"),
-      validationError: namespaceValidationError,
+      validationError: namespaceValidationError
     };
 
     if (namespaceStrategies!.current === CUSTOM_NAMESPACE_STRATEGY) {
@@ -141,13 +141,14 @@ const RenameRepository: FC<Props> = ({ repository }) => {
       />
       <Level
         left={
-          <p>
-            <strong>{t("renameRepo.subtitle")}</strong>
-            <br />
-            {t("renameRepo.description1")}
-            <br />
-            {t("renameRepo.description2")}
-          </p>
+          <div>
+            <h4 className="has-text-weight-bold">{t("renameRepo.subtitle")}</h4>
+            <p>
+              {t("renameRepo.description1")}
+              <br />
+              {t("renameRepo.description2")}
+            </p>
+          </div>
         }
         right={<Button label={t("renameRepo.button")} action={() => setShowModal(true)} color="warning" icon="edit" />}
       />
