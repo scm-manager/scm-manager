@@ -121,7 +121,7 @@ public class BrowserResultToFileObjectDtoMapperTest {
 
     FileObjectDto dto = mapper.map(browserResult, namespaceAndName, 0);
 
-    assertThat(dto.getLinks().getLinkBy("self").get().getHref()).isEqualTo("http://example.com/base/v2/repositories/foo/bar/content/Revision/c%3Afile");
+    assertThat(dto.getLinks().getLinkBy("self").get().getHref()).isEqualTo("http://example.com/base/v2/repositories/foo/bar/content/Revision/c:file");
   }
 
   private BrowserResult createBrowserResult() {
