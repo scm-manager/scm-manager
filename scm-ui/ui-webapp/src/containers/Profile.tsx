@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 import React, { FC } from "react";
-import { Redirect, Route, useRouteMatch } from "react-router-dom";
+import { Route, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
   CustomQueryFlexWrappedColumns,
@@ -34,7 +34,7 @@ import {
   SecondaryNavigationColumn,
   StateMenuContextProvider,
   SubNavigation,
-  urls,
+  urls
 } from "@scm-manager/ui-components";
 import ChangeUserPassword from "./ChangeUserPassword";
 import ProfileInfo from "./ProfileInfo";
@@ -63,7 +63,7 @@ const Profile: FC = () => {
         subtitle={t("profile.error-subtitle")}
         error={{
           name: t("profile.error"),
-          message: t("profile.error-message"),
+          message: t("profile.error-message")
         }}
       />
     );
@@ -71,7 +71,7 @@ const Profile: FC = () => {
 
   const extensionProps = {
     me,
-    url,
+    url
   };
 
   return (
@@ -79,10 +79,9 @@ const Profile: FC = () => {
       <Page title={me.displayName}>
         <CustomQueryFlexWrappedColumns>
           <PrimaryContentColumn>
-            <Route path={url} exact>
+            <Route path={`${url}`} exact>
               <ProfileInfo me={me} />
             </Route>
-            <Redirect exact from={`${url}/settings/`} to={`${url}/settings/theme`} />
             <Route path={`${url}/settings/theme`} exact>
               <Theme />
             </Route>
