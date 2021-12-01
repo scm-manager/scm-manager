@@ -94,10 +94,7 @@ public final class Branch implements Serializable, Validateable {
    */
   @Deprecated
   Branch(String name, String revision, boolean defaultBranch, Long lastCommitDate) {
-    this.name = name;
-    this.revision = revision;
-    this.defaultBranch = defaultBranch;
-    this.lastCommitDate = lastCommitDate;
+    this(name, revision, defaultBranch, lastCommitDate, null);
   }
 
   /**
@@ -130,7 +127,7 @@ public final class Branch implements Serializable, Validateable {
    */
   @Deprecated
   public static Branch normalBranch(String name, String revision, Long lastCommitDate) {
-    return normalBranch(name, revision, false, lastCommitDate, null);
+    return normalBranch(name, revision, lastCommitDate, null);
   }
 
   public static Branch normalBranch(String name, String revision, Long lastCommitDate, Person lastCommitter) {
@@ -150,7 +147,7 @@ public final class Branch implements Serializable, Validateable {
    */
   @Deprecated
   public static Branch defaultBranch(String name, String revision, Long lastCommitDate) {
-    return defaultBranch(name, revision, true, lastCommitDate, null);
+    return defaultBranch(name, revision, lastCommitDate, null);
   }
 
   public static Branch defaultBranch(String name, String revision, Long lastCommitDate, Person lastCommitter) {

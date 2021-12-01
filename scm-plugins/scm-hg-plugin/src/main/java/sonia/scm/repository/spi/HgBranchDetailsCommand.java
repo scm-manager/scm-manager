@@ -61,7 +61,7 @@ public class HgBranchDetailsCommand implements BranchDetailsCommand {
 
       return new BranchDetailsCommandResult(ahead.size(), behind.size());
     } catch (ExecutionException e) {
-      if (e.getMessage().matches("unknown revision '.*'!")) {
+      if (e.getMessage().contains("unknown revision '")) {
         throw notFound(entity(Branch.class, request.getBranchName()).in(context.getScmRepository()));
       }
       throw e;
