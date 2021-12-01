@@ -68,13 +68,14 @@ const PluginEntry: FC<Props> = ({ plugin, openModal, pluginCenterAuthInfo }) => 
   const isUpdatable = plugin._links.update && (plugin._links.update as Link).href;
   const isUninstallable = plugin._links.uninstall && (plugin._links.uninstall as Link).href;
   const isCloudoguPlugin = plugin.type === "CLOUDOGU";
+  const isDefaultPluginCenterLoginAvailable = pluginCenterAuthInfo?.default && !!pluginCenterAuthInfo?._links?.login;
 
   const evaluateAction = () => {
     if (isInstallable) {
       return () => openModal({ plugin, action: PluginAction.INSTALL });
     }
 
-    if (isCloudoguPlugin) {
+    if (isCloudoguPlugin && isDefaultPluginCenterLoginAvailable) {
       return () => openModal({ plugin, action: PluginAction.CLOUDOGU });
     }
 
@@ -91,7 +92,7 @@ const PluginEntry: FC<Props> = ({ plugin, openModal, pluginCenterAuthInfo }) => 
   );
   const actionBar = () => (
     <ActionbarWrapper className="is-flex">
-      {isCloudoguPlugin && pluginCenterAuthInfo?._links?.login && (
+      {isCloudoguPlugin && isDefaultPluginCenterLoginAvailable && (
         <IconWrapper action={() => openModal({ plugin, action: PluginAction.CLOUDOGU })}>
           <Icon title={t("plugins.modal.cloudoguInstall")} name="link" color="success-dark" />
         </IconWrapper>

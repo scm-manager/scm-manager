@@ -98,6 +98,8 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
     (installed ? isLoadingInstalledPlugins : isLoadingAvailablePlugins) ||
     isLoadingPendingPlugins ||
     isLoadingPluginCenterAuthInfo;
+  const isPluginCenterAuthenticated = !!pluginCenterAuthInfo?.pluginCenterSubject;
+  const isDefaultPluginCenter = pluginCenterAuthInfo?.default;
 
   const renderHeader = (actions: React.ReactNode) => {
     return (
@@ -105,7 +107,7 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
         <div className="column">
           <Title>
             {t("plugins.title")}
-            {pluginCenterAuthInfo?.pluginCenterSubject ? (
+            {isPluginCenterAuthenticated && isDefaultPluginCenter ? (
               <Tooltip
                 message={t("plugins.myCloudogu.connectionInfo", {
                   pluginCenterSubject: pluginCenterAuthInfo.pluginCenterSubject
@@ -248,7 +250,9 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
     <>
       {renderHeader(actions)}
       <hr className="header-with-actions" />
-      <MyCloudoguBanner loginLink={(pluginCenterAuthInfo?._links?.login as Link)?.href} />
+      {isDefaultPluginCenter ? (
+        <MyCloudoguBanner loginLink={(pluginCenterAuthInfo?._links?.login as Link)?.href} />
+      ) : null}
       {renderPluginsList()}
       {renderFooter(actions)}
       {renderModals()}
