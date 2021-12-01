@@ -1,19 +1,22 @@
 import { Button } from "@scm-manager/ui-components";
 import * as React from "react";
+import { FC } from "react";
 import styled from "styled-components";
 import { Trans, useTranslation } from "react-i18next";
-import { usePluginCenterLogin } from "@scm-manager/ui-api";
 
 const MyCloudoguBannerWrapper = styled.div`
   border: 1px solid;
 `;
 
-const MyCloudoguBanner = () => {
-  const login = usePluginCenterLogin();
+type Props = {
+  loginLink?: string;
+};
+
+const MyCloudoguBanner: FC<Props> = ({ loginLink }) => {
   const [t] = useTranslation("admin");
-  return login ? (
+  return loginLink ? (
     <MyCloudoguBannerWrapper className="has-rounded-border is-flex is-flex-direction-column is-align-items-center p-5 mb-4 has-border-success">
-      <Button className="mb-5 has-text-weight-normal has-border-info" reducedMobile={true} link={login}>
+      <Button className="mb-5 has-text-weight-normal has-border-info" reducedMobile={true} link={loginLink}>
         <Trans
           t={t}
           i18nKey="plugins.myCloudogu.login.button.label"

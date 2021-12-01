@@ -87,6 +87,7 @@
       "showPending": "To execute the following plugin changes, SCM-Manager must be restarted."
     },
     "myCloudogu": {
+      "connectionInfo": "Instance is connected to myCloudogu.\nAccount: {{pluginCenterSubject}}",
       "login": {
         "button": {
           "label": "Connect to <0>myCloudogu</0>"

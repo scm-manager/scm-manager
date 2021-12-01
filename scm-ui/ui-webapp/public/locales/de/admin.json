@@ -87,6 +87,7 @@
       "showPending": "Um die folgenden Plugin-Änderungen auszuführen, muss SCM-Manager neu gestartet werden."
     },
     "myCloudogu": {
+      "connectionInfo": "Instanz ist mit myCloudogu verbunden.\nAccount: {{pluginCenterSubject}}",
       "login": {
         "button": {
           "label": "Mit <0>myCloudogu</0> verbinden"

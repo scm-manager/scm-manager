@@ -23,18 +23,18 @@
  */
 import React, { FC } from "react";
 import styled from "styled-components";
-import { Link, Plugin } from "@scm-manager/ui-types";
+import { Link, Plugin, PluginCenterAuthenticationInfo } from "@scm-manager/ui-types";
 import { CardColumn, Icon } from "@scm-manager/ui-components";
 import { PluginAction, PluginModalContent } from "../containers/PluginsOverview";
 import { useTranslation } from "react-i18next";
 import PluginAvatar from "./PluginAvatar";
 import classNames from "classnames";
-import { usePluginCenterLogin } from "@scm-manager/ui-api";
 import MyCloudoguTag from "./MyCloudoguTag";
 
 type Props = {
   plugin: Plugin;
   openModal: (content: PluginModalContent) => void;
+  pluginCenterAuthInfo?: PluginCenterAuthenticationInfo;
 };
 
 const ActionbarWrapper = styled.div`
@@ -62,13 +62,12 @@ const IconWrapper: FC<{ action: () => void }> = ({ action, children }) => {
   );
 };
 
-const PluginEntry: FC<Props> = ({ plugin, openModal }) => {
+const PluginEntry: FC<Props> = ({ plugin, openModal, pluginCenterAuthInfo }) => {
   const [t] = useTranslation("admin");
   const isInstallable = plugin._links.install && (plugin._links.install as Link).href;
   const isUpdatable = plugin._links.update && (plugin._links.update as Link).href;
   const isUninstallable = plugin._links.uninstall && (plugin._links.uninstall as Link).href;
   const isCloudoguPlugin = plugin.type === "CLOUDOGU";
-  const pluginCenterLoginLink = usePluginCenterLogin();
 
   const evaluateAction = () => {
     if (isInstallable) {
@@ -92,7 +91,7 @@ const PluginEntry: FC<Props> = ({ plugin, openModal }) => {
   );
   const actionBar = () => (
     <ActionbarWrapper className="is-flex">
-      {isCloudoguPlugin && pluginCenterLoginLink && (
+      {isCloudoguPlugin && pluginCenterAuthInfo?._links?.login && (
         <IconWrapper action={() => openModal({ plugin, action: PluginAction.CLOUDOGU })}>
           <Icon title={t("plugins.modal.cloudoguInstall")} name="link" color="success-dark" />
         </IconWrapper>

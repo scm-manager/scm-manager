@@ -24,7 +24,7 @@
 import * as React from "react";
 import { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Plugin } from "@scm-manager/ui-types";
+import { Link, Plugin } from "@scm-manager/ui-types";
 import {
   Button,
   ButtonGroup,
@@ -33,7 +33,8 @@ import {
   Loading,
   Notification,
   Subtitle,
-  Title
+  Title,
+  Tooltip
 } from "@scm-manager/ui-components";
 import PluginsList from "../components/PluginList";
 import PluginTopActions from "../components/PluginTopActions";
@@ -42,7 +43,12 @@ import ExecutePendingActionModal from "../components/ExecutePendingActionModal";
 import CancelPendingActionModal from "../components/CancelPendingActionModal";
 import UpdateAllActionModal from "../components/UpdateAllActionModal";
 import ShowPendingModal from "../components/ShowPendingModal";
-import { useAvailablePlugins, useInstalledPlugins, usePendingPlugins, usePluginCenterLogin } from "@scm-manager/ui-api";
+import {
+  useAvailablePlugins,
+  useInstalledPlugins,
+  usePendingPlugins,
+  usePluginCenterAuthInfo
+} from "@scm-manager/ui-api";
 import PluginModal from "../components/PluginModal";
 import MyCloudoguBanner from "../components/MyCloudoguBanner";
 
@@ -75,14 +81,23 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
     error: installedPluginsError
   } = useInstalledPlugins({ enabled: installed });
   const { data: pendingPlugins, isLoading: isLoadingPendingPlugins, error: pendingPluginsError } = usePendingPlugins();
+  const {
+    data: pluginCenterAuthInfo,
+    isLoading: isLoadingPluginCenterAuthInfo,
+    error: pluginCenterAuthInfoError
+  } = usePluginCenterAuthInfo();
   const [showPendingModal, setShowPendingModal] = useState(false);
   const [showExecutePendingModal, setShowExecutePendingModal] = useState(false);
   const [showUpdateAllModal, setShowUpdateAllModal] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [pluginModalContent, setPluginModalContent] = useState<PluginModalContent | null>(null);
   const collection = installed ? installedPlugins : availablePlugins;
-  const error = (installed ? installedPluginsError : availablePluginsError) || pendingPluginsError;
-  const loading = (installed ? isLoadingInstalledPlugins : isLoadingAvailablePlugins) || isLoadingPendingPlugins;
+  const error =
+    (installed ? installedPluginsError : availablePluginsError) || pendingPluginsError || pluginCenterAuthInfoError;
+  const loading =
+    (installed ? isLoadingInstalledPlugins : isLoadingAvailablePlugins) ||
+    isLoadingPendingPlugins ||
+    isLoadingPluginCenterAuthInfo;
 
   const renderHeader = (actions: React.ReactNode) => {
     return (
@@ -90,7 +105,16 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
         <div className="column">
           <Title>
             {t("plugins.title")}
-            <Icon name="check-circle" color="info" className="is-size-5 ml-1" />
+            {pluginCenterAuthInfo?.pluginCenterSubject ? (
+              <Tooltip
+                message={t("plugins.myCloudogu.connectionInfo", {
+                  pluginCenterSubject: pluginCenterAuthInfo.pluginCenterSubject
+                })}
+                multiline={true}
+              >
+                <Icon name="check-circle" color="info" className="is-size-5 ml-1" />
+              </Tooltip>
+            ) : null}
           </Title>
           <Subtitle subtitle={installed ? t("plugins.installedSubtitle") : t("plugins.availableSubtitle")} />
         </div>
@@ -178,7 +202,13 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
 
   const renderPluginsList = () => {
     if (collection?._embedded && collection._embedded.plugins.length > 0) {
-      return <PluginsList plugins={collection._embedded.plugins} openModal={setPluginModalContent} />;
+      return (
+        <PluginsList
+          plugins={collection._embedded.plugins}
+          openModal={setPluginModalContent}
+          pluginCenterAuthInfo={pluginCenterAuthInfo}
+        />
+      );
     }
     return <Notification type="info">{t("plugins.noPlugins")}</Notification>;
   };
@@ -218,7 +248,7 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
     <>
       {renderHeader(actions)}
       <hr className="header-with-actions" />
-      <MyCloudoguBanner />
+      <MyCloudoguBanner loginLink={(pluginCenterAuthInfo?._links?.login as Link)?.href} />
       {renderPluginsList()}
       {renderFooter(actions)}
       {renderModals()}
