@@ -24,7 +24,6 @@
 
 package sonia.scm.api.v2.resources;
 
-import com.google.common.base.Strings;
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Links;
@@ -32,6 +31,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.hibernate.validator.constraints.Length;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.api.BranchDetailsCommandBuilder;
@@ -43,6 +43,7 @@ import sonia.scm.util.HttpUtil;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
+import javax.validation.constraints.Pattern;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -50,7 +51,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static sonia.scm.repository.Branch.VALID_BRANCH_NAMES;
 
 @Path("")
 public class BranchDetailsResource {
@@ -108,7 +113,7 @@ public class BranchDetailsResource {
   public Response getBranchDetails(
     @PathParam("namespace") String namespace,
     @PathParam("name") String name,
-    @PathParam("branch") String branchName
+    @Length(min = 1, max = 100) @Pattern(regexp = VALID_BRANCH_NAMES) @PathParam("branch") String branchName
   ) {
     try (RepositoryService service = serviceFactory.create(new NamespaceAndName(namespace, name))) {
       BranchDetailsCommandResult result = service.getBranchDetailsCommand().execute(branchName);
@@ -161,10 +166,10 @@ public class BranchDetailsResource {
   public Response getBranchDetailsCollection(
     @PathParam("namespace") String namespace,
     @PathParam("name") String name,
-    @QueryParam("branches") String branches
+    @QueryParam("branches") List<@Length(min = 1, max = 100) @Pattern(regexp = VALID_BRANCH_NAMES) String> branches
   ) {
     try (RepositoryService service = serviceFactory.create(new NamespaceAndName(namespace, name))) {
-      List<BranchDetailsDto> dtos = getBranchDetailsDtos(service, branches);
+      List<BranchDetailsDto> dtos = getBranchDetailsDtos(service, decodeBranchNames(branches));
       Links links = Links.linkingTo().self(resourceLinks.branchDetailsCollection().self(namespace, name)).build();
       Embedded embedded = Embedded.embeddedBuilder().with("branchDetails", dtos).build();
 
@@ -174,12 +179,11 @@ public class BranchDetailsResource {
     }
   }
 
-  private List<BranchDetailsDto> getBranchDetailsDtos(RepositoryService service, String branches) {
+  private List<BranchDetailsDto> getBranchDetailsDtos(RepositoryService service, Collection<String> branches) {
     List<BranchDetailsDto> dtos = new ArrayList<>();
-    if (!Strings.isNullOrEmpty(branches)) {
-      String decodedBranches = HttpUtil.decode(branches);
+    if (!branches.isEmpty()) {
       BranchDetailsCommandBuilder branchDetailsCommand = service.getBranchDetailsCommand();
-      for (String branch : decodedBranches.split(",")) {
+      for (String branch : branches) {
         try {
           BranchDetailsCommandResult result = branchDetailsCommand.execute(branch);
           dtos.add(mapper.map(service.getRepository(), branch, result));
@@ -189,5 +193,9 @@ public class BranchDetailsResource {
       }
     }
     return dtos;
+  }
+
+  private Collection<String> decodeBranchNames(Collection<String> branches) {
+    return branches.stream().map(HttpUtil::decode).collect(Collectors.toList());
   }
 }

@@ -95,7 +95,7 @@ export const useBranchDetailsCollection = (repository: Repository, branches: Bra
   >(
     branchQueryKey(repository, "details"),
     ({ pageParam = 0 }) => {
-      const encodedBranches = encodeURIComponent(chunks[pageParam].map(b => b.name).join(","));
+      const encodedBranches = chunks[pageParam].map(b => encodeURIComponent(b.name)).join("&branches=");
       return apiClient.get(concat(link, `?branches=${encodedBranches}`)).then(response => response.json());
     },
     {
