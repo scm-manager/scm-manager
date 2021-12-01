@@ -141,9 +141,10 @@ public class PluginCenterAuthResource {
 
     challenge = challengeGenerator.create();
 
-    String path = uriInfo.getAbsolutePath().getPath().replace("/login", "/callback");
-    URI callbackUri = uriInfo.getBaseUriBuilder()
-      .path(path)
+    URI selfUri = uriInfo.getAbsolutePath();
+    selfUri = selfUri.resolve(selfUri.getPath().replace("/login", "/callback"));
+
+    URI callbackUri = UriBuilder.fromUri(selfUri)
       .queryParam("source", sourceUri)
       .queryParam("challenge", challenge)
       .build();
