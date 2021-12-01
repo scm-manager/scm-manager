@@ -22,12 +22,8 @@
  * SOFTWARE.
  */
 import React from "react";
-// eslint-disable-next-line no-restricted-imports
-import { mount, shallow } from "@scm-manager/ui-tests/enzyme-router";
-// eslint-disable-next-line no-restricted-imports
-import "@scm-manager/ui-tests/enzyme";
-// eslint-disable-next-line no-restricted-imports
-import "@scm-manager/ui-tests/i18n";
+import { mount, shallow } from "@scm-manager/ui-tests";
+import "@scm-manager/ui-tests";
 import PermissionsNavLink from "./PermissionsNavLink";
 
 describe("PermissionsNavLink", () => {

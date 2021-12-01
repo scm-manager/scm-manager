@@ -22,10 +22,7 @@
  * SOFTWARE.
  */
 import React from "react";
-// eslint-disable-next-line no-restricted-imports
-import "@scm-manager/ui-tests/enzyme";
-// eslint-disable-next-line no-restricted-imports
-import "@scm-manager/ui-tests/i18n";
+import "@scm-manager/ui-tests";
 import SetPermissionsNavLink from "./SetPermissionsNavLink";
 import { shallow } from "enzyme";
 

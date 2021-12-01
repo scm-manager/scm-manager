@@ -23,10 +23,7 @@
  */
 import React from "react";
 import { shallow } from "enzyme";
-// eslint-disable-next-line no-restricted-imports
-import "@scm-manager/ui-tests/enzyme";
-// eslint-disable-next-line no-restricted-imports
-import "@scm-manager/ui-tests/i18n";
+import "@scm-manager/ui-tests";
 import ChangePasswordNavLink from "./SetPasswordNavLink";
 
 it("should render nothing, if the password link is missing", () => {
