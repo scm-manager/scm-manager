@@ -84,7 +84,7 @@ class CardColumnGroup extends React.Component<Props, State> {
 
     return (
       <div className="mb-4">
-        <h2>
+        <h3>
           <span className={classNames("is-size-4", "is-clickable")} onClick={this.toggleCollapse}>
             {icon}
           </span>{" "}
@@ -95,7 +95,7 @@ class CardColumnGroup extends React.Component<Props, State> {
           ) : (
             name
           )}
-        </h2>
+        </h3>
         <hr />
         <div className={classNames("columns", "card-columns", "is-multiline", "mx-3", "my-0")}>{content}</div>
         <div className="is-clearfix" />

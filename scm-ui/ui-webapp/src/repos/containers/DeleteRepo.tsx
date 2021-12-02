@@ -38,7 +38,7 @@ const DeleteRepo: FC<Props> = ({ repository, confirmDialog = true }) => {
   const { isLoading, error, remove, isDeleted } = useDeleteRepository({
     onSuccess: () => {
       history.push("/repos/");
-    },
+    }
   });
   const [showConfirmAlert, setShowConfirmAlert] = useState(false);
   const [t] = useTranslation("repos");
@@ -67,12 +67,12 @@ const DeleteRepo: FC<Props> = ({ repository, confirmDialog = true }) => {
           {
             className: "is-outlined",
             label: t("deleteRepo.confirmAlert.submit"),
-            onClick: () => deleteRepoCallback(),
+            onClick: () => deleteRepoCallback()
           },
           {
             label: t("deleteRepo.confirmAlert.cancel"),
-            onClick: () => null,
-          },
+            onClick: () => null
+          }
         ]}
         close={() => setShowConfirmAlert(false)}
       />
@@ -84,11 +84,10 @@ const DeleteRepo: FC<Props> = ({ repository, confirmDialog = true }) => {
       <ErrorNotification error={error} />
       <Level
         left={
-          <p>
-            <strong>{t("deleteRepo.subtitle")}</strong>
-            <br />
-            {t("deleteRepo.description")}
-          </p>
+          <div>
+            <h4 className="has-text-weight-bold">{t("deleteRepo.subtitle")}</h4>
+            <p>{t("deleteRepo.description")}</p>
+          </div>
         }
         right={<DeleteButton label={t("deleteRepo.button")} action={action} loading={isLoading} />}
       />

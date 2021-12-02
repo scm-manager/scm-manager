@@ -23,8 +23,9 @@
  */
 
 import React, { FC } from "react";
-import { Tag } from "@scm-manager/ui-types";
 import { useTranslation } from "react-i18next";
+import { Tag } from "@scm-manager/ui-types";
+import { SubSubtitle } from "@scm-manager/ui-components";
 
 type Props = {
   tag: Tag;
@@ -35,7 +36,7 @@ const GitTagInformation: FC<Props> = ({ tag }) => {
 
   return (
     <>
-      <h4>{t("scm-git-plugin.information.checkoutTag")}</h4>
+      <SubSubtitle>{t("scm-git-plugin.information.checkoutTag")}</SubSubtitle>
       <pre>
         <code>
           git checkout tags/{tag.name} -b branch/{tag.name}

@@ -24,6 +24,7 @@
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { Branch } from "@scm-manager/ui-types";
+import { SubSubtitle } from "@scm-manager/ui-components";
 
 type Props = WithTranslation & {
   branch: Branch;
@@ -35,11 +36,11 @@ class HgBranchInformation extends React.Component<Props> {
 
     return (
       <div>
-        <h4>{t("scm-hg-plugin.information.fetch")}</h4>
+        <SubSubtitle>{t("scm-hg-plugin.information.fetch")}</SubSubtitle>
         <pre>
           <code>hg pull</code>
         </pre>
-        <h4>{t("scm-hg-plugin.information.checkout")}</h4>
+        <SubSubtitle>{t("scm-hg-plugin.information.checkout")}</SubSubtitle>
         <pre>
           <code>hg update {branch.name}</code>
         </pre>

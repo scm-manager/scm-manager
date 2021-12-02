@@ -89,7 +89,6 @@ footer.footer {
   }
 }
 
-
 .has-hover-background-blue:hover {
   background-color: scale-color($blue, $alpha: -90%);
 }
@@ -398,6 +397,7 @@ ul.is-separated {
 .card-columns {
   .column {
     height: 120px;
+    margin-bottom: 1.5rem;
 
     .overlay-column {
       position: absolute;

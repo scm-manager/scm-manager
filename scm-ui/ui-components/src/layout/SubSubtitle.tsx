@@ -21,27 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-import React, { FC } from "react";
-import { useTranslation } from "react-i18next";
-import { Tag } from "@scm-manager/ui-types";
-import { SubSubtitle } from "@scm-manager/ui-components";
+import React from "react";
+import classNames from "classnames";
 
 type Props = {
-  tag: Tag;
+  className?: string;
 };
 
-const HgTagInformation: FC<Props> = ({ tag }) => {
-  const [t] = useTranslation("plugins");
+class SubSubtitle extends React.Component<Props> {
+  render() {
+    const { className, children } = this.props;
+    if (children) {
+      return <h3 className={classNames("is-size-5", className)}>{children}</h3>;
+    }
+    return null;
+  }
+}
 
-  return (
-    <>
-      <SubSubtitle>{t("scm-hg-plugin.information.checkoutTag")}</SubSubtitle>
-      <pre>
-        <code>hg update {tag.name}</code>
-      </pre>
-    </>
-  );
-};
-
-export default HgTagInformation;
+export default SubSubtitle;

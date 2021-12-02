@@ -24,7 +24,7 @@
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { Repository } from "@scm-manager/ui-types";
-import { ErrorNotification, Loading } from "@scm-manager/ui-components";
+import { SubSubtitle, ErrorNotification, Loading } from "@scm-manager/ui-components";
 import { useChangesets, useDefaultBranch } from "@scm-manager/ui-api";
 
 type Props = {
@@ -34,16 +34,12 @@ type Props = {
 
 const CloneInformation: FC<Props> = ({ url, repository }) => {
   const [t] = useTranslation("plugins");
-  const {
-    data: changesets,
-    error: changesetsError,
-    isLoading: changesetsLoading,
-  } = useChangesets(repository, { limit: 1 });
-  const {
-    data: defaultBranchData,
-    isLoading: defaultBranchLoading,
-    error: defaultBranchError,
-  } = useDefaultBranch(repository);
+  const { data: changesets, error: changesetsError, isLoading: changesetsLoading } = useChangesets(repository, {
+    limit: 1
+  });
+  const { data: defaultBranchData, isLoading: defaultBranchLoading, error: defaultBranchError } = useDefaultBranch(
+    repository
+  );
 
   if (changesetsLoading || defaultBranchLoading) {
     return <Loading />;
@@ -56,7 +52,7 @@ const CloneInformation: FC<Props> = ({ url, repository }) => {
   return (
     <div className="content">
       <ErrorNotification error={error} />
-      <h4>{t("scm-git-plugin.information.clone")}</h4>
+      <SubSubtitle>{t("scm-git-plugin.information.clone")}</SubSubtitle>
       <pre>
         <code>
           git clone {url}
@@ -72,7 +68,7 @@ const CloneInformation: FC<Props> = ({ url, repository }) => {
       </pre>
       {emptyRepository && (
         <>
-          <h4>{t("scm-git-plugin.information.create")}</h4>
+          <SubSubtitle>{t("scm-git-plugin.information.create")}</SubSubtitle>
           <pre>
             <code>
               git init {repository.name}
@@ -96,7 +92,7 @@ const CloneInformation: FC<Props> = ({ url, repository }) => {
           </pre>
         </>
       )}
-      <h4>{t("scm-git-plugin.information.replace")}</h4>
+      <SubSubtitle>{t("scm-git-plugin.information.replace")}</SubSubtitle>
       <pre>
         <code>
           git remote add origin {url}
