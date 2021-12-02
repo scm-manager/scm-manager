@@ -1388,7 +1388,7 @@ exports[`Storyshots Footer Default 1`] = `
             <a
               className=""
               data-testid="footer-user-profile"
-              href="/me"
+              href="/me/settings/theme"
               onClick={[Function]}
             >
               footer.user.profile
@@ -1505,7 +1505,7 @@ exports[`Storyshots Footer Full 1`] = `
             <a
               className=""
               data-testid="footer-user-profile"
-              href="/me"
+              href="/me/settings/theme"
               onClick={[Function]}
             >
               footer.user.profile
@@ -1661,7 +1661,7 @@ exports[`Storyshots Footer With Avatar 1`] = `
             <a
               className=""
               data-testid="footer-user-profile"
-              href="/me"
+              href="/me/settings/theme"
               onClick={[Function]}
             >
               footer.user.profile
@@ -1770,7 +1770,7 @@ exports[`Storyshots Footer With Plugin Links 1`] = `
             <a
               className=""
               data-testid="footer-user-profile"
-              href="/me"
+              href="/me/settings/theme"
               onClick={[Function]}
             >
               footer.user.profile
