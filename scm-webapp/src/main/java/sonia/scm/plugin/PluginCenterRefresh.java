@@ -40,7 +40,7 @@ public class PluginCenterRefresh {
   @Inject
   @SuppressWarnings("java:S1118") // could not hide constructor
   public PluginCenterRefresh(Scheduler scheduler) {
-    scheduler.schedule("? ? 0/6 * * ?", RefreshTask.class);
+    scheduler.schedule("42 42 0/6 * * ?", RefreshTask.class);
   }
 
   public static class RefreshTask implements Runnable {
