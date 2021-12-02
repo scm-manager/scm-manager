@@ -37,12 +37,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.plugin.AuthenticationInfo;
 import sonia.scm.plugin.FetchAccessTokenFailedException;
 import sonia.scm.plugin.PluginCenterAuthenticator;
+import sonia.scm.security.Impersonator;
+import sonia.scm.security.SecureParameterSerializer;
 import sonia.scm.security.XsrfExcludes;
 import sonia.scm.user.DisplayUser;
 import sonia.scm.user.UserDisplayManager;
@@ -80,16 +83,29 @@ class PluginCenterAuthResourceTest {
   @Mock
   private UserDisplayManager userDisplayManager;
 
+  @Mock
+  private SecureParameterSerializer parameterSerializer;
+
+  @Mock
+  private Impersonator impersonator;
+
   @BeforeEach
   void setUpDispatcher() {
     ScmPathInfoStore pathInfoStore = new ScmPathInfoStore();
     pathInfoStore.set(rootPathInfo);
+
+    PluginCenterAuthResource resource = new PluginCenterAuthResource(
+      pathInfoStore, authenticator, userDisplayManager,
+      scmConfiguration, excludes, challengeGenerator,
+      parameterSerializer, impersonator
+    );
+
     dispatcher.addSingletonResource(
       new PluginRootResource(
         null,
         null,
         null,
-        Providers.of(new PluginCenterAuthResource(pathInfoStore, authenticator, userDisplayManager, scmConfiguration, excludes, challengeGenerator))
+        Providers.of(resource)
       )
     );
   }
@@ -218,17 +234,22 @@ class PluginCenterAuthResourceTest {
     }
 
     @Test
-    void shouldReturnRedirectToPluginAuthUrl() throws URISyntaxException {
+    @SubjectAware("trillian")
+    void shouldReturnRedirectToPluginAuthUrl() throws URISyntaxException, IOException {
       when(challengeGenerator.create()).thenReturn("abcd");
+      when(parameterSerializer.serialize(any(AuthParameter.class))).thenReturn("def");
+
       scmConfiguration.setPluginAuthUrl("https://plug.ins");
 
       MockHttpResponse response = get("/v2/plugins/auth/login?source=/admin/plugins");
-      assertRedirect(response, "https://plug.ins?instance=%2Fv2%2Fplugins%2Fauth%2Fcallback?source%3D%2Fadmin%2Fplugins%26challenge%3Dabcd");
+      assertRedirect(response, "https://plug.ins?instance=%2Fv2%2Fplugins%2Fauth%2Fcallback?params%3Ddef");
     }
 
     @Test
-    void shouldExcludeCallbackFromXsrf() throws URISyntaxException {
+    @SubjectAware("trillian")
+    void shouldExcludeCallbackFromXsrf() throws URISyntaxException, IOException {
       when(challengeGenerator.create()).thenReturn("1234");
+      when(parameterSerializer.serialize(any(AuthParameter.class))).thenReturn("def");
       scmConfiguration.setPluginAuthUrl("https://plug.ins");
 
       get("/v2/plugins/auth/login?source=/admin/plugins");
@@ -236,102 +257,153 @@ class PluginCenterAuthResourceTest {
       verify(excludes).add("/v2/plugins/auth/callback");
     }
 
+    @Test
+    @SubjectAware("trillian")
+    void shouldSendAuthParameters() throws URISyntaxException, IOException {
+      when(challengeGenerator.create()).thenReturn("abc123def");
+      when(parameterSerializer.serialize(any(AuthParameter.class))).thenReturn("xyz");
+
+      get("/v2/plugins/auth/login?source=/admin/plugins");
+
+      ArgumentCaptor<AuthParameter> captor = ArgumentCaptor.forClass(AuthParameter.class);
+      verify(parameterSerializer).serialize(captor.capture());
+
+      AuthParameter parameter = captor.getValue();
+      assertThat(parameter.getChallenge()).isEqualTo("abc123def");
+      assertThat(parameter.getSource()).isEqualTo("/admin/plugins");
+      assertThat(parameter.getPrincipal()).isEqualTo("trillian");
+    }
+
   }
 
   @Nested
+  @SubjectAware("marvin")
   class AbortAuthentication {
 
+    @BeforeEach
+    void setUp() throws IOException {
+      lenient().when(challengeGenerator.create()).thenReturn("xyz");
+      lenient().when(parameterSerializer.serialize(any(AuthParameter.class))).thenReturn("secureParams");
+    }
+
     @Test
-    void shouldReturnErrorRedirectWithoutChallengeParameter() throws URISyntaxException {
+    void shouldReturnErrorRedirectWithoutParams() throws URISyntaxException {
       MockHttpResponse response = get("/v2/plugins/auth/callback");
+      assertError(response, ERROR_PARAMS_MISSING);
+    }
+
+
+    @Test
+    void shouldReturnErrorRedirectWithoutChallenge() throws URISyntaxException, IOException {
+      mockParams("marvin", null, "/");
+      MockHttpResponse response = get("/v2/plugins/auth/callback?params=secureParams");
       assertError(response, ERROR_CHALLENGE_MISSING);
     }
 
     @Test
-    void shouldReturnErrorRedirectWithChallengeMismatch() throws URISyntaxException {
-      when(challengeGenerator.create()).thenReturn("xyz");
+    void shouldReturnErrorRedirectWithChallengeMismatch() throws URISyntaxException, IOException {
+      mockParams("marvin", "abc", "/repos");
       get("/v2/plugins/auth/login?source=/repos");
-      MockHttpResponse response = get("/v2/plugins/auth/callback?challenge=abc");
+      MockHttpResponse response = get("/v2/plugins/auth/callback?params=secureParams");
       assertError(response, ERROR_CHALLENGE_DOES_NOT_MATCH);
     }
 
     @Test
-    void shouldRedirectToRoot() throws URISyntaxException {
-      when(challengeGenerator.create()).thenReturn("xyz");
+    void shouldRedirectToRoot() throws URISyntaxException, IOException {
+      mockParams("marvin", "xyz", null);
       get("/v2/plugins/auth/login?source=/repos");
-      MockHttpResponse response = get("/v2/plugins/auth/callback?challenge=xyz");
+      MockHttpResponse response = get("/v2/plugins/auth/callback?params=secureParams");
       assertRedirect(response, "/");
     }
 
     @Test
-    void shouldRedirectToSource() throws URISyntaxException {
-      when(challengeGenerator.create()).thenReturn("xyz");
+    void shouldRedirectToSource() throws URISyntaxException, IOException {
+      mockParams("marvin", "xyz", "/repos");
       get("/v2/plugins/auth/login?source=/repos");
-      MockHttpResponse response = get("/v2/plugins/auth/callback?challenge=xyz&source=/repos");
+      MockHttpResponse response = get("/v2/plugins/auth/callback?params=secureParams");
       assertRedirect(response, "/repos");
     }
 
     @Test
-    void shouldRemoveCallbackFromXsrf() throws URISyntaxException {
-      when(challengeGenerator.create()).thenReturn("xyz");
+    void shouldRemoveCallbackFromXsrf() throws URISyntaxException, IOException {
+      mockParams("marvin", "xyz", "/repos");
       get("/v2/plugins/auth/login?source=/repos");
-      get("/v2/plugins/auth/callback?challenge=xyz");
+      get("/v2/plugins/auth/callback?params=secureParams");
       verify(excludes).remove("/v2/plugins/auth/callback");
     }
 
   }
 
   @Nested
+  @SubjectAware("slarti")
   class AuthenticationCallback {
 
+    @BeforeEach
+    void setUp() throws IOException {
+      lenient().when(challengeGenerator.create()).thenReturn("abc");
+      lenient().when(parameterSerializer.serialize(any(AuthParameter.class))).thenReturn("secureParams");
+    }
+
     @Test
-    void shouldReturnErrorRedirectWithoutChallengeParameter() throws URISyntaxException {
+    void shouldReturnErrorRedirectWithoutParameters() throws URISyntaxException {
       MockHttpResponse response = post("/v2/plugins/auth/callback", "trillian", "rf");
+      assertError(response, ERROR_PARAMS_MISSING);
+    }
+
+    @Test
+    void shouldReturnErrorRedirectWithoutChallengeParameter() throws URISyntaxException, IOException {
+      mockParams("slarti", null, "/");
+      MockHttpResponse response = post("/v2/plugins/auth/callback?params=secureParams", "slarti", "rf");
       assertError(response, ERROR_CHALLENGE_MISSING);
     }
 
     @Test
-    void shouldReturnErrorRedirectWithChallengeMismatch() throws URISyntaxException {
-      when(challengeGenerator.create()).thenReturn("xyz");
+    void shouldReturnErrorRedirectWithChallengeMismatch() throws URISyntaxException, IOException {
+      mockParams("slarti", "xyz", "/");
       get("/v2/plugins/auth/login?source=/repos");
-      MockHttpResponse response = post("/v2/plugins/auth/callback?challenge=abc", "trillian", "rf");
+      MockHttpResponse response = post("/v2/plugins/auth/callback?params=secureParams", "trillian", "rf");
       assertError(response, ERROR_CHALLENGE_DOES_NOT_MATCH);
     }
 
     @Test
-    void shouldReturnErrorRedirectFromFailedAuthentication() throws URISyntaxException {
+    void shouldReturnErrorRedirectFromFailedAuthentication() throws URISyntaxException, IOException {
+      mockParams("slarti", "abc", "/");
       FetchAccessTokenFailedException exception = new FetchAccessTokenFailedException("failed ...");
-      doThrow(exception).when(authenticator).authenticate("trillian", "rf");
-      when(challengeGenerator.create()).thenReturn("xyz");
+      doThrow(exception).when(authenticator).authenticate("slarti", "rf");
       get("/v2/plugins/auth/login?source=/repos");
-      MockHttpResponse response = post("/v2/plugins/auth/callback?challenge=xyz", "trillian", "rf");
+      MockHttpResponse response = post("/v2/plugins/auth/callback?params=secureParams", "slarti", "rf");
       assertError(response, exception.getCode());
     }
 
     @Test
-    void shouldAuthenticate() throws URISyntaxException {
-      when(challengeGenerator.create()).thenReturn("xyz");
+    void shouldAuthenticate() throws URISyntaxException, IOException {
+      mockParams("slarti", "abc", "/");
       get("/v2/plugins/auth/login?source=/repos");
-      post("/v2/plugins/auth/callback?challenge=xyz", "trillian", "refresh_token");
-      verify(authenticator).authenticate("trillian", "refresh_token");
+      post("/v2/plugins/auth/callback?params=secureParams", "slarti", "refresh_token");
+      verify(authenticator).authenticate("slarti", "refresh_token");
     }
 
     @Test
-    void shouldRedirectToSource() throws URISyntaxException {
-      when(challengeGenerator.create()).thenReturn("xyz");
+    void shouldRedirectToSource() throws URISyntaxException, IOException {
+      mockParams("slarti", "abc", "/users");
       get("/v2/plugins/auth/login?source=/users");
-      MockHttpResponse response = post("/v2/plugins/auth/callback?challenge=xyz&source=/users", "tricia", "rrrrf");
+      MockHttpResponse response = post("/v2/plugins/auth/callback?params=secureParams", "slarti", "rrrrf");
       assertRedirect(response, "/users");
     }
 
     @Test
-    void shouldRemoveCallbackFromXsrf() throws URISyntaxException {
-      when(challengeGenerator.create()).thenReturn("xyz");
+    void shouldRemoveCallbackFromXsrf() throws URISyntaxException, IOException {
+      mockParams("slarti", "abc", "/users");
       get("/v2/plugins/auth/login?source=/repos");
-      post("/v2/plugins/auth/callback?challenge=xyz", "trillian", "rf");
+      post("/v2/plugins/auth/callback?params=secureParams", "slarti", "rf");
       verify(excludes).remove("/v2/plugins/auth/callback");
     }
 
+  }
+
+  private void mockParams(String principal, String challenge, String source) throws IOException {
+    AuthParameter params = new AuthParameter(principal, challenge, source);
+    when(parameterSerializer.deserialize("secureParams", AuthParameter.class)).thenReturn(params);
   }
 
   @CanIgnoreReturnValue

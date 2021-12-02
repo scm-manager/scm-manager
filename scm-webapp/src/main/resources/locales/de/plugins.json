@@ -390,6 +390,10 @@
     "AHSqALeEv1": {
       "displayName": "Authentifizierung fehlgeschlagen",
       "description": "Die Authentifizierung des Plugin Centers ist fehlgeschlagen."
+    },
+    "52SqQBdpO1": {
+      "displayName": "Fehlender params Parameter",
+      "description": "Die Antwort der Authentifizierung enthält keinen params Parameter."
     }
   },
   "healthCheckFailures": {

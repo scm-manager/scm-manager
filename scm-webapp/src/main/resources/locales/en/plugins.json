@@ -398,6 +398,10 @@
     "AHSqALeEv1": {
       "displayName": "Authentication failed",
       "description": "Plugin center authentication failed."
+    },
+    "52SqQBdpO1": {
+      "displayName": "Params missing",
+      "description": "The parameter params is missing."
     }
   },
   "healthChecksFailures": {

@@ -28,13 +28,23 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
 import de.otto.edison.hal.Link;
 import de.otto.edison.hal.Links;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.SimplePrincipalCollection;
 import sonia.scm.ExceptionWithContext;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.plugin.AuthenticationInfo;
 import sonia.scm.plugin.PluginCenterAuthenticator;
 import sonia.scm.plugin.PluginPermissions;
+import sonia.scm.security.AllowAnonymousAccess;
+import sonia.scm.security.Impersonator;
+import sonia.scm.security.SecureParameterSerializer;
 import sonia.scm.security.XsrfExcludes;
 import sonia.scm.user.DisplayUser;
+import sonia.scm.user.User;
 import sonia.scm.user.UserDisplayManager;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.web.VndMediaType;
@@ -42,7 +52,11 @@ import sonia.scm.web.VndMediaType;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.ws.rs.*;
-import javax.ws.rs.core.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.UriInfo;
+import java.io.IOException;
 import java.net.URI;
 import java.util.Optional;
 import java.util.UUID;
@@ -57,6 +71,8 @@ public class PluginCenterAuthResource {
   @VisibleForTesting
   static final String ERROR_ALREADY_AUTHENTICATED = "8XSqFEBd41";
   @VisibleForTesting
+  static final String ERROR_PARAMS_MISSING = "52SqQBdpO1";
+  @VisibleForTesting
   static final String ERROR_CHALLENGE_MISSING = "FNSqFKQIR1";
   @VisibleForTesting
   static final String ERROR_CHALLENGE_DOES_NOT_MATCH = "8ESqFElpI1";
@@ -67,6 +83,8 @@ public class PluginCenterAuthResource {
   private final UserDisplayManager userDisplayManager;
   private final XsrfExcludes excludes;
   private final ChallengeGenerator challengeGenerator;
+  private final SecureParameterSerializer parameterSerializer;
+  private final Impersonator impersonator;
 
   private String challenge;
 
@@ -76,11 +94,11 @@ public class PluginCenterAuthResource {
     PluginCenterAuthenticator authenticator,
     UserDisplayManager userDisplayManager,
     ScmConfiguration scmConfiguration,
-    XsrfExcludes excludes
-  ) {
+    XsrfExcludes excludes,
+    SecureParameterSerializer parameterSerializer, Impersonator impersonator) {
     this(
-      pathInfoStore, authenticator, userDisplayManager, scmConfiguration, excludes, () -> UUID.randomUUID().toString()
-    );
+      pathInfoStore, authenticator, userDisplayManager, scmConfiguration, excludes, () -> UUID.randomUUID().toString(),
+      parameterSerializer, impersonator);
   }
 
   @VisibleForTesting
@@ -90,14 +108,17 @@ public class PluginCenterAuthResource {
     UserDisplayManager userDisplayManager,
     ScmConfiguration configuration,
     XsrfExcludes excludes,
-    ChallengeGenerator challengeGenerator
-  ) {
+    ChallengeGenerator challengeGenerator,
+    SecureParameterSerializer parameterSerializer,
+    Impersonator impersonator) {
     this.pathInfoStore = pathInfoStore;
     this.authenticator = authenticator;
     this.configuration = configuration;
     this.userDisplayManager = userDisplayManager;
     this.excludes = excludes;
     this.challengeGenerator = challengeGenerator;
+    this.parameterSerializer = parameterSerializer;
+    this.impersonator = impersonator;
   }
 
   @GET
@@ -127,10 +148,10 @@ public class PluginCenterAuthResource {
 
   @GET
   @Path("login")
-  public Response login(@Context UriInfo uriInfo, @QueryParam("source") String sourceUri) {
+  public Response login(@Context UriInfo uriInfo, @QueryParam("source") String source) throws IOException {
     String pluginAuthUrl = configuration.getPluginAuthUrl();
 
-    if (Strings.isNullOrEmpty(sourceUri)) {
+    if (Strings.isNullOrEmpty(source)) {
       return error(ERROR_SOURCE_MISSING);
     }
 
@@ -147,9 +168,16 @@ public class PluginCenterAuthResource {
     URI selfUri = uriInfo.getAbsolutePath();
     selfUri = selfUri.resolve(selfUri.getPath().replace("/login", "/callback"));
 
+    String principal = SecurityUtils.getSubject().getPrincipal().toString();
+
+    AuthParameter parameter = new AuthParameter(
+      principal,
+      challenge,
+      source
+    );
+
     URI callbackUri = UriBuilder.fromUri(selfUri)
-      .queryParam("source", sourceUri)
-      .queryParam("challenge", challenge)
+      .queryParam("params", parameterSerializer.serialize(parameter))
       .build();
 
     excludes.add(callbackUri.getPath());
@@ -185,44 +213,66 @@ public class PluginCenterAuthResource {
 
   @POST
   @Path("callback")
+  @AllowAnonymousAccess
   public Response callback(
     @Context UriInfo uriInfo,
-    @QueryParam("challenge") String challenge,
-    @QueryParam("source") String source,
+    @QueryParam("params") String encryptedParams,
     @FormParam("subject") String subject,
     @FormParam("refresh_token") String refreshToken
-  ) {
-    Optional<String> error = checkChallenge(challenge);
+  ) throws IOException {
+
+    if (Strings.isNullOrEmpty(encryptedParams)) {
+      return error(ERROR_PARAMS_MISSING);
+    }
+
+    AuthParameter params = parameterSerializer.deserialize(encryptedParams, AuthParameter.class);
+
+    Optional<String> error = checkChallenge(params.getChallenge());
     if (error.isPresent()) {
       return error(error.get());
     }
 
+    challenge = null;
     excludes.remove(uriInfo.getPath());
 
-    try {
+    PrincipalCollection principal = createPrincipalCollection(params);
+    try (Impersonator.Session session = impersonator.impersonate(principal)) {
       authenticator.authenticate(subject, refreshToken);
     } catch (ExceptionWithContext ex) {
       return error(ex.getCode());
     }
 
-    return redirect(source);
+    return redirect(params.getSource());
+  }
+
+  private PrincipalCollection createPrincipalCollection(AuthParameter params) {
+    SimplePrincipalCollection principal = new SimplePrincipalCollection(
+      params.getPrincipal(), "pluginCenterAuth"
+    );
+    User user = new User(params.getPrincipal());
+    principal.add(user, "pluginCenterAuth");
+    return principal;
   }
 
   @GET
   @Path("callback")
-  public Response callbackAbort(
-    @Context UriInfo uriInfo,
-    @QueryParam("challenge") String challenge,
-    @QueryParam("source") String source
-  ) {
-    Optional<String> error = checkChallenge(challenge);
+  public Response callbackAbort(@Context UriInfo uriInfo, @QueryParam("params") String encryptedParams) throws IOException {
+    if (Strings.isNullOrEmpty(encryptedParams)) {
+      return error(ERROR_PARAMS_MISSING);
+    }
+
+    AuthParameter params = parameterSerializer.deserialize(encryptedParams, AuthParameter.class);
+
+    Optional<String> error = checkChallenge(params.getChallenge());
     if (error.isPresent()) {
       return error(error.get());
     }
 
+    challenge = null;
+
     excludes.remove(uriInfo.getPath());
 
-    return redirect(source);
+    return redirect(params.getSource());
   }
 
   private Response error(String code) {
@@ -255,6 +305,17 @@ public class PluginCenterAuthResource {
   @FunctionalInterface
   interface ChallengeGenerator {
     String create();
+  }
+
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  static class AuthParameter {
+
+    private String principal;
+    private String challenge;
+    private String source;
+
   }
 
 }
