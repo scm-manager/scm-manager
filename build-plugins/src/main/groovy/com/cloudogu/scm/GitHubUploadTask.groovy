@@ -61,15 +61,23 @@ class GitHubUploadTask extends UploadTask {
   private Author author = new Author()
 
   @Nested
-  private Author commiter
+  private Author committer
+
+  Author getAuthor() {
+    return author
+  }
+
+  Author getCommitter() {
+    return committer
+  }
 
   void author(Closure closure) {
     closure.setDelegate(author)
     closure.call()
   }
 
-  void commiter(Closure closure) {
-    closure.setDelegate(commiter)
+  void committer(Closure closure) {
+    closure.setDelegate(committer)
     closure.call()
   }
 
@@ -93,10 +101,10 @@ class GitHubUploadTask extends UploadTask {
         email: author.email
       ]
     }
-    if (commiter?.valid) {
-      body.commiter = [
-        name: commiter.name,
-        email: commiter.email
+    if (committer?.valid) {
+      body.committer = [
+        name: committer.name,
+        email: committer.email
       ]
     }
     request.content(new StringContentProvider(JsonOutput.toJson(body), StandardCharsets.UTF_8))
