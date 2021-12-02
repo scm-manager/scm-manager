@@ -61,6 +61,7 @@ class GitHubUploadTask extends UploadTask {
   private Author author = new Author()
 
   @Nested
+  @Optional
   private Author committer
 
   Author getAuthor() {
