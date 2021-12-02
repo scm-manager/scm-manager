@@ -31,6 +31,7 @@ import org.eclipse.jetty.client.api.Request
 import org.eclipse.jetty.client.util.StringContentProvider
 import org.eclipse.jetty.http.HttpMethod
 import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.Nested
 import org.gradle.api.tasks.Optional
 
@@ -122,6 +123,7 @@ class GitHubUploadTask extends UploadTask {
     @Optional
     String email
 
+    @Internal
     boolean isValid() {
       !Strings.isNullOrEmpty(name) && !Strings.isNullOrEmpty(email)
     }
