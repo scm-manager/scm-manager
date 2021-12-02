@@ -52,9 +52,8 @@ public class BrowserResultToFileObjectDtoMapperTest {
   private final Subject subject = mock(Subject.class);
   private final ThreadState subjectThreadState = new SubjectThreadState(subject);
 
-  private FileObject fileObject1 = new FileObject();
-  private FileObject fileObject2 = new FileObject();
-
+  private final FileObject fileObject1 = new FileObject();
+  private final FileObject fileObject2 = new FileObject();
 
   @Before
   public void init() {
@@ -141,7 +140,7 @@ public class BrowserResultToFileObjectDtoMapperTest {
 
   private FileObject createFileObject(String name) {
     FileObject file = new FileObject();
-    file.setName("");
+    file.setName(name);
     file.setPath(name);
     file.setDirectory(false);
     return file;
