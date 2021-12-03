@@ -29,7 +29,7 @@ import PluginCenterAuthentication from "./PluginCenterAuthentication";
 type Props = {
   pluginUrl: string;
   pluginAuthUrl: string;
-  onChange: (p1: boolean, p2: any, p3: string) => void;
+  onChange: (isValid: boolean, changedValue: string, name: string) => void;
   hasUpdatePermission: boolean;
 };
 

@@ -30,19 +30,15 @@ import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { Trans, useTranslation } from "react-i18next";
 
-type AuthenticatedInfoProps = {
-  authenticationInfo: PluginCenterAuthenticationInfo;
-};
-
 const Message = styled.p`
   line-height: 2.5rem;
 `;
 
-type PluginCenterSubjectProps = {
+type Props = {
   authenticationInfo: PluginCenterAuthenticationInfo;
 };
 
-const PluginCenterSubject: FC<PluginCenterSubjectProps> = ({ authenticationInfo }) => {
+const PluginCenterSubject: FC<Props> = ({ authenticationInfo }) => {
   const formatter = useDateFormatter({ date: authenticationInfo.date });
   const [t] = useTranslation("config");
   return (
@@ -60,7 +56,7 @@ const PluginCenterSubject: FC<PluginCenterSubjectProps> = ({ authenticationInfo 
   );
 };
 
-const AuthenticatedInfo: FC<AuthenticatedInfoProps> = ({ authenticationInfo }) => {
+const AuthenticatedInfo: FC<Props> = ({ authenticationInfo }) => {
   const { logout, isLoading, error } = usePluginCenterLogout(authenticationInfo);
   const [t] = useTranslation("config");
 

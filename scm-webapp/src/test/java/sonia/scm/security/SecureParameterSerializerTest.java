@@ -43,9 +43,6 @@ class SecureParameterSerializerTest {
     TestObject object = new TestObject("1", 2);
     String serialized = serializer.serialize(object);
 
-
-    System.out.println(serialized);
-
     assertThat(serialized).isNotEmpty();
 
     object = serializer.deserialize(serialized, TestObject.class);

@@ -95,7 +95,8 @@ public class PluginCenterAuthResource {
     UserDisplayManager userDisplayManager,
     ScmConfiguration scmConfiguration,
     XsrfExcludes excludes,
-    SecureParameterSerializer parameterSerializer, Impersonator impersonator) {
+    SecureParameterSerializer parameterSerializer,
+    Impersonator impersonator) {
     this(
       pathInfoStore, authenticator, userDisplayManager, scmConfiguration, excludes, () -> UUID.randomUUID().toString(),
       parameterSerializer, impersonator);

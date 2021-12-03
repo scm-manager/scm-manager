@@ -380,11 +380,11 @@
       "description": "Das Plugin Center wurde bereits authentifiziert."
     },
     "FNSqFKQIR1": {
-      "displayName": "Fehlender Challenge Parameter",
+      "displayName": "Fehlender challenge Parameter",
       "description": "Die Antwort der Authentifizierung enthält keinen Challenge Parameter."
     },
     "8ESqFElpI1": {
-      "displayName": "Falscher Challenge Parameter",
+      "displayName": "Falscher challenge Parameter",
       "description": "Die Antwort der Authentifizierung enthält einen falschen Challenge Parameter."
     },
     "AHSqALeEv1": {

@@ -144,7 +144,6 @@ const ConfigForm: FC<Props> = ({
         dateFormat={innerConfig.dateFormat}
         anonymousMode={innerConfig.anonymousMode}
         skipFailedAuthenticators={innerConfig.skipFailedAuthenticators}
-        pluginUrl={innerConfig.pluginUrl}
         releaseFeedUrl={innerConfig.releaseFeedUrl}
         mailDomainName={innerConfig.mailDomainName}
         enabledXsrfProtection={innerConfig.enabledXsrfProtection}
