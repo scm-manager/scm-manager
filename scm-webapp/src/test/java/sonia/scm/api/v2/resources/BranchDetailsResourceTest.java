@@ -24,6 +24,7 @@
 
 package sonia.scm.api.v2.resources;
 
+import com.google.inject.util.Providers;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -74,7 +75,7 @@ class BranchDetailsResourceTest extends RepositoryTestBase {
     dispatcher.addSingletonResource(getRepositoryRootResource());
     ScmPathInfoStore scmPathInfoStore = new ScmPathInfoStore();
     scmPathInfoStore.set(() -> URI.create("/scm/api/"));
-    mapper.setResourceLinks(new ResourceLinks(scmPathInfoStore));
+    mapper.setResourceLinks(new ResourceLinks(Providers.of(scmPathInfoStore)));
   }
 
   @Test

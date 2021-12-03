@@ -46,11 +46,11 @@ public abstract class BranchDetailsMapper extends BaseMapper<BranchDetailsComman
   abstract BranchDetailsDto map(@Context Repository repository, String branchName, BranchDetailsCommandResult result);
 
   @ObjectFactory
-  BranchDetailsDto createDto(@Context Repository repository, String branchName) {
+  BranchDetailsDto createDto(@Context Repository repository, String branchName, BranchDetailsCommandResult result) {
     Links.Builder linksBuilder = createLinks(repository, branchName);
     Embedded.Builder embeddedBuilder = Embedded.embeddedBuilder();
 
-    applyEnrichers(new EdisonHalAppender(linksBuilder, embeddedBuilder), repository);
+    applyEnrichers(new EdisonHalAppender(linksBuilder, embeddedBuilder), result, branchName, repository);
 
     return new BranchDetailsDto(linksBuilder.build(), embeddedBuilder.build());
   }
