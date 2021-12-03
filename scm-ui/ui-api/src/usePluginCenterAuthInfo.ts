@@ -58,7 +58,7 @@ export const usePluginCenterLogout = (authenticationInfo: PluginCenterAuthentica
   const { mutate, isLoading, error } = useMutation<unknown, Error>(
     () => {
       if (!authenticationInfo._links.logout) {
-        throw new Error("authenticationInfo has not logout link");
+        throw new Error("authenticationInfo has no logout link");
       }
       const logout = authenticationInfo._links.logout as Link;
       return apiClient.delete(logout.href);
