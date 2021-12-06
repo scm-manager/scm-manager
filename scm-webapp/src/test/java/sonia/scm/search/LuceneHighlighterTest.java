@@ -52,7 +52,7 @@ class LuceneHighlighterTest {
     String[] snippets = highlighter.highlight("content", Indexed.Analyzer.DEFAULT, content);
 
     assertThat(snippets).hasSize(1).allSatisfy(
-      snippet -> assertThat(snippet).contains("<>Golgafrinchan</>")
+      snippet -> assertThat(snippet).contains("<|[[--Golgafrinchan--]]|>")
     );
   }
 
@@ -64,7 +64,7 @@ class LuceneHighlighterTest {
       snippet -> assertThat(snippet.split("\n")).contains(
         "\t\t\t\tint neighbors= getNeighbors(above, same, below);",
         "\t\t\t\tif(neighbors < 2 || neighbors > 3){",
-        "\t\t\t\t\tnewGen[row]+= \"_\";//<2 or >3 neighbors -> <>die</>",
+        "\t\t\t\t\tnewGen[row]+= \"_\";//<2 or >3 neighbors -> <|[[--die--]]|>",
         "\t\t\t\t}else if(neighbors == 3){",
         "\t\t\t\t\tnewGen[row]+= \"#\";//3 neighbors -> spawn/live"
       )
@@ -79,7 +79,7 @@ class LuceneHighlighterTest {
       snippet -> assertThat(snippet.split("\n")).contains(
         "}) => {",
         "  const renderIcon = () => {",
-        "    return <>{icon ? <Icon name={icon} color=\"<>inherit</>\" className=\"is-medium pr-1\" /> : null}</>;",
+        "    return <>{icon ? <Icon name={icon} color=\"<|[[--inherit--]]|>\" className=\"is-medium pr-1\" /> : null}</>;",
         "  };"
       )
     );

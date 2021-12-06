@@ -55,7 +55,6 @@ public final class LuceneHighlighter {
       fragments = keepWholeLine(value, fragments);
     }
     return Arrays.stream(fragments)
-      .map(fragment -> fragment.replace(PRE_TAG, "<>").replace(POST_TAG, "</>"))
       .toArray(String[]::new);
   }
 
