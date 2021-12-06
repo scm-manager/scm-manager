@@ -37,7 +37,7 @@ import {
   DiffEventHandler,
   File,
   FileChangeType,
-  Hunk,
+  Hunk
 } from "./repos";
 
 export { validation, repositories };
@@ -51,6 +51,7 @@ export { default as ErrorPage } from "./ErrorPage";
 export { default as Icon } from "./Icon";
 export { default as Image } from "./Image";
 export { default as Loading } from "./Loading";
+export { default as SmallLoadingSpinner } from "./SmallLoadingSpinner";
 export { default as Logo } from "./Logo";
 export { default as MailLink } from "./MailLink";
 export { default as Notification } from "./Notification";
@@ -113,7 +114,7 @@ export {
   AnnotationFactory,
   AnnotationFactoryContext,
   DiffEventHandler,
-  DiffEventContext,
+  DiffEventContext
 };
 
 // Re-export from ui-api
@@ -130,7 +131,7 @@ export {
   MissingLinkError,
   createBackendError,
   isBackendError,
-  TOKEN_EXPIRED_ERROR_CODE,
+  TOKEN_EXPIRED_ERROR_CODE
 } from "@scm-manager/ui-api";
 
 export { urls };
