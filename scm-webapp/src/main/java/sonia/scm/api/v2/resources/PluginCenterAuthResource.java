@@ -28,6 +28,10 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
 import de.otto.edison.hal.Link;
 import de.otto.edison.hal.Links;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -124,6 +128,30 @@ public class PluginCenterAuthResource {
 
   @GET
   @Path("")
+  @Operation(
+    summary = "Return plugin center auth info",
+    description = "Return authentication information of plugin center connection",
+    tags = "Plugin Management",
+    operationId = "plugin_center_auth_information"
+  )
+  @ApiResponse(
+    responseCode = "200",
+    description = "success",
+    content = @Content(
+      mediaType = VndMediaType.PLUGIN_COLLECTION,
+      schema = @Schema(implementation = PluginCenterAuthenticationInfoDto.class)
+    )
+  )
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current user does not have the \"plugin:read\" privilege")
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
   @Produces(VndMediaType.PLUGIN_CENTER_AUTH_INFO)
   public Response authenticationInfo(@Context UriInfo uriInfo) {
     Optional<AuthenticationInfo> authentication = authenticator.getAuthenticationInfo();
@@ -149,6 +177,26 @@ public class PluginCenterAuthResource {
 
   @GET
   @Path("login")
+  @Operation(
+    summary = "Login",
+    description = "Start the authentication flow to connect the plugin center with an account",
+    tags = "Plugin Management",
+    operationId = "plugin_center_auth_login"
+  )
+  @ApiResponse(
+    responseCode = "303",
+    description = "See other"
+  )
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current user does not have the \"plugin:write\" privilege")
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
   public Response login(@Context UriInfo uriInfo, @QueryParam("source") String source) throws IOException {
     String pluginAuthUrl = configuration.getPluginAuthUrl();
 
@@ -207,6 +255,26 @@ public class PluginCenterAuthResource {
 
   @DELETE
   @Path("")
+  @Operation(
+    summary = "Logout",
+    description = "Start the authentication flow to connect the plugin center with an account",
+    tags = "Plugin Management",
+    operationId = "plugin_center_auth_logout"
+  )
+  @ApiResponse(
+    responseCode = "204",
+    description = "No content"
+  )
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current user does not have the \"plugin:write\" privilege")
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
   public Response logout() {
     authenticator.logout();
     return Response.noContent().build();
@@ -214,6 +282,26 @@ public class PluginCenterAuthResource {
 
   @POST
   @Path("callback")
+  @Operation(
+    summary = "Finalize authentication",
+    description = "Callback endpoint for the authentication flow to finalize the authentication",
+    tags = "Plugin Management",
+    operationId = "plugin_center_auth_callback"
+  )
+  @ApiResponse(
+    responseCode = "303",
+    description = "See other"
+  )
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current user does not have the \"plugin:write\" privilege")
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
   @AllowAnonymousAccess
   public Response callback(
     @Context UriInfo uriInfo,
@@ -221,7 +309,6 @@ public class PluginCenterAuthResource {
     @FormParam("subject") String subject,
     @FormParam("refresh_token") String refreshToken
   ) throws IOException {
-
     if (Strings.isNullOrEmpty(encryptedParams)) {
       return error(ERROR_PARAMS_MISSING);
     }
@@ -257,6 +344,26 @@ public class PluginCenterAuthResource {
 
   @GET
   @Path("callback")
+  @Operation(
+    summary = "Abort authentication",
+    description = "Callback endpoint for the authentication flow to abort the authentication",
+    tags = "Plugin Management",
+    operationId = "plugin_center_auth_callback_abort"
+  )
+  @ApiResponse(
+    responseCode = "303",
+    description = "See other"
+  )
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current user does not have the \"plugin:write\" privilege")
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
   public Response callbackAbort(@Context UriInfo uriInfo, @QueryParam("params") String encryptedParams) throws IOException {
     if (Strings.isNullOrEmpty(encryptedParams)) {
       return error(ERROR_PARAMS_MISSING);
