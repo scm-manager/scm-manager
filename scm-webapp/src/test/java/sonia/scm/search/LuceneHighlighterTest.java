@@ -30,15 +30,24 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.highlight.InvalidTokenOffsetsException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class LuceneHighlighterTest {
+
+
 
   @Test
   void shouldHighlightText() throws InvalidTokenOffsetsException, IOException {
@@ -97,6 +106,45 @@ class LuceneHighlighterTest {
     String[] snippets = highlightCode("Button.tsx", "default");
 
     assertThat(snippets).hasSize(1);
+  }
+
+  @Nested
+  class IsHighlightableTests {
+
+    @Mock
+    private LuceneSearchableField field;
+
+    private LuceneHighlighter highlighter;
+
+    @BeforeEach
+    void setUpHighlighter() {
+      Query query = new TermQuery(new Term("content", "ka"));
+      highlighter = new LuceneHighlighter(new StandardAnalyzer(), query);
+    }
+
+    @Test
+    void shouldReturnFalseForNonHighlightedField() {
+      when(field.isHighlighted()).thenReturn(false);
+
+      assertThat(highlighter.isHighlightable(field)).isFalse();
+    }
+
+    @Test
+    void shouldReturnFalseIfNotInQuery() {
+      when(field.isHighlighted()).thenReturn(true);
+      when(field.getName()).thenReturn("name");
+
+      assertThat(highlighter.isHighlightable(field)).isFalse();
+    }
+
+    @Test
+    void shouldReturnTrue() {
+      when(field.isHighlighted()).thenReturn(true);
+      when(field.getName()).thenReturn("content");
+
+      assertThat(highlighter.isHighlightable(field)).isTrue();
+    }
+
   }
 
   private String[] highlightCode(String resource, String search) throws IOException, InvalidTokenOffsetsException {
