@@ -99,6 +99,7 @@ const BranchTable: FC<Props> = ({ repository, baseUrl, branches, type, branchesD
           {(branches || []).map(branch => (
             <BranchRow
               key={branch.name}
+              repository={repository}
               baseUrl={baseUrl}
               branch={branch}
               onDelete={onDelete}

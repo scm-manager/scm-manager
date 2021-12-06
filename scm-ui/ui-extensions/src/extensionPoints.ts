@@ -25,13 +25,14 @@
 import React from "react";
 import {
   Branch,
+  BranchDetails,
   File,
   IndexResources,
   Links,
   NamespaceStrategies,
   Repository,
   RepositoryCreation,
-  RepositoryTypeCollection,
+  RepositoryTypeCollection
 } from "@scm-manager/ui-types";
 import { ExtensionPointDefinition } from "./binder";
 
@@ -166,4 +167,9 @@ export type RepositoryOverviewTitleExtension = ExtensionPointDefinition<
 export type RepositoryOverviewSubtitleExtension = ExtensionPointDefinition<
   "repository.overview.subtitle",
   React.ComponentType
+>;
+
+export type BranchesOverviewRowDetailsExtension = ExtensionPointDefinition<
+  "repos.branches.row.details",
+  { branch: Branch; details: BranchDetails }
 >;

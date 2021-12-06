@@ -25,19 +25,21 @@ import React, { FC } from "react";
 import { Link as ReactLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
-import { Branch, BranchDetails, Link } from "@scm-manager/ui-types";
-import { DateFromNow, Icon } from "@scm-manager/ui-components";
+import { Branch, BranchDetails, Link, Repository } from "@scm-manager/ui-types";
+import { DateFromNow, Icon, SmallLoadingSpinner } from "@scm-manager/ui-components";
+import { binder } from "@scm-manager/ui-extensions";
 import DefaultBranchTag from "./DefaultBranchTag";
 import AheadBehindTag from "./AheadBehindTag";
 
 type Props = {
+  repository: Repository;
   baseUrl: string;
   branch: Branch;
   onDelete: (branch: Branch) => void;
   details?: BranchDetails;
 };
 
-const BranchRow: FC<Props> = ({ baseUrl, branch, onDelete, details }) => {
+const BranchRow: FC<Props> = ({ repository, baseUrl, branch, onDelete, details }) => {
   const to = `${baseUrl}/${encodeURIComponent(branch.name)}/info`;
   const [t] = useTranslation("repos");
 
@@ -62,11 +64,7 @@ const BranchRow: FC<Props> = ({ baseUrl, branch, onDelete, details }) => {
     if (details) {
       return <AheadBehindTag branch={branch} details={details} />;
     }
-    return (
-      <div className="loader-wrapper">
-        <div className="loader is-loading" />
-      </div>
-    );
+    return <SmallLoadingSpinner />;
   };
 
   const committedAt = (
@@ -86,6 +84,7 @@ const BranchRow: FC<Props> = ({ baseUrl, branch, onDelete, details }) => {
     committedAtBy = committedAt;
   }
 
+  const extensionProps = { repository, branch, details };
   return (
     <tr>
       <td className="is-flex">
@@ -99,6 +98,9 @@ const BranchRow: FC<Props> = ({ baseUrl, branch, onDelete, details }) => {
         )}
       </td>
       <td className="has-text-centered">{renderBranchTag()}</td>
+      {binder.hasExtension("repos.branches.row.details")
+        ? binder.getExtensions("repos.branches.row.details").map(e => <td>{React.createElement(e, extensionProps)}</td>)
+        : null}
       <td className="is-darker has-text-centered">{deleteButton}</td>
     </tr>
   );
