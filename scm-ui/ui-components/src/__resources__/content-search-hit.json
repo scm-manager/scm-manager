@@ -1,0 +1,58 @@
+{
+  "score": 2.5,
+  "fields": {
+    "path": {
+      "highlighted": false,
+      "value": "scm-webapp/src/main/java/sonia/scm/security/JwtAccessTokenBuilder.java"
+    },
+    "extension": {
+      "highlighted": false,
+      "value": "java"
+    },
+    "filename": {
+      "highlighted": false,
+      "value": "JwtAccessTokenBuilder.java"
+    },
+    "binary": {
+      "highlighted": false,
+      "value": false
+    },
+    "codingLanguage": {
+      "highlighted": false,
+      "value": "java"
+    },
+    "contentType": {
+      "highlighted": false,
+      "value": "text/x-java-source"
+    },
+    "content": {
+      "highlighted": true,
+      "fragments": [
+        "\nimport org.slf4j.LoggerFactory;\n\nimport java.util.Date;\nimport java.util.HashMap;\nimport java.util.Map;\nimport java.util.concurrent.TimeUnit;\n\n/**\n * Jwt implementation of {@link <|[[--AccessTokenBuilder--]]|>}.\n * \n * @author Sebastian Sdorra\n * @since 2.0.0\n */\npublic final class <|[[--JwtAccessTokenBuilder--]]|> implements <|[[--AccessTokenBuilder--]]|> {\n\n  /**\n   * the logger for <|[[--JwtAccessTokenBuilder--]]|>\n   */\n  private static final Logger LOG = LoggerFactory.getLogger(<|[[--JwtAccessTokenBuilder.class--]]|>);\n  \n  private final KeyGenerator keyGenerator; \n  private final SecureKeyResolver keyResolver; \n  \n  private String subject;\n  private String issuer;\n",
+        "\n  private final Map<String,Object> custom = Maps.newHashMap();\n  \n  <|[[--JwtAccessTokenBuilder--]]|>(KeyGenerator keyGenerator, SecureKeyResolver keyResolver)  {\n    this.keyGenerator = keyGenerator;\n    this.keyResolver = keyResolver;\n  }\n\n  @Override\n  public <|[[--JwtAccessTokenBuilder--]]|> subject(String subject) {\n",
+        "\n  public <|[[--JwtAccessTokenBuilder--]]|> custom(String key, Object value) {\n    Preconditions.checkArgument(!Strings.isNullOrEmpty(key), \"null or empty value not allowed\");\n    Preconditions.checkArgument(value != null, \"null or empty value not allowed\");\n"
+      ]
+    },
+    "revision": {
+      "highlighted": false,
+      "value": "39150d7e6dfcb6e85381d2bd79469211941bb532"
+    }
+  },
+  "_embedded": {
+    "repository": {
+      "namespace": "pfeuffer",
+      "name": "scm-manager-hg",
+      "type": "hg",
+      "_links": {
+        "self": {
+          "href": "https://scm-manager.org/scm/api/v2/repositories/pfeuffer/scm-manager-hg"
+        }
+      },
+      "_embedded": {
+        "avatar": {
+          "type": "AUTO_GENERATED"
+        }
+      }
+    }
+  }
+}

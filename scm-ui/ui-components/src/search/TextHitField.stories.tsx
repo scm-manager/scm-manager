@@ -21,36 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import React from "react";
+import { storiesOf } from "@storybook/react";
+// @ts-ignore no types for import
+import hit from "../__resources__/content-search-hit.json";
+import TextHitField from "./TextHitField";
 
-@import "utils/_pre.scss";
-// colors defined in variables/commons.scss
-$subtitle-color: #666;
-$warning-invert: #88550D;
-$button-disabled-opacity: .25;
-
-$background-accent: $white-ter;
-
-@import "utils/_post.scss";
-
-:root {
-  --sh-base-color: #363636;
-  --sh-font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
-  --sh-block-background: #ffffff;
-  --sh-inline-code-color: #ff3860;
-  --sh-inline-code-background: #fbe7eb;
-  --sh-comment-color: #9a9a9a;
-  --sh-punctuation-color: #9a9a9a;
-  --sh-property-color: #2c99c7;
-  --sh-selector-color: #005f9a;
-  --sh-operator-color: #686868;
-  --sh-operator-bg: inherit;
-  --sh-variable-color: #a74eb2;
-  --sh-function-color: #ff3860;
-  --sh-keyword-color: #00a984;
-  --sh-selected-color: #7fe3cd;
-  --sh-highlight-background: #f5f5f5;
-  --sh-highlight-accent: #99d8f3;
-  --sh-marker-color: inherit;
-  --sh-marker-background: #feffaa;
-}
-
+storiesOf("TextHitField", module)
+  .add("Default", () => (
+    <pre>
+      <TextHitField hit={hit} field={"content"} />
+    </pre>
+  ))
+  .add("Syntaxhighlighting", () => (
+    <pre>
+      <TextHitField hit={hit} field={"content"} syntaxHighlightingLanguage="java" />
+    </pre>
+  ));

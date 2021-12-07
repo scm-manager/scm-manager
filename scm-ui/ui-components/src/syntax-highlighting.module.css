@@ -196,3 +196,8 @@ pre[class*="language-"] > code[class*="language-"] {
   line-height: inherit;
   white-space: pre;
 }
+
+.marker {
+  color: var(--sh-marker-color);
+  background: var(--sh-marker-background);
+}

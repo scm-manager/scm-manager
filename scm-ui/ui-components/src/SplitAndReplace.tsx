@@ -33,9 +33,10 @@ export type Replacement = {
 type Props = {
   text: string;
   replacements: Replacement[];
+  textWrapper?: (s: string) => ReactNode;
 };
 
-const textWrapper = (s: string) => {
+const defaultTextWrapper = (s: string) => {
   const first = s.startsWith(" ") ? <>&nbsp;</> : "";
   const last = s.endsWith(" ") ? <>&nbsp;</> : "";
   return (
@@ -47,7 +48,7 @@ const textWrapper = (s: string) => {
   );
 };
 
-const SplitAndReplace: FC<Props> = ({ text, replacements }) => {
+const SplitAndReplace: FC<Props> = ({ text, replacements, textWrapper = defaultTextWrapper }) => {
   const parts = textSplitAndReplace<ReactNode>(text, replacements, textWrapper);
   if (parts.length === 0) {
     return <>{parts[0]}</>;
