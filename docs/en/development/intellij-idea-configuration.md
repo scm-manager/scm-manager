@@ -17,11 +17,6 @@ title: Intellij IDEA Configuration
         * Nullable annotations: select (✓) `javax.annotation.Nullable`
         * NotNull annotations: select (✓) `javax.annotation.Nonnull` and check Instrument
 
-* Run Configurations / Edit Configuration
-    * Add Maven
-    * Name: run-backend
-    * Working directory: ../scm-webapp
-    * Command line: -DskipTests -Dlivereload package jetty:run-war
 * Editor / Code Style / Java
     * Tab Imports
         * Class count to use import with '*': <MAX_INT>
@@ -53,18 +48,6 @@ title: Intellij IDEA Configuration
         * Scope: Current File
         * Program: $ProjectFileDir$/node_modules/.bin/prettier
         * Working Directory: $ProjectFileDir$
-
-* Run Configurations / Edit Configuration
-    * Templates / Jest
-    * Jest package: .../node_modules/jest
-    * Jest options: --config node_modules/@scm-manager/ui-bundler/src/jest.ide.config.js
-
-* Run Configurations / Edit Configuration
-    * Add npm
-    * Name: run-frontend
-    * package-json: .../package.json
-    * Command: run
-    * Scripts: serve
 
 ## Both
 
