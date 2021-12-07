@@ -132,8 +132,8 @@ public class LuceneQueryBuilder<T> extends QueryBuilder<T> {
   }
 
   public Query createBestGuessQuery(LuceneSearchableType searchableType, QueryBuilder.QueryParams queryParams) throws QueryNodeException, IOException {
-    String[] fieldNames = searchableType.getFieldNames();
-    if (fieldNames == null || fieldNames.length == 0) {
+    String[] defaultFieldNames = searchableType.getDefaultFieldNames();
+    if (defaultFieldNames == null || defaultFieldNames.length == 0) {
       throw new NoDefaultQueryFieldsFoundException(searchableType.getType());
     }
 
@@ -141,7 +141,7 @@ public class LuceneQueryBuilder<T> extends QueryBuilder<T> {
     boolean hasWildcard = containsWildcard(queryString);
 
     BooleanQuery.Builder builder = new BooleanQuery.Builder();
-    for (String fieldName : fieldNames) {
+    for (String fieldName : defaultFieldNames) {
       Query query;
       if (!hasWildcard) {
         query = createWildcardQuery(fieldName, queryString);
