@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, FormEvent, useEffect, useState } from "react";
+import React, { FC, FormEvent, useCallback, useEffect, useState } from "react";
 import { Repository, RepositoryCreation, RepositoryType } from "@scm-manager/ui-types";
 import { ErrorNotification, Level, SubmitButton } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
@@ -59,6 +59,12 @@ const ImportRepositoryFromBundle: FC<Props> = ({
   const { importRepositoryFromBundle, importedRepository, error, isLoading } = useImportRepositoryFromBundle(
     repositoryType
   );
+  const setContactValid = useCallback((contact: boolean) => setValid({ ...valid, contact }), [setValid]);
+  const setNamespaceAndNameValid = useCallback(
+    (namespaceAndName: boolean) => setValid({ ...valid, namespaceAndName }),
+    [setValid]
+  );
+  const setFileValid = useCallback((file: boolean) => setValid({ ...valid, file }), [setValid]);
 
   useEffect(() => setImportPending(isLoading), [isLoading, setImportPending]);
   useEffect(() => {
@@ -82,7 +88,7 @@ const ImportRepositoryFromBundle: FC<Props> = ({
       <ErrorNotification error={error} />
       <ImportFromBundleForm
         setFile={setFile}
-        setValid={(file: boolean) => setValid({ ...valid, file })}
+        setValid={setFileValid}
         compressed={compressed}
         setCompressed={setCompressed}
         password={password}
@@ -93,14 +99,14 @@ const ImportRepositoryFromBundle: FC<Props> = ({
       <NameForm
         repository={repo}
         onChange={setRepo as React.Dispatch<React.SetStateAction<RepositoryCreation>>}
-        setValid={(namespaceAndName: boolean) => setValid({ ...valid, namespaceAndName })}
+        setValid={setNamespaceAndNameValid}
         disabled={isLoading}
       />
       <InformationForm
         repository={repo}
         onChange={setRepo as React.Dispatch<React.SetStateAction<RepositoryCreation>>}
         disabled={isLoading}
-        setValid={(contact: boolean) => setValid({ ...valid, contact })}
+        setValid={setContactValid}
       />
       <Level
         right={<SubmitButton disabled={!isValid()} loading={isLoading} label={t("repositoryForm.submitImport")} />}

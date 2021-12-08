@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, FormEvent, useEffect, useState } from "react";
+import React, { FC, FormEvent, useCallback, useEffect, useState } from "react";
 import { Repository, RepositoryCreation, RepositoryType, RepositoryUrlImport } from "@scm-manager/ui-types";
 import ImportFromUrlForm from "./ImportFromUrlForm";
 import { ErrorNotification, Level, SubmitButton } from "@scm-manager/ui-components";
@@ -58,6 +58,12 @@ const ImportRepositoryFromUrl: FC<Props> = ({
   const [valid, setValid] = useState({ namespaceAndName: false, contact: true, importUrl: false });
   const [t] = useTranslation("repos");
   const { importRepositoryFromUrl, importedRepository, error, isLoading } = useImportRepositoryFromUrl(repositoryType);
+  const setContactValid = useCallback((contact: boolean) => setValid({ ...valid, contact }), [setValid]);
+  const setNamespaceAndNameValid = useCallback(
+    (namespaceAndName: boolean) => setValid({ ...valid, namespaceAndName }),
+    [setValid]
+  );
+  const setImportUrlValid = useCallback((importUrl: boolean) => setValid({ ...valid, importUrl }), [setValid]);
 
   useEffect(() => setImportPending(isLoading), [isLoading, setImportPending]);
   useEffect(() => {
@@ -76,24 +82,19 @@ const ImportRepositoryFromUrl: FC<Props> = ({
   return (
     <form onSubmit={submit}>
       {error ? <ErrorNotification error={error} /> : null}
-      <ImportFromUrlForm
-        repository={repo}
-        onChange={setRepo}
-        setValid={(importUrl: boolean) => setValid({ ...valid, importUrl })}
-        disabled={isLoading}
-      />
+      <ImportFromUrlForm repository={repo} onChange={setRepo} setValid={setImportUrlValid} disabled={isLoading} />
       <hr />
       <NameForm
         repository={repo}
         onChange={setRepo as React.Dispatch<React.SetStateAction<RepositoryCreation>>}
-        setValid={(namespaceAndName: boolean) => setValid({ ...valid, namespaceAndName })}
+        setValid={setNamespaceAndNameValid}
         disabled={isLoading}
       />
       <InformationForm
         repository={repo}
         onChange={setRepo as React.Dispatch<React.SetStateAction<RepositoryCreation>>}
         disabled={isLoading}
-        setValid={(contact: boolean) => setValid({ ...valid, contact })}
+        setValid={setContactValid}
       />
       <Level
         right={<SubmitButton disabled={!isValid()} loading={isLoading} label={t("repositoryForm.submitImport")} />}
