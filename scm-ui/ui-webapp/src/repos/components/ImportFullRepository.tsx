@@ -56,12 +56,16 @@ const ImportFullRepository: FC<Props> = ({
   const [file, setFile] = useState<File | null>(null);
   const [t] = useTranslation("repos");
   const { importFullRepository, importedRepository, isLoading, error } = useImportFullRepository(repositoryType);
-  const setContactValid = useCallback((contact: boolean) => setValid({ ...valid, contact }), [setValid]);
+  const setContactValid = useCallback((contact: boolean) => setValid(currentValid => ({ ...currentValid, contact })), [
+    setValid
+  ]);
   const setNamespaceAndNameValid = useCallback(
-    (namespaceAndName: boolean) => setValid({ ...valid, namespaceAndName }),
+    (namespaceAndName: boolean) => setValid(currentValid => ({ ...currentValid, namespaceAndName })),
     [setValid]
   );
-  const setFileValid = useCallback((file: boolean) => setValid({ ...valid, file }), [setValid]);
+  const setFileValid = useCallback((file: boolean) => setValid(currentValid => ({ ...currentValid, file })), [
+    setValid
+  ]);
 
   useEffect(() => setImportPending(isLoading), [isLoading, setImportPending]);
   useEffect(() => {

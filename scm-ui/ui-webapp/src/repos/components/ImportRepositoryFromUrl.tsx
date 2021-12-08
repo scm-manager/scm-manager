@@ -58,12 +58,17 @@ const ImportRepositoryFromUrl: FC<Props> = ({
   const [valid, setValid] = useState({ namespaceAndName: false, contact: true, importUrl: false });
   const [t] = useTranslation("repos");
   const { importRepositoryFromUrl, importedRepository, error, isLoading } = useImportRepositoryFromUrl(repositoryType);
-  const setContactValid = useCallback((contact: boolean) => setValid({ ...valid, contact }), [setValid]);
+  const setContactValid = useCallback((contact: boolean) => setValid(currentValid => ({ ...currentValid, contact })), [
+    setValid
+  ]);
   const setNamespaceAndNameValid = useCallback(
-    (namespaceAndName: boolean) => setValid({ ...valid, namespaceAndName }),
+    (namespaceAndName: boolean) => setValid(currentValid => ({ ...currentValid, namespaceAndName })),
     [setValid]
   );
-  const setImportUrlValid = useCallback((importUrl: boolean) => setValid({ ...valid, importUrl }), [setValid]);
+  const setImportUrlValid = useCallback(
+    (importUrl: boolean) => setValid(currentValid => ({ ...currentValid, importUrl })),
+    [setValid]
+  );
 
   useEffect(() => setImportPending(isLoading), [isLoading, setImportPending]);
   useEffect(() => {
