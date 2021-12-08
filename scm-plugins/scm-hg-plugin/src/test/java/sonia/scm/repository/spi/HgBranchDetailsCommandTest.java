@@ -24,9 +24,10 @@
 
 package sonia.scm.repository.spi;
 
+import lombok.val;
 import org.junit.Test;
 import sonia.scm.NotFoundException;
-import sonia.scm.repository.api.BranchDetailsCommandResult;
+import sonia.scm.repository.BranchDetails;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -37,7 +38,7 @@ public class HgBranchDetailsCommandTest extends AbstractHgCommandTestBase {
     BranchDetailsCommandRequest branchRequest = new BranchDetailsCommandRequest();
     branchRequest.setBranchName("testbranch");
 
-    BranchDetailsCommandResult result = new HgBranchDetailsCommand(cmdContext).execute(branchRequest);
+    BranchDetails result = new HgBranchDetailsCommand(cmdContext).execute(branchRequest).getDetails();
 
     assertThat(result.getChangesetsAhead()).get().isEqualTo(1);
     assertThat(result.getChangesetsBehind()).get().isEqualTo(3);
@@ -48,7 +49,7 @@ public class HgBranchDetailsCommandTest extends AbstractHgCommandTestBase {
     BranchDetailsCommandRequest branchRequest = new BranchDetailsCommandRequest();
     branchRequest.setBranchName("with_merge");
 
-    BranchDetailsCommandResult result = new HgBranchDetailsCommand(cmdContext).execute(branchRequest);
+    val result = new HgBranchDetailsCommand(cmdContext).execute(branchRequest).getDetails();
 
     assertThat(result.getChangesetsAhead()).get().isEqualTo(5);
     assertThat(result.getChangesetsBehind()).get().isEqualTo(1);
@@ -59,7 +60,7 @@ public class HgBranchDetailsCommandTest extends AbstractHgCommandTestBase {
     BranchDetailsCommandRequest branchRequest = new BranchDetailsCommandRequest();
     branchRequest.setBranchName("next_merge");
 
-    BranchDetailsCommandResult result = new HgBranchDetailsCommand(cmdContext).execute(branchRequest);
+    BranchDetails result = new HgBranchDetailsCommand(cmdContext).execute(branchRequest).getDetails();
 
     assertThat(result.getChangesetsAhead()).get().isEqualTo(3);
     assertThat(result.getChangesetsBehind()).get().isEqualTo(0);

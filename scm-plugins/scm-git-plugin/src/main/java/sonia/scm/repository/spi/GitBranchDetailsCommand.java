@@ -33,6 +33,7 @@ import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.revwalk.RevWalkUtils;
 import org.eclipse.jgit.revwalk.filter.RevFilter;
 import sonia.scm.repository.Branch;
+import sonia.scm.repository.BranchDetails;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.api.BranchDetailsCommandResult;
 
@@ -52,14 +53,15 @@ public class GitBranchDetailsCommand extends AbstractGitCommand implements Branc
   @Override
   public BranchDetailsCommandResult execute(BranchDetailsCommandRequest branchDetailsCommandRequest) {
     String defaultBranch = context.getConfig().getDefaultBranch();
-    if (branchDetailsCommandRequest.getBranchName().equals(defaultBranch)) {
-      return new BranchDetailsCommandResult(0, 0);
+    String branchName = branchDetailsCommandRequest.getBranchName();
+    if (branchName.equals(defaultBranch)) {
+      return new BranchDetailsCommandResult(new BranchDetails(branchName, 0, 0));
     }
     try {
       Repository repository = open();
-      ObjectId branchCommit = getObjectId(branchDetailsCommandRequest.getBranchName(), repository);
+      ObjectId branchCommit = getObjectId(branchName, repository);
       ObjectId defaultCommit = getObjectId(defaultBranch, repository);
-      return computeAheadBehind(repository, branchCommit, defaultCommit);
+      return computeAheadBehind(repository, branchName, branchCommit, defaultCommit);
     } catch (IOException e) {
       throw new InternalRepositoryException(context.getRepository(), "could not compute ahead/behind", e);
     }
@@ -73,7 +75,7 @@ public class GitBranchDetailsCommand extends AbstractGitCommand implements Branc
     return branchCommit;
   }
 
-  private BranchDetailsCommandResult computeAheadBehind(Repository repository, ObjectId branchCommit, ObjectId defaultCommit) throws MissingObjectException, IncorrectObjectTypeException {
+  private BranchDetailsCommandResult computeAheadBehind(Repository repository, String branchName, ObjectId branchCommit, ObjectId defaultCommit) throws MissingObjectException, IncorrectObjectTypeException {
     // this implementation is a copy of the implementation in org.eclipse.jgit.lib.BranchTrackingStatus
     try (RevWalk walk = new RevWalk(repository)) {
 
@@ -90,7 +92,7 @@ public class GitBranchDetailsCommand extends AbstractGitCommand implements Branc
       int aheadCount = RevWalkUtils.count(walk, localCommit, mergeBase);
       int behindCount = RevWalkUtils.count(walk, trackingCommit, mergeBase);
 
-      return new BranchDetailsCommandResult(aheadCount, behindCount);
+      return new BranchDetailsCommandResult(new BranchDetails(branchName, aheadCount, behindCount));
     } catch (IOException e) {
       throw new InternalRepositoryException(context.getRepository(), "could not compute ahead/behind", e);
     }
