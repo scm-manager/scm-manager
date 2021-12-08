@@ -90,11 +90,21 @@ public final class LuceneHighlighter {
     int index = content.indexOf(raw);
 
     int start = content.lastIndexOf('\n', index);
-    if (start < 0) {
-      start = 0;
-    }
 
-    String snippet = content.substring(start, index) + fragment;
+    String snippet;
+    if (start == index) {
+      // fragment starts with a linebreak
+      snippet = fragment.substring(1);
+    } else {
+      if (start < 0) {
+        // no leading linebreak
+        start = 0;
+      } else if (start < content.length()) {
+        // skip linebreak
+        start++;
+      }
+      snippet = content.substring(start, index) + fragment;
+    }
 
     int end = content.indexOf('\n', index + raw.length());
     if (end < 0) {
