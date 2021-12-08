@@ -24,11 +24,10 @@
 
 package sonia.scm.io;
 
+import java.util.Locale;
 import java.util.Optional;
 
 public class DefaultContentType implements ContentType {
-
-  private static final String DEFAULT_LANG_MODE = "text";
 
   private final com.github.sdorra.spotter.ContentType contentType;
 
@@ -60,7 +59,7 @@ public class DefaultContentType implements ContentType {
   public Optional<String> getLanguage() {
     return contentType.getLanguage().map(language -> {
       Optional<String> aceMode = language.getAceMode();
-      return aceMode.orElseGet(() -> language.getCodemirrorMode().orElse(DEFAULT_LANG_MODE));
+      return aceMode.orElseGet(() -> language.getCodemirrorMode().orElse(language.getName().toLowerCase(Locale.ENGLISH)));
     });
   }
 }

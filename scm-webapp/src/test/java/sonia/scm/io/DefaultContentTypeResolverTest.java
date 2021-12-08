@@ -118,8 +118,8 @@ class DefaultContentTypeResolverTest {
     }
 
     @Test
-    void shouldReturnTextIfNoModeIsPresent() {
-      assertThat(contentTypeResolver.resolve("index.hxml").getLanguage()).contains("text");
+    void shouldReturnLanguageNameIfNoModeIsPresent() {
+      assertThat(contentTypeResolver.resolve("index.hxml").getLanguage()).contains("hxml");
     }
 
   }
