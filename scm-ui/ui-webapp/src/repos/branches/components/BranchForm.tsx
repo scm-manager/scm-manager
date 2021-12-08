@@ -22,27 +22,20 @@
  * SOFTWARE.
  */
 import React, { FC, FormEvent, useEffect, useState } from "react";
-import { useTranslation, WithTranslation, withTranslation } from "react-i18next";
-import { Branch, BranchCreation, Repository } from "@scm-manager/ui-types";
+import { useTranslation } from "react-i18next";
+import { Branch, BranchCreation } from "@scm-manager/ui-types";
 import { InputField, Level, Select, SubmitButton, validation as validator } from "@scm-manager/ui-components";
 import { orderBranches } from "../util/orderBranches";
 
-type Props = WithTranslation & {
+type Props = {
   submitForm: (p: BranchCreation) => void;
-  repository: Repository;
   branches: Branch[];
   loading?: boolean;
   transmittedName?: string;
   disabled?: boolean;
 };
 
-type State = {
-  source?: string;
-  name?: string;
-  nameValidationError: boolean;
-};
-
-const BranchForm: FC<Props> = ({ submitForm, repository, branches, disabled, transmittedName, loading }) => {
+const BranchForm: FC<Props> = ({ submitForm, branches, disabled, transmittedName, loading }) => {
   const [t] = useTranslation("repos");
   const [name, setName] = useState(transmittedName || "");
   const [source, setSource] = useState("");
@@ -108,4 +101,4 @@ const BranchForm: FC<Props> = ({ submitForm, repository, branches, disabled, tra
   );
 };
 
-export default withTranslation("repos")(BranchForm);
+export default BranchForm;
