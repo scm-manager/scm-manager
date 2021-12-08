@@ -23,18 +23,32 @@
  */
 import React from "react";
 import { storiesOf } from "@storybook/react";
-// @ts-ignore no types for import
-import hit from "../__resources__/content-search-hit.json";
+import { bashHit, javaHit, markdownHit } from "../__resources__/ContentSearchHit";
 import TextHitField from "./TextHitField";
 
 storiesOf("TextHitField", module)
   .add("Default", () => (
     <pre>
-      <TextHitField hit={hit} field={"content"} />
+      <TextHitField hit={javaHit} field={"content"} />
     </pre>
   ))
-  .add("Syntaxhighlighting", () => (
+  .add("Java SyntaxHighlighting", () => (
     <pre>
-      <TextHitField hit={hit} field={"content"} syntaxHighlightingLanguage="java" />
+      <TextHitField hit={javaHit} field={"content"} syntaxHighlightingLanguage="java" />
+    </pre>
+  ))
+  .add("Bash SyntaxHighlighting", () => (
+    <pre>
+      <TextHitField hit={bashHit} field={"content"} syntaxHighlightingLanguage="sh" />
+    </pre>
+  ))
+  .add("Markdown SyntaxHighlighting", () => (
+    <pre>
+      <TextHitField hit={markdownHit} field={"content"} syntaxHighlightingLanguage="markdown" />
+    </pre>
+  ))
+  .add("Unknown SyntaxHighlighting", () => (
+    <pre>
+      <TextHitField hit={bashHit} field={"content"} syntaxHighlightingLanguage="__unknown__" />
     </pre>
   ));

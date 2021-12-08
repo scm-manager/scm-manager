@@ -22,12 +22,13 @@
  * SOFTWARE.
  */
 
-import React, { FC, ReactNode, useEffect, useState } from "react";
+import React, { FC, ReactNode, useEffect, useMemo, useState } from "react";
 import createAdapter from "../repos/refractorAdapter";
 // @ts-ignore no types for css modules
 import theme from "../syntax-highlighting.module.css";
 import SplitAndReplace, { Replacement } from "../SplitAndReplace";
 import { AST, RefractorNode } from "refractor";
+import { determineLanguage } from "../languages";
 
 const PRE_TAG = "<|[[--";
 const POST_TAG = "--]]|>";
@@ -78,21 +79,19 @@ type Props = {
   language: string;
 };
 
-const HighlightedFragment: FC<Props> = ({ value, language }) => {
+const SyntaxHighlightedFragment: FC<Props> = ({ value, language }) => {
   const [isLoading, setIsLoading] = useState(true);
+  const strippedValue = useMemo(() => value.replace(PRE_TAG_REGEX, "").replace(POST_TAG_REGEX, ""), [value]);
+  const determinedLanguage = determineLanguage(language);
 
   useEffect(() => {
-    adapter.loadLanguage(language, () => {
+    adapter.loadLanguage(determinedLanguage, () => {
       setIsLoading(false);
     });
-  }, [language]);
+  }, [determinedLanguage]);
 
   if (isLoading) {
-    return (
-      <pre>
-        <code>{value}</code>
-      </pre>
-    );
+    return <>{strippedValue}</>;
   }
 
   let content = value;
@@ -114,10 +113,10 @@ const HighlightedFragment: FC<Props> = ({ value, language }) => {
 
   result.sort((a, b) => b.length - a.length);
 
-  const refractorNodes = adapter.highlight(value.replace(PRE_TAG_REGEX, "").replace(POST_TAG_REGEX, ""), language);
+  const refractorNodes = adapter.highlight(strippedValue, determinedLanguage);
   const highlightedFragment = refractorNodes.map(mapWithDepth(0, result.map(createReplacement)));
 
   return <>{highlightedFragment}</>;
 };
 
-export default HighlightedFragment;
+export default SyntaxHighlightedFragment;
