@@ -62,6 +62,17 @@ const Contributor: FC<{ person: Person }> = ({ person }) => {
   return <>{person.name}</>;
 };
 
+const getUnique = (items: string[]) => {
+  return Object.keys(
+    items.reduce((result, item) => {
+      if (item in result) {
+        result[item] = true;
+      }
+      return result;
+    }, {} as { [type: string]: boolean })
+  );
+};
+
 const ContributorTable: FC<Props> = ({ changeset }) => {
   const [t] = useTranslation("plugins");
 
@@ -69,7 +80,7 @@ const ContributorTable: FC<Props> = ({ changeset }) => {
     if (!changeset.contributors) {
       return [];
     }
-    return Array.from(new Set(changeset.contributors.map(contributor => contributor.type)));
+    return getUnique(changeset.contributors.map(contributor => contributor.type));
   };
 
   const getPersonsByContributorType = (type: string) => {
