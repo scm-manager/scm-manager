@@ -22,8 +22,7 @@
  * SOFTWARE.
  */
 import React, { useState } from "react";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { match } from "react-router";
+import { match as Match } from "react-router";
 import { Link as RouteLink, Redirect, Route, RouteProps, Switch, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
@@ -73,7 +72,7 @@ type UrlParams = {
   name: string;
 };
 
-const useRepositoryFromUrl = (match: match<UrlParams>) => {
+const useRepositoryFromUrl = (match: Match<UrlParams>) => {
   const { namespace, name } = match.params;
   const { data: repository, ...rest } = useRepository(namespace, name);
   return {
