@@ -76,7 +76,13 @@ const RepositoryForm: FC<Props> = ({
   );
   const [valid, setValid] = useState({ namespaceAndName: true, contact: true });
   const [t] = useTranslation("repos");
-  const validate = useCallback(namespaceAndName => setValid({ ...valid, namespaceAndName }), [setValid]);
+  const setContactValid = useCallback((contact: boolean) => setValid(currentValid => ({ ...currentValid, contact })), [
+    setValid
+  ]);
+  const setNamespaceAndNameValid = useCallback(
+    (namespaceAndName: boolean) => setValid(currentValid => ({ ...currentValid, namespaceAndName })),
+    [setValid]
+  );
 
   useEffect(() => {
     if (repository) {
@@ -134,7 +140,12 @@ const RepositoryForm: FC<Props> = ({
     };
     return (
       <>
-        <NamespaceAndNameFields repository={repo} onChange={setRepo} setValid={validate} disabled={disabled} />
+        <NamespaceAndNameFields
+          repository={repo}
+          onChange={setRepo}
+          setValid={setNamespaceAndNameValid}
+          disabled={disabled}
+        />
         <div className="columns">
           <div className={classNames("column", "is-half")}>
             <Select
@@ -183,12 +194,7 @@ const RepositoryForm: FC<Props> = ({
   return (
     <form onSubmit={submit}>
       {renderCreateOnlyFields()}
-      <RepositoryInformationForm
-        repository={repo}
-        onChange={setRepo}
-        disabled={disabled}
-        setValid={contact => validate({ ...valid, contact })}
-      />
+      <RepositoryInformationForm repository={repo} onChange={setRepo} disabled={disabled} setValid={setContactValid} />
       {submitButton()}
     </form>
   );
