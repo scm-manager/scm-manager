@@ -22,4 +22,11 @@
  * SOFTWARE.
  */
 
-export type OnChangeType = string | string[] | number | boolean;
+import { Config } from "./Config";
+import { HalRepresentation } from "./hal";
+
+export type ConfigChangeHandler = <Name extends Exclude<keyof Config, keyof HalRepresentation>>(
+  isValid: boolean,
+  changedValue: Config[Name],
+  name: Name
+) => void;

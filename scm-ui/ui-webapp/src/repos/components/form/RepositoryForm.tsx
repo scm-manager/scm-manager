@@ -28,8 +28,9 @@ import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import {
   CUSTOM_NAMESPACE_STRATEGY,
   IndexResources,
-  OnChangeType,
   Repository,
+  RepositoryBase,
+  RepositoryCreation,
   RepositoryType
 } from "@scm-manager/ui-types";
 import { Checkbox, Level, Select, SubmitButton } from "@scm-manager/ui-components";
@@ -46,10 +47,6 @@ type Props = {
   indexResources?: IndexResources;
 };
 
-type RepositoryCreation = Repository & {
-  contextEntries?: { [key: string]: object | undefined };
-};
-
 const RepositoryForm: FC<Props> = ({
   createRepository,
   modifyRepository,
@@ -59,18 +56,17 @@ const RepositoryForm: FC<Props> = ({
   loading,
   indexResources
 }) => {
-  const [repo, setRepo] = useState<RepositoryCreation>({
+  const [repo, setRepo] = useState<RepositoryBase>({
     name: "",
     namespace: "",
     type: "",
     contact: "",
-    description: "",
-    _links: {}
+    description: ""
   });
   const [initRepository, setInitRepository] = useState(false);
   const [contextEntries, setContextEntries] = useState({});
   const setCreationContextEntry = useCallback(
-    (key: string, value: OnChangeType) => {
+    (key: string, value: unknown) => {
       setContextEntries(entries => ({
         ...entries,
         [key]: value
@@ -105,7 +101,11 @@ const RepositoryForm: FC<Props> = ({
       if (createRepository) {
         createRepository({ ...repo, contextEntries }, initRepository);
       } else if (modifyRepository) {
-        modifyRepository(repo);
+        if (!!repository && !!repository._links.update) {
+          modifyRepository({ ...repository, ...repo });
+        } else {
+          throw new Error("Repository has to be present and contain update link for modification");
+        }
       }
     }
   };

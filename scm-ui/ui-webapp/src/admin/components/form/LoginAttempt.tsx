@@ -24,12 +24,12 @@
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { InputField, Subtitle, validation as validator } from "@scm-manager/ui-components";
-import { OnChangeType } from "@scm-manager/ui-types";
+import { ConfigChangeHandler } from "@scm-manager/ui-types";
 
 type Props = WithTranslation & {
   loginAttemptLimit: number;
   loginAttemptLimitTimeout: number;
-  onChange: (p1: boolean, p2: OnChangeType, p3: string) => void;
+  onChange: ConfigChangeHandler;
   hasUpdatePermission: boolean;
 };
 
@@ -87,7 +87,7 @@ class LoginAttempt extends React.Component<Props, State> {
       ...this.state,
       loginAttemptLimitError: !validator.isNumberValid(value)
     });
-    this.props.onChange(validator.isNumberValid(value), value, "loginAttemptLimit");
+    this.props.onChange(validator.isNumberValid(value), Number(value), "loginAttemptLimit");
   };
 
   handleLoginAttemptLimitTimeoutChange = (value: string) => {
@@ -95,7 +95,7 @@ class LoginAttempt extends React.Component<Props, State> {
       ...this.state,
       loginAttemptLimitTimeoutError: !validator.isNumberValid(value)
     });
-    this.props.onChange(validator.isNumberValid(value), value, "loginAttemptLimitTimeout");
+    this.props.onChange(validator.isNumberValid(value), Number(value), "loginAttemptLimitTimeout");
   };
 }
 

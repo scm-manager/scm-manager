@@ -24,12 +24,12 @@
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { Checkbox, InputField, Subtitle } from "@scm-manager/ui-components";
-import { OnChangeType } from "@scm-manager/ui-types";
+import { ConfigChangeHandler } from "@scm-manager/ui-types";
 
 type Props = WithTranslation & {
   baseUrl: string;
   forceBaseUrl: boolean;
-  onChange: (p1: boolean, p2: OnChangeType, p3: string) => void;
+  onChange: ConfigChangeHandler;
   hasUpdatePermission: boolean;
 };
 

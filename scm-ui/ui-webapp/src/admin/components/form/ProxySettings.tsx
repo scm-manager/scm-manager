@@ -25,7 +25,7 @@ import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { AddEntryToTableField, Checkbox, InputField, Subtitle } from "@scm-manager/ui-components";
 import ProxyExcludesTable from "../table/ProxyExcludesTable";
-import { OnChangeType } from "@scm-manager/ui-types";
+import { ConfigChangeHandler } from "@scm-manager/ui-types";
 
 type Props = WithTranslation & {
   proxyPassword: string;
@@ -34,7 +34,7 @@ type Props = WithTranslation & {
   proxyUser: string;
   enableProxy: boolean;
   proxyExcludes: string[];
-  onChange: (p1: boolean, p2: OnChangeType, p3: string) => void;
+  onChange: ConfigChangeHandler;
   hasUpdatePermission: boolean;
 };
 
@@ -110,7 +110,7 @@ class ProxySettings extends React.Component<Props> {
           <div className="column is-full">
             <ProxyExcludesTable
               proxyExcludes={proxyExcludes}
-              onChange={(isValid, changedValue, name) => this.props.onChange(isValid, changedValue, name)}
+              onChange={this.props.onChange}
               disabled={!enableProxy || !hasUpdatePermission}
             />
             <AddEntryToTableField
@@ -131,7 +131,7 @@ class ProxySettings extends React.Component<Props> {
     this.props.onChange(true, value, "proxyPassword");
   };
   handleProxyPortChange = (value: string) => {
-    this.props.onChange(true, value, "proxyPort");
+    this.props.onChange(true, Number(value), "proxyPort");
   };
   handleProxyServerChange = (value: string) => {
     this.props.onChange(true, value, "proxyServer");
