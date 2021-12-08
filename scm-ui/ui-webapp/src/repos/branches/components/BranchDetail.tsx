@@ -21,41 +21,46 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
+import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import { Branch, Repository } from "@scm-manager/ui-types";
-import { DateFromNow } from "@scm-manager/ui-components";
+import { Subtitle, DateFromNow } from "@scm-manager/ui-components";
 import BranchButtonGroup from "./BranchButtonGroup";
 import DefaultBranchTag from "./DefaultBranchTag";
 
-type Props = WithTranslation & {
+type Props = {
   repository: Repository;
   branch: Branch;
 };
 
-class BranchDetail extends React.Component<Props> {
-  render() {
-    const { repository, branch, t } = this.props;
+const BranchDetail: FC<Props> = ({ repository, branch }) => {
+  const [t] = useTranslation("repos");
 
-    return (
-      <div className="media">
-        <div
-          className={classNames("media-content", "subtitle", "is-flex", "is-align-items-center", "is-flex-wrap-wrap")}
-        >
-          <strong className="mr-1">{t("branch.name")}</strong> {branch.name}{" "}
-          <DefaultBranchTag defaultBranch={branch.defaultBranch} />
-          <div className={classNames("is-ellipsis-overflow", "is-size-7", "ml-2")}>
-            {t("branches.overview.lastCommit")}{" "}
-            <DateFromNow className={classNames("is-size-7", "has-text-grey")} date={branch.lastCommitDate} />
-          </div>
-        </div>
-        <div className="media-right">
-          <BranchButtonGroup repository={repository} branch={branch} />
+  return (
+    <div className="media is-align-items-center">
+      <div
+        className={classNames(
+          "media-content",
+          "subtitle",
+          "is-flex",
+          "is-flex-wrap-wrap",
+          "is-align-items-center",
+          "mb-0"
+        )}
+      >
+        <strong className="mr-1">{t("branch.name")}</strong> <Subtitle className="mb-0">{branch.name}</Subtitle>
+        <DefaultBranchTag defaultBranch={branch.defaultBranch} />
+        <div className={classNames("is-ellipsis-overflow", "is-size-7", "ml-2")}>
+          {t("branches.overview.lastCommit")}{" "}
+          <DateFromNow className={classNames("is-size-7", "has-text-grey")} date={branch.lastCommitDate} />
         </div>
       </div>
-    );
-  }
-}
+      <div className="media-right">
+        <BranchButtonGroup repository={repository} branch={branch} />
+      </div>
+    </div>
+  );
+};
 
-export default withTranslation("repos")(BranchDetail);
+export default BranchDetail;

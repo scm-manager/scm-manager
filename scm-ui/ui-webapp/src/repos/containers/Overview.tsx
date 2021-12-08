@@ -166,6 +166,7 @@ const Overview: FC = () => {
 
   return (
     <Page
+      documentTitle={t("overview.title")}
       title={<ExtensionPoint name="repository.overview.title">{t("overview.title")}</ExtensionPoint>}
       subtitle={<ExtensionPoint name="repository.overview.subtitle">{t("overview.subtitle")}</ExtensionPoint>}
       loading={isLoading}

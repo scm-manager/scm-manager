@@ -21,9 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { Repository } from "@scm-manager/ui-types";
+import { SubSubtitle } from "@scm-manager/ui-components";
 
 type Props = WithTranslation & {
   repository: Repository;
@@ -37,7 +39,7 @@ class GitMergeInformation extends React.Component<Props> {
 
     return (
       <div>
-        <h4>{t("scm-git-plugin.information.merge.heading")}</h4>
+        <SubSubtitle>{t("scm-git-plugin.information.merge.heading")}</SubSubtitle>
         {t("scm-git-plugin.information.merge.checkout")}
         <pre>
           <code>git checkout {target}</code>

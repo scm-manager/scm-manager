@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 import React, { FC } from "react";
-import { Redirect, Route, useRouteMatch } from "react-router-dom";
+import { Route, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
   CustomQueryFlexWrappedColumns,
@@ -82,7 +82,6 @@ const Profile: FC = () => {
             <Route path={url} exact>
               <ProfileInfo me={me} />
             </Route>
-            <Redirect exact from={`${url}/settings/`} to={`${url}/settings/theme`} />
             <Route path={`${url}/settings/theme`} exact>
               <Theme />
             </Route>

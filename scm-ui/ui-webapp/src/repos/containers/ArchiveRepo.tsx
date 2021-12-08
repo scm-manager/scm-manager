@@ -72,11 +72,10 @@ const ArchiveRepo: FC<Props> = ({ repository, confirmDialog = true }) => {
       {showConfirmAlert && confirmAlert}
       <Level
         left={
-          <p>
-            <strong>{t("archiveRepo.subtitle")}</strong>
-            <br />
-            {t("archiveRepo.description")}
-          </p>
+          <div>
+            <h4 className="has-text-weight-bold">{t("archiveRepo.subtitle")}</h4>
+            <p>{t("archiveRepo.description")}</p>
+          </div>
         }
         right={
           <Button color="warning" icon="archive" label={t("archiveRepo.button")} action={action} loading={isLoading} />

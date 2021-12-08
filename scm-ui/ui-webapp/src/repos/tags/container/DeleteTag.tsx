@@ -67,11 +67,10 @@ const DeleteTag: FC<Props> = ({ tag, repository }) => {
       ) : null}
       <Level
         left={
-          <p>
-            <strong>{t("tag.delete.subtitle")}</strong>
-            <br />
-            {t("tag.delete.description")}
-          </p>
+          <div>
+            <h4 className="has-text-weight-bold">{t("tag.delete.subtitle")}</h4>
+            <p>{t("tag.delete.description")}</p>
+          </div>
         }
         right={<DeleteButton label={t("tag.delete.button")} action={() => setShowConfirmAlert(true)} />}
       />

@@ -44,7 +44,7 @@ class ResourceLinks {
   // we have to add the file path using URI, so that path separators (aka '/') will not be encoded as '%2F'
   private static String addPath(String sourceWithPath, String path) {
     try {
-      return new URI(sourceWithPath).resolve(new URI(null, null, path, null)).toASCIIString();
+      return new URI(sourceWithPath).resolve(new URI(null, null, "./" + path, null)).toASCIIString();
     } catch (URISyntaxException e) {
       throw new RuntimeException(e);
     }

@@ -1388,7 +1388,7 @@ exports[`Storyshots Footer Default 1`] = `
             <a
               className=""
               data-testid="footer-user-profile"
-              href="/me"
+              href="/me/settings/theme"
               onClick={[Function]}
             >
               footer.user.profile
@@ -1505,7 +1505,7 @@ exports[`Storyshots Footer Full 1`] = `
             <a
               className=""
               data-testid="footer-user-profile"
-              href="/me"
+              href="/me/settings/theme"
               onClick={[Function]}
             >
               footer.user.profile
@@ -1661,7 +1661,7 @@ exports[`Storyshots Footer With Avatar 1`] = `
             <a
               className=""
               data-testid="footer-user-profile"
-              href="/me"
+              href="/me/settings/theme"
               onClick={[Function]}
             >
               footer.user.profile
@@ -1770,7 +1770,7 @@ exports[`Storyshots Footer With Plugin Links 1`] = `
             <a
               className=""
               data-testid="footer-user-profile"
-              href="/me"
+              href="/me/settings/theme"
               onClick={[Function]}
             >
               footer.user.profile
@@ -23015,11 +23015,11 @@ exports[`Storyshots Repositories/Diff Binaries 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               Main.java
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -23237,11 +23237,11 @@ exports[`Storyshots Repositories/Diff Binaries 1`] = `
             onClick={[Function]}
             title="conflict.png"
           >
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               conflict.png
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -23315,11 +23315,11 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
                 className="fas fa-fw fa-angle-down has-text-inherit"
                 onKeyPress={[Function]}
               />
-              <span
-                className="is-ellipsis-overflow is-size-6 ml-1"
+              <h4
+                className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
               >
                 src/main/java/com/cloudogu/scm/review/events/EventListener.java
-              </span>
+              </h4>
               <span
                 className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
               >
@@ -23938,11 +23938,11 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
                 className="fas fa-fw fa-angle-down has-text-inherit"
                 onKeyPress={[Function]}
               />
-              <span
-                className="is-ellipsis-overflow is-size-6 ml-1"
+              <h4
+                className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
               >
                 src/main/js/ChangeNotification.tsx
-              </span>
+              </h4>
               <span
                 className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
               >
@@ -24898,11 +24898,11 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
                 className="fas fa-fw fa-angle-down has-text-inherit"
                 onKeyPress={[Function]}
               />
-              <span
-                className="is-ellipsis-overflow is-size-6 ml-1"
+              <h4
+                className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
               >
                 src/main/resources/locales/de/plugins.json
-              </span>
+              </h4>
               <span
                 className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
               >
@@ -25429,11 +25429,11 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
                 className="fas fa-fw fa-angle-down has-text-inherit"
                 onKeyPress={[Function]}
               />
-              <span
-                className="is-ellipsis-overflow is-size-6 ml-1"
+              <h4
+                className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
               >
                 src/main/resources/locales/en/plugins.json
-              </span>
+              </h4>
               <span
                 className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
               >
@@ -25960,11 +25960,11 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
                 className="fas fa-fw fa-angle-down has-text-inherit"
                 onKeyPress={[Function]}
               />
-              <span
-                className="is-ellipsis-overflow is-size-6 ml-1"
+              <h4
+                className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
               >
                 src/test/java/com/cloudogu/scm/review/events/ClientTest.java
-              </span>
+              </h4>
               <span
                 className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
               >
@@ -27181,11 +27181,11 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
                 className="fas fa-fw fa-angle-down has-text-inherit"
                 onKeyPress={[Function]}
               />
-              <span
-                className="is-ellipsis-overflow is-size-6 ml-1"
+              <h4
+                className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
               >
                 Main.java
-              </span>
+              </h4>
               <span
                 className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
               >
@@ -27762,11 +27762,11 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
               className="fas fa-fw fa-angle-right has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/main/java/com/cloudogu/scm/review/events/EventListener.java
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -27886,11 +27886,11 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
               className="fas fa-fw fa-angle-right has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/main/js/ChangeNotification.tsx
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -28010,11 +28010,11 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
               className="fas fa-fw fa-angle-right has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/main/resources/locales/de/plugins.json
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -28134,11 +28134,11 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
               className="fas fa-fw fa-angle-right has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/main/resources/locales/en/plugins.json
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -28258,11 +28258,11 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
               className="fas fa-fw fa-angle-right has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/test/java/com/cloudogu/scm/review/events/ClientTest.java
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -28382,11 +28382,11 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
               className="fas fa-fw fa-angle-right has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               Main.java
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -28515,11 +28515,11 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
               className="fas fa-fw fa-angle-right has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/main/java/com/cloudogu/scm/review/events/EventListener.java
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -28595,11 +28595,11 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/main/js/ChangeNotification.tsx
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -29458,11 +29458,11 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/main/resources/locales/de/plugins.json
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -29917,11 +29917,11 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/main/resources/locales/en/plugins.json
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -30376,11 +30376,11 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
               className="fas fa-fw fa-angle-right has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/test/java/com/cloudogu/scm/review/events/ClientTest.java
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -30456,11 +30456,11 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
               className="fas fa-fw fa-angle-right has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               Main.java
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -30545,11 +30545,11 @@ exports[`Storyshots Repositories/Diff Default 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/main/java/com/cloudogu/scm/review/events/EventListener.java
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -31131,11 +31131,11 @@ exports[`Storyshots Repositories/Diff Default 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/main/js/ChangeNotification.tsx
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -31994,11 +31994,11 @@ exports[`Storyshots Repositories/Diff Default 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/main/resources/locales/de/plugins.json
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -32453,11 +32453,11 @@ exports[`Storyshots Repositories/Diff Default 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/main/resources/locales/en/plugins.json
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -32912,11 +32912,11 @@ exports[`Storyshots Repositories/Diff Default 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/test/java/com/cloudogu/scm/review/events/ClientTest.java
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -33978,11 +33978,11 @@ exports[`Storyshots Repositories/Diff Default 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               Main.java
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -34521,11 +34521,11 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/main/java/com/cloudogu/scm/review/events/EventListener.java
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -35144,11 +35144,11 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/main/js/ChangeNotification.tsx
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -36104,11 +36104,11 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/main/resources/locales/de/plugins.json
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -36635,11 +36635,11 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/main/resources/locales/en/plugins.json
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -37166,11 +37166,11 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/test/java/com/cloudogu/scm/review/events/ClientTest.java
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -38387,11 +38387,11 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               Main.java
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -38967,11 +38967,11 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/main/java/com/cloudogu/scm/review/events/EventListener.java
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -39590,11 +39590,11 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/main/js/ChangeNotification.tsx
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -40550,11 +40550,11 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/main/resources/locales/de/plugins.json
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -41081,11 +41081,11 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/main/resources/locales/en/plugins.json
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -41612,11 +41612,11 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/test/java/com/cloudogu/scm/review/events/ClientTest.java
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -42833,11 +42833,11 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               Main.java
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -43413,11 +43413,11 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/main/java/com/cloudogu/scm/review/events/EventListener.java
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -44003,11 +44003,11 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/main/js/ChangeNotification.tsx
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -44870,11 +44870,11 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/main/resources/locales/de/plugins.json
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -45333,11 +45333,11 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/main/resources/locales/en/plugins.json
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -45796,11 +45796,11 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/test/java/com/cloudogu/scm/review/events/ClientTest.java
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -46866,11 +46866,11 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               Main.java
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -47413,11 +47413,11 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/main/java/com/cloudogu/scm/review/events/EventListener.java
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -48018,11 +48018,11 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/main/js/ChangeNotification.tsx
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -48900,11 +48900,11 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/main/resources/locales/de/plugins.json
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -49378,11 +49378,11 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/main/resources/locales/en/plugins.json
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -49856,11 +49856,11 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/test/java/com/cloudogu/scm/review/events/ClientTest.java
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -50941,11 +50941,11 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               Main.java
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -51503,11 +51503,11 @@ exports[`Storyshots Repositories/Diff Hunks 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/main/java/com/cloudogu/scm/review/pullrequest/service/DefaultPullRequestService.java
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -52353,11 +52353,11 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/main/java/com/cloudogu/scm/review/events/EventListener.java
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -52951,11 +52951,11 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/main/js/ChangeNotification.tsx
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -53826,11 +53826,11 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/main/resources/locales/de/plugins.json
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -54285,11 +54285,11 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/main/resources/locales/en/plugins.json
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -54744,11 +54744,11 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/test/java/com/cloudogu/scm/review/events/ClientTest.java
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -55810,11 +55810,11 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               Main.java
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -56365,11 +56365,11 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/main/java/com/cloudogu/scm/review/events/EventListener.java
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -56991,11 +56991,11 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/main/js/ChangeNotification.tsx
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -57916,11 +57916,11 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/main/resources/locales/de/plugins.json
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -58405,11 +58405,11 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/main/resources/locales/en/plugins.json
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -58894,11 +58894,11 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/test/java/com/cloudogu/scm/review/events/ClientTest.java
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -60036,11 +60036,11 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               Main.java
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -60615,11 +60615,11 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/main/java/com/cloudogu/scm/review/events/EventListener.java
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -61294,11 +61294,11 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/main/js/ChangeNotification.tsx
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -62247,11 +62247,11 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/main/resources/locales/de/plugins.json
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -62758,11 +62758,11 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/main/resources/locales/en/plugins.json
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -63269,11 +63269,11 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/test/java/com/cloudogu/scm/review/events/ClientTest.java
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -64504,11 +64504,11 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               Main.java
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -65120,11 +65120,11 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting (Markdown) 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               CHANGELOG.md
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -65488,11 +65488,11 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/main/java/com/cloudogu/scm/review/events/EventListener.java
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -66074,11 +66074,11 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/main/js/ChangeNotification.tsx
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -66937,11 +66937,11 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/main/resources/locales/de/plugins.json
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -67396,11 +67396,11 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/main/resources/locales/en/plugins.json
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -67855,11 +67855,11 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/test/java/com/cloudogu/scm/review/events/ClientTest.java
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -68921,11 +68921,11 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               Main.java
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -69464,11 +69464,11 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/main/java/com/cloudogu/scm/review/events/EventListener.java
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -70087,11 +70087,11 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/main/js/ChangeNotification.tsx
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -71047,11 +71047,11 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/main/resources/locales/de/plugins.json
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -71578,11 +71578,11 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/main/resources/locales/en/plugins.json
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -72109,11 +72109,11 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               src/test/java/com/cloudogu/scm/review/events/ClientTest.java
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >
@@ -73330,11 +73330,11 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
               className="fas fa-fw fa-angle-down has-text-inherit"
               onKeyPress={[Function]}
             />
-            <span
-              className="is-ellipsis-overflow is-size-6 ml-1"
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
             >
               Main.java
-            </span>
+            </h4>
             <span
               className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
             >

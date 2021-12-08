@@ -73,11 +73,10 @@ const UnarchiveRepo: FC<Props> = ({ repository, confirmDialog = true }) => {
       {showConfirmAlert && confirmAlert}
       <Level
         left={
-          <p>
-            <strong>{t("unarchiveRepo.subtitle")}</strong>
-            <br />
-            {t("unarchiveRepo.description")}
-          </p>
+          <div>
+            <h4 className="has-text-weight-bold">{t("unarchiveRepo.subtitle")}</h4>
+            <p>{t("unarchiveRepo.description")}</p>
+          </div>
         }
         right={
           <Button

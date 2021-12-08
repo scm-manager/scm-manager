@@ -74,7 +74,7 @@ public class QueryResultFactory {
   private Optional<Hit.Field> field(Document document, LuceneSearchableField field) throws IOException, InvalidTokenOffsetsException {
     Object value = field.value(document);
     if (value != null) {
-      if (field.isHighlighted()) {
+      if (highlighter.isHighlightable(field)) {
         String[] fragments = createFragments(field, value.toString());
         if (fragments.length > 0) {
           return of(new Hit.HighlightedField(fragments));

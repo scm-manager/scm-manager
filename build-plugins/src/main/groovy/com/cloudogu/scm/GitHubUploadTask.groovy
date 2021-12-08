@@ -31,6 +31,7 @@ import org.eclipse.jetty.client.api.Request
 import org.eclipse.jetty.client.util.StringContentProvider
 import org.eclipse.jetty.http.HttpMethod
 import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.Nested
 import org.gradle.api.tasks.Optional
 
@@ -61,15 +62,24 @@ class GitHubUploadTask extends UploadTask {
   private Author author = new Author()
 
   @Nested
-  private Author commiter
+  @Optional
+  private Author committer
+
+  Author getAuthor() {
+    return author
+  }
+
+  Author getCommitter() {
+    return committer
+  }
 
   void author(Closure closure) {
     closure.setDelegate(author)
     closure.call()
   }
 
-  void commiter(Closure closure) {
-    closure.setDelegate(commiter)
+  void committer(Closure closure) {
+    closure.setDelegate(committer)
     closure.call()
   }
 
@@ -93,10 +103,10 @@ class GitHubUploadTask extends UploadTask {
         email: author.email
       ]
     }
-    if (commiter?.valid) {
-      body.commiter = [
-        name: commiter.name,
-        email: commiter.email
+    if (committer?.valid) {
+      body.committer = [
+        name: committer.name,
+        email: committer.email
       ]
     }
     request.content(new StringContentProvider(JsonOutput.toJson(body), StandardCharsets.UTF_8))
@@ -113,6 +123,7 @@ class GitHubUploadTask extends UploadTask {
     @Optional
     String email
 
+    @Internal
     boolean isValid() {
       !Strings.isNullOrEmpty(name) && !Strings.isNullOrEmpty(email)
     }

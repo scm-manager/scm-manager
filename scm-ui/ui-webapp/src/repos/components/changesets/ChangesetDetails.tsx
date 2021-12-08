@@ -42,7 +42,8 @@ import {
   Icon,
   Level,
   SignatureIcon,
-  Tooltip
+  Tooltip,
+  SubSubtitle
 } from "@scm-manager/ui-components";
 import ContributorTable from "./ContributorTable";
 import { Link as ReactLink } from "react-router-dom";
@@ -144,7 +145,7 @@ const ChangesetDetails: FC<Props> = ({ changeset, repository, fileControlFactory
   return (
     <>
       <div className={classNames("content", "m-0")}>
-        <h4>
+        <SubSubtitle>
           <ExtensionPoint
             name="changeset.description"
             props={{
@@ -155,7 +156,7 @@ const ChangesetDetails: FC<Props> = ({ changeset, repository, fileControlFactory
           >
             <ChangesetDescription changeset={changeset} value={description.title} />
           </ExtensionPoint>
-        </h4>
+        </SubSubtitle>
         <article className="media">
           <AvatarWrapper>
             <p className={classNames("image", "is-64x64", "mr-4")}>

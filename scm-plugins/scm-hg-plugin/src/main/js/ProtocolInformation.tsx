@@ -24,7 +24,7 @@
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { Repository } from "@scm-manager/ui-types";
-import { ErrorNotification, Loading, repositories } from "@scm-manager/ui-components";
+import { ErrorNotification, Loading, SubSubtitle, repositories } from "@scm-manager/ui-components";
 import { useChangesets } from "@scm-manager/ui-api";
 
 type Props = {
@@ -49,13 +49,13 @@ const ProtocolInformation: FC<Props> = ({ repository }) => {
   return (
     <div className="content">
       <ErrorNotification error={error} />
-      <h4>{t("scm-hg-plugin.information.clone")}</h4>
+      <SubSubtitle>{t("scm-hg-plugin.information.clone")}</SubSubtitle>
       <pre>
         <code>hg clone {href}</code>
       </pre>
       {emptyRepository && (
         <>
-          <h4>{t("scm-hg-plugin.information.create")}</h4>
+          <SubSubtitle>{t("scm-hg-plugin.information.create")}</SubSubtitle>
           <pre>
             <code>
               hg init {repository.name}
@@ -81,7 +81,7 @@ const ProtocolInformation: FC<Props> = ({ repository }) => {
           </pre>
         </>
       )}
-      <h4>{t("scm-hg-plugin.information.replace")}</h4>
+      <SubSubtitle>{t("scm-hg-plugin.information.replace")}</SubSubtitle>
       <pre>
         <code>
           # add the repository url as default to your .hg/hgrc e.g:

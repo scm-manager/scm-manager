@@ -75,11 +75,10 @@ const DeleteBranch: FC<Props> = ({ repository, branch }: Props) => {
       {showConfirmAlert && confirmAlert}
       <Level
         left={
-          <p>
-            <strong>{t("branch.delete.subtitle")}</strong>
-            <br />
-            {t("branch.delete.description")}
-          </p>
+          <div>
+            <h4 className="has-text-weight-bold">{t("branch.delete.subtitle")}</h4>
+            <p>{t("branch.delete.description")}</p>
+          </div>
         }
         right={<DeleteButton label={t("branch.delete.button")} action={() => setShowConfirmAlert(true)} />}
       />

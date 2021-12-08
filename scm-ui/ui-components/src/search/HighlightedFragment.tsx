@@ -24,6 +24,9 @@
 
 import React, { FC } from "react";
 
+const PRE_TAG = "<|[[--";
+const POST_TAG = "--]]|>";
+
 type Props = {
   value: string;
 };
@@ -33,14 +36,14 @@ const HighlightedFragment: FC<Props> = ({ value }) => {
 
   const result = [];
   while (content.length > 0) {
-    const start = content.indexOf("<>");
-    const end = content.indexOf("</>");
+    const start = content.indexOf(PRE_TAG);
+    const end = content.indexOf(POST_TAG);
     if (start >= 0 && end > 0) {
       if (start > 0) {
         result.push(content.substring(0, start));
       }
-      result.push(<strong>{content.substring(start + 2, end)}</strong>);
-      content = content.substring(end + 3);
+      result.push(<strong>{content.substring(start + PRE_TAG.length, end)}</strong>);
+      content = content.substring(end + POST_TAG.length);
     } else {
       result.push(content);
       break;
