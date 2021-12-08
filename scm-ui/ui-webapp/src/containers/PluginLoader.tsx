@@ -68,9 +68,8 @@ class PluginLoader extends React.Component<Props, State> {
     }
   }
 
-  //eslint-disable-next-line @typescript-eslint/no-explicit-any
-  getPlugins = (link: string): Promise<any> => {
-    return apiClient
+  getPlugins = (link: string) => {
+    apiClient
       .get(link)
       .then(response => response.text())
       .then(JSON.parse)
