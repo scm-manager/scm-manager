@@ -87,7 +87,7 @@ const BranchRow: FC<Props> = ({ repository, baseUrl, branch, onDelete, details }
   const extensionProps = { repository, branch, details };
   return (
     <tr>
-      <td className="is-flex">
+      <td>
         <ReactLink to={to} title={branch.name}>
           {branch.name}
         </ReactLink>
