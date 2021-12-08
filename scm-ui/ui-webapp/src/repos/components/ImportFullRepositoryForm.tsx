@@ -50,7 +50,7 @@ const ImportFullRepositoryForm: FC<Props> = ({ setFile, setValid, password, setP
       <div className="column is-half is-vcentered">
         <InputField
           value={password}
-          onChange={value => setPassword(value)}
+          onChange={setPassword}
           type="password"
           label={t("import.bundle.password.title")}
           helpText={t("import.bundle.password.helpText")}

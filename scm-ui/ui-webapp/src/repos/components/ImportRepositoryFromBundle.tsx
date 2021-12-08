@@ -72,7 +72,7 @@ const ImportRepositoryFromBundle: FC<Props> = ({
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!file) {
-      return;
+      throw new Error("File is required for import");
     }
     importRepositoryFromBundle({ ...repo, type: repositoryType.name }, file, compressed, password);
   };

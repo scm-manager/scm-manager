@@ -69,7 +69,7 @@ const ImportFullRepository: FC<Props> = ({
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!file) {
-      return;
+      throw new Error("File is required for import");
     }
     importFullRepository({ ...repo, type: repositoryType.name }, file, password);
   };
