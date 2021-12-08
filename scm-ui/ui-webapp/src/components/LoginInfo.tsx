@@ -91,9 +91,8 @@ class LoginInfo extends React.Component<Props, State> {
       });
   };
 
-  //eslint-disable-next-line @typescript-eslint/no-explicit-any
-  timeout = (ms: number, promise: Promise<any>) => {
-    return new Promise<LoginInfoResponse>((resolve, reject) => {
+  timeout = (ms: number, promise: Promise<void>) => {
+    return new Promise<void>((resolve, reject) => {
       setTimeout(() => {
         reject(new Error("timeout during fetch of login info"));
       }, ms);
