@@ -18,7 +18,7 @@ After a successful login you will return to the SCM-Manager. Here you can review
 Now you can install myCloudogu plugins like basic plugins.
 ![Plugin-center connected with myCloudogu](assets/administration-plugin-center-connected.png)
 Only one user with appropriate permissions needs to connect a single instance with myCloudogu. The myCloudogu plugins may than be installed by every user with suitable permissions.
-You can always sever the connection in the plugin center settings in global settings of your instance.
+You can always sever the connection in the plugin center section of the global settings.
 
 #### What is myCloudogu and why should you create an account?
 myCloudogu is not only the home of the SCM-Manager community. You can connect to other users, get help and express feature requests in the forum. 

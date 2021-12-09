@@ -24,7 +24,7 @@ Sie können die Verbindung zu myCloudogu jederzeit unter Plugin Center Einstellu
 #### Was ist myCloudogu und warum sollte ich ein Konto erstellen?
 myCloudogu ist nicht nur die Heimat der SCM-Manager-Community. Sie können sich auch mit anderen Nutzenden austauschen, Bugs melden oder neue Funktionen im Forum zur Diskussion stellen.
 myCloudogu bietet weiter besondere Plugins speziell für die Community an. In der Zukunft folgen weitere nützliche Plugins, die auch gemeinsam mit Partnern bereitgestellt werden.
-Erschließen Sie … und schließen Sie sich [myCloudogu](https://my.cloudogu.com) kostenfrei an!
+Nutzen Sie erweiterte Plugin-Funktionen im SCM-Managers, treten Sie mit den Entwicklern in Kontakt und schließen Sie sich [myCloudogu](https://my.cloudogu.com) kostenfrei an!
 
 ### Installiert
 Auf der Übersicht für installierte Plugins werden alle auf der SCM-Manager Instanz installierten Plugins angezeigt. Optionale Plugins können hier aktualisiert und deinstalliert werden. 
