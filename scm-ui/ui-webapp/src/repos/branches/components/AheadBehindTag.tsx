@@ -32,6 +32,7 @@ import { calculateBarLength } from "./aheadBehind";
 type Props = {
   branch: Branch;
   details: BranchDetails;
+  verbose?: boolean;
 };
 
 type BarProps = {
@@ -65,7 +66,7 @@ const TooltipWithDefaultCursor = styled(Tooltip)`
   cursor: default !important;
 `;
 
-const AheadBehindTag: FC<Props> = ({ branch, details }) => {
+const AheadBehindTag: FC<Props> = ({ branch, details, verbose }) => {
   const [t] = useTranslation("repos");
 
   if (
@@ -76,6 +77,13 @@ const AheadBehindTag: FC<Props> = ({ branch, details }) => {
     return null;
   }
 
+  const behindText = verbose
+    ? t("branch.aheadBehind.behindLabel", { count: details.changesetsBehind })
+    : details.changesetsBehind;
+  const aheadText = verbose
+    ? t("branch.aheadBehind.aheadLabel", { count: details.changesetsAhead })
+    : details.changesetsAhead;
+
   return (
     <TooltipWithDefaultCursor
       message={t("branch.aheadBehind.tooltip", { ahead: details.changesetsAhead, behind: details.changesetsBehind })}
@@ -83,7 +91,7 @@ const AheadBehindTag: FC<Props> = ({ branch, details }) => {
     >
       <div className="columns is-flex is-unselectable is-hidden-mobile mt-1">
         <Behind className="column is-half is-flex is-flex-direction-column is-align-items-flex-end p-0">
-          <Count className="is-size-7 pr-1">{details.changesetsBehind}</Count>
+          <Count className="is-size-7 pr-1">{behindText}</Count>
           <Bar
             className="has-rounded-border-left has-background-grey"
             width={calculateBarLength(details.changesetsBehind)}
@@ -91,7 +99,7 @@ const AheadBehindTag: FC<Props> = ({ branch, details }) => {
           />
         </Behind>
         <Ahead className="column is-half is-flex is-flex-direction-column is-align-items-flex-start p-0">
-          <Count className="is-size-7 pl-1">{details.changesetsAhead}</Count>
+          <Count className="is-size-7 pl-1">{aheadText}</Count>
           <Bar
             className="has-rounded-border-right has-background-grey"
             width={calculateBarLength(details.changesetsAhead)}
