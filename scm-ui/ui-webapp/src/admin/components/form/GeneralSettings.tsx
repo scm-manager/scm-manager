@@ -24,13 +24,13 @@
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { useUserSuggestions } from "@scm-manager/ui-api";
-import { NamespaceStrategies, AnonymousMode, SelectValue } from "@scm-manager/ui-types";
+import { NamespaceStrategies, AnonymousMode, SelectValue, ConfigChangeHandler } from "@scm-manager/ui-types";
 import {
   Checkbox,
   InputField,
   MemberNameTagGroup,
   AutocompleteAddEntryToTableField,
-  Select,
+  Select
 } from "@scm-manager/ui-components";
 import NamespaceStrategySelect from "./NamespaceStrategySelect";
 
@@ -50,7 +50,7 @@ type Props = {
   emergencyContacts: string[];
   namespaceStrategy: string;
   namespaceStrategies?: NamespaceStrategies;
-  onChange: (p1: boolean, p2: any, p3: string) => void;
+  onChange: ConfigChangeHandler;
   hasUpdatePermission: boolean;
 };
 
@@ -68,7 +68,7 @@ const GeneralSettings: FC<Props> = ({
   namespaceStrategy,
   namespaceStrategies,
   onChange,
-  hasUpdatePermission,
+  hasUpdatePermission
 }) => {
   const { t } = useTranslation("config");
   const userSuggestions = useUserSuggestions();
@@ -86,7 +86,7 @@ const GeneralSettings: FC<Props> = ({
     onChange(true, value, "enabledUserConverter");
   };
   const handleAnonymousMode = (value: string) => {
-    onChange(true, value, "anonymousMode");
+    onChange(true, value as AnonymousMode, "anonymousMode");
   };
   const handleNamespaceStrategyChange = (value: string) => {
     onChange(true, value, "namespaceStrategy");
@@ -181,7 +181,7 @@ const GeneralSettings: FC<Props> = ({
             options={[
               { label: t("general-settings.anonymousMode.full"), value: "FULL" },
               { label: t("general-settings.anonymousMode.protocolOnly"), value: "PROTOCOL_ONLY" },
-              { label: t("general-settings.anonymousMode.off"), value: "OFF" },
+              { label: t("general-settings.anonymousMode.off"), value: "OFF" }
             ]}
             helpText={t("help.allowAnonymousAccessHelpText")}
             testId={"anonymous-mode-select"}

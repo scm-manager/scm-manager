@@ -23,7 +23,7 @@
  */
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
-import { Redirect, Route, Switch, useRouteMatch } from "react-router-dom";
+import { Redirect, Route, RouteProps, Switch, useRouteMatch } from "react-router-dom";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import {
   CustomQueryFlexWrappedColumns,
@@ -34,7 +34,7 @@ import {
   SecondaryNavigationColumn,
   StateMenuContextProvider,
   SubNavigation,
-  urls,
+  urls
 } from "@scm-manager/ui-components";
 import AdminDetails from "./AdminDetails";
 import PluginsOverview from "../plugins/containers/PluginsOverview";
@@ -51,16 +51,16 @@ const Admin: FC = () => {
   const availablePluginsLink = links.availablePlugins;
   const installedPluginsLink = links.installedPlugins;
 
-  const matchesRoles = (route: any) => {
+  const matchesRoles = (route: RouteProps) => {
     const url = urls.matchedUrlFromMatch(match);
     const regex = new RegExp(`${url}/role/`);
-    return route.location.pathname.match(regex);
+    return !!route.location?.pathname.match(regex);
   };
 
   const url = urls.matchedUrlFromMatch(match);
   const extensionProps = {
     links,
-    url,
+    url
   };
 
   return (

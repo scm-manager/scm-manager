@@ -76,23 +76,23 @@ class LoginInfo extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      loading: !!props.loginInfoLink,
+      loading: !!props.loginInfoLink
     };
   }
 
   fetchLoginInfo = (url: string) => {
     return fetch(url)
-      .then((response) => response.json())
-      .then((info) => {
+      .then(response => response.json())
+      .then(info => {
         this.setState({
           info,
-          loading: false,
+          loading: false
         });
       });
   };
 
-  timeout = (ms: number, promise: Promise<any>) => {
-    return new Promise<LoginInfoResponse>((resolve, reject) => {
+  timeout = (ms: number, promise: Promise<void>) => {
+    return new Promise<void>((resolve, reject) => {
       setTimeout(() => {
         reject(new Error("timeout during fetch of login info"));
       }, ms);
@@ -107,7 +107,7 @@ class LoginInfo extends React.Component<Props, State> {
     }
     this.timeout(1000, this.fetchLoginInfo(loginInfoLink)).catch(() => {
       this.setState({
-        loading: false,
+        loading: false
       });
     });
   }

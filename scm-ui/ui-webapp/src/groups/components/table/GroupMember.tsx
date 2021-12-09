@@ -46,7 +46,7 @@ export default class GroupMember extends React.Component<Props> {
     );
   }
 
-  showName(to: any, member: Member) {
+  showName(to: string, member: Member) {
     if (member._links.self) {
       return this.renderLink(to, member.name);
     } else {

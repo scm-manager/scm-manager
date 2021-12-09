@@ -328,7 +328,7 @@ const OmniSearch: FC = () => {
     }
   };
 
-  const { onKeyDown, index } = useKeyBoardNavigation(gotoDetailSearch, clearQuery, data?._embedded.hits);
+  const { onKeyDown, index } = useKeyBoardNavigation(gotoDetailSearch, clearQuery, data?._embedded?.hits);
 
   return (
     <div className={classNames("navbar-item", "field", "mb-0")}>
@@ -372,7 +372,7 @@ const OmniSearch: FC = () => {
                 gotoDetailSearch={gotoDetailSearch}
                 clear={clearQuery}
                 index={index}
-                hits={data._embedded.hits}
+                hits={data._embedded?.hits || []}
               />
             ) : null}
           </DropdownMenu>

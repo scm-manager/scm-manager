@@ -35,7 +35,7 @@ import {
   SecondaryNavigationColumn,
   StateMenuContextProvider,
   SubNavigation,
-  urls,
+  urls
 } from "@scm-manager/ui-components";
 import { Details } from "./../components/table";
 import EditUser from "./EditUser";
@@ -44,7 +44,7 @@ import {
   SetApiKeysNavLink,
   SetPasswordNavLink,
   SetPermissionsNavLink,
-  SetPublicKeysNavLink,
+  SetPublicKeysNavLink
 } from "./../components/navLinks";
 import { useTranslation } from "react-i18next";
 import SetUserPassword from "../components/SetUserPassword";
@@ -71,7 +71,7 @@ const SingleUser: FC = () => {
 
   const extensionProps = {
     user,
-    url,
+    url
   };
 
   return (

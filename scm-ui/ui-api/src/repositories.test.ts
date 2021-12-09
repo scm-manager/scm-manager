@@ -37,7 +37,7 @@ import {
   useRepository,
   useRepositoryTypes,
   useUnarchiveRepository,
-  useUpdateRepository,
+  useUpdateRepository
 } from "./repositories";
 import { Repository } from "@scm-manager/ui-types";
 import { QueryClient } from "react-query";
@@ -50,25 +50,25 @@ describe("Test repository hooks", () => {
     type: "git",
     _links: {
       delete: {
-        href: "/r/spaceships/heartOfGold",
+        href: "/r/spaceships/heartOfGold"
       },
       update: {
-        href: "/r/spaceships/heartOfGold",
+        href: "/r/spaceships/heartOfGold"
       },
       archive: {
-        href: "/r/spaceships/heartOfGold/archive",
+        href: "/r/spaceships/heartOfGold/archive"
       },
       unarchive: {
-        href: "/r/spaceships/heartOfGold/unarchive",
-      },
-    },
+        href: "/r/spaceships/heartOfGold/unarchive"
+      }
+    }
   };
 
   const repositoryCollection = {
     _embedded: {
-      repositories: [heartOfGold],
+      repositories: [heartOfGold]
     },
-    _links: {},
+    _links: {}
   };
 
   afterEach(() => {
@@ -78,7 +78,7 @@ describe("Test repository hooks", () => {
   describe("useRepositories tests", () => {
     const expectCollection = async (queryClient: QueryClient, request?: UseRepositoriesRequest) => {
       const { result, waitFor } = renderHook(() => useRepositories(request), {
-        wrapper: createWrapper(undefined, queryClient),
+        wrapper: createWrapper(undefined, queryClient)
       });
       await waitFor(() => {
         return !!result.current.data;
@@ -91,8 +91,8 @@ describe("Test repository hooks", () => {
       setIndexLink(queryClient, "repositories", "/repos");
       fetchMock.get("/api/v2/repos", repositoryCollection, {
         query: {
-          sortBy: "namespaceAndName",
-        },
+          sortBy: "namespaceAndName"
+        }
       });
 
       await expectCollection(queryClient);
@@ -104,12 +104,12 @@ describe("Test repository hooks", () => {
       fetchMock.get("/api/v2/repos", repositoryCollection, {
         query: {
           sortBy: "namespaceAndName",
-          page: "42",
-        },
+          page: "42"
+        }
       });
 
       await expectCollection(queryClient, {
-        page: 42,
+        page: 42
       });
     });
 
@@ -118,8 +118,8 @@ describe("Test repository hooks", () => {
       setIndexLink(queryClient, "repositories", "/repos");
       fetchMock.get("/api/v2/spaceships", repositoryCollection, {
         query: {
-          sortBy: "namespaceAndName",
-        },
+          sortBy: "namespaceAndName"
+        }
       });
 
       await expectCollection(queryClient, {
@@ -127,10 +127,10 @@ describe("Test repository hooks", () => {
           namespace: "spaceships",
           _links: {
             repositories: {
-              href: "/spaceships",
-            },
-          },
-        },
+              href: "/spaceships"
+            }
+          }
+        }
       });
     });
 
@@ -140,12 +140,12 @@ describe("Test repository hooks", () => {
       fetchMock.get("/api/v2/repos", repositoryCollection, {
         query: {
           sortBy: "namespaceAndName",
-          q: "heart",
-        },
+          q: "heart"
+        }
       });
 
       await expectCollection(queryClient, {
-        search: "heart",
+        search: "heart"
       });
     });
 
@@ -154,8 +154,8 @@ describe("Test repository hooks", () => {
       setIndexLink(queryClient, "repositories", "/repos");
       fetchMock.get("/api/v2/repos", repositoryCollection, {
         query: {
-          sortBy: "namespaceAndName",
-        },
+          sortBy: "namespaceAndName"
+        }
       });
 
       await expectCollection(queryClient);
@@ -168,7 +168,7 @@ describe("Test repository hooks", () => {
       const queryClient = createInfiniteCachingClient();
       setIndexLink(queryClient, "repositories", "/repos");
       const { result } = renderHook(() => useRepositories({ disabled: true }), {
-        wrapper: createWrapper(undefined, queryClient),
+        wrapper: createWrapper(undefined, queryClient)
       });
 
       expect(result.current.isLoading).toBe(false);
@@ -185,19 +185,18 @@ describe("Test repository hooks", () => {
       fetchMock.postOnce("/api/v2/r", {
         status: 201,
         headers: {
-          Location: "/r/spaceships/heartOfGold",
-        },
+          Location: "/r/spaceships/heartOfGold"
+        }
       });
 
       fetchMock.getOnce("/api/v2/r/spaceships/heartOfGold", heartOfGold);
 
       const { result, waitForNextUpdate } = renderHook(() => useCreateRepository(), {
-        wrapper: createWrapper(undefined, queryClient),
+        wrapper: createWrapper(undefined, queryClient)
       });
 
       const repository = {
-        ...heartOfGold,
-        contextEntries: [],
+        ...heartOfGold
       };
 
       await act(() => {
@@ -216,19 +215,18 @@ describe("Test repository hooks", () => {
       fetchMock.postOnce("/api/v2/r?initialize=true", {
         status: 201,
         headers: {
-          Location: "/r/spaceships/heartOfGold",
-        },
+          Location: "/r/spaceships/heartOfGold"
+        }
       });
 
       fetchMock.getOnce("/api/v2/r/spaceships/heartOfGold", heartOfGold);
 
       const { result, waitForNextUpdate } = renderHook(() => useCreateRepository(), {
-        wrapper: createWrapper(undefined, queryClient),
+        wrapper: createWrapper(undefined, queryClient)
       });
 
       const repository = {
-        ...heartOfGold,
-        contextEntries: [],
+        ...heartOfGold
       };
 
       await act(() => {
@@ -245,16 +243,15 @@ describe("Test repository hooks", () => {
       setIndexLink(queryClient, "repositories", "/r");
 
       fetchMock.postOnce("/api/v2/r", {
-        status: 201,
+        status: 201
       });
 
       const { result, waitForNextUpdate } = renderHook(() => useCreateRepository(), {
-        wrapper: createWrapper(undefined, queryClient),
+        wrapper: createWrapper(undefined, queryClient)
       });
 
       const repository = {
-        ...heartOfGold,
-        contextEntries: [],
+        ...heartOfGold
       };
 
       await act(() => {
@@ -274,7 +271,7 @@ describe("Test repository hooks", () => {
       fetchMock.get("/api/v2/r/spaceships/heartOfGold", heartOfGold);
 
       const { result, waitFor } = renderHook(() => useRepository("spaceships", "heartOfGold"), {
-        wrapper: createWrapper(undefined, queryClient),
+        wrapper: createWrapper(undefined, queryClient)
       });
       await waitFor(() => {
         return !!result.current.data;
@@ -293,15 +290,15 @@ describe("Test repository hooks", () => {
             {
               name: "git",
               displayName: "Git",
-              _links: {},
-            },
-          ],
+              _links: {}
+            }
+          ]
         },
-        _links: {},
+        _links: {}
       });
 
       const { result, waitFor } = renderHook(() => useRepositoryTypes(), {
-        wrapper: createWrapper(undefined, queryClient),
+        wrapper: createWrapper(undefined, queryClient)
       });
       await waitFor(() => {
         return !!result.current.data;
@@ -322,11 +319,11 @@ describe("Test repository hooks", () => {
 
     const deleteRepository = async (options?: UseDeleteRepositoryOptions) => {
       fetchMock.deleteOnce("/api/v2/r/spaceships/heartOfGold", {
-        status: 204,
+        status: 204
       });
 
       const { result, waitForNextUpdate } = renderHook(() => useDeleteRepository(options), {
-        wrapper: createWrapper(undefined, queryClient),
+        wrapper: createWrapper(undefined, queryClient)
       });
 
       await act(() => {
@@ -371,9 +368,9 @@ describe("Test repository hooks", () => {
     it("should call onSuccess callback", async () => {
       let repo;
       await deleteRepository({
-        onSuccess: (repository) => {
+        onSuccess: repository => {
           repo = repository;
-        },
+        }
       });
       expect(repo).toEqual(heartOfGold);
     });
@@ -388,11 +385,11 @@ describe("Test repository hooks", () => {
 
     const updateRepository = async () => {
       fetchMock.putOnce("/api/v2/r/spaceships/heartOfGold", {
-        status: 204,
+        status: 204
       });
 
       const { result, waitForNextUpdate } = renderHook(() => useUpdateRepository(), {
-        wrapper: createWrapper(undefined, queryClient),
+        wrapper: createWrapper(undefined, queryClient)
       });
 
       await act(() => {
@@ -436,11 +433,11 @@ describe("Test repository hooks", () => {
 
     const archiveRepository = async () => {
       fetchMock.postOnce("/api/v2/r/spaceships/heartOfGold/archive", {
-        status: 204,
+        status: 204
       });
 
       const { result, waitForNextUpdate } = renderHook(() => useArchiveRepository(), {
-        wrapper: createWrapper(undefined, queryClient),
+        wrapper: createWrapper(undefined, queryClient)
       });
 
       await act(() => {
@@ -484,11 +481,11 @@ describe("Test repository hooks", () => {
 
     const unarchiveRepository = async () => {
       fetchMock.postOnce("/api/v2/r/spaceships/heartOfGold/unarchive", {
-        status: 204,
+        status: 204
       });
 
       const { result, waitForNextUpdate } = renderHook(() => useUnarchiveRepository(), {
-        wrapper: createWrapper(undefined, queryClient),
+        wrapper: createWrapper(undefined, queryClient)
       });
 
       await act(() => {

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, FormEvent, useEffect, useState } from "react";
+import React, { FC, FormEvent, useCallback, useEffect, useState } from "react";
 import { Repository, RepositoryCreation, RepositoryType } from "@scm-manager/ui-types";
 import { ErrorNotification, Level, SubmitButton } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
@@ -42,35 +42,46 @@ const ImportFullRepository: FC<Props> = ({
   setImportPending,
   setImportedRepository,
   nameForm: NameForm,
-  informationForm: InformationForm,
+  informationForm: InformationForm
 }) => {
   const [repo, setRepo] = useState<RepositoryCreation>({
     name: "",
     namespace: "",
     type: repositoryType.name,
     contact: "",
-    description: "",
-    contextEntries: [],
+    description: ""
   });
   const [password, setPassword] = useState("");
   const [valid, setValid] = useState({ namespaceAndName: false, contact: true, file: false });
   const [file, setFile] = useState<File | null>(null);
   const [t] = useTranslation("repos");
   const { importFullRepository, importedRepository, isLoading, error } = useImportFullRepository(repositoryType);
+  const setContactValid = useCallback((contact: boolean) => setValid(currentValid => ({ ...currentValid, contact })), [
+    setValid
+  ]);
+  const setNamespaceAndNameValid = useCallback(
+    (namespaceAndName: boolean) => setValid(currentValid => ({ ...currentValid, namespaceAndName })),
+    [setValid]
+  );
+  const setFileValid = useCallback((file: boolean) => setValid(currentValid => ({ ...currentValid, file })), [
+    setValid
+  ]);
 
-  useEffect(() => setRepo({ ...repo, type: repositoryType.name }), [repositoryType]);
-  useEffect(() => setImportPending(isLoading), [isLoading]);
+  useEffect(() => setImportPending(isLoading), [isLoading, setImportPending]);
   useEffect(() => {
     if (importedRepository) {
       setImportedRepository(importedRepository);
     }
-  }, [importedRepository]);
+  }, [importedRepository, setImportedRepository]);
 
-  const isValid = () => Object.values(valid).every((v) => v);
+  const isValid = () => Object.values(valid).every(v => v);
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    importFullRepository(repo, file!, password);
+    if (!file) {
+      throw new Error("File is required for import");
+    }
+    importFullRepository({ ...repo, type: repositoryType.name }, file, password);
   };
 
   return (
@@ -80,20 +91,20 @@ const ImportFullRepository: FC<Props> = ({
         setFile={setFile}
         password={password}
         setPassword={setPassword}
-        setValid={(file: boolean) => setValid({ ...valid, file })}
+        setValid={setFileValid}
       />
       <hr />
       <NameForm
         repository={repo}
         onChange={setRepo as React.Dispatch<React.SetStateAction<RepositoryCreation>>}
-        setValid={(namespaceAndName: boolean) => setValid({ ...valid, namespaceAndName })}
+        setValid={setNamespaceAndNameValid}
         disabled={isLoading}
       />
       <InformationForm
         repository={repo}
         onChange={setRepo as React.Dispatch<React.SetStateAction<RepositoryCreation>>}
         disabled={isLoading}
-        setValid={(contact: boolean) => setValid({ ...valid, contact })}
+        setValid={setContactValid}
       />
       <Level
         right={<SubmitButton disabled={!isValid()} loading={isLoading} label={t("repositoryForm.submitImport")} />}

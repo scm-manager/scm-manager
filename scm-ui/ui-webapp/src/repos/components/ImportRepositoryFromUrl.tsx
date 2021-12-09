@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, FormEvent, useEffect, useState } from "react";
+import React, { FC, FormEvent, useCallback, useEffect, useState } from "react";
 import { Repository, RepositoryCreation, RepositoryType, RepositoryUrlImport } from "@scm-manager/ui-types";
 import ImportFromUrlForm from "./ImportFromUrlForm";
 import { ErrorNotification, Level, SubmitButton } from "@scm-manager/ui-components";
@@ -42,7 +42,7 @@ const ImportRepositoryFromUrl: FC<Props> = ({
   setImportPending,
   setImportedRepository,
   nameForm: NameForm,
-  informationForm: InformationForm,
+  informationForm: InformationForm
 }) => {
   const [repo, setRepo] = useState<RepositoryUrlImport>({
     name: "",
@@ -52,50 +52,54 @@ const ImportRepositoryFromUrl: FC<Props> = ({
     description: "",
     importUrl: "",
     username: "",
-    password: "",
-    contextEntries: [],
+    password: ""
   });
 
   const [valid, setValid] = useState({ namespaceAndName: false, contact: true, importUrl: false });
   const [t] = useTranslation("repos");
   const { importRepositoryFromUrl, importedRepository, error, isLoading } = useImportRepositoryFromUrl(repositoryType);
+  const setContactValid = useCallback((contact: boolean) => setValid(currentValid => ({ ...currentValid, contact })), [
+    setValid
+  ]);
+  const setNamespaceAndNameValid = useCallback(
+    (namespaceAndName: boolean) => setValid(currentValid => ({ ...currentValid, namespaceAndName })),
+    [setValid]
+  );
+  const setImportUrlValid = useCallback(
+    (importUrl: boolean) => setValid(currentValid => ({ ...currentValid, importUrl })),
+    [setValid]
+  );
 
-  useEffect(() => setRepo({ ...repo, type: repositoryType.name }), [repositoryType]);
-  useEffect(() => setImportPending(isLoading), [isLoading]);
+  useEffect(() => setImportPending(isLoading), [isLoading, setImportPending]);
   useEffect(() => {
     if (importedRepository) {
       setImportedRepository(importedRepository);
     }
-  }, [importedRepository]);
+  }, [importedRepository, setImportedRepository]);
 
-  const isValid = () => Object.values(valid).every((v) => v);
+  const isValid = () => Object.values(valid).every(v => v);
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    importRepositoryFromUrl(repo);
+    importRepositoryFromUrl({ ...repo, type: repositoryType.name });
   };
 
   return (
     <form onSubmit={submit}>
       {error ? <ErrorNotification error={error} /> : null}
-      <ImportFromUrlForm
-        repository={repo}
-        onChange={setRepo}
-        setValid={(importUrl: boolean) => setValid({ ...valid, importUrl })}
-        disabled={isLoading}
-      />
+      <ImportFromUrlForm repository={repo} onChange={setRepo} setValid={setImportUrlValid} disabled={isLoading} />
       <hr />
       <NameForm
         repository={repo}
         onChange={setRepo as React.Dispatch<React.SetStateAction<RepositoryCreation>>}
-        setValid={(namespaceAndName: boolean) => setValid({ ...valid, namespaceAndName })}
+        setValid={setNamespaceAndNameValid}
         disabled={isLoading}
       />
       <InformationForm
         repository={repo}
         onChange={setRepo as React.Dispatch<React.SetStateAction<RepositoryCreation>>}
         disabled={isLoading}
-        setValid={(contact: boolean) => setValid({ ...valid, contact })}
+        setValid={setContactValid}
       />
       <Level
         right={<SubmitButton disabled={!isValid()} loading={isLoading} label={t("repositoryForm.submitImport")} />}

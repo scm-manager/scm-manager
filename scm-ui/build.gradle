@@ -55,6 +55,26 @@ task typecheck(type: YarnTask) {
   }
 }
 
+task lint(type: YarnTask) {
+  args = ['lint']
+  inputs.files(fileTree(project.projectDir) {
+    include 'ui-*/src/**'
+    include 'ui-*/**/*.js'
+    include 'ui-*/**/*.jsx'
+    include 'ui-*/**/*.ts'
+    include 'ui-*/**/*.tsx'
+  })
+    .withPathSensitivity(PathSensitivity.RELATIVE)
+  outputs.file('build/tmp/lint/marker')
+  dependsOn('yarn_install')
+  doLast {
+    File directory = new File(project.buildDir, 'tmp/lint')
+    directory.mkdirs()
+    File marker = new File(directory, 'marker')
+    marker.createNewFile()
+  }
+}
+
 task test(type: YarnTask) {
   args = ['run', 'test']
   inputs.files(fileTree(project.projectDir) {
@@ -103,7 +123,7 @@ task updateUiTestTimestamps(type: TouchFiles) {
 }
 
 task check {
-  dependsOn('typecheck', 'test', 'chromatic', 'checkLicenses')
+  dependsOn('typecheck', 'test', 'chromatic', 'checkLicenses', 'lint')
 }
 
 yarn_install {

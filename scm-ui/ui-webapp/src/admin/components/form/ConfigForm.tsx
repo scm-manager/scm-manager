@@ -23,7 +23,7 @@
  */
 import React, { FC, useState, useEffect, FormEvent } from "react";
 import { useTranslation } from "react-i18next";
-import { Config, NamespaceStrategies } from "@scm-manager/ui-types";
+import { Config, ConfigChangeHandler, NamespaceStrategies } from "@scm-manager/ui-types";
 import { Level, Notification, SubmitButton } from "@scm-manager/ui-components";
 import ProxySettings from "./ProxySettings";
 import GeneralSettings from "./GeneralSettings";
@@ -45,7 +45,7 @@ const ConfigForm: FC<Props> = ({
   loading,
   configReadPermission,
   configUpdatePermission,
-  namespaceStrategies,
+  namespaceStrategies
 }) => {
   const [t] = useTranslation("config");
   const [innerConfig, setInnerConfig] = useState<Config>({
@@ -74,7 +74,7 @@ const ConfigForm: FC<Props> = ({
     mailDomainName: "",
     emergencyContacts: [],
     enabledApiKeys: true,
-    _links: {},
+    _links: {}
   });
   const [showNotification, setShowNotification] = useState(false);
   const [changed, setChanged] = useState(false);
@@ -83,7 +83,7 @@ const ConfigForm: FC<Props> = ({
     loginAttemptLimit: boolean;
   }>({
     loginAttemptLimitTimeout: false,
-    loginAttemptLimit: false,
+    loginAttemptLimit: false
   });
 
   useEffect(() => {
@@ -101,7 +101,7 @@ const ConfigForm: FC<Props> = ({
     submitForm(innerConfig);
   };
 
-  const onChange = (isValid: boolean, changedValue: any, name: string) => {
+  const onChange: ConfigChangeHandler = (isValid: boolean, changedValue: unknown, name: string) => {
     setInnerConfig({ ...innerConfig, [name]: changedValue });
     setError({ ...error, [name]: !isValid });
     setChanged(true);
@@ -150,21 +150,21 @@ const ConfigForm: FC<Props> = ({
         enabledApiKeys={innerConfig.enabledApiKeys}
         emergencyContacts={innerConfig.emergencyContacts}
         namespaceStrategy={innerConfig.namespaceStrategy}
-        onChange={(isValid, changedValue, name) => onChange(isValid, changedValue, name)}
+        onChange={onChange}
         hasUpdatePermission={configUpdatePermission}
       />
       <hr />
       <LoginAttempt
         loginAttemptLimit={innerConfig.loginAttemptLimit}
         loginAttemptLimitTimeout={innerConfig.loginAttemptLimitTimeout}
-        onChange={(isValid, changedValue, name) => onChange(isValid, changedValue, name)}
+        onChange={onChange}
         hasUpdatePermission={configUpdatePermission}
       />
       <hr />
       <BaseUrlSettings
         baseUrl={innerConfig.baseUrl}
         forceBaseUrl={innerConfig.forceBaseUrl}
-        onChange={(isValid, changedValue, name) => onChange(isValid, changedValue, name)}
+        onChange={onChange}
         hasUpdatePermission={configUpdatePermission}
       />
       <hr />
@@ -175,7 +175,7 @@ const ConfigForm: FC<Props> = ({
         proxyUser={innerConfig.proxyUser ? innerConfig.proxyUser : ""}
         enableProxy={innerConfig.enableProxy}
         proxyExcludes={innerConfig.proxyExcludes}
-        onChange={(isValid, changedValue, name) => onChange(isValid, changedValue, name)}
+        onChange={onChange}
         hasUpdatePermission={configUpdatePermission}
       />
       <hr />

@@ -53,7 +53,7 @@ const ImportPendingLoading = ({ importPending }: { importPending: boolean }) => 
 const ImportRepository: extensionPoints.RepositoryCreatorExtension["component"] = ({
   repositoryTypes,
   nameForm,
-  informationForm,
+  informationForm
 }) => {
   const [importPending, setImportPending] = useState(false);
   const [importedRepository, setImportedRepository] = useState<Repository>();
@@ -65,14 +65,17 @@ const ImportRepository: extensionPoints.RepositoryCreatorExtension["component"] 
 
   const changeRepositoryType = (repositoryType: RepositoryType) => {
     setRepositoryType(repositoryType);
-    setImportType(repositoryType?._links ? ((repositoryType!._links?.import as Link[])[0] as Link).name! : "");
+    setImportType(((repositoryType._links?.import as Link[])[0] as Link)?.name || "");
   };
 
   const renderImportComponent = () => {
+    if (!repositoryType) {
+      throw new Error("Missing import type");
+    }
     if (importType === "url") {
       return (
         <ImportRepositoryFromUrl
-          repositoryType={repositoryType!}
+          repositoryType={repositoryType}
           setImportPending={setImportPending}
           setImportedRepository={setImportedRepository}
           nameForm={nameForm}
@@ -84,7 +87,7 @@ const ImportRepository: extensionPoints.RepositoryCreatorExtension["component"] 
     if (importType === "bundle") {
       return (
         <ImportRepositoryFromBundle
-          repositoryType={repositoryType!}
+          repositoryType={repositoryType}
           setImportPending={setImportPending}
           setImportedRepository={setImportedRepository}
           nameForm={nameForm}
@@ -96,7 +99,7 @@ const ImportRepository: extensionPoints.RepositoryCreatorExtension["component"] 
     if (importType === "fullImport") {
       return (
         <ImportFullRepository
-          repositoryType={repositoryType!}
+          repositoryType={repositoryType}
           setImportPending={setImportPending}
           setImportedRepository={setImportedRepository}
           nameForm={nameForm}
@@ -104,7 +107,6 @@ const ImportRepository: extensionPoints.RepositoryCreatorExtension["component"] 
         />
       );
     }
-
     throw new Error("Unknown import type");
   };
 
@@ -117,7 +119,7 @@ const ImportRepository: extensionPoints.RepositoryCreatorExtension["component"] 
       <Prompt when={importPending} message={t("import.navigationWarning")} />
       <ImportPendingLoading importPending={importPending} />
       <ImportRepositoryTypeSelect
-        repositoryTypes={repositoryTypes?._embedded.repositoryTypes || []}
+        repositoryTypes={repositoryTypes?._embedded?.repositoryTypes || []}
         repositoryType={repositoryType}
         setRepositoryType={changeRepositoryType}
         disabled={importPending}

@@ -36,7 +36,7 @@ const PluginList: FC<Props> = ({ plugins, openModal }) => {
   const groups = groupByCategory(plugins);
   return (
     <div className="content is-plugin-page">
-      {groups.map((group) => {
+      {groups.map(group => {
         return <PluginGroupEntry group={group} openModal={openModal} key={group.name} />;
       })}
     </div>

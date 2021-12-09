@@ -21,36 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import EditRepoNavLink from "./EditRepoNavLink";
-import { mount, shallow } from "@scm-manager/ui-tests";
 
-describe("GeneralNavLink", () => {
-  it("should render nothing, if the modify link is missing", () => {
-    const repository = {
-      namespace: "space",
-      name: "name",
-      type: "git",
-      _links: {}
-    };
+import { Config } from "./Config";
+import { HalRepresentation } from "./hal";
 
-    const navLink = shallow(<EditRepoNavLink repository={repository} editUrl="" />);
-    expect(navLink.text()).toBe("");
-  });
-
-  it("should render the navLink", () => {
-    const repository = {
-      namespace: "space",
-      name: "name",
-      type: "git",
-      _links: {
-        update: {
-          href: "/repositories"
-        }
-      }
-    };
-
-    const navLink = mount(<EditRepoNavLink repository={repository} editUrl="" />);
-    expect(navLink.text()).toBe("repositoryRoot.menu.generalNavLink");
-  });
-});
+export type ConfigChangeHandler = <Name extends Exclude<keyof Config, keyof HalRepresentation>>(
+  isValid: boolean,
+  changedValue: Config[Name],
+  name: Name
+) => void;

@@ -23,6 +23,7 @@
  */
 
 import i18n from "i18next";
+// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import Backend from "i18next-fetch-backend";
 import LanguageDetector from "i18next-browser-languagedetector";
@@ -48,19 +49,19 @@ i18n
     debug: false,
 
     interpolation: {
-      escapeValue: false, // not needed for react!!
+      escapeValue: false // not needed for react!!
     },
 
     react: {
       wait: true,
-      useSuspense: false,
+      useSuspense: false
     },
 
     backend: {
       loadPath: loadPath,
       init: {
-        credentials: "same-origin",
-      },
+        credentials: "same-origin"
+      }
     },
 
     // configure LanguageDetector
@@ -69,8 +70,8 @@ i18n
       // we only use browser configuration
       order: ["navigator"],
       // we do not cache the detected language
-      caches: [],
-    },
+      caches: []
+    }
   });
 
 export default i18n;

@@ -24,10 +24,11 @@
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import ArrayConfigTable from "./ArrayConfigTable";
+import { ConfigChangeHandler } from "@scm-manager/ui-types";
 
 type Props = WithTranslation & {
   proxyExcludes: string[];
-  onChange: (p1: boolean, p2: any, p3: string) => void;
+  onChange: ConfigChangeHandler;
   disabled: boolean;
 };
 

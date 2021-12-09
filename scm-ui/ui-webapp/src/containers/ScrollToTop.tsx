@@ -21,36 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import EditRepoNavLink from "./EditRepoNavLink";
-import { mount, shallow } from "@scm-manager/ui-tests";
 
-describe("GeneralNavLink", () => {
-  it("should render nothing, if the modify link is missing", () => {
-    const repository = {
-      namespace: "space",
-      name: "name",
-      type: "git",
-      _links: {}
-    };
+import { FC, ReactElement, useEffect, useRef } from "react";
 
-    const navLink = shallow(<EditRepoNavLink repository={repository} editUrl="" />);
-    expect(navLink.text()).toBe("");
-  });
+type Props = {
+  location?: Location;
+  children: ReactElement;
+};
 
-  it("should render the navLink", () => {
-    const repository = {
-      namespace: "space",
-      name: "name",
-      type: "git",
-      _links: {
-        update: {
-          href: "/repositories"
-        }
-      }
-    };
+const ScrollToTop: FC<Props> = ({ location, children }) => {
+  const previousLocation = useRef(location);
 
-    const navLink = mount(<EditRepoNavLink repository={repository} editUrl="" />);
-    expect(navLink.text()).toBe("repositoryRoot.menu.generalNavLink");
-  });
-});
+  useEffect(() => {
+    if (previousLocation?.current?.pathname !== location?.pathname) {
+      window.scrollTo(0, 0);
+    }
+  }, [location]);
+
+  return children;
+};
+
+export default ScrollToTop;

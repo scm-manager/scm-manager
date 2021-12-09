@@ -86,7 +86,7 @@ const RenameRepository: FC<Props> = ({ repository }) => {
       validationError: namespaceValidationError
     };
 
-    if (namespaceStrategies!.current === CUSTOM_NAMESPACE_STRATEGY) {
+    if (namespaceStrategies?.current === CUSTOM_NAMESPACE_STRATEGY) {
       return <InputField {...props} />;
     }
 

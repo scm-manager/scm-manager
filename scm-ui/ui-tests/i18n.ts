@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-jest.mock("react-i18next", () => ({
+export const jestMock = jest.mock("react-i18next", () => ({
   // this mock makes sure any components using the translate HoC receive the t function as a prop
   withTranslation: () => (Component: any) => {
     Component.defaultProps = {
@@ -32,8 +32,6 @@ jest.mock("react-i18next", () => ({
     return Component;
   },
   useTranslation: (ns: string) => {
-    return [
-      (key: string) => key
-    ];
+    return [(key: string) => key];
   }
 }));

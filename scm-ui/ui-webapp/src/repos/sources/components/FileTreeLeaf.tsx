@@ -30,6 +30,7 @@ import { File, Repository } from "@scm-manager/ui-types";
 import { DateFromNow, FileSize, Icon, Tooltip } from "@scm-manager/ui-components";
 import FileIcon from "./FileIcon";
 import FileLink from "./content/FileLink";
+import { ReactElement } from "react";
 
 type Props = WithTranslation & {
   repository: Repository;
@@ -71,7 +72,7 @@ class FileTreeLeaf extends React.Component<Props> {
     );
   };
 
-  contentIfPresent = (file: File, attribute: string, content: (file: File) => any) => {
+  contentIfPresent = (file: File, attribute: string, content: (file: File) => ReactElement | string | undefined) => {
     const { t } = this.props;
     if (file.hasOwnProperty(attribute)) {
       return content(file);
@@ -100,7 +101,7 @@ class FileTreeLeaf extends React.Component<Props> {
 
     const extProps: extensionPoints.ReposSourcesTreeRowProps = {
       repository,
-      file,
+      file
     };
 
     return (
@@ -113,7 +114,7 @@ class FileTreeLeaf extends React.Component<Props> {
           </NoWrapTd>
           <td className="is-hidden-mobile">{this.contentIfPresent(file, "commitDate", renderCommitDate)}</td>
           <MinWidthTd className={classNames("is-word-break", "is-hidden-touch")}>
-            {this.contentIfPresent(file, "description", (file) => file.description)}
+            {this.contentIfPresent(file, "description", file => file.description)}
           </MinWidthTd>
           {binder.hasExtension("repos.sources.tree.row.right") && (
             <ExtensionTd className="is-hidden-mobile">

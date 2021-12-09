@@ -77,7 +77,7 @@ class ProfileInfo extends React.Component<Props> {
           <th>{t("profile.groups")}</th>
           <td className="p-0">
             <ul>
-              {me.groups.map((group) => {
+              {me.groups.map(group => {
                 return <li>{group}</li>;
               })}
             </ul>

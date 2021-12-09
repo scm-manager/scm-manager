@@ -47,7 +47,7 @@ const ImportFromUrlForm: FC<Props> = ({ repository, onChange, setValid, disabled
   const handleImportUrlBlur = (importUrl: string) => {
     if (!repository.name) {
       // If the repository name is not fill we set a name suggestion
-      const match = importUrl.match(/([^\/]+?)(?:.git)?$/);
+      const match = importUrl.match(/([^/]+?)(?:.git)?$/);
       if (match && match[1]) {
         onChange({ ...repository, name: match[1] });
       }
@@ -71,7 +71,7 @@ const ImportFromUrlForm: FC<Props> = ({ repository, onChange, setValid, disabled
       <div className="column is-half px-3">
         <InputField
           label={t("import.username")}
-          onChange={(username) => onChange({ ...repository, username })}
+          onChange={username => onChange({ ...repository, username })}
           value={repository.username}
           helpText={t("help.usernameHelpText")}
           disabled={disabled}
@@ -80,7 +80,7 @@ const ImportFromUrlForm: FC<Props> = ({ repository, onChange, setValid, disabled
       <div className="column is-half px-3">
         <InputField
           label={t("import.password")}
-          onChange={(password) => onChange({ ...repository, password })}
+          onChange={password => onChange({ ...repository, password })}
           value={repository.password}
           type="password"
           helpText={t("help.passwordHelpText")}

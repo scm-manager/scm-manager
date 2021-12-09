@@ -11,6 +11,7 @@
     "test": "lerna run --scope '@scm-manager/ui-*' test",
     "e2e-tests": "lerna run --scope '@scm-manager/e2e-tests' ci",
     "typecheck": "lerna run --scope '@scm-manager/ui-*' typecheck",
+    "lint": "lerna run --scope '@scm-manager/ui-*' lint",
     "serve": "ui-scripts serve development",
     "deploy": "ui-scripts publish",
     "set-version": "ui-scripts version"

@@ -30,7 +30,7 @@ import {
   useClearNotifications,
   useDismissNotification,
   useNotifications,
-  useNotificationSubscription,
+  useNotificationSubscription
 } from "@scm-manager/ui-api";
 import { Notification, NotificationCollection } from "@scm-manager/ui-types";
 import {
@@ -43,7 +43,7 @@ import {
   ToastType,
   Loading,
   DateFromNow,
-  devices,
+  devices
 } from "@scm-manager/ui-components";
 
 const DropDownMenu = styled.div`
@@ -283,7 +283,7 @@ type NotificationCounterProps = {
 const NotificationCounter = styled.span<NotificationCounterProps>`
   position: absolute;
   top: -0.5rem;
-  right: ${(props) => (props.count < 10 ? "0" : "-0.25")}rem;
+  right: ${props => (props.count < 10 ? "0" : "-0.25")}rem;
 `;
 
 type BellNotificationIconProps = {
@@ -351,14 +351,14 @@ const Notifications: FC<NotificationProps> = ({ className }) => {
           "dropdown",
           "is-hoverable",
           {
-            "is-active": open,
+            "is-active": open
           },
           className
         )}
-        onClick={(e) => e.stopPropagation()}
+        onClick={e => e.stopPropagation()}
       >
         <div className={classNames("is-flex", "dropdown-trigger", "is-clickable")}>
-          <BellNotificationIcon data={data} onClick={() => setOpen((o) => !o)} />
+          <BellNotificationIcon data={data} onClick={() => setOpen(o => !o)} />
         </div>
         <DropDownMenu className="dropdown-menu" id="dropdown-menu" role="menu">
           <ErrorBox error={error} />

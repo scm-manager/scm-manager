@@ -40,9 +40,15 @@ const CreateBranch: FC<Props> = ({ repository }) => {
   const location = useLocation();
   const [t] = useTranslation("repos");
 
-  const transmittedName = (url: string) => {
-    const params = queryString.parse(url);
-    return params.name;
+  const transmittedName = (url: string): string | undefined => {
+    const paramsName = queryString.parse(url).name;
+    if (paramsName === null) {
+      return undefined;
+    }
+    if (Array.isArray(paramsName)) {
+      return paramsName[0];
+    }
+    return paramsName;
   };
 
   if (createdBranch) {
@@ -68,8 +74,7 @@ const CreateBranch: FC<Props> = ({ repository }) => {
       <BranchForm
         submitForm={create}
         loading={isLoadingCreate}
-        repository={repository}
-        branches={branches._embedded.branches}
+        branches={branches._embedded?.branches || []}
         transmittedName={transmittedName(location.search)}
       />
     </>
