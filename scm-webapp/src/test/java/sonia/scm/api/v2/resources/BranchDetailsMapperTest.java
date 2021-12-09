@@ -24,6 +24,7 @@
 
 package sonia.scm.api.v2.resources;
 
+import com.google.inject.util.Providers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sonia.scm.repository.Repository;
@@ -44,7 +45,7 @@ class BranchDetailsMapperTest {
   void configureMapper() {
     ScmPathInfoStore scmPathInfoStore = new ScmPathInfoStore();
     scmPathInfoStore.set(() -> URI.create("/scm/api/"));
-    mapper.setResourceLinks(new ResourceLinks(scmPathInfoStore));
+    mapper.setResourceLinks(new ResourceLinks(Providers.of(scmPathInfoStore)));
   }
 
   @Test

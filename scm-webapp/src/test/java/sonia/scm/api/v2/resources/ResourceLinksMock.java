@@ -24,6 +24,8 @@
 
 package sonia.scm.api.v2.resources;
 
+import com.google.inject.util.Providers;
+
 import java.net.URI;
 
 import static org.mockito.Mockito.spy;
@@ -35,7 +37,7 @@ public class ResourceLinksMock {
     ScmPathInfoStore scmPathInfoStore = new ScmPathInfoStore();
     scmPathInfoStore.set(pathInfo);
 
-    ResourceLinks resourceLinks = new ResourceLinks(scmPathInfoStore);
+    ResourceLinks resourceLinks = new ResourceLinks(Providers.of(scmPathInfoStore));
     return spy(resourceLinks);
   }
 }

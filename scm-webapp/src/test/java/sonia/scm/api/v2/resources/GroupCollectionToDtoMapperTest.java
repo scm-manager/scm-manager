@@ -24,6 +24,7 @@
     
 package sonia.scm.api.v2.resources;
 
+import com.google.inject.util.Providers;
 import de.otto.edison.hal.HalRepresentation;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.support.SubjectThreadState;
@@ -53,7 +54,7 @@ public class GroupCollectionToDtoMapperTest {
 
   private final ScmPathInfo uriInfo = mock(ScmPathInfo.class);
   private final ScmPathInfoStore scmPathInfoStore = new ScmPathInfoStore();
-  private final ResourceLinks resourceLinks = new ResourceLinks(scmPathInfoStore);
+  private final ResourceLinks resourceLinks = new ResourceLinks(Providers.of(scmPathInfoStore));
   private final GroupToGroupDtoMapper groupToDtoMapper = mock(GroupToGroupDtoMapper.class);
   private final Subject subject = mock(Subject.class);
   private final ThreadState subjectThreadState = new SubjectThreadState(subject);
