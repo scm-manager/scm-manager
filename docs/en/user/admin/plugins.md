@@ -11,7 +11,7 @@ In order for changes to plugins to become effective, the SCM-Manager server need
 ### myCloudogu plugins
 Some special plugins are only available to instances of SCM-Manager that are connected to myCloudogu. You may connect your instance by clicking the button “Connect to myCloudogu” ![Plugin-center not connected](assets/administration-plugin-center-not-connected.png). 
 
-You will be redirected to a myCloudogu login form. ![myCloudogu-Login-Form](assets/myCloudogu-Login.png) If you already have an account you simply log in. Else you may create an account either by using a confederate identity provider (Google or github) 
+You will be redirected to a myCloudogu login form. ![myCloudogu-Login-Form](assets/myCloudogu-Login.png) If you already have an account you simply log in. Otherwise you can create an account either by using a confederate identity provider (Google or github) 
 or with your email.
 After a successful login you will return to the SCM-Manager. Here you can review the instance and account to connect. By clicking the button “Connect” you approve the connection and return to the plugin center. ![Confirmation of connection](assets/administration-myC-confirmation.png)
 
