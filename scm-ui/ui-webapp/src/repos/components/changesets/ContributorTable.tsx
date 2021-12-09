@@ -62,16 +62,15 @@ const Contributor: FC<{ person: Person }> = ({ person }) => {
   return <>{person.name}</>;
 };
 
-const getUnique = (items: string[]) => {
-  return Object.keys(
+const getUnique = (items: string[]) =>
+  Object.keys(
     items.reduce((result, item) => {
-      if (item in result) {
+      if (!(item in result)) {
         result[item] = true;
       }
       return result;
     }, {} as { [type: string]: boolean })
   );
-};
 
 const ContributorTable: FC<Props> = ({ changeset }) => {
   const [t] = useTranslation("plugins");
