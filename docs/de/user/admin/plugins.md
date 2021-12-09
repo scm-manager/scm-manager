@@ -13,7 +13,7 @@ Einige besondere Plugins sind nur für Instanzen des SCM-Managers verfügbar, di
 ![Plugin-Center nicht verbunden, Button zur Verbindung mit myCloudogu](assets/administration-plugin-center-not-connected.png)
 Sie werden dann zur myCloudogu-Login-Maske weitergeleitet. 
 ![myCloudogu-Login-Maske](assets/myCloudogu-login.png)
-Wenn Sie über einen myCloudogu-Konto verfügen, können Sie sich einloggen. Ansonsten erstellen Sie über einen konföderierten Identitätsanbieter (Google oder github) oder Ihre Email-Adresse ein Konto.
+Wenn Sie über ein myCloudogu-Konto verfügen, können Sie sich einloggen. Ansonsten erstellen Sie über einen konföderierten Identitätsanbieter (Google oder github) oder Ihre Email-Adresse ein Konto.
 Anschließend werden Sie zurück zum SCM-Manager geleitet und können Details zur verbundenen Instanz und Konto überprüfen. Mit „Verbinden“ bestätigen Sie die Verbindung, mit „Abbrechen“ brechen Sie den Vorgang ab.
 ![Bestätigung der Verbindung mit myCloudogu](assets/administration-myC-confirmation.png)
 Jetzt können Sie im Plugin-Center myCloudogu-Plugins genau wie Basis-Plugins installieren.
