@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.spi;
 
-import lombok.val;
 import org.junit.Test;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.BranchDetails;
@@ -49,7 +48,7 @@ public class HgBranchDetailsCommandTest extends AbstractHgCommandTestBase {
     BranchDetailsCommandRequest branchRequest = new BranchDetailsCommandRequest();
     branchRequest.setBranchName("with_merge");
 
-    val result = new HgBranchDetailsCommand(cmdContext).execute(branchRequest).getDetails();
+    BranchDetails result = new HgBranchDetailsCommand(cmdContext).execute(branchRequest).getDetails();
 
     assertThat(result.getChangesetsAhead()).get().isEqualTo(5);
     assertThat(result.getChangesetsBehind()).get().isEqualTo(1);
