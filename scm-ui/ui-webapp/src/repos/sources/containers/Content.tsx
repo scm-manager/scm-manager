@@ -170,8 +170,8 @@ const Content: FC<Props> = ({ file, repository, revision, breadcrumb, error }) =
     if (!collapsed) {
       return (
         <>
-          <div className="panel-block has-background-white-bis">
-            <table className="table has-background-white-bis">
+          <div className="panel-block has-background-secondary-less">
+            <table className="table has-background-secondary-less">
               <tbody>
                 <tr>
                   <td>{t("sources.content.path")}</td>

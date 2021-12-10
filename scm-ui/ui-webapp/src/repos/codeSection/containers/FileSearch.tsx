@@ -44,6 +44,7 @@ type Params = {
   revision: string;
 };
 
+// TODO ersetzen?
 const HomeLink = styled(Link)`
   border-right: 1px solid lightgray;
 `;

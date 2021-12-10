@@ -62,6 +62,7 @@ const DropDownMenu = styled.div`
     left: auto;
   }
 
+  // TODO ersetzen
   &:before {
     position: absolute;
     content: "";
@@ -132,7 +133,7 @@ const NotificationEntry: FC<EntryProps> = ({ notification, removeToast }) => {
         ) : (
           <Icon
             name="trash"
-            color="black"
+            color="secondary-most"
             className="is-clickable"
             title={t("notifications.dismiss")}
             onClick={remove}
@@ -188,7 +189,7 @@ const NotificationList: FC<Props> = ({ data, clear, remove }) => {
         </tbody>
       </table>
       {all.length > 6 ? (
-        <p className={classNames("has-text-centered", "has-text-grey")}>
+        <p className={classNames("has-text-centered", "has-text-secondary")}>
           {t("notifications.xMore", { count: all.length - 6 })}
         </p>
       ) : null}

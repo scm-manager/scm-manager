@@ -26,6 +26,7 @@ import styled from "styled-components";
 import { devices } from "@scm-manager/ui-components";
 
 const HeaderButton = styled.div`
+  // TODO: ersetzen?
   @media screen and (max-width: ${devices.desktop.width - 1}px) {
     border-top: 1px solid white;
     margin-top: 1rem;

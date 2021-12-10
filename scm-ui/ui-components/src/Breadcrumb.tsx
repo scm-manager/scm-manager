@@ -110,6 +110,7 @@ const ActionBar = styled.div`
   }
 `;
 
+// TODO ersetzen?
 const PrefixButton = styled.div`
   border-right: 1px solid lightgray;
 `;

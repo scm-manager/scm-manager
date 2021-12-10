@@ -120,7 +120,7 @@ const InitializationAdminAccountStep: FC<Props> = ({ data }) => {
   }
 
   const component = (
-    <div className="column is-8 box  has-background-white-ter">
+    <div className="column is-8 box  has-background-secondary-less">
       <form onSubmit={handleSubmit(onSubmit)}>
         <h3 className="title">{t("title")}</h3>
         <h4 className="subtitle">{t("adminStep.title")}</h4>

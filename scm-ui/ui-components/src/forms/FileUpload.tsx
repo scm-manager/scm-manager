@@ -60,7 +60,7 @@ const FileUpload: FC<Props> = ({ handleFile, filenamePlaceholder = "", disabled 
         {file?.name ? (
           <span className="file-name">{file?.name}</span>
         ) : (
-          <span className="file-name has-text-weight-light has-text-grey-light	">{filenamePlaceholder}</span>
+          <span className="file-name has-text-weight-light has-text-secondary">{filenamePlaceholder}</span>
         )}
       </label>
     </div>

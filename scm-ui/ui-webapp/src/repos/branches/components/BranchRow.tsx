@@ -76,7 +76,7 @@ const BranchRow: FC<Props> = ({ repository, baseUrl, branch, onDelete, details }
           {branch.name}
         </ReactLink>
         {branch.lastCommitDate && (
-          <span className={classNames("has-text-grey", "is-ellipsis-overflow", "is-size-7", "ml-4")}>
+          <span className={classNames("has-text-secondary", "is-ellipsis-overflow", "is-size-7", "ml-4")}>
             <BranchCommitDateCommitter branch={branch} />
           </span>
         )}

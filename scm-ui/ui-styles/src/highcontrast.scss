@@ -30,8 +30,6 @@ $background: $grey-dark;
 $text: $white-ter;
 $text-strong: $white-bis;
 
-$background-accent: $grey-darker;
-
 $red: #e63453;
 // TODO check if we could replace red in commons,
 // without breaking the light mode
@@ -53,7 +51,8 @@ $footer-color: $white-ter;
 $box-background-color: scale-color($scheme-main, $lightness: 15%);
 $box-background-color: $grey-darker;
 
-$modal-card-head-background-color: $grey-dark;
+// TODO: Noch notwendig?
+$modal-card-head-background-color: $black-ter;
 $modal-card-body-background-color: $scheme-main;
 
 $input-placeholder-color: $white;
@@ -72,11 +71,11 @@ $high-contrast-light-gray: #f2f2f2;
 
 @import "utils/_post.scss";
 
-
+// SyntaxHighlighter
 :root {
   --sh-base-color: #fff;
-  --sh-font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
-  --sh-block-background: #000;
+  --sh-font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+  --sh-block-background: $scheme-main;
   --sh-inline-code-color: #ff3860;
   --sh-inline-code-background: #fbe7eb;
   --sh-comment-color: #9a9a9a;
@@ -85,8 +84,8 @@ $high-contrast-light-gray: #f2f2f2;
   --sh-selector-color: #009dff;
   --sh-operator-color: #999999;
   --sh-operator-bg: inherit;
-  --sh-variable-color: #C386CA;
-  --sh-function-color: #FF6181;
+  --sh-variable-color: #c386ca;
+  --sh-function-color: #ff6181;
   --sh-keyword-color: #00a984;
   --sh-selected-color: #7fe3cd;
   --sh-highlight-background: #f5f5f5;
@@ -96,10 +95,10 @@ $high-contrast-light-gray: #f2f2f2;
   --diff-text-color: $white-bis;
   --diff-font-family: Consolas, Courier, monospace;
   --diff-selection-background-color: #b3d7ff;
-  --diff-gutter-insert-background-color: #05C71D;
-  --diff-gutter-delete-background-color: #EB7A85;
+  --diff-gutter-insert-background-color: #05c71d;
+  --diff-gutter-delete-background-color: #eb7a85;
   --diff-gutter-selected-background-color: #fffce0;
-  --diff-code-insert-background-color: #05240B;
+  --diff-code-insert-background-color: #05240b;
   --diff-code-delete-background-color: #230608;
   --diff-code-insert-edit-background-color: #c0dc91;
   --diff-code-delete-edit-background-color: #000;
@@ -107,19 +106,7 @@ $high-contrast-light-gray: #f2f2f2;
   --diff-omit-gutter-line-color: #cb2a1d;
 }
 
-
 .button {
-
-  &.is-danger:hover,
-  &.is-danger.is-hovered {
-    background-color: scale-color($danger, $lightness: -2.5%);
-  }
-
-  &.is-danger:active,
-  &.is-danger.is-active {
-    background-color: scale-color($danger, $lightness: -4%);
-  }
-
   &.is-primary,
   &.is-info,
   &.is-link,
@@ -129,6 +116,93 @@ $high-contrast-light-gray: #f2f2f2;
     &.is-outlined {
       background-color: inherit;
     }
+  }
+
+  &.is-primary:hover,
+  &.is-primary.is-hovered {
+    background-color: scale-color($primary, $lightness: -5%);
+  }
+
+  &.is-primary:active,
+  &.is-primary.is-active {
+    background-color: scale-color($primary, $lightness: -10%);
+  }
+
+  &.is-primary[disabled] {
+    background-color: scale-color($primary, $lightness: -75%);
+  }
+
+  &.is-info:hover,
+  &.is-info.is-hovered {
+    background-color: scale-color($info, $lightness: -5%);
+  }
+
+  &.is-info:active,
+  &.is-info.is-active {
+    background-color: scale-color($info, $lightness: -10%);
+  }
+
+  &.is-info[disabled] {
+    background-color: scale-color($info, $lightness: -75%);
+  }
+
+  &.is-link:hover,
+  &.is-link.is-hovered {
+    background-color: scale-color($link, $lightness: -5%);
+  }
+
+  &.is-link:active,
+  &.is-link.is-active {
+    background-color: scale-color($link, $lightness: -10%);
+  }
+
+  &.is-link[disabled] {
+    background-color: scale-color($link, $lightness: -75%);
+  }
+
+  &.is-success:hover,
+  &.is-success.is-hovered {
+    background-color: scale-color($success, $lightness: -5%);
+  }
+
+  &.is-success:active,
+  &.is-success.is-active {
+    background-color: scale-color($success, $lightness: -10%);
+  }
+
+  &.is-success[disabled] {
+    background-color: scale-color($success, $lightness: -75%);
+  }
+
+  &.is-warning:hover,
+  &.is-warning.is-hovered {
+    background-color: scale-color($warning, $lightness: -5%);
+  }
+
+  &.is-warning:active,
+  &.is-warning.is-active {
+    background-color: scale-color($warning, $lightness: -10%);
+  }
+
+  &.is-warning[disabled] {
+    background-color: scale-color($warning, $lightness: -75%);
+    color: #e1d4c2;
+  }
+
+  //TODO war so.. andere auch?
+  &.is-danger:hover,
+  &.is-danger.is-hovered {
+    background-color: scale-color($danger, $lightness: -2.5%);
+  }
+
+  //TODO ebenfalls
+  &.is-danger:active,
+  &.is-danger.is-active {
+    background-color: scale-color($danger, $lightness: -4%);
+  }
+
+  &.is-danger[disabled] {
+    background-color: scale-color($danger, $lightness: -75%);
   }
 }
 
@@ -148,16 +222,19 @@ $high-contrast-light-gray: #f2f2f2;
 //footer is overwritten in _main.scss
 footer.footer {
   background-color: $grey-dark;
-  a{
-    color: scale-color($link, $lightness:25%);
+  a {
+    color: scale-color($link, $lightness: 25%);
   }
 }
 //card
 
 .modal-card {
   border: 1px solid $white-ter;
- .modal-close::before, .delete::before, .modal-close::after, .delete::after {
-  background-color: $white-bis;
+  .modal-close::before,
+  .delete::before,
+  .modal-close::after,
+  .delete::after {
+    background-color: $white-bis;
   }
 }
 
@@ -225,10 +302,12 @@ footer.footer {
 }
 
 .diff-gutter-conflict {
-  background-color: #FFD11A;
+  background-color: #ffd11a;
 }
 
-.diff-gutter-delete,.diff-gutter-insert, .diff-gutter-conflict {
+.diff-gutter-delete,
+.diff-gutter-insert,
+.diff-gutter-conflict {
   color: $scheme-main;
 }
 
@@ -264,21 +343,27 @@ td:first-child.diff-gutter-conflict:before {
 //inline member tags
 .tag:not(body) {
   border: 1px solid transparent;
-  background-color: $white;
-  .is-delete::before, .is-delete::after {
+  background-color: $white; // TODO black?
+
+  .is-delete::before,
+  .is-delete::after {
     background-color: $scheme-main;
   }
 }
 
-.tag:not(body).is-delete::before, .tag:not(body).is-delete::after {
+//TODO Oben hinein ziehen
+.tag:not(body).is-delete::before,
+.tag:not(body).is-delete::after {
   background-color: $scheme-main;
 }
-.tag:not(body).is-delete:hover::before, .tag:not(body).is-delete:hover::after {
+.tag:not(body).is-delete:hover::before,
+.tag:not(body).is-delete:hover::after {
   background-color: $white-bis;
 }
 
 //dark tags have light borders to separate from background
-.tag:not(body).is-dark, .tag:not(body).is-black {
+.tag:not(body).is-dark,
+.tag:not(body).is-black {
   border: 1px solid $white-bis;
 }
 
@@ -312,8 +397,7 @@ td:first-child.diff-gutter-conflict:before {
 .popover {
   color: #00a984;
 }
-.popover .popover-content::before
-{
+.popover .popover-content::before {
   border-bottom-color: $grey-dark !important;
   border-left-color: $grey-dark !important;
 }
@@ -323,14 +407,112 @@ hr {
   background-color: $white-bis;
 }
 
-//Login and logout overwrite white-ter background
-.hero-body .has-background-white-ter {
-  background-color: $grey-dark !important;
-}
-
 //Display darker version of background image
 .has-scm-background {
   background-image: url(images/scmManagerHeroDark.jpg) !important;
   background-size: cover;
   background-position: top center;
+}
+
+.has-text-secondary-least {
+  color: $scheme-main !important;
+}
+a.has-text-secondary-least:hover,
+a.has-text-secondary-least:focus {
+  color: lighten($scheme-main, 10%) !important;
+}
+.has-background-secondary-least {
+  background-color: $scheme-main !important;
+}
+
+.has-text-secondary-less {
+  color: $black-ter !important;
+}
+a.has-text-secondary-less:hover,
+a.has-text-secondary-less:focus {
+  color: lighten($black-ter, 10%) !important;
+}
+.has-background-secondary-less {
+  background-color: $black-ter !important;
+}
+
+.has-text-secondary {
+  color: $white-bis !important;
+}
+a.has-text-secondary:hover,
+a.has-text-secondary:focus {
+  color: lighten($white-bis, 10%) !important;
+}
+.has-background-secondary {
+  background-color: $white-bis !important;
+}
+
+.has-text-secondary-more {
+  color: $white-ter !important;
+}
+a.has-text-secondary-more:hover,
+a.has-text-secondary-more:focus {
+  color: lighten($white-ter, 10%) !important;
+}
+.has-background-secondary-more {
+  background-color: $white-ter !important;
+}
+
+.has-text-secondary-most {
+  color: $white !important;
+}
+a.has-text-secondary-most:hover,
+a.has-text-secondary-most:focus {
+  color: lighten($white, 10%) !important;
+}
+.has-background-secondary-most {
+  background-color: $white !important;
+}
+
+.has-hover-visible:hover {
+  color: $white-bis !important;
+}
+
+.select select[disabled],
+[disabled].textarea,
+[disabled].input,
+fieldset[disabled] .select select,
+.select fieldset[disabled] select,
+fieldset[disabled] .textarea,
+fieldset[disabled] .input {
+  color: $white-bis;
+}
+
+[disabled].textarea::placeholder,
+[disabled].input::placeholder,
+fieldset[disabled] .textarea::placeholder,
+fieldset[disabled] .input::placeholder {
+  color: $white-bis;
+}
+
+.repository-export-info-box {
+  background-color: $high-contrast-info-25;
+  border: 0.2rem solid;
+}
+
+.search-syntax-accordion {
+  border: 1px solid $info;
+  box-shadow: none;
+}
+
+.autocomplete-entry {
+  & div div {
+    background-color: $scheme-main;
+    color: $white-bis;
+    border-color: $blue-light;
+
+    &:hover,
+    &.is-hovered {
+      border-color: #4a4a4a;
+    }
+  }
+  // TODO: Korrigieren
+  & div:nth-child(2) {
+    border: 1px solid $info;
+  }
 }

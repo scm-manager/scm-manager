@@ -42,13 +42,13 @@ const RoutingDecorator = (story: () => ReactNode) => <MemoryRouter initialEntrie
 
 storiesOf("Tag", module)
   .addDecorator(RoutingDecorator)
-  .addDecorator((storyFn) => <Wrapper>{storyFn()}</Wrapper>)
+  .addDecorator(storyFn => <Wrapper>{storyFn()}</Wrapper>)
   .add("Default", () => <Tag label="Default tag" />)
   .add("Rounded", () => <Tag label="Rounded tag" color="dark" rounded={true} />)
   .add("With Icon", () => <Tag label="System" icon="bolt" />)
   .add("Colors", () => (
     <div>
-      {colors.map((color) => (
+      {colors.map(color => (
         <Spacing key={color}>
           <Tag color={color} label={color} />
         </Spacing>
@@ -57,7 +57,7 @@ storiesOf("Tag", module)
   ))
   .add("Outlined", () => (
     <div>
-      {(["success", "black", "danger"] as Color[]).map((color) => (
+      {(["success", "black", "danger"] as Color[]).map(color => (
         <Spacing key={color}>
           <Tag color={color} label={color} outlined={true} />
         </Spacing>
@@ -68,7 +68,7 @@ storiesOf("Tag", module)
   .add("Clickable", () => <Tag label="Click here" onClick={() => alert("Not so fast")} />)
   .add("Sizes", () => (
     <div>
-      {sizes.map((size) => (
+      {sizes.map(size => (
         <Spacing key={size}>
           <Tag size={size} label={size} />
         </Spacing>

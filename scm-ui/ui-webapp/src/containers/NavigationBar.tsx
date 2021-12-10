@@ -85,6 +85,7 @@ const StyledNavBar = styled.nav`
     padding: 0;
   }
 
+  //TODO Ersetzen?
   .navbar-brand {
     @media screen and (max-width: ${devices.desktop.width - 1}px) {
       border-bottom: 1px solid white;

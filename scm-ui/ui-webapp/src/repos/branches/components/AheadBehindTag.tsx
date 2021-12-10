@@ -96,7 +96,7 @@ const AheadBehindTag: FC<Props> = ({ branch, details, hiddenMobile, verbose }) =
         <Behind className="column is-half is-flex is-flex-direction-column is-align-items-flex-end p-0">
           <Count className="is-size-7 pr-1">{behindText}</Count>
           <Bar
-            className="has-rounded-border-left has-background-grey"
+            className="has-rounded-border-left has-background-secondary"
             width={calculateBarLength(details.changesetsBehind)}
             direction="left"
           />
@@ -104,7 +104,7 @@ const AheadBehindTag: FC<Props> = ({ branch, details, hiddenMobile, verbose }) =
         <Ahead className="column is-half is-flex is-flex-direction-column is-align-items-flex-start p-0">
           <Count className="is-size-7 pl-1">{aheadText}</Count>
           <Bar
-            className="has-rounded-border-right has-background-grey"
+            className="has-rounded-border-right has-background-secondary"
             width={calculateBarLength(details.changesetsAhead)}
             direction="right"
           />
