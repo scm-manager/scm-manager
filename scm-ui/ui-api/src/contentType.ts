@@ -28,6 +28,9 @@ import { ApiResultWithFetching } from "./base";
 export type ContentType = {
   type: string;
   language?: string;
+  aceMode?: string;
+  codemirrorMode?: string;
+  prismMode?: string;
 };
 
 function getContentType(url: string): Promise<ContentType> {
@@ -35,6 +38,9 @@ function getContentType(url: string): Promise<ContentType> {
     return {
       type: response.headers.get("Content-Type") || "application/octet-stream",
       language: response.headers.get("X-Programming-Language") || undefined,
+      aceMode: response.headers.get("X-Syntax-Mode-Ace") || undefined,
+      codemirrorMode: response.headers.get("X-Syntax-Mode-Codemirror") || undefined,
+      prismMode: response.headers.get("X-Syntax-Mode-Prism") || undefined,
     };
   });
 }

@@ -28,6 +28,8 @@ final class ProgrammingLanguages {
 
   static final String HEADER = "X-Programming-Language";
 
+  static final String HEADER_SYNTAX_MODE_PREFIX = "X-Syntax-Mode-";
+
   private ProgrammingLanguages() {
   }
 }

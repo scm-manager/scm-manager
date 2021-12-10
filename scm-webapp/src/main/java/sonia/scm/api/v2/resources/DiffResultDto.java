@@ -32,6 +32,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.util.List;
+import java.util.Map;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -63,6 +64,7 @@ public class DiffResultDto extends HalRepresentation {
     private String oldMode;
     private String type;
     private String language;
+    private Map<String, String> syntaxModes;
     private List<HunkDto> hunks;
 
   }
