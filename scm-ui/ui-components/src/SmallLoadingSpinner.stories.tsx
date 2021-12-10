@@ -21,30 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import { storiesOf } from "@storybook/react";
+import React from "react";
+import SmallLoadingSpinner from "./SmallLoadingSpinner";
 
-package sonia.scm.repository.api;
-
-import sonia.scm.repository.BranchDetails;
-
-/**
- * @since 2.28.0
- */
-public class BranchDetailsCommandResult {
-  private final BranchDetails details;
-
-  /**
-   * Creates the result object
-   *
-   * @param details The details for the branch
-   */
-  public BranchDetailsCommandResult(BranchDetails details) {
-    this.details = details;
-  }
-
-  /**
-   * The details for the branch.
-   */
-  public BranchDetails getDetails() {
-    return details;
-  }
-}
+storiesOf("SmallLoading", module).add("Default", () => (
+  <div>
+    <SmallLoadingSpinner />
+  </div>
+));

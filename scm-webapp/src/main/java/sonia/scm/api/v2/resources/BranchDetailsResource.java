@@ -117,7 +117,7 @@ public class BranchDetailsResource {
   ) {
     try (RepositoryService service = serviceFactory.create(new NamespaceAndName(namespace, name))) {
       BranchDetailsCommandResult result = service.getBranchDetailsCommand().execute(branchName);
-      BranchDetailsDto dto = mapper.map(service.getRepository(), branchName, result);
+      BranchDetailsDto dto = mapper.map(service.getRepository(), branchName, result.getDetails());
       return Response.ok(dto).build();
     } catch (CommandNotSupportedException ex) {
       return Response.status(Response.Status.BAD_REQUEST).build();
@@ -186,7 +186,7 @@ public class BranchDetailsResource {
       for (String branch : branches) {
         try {
           BranchDetailsCommandResult result = branchDetailsCommand.execute(branch);
-          dtos.add(mapper.map(service.getRepository(), branch, result));
+          dtos.add(mapper.map(service.getRepository(), branch, result.getDetails()));
         } catch (NotFoundException e) {
           // we simply omit details for branches that do not exist
         }

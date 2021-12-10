@@ -21,30 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import React, { FC } from "react";
 
-package sonia.scm.repository.api;
+const SmallLoadingSpinner: FC = () => {
+  return (
+    <div className="loader-wrapper">
+      <div className="loader is-loading" />
+    </div>
+  );
+};
 
-import sonia.scm.repository.BranchDetails;
-
-/**
- * @since 2.28.0
- */
-public class BranchDetailsCommandResult {
-  private final BranchDetails details;
-
-  /**
-   * Creates the result object
-   *
-   * @param details The details for the branch
-   */
-  public BranchDetailsCommandResult(BranchDetails details) {
-    this.details = details;
-  }
-
-  /**
-   * The details for the branch.
-   */
-  public BranchDetails getDetails() {
-    return details;
-  }
-}
+export default SmallLoadingSpinner;

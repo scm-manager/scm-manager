@@ -75216,6 +75216,18 @@ exports[`Storyshots Secondary Navigation Sub Navigation 1`] = `
 </div>
 `;
 
+exports[`Storyshots SmallLoading Default 1`] = `
+<div>
+  <div
+    className="loader-wrapper"
+  >
+    <div
+      className="loader is-loading"
+    />
+  </div>
+</div>
+`;
+
 exports[`Storyshots SplitAndReplace Simple replacement 1`] = `
 Array [
   <div

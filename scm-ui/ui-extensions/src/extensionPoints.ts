@@ -25,13 +25,14 @@
 import React from "react";
 import {
   Branch,
+  BranchDetails,
   File,
   IndexResources,
   Links,
   NamespaceStrategies,
   Repository,
   RepositoryCreation,
-  RepositoryTypeCollection,
+  RepositoryTypeCollection
 } from "@scm-manager/ui-types";
 import { ExtensionPointDefinition } from "./binder";
 

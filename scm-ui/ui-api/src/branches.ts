@@ -26,7 +26,7 @@ import {
   BranchCollection,
   BranchCreation,
   BranchDetailsCollection,
-  Link,
+  Link, NamespaceAndName,
   Repository
 } from "@scm-manager/ui-types";
 import { requiredLink } from "./links";
@@ -61,13 +61,6 @@ export const useBranch = (repository: Repository, name: string): ApiResultWithFe
   );
 };
 
-export const useBranchDetails = (repository: Repository, branch: string) => {
-  const link = requiredLink(repository, "branchDetails");
-  return useQuery<Branch, Error>(branchQueryKey(repository, branch, "details"), () =>
-    apiClient.get(concat(link, encodeURIComponent(branch))).then(response => response.json())
-  );
-};
-
 function chunkBranches(branches: Branch[]) {
   const chunks: Branch[][] = [];
   const chunkSize = 5;
@@ -84,6 +77,20 @@ function chunkBranches(branches: Branch[]) {
   return chunks;
 }
 
+const branchDetailsQueryKey = (
+  repository: NamespaceAndName,
+  branch: string | undefined = undefined,
+  ...values: unknown[]
+) => {
+  let branchName;
+  if (!branch) {
+    branchName = "_";
+  } else {
+    branchName = branch;
+  }
+  return [...repoQueryKey(repository), "branch-details", branchName, ...values];
+};
+
 export const useBranchDetailsCollection = (repository: Repository, branches: Branch[]) => {
   const link = requiredLink(repository, "branchDetailsCollection");
   const chunks = chunkBranches(branches);
@@ -93,7 +100,7 @@ export const useBranchDetailsCollection = (repository: Repository, branches: Bra
     Error,
     BranchDetailsCollection
   >(
-    branchQueryKey(repository, "details"),
+    branchDetailsQueryKey(repository),
     ({ pageParam = 0 }) => {
       const encodedBranches = chunks[pageParam]?.map(b => encodeURIComponent(b.name)).join("&branches=");
       return apiClient.get(concat(link, `?branches=${encodedBranches}`)).then(response => response.json());
