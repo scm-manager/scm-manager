@@ -29,6 +29,7 @@ import { FileDiff } from "@scm-manager/ui-types";
 
 // @ts-ignore no types for css modules
 import theme from "../syntax-highlighting.module.css";
+import { determineLanguage } from "../languages";
 
 const DiffView = styled(Diff)`
   /* align line numbers */
@@ -81,19 +82,17 @@ type Props = {
   className?: string;
 };
 
-const determineLanguage = (file: FileDiff) => {
+const findSyntaxHighlightingLanguage = (file: FileDiff) => {
   if (file.syntaxModes) {
-    return (
-      file.syntaxModes["prism"] || file.syntaxModes["codemirror"] || file.syntaxModes["ace"] || file.language || "text"
-    );
+    return file.syntaxModes["prism"] || file.syntaxModes["codemirror"] || file.syntaxModes["ace"] || file.language;
   }
-  return file.language || "text";
+  return file.language;
 };
 
 const TokenizedDiffView: FC<Props> = ({ file, viewType, className, children }) => {
   const { tokens } = useTokenizeWorker(tokenize, {
     hunks: file.hunks,
-    language: determineLanguage(file)
+    language: determineLanguage(findSyntaxHighlightingLanguage(file))
   });
 
   return (
