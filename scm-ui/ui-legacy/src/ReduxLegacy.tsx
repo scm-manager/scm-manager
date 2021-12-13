@@ -21,16 +21,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, Suspense } from "react";
-import { Props } from "./LazyMarkdownView";
-import Loading from "../Loading";
 
-const LazyMarkdownView = React.lazy(() => import("./LazyMarkdownView"));
+import React, { FC, useEffect } from "react";
+import { ApiProviderProps, useLegacyContext } from "@scm-manager/ui-api";
+import { connect, Dispatch } from "react-redux";
+import { ActionTypes, fetchIndexResourcesSuccess, fetchMeSuccess } from "./LegacyReduxProvider";
+import { IndexResources, Me } from "@scm-manager/ui-types";
 
-const MarkdownView: FC<Props> = props => (
-  <Suspense fallback={<Loading />}>
-    <LazyMarkdownView {...props}></LazyMarkdownView>
-  </Suspense>
-);
+const ReduxLegacy: FC<ApiProviderProps> = ({ children, onIndexFetched, onMeFetched }) => {
+  const context = useLegacyContext();
+  useEffect(() => {
+    context.onIndexFetched = onIndexFetched;
+    context.onMeFetched = onMeFetched;
+    context.initialize();
+  }, [context, onIndexFetched, onMeFetched]);
+  return <>{children}</>;
+};
 
-export default MarkdownView;
+const mapDispatchToProps = (dispatch: Dispatch<ActionTypes>) => {
+  return {
+    onIndexFetched: (index: IndexResources) => dispatch(fetchIndexResourcesSuccess(index)),
+    onMeFetched: (me: Me) => dispatch(fetchMeSuccess(me))
+  };
+};
+
+const connector = connect(undefined, mapDispatchToProps);
+
+export default (ReduxLegacy);

@@ -22,28 +22,11 @@
  * SOFTWARE.
  */
 
-import React, { FC } from "react";
-import { ApiProvider, ApiProviderProps } from "@scm-manager/ui-api";
-import { IndexResources, Me } from "@scm-manager/ui-types";
+import { binder } from "@scm-manager/ui-extensions";
+import * as Redux from "redux";
+import * as ReactRedux from "react-redux";
+import LegacyReduxProvider from "./LegacyReduxProvider";
 
-import { connect, Dispatch } from "react-redux";
-import { ActionTypes, fetchIndexResourcesSuccess, fetchMeSuccess } from "./LegacyReduxProvider";
+binder.bind("main.wrapper", LegacyReduxProvider);
 
-const ReduxAwareApiProvider: FC<ApiProviderProps> = ({ children, ...listeners }) => (
-  <ApiProvider {...listeners}>{children}</ApiProvider>
-);
-
-const mapDispatchToProps = (dispatch: Dispatch<ActionTypes>) => {
-  return {
-    onIndexFetched: (index: IndexResources) => {
-      dispatch(fetchIndexResourcesSuccess(index));
-    },
-    onMeFetched: (me: Me) => {
-      dispatch(fetchMeSuccess(me));
-    }
-  };
-};
-
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-// @ts-ignore no clue how to type it
-export default connect(undefined, mapDispatchToProps)(ReduxAwareApiProvider);
+export { Redux, ReactRedux };

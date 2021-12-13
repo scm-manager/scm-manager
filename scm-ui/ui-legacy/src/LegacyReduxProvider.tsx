@@ -21,10 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import { createStore } from "redux";
+import { createStore, Reducer } from "redux";
 import { IndexResources, Links, Me } from "@scm-manager/ui-types";
 import React, { FC } from "react";
 import { Provider } from "react-redux";
+import ReduxLegacy from "./ReduxLegacy";
 
 const ACTION_TYPE_INITIAL = "scm/initial";
 const ACTION_TYPE_INDEX = "scm/index_success";
@@ -58,9 +59,12 @@ type State = {
 
 const initialState: State = {};
 
-const reducer = (state: State = initialState, action: ActionTypes = { type: ACTION_TYPE_INITIAL }): State => {
+const reducer: Reducer<State, ActionTypes> = (
+  state: State = initialState,
+  action: ActionTypes = { type: ACTION_TYPE_INITIAL }
+): State => {
   switch (action.type) {
-    case "scm/index_success": {
+    case ACTION_TYPE_INDEX: {
       return {
         ...state,
         indexResources: {
@@ -69,7 +73,7 @@ const reducer = (state: State = initialState, action: ActionTypes = { type: ACTI
         }
       };
     }
-    case "scm/me_success": {
+    case ACTION_TYPE_ME: {
       return {
         ...state,
         auth: {
@@ -85,22 +89,26 @@ const reducer = (state: State = initialState, action: ActionTypes = { type: ACTI
 
 // add window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__() as last argument of createStore
 // to enable redux devtools
-const store = createStore(reducer, initialState);
+const store = createStore(reducer);
 
-export const fetchIndexResourcesSuccess = (index: IndexResources): ActionTypes => {
+export const fetchIndexResourcesSuccess = (index: IndexResources): IndexActionSuccess => {
   return {
     type: ACTION_TYPE_INDEX,
     payload: index
   };
 };
 
-export const fetchMeSuccess = (me: Me): ActionTypes => {
+export const fetchMeSuccess = (me: Me): MeActionSuccess => {
   return {
     type: ACTION_TYPE_ME,
     payload: me
   };
 };
 
-const LegacyReduxProvider: FC = ({ children }) => <Provider store={store}>{children}</Provider>;
+const LegacyReduxProvider: FC = ({ children }) => (
+  <Provider store={store}>
+    <ReduxLegacy>{children}</ReduxLegacy>
+  </Provider>
+);
 
 export default LegacyReduxProvider;

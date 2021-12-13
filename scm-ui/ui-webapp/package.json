@@ -6,6 +6,7 @@
     "@scm-manager/ui-api": "^2.27.3-SNAPSHOT",
     "@scm-manager/ui-components": "^2.27.3-SNAPSHOT",
     "@scm-manager/ui-extensions": "^2.27.3-SNAPSHOT",
+    "@scm-manager/ui-modules": "^2.27.3-SNAPSHOT",
     "classnames": "^2.2.5",
     "history": "^4.10.1",
     "i18next": "^19.6.0",
