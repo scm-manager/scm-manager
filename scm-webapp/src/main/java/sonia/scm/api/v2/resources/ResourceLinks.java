@@ -1202,4 +1202,20 @@ class ResourceLinks {
         .href();
     }
   }
+
+  public PluginCenterAuthLinks pluginCenterAuth() {
+    return new PluginCenterAuthLinks(scmPathInfoStore.get().get());
+  }
+
+  static class PluginCenterAuthLinks {
+    private final LinkBuilder indexLinkBuilder;
+
+    PluginCenterAuthLinks(ScmPathInfo pathInfo) {
+      indexLinkBuilder = new LinkBuilder(pathInfo, PluginRootResource.class, PluginCenterAuthResource.class);
+    }
+
+    String auth() {
+      return indexLinkBuilder.method("authResource").parameters().method("authenticationInfo").parameters().href();
+    }
+  }
 }

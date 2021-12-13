@@ -366,6 +366,34 @@
     "CISPvega31": {
       "displayName": "Ungültiger Repository-Typ für Import",
       "description": "Der Import ist für den gegebenen Repository-Typen nicht möglich."
+    },
+    "5DSqG6Mcg1": {
+      "displayName": "Fehlender Source Parameter",
+      "description": "Der Source Parameter wird für die Authentifizierung benötigt."
+    },
+    "8tSqFDot11": {
+      "displayName": "Authentifizierung ist deaktiviert",
+      "description": "Die Plugin Center Authentifizierung ist deaktiviert."
+    },
+    "8XSqFEBd41": {
+      "displayName": "Authentifizierung bereits durchgeführt",
+      "description": "Das Plugin Center wurde bereits authentifiziert."
+    },
+    "FNSqFKQIR1": {
+      "displayName": "Fehlender challenge Parameter",
+      "description": "Die Antwort der Authentifizierung enthält keinen Challenge Parameter."
+    },
+    "8ESqFElpI1": {
+      "displayName": "Falscher challenge Parameter",
+      "description": "Die Antwort der Authentifizierung enthält einen falschen Challenge Parameter."
+    },
+    "AHSqALeEv1": {
+      "displayName": "Authentifizierung fehlgeschlagen",
+      "description": "Die Authentifizierung des Plugin Centers ist fehlgeschlagen."
+    },
+    "52SqQBdpO1": {
+      "displayName": "Fehlender params Parameter",
+      "description": "Die Antwort der Authentifizierung enthält keinen params Parameter."
     }
   },
   "healthCheckFailures": {

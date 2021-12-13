@@ -28,8 +28,9 @@ import styled from "styled-components";
 import { Link, Plugin } from "@scm-manager/ui-types";
 import { Button, ButtonGroup, Checkbox, ErrorNotification, Modal, Notification } from "@scm-manager/ui-components";
 import SuccessNotification from "./SuccessNotification";
-import { useInstallPlugin, useUninstallPlugin, useUpdatePlugins } from "@scm-manager/ui-api";
+import { useInstallPlugin, usePluginCenterAuthInfo, useUninstallPlugin, useUpdatePlugins } from "@scm-manager/ui-api";
 import { PluginAction } from "../containers/PluginsOverview";
+import MyCloudoguTag from "./MyCloudoguTag";
 
 type Props = {
   plugin: Plugin;
@@ -54,11 +55,16 @@ const ListChild = styled.div`
 const PluginModal: FC<Props> = ({ onClose, pluginAction, plugin }) => {
   const [t] = useTranslation("admin");
   const [shouldRestart, setShouldRestart] = useState<boolean>(false);
+  const {
+    data: pluginCenterAuthInfo,
+    isLoading: isLoadingPluginCenterAuthInfo,
+    error: pluginCenterAuthInfoError
+  } = usePluginCenterAuthInfo();
   const { isLoading: isInstalling, error: installError, install, isInstalled } = useInstallPlugin();
   const { isLoading: isUninstalling, error: uninstallError, uninstall, isUninstalled } = useUninstallPlugin();
   const { isLoading: isUpdating, error: updateError, update, isUpdated } = useUpdatePlugins();
-  const error = installError || uninstallError || updateError;
-  const loading = isInstalling || isUninstalling || isUpdating;
+  const error = installError || uninstallError || updateError || pluginCenterAuthInfoError;
+  const loading = isInstalling || isUninstalling || isUpdating || isLoadingPluginCenterAuthInfo;
   const isDone = isInstalled || isUninstalled || isUpdated;
 
   useEffect(() => {
@@ -71,7 +77,7 @@ const PluginModal: FC<Props> = ({ onClose, pluginAction, plugin }) => {
     e.preventDefault();
     switch (pluginAction) {
       case PluginAction.CLOUDOGU:
-        window.open((plugin._links.cloudoguInstall as Link).href, "_blank");
+        window.open((pluginCenterAuthInfo?._links?.login as Link).href, "_self");
         break;
       case PluginAction.INSTALL:
         install(plugin, { restart: shouldRestart });
@@ -198,11 +204,16 @@ const PluginModal: FC<Props> = ({ onClose, pluginAction, plugin }) => {
             <ListChild className={classNames("field-body", "is-inline-flex")}>{plugin.author}</ListChild>
           </div>
           {pluginAction === PluginAction.CLOUDOGU && (
-            <div className="field is-horizontal">
-              <Notification type="info" className="is-full-width">
-                {t("plugins.modal.cloudoguInstallInfo")}
-              </Notification>
-            </div>
+            <>
+              <div className="field is-horizontal">
+                <MyCloudoguTag />
+              </div>
+              <div className="field is-horizontal">
+                <Notification type="info" className="is-full-width">
+                  {t("plugins.modal.cloudoguInstallInfo")}
+                </Notification>
+              </div>
+            </>
           )}
           {pluginAction === PluginAction.INSTALL && (
             <div className="field is-horizontal">

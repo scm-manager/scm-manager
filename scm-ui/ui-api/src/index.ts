@@ -59,6 +59,7 @@ export * from "./contentType";
 export * from "./annotations";
 export * from "./search";
 export * from "./loginInfo";
+export * from "./usePluginCenterAuthInfo";
 
 export { default as ApiProvider } from "./ApiProvider";
 export * from "./ApiProvider";

@@ -24,6 +24,8 @@
 
 package sonia.scm.plugin;
 
+import com.github.legman.Subscribe;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContextProvider;
@@ -34,8 +36,10 @@ import sonia.scm.util.HttpUtil;
 import sonia.scm.util.SystemUtil;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Set;
 
+@Singleton
 public class PluginCenter {
 
   private static final String CACHE_NAME = "sonia.cache.plugins";
@@ -55,17 +59,35 @@ public class PluginCenter {
     this.cache = cacheManager.getCache(CACHE_NAME);
   }
 
+  @Subscribe
+  public void handle(PluginCenterAuthenticationEvent event) {
+    LOG.debug("clear plugin center cache, because of {}", event);
+    cache.clear();
+  }
+
   synchronized Set<AvailablePlugin> getAvailable() {
     String url = buildPluginUrl(configuration.getPluginUrl());
     Set<AvailablePlugin> plugins = cache.get(url);
     if (plugins == null) {
       LOG.debug("no cached available plugins found, start fetching");
-      plugins = loader.load(url);
-      cache.put(url, plugins);
+      plugins = fetchAvailablePlugins(url);
     } else {
       LOG.debug("return available plugins from cache");
     }
     return plugins;
+  }
+
+  @CanIgnoreReturnValue
+  private Set<AvailablePlugin> fetchAvailablePlugins(String url) {
+    Set<AvailablePlugin> plugins = loader.load(url);
+    cache.put(url, plugins);
+    return plugins;
+  }
+
+  synchronized void refresh() {
+    LOG.debug("refresh plugin center cache");
+    String url = buildPluginUrl(configuration.getPluginUrl());
+    fetchAvailablePlugins(url);
   }
 
   private String buildPluginUrl(String url) {
