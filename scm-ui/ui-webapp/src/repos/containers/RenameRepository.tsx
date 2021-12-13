@@ -130,15 +130,19 @@ const RenameRepository: FC<Props> = ({ repository }) => {
     </>
   );
 
+  const modal = (
+    <Modal
+      active={showModal}
+      title={t("renameRepo.modal.title")}
+      footer={footer}
+      body={modalBody}
+      closeFunction={() => setShowModal(false)}
+    />
+  );
+
   return (
     <>
-      <Modal
-        active={showModal}
-        title={t("renameRepo.modal.title")}
-        footer={footer}
-        body={modalBody}
-        closeFunction={() => setShowModal(false)}
-      />
+      {showModal ? modal : null}
       <Level
         left={
           <div>
