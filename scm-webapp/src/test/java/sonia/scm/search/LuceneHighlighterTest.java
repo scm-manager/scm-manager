@@ -47,8 +47,6 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class LuceneHighlighterTest {
 
-
-
   @Test
   void shouldHighlightText() throws InvalidTokenOffsetsException, IOException {
     StandardAnalyzer analyzer = new StandardAnalyzer();
@@ -77,6 +75,15 @@ class LuceneHighlighterTest {
         "\t\t\t\t}else if(neighbors == 3){",
         "\t\t\t\t\tnewGen[row]+= \"#\";//3 neighbors -> spawn/live"
       )
+    );
+  }
+
+  @Test
+  void shouldNotStartHighlightedFragmentWithLineBreak() throws IOException, InvalidTokenOffsetsException {
+    String[] snippets = highlightCode("GameOfLife.java", "die");
+
+    assertThat(snippets).hasSize(1).allSatisfy(
+      snippet -> assertThat(snippet).doesNotStartWith("\n")
     );
   }
 

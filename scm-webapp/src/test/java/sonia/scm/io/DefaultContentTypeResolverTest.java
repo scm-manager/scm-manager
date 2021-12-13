@@ -24,15 +24,15 @@
 
 package sonia.scm.io;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class DefaultContentTypeResolverTest {
 
@@ -84,42 +84,45 @@ class DefaultContentTypeResolverTest {
         "% Which does not start with markdown"
       );
       ContentType contentType = contentTypeResolver.resolve("somedoc.md", content.getBytes(StandardCharsets.UTF_8));
-      Assertions.assertThat(contentType.getLanguage()).contains("markdown");
+      assertThat(contentType.getLanguage()).contains("Markdown");
     }
 
     @Test
     void shouldResolveMarkdownWithoutContent() {
       ContentType contentType = contentTypeResolver.resolve("somedoc.md");
-      Assertions.assertThat(contentType.getLanguage()).contains("markdown");
+      assertThat(contentType.getLanguage()).contains("Markdown");
     }
 
     @Test
     void shouldResolveMarkdownEvenWithDotsInFilename() {
       ContentType contentType = contentTypeResolver.resolve("somedoc.1.1.md");
-      Assertions.assertThat(contentType.getLanguage()).contains("markdown");
+      assertThat(contentType.getLanguage()).contains("Markdown");
     }
 
     @Test
     void shouldResolveDockerfile() {
       ContentType contentType = contentTypeResolver.resolve("Dockerfile");
-      Assertions.assertThat(contentType.getLanguage()).contains("dockerfile");
+      assertThat(contentType.getLanguage()).contains("Dockerfile");
     }
 
+  }
+
+  @Nested
+  class GetSyntaxModesTests {
 
     @Test
-    void shouldReturnAceModeIfPresent() {
-      assertThat(contentTypeResolver.resolve("app.go").getLanguage()).contains("golang"); // codemirror is just go
-      assertThat(contentTypeResolver.resolve("App.java").getLanguage()).contains("java"); // codemirror is clike
+    void shouldReturnEmptyMapOfModesWithoutLanguage() {
+      Map<String, String> syntaxModes = contentTypeResolver.resolve("app.exe").getSyntaxModes();
+      assertThat(syntaxModes).isEmpty();
     }
 
     @Test
-    void shouldReturnCodemirrorIfAceModeIsMissing() {
-      assertThat(contentTypeResolver.resolve("index.ecr").getLanguage()).contains("htmlmixed");
-    }
-
-    @Test
-    void shouldReturnTextIfNoModeIsPresent() {
-      assertThat(contentTypeResolver.resolve("index.hxml").getLanguage()).contains("text");
+    void shouldReturnMapOfModes() {
+      Map<String, String> syntaxModes = contentTypeResolver.resolve("app.rs").getSyntaxModes();
+      assertThat(syntaxModes)
+        .containsEntry("ace", "rust")
+        .containsEntry("codemirror", "rust")
+        .containsEntry("prism", "rust");
     }
 
   }

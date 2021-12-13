@@ -24,6 +24,8 @@
 
 package sonia.scm.io;
 
+import java.util.Collections;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -68,4 +70,14 @@ public interface ContentType {
    * @return programming language or empty
    */
   Optional<String> getLanguage();
+
+  /**
+   * Returns a map of syntax modes such as codemirror, ace or prism.
+   *
+   * @return map of syntax modes
+   * @since 2.28.0
+   */
+  default Map<String, String> getSyntaxModes() {
+    return Collections.emptyMap();
+  }
 }

@@ -141,7 +141,7 @@ public class ContentResourceTest {
     Response response = contentResource.get(NAMESPACE, REPO_NAME, REV, "SomeGoCode.go", null, null);
     assertEquals(200, response.getStatus());
 
-    assertEquals("golang", response.getHeaderString("X-Programming-Language"));
+    assertEquals("Go", response.getHeaderString("X-Programming-Language"));
     assertEquals("text/x-go", response.getHeaderString("Content-Type"));
   }
 
@@ -152,8 +152,20 @@ public class ContentResourceTest {
     Response response = contentResource.get(NAMESPACE, REPO_NAME, REV, "Dockerfile", null, null);
     assertEquals(200, response.getStatus());
 
-    assertEquals("dockerfile", response.getHeaderString("X-Programming-Language"));
+    assertEquals("Dockerfile", response.getHeaderString("X-Programming-Language"));
     assertEquals("text/plain", response.getHeaderString("Content-Type"));
+  }
+
+  @Test
+  public void shouldRecognizeSyntaxModes() throws Exception {
+    mockContentFromResource("SomeGoCode.go");
+
+    Response response = contentResource.get(NAMESPACE, REPO_NAME, REV, "SomeGoCode.go", null, null);
+    assertEquals(200, response.getStatus());
+
+    assertEquals("golang", response.getHeaderString("X-Syntax-Mode-Ace"));
+    assertEquals("go", response.getHeaderString("X-Syntax-Mode-Codemirror"));
+    assertEquals("go", response.getHeaderString("X-Syntax-Mode-Prism"));
   }
 
   @Test
@@ -190,6 +202,7 @@ public class ContentResourceTest {
     assertEquals("application/octet-stream", response.getHeaderString("Content-Type"));
   }
 
+  @SuppressWarnings("UnstableApiUsage")
   private void mockContentFromResource(String fileName) throws Exception {
     URL url = Resources.getResource(fileName);
     mockContent(fileName, Resources.toByteArray(url));

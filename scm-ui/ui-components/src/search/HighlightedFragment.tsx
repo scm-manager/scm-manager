@@ -42,7 +42,7 @@ const HighlightedFragment: FC<Props> = ({ value }) => {
       if (start > 0) {
         result.push(content.substring(0, start));
       }
-      result.push(<strong>{content.substring(start + PRE_TAG.length, end)}</strong>);
+      result.push(<mark>{content.substring(start + PRE_TAG.length, end)}</mark>);
       content = content.substring(end + POST_TAG.length);
     } else {
       result.push(content);

@@ -21,38 +21,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import { apiClient } from "./apiclient";
-import { useQuery } from "react-query";
-import { ApiResultWithFetching } from "./base";
+import React from "react";
+import { storiesOf } from "@storybook/react";
+import { bashHit, javaHit, markdownHit } from "../__resources__/ContentSearchHit";
+import TextHitField from "./TextHitField";
 
-export type ContentType = {
-  type: string;
-  language?: string;
-  aceMode?: string;
-  codemirrorMode?: string;
-  prismMode?: string;
-};
-
-function getContentType(url: string): Promise<ContentType> {
-  return apiClient.head(url).then((response) => {
-    return {
-      type: response.headers.get("Content-Type") || "application/octet-stream",
-      language: response.headers.get("X-Programming-Language") || undefined,
-      aceMode: response.headers.get("X-Syntax-Mode-Ace") || undefined,
-      codemirrorMode: response.headers.get("X-Syntax-Mode-Codemirror") || undefined,
-      prismMode: response.headers.get("X-Syntax-Mode-Prism") || undefined,
-    };
-  });
-}
-
-export const useContentType = (url: string): ApiResultWithFetching<ContentType> => {
-  const { isLoading, isFetching, error, data } = useQuery<ContentType, Error>(["contentType", url], () =>
-    getContentType(url)
-  );
-  return {
-    isLoading,
-    isFetching,
-    error,
-    data,
-  };
-};
+storiesOf("TextHitField", module)
+  .add("Default", () => (
+    <pre>
+      <TextHitField hit={javaHit} field={"content"} />
+    </pre>
+  ))
+  .add("Java SyntaxHighlighting", () => (
+    <pre>
+      <TextHitField hit={javaHit} field={"content"} syntaxHighlightingLanguage="java" />
+    </pre>
+  ))
+  .add("Bash SyntaxHighlighting", () => (
+    <pre>
+      <TextHitField hit={bashHit} field={"content"} syntaxHighlightingLanguage="bash" />
+    </pre>
+  ))
+  .add("Markdown SyntaxHighlighting", () => (
+    <pre>
+      <TextHitField hit={markdownHit} field={"content"} syntaxHighlightingLanguage="markdown" />
+    </pre>
+  ))
+  .add("Unknown SyntaxHighlighting", () => (
+    <pre>
+      <TextHitField hit={bashHit} field={"content"} syntaxHighlightingLanguage="__unknown__" />
+    </pre>
+  ));

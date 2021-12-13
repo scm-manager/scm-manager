@@ -22,20 +22,11 @@
  * SOFTWARE.
  */
 
-// this aliases are only to map from spotter detection to prismjs
-const languageAliases: { [key: string]: string } = {
-  golang: "go",
-};
-
 export const defaultLanguage = "text";
 
 export const determineLanguage = (language?: string) => {
   if (!language) {
     return defaultLanguage;
   }
-  const lang = language.toLowerCase();
-  if (languageAliases[lang]) {
-    return languageAliases[lang];
-  }
-  return lang;
+  return language.toLowerCase();
 };

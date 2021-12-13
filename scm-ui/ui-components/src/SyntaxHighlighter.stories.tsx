@@ -48,7 +48,7 @@ storiesOf("SyntaxHighlighter", module)
   ))
   .add("Go", () => (
     <Spacing>
-      <SyntaxHighlighter language="golang" value={GoHttpServer} />
+      <SyntaxHighlighter language="go" value={GoHttpServer} />
     </Spacing>
   ))
   .add("Javascript", () => (

@@ -127,7 +127,7 @@ ext {
     webResources: 'com.github.sdorra:web-resources:1.1.1',
 
     // content type detection
-    spotter: 'com.github.sdorra:spotter-core:3.0.1',
+    spotter: 'com.cloudogu.spotter:spotter-core:4.0.0',
     tika: 'org.apache.tika:tika-core:1.25',
 
     // restart on unix

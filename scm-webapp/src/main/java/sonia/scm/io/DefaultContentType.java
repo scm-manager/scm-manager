@@ -24,15 +24,18 @@
 
 package sonia.scm.io;
 
+import com.cloudogu.spotter.Language;
+import com.google.common.collect.ImmutableMap;
+
+import java.util.Collections;
+import java.util.Map;
 import java.util.Optional;
 
 public class DefaultContentType implements ContentType {
 
-  private static final String DEFAULT_LANG_MODE = "text";
+  private final com.cloudogu.spotter.ContentType contentType;
 
-  private final com.github.sdorra.spotter.ContentType contentType;
-
-  DefaultContentType(com.github.sdorra.spotter.ContentType contentType) {
+  DefaultContentType(com.cloudogu.spotter.ContentType contentType) {
     this.contentType = contentType;
   }
 
@@ -58,9 +61,23 @@ public class DefaultContentType implements ContentType {
 
   @Override
   public Optional<String> getLanguage() {
-    return contentType.getLanguage().map(language -> {
-      Optional<String> aceMode = language.getAceMode();
-      return aceMode.orElseGet(() -> language.getCodemirrorMode().orElse(DEFAULT_LANG_MODE));
-    });
+    return contentType.getLanguage().map(Language::getName);
+  }
+
+  @Override
+  public Map<String, String> getSyntaxModes() {
+    Optional<Language> language = contentType.getLanguage();
+    if (language.isPresent()) {
+      return syntaxMode(language.get());
+    }
+    return Collections.emptyMap();
+  }
+
+  static Map<String, String> syntaxMode(Language language) {
+    ImmutableMap.Builder<String, String> builder = ImmutableMap.builder();
+    language.getAceMode().ifPresent(mode -> builder.put("ace", mode));
+    language.getCodemirrorMode().ifPresent(mode -> builder.put("codemirror", mode));
+    language.getPrismMode().ifPresent(mode -> builder.put("prism", mode));
+    return builder.build();
   }
 }

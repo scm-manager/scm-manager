@@ -31,7 +31,8 @@ import { File, Link, Repository } from "@scm-manager/ui-types";
 import { ErrorNotification, Loading, PdfViewer } from "@scm-manager/ui-components";
 import SwitchableMarkdownViewer from "../components/content/SwitchableMarkdownViewer";
 import styled from "styled-components";
-import { useContentType } from "@scm-manager/ui-api";
+import { ContentType, useContentType } from "@scm-manager/ui-api";
+import {determineSyntaxHighlightingLanguage} from "../utils/files";
 
 const NoSpacingSyntaxHighlighterContainer = styled.div`
   & pre {
@@ -46,6 +47,8 @@ type Props = {
   revision: string;
 };
 
+
+
 const SourcesView: FC<Props> = ({ file, repository, revision }) => {
   const { data: contentTypeData, error, isLoading } = useContentType((file._links.self as Link).href);
 
@@ -59,7 +62,8 @@ const SourcesView: FC<Props> = ({ file, repository, revision }) => {
 
   let sources;
 
-  const { type: contentType, language } = contentTypeData;
+  const language = determineSyntaxHighlightingLanguage(contentTypeData);
+  const contentType = contentTypeData.type;
   const basePath = `/repo/${repository.namespace}/${repository.name}/code/sources/${revision}/`;
   if (contentType.startsWith("image/")) {
     sources = <ImageViewer file={file} />;

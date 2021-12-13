@@ -83959,20 +83959,10 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
               
             </span>
             <span
-              className="token code code-block language-go"
-              style={
-                Object {
-                  "color": "var(--sh-keyword-color)",
-                }
-              }
-            >
-              package
-            </span>
-            <span
-              className="token code code-block language-go"
+              className="token code code-block"
               style={Object {}}
             >
-               main
+              package main
 
             </span>
           </span>
@@ -84031,45 +84021,8 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
           <span
             style={Object {}}
           >
-            <span
-              className="token code code-block language-go"
-              style={Object {}}
-            >
-              
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={
-                Object {
-                  "color": "var(--sh-keyword-color)",
-                }
-              }
-            >
-              import
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={Object {}}
-            >
-               
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={
-                Object {
-                  "color": "var(--sh-punctuation-color)",
-                }
-              }
-            >
-              (
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={Object {}}
-            >
-              
+            import (
 
-            </span>
           </span>
         </div>
         <div
@@ -84097,29 +84050,8 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
           <span
             style={Object {}}
           >
-            <span
-              className="token code code-block language-go"
-              style={Object {}}
-            >
-                  
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={
-                Object {
-                  "color": "var(--sh-selector-color)",
-                }
-              }
-            >
-              "fmt"
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={Object {}}
-            >
-              
+                "fmt"
 
-            </span>
           </span>
         </div>
         <div
@@ -84147,29 +84079,8 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
           <span
             style={Object {}}
           >
-            <span
-              className="token code code-block language-go"
-              style={Object {}}
-            >
-                  
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={
-                Object {
-                  "color": "var(--sh-selector-color)",
-                }
-              }
-            >
-              "net/http"
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={Object {}}
-            >
-              
+                "net/http"
 
-            </span>
           </span>
         </div>
         <div
@@ -84197,29 +84108,8 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
           <span
             style={Object {}}
           >
-            <span
-              className="token code code-block language-go"
-              style={Object {}}
-            >
-              
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={
-                Object {
-                  "color": "var(--sh-punctuation-color)",
-                }
-              }
-            >
-              )
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={Object {}}
-            >
-              
+            )
 
-            </span>
           </span>
         </div>
         <div
@@ -84276,152 +84166,8 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
           <span
             style={Object {}}
           >
-            <span
-              className="token code code-block language-go"
-              style={Object {}}
-            >
-              
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={
-                Object {
-                  "color": "var(--sh-keyword-color)",
-                }
-              }
-            >
-              func
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={Object {}}
-            >
-               
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={
-                Object {
-                  "color": "var(--sh-function-color)",
-                }
-              }
-            >
-              handler
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={
-                Object {
-                  "color": "var(--sh-punctuation-color)",
-                }
-              }
-            >
-              (
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={Object {}}
-            >
-              w http
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={
-                Object {
-                  "color": "var(--sh-punctuation-color)",
-                }
-              }
-            >
-              .
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={Object {}}
-            >
-              ResponseWriter
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={
-                Object {
-                  "color": "var(--sh-punctuation-color)",
-                }
-              }
-            >
-              ,
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={Object {}}
-            >
-               r 
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={
-                Object {
-                  "background": "var(--sh-operator-bg)",
-                  "color": "var(--sh-operator-color)",
-                }
-              }
-            >
-              *
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={Object {}}
-            >
-              http
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={
-                Object {
-                  "color": "var(--sh-punctuation-color)",
-                }
-              }
-            >
-              .
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={Object {}}
-            >
-              Request
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={
-                Object {
-                  "color": "var(--sh-punctuation-color)",
-                }
-              }
-            >
-              )
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={Object {}}
-            >
-               
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={
-                Object {
-                  "color": "var(--sh-punctuation-color)",
-                }
-              }
-            >
-              {
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={Object {}}
-            >
-              
+            func handler(w http.ResponseWriter, r *http.Request) {
 
-            </span>
           </span>
         </div>
         <div
@@ -84449,179 +84195,8 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
           <span
             style={Object {}}
           >
-            <span
-              className="token code code-block language-go"
-              style={Object {}}
-            >
-                  fmt
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={
-                Object {
-                  "color": "var(--sh-punctuation-color)",
-                }
-              }
-            >
-              .
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={
-                Object {
-                  "color": "var(--sh-function-color)",
-                }
-              }
-            >
-              Fprintf
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={
-                Object {
-                  "color": "var(--sh-punctuation-color)",
-                }
-              }
-            >
-              (
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={Object {}}
-            >
-              w
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={
-                Object {
-                  "color": "var(--sh-punctuation-color)",
-                }
-              }
-            >
-              ,
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={Object {}}
-            >
-               
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={
-                Object {
-                  "color": "var(--sh-selector-color)",
-                }
-              }
-            >
-              "Hi there, I love %s!"
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={
-                Object {
-                  "color": "var(--sh-punctuation-color)",
-                }
-              }
-            >
-              ,
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={Object {}}
-            >
-               r
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={
-                Object {
-                  "color": "var(--sh-punctuation-color)",
-                }
-              }
-            >
-              .
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={Object {}}
-            >
-              URL
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={
-                Object {
-                  "color": "var(--sh-punctuation-color)",
-                }
-              }
-            >
-              .
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={Object {}}
-            >
-              Path
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={
-                Object {
-                  "color": "var(--sh-punctuation-color)",
-                }
-              }
-            >
-              [
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={
-                Object {
-                  "color": "var(--sh-property-color)",
-                }
-              }
-            >
-              1
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={
-                Object {
-                  "color": "var(--sh-punctuation-color)",
-                }
-              }
-            >
-              :
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={
-                Object {
-                  "color": "var(--sh-punctuation-color)",
-                }
-              }
-            >
-              ]
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={
-                Object {
-                  "color": "var(--sh-punctuation-color)",
-                }
-              }
-            >
-              )
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={Object {}}
-            >
-              
+                fmt.Fprintf(w, "Hi there, I love %s!", r.URL.Path[1:])
 
-            </span>
           </span>
         </div>
         <div
@@ -84649,29 +84224,8 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
           <span
             style={Object {}}
           >
-            <span
-              className="token code code-block language-go"
-              style={Object {}}
-            >
-              
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={
-                Object {
-                  "color": "var(--sh-punctuation-color)",
-                }
-              }
-            >
-              }
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={Object {}}
-            >
-              
+            }
 
-            </span>
           </span>
         </div>
         <div
@@ -84728,81 +84282,8 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
           <span
             style={Object {}}
           >
-            <span
-              className="token code code-block language-go"
-              style={Object {}}
-            >
-              
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={
-                Object {
-                  "color": "var(--sh-keyword-color)",
-                }
-              }
-            >
-              func
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={Object {}}
-            >
-               
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={
-                Object {
-                  "color": "var(--sh-function-color)",
-                }
-              }
-            >
-              main
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={
-                Object {
-                  "color": "var(--sh-punctuation-color)",
-                }
-              }
-            >
-              (
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={
-                Object {
-                  "color": "var(--sh-punctuation-color)",
-                }
-              }
-            >
-              )
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={Object {}}
-            >
-               
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={
-                Object {
-                  "color": "var(--sh-punctuation-color)",
-                }
-              }
-            >
-              {
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={Object {}}
-            >
-              
+            func main() {
 
-            </span>
           </span>
         </div>
         <div
@@ -84830,85 +84311,8 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
           <span
             style={Object {}}
           >
-            <span
-              className="token code code-block language-go"
-              style={Object {}}
-            >
-                  http
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={
-                Object {
-                  "color": "var(--sh-punctuation-color)",
-                }
-              }
-            >
-              .
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={
-                Object {
-                  "color": "var(--sh-function-color)",
-                }
-              }
-            >
-              HandleFunc
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={
-                Object {
-                  "color": "var(--sh-punctuation-color)",
-                }
-              }
-            >
-              (
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={
-                Object {
-                  "color": "var(--sh-selector-color)",
-                }
-              }
-            >
-              "/"
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={
-                Object {
-                  "color": "var(--sh-punctuation-color)",
-                }
-              }
-            >
-              ,
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={Object {}}
-            >
-               handler
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={
-                Object {
-                  "color": "var(--sh-punctuation-color)",
-                }
-              }
-            >
-              )
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={Object {}}
-            >
-              
+                http.HandleFunc("/", handler)
 
-            </span>
           </span>
         </div>
         <div
@@ -84936,95 +84340,8 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
           <span
             style={Object {}}
           >
-            <span
-              className="token code code-block language-go"
-              style={Object {}}
-            >
-                  http
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={
-                Object {
-                  "color": "var(--sh-punctuation-color)",
-                }
-              }
-            >
-              .
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={
-                Object {
-                  "color": "var(--sh-function-color)",
-                }
-              }
-            >
-              ListenAndServe
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={
-                Object {
-                  "color": "var(--sh-punctuation-color)",
-                }
-              }
-            >
-              (
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={
-                Object {
-                  "color": "var(--sh-selector-color)",
-                }
-              }
-            >
-              ":8080"
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={
-                Object {
-                  "color": "var(--sh-punctuation-color)",
-                }
-              }
-            >
-              ,
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={Object {}}
-            >
-               
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={
-                Object {
-                  "color": "var(--sh-property-color)",
-                }
-              }
-            >
-              nil
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={
-                Object {
-                  "color": "var(--sh-punctuation-color)",
-                }
-              }
-            >
-              )
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={Object {}}
-            >
-              
+                http.ListenAndServe(":8080", nil)
 
-            </span>
           </span>
         </div>
         <div
@@ -85053,18 +84370,8 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
             style={Object {}}
           >
             <span
-              className="token code code-block language-go"
+              className="token code code-block"
               style={Object {}}
-            >
-              
-            </span>
-            <span
-              className="token code code-block language-go"
-              style={
-                Object {
-                  "color": "var(--sh-punctuation-color)",
-                }
-              }
             >
               }
             </span>
@@ -90695,6 +90002,293 @@ exports[`Storyshots Tag With title 1`] = `
     hover me
   </span>
 </div>
+`;
+
+exports[`Storyshots TextHitField Bash SyntaxHighlighting 1`] = `
+<pre>
+  ...
+
+  # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+
+
+  <mark>
+    getent
+  </mark>
+   group scm &gt;/dev/null || groupadd -r scm
+
+  <mark>
+    getent
+  </mark>
+   passwd scm &gt;/dev/null || \\
+    useradd -r -g scm -M \\
+    -s /sbin/nologin -d /var/lib/scm \\
+    -c "user for the scm-server process" scm
+exit 0
+
+
+  ...
+
+</pre>
+`;
+
+exports[`Storyshots TextHitField Default 1`] = `
+<pre>
+   ... 
+  import org.slf4j.LoggerFactory;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
+/**
+ * Jwt implementation of {@link 
+  <mark>
+    AccessTokenBuilder
+  </mark>
+  }.
+ * 
+ * @author Sebastian Sdorra
+ * @since 2.0.0
+ */
+public final class 
+  <mark>
+    JwtAccessTokenBuilder
+  </mark>
+   implements 
+  <mark>
+    AccessTokenBuilder
+  </mark>
+   {
+
+  /**
+   * the logger for 
+  <mark>
+    JwtAccessTokenBuilder
+  </mark>
+  
+   */
+  private static final Logger LOG = LoggerFactory.getLogger(
+  <mark>
+    JwtAccessTokenBuilder.class
+  </mark>
+  );
+  
+  private final KeyGenerator keyGenerator; 
+  private final SecureKeyResolver keyResolver; 
+  
+  private String subject;
+  private String issuer;
+
+   ... 
+    private final Map&lt;String,Object&gt; custom = Maps.newHashMap();
+  
+  
+  <mark>
+    JwtAccessTokenBuilder
+  </mark>
+  (KeyGenerator keyGenerator, SecureKeyResolver keyResolver)  {
+    this.keyGenerator = keyGenerator;
+    this.keyResolver = keyResolver;
+  }
+
+  @Override
+  public 
+  <mark>
+    JwtAccessTokenBuilder
+  </mark>
+   subject(String subject) {
+
+   ... 
+    public 
+  <mark>
+    JwtAccessTokenBuilder
+  </mark>
+   custom(String key, Object value) {
+    Preconditions.checkArgument(!Strings.isNullOrEmpty(key), "null or empty value not allowed");
+    Preconditions.checkArgument(value != null, "null or empty value not allowed");
+
+   ... 
+</pre>
+`;
+
+exports[`Storyshots TextHitField Java SyntaxHighlighting 1`] = `
+<pre>
+  ...
+
+  import org.slf4j.LoggerFactory;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
+/**
+ * Jwt implementation of {@link 
+  <mark>
+    AccessTokenBuilder
+  </mark>
+  }.
+ * 
+ * @author Sebastian Sdorra
+ * @since 2.0.0
+ */
+public final class 
+  <mark>
+    JwtAccessTokenBuilder
+  </mark>
+   implements 
+  <mark>
+    AccessTokenBuilder
+  </mark>
+   {
+
+  /**
+   * the logger for 
+  <mark>
+    JwtAccessTokenBuilder
+  </mark>
+  
+   */
+  private static final Logger LOG = LoggerFactory.getLogger(
+  <mark>
+    JwtAccessTokenBuilder.class
+  </mark>
+  );
+  
+  private final KeyGenerator keyGenerator; 
+  private final SecureKeyResolver keyResolver; 
+  
+  private String subject;
+  private String issuer;
+
+  ...
+
+    private final Map&lt;String,Object&gt; custom = Maps.newHashMap();
+  
+  
+  <mark>
+    JwtAccessTokenBuilder
+  </mark>
+  (KeyGenerator keyGenerator, SecureKeyResolver keyResolver)  {
+    this.keyGenerator = keyGenerator;
+    this.keyResolver = keyResolver;
+  }
+
+  @Override
+  public 
+  <mark>
+    JwtAccessTokenBuilder
+  </mark>
+   subject(String subject) {
+
+  ...
+
+    public 
+  <mark>
+    JwtAccessTokenBuilder
+  </mark>
+   custom(String key, Object value) {
+    Preconditions.checkArgument(!Strings.isNullOrEmpty(key), "null or empty value not allowed");
+    Preconditions.checkArgument(value != null, "null or empty value not allowed");
+
+  ...
+
+</pre>
+`;
+
+exports[`Storyshots TextHitField Markdown SyntaxHighlighting 1`] = `
+<pre>
+  ...
+
+  ---
+title: SCM-Manager v2 Test 
+  <mark>
+    Cases
+  </mark>
+  
+---
+
+Describes the expected behaviour for SCMM v2 REST Resources using manual tests.
+
+The following states general test 
+  <mark>
+    cases
+  </mark>
+   per HTTP Method and en expected return code as well as exemplary curl calls.
+Resource-specifics are stated 
+
+## Test 
+  <mark>
+    Cases
+  </mark>
+  
+
+### GET
+
+- Collection Resource (e.g. \`/users\`)
+    - Without parameters -&gt; 200
+    - Parameters
+        - \`?pageSize=1\` -&gt; Only one embedded element, pageTotal reflects the correct number of pages, \`last\` link points to last page.
+        - \`?pageSize=1&page=1\` -&gt; \`next\` link points to page 0 ; \`prev\` link points to page 2
+        - \`?sortBy=admin\` -&gt; Sorted by \`admin\` field of embedded objects
+        - \`?sortBy=admin&desc=true\` -&gt; Invert sorting
+- Individual Resource (e.g. \`/users/scmadmin\`)
+    - Exists  -&gt; 200
+
+  ...
+
+  
+### DELETE
+
+- existing -&gt; 204
+- not existing -&gt; 204
+- without permission -&gt; 401
+
+## Exemplary calls & Resource specific test 
+  <mark>
+    cases
+  </mark>
+  
+
+In order to extend those tests to other Resources, have a look at the rest docs. Note that the Content Type is specific to each resource as well.
+
+  ...
+
+</pre>
+`;
+
+exports[`Storyshots TextHitField Unknown SyntaxHighlighting 1`] = `
+<pre>
+  ...
+
+  # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+
+
+  <mark>
+    getent
+  </mark>
+   group scm &gt;/dev/null || groupadd -r scm
+
+  <mark>
+    getent
+  </mark>
+   passwd scm &gt;/dev/null || \\
+    useradd -r -g scm -M \\
+    -s /sbin/nologin -d /var/lib/scm \\
+    -c "user for the scm-server process" scm
+exit 0
+
+
+  ...
+
+</pre>
 `;
 
 exports[`Storyshots Toast Click to close 1`] = `null`;

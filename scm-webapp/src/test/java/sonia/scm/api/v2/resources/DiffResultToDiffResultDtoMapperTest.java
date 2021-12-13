@@ -60,11 +60,16 @@ class DiffResultToDiffResultDtoMapperTest {
     DiffResultDto dto = mapper.mapForRevision(REPOSITORY, createResult(), "123");
 
     List<DiffResultDto.FileDto> files = dto.getFiles();
-    assertAddedFile(files.get(0), "A.java", "abc", "java");
-    assertModifiedFile(files.get(1), "B.ts", "abc", "def", "typescript");
-    assertDeletedFile(files.get(2), "C.go", "ghi", "golang");
-    assertRenamedFile(files.get(3), "typo.ts", "okay.ts", "def", "fixed", "typescript");
-    assertCopiedFile(files.get(4), "good.ts", "better.ts", "def", "fixed", "typescript");
+    assertAddedFile(files.get(0), "A.java", "abc", "Java");
+    assertModifiedFile(files.get(1), "B.ts", "abc", "def", "TypeScript");
+    DiffResultDto.FileDto cGo = files.get(2);
+    assertDeletedFile(cGo, "C.go", "ghi", "Go");
+    assertThat(cGo.getSyntaxModes())
+      .containsEntry("ace", "golang")
+      .containsEntry("codemirror", "go")
+      .containsEntry("prism", "go");
+    assertRenamedFile(files.get(3), "typo.ts", "okay.ts", "def", "fixed", "TypeScript");
+    assertCopiedFile(files.get(4), "good.ts", "better.ts", "def", "fixed", "TypeScript");
 
     DiffResultDto.HunkDto hunk = files.get(1).getHunks().get(0);
     assertHunk(hunk, "@@ -3,4 1,2 @@", 1, 2, 3, 4);
