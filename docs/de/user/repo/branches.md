@@ -23,6 +23,7 @@ Mit dem "Branch erstellen"-Formular können neue Branches für das Repository er
 
 ### Branch Detailseite
 Hier werden einige Befehle zum Arbeiten mit dem Branch auf einer Kommandozeile aufgeführt.
+Die Angaben, wie viele Commits der Branch vor bzw. hinter dem Default Branch liegt, finden sich direkt unterhalb des Namens.
 
 Handelt es sich nicht um den Default Branch des Repositories, kann im unteren Bereich der Branch unwiderruflich gelöscht werden.
 
