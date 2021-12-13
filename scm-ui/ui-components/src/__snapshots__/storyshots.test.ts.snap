@@ -90013,8 +90013,16 @@ exports[`Storyshots TextHitField Bash SyntaxHighlighting 1`] = `
 # SOFTWARE.
 #
 
-getent group scm &gt;/dev/null || groupadd -r scm
-getent passwd scm &gt;/dev/null || \\
+
+  <mark>
+    getent
+  </mark>
+   group scm &gt;/dev/null || groupadd -r scm
+
+  <mark>
+    getent
+  </mark>
+   passwd scm &gt;/dev/null || \\
     useradd -r -g scm -M \\
     -s /sbin/nologin -d /var/lib/scm \\
     -c "user for the scm-server process" scm
@@ -90038,35 +90046,35 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Jwt implementation of {@link 
-  <strong>
+  <mark>
     AccessTokenBuilder
-  </strong>
+  </mark>
   }.
  * 
  * @author Sebastian Sdorra
  * @since 2.0.0
  */
 public final class 
-  <strong>
+  <mark>
     JwtAccessTokenBuilder
-  </strong>
+  </mark>
    implements 
-  <strong>
+  <mark>
     AccessTokenBuilder
-  </strong>
+  </mark>
    {
 
   /**
    * the logger for 
-  <strong>
+  <mark>
     JwtAccessTokenBuilder
-  </strong>
+  </mark>
   
    */
   private static final Logger LOG = LoggerFactory.getLogger(
-  <strong>
+  <mark>
     JwtAccessTokenBuilder.class
-  </strong>
+  </mark>
   );
   
   private final KeyGenerator keyGenerator; 
@@ -90079,9 +90087,9 @@ public final class
     private final Map&lt;String,Object&gt; custom = Maps.newHashMap();
   
   
-  <strong>
+  <mark>
     JwtAccessTokenBuilder
-  </strong>
+  </mark>
   (KeyGenerator keyGenerator, SecureKeyResolver keyResolver)  {
     this.keyGenerator = keyGenerator;
     this.keyResolver = keyResolver;
@@ -90089,16 +90097,16 @@ public final class
 
   @Override
   public 
-  <strong>
+  <mark>
     JwtAccessTokenBuilder
-  </strong>
+  </mark>
    subject(String subject) {
 
    ... 
     public 
-  <strong>
+  <mark>
     JwtAccessTokenBuilder
-  </strong>
+  </mark>
    custom(String key, Object value) {
     Preconditions.checkArgument(!Strings.isNullOrEmpty(key), "null or empty value not allowed");
     Preconditions.checkArgument(value != null, "null or empty value not allowed");
@@ -90119,17 +90127,37 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Jwt implementation of {@link AccessTokenBuilder}.
+ * Jwt implementation of {@link 
+  <mark>
+    AccessTokenBuilder
+  </mark>
+  }.
  * 
  * @author Sebastian Sdorra
  * @since 2.0.0
  */
-public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
+public final class 
+  <mark>
+    JwtAccessTokenBuilder
+  </mark>
+   implements 
+  <mark>
+    AccessTokenBuilder
+  </mark>
+   {
 
   /**
-   * the logger for JwtAccessTokenBuilder
+   * the logger for 
+  <mark>
+    JwtAccessTokenBuilder
+  </mark>
+  
    */
-  private static final Logger LOG = LoggerFactory.getLogger(JwtAccessTokenBuilder.class);
+  private static final Logger LOG = LoggerFactory.getLogger(
+  <mark>
+    JwtAccessTokenBuilder.class
+  </mark>
+  );
   
   private final KeyGenerator keyGenerator; 
   private final SecureKeyResolver keyResolver; 
@@ -90141,17 +90169,29 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
 
     private final Map&lt;String,Object&gt; custom = Maps.newHashMap();
   
-  JwtAccessTokenBuilder(KeyGenerator keyGenerator, SecureKeyResolver keyResolver)  {
+  
+  <mark>
+    JwtAccessTokenBuilder
+  </mark>
+  (KeyGenerator keyGenerator, SecureKeyResolver keyResolver)  {
     this.keyGenerator = keyGenerator;
     this.keyResolver = keyResolver;
   }
 
   @Override
-  public JwtAccessTokenBuilder subject(String subject) {
+  public 
+  <mark>
+    JwtAccessTokenBuilder
+  </mark>
+   subject(String subject) {
 
   ...
 
-    public JwtAccessTokenBuilder custom(String key, Object value) {
+    public 
+  <mark>
+    JwtAccessTokenBuilder
+  </mark>
+   custom(String key, Object value) {
     Preconditions.checkArgument(!Strings.isNullOrEmpty(key), "null or empty value not allowed");
     Preconditions.checkArgument(value != null, "null or empty value not allowed");
 
@@ -90165,15 +90205,27 @@ exports[`Storyshots TextHitField Markdown SyntaxHighlighting 1`] = `
   ...
 
   ---
-title: SCM-Manager v2 Test Cases
+title: SCM-Manager v2 Test 
+  <mark>
+    Cases
+  </mark>
+  
 ---
 
 Describes the expected behaviour for SCMM v2 REST Resources using manual tests.
 
-The following states general test cases per HTTP Method and en expected return code as well as exemplary curl calls.
+The following states general test 
+  <mark>
+    cases
+  </mark>
+   per HTTP Method and en expected return code as well as exemplary curl calls.
 Resource-specifics are stated 
 
-## Test Cases
+## Test 
+  <mark>
+    Cases
+  </mark>
+  
 
 ### GET
 
@@ -90196,7 +90248,11 @@ Resource-specifics are stated
 - not existing -&gt; 204
 - without permission -&gt; 401
 
-## Exemplary calls & Resource specific test cases
+## Exemplary calls & Resource specific test 
+  <mark>
+    cases
+  </mark>
+  
 
 In order to extend those tests to other Resources, have a look at the rest docs. Note that the Content Type is specific to each resource as well.
 
@@ -90214,8 +90270,16 @@ exports[`Storyshots TextHitField Unknown SyntaxHighlighting 1`] = `
 # SOFTWARE.
 #
 
-getent group scm &gt;/dev/null || groupadd -r scm
-getent passwd scm &gt;/dev/null || \\
+
+  <mark>
+    getent
+  </mark>
+   group scm &gt;/dev/null || groupadd -r scm
+
+  <mark>
+    getent
+  </mark>
+   passwd scm &gt;/dev/null || \\
     useradd -r -g scm -M \\
     -s /sbin/nologin -d /var/lib/scm \\
     -c "user for the scm-server process" scm
