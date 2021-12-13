@@ -64,15 +64,3 @@ $high-contrast-warning-25: scale-color($warning, $lightness: -75%);
 $high-contrast-danger-75: scale-color($danger, $lightness: -25%);
 $high-contrast-danger-50: scale-color($danger, $lightness: -50%);
 $high-contrast-danger-25: scale-color($danger, $lightness: -75%);
-
-
-// TODO
-// $high-contrast-danger-75: scale-color($high-contrast-danger, $lightness: 25%);
-// $high-contrast-danger-50: scale-color($high-contrast-danger, $lightness: 50%);
-// $high-contrast-danger-25: scale-color($high-contrast-danger, $lightness: 75%);
-
-// TODO
-// high-contrast light gray
-// $light-75: darken($high-contrast-light-gray, 15%);
-// $light-50: darken($high-contrast-light-gray, 30%);
-// $light-25: darken($high-contrast-light-gray, 45%);

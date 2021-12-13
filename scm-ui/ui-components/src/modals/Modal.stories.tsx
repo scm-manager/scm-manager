@@ -88,11 +88,6 @@ storiesOf("Modal/Modal", module)
       <p>{text}</p>
     </NestedModal>
   ))
-  .add("Warning Modal", () => (
-    <NestedModal color={}>
-      <p>{text}</p>
-    </NestedModal>
-  ))
   .add("With form elements", () => (
     <Modal
       body={withFormElementsBody}

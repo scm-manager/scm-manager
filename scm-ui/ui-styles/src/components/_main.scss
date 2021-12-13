@@ -174,33 +174,6 @@ footer.footer {
   background-color: $danger-25;
 }
 
-// TODO
-/*.has-background-danger-high-contrast {
-  background-color: $high-contrast-danger;
-}
-.has-background-danger-high-contrast-75 {
-  background-color: $high-contrast-danger-75;
-}
-.has-background-danger-high-contrast-50 {
-  background-color: $high-contrast-danger-50;
-}
-.has-background-danger-high-contrast-25 {
-  background-color: $high-contrast-danger-25;
-}
-
-.has-background-high-contrast-light-gray {
-  background-color: $high-contrast-light-gray;
-}
-.has-background-high-contrast-light-gray-75 {
-  background-color: $light-75;
-}
-.has-background-high-contrast-light-gray-50 {
-  background-color: $light-50;
-}
-.has-background-high-contrast-light-gray-25 {
-  background-color: $light-25;
-}*/
-
 // tags
 .tag:not(body) {
   border: 1px solid transparent;
@@ -368,6 +341,35 @@ footer.footer {
   &:active {
     box-shadow: $box-link-active-shadow;
   }
+}
+
+.popover {
+  position: absolute;
+  z-index: 100;
+  width: 30em;
+  display: block;
+
+  &:before {
+    position: absolute;
+    content: "";
+    border-style: solid;
+    pointer-events: none;
+    height: 0;
+    width: 0;
+    top: 100%;
+    left: 5.5em;
+    border-color: transparent;
+    border-width: 0.4rem;
+    margin-left: -0.4rem;
+    margin-top: -0.4rem;
+    -webkit-transform-origin: center;
+    transform-origin: center;
+    transform: rotate(-45deg);
+  }
+}
+
+.notifications .dropdown-menu:before {
+  border: 0.4rem solid transparent;
 }
 
 @import "~@fortawesome/fontawesome-free/scss/fontawesome";
@@ -551,7 +553,7 @@ ul.is-separated {
 
 // panels
 .panel {
-  border: 1px solid #dbdbdb;
+  border: 1px solid $border;
   border-radius: 0.25rem;
 
   .panel-heading {
@@ -831,4 +833,13 @@ form .field:not(.is-grouped) {
 
 .has-text-default {
   color: $text !important;
+}
+
+.autocomplete-entry > div {
+  border-color: $blue-light;
+
+  &:hover,
+  &.is-hovered {
+    border-color: #4a4a4a;
+  }
 }

@@ -27,7 +27,6 @@ import { Async, AsyncCreatable } from "react-select";
 import { SelectValue } from "@scm-manager/ui-types";
 import LabelWithHelpIcon from "./forms/LabelWithHelpIcon";
 import { ActionMeta, ValueType } from "react-select/lib/types";
-import styled from "styled-components";
 
 type Props = {
   loadSuggestions: (p: string) => Promise<SelectValue[]>;
@@ -43,18 +42,6 @@ type Props = {
 };
 
 type State = {};
-
-const AutocompleteWrapper = styled.div`
-  div div {
-    border-color: #98d8f3;
-
-    // TODO: notwendig?
-    &:hover,
-    &.is-hovered {
-      border-color: #4a4a4a;
-    }
-  }
-`;
 
 class Autocomplete extends React.Component<Props, State> {
   static defaultProps = {
@@ -98,9 +85,10 @@ class Autocomplete extends React.Component<Props, State> {
     return (
       <div className={classNames("field", className)}>
         <LabelWithHelpIcon label={label} helpText={helpText} />
-        <AutocompleteWrapper className="control autocomplete-entry">
+        <div className="control">
           {creatable ? (
             <AsyncCreatable
+              className="autocomplete-entry"
               cacheOptions
               loadOptions={loadSuggestions}
               onChange={this.handleInputChange}
@@ -132,7 +120,7 @@ class Autocomplete extends React.Component<Props, State> {
               aria-label={helpText || label}
             />
           )}
-        </AutocompleteWrapper>
+        </div>
       </div>
     );
   }

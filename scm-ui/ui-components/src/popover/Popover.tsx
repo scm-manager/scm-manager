@@ -41,30 +41,10 @@ type ContainerProps = {
 };
 
 const PopoverContainer = styled.div<ContainerProps>`
-  position: absolute;
-  z-index: 100;
-  width: ${(props) => props.width}px;
-  display: block;
+  width: ${props => props.width}px;
 
-  // TODO ersetzen
   &:before {
-    position: absolute;
-    content: "";
-    border-style: solid;
-    pointer-events: none;
-    height: 0;
-    width: 0;
-    top: 100%;
-    left: ${(props) => props.width / 2}px;
-    border-color: transparent;
-    border-bottom-color: white;
-    border-left-color: white;
-    border-width: 0.4rem;
-    margin-left: -0.4rem;
-    margin-top: -0.4rem;
-    -webkit-transform-origin: center;
-    transform-origin: center;
-    transform: rotate(-45deg);
+    left: ${props => props.width / 2}px;
   }
 `;
 
@@ -72,7 +52,7 @@ const PopoverHeading = styled.div`
   height: 1.5em;
 `;
 
-const Popover: FC<Props> = (props) => {
+const Popover: FC<Props> = props => {
   if (!props.show) {
     return null;
   }
@@ -90,13 +70,13 @@ const InnerPopover: FC<Props> = ({ title, show, width, offsetTop, offsetLeft, di
 
   const onMouseEnter = () => {
     dispatch({
-      type: "enter-popover",
+      type: "enter-popover"
     });
   };
 
   const onMouseLeave = () => {
     dispatch({
-      type: "leave-popover",
+      type: "leave-popover"
     });
   };
 
@@ -106,7 +86,7 @@ const InnerPopover: FC<Props> = ({ title, show, width, offsetTop, offsetLeft, di
     <PopoverContainer
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
-      className="box"
+      className="box popover"
       style={{ top: `${top}px`, left: `${left}px` }}
       width={width!}
       ref={ref}
@@ -119,7 +99,7 @@ const InnerPopover: FC<Props> = ({ title, show, width, offsetTop, offsetLeft, di
 };
 
 Popover.defaultProps = {
-  width: 120,
+  width: 120
 };
 
 export default Popover;
