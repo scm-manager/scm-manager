@@ -1204,7 +1204,7 @@ class ResourceLinks {
   }
 
   public PluginCenterAuthLinks pluginCenterAuth() {
-    return new PluginCenterAuthLinks(scmPathInfoStore.get());
+    return new PluginCenterAuthLinks(scmPathInfoStore.get().get());
   }
 
   static class PluginCenterAuthLinks {
