@@ -1,2 +1,4 @@
 - type: changed
   description: Keep whole lines for code highlighting in search ([#1871](https://github.com/scm-manager/scm-manager/pull/1871))
+- type: changed
+  description: Use more accurate language detection for syntax highlighting ([#1891](https://github.com/scm-manager/scm-manager/pull/1891))
