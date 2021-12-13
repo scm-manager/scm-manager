@@ -40,7 +40,7 @@ const adapter = createAdapter(theme);
 function createReplacement(textToReplace: string): Replacement {
   return {
     textToReplace,
-    replacement: <span className={theme.marker}>{textToReplace}</span>,
+    replacement: <mark>{textToReplace}</mark>,
     replaceAll: true
   };
 }
@@ -79,21 +79,8 @@ type Props = {
   language: string;
 };
 
-const SyntaxHighlightedFragment: FC<Props> = ({ value, language }) => {
-  const [isLoading, setIsLoading] = useState(true);
-  const strippedValue = useMemo(() => value.replace(PRE_TAG_REGEX, "").replace(POST_TAG_REGEX, ""), [value]);
-  const determinedLanguage = determineLanguage(language);
-
-  useEffect(() => {
-    adapter.loadLanguage(determinedLanguage, () => {
-      setIsLoading(false);
-    });
-  }, [determinedLanguage]);
-
-  if (isLoading) {
-    return <>{strippedValue}</>;
-  }
-
+const stripAndReplace = (value: string) => {
+  const strippedValue = value.replace(PRE_TAG_REGEX, "").replace(POST_TAG_REGEX, "");
   let content = value;
 
   const result: string[] = [];
@@ -113,8 +100,29 @@ const SyntaxHighlightedFragment: FC<Props> = ({ value, language }) => {
 
   result.sort((a, b) => b.length - a.length);
 
+  return {
+    strippedValue,
+    replacements: result.map(createReplacement)
+  };
+};
+
+const SyntaxHighlightedFragment: FC<Props> = ({ value, language }) => {
+  const [isLoading, setIsLoading] = useState(true);
+  const determinedLanguage = determineLanguage(language);
+  const { strippedValue, replacements } = useMemo(() => stripAndReplace(value), [value]);
+
+  useEffect(() => {
+    adapter.loadLanguage(determinedLanguage, () => {
+      setIsLoading(false);
+    });
+  }, [determinedLanguage]);
+
+  if (isLoading) {
+    return <SplitAndReplace text={strippedValue} replacements={replacements} textWrapper={s => s} />;
+  }
+
   const refractorNodes = adapter.highlight(strippedValue, determinedLanguage);
-  const highlightedFragment = refractorNodes.map(mapWithDepth(0, result.map(createReplacement)));
+  const highlightedFragment = refractorNodes.map(mapWithDepth(0, replacements));
 
   return <>{highlightedFragment}</>;
 };

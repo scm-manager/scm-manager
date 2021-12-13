@@ -39,7 +39,7 @@ storiesOf("TextHitField", module)
   ))
   .add("Bash SyntaxHighlighting", () => (
     <pre>
-      <TextHitField hit={bashHit} field={"content"} syntaxHighlightingLanguage="sh" />
+      <TextHitField hit={bashHit} field={"content"} syntaxHighlightingLanguage="bash" />
     </pre>
   ))
   .add("Markdown SyntaxHighlighting", () => (
