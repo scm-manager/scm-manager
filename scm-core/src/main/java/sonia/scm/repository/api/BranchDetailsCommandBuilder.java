@@ -63,6 +63,7 @@ public final class BranchDetailsCommandBuilder {
    * @param branchName Tha name of the branch the details should be computed for.
    * @return The result object containing the details for the branch.
    */
+  @SuppressWarnings("javasecurity:S5145") // We validate branch names in the rest layer
   public BranchDetailsCommandResult execute(String branchName) {
     LOG.debug("get branch details for repository {} and branch {}", repository, branchName);
     RepositoryPermissions.read(repository).check();
