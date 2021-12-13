@@ -23,7 +23,7 @@
  */
 
 import React, { FC } from "react";
-import { useImportLog, useIndex } from "@scm-manager/ui-api";
+import { useImportLog } from "@scm-manager/ui-api";
 import { useParams } from "react-router-dom";
 import { Page } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";

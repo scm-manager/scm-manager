@@ -23,13 +23,17 @@
  */
 import React from "react";
 import { shallow } from "enzyme";
-import "@scm-manager/ui-tests/enzyme";
-import "@scm-manager/ui-tests/i18n";
+import "@scm-manager/ui-tests";
 import ChangePasswordNavLink from "./SetPasswordNavLink";
 
 it("should render nothing, if the password link is missing", () => {
   const user = {
-    _links: {},
+    displayName: "User",
+    name: "User",
+    password: "hitchhiker",
+    external: true,
+    active: true,
+    _links: {}
   };
 
   const navLink = shallow(<ChangePasswordNavLink user={user} passwordUrl="/user/password" />);
@@ -38,11 +42,16 @@ it("should render nothing, if the password link is missing", () => {
 
 it("should render the navLink", () => {
   const user = {
+    displayName: "User",
+    name: "User",
+    password: "hitchhiker",
+    external: true,
+    active: true,
     _links: {
       password: {
-        href: "/password",
-      },
-    },
+        href: "/password"
+      }
+    }
   };
 
   const navLink = shallow(<ChangePasswordNavLink user={user} passwordUrl="/user/password" />);

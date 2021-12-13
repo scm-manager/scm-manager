@@ -24,9 +24,12 @@
 
 package sonia.scm.api.v2.resources;
 
+import com.google.inject.OutOfScopeException;
+import com.google.inject.ProvisionException;
 import sonia.scm.security.gpg.UserPublicKeyResource;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -34,10 +37,10 @@ import java.net.URISyntaxException;
 // string literals should not be duplicated
 class ResourceLinks {
 
-  private final ScmPathInfoStore scmPathInfoStore;
+  private final Provider<ScmPathInfoStore> scmPathInfoStore;
 
   @Inject
-  ResourceLinks(ScmPathInfoStore scmPathInfoStore) {
+  ResourceLinks(Provider<ScmPathInfoStore> scmPathInfoStore) {
     this.scmPathInfoStore = scmPathInfoStore;
   }
 
@@ -50,8 +53,20 @@ class ResourceLinks {
     }
   }
 
+  private ScmPathInfoStore accessScmPathInfoStore() {
+    try {
+      return scmPathInfoStore.get();
+    } catch (ProvisionException e) {
+
+      if (e.getCause() instanceof OutOfScopeException) {
+        throw new OutOfRequestScopeException(e);
+      }
+      throw e;
+    }
+  }
+
   GroupLinks group() {
-    return new GroupLinks(scmPathInfoStore.get());
+    return new GroupLinks(accessScmPathInfoStore().get());
   }
 
   static class GroupLinks {
@@ -75,7 +90,7 @@ class ResourceLinks {
   }
 
   GroupCollectionLinks groupCollection() {
-    return new GroupCollectionLinks(scmPathInfoStore.get());
+    return new GroupCollectionLinks(accessScmPathInfoStore().get());
   }
 
   static class GroupCollectionLinks {
@@ -95,7 +110,7 @@ class ResourceLinks {
   }
 
   UserLinks user() {
-    return new UserLinks(scmPathInfoStore.get());
+    return new UserLinks(accessScmPathInfoStore().get());
   }
 
   static class UserLinks {
@@ -149,7 +164,7 @@ class ResourceLinks {
   }
 
   UserPermissionLinks userPermissions() {
-    return new UserPermissionLinks(scmPathInfoStore.get());
+    return new UserPermissionLinks(accessScmPathInfoStore().get());
   }
 
   static class UserPermissionLinks implements WithPermissionLinks {
@@ -169,7 +184,7 @@ class ResourceLinks {
   }
 
   GroupPermissionLinks groupPermissions() {
-    return new GroupPermissionLinks(scmPathInfoStore.get());
+    return new GroupPermissionLinks(accessScmPathInfoStore().get());
   }
 
   static class GroupPermissionLinks implements WithPermissionLinks {
@@ -189,7 +204,7 @@ class ResourceLinks {
   }
 
   MeLinks me() {
-    return new MeLinks(scmPathInfoStore.get(), this.user());
+    return new MeLinks(accessScmPathInfoStore().get(), this.user());
   }
 
   static class MeLinks {
@@ -225,7 +240,7 @@ class ResourceLinks {
   }
 
   public ApiKeyCollectionLinks apiKeyCollection() {
-    return new ApiKeyCollectionLinks(scmPathInfoStore.get());
+    return new ApiKeyCollectionLinks(accessScmPathInfoStore().get());
   }
 
   static class ApiKeyCollectionLinks {
@@ -245,7 +260,7 @@ class ResourceLinks {
   }
 
   public ApiKeyLinks apiKey() {
-    return new ApiKeyLinks(scmPathInfoStore.get());
+    return new ApiKeyLinks(accessScmPathInfoStore().get());
   }
 
   static class ApiKeyLinks {
@@ -265,7 +280,7 @@ class ResourceLinks {
   }
 
   UserCollectionLinks userCollection() {
-    return new UserCollectionLinks(scmPathInfoStore.get());
+    return new UserCollectionLinks(accessScmPathInfoStore().get());
   }
 
   static class UserCollectionLinks {
@@ -285,7 +300,7 @@ class ResourceLinks {
   }
 
   AutoCompleteLinks autoComplete() {
-    return new AutoCompleteLinks(scmPathInfoStore.get());
+    return new AutoCompleteLinks(accessScmPathInfoStore().get());
   }
 
   static class AutoCompleteLinks {
@@ -305,7 +320,7 @@ class ResourceLinks {
   }
 
   ConfigLinks config() {
-    return new ConfigLinks(scmPathInfoStore.get());
+    return new ConfigLinks(accessScmPathInfoStore().get());
   }
 
   static class ConfigLinks {
@@ -325,7 +340,7 @@ class ResourceLinks {
   }
 
   AdminInfoLinks adminInfo() {
-    return new AdminInfoLinks(scmPathInfoStore.get());
+    return new AdminInfoLinks(accessScmPathInfoStore().get());
   }
 
   static class AdminInfoLinks {
@@ -341,7 +356,7 @@ class ResourceLinks {
   }
 
   public RepositoryLinks repository() {
-    return new RepositoryLinks(scmPathInfoStore.get());
+    return new RepositoryLinks(accessScmPathInfoStore().get());
   }
 
   static class RepositoryLinks {
@@ -423,7 +438,7 @@ class ResourceLinks {
   }
 
   RepositoryCollectionLinks repositoryCollection() {
-    return new RepositoryCollectionLinks(scmPathInfoStore.get());
+    return new RepositoryCollectionLinks(accessScmPathInfoStore().get());
   }
 
   static class RepositoryCollectionLinks {
@@ -447,7 +462,7 @@ class ResourceLinks {
   }
 
   public NamespaceStrategiesLinks namespaceStrategies() {
-    return new NamespaceStrategiesLinks(scmPathInfoStore.get());
+    return new NamespaceStrategiesLinks(accessScmPathInfoStore().get());
   }
 
   static class NamespaceStrategiesLinks {
@@ -464,7 +479,7 @@ class ResourceLinks {
   }
 
   public RepositoryTypeLinks repositoryType() {
-    return new RepositoryTypeLinks(scmPathInfoStore.get());
+    return new RepositoryTypeLinks(accessScmPathInfoStore().get());
   }
 
   static class RepositoryTypeLinks {
@@ -480,7 +495,7 @@ class ResourceLinks {
   }
 
   public RepositoryTypeCollectionLinks repositoryTypeCollection() {
-    return new RepositoryTypeCollectionLinks(scmPathInfoStore.get());
+    return new RepositoryTypeCollectionLinks(accessScmPathInfoStore().get());
   }
 
   static class RepositoryTypeCollectionLinks {
@@ -497,7 +512,7 @@ class ResourceLinks {
 
 
   public TagCollectionLinks tag() {
-    return new TagCollectionLinks(scmPathInfoStore.get());
+    return new TagCollectionLinks(accessScmPathInfoStore().get());
   }
 
   static class TagCollectionLinks {
@@ -525,7 +540,7 @@ class ResourceLinks {
   }
 
   public DiffLinks diff() {
-    return new DiffLinks(scmPathInfoStore.get());
+    return new DiffLinks(accessScmPathInfoStore().get());
   }
 
   static class DiffLinks {
@@ -549,7 +564,7 @@ class ResourceLinks {
   }
 
   public BranchLinks branch() {
-    return new BranchLinks(scmPathInfoStore.get());
+    return new BranchLinks(accessScmPathInfoStore().get());
   }
 
   static class BranchLinks {
@@ -577,7 +592,7 @@ class ResourceLinks {
   }
 
   public BranchDetailsLinks branchDetails() {
-    return new BranchDetailsLinks(scmPathInfoStore.get());
+    return new BranchDetailsLinks(accessScmPathInfoStore().get());
   }
 
   static class BranchDetailsLinks {
@@ -593,7 +608,7 @@ class ResourceLinks {
   }
 
   public BranchDetailsCollectionLinks branchDetailsCollection() {
-    return new BranchDetailsCollectionLinks(scmPathInfoStore.get());
+    return new BranchDetailsCollectionLinks(accessScmPathInfoStore().get());
   }
 
   static class BranchDetailsCollectionLinks {
@@ -609,7 +624,7 @@ class ResourceLinks {
   }
 
   public IncomingLinks incoming() {
-    return new IncomingLinks(scmPathInfoStore.get());
+    return new IncomingLinks(accessScmPathInfoStore().get());
   }
 
   static class IncomingLinks {
@@ -655,7 +670,7 @@ class ResourceLinks {
   }
 
   public BranchCollectionLinks branchCollection() {
-    return new BranchCollectionLinks(scmPathInfoStore.get());
+    return new BranchCollectionLinks(accessScmPathInfoStore().get());
   }
 
   static class BranchCollectionLinks {
@@ -671,7 +686,7 @@ class ResourceLinks {
   }
 
   public ChangesetLinks changeset() {
-    return new ChangesetLinks(scmPathInfoStore.get());
+    return new ChangesetLinks(accessScmPathInfoStore().get());
   }
 
   static class ChangesetLinks {
@@ -695,7 +710,7 @@ class ResourceLinks {
   }
 
   public ModificationsLinks modifications() {
-    return new ModificationsLinks(scmPathInfoStore.get());
+    return new ModificationsLinks(accessScmPathInfoStore().get());
   }
 
   static class ModificationsLinks {
@@ -711,7 +726,7 @@ class ResourceLinks {
   }
 
   public FileHistoryLinks fileHistory() {
-    return new FileHistoryLinks(scmPathInfoStore.get());
+    return new FileHistoryLinks(accessScmPathInfoStore().get());
   }
 
   static class FileHistoryLinks {
@@ -728,7 +743,7 @@ class ResourceLinks {
   }
 
   public SourceLinks source() {
-    return new SourceLinks(scmPathInfoStore.get());
+    return new SourceLinks(accessScmPathInfoStore().get());
   }
 
   static class SourceLinks {
@@ -760,7 +775,7 @@ class ResourceLinks {
   }
 
   public AnnotateLinks annotate() {
-    return new AnnotateLinks(scmPathInfoStore.get());
+    return new AnnotateLinks(accessScmPathInfoStore().get());
   }
 
   static class AnnotateLinks {
@@ -776,7 +791,7 @@ class ResourceLinks {
   }
 
   RepositoryVerbLinks repositoryVerbs() {
-    return new RepositoryVerbLinks(scmPathInfoStore.get());
+    return new RepositoryVerbLinks(accessScmPathInfoStore().get());
   }
 
   static class RepositoryVerbLinks {
@@ -792,7 +807,7 @@ class ResourceLinks {
   }
 
   RepositoryRoleLinks repositoryRole() {
-    return new RepositoryRoleLinks(scmPathInfoStore.get());
+    return new RepositoryRoleLinks(accessScmPathInfoStore().get());
   }
 
   static class RepositoryRoleLinks {
@@ -816,7 +831,7 @@ class ResourceLinks {
   }
 
   RepositoryRoleCollectionLinks repositoryRoleCollection() {
-    return new RepositoryRoleCollectionLinks(scmPathInfoStore.get());
+    return new RepositoryRoleCollectionLinks(accessScmPathInfoStore().get());
   }
 
   static class RepositoryRoleCollectionLinks {
@@ -836,7 +851,7 @@ class ResourceLinks {
   }
 
   public RepositoryPermissionLinks repositoryPermission() {
-    return new RepositoryPermissionLinks(scmPathInfoStore.get());
+    return new RepositoryPermissionLinks(accessScmPathInfoStore().get());
   }
 
   static class RepositoryPermissionLinks {
@@ -872,7 +887,7 @@ class ResourceLinks {
   }
 
   public UIPluginLinks uiPlugin() {
-    return new UIPluginLinks(scmPathInfoStore.get());
+    return new UIPluginLinks(accessScmPathInfoStore().get());
   }
 
   static class UIPluginLinks {
@@ -888,7 +903,7 @@ class ResourceLinks {
   }
 
   public UIPluginCollectionLinks uiPluginCollection() {
-    return new UIPluginCollectionLinks(scmPathInfoStore.get());
+    return new UIPluginCollectionLinks(accessScmPathInfoStore().get());
   }
 
   static class UIPluginCollectionLinks {
@@ -904,7 +919,7 @@ class ResourceLinks {
   }
 
   public InstalledPluginLinks installedPlugin() {
-    return new InstalledPluginLinks(scmPathInfoStore.get());
+    return new InstalledPluginLinks(accessScmPathInfoStore().get());
   }
 
   static class InstalledPluginLinks {
@@ -924,7 +939,7 @@ class ResourceLinks {
   }
 
   public InstalledPluginCollectionLinks installedPluginCollection() {
-    return new InstalledPluginCollectionLinks(scmPathInfoStore.get());
+    return new InstalledPluginCollectionLinks(accessScmPathInfoStore().get());
   }
 
   static class InstalledPluginCollectionLinks {
@@ -944,7 +959,7 @@ class ResourceLinks {
   }
 
   public AvailablePluginLinks availablePlugin() {
-    return new AvailablePluginLinks(scmPathInfoStore.get());
+    return new AvailablePluginLinks(accessScmPathInfoStore().get());
   }
 
   static class AvailablePluginLinks {
@@ -964,7 +979,7 @@ class ResourceLinks {
   }
 
   public AvailablePluginCollectionLinks availablePluginCollection() {
-    return new AvailablePluginCollectionLinks(scmPathInfoStore.get());
+    return new AvailablePluginCollectionLinks(accessScmPathInfoStore().get());
   }
 
   static class AvailablePluginCollectionLinks {
@@ -980,7 +995,7 @@ class ResourceLinks {
   }
 
   public PendingPluginCollectionLinks pendingPluginCollection() {
-    return new PendingPluginCollectionLinks(scmPathInfoStore.get());
+    return new PendingPluginCollectionLinks(accessScmPathInfoStore().get());
   }
 
   static class PendingPluginCollectionLinks {
@@ -1004,7 +1019,7 @@ class ResourceLinks {
   }
 
   public AuthenticationLinks authentication() {
-    return new AuthenticationLinks(scmPathInfoStore.get());
+    return new AuthenticationLinks(accessScmPathInfoStore().get());
   }
 
   static class AuthenticationLinks {
@@ -1028,7 +1043,7 @@ class ResourceLinks {
   }
 
   public IndexLinks index() {
-    return new IndexLinks(scmPathInfoStore.get());
+    return new IndexLinks(accessScmPathInfoStore().get());
   }
 
   static class IndexLinks {
@@ -1044,7 +1059,7 @@ class ResourceLinks {
   }
 
   public PermissionsLinks permissions() {
-    return new PermissionsLinks(scmPathInfoStore.get());
+    return new PermissionsLinks(accessScmPathInfoStore().get());
   }
 
   static class PermissionsLinks {
@@ -1060,7 +1075,7 @@ class ResourceLinks {
   }
 
   public NamespaceCollectionLinks namespaceCollection() {
-    return new NamespaceCollectionLinks(scmPathInfoStore.get());
+    return new NamespaceCollectionLinks(accessScmPathInfoStore().get());
   }
 
   static class NamespaceCollectionLinks {
@@ -1076,7 +1091,7 @@ class ResourceLinks {
   }
 
   public NamespaceLinks namespace() {
-    return new NamespaceLinks(scmPathInfoStore.get());
+    return new NamespaceLinks(accessScmPathInfoStore().get());
   }
 
   static class NamespaceLinks {
@@ -1096,7 +1111,7 @@ class ResourceLinks {
   }
 
   public NamespacePermissionLinks namespacePermission() {
-    return new NamespacePermissionLinks(scmPathInfoStore.get());
+    return new NamespacePermissionLinks(accessScmPathInfoStore().get());
   }
 
   static class NamespacePermissionLinks {
@@ -1132,7 +1147,7 @@ class ResourceLinks {
   }
 
   public MetricsLinks metrics() {
-    return new MetricsLinks(new LinkBuilder(scmPathInfoStore.get(), MetricsResource.class));
+    return new MetricsLinks(new LinkBuilder(accessScmPathInfoStore().get(), MetricsResource.class));
   }
 
   public static class MetricsLinks {
@@ -1149,7 +1164,7 @@ class ResourceLinks {
   }
 
   public SearchLinks search() {
-    return new SearchLinks(scmPathInfoStore.get());
+    return new SearchLinks(accessScmPathInfoStore().get());
   }
 
   public static class SearchLinks {
@@ -1170,7 +1185,7 @@ class ResourceLinks {
   }
 
   public InitialAdminAccountLinks initialAdminAccount() {
-    return new InitialAdminAccountLinks(new LinkBuilder(scmPathInfoStore.get(), InitializationResource.class, AdminAccountStartupResource.class));
+    return new InitialAdminAccountLinks(new LinkBuilder(accessScmPathInfoStore().get(), InitializationResource.class, AdminAccountStartupResource.class));
   }
 
   public static class InitialAdminAccountLinks {

@@ -26,15 +26,17 @@ package sonia.scm.api.v2.resources;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.net.URI;
 
+import static com.google.inject.util.Providers.of;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ResourceLinksTest {
 
   private static final String BASE_URL = "http://example.com/";
@@ -44,7 +46,6 @@ public class ResourceLinksTest {
   @Mock
   private ScmPathInfo uriInfo;
 
-  @InjectMocks
   private ResourceLinks resourceLinks;
 
   @Test
@@ -229,8 +230,8 @@ public class ResourceLinksTest {
 
   @Before
   public void initUriInfo() {
-    initMocks(this);
     when(scmPathInfoStore.get()).thenReturn(uriInfo);
     when(uriInfo.getApiRestUri()).thenReturn(URI.create(BASE_URL));
+    resourceLinks = new ResourceLinks(of(scmPathInfoStore));
   }
 }

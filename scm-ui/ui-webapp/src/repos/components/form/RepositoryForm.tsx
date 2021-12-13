@@ -25,7 +25,14 @@ import React, { FC, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
-import { IndexResources, Repository, RepositoryType, CUSTOM_NAMESPACE_STRATEGY } from "@scm-manager/ui-types";
+import {
+  CUSTOM_NAMESPACE_STRATEGY,
+  IndexResources,
+  Repository,
+  RepositoryBase,
+  RepositoryCreation,
+  RepositoryType
+} from "@scm-manager/ui-types";
 import { Checkbox, Level, Select, SubmitButton } from "@scm-manager/ui-components";
 import NamespaceAndNameFields from "../NamespaceAndNameFields";
 import RepositoryInformationForm from "../RepositoryInformationForm";
@@ -40,10 +47,6 @@ type Props = {
   indexResources?: IndexResources;
 };
 
-type RepositoryCreation = Repository & {
-  contextEntries: object;
-};
-
 const RepositoryForm: FC<Props> = ({
   createRepository,
   modifyRepository,
@@ -51,29 +54,35 @@ const RepositoryForm: FC<Props> = ({
   repositoryTypes,
   namespaceStrategy,
   loading,
-  indexResources,
+  indexResources
 }) => {
-  const [repo, setRepo] = useState<Repository>({
+  const [repo, setRepo] = useState<RepositoryBase>({
     name: "",
     namespace: "",
     type: "",
     contact: "",
-    description: "",
-    _links: {},
+    description: ""
   });
   const [initRepository, setInitRepository] = useState(false);
   const [contextEntries, setContextEntries] = useState({});
   const setCreationContextEntry = useCallback(
-    (key: string, value: any) => {
-      setContextEntries((entries) => ({
+    (key: string, value: unknown) => {
+      setContextEntries(entries => ({
         ...entries,
-        [key]: value,
+        [key]: value
       }));
     },
     [setContextEntries]
   );
   const [valid, setValid] = useState({ namespaceAndName: true, contact: true });
   const [t] = useTranslation("repos");
+  const setContactValid = useCallback((contact: boolean) => setValid(currentValid => ({ ...currentValid, contact })), [
+    setValid
+  ]);
+  const setNamespaceAndNameValid = useCallback(
+    (namespaceAndName: boolean) => setValid(currentValid => ({ ...currentValid, namespaceAndName })),
+    [setValid]
+  );
 
   useEffect(() => {
     if (repository) {
@@ -88,7 +97,7 @@ const RepositoryForm: FC<Props> = ({
   const isValid = () => {
     return (
       !(!repo.name || (namespaceStrategy === CUSTOM_NAMESPACE_STRATEGY && !repo.namespace)) &&
-      Object.values(valid).every((v) => v)
+      Object.values(valid).every(v => v)
     );
   };
 
@@ -98,17 +107,21 @@ const RepositoryForm: FC<Props> = ({
       if (createRepository) {
         createRepository({ ...repo, contextEntries }, initRepository);
       } else if (modifyRepository) {
-        modifyRepository(repo);
+        if (!!repository && !!repository._links.update) {
+          modifyRepository({ ...repository, ...repo });
+        } else {
+          throw new Error("Repository has to be present and contain update link for modification");
+        }
       }
     }
   };
 
   const createSelectOptions = (repositoryTypes?: RepositoryType[]) => {
     if (repositoryTypes) {
-      return repositoryTypes.map((repositoryType) => {
+      return repositoryTypes.map(repositoryType => {
         return {
           label: repositoryType.displayName,
-          value: repositoryType.name,
+          value: repositoryType.name
         };
       });
     }
@@ -123,21 +136,21 @@ const RepositoryForm: FC<Props> = ({
     const extensionProps = {
       repository: repo,
       setCreationContextEntry: setCreationContextEntry,
-      indexResources: indexResourcesWithLinks,
+      indexResources: indexResourcesWithLinks
     };
     return (
       <>
         <NamespaceAndNameFields
           repository={repo}
           onChange={setRepo}
-          setValid={(namespaceAndName) => setValid({ ...valid, namespaceAndName })}
+          setValid={setNamespaceAndNameValid}
           disabled={disabled}
         />
         <div className="columns">
           <div className={classNames("column", "is-half")}>
             <Select
               label={t("repository.type")}
-              onChange={(type) => setRepo({ ...repo, type })}
+              onChange={type => setRepo({ ...repo, type })}
               value={repo ? repo.type : ""}
               options={createSelectOptions(repositoryTypes)}
               helpText={t("help.typeHelpText")}
@@ -181,12 +194,7 @@ const RepositoryForm: FC<Props> = ({
   return (
     <form onSubmit={submit}>
       {renderCreateOnlyFields()}
-      <RepositoryInformationForm
-        repository={repo}
-        onChange={setRepo}
-        disabled={disabled}
-        setValid={(contact) => setValid({ ...valid, contact })}
-      />
+      <RepositoryInformationForm repository={repo} onChange={setRepo} disabled={disabled} setValid={setContactValid} />
       {submitButton()}
     </form>
   );

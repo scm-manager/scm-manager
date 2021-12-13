@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import { PagedCollection, Links, HalRepresentation } from "./hal";
+import { HalRepresentation, Links, PagedCollection } from "./hal";
 
 export type NamespaceAndName = {
   namespace: string;
@@ -53,7 +53,7 @@ export type Repository = HalRepresentation &
   };
 
 export type RepositoryCreation = RepositoryBase & {
-  contextEntries: { [key: string]: any };
+  contextEntries?: { [key: string]: object | undefined };
 };
 
 export type RepositoryUrlImport = RepositoryCreation & {

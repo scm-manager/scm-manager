@@ -26,6 +26,7 @@ package sonia.scm.repository.spi;
 
 import org.junit.Test;
 import sonia.scm.NotFoundException;
+import sonia.scm.repository.BranchDetails;
 import sonia.scm.repository.api.BranchDetailsCommandResult;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -38,7 +39,7 @@ public class GitBranchDetailsCommandTest extends AbstractGitCommandTestBase {
 
     BranchDetailsCommandRequest request = new BranchDetailsCommandRequest();
     request.setBranchName("master");
-    BranchDetailsCommandResult result = command.execute(request);
+    BranchDetails result = command.execute(request).getDetails();
 
     assertThat(result.getChangesetsAhead()).get().isEqualTo(0);
     assertThat(result.getChangesetsBehind()).get().isEqualTo(0);
@@ -50,7 +51,7 @@ public class GitBranchDetailsCommandTest extends AbstractGitCommandTestBase {
 
     BranchDetailsCommandRequest request = new BranchDetailsCommandRequest();
     request.setBranchName("test-branch");
-    BranchDetailsCommandResult result = command.execute(request);
+    BranchDetails result = command.execute(request).getDetails();
 
     assertThat(result.getChangesetsAhead()).get().isEqualTo(1);
     assertThat(result.getChangesetsBehind()).get().isEqualTo(2);
@@ -62,7 +63,7 @@ public class GitBranchDetailsCommandTest extends AbstractGitCommandTestBase {
 
     BranchDetailsCommandRequest request = new BranchDetailsCommandRequest();
     request.setBranchName("partially_merged");
-    BranchDetailsCommandResult result = command.execute(request);
+    BranchDetails result = command.execute(request).getDetails();
 
     assertThat(result.getChangesetsAhead()).get().isEqualTo(3);
     assertThat(result.getChangesetsBehind()).get().isEqualTo(1);

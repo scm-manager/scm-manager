@@ -29,7 +29,6 @@ import lombok.Value;
 import org.apache.lucene.queryparser.flexible.standard.config.PointsConfig;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -47,7 +46,7 @@ public class LuceneSearchableType implements SearchableType {
   String name;
   String permission;
   List<LuceneSearchableField> fields;
-  String[] fieldNames;
+  String[] defaultFieldNames;
   Map<String, Float> boosts;
   Map<String, PointsConfig> pointsConfig;
   TypeConverter typeConverter;
@@ -57,7 +56,7 @@ public class LuceneSearchableType implements SearchableType {
     this.name = Names.create(type, annotation);
     this.permission = Strings.emptyToNull(annotation.permission());
     this.fields = fields;
-    this.fieldNames = fieldNames(fields);
+    this.defaultFieldNames = defaultFieldNames(fields);
     this.boosts = boosts(fields);
     this.pointsConfig = pointsConfig(fields);
     this.typeConverter = TypeConverters.create(type);
@@ -67,7 +66,7 @@ public class LuceneSearchableType implements SearchableType {
     return Optional.ofNullable(permission);
   }
 
-  private String[] fieldNames(List<LuceneSearchableField> fields) {
+  private String[] defaultFieldNames(List<LuceneSearchableField> fields) {
     return fields.stream()
       .filter(LuceneSearchableField::isDefaultQuery)
       .map(LuceneSearchableField::getName)

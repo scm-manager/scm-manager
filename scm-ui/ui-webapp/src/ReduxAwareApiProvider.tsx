@@ -40,9 +40,10 @@ const mapDispatchToProps = (dispatch: Dispatch<ActionTypes>) => {
     },
     onMeFetched: (me: Me) => {
       dispatch(fetchMeSuccess(me));
-    },
+    }
   };
 };
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore no clue how to type it
 export default connect(undefined, mapDispatchToProps)(ReduxAwareApiProvider);

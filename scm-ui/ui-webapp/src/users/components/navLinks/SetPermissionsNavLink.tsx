@@ -21,31 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
+import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
 import { User } from "@scm-manager/ui-types";
 import { NavLink } from "@scm-manager/ui-components";
 
-type Props = WithTranslation & {
+type Props = {
   user: User;
   permissionsUrl: string;
 };
 
-class ChangePermissionNavLink extends React.Component<Props> {
-  render() {
-    const { t, permissionsUrl } = this.props;
+const ChangePermissionNavLink: FC<Props> = ({ user, permissionsUrl }) => {
+  const [t] = useTranslation("users");
 
-    if (!this.hasPermissionToSetPermission()) {
-      return null;
-    }
-    return (
-      <NavLink to={permissionsUrl} label={t("singleUser.menu.setPermissionsNavLink")} testId="user-permissions-link" />
-    );
+  if (!user._links.permissions) {
+    return null;
   }
 
-  hasPermissionToSetPermission = () => {
-    return this.props.user._links.permissions;
-  };
-}
+  return (
+    <NavLink to={permissionsUrl} label={t("singleUser.menu.setPermissionsNavLink")} testId="user-permissions-link" />
+  );
+};
 
-export default withTranslation("users")(ChangePermissionNavLink);
+export default ChangePermissionNavLink;

@@ -25,6 +25,7 @@
 package sonia.scm.api.v2.resources;
 
 import com.google.common.collect.ImmutableSet;
+import com.google.inject.util.Providers;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.apache.shiro.subject.Subject;
@@ -69,7 +70,7 @@ class MetricsIndexEnricherTest {
   void setUpResourceLinks() {
     ScmPathInfoStore scmPathInfoStore = new ScmPathInfoStore();
     scmPathInfoStore.set(() -> URI.create("/"));
-    resourceLinks = () -> new ResourceLinks(scmPathInfoStore);
+    resourceLinks = () -> new ResourceLinks(Providers.of(scmPathInfoStore));
   }
 
   @BeforeEach

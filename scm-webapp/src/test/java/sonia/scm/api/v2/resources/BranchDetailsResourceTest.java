@@ -24,6 +24,7 @@
 
 package sonia.scm.api.v2.resources;
 
+import com.google.inject.util.Providers;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,6 +34,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.NotFoundException;
+import sonia.scm.repository.BranchDetails;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.repository.api.BranchDetailsCommandBuilder;
@@ -48,6 +50,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
@@ -74,7 +77,7 @@ class BranchDetailsResourceTest extends RepositoryTestBase {
     dispatcher.addSingletonResource(getRepositoryRootResource());
     ScmPathInfoStore scmPathInfoStore = new ScmPathInfoStore();
     scmPathInfoStore.set(() -> URI.create("/scm/api/"));
-    mapper.setResourceLinks(new ResourceLinks(scmPathInfoStore));
+    mapper.setResourceLinks(new ResourceLinks(Providers.of(scmPathInfoStore)));
   }
 
   @Test
@@ -95,7 +98,7 @@ class BranchDetailsResourceTest extends RepositoryTestBase {
     when(serviceFactory.create(repository.getNamespaceAndName())).thenReturn(service);
     when(service.getRepository()).thenReturn(repository);
     when(service.getBranchDetailsCommand()).thenReturn(branchDetailsCommandBuilder);
-    BranchDetailsCommandResult result = new BranchDetailsCommandResult(42, 21);
+    BranchDetailsCommandResult result = new BranchDetailsCommandResult(new BranchDetails("master", 42, 21));
     when(branchDetailsCommandBuilder.execute("master")).thenReturn(result);
 
     MockHttpRequest request = MockHttpRequest
@@ -140,6 +143,7 @@ class BranchDetailsResourceTest extends RepositoryTestBase {
     when(serviceFactory.create(repository.getNamespaceAndName())).thenReturn(service);
     when(service.getRepository()).thenReturn(repository);
     when(service.getBranchDetailsCommand()).thenReturn(branchDetailsCommandBuilder);
+    when(branchDetailsCommandBuilder.execute(any())).thenAnswer(invocation -> new BranchDetailsCommandResult(new BranchDetails(invocation.getArgument(0, String.class), null, null)));
 
     MockHttpRequest request = MockHttpRequest
       .get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + repository.getNamespaceAndName() + "/branch-details?branches=master&branches=develop&branches=feature%2Fhitchhiker42");

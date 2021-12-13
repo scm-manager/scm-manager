@@ -57,7 +57,7 @@ type Props = {
   authenticated?: boolean;
 };
 
-const Main: FC<Props> = (props) => {
+const Main: FC<Props> = props => {
   const { authenticated, me } = props;
   const redirectUrlFactory = binder.getExtension("main.redirect", props);
   let url = "/";

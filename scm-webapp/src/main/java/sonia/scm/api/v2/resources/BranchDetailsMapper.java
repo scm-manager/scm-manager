@@ -30,27 +30,27 @@ import de.otto.edison.hal.Links;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.ObjectFactory;
+import sonia.scm.repository.BranchDetails;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.api.BranchDetailsCommandResult;
 import sonia.scm.web.EdisonHalAppender;
 
 import javax.inject.Inject;
 import java.util.Optional;
 
 @Mapper
-public abstract class BranchDetailsMapper extends BaseMapper<BranchDetailsCommandResult, BranchDetailsDto> {
+public abstract class BranchDetailsMapper extends BaseMapper<BranchDetails, BranchDetailsDto> {
 
   @Inject
   private ResourceLinks resourceLinks;
 
-  abstract BranchDetailsDto map(@Context Repository repository, String branchName, BranchDetailsCommandResult result);
+  abstract BranchDetailsDto map(@Context Repository repository, String branchName, BranchDetails result);
 
   @ObjectFactory
-  BranchDetailsDto createDto(@Context Repository repository, String branchName) {
+  BranchDetailsDto createDto(@Context Repository repository, String branchName, BranchDetails result) {
     Links.Builder linksBuilder = createLinks(repository, branchName);
     Embedded.Builder embeddedBuilder = Embedded.embeddedBuilder();
 
-    applyEnrichers(new EdisonHalAppender(linksBuilder, embeddedBuilder), repository);
+    applyEnrichers(new EdisonHalAppender(linksBuilder, embeddedBuilder), result, repository);
 
     return new BranchDetailsDto(linksBuilder.build(), embeddedBuilder.build());
   }

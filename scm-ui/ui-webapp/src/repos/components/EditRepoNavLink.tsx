@@ -21,29 +21,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
+import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
 import { Repository } from "@scm-manager/ui-types";
 import { NavLink } from "@scm-manager/ui-components";
 
-type Props = WithTranslation & {
+type Props = {
   repository: Repository;
   editUrl: string;
 };
 
-class EditRepoNavLink extends React.Component<Props> {
-  isEditable = () => {
-    return this.props.repository._links.update;
-  };
-
-  render() {
-    const { editUrl, t } = this.props;
-
-    if (!this.isEditable()) {
-      return null;
-    }
-    return <NavLink to={editUrl} label={t("repositoryRoot.menu.generalNavLink")} />;
+const EditRepoNavLink: FC<Props> = ({ repository, editUrl }) => {
+  const [t] = useTranslation("repos");
+  if (!repository._links.update) {
+    return null;
   }
-}
+  return <NavLink to={editUrl} label={t("repositoryRoot.menu.generalNavLink")} />;
+};
 
-export default withTranslation("repos")(EditRepoNavLink);
+export default EditRepoNavLink;

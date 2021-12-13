@@ -31,16 +31,14 @@ type Props = {
 };
 
 const SetGroupPermissions: FC<Props> = ({ group }) => {
-  const {
-    data: selectedPermissions,
-    isLoading: loadingPermissions,
-    error: permissionsLoadError,
-  } = useGroupPermissions(group);
+  const { data: selectedPermissions, isLoading: loadingPermissions, error: permissionsLoadError } = useGroupPermissions(
+    group
+  );
   const {
     isLoading: isUpdatingPermissions,
     isUpdated: permissionsUpdated,
     setPermissions,
-    error: permissionsUpdateError,
+    error: permissionsUpdateError
   } = useSetGroupPermissions(group, selectedPermissions);
   return (
     <SetPermissions

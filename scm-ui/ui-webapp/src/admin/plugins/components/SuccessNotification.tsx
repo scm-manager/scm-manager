@@ -48,7 +48,7 @@ class InstallSuccessNotification extends React.Component<Props> {
     return (
       <Notification type="success">
         {this.createMessageForPluginAction()}{" "}
-        <NoStyleButton onClick={(_) => window.location.reload(true)} className="has-text-info">
+        <NoStyleButton onClick={_ => window.location.reload(true)} className="has-text-info">
           {t("plugins.modal.reload")}
         </NoStyleButton>
       </Notification>

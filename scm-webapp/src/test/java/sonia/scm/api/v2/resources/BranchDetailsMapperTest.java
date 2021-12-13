@@ -24,11 +24,12 @@
 
 package sonia.scm.api.v2.resources;
 
+import com.google.inject.util.Providers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import sonia.scm.repository.BranchDetails;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryTestData;
-import sonia.scm.repository.api.BranchDetailsCommandResult;
 
 import java.net.URI;
 
@@ -44,7 +45,7 @@ class BranchDetailsMapperTest {
   void configureMapper() {
     ScmPathInfoStore scmPathInfoStore = new ScmPathInfoStore();
     scmPathInfoStore.set(() -> URI.create("/scm/api/"));
-    mapper.setResourceLinks(new ResourceLinks(scmPathInfoStore));
+    mapper.setResourceLinks(new ResourceLinks(Providers.of(scmPathInfoStore)));
   }
 
   @Test
@@ -52,7 +53,7 @@ class BranchDetailsMapperTest {
     BranchDetailsDto dto = mapper.map(
       repository,
       "master",
-      new BranchDetailsCommandResult(42, 21)
+      new BranchDetails("master", 42, 21)
     );
 
     assertThat(dto.getBranchName()).isEqualTo("master");

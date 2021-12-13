@@ -26,10 +26,17 @@ package sonia.scm.search;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.search.Query;
-import org.apache.lucene.search.highlight.*;
+import org.apache.lucene.search.QueryVisitor;
+import org.apache.lucene.search.highlight.Highlighter;
+import org.apache.lucene.search.highlight.InvalidTokenOffsetsException;
+import org.apache.lucene.search.highlight.QueryScorer;
+import org.apache.lucene.search.highlight.SimpleHTMLFormatter;
+import org.apache.lucene.search.highlight.SimpleSpanFragmenter;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 public final class LuceneHighlighter {
 
@@ -42,11 +49,25 @@ public final class LuceneHighlighter {
   private final Analyzer analyzer;
   private final Highlighter highlighter;
 
+  private final Set<String> queriedFields = new HashSet<>();
+
   public LuceneHighlighter(Analyzer analyzer, Query query) {
     this.analyzer = analyzer;
     QueryScorer scorer = new QueryScorer(query);
     this.highlighter = new Highlighter(new SimpleHTMLFormatter(PRE_TAG, POST_TAG), scorer);
     this.highlighter.setTextFragmenter(new SimpleSpanFragmenter(scorer, FRAGMENT_SIZE));
+
+    query.visit(new QueryVisitor() {
+      @Override
+      public boolean acceptField(String field) {
+        queriedFields.add(field);
+        return super.acceptField(field);
+      }
+    });
+  }
+
+  public boolean isHighlightable(LuceneSearchableField field) {
+    return field.isHighlighted() && queriedFields.contains(field.getName());
   }
 
   public String[] highlight(String fieldName, Indexed.Analyzer fieldAnalyzer, String value) throws InvalidTokenOffsetsException, IOException {
@@ -55,7 +76,6 @@ public final class LuceneHighlighter {
       fragments = keepWholeLine(value, fragments);
     }
     return Arrays.stream(fragments)
-      .map(fragment -> fragment.replace(PRE_TAG, "<>").replace(POST_TAG, "</>"))
       .toArray(String[]::new);
   }
 

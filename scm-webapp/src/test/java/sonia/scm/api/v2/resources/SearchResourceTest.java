@@ -25,6 +25,7 @@
 package sonia.scm.api.v2.resources;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.inject.util.Providers;
 import de.otto.edison.hal.HalRepresentation;
 import lombok.Getter;
 import lombok.Setter;
@@ -95,7 +96,7 @@ class SearchResourceTest {
 
     QueryResultMapper queryResultMapper = Mappers.getMapper(QueryResultMapper.class);
     queryResultMapper.setRepositoryManager(repositoryManager);
-    queryResultMapper.setResourceLinks(new ResourceLinks(scmPathInfoStore));
+    queryResultMapper.setResourceLinks(new ResourceLinks(Providers.of(scmPathInfoStore)));
 
     SearchableTypeMapper searchableTypeMapper = Mappers.getMapper(SearchableTypeMapper.class);
     queryResultMapper.setRegistry(enricherRegistry);

@@ -48,21 +48,15 @@ type AdminAccountCreation = {
   passwordConfirmation: string;
 };
 
-const createAdmin = (link: string) => {
-  return (data: AdminAccountCreation) => {
-    return apiClient.post(link, data, "application/json").then(() => {
-      return new Promise<void>((resolve) => resolve());
-    });
-  };
-};
+const createAdmin = (link: string) => (data: AdminAccountCreation) => apiClient.post(link, data, "application/json");
 
 const useCreateAdmin = (link: string) => {
-  const { mutate, isLoading, error, isSuccess } = useMutation<void, Error, AdminAccountCreation>(createAdmin(link));
+  const { mutate, isLoading, error, isSuccess } = useMutation<unknown, Error, AdminAccountCreation>(createAdmin(link));
   return {
     create: mutate,
     isLoading,
     error,
-    isCreated: isSuccess,
+    isCreated: isSuccess
   };
 };
 
@@ -74,16 +68,16 @@ const InitializationAdminAccountStep: FC<Props> = ({ data }) => {
       displayName: "SCM Administrator",
       email: "",
       password: "",
-      passwordConfirmation: "",
+      passwordConfirmation: ""
     },
-    mode: "onChange",
+    mode: "onChange"
   });
 
   const { create, isLoading, error, isCreated } = useCreateAdmin((data._links.initialAdminUser as Link).href);
 
   useEffect(() => {
     if (isCreated) {
-      window.location.reload(false);
+      window.location.reload();
     }
   }, [isCreated]);
 

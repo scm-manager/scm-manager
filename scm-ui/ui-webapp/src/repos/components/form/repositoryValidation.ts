@@ -25,6 +25,7 @@
 import { validation } from "@scm-manager/ui-components";
 import { isNameValid as isUserNameValid } from "../../../users/components/userValidation";
 
+// eslint-disable-next-line
 const nameRegex = /(?!^\.\.$)(?!^\.$)(?!.*[.]git$)(?!.*[\\\[\]])^[A-Za-z0-9\.][A-Za-z0-9\.\-_]*$/;
 const namespaceExceptionsRegex = /^(([0-9]{1,3})|(create)|(import))$/;
 

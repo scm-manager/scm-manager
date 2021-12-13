@@ -131,7 +131,7 @@ const ChangesetDetails: FC<Props> = ({ changeset, repository, fileControlFactory
   const description = changesets.parseDescription(changeset.description);
   const id = <ChangesetId repository={repository} changeset={changeset} link={false} />;
   const date = <DateFromNow date={changeset.date} />;
-  const parents = changeset._embedded.parents?.map((parent: ParentChangeset, index: number) => (
+  const parents = changeset._embedded?.parents?.map((parent: ParentChangeset, index: number) => (
     <ReactLink title={parent.id} to={parent.id} key={index}>
       {parent.id.substring(0, 7)}
     </ReactLink>
@@ -187,7 +187,7 @@ const ChangesetDetails: FC<Props> = ({ changeset, repository, fileControlFactory
                 <Button
                   color="success"
                   className="tag"
-                  label={(changeset._embedded["tags"]?.length === 0 && t("changeset.tag.create")) || ""}
+                  label={(changeset._embedded?.tags?.length === 0 && t("changeset.tag.create")) || ""}
                   icon="plus"
                   action={() => setTagCreationModalVisible(true)}
                 />

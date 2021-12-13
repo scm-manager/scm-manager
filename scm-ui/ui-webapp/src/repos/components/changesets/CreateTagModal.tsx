@@ -37,12 +37,10 @@ type Props = {
 
 const CreateTagModal: FC<Props> = ({ repository, changeset, onClose }) => {
   const { isLoading, error, data: tags } = useTags(repository);
-  const {
-    isLoading: isLoadingCreate,
-    error: errorCreate,
-    create,
-    tag: createdTag,
-  } = useCreateTag(repository, changeset);
+  const { isLoading: isLoadingCreate, error: errorCreate, create, tag: createdTag } = useCreateTag(
+    repository,
+    changeset
+  );
   const [t] = useTranslation("repos");
   const [newTagName, setNewTagName] = useState("");
   useEffect(() => {
@@ -51,7 +49,7 @@ const CreateTagModal: FC<Props> = ({ repository, changeset, onClose }) => {
     }
   }, [createdTag, onClose]);
 
-  const tagNames = tags?._embedded.tags.map((tag) => tag.name);
+  const tagNames = tags?._embedded.tags.map(tag => tag.name);
 
   let validationError = "";
 
@@ -76,7 +74,7 @@ const CreateTagModal: FC<Props> = ({ repository, changeset, onClose }) => {
         <InputField
           name="name"
           label={t("tags.create.form.field.name.label")}
-          onChange={(val) => setNewTagName(val)}
+          onChange={val => setNewTagName(val)}
           value={newTagName}
           validationError={!!validationError}
           errorMessage={t(validationError)}

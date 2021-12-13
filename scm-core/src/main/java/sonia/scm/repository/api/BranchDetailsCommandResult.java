@@ -24,43 +24,27 @@
 
 package sonia.scm.repository.api;
 
-import java.util.Optional;
-
-import static java.util.Optional.ofNullable;
+import sonia.scm.repository.BranchDetails;
 
 /**
  * @since 2.28.0
  */
 public class BranchDetailsCommandResult {
-  private final Integer changesetsAhead;
-  private final Integer changesetsBehind;
+  private final BranchDetails details;
 
   /**
    * Creates the result object
    *
-   * @param changesetsAhead  The number of changesets this branch is ahead of the default branch (that is
-   *                         the number of changesets on this branch that are not reachable from the default branch).
-   * @param changesetsBehind The number of changesets the default branch is ahead of this branch (that is
-   *                         the number of changesets on the default branch that are not reachable from this branch).
+   * @param details The details for the branch
    */
-  public BranchDetailsCommandResult(Integer changesetsAhead, Integer changesetsBehind) {
-    this.changesetsAhead = changesetsAhead;
-    this.changesetsBehind = changesetsBehind;
+  public BranchDetailsCommandResult(BranchDetails details) {
+    this.details = details;
   }
 
   /**
-   * The number of changesets this branch is ahead of the default branch (that is
-   * the number of changesets on this branch that are not reachable from the default branch).
+   * The details for the branch.
    */
-  public Optional<Integer> getChangesetsAhead() {
-    return ofNullable(changesetsAhead);
-  }
-
-  /**
-   * The number of changesets the default branch is ahead of this branch (that is
-   * the number of changesets on the default branch that are not reachable from this branch).
-   */
-  public Optional<Integer> getChangesetsBehind() {
-    return ofNullable(changesetsBehind);
+  public BranchDetails getDetails() {
+    return details;
   }
 }

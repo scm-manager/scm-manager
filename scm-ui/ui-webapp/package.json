@@ -25,7 +25,8 @@
     "systemjs": "0.21.6"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "lint": "eslint src"
   },
   "devDependencies": {
     "@scm-manager/jest-preset": "^2.13.0",

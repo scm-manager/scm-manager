@@ -55,12 +55,12 @@ const BundleLoader = {
       headers: {
         Cache: "no-cache",
         // identify the request as ajax request
-        "X-Requested-With": "XMLHttpRequest",
-      },
-    }).then((response) => {
+        "X-Requested-With": "XMLHttpRequest"
+      }
+    }).then(response => {
       return response.text();
     });
-  },
+  }
 };
 
 SystemJS.registry.set(BundleLoader.name, SystemJS.newModule(BundleLoader));
@@ -69,12 +69,13 @@ SystemJS.config({
   baseURL: urls.withContextPath("/assets"),
   meta: {
     "/*": {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
       // @ts-ignore typing missing, but seems required
       esModule: true,
       authorization: true,
-      loader: BundleLoader.name,
-    },
-  },
+      loader: BundleLoader.name
+    }
+  }
 });
 
 // We have to patch the resolve methods of SystemJS
@@ -89,17 +90,18 @@ const resolveModuleUrl = (key: string) => {
 };
 
 const defaultResolve = SystemJS.resolve;
-SystemJS.resolve = function (key, parentName) {
+SystemJS.resolve = function(key, parentName) {
   const module = resolveModuleUrl(key);
   return defaultResolve.apply(this, [module, parentName]);
 };
 
 const defaultResolveSync = SystemJS.resolveSync;
-SystemJS.resolveSync = function (key, parentName) {
+SystemJS.resolveSync = function(key, parentName) {
   const module = resolveModuleUrl(key);
   return defaultResolveSync.apply(this, [module, parentName]);
 };
 
+//eslint-disable-next-line @typescript-eslint/no-explicit-any
 const expose = (name: string, cmp: any, defaultCmp?: any) => {
   let mod = cmp;
   if (defaultCmp) {
@@ -107,7 +109,7 @@ const expose = (name: string, cmp: any, defaultCmp?: any) => {
     // https://github.com/systemjs/systemjs/issues/1749
     mod = {
       ...cmp,
-      __useDefault: defaultCmp,
+      __useDefault: defaultCmp
     };
   }
   SystemJS.set(name, SystemJS.newModule(mod));
