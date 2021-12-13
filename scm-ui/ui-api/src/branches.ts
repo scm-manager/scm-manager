@@ -135,7 +135,7 @@ export const useBranchDetailsCollection = (repository: Repository, branches: Bra
 };
 
 export const useBranchDetails = (repository: Repository, branch: Branch) => {
-  const link = branch._links.details.href;
+  const link = (branch._links.details as Link).href;
   const queryKey = branchDetailsQueryKey(repository, branch.name);
   return useQuery<BranchDetails, Error>(queryKey, () => apiClient.get(link).then(response => response.json()));
 };
