@@ -79,7 +79,7 @@ const SwitchableMarkdownViewer: FC<Props> = ({ file, basePath }) => {
       {renderMarkdown ? (
         <MarkdownViewer content={content || ""} basePath={basePath} permalink={permalink} />
       ) : (
-        <SyntaxHighlighter language="MARKDOWN" value={content || ""} permalink={permalink} />
+        <SyntaxHighlighter language="markdown" value={content || ""} permalink={permalink} />
       )}
     </div>
   );

@@ -35,7 +35,7 @@ describe("syntax highlighter", () => {
     expect(java).toBe("java");
   });
 
-  it("should return text if language is undefied", () => {
+  it("should return text if language is undefined", () => {
     const lang = determineLanguage();
     expect(lang).toBe("text");
   });
@@ -45,8 +45,4 @@ describe("syntax highlighter", () => {
     expect(lang).toBe("text");
   });
 
-  it("should use alias go for golang", () => {
-    const go = determineLanguage("golang");
-    expect(go).toBe("go");
-  });
 });
