@@ -50,9 +50,9 @@ class Tooltip extends React.Component<Props> {
     }
 
     return (
-      <span className={classes} data-tooltip={message} aria-label={message} id={id}>
+      <div className={classes} data-tooltip={message} aria-label={message} id={id}>
         {children}
-      </span>
+      </div>
     );
   }
 }
