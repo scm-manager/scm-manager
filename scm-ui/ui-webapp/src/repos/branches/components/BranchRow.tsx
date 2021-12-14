@@ -62,7 +62,7 @@ const BranchRow: FC<Props> = ({ repository, baseUrl, branch, onDelete, details }
       return <DefaultBranchTag defaultBranch={branch.defaultBranch} />;
     }
     if (details) {
-      return <AheadBehindTag branch={branch} details={details} />;
+      return <AheadBehindTag branch={branch} details={details} hiddenMobile={true} />;
     }
     return <SmallLoadingSpinner />;
   };

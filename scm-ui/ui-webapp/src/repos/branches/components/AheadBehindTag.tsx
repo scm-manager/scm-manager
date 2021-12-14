@@ -32,6 +32,7 @@ import { calculateBarLength } from "./aheadBehind";
 type Props = {
   branch: Branch;
   details: BranchDetails;
+  hiddenMobile?: boolean;
   verbose?: boolean;
 };
 
@@ -66,7 +67,7 @@ const TooltipWithDefaultCursor = styled(Tooltip)`
   cursor: default !important;
 `;
 
-const AheadBehindTag: FC<Props> = ({ branch, details, verbose }) => {
+const AheadBehindTag: FC<Props> = ({ branch, details, hiddenMobile, verbose }) => {
   const [t] = useTranslation("repos");
 
   if (
@@ -89,7 +90,7 @@ const AheadBehindTag: FC<Props> = ({ branch, details, verbose }) => {
       message={t("branch.aheadBehind.tooltip", { ahead: details.changesetsAhead, behind: details.changesetsBehind })}
       location="top"
     >
-      <div className="columns is-flex is-unselectable is-hidden-mobile mt-1">
+      <div className={`columns is-flex is-unselectable mt-1 ${hiddenMobile ? "is-hidden-mobile" : ""}`}>
         <Behind className="column is-half is-flex is-flex-direction-column is-align-items-flex-end p-0">
           <Count className="is-size-7 pr-1">{behindText}</Count>
           <Bar
