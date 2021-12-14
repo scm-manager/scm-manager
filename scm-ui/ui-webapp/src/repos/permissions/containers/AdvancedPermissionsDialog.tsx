@@ -58,7 +58,7 @@ const AdvancedPermissionsDialog: FC<Props> = ({ availableVerbs, selectedVerbs, r
     }
   };
 
-  const verbSelectBoxes = Object.entries(verbs).map(([name, checked]) => (
+  const verbSelectBoxes = Object.entries(verbs).map(([name, checked], index) => (
     <PermissionCheckbox
       key={name}
       name={name}
@@ -66,6 +66,7 @@ const AdvancedPermissionsDialog: FC<Props> = ({ availableVerbs, selectedVerbs, r
       onChange={handleChange}
       disabled={readOnly}
       role={true}
+      autofocus={index === 0}
     />
   ));
 

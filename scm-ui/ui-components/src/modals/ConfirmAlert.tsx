@@ -32,6 +32,7 @@ type Button = {
   label: string;
   isLoading?: boolean;
   onClick?: () => void | null;
+  autofocus?: boolean;
 };
 
 type Props = {
@@ -69,8 +70,9 @@ export const ConfirmAlert: FC<Props> = ({ title, message, buttons, close }) => {
             className={classNames("button", "is-info", button.className, button.isLoading ? "is-loading" : "")}
             key={index}
             onClick={() => handleClickButton(button)}
-            onKeyDown={(e) => e.key === "Enter" && handleClickButton(button)}
+            onKeyDown={e => e.key === "Enter" && handleClickButton(button)}
             tabIndex={0}
+            autoFocus={button.autofocus}
           >
             {button.label}
           </button>

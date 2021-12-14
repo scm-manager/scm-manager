@@ -56,7 +56,8 @@ const UnarchiveRepo: FC<Props> = ({ repository, confirmDialog = true }) => {
           className: "is-outlined",
           label: t("unarchiveRepo.confirmAlert.submit"),
           isLoading,
-          onClick: () => unarchiveRepoCallback()
+          onClick: () => unarchiveRepoCallback(),
+          autofocus: true
         },
         {
           label: t("unarchiveRepo.confirmAlert.cancel"),
