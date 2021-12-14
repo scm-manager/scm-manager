@@ -114,9 +114,9 @@ export const useBranchDetailsCollection = (repository: Repository, branches: Bra
         }
         return allPages.length;
       },
-      onSuccess: data => {
-        const flatMap = data.pages.flatMap(d => d._embedded?.branchDetails);
-        flatMap
+      onSuccess: newData => {
+        newData.pages
+          .flatMap(d => d._embedded?.branchDetails)
           .filter(d => !!d)
           .forEach(d => queryClient.setQueryData(branchDetailsQueryKey(repository, d!.branchName), () => d));
       }
