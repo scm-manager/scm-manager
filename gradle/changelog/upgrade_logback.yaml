@@ -1,0 +1,2 @@
+- type: changed
+  description: Upgrade Logback to v1.2.8 ([#1894](https://github.com/scm-manager/scm-manager/pull/1894))
