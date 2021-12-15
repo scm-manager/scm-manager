@@ -78,9 +78,9 @@ public class QueryResultFactory {
       if (highlighter.isHighlightable(field)) {
         ContentFragment[] fragments = createFragments(field, value.toString());
         if (fragments.length > 0) {
-          boolean firstFragmentMatchesContentStart = fragments[0].matchesContentStart;
-          boolean lastFragmentMatchesContentEnd = fragments[fragments.length - 1].matchesContentEnd;
-          return of(new Hit.HighlightedField(Arrays.stream(fragments).map(f -> f.fragment).toArray(String[]::new), firstFragmentMatchesContentStart, lastFragmentMatchesContentEnd));
+          boolean firstFragmentMatchesContentStart = fragments[0].isMatchesContentStart();
+          boolean lastFragmentMatchesContentEnd = fragments[fragments.length - 1].isMatchesContentEnd();
+          return of(new Hit.HighlightedField(Arrays.stream(fragments).map(ContentFragment::getFragment).toArray(String[]::new), firstFragmentMatchesContentStart, lastFragmentMatchesContentEnd));
         }
       }
       return of(new Hit.ValueField(value));

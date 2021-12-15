@@ -59,7 +59,7 @@ class LuceneHighlighterTest {
     ContentFragment[] contentFragments = highlighter.highlight("content", Indexed.Analyzer.DEFAULT, content);
 
     assertThat(contentFragments).hasSize(1).allSatisfy(
-      contentFragment -> assertThat(contentFragment.fragment).contains("<|[[--Golgafrinchan--]]|>")
+      contentFragment -> assertThat(contentFragment.getFragment()).contains("<|[[--Golgafrinchan--]]|>")
     );
   }
 
@@ -69,15 +69,15 @@ class LuceneHighlighterTest {
 
     assertThat(contentFragments).hasSize(1).allSatisfy(
       contentFragment -> {
-        assertThat(contentFragment.fragment.split("\n")).contains(
+        assertThat(contentFragment.getFragment().split("\n")).contains(
           "\t\t\t\tint neighbors= getNeighbors(above, same, below);",
           "\t\t\t\tif(neighbors < 2 || neighbors > 3){",
           "\t\t\t\t\tnewGen[row]+= \"_\";//<2 or >3 neighbors -> <|[[--die--]]|>",
           "\t\t\t\t}else if(neighbors == 3){",
           "\t\t\t\t\tnewGen[row]+= \"#\";//3 neighbors -> spawn/live"
         );
-        assertThat(contentFragment.matchesContentStart).isFalse();
-        assertThat(contentFragment.matchesContentEnd).isFalse();
+        assertThat(contentFragment.isMatchesContentEnd()).isFalse();
+        assertThat(contentFragment.isMatchesContentEnd()).isFalse();
       }
     );
   }
@@ -87,7 +87,7 @@ class LuceneHighlighterTest {
     ContentFragment[] contentFragments = highlightCode("GameOfLife.java", "die");
 
     assertThat(contentFragments).hasSize(1).allSatisfy(
-      contentFragment -> assertThat(contentFragment.fragment).doesNotStartWith("\n")
+      contentFragment -> assertThat(contentFragment.getFragment()).doesNotStartWith("\n")
     );
   }
 
@@ -96,7 +96,7 @@ class LuceneHighlighterTest {
     ContentFragment[] contentFragments = highlightCode("Button.tsx", "inherit");
 
     assertThat(contentFragments).hasSize(1).allSatisfy(
-      contentFragment -> assertThat(contentFragment.fragment.split("\n")).contains(
+      contentFragment -> assertThat(contentFragment.getFragment().split("\n")).contains(
         "}) => {",
         "  const renderIcon = () => {",
         "    return <>{icon ? <Icon name={icon} color=\"<|[[--inherit--]]|>\" className=\"is-medium pr-1\" /> : null}</>;",
@@ -110,8 +110,8 @@ class LuceneHighlighterTest {
     ContentFragment[] contentFragments = highlightCode("GameOfLife.java", "gameoflife");
 
     assertThat(contentFragments).hasSize(1);
-    assertThat(contentFragments[0].matchesContentStart).isTrue();
-    assertThat(contentFragments[0].matchesContentEnd).isFalse();
+    assertThat(contentFragments[0].isMatchesContentStart()).isTrue();
+    assertThat(contentFragments[0].isMatchesContentEnd()).isFalse();
   }
 
   @Test
@@ -119,8 +119,8 @@ class LuceneHighlighterTest {
     ContentFragment[] contentFragments = highlightCode("Button.tsx", "default");
 
     assertThat(contentFragments).hasSize(1);
-    assertThat(contentFragments[0].matchesContentStart).isFalse();
-    assertThat(contentFragments[0].matchesContentEnd).isTrue();
+    assertThat(contentFragments[0].isMatchesContentStart()).isFalse();
+    assertThat(contentFragments[0].isMatchesContentEnd()).isTrue();
   }
 
   @Nested

@@ -28,9 +28,9 @@ import lombok.Getter;
 
 @Getter
 public class ContentFragment {
-  String fragment;
-  boolean matchesContentStart;
-  boolean matchesContentEnd;
+  private final String fragment;
+  private final boolean matchesContentStart;
+  private final boolean matchesContentEnd;
 
   ContentFragment(String fragment) {
     this(fragment, false, false);
