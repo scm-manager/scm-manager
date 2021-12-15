@@ -262,7 +262,7 @@ public class TagRootResource {
 
   private Tags getTags(RepositoryService repositoryService) throws IOException {
     Repository repository = repositoryService.getRepository();
-    RepositoryPermissions.read(repository).check();
+    RepositoryPermissions.pull(repository).check();
     return repositoryService.getTagsCommand().getTags();
   }
 

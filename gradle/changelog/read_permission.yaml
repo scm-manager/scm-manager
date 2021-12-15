@@ -1,0 +1,2 @@
+- type: fixed
+  description: The permission 'repository:read' can only read metadata, no sources ([#1897](https://github.com/scm-manager/scm-manager/pull/1897))

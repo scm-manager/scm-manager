@@ -52,6 +52,7 @@ public class RepositoryPathCollector {
 
   private BrowserResult browse(NamespaceAndName repository, String revision) throws IOException {
     try (RepositoryService repositoryService = serviceFactory.create(repository)) {
+      RepositoryPermissions.pull(repositoryService.getRepository()).check();
       return repositoryService.getBrowseCommand()
         .setDisableSubRepositoryDetection(true)
         .setDisableLastCommit(true)

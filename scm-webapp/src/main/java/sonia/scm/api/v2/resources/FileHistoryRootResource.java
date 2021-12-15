@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,6 +34,7 @@ import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.web.VndMediaType;
@@ -114,6 +115,7 @@ public class FileHistoryRootResource {
     try (RepositoryService repositoryService = serviceFactory.create(namespaceAndName)) {
       log.info("Get changesets of the file {} and revision {}", path, revision);
       Repository repository = repositoryService.getRepository();
+      RepositoryPermissions.pull(repository).check();
       ChangesetPagingResult changesets = new PagedLogCommandBuilder(repositoryService)
         .page(page)
         .pageSize(pageSize)

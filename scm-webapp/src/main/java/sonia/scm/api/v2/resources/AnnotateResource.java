@@ -29,6 +29,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import sonia.scm.repository.NamespaceAndName;
+import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.web.VndMediaType;
@@ -89,6 +90,7 @@ public class AnnotateResource {
   ) throws IOException {
     NamespaceAndName namespaceAndName = new NamespaceAndName(namespace, name);
     try (RepositoryService repositoryService = serviceFactory.create(namespaceAndName)) {
+      RepositoryPermissions.pull(repositoryService.getRepository()).check();
       return mapper.map(repositoryService.getBlameCommand().setRevision(revision).getBlameResult(path), namespaceAndName, revision, path);
     }
   }

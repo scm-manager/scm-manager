@@ -143,7 +143,7 @@ public class IncomingRootResource {
                                      @DefaultValue("10") @QueryParam("pageSize") int pageSize) throws IOException {
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
       Repository repository = repositoryService.getRepository();
-      RepositoryPermissions.read(repository).check();
+      RepositoryPermissions.pull(repository).check();
       ChangesetPagingResult changesets = new PagedLogCommandBuilder(repositoryService)
         .page(page)
         .pageSize(pageSize)
@@ -199,6 +199,7 @@ public class IncomingRootResource {
     HttpUtil.checkForCRLFInjection(target);
     DiffFormat diffFormat = DiffFormat.valueOf(format);
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
+      RepositoryPermissions.pull(repositoryService.getRepository()).check();
       DiffCommandBuilder.OutputStreamConsumer outputStreamConsumer = repositoryService.getDiffCommand()
         .setRevision(source)
         .setAncestorChangeset(target)
@@ -249,6 +250,7 @@ public class IncomingRootResource {
     HttpUtil.checkForCRLFInjection(source);
     HttpUtil.checkForCRLFInjection(target);
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
+      RepositoryPermissions.pull(repositoryService.getRepository()).check();
       DiffResult diffResult = repositoryService.getDiffResultCommand()
         .setRevision(source)
         .setAncestorChangeset(target)

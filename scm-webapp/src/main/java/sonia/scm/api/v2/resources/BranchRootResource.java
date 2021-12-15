@@ -131,6 +131,7 @@ public class BranchRootResource {
   ) throws IOException {
     NamespaceAndName namespaceAndName = new NamespaceAndName(namespace, name);
     try (RepositoryService repositoryService = serviceFactory.create(namespaceAndName)) {
+      RepositoryPermissions.pull(repositoryService.getRepository()).check();
       Branches branches = repositoryService.getBranchesCommand().getBranches();
       return branches.getBranches()
         .stream()
@@ -180,6 +181,7 @@ public class BranchRootResource {
                           @DefaultValue("0") @QueryParam("page") int page,
                           @DefaultValue("10") @QueryParam("pageSize") int pageSize) throws IOException {
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
+      RepositoryPermissions.pull(repositoryService.getRepository()).check();
       if (!branchExists(branchName, repositoryService)) {
         throw notFound(entity(Branch.class, branchName).in(Repository.class, namespace + "/" + name));
       }
@@ -330,6 +332,7 @@ public class BranchRootResource {
     @PathParam("name") String name
   ) throws IOException {
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
+      RepositoryPermissions.pull(repositoryService.getRepository()).check();
       Branches branches = repositoryService.getBranchesCommand().getBranches();
       return Response.ok(branchCollectionToDtoMapper.map(repositoryService.getRepository(), branches.getBranches())).build();
     } catch (CommandNotSupportedException ex) {

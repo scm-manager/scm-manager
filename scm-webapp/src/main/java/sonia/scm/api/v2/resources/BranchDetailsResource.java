@@ -34,6 +34,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.hibernate.validator.constraints.Length;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.NamespaceAndName;
+import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.api.BranchDetailsCommandBuilder;
 import sonia.scm.repository.api.BranchDetailsCommandResult;
 import sonia.scm.repository.api.CommandNotSupportedException;
@@ -116,6 +117,7 @@ public class BranchDetailsResource {
     @Length(min = 1, max = 100) @Pattern(regexp = VALID_BRANCH_NAMES) @PathParam("branch") String branchName
   ) {
     try (RepositoryService service = serviceFactory.create(new NamespaceAndName(namespace, name))) {
+      RepositoryPermissions.pull(service.getRepository()).check();
       BranchDetailsCommandResult result = service.getBranchDetailsCommand().execute(branchName);
       BranchDetailsDto dto = mapper.map(service.getRepository(), branchName, result.getDetails());
       return Response.ok(dto).build();
@@ -169,6 +171,7 @@ public class BranchDetailsResource {
     @QueryParam("branches") List<@Length(min = 1, max = 100) @Pattern(regexp = VALID_BRANCH_NAMES) String> branches
   ) {
     try (RepositoryService service = serviceFactory.create(new NamespaceAndName(namespace, name))) {
+      RepositoryPermissions.pull(service.getRepository()).check();
       List<BranchDetailsDto> dtos = getBranchDetailsDtos(service, decodeBranchNames(branches));
       Links links = Links.linkingTo().self(resourceLinks.branchDetailsCollection().self(namespace, name)).build();
       Embedded embedded = Embedded.embeddedBuilder().with("branchDetails", dtos).build();

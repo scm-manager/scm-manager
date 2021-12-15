@@ -27,6 +27,7 @@ package sonia.scm.api.v2.resources;
 import io.swagger.v3.oas.annotations.Operation;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.NamespaceAndName;
+import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.api.BrowseCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
@@ -83,6 +84,7 @@ public class SourceRootResource {
   private FileObjectDto getSource(String namespace, String repoName, String path, String revision, int offset) throws IOException {
     NamespaceAndName namespaceAndName = new NamespaceAndName(namespace, repoName);
     try (RepositoryService repositoryService = serviceFactory.create(namespaceAndName)) {
+      RepositoryPermissions.pull(repositoryService.getRepository()).check();
       BrowseCommandBuilder browseCommand = repositoryService.getBrowseCommand();
       browseCommand.setPath(path);
       browseCommand.setOffset(offset);

@@ -35,6 +35,7 @@ import sonia.scm.NotFoundException;
 import sonia.scm.io.ContentType;
 import sonia.scm.io.ContentTypeResolver;
 import sonia.scm.repository.NamespaceAndName;
+import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.util.IOUtil;
@@ -121,6 +122,7 @@ public class ContentResource {
     @QueryParam("end") Integer end) {
     StreamingOutput stream = createStreamingOutput(namespace, name, revision, path, start, end);
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
+      RepositoryPermissions.pull(repositoryService.getRepository()).check();
       Response.ResponseBuilder responseBuilder = Response.ok(stream);
       return createContentHeader(namespace, name, revision, path, repositoryService, responseBuilder);
     } catch (NotFoundException e) {
@@ -188,6 +190,7 @@ public class ContentResource {
     ))
   public Response metadata(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision, @PathParam("path") String path) {
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
+      RepositoryPermissions.pull(repositoryService.getRepository()).check();
       Response.ResponseBuilder responseBuilder = Response.ok();
       return createContentHeader(namespace, name, revision, path, repositoryService, responseBuilder);
     } catch (NotFoundException e) {

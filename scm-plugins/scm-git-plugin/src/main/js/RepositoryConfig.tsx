@@ -73,25 +73,28 @@ class RepositoryConfig extends React.Component<Props, State> {
 
   componentDidMount() {
     const { repository } = this.props;
-    this.setState({
-      loadingBranches: true,
-    });
     const branchesLink = repository._links.branches as Link;
-    apiClient
-      .get(branchesLink.href)
-      .then((response) => response.json())
-      .then((payload) => payload._embedded.branches)
-      .then((branches) =>
-        this.setState({
-          branches,
-          loadingBranches: false,
-        })
-      )
-      .catch((error) =>
-        this.setState({
-          error,
-        })
-      );
+    if (branchesLink) {
+      apiClient
+        .get(branchesLink.href)
+        .then((response) => response.json())
+        .then((payload) => payload._embedded.branches)
+        .then((branches) =>
+          this.setState({
+            branches,
+            loadingBranches: false,
+          })
+        )
+        .catch((error) =>
+          this.setState({
+            error,
+          })
+        );
+    } else {
+      this.setState({
+        loadingBranches: false,
+      });
+    }
 
     const configurationLink = repository._links.configuration as Link;
     this.setState({

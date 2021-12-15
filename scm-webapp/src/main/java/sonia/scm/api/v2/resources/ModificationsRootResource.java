@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,6 +30,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import sonia.scm.repository.Modifications;
 import sonia.scm.repository.NamespaceAndName;
+import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.web.VndMediaType;
@@ -81,6 +82,7 @@ public class ModificationsRootResource {
   @ApiResponse(responseCode = "500", description = "internal server error")
   public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision) throws IOException {
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
+      RepositoryPermissions.pull(repositoryService.getRepository()).check();
       Modifications modifications = repositoryService.getModificationsCommand()
         .revision(revision)
         .getModifications();

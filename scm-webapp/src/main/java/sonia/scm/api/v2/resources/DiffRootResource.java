@@ -30,6 +30,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.NamespaceAndName;
+import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.api.DiffCommandBuilder;
 import sonia.scm.repository.api.DiffFormat;
 import sonia.scm.repository.api.DiffResult;
@@ -103,6 +104,7 @@ public class DiffRootResource {
     HttpUtil.checkForCRLFInjection(revision);
     DiffFormat diffFormat = DiffFormat.valueOf(format);
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
+      RepositoryPermissions.pull(repositoryService.getRepository()).check();
       DiffCommandBuilder.OutputStreamConsumer outputStreamConsumer = repositoryService.getDiffCommand()
         .setRevision(revision)
         .setFormat(diffFormat)
@@ -150,6 +152,7 @@ public class DiffRootResource {
                                  @QueryParam("offset") @Min(0) Integer offset) throws IOException {
     HttpUtil.checkForCRLFInjection(revision);
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
+      RepositoryPermissions.pull(repositoryService.getRepository()).check();
       DiffResult diffResult = repositoryService.getDiffResultCommand()
         .setRevision(revision)
         .setLimit(limit)

@@ -118,8 +118,10 @@ const RepositoryRoot = () => {
   let redirectedUrl;
   if (redirectUrlFactory) {
     redirectedUrl = url + redirectUrlFactory(props);
-  } else {
+  } else if (repository._links.sources) {
     redirectedUrl = url + "/code/sources/";
+  } else {
+    redirectedUrl = url + "/info";
   }
 
   const fileControlFactoryFactory: (changeset: Changeset) => FileControlFactory = changeset => file => {
