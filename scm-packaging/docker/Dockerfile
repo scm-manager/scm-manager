@@ -31,7 +31,7 @@ COPY . /
 RUN set -x \
  # ttf-dejavu graphviz are required for the plantuml plugin
  && apk add --no-cache ttf-dejavu graphviz mercurial bash ca-certificates \
- && adduser -S -s /bin/false -h ${SCM_HOME} -D -H -u 1000 scm \
+ && adduser -S -s /bin/false -h ${SCM_HOME} -D -H -u 1000 -G root scm \
  && mkdir -p ${SCM_HOME} ${CACHE_DIR} \
  && chmod +x /opt/scm-server/bin/scm-server \
  # set permissions to group 0 for openshift compatibility
