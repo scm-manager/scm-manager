@@ -39,13 +39,13 @@ const HighlightedTextField: FC<HighlightedTextFieldProps> = ({ field, syntaxHigh
     <>
       {field.fragments.map((fragment, i) => (
         <React.Fragment key={fragment}>
-          {separator}
+          {field.matchesContentStart ? null : separator}
           {syntaxHighlightingLanguage ? (
             <SyntaxHighlightedFragment value={fragment} language={syntaxHighlightingLanguage} />
           ) : (
             <HighlightedFragment value={fragment} />
           )}
-          {i + 1 >= field.fragments.length ? separator : null}
+          {i + 1 >= field.fragments.length && !field.matchesContentEnd ? separator : null}
         </React.Fragment>
       ))}
     </>

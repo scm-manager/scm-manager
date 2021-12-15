@@ -22,47 +22,23 @@
  * SOFTWARE.
  */
 
-import { HalRepresentation, HalRepresentationWithEmbedded, PagedCollection } from "./hal";
-import { Repository } from "./Repositories";
+package sonia.scm.search;
 
-export type ValueHitField = {
-  highlighted: false;
-  value: unknown;
-};
+import lombok.Getter;
 
-export type HighlightedHitField = {
-  highlighted: true;
-  fragments: string[];
-  matchesContentStart: boolean;
-  matchesContentEnd: boolean;
-};
+@Getter
+public class ContentFragment {
+  private final String fragment;
+  private final boolean matchesContentStart;
+  private final boolean matchesContentEnd;
 
-export type HitField = ValueHitField | HighlightedHitField;
+  ContentFragment(String fragment) {
+    this(fragment, false, false);
+  }
 
-export type EmbeddedRepository = {
-  repository?: Repository;
-};
-
-export type Hit = HalRepresentationWithEmbedded<EmbeddedRepository> & {
-  score: number;
-  fields: { [name: string]: HitField };
-};
-
-export type HitEmbedded = {
-  hits: Hit[];
-};
-
-export type QueryResult = PagedCollection<HitEmbedded> & {
-  type: string;
-  totalHits: number;
-};
-
-export type SearchableField = {
-  name: string;
-  type: string;
-};
-
-export type SearchableType = HalRepresentation & {
-  name: string;
-  fields: SearchableField[];
-};
+  ContentFragment(String fragment, boolean matchesContentStart, boolean matchesContentEnd) {
+    this.fragment = fragment;
+    this.matchesContentStart = matchesContentStart;
+    this.matchesContentEnd = matchesContentEnd;
+  }
+}

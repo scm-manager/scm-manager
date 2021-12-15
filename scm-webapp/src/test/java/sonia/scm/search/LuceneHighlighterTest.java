@@ -56,43 +56,47 @@ class LuceneHighlighterTest {
     String content = content("content");
 
     LuceneHighlighter highlighter = new LuceneHighlighter(analyzer, query);
-    String[] snippets = highlighter.highlight("content", Indexed.Analyzer.DEFAULT, content);
+    ContentFragment[] contentFragments = highlighter.highlight("content", Indexed.Analyzer.DEFAULT, content);
 
-    assertThat(snippets).hasSize(1).allSatisfy(
-      snippet -> assertThat(snippet).contains("<|[[--Golgafrinchan--]]|>")
+    assertThat(contentFragments).hasSize(1).allSatisfy(
+      contentFragment -> assertThat(contentFragment.getFragment()).contains("<|[[--Golgafrinchan--]]|>")
     );
   }
 
   @Test
   void shouldHighlightCodeAndKeepLines() throws IOException, InvalidTokenOffsetsException {
-    String[] snippets = highlightCode("GameOfLife.java", "die");
+    ContentFragment[] contentFragments = highlightCode("GameOfLife.java", "die");
 
-    assertThat(snippets).hasSize(1).allSatisfy(
-      snippet -> assertThat(snippet.split("\n")).contains(
-        "\t\t\t\tint neighbors= getNeighbors(above, same, below);",
-        "\t\t\t\tif(neighbors < 2 || neighbors > 3){",
-        "\t\t\t\t\tnewGen[row]+= \"_\";//<2 or >3 neighbors -> <|[[--die--]]|>",
-        "\t\t\t\t}else if(neighbors == 3){",
-        "\t\t\t\t\tnewGen[row]+= \"#\";//3 neighbors -> spawn/live"
-      )
+    assertThat(contentFragments).hasSize(1).allSatisfy(
+      contentFragment -> {
+        assertThat(contentFragment.getFragment().split("\n")).contains(
+          "\t\t\t\tint neighbors= getNeighbors(above, same, below);",
+          "\t\t\t\tif(neighbors < 2 || neighbors > 3){",
+          "\t\t\t\t\tnewGen[row]+= \"_\";//<2 or >3 neighbors -> <|[[--die--]]|>",
+          "\t\t\t\t}else if(neighbors == 3){",
+          "\t\t\t\t\tnewGen[row]+= \"#\";//3 neighbors -> spawn/live"
+        );
+        assertThat(contentFragment.isMatchesContentEnd()).isFalse();
+        assertThat(contentFragment.isMatchesContentEnd()).isFalse();
+      }
     );
   }
 
   @Test
   void shouldNotStartHighlightedFragmentWithLineBreak() throws IOException, InvalidTokenOffsetsException {
-    String[] snippets = highlightCode("GameOfLife.java", "die");
+    ContentFragment[] contentFragments = highlightCode("GameOfLife.java", "die");
 
-    assertThat(snippets).hasSize(1).allSatisfy(
-      snippet -> assertThat(snippet).doesNotStartWith("\n")
+    assertThat(contentFragments).hasSize(1).allSatisfy(
+      contentFragment -> assertThat(contentFragment.getFragment()).doesNotStartWith("\n")
     );
   }
 
   @Test
   void shouldHighlightCodeInTsx() throws IOException, InvalidTokenOffsetsException {
-    String[] snippets = highlightCode("Button.tsx", "inherit");
+    ContentFragment[] contentFragments = highlightCode("Button.tsx", "inherit");
 
-    assertThat(snippets).hasSize(1).allSatisfy(
-      snippet -> assertThat(snippet.split("\n")).contains(
+    assertThat(contentFragments).hasSize(1).allSatisfy(
+      contentFragment -> assertThat(contentFragment.getFragment().split("\n")).contains(
         "}) => {",
         "  const renderIcon = () => {",
         "    return <>{icon ? <Icon name={icon} color=\"<|[[--inherit--]]|>\" className=\"is-medium pr-1\" /> : null}</>;",
@@ -103,16 +107,20 @@ class LuceneHighlighterTest {
 
   @Test
   void shouldHighlightFirstCodeLine() throws InvalidTokenOffsetsException, IOException {
-    String[] snippets = highlightCode("GameOfLife.java", "gameoflife");
+    ContentFragment[] contentFragments = highlightCode("GameOfLife.java", "gameoflife");
 
-    assertThat(snippets).hasSize(1);
+    assertThat(contentFragments).hasSize(1);
+    assertThat(contentFragments[0].isMatchesContentStart()).isTrue();
+    assertThat(contentFragments[0].isMatchesContentEnd()).isFalse();
   }
 
   @Test
   void shouldHighlightLastCodeLine() throws InvalidTokenOffsetsException, IOException {
-    String[] snippets = highlightCode("Button.tsx", "default");
+    ContentFragment[] contentFragments = highlightCode("Button.tsx", "default");
 
-    assertThat(snippets).hasSize(1);
+    assertThat(contentFragments).hasSize(1);
+    assertThat(contentFragments[0].isMatchesContentStart()).isFalse();
+    assertThat(contentFragments[0].isMatchesContentEnd()).isTrue();
   }
 
   @Nested
@@ -154,7 +162,7 @@ class LuceneHighlighterTest {
 
   }
 
-  private String[] highlightCode(String resource, String search) throws IOException, InvalidTokenOffsetsException {
+  private ContentFragment[] highlightCode(String resource, String search) throws IOException, InvalidTokenOffsetsException {
     NonNaturalLanguageAnalyzer analyzer = new NonNaturalLanguageAnalyzer();
     Query query = new TermQuery(new Term("content", search));
 

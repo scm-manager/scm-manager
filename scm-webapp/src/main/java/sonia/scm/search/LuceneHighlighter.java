@@ -70,24 +70,31 @@ public final class LuceneHighlighter {
     return field.isHighlighted() && queriedFields.contains(field.getName());
   }
 
-  public String[] highlight(String fieldName, Indexed.Analyzer fieldAnalyzer, String value) throws InvalidTokenOffsetsException, IOException {
+  public ContentFragment[] highlight(String fieldName, Indexed.Analyzer fieldAnalyzer, String value) throws InvalidTokenOffsetsException, IOException {
     String[] fragments = highlighter.getBestFragments(analyzer, fieldName, value, MAX_NUM_FRAGMENTS);
     if (fieldAnalyzer == Indexed.Analyzer.CODE) {
-      fragments = keepWholeLine(value, fragments);
+      return keepWholeLine(value, fragments);
     }
-    return Arrays.stream(fragments)
-      .toArray(String[]::new);
+    return Arrays.stream(fragments).map(ContentFragment::new)
+      .toArray(ContentFragment[]::new);
   }
 
-  private String[] keepWholeLine(String content, String[] fragments) {
+  private ContentFragment[] keepWholeLine(String content, String[] fragments) {
     return Arrays.stream(fragments)
       .map(fragment -> keepWholeLine(content, fragment))
-      .toArray(String[]::new);
+      .toArray(ContentFragment[]::new);
   }
 
-  private String keepWholeLine(String content, String fragment) {
+  private ContentFragment keepWholeLine(String content, String fragment) {
+    boolean matchesContentStart = false;
+    boolean matchesContentEnd = false;
+
     String raw = fragment.replace(PRE_TAG, "").replace(POST_TAG, "");
     int index = content.indexOf(raw);
+
+    if (index == 0) {
+      matchesContentStart = true;
+    }
 
     int start = content.lastIndexOf('\n', index);
 
@@ -109,9 +116,10 @@ public final class LuceneHighlighter {
     int end = content.indexOf('\n', index + raw.length());
     if (end < 0) {
       end = content.length();
+      matchesContentEnd = true;
     }
 
-    return snippet + content.substring(index + raw.length(), end) + "\n";
+    return new ContentFragment(snippet + content.substring(index + raw.length(), end) + (matchesContentEnd ? "" : "\n"), matchesContentStart, matchesContentEnd);
   }
 
 }

@@ -90029,8 +90029,6 @@ exports[`Storyshots TextHitField Bash SyntaxHighlighting 1`] = `
 exit 0
 
 
-  ...
-
 </pre>
 `;
 
@@ -90202,8 +90200,6 @@ public final class
 
 exports[`Storyshots TextHitField Markdown SyntaxHighlighting 1`] = `
 <pre>
-  ...
-
   ---
 title: SCM-Manager v2 Test 
   <mark>
@@ -90238,8 +90234,6 @@ Resource-specifics are stated
         - \`?sortBy=admin&desc=true\` -&gt; Invert sorting
 - Individual Resource (e.g. \`/users/scmadmin\`)
     - Exists  -&gt; 200
-
-  ...
 
   
 ### DELETE
@@ -90285,8 +90279,6 @@ exports[`Storyshots TextHitField Unknown SyntaxHighlighting 1`] = `
     -c "user for the scm-server process" scm
 exit 0
 
-
-  ...
 
 </pre>
 `;

@@ -34,6 +34,7 @@ import org.apache.lucene.search.highlight.InvalidTokenOffsetsException;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,9 +76,11 @@ public class QueryResultFactory {
     Object value = field.value(document);
     if (value != null) {
       if (highlighter.isHighlightable(field)) {
-        String[] fragments = createFragments(field, value.toString());
+        ContentFragment[] fragments = createFragments(field, value.toString());
         if (fragments.length > 0) {
-          return of(new Hit.HighlightedField(fragments));
+          boolean firstFragmentMatchesContentStart = fragments[0].isMatchesContentStart();
+          boolean lastFragmentMatchesContentEnd = fragments[fragments.length - 1].isMatchesContentEnd();
+          return of(new Hit.HighlightedField(Arrays.stream(fragments).map(ContentFragment::getFragment).toArray(String[]::new), firstFragmentMatchesContentStart, lastFragmentMatchesContentEnd));
         }
       }
       return of(new Hit.ValueField(value));
@@ -85,7 +88,7 @@ public class QueryResultFactory {
     return empty();
   }
 
-  private String[] createFragments(LuceneSearchableField field, String value) throws InvalidTokenOffsetsException, IOException {
+  private ContentFragment[] createFragments(LuceneSearchableField field, String value) throws InvalidTokenOffsetsException, IOException {
     return highlighter.highlight(field.getName(), field.getAnalyzer(), value);
   }
 

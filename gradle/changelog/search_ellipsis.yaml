@@ -1,0 +1,2 @@
+- type: fixed
+  description: Do not display ellipsis if search result matches start or end of content ([#1896](https://github.com/scm-manager/scm-manager/pull/1896))
