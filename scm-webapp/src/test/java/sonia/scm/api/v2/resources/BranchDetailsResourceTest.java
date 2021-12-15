@@ -25,8 +25,11 @@
 package sonia.scm.api.v2.resources;
 
 import com.google.inject.util.Providers;
+import org.github.sdorra.jse.ShiroExtension;
+import org.github.sdorra.jse.SubjectAware;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -36,7 +39,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.BranchDetails;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.repository.api.BranchDetailsCommandBuilder;
 import sonia.scm.repository.api.BranchDetailsCommandResult;
 import sonia.scm.repository.api.CommandNotSupportedException;
@@ -54,11 +56,12 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(ShiroExtension.class)
 @ExtendWith(MockitoExtension.class)
 class BranchDetailsResourceTest extends RepositoryTestBase {
 
   private final RestDispatcher dispatcher = new RestDispatcher();
-  private final Repository repository = RepositoryTestData.create42Puzzle();
+  private final Repository repository = new Repository("42", "git", "hitchhiker", "42Puzzle");
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(URI.create("/"));
 
   @Mock
@@ -80,80 +83,98 @@ class BranchDetailsResourceTest extends RepositoryTestBase {
     mapper.setResourceLinks(new ResourceLinks(Providers.of(scmPathInfoStore)));
   }
 
-  @Test
-  void shouldReturnBadRequestIfBranchDetailsNotSupported() throws URISyntaxException {
-    when(serviceFactory.create(repository.getNamespaceAndName())).thenReturn(service);
-    doThrow(CommandNotSupportedException.class).when(service).getBranchDetailsCommand();
+  @Nested
+  class WithService {
 
-    MockHttpRequest request = MockHttpRequest
-      .get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + repository.getNamespaceAndName() + "/branch-details/master/");
+    @BeforeEach
+    void initService() {
+      when(serviceFactory.create(repository.getNamespaceAndName())).thenReturn(service);
+      when(service.getRepository()).thenReturn(repository);
+    }
 
-    dispatcher.invoke(request, response);
+    @Nested
+    @SubjectAware(value = "dent", permissions = "repository:pull:42")
+    class WithPermission {
 
-    assertThat(response.getStatus()).isEqualTo(400);
-  }
+      @Test
+      void shouldReturnBadRequestIfBranchDetailsNotSupported() throws URISyntaxException {
+        doThrow(CommandNotSupportedException.class).when(service).getBranchDetailsCommand();
 
-  @Test
-  void shouldReturnBranchDetails() throws URISyntaxException, UnsupportedEncodingException {
-    when(serviceFactory.create(repository.getNamespaceAndName())).thenReturn(service);
-    when(service.getRepository()).thenReturn(repository);
-    when(service.getBranchDetailsCommand()).thenReturn(branchDetailsCommandBuilder);
-    BranchDetailsCommandResult result = new BranchDetailsCommandResult(new BranchDetails("master", 42, 21));
-    when(branchDetailsCommandBuilder.execute("master")).thenReturn(result);
+        MockHttpRequest request = MockHttpRequest
+          .get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + repository.getNamespaceAndName() + "/branch-details/master/");
 
-    MockHttpRequest request = MockHttpRequest
-      .get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + repository.getNamespaceAndName() + "/branch-details/master/");
+        dispatcher.invoke(request, response);
 
-    dispatcher.invoke(request, response);
+        assertThat(response.getStatus()).isEqualTo(400);
+      }
 
-    assertThat(response.getStatus()).isEqualTo(200);
-    assertThat(response.getContentAsString())
-      .isEqualTo("{\"branchName\":\"master\",\"changesetsAhead\":42,\"changesetsBehind\":21,\"_links\":{\"self\":{\"href\":\"/scm/api/v2/repositories/hitchhiker/42Puzzle/branch-details/master\"}}}");
-  }
+      @Test
+      void shouldReturnBranchDetails() throws URISyntaxException, UnsupportedEncodingException {
+        when(service.getBranchDetailsCommand()).thenReturn(branchDetailsCommandBuilder);
+        BranchDetailsCommandResult result = new BranchDetailsCommandResult(new BranchDetails("master", 42, 21));
+        when(branchDetailsCommandBuilder.execute("master")).thenReturn(result);
 
-  @ParameterizedTest
-  @ValueSource(strings = {
-    "%2Fmaster",
-    "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890X"
-  })
-  void shouldValidateSingleBranch(String branchName) throws URISyntaxException {
-    MockHttpRequest request = MockHttpRequest
-      .get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + repository.getNamespaceAndName() + String.format("/branch-details/%s/", branchName));
+        MockHttpRequest request = MockHttpRequest
+          .get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + repository.getNamespaceAndName() + "/branch-details/master/");
 
-    dispatcher.invoke(request, response);
+        dispatcher.invoke(request, response);
 
-    assertThat(response.getStatus()).isEqualTo(400);
-  }
+        assertThat(response.getStatus()).isEqualTo(200);
+        assertThat(response.getContentAsString())
+          .isEqualTo("{\"branchName\":\"master\",\"changesetsAhead\":42,\"changesetsBehind\":21,\"_links\":{\"self\":{\"href\":\"/scm/api/v2/repositories/hitchhiker/42Puzzle/branch-details/master\"}}}");
+      }
 
-  @Test
-  void shouldGetEmptyDetailsCollection() throws URISyntaxException, UnsupportedEncodingException {
-    when(serviceFactory.create(repository.getNamespaceAndName())).thenReturn(service);
+      @Test
+      void shouldGetEmptyDetailsCollection() throws URISyntaxException, UnsupportedEncodingException {
+        MockHttpRequest request = MockHttpRequest
+          .get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + repository.getNamespaceAndName() + "/branch-details/");
 
-    MockHttpRequest request = MockHttpRequest
-      .get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + repository.getNamespaceAndName() + "/branch-details/");
+        dispatcher.invoke(request, response);
 
-    dispatcher.invoke(request, response);
+        assertThat(response.getStatus()).isEqualTo(200);
+        assertThat(response.getContentAsString()).isEqualTo("{\"_links\":{\"self\":{\"href\":\"/v2/repositories/hitchhiker/42Puzzle/branch-details/\"}},\"_embedded\":{\"branchDetails\":[]}}");
+      }
 
-    assertThat(response.getStatus()).isEqualTo(200);
-    assertThat(response.getContentAsString()).isEqualTo("{\"_links\":{\"self\":{\"href\":\"/v2/repositories/hitchhiker/42Puzzle/branch-details/\"}},\"_embedded\":{\"branchDetails\":[]}}");
-  }
+      @Test
+      void shouldGetDetailsCollection() throws URISyntaxException, UnsupportedEncodingException {
+        when(service.getBranchDetailsCommand()).thenReturn(branchDetailsCommandBuilder);
+        when(branchDetailsCommandBuilder.execute(any())).thenAnswer(invocation -> new BranchDetailsCommandResult(new BranchDetails(invocation.getArgument(0, String.class), null, null)));
 
-  @Test
-  void shouldGetDetailsCollection() throws URISyntaxException, UnsupportedEncodingException {
-    when(serviceFactory.create(repository.getNamespaceAndName())).thenReturn(service);
-    when(service.getRepository()).thenReturn(repository);
-    when(service.getBranchDetailsCommand()).thenReturn(branchDetailsCommandBuilder);
-    when(branchDetailsCommandBuilder.execute(any())).thenAnswer(invocation -> new BranchDetailsCommandResult(new BranchDetails(invocation.getArgument(0, String.class), null, null)));
+        MockHttpRequest request = MockHttpRequest
+          .get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + repository.getNamespaceAndName() + "/branch-details?branches=master&branches=develop&branches=feature%2Fhitchhiker42");
 
-    MockHttpRequest request = MockHttpRequest
-      .get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + repository.getNamespaceAndName() + "/branch-details?branches=master&branches=develop&branches=feature%2Fhitchhiker42");
+        dispatcher.invoke(request, response);
 
-    dispatcher.invoke(request, response);
+        assertThat(response.getStatus()).isEqualTo(200);
+        assertThat(response.getContentAsString()).contains("{\"branchDetails\":[{\"branchName\":\"master\",\"_links\":{\"self\":{\"href\":\"/scm/api/v2/repositories/hitchhiker/42Puzzle/branch-details/master\"}}}");
+        assertThat(response.getContentAsString()).contains("{\"branchName\":\"develop\",\"_links\":{\"self\":{\"href\":\"/scm/api/v2/repositories/hitchhiker/42Puzzle/branch-details/develop\"}}}");
+        assertThat(response.getContentAsString()).contains("{\"branchName\":\"feature/hitchhiker42\",\"_links\":{\"self\":{\"href\":\"/scm/api/v2/repositories/hitchhiker/42Puzzle/branch-details/feature%2Fhitchhiker42\"}}}");
+      }
 
-    assertThat(response.getStatus()).isEqualTo(200);
-    assertThat(response.getContentAsString()).contains("{\"branchDetails\":[{\"branchName\":\"master\",\"_links\":{\"self\":{\"href\":\"/scm/api/v2/repositories/hitchhiker/42Puzzle/branch-details/master\"}}}");
-    assertThat(response.getContentAsString()).contains("{\"branchName\":\"develop\",\"_links\":{\"self\":{\"href\":\"/scm/api/v2/repositories/hitchhiker/42Puzzle/branch-details/develop\"}}}");
-    assertThat(response.getContentAsString()).contains("{\"branchName\":\"feature/hitchhiker42\",\"_links\":{\"self\":{\"href\":\"/scm/api/v2/repositories/hitchhiker/42Puzzle/branch-details/feature%2Fhitchhiker42\"}}}");
+      @Test
+      void shouldIgnoreMissingBranchesInCollection() throws URISyntaxException {
+        when(service.getBranchDetailsCommand()).thenReturn(branchDetailsCommandBuilder);
+        when(branchDetailsCommandBuilder.execute("no-such-branch")).thenThrow(NotFoundException.class);
+
+        MockHttpRequest request = MockHttpRequest
+          .get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + repository.getNamespaceAndName() + "/branch-details?branches=no-such-branch");
+
+        dispatcher.invoke(request, response);
+
+        assertThat(response.getStatus()).isEqualTo(200);
+        assertThat(response.getContentAsJson().get("_embedded").get("branchDetails")).isEmpty();
+      }
+    }
+
+    @Test
+    void shouldFailWithoutPermission() throws URISyntaxException {
+      MockHttpRequest request = MockHttpRequest
+        .get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + repository.getNamespaceAndName() + "/branch-details/master/");
+
+      dispatcher.invoke(request, response);
+
+      assertThat(response.getStatus()).isEqualTo(403);
+    }
   }
 
   @ParameterizedTest
@@ -171,19 +192,18 @@ class BranchDetailsResourceTest extends RepositoryTestBase {
     assertThat(response.getStatus()).isEqualTo(400);
   }
 
-  @Test
-  void shouldIgnoreMissingBranchesInCollection() throws URISyntaxException {
-    when(serviceFactory.create(repository.getNamespaceAndName())).thenReturn(service);
-    when(service.getBranchDetailsCommand()).thenReturn(branchDetailsCommandBuilder);
-    when(branchDetailsCommandBuilder.execute("no-such-branch")).thenThrow(NotFoundException.class);
-
+  @ParameterizedTest
+  @ValueSource(strings = {
+    "%2Fmaster",
+    "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890X"
+  })
+  void shouldValidateSingleBranch(String branchName) throws URISyntaxException {
     MockHttpRequest request = MockHttpRequest
-      .get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + repository.getNamespaceAndName() + "/branch-details?branches=no-such-branch");
+      .get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + repository.getNamespaceAndName() + String.format("/branch-details/%s/", branchName));
 
     dispatcher.invoke(request, response);
 
-    assertThat(response.getStatus()).isEqualTo(200);
-    assertThat(response.getContentAsJson().get("_embedded").get("branchDetails")).isEmpty();
+    assertThat(response.getStatus()).isEqualTo(400);
   }
 }
 

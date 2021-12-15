@@ -25,15 +25,20 @@
 package sonia.scm.api.v2.resources;
 
 import com.google.common.io.Resources;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.apache.shiro.authz.UnauthorizedException;
+import org.github.sdorra.jse.ShiroExtension;
+import org.github.sdorra.jse.SubjectAware;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Answers;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.NotFoundException;
 import sonia.scm.io.DefaultContentTypeResolver;
 import sonia.scm.repository.NamespaceAndName;
+import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.CatCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
@@ -49,17 +54,19 @@ import java.net.URL;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.AdditionalMatchers.not;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ContentResourceTest {
+@ExtendWith(ShiroExtension.class)
+@ExtendWith(MockitoExtension.class)
+class ContentResourceTest {
 
   private static final String NAMESPACE = "space";
   private static final String REPO_NAME = "name";
@@ -72,134 +79,146 @@ public class ContentResourceTest {
 
   private CatCommandBuilder catCommand;
 
-  @Before
-  public void initService() throws Exception {
+  @BeforeEach
+  void initService() throws Exception {
     contentResource = new ContentResource(repositoryServiceFactory, new DefaultContentTypeResolver());
 
     NamespaceAndName existingNamespaceAndName = new NamespaceAndName(NAMESPACE, REPO_NAME);
     RepositoryService repositoryService = repositoryServiceFactory.create(existingNamespaceAndName);
     catCommand = repositoryService.getCatCommand();
     when(catCommand.setRevision(REV)).thenReturn(catCommand);
+    when(repositoryService.getRepository()).thenReturn(new Repository("42", "git", "hog", "hitchhiker"));
 
     // defaults for unknown things
-    doThrow(new NotFoundException("Test", "r")).when(repositoryServiceFactory).create(not(eq(existingNamespaceAndName)));
-    doThrow(new NotFoundException("Test", "X")).when(catCommand).getStream(any());
+    lenient().doThrow(new NotFoundException("Test", "r")).when(repositoryServiceFactory).create(not(eq(existingNamespaceAndName)));
+    lenient().doThrow(new NotFoundException("Test", "X")).when(catCommand).getStream(any());
+  }
+
+  @Nested
+  @SubjectAware(value = "dent", permissions = "repository:pull:42")
+  class WithPermission {
+
+    @Test
+    void shouldReadSimpleFile() throws Exception {
+      mockContent("file", "Hello".getBytes());
+
+      Response response = contentResource.get(NAMESPACE, REPO_NAME, REV, "file", null, null);
+      assertEquals(200, response.getStatus());
+
+      ByteArrayOutputStream baos = readOutputStream(response);
+
+      assertEquals("Hello", baos.toString());
+    }
+
+    @Test
+    void shouldLimitOutputByLines() throws Exception {
+      mockContent("file", "line 1\nline 2\nline 3\nline 4".getBytes());
+
+      Response response = contentResource.get(NAMESPACE, REPO_NAME, REV, "file", 1, 3);
+      assertEquals(200, response.getStatus());
+
+      ByteArrayOutputStream baos = readOutputStream(response);
+
+      assertEquals("line 2\nline 3\n", baos.toString());
+    }
+
+    @Test
+    void shouldNotLimitOutputWhenEndLessThanZero() throws Exception {
+      mockContent("file", "line 1\nline 2\nline 3\nline 4".getBytes());
+
+      Response response = contentResource.get(NAMESPACE, REPO_NAME, REV, "file", 1, -1);
+      assertEquals(200, response.getStatus());
+
+      ByteArrayOutputStream baos = readOutputStream(response);
+
+      assertEquals("line 2\nline 3\nline 4", baos.toString());
+    }
+
+    @Test
+    void shouldHandleMissingFile() {
+      Response response = contentResource.get(NAMESPACE, REPO_NAME, REV, "doesNotExist", null, null);
+      assertEquals(404, response.getStatus());
+    }
+
+    @Test
+    void shouldHandleMissingRepository() {
+      Response response = contentResource.get("no", "repo", REV, "anything", null, null);
+      assertEquals(404, response.getStatus());
+    }
+
+    @Test
+    void shouldRecognizeTikaSourceCode() throws Exception {
+      mockContentFromResource("SomeGoCode.go");
+
+      Response response = contentResource.get(NAMESPACE, REPO_NAME, REV, "SomeGoCode.go", null, null);
+      assertEquals(200, response.getStatus());
+
+      assertEquals("Go", response.getHeaderString("X-Programming-Language"));
+      assertEquals("text/x-go", response.getHeaderString("Content-Type"));
+    }
+
+    @Test
+    void shouldRecognizeSpecialSourceCode() throws Exception {
+      mockContentFromResource("Dockerfile");
+
+      Response response = contentResource.get(NAMESPACE, REPO_NAME, REV, "Dockerfile", null, null);
+      assertEquals(200, response.getStatus());
+
+      assertEquals("Dockerfile", response.getHeaderString("X-Programming-Language"));
+      assertEquals("text/plain", response.getHeaderString("Content-Type"));
+    }
+
+    @Test
+    void shouldRecognizeSyntaxModes() throws Exception {
+      mockContentFromResource("SomeGoCode.go");
+
+      Response response = contentResource.get(NAMESPACE, REPO_NAME, REV, "SomeGoCode.go", null, null);
+      assertEquals(200, response.getStatus());
+
+      assertEquals("golang", response.getHeaderString("X-Syntax-Mode-Ace"));
+      assertEquals("go", response.getHeaderString("X-Syntax-Mode-Codemirror"));
+      assertEquals("go", response.getHeaderString("X-Syntax-Mode-Prism"));
+    }
+
+    @Test
+    void shouldHandleRandomByteFile() throws Exception {
+      mockContentFromResource("JustBytes");
+
+      Response response = contentResource.get(NAMESPACE, REPO_NAME, REV, "JustBytes", null, null);
+      assertEquals(200, response.getStatus());
+
+      assertFalse(response.getHeaders().containsKey("Language"));
+      assertEquals("application/octet-stream", response.getHeaderString("Content-Type"));
+    }
+
+    @Test
+    void shouldNotReadCompleteFileForHead() throws Exception {
+      FailingAfterSomeBytesStream stream = new FailingAfterSomeBytesStream();
+      doAnswer(invocation -> stream).when(catCommand).getStream("readHeadOnly");
+
+      Response response = contentResource.metadata(NAMESPACE, REPO_NAME, REV, "readHeadOnly");
+      assertEquals(200, response.getStatus());
+
+      assertEquals("application/octet-stream", response.getHeaderString("Content-Type"));
+      assertTrue("stream has to be closed after reading head", stream.isClosed());
+    }
+
+    @Test
+    void shouldHandleEmptyFile() throws Exception {
+      mockContent("empty", new byte[]{});
+
+      Response response = contentResource.get(NAMESPACE, REPO_NAME, REV, "empty", null, null);
+      assertEquals(200, response.getStatus());
+
+      assertFalse(response.getHeaders().containsKey("Language"));
+      assertEquals("application/octet-stream", response.getHeaderString("Content-Type"));
+    }
   }
 
   @Test
-  public void shouldReadSimpleFile() throws Exception {
-    mockContent("file", "Hello".getBytes());
-
-    Response response = contentResource.get(NAMESPACE, REPO_NAME, REV, "file", null, null);
-    assertEquals(200, response.getStatus());
-
-    ByteArrayOutputStream baos = readOutputStream(response);
-
-    assertEquals("Hello", baos.toString());
-  }
-
-  @Test
-  public void shouldLimitOutputByLines() throws Exception {
-    mockContent("file", "line 1\nline 2\nline 3\nline 4".getBytes());
-
-    Response response = contentResource.get(NAMESPACE, REPO_NAME, REV, "file", 1, 3);
-    assertEquals(200, response.getStatus());
-
-    ByteArrayOutputStream baos = readOutputStream(response);
-
-    assertEquals("line 2\nline 3\n", baos.toString());
-  }
-
-  @Test
-  public void shouldNotLimitOutputWhenEndLessThanZero() throws Exception {
-    mockContent("file", "line 1\nline 2\nline 3\nline 4".getBytes());
-
-    Response response = contentResource.get(NAMESPACE, REPO_NAME, REV, "file", 1, -1);
-    assertEquals(200, response.getStatus());
-
-    ByteArrayOutputStream baos = readOutputStream(response);
-
-    assertEquals("line 2\nline 3\nline 4", baos.toString());
-  }
-
-  @Test
-  public void shouldHandleMissingFile() {
-    Response response = contentResource.get(NAMESPACE, REPO_NAME, REV, "doesNotExist", null, null);
-    assertEquals(404, response.getStatus());
-  }
-
-  @Test
-  public void shouldHandleMissingRepository() {
-    Response response = contentResource.get("no", "repo", REV, "anything", null, null);
-    assertEquals(404, response.getStatus());
-  }
-
-  @Test
-  public void shouldRecognizeTikaSourceCode() throws Exception {
-    mockContentFromResource("SomeGoCode.go");
-
-    Response response = contentResource.get(NAMESPACE, REPO_NAME, REV, "SomeGoCode.go", null, null);
-    assertEquals(200, response.getStatus());
-
-    assertEquals("Go", response.getHeaderString("X-Programming-Language"));
-    assertEquals("text/x-go", response.getHeaderString("Content-Type"));
-  }
-
-  @Test
-  public void shouldRecognizeSpecialSourceCode() throws Exception {
-    mockContentFromResource("Dockerfile");
-
-    Response response = contentResource.get(NAMESPACE, REPO_NAME, REV, "Dockerfile", null, null);
-    assertEquals(200, response.getStatus());
-
-    assertEquals("Dockerfile", response.getHeaderString("X-Programming-Language"));
-    assertEquals("text/plain", response.getHeaderString("Content-Type"));
-  }
-
-  @Test
-  public void shouldRecognizeSyntaxModes() throws Exception {
-    mockContentFromResource("SomeGoCode.go");
-
-    Response response = contentResource.get(NAMESPACE, REPO_NAME, REV, "SomeGoCode.go", null, null);
-    assertEquals(200, response.getStatus());
-
-    assertEquals("golang", response.getHeaderString("X-Syntax-Mode-Ace"));
-    assertEquals("go", response.getHeaderString("X-Syntax-Mode-Codemirror"));
-    assertEquals("go", response.getHeaderString("X-Syntax-Mode-Prism"));
-  }
-
-  @Test
-  public void shouldHandleRandomByteFile() throws Exception {
-    mockContentFromResource("JustBytes");
-
-    Response response = contentResource.get(NAMESPACE, REPO_NAME, REV, "JustBytes", null, null);
-    assertEquals(200, response.getStatus());
-
-    assertFalse(response.getHeaders().containsKey("Language"));
-    assertEquals("application/octet-stream", response.getHeaderString("Content-Type"));
-  }
-
-  @Test
-  public void shouldNotReadCompleteFileForHead() throws Exception {
-    FailingAfterSomeBytesStream stream = new FailingAfterSomeBytesStream();
-    doAnswer(invocation -> stream).when(catCommand).getStream("readHeadOnly");
-
-    Response response = contentResource.metadata(NAMESPACE, REPO_NAME, REV, "readHeadOnly");
-    assertEquals(200, response.getStatus());
-
-    assertEquals("application/octet-stream", response.getHeaderString("Content-Type"));
-    assertTrue("stream has to be closed after reading head", stream.isClosed());
-  }
-
-  @Test
-  public void shouldHandleEmptyFile() throws Exception {
-    mockContent("empty", new byte[]{});
-
-    Response response = contentResource.get(NAMESPACE, REPO_NAME, REV, "empty", null, null);
-    assertEquals(200, response.getStatus());
-
-    assertFalse(response.getHeaders().containsKey("Language"));
-    assertEquals("application/octet-stream", response.getHeaderString("Content-Type"));
+  @SubjectAware(value = "dent", permissions = "repository:read:42")
+  void shouldFailWithoutPermission() throws Exception {
+    assertThrows(UnauthorizedException.class, () -> contentResource.get(NAMESPACE, REPO_NAME, REV, "empty", null, null));
   }
 
   @SuppressWarnings("UnstableApiUsage")
@@ -209,7 +228,7 @@ public class ContentResourceTest {
   }
 
   private void mockContent(String path, byte[] content) throws Exception {
-    doAnswer(invocation -> {
+    lenient().doAnswer(invocation -> {
       OutputStream outputStream = (OutputStream) invocation.getArguments()[0];
       outputStream.write(content);
       outputStream.close();

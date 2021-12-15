@@ -24,7 +24,11 @@
 
 package sonia.scm.repository;
 
+import org.apache.shiro.authz.UnauthorizedException;
+import org.github.sdorra.jse.ShiroExtension;
+import org.github.sdorra.jse.SubjectAware;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Answers;
@@ -39,13 +43,16 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(ShiroExtension.class)
 @ExtendWith(MockitoExtension.class)
 class RepositoryPathCollectorTest {
 
   private final NamespaceAndName HEART_OF_GOLD = new NamespaceAndName("hitchhiker", "heart-of-gold");
+  public static final Repository REPOSITORY = new Repository("42", "git", "hitchhiker", "heart-of-gold");
 
   @Mock
   private RepositoryServiceFactory factory;
@@ -62,41 +69,57 @@ class RepositoryPathCollectorTest {
   @BeforeEach
   void setUpMocks() {
     when(factory.create(HEART_OF_GOLD)).thenReturn(service);
-    when(service.getBrowseCommand()).thenReturn(browseCommand);
+    when(service.getRepository()).thenReturn(REPOSITORY);
+  }
+
+  @Nested
+  @SubjectAware(value = "dent", permissions = "repository:pull:42")
+  class WithPermission {
+
+    @BeforeEach
+    void initCommand() {
+      when(service.getBrowseCommand()).thenReturn(browseCommand);
+    }
+
+    @Test
+    void shouldDisableComputeHeavySettings() throws IOException {
+      BrowserResult result = new BrowserResult("42", new FileObject());
+      when(browseCommand.getBrowserResult()).thenReturn(result);
+
+      collector.collect(HEART_OF_GOLD, "42");
+      verify(browseCommand).setDisablePreProcessors(true);
+      verify(browseCommand).setDisableSubRepositoryDetection(true);
+      verify(browseCommand).setDisableLastCommit(true);
+    }
+
+    @Test
+    void shouldCollectFiles() throws IOException {
+      FileObject root = dir(
+        "a",
+        file("a/b.txt"),
+        dir("a/c",
+          file("a/c/d.txt"),
+          file("a/c/e.txt")
+        )
+      );
+
+      BrowserResult result = new BrowserResult("21", root);
+      when(browseCommand.getBrowserResult()).thenReturn(result);
+
+      RepositoryPaths paths = collector.collect(HEART_OF_GOLD, "develop");
+      assertThat(paths.getRevision()).isEqualTo("21");
+      assertThat(paths.getPaths()).containsExactlyInAnyOrder(
+        "a/b.txt",
+        "a/c/d.txt",
+        "a/c/e.txt"
+      );
+    }
   }
 
   @Test
-  void shouldDisableComputeHeavySettings() throws IOException {
-    BrowserResult result = new BrowserResult("42", new FileObject());
-    when(browseCommand.getBrowserResult()).thenReturn(result);
-
-    collector.collect(HEART_OF_GOLD, "42");
-    verify(browseCommand).setDisablePreProcessors(true);
-    verify(browseCommand).setDisableSubRepositoryDetection(true);
-    verify(browseCommand).setDisableLastCommit(true);
-  }
-
-  @Test
-  void shouldCollectFiles() throws IOException {
-    FileObject root = dir(
-      "a",
-      file("a/b.txt"),
-      dir("a/c",
-        file("a/c/d.txt"),
-        file("a/c/e.txt")
-      )
-    );
-
-    BrowserResult result = new BrowserResult("21", root);
-    when(browseCommand.getBrowserResult()).thenReturn(result);
-
-    RepositoryPaths paths = collector.collect(HEART_OF_GOLD, "develop");
-    assertThat(paths.getRevision()).isEqualTo("21");
-    assertThat(paths.getPaths()).containsExactlyInAnyOrder(
-      "a/b.txt",
-      "a/c/d.txt",
-      "a/c/e.txt"
-    );
+  @SubjectAware(value = "dent", permissions = "repository:read:42")
+  void shouldFailWithoutPermission() throws IOException {
+    assertThrows(UnauthorizedException.class, () -> collector.collect(HEART_OF_GOLD, "develop"));
   }
 
   FileObject dir(String path, FileObject... children) {

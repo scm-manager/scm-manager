@@ -27,19 +27,21 @@ package sonia.scm.api.v2.resources;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.assertj.core.api.Assertions;
+import org.github.sdorra.jse.ShiroExtension;
+import org.github.sdorra.jse.SubjectAware;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.repository.BlameLine;
 import sonia.scm.repository.BlameResult;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Person;
+import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.BlameCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
@@ -55,10 +57,12 @@ import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(ShiroExtension.class)
 @ExtendWith(MockitoExtension.class)
 class AnnotateResourceTest extends RepositoryTestBase {
 
   public static final NamespaceAndName NAMESPACE_AND_NAME = new NamespaceAndName("space", "X");
+  public static final Repository REPOSITORY = new Repository("42", "git", "space", "X");
   public static final String REVISION = "123";
   public static final String PATH = "some/file";
   @Mock
@@ -82,66 +86,83 @@ class AnnotateResourceTest extends RepositoryTestBase {
   @BeforeEach
   void initRepositoryService() {
     when(serviceFactory.create(NAMESPACE_AND_NAME)).thenReturn(service);
-    when(service.getBlameCommand()).thenReturn(blameCommandBuilder);
+    when(service.getRepository()).thenReturn(REPOSITORY);
   }
 
-  @BeforeEach
-  void initBlameCommand() throws IOException {
-    BlameLine line1 = new BlameLine(
-      0,
-      "100",
-      System.currentTimeMillis(),
-      new Person("Arthur Dent", "arthur@hitchhiker.com"),
-      "first try",
-      "jump"
-    );
-    BlameLine line2 = new BlameLine(
-      1,
-      "42",
-      System.currentTimeMillis(),
-      new Person("Zaphod Beeblebrox", "zaphod@hitchhiker.com"),
-      "got it",
-      "heart of gold"
-    );
-    BlameResult result = new BlameResult(asList(line1, line2));
-    when(blameCommandBuilder.setRevision(REVISION)).thenReturn(blameCommandBuilder);
-    when(blameCommandBuilder.getBlameResult(PATH)).thenReturn(result);
+  @Nested
+  @SubjectAware(value = "dent", permissions = "repository:pull:42")
+  class WithPermission {
+
+    @BeforeEach
+    void initBlameCommand() throws IOException {
+      BlameLine line1 = new BlameLine(
+        0,
+        "100",
+        System.currentTimeMillis(),
+        new Person("Arthur Dent", "arthur@hitchhiker.com"),
+        "first try",
+        "jump"
+      );
+      BlameLine line2 = new BlameLine(
+        1,
+        "42",
+        System.currentTimeMillis(),
+        new Person("Zaphod Beeblebrox", "zaphod@hitchhiker.com"),
+        "got it",
+        "heart of gold"
+      );
+      BlameResult result = new BlameResult(asList(line1, line2));
+      when(blameCommandBuilder.setRevision(REVISION)).thenReturn(blameCommandBuilder);
+      when(blameCommandBuilder.getBlameResult(PATH)).thenReturn(result);
+      when(service.getBlameCommand()).thenReturn(blameCommandBuilder);
+    }
+
+    @Test
+    void shouldReturnAnnotations() throws URISyntaxException, UnsupportedEncodingException, JsonProcessingException {
+      MockHttpRequest request = MockHttpRequest
+        .get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + NAMESPACE_AND_NAME + "/annotate/" + REVISION + "/" + PATH);
+
+      dispatcher.invoke(request, response);
+
+      assertThat(response.getStatus()).isEqualTo(200);
+
+      String content = response.getContentAsString();
+      ObjectMapper mapper = new ObjectMapper();
+      JsonNode jsonNode = mapper.readTree(content);
+      JsonNode blameLines = jsonNode.get("lines");
+      assertThat(blameLines.isArray()).isTrue();
+      assertThat(jsonNode.get("_links").get("self").get("href").asText())
+        .isEqualTo("/v2/repositories/space/X/annotate/123/some%2Ffile");
+
+      Iterator<JsonNode> lineIterator = blameLines.iterator();
+      JsonNode line1 = lineIterator.next();
+      assertThat(line1.get("author").get("mail").asText()).isEqualTo("arthur@hitchhiker.com");
+      assertThat(line1.get("author").get("name").asText()).isEqualTo("Arthur Dent");
+      assertThat(line1.get("code").asText()).isEqualTo("jump");
+      assertThat(line1.get("description").asText()).isEqualTo("first try");
+      assertThat(line1.get("lineNumber").asInt()).isZero();
+      assertThat(line1.get("revision").asText()).isEqualTo("100");
+
+      JsonNode line2 = lineIterator.next();
+      assertThat(line2.get("author").get("mail").asText()).isEqualTo("zaphod@hitchhiker.com");
+      assertThat(line2.get("author").get("name").asText()).isEqualTo("Zaphod Beeblebrox");
+      assertThat(line2.get("code").asText()).isEqualTo("heart of gold");
+      assertThat(line2.get("description").asText()).isEqualTo("got it");
+      assertThat(line2.get("lineNumber").asInt()).isEqualTo(1);
+      assertThat(line2.get("revision").asText()).isEqualTo("42");
+
+      assertThat(lineIterator.hasNext()).isFalse();
+    }
   }
 
   @Test
-  void shouldReturnAnnotations() throws URISyntaxException, UnsupportedEncodingException, JsonProcessingException {
+  @SubjectAware(value = "dent", permissions = "repository:read:42")
+  void shouldFailWithoutPermission() throws URISyntaxException, UnsupportedEncodingException, JsonProcessingException {
     MockHttpRequest request = MockHttpRequest
       .get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + NAMESPACE_AND_NAME + "/annotate/" + REVISION + "/" + PATH);
 
     dispatcher.invoke(request, response);
 
-    assertThat(response.getStatus()).isEqualTo(200);
-
-    String content = response.getContentAsString();
-    ObjectMapper mapper = new ObjectMapper();
-    JsonNode jsonNode = mapper.readTree(content);
-    JsonNode blameLines = jsonNode.get("lines");
-    assertThat(blameLines.isArray()).isTrue();
-    assertThat(jsonNode.get("_links").get("self").get("href").asText())
-      .isEqualTo("/v2/repositories/space/X/annotate/123/some%2Ffile");
-
-    Iterator<JsonNode> lineIterator = blameLines.iterator();
-    JsonNode line1 = lineIterator.next();
-    assertThat(line1.get("author").get("mail").asText()).isEqualTo("arthur@hitchhiker.com");
-    assertThat(line1.get("author").get("name").asText()).isEqualTo("Arthur Dent");
-    assertThat(line1.get("code").asText()).isEqualTo("jump");
-    assertThat(line1.get("description").asText()).isEqualTo("first try");
-    assertThat(line1.get("lineNumber").asInt()).isEqualTo(0);
-    assertThat(line1.get("revision").asText()).isEqualTo("100");
-
-    JsonNode line2 = lineIterator.next();
-    assertThat(line2.get("author").get("mail").asText()).isEqualTo("zaphod@hitchhiker.com");
-    assertThat(line2.get("author").get("name").asText()).isEqualTo("Zaphod Beeblebrox");
-    assertThat(line2.get("code").asText()).isEqualTo("heart of gold");
-    assertThat(line2.get("description").asText()).isEqualTo("got it");
-    assertThat(line2.get("lineNumber").asInt()).isEqualTo(1);
-    assertThat(line2.get("revision").asText()).isEqualTo("42");
-
-    assertThat(lineIterator.hasNext()).isFalse();
+    assertThat(response.getStatus()).isEqualTo(403);
   }
 }
