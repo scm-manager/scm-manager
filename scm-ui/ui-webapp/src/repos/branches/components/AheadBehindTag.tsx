@@ -41,13 +41,13 @@ type BarProps = {
   direction: "right" | "left";
 };
 
-const Ahead = styled.div`
+const Ahead = styled.span`
   border-left: 1px solid gray;
 `;
 
-const Behind = styled.div``;
+const Behind = styled.span``;
 
-const Count = styled.div`
+const Count = styled.span`
   word-break: keep-all;
 `;
 
@@ -65,6 +65,7 @@ const Bar = styled.span.attrs<BarProps>(props => ({
 
 const TooltipWithDefaultCursor = styled(Tooltip)`
   cursor: default !important;
+  width: 100%;
 `;
 
 const AheadBehindTag: FC<Props> = ({ branch, details, hiddenMobile, verbose }) => {
@@ -86,11 +87,12 @@ const AheadBehindTag: FC<Props> = ({ branch, details, hiddenMobile, verbose }) =
     : details.changesetsAhead;
 
   return (
-    <TooltipWithDefaultCursor
-      message={t("branch.aheadBehind.tooltip", { ahead: details.changesetsAhead, behind: details.changesetsBehind })}
-      location="top"
-    >
-      <div className={`columns is-flex is-unselectable mt-1 ${hiddenMobile ? "is-hidden-mobile" : ""}`}>
+    <div className={`columns is-flex is-unselectable mt-1 ${hiddenMobile ? "is-hidden-mobile" : ""}`}>
+      <TooltipWithDefaultCursor
+        message={t("branch.aheadBehind.tooltip", { ahead: details.changesetsAhead, behind: details.changesetsBehind })}
+        location="top"
+        className={"is-flex"}
+      >
         <Behind className="column is-half is-flex is-flex-direction-column is-align-items-flex-end p-0">
           <Count className="is-size-7 pr-1">{behindText}</Count>
           <Bar
@@ -107,8 +109,8 @@ const AheadBehindTag: FC<Props> = ({ branch, details, hiddenMobile, verbose }) =
             direction="right"
           />
         </Ahead>
-      </div>
-    </TooltipWithDefaultCursor>
+      </TooltipWithDefaultCursor>
+    </div>
   );
 };
 
