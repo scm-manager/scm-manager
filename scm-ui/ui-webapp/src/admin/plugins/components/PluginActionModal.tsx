@@ -161,6 +161,7 @@ class PluginActionModal extends React.Component<Props> {
           loading={loading}
           action={this.props.execute}
           disabled={!!error || success}
+          autofocus={true}
         />
         <Button label={t("plugins.modal.abort")} action={onClose} />
       </ButtonGroup>
