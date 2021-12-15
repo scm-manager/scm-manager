@@ -40,6 +40,7 @@ export type ButtonProps = {
   reducedMobile?: boolean;
   children?: ReactNode;
   testId?: string;
+  autofocus?: boolean;
 };
 
 type Props = ButtonProps & {
@@ -61,7 +62,8 @@ const Button: FC<Props> = ({
   loading,
   disabled,
   action,
-  color = "default"
+  color = "default",
+  autofocus
 }) => {
   const renderIcon = () => {
     return <>{icon ? <Icon name={icon} color="inherit" className="is-medium pr-1" /> : null}</>;
@@ -109,6 +111,7 @@ const Button: FC<Props> = ({
       disabled={disabled}
       onClick={event => action && action(event)}
       className={classes}
+      autoFocus={autofocus}
       {...createAttributesForTesting(testId)}
     >
       {content}
