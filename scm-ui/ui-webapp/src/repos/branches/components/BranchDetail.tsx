@@ -25,9 +25,11 @@ import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import { Branch, Repository } from "@scm-manager/ui-types";
-import { Subtitle, DateFromNow } from "@scm-manager/ui-components";
+import { Subtitle, DateFromNow, SmallLoadingSpinner } from "@scm-manager/ui-components";
 import BranchButtonGroup from "./BranchButtonGroup";
 import DefaultBranchTag from "./DefaultBranchTag";
+import AheadBehindTag from "./AheadBehindTag";
+import { useBranchDetails } from "@scm-manager/ui-api";
 
 type Props = {
   repository: Repository;
@@ -36,30 +38,43 @@ type Props = {
 
 const BranchDetail: FC<Props> = ({ repository, branch }) => {
   const [t] = useTranslation("repos");
+  const { data, isLoading } = useBranchDetails(repository, branch);
+
+  let aheadBehind;
+  if (isLoading) {
+    aheadBehind = <SmallLoadingSpinner />;
+  } else if (data) {
+    aheadBehind = <AheadBehindTag branch={branch} details={data} verbose={true} />;
+  } else {
+    aheadBehind = null;
+  }
 
   return (
-    <div className="media is-align-items-center">
-      <div
-        className={classNames(
-          "media-content",
-          "subtitle",
-          "is-flex",
-          "is-flex-wrap-wrap",
-          "is-align-items-center",
-          "mb-0"
-        )}
-      >
-        <strong className="mr-1">{t("branch.name")}</strong> <Subtitle className="mb-0">{branch.name}</Subtitle>
-        <DefaultBranchTag defaultBranch={branch.defaultBranch} />
-        <div className={classNames("is-ellipsis-overflow", "is-size-7", "ml-2")}>
-          {t("branches.overview.lastCommit")}{" "}
-          <DateFromNow className={classNames("is-size-7", "has-text-grey")} date={branch.lastCommitDate} />
+    <>
+      <div className="media is-align-items-center">
+        <div
+          className={classNames(
+            "media-content",
+            "subtitle",
+            "is-flex",
+            "is-flex-wrap-wrap",
+            "is-align-items-center",
+            "mb-0"
+          )}
+        >
+          <strong className="mr-1">{t("branch.name")}</strong> <Subtitle className="mb-0">{branch.name}</Subtitle>
+          <DefaultBranchTag defaultBranch={branch.defaultBranch} />
+          <div className={classNames("is-ellipsis-overflow", "is-size-7", "ml-2")}>
+            {t("branches.overview.lastCommit")}{" "}
+            <DateFromNow className={classNames("is-size-7", "has-text-grey")} date={branch.lastCommitDate} />
+          </div>
+        </div>
+        <div className="media-right">
+          <BranchButtonGroup repository={repository} branch={branch} />
         </div>
       </div>
-      <div className="media-right">
-        <BranchButtonGroup repository={repository} branch={branch} />
-      </div>
-    </div>
+      {aheadBehind}
+    </>
   );
 };
 

@@ -144,7 +144,9 @@
     "defaultTag": "Default",
     "dangerZone": "Delete Branch",
     "aheadBehind": {
-      "tooltip": "{{ahead}} commit(s) ahead, {{behind}} commit(s) behind default branch"
+      "tooltip": "{{ahead}} commit(s) ahead, {{behind}} commit(s) behind default branch",
+      "aheadLabel": "{{count}} ahead",
+      "behindLabel": "{{count}} behind"
     },
     "delete": {
       "button": "Delete Branch",

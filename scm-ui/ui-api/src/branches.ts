@@ -25,8 +25,10 @@ import {
   Branch,
   BranchCollection,
   BranchCreation,
+  BranchDetails,
   BranchDetailsCollection,
-  Link, NamespaceAndName,
+  Link,
+  NamespaceAndName,
   Repository
 } from "@scm-manager/ui-types";
 import { requiredLink } from "./links";
@@ -79,8 +81,7 @@ function chunkBranches(branches: Branch[]) {
 
 const branchDetailsQueryKey = (
   repository: NamespaceAndName,
-  branch: string | undefined = undefined,
-  ...values: unknown[]
+  branch: string | undefined = undefined
 ) => {
   let branchName;
   if (!branch) {
@@ -88,12 +89,13 @@ const branchDetailsQueryKey = (
   } else {
     branchName = branch;
   }
-  return [...repoQueryKey(repository), "branch-details", branchName, ...values];
+  return [...repoQueryKey(repository), "branch-details", branchName];
 };
 
 export const useBranchDetailsCollection = (repository: Repository, branches: Branch[]) => {
   const link = requiredLink(repository, "branchDetailsCollection");
   const chunks = chunkBranches(branches);
+  const queryClient = useQueryClient();
 
   const { data, isLoading, error, fetchNextPage } = useInfiniteQuery<
     BranchDetailsCollection,
@@ -111,6 +113,12 @@ export const useBranchDetailsCollection = (repository: Repository, branches: Bra
           return undefined;
         }
         return allPages.length;
+      },
+      onSuccess: newData => {
+        newData.pages
+          .flatMap(d => d._embedded?.branchDetails)
+          .filter(d => !!d)
+          .forEach(d => queryClient.setQueryData(branchDetailsQueryKey(repository, d!.branchName), () => d));
       }
     }
   );
@@ -124,6 +132,12 @@ export const useBranchDetailsCollection = (repository: Repository, branches: Bra
     isLoading,
     error
   };
+};
+
+export const useBranchDetails = (repository: Repository, branch: Branch) => {
+  const link = (branch._links.details as Link).href;
+  const queryKey = branchDetailsQueryKey(repository, branch.name);
+  return useQuery<BranchDetails, Error>(queryKey, () => apiClient.get(link).then(response => response.json()));
 };
 
 const createBranch = (link: string) => {
