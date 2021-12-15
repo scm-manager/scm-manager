@@ -104,9 +104,28 @@ public class Hit {
   public static class HighlightedField extends Field {
     String[] fragments;
 
+    /**
+     * @since 2.28.0
+     */
+    boolean matchesContentStart;
+
+    /**
+     * @since 2.28.0
+     */
+    boolean matchesContentEnd;
+
     public HighlightedField(String[] fragments) {
       super(true);
       this.fragments = fragments;
+    }
+
+    /**
+     * @since 2.28.0
+     */
+    public HighlightedField(String[] fragments, boolean matchesContentStart, boolean matchesContentEnd) {
+      this(fragments);
+      this.matchesContentStart = matchesContentStart;
+      this.matchesContentEnd = matchesContentEnd;
     }
   }
 
