@@ -151,17 +151,6 @@ type ScreenReaderHitSummaryProps = {
 const ScreenReaderHitSummary: FC<ScreenReaderHitSummaryProps> = ({ hits }) => {
   const [t] = useTranslation("commons");
   const key = hits.length > 0 ? "screenReaderHint" : "screenReaderHintNoResult";
-  // plural i18n
-
-  /*if (hits.length === 0) {
-    // .
-    message =
-      "No repositories found. Other result types maybe available hit enter to navigate to complete search result.";
-  } else {
-    //
-    message = `Found at least ${hits.length} repositories. Hit enter to see search results of all types or use arrow keys to navigate to repository quick results and enter to select one of them.`;
-  }*/
-
   return (
     <span aria-live="assertive" className="is-sr-only">
       {t(`search.quickSearch.${key}`, { count: hits.length })}
