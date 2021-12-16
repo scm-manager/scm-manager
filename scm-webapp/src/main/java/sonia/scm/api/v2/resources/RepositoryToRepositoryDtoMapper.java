@@ -134,34 +134,34 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
           .map(this::createProtocolLink)
           .collect(toList());
         linksBuilder.array(protocolLinks);
-      }
 
-      if (repositoryService.isSupported(Command.BUNDLE) && RepositoryPermissions.export(repository).isPermitted()) {
-        linksBuilder.single(link("export", resourceLinks.repository().export(repository.getNamespace(), repository.getName(), repository.getType())));
-        linksBuilder.single(link("fullExport", resourceLinks.repository().fullExport(repository.getNamespace(), repository.getName(), repository.getType())));
-        linksBuilder.single(link("exportInfo", resourceLinks.repository().exportInfo(repository.getNamespace(), repository.getName())));
-      }
-
-      if (repositoryService.isSupported(Command.TAGS)) {
-        linksBuilder.single(link("tags", resourceLinks.tag().all(repository.getNamespace(), repository.getName())));
-      }
-      if (repositoryService.isSupported(Command.BRANCHES)) {
-        linksBuilder.single(link("branches", resourceLinks.branchCollection().self(repository.getNamespace(), repository.getName())));
-      }
-      if (repositoryService.isSupported(Command.BRANCH_DETAILS)) {
-        linksBuilder.single(link("branchDetailsCollection", resourceLinks.branchDetailsCollection().self(repository.getNamespace(), repository.getName())));
-      }
-      if (repositoryService.isSupported(Feature.INCOMING_REVISION)) {
-        linksBuilder.single(link("incomingChangesets", resourceLinks.incoming().changesets(repository.getNamespace(), repository.getName())));
-        linksBuilder.single(link("incomingDiff", resourceLinks.incoming().diff(repository.getNamespace(), repository.getName())));
-        if (repositoryService.isSupported(Command.DIFF_RESULT)) {
-          linksBuilder.single(link("incomingDiffParsed", resourceLinks.incoming().diffParsed(repository.getNamespace(), repository.getName())));
+        if (repositoryService.isSupported(Command.BUNDLE) && RepositoryPermissions.export(repository).isPermitted()) {
+          linksBuilder.single(link("export", resourceLinks.repository().export(repository.getNamespace(), repository.getName(), repository.getType())));
+          linksBuilder.single(link("fullExport", resourceLinks.repository().fullExport(repository.getNamespace(), repository.getName(), repository.getType())));
+          linksBuilder.single(link("exportInfo", resourceLinks.repository().exportInfo(repository.getNamespace(), repository.getName())));
         }
+
+        if (repositoryService.isSupported(Command.TAGS)) {
+          linksBuilder.single(link("tags", resourceLinks.tag().all(repository.getNamespace(), repository.getName())));
+        }
+        if (repositoryService.isSupported(Command.BRANCHES)) {
+          linksBuilder.single(link("branches", resourceLinks.branchCollection().self(repository.getNamespace(), repository.getName())));
+        }
+        if (repositoryService.isSupported(Command.BRANCH_DETAILS)) {
+          linksBuilder.single(link("branchDetailsCollection", resourceLinks.branchDetailsCollection().self(repository.getNamespace(), repository.getName())));
+        }
+        if (repositoryService.isSupported(Feature.INCOMING_REVISION)) {
+          linksBuilder.single(link("incomingChangesets", resourceLinks.incoming().changesets(repository.getNamespace(), repository.getName())));
+          linksBuilder.single(link("incomingDiff", resourceLinks.incoming().diff(repository.getNamespace(), repository.getName())));
+          if (repositoryService.isSupported(Command.DIFF_RESULT)) {
+            linksBuilder.single(link("incomingDiffParsed", resourceLinks.incoming().diffParsed(repository.getNamespace(), repository.getName())));
+          }
+        }
+        linksBuilder.single(link("changesets", resourceLinks.changeset().all(repository.getNamespace(), repository.getName())));
+        linksBuilder.single(link("sources", resourceLinks.source().selfWithoutRevision(repository.getNamespace(), repository.getName())));
+        linksBuilder.single(link("paths", resourceLinks.repository().paths(repository.getNamespace(), repository.getName())));
       }
     }
-    linksBuilder.single(link("changesets", resourceLinks.changeset().all(repository.getNamespace(), repository.getName())));
-    linksBuilder.single(link("sources", resourceLinks.source().selfWithoutRevision(repository.getNamespace(), repository.getName())));
-    linksBuilder.single(link("paths", resourceLinks.repository().paths(repository.getNamespace(), repository.getName())));
     if (RepositoryPermissions.healthCheck(repository).isPermitted() && !healthCheckService.checkRunning(repository)) {
       linksBuilder.single(link("runHealthCheck", resourceLinks.repository().runHealthCheck(repository.getNamespace(), repository.getName())));
     }
