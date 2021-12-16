@@ -24,7 +24,7 @@
 import React, { FC } from "react";
 
 import { Redirect, Route, Switch } from "react-router-dom";
-import { Me } from "@scm-manager/ui-types";
+import { Links, Me } from "@scm-manager/ui-types";
 
 import Overview from "../repos/containers/Overview";
 import Users from "../users/containers/Users";
@@ -55,6 +55,7 @@ import ExternalError from "./ExternalError";
 type Props = {
   me: Me;
   authenticated?: boolean;
+  links: Links;
 };
 
 const Main: FC<Props> = props => {

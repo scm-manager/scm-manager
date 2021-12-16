@@ -60,7 +60,7 @@ const App: FC = () => {
   } else if (error) {
     content = <ErrorPage title={t("app.error.title")} subtitle={t("app.error.subtitle")} error={error} />;
   } else if (me) {
-    content = <Main authenticated={authenticated} me={me} />;
+    content = <Main authenticated={authenticated} me={me} links={index._links} />;
   }
 
   return (

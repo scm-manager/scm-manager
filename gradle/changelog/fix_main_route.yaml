@@ -1,0 +1,2 @@
+- type: fixed
+  description: Fix extension point "main.route"
