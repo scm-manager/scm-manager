@@ -195,9 +195,9 @@
       "noResults": "Es konnten keine Repositories gefunden werden",
       "hintsIcon": "Suchtipps",
       "hints": "Hinweise zu ihrer Suche",
-      "screenReaderHintNoResult": "Keine Repositories gefunden. Mögliche weitere Egebnistypen mit Enter anzeigen.",
-      "screenReaderHint": "Ein Repository gefunden. Mögliche weitere Egebnistypen mit Enter anzeigen oder Pheiltasten verwenden um zu den gefunden Repositories zu navigieren und mit Enter bestätigen.",
-      "screenReaderHint_plural": "Mindestens {{ count }} Repositories gefunden. Mögliche weitere Egebnistypen mit Enter anzeigen oder Pheiltasten verwenden um zu den gefunden Repositories zu navigieren und mit Enter bestätigen."
+      "screenReaderHintNoResult": "Keine Repositories gefunden. Mögliche weitere Ergebnistypen mit Enter anzeigen.",
+      "screenReaderHint": "Ein Repository gefunden. Mögliche weitere Ergebnistypen mit Enter anzeigen oder Pfeiltasten verwenden um zu den gefunden Repositories zu navigieren und mit Enter bestätigen.",
+      "screenReaderHint_plural": "Mindestens {{ count }} Repositories gefunden. Mögliche weitere Ergebnistypen mit Enter anzeigen oder Pfeiltasten verwenden um zu den gefunden Repositories zu navigieren und mit Enter bestätigen."
     },
     "syntax": {
       "title": "Experten-Suche",
