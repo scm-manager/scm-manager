@@ -21,31 +21,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
-import { Tag } from "@scm-manager/ui-components";
-import styled from "styled-components";
 
-type Props = WithTranslation & {
-  defaultBranch?: boolean;
-  className?: string;
+import React, { FC } from "react";
+import { Branch } from "@scm-manager/ui-types";
+import { DateFromNow } from "@scm-manager/ui-components";
+import classNames from "classnames";
+import { useTranslation } from "react-i18next";
+
+const BranchCommitDateCommitter: FC<{ branch: Branch }> = ({ branch }) => {
+  const [t] = useTranslation("repos");
+
+  const committedAt = <DateFromNow className={classNames("is-size-7", "has-text-grey")} date={branch.lastCommitDate} />;
+  if (branch.lastCommitter?.name) {
+    return (
+      <>
+        {t("branches.table.lastCommit")} {committedAt}{" "}
+        {t("branches.table.lastCommitter", { name: branch.lastCommitter?.name })}
+      </>
+    );
+  } else {
+    return committedAt;
+  }
 };
 
-const DefaultTag = styled(Tag)`
-  max-height: 1.5em;
-`;
-
-class DefaultBranchTag extends React.Component<Props> {
-  render() {
-    const { defaultBranch, className, t } = this.props;
-
-    if (defaultBranch) {
-      return (
-        <DefaultTag className={"is-unselectable " + (className || "")} color="dark" label={t("branch.defaultTag")} />
-      );
-    }
-    return null;
-  }
-}
-
-export default withTranslation("repos")(DefaultBranchTag);
+export default BranchCommitDateCommitter;

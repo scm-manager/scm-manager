@@ -25,11 +25,12 @@ import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import { Branch, Repository } from "@scm-manager/ui-types";
-import { Subtitle, DateFromNow, SmallLoadingSpinner } from "@scm-manager/ui-components";
+import { Subtitle, SmallLoadingSpinner } from "@scm-manager/ui-components";
 import BranchButtonGroup from "./BranchButtonGroup";
 import DefaultBranchTag from "./DefaultBranchTag";
 import AheadBehindTag from "./AheadBehindTag";
 import { useBranchDetails } from "@scm-manager/ui-api";
+import BranchCommitDateCommitter from "./BranchCommitDateCommitter";
 
 type Props = {
   repository: Repository;
@@ -63,10 +64,9 @@ const BranchDetail: FC<Props> = ({ repository, branch }) => {
           )}
         >
           <strong className="mr-1">{t("branch.name")}</strong> <Subtitle className="mb-0">{branch.name}</Subtitle>
-          <DefaultBranchTag defaultBranch={branch.defaultBranch} />
+          <DefaultBranchTag className={"ml-2"} defaultBranch={branch.defaultBranch} />
           <div className={classNames("is-ellipsis-overflow", "is-size-7", "ml-2")}>
-            {t("branches.overview.lastCommit")}{" "}
-            <DateFromNow className={classNames("is-size-7", "has-text-grey")} date={branch.lastCommitDate} />
+            <BranchCommitDateCommitter branch={branch} />
           </div>
         </div>
         <div className="media-right">

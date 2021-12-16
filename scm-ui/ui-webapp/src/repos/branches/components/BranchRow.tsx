@@ -26,10 +26,11 @@ import { Link as ReactLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import { Branch, BranchDetails, Link, Repository } from "@scm-manager/ui-types";
-import { DateFromNow, Icon, SmallLoadingSpinner } from "@scm-manager/ui-components";
+import { Icon, SmallLoadingSpinner } from "@scm-manager/ui-components";
 import { binder } from "@scm-manager/ui-extensions";
 import DefaultBranchTag from "./DefaultBranchTag";
 import AheadBehindTag from "./AheadBehindTag";
+import BranchCommitDateCommitter from "./BranchCommitDateCommitter";
 
 type Props = {
   repository: Repository;
@@ -67,23 +68,6 @@ const BranchRow: FC<Props> = ({ repository, baseUrl, branch, onDelete, details }
     return <SmallLoadingSpinner />;
   };
 
-  const committedAt = (
-    <>
-      {t("branches.table.lastCommit")} <DateFromNow date={branch.lastCommitDate} />
-    </>
-  );
-
-  let committedAtBy;
-  if (branch.lastCommitter?.name) {
-    committedAtBy = (
-      <>
-        {committedAt} {t("branches.table.lastCommitter", { name: branch.lastCommitter?.name })}
-      </>
-    );
-  } else {
-    committedAtBy = committedAt;
-  }
-
   const extensionProps = { repository, branch, details };
   return (
     <tr>
@@ -93,7 +77,7 @@ const BranchRow: FC<Props> = ({ repository, baseUrl, branch, onDelete, details }
         </ReactLink>
         {branch.lastCommitDate && (
           <span className={classNames("has-text-grey", "is-ellipsis-overflow", "is-size-7", "ml-4")}>
-            {committedAtBy}
+            <BranchCommitDateCommitter branch={branch} />
           </span>
         )}
       </td>
