@@ -41,6 +41,13 @@ nameOverride: ""
 # fullnameOverride -- Override the full resource names
 fullnameOverride: ""
 
+# securityContext -- Toggle and define securityContext
+securityContext:
+#  runAsUser: 999
+#  runAsGroup: 999
+  # unset fsGroup if working on openshift
+  fsGroup: 0
+
 service:
   # service.type -- k8s service type
   type: LoadBalancer
@@ -162,3 +169,8 @@ extraVolumeMounts: |
 #  - name: bucket-service-account
 #    mountPath: "{{.Values.bucket.mountPath}}"
 #    readOnly: true
+
+# extraArgs -- Add additional arguments on startup
+extraArgs: []
+#  - "-Dscm.initialPassword=admin"
+#  - "-Dscm.initialUser=admin"

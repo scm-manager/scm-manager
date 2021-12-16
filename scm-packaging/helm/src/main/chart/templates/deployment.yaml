@@ -49,23 +49,15 @@ spec:
       imagePullSecrets:
         - name: {{ .Values.image.pullSecret }}
       {{- end }}
-      initContainers:
-      - name: volume-permissions
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-        imagePullPolicy: IfNotPresent
-        command: ['sh', '-c', 'chown 1000:1000 /data']
-        securityContext:
-          runAsUser: 0
-        volumeMounts:
-        - name: data
-          mountPath: /data
+      {{- if .Values.securityContext }}
+      securityContext: {{- toYaml .Values.securityContext | nindent 8 }}
+      {{- end }}
       {{- if .Values.plugins }}
+      initContainers:
       - name: install-plugins
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: IfNotPresent
         command: ['sh', '/scripts/install-plugins.sh']
-        securityContext:
-          runAsUser: 0
         volumeMounts:
         - name: data
           mountPath: /data
@@ -75,6 +67,10 @@ spec:
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          {{- with .Values.extraArgs }}
+          args:
+          {{- . | toYaml | nindent 12 }}
+          {{- end }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           {{- if .Values.lifecycleHooks }}
           lifecycle:

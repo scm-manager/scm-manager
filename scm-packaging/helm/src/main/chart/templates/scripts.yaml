@@ -36,10 +36,8 @@ data:
   install-plugins.sh: |
     #!/bin/sh
     mkdir -p /data/plugins
-    chown 1000:1000 /data/plugins
     {{ range $i, $plugin := .Values.plugins }}
     # install plugin {{ tpl $plugin.name $ }}
     wget -O /data/plugins/{{ tpl $plugin.name $ }}.smp {{ tpl $plugin.url $ }}
-    chown 1000:1000 /data/plugins/{{ tpl $plugin.name $ }}.smp
     {{ end }}
 {{ end }}
