@@ -117,33 +117,54 @@ const HitsList: FC<HitsProps> = ({ hits, index, clear, gotoDetailSearch }) => {
     return <EmptyHits />;
   }
   return (
-    <>
+    <ul id="omni-search-results" aria-expanded="true" role="listbox">
       {hits.map((hit, idx) => (
-        <div key={id(hit)} onMouseDown={e => e.preventDefault()} onClick={clear}>
+        <li
+          key={id(hit)}
+          onMouseDown={e => e.preventDefault()}
+          onClick={clear}
+          role="option"
+          aria-selected={idx === index}
+          id={idx === index ? "omni-search-selected-option" : undefined}
+        >
           <Link
             className={classNames("is-flex", "dropdown-item", "has-text-weight-medium", "is-ellipsis-overflow", {
               "is-active": idx === index
             })}
             title={id(hit)}
             to={`/repo/${id(hit)}`}
-            role="option"
             data-omnisearch="true"
           >
             <AvatarSection hit={hit} />
             {id(hit)}
           </Link>
-        </div>
+        </li>
       ))}
-    </>
+    </ul>
   );
 };
 
-const Hits: FC<HitsProps> = ({ showHelp, gotoDetailSearch, ...rest }) => {
+type ScreenReaderHitSummaryProps = {
+  hits: Hit[];
+};
+
+const ScreenReaderHitSummary: FC<ScreenReaderHitSummaryProps> = ({ hits }) => {
+  const [t] = useTranslation("commons");
+  const key = hits.length > 0 ? "screenReaderHint" : "screenReaderHintNoResult";
+  return (
+    <span aria-live="assertive" className="is-sr-only">
+      {t(`search.quickSearch.${key}`, { count: hits.length })}
+    </span>
+  );
+};
+
+const Hits: FC<HitsProps> = ({ showHelp, gotoDetailSearch, hits, ...rest }) => {
   const [t] = useTranslation("commons");
 
   return (
     <>
-      <div aria-expanded="true" role="listbox" className="dropdown-content">
+      <div className="dropdown-content">
+        <ScreenReaderHitSummary hits={hits} />
         <ResultHeading
           className={classNames(
             "dropdown-item",
@@ -159,7 +180,7 @@ const Hits: FC<HitsProps> = ({ showHelp, gotoDetailSearch, ...rest }) => {
           <span>{t("search.quickSearch.resultHeading")}</span>
           <SyntaxHelp onClick={showHelp} />
         </ResultHeading>
-        <HitsList showHelp={showHelp} gotoDetailSearch={gotoDetailSearch} {...rest} />
+        <HitsList showHelp={showHelp} gotoDetailSearch={gotoDetailSearch} hits={hits} {...rest} />
         <MoreResults gotoDetailSearch={gotoDetailSearch} />
       </div>
     </>
@@ -298,7 +319,12 @@ const useSearchParams = () => {
     }
 
     const queryParams = queryString.parse(location.search);
-    initialQuery = queryParams.q || "";
+    const q = queryParams.q;
+    if (Array.isArray(q)) {
+      initialQuery = q[0] || "";
+    } else {
+      initialQuery = q || "";
+    }
   }
 
   return {
@@ -348,10 +374,12 @@ const OmniSearch: FC = () => {
               onKeyDown={onKeyDown}
               value={query}
               role="combobox"
-              aria-autocomplete="list"
+              aria-autocomplete="both"
               data-omnisearch="true"
               aria-expanded={query.length > 2}
               aria-label={t("search.ariaLabel")}
+              aria-owns="omni-search-results"
+              aria-activedescendant={index >= 0 ? "omni-search-selected-option" : undefined}
               {...handlers}
             />
             {isLoading ? null : (
