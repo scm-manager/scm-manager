@@ -41,7 +41,6 @@ import classNames from "classnames";
 
 const InfoBox = styled.div`
   white-space: pre-line;
-  background-color: #ccecf9;
   border-radius: 2px;
   border-left: 0.2rem solid;
   border-color: #33b2e8;
@@ -59,7 +58,7 @@ const ExportInterruptedNotification = () => {
 const ExportInfoBox: FC<{ exportInfo: ExportInfo }> = ({ exportInfo }) => {
   const [t] = useTranslation("repos");
   return (
-    <InfoBox className={classNames("my-4", "p-4")}>
+    <InfoBox className={classNames("my-4", "p-4", "has-background-info-25", "repository-export-info-box")}>
       <strong>{t("export.exportInfo.infoBoxTitle")}</strong>
       <p>{t("export.exportInfo.exporter", { username: exportInfo.exporterName })}</p>
       <p>

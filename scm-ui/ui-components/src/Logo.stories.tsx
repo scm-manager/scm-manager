@@ -26,6 +26,7 @@ import { storiesOf } from "@storybook/react";
 import styled from "styled-components";
 import Logo from "./Logo";
 
+// TODO Ersetzen?
 const Wrapper = styled.div`
   padding: 2em;
   background-color: black;

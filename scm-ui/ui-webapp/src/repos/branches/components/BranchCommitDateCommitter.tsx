@@ -31,7 +31,7 @@ import { useTranslation } from "react-i18next";
 const BranchCommitDateCommitter: FC<{ branch: Branch }> = ({ branch }) => {
   const [t] = useTranslation("repos");
 
-  const committedAt = <DateFromNow className={classNames("is-size-7", "has-text-grey")} date={branch.lastCommitDate} />;
+  const committedAt = <DateFromNow className={classNames("is-size-7", "has-text-secondary")} date={branch.lastCommitDate} />;
   if (branch.lastCommitter?.name) {
     return (
       <>

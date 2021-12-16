@@ -71,6 +71,7 @@ const EmptyHits: FC = () => {
   );
 };
 
+// TODO ersetzen
 const ResultHeading = styled.h3`
   border-bottom: 1px solid lightgray;
 `;
@@ -79,6 +80,7 @@ const DropdownMenu = styled.div`
   max-width: 20rem;
 `;
 
+// TODO ersetzen
 const ResultFooter = styled.div`
   border-top: 1px solid lightgray;
 `;

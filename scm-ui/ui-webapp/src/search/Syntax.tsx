@@ -53,7 +53,7 @@ const Expandable: FC<ExpandableProps> = ({ header, children, className }) => {
   const [t] = useTranslation("commons");
   const [expanded, setExpanded] = useState(false);
   return (
-    <div className={classNames("card", className)}>
+    <div className={classNames("card search-syntax-accordion", className)}>
       <header onClick={() => setExpanded(!expanded)} className="card-header is-clickable">
         <span className="card-header-title">{header}</span>
         <span className="card-header-icon">

@@ -45,7 +45,7 @@ type Props = {
 };
 
 const SizedModal = styled.div<{ size?: ModalSize }>`
-  width: ${(props) => (props.size ? `${modalSizes[props.size]}%` : "640px")};
+  width: ${props => (props.size ? `${modalSizes[props.size]}%` : "640px")};
 `;
 
 export const Modal: FC<Props> = ({
@@ -55,9 +55,9 @@ export const Modal: FC<Props> = ({
   footer,
   active,
   className,
-  headColor = "light",
-  headTextColor = "black",
-  size,
+  headColor = "secondary-less",
+  headTextColor = "secondary-most",
+  size
 }) => {
   const portalRootElement = usePortalRootElement("modalsRoot");
   const initialFocusRef = useRef(null);
@@ -65,7 +65,7 @@ export const Modal: FC<Props> = ({
     includeContainer: true,
     initialFocus: initialFocusRef.current,
     returnFocus: true,
-    updateNodes: false,
+    updateNodes: false
   });
 
   if (!portalRootElement) {

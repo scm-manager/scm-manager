@@ -58,7 +58,7 @@ const CodeActionBar: FC<Props> = ({ selectedBranch, branches, onSelectBranch, sw
   const location = useLocation();
 
   return (
-    <ActionBar className={"has-background-accent"}>
+    <ActionBar className="has-background-secondary-less">
       <FlexShrinkLevel
         left={
           branches &&

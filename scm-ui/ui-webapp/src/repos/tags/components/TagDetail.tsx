@@ -52,7 +52,7 @@ const TagDetail: FC<Props> = ({ repository, tag }) => {
         <SignatureIcon signatures={tag.signatures} className="ml-2 mb-5" />
         <div className={classNames("is-ellipsis-overflow", "is-size-7", "ml-2")}>
           {t("tags.overview.created")}{" "}
-          <DateFromNow className={classNames("is-size-7", "has-text-grey")} date={tag.date} />
+          <DateFromNow className={classNames("is-size-7", "has-text-secondary")} date={tag.date} />
         </div>
       </div>
       <div className="media-right">

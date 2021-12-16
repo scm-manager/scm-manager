@@ -65,15 +65,10 @@ const DropDownMenu = styled.div`
   &:before {
     position: absolute;
     content: "";
-    border-style: solid;
     pointer-events: none;
     height: 0;
     width: 0;
-    top: 0;
-    border-color: transparent;
-    border-bottom-color: white;
-    border-left-color: white;
-    border-width: 0.4rem;
+    top: -7px; // top padding of dropdown-menu + border-spacing
     transform-origin: center;
     transform: rotate(135deg);
 
@@ -132,7 +127,7 @@ const NotificationEntry: FC<EntryProps> = ({ notification, removeToast }) => {
         ) : (
           <Icon
             name="trash"
-            color="black"
+            color="secondary-most"
             className="is-clickable"
             title={t("notifications.dismiss")}
             onClick={remove}
@@ -142,12 +137,6 @@ const NotificationEntry: FC<EntryProps> = ({ notification, removeToast }) => {
     </tr>
   );
 };
-
-const DismissAllButton = styled(Button)`
-  &:hover > * {
-    color: white !important;
-  }
-`;
 
 type ClearEntryProps = {
   notifications: NotificationCollection;
@@ -164,9 +153,9 @@ const ClearEntry: FC<ClearEntryProps> = ({ notifications, clearToasts }) => {
   return (
     <div className={classNames("dropdown-item", "has-text-centered")}>
       <ErrorNotification error={error} />
-      <DismissAllButton className="is-outlined" color="link" loading={isLoading} action={clear}>
-        <Icon color="link" name="trash" className="mr-1" alt="" /> {t("notifications.dismissAll")}
-      </DismissAllButton>
+      <Button className="is-outlined" color="link" loading={isLoading} action={clear}>
+        <Icon color="inherit" name="trash" className="mr-1" alt="" /> {t("notifications.dismissAll")}
+      </Button>
     </div>
   );
 };
@@ -188,7 +177,7 @@ const NotificationList: FC<Props> = ({ data, clear, remove }) => {
         </tbody>
       </table>
       {all.length > 6 ? (
-        <p className={classNames("has-text-centered", "has-text-grey")}>
+        <p className={classNames("has-text-centered", "has-text-secondary")}>
           {t("notifications.xMore", { count: all.length - 6 })}
         </p>
       ) : null}
@@ -348,6 +337,7 @@ const Notifications: FC<NotificationProps> = ({ className }) => {
       <NotificationSubscription notifications={notifications} remove={remove} />
       <div
         className={classNames(
+          "notifications",
           "dropdown",
           "is-hoverable",
           {
