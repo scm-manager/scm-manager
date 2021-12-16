@@ -64,7 +64,7 @@ const BranchDetail: FC<Props> = ({ repository, branch }) => {
           )}
         >
           <strong className="mr-1">{t("branch.name")}</strong> <Subtitle className="mb-0">{branch.name}</Subtitle>
-          <DefaultBranchTag defaultBranch={branch.defaultBranch} />
+          <DefaultBranchTag className={"ml-2"} defaultBranch={branch.defaultBranch} />
           <div className={classNames("is-ellipsis-overflow", "is-size-7", "ml-2")}>
             <BranchCommitDateCommitter branch={branch} />
           </div>

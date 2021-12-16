@@ -28,6 +28,7 @@ import styled from "styled-components";
 
 type Props = WithTranslation & {
   defaultBranch?: boolean;
+  className?: string;
 };
 
 const DefaultTag = styled(Tag)`
@@ -36,10 +37,12 @@ const DefaultTag = styled(Tag)`
 
 class DefaultBranchTag extends React.Component<Props> {
   render() {
-    const { defaultBranch, t } = this.props;
+    const { defaultBranch, className, t } = this.props;
 
     if (defaultBranch) {
-      return <DefaultTag className="is-unselectable" color="dark" label={t("branch.defaultTag")} />;
+      return (
+        <DefaultTag className={"is-unselectable " + (className || "")} color="dark" label={t("branch.defaultTag")} />
+      );
     }
     return null;
   }
