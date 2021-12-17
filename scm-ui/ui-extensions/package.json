@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-extensions",
-  "version": "2.27.3",
+  "version": "2.27.4",
   "main": "src/index.ts",
   "license": "MIT",
   "private": false,
@@ -10,7 +10,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@scm-manager/ui-types": "^2.27.3",
+    "@scm-manager/ui-types": "^2.27.4",
     "react": "^17.0.1"
   },
   "devDependencies": {
