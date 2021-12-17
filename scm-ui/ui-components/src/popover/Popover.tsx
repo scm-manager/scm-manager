@@ -41,10 +41,29 @@ type ContainerProps = {
 };
 
 const PopoverContainer = styled.div<ContainerProps>`
+  position: absolute;
+  z-index: 100;
   width: ${props => props.width}px;
+  display: block;
 
   &:before {
+    position: absolute;
+    content: "";
+    border-style: solid;
+    pointer-events: none;
+    height: 0;
+    width: 0;
+    top: 100%;
     left: ${props => props.width / 2}px;
+    border-color: transparent;
+    border-bottom-color: white;
+    border-left-color: white;
+    border-width: 0.4rem;
+    margin-left: -0.4rem;
+    margin-top: -0.4rem;
+    -webkit-transform-origin: center;
+    transform-origin: center;
+    transform: rotate(-45deg);
   }
 `;
 

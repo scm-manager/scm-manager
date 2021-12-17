@@ -34,7 +34,32 @@ import { Action } from "./actions";
 import { useTranslation } from "react-i18next";
 
 const PopoverContainer = styled.div`
+  position: absolute;
   left: 2.25em;
+  z-index: 100;
+  width: 30em;
+  display: block;
+
+  &:before {
+    position: absolute;
+    content: "";
+    border-style: solid;
+    pointer-events: none;
+    height: 0;
+    width: 0;
+    top: 100%;
+    left: 5.5em;
+    border-color: transparent;
+    border-bottom-color: white;
+    border-left-color: white;
+    border-width: 0.4rem;
+    margin-left: -0.4rem;
+    margin-top: -0.4rem;
+    -webkit-transform-origin: center;
+    transform-origin: center;
+    box-shadow: -1px 1px 2px rgba(10, 10, 10, 0.2);
+    transform: rotate(-45deg);
+  }
 `;
 
 const PopoverHeading = styled.div`
@@ -60,7 +85,7 @@ type PopoverProps = {
   dispatch: Dispatch<Action>;
 };
 
-const Popover: FC<PopoverProps> = ({ annotation, offsetTop, repository, baseDate, dispatch }) => {
+const AnnotatePopover: FC<PopoverProps> = ({ annotation, offsetTop, repository, baseDate, dispatch }) => {
   const [t] = useTranslation("repos");
   const [height, setHeight] = useState(125);
   const ref = useRef<HTMLDivElement>(null);
@@ -72,13 +97,13 @@ const Popover: FC<PopoverProps> = ({ annotation, offsetTop, repository, baseDate
 
   const onMouseEnter = () => {
     dispatch({
-      type: "enter-popover"
+      type: "enter-popover",
     });
   };
 
   const OnMouseLeave = () => {
     dispatch({
-      type: "leave-popover"
+      type: "leave-popover",
     });
   };
 
@@ -88,7 +113,7 @@ const Popover: FC<PopoverProps> = ({ annotation, offsetTop, repository, baseDate
       ref={ref}
       onMouseEnter={onMouseEnter}
       onMouseLeave={OnMouseLeave}
-      className="box popover"
+      className="box"
       style={{ top: `${top}px` }}
     >
       <PopoverHeading className="is-clearfix">
@@ -110,4 +135,4 @@ const Popover: FC<PopoverProps> = ({ annotation, offsetTop, repository, baseDate
   );
 };
 
-export default Popover;
+export default AnnotatePopover;
