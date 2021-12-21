@@ -82,6 +82,11 @@ const SyntaxHighlighter: FC<Props> = ({ language = defaultLanguage, showLineNumb
 
   const defaultRenderer = createSyntaxHighlighterRenderer(createLinePermaLink, showLineNumbers);
 
+  let valueWithoutTrailingLineBreak = value;
+  if (value && value.length > 1 && value.substr(value.length - 1, value.length) === "\n") {
+    valueWithoutTrailingLineBreak = value.substr(0, value.length - 1);
+  }
+
   return (
     <Container ref={setContentRef}>
       <ReactSyntaxHighlighter
@@ -90,7 +95,7 @@ const SyntaxHighlighter: FC<Props> = ({ language = defaultLanguage, showLineNumb
         style={highlightingTheme}
         renderer={defaultRenderer}
       >
-        {value}
+        {valueWithoutTrailingLineBreak}
       </ReactSyntaxHighlighter>
       <TopRightButton title={t("syntaxHighlighting.copyButton")} onClick={copy}>
         <i className={copied ? "fa fa-clipboard-check" : "fa fa-clipboard"} />

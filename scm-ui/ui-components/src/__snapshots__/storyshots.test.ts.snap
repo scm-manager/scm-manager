@@ -4603,37 +4603,7 @@ exports[`Storyshots MarkdownView Code without Lang 1`] = `
                   style={Object {}}
                 >
                   Code without Language!
-
                 </span>
-              </span>
-            </div>
-            <div
-              className="SyntaxHighlighterRenderer__RowContainer-sc-12li0bg-0 dsgsZc"
-              id="line-2"
-            >
-              <span
-                aria-label="sources.content.copyPermalink"
-                className="tooltip has-tooltip-right"
-                data-tooltip="sources.content.copyPermalink"
-              >
-                <i
-                  aria-label="sources.content.copyPermalink"
-                  className="fas fa-fw fa-link has-text-secondary"
-                  onClick={[Function]}
-                  onKeyPress={[Function]}
-                />
-              </span>
-              <span
-                className="linenumber react-syntax-highlighter-line-number"
-                onClick={[Function]}
-              >
-                2
-              </span>
-              <span
-                style={Object {}}
-              >
-                
-
               </span>
             </div>
           </code>
@@ -6849,41 +6819,6 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
                 >
                   }
                 </span>
-                <span
-                  style={Object {}}
-                >
-                  
-
-                </span>
-              </span>
-            </div>
-            <div
-              className="SyntaxHighlighterRenderer__RowContainer-sc-12li0bg-0 dsgsZc"
-              id="line-16"
-            >
-              <span
-                aria-label="sources.content.copyPermalink"
-                className="tooltip has-tooltip-right"
-                data-tooltip="sources.content.copyPermalink"
-              >
-                <i
-                  aria-label="sources.content.copyPermalink"
-                  className="fas fa-fw fa-link has-text-secondary"
-                  onClick={[Function]}
-                  onKeyPress={[Function]}
-                />
-              </span>
-              <span
-                className="linenumber react-syntax-highlighter-line-number"
-                onClick={[Function]}
-              >
-                16
-              </span>
-              <span
-                style={Object {}}
-              >
-                
-
               </span>
             </div>
           </code>
@@ -15185,35 +15120,6 @@ exports[`Storyshots MarkdownView Inline Xml 1`] = `
 
               </span>
             </div>
-            <div
-              className="SyntaxHighlighterRenderer__RowContainer-sc-12li0bg-0 dsgsZc"
-              id="line-12"
-            >
-              <span
-                aria-label="sources.content.copyPermalink"
-                className="tooltip has-tooltip-right"
-                data-tooltip="sources.content.copyPermalink"
-              >
-                <i
-                  aria-label="sources.content.copyPermalink"
-                  className="fas fa-fw fa-link has-text-secondary"
-                  onClick={[Function]}
-                  onKeyPress={[Function]}
-                />
-              </span>
-              <span
-                className="linenumber react-syntax-highlighter-line-number"
-                onClick={[Function]}
-              >
-                12
-              </span>
-              <span
-                style={Object {}}
-              >
-                
-
-              </span>
-            </div>
           </code>
         </pre>
         <button
@@ -17551,41 +17457,6 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
                 >
                   }
                 </span>
-                <span
-                  style={Object {}}
-                >
-                  
-
-                </span>
-              </span>
-            </div>
-            <div
-              className="SyntaxHighlighterRenderer__RowContainer-sc-12li0bg-0 dsgsZc"
-              id="line-16"
-            >
-              <span
-                aria-label="sources.content.copyPermalink"
-                className="tooltip has-tooltip-right"
-                data-tooltip="sources.content.copyPermalink"
-              >
-                <i
-                  aria-label="sources.content.copyPermalink"
-                  className="fas fa-fw fa-link has-text-secondary"
-                  onClick={[Function]}
-                  onKeyPress={[Function]}
-                />
-              </span>
-              <span
-                className="linenumber react-syntax-highlighter-line-number"
-                onClick={[Function]}
-              >
-                16
-              </span>
-              <span
-                style={Object {}}
-              >
-                
-
               </span>
             </div>
           </code>
@@ -19209,41 +19080,6 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
                 >
                   &gt;
                 </span>
-                <span
-                  style={Object {}}
-                >
-                  
-
-                </span>
-              </span>
-            </div>
-            <div
-              className="SyntaxHighlighterRenderer__RowContainer-sc-12li0bg-0 dsgsZc"
-              id="line-24"
-            >
-              <span
-                aria-label="sources.content.copyPermalink"
-                className="tooltip has-tooltip-right"
-                data-tooltip="sources.content.copyPermalink"
-              >
-                <i
-                  aria-label="sources.content.copyPermalink"
-                  className="fas fa-fw fa-link has-text-secondary"
-                  onClick={[Function]}
-                  onKeyPress={[Function]}
-                />
-              </span>
-              <span
-                className="linenumber react-syntax-highlighter-line-number"
-                onClick={[Function]}
-              >
-                24
-              </span>
-              <span
-                style={Object {}}
-              >
-                
-
               </span>
             </div>
           </code>
@@ -76721,41 +76557,6 @@ exports[`Storyshots SyntaxHighlighter Go 1`] = `
             >
               }
             </span>
-            <span
-              style={Object {}}
-            >
-              
-
-            </span>
-          </span>
-        </div>
-        <div
-          className="SyntaxHighlighterRenderer__RowContainer-sc-12li0bg-0 dsgsZc"
-          id="line-18"
-        >
-          <span
-            aria-label="sources.content.copyPermalink"
-            className="tooltip has-tooltip-right"
-            data-tooltip="sources.content.copyPermalink"
-          >
-            <i
-              aria-label="sources.content.copyPermalink"
-              className="fas fa-fw fa-link has-text-secondary"
-              onClick={[Function]}
-              onKeyPress={[Function]}
-            />
-          </span>
-          <span
-            className="linenumber react-syntax-highlighter-line-number"
-            onClick={[Function]}
-          >
-            18
-          </span>
-          <span
-            style={Object {}}
-          >
-            
-
           </span>
         </div>
       </code>
@@ -76862,7 +76663,6 @@ public class Test {
   }
 
 }
-
       </code>
     </pre>
     <button
@@ -77684,41 +77484,6 @@ exports[`Storyshots SyntaxHighlighter Javascript 1`] = `
             >
               ;
             </span>
-            <span
-              style={Object {}}
-            >
-              
-
-            </span>
-          </span>
-        </div>
-        <div
-          className="SyntaxHighlighterRenderer__RowContainer-sc-12li0bg-0 dsgsZc"
-          id="line-8"
-        >
-          <span
-            aria-label="sources.content.copyPermalink"
-            className="tooltip has-tooltip-right"
-            data-tooltip="sources.content.copyPermalink"
-          >
-            <i
-              aria-label="sources.content.copyPermalink"
-              className="fas fa-fw fa-link has-text-secondary"
-              onClick={[Function]}
-              onKeyPress={[Function]}
-            />
-          </span>
-          <span
-            className="linenumber react-syntax-highlighter-line-number"
-            onClick={[Function]}
-          >
-            8
-          </span>
-          <span
-            style={Object {}}
-          >
-            
-
           </span>
         </div>
       </code>
@@ -85703,37 +85468,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
               style={Object {}}
             >
                dolore cillum. Esse laboris consequat dolor anim exercitation tempor aliqua deserunt velit magna laboris. Culpa culpa minim duis amet mollit do quis amet commodo nulla irure.
-
             </span>
-          </span>
-        </div>
-        <div
-          className="SyntaxHighlighterRenderer__RowContainer-sc-12li0bg-0 dsgsZc"
-          id="line-172"
-        >
-          <span
-            aria-label="sources.content.copyPermalink"
-            className="tooltip has-tooltip-right"
-            data-tooltip="sources.content.copyPermalink"
-          >
-            <i
-              aria-label="sources.content.copyPermalink"
-              className="fas fa-fw fa-link has-text-secondary"
-              onClick={[Function]}
-              onKeyPress={[Function]}
-            />
-          </span>
-          <span
-            className="linenumber react-syntax-highlighter-line-number"
-            onClick={[Function]}
-          >
-            172
-          </span>
-          <span
-            style={Object {}}
-          >
-            
-
           </span>
         </div>
       </code>
@@ -87208,41 +86943,6 @@ exports[`Storyshots SyntaxHighlighter Python 1`] = `
             >
               )
             </span>
-            <span
-              style={Object {}}
-            >
-              
-
-            </span>
-          </span>
-        </div>
-        <div
-          className="SyntaxHighlighterRenderer__RowContainer-sc-12li0bg-0 dsgsZc"
-          id="line-21"
-        >
-          <span
-            aria-label="sources.content.copyPermalink"
-            className="tooltip has-tooltip-right"
-            data-tooltip="sources.content.copyPermalink"
-          >
-            <i
-              aria-label="sources.content.copyPermalink"
-              className="fas fa-fw fa-link has-text-secondary"
-              onClick={[Function]}
-              onKeyPress={[Function]}
-            />
-          </span>
-          <span
-            className="linenumber react-syntax-highlighter-line-number"
-            onClick={[Function]}
-          >
-            21
-          </span>
-          <span
-            style={Object {}}
-          >
-            
-
           </span>
         </div>
       </code>
@@ -89613,23 +89313,6 @@ exports[`Storyshots SyntaxHighlighter Without line numbers 1`] = `
             >
               }
             </span>
-            <span
-              style={Object {}}
-            >
-              
-
-            </span>
-          </span>
-        </div>
-        <div
-          className="SyntaxHighlighterRenderer__RowContainer-sc-12li0bg-0 dsgsZc"
-          id="line-32"
-        >
-          <span
-            style={Object {}}
-          >
-            
-
           </span>
         </div>
       </code>
