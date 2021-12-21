@@ -1,0 +1,6 @@
+- type: fixed
+  description: Syntax highlighting on non highlighted fields ([#1901](https://github.com/scm-manager/scm-manager/pull/1901))
+- type: fixed
+  description: Ellipsis on new lines in code syntax highlighting ([#1901](https://github.com/scm-manager/scm-manager/pull/1901))
+- type: fixed
+  description: Ellipsis on content start or end in non code fields ([#1901](https://github.com/scm-manager/scm-manager/pull/1901))

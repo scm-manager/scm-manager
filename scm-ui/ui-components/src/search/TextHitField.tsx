@@ -40,16 +40,24 @@ const HighlightedTextField: FC<HighlightedTextFieldProps> = ({ field, syntaxHigh
       {field.fragments.map((fragment, i) => (
         <React.Fragment key={fragment}>
           {field.matchesContentStart ? null : separator}
-          {syntaxHighlightingLanguage ? (
-            <SyntaxHighlightedFragment value={fragment} language={syntaxHighlightingLanguage} />
-          ) : (
-            <HighlightedFragment value={fragment} />
-          )}
+          <FieldFragment fragment={fragment} syntaxHighlightingLanguage={syntaxHighlightingLanguage} />
           {i + 1 >= field.fragments.length && !field.matchesContentEnd ? separator : null}
         </React.Fragment>
       ))}
     </>
   );
+};
+
+type FieldFragmentProps = {
+  fragment: string;
+  syntaxHighlightingLanguage?: string;
+};
+
+const FieldFragment: FC<FieldFragmentProps> = ({ fragment, syntaxHighlightingLanguage }) => {
+  if (syntaxHighlightingLanguage) {
+    return <SyntaxHighlightedFragment value={fragment} language={syntaxHighlightingLanguage} />;
+  }
+  return <HighlightedFragment value={fragment} />;
 };
 
 type Props = {
@@ -58,6 +66,20 @@ type Props = {
   truncateValueAt?: number;
   syntaxHighlightingLanguage?: string;
 };
+
+function truncate(value: string, truncateValueAt: number = 0, syntaxHighlightingLanguage?: string): string {
+  if (truncateValueAt > 0 && value.length > truncateValueAt) {
+    if (syntaxHighlightingLanguage) {
+      let nextLineBreak = value.indexOf("\n", truncateValueAt);
+      if (nextLineBreak >= 0 && nextLineBreak < value.length - 1) {
+        value = value.substring(0, nextLineBreak) + "\n...";
+      }
+    } else {
+      value = value.substring(0, truncateValueAt) + "...";
+    }
+  }
+  return value;
+}
 
 const TextHitField: FC<Props> = ({
   hit,
@@ -75,8 +97,9 @@ const TextHitField: FC<Props> = ({
     let value = field.value;
     if (value === "") {
       return <>{children}</>;
-    } else if (typeof value === "string" && truncateValueAt > 0 && value.length > truncateValueAt) {
-      value = value.substring(0, truncateValueAt) + "...";
+    } else if (typeof value === "string") {
+      const v = truncate(value, truncateValueAt, syntaxHighlightingLanguage);
+      return <FieldFragment fragment={v} syntaxHighlightingLanguage={syntaxHighlightingLanguage} />;
     }
     return <>{value}</>;
   }
