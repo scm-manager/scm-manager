@@ -1,0 +1,2 @@
+- type: fixed
+  description: Closing of repository while getting the latest commit asynchronously ([#1903](https://github.com/scm-manager/scm-manager/pull/1903))
