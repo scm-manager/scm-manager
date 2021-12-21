@@ -75,7 +75,7 @@ public final class LuceneHighlighter {
     if (fieldAnalyzer == Indexed.Analyzer.CODE) {
       return keepWholeLine(value, fragments);
     }
-    return Arrays.stream(fragments).map(ContentFragment::new)
+    return Arrays.stream(fragments).map(f -> createContentFragment(value, f))
       .toArray(ContentFragment[]::new);
   }
 
@@ -120,6 +120,11 @@ public final class LuceneHighlighter {
     }
 
     return new ContentFragment(snippet + content.substring(index + raw.length(), end) + (matchesContentEnd ? "" : "\n"), matchesContentStart, matchesContentEnd);
+  }
+
+  private ContentFragment createContentFragment(String content, String fragment) {
+    String raw = fragment.replace(PRE_TAG, "").replace(POST_TAG, "");
+    return new ContentFragment(fragment, content.startsWith(raw), content.endsWith(raw));
   }
 
 }

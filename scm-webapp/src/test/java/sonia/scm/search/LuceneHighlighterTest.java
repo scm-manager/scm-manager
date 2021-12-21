@@ -123,6 +123,24 @@ class LuceneHighlighterTest {
     assertThat(contentFragments[0].isMatchesContentEnd()).isTrue();
   }
 
+  @Test
+  void shouldMatchContentStartWithDefaultAnalyzer() throws InvalidTokenOffsetsException, IOException {
+    ContentFragment[] contentFragments = highlight("GameOfLife.java", "gameoflife");
+
+    assertThat(contentFragments).hasSize(1);
+    assertThat(contentFragments[0].isMatchesContentStart()).isTrue();
+    assertThat(contentFragments[0].isMatchesContentEnd()).isFalse();
+  }
+
+  @Test
+  void shouldMatchContentEndWithDefaultAnalyzer() throws InvalidTokenOffsetsException, IOException {
+    ContentFragment[] contentFragments = highlight("Button.tsx", "default");
+
+    assertThat(contentFragments).hasSize(1);
+    assertThat(contentFragments[0].isMatchesContentStart()).isFalse();
+    assertThat(contentFragments[0].isMatchesContentEnd()).isTrue();
+  }
+
   @Nested
   class IsHighlightableTests {
 
@@ -160,6 +178,16 @@ class LuceneHighlighterTest {
       assertThat(highlighter.isHighlightable(field)).isTrue();
     }
 
+  }
+
+  private ContentFragment[] highlight(String resource, String search) throws IOException, InvalidTokenOffsetsException {
+    StandardAnalyzer analyzer = new StandardAnalyzer();
+    Query query = new TermQuery(new Term("content", search));
+
+    String content = content(resource);
+
+    LuceneHighlighter highlighter = new LuceneHighlighter(analyzer, query);
+    return highlighter.highlight("content", Indexed.Analyzer.DEFAULT, content);
   }
 
   private ContentFragment[] highlightCode(String resource, String search) throws IOException, InvalidTokenOffsetsException {

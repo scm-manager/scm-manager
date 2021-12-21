@@ -23,7 +23,7 @@
  */
 import React from "react";
 import { storiesOf } from "@storybook/react";
-import { bashHit, javaHit, markdownHit } from "../__resources__/ContentSearchHit";
+import { bashHit, filenameXmlHit, javaHit, markdownHit, pullRequestHit } from "../__resources__/SearchHit";
 import TextHitField from "./TextHitField";
 
 storiesOf("TextHitField", module)
@@ -50,5 +50,20 @@ storiesOf("TextHitField", module)
   .add("Unknown SyntaxHighlighting", () => (
     <pre>
       <TextHitField hit={bashHit} field={"content"} syntaxHighlightingLanguage="__unknown__" />
+    </pre>
+  ))
+  .add("Non Content Search", () => (
+    <pre>
+      <TextHitField hit={filenameXmlHit} field={"content"} syntaxHighlightingLanguage="xml" />
+    </pre>
+  ))
+  .add("Truncate", () => (
+    <pre>
+      <TextHitField hit={pullRequestHit} field={"description"} truncateValueAt={128} />
+    </pre>
+  ))
+  .add("Truncate Keep Whole Line", () => (
+    <pre>
+      <TextHitField hit={filenameXmlHit} field={"content"} syntaxHighlightingLanguage="xml" truncateValueAt={1024} />
     </pre>
   ));
