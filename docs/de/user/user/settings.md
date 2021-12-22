@@ -30,6 +30,6 @@ Es können öffentliche Schlüssel (Public Keys) zu Benutzern hinzugefügt werde
 ![Öffentliche Schlüssel](assets/user-settings-publickeys.png)
 
 ### API Schlüssel
-Zur Nutzung in anderen Systemen wie z. B. CI Systemen können sogenannte API Schlüssel erstellt werden. Sie können für den Zugriff auf Repositories über die REST API sowie über SCM-Clients genutzt werden. Weitere Informationen zu API Schlüsseln befinden sich im [Abschnitt Profil](../profile/#api-schlüssel).
+Zur Nutzung in anderen Systemen wie z. B. CI Systemen können sogenannte API Schlüssel erstellt werden. Sie können für den Zugriff auf Repositories über die REST API sowie über SCM-Clients genutzt werden. Weitere Informationen zu API Schlüsseln befinden sich im [Abschnitt Profil](../../profile/#api-schlüssel).
 
 ![API Schlüssel](assets/user-settings-apikeys.png)
