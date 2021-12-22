@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-styles",
-  "version": "2.27.5-SNAPSHOT",
+  "version": "2.28.0",
   "description": "Styles for SCM-Manager",
   "main": "src/scm.scss",
   "license": "MIT",
