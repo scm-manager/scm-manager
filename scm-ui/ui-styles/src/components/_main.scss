@@ -815,16 +815,16 @@ form .field:not(.is-grouped) {
   color: $link-invert !important;
 }
 
+.autocomplete-entry__option--is-selected {
+  // TODO better use link-light or something
+  background-color: $blue-light !important;
+  color: $link-invert !important;
+}
+
 .autocomplete-entry__single-value {
   color: $text !important;
 }
 
-.autocomplete-entry__control--is-focused {
-  border-color: $input-focus-border-color !important;
-}
-
-.autocomplete-entry {
-}
 .autocomplete-entry > div {
   color: $text-strong !important;
 }
@@ -842,8 +842,14 @@ form .field:not(.is-grouped) {
   border-color: $input-hover-border-color !important;
 }
 
-.autocomplete-entry__control:focus {
+.autocomplete-entry__control--is-focused {
   border-color: $input-focus-border-color !important;
+  box-shadow: $input-focus-box-shadow-size $input-focus-box-shadow-color !important;
+}
+
+.autocomplete-entry__control--is-focused:hover {
+  border-color: $input-focus-border-color !important;
+  box-shadow: $input-focus-box-shadow-size $input-focus-box-shadow-color !important;
 }
 
 .autocomplete-entry__input {
