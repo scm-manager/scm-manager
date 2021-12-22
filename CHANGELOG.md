@@ -5,6 +5,39 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.28.0] - 2021-12-22
+### Added
+- Fix ScmPathInfoStore injection ([#1889](https://github.com/scm-manager/scm-manager/pull/1889))
+- Show additional branch details information ([#1888](https://github.com/scm-manager/scm-manager/pull/1888) and [#1893](https://github.com/scm-manager/scm-manager/pull/1893))
+- Add move capabilities to modify command ([#1859](https://github.com/scm-manager/scm-manager/pull/1859))
+- Adds compatibility for OCP and ICP ([#1870](https://github.com/scm-manager/scm-manager/pull/1870))
+- Show additional information on branches overview ([#1876](https://github.com/scm-manager/scm-manager/pull/1876))
+
+### Fixed
+- High contrast mode flaws ([#1892](https://github.com/scm-manager/scm-manager/pull/1892))
+- Cleanup html errors ([#1869](https://github.com/scm-manager/scm-manager/pull/1869))
+- Fix extension point "main.route"
+- Closing of repository while getting the latest commit asynchronously ([#1903](https://github.com/scm-manager/scm-manager/pull/1903))
+- Search highlighting in jsx ([#1886](https://github.com/scm-manager/scm-manager/pull/1886))
+- Syntax highlighting on non highlighted fields ([#1901](https://github.com/scm-manager/scm-manager/pull/1901))
+- Ellipsis on new lines in code syntax highlighting ([#1901](https://github.com/scm-manager/scm-manager/pull/1901))
+- Ellipsis on content start or end in non code fields ([#1901](https://github.com/scm-manager/scm-manager/pull/1901))
+- Closing of file streams ([#1857](https://github.com/scm-manager/scm-manager/pull/1857) and [#1868](https://github.com/scm-manager/scm-manager/pull/1868))
+- Exit of retry loop for deletion of files ([#1857](https://github.com/scm-manager/scm-manager/pull/1857)  and [#1868](https://github.com/scm-manager/scm-manager/pull/1868))
+- Personal footer links ([#1882](https://github.com/scm-manager/scm-manager/pull/1882))
+- Better error descriptions for gpg key import ([#1879](https://github.com/scm-manager/scm-manager/pull/1879))
+- Highlight only queried fields ([#1887](https://github.com/scm-manager/scm-manager/pull/1887))
+- Overview document title ([#1885](https://github.com/scm-manager/scm-manager/pull/1885))
+- Do not display ellipsis if search result matches start or end of content ([#1896](https://github.com/scm-manager/scm-manager/pull/1896))
+- Source view for files with colons ([#1881](https://github.com/scm-manager/scm-manager/pull/1881))
+
+### Changed
+- Improved quick search experience for screen readers ([#1898](https://github.com/scm-manager/scm-manager/pull/1898))
+- Keep whole lines for code highlighting in search ([#1871](https://github.com/scm-manager/scm-manager/pull/1871))
+- Use more accurate language detection for syntax highlighting ([#1891](https://github.com/scm-manager/scm-manager/pull/1891))
+- Improve headings structure ([#1883](https://github.com/scm-manager/scm-manager/pull/1883))
+- Enforce eslint to ensure accessible html ([#1878](https://github.com/scm-manager/scm-manager/pull/1878))
+
 ## [2.27.4] - 2021-12-17
 ### Changed
 - Upgrade Logback to v1.2.9
@@ -850,3 +883,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.27.2]: https://scm-manager.org/download/2.27.2
 [2.27.3]: https://scm-manager.org/download/2.27.3
 [2.27.4]: https://scm-manager.org/download/2.27.4
+[2.28.0]: https://scm-manager.org/download/2.28.0

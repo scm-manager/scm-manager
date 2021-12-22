@@ -1,4 +1,0 @@
-- type: fixed
-  description: Closing of file streams ([#1857](https://github.com/scm-manager/scm-manager/pull/1857) and [#1868](https://github.com/scm-manager/scm-manager/pull/1868))
-- type: fixed
-  description: Exit of retry loop for deletion of files ([#1857](https://github.com/scm-manager/scm-manager/pull/1857)  and [#1868](https://github.com/scm-manager/scm-manager/pull/1868))
