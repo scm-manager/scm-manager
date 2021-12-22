@@ -568,7 +568,6 @@ form .field:not(.is-grouped) {
 .select select,
 .textarea,
 .file-name {
-  border-color: $blue-light;
   box-shadow: none;
 }
 
@@ -811,11 +810,42 @@ form .field:not(.is-grouped) {
   color: $text !important;
 }
 
-.autocomplete-entry > div {
-  border-color: $blue-light;
+.autocomplete-entry__option--is-focused {
+  background-color: $link !important;
+  color: $link-invert !important;
+}
 
-  &:hover,
-  &.is-hovered {
-    border-color: #4a4a4a;
-  }
+.autocomplete-entry__single-value {
+  color: $text !important;
+}
+
+.autocomplete-entry__control--is-focused {
+  border-color: $input-focus-border-color !important;
+}
+
+.autocomplete-entry {
+}
+.autocomplete-entry > div {
+  color: $text-strong !important;
+}
+
+.autocomplete-entry__menu {
+  background-color: $background !important;
+}
+
+.autocomplete-entry__control {
+  background-color: $scheme-main !important;
+  border-color: $input-border-color !important;
+}
+
+.autocomplete-entry__control:hover {
+  border-color: $input-hover-border-color !important;
+}
+
+.autocomplete-entry__control:focus {
+  border-color: $input-focus-border-color !important;
+}
+
+.autocomplete-entry__input {
+  color: $text-strong !important;
 }

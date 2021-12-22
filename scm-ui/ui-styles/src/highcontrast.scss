@@ -482,22 +482,3 @@ fieldset[disabled] .input::placeholder {
   border: 1px solid $info;
   box-shadow: none;
 }
-
-.autocomplete-entry > div {
-  background-color: $scheme-main;
-  color: $white-bis;
-
-  /* Text input */
-  &:nth-child(2) * {
-    color: $white-bis;
-  }
-
-  /* Suggestions */
-  &:nth-child(3) {
-    border: 1px solid $info;
-
-    > div div:hover {
-      background-color: #4672fe !important;
-    }
-  }
-}
