@@ -68,6 +68,8 @@ task publish(type: GitHubUploadTask) {
 
 license {
   header rootProject.file("LICENSE.txt")
+  lineEnding = "\n"
+
   tasks {
     gradle {
       files.from('build.gradle')

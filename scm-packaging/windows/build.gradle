@@ -132,6 +132,7 @@ project.rootProject.publishing.repositories.each { r ->
 
 license {
   header rootProject.file("LICENSE.txt")
+  lineEnding = "\n"
 
   tasks {
     build {
