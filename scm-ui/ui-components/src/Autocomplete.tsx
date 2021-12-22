@@ -89,6 +89,7 @@ class Autocomplete extends React.Component<Props, State> {
           {creatable ? (
             <AsyncCreatable
               className="autocomplete-entry"
+              classNamePrefix="autocomplete-entry"
               cacheOptions
               loadOptions={loadSuggestions}
               onChange={this.handleInputChange}
@@ -110,6 +111,8 @@ class Autocomplete extends React.Component<Props, State> {
             />
           ) : (
             <Async
+              className="autocomplete-entry"
+              classNamePrefix="autocomplete-entry"
               cacheOptions
               loadOptions={loadSuggestions}
               onChange={this.handleInputChange}
