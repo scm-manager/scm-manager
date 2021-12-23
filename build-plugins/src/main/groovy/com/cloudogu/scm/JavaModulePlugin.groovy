@@ -111,6 +111,7 @@ class JavaModulePlugin implements Plugin<Project> {
       header project.rootProject.file('LICENSE.txt')
       newLine = true
       ignoreNewLine = true
+      lineEnding = "\n"
 
       exclude "**/*.mustache"
       exclude "**/*.json"

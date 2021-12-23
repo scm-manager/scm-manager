@@ -1,0 +1,2 @@
+- type: fixed
+  description: Set line ending used for license files to LF ([#1904](https://github.com/scm-manager/scm-manager/pull/1904))

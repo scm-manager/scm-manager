@@ -29,7 +29,7 @@ plugins {
   id 'org.scm-manager.packaging'
   id 'signing'
   id 'maven-publish'
-  id 'org.scm-manager.license' version '0.7.1'
+  id 'org.scm-manager.license'
 }
 
 configurations {
@@ -132,6 +132,7 @@ project.rootProject.publishing.repositories.each { r ->
 
 license {
   header rootProject.file("LICENSE.txt")
+  lineEnding = "\n"
 
   tasks {
     build {

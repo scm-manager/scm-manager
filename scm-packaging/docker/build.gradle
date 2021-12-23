@@ -25,7 +25,7 @@
 plugins {
   id 'com.bmuschko.docker-remote-api' version '6.6.1'
   id 'org.scm-manager.packaging'
-  id 'org.scm-manager.license' version '0.7.1'
+  id 'org.scm-manager.license'
 }
 
 import org.gradle.util.VersionNumber
@@ -119,6 +119,7 @@ artifacts {
 
 license {
   header rootProject.file("LICENSE.txt")
+  lineEnding = "\n"
 
   tasks {
     build {
