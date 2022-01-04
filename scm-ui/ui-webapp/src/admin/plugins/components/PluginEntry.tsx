@@ -43,7 +43,6 @@ const ActionbarWrapper = styled.div`
   }
 `;
 
-// TODO: ersetzen?
 const IconWrapperStyle = styled.span.attrs(props => ({
   className: "level-item mb-0 p-2 is-clickable"
 }))`

@@ -46,7 +46,6 @@ const AvatarWrapper = styled.figure`
   padding-bottom: 20px;
 `;
 
-//TODO Ersetzen?
 const AvatarImage = styled(Image)`
   width: 128px;
   height: 128px;
