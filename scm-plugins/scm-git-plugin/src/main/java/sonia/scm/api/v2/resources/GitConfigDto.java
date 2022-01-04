@@ -43,6 +43,7 @@ import static sonia.scm.repository.Branch.VALID_BRANCH_NAMES;
 public class GitConfigDto extends HalRepresentation implements UpdateGitConfigDto {
 
   private boolean disabled = false;
+  private boolean allowDisable;
 
   private String gcExpression;
 

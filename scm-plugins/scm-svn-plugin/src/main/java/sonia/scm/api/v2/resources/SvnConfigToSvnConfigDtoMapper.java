@@ -25,7 +25,6 @@
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.Links;
-import org.assertj.core.util.VisibleForTesting;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
@@ -47,11 +46,6 @@ public abstract class SvnConfigToSvnConfigDtoMapper extends BaseMapper<SvnConfig
   private ScmPathInfoStore scmPathInfoStore;
   @Inject
   private RepositoryManager repositoryManager;
-
-  @VisibleForTesting
-  void setRepositoryManager(RepositoryManager repositoryManager) {
-    this.repositoryManager = repositoryManager;
-  }
 
   @AfterMapping
   void appendLinks(SvnConfig config, @MappingTarget SvnConfigDto target) {
