@@ -25,10 +25,12 @@
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.Links;
+import org.assertj.core.util.VisibleForTesting;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import sonia.scm.config.ConfigurationPermissions;
+import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.SvnConfig;
 
 import javax.inject.Inject;
@@ -43,6 +45,13 @@ public abstract class SvnConfigToSvnConfigDtoMapper extends BaseMapper<SvnConfig
 
   @Inject
   private ScmPathInfoStore scmPathInfoStore;
+  @Inject
+  private RepositoryManager repositoryManager;
+
+  @VisibleForTesting
+  void setRepositoryManager(RepositoryManager repositoryManager) {
+    this.repositoryManager = repositoryManager;
+  }
 
   @AfterMapping
   void appendLinks(SvnConfig config, @MappingTarget SvnConfigDto target) {
@@ -51,6 +60,7 @@ public abstract class SvnConfigToSvnConfigDtoMapper extends BaseMapper<SvnConfig
       linksBuilder.single(link("update", update()));
     }
     target.add(linksBuilder.build());
+    target.setAllowDisable(repositoryManager.getAll().stream().noneMatch(r -> r.getType().equals("svn")));
   }
 
   private String self() {

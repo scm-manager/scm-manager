@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 import React, { FC, useEffect, useState } from "react";
-import { useTranslation, WithTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import { Link, Links } from "@scm-manager/ui-types";
 import { apiClient, Button, Checkbox, InputField } from "@scm-manager/ui-components";
 
@@ -36,7 +36,7 @@ type Configuration = {
   _links: Links;
 };
 
-type Props = WithTranslation & {
+type Props = {
   initialConfiguration: Configuration;
   readOnly: boolean;
   onConfigurationChange: (p1: Configuration, p2: boolean) => void;
