@@ -37,6 +37,7 @@ type Props = {
   repository: Repository;
   branch?: Branch;
   defaultBranch?: Branch;
+  clickable?: boolean;
   revision: string;
   path: string;
   baseUrl: string;
@@ -124,7 +125,8 @@ const Breadcrumb: FC<Props> = ({
   baseUrl,
   sources,
   permalink,
-  preButtons
+  preButtons,
+  clickable = true
 }) => {
   const location = useLocation();
   const history = useHistory();
@@ -153,13 +155,17 @@ const Breadcrumb: FC<Props> = ({
         }
         return (
           <li key={index}>
-            <Link
-              className="is-ellipsis-overflow"
-              title={pathFragment}
-              to={baseUrl + "/" + encodeURIComponent(revision) + "/" + currPath}
-            >
-              {decodeURIComponent(pathFragment)}
-            </Link>
+            {clickable ? (
+              <Link
+                className="is-ellipsis-overflow"
+                title={pathFragment}
+                to={baseUrl + "/" + encodeURIComponent(revision) + "/" + currPath}
+              >
+                {decodeURIComponent(pathFragment)}
+              </Link>
+            ) : (
+              <text className="is-ellipsis-overflow has-text-inherit px-3">{decodeURIComponent(pathFragment)}</text>
+            )}
           </li>
         );
       });
@@ -196,9 +202,13 @@ const Breadcrumb: FC<Props> = ({
         {prefixButtons}
         <ul>
           <li>
-            <Link to={homeUrl} aria-label={t("breadcrumb.home")}>
-              <HomeIcon title={t("breadcrumb.home")} name="home" color="inherit" />
-            </Link>
+            {clickable ? (
+              <Link to={homeUrl} aria-label={t("breadcrumb.home")}>
+                <HomeIcon title={t("breadcrumb.home")} name="home" color="inherit" />
+              </Link>
+            ) : (
+              <Icon name="home" color="inherit" className="mr-3" />
+            )}
           </li>
           {pathSection()}
         </ul>
