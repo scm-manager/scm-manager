@@ -28,7 +28,7 @@ import CreateRepository from "./CreateRepository";
 import ImportRepository from "./ImportRepository";
 import { useBinder } from "@scm-manager/ui-extensions";
 import { useTranslation } from "react-i18next";
-import { Page, urls } from "@scm-manager/ui-components";
+import { Notification, Page, urls } from "@scm-manager/ui-components";
 import RepositoryFormSwitcher from "../components/form/RepositoryFormSwitcher";
 import { useIndex, useNamespaceStrategies, useRepositoryTypes } from "@scm-manager/ui-api";
 import NamespaceAndNameFields from "../components/NamespaceAndNameFields";
@@ -67,7 +67,11 @@ const CreatorRoute: FC<CreatorRouteProps> = ({ creator, creators }) => {
       loading={isPageLoading}
       error={pageLoadingError}
     >
-      {namespaceStrategies && repositoryTypes && index ? (
+      {namespaceStrategies &&
+      repositoryTypes &&
+      repositoryTypes?._embedded?.repositoryTypes &&
+      repositoryTypes._embedded.repositoryTypes.length > 0 &&
+      index ? (
         <Component
           namespaceStrategies={namespaceStrategies}
           repositoryTypes={repositoryTypes}
@@ -75,7 +79,9 @@ const CreatorRoute: FC<CreatorRouteProps> = ({ creator, creators }) => {
           nameForm={NamespaceAndNameFields}
           informationForm={RepositoryInformationForm}
         />
-      ) : null}
+      ) : (
+        <Notification type="warning">{t("create.noTypes")}</Notification>
+      )}
     </Page>
   );
 };
