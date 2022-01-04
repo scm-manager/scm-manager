@@ -89,68 +89,56 @@ const HgConfigurationForm: FC<Props> = ({ initialConfiguration, onConfigurationC
   };
 
   return (
-    <div className="columns is-multiline">
-      <div className="column is-half">
-        <InputField
-          name="hgBinary"
-          label={t("scm-hg-plugin.config.hgBinary")}
-          helpText={t("scm-hg-plugin.config.hgBinary.HelpText")}
-          value={configuration.hgBinary}
-          onChange={value => setConfiguration({ ...configuration, hgBinary: value })}
-          validationError={hasValidationError("hgBinary")}
-          errorMessage={t("scm-hg-plugin.config.required")}
-          disabled={readOnly}
-        />
-      </div>
-      <div className="column is-half">
-        <InputField
-          name="encoding"
-          label={t("scm-hg-plugin.config.encoding")}
-          helpText={t("scm-hg-plugin.config.encoding.HelpText")}
-          value={configuration.encoding}
-          onChange={value => setConfiguration({ ...configuration, encoding: value })}
-          validationError={hasValidationError("encoding")}
-          errorMessage={t("scm-hg-plugin.config.required")}
-          disabled={readOnly}
-        />
-      </div>
-      <div className="column is-half">
-        <Checkbox
-          name="showRevisionInId"
-          label={t("scm-hg-plugin.config.showRevisionInId")}
-          helpText={t("scm-hg-plugin.config.showRevisionInId.HelpText")}
-          checked={configuration.showRevisionInId}
-          onChange={value => setConfiguration({ ...configuration, showRevisionInId: value })}
-          disabled={readOnly}
-        />
-      </div>
-      <div className="column is-half">
-        <Checkbox
-          name="enableHttpPostArgs"
-          label={t("scm-hg-plugin.config.enableHttpPostArgs")}
-          helpText={t("scm-hg-plugin.config.enableHttpPostArgs.HelpText")}
-          checked={configuration.enableHttpPostArgs}
-          onChange={value => setConfiguration({ ...configuration, enableHttpPostArgs: value })}
-          disabled={readOnly}
-        />
-      </div>
-      <div className="column is-half">
-        <Checkbox
-          name="disabled"
-          label={t("scm-hg-plugin.config.disabled")}
-          helpText={t("scm-hg-plugin.config.disabledHelpText")}
-          checked={configuration.disabled}
-          onChange={value => {
-            setConfiguration({ ...configuration, disabled: value });
-          }}
-          disabled={readOnly || !configuration.allowDisable}
-        />
-      </div>
-      <div className="column is-full">
-        <Button disabled={!initialConfiguration?._links?.autoConfiguration} action={() => triggerAutoConfigure()}>
-          {t("scm-hg-plugin.config.autoConfigure")}
-        </Button>
-      </div>
+    <div>
+      <InputField
+        name="hgBinary"
+        label={t("scm-hg-plugin.config.hgBinary")}
+        helpText={t("scm-hg-plugin.config.hgBinary.HelpText")}
+        value={configuration.hgBinary}
+        onChange={value => setConfiguration({ ...configuration, hgBinary: value })}
+        validationError={hasValidationError("hgBinary")}
+        errorMessage={t("scm-hg-plugin.config.required")}
+        disabled={readOnly}
+      />
+      <InputField
+        name="encoding"
+        label={t("scm-hg-plugin.config.encoding")}
+        helpText={t("scm-hg-plugin.config.encoding.HelpText")}
+        value={configuration.encoding}
+        onChange={value => setConfiguration({ ...configuration, encoding: value })}
+        validationError={hasValidationError("encoding")}
+        errorMessage={t("scm-hg-plugin.config.required")}
+        disabled={readOnly}
+      />
+      <Checkbox
+        name="showRevisionInId"
+        label={t("scm-hg-plugin.config.showRevisionInId")}
+        helpText={t("scm-hg-plugin.config.showRevisionInId.HelpText")}
+        checked={configuration.showRevisionInId}
+        onChange={value => setConfiguration({ ...configuration, showRevisionInId: value })}
+        disabled={readOnly}
+      />
+      <Checkbox
+        name="enableHttpPostArgs"
+        label={t("scm-hg-plugin.config.enableHttpPostArgs")}
+        helpText={t("scm-hg-plugin.config.enableHttpPostArgs.HelpText")}
+        checked={configuration.enableHttpPostArgs}
+        onChange={value => setConfiguration({ ...configuration, enableHttpPostArgs: value })}
+        disabled={readOnly}
+      />
+      <Checkbox
+        name="disabled"
+        label={t("scm-hg-plugin.config.disabled")}
+        helpText={t("scm-hg-plugin.config.disabledHelpText")}
+        checked={configuration.disabled}
+        onChange={value => {
+          setConfiguration({ ...configuration, disabled: value });
+        }}
+        disabled={readOnly || !configuration.allowDisable}
+      />
+      <Button disabled={!initialConfiguration?._links?.autoConfiguration} action={() => triggerAutoConfigure()}>
+        {t("scm-hg-plugin.config.autoConfigure")}
+      </Button>
     </div>
   );
 };
