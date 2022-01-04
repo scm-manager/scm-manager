@@ -48,6 +48,9 @@ $light-gray: #f2f2f2;
 $footer-background-color: $grey-dark;
 $footer-color: $white-ter;
 
+//make horizontal lines pop more
+$hr-background-color: $white-bis;
+
 $box-background-color: scale-color($scheme-main, $lightness: 15%);
 $box-background-color: $grey-darker;
 
@@ -55,6 +58,7 @@ $modal-card-head-background-color: $black-ter;
 $modal-card-body-background-color: $scheme-main;
 
 $input-placeholder-color: $white;
+$input-disabled-color: $white-bis;
 
 $popover-background-color: $grey-dark;
 
@@ -387,11 +391,6 @@ td:first-child.diff-gutter-conflict:before {
   }
 }
 
-//make horizontal lines pop more
-hr {
-  background-color: $white-bis;
-}
-
 //Display darker version of background image
 .has-scm-background {
   background-image: url(images/scmManagerHeroDark.jpg) !important;
@@ -458,16 +457,6 @@ a.has-text-secondary-most:focus {
 
 .has-hover-visible:hover {
   color: $white-bis !important;
-}
-
-.select select[disabled],
-[disabled].textarea,
-[disabled].input,
-fieldset[disabled] .select select,
-.select fieldset[disabled] select,
-fieldset[disabled] .textarea,
-fieldset[disabled] .input {
-  color: $white-bis;
 }
 
 [disabled].textarea::placeholder,

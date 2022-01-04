@@ -343,6 +343,31 @@ footer.footer {
   }
 }
 
+// TODO: REMOVE???!
+.popover {
+  position: absolute;
+  z-index: 100;
+  width: 30em;
+  display: block;
+
+  &:before {
+    position: absolute;
+    content: "";
+    border-style: solid;
+    pointer-events: none;
+    height: 0;
+    width: 0;
+    top: 100%;
+    left: 5.5em;
+    border-color: transparent;
+    border-width: 0.4rem;
+    margin-left: -0.4rem;
+    margin-top: -0.4rem;
+    -webkit-transform-origin: center;
+    transform-origin: center;
+    transform: rotate(-45deg);
+  }
+}
 
 .notifications .dropdown-menu:before {
   border: 0.4rem solid transparent;
@@ -855,3 +880,26 @@ form .field:not(.is-grouped) {
 .autocomplete-entry__input {
   color: $text-strong !important;
 }
+
+.breadcrumb {
+  & .prefix-button {
+    border-right: 1px solid lightgray;
+  }
+
+  & li:not(:last-child)::after {
+    color: $breadcrumb-item-separator-color;
+    content: "\0002f";
+  }
+}
+
+.breadcrumb {
+  & .prefix-button {
+    border-right: 1px solid lightgray;
+  }
+
+  & li:not(:last-child)::after {
+    color: $breadcrumb-item-separator-color;
+    content: "\0002f";
+  }
+}
+
