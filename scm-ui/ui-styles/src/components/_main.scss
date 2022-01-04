@@ -891,15 +891,3 @@ form .field:not(.is-grouped) {
     content: "\0002f";
   }
 }
-
-.breadcrumb {
-  & .prefix-button {
-    border-right: 1px solid lightgray;
-  }
-
-  & li:not(:last-child)::after {
-    color: $breadcrumb-item-separator-color;
-    content: "\0002f";
-  }
-}
-

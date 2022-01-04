@@ -30,12 +30,8 @@ $background: $grey-dark;
 $text: $white-ter;
 $text-strong: $white-bis;
 
-$red: #e63453;
-// TODO check if we could replace red in commons,
-// without breaking the light mode
-$danger: $red;
-
-$code: lighten($red, 25%);
+$danger: #e63453;
+$code: lighten($danger, 25%);
 $primary-invert: #050514;
 $info-invert: #050514;
 $link-invert: #050514;
