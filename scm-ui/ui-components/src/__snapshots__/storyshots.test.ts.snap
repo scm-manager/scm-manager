@@ -76763,38 +76763,2896 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
           }
         }
       >
-        package com.example;
+        <div
+          className="SyntaxHighlighterRenderer__RowContainer-sc-12li0bg-0 dsgsZc"
+          id="line-1"
+        >
+          <span
+            aria-label="sources.content.copyPermalink"
+            className="tooltip has-tooltip-right"
+            data-tooltip="sources.content.copyPermalink"
+          >
+            <i
+              aria-label="sources.content.copyPermalink"
+              className="fas fa-fw fa-link has-text-secondary"
+              onClick={[Function]}
+              onKeyPress={[Function]}
+            />
+          </span>
+          <span
+            className="linenumber react-syntax-highlighter-line-number"
+            onClick={[Function]}
+          >
+            1
+          </span>
+          <span
+            style={Object {}}
+          >
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-keyword-color)",
+                }
+              }
+            >
+              package
+            </span>
+            <span
+              style={Object {}}
+            >
+               
+            </span>
+            <span
+              className="token"
+              style={Object {}}
+            >
+              com
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              .
+            </span>
+            <span
+              className="token"
+              style={Object {}}
+            >
+              example
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              ;
+            </span>
+            <span
+              style={Object {}}
+            >
+              
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.InetSocketAddress;
+            </span>
+          </span>
+        </div>
+        <div
+          className="SyntaxHighlighterRenderer__RowContainer-sc-12li0bg-0 dsgsZc"
+          id="line-2"
+        >
+          <span
+            aria-label="sources.content.copyPermalink"
+            className="tooltip has-tooltip-right"
+            data-tooltip="sources.content.copyPermalink"
+          >
+            <i
+              aria-label="sources.content.copyPermalink"
+              className="fas fa-fw fa-link has-text-secondary"
+              onClick={[Function]}
+              onKeyPress={[Function]}
+            />
+          </span>
+          <span
+            className="linenumber react-syntax-highlighter-line-number"
+            onClick={[Function]}
+          >
+            2
+          </span>
+          <span
+            style={Object {}}
+          >
+            
 
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
-import com.sun.net.httpserver.HttpServer;
+          </span>
+        </div>
+        <div
+          className="SyntaxHighlighterRenderer__RowContainer-sc-12li0bg-0 dsgsZc"
+          id="line-3"
+        >
+          <span
+            aria-label="sources.content.copyPermalink"
+            className="tooltip has-tooltip-right"
+            data-tooltip="sources.content.copyPermalink"
+          >
+            <i
+              aria-label="sources.content.copyPermalink"
+              className="fas fa-fw fa-link has-text-secondary"
+              onClick={[Function]}
+              onKeyPress={[Function]}
+            />
+          </span>
+          <span
+            className="linenumber react-syntax-highlighter-line-number"
+            onClick={[Function]}
+          >
+            3
+          </span>
+          <span
+            style={Object {}}
+          >
+            <span
+              style={Object {}}
+            >
+              
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-keyword-color)",
+                }
+              }
+            >
+              import
+            </span>
+            <span
+              style={Object {}}
+            >
+               
+            </span>
+            <span
+              className="token"
+              style={Object {}}
+            >
+              java
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              .
+            </span>
+            <span
+              className="token"
+              style={Object {}}
+            >
+              io
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              .
+            </span>
+            <span
+              className="token class-name"
+              style={Object {}}
+            >
+              IOException
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              ;
+            </span>
+            <span
+              style={Object {}}
+            >
+              
 
-public class Test {
+            </span>
+          </span>
+        </div>
+        <div
+          className="SyntaxHighlighterRenderer__RowContainer-sc-12li0bg-0 dsgsZc"
+          id="line-4"
+        >
+          <span
+            aria-label="sources.content.copyPermalink"
+            className="tooltip has-tooltip-right"
+            data-tooltip="sources.content.copyPermalink"
+          >
+            <i
+              aria-label="sources.content.copyPermalink"
+              className="fas fa-fw fa-link has-text-secondary"
+              onClick={[Function]}
+              onKeyPress={[Function]}
+            />
+          </span>
+          <span
+            className="linenumber react-syntax-highlighter-line-number"
+            onClick={[Function]}
+          >
+            4
+          </span>
+          <span
+            style={Object {}}
+          >
+            <span
+              style={Object {}}
+            >
+              
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-keyword-color)",
+                }
+              }
+            >
+              import
+            </span>
+            <span
+              style={Object {}}
+            >
+               
+            </span>
+            <span
+              className="token"
+              style={Object {}}
+            >
+              java
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              .
+            </span>
+            <span
+              className="token"
+              style={Object {}}
+            >
+              io
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              .
+            </span>
+            <span
+              className="token class-name"
+              style={Object {}}
+            >
+              OutputStream
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              ;
+            </span>
+            <span
+              style={Object {}}
+            >
+              
 
-  public static void main(String[] args) throws Exception {
-    HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
-    server.createContext("/test", new MyHandler());
-    server.setExecutor(null); // creates a default executor
-    server.start();
-  }
+            </span>
+          </span>
+        </div>
+        <div
+          className="SyntaxHighlighterRenderer__RowContainer-sc-12li0bg-0 dsgsZc"
+          id="line-5"
+        >
+          <span
+            aria-label="sources.content.copyPermalink"
+            className="tooltip has-tooltip-right"
+            data-tooltip="sources.content.copyPermalink"
+          >
+            <i
+              aria-label="sources.content.copyPermalink"
+              className="fas fa-fw fa-link has-text-secondary"
+              onClick={[Function]}
+              onKeyPress={[Function]}
+            />
+          </span>
+          <span
+            className="linenumber react-syntax-highlighter-line-number"
+            onClick={[Function]}
+          >
+            5
+          </span>
+          <span
+            style={Object {}}
+          >
+            <span
+              style={Object {}}
+            >
+              
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-keyword-color)",
+                }
+              }
+            >
+              import
+            </span>
+            <span
+              style={Object {}}
+            >
+               
+            </span>
+            <span
+              className="token"
+              style={Object {}}
+            >
+              java
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              .
+            </span>
+            <span
+              className="token"
+              style={Object {}}
+            >
+              net
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              .
+            </span>
+            <span
+              className="token class-name"
+              style={Object {}}
+            >
+              InetSocketAddress
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              ;
+            </span>
+            <span
+              style={Object {}}
+            >
+              
 
-  static class MyHandler implements HttpHandler {
-    @Override
-    public void handle(HttpExchange t) throws IOException {
-      String response = "This is the response";
-      t.sendResponseHeaders(200, response.length());
-      OutputStream os = t.getResponseBody();
-      os.write(response.getBytes());
-      os.close();
-    }
-  }
+            </span>
+          </span>
+        </div>
+        <div
+          className="SyntaxHighlighterRenderer__RowContainer-sc-12li0bg-0 dsgsZc"
+          id="line-6"
+        >
+          <span
+            aria-label="sources.content.copyPermalink"
+            className="tooltip has-tooltip-right"
+            data-tooltip="sources.content.copyPermalink"
+          >
+            <i
+              aria-label="sources.content.copyPermalink"
+              className="fas fa-fw fa-link has-text-secondary"
+              onClick={[Function]}
+              onKeyPress={[Function]}
+            />
+          </span>
+          <span
+            className="linenumber react-syntax-highlighter-line-number"
+            onClick={[Function]}
+          >
+            6
+          </span>
+          <span
+            style={Object {}}
+          >
+            
 
-}
+          </span>
+        </div>
+        <div
+          className="SyntaxHighlighterRenderer__RowContainer-sc-12li0bg-0 dsgsZc"
+          id="line-7"
+        >
+          <span
+            aria-label="sources.content.copyPermalink"
+            className="tooltip has-tooltip-right"
+            data-tooltip="sources.content.copyPermalink"
+          >
+            <i
+              aria-label="sources.content.copyPermalink"
+              className="fas fa-fw fa-link has-text-secondary"
+              onClick={[Function]}
+              onKeyPress={[Function]}
+            />
+          </span>
+          <span
+            className="linenumber react-syntax-highlighter-line-number"
+            onClick={[Function]}
+          >
+            7
+          </span>
+          <span
+            style={Object {}}
+          >
+            <span
+              style={Object {}}
+            >
+              
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-keyword-color)",
+                }
+              }
+            >
+              import
+            </span>
+            <span
+              style={Object {}}
+            >
+               
+            </span>
+            <span
+              className="token"
+              style={Object {}}
+            >
+              com
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              .
+            </span>
+            <span
+              className="token"
+              style={Object {}}
+            >
+              sun
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              .
+            </span>
+            <span
+              className="token"
+              style={Object {}}
+            >
+              net
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              .
+            </span>
+            <span
+              className="token"
+              style={Object {}}
+            >
+              httpserver
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              .
+            </span>
+            <span
+              className="token class-name"
+              style={Object {}}
+            >
+              HttpExchange
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              ;
+            </span>
+            <span
+              style={Object {}}
+            >
+              
 
+            </span>
+          </span>
+        </div>
+        <div
+          className="SyntaxHighlighterRenderer__RowContainer-sc-12li0bg-0 dsgsZc"
+          id="line-8"
+        >
+          <span
+            aria-label="sources.content.copyPermalink"
+            className="tooltip has-tooltip-right"
+            data-tooltip="sources.content.copyPermalink"
+          >
+            <i
+              aria-label="sources.content.copyPermalink"
+              className="fas fa-fw fa-link has-text-secondary"
+              onClick={[Function]}
+              onKeyPress={[Function]}
+            />
+          </span>
+          <span
+            className="linenumber react-syntax-highlighter-line-number"
+            onClick={[Function]}
+          >
+            8
+          </span>
+          <span
+            style={Object {}}
+          >
+            <span
+              style={Object {}}
+            >
+              
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-keyword-color)",
+                }
+              }
+            >
+              import
+            </span>
+            <span
+              style={Object {}}
+            >
+               
+            </span>
+            <span
+              className="token"
+              style={Object {}}
+            >
+              com
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              .
+            </span>
+            <span
+              className="token"
+              style={Object {}}
+            >
+              sun
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              .
+            </span>
+            <span
+              className="token"
+              style={Object {}}
+            >
+              net
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              .
+            </span>
+            <span
+              className="token"
+              style={Object {}}
+            >
+              httpserver
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              .
+            </span>
+            <span
+              className="token class-name"
+              style={Object {}}
+            >
+              HttpHandler
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              ;
+            </span>
+            <span
+              style={Object {}}
+            >
+              
+
+            </span>
+          </span>
+        </div>
+        <div
+          className="SyntaxHighlighterRenderer__RowContainer-sc-12li0bg-0 dsgsZc"
+          id="line-9"
+        >
+          <span
+            aria-label="sources.content.copyPermalink"
+            className="tooltip has-tooltip-right"
+            data-tooltip="sources.content.copyPermalink"
+          >
+            <i
+              aria-label="sources.content.copyPermalink"
+              className="fas fa-fw fa-link has-text-secondary"
+              onClick={[Function]}
+              onKeyPress={[Function]}
+            />
+          </span>
+          <span
+            className="linenumber react-syntax-highlighter-line-number"
+            onClick={[Function]}
+          >
+            9
+          </span>
+          <span
+            style={Object {}}
+          >
+            <span
+              style={Object {}}
+            >
+              
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-keyword-color)",
+                }
+              }
+            >
+              import
+            </span>
+            <span
+              style={Object {}}
+            >
+               
+            </span>
+            <span
+              className="token"
+              style={Object {}}
+            >
+              com
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              .
+            </span>
+            <span
+              className="token"
+              style={Object {}}
+            >
+              sun
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              .
+            </span>
+            <span
+              className="token"
+              style={Object {}}
+            >
+              net
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              .
+            </span>
+            <span
+              className="token"
+              style={Object {}}
+            >
+              httpserver
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              .
+            </span>
+            <span
+              className="token class-name"
+              style={Object {}}
+            >
+              HttpServer
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              ;
+            </span>
+            <span
+              style={Object {}}
+            >
+              
+
+            </span>
+          </span>
+        </div>
+        <div
+          className="SyntaxHighlighterRenderer__RowContainer-sc-12li0bg-0 dsgsZc"
+          id="line-10"
+        >
+          <span
+            aria-label="sources.content.copyPermalink"
+            className="tooltip has-tooltip-right"
+            data-tooltip="sources.content.copyPermalink"
+          >
+            <i
+              aria-label="sources.content.copyPermalink"
+              className="fas fa-fw fa-link has-text-secondary"
+              onClick={[Function]}
+              onKeyPress={[Function]}
+            />
+          </span>
+          <span
+            className="linenumber react-syntax-highlighter-line-number"
+            onClick={[Function]}
+          >
+            10
+          </span>
+          <span
+            style={Object {}}
+          >
+            
+
+          </span>
+        </div>
+        <div
+          className="SyntaxHighlighterRenderer__RowContainer-sc-12li0bg-0 dsgsZc"
+          id="line-11"
+        >
+          <span
+            aria-label="sources.content.copyPermalink"
+            className="tooltip has-tooltip-right"
+            data-tooltip="sources.content.copyPermalink"
+          >
+            <i
+              aria-label="sources.content.copyPermalink"
+              className="fas fa-fw fa-link has-text-secondary"
+              onClick={[Function]}
+              onKeyPress={[Function]}
+            />
+          </span>
+          <span
+            className="linenumber react-syntax-highlighter-line-number"
+            onClick={[Function]}
+          >
+            11
+          </span>
+          <span
+            style={Object {}}
+          >
+            <span
+              style={Object {}}
+            >
+              
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-keyword-color)",
+                }
+              }
+            >
+              public
+            </span>
+            <span
+              style={Object {}}
+            >
+               
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-keyword-color)",
+                }
+              }
+            >
+              class
+            </span>
+            <span
+              style={Object {}}
+            >
+               
+            </span>
+            <span
+              className="token class-name"
+              style={Object {}}
+            >
+              Test
+            </span>
+            <span
+              style={Object {}}
+            >
+               
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              {
+            </span>
+            <span
+              style={Object {}}
+            >
+              
+
+            </span>
+          </span>
+        </div>
+        <div
+          className="SyntaxHighlighterRenderer__RowContainer-sc-12li0bg-0 dsgsZc"
+          id="line-12"
+        >
+          <span
+            aria-label="sources.content.copyPermalink"
+            className="tooltip has-tooltip-right"
+            data-tooltip="sources.content.copyPermalink"
+          >
+            <i
+              aria-label="sources.content.copyPermalink"
+              className="fas fa-fw fa-link has-text-secondary"
+              onClick={[Function]}
+              onKeyPress={[Function]}
+            />
+          </span>
+          <span
+            className="linenumber react-syntax-highlighter-line-number"
+            onClick={[Function]}
+          >
+            12
+          </span>
+          <span
+            style={Object {}}
+          >
+            
+
+          </span>
+        </div>
+        <div
+          className="SyntaxHighlighterRenderer__RowContainer-sc-12li0bg-0 dsgsZc"
+          id="line-13"
+        >
+          <span
+            aria-label="sources.content.copyPermalink"
+            className="tooltip has-tooltip-right"
+            data-tooltip="sources.content.copyPermalink"
+          >
+            <i
+              aria-label="sources.content.copyPermalink"
+              className="fas fa-fw fa-link has-text-secondary"
+              onClick={[Function]}
+              onKeyPress={[Function]}
+            />
+          </span>
+          <span
+            className="linenumber react-syntax-highlighter-line-number"
+            onClick={[Function]}
+          >
+            13
+          </span>
+          <span
+            style={Object {}}
+          >
+            <span
+              style={Object {}}
+            >
+                
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-keyword-color)",
+                }
+              }
+            >
+              public
+            </span>
+            <span
+              style={Object {}}
+            >
+               
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-keyword-color)",
+                }
+              }
+            >
+              static
+            </span>
+            <span
+              style={Object {}}
+            >
+               
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-keyword-color)",
+                }
+              }
+            >
+              void
+            </span>
+            <span
+              style={Object {}}
+            >
+               
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-function-color)",
+                }
+              }
+            >
+              main
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              (
+            </span>
+            <span
+              className="token class-name"
+              style={Object {}}
+            >
+              String
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              [
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              ]
+            </span>
+            <span
+              style={Object {}}
+            >
+               args
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              )
+            </span>
+            <span
+              style={Object {}}
+            >
+               
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-keyword-color)",
+                }
+              }
+            >
+              throws
+            </span>
+            <span
+              style={Object {}}
+            >
+               
+            </span>
+            <span
+              className="token class-name"
+              style={Object {}}
+            >
+              Exception
+            </span>
+            <span
+              style={Object {}}
+            >
+               
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              {
+            </span>
+            <span
+              style={Object {}}
+            >
+              
+
+            </span>
+          </span>
+        </div>
+        <div
+          className="SyntaxHighlighterRenderer__RowContainer-sc-12li0bg-0 dsgsZc"
+          id="line-14"
+        >
+          <span
+            aria-label="sources.content.copyPermalink"
+            className="tooltip has-tooltip-right"
+            data-tooltip="sources.content.copyPermalink"
+          >
+            <i
+              aria-label="sources.content.copyPermalink"
+              className="fas fa-fw fa-link has-text-secondary"
+              onClick={[Function]}
+              onKeyPress={[Function]}
+            />
+          </span>
+          <span
+            className="linenumber react-syntax-highlighter-line-number"
+            onClick={[Function]}
+          >
+            14
+          </span>
+          <span
+            style={Object {}}
+          >
+            <span
+              style={Object {}}
+            >
+                  
+            </span>
+            <span
+              className="token class-name"
+              style={Object {}}
+            >
+              HttpServer
+            </span>
+            <span
+              style={Object {}}
+            >
+               server 
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "background": "var(--sh-operator-bg)",
+                  "color": "var(--sh-operator-color)",
+                }
+              }
+            >
+              =
+            </span>
+            <span
+              style={Object {}}
+            >
+               
+            </span>
+            <span
+              className="token class-name"
+              style={Object {}}
+            >
+              HttpServer
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              .
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-function-color)",
+                }
+              }
+            >
+              create
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              (
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-keyword-color)",
+                }
+              }
+            >
+              new
+            </span>
+            <span
+              style={Object {}}
+            >
+               
+            </span>
+            <span
+              className="token class-name"
+              style={Object {}}
+            >
+              InetSocketAddress
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              (
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-property-color)",
+                }
+              }
+            >
+              8000
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              )
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              ,
+            </span>
+            <span
+              style={Object {}}
+            >
+               
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-property-color)",
+                }
+              }
+            >
+              0
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              )
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              ;
+            </span>
+            <span
+              style={Object {}}
+            >
+              
+
+            </span>
+          </span>
+        </div>
+        <div
+          className="SyntaxHighlighterRenderer__RowContainer-sc-12li0bg-0 dsgsZc"
+          id="line-15"
+        >
+          <span
+            aria-label="sources.content.copyPermalink"
+            className="tooltip has-tooltip-right"
+            data-tooltip="sources.content.copyPermalink"
+          >
+            <i
+              aria-label="sources.content.copyPermalink"
+              className="fas fa-fw fa-link has-text-secondary"
+              onClick={[Function]}
+              onKeyPress={[Function]}
+            />
+          </span>
+          <span
+            className="linenumber react-syntax-highlighter-line-number"
+            onClick={[Function]}
+          >
+            15
+          </span>
+          <span
+            style={Object {}}
+          >
+            <span
+              style={Object {}}
+            >
+                  server
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              .
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-function-color)",
+                }
+              }
+            >
+              createContext
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              (
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-selector-color)",
+                }
+              }
+            >
+              "/test"
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              ,
+            </span>
+            <span
+              style={Object {}}
+            >
+               
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-keyword-color)",
+                }
+              }
+            >
+              new
+            </span>
+            <span
+              style={Object {}}
+            >
+               
+            </span>
+            <span
+              className="token class-name"
+              style={Object {}}
+            >
+              MyHandler
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              (
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              )
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              )
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              ;
+            </span>
+            <span
+              style={Object {}}
+            >
+              
+
+            </span>
+          </span>
+        </div>
+        <div
+          className="SyntaxHighlighterRenderer__RowContainer-sc-12li0bg-0 dsgsZc"
+          id="line-16"
+        >
+          <span
+            aria-label="sources.content.copyPermalink"
+            className="tooltip has-tooltip-right"
+            data-tooltip="sources.content.copyPermalink"
+          >
+            <i
+              aria-label="sources.content.copyPermalink"
+              className="fas fa-fw fa-link has-text-secondary"
+              onClick={[Function]}
+              onKeyPress={[Function]}
+            />
+          </span>
+          <span
+            className="linenumber react-syntax-highlighter-line-number"
+            onClick={[Function]}
+          >
+            16
+          </span>
+          <span
+            style={Object {}}
+          >
+            <span
+              style={Object {}}
+            >
+                  server
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              .
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-function-color)",
+                }
+              }
+            >
+              setExecutor
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              (
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-keyword-color)",
+                }
+              }
+            >
+              null
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              )
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              ;
+            </span>
+            <span
+              style={Object {}}
+            >
+               
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-comment-color)",
+                }
+              }
+            >
+              // creates a default executor
+            </span>
+            <span
+              style={Object {}}
+            >
+              
+
+            </span>
+          </span>
+        </div>
+        <div
+          className="SyntaxHighlighterRenderer__RowContainer-sc-12li0bg-0 dsgsZc"
+          id="line-17"
+        >
+          <span
+            aria-label="sources.content.copyPermalink"
+            className="tooltip has-tooltip-right"
+            data-tooltip="sources.content.copyPermalink"
+          >
+            <i
+              aria-label="sources.content.copyPermalink"
+              className="fas fa-fw fa-link has-text-secondary"
+              onClick={[Function]}
+              onKeyPress={[Function]}
+            />
+          </span>
+          <span
+            className="linenumber react-syntax-highlighter-line-number"
+            onClick={[Function]}
+          >
+            17
+          </span>
+          <span
+            style={Object {}}
+          >
+            <span
+              style={Object {}}
+            >
+                  server
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              .
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-function-color)",
+                }
+              }
+            >
+              start
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              (
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              )
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              ;
+            </span>
+            <span
+              style={Object {}}
+            >
+              
+
+            </span>
+          </span>
+        </div>
+        <div
+          className="SyntaxHighlighterRenderer__RowContainer-sc-12li0bg-0 dsgsZc"
+          id="line-18"
+        >
+          <span
+            aria-label="sources.content.copyPermalink"
+            className="tooltip has-tooltip-right"
+            data-tooltip="sources.content.copyPermalink"
+          >
+            <i
+              aria-label="sources.content.copyPermalink"
+              className="fas fa-fw fa-link has-text-secondary"
+              onClick={[Function]}
+              onKeyPress={[Function]}
+            />
+          </span>
+          <span
+            className="linenumber react-syntax-highlighter-line-number"
+            onClick={[Function]}
+          >
+            18
+          </span>
+          <span
+            style={Object {}}
+          >
+            <span
+              style={Object {}}
+            >
+                
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              }
+            </span>
+            <span
+              style={Object {}}
+            >
+              
+
+            </span>
+          </span>
+        </div>
+        <div
+          className="SyntaxHighlighterRenderer__RowContainer-sc-12li0bg-0 dsgsZc"
+          id="line-19"
+        >
+          <span
+            aria-label="sources.content.copyPermalink"
+            className="tooltip has-tooltip-right"
+            data-tooltip="sources.content.copyPermalink"
+          >
+            <i
+              aria-label="sources.content.copyPermalink"
+              className="fas fa-fw fa-link has-text-secondary"
+              onClick={[Function]}
+              onKeyPress={[Function]}
+            />
+          </span>
+          <span
+            className="linenumber react-syntax-highlighter-line-number"
+            onClick={[Function]}
+          >
+            19
+          </span>
+          <span
+            style={Object {}}
+          >
+            
+
+          </span>
+        </div>
+        <div
+          className="SyntaxHighlighterRenderer__RowContainer-sc-12li0bg-0 dsgsZc"
+          id="line-20"
+        >
+          <span
+            aria-label="sources.content.copyPermalink"
+            className="tooltip has-tooltip-right"
+            data-tooltip="sources.content.copyPermalink"
+          >
+            <i
+              aria-label="sources.content.copyPermalink"
+              className="fas fa-fw fa-link has-text-secondary"
+              onClick={[Function]}
+              onKeyPress={[Function]}
+            />
+          </span>
+          <span
+            className="linenumber react-syntax-highlighter-line-number"
+            onClick={[Function]}
+          >
+            20
+          </span>
+          <span
+            style={Object {}}
+          >
+            <span
+              style={Object {}}
+            >
+                
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-keyword-color)",
+                }
+              }
+            >
+              static
+            </span>
+            <span
+              style={Object {}}
+            >
+               
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-keyword-color)",
+                }
+              }
+            >
+              class
+            </span>
+            <span
+              style={Object {}}
+            >
+               
+            </span>
+            <span
+              className="token class-name"
+              style={Object {}}
+            >
+              MyHandler
+            </span>
+            <span
+              style={Object {}}
+            >
+               
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-keyword-color)",
+                }
+              }
+            >
+              implements
+            </span>
+            <span
+              style={Object {}}
+            >
+               
+            </span>
+            <span
+              className="token class-name"
+              style={Object {}}
+            >
+              HttpHandler
+            </span>
+            <span
+              style={Object {}}
+            >
+               
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              {
+            </span>
+            <span
+              style={Object {}}
+            >
+              
+
+            </span>
+          </span>
+        </div>
+        <div
+          className="SyntaxHighlighterRenderer__RowContainer-sc-12li0bg-0 dsgsZc"
+          id="line-21"
+        >
+          <span
+            aria-label="sources.content.copyPermalink"
+            className="tooltip has-tooltip-right"
+            data-tooltip="sources.content.copyPermalink"
+          >
+            <i
+              aria-label="sources.content.copyPermalink"
+              className="fas fa-fw fa-link has-text-secondary"
+              onClick={[Function]}
+              onKeyPress={[Function]}
+            />
+          </span>
+          <span
+            className="linenumber react-syntax-highlighter-line-number"
+            onClick={[Function]}
+          >
+            21
+          </span>
+          <span
+            style={Object {}}
+          >
+            <span
+              style={Object {}}
+            >
+                  
+            </span>
+            <span
+              className="token annotation"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              @Override
+            </span>
+            <span
+              style={Object {}}
+            >
+              
+
+            </span>
+          </span>
+        </div>
+        <div
+          className="SyntaxHighlighterRenderer__RowContainer-sc-12li0bg-0 dsgsZc"
+          id="line-22"
+        >
+          <span
+            aria-label="sources.content.copyPermalink"
+            className="tooltip has-tooltip-right"
+            data-tooltip="sources.content.copyPermalink"
+          >
+            <i
+              aria-label="sources.content.copyPermalink"
+              className="fas fa-fw fa-link has-text-secondary"
+              onClick={[Function]}
+              onKeyPress={[Function]}
+            />
+          </span>
+          <span
+            className="linenumber react-syntax-highlighter-line-number"
+            onClick={[Function]}
+          >
+            22
+          </span>
+          <span
+            style={Object {}}
+          >
+            <span
+              style={Object {}}
+            >
+                  
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-keyword-color)",
+                }
+              }
+            >
+              public
+            </span>
+            <span
+              style={Object {}}
+            >
+               
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-keyword-color)",
+                }
+              }
+            >
+              void
+            </span>
+            <span
+              style={Object {}}
+            >
+               
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-function-color)",
+                }
+              }
+            >
+              handle
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              (
+            </span>
+            <span
+              className="token class-name"
+              style={Object {}}
+            >
+              HttpExchange
+            </span>
+            <span
+              style={Object {}}
+            >
+               t
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              )
+            </span>
+            <span
+              style={Object {}}
+            >
+               
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-keyword-color)",
+                }
+              }
+            >
+              throws
+            </span>
+            <span
+              style={Object {}}
+            >
+               
+            </span>
+            <span
+              className="token class-name"
+              style={Object {}}
+            >
+              IOException
+            </span>
+            <span
+              style={Object {}}
+            >
+               
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              {
+            </span>
+            <span
+              style={Object {}}
+            >
+              
+
+            </span>
+          </span>
+        </div>
+        <div
+          className="SyntaxHighlighterRenderer__RowContainer-sc-12li0bg-0 dsgsZc"
+          id="line-23"
+        >
+          <span
+            aria-label="sources.content.copyPermalink"
+            className="tooltip has-tooltip-right"
+            data-tooltip="sources.content.copyPermalink"
+          >
+            <i
+              aria-label="sources.content.copyPermalink"
+              className="fas fa-fw fa-link has-text-secondary"
+              onClick={[Function]}
+              onKeyPress={[Function]}
+            />
+          </span>
+          <span
+            className="linenumber react-syntax-highlighter-line-number"
+            onClick={[Function]}
+          >
+            23
+          </span>
+          <span
+            style={Object {}}
+          >
+            <span
+              style={Object {}}
+            >
+                    
+            </span>
+            <span
+              className="token class-name"
+              style={Object {}}
+            >
+              String
+            </span>
+            <span
+              style={Object {}}
+            >
+               response 
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "background": "var(--sh-operator-bg)",
+                  "color": "var(--sh-operator-color)",
+                }
+              }
+            >
+              =
+            </span>
+            <span
+              style={Object {}}
+            >
+               
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-selector-color)",
+                }
+              }
+            >
+              "This is the response"
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              ;
+            </span>
+            <span
+              style={Object {}}
+            >
+              
+
+            </span>
+          </span>
+        </div>
+        <div
+          className="SyntaxHighlighterRenderer__RowContainer-sc-12li0bg-0 dsgsZc"
+          id="line-24"
+        >
+          <span
+            aria-label="sources.content.copyPermalink"
+            className="tooltip has-tooltip-right"
+            data-tooltip="sources.content.copyPermalink"
+          >
+            <i
+              aria-label="sources.content.copyPermalink"
+              className="fas fa-fw fa-link has-text-secondary"
+              onClick={[Function]}
+              onKeyPress={[Function]}
+            />
+          </span>
+          <span
+            className="linenumber react-syntax-highlighter-line-number"
+            onClick={[Function]}
+          >
+            24
+          </span>
+          <span
+            style={Object {}}
+          >
+            <span
+              style={Object {}}
+            >
+                    t
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              .
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-function-color)",
+                }
+              }
+            >
+              sendResponseHeaders
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              (
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-property-color)",
+                }
+              }
+            >
+              200
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              ,
+            </span>
+            <span
+              style={Object {}}
+            >
+               response
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              .
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-function-color)",
+                }
+              }
+            >
+              length
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              (
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              )
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              )
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              ;
+            </span>
+            <span
+              style={Object {}}
+            >
+              
+
+            </span>
+          </span>
+        </div>
+        <div
+          className="SyntaxHighlighterRenderer__RowContainer-sc-12li0bg-0 dsgsZc"
+          id="line-25"
+        >
+          <span
+            aria-label="sources.content.copyPermalink"
+            className="tooltip has-tooltip-right"
+            data-tooltip="sources.content.copyPermalink"
+          >
+            <i
+              aria-label="sources.content.copyPermalink"
+              className="fas fa-fw fa-link has-text-secondary"
+              onClick={[Function]}
+              onKeyPress={[Function]}
+            />
+          </span>
+          <span
+            className="linenumber react-syntax-highlighter-line-number"
+            onClick={[Function]}
+          >
+            25
+          </span>
+          <span
+            style={Object {}}
+          >
+            <span
+              style={Object {}}
+            >
+                    
+            </span>
+            <span
+              className="token class-name"
+              style={Object {}}
+            >
+              OutputStream
+            </span>
+            <span
+              style={Object {}}
+            >
+               os 
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "background": "var(--sh-operator-bg)",
+                  "color": "var(--sh-operator-color)",
+                }
+              }
+            >
+              =
+            </span>
+            <span
+              style={Object {}}
+            >
+               t
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              .
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-function-color)",
+                }
+              }
+            >
+              getResponseBody
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              (
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              )
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              ;
+            </span>
+            <span
+              style={Object {}}
+            >
+              
+
+            </span>
+          </span>
+        </div>
+        <div
+          className="SyntaxHighlighterRenderer__RowContainer-sc-12li0bg-0 dsgsZc"
+          id="line-26"
+        >
+          <span
+            aria-label="sources.content.copyPermalink"
+            className="tooltip has-tooltip-right"
+            data-tooltip="sources.content.copyPermalink"
+          >
+            <i
+              aria-label="sources.content.copyPermalink"
+              className="fas fa-fw fa-link has-text-secondary"
+              onClick={[Function]}
+              onKeyPress={[Function]}
+            />
+          </span>
+          <span
+            className="linenumber react-syntax-highlighter-line-number"
+            onClick={[Function]}
+          >
+            26
+          </span>
+          <span
+            style={Object {}}
+          >
+            <span
+              style={Object {}}
+            >
+                    os
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              .
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-function-color)",
+                }
+              }
+            >
+              write
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              (
+            </span>
+            <span
+              style={Object {}}
+            >
+              response
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              .
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-function-color)",
+                }
+              }
+            >
+              getBytes
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              (
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              )
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              )
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              ;
+            </span>
+            <span
+              style={Object {}}
+            >
+              
+
+            </span>
+          </span>
+        </div>
+        <div
+          className="SyntaxHighlighterRenderer__RowContainer-sc-12li0bg-0 dsgsZc"
+          id="line-27"
+        >
+          <span
+            aria-label="sources.content.copyPermalink"
+            className="tooltip has-tooltip-right"
+            data-tooltip="sources.content.copyPermalink"
+          >
+            <i
+              aria-label="sources.content.copyPermalink"
+              className="fas fa-fw fa-link has-text-secondary"
+              onClick={[Function]}
+              onKeyPress={[Function]}
+            />
+          </span>
+          <span
+            className="linenumber react-syntax-highlighter-line-number"
+            onClick={[Function]}
+          >
+            27
+          </span>
+          <span
+            style={Object {}}
+          >
+            <span
+              style={Object {}}
+            >
+                    os
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              .
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-function-color)",
+                }
+              }
+            >
+              close
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              (
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              )
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              ;
+            </span>
+            <span
+              style={Object {}}
+            >
+              
+
+            </span>
+          </span>
+        </div>
+        <div
+          className="SyntaxHighlighterRenderer__RowContainer-sc-12li0bg-0 dsgsZc"
+          id="line-28"
+        >
+          <span
+            aria-label="sources.content.copyPermalink"
+            className="tooltip has-tooltip-right"
+            data-tooltip="sources.content.copyPermalink"
+          >
+            <i
+              aria-label="sources.content.copyPermalink"
+              className="fas fa-fw fa-link has-text-secondary"
+              onClick={[Function]}
+              onKeyPress={[Function]}
+            />
+          </span>
+          <span
+            className="linenumber react-syntax-highlighter-line-number"
+            onClick={[Function]}
+          >
+            28
+          </span>
+          <span
+            style={Object {}}
+          >
+            <span
+              style={Object {}}
+            >
+                  
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              }
+            </span>
+            <span
+              style={Object {}}
+            >
+              
+
+            </span>
+          </span>
+        </div>
+        <div
+          className="SyntaxHighlighterRenderer__RowContainer-sc-12li0bg-0 dsgsZc"
+          id="line-29"
+        >
+          <span
+            aria-label="sources.content.copyPermalink"
+            className="tooltip has-tooltip-right"
+            data-tooltip="sources.content.copyPermalink"
+          >
+            <i
+              aria-label="sources.content.copyPermalink"
+              className="fas fa-fw fa-link has-text-secondary"
+              onClick={[Function]}
+              onKeyPress={[Function]}
+            />
+          </span>
+          <span
+            className="linenumber react-syntax-highlighter-line-number"
+            onClick={[Function]}
+          >
+            29
+          </span>
+          <span
+            style={Object {}}
+          >
+            <span
+              style={Object {}}
+            >
+                
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              }
+            </span>
+            <span
+              style={Object {}}
+            >
+              
+
+            </span>
+          </span>
+        </div>
+        <div
+          className="SyntaxHighlighterRenderer__RowContainer-sc-12li0bg-0 dsgsZc"
+          id="line-30"
+        >
+          <span
+            aria-label="sources.content.copyPermalink"
+            className="tooltip has-tooltip-right"
+            data-tooltip="sources.content.copyPermalink"
+          >
+            <i
+              aria-label="sources.content.copyPermalink"
+              className="fas fa-fw fa-link has-text-secondary"
+              onClick={[Function]}
+              onKeyPress={[Function]}
+            />
+          </span>
+          <span
+            className="linenumber react-syntax-highlighter-line-number"
+            onClick={[Function]}
+          >
+            30
+          </span>
+          <span
+            style={Object {}}
+          >
+            
+
+          </span>
+        </div>
+        <div
+          className="SyntaxHighlighterRenderer__RowContainer-sc-12li0bg-0 dsgsZc"
+          id="line-31"
+        >
+          <span
+            aria-label="sources.content.copyPermalink"
+            className="tooltip has-tooltip-right"
+            data-tooltip="sources.content.copyPermalink"
+          >
+            <i
+              aria-label="sources.content.copyPermalink"
+              className="fas fa-fw fa-link has-text-secondary"
+              onClick={[Function]}
+              onKeyPress={[Function]}
+            />
+          </span>
+          <span
+            className="linenumber react-syntax-highlighter-line-number"
+            onClick={[Function]}
+          >
+            31
+          </span>
+          <span
+            style={Object {}}
+          >
+            <span
+              style={Object {}}
+            >
+              
+            </span>
+            <span
+              className="token"
+              style={
+                Object {
+                  "color": "var(--sh-punctuation-color)",
+                }
+              }
+            >
+              }
+            </span>
+            <span
+              style={Object {}}
+            >
+              
+
+            </span>
+          </span>
+        </div>
+        <div
+          className="SyntaxHighlighterRenderer__RowContainer-sc-12li0bg-0 dsgsZc"
+          id="line-32"
+        >
+          <span
+            aria-label="sources.content.copyPermalink"
+            className="tooltip has-tooltip-right"
+            data-tooltip="sources.content.copyPermalink"
+          >
+            <i
+              aria-label="sources.content.copyPermalink"
+              className="fas fa-fw fa-link has-text-secondary"
+              onClick={[Function]}
+              onKeyPress={[Function]}
+            />
+          </span>
+          <span
+            className="linenumber react-syntax-highlighter-line-number"
+            onClick={[Function]}
+          >
+            32
+          </span>
+          <span
+            style={Object {}}
+          >
+            
+
+          </span>
+        </div>
       </code>
     </pre>
   </div>

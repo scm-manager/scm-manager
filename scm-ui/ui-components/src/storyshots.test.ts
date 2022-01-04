@@ -24,23 +24,63 @@
 
 import path from "path";
 import initStoryshots, { snapshotWithOptions } from "@storybook/addon-storyshots";
+import { act, create, ReactTestRenderer } from "react-test-renderer";
+import { StoryContext } from "@storybook/react";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const createNodeMock = (element: any) => {
   if (element.type === "tr") {
     return {
       // eslint-disable-next-line @typescript-eslint/no-empty-function
-      querySelector: (selector: string) => {},
+      querySelector: () => {}
     };
   }
 };
 
+async function wait(delay: number) {
+  return act(
+    () =>
+      new Promise(resolve => {
+        setTimeout(resolve, delay);
+      })
+  );
+}
+
+async function runAsyncTest(story: StoryContext) {
+  const storyElement = story.render();
+  let renderer: ReactTestRenderer | undefined;
+  act(() => {
+    renderer = create(storyElement);
+  });
+
+  // For Flow's benefit
+  if (!renderer) {
+    return;
+  }
+
+  // Let one render cycle pass before rendering snapshot
+  await wait(0);
+  expect(renderer).toMatchSnapshot();
+
+  renderer.unmount();
+}
+
+const syncTest = snapshotWithOptions({
+  // @ts-ignore types seems not to match
+  createNodeMock
+});
+
 initStoryshots({
+  asyncJest: true,
   configPath: path.resolve(__dirname, "..", ".storybook"),
-  // fix snapshot tests with react-diff-view which uses a ref on tr
-  // @see https://github.com/storybookjs/storybook/pull/1090
-  test: snapshotWithOptions({
-    // @ts-ignore types seems not to match
-    createNodeMock,
-  }),
+  test: ({ story, context, done, ...rest }) => {
+    if (story.parameters?.storyshots?.async) {
+      runAsyncTest(story).then(done);
+    } else {
+      syncTest({ story, context, ...rest });
+      if (done) {
+        done();
+      }
+    }
+  }
 });

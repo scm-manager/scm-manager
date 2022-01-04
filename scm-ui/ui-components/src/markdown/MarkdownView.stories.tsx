@@ -46,8 +46,11 @@ const Spacing = styled.div`
 `;
 
 storiesOf("MarkdownView", module)
-  .addDecorator((story) => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
-  .addDecorator((story) => <Spacing>{story()}</Spacing>)
+  .addDecorator(story => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
+  .addDecorator(story => <Spacing>{story()}</Spacing>)
+  // Add async parameter, because the tests needs to render async before snapshot is taken so that
+  // code fragments get highlighted properly
+  .addParameters({ storyshots: { async: true } })
   .add("Default", () => <MarkdownView content={TestPage} skipHtml={false} />)
   .add("Skip Html", () => <MarkdownView content={TestPage} skipHtml={true} />)
   .add("Code without Lang", () => <MarkdownView content={MarkdownWithoutLang} skipHtml={false} />)
@@ -63,7 +66,7 @@ storiesOf("MarkdownView", module)
     const binder = new Binder("custom protocol link renderer");
     binder.bind("markdown-renderer.link.protocol", {
       protocol: "scw",
-      renderer: ProtocolLinkRenderer,
+      renderer: ProtocolLinkRenderer
     } as ProtocolLinkRendererExtension);
     return (
       <BinderContext.Provider value={binder}>
@@ -75,7 +78,7 @@ storiesOf("MarkdownView", module)
     const binder = new Binder("custom protocol link renderer");
     binder.bind("markdown-renderer.link.protocol", {
       protocol: "scw",
-      renderer: ProtocolLinkRenderer,
+      renderer: ProtocolLinkRenderer
     } as ProtocolLinkRendererExtension);
     return (
       <BinderContext.Provider value={binder}>
