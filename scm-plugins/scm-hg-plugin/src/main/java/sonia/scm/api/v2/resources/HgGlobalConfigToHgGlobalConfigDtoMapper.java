@@ -31,6 +31,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import sonia.scm.config.ConfigurationPermissions;
 import sonia.scm.repository.HgGlobalConfig;
+import sonia.scm.repository.RepositoryManager;
 
 import javax.inject.Inject;
 
@@ -44,10 +45,17 @@ public abstract class HgGlobalConfigToHgGlobalConfigDtoMapper extends BaseMapper
 
   @Inject
   private HgConfigLinks links;
+  @Inject
+  private RepositoryManager repositoryManager;
 
   @VisibleForTesting
   void setLinks(HgConfigLinks links) {
     this.links = links;
+  }
+
+  @VisibleForTesting
+  void setRepositoryManager(RepositoryManager repositoryManager) {
+    this.repositoryManager = repositoryManager;
   }
 
   @AfterMapping
@@ -59,5 +67,6 @@ public abstract class HgGlobalConfigToHgGlobalConfigDtoMapper extends BaseMapper
       linksBuilder.single(link("autoConfiguration", configLinks.autoConfigure()));
     }
     target.add(linksBuilder.build());
+    target.setAllowDisable(repositoryManager.getAll().stream().noneMatch(r -> r.getType().equals("hg")));
   }
 }
