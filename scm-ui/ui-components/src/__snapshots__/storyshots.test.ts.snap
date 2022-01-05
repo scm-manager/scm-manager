@@ -132,6 +132,7 @@ exports[`Storyshots BreadCrumb Default 1`] = `
             className="is-ellipsis-overflow"
             href="/"
             onClick={[Function]}
+            title="cloudogu"
           >
             cloudogu
           </a>
@@ -290,9 +291,100 @@ exports[`Storyshots BreadCrumb Long path 1`] = `
             className="is-ellipsis-overflow"
             href="/"
             onClick={[Function]}
+            title="SvnRepositoryServiceResolver.java"
           >
             SvnRepositoryServiceResolver.java
           </a>
+        </li>
+      </ul>
+      <span
+        className="Breadcrumb__PermaLinkWrapper-zvtb4t-0 OWytj ml-1"
+        onKeyDown={[Function]}
+        tabIndex={0}
+      >
+        <span
+          aria-label="breadcrumb.copyPermalink"
+          className="tooltip has-tooltip-right"
+          data-tooltip="breadcrumb.copyPermalink"
+        >
+          <i
+            aria-label="breadcrumb.copyPermalink"
+            className="fas fa-fw fa-link has-text-inherit"
+            onClick={[Function]}
+            onKeyPress={[Function]}
+          />
+        </span>
+      </span>
+    </nav>
+    <div
+      className="Breadcrumb__ActionBar-zvtb4t-3 ffeyDa is-flex is-justify-content-flex-start is-align-self-center my-2"
+    />
+  </div>
+  <hr
+    className="m-0"
+  />
+</div>
+`;
+
+exports[`Storyshots BreadCrumb Not clickable 1`] = `
+<div
+  className="Breadcrumbstories__Wrapper-sc-1eq8sgz-0 exRctT"
+>
+  <div
+    className="is-flex is-justify-content-flex-end is-align-items-center"
+  >
+    <nav
+      aria-label="breadcrumbs"
+      className="Breadcrumb__BreadcrumbNav-zvtb4t-1 eupowG breadcrumb sources-breadcrumb mx-2 my-4"
+    >
+      <ul>
+        <li>
+          <i
+            className="fas fa-fw fa-home has-text-inherit mr-3"
+            onKeyPress={[Function]}
+          />
+        </li>
+        <li>
+          <span
+            className="is-ellipsis-overflow has-text-inherit px-3"
+            title="src"
+          >
+            src
+          </span>
+        </li>
+        <li>
+          <span
+            className="is-ellipsis-overflow has-text-inherit px-3"
+            title="main"
+          >
+            main
+          </span>
+        </li>
+        <li>
+          <span
+            className="is-ellipsis-overflow has-text-inherit px-3"
+            title="java"
+          >
+            java
+          </span>
+        </li>
+        <li>
+          <span
+            className="is-ellipsis-overflow has-text-inherit px-3"
+            title="com"
+          >
+            com
+          </span>
+        </li>
+        <li
+          className="is-active"
+        >
+          <span
+            className="is-ellipsis-overflow has-text-inherit px-3"
+            title="cloudogu"
+          >
+            cloudogu
+          </span>
         </li>
       </ul>
       <span
@@ -411,6 +503,7 @@ exports[`Storyshots BreadCrumb With prefix button 1`] = `
             className="is-ellipsis-overflow"
             href="/"
             onClick={[Function]}
+            title="cloudogu"
           >
             cloudogu
           </a>
