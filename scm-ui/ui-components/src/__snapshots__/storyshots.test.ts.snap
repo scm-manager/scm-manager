@@ -132,6 +132,7 @@ exports[`Storyshots BreadCrumb Default 1`] = `
             className="is-ellipsis-overflow"
             href="/"
             onClick={[Function]}
+            title="cloudogu"
           >
             cloudogu
           </a>
@@ -290,6 +291,7 @@ exports[`Storyshots BreadCrumb Long path 1`] = `
             className="is-ellipsis-overflow"
             href="/"
             onClick={[Function]}
+            title="SvnRepositoryServiceResolver.java"
           >
             SvnRepositoryServiceResolver.java
           </a>
@@ -343,44 +345,46 @@ exports[`Storyshots BreadCrumb Not clickable 1`] = `
           />
         </li>
         <li>
-          <text
+          <span
             className="is-ellipsis-overflow has-text-inherit px-3"
+            title="src"
           >
             src
-          </text>
+          </span>
         </li>
         <li>
-          <text
+          <span
             className="is-ellipsis-overflow has-text-inherit px-3"
+            title="main"
           >
             main
-          </text>
+          </span>
         </li>
         <li>
-          <text
+          <span
             className="is-ellipsis-overflow has-text-inherit px-3"
+            title="java"
           >
             java
-          </text>
+          </span>
         </li>
         <li>
-          <text
+          <span
             className="is-ellipsis-overflow has-text-inherit px-3"
+            title="com"
           >
             com
-          </text>
+          </span>
         </li>
         <li
           className="is-active"
         >
-          <a
-            aria-current="page"
-            className="is-ellipsis-overflow"
-            href="/"
-            onClick={[Function]}
+          <span
+            className="is-ellipsis-overflow has-text-inherit px-3"
+            title="cloudogu"
           >
             cloudogu
-          </a>
+          </span>
         </li>
       </ul>
       <span
@@ -499,6 +503,7 @@ exports[`Storyshots BreadCrumb With prefix button 1`] = `
             className="is-ellipsis-overflow"
             href="/"
             onClick={[Function]}
+            title="cloudogu"
           >
             cloudogu
           </a>

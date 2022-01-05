@@ -116,6 +116,27 @@ const PrefixButton = styled.div`
   border-right: 1px solid lightgray;
 `;
 
+const BreadcrumbNode: FC<{ clickable: boolean; text: string; url: string; current?: boolean }> = ({
+  clickable,
+  text,
+  url,
+  current
+}) => {
+  if (clickable) {
+    return (
+      <Link className="is-ellipsis-overflow" title={text} to={url} aria-current={current ? "page" : undefined}>
+        {text}
+      </Link>
+    );
+  } else {
+    return (
+      <span className="is-ellipsis-overflow has-text-inherit px-3" title={text}>
+        {text}
+      </span>
+    );
+  }
+};
+
 const Breadcrumb: FC<Props> = ({
   repository,
   branch,
@@ -137,6 +158,7 @@ const Breadcrumb: FC<Props> = ({
     if (path) {
       const paths = path.split("/");
       return paths.map((pathFragment, index) => {
+        const decodedPathFragment = decodeURIComponent(pathFragment);
         let currPath = paths
           .slice(0, index + 1)
           .map(encodeURIComponent)
@@ -147,25 +169,17 @@ const Breadcrumb: FC<Props> = ({
         if (paths.length - 1 === index) {
           return (
             <li className="is-active" key={index}>
-              <Link className="is-ellipsis-overflow" to="#" aria-current="page">
-                {decodeURIComponent(pathFragment)}
-              </Link>
+              <BreadcrumbNode clickable={clickable} text={decodedPathFragment} url="#" current={true} />
             </li>
           );
         }
         return (
           <li key={index}>
-            {clickable ? (
-              <Link
-                className="is-ellipsis-overflow"
-                title={pathFragment}
-                to={baseUrl + "/" + encodeURIComponent(revision) + "/" + currPath}
-              >
-                {decodeURIComponent(pathFragment)}
-              </Link>
-            ) : (
-              <text className="is-ellipsis-overflow has-text-inherit px-3">{decodeURIComponent(pathFragment)}</text>
-            )}
+            <BreadcrumbNode
+              clickable={clickable}
+              text={decodedPathFragment}
+              url={baseUrl + "/" + encodeURIComponent(revision) + "/" + currPath}
+            />
           </li>
         );
       });
