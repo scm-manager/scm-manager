@@ -68,9 +68,15 @@ $tooltip-color: $scheme-main;
 
 // SyntaxHighlighter
 :root {
+  --scm-secondary-least: #{$scheme-main};
+  --scm-secondary-most: #{$white};
+  --scm-border: 2px solid #{$white-ter};
+  --scm-shade-warning-relative: #{$warning-dark};
+  --scm-shade-link-relative: #{$link-dark};
+
   --sh-base-color: #fff;
   --sh-font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
-  --sh-block-background: $scheme-main;
+  --sh-block-background: #{$scheme-main};
   --sh-inline-code-color: #ff3860;
   --sh-inline-code-background: #fbe7eb;
   --sh-comment-color: #9a9a9a;
@@ -86,8 +92,8 @@ $tooltip-color: $scheme-main;
   --sh-highlight-background: #f5f5f5;
   --sh-highlight-accent: #99d8f3;
 
-  --diff-background-color: $scheme-main;
-  --diff-text-color: $white-bis;
+  --diff-background-color: #{$scheme-main};
+  --diff-text-color: #{$white-bis};
   --diff-font-family: Consolas, Courier, monospace;
   --diff-selection-background-color: #b3d7ff;
   --diff-gutter-insert-background-color: #05c71d;
@@ -470,42 +476,4 @@ fieldset[disabled] .input::placeholder {
 .search-syntax-accordion {
   border: 1px solid $info;
   box-shadow: none;
-}
-
-.review-inline-comments {
-  & > * {
-    background-color: $scheme-main;
-  }
-}
-
-.review-styled-diff-wrapper {
-  & table.diff tr:hover > td {
-    background-color: #88550d;
-  }
-
-  tbody.commentable .diff-gutter:hover::after {
-    color: $info-invert;
-  }
-}
-
-.review-mention-textarea {
-  textarea {
-    color: white;
-  }
-
-  > div [class*="__control"],
-  > div [class*="suggestions__list"] {
-    border: 2px solid $white-ter !important;
-    background-color: $scheme-main;
-  }
-  > div [class*="suggestions__item"]:focus {
-    background-color: $scheme-main;
-  }
-}
-
-.review-mention-textarea-user {
-  &:hover,
-  &.focused {
-    background-color: $scheme-main;
-  }
 }
