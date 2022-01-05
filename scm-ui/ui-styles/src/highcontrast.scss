@@ -471,3 +471,41 @@ fieldset[disabled] .input::placeholder {
   border: 1px solid $info;
   box-shadow: none;
 }
+
+.review-inline-comments {
+  & > * {
+    background-color: $scheme-main;
+  }
+}
+
+.review-styled-diff-wrapper {
+  & table.diff tr:hover > td {
+    background-color: #88550d;
+  }
+
+  tbody.commentable .diff-gutter:hover::after {
+    color: $info-invert;
+  }
+}
+
+.review-mention-textarea {
+  textarea {
+    color: white;
+  }
+
+  > div [class*="__control"],
+  > div [class*="suggestions__list"] {
+    border: 2px solid $white-ter !important;
+    background-color: $scheme-main;
+  }
+  > div [class*="suggestions__item"]:focus {
+    background-color: $scheme-main;
+  }
+}
+
+.review-mention-textarea-user {
+  &:hover,
+  &.focused {
+    background-color: $scheme-main;
+  }
+}

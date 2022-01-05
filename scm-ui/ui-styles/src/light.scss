@@ -119,3 +119,36 @@ a.has-text-secondary-most:focus {
 .has-hover-visible:hover {
   color: $grey-darker !important;
 }
+
+.review-inline-comments {
+  & > * {
+    background-color: white;
+  }
+}
+
+.review-styled-diff-wrapper {
+  & table.diff tr:hover > td {
+    background-color: #fff7d5;
+  }
+
+  tbody.commentable .diff-gutter:hover::after {
+    color: #33b2e8;
+  }
+}
+
+.review-mention-textarea {
+  > div [class*="__control"],
+  > div [class*="suggestions__list"] {
+    background-color: white;
+  }
+  > div [class*="suggestions__item"]:focus {
+    background-color: #cee4e5;
+  }
+}
+
+.review-mention-textarea-user {
+  &:hover,
+  &.focused {
+    background-color: #ccecf9;
+  }
+}
