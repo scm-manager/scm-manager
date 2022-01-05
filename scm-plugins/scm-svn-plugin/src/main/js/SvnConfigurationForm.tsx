@@ -52,12 +52,12 @@ const SvnConfigurationForm: FC<Props> = ({ initialConfiguration, readOnly, onCon
     onConfigurationChange(configuration, true);
   }, [configuration]);
 
-  const compatibilityOptions = (values: string[]) => {
-    const options = [];
+  const getCompatibilityOptions = (values: string[]) => {
+    const compatibilityOptions = [];
     for (const value of values) {
-      options.push(compatibilityOption(value));
+      compatibilityOptions.push(compatibilityOption(value));
     }
-    return options;
+    return compatibilityOptions;
   };
 
   const compatibilityOption = (value: string) => {
@@ -67,7 +67,7 @@ const SvnConfigurationForm: FC<Props> = ({ initialConfiguration, readOnly, onCon
     };
   };
 
-  const options = compatibilityOptions(["NONE", "PRE14", "PRE15", "PRE16", "PRE17", "WITH17"]);
+  const options = getCompatibilityOptions(["NONE", "PRE14", "PRE15", "PRE16", "PRE17", "WITH17"]);
 
   return (
     <>
