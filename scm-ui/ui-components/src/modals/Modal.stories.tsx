@@ -115,16 +115,17 @@ storiesOf("Modal/Modal", module)
     />
   ))
   .add("With initial input field focus", () => {
-    const ref = useRef<HTMLInputElement>(null);
+    const [ref, setRef] = useState<HTMLInputElement | null>(null);
     return (
       <Modal
-        body={<InputField ref={ref} />}
         closeFunction={doNothing}
         active={true}
         title={"Hitchhiker Modal"}
         footer={withFormElementsFooter}
-        initialFocusRef={ref}
-      />
+        initialFocusNode={ref}
+      >
+        <InputField ref={setRef} />
+      </Modal>
     );
   })
   .add("With initial button focus", () => <RefModal />)
@@ -328,16 +329,16 @@ const NestedModal: FC = ({ children }) => {
 };
 
 const RefModal = () => {
-  const ref = useRef<HTMLButtonElement>(null);
-
+  const [ref, setRef] = useState<HTMLButtonElement | null>(null);
   return (
     <Modal
-      body={<button ref={ref}>Hello</button>}
       closeFunction={doNothing}
       active={true}
       title={"Hitchhiker Modal"}
       footer={withFormElementsFooter}
-      initialFocusRef={ref}
-    />
+      initialFocusNode={ref}
+    >
+      <button ref={setRef}>Hello</button>
+    </Modal>
   );
 };

@@ -29,7 +29,7 @@ type Node = HTMLDivElement | null;
 
 interface UseTrapFocus {
   includeContainer?: boolean;
-  initialFocus?: "container" | Node;
+  initialFocus?: "container" | HTMLElement | null;
   returnFocus?: boolean;
   updateNodes?: boolean;
 }
