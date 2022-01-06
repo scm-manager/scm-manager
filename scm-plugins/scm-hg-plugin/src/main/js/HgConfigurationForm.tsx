@@ -47,13 +47,8 @@ const HgConfigurationForm: FC<Props> = ({ initialConfiguration, onConfigurationC
   const [configuration, setConfiguration] = useState(initialConfiguration);
   const [t] = useTranslation("plugins");
 
-  useEffect(() => {
-    setConfiguration(initialConfiguration);
-  }, [initialConfiguration]);
-
-  useEffect(() => {
-    onConfigurationChange(configuration, updateValidationStatus());
-  }, [configuration]);
+  useEffect(() => setConfiguration(initialConfiguration), [initialConfiguration]);
+  useEffect(() => onConfigurationChange(configuration, updateValidationStatus()), [configuration]);
 
   const updateValidationStatus = () => {
     const errors = [];

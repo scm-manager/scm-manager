@@ -44,30 +44,13 @@ const SvnConfigurationForm: FC<Props> = ({ initialConfiguration, readOnly, onCon
   const [t] = useTranslation("plugins");
   const [configuration, setConfiguration] = useState(initialConfiguration);
 
-  useEffect(() => {
-    setConfiguration(initialConfiguration);
-  }, [initialConfiguration]);
+  useEffect(() => setConfiguration(initialConfiguration), [initialConfiguration]);
+  useEffect(() => onConfigurationChange(configuration, true), [configuration]);
 
-  useEffect(() => {
-    onConfigurationChange(configuration, true);
-  }, [configuration]);
-
-  const getCompatibilityOptions = (values: string[]) => {
-    const compatibilityOptions = [];
-    for (const value of values) {
-      compatibilityOptions.push(compatibilityOption(value));
-    }
-    return compatibilityOptions;
-  };
-
-  const compatibilityOption = (value: string) => {
-    return {
-      value,
-      label: t("scm-svn-plugin.config.compatibility-values." + value.toLowerCase())
-    };
-  };
-
-  const options = getCompatibilityOptions(["NONE", "PRE14", "PRE15", "PRE16", "PRE17", "WITH17"]);
+  const options = ["NONE", "PRE14", "PRE15", "PRE16", "PRE17", "WITH17"].map((option: string) => ({
+    value: option,
+    label: t("scm-svn-plugin.config.compatibility-values." + option.toLowerCase())
+  }));
 
   return (
     <>
