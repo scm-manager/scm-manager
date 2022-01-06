@@ -21,12 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
+import React, { FC, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link, Links } from "@scm-manager/ui-types";
-import { InputField, Checkbox, Button, apiClient } from "@scm-manager/ui-components";
+import { apiClient, Button, Checkbox, InputField } from "@scm-manager/ui-components";
 
 type Configuration = {
+  disabled: boolean;
+  allowDisable: boolean;
   hgBinary: string;
   encoding: string;
   showRevisionInId: boolean;
@@ -34,130 +36,106 @@ type Configuration = {
   _links: Links;
 };
 
-type Props = WithTranslation & {
+type Props = {
   initialConfiguration: Configuration;
   readOnly: boolean;
-
   onConfigurationChange: (p1: Configuration, p2: boolean) => void;
 };
 
-type State = Configuration & {
-  validationErrors: string[];
-};
+const HgConfigurationForm: FC<Props> = ({ initialConfiguration, onConfigurationChange, readOnly }) => {
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
+  const [configuration, setConfiguration] = useState(initialConfiguration);
+  const [t] = useTranslation("plugins");
 
-class HgConfigurationForm extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      ...props.initialConfiguration,
-      validationErrors: [],
-    };
-  }
+  useEffect(() => setConfiguration(initialConfiguration), [initialConfiguration]);
+  useEffect(() => onConfigurationChange(configuration, updateValidationStatus()), [configuration]);
 
-  updateValidationStatus = () => {
-    const requiredFields = ["hgBinary", "encoding"];
-
-    const validationErrors = [];
-    for (const field of requiredFields) {
-      // @ts-ignore
-      if (!this.state[field]) {
-        validationErrors.push(field);
-      }
+  const updateValidationStatus = () => {
+    const errors = [];
+    if (!configuration.hgBinary) {
+      errors.push("hgBinary");
+    }
+    if (!configuration.encoding) {
+      errors.push("encoding");
     }
 
-    this.setState({
-      validationErrors,
-    });
-
-    return validationErrors.length === 0;
+    setValidationErrors(errors);
+    return errors.length === 0;
   };
 
-  hasValidationError = (name: string) => {
-    return this.state.validationErrors.indexOf(name) >= 0;
+  const hasValidationError = (name: string) => {
+    return validationErrors.indexOf(name) >= 0;
   };
 
-  handleChange = (value: string | boolean, name?: string) => {
-    if (!name) {
-      throw new Error("name not set");
-    }
-    this.setState(
-      // @ts-ignore
-      {
-        [name]: value,
-      },
-      () => this.props.onConfigurationChange(this.state, this.updateValidationStatus())
-    );
-  };
-
-  triggerAutoConfigure = () => {
+  const triggerAutoConfigure = () => {
     apiClient
       .put(
-        (this.props.initialConfiguration._links.autoConfiguration as Link).href,
-        { ...this.props.initialConfiguration, hgBinary: this.state.hgBinary },
+        (initialConfiguration._links.autoConfiguration as Link).href,
+        { ...initialConfiguration, hgBinary: configuration.hgBinary },
         "application/vnd.scmm-hgConfig+json;v=2"
       )
       .then(() =>
         apiClient
-          .get((this.props.initialConfiguration._links.self as Link).href)
-          .then((r) => r.json())
-          .then((config: Configuration) => this.setState({ hgBinary: config.hgBinary }))
+          .get((initialConfiguration._links.self as Link).href)
+          .then(r => r.json())
+          .then((config: Configuration) => setConfiguration({ ...configuration, hgBinary: config.hgBinary }))
       )
-      .then(() => this.updateValidationStatus());
+      .then(() => onConfigurationChange(configuration, updateValidationStatus()));
   };
 
-  inputField = (name: string) => {
-    const { readOnly, t } = this.props;
-    return (
-      <div className="column is-half">
-        <InputField
-          name={name}
-          label={t("scm-hg-plugin.config." + name)}
-          helpText={t("scm-hg-plugin.config." + name + "HelpText")}
-          // @ts-ignore
-          value={this.state[name]}
-          onChange={this.handleChange}
-          validationError={this.hasValidationError(name)}
-          errorMessage={t("scm-hg-plugin.config.required")}
-          disabled={readOnly}
-        />
-      </div>
-    );
-  };
-
-  checkbox = (name: string) => {
-    const { readOnly, t } = this.props;
-    return (
-      <Checkbox
-        name={name}
-        label={t("scm-hg-plugin.config." + name)}
-        helpText={t("scm-hg-plugin.config." + name + "HelpText")}
-        // @ts-ignore
-        checked={this.state[name]}
-        onChange={this.handleChange}
+  return (
+    <div>
+      <InputField
+        name="hgBinary"
+        label={t("scm-hg-plugin.config.hgBinary")}
+        helpText={t("scm-hg-plugin.config.hgBinary.HelpText")}
+        value={configuration.hgBinary}
+        onChange={value => setConfiguration({ ...configuration, hgBinary: value })}
+        validationError={hasValidationError("hgBinary")}
+        errorMessage={t("scm-hg-plugin.config.required")}
         disabled={readOnly}
       />
-    );
-  };
+      <InputField
+        name="encoding"
+        label={t("scm-hg-plugin.config.encoding")}
+        helpText={t("scm-hg-plugin.config.encoding.HelpText")}
+        value={configuration.encoding}
+        onChange={value => setConfiguration({ ...configuration, encoding: value })}
+        validationError={hasValidationError("encoding")}
+        errorMessage={t("scm-hg-plugin.config.required")}
+        disabled={readOnly}
+      />
+      <Checkbox
+        name="showRevisionInId"
+        label={t("scm-hg-plugin.config.showRevisionInId")}
+        helpText={t("scm-hg-plugin.config.showRevisionInId.HelpText")}
+        checked={configuration.showRevisionInId}
+        onChange={value => setConfiguration({ ...configuration, showRevisionInId: value })}
+        disabled={readOnly}
+      />
+      <Checkbox
+        name="enableHttpPostArgs"
+        label={t("scm-hg-plugin.config.enableHttpPostArgs")}
+        helpText={t("scm-hg-plugin.config.enableHttpPostArgs.HelpText")}
+        checked={configuration.enableHttpPostArgs}
+        onChange={value => setConfiguration({ ...configuration, enableHttpPostArgs: value })}
+        disabled={readOnly}
+      />
+      <Checkbox
+        name="disabled"
+        label={t("scm-hg-plugin.config.disabled")}
+        helpText={t("scm-hg-plugin.config.disabledHelpText")}
+        checked={configuration.disabled}
+        onChange={value => {
+          setConfiguration({ ...configuration, disabled: value });
+        }}
+        disabled={readOnly || !configuration.allowDisable}
+      />
+      <Button disabled={!initialConfiguration?._links?.autoConfiguration} action={() => triggerAutoConfigure()}>
+        {t("scm-hg-plugin.config.autoConfigure")}
+      </Button>
+    </div>
+  );
+};
 
-  render() {
-    const { t } = this.props;
-    return (
-      <div className="columns is-multiline">
-        {this.inputField("hgBinary")}
-        {this.inputField("encoding")}
-        <div className="column is-half">{this.checkbox("showRevisionInId")}</div>
-        <div className="column is-half">{this.checkbox("enableHttpPostArgs")}</div>
-        <div className="column is-full">
-          <Button
-            disabled={!this.props.initialConfiguration?._links?.autoConfiguration}
-            action={() => this.triggerAutoConfigure()}
-          >
-            {t("scm-hg-plugin.config.autoConfigure")}
-          </Button>
-        </div>
-      </div>
-    );
-  }
-}
-
-export default withTranslation("plugins")(HgConfigurationForm);
+export default HgConfigurationForm;

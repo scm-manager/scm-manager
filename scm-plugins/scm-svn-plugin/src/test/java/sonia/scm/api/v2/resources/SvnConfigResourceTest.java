@@ -38,6 +38,7 @@ import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.SvnConfig;
 import sonia.scm.repository.SvnRepositoryHandler;
 import sonia.scm.web.RestDispatcher;
@@ -67,6 +68,9 @@ public class SvnConfigResourceTest {
   private RestDispatcher dispatcher = new RestDispatcher();
 
   private final URI baseUri = URI.create("/");
+
+  @Mock
+  private RepositoryManager repositoryManager;
 
   @InjectMocks
   private SvnConfigDtoToSvnConfigMapperImpl dtoToConfigMapper;

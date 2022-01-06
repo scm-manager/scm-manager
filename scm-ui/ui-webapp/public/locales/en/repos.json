@@ -67,7 +67,8 @@
   },
   "create": {
     "title": "Add Repository",
-    "subtitle": "Create a new repository"
+    "subtitle": "Create a new repository",
+    "noTypes": "Cannot create new repository because no repository type is available. Please ensure at least one repository type is enabled."
   },
   "import": {
     "subtitle": "Import existing repository",

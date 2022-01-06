@@ -31,7 +31,7 @@
       "lfsWriteAuthorizationExpirationInMinutesHelpText": "Ablaufzeit für den Autorisierungstoken in Minuten, der für LFS Speicheranfragen ausgestellt wird. Wenn der SCM-Manager hinter einem Reverse-Proxy mit Zwischenspeicherung (z. B. Nginx) betrieben wird, sollte dieser Wert auf die Zeit gesetzt werden, die ein LFS-Upload maximal benötigen kann.",
       "lfsWriteAuthorizationExpirationInMinutesValidationError": "Has to be at least 1 minute",
       "disabled": "Deaktiviert",
-      "disabledHelpText": "Aktiviere oder deaktiviere das Git Plugin",
+      "disabledHelpText": "Aktiviere oder deaktiviere das Git Plugin. Nur erlaubt, wenn keine Git Repositories existieren.",
       "submit": "Speichern"
     },
     "repoConfig": {

@@ -21,87 +21,65 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { withTranslation, WithTranslation } from "react-i18next";
+import React, { FC, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Links } from "@scm-manager/ui-types";
 import { Checkbox, Select } from "@scm-manager/ui-components";
 
 type Configuration = {
+  disabled: boolean;
+  allowDisable: boolean;
   compatibility: string;
   enabledGZip: boolean;
   _links: Links;
 };
 
-type Props = WithTranslation & {
+type Props = {
   initialConfiguration: Configuration;
   readOnly: boolean;
-
   onConfigurationChange: (p1: Configuration, p2: boolean) => void;
 };
 
-type State = Configuration;
+const SvnConfigurationForm: FC<Props> = ({ initialConfiguration, readOnly, onConfigurationChange }) => {
+  const [t] = useTranslation("plugins");
+  const [configuration, setConfiguration] = useState(initialConfiguration);
 
-class SvnConfigurationForm extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      ...props.initialConfiguration,
-    };
-  }
+  useEffect(() => setConfiguration(initialConfiguration), [initialConfiguration]);
+  useEffect(() => onConfigurationChange(configuration, true), [configuration]);
 
-  handleChange = (value: any, name?: string) => {
-    if (!name) {
-      throw new Error("required name not set");
-    }
-    this.setState(
-      // @ts-ignore
-      {
-        [name]: value,
-      },
-      () => this.props.onConfigurationChange(this.state, true)
-    );
-  };
+  const options = ["NONE", "PRE14", "PRE15", "PRE16", "PRE17", "WITH17"].map((option: string) => ({
+    value: option,
+    label: t("scm-svn-plugin.config.compatibility-values." + option.toLowerCase())
+  }));
 
-  compatibilityOptions = (values: string[]) => {
-    const options = [];
-    for (const value of values) {
-      options.push(this.compatibilityOption(value));
-    }
-    return options;
-  };
+  return (
+    <>
+      <Select
+        name="compatibility"
+        label={t("scm-svn-plugin.config.compatibility")}
+        helpText={t("scm-svn-plugin.config.compatibilityHelpText")}
+        value={configuration.compatibility}
+        options={options}
+        onChange={option => setConfiguration({ ...configuration, compatibility: option })}
+      />
+      <Checkbox
+        name="enabledGZip"
+        label={t("scm-svn-plugin.config.enabledGZip")}
+        helpText={t("scm-svn-plugin.config.enabledGZipHelpText")}
+        checked={configuration.enabledGZip}
+        onChange={value => setConfiguration({ ...configuration, enabledGZip: value })}
+        disabled={readOnly}
+      />
+      <Checkbox
+        name="disabled"
+        label={t("scm-svn-plugin.config.disabled")}
+        helpText={t("scm-svn-plugin.config.disabledHelpText")}
+        checked={configuration.disabled}
+        onChange={value => setConfiguration({ ...configuration, disabled: value })}
+        disabled={readOnly || !configuration.allowDisable}
+      />
+    </>
+  );
+};
 
-  compatibilityOption = (value: string) => {
-    return {
-      value,
-      label: this.props.t("scm-svn-plugin.config.compatibility-values." + value.toLowerCase()),
-    };
-  };
-
-  render() {
-    const { readOnly, t } = this.props;
-    const compatibilityOptions = this.compatibilityOptions(["NONE", "PRE14", "PRE15", "PRE16", "PRE17", "WITH17"]);
-
-    return (
-      <>
-        <Select
-          name="compatibility"
-          label={t("scm-svn-plugin.config.compatibility")}
-          helpText={t("scm-svn-plugin.config.compatibilityHelpText")}
-          value={this.state.compatibility}
-          options={compatibilityOptions}
-          onChange={this.handleChange}
-        />
-        <Checkbox
-          name="enabledGZip"
-          label={t("scm-svn-plugin.config.enabledGZip")}
-          helpText={t("scm-svn-plugin.config.enabledGZipHelpText")}
-          checked={this.state.enabledGZip}
-          onChange={this.handleChange}
-          disabled={readOnly}
-        />
-      </>
-    );
-  }
-}
-
-export default withTranslation("plugins")(SvnConfigurationForm);
+export default SvnConfigurationForm;

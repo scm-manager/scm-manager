@@ -19,7 +19,7 @@
       "enabledGZip": "GZip Compression aktivieren",
       "enabledGZipHelpText": "Aktiviert GZip Kompression für SVN Responses",
       "disabled": "Deaktiviert",
-      "disabledHelpText": "Aktiviert oder deaktiviert das SVN Plugin",
+      "disabledHelpText": "Aktiviert oder deaktiviert das SVN Plugin. Nur erlaubt, wenn keine Subversion Repositories existieren.",
       "required": "Dieser Konfigurationswert wird benötigt"
     }
   },

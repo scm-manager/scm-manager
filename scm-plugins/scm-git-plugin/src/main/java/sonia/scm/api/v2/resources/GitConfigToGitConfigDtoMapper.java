@@ -30,6 +30,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import sonia.scm.config.ConfigurationPermissions;
 import sonia.scm.repository.GitConfig;
+import sonia.scm.repository.RepositoryManager;
 
 import javax.inject.Inject;
 
@@ -44,6 +45,9 @@ public abstract class GitConfigToGitConfigDtoMapper extends BaseMapper<GitConfig
   @Inject
   private ScmPathInfoStore scmPathInfoStore;
 
+  @Inject
+  private RepositoryManager repositoryManager;
+
   @AfterMapping
   void appendLinks(GitConfig config, @MappingTarget GitConfigDto target) {
     Links.Builder linksBuilder = linkingTo().self(self());
@@ -51,6 +55,7 @@ public abstract class GitConfigToGitConfigDtoMapper extends BaseMapper<GitConfig
       linksBuilder.single(link("update", update()));
     }
     target.add(linksBuilder.build());
+    target.setAllowDisable(repositoryManager.getAll().stream().noneMatch(r -> r.getType().equals("git")));
   }
 
   private String self() {
