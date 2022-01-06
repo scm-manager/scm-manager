@@ -151,6 +151,9 @@
   "importLog": {
     "title": "Importprotokoll"
   },
+  "syntaxHighlighting": {
+    "copyButton": "In die Zwischenablage kopieren"
+  },
   "notifications": {
     "toastTitle": "Benachrichtigung",
     "xMore": "+{{ count }} Benachrichtigung",
