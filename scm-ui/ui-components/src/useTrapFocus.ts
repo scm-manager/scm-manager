@@ -36,18 +36,17 @@ interface UseTrapFocus {
 
 // Based on https://tobbelindstrom.com/blog/useTrapFocus/
 
-export const useTrapFocus = (options?: UseTrapFocus): MutableRefObject<Node> => {
+export const useTrapFocus = (options: UseTrapFocus): MutableRefObject<Node> => {
   const node = useRef<Node>(null);
-  const { includeContainer, initialFocus, returnFocus, updateNodes } = useMemo<UseTrapFocus>(
-    () => ({
+  const { includeContainer, initialFocus, returnFocus, updateNodes } = useMemo<UseTrapFocus>(() => {
+    return {
       includeContainer: false,
       initialFocus: null,
       returnFocus: true,
       updateNodes: false,
-      ...options,
-    }),
-    [options]
-  );
+      ...options
+    };
+  }, [options.initialFocus]);
   const [tabbableNodes, setTabbableNodes] = useState<FocusableElement[]>([]);
   const previousFocusedNode = useRef<Node>(document.activeElement as Node);
 
@@ -84,7 +83,7 @@ export const useTrapFocus = (options?: UseTrapFocus): MutableRefObject<Node> => 
   }, [returnFocus]);
 
   const handleKeydown = useCallback(
-    (event) => {
+    event => {
       const { key, keyCode, shiftKey } = event;
 
       let getTabbableNodes = tabbableNodes;
@@ -116,7 +115,7 @@ export const useTrapFocus = (options?: UseTrapFocus): MutableRefObject<Node> => 
 
   useEventListener({
     type: "keydown",
-    listener: handleKeydown,
+    listener: handleKeydown
   });
 
   return node;
@@ -133,7 +132,7 @@ export const useEventListener = ({
   type,
   listener,
   element = isSSR ? undefined : window,
-  options,
+  options
 }: UseEventListener): void => {
   const savedListener = useRef<EventListener>();
 

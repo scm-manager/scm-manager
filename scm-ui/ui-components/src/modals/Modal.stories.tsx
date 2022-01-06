@@ -24,13 +24,13 @@
 
 import { storiesOf } from "@storybook/react";
 import { MemoryRouter } from "react-router-dom";
-import React, { useState, FC } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import Modal from "./Modal";
 import Checkbox from "../forms/Checkbox";
 import styled from "styled-components";
 import ExternalLink from "../navigation/ExternalLink";
-import { Radio, Textarea, InputField } from "../forms";
-import { ButtonGroup, Button } from "../buttons";
+import { InputField, Radio, Textarea } from "../forms";
+import { Button, ButtonGroup } from "../buttons";
 import Notification from "../Notification";
 import { Autocomplete } from "../index";
 import { SelectValue } from "@scm-manager/ui-types";
@@ -114,6 +114,20 @@ storiesOf("Modal/Modal", module)
       footer={withFormElementsFooter}
     />
   ))
+  .add("With initial input field focus", () => {
+    const ref = useRef<HTMLInputElement>(null);
+    return (
+      <Modal
+        body={<InputField ref={ref} />}
+        closeFunction={doNothing}
+        active={true}
+        title={"Hitchhiker Modal"}
+        footer={withFormElementsFooter}
+        initialFocusRef={ref}
+      />
+    );
+  })
+  .add("With initial button focus", () => <RefModal />)
   .add("With long tooltips", () => {
     return (
       <NonCloseableModal>
@@ -310,5 +324,20 @@ const NestedModal: FC = ({ children }) => {
         />
       )}
     </>
+  );
+};
+
+const RefModal = () => {
+  const ref = useRef<HTMLButtonElement>(null);
+
+  return (
+    <Modal
+      body={<button ref={ref}>Hello</button>}
+      closeFunction={doNothing}
+      active={true}
+      title={"Hitchhiker Modal"}
+      footer={withFormElementsFooter}
+      initialFocusRef={ref}
+    />
   );
 };
