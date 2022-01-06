@@ -41,23 +41,23 @@ binder.bind<extensionPoints.ChangesetDescriptionTokens>("changeset.description.t
 
 binder.bind("repos.sources.content.actionbar.menu", {
   action: () => console.log("abc"),
-  label: "test",
-  icon: "home",
-  category: "lala"
+  label: "Löschen",
+  icon: "trash",
+  category: "Editor"
 });
 
 binder.bind("repos.sources.content.actionbar.menu", {
   action: () => console.log("abc"),
-  label: "test",
-  icon: "home",
-  category: "lala"
+  label: "Vergrößern",
+  icon: "search-plus",
+  category: "Helper"
 });
 
 binder.bind("repos.sources.content.actionbar.menu", {
   action: () => console.log("abc"),
-  label: "test",
-  icon: "home",
-  category: "bb"
+  label: "Bearbeiten",
+  icon: "edit",
+  category: "Editor"
 });
 
 const root = document.getElementById("root");

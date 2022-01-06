@@ -69,38 +69,68 @@ const ContentActionMenu: FC<Props> = ({ extensionProps }) => {
 
   const renderMenuTrigger = () => {
     if (showMenu) {
-      return <Icon className="has-cursor-pointer" name="times" onClick={() => setShowMenu(false)} color="inherit" />;
+      return (
+        <Icon
+          className="has-cursor-pointer"
+          name="times"
+          onClick={() => setShowMenu(false)}
+          color="inherit"
+          tabIndex={0}
+          onEnter={() => setShowMenu(false)}
+        />
+      );
     }
-    return <Icon className="has-cursor-pointer" name="ellipsis-v" onClick={() => setShowMenu(true)} color="inherit" />;
+    return (
+      <i
+        className="has-cursor-pointer fas fa-fw fa-ellipsis-v"
+        onClick={() => setShowMenu(true)}
+        color="inherit"
+        onMouseEnter={() => setShowMenu(true)}
+        tabIndex={0}
+        onKeyPress={e => (e.key === "Enter" ? setShowMenu(true) : null)}
+      />
+    );
   };
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-  // @ts-ignore This seems to be the best way to remove duplicate array entries
-  // https://stackoverflow.com/questions/1960473/get-all-unique-values-in-a-javascript-array-remove-duplicates
   const categories = extensions.map(e => e.category);
+
+  const renderMenu = () => {
+    return (
+      <>
+        {showMenu ? (
+          <Menu className="has-background-white p-2">
+            {categories
+              .filter((item, index) => categories.indexOf(item) === index)
+              .map(category => {
+                return (
+                  <ul>
+                    <Category>{category}</Category>
+                    {extensions
+                      .filter(extension => extension.category === category)
+                      .map(extension => (
+                        <li
+                          className="has-cursor-pointer p-1"
+                          onClick={() => extension.action}
+                          tabIndex={0}
+                          onKeyPress={e => (e.key === "Enter" ? extension.action() : null)}
+                        >
+                          <Icon name={extension.icon} color="inherit" />
+                          {extension.label}
+                        </li>
+                      ))}
+                  </ul>
+                );
+              })}
+          </Menu>
+        ) : null}
+      </>
+    );
+  };
 
   return (
     <div>
       {renderMenuTrigger()}
-      {showMenu ? (
-        <Menu className="has-background-white p-2">
-          {categories.map(c => {
-            return (
-              <ul>
-                <Category>{c}</Category>
-                {extensions
-                  .filter(e => e.category === c)
-                  .map(e => (
-                    <li className="has-cursor-pointer p-1" onClick={() => e.action}>
-                      <Icon name={e.icon} color="inherit" />
-                      {e.label}
-                    </li>
-                  ))}
-              </ul>
-            );
-          })}
-        </Menu>
-      ) : null}
+      {renderMenu()}
     </div>
   );
 };
