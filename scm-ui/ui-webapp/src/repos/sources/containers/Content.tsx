@@ -32,6 +32,7 @@ import FileButtonAddons from "../components/content/FileButtonAddons";
 import SourcesView from "./SourcesView";
 import HistoryView from "./HistoryView";
 import AnnotateView from "./AnnotateView";
+import ContentActionMenu from "./ContentActionMenu";
 
 type Props = {
   file: File;
@@ -62,6 +63,13 @@ const BorderLessDiv = styled.div`
   border: none;
   box-shadow: none;
 `;
+
+export type ContentActionExtensionProps = {
+  repository: Repository;
+  file: File;
+  revision: string;
+  handleExtensionError: React.Dispatch<React.SetStateAction<Error | undefined>>;
+};
 
 export type SourceViewSelection = "source" | "annotations" | "history";
 
@@ -119,6 +127,13 @@ const Content: FC<Props> = ({ file, repository, revision, breadcrumb, error }) =
       />
     ) : null;
 
+    const extensionProps: ContentActionExtensionProps = {
+      repository,
+      file,
+      revision: revision ? encodeURIComponent(revision) : "",
+      handleExtensionError: setErrorFromExtension
+    };
+
     return (
       <HeaderWrapper>
         <div className={classNames("level", "is-flex-wrap-wrap")}>
@@ -138,14 +153,10 @@ const Content: FC<Props> = ({ file, repository, revision, breadcrumb, error }) =
             />
             <ExtensionPoint<extensionPoints.ReposSourcesContentActionBar>
               name="repos.sources.content.actionbar"
-              props={{
-                repository,
-                file,
-                revision: revision ? encodeURIComponent(revision) : "",
-                handleExtensionError: setErrorFromExtension
-              }}
+              props={extensionProps}
               renderAll={true}
             />
+            <ContentActionMenu extensionProps={extensionProps} />
           </div>
         </div>
       </HeaderWrapper>

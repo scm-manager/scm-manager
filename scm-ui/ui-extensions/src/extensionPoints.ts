@@ -519,3 +519,21 @@ export type InitializationStep<Step extends string | undefined = undefined> =
     {
       data: HalRepresentation;
     }>;
+
+type FileViewActionBarOverflowMenuActionProps = {
+  repository: Repository;
+  file: File;
+  revision: string;
+  handleExtensionError: React.Dispatch<React.SetStateAction<Error | undefined>>;
+};
+
+export type FileViewActionBarOverflowMenu = ExtensionPointDefinition<
+  "repos.sources.content.actionbar.menu",
+  {
+    category: string;
+    label: string;
+    icon: string;
+    action: (props: FileViewActionBarOverflowMenuActionProps) => void;
+  },
+  FileViewActionBarOverflowMenuActionProps
+>;
