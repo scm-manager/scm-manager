@@ -83,7 +83,7 @@ const SyntaxHighlighter: FC<Props> = ({ language = defaultLanguage, showLineNumb
   const defaultRenderer = createSyntaxHighlighterRenderer(createLinePermaLink, showLineNumbers);
 
   let valueWithoutTrailingLineBreak = value;
-  if (value && value.length > 1 && value.substr(value.length - 1, value.length) === "\n") {
+  if (value && value.length > 1 && value.endsWith("\n")) {
     valueWithoutTrailingLineBreak = value.substr(0, value.length - 1);
   }
 
