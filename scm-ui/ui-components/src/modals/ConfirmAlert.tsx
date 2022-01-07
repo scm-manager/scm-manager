@@ -44,6 +44,7 @@ type Props = {
 
 export const ConfirmAlert: FC<Props> = ({ title, message, buttons, close }) => {
   const [showModal, setShowModal] = useState(true);
+  const [initialFocusButton, setInitialFocusButton] = useState<HTMLButtonElement | null>(null);
 
   const onClose = () => {
     if (typeof close === "function") {
@@ -72,7 +73,7 @@ export const ConfirmAlert: FC<Props> = ({ title, message, buttons, close }) => {
             onClick={() => handleClickButton(button)}
             onKeyDown={e => e.key === "Enter" && handleClickButton(button)}
             tabIndex={0}
-            autoFocus={button.autofocus}
+            ref={button.autofocus ? setInitialFocusButton : undefined}
           >
             {button.label}
           </button>
@@ -82,7 +83,17 @@ export const ConfirmAlert: FC<Props> = ({ title, message, buttons, close }) => {
   );
 
   return (
-    (showModal && <Modal title={title} closeFunction={onClose} body={body} active={true} footer={footer} />) || null
+    (showModal && (
+      <Modal
+        title={title}
+        closeFunction={onClose}
+        body={body}
+        active={true}
+        footer={footer}
+        initialFocusNode={initialFocusButton}
+      />
+    )) ||
+    null
   );
 };
 
