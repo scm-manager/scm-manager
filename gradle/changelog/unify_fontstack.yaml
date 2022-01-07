@@ -1,2 +1,0 @@
-- type: changed
-  description: Change mono-font-stack to provide better ux on modern platforms by using later os-fonts. Reduces amount of similar but not equal fonts used.
