@@ -1,2 +1,4 @@
 - type: fixed
-  description: Minor adjustments regarding high contrast mode ([#1910](https://github.com/scm-manager/scm-manager/pull/1910))
+  description: Minor issues in high contrast mode ([#1910](https://github.com/scm-manager/scm-manager/pull/1910))
+- type: added
+  description: CSS variables for plugins ([#1910](https://github.com/scm-manager/scm-manager/pull/1910))
