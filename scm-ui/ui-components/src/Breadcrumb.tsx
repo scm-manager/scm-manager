@@ -69,14 +69,8 @@ const BreadcrumbNav = styled.nav`
   width: 100%;
 
   /* move slash to end */
-
   li + li::before {
     content: none;
-  }
-
-  li:not(:last-child)::after {
-    color: #b5b5b5; //$breadcrumb-item-separator-color
-    content: "\\0002f";
   }
 
   li:first-child {
@@ -84,7 +78,6 @@ const BreadcrumbNav = styled.nav`
   }
 
   /* sizing of each item */
-
   li {
     max-width: 375px;
 
@@ -109,11 +102,6 @@ const ActionBar = styled.div`
      */
     margin: 0 0.75rem 0 0 !important;
   }
-`;
-
-// TODO ersetzen?
-const PrefixButton = styled.div`
-  border-right: 1px solid lightgray;
 `;
 
 const BreadcrumbNode: FC<{ clickable: boolean; text: string; url: string; current?: boolean }> = ({
@@ -198,7 +186,7 @@ const Breadcrumb: FC<Props> = ({
   const renderBreadcrumbNav = () => {
     let prefixButtons = null;
     if (preButtons) {
-      prefixButtons = <PrefixButton className="mr-2">{preButtons}</PrefixButton>;
+      prefixButtons = <div className="mr-2 prefix-button">{preButtons}</div>;
     }
 
     let homeUrl = baseUrl + "/";

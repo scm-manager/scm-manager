@@ -67,7 +67,7 @@ exports[`Storyshots BreadCrumb Default 1`] = `
   >
     <nav
       aria-label="breadcrumbs"
-      className="Breadcrumb__BreadcrumbNav-zvtb4t-1 eupowG breadcrumb sources-breadcrumb mx-2 my-4"
+      className="Breadcrumb__BreadcrumbNav-zvtb4t-1 iPDJBY breadcrumb sources-breadcrumb mx-2 my-4"
     >
       <ul>
         <li>
@@ -176,7 +176,7 @@ exports[`Storyshots BreadCrumb Long path 1`] = `
   >
     <nav
       aria-label="breadcrumbs"
-      className="Breadcrumb__BreadcrumbNav-zvtb4t-1 eupowG breadcrumb sources-breadcrumb mx-2 my-4"
+      className="Breadcrumb__BreadcrumbNav-zvtb4t-1 iPDJBY breadcrumb sources-breadcrumb mx-2 my-4"
     >
       <ul>
         <li>
@@ -335,7 +335,7 @@ exports[`Storyshots BreadCrumb Not clickable 1`] = `
   >
     <nav
       aria-label="breadcrumbs"
-      className="Breadcrumb__BreadcrumbNav-zvtb4t-1 eupowG breadcrumb sources-breadcrumb mx-2 my-4"
+      className="Breadcrumb__BreadcrumbNav-zvtb4t-1 iPDJBY breadcrumb sources-breadcrumb mx-2 my-4"
     >
       <ul>
         <li>
@@ -425,10 +425,10 @@ exports[`Storyshots BreadCrumb With prefix button 1`] = `
   >
     <nav
       aria-label="breadcrumbs"
-      className="Breadcrumb__BreadcrumbNav-zvtb4t-1 eupowG breadcrumb sources-breadcrumb mx-2 my-4"
+      className="Breadcrumb__BreadcrumbNav-zvtb4t-1 iPDJBY breadcrumb sources-breadcrumb mx-2 my-4"
     >
       <div
-        className="Breadcrumb__PrefixButton-zvtb4t-4 fsMznZ mr-2"
+        className="mr-2 prefix-button"
       >
         <a
           href="#link"
