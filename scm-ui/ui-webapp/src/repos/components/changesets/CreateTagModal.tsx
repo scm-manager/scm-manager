@@ -43,13 +43,15 @@ const CreateTagModal: FC<Props> = ({ repository, changeset, onClose }) => {
   );
   const [t] = useTranslation("repos");
   const [newTagName, setNewTagName] = useState("");
+  const [initialFocusNode, setInitialFocusNode] = useState<HTMLInputElement | null>(null);
+
   useEffect(() => {
     if (createdTag) {
       onClose();
     }
   }, [createdTag, onClose]);
 
-  const tagNames = tags?._embedded.tags.map(tag => tag.name);
+  const tagNames = tags?._embedded?.tags.map(tag => tag.name);
 
   let validationError = "";
 
@@ -74,10 +76,12 @@ const CreateTagModal: FC<Props> = ({ repository, changeset, onClose }) => {
         <InputField
           name="name"
           label={t("tags.create.form.field.name.label")}
-          onChange={val => setNewTagName(val)}
+          onChange={event => setNewTagName(event.target.value)}
           value={newTagName}
           validationError={!!validationError}
           errorMessage={t(validationError)}
+          ref={setInitialFocusNode}
+          onReturnPressed={() => !validationError && newTagName.length > 0 && create(newTagName)}
         />
         <div className="mt-5">{t("tags.create.hint")}</div>
       </>
@@ -103,6 +107,7 @@ const CreateTagModal: FC<Props> = ({ repository, changeset, onClose }) => {
         </>
       }
       closeFunction={onClose}
+      initialFocusNode={initialFocusNode}
     />
   );
 };
