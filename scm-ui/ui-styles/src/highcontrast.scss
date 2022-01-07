@@ -66,13 +66,11 @@ $tooltip-color: $scheme-main;
 
 @import "utils/_post.scss";
 
-// SyntaxHighlighter
 :root {
-  --scm-secondary-least: #{$scheme-main};
-  --scm-secondary-most: #{$white};
+  --scm-secondary-background: #{$scheme-main};
+  --scm-secondary-text: #{$white};
   --scm-border: 2px solid #{$white-ter};
-  --scm-shade-warning-relative: #{$warning-dark};
-  --scm-shade-link-relative: #{$link-dark};
+  --scm-column-selection: #{$link-dark};
 
   --sh-base-color: #fff;
   --sh-font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
@@ -88,7 +86,7 @@ $tooltip-color: $scheme-main;
   --sh-variable-color: #c386ca;
   --sh-function-color: #ff6181;
   --sh-keyword-color: #00a984;
-  --sh-selected-color: #7fe3cd;
+  --sh-selected-color: #{$warning-dark};
   --sh-highlight-background: #f5f5f5;
   --sh-highlight-accent: #99d8f3;
 
