@@ -66,6 +66,7 @@ const PluginModal: FC<Props> = ({ onClose, pluginAction, plugin }) => {
   const error = installError || uninstallError || updateError || pluginCenterAuthInfoError;
   const loading = isInstalling || isUninstalling || isUpdating || isLoadingPluginCenterAuthInfo;
   const isDone = isInstalled || isUninstalled || isUpdated;
+  const [initialFocusNode, setInitialFocusNode] = useState<HTMLButtonElement | null>(null);
 
   useEffect(() => {
     if (isDone && !shouldRestart) {
@@ -108,6 +109,7 @@ const PluginModal: FC<Props> = ({ onClose, pluginAction, plugin }) => {
           action={handlePluginAction}
           loading={loading}
           disabled={!!error || isDone}
+          ref={setInitialFocusNode}
         />
         <Button label={t("plugins.modal.abort")} action={onClose} />
       </ButtonGroup>
@@ -253,6 +255,7 @@ const PluginModal: FC<Props> = ({ onClose, pluginAction, plugin }) => {
       body={body}
       footer={footer()}
       active={true}
+      initialFocusNode={initialFocusNode}
     />
   );
 };
