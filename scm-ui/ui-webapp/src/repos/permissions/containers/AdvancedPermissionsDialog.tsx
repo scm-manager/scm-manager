@@ -45,6 +45,8 @@ const createPreSelection = (availableVerbs: string[], selectedVerbs?: string[]):
 const AdvancedPermissionsDialog: FC<Props> = ({ availableVerbs, selectedVerbs, readOnly, onSubmit, onClose }) => {
   const [verbs, setVerbs] = useState<SelectedVerbs>({});
   const [t] = useTranslation("repos");
+  const [initialFocusNode, setInitialFocusNode] = useState<HTMLInputElement | null>(null);
+
   useEffect(() => {
     setVerbs(createPreSelection(availableVerbs, selectedVerbs));
   }, [availableVerbs, selectedVerbs]);
@@ -66,7 +68,7 @@ const AdvancedPermissionsDialog: FC<Props> = ({ availableVerbs, selectedVerbs, r
       onChange={handleChange}
       disabled={readOnly}
       role={true}
-      autofocus={index === 0}
+      ref={index === 0 ? setInitialFocusNode : undefined}
     />
   ));
 
@@ -94,6 +96,7 @@ const AdvancedPermissionsDialog: FC<Props> = ({ availableVerbs, selectedVerbs, r
       body={<>{verbSelectBoxes}</>}
       footer={footer}
       active={true}
+      initialFocusNode={initialFocusNode}
     />
   );
 };
