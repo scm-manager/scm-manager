@@ -56,6 +56,7 @@ const UserConverter: FC<Props> = ({ user }) => {
   } = useConvertToExternal();
   const error = convertingToExternalError || convertingToInternalError || undefined;
   const isLoading = isConvertingToExternal || isConvertingToInternal;
+  const [initialFocusNode, setInitialFocusNode] = useState<HTMLInputElement | null>(null);
 
   useEffect(() => setShowPasswordModal(false), [user]);
 
@@ -103,15 +104,12 @@ const UserConverter: FC<Props> = ({ user }) => {
     }
   };
 
-  const passwordChangeField = (
-    <PasswordConfirmation passwordChanged={changePassword} onReturnPressed={onReturnPressed} />
-  );
   const passwordModal = (
     <Modal
-      body={passwordChangeField}
       closeFunction={() => setShowPasswordModal(false)}
       active={showPasswordModal}
       title={t("userForm.modal.passwordRequired")}
+      initialFocusNode={initialFocusNode}
       footer={
         <SubmitButton
           action={() => password && passwordValid && convertToInternal(user, password)}
@@ -121,7 +119,13 @@ const UserConverter: FC<Props> = ({ user }) => {
           label={t("userForm.modal.convertToInternal")}
         />
       }
-    />
+    >
+      <PasswordConfirmation
+        passwordChanged={changePassword}
+        onReturnPressed={onReturnPressed}
+        ref={setInitialFocusNode}
+      />
+    </Modal>
   );
 
   return (
