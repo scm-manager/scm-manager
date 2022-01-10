@@ -24,37 +24,31 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.common.base.Strings;
 import lombok.EqualsAndHashCode;
 import sonia.scm.Validateable;
 import sonia.scm.repository.api.DiffFormat;
 
 /**
- *
  * @author Sebastian Sdorra
  * @since 1.17
  */
 @EqualsAndHashCode(callSuper = true)
-public class DiffCommandRequest extends FileBaseCommandRequest
-  implements Validateable {
+public class DiffCommandRequest extends FileBaseCommandRequest implements Validateable {
 
   private static final long serialVersionUID = 4026911212676859626L;
 
+  private DiffFormat format = DiffFormat.NATIVE;
+  private String ancestorChangeset;
+  private String compareTo;
+
   @Override
-  public DiffCommandRequest clone()
-  {
-    DiffCommandRequest clone = null;
+  public DiffCommandRequest clone() {
+    DiffCommandRequest clone;
 
-    try
-    {
+    try {
       clone = (DiffCommandRequest) super.clone();
-    }
-    catch (CloneNotSupportedException e)
-    {
-
-      // this shouldn't happen, since we are Cloneable
+    } catch (CloneNotSupportedException e) {
       throw new InternalError("DiffCommandRequest seems not to be cloneable");
     }
 
@@ -62,22 +56,18 @@ public class DiffCommandRequest extends FileBaseCommandRequest
   }
 
   @Override
-  public boolean isValid()
-  {
+  public boolean isValid() {
     return !Strings.isNullOrEmpty(getPath())
-      ||!Strings.isNullOrEmpty(getRevision());
+      || !Strings.isNullOrEmpty(getRevision());
   }
 
   /**
    * Sets the diff format which should be used for the output.
    *
-   *
    * @param format format of the diff output
-   *
    * @since 1.34
    */
-  public void setFormat(DiffFormat format)
-  {
+  public void setFormat(DiffFormat format) {
     this.format = format;
   }
 
@@ -88,13 +78,10 @@ public class DiffCommandRequest extends FileBaseCommandRequest
   /**
    * Return the output format of the diff command.
    *
-   *
    * @return output format
-   *
    * @since 1.34
    */
-  public DiffFormat getFormat()
-  {
+  public DiffFormat getFormat() {
     return format;
   }
 
@@ -102,8 +89,22 @@ public class DiffCommandRequest extends FileBaseCommandRequest
     return ancestorChangeset;
   }
 
-  /** diff format */
-  private DiffFormat format = DiffFormat.NATIVE;
+  /**
+   * Sets the compareTo reference which will be used for the compare.
+   *
+   * @since 2.29.x
+   */
+  public String getCompareTo() {
+    return compareTo;
+  }
 
-  private String ancestorChangeset;
+  /**
+   * Gets the compareTo reference which will be used for the compare.
+   *
+   * @param compareTo reference which will be used for the compare
+   * @since 2.29.x
+   */
+  public void setCompareTo(String compareTo) {
+    this.compareTo = compareTo;
+  }
 }
