@@ -38,6 +38,7 @@ type Props = {
   loadingMessage: string;
   noOptionsMessage: string;
   errorMessage?: string;
+  informationMessage?: string;
   creatable?: boolean;
   className?: string;
   disabled?: boolean;
@@ -81,6 +82,7 @@ class Autocomplete extends React.Component<Props, State> {
       noOptionsMessage,
       loadSuggestions,
       errorMessage,
+      informationMessage,
       creatable,
       className,
       disabled
@@ -131,6 +133,7 @@ class Autocomplete extends React.Component<Props, State> {
           )}
         </div>
         {errorMessage ? <p className="help is-danger">{errorMessage}</p> : null}
+        {informationMessage ? <p className="help is-info">{informationMessage}</p> : null}
       </div>
     );
   }

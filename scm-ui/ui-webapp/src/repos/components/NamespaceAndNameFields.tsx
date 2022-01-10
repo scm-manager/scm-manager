@@ -23,12 +23,12 @@
  */
 
 import React, { FC, useEffect, useState } from "react";
-import { CUSTOM_NAMESPACE_STRATEGY, RepositoryCreation, SelectValue } from "@scm-manager/ui-types";
+import { CUSTOM_NAMESPACE_STRATEGY, RepositoryCreation} from "@scm-manager/ui-types";
 import { useTranslation } from "react-i18next";
-import { Autocomplete, InputField } from "@scm-manager/ui-components";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import { InputField } from "@scm-manager/ui-components";
 import * as validator from "./form/repositoryValidation";
-import { useNamespaceStrategies, useNamespaceSuggestions } from "@scm-manager/ui-api";
+import { useNamespaceStrategies} from "@scm-manager/ui-api";
+import NamespaceInput from "./NamespaceInput";
 
 type Props = {
   repository: RepositoryCreation;
@@ -50,7 +50,6 @@ const NamespaceAndNameFields: FC<Props> = ({ repository, onChange, setValid, dis
   const [nameValidationError, setNameValidationError] = useState(false);
   const [namespaceValidationError, setNamespaceValidationError] = useState(false);
   const [t] = useTranslation("repos");
-  const loadNamespaceSuggestions = useNamespaceSuggestions();
 
   useEffect(() => {
     if (repository.name) {
@@ -71,8 +70,7 @@ const NamespaceAndNameFields: FC<Props> = ({ repository, onChange, setValid, dis
     }
   }, [repository.name, repository.namespace, namespaceStrategy, setValid]);
 
-  const handleNamespaceChange = (selectedNamespace: SelectValue) => {
-    const namespace = selectedNamespace.value.id;
+  const handleNamespaceChange = (namespace: string) => {
     const valid = validator.isNamespaceValid(namespace);
     setNamespaceValidationError(!valid);
     onChange({ ...repository, namespace });
@@ -85,33 +83,15 @@ const NamespaceAndNameFields: FC<Props> = ({ repository, onChange, setValid, dis
   };
 
   const renderNamespaceField = () => {
-    let informationMessage = undefined;
-    if (repository?.namespace?.indexOf(" ") > 0) {
-      informationMessage = t("validation.namespaceSpaceWarningText");
-    }
-
-    const repositorySelectValue = repository
-      ? { value: { id: repository.namespace, displayName: "" }, label: repository.namespace }
-      : undefined;
-    const props = {
-      loadSuggestions: loadNamespaceSuggestions,
-      label: t("repository.namespace"),
-      helpText: t("help.namespaceHelpText"),
-      value: repositorySelectValue,
-      valueSelected: handleNamespaceChange,
-      placeholder: "Namespace",
-      creatable: true,
-      errorMessage: t("validation.namespace-invalid"),
-      validationError: namespaceValidationError,
-      disabled: disabled,
-      informationMessage
-    };
-
-    if (namespaceStrategy === CUSTOM_NAMESPACE_STRATEGY) {
-      return <Autocomplete {...props} />;
-    }
-
-    return <ExtensionPoint name="repos.create.namespace" props={props} renderAll={false} />;
+    return (
+      <NamespaceInput
+        namespace={repository?.namespace}
+        handleNamespaceChange={handleNamespaceChange}
+        namespaceStrategy={namespaceStrategy}
+        namespaceValidationError={namespaceValidationError}
+        disabled={disabled}
+      />
+    );
   };
 
   // not yet loaded
