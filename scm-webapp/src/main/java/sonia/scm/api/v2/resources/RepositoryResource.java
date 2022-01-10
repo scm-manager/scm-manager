@@ -370,6 +370,11 @@ public class RepositoryResource {
     return resourceProvider.getRepositoryPathResource();
   }
 
+  @Path("compare-diff/")
+  public CompareDiffResource compareDiff() {
+    return resourceProvider.getCompareDiffResource();
+  }
+
   private Supplier<Repository> loadBy(String namespace, String name) {
     NamespaceAndName namespaceAndName = new NamespaceAndName(namespace, name);
     return () -> Optional.ofNullable(manager.get(namespaceAndName)).orElseThrow(() -> notFound(entity(namespaceAndName)));

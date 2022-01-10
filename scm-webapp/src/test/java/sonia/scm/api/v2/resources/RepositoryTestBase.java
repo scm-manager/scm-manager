@@ -51,6 +51,7 @@ abstract class RepositoryTestBase {
   RepositoryExportResource repositoryExportResource;
   RepositoryPathsResource repositoryPathsResource;
   HealthCheckService healthCheckService;
+  CompareDiffResource compareDiffResource;
 
   RepositoryRootResource getRepositoryRootResource() {
     RepositoryBasedResourceProvider repositoryBasedResourceProvider = new RepositoryBasedResourceProvider(
@@ -67,7 +68,8 @@ abstract class RepositoryTestBase {
       of(incomingRootResource),
       of(annotateResource),
       of(repositoryExportResource),
-      of(repositoryPathsResource)
+      of(repositoryPathsResource),
+      of(compareDiffResource)
     );
     return new RepositoryRootResource(
       of(new RepositoryResource(
