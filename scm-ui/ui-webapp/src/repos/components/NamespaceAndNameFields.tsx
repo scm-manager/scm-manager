@@ -23,12 +23,12 @@
  */
 
 import React, { FC, useEffect, useState } from "react";
-import { CUSTOM_NAMESPACE_STRATEGY, RepositoryCreation } from "@scm-manager/ui-types";
+import { CUSTOM_NAMESPACE_STRATEGY, RepositoryCreation, SelectValue } from "@scm-manager/ui-types";
 import { useTranslation } from "react-i18next";
-import { InputField } from "@scm-manager/ui-components";
+import { Autocomplete, InputField } from "@scm-manager/ui-components";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import * as validator from "./form/repositoryValidation";
-import { useNamespaceStrategies } from "@scm-manager/ui-api";
+import { useNamespaceStrategies, useNamespaceSuggestions } from "@scm-manager/ui-api";
 
 type Props = {
   repository: RepositoryCreation;
@@ -50,6 +50,7 @@ const NamespaceAndNameFields: FC<Props> = ({ repository, onChange, setValid, dis
   const [nameValidationError, setNameValidationError] = useState(false);
   const [namespaceValidationError, setNamespaceValidationError] = useState(false);
   const [t] = useTranslation("repos");
+  const loadNamespaceSuggestions = useNamespaceSuggestions();
 
   useEffect(() => {
     if (repository.name) {
@@ -70,7 +71,8 @@ const NamespaceAndNameFields: FC<Props> = ({ repository, onChange, setValid, dis
     }
   }, [repository.name, repository.namespace, namespaceStrategy, setValid]);
 
-  const handleNamespaceChange = (namespace: string) => {
+  const handleNamespaceChange = (selectedNamespace: SelectValue) => {
+    const namespace = selectedNamespace.value.id;
     const valid = validator.isNamespaceValid(namespace);
     setNamespaceValidationError(!valid);
     onChange({ ...repository, namespace });
@@ -88,11 +90,17 @@ const NamespaceAndNameFields: FC<Props> = ({ repository, onChange, setValid, dis
       informationMessage = t("validation.namespaceSpaceWarningText");
     }
 
+    const repositorySelectValue = repository
+      ? { value: { id: repository.namespace, displayName: "" }, label: repository.namespace }
+      : undefined;
     const props = {
+      loadSuggestions: loadNamespaceSuggestions,
       label: t("repository.namespace"),
       helpText: t("help.namespaceHelpText"),
-      value: repository ? repository.namespace : "",
-      onChange: handleNamespaceChange,
+      value: repositorySelectValue,
+      valueSelected: handleNamespaceChange,
+      placeholder: "Namespace",
+      creatable: true,
       errorMessage: t("validation.namespace-invalid"),
       validationError: namespaceValidationError,
       disabled: disabled,
@@ -100,7 +108,7 @@ const NamespaceAndNameFields: FC<Props> = ({ repository, onChange, setValid, dis
     };
 
     if (namespaceStrategy === CUSTOM_NAMESPACE_STRATEGY) {
-      return <InputField {...props} />;
+      return <Autocomplete {...props} />;
     }
 
     return <ExtensionPoint name="repos.create.namespace" props={props} renderAll={false} />;

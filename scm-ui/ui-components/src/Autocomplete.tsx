@@ -37,8 +37,10 @@ type Props = {
   placeholder: string;
   loadingMessage: string;
   noOptionsMessage: string;
+  errorMessage?: string;
   creatable?: boolean;
   className?: string;
+  disabled?: boolean;
 };
 
 type State = {};
@@ -78,8 +80,10 @@ class Autocomplete extends React.Component<Props, State> {
       loadingMessage,
       noOptionsMessage,
       loadSuggestions,
+      errorMessage,
       creatable,
-      className
+      className,
+      disabled
     } = this.props;
 
     return (
@@ -108,6 +112,7 @@ class Autocomplete extends React.Component<Props, State> {
                 });
               }}
               aria-label={helpText || label}
+              isDisabled={disabled}
             />
           ) : (
             <Async
@@ -121,9 +126,11 @@ class Autocomplete extends React.Component<Props, State> {
               loadingMessage={() => loadingMessage}
               noOptionsMessage={() => noOptionsMessage}
               aria-label={helpText || label}
+              isDisabled={disabled}
             />
           )}
         </div>
+        {errorMessage ? <p className="help is-danger">{errorMessage}</p> : null}
       </div>
     );
   }

@@ -317,6 +317,10 @@ class ResourceLinks {
     String groups() {
       return linkBuilder.method("searchGroup").parameters().href();
     }
+
+    String namespaces() {
+      return linkBuilder.method("searchNamespace").parameters().href();
+    }
   }
 
   ConfigLinks config() {
