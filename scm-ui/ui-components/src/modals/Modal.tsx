@@ -42,10 +42,24 @@ type Props = {
   headColor?: string;
   headTextColor?: string;
   size?: ModalSize;
+  overflowVisible?: boolean;
 };
 
-const SizedModal = styled.div<{ size?: ModalSize }>`
+const SizedModal = styled.div<{ size?: ModalSize; overflow: string }>`
   width: ${props => (props.size ? `${modalSizes[props.size]}%` : "640px")};
+  overflow: ${props => props.overflow};
+`;
+
+const DivWithOptionalOverflow = styled.div<{ overflow: string; borderBottomRadius: string }>`
+  overflow: ${props => props.overflow};
+  border-bottom-left-radius: ${props => props.borderBottomRadius};
+  border-bottom-right-radius: ${props => props.borderBottomRadius};
+`;
+
+const SectionWithOptionalOverflow = styled.section<{ overflow: string; borderBottomRadius: string }>`
+  overflow: ${props => props.overflow};
+  border-bottom-left-radius: ${props => props.borderBottomRadius};
+  border-bottom-right-radius: ${props => props.borderBottomRadius};
 `;
 
 export const Modal: FC<Props> = ({
@@ -57,7 +71,8 @@ export const Modal: FC<Props> = ({
   className,
   headColor = "secondary-less",
   headTextColor = "secondary-most",
-  size
+  size,
+  overflowVisible
 }) => {
   const portalRootElement = usePortalRootElement("modalsRoot");
   const initialFocusRef = useRef(null);
@@ -85,18 +100,29 @@ export const Modal: FC<Props> = ({
     }
   };
 
+  const overflowAttribute = overflowVisible ? "visible" : "auto";
+  const borderBottomRadiusAttribute = overflowVisible && !footer ? "inherit" : "unset";
+
   const modalElement = (
-    <div className={classNames("modal", className, isActive)} ref={trapRef} onKeyDown={onKeyDown}>
+    <DivWithOptionalOverflow
+      className={classNames("modal", className, isActive)}
+      ref={trapRef}
+      onKeyDown={onKeyDown}
+      overflow={overflowAttribute}
+      borderBottomRadius={borderBottomRadiusAttribute}
+    >
       <div className="modal-background" onClick={closeFunction} />
-      <SizedModal className="modal-card" size={size}>
+      <SizedModal className="modal-card" size={size} overflow={overflowAttribute}>
         <header className={classNames("modal-card-head", `has-background-${headColor}`)}>
           <h2 className={`modal-card-title m-0 has-text-${headTextColor}`}>{title}</h2>
           <button className="delete" aria-label="close" onClick={closeFunction} ref={initialFocusRef} autoFocus />
         </header>
-        <section className="modal-card-body">{body}</section>
+        <SectionWithOptionalOverflow className="modal-card-body" overflow={overflowAttribute} borderBottomRadius={borderBottomRadiusAttribute}>
+          {body}
+        </SectionWithOptionalOverflow>
         {showFooter}
       </SizedModal>
-    </div>
+    </DivWithOptionalOverflow>
   );
 
   return ReactDOM.createPortal(modalElement, portalRootElement);

@@ -23,13 +23,18 @@
  */
 
 import React, { FC, useState } from "react";
-import { CUSTOM_NAMESPACE_STRATEGY, Repository } from "@scm-manager/ui-types";
+import { Repository } from "@scm-manager/ui-types";
 import { Button, ButtonGroup, ErrorNotification, InputField, Level, Loading, Modal } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 import { Redirect } from "react-router-dom";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import * as validator from "../components/form/repositoryValidation";
 import { useNamespaceStrategies, useRenameRepository } from "@scm-manager/ui-api";
+import NamespaceInput from "../components/NamespaceInput";
+import styled from "styled-components";
+
+const WithOverflow = styled.div`
+  overflow: visible;
+`;
 
 type Props = {
   repository: Repository;
@@ -76,25 +81,8 @@ const RenameRepository: FC<Props> = ({ repository }) => {
     setName(name);
   };
 
-  const renderNamespaceField = () => {
-    const props = {
-      label: t("repository.namespace"),
-      helpText: t("help.namespaceHelpText"),
-      value: namespace,
-      onChange: handleNamespaceChange,
-      errorMessage: t("validation.namespace-invalid"),
-      validationError: namespaceValidationError
-    };
-
-    if (namespaceStrategies?.current === CUSTOM_NAMESPACE_STRATEGY) {
-      return <InputField {...props} />;
-    }
-
-    return <ExtensionPoint name="repos.create.namespace" props={props} renderAll={false} />;
-  };
-
   const modalBody = (
-    <div>
+    <WithOverflow>
       {renamingError ? <ErrorNotification error={renamingError} /> : null}
       <InputField
         label={t("renameRepo.modal.label.repoName")}
@@ -105,8 +93,13 @@ const RenameRepository: FC<Props> = ({ repository }) => {
         value={name}
         onChange={handleNameChange}
       />
-      {renderNamespaceField()}
-    </div>
+      <NamespaceInput
+        namespace={namespace}
+        handleNamespaceChange={handleNamespaceChange}
+        namespaceValidationError={namespaceValidationError}
+        namespaceStrategy={namespaceStrategies?.current}
+      />
+    </WithOverflow>
   );
 
   const footer = (
@@ -137,6 +130,7 @@ const RenameRepository: FC<Props> = ({ repository }) => {
       footer={footer}
       body={modalBody}
       closeFunction={() => setShowModal(false)}
+      overflowVisible={true}
     />
   );
 

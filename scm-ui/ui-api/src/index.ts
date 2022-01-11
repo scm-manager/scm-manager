@@ -36,6 +36,7 @@ export * from "./users";
 export * from "./suggestions";
 export * from "./userSuggestions";
 export * from "./groupSuggestions";
+export * from "./namespaceSuggestions";
 export * from "./repositories";
 export * from "./namespaces";
 export * from "./branches";

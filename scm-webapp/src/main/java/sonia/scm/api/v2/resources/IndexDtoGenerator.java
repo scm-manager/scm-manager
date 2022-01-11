@@ -121,6 +121,7 @@ public class IndexDtoGenerator extends HalAppenderMapper {
       if (GroupPermissions.autocomplete().isPermitted()) {
         autoCompleteLinks.add(Link.linkBuilder("autocomplete", resourceLinks.autoComplete().groups()).withName("groups").build());
       }
+      autoCompleteLinks.add(Link.linkBuilder("autocomplete", resourceLinks.autoComplete().namespaces()).withName("namespaces").build());
       builder.array(autoCompleteLinks);
       if (GroupPermissions.list().isPermitted()) {
         builder.single(link("groups", resourceLinks.groupCollection().self()));
