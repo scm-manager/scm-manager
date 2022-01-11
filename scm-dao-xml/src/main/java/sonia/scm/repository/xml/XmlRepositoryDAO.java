@@ -41,7 +41,9 @@ import javax.inject.Inject;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -67,7 +69,7 @@ public class XmlRepositoryDAO implements RepositoryDAO {
     this.repositoryExportingCheck = repositoryExportingCheck;
 
     this.byId = new ConcurrentHashMap<>();
-    this.byNamespaceAndName = new ConcurrentHashMap<>();
+    this.byNamespaceAndName = Collections.synchronizedMap(new TreeMap<>());
 
     init();
   }
