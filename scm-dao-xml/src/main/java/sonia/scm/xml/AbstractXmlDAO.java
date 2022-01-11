@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.xml;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -45,7 +45,7 @@ import java.util.Collection;
  * @param <T>
  */
 public abstract class AbstractXmlDAO<I extends ModelObject,
-      T extends XmlDatabase> implements GenericDAO<I>
+      T extends XmlDatabase<I>> implements GenericDAO<I>
 {
 
   /** Field description */
