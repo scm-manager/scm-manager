@@ -161,6 +161,21 @@
       }
     }
   },
+  "compare": {
+    "title": "Vergleiche Änderungen",
+    "selector": {
+      "filter": "Filter...",
+      "branches": "Branches",
+      "tags": "Tags",
+      "source": "Source",
+      "target": "Target",
+      "with": "Vergleiche Änderungen mit..."
+    },
+    "tabs": {
+      "diff": "Diff",
+      "changesets": "Changesets"
+    }
+  },
   "tags": {
     "overview": {
       "title": "Übersicht aller verfügbaren Tags",

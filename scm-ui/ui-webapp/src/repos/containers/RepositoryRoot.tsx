@@ -57,7 +57,7 @@ import CodeOverview from "../codeSection/containers/CodeOverview";
 import ChangesetView from "./ChangesetView";
 import SourceExtensions from "../sources/containers/SourceExtensions";
 import TagsOverview from "../tags/container/TagsOverview";
-import CompareView from "../compare/CompareView";
+import CompareRoot from "../compare/CompareRoot";
 import TagRoot from "../tags/container/TagRoot";
 import { useIndexLinks, useRepository } from "@scm-manager/ui-api";
 import styled from "styled-components";
@@ -294,8 +294,8 @@ const RepositoryRoot = () => {
                 render={() => <TagsOverview repository={repository} baseUrl={`${url}/tag`} />}
               />
               <Route
-                path={`${url}/compare`}
-                render={() => <CompareView repository={repository} baseUrl={`${url}/compare`} />}
+                path={`${url}/compare/:source/`}
+                render={() => <CompareRoot repository={repository} baseUrl={`${url}/compare`} />}
               />
               <ExtensionPoint name="repository.route" props={extensionProps} renderAll={true} />
             </Switch>

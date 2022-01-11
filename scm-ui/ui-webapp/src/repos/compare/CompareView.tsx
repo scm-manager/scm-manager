@@ -23,12 +23,12 @@
  */
 
 import React, { FC } from "react";
-import { Repository } from "@scm-manager/ui-types";
-import { LoadingDiff, Subtitle } from "@scm-manager/ui-components";
+import { Redirect, Route, Switch, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { Repository } from "@scm-manager/ui-types";
+import { LoadingDiff, Subtitle, urls } from "@scm-manager/ui-components";
 import CompareSelectBar from "./CompareSelectBar";
 import CompareTabs from "./CompareTabs";
-import { Route, Switch } from "react-router-dom";
 import { createDiffUrl } from "./compare";
 import IncomingChangesets from "./IncomingChangesets";
 
@@ -37,22 +37,26 @@ type Props = {
   baseUrl: string;
 };
 
-type Params = {
+export type CompareBranchesParams = {
   source: string;
   target: string;
 };
 
 const CompareRoutes: FC<Props> = ({ repository, baseUrl }) => {
+  const match = useRouteMatch<CompareBranchesParams>();
+  const url = urls.matchedUrlFromMatch(match);
+
   return (
     <Switch>
-      <Route path={`${baseUrl}/diff`}>
-        <LoadingDiff url={createDiffUrl(repository, "develop", "master")} />
+      <Redirect exact from={url} to={`${url}/diff`} />
+      <Route path={`${baseUrl}/:source/:target/diff`}>
+        <LoadingDiff url={createDiffUrl(repository, match.params.source, match.params.target)} />
       </Route>
-      <Route path={`${baseUrl}/changesets/:page`}>
-        <IncomingChangesets repository={repository} source="develop" target="master" />
+      <Route path={`${baseUrl}/:source/:target/changesets`} exact>
+        <IncomingChangesets repository={repository} source={match.params.source} target={match.params.target} />
       </Route>
-      <Route path={`${baseUrl}/changesets`}>
-        <IncomingChangesets repository={repository} source="develop" target="master" />
+      <Route path={`${baseUrl}/:source/:target/changesets/:page`} exact>
+        <IncomingChangesets repository={repository} source={match.params.source} target={match.params.target} />
       </Route>
     </Switch>
   );
@@ -64,8 +68,8 @@ const CompareView: FC<Props> = ({ repository, baseUrl }) => {
   return (
     <>
       <Subtitle subtitle={t("compare.title")} />
-      <CompareSelectBar />
-      <CompareTabs />
+      <CompareSelectBar repository={repository} baseUrl={baseUrl} />
+      <CompareTabs baseUrl={baseUrl} />
       <CompareRoutes repository={repository} baseUrl={baseUrl} />
     </>
   );

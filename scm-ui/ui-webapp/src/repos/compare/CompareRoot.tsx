@@ -22,39 +22,47 @@
  * SOFTWARE.
  */
 
-import React, { FC } from "react";
-import { Link, useLocation, useRouteMatch } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import { CompareBranchesParams } from "./CompareView";
+import React, { FC, useEffect } from "react";
+import { Redirect, Route, Switch, useHistory, useRouteMatch } from "react-router-dom";
+import { Repository } from "@scm-manager/ui-types";
+import { useDefaultBranch } from "@scm-manager/ui-api";
+import { ErrorNotification, Loading, urls } from "@scm-manager/ui-components";
+import CompareView, { CompareBranchesParams } from "./CompareView";
 
 type Props = {
+  repository: Repository;
   baseUrl: string;
 };
 
-const CompareTabs: FC<Props> = ({ baseUrl }) => {
-  const [t] = useTranslation("repos");
-  const location = useLocation();
+const CompareRoot: FC<Props> = ({ repository, baseUrl }) => {
   const match = useRouteMatch<CompareBranchesParams>();
+  const { data, isLoading, error } = useDefaultBranch(repository);
+  const url = urls.matchedUrlFromMatch(match);
+  /*
+    const history = useHistory();
+  useEffect(() => {
+    if (!match.params.target && data?.defaultBranch) {
+      history.replace(`${baseUrl}/${match.params.source}/${data.defaultBranch}`);
+    }
+  }, [history, baseUrl, match.params.source, data, match.params.target]);
+   */
 
-  const url = `${baseUrl}/${match.params.source}/${match.params.target}`;
-
-  const setActiveClass = (path: string) => {
-    const regex = new RegExp(url + path);
-    return location.pathname.match(regex) ? "is-active" : "";
-  };
+  if (isLoading) {
+    return <Loading />;
+  }
+  if (error) {
+    return <ErrorNotification error={error} />;
+  }
 
   return (
-    <div className="tabs mt-5">
-      <ul>
-        <li className={setActiveClass("/diff")}>
-          <Link to={`${url}/diff`}>{t("compare.tabs.diff")}</Link>
-        </li>
-        <li className={setActiveClass("/changesets")}>
-          <Link to={`${url}/changesets`}>{t("compare.tabs.changesets")}</Link>
-        </li>
-      </ul>
-    </div>
+    <Switch>
+      <Route
+        path={`${baseUrl}/:source/:target`}
+        render={() => <CompareView repository={repository} baseUrl={baseUrl} />}
+      />
+      <Redirect exact from={url} to={`${url}/${data?.defaultBranch}`} />
+    </Switch>
   );
 };
 
-export default CompareTabs;
+export default CompareRoot;

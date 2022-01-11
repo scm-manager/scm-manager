@@ -22,23 +22,64 @@
  * SOFTWARE.
  */
 
-import React, { FC } from "react";
-import { Icon } from "@scm-manager/ui-components";
+import React, { FC, useEffect, useState } from "react";
+import { useHistory, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { useRouteMatch } from "react-router-dom";
+import { useBranches } from "@scm-manager/ui-api";
+import { Branch, Repository } from "@scm-manager/ui-types";
+import { BranchSelector, ErrorNotification, Icon, Loading } from "@scm-manager/ui-components";
+import CompareSelector from "./CompareSelector";
+import { CompareBranchesParams } from "./CompareView";
 
-type Props = {};
+type Props = {
+  repository: Repository;
+  baseUrl: string;
+};
 
-const CompareSelectBar: FC<Props> = ({}) => {
-  const match = useRouteMatch();
-
+const CompareSelectBar: FC<Props> = ({ repository, baseUrl }) => {
   const [t] = useTranslation("repos");
+  const match = useRouteMatch<CompareBranchesParams>();
+  const history = useHistory();
+  const { isLoading, error, data } = useBranches(repository);
+  const [sources, setSources] = useState<string | undefined>(match?.params?.source);
+  const [target, setTarget] = useState<string | undefined>(match?.params?.target);
+
+  const branches: Branch[] = (data?._embedded?.branches as Branch[]) || [];
+
+  useEffect(() => {
+    if (sources && target) {
+      history.push(baseUrl + "/" + encodeURIComponent(sources) + "/" + encodeURIComponent(target) + "/diff");
+    }
+  }, [sources, target, history, baseUrl]);
+
+  if (isLoading) {
+    return <Loading />;
+  }
+  if (error) {
+    return <ErrorNotification error={error} />;
+  }
 
   return (
     <>
-      {/*<CompareSelector />/*/}
+      <BranchSelector
+        branches={branches}
+        onSelectBranch={branch => setSources(branch?.name)}
+        selectedBranch={sources}
+        label="source"
+      />
       <Icon name="arrow-right" />
-      {/*<CompareSelector />*/}
+      <BranchSelector
+        branches={branches}
+        onSelectBranch={branch => setTarget(branch?.name)}
+        selectedBranch={target}
+        label="target"
+      />
+
+      <hr />
+      <div className="is-flex is-justify-content-space-around is-align-items-center">
+        <CompareSelector repository={repository} /> <Icon name="arrow-right" title={t("compare.selector.with")} />{" "}
+        <CompareSelector repository={repository} />
+      </div>
     </>
   );
 };

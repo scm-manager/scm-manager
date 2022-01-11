@@ -21,40 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-import React, { FC } from "react";
-import { Link, useLocation, useRouteMatch } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import { CompareBranchesParams } from "./CompareView";
+import React, { FC, ReactNode } from "react";
 
 type Props = {
-  baseUrl: string;
+  children: ReactNode;
+  isSelected?: boolean;
 };
 
-const CompareTabs: FC<Props> = ({ baseUrl }) => {
-  const [t] = useTranslation("repos");
-  const location = useLocation();
-  const match = useRouteMatch<CompareBranchesParams>();
-
-  const url = `${baseUrl}/${match.params.source}/${match.params.target}`;
-
-  const setActiveClass = (path: string) => {
-    const regex = new RegExp(url + path);
-    return location.pathname.match(regex) ? "is-active" : "";
-  };
-
+const CompareSelectorListEntry: FC<Props> = ({ children, isSelected = false }) => {
   return (
-    <div className="tabs mt-5">
-      <ul>
-        <li className={setActiveClass("/diff")}>
-          <Link to={`${url}/diff`}>{t("compare.tabs.diff")}</Link>
-        </li>
-        <li className={setActiveClass("/changesets")}>
-          <Link to={`${url}/changesets`}>{t("compare.tabs.changesets")}</Link>
-        </li>
-      </ul>
-    </div>
+    <li role="option" aria-selected={isSelected}>
+      <a className="is-flex dropdown-item has-text-weight-medium">{children}</a>
+    </li>
   );
 };
 
-export default CompareTabs;
+export default CompareSelectorListEntry;
