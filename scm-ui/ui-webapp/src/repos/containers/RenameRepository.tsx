@@ -30,6 +30,11 @@ import { Redirect } from "react-router-dom";
 import * as validator from "../components/form/repositoryValidation";
 import { useNamespaceStrategies, useRenameRepository } from "@scm-manager/ui-api";
 import NamespaceInput from "../components/NamespaceInput";
+import styled from "styled-components";
+
+const WithOverflow = styled.div`
+  overflow: visible;
+`;
 
 type Props = {
   repository: Repository;
@@ -88,7 +93,7 @@ const RenameRepository: FC<Props> = ({ repository }) => {
   };
 
   const modalBody = (
-    <div>
+    <WithOverflow>
       {renamingError ? <ErrorNotification error={renamingError} /> : null}
       <InputField
         label={t("renameRepo.modal.label.repoName")}
@@ -100,7 +105,7 @@ const RenameRepository: FC<Props> = ({ repository }) => {
         onChange={handleNameChange}
       />
       {renderNamespaceField()}
-    </div>
+    </WithOverflow>
   );
 
   const footer = (
@@ -131,6 +136,7 @@ const RenameRepository: FC<Props> = ({ repository }) => {
       footer={footer}
       body={modalBody}
       closeFunction={() => setShowModal(false)}
+      overflow="visible"
     />
   );
 
