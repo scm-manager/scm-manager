@@ -82,18 +82,6 @@ const NamespaceAndNameFields: FC<Props> = ({ repository, onChange, setValid, dis
     onChange({ ...repository, name });
   };
 
-  const renderNamespaceField = () => {
-    return (
-      <NamespaceInput
-        namespace={repository?.namespace}
-        handleNamespaceChange={handleNamespaceChange}
-        namespaceStrategy={namespaceStrategy}
-        namespaceValidationError={namespaceValidationError}
-        disabled={disabled}
-      />
-    );
-  };
-
   // not yet loaded
   if (namespaceStrategy === "") {
     return null;
@@ -101,7 +89,13 @@ const NamespaceAndNameFields: FC<Props> = ({ repository, onChange, setValid, dis
 
   return (
     <>
-      {renderNamespaceField()}
+      <NamespaceInput
+        namespace={repository?.namespace}
+        handleNamespaceChange={handleNamespaceChange}
+        namespaceStrategy={namespaceStrategy}
+        namespaceValidationError={namespaceValidationError}
+        disabled={disabled}
+      />
       <InputField
         label={t("repository.name")}
         onChange={handleNameChange}

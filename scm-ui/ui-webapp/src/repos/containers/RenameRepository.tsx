@@ -81,17 +81,6 @@ const RenameRepository: FC<Props> = ({ repository }) => {
     setName(name);
   };
 
-  const renderNamespaceField = () => {
-    return (
-      <NamespaceInput
-        namespace={namespace}
-        handleNamespaceChange={handleNamespaceChange}
-        namespaceValidationError={namespaceValidationError}
-        namespaceStrategy={namespaceStrategies?.current}
-      />
-    );
-  };
-
   const modalBody = (
     <WithOverflow>
       {renamingError ? <ErrorNotification error={renamingError} /> : null}
@@ -104,7 +93,12 @@ const RenameRepository: FC<Props> = ({ repository }) => {
         value={name}
         onChange={handleNameChange}
       />
-      {renderNamespaceField()}
+      <NamespaceInput
+        namespace={namespace}
+        handleNamespaceChange={handleNamespaceChange}
+        namespaceValidationError={namespaceValidationError}
+        namespaceStrategy={namespaceStrategies?.current}
+      />
     </WithOverflow>
   );
 
@@ -136,7 +130,7 @@ const RenameRepository: FC<Props> = ({ repository }) => {
       footer={footer}
       body={modalBody}
       closeFunction={() => setShowModal(false)}
-      overflow="visible"
+      overflowVisible={true}
     />
   );
 
