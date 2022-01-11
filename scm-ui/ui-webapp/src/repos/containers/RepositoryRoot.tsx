@@ -294,8 +294,8 @@ const RepositoryRoot = () => {
                 render={() => <TagsOverview repository={repository} baseUrl={`${url}/tag`} />}
               />
               <Route
-                path={`${url}/compareTo/:source/:target`}
-                render={() => <CompareView repository={repository} baseUrl={`${url}/compareTo`} />}
+                path={`${url}/compare`}
+                render={() => <CompareView repository={repository} baseUrl={`${url}/compare`} />}
               />
               <ExtensionPoint name="repository.route" props={extensionProps} renderAll={true} />
             </Switch>

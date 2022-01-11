@@ -22,20 +22,67 @@
  * SOFTWARE.
  */
 
-import React, { FC } from "react";
-import { Repository } from "@scm-manager/ui-types";
-import { requiredLink } from "@scm-manager/ui-api/src/links";
+import { ChangesetCollection, Link, Repository } from "@scm-manager/ui-types";
+import { useQuery, useQueryClient } from "react-query";
+import { apiClient, ApiResultWithFetching, changesetQueryKey } from "@scm-manager/ui-api";
 
-type Props = {};
+function createIncomingUrl(repository: Repository, linkName: string, source: string, target: string) {
+  const link = repository._links[linkName];
+  if ((link as Link)?.templated) {
+    return (link as Link).href
+      .replace("{source}", encodeURIComponent(source))
+      .replace("{target}", encodeURIComponent(target));
+  } else {
+    return (link as Link).href;
+  }
+}
 
-export const useCompare = (repository: Repository, source: string, target: string) => {
-  const link = requiredLink(repository, "incoming");
+export function createChangesetUrl(repository: Repository, source: string, target: string) {
+  return createIncomingUrl(repository, "incomingChangesets", source, target);
+}
 
-  // TODO
+export function createDiffUrl(repository: Repository, source: string, target: string) {
+  if (repository._links.incomingDiffParsed) {
+    return createIncomingUrl(repository, "incomingDiffParsed", source, target);
+  } else {
+    return createIncomingUrl(repository, "incomingDiff", source, target);
+  }
+}
 
-  return {
-    error,
-    isLoading,
-    data
-  };
+type UseIncomingChangesetsRequest = {
+  page?: string | number;
+  limit?: number;
+};
+
+export const useIncomingChangesets = (
+  repository: Repository,
+  source: string,
+  target: string,
+  request?: UseIncomingChangesetsRequest
+): ApiResultWithFetching<ChangesetCollection> => {
+  const queryClient = useQueryClient();
+
+  let link = createChangesetUrl(repository, source, target);
+
+  if (request?.page || request?.limit) {
+    if (request?.page && request?.limit) {
+      link = `${link}?page=${request.page}&pageSize=${request.limit}`;
+    } else if (request.page) {
+      link = `${link}?page=${request.page}`;
+    } else if (request.limit) {
+      link = `${link}?pageSize=${request.limit}`;
+    }
+  }
+
+  return useQuery<ChangesetCollection, Error>(
+    ["repository", repository.namespace, repository.name, "compare", source, target, "changesets", request?.page || ""],
+    () => apiClient.get(link).then(response => response.json()),
+    {
+      onSuccess: changesetCollection => {
+        changesetCollection._embedded?.changesets.forEach(changeset => {
+          queryClient.setQueryData(changesetQueryKey(repository, changeset.id), changeset);
+        });
+      }
+    }
+  );
 };

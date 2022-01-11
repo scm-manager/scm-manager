@@ -28,10 +28,10 @@ import { Branch, Repository } from "@scm-manager/ui-types";
 import {
   ChangesetList,
   ErrorNotification,
-  urls,
   LinkPaginator,
   Loading,
-  Notification
+  Notification,
+  urls
 } from "@scm-manager/ui-components";
 import { useChangesets } from "@scm-manager/ui-api";
 
@@ -40,15 +40,28 @@ type Props = {
   branch?: Branch;
 };
 
-const usePage = () => {
+type ChangesetProps = Props & {
+  error: Error | null;
+  isLoading: boolean;
+  data?: ChangesetCollection;
+};
+
+export const usePage = () => {
   const match = useRouteMatch();
   return urls.getPageFromMatch(match);
 };
 
 const Changesets: FC<Props> = ({ repository, branch }) => {
   const page = usePage();
+
   const { isLoading, error, data } = useChangesets(repository, { branch, page: page - 1 });
+
+  return <ChangesetsPanel repository={repository} branch={branch} error={error} isLoading={isLoading} data={data} />;
+};
+
+export const ChangesetsPanel: FC<ChangesetProps> = ({ repository, error, isLoading, data }) => {
   const [t] = useTranslation("repos");
+  const page = usePage();
   const changesets = data?._embedded.changesets;
 
   if (error) {
@@ -59,23 +72,25 @@ const Changesets: FC<Props> = ({ repository, branch }) => {
     return <Loading />;
   }
 
-  if (!data || !changesets || changesets.length === 0) {
+  if (!changesets || changesets.length === 0) {
     return (
-      <div className="panel-block">
-        <Notification type="info">{t("changesets.noChangesets")}</Notification>
+      <div className="panel">
+        <div className="panel-block">
+          <Notification type="info">{t("changesets.noChangesets")}</Notification>
+        </div>
       </div>
     );
   }
 
   return (
-    <>
+    <div className="panel">
       <div className="panel-block">
         <ChangesetList repository={repository} changesets={changesets} />
       </div>
       <div className="panel-footer">
         <LinkPaginator page={page} collection={data} />
       </div>
-    </>
+    </div>
   );
 };
 

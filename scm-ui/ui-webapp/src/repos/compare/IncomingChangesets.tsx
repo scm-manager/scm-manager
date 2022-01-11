@@ -23,52 +23,21 @@
  */
 
 import React, { FC } from "react";
+import { ChangesetsPanel, usePage } from "../containers/Changesets";
 import { Repository } from "@scm-manager/ui-types";
-import { LoadingDiff, Subtitle } from "@scm-manager/ui-components";
-import { useTranslation } from "react-i18next";
-import CompareSelectBar from "./CompareSelectBar";
-import CompareTabs from "./CompareTabs";
-import { Route, Switch } from "react-router-dom";
-import { createDiffUrl } from "./compare";
-import IncomingChangesets from "./IncomingChangesets";
+import { useIncomingChangesets } from "./compare";
 
 type Props = {
   repository: Repository;
-  baseUrl: string;
-};
-
-type Params = {
   source: string;
   target: string;
 };
 
-const CompareRoutes: FC<Props> = ({ repository, baseUrl }) => {
-  return (
-    <Switch>
-      <Route path={`${baseUrl}/diff`}>
-        <LoadingDiff url={createDiffUrl(repository, "develop", "master")} />
-      </Route>
-      <Route path={`${baseUrl}/changesets/:page`}>
-        <IncomingChangesets repository={repository} source="develop" target="master" />
-      </Route>
-      <Route path={`${baseUrl}/changesets`}>
-        <IncomingChangesets repository={repository} source="develop" target="master" />
-      </Route>
-    </Switch>
-  );
+const IncomingChangesets: FC<Props> = ({ repository, source, target }) => {
+  const page = usePage();
+  const { data, error, isLoading } = useIncomingChangesets(repository, source, target, { page: page - 1, limit: 25 });
+
+  return <ChangesetsPanel repository={repository} error={error} isLoading={isLoading} data={data} />;
 };
 
-const CompareView: FC<Props> = ({ repository, baseUrl }) => {
-  const [t] = useTranslation("repos");
-
-  return (
-    <>
-      <Subtitle subtitle={t("compare.title")} />
-      <CompareSelectBar />
-      <CompareTabs />
-      <CompareRoutes repository={repository} baseUrl={baseUrl} />
-    </>
-  );
-};
-
-export default CompareView;
+export default IncomingChangesets;

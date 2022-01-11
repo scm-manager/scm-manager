@@ -25,17 +25,20 @@
 import React, { FC } from "react";
 import { Icon } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
+import { useRouteMatch } from "react-router-dom";
 
 type Props = {};
 
 const CompareSelectBar: FC<Props> = ({}) => {
+  const match = useRouteMatch();
+
   const [t] = useTranslation("repos");
 
   return (
     <>
-      <CompareSelector />
+      {/*<CompareSelector />/*/}
       <Icon name="arrow-right" />
-      <CompareSelector />
+      {/*<CompareSelector />*/}
     </>
   );
 };
