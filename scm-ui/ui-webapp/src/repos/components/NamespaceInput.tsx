@@ -37,7 +37,13 @@ type Props = {
   disabled?: boolean;
 };
 
-const NamespaceInput: FC<Props> = ({ namespace, handleNamespaceChange, namespaceStrategy, namespaceValidationError, disabled }) => {
+const NamespaceInput: FC<Props> = ({
+  namespace,
+  handleNamespaceChange,
+  namespaceStrategy,
+  namespaceValidationError,
+  disabled
+}) => {
   const [t] = useTranslation("repos");
   const loadNamespaceSuggestions = useNamespaceSuggestions();
 
@@ -65,7 +71,7 @@ const NamespaceInput: FC<Props> = ({ namespace, handleNamespaceChange, namespace
         loadSuggestions={loadNamespaceSuggestions}
         value={repositorySelectValue}
         valueSelected={namespaceValue => handleNamespaceChange(namespaceValue.value.id)}
-        placeholder={"Namespace"}
+        placeholder={""}
         creatable={true}
       />
     );
