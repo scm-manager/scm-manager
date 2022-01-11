@@ -343,7 +343,6 @@ footer.footer {
   }
 }
 
-
 .notifications .dropdown-menu:before {
   border: 0.4rem solid transparent;
 }
@@ -854,4 +853,15 @@ form .field:not(.is-grouped) {
 
 .autocomplete-entry__input {
   color: $text-strong !important;
+}
+
+.breadcrumb {
+  & .prefix-button {
+    border-right: 1px solid lightgray;
+  }
+
+  & li:not(:last-child)::after {
+    color: $breadcrumb-item-separator-color;
+    content: "\0002f";
+  }
 }

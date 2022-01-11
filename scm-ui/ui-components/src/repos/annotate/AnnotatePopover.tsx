@@ -113,7 +113,7 @@ const AnnotatePopover: FC<PopoverProps> = ({ annotation, offsetTop, repository, 
       ref={ref}
       onMouseEnter={onMouseEnter}
       onMouseLeave={OnMouseLeave}
-      className="box"
+      className="popover box"
       style={{ top: `${top}px` }}
     >
       <PopoverHeading className="is-clearfix">

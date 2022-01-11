@@ -30,12 +30,8 @@ $background: $grey-dark;
 $text: $white-ter;
 $text-strong: $white-bis;
 
-$red: #e63453;
-// TODO check if we could replace red in commons,
-// without breaking the light mode
-$danger: $red;
-
-$code: lighten($red, 25%);
+$danger: #e63453;
+$code: lighten($danger, 25%);
 $primary-invert: #050514;
 $info-invert: #050514;
 $link-invert: #050514;
@@ -48,6 +44,9 @@ $light-gray: #f2f2f2;
 $footer-background-color: $grey-dark;
 $footer-color: $white-ter;
 
+//make horizontal lines pop more
+$hr-background-color: $white-bis;
+
 $box-background-color: scale-color($scheme-main, $lightness: 15%);
 $box-background-color: $grey-darker;
 
@@ -55,6 +54,7 @@ $modal-card-head-background-color: $black-ter;
 $modal-card-body-background-color: $scheme-main;
 
 $input-placeholder-color: $white;
+$input-disabled-color: $white-bis;
 
 $popover-background-color: $grey-dark;
 
@@ -66,11 +66,15 @@ $tooltip-color: $scheme-main;
 
 @import "utils/_post.scss";
 
-// SyntaxHighlighter
 :root {
+  --scm-secondary-background: #{$scheme-main};
+  --scm-secondary-text: #{$white};
+  --scm-border: 2px solid #{$white-ter};
+  --scm-column-selection: #{$link-dark};
+
   --sh-base-color: #fff;
   --sh-font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
-  --sh-block-background: $scheme-main;
+  --sh-block-background: #{$scheme-main};
   --sh-inline-code-color: #ff3860;
   --sh-inline-code-background: #fbe7eb;
   --sh-comment-color: #9a9a9a;
@@ -82,12 +86,12 @@ $tooltip-color: $scheme-main;
   --sh-variable-color: #c386ca;
   --sh-function-color: #ff6181;
   --sh-keyword-color: #00a984;
-  --sh-selected-color: #7fe3cd;
+  --sh-selected-color: #{$warning-dark};
   --sh-highlight-background: #f5f5f5;
   --sh-highlight-accent: #99d8f3;
 
-  --diff-background-color: $scheme-main;
-  --diff-text-color: $white-bis;
+  --diff-background-color: #{$scheme-main};
+  --diff-text-color: #{$white-bis};
   --diff-font-family: Consolas, Courier, monospace;
   --diff-selection-background-color: #b3d7ff;
   --diff-gutter-insert-background-color: #05c71d;
@@ -387,11 +391,6 @@ td:first-child.diff-gutter-conflict:before {
   }
 }
 
-//make horizontal lines pop more
-hr {
-  background-color: $white-bis;
-}
-
 //Display darker version of background image
 .has-scm-background {
   background-image: url(images/scmManagerHeroDark.jpg) !important;
@@ -458,16 +457,6 @@ a.has-text-secondary-most:focus {
 
 .has-hover-visible:hover {
   color: $white-bis !important;
-}
-
-.select select[disabled],
-[disabled].textarea,
-[disabled].input,
-fieldset[disabled] .select select,
-.select fieldset[disabled] select,
-fieldset[disabled] .textarea,
-fieldset[disabled] .input {
-  color: $white-bis;
 }
 
 [disabled].textarea::placeholder,

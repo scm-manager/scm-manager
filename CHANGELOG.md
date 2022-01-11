@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.29.0] - 2022-01-07
+### Added
+- CSS variables for plugins ([#1910](https://github.com/scm-manager/scm-manager/pull/1910))
+- Add copy button for markdown code blocks ([#1902](https://github.com/scm-manager/scm-manager/pull/1902))
+- Disable repository types via global config ([#1908](https://github.com/scm-manager/scm-manager/pull/1908))
+
+### Fixed
+- Minor issues in high contrast mode ([#1910](https://github.com/scm-manager/scm-manager/pull/1910))
+- Set line ending used for license files to LF ([#1904](https://github.com/scm-manager/scm-manager/pull/1904))
+- Add ability to render storyshots asynchronously ([#1906](https://github.com/scm-manager/scm-manager/pull/1906))
+
+### Changed
+- Change mono-font-stack to provide better ux on modern platforms by using later os-fonts. Reduces amount of similar but not equal fonts used.
+- Make "not clickable" mode for breadcrumb ([#1907](https://github.com/scm-manager/scm-manager/pull/1907))
+
 ## [2.28.0] - 2021-12-22
 ### Added
 - Fix ScmPathInfoStore injection ([#1889](https://github.com/scm-manager/scm-manager/pull/1889))
@@ -884,3 +899,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.27.3]: https://scm-manager.org/download/2.27.3
 [2.27.4]: https://scm-manager.org/download/2.27.4
 [2.28.0]: https://scm-manager.org/download/2.28.0
+[2.29.0]: https://scm-manager.org/download/2.29.0
