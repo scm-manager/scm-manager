@@ -88,48 +88,40 @@ class Autocomplete extends React.Component<Props, State> {
       disabled
     } = this.props;
 
+    const asyncProps = {
+      className: "autocomplete-entry",
+      classNamePrefix: "autocomplete-entry",
+      cacheOptions: null,
+      loadOptions: loadSuggestions,
+      onChange: this.handleInputChange,
+      value,
+      placeholder,
+      loadingMessage: () => loadingMessage,
+      noOptionsMessage: () => noOptionsMessage,
+      isDisabled: disabled,
+      "aria-label": helpText || label
+    };
+
     return (
       <div className={classNames("field", className)}>
         <LabelWithHelpIcon label={label} helpText={helpText} />
         <div className="control">
           {creatable ? (
             <AsyncCreatable
-              className="autocomplete-entry"
-              classNamePrefix="autocomplete-entry"
-              cacheOptions
-              loadOptions={loadSuggestions}
-              onChange={this.handleInputChange}
-              value={value}
-              placeholder={placeholder}
-              loadingMessage={() => loadingMessage}
-              noOptionsMessage={() => noOptionsMessage}
+              {...asyncProps}
               isValidNewOption={this.isValidNewOption}
-              onCreateOption={value => {
+              onCreateOption={newValue => {
                 this.selectValue({
-                  label: value,
+                  label: newValue,
                   value: {
-                    id: value,
-                    displayName: value
+                    id: newValue,
+                    displayName: newValue
                   }
                 });
               }}
-              aria-label={helpText || label}
-              isDisabled={disabled}
             />
           ) : (
-            <Async
-              className="autocomplete-entry"
-              classNamePrefix="autocomplete-entry"
-              cacheOptions
-              loadOptions={loadSuggestions}
-              onChange={this.handleInputChange}
-              value={value}
-              placeholder={placeholder}
-              loadingMessage={() => loadingMessage}
-              noOptionsMessage={() => noOptionsMessage}
-              aria-label={helpText || label}
-              isDisabled={disabled}
-            />
+            <Async {...asyncProps} />
           )}
         </div>
         {errorMessage ? <p className="help is-danger">{errorMessage}</p> : null}
