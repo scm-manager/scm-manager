@@ -34,6 +34,7 @@ type Props = {
   body: ReactNode;
   active: boolean;
   closeButtonLabel?: string;
+  initialFocusNode?: HTMLElement | null;
 };
 
 const FullSizedModal = styled(Modal)`
@@ -43,11 +44,22 @@ const FullSizedModal = styled(Modal)`
   }
 `;
 
-const FullscreenModal: FC<Props> = ({ title, closeFunction, body, active, closeButtonLabel }) => {
+const FullscreenModal: FC<Props> = ({ title, closeFunction, body, active, initialFocusNode, closeButtonLabel }) => {
   const [t] = useTranslation("repos");
-  const footer = <Button label={closeButtonLabel || t("diff.fullscreen.close")} action={closeFunction} color="secondary" />;
+  const footer = (
+    <Button label={closeButtonLabel || t("diff.fullscreen.close")} action={closeFunction} color="secondary" />
+  );
 
-  return <FullSizedModal title={title} closeFunction={closeFunction} body={body} footer={footer} active={active} />;
+  return (
+    <FullSizedModal
+      title={title}
+      closeFunction={closeFunction}
+      body={body}
+      footer={footer}
+      active={active}
+      initialFocusNode={initialFocusNode}
+    />
+  );
 };
 
 export default FullscreenModal;
