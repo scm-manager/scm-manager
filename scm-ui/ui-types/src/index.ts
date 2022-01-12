@@ -67,6 +67,7 @@ export * from "./Admin";
 
 export * from "./Diff";
 export * from "./Notifications";
+export * from "./Alerts";
 export * from "./ApiKeys";
 export * from "./PublicKeys";
 export * from "./GlobalPermissions";

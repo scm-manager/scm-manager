@@ -21,16 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, useEffect, useState } from "react";
-import { Links } from "@scm-manager/ui-types";
+
+import React, {FC, useEffect, useState} from "react";
+import {Links} from "@scm-manager/ui-types";
 import classNames from "classnames";
 import styled from "styled-components";
-import { devices, Logo, PrimaryNavigation } from "@scm-manager/ui-components";
+import {devices, Logo, PrimaryNavigation} from "@scm-manager/ui-components";
 import Notifications from "./Notifications";
 import OmniSearch from "./OmniSearch";
 import LogoutButton from "./LogoutButton";
 import LoginButton from "./LoginButton";
-import { useTranslation } from "react-i18next";
+import {useTranslation} from "react-i18next";
+import Alerts from "./Alerts";
 
 const StyledMenuBar = styled.div`
   background-color: transparent !important;
@@ -147,6 +149,7 @@ const NavigationBar: FC<Props> = ({ links }) => {
         </button>
       </div>
       <div className="is-active navbar-header-actions">
+        <Alerts className="navbar-item" />
         <OmniSearch links={links} />
         <Notifications className="navbar-item" />
       </div>

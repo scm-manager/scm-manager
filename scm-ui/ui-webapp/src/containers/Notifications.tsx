@@ -21,9 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, useEffect, useState } from "react";
-import { useHistory, Link } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+
+import React, {FC} from "react";
+import {Link, useHistory} from "react-router-dom";
+import {useTranslation} from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
 import {
@@ -32,63 +33,18 @@ import {
   useNotifications,
   useNotificationSubscription
 } from "@scm-manager/ui-api";
-import { Notification, NotificationCollection } from "@scm-manager/ui-types";
+import {Notification, NotificationCollection} from "@scm-manager/ui-types";
 import {
   Button,
-  Notification as InfoNotification,
+  DateFromNow,
   ErrorNotification,
   Icon,
+  Notification as InfoNotification,
   ToastArea,
   ToastNotification,
-  ToastType,
-  Loading,
-  DateFromNow,
-  devices
+  ToastType
 } from "@scm-manager/ui-components";
-
-const DropDownMenu = styled.div`
-  min-width: 35rem;
-
-  @media screen and (max-width: ${devices.mobile.width}px) {
-    min-width: 20rem;
-  }
-
-  @media screen and (max-width: ${devices.desktop.width - 1}px) {
-    margin-right: 1rem;
-  }
-
-  @media screen and (min-width: ${devices.desktop.width}px) {
-    right: 0;
-    left: auto;
-  }
-
-  &:before {
-    position: absolute;
-    content: "";
-    pointer-events: none;
-    height: 0;
-    width: 0;
-    top: -7px; // top padding of dropdown-menu + border-spacing
-    transform-origin: center;
-    transform: rotate(135deg);
-
-    @media screen and (max-width: ${devices.desktop.width - 1}px) {
-      left: 1.3rem;
-    }
-
-    @media screen and (min-width: ${devices.desktop.width}px) {
-      right: 1.3rem;
-    }
-  }
-`;
-
-const VerticalCenteredTd = styled.td`
-  vertical-align: middle !important;
-`;
-
-const DateColumn = styled(VerticalCenteredTd)`
-  white-space: nowrap;
-`;
+import HeaderDropDown, {Column, NonWrappingColumn} from "../components/HeaderDropDown";
 
 const DismissColumn = styled.td`
   vertical-align: middle !important;
@@ -115,23 +71,17 @@ const NotificationEntry: FC<EntryProps> = ({ notification, removeToast }) => {
   }
   return (
     <tr className={`is-${color(notification)}`}>
-      <VerticalCenteredTd onClick={() => history.push(notification.link)} className="is-clickable">
+      <Column onClick={() => history.push(notification.link)} className="is-clickable">
         <NotificationMessage message={notification.message} />
-      </VerticalCenteredTd>
-      <DateColumn className="has-text-right">
+      </Column>
+      <NonWrappingColumn className="has-text-right">
         <DateFromNow date={notification.createdAt} />
-      </DateColumn>
-      <DismissColumn className="is-darker">
+      </NonWrappingColumn>
+      <DismissColumn className="is-darker is-clickable" onClick={remove}>
         {isLoading ? (
           <div className="small-loading-spinner" aria-label={t("notifications.loading")} />
         ) : (
-          <Icon
-            name="trash"
-            color="secondary-most"
-            className="is-clickable"
-            title={t("notifications.dismiss")}
-            onClick={remove}
-          />
+          <Icon name="trash" color="secondary-most" title={t("notifications.dismiss")} />
         )}
       </DismissColumn>
     </tr>
@@ -164,7 +114,7 @@ const NotificationList: FC<Props> = ({ data, clear, remove }) => {
   const [t] = useTranslation("commons");
   const clearLink = data._links.clear;
 
-  const all = [...data._embedded.notifications].reverse();
+  const all = [...(data._embedded?.notifications || [])].reverse();
   const top = all.slice(0, 6);
 
   return (
@@ -207,7 +157,7 @@ type Props = {
 
 const NotificationDropDown: FC<Props> = ({ data, remove, clear }) => (
   <>
-    {data._embedded.notifications.length > 0 ? (
+    {data._embedded?.notifications.length || 0 > 0 ? (
       <NotificationList data={data} remove={remove} clear={clear} />
     ) : (
       <NoNotifications />
@@ -260,61 +210,29 @@ const NotificationSubscription: FC<SubscriptionProps> = ({ notifications, remove
   );
 };
 
-const BellNotificationContainer = styled.div`
-  width: 2rem;
-  height: 2rem;
-`;
-
-type NotificationCounterProps = {
-  count: number;
-};
-
-const NotificationCounter = styled.span<NotificationCounterProps>`
-  position: absolute;
-  top: -0.5rem;
-  right: ${props => (props.count < 10 ? "0" : "-0.25")}rem;
-`;
-
 type BellNotificationIconProps = {
   data?: NotificationCollection;
-  onClick: () => void;
 };
 
-const BellNotificationIcon: FC<BellNotificationIconProps> = ({ data, onClick }) => {
+const BellNotificationIcon: FC<BellNotificationIconProps> = ({ data }) => {
   const [t] = useTranslation("commons");
-  const counter = data?._embedded.notifications.length || 0;
+  const counter = data?._embedded?.notifications.length || 0;
   return (
-    <BellNotificationContainer
-      className={classNames("is-relative", "is-flex", "is-justify-content-center", "is-align-items-center")}
-      onClick={onClick}
-    >
-      <Icon
-        className="is-size-4"
-        iconStyle={counter === 0 ? "far" : "fas"}
-        name="bell"
-        color="white"
-        alt={t("notifications.bellTitle")}
-      />
-      {counter > 0 ? <NotificationCounter count={counter}>{counter < 100 ? counter : "∞"}</NotificationCounter> : null}
-    </BellNotificationContainer>
+    <Icon
+      className="is-size-4"
+      iconStyle={counter === 0 ? "far" : "fas"}
+      name="bell"
+      color="white"
+      alt={t("notifications.bellTitle")}
+    />
   );
 };
 
-const LoadingBox: FC = () => (
-  <div className="box">
-    <Loading />
-  </div>
-);
-
-const ErrorBox: FC<{ error: Error | null }> = ({ error }) => {
-  if (!error) {
-    return null;
+const count = (data?: NotificationCollection) => {
+  const counter = data?._embedded?.notifications.length || 0;
+  if (counter !== 0) {
+    return counter < 100 ? counter.toString() : "∞";
   }
-  return (
-    <DropdownMenuContainer>
-      <ErrorNotification error={error} />
-    </DropdownMenuContainer>
-  );
 };
 
 type NotificationProps = {
@@ -325,37 +243,18 @@ const Notifications: FC<NotificationProps> = ({ className }) => {
   const { data, isLoading, error, refetch } = useNotifications();
   const { notifications, remove, clear } = useNotificationSubscription(refetch, data);
 
-  const [open, setOpen] = useState(false);
-  useEffect(() => {
-    const close = () => setOpen(false);
-    window.addEventListener("click", close);
-    return () => window.removeEventListener("click", close);
-  }, []);
-
   return (
     <>
       <NotificationSubscription notifications={notifications} remove={remove} />
-      <div
-        className={classNames(
-          "notifications",
-          "dropdown",
-          "is-hoverable",
-          {
-            "is-active": open
-          },
-          className
-        )}
-        onClick={e => e.stopPropagation()}
+      <HeaderDropDown
+        className={className}
+        error={error}
+        isLoading={isLoading}
+        icon={<BellNotificationIcon data={data} />}
+        count={count(data)}
       >
-        <div className={classNames("is-flex", "dropdown-trigger", "is-clickable")}>
-          <BellNotificationIcon data={data} onClick={() => setOpen(o => !o)} />
-        </div>
-        <DropDownMenu className="dropdown-menu" id="dropdown-menu" role="menu">
-          <ErrorBox error={error} />
-          {isLoading ? <LoadingBox /> : null}
-          {data ? <NotificationDropDown data={data} remove={remove} clear={clear} /> : null}
-        </DropDownMenu>
-      </div>
+        {data ? <NotificationDropDown data={data} remove={remove} clear={clear} /> : null}
+      </HeaderDropDown>
     </>
   );
 };

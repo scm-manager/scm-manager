@@ -1,5 +1,6 @@
 package sonia.scm.api.v2.resources;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Value;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.plugin.PluginLoader;
@@ -25,6 +26,7 @@ public class AlertsResource {
     this.pluginLoader = pluginLoader;
   }
 
+  @Path("")
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public AlertsRequest getAlertsRequest() {
@@ -39,15 +41,15 @@ public class AlertsResource {
       .map(i -> new Plugin(i.getName(), i.getVersion()))
       .collect(Collectors.toList());
 
-    AlertsRequestBody alertsRequestBody = new AlertsRequestBody(instanceId, version, os, arch, jre, plugins);
-    return new AlertsRequest("https://alerts.scm-manager.org/api/v1/alerts", alertsRequestBody);
+    AlertsRequestBody body = new AlertsRequestBody(instanceId, version, os, arch, jre, plugins);
+    return new AlertsRequest("https://alerts.scm-manager.org/api/v1/alerts", body);
   }
 
   @Value
   public static class AlertsRequest {
 
     String url;
-    AlertsRequestBody alertsRequestBody;
+    AlertsRequestBody body;
 
   }
 

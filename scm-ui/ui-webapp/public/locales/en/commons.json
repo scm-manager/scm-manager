@@ -165,6 +165,9 @@
     "dismiss": "Dismiss",
     "dismissAll": "Dismiss all"
   },
+  "alerts": {
+    "shieldTitle": "Alerts"
+  },
   "cardColumnGroup": {
     "showContent": "Show content",
     "hideContent": "Hide content"

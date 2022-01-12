@@ -22,45 +22,20 @@
  * SOFTWARE.
  */
 
-import * as urls from "./urls";
+export type Alert = {
+  title: string;
+  description: string;
+  link?: string;
+  issuedAt: string;
+  affectedVersions?: string;
+};
 
-export { urls };
+export type PluginAlerts = {
+  name: string;
+  alerts: Alert[];
+};
 
-export * from "./errors";
-export * from "./apiclient";
-
-export * from "./base";
-export * from "./login";
-export * from "./groups";
-export * from "./users";
-export * from "./suggestions";
-export * from "./userSuggestions";
-export * from "./groupSuggestions";
-export * from "./repositories";
-export * from "./namespaces";
-export * from "./branches";
-export * from "./changesets";
-export * from "./tags";
-export * from "./config";
-export * from "./admin";
-export * from "./plugins";
-export * from "./repository-roles";
-export * from "./permissions";
-export * from "./sources";
-export * from "./import";
-export * from "./diff";
-export * from "./notifications";
-export * from "./alerts";
-export * from "./configLink";
-export * from "./apiKeys";
-export * from "./publicKeys";
-export * from "./fileContent";
-export * from "./history";
-export * from "./contentType";
-export * from "./annotations";
-export * from "./search";
-export * from "./loginInfo";
-export * from "./usePluginCenterAuthInfo";
-
-export { default as ApiProvider } from "./ApiProvider";
-export * from "./ApiProvider";
+export type AlertsResponse = {
+  alerts?: Alert[];
+  plugins?: PluginAlerts[];
+};

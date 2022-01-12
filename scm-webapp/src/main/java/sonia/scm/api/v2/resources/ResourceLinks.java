@@ -1218,4 +1218,23 @@ class ResourceLinks {
       return indexLinkBuilder.method("authResource").parameters().method("authenticationInfo").parameters().href();
     }
   }
+
+  public AlertsLinks alerts() {
+    return new AlertsLinks(scmPathInfoStore.get().get());
+  }
+
+  static class AlertsLinks {
+
+    private final LinkBuilder indexLinkBuilder;
+
+    AlertsLinks(ScmPathInfo pathInfo) {
+      indexLinkBuilder = new LinkBuilder(pathInfo, AlertsResource.class);
+    }
+
+    String get() {
+      return indexLinkBuilder.method("getAlertsRequest").parameters().href();
+    }
+
+  }
+
 }
