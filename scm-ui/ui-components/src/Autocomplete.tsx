@@ -91,7 +91,7 @@ class Autocomplete extends React.Component<Props, State> {
     const asyncProps = {
       className: "autocomplete-entry",
       classNamePrefix: "autocomplete-entry",
-      cacheOptions: null,
+      cacheOptions: true,
       loadOptions: loadSuggestions,
       onChange: this.handleInputChange,
       value,
