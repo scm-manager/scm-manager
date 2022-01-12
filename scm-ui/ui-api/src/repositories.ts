@@ -55,9 +55,7 @@ export const useRepositories = (request?: UseRepositoriesRequest): ApiResult<Rep
   const namespaceLink = (request?.namespace?._links.repositories as Link)?.href;
   const link = namespaceLink || indexLink;
 
-  const queryParams: Record<string, string> = {
-    sortBy: "namespaceAndName",
-  };
+  const queryParams: Record<string, string> = {};
   if (request?.search) {
     queryParams.q = request.search;
   }

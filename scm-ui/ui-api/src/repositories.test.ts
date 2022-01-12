@@ -89,11 +89,7 @@ describe("Test repository hooks", () => {
     it("should return repositories", async () => {
       const queryClient = createInfiniteCachingClient();
       setIndexLink(queryClient, "repositories", "/repos");
-      fetchMock.get("/api/v2/repos", repositoryCollection, {
-        query: {
-          sortBy: "namespaceAndName"
-        }
-      });
+      fetchMock.get("/api/v2/repos", repositoryCollection);
 
       await expectCollection(queryClient);
     });
@@ -103,7 +99,6 @@ describe("Test repository hooks", () => {
       setIndexLink(queryClient, "repositories", "/repos");
       fetchMock.get("/api/v2/repos", repositoryCollection, {
         query: {
-          sortBy: "namespaceAndName",
           page: "42"
         }
       });
@@ -116,11 +111,7 @@ describe("Test repository hooks", () => {
     it("should use repository from namespace", async () => {
       const queryClient = createInfiniteCachingClient();
       setIndexLink(queryClient, "repositories", "/repos");
-      fetchMock.get("/api/v2/spaceships", repositoryCollection, {
-        query: {
-          sortBy: "namespaceAndName"
-        }
-      });
+      fetchMock.get("/api/v2/spaceships", repositoryCollection);
 
       await expectCollection(queryClient, {
         namespace: {
@@ -139,7 +130,6 @@ describe("Test repository hooks", () => {
       setIndexLink(queryClient, "repositories", "/repos");
       fetchMock.get("/api/v2/repos", repositoryCollection, {
         query: {
-          sortBy: "namespaceAndName",
           q: "heart"
         }
       });
@@ -152,11 +142,7 @@ describe("Test repository hooks", () => {
     it("should update repository cache", async () => {
       const queryClient = createInfiniteCachingClient();
       setIndexLink(queryClient, "repositories", "/repos");
-      fetchMock.get("/api/v2/repos", repositoryCollection, {
-        query: {
-          sortBy: "namespaceAndName"
-        }
-      });
+      fetchMock.get("/api/v2/repos", repositoryCollection);
 
       await expectCollection(queryClient);
 
