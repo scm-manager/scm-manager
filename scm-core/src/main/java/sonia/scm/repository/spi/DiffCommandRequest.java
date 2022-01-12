@@ -40,7 +40,6 @@ public class DiffCommandRequest extends FileBaseCommandRequest implements Valida
 
   private DiffFormat format = DiffFormat.NATIVE;
   private String ancestorChangeset;
-  private String compareTo;
 
   @Override
   public DiffCommandRequest clone() {
@@ -87,24 +86,5 @@ public class DiffCommandRequest extends FileBaseCommandRequest implements Valida
 
   public String getAncestorChangeset() {
     return ancestorChangeset;
-  }
-
-  /**
-   * Sets the compareTo reference which will be used for the compare.
-   *
-   * @since 2.29.x
-   */
-  public String getCompareTo() {
-    return compareTo;
-  }
-
-  /**
-   * Gets the compareTo reference which will be used for the compare.
-   *
-   * @param compareTo reference which will be used for the compare
-   * @since 2.29.x
-   */
-  public void setCompareTo(String compareTo) {
-    this.compareTo = compareTo;
   }
 }

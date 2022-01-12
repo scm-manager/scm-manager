@@ -42,7 +42,6 @@ public class RepositoryBasedResourceProvider {
   private final Provider<AnnotateResource> annotateResource;
   private final Provider<RepositoryExportResource> repositoryExportResource;
   private final Provider<RepositoryPathsResource> repositoryPathResource;
-  private final Provider<CompareDiffResource> compareDiffResource;
 
   @Inject
   public RepositoryBasedResourceProvider(
@@ -59,8 +58,7 @@ public class RepositoryBasedResourceProvider {
     Provider<IncomingRootResource> incomingRootResource,
     Provider<AnnotateResource> annotateResource,
     Provider<RepositoryExportResource> repositoryExportResource,
-    Provider<RepositoryPathsResource> repositoryPathResource,
-    Provider<CompareDiffResource> compareDiffResource) {
+    Provider<RepositoryPathsResource> repositoryPathResource) {
     this.tagRootResource = tagRootResource;
     this.branchRootResource = branchRootResource;
     this.branchDetailsResource = branchDetailsResource;
@@ -75,7 +73,6 @@ public class RepositoryBasedResourceProvider {
     this.annotateResource = annotateResource;
     this.repositoryExportResource = repositoryExportResource;
     this.repositoryPathResource = repositoryPathResource;
-    this.compareDiffResource = compareDiffResource;
   }
 
   public TagRootResource getTagRootResource() {
@@ -133,6 +130,4 @@ public class RepositoryBasedResourceProvider {
   public BranchDetailsResource getBranchDetailsResource() {
     return branchDetailsResource.get();
   }
-
-  public CompareDiffResource getCompareDiffResource() { return compareDiffResource.get(); }
 }
