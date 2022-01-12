@@ -88,7 +88,7 @@ const CreatePermissionForm: FC<Props> = ({
   const [permission, setPermission] = useState<PermissionState>(initialPermissionState);
   const [t] = useTranslation("repos");
   useEffect(() => {
-    setPermission(initialPermissionState);
+    setPermission({ ...initialPermissionState, groupPermission: !!createdPermission?.groupPermission });
     //eslint-disable-next-line
   }, [createdPermission]);
   const selectedVerbs = permission.role ? findVerbsForRole(availableRoles, permission.role) : permission.verbs;
