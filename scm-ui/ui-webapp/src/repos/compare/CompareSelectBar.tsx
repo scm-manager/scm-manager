@@ -41,8 +41,8 @@ const CompareSelectBar: FC<Props> = ({ repository, baseUrl }) => {
   const match = useRouteMatch<CompareBranchesParams>();
   const history = useHistory();
   const { isLoading, error, data } = useBranches(repository);
-  const [sources, setSources] = useState<string | undefined>(match?.params?.source);
-  const [target, setTarget] = useState<string | undefined>(match?.params?.target);
+  const [sources, setSources] = useState<string | undefined>(decodeURIComponent(match?.params?.source));
+  const [target, setTarget] = useState<string | undefined>(decodeURIComponent(match?.params?.target));
 
   const branches: Branch[] = (data?._embedded?.branches as Branch[]) || [];
 

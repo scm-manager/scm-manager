@@ -45,18 +45,20 @@ export type CompareBranchesParams = {
 const CompareRoutes: FC<Props> = ({ repository, baseUrl }) => {
   const match = useRouteMatch<CompareBranchesParams>();
   const url = urls.matchedUrlFromMatch(match);
+  const source = decodeURIComponent(match.params.source);
+  const target = decodeURIComponent(match.params.target);
 
   return (
     <Switch>
       <Redirect exact from={url} to={`${url}/diff`} />
       <Route path={`${baseUrl}/:source/:target/diff`}>
-        <LoadingDiff url={createDiffUrl(repository, match.params.source, match.params.target)} />
+        <LoadingDiff url={createDiffUrl(repository, source, target)} />
       </Route>
       <Route path={`${baseUrl}/:source/:target/changesets`} exact>
-        <IncomingChangesets repository={repository} source={match.params.source} target={match.params.target} />
+        <IncomingChangesets repository={repository} source={source} target={target} />
       </Route>
       <Route path={`${baseUrl}/:source/:target/changesets/:page`} exact>
-        <IncomingChangesets repository={repository} source={match.params.source} target={match.params.target} />
+        <IncomingChangesets repository={repository} source={source} target={target} />
       </Route>
     </Switch>
   );
