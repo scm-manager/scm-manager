@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 import React, { FC, ReactNode } from "react";
+import classNames from "classnames";
 
 type Props = {
   children: ReactNode;
@@ -31,7 +32,13 @@ type Props = {
 const CompareSelectorListEntry: FC<Props> = ({ children, isSelected = false }) => {
   return (
     <li role="option" aria-selected={isSelected}>
-      <a className="is-flex dropdown-item has-text-weight-medium">{children}</a>
+      <a
+        className={classNames("dropdown-item", "is-flex", "has-text-weight-medium", "px-4", {
+          "is-active": isSelected
+        })}
+      >
+        {children}
+      </a>
     </li>
   );
 };

@@ -34,8 +34,10 @@ type Props = {
 };
 
 const ScrollableUl = styled.ul`
-  max-height: 200px;
+  max-height: 250px;
+  overflow-x: hidden;
   overflow-y: scroll;
+  width: 300px;
 `;
 
 const CompareSelectorList: FC<Props> = ({ branches, tags }) => {
@@ -59,7 +61,8 @@ const CompareSelectorList: FC<Props> = ({ branches, tags }) => {
           branches.map((branch, index) => {
             return (
               <CompareSelectorListEntry isSelected={false} key={index}>
-                {branch.name} <DefaultBranchTag defaultBranch={branch.defaultBranch} />
+                <span className="is-ellipsis-overflow">{branch.name}</span>{" "}
+                <DefaultBranchTag defaultBranch={branch.defaultBranch} />
               </CompareSelectorListEntry>
             );
           })}
@@ -67,7 +70,7 @@ const CompareSelectorList: FC<Props> = ({ branches, tags }) => {
           tags.map((tag, index) => {
             return (
               <CompareSelectorListEntry isSelected={false} key={index}>
-                {tag.name}
+                <span className="is-ellipsis-overflow">{tag.name}</span>
               </CompareSelectorListEntry>
             );
           })}

@@ -24,19 +24,14 @@
 import React, { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
-import styled from "styled-components";
 import { Branch, Repository, Tag } from "@scm-manager/ui-types";
 import { useBranches, useTags } from "@scm-manager/ui-api";
 import { ErrorNotification, Icon, Loading } from "@scm-manager/ui-components";
 import CompareSelectorList from "./CompareSelectorList";
 
-const Styled = styled.div``;
-
 type Props = {
   repository: Repository;
 };
-
-// TODO: ScreenReader-ready, aria label -> vgl. OmniSearch
 
 const CompareSelector: FC<Props> = ({ repository }) => {
   const [t] = useTranslation("repos");
@@ -55,32 +50,30 @@ const CompareSelector: FC<Props> = ({ repository }) => {
   }
 
   return (
-    <Styled>
-      <div className="dropdown is-active">
-        <div className="dropdown-trigger">
-          <button className="button has-text-weight-normal px-4" onClick={() => setHidden(!hidden)}>
-            <span>
-              <strong>branch:</strong> main
-            </span>
-            <span className="icon is-small">
-              <Icon name="angle-down" color="inherit" />
-            </span>
-          </button>
-        </div>
-        <div className={classNames("dropdown-menu", { "is-hidden": hidden })} id="dropdown-menu2" role="menu">
-          <div className="dropdown-content">
-            <div className="dropdown-item">
-              <h3 className="has-text-weight-bold">Text first?</h3>
-            </div>
-            <hr className="dropdown-divider my-1" />
-            <div className="dropdown-item px-2">
-              <input className="input is-small" placeholder={t("compare.selector.filter")} />
-              <CompareSelectorList branches={branches} tags={tags} />
-            </div>
+    <div className="dropdown is-active">
+      <div className="dropdown-trigger">
+        <button className="button has-text-weight-normal px-4" onClick={() => setHidden(!hidden)}>
+          <span>
+            <strong>branch:</strong> main
+          </span>
+          <span className="icon is-small">
+            <Icon name="angle-down" color="inherit" />
+          </span>
+        </button>
+      </div>
+      <div className={classNames("dropdown-menu", { "is-hidden": hidden })} id="dropdown-menu2" role="menu">
+        <div className="dropdown-content">
+          <div className="dropdown-item">
+            <h3 className="has-text-weight-bold">Text first?</h3>
+          </div>
+          <hr className="dropdown-divider my-1" />
+          <div className="dropdown-item px-2">
+            <input className="input is-small" placeholder={t("compare.selector.filter")} />
+            <CompareSelectorList branches={branches} tags={tags} />
           </div>
         </div>
       </div>
-    </Styled>
+    </div>
   );
 };
 
