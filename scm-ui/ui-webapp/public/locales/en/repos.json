@@ -169,6 +169,7 @@
       "target": "Target",
       "with": "Compare changes with...",
       "filter": "Filter selection...",
+      "emptyResult": "No results matching the filter were found.",
       "tabs": {
         "branches": "Branches",
         "tags": "Tags",

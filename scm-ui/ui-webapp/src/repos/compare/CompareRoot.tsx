@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 
-import React, { FC, useEffect } from "react";
-import { Redirect, Route, Switch, useHistory, useRouteMatch } from "react-router-dom";
+import React, { FC } from "react";
+import { Redirect, Route, Switch, useRouteMatch } from "react-router-dom";
 import { Repository } from "@scm-manager/ui-types";
 import { useDefaultBranch } from "@scm-manager/ui-api";
 import { ErrorNotification, Loading, urls } from "@scm-manager/ui-components";
@@ -38,14 +38,6 @@ const CompareRoot: FC<Props> = ({ repository, baseUrl }) => {
   const match = useRouteMatch<CompareBranchesParams>();
   const { data, isLoading, error } = useDefaultBranch(repository);
   const url = urls.matchedUrlFromMatch(match);
-  /*
-    const history = useHistory();
-  useEffect(() => {
-    if (!match.params.target && data?.defaultBranch) {
-      history.replace(`${baseUrl}/${match.params.source}/${data.defaultBranch}`);
-    }
-  }, [history, baseUrl, match.params.source, data, match.params.target]);
-   */
 
   if (isLoading) {
     return <Loading />;
@@ -57,10 +49,10 @@ const CompareRoot: FC<Props> = ({ repository, baseUrl }) => {
   return (
     <Switch>
       <Route
-        path={`${baseUrl}/:source/:target`}
+        path={`${baseUrl}/:sourceType/:sourceName/:targetType/:targetName`}
         render={() => <CompareView repository={repository} baseUrl={baseUrl} />}
       />
-      <Redirect exact from={url} to={`${url}/${data?.defaultBranch}`} />
+      <Redirect from={url} to={`${url}/b/${data?.defaultBranch}`} />
     </Switch>
   );
 };

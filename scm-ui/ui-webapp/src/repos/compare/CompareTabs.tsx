@@ -36,7 +36,7 @@ const CompareTabs: FC<Props> = ({ baseUrl }) => {
   const location = useLocation();
   const match = useRouteMatch<CompareBranchesParams>();
 
-  const url = `${baseUrl}/${match.params.source}/${match.params.target}`;
+  const url = `${baseUrl}/${match.params.sourceType}/${match.params.sourceName}/${match.params.targetType}/${match.params.targetName}`;
 
   const setActiveClass = (path: string) => {
     const regex = new RegExp(url + path);

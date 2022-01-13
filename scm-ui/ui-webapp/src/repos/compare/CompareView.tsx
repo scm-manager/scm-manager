@@ -38,26 +38,28 @@ type Props = {
 };
 
 export type CompareBranchesParams = {
-  source: string;
-  target: string;
+  sourceType: string;
+  sourceName: string;
+  targetType: string;
+  targetName: string;
 };
 
 const CompareRoutes: FC<Props> = ({ repository, baseUrl }) => {
   const match = useRouteMatch<CompareBranchesParams>();
   const url = urls.matchedUrlFromMatch(match);
-  const source = decodeURIComponent(match.params.source);
-  const target = decodeURIComponent(match.params.target);
+  const source = decodeURIComponent(match.params.sourceName);
+  const target = decodeURIComponent(match.params.targetName);
 
   return (
     <Switch>
       <Redirect exact from={url} to={`${url}/diff`} />
-      <Route path={`${baseUrl}/:source/:target/diff`}>
+      <Route path={`${baseUrl}/:sourceType/:sourceName/:targetType/:targetName/diff`}>
         <LoadingDiff url={createDiffUrl(repository, source, target) + "?format=GIT"} />
       </Route>
-      <Route path={`${baseUrl}/:source/:target/changesets`} exact>
+      <Route path={`${baseUrl}/:sourceType/:sourceName/:targetType/:targetName/changesets`} exact>
         <IncomingChangesets repository={repository} source={source} target={target} />
       </Route>
-      <Route path={`${baseUrl}/:source/:target/changesets/:page`} exact>
+      <Route path={`${baseUrl}/:sourceType/:sourceName/:targetType/:targetName/changesets/:page`} exact>
         <IncomingChangesets repository={repository} source={source} target={target} />
       </Route>
     </Switch>

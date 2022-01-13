@@ -34,39 +34,60 @@ type Props = {
   baseUrl: string;
 };
 
+export type CompareTypes = "b" | "t" | "r";
+
+export type CompareFunction = (type: CompareTypes, name: string) => void;
+export type CompareProps = {
+  type: CompareTypes;
+  name: string;
+};
+
 const CompareSelectBar: FC<Props> = ({ repository, baseUrl }) => {
   const [t] = useTranslation("repos");
   const match = useRouteMatch<CompareBranchesParams>();
   const location = useLocation();
   const history = useHistory();
-  const [sources, setSources] = useState<string | undefined>(decodeURIComponent(match?.params?.source));
-  const [target, setTarget] = useState<string | undefined>(decodeURIComponent(match?.params?.target));
+  const [source, setSource] = useState<CompareProps>({
+    type: "b",
+    name: decodeURIComponent(match?.params?.sourceName)
+  });
+  const [target, setTarget] = useState<CompareProps>({
+    type: "b",
+    name: decodeURIComponent(match?.params?.targetName)
+  });
 
   useEffect(() => {
-    if (sources && target) {
-      const lastUriComponent = location.pathname.split("/").slice(-1)[0];
+    const tabUriComponent = location.pathname.split("/")[9];
+    if (source && target && tabUriComponent) {
       history.push(
-        baseUrl + "/" + encodeURIComponent(sources) + "/" + encodeURIComponent(target) + "/" + lastUriComponent
+        baseUrl +
+          "/" +
+          source.type +
+          "/" +
+          encodeURIComponent(source.name) +
+          "/" +
+          target.type +
+          "/" +
+          encodeURIComponent(target.name) +
+          "/" +
+          tabUriComponent
       );
     }
-  }, [sources, target, history, baseUrl, location.pathname]);
+  }, [history, baseUrl, location.pathname, source, target]);
 
   return (
     <div className="is-flex is-justify-content-space-around is-align-items-center is-flex-wrap-wrap">
       <CompareSelector
         repository={repository}
         label={t("compare.selector.source")}
-        onSelect={setSources}
-        selected={sources}
+        onSelect={(type, name) => setSource({ type, name })}
+        selected={source}
       />
-      <div className="is-flex is-flex-direction-column is-align-items-center">
-        <span className="is-hidden-touch">{t("compare.selector.with")}</span>
-        <Icon name="arrow-right" className="fa-lg mt-2" title={t("compare.selector.with")} />
-      </div>
+      <Icon name="arrow-right" className="fa-lg mt-2" title={t("compare.selector.with")} />
       <CompareSelector
         repository={repository}
         label={t("compare.selector.target")}
-        onSelect={setTarget}
+        onSelect={(type, name) => setTarget({ type, name })}
         selected={target}
       />
     </div>

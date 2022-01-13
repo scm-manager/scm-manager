@@ -28,10 +28,11 @@ import styled from "styled-components";
 import { Repository } from "@scm-manager/ui-types";
 import { devices, Icon } from "@scm-manager/ui-components";
 import CompareSelectorList from "./CompareSelectorList";
+import { CompareFunction, CompareProps, CompareTypes } from "./CompareSelectBar";
 
 type Props = {
-  onSelect: (name: string, type: string) => void;
-  selected?: string;
+  onSelect: CompareFunction;
+  selected: CompareProps;
   label: string;
   repository: Repository;
 };
@@ -50,15 +51,25 @@ const MaxWidthButton = styled.button`
 
 const CompareSelector: FC<Props> = ({ onSelect, selected, label, repository }) => {
   const [t] = useTranslation("repos");
-  const [hidden, setHidden] = useState(true); // Todo TEMP
-  const [selectedName, setSelectedName] = useState(selected);
-  const [selectedType, setSelectedType] = useState("");
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [filter, setFilter] = useState("");
+  const [selection, setSelection] = useState<CompareProps>(selected);
 
-  const onSelectEntry = (name: string, type: string) => {
-    setSelectedName(name);
-    setSelectedType(type);
-    setHidden(true);
-    onSelect(name, type);
+  const onSelectEntry = (type: CompareTypes, name: string) => {
+    setSelection({ type, name });
+    setShowDropdown(false);
+    onSelect(type, name);
+  };
+
+  const getActionTypeName = (type: CompareTypes) => {
+    switch (type) {
+      case "b":
+        return "Branch";
+      case "t":
+        return "Tag";
+      case "r":
+        return "Revision";
+    }
   };
 
   return (
@@ -67,24 +78,36 @@ const CompareSelector: FC<Props> = ({ onSelect, selected, label, repository }) =
       <div className="control">
         <div className="dropdown is-active">
           <div className="dropdown-trigger">
-            <MaxWidthButton className="button has-text-weight-normal px-4" onClick={() => setHidden(!hidden)}>
+            <MaxWidthButton
+              className="button has-text-weight-normal px-4"
+              onClick={() => setShowDropdown(!showDropdown)}
+            >
               <span className="is-ellipsis-overflow">
-                {selectedType && <strong>{selectedType}:</strong>} {selectedName}
+                <strong>{getActionTypeName(selection.type)}:</strong> {selection.name}
               </span>
               <span className="icon is-small">
                 <Icon name="angle-down" color="inherit" />
               </span>
             </MaxWidthButton>
           </div>
-          <div className={classNames("dropdown-menu", { "is-hidden": hidden })} role="menu">
+          <div className={classNames("dropdown-menu", { "is-hidden": !showDropdown })} role="menu">
             <div className="dropdown-content">
               <div className="dropdown-item">
                 <h3 className="has-text-weight-bold">{t("compare.selector.title")}</h3>
               </div>
               <hr className="dropdown-divider my-1" />
               <div className="dropdown-item px-2">
-                <input className="input is-small" placeholder={t("compare.selector.filter")} />
-                <CompareSelectorList onSelect={onSelectEntry} selected={selected} repository={repository} />
+                <input
+                  className="input is-small"
+                  placeholder={t("compare.selector.filter")}
+                  onChange={e => setFilter(e.target.value)}
+                />
+                <CompareSelectorList
+                  onSelect={onSelectEntry}
+                  selected={selected}
+                  repository={repository}
+                  filter={filter}
+                />
               </div>
             </div>
           </div>
