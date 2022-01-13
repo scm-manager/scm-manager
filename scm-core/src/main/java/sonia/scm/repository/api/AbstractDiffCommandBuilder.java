@@ -83,18 +83,6 @@ abstract class AbstractDiffCommandBuilder<T extends AbstractDiffCommandBuilder, 
     return self();
   }
 
-  /**
-   * Show the difference between the given compareTo reference
-   * and another revision.
-   *
-   * @param compareTo revision for difference
-   * @return {@code this}
-   */
-  public T setCompareTo(String compareTo) {
-    request.setCompareTo(compareTo);
-    return self();
-  }
-
   abstract T self();
 
   abstract R createRequest();

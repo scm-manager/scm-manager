@@ -62,7 +62,8 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider {
 
   public static final Set<Feature> FEATURES = EnumSet.of(
     Feature.COMBINED_DEFAULT_BRANCH,
-    Feature.MODIFICATIONS_BETWEEN_REVISIONS
+    Feature.MODIFICATIONS_BETWEEN_REVISIONS,
+    Feature.INCOMING_REVISION
   );
 
   private final Injector commandInjector;
