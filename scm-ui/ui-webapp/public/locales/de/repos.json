@@ -163,6 +163,7 @@
   },
   "compare": {
     "title": "Vergleiche Änderungen",
+    "linkTitle": "Vergleichen mit...",
     "selector": {
       "title": "Branch, Tag oder Revision auswählen",
       "source": "Source",

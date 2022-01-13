@@ -21,10 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
+import React, { FC, ReactNode } from "react";
 import styled from "styled-components";
-import { useLocation } from "react-router-dom";
-import { Level, BranchSelector } from "@scm-manager/ui-components";
+import { Link, useLocation } from "react-router-dom";
+import { Level, BranchSelector, Icon } from "@scm-manager/ui-components";
 import CodeViewSwitcher, { SwitchViewLink } from "./CodeViewSwitcher";
 import { useTranslation } from "react-i18next";
 import { Branch } from "@scm-manager/ui-types";
@@ -51,9 +51,10 @@ type Props = {
   branches?: Branch[];
   onSelectBranch: () => void;
   switchViewLink: SwitchViewLink;
+  actions?: ReactNode;
 };
 
-const CodeActionBar: FC<Props> = ({ selectedBranch, branches, onSelectBranch, switchViewLink }) => {
+const CodeActionBar: FC<Props> = ({ selectedBranch, branches, onSelectBranch, switchViewLink, actions }) => {
   const { t } = useTranslation("repos");
   const location = useLocation();
 
@@ -63,14 +64,17 @@ const CodeActionBar: FC<Props> = ({ selectedBranch, branches, onSelectBranch, sw
         left={
           branches &&
           branches?.length > 0 && (
-            <BranchSelector
-              label={t("code.branchSelector")}
-              branches={branches}
-              selectedBranch={selectedBranch}
-              onSelectBranch={onSelectBranch}
-            />
+            <>
+              <BranchSelector
+                label={t("code.branchSelector")}
+                branches={branches}
+                selectedBranch={selectedBranch}
+                onSelectBranch={onSelectBranch}
+              />
+            </>
           )
         }
+        children={actions}
         right={<CodeViewSwitcher currentUrl={location.pathname} switchViewLink={switchViewLink} />}
       />
     </ActionBar>
