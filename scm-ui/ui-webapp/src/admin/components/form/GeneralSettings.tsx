@@ -24,12 +24,12 @@
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { useUserSuggestions } from "@scm-manager/ui-api";
-import { NamespaceStrategies, AnonymousMode, SelectValue, ConfigChangeHandler } from "@scm-manager/ui-types";
+import { AnonymousMode, ConfigChangeHandler, NamespaceStrategies, SelectValue } from "@scm-manager/ui-types";
 import {
+  AutocompleteAddEntryToTableField,
   Checkbox,
   InputField,
   MemberNameTagGroup,
-  AutocompleteAddEntryToTableField,
   Select
 } from "@scm-manager/ui-components";
 import NamespaceStrategySelect from "./NamespaceStrategySelect";
@@ -41,6 +41,7 @@ type Props = {
   dateFormat: string;
   anonymousMode: AnonymousMode;
   skipFailedAuthenticators: boolean;
+  alertsUrl: string;
   releaseFeedUrl: string;
   mailDomainName: string;
   enabledXsrfProtection: boolean;
@@ -57,6 +58,7 @@ const GeneralSettings: FC<Props> = ({
   realmDescription,
   loginInfoUrl,
   anonymousMode,
+  alertsUrl,
   releaseFeedUrl,
   mailDomainName,
   enabledXsrfProtection,
@@ -88,6 +90,9 @@ const GeneralSettings: FC<Props> = ({
   };
   const handleNamespaceStrategyChange = (value: string) => {
     onChange(true, value, "namespaceStrategy");
+  };
+  const handleAlertsUrlChange = (value: string) => {
+    onChange(true, value, "alertsUrl");
   };
   const handleReleaseFeedUrlChange = (value: string) => {
     onChange(true, value, "releaseFeedUrl");
@@ -207,7 +212,16 @@ const GeneralSettings: FC<Props> = ({
         </div>
       </div>
       <div className="columns">
-        <div className="column">
+        <div className="column is-half">
+          <InputField
+            label={t("general-settings.alerts-url")}
+            onChange={handleAlertsUrlChange}
+            value={alertsUrl}
+            disabled={!hasUpdatePermission}
+            helpText={t("help.alertsUrlHelpText")}
+          />
+        </div>
+        <div className="column is-half">
           <InputField
             label={t("general-settings.release-feed-url")}
             onChange={handleReleaseFeedUrlChange}

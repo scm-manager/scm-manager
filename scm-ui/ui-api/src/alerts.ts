@@ -24,36 +24,75 @@
 
 import { useQuery } from "react-query";
 import { apiClient } from "./apiclient";
-import { ApiResult, useRequiredIndexLink } from "./base";
+import { ApiResult, useIndexLink } from "./base";
 import { AlertsResponse } from "@scm-manager/ui-types";
 
 type AlertRequest = {
   url: string;
+  checksum: string;
   body: unknown;
 };
 
+type LocalStorageAlerts = AlertsResponse & {
+  checksum: string;
+};
+
+const alertsFromStorage = (): LocalStorageAlerts | undefined => {
+  const item = localStorage.getItem("alerts");
+  if (item) {
+    return JSON.parse(item);
+  }
+};
+
+const fetchAlerts = (request: AlertRequest) =>
+  fetch(request.url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(request.body)
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error("Failed to fetch alerts");
+      }
+      return response;
+    })
+    .then(response => response.json())
+    .then((data: AlertsResponse) => {
+      const storageItem: LocalStorageAlerts = {
+        ...data,
+        checksum: request.checksum
+      };
+      localStorage.setItem("alerts", JSON.stringify(storageItem));
+      return data;
+    });
+
+const restoreOrFetch = (request: AlertRequest): Promise<AlertsResponse> => {
+  const storedAlerts = alertsFromStorage();
+  if (!storedAlerts || storedAlerts.checksum !== request.checksum) {
+    return fetchAlerts(request);
+  }
+  return Promise.resolve(storedAlerts);
+};
+
 export const useAlerts = (): ApiResult<AlertsResponse> => {
-  const link = useRequiredIndexLink("alerts");
-  const { data, error, isLoading } = useQuery<AlertsResponse, Error>("alerts", () =>
-    apiClient
-      .get(link)
-      .then(response => response.json())
-      .then((json: AlertRequest) =>
-        fetch(json.url, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(json.body)
-        })
-          .then(response => {
-            if (!response.ok) {
-              throw new Error("Failed to fetch alerts");
-            }
-            return response;
-          })
-          .then(response => response.json())
-      )
+  const link = useIndexLink("alerts");
+  const { data, error, isLoading } = useQuery<AlertsResponse, Error>(
+    "alerts",
+    () => {
+      if (!link) {
+        throw new Error("Could not find alert link");
+      }
+      return apiClient
+        .get(link)
+        .then(response => response.json())
+        .then(restoreOrFetch);
+    },
+    {
+      enabled: !!link,
+      staleTime: Infinity
+    }
   );
 
   return {

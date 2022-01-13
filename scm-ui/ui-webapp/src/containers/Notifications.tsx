@@ -22,9 +22,9 @@
  * SOFTWARE.
  */
 
-import React, {FC} from "react";
-import {Link, useHistory} from "react-router-dom";
-import {useTranslation} from "react-i18next";
+import React, { FC } from "react";
+import { Link, useHistory } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
 import {
@@ -33,7 +33,7 @@ import {
   useNotifications,
   useNotificationSubscription
 } from "@scm-manager/ui-api";
-import {Notification, NotificationCollection} from "@scm-manager/ui-types";
+import { Notification, NotificationCollection } from "@scm-manager/ui-types";
 import {
   Button,
   DateFromNow,
@@ -44,7 +44,7 @@ import {
   ToastNotification,
   ToastType
 } from "@scm-manager/ui-components";
-import HeaderDropDown, {Column, NonWrappingColumn} from "../components/HeaderDropDown";
+import HeaderDropDown, { Column, NonWrappingColumn } from "../components/HeaderDropDown";
 
 const DismissColumn = styled.td`
   vertical-align: middle !important;

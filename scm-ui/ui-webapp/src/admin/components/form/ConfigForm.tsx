@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, useState, useEffect, FormEvent } from "react";
+import React, { FC, FormEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Config, ConfigChangeHandler, NamespaceStrategies } from "@scm-manager/ui-types";
 import { Level, Notification, SubmitButton } from "@scm-manager/ui-components";
@@ -72,6 +72,7 @@ const ConfigForm: FC<Props> = ({
     enabledUserConverter: false,
     namespaceStrategy: "",
     loginInfoUrl: "",
+    alertsUrl: "",
     releaseFeedUrl: "",
     mailDomainName: "",
     emergencyContacts: [],
@@ -144,6 +145,7 @@ const ConfigForm: FC<Props> = ({
         dateFormat={innerConfig.dateFormat}
         anonymousMode={innerConfig.anonymousMode}
         skipFailedAuthenticators={innerConfig.skipFailedAuthenticators}
+        alertsUrl={innerConfig.alertsUrl}
         releaseFeedUrl={innerConfig.releaseFeedUrl}
         mailDomainName={innerConfig.mailDomainName}
         enabledXsrfProtection={innerConfig.enabledXsrfProtection}

@@ -121,7 +121,7 @@ type AlertsProps = {
 
 const Alerts: FC<AlertsProps> = ({ className }) => {
   const { data, error } = useFlattenedAlerts();
-  if (!data || (data.length === 0 && !error)) {
+  if ((!data || data.length === 0) && !error) {
     return null;
   }
   return (

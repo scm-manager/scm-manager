@@ -49,6 +49,7 @@ export type Config = HalRepresentation & {
   enabledUserConverter: boolean;
   namespaceStrategy: string;
   loginInfoUrl: string;
+  alertsUrl: string;
   releaseFeedUrl: string;
   mailDomainName: string;
   emergencyContacts: string[];
