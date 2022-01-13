@@ -21,13 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, useState } from "react";
+import React, { FC, KeyboardEvent, useState } from "react";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
 import { useBranches, useTags } from "@scm-manager/ui-api";
 import { Branch, Repository, Tag } from "@scm-manager/ui-types";
-import { ErrorNotification, Loading, NoStyleButton, Notification } from "@scm-manager/ui-components";
+import { Button, ErrorNotification, Loading, NoStyleButton, Notification } from "@scm-manager/ui-components";
 import DefaultBranchTag from "../branches/components/DefaultBranchTag";
 import CompareSelectorListEntry from "./CompareSelectorListEntry";
 import { CompareFunction, CompareProps, CompareTypes } from "./CompareSelectBar";
@@ -38,20 +38,6 @@ type Props = {
   repository: Repository;
   filter: string;
 };
-
-type TabContentBranchProps = {
-  elements: Branch[];
-  selection: CompareProps;
-  onSelectEntry: CompareFunction;
-};
-
-type TabContentTagProps = {
-  elements: Tag[];
-  selection: CompareProps;
-  onSelectEntry: CompareFunction;
-};
-
-type AvailableTabs = "branches" | "tags" | "revision";
 
 const TabStyleButton = styled(NoStyleButton)`
   align-items: center;
@@ -91,7 +77,17 @@ const SizedDiv = styled.div`
   width: 300px;
 `;
 
-const BranchTabContent: FC<TabContentBranchProps> = ({ elements, selection, onSelectEntry }) => {
+const SmallButton = styled(Button)`
+  height: 1.875rem;
+`;
+
+type BranchTabContentProps = {
+  elements: Branch[];
+  selection: CompareProps;
+  onSelectEntry: CompareFunction;
+};
+
+const BranchTabContent: FC<BranchTabContentProps> = ({ elements, selection, onSelectEntry }) => {
   const [t] = useTranslation("repos");
 
   if (elements.length === 0) {
@@ -120,7 +116,13 @@ const BranchTabContent: FC<TabContentBranchProps> = ({ elements, selection, onSe
   );
 };
 
-const TagTabContent: FC<TabContentTagProps> = ({ elements, selection, onSelectEntry }) => {
+type TagTabContentProps = {
+  elements: Tag[];
+  selection: CompareProps;
+  onSelectEntry: CompareFunction;
+};
+
+const TagTabContent: FC<TagTabContentProps> = ({ elements, selection, onSelectEntry }) => {
   const [t] = useTranslation("repos");
 
   if (elements.length === 0) {
@@ -148,7 +150,52 @@ const TagTabContent: FC<TabContentTagProps> = ({ elements, selection, onSelectEn
   );
 };
 
-const ScrollableList: FC<{ selectedTab: AvailableTabs } & Props> = ({
+type RevisionTabContentProps = {
+  selected: CompareProps;
+  onSelect: CompareFunction;
+};
+
+const RevisionTabContent: FC<RevisionTabContentProps> = ({ selected, onSelect }) => {
+  const [t] = useTranslation("repos");
+  const defaultValue = selected.type === "r" ? selected.name : "";
+  const [revision, setRevision] = useState(defaultValue);
+
+  const handleKeyPress = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      handleSubmit();
+    }
+  };
+
+  const handleSubmit = () => {
+    if (revision) {
+      onSelect("r", revision);
+    }
+  };
+
+  return (
+    <SizedDiv className="mt-2">
+      <div className="field has-addons is-justify-content-center">
+        <div className="control">
+          <input
+            className="input is-small"
+            placeholder={t("compare.selector.revision.input")}
+            onChange={e => setRevision(e.target.value)}
+            onKeyPress={handleKeyPress}
+            value={revision}
+          />
+        </div>
+        <div className="control">
+          <SmallButton className="is-info is-small" action={handleSubmit} disabled={!revision}>
+            {t("compare.selector.revision.submit")}
+          </SmallButton>
+        </div>
+      </div>
+    </SizedDiv>
+  );
+};
+
+const ScrollableList: FC<{ selectedTab: CompareTypes } & Props> = ({
   selectedTab,
   onSelect,
   selected,
@@ -173,17 +220,17 @@ const ScrollableList: FC<{ selectedTab: AvailableTabs } & Props> = ({
     return <ErrorNotification error={branchesError || tagsError} />;
   }
 
-  if (selectedTab !== "revision") {
+  if (selectedTab !== "r") {
     return (
       <ScrollableUl aria-expanded="true" role="listbox">
-        {selectedTab === "branches" && (
+        {selectedTab === "b" && (
           <BranchTabContent
             elements={branches.filter(branch => branch.name.includes(filter))}
             selection={selection}
             onSelectEntry={onSelectEntry}
           />
         )}
-        {selectedTab === "tags" && (
+        {selectedTab === "t" && (
           <TagTabContent
             elements={tags.filter(tag => tag.name.includes(filter))}
             selection={selection}
@@ -198,8 +245,8 @@ const ScrollableList: FC<{ selectedTab: AvailableTabs } & Props> = ({
 
 const CompareSelectorList: FC<Props> = ({ onSelect, selected, repository, filter }) => {
   const [t] = useTranslation("repos");
-  const [selectedTab, setSelectedTab] = useState<AvailableTabs>("branches");
-  const tabs: AvailableTabs[] = ["branches", "tags"]; // TODO add revision tab
+  const [selectedTab, setSelectedTab] = useState<CompareTypes>(selected.type);
+  const tabs: CompareTypes[] = ["b", "t", "r"];
 
   return (
     <>
@@ -226,11 +273,7 @@ const CompareSelectorList: FC<Props> = ({ onSelect, selected, repository, filter
         repository={repository}
         filter={filter}
       />
-      {selectedTab === "revision" && (
-        <SizedDiv className="mt-2">
-          <input className="input is-small" placeholder={t("compare.selector.revision")} />
-        </SizedDiv>
-      )}
+      {selectedTab === "r" && <RevisionTabContent onSelect={onSelect} selected={selected} />}
     </>
   );
 };

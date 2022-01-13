@@ -64,14 +64,12 @@ const CodeActionBar: FC<Props> = ({ selectedBranch, branches, onSelectBranch, sw
         left={
           branches &&
           branches?.length > 0 && (
-            <>
-              <BranchSelector
-                label={t("code.branchSelector")}
-                branches={branches}
-                selectedBranch={selectedBranch}
-                onSelectBranch={onSelectBranch}
-              />
-            </>
+            <BranchSelector
+              label={t("code.branchSelector")}
+              branches={branches}
+              selectedBranch={selectedBranch}
+              onSelectBranch={onSelectBranch}
+            />
           )
         }
         children={actions}

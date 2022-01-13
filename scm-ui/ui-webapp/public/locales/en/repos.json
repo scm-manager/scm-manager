@@ -172,11 +172,14 @@
       "filter": "Filter selection...",
       "emptyResult": "No results matching the filter were found.",
       "tabs": {
-        "branches": "Branches",
-        "tags": "Tags",
-        "revision": "Revision"
+        "b": "Branches",
+        "t": "Tags",
+        "r": "Revision"
       },
-      "revision": "Enter revision"
+      "revision": {
+        "input": "Enter revision",
+        "submit": "Select"
+      }
     },
     "tabs": {
       "diff": "Diff",
