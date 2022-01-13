@@ -24,7 +24,7 @@
 import React, { FC } from "react";
 import { useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Branch, Repository } from "@scm-manager/ui-types";
+import { Branch, ChangesetCollection, Repository } from "@scm-manager/ui-types";
 import {
   ChangesetList,
   ErrorNotification,
@@ -62,7 +62,7 @@ const Changesets: FC<Props> = ({ repository, branch }) => {
 export const ChangesetsPanel: FC<ChangesetProps> = ({ repository, error, isLoading, data }) => {
   const [t] = useTranslation("repos");
   const page = usePage();
-  const changesets = data?._embedded.changesets;
+  const changesets = data?._embedded?.changesets;
 
   if (error) {
     return <ErrorNotification error={error} />;
@@ -73,13 +73,7 @@ export const ChangesetsPanel: FC<ChangesetProps> = ({ repository, error, isLoadi
   }
 
   if (!changesets || changesets.length === 0) {
-    return (
-      <div className="panel">
-        <div className="panel-block">
-          <Notification type="info">{t("changesets.noChangesets")}</Notification>
-        </div>
-      </div>
-    );
+    return <Notification type="info">{t("changesets.noChangesets")}</Notification>;
   }
 
   return (
