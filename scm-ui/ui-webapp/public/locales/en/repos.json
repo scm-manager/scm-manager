@@ -163,6 +163,7 @@
   },
   "compare": {
     "title": "Compare Changes",
+    "linkTitle": "Compare with...",
     "selector": {
       "title": "Select branch, tag or revision",
       "source": "Source",
