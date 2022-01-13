@@ -67,6 +67,10 @@ const CompareRoutes: FC<Props> = ({ repository, baseUrl }) => {
 const CompareView: FC<Props> = ({ repository, baseUrl }) => {
   const [t] = useTranslation("repos");
 
+  if (!repository._links.incomingDiff) {
+    return null;
+  }
+
   return (
     <>
       <Subtitle subtitle={t("compare.title")} />

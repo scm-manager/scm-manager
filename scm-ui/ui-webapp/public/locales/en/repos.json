@@ -164,12 +164,17 @@
   "compare": {
     "title": "Compare Changes",
     "selector": {
-      "filter": "Filter...",
-      "branches": "Branches",
-      "tags": "Tags",
+      "title": "Select branch, tag or revision",
       "source": "Source",
       "target": "Target",
-      "with": "Compare changes with..."
+      "with": "Compare changes with...",
+      "filter": "Filter selection...",
+      "tabs": {
+        "branches": "Branches",
+        "tags": "Tags",
+        "revision": "Revision"
+      },
+      "revision": "Enter revision"
     },
     "tabs": {
       "diff": "Diff",

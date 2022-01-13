@@ -23,58 +23,147 @@
  */
 import React, { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
+import classNames from "classnames";
 import styled from "styled-components";
-import { Branch, Tag } from "@scm-manager/ui-types";
+import { useBranches, useTags } from "@scm-manager/ui-api";
+import { Branch, Repository, Tag } from "@scm-manager/ui-types";
+import { ErrorNotification, Loading, NoStyleButton } from "@scm-manager/ui-components";
 import DefaultBranchTag from "../branches/components/DefaultBranchTag";
 import CompareSelectorListEntry from "./CompareSelectorListEntry";
 
 type Props = {
-  branches: Branch[];
-  tags: Tag[];
+  onSelect: (name: string, type: string) => void;
+  selected?: string;
+  repository: Repository;
 };
+
+type AvailableTabs = "branches" | "tags" | "revision";
+
+const TabStyleButton = styled(NoStyleButton)`
+  align-items: center;
+  border-bottom-color: #dbdbdb;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  color: #4a4a4a;
+  display: flex;
+  justify-content: center;
+  margin-bottom: -1px;
+  padding: 0.5em 1em;
+  vertical-align: top;
+
+  &:hover {
+    border-bottom-color: #363636;
+    color: #363636;
+  }
+
+  &.is-active {
+    border-bottom-color: #33b2e8;
+    color: #33b2e8;
+  }
+
+  &:focus {
+    background-color: var(--scm-column-selection);
+  }
+`;
 
 const ScrollableUl = styled.ul`
   max-height: 250px;
+  width: 300px;
   overflow-x: hidden;
   overflow-y: scroll;
+`;
+
+const SizedDiv = styled.div`
   width: 300px;
 `;
 
-const CompareSelectorList: FC<Props> = ({ branches, tags }) => {
-  const [selectedTab, setSelectedTab] = useState<"branches" | "tags">("branches");
-  const [t] = useTranslation("repos");
+const ScrollableList: FC<{ selectedTab: AvailableTabs } & Props> = ({
+  selectedTab,
+  onSelect,
+  selected,
+  repository
+}) => {
+  const { isLoading: branchesIsLoading, error: branchesError, data: branchesData } = useBranches(repository);
+  const branches: Branch[] = (branchesData?._embedded?.branches as Branch[]) || [];
+  const { isLoading: tagsIsLoading, error: tagsError, data: tagsData } = useTags(repository);
+  const tags: Tag[] = (tagsData?._embedded?.tags as Tag[]) || [];
+  const [selectedName, setSelectedName] = useState(selected);
 
-  return (
-    <>
-      <div className="tabs is-small mt-3 mb-0">
-        <ul>
-          <li className={selectedTab === "branches" ? "is-active" : ""}>
-            <a onClick={() => setSelectedTab("branches")}>{t("compare.selector.branches")}</a>
-          </li>
-          <li className={selectedTab === "tags" ? "is-active" : ""}>
-            <a onClick={() => setSelectedTab("tags")}>{t("compare.selector.tags")}</a>
-          </li>
-        </ul>
-      </div>
+  const onSelectEntry = (name: string, type: string) => {
+    setSelectedName(name);
+    onSelect(name, type);
+  };
+
+  if (branchesIsLoading || tagsIsLoading) {
+    return <Loading />;
+  }
+  if (branchesError || tagsError) {
+    return <ErrorNotification error={branchesError || tagsError} />;
+  }
+
+  if (selectedTab !== "revision") {
+    return (
       <ScrollableUl aria-expanded="true" role="listbox">
         {selectedTab === "branches" &&
           branches.map((branch, index) => {
             return (
-              <CompareSelectorListEntry isSelected={false} key={index}>
-                <span className="is-ellipsis-overflow">{branch.name}</span>{" "}
-                <DefaultBranchTag defaultBranch={branch.defaultBranch} />
+              <CompareSelectorListEntry
+                isSelected={selectedName === branch.name}
+                onClick={() => onSelectEntry(branch.name, "Branch")}
+                key={index}
+              >
+                <span className="is-ellipsis-overflow">{branch.name}</span>
+                <DefaultBranchTag className="ml-2" defaultBranch={branch.defaultBranch} />
               </CompareSelectorListEntry>
             );
           })}
         {selectedTab === "tags" &&
           tags.map((tag, index) => {
             return (
-              <CompareSelectorListEntry isSelected={false} key={index}>
+              <CompareSelectorListEntry
+                isSelected={selectedName === tag.name}
+                onClick={() => onSelectEntry(tag.name, "Tag")}
+                key={index}
+              >
                 <span className="is-ellipsis-overflow">{tag.name}</span>
               </CompareSelectorListEntry>
             );
           })}
       </ScrollableUl>
+    );
+  }
+  return null;
+};
+
+const CompareSelectorList: FC<Props> = ({ onSelect, selected, repository }) => {
+  const [t] = useTranslation("repos");
+  const [selectedTab, setSelectedTab] = useState<AvailableTabs>("branches");
+  const tabs: AvailableTabs[] = ["branches", "tags"]; // TODO add revision tab
+
+  return (
+    <>
+      <div className="tabs is-small mt-3 mb-0">
+        <ul>
+          {tabs.map((tab, index) => {
+            return (
+              <li key={index}>
+                <TabStyleButton
+                  className={classNames({ "is-active": selectedTab === tab })}
+                  onClick={() => setSelectedTab(tab)}
+                >
+                  {t("compare.selector.tabs." + tab)}
+                </TabStyleButton>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+      <ScrollableList selectedTab={selectedTab} onSelect={onSelect} selected={selected} repository={repository} />
+      {selectedTab === "revision" && (
+        <SizedDiv className="mt-2">
+          <input className="input is-small" placeholder={t("compare.selector.revision")} />
+        </SizedDiv>
+      )}
     </>
   );
 };

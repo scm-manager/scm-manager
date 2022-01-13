@@ -21,13 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 import React, { FC, useEffect, useState } from "react";
-import { useHistory, useRouteMatch } from "react-router-dom";
+import { useHistory, useLocation, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { useBranches } from "@scm-manager/ui-api";
-import { Branch, Repository } from "@scm-manager/ui-types";
-import { BranchSelector, ErrorNotification, Icon, Loading } from "@scm-manager/ui-components";
+import { Repository } from "@scm-manager/ui-types";
+import { Icon } from "@scm-manager/ui-components";
 import CompareSelector from "./CompareSelector";
 import { CompareBranchesParams } from "./CompareView";
 
@@ -39,48 +37,39 @@ type Props = {
 const CompareSelectBar: FC<Props> = ({ repository, baseUrl }) => {
   const [t] = useTranslation("repos");
   const match = useRouteMatch<CompareBranchesParams>();
+  const location = useLocation();
   const history = useHistory();
-  const { isLoading, error, data } = useBranches(repository);
   const [sources, setSources] = useState<string | undefined>(decodeURIComponent(match?.params?.source));
   const [target, setTarget] = useState<string | undefined>(decodeURIComponent(match?.params?.target));
 
-  const branches: Branch[] = (data?._embedded?.branches as Branch[]) || [];
-
   useEffect(() => {
     if (sources && target) {
-      history.push(baseUrl + "/" + encodeURIComponent(sources) + "/" + encodeURIComponent(target) + "/diff");
+      const lastUriComponent = location.pathname.split("/").slice(-1)[0];
+      history.push(
+        baseUrl + "/" + encodeURIComponent(sources) + "/" + encodeURIComponent(target) + "/" + lastUriComponent
+      );
     }
-  }, [sources, target, history, baseUrl]);
-
-  if (isLoading) {
-    return <Loading />;
-  }
-  if (error) {
-    return <ErrorNotification error={error} />;
-  }
+  }, [sources, target, history, baseUrl, location.pathname]);
 
   return (
-    <>
-      <BranchSelector
-        branches={branches}
-        onSelectBranch={branch => setSources(branch?.name)}
-        selectedBranch={sources}
-        label="source"
+    <div className="is-flex is-justify-content-space-around is-align-items-center is-flex-wrap-wrap">
+      <CompareSelector
+        repository={repository}
+        label={t("compare.selector.source")}
+        onSelect={setSources}
+        selected={sources}
       />
-      <Icon name="arrow-right" />
-      <BranchSelector
-        branches={branches}
-        onSelectBranch={branch => setTarget(branch?.name)}
-        selectedBranch={target}
-        label="target"
-      />
-
-      <hr />
-      <div className="is-flex is-justify-content-space-around is-align-items-center">
-        <CompareSelector repository={repository} /> <Icon name="arrow-right" title={t("compare.selector.with")} />{" "}
-        <CompareSelector repository={repository} />
+      <div className="is-flex is-flex-direction-column is-align-items-center">
+        <span className="is-hidden-touch">{t("compare.selector.with")}</span>
+        <Icon name="arrow-right" className="fa-lg mt-2" title={t("compare.selector.with")} />
       </div>
-    </>
+      <CompareSelector
+        repository={repository}
+        label={t("compare.selector.target")}
+        onSelect={setTarget}
+        selected={target}
+      />
+    </div>
   );
 };
 

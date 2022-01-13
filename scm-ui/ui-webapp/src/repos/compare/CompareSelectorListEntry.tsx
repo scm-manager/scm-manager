@@ -23,22 +23,32 @@
  */
 import React, { FC, ReactNode } from "react";
 import classNames from "classnames";
+import { NoStyleButton } from "@scm-manager/ui-components";
+import styled from "styled-components";
 
 type Props = {
   children: ReactNode;
   isSelected?: boolean;
+  onClick?: (event: React.MouseEvent) => void;
 };
 
-const CompareSelectorListEntry: FC<Props> = ({ children, isSelected = false }) => {
+const FocusButton = styled(NoStyleButton)`
+  &:focus:not(.is-active) {
+    background-color: var(--scm-column-selection) !important;
+  }
+`;
+
+const CompareSelectorListEntry: FC<Props> = ({ children, isSelected = false, onClick }) => {
   return (
     <li role="option" aria-selected={isSelected}>
-      <a
-        className={classNames("dropdown-item", "is-flex", "has-text-weight-medium", "px-4", {
+      <FocusButton
+        className={classNames("dropdown-item", "is-flex", "has-text-weight-medium", "px-4", "py-2", {
           "is-active": isSelected
         })}
+        onClick={onClick}
       >
         {children}
-      </a>
+      </FocusButton>
     </li>
   );
 };
