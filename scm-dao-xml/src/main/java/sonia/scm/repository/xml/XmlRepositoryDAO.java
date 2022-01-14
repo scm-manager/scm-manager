@@ -26,6 +26,7 @@ package sonia.scm.repository.xml;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.ImmutableList;
 import com.google.inject.Singleton;
 import sonia.scm.io.FileSystem;
 import sonia.scm.repository.InternalRepositoryException;
@@ -40,16 +41,13 @@ import javax.inject.Inject;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Supplier;
-
-import static java.util.Collections.unmodifiableList;
-import static java.util.stream.Collectors.toList;
 
 /**
  * @author Sebastian Sdorra
@@ -57,16 +55,14 @@ import static java.util.stream.Collectors.toList;
 @Singleton
 public class XmlRepositoryDAO implements RepositoryDAO {
 
-  private static final RepositoryContainer EMPTY_REPOSITORY_CONTAINER = new RepositoryContainer(null);
-
   private final MetadataStore metadataStore = new MetadataStore();
 
   private final PathBasedRepositoryLocationResolver repositoryLocationResolver;
   private final FileSystem fileSystem;
   private final RepositoryExportingCheck repositoryExportingCheck;
 
-  private final Map<String, RepositoryContainer> byId;
-  private final Map<NamespaceAndName, RepositoryContainer> byNamespaceAndName;
+  private final Map<String, Repository> byId;
+  private final Map<NamespaceAndName, Repository> byNamespaceAndName;
   private final ReadWriteLock byNamespaceLock = new ReentrantReadWriteLock();
 
   @Inject
@@ -75,20 +71,19 @@ public class XmlRepositoryDAO implements RepositoryDAO {
     this.fileSystem = fileSystem;
     this.repositoryExportingCheck = repositoryExportingCheck;
 
-    this.byId = new ConcurrentHashMap<>();
+    this.byId = new HashMap<>();
     this.byNamespaceAndName = new TreeMap<>();
 
     init();
   }
 
   private void init() {
-    withWriteLockedByNamespaceMap(() -> {
+    withWriteLockedMaps(() -> {
       RepositoryLocationResolver.RepositoryLocationResolverInstance<Path> pathRepositoryLocationResolverInstance = repositoryLocationResolver.create(Path.class);
       pathRepositoryLocationResolverInstance.forAllLocations((repositoryId, repositoryPath) -> {
         Repository repository = metadataStore.read(repositoryPath);
-        RepositoryContainer container = new RepositoryContainer(repository);
-        byNamespaceAndName.put(repository.getNamespaceAndName(), container);
-        byId.put(repositoryId, container);
+        byNamespaceAndName.put(repository.getNamespaceAndName(), repository);
+        byId.put(repositoryId, repository);
       });
     });
   }
@@ -118,47 +113,40 @@ public class XmlRepositoryDAO implements RepositoryDAO {
       throw new InternalRepositoryException(repository, "failed to create filesystem", e);
     }
 
-    withWriteLockedByNamespaceMap(() -> {
-      RepositoryContainer container = new RepositoryContainer(clone);
-      byId.put(repository.getId(), container);
-      byNamespaceAndName.put(repository.getNamespaceAndName(), container);
+    withWriteLockedMaps(() -> {
+      byId.put(repository.getId(), clone);
+      byNamespaceAndName.put(repository.getNamespaceAndName(), clone);
     });
   }
 
   @Override
   public boolean contains(Repository repository) {
-    return byId.containsKey(repository.getId());
+    return withReadLockedMaps(() -> byId.containsKey(repository.getId()));
   }
 
   @Override
   public boolean contains(NamespaceAndName namespaceAndName) {
-    return withReadLockedByNamespaceMap(() -> byNamespaceAndName.containsKey(namespaceAndName));
+    return withReadLockedMaps(() -> byNamespaceAndName.containsKey(namespaceAndName));
   }
 
   @Override
   public boolean contains(String id) {
-    return byId.containsKey(id);
+    return withReadLockedMaps(() -> byId.containsKey(id));
   }
 
   @Override
   public Repository get(NamespaceAndName namespaceAndName) {
-    return withReadLockedByNamespaceMap(() -> byNamespaceAndName.getOrDefault(namespaceAndName, EMPTY_REPOSITORY_CONTAINER).getRepository());
+    return withReadLockedMaps(() -> byNamespaceAndName.get(namespaceAndName));
   }
 
   @Override
   public Repository get(String id) {
-    return byId.getOrDefault(id, EMPTY_REPOSITORY_CONTAINER).getRepository();
+    return withReadLockedMaps(() -> byId.get(id));
   }
 
   @Override
   public Collection<Repository> getAll() {
-    return withReadLockedByNamespaceMap(() ->
-      unmodifiableList(
-        byNamespaceAndName
-          .values()
-          .stream()
-          .map(RepositoryContainer::getRepository)
-          .collect(toList())));
+    return withReadLockedMaps(() -> ImmutableList.copyOf(byNamespaceAndName.values()));
   }
 
   @Override
@@ -168,23 +156,14 @@ public class XmlRepositoryDAO implements RepositoryDAO {
       throw new StoreReadOnlyException(repository);
     }
 
-    synchronized (this) {
+    withWriteLockedMaps(() -> {
       // remove old namespaceAndName from map, in case of rename
-      RepositoryContainer container = byId.get(clone.getId());
-      if (container != null) {
-        if (container.getRepository().getNamespaceAndName() != clone.getNamespaceAndName()) {
-          withWriteLockedByNamespaceMap(() -> {
-            byNamespaceAndName.remove(container.getRepository().getNamespaceAndName());
-            byNamespaceAndName.put(clone.getNamespaceAndName(), container);
-          });
-        }
-        container.setRepository(clone);
-      } else {
-        RepositoryContainer newContainer = new RepositoryContainer(clone);
-        withWriteLockedByNamespaceMap(() -> byNamespaceAndName.put(clone.getNamespaceAndName(), newContainer));
-        byId.put(clone.getId(), newContainer);
+      Repository prev = byId.put(clone.getId(), clone);
+      if (prev != null) {
+        byNamespaceAndName.remove(prev.getNamespaceAndName());
       }
-    }
+      byNamespaceAndName.put(clone.getNamespaceAndName(), clone);
+    });
 
     Path repositoryPath = repositoryLocationResolver
       .create(Path.class)
@@ -194,8 +173,10 @@ public class XmlRepositoryDAO implements RepositoryDAO {
   }
 
   private boolean mustNotModifyRepository(Repository clone) {
-    return clone.isArchived() && byId.get(clone.getId()) != null && byId.get(clone.getId()).getRepository().isArchived()
-      || repositoryExportingCheck.isExporting(clone);
+    return withReadLockedMaps(() ->
+      clone.isArchived() && byId.get(clone.getId()).isArchived()
+        || repositoryExportingCheck.isExporting(clone)
+    );
   }
 
   @Override
@@ -203,14 +184,13 @@ public class XmlRepositoryDAO implements RepositoryDAO {
     if (repository.isArchived() || repositoryExportingCheck.isExporting(repository)) {
       throw new StoreReadOnlyException(repository);
     }
-    Path path;
-    synchronized (this) {
-      RepositoryContainer prev = byId.remove(repository.getId());
+    Path path = withWriteLockedMaps(() -> {
+      Repository prev = byId.remove(repository.getId());
       if (prev != null) {
-        withWriteLockedByNamespaceMap(() -> byNamespaceAndName.remove(prev.getRepository().getNamespaceAndName()));
+        byNamespaceAndName.remove(prev.getNamespaceAndName());
       }
-      path = repositoryLocationResolver.remove(repository.getId());
-    }
+      return repositoryLocationResolver.remove(repository.getId());
+    });
 
     try {
       fileSystem.destroy(path.toFile());
@@ -231,12 +211,14 @@ public class XmlRepositoryDAO implements RepositoryDAO {
 
   public void refresh() {
     repositoryLocationResolver.refresh();
-    withWriteLockedByNamespaceMap(byNamespaceAndName::clear);
-    byId.clear();
+    withWriteLockedMaps(() -> {
+      byNamespaceAndName.clear();
+      byId.clear();
+    });
     init();
   }
 
-  private void withWriteLockedByNamespaceMap(Runnable runnable) {
+  private void withWriteLockedMaps(Runnable runnable) {
     Lock lock = byNamespaceLock.writeLock();
     lock.lock();
     try {
@@ -246,8 +228,8 @@ public class XmlRepositoryDAO implements RepositoryDAO {
     }
   }
 
-  private <T> T withReadLockedByNamespaceMap(Supplier<T> runnable) {
-    Lock lock = byNamespaceLock.readLock();
+  private <T> T withWriteLockedMaps(Supplier<T> runnable) {
+    Lock lock = byNamespaceLock.writeLock();
     lock.lock();
     try {
       return runnable.get();
@@ -256,19 +238,13 @@ public class XmlRepositoryDAO implements RepositoryDAO {
     }
   }
 
-  private static class RepositoryContainer {
-    private Repository repository;
-
-    public RepositoryContainer(Repository repository) {
-      this.repository = repository;
-    }
-
-    public Repository getRepository() {
-      return repository;
-    }
-
-    public void setRepository(Repository repository) {
-      this.repository = repository;
+  private <T> T withReadLockedMaps(Supplier<T> runnable) {
+    Lock lock = byNamespaceLock.readLock();
+    lock.lock();
+    try {
+      return runnable.get();
+    } finally {
+      lock.unlock();
     }
   }
 }
