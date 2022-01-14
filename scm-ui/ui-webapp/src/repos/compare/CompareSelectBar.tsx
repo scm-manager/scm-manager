@@ -48,11 +48,11 @@ const CompareSelectBar: FC<Props> = ({ repository, baseUrl }) => {
   const location = useLocation();
   const history = useHistory();
   const [source, setSource] = useState<CompareProps>({
-    type: match?.params?.sourceType,
+    type: match?.params?.sourceType as CompareTypes,
     name: decodeURIComponent(match?.params?.sourceName)
   });
   const [target, setTarget] = useState<CompareProps>({
-    type: match?.params?.targetType,
+    type: match?.params?.targetType as CompareTypes,
     name: decodeURIComponent(match?.params?.targetName)
   });
 
@@ -70,10 +70,11 @@ const CompareSelectBar: FC<Props> = ({ repository, baseUrl }) => {
           "/" +
           encodeURIComponent(target.name) +
           "/" +
-          tabUriComponent
+          tabUriComponent +
+          "/"
       );
     }
-  }, [history, baseUrl, location.pathname, source, target]);
+  }, [history, baseUrl, source, target]);
 
   return (
     <div className="is-flex is-justify-content-space-around is-align-items-center is-flex-wrap-wrap">

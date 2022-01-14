@@ -176,6 +176,16 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
     return !repository._links.branches || (branches && branches.length !== 0);
   };
 
+  const renderCodeActions = () => (
+    <Link
+      to={`/repo/${repository.namespace}/${repository.name}/compare/b/${selectedBranch}/b/${
+        branches?.filter(b => b.defaultBranch)[0].name
+      }/diff`}
+    >
+      <Icon name="exchange-alt" title={t("compare.linkTitle")} color="inherit" />
+    </Link>
+  );
+
   return (
     <>
       {hasBranchesWhenSupporting(repository) && (
@@ -184,15 +194,7 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
           branches={branches}
           onSelectBranch={onSelectBranch}
           switchViewLink={evaluateSwitchViewLink()}
-          actions={
-            <Link
-              to={`/repo/${repository.namespace}/${repository.name}/compare/b/${selectedBranch}/b/${
-                branches?.filter(b => b.defaultBranch)[0]
-              }/diff`}
-            >
-              <Icon name="exchange-alt" title={t("compare.linkTitle")} color="inherit" />
-            </Link>
-          }
+          actions={branches ? renderCodeActions() : null}
         />
       )}
       {renderPanelContent()}

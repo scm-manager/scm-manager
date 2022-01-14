@@ -39,7 +39,7 @@ const CompareRoot: FC<Props> = ({ repository, baseUrl }) => {
   const { data, isLoading, error } = useDefaultBranch(repository);
   const url = urls.matchedUrlFromMatch(match);
 
-  if (isLoading) {
+  if (isLoading || !data) {
     return <Loading />;
   }
   if (error) {
@@ -52,7 +52,7 @@ const CompareRoot: FC<Props> = ({ repository, baseUrl }) => {
         path={`${baseUrl}/:sourceType/:sourceName/:targetType/:targetName`}
         render={() => <CompareView repository={repository} baseUrl={baseUrl} />}
       />
-      <Redirect from={url} to={`${url}/b/${data?.defaultBranch}`} />
+      <Redirect from={url} to={`${url}/b/${data.defaultBranch}`} />
     </Switch>
   );
 };
