@@ -30,12 +30,10 @@ import sonia.scm.repository.spi.DiffCommandRequest;
 
 import java.util.Set;
 
-abstract class AbstractDiffCommandBuilder<T extends AbstractDiffCommandBuilder, R extends DiffCommandRequest> {
+abstract class AbstractDiffCommandBuilder <T extends AbstractDiffCommandBuilder, R extends DiffCommandRequest> {
 
 
-  /**
-   * request for the diff command implementation
-   */
+  /** request for the diff command implementation */
   final R request = createRequest();
 
   private final Set<Feature> supportedFeatures;
@@ -51,7 +49,8 @@ abstract class AbstractDiffCommandBuilder<T extends AbstractDiffCommandBuilder, 
    *
    * @return {@code this}
    */
-  public T setAncestorChangeset(String revision) {
+  public T setAncestorChangeset(String revision)
+  {
     if (!supportedFeatures.contains(Feature.INCOMING_REVISION)) {
       throw new FeatureNotSupportedException(Feature.INCOMING_REVISION.name());
     }
@@ -63,10 +62,13 @@ abstract class AbstractDiffCommandBuilder<T extends AbstractDiffCommandBuilder, 
   /**
    * Show the difference only for the given path.
    *
+   *
    * @param path path for difference
+   *
    * @return {@code this}
    */
-  public T setPath(String path) {
+  public T setPath(String path)
+  {
     request.setPath(path);
     return self();
   }
@@ -75,10 +77,13 @@ abstract class AbstractDiffCommandBuilder<T extends AbstractDiffCommandBuilder, 
    * Show the difference only for the given revision or (using {@link #setAncestorChangeset(String)}) between this
    * and another revision.
    *
+   *
    * @param revision revision for difference
+   *
    * @return {@code this}
    */
-  public T setRevision(String revision) {
+  public T setRevision(String revision)
+  {
     request.setRevision(revision);
     return self();
   }

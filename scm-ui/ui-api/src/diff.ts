@@ -28,16 +28,13 @@ import { useInfiniteQuery } from "react-query";
 import { apiClient } from "./apiclient";
 import { Diff, Link } from "@scm-manager/ui-types";
 
-type DiffFormat = "GIT" | "NATIVE" | "UNIFIED";
-
 type UseDiffOptions = {
   limit?: number;
   refetchOnWindowFocus?: boolean;
-  format?: DiffFormat;
 };
 
 const defaultOptions: UseDiffOptions = {
-  refetchOnWindowFocus: true
+  refetchOnWindowFocus: true,
 };
 
 export const useDiff = (link: string, options: UseDiffOptions = defaultOptions) => {
@@ -49,7 +46,7 @@ export const useDiff = (link: string, options: UseDiffOptions = defaultOptions) 
   const { isLoading, error, data, isFetchingNextPage, fetchNextPage } = useInfiniteQuery<Diff, Error, Diff>(
     ["link", link],
     ({ pageParam }) => {
-      return apiClient.get(pageParam || initialLink).then(response => {
+      return apiClient.get(pageParam || initialLink).then((response) => {
         const contentType = response.headers.get("Content-Type");
         if (contentType && contentType.toLowerCase() === "application/vnd.scmm-diffparsed+json;v=2") {
           return response.json();
@@ -57,19 +54,19 @@ export const useDiff = (link: string, options: UseDiffOptions = defaultOptions) 
           return response
             .text()
             .then(parser.parse)
-            .then(parsedGit => {
+            .then((parsedGit) => {
               return {
                 files: parsedGit,
                 partial: false,
-                _links: {}
+                _links: {},
               };
             });
         }
       });
     },
     {
-      getNextPageParam: lastPage => (lastPage._links.next as Link)?.href,
-      refetchOnWindowFocus: options.refetchOnWindowFocus
+      getNextPageParam: (lastPage) => (lastPage._links.next as Link)?.href,
+      refetchOnWindowFocus: options.refetchOnWindowFocus,
     }
   );
 
@@ -80,7 +77,7 @@ export const useDiff = (link: string, options: UseDiffOptions = defaultOptions) 
     fetchNextPage: () => {
       fetchNextPage();
     },
-    data: merge(data?.pages)
+    data: merge(data?.pages),
   };
 };
 
@@ -88,9 +85,9 @@ const merge = (diffs?: Diff[]): Diff | undefined => {
   if (!diffs || diffs.length === 0) {
     return;
   }
-  const joinedFiles = diffs.flatMap(diff => diff.files);
+  const joinedFiles = diffs.flatMap((diff) => diff.files);
   return {
     ...diffs[diffs.length - 1],
-    files: joinedFiles
+    files: joinedFiles,
   };
 };

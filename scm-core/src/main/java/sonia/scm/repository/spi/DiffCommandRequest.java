@@ -24,30 +24,37 @@
 
 package sonia.scm.repository.spi;
 
+//~--- non-JDK imports --------------------------------------------------------
+
 import com.google.common.base.Strings;
 import lombok.EqualsAndHashCode;
 import sonia.scm.Validateable;
 import sonia.scm.repository.api.DiffFormat;
 
 /**
+ *
  * @author Sebastian Sdorra
  * @since 1.17
  */
 @EqualsAndHashCode(callSuper = true)
-public class DiffCommandRequest extends FileBaseCommandRequest implements Validateable {
+public class DiffCommandRequest extends FileBaseCommandRequest
+  implements Validateable {
 
   private static final long serialVersionUID = 4026911212676859626L;
 
-  private DiffFormat format = DiffFormat.NATIVE;
-  private String ancestorChangeset;
-
   @Override
-  public DiffCommandRequest clone() {
-    DiffCommandRequest clone;
+  public DiffCommandRequest clone()
+  {
+    DiffCommandRequest clone = null;
 
-    try {
+    try
+    {
       clone = (DiffCommandRequest) super.clone();
-    } catch (CloneNotSupportedException e) {
+    }
+    catch (CloneNotSupportedException e)
+    {
+
+      // this shouldn't happen, since we are Cloneable
       throw new InternalError("DiffCommandRequest seems not to be cloneable");
     }
 
@@ -55,18 +62,22 @@ public class DiffCommandRequest extends FileBaseCommandRequest implements Valida
   }
 
   @Override
-  public boolean isValid() {
+  public boolean isValid()
+  {
     return !Strings.isNullOrEmpty(getPath())
-      || !Strings.isNullOrEmpty(getRevision());
+      ||!Strings.isNullOrEmpty(getRevision());
   }
 
   /**
    * Sets the diff format which should be used for the output.
    *
+   *
    * @param format format of the diff output
+   *
    * @since 1.34
    */
-  public void setFormat(DiffFormat format) {
+  public void setFormat(DiffFormat format)
+  {
     this.format = format;
   }
 
@@ -77,14 +88,22 @@ public class DiffCommandRequest extends FileBaseCommandRequest implements Valida
   /**
    * Return the output format of the diff command.
    *
+   *
    * @return output format
+   *
    * @since 1.34
    */
-  public DiffFormat getFormat() {
+  public DiffFormat getFormat()
+  {
     return format;
   }
 
   public String getAncestorChangeset() {
     return ancestorChangeset;
   }
+
+  /** diff format */
+  private DiffFormat format = DiffFormat.NATIVE;
+
+  private String ancestorChangeset;
 }
