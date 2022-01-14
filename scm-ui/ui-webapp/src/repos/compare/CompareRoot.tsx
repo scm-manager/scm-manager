@@ -25,7 +25,7 @@
 import React, { FC } from "react";
 import { Redirect, Route, Switch, useRouteMatch } from "react-router-dom";
 import { Repository } from "@scm-manager/ui-types";
-import { useDefaultBranch } from "@scm-manager/ui-api";
+import { useBranches } from "@scm-manager/ui-api";
 import { ErrorNotification, Loading, urls } from "@scm-manager/ui-components";
 import CompareView, { CompareBranchesParams } from "./CompareView";
 
@@ -36,7 +36,7 @@ type Props = {
 
 const CompareRoot: FC<Props> = ({ repository, baseUrl }) => {
   const match = useRouteMatch<CompareBranchesParams>();
-  const { data, isLoading, error } = useDefaultBranch(repository);
+  const { data, isLoading, error } = useBranches(repository);
   const url = urls.matchedUrlFromMatch(match);
 
   if (isLoading || !data) {
@@ -52,7 +52,7 @@ const CompareRoot: FC<Props> = ({ repository, baseUrl }) => {
         path={`${baseUrl}/:sourceType/:sourceName/:targetType/:targetName`}
         render={() => <CompareView repository={repository} baseUrl={baseUrl} />}
       />
-      <Redirect from={url} to={`${url}/b/${data.defaultBranch}`} />
+      <Redirect from={url} to={`${url}/b/${data._embedded?.branches.filter(b => b.defaultBranch)[0].name}/diff/`} />
     </Switch>
   );
 };

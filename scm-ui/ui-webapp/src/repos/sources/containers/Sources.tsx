@@ -60,7 +60,7 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
   const history = useHistory();
   const location = useLocation();
   const [t] = useTranslation("repos");
-  // redirect to default branch is non branch selected
+  // redirect to default branch if no branch selected
   useEffect(() => {
     if (branches && branches.length > 0 && !selectedBranch) {
       const defaultBranch = branches?.filter(b => b.defaultBranch === true)[0];
@@ -180,11 +180,7 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
   const renderCodeActions = () => (
     <>
       {selectedBranch && branches ? (
-        <CompareLink
-          repository={repository}
-          source={encodeURIComponent(selectedBranch)}
-          target={encodeURIComponent(branches?.filter(b => b.defaultBranch)[0].name)}
-        />
+        <CompareLink repository={repository} source={encodeURIComponent(selectedBranch)} />
       ) : null}
     </>
   );

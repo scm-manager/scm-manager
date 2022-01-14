@@ -40,10 +40,12 @@ type Props = {
 const CompareLink: FC<Props> = ({ repository, source, sourceType = "b", target, targetType = "b" }) => {
   const [t] = useTranslation("repos");
 
+  const icon = <Icon name="exchange-alt" title={t("compare.linkTitle")} color="inherit" className="mr-2" />;
+
   if (!target) {
     return (
-      <Link to={`/repo/${repository.namespace}/${repository.name}/compare/${sourceType}/${source}`}>
-        <Icon name="exchange-alt" title={t("compare.linkTitle")} color="inherit" />
+      <Link to={`/repo/${repository.namespace}/${repository.name}/compare/${sourceType}/${source}`} className="px-1">
+        {icon}
       </Link>
     );
   }
@@ -52,7 +54,7 @@ const CompareLink: FC<Props> = ({ repository, source, sourceType = "b", target, 
     <Link
       to={`/repo/${repository.namespace}/${repository.name}/compare/${sourceType}/${source}/${targetType}/${target}/diff`}
     >
-      <Icon name="exchange-alt" title={t("compare.linkTitle")} color="inherit" />
+      {icon}
     </Link>
   );
 };

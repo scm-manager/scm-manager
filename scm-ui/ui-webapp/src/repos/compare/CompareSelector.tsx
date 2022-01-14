@@ -38,6 +38,7 @@ type Props = {
 };
 
 const ResponsiveWrapper = styled.div`
+  width: 100%;
   justify-content: flex-start;
   @media screen and (min-width: ${devices.tablet.width}px) {
     justify-content: space-between;
@@ -46,6 +47,10 @@ const ResponsiveWrapper = styled.div`
 
 const BorderedMenu = styled.div`
   border: 1px solid whitesmoke;
+`;
+
+const MaxWidthDiv = styled.div`
+  width: 100%;
 `;
 
 const CompareSelector: FC<Props> = ({ onSelect, selected, label, repository }) => {
@@ -72,13 +77,13 @@ const CompareSelector: FC<Props> = ({ onSelect, selected, label, repository }) =
   };
 
   return (
-    <ResponsiveWrapper className="field mb-0 is-flex is-flex-direction-column">
+    <ResponsiveWrapper className="field mb-0 is-flex is-flex-direction-column is-fullwidth">
       <label className="label">{label}</label>
-      <div className="control">
-        <div className="dropdown is-active">
-          <div className="dropdown-trigger">
+      <MaxWidthDiv className="control">
+        <MaxWidthDiv className="dropdown is-active">
+          <MaxWidthDiv className="dropdown-trigger">
             <button
-              className="button has-text-weight-normal px-4 is-flex is-justify-content-space-between is-flex-grow-1"
+              className="button has-text-weight-normal px-4 is-flex is-justify-content-space-between is-fullwidth"
               onClick={() => setShowDropdown(!showDropdown)}
             >
               <span className="is-ellipsis-overflow">
@@ -88,7 +93,7 @@ const CompareSelector: FC<Props> = ({ onSelect, selected, label, repository }) =
                 <Icon name="angle-down" color="inherit" />
               </span>
             </button>
-          </div>
+          </MaxWidthDiv>
           <div className={classNames("dropdown-menu", { "is-hidden": !showDropdown })} role="menu">
             <BorderedMenu className="dropdown-content">
               <div className="dropdown-item">
@@ -110,8 +115,8 @@ const CompareSelector: FC<Props> = ({ onSelect, selected, label, repository }) =
               </div>
             </BorderedMenu>
           </div>
-        </div>
-      </div>
+        </MaxWidthDiv>
+      </MaxWidthDiv>
     </ResponsiveWrapper>
   );
 };
