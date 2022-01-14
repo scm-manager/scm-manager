@@ -178,9 +178,9 @@ const RevisionTabContent: FC<RevisionTabContentProps> = ({ selected, onSelect })
           <input
             className="input is-small"
             placeholder={t("compare.selector.revision.input")}
-            onChange={e => setRevision(e.target.value)}
+            onChange={e => setRevision(e.target.value.trim())}
             onKeyPress={handleKeyPress}
-            value={revision}
+            value={revision.trim()}
           />
         </div>
         <div className="control">

@@ -25,11 +25,11 @@ import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import { Branch, Repository } from "@scm-manager/ui-types";
-import { Subtitle, SmallLoadingSpinner } from "@scm-manager/ui-components";
+import { SmallLoadingSpinner, Subtitle } from "@scm-manager/ui-components";
 import BranchButtonGroup from "./BranchButtonGroup";
 import DefaultBranchTag from "./DefaultBranchTag";
 import AheadBehindTag from "./AheadBehindTag";
-import { useBranchDetails, useDefaultBranch } from "@scm-manager/ui-api";
+import { useBranchDetails } from "@scm-manager/ui-api";
 import BranchCommitDateCommitter from "./BranchCommitDateCommitter";
 import CompareLink from "../../compare/CompareLink";
 

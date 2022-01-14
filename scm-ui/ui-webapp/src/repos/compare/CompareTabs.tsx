@@ -46,11 +46,11 @@ const CompareTabs: FC<Props> = ({ baseUrl }) => {
   return (
     <div className="tabs mt-5">
       <ul>
-        <li className={setActiveClass("/diff")}>
-          <Link to={`${url}/diff`}>{t("compare.tabs.diff")}</Link>
+        <li className={setActiveClass("/diff/")}>
+          <Link to={`${url}/diff/`}>{t("compare.tabs.diff")}</Link>
         </li>
-        <li className={setActiveClass("/changesets")}>
-          <Link to={`${url}/changesets`}>{t("compare.tabs.changesets")}</Link>
+        <li className={setActiveClass("/changesets/")}>
+          <Link to={`${url}/changesets/`}>{t("compare.tabs.changesets")}</Link>
         </li>
       </ul>
     </div>
