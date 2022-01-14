@@ -46,13 +46,11 @@ export type CompareBranchesParams = {
 
 const CompareRoutes: FC<Props> = ({ repository, baseUrl }) => {
   const match = useRouteMatch<CompareBranchesParams>();
-  const url = urls.matchedUrlFromMatch(match);
   const source = decodeURIComponent(match.params.sourceName);
   const target = decodeURIComponent(match.params.targetName);
 
   return (
     <Switch>
-      <Redirect exact from={url} to={`${url}/diff/`} />
       <Route path={`${baseUrl}/:sourceType/:sourceName/:targetType/:targetName/diff/`}>
         <LoadingDiff url={createDiffUrl(repository, source, target) + "?format=GIT"} />
       </Route>

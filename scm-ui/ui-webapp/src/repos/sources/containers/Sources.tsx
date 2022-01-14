@@ -33,6 +33,7 @@ import CodeActionBar from "../../codeSection/components/CodeActionBar";
 import replaceBranchWithRevision from "../ReplaceBranchWithRevision";
 import FileSearchButton from "../../codeSection/components/FileSearchButton";
 import { isEmptyDirectory, isRootFile } from "../utils/files";
+import CompareLink from "../../compare/CompareLink";
 
 type Props = {
   repository: Repository;
@@ -177,13 +178,15 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
   };
 
   const renderCodeActions = () => (
-    <Link
-      to={`/repo/${repository.namespace}/${repository.name}/compare/b/${selectedBranch}/b/${
-        branches?.filter(b => b.defaultBranch)[0].name
-      }/diff`}
-    >
-      <Icon name="exchange-alt" title={t("compare.linkTitle")} color="inherit" />
-    </Link>
+    <>
+      {selectedBranch && branches ? (
+        <CompareLink
+          repository={repository}
+          source={encodeURIComponent(selectedBranch)}
+          target={encodeURIComponent(branches?.filter(b => b.defaultBranch)[0].name)}
+        />
+      ) : null}
+    </>
   );
 
   return (

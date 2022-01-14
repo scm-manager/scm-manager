@@ -24,11 +24,11 @@
 import React, { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
-import styled from "styled-components";
 import { Repository } from "@scm-manager/ui-types";
 import { devices, Icon } from "@scm-manager/ui-components";
 import CompareSelectorList from "./CompareSelectorList";
 import { CompareFunction, CompareProps, CompareTypes } from "./CompareSelectBar";
+import styled from "styled-components";
 
 type Props = {
   onSelect: CompareFunction;
@@ -37,16 +37,15 @@ type Props = {
   repository: Repository;
 };
 
-const SizedDiv = styled.div`
-  width: 250px;
-
-  @media (max-width: ${devices.tablet.width}px) {
-    width: 100%;
+const ResponsiveWrapper = styled.div`
+  justify-content: flex-start;
+  @media screen and (min-width: ${devices.tablet.width}px) {
+    justify-content: space-between;
   }
 `;
 
-const MaxWidthButton = styled.button`
-  max-width: 250px;
+const BorderedMenu = styled.div`
+  border: 1px solid whitesmoke;
 `;
 
 const CompareSelector: FC<Props> = ({ onSelect, selected, label, repository }) => {
@@ -73,13 +72,13 @@ const CompareSelector: FC<Props> = ({ onSelect, selected, label, repository }) =
   };
 
   return (
-    <SizedDiv className="field mb-0">
+    <ResponsiveWrapper className="field mb-0 is-flex is-flex-direction-column">
       <label className="label">{label}</label>
       <div className="control">
         <div className="dropdown is-active">
           <div className="dropdown-trigger">
-            <MaxWidthButton
-              className="button has-text-weight-normal px-4"
+            <button
+              className="button has-text-weight-normal px-4 is-flex is-justify-content-space-between is-flex-grow-1"
               onClick={() => setShowDropdown(!showDropdown)}
             >
               <span className="is-ellipsis-overflow">
@@ -88,10 +87,10 @@ const CompareSelector: FC<Props> = ({ onSelect, selected, label, repository }) =
               <span className="icon is-small">
                 <Icon name="angle-down" color="inherit" />
               </span>
-            </MaxWidthButton>
+            </button>
           </div>
           <div className={classNames("dropdown-menu", { "is-hidden": !showDropdown })} role="menu">
-            <div className="dropdown-content">
+            <BorderedMenu className="dropdown-content">
               <div className="dropdown-item">
                 <h3 className="has-text-weight-bold">{t("compare.selector.title")}</h3>
               </div>
@@ -109,11 +108,11 @@ const CompareSelector: FC<Props> = ({ onSelect, selected, label, repository }) =
                   filter={filter}
                 />
               </div>
-            </div>
+            </BorderedMenu>
           </div>
         </div>
       </div>
-    </SizedDiv>
+    </ResponsiveWrapper>
   );
 };
 

@@ -25,9 +25,10 @@ import React, { FC, useEffect, useState } from "react";
 import { useHistory, useLocation, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Repository } from "@scm-manager/ui-types";
-import { Icon } from "@scm-manager/ui-components";
+import { devices, Icon } from "@scm-manager/ui-components";
 import CompareSelector from "./CompareSelector";
 import { CompareBranchesParams } from "./CompareView";
+import styled from "styled-components";
 
 type Props = {
   repository: Repository;
@@ -41,6 +42,23 @@ export type CompareProps = {
   type: CompareTypes;
   name: string;
 };
+const ResponsiveIcon = styled(Icon)`
+  margin: 0 1rem;
+  transform: rotate(90deg);
+  @media screen and (min-width: ${devices.tablet.width}px) {
+    margin-left: 0;
+    transform: rotate(0);
+    padding-left: 0.75rem;
+  }
+`;
+
+const ResponsiveBar = styled.div`
+  @media screen and (min-width: ${devices.tablet.width}px) {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+  }
+`;
 
 const CompareSelectBar: FC<Props> = ({ repository, baseUrl }) => {
   const [t] = useTranslation("repos");
@@ -77,21 +95,21 @@ const CompareSelectBar: FC<Props> = ({ repository, baseUrl }) => {
   }, [history, baseUrl, source, target]);
 
   return (
-    <div className="is-flex is-justify-content-space-around is-align-items-center is-flex-wrap-wrap">
+    <ResponsiveBar className="is-align-items-center">
       <CompareSelector
         repository={repository}
         label={t("compare.selector.source")}
         onSelect={(type, name) => setSource({ type, name })}
         selected={source}
       />
-      <Icon name="arrow-right" className="fa-lg mt-2" title={t("compare.selector.with")} />
+      <ResponsiveIcon name="arrow-right" className="fa-lg mt-2" title={t("compare.selector.with")} />
       <CompareSelector
         repository={repository}
         label={t("compare.selector.target")}
         onSelect={(type, name) => setTarget({ type, name })}
         selected={target}
       />
-    </div>
+    </ResponsiveBar>
   );
 };
 

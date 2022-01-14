@@ -41,10 +41,8 @@ type Props = {
 
 const TabStyleButton = styled(NoStyleButton)`
   align-items: center;
-  border-bottom-color: #dbdbdb;
-  border-bottom-style: solid;
-  border-bottom-width: 1px;
-  color: #4a4a4a;
+  border-bottom: var(--scm-border);
+  color: var(--scm-secondary-text);
   display: flex;
   justify-content: center;
   margin-bottom: -1px;
@@ -52,17 +50,13 @@ const TabStyleButton = styled(NoStyleButton)`
   vertical-align: top;
 
   &:hover {
-    border-bottom-color: #363636;
-    color: #363636;
+    border-bottom-color: var(--scm-hover-color);
+    color: var(--scm-hover-color);
   }
 
   &.is-active {
     border-bottom-color: #33b2e8;
     color: #33b2e8;
-  }
-
-  &:focus {
-    background-color: var(--scm-column-selection);
   }
 `;
 

@@ -27,6 +27,7 @@ import classNames from "classnames";
 import { Repository, Tag } from "@scm-manager/ui-types";
 import { Subtitle, DateFromNow, SignatureIcon } from "@scm-manager/ui-components";
 import TagButtonGroup from "./TagButtonGroup";
+import CompareLink from "../../compare/CompareLink";
 
 type Props = {
   repository: Repository;
@@ -35,6 +36,8 @@ type Props = {
 
 const TagDetail: FC<Props> = ({ repository, tag }) => {
   const [t] = useTranslation("repos");
+
+  const encodedTag = encodeURIComponent(tag.name);
 
   return (
     <div className="media is-align-items-center">
@@ -55,6 +58,7 @@ const TagDetail: FC<Props> = ({ repository, tag }) => {
           <DateFromNow className={classNames("is-size-7", "has-text-secondary")} date={tag.date} />
         </div>
       </div>
+      <CompareLink repository={repository} source={encodedTag} sourceType="t" target={encodedTag} targetType="t" />
       <div className="media-right">
         <TagButtonGroup repository={repository} tag={tag} />
       </div>
