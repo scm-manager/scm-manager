@@ -77,7 +77,7 @@ const CreatePermissionForm: FC<Props> = ({
 }) => {
   const initialPermissionState = {
     name: "",
-    role: availableRoles[0].name,
+    role: "READ",
     verbs: [],
     groupPermission: false,
     valid: false
