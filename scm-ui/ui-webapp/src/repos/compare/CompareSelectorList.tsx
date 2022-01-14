@@ -58,6 +58,10 @@ const TabStyleButton = styled(NoStyleButton)`
     border-bottom-color: #33b2e8;
     color: #33b2e8;
   }
+
+  :focus {
+    background-color: var(--scm-column-selection);
+  }
 `;
 
 const ScrollableUl = styled.ul`
