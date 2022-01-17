@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -42,11 +42,10 @@ import java.net.URL;
  *
  * @author Sebastian Sdorra
  */
-public class PathWebResourceLoaderTest extends WebResourceLoaderTestBase
-{
+public class PathWebResourceLoaderTest extends WebResourceLoaderTestBase {
 
   @Test
-  public void testGetNullForDirectories() throws IOException {
+  public void shouldReturnNullForDirectories() throws IOException {
     File directory = temp.newFolder();
     assertTrue(new File(directory, "awesome").mkdir());
 
@@ -56,7 +55,7 @@ public class PathWebResourceLoaderTest extends WebResourceLoaderTestBase
 
 
   @Test
-  public void testGetResource() throws IOException {
+  public void shouldReturnResource() throws IOException {
     File directory = temp.newFolder();
     URL url = file(directory, "myresource").toURI().toURL();
 
@@ -68,4 +67,36 @@ public class PathWebResourceLoaderTest extends WebResourceLoaderTestBase
     assertNull(resourceLoader.getResource("other"));
   }
 
+  @Test
+  public void shouldNotReturnPathsWithAbsolutePath() throws IOException {
+    File base = temp.newFolder();
+
+    File one = new File(base, "one");
+    assertTrue(one.mkdirs());
+    File two = new File(base, "two");
+    assertTrue(two.mkdirs());
+
+    File secret = new File(two, "secret");
+    assertTrue(secret.createNewFile());
+
+    WebResourceLoader resourceLoader = new PathWebResourceLoader(one.toPath());
+    assertNull(resourceLoader.getResource(secret.getAbsolutePath()));
+    assertNull(resourceLoader.getResource("/" + secret.getAbsolutePath()));
+  }
+
+  @Test
+  public void shouldNotReturnPathsWithPathTraversal() throws IOException {
+    File base = temp.newFolder();
+
+    File one = new File(base, "one");
+    assertTrue(one.mkdirs());
+    File two = new File(base, "two");
+    assertTrue(two.mkdirs());
+
+    File secret = new File(two, "secret");
+    assertTrue(secret.createNewFile());
+
+    WebResourceLoader resourceLoader = new PathWebResourceLoader(one.toPath());
+    assertNull(resourceLoader.getResource("../two/secret"));
+  }
 }
