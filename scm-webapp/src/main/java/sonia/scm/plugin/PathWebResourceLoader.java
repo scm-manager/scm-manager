@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.plugin;
 
 import org.slf4j.Logger;
@@ -38,37 +38,32 @@ import java.nio.file.Path;
  * @author Sebastian Sdorra
  * @since 2.0.0
  */
-public class PathWebResourceLoader implements WebResourceLoader
-{
+public class PathWebResourceLoader implements WebResourceLoader {
 
   private static final String SEPARATOR = "/";
+
+  private final Path directory;
 
   /**
    * the logger for PathWebResourceLoader
    */
-  private static final Logger LOG =
-    LoggerFactory.getLogger(PathWebResourceLoader.class);
+  private static final Logger LOG = LoggerFactory.getLogger(PathWebResourceLoader.class);
 
-  public PathWebResourceLoader(Path directory)
-  {
-    this.directory = directory;
+  public PathWebResourceLoader(Path directory) {
+    this.directory = directory.toAbsolutePath().normalize();
   }
 
   @Override
   public URL getResource(String path) {
     URL resource = null;
-    Path file = directory.resolve(filePath(path));
+    Path file = directory.resolve(filePath(path)).toAbsolutePath().normalize();
 
-    if (Files.exists(file) && ! Files.isDirectory(file))
-    {
+    if (isValidPath(file)) {
       LOG.trace("found path {} at {}", path, file);
 
-      try
-      {
+      try {
         resource = file.toUri().toURL();
-      }
-      catch (MalformedURLException ex)
-      {
+      } catch (MalformedURLException ex) {
         LOG.error("could not transform path to url", ex);
       }
     } else {
@@ -78,6 +73,12 @@ public class PathWebResourceLoader implements WebResourceLoader
     return resource;
   }
 
+  private boolean isValidPath(Path file) {
+    return Files.exists(file)
+      && !Files.isDirectory(file)
+      && file.startsWith(directory);
+  }
+
   private String filePath(String path) {
     if (path.startsWith(SEPARATOR)) {
       return path.substring(1);
@@ -85,8 +86,4 @@ public class PathWebResourceLoader implements WebResourceLoader
     return path;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final Path directory;
 }

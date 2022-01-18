@@ -21,59 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import { Link } from "@scm-manager/ui-types";
+import { useIndexLinks } from "./base";
+import { useSuggestions } from "./suggestions";
 
-package sonia.scm.group.xml;
-
-import sonia.scm.group.Group;
-
-import javax.xml.bind.annotation.adapters.XmlAdapter;
-import java.util.Map;
-import java.util.TreeMap;
-
-/**
- *
- * @author Sebastian Sdorra
- */
-public class XmlGroupMapAdapter
-        extends XmlAdapter<XmlGroupList, Map<String, Group>>
-{
-
-  /**
-   * Method description
-   *
-   *
-   * @param groupMap
-   *
-   * @return
-   *
-   * @throws Exception
-   */
-  @Override
-  public XmlGroupList marshal(Map<String, Group> groupMap) throws Exception
-  {
-    return new XmlGroupList(groupMap);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param groups
-   *
-   * @return
-   *
-   * @throws Exception
-   */
-  @Override
-  public Map<String, Group> unmarshal(XmlGroupList groups) throws Exception
-  {
-    Map<String, Group> groupMap = new TreeMap<>();
-
-    for (Group group : groups)
-    {
-      groupMap.put(group.getName(), group);
-    }
-
-    return groupMap;
-  }
-}
+export const useNamespaceSuggestions = () => {
+  const indexLinks = useIndexLinks();
+  const autocompleteLink = (indexLinks.autocomplete as Link[]).find((i) => i.name === "namespaces");
+  return useSuggestions(autocompleteLink?.href);
+};

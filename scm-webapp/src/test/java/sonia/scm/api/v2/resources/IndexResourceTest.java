@@ -179,17 +179,17 @@ public class IndexResourceTest {
 
     Assertions.assertThat(index.getLinks().getLinksBy("autocomplete"))
       .extracting("name")
-      .containsExactlyInAnyOrder("users", "groups");
+      .containsExactlyInAnyOrder("users", "groups", "namespaces");
   }
 
   @Test
   @SubjectAware(username = "user_without_autocomplete_permission", password = "secret")
-  public void userWithoutAutocompletePermissionShouldNotSeeAutoCompleteLinks() {
+  public void userWithoutAutocompletePermissionShouldSeeAutoCompleteLinksOnlyForNamespaces() {
     IndexDto index = indexResource.getIndex();
 
     Assertions.assertThat(index.getLinks().getLinksBy("autocomplete"))
       .extracting("name")
-      .isEmpty();
+      .containsExactly("namespaces");
   }
 
   @Test

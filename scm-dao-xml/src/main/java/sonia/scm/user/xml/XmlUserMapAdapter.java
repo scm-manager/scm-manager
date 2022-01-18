@@ -21,19 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.user.xml;
 
-//~--- non-JDK imports --------------------------------------------------------
+package sonia.scm.user.xml;
 
 import sonia.scm.user.User;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import javax.xml.bind.annotation.adapters.XmlAdapter;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  *
@@ -72,7 +67,7 @@ public class XmlUserMapAdapter
   @Override
   public Map<String, User> unmarshal(XmlUserList users) throws Exception
   {
-    Map<String, User> userMap = new LinkedHashMap<>();
+    Map<String, User> userMap = new TreeMap<>();
 
     for (User user : users)
     {

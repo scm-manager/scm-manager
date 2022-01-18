@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
@@ -32,6 +32,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import sonia.scm.ReducedModelObject;
 import sonia.scm.group.GroupDisplayManager;
+import sonia.scm.repository.NamespaceManager;
+import sonia.scm.search.SearchRequest;
+import sonia.scm.search.SearchUtil;
 import sonia.scm.user.UserDisplayManager;
 import sonia.scm.web.VndMediaType;
 
@@ -46,6 +49,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static sonia.scm.DisplayManager.DEFAULT_LIMIT;
+
 @OpenAPIDefinition(tags = {
   @Tag(name = "Autocomplete", description = "Autocomplete related endpoints")
 })
@@ -58,16 +63,18 @@ public class AutoCompleteResource {
   public static final String INVALID_PARAMETER_LENGTH = "Invalid parameter length.";
 
 
-  private ReducedObjectModelToDtoMapper mapper;
+  private final ReducedObjectModelToDtoMapper mapper;
 
-  private UserDisplayManager userDisplayManager;
-  private GroupDisplayManager groupDisplayManager;
+  private final UserDisplayManager userDisplayManager;
+  private final GroupDisplayManager groupDisplayManager;
+  private final NamespaceManager namespaceManager;
 
   @Inject
-  public AutoCompleteResource(ReducedObjectModelToDtoMapper mapper, UserDisplayManager userDisplayManager, GroupDisplayManager groupDisplayManager) {
+  public AutoCompleteResource(ReducedObjectModelToDtoMapper mapper, UserDisplayManager userDisplayManager, GroupDisplayManager groupDisplayManager, NamespaceManager namespaceManager) {
     this.mapper = mapper;
     this.userDisplayManager = userDisplayManager;
     this.groupDisplayManager = groupDisplayManager;
+    this.namespaceManager = namespaceManager;
   }
 
   @GET
@@ -123,12 +130,50 @@ public class AutoCompleteResource {
     return map(groupDisplayManager.autocomplete(filter));
   }
 
+  @GET
+  @Path("namespaces")
+  @Produces(VndMediaType.AUTOCOMPLETE)
+  @Operation(summary = "Search namespaces", description = "Returns matching namespaces.", tags = "Autocomplete")
+  @ApiResponse(
+    responseCode = "200",
+    description = "success",
+    content = @Content(
+    mediaType = VndMediaType.AUTOCOMPLETE,
+    schema = @Schema(implementation = ReducedObjectModelDto.class)
+  ))
+  @ApiResponse(responseCode = "400", description = "if the searched string contains less than 2 characters")
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
+  public List<ReducedObjectModelDto> searchNamespace(@NotEmpty(message = PARAMETER_IS_REQUIRED) @Size(min = MIN_SEARCHED_CHARS, message = INVALID_PARAMETER_LENGTH) @QueryParam("q") String filter) {
+    SearchRequest searchRequest = new SearchRequest(filter, true, DEFAULT_LIMIT);
+    return map(SearchUtil.search(
+      searchRequest,
+      namespaceManager.getAll(),
+      namespace -> SearchUtil.matchesOne(searchRequest, namespace.getNamespace()) ? new ReducedModelObject() {
+        @Override
+        public String getId() {
+          return namespace.getId();
+        }
+
+        @Override
+        public String getDisplayName() {
+          return null;
+        }
+      } : null
+    ));
+  }
+
   private <T extends ReducedModelObject> List<ReducedObjectModelDto> map(Collection<T> autocomplete) {
     return autocomplete
       .stream()
       .map(mapper::map)
       .collect(Collectors.toList());
   }
-
-
 }

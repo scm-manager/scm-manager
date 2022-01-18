@@ -32,6 +32,8 @@ import ExternalLink from "../navigation/ExternalLink";
 import { Radio, Textarea, InputField } from "../forms";
 import { ButtonGroup, Button } from "../buttons";
 import Notification from "../Notification";
+import { Autocomplete } from "../index";
+import { SelectValue } from "@scm-manager/ui-types";
 
 const TopAndBottomMargin = styled.div`
   margin: 0.75rem 0; // only for aesthetic reasons
@@ -51,7 +53,9 @@ const text = `Mind-paralyzing change needed improbability vortex machine sorts s
     ordinary mob.`;
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
-const doNothing = () => {};
+const doNothing = () => {
+  // nothing to do
+};
 const withFormElementsBody = (
   <>
     <RadioList>
@@ -71,8 +75,21 @@ const withFormElementsFooter = (
   </ButtonGroup>
 );
 
+const loadSuggestions: (p: string) => Promise<SelectValue[]> = () =>
+  new Promise(resolve => {
+    setTimeout(() => {
+      resolve([
+        { value: { id: "trillian", displayName: "Tricia McMillan" }, label: "Tricia McMillan" },
+        { value: { id: "zaphod", displayName: "Zaphod Beeblebrox" }, label: "Zaphod Beeblebrox" },
+        { value: { id: "ford", displayName: "Ford Prefect" }, label: "Ford Prefect" },
+        { value: { id: "dent", displayName: "Arthur Dent" }, label: "Arthur Dent" },
+        { value: { id: "marvin", displayName: "Marvin" }, label: "Marvin the Paranoid Android " }
+      ]);
+    });
+  });
+
 storiesOf("Modal/Modal", module)
-  .addDecorator((story) => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
+  .addDecorator(story => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
   .add("Default", () => (
     <NonCloseableModal>
       <p>{text}</p>
@@ -104,7 +121,7 @@ storiesOf("Modal/Modal", module)
           This story exists because we had a problem, that long tooltips causes a horizontal scrollbar on the modal.
         </Notification>
         <hr />
-        <p>The following elements will have a verly long help text, which has triggered the scrollbar in the past.</p>
+        <p>The following elements will have a very long help text, which has triggered the scrollbar in the past.</p>
         <hr />
         <TopAndBottomMargin>
           <Checkbox label="Checkbox" checked={true} helpText={text} />
@@ -211,10 +228,47 @@ storiesOf("Modal/Modal", module)
         </p>
       </div>
     </NonCloseableModal>
-  ));
+  ))
+  .add("With overflow", () => {
+    return (
+      <NonCloseableModal overflowVisible={true}>
+        <h1 className="title">Please Select</h1>
+        <Autocomplete
+          valueSelected={() => {
+            // nothing to do
+          }}
+          loadSuggestions={loadSuggestions}
+        />
+      </NonCloseableModal>
+    );
+  })
+  .add("With overflow and footer", () => {
+    return (
+      <NonCloseableModal overflowVisible={true} footer={withFormElementsFooter}>
+        <h1 className="title">Please Select</h1>
+        <Autocomplete
+          valueSelected={() => {
+            // nothing to do
+          }}
+          loadSuggestions={loadSuggestions}
+        />
+      </NonCloseableModal>
+    );
+  });
 
-const NonCloseableModal: FC = ({ children }) => {
-  return <Modal body={children} closeFunction={doNothing} active={true} title={"Hitchhiker Modal"} />;
+type NonCloseableModalProps = { overflowVisible?: boolean; footer?: any };
+
+const NonCloseableModal: FC<NonCloseableModalProps> = ({ overflowVisible, footer, children }) => {
+  return (
+    <Modal
+      body={children}
+      closeFunction={doNothing}
+      active={true}
+      title={"Hitchhiker Modal"}
+      overflowVisible={overflowVisible}
+      footer={footer}
+    />
+  );
 };
 
 const CloseableModal: FC = ({ children }) => {

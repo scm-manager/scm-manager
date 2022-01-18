@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,11 +36,14 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.DisplayManager;
 import sonia.scm.group.DefaultGroupDisplayManager;
 import sonia.scm.group.Group;
 import sonia.scm.group.xml.XmlGroupDAO;
+import sonia.scm.repository.Namespace;
+import sonia.scm.repository.NamespaceManager;
 import sonia.scm.store.ConfigurationStore;
 import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.user.DefaultUserDisplayManager;
@@ -56,6 +59,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -78,6 +82,8 @@ public class AutoCompleteResourceTest {
 
   private XmlUserDAO userDao;
   private XmlGroupDAO groupDao;
+  @Mock
+  private NamespaceManager namespaceManager;
   private XmlDatabase xmlDB;
   private ObjectMapper jsonObjectMapper = new ObjectMapper();
 
@@ -97,7 +103,7 @@ public class AutoCompleteResourceTest {
     ReducedObjectModelToDtoMapperImpl mapper = new ReducedObjectModelToDtoMapperImpl();
     DefaultUserDisplayManager userManager = new DefaultUserDisplayManager(this.userDao);
     DefaultGroupDisplayManager groupManager = new DefaultGroupDisplayManager(groupDao);
-    AutoCompleteResource autoCompleteResource = new AutoCompleteResource(mapper, userManager, groupManager);
+    AutoCompleteResource autoCompleteResource = new AutoCompleteResource(mapper, userManager, groupManager, namespaceManager);
     dispatcher.addSingletonResource(autoCompleteResource);
   }
 
@@ -267,6 +273,24 @@ public class AutoCompleteResourceTest {
 
     assertEquals(HttpServletResponse.SC_OK, response.getStatus());
     assertResultSize(response, defaultLimit);
+  }
+
+  @Test
+  @SubjectAware(username = "user_without_autocomplete_permission", password = "secret")
+  public void shouldSearchNamespacesForAllUsers() throws Exception {
+    when(namespaceManager.getAll()).thenReturn(asList(new Namespace("hog"), new Namespace("hitchhiker")));
+
+    MockHttpRequest request = MockHttpRequest
+      .get("/" + AutoCompleteResource.PATH + "namespaces?q=hi")
+      .contentType(VndMediaType.AUTOCOMPLETE)
+      .accept(VndMediaType.AUTOCOMPLETE);
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+    assertResultSize(response, 1);
+    assertTrue(response.getContentAsString().contains("\"id\":\"hitchhiker\""));
   }
 
   private User createMockUser(String id, String name) {

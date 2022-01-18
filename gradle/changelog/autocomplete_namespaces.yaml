@@ -1,0 +1,2 @@
+- type: changed
+  description: Autocompletion for namespaces ([#1916](https://github.com/scm-manager/scm-manager/pull/1916))

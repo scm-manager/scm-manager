@@ -21,14 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.xml;
 
 import sonia.scm.repository.RepositoryRole;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
-import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class XmlRepositoryRoleMapAdapter
         extends XmlAdapter<XmlRepositoryRoleList, Map<String, RepositoryRole>> {
@@ -40,7 +40,7 @@ public class XmlRepositoryRoleMapAdapter
 
   @Override
   public Map<String, RepositoryRole> unmarshal(XmlRepositoryRoleList roles) {
-    Map<String, RepositoryRole> roleMap = new LinkedHashMap<>();
+    Map<String, RepositoryRole> roleMap = new TreeMap<>();
 
     for (RepositoryRole role : roles) {
       roleMap.put(role.getName(), role);

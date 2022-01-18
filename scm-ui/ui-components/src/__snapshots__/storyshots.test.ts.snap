@@ -19219,6 +19219,10 @@ exports[`Storyshots Modal/Modal With form elements 1`] = `null`;
 
 exports[`Storyshots Modal/Modal With long tooltips 1`] = `null`;
 
+exports[`Storyshots Modal/Modal With overflow 1`] = `null`;
+
+exports[`Storyshots Modal/Modal With overflow and footer 1`] = `null`;
+
 exports[`Storyshots Notification Closeable 1`] = `
 <div
   className="Notificationstories__Wrapper-sc-8fx7tr-0 gJPbVB"
