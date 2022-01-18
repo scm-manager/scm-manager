@@ -31,6 +31,12 @@ import com.google.common.hash.Hashing;
 import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Link;
 import de.otto.edison.hal.Links;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,6 +46,7 @@ import sonia.scm.SCMContextProvider;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.plugin.PluginLoader;
 import sonia.scm.util.SystemUtil;
+import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -62,6 +69,9 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @Path("v2/alerts")
+@OpenAPIDefinition(tags = {
+  @Tag(name = "Alerts", description = "Alert related endpoints")
+})
 public class AlertsResource {
 
   private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -86,7 +96,29 @@ public class AlertsResource {
 
   @GET
   @Path("")
-  @Produces(MediaType.APPLICATION_JSON)
+  @Produces(VndMediaType.ALERTS_REQUEST)
+  @Operation(
+    summary = "Alerts",
+    description = "Returns url and body prepared for the alert service",
+    tags = "Alerts",
+    operationId = "alerts_get_request"
+  )
+  @ApiResponse(
+    responseCode = "200",
+    description = "success",
+    content = @Content(
+      mediaType = VndMediaType.ALERTS_REQUEST,
+      schema = @Schema(implementation = HalRepresentation.class)
+    )
+  )
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
   public AlertsRequest getAlertsRequest(@Context UriInfo uriInfo) throws IOException {
     if (Strings.isNullOrEmpty(scmConfiguration.getAlertsUrl())) {
       throw new WebApplicationException("Alerts disabled", Response.Status.CONFLICT);
@@ -157,6 +189,7 @@ public class AlertsResource {
     String os;
     String arch;
     String jre;
+    @SuppressWarnings("java:S1948") // the field is serializable, but sonar does not get it
     List<Plugin> plugins;
 
   }

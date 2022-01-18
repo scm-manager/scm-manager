@@ -44,6 +44,7 @@ import sonia.scm.plugin.PluginInformation;
 import sonia.scm.plugin.PluginLoader;
 import sonia.scm.util.SystemUtil;
 import sonia.scm.web.RestDispatcher;
+import sonia.scm.web.VndMediaType;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
@@ -97,6 +98,12 @@ class AlertsResourceTest {
     MockHttpResponse response = invoke();
     JsonNode node = mapper.readTree(response.getContentAsString());
     assertThat(node.get("_links").get("alerts").get("href").asText()).isEqualTo(ScmConfiguration.DEFAULT_ALERTS_URL);
+  }
+
+  @Test
+  void shouldReturnVndMediaType() throws Exception {
+    MockHttpResponse response = invoke();
+    assertThat(response.getOutputHeaders().getFirst("Content-Type")).hasToString(VndMediaType.ALERTS_REQUEST);
   }
 
   @Test
