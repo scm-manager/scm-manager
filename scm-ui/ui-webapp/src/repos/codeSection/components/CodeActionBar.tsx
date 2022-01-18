@@ -44,6 +44,9 @@ const FlexShrinkLevel = styled(Level)`
     flex-shrink: 1;
     margin-right: 0.75rem;
   }
+  .level-item {
+    justify-content: flex-end;
+  }
 `;
 
 type Props = {
