@@ -229,6 +229,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Redesign SCM-Manager header ([#1721](https://github.com/scm-manager/scm-manager/pull/1721))
 - Initial admin user has to be created on first startup ([#1707](https://github.com/scm-manager/scm-manager/pull/1707), [#1722](https://github.com/scm-manager/scm-manager/pull/1722))
 
+## [2.20.1] - 2022-01-18
+### Fixed
+- Path traversal vulnerability (backport from 2.29.1)
+
 ## [2.20.0] - 2021-06-16
 ### Added
 - Support basic authentication with access token ([#1694](https://github.com/scm-manager/scm-manager/pull/1694))
