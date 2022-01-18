@@ -63,6 +63,10 @@ const DropDownMenu = styled.div`
   }
 `;
 
+export const Table = styled.table`
+  border-collapse: collapse;
+`;
+
 export const Column = styled.td`
   vertical-align: middle !important;
 `;
@@ -161,7 +165,7 @@ const HeaderDropDown: FC<Props> = ({ className, icon, count, error, isLoading, c
         >
           <IconWrapper icon={icon} count={count} />
         </DropDownTrigger>
-        <DropDownMenu className="dropdown-menu" id="dropdown-menu" role="menu">
+        <DropDownMenu className="dropdown-menu pt-0" id="dropdown-menu" role="menu">
           <ErrorBox error={error} />
           {isLoading ? <LoadingBox /> : null}
           {children}

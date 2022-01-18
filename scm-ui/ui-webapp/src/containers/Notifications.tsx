@@ -44,7 +44,7 @@ import {
   ToastNotification,
   ToastType
 } from "@scm-manager/ui-components";
-import HeaderDropDown, { Column, NonWrappingColumn } from "../components/HeaderDropDown";
+import HeaderDropDown, { Column, NonWrappingColumn, Table } from "../components/HeaderDropDown";
 
 const DismissColumn = styled.td`
   vertical-align: middle !important;
@@ -103,7 +103,7 @@ const ClearEntry: FC<ClearEntryProps> = ({ notifications, clearToasts }) => {
   return (
     <div className={classNames("dropdown-item", "has-text-centered")}>
       <ErrorNotification error={error} />
-      <Button className="is-outlined" color="link" loading={isLoading} action={clear}>
+      <Button className="is-outlined m-3" color="link" loading={isLoading} action={clear}>
         <Icon color="inherit" name="trash" className="mr-1" alt="" /> {t("notifications.dismissAll")}
       </Button>
     </div>
@@ -119,13 +119,13 @@ const NotificationList: FC<Props> = ({ data, clear, remove }) => {
 
   return (
     <div className={classNames("dropdown-content", "p-0")}>
-      <table className={classNames("table", "card-table", "mb-0")}>
+      <Table className={classNames("table", "card-table", "mb-0")}>
         <tbody>
           {top.map((n, i) => (
             <NotificationEntry key={i} notification={n} removeToast={remove} />
           ))}
         </tbody>
-      </table>
+      </Table>
       {all.length > 6 ? (
         <p className={classNames("has-text-centered", "has-text-secondary")}>
           {t("notifications.xMore", { count: all.length - 6 })}

@@ -29,9 +29,9 @@ import styled from "styled-components";
 import { Alert } from "@scm-manager/ui-types";
 import { DateFromNow, Icon } from "@scm-manager/ui-components";
 import { useAlerts } from "@scm-manager/ui-api";
-import HeaderDropDown, { Column, NonWrappingColumn } from "../components/HeaderDropDown";
+import HeaderDropDown, { Column, NonWrappingColumn, Table } from "../components/HeaderDropDown";
 
-const FullHeightTable = styled.table`
+const FullHeightTable = styled(Table)`
   height: 100%;
 `;
 
