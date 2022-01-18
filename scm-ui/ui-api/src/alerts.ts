@@ -25,10 +25,9 @@
 import { useQuery } from "react-query";
 import { apiClient } from "./apiclient";
 import { ApiResult, useIndexLink } from "./base";
-import { AlertsResponse } from "@scm-manager/ui-types";
+import { AlertsResponse, HalRepresentation, Link } from "@scm-manager/ui-types";
 
-type AlertRequest = {
-  url: string;
+type AlertRequest = HalRepresentation & {
   checksum: string;
   body: unknown;
 };
@@ -44,8 +43,12 @@ const alertsFromStorage = (): LocalStorageAlerts | undefined => {
   }
 };
 
-const fetchAlerts = (request: AlertRequest) =>
-  fetch(request.url, {
+const fetchAlerts = (request: AlertRequest) => {
+  const url = (request._links["alerts"] as Link)?.href;
+  if (!url) {
+    throw new Error("no alerts link defined");
+  }
+  return fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -67,6 +70,7 @@ const fetchAlerts = (request: AlertRequest) =>
       localStorage.setItem("alerts", JSON.stringify(storageItem));
       return data;
     });
+};
 
 const restoreOrFetch = (request: AlertRequest): Promise<AlertsResponse> => {
   const storedAlerts = alertsFromStorage();

@@ -28,6 +28,13 @@ import com.cronutils.utils.VisibleForTesting;
 import com.google.common.base.Strings;
 import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
+import de.otto.edison.hal.HalRepresentation;
+import de.otto.edison.hal.Link;
+import de.otto.edison.hal.Links;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.Value;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.config.ScmConfiguration;
@@ -39,8 +46,10 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -75,10 +84,10 @@ public class AlertsResource {
     this.dateSupplier = dateSupplier;
   }
 
-  @Path("")
   @GET
+  @Path("")
   @Produces(MediaType.APPLICATION_JSON)
-  public AlertsRequest getAlertsRequest() {
+  public AlertsRequest getAlertsRequest(@Context UriInfo uriInfo) throws IOException {
     if (Strings.isNullOrEmpty(scmConfiguration.getAlertsUrl())) {
       throw new WebApplicationException("Alerts disabled", Response.Status.CONFLICT);
     }
@@ -97,11 +106,20 @@ public class AlertsResource {
     String url = scmConfiguration.getAlertsUrl();
     AlertsRequestBody body = new AlertsRequestBody(instanceId, version, os, arch, jre, plugins);
     String checksum = createChecksum(url, body);
-    return new AlertsRequest(url, checksum, body);
+
+    Links links = createLinks(uriInfo, url);
+    return new AlertsRequest(links, checksum, body);
+  }
+
+  private Links createLinks(UriInfo uriInfo, String alertsUrl) {
+    return Links.linkingTo()
+      .self(uriInfo.getAbsolutePath().toASCIIString())
+      .single(Link.link("alerts", alertsUrl))
+      .build();
   }
 
   @SuppressWarnings("UnstableApiUsage")
-  private String createChecksum(String url, AlertsRequestBody body) {
+  private String createChecksum(String url, AlertsRequestBody body) throws IOException {
     Hasher hasher = Hashing.sha256().newHasher();
     hasher.putString(url, StandardCharsets.UTF_8);
     hasher.putString(dateSupplier.get(), StandardCharsets.UTF_8);
@@ -109,21 +127,26 @@ public class AlertsResource {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     try (ObjectOutputStream out = new ObjectOutputStream(baos)) {
       out.writeObject(body);
-    } catch (IOException e) {
-      e.printStackTrace();
     }
 
     hasher.putBytes(baos.toByteArray());
     return hasher.hash().toString();
   }
 
-  @Value
-  public static class AlertsRequest {
+  @Getter
+  @Setter
+  @NoArgsConstructor
+  @SuppressWarnings("java:S2160") // we need no equals here
+  public static class AlertsRequest extends HalRepresentation {
 
-    String url;
-    String checksum;
-    AlertsRequestBody body;
+    private String checksum;
+    private AlertsRequestBody body;
 
+    public AlertsRequest(Links links, String checksum, AlertsRequestBody body) {
+      super(links);
+      this.checksum = checksum;
+      this.body = body;
+    }
   }
 
   @Value

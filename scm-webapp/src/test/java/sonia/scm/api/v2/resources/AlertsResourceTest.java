@@ -25,6 +25,7 @@
 package sonia.scm.api.v2.resources;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
@@ -82,6 +83,30 @@ class AlertsResourceTest {
     MockHttpResponse response = invoke();
 
     assertThat(response.getStatus()).isEqualTo(409);
+  }
+
+  @Test
+  void shouldReturnSelfUrl() throws Exception {
+    MockHttpResponse response = invoke();
+    JsonNode node = mapper.readTree(response.getContentAsString());
+    assertThat(node.get("_links").get("self").get("href").asText()).isEqualTo("/v2/alerts");
+  }
+
+  @Test
+  void shouldReturnAlertsUrl() throws Exception {
+    MockHttpResponse response = invoke();
+    JsonNode node = mapper.readTree(response.getContentAsString());
+    assertThat(node.get("_links").get("alerts").get("href").asText()).isEqualTo(ScmConfiguration.DEFAULT_ALERTS_URL);
+  }
+
+  @Test
+  void shouldReturnCustomAlertsUrl() throws Exception {
+    scmConfiguration.setAlertsUrl("https://mycustom.alerts.io");
+
+    MockHttpResponse response = invoke();
+    JsonNode node = mapper.readTree(response.getContentAsString());
+
+    assertThat(node.get("_links").get("alerts").get("href").asText()).isEqualTo("https://mycustom.alerts.io");
   }
 
   @Test
