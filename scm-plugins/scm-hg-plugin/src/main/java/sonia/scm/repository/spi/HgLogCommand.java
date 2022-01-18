@@ -119,7 +119,7 @@ public class HgLogCommand extends AbstractCommand implements LogCommand {
 
     if (!Strings.isNullOrEmpty(startChangeset) && !Strings.isNullOrEmpty(endChangeset)) {
       cmd.rev(startChangeset.concat(":").concat(endChangeset));
-    } else if (!Strings.isNullOrEmpty(startChangeset) || !Strings.isNullOrEmpty(ancestorChangeset)) {
+    } else if (!Strings.isNullOrEmpty(startChangeset) && !Strings.isNullOrEmpty(ancestorChangeset)) {
       int start = on(repository).rev(startChangeset).singleRevision();
       int ancestor = on(repository).rev(ancestorChangeset).singleRevision();
       cmd.rev(String.format("only(%s,%s)", start, ancestor));
