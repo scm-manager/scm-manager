@@ -1,11 +1,11 @@
 {
   "name": "@scm-manager/ui-webapp",
-  "version": "2.20.0",
+  "version": "2.20.1",
   "private": true,
   "dependencies": {
-    "@scm-manager/ui-api": "^2.20.0",
-    "@scm-manager/ui-components": "^2.20.0",
-    "@scm-manager/ui-extensions": "^2.20.0",
+    "@scm-manager/ui-api": "^2.20.1",
+    "@scm-manager/ui-components": "^2.20.1",
+    "@scm-manager/ui-extensions": "^2.20.1",
     "classnames": "^2.2.5",
     "history": "^4.10.1",
     "i18next": "^19.6.0",
@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@scm-manager/jest-preset": "^2.12.7",
-    "@scm-manager/ui-tests": "^2.20.0",
+    "@scm-manager/ui-tests": "^2.20.1",
     "@types/classnames": "^2.2.9",
     "@types/enzyme": "^3.10.3",
     "@types/fetch-mock": "^7.3.1",
