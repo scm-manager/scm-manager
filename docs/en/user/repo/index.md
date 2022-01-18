@@ -7,6 +7,7 @@ The Repository area includes everything based on repositories in namespaces. Thi
 * [Branches](branches/)
 * [Tags](tags/)
 * [Code](code/)
+* [Compare](compare/)
 * [Settings](settings/)
 
 ### Overview
