@@ -21,19 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.group.xml;
 
-//~--- non-JDK imports --------------------------------------------------------
+package sonia.scm.group.xml;
 
 import sonia.scm.group.Group;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import javax.xml.bind.annotation.adapters.XmlAdapter;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  *
@@ -72,7 +67,7 @@ public class XmlGroupMapAdapter
   @Override
   public Map<String, Group> unmarshal(XmlGroupList groups) throws Exception
   {
-    Map<String, Group> groupMap = new LinkedHashMap<>();
+    Map<String, Group> groupMap = new TreeMap<>();
 
     for (Group group : groups)
     {

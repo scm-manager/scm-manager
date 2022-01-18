@@ -21,25 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.user.xml;
 
-//~--- non-JDK imports --------------------------------------------------------
+package sonia.scm.user.xml;
 
 import sonia.scm.user.User;
 import sonia.scm.xml.XmlDatabase;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.util.Collection;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  *
@@ -193,5 +188,5 @@ public class XmlUserDatabase implements XmlDatabase<User>
   /** Field description */
   @XmlJavaTypeAdapter(XmlUserMapAdapter.class)
   @XmlElement(name = "users")
-  private Map<String, User> userMap = new LinkedHashMap<>();
+  private Map<String, User> userMap = new TreeMap<>();
 }

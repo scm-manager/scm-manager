@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.HalRepresentation;
@@ -38,6 +38,7 @@ import sonia.scm.api.rest.resources.Simple;
 import java.util.Comparator;
 import java.util.function.Predicate;
 
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
@@ -61,11 +62,11 @@ public class CollectionResourceManagerAdapterTest {
   }
 
   @Test
-  public void shouldAcceptDefaultSortByParameter() {
+  public void shouldNotSortByDefault() {
     abstractManagerResource.getAll(0, 1, x -> true, null, true, r -> null);
 
     Comparator<Simple> comparator = comparatorCaptor.getValue();
-    assertTrue(comparator.compare(new Simple("1", null), new Simple("2", null)) > 0);
+    assertNull(comparator);
   }
 
   @Test

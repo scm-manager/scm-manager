@@ -35,10 +35,10 @@ describe("getProtocolLinkByType tests", () => {
         protocol: [
           {
             name: "http",
-            href: "http://scm.scm-manager.org/repo/scm/core",
-          },
-        ],
-      },
+            href: "http://scm.scm-manager.org/repo/scm/core"
+          }
+        ]
+      }
     };
 
     const link = getProtocolLinkByType(repository, "http");
@@ -54,14 +54,14 @@ describe("getProtocolLinkByType tests", () => {
         protocol: [
           {
             name: "http",
-            href: "http://scm.scm-manager.org/repo/scm/core",
+            href: "http://scm.scm-manager.org/repo/scm/core"
           },
           {
             name: "ssh",
-            href: "git@scm.scm-manager.org:scm/core",
-          },
-        ],
-      },
+            href: "git@scm.scm-manager.org:scm/core"
+          }
+        ]
+      }
     };
 
     const link = getProtocolLinkByType(repository, "http");
@@ -76,9 +76,9 @@ describe("getProtocolLinkByType tests", () => {
       _links: {
         protocol: {
           name: "http",
-          href: "http://scm.scm-manager.org/repo/scm/core",
-        },
-      },
+          href: "http://scm.scm-manager.org/repo/scm/core"
+        }
+      }
     };
 
     const link = getProtocolLinkByType(repository, "http");
@@ -94,14 +94,14 @@ describe("getProtocolLinkByType tests", () => {
         protocol: [
           {
             name: "http",
-            href: "http://scm.scm-manager.org/repo/scm/core",
+            href: "http://scm.scm-manager.org/repo/scm/core"
           },
           {
             name: "ssh",
-            href: "git@scm.scm-manager.org:scm/core",
-          },
-        ],
-      },
+            href: "git@scm.scm-manager.org:scm/core"
+          }
+        ]
+      }
     };
 
     const link = getProtocolLinkByType(repository, "awesome");
@@ -113,7 +113,7 @@ describe("getProtocolLinkByType tests", () => {
       namespace: "scm",
       name: "core",
       type: "git",
-      _links: {},
+      _links: {}
     };
 
     const link = getProtocolLinkByType(repository, "http");

@@ -41,7 +41,6 @@ import sonia.scm.event.ScmEventBus;
 import sonia.scm.security.AuthorizationChangedEvent;
 import sonia.scm.security.KeyGenerator;
 import sonia.scm.util.AssertUtil;
-import sonia.scm.util.CollectionAppender;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 
@@ -51,13 +50,19 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BiConsumer;
+import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
+import java.util.stream.Collector;
 
-import static java.util.stream.Collectors.toSet;
+import static java.util.Collections.emptySet;
 import static sonia.scm.AlreadyExistsException.alreadyExists;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
@@ -70,6 +75,33 @@ import static sonia.scm.NotFoundException.notFound;
 @Singleton
 public class DefaultRepositoryManager extends AbstractRepositoryManager {
 
+  @SuppressWarnings("unchecked")
+  public static final Collector<String, Object, Collection<String>> LINKED_HASH_SET_COLLECTOR = new Collector<String, Object, Collection<String>>() {
+    @Override
+    public Supplier<Object> supplier() {
+      return LinkedHashSet::new;
+    }
+
+    @Override
+    public BiConsumer<Object, String> accumulator() {
+      return (collection, value) -> ((Collection<String>) collection).add(value);
+    }
+
+    @Override
+    public BinaryOperator<Object> combiner() {
+      return (c1, c2) -> ((Collection<String>) c1).addAll((Collection<String>) c2);
+    }
+
+    @Override
+    public Function<Object, Collection<String>> finisher() {
+      return collection -> (Collection<String>) collection;
+    }
+
+    @Override
+    public Set<Characteristics> characteristics() {
+      return emptySet();
+    }
+  };
   private static final Logger logger = LoggerFactory.getLogger(DefaultRepositoryManager.class);
   private final Map<String, RepositoryHandler> handlerMap;
   private final KeyGenerator keyGenerator;
@@ -340,12 +372,9 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
                                        int start, int limit) {
 
     return Util.createSubCollection(repositoryDAO.getAll(), comparator,
-      new CollectionAppender<Repository>() {
-        @Override
-        public void append(Collection<Repository> collection, Repository item) {
-          if (RepositoryPermissions.read().isPermitted(item)) {
-            collection.add(postProcess(item));
-          }
+      (collection, item) -> {
+        if (RepositoryPermissions.read().isPermitted(item)) {
+          collection.add(postProcess(item));
         }
       }, start, limit);
   }
@@ -363,7 +392,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
   public Collection<String> getAllNamespaces() {
     return getAll().stream()
       .map(Repository::getNamespace)
-      .collect(toSet());
+      .collect(LINKED_HASH_SET_COLLECTOR);
   }
 
   @Override

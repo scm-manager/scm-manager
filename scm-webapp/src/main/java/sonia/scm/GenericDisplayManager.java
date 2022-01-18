@@ -31,6 +31,7 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.function.Function;
 
+import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
 
 public abstract class GenericDisplayManager<D, T extends ReducedModelObject> implements DisplayManager<T> {
@@ -60,6 +61,9 @@ public abstract class GenericDisplayManager<D, T extends ReducedModelObject> imp
 
   @Override
   public Optional<T> get(String id) {
+    if (id == null) {
+      return empty();
+    }
     return ofNullable(dao.get(id)).map(transform);
   }
 }
