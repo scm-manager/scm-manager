@@ -23,8 +23,8 @@
  */
 import React, { FC, ReactNode } from "react";
 import styled from "styled-components";
-import { Link, useLocation } from "react-router-dom";
-import { Level, BranchSelector, Icon } from "@scm-manager/ui-components";
+import { useLocation } from "react-router-dom";
+import { BranchSelector, Level } from "@scm-manager/ui-components";
 import CodeViewSwitcher, { SwitchViewLink } from "./CodeViewSwitcher";
 import { useTranslation } from "react-i18next";
 import { Branch } from "@scm-manager/ui-types";

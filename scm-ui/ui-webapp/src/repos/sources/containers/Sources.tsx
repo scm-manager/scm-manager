@@ -23,10 +23,10 @@
  */
 import React, { FC, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Link, useHistory, useLocation, useParams } from "react-router-dom";
+import { useHistory, useLocation, useParams } from "react-router-dom";
 import { useSources } from "@scm-manager/ui-api";
 import { Branch, Repository } from "@scm-manager/ui-types";
-import { Breadcrumb, ErrorNotification, Icon, Loading, Notification } from "@scm-manager/ui-components";
+import { Breadcrumb, ErrorNotification, Loading, Notification } from "@scm-manager/ui-components";
 import FileTree from "../components/FileTree";
 import Content from "./Content";
 import CodeActionBar from "../../codeSection/components/CodeActionBar";

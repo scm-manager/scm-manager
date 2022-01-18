@@ -23,10 +23,10 @@
  */
 
 import React, { FC } from "react";
-import { Redirect, Route, Switch, useRouteMatch } from "react-router-dom";
+import { Route, Switch, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Repository } from "@scm-manager/ui-types";
-import { LoadingDiff, Subtitle, urls } from "@scm-manager/ui-components";
+import { LoadingDiff, Subtitle } from "@scm-manager/ui-components";
 import CompareSelectBar from "./CompareSelectBar";
 import CompareTabs from "./CompareTabs";
 import { createDiffUrl } from "./compare";
