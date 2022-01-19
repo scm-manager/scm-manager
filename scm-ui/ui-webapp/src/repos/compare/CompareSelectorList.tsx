@@ -60,7 +60,7 @@ const TabStyleButton = styled(NoStyleButton)`
     color: #33b2e8;
   }
 
-  &:focus {
+  &:focus-visible {
     background-color: var(--scm-column-selection);
   }
 `;
