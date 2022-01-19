@@ -23,7 +23,7 @@
  */
 
 import React, { FC } from "react";
-import { Route, Switch, useRouteMatch } from "react-router-dom";
+import { Redirect, Route, Switch, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Repository } from "@scm-manager/ui-types";
 import { createDiffUrl } from "@scm-manager/ui-api";
@@ -46,11 +46,13 @@ export type CompareBranchesParams = {
 
 const CompareRoutes: FC<Props> = ({ repository, baseUrl }) => {
   const match = useRouteMatch<CompareBranchesParams>();
+  const url = urls.matchedUrlFromMatch(match);
   const source = decodeURIComponent(match.params.sourceName);
   const target = decodeURIComponent(match.params.targetName);
 
   return (
     <Switch>
+      <Redirect exact from={url} to={`${url}/diff/`} />
       <Route path={`${baseUrl}/:sourceType/:sourceName/:targetType/:targetName/diff/`}>
         <LoadingDiff url={createDiffUrl(repository, source, target) + "?format=GIT"} />
       </Route>
