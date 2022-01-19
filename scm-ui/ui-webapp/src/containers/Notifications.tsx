@@ -252,6 +252,7 @@ const Notifications: FC<NotificationProps> = ({ className }) => {
         isLoading={isLoading}
         icon={<BellNotificationIcon data={data} />}
         count={count(data)}
+        mobilePosition="left"
       >
         {data ? <NotificationDropDown data={data} remove={remove} clear={clear} /> : null}
       </HeaderDropDown>

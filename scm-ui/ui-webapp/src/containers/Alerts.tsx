@@ -132,6 +132,7 @@ const Alerts: FC<AlertsProps> = ({ className }) => {
       count={data ? data.length.toString() : "?"}
       error={error}
       className={className}
+      mobilePosition="right"
     >
       {data ? <AlertsList data={data} /> : null}
     </HeaderDropDown>

@@ -23,15 +23,34 @@
  */
 
 import React, { FC, useEffect, useState } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { devices, ErrorNotification, Loading } from "@scm-manager/ui-components";
 import classNames from "classnames";
 
-const DropDownMenu = styled.div`
+type DropDownMenuProps = {
+  mobilePosition: "left" | "right";
+};
+
+const DropDownMenu = styled.div<DropDownMenuProps>`
   min-width: 35rem;
+  
+  @media screen and (max-width: ${devices.desktop.width}px) {
+    min-width: 30rem;
+  }
+
+  @media screen and (max-width: ${devices.tablet.width}px) {
+    min-width: 25rem;
+  }
 
   @media screen and (max-width: ${devices.mobile.width}px) {
     min-width: 20rem;
+    ${props =>
+      props.mobilePosition === "right" &&
+      css`
+      right: -1.5rem;
+      left: auto;
+    `};
+
   }
 
   @media screen and (max-width: ${devices.desktop.width - 1}px) {
@@ -60,6 +79,15 @@ const DropDownMenu = styled.div`
     @media screen and (min-width: ${devices.desktop.width}px) {
       right: 1.3rem;
     }
+    
+    ${props =>
+      props.mobilePosition === "right" &&
+      css`
+        @media screen and (max-width: ${devices.mobile.width}px) {
+          left: auto;
+          right: 1.75rem;
+        }
+    `};
   }
 `;
 
@@ -123,7 +151,7 @@ const IconWrapper: FC<IconWrapperProps> = ({ icon, count }) => (
   </IconContainer>
 );
 
-type Props = {
+type Props = DropDownMenuProps & {
   className?: string;
   icon: React.ReactNode;
   count?: string;
@@ -135,7 +163,7 @@ const DropDownTrigger = styled.div`
   padding: 0.65rem 0.75rem;
 `;
 
-const HeaderDropDown: FC<Props> = ({ className, icon, count, error, isLoading, children }) => {
+const HeaderDropDown: FC<Props> = ({ className, icon, count, error, isLoading, mobilePosition, children }) => {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -165,7 +193,7 @@ const HeaderDropDown: FC<Props> = ({ className, icon, count, error, isLoading, c
         >
           <IconWrapper icon={icon} count={count} />
         </DropDownTrigger>
-        <DropDownMenu className="dropdown-menu pt-0" id="dropdown-menu" role="menu">
+        <DropDownMenu mobilePosition={mobilePosition} className="dropdown-menu pt-0" id="dropdown-menu" role="menu">
           <ErrorBox error={error} />
           {isLoading ? <LoadingBox /> : null}
           {children}
