@@ -26,12 +26,16 @@ package sonia.scm.it.utils;
 
 import io.restassured.response.ValidatableResponse;
 import org.apache.http.HttpStatus;
+import org.eclipse.jgit.errors.ConfigInvalidException;
+import org.eclipse.jgit.lib.StoredConfig;
+import org.eclipse.jgit.util.SystemReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.web.VndMediaType;
 
 import javax.json.Json;
 import javax.json.JsonObjectBuilder;
+import java.io.IOException;
 import java.net.URI;
 import java.util.Collection;
 import java.util.HashMap;
@@ -245,6 +249,14 @@ public class TestData {
   }
 
   private static void cleanupConfig() {
+    try {
+      StoredConfig config = SystemReader.getInstance().getUserConfig();
+      config.setString("init", null, "defaultBranch", "main");
+      config.save();
+    } catch (ConfigInvalidException | IOException e) {
+      LOG.error("could not set default branch for git to 'main'", e);
+    }
+
     given(VndMediaType.CONFIG).accept("application/json")
       .when()
       .body("{\n" +

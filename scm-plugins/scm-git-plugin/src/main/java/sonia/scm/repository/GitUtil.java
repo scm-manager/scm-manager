@@ -84,7 +84,7 @@ public final class GitUtil {
   private static final GitUserAgentProvider GIT_USER_AGENT_PROVIDER = new GitUserAgentProvider();
   public static final String REF_HEAD = "HEAD";
   public static final String REF_HEAD_PREFIX = "refs/heads/";
-  public static final String REF_MASTER = "master";
+  public static final String REF_MASTER = "main";
   private static final String DIRECTORY_DOTGIT = ".git";
   private static final String DIRECTORY_OBJETCS = "objects";
   private static final String DIRECTORY_REFS = "refs";

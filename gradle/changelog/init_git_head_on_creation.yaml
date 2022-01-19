@@ -1,0 +1,2 @@
+- type: fixed
+  description: Set HEAD to correct branch in new git repositories

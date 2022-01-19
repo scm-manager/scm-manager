@@ -49,7 +49,7 @@ class MergeDetectionITCase {
   private static final Person ARTHUR = new Person("arthur", "arthur@hitchhiker.com");
 
   RepositoryClient client;
-  String masterFile;
+  String mainFile;
   String developFile;
 
   @BeforeEach
@@ -58,10 +58,10 @@ class MergeDetectionITCase {
 
     client = RepositoryUtil.createRepositoryClient("git", tempDir.toFile());
 
-    masterFile = createFile(tempDir, "hg2g.md");
+    mainFile = createFile(tempDir, "hg2g.md");
     developFile = createFile(tempDir, "how_to_make_tea.md");
 
-    client.getAddCommand().add(masterFile);
+    client.getAddCommand().add(mainFile);
     client.getCommitCommand().commit(ARTHUR, "Add base file");
     client.getPushCommand().push();
 
@@ -87,10 +87,10 @@ class MergeDetectionITCase {
 
   @Test
   void shouldDetectSimpleMergeAsMerged() throws IOException {
-    client.getCheckoutCommand().checkout("master");
+    client.getCheckoutCommand().checkout("main");
     client.getMergeCommand().noFf().merge("develop");
 
-    initializeMergeDetection("master", "develop");
+    initializeMergeDetection("main", "develop");
 
     client.getPushCommand().push();
 
@@ -100,10 +100,10 @@ class MergeDetectionITCase {
 
   @Test
   void shouldDetectFastForwardAsMerged() throws IOException {
-    client.getCheckoutCommand().checkout("master");
+    client.getCheckoutCommand().checkout("main");
     client.getMergeCommand().merge("develop");
 
-    initializeMergeDetection("master", "develop");
+    initializeMergeDetection("main", "develop");
 
     client.getPushCommand().push();
 
@@ -113,11 +113,11 @@ class MergeDetectionITCase {
 
   @Test
   void shouldDetectMergeWhenBranchHasBeenDeletedAsMerged() throws IOException {
-    client.getCheckoutCommand().checkout("master");
+    client.getCheckoutCommand().checkout("main");
     client.getMergeCommand().merge("develop");
     client.getPushCommand().push();
 
-    initializeMergeDetection("master", "develop");
+    initializeMergeDetection("main", "develop");
 
     client.getDeleteRemoteBranchCommand().delete("develop");
     client.getPushCommand().push();
@@ -133,7 +133,7 @@ class MergeDetectionITCase {
     client.getAddCommand().add(developFile);
     client.getCommitCommand().commit(ARTHUR, "simple commit");
 
-    initializeMergeDetection("master", "develop");
+    initializeMergeDetection("main", "develop");
 
     client.getPushCommand().push();
 

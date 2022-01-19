@@ -183,6 +183,7 @@ public class GitRepositoryHandler
   protected void create(Repository repository, File directory) throws IOException {
     try (org.eclipse.jgit.lib.Repository gitRepository = build(directory)) {
       gitRepository.create(true);
+      new GitHeadModifier(this).ensure(repository, config.getDefaultBranch());
       new GitConfigHelper().createScmmConfig(repository, gitRepository);
     }
   }
