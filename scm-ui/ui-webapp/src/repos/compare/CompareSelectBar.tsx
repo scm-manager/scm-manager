@@ -89,10 +89,11 @@ const CompareSelectBar: FC<Props> = ({ repository, baseUrl }) => {
           encodeURIComponent(target.name) +
           "/" +
           tabUriComponent +
-          "/"
+          "/" +
+          location.pathname.split("/")[10] || ""
       );
     }
-  }, [history, baseUrl, source, target]);
+  }, [history, baseUrl, source, target, location.pathname]);
 
   return (
     <ResponsiveBar className="is-align-items-center">
