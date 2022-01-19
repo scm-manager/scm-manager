@@ -47,7 +47,7 @@ const ResponsiveWrapper = styled.div`
 `;
 
 const BorderedMenu = styled.div`
-  border: 1px solid whitesmoke;
+  border: var(--scm-border);
 `;
 
 const MaxWidthDiv = styled.div`
@@ -107,7 +107,7 @@ const CompareSelector: FC<Props> = ({ onSelect, selected, label, repository }) =
         <MaxWidthDiv className="dropdown is-active" ref={ref}>
           <MaxWidthDiv className="dropdown-trigger">
             <button
-              className="button has-text-weight-normal px-4 is-flex is-justify-content-space-between is-fullwidth"
+              className="button has-text-weight-normal has-text-secondary-more px-4 is-flex is-justify-content-space-between is-fullwidth"
               onClick={() => setShowDropdown(!showDropdown)}
             >
               <span className="is-ellipsis-overflow">
