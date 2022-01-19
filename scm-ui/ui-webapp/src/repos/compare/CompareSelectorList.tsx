@@ -56,8 +56,8 @@ const TabStyleButton = styled(NoStyleButton)`
   }
 
   &.is-active {
-    border-bottom-color: #33b2e8;
-    color: #33b2e8;
+    border-bottom-color: var(--scm-info-color);
+    color: var(--scm-info-color);
   }
 
   &:focus-visible {
@@ -66,14 +66,14 @@ const TabStyleButton = styled(NoStyleButton)`
 `;
 
 const ScrollableUl = styled.ul`
-  max-height: 250px;
-  width: 300px;
+  max-height: 15.65rem;
+  width: 18.5rem;
   overflow-x: hidden;
   overflow-y: scroll;
 `;
 
 const SizedDiv = styled.div`
-  width: 300px;
+  width: 18.5rem;
 `;
 
 const SmallButton = styled(Button)`
