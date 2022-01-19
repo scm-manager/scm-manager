@@ -21,12 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 import React, { FC, KeyboardEvent, useState } from "react";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
-import { useBranches, useTags } from "@scm-manager/ui-api";
 import { Branch, Repository, Tag } from "@scm-manager/ui-types";
+import { useBranches, useTags } from "@scm-manager/ui-api";
 import { Button, ErrorNotification, Loading, NoStyleButton, Notification } from "@scm-manager/ui-components";
 import DefaultBranchTag from "../branches/components/DefaultBranchTag";
 import CompareSelectorListEntry from "./CompareSelectorListEntry";
@@ -46,7 +47,7 @@ const TabStyleButton = styled(NoStyleButton)`
   display: flex;
   justify-content: center;
   margin-bottom: -1px;
-  padding: 0.5em 1em;
+  padding: 0.5rem 1rem;
   vertical-align: top;
 
   &:hover {
@@ -98,12 +99,12 @@ const BranchTabContent: FC<BranchTabContentProps> = ({ elements, selection, onSe
 
   return (
     <>
-      {elements.map((branch, index) => {
+      {elements.map(branch => {
         return (
           <CompareSelectorListEntry
             isSelected={selection.type === "b" && selection.name === branch.name}
             onClick={() => onSelectEntry("b", branch.name)}
-            key={index}
+            key={branch.name}
           >
             <span className="is-ellipsis-overflow">{branch.name}</span>
             <DefaultBranchTag className="ml-2" defaultBranch={branch.defaultBranch} />
@@ -133,12 +134,12 @@ const TagTabContent: FC<TagTabContentProps> = ({ elements, selection, onSelectEn
 
   return (
     <>
-      {elements.map((tag, index) => {
+      {elements.map(tag => {
         return (
           <CompareSelectorListEntry
             isSelected={selection.type === "t" && selection.name === tag.name}
             onClick={() => onSelectEntry("t", tag.name)}
-            key={index}
+            key={tag.name}
           >
             <span className="is-ellipsis-overflow">{tag.name}</span>
           </CompareSelectorListEntry>
@@ -220,7 +221,7 @@ const ScrollableList: FC<{ selectedTab: CompareTypes } & Props> = ({
 
   if (selectedTab !== "r") {
     return (
-      <ScrollableUl aria-expanded="true" role="listbox">
+      <ScrollableUl className="py-2 pr-2" aria-expanded="true" role="listbox">
         {selectedTab === "b" && (
           <BranchTabContent
             elements={branches.filter(branch => branch.name.includes(filter))}
@@ -250,9 +251,9 @@ const CompareSelectorList: FC<Props> = ({ onSelect, selected, repository, filter
     <>
       <div className="tabs is-small mt-3 mb-0">
         <ul>
-          {tabs.map((tab, index) => {
+          {tabs.map(tab => {
             return (
-              <li key={index}>
+              <li key={tab}>
                 <TabStyleButton
                   className={classNames({ "is-active": selectedTab === tab })}
                   onClick={() => setSelectedTab(tab)}

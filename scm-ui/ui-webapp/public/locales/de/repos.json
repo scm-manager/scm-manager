@@ -183,7 +183,7 @@
     },
     "tabs": {
       "diff": "Diff",
-      "changesets": "Changesets"
+      "commits": "Commits"
     }
   },
   "tags": {

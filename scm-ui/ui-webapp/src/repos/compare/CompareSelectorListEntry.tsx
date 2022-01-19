@@ -21,10 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 import React, { FC, ReactNode } from "react";
 import classNames from "classnames";
-import { NoStyleButton } from "@scm-manager/ui-components";
 import styled from "styled-components";
+import { NoStyleButton } from "@scm-manager/ui-components";
 
 type Props = {
   children: ReactNode;
@@ -33,6 +34,8 @@ type Props = {
 };
 
 const FocusButton = styled(NoStyleButton)`
+  border-radius: 0.25rem;
+
   &:focus:not(.is-active) {
     background-color: var(--scm-column-selection) !important;
   }

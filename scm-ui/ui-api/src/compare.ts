@@ -24,7 +24,9 @@
 
 import { ChangesetCollection, Link, Repository } from "@scm-manager/ui-types";
 import { useQuery, useQueryClient } from "react-query";
-import { apiClient, ApiResultWithFetching, changesetQueryKey } from "@scm-manager/ui-api";
+import { ApiResultWithFetching } from "./base";
+import { apiClient } from "./apiclient";
+import { changesetQueryKey } from "./changesets";
 
 function createIncomingUrl(repository: Repository, linkName: string, source: string, target: string) {
   const link = repository._links[linkName];
@@ -75,7 +77,7 @@ export const useIncomingChangesets = (
   }
 
   return useQuery<ChangesetCollection, Error>(
-    ["repository", repository.namespace, repository.name, "compare", source, target, "changesets", request?.page || ""],
+    ["repository", repository.namespace, repository.name, "compare", source, target, "changesets", request?.page || 0],
     () => apiClient.get(link).then(response => response.json()),
     {
       onSuccess: changesetCollection => {

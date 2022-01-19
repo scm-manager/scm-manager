@@ -48,11 +48,12 @@ const CompareRoot: FC<Props> = ({ repository, baseUrl }) => {
 
   return (
     <Switch>
-      <Route
-        path={`${baseUrl}/:sourceType/:sourceName/:targetType/:targetName`}
-        render={() => <CompareView repository={repository} baseUrl={baseUrl} />}
-      />
-      <Redirect from={url} to={`${url}/b/${data._embedded?.branches.filter(b => b.defaultBranch)[0].name}/diff/`} />
+      <Route path={`${baseUrl}/:sourceType/:sourceName/:targetType/:targetName`}>
+        <CompareView repository={repository} baseUrl={baseUrl} />
+      </Route>
+      {data._embedded && (
+        <Redirect from={url} to={`${url}/b/${data._embedded.branches.filter(b => b.defaultBranch)[0].name}`} />
+      )}
     </Switch>
   );
 };

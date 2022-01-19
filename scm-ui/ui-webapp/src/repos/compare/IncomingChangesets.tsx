@@ -23,9 +23,9 @@
  */
 
 import React, { FC } from "react";
-import { ChangesetsPanel, usePage } from "../containers/Changesets";
 import { Repository } from "@scm-manager/ui-types";
-import { useIncomingChangesets } from "./compare";
+import { useIncomingChangesets } from "@scm-manager/ui-api";
+import { ChangesetsPanel, usePage } from "../containers/Changesets";
 
 type Props = {
   repository: Repository;

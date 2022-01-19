@@ -26,10 +26,10 @@ import React, { FC } from "react";
 import { Route, Switch, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Repository } from "@scm-manager/ui-types";
-import { LoadingDiff, Subtitle } from "@scm-manager/ui-components";
-import CompareSelectBar from "./CompareSelectBar";
+import { createDiffUrl } from "@scm-manager/ui-api";
+import { LoadingDiff, Subtitle, urls } from "@scm-manager/ui-components";
+import CompareSelectBar, { CompareTypes } from "./CompareSelectBar";
 import CompareTabs from "./CompareTabs";
-import { createDiffUrl } from "./compare";
 import IncomingChangesets from "./IncomingChangesets";
 
 type Props = {
@@ -38,9 +38,9 @@ type Props = {
 };
 
 export type CompareBranchesParams = {
-  sourceType: string;
+  sourceType: CompareTypes;
   sourceName: string;
-  targetType: string;
+  targetType: CompareTypes;
   targetName: string;
 };
 
@@ -54,10 +54,10 @@ const CompareRoutes: FC<Props> = ({ repository, baseUrl }) => {
       <Route path={`${baseUrl}/:sourceType/:sourceName/:targetType/:targetName/diff/`}>
         <LoadingDiff url={createDiffUrl(repository, source, target) + "?format=GIT"} />
       </Route>
-      <Route path={`${baseUrl}/:sourceType/:sourceName/:targetType/:targetName/changesets/:page`} exact>
+      <Route path={`${baseUrl}/:sourceType/:sourceName/:targetType/:targetName/changesets/`} exact>
         <IncomingChangesets repository={repository} source={source} target={target} />
       </Route>
-      <Route path={`${baseUrl}/:sourceType/:sourceName/:targetType/:targetName/changesets/`} exact>
+      <Route path={`${baseUrl}/:sourceType/:sourceName/:targetType/:targetName/changesets/:page`} exact>
         <IncomingChangesets repository={repository} source={source} target={target} />
       </Route>
     </Switch>

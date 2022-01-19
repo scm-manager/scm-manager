@@ -38,7 +38,7 @@ const CompareTabs: FC<Props> = ({ baseUrl }) => {
 
   const url = `${baseUrl}/${match.params.sourceType}/${match.params.sourceName}/${match.params.targetType}/${match.params.targetName}`;
 
-  const setActiveClass = (path: string) => {
+  const setIsActiveClass = (path: string) => {
     const regex = new RegExp(url + path);
     return location.pathname.match(regex) ? "is-active" : "";
   };
@@ -46,11 +46,11 @@ const CompareTabs: FC<Props> = ({ baseUrl }) => {
   return (
     <div className="tabs mt-5">
       <ul>
-        <li className={setActiveClass("/diff/")}>
+        <li className={setIsActiveClass("/diff/")}>
           <Link to={`${url}/diff/`}>{t("compare.tabs.diff")}</Link>
         </li>
-        <li className={setActiveClass("/changesets/")}>
-          <Link to={`${url}/changesets/`}>{t("compare.tabs.changesets")}</Link>
+        <li className={setIsActiveClass("/changesets/")}>
+          <Link to={`${url}/changesets/`}>{t("compare.tabs.commits")}</Link>
         </li>
       </ul>
     </div>

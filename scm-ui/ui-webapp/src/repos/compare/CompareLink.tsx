@@ -23,11 +23,11 @@
  */
 
 import React, { FC } from "react";
-import { Repository } from "@scm-manager/ui-types";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { Repository } from "@scm-manager/ui-types";
 import { Icon } from "@scm-manager/ui-components";
 import { CompareTypes } from "./CompareSelectBar";
-import { useTranslation } from "react-i18next";
 
 type Props = {
   repository: Repository;
@@ -40,7 +40,7 @@ type Props = {
 const CompareLink: FC<Props> = ({ repository, source, sourceType = "b", target, targetType = "b" }) => {
   const [t] = useTranslation("repos");
 
-  const icon = <Icon name="exchange-alt" title={t("compare.linkTitle")} color="inherit" className="mr-2" />;
+  const icon = <Icon name="retweet" title={t("compare.linkTitle")} color="inherit" className="mr-2" />;
 
   if (!target) {
     return (
@@ -52,7 +52,7 @@ const CompareLink: FC<Props> = ({ repository, source, sourceType = "b", target, 
 
   return (
     <Link
-      to={`/repo/${repository.namespace}/${repository.name}/compare/${sourceType}/${source}/${targetType}/${target}/diff`}
+      to={`/repo/${repository.namespace}/${repository.name}/compare/${sourceType}/${source}/${targetType}/${target}`}
     >
       {icon}
     </Link>

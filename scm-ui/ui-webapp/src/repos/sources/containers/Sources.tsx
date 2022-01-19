@@ -177,14 +177,6 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
     return !repository._links.branches || (branches && branches.length !== 0);
   };
 
-  const renderCodeActions = () => (
-    <>
-      {selectedBranch && branches ? (
-        <CompareLink repository={repository} source={encodeURIComponent(selectedBranch)} />
-      ) : null}
-    </>
-  );
-
   return (
     <>
       {hasBranchesWhenSupporting(repository) && (
@@ -193,7 +185,11 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
           branches={branches}
           onSelectBranch={onSelectBranch}
           switchViewLink={evaluateSwitchViewLink()}
-          actions={branches ? renderCodeActions() : null}
+          actions={
+            branches && selectedBranch ? (
+              <CompareLink repository={repository} source={encodeURIComponent(selectedBranch)} />
+            ) : null
+          }
         />
       )}
       {renderPanelContent()}

@@ -21,14 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, useState } from "react";
+
+import React, { FC, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
+import styled from "styled-components";
 import { Repository } from "@scm-manager/ui-types";
 import { devices, Icon } from "@scm-manager/ui-components";
 import CompareSelectorList from "./CompareSelectorList";
 import { CompareFunction, CompareProps, CompareTypes } from "./CompareSelectBar";
-import styled from "styled-components";
 
 type Props = {
   onSelect: CompareFunction;
@@ -58,12 +59,35 @@ const CompareSelector: FC<Props> = ({ onSelect, selected, label, repository }) =
   const [showDropdown, setShowDropdown] = useState(false);
   const [filter, setFilter] = useState("");
   const [selection, setSelection] = useState<CompareProps>(selected);
+  const ref = useRef<HTMLInputElement>(null);
 
   const onSelectEntry = (type: CompareTypes, name: string) => {
     setSelection({ type, name });
     setShowDropdown(false);
     onSelect(type, name);
   };
+
+  const onMousedown = (e: Event) => {
+    if (ref.current && !ref.current.contains(e.target as HTMLElement)) {
+      setShowDropdown(false);
+    }
+  };
+
+  const onKeyUp = (e: KeyboardEvent) => {
+    if (e.which === 27) {
+      // escape
+      setShowDropdown(false);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("mousedown", onMousedown);
+    window.addEventListener("keyup", onKeyUp);
+    return () => {
+      window.removeEventListener("mousedown", onMousedown);
+      window.removeEventListener("keyup", onKeyUp);
+    };
+  });
 
   const getActionTypeName = (type: CompareTypes) => {
     switch (type) {
@@ -80,7 +104,7 @@ const CompareSelector: FC<Props> = ({ onSelect, selected, label, repository }) =
     <ResponsiveWrapper className="field mb-0 is-flex is-flex-direction-column is-fullwidth">
       <label className="label">{label}</label>
       <MaxWidthDiv className="control">
-        <MaxWidthDiv className="dropdown is-active">
+        <MaxWidthDiv className="dropdown is-active" ref={ref}>
           <MaxWidthDiv className="dropdown-trigger">
             <button
               className="button has-text-weight-normal px-4 is-flex is-justify-content-space-between is-fullwidth"
