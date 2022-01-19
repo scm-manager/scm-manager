@@ -86,15 +86,15 @@ type BranchTabContentProps = {
   onSelectEntry: CompareFunction;
 };
 
-const BranchTabContent: FC<BranchTabContentProps> = ({ elements, selection, onSelectEntry }) => {
+const EmptyResultNotification: FC = () => {
   const [t] = useTranslation("repos");
 
+  return <Notification type="info">{t("compare.selector.emptyResult")}</Notification>;
+};
+
+const BranchTabContent: FC<BranchTabContentProps> = ({ elements, selection, onSelectEntry }) => {
   if (elements.length === 0) {
-    return (
-      <Notification className="m-4" type="info">
-        {t("compare.selector.emptyResult")}
-      </Notification>
-    );
+    return <EmptyResultNotification />;
   }
 
   return (
@@ -122,14 +122,8 @@ type TagTabContentProps = {
 };
 
 const TagTabContent: FC<TagTabContentProps> = ({ elements, selection, onSelectEntry }) => {
-  const [t] = useTranslation("repos");
-
   if (elements.length === 0) {
-    return (
-      <Notification className="m-4" type="info">
-        {t("compare.selector.emptyResult")}
-      </Notification>
-    );
+    return <EmptyResultNotification />;
   }
 
   return (
