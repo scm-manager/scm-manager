@@ -50,6 +50,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.charset.StandardCharsets;
@@ -60,6 +61,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
@@ -127,11 +129,10 @@ class I18nServletTest {
   private Cache<String, JsonNode> cache;
 
   @Test
-  void shouldNotHaveInvalidPluginsJsonFiles() throws IOException {
-    String path = getClass().getClassLoader().getResource("locales/en/plugins.json").getPath();
-    assertThat(path).isNotNull();
+  void shouldNotHaveInvalidPluginsJsonFiles() throws Exception {
+    URI uri = Objects.requireNonNull(getClass().getClassLoader().getResource("locales/en/plugins.json")).toURI();
 
-    Path filePath = Paths.get(path);
+    Path filePath = Paths.get(uri);
     Path translationRootPath = filePath.getParent().getParent();
     assertThat(translationRootPath).isDirectoryContaining("glob:**/en");
 

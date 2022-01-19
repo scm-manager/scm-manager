@@ -28,7 +28,9 @@ package sonia.scm.repository.spi;
 
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
 import sonia.scm.repository.GitConfig;
 import sonia.scm.repository.api.PushResponse;
 
@@ -74,7 +76,7 @@ public class GitPushCommandTest extends AbstractRemoteCommandTestBase
     PushResponse response = cmd.push(request);
 
     assertNotNull(response);
-    assertEquals(2l, response.getChangesetCount());
+    assertEquals(2L, response.getChangesetCount());
 
     Iterator<RevCommit> commits = incoming.log().call().iterator();
 
