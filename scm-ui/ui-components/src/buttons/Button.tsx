@@ -40,7 +40,6 @@ export type ButtonProps = {
   reducedMobile?: boolean;
   children?: ReactNode;
   testId?: string;
-  autofocus?: boolean;
   ref?: React.ForwardedRef<HTMLButtonElement>;
 };
 
@@ -68,7 +67,6 @@ const Button: FC<InnerProps> = ({
   disabled,
   action,
   color = "default",
-  autofocus,
   innerRef
 }) => {
   const renderIcon = () => {
@@ -117,7 +115,6 @@ const Button: FC<InnerProps> = ({
       disabled={disabled}
       onClick={event => action && action(event)}
       className={classes}
-      autoFocus={autofocus}
       ref={innerRef}
       {...createAttributesForTesting(testId)}
     >
