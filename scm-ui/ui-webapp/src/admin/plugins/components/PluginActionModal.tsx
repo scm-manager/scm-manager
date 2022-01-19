@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 import * as React from "react";
-import { FC, useState } from "react";
+import { FC, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { PendingPlugins, PluginCollection } from "@scm-manager/ui-types";
 import { Button, ButtonGroup, ErrorNotification, Modal } from "@scm-manager/ui-components";
@@ -53,7 +53,7 @@ const PluginActionModal: FC<Props> = ({
   execute
 }) => {
   const [t] = useTranslation("admin");
-  const [initialFocusNode, setInitialFocusNode] = useState<HTMLButtonElement | null>(null);
+  const initialFocusRef = useRef<HTMLButtonElement>(null);
 
   let notifications;
   if (error) {
@@ -147,7 +147,7 @@ const PluginActionModal: FC<Props> = ({
         loading={loading}
         action={execute}
         disabled={!!error || success}
-        ref={setInitialFocusNode}
+        ref={initialFocusRef}
       />
       <Button label={t("plugins.modal.abort")} action={onClose} />
     </ButtonGroup>
@@ -160,7 +160,7 @@ const PluginActionModal: FC<Props> = ({
       body={body}
       footer={footer}
       active={true}
-      initialFocusNode={initialFocusNode}
+      initialFocusRef={initialFocusRef}
     />
   );
 };

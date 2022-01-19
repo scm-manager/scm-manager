@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import { User } from "@scm-manager/ui-types";
@@ -56,7 +56,7 @@ const UserConverter: FC<Props> = ({ user }) => {
   } = useConvertToExternal();
   const error = convertingToExternalError || convertingToInternalError || undefined;
   const isLoading = isConvertingToExternal || isConvertingToInternal;
-  const [initialFocusNode, setInitialFocusNode] = useState<HTMLInputElement | null>(null);
+  const initialFocusRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => setShowPasswordModal(false), [user]);
 
@@ -109,7 +109,7 @@ const UserConverter: FC<Props> = ({ user }) => {
       closeFunction={() => setShowPasswordModal(false)}
       active={showPasswordModal}
       title={t("userForm.modal.passwordRequired")}
-      initialFocusNode={initialFocusNode}
+      initialFocusRef={initialFocusRef}
       footer={
         <SubmitButton
           action={() => password && passwordValid && convertToInternal(user, password)}
@@ -120,11 +120,7 @@ const UserConverter: FC<Props> = ({ user }) => {
         />
       }
     >
-      <PasswordConfirmation
-        passwordChanged={changePassword}
-        onReturnPressed={onReturnPressed}
-        ref={setInitialFocusNode}
-      />
+      <PasswordConfirmation passwordChanged={changePassword} onReturnPressed={onReturnPressed} ref={initialFocusRef} />
     </Modal>
   );
 

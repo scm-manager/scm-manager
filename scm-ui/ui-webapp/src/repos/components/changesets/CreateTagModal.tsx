@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import { Modal, InputField, Button, Loading, ErrorNotification } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 import { Changeset, Repository } from "@scm-manager/ui-types";
@@ -43,7 +43,7 @@ const CreateTagModal: FC<Props> = ({ repository, changeset, onClose }) => {
   );
   const [t] = useTranslation("repos");
   const [newTagName, setNewTagName] = useState("");
-  const [initialFocusNode, setInitialFocusNode] = useState<HTMLInputElement | null>(null);
+  const initialFocusRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (createdTag) {
@@ -80,7 +80,7 @@ const CreateTagModal: FC<Props> = ({ repository, changeset, onClose }) => {
           value={newTagName}
           validationError={!!validationError}
           errorMessage={t(validationError)}
-          ref={setInitialFocusNode}
+          ref={initialFocusRef}
           onReturnPressed={() => !validationError && newTagName.length > 0 && create(newTagName)}
         />
         <div className="mt-5">{t("tags.create.hint")}</div>
@@ -107,7 +107,7 @@ const CreateTagModal: FC<Props> = ({ repository, changeset, onClose }) => {
         </>
       }
       closeFunction={onClose}
-      initialFocusNode={initialFocusNode}
+      initialFocusRef={initialFocusRef}
     />
   );
 };

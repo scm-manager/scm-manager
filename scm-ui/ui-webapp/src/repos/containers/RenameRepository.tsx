@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import React, { FC, useState } from "react";
+import React, { FC, useRef, useState } from "react";
 import { Repository } from "@scm-manager/ui-types";
 import { Button, ButtonGroup, ErrorNotification, InputField, Level, Loading, Modal } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
@@ -53,6 +53,7 @@ const RenameRepository: FC<Props> = ({ repository }) => {
     error: namespaceStrategyLoadError,
     data: namespaceStrategies
   } = useNamespaceStrategies();
+  const initialFocusRef = useRef<HTMLInputElement>(null);
 
   if (isRenamed) {
     return <Redirect to={`/repo/${namespace}/${name}`} />;
@@ -91,7 +92,9 @@ const RenameRepository: FC<Props> = ({ repository }) => {
         helpText={t("help.nameHelpText")}
         validationError={nameValidationError}
         value={name}
-        onChange={handleNameChange}
+        onChange={event => handleNameChange(event.target.value)}
+        onReturnPressed={() => isValid && renameRepository(namespace, name)}
+        ref={initialFocusRef}
       />
       <NamespaceInput
         namespace={namespace}
@@ -123,16 +126,18 @@ const RenameRepository: FC<Props> = ({ repository }) => {
     </>
   );
 
-  const modal = (
-    <Modal
-      active={showModal}
-      title={t("renameRepo.modal.title")}
-      footer={footer}
-      body={modalBody}
-      closeFunction={() => setShowModal(false)}
-      overflowVisible={true}
-    />
-  );
+    return (
+      <Modal
+        active={showModal}
+        title={t("renameRepo.modal.title")}
+        footer={footer}
+        body={modalBody}
+        closeFunction={() => setShowModal(false)}
+        initialFocusRef={initialFocusRef}
+        overflowVisible={true}
+      />
+    );
+  };
 
   return (
     <>

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import InputField from "./InputField";
 
@@ -43,27 +43,25 @@ const PasswordConfirmation: FC<InnerProps> = ({ passwordChanged, passwordValidat
   const [passwordConfirmationFailed, setPasswordConfirmationFailed] = useState(false);
   const isValid = passwordValid && !passwordConfirmationFailed;
 
-  const propagateChange = () => passwordChanged(password, isValid);
+  useEffect(() => passwordChanged(password, isValid), [password, isValid]);
 
-  const validatePassword = (password: string) => {
+  const validatePassword = (newPassword: string) => {
     if (passwordValidator) {
-      return passwordValidator(password);
+      return passwordValidator(newPassword);
     }
 
-    return password.length >= 6 && password.length < 32;
+    return newPassword.length >= 6 && newPassword.length < 32;
   };
 
-  const handlePasswordValidationChange = (confirmedPassword: string) => {
-    setConfirmedPassword(confirmedPassword);
-    setPasswordConfirmationFailed(password !== confirmedPassword);
-    propagateChange();
+  const handlePasswordValidationChange = (newConfirmedPassword: string) => {
+    setConfirmedPassword(newConfirmedPassword);
+    setPasswordConfirmationFailed(password !== newConfirmedPassword);
   };
 
-  const handlePasswordChange = (password: string) => {
-    setPasswordConfirmationFailed(password !== confirmedPassword);
-    setPassword(password);
-    setPasswordValid(validatePassword(password));
-    propagateChange();
+  const handlePasswordChange = (newPassword: string) => {
+    setPasswordConfirmationFailed(newPassword !== confirmedPassword);
+    setPassword(newPassword);
+    setPasswordValid(validatePassword(newPassword));
   };
 
   return (

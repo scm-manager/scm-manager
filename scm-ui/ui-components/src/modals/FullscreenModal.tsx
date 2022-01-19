@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 import * as React from "react";
-import { FC, ReactNode } from "react";
+import { FC, MutableRefObject, ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { Modal } from "./Modal";
 import Button from "../buttons/Button";
@@ -34,7 +34,7 @@ type Props = {
   body: ReactNode;
   active: boolean;
   closeButtonLabel?: string;
-  initialFocusNode?: HTMLElement | null;
+  initialFocusRef?: MutableRefObject<HTMLElement | null>;
 };
 
 const FullSizedModal = styled(Modal)`
@@ -44,7 +44,7 @@ const FullSizedModal = styled(Modal)`
   }
 `;
 
-const FullscreenModal: FC<Props> = ({ title, closeFunction, body, active, initialFocusNode, closeButtonLabel }) => {
+const FullscreenModal: FC<Props> = ({ title, closeFunction, body, active, initialFocusRef, closeButtonLabel }) => {
   const [t] = useTranslation("repos");
   const footer = (
     <Button label={closeButtonLabel || t("diff.fullscreen.close")} action={closeFunction} color="secondary" />
@@ -57,7 +57,7 @@ const FullscreenModal: FC<Props> = ({ title, closeFunction, body, active, initia
       body={body}
       footer={footer}
       active={active}
-      initialFocusNode={initialFocusNode}
+      initialFocusRef={initialFocusRef}
     />
   );
 };

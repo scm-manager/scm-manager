@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button, ButtonGroup, Modal, SubmitButton } from "@scm-manager/ui-components";
 import PermissionCheckbox from "../../../permissions/components/PermissionCheckbox";
@@ -45,7 +45,7 @@ const createPreSelection = (availableVerbs: string[], selectedVerbs?: string[]):
 const AdvancedPermissionsDialog: FC<Props> = ({ availableVerbs, selectedVerbs, readOnly, onSubmit, onClose }) => {
   const [verbs, setVerbs] = useState<SelectedVerbs>({});
   const [t] = useTranslation("repos");
-  const [initialFocusNode, setInitialFocusNode] = useState<HTMLInputElement | null>(null);
+  const initialFocusRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setVerbs(createPreSelection(availableVerbs, selectedVerbs));
@@ -68,7 +68,7 @@ const AdvancedPermissionsDialog: FC<Props> = ({ availableVerbs, selectedVerbs, r
       onChange={handleChange}
       disabled={readOnly}
       role={true}
-      ref={index === 0 ? setInitialFocusNode : undefined}
+      ref={index === 0 ? initialFocusRef : undefined}
     />
   ));
 
@@ -96,7 +96,7 @@ const AdvancedPermissionsDialog: FC<Props> = ({ availableVerbs, selectedVerbs, r
       body={<>{verbSelectBoxes}</>}
       footer={footer}
       active={true}
-      initialFocusNode={initialFocusNode}
+      initialFocusRef={initialFocusRef}
     />
   );
 };
