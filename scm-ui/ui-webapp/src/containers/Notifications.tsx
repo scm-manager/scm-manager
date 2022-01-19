@@ -157,7 +157,7 @@ type Props = {
 
 const NotificationDropDown: FC<Props> = ({ data, remove, clear }) => (
   <>
-    {data._embedded?.notifications.length || 0 > 0 ? (
+    {(data._embedded?.notifications.length ?? 0) > 0 ? (
       <NotificationList data={data} remove={remove} clear={clear} />
     ) : (
       <NoNotifications />

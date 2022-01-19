@@ -43,7 +43,9 @@ import java.util.stream.Collectors;
 import static com.google.common.collect.ImmutableSet.of;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Sebastian Sdorra
@@ -85,7 +87,8 @@ public class PluginTreeTest {
     Path path = smp.getPath();
     Files.createFile(path.resolve(PluginConstants.FILE_CORE));
 
-    new PluginTree(Stage.DEVELOPMENT, smp).getLeafLastNodes();
+    List<PluginNode> nodes = new PluginTree(Stage.DEVELOPMENT, smp).getLeafLastNodes();
+    assertFalse(nodes.isEmpty());
   }
 
   @Test(expected = PluginNotInstalledException.class)

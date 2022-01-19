@@ -29,7 +29,6 @@ package sonia.scm;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
 import com.google.common.io.Files;
-import com.google.common.io.MoreFiles;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 
@@ -293,9 +292,9 @@ public class BasicContextProvider implements SCMContextProvider
     if (instanceIdFile.exists()) {
       return Files.asCharSource(instanceIdFile, StandardCharsets.UTF_8).read();
     }
-    String instanceId = UUID.randomUUID().toString();
-    Files.asCharSink(instanceIdFile, StandardCharsets.UTF_8).write(instanceId);
-    return instanceId;
+    String uuid = UUID.randomUUID().toString();
+    Files.asCharSink(instanceIdFile, StandardCharsets.UTF_8).write(uuid);
+    return uuid;
   }
 
   //~--- fields ---------------------------------------------------------------

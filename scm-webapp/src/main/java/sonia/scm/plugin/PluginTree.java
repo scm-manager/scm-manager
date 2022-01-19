@@ -27,8 +27,6 @@ package sonia.scm.plugin;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.SCMContext;
-import sonia.scm.SCMContextProvider;
 import sonia.scm.Stage;
 
 import java.util.Arrays;
