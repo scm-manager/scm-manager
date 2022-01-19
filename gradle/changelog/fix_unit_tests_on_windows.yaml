@@ -1,0 +1,2 @@
+- type: fixed
+  description: Fix bugs in unit tests which occur on Windows only ([#1927](https://github.com/scm-manager/scm-manager/pull/1927))
