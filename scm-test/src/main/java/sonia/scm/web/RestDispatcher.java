@@ -43,6 +43,7 @@ import sonia.scm.NotFoundException;
 import sonia.scm.ScmConstraintViolationException;
 
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.ContextResolver;
@@ -111,13 +112,16 @@ public class RestDispatcher {
     }
 
     private Integer getStatus(Exception ex) {
+      if (ex instanceof WebApplicationException) {
+        return ((WebApplicationException) ex).getResponse().getStatus();
+      }
       return statusCodes
         .entrySet()
         .stream()
         .filter(e -> e.getKey().isAssignableFrom(ex.getClass()))
         .map(Map.Entry::getValue)
         .findAny()
-        .orElse(handleUnknownException(ex));
+        .orElseGet(() -> handleUnknownException(ex));
     }
 
     private Integer handleUnknownException(Exception ex) {

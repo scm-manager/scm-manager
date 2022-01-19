@@ -39,12 +39,8 @@ import sonia.scm.config.ScmConfiguration;
 import sonia.scm.security.AnonymousMode;
 
 import java.net.URI;
-import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -106,6 +102,7 @@ class ScmConfigurationToConfigDtoMapperTest {
     assertThat(dto.isEnabledXsrfProtection()).isTrue();
     assertThat(dto.getNamespaceStrategy()).isEqualTo("username");
     assertThat(dto.getLoginInfoUrl()).isEqualTo("https://scm-manager.org/login-info");
+    assertThat(dto.getAlertsUrl()).isEqualTo("https://alerts.scm-manager.org/api/v1/alerts");
     assertThat(dto.getReleaseFeedUrl()).isEqualTo("https://www.scm-manager.org/download/rss.xml");
     assertThat(dto.getMailDomainName()).isEqualTo("scm-manager.local");
     assertThat(dto.getEmergencyContacts()).contains(expectedUsers);
@@ -169,6 +166,7 @@ class ScmConfigurationToConfigDtoMapperTest {
     config.setEnabledXsrfProtection(true);
     config.setNamespaceStrategy("username");
     config.setLoginInfoUrl("https://scm-manager.org/login-info");
+    config.setAlertsUrl("https://alerts.scm-manager.org/api/v1/alerts");
     config.setReleaseFeedUrl("https://www.scm-manager.org/download/rss.xml");
     config.setEmergencyContacts(Sets.newSet(expectedUsers));
     return config;

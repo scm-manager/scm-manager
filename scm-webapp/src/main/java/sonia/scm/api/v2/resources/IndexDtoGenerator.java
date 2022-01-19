@@ -146,6 +146,10 @@ public class IndexDtoGenerator extends HalAppenderMapper {
 
       builder.array(searchLinks());
       builder.single(link("searchableTypes", resourceLinks.search().searchableTypes()));
+
+      if (!Strings.isNullOrEmpty(configuration.getAlertsUrl())) {
+        builder.single(link("alerts", resourceLinks.alerts().get()));
+      }
     } else {
       builder.single(link("login", resourceLinks.authentication().jsonLogin()));
     }

@@ -98,6 +98,8 @@ public class VndMediaType {
 
   public static final String NOTIFICATION_COLLECTION = PREFIX + "notificationCollection" + SUFFIX;
 
+  public static final String ALERTS_REQUEST = PREFIX + "alertsRequest" + SUFFIX;
+
   public static final String QUERY_RESULT = PREFIX + "queryResult" + SUFFIX;
   public static final String SEARCHABLE_TYPE_COLLECTION = PREFIX + "searchableTypeCollection" + SUFFIX;
 

@@ -30,6 +30,7 @@ import sonia.scm.version.Version;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.UUID;
 
 import static java.lang.String.format;
 
@@ -98,5 +99,15 @@ public interface SCMContextProvider {
   default String getDocumentationVersion() {
     Version parsedVersion = Version.parse(getVersion());
     return format("%s.%s.x", parsedVersion.getMajor(), parsedVersion.getMinor());
+  }
+
+  /**
+   * Returns the instance id of the SCM-Manager used.
+   *
+   * @return instance id of the SCM-Manager
+   * @since 2.30.0
+   */
+  default String getInstanceId() {
+    return UUID.randomUUID().toString();
   }
 }

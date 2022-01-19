@@ -71,6 +71,14 @@ interface UpdateConfigDto {
 
   String getLoginInfoUrl();
 
+  /**
+   * Get the url to the alerts api.
+   *
+   * @return alerts url
+   * @since 2.30.0
+   */
+  String getAlertsUrl();
+
   String getReleaseFeedUrl();
 
   String getMailDomainName();

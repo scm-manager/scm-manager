@@ -22,36 +22,20 @@
  * SOFTWARE.
  */
 
-import { HalRepresentation } from "./hal";
+export type Alert = {
+  title: string;
+  description: string;
+  link?: string;
+  issuedAt: string;
+  affectedVersions?: string;
+};
 
-export type AnonymousMode = "FULL" | "PROTOCOL_ONLY" | "OFF";
+export type PluginAlerts = {
+  name: string;
+  alerts: Alert[];
+};
 
-export type Config = HalRepresentation & {
-  proxyPassword: string | null;
-  proxyPort: number;
-  proxyServer: string;
-  proxyUser: string | null;
-  enableProxy: boolean;
-  realmDescription: string;
-  disableGroupingGrid: boolean;
-  dateFormat: string;
-  anonymousAccessEnabled: boolean;
-  anonymousMode: AnonymousMode;
-  baseUrl: string;
-  forceBaseUrl: boolean;
-  loginAttemptLimit: number;
-  proxyExcludes: string[];
-  skipFailedAuthenticators: boolean;
-  pluginUrl: string;
-  pluginAuthUrl: string;
-  loginAttemptLimitTimeout: number;
-  enabledXsrfProtection: boolean;
-  enabledUserConverter: boolean;
-  namespaceStrategy: string;
-  loginInfoUrl: string;
-  alertsUrl: string;
-  releaseFeedUrl: string;
-  mailDomainName: string;
-  emergencyContacts: string[];
-  enabledApiKeys: boolean;
+export type AlertsResponse = {
+  alerts?: Alert[];
+  plugins?: PluginAlerts[];
 };

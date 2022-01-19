@@ -51,6 +51,7 @@ export * from "./sources";
 export * from "./import";
 export * from "./diff";
 export * from "./notifications";
+export * from "./alerts";
 export * from "./configLink";
 export * from "./apiKeys";
 export * from "./publicKeys";

@@ -164,6 +164,9 @@
     "dismiss": "Löschen",
     "dismissAll": "Alle löschen"
   },
+  "alerts": {
+    "shieldTitle": "Alerts"
+  },
   "cardColumnGroup": {
     "showContent": "Inhalt einblenden",
     "hideContent": "Inhalt ausblenden"

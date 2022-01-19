@@ -61,6 +61,7 @@ public class ConfigDto extends HalRepresentation implements UpdateConfigDto {
   private boolean enabledApiKeys;
   private String namespaceStrategy;
   private String loginInfoUrl;
+  private String alertsUrl;
   private String releaseFeedUrl;
   private String mailDomainName;
   private Set<String> emergencyContacts;

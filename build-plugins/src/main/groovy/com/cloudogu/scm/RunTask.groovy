@@ -102,13 +102,22 @@ class RunTask extends DefaultTask {
   }
 
   private Closure<Void> createBackend() {
+    Map<String,String> scmProperties = System.getProperties().findAll { e -> {
+      return e.key.startsWith("scm") || e.key.startsWith("sonia")
+    }}
+
+    def runProperties = new HashMap<String, String>(scmProperties)
+    runProperties.put("user.home", extension.getHome())
+    runProperties.put("scm.initialPassword", "scmadmin")
+    runProperties.put("scm.workingCopyPoolStrategy", "sonia.scm.repository.work.SimpleCachingWorkingCopyPool")
+
     return {
       project.javaexec {
         mainClass.set(ScmServer.name)
         args(new File(project.buildDir, 'server/config.json').toString())
         environment 'NODE_ENV', 'development'
         classpath project.buildscript.configurations.classpath
-        systemProperties = ["user.home": extension.getHome(), "scm.initialPassword": "scmadmin", "scm.workingCopyPoolStrategy": "sonia.scm.repository.work.SimpleCachingWorkingCopyPool"]
+        systemProperties = runProperties
         if (debugJvm) {
           debug = true
           debugOptions {
