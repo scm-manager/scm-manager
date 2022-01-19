@@ -126,18 +126,17 @@ const RenameRepository: FC<Props> = ({ repository }) => {
     </>
   );
 
-    return (
-      <Modal
-        active={showModal}
-        title={t("renameRepo.modal.title")}
-        footer={footer}
-        body={modalBody}
-        closeFunction={() => setShowModal(false)}
-        initialFocusRef={initialFocusRef}
-        overflowVisible={true}
-      />
-    );
-  };
+  const modal = (
+    <Modal
+      active={showModal}
+      title={t("renameRepo.modal.title")}
+      footer={footer}
+      body={modalBody}
+      closeFunction={() => setShowModal(false)}
+      initialFocusRef={initialFocusRef}
+      overflowVisible={true}
+    />
+  );
 
   return (
     <>
