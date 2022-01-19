@@ -21,14 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 import React, { FC, useEffect, useState } from "react";
 import { useHistory, useLocation, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import styled from "styled-components";
 import { Repository } from "@scm-manager/ui-types";
 import { devices, Icon } from "@scm-manager/ui-components";
 import CompareSelector from "./CompareSelector";
 import { CompareBranchesParams } from "./CompareView";
-import styled from "styled-components";
 
 type Props = {
   repository: Repository;
@@ -43,12 +44,11 @@ export type CompareProps = {
   name: string;
 };
 const ResponsiveIcon = styled(Icon)`
-  margin: 0 1rem;
+  margin: 1rem 0.5rem;
   transform: rotate(90deg);
   @media screen and (min-width: ${devices.tablet.width}px) {
-    margin-left: 0;
+    margin: 1.5rem 1rem 0;
     transform: rotate(0);
-    padding-left: 0.75rem;
   }
 `;
 
@@ -102,7 +102,7 @@ const CompareSelectBar: FC<Props> = ({ repository, baseUrl }) => {
         onSelect={(type, name) => setSource({ type, name })}
         selected={source}
       />
-      <ResponsiveIcon name="arrow-right" className="fa-lg mt-2" title={t("compare.selector.with")} />
+      <ResponsiveIcon name="arrow-right" className="fa-lg" title={t("compare.selector.with")} />
       <CompareSelector
         repository={repository}
         label={t("compare.selector.target")}
