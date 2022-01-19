@@ -37,6 +37,7 @@ import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.regex.Pattern;
 
 public class TarArchiveRepositoryStoreImporter {
 
@@ -51,7 +52,7 @@ public class TarArchiveRepositoryStoreImporter {
     try (TarArchiveInputStream tais = new NoneClosingTarArchiveInputStream(inputStream)) {
       ArchiveEntry entry = tais.getNextEntry();
       while (entry != null) {
-        String[] entryPathParts = entry.getName().split(File.separator);
+        String[] entryPathParts = entry.getName().split("/");
         validateStorePath(repository, entryPathParts);
         importStoreByType(repository, tais, entryPathParts, logger);
         entry = tais.getNextEntry();

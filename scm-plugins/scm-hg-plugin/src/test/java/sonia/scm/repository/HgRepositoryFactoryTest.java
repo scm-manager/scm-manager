@@ -24,8 +24,9 @@
 
 package sonia.scm.repository;
 
-import org.javahg.Repository;
 import com.google.common.collect.ImmutableMap;
+import org.javahg.Repository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -57,6 +58,7 @@ class HgRepositoryFactoryTest {
   private HgRepositoryFactory factory;
 
   private sonia.scm.repository.Repository heartOfGold;
+  private Repository repository;
 
   @BeforeEach
   void setUpFactory(@TempDir Path directory) {
@@ -68,9 +70,16 @@ class HgRepositoryFactoryTest {
     heartOfGold = createRepository();
   }
 
+  @AfterEach
+  void tearDown() {
+    if (repository != null) {
+      repository.close();
+    }
+  }
+
   @Test
   void shouldOpenRepositoryForRead() {
-    Repository repository = factory.openForRead(heartOfGold);
+    repository = factory.openForRead(heartOfGold);
 
     assertThat(repository).isNotNull();
     verify(environmentBuilder).read(heartOfGold);
@@ -78,7 +87,7 @@ class HgRepositoryFactoryTest {
 
   @Test
   void shouldOpenRepositoryForWrite() {
-    Repository repository = factory.openForWrite(heartOfGold);
+    repository = factory.openForWrite(heartOfGold);
 
     assertThat(repository).isNotNull();
     verify(environmentBuilder).write(heartOfGold);
@@ -88,7 +97,7 @@ class HgRepositoryFactoryTest {
   void shouldFallbackToUTF8OnUnknownEncoding() {
     handler.getConfig().setEncoding("unknown");
 
-    Repository repository = factory.openForRead(heartOfGold);
+    repository = factory.openForRead(heartOfGold);
 
     assertThat(repository.getBaseRepository().getConfiguration().getEncoding()).isEqualTo(StandardCharsets.UTF_8);
   }
@@ -97,7 +106,7 @@ class HgRepositoryFactoryTest {
   void shouldSetPendingChangesetState() {
     when(hookEnvironment.isPending()).thenReturn(true);
 
-    Repository repository = factory.openForRead(heartOfGold);
+    repository = factory.openForRead(heartOfGold);
 
     assertThat(repository.getBaseRepository().getConfiguration().isEnablePendingChangesets())
       .isTrue();
@@ -107,7 +116,7 @@ class HgRepositoryFactoryTest {
   void shouldPassEnvironment() {
     when(environmentBuilder.read(heartOfGold)).thenReturn(ImmutableMap.of("spaceship", "heartOfGold"));
 
-    Repository repository = factory.openForRead(heartOfGold);
+    repository = factory.openForRead(heartOfGold);
 
     assertThat(repository.getBaseRepository().getConfiguration().getEnvironment())
       .containsEntry("spaceship", "heartOfGold");
@@ -121,6 +130,5 @@ class HgRepositoryFactoryTest {
     handler.create(heartOfGold);
     return heartOfGold;
   }
-
 
 }
