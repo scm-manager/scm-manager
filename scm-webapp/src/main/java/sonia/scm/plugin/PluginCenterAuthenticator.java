@@ -41,6 +41,7 @@ import sonia.scm.net.ahc.AdvancedHttpResponse;
 import sonia.scm.store.ConfigurationStore;
 import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.util.HttpUtil;
+import sonia.scm.xml.XmlEncryptionAdapter;
 import sonia.scm.xml.XmlInstantAdapter;
 
 import javax.inject.Inject;
@@ -151,13 +152,13 @@ public class PluginCenterAuthenticator {
 
   @Data
   @XmlRootElement
-  @VisibleForTesting
   @AllArgsConstructor
   @NoArgsConstructor
   @XmlAccessorType(XmlAccessType.FIELD)
-  static class Authentication implements AuthenticationInfo {
+  public static class Authentication implements AuthenticationInfo {
     private String principal;
     private String pluginCenterSubject;
+    @XmlJavaTypeAdapter(XmlEncryptionAdapter.class)
     private String refreshToken;
     @XmlJavaTypeAdapter(XmlInstantAdapter.class)
     private Instant date;
