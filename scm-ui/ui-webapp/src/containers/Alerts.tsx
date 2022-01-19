@@ -56,11 +56,13 @@ const AlertsEntry: FC<EntryProps> = ({ alert }) => {
         <p className="has-text-weight-bold">{alert.title}</p>
         <p>{alert.description}</p>
       </Column>
-      <RightColumn className="has-text-right is-flex is-flex-direction-column is-justify-content-space-between">
-        <p className="has-text-weight-semibold">
-          {alert.component} {alert.affectedVersions}
-        </p>
-        <DateFromNow date={alert.issuedAt} className="is-size-7" />
+      <RightColumn className="has-text-right">
+        <div className="is-flex is-flex-direction-column is-justify-content-space-between">
+          <p className="has-text-weight-semibold">
+            {alert.component} {alert.affectedVersions}
+          </p>
+          <DateFromNow date={alert.issuedAt} className="is-size-7" />
+        </div>
       </RightColumn>
     </tr>
   );
