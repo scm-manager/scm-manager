@@ -33,7 +33,7 @@ const modalSizes: { [key in ModalSize]: number } = { S: 33, M: 50, L: 66 };
 type Props = {
   title: string;
   closeFunction: () => void;
-  body: any;
+  body?: any;
   footer?: any;
   active: boolean;
   className?: string;
@@ -49,7 +49,7 @@ const SizedModal = styled.div<{ size?: ModalSize; overflow: string }>`
   overflow: ${props => props.overflow};
 `;
 
-const DialogWithOptionalOverflow = styled(Dialog)<{ overflow: string; borderBottomRadius: string }>`
+const DialogWithOptionalOverflow = styled(Dialog)`
   overflow: ${props => props.overflow};
   border-bottom-left-radius: ${props => props.borderBottomRadius};
   border-bottom-right-radius: ${props => props.borderBottomRadius};
