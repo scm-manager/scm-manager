@@ -27,10 +27,13 @@ const fs = require("fs");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const RemoveThemesPlugin = require("./RemoveThemesPlugin");
 const WorkerPlugin = require("worker-plugin");
+const ReactDOM = require("react-dom");
 
 const root = path.resolve("..");
 
 const themedir = path.join(root, "ui-styles", "src");
+
+ReactDOM.createPortal = node => node;
 
 const themes = fs
   .readdirSync(themedir)
@@ -50,7 +53,7 @@ module.exports = {
     // add our themes to webpack entry points
     config.entry = {
       main: config.entry,
-      ...themes,
+      ...themes
     };
 
     // create separate css files for our themes
