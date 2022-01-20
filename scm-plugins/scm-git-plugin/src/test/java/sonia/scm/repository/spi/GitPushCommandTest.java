@@ -28,9 +28,7 @@ package sonia.scm.repository.spi;
 
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.revwalk.RevCommit;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.jupiter.api.Disabled;
 import sonia.scm.repository.GitConfig;
 import sonia.scm.repository.api.PushResponse;
 
