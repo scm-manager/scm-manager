@@ -33,6 +33,7 @@ import CodeActionBar from "../../codeSection/components/CodeActionBar";
 import replaceBranchWithRevision from "../ReplaceBranchWithRevision";
 import FileSearchButton from "../../codeSection/components/FileSearchButton";
 import { isEmptyDirectory, isRootFile } from "../utils/files";
+import CompareLink from "../../compare/CompareLink";
 
 type Props = {
   repository: Repository;
@@ -59,7 +60,7 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
   const history = useHistory();
   const location = useLocation();
   const [t] = useTranslation("repos");
-  // redirect to default branch is non branch selected
+  // redirect to default branch if no branch selected
   useEffect(() => {
     if (branches && branches.length > 0 && !selectedBranch) {
       const defaultBranch = branches?.filter(b => b.defaultBranch === true)[0];
@@ -184,6 +185,11 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
           branches={branches}
           onSelectBranch={onSelectBranch}
           switchViewLink={evaluateSwitchViewLink()}
+          actions={
+            branches && selectedBranch ? (
+              <CompareLink repository={repository} source={encodeURIComponent(selectedBranch)} />
+            ) : null
+          }
         />
       )}
       {renderPanelContent()}

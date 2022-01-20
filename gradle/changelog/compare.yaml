@@ -1,0 +1,2 @@
+- type: added
+  description: Add compare view to see changes between branches, tags and revisions ([#1920](https://github.com/scm-manager/scm-manager/pull/1920))

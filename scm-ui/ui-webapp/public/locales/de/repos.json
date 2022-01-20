@@ -161,6 +161,31 @@
       }
     }
   },
+  "compare": {
+    "title": "Vergleiche Änderungen",
+    "linkTitle": "Vergleichen mit...",
+    "selector": {
+      "title": "Branch, Tag oder Revision auswählen",
+      "source": "Source",
+      "target": "Target",
+      "with": "Vergleiche Änderungen mit...",
+      "filter": "Auswahl filtern...",
+      "emptyResult": "Es wurden keine dem Filter entsprechenden Ergebnisse gefunden.",
+      "tabs": {
+        "b": "Branches",
+        "t": "Tags",
+        "r": "Revision"
+      },
+      "revision": {
+        "input": "Revision eingeben",
+        "submit": "Auswählen"
+      }
+    },
+    "tabs": {
+      "diff": "Diff",
+      "commits": "Commits"
+    }
+  },
   "tags": {
     "overview": {
       "title": "Übersicht aller verfügbaren Tags",

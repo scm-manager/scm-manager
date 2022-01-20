@@ -627,7 +627,7 @@ public final class GitUtil {
   public static ObjectId computeCommonAncestor(org.eclipse.jgit.lib.Repository repository, ObjectId revision1, ObjectId revision2) throws IOException {
     try (RevWalk mergeBaseWalk = new RevWalk(repository)) {
       mergeBaseWalk.setRevFilter(RevFilter.MERGE_BASE);
-      mergeBaseWalk.markStart(mergeBaseWalk.lookupCommit(revision1));
+      mergeBaseWalk.markStart(mergeBaseWalk.parseCommit(revision1));
       mergeBaseWalk.markStart(mergeBaseWalk.parseCommit(revision2));
       RevCommit ancestor = mergeBaseWalk.next();
       if (ancestor == null) {

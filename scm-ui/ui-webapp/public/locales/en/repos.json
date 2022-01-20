@@ -161,6 +161,31 @@
       }
     }
   },
+  "compare": {
+    "title": "Compare Changes",
+    "linkTitle": "Compare with...",
+    "selector": {
+      "title": "Select branch, tag or revision",
+      "source": "Source",
+      "target": "Target",
+      "with": "Compare changes with...",
+      "filter": "Filter selection...",
+      "emptyResult": "No results matching the filter were found.",
+      "tabs": {
+        "b": "Branches",
+        "t": "Tags",
+        "r": "Revision"
+      },
+      "revision": {
+        "input": "Enter revision",
+        "submit": "Select"
+      }
+    },
+    "tabs": {
+      "diff": "Diff",
+      "commits": "Commits"
+    }
+  },
   "tags": {
     "overview": {
       "title": "Overview of All Tags",
