@@ -33,7 +33,7 @@ type DropDownMenuProps = {
 
 const DropDownMenu = styled.div<DropDownMenuProps>`
   min-width: 35rem;
-  
+
   @media screen and (max-width: ${devices.desktop.width}px) {
     min-width: 30rem;
   }
@@ -47,10 +47,9 @@ const DropDownMenu = styled.div<DropDownMenuProps>`
     ${props =>
       props.mobilePosition === "right" &&
       css`
-      right: -1.5rem;
-      left: auto;
-    `};
-
+        right: -1.5rem;
+        left: auto;
+      `};
   }
 
   @media screen and (max-width: ${devices.desktop.width - 1}px) {
@@ -79,7 +78,7 @@ const DropDownMenu = styled.div<DropDownMenuProps>`
     @media screen and (min-width: ${devices.desktop.width}px) {
       right: 1.3rem;
     }
-    
+
     ${props =>
       props.mobilePosition === "right" &&
       css`
@@ -87,7 +86,7 @@ const DropDownMenu = styled.div<DropDownMenuProps>`
           left: auto;
           right: 1.75rem;
         }
-    `};
+      `};
   }
 `;
 
