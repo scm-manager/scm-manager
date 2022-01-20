@@ -55,12 +55,12 @@ const DeleteTag: FC<Props> = ({ tag, repository }) => {
               className: "is-outlined",
               label: t("tag.delete.confirmAlert.submit"),
               isLoading,
-              autofocus: true,
               onClick: () => remove(tag)
             },
             {
               label: t("tag.delete.confirmAlert.cancel"),
-              onClick: () => null
+              onClick: () => null,
+              autofocus: true
             }
           ]}
           close={() => setShowConfirmAlert(false)}

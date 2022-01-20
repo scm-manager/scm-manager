@@ -77,12 +77,12 @@ const TagTable: FC<Props> = ({ repository, baseUrl, tags }) => {
               className: "is-outlined",
               label: t("tag.delete.confirmAlert.submit"),
               isLoading,
-              onClick: () => deleteTag(),
-              autofocus: true
+              onClick: () => deleteTag()
             },
             {
               label: t("tag.delete.confirmAlert.cancel"),
-              onClick: () => abortDelete()
+              onClick: () => abortDelete(),
+              autofocus: true
             }
           ]}
           close={() => abortDelete()}
