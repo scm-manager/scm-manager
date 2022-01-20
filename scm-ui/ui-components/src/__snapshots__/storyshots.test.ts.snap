@@ -19196,11 +19196,9 @@ exports[`Storyshots Modal/ConfirmAlert Autofocus 1`] = `
 <div
   aria-labelledby="headlessui-dialog-title-6"
   aria-modal={true}
-  borderBottomRadius="unset"
-  className="Modal__DialogWithOptionalOverflow-m3xdw4-1 hMMOts modal is-active"
+  className="modal is-active is-overflow-auto is-border-bottom-radius-unset"
   id="headlessui-dialog-4"
   onClick={[Function]}
-  overflow="auto"
   role="dialog"
 >
   <div
@@ -19229,8 +19227,7 @@ exports[`Storyshots Modal/ConfirmAlert Autofocus 1`] = `
       />
     </header>
     <section
-      className="Modal__SectionWithOptionalOverflow-m3xdw4-2 boQfzO modal-card-body"
-      overflow="auto"
+      className="modal-card-body is-overflow-auto is-border-bottom-radius-unset"
     >
       Mind-paralyzing change needed improbability vortex machine sorts sought same theory upending job just allows
  hostess’s really oblong Infinite Improbability thing into the starship against which behavior accordance with
@@ -19277,11 +19274,9 @@ exports[`Storyshots Modal/ConfirmAlert Default 1`] = `
 <div
   aria-labelledby={null}
   aria-modal={true}
-  borderBottomRadius="unset"
-  className="Modal__DialogWithOptionalOverflow-m3xdw4-1 hMMOts modal is-active"
+  className="modal is-active is-overflow-auto is-border-bottom-radius-unset"
   id="headlessui-dialog-1"
   onClick={[Function]}
-  overflow="auto"
   role="dialog"
 >
   <div
@@ -19310,8 +19305,7 @@ exports[`Storyshots Modal/ConfirmAlert Default 1`] = `
       />
     </header>
     <section
-      className="Modal__SectionWithOptionalOverflow-m3xdw4-2 boQfzO modal-card-body"
-      overflow="auto"
+      className="modal-card-body is-overflow-auto is-border-bottom-radius-unset"
     >
       Mind-paralyzing change needed improbability vortex machine sorts sought same theory upending job just allows
  hostess’s really oblong Infinite Improbability thing into the starship against which behavior accordance with
@@ -19371,11 +19365,9 @@ exports[`Storyshots Modal/Modal Closeable 1`] = `
 <div
   aria-labelledby="headlessui-dialog-title-12"
   aria-modal={true}
-  borderBottomRadius="unset"
-  className="Modal__DialogWithOptionalOverflow-m3xdw4-1 hMMOts modal is-active"
+  className="modal is-active is-overflow-auto is-border-bottom-radius-unset"
   id="headlessui-dialog-10"
   onClick={[Function]}
-  overflow="auto"
   role="dialog"
 >
   <div
@@ -19404,8 +19396,7 @@ exports[`Storyshots Modal/Modal Closeable 1`] = `
       />
     </header>
     <section
-      className="Modal__SectionWithOptionalOverflow-m3xdw4-2 boQfzO modal-card-body"
-      overflow="auto"
+      className="modal-card-body is-overflow-auto is-border-bottom-radius-unset"
     >
       <p>
         Mind-paralyzing change needed improbability vortex machine sorts sought same theory upending job just allows
@@ -19422,11 +19413,9 @@ exports[`Storyshots Modal/Modal Default 1`] = `
 <div
   aria-labelledby="headlessui-dialog-title-9"
   aria-modal={true}
-  borderBottomRadius="unset"
-  className="Modal__DialogWithOptionalOverflow-m3xdw4-1 hMMOts modal is-active"
+  className="modal is-active is-overflow-auto is-border-bottom-radius-unset"
   id="headlessui-dialog-7"
   onClick={[Function]}
-  overflow="auto"
   role="dialog"
 >
   <div
@@ -19455,8 +19444,7 @@ exports[`Storyshots Modal/Modal Default 1`] = `
       />
     </header>
     <section
-      className="Modal__SectionWithOptionalOverflow-m3xdw4-2 boQfzO modal-card-body"
-      overflow="auto"
+      className="modal-card-body is-overflow-auto is-border-bottom-radius-unset"
     >
       <p>
         Mind-paralyzing change needed improbability vortex machine sorts sought same theory upending job just allows
@@ -19473,11 +19461,9 @@ exports[`Storyshots Modal/Modal Long content 1`] = `
 <div
   aria-labelledby="headlessui-dialog-title-30"
   aria-modal={true}
-  borderBottomRadius="unset"
-  className="Modal__DialogWithOptionalOverflow-m3xdw4-1 hMMOts modal is-active"
+  className="modal is-active is-overflow-auto is-border-bottom-radius-unset"
   id="headlessui-dialog-28"
   onClick={[Function]}
-  overflow="auto"
   role="dialog"
 >
   <div
@@ -19506,8 +19492,7 @@ exports[`Storyshots Modal/Modal Long content 1`] = `
       />
     </header>
     <section
-      className="Modal__SectionWithOptionalOverflow-m3xdw4-2 boQfzO modal-card-body"
-      overflow="auto"
+      className="modal-card-body is-overflow-auto is-border-bottom-radius-unset"
     >
       <h1
         className="title"
@@ -19597,11 +19582,9 @@ exports[`Storyshots Modal/Modal Nested 1`] = `
 <div
   aria-labelledby="headlessui-dialog-title-15"
   aria-modal={true}
-  borderBottomRadius="unset"
-  className="Modal__DialogWithOptionalOverflow-m3xdw4-1 hMMOts modal is-active"
+  className="modal is-active is-overflow-auto is-border-bottom-radius-unset"
   id="headlessui-dialog-13"
   onClick={[Function]}
-  overflow="auto"
   role="dialog"
 >
   <div
@@ -19631,8 +19614,7 @@ exports[`Storyshots Modal/Modal Nested 1`] = `
       />
     </header>
     <section
-      className="Modal__SectionWithOptionalOverflow-m3xdw4-2 boQfzO modal-card-body"
-      overflow="auto"
+      className="modal-card-body is-overflow-auto is-border-bottom-radius-unset"
     >
       <button
         className="button is-default button"
@@ -19653,11 +19635,9 @@ exports[`Storyshots Modal/Modal With form elements 1`] = `
 <div
   aria-labelledby="headlessui-dialog-title-18"
   aria-modal={true}
-  borderBottomRadius="unset"
-  className="Modal__DialogWithOptionalOverflow-m3xdw4-1 hMMOts modal is-active"
+  className="modal is-active is-overflow-auto is-border-bottom-radius-unset"
   id="headlessui-dialog-16"
   onClick={[Function]}
-  overflow="auto"
   role="dialog"
 >
   <div
@@ -19686,8 +19666,7 @@ exports[`Storyshots Modal/Modal With form elements 1`] = `
       />
     </header>
     <section
-      className="Modal__SectionWithOptionalOverflow-m3xdw4-2 boQfzO modal-card-body"
-      overflow="auto"
+      className="modal-card-body is-overflow-auto is-border-bottom-radius-unset"
     >
       <div
         className="Modalstories__RadioList-sc-2lb0wg-1 MgWma"
@@ -19838,11 +19817,9 @@ exports[`Storyshots Modal/Modal With initial button focus 1`] = `
 <div
   aria-labelledby="headlessui-dialog-title-24"
   aria-modal={true}
-  borderBottomRadius="unset"
-  className="Modal__DialogWithOptionalOverflow-m3xdw4-1 hMMOts modal is-active"
+  className="modal is-active is-overflow-auto is-border-bottom-radius-unset"
   id="headlessui-dialog-22"
   onClick={[Function]}
-  overflow="auto"
   role="dialog"
 >
   <div
@@ -19871,8 +19848,7 @@ exports[`Storyshots Modal/Modal With initial button focus 1`] = `
       />
     </header>
     <section
-      className="Modal__SectionWithOptionalOverflow-m3xdw4-2 boQfzO modal-card-body"
-      overflow="auto"
+      className="modal-card-body is-overflow-auto is-border-bottom-radius-unset"
     >
       <button>
         Hello
@@ -19920,11 +19896,9 @@ exports[`Storyshots Modal/Modal With initial input field focus 1`] = `
 <div
   aria-labelledby="headlessui-dialog-title-21"
   aria-modal={true}
-  borderBottomRadius="unset"
-  className="Modal__DialogWithOptionalOverflow-m3xdw4-1 hMMOts modal is-active"
+  className="modal is-active is-overflow-auto is-border-bottom-radius-unset"
   id="headlessui-dialog-19"
   onClick={[Function]}
-  overflow="auto"
   role="dialog"
 >
   <div
@@ -19953,8 +19927,7 @@ exports[`Storyshots Modal/Modal With initial input field focus 1`] = `
       />
     </header>
     <section
-      className="Modal__SectionWithOptionalOverflow-m3xdw4-2 boQfzO modal-card-body"
-      overflow="auto"
+      className="modal-card-body is-overflow-auto is-border-bottom-radius-unset"
     >
       <fieldset
         className="field"
@@ -20016,11 +19989,9 @@ exports[`Storyshots Modal/Modal With long tooltips 1`] = `
 <div
   aria-labelledby="headlessui-dialog-title-27"
   aria-modal={true}
-  borderBottomRadius="unset"
-  className="Modal__DialogWithOptionalOverflow-m3xdw4-1 hMMOts modal is-active"
+  className="modal is-active is-overflow-auto is-border-bottom-radius-unset"
   id="headlessui-dialog-25"
   onClick={[Function]}
-  overflow="auto"
   role="dialog"
 >
   <div
@@ -20049,8 +20020,7 @@ exports[`Storyshots Modal/Modal With long tooltips 1`] = `
       />
     </header>
     <section
-      className="Modal__SectionWithOptionalOverflow-m3xdw4-2 boQfzO modal-card-body"
-      overflow="auto"
+      className="modal-card-body is-overflow-auto is-border-bottom-radius-unset"
     >
       <div
         className="notification is-info"
@@ -20263,11 +20233,9 @@ exports[`Storyshots Modal/Modal With overflow 1`] = `
 <div
   aria-labelledby="headlessui-dialog-title-33"
   aria-modal={true}
-  borderBottomRadius="inherit"
-  className="Modal__DialogWithOptionalOverflow-m3xdw4-1 iSEQlZ modal is-active"
+  className="modal is-active is-overflow-visible is-border-bottom-radius-inherit"
   id="headlessui-dialog-31"
   onClick={[Function]}
-  overflow="visible"
   role="dialog"
 >
   <div
@@ -20296,8 +20264,7 @@ exports[`Storyshots Modal/Modal With overflow 1`] = `
       />
     </header>
     <section
-      className="Modal__SectionWithOptionalOverflow-m3xdw4-2 kuuWLP modal-card-body"
-      overflow="visible"
+      className="modal-card-body is-overflow-visible is-border-bottom-radius-inherit"
     >
       <h1
         className="title"
@@ -20425,11 +20392,9 @@ exports[`Storyshots Modal/Modal With overflow and footer 1`] = `
 <div
   aria-labelledby="headlessui-dialog-title-36"
   aria-modal={true}
-  borderBottomRadius="unset"
-  className="Modal__DialogWithOptionalOverflow-m3xdw4-1 cYMGvl modal is-active"
+  className="modal is-active is-overflow-visible is-border-bottom-radius-unset"
   id="headlessui-dialog-34"
   onClick={[Function]}
-  overflow="visible"
   role="dialog"
 >
   <div
@@ -20458,8 +20423,7 @@ exports[`Storyshots Modal/Modal With overflow and footer 1`] = `
       />
     </header>
     <section
-      className="Modal__SectionWithOptionalOverflow-m3xdw4-2 dooVcv modal-card-body"
-      overflow="visible"
+      className="modal-card-body is-overflow-visible is-border-bottom-radius-unset"
     >
       <h1
         className="title"

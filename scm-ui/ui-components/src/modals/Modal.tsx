@@ -49,18 +49,6 @@ const SizedModal = styled.div<{ size?: ModalSize; overflow: string }>`
   overflow: ${props => props.overflow};
 `;
 
-const DialogWithOptionalOverflow = styled(Dialog)`
-  overflow: ${props => props.overflow};
-  border-bottom-left-radius: ${props => props.borderBottomRadius};
-  border-bottom-right-radius: ${props => props.borderBottomRadius};
-`;
-
-const SectionWithOptionalOverflow = styled.section<{ overflow: string; borderBottomRadius: string }>`
-  overflow: ${props => props.overflow};
-  border-bottom-left-radius: ${props => props.borderBottomRadius};
-  border-bottom-right-radius: ${props => props.borderBottomRadius};
-`;
-
 export const Modal: FC<Props> = ({
   title,
   closeFunction,
@@ -86,13 +74,17 @@ export const Modal: FC<Props> = ({
   const borderBottomRadiusAttribute = overflowVisible && !footer ? "inherit" : "unset";
 
   return (
-    <DialogWithOptionalOverflow
+    <Dialog
       open={active}
       onClose={closeFunction}
-      className={classNames("modal", { "is-active": active }, className)}
+      className={classNames(
+        "modal",
+        { "is-active": active },
+        `is-overflow-${overflowAttribute}`,
+        `is-border-bottom-radius-${borderBottomRadiusAttribute}`,
+        className
+      )}
       initialFocus={initialFocusRef ?? closeButtonRef}
-      overflow={overflowAttribute}
-      borderBottomRadius={borderBottomRadiusAttribute}
     >
       <Dialog.Overlay className="modal-background" />
       <SizedModal className="modal-card" size={size} overflow={overflowAttribute}>
@@ -105,16 +97,18 @@ export const Modal: FC<Props> = ({
             ref={!initialFocusRef ? closeButtonRef : undefined}
           />
         </Dialog.Title>
-        <SectionWithOptionalOverflow
-          className="modal-card-body"
-          overflow={overflowAttribute}
-          borderBottomRadius={borderBottomRadiusAttribute}
+        <section
+          className={classNames(
+            "modal-card-body",
+            `is-overflow-${overflowAttribute}`,
+            `is-border-bottom-radius-${borderBottomRadiusAttribute}`
+          )}
         >
           {body || children}
-        </SectionWithOptionalOverflow>
+        </section>
         {showFooter}
       </SizedModal>
-    </DialogWithOptionalOverflow>
+    </Dialog>
   );
 };
 

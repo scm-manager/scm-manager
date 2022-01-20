@@ -759,6 +759,24 @@ form .field:not(.is-grouped) {
   }
 }
 
+.is-overflow-visible {
+  overflow: visible;
+}
+
+.is-overflow-auto {
+  overflow: auto;
+}
+
+.is-border-bottom-radius-inherit {
+  border-bottom-left-radius: inherit;
+  border-bottom-right-radius: inherit;
+}
+
+.is-border-bottom-radius-unset {
+  border-bottom-left-radius: unset;
+  border-bottom-right-radius: unset;
+}
+
 // radio
 //overwrite bulma's default margin
 .radio + .radio {
