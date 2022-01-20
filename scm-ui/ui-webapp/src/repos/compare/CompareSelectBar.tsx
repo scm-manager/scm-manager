@@ -23,7 +23,7 @@
  */
 
 import React, { FC, useEffect, useState } from "react";
-import { useHistory, useLocation, useRouteMatch } from "react-router-dom";
+import { useHistory, useLocation, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { Repository } from "@scm-manager/ui-types";
@@ -62,16 +62,16 @@ const ResponsiveBar = styled.div`
 
 const CompareSelectBar: FC<Props> = ({ repository, baseUrl }) => {
   const [t] = useTranslation("repos");
-  const match = useRouteMatch<CompareBranchesParams>();
+  const params = useParams<CompareBranchesParams>();
   const location = useLocation();
   const history = useHistory();
   const [source, setSource] = useState<CompareProps>({
-    type: match?.params?.sourceType as CompareTypes,
-    name: decodeURIComponent(match?.params?.sourceName)
+    type: params?.sourceType,
+    name: decodeURIComponent(params?.sourceName)
   });
   const [target, setTarget] = useState<CompareProps>({
-    type: match?.params?.targetType as CompareTypes,
-    name: decodeURIComponent(match?.params?.targetName)
+    type: params?.targetType,
+    name: decodeURIComponent(params?.targetName)
   });
 
   useEffect(() => {
