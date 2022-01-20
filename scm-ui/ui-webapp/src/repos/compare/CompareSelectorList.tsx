@@ -128,17 +128,15 @@ const TagTabContent: FC<TagTabContentProps> = ({ elements, selection, onSelectEn
 
   return (
     <>
-      {elements.map(tag => {
-        return (
-          <CompareSelectorListEntry
-            isSelected={selection.type === "t" && selection.name === tag.name}
-            onClick={() => onSelectEntry("t", tag.name)}
-            key={tag.name}
-          >
-            <span className="is-ellipsis-overflow">{tag.name}</span>
-          </CompareSelectorListEntry>
-        );
-      })}
+      {elements.map(tag => (
+        <CompareSelectorListEntry
+          isSelected={selection.type === "t" && selection.name === tag.name}
+          onClick={() => onSelectEntry("t", tag.name)}
+          key={tag.name}
+        >
+          <span className="is-ellipsis-overflow">{tag.name}</span>
+        </CompareSelectorListEntry>
+      ))}
     </>
   );
 };

@@ -41,19 +41,17 @@ const FocusButton = styled(NoStyleButton)`
   }
 `;
 
-const CompareSelectorListEntry: FC<Props> = ({ children, isSelected = false, onClick }) => {
-  return (
-    <li role="option" aria-selected={isSelected}>
-      <FocusButton
-        className={classNames("dropdown-item", "is-flex", "has-text-weight-medium", "px-4", "py-2", {
-          "is-active": isSelected
-        })}
-        onClick={onClick}
-      >
-        {children}
-      </FocusButton>
-    </li>
-  );
-};
+const CompareSelectorListEntry: FC<Props> = ({ children, isSelected = false, onClick }) => (
+  <li role="option" aria-selected={isSelected}>
+    <FocusButton
+      className={classNames("dropdown-item", "is-flex", "has-text-weight-medium", "px-4", "py-2", {
+        "is-active": isSelected
+      })}
+      onClick={onClick}
+    >
+      {children}
+    </FocusButton>
+  </li>
+);
 
 export default CompareSelectorListEntry;
