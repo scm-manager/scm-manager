@@ -57,19 +57,27 @@ const PermissionCheckbox: FC<InnerProps> = ({ name, checked, onChange, disabled,
     ? t("verbs.repository." + name + ".description")
     : translateOrDefault("permissions." + key + ".description", t("permissions.unknown"));
 
-  return (
-    <Checkbox
-      key={name}
-      name={name}
-      label={label}
-      helpText={helpText}
-      checked={checked}
-      onChange={onChange ? event => onChange(event.target.checked, name) : undefined}
-      disabled={disabled}
-      testId={label}
-      ref={innerRef}
-    />
-  );
+  const commonCheckboxProps = {
+    key: name,
+    name,
+    label,
+    helpText,
+    checked,
+    disabled,
+    testId: label
+  };
+
+  if (innerRef) {
+    return (
+      <Checkbox
+        {...commonCheckboxProps}
+        onChange={onChange ? event => onChange(event.target.checked, name) : undefined}
+        ref={innerRef}
+      />
+    );
+  }
+
+  return <Checkbox {...commonCheckboxProps} onChange={onChange ? newValue => onChange(newValue, name) : undefined} />;
 };
 
 export default React.forwardRef<HTMLInputElement, Props>((props, ref) => (
