@@ -24,13 +24,13 @@
 
 import { storiesOf } from "@storybook/react";
 import { MemoryRouter } from "react-router-dom";
-import React, { useState, FC } from "react";
+import React, { FC, useRef, useState } from "react";
 import Modal from "./Modal";
 import Checkbox from "../forms/Checkbox";
 import styled from "styled-components";
 import ExternalLink from "../navigation/ExternalLink";
-import { Radio, Textarea, InputField } from "../forms";
-import { ButtonGroup, Button } from "../buttons";
+import { InputField, Radio, Textarea } from "../forms";
+import { Button, ButtonGroup } from "../buttons";
 import Notification from "../Notification";
 import { Autocomplete } from "../index";
 import { SelectValue } from "@scm-manager/ui-types";
@@ -52,9 +52,8 @@ const text = `Mind-paralyzing change needed improbability vortex machine sorts s
     Kakrafoon humanoid undergarment ship powered by GPP-guided bowl of petunias nothing was frequently away incredibly
     ordinary mob.`;
 
-// eslint-disable-next-line @typescript-eslint/no-empty-function
 const doNothing = () => {
-  // nothing to do
+  // Do nothing
 };
 const withFormElementsBody = (
   <>
@@ -114,6 +113,21 @@ storiesOf("Modal/Modal", module)
       footer={withFormElementsFooter}
     />
   ))
+  .add("With initial input field focus", () => {
+    const ref = useRef<HTMLInputElement | null>(null);
+    return (
+      <Modal
+        closeFunction={doNothing}
+        active={true}
+        title={"Hitchhiker Modal"}
+        footer={withFormElementsFooter}
+        initialFocusRef={ref}
+      >
+        <InputField ref={ref} />
+      </Modal>
+    );
+  })
+  .add("With initial button focus", () => <RefModal />)
   .add("With long tooltips", () => {
     return (
       <NonCloseableModal>
@@ -285,9 +299,20 @@ const NestedModal: FC = ({ children }) => {
   const [showOuter, setShowOuter] = useState(true);
   const [showInner, setShowInner] = useState(false);
   const outerBody = (
-    <Button title="Open inner modal" className="button" action={() => setShowInner(true)}>
-      Open inner modal
-    </Button>
+    <>
+      {showInner && (
+        <Modal
+          body={children}
+          closeFunction={() => setShowInner(!showInner)}
+          active={showInner}
+          title="Inner Hitchhiker Modal"
+        />
+      )}
+
+      <Button title="Open inner modal" className="button" action={() => setShowInner(true)}>
+        Open inner modal
+      </Button>
+    </>
   );
 
   return (
@@ -301,14 +326,21 @@ const NestedModal: FC = ({ children }) => {
           size="M"
         />
       )}
-      {showInner && (
-        <Modal
-          body={children}
-          closeFunction={() => setShowInner(!showInner)}
-          active={showInner}
-          title="Inner Hitchhiker Modal"
-        />
-      )}
     </>
+  );
+};
+
+const RefModal = () => {
+  const ref = useRef<HTMLButtonElement>(null);
+  return (
+    <Modal
+      closeFunction={doNothing}
+      active={true}
+      title={"Hitchhiker Modal"}
+      footer={withFormElementsFooter}
+      initialFocusRef={ref}
+    >
+      <button ref={ref}>Hello</button>
+    </Modal>
   );
 };

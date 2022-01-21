@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
@@ -66,6 +66,7 @@ const PluginModal: FC<Props> = ({ onClose, pluginAction, plugin }) => {
   const error = installError || uninstallError || updateError || pluginCenterAuthInfoError;
   const loading = isInstalling || isUninstalling || isUpdating || isLoadingPluginCenterAuthInfo;
   const isDone = isInstalled || isUninstalled || isUpdated;
+  const initialFocusRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (isDone && !shouldRestart) {
@@ -108,6 +109,7 @@ const PluginModal: FC<Props> = ({ onClose, pluginAction, plugin }) => {
           action={handlePluginAction}
           loading={loading}
           disabled={!!error || isDone}
+          ref={initialFocusRef}
         />
         <Button label={t("plugins.modal.abort")} action={onClose} />
       </ButtonGroup>
@@ -253,6 +255,7 @@ const PluginModal: FC<Props> = ({ onClose, pluginAction, plugin }) => {
       body={body}
       footer={footer()}
       active={true}
+      initialFocusRef={initialFocusRef}
     />
   );
 };

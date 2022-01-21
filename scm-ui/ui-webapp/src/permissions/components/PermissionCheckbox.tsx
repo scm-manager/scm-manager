@@ -21,11 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
+import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
 import { Checkbox } from "@scm-manager/ui-components";
 
-type Props = WithTranslation & {
+type Props = {
   name: string;
   checked: boolean;
   onChange?: (value: boolean, name?: string) => void;
@@ -33,40 +33,53 @@ type Props = WithTranslation & {
   role?: boolean;
 };
 
-class PermissionCheckbox extends React.Component<Props> {
-  render() {
-    const { name, checked, onChange, disabled, role, t } = this.props;
+type InnerProps = Props & {
+  innerRef: React.Ref<HTMLInputElement>;
+};
 
-    const key = name.split(":").join(".");
-    const label = role
-      ? t("verbs.repository." + name + ".displayName")
-      : this.translateOrDefault("permissions." + key + ".displayName", key);
-    const helpText = role
-      ? t("verbs.repository." + name + ".description")
-      : this.translateOrDefault("permissions." + key + ".description", t("permissions.unknown"));
+const PermissionCheckbox: FC<InnerProps> = ({ name, checked, onChange, disabled, role, innerRef }) => {
+  const [t] = useTranslation("plugins");
+  const key = name.split(":").join(".");
 
-    return (
-      <Checkbox
-        key={name}
-        name={name}
-        label={label}
-        helpText={helpText}
-        checked={checked}
-        onChange={onChange}
-        disabled={disabled}
-        testId={label}
-      />
-    );
-  }
-
-  translateOrDefault = (key: string, defaultText: string) => {
-    const translation = this.props.t(key);
+  const translateOrDefault = (key: string, defaultText: string) => {
+    const translation = t(key);
     if (translation === key) {
       return defaultText;
     } else {
       return translation;
     }
   };
-}
 
-export default withTranslation("plugins")(PermissionCheckbox);
+  const label = role
+    ? t("verbs.repository." + name + ".displayName")
+    : translateOrDefault("permissions." + key + ".displayName", key);
+  const helpText = role
+    ? t("verbs.repository." + name + ".description")
+    : translateOrDefault("permissions." + key + ".description", t("permissions.unknown"));
+
+  const commonCheckboxProps = {
+    key: name,
+    name,
+    label,
+    helpText,
+    checked,
+    disabled,
+    testId: label
+  };
+
+  if (innerRef) {
+    return (
+      <Checkbox
+        {...commonCheckboxProps}
+        onChange={onChange ? event => onChange(event.target.checked, name) : undefined}
+        ref={innerRef}
+      />
+    );
+  }
+
+  return <Checkbox {...commonCheckboxProps} onChange={onChange ? newValue => onChange(newValue, name) : undefined} />;
+};
+
+export default React.forwardRef<HTMLInputElement, Props>((props, ref) => (
+  <PermissionCheckbox {...props} innerRef={ref} />
+));

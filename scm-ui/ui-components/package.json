@@ -92,7 +92,8 @@
     "remark-parse": "^9.0.0",
     "remark-rehype": "^8.0.0",
     "tabbable": "^5.2.1",
-    "unified": "^9.2.1"
+    "unified": "^9.2.1",
+    "@headlessui/react": "^1.4.3"
   },
   "babel": {
     "presets": [

@@ -31,8 +31,8 @@ import { File, Link, Repository } from "@scm-manager/ui-types";
 import { ErrorNotification, Loading, PdfViewer } from "@scm-manager/ui-components";
 import SwitchableMarkdownViewer from "../components/content/SwitchableMarkdownViewer";
 import styled from "styled-components";
-import { ContentType, useContentType } from "@scm-manager/ui-api";
-import {determineSyntaxHighlightingLanguage} from "../utils/files";
+import { useContentType } from "@scm-manager/ui-api";
+import { determineSyntaxHighlightingLanguage } from "../utils/files";
 
 const NoSpacingSyntaxHighlighterContainer = styled.div`
   & pre {
@@ -46,8 +46,6 @@ type Props = {
   file: File;
   revision: string;
 };
-
-
 
 const SourcesView: FC<Props> = ({ file, repository, revision }) => {
   const { data: contentTypeData, error, isLoading } = useContentType((file._links.self as Link).href);

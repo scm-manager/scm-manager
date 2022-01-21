@@ -19192,7 +19192,161 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
 </div>
 `;
 
-exports[`Storyshots Modal/ConfirmAlert Default 1`] = `null`;
+exports[`Storyshots Modal/ConfirmAlert Autofocus 1`] = `
+<div
+  aria-labelledby="headlessui-dialog-title-6"
+  aria-modal={true}
+  className="modal is-active is-overflow-auto is-border-bottom-radius-unset"
+  id="headlessui-dialog-4"
+  onClick={[Function]}
+  role="dialog"
+>
+  <div
+    aria-hidden={true}
+    className="modal-background"
+    id="headlessui-dialog-overlay-5"
+    onClick={[Function]}
+  />
+  <div
+    className="Modal__SizedModal-m3xdw4-0 bToMXK modal-card"
+    overflow="auto"
+  >
+    <header
+      className="modal-card-head has-background-secondary-less"
+      id="headlessui-dialog-title-6"
+    >
+      <h2
+        className="modal-card-title m-0 has-text-secondary-most"
+      >
+        Are you sure about that?
+      </h2>
+      <button
+        aria-label="close"
+        className="delete"
+        onClick={[Function]}
+      />
+    </header>
+    <section
+      className="modal-card-body is-overflow-auto is-border-bottom-radius-unset"
+    >
+      Mind-paralyzing change needed improbability vortex machine sorts sought same theory upending job just allows
+ hostess’s really oblong Infinite Improbability thing into the starship against which behavior accordance with
+ Kakrafoon humanoid undergarment ship powered by GPP-guided bowl of petunias nothing was frequently away incredibly
+ ordinary mob.
+    </section>
+    <footer
+      className="modal-card-foot"
+    >
+      <div
+        className="field is-grouped"
+      >
+        <p
+          className="control"
+        >
+          <button
+            className="button is-info is-outlined"
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            tabIndex={0}
+          >
+            Cancel
+          </button>
+        </p>
+        <p
+          className="control"
+        >
+          <button
+            className="button is-info"
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            tabIndex={0}
+          >
+            I should be focused
+          </button>
+        </p>
+      </div>
+    </footer>
+  </div>
+</div>
+`;
+
+exports[`Storyshots Modal/ConfirmAlert Default 1`] = `
+<div
+  aria-labelledby={null}
+  aria-modal={true}
+  className="modal is-active is-overflow-auto is-border-bottom-radius-unset"
+  id="headlessui-dialog-1"
+  onClick={[Function]}
+  role="dialog"
+>
+  <div
+    aria-hidden={true}
+    className="modal-background"
+    id="headlessui-dialog-overlay-2"
+    onClick={[Function]}
+  />
+  <div
+    className="Modal__SizedModal-m3xdw4-0 bToMXK modal-card"
+    overflow="auto"
+  >
+    <header
+      className="modal-card-head has-background-secondary-less"
+      id="headlessui-dialog-title-3"
+    >
+      <h2
+        className="modal-card-title m-0 has-text-secondary-most"
+      >
+        Are you sure about that?
+      </h2>
+      <button
+        aria-label="close"
+        className="delete"
+        onClick={[Function]}
+      />
+    </header>
+    <section
+      className="modal-card-body is-overflow-auto is-border-bottom-radius-unset"
+    >
+      Mind-paralyzing change needed improbability vortex machine sorts sought same theory upending job just allows
+ hostess’s really oblong Infinite Improbability thing into the starship against which behavior accordance with
+ Kakrafoon humanoid undergarment ship powered by GPP-guided bowl of petunias nothing was frequently away incredibly
+ ordinary mob.
+    </section>
+    <footer
+      className="modal-card-foot"
+    >
+      <div
+        className="field is-grouped"
+      >
+        <p
+          className="control"
+        >
+          <button
+            className="button is-info is-outlined"
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            tabIndex={0}
+          >
+            Cancel
+          </button>
+        </p>
+        <p
+          className="control"
+        >
+          <button
+            className="button is-info"
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            tabIndex={0}
+          >
+            Submit
+          </button>
+        </p>
+      </div>
+    </footer>
+  </div>
+</div>
+`;
 
 exports[`Storyshots Modal/ConfirmAlert WithButton 1`] = `
 Array [
@@ -19207,21 +19361,1225 @@ Array [
 ]
 `;
 
-exports[`Storyshots Modal/Modal Closeable 1`] = `null`;
+exports[`Storyshots Modal/Modal Closeable 1`] = `
+<div
+  aria-labelledby="headlessui-dialog-title-12"
+  aria-modal={true}
+  className="modal is-active is-overflow-auto is-border-bottom-radius-unset"
+  id="headlessui-dialog-10"
+  onClick={[Function]}
+  role="dialog"
+>
+  <div
+    aria-hidden={true}
+    className="modal-background"
+    id="headlessui-dialog-overlay-11"
+    onClick={[Function]}
+  />
+  <div
+    className="Modal__SizedModal-m3xdw4-0 bToMXK modal-card"
+    overflow="auto"
+  >
+    <header
+      className="modal-card-head has-background-secondary-less"
+      id="headlessui-dialog-title-12"
+    >
+      <h2
+        className="modal-card-title m-0 has-text-secondary-most"
+      >
+        Hitchhiker Modal
+      </h2>
+      <button
+        aria-label="close"
+        className="delete"
+        onClick={[Function]}
+      />
+    </header>
+    <section
+      className="modal-card-body is-overflow-auto is-border-bottom-radius-unset"
+    >
+      <p>
+        Mind-paralyzing change needed improbability vortex machine sorts sought same theory upending job just allows
+    hostess’s really oblong Infinite Improbability thing into the starship against which behavior accordance.with
+    Kakrafoon humanoid undergarment ship powered by GPP-guided bowl of petunias nothing was frequently away incredibly
+    ordinary mob.
+      </p>
+    </section>
+  </div>
+</div>
+`;
 
-exports[`Storyshots Modal/Modal Default 1`] = `null`;
+exports[`Storyshots Modal/Modal Default 1`] = `
+<div
+  aria-labelledby="headlessui-dialog-title-9"
+  aria-modal={true}
+  className="modal is-active is-overflow-auto is-border-bottom-radius-unset"
+  id="headlessui-dialog-7"
+  onClick={[Function]}
+  role="dialog"
+>
+  <div
+    aria-hidden={true}
+    className="modal-background"
+    id="headlessui-dialog-overlay-8"
+    onClick={[Function]}
+  />
+  <div
+    className="Modal__SizedModal-m3xdw4-0 bToMXK modal-card"
+    overflow="auto"
+  >
+    <header
+      className="modal-card-head has-background-secondary-less"
+      id="headlessui-dialog-title-9"
+    >
+      <h2
+        className="modal-card-title m-0 has-text-secondary-most"
+      >
+        Hitchhiker Modal
+      </h2>
+      <button
+        aria-label="close"
+        className="delete"
+        onClick={[Function]}
+      />
+    </header>
+    <section
+      className="modal-card-body is-overflow-auto is-border-bottom-radius-unset"
+    >
+      <p>
+        Mind-paralyzing change needed improbability vortex machine sorts sought same theory upending job just allows
+    hostess’s really oblong Infinite Improbability thing into the starship against which behavior accordance.with
+    Kakrafoon humanoid undergarment ship powered by GPP-guided bowl of petunias nothing was frequently away incredibly
+    ordinary mob.
+      </p>
+    </section>
+  </div>
+</div>
+`;
 
-exports[`Storyshots Modal/Modal Long content 1`] = `null`;
+exports[`Storyshots Modal/Modal Long content 1`] = `
+<div
+  aria-labelledby="headlessui-dialog-title-30"
+  aria-modal={true}
+  className="modal is-active is-overflow-auto is-border-bottom-radius-unset"
+  id="headlessui-dialog-28"
+  onClick={[Function]}
+  role="dialog"
+>
+  <div
+    aria-hidden={true}
+    className="modal-background"
+    id="headlessui-dialog-overlay-29"
+    onClick={[Function]}
+  />
+  <div
+    className="Modal__SizedModal-m3xdw4-0 bToMXK modal-card"
+    overflow="auto"
+  >
+    <header
+      className="modal-card-head has-background-secondary-less"
+      id="headlessui-dialog-title-30"
+    >
+      <h2
+        className="modal-card-title m-0 has-text-secondary-most"
+      >
+        Hitchhiker Modal
+      </h2>
+      <button
+        aria-label="close"
+        className="delete"
+        onClick={[Function]}
+      />
+    </header>
+    <section
+      className="modal-card-body is-overflow-auto is-border-bottom-radius-unset"
+    >
+      <h1
+        className="title"
+      >
+        Marvin
+      </h1>
+      <h2
+        className="subtitle"
+      >
+        The Paranoid Android
+      </h2>
+      <hr />
+      <div
+        className="notification is-info"
+      >
+        The following content comes from the awesome
+         
+        <a
+          href="https://hitchhikers.fandom.com/wiki/Main_Page"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          Hitchhikers Wiki
+        </a>
+      </div>
+      <hr />
+      <div
+        className="has-text-centered"
+      >
+        <img
+          alt="Marvin"
+          src="https://vignette.wikia.nocookie.net/hitchhikers/images/a/a4/Marvin.jpg/revision/latest/scale-to-width-down/150?cb=20100530114055"
+        />
+      </div>
+      <hr />
+      <p
+        className="content"
+      >
+        Marvin, more fully known as Marvin the Paranoid Android, is an incredibly brilliant but overwhelmingly depressed robot manufactured by the Sirius Cybernetics Corporation and unwilling servant to the crew of the Heart of Gold.
+      </p>
+      <hr />
+      <div
+        className="content"
+      >
+        <h4>
+          Physical Appearance
+        </h4>
+        <p>
+          In the novels, Marvin is described thusly: "...though it was beautifully constructed and polished it looked somehow as if the various parts of its more or less humanoid body didn't quite fit properly. In fact, they fit perfectly well, but something in its bearing suggested that they might have fitted better."
+        </p>
+        <p>
+          On the radio show, there's no physical description of Marvin, though his voice is digitally altered to sound more robotic, and any scene that focuses on him is accompanied by sounds of mechanical clanking and hissing.
+        </p>
+        <p>
+          In the TV series, Marvin is built in the style of a 1950's robot similar to Robbie the Robot from Forbidden Planet or Twiki from Buck Rogers. His body is blocky and angular, with a pair of clamp-claw hands, shuffling feet and a squarish head with a dour face.
+        </p>
+        <p>
+          In the movie, Marvin is a short, stout robot built of smooth, white plastic. His arms are much longer than his legs, and his head is a massive sphere with only a pair of triangle eyes for a face. His large head and simian-like proportions give Marvin a perpetual slouch, adding to his melancholy personality. At the start of the film his eyes glow, but at the end he is shot but unharmed, leaving a hole in his head and dimming his eyes. This is probably the most depressing and unacceptable manifestation of Marvin ever conceived, and thus paradoxically the most accurate.
+        </p>
+      </div>
+      <hr />
+      <div
+        className="content"
+      >
+        <h4>
+          Personality
+        </h4>
+        <p>
+          Marvin the robot has a prototype version of the Genuine People Personality (GPP) software from SCC, allowing him sentience and the ability to feel emotions and develop a personality. He's also incredibly smart, having a "brain the size of a planet" capable of computing extremely complex mathematics, as well as solving difficult problems and operating high-tech devices.
+        </p>
+        <p>
+          However, despite being so smart, Marvin is typically made to perform menial tasks and labour such as escorting people, opening doors, picking up pieces of paper, and other tasks well beneath his skills. Even extremely hard tasks, such as computing for the vast Krikkit robot army, are trivial for Marvin. All this leaves him extremely bored, frustrated, and overwhelmingly depressed. Because of this, all modern GPP-capable machines, such as Eddie the computer and the Heart of Gold's automatic doors, are programmed to be extremely cheerful and happy, much to Marvin's disgust.
+        </p>
+        <p>
+          Marvin hates everyone and everything he comes into contact with, having no respect for anybody and will criticise and insult others at any opportunity, or otherwise rant and complain for hours on end about his own problems, such as the terrible pain he suffers in all the diodes down his left side. His contempt for everyone is often justified, as almost every person he comes across, even those who consider him a friend, (such as Arthur and Trillian, who treat him more kindly than Ford and Zaphod) treat Marvin as an expendable servant, even sending him to his death more than once (such as when Zaphod ordered Marvin to fight the gigantic, heavy-duty Frogstar Scout Robot Class D so he could escape). Being a robot, he still does what he's told (he won't enjoy it, nor will he let you forget it, but he'll do it anyway), though he'd much rather sulk in a corner by himself.
+        </p>
+        <p>
+          Several times in the series Marvin ends up alone and isolated for extremely long periods of time, sometimes spanning millions of years, either by sheer bad luck (such as the explosion that propelled everyone but Marvin to Milliways in the far-off future) or because his unpleasantly depressing personality drives them away or, in more than one case, makes them commit suicide. In his spare time (which he has a lot of), Marvin will attempt to occupy himself by composing songs and writing poetry. Of course, none of them are particularly cheerful, or even that good.
+        </p>
+      </div>
+    </section>
+  </div>
+</div>
+`;
 
-exports[`Storyshots Modal/Modal Nested 1`] = `null`;
+exports[`Storyshots Modal/Modal Nested 1`] = `
+<div
+  aria-labelledby="headlessui-dialog-title-15"
+  aria-modal={true}
+  className="modal is-active is-overflow-auto is-border-bottom-radius-unset"
+  id="headlessui-dialog-13"
+  onClick={[Function]}
+  role="dialog"
+>
+  <div
+    aria-hidden={true}
+    className="modal-background"
+    id="headlessui-dialog-overlay-14"
+    onClick={[Function]}
+  />
+  <div
+    className="Modal__SizedModal-m3xdw4-0 gfoDmI modal-card"
+    overflow="auto"
+    size="M"
+  >
+    <header
+      className="modal-card-head has-background-secondary-less"
+      id="headlessui-dialog-title-15"
+    >
+      <h2
+        className="modal-card-title m-0 has-text-secondary-most"
+      >
+        Outer Hitchhiker Modal
+      </h2>
+      <button
+        aria-label="close"
+        className="delete"
+        onClick={[Function]}
+      />
+    </header>
+    <section
+      className="modal-card-body is-overflow-auto is-border-bottom-radius-unset"
+    >
+      <button
+        className="button is-default button"
+        onClick={[Function]}
+        title="Open inner modal"
+        type="button"
+      >
+         
+         
+        Open inner modal
+      </button>
+    </section>
+  </div>
+</div>
+`;
 
-exports[`Storyshots Modal/Modal With form elements 1`] = `null`;
+exports[`Storyshots Modal/Modal With form elements 1`] = `
+<div
+  aria-labelledby="headlessui-dialog-title-18"
+  aria-modal={true}
+  className="modal is-active is-overflow-auto is-border-bottom-radius-unset"
+  id="headlessui-dialog-16"
+  onClick={[Function]}
+  role="dialog"
+>
+  <div
+    aria-hidden={true}
+    className="modal-background"
+    id="headlessui-dialog-overlay-17"
+    onClick={[Function]}
+  />
+  <div
+    className="Modal__SizedModal-m3xdw4-0 bToMXK modal-card"
+    overflow="auto"
+  >
+    <header
+      className="modal-card-head has-background-secondary-less"
+      id="headlessui-dialog-title-18"
+    >
+      <h2
+        className="modal-card-title m-0 has-text-secondary-most"
+      >
+        Hitchhiker Modal
+      </h2>
+      <button
+        aria-label="close"
+        className="delete"
+        onClick={[Function]}
+      />
+    </header>
+    <section
+      className="modal-card-body is-overflow-auto is-border-bottom-radius-unset"
+    >
+      <div
+        className="Modalstories__RadioList-sc-2lb0wg-1 MgWma"
+      >
+        <fieldset
+          className="is-inline-block"
+        >
+          <label
+            className="radio mr-2"
+          >
+            <input
+              aria-describedby="radio_122"
+              aria-labelledby="radio_121"
+              checked={true}
+              onBlur={[Function]}
+              onChange={[Function]}
+              type="radio"
+            />
+             
+            <span
+              id="radio_121"
+            >
+              One
+            </span>
+            <span
+              aria-label="The first one"
+              className="tooltip has-tooltip-right Help__AbsolutePositionTooltip-ykmmew-0 fpvHMo is-inline-block pl-1 has-tooltip-multiline"
+              data-tooltip="The first one"
+              id="radio_122"
+            >
+              <i
+                aria-label=""
+                className="fas fa-fw fa-question-circle has-text-blue-light"
+                onKeyPress={[Function]}
+              />
+            </span>
+          </label>
+        </fieldset>
+        <fieldset
+          className="is-inline-block"
+        >
+          <label
+            className="radio mr-2"
+          >
+            <input
+              aria-describedby="radio_124"
+              aria-labelledby="radio_123"
+              checked={false}
+              onBlur={[Function]}
+              onChange={[Function]}
+              type="radio"
+            />
+             
+            <span
+              id="radio_123"
+            >
+              Two
+            </span>
+            <span
+              aria-label="The second one"
+              className="tooltip has-tooltip-right Help__AbsolutePositionTooltip-ykmmew-0 fpvHMo is-inline-block pl-1 has-tooltip-multiline"
+              data-tooltip="The second one"
+              id="radio_124"
+            >
+              <i
+                aria-label=""
+                className="fas fa-fw fa-question-circle has-text-blue-light"
+                onKeyPress={[Function]}
+              />
+            </span>
+          </label>
+        </fieldset>
+      </div>
+      <hr />
+      <p>
+        Mind-paralyzing change needed improbability vortex machine sorts sought same theory upending job just allows
+    hostess’s really oblong Infinite Improbability thing into the starship against which behavior accordance.with
+    Kakrafoon humanoid undergarment ship powered by GPP-guided bowl of petunias nothing was frequently away incredibly
+    ordinary mob.
+      </p>
+      <hr />
+      <fieldset
+        className="field"
+      >
+        <label
+          className="label"
+        >
+          <span
+            id="textarea_125"
+          >
+            Text
+          </span>
+           
+        </label>
+        <div
+          className="control"
+        >
+          <textarea
+            aria-describedby="textarea_126"
+            aria-labelledby="textarea_125"
+            className="textarea"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onKeyDown={[Function]}
+          />
+        </div>
+      </fieldset>
+    </section>
+    <footer
+      className="modal-card-foot"
+    >
+      <div
+        className="field is-grouped"
+      >
+        <div
+          className="control"
+        >
+          <button
+            className="button is-default"
+            onClick={[Function]}
+            type="button"
+          >
+             
+            One
+             
+          </button>
+        </div>
+        <div
+          className="control"
+        >
+          <button
+            className="button is-default"
+            onClick={[Function]}
+            type="button"
+          >
+             
+            Two
+             
+          </button>
+        </div>
+      </div>
+    </footer>
+  </div>
+</div>
+`;
 
-exports[`Storyshots Modal/Modal With long tooltips 1`] = `null`;
+exports[`Storyshots Modal/Modal With initial button focus 1`] = `
+<div
+  aria-labelledby="headlessui-dialog-title-24"
+  aria-modal={true}
+  className="modal is-active is-overflow-auto is-border-bottom-radius-unset"
+  id="headlessui-dialog-22"
+  onClick={[Function]}
+  role="dialog"
+>
+  <div
+    aria-hidden={true}
+    className="modal-background"
+    id="headlessui-dialog-overlay-23"
+    onClick={[Function]}
+  />
+  <div
+    className="Modal__SizedModal-m3xdw4-0 bToMXK modal-card"
+    overflow="auto"
+  >
+    <header
+      className="modal-card-head has-background-secondary-less"
+      id="headlessui-dialog-title-24"
+    >
+      <h2
+        className="modal-card-title m-0 has-text-secondary-most"
+      >
+        Hitchhiker Modal
+      </h2>
+      <button
+        aria-label="close"
+        className="delete"
+        onClick={[Function]}
+      />
+    </header>
+    <section
+      className="modal-card-body is-overflow-auto is-border-bottom-radius-unset"
+    >
+      <button>
+        Hello
+      </button>
+    </section>
+    <footer
+      className="modal-card-foot"
+    >
+      <div
+        className="field is-grouped"
+      >
+        <div
+          className="control"
+        >
+          <button
+            className="button is-default"
+            onClick={[Function]}
+            type="button"
+          >
+             
+            One
+             
+          </button>
+        </div>
+        <div
+          className="control"
+        >
+          <button
+            className="button is-default"
+            onClick={[Function]}
+            type="button"
+          >
+             
+            Two
+             
+          </button>
+        </div>
+      </div>
+    </footer>
+  </div>
+</div>
+`;
 
-exports[`Storyshots Modal/Modal With overflow 1`] = `null`;
+exports[`Storyshots Modal/Modal With initial input field focus 1`] = `
+<div
+  aria-labelledby="headlessui-dialog-title-21"
+  aria-modal={true}
+  className="modal is-active is-overflow-auto is-border-bottom-radius-unset"
+  id="headlessui-dialog-19"
+  onClick={[Function]}
+  role="dialog"
+>
+  <div
+    aria-hidden={true}
+    className="modal-background"
+    id="headlessui-dialog-overlay-20"
+    onClick={[Function]}
+  />
+  <div
+    className="Modal__SizedModal-m3xdw4-0 bToMXK modal-card"
+    overflow="auto"
+  >
+    <header
+      className="modal-card-head has-background-secondary-less"
+      id="headlessui-dialog-title-21"
+    >
+      <h2
+        className="modal-card-title m-0 has-text-secondary-most"
+      >
+        Hitchhiker Modal
+      </h2>
+      <button
+        aria-label="close"
+        className="delete"
+        onClick={[Function]}
+      />
+    </header>
+    <section
+      className="modal-card-body is-overflow-auto is-border-bottom-radius-unset"
+    >
+      <fieldset
+        className="field"
+      >
+        
+        <div
+          className="control"
+        >
+          <input
+            aria-describedby="input_128"
+            aria-labelledby="input_127"
+            className="input"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onKeyPress={[Function]}
+          />
+        </div>
+      </fieldset>
+    </section>
+    <footer
+      className="modal-card-foot"
+    >
+      <div
+        className="field is-grouped"
+      >
+        <div
+          className="control"
+        >
+          <button
+            className="button is-default"
+            onClick={[Function]}
+            type="button"
+          >
+             
+            One
+             
+          </button>
+        </div>
+        <div
+          className="control"
+        >
+          <button
+            className="button is-default"
+            onClick={[Function]}
+            type="button"
+          >
+             
+            Two
+             
+          </button>
+        </div>
+      </div>
+    </footer>
+  </div>
+</div>
+`;
 
-exports[`Storyshots Modal/Modal With overflow and footer 1`] = `null`;
+exports[`Storyshots Modal/Modal With long tooltips 1`] = `
+<div
+  aria-labelledby="headlessui-dialog-title-27"
+  aria-modal={true}
+  className="modal is-active is-overflow-auto is-border-bottom-radius-unset"
+  id="headlessui-dialog-25"
+  onClick={[Function]}
+  role="dialog"
+>
+  <div
+    aria-hidden={true}
+    className="modal-background"
+    id="headlessui-dialog-overlay-26"
+    onClick={[Function]}
+  />
+  <div
+    className="Modal__SizedModal-m3xdw4-0 bToMXK modal-card"
+    overflow="auto"
+  >
+    <header
+      className="modal-card-head has-background-secondary-less"
+      id="headlessui-dialog-title-27"
+    >
+      <h2
+        className="modal-card-title m-0 has-text-secondary-most"
+      >
+        Hitchhiker Modal
+      </h2>
+      <button
+        aria-label="close"
+        className="delete"
+        onClick={[Function]}
+      />
+    </header>
+    <section
+      className="modal-card-body is-overflow-auto is-border-bottom-radius-unset"
+    >
+      <div
+        className="notification is-info"
+      >
+        This story exists because we had a problem, that long tooltips causes a horizontal scrollbar on the modal.
+      </div>
+      <hr />
+      <p>
+        The following elements will have a very long help text, which has triggered the scrollbar in the past.
+      </p>
+      <hr />
+      <div
+        className="Modalstories__TopAndBottomMargin-sc-2lb0wg-0 koqZXa"
+      >
+        <fieldset
+          className="field"
+        >
+          <div
+            className="control"
+          >
+            <label
+              className="checkbox"
+            >
+              <input
+                aria-describedby="checkbox_130"
+                aria-labelledby="checkbox_129"
+                checked={true}
+                className="checkbox"
+                onBlur={[Function]}
+                onChange={[Function]}
+                type="checkbox"
+              />
+               
+              Checkbox
+              <span
+                aria-label="Mind-paralyzing change needed improbability vortex machine sorts sought same theory upending job just allows
+    hostess’s really oblong Infinite Improbability thing into the starship against which behavior accordance.with
+    Kakrafoon humanoid undergarment ship powered by GPP-guided bowl of petunias nothing was frequently away incredibly
+    ordinary mob."
+                className="tooltip has-tooltip-right Help__AbsolutePositionTooltip-ykmmew-0 fpvHMo is-inline-block pl-1 has-tooltip-multiline"
+                data-tooltip="Mind-paralyzing change needed improbability vortex machine sorts sought same theory upending job just allows
+    hostess’s really oblong Infinite Improbability thing into the starship against which behavior accordance.with
+    Kakrafoon humanoid undergarment ship powered by GPP-guided bowl of petunias nothing was frequently away incredibly
+    ordinary mob."
+                id="checkbox_130"
+              >
+                <i
+                  aria-label=""
+                  className="fas fa-fw fa-question-circle has-text-blue-light"
+                  onKeyPress={[Function]}
+                />
+              </span>
+            </label>
+          </div>
+        </fieldset>
+      </div>
+      <hr />
+      <div
+        className="Modalstories__TopAndBottomMargin-sc-2lb0wg-0 koqZXa"
+      >
+        <fieldset
+          className="is-inline-block"
+        >
+          <label
+            className="radio mr-2"
+          >
+            <input
+              aria-describedby="radio_132"
+              aria-labelledby="radio_131"
+              checked={false}
+              onBlur={[Function]}
+              onChange={[Function]}
+              type="radio"
+            />
+             
+            <span
+              id="radio_131"
+            >
+              Radio button
+            </span>
+            <span
+              aria-label="Mind-paralyzing change needed improbability vortex machine sorts sought same theory upending job just allows
+    hostess’s really oblong Infinite Improbability thing into the starship against which behavior accordance.with
+    Kakrafoon humanoid undergarment ship powered by GPP-guided bowl of petunias nothing was frequently away incredibly
+    ordinary mob."
+              className="tooltip has-tooltip-right Help__AbsolutePositionTooltip-ykmmew-0 fpvHMo is-inline-block pl-1 has-tooltip-multiline"
+              data-tooltip="Mind-paralyzing change needed improbability vortex machine sorts sought same theory upending job just allows
+    hostess’s really oblong Infinite Improbability thing into the starship against which behavior accordance.with
+    Kakrafoon humanoid undergarment ship powered by GPP-guided bowl of petunias nothing was frequently away incredibly
+    ordinary mob."
+              id="radio_132"
+            >
+              <i
+                aria-label=""
+                className="fas fa-fw fa-question-circle has-text-blue-light"
+                onKeyPress={[Function]}
+              />
+            </span>
+          </label>
+        </fieldset>
+      </div>
+      <hr />
+      <div
+        className="Modalstories__TopAndBottomMargin-sc-2lb0wg-0 koqZXa"
+      >
+        <fieldset
+          className="field"
+        >
+          <label
+            className="label"
+          >
+            <span
+              id="input_133"
+            >
+              Input
+            </span>
+             
+            <span
+              aria-label="Mind-paralyzing change needed improbability vortex machine sorts sought same theory upending job just allows
+    hostess’s really oblong Infinite Improbability thing into the starship against which behavior accordance.with
+    Kakrafoon humanoid undergarment ship powered by GPP-guided bowl of petunias nothing was frequently away incredibly
+    ordinary mob."
+              className="tooltip has-tooltip-right Help__AbsolutePositionTooltip-ykmmew-0 fpvHMo is-inline-block pl-1 has-tooltip-multiline"
+              data-tooltip="Mind-paralyzing change needed improbability vortex machine sorts sought same theory upending job just allows
+    hostess’s really oblong Infinite Improbability thing into the starship against which behavior accordance.with
+    Kakrafoon humanoid undergarment ship powered by GPP-guided bowl of petunias nothing was frequently away incredibly
+    ordinary mob."
+              id="input_134"
+            >
+              <i
+                aria-label=""
+                className="fas fa-fw fa-question-circle has-text-blue-light"
+                onKeyPress={[Function]}
+              />
+            </span>
+          </label>
+          <div
+            className="control"
+          >
+            <input
+              aria-describedby="input_134"
+              aria-labelledby="input_133"
+              className="input"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onKeyPress={[Function]}
+            />
+          </div>
+        </fieldset>
+      </div>
+      <hr />
+      <div
+        className="Modalstories__TopAndBottomMargin-sc-2lb0wg-0 koqZXa"
+      >
+        <fieldset
+          className="field"
+        >
+          <label
+            className="label"
+          >
+            <span
+              id="textarea_135"
+            >
+              Textarea
+            </span>
+             
+            <span
+              aria-label="Mind-paralyzing change needed improbability vortex machine sorts sought same theory upending job just allows
+    hostess’s really oblong Infinite Improbability thing into the starship against which behavior accordance.with
+    Kakrafoon humanoid undergarment ship powered by GPP-guided bowl of petunias nothing was frequently away incredibly
+    ordinary mob."
+              className="tooltip has-tooltip-right Help__AbsolutePositionTooltip-ykmmew-0 fpvHMo is-inline-block pl-1 has-tooltip-multiline"
+              data-tooltip="Mind-paralyzing change needed improbability vortex machine sorts sought same theory upending job just allows
+    hostess’s really oblong Infinite Improbability thing into the starship against which behavior accordance.with
+    Kakrafoon humanoid undergarment ship powered by GPP-guided bowl of petunias nothing was frequently away incredibly
+    ordinary mob."
+              id="textarea_136"
+            >
+              <i
+                aria-label=""
+                className="fas fa-fw fa-question-circle has-text-blue-light"
+                onKeyPress={[Function]}
+              />
+            </span>
+          </label>
+          <div
+            className="control"
+          >
+            <textarea
+              aria-describedby="textarea_136"
+              aria-labelledby="textarea_135"
+              className="textarea"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onKeyDown={[Function]}
+            />
+          </div>
+        </fieldset>
+      </div>
+      <hr />
+      <p>
+        If this modal has no horizontal scrollbar the issue is fixed
+      </p>
+    </section>
+  </div>
+</div>
+`;
+
+exports[`Storyshots Modal/Modal With overflow 1`] = `
+<div
+  aria-labelledby="headlessui-dialog-title-33"
+  aria-modal={true}
+  className="modal is-active is-overflow-visible is-border-bottom-radius-inherit"
+  id="headlessui-dialog-31"
+  onClick={[Function]}
+  role="dialog"
+>
+  <div
+    aria-hidden={true}
+    className="modal-background"
+    id="headlessui-dialog-overlay-32"
+    onClick={[Function]}
+  />
+  <div
+    className="Modal__SizedModal-m3xdw4-0 leZDUX modal-card"
+    overflow="visible"
+  >
+    <header
+      className="modal-card-head has-background-secondary-less"
+      id="headlessui-dialog-title-33"
+    >
+      <h2
+        className="modal-card-title m-0 has-text-secondary-most"
+      >
+        Hitchhiker Modal
+      </h2>
+      <button
+        aria-label="close"
+        className="delete"
+        onClick={[Function]}
+      />
+    </header>
+    <section
+      className="modal-card-body is-overflow-visible is-border-bottom-radius-inherit"
+    >
+      <h1
+        className="title"
+      >
+        Please Select
+      </h1>
+      <div
+        className="field"
+      >
+        
+        <div
+          className="control"
+        >
+          <div
+            className="css-1pcexqc-container autocomplete-entry"
+            onKeyDown={[Function]}
+          >
+            <div
+              className="css-bg1rzq-control autocomplete-entry__control"
+              onMouseDown={[Function]}
+              onTouchEnd={[Function]}
+            >
+              <div
+                className="css-1hwfws3 autocomplete-entry__value-container"
+              >
+                <div
+                  className="css-151xaom-placeholder autocomplete-entry__placeholder"
+                >
+                  Type here
+                </div>
+                <div
+                  className="css-1g6gooi"
+                >
+                  <div
+                    className="autocomplete-entry__input"
+                    style={
+                      Object {
+                        "display": "inline-block",
+                      }
+                    }
+                  >
+                    <input
+                      aria-autocomplete="list"
+                      autoCapitalize="none"
+                      autoComplete="off"
+                      autoCorrect="off"
+                      disabled={false}
+                      id="react-select-2-input"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      spellCheck="false"
+                      style={
+                        Object {
+                          "background": 0,
+                          "border": 0,
+                          "boxSizing": "content-box",
+                          "color": "inherit",
+                          "fontSize": "inherit",
+                          "label": "input",
+                          "opacity": 1,
+                          "outline": 0,
+                          "padding": 0,
+                          "width": "1px",
+                        }
+                      }
+                      tabIndex="0"
+                      type="text"
+                      value=""
+                    />
+                    <div
+                      style={
+                        Object {
+                          "height": 0,
+                          "left": 0,
+                          "overflow": "scroll",
+                          "position": "absolute",
+                          "top": 0,
+                          "visibility": "hidden",
+                          "whiteSpace": "pre",
+                        }
+                      }
+                    >
+                      
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                className="css-1wy0on6 autocomplete-entry__indicators"
+              >
+                <span
+                  className="css-bgvzuu-indicatorSeparator autocomplete-entry__indicator-separator"
+                />
+                <div
+                  aria-hidden="true"
+                  className="css-16pqwjk-indicatorContainer autocomplete-entry__indicator autocomplete-entry__dropdown-indicator"
+                  onMouseDown={[Function]}
+                  onTouchEnd={[Function]}
+                >
+                  <svg
+                    aria-hidden="true"
+                    className="css-19bqh2r"
+                    focusable="false"
+                    height={20}
+                    viewBox="0 0 20 20"
+                    width={20}
+                  >
+                    <path
+                      d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+`;
+
+exports[`Storyshots Modal/Modal With overflow and footer 1`] = `
+<div
+  aria-labelledby="headlessui-dialog-title-36"
+  aria-modal={true}
+  className="modal is-active is-overflow-visible is-border-bottom-radius-unset"
+  id="headlessui-dialog-34"
+  onClick={[Function]}
+  role="dialog"
+>
+  <div
+    aria-hidden={true}
+    className="modal-background"
+    id="headlessui-dialog-overlay-35"
+    onClick={[Function]}
+  />
+  <div
+    className="Modal__SizedModal-m3xdw4-0 leZDUX modal-card"
+    overflow="visible"
+  >
+    <header
+      className="modal-card-head has-background-secondary-less"
+      id="headlessui-dialog-title-36"
+    >
+      <h2
+        className="modal-card-title m-0 has-text-secondary-most"
+      >
+        Hitchhiker Modal
+      </h2>
+      <button
+        aria-label="close"
+        className="delete"
+        onClick={[Function]}
+      />
+    </header>
+    <section
+      className="modal-card-body is-overflow-visible is-border-bottom-radius-unset"
+    >
+      <h1
+        className="title"
+      >
+        Please Select
+      </h1>
+      <div
+        className="field"
+      >
+        
+        <div
+          className="control"
+        >
+          <div
+            className="css-1pcexqc-container autocomplete-entry"
+            onKeyDown={[Function]}
+          >
+            <div
+              className="css-bg1rzq-control autocomplete-entry__control"
+              onMouseDown={[Function]}
+              onTouchEnd={[Function]}
+            >
+              <div
+                className="css-1hwfws3 autocomplete-entry__value-container"
+              >
+                <div
+                  className="css-151xaom-placeholder autocomplete-entry__placeholder"
+                >
+                  Type here
+                </div>
+                <div
+                  className="css-1g6gooi"
+                >
+                  <div
+                    className="autocomplete-entry__input"
+                    style={
+                      Object {
+                        "display": "inline-block",
+                      }
+                    }
+                  >
+                    <input
+                      aria-autocomplete="list"
+                      autoCapitalize="none"
+                      autoComplete="off"
+                      autoCorrect="off"
+                      disabled={false}
+                      id="react-select-3-input"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      spellCheck="false"
+                      style={
+                        Object {
+                          "background": 0,
+                          "border": 0,
+                          "boxSizing": "content-box",
+                          "color": "inherit",
+                          "fontSize": "inherit",
+                          "label": "input",
+                          "opacity": 1,
+                          "outline": 0,
+                          "padding": 0,
+                          "width": "1px",
+                        }
+                      }
+                      tabIndex="0"
+                      type="text"
+                      value=""
+                    />
+                    <div
+                      style={
+                        Object {
+                          "height": 0,
+                          "left": 0,
+                          "overflow": "scroll",
+                          "position": "absolute",
+                          "top": 0,
+                          "visibility": "hidden",
+                          "whiteSpace": "pre",
+                        }
+                      }
+                    >
+                      
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                className="css-1wy0on6 autocomplete-entry__indicators"
+              >
+                <span
+                  className="css-bgvzuu-indicatorSeparator autocomplete-entry__indicator-separator"
+                />
+                <div
+                  aria-hidden="true"
+                  className="css-16pqwjk-indicatorContainer autocomplete-entry__indicator autocomplete-entry__dropdown-indicator"
+                  onMouseDown={[Function]}
+                  onTouchEnd={[Function]}
+                >
+                  <svg
+                    aria-hidden="true"
+                    className="css-19bqh2r"
+                    focusable="false"
+                    height={20}
+                    viewBox="0 0 20 20"
+                    width={20}
+                  >
+                    <path
+                      d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <footer
+      className="modal-card-foot"
+    >
+      <div
+        className="field is-grouped"
+      >
+        <div
+          className="control"
+        >
+          <button
+            className="button is-default"
+            onClick={[Function]}
+            type="button"
+          >
+             
+            One
+             
+          </button>
+        </div>
+        <div
+          className="control"
+        >
+          <button
+            className="button is-default"
+            onClick={[Function]}
+            type="button"
+          >
+             
+            Two
+             
+          </button>
+        </div>
+      </div>
+    </footer>
+  </div>
+</div>
+`;
 
 exports[`Storyshots Notification Closeable 1`] = `
 <div
