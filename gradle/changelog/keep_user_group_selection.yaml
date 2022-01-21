@@ -1,2 +1,0 @@
-- type: changed
-  description: Keeps the selection whether to add a user or a group in the repository permission dialog ([#1919](https://github.com/scm-manager/scm-manager/pull/1919))

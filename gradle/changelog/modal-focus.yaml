@@ -1,2 +1,0 @@
-- type: added
-  description: initial focus, submission on pressing enter and fix trap focus for modals ([#1925](https://github.com/scm-manager/scm-manager/pull/1925))
