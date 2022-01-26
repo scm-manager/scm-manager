@@ -92,7 +92,7 @@
         "button": {
           "label": "Mit <0>myCloudogu</0> verbinden"
         },
-        "description": "Verbinden Sie Ihren SCM-Manager mit <0>myCloudogu</0> um besondere Plugins zu installieren. myCloudogu ist die Heimat der SCM-Manager Community, getragen von Maintainern des SCM-Managers. Sie haben noch kein Konto? Erstellen Sie während der Verbindung der SCM-Manager-Instanz kostenfrei ein myCloudogu-Konto."
+        "description": "Verbinden Sie Ihren SCM-Manager mit <0>myCloudogu</0> um besondere Plugins zu installieren. myCloudogu ist die Heimat der SCM-Manager Community, getragen von Maintainern des SCM-Managers. Sie haben noch kein Konto? Erstellen Sie während der Verbindung der SCM-Manager-Instanz kostenfrei ein myCloudogu-Konto. <1>Mehr Details zur Datenverarbeitung.</1>"
       }
     }
   },
