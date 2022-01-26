@@ -1,0 +1,2 @@
+- type: fixed
+  description: Make comparable null safe ([#1933](https://github.com/scm-manager/scm-manager/pull/1933))
