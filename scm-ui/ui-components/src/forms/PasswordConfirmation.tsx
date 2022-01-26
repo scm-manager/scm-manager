@@ -58,7 +58,13 @@ const PasswordConfirmation: FC<InnerProps> = ({ passwordChanged, passwordValidat
     setPasswordConfirmationFailed(password !== newConfirmedPassword);
   };
 
-  const handlePasswordChange = (newPassword: string) => {
+  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement> | string) => {
+    let newPassword;
+    if (typeof event === "string") {
+      newPassword = event;
+    } else {
+      newPassword = event.target.value;
+    }
     setPasswordConfirmationFailed(newPassword !== confirmedPassword);
     setPassword(newPassword);
     setPasswordValid(validatePassword(newPassword));
@@ -70,7 +76,7 @@ const PasswordConfirmation: FC<InnerProps> = ({ passwordChanged, passwordValidat
         <InputField
           label={t("password.newPassword")}
           type="password"
-          onChange={event => handlePasswordChange(event.target.value)}
+          onChange={event => handlePasswordChange(event)}
           value={password}
           validationError={!passwordValid}
           errorMessage={t("password.passwordInvalid")}
