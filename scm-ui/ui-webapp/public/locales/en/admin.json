@@ -92,7 +92,7 @@
         "button": {
           "label": "Connect to <0>myCloudogu</0>"
         },
-        "description": "Connect your SCM-Manager with <0>myCloudogu</0> to install special plugins. myCloudogu is the home of the SCM-Manager Community, sustained by the maintainers of the SCM-Manager. You don't have an account yet? Create a free myCloudogu account while connecting your SCM-Manager instance."
+        "description": "Connect your SCM-Manager with <0>myCloudogu</0> to install special plugins. myCloudogu is the home of the SCM-Manager Community, sustained by the maintainers of the SCM-Manager. You don't have an account yet? Create a free myCloudogu account while connecting your SCM-Manager instance. <1>More details on data processing.</1>"
       }
     }
   },

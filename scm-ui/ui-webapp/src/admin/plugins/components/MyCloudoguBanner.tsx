@@ -51,7 +51,10 @@ const MyCloudoguBanner: FC<Props> = ({ loginLink }) => {
         <Trans
           t={t}
           i18nKey="plugins.myCloudogu.login.description"
-          components={[<a href="https://my.cloudogu.com/">myCloudogu</a>]}
+          components={[
+            <a href="https://my.cloudogu.com/">myCloudogu</a>,
+            <a href="https://scm-manager.org/data-processing">Data Processing</a>
+          ]}
         />
       </p>
     </MyCloudoguBannerWrapper>

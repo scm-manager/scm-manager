@@ -10,6 +10,8 @@ Damit Änderungen der Plugins wirksam werden, muss der SCM-Manager-Server neu ge
 
 ### myCloudogu-Plugins
 Einige besondere Plugins sind nur für Instanzen des SCM-Managers verfügbar, die mit myCloudogu verbunden sind. Der SCM-Manager kann über den Button „Mit myCloudogu verbinden“ mit myCloudogu verbunden werden.
+[Mehr Details zur Datenverarbeitung.](https://scm-manager.org/data-processing)
+
 ![Plugin-Center nicht verbunden, Button zur Verbindung mit myCloudogu](assets/administration-plugin-center-not-connected.png)
 Sie werden dann zur myCloudogu-Login-Maske weitergeleitet. 
 ![myCloudogu-Login-Maske](assets/myCloudogu-login.png)

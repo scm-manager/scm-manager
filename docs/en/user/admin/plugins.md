@@ -9,12 +9,15 @@ Plugins can be managed by action icons on the tiles. System relevant plugins tha
 In order for changes to plugins to become effective, the SCM-Manager server needs to be restarted. That can be done after every single action. It is also possible to queue several actions like the installation of a new plugin, updates or the deletion of a plugin and to perform all actions with one restart. If an action (installation, uninstallation, update) for a plugin was performed, the buttons "Execute changes" and "Abort changes"  appear. If you choose to execute  the changes, a popup window that shows the current queue (all actions without a restart) appears. Now the user can decide whether to execute the changes by restarting the server. If there are actions in the queue that are no longer desired, the queue can be emptied with the abort changes button.
 
 ### myCloudogu plugins
-Some special plugins are only available to instances of SCM-Manager that are connected to myCloudogu. You may connect your instance by clicking the button “Connect to myCloudogu” ![Plugin-center not connected](assets/administration-plugin-center-not-connected.png). 
+Some special plugins are only available to instances of SCM-Manager that are connected to myCloudogu. You may connect your instance by clicking the button “Connect to myCloudogu”.
+[More details on data processing.](https://scm-manager.org/data-processing)
 
-You will be redirected to a myCloudogu login form. ![myCloudogu-Login-Form](assets/myCloudogu-Login.png) If you already have an account you simply log in. Otherwise you can create an account either by using a confederate identity provider (Google or github) 
-or with your email.
-After a successful login you will return to the SCM-Manager. Here you can review the instance and account to connect. By clicking the button “Connect” you approve the connection and return to the plugin center. ![Confirmation of connection](assets/administration-myC-confirmation.png)
-
+![Plugin-center not connected](assets/administration-plugin-center-not-connected.png)
+You will be redirected to a myCloudogu login form. 
+![myCloudogu-Login-Form](assets/myCloudogu-Login.png)
+If you already have an account you simply log in. Otherwise you can create an account either by using a confederate identity provider (Google or github) or with your email.
+After a successful login you will return to the SCM-Manager. Here you can review the instance and account to connect. By clicking the button “Connect” you approve the connection and return to the plugin center. 
+![Confirmation of connection](assets/administration-myC-confirmation.png)
 Now you can install myCloudogu plugins like basic plugins.
 ![Plugin-center connected with myCloudogu](assets/administration-plugin-center-connected.png)
 Only one user with sufficient permissions needs to connect the instance with myCloudogu. The myCloudogu plugins can than be installed by every user with suitable permissions.
