@@ -22,18 +22,18 @@
  * SOFTWARE.
  */
 
-.tooltip-arrow-top {
+.tooltip-arrow-top-border-color {
   border-color: $grey-dark transparent transparent transparent;
 }
 
-.tooltip-arrow-right {
+.tooltip-arrow-right-border-color {
   border-color: transparent $grey-dark transparent transparent;
 }
 
-.tooltip-arrow-bottom {
+.tooltip-arrow-bottom-border-color {
   border-color: transparent transparent $grey-dark transparent;
 }
 
-.tooltip-arrow-left {
+.tooltip-arrow-left-border-color {
   border-color: transparent transparent transparent $grey-dark;
 }

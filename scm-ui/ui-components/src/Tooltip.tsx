@@ -161,7 +161,7 @@ const Tooltip: FC<Props> = ({ className, message, location = "right", multiline,
     };
     window.addEventListener("keydown", listener);
     return () => window.removeEventListener("keydown", listener);
-  });
+  }, []);
 
   const LocationContainer = Container[location];
   const LocationArrow = Arrow[location];
@@ -174,7 +174,7 @@ const Tooltip: FC<Props> = ({ className, message, location = "right", multiline,
     >
       {open ? (
         <>
-          <LocationArrow className={`tooltip-arrow-${location}`} />
+          <LocationArrow className={`tooltip-arrow-${location}-border-color`} />
           <LocationContainer
             className={classNames(
               className,
