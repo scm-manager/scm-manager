@@ -356,8 +356,8 @@
       "annotateButton": "Annotate",
       "downloadButton": "Download",
       "toggleButton": {
-        "showMarkdown": "Markdown rendern",
-        "showSources": "Sources anzeigen"
+        "showMarkdown": "Vorschau",
+        "showSources": "Source"
       },
       "showMore": "Mehr Informationen einblenden",
       "hideMore": "Mehr Informationen ausblenden",
