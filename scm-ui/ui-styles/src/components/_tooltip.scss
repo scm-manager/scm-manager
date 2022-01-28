@@ -21,8 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-@import "bulma/bulma";
-@import "../variables/_derived.scss";
-@import "bulma-popover/css/bulma-popover";
-@import "../components/_main.scss";
-@import "../components/_tooltip.scss";
+
+.tooltip-arrow-top-border-color {
+  border-color: $grey-dark transparent transparent transparent;
+}
+
+.tooltip-arrow-right-border-color {
+  border-color: transparent $grey-dark transparent transparent;
+}
+
+.tooltip-arrow-bottom-border-color {
+  border-color: transparent transparent $grey-dark transparent;
+}
+
+.tooltip-arrow-left-border-color {
+  border-color: transparent transparent transparent $grey-dark;
+}
