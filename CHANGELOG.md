@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.30.1] - 2022-01-26
 ### Fixed
 - Make comparable null safe ([#1933](https://github.com/scm-manager/scm-manager/pull/1933))
-- Password field in "Create User" dialog and other ((#1934)[https://github.com/scm-manager/scm-manager/pull/1934])
+- Password field in "Create User" dialog and other ([#1934](https://github.com/scm-manager/scm-manager/pull/1934))
 
 ## [2.30.0] - 2022-01-21
 ### Added
