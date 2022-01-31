@@ -89,11 +89,11 @@
     "myCloudogu": {
       "connectionInfo": "Instanz ist mit myCloudogu verbunden.\nAccount: {{pluginCenterSubject}}",
       "error": {
-        "info": "myCloudogu Authentifizierungs Informationen konnten nicht abgerufen werden. Klick um Details zu sehen.",
+        "info": "myCloudogu Authentifizierungsinformationen konnten nicht abgerufen werden. Klicken Sie, um Details zu sehen.",
         "title": "Fehler"
       },
       "failed": {
-        "info": "Verbindung mit account {{pluginCenterSubject}} zu myCloudogu is fehlgeschlagen",
+        "info": "Verbindung zu myCloudogu mit Account {{pluginCenterSubject}} is fehlgeschlagen",
         "message": "Die Verbindung der SCM-Manager Instanz mit <0>myCloudogu</0> is fehlgeschlagen. Der Benutzer <1>{{subject}}</1> konnte nicht authentifiziert werden.",
         "button": {
           "label": "Erneut mit <0>myCloudogu</0> verbinden"
