@@ -46,6 +46,7 @@ public class PluginCenterAuthenticationInfoDto extends HalRepresentation {
   @JsonInclude(NON_NULL)
   private Instant date;
   private boolean isDefault;
+  private boolean failed;
 
   public PluginCenterAuthenticationInfoDto(Links links) {
     super(links);

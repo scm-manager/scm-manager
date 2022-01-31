@@ -21,42 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package sonia.scm.plugin;
 
-import java.time.Instant;
+import lombok.Value;
+import sonia.scm.event.Event;
 
 /**
- * Information about the plugin center authentication.
- * @since 2.28.0
+ * Event is thrown if the authentication to the plugin center fails.
+ * @since 2.30.0
  */
-public interface AuthenticationInfo {
-
-  /**
-   * Returns the username of the SCM-Manager user which has authenticated the plugin center.
-   * @return SCM-Manager username
-   */
-  String getPrincipal();
-
-  /**
-   * Returns the subject of the plugin center user.
-   * @return plugin center subject
-   */
-  String getPluginCenterSubject();
-
-  /**
-   * Returns the date on which the authentication was performed.
-   * @return authentication date
-   */
-  Instant getDate();
-
-  /**
-   * Returns {@code true} if the last authentication has failed.
-   * @return {@code true} if the last authentication has failed.
-   * @since 2.31.0
-   */
-  default boolean isFailed() {
-    return false;
-  }
-
+@Event
+@Value
+public class PluginCenterAuthenticationFailedEvent implements PluginCenterAuthenticationEvent {
+  AuthenticationInfo authenticationInfo;
 }

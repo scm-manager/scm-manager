@@ -132,7 +132,7 @@ class PluginInstaller {
   private InputStream download(AvailablePlugin plugin) throws IOException {
     AdvancedHttpRequest request = client.get(plugin.getDescriptor().getUrl()).spanKind(SPAN_KIND);
     if (authenticator.isAuthenticated()) {
-      request.bearerAuth(authenticator.fetchAccessToken());
+      authenticator.fetchAccessToken().ifPresent(request::bearerAuth);
     }
     return request.request().contentAsStream();
   }

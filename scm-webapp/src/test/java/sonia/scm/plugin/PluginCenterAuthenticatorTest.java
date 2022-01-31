@@ -47,6 +47,7 @@ import sonia.scm.store.InMemoryConfigurationStoreFactory;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -146,7 +147,7 @@ class PluginCenterAuthenticatorTest {
 
     @Test
     void shouldAuthenticate() throws IOException {
-      mockAuthProtocol("https://plugin-center-api.scm-manager.org/api/v1/auth/oidc/refresh", "access", "refresh");
+      mockSuccessfulAuth("https://plugin-center-api.scm-manager.org/api/v1/auth/oidc/refresh", "access", "refresh");
 
       authenticator.authenticate("tricia.mcmillan@hitchhiker.com", "my-awesome-refresh-token");
       assertThat(authenticator.isAuthenticated()).isTrue();
@@ -154,7 +155,7 @@ class PluginCenterAuthenticatorTest {
 
     @Test
     void shouldFireLoginEvent() throws IOException {
-      mockAuthProtocol("https://plugin-center-api.scm-manager.org/api/v1/auth/oidc/refresh", "access", "refresh");
+      mockSuccessfulAuth("https://plugin-center-api.scm-manager.org/api/v1/auth/oidc/refresh", "access", "refresh");
 
       authenticator.authenticate("tricia.mcmillan@hitchhiker.com", "my-awesome-refresh-token");
 
@@ -174,51 +175,89 @@ class PluginCenterAuthenticatorTest {
     void shouldUseUrlFromScmConfiguration() throws IOException {
       preAuth("cool-refresh-token");
       scmConfiguration.setPluginAuthUrl("https://pca.org/oidc/");
-      mockAuthProtocol("https://pca.org/oidc/refresh", "access", "refresh");
+      mockSuccessfulAuth("https://pca.org/oidc/refresh", "access", "refresh");
 
-      String accessToken = authenticator.fetchAccessToken();
-      assertThat(accessToken).isEqualTo("access");
-    }
-
-    @Test
-    void shouldFailIfFetchFails() throws IOException {
-      preAuth("cool-refresh-token");
-      scmConfiguration.setPluginAuthUrl("https://plug.ins/oidc/");
-
-      when(advancedHttpClient.post("https://plug.ins/oidc/refresh")).thenReturn(request);
-      when(request.request()).thenThrow(new IOException("network down down down"));
-
-      assertThrows(FetchAccessTokenFailedException.class, () -> authenticator.fetchAccessToken());
-    }
-
-    @Test
-    void shouldFailIfFetchResponseIsNotSuccessful() throws IOException {
-      preAuth("cool-refresh-token");
-      scmConfiguration.setPluginAuthUrl("https://plug.ins/oidc/");
-
-      when(advancedHttpClient.post("https://plug.ins/oidc/refresh")).thenReturn(request);
-
-      AdvancedHttpResponse response = mock(AdvancedHttpResponse.class);
-      when(request.request()).thenReturn(response);
-
-      when(response.isSuccessful()).thenReturn(false);
-
-      assertThrows(FetchAccessTokenFailedException.class, () -> authenticator.fetchAccessToken());
+      Optional<String> accessToken = authenticator.fetchAccessToken();
+      assertThat(accessToken).contains("access");
     }
 
     @Test
     void shouldFetchAccessToken() throws IOException {
       preAuth("cool-refresh-token");
-      mockAuthProtocol("https://plugin-center-api.scm-manager.org/api/v1/auth/oidc/refresh", "access", "refresh");
+      mockSuccessfulAuth("https://plugin-center-api.scm-manager.org/api/v1/auth/oidc/refresh", "access", "refresh");
 
-      String accessToken = authenticator.fetchAccessToken();
-      assertThat(accessToken).isEqualTo("access");
+      Optional<String> accessToken = authenticator.fetchAccessToken();
+      assertThat(accessToken).contains("access");
+    }
+
+    @Test
+    void shouldReturnEmptyAccessTokenOnFailedRequest() throws IOException {
+      preAuth("cool-refresh-token");
+
+      AdvancedHttpResponse response = mockAuthResponse("https://plugin-center-api.scm-manager.org/api/v1/auth/oidc/refresh");
+      when(response.isSuccessful()).thenReturn(false);
+
+      Optional<String> accessToken = authenticator.fetchAccessToken();
+      assertThat(accessToken).isEmpty();
+    }
+
+    @Test
+    void shouldReturnEmptyAccessTokenOnException() throws IOException {
+      preAuth("cool-refresh-token");
+
+      when(advancedHttpClient.post("https://plugin-center-api.scm-manager.org/api/v1/auth/oidc/refresh"))
+        .thenReturn(request);
+      when(request.request()).thenThrow(new IOException("failed"));
+
+      Optional<String> accessToken = authenticator.fetchAccessToken();
+      assertThat(accessToken).isEmpty();
+    }
+
+    @Test
+    void shouldMarkAuthenticationAsFailed() throws IOException {
+      preAuth("cool-refresh-token");
+
+      AdvancedHttpResponse response = mockAuthResponse("https://plugin-center-api.scm-manager.org/api/v1/auth/oidc/refresh");
+      when(response.isSuccessful()).thenReturn(false);
+
+      authenticator.fetchAccessToken();
+      assertThat(authenticator.getAuthenticationInfo()).hasValueSatisfying(
+        auth -> assertThat(auth.isFailed()).isTrue()
+      );
+    }
+
+    @Test
+    void shouldUnmarkAfterSuccessfulAuthentication() throws IOException {
+      preAuth("cool-refresh-token", true);
+      mockSuccessfulAuth("https://plugin-center-api.scm-manager.org/api/v1/auth/oidc/refresh", "access", "refresh");
+
+      authenticator.fetchAccessToken();
+
+      assertThat(authenticator.getAuthenticationInfo()).hasValueSatisfying(
+        auth -> assertThat(auth.isFailed()).isFalse()
+      );
+    }
+
+    @Test
+    void shouldFireAuthenticationFailedEvent() throws IOException {
+      preAuth("cool-refresh-token");
+
+      AdvancedHttpResponse response = mockAuthResponse("https://plugin-center-api.scm-manager.org/api/v1/auth/oidc/refresh");
+      when(response.isSuccessful()).thenReturn(false);
+
+      authenticator.fetchAccessToken();
+
+      ArgumentCaptor<PluginCenterAuthenticationFailedEvent> eventCaptor = ArgumentCaptor.forClass(PluginCenterAuthenticationFailedEvent.class);
+      verify(eventBus).post(eventCaptor.capture());
+      PluginCenterAuthenticationFailedEvent event = eventCaptor.getValue();
+
+      assertThat(event.getAuthenticationInfo().isFailed()).isTrue();
     }
 
     @Test
     void shouldStoreRefreshTokenAfterFetch() throws IOException {
       preAuth("refreshOne");
-      mockAuthProtocol("https://plugin-center-api.scm-manager.org/api/v1/auth/oidc/refresh", "accessTwo", "refreshTwo");
+      mockSuccessfulAuth("https://plugin-center-api.scm-manager.org/api/v1/auth/oidc/refresh", "accessTwo", "refreshTwo");
 
       authenticator.fetchAccessToken();
       authenticator.fetchAccessToken();
@@ -272,22 +311,24 @@ class PluginCenterAuthenticatorTest {
       assertThat(info.getPluginCenterSubject()).isEqualTo("tricia.mcmillan@hitchhiker.com");
     }
 
-    @SuppressWarnings("unchecked")
     private void preAuth(String refreshToken) {
+      preAuth(refreshToken, false);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void preAuth(String refreshToken, boolean failed) {
       Authentication authentication = new Authentication();
       authentication.setPluginCenterSubject("tricia.mcmillan@hitchhiker.com");
       authentication.setPrincipal("trillian");
       authentication.setRefreshToken(refreshToken);
       authentication.setDate(Instant.now());
+      authentication.setFailed(failed);
       factory.get(STORE_NAME, null).set(authentication);
     }
 
     @CanIgnoreReturnValue
-    private void mockAuthProtocol(String url, String accessToken, String refreshToken) throws IOException {
-      when(advancedHttpClient.post(url)).thenReturn(request);
-
-      AdvancedHttpResponse response = mock(AdvancedHttpResponse.class);
-      when(request.request()).thenReturn(response);
+    private void mockSuccessfulAuth(String url, String accessToken, String refreshToken) throws IOException {
+      AdvancedHttpResponse response = mockAuthResponse(url);
 
       RefreshResponse refreshResponse = new RefreshResponse();
       refreshResponse.setAccessToken(accessToken);
@@ -295,6 +336,15 @@ class PluginCenterAuthenticatorTest {
       when(response.contentFromJson(RefreshResponse.class)).thenReturn(refreshResponse);
 
       when(response.isSuccessful()).thenReturn(true);
+    }
+
+    private AdvancedHttpResponse mockAuthResponse(String url) throws IOException {
+      when(advancedHttpClient.post(url)).thenReturn(request);
+
+      AdvancedHttpResponse response = mock(AdvancedHttpResponse.class);
+      when(request.request()).thenReturn(response);
+
+      return response;
     }
 
   }

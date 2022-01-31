@@ -24,17 +24,15 @@
 import * as React from "react";
 import { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Link, Plugin } from "@scm-manager/ui-types";
+import { Plugin } from "@scm-manager/ui-types";
 import {
   Button,
   ButtonGroup,
   ErrorNotification,
-  Icon,
   Loading,
   Notification,
   Subtitle,
-  Title,
-  Tooltip
+  Title
 } from "@scm-manager/ui-components";
 import PluginsList from "../components/PluginList";
 import PluginTopActions from "../components/PluginTopActions";
@@ -51,6 +49,7 @@ import {
 } from "@scm-manager/ui-api";
 import PluginModal from "../components/PluginModal";
 import MyCloudoguBanner from "../components/MyCloudoguBanner";
+import PluginCenterAuthInfo from "../components/PluginCenterAuthInfo";
 
 export enum PluginAction {
   INSTALL = "install",
@@ -81,42 +80,22 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
     error: installedPluginsError
   } = useInstalledPlugins({ enabled: installed });
   const { data: pendingPlugins, isLoading: isLoadingPendingPlugins, error: pendingPluginsError } = usePendingPlugins();
-  const {
-    data: pluginCenterAuthInfo,
-    isLoading: isLoadingPluginCenterAuthInfo,
-    error: pluginCenterAuthInfoError
-  } = usePluginCenterAuthInfo();
+  const pluginCenterAuthInfo = usePluginCenterAuthInfo();
   const [showPendingModal, setShowPendingModal] = useState(false);
   const [showExecutePendingModal, setShowExecutePendingModal] = useState(false);
   const [showUpdateAllModal, setShowUpdateAllModal] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [pluginModalContent, setPluginModalContent] = useState<PluginModalContent | null>(null);
   const collection = installed ? installedPlugins : availablePlugins;
-  const error =
-    (installed ? installedPluginsError : availablePluginsError) || pendingPluginsError || pluginCenterAuthInfoError;
-  const loading =
-    (installed ? isLoadingInstalledPlugins : isLoadingAvailablePlugins) ||
-    isLoadingPendingPlugins ||
-    isLoadingPluginCenterAuthInfo;
-  const isPluginCenterAuthenticated = !!pluginCenterAuthInfo?.pluginCenterSubject;
-  const isDefaultPluginCenter = pluginCenterAuthInfo?.default;
+  const error = (installed ? installedPluginsError : availablePluginsError) || pendingPluginsError;
+  const loading = (installed ? isLoadingInstalledPlugins : isLoadingAvailablePlugins) || isLoadingPendingPlugins;
 
   const renderHeader = (actions: React.ReactNode) => {
     return (
       <div className="columns">
         <div className="column">
-          <Title>
-            {t("plugins.title")}
-            {isPluginCenterAuthenticated && isDefaultPluginCenter ? (
-              <Tooltip
-                message={t("plugins.myCloudogu.connectionInfo", {
-                  pluginCenterSubject: pluginCenterAuthInfo.pluginCenterSubject
-                })}
-                multiline={true}
-              >
-                <Icon name="check-circle" color="info" className="is-size-5 ml-1" />
-              </Tooltip>
-            ) : null}
+          <Title className="is-flex">
+            {t("plugins.title")} <PluginCenterAuthInfo {...pluginCenterAuthInfo} />
           </Title>
           <Subtitle subtitle={installed ? t("plugins.installedSubtitle") : t("plugins.availableSubtitle")} />
         </div>
@@ -208,7 +187,7 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
         <PluginsList
           plugins={collection._embedded.plugins}
           openModal={setPluginModalContent}
-          pluginCenterAuthInfo={pluginCenterAuthInfo}
+          pluginCenterAuthInfo={pluginCenterAuthInfo.data}
         />
       );
     }
@@ -250,9 +229,7 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
     <>
       {renderHeader(actions)}
       <hr className="header-with-actions" />
-      {isDefaultPluginCenter ? (
-        <MyCloudoguBanner loginLink={(pluginCenterAuthInfo?._links?.login as Link)?.href} />
-      ) : null}
+      {pluginCenterAuthInfo.data?.default ? <MyCloudoguBanner info={pluginCenterAuthInfo.data} /> : null}
       {renderPluginsList()}
       {renderFooter(actions)}
       {renderModals()}
