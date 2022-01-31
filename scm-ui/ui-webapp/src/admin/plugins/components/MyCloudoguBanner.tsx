@@ -22,25 +22,84 @@
  * SOFTWARE.
  */
 
-import { Button } from "@scm-manager/ui-components";
-import * as React from "react";
-import { FC } from "react";
-import styled from "styled-components";
+import React, { FC } from "react";
 import { Trans, useTranslation } from "react-i18next";
-
-const MyCloudoguBannerWrapper = styled.div`
-  border: 1px solid;
-`;
+import { Link, PluginCenterAuthenticationInfo } from "@scm-manager/ui-types";
+import classNames from "classnames";
+import styled from "styled-components";
+import { Button } from "@scm-manager/ui-components";
 
 type Props = {
-  loginLink?: string;
+  info: PluginCenterAuthenticationInfo;
 };
 
-const MyCloudoguBanner: FC<Props> = ({ loginLink }) => {
+const MyCloudoguBanner: FC<Props> = ({ info }) => {
+  const loginLink = (info._links.login as Link)?.href;
+  if (loginLink) {
+    return <Unauthenticated info={info} link={loginLink} />;
+  }
+
+  if (info.failed) {
+    const reconnectLink = (info._links.reconnect as Link)?.href;
+    if (reconnectLink) {
+      return <FailedAuthentication info={info} link={reconnectLink} />;
+    }
+  }
+
+  return null;
+};
+
+type PropsWithLink = Props & {
+  link: string;
+};
+
+const FailedAuthentication: FC<PropsWithLink> = ({ info, link }) => {
   const [t] = useTranslation("admin");
-  return loginLink ? (
-    <MyCloudoguBannerWrapper className="has-rounded-border is-flex is-flex-direction-column is-align-items-center p-5 mb-4 has-border-success">
-      <Button className="mb-5 has-text-weight-normal has-border-info" reducedMobile={true} link={loginLink}>
+  return (
+    <Container className="has-border-danger">
+      <p className="is-align-self-flex-start">
+        <Trans
+          t={t}
+          i18nKey="plugins.myCloudogu.failed.message"
+          values={{ subject: info.pluginCenterSubject }}
+          components={[<a href="https://my.cloudogu.com/">myCloudogu</a>, <strong />]}
+        />
+      </p>
+      <Button className="mt-5 has-text-weight-normal has-border-info" reducedMobile={true} link={link}>
+        <Trans
+          t={t}
+          i18nKey="plugins.myCloudogu.failed.button.label"
+          components={[<span className="mx-1 has-text-info">myCloudogu</span>]}
+        />
+      </Button>
+    </Container>
+  );
+};
+
+type ContainerProps = {
+  className?: string;
+};
+
+const Container: FC<ContainerProps> = ({ className, children }) => (
+  <DivWithSolidBorder
+    className={classNames(
+      "has-rounded-border is-flex is-flex-direction-column is-align-items-center p-5 mb-4",
+      className
+    )}
+  >
+    {children}
+  </DivWithSolidBorder>
+);
+
+const DivWithSolidBorder = styled.div`
+  border: 2px solid;
+`;
+
+const Unauthenticated: FC<PropsWithLink> = ({ link, info }) => {
+  const [t] = useTranslation("admin");
+  return (
+    <Container className="has-border-success">
+      <Button className="mb-5 has-text-weight-normal has-border-info" reducedMobile={true} link={link}>
         <Trans
           t={t}
           i18nKey="plugins.myCloudogu.login.button.label"
@@ -57,8 +116,8 @@ const MyCloudoguBanner: FC<Props> = ({ loginLink }) => {
           ]}
         />
       </p>
-    </MyCloudoguBannerWrapper>
-  ) : null;
+    </Container>
+  );
 };
 
 export default MyCloudoguBanner;

@@ -72,7 +72,7 @@ class PluginCenterAuthenticationUpdateStepTest {
   @Test
   void shouldUpdateIfRefreshTokenNotEncrypted() throws Exception {
     when(configurationStore.getOptional())
-      .thenReturn(Optional.of(new PluginCenterAuthenticator.Authentication("trillian", "trillian", "some_not_encrypted_token", Instant.now())));
+      .thenReturn(Optional.of(new PluginCenterAuthenticator.Authentication("trillian", "trillian", "some_not_encrypted_token", Instant.now(), false)));
 
     updateStep.doUpdate();
 
@@ -85,7 +85,7 @@ class PluginCenterAuthenticationUpdateStepTest {
   @Test
   void shouldNotUpdateIfRefreshTokenIsAlreadyEncrypted() throws Exception {
     when(configurationStore.getOptional())
-      .thenReturn(Optional.of(new PluginCenterAuthenticator.Authentication("trillian", "trillian", "{enc}my_encrypted_token", Instant.now())));
+      .thenReturn(Optional.of(new PluginCenterAuthenticator.Authentication("trillian", "trillian", "{enc}my_encrypted_token", Instant.now(), false)));
 
     updateStep.doUpdate();
 

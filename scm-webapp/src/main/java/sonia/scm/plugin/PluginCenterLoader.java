@@ -69,7 +69,7 @@ class PluginCenterLoader {
       LOG.info("fetch plugins from {}", url);
       AdvancedHttpRequest request = client.get(url).spanKind(SPAN_KIND);
       if (authenticator.isAuthenticated()) {
-        request.bearerAuth(authenticator.fetchAccessToken());
+        authenticator.fetchAccessToken().ifPresent(request::bearerAuth);
       }
       PluginCenterDto pluginCenterDto = request.request().contentFromJson(PluginCenterDto.class);
       return mapper.map(pluginCenterDto);

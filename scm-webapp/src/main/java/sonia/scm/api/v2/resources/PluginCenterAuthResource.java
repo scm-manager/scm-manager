@@ -53,9 +53,16 @@ import sonia.scm.user.UserDisplayManager;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.web.VndMediaType;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.ws.rs.*;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
@@ -80,6 +87,9 @@ public class PluginCenterAuthResource {
   static final String ERROR_CHALLENGE_MISSING = "FNSqFKQIR1";
   @VisibleForTesting
   static final String ERROR_CHALLENGE_DOES_NOT_MATCH = "8ESqFElpI1";
+
+  private static final String METHOD_LOGIN = "login";
+  private static final String METHOD_LOGOUT = "logout";
 
   private final ScmPathInfoStore pathInfoStore;
   private final PluginCenterAuthenticator authenticator;
@@ -107,6 +117,7 @@ public class PluginCenterAuthResource {
   }
 
   @VisibleForTesting
+  @SuppressWarnings("java:S107") // parameter count is ok for testing
   PluginCenterAuthResource(
     ScmPathInfoStore pathInfoStore,
     PluginCenterAuthenticator authenticator,
@@ -158,20 +169,21 @@ public class PluginCenterAuthResource {
     if (authentication.isPresent()) {
       return Response.ok(createAuthenticatedDto(uriInfo, authentication.get())).build();
     }
-    PluginCenterAuthenticationInfoDto dto = new PluginCenterAuthenticationInfoDto(createLinks(uriInfo, false));
+    PluginCenterAuthenticationInfoDto dto = new PluginCenterAuthenticationInfoDto(createLinks(uriInfo, null));
     dto.setDefault(configuration.isDefaultPluginAuthUrl());
     return Response.ok(dto).build();
   }
 
-  private PluginCenterAuthenticationInfoDto createAuthenticatedDto(@Context UriInfo uriInfo, AuthenticationInfo info) {
+  private PluginCenterAuthenticationInfoDto createAuthenticatedDto(UriInfo uriInfo, AuthenticationInfo info) {
     PluginCenterAuthenticationInfoDto dto = new PluginCenterAuthenticationInfoDto(
-      createLinks(uriInfo, true)
+      createLinks(uriInfo, info)
     );
 
     dto.setPrincipal(getPrincipalDisplayName(info.getPrincipal()));
     dto.setPluginCenterSubject(info.getPluginCenterSubject());
     dto.setDate(info.getDate());
     dto.setDefault(configuration.isDefaultPluginAuthUrl());
+    dto.setFailed(info.isFailed());
     return dto;
   }
 
@@ -197,7 +209,9 @@ public class PluginCenterAuthResource {
       schema = @Schema(implementation = ErrorDto.class)
     )
   )
-  public Response login(@Context UriInfo uriInfo, @QueryParam("source") String source) throws IOException {
+  public Response login(
+    @Context UriInfo uriInfo, @QueryParam("source") String source, @QueryParam("reconnect") boolean reconnect
+  ) throws IOException {
     String pluginAuthUrl = configuration.getPluginAuthUrl();
 
     if (Strings.isNullOrEmpty(source)) {
@@ -208,7 +222,7 @@ public class PluginCenterAuthResource {
       return error(ERROR_AUTHENTICATION_DISABLED);
     }
 
-    if (authenticator.isAuthenticated()) {
+    if (!reconnect && authenticator.isAuthenticated()) {
       return error(ERROR_ALREADY_AUTHENTICATED);
     }
 
@@ -235,15 +249,22 @@ public class PluginCenterAuthResource {
     return Response.seeOther(authUri).build();
   }
 
-  private Links createLinks(UriInfo uriInfo, boolean authenticated) {
+  private Links createLinks(UriInfo uriInfo, @Nullable AuthenticationInfo info) {
     String self = uriInfo.getAbsolutePath().toASCIIString();
     Links.Builder builder = Links.linkingTo().self(self);
     if (PluginPermissions.write().isPermitted()) {
-      if (authenticated) {
-        builder.single(Link.link("logout", self));
+      if (info != null) {
+        builder.single(Link.link(METHOD_LOGOUT, self));
+        if (info.isFailed()) {
+          String reconnectLink = uriInfo.getAbsolutePathBuilder()
+            .path(METHOD_LOGIN)
+            .queryParam("reconnect", "true")
+            .build()
+            .toASCIIString();
+          builder.single(Link.link("reconnect", reconnectLink));
+        }
       } else {
-        URI login = uriInfo.getAbsolutePathBuilder().path("login").build();
-        builder.single(Link.link("login", login.toASCIIString()));
+        builder.single(Link.link(METHOD_LOGIN, uriInfo.getAbsolutePathBuilder().path(METHOD_LOGIN).build().toASCIIString()));
       }
     }
     return builder.build();

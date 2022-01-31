@@ -88,6 +88,17 @@
     },
     "myCloudogu": {
       "connectionInfo": "Instance is connected to myCloudogu.\nAccount: {{pluginCenterSubject}}",
+      "error": {
+        "info": "Failed to retrieve myCloudogu authentication information. Click for more details.",
+        "title": "Error"
+      },
+      "failed": {
+        "info": "Connection to myCloudogu failed for account {{pluginCenterSubject}}",
+        "message": "The connection of the SCM Manager instance with <0>myCloudogu</0> failed. The user <1>{{subject}}</1> could not be authenticated. Click Reconnect to restore the connection.",
+        "button": {
+          "label": "Reconnect to <0>myCloudogu</0>"
+        }
+      },
       "login": {
         "button": {
           "label": "Connect to <0>myCloudogu</0>"

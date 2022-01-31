@@ -21,17 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
-import classNames from "classnames";
+package sonia.scm.plugin;
 
-type Props = {
-  className?: string;
-};
+import lombok.Value;
+import sonia.scm.event.Event;
 
-const SmallLoadingSpinner: FC<Props> = ({ className }) => (
-  <div className={classNames("loader-wrapper", className)}>
-    <div className="loader is-loading" />
-  </div>
-);
-
-export default SmallLoadingSpinner;
+/**
+ * Event is thrown if the authentication to the plugin center fails.
+ * @since 2.30.0
+ */
+@Event
+@Value
+public class PluginCenterAuthenticationFailedEvent implements PluginCenterAuthenticationEvent {
+  AuthenticationInfo authenticationInfo;
+}

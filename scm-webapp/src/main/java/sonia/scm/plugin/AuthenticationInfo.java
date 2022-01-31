@@ -49,4 +49,14 @@ public interface AuthenticationInfo {
    * @return authentication date
    */
   Instant getDate();
+
+  /**
+   * Returns {@code true} if the last authentication has failed.
+   * @return {@code true} if the last authentication has failed.
+   * @since 2.31.0
+   */
+  default boolean isFailed() {
+    return false;
+  }
+
 }
