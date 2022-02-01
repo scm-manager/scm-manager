@@ -27,7 +27,7 @@ package sonia.scm.web.i18n;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.legman.EventBus;
-import org.apache.commons.lang3.StringUtils;
+import com.google.common.base.CharMatcher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -323,8 +323,8 @@ class I18nServletTest {
   private void assertJson(String actual) {
     assertThat(actual)
       .isNotEmpty()
-      .contains(StringUtils.deleteWhitespace(GIT_PLUGIN_JSON.substring(1, GIT_PLUGIN_JSON.length() - 1)))
-      .contains(StringUtils.deleteWhitespace(HG_PLUGIN_JSON.substring(1, HG_PLUGIN_JSON.length() - 1)))
-      .contains(StringUtils.deleteWhitespace(SVN_PLUGIN_JSON.substring(1, SVN_PLUGIN_JSON.length() - 1)));
+      .contains(CharMatcher.whitespace().removeFrom(GIT_PLUGIN_JSON.substring(1, GIT_PLUGIN_JSON.length() - 1)))
+      .contains(CharMatcher.whitespace().removeFrom(HG_PLUGIN_JSON.substring(1, HG_PLUGIN_JSON.length() - 1)))
+      .contains(CharMatcher.whitespace().removeFrom(SVN_PLUGIN_JSON.substring(1, SVN_PLUGIN_JSON.length() - 1)));
   }
 }
