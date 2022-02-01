@@ -162,5 +162,5 @@ sonia.jgit:org.eclipse.jgit.junit:5.11.1.202105131744-r-scm1=testCompileClasspat
 sonia.jgit:org.eclipse.jgit.lfs.server:5.11.1.202105131744-r-scm1=compileClasspath,default,runtimeClasspath,testCompileClasspath,testRuntimeClasspath
 sonia.jgit:org.eclipse.jgit.lfs:5.11.1.202105131744-r-scm1=compileClasspath,default,runtimeClasspath,testCompileClasspath,testRuntimeClasspath
 sonia.jgit:org.eclipse.jgit:5.11.1.202105131744-r-scm1=compileClasspath,default,runtimeClasspath,testCompileClasspath,testRuntimeClasspath
-sonia.scm:scm-webapp:2.29.2-SNAPSHOT=scmServer
+sonia.scm:scm-webapp:2.30.2-SNAPSHOT=scmServer
 empty=archives,optionalPlugin,plugin

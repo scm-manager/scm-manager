@@ -137,5 +137,5 @@ org.slf4j:jcl-over-slf4j:1.7.30=compileClasspath,default,runtimeClasspath,runtim
 org.slf4j:slf4j-api:1.7.25=swaggerDeps
 org.slf4j:slf4j-api:1.7.30=annotationProcessor,compileClasspath,default,runtimeClasspath,runtimePluginElements,scmCoreDependency,testCompileClasspath,testRuntimeClasspath
 org.yaml:snakeyaml:1.26=swaggerDeps
-sonia.scm:scm-webapp:2.29.2-SNAPSHOT=scmServer
+sonia.scm:scm-webapp:2.30.2-SNAPSHOT=scmServer
 empty=archives,optionalPlugin,plugin
