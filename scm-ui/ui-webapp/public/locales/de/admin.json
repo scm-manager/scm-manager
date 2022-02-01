@@ -88,11 +88,22 @@
     },
     "myCloudogu": {
       "connectionInfo": "Instanz ist mit myCloudogu verbunden.\nAccount: {{pluginCenterSubject}}",
+      "error": {
+        "info": "myCloudogu Authentifizierungsinformationen konnten nicht abgerufen werden. Klicken Sie, um Details zu sehen.",
+        "title": "Fehler"
+      },
+      "failed": {
+        "info": "Verbindung zu myCloudogu mit Account {{pluginCenterSubject}} is fehlgeschlagen",
+        "message": "Die Verbindung der SCM-Manager Instanz mit <0>myCloudogu</0> is fehlgeschlagen. Der Benutzer <1>{{subject}}</1> konnte nicht authentifiziert werden.",
+        "button": {
+          "label": "Erneut mit <0>myCloudogu</0> verbinden"
+        }
+      },
       "login": {
         "button": {
           "label": "Mit <0>myCloudogu</0> verbinden"
         },
-        "description": "Verbinden Sie Ihren SCM-Manager mit <0>myCloudogu</0> um besondere Plugins zu installieren. myCloudogu ist die Heimat der SCM-Manager Community, getragen von Maintainern des SCM-Managers. Sie haben noch kein Konto? Erstellen Sie während der Verbindung der SCM-Manager-Instanz kostenfrei ein myCloudogu-Konto."
+        "description": "Verbinden Sie Ihren SCM-Manager mit <0>myCloudogu</0> um besondere Plugins zu installieren. myCloudogu ist die Heimat der SCM-Manager Community, getragen von Maintainern des SCM-Managers. Sie haben noch kein Konto? Erstellen Sie während der Verbindung der SCM-Manager-Instanz kostenfrei ein myCloudogu-Konto. <1>Mehr Details zur Datenverarbeitung.</1>"
       }
     }
   },

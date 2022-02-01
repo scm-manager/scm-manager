@@ -50,7 +50,7 @@ import static org.mockito.Mockito.verify;
 )
 class RepositoryLinkEnricherTest {
 
-  private static final Repository REPOSITORY = RepositoryTestData.create42Puzzle();
+  private static final Repository REPOSITORY = RepositoryTestData.create42Puzzle("git");
 
   private RepositoryLinkEnricher repositoryLinkEnricher;
 

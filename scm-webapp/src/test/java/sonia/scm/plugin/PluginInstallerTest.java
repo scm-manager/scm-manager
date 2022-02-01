@@ -43,6 +43,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.Collections;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -200,7 +201,7 @@ class PluginInstallerTest {
   @Test
   void shouldAppendBearerAuth() throws IOException {
     when(authenticator.isAuthenticated()).thenReturn(true);
-    when(authenticator.fetchAccessToken()).thenReturn("atat");
+    when(authenticator.fetchAccessToken()).thenReturn(Optional.of("atat"));
     mockContent("42");
 
     installer.install(PluginInstallationContext.empty(), createGitPlugin());

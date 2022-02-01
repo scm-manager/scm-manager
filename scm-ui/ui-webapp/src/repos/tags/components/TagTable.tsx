@@ -81,7 +81,8 @@ const TagTable: FC<Props> = ({ repository, baseUrl, tags }) => {
             },
             {
               label: t("tag.delete.confirmAlert.cancel"),
-              onClick: () => abortDelete()
+              onClick: () => abortDelete(),
+              autofocus: true
             }
           ]}
           close={() => abortDelete()}

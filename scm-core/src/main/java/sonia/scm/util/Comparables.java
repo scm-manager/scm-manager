@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.util;
 
 import com.google.common.cache.CacheBuilder;
@@ -102,7 +102,17 @@ public final class Comparables {
       try {
         Comparable leftResult = (Comparable) readMethod.invoke(left);
         Comparable rightResult = (Comparable) readMethod.invoke(right);
-        return leftResult.compareTo(rightResult);
+        if (leftResult == null) {
+          if (rightResult == null) {
+            return 0;
+          } else {
+            return -1;
+          }
+        } else if (rightResult == null) {
+          return 1;
+        } else {
+          return leftResult.compareTo(rightResult);
+        }
       } catch (IllegalAccessException | InvocationTargetException ex) {
         throw new IllegalArgumentException("failed to invoke read method", ex);
       }

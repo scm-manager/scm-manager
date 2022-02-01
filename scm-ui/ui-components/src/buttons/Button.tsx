@@ -40,6 +40,7 @@ export type ButtonProps = {
   reducedMobile?: boolean;
   children?: ReactNode;
   testId?: string;
+  ref?: React.ForwardedRef<HTMLButtonElement>;
 };
 
 type Props = ButtonProps & {
@@ -47,7 +48,11 @@ type Props = ButtonProps & {
   color?: string;
 };
 
-const Button: FC<Props> = ({
+type InnerProps = Props & {
+  innerRef: React.Ref<HTMLButtonElement>;
+};
+
+const Button: FC<InnerProps> = ({
   link,
   className,
   icon,
@@ -61,7 +66,8 @@ const Button: FC<Props> = ({
   loading,
   disabled,
   action,
-  color = "default"
+  color = "default",
+  innerRef
 }) => {
   const renderIcon = () => {
     return <>{icon ? <Icon name={icon} color="inherit" className="is-medium pr-1" /> : null}</>;
@@ -109,6 +115,7 @@ const Button: FC<Props> = ({
       disabled={disabled}
       onClick={event => action && action(event)}
       className={classes}
+      ref={innerRef}
       {...createAttributesForTesting(testId)}
     >
       {content}
@@ -116,4 +123,4 @@ const Button: FC<Props> = ({
   );
 };
 
-export default Button;
+export default React.forwardRef<HTMLButtonElement, Props>((props, ref) => <Button {...props} innerRef={ref} />);

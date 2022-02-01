@@ -61,7 +61,8 @@ const DeleteBranch: FC<Props> = ({ repository, branch }: Props) => {
           },
           {
             label: t("branch.delete.confirmAlert.cancel"),
-            onClick: () => null
+            onClick: () => null,
+            autofocus: true
           }
         ]}
         close={() => setShowConfirmAlert(false)}

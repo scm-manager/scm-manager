@@ -34,6 +34,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Value;
 import org.apache.shiro.SecurityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.net.ahc.AdvancedHttpClient;
@@ -58,6 +60,8 @@ import static sonia.scm.plugin.Tracing.SPAN_KIND;
 
 @Singleton
 public class PluginCenterAuthenticator {
+
+  private static final Logger LOG = LoggerFactory.getLogger(PluginCenterAuthenticator.class);
 
   @VisibleForTesting
   static final String STORE_NAME = "plugin-center-auth";
@@ -86,7 +90,9 @@ public class PluginCenterAuthenticator {
     PluginPermissions.write().check();
 
     // check if refresh token is valid
-    Authentication authentication = new Authentication(principal(), pluginCenterSubject, refreshToken, Instant.now());
+    Authentication authentication = new Authentication(
+      principal(), pluginCenterSubject, refreshToken, Instant.now(), false
+    );
     fetchAccessToken(authentication);
     eventBus.post(new PluginCenterLoginEvent(authentication));
   }
@@ -109,11 +115,16 @@ public class PluginCenterAuthenticator {
     return getAuthentication().map(a -> a);
   }
 
-  public String fetchAccessToken() {
+  public Optional<String> fetchAccessToken() {
     PluginPermissions.read().check();
     Authentication authentication = getAuthentication()
       .orElseThrow(() -> new IllegalStateException("An access token can only be obtained, after a prior authentication"));
-    return fetchAccessToken(authentication);
+    try {
+      return Optional.of(fetchAccessToken(authentication));
+    } catch (FetchAccessTokenFailedException ex) {
+      LOG.warn("failed to fetch access token", ex);
+      return Optional.empty();
+    }
   }
 
   @CanIgnoreReturnValue
@@ -128,18 +139,27 @@ public class PluginCenterAuthenticator {
         .request();
 
       if (!response.isSuccessful()) {
+        authenticationFailed(authentication);
         throw new FetchAccessTokenFailedException("failed to obtain access token, server returned status code " + response.getStatus());
       }
 
       RefreshResponse refresh = response.contentFromJson(RefreshResponse.class);
 
       authentication.setRefreshToken(refresh.getRefreshToken());
+      authentication.setFailed(false);
       configurationStore.set(authentication);
 
       return refresh.getAccessToken();
     } catch (IOException ex) {
+      authenticationFailed(authentication);
       throw new FetchAccessTokenFailedException("failed to obtain an access token", ex);
     }
+  }
+
+  private void authenticationFailed(Authentication authentication) {
+    authentication.setFailed(true);
+    configurationStore.set(authentication);
+    eventBus.post(new PluginCenterAuthenticationFailedEvent(authentication));
   }
 
   private String principal() {
@@ -162,6 +182,7 @@ public class PluginCenterAuthenticator {
     private String refreshToken;
     @XmlJavaTypeAdapter(XmlInstantAdapter.class)
     private Instant date;
+    private boolean failed;
   }
 
   @Value

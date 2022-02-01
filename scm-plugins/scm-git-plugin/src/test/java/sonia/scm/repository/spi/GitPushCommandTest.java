@@ -74,7 +74,7 @@ public class GitPushCommandTest extends AbstractRemoteCommandTestBase
     PushResponse response = cmd.push(request);
 
     assertNotNull(response);
-    assertEquals(2l, response.getChangesetCount());
+    assertEquals(2L, response.getChangesetCount());
 
     Iterator<RevCommit> commits = incoming.log().call().iterator();
 

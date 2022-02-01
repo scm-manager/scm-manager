@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.30.1] - 2022-01-26
+### Fixed
+- Make comparable null safe ([#1933](https://github.com/scm-manager/scm-manager/pull/1933))
+- Password field in "Create User" dialog and other ([#1934](https://github.com/scm-manager/scm-manager/pull/1934))
+
+## [2.30.0] - 2022-01-21
+### Added
+- initial focus, submission on pressing enter and fix trap focus for modals ([#1925](https://github.com/scm-manager/scm-manager/pull/1925))
+- Add compare view to see changes between branches, tags and revisions ([#1920](https://github.com/scm-manager/scm-manager/pull/1920))
+- Security notifications to inform the running instance about known security issues ([#1924](https://github.com/scm-manager/scm-manager/pull/1924))
+
+### Fixed
+- Set HEAD to correct branch in new git repositories ([#1929](https://github.com/scm-manager/scm-manager/pull/1929))
+- Fix bugs in unit tests which occur on Windows only ([#1927](https://github.com/scm-manager/scm-manager/pull/1927))
+- Encrypt myCloudogu refresh token on file system ([#1923](https://github.com/scm-manager/scm-manager/pull/1923))
+- Autocompletion has sorted suggestions ([#1918](https://github.com/scm-manager/scm-manager/pull/1918))
+
+### Changed
+- Keeps the selection whether to add a user or a group in the repository permission dialog ([#1919](https://github.com/scm-manager/scm-manager/pull/1919))
+- Autocompletion for namespaces ([#1916](https://github.com/scm-manager/scm-manager/pull/1916))
+
 ## [2.29.1] - 2022-01-17
 ### Fixed
 - Path traversal vulnerability
@@ -909,4 +930,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.28.0]: https://scm-manager.org/download/2.28.0
 [2.29.0]: https://scm-manager.org/download/2.29.0
 [2.29.1]: https://scm-manager.org/download/2.29.1
-
+[2.30.0]: https://scm-manager.org/download/2.30.0
+[2.30.1]: https://scm-manager.org/download/2.30.1

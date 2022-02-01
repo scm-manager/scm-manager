@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 import * as React from "react";
-import { FC, useState } from "react";
+import { FC, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import Modal from "./Modal";
 import classNames from "classnames";
@@ -32,6 +32,7 @@ type Button = {
   label: string;
   isLoading?: boolean;
   onClick?: () => void | null;
+  autofocus?: boolean;
 };
 
 type Props = {
@@ -43,6 +44,7 @@ type Props = {
 
 export const ConfirmAlert: FC<Props> = ({ title, message, buttons, close }) => {
   const [showModal, setShowModal] = useState(true);
+  const initialFocusButton = useRef<HTMLButtonElement>(null);
 
   const onClose = () => {
     if (typeof close === "function") {
@@ -69,8 +71,9 @@ export const ConfirmAlert: FC<Props> = ({ title, message, buttons, close }) => {
             className={classNames("button", "is-info", button.className, button.isLoading ? "is-loading" : "")}
             key={index}
             onClick={() => handleClickButton(button)}
-            onKeyDown={(e) => e.key === "Enter" && handleClickButton(button)}
+            onKeyDown={e => e.key === "Enter" && handleClickButton(button)}
             tabIndex={0}
+            ref={button.autofocus ? initialFocusButton : undefined}
           >
             {button.label}
           </button>
@@ -80,7 +83,14 @@ export const ConfirmAlert: FC<Props> = ({ title, message, buttons, close }) => {
   );
 
   return (
-    (showModal && <Modal title={title} closeFunction={onClose} body={body} active={true} footer={footer} />) || null
+    <Modal
+      title={title}
+      closeFunction={onClose}
+      body={body}
+      active={showModal}
+      footer={footer}
+      initialFocusRef={initialFocusButton}
+    />
   );
 };
 

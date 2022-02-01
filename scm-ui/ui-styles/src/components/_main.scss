@@ -370,6 +370,18 @@ $fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
   border-color: $info !important;
 }
 
+.has-border-danger {
+  border-color: $danger !important;
+}
+
+.has-border-warning {
+  border-color: $warning !important;
+}
+
+.has-border-primary {
+  border-color: $primary !important;
+}
+
 ul.is-separated {
   > li:after {
     content: ",\2800";
@@ -757,6 +769,24 @@ form .field:not(.is-grouped) {
   .modal-card-foot {
     justify-content: flex-end; // pulled-right
   }
+}
+
+.is-overflow-visible {
+  overflow: visible;
+}
+
+.is-overflow-auto {
+  overflow: auto;
+}
+
+.is-border-bottom-radius-inherit {
+  border-bottom-left-radius: inherit;
+  border-bottom-right-radius: inherit;
+}
+
+.is-border-bottom-radius-unset {
+  border-bottom-left-radius: unset;
+  border-bottom-right-radius: unset;
 }
 
 // radio

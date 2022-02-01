@@ -37,6 +37,7 @@ import sonia.scm.net.ahc.AdvancedHttpResponse;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -107,7 +108,7 @@ class PluginCenterLoaderTest {
   @Test
   void shouldAppendAccessToken() throws IOException {
     when(authenticator.isAuthenticated()).thenReturn(true);
-    when(authenticator.fetchAccessToken()).thenReturn("mega-cool-at");
+    when(authenticator.fetchAccessToken()).thenReturn(Optional.of("mega-cool-at"));
 
     mockResponse();
     loader.load(PLUGIN_URL);

@@ -37,13 +37,18 @@ import copyToClipboard from "./CopyToClipboard";
 
 const LINE_NUMBER_URL_HASH_REGEX = /^#line-(.*)$/;
 
-const Container = styled.div`
-  position: relative;
-`;
 const TopRightButton = styled.button`
   position: absolute;
+  display: none;
   top: 0;
   right: 0;
+`;
+
+const Container = styled.div`
+  position: relative;
+  &:hover > ${TopRightButton} {
+    display: inline-block;
+  }
 `;
 
 type Props = {

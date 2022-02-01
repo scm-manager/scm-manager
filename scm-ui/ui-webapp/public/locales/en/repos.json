@@ -161,6 +161,31 @@
       }
     }
   },
+  "compare": {
+    "title": "Compare Changes",
+    "linkTitle": "Compare with...",
+    "selector": {
+      "title": "Select branch, tag or revision",
+      "source": "Source",
+      "target": "Target",
+      "with": "Compare changes with...",
+      "filter": "Filter selection...",
+      "emptyResult": "No results matching the filter were found.",
+      "tabs": {
+        "b": "Branches",
+        "t": "Tags",
+        "r": "Revision"
+      },
+      "revision": {
+        "input": "Enter revision",
+        "submit": "Select"
+      }
+    },
+    "tabs": {
+      "diff": "Diff",
+      "commits": "Commits"
+    }
+  },
   "tags": {
     "overview": {
       "title": "Overview of All Tags",
@@ -331,8 +356,8 @@
       "annotateButton": "Annotate",
       "downloadButton": "Download",
       "toggleButton": {
-        "showMarkdown": "Render markdown",
-        "showSources": "Show sources"
+        "showMarkdown": "Preview",
+        "showSources": "Source"
       },
       "showMore": "Show more information",
       "hideMore": "Hide more information",

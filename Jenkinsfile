@@ -41,6 +41,7 @@ pipeline {
         script {
           if (isReleaseBuild()) {
             // checkout, reset and merge
+            sh 'git checkout master'
             sh 'git reset --hard origin/master'
             sh "git merge --ff-only ${env.BRANCH_NAME}"
           }
@@ -149,8 +150,10 @@ pipeline {
 
     stage('Push Tag') {
       when {
-        branch pattern: 'release/*', comparator: 'GLOB'
-        branch pattern: 'hotfix/*', comparator: 'GLOB'
+        anyOf {
+          branch pattern: 'release/*', comparator: 'GLOB'
+          branch pattern: 'hotfix/*', comparator: 'GLOB'
+        }
         expression { return isBuildSuccess() }
       }
       steps {

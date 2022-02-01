@@ -8,6 +8,7 @@ Der Bereich Repository umfasst alles auf Basis von Repositories in Namespaces. D
 * [Branches](branches/)
 * [Tags](tags/)
 * [Code](code/)
+* [Compare](compare/)
 * [Einstellungen](settings/)
 <!--- AppendLinkContentEnd -->
 

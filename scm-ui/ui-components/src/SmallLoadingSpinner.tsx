@@ -22,13 +22,16 @@
  * SOFTWARE.
  */
 import React, { FC } from "react";
+import classNames from "classnames";
 
-const SmallLoadingSpinner: FC = () => {
-  return (
-    <div className="loader-wrapper">
-      <div className="loader is-loading" />
-    </div>
-  );
+type Props = {
+  className?: string;
 };
+
+const SmallLoadingSpinner: FC<Props> = ({ className }) => (
+  <div className={classNames("loader-wrapper", className)}>
+    <div className="loader is-loading" />
+  </div>
+);
 
 export default SmallLoadingSpinner;

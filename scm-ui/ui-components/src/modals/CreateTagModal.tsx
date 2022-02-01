@@ -22,13 +22,13 @@
  * SOFTWARE.
  */
 
-import React, { FC, useEffect, useState } from "react";
-import { Modal, InputField, Button, apiClient } from "@scm-manager/ui-components";
-import { WithTranslation, withTranslation } from "react-i18next";
+import React, { FC, useEffect, useRef, useState } from "react";
+import { apiClient, Button, InputField, Modal } from "@scm-manager/ui-components";
+import { useTranslation } from "react-i18next";
 import { Tag } from "@scm-manager/ui-types";
 import { isBranchValid } from "../validation";
 
-type Props = WithTranslation & {
+type Props = {
   existingTagsLink: string;
   tagCreationLink: string;
   onClose: () => void;
@@ -40,16 +40,18 @@ type Props = WithTranslation & {
 /**
  * @deprecated
  */
-const CreateTagModal: FC<Props> = ({ t, onClose, tagCreationLink, existingTagsLink, onCreated, onError, revision }) => {
+const CreateTagModal: FC<Props> = ({ onClose, tagCreationLink, existingTagsLink, onCreated, onError, revision }) => {
+  const [t] = useTranslation("repos");
   const [newTagName, setNewTagName] = useState("");
   const [loading, setLoading] = useState(false);
   const [tagNames, setTagNames] = useState<string[]>([]);
+  const initialFocusRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     apiClient
       .get(existingTagsLink)
-      .then((response) => response.json())
-      .then((json) => setTagNames(json._embedded.tags.map((tag: Tag) => tag.name)));
+      .then(response => response.json())
+      .then(json => setTagNames(json._embedded.tags.map((tag: Tag) => tag.name)));
   }, [existingTagsLink]);
 
   const createTag = () => {
@@ -57,7 +59,7 @@ const CreateTagModal: FC<Props> = ({ t, onClose, tagCreationLink, existingTagsLi
     apiClient
       .post(tagCreationLink, {
         revision,
-        name: newTagName,
+        name: newTagName
       })
       .then(onCreated)
       .catch(onError)
@@ -83,10 +85,12 @@ const CreateTagModal: FC<Props> = ({ t, onClose, tagCreationLink, existingTagsLi
           <InputField
             name="name"
             label={t("tags.create.form.field.name.label")}
-            onChange={(val) => setNewTagName(val)}
+            onChange={e => setNewTagName(e.target.value)}
             value={newTagName}
             validationError={!!validationError}
             errorMessage={t(validationError)}
+            onReturnPressed={() => !validationError && newTagName.length > 0 && createTag()}
+            ref={initialFocusRef}
           />
           <div className="mt-6">{t("tags.create.hint")}</div>
         </>
@@ -105,8 +109,9 @@ const CreateTagModal: FC<Props> = ({ t, onClose, tagCreationLink, existingTagsLi
         </>
       }
       closeFunction={onClose}
+      initialFocusRef={initialFocusRef}
     />
   );
 };
 
-export default withTranslation("repos")(CreateTagModal);
+export default CreateTagModal;

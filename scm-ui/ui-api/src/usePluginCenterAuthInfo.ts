@@ -28,6 +28,16 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { apiClient } from "./apiclient";
 import { useLocation } from "react-router-dom";
 
+const appendQueryParam = (link: Link, name: string, value: string) => {
+  let href = link.href;
+  if (href.includes("?")) {
+    href += "&";
+  } else {
+    href += "?";
+  }
+  link.href = href + name + "=" + value;
+};
+
 export const usePluginCenterAuthInfo = (): ApiResult<PluginCenterAuthenticationInfo> => {
   const link = useIndexLink("pluginCenterAuth");
   const location = useLocation();
@@ -42,7 +52,10 @@ export const usePluginCenterAuthInfo = (): ApiResult<PluginCenterAuthenticationI
         .then(response => response.json())
         .then((result: PluginCenterAuthenticationInfo) => {
           if (result._links?.login) {
-            (result._links.login as Link).href += `?source=${location.pathname}`;
+            appendQueryParam(result._links.login as Link, "source", location.pathname);
+          }
+          if (result._links?.reconnect) {
+            appendQueryParam(result._links.reconnect as Link, "source", location.pathname);
           }
           return result;
         });

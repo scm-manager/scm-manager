@@ -148,6 +148,14 @@ class PluginCenterAuthResourceTest {
     }
 
     @Test
+    @SubjectAware(value = "marvin", permissions = "plugin:write")
+    void shouldReturnReconnectAndLogoutLinkForFailedAuthentication() throws URISyntaxException, IOException {
+      JsonNode root = requestAuthInfo(true);
+
+      assertThat(root.get("_links").get("reconnect").get("href").asText()).isEqualTo("/v2/plugins/auth/login?reconnect=true");
+    }
+
+    @Test
     void shouldReturnAuthenticationInfo() throws IOException, URISyntaxException {
       JsonNode root = requestAuthInfo();
 
@@ -181,8 +189,12 @@ class PluginCenterAuthResourceTest {
     }
 
     private JsonNode requestAuthInfo() throws IOException, URISyntaxException {
+      return requestAuthInfo(false);
+    }
+
+    private JsonNode requestAuthInfo(boolean failed) throws IOException, URISyntaxException {
       AuthenticationInfo info = new SimpleAuthenticationInfo(
-        "trillian", "tricia.mcmillan@hitchhiker.com", Instant.now()
+        "trillian", "tricia.mcmillan@hitchhiker.com", Instant.now(), failed
       );
       when(authenticator.getAuthenticationInfo()).thenReturn(Optional.of(info));
 
@@ -231,6 +243,19 @@ class PluginCenterAuthResourceTest {
 
       MockHttpResponse response = get("/v2/plugins/auth/login?source=/admin/plugins");
       assertError(response, ERROR_ALREADY_AUTHENTICATED);
+    }
+
+    @Test
+    @SubjectAware("trillian")
+    void shouldIgnorePreviousAuthenticationOnReconnection() throws URISyntaxException, IOException {
+      lenient().when(authenticator.isAuthenticated()).thenReturn(true);
+      when(challengeGenerator.create()).thenReturn("abcd");
+      when(parameterSerializer.serialize(any(AuthParameter.class))).thenReturn("def");
+
+      scmConfiguration.setPluginAuthUrl("https://plug.ins");
+
+      MockHttpResponse response = get("/v2/plugins/auth/login?source=/admin/plugins&reconnect=true");
+      assertRedirect(response, "https://plug.ins?instance=%2Fv2%2Fplugins%2Fauth%2Fcallback?params%3Ddef");
     }
 
     @Test
@@ -453,6 +478,7 @@ class PluginCenterAuthResourceTest {
     String principal;
     String pluginCenterSubject;
     Instant date;
+    boolean failed;
   }
 
   private static final ScmPathInfo rootPathInfo = new ScmPathInfo() {

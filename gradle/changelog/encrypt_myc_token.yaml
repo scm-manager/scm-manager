@@ -1,2 +1,0 @@
-- type: fixed
-  description: Encrypt myCloudogu refresh token on file system ([#1923](https://github.com/scm-manager/scm-manager/pull/1923))

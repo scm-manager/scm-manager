@@ -1,2 +1,0 @@
-- type: added
-  description: Security notifications to inform the running instance about known security issues ([#1924](https://github.com/scm-manager/scm-manager/pull/1924))

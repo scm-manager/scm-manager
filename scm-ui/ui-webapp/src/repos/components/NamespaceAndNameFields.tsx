@@ -23,11 +23,11 @@
  */
 
 import React, { FC, useEffect, useState } from "react";
-import { CUSTOM_NAMESPACE_STRATEGY, RepositoryCreation} from "@scm-manager/ui-types";
+import { CUSTOM_NAMESPACE_STRATEGY, RepositoryCreation } from "@scm-manager/ui-types";
 import { useTranslation } from "react-i18next";
 import { InputField } from "@scm-manager/ui-components";
 import * as validator from "./form/repositoryValidation";
-import { useNamespaceStrategies} from "@scm-manager/ui-api";
+import { useNamespaceStrategies } from "@scm-manager/ui-api";
 import NamespaceInput from "./NamespaceInput";
 
 type Props = {
