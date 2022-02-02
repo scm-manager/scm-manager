@@ -22,23 +22,20 @@
  * SOFTWARE.
  */
 import ChangesetRow from "./ChangesetRow";
-import React from "react";
-
-import { Changeset, Repository } from "@scm-manager/ui-types";
+import React, { FC } from "react";
+import { Changeset, File, Repository } from "@scm-manager/ui-types";
 
 type Props = {
   repository: Repository;
   changesets: Changeset[];
+  file?: File;
 };
 
-class ChangesetList extends React.Component<Props> {
-  render() {
-    const { repository, changesets } = this.props;
-    const content = changesets.map((changeset) => {
-      return <ChangesetRow key={changeset.id} repository={repository} changeset={changeset} />;
-    });
-    return <>{content}</>;
-  }
-}
+const ChangesetList: FC<Props> = ({ repository, changesets, file }) => {
+  const content = changesets.map(changeset => {
+    return <ChangesetRow key={changeset.id} repository={repository} changeset={changeset} file={file} />;
+  });
+  return <>{content}</>;
+};
 
 export default ChangesetList;

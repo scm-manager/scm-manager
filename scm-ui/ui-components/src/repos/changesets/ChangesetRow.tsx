@@ -25,13 +25,14 @@ import React, { FC } from "react";
 import classNames from "classnames";
 import styled from "styled-components";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
-import { Changeset, Repository } from "@scm-manager/ui-types";
+import { Changeset, File, Repository } from "@scm-manager/ui-types";
 import ChangesetButtonGroup from "./ChangesetButtonGroup";
 import SingleChangeset from "./SingleChangeset";
 
 type Props = {
   repository: Repository;
   changeset: Changeset;
+  file?: File;
 };
 
 const Wrapper = styled.div`
@@ -44,7 +45,7 @@ const Wrapper = styled.div`
   }
 `;
 
-const ChangesetRow: FC<Props> = ({ repository, changeset }) => {
+const ChangesetRow: FC<Props> = ({ repository, changeset, file }) => {
   return (
     <Wrapper>
       <div className={classNames("columns", "is-gapless", "is-mobile")}>
@@ -52,12 +53,12 @@ const ChangesetRow: FC<Props> = ({ repository, changeset }) => {
           <SingleChangeset repository={repository} changeset={changeset} />
         </div>
         <div className={classNames("column", "is-flex", "is-justify-content-flex-end", "is-align-items-center")}>
-          <ChangesetButtonGroup repository={repository} changeset={changeset} />
+          <ChangesetButtonGroup repository={repository} changeset={changeset} file={file} />
           <ExtensionPoint
             name="changeset.right"
             props={{
               repository,
-              changeset,
+              changeset
             }}
             renderAll={true}
           />

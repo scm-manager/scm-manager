@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import { Changeset, Repository } from "@scm-manager/ui-types";
+import { Changeset, File, Repository } from "@scm-manager/ui-types";
 
 export type Description = {
   title: string;
@@ -33,8 +33,13 @@ export function createChangesetLink(repository: Repository, changeset: Changeset
   return `/repo/${repository.namespace}/${repository.name}/code/changeset/${changeset.id}`;
 }
 
-export function createSourcesLink(repository: Repository, changeset: Changeset) {
-  return `/repo/${repository.namespace}/${repository.name}/code/sources/${changeset.id}`;
+export function createSourcesLink(repository: Repository, changeset: Changeset, file?: File) {
+  let url = `/repo/${repository.namespace}/${repository.name}/code/sources/${changeset.id}`;
+
+  if (file) {
+    url += `/${encodeURIComponent(file.path)}/`;
+  }
+  return url;
 }
 
 export function parseDescription(description?: string): Description {
@@ -53,6 +58,6 @@ export function parseDescription(description?: string): Description {
 
   return {
     title,
-    message,
+    message
   };
 }
