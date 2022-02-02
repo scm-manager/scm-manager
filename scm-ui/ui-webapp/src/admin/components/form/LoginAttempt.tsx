@@ -56,6 +56,7 @@ class LoginAttempt extends React.Component<Props, State> {
         <div className="columns">
           <div className="column is-half">
             <InputField
+              type="number"
               label={t("login-attempt.login-attempt-limit")}
               onChange={this.handleLoginAttemptLimitChange}
               value={loginAttemptLimit}
@@ -67,6 +68,7 @@ class LoginAttempt extends React.Component<Props, State> {
           </div>
           <div className="column is-half">
             <InputField
+              type="number"
               label={t("login-attempt.login-attempt-limit-timeout")}
               onChange={this.handleLoginAttemptLimitTimeoutChange}
               value={loginAttemptLimitTimeout}

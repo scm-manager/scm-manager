@@ -45,7 +45,6 @@ const TopRightButton = styled.button`
 `;
 
 const Container = styled.div`
-  position: relative;
   &:hover > ${TopRightButton} {
     display: inline-block;
   }
@@ -93,7 +92,7 @@ const SyntaxHighlighter: FC<Props> = ({ language = defaultLanguage, showLineNumb
   }
 
   return (
-    <Container ref={setContentRef}>
+    <Container ref={setContentRef} className="is-relative">
       <ReactSyntaxHighlighter
         showLineNumbers={false}
         language={determineLanguage(language)}
@@ -102,7 +101,7 @@ const SyntaxHighlighter: FC<Props> = ({ language = defaultLanguage, showLineNumb
       >
         {valueWithoutTrailingLineBreak}
       </ReactSyntaxHighlighter>
-      <TopRightButton title={t("syntaxHighlighting.copyButton")} onClick={copy}>
+      <TopRightButton className="is-clickable" title={t("syntaxHighlighting.copyButton")} onClick={copy}>
         <i className={copied ? "fa fa-clipboard-check" : "fa fa-clipboard"} />
       </TopRightButton>
     </Container>
