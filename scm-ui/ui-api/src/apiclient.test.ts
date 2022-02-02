@@ -22,9 +22,9 @@
  * SOFTWARE.
  */
 
-import {apiClient, createUrl, extractXsrfTokenFromCookie} from "./apiclient";
+import { apiClient, createUrl, extractXsrfTokenFromCookie } from "./apiclient";
 import fetchMock from "fetch-mock";
-import {BackendError, BadGatewayError} from "./errors";
+import { BackendError, BadGatewayError } from "./errors";
 
 describe("create url", () => {
   it("should not change absolute urls", () => {

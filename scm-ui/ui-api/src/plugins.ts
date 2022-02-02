@@ -38,7 +38,7 @@ const waitForRestartAfter = (
   promise: Promise<any>,
   { initialDelay = 1000, timeout = 500 }: WaitForRestartOptions = {}
 ): Promise<void> => {
-  const endTime = Number(new Date()) + (4 * 60 * 1000);
+  const endTime = Number(new Date()) + 4 * 60 * 1000;
   let started = false;
 
   const executor = <T = any>(data: T) => (resolve: (result: T) => void, reject: (error: Error) => void) => {
