@@ -37,7 +37,7 @@ binder.bind<extensionPoints.RepositoryDetailsInformation>(
   ProtocolInformation,
   svnPredicate
 );
-binder.bind<extensionPoints.RepositoryAvatar>("repos.repository-avatar", SvnAvatar, svnPredicate);
+binder.bind("repos.repository-avatar", SvnAvatar, svnPredicate);
 
 // bind global configuration
 

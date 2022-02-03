@@ -23,7 +23,7 @@
  */
 import React from "react";
 import { withRouter, RouteComponentProps } from "react-router-dom";
-import { binder, extensionPoints } from "@scm-manager/ui-extensions";
+import { binder } from "@scm-manager/ui-extensions";
 import { apiClient, ErrorBoundary, ErrorNotification, ProtectedRoute } from "@scm-manager/ui-components";
 import DummyComponent from "./DummyComponent";
 import { Links, Link } from "@scm-manager/ui-types";
@@ -98,4 +98,4 @@ class LegacyRepositoryRedirect extends React.Component<Props, State> {
   }
 }
 
-binder.bind<extensionPoints.MainRoute>("main.route", withRouter(LegacyRepositoryRedirect));
+binder.bind("main.route", withRouter(LegacyRepositoryRedirect));

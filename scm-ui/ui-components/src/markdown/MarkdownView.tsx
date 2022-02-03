@@ -29,7 +29,7 @@ import sanitize from "rehype-sanitize";
 import remark2rehype from "remark-rehype";
 import rehype2react from "rehype-react";
 import gfm from "remark-gfm";
-import { BinderContext, extensionPoints } from "@scm-manager/ui-extensions";
+import { BinderContext } from "@scm-manager/ui-extensions";
 import ErrorBoundary from "../ErrorBoundary";
 import { create as createMarkdownHeadingRenderer } from "./MarkdownHeadingRenderer";
 import { create as createMarkdownLinkRenderer } from "./MarkdownLinkRenderer";
@@ -96,7 +96,6 @@ const MarkdownErrorNotification: FC = () => {
 
 class MarkdownView extends React.Component<Props, State> {
   static contextType = BinderContext;
-  declare context: React.ContextType<typeof BinderContext>;
 
   static defaultProps: Partial<Props> = {
     enableAnchorHeadings: false,
@@ -147,10 +146,8 @@ class MarkdownView extends React.Component<Props, State> {
       mdastPlugins = []
     } = this.props;
 
-    const rendererFactory = this.context.getExtension<extensionPoints.MarkdownRendererFactory>(
-      "markdown-renderer-factory"
-    );
-    let remarkRendererList: Record<string, React.ComponentType<any>> = renderers;
+    const rendererFactory = this.context.getExtension("markdown-renderer-factory");
+    let remarkRendererList = renderers;
 
     if (rendererFactory) {
       remarkRendererList = rendererFactory(renderContext);
@@ -166,7 +163,7 @@ class MarkdownView extends React.Component<Props, State> {
 
     let protocolLinkRendererExtensions: ProtocolLinkRendererExtensionMap = {};
     if (!remarkRendererList.link) {
-      const extensionPoints = this.context.getExtensions<extensionPoints.MarkdownLinkProtocolRenderer>(
+      const extensionPoints = this.context.getExtensions(
         "markdown-renderer.link.protocol"
       ) as ProtocolLinkRendererExtension[];
       protocolLinkRendererExtensions = extensionPoints.reduce<ProtocolLinkRendererExtensionMap>(

@@ -40,17 +40,14 @@ binder.bind<extensionPoints.RepositoryDetailsInformation>(
   ProtocolInformation,
   hgPredicate
 );
-binder.bind<extensionPoints.ReposBranchDetailsInformation>(
-  "repos.branch-details.information",
-  HgBranchInformation,
- { priority: 100, predicate: hgPredicate
-});
+binder.bind("repos.branch-details.information", HgBranchInformation, { priority: 100, predicate: hgPredicate });
+
 binder.bind<extensionPoints.RepositoryTagDetailsInformation>(
   "repos.tag-details.information",
   HgTagInformation,
   hgPredicate
 );
-binder.bind<extensionPoints.RepositoryAvatar>("repos.repository-avatar", HgAvatar, hgPredicate);
+binder.bind("repos.repository-avatar", HgAvatar, hgPredicate);
 
 // bind repository specific configuration
 
