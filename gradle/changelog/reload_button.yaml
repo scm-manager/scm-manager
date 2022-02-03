@@ -1,0 +1,2 @@
+- type: fixed
+  description: Adjust reload button on plugin actions ([#1946](https://github.com/scm-manager/scm-manager/pull/1946))

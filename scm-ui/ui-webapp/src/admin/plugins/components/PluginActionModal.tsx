@@ -141,15 +141,26 @@ const PluginActionModal: FC<Props> = ({
 
   const footer = (
     <ButtonGroup>
-      <Button
-        color="warning"
-        label={label}
-        loading={loading}
-        action={execute}
-        disabled={!!error || success}
-        ref={initialFocusRef}
-      />
-      <Button label={t("plugins.modal.abort")} action={onClose} />
+      {success ? (
+        <Button
+          label={t("plugins.modal.reload")}
+          action={() => window.location.reload()}
+          color="success"
+          icon="sync-alt"
+        />
+      ) : (
+        <>
+          <Button
+            color="warning"
+            label={label}
+            loading={loading}
+            action={execute}
+            disabled={!!error || success}
+            ref={initialFocusRef}
+          />
+          <Button label={t("plugins.modal.abort")} action={onClose} />
+        </>
+      )}
     </ButtonGroup>
   );
 
