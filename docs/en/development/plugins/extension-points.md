@@ -2,10 +2,6 @@
 title: Extension Points
 ---
 
-The following extension points are provided for the frontend:
+The available extension points are now maintained in-code, providing typescript types for improved developer experience and code quality assurance.
 
-# Deprecated
-
-### markdown-renderer-factory
-- A Factory function to create markdown [renderer](https://github.com/rexxars/react-markdown#node-types)
-- The factory function will be called with a renderContext parameter of type Object. this parameter is given as a prop for the MarkdownView component.
+You can browse and import them directly in your frontend code from the `@scm-manager/ui-extensions` package.
