@@ -56,11 +56,14 @@ const AvatarList = styled.span`
 
 type PersonAvatarProps = {
   person: Person;
-  avatar: string;
+  avatar?: string;
 };
 
 const ContributorWithAvatar: FC<PersonAvatarProps> = ({ person, avatar }) => {
   const [t] = useTranslation("repos");
+  if (!avatar) {
+    return null; // TODO: What to display if there is no avatar available ?
+  }
   if (person.mail) {
     return (
       <a href={"mailto:" + person.mail} title={t("changeset.contributors.mailto") + " " + person.mail}>
@@ -115,7 +118,7 @@ const Contributors: FC<PersonsProps> = ({ persons, label, displayTextOnly }) => 
       <>
         {t(label)}{" "}
         <AvatarList>
-          {persons.map((p) => (
+          {persons.map(p => (
             <ContributorWithAvatar key={p.name} person={p} avatar={avatarFactory(p)} />
           ))}
         </AvatarList>
@@ -125,7 +128,7 @@ const Contributors: FC<PersonsProps> = ({ persons, label, displayTextOnly }) => 
     return (
       <>
         {t(label)}{" "}
-        <span title={persons.map((person) => "- " + person.name).join("\n")}>
+        <span title={persons.map(person => "- " + person.name).join("\n")}>
           {t("changeset.contributors.more", { count: persons.length })}
         </span>
       </>
@@ -148,7 +151,7 @@ const ChangesetAuthor: FC<Props> = ({ changeset }) => {
 
   const filterContributorsByType = (type: string) => {
     if (changeset.contributors) {
-      return changeset.contributors.filter((p) => p.type === type).map((contributor) => contributor.person);
+      return changeset.contributors.filter(p => p.type === type).map(contributor => contributor.person);
     }
     return emptyListOfContributors;
   };
@@ -172,7 +175,7 @@ const ChangesetAuthor: FC<Props> = ({ changeset }) => {
 
   // extensions
   const extensions = binder.getExtensions<extensionPoints.ChangesetsAuthorSuffix>("changesets.author.suffix", {
-    changeset,
+    changeset
   });
   if (extensions) {
     authorLine.push(...extensions);

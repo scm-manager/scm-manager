@@ -29,4 +29,4 @@ import { extensionPoints } from "@scm-manager/ui-extensions";
 // after the type was moved to ui-types
 export { Person };
 
-export const EXTENSION_POINT = extensionPoints.AvatarFactory["name"];
+export const EXTENSION_POINT: extensionPoints.AvatarFactory["name"] = "avatar.factory";

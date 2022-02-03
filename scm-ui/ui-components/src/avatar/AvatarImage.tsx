@@ -38,6 +38,10 @@ const AvatarImage: FC<Props> = ({ person, representation = "rounded-border", cla
   if (avatarFactory) {
     const avatar = avatarFactory(person);
 
+    if (!avatar) {
+      return null; // TODO: What should happen if the avatar factory doesnt return anything ?
+    }
+
     let classes = representation === "rounded" ? "is-rounded" : "has-rounded-border";
     if (className) {
       classes += " " + className;
