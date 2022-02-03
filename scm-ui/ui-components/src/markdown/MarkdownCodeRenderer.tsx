@@ -28,11 +28,11 @@ import { ExtensionPoint, extensionPoints, useBinder } from "@scm-manager/ui-exte
 import { useIndexLinks } from "@scm-manager/ui-api";
 
 type Props = {
-  language: string;
+  language?: string;
   value: string;
 };
 
-const MarkdownCodeRenderer: FC<Props> = (props) => {
+const MarkdownCodeRenderer: FC<Props> = props => {
   const binder = useBinder();
   const indexLinks = useIndexLinks();
   const { language } = props;

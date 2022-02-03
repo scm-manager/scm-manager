@@ -69,14 +69,8 @@ const BreadcrumbNav = styled.nav`
   width: 100%;
 
   /* move slash to end */
-
   li + li::before {
     content: none;
-  }
-
-  li:not(:last-child)::after {
-    color: #b5b5b5; //$breadcrumb-item-separator-color
-    content: "\\0002f";
   }
 
   li:first-child {
@@ -84,7 +78,6 @@ const BreadcrumbNav = styled.nav`
   }
 
   /* sizing of each item */
-
   li {
     max-width: 375px;
 
@@ -251,7 +244,7 @@ const Breadcrumb: FC<Props> = ({
       return (
         <ExtensionPoint<extensionPoints.ReposSourcesEmptyActionbar>
           name="repos.sources.empty.actionbar"
-          props={extProps}
+          props={{ repository, sources }}
           renderAll={true}
         />
       );

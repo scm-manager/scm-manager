@@ -78,7 +78,7 @@ const FileTree: FC<Props> = ({ repository, directory, baseUrl, revision, fetchNe
 
   const baseUrlWithRevision = baseUrl + "/" + encodeURIComponent(revision);
 
-  const extProps = {
+  const extProps: extensionPoints.ReposSourcesTreeWrapperProps = {
     repository,
     directory,
     baseUrl,
@@ -101,10 +101,7 @@ const FileTree: FC<Props> = ({ repository, directory, baseUrl, revision, fetchNe
               <th className="is-hidden-mobile">{t("sources.fileTree.length")}</th>
               <th className="is-hidden-mobile">{t("sources.fileTree.commitDate")}</th>
               <th className="is-hidden-touch">{t("sources.fileTree.description")}</th>
-              {/* TODO Add support for this use-case of extension points */}
-              {binder.hasExtension<extensionPoints.ReposSourcesTreeRowRight>("repos.sources.tree.row.right") && (
-                <th className="is-hidden-mobile" />
-              )}{" "}
+              {binder.hasExtension("repos.sources.tree.row.right") && <th className="is-hidden-mobile" />}
             </tr>
           </thead>
           <tbody>

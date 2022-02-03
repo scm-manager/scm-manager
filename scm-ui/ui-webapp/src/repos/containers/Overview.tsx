@@ -42,9 +42,11 @@ import styled from "styled-components";
 
 const StickyColumn = styled.div`
   align-self: flex-start;
+
   &:empty {
     display: none;
   }
+
   @media (min-width: ${devices.mobile.width}px) {
     position: sticky;
     top: 1rem;

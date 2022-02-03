@@ -24,7 +24,7 @@
 import React, { FC } from "react";
 import { Image } from "..";
 import { EXTENSION_POINT, Person } from "./Avatar";
-import { extensionPoints, useBinder } from "@scm-manager/ui-extensions";
+import { useBinder } from "@scm-manager/ui-extensions";
 
 type Props = {
   person: Person;
@@ -34,13 +34,9 @@ type Props = {
 
 const AvatarImage: FC<Props> = ({ person, representation = "rounded-border", className }) => {
   const binder = useBinder();
-  const avatarFactory = binder.getExtension<extensionPoints.AvatarFactory>(EXTENSION_POINT);
+  const avatarFactory = binder.getExtension(EXTENSION_POINT);
   if (avatarFactory) {
     const avatar = avatarFactory(person);
-
-    if (!avatar) {
-      return null; // TODO: What should happen if the avatar factory doesnt return anything ?
-    }
 
     let classes = representation === "rounded" ? "is-rounded" : "has-rounded-border";
     if (className) {

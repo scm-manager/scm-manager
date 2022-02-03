@@ -71,8 +71,7 @@ const Profile: FC = () => {
 
   const extensionProps = {
     me,
-    url,
-    links: me._links // TODO: Are these the links that the extension talks about ?
+    url
   };
 
   return (
@@ -131,11 +130,7 @@ const Profile: FC = () => {
                 )}
                 <SetPublicKeysNavLink user={me} publicKeyUrl={`${url}/settings/publicKeys`} />
                 <SetApiKeysNavLink user={me} apiKeyUrl={`${url}/settings/apiKeys`} />
-                <ExtensionPoint<extensionPoints.ProfileSetting>
-                  name="profile.setting"
-                  props={extensionProps}
-                  renderAll={true}
-                />
+                <ExtensionPoint name="profile.setting" props={extensionProps} renderAll={true} />
               </SubNavigation>
             </SecondaryNavigation>
           </SecondaryNavigationColumn>

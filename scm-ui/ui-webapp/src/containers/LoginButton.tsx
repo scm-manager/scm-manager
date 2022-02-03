@@ -51,7 +51,7 @@ const LoginButton: FC<Props> = ({ burgerMode, links, className }) => {
 
   const content = <HeaderButtonContent burgerMode={burgerMode} label={label} icon="sign-in-alt" />;
 
-  const extensionProps = {
+  const extensionProps: extensionPoints.PrimaryNavigationLoginButtonProps = {
     links,
     label,
     loginUrl: urls.withContextPath(loginPath),

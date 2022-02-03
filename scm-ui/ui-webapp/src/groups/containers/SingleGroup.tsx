@@ -43,7 +43,6 @@ import { EditGroupNavLink, SetPermissionsNavLink } from "./../components/navLink
 import EditGroup from "./EditGroup";
 import { useGroup } from "@scm-manager/ui-api";
 import SetGroupPermissions from "../../permissions/components/SetGroupPermissions";
-import { GroupNavigation, GroupRoute, GroupSetting } from "@scm-manager/ui-extensions/src/extensionPoints";
 
 const SingleGroup: FC = () => {
   const { name } = useParams<{ name: string }>();

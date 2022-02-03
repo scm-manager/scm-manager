@@ -21,12 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
-import { binder, extensionPoints } from "@scm-manager/ui-extensions";
+import React from "react";
+import { binder } from "@scm-manager/ui-extensions";
 import { NavLink } from "../navigation";
 import { Route } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import { Link, Links, Repository } from "@scm-manager/ui-types";
+import { WithTranslation, withTranslation } from "react-i18next";
+import { Repository, Links, Link } from "@scm-manager/ui-types";
 
 type GlobalRouteProps = {
   url: string;
@@ -38,7 +38,7 @@ type RepositoryRouteProps = {
   repository: Repository;
 };
 
-type RepositoryNavProps = { url: string };
+type RepositoryNavProps = WithTranslation & { url: string };
 
 class ConfigurationBinder {
   i18nNamespace = "plugins";
@@ -58,21 +58,20 @@ class ConfigurationBinder {
   bindGlobal(to: string, labelI18nKey: string, linkName: string, ConfigurationComponent: any) {
     // create predicate based on the link name of the index resource
     // if the linkname is not available, the navigation link and the route are not bound to the extension points
-    const configPredicate = (props: extensionPoints.AdminSetting["props"]) => {
+    const configPredicate = (props: any) => {
       return props.links && props.links[linkName];
     };
 
     // create NavigationLink with translated label
-    const ConfigNavLink = () => {
-      const [t] = useTranslation(this.i18nNamespace);
+    const ConfigNavLink = withTranslation(this.i18nNamespace)(({ t }) => {
       return this.navLink("/admin/settings" + to, labelI18nKey, t);
-    };
+    });
 
     // bind navigation link to extension point
-    binder.bind<extensionPoints.AdminSetting>("admin.setting", ConfigNavLink, configPredicate, labelI18nKey);
+    binder.bind("admin.setting", ConfigNavLink, configPredicate, labelI18nKey);
 
     // route for global configuration, passes the link from the index resource to component
-    const ConfigRoute: FC<GlobalRouteProps> = ({ url, links, ...additionalProps }) => {
+    const ConfigRoute = ({ url, links, ...additionalProps }: GlobalRouteProps) => {
       const link = links[linkName];
       if (link) {
         return this.route(
@@ -80,31 +79,29 @@ class ConfigurationBinder {
           <ConfigurationComponent link={(link as Link).href} {...additionalProps} />
         );
       }
-      return null;
     };
 
     // bind config route to extension point
-    binder.bind<extensionPoints.AdminRoute>("admin.route", ConfigRoute, configPredicate);
+    binder.bind("admin.route", ConfigRoute, configPredicate);
   }
 
   bindRepository(to: string, labelI18nKey: string, linkName: string, RepositoryComponent: any) {
     // create predicate based on the link name of the current repository route
     // if the linkname is not available, the navigation link and the route are not bound to the extension points
-    const repoPredicate = (props: extensionPoints.RepositoryRoute["props"]) => {
+    const repoPredicate = (props: any) => {
       return props.repository && props.repository._links && props.repository._links[linkName];
     };
 
     // create NavigationLink with translated label
-    const RepoNavLink: FC<RepositoryNavProps> = ({ url }) => {
-      const [t] = useTranslation(this.i18nNamespace);
+    const RepoNavLink = withTranslation(this.i18nNamespace)(({ t, url }: RepositoryNavProps) => {
       return this.navLink(url + to, labelI18nKey, t);
-    };
+    });
 
     // bind navigation link to extension point
-    binder.bind<extensionPoints.RepositoryNavigation>("repository.navigation", RepoNavLink, repoPredicate);
+    binder.bind("repository.navigation", RepoNavLink, repoPredicate);
 
     // route for global configuration, passes the current repository to component
-    const RepoRoute: FC<RepositoryRouteProps> = ({ url, repository, ...additionalProps }) => {
+    const RepoRoute = ({ url, repository, ...additionalProps }: RepositoryRouteProps) => {
       const link = repository._links[linkName];
       if (link) {
         return this.route(
@@ -112,31 +109,29 @@ class ConfigurationBinder {
           <RepositoryComponent repository={repository} link={(link as Link).href} {...additionalProps} />
         );
       }
-      return null;
     };
 
     // bind config route to extension point
-    binder.bind<extensionPoints.RepositoryRoute>("repository.route", RepoRoute, repoPredicate);
+    binder.bind("repository.route", RepoRoute, repoPredicate);
   }
 
   bindRepositorySetting(to: string, labelI18nKey: string, linkName: string, RepositoryComponent: any) {
     // create predicate based on the link name of the current repository route
     // if the linkname is not available, the navigation link and the route are not bound to the extension points
-    const repoPredicate = (props: extensionPoints.RepositoryRoute["props"]) => {
+    const repoPredicate = (props: any) => {
       return props.repository && props.repository._links && props.repository._links[linkName];
     };
 
     // create NavigationLink with translated label
-    const RepoNavLink: FC<RepositoryNavProps> = ({ url }) => {
-      const [t] = useTranslation(this.i18nNamespace);
+    const RepoNavLink = withTranslation(this.i18nNamespace)(({ t, url }: RepositoryNavProps) => {
       return this.navLink(url + "/settings" + to, labelI18nKey, t);
-    };
+    });
 
     // bind navigation link to extension point
-    binder.bind<extensionPoints.RepositorySetting>("repository.setting", RepoNavLink, repoPredicate);
+    binder.bind("repository.setting", RepoNavLink, repoPredicate);
 
     // route for global configuration, passes the current repository to component
-    const RepoRoute: FC<RepositoryRouteProps> = ({ url, repository, ...additionalProps }) => {
+    const RepoRoute = ({ url, repository, ...additionalProps }: RepositoryRouteProps) => {
       const link = repository._links[linkName];
       if (link) {
         return this.route(
@@ -144,11 +139,10 @@ class ConfigurationBinder {
           <RepositoryComponent repository={repository} link={(link as Link).href} {...additionalProps} />
         );
       }
-      return null;
     };
 
     // bind config route to extension point
-    binder.bind<extensionPoints.RepositoryRoute>("repository.route", RepoRoute, repoPredicate);
+    binder.bind("repository.route", RepoRoute, repoPredicate);
   }
 }
 

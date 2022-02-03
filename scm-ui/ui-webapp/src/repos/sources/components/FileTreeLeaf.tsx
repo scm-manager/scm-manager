@@ -49,6 +49,7 @@ const NoWrapTd = styled.td`
 const ExtensionTd = styled.td`
   white-space: nowrap;
   text-align: right;
+
   > *:not(:last-child) {
     margin-right: 0.5rem;
   }

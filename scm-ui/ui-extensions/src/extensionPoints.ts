@@ -391,7 +391,7 @@ export type MarkdownCodeRenderer<Language extends string | undefined = undefined
   SimpleRenderableDynamicExtensionPointDefinition<"markdown-renderer.code.",
     Language,
     {
-      language: Language extends string ? Language : string;
+      language?: Language extends string ? Language : string;
       value: string;
       indexLinks: Links;
     }>;
