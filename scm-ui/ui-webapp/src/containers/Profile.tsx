@@ -71,7 +71,8 @@ const Profile: FC = () => {
 
   const extensionProps = {
     me,
-    url
+    url,
+    links: me._links
   };
 
   return (

@@ -33,7 +33,6 @@ import ExportRepository from "./ExportRepository";
 import { useUpdateRepository } from "@scm-manager/ui-api";
 import HealthCheckWarning from "./HealthCheckWarning";
 import RunHealthCheck from "./RunHealthCheck";
-import { RepoConfigDetails, RepoConfigRoute } from "@scm-manager/ui-extensions/src/extensionPoints";
 
 type Props = {
   repository: Repository;

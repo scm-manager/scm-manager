@@ -25,7 +25,7 @@
 import React, { FC } from "react";
 import { CUSTOM_NAMESPACE_STRATEGY } from "@scm-manager/ui-types";
 import { Autocomplete } from "@scm-manager/ui-components";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import { useTranslation } from "react-i18next";
 import { useNamespaceSuggestions } from "@scm-manager/ui-api";
 
@@ -77,7 +77,13 @@ const NamespaceInput: FC<Props> = ({
     );
   }
 
-  return <ExtensionPoint name="repos.create.namespace" props={props} renderAll={false} />;
+  return (
+    <ExtensionPoint<extensionPoints.ReposCreateNamespace>
+      name="repos.create.namespace"
+      props={props}
+      renderAll={false}
+    />
+  );
 };
 
 export default NamespaceInput;

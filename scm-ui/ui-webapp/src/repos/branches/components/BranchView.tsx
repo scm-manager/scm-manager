@@ -26,7 +26,6 @@ import BranchDetail from "./BranchDetail";
 import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import { Branch, Repository } from "@scm-manager/ui-types";
 import BranchDangerZone from "../containers/BranchDangerZone";
-import { ReposBranchDetailsInformation } from "@scm-manager/ui-extensions/src/extensionPoints";
 
 type Props = {
   repository: Repository;

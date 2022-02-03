@@ -25,7 +25,6 @@
 import React, { ReactNode } from "react";
 import {
   Branch,
-  BranchDetails,
   Changeset,
   File,
   Group,
@@ -330,7 +329,7 @@ export type ReposCreateNamespace = RenderableExtensionPointDefinition<"repos.cre
     value: string;
     onChange: (namespace: string) => void;
     errorMessage: string;
-    validationError: boolean;
+    validationError?: boolean;
   }>;
 
 export type ReposSourcesContentActionBar = RenderableExtensionPointDefinition<"repos.sources.content.actionbar",
