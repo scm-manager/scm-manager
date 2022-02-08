@@ -21,55 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
+import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
 import { Me } from "@scm-manager/ui-types";
-import { AvatarImage, AvatarWrapper, MailLink, createAttributesForTesting } from "@scm-manager/ui-components";
+import { AvatarImage, AvatarWrapper, createAttributesForTesting, MailLink } from "@scm-manager/ui-components";
 
-type Props = WithTranslation & {
+type Props = {
   me: Me;
 };
 
-class ProfileInfo extends React.Component<Props> {
-  render() {
-    const { me, t } = this.props;
-    return (
-      <div className="media">
-        <AvatarWrapper>
-          <figure className="media-left">
-            <p className="image is-64x64">
-              <AvatarImage person={me} />
-            </p>
-          </figure>
-        </AvatarWrapper>
-        <div className="media-content">
-          <table className="table content">
-            <tbody>
-              <tr>
-                <th>{t("profile.username")}</th>
-                <td {...createAttributesForTesting(me.name)}>{me.name}</td>
-              </tr>
-              <tr>
-                <th>{t("profile.displayName")}</th>
-                <td {...createAttributesForTesting(me.displayName)}>{me.displayName}</td>
-              </tr>
-              <tr>
-                <th>{t("profile.mail")}</th>
-                <td>
-                  <MailLink address={me.mail} />
-                </td>
-              </tr>
-              {this.renderGroups()}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    );
-  }
-
-  renderGroups() {
-    const { me, t } = this.props;
-
+const ProfileInfo: FC<Props> = ({ me }) => {
+  const [t] = useTranslation("commons");
+  const renderGroups = () => {
     let groups = null;
     if (me.groups.length > 0) {
       groups = (
@@ -86,7 +49,40 @@ class ProfileInfo extends React.Component<Props> {
       );
     }
     return groups;
-  }
-}
+  };
 
-export default withTranslation("commons")(ProfileInfo);
+  return (
+    <div className="media">
+      <AvatarWrapper>
+        <figure className="media-left">
+          <p className="image is-64x64">
+            <AvatarImage person={me} />
+          </p>
+        </figure>
+      </AvatarWrapper>
+      <div className="media-content">
+        <table className="table content">
+          <tbody>
+            <tr>
+              <th>{t("profile.username")}</th>
+              <td {...createAttributesForTesting(me.name)}>{me.name}</td>
+            </tr>
+            <tr>
+              <th>{t("profile.displayName")}</th>
+              <td {...createAttributesForTesting(me.displayName)}>{me.displayName}</td>
+            </tr>
+            <tr>
+              <th>{t("profile.mail")}</th>
+              <td>
+                <MailLink address={me.mail} />
+              </td>
+            </tr>
+            {renderGroups()}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+
+export default ProfileInfo;
