@@ -24,11 +24,18 @@
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { Me } from "@scm-manager/ui-types";
-import { AvatarImage, AvatarWrapper, createAttributesForTesting, MailLink } from "@scm-manager/ui-components";
+import { AvatarImage, AvatarWrapper, createAttributesForTesting, devices, MailLink } from "@scm-manager/ui-components";
+import styled from "styled-components";
 
 type Props = {
   me: Me;
 };
+
+const ChangeFlexDirection = styled.div`
+  @media screen and (max-width: ${devices.mobile.width}px) {
+    flex-direction: column;
+  }
+`;
 
 const ProfileInfo: FC<Props> = ({ me }) => {
   const [t] = useTranslation("commons");
@@ -52,7 +59,7 @@ const ProfileInfo: FC<Props> = ({ me }) => {
   };
 
   return (
-    <div className="media">
+    <ChangeFlexDirection className="media">
       <AvatarWrapper>
         <figure className="media-left">
           <p className="image is-64x64">
@@ -81,7 +88,7 @@ const ProfileInfo: FC<Props> = ({ me }) => {
           </tbody>
         </table>
       </div>
-    </div>
+    </ChangeFlexDirection>
   );
 };
 
