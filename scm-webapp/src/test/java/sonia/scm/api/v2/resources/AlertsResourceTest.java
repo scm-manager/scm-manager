@@ -103,7 +103,9 @@ class AlertsResourceTest {
   @Test
   void shouldReturnVndMediaType() throws Exception {
     MockHttpResponse response = invoke();
-    assertThat(response.getOutputHeaders().getFirst("Content-Type")).hasToString(VndMediaType.ALERTS_REQUEST);
+    assertThat(response.getOutputHeaders().getFirst("Content-Type"))
+      .asString()
+      .isEqualToIgnoringCase(VndMediaType.ALERTS_REQUEST);
   }
 
   @Test
