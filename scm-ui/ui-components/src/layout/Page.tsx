@@ -30,6 +30,7 @@ import Title from "./Title";
 import Subtitle from "./Subtitle";
 import PageActions from "./PageActions";
 import ErrorBoundary from "../ErrorBoundary";
+import { devices } from "../devices";
 
 type Props = {
   title?: ReactNode;
@@ -53,7 +54,9 @@ const PageActionContainer = styled.div`
 
 const MaxTitleHeight = styled.div`
   // remove blank space in repo create form
-  height: 2.25rem;
+  @media screen and (min-width: ${devices.tablet.width}px) {
+    height: 2.25rem;
+  }
 `;
 
 export default class Page extends React.Component<Props> {
@@ -90,7 +93,7 @@ export default class Page extends React.Component<Props> {
 
     let pageActions = null;
     let pageActionsExists = false;
-    React.Children.forEach(children, (child) => {
+    React.Children.forEach(children, child => {
       if (child && !error) {
         if (this.isPageAction(child)) {
           pageActions = (
@@ -144,7 +147,7 @@ export default class Page extends React.Component<Props> {
     }
 
     const content: ReactNode[] = [];
-    React.Children.forEach(children, (child) => {
+    React.Children.forEach(children, child => {
       if (child) {
         if (!this.isPageAction(child)) {
           content.push(child);
