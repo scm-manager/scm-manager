@@ -24,7 +24,14 @@
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { Me } from "@scm-manager/ui-types";
-import { AvatarImage, AvatarWrapper, createAttributesForTesting, devices, MailLink } from "@scm-manager/ui-components";
+import {
+  AvatarImage,
+  AvatarWrapper,
+  createAttributesForTesting,
+  devices,
+  InfoTable,
+  MailLink
+} from "@scm-manager/ui-components";
 import styled from "styled-components";
 
 type Props = {
@@ -32,6 +39,12 @@ type Props = {
 };
 
 const ChangeFlexDirection = styled.div`
+  @media screen and (max-width: ${devices.mobile.width}px) {
+    flex-direction: column;
+  }
+`;
+
+const ChangeBorder = styled.div`
   @media screen and (max-width: ${devices.mobile.width}px) {
     flex-direction: column;
   }
@@ -68,7 +81,7 @@ const ProfileInfo: FC<Props> = ({ me }) => {
         </figure>
       </AvatarWrapper>
       <div className="media-content">
-        <table className="table content">
+        <InfoTable className="table content">
           <tbody>
             <tr>
               <th>{t("profile.username")}</th>
@@ -86,7 +99,7 @@ const ProfileInfo: FC<Props> = ({ me }) => {
             </tr>
             {renderGroups()}
           </tbody>
-        </table>
+        </InfoTable>
       </div>
     </ChangeFlexDirection>
   );
