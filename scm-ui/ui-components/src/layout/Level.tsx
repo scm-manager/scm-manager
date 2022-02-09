@@ -40,7 +40,7 @@ export default class Level extends React.Component<Props> {
     }
 
     return (
-      <div className={classNames("level", className)}>
+      <div className={classNames("level is-mobile", className)}>
         <div className="level-left">{left}</div>
         {child}
         <div className="level-right">{right}</div>
