@@ -10,6 +10,7 @@ const InfoTable = styled.table`
     }
     td {
       border-width: 0 0 1px;
+      word-break: break-word;
     }
     th {
       border: none;
