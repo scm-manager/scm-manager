@@ -25,8 +25,9 @@ import React, { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import BranchRow from "./BranchRow";
 import { Branch, BranchDetails, Repository } from "@scm-manager/ui-types";
-import { ConfirmAlert, ErrorNotification } from "@scm-manager/ui-components";
+import { ConfirmAlert, devices, ErrorNotification } from "@scm-manager/ui-components";
 import { useDeleteBranch } from "@scm-manager/ui-api";
+import styled from "styled-components";
 
 type Props = {
   baseUrl: string;
@@ -35,6 +36,23 @@ type Props = {
   type: string;
   branchesDetails: BranchDetails[];
 };
+
+const AdaptTableFlow = styled.table`
+  @media screen and (max-width: ${devices.mobile.width}px) {
+    td {
+      display: block;
+      border-left: 3px solid #7a7a7a !important;
+    }
+    td span.ml-4 {
+      margin-left: 0 !important;
+      display: block;
+    }
+    td span.is-ellipsis-overflow {
+      white-space: break-space;
+      word-break: break-word;
+    }
+  }
+`;
 
 const BranchTable: FC<Props> = ({ repository, baseUrl, branches, type, branchesDetails }) => {
   const { isLoading, error, remove, isDeleted } = useDeleteBranch(repository);
@@ -90,7 +108,7 @@ const BranchTable: FC<Props> = ({ repository, baseUrl, branches, type, branchesD
         />
       ) : null}
       <ErrorNotification error={error} />
-      <table className="card-table table is-hoverable is-fullwidth is-word-break">
+      <AdaptTableFlow className="card-table table is-hoverable is-fullwidth is-word-break">
         <thead>
           <tr>
             <th>{t(`branches.table.branches.${type}`)}</th>
@@ -108,7 +126,7 @@ const BranchTable: FC<Props> = ({ repository, baseUrl, branches, type, branchesD
             />
           ))}
         </tbody>
-      </table>
+      </AdaptTableFlow>
     </>
   );
 };
