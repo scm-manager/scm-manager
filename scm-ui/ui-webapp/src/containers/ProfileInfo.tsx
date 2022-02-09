@@ -44,12 +44,6 @@ const ChangeFlexDirection = styled.div`
   }
 `;
 
-const ChangeBorder = styled.div`
-  @media screen and (max-width: ${devices.mobile.width}px) {
-    flex-direction: column;
-  }
-`;
-
 const ProfileInfo: FC<Props> = ({ me }) => {
   const [t] = useTranslation("commons");
   const renderGroups = () => {

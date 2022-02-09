@@ -24,7 +24,7 @@
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-import { ErrorNotification, Image, Loading, Subtitle, Title } from "@scm-manager/ui-components";
+import { devices, ErrorNotification, Image, Loading, Subtitle, Title } from "@scm-manager/ui-components";
 import { useUpdateInfo, useVersion } from "@scm-manager/ui-api";
 
 const BoxShadowBox = styled.div`
@@ -33,6 +33,15 @@ const BoxShadowBox = styled.div`
 
 const ImageWrapper = styled.div`
   padding: 0.2rem 0.4rem;
+`;
+
+const ChangeFlexDirection = styled.article`
+  @media screen and (max-width: ${devices.mobile.width}px) {
+    flex-direction: column;
+    .button {
+      height: 100%;
+    }
+  }
 `;
 
 const AdminDetails: FC = () => {
@@ -51,7 +60,7 @@ const AdminDetails: FC = () => {
   const renderUpdateInfo = () => (
     <>
       <BoxShadowBox className="box">
-        <article className="media">
+        <ChangeFlexDirection className="media">
           <ImageWrapper className="media-left image is-96x96">
             <Image src="/images/blib.jpg" alt={t("admin.info.logo")} />
           </ImageWrapper>
@@ -68,7 +77,7 @@ const AdminDetails: FC = () => {
               </a>
             </div>
           </div>
-        </article>
+        </ChangeFlexDirection>
       </BoxShadowBox>
       <hr />
     </>
@@ -81,7 +90,7 @@ const AdminDetails: FC = () => {
       <div className="mb-5">{version}</div>
       {updateInfo ? renderUpdateInfo() : null}
       <BoxShadowBox className="box">
-        <article className="media">
+        <ChangeFlexDirection className="media">
           <ImageWrapper className="media-left">
             <Image src="/images/iconCommunitySupport.png" alt={t("admin.info.communityIconAlt")} />
           </ImageWrapper>
@@ -99,10 +108,10 @@ const AdminDetails: FC = () => {
               </a>
             </div>
           </div>
-        </article>
+        </ChangeFlexDirection>
       </BoxShadowBox>
       <BoxShadowBox className="box">
-        <article className="media">
+        <ChangeFlexDirection className="media">
           <ImageWrapper className="media-left">
             <Image src="/images/iconEnterpriseSupport.png" alt={t("admin.info.enterpriseIconAlt")} />
           </ImageWrapper>
@@ -124,7 +133,7 @@ const AdminDetails: FC = () => {
               </a>
             </div>
           </div>
-        </article>
+        </ChangeFlexDirection>
       </BoxShadowBox>
     </>
   );
