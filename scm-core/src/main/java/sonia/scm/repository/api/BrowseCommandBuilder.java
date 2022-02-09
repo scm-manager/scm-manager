@@ -320,6 +320,17 @@ public final class BrowseCommandBuilder
     return this;
   }
 
+  /**
+   * Collapse empty folders until a folder has content and return the path to such folder as a single item.
+   *
+   * @param collapse {@code true} if empty folders should be collapsed, otherwise {@code false}.
+   * @since 2.30.3
+   */
+  public BrowseCommandBuilder setCollapse(boolean collapse) {
+    request.setCollapse(collapse);
+    return this;
+  }
+
   private void updateCache(BrowserResult updatedResult) {
     if (!disableCache) {
       CacheKey key = new CacheKey(repository, request);
