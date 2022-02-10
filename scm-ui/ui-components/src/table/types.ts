@@ -33,4 +33,5 @@ export type ColumnProps = {
   createComparator?: (props: any, columnIndex: number) => Comparator;
   ascendingIcon?: string;
   descendingIcon?: string;
+  className?: string;
 };

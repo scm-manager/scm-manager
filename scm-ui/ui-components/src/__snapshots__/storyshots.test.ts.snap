@@ -94238,7 +94238,9 @@ exports[`Storyshots Table Default 1`] = `
           Tricia
         </h4>
       </td>
-      <td>
+      <td
+        className="has-background-success"
+      >
         <b
           style={
             Object {
@@ -94261,7 +94263,9 @@ exports[`Storyshots Table Default 1`] = `
           Arthur
         </h4>
       </td>
-      <td>
+      <td
+        className="has-background-success"
+      >
         <b
           style={
             Object {
