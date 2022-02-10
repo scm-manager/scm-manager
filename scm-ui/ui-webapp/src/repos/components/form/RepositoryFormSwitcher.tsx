@@ -26,15 +26,15 @@ import { useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
-import { Button, ButtonAddons, Icon, Level, urls } from "@scm-manager/ui-components";
+import { devices, Button, ButtonAddons, Icon, Level, urls } from "@scm-manager/ui-components";
 
 const TopLevel = styled(Level)`
+ @media screen and (min-width: ${devices.tablet.width}px){
   margin-top: 1.5rem;
   margin-bottom: -1.5rem;
   height: 0;
   position: absolute;
   right: 0;
-  @media (max-width: 785px) {
     margin-top: 4.5rem;
   }
 `;

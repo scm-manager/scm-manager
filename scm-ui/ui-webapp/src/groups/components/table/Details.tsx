@@ -24,7 +24,7 @@
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { Group } from "@scm-manager/ui-types";
-import { Checkbox, DateFromNow } from "@scm-manager/ui-components";
+import {Checkbox, DateFromNow, InfoTable} from "@scm-manager/ui-components";
 import GroupMember from "./GroupMember";
 
 type Props = WithTranslation & {
@@ -35,7 +35,7 @@ class Details extends React.Component<Props> {
   render() {
     const { group, t } = this.props;
     return (
-      <table className="table content">
+      <InfoTable className="table content">
         <tbody>
           <tr>
             <th>{t("group.name")}</th>
@@ -69,7 +69,7 @@ class Details extends React.Component<Props> {
           </tr>
           {this.renderMembers()}
         </tbody>
-      </table>
+      </InfoTable>
     );
   }
 

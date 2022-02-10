@@ -28,6 +28,7 @@ import {
   Checkbox,
   DateFromNow,
   ErrorNotification,
+  Icon,
   InputField,
   Level,
   Notification,
@@ -97,6 +98,27 @@ const ExportRepository: FC<Props> = ({ repository }) => {
     }
   }, [exportedInfo]);
 
+  const renderLinkedExport = (link: string) => {
+    const Label = (
+      <>
+        <Icon name="download" color="inherit" />
+        {t("export.downloadExportButton")}
+      </>
+    );
+    if (link) {
+      return (
+        <a href={link} className={classNames("button", "is-info")}>
+          {Label}
+        </a>
+      );
+    }
+    return (
+      <Button disabled={true} color="info">
+        {Label}
+      </Button>
+    );
+  };
+
   if (!repository._links.export) {
     return null;
   }
@@ -156,14 +178,7 @@ const ExportRepository: FC<Props> = ({ repository }) => {
       <Level
         right={
           <ButtonGroup>
-            <a href={(exportInfo?._links.download as Link)?.href}>
-              <Button
-                color="info"
-                disabled={isLoadingInfo || isLoadingExport || !exportInfo?._links.download}
-                label={t("export.downloadExportButton")}
-                icon="download"
-              />
-            </a>
+            {renderLinkedExport((exportInfo?._links.download as Link)?.href)}
             <Button
               color="primary"
               action={() =>

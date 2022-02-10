@@ -25,6 +25,7 @@ import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { RepositoryRole } from "@scm-manager/ui-types";
 import AvailableVerbs from "./AvailableVerbs";
+import {InfoTable} from "@scm-manager/ui-components";
 
 type Props = WithTranslation & {
   role: RepositoryRole;
@@ -34,7 +35,7 @@ class PermissionRoleDetailsTable extends React.Component<Props> {
   render() {
     const { role, t } = this.props;
     return (
-      <table className="table content">
+      <InfoTable className="table content">
         <tbody>
           <tr>
             <th>{t("repositoryRole.name")}</th>
@@ -49,7 +50,7 @@ class PermissionRoleDetailsTable extends React.Component<Props> {
             <AvailableVerbs role={role} />
           </tr>
         </tbody>
-      </table>
+      </InfoTable>
     );
   }
 }

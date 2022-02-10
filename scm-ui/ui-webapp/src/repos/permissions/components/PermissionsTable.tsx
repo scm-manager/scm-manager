@@ -24,9 +24,10 @@
 
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
-import { LabelWithHelpIcon, Notification } from "@scm-manager/ui-components";
+import { devices, LabelWithHelpIcon, Notification } from "@scm-manager/ui-components";
 import SinglePermission from "../containers/SinglePermission";
 import { Namespace, PermissionCollection, Repository, RepositoryRole } from "@scm-manager/ui-types";
+import styled from "styled-components";
 
 type Props = {
   availableRoles: RepositoryRole[];
@@ -34,6 +35,15 @@ type Props = {
   permissions: PermissionCollection;
   namespaceOrRepository: Namespace | Repository;
 };
+
+const BreakingPermissionsTable = styled.table`
+{
+@media screen and (max-width:${devices.mobile.width}px) {
+  th, td {
+    display: block;  
+    }
+}
+`;
 
 const PermissionsTable: FC<Props> = ({
   availableRoles,
@@ -58,6 +68,7 @@ const PermissionsTable: FC<Props> = ({
   });
 
   return (
+    <div className="is-overflow-x-auto">
     <table className="card-table table is-hoverable is-fullwidth">
       <thead>
         <tr>
@@ -90,6 +101,7 @@ const PermissionsTable: FC<Props> = ({
         })}
       </tbody>
     </table>
+    </div>
   );
 };
 
