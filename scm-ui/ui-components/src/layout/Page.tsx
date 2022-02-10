@@ -57,8 +57,7 @@ const MaxTitleHeight = styled.div`
   @media screen and (min-width: ${devices.tablet.width}px) {
     height: 2.25rem;
   }
-  @media screen and (max-width: ${devices.tablet.width}px) {
-    flex-direction: column;
+  flex-wrap:wrap;
 `;
 
 export default class Page extends React.Component<Props> {
