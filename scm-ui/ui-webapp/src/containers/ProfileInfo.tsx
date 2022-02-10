@@ -28,21 +28,13 @@ import {
   AvatarImage,
   AvatarWrapper,
   createAttributesForTesting,
-  devices,
   InfoTable,
   MailLink
 } from "@scm-manager/ui-components";
-import styled from "styled-components";
 
 type Props = {
   me: Me;
 };
-
-const ChangeFlexDirection = styled.div`
-  @media screen and (max-width: ${devices.mobile.width}px) {
-    flex-direction: column;
-  }
-`;
 
 const ProfileInfo: FC<Props> = ({ me }) => {
   const [t] = useTranslation("commons");
@@ -66,7 +58,7 @@ const ProfileInfo: FC<Props> = ({ me }) => {
   };
 
   return (
-    <ChangeFlexDirection className="media">
+    <div className="media is-flex-wrap-wrap">
       <AvatarWrapper>
         <figure className="media-left">
           <p className="image is-64x64">
@@ -95,7 +87,7 @@ const ProfileInfo: FC<Props> = ({ me }) => {
           </tbody>
         </InfoTable>
       </div>
-    </ChangeFlexDirection>
+    </div>
   );
 };
 
