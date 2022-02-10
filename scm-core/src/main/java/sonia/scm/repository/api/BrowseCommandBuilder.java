@@ -137,6 +137,9 @@ public final class BrowseCommandBuilder
       }
 
       result = browseCommand.getBrowserResult(request);
+      if (!request.isRecursive() && request.isCollapsed()) {
+        new BrowserResultCollapser().collapseFolders(browseCommand, request, result.getFile());
+      }
     }
     else
     {
@@ -152,6 +155,9 @@ public final class BrowseCommandBuilder
         }
 
         result = browseCommand.getBrowserResult(request);
+        if (!request.isRecursive() && request.isCollapsed()) {
+          new BrowserResultCollapser().collapseFolders(browseCommand, request, result.getFile());
+        }
 
         if (result != null)
         {
