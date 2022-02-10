@@ -23,6 +23,7 @@
  */
 
 import styled from "styled-components";
+import { devices } from "./devices";
 
 export const DangerZone = styled.div`
   border: 1px solid #ff6a88;
@@ -44,6 +45,12 @@ export const DangerZone = styled.div`
   > *:not(:last-child) {
     padding-bottom: 1.5rem;
     border-bottom: solid 2px whitesmoke;
+  }
+  @media screen and (max-width: ${devices.tablet.width}px) {
+    .button {
+      height: 100%;
+      white-space: break-spaces;
+    }
   }
 `;
 
