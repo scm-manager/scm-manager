@@ -36,10 +36,12 @@ const ImageWrapper = styled.div`
 `;
 
 const ChangeFlexDirection = styled.article`
+  flex-wrap: wrap;
   @media screen and (max-width: ${devices.mobile.width}px) {
-    flex-direction: column;
     .button {
       height: 100%;
+      word-break: break-word;
+      white-space: break-spaces;
     }
   }
 `;
