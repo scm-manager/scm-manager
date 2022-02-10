@@ -27,7 +27,7 @@ plugins {
   id 'org.scm-manager.java'
   id 'org.scm-manager.run'
   id 'org.scm-manager.core-plugins'
-  id 'io.swagger.core.v3.swagger-gradle-plugin' version '2.1.6'
+  id 'io.swagger.core.v3.swagger-gradle-plugin' version '2.1.12'
 }
 
 configurations {
