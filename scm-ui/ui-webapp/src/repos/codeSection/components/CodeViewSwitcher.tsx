@@ -23,17 +23,17 @@
  */
 import React, { FC } from "react";
 import styled from "styled-components";
-import {Button, ButtonAddons, devices} from "@scm-manager/ui-components";
+import { Button, ButtonAddons, devices } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 
 const SmallButton = styled(Button)`
   border-radius: 4px;
   font-size: 1rem;
   font-weight: 600;
-   @media screen and (max-width: ${devices.mobile.width}px) {
+  @media screen and (max-width: ${devices.mobile.width}px) {
     padding-left: 0.75rem;
     padding-right: 0.75rem;
-   }
+  }
 `;
 
 const ButtonAddonsMarginRight = styled(ButtonAddons)`
