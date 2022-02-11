@@ -26,7 +26,7 @@ import { WithTranslation, withTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
 import { InfoItem } from "@scm-manager/ui-types";
-import { Icon } from "@scm-manager/ui-components";
+import {devices, Icon} from "@scm-manager/ui-components";
 
 type Props = WithTranslation & {
   type: "plugin" | "feature";
@@ -36,10 +36,22 @@ type Props = WithTranslation & {
 const FixedSizedIconWrapper = styled.div`
   width: 160px;
   height: 160px;
+  @media screen and (max-width: ${devices.mobile.width}px) {
+    margin-left:auto;
+    margin-right:auto;
+    margin-bottom: 1rem;
+ }
 `;
 
 const ContentWrapper = styled.div`
   min-height: 10.5rem;
+`;
+
+const InfoBoxWrapper = styled.div`
+ @media screen and (max-width: ${devices.mobile.width}px) {
+    flex-wrap: wrap;
+    justify-content: center;
+ }
 `;
 
 class InfoBox extends React.Component<Props> {
@@ -61,7 +73,7 @@ class InfoBox extends React.Component<Props> {
     const icon = type === "plugin" ? "puzzle-piece" : "star";
     return (
       <a className="is-block mb-5" href={item._links.self.href}>
-        <div className="box media">
+        <InfoBoxWrapper className="box media">
           <figure className="media-left">
             <FixedSizedIconWrapper
               className={classNames(
@@ -82,7 +94,7 @@ class InfoBox extends React.Component<Props> {
             </FixedSizedIconWrapper>
           </figure>
           {this.renderBody()}
-        </div>
+        </InfoBoxWrapper>
       </a>
     );
   }
