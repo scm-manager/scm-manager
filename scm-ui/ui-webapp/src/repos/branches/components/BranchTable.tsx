@@ -48,7 +48,7 @@ const AdaptTableFlow = styled.table`
       display: block;
     }
     td span.is-ellipsis-overflow {
-      white-space: break-space;
+      white-space: break-spaces;
       word-break: break-word;
     }
   }
