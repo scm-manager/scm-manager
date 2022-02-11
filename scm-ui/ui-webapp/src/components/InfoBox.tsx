@@ -26,7 +26,7 @@ import { WithTranslation, withTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
 import { InfoItem } from "@scm-manager/ui-types";
-import {devices, Icon} from "@scm-manager/ui-components";
+import { devices, Icon } from "@scm-manager/ui-components";
 
 type Props = WithTranslation & {
   type: "plugin" | "feature";
@@ -37,10 +37,8 @@ const FixedSizedIconWrapper = styled.div`
   width: 160px;
   height: 160px;
   @media screen and (max-width: ${devices.mobile.width}px) {
-    margin-left:auto;
-    margin-right:auto;
     margin-bottom: 1rem;
- }
+  }
 `;
 
 const ContentWrapper = styled.div`
@@ -48,10 +46,10 @@ const ContentWrapper = styled.div`
 `;
 
 const InfoBoxWrapper = styled.div`
- @media screen and (max-width: ${devices.mobile.width}px) {
+  @media screen and (max-width: ${devices.mobile.width}px) {
     flex-wrap: wrap;
     justify-content: center;
- }
+  }
 `;
 
 class InfoBox extends React.Component<Props> {
