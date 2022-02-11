@@ -31,7 +31,7 @@ import sonia.scm.repository.spi.BrowseCommandRequest;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.ListIterator;
+import java.util.List;
 
 public class BrowserResultCollapser {
 
@@ -43,51 +43,43 @@ public class BrowserResultCollapser {
       return;
     }
     this.browseCommand = browseCommand;
-    this.request = request;
+    this.request = new BrowseCommandRequest();
+    this.request.setRevision(request.getRevision());
+    this.request.setDisableLastCommit(true);
+    this.request.setLimit(Integer.MAX_VALUE);
 
-    ArrayList<FileObject> collapsedChildren = new ArrayList<>(fo.getChildren());
-    ListIterator<FileObject> iter = collapsedChildren.listIterator();
-    while (iter.hasNext()) {
-      FileObject child = iter.next();
+    List<FileObject> collapsedChildren = new ArrayList<>();
+    for (FileObject child : fo.getChildren()) {
       if (child.isDirectory()) {
-        iter.remove();
-        traverseFolder(child, iter);
+        traverseFolder(child, collapsedChildren);
+      } else {
+        collapsedChildren.add(child);
       }
     }
     fo.setChildren(collapsedChildren);
   }
 
-  private void traverseFolder(FileObject fo, ListIterator<FileObject> iter) throws IOException {
-    BrowseCommandRequest childRequest = createChildRequest(request, fo.getPath());
-    BrowserResult result = browseCommand.getBrowserResult(childRequest);
-    if (isEmptyOrHasFiles(result.getFile())) {
-      iter.add(fo);
+  private void traverseFolder(FileObject parent, List<FileObject> collapsedChildren) throws IOException {
+    request.setPath(parent.getPath());
+    BrowserResult result = browseCommand.getBrowserResult(request);
+    if (!isCollapsible(result.getFile())) {
+      collapsedChildren.add(parent);
     } else {
       for (FileObject child : result.getFile().getChildren()) {
-        child.setName(fo.getName() + "/" + child.getName());
-        traverseFolder(child, iter);
+        if (child.isDirectory()) {
+          child.setName(parent.getName() + "/" + child.getName());
+          traverseFolder(child, collapsedChildren);
+        }
       }
     }
   }
 
-  private BrowseCommandRequest createChildRequest(BrowseCommandRequest request, String path) {
-    BrowseCommandRequest childRequest = request.clone();
-    childRequest.setLimit(Integer.MAX_VALUE);
-    childRequest.setOffset(0);
-    childRequest.setPath(path);
-    return childRequest;
-  }
-
-  private boolean isEmptyOrHasFiles(FileObject fo) {
-    if (fo.getChildren().isEmpty()) {
-      return true;
+  private boolean isCollapsible(FileObject fo) {
+    if (fo.getChildren().size() != 1) {
+      return false;
     }
-    for (FileObject child : fo.getChildren()) {
-      if (!child.isDirectory()) {
-        return true;
-      }
-    }
-    return false;
+    FileObject child = fo.getChildren().iterator().next();
+    return child.isDirectory() && child.getSubRepository() == null;
   }
 
 }

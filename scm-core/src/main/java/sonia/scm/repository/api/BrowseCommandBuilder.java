@@ -166,7 +166,7 @@ public final class BrowseCommandBuilder
       }
       else if (logger.isDebugEnabled())
       {
-        logger.debug("retrive browser result from cache for {}", request);
+        logger.debug("retrieve browser result from cache for {}", request);
       }
     }
 
@@ -371,7 +371,7 @@ public final class BrowseCommandBuilder
     public CacheKey(Repository repository, BrowseCommandRequest request)
     {
       this.repositoryId = repository.getId();
-      this.request = request;
+      this.request = request.clone();
     }
 
     //~--- methods ------------------------------------------------------------
