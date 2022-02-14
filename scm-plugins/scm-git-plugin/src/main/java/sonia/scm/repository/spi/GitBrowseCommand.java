@@ -128,6 +128,8 @@ public class GitBrowseCommand extends AbstractGitCommand
     throws IOException {
     logger.debug("try to create browse result for {}", request);
 
+    resultCount = 0;
+
     this.request = request;
     repo = open();
     revId = computeRevIdToBrowse();

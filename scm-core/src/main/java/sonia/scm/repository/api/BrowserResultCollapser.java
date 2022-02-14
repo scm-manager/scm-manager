@@ -46,7 +46,7 @@ public class BrowserResultCollapser {
     this.request = new BrowseCommandRequest();
     this.request.setRevision(request.getRevision());
     this.request.setDisableLastCommit(true);
-    this.request.setLimit(Integer.MAX_VALUE);
+    this.request.setLimit(2);
 
     List<FileObject> collapsedChildren = new ArrayList<>();
     for (FileObject child : fo.getChildren()) {
