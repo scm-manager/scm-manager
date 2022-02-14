@@ -65,12 +65,9 @@ public class BrowserResultCollapser {
     if (!isCollapsible(result.getFile())) {
       collapsedChildren.add(parent);
     } else {
-      for (FileObject child : result.getFile().getChildren()) {
-        if (child.isDirectory()) {
-          child.setName(parent.getName() + "/" + child.getName());
-          traverseFolder(child, collapsedChildren);
-        }
-      }
+      FileObject child = result.getFile().getChildren().iterator().next();
+      child.setName(parent.getName() + "/" + child.getName());
+      traverseFolder(child, collapsedChildren);
     }
   }
 
