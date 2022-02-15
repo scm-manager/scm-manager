@@ -60,32 +60,33 @@ public class SourceRootResource {
   @Path("")
   @Produces(VndMediaType.SOURCE)
   @Operation(summary = "List of sources", description = "Returns all sources for repository head.", tags = "Repository")
-  public FileObjectDto getAllWithoutRevision(@PathParam("namespace") String namespace, @PathParam("name") String name, @DefaultValue("0") @QueryParam("offset") int offset) throws IOException {
-    return getSource(namespace, name, "/", null, offset);
+  public FileObjectDto getAllWithoutRevision(@PathParam("namespace") String namespace, @PathParam("name") String name, @DefaultValue("0") @QueryParam("offset") int offset, @DefaultValue("false") @QueryParam("collapse") boolean collapse) throws IOException {
+    return getSource(namespace, name, "/", null, offset, collapse);
   }
 
   @GET
   @Path("{revision}")
   @Produces(VndMediaType.SOURCE)
   @Operation(summary = "List of sources by revision", description = "Returns all sources for the given revision.", tags = "Repository")
-  public FileObjectDto getAll(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision, @DefaultValue("0") @QueryParam("offset") int offset) throws IOException {
-    return getSource(namespace, name, "/", revision, offset);
+  public FileObjectDto getAll(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision, @DefaultValue("0") @QueryParam("offset") int offset, @DefaultValue("false") @QueryParam("collapse") boolean collapse) throws IOException {
+    return getSource(namespace, name, "/", revision, offset, collapse);
   }
 
   @GET
   @Path("{revision}/{path: .*}")
   @Produces(VndMediaType.SOURCE)
   @Operation(summary = "List of sources by revision in path", description = "Returns all sources for the given revision in a specific path.", tags = "Repository")
-  public FileObjectDto get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision, @PathParam("path") String path, @DefaultValue("0") @QueryParam("offset") int offset) throws IOException {
-    return getSource(namespace, name, path, revision, offset);
+  public FileObjectDto get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision, @PathParam("path") String path, @DefaultValue("0") @QueryParam("offset") int offset, @DefaultValue("false") @QueryParam("collapse") boolean collapse) throws IOException {
+    return getSource(namespace, name, path, revision, offset, collapse);
   }
 
-  private FileObjectDto getSource(String namespace, String repoName, String path, String revision, int offset) throws IOException {
+  private FileObjectDto getSource(String namespace, String repoName, String path, String revision, int offset, boolean collapse) throws IOException {
     NamespaceAndName namespaceAndName = new NamespaceAndName(namespace, repoName);
     try (RepositoryService repositoryService = serviceFactory.create(namespaceAndName)) {
       BrowseCommandBuilder browseCommand = repositoryService.getBrowseCommand();
       browseCommand.setPath(path);
       browseCommand.setOffset(offset);
+      browseCommand.setCollapse(collapse);
       if (revision != null && !revision.isEmpty()) {
         browseCommand.setRevision(revision);
       }

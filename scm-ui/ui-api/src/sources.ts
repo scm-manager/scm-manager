@@ -28,17 +28,20 @@ import * as urls from "./urls";
 import { useInfiniteQuery } from "react-query";
 import { repoQueryKey } from "./keys";
 import { useEffect } from "react";
+import { createQueryString } from "./utils";
 
 export type UseSourcesOptions = {
   revision?: string;
   path?: string;
   refetchPartialInterval?: number;
   enabled?: boolean;
+  collapse?: boolean;
 };
 
 const UseSourcesDefaultOptions: UseSourcesOptions = {
   enabled: true,
   refetchPartialInterval: 3000,
+  collapse: true
 };
 
 export const useSources = (repository: Repository, opts: UseSourcesOptions = UseSourcesDefaultOptions) => {
@@ -48,7 +51,7 @@ export const useSources = (repository: Repository, opts: UseSourcesOptions = Use
   };
   const link = createSourcesLink(repository, options);
   const { isLoading, error, data, isFetchingNextPage, fetchNextPage, refetch } = useInfiniteQuery<File, Error, File>(
-    repoQueryKey(repository, "sources", options.revision || "", options.path || ""),
+    repoQueryKey(repository, "sources", options.revision || "", options.path || "", options.collapse ? "collapse" : ""),
     ({ pageParam }) => {
       return apiClient.get(pageParam || link).then((response) => response.json());
     },
@@ -92,6 +95,9 @@ const createSourcesLink = (repository: Repository, options: UseSourcesOptions) =
     if (options.path) {
       link = urls.concat(link, options.path);
     }
+  }
+  if (options.collapse) {
+    return `${link}?${createQueryString({ collapse: "true" })}`;
   }
   return link;
 };
