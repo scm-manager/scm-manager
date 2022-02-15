@@ -12,6 +12,7 @@
     "@fortawesome/fontawesome-free": "^5.11.2",
     "bulma": "^0.9.3",
     "bulma-popover": "^1.0.0",
+    "bulma-tooltip": "^3.0.0",
     "react-diff-view": "^2.4.1"
   },
   "devDependencies": {
