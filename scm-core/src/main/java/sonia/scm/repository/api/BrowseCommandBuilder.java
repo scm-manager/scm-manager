@@ -135,8 +135,7 @@ public final class BrowseCommandBuilder
           request);
       }
 
-      result = browseCommand.getBrowserResult(request);
-      collapseFoldersIfRequested(result);
+      result = computeBrowserResult();
     }
     else
     {
@@ -151,8 +150,7 @@ public final class BrowseCommandBuilder
           logger.debug("create browser result for {}", request);
         }
 
-        result = browseCommand.getBrowserResult(request);
-        collapseFoldersIfRequested(result);
+        result = computeBrowserResult();
 
         if (result != null)
         {
@@ -173,10 +171,12 @@ public final class BrowseCommandBuilder
     return result;
   }
 
-  private void collapseFoldersIfRequested(BrowserResult result) throws IOException {
-    if (!request.isRecursive() && request.isCollapse()) {
+  private BrowserResult computeBrowserResult() throws IOException {
+    BrowserResult result = browseCommand.getBrowserResult(request);
+    if (result != null && !request.isRecursive() && request.isCollapse()) {
       new BrowserResultCollapser().collapseFolders(browseCommand, request, result.getFile());
     }
+    return result;
   }
 
   //~--- set methods ----------------------------------------------------------
