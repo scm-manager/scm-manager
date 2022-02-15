@@ -1,7 +1,7 @@
 ext {
   slf4jVersion = '1.7.30'
   guiceVersion = '5.0.1'
-  resteasyVersion = '4.6.0.Final'
+  resteasyVersion = '4.7.5.Final'
 
   // TODO upgrade to 2.12.0, but this breaks openapi spec generation
   jacksonVersion = '2.11.3'
@@ -68,7 +68,7 @@ ext {
     edison: 'de.otto.edison:edison-hal:2.1.0',
 
     // openapi
-    swaggerJaxRs: 'io.swagger.core.v3:swagger-jaxrs2:2.1.6',
+    swaggerJaxRs: 'io.swagger.core.v3:swagger-jaxrs2:2.1.12',
 
     // dto mapping
     mapstruct: "org.mapstruct:mapstruct-jdk8:${mapstructVersion}",
