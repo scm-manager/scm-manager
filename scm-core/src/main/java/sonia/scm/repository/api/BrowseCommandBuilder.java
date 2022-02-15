@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.api;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -85,7 +85,6 @@ public final class BrowseCommandBuilder
    *
    * @param cacheManager cache manager
    * @param browseCommand implementation of the {@link BrowseCommand}
-   * @param browseCommand
    * @param repository repository to query
    * @param preProcessorUtil
    */
@@ -126,7 +125,7 @@ public final class BrowseCommandBuilder
    * @throws IOException
    */
   public BrowserResult getBrowserResult() throws IOException {
-    BrowserResult result = null;
+    BrowserResult result;
 
     if (disableCache)
     {
@@ -137,9 +136,7 @@ public final class BrowseCommandBuilder
       }
 
       result = browseCommand.getBrowserResult(request);
-      if (!request.isRecursive() && request.isCollapsed()) {
-        new BrowserResultCollapser().collapseFolders(browseCommand, request, result.getFile());
-      }
+      collapseFoldersIfRequested(result);
     }
     else
     {
@@ -155,9 +152,7 @@ public final class BrowseCommandBuilder
         }
 
         result = browseCommand.getBrowserResult(request);
-        if (!request.isRecursive() && request.isCollapsed()) {
-          new BrowserResultCollapser().collapseFolders(browseCommand, request, result.getFile());
-        }
+        collapseFoldersIfRequested(result);
 
         if (result != null)
         {
@@ -176,6 +171,12 @@ public final class BrowseCommandBuilder
     }
 
     return result;
+  }
+
+  private void collapseFoldersIfRequested(BrowserResult result) throws IOException {
+    if (!request.isRecursive() && request.isCollapse()) {
+      new BrowserResultCollapser().collapseFolders(browseCommand, request, result.getFile());
+    }
   }
 
   //~--- set methods ----------------------------------------------------------
@@ -327,10 +328,11 @@ public final class BrowseCommandBuilder
   }
 
   /**
-   * Collapse empty folders until a folder has content and return the path to such folder as a single item.
+   * Collapse folders with only one sub-folder until a folder is empty, contains files or has more than one sub-folder
+   * and return the path to such folder as a single item.
    *
-   * @param collapse {@code true} if empty folders should be collapsed, otherwise {@code false}.
-   * @since 2.30.3
+   * @param collapse {@code true} if folders with only one sub-folder should be collapsed, otherwise {@code false}.
+   * @since 2.31.0
    */
   public BrowseCommandBuilder setCollapse(boolean collapse) {
     request.setCollapse(collapse);

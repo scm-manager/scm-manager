@@ -53,7 +53,7 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest {
   private final transient Consumer<BrowserResult> updater;
 
   private int offset;
-  private boolean collpase;
+  private boolean collapse;
 
   public BrowseCommandRequest() {
     this(null);
@@ -65,7 +65,7 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest {
 
   @Override
   public BrowseCommandRequest clone() {
-    BrowseCommandRequest clone = null;
+    BrowseCommandRequest clone;
 
     try {
       clone = (BrowseCommandRequest) super.clone();
@@ -185,8 +185,8 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest {
    * @return {@code true} if empty folders are collapsed, otherwise {@code false}
    * @since 2.30.3
    */
-  public boolean isCollapsed() {
-    return collpase;
+  public boolean isCollapse() {
+    return collapse;
   }
 
   /**
@@ -196,7 +196,7 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest {
    * @since 2.30.3
    */
   public void setCollapse(boolean collapse) {
-    this.collpase = collapse;
+    this.collapse = collapse;
   }
 
   public void updateCache(BrowserResult update) {

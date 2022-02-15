@@ -89,7 +89,7 @@ class BrowserResultCollapserTest {
 
     FileObject f = result.getFile();
     Collection<FileObject> children = f.getChildren();
-    assertThat(children.size()).isEqualTo(2);
+    assertThat(children).hasSize(2);
     assertContains(children, "folder_a", "folder_a");
     assertContains(children, "folder_b", "folder_b");
   }
@@ -120,7 +120,7 @@ class BrowserResultCollapserTest {
 
     FileObject f = result.getFile();
     Collection<FileObject> children = f.getChildren();
-    assertThat(children.size()).isEqualTo(2);
+    assertThat(children).hasSize(2);
     assertContains(children, "folder_a", "folder_a");
     assertContains(children, "folder_b/subfolder", "folder_b/subfolder");
   }
@@ -165,7 +165,7 @@ class BrowserResultCollapserTest {
 
     FileObject f = result.getFile();
     Collection<FileObject> children = f.getChildren();
-    assertThat(children.size()).isEqualTo(4);
+    assertThat(children).hasSize(4);
     assertContains(children, "folder_a", "folder_a");
     assertContains(children, "folder_b", "folder_b");
     assertContains(children, "folder_c/subfolder_b", "folder_c/subfolder_b");
@@ -197,7 +197,7 @@ class BrowserResultCollapserTest {
 
     FileObject f = result.getFile();
     Collection<FileObject> children = f.getChildren();
-    assertThat(children.size()).isEqualTo(2);
+    assertThat(children).hasSize(2);
     assertContains(children, "folder_a", "folder_a");
     assertContains(children, "folder_b", "folder_b");
   }
@@ -260,16 +260,16 @@ class BrowserResultCollapserTest {
 
     FileObject f = result.getFile();
     Collection<FileObject> children = f.getChildren();
-    assertThat(children.size()).isEqualTo(3);
+    assertThat(children).hasSize(3);
     assertContains(children, "src/main/java/sonia/scm/server", "scm-server/src/main/java/sonia/scm/server");
     assertContains(children, "build.gradle", "scm-server/build.gradle");
     assertContains(children, "gradle.lockfile", "scm-server/gradle.lockfile");
   }
 
   private void assertContains(Collection<FileObject> children, String name, String path) {
-    assertThat(children.stream().anyMatch(c -> c.getName().equals(name) && c.getPath().equals(path)))
+    assertThat(children)
       .as("%s not found", name)
-      .isTrue();
+      .anyMatch(c -> c.getName().equals(name) && c.getPath().equals(path));
   }
 
   private BrowserResult createBrowserResult(FileObject f) {

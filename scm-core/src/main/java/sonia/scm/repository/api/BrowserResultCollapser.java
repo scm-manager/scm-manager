@@ -33,7 +33,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BrowserResultCollapser {
+class BrowserResultCollapser {
 
   private BrowseCommand browseCommand;
   private BrowseCommandRequest request;
@@ -51,24 +51,22 @@ public class BrowserResultCollapser {
     List<FileObject> collapsedChildren = new ArrayList<>();
     for (FileObject child : fo.getChildren()) {
       if (child.isDirectory()) {
-        traverseFolder(child, collapsedChildren);
-      } else {
-        collapsedChildren.add(child);
+        child = traverseFolder(child);
       }
+      collapsedChildren.add(child);
     }
     fo.setChildren(collapsedChildren);
   }
 
-  private void traverseFolder(FileObject parent, List<FileObject> collapsedChildren) throws IOException {
+  private FileObject traverseFolder(FileObject parent) throws IOException {
     request.setPath(parent.getPath());
     BrowserResult result = browseCommand.getBrowserResult(request);
-    if (!isCollapsible(result.getFile())) {
-      collapsedChildren.add(parent);
-    } else {
+    if (isCollapsible(result.getFile())) {
       FileObject child = result.getFile().getChildren().iterator().next();
       child.setName(parent.getName() + "/" + child.getName());
-      traverseFolder(child, collapsedChildren);
+      return traverseFolder(child);
     }
+    return parent;
   }
 
   private boolean isCollapsible(FileObject fo) {

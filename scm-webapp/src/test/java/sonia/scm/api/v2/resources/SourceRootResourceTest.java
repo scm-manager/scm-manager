@@ -46,6 +46,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
@@ -122,6 +123,26 @@ public class SourceRootResourceTest extends RepositoryTestBase {
 
     dispatcher.invoke(request, response);
     assertThat(response.getStatus()).isEqualTo(404);
+  }
+
+  @Test
+  public void collapseShouldBeFalseByDefault() throws Exception {
+    MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/sources");
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    verify(browseCommandBuilder).setCollapse(false);
+  }
+
+  @Test
+  public void shouldSetCollapseToTrue() throws Exception {
+    MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/sources?collapse=true");
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    verify(browseCommandBuilder).setCollapse(true);
   }
 
   private BrowserResult createBrowserResult() {
