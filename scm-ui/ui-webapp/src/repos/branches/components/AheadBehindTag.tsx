@@ -65,7 +65,6 @@ const Bar = styled.span.attrs<BarProps>(props => ({
 
 const TooltipWithDefaultCursor = styled(Tooltip)`
   cursor: default !important;
-  width: 100%;
 `;
 
 const AheadBehindTag: FC<Props> = ({ branch, details, hiddenMobile, verbose }) => {
@@ -91,24 +90,25 @@ const AheadBehindTag: FC<Props> = ({ branch, details, hiddenMobile, verbose }) =
       <TooltipWithDefaultCursor
         message={t("branch.aheadBehind.tooltip", { ahead: details.changesetsAhead, behind: details.changesetsBehind })}
         location="top"
-        className={"is-flex"}
       >
-        <Behind className="column is-half is-flex is-flex-direction-column is-align-items-flex-end p-0">
-          <Count className="is-size-7 pr-1">{behindText}</Count>
-          <Bar
-            className="has-rounded-border-left has-background-secondary"
-            width={calculateBarLength(details.changesetsBehind)}
-            direction="left"
-          />
-        </Behind>
-        <Ahead className="column is-half is-flex is-flex-direction-column is-align-items-flex-start p-0">
-          <Count className="is-size-7 pl-1">{aheadText}</Count>
-          <Bar
-            className="has-rounded-border-right has-background-secondary"
-            width={calculateBarLength(details.changesetsAhead)}
-            direction="right"
-          />
-        </Ahead>
+        <div className="is-flex">
+          <Behind className="column is-half is-flex is-flex-direction-column is-align-items-flex-end p-0">
+            <Count className="is-size-7 pr-1">{behindText}</Count>
+            <Bar
+              className="has-rounded-border-left has-background-secondary"
+              width={calculateBarLength(details.changesetsBehind)}
+              direction="left"
+            />
+          </Behind>
+          <Ahead className="column is-half is-flex is-flex-direction-column is-align-items-flex-start p-0">
+            <Count className="is-size-7 pl-1">{aheadText}</Count>
+            <Bar
+              className="has-rounded-border-right has-background-secondary"
+              width={calculateBarLength(details.changesetsAhead)}
+              direction="right"
+            />
+          </Ahead>
+        </div>
       </TooltipWithDefaultCursor>
     </div>
   );

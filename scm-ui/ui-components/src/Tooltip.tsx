@@ -27,7 +27,7 @@ import classNames from "classnames";
 
 // See for css reference: https://github.com/Wikiki/bulma-tooltip/blob/master/src/sass/index.sass
 
-const TooltipWrapper = styled.span`
+const TooltipWrapper = styled.div`
   position: relative;
   display: inline-block;
 `;
@@ -177,7 +177,6 @@ const Tooltip: FC<Props> = ({ className, message, location = "right", multiline,
           <LocationArrow className={`tooltip-arrow-${location}-border-color`} />
           <LocationContainer
             className={classNames(
-              className,
               "is-size-7",
               "is-family-primary",
               "has-rounded-border",
