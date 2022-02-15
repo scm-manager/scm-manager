@@ -25,16 +25,16 @@ import React, { PropsWithChildren, ReactNode } from "react";
 import { Binder, ExtensionPointDefinition } from "./binder";
 import useBinder from "./useBinder";
 
-export type Renderable<P extends Record<string, unknown> | undefined> = React.ReactElement | React.ComponentType<P>;
+export type Renderable<P> = React.ReactElement | React.ComponentType<P>;
 export type RenderableExtensionPointDefinition<
   Name extends string = string,
-  P extends Record<string, unknown> | undefined = undefined
+  P = undefined
 > = ExtensionPointDefinition<Name, Renderable<P>, P>;
 
 export type SimpleRenderableDynamicExtensionPointDefinition<
   Prefix extends string,
   Suffix extends string | undefined,
-  Properties extends Record<string, unknown> | undefined
+  Properties
 > = RenderableExtensionPointDefinition<Suffix extends string ? `${Prefix}${Suffix}` : `${Prefix}${string}`, Properties>;
 
 /**
@@ -59,7 +59,7 @@ type Props<E extends RenderableExtensionPointDefinition> = BaseProps<E> &
         props: E["props"];
       });
 
-const createInstance = <P extends Record<string, unknown>>(Component: Renderable<P>, props: P, key?: number) => {
+function createInstance<P>(Component: Renderable<P>, props: P, key?: number) {
   if (React.isValidElement(Component)) {
     return React.cloneElement(Component, {
       ...props,
@@ -68,9 +68,9 @@ const createInstance = <P extends Record<string, unknown>>(Component: Renderable
     });
   }
   return <Component {...props} key={key} />;
-};
+}
 
-const renderAllExtensions = <E extends RenderableExtensionPointDefinition<string, Record<string, unknown>>>(
+const renderAllExtensions = <E extends RenderableExtensionPointDefinition<string, unknown>>(
   binder: Binder,
   name: E["name"],
   props: E["props"]
@@ -79,7 +79,7 @@ const renderAllExtensions = <E extends RenderableExtensionPointDefinition<string
   return <>{extensions.map((cmp, index) => createInstance(cmp, props, index))}</>;
 };
 
-const renderWrapperExtensions = <E extends RenderableExtensionPointDefinition<string, Record<string, unknown>>>(
+const renderWrapperExtensions = <E extends RenderableExtensionPointDefinition<string, any>>(
   binder: Binder,
   name: E["name"],
   props: E["props"]
@@ -99,7 +99,7 @@ const renderWrapperExtensions = <E extends RenderableExtensionPointDefinition<st
   return instance;
 };
 
-const renderSingleExtension = <E extends RenderableExtensionPointDefinition<string, Record<string, unknown>>>(
+const renderSingleExtension = <E extends RenderableExtensionPointDefinition<string, unknown>>(
   binder: Binder,
   name: E["name"],
   props: E["props"]
