@@ -26,7 +26,7 @@ import { IndexResources, Me } from "@scm-manager/ui-types";
 import React, { createContext, FC, useContext } from "react";
 import { QueryClient, useQueryClient } from "react-query";
 
-type BaseContext = {
+export type BaseContext = {
   onIndexFetched?: (index: IndexResources) => void;
   onMeFetched?: (me: Me) => void;
 };
@@ -67,7 +67,7 @@ const createInitialContext = (queryClient: QueryClient, base: BaseContext): Lega
   return ctx;
 };
 
-export const LegacyContextProvider: FC<LegacyContext> = ({ onIndexFetched, onMeFetched, children }) => {
+export const LegacyContextProvider: FC<BaseContext> = ({ onIndexFetched, onMeFetched, children }) => {
   const queryClient = useQueryClient();
   const ctx = createInitialContext(queryClient, { onIndexFetched, onMeFetched });
 

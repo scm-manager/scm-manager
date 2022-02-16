@@ -23,12 +23,12 @@
  */
 
 import React, { FC, useEffect } from "react";
-import { ApiProviderProps, useLegacyContext } from "@scm-manager/ui-api";
+import { BaseContext, useLegacyContext } from "@scm-manager/ui-api";
 import { connect, Dispatch } from "react-redux";
 import { ActionTypes, fetchIndexResourcesSuccess, fetchMeSuccess } from "./LegacyReduxProvider";
 import { IndexResources, Me } from "@scm-manager/ui-types";
 
-const ReduxLegacy: FC<ApiProviderProps> = ({ children, onIndexFetched, onMeFetched }) => {
+const ReduxLegacy: FC<BaseContext> = ({ children, onIndexFetched, onMeFetched }) => {
   const context = useLegacyContext();
   useEffect(() => {
     context.onIndexFetched = onIndexFetched;
@@ -45,6 +45,6 @@ const mapDispatchToProps = (dispatch: Dispatch<ActionTypes>) => {
   };
 };
 
-const connector = connect(undefined, mapDispatchToProps);
+const connector = connect<{}, BaseContext>(undefined, mapDispatchToProps);
 
-export default ReduxLegacy;
+export default connector(ReduxLegacy);
