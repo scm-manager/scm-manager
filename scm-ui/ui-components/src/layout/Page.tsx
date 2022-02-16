@@ -117,7 +117,7 @@ export default class Page extends React.Component<Props> {
                 <Title className="mb-0 mr-2" title={this.getTextualTitle()}>
                   {this.getTitleComponent()}
                 </Title>
-                {afterTitle && afterTitle}
+                {afterTitle && <>{afterTitle}</>}
               </div>
               {subtitle ? <Subtitle>{subtitle}</Subtitle> : null}
             </div>
