@@ -336,7 +336,9 @@ class SearchResourceTest {
   }
 
   private void assertHeader(JsonMockHttpResponse response, String header, String expectedValue) {
-    assertThat(response.getOutputHeaders().getFirst(header)).hasToString(expectedValue);
+    assertThat(response.getOutputHeaders().getFirst(header))
+      .asString()
+      .isEqualToIgnoringCase(expectedValue);
   }
 
   private JsonMockHttpResponse search(String query) throws URISyntaxException, UnsupportedEncodingException {

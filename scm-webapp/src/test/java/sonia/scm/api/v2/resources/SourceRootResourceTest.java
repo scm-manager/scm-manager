@@ -24,7 +24,6 @@
 
 package sonia.scm.api.v2.resources;
 
-import com.google.inject.util.Providers;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.Before;
@@ -47,13 +46,13 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class SourceRootResourceTest extends RepositoryTestBase {
 
-  private RestDispatcher dispatcher = new RestDispatcher();
+  private final RestDispatcher dispatcher = new RestDispatcher();
   private final URI baseUri = URI.create("/");
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
 
@@ -64,12 +63,9 @@ public class SourceRootResourceTest extends RepositoryTestBase {
   @Mock
   private BrowseCommandBuilder browseCommandBuilder;
 
-  private BrowserResultToFileObjectDtoMapper browserResultToFileObjectDtoMapper;
-
-
   @Before
   public void prepareEnvironment() {
-    browserResultToFileObjectDtoMapper = Mappers.getMapper(BrowserResultToFileObjectDtoMapper.class);
+    BrowserResultToFileObjectDtoMapper browserResultToFileObjectDtoMapper = Mappers.getMapper(BrowserResultToFileObjectDtoMapper.class);
     browserResultToFileObjectDtoMapper.setResourceLinks(resourceLinks);
     when(serviceFactory.create(new NamespaceAndName("space", "repo"))).thenReturn(service);
     when(service.getBrowseCommand()).thenReturn(browseCommandBuilder);
@@ -87,9 +83,9 @@ public class SourceRootResourceTest extends RepositoryTestBase {
 
     dispatcher.invoke(request, response);
     assertThat(response.getStatus()).isEqualTo(200);
-    System.out.println(response.getContentAsString());
-    assertThat(response.getContentAsString()).contains("\"revision\":\"revision\"");
-    assertThat(response.getContentAsString()).contains("\"children\":");
+    String content = response.getContentAsString();
+    assertThat(content).contains("\"revision\":\"revision\"");
+    assertThat(content).contains("\"children\":");
   }
 
   @Test
@@ -127,6 +123,26 @@ public class SourceRootResourceTest extends RepositoryTestBase {
 
     dispatcher.invoke(request, response);
     assertThat(response.getStatus()).isEqualTo(404);
+  }
+
+  @Test
+  public void collapseShouldBeFalseByDefault() throws Exception {
+    MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/sources");
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    verify(browseCommandBuilder).setCollapse(false);
+  }
+
+  @Test
+  public void shouldSetCollapseToTrue() throws Exception {
+    MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/sources?collapse=true");
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    verify(browseCommandBuilder).setCollapse(true);
   }
 
   private BrowserResult createBrowserResult() {

@@ -40,16 +40,17 @@ const AbsolutePositionTooltip = styled(Tooltip)`
 
 const Help: FC<Props> = ({ message, multiline, className, id }) => (
   <AbsolutePositionTooltip
-    className={classNames("is-inline-block", "pl-1", multiline ? "has-tooltip-multiline" : undefined, className)}
+    className={classNames("is-inline-block", "pl-1", className)}
     message={message}
     id={id}
+    multiline={multiline}
   >
     <HelpIcon />
   </AbsolutePositionTooltip>
 );
 
 Help.defaultProps = {
-  multiline: true,
+  multiline: true
 };
 
 export default Help;

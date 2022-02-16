@@ -167,7 +167,11 @@ public class HgFileviewCommand extends AbstractCommand
 
     HgInputStream stream = launchStream();
 
-    return new HgFileviewCommandResultReader(stream, disableLastCommit).parseResult();
+    try {
+      return new HgFileviewCommandResultReader(stream, disableLastCommit).parseResult();
+    } finally {
+      stream.close();
+    }
   }
 
   /**

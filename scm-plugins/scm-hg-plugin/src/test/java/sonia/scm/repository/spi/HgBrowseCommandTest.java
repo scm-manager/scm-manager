@@ -192,6 +192,23 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase {
   }
 
   @Test
+  public void testMultipleCallsOfSameRequest() throws IOException {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+    request.setLimit(1);
+
+    for (int i = 0; i < 5; ++i) {
+      HgBrowseCommand hgBrowseCommand = new HgBrowseCommand(cmdContext);
+      BrowserResult result = hgBrowseCommand.getBrowserResult(request);
+      FileObject root = result.getFile();
+
+      Collection<FileObject> foList = root.getChildren();
+
+      assertThat(foList).extracting("name").containsExactly("c", "a.txt");
+      assertThat(root.isTruncated()).isTrue();
+    }
+  }
+
+  @Test
   public void testOffset() throws IOException {
     BrowseCommandRequest request = new BrowseCommandRequest();
     request.setLimit(2);
