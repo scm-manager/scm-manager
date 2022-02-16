@@ -25,7 +25,7 @@ import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { User } from "@scm-manager/ui-types";
-import { Icon, createAttributesForTesting } from "@scm-manager/ui-components";
+import { createAttributesForTesting, Icon } from "@scm-manager/ui-components";
 import classNames from "classnames";
 
 type Props = WithTranslation & {

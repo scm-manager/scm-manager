@@ -78,6 +78,22 @@ const ExportInfoBox: FC<{ exportInfo: ExportInfo }> = ({ exportInfo }) => {
   );
 };
 
+const LinkedExport: FC<{ link: string }> = ({ link }) => {
+  const [t] = useTranslation("repos");
+  const label = (
+    <>
+      <Icon name="download" color="inherit" />
+      {t("export.downloadExportButton")}
+    </>
+  );
+
+  return (
+    <Button link={link} disabled={!link} color="info">
+      {label}
+    </Button>
+  );
+};
+
 const ExportRepository: FC<Props> = ({ repository }) => {
   const [t] = useTranslation("repos");
   const [compressed, setCompressed] = useState(true);
@@ -97,27 +113,6 @@ const ExportRepository: FC<Props> = ({ repository }) => {
       window.location.href = (exportedInfo?._links.download as Link).href;
     }
   }, [exportedInfo]);
-
-  const renderLinkedExport = (link: string) => {
-    const Label = (
-      <>
-        <Icon name="download" color="inherit" />
-        {t("export.downloadExportButton")}
-      </>
-    );
-    if (link) {
-      return (
-        <a href={link} className={classNames("button", "is-info")}>
-          {Label}
-        </a>
-      );
-    }
-    return (
-      <Button disabled={true} color="info">
-        {Label}
-      </Button>
-    );
-  };
 
   if (!repository._links.export) {
     return null;
@@ -178,7 +173,7 @@ const ExportRepository: FC<Props> = ({ repository }) => {
       <Level
         right={
           <ButtonGroup>
-            {renderLinkedExport((exportInfo?._links.download as Link)?.href)}
+            <LinkedExport link={(exportInfo?._links.download as Link)?.href} />
             <Button
               color="primary"
               action={() =>

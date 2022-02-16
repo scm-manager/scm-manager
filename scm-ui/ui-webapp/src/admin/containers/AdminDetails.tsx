@@ -35,9 +35,9 @@ const ImageWrapper = styled.div`
   padding: 0.2rem 0.4rem;
 `;
 
-const ChangeFlexDirection = styled.article`
-  flex-wrap: wrap;
+const MobileWrapped = styled.article`
   @media screen and (max-width: ${devices.mobile.width}px) {
+    flex-wrap: wrap;
     .button {
       height: 100%;
       word-break: break-word;
@@ -62,7 +62,7 @@ const AdminDetails: FC = () => {
   const renderUpdateInfo = () => (
     <>
       <BoxShadowBox className="box">
-        <ChangeFlexDirection className="media">
+        <MobileWrapped className="media">
           <ImageWrapper className="media-left image is-96x96">
             <Image src="/images/blib.jpg" alt={t("admin.info.logo")} />
           </ImageWrapper>
@@ -79,7 +79,7 @@ const AdminDetails: FC = () => {
               </a>
             </div>
           </div>
-        </ChangeFlexDirection>
+        </MobileWrapped>
       </BoxShadowBox>
       <hr />
     </>
@@ -92,7 +92,7 @@ const AdminDetails: FC = () => {
       <div className="mb-5">{version}</div>
       {updateInfo ? renderUpdateInfo() : null}
       <BoxShadowBox className="box">
-        <ChangeFlexDirection className="media">
+        <MobileWrapped className="media">
           <ImageWrapper className="media-left">
             <Image src="/images/iconCommunitySupport.png" alt={t("admin.info.communityIconAlt")} />
           </ImageWrapper>
@@ -110,10 +110,10 @@ const AdminDetails: FC = () => {
               </a>
             </div>
           </div>
-        </ChangeFlexDirection>
+        </MobileWrapped>
       </BoxShadowBox>
       <BoxShadowBox className="box">
-        <ChangeFlexDirection className="media">
+        <MobileWrapped className="media">
           <ImageWrapper className="media-left">
             <Image src="/images/iconEnterpriseSupport.png" alt={t("admin.info.enterpriseIconAlt")} />
           </ImageWrapper>
@@ -135,7 +135,7 @@ const AdminDetails: FC = () => {
               </a>
             </div>
           </div>
-        </ChangeFlexDirection>
+        </MobileWrapped>
       </BoxShadowBox>
     </>
   );

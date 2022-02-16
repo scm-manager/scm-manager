@@ -251,10 +251,20 @@ const Breadcrumb: FC<Props> = ({
 
   return (
     <>
-      <div className={classNames("is-flex", "is-justify-content-flex-end", "is-align-items-center", "is-flex-wrap-wrap")}>
+      <div
+        className={classNames("is-flex", "is-justify-content-flex-end", "is-align-items-center", "is-flex-wrap-wrap")}
+      >
         {renderBreadcrumbNav()}
         {
-          <ActionBar className={classNames("is-flex", "is-justify-content-flex-start", "is-align-self-center", "my-2","mx-2", "is-flex-wrap-wrap")}>
+          <ActionBar
+            className={classNames(
+              "is-flex",
+              "is-justify-content-flex-start",
+              "is-align-self-center",
+              "m-2",
+              "is-flex-wrap-wrap"
+            )}
+          >
             {renderExtensionPoints()}
           </ActionBar>
         }

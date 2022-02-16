@@ -50,13 +50,13 @@ const FlexShrinkLevel = styled(Level)`
   .level-item {
     justify-content: flex-end;
   }
-  @media screen and (max-width: ${devices.tablet.width}px){
-   .level-left {
-    margin-right: 0;
-   }
-   .level-item {
-    margin-top: 0.5rem;
-   }
+  @media screen and (max-width: ${devices.tablet.width}px) {
+    .level-left {
+      margin-right: 0;
+    }
+    .level-item {
+      margin-top: 0.5rem;
+    }
   }
 `;
 

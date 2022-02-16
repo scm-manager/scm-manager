@@ -39,7 +39,7 @@ type Props = {
   validateEntry?: (p: string) => boolean;
 };
 
-const MobileWrapedDiv = styled.div`
+const MobileWrappedDiv = styled.div`
   @media screen and (min-width: ${devices.tablet.width}px) {
     & > fieldset {
       margin-right: 1.5rem;
@@ -48,10 +48,6 @@ const MobileWrapedDiv = styled.div`
   @media screen and (max-width: ${devices.mobile.width}px) {
     flex-wrap: wrap;
   }
-`;
-
-const FullWidthInputField = styled(InputField)`
-  width: 100%;
 `;
 
 const AddKeyValueEntryToTableField: FC<Props> = ({
@@ -83,8 +79,9 @@ const AddKeyValueEntryToTableField: FC<Props> = ({
   };
 
   return (
-    <MobileWrapedDiv className="is-flex is-align-items-flex-end">
-      <FullWidthInputField
+    <MobileWrappedDiv className="is-flex is-align-items-flex-end">
+      <InputField
+        className="is-full-width"
         label={keyFieldLabel}
         errorMessage={errorMessage}
         onChange={setKey}
@@ -94,7 +91,8 @@ const AddKeyValueEntryToTableField: FC<Props> = ({
         disabled={disabled}
         helpText={keyHelpText}
       />
-      <FullWidthInputField
+      <InputField
+        className="is-full-width"
         label={valueFieldLabel}
         errorMessage={errorMessage}
         onChange={setValue}
@@ -110,7 +108,7 @@ const AddKeyValueEntryToTableField: FC<Props> = ({
         action={add}
         disabled={disabled || !key || !value || !isValid(key) || !isValid(value)}
       />
-    </MobileWrapedDiv>
+    </MobileWrappedDiv>
   );
 };
 

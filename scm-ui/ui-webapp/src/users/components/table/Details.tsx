@@ -24,7 +24,7 @@
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { User } from "@scm-manager/ui-types";
-import { Checkbox, DateFromNow, MailLink, createAttributesForTesting, InfoTable } from "@scm-manager/ui-components";
+import { Checkbox, createAttributesForTesting, DateFromNow, InfoTable, MailLink } from "@scm-manager/ui-components";
 
 type Props = WithTranslation & {
   user: User;

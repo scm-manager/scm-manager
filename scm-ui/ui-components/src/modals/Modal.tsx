@@ -25,7 +25,7 @@ import React, { FC, MutableRefObject, useRef } from "react";
 import classNames from "classnames";
 import styled from "styled-components";
 import { Dialog } from "@headlessui/react";
-import {devices} from "../devices";
+import { devices } from "../devices";
 
 type ModalSize = "S" | "M" | "L";
 

@@ -24,10 +24,9 @@
 
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
-import { devices, LabelWithHelpIcon, Notification } from "@scm-manager/ui-components";
+import { LabelWithHelpIcon, Notification } from "@scm-manager/ui-components";
 import SinglePermission from "../containers/SinglePermission";
 import { Namespace, PermissionCollection, Repository, RepositoryRole } from "@scm-manager/ui-types";
-import styled from "styled-components";
 
 type Props = {
   availableRoles: RepositoryRole[];
@@ -35,15 +34,6 @@ type Props = {
   permissions: PermissionCollection;
   namespaceOrRepository: Namespace | Repository;
 };
-
-const BreakingPermissionsTable = styled.table`
-{
-@media screen and (max-width:${devices.mobile.width}px) {
-  th, td {
-    display: block;  
-    }
-}
-`;
 
 const PermissionsTable: FC<Props> = ({
   availableRoles,
@@ -69,38 +59,38 @@ const PermissionsTable: FC<Props> = ({
 
   return (
     <div className="is-overflow-x-auto">
-    <table className="card-table table is-hoverable is-fullwidth">
-      <thead>
-        <tr>
-          <th>
-            <LabelWithHelpIcon label={t("permission.name")} helpText={t("permission.help.nameHelpText")} />
-          </th>
-          <th>
-            <LabelWithHelpIcon label={t("permission.role")} helpText={t("permission.help.roleHelpText")} />
-          </th>
-          <th>
-            <LabelWithHelpIcon
-              label={t("permission.permissions")}
-              helpText={t("permission.help.permissionsHelpText")}
-            />
-          </th>
-          <th />
-        </tr>
-      </thead>
-      <tbody>
-        {permissionCollection?._embedded.permissions.map(permission => {
-          return (
-            <SinglePermission
-              availableRoles={availableRoles}
-              availableVerbs={availableVerbs}
-              key={permission.name + permission.groupPermission.toString()}
-              namespaceOrRepository={namespaceOrRepository}
-              permission={permission}
-            />
-          );
-        })}
-      </tbody>
-    </table>
+      <table className="card-table table is-hoverable is-fullwidth">
+        <thead>
+          <tr>
+            <th>
+              <LabelWithHelpIcon label={t("permission.name")} helpText={t("permission.help.nameHelpText")} />
+            </th>
+            <th>
+              <LabelWithHelpIcon label={t("permission.role")} helpText={t("permission.help.roleHelpText")} />
+            </th>
+            <th>
+              <LabelWithHelpIcon
+                label={t("permission.permissions")}
+                helpText={t("permission.help.permissionsHelpText")}
+              />
+            </th>
+            <th />
+          </tr>
+        </thead>
+        <tbody>
+          {permissionCollection?._embedded.permissions.map(permission => {
+            return (
+              <SinglePermission
+                availableRoles={availableRoles}
+                availableVerbs={availableVerbs}
+                key={permission.name + permission.groupPermission.toString()}
+                namespaceOrRepository={namespaceOrRepository}
+                permission={permission}
+              />
+            );
+          })}
+        </tbody>
+      </table>
     </div>
   );
 };
