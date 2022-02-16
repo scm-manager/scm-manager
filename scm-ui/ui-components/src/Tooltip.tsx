@@ -182,7 +182,8 @@ const Tooltip: FC<Props> = ({ className, message, location = "right", multiline,
               "has-rounded-border",
               "has-text-white",
               "has-background-grey-dark",
-              "has-text-weight-semibold"
+              "has-text-weight-semibold",
+              className
             )}
             multiline={multiline}
             aria-live="polite"

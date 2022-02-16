@@ -95531,3 +95531,94 @@ exports[`Storyshots Tooltip Short Multiline 1`] = `
   </div>
 </div>
 `;
+
+exports[`Storyshots Tooltip Styled 1`] = `
+<div
+  className="Tooltipstories__Wrapper-sc-1c34uq-0 eUgA-dC"
+>
+  <div
+    className="Tooltipstories__Spacing-sc-1c34uq-1 goABUu"
+  >
+    <div
+      className="Tooltip__TooltipWrapper-fmp853-0 PCJqp"
+      onClick={[Function]}
+      onMouseEnter={[Function]}
+      onMouseLeave={[Function]}
+    >
+      <button
+        className="button is-info"
+        onClick={[Function]}
+        type="button"
+      >
+         
+        right
+         
+      </button>
+       
+    </div>
+  </div>
+  <div
+    className="Tooltipstories__Spacing-sc-1c34uq-1 goABUu"
+  >
+    <div
+      className="Tooltip__TooltipWrapper-fmp853-0 PCJqp"
+      onClick={[Function]}
+      onMouseEnter={[Function]}
+      onMouseLeave={[Function]}
+    >
+      <button
+        className="button is-info"
+        onClick={[Function]}
+        type="button"
+      >
+         
+        top
+         
+      </button>
+       
+    </div>
+  </div>
+  <div
+    className="Tooltipstories__Spacing-sc-1c34uq-1 goABUu"
+  >
+    <div
+      className="Tooltip__TooltipWrapper-fmp853-0 PCJqp"
+      onClick={[Function]}
+      onMouseEnter={[Function]}
+      onMouseLeave={[Function]}
+    >
+      <button
+        className="button is-info"
+        onClick={[Function]}
+        type="button"
+      >
+         
+        left
+         
+      </button>
+       
+    </div>
+  </div>
+  <div
+    className="Tooltipstories__Spacing-sc-1c34uq-1 goABUu"
+  >
+    <div
+      className="Tooltip__TooltipWrapper-fmp853-0 PCJqp"
+      onClick={[Function]}
+      onMouseEnter={[Function]}
+      onMouseLeave={[Function]}
+    >
+      <button
+        className="button is-info"
+        onClick={[Function]}
+        type="button"
+      >
+         
+        bottom
+         
+      </button>
+       
+    </div>
+  </div>
+</div>
+`;

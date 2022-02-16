@@ -94,4 +94,15 @@ storiesOf("Tooltip", module)
         </Spacing>
       ))}
     </Wrapper>
+  ))
+  .add("Styled", () => (
+    <Wrapper>
+      {positions.map((position) => (
+        <Spacing>
+          <Tooltip message={message} location={position} className={"has-text-warning"}>
+            <Button label={position} color="info" />{" "}
+          </Tooltip>
+        </Spacing>
+      ))}
+    </Wrapper>
   ));
