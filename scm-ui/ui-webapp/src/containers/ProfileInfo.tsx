@@ -67,7 +67,7 @@ const ProfileInfo: FC<Props> = ({ me }) => {
         </figure>
       </AvatarWrapper>
       <div className="media-content">
-        <InfoTable className="table content">
+        <InfoTable className="content">
           <tbody>
             <tr>
               <th>{t("profile.username")}</th>

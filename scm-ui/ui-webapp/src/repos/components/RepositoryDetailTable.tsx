@@ -24,7 +24,7 @@
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { Repository } from "@scm-manager/ui-types";
-import {DateFromNow, InfoTable, MailLink} from "@scm-manager/ui-components";
+import { DateFromNow, InfoTable, MailLink } from "@scm-manager/ui-components";
 
 type Props = WithTranslation & {
   repository: Repository;
@@ -34,7 +34,7 @@ class RepositoryDetailTable extends React.Component<Props> {
   render() {
     const { repository, t } = this.props;
     return (
-      <InfoTable className="table">
+      <InfoTable>
         <tbody>
           <tr>
             <th>{t("repository.name")}</th>

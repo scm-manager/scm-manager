@@ -22,11 +22,17 @@
  * SOFTWARE.
  */
 
-import React from "react";
+import React, { FC, ReactNode } from "react";
 import styled from "styled-components";
+import classNames from "classnames";
 import { devices } from "../devices";
 
-const InfoTable = styled.table`
+type Props = {
+  className?: string;
+  children: ReactNode;
+};
+
+const StyledTable = styled.table`
   @media screen and (max-width: ${devices.mobile.width}px) {
     td,
     th {
@@ -45,4 +51,9 @@ const InfoTable = styled.table`
     }
   }
 `;
+
+const InfoTable: FC<Props> = ({ className, children }) => {
+  return <StyledTable className={classNames("table", className)}>{children}</StyledTable>;
+};
+
 export default InfoTable;
