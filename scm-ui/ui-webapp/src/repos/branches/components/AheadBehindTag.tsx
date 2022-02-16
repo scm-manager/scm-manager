@@ -49,6 +49,7 @@ const Behind = styled.span``;
 
 const Count = styled.span`
   word-break: keep-all;
+  width: max-content;
 `;
 
 const Bar = styled.span.attrs<BarProps>(props => ({
@@ -86,13 +87,17 @@ const AheadBehindTag: FC<Props> = ({ branch, details, hiddenMobile, verbose }) =
     : details.changesetsAhead;
 
   return (
-    <div className={`columns is-flex is-unselectable mt-1 ${hiddenMobile ? "is-hidden-mobile" : ""}`}>
+    <div
+      className={`columns is-flex is-justify-content-center is-unselectable mt-1 ${
+        hiddenMobile ? "is-hidden-mobile" : ""
+      }`}
+    >
       <TooltipWithDefaultCursor
         message={t("branch.aheadBehind.tooltip", { ahead: details.changesetsAhead, behind: details.changesetsBehind })}
         location="top"
       >
         <div className="is-flex">
-          <Behind className="column is-half is-flex is-flex-direction-column is-align-items-flex-end p-0">
+          <Behind className="column is-flex is-flex-direction-column is-align-items-flex-end p-0">
             <Count className="is-size-7 pr-1">{behindText}</Count>
             <Bar
               className="has-rounded-border-left has-background-secondary"
@@ -100,7 +105,7 @@ const AheadBehindTag: FC<Props> = ({ branch, details, hiddenMobile, verbose }) =
               direction="left"
             />
           </Behind>
-          <Ahead className="column is-half is-flex is-flex-direction-column is-align-items-flex-start p-0">
+          <Ahead className="column is-flex is-flex-direction-column is-align-items-flex-start p-0">
             <Count className="is-size-7 pl-1">{aheadText}</Count>
             <Bar
               className="has-rounded-border-right has-background-secondary"
