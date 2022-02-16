@@ -29,7 +29,7 @@ const resolveModule = (name: string) => {
     });
   }
 
-  return Promise.reject();
+  return Promise.reject("Could not resolve module: " + name);
 };
 
 const defineModule = (name: string, module: Module) => {
@@ -37,10 +37,10 @@ const defineModule = (name: string, module: Module) => {
     .then(resolvedDependencies => {
       delete queue[name];
 
-      modules[name] = module.fn(...resolvedDependencies);
+      modules["@scm-manager/" + name] = module.fn(...resolvedDependencies);
 
       Object.keys(queue).forEach(queuedModuleName => {
-        const queueModule = modules[queuedModuleName];
+        const queueModule = queue[queuedModuleName];
         defineModule(queuedModuleName, queueModule);
       });
     })
