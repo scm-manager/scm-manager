@@ -89,20 +89,10 @@ class PluginLoader extends React.Component<Props, State> {
     for (const plugin of sortedPlugins) {
       promises.push(this.loadPlugin(plugin));
     }
-    /*return promises.reduce((chain, current) => {
-      return chain.then(chainResults => {
-        return current.then(currentResult => [...chainResults, currentResult]);
-      });
-    }, Promise.resolve([]));
-     */
     return Promise.all(promises);
   };
 
   loadPlugin = (plugin: Plugin) => {
-    this.setState({
-      message: `loading ${plugin.name}`
-    });
-
     const promises = [];
     for (const bundle of plugin.bundles) {
       promises.push(

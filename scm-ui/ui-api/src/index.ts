@@ -67,5 +67,4 @@ export * from "./compare";
 export { default as ApiProvider } from "./ApiProvider";
 export * from "./ApiProvider";
 
-// TODO check
-export * from "./LegacyContext"
+export * from "./LegacyContext";
