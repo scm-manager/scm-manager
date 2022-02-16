@@ -124,7 +124,7 @@ const InnerSelect: FC<FieldProps<BaseProps, HTMLSelectElement, string>> = ({
           onChange={handleInput}
           onBlur={handleBlur}
           disabled={disabled}
-          aria-labelledby={label ? a11yId : undefined}
+          aria-labelledby={ariaLabelledby || (label ? a11yId : undefined)}
           aria-describedby={helpText ? helpId : undefined}
           {...createAttributesForTesting(testId)}
         >

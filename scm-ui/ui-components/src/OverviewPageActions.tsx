@@ -26,6 +26,7 @@ import { useHistory, useLocation } from "react-router-dom";
 import classNames from "classnames";
 import { Button, urls } from "./index";
 import { FilterInput, Select } from "./forms";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   showCreateButton: boolean;
@@ -56,12 +57,17 @@ const OverviewPageActions: FC<Props> = ({
 }) => {
   const history = useHistory();
   const location = useLocation();
+  const [t] = useTranslation("commons");
   const [filterValue, setFilterValue] = useState(urls.getQueryStringFromLocation(location) || "");
   const link = createAbsoluteLink(inputLink);
 
   const groupSelector = groups && (
     <div className="column is-flex">
+      <label id="select-namespace" hidden>
+        {t("namespace")}
+      </label>
       <Select
+        ariaLabelledby="select-namespace"
         className="is-fullwidth"
         options={groups.map(g => ({ value: g, label: g }))}
         value={currentGroup}
