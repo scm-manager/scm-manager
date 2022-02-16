@@ -32,6 +32,7 @@ import { binder, ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensi
 import Icon from "./Icon";
 import Tooltip from "./Tooltip";
 import copyToClipboard from "./CopyToClipboard";
+import { devices } from "./devices";
 
 type Props = {
   repository: Repository;
@@ -51,6 +52,13 @@ const PermaLinkWrapper = styled.span`
   height: 16px;
   font-size: 13px;
 
+  @media screen and (min-width: ${devices.tablet.width}px) {
+    margin-left: 0.25rem;
+  }
+  @media screen and (max-width: ${devices.mobile.width}px) {
+    margin-left: auto;
+  }
+
   i {
     color: #dbdbdb;
     opacity: 0.75;
@@ -64,9 +72,10 @@ const PermaLinkWrapper = styled.span`
 
 const BreadcrumbNav = styled.nav`
   flex: 1;
-  display: flex;
-  align-items: center;
-  width: 100%;
+
+  @media screen and (max-width: ${devices.mobile.width}px) {
+    flex-wrap: wrap;
+  }
 
   /* move slash to end */
   li + li::before {
@@ -198,7 +207,15 @@ const Breadcrumb: FC<Props> = ({
 
     return (
       <BreadcrumbNav
-        className={classNames("breadcrumb", "sources-breadcrumb", "mx-2", "my-4")}
+        className={classNames(
+          "breadcrumb",
+          "sources-breadcrumb",
+          "mx-2",
+          "my-4",
+          "is-flex",
+          "is-align-items-center",
+          "is-full-width"
+        )}
         aria-label="breadcrumbs"
       >
         {prefixButtons}
@@ -214,7 +231,7 @@ const Breadcrumb: FC<Props> = ({
           </li>
           {pathSection()}
         </ul>
-        <PermaLinkWrapper className="ml-1" tabIndex={0} onKeyDown={e => e.key === "Enter" && copySource()}>
+        <PermaLinkWrapper tabIndex={0} onKeyDown={e => e.key === "Enter" && copySource()}>
           {copying ? (
             <Icon name="spinner fa-spin" alt={t("breadcrumb.loading")} />
           ) : (

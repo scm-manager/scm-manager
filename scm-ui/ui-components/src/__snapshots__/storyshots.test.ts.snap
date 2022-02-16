@@ -67,7 +67,7 @@ exports[`Storyshots BreadCrumb Default 1`] = `
   >
     <nav
       aria-label="breadcrumbs"
-      className="Breadcrumb__BreadcrumbNav-zvtb4t-1 iPDJBY breadcrumb sources-breadcrumb mx-2 my-4"
+      className="Breadcrumb__BreadcrumbNav-zvtb4t-1 gbljuf breadcrumb sources-breadcrumb mx-2 my-4 is-flex is-align-items-center is-full-width"
     >
       <ul>
         <li>
@@ -139,7 +139,7 @@ exports[`Storyshots BreadCrumb Default 1`] = `
         </li>
       </ul>
       <span
-        className="Breadcrumb__PermaLinkWrapper-zvtb4t-0 OWytj ml-1"
+        className="Breadcrumb__PermaLinkWrapper-zvtb4t-0 jVSNLE"
         onKeyDown={[Function]}
         tabIndex={0}
       >
@@ -177,7 +177,7 @@ exports[`Storyshots BreadCrumb Long path 1`] = `
   >
     <nav
       aria-label="breadcrumbs"
-      className="Breadcrumb__BreadcrumbNav-zvtb4t-1 iPDJBY breadcrumb sources-breadcrumb mx-2 my-4"
+      className="Breadcrumb__BreadcrumbNav-zvtb4t-1 gbljuf breadcrumb sources-breadcrumb mx-2 my-4 is-flex is-align-items-center is-full-width"
     >
       <ul>
         <li>
@@ -299,7 +299,7 @@ exports[`Storyshots BreadCrumb Long path 1`] = `
         </li>
       </ul>
       <span
-        className="Breadcrumb__PermaLinkWrapper-zvtb4t-0 OWytj ml-1"
+        className="Breadcrumb__PermaLinkWrapper-zvtb4t-0 jVSNLE"
         onKeyDown={[Function]}
         tabIndex={0}
       >
@@ -337,7 +337,7 @@ exports[`Storyshots BreadCrumb Not clickable 1`] = `
   >
     <nav
       aria-label="breadcrumbs"
-      className="Breadcrumb__BreadcrumbNav-zvtb4t-1 iPDJBY breadcrumb sources-breadcrumb mx-2 my-4"
+      className="Breadcrumb__BreadcrumbNav-zvtb4t-1 gbljuf breadcrumb sources-breadcrumb mx-2 my-4 is-flex is-align-items-center is-full-width"
     >
       <ul>
         <li>
@@ -390,7 +390,7 @@ exports[`Storyshots BreadCrumb Not clickable 1`] = `
         </li>
       </ul>
       <span
-        className="Breadcrumb__PermaLinkWrapper-zvtb4t-0 OWytj ml-1"
+        className="Breadcrumb__PermaLinkWrapper-zvtb4t-0 jVSNLE"
         onKeyDown={[Function]}
         tabIndex={0}
       >
@@ -428,7 +428,7 @@ exports[`Storyshots BreadCrumb With prefix button 1`] = `
   >
     <nav
       aria-label="breadcrumbs"
-      className="Breadcrumb__BreadcrumbNav-zvtb4t-1 iPDJBY breadcrumb sources-breadcrumb mx-2 my-4"
+      className="Breadcrumb__BreadcrumbNav-zvtb4t-1 gbljuf breadcrumb sources-breadcrumb mx-2 my-4 is-flex is-align-items-center is-full-width"
     >
       <div
         className="mr-2 prefix-button"
@@ -513,7 +513,7 @@ exports[`Storyshots BreadCrumb With prefix button 1`] = `
         </li>
       </ul>
       <span
-        className="Breadcrumb__PermaLinkWrapper-zvtb4t-0 OWytj ml-1"
+        className="Breadcrumb__PermaLinkWrapper-zvtb4t-0 jVSNLE"
         onKeyDown={[Function]}
         tabIndex={0}
       >
