@@ -24,7 +24,7 @@
 
 import { IndexResources, Me } from "@scm-manager/ui-types";
 import React, { createContext, FC, useContext } from "react";
-import {QueryClient, useQueryClient} from "react-query";
+import { QueryClient, useQueryClient } from "react-query";
 
 type BaseContext = {
   onIndexFetched?: (index: IndexResources) => void;
@@ -50,7 +50,7 @@ const createInitialContext = (queryClient: QueryClient, base: BaseContext): Lega
     ...base,
     initialize: () => {
       if (ctx.onIndexFetched) {
-        const index: IndexResources | undefined = queryClient.getQueryData("index")
+        const index: IndexResources | undefined = queryClient.getQueryData("index");
         if (index) {
           ctx.onIndexFetched(index);
         }
@@ -69,9 +69,7 @@ const createInitialContext = (queryClient: QueryClient, base: BaseContext): Lega
 
 export const LegacyContextProvider: FC<LegacyContext> = ({ onIndexFetched, onMeFetched, children }) => {
   const queryClient = useQueryClient();
-  const ctx = createInitialContext(queryClient, {onIndexFetched, onMeFetched});
+  const ctx = createInitialContext(queryClient, { onIndexFetched, onMeFetched });
 
-  return (
-    <Context.Provider value={ctx}>{children}</Context.Provider>
-  );
-}
+  return <Context.Provider value={ctx}>{children}</Context.Provider>;
+};

@@ -47,4 +47,4 @@ const mapDispatchToProps = (dispatch: Dispatch<ActionTypes>) => {
 
 const connector = connect(undefined, mapDispatchToProps);
 
-export default (ReduxLegacy);
+export default ReduxLegacy;
