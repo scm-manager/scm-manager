@@ -525,9 +525,10 @@ ul.is-separated {
     padding: 1em 1.25em;
     background-color: #fafafa;
     border-bottom: 1px solid whitesmoke;
+    border-left-color: $grey;
 
     &:first-child {
-      border-left: 3px solid $grey;
+      border-left: 3px solid;
     }
     &.is-darker {
       background-color: whitesmoke;

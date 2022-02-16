@@ -265,14 +265,14 @@ footer.footer {
   td {
     background-color: $grey-dark;
     border-bottom: 1px solid $grey;
-    &.is-darker {
-      background-color: $grey-dark;
-    }
+
     &:first-child {
       border-left-width: 9px;
     }
+    &.is-darker {
+      background-color: $grey-dark;
+    }
   }
-
   &.is-hoverable tbody tr:not(.is-selected):hover {
     background-color: $grey-darker;
   }
