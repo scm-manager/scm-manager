@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-modules",
-  "version": "2.27.3-SNAPSHOT",
+  "version": "2.30.2-SNAPSHOT",
   "private": true,
   "main": "src/index.ts",
   "scripts": {
