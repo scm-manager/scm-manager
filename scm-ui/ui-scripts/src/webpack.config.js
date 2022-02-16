@@ -25,8 +25,8 @@ const path = require("path");
 const fs = require("fs");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
+const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 const createIndexMiddleware = require("./middleware/IndexMiddleware");
 const createContextPathMiddleware = require("./middleware/ContextPathMiddleware");
 
@@ -34,7 +34,11 @@ const isDevelopment = process.env.NODE_ENV === "development";
 const root = path.resolve(process.cwd(), "scm-ui");
 
 const babelPlugins = [];
-const webpackPlugins = [new BundleAnalyzerPlugin()];
+const webpackPlugins = [];
+
+if (process.env.ANALYZE_BUNDLES === "true") {
+  webpackPlugins.push(new BundleAnalyzerPlugin());
+}
 
 let mode = "production";
 
@@ -50,8 +54,8 @@ if (isDevelopment) {
 const themedir = path.join(root, "ui-styles", "src");
 const themes = fs
   .readdirSync(themedir)
-  .map((filename) => path.parse(filename))
-  .filter((p) => p.ext === ".scss")
+  .map(filename => path.parse(filename))
+  .filter(p => p.ext === ".scss")
   .reduce((entries, current) => ({ ...entries, [current.name]: path.join(themedir, current.base) }), {});
 
 console.log(`build ${mode} bundles`);
