@@ -6638,11 +6638,6 @@ bulma-popover@^1.0.0:
   resolved "https://registry.yarnpkg.com/bulma-popover/-/bulma-popover-1.0.3.tgz#bc948b7b855bedbe8adf20737fc569ac87623a91"
   integrity sha512-/StxOsgTvxrK1OIVrzUk7w4+Lyg9VvXDeh/wj9HhsYoCkqLqRi+EYm9htX6FP0GvscwlPradkgZG6bb997oBBA==
 
-bulma-tooltip@^3.0.0:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/bulma-tooltip/-/bulma-tooltip-3.0.2.tgz#2cf0abab1de2eba07f9d84eb7f07a8a88819ea92"
-  integrity sha512-CsT3APjhlZScskFg38n8HYL8oYNUHQtcu4sz6ERarxkUpBRbk9v0h/5KAvXeKapVSn2dp9l7bOGit5SECP8EWQ==
-
 bulma@^0.9.3:
   version "0.9.3"
   resolved "https://registry.yarnpkg.com/bulma/-/bulma-0.9.3.tgz#ddccb7436ebe3e21bf47afe01d3c43a296b70243"

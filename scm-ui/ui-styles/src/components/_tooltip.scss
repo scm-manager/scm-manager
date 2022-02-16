@@ -21,36 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
-import classNames from "classnames";
-import styled from "styled-components";
-import Tooltip from "./Tooltip";
-import HelpIcon from "./HelpIcon";
 
-type Props = {
-  message: string;
-  multiline?: boolean;
-  className?: string;
-  id?: string;
-};
+.tooltip-arrow-top-border-color {
+  border-color: $grey-dark transparent transparent transparent;
+}
 
-const AbsolutePositionTooltip = styled(Tooltip)`
-  position: absolute;
-`;
+.tooltip-arrow-right-border-color {
+  border-color: transparent $grey-dark transparent transparent;
+}
 
-const Help: FC<Props> = ({ message, multiline, className, id }) => (
-  <AbsolutePositionTooltip
-    className={classNames("is-inline-block", "pl-1", className)}
-    message={message}
-    id={id}
-    multiline={multiline}
-  >
-    <HelpIcon />
-  </AbsolutePositionTooltip>
-);
+.tooltip-arrow-bottom-border-color {
+  border-color: transparent transparent $grey-dark transparent;
+}
 
-Help.defaultProps = {
-  multiline: true
-};
-
-export default Help;
+.tooltip-arrow-left-border-color {
+  border-color: transparent transparent transparent $grey-dark;
+}

@@ -1,0 +1,2 @@
+- type: changed
+  description: improve tooltip accessibility ([#1954](https://github.com/scm-manager/scm-manager/pull/1954))
