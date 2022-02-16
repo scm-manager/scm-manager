@@ -1990,10 +1990,10 @@ exports[`Storyshots Forms/AddKeyValueEntryToTableField Default 1`] = `
   className="m-6"
 >
   <div
-    className="AddKeyValueEntryToTableField__MobileWrappedDiv-kiarql-0 ioNeed is-flex is-align-items-flex-end"
+    className="AddKeyValueEntryToTableField__MobileWrappedDiv-kiarql-1 ffYvji is-flex is-align-items-flex-end"
   >
     <fieldset
-      className="field is-full-width"
+      className="field AddKeyValueEntryToTableField__FullWidthInputField-kiarql-0 eFAROt"
     >
       <label
         className="label"
@@ -2020,7 +2020,7 @@ exports[`Storyshots Forms/AddKeyValueEntryToTableField Default 1`] = `
       </div>
     </fieldset>
     <fieldset
-      className="field is-full-width"
+      className="field AddKeyValueEntryToTableField__FullWidthInputField-kiarql-0 eFAROt"
     >
       <label
         className="label"
@@ -2069,10 +2069,10 @@ exports[`Storyshots Forms/AddKeyValueEntryToTableField Disabled 1`] = `
   className="m-6"
 >
   <div
-    className="AddKeyValueEntryToTableField__MobileWrappedDiv-kiarql-0 ioNeed is-flex is-align-items-flex-end"
+    className="AddKeyValueEntryToTableField__MobileWrappedDiv-kiarql-1 ffYvji is-flex is-align-items-flex-end"
   >
     <fieldset
-      className="field is-full-width"
+      className="field AddKeyValueEntryToTableField__FullWidthInputField-kiarql-0 eFAROt"
     >
       <label
         className="label"
@@ -2100,7 +2100,7 @@ exports[`Storyshots Forms/AddKeyValueEntryToTableField Disabled 1`] = `
       </div>
     </fieldset>
     <fieldset
-      className="field is-full-width"
+      className="field AddKeyValueEntryToTableField__FullWidthInputField-kiarql-0 eFAROt"
     >
       <label
         className="label"
