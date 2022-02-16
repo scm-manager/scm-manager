@@ -58,6 +58,7 @@ const LineNumber = styled(LineElement)`
   text-overflow: ellipsis;
   white-space: nowrap;
 
+  // TODO: ERSETZEN?
   border-left: 1px solid lightgrey;
   border-right: 1px solid lightgrey;
 

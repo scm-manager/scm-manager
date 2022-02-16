@@ -24,8 +24,6 @@
 
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,12 +34,11 @@ import sonia.scm.store.ConfigurationStoreFactory;
 
 import java.io.File;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-
-//~--- JDK imports ------------------------------------------------------------
 
 /**
  * @author Sebastian Sdorra
@@ -111,5 +108,22 @@ public class GitRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
     initRepository();
     File path = repositoryHandler.getDirectory(repository.getId());
     assertEquals(repoPath.toString() + File.separator + RepositoryDirectoryHandler.REPOSITORIES_NATIVE_DIRECTORY, path.getAbsolutePath());
+  }
+
+  @Test
+  public void shouldSetHeadToDefaultRepository() {
+    GitRepositoryHandler repositoryHandler = new GitRepositoryHandler(factory,
+      scheduler, locationResolver, gitWorkingCopyFactory, null);
+
+    GitConfig config = new GitConfig();
+    config.setDefaultBranch("other");
+
+    repositoryHandler.setConfig(config);
+
+    File nativeRepoDirectory = initRepository();
+
+    repositoryHandler.create(repository);
+
+    assertThat(new File(nativeRepoDirectory, "HEAD")).hasContent("ref: refs/heads/other");
   }
 }

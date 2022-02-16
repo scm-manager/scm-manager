@@ -35,6 +35,9 @@ import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPermissions;
+import sonia.scm.repository.api.Command;
+import sonia.scm.repository.api.RepositoryService;
+import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.web.EdisonHalAppender;
 
 import javax.inject.Inject;
@@ -50,6 +53,8 @@ public abstract class BranchToBranchDtoMapper extends HalAppenderMapper implemen
 
   @Inject
   private ResourceLinks resourceLinks;
+  @Inject
+  private RepositoryServiceFactory serviceFactory;
 
   @Mapping(target = "attributes", ignore = true) // We do not map HAL attributes
   public abstract BranchDto map(Branch branch, @Context Repository repository);
@@ -67,6 +72,12 @@ public abstract class BranchToBranchDtoMapper extends HalAppenderMapper implemen
 
     if (!branch.isDefaultBranch() && RepositoryPermissions.push(repository).isPermitted()) {
       linksBuilder.single(linkBuilder("delete", resourceLinks.branch().delete(repository.getNamespace(), repository.getName(), branch.getName())).build());
+    }
+
+    try (RepositoryService service = serviceFactory.create(repository)) {
+      if (service.isSupported(Command.BRANCH_DETAILS)) {
+        linksBuilder.single(linkBuilder("details", resourceLinks.branchDetails().self(namespaceAndName.getNamespace(), namespaceAndName.getName(), branch.getName())).build());
+      }
     }
 
     Embedded.Builder embeddedBuilder = Embedded.embeddedBuilder();

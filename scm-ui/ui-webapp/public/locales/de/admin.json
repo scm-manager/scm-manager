@@ -49,7 +49,7 @@
         "install": "{{name}} Plugin installieren",
         "update": "{{name}} Plugin aktualisieren",
         "uninstall": "{{name}} Plugin deinstallieren",
-        "cloudoguInstall": "Plugin über myCloudogu installieren"
+        "cloudoguInstall": "{{name}} Plugin installieren"
       },
       "restart": "Neustarten, um Plugin-Änderungen wirksam zu machen",
       "install": "Installieren",
@@ -69,22 +69,42 @@
       "version": "Version",
       "currentVersion": "Installierte Version",
       "newVersion": "Neue Version",
-      "cloudoguInstallInfo": "Dieses Plugin ist exklusiv über myCloudogu erhältlich. Zum Installieren folgen Sie bitte der Anleitung.",
-      "cloudoguInstall": "Zur Installationsanleitung",
+      "cloudoguInstallInfo": "Verbinden Sie Ihre SCM-Manager-Instanz mit ihrem myCloudogu-Account um Zugriff auf myCloudogu-Plugins zu erhalten. Falls Sie noch über keinen Account verfügen, können Sie sich einfach kostenlos registrieren.",
+      "cloudoguInstall": "Mit myCloudogu verbinden und installieren",
       "dependencyNotification": "Mit diesem Plugin werden folgende Abhängigkeiten mit installiert bzw. aktualisiert, wenn sie noch nicht in der aktuellen Version vorhanden sind!",
       "optionalDependencyNotification": "Mit diesem Plugin werden folgende optionale Abhängigkeiten mit aktualisiert, falls sie installiert sind!",
       "dependencies": "Abhängigkeiten",
-      "installedNotification": "Das Plugin wurde erfolgreich installiert. Um Änderungen an der UI zu sehen, muss die Seite neu geladen werden:",
-      "updatedNotification": "Das Plugin wurde erfolgreich aktualisiert. Um Änderungen an der UI zu sehen, muss die Seite neu geladen werden:",
-      "uninstalledNotification": "Das Plugin wurde erfolgreich installiert. Um Änderungen an der UI zu sehen, muss die Seite neu geladen werden:",
-      "executedChangesNotification": "Die Plugin Änderungen wurden erfolgreich durchgeführt. Um Änderungen an der UI zu sehen, muss die Seite neu geladen werden:",
-      "reload": "jetzt neu laden",
+      "installedNotification": "Das Plugin wurde erfolgreich installiert. Um Änderungen an der UI zu sehen, muss die Seite neu geladen werden.",
+      "updatedNotification": "Das Plugin wurde erfolgreich aktualisiert. Um Änderungen an der UI zu sehen, muss die Seite neu geladen werden.",
+      "uninstalledNotification": "Das Plugin wurde erfolgreich installiert. Um Änderungen an der UI zu sehen, muss die Seite neu geladen werden.",
+      "executedChangesNotification": "Die Plugin Änderungen wurden erfolgreich durchgeführt. Um Änderungen an der UI zu sehen, muss die Seite neu geladen werden.",
+      "reload": "Seite neu laden",
       "restartNotification": "Der SCM-Manager sollte nur neu gestartet werden, wenn aktuell niemand damit arbeitet.",
       "executePending": "Die folgenden Plugin-Änderungen werden ausgeführt. Anschließend wird SCM-Manager neu gestartet.",
       "cancelPending": "Die folgenden Plugin-Änderungen werden abgebrochen und zurückgesetzt.",
       "updateAllInfo": "Die folgenden Plugins werden aktualisiert. Die Änderungen werden nach dem nächsten Neustart wirksam.",
       "manualRestartRequired": "Nachdem die Plugin-Änderung durchgeführt wurde, muss SCM-Manager neu gestartet werden.",
       "showPending": "Um die folgenden Plugin-Änderungen auszuführen, muss SCM-Manager neu gestartet werden."
+    },
+    "myCloudogu": {
+      "connectionInfo": "Instanz ist mit myCloudogu verbunden.\nAccount: {{pluginCenterSubject}}",
+      "error": {
+        "info": "myCloudogu Authentifizierungsinformationen konnten nicht abgerufen werden. Klicken Sie, um Details zu sehen.",
+        "title": "Fehler"
+      },
+      "failed": {
+        "info": "Verbindung zu myCloudogu mit Account {{pluginCenterSubject}} is fehlgeschlagen",
+        "message": "Die Verbindung der SCM-Manager Instanz mit <0>myCloudogu</0> is fehlgeschlagen. Der Benutzer <1>{{subject}}</1> konnte nicht authentifiziert werden.",
+        "button": {
+          "label": "Erneut mit <0>myCloudogu</0> verbinden"
+        }
+      },
+      "login": {
+        "button": {
+          "label": "Mit <0>myCloudogu</0> verbinden"
+        },
+        "description": "Verbinden Sie Ihren SCM-Manager mit <0>myCloudogu</0> um besondere Plugins zu installieren. myCloudogu ist die Heimat der SCM-Manager Community, getragen von Maintainern des SCM-Managers. Sie haben noch kein Konto? Erstellen Sie während der Verbindung der SCM-Manager-Instanz kostenfrei ein myCloudogu-Konto. <1>Mehr Details zur Datenverarbeitung.</1>"
+      }
     }
   },
   "repositoryRole": {

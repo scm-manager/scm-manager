@@ -105,6 +105,7 @@ public class IndexDtoGenerator extends HalAppenderMapper {
       }
 
       if (PluginPermissions.read().isPermitted()) {
+        builder.single(link("pluginCenterAuth", resourceLinks.pluginCenterAuth().auth()));
         builder.single(link("installedPlugins", resourceLinks.installedPluginCollection().self()));
         builder.single(link("availablePlugins", resourceLinks.availablePluginCollection().self()));
       }
@@ -120,6 +121,7 @@ public class IndexDtoGenerator extends HalAppenderMapper {
       if (GroupPermissions.autocomplete().isPermitted()) {
         autoCompleteLinks.add(Link.linkBuilder("autocomplete", resourceLinks.autoComplete().groups()).withName("groups").build());
       }
+      autoCompleteLinks.add(Link.linkBuilder("autocomplete", resourceLinks.autoComplete().namespaces()).withName("namespaces").build());
       builder.array(autoCompleteLinks);
       if (GroupPermissions.list().isPermitted()) {
         builder.single(link("groups", resourceLinks.groupCollection().self()));
@@ -144,6 +146,10 @@ public class IndexDtoGenerator extends HalAppenderMapper {
 
       builder.array(searchLinks());
       builder.single(link("searchableTypes", resourceLinks.search().searchableTypes()));
+
+      if (!Strings.isNullOrEmpty(configuration.getAlertsUrl())) {
+        builder.single(link("alerts", resourceLinks.alerts().get()));
+      }
     } else {
       builder.single(link("login", resourceLinks.authentication().jsonLogin()));
     }

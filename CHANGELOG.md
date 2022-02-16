@@ -5,6 +5,87 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.30.1] - 2022-01-26
+### Fixed
+- Make comparable null safe ([#1933](https://github.com/scm-manager/scm-manager/pull/1933))
+- Password field in "Create User" dialog and other ([#1934](https://github.com/scm-manager/scm-manager/pull/1934))
+
+## [2.30.0] - 2022-01-21
+### Added
+- initial focus, submission on pressing enter and fix trap focus for modals ([#1925](https://github.com/scm-manager/scm-manager/pull/1925))
+- Add compare view to see changes between branches, tags and revisions ([#1920](https://github.com/scm-manager/scm-manager/pull/1920))
+- Security notifications to inform the running instance about known security issues ([#1924](https://github.com/scm-manager/scm-manager/pull/1924))
+
+### Fixed
+- Set HEAD to correct branch in new git repositories ([#1929](https://github.com/scm-manager/scm-manager/pull/1929))
+- Fix bugs in unit tests which occur on Windows only ([#1927](https://github.com/scm-manager/scm-manager/pull/1927))
+- Encrypt myCloudogu refresh token on file system ([#1923](https://github.com/scm-manager/scm-manager/pull/1923))
+- Autocompletion has sorted suggestions ([#1918](https://github.com/scm-manager/scm-manager/pull/1918))
+
+### Changed
+- Keeps the selection whether to add a user or a group in the repository permission dialog ([#1919](https://github.com/scm-manager/scm-manager/pull/1919))
+- Autocompletion for namespaces ([#1916](https://github.com/scm-manager/scm-manager/pull/1916))
+
+## [2.29.1] - 2022-01-17
+### Fixed
+- Path traversal vulnerability
+
+## [2.29.0] - 2022-01-07
+### Added
+- CSS variables for plugins ([#1910](https://github.com/scm-manager/scm-manager/pull/1910))
+- Add copy button for markdown code blocks ([#1902](https://github.com/scm-manager/scm-manager/pull/1902))
+- Disable repository types via global config ([#1908](https://github.com/scm-manager/scm-manager/pull/1908))
+
+### Fixed
+- Minor issues in high contrast mode ([#1910](https://github.com/scm-manager/scm-manager/pull/1910))
+- Set line ending used for license files to LF ([#1904](https://github.com/scm-manager/scm-manager/pull/1904))
+- Add ability to render storyshots asynchronously ([#1906](https://github.com/scm-manager/scm-manager/pull/1906))
+
+### Changed
+- Change mono-font-stack to provide better ux on modern platforms by using later os-fonts. Reduces amount of similar but not equal fonts used.
+- Make "not clickable" mode for breadcrumb ([#1907](https://github.com/scm-manager/scm-manager/pull/1907))
+
+## [2.28.0] - 2021-12-22
+### Added
+- Fix ScmPathInfoStore injection ([#1889](https://github.com/scm-manager/scm-manager/pull/1889))
+- Show additional branch details information ([#1888](https://github.com/scm-manager/scm-manager/pull/1888) and [#1893](https://github.com/scm-manager/scm-manager/pull/1893))
+- Add move capabilities to modify command ([#1859](https://github.com/scm-manager/scm-manager/pull/1859))
+- Adds compatibility for OCP and ICP ([#1870](https://github.com/scm-manager/scm-manager/pull/1870))
+- Show additional information on branches overview ([#1876](https://github.com/scm-manager/scm-manager/pull/1876))
+
+### Fixed
+- High contrast mode flaws ([#1892](https://github.com/scm-manager/scm-manager/pull/1892))
+- Cleanup html errors ([#1869](https://github.com/scm-manager/scm-manager/pull/1869))
+- Fix extension point "main.route"
+- Closing of repository while getting the latest commit asynchronously ([#1903](https://github.com/scm-manager/scm-manager/pull/1903))
+- Search highlighting in jsx ([#1886](https://github.com/scm-manager/scm-manager/pull/1886))
+- Syntax highlighting on non highlighted fields ([#1901](https://github.com/scm-manager/scm-manager/pull/1901))
+- Ellipsis on new lines in code syntax highlighting ([#1901](https://github.com/scm-manager/scm-manager/pull/1901))
+- Ellipsis on content start or end in non code fields ([#1901](https://github.com/scm-manager/scm-manager/pull/1901))
+- Closing of file streams ([#1857](https://github.com/scm-manager/scm-manager/pull/1857) and [#1868](https://github.com/scm-manager/scm-manager/pull/1868))
+- Exit of retry loop for deletion of files ([#1857](https://github.com/scm-manager/scm-manager/pull/1857)  and [#1868](https://github.com/scm-manager/scm-manager/pull/1868))
+- Personal footer links ([#1882](https://github.com/scm-manager/scm-manager/pull/1882))
+- Better error descriptions for gpg key import ([#1879](https://github.com/scm-manager/scm-manager/pull/1879))
+- Highlight only queried fields ([#1887](https://github.com/scm-manager/scm-manager/pull/1887))
+- Overview document title ([#1885](https://github.com/scm-manager/scm-manager/pull/1885))
+- Do not display ellipsis if search result matches start or end of content ([#1896](https://github.com/scm-manager/scm-manager/pull/1896))
+- Source view for files with colons ([#1881](https://github.com/scm-manager/scm-manager/pull/1881))
+
+### Changed
+- Improved quick search experience for screen readers ([#1898](https://github.com/scm-manager/scm-manager/pull/1898))
+- Keep whole lines for code highlighting in search ([#1871](https://github.com/scm-manager/scm-manager/pull/1871))
+- Use more accurate language detection for syntax highlighting ([#1891](https://github.com/scm-manager/scm-manager/pull/1891))
+- Improve headings structure ([#1883](https://github.com/scm-manager/scm-manager/pull/1883))
+- Enforce eslint to ensure accessible html ([#1878](https://github.com/scm-manager/scm-manager/pull/1878))
+
+## [2.27.4] - 2021-12-17
+### Changed
+- Upgrade Logback to v1.2.9
+
+## [2.27.3] - 2021-12-14
+### Changed
+- Upgrade Logback to v1.2.8 ([#1894](https://github.com/scm-manager/scm-manager/pull/1894))
+
 ## [2.27.2] - 2021-11-19
 ### Fixed
 - Repository file search ([#1867](https://github.com/scm-manager/scm-manager/pull/1867))
@@ -168,6 +249,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Show last modified date on repository overview ([#1715](https://github.com/scm-manager/scm-manager/pull/1715))
 - Redesign SCM-Manager header ([#1721](https://github.com/scm-manager/scm-manager/pull/1721))
 - Initial admin user has to be created on first startup ([#1707](https://github.com/scm-manager/scm-manager/pull/1707), [#1722](https://github.com/scm-manager/scm-manager/pull/1722))
+
+## [2.20.1] - 2022-01-18
+### Fixed
+- Path traversal vulnerability (backport from 2.29.1)
 
 ## [2.20.0] - 2021-06-16
 ### Added
@@ -840,3 +925,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.27.0]: https://scm-manager.org/download/2.27.0
 [2.27.1]: https://scm-manager.org/download/2.27.1
 [2.27.2]: https://scm-manager.org/download/2.27.2
+[2.27.3]: https://scm-manager.org/download/2.27.3
+[2.27.4]: https://scm-manager.org/download/2.27.4
+[2.28.0]: https://scm-manager.org/download/2.28.0
+[2.29.0]: https://scm-manager.org/download/2.29.0
+[2.29.1]: https://scm-manager.org/download/2.29.1
+[2.30.0]: https://scm-manager.org/download/2.30.0
+[2.30.1]: https://scm-manager.org/download/2.30.1

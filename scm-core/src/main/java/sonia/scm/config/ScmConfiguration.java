@@ -70,6 +70,22 @@ public class ScmConfiguration implements Configuration {
     "https://plugin-center-api.scm-manager.org/api/v1/plugins/{version}?os={os}&arch={arch}&jre={jre}";
 
   /**
+   * Default url for plugin center authentication.
+   *
+   * @since 2.28.0
+   */
+  public static final String DEFAULT_PLUGIN_AUTH_URL =
+    "https://plugin-center-api.scm-manager.org/api/v1/auth/oidc";
+
+  /**
+   * SCM Manager alerts url.
+   *
+   * @since 2.30.0
+   */
+  public static final String DEFAULT_ALERTS_URL =
+    "https://alerts.scm-manager.org/api/v1/alerts";
+
+  /**
    * SCM Manager release feed url
    */
   public static final String DEFAULT_RELEASE_FEED_URL =
@@ -154,6 +170,17 @@ public class ScmConfiguration implements Configuration {
   @XmlElement(name = "plugin-url")
   private String pluginUrl = DEFAULT_PLUGINURL;
 
+  @XmlElement(name = "plugin-auth-url")
+  private String pluginAuthUrl = DEFAULT_PLUGIN_AUTH_URL;
+
+  /**
+   * Url of the alerts api.
+   *
+   * @since 2.30.0
+   */
+  @XmlElement(name = "alerts-url")
+  private String alertsUrl = DEFAULT_ALERTS_URL;
+
   @XmlElement(name = "release-feed-url")
   private String releaseFeedUrl = DEFAULT_RELEASE_FEED_URL;
 
@@ -163,7 +190,7 @@ public class ScmConfiguration implements Configuration {
    * @since 1.34
    */
   @XmlElement(name = "login-attempt-limit-timeout")
-  private long loginAttemptLimitTimeout = TimeUnit.MINUTES.toSeconds(5l);
+  private long loginAttemptLimitTimeout = TimeUnit.MINUTES.toSeconds(5L);
 
 
   private boolean enableProxy = false;
@@ -237,12 +264,13 @@ public class ScmConfiguration implements Configuration {
   /**
    * Load all properties from another {@link ScmConfiguration} object.
    *
-   * @param other
+   * @param other {@link ScmConfiguration} to load from
    */
   public void load(ScmConfiguration other) {
     this.realmDescription = other.realmDescription;
     this.dateFormat = other.dateFormat;
     this.pluginUrl = other.pluginUrl;
+    this.pluginAuthUrl = other.pluginAuthUrl;
     this.anonymousMode = other.anonymousMode;
     this.enableProxy = other.enableProxy;
     this.proxyPort = other.proxyPort;
@@ -259,6 +287,7 @@ public class ScmConfiguration implements Configuration {
     this.enabledXsrfProtection = other.enabledXsrfProtection;
     this.namespaceStrategy = other.namespaceStrategy;
     this.loginInfoUrl = other.loginInfoUrl;
+    this.alertsUrl = other.alertsUrl;
     this.releaseFeedUrl = other.releaseFeedUrl;
     this.mailDomainName = other.mailDomainName;
     this.emergencyContacts = other.emergencyContacts;
@@ -317,6 +346,36 @@ public class ScmConfiguration implements Configuration {
    */
   public String getPluginUrl() {
     return pluginUrl;
+  }
+
+  /**
+   * Returns the url which is used for plugin center authentication.
+   *
+   * @return authentication url
+   * @since 2.28.0
+   */
+  public String getPluginAuthUrl() {
+    return pluginAuthUrl;
+  }
+
+  /**
+   * Returns {@code true} if the default plugin auth url is used.
+   *
+   * @return {@code true} if the default plugin auth url is used
+   * @since 2.28.0
+   */
+  public boolean isDefaultPluginAuthUrl() {
+    return DEFAULT_PLUGIN_AUTH_URL.equals(pluginAuthUrl);
+  }
+
+  /**
+   * Returns the url of the alerts api.
+   *
+   * @return the alerts url.
+   * @since 2.30.0
+   */
+  public String getAlertsUrl() {
+    return alertsUrl;
   }
 
   /**
@@ -541,6 +600,26 @@ public class ScmConfiguration implements Configuration {
 
   public void setPluginUrl(String pluginUrl) {
     this.pluginUrl = pluginUrl;
+  }
+
+  /**
+   * Set the url for plugin center authentication.
+   *
+   * @param pluginAuthUrl authentication url
+   * @since 2.28.0
+   */
+  public void setPluginAuthUrl(String pluginAuthUrl) {
+    this.pluginAuthUrl = pluginAuthUrl;
+  }
+
+  /**
+   * Set the url for the alerts api.
+   *
+   * @param alertsUrl alerts url
+   * @since 2.30.0
+   */
+  public void setAlertsUrl(String alertsUrl) {
+    this.alertsUrl = alertsUrl;
   }
 
   public void setReleaseFeedUrl(String releaseFeedUrl) {

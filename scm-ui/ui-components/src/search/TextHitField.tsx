@@ -26,41 +26,80 @@ import React, { FC } from "react";
 import { HighlightedHitField, Hit } from "@scm-manager/ui-types";
 import HighlightedFragment from "./HighlightedFragment";
 import { isHighlightedHitField } from "./fields";
+import SyntaxHighlightedFragment from "./SyntaxHighlightedFragment";
+
+type HighlightedTextFieldProps = {
+  field: HighlightedHitField;
+  syntaxHighlightingLanguage?: string;
+};
+
+const HighlightedTextField: FC<HighlightedTextFieldProps> = ({ field, syntaxHighlightingLanguage }) => {
+  const separator = syntaxHighlightingLanguage ? "...\n" : " ... ";
+  return (
+    <>
+      {field.fragments.map((fragment, i) => (
+        <React.Fragment key={fragment}>
+          {field.matchesContentStart ? null : separator}
+          <FieldFragment fragment={fragment} syntaxHighlightingLanguage={syntaxHighlightingLanguage} />
+          {i + 1 >= field.fragments.length && !field.matchesContentEnd ? separator : null}
+        </React.Fragment>
+      ))}
+    </>
+  );
+};
+
+type FieldFragmentProps = {
+  fragment: string;
+  syntaxHighlightingLanguage?: string;
+};
+
+const FieldFragment: FC<FieldFragmentProps> = ({ fragment, syntaxHighlightingLanguage }) => {
+  if (syntaxHighlightingLanguage) {
+    return <SyntaxHighlightedFragment value={fragment} language={syntaxHighlightingLanguage} />;
+  }
+  return <HighlightedFragment value={fragment} />;
+};
 
 type Props = {
   hit: Hit;
   field: string;
   truncateValueAt?: number;
+  syntaxHighlightingLanguage?: string;
 };
 
-type HighlightedTextFieldProps = {
-  field: HighlightedHitField;
-};
+function truncate(value: string, truncateValueAt: number = 0, syntaxHighlightingLanguage?: string): string {
+  if (truncateValueAt > 0 && value.length > truncateValueAt) {
+    if (syntaxHighlightingLanguage) {
+      let nextLineBreak = value.indexOf("\n", truncateValueAt);
+      if (nextLineBreak >= 0 && nextLineBreak < value.length - 1) {
+        value = value.substring(0, nextLineBreak) + "\n...";
+      }
+    } else {
+      value = value.substring(0, truncateValueAt) + "...";
+    }
+  }
+  return value;
+}
 
-const HighlightedTextField: FC<HighlightedTextFieldProps> = ({ field }) => (
-  <>
-    {field.fragments.map((fr, i) => (
-      <React.Fragment key={fr}>
-        {" ... "}
-        <HighlightedFragment value={fr} />
-        {i + 1 >= field.fragments.length ? " ... " : null}
-      </React.Fragment>
-    ))}
-  </>
-);
-
-const TextHitField: FC<Props> = ({ hit, field: fieldName, children, truncateValueAt = 0 }) => {
+const TextHitField: FC<Props> = ({
+  hit,
+  field: fieldName,
+  children,
+  syntaxHighlightingLanguage,
+  truncateValueAt = 0
+}) => {
   const field = hit.fields[fieldName];
   if (!field) {
     return <>{children}</>;
   } else if (isHighlightedHitField(field)) {
-    return <HighlightedTextField field={field} />;
+    return <HighlightedTextField field={field} syntaxHighlightingLanguage={syntaxHighlightingLanguage} />;
   } else {
     let value = field.value;
     if (value === "") {
       return <>{children}</>;
-    } else if (typeof value === "string" && truncateValueAt > 0 && value.length > truncateValueAt) {
-      value = value.substring(0, truncateValueAt) + "...";
+    } else if (typeof value === "string") {
+      const v = truncate(value, truncateValueAt, syntaxHighlightingLanguage);
+      return <FieldFragment fragment={v} syntaxHighlightingLanguage={syntaxHighlightingLanguage} />;
     }
     return <>{value}</>;
   }

@@ -40,6 +40,7 @@ export type ButtonProps = {
   reducedMobile?: boolean;
   children?: ReactNode;
   testId?: string;
+  ref?: React.ForwardedRef<HTMLButtonElement>;
 };
 
 type Props = ButtonProps & {
@@ -47,7 +48,11 @@ type Props = ButtonProps & {
   color?: string;
 };
 
-const Button: FC<Props> = ({
+type InnerProps = Props & {
+  innerRef: React.Ref<HTMLButtonElement>;
+};
+
+const Button: FC<InnerProps> = ({
   link,
   className,
   icon,
@@ -62,31 +67,43 @@ const Button: FC<Props> = ({
   disabled,
   action,
   color = "default",
+  innerRef
 }) => {
   const renderIcon = () => {
     return <>{icon ? <Icon name={icon} color="inherit" className="is-medium pr-1" /> : null}</>;
   };
 
+  const classes = classNames(
+    "button",
+    "is-" + color,
+    { "is-loading": loading },
+    { "is-fullwidth": fullWidth },
+    { "is-reduced-mobile": reducedMobile },
+    className
+  );
+
+  const content = (
+    <>
+      {renderIcon()}{" "}
+      {(label || children) && (
+        <>
+          {label} {children}
+        </>
+      )}
+    </>
+  );
+
   if (link && !disabled) {
+    if (link.includes("://")) {
+      return (
+        <a className={classes} href={link} aria-label={label}>
+          {content}
+        </a>
+      );
+    }
     return (
-      <Link
-        className={classNames(
-          "button",
-          "is-" + color,
-          { "is-loading": loading },
-          { "is-fullwidth": fullWidth },
-          { "is-reduced-mobile": reducedMobile },
-          className
-        )}
-        to={link}
-        aria-label={label}
-      >
-        {renderIcon()}{" "}
-        {(label || children) && (
-          <>
-            {label} {children}
-          </>
-        )}
+      <Link className={classes} to={link} aria-label={label}>
+        {content}
       </Link>
     );
   }
@@ -96,25 +113,14 @@ const Button: FC<Props> = ({
       type={type}
       title={title}
       disabled={disabled}
-      onClick={(event) => action && action(event)}
-      className={classNames(
-        "button",
-        "is-" + color,
-        { "is-loading": loading },
-        { "is-fullwidth": fullWidth },
-        { "is-reduced-mobile": reducedMobile },
-        className
-      )}
+      onClick={event => action && action(event)}
+      className={classes}
+      ref={innerRef}
       {...createAttributesForTesting(testId)}
     >
-      {renderIcon()}{" "}
-      {(label || children) && (
-        <>
-          {label} {children}
-        </>
-      )}
+      {content}
     </button>
   );
 };
 
-export default Button;
+export default React.forwardRef<HTMLButtonElement, Props>((props, ref) => <Button {...props} innerRef={ref} />);

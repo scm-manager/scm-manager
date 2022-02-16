@@ -59,7 +59,8 @@ const ArchiveRepo: FC<Props> = ({ repository, confirmDialog = true }) => {
         },
         {
           label: t("archiveRepo.confirmAlert.cancel"),
-          onClick: () => null
+          onClick: () => null,
+          autofocus: true
         }
       ]}
       close={() => setShowConfirmAlert(false)}

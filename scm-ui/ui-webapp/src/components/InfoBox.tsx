@@ -68,7 +68,7 @@ class InfoBox extends React.Component<Props> {
                 "image",
                 "box",
                 "has-text-weight-bold",
-                "has-text-white",
+                "has-text-secondary-least",
                 "has-background-info",
                 "is-flex",
                 "is-flex-direction-column",

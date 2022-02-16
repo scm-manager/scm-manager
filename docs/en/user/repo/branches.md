@@ -22,7 +22,9 @@ New branches can be created with the "Create Branch" form. There, you have to ch
 ![Create Branch](assets/repository-create-branch.png)
 
 ### Branch Details Page
-This page shows some commands to work with the branch on the command line.
+This page shows some commands to work with the branch on the command line. The number of commits the branch is
+ahead/behind the default branch can be found directly beneath the name of the branch.
+
 If the branch is not the default branch of the repository it can be deleted using the action inside the bottom section.
 
 ![Branch Details Page](assets/repository-branch-detailView.png)

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.HalRepresentation;
@@ -77,12 +77,12 @@ class CollectionResourceManagerAdapter<MODEL_OBJECT extends ModelObject,
     AssertUtil.assertPositive(pageNumber);
     AssertUtil.assertPositive(pageSize);
 
-    if (Util.isEmpty(sortBy)) {
-      // replace with something useful
-      sortBy = "id";
+    Comparator<MODEL_OBJECT> comparator = null;
+    if (!Util.isEmpty(sortBy)) {
+      comparator = createComparator(sortBy, desc);
     }
 
-    return manager.getPage(filter, createComparator(sortBy, desc), pageNumber, pageSize);
+    return manager.getPage(filter, comparator, pageNumber, pageSize);
   }
 
   private Comparator<MODEL_OBJECT> createComparator(String sortBy, boolean desc) {

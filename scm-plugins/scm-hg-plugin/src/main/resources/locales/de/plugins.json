@@ -20,7 +20,7 @@
       "enableHttpPostArgs": "HttpPostArgs Protocol aktivieren",
       "enableHttpPostArgsHelpText": "Aktiviert das experimentelle HttpPostArgs Protokoll von Mercurial. Das HttpPostArgs Protokoll verwendet den Post Request Body anstatt des HTTP Headers um Meta Informationen zu versenden. Dieses Vorgehen reduziert die Header Größe der Mercurial Requests. HttpPostArgs wird seit Mercurial 3.8 unterstützt.",
       "disabled": "Deaktiviert",
-      "disabledHelpText": "Aktiviert oder deaktiviert das Mercurial Plugin.",
+      "disabledHelpText": "Aktiviert oder deaktiviert das Mercurial Plugin. Nur erlaubt, wenn keine Mercurial Repositories existieren.",
       "required": "Dieser Konfigurationswert wird benötigt",
       "submit": "Speichern",
       "success": "Einstellungen wurden erfolgreich geändert",

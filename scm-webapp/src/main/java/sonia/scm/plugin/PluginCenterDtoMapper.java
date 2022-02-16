@@ -42,6 +42,8 @@ public abstract class PluginCenterDtoMapper {
   Set<AvailablePlugin> map(PluginCenterDto pluginCenterDto) {
     Set<AvailablePlugin> plugins = new HashSet<>();
     for (PluginCenterDto.Plugin plugin : pluginCenterDto.getEmbedded().getPlugins()) {
+      // plugin center api returns always a download link,
+      // but for cloudogu plugin without authentication the href is an empty string
       String url = plugin.getLinks().get("download").getHref();
       String installLink = getInstallLink(plugin);
       AvailablePluginDescriptor descriptor = new AvailablePluginDescriptor(

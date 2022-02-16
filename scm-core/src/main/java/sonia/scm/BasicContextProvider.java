@@ -28,14 +28,18 @@ package sonia.scm;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
+import com.google.common.io.Files;
+import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.UUID;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -95,6 +99,7 @@ public class BasicContextProvider implements SCMContextProvider
       baseDirectory = findBaseDirectory();
       version = determineVersion();
       stage = loadProjectStage();
+      instanceId = readOrCreateInstanceId();
     }
     catch (Exception ex)
     {
@@ -164,6 +169,11 @@ public class BasicContextProvider implements SCMContextProvider
   public String getVersion()
   {
     return version;
+  }
+
+  @Override
+  public String getInstanceId() {
+    return instanceId;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -275,6 +285,18 @@ public class BasicContextProvider implements SCMContextProvider
     return properties.getProperty(MAVEN_PROPERTY_VERSION, VERSION_DEFAULT);
   }
 
+  private String readOrCreateInstanceId() throws IOException {
+    File configDirectory = new File(baseDirectory, "config");
+    IOUtil.mkdirs(configDirectory);
+    File instanceIdFile = new File(configDirectory, ".instance-id");
+    if (instanceIdFile.exists()) {
+      return Files.asCharSource(instanceIdFile, StandardCharsets.UTF_8).read();
+    }
+    String uuid = UUID.randomUUID().toString();
+    Files.asCharSink(instanceIdFile, StandardCharsets.UTF_8).write(uuid);
+    return uuid;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** The base directory of the SCM-Manager */
@@ -288,4 +310,7 @@ public class BasicContextProvider implements SCMContextProvider
 
   /** the version of the SCM-Manager */
   private String version;
+
+  /** the instance id of the SCM-Manager */
+  private String instanceId;
 }

@@ -30,6 +30,7 @@ The following table list the configurable parameters of the SCM-Manager chart an
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Affinity settings |
+| extraArgs | list | `[]` | Arguments to pass to the container |
 | extraEnv | string | `""` | Additional environment variables, parsed through tpl function |
 | extraEnvFrom | string | `""` | Additional environment variables mapped from Secret or ConfigMap, parsed through tpl function |
 | extraVolumeMounts | string | `""` | Add additional volumes mounts, parsed through tpl function |
@@ -51,6 +52,7 @@ The following table list the configurable parameters of the SCM-Manager chart an
 | persistence.enabled | bool | `true` | Enable the use of a PVC for SCM-Manager home |
 | persistence.size | string | `"40Gi"` | The size of the PVC |
 | resources | object | `{}` | Resources allocation (Requests and Limits) |
+| securityContext | object | `{ fsGroup: 0 }` | Securitycontext for the pod |
 | service.port | int | `80` | k8s service port |
 | service.type | string | `"LoadBalancer"` | k8s service type |
 | ssh.dns | list | `["ssh.scm-manager.local"]` | dns names for the ssh service (requires installed external dns) |

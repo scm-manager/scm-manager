@@ -32,7 +32,7 @@ import { PrismAsyncLight as ReactSyntaxHighlighter, createElement } from "react-
 // eslint-disable-next-line no-restricted-imports
 import highlightingTheme from "../../syntax-highlighting";
 import { DateInput } from "../../useDateFormatter";
-import Popover from "./Popover";
+import AnnotatePopover from "./AnnotatePopover";
 import AnnotateLine from "./AnnotateLine";
 import { Action } from "./actions";
 import { determineLanguage } from "../../languages";
@@ -128,7 +128,7 @@ const Annotate: FC<Props> = ({ source, repository, baseDate }) => {
   let popover = null;
   if ((state.onPopover || state.onLine) && state.annotation) {
     popover = (
-      <Popover
+      <AnnotatePopover
         annotation={state.annotation}
         dispatch={dispatch}
         offsetTop={state.offset}

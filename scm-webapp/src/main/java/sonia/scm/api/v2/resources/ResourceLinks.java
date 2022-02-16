@@ -317,6 +317,10 @@ class ResourceLinks {
     String groups() {
       return linkBuilder.method("searchGroup").parameters().href();
     }
+
+    String namespaces() {
+      return linkBuilder.method("searchNamespace").parameters().href();
+    }
   }
 
   ConfigLinks config() {
@@ -1202,4 +1206,39 @@ class ResourceLinks {
         .href();
     }
   }
+
+  public PluginCenterAuthLinks pluginCenterAuth() {
+    return new PluginCenterAuthLinks(scmPathInfoStore.get().get());
+  }
+
+  static class PluginCenterAuthLinks {
+    private final LinkBuilder indexLinkBuilder;
+
+    PluginCenterAuthLinks(ScmPathInfo pathInfo) {
+      indexLinkBuilder = new LinkBuilder(pathInfo, PluginRootResource.class, PluginCenterAuthResource.class);
+    }
+
+    String auth() {
+      return indexLinkBuilder.method("authResource").parameters().method("authenticationInfo").parameters().href();
+    }
+  }
+
+  public AlertsLinks alerts() {
+    return new AlertsLinks(scmPathInfoStore.get().get());
+  }
+
+  static class AlertsLinks {
+
+    private final LinkBuilder indexLinkBuilder;
+
+    AlertsLinks(ScmPathInfo pathInfo) {
+      indexLinkBuilder = new LinkBuilder(pathInfo, AlertsResource.class);
+    }
+
+    String get() {
+      return indexLinkBuilder.method("getAlertsRequest").parameters().href();
+    }
+
+  }
+
 }

@@ -28,26 +28,24 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.support.SubjectThreadState;
 import org.apache.shiro.util.ThreadContext;
 import org.apache.shiro.util.ThreadState;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.internal.util.collections.Sets;
+import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.security.AnonymousMode;
 
 import java.net.URI;
-import java.util.Arrays;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
 
-public class ScmConfigurationToConfigDtoMapperTest {
+@ExtendWith(MockitoExtension.class)
+class ScmConfigurationToConfigDtoMapperTest {
 
   private final URI baseUri = URI.create("http://example.com/base/");
 
@@ -65,78 +63,85 @@ public class ScmConfigurationToConfigDtoMapperTest {
 
   private URI expectedBaseUri;
 
-  @Before
-  public void init() {
-    initMocks(this);
+  @BeforeEach
+  void init() {
     expectedBaseUri = baseUri.resolve(ConfigResource.CONFIG_PATH_V2);
     subjectThreadState.bind();
     ThreadContext.bind(subject);
   }
 
-  @After
+  @AfterEach
   public void unbindSubject() {
     ThreadContext.unbindSubject();
   }
 
   @Test
-  public void shouldMapFields() {
+  void shouldMapFields() {
     ScmConfiguration config = createConfiguration();
 
     when(subject.isPermitted("configuration:write:global")).thenReturn(true);
     ConfigDto dto = mapper.map(config);
 
-    assertEquals("heartOfGold", dto.getProxyPassword());
-    assertEquals(1234, dto.getProxyPort());
-    assertEquals("proxyserver", dto.getProxyServer());
-    assertEquals("trillian", dto.getProxyUser());
-    assertTrue(dto.isEnableProxy());
-    assertEquals("description", dto.getRealmDescription());
-    assertTrue(dto.isDisableGroupingGrid());
-    assertEquals("dd", dto.getDateFormat());
-    assertSame(AnonymousMode.FULL, dto.getAnonymousMode());
-    assertEquals("baseurl", dto.getBaseUrl());
-    assertTrue(dto.isForceBaseUrl());
-    assertEquals(1, dto.getLoginAttemptLimit());
-    assertTrue("proxyExcludes", dto.getProxyExcludes().containsAll(Arrays.asList(expectedExcludes)));
-    assertTrue(dto.isSkipFailedAuthenticators());
-    assertEquals("pluginurl", dto.getPluginUrl());
-    assertEquals(2, dto.getLoginAttemptLimitTimeout());
-    assertTrue(dto.isEnabledXsrfProtection());
-    assertEquals("username", dto.getNamespaceStrategy());
-    assertEquals("https://scm-manager.org/login-info", dto.getLoginInfoUrl());
-    assertEquals("https://www.scm-manager.org/download/rss.xml", dto.getReleaseFeedUrl());
-    assertEquals("scm-manager.local", dto.getMailDomainName());
-    assertTrue("emergencyContacts", dto.getEmergencyContacts().containsAll(Arrays.asList(expectedUsers)));
+    assertThat(dto.getProxyPassword()).isEqualTo("heartOfGold");
+    assertThat(dto.getProxyPort()).isEqualTo(1234);
+    assertThat(dto.getProxyServer()).isEqualTo("proxyserver");
+    assertThat(dto.getProxyUser()).isEqualTo("trillian");
+    assertThat(dto.isEnableProxy()).isTrue();
+    assertThat(dto.getRealmDescription()).isEqualTo("description");
+    assertThat(dto.isDisableGroupingGrid()).isTrue();
+    assertThat(dto.getDateFormat()).isEqualTo("dd");
+    assertThat(dto.getAnonymousMode()).isSameAs(AnonymousMode.FULL);
+    assertThat(dto.getBaseUrl()).isEqualTo("baseurl");
+    assertThat(dto.isForceBaseUrl()).isTrue();
+    assertThat(dto.getLoginAttemptLimit()).isOne();
+    assertThat(dto.getProxyExcludes()).contains(expectedExcludes);
+    assertThat(dto.isSkipFailedAuthenticators()).isTrue();
+    assertThat(dto.getPluginUrl()).isEqualTo("https://plug.ins");
+    assertThat(dto.getPluginAuthUrl()).isEqualTo("https://plug.ins/oidc");
+    assertThat(dto.getLoginAttemptLimitTimeout()).isEqualTo(2);
+    assertThat(dto.isEnabledXsrfProtection()).isTrue();
+    assertThat(dto.getNamespaceStrategy()).isEqualTo("username");
+    assertThat(dto.getLoginInfoUrl()).isEqualTo("https://scm-manager.org/login-info");
+    assertThat(dto.getAlertsUrl()).isEqualTo("https://alerts.scm-manager.org/api/v1/alerts");
+    assertThat(dto.getReleaseFeedUrl()).isEqualTo("https://www.scm-manager.org/download/rss.xml");
+    assertThat(dto.getMailDomainName()).isEqualTo("scm-manager.local");
+    assertThat(dto.getEmergencyContacts()).contains(expectedUsers);
+    assertLinks(dto);
+  }
 
-    assertEquals(expectedBaseUri.toString(), dto.getLinks().getLinkBy("self").get().getHref());
-    assertEquals(expectedBaseUri.toString(), dto.getLinks().getLinkBy("update").get().getHref());
+  private void assertLinks(ConfigDto dto) {
+    assertThat(dto.getLinks().getLinkBy("self"))
+      .hasValueSatisfying(link -> assertThat(link.getHref()).isEqualTo(expectedBaseUri.toString()));
+    assertThat(dto.getLinks().getLinkBy("update"))
+      .hasValueSatisfying(link -> assertThat(link.getHref()).isEqualTo(expectedBaseUri.toString()));
   }
 
   @Test
-  public void shouldMapFieldsWithoutUpdate() {
+  void shouldMapFieldsWithoutUpdate() {
     ScmConfiguration config = createConfiguration();
 
     when(subject.hasRole("configuration:write:global")).thenReturn(false);
     ConfigDto dto = mapper.map(config);
 
-    assertEquals("baseurl", dto.getBaseUrl());
-    assertEquals(expectedBaseUri.toString(), dto.getLinks().getLinkBy("self").get().getHref());
-    assertFalse(dto.getLinks().hasLink("update"));
+    assertThat(dto.getBaseUrl()).isEqualTo("baseurl");
+    assertThat(dto.getLinks().getLinkBy("self"))
+      .hasValueSatisfying(link -> assertThat(link.getHref()).isEqualTo(expectedBaseUri.toString()));
+    assertThat(dto.getLinks().hasLink("update")).isFalse();
   }
 
   @Test
-  public void shouldMapAnonymousAccessField() {
+  void shouldMapAnonymousAccessField() {
     ScmConfiguration config = createConfiguration();
 
     when(subject.hasRole("configuration:write:global")).thenReturn(false);
     ConfigDto dto = mapper.map(config);
 
-    assertTrue(dto.isAnonymousAccessEnabled());
+    assertThat(dto.isAnonymousAccessEnabled()).isTrue();
 
     config.setAnonymousMode(AnonymousMode.OFF);
     ConfigDto secondDto = mapper.map(config);
 
-    assertFalse(secondDto.isAnonymousAccessEnabled());
+    assertThat(secondDto.isAnonymousAccessEnabled()).isFalse();
   }
 
   private ScmConfiguration createConfiguration() {
@@ -155,11 +160,13 @@ public class ScmConfigurationToConfigDtoMapperTest {
     config.setLoginAttemptLimit(1);
     config.setProxyExcludes(Sets.newSet(expectedExcludes));
     config.setSkipFailedAuthenticators(true);
-    config.setPluginUrl("pluginurl");
+    config.setPluginUrl("https://plug.ins");
+    config.setPluginAuthUrl("https://plug.ins/oidc");
     config.setLoginAttemptLimitTimeout(2);
     config.setEnabledXsrfProtection(true);
     config.setNamespaceStrategy("username");
     config.setLoginInfoUrl("https://scm-manager.org/login-info");
+    config.setAlertsUrl("https://alerts.scm-manager.org/api/v1/alerts");
     config.setReleaseFeedUrl("https://www.scm-manager.org/download/rss.xml");
     config.setEmergencyContacts(Sets.newSet(expectedUsers));
     return config;

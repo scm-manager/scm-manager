@@ -166,6 +166,16 @@ class PluginDtoMapperTest {
   }
 
   @Test
+  void shouldNotAppendInstallLinkWithEmptyDownloadUrl() {
+    when(subject.isPermitted("plugin:write")).thenReturn(true);
+    AvailablePlugin plugin = createAvailable(createPluginInformation(), "");
+
+    PluginDto dto = mapper.mapAvailable(plugin);
+    assertThat(dto.getLinks().hasLink("install")).isFalse();
+    assertThat(dto.getLinks().hasLink("installWithRestart")).isFalse();
+  }
+
+  @Test
   void shouldReturnMiscellaneousIfCategoryIsNull() {
     PluginInformation information = createPluginInformation();
     information.setCategory(null);

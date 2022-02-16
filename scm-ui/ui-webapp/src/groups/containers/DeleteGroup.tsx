@@ -66,7 +66,8 @@ export const DeleteGroup: FC<Props> = ({ confirmDialog = true, group }) => {
           },
           {
             label: t("deleteGroup.confirmAlert.cancel"),
-            onClick: () => null
+            onClick: () => null,
+            autofocus: true
           }
         ]}
         close={() => setShowConfirmAlert(false)}

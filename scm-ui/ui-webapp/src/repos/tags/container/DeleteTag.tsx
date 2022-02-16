@@ -59,7 +59,8 @@ const DeleteTag: FC<Props> = ({ tag, repository }) => {
             },
             {
               label: t("tag.delete.confirmAlert.cancel"),
-              onClick: () => null
+              onClick: () => null,
+              autofocus: true
             }
           ]}
           close={() => setShowConfirmAlert(false)}

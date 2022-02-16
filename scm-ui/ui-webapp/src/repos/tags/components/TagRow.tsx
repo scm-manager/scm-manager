@@ -58,7 +58,7 @@ const TagRow: FC<Props> = ({ tag, baseUrl, onDelete }) => {
       <td>
         <RouterLink to={to} title={tag.name}>
           {tag.name}
-          <span className={classNames("has-text-grey", "is-ellipsis-overflow", "ml-2", "is-size-7")}>
+          <span className={classNames("has-text-secondary", "is-ellipsis-overflow", "ml-2", "is-size-7")}>
             {t("tags.overview.created")} <DateFromNow date={tag.date} />
           </span>
         </RouterLink>

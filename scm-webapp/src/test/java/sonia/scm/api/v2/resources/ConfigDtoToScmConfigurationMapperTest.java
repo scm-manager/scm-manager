@@ -24,21 +24,18 @@
 
 package sonia.scm.api.v2.resources;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.internal.util.collections.Sets;
+import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.security.AnonymousMode;
 
-import java.util.Arrays;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.MockitoAnnotations.initMocks;
-
-public class ConfigDtoToScmConfigurationMapperTest {
+@ExtendWith(MockitoExtension.class)
+class ConfigDtoToScmConfigurationMapperTest {
 
   @InjectMocks
   private ConfigDtoToScmConfigurationMapperImpl mapper;
@@ -46,53 +43,49 @@ public class ConfigDtoToScmConfigurationMapperTest {
   private final String[] expectedExcludes = {"ex", "clude"};
   private final String[] expectedUsers = {"trillian", "arthur"};
 
-  @Before
-  public void init() {
-    initMocks(this);
-  }
-
   @Test
-  public void shouldMapFields() {
+  void shouldMapFields() {
     ConfigDto dto = createDefaultDto();
     ScmConfiguration config = mapper.map(dto);
 
-    assertEquals("prPw", config.getProxyPassword());
-    assertEquals(42, config.getProxyPort());
-    assertEquals("srvr", config.getProxyServer());
-    assertEquals("user", config.getProxyUser());
-    assertTrue(config.isEnableProxy());
-    assertEquals("realm", config.getRealmDescription());
-    assertTrue(config.isDisableGroupingGrid());
-    assertEquals("yyyy", config.getDateFormat());
-    assertEquals(AnonymousMode.PROTOCOL_ONLY, config.getAnonymousMode());
-    assertEquals("baseurl", config.getBaseUrl());
-    assertTrue(config.isForceBaseUrl());
-    assertEquals(41, config.getLoginAttemptLimit());
-    assertTrue("proxyExcludes", config.getProxyExcludes().containsAll(Arrays.asList(expectedExcludes)));
-    assertTrue(config.isSkipFailedAuthenticators());
-    assertEquals("https://plug.ins", config.getPluginUrl());
-    assertEquals(40, config.getLoginAttemptLimitTimeout());
-    assertTrue(config.isEnabledXsrfProtection());
-    assertFalse(config.isEnabledUserConverter());
-    assertEquals("username", config.getNamespaceStrategy());
-    assertEquals("https://scm-manager.org/login-info", config.getLoginInfoUrl());
-    assertEquals("hitchhiker.mail", config.getMailDomainName());
-    assertTrue("emergencyContacts", config.getEmergencyContacts().containsAll(Arrays.asList(expectedUsers)));
+    assertThat(config.getProxyPassword()).isEqualTo("prPw");
+    assertThat(config.getProxyPort()).isEqualTo(42);
+    assertThat(config.getProxyServer()).isEqualTo("srvr");
+    assertThat(config.getProxyUser()).isEqualTo("user");
+    assertThat(config.isEnableProxy()).isTrue();
+    assertThat(config.getRealmDescription()).isEqualTo("realm");
+    assertThat(config.isDisableGroupingGrid()).isTrue();
+    assertThat(config.getDateFormat()).isEqualTo("yyyy");
+    assertThat(config.getAnonymousMode()).isSameAs(AnonymousMode.PROTOCOL_ONLY);
+    assertThat(config.getBaseUrl()).isEqualTo("baseurl");
+    assertThat(config.isForceBaseUrl()).isTrue();
+    assertThat(config.getLoginAttemptLimit()).isEqualTo(41);
+    assertThat(config.getProxyExcludes()).contains(expectedExcludes);
+    assertThat(config.isSkipFailedAuthenticators()).isTrue();
+    assertThat(config.getPluginUrl()).isEqualTo("https://plug.ins");
+    assertThat(config.getPluginAuthUrl()).isEqualTo("https://plug.ins/oidc");
+    assertThat(config.getLoginAttemptLimitTimeout()).isEqualTo(40);
+    assertThat(config.isEnabledXsrfProtection()).isTrue();
+    assertThat(config.isEnabledUserConverter()).isFalse();
+    assertThat(config.getNamespaceStrategy()).isEqualTo("username");
+    assertThat(config.getLoginInfoUrl()).isEqualTo("https://scm-manager.org/login-info");
+    assertThat(config.getMailDomainName()).isEqualTo("hitchhiker.mail");
+    assertThat(config.getEmergencyContacts()).contains(expectedUsers);
   }
 
   @Test
-  public void shouldMapAnonymousAccessFieldToAnonymousMode() {
+  void shouldMapAnonymousAccessFieldToAnonymousMode() {
     ConfigDto dto = createDefaultDto();
 
     ScmConfiguration config = mapper.map(dto);
 
-    assertEquals(AnonymousMode.PROTOCOL_ONLY, config.getAnonymousMode());
+    assertThat(config.getAnonymousMode()).isSameAs(AnonymousMode.PROTOCOL_ONLY);
 
     dto.setAnonymousMode(null);
     dto.setAnonymousAccessEnabled(false);
     ScmConfiguration config2 = mapper.map(dto);
 
-    assertEquals(AnonymousMode.OFF, config2.getAnonymousMode());
+    assertThat(config2.getAnonymousMode()).isSameAs(AnonymousMode.OFF);
   }
 
   private ConfigDto createDefaultDto() {
@@ -112,6 +105,7 @@ public class ConfigDtoToScmConfigurationMapperTest {
     configDto.setProxyExcludes(Sets.newSet(expectedExcludes));
     configDto.setSkipFailedAuthenticators(true);
     configDto.setPluginUrl("https://plug.ins");
+    configDto.setPluginAuthUrl("https://plug.ins/oidc");
     configDto.setLoginAttemptLimitTimeout(40);
     configDto.setEnabledXsrfProtection(true);
     configDto.setNamespaceStrategy("username");

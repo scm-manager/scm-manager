@@ -84,7 +84,7 @@ public final class GitUtil {
   private static final GitUserAgentProvider GIT_USER_AGENT_PROVIDER = new GitUserAgentProvider();
   public static final String REF_HEAD = "HEAD";
   public static final String REF_HEAD_PREFIX = "refs/heads/";
-  public static final String REF_MASTER = "master";
+  public static final String REF_MAIN = "main";
   private static final String DIRECTORY_DOTGIT = ".git";
   private static final String DIRECTORY_OBJETCS = "objects";
   private static final String DIRECTORY_REFS = "refs";
@@ -425,7 +425,7 @@ public final class GitUtil {
       return of(refHead.getTarget());
     }
 
-    Ref master = refs.get(REF_HEAD_PREFIX + REF_MASTER);
+    Ref master = refs.get(REF_HEAD_PREFIX + REF_MAIN);
     if (master != null) {
       return of(master);
     }
@@ -627,7 +627,7 @@ public final class GitUtil {
   public static ObjectId computeCommonAncestor(org.eclipse.jgit.lib.Repository repository, ObjectId revision1, ObjectId revision2) throws IOException {
     try (RevWalk mergeBaseWalk = new RevWalk(repository)) {
       mergeBaseWalk.setRevFilter(RevFilter.MERGE_BASE);
-      mergeBaseWalk.markStart(mergeBaseWalk.lookupCommit(revision1));
+      mergeBaseWalk.markStart(mergeBaseWalk.parseCommit(revision1));
       mergeBaseWalk.markStart(mergeBaseWalk.parseCommit(revision2));
       RevCommit ancestor = mergeBaseWalk.next();
       if (ancestor == null) {

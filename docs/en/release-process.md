@@ -26,7 +26,8 @@ All unreleased changes are stored in the `gradle/changelog` directory.
 The changelog can be updated with the `updateChangelog` gradle task.
 
 ```bash
-./gradlew :updateChangelog --release=<version>
+export VERSION=<version> \
+&& ./gradlew :updateChangelog --release=$VERSION
 ```
 
 Now we should manually check if the changelog looks good.
@@ -37,26 +38,15 @@ git diff CHANGELOG.md
 
 If everything looks fine, we can remove the changelog directory.
 
-```bash
-rm -rf gradle/changelog
-```
-
-## Create release branch
+## Create release branch, commit changes and push
 
 ```bash
-git checkout -b release/<version>
+git rm -rf gradle/changelog \
+&& git checkout -b release/$VERSION \
+&& git add CHANGELOG.md \
+&& git commit -m "Adjust changelog for release $VERSION" \
+&& git push origin release/$VERSION
 ```
-
-## Commit version changes
-
-```bash
-git add CHANGELOG.md gradle/changelog
-git commit -m "Adjust changelog for release <version>"
-```
-
-## Push release branch
-
-`git push origin release/<version>`
 
 ## Wait for Jenkins build
 

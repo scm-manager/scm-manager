@@ -1,7 +1,7 @@
 ext {
   slf4jVersion = '1.7.30'
   guiceVersion = '5.0.1'
-  resteasyVersion = '4.6.0.Final'
+  resteasyVersion = '4.7.5.Final'
 
   // TODO upgrade to 2.12.0, but this breaks openapi spec generation
   jacksonVersion = '2.11.3'
@@ -36,7 +36,7 @@ ext {
     // logging
     slf4jApi: "org.slf4j:slf4j-api:${slf4jVersion}",
     slf4jJcl: "org.slf4j:jcl-over-slf4j:${slf4jVersion}",
-    logback: 'ch.qos.logback:logback-classic:1.2.3',
+    logback: 'ch.qos.logback:logback-classic:1.2.9',
 
     // injection
     guice: "com.google.inject:guice:${guiceVersion}",
@@ -68,7 +68,7 @@ ext {
     edison: 'de.otto.edison:edison-hal:2.1.0',
 
     // openapi
-    swaggerJaxRs: 'io.swagger.core.v3:swagger-jaxrs2:2.1.6',
+    swaggerJaxRs: 'io.swagger.core.v3:swagger-jaxrs2:2.1.12',
 
     // dto mapping
     mapstruct: "org.mapstruct:mapstruct-jdk8:${mapstructVersion}",
@@ -118,7 +118,7 @@ ext {
     metainfServices: 'org.kohsuke.metainf-services:metainf-services:1.8',
 
     // cron expression
-    cronUtils: 'com.cronutils:cron-utils:9.1.3',
+    cronUtils: 'com.cronutils:cron-utils:9.1.+',
 
     // templates
     mustache: 'com.github.spullara.mustache.java:compiler:0.9.7',
@@ -127,7 +127,7 @@ ext {
     webResources: 'com.github.sdorra:web-resources:1.1.1',
 
     // content type detection
-    spotter: 'com.github.sdorra:spotter-core:3.0.1',
+    spotter: 'com.cloudogu.spotter:spotter-core:4.0.0',
     tika: 'org.apache.tika:tika-core:1.25',
 
     // restart on unix

@@ -26,7 +26,8 @@ plugins {
   id 'java-platform'
   id 'maven-publish'
   id "org.sonarqube" version "3.0"
-  id "org.scm-manager.changelog" version "0.1.5"
+  id "org.scm-manager.changelog" version "0.1.6"
+  id 'org.scm-manager.license' version "0.7.1"
 }
 
 changelog {
@@ -44,6 +45,23 @@ subprojects { s ->
 
 allprojects {
   apply from: rootProject.file('gradle/dependencies.gradle')
+
+  dependencyLocking {
+    lockAllConfigurations()
+  }
+
+  tasks.register('resolveAndLockAll') {
+    doFirst {
+      assert gradle.startParameter.writeDependencyLocks
+    }
+    doLast {
+      configurations.findAll {
+        // Add any custom filtering on the configurations to be resolved
+        it.canBeResolved
+      }.each { it.resolve() }
+    }
+  }
+
 }
 
 dependencies {
@@ -120,6 +138,19 @@ dependencies {
     // mocking
     api libraries.mockitoCore
     api libraries.mockitoJunitJupiter
+  }
+}
+
+license {
+  header rootProject.file("LICENSE.txt")
+  newLine = true
+  ignoreNewLine = true
+  lineEnding = "\n"
+
+  tasks {
+    build {
+      files.from("build.gradle", "settings.gradle", "gradle.properties")
+    }
   }
 }
 

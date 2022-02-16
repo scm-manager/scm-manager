@@ -26,6 +26,7 @@ import React, { FC } from "react";
 import { File, Link, Repository } from "@scm-manager/ui-types";
 import { Annotate, ErrorNotification, Loading } from "@scm-manager/ui-components";
 import { useAnnotations, useContentType } from "@scm-manager/ui-api";
+import { determineSyntaxHighlightingLanguage } from "../utils/files";
 
 type Props = {
   file: File;
@@ -52,7 +53,8 @@ const AnnotateView: FC<Props> = ({ file, repository, revision }) => {
     return <Loading />;
   }
 
-  return <Annotate source={{ ...annotation, language: contentType.language }} repository={repository} />;
+  const language = determineSyntaxHighlightingLanguage(contentType);
+  return <Annotate source={{ ...annotation, language }} repository={repository} />;
 };
 
 export default AnnotateView;

@@ -151,6 +151,9 @@
   "importLog": {
     "title": "Importprotokoll"
   },
+  "syntaxHighlighting": {
+    "copyButton": "In die Zwischenablage kopieren"
+  },
   "notifications": {
     "toastTitle": "Benachrichtigung",
     "xMore": "+{{ count }} Benachrichtigung",
@@ -160,6 +163,9 @@
     "empty": "Keine Benachrichtigungen",
     "dismiss": "Löschen",
     "dismissAll": "Alle löschen"
+  },
+  "alerts": {
+    "shieldTitle": "Alerts"
   },
   "cardColumnGroup": {
     "showContent": "Inhalt einblenden",
@@ -194,7 +200,10 @@
       "moreResults": "Mehr Ergebnisse",
       "noResults": "Es konnten keine Repositories gefunden werden",
       "hintsIcon": "Suchtipps",
-      "hints": "Hinweise zu ihrer Suche"
+      "hints": "Hinweise zu ihrer Suche",
+      "screenReaderHintNoResult": "Keine Repositories gefunden. Mögliche weitere Ergebnistypen mit Enter anzeigen.",
+      "screenReaderHint": "Ein Repository gefunden. Mögliche weitere Ergebnistypen mit Enter anzeigen oder Pfeiltasten verwenden um zu den gefunden Repositories zu navigieren und mit Enter bestätigen.",
+      "screenReaderHint_plural": "Mindestens {{ count }} Repositories gefunden. Mögliche weitere Ergebnistypen mit Enter anzeigen oder Pfeiltasten verwenden um zu den gefunden Repositories zu navigieren und mit Enter bestätigen."
     },
     "syntax": {
       "title": "Experten-Suche",

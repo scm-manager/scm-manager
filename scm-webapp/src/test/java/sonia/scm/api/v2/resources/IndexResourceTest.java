@@ -33,6 +33,7 @@ import org.junit.Test;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.initialization.InitializationFinisher;
+import sonia.scm.plugin.PluginCenterAuthenticator;
 import sonia.scm.search.SearchEngine;
 
 import java.net.URI;
@@ -51,7 +52,6 @@ public class IndexResourceTest {
   private SCMContextProvider scmContextProvider;
   private IndexResource indexResource;
 
-
   @Before
   public void setUpObjectUnderTest() {
     this.configuration = new ScmConfiguration();
@@ -63,8 +63,26 @@ public class IndexResourceTest {
       ResourceLinksMock.createMock(URI.create("/")),
       scmContextProvider,
       configuration,
-      initializationFinisher, searchEngine);
+      initializationFinisher,
+      searchEngine
+    );
     this.indexResource = new IndexResource(generator);
+  }
+
+  @Test
+  @SubjectAware(username = "dent", password = "secret")
+  public void shouldRenderPluginCenterAuthLink() {
+    IndexDto index = indexResource.getIndex();
+
+    Assertions.assertThat(index.getLinks().getLinkBy("pluginCenterAuth")).isPresent();
+  }
+
+  @Test
+  @SubjectAware(username = "trillian", password = "secret")
+  public void shouldNotRenderPluginCenterLoginLinkIfPermissionsAreMissing() {
+    IndexDto index = indexResource.getIndex();
+
+    Assertions.assertThat(index.getLinks().getLinkBy("pluginCenterAuth")).isNotPresent();
   }
 
   @Test
@@ -161,17 +179,17 @@ public class IndexResourceTest {
 
     Assertions.assertThat(index.getLinks().getLinksBy("autocomplete"))
       .extracting("name")
-      .containsExactlyInAnyOrder("users", "groups");
+      .containsExactlyInAnyOrder("users", "groups", "namespaces");
   }
 
   @Test
   @SubjectAware(username = "user_without_autocomplete_permission", password = "secret")
-  public void userWithoutAutocompletePermissionShouldNotSeeAutoCompleteLinks() {
+  public void userWithoutAutocompletePermissionShouldSeeAutoCompleteLinksOnlyForNamespaces() {
     IndexDto index = indexResource.getIndex();
 
     Assertions.assertThat(index.getLinks().getLinksBy("autocomplete"))
       .extracting("name")
-      .isEmpty();
+      .containsExactly("namespaces");
   }
 
   @Test

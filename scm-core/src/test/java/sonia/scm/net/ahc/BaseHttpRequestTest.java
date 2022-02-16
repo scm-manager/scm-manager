@@ -28,108 +28,116 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import java.io.IOException;
 import java.util.Collection;
-import org.junit.Test;
-import static org.junit.Assert.*;
-import static org.hamcrest.Matchers.*;
-import org.junit.Before;
-import org.junit.runner.RunWith;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@RunWith(MockitoJUnitRunner.class)
-public class BaseHttpRequestTest {
+@ExtendWith(MockitoExtension.class)
+class BaseHttpRequestTest {
 
   @Mock
   private AdvancedHttpClient ahc;
   
   private BaseHttpRequest<AdvancedHttpRequest> request;
   
-  @Before
+  @BeforeEach
   public void before(){
     request = new AdvancedHttpRequest(ahc, HttpMethod.GET, "https://www.scm-manager.org");
   }
 
   @Test
-  public void testBasicAuth()
-  {
+  void shouldAddAuthorizationHeaderWithBasicScheme() {
     request.basicAuth("tricia", "mcmillian123");
     Multimap<String,String> headers = request.getHeaders();
-    assertEquals("Basic dHJpY2lhOm1jbWlsbGlhbjEyMw==", headers.get("Authorization").iterator().next());
+    assertThat(headers.get("Authorization").iterator().next()).isEqualTo("Basic dHJpY2lhOm1jbWlsbGlhbjEyMw==");
+  }
+
+  @Test
+  void shouldAddAuthorizationHeaderWithBearerScheme() {
+    request.bearerAuth("awesome-access-token");
+    Multimap<String,String> headers = request.getHeaders();
+    assertThat(headers.get("Authorization").iterator().next()).isEqualTo("Bearer awesome-access-token");
   }
   
   @Test
-  public void testQueryString(){
+  void shouldAppendQueryString(){
     request.queryString("a", "b");
-    assertEquals("https://www.scm-manager.org?a=b", request.getUrl());
+    assertThat(request.getUrl()).isEqualTo("https://www.scm-manager.org?a=b");
   }
   
   @Test
-  public void testQueryStringMultiple(){
+  void shouldAppendMultipleQueryStrings(){
     request.queryString("a", "b");
     request.queryString("c", "d", "e");
-    assertEquals("https://www.scm-manager.org?a=b&c=d&c=e", request.getUrl());
+    assertThat(request.getUrl()).isEqualTo("https://www.scm-manager.org?a=b&c=d&c=e");
   }
   
   @Test
-  public void testQueryStringEncoded(){
+  void shouldEscapeQueryString(){
     request.queryString("a", "äüö");
-    assertEquals("https://www.scm-manager.org?a=%C3%A4%C3%BC%C3%B6", request.getUrl());
+    assertThat(request.getUrl()).isEqualTo("https://www.scm-manager.org?a=%C3%A4%C3%BC%C3%B6");
   }
   
   @Test
-  public void testQueryStrings(){
-    Iterable<? extends Object> i1 = Lists.newArrayList("b");
-    Iterable<? extends Object> i2 = Lists.newArrayList("d", "e");
+  void shouldAppendQueryStringFromIterable(){
+    Iterable<?> i1 = Lists.newArrayList("b");
+    Iterable<?> i2 = Lists.newArrayList("d", "e");
     request.queryStrings("a", i1);
     request.queryStrings("c", i2);
-    assertEquals("https://www.scm-manager.org?a=b&c=d&c=e", request.getUrl());
+
+    assertThat(request.getUrl()).isEqualTo("https://www.scm-manager.org?a=b&c=d&c=e");
   }
   
   @Test
-  public void testQuerqStringNullValue(){
+  void ShouldNotAppendQueryStringWithNullValue(){
     request.queryString("a", null, "b");
-    assertEquals("https://www.scm-manager.org?a=&a=b", request.getUrl());
+    assertThat(request.getUrl()).isEqualTo("https://www.scm-manager.org?a=&a=b");
   }
   
   @Test
-  public void testHeader(){
+  void shouldAddHeader(){
     request.header("a", "b");
-    assertEquals("b", request.getHeaders().get("a").iterator().next());
+    assertThat(request.getHeaders().get("a").iterator().next()).isEqualTo("b");
   }
   
   @Test
-  public void testHeaderMultiple(){
+  void shouldAddHeaderWithMultipleValues(){
     request.header("a", "b", "c", "d");
-    Collection<String> values = request.getHeaders().get("a");
-    assertThat(values, contains("b", "c", "d"));
+    assertThat( request.getHeaders().get("a")).contains("b", "c", "d");
   }
   
   @Test
-  public void testRequest() throws IOException{
+  void shouldExecuteWithClient() throws IOException{
     request.request();
+
     verify(ahc).request(request);
   }
   
   @Test
-  public void testBuilderMethods(){
-    Iterable<? extends Object> i1 = Lists.newArrayList("b");
-    assertThat(request.decodeGZip(true), instanceOf(AdvancedHttpRequest.class));
-    assertTrue(request.isDecodeGZip());
-    assertThat(request.disableCertificateValidation(true), instanceOf(AdvancedHttpRequest.class));
-    assertTrue(request.isDisableCertificateValidation());
-    assertThat(request.disableHostnameValidation(true), instanceOf(AdvancedHttpRequest.class));
-    assertTrue(request.isDisableHostnameValidation());
-    assertThat(request.ignoreProxySettings(true), instanceOf(AdvancedHttpRequest.class));
-    assertTrue(request.isIgnoreProxySettings());
-    assertThat(request.header("a", "b"), instanceOf(AdvancedHttpRequest.class));
-    assertThat(request.headers("a", i1), instanceOf(AdvancedHttpRequest.class));
-    assertThat(request.queryString("a", "b"), instanceOf(AdvancedHttpRequest.class));
-    assertThat(request.queryStrings("a", i1), instanceOf(AdvancedHttpRequest.class));
+  void shouldApplyValueFromBuilderMethods(){
+    Iterable<?> i1 = Lists.newArrayList("b");
+    assertThat(request.decodeGZip(true)).isInstanceOf(AdvancedHttpRequest.class);
+    assertThat(request.isDecodeGZip()).isTrue();
+    assertThat(request.disableCertificateValidation(true)).isInstanceOf(AdvancedHttpRequest.class);
+    assertThat(request.isDisableCertificateValidation()).isTrue();
+    assertThat(request.disableHostnameValidation(true)).isInstanceOf(AdvancedHttpRequest.class);
+    assertThat(request.isDisableHostnameValidation()).isTrue();
+    assertThat(request.ignoreProxySettings(true)).isInstanceOf(AdvancedHttpRequest.class);
+    assertThat(request.isIgnoreProxySettings()).isTrue();
+    assertThat(request.header("a", "b")).isInstanceOf(AdvancedHttpRequest.class);
+    assertThat(request.headers("a", i1)).isInstanceOf(AdvancedHttpRequest.class);
+    assertThat(request.queryString("a", "b")).isInstanceOf(AdvancedHttpRequest.class);
+    assertThat(request.queryStrings("a", i1)).isInstanceOf(AdvancedHttpRequest.class);
   }
 
 }

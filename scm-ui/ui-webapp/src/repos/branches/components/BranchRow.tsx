@@ -26,10 +26,11 @@ import { Link as ReactLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import { Branch, BranchDetails, Link, Repository } from "@scm-manager/ui-types";
-import { DateFromNow, Icon, SmallLoadingSpinner } from "@scm-manager/ui-components";
+import { Icon, SmallLoadingSpinner } from "@scm-manager/ui-components";
 import { binder } from "@scm-manager/ui-extensions";
 import DefaultBranchTag from "./DefaultBranchTag";
 import AheadBehindTag from "./AheadBehindTag";
+import BranchCommitDateCommitter from "./BranchCommitDateCommitter";
 
 type Props = {
   repository: Repository;
@@ -62,27 +63,10 @@ const BranchRow: FC<Props> = ({ repository, baseUrl, branch, onDelete, details }
       return <DefaultBranchTag defaultBranch={branch.defaultBranch} />;
     }
     if (details) {
-      return <AheadBehindTag branch={branch} details={details} />;
+      return <AheadBehindTag branch={branch} details={details} hiddenMobile={true} />;
     }
     return <SmallLoadingSpinner />;
   };
-
-  const committedAt = (
-    <>
-      {t("branches.table.lastCommit")} <DateFromNow date={branch.lastCommitDate} />
-    </>
-  );
-
-  let committedAtBy;
-  if (branch.lastCommitter?.name) {
-    committedAtBy = (
-      <>
-        {committedAt} {t("branches.table.lastCommitter", { name: branch.lastCommitter?.name })}
-      </>
-    );
-  } else {
-    committedAtBy = committedAt;
-  }
 
   const extensionProps = { repository, branch, details };
   return (
@@ -92,8 +76,8 @@ const BranchRow: FC<Props> = ({ repository, baseUrl, branch, onDelete, details }
           {branch.name}
         </ReactLink>
         {branch.lastCommitDate && (
-          <span className={classNames("has-text-grey", "is-ellipsis-overflow", "is-size-7", "ml-4")}>
-            {committedAtBy}
+          <span className={classNames("has-text-secondary", "is-ellipsis-overflow", "is-size-7", "ml-4")}>
+            <BranchCommitDateCommitter branch={branch} />
           </span>
         )}
       </td>

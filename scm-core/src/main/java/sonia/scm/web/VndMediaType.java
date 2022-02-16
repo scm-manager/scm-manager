@@ -69,6 +69,7 @@ public class VndMediaType {
   public static final String REPOSITORY_TYPE = PREFIX + "repositoryType" + SUFFIX;
   public static final String PLUGIN = PREFIX + "plugin" + SUFFIX;
   public static final String PLUGIN_COLLECTION = PREFIX + "pluginCollection" + SUFFIX;
+  public static final String PLUGIN_CENTER_AUTH_INFO = PREFIX + "pluginCenterAuthInfo" + SUFFIX;
   public static final String UI_PLUGIN = PREFIX + "uiPlugin" + SUFFIX;
   public static final String UI_PLUGIN_COLLECTION = PREFIX + "uiPluginCollection" + SUFFIX;
   @SuppressWarnings("squid:S2068")
@@ -96,6 +97,8 @@ public class VndMediaType {
   public static final String REPOSITORY_EXPORT_INFO = PREFIX + "repositoryExportInfo" + SUFFIX;
 
   public static final String NOTIFICATION_COLLECTION = PREFIX + "notificationCollection" + SUFFIX;
+
+  public static final String ALERTS_REQUEST = PREFIX + "alertsRequest" + SUFFIX;
 
   public static final String QUERY_RESULT = PREFIX + "queryResult" + SUFFIX;
   public static final String SEARCHABLE_TYPE_COLLECTION = PREFIX + "searchableTypeCollection" + SUFFIX;

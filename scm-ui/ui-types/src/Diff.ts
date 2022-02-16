@@ -43,6 +43,7 @@ export type FileDiff = {
   oldRevision?: string;
   type: FileChangeType;
   language?: string;
+  syntaxModes?: { [mode: string]: string };
   // TODO does this property exists?
   isBinary?: boolean;
   _links?: Links;

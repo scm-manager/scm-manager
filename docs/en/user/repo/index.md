@@ -7,6 +7,7 @@ The Repository area includes everything based on repositories in namespaces. Thi
 * [Branches](branches/)
 * [Tags](tags/)
 * [Code](code/)
+* [Compare](compare/)
 * [Settings](settings/)
 
 ### Overview
@@ -24,7 +25,10 @@ In SCM-Manager new Git, Mercurial & Subversion (SVN) repositories can be created
 Optionally, repositories can be initialized during the creation. That creates a standard branch (master or default) for Git and Mercurial repositories. 
 Additionally, it performs a commit that creates a README.md. For Subversion repositories the README.md will be created in a directory named `trunk`.
 
-If the namespace strategy is set to custom, the namespace field is also mandatory. The namespace must heed the same restrictions as the name. Additionally, namespaces that only consist of three digits, or the words "create" and "import" are not valid.
+If the namespace strategy is set to custom, the namespace field is also mandatory. The namespace must heed the same
+restrictions as the name. Additionally, namespaces that only consist of three digits, or the words "create"
+and "import" are not valid. After typing the first characters, existing matching namespaces are suggested which can
+be chosen. To create a new namespace, this has to be chosen from the drop down explicitly.
 
 ![Create Repository](assets/create-repository.png)
 

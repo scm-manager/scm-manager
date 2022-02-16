@@ -1,2 +1,0 @@
-- type: fixed
-  description: Better error descriptions for gpg key import ([#1879](https://github.com/scm-manager/scm-manager/pull/1879))

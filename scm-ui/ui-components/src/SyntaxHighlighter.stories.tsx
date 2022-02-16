@@ -41,6 +41,9 @@ const RoutingDecorator = (story: () => ReactNode) => <MemoryRouter initialEntrie
 
 storiesOf("SyntaxHighlighter", module)
   .addDecorator(RoutingDecorator)
+  // Add async parameter, because the tests needs to render async before snapshot is taken so that
+  // code fragments get highlighted properly
+  .addParameters({ storyshots: { async: true } })
   .add("Java", () => (
     <Spacing>
       <SyntaxHighlighter language="java" value={JavaHttpServer} />
@@ -48,7 +51,7 @@ storiesOf("SyntaxHighlighter", module)
   ))
   .add("Go", () => (
     <Spacing>
-      <SyntaxHighlighter language="golang" value={GoHttpServer} />
+      <SyntaxHighlighter language="go" value={GoHttpServer} />
     </Spacing>
   ))
   .add("Javascript", () => (

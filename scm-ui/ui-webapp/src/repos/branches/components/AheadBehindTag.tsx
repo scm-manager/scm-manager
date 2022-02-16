@@ -32,6 +32,8 @@ import { calculateBarLength } from "./aheadBehind";
 type Props = {
   branch: Branch;
   details: BranchDetails;
+  hiddenMobile?: boolean;
+  verbose?: boolean;
 };
 
 type BarProps = {
@@ -39,13 +41,13 @@ type BarProps = {
   direction: "right" | "left";
 };
 
-const Ahead = styled.div`
+const Ahead = styled.span`
   border-left: 1px solid gray;
 `;
 
-const Behind = styled.div``;
+const Behind = styled.span``;
 
-const Count = styled.div`
+const Count = styled.span`
   word-break: keep-all;
 `;
 
@@ -63,9 +65,10 @@ const Bar = styled.span.attrs<BarProps>(props => ({
 
 const TooltipWithDefaultCursor = styled(Tooltip)`
   cursor: default !important;
+  width: 100%;
 `;
 
-const AheadBehindTag: FC<Props> = ({ branch, details }) => {
+const AheadBehindTag: FC<Props> = ({ branch, details, hiddenMobile, verbose }) => {
   const [t] = useTranslation("repos");
 
   if (
@@ -76,30 +79,38 @@ const AheadBehindTag: FC<Props> = ({ branch, details }) => {
     return null;
   }
 
+  const behindText = verbose
+    ? t("branch.aheadBehind.behindLabel", { count: details.changesetsBehind })
+    : details.changesetsBehind;
+  const aheadText = verbose
+    ? t("branch.aheadBehind.aheadLabel", { count: details.changesetsAhead })
+    : details.changesetsAhead;
+
   return (
-    <TooltipWithDefaultCursor
-      message={t("branch.aheadBehind.tooltip", { ahead: details.changesetsAhead, behind: details.changesetsBehind })}
-      location="top"
-    >
-      <div className="columns is-flex is-unselectable is-hidden-mobile mt-1">
+    <div className={`columns is-flex is-unselectable mt-1 ${hiddenMobile ? "is-hidden-mobile" : ""}`}>
+      <TooltipWithDefaultCursor
+        message={t("branch.aheadBehind.tooltip", { ahead: details.changesetsAhead, behind: details.changesetsBehind })}
+        location="top"
+        className={"is-flex"}
+      >
         <Behind className="column is-half is-flex is-flex-direction-column is-align-items-flex-end p-0">
-          <Count className="is-size-7 pr-1">{details.changesetsBehind}</Count>
+          <Count className="is-size-7 pr-1">{behindText}</Count>
           <Bar
-            className="has-rounded-border-left has-background-grey"
+            className="has-rounded-border-left has-background-secondary"
             width={calculateBarLength(details.changesetsBehind)}
             direction="left"
           />
         </Behind>
         <Ahead className="column is-half is-flex is-flex-direction-column is-align-items-flex-start p-0">
-          <Count className="is-size-7 pl-1">{details.changesetsAhead}</Count>
+          <Count className="is-size-7 pl-1">{aheadText}</Count>
           <Bar
-            className="has-rounded-border-right has-background-grey"
+            className="has-rounded-border-right has-background-secondary"
             width={calculateBarLength(details.changesetsAhead)}
             direction="right"
           />
         </Ahead>
-      </div>
-    </TooltipWithDefaultCursor>
+      </TooltipWithDefaultCursor>
+    </div>
   );
 };
 

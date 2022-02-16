@@ -49,8 +49,8 @@ const prefix = (
 );
 
 storiesOf("BreadCrumb", module)
-  .addDecorator((story) => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
-  .addDecorator((storyFn) => <Wrapper>{storyFn()}</Wrapper>)
+  .addDecorator(story => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
+  .addDecorator(storyFn => <Wrapper>{storyFn()}</Wrapper>)
   .add("Default", () => (
     <Breadcrumb
       repository={repository}
@@ -86,5 +86,18 @@ storiesOf("BreadCrumb", module)
       revision={"1"}
       permalink={"/" + path}
       preButtons={prefix}
+    />
+  ))
+  .add("Not clickable", () => (
+    <Breadcrumb
+      repository={repository}
+      defaultBranch={master}
+      branch={master}
+      path={path}
+      baseUrl={baseUrl}
+      sources={sources}
+      revision={"1"}
+      permalink={"/" + path}
+      clickable={false}
     />
   ));

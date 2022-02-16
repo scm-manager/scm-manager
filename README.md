@@ -50,7 +50,7 @@ SCM-Manager uses [Gradle](https://gradle.org/) for the build.
 The build itself is organized in tasks, the tasks can be executed with the gradle wrapper:
 
 ```bash
-# on linux
+# on *nix
 ./gradlew taskname
 
 # on windows
@@ -84,11 +84,26 @@ and it should rarely be necessary to call them individually.
 To see the full list of available tasks, execute the following command:
 
 ```bash
-# on linux
+# on *nix
 ./gradlew tasks
 
 # on windows
 gradlew.bat tasks
+```
+
+### Dependencies
+
+Dependencies and their versions are configured in the `gradle/dependencies.gradle`.
+Versions of dependencies can be specified as exact version or as a [range](https://docs.gradle.org/current/userguide/single_versions.html) of versions.
+In order to keep the build consistent and reproducible, we use [gradle dependency locking](https://docs.gradle.org/current/userguide/dependency_locking.html).
+Whenever a dependency was added, changed or removed the lock files must be refreshed e.g.:
+
+```bash
+# on *nix
+./gradlew resolveAndLockAll --write-locks
+
+# on windows
+gradlew.bat resolveAndLockAll --write-locks
 ```
 
 ### Artifacts and reports
@@ -110,12 +125,14 @@ Those modules are not build by default.
 To build the distribution modules specify the `enablePackaging` property e.g.:
 
 ```bash
-# on unix
+# on *nix
 ./gradlew -PenablePackaging distribution
 
 # on windows
 gradlew.bat -PenablePackaging distribution
 ```
+
+The command above will refresh the lock files of all sub projects and all configurations.
 
 ### Properties for publishing
 

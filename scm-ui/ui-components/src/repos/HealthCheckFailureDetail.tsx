@@ -38,7 +38,7 @@ type Props = {
 const HealthCheckFailureDetail: FC<Props> = ({ active, closeFunction, failures }) => {
   const [t] = useTranslation("repos");
 
-  const footer = <Button label={t("healthCheckFailure.close")} action={closeFunction} color="grey" />;
+  const footer = <Button label={t("healthCheckFailure.close")} action={closeFunction} color="secondary" />;
 
   return (
     <Modal
@@ -52,7 +52,7 @@ const HealthCheckFailureDetail: FC<Props> = ({ active, closeFunction, failures }
       active={active}
       footer={footer}
       headColor={"danger"}
-      headTextColor={"white"}
+      headTextColor="secondary-least"
     />
   );
 };

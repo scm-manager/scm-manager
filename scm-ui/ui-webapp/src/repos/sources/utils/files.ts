@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 import { File } from "@scm-manager/ui-types";
+import { ContentType } from "@scm-manager/ui-api";
 
 export const isRootPath = (path: string) => {
   return path === "" || path === "/";
@@ -39,4 +40,8 @@ export const isEmptyDirectory = (file: File) => {
     return false;
   }
   return (file._embedded?.children?.length || 0) === 0;
+};
+
+export const determineSyntaxHighlightingLanguage = (data: ContentType) => {
+  return data.prismMode || data.codemirrorMode || data.aceMode || data.language;
 };

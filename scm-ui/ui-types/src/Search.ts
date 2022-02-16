@@ -33,6 +33,8 @@ export type ValueHitField = {
 export type HighlightedHitField = {
   highlighted: true;
   fragments: string[];
+  matchesContentStart: boolean;
+  matchesContentEnd: boolean;
 };
 
 export type HitField = ValueHitField | HighlightedHitField;

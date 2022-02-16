@@ -1,0 +1,2 @@
+- type: added
+  description: Collapses folders in code view which only have a folder as their only child ([#1951](https://github.com/scm-manager/scm-manager/pull/1951))

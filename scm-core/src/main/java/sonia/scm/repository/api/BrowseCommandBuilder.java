@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.api;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -85,7 +85,6 @@ public final class BrowseCommandBuilder
    *
    * @param cacheManager cache manager
    * @param browseCommand implementation of the {@link BrowseCommand}
-   * @param browseCommand
    * @param repository repository to query
    * @param preProcessorUtil
    */
@@ -126,7 +125,7 @@ public final class BrowseCommandBuilder
    * @throws IOException
    */
   public BrowserResult getBrowserResult() throws IOException {
-    BrowserResult result = null;
+    BrowserResult result;
 
     if (disableCache)
     {
@@ -136,7 +135,7 @@ public final class BrowseCommandBuilder
           request);
       }
 
-      result = browseCommand.getBrowserResult(request);
+      result = computeBrowserResult();
     }
     else
     {
@@ -151,7 +150,7 @@ public final class BrowseCommandBuilder
           logger.debug("create browser result for {}", request);
         }
 
-        result = browseCommand.getBrowserResult(request);
+        result = computeBrowserResult();
 
         if (result != null)
         {
@@ -160,7 +159,7 @@ public final class BrowseCommandBuilder
       }
       else if (logger.isDebugEnabled())
       {
-        logger.debug("retrive browser result from cache for {}", request);
+        logger.debug("retrieve browser result from cache for {}", request);
       }
     }
 
@@ -169,6 +168,14 @@ public final class BrowseCommandBuilder
       preProcessorUtil.prepareForReturn(repository, result);
     }
 
+    return result;
+  }
+
+  private BrowserResult computeBrowserResult() throws IOException {
+    BrowserResult result = browseCommand.getBrowserResult(request);
+    if (result != null && !request.isRecursive() && request.isCollapse()) {
+      new BrowserResultCollapser().collapseFolders(browseCommand, request, result.getFile());
+    }
     return result;
   }
 
@@ -320,6 +327,18 @@ public final class BrowseCommandBuilder
     return this;
   }
 
+  /**
+   * Collapse folders with only one sub-folder until a folder is empty, contains files or has more than one sub-folder
+   * and return the path to such folder as a single item.
+   *
+   * @param collapse {@code true} if folders with only one sub-folder should be collapsed, otherwise {@code false}.
+   * @since 2.31.0
+   */
+  public BrowseCommandBuilder setCollapse(boolean collapse) {
+    request.setCollapse(collapse);
+    return this;
+  }
+
   private void updateCache(BrowserResult updatedResult) {
     if (!disableCache) {
       CacheKey key = new CacheKey(repository, request);
@@ -354,7 +373,7 @@ public final class BrowseCommandBuilder
     public CacheKey(Repository repository, BrowseCommandRequest request)
     {
       this.repositoryId = repository.getId();
-      this.request = request;
+      this.request = request.clone();
     }
 
     //~--- methods ------------------------------------------------------------

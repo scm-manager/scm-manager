@@ -89,7 +89,7 @@ class InstalledPluginResourceTest {
 
   @BeforeEach
   void prepareEnvironment() {
-    pluginRootResource = new PluginRootResource(installedPluginResourceProvider, null, null);
+    pluginRootResource = new PluginRootResource(installedPluginResourceProvider, null, null, null);
     when(installedPluginResourceProvider.get()).thenReturn(installedPluginResource);
     dispatcher.addSingletonResource(pluginRootResource);
   }

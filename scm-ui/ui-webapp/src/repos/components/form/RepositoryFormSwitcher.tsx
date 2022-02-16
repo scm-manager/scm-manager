@@ -57,7 +57,7 @@ const RepositoryFormButton: FC<RepositoryForm> = ({ path, icon, label }) => {
       color={isSelected ? "link is-selected" : undefined}
       link={!isSelected ? href : undefined}
     >
-      <Icon className="pr-2" name={icon} color={isSelected ? "white" : "default"} alt="" />
+      <Icon className="pr-2" name={icon} color={isSelected ? "secondary-least" : "inherit"} alt="" />
       <p className={classNames("is-hidden-mobile", "is-hidden-tablet-only")}>{t(`plugins:${label}`, label)}</p>
     </Button>
   );

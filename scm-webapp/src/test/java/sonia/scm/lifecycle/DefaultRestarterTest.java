@@ -24,6 +24,8 @@
 package sonia.scm.lifecycle;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -61,6 +63,7 @@ class DefaultRestarterTest {
     assertThat(restarter.isSupported()).isFalse();
   }
 
+  @DisabledOnOs(OS.WINDOWS)
   @Test
   void shouldReturnTrueIfRestartStrategyIsAvailable() {
     DefaultRestarter restarter = new DefaultRestarter();

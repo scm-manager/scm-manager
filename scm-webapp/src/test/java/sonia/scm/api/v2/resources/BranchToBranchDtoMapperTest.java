@@ -28,6 +28,7 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -37,15 +38,20 @@ import sonia.scm.repository.Branch;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryTestData;
+import sonia.scm.repository.api.Command;
+import sonia.scm.repository.api.RepositoryService;
+import sonia.scm.repository.api.RepositoryServiceFactory;
 
 import java.net.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class BranchToBranchDtoMapperTest {
 
+  public static final Repository REPOSITORY = RepositoryTestData.createHeartOfGold();
   private final URI baseUri = URI.create("https://hitchhiker.com/api/");
 
   @SuppressWarnings("unused") // Is injected
@@ -53,6 +59,10 @@ class BranchToBranchDtoMapperTest {
 
   @Mock
   private Subject subject;
+  @Mock
+  private RepositoryServiceFactory serviceFactory;
+  @Mock
+  private RepositoryService service;
 
   @InjectMocks
   private BranchToBranchDtoMapperImpl mapper;
@@ -60,6 +70,11 @@ class BranchToBranchDtoMapperTest {
   @BeforeEach
   void setupSubject() {
     ThreadContext.bind(subject);
+  }
+
+  @BeforeEach
+  void initService() {
+    when(serviceFactory.create(REPOSITORY)).thenReturn(service);
   }
 
   @AfterEach
@@ -80,37 +95,69 @@ class BranchToBranchDtoMapperTest {
 
     Branch branch = Branch.normalBranch("master", "42");
 
-    BranchDto dto = mapper.map(branch, RepositoryTestData.createHeartOfGold());
+    BranchDto dto = mapper.map(branch, REPOSITORY);
     assertThat(dto.getLinks().getLinkBy("ka").get().getHref()).isEqualTo("http://hitchhiker/HeartOfGold/master");
   }
 
-  @Test
-  void shouldAppendDeleteLink() {
-    Repository repository = RepositoryTestData.createHeartOfGold();
-    when(subject.isPermitted("repository:push:" + repository.getId())).thenReturn(true);
-    Branch branch = Branch.normalBranch("master", "42");
+  @Nested
+  class WithPushPermissions {
 
-    BranchDto dto = mapper.map(branch, repository);
-    assertThat(dto.getLinks().getLinkBy("delete").get().getHref()).isEqualTo("https://hitchhiker.com/api/v2/repositories/hitchhiker/HeartOfGold/branches/master");
-  }
+    @BeforeEach
+    void setPermission() {
+      lenient().when(subject.isPermitted("repository:push:" + REPOSITORY.getId())).thenReturn(true);
+    }
 
-  @Test
-  void shouldNotAppendDeleteLinkIfDefaultBranch() {
-    Repository repository = RepositoryTestData.createHeartOfGold();
-    Branch branch = Branch.defaultBranch("master", "42");
+    @Test
+    void shouldAppendDefaultLink() {
+      Branch branch = Branch.normalBranch("master", "42");
 
-    BranchDto dto = mapper.map(branch, repository);
-    assertThat(dto.getLinks().getLinkBy("delete")).isNotPresent();
+      BranchDto dto = mapper.map(branch, REPOSITORY);
+      assertThat(dto.getLinks().getLinkBy("history")).isNotEmpty();
+      assertThat(dto.getLinks().getLinkBy("changeset")).isNotEmpty();
+      assertThat(dto.getLinks().getLinkBy("source")).isNotEmpty();
+    }
+
+    @Test
+    void shouldAppendDeleteLink() {
+      Branch branch = Branch.normalBranch("master", "42");
+
+      BranchDto dto = mapper.map(branch, REPOSITORY);
+      assertThat(dto.getLinks().getLinkBy("delete").get().getHref()).isEqualTo("https://hitchhiker.com/api/v2/repositories/hitchhiker/HeartOfGold/branches/master");
+    }
+
+    @Test
+    void shouldNotAppendDeleteLinkIfDefaultBranch() {
+      Branch branch = Branch.defaultBranch("master", "42");
+
+      BranchDto dto = mapper.map(branch, REPOSITORY);
+      assertThat(dto.getLinks().getLinkBy("delete")).isNotPresent();
+    }
+
+    @Test
+    void shouldAppendDetailsLinkIfDetailsCommandIsSupported() {
+      Branch branch = Branch.normalBranch("master", "42");
+      when(service.isSupported(Command.BRANCH_DETAILS)).thenReturn(true);
+
+      BranchDto dto = mapper.map(branch, REPOSITORY);
+      assertThat(dto.getLinks().getLinkBy("details")).isNotEmpty();
+    }
+
+    @Test
+    void shouldNotAppendDetailsLinkIfDetailsCommandIsNotSupported() {
+      Branch branch = Branch.normalBranch("master", "42");
+      when(service.isSupported(Command.BRANCH_DETAILS)).thenReturn(false);
+
+      BranchDto dto = mapper.map(branch, REPOSITORY);
+      assertThat(dto.getLinks().getLinkBy("details")).isNotPresent();
+    }
   }
 
   @Test
   void shouldNotAppendDeleteLinkIfNotPermitted() {
-    Repository repository = RepositoryTestData.createHeartOfGold();
-    when(subject.isPermitted("repository:push:" + repository.getId())).thenReturn(false);
+    when(subject.isPermitted("repository:push:" + REPOSITORY.getId())).thenReturn(false);
     Branch branch = Branch.normalBranch("master", "42");
 
-    BranchDto dto = mapper.map(branch, repository);
+    BranchDto dto = mapper.map(branch, REPOSITORY);
     assertThat(dto.getLinks().getLinkBy("delete")).isNotPresent();
   }
-
 }

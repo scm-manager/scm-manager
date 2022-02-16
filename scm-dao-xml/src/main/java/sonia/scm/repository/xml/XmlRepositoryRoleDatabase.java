@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.xml;
 
 import sonia.scm.repository.RepositoryRole;
@@ -33,8 +33,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.Collection;
-import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 @XmlRootElement(name = "user-db")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -45,7 +45,7 @@ public class XmlRepositoryRoleDatabase implements XmlDatabase<RepositoryRole> {
 
   @XmlJavaTypeAdapter(XmlRepositoryRoleMapAdapter.class)
   @XmlElement(name = "roles")
-  private Map<String, RepositoryRole> roleMap = new LinkedHashMap<>();
+  private Map<String, RepositoryRole> roleMap = new TreeMap<>();
 
   public XmlRepositoryRoleDatabase() {
     long c = System.currentTimeMillis();

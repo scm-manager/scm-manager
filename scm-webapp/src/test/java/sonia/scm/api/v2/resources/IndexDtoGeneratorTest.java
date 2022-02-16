@@ -61,10 +61,7 @@ import static sonia.scm.SCMContext.USER_ANONYMOUS;
 @ExtendWith(MockitoExtension.class)
 class IndexDtoGeneratorTest {
 
-  private static final ScmPathInfo scmPathInfo = () -> URI.create("/api/v2");
-
-  @Mock
-  private ResourceLinks resourceLinks;
+  private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(URI.create("/api/v2"));
   @Mock
   private BasicContextProvider contextProvider;
   @Mock
@@ -99,7 +96,6 @@ class IndexDtoGeneratorTest {
 
     @Test
     void shouldAppendMeIfAuthenticated() {
-      mockSubjectRelatedResourceLinks();
       when(subject.isAuthenticated()).thenReturn(true);
 
       when(contextProvider.getVersion()).thenReturn("2.x");
@@ -111,7 +107,6 @@ class IndexDtoGeneratorTest {
 
     @Test
     void shouldNotAppendMeIfUserIsAuthenticatedButAnonymous() {
-      mockResourceLinks();
       when(subject.getPrincipal()).thenReturn(USER_ANONYMOUS);
       when(subject.isAuthenticated()).thenReturn(true);
 
@@ -122,7 +117,6 @@ class IndexDtoGeneratorTest {
 
     @Test
     void shouldAppendMeIfUserIsAnonymousAndAnonymousModeIsFullEnabled() {
-      mockSubjectRelatedResourceLinks();
       when(subject.getPrincipal()).thenReturn(USER_ANONYMOUS);
       when(subject.isAuthenticated()).thenReturn(true);
       when(configuration.getAnonymousMode()).thenReturn(AnonymousMode.FULL);
@@ -134,7 +128,6 @@ class IndexDtoGeneratorTest {
 
     @Test
     void shouldNotAppendMeIfUserIsAnonymousAndAnonymousModeIsProtocolOnly() {
-      mockResourceLinks();
       when(subject.getPrincipal()).thenReturn(USER_ANONYMOUS);
       when(subject.isAuthenticated()).thenReturn(true);
       when(configuration.getAnonymousMode()).thenReturn(AnonymousMode.PROTOCOL_ONLY);
@@ -152,8 +145,6 @@ class IndexDtoGeneratorTest {
         searchableType("group")
       );
       when(searchEngine.getSearchableTypes()).thenReturn(types);
-      mockSubjectRelatedResourceLinks();
-      when(resourceLinks.search()).thenReturn(new ResourceLinks.SearchLinks(scmPathInfo));
 
       when(subject.isAuthenticated()).thenReturn(true);
 
@@ -182,7 +173,6 @@ class IndexDtoGeneratorTest {
 
     @Test
     void shouldCreateInitializationLink() {
-      mockBaseLink();
       when(initializationFinisher.isFullyInitialized()).thenReturn(false);
       when(initializationFinisher.missingInitialization()).thenReturn(initializationStep);
       when(initializationStep.name()).thenReturn("probability");
@@ -206,28 +196,5 @@ class IndexDtoGeneratorTest {
         }
       );
     }
-  }
-
-  private void mockResourceLinks() {
-    mockBaseLink();
-    when(resourceLinks.authentication()).thenReturn(new ResourceLinks.AuthenticationLinks(scmPathInfo));
-  }
-
-  private void mockBaseLink() {
-    when(resourceLinks.index()).thenReturn(new ResourceLinks.IndexLinks(scmPathInfo));
-    when(resourceLinks.uiPluginCollection()).thenReturn(new ResourceLinks.UIPluginCollectionLinks(scmPathInfo));
-  }
-
-  private void mockSubjectRelatedResourceLinks() {
-    mockResourceLinks();
-    when(resourceLinks.repositoryCollection()).thenReturn(new ResourceLinks.RepositoryCollectionLinks(scmPathInfo));
-    when(resourceLinks.repositoryVerbs()).thenReturn(new ResourceLinks.RepositoryVerbLinks(scmPathInfo));
-    when(resourceLinks.repositoryTypeCollection()).thenReturn(new ResourceLinks.RepositoryTypeCollectionLinks(scmPathInfo));
-    when(resourceLinks.repositoryRoleCollection()).thenReturn(new ResourceLinks.RepositoryRoleCollectionLinks(scmPathInfo));
-    when(resourceLinks.namespaceStrategies()).thenReturn(new ResourceLinks.NamespaceStrategiesLinks(scmPathInfo));
-    when(resourceLinks.namespaceCollection()).thenReturn(new ResourceLinks.NamespaceCollectionLinks(scmPathInfo));
-    when(resourceLinks.me()).thenReturn(new ResourceLinks.MeLinks(scmPathInfo, new ResourceLinks.UserLinks(scmPathInfo)));
-    when(resourceLinks.repository()).thenReturn(new ResourceLinks.RepositoryLinks(scmPathInfo));
-    when(resourceLinks.search()).thenReturn(new ResourceLinks.SearchLinks(scmPathInfo));
   }
 }

@@ -40,6 +40,7 @@ import sonia.scm.config.ScmConfiguration;
 import sonia.scm.net.GlobalProxyConfiguration;
 import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.repository.api.MirrorCommandResult;
+import sonia.scm.util.SystemUtil;
 
 import javax.net.ssl.X509TrustManager;
 import java.io.File;
@@ -115,7 +116,7 @@ public class SvnMirrorCommandTest extends AbstractSvnCommandTestBase {
 
   private MirrorCommandRequest createRequest(File source) {
     MirrorCommandRequest request = new MirrorCommandRequest();
-    request.setSourceUrl("file://" + source.getAbsolutePath());
+    request.setSourceUrl("file://" + (SystemUtil.isWindows() ? "/" : "") + source.getAbsolutePath());
     return request;
   }
 

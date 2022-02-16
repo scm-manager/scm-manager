@@ -66,7 +66,8 @@ const DeleteUser: FC<Props> = ({ confirmDialog = true, user }) => {
           },
           {
             label: t("deleteUser.confirmAlert.cancel"),
-            onClick: () => null
+            onClick: () => null,
+            autofocus: true
           }
         ]}
         close={() => setShowConfirmAlert(false)}

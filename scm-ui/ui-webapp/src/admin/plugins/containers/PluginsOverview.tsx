@@ -41,8 +41,15 @@ import ExecutePendingActionModal from "../components/ExecutePendingActionModal";
 import CancelPendingActionModal from "../components/CancelPendingActionModal";
 import UpdateAllActionModal from "../components/UpdateAllActionModal";
 import ShowPendingModal from "../components/ShowPendingModal";
-import { useAvailablePlugins, useInstalledPlugins, usePendingPlugins } from "@scm-manager/ui-api";
+import {
+  useAvailablePlugins,
+  useInstalledPlugins,
+  usePendingPlugins,
+  usePluginCenterAuthInfo
+} from "@scm-manager/ui-api";
 import PluginModal from "../components/PluginModal";
+import MyCloudoguBanner from "../components/MyCloudoguBanner";
+import PluginCenterAuthInfo from "../components/PluginCenterAuthInfo";
 
 export enum PluginAction {
   INSTALL = "install",
@@ -73,6 +80,7 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
     error: installedPluginsError
   } = useInstalledPlugins({ enabled: installed });
   const { data: pendingPlugins, isLoading: isLoadingPendingPlugins, error: pendingPluginsError } = usePendingPlugins();
+  const pluginCenterAuthInfo = usePluginCenterAuthInfo();
   const [showPendingModal, setShowPendingModal] = useState(false);
   const [showExecutePendingModal, setShowExecutePendingModal] = useState(false);
   const [showUpdateAllModal, setShowUpdateAllModal] = useState(false);
@@ -86,7 +94,9 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
     return (
       <div className="columns">
         <div className="column">
-          <Title title={t("plugins.title")} />
+          <Title className="is-flex">
+            {t("plugins.title")} <PluginCenterAuthInfo {...pluginCenterAuthInfo} />
+          </Title>
           <Subtitle subtitle={installed ? t("plugins.installedSubtitle") : t("plugins.availableSubtitle")} />
         </div>
         <PluginTopActions>{actions}</PluginTopActions>
@@ -165,7 +175,7 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
   };
 
   const computeUpdateAllSize = () => {
-    const outdatedPlugins = collection?._embedded.plugins.filter((p: Plugin) => p._links.update).length;
+    const outdatedPlugins = collection?._embedded?.plugins.filter((p: Plugin) => p._links.update).length;
     return t("plugins.outdatedPlugins", {
       count: outdatedPlugins
     });
@@ -173,7 +183,13 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
 
   const renderPluginsList = () => {
     if (collection?._embedded && collection._embedded.plugins.length > 0) {
-      return <PluginsList plugins={collection._embedded.plugins} openModal={setPluginModalContent} />;
+      return (
+        <PluginsList
+          plugins={collection._embedded.plugins}
+          openModal={setPluginModalContent}
+          pluginCenterAuthInfo={pluginCenterAuthInfo.data}
+        />
+      );
     }
     return <Notification type="info">{t("plugins.noPlugins")}</Notification>;
   };
@@ -213,6 +229,7 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
     <>
       {renderHeader(actions)}
       <hr className="header-with-actions" />
+      {pluginCenterAuthInfo.data?.default ? <MyCloudoguBanner info={pluginCenterAuthInfo.data} /> : null}
       {renderPluginsList()}
       {renderFooter(actions)}
       {renderModals()}

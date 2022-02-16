@@ -8,6 +8,7 @@ Der Bereich Repository umfasst alles auf Basis von Repositories in Namespaces. D
 * [Branches](branches/)
 * [Tags](tags/)
 * [Code](code/)
+* [Compare](compare/)
 * [Einstellungen](settings/)
 <!--- AppendLinkContentEnd -->
 
@@ -26,7 +27,12 @@ Im SCM-Manager können neue Git, Mercurial & Subersion (SVN) Repositories über 
 Optional kann man das Repository beim Erstellen direkt initialisieren. Damit werden für Git und Mercurial jeweils der Standard-Branch (master bzw. default) angelegt. Außerdem wird ein initialer Commit ausgeführt, der eine README.md erzeugt. 
 Für Subversion Repositories wird die README.md in einen Ordner `trunk` abgelegt.
 
-Ist die Namespace-Strategie auf "Benutzerdefiniert" eingestellt, muss noch ein Namespace eingetragen werden. Für den Namespace gelten dieselben Regeln wie für den Namen des Repositories. Darüber hinaus darf ein Namespace nicht nur aus bis zu drei Ziffern (z. B. "123") oder den Wörter "create" und "import" bestehen. 
+Ist die Namespace-Strategie auf "Benutzerdefiniert" eingestellt, muss noch ein Namespace eingetragen werden.
+Für den Namespace gelten dieselben Regeln wie für den Namen des Repositories. Darüber hinaus darf ein Namespace
+nicht nur aus bis zu drei Ziffern (z. B. "123") oder den Wörter "create" und "import" bestehen.
+Bei der Eingabe werden nach den ersten Zeichen bereits bestehende passende Werte vorgeschlagen, sodass diese leichter
+übernommen werden können. Ein neuer Namespace muss explizit mit dem entsprechenden Eintrag in der Vorschlagsliste
+neu erstellt werden.
 
 ![Repository erstellen](assets/create-repository.png)
 

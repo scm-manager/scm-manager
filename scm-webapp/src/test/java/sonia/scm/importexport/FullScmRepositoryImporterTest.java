@@ -160,11 +160,12 @@ class FullScmRepositoryImporterTest {
   void shouldNotImportRepositoryIfFileNotExists(@TempDir Path temp) throws IOException {
     Path emptyFile = temp.resolve("empty");
     Files.createFile(emptyFile);
-    FileInputStream inputStream = new FileInputStream(emptyFile.toFile());
-    assertThrows(
-      ImportFailedException.class,
-      () -> fullImporter.importFromStream(REPOSITORY, inputStream, "")
-    );
+    try (FileInputStream inputStream = new FileInputStream(emptyFile.toFile())) {
+      assertThrows(
+        ImportFailedException.class,
+        () -> fullImporter.importFromStream(REPOSITORY, inputStream, "")
+      );
+    }
   }
 
   @Test

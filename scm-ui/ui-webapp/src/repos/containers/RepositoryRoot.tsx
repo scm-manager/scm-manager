@@ -57,6 +57,7 @@ import CodeOverview from "../codeSection/containers/CodeOverview";
 import ChangesetView from "./ChangesetView";
 import SourceExtensions from "../sources/containers/SourceExtensions";
 import TagsOverview from "../tags/container/TagsOverview";
+import CompareRoot from "../compare/CompareRoot";
 import TagRoot from "../tags/container/TagRoot";
 import { useIndexLinks, useRepository } from "@scm-manager/ui-api";
 import styled from "styled-components";
@@ -257,41 +258,36 @@ const RepositoryRoot = () => {
               <Route path={`${url}/settings/permissions`}>
                 <Permissions namespaceOrRepository={repository} />
               </Route>
-              <Route
-                exact
-                path={`${url}/code/changeset/:id`}
-                render={() => (
-                  <ChangesetView repository={repository} fileControlFactoryFactory={fileControlFactoryFactory} />
-                )}
-              />
-              <Route
-                path={`${url}/code/sourceext/:extension`}
-                exact={true}
-                render={() => <SourceExtensions repository={repository} />}
-              />
-              <Route
-                path={`${url}/code/sourceext/:extension/:revision/:path*`}
-                render={() => <SourceExtensions repository={repository} baseUrl={`${url}/code/sources`} />}
-              />
+              <Route exact path={`${url}/code/changeset/:id`}>
+                <ChangesetView repository={repository} fileControlFactoryFactory={fileControlFactoryFactory} />
+              </Route>
+              <Route path={`${url}/code/sourceext/:extension`} exact={true}>
+                <SourceExtensions repository={repository} />
+              </Route>
+              <Route path={`${url}/code/sourceext/:extension/:revision/:path*`}>
+                <SourceExtensions repository={repository} baseUrl={`${url}/code/sources`} />
+              </Route>
               <Route path={`${url}/code`}>
                 <CodeOverview baseUrl={`${url}/code`} repository={repository} />
               </Route>
-              <Route path={`${url}/branch/:branch`} render={() => <BranchRoot repository={repository} />} />
-              <Route
-                path={`${url}/branches`}
-                exact={true}
-                render={() => <BranchesOverview repository={repository} baseUrl={`${url}/branch`} />}
-              />
-              <Route path={`${url}/branches/create`} render={() => <CreateBranch repository={repository} />} />
-              <Route
-                path={`${url}/tag/:tag`}
-                render={() => <TagRoot repository={repository} baseUrl={`${url}/tag`} />}
-              />
-              <Route
-                path={`${url}/tags`}
-                exact={true}
-                render={() => <TagsOverview repository={repository} baseUrl={`${url}/tag`} />}
-              />
+              <Route path={`${url}/branch/:branch`}>
+                <BranchRoot repository={repository} />
+              </Route>
+              <Route path={`${url}/branches`} exact={true}>
+                <BranchesOverview repository={repository} baseUrl={`${url}/branch`} />
+              </Route>
+              <Route path={`${url}/branches/create`}>
+                <CreateBranch repository={repository} />
+              </Route>
+              <Route path={`${url}/tag/:tag`}>
+                <TagRoot repository={repository} baseUrl={`${url}/tag`} />
+              </Route>
+              <Route path={`${url}/tags`} exact={true}>
+                <TagsOverview repository={repository} baseUrl={`${url}/tag`} />
+              </Route>
+              <Route path={`${url}/compare/:sourceType/:sourceName`}>
+                <CompareRoot repository={repository} baseUrl={`${url}/compare`} />
+              </Route>
               <ExtensionPoint name="repository.route" props={extensionProps} renderAll={true} />
             </Switch>
           </PrimaryContentColumn>

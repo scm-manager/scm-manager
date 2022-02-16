@@ -22,22 +22,14 @@
  * SOFTWARE.
  */
 import React, { FC, useState } from "react";
-import styled from "styled-components";
 import MarkdownViewer from "./MarkdownViewer";
 import { File } from "@scm-manager/ui-types";
-import { Button, ErrorNotification, Loading, SyntaxHighlighter } from "@scm-manager/ui-components";
+import { ErrorNotification, Loading, SyntaxHighlighter } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 import { useFileContent } from "@scm-manager/ui-api";
 import replaceBranchWithRevision from "../../ReplaceBranchWithRevision";
 import { useLocation } from "react-router-dom";
-
-const ToggleButton = styled(Button)`
-  max-width: 1rem;
-  position: absolute;
-  top: 0;
-  right: 0.25rem;
-  z-index: 30;
-`;
+import classNames from "classnames";
 
 type Props = {
   file: File;
@@ -65,21 +57,20 @@ const SwitchableMarkdownViewer: FC<Props> = ({ file, basePath }) => {
 
   return (
     <div className="is-relative">
-      <ToggleButton
-        color={renderMarkdown ? "link" : ""}
-        action={toggleMarkdown}
-        title={
-          renderMarkdown
-            ? t("sources.content.toggleButton.showSources")
-            : t("sources.content.toggleButton.showMarkdown")
-        }
-      >
-        <i className="fab fa-markdown" />
-      </ToggleButton>
+      <div className="tabs is-toggle is-right">
+        <ul>
+          <li className={classNames({ "is-active": renderMarkdown })} onClick={toggleMarkdown}>
+            <a>{t("sources.content.toggleButton.showMarkdown")}</a>
+          </li>
+          <li className={classNames({ "is-active": !renderMarkdown })} onClick={toggleMarkdown}>
+            <a>{t("sources.content.toggleButton.showSources")}</a>
+          </li>
+        </ul>
+      </div>
       {renderMarkdown ? (
         <MarkdownViewer content={content || ""} basePath={basePath} permalink={permalink} />
       ) : (
-        <SyntaxHighlighter language="MARKDOWN" value={content || ""} permalink={permalink} />
+        <SyntaxHighlighter language="markdown" value={content || ""} permalink={permalink} />
       )}
     </div>
   );

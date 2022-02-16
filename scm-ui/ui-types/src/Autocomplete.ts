@@ -24,7 +24,7 @@
 
 export type AutocompleteObject = {
   id: string;
-  displayName: string;
+  displayName?: string;
 };
 
 export type SelectValue = {

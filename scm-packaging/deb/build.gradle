@@ -27,7 +27,7 @@ import org.gradle.util.VersionNumber
 plugins {
   id 'nebula.ospackage' version '8.5.6'
   id 'org.scm-manager.packaging'
-  id 'org.scm-manager.license' version '0.7.1'
+  id 'org.scm-manager.license'
 }
 
 configurations {
@@ -169,6 +169,7 @@ artifacts {
 
 license {
   header rootProject.file("LICENSE.txt")
+  lineEnding = "\n"
 
   tasks {
     build {

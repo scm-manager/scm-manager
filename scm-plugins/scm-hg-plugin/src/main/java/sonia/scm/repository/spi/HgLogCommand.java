@@ -24,37 +24,21 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.spi.javahg.HgLogChangesetCommand;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-//~--- JDK imports ------------------------------------------------------------
+public class HgLogCommand extends AbstractCommand implements LogCommand {
 
-/**
- *
- * @author Sebastian Sdorra
- */
-public class HgLogCommand extends AbstractCommand implements LogCommand
-{
-
-  /**
-   * Constructs ...
-   *
-   *  @param context
-   *
-   */
-  HgLogCommand(HgCommandContext context)
-  {
+  HgLogCommand(HgCommandContext context) {
     super(context);
   }
-
-  //~--- get methods ----------------------------------------------------------
 
   @Override
   public Changeset getChangeset(String id, LogCommandRequest request) {
@@ -66,17 +50,15 @@ public class HgLogCommand extends AbstractCommand implements LogCommand
 
   @Override
   public ChangesetPagingResult getChangesets(LogCommandRequest request) {
-    ChangesetPagingResult result = null;
+    ChangesetPagingResult result;
 
     org.javahg.Repository repository = open();
 
     if (!Strings.isNullOrEmpty(request.getPath())
-      ||!Strings.isNullOrEmpty(request.getBranch()))
-    {
+      || !Strings.isNullOrEmpty(request.getBranch())
+      || !Strings.isNullOrEmpty(request.getAncestorChangeset())) {
       result = collectSafely(repository, request);
-    }
-    else
-    {
+    } else {
 
       int start = -1;
       int end = 0;
@@ -84,133 +66,107 @@ public class HgLogCommand extends AbstractCommand implements LogCommand
       String startChangeset = request.getStartChangeset();
       String endChangeset = request.getEndChangeset();
 
-      if (!Strings.isNullOrEmpty(startChangeset))
-      {
+      if (!Strings.isNullOrEmpty(startChangeset)) {
         start = on(repository).rev(startChangeset).singleRevision();
-      }
-      else if (!Strings.isNullOrEmpty(endChangeset))
-      {
+      } else if (!Strings.isNullOrEmpty(endChangeset)) {
         end = on(repository).rev(endChangeset).singleRevision();
       }
 
-      if (start < 0)
-      {
+      if (start < 0) {
         start = on(repository).rev("tip").singleRevision();
       }
 
-      if (start >= 0)
-      {
+      if (start >= 0) {
 
         int total = start - end + 1;
 
-        if (request.getPagingStart() > 0)
-        {
+        if (request.getPagingStart() > 0) {
           start -= request.getPagingStart();
         }
 
-        if (request.getPagingLimit() > 0)
-        {
+        if (request.getPagingLimit() > 0) {
           end = start - request.getPagingLimit() + 1;
         }
 
-        if (end < 0)
-        {
+        if (end < 0) {
           end = 0;
         }
 
         List<Changeset> changesets = on(repository).rev(start + ":"
-                                       + end).execute();
+          + end).execute();
 
         if (request.getBranch() == null) {
           result = new ChangesetPagingResult(total, changesets);
         } else {
           result = new ChangesetPagingResult(total, changesets, request.getBranch());
         }
-      }
-      else
-      {
+      } else {
 
         // empty repository
-        result = new ChangesetPagingResult(0, new ArrayList<Changeset>());
+        result = new ChangesetPagingResult(0, new ArrayList<>());
       }
     }
 
     return result;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   * @param request
-   *
-   * @return
-   */
   private ChangesetPagingResult collectSafely(
-    org.javahg.Repository repository, LogCommandRequest request)
-  {
+    org.javahg.Repository repository, LogCommandRequest request) {
     HgLogChangesetCommand cmd = on(repository);
     String startChangeset = request.getStartChangeset();
     String endChangeset = request.getEndChangeset();
+    String ancestorChangeset = request.getAncestorChangeset();
 
-    if (!Strings.isNullOrEmpty(startChangeset)
-      &&!Strings.isNullOrEmpty(endChangeset))
-    {
+    if (!Strings.isNullOrEmpty(startChangeset) && !Strings.isNullOrEmpty(endChangeset)) {
       cmd.rev(startChangeset.concat(":").concat(endChangeset));
-    }
-    else if (!Strings.isNullOrEmpty(endChangeset))
-    {
+    } else if (!Strings.isNullOrEmpty(startChangeset) && !Strings.isNullOrEmpty(ancestorChangeset)) {
+      int start = on(repository).rev(startChangeset).singleRevision();
+      int ancestor = on(repository).rev(ancestorChangeset).singleRevision();
+      cmd.rev(String.format("only(%s,%s)", start, ancestor));
+    } else if (!Strings.isNullOrEmpty(endChangeset)) {
       cmd.rev("tip:".concat(endChangeset));
-    }
-    else if (!Strings.isNullOrEmpty(startChangeset))
-    {
+    } else if (!Strings.isNullOrEmpty(startChangeset)) {
       cmd.rev(startChangeset.concat(":0"));
     }
 
-    if (!Strings.isNullOrEmpty(request.getBranch()))
-    {
+    if (!Strings.isNullOrEmpty(request.getBranch())) {
       cmd.branch(request.getBranch());
     }
 
     int start = request.getPagingStart();
     int limit = request.getPagingLimit();
 
-    List<Changeset> changesets = null;
-    int total = 0;
+    List<Changeset> changesets;
+    int total;
 
-    if ((start == 0) && (limit < 0))
-    {
-      if (!Strings.isNullOrEmpty(request.getPath()))
-      {
+    if ((start == 0) && (limit < 0)) {
+      if (!Strings.isNullOrEmpty(request.getPath())) {
         changesets = cmd.execute(request.getPath());
-      }
-      else
-      {
+      } else {
         changesets = cmd.execute();
       }
 
       total = changesets.size();
-    }
-    else
-    {
+    } else {
       limit = limit + start;
 
-      List<Integer> revisionList = null;
+      List<Integer> revisionList;
 
-      if (!Strings.isNullOrEmpty(request.getPath()))
-      {
+      if (!Strings.isNullOrEmpty(request.getPath())) {
         revisionList = cmd.loadRevisions(request.getPath());
-      }
-      else
-      {
+      } else {
         revisionList = cmd.loadRevisions();
       }
 
-      if ((limit > revisionList.size()) || (limit < 0))
-      {
+      if (!Strings.isNullOrEmpty(request.getAncestorChangeset())) {
+        revisionList = Lists.reverse(revisionList);
+      }
+
+      if (revisionList.isEmpty()) {
+        return new ChangesetPagingResult(0, Collections.emptyList());
+      }
+
+      if ((limit > revisionList.size()) || (limit < 0)) {
         limit = revisionList.size();
       }
 
@@ -220,8 +176,7 @@ public class HgLogCommand extends AbstractCommand implements LogCommand
 
       String[] revs = new String[sublist.size()];
 
-      for (int i = 0; i < sublist.size(); i++)
-      {
+      for (int i = 0; i < sublist.size(); i++) {
         revs[i] = sublist.get(i).toString();
       }
 
@@ -231,16 +186,7 @@ public class HgLogCommand extends AbstractCommand implements LogCommand
     return new ChangesetPagingResult(total, changesets);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   */
-  private HgLogChangesetCommand on(org.javahg.Repository repository)
-  {
+  private HgLogChangesetCommand on(org.javahg.Repository repository) {
     return HgLogChangesetCommand.on(repository, getContext().getConfig());
   }
 }

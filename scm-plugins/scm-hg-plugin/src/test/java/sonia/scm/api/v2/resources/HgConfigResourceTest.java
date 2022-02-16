@@ -41,6 +41,8 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.repository.HgGlobalConfig;
 import sonia.scm.repository.HgRepositoryHandler;
+import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.web.HgVndMediaType;
 import sonia.scm.web.RestDispatcher;
 
@@ -50,6 +52,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collections;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
@@ -68,6 +71,9 @@ public class HgConfigResourceTest {
 
   private final RestDispatcher dispatcher = new RestDispatcher();
 
+  @Mock
+  private RepositoryManager repositoryManager;
+
   @InjectMocks
   private HgGlobalConfigDtoToHgConfigMapperImpl dtoToConfigMapper;
 
@@ -84,6 +90,7 @@ public class HgConfigResourceTest {
   public void prepareEnvironment() {
     HgGlobalConfig gitConfig = createConfiguration();
     when(repositoryHandler.getConfig()).thenReturn(gitConfig);
+    when(repositoryManager.getAll()).thenReturn(Collections.singleton(RepositoryTestData.create42Puzzle()));
 
     HgConfigResource gitConfigResource = new HgConfigResource(
       dtoToConfigMapper, createConfigToDtoMapper(), repositoryHandler,
@@ -100,6 +107,7 @@ public class HgConfigResourceTest {
       HgGlobalConfigToHgGlobalConfigDtoMapper.class
     );
     mapper.setLinks(links);
+    mapper.setRepositoryManager(repositoryManager);
     return mapper;
   }
 

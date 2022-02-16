@@ -54,6 +54,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
+import java.util.Locale;
 
 public class ContentResource {
 
@@ -211,6 +212,11 @@ public class ContentResource {
     contentType.getLanguage().ifPresent(
       language -> responseBuilder.header(ProgrammingLanguages.HEADER, language)
     );
+
+    contentType.getSyntaxModes().forEach((mode, lang) -> {
+      String modeName = mode.substring(0, 1).toUpperCase(Locale.ENGLISH) + mode.substring(1);
+      responseBuilder.header(ProgrammingLanguages.HEADER_SYNTAX_MODE_PREFIX + modeName, lang);
+    });
   }
 
   private byte[] getHead(String revision, String path, RepositoryService repositoryService) throws IOException {

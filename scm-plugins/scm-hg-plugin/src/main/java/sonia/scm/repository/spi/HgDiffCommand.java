@@ -38,7 +38,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- *
  * @author Sebastian Sdorra
  */
 public class HgDiffCommand extends AbstractCommand implements DiffCommand {
@@ -74,7 +73,13 @@ public class HgDiffCommand extends AbstractCommand implements DiffCommand {
     if (format == DiffFormat.GIT) {
       cmd.git();
     }
-    cmd.change(HgUtil.getRevision(request.getRevision()));
+    String revision = HgUtil.getRevision(request.getRevision());
+    if (request.getAncestorChangeset() != null) {
+      String ancestor = HgUtil.getRevision(request.getAncestorChangeset());
+      cmd.cmdAppend(String.format("-r ancestor(%s,%s):%s", ancestor, revision, revision));
+    } else {
+      cmd.change(revision);
+    }
     return cmd;
   }
 

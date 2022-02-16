@@ -174,33 +174,6 @@ footer.footer {
   background-color: $danger-25;
 }
 
-// TODO
-/*.has-background-danger-high-contrast {
-  background-color: $high-contrast-danger;
-}
-.has-background-danger-high-contrast-75 {
-  background-color: $high-contrast-danger-75;
-}
-.has-background-danger-high-contrast-50 {
-  background-color: $high-contrast-danger-50;
-}
-.has-background-danger-high-contrast-25 {
-  background-color: $high-contrast-danger-25;
-}
-
-.has-background-high-contrast-light-gray {
-  background-color: $high-contrast-light-gray;
-}
-.has-background-high-contrast-light-gray-75 {
-  background-color: $light-75;
-}
-.has-background-high-contrast-light-gray-50 {
-  background-color: $light-50;
-}
-.has-background-high-contrast-light-gray-25 {
-  background-color: $light-25;
-}*/
-
 // tags
 .tag:not(body) {
   border: 1px solid transparent;
@@ -370,6 +343,10 @@ footer.footer {
   }
 }
 
+.notifications .dropdown-menu:before {
+  border: 0.4rem solid transparent;
+}
+
 @import "~@fortawesome/fontawesome-free/scss/fontawesome";
 $fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
 @import "~@fortawesome/fontawesome-free/scss/solid";
@@ -384,6 +361,27 @@ $fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
 .has-border-white {
   border-color: $white !important;
 }
+
+.has-border-success {
+  border-color: $success !important;
+}
+
+.has-border-info {
+  border-color: $info !important;
+}
+
+.has-border-danger {
+  border-color: $danger !important;
+}
+
+.has-border-warning {
+  border-color: $warning !important;
+}
+
+.has-border-primary {
+  border-color: $primary !important;
+}
+
 ul.is-separated {
   > li:after {
     content: ",\2800";
@@ -396,12 +394,12 @@ ul.is-separated {
 // card columns for repo and plugins overview
 .card-columns {
   .column {
-    height: 120px;
+    height: 160px;
     margin-bottom: 1.5rem;
 
     .overlay-column {
       position: absolute;
-      height: calc(120px - 1.5rem);
+      height: calc(160px - 1.5rem);
     }
   }
 
@@ -542,7 +540,7 @@ ul.is-separated {
 
 // panels
 .panel {
-  border: 1px solid #dbdbdb;
+  border: 1px solid $border;
   border-radius: 0.25rem;
 
   .panel-heading {
@@ -581,7 +579,6 @@ form .field:not(.is-grouped) {
 .select select,
 .textarea,
 .file-name {
-  border-color: $blue-light;
   box-shadow: none;
 }
 
@@ -774,6 +771,24 @@ form .field:not(.is-grouped) {
   }
 }
 
+.is-overflow-visible {
+  overflow: visible;
+}
+
+.is-overflow-auto {
+  overflow: auto;
+}
+
+.is-border-bottom-radius-inherit {
+  border-bottom-left-radius: inherit;
+  border-bottom-right-radius: inherit;
+}
+
+.is-border-bottom-radius-unset {
+  border-bottom-left-radius: unset;
+  border-bottom-right-radius: unset;
+}
+
 // radio
 //overwrite bulma's default margin
 .radio + .radio {
@@ -824,6 +839,59 @@ form .field:not(.is-grouped) {
   color: $text !important;
 }
 
-.has-background-accent {
-  background: $background-accent;
+.autocomplete-entry__option--is-focused {
+  background-color: $link !important;
+  color: $link-invert !important;
+}
+
+.autocomplete-entry__option--is-selected {
+  // TODO better use link-light or something
+  background-color: $blue-light !important;
+  color: $link-invert !important;
+}
+
+.autocomplete-entry__single-value {
+  color: $text !important;
+}
+
+.autocomplete-entry > div {
+  color: $text-strong !important;
+}
+
+.autocomplete-entry__menu {
+  background-color: $background !important;
+}
+
+.autocomplete-entry__control {
+  background-color: $scheme-main !important;
+  border-color: $input-border-color !important;
+}
+
+.autocomplete-entry__control:hover {
+  border-color: $input-hover-border-color !important;
+}
+
+.autocomplete-entry__control--is-focused {
+  border-color: $input-focus-border-color !important;
+  box-shadow: $input-focus-box-shadow-size $input-focus-box-shadow-color !important;
+}
+
+.autocomplete-entry__control--is-focused:hover {
+  border-color: $input-focus-border-color !important;
+  box-shadow: $input-focus-box-shadow-size $input-focus-box-shadow-color !important;
+}
+
+.autocomplete-entry__input {
+  color: $text-strong !important;
+}
+
+.breadcrumb {
+  & .prefix-button {
+    border-right: 1px solid lightgray;
+  }
+
+  & li:not(:last-child)::after {
+    color: $breadcrumb-item-separator-color;
+    content: "\0002f";
+  }
 }

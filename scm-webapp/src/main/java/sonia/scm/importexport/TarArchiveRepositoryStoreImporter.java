@@ -34,7 +34,6 @@ import sonia.scm.store.StoreEntryMetaData;
 import sonia.scm.store.StoreType;
 
 import javax.inject.Inject;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -51,7 +50,7 @@ public class TarArchiveRepositoryStoreImporter {
     try (TarArchiveInputStream tais = new NoneClosingTarArchiveInputStream(inputStream)) {
       ArchiveEntry entry = tais.getNextEntry();
       while (entry != null) {
-        String[] entryPathParts = entry.getName().split(File.separator);
+        String[] entryPathParts = entry.getName().split("/");
         validateStorePath(repository, entryPathParts);
         importStoreByType(repository, tais, entryPathParts, logger);
         entry = tais.getNextEntry();

@@ -36,7 +36,8 @@ scm-server.exe start
 ```
 
 SCM-Manager is now starting and after a few seconds it should be reachable on port 8080.
-The default username is `scmadmin` with the password `scmadmin`.
+There you have to create your initial admin account with an initialization token which you can find inside your server logs.
+You can find more detailed information here: [first startup](../../first-startup/)
 
 ## Troubleshooting
 

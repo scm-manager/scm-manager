@@ -76,14 +76,14 @@ import static sonia.scm.NotFoundException.notFound;
 import static sonia.scm.repository.spi.SyncAsyncExecutor.ExecutionType.ASYNCHRONOUS;
 
 /**
- *
  * @author Sebastian Sdorra
  */
 public class GitBrowseCommand extends AbstractGitCommand
-  implements BrowseCommand
-{
+  implements BrowseCommand {
 
-  /** Field description */
+  /**
+   * Field description
+   */
   public static final String PATH_MODULES = ".gitmodules";
 
   /**
@@ -91,7 +91,9 @@ public class GitBrowseCommand extends AbstractGitCommand
    */
   private static final Logger logger = LoggerFactory.getLogger(GitBrowseCommand.class);
 
-  /** sub repository cache */
+  /**
+   * sub repository cache
+   */
   private final Map<ObjectId, Map<String, SubRepository>> subrepositoryCache = Maps.newHashMap();
 
   private final Object asyncMonitor = new Object();
@@ -125,6 +127,8 @@ public class GitBrowseCommand extends AbstractGitCommand
   public BrowserResult getBrowserResult(BrowseCommandRequest request)
     throws IOException {
     logger.debug("try to create browse result for {}", request);
+
+    resultCount = 0;
 
     this.request = request;
     repo = open();
@@ -170,21 +174,17 @@ public class GitBrowseCommand extends AbstractGitCommand
     file.setName(treeEntry.getNameString());
     file.setPath(path);
 
-    if (treeEntry.getType() == TreeType.SUB_REPOSITORY)
-    {
+    if (treeEntry.getType() == TreeType.SUB_REPOSITORY) {
       logger.trace("{} seems to be a sub repository", path);
       file.setDirectory(true);
       file.setSubRepository(treeEntry.subRepository);
-    }
-    else
-    {
+    } else {
       ObjectLoader loader = repo.open(treeEntry.getObjectId());
 
       file.setDirectory(loader.getType() == Constants.OBJ_TREE);
 
       // don't show message and date for directories to improve performance
-      if (!file.isDirectory() &&!request.isDisableLastCommit())
-      {
+      if (!file.isDirectory() && !request.isDisableLastCommit()) {
         file.setPartialResult(true);
         RevCommit commit;
         try (RevWalk walk = new RevWalk(repo)) {
@@ -232,7 +232,7 @@ public class GitBrowseCommand extends AbstractGitCommand
         return result;
       } else {
         FileObject result = findFirstMatch(treeWalk);
-        if ( result.isDirectory() ) {
+        if (result.isDirectory()) {
           treeWalk.enterSubtree();
           findChildren(result, treeWalk);
         }
@@ -255,8 +255,7 @@ public class GitBrowseCommand extends AbstractGitCommand
     List<FileObject> files = Lists.newArrayList();
     Iterator<TreeEntry> entryIterator = entries.iterator();
     boolean hasNext;
-    while ((hasNext = entryIterator.hasNext()) && resultCount < request.getLimit() + request.getOffset())
-    {
+    while ((hasNext = entryIterator.hasNext()) && resultCount < request.getLimit() + request.getOffset()) {
       TreeEntry entry = entryIterator.next();
       FileObject fileObject = createFileObject(entry);
 
@@ -302,7 +301,7 @@ public class GitBrowseCommand extends AbstractGitCommand
 
   private String appendTrailingSlashIfNeeded(Deque<TreeEntry> parents) {
     String path = parents.peek().pathString;
-    return path.length() == 0? path: path + "/";
+    return path.length() == 0 ? path : path + "/";
   }
 
   private FileObject findFirstMatch(TreeWalk treeWalk) throws IOException {
@@ -337,7 +336,7 @@ public class GitBrowseCommand extends AbstractGitCommand
 
     logger.debug("read submodules of {} at {}", repository, revId);
 
-    try ( ByteArrayOutputStream baos = new ByteArrayOutputStream() ) {
+    try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
       new GitCatCommand(context, lfsBlobStoreFactory).getContent(repo, revId, PATH_MODULES, baos);
       return GitSubModuleParser.parse(baos.toString());
     } catch (NotFoundException ex) {
@@ -416,8 +415,13 @@ public class GitBrowseCommand extends AbstractGitCommand
       logger.trace("finished loading of last commit {} of {} in {}", revId.getName(), path, sw.stop());
     }
 
-    private Optional<RevCommit> getLatestCommit(org.eclipse.jgit.lib.Repository repo,
-                                      ObjectId revId, String path) {
+    private Optional<RevCommit> getLatestCommit(org.eclipse.jgit.lib.Repository repo, ObjectId revId, String path) {
+      // getLatestCommit can run async, which can lead to an open repository.
+      // Because if the RepositoryService is closed and getLatestCommit runs after that it will reopen the repository.
+      // So we increment the open counter and close after.
+      // The increment is required to not close the repository if the getLatestCommit runs before the RepositoryService
+      // is closed.
+      repo.incrementOpen();
       try (RevWalk walk = new RevWalk(repo)) {
         walk.setTreeFilter(AndTreeFilter.create(TreeFilter.ANY_DIFF, PathFilter.create(path)));
 
@@ -428,6 +432,8 @@ public class GitBrowseCommand extends AbstractGitCommand
       } catch (IOException ex) {
         logger.error("could not parse commit for file", ex);
         return empty();
+      } finally {
+        repo.close();
       }
     }
 

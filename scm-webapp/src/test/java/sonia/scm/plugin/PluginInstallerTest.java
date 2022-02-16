@@ -34,6 +34,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.net.ahc.AdvancedHttpClient;
+import sonia.scm.net.ahc.AdvancedHttpRequest;
 import sonia.scm.net.ahc.AdvancedHttpResponse;
 
 import java.io.ByteArrayInputStream;
@@ -42,31 +43,34 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.Collections;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
-import static org.mockito.Mockito.anyInt;
-import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static sonia.scm.plugin.Tracing.SPAN_KIND;
 
-@ExtendWith({MockitoExtension.class})
+@ExtendWith(MockitoExtension.class)
 class PluginInstallerTest {
 
   @Mock
   private SCMContextProvider context;
 
-  @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+  @Mock
   private AdvancedHttpClient client;
 
   @Mock
   private SmpDescriptorExtractor extractor;
 
+  @Mock
+  private PluginCenterAuthenticator authenticator;
+
   @InjectMocks
   private PluginInstaller installer;
+
+  @Mock(answer = Answers.RETURNS_SELF)
+  private AdvancedHttpRequest request;
 
   private Path directory;
 
@@ -108,7 +112,10 @@ class PluginInstallerTest {
   }
 
   private AdvancedHttpResponse request(String url) throws IOException {
-    return client.get(url).spanKind(SPAN_KIND).request();
+    AdvancedHttpResponse response = mock(AdvancedHttpResponse.class);
+    when(client.get(url)).thenReturn(request);
+    when(request.request()).thenReturn(response);
+    return response;
   }
 
   private AvailablePlugin createGitPlugin() {
@@ -121,7 +128,8 @@ class PluginInstallerTest {
 
   @Test
   void shouldThrowPluginDownloadException() throws IOException {
-    when(request("https://download.hitchhiker.com")).thenThrow(new IOException("failed to download"));
+    when(client.get("https://download.hitchhiker.com")).thenReturn(request);
+    when(request.request()).thenThrow(new IOException("failed to download"));
 
     PluginInstallationContext context = PluginInstallationContext.empty();
     AvailablePlugin gitPlugin = createGitPlugin();
@@ -188,6 +196,17 @@ class PluginInstallerTest {
     PluginInformationMismatchException exception = assertThrows(PluginInformationMismatchException.class, () -> installer.install(context, gitPlugin));
     assertThat(exception.getApi().getVersion()).isEqualTo("1.0.0");
     assertThat(exception.getDownloaded().getVersion()).isEqualTo("1.1.0");
+  }
+
+  @Test
+  void shouldAppendBearerAuth() throws IOException {
+    when(authenticator.isAuthenticated()).thenReturn(true);
+    when(authenticator.fetchAccessToken()).thenReturn(Optional.of("atat"));
+    mockContent("42");
+
+    installer.install(PluginInstallationContext.empty(), createGitPlugin());
+
+    verify(request).bearerAuth("atat");
   }
 
   private AvailablePlugin createPlugin(String name, String url, String checksum) {

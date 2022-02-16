@@ -21,12 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, KeyboardEvent, useRef } from "react";
+import React, { FC, MutableRefObject, useRef } from "react";
 import classNames from "classnames";
-import usePortalRootElement from "../usePortalRootElement";
-import ReactDOM from "react-dom";
 import styled from "styled-components";
-import { useTrapFocus } from "../useTrapFocus";
+import { Dialog } from "@headlessui/react";
 
 type ModalSize = "S" | "M" | "L";
 
@@ -35,71 +33,83 @@ const modalSizes: { [key in ModalSize]: number } = { S: 33, M: 50, L: 66 };
 type Props = {
   title: string;
   closeFunction: () => void;
-  body: any;
+  body?: any;
   footer?: any;
   active: boolean;
   className?: string;
   headColor?: string;
   headTextColor?: string;
   size?: ModalSize;
+  initialFocusRef?: MutableRefObject<HTMLElement | null>;
+  overflowVisible?: boolean;
 };
 
-const SizedModal = styled.div<{ size?: ModalSize }>`
-  width: ${(props) => (props.size ? `${modalSizes[props.size]}%` : "640px")};
+const SizedModal = styled.div<{ size?: ModalSize; overflow: string }>`
+  width: ${props => (props.size ? `${modalSizes[props.size]}%` : "640px")};
+  overflow: ${props => props.overflow};
 `;
 
 export const Modal: FC<Props> = ({
   title,
   closeFunction,
   body,
+  children,
   footer,
   active,
   className,
-  headColor = "light",
-  headTextColor = "black",
+  headColor = "secondary-less",
+  headTextColor = "secondary-most",
   size,
+  initialFocusRef,
+  overflowVisible
 }) => {
-  const portalRootElement = usePortalRootElement("modalsRoot");
-  const initialFocusRef = useRef(null);
-  const trapRef = useTrapFocus({
-    includeContainer: true,
-    initialFocus: initialFocusRef.current,
-    returnFocus: true,
-    updateNodes: false,
-  });
-
-  if (!portalRootElement) {
-    return null;
-  }
-
-  const isActive = active ? "is-active" : null;
-
+  const closeButtonRef = useRef<HTMLButtonElement | null>(null);
   let showFooter = null;
+
   if (footer) {
     showFooter = <footer className="modal-card-foot">{footer}</footer>;
   }
 
-  const onKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-    if (closeFunction && "Escape" === event.key) {
-      closeFunction();
-    }
-  };
+  const overflowAttribute = overflowVisible ? "visible" : "auto";
+  const borderBottomRadiusAttribute = overflowVisible && !footer ? "inherit" : "unset";
 
-  const modalElement = (
-    <div className={classNames("modal", className, isActive)} ref={trapRef} onKeyDown={onKeyDown}>
-      <div className="modal-background" onClick={closeFunction} />
-      <SizedModal className="modal-card" size={size}>
-        <header className={classNames("modal-card-head", `has-background-${headColor}`)}>
+  return (
+    <Dialog
+      open={active}
+      onClose={closeFunction}
+      className={classNames(
+        "modal",
+        { "is-active": active },
+        `is-overflow-${overflowAttribute}`,
+        `is-border-bottom-radius-${borderBottomRadiusAttribute}`,
+        className
+      )}
+      initialFocus={initialFocusRef ?? closeButtonRef}
+    >
+      <Dialog.Overlay className="modal-background" />
+      <SizedModal className="modal-card" size={size} overflow={overflowAttribute}>
+        <Dialog.Title as="header" className={classNames("modal-card-head", `has-background-${headColor}`)}>
           <h2 className={`modal-card-title m-0 has-text-${headTextColor}`}>{title}</h2>
-          <button className="delete" aria-label="close" onClick={closeFunction} ref={initialFocusRef} autoFocus />
-        </header>
-        <section className="modal-card-body">{body}</section>
+          <button
+            className="delete"
+            aria-label="close"
+            onClick={closeFunction}
+            ref={!initialFocusRef ? closeButtonRef : undefined}
+          />
+        </Dialog.Title>
+        <section
+          className={classNames(
+            "modal-card-body",
+            `is-overflow-${overflowAttribute}`,
+            `is-border-bottom-radius-${borderBottomRadiusAttribute}`
+          )}
+        >
+          {body || children}
+        </section>
         {showFooter}
       </SizedModal>
-    </div>
+    </Dialog>
   );
-
-  return ReactDOM.createPortal(modalElement, portalRootElement);
 };
 
 export default Modal;

@@ -71,7 +71,8 @@ const DeleteRepo: FC<Props> = ({ repository, confirmDialog = true }) => {
           },
           {
             label: t("deleteRepo.confirmAlert.cancel"),
-            onClick: () => null
+            onClick: () => null,
+            autofocus: true
           }
         ]}
         close={() => setShowConfirmAlert(false)}

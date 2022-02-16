@@ -43,11 +43,13 @@ export type Config = HalRepresentation & {
   proxyExcludes: string[];
   skipFailedAuthenticators: boolean;
   pluginUrl: string;
+  pluginAuthUrl: string;
   loginAttemptLimitTimeout: number;
   enabledXsrfProtection: boolean;
   enabledUserConverter: boolean;
   namespaceStrategy: string;
   loginInfoUrl: string;
+  alertsUrl: string;
   releaseFeedUrl: string;
   mailDomainName: string;
   emergencyContacts: string[];

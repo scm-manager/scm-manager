@@ -49,7 +49,7 @@
         "install": "Install {{name}} Plugin",
         "update": "Update {{name}} Plugin",
         "uninstall": "Uninstall {{name}} Plugin",
-        "cloudoguInstall": "Get plugin from myCloudogu"
+        "cloudoguInstall": "Install {{name}} Plugin"
       },
       "restart": "Restart to make plugin changes effective",
       "install": "Install",
@@ -69,22 +69,42 @@
       "version": "Version",
       "currentVersion": "Installed version",
       "newVersion": "New version",
-      "cloudoguInstallInfo": "This plugin is exclusively available via myCloudogu. Follow the instructions to install it.",
-      "cloudoguInstall": "To Installation Instructions",
+      "cloudoguInstallInfo": "Connect your SCM-Manager instance with your myCloudogu account to access myCloudogu plugins. If you do not already have an account you can easily register for free.",
+      "cloudoguInstall": "Connect myCloudogu and install",
       "dependencyNotification": "With this plugin, the following dependencies will be installed/updated if their latest versions are not installed yet!",
       "optionalDependencyNotification": "With this plugin, the following optional dependencies will be updated if they are installed!",
       "dependencies": "Dependencies",
-      "installedNotification": "Successfully installed plugin. You have to reload the page, to see ui changes:",
-      "updatedNotification": "Successfully updated plugin. You have to reload the page, to see ui changes:",
-      "uninstalledNotification": "Successfully uninstalled plugin. You have to reload the page, to see ui changes:",
-      "executedChangesNotification": "Successfully executed plugin changes. You have to reload the page, to see ui changes:",
-      "reload": "reload now",
+      "installedNotification": "Successfully installed plugin. You have to reload the page, to see ui changes.",
+      "updatedNotification": "Successfully updated plugin. You have to reload the page, to see ui changes.",
+      "uninstalledNotification": "Successfully uninstalled plugin. You have to reload the page, to see ui changes.",
+      "executedChangesNotification": "Successfully executed plugin changes. You have to reload the page, to see ui changes.",
+      "reload": "Reload now",
       "restartNotification": "You should only restart SCM-Manager if no one else is currently working with it.",
       "executePending": "The following plugin changes will be executed and after that the SCM-Manager will be restarted.",
       "cancelPending": "The following plugin changes will be canceled.",
       "updateAllInfo": "The following plugin changes will be executed. You need to restart the SCM-Manager to make these changes effective.",
       "manualRestartRequired": "After the plugin change has been made, SCM-Manager must be restarted.",
       "showPending": "To execute the following plugin changes, SCM-Manager must be restarted."
+    },
+    "myCloudogu": {
+      "connectionInfo": "Instance is connected to myCloudogu.\nAccount: {{pluginCenterSubject}}",
+      "error": {
+        "info": "Failed to retrieve myCloudogu authentication information. Click for more details.",
+        "title": "Error"
+      },
+      "failed": {
+        "info": "Connection to myCloudogu failed for account {{pluginCenterSubject}}",
+        "message": "The connection of the SCM Manager instance with <0>myCloudogu</0> failed. The user <1>{{subject}}</1> could not be authenticated. Click Reconnect to restore the connection.",
+        "button": {
+          "label": "Reconnect to <0>myCloudogu</0>"
+        }
+      },
+      "login": {
+        "button": {
+          "label": "Connect to <0>myCloudogu</0>"
+        },
+        "description": "Connect your SCM-Manager with <0>myCloudogu</0> to install special plugins. myCloudogu is the home of the SCM-Manager Community, sustained by the maintainers of the SCM-Manager. You don't have an account yet? Create a free myCloudogu account while connecting your SCM-Manager instance. <1>More details on data processing.</1>"
+      }
     }
   },
   "repositoryRole": {

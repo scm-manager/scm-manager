@@ -32,16 +32,17 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.net.ahc.AdvancedHttpClient;
+import sonia.scm.net.ahc.AdvancedHttpRequest;
 import sonia.scm.net.ahc.AdvancedHttpResponse;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static sonia.scm.plugin.Tracing.SPAN_KIND;
 
 @ExtendWith(MockitoExtension.class)
@@ -49,7 +50,7 @@ class PluginCenterLoaderTest {
 
   private static final String PLUGIN_URL = "https://plugins.hitchhiker.com";
 
-  @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+  @Mock
   private AdvancedHttpClient client;
 
   @Mock
@@ -58,8 +59,14 @@ class PluginCenterLoaderTest {
   @Mock
   private ScmEventBus eventBus;
 
+  @Mock
+  private PluginCenterAuthenticator authenticator;
+
   @InjectMocks
   private PluginCenterLoader loader;
+
+  @Mock(answer = Answers.RETURNS_SELF)
+  private AdvancedHttpRequest request;
 
   @Test
   void shouldFetch() throws IOException {
@@ -73,12 +80,16 @@ class PluginCenterLoaderTest {
   }
 
   private AdvancedHttpResponse request() throws IOException {
-    return client.get(PLUGIN_URL).spanKind(SPAN_KIND).request();
+    when(client.get(PLUGIN_URL)).thenReturn(request);
+    AdvancedHttpResponse response = mock(AdvancedHttpResponse.class);
+    when(request.request()).thenReturn(response);
+    return response;
   }
 
   @Test
   void shouldReturnEmptySetIfPluginCenterNotBeReached() throws IOException {
-    when(request()).thenThrow(new IOException("failed to fetch"));
+    when(client.get(PLUGIN_URL)).thenReturn(request);
+    when(request.request()).thenThrow(new IOException("failed to fetch"));
 
     Set<AvailablePlugin> fetch = loader.load(PLUGIN_URL);
     assertThat(fetch).isEmpty();
@@ -86,10 +97,31 @@ class PluginCenterLoaderTest {
 
   @Test
   void shouldFirePluginCenterErrorEvent() throws IOException {
-    when(request()).thenThrow(new IOException("failed to fetch"));
+    when(client.get(PLUGIN_URL)).thenReturn(request);
+    when(request.request()).thenThrow(new IOException("failed to fetch"));
 
     loader.load(PLUGIN_URL);
 
     verify(eventBus).post(any(PluginCenterErrorEvent.class));
   }
+
+  @Test
+  void shouldAppendAccessToken() throws IOException {
+    when(authenticator.isAuthenticated()).thenReturn(true);
+    when(authenticator.fetchAccessToken()).thenReturn(Optional.of("mega-cool-at"));
+
+    mockResponse();
+    loader.load(PLUGIN_URL);
+
+    verify(request).bearerAuth("mega-cool-at");
+  }
+
+  private Set<AvailablePlugin> mockResponse() throws IOException {
+    PluginCenterDto dto = new PluginCenterDto();
+    Set<AvailablePlugin> plugins = Collections.emptySet();
+    when(request().contentFromJson(PluginCenterDto.class)).thenReturn(dto);
+    when(mapper.map(dto)).thenReturn(plugins);
+    return plugins;
+  }
+
 }

@@ -48,7 +48,7 @@ public class RepositoryLinkEnricher implements HalEnricher {
 
     LinkBuilder linkBuilder = new LinkBuilder(scmPathInfoStore.get().get(), GitConfigResource.class, GitRepositoryConfigResource.class);
 
-    if (RepositoryPermissions.read(repository).isPermitted()) {
+    if (RepositoryPermissions.read(repository).isPermitted() && repository.getType().equals("git")) {
       appender.appendLink("defaultBranch", getDefaultBranchLink(repository, linkBuilder));
     }
   }

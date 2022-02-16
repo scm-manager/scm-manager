@@ -21,6 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 import React, { FC, useEffect, useState } from "react";
 import { Links } from "@scm-manager/ui-types";
 import classNames from "classnames";
@@ -31,6 +32,7 @@ import OmniSearch from "./OmniSearch";
 import LogoutButton from "./LogoutButton";
 import LoginButton from "./LoginButton";
 import { useTranslation } from "react-i18next";
+import Alerts from "./Alerts";
 
 const StyledMenuBar = styled.div`
   background-color: transparent !important;
@@ -85,6 +87,7 @@ const StyledNavBar = styled.nav`
     padding: 0;
   }
 
+  //TODO Ersetzen?
   .navbar-brand {
     @media screen and (max-width: ${devices.desktop.width - 1}px) {
       border-bottom: 1px solid white;
@@ -146,6 +149,7 @@ const NavigationBar: FC<Props> = ({ links }) => {
         </button>
       </div>
       <div className="is-active navbar-header-actions">
+        <Alerts className="navbar-item" />
         <OmniSearch links={links} />
         <Notifications className="navbar-item" />
       </div>

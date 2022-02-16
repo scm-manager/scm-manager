@@ -37,6 +37,7 @@ import sonia.scm.repository.Compatibility;
 public class SvnConfigDto extends HalRepresentation implements UpdateSvnConfigDto {
 
   private boolean disabled;
+  private boolean allowDisable;
 
   private boolean enabledGZip;
   private Compatibility compatibility;

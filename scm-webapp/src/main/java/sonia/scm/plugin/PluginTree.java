@@ -24,10 +24,10 @@
 
 package sonia.scm.plugin;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.Stage;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -35,76 +35,62 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
- *
  * @author Sebastian Sdorra
  */
-public final class PluginTree
-{
+public final class PluginTree {
 
-  /** Field description */
   private static final int SCM_VERSION = 2;
 
   /**
    * the logger for PluginTree
    */
-  private static final Logger logger =
-    LoggerFactory.getLogger(PluginTree.class);
+  private static final Logger LOG = LoggerFactory.getLogger(PluginTree.class);
 
-  //~--- constructors ---------------------------------------------------------
+  private final Stage stage;
+  private final List<PluginNode> rootNodes;
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param smps
-   */
-  public PluginTree(ExplodedSmp... smps)
-  {
-    this(Arrays.asList(smps));
+  public PluginTree(Stage stage, ExplodedSmp... smps) {
+    this(stage, Arrays.asList(smps));
   }
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param smps
-   */
-  public PluginTree(Collection<ExplodedSmp> smps)
-  {
-
+  public PluginTree(Stage stage, Collection<ExplodedSmp> smps) {
+    this.stage = stage;
     smps.forEach(s -> {
       InstalledPluginDescriptor plugin = s.getPlugin();
-      logger.trace("plugin: {}", plugin.getInformation().getName());
-      logger.trace("dependencies: {}", plugin.getDependencies());
-      logger.trace("optional dependencies: {}", plugin.getOptionalDependencies());
+      LOG.trace("plugin: {}", plugin.getInformation().getName());
+      LOG.trace("dependencies: {}", plugin.getDependencies());
+      LOG.trace("optional dependencies: {}", plugin.getOptionalDependencies());
     });
 
     rootNodes = new SmpNodeBuilder().buildNodeTree(smps);
 
-    for (ExplodedSmp smp : smps)
-    {
-      InstalledPluginDescriptor plugin = smp.getPlugin();
+    for (ExplodedSmp smp : smps) {
+      checkIfSupported(smp);
+    }
+  }
 
-      if (plugin.getScmVersion() != SCM_VERSION)
-      {
-        //J-
-        throw new PluginException(
-          String.format(
-            "scm version %s of plugin %s does not match, required is version %s",
-            plugin.getScmVersion(), plugin.getInformation().getId(), SCM_VERSION
-          )
-        );
-        //J+
-      }
+  private void checkIfSupported(ExplodedSmp smp) {
+    InstalledPluginDescriptor plugin = smp.getPlugin();
 
-      PluginCondition condition = plugin.getCondition();
+    if (plugin.getScmVersion() != SCM_VERSION) {
+      throw new PluginException(
+        String.format(
+          "scm version %s of plugin %s does not match, required is version %s",
+          plugin.getScmVersion(), plugin.getInformation().getId(), SCM_VERSION
+        )
+      );
+    }
 
-      if (!condition.isSupported())
-      {
-        //J-
+    checkIfConditionsMatch(smp, plugin);
+  }
+
+  private void checkIfConditionsMatch(ExplodedSmp smp, InstalledPluginDescriptor plugin) {
+    PluginCondition condition = plugin.getCondition();
+    if (!condition.isSupported()) {
+      if (smp.isCore() && stage == Stage.DEVELOPMENT) {
+        LOG.warn("plugin {} does not match conditions {}", plugin.getInformation().getId(), condition);
+      } else {
         throw new PluginConditionFailedException(
           condition,
           String.format(
@@ -112,29 +98,17 @@ public final class PluginTree
             plugin.getInformation().getId(), condition
           )
         );
-        //J+
       }
     }
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public List<PluginNode> getLeafLastNodes()
-  {
+  public List<PluginNode> getLeafLastNodes() {
     LinkedHashSet<PluginNode> leafFirst = new LinkedHashSet<>();
 
     rootNodes.forEach(node -> appendLeafFirst(leafFirst, node));
 
     LinkedList<PluginNode> leafLast = new LinkedList<>();
-
     leafFirst.forEach(leafLast::addFirst);
-
     return leafLast;
   }
 
@@ -142,9 +116,6 @@ public final class PluginTree
     node.getChildren().forEach(child -> appendLeafFirst(leafFirst, child));
     leafFirst.add(node);
   }
-
-
-  //~--- methods --------------------------------------------------------------
 
   @Override
   public String toString() {
@@ -163,8 +134,4 @@ public final class PluginTree
     }
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final List<PluginNode> rootNodes;
 }

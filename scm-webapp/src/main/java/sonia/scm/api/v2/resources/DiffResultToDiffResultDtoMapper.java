@@ -26,6 +26,7 @@ package sonia.scm.api.v2.resources;
 
 import com.google.inject.Inject;
 import de.otto.edison.hal.Links;
+import sonia.scm.io.ContentType;
 import sonia.scm.io.ContentTypeResolver;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.DiffFile;
@@ -155,8 +156,10 @@ class DiffResultToDiffResultDtoMapper {
     dto.setOldPath(oldPath);
     dto.setOldRevision(file.getOldRevision());
 
-    Optional<String> language = contentTypeResolver.resolve(path).getLanguage();
+    ContentType contentType = contentTypeResolver.resolve(path);
+    Optional<String> language = contentType.getLanguage();
     language.ifPresent(dto::setLanguage);
+    dto.setSyntaxModes(contentType.getSyntaxModes());
 
     List<DiffResultDto.HunkDto> hunks = new ArrayList<>();
     for (Hunk hunk : file) {

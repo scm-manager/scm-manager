@@ -31,4 +31,6 @@ $warning: #ffdd57;
 $blue-light: #98d8f3;
 $danger: #ff3860;
 
-$family-monospace: "Courier New", Monaco, Menlo, "Ubuntu Mono", "source-code-pro", monospace;
+$family-monospace: Consolas, "Andale Mono WT", "Andale Mono", "Lucida Console", "Lucida Sans Typewriter", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Liberation Mono", "Nimbus Mono L", Monaco, "Courier New", Courier, monospace;
+
+$input-border-color: $blue-light;

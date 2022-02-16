@@ -81,7 +81,7 @@ public class Hit {
   @Getter
   @AllArgsConstructor(access = AccessLevel.PRIVATE)
   public abstract static class Field {
-    boolean highlighted;
+    private final boolean highlighted;
   }
 
   /**
@@ -89,7 +89,7 @@ public class Hit {
    */
   @Getter
   public static class ValueField extends Field {
-    Object value;
+    private final Object value;
 
     public ValueField(Object value) {
       super(false);
@@ -102,11 +102,30 @@ public class Hit {
    */
   @Getter
   public static class HighlightedField extends Field {
-    String[] fragments;
+    private final String[] fragments;
+
+    /**
+     * @since 2.28.0
+     */
+    private final boolean matchesContentStart;
+
+    /**
+     * @since 2.28.0
+     */
+    private final boolean matchesContentEnd;
 
     public HighlightedField(String[] fragments) {
+      this(fragments, false, false);
+    }
+
+    /**
+     * @since 2.28.0
+     */
+    public HighlightedField(String[] fragments, boolean matchesContentStart, boolean matchesContentEnd) {
       super(true);
       this.fragments = fragments;
+      this.matchesContentStart = matchesContentStart;
+      this.matchesContentEnd = matchesContentEnd;
     }
   }
 

@@ -45,4 +45,8 @@ public class InMemoryConfigurationStore<T> implements ConfigurationStore<T> {
     this.object = obejct;
   }
 
+  @Override
+  public void delete() {
+    object = null;
+  }
 }

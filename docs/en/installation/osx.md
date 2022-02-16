@@ -14,7 +14,8 @@ brew services start scm-manager/tap/scm-server
 ```
 
 After a few seconds SCM-Manager should be started on port 8080.
-The default username is `scmadmin` with the password `scmadmin`.
+There you have to create your initial admin account with an initialization token which you can find inside your server logs.
+You can find more detailed information here: [first startup](../../first-startup/)
 
 ## Detailed installation
 

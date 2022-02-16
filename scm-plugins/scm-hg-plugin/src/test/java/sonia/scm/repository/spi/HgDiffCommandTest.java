@@ -54,6 +54,28 @@ public class HgDiffCommandTest extends AbstractHgCommandTestBase {
   }
 
   @Test
+  public void shouldCreateDiffComparedToAncestor() throws IOException {
+    DiffCommandRequest request = new DiffCommandRequest();
+    request.setRevision("3049df33fdbbded08b707bac3eccd0f7b453c58b");
+    request.setAncestorChangeset("a9bacaf1b7fa0cebfca71fed4e59ed69a6319427");
+
+    String content = diff(cmdContext, request);
+    assertThat(content)
+      .contains("+++ b/c/d.txt")
+      .contains("+++ b/c/e.txt");
+  }
+
+  @Test
+  public void shouldNotCreateDiffWithAncestorIfNoChangesExists() throws IOException {
+    DiffCommandRequest request = new DiffCommandRequest();
+    request.setRevision("a9bacaf1b7fa0cebfca71fed4e59ed69a6319427");
+    request.setAncestorChangeset("3049df33fdbbded08b707bac3eccd0f7b453c58b");
+
+    String content = diff(cmdContext, request);
+    assertThat(content).isEmpty();
+  }
+
+  @Test
   public void shouldCloseContent() throws IOException {
     HgCommandContext context = spy(cmdContext);
     String content = diff(context, "a9bacaf1b7fa0cebfca71fed4e59ed69a6319427");

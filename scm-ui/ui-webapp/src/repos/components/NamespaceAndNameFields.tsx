@@ -26,9 +26,9 @@ import React, { FC, useEffect, useState } from "react";
 import { CUSTOM_NAMESPACE_STRATEGY, RepositoryCreation } from "@scm-manager/ui-types";
 import { useTranslation } from "react-i18next";
 import { InputField } from "@scm-manager/ui-components";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import * as validator from "./form/repositoryValidation";
 import { useNamespaceStrategies } from "@scm-manager/ui-api";
+import NamespaceInput from "./NamespaceInput";
 
 type Props = {
   repository: RepositoryCreation;
@@ -82,30 +82,6 @@ const NamespaceAndNameFields: FC<Props> = ({ repository, onChange, setValid, dis
     onChange({ ...repository, name });
   };
 
-  const renderNamespaceField = () => {
-    let informationMessage = undefined;
-    if (repository?.namespace?.indexOf(" ") > 0) {
-      informationMessage = t("validation.namespaceSpaceWarningText");
-    }
-
-    const props = {
-      label: t("repository.namespace"),
-      helpText: t("help.namespaceHelpText"),
-      value: repository ? repository.namespace : "",
-      onChange: handleNamespaceChange,
-      errorMessage: t("validation.namespace-invalid"),
-      validationError: namespaceValidationError,
-      disabled: disabled,
-      informationMessage
-    };
-
-    if (namespaceStrategy === CUSTOM_NAMESPACE_STRATEGY) {
-      return <InputField {...props} />;
-    }
-
-    return <ExtensionPoint name="repos.create.namespace" props={props} renderAll={false} />;
-  };
-
   // not yet loaded
   if (namespaceStrategy === "") {
     return null;
@@ -113,7 +89,13 @@ const NamespaceAndNameFields: FC<Props> = ({ repository, onChange, setValid, dis
 
   return (
     <>
-      {renderNamespaceField()}
+      <NamespaceInput
+        namespace={repository?.namespace}
+        handleNamespaceChange={handleNamespaceChange}
+        namespaceStrategy={namespaceStrategy}
+        namespaceValidationError={namespaceValidationError}
+        disabled={disabled}
+      />
       <InputField
         label={t("repository.name")}
         onChange={handleNameChange}

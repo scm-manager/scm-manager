@@ -21,29 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { Changeset, Repository } from "@scm-manager/ui-types";
-import { ButtonAddons, Button } from "../../buttons";
+import React, { FC } from "react";
+import { Changeset, File, Repository } from "@scm-manager/ui-types";
+import { Button, ButtonAddons } from "../../buttons";
 import { createChangesetLink, createSourcesLink } from "./changesets";
-import { WithTranslation, withTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 
-type Props = WithTranslation & {
+type Props = {
   repository: Repository;
   changeset: Changeset;
+  file?: File;
 };
 
-class ChangesetButtonGroup extends React.Component<Props> {
-  render() {
-    const { repository, changeset, t } = this.props;
-    const changesetLink = createChangesetLink(repository, changeset);
-    const sourcesLink = createSourcesLink(repository, changeset);
-    return (
-      <ButtonAddons className="m-0">
-        <Button link={changesetLink} icon="exchange-alt" label={t("changeset.buttons.details")} reducedMobile={true} />
-        <Button link={sourcesLink} icon="code" label={t("changeset.buttons.sources")} reducedMobile={true} />
-      </ButtonAddons>
-    );
-  }
-}
+const ChangesetButtonGroup: FC<Props> = ({ repository, changeset, file }) => {
+  const [t] = useTranslation("repos");
+  const changesetLink = createChangesetLink(repository, changeset);
+  const sourcesLink = createSourcesLink(repository, changeset, file);
+  return (
+    <ButtonAddons className="m-0">
+      <Button link={changesetLink} icon="exchange-alt" label={t("changeset.buttons.details")} reducedMobile={true} />
+      <Button link={sourcesLink} icon="code" label={t("changeset.buttons.sources")} reducedMobile={true} />
+    </ButtonAddons>
+  );
+};
 
-export default withTranslation("repos")(ChangesetButtonGroup);
+export default ChangesetButtonGroup;

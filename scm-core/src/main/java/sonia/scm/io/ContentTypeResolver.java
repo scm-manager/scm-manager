@@ -24,6 +24,9 @@
 
 package sonia.scm.io;
 
+import java.util.Collections;
+import java.util.Map;
+
 /**
  * ContentTypeResolver is able to detect the {@link ContentType} of files based on their path and (optinally) a few starting bytes. These files do not have to be real files on the file system, but can be hypothetical constructs ("What content type is most probable for a file named like this").
  *
@@ -35,7 +38,6 @@ public interface ContentTypeResolver {
    * Detects the {@link ContentType} of the given path, by only using path based strategies.
    *
    * @param path path of the file
-   *
    * @return {@link ContentType} of path
    */
   ContentType resolve(String path);
@@ -43,10 +45,19 @@ public interface ContentTypeResolver {
   /**
    * Detects the {@link ContentType} of the given path, by using path and content based strategies.
    *
-   * @param path path of the file
+   * @param path          path of the file
    * @param contentPrefix first few bytes of the content
-   *
    * @return {@link ContentType} of path and content prefix
    */
   ContentType resolve(String path, byte[] contentPrefix);
+
+  /**
+   * Returns a map of syntax highlighting modes such as ace, codemirror or prism by language.
+   * @param language name of the coding language
+   * @return map of syntax highlighting modes
+   * @since 2.28.0
+   */
+  default Map<String, String> findSyntaxModesByLanguage(String language) {
+    return Collections.emptyMap();
+  }
 }

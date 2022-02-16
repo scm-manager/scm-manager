@@ -136,13 +136,13 @@ public class GitLogComputer {
 
         if (branchId != null) {
           if (startId != null) {
-            revWalk.markStart(revWalk.lookupCommit(startId));
+            revWalk.markStart(revWalk.parseCommit(startId));
           } else {
-            revWalk.markStart(revWalk.lookupCommit(branchId));
+            revWalk.markStart(revWalk.parseCommit(branchId));
           }
 
           if (ancestorId != null) {
-            revWalk.markUninteresting(revWalk.lookupCommit(ancestorId));
+            revWalk.markUninteresting(revWalk.parseCommit(ancestorId));
           }
 
           Iterator<RevCommit> iterator = revWalk.iterator();

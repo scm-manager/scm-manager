@@ -102,7 +102,7 @@ const FileInput: FC<Props> = ({
           {file?.name ? (
             <span className="file-name">{file?.name}</span>
           ) : (
-            <span className="file-name has-text-weight-light has-text-grey-light">
+            <span className="file-name has-text-weight-light has-text-secondary">
               {filenamePlaceholder || t("fileInput.noFileChosen")}
             </span>
           )}

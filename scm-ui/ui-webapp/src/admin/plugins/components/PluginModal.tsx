@@ -21,15 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
 import { Link, Plugin } from "@scm-manager/ui-types";
 import { Button, ButtonGroup, Checkbox, ErrorNotification, Modal, Notification } from "@scm-manager/ui-components";
 import SuccessNotification from "./SuccessNotification";
-import { useInstallPlugin, useUninstallPlugin, useUpdatePlugins } from "@scm-manager/ui-api";
+import { useInstallPlugin, usePluginCenterAuthInfo, useUninstallPlugin, useUpdatePlugins } from "@scm-manager/ui-api";
 import { PluginAction } from "../containers/PluginsOverview";
+import MyCloudoguTag from "./MyCloudoguTag";
 
 type Props = {
   plugin: Plugin;
@@ -54,12 +55,18 @@ const ListChild = styled.div`
 const PluginModal: FC<Props> = ({ onClose, pluginAction, plugin }) => {
   const [t] = useTranslation("admin");
   const [shouldRestart, setShouldRestart] = useState<boolean>(false);
+  const {
+    data: pluginCenterAuthInfo,
+    isLoading: isLoadingPluginCenterAuthInfo,
+    error: pluginCenterAuthInfoError
+  } = usePluginCenterAuthInfo();
   const { isLoading: isInstalling, error: installError, install, isInstalled } = useInstallPlugin();
   const { isLoading: isUninstalling, error: uninstallError, uninstall, isUninstalled } = useUninstallPlugin();
   const { isLoading: isUpdating, error: updateError, update, isUpdated } = useUpdatePlugins();
-  const error = installError || uninstallError || updateError;
-  const loading = isInstalling || isUninstalling || isUpdating;
+  const error = installError || uninstallError || updateError || pluginCenterAuthInfoError;
+  const loading = isInstalling || isUninstalling || isUpdating || isLoadingPluginCenterAuthInfo;
   const isDone = isInstalled || isUninstalled || isUpdated;
+  const initialFocusRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (isDone && !shouldRestart) {
@@ -71,7 +78,7 @@ const PluginModal: FC<Props> = ({ onClose, pluginAction, plugin }) => {
     e.preventDefault();
     switch (pluginAction) {
       case PluginAction.CLOUDOGU:
-        window.open((plugin._links.cloudoguInstall as Link).href, "_blank");
+        window.open((pluginCenterAuthInfo?._links?.login as Link).href, "_self");
         break;
       case PluginAction.INSTALL:
         install(plugin, { restart: shouldRestart });
@@ -96,14 +103,26 @@ const PluginModal: FC<Props> = ({ onClose, pluginAction, plugin }) => {
     }
     return (
       <ButtonGroup>
-        <Button
-          label={t(label)}
-          color={color}
-          action={handlePluginAction}
-          loading={loading}
-          disabled={!!error || isDone}
-        />
-        <Button label={t("plugins.modal.abort")} action={onClose} />
+        {isDone ? (
+          <Button
+            label={t("plugins.modal.reload")}
+            action={() => window.location.reload()}
+            color="success"
+            icon="sync-alt"
+          />
+        ) : (
+          <>
+            <Button
+              label={t(label)}
+              color={color}
+              action={handlePluginAction}
+              loading={loading}
+              disabled={!!error || isDone}
+              ref={initialFocusRef}
+            />
+            <Button label={t("plugins.modal.abort")} action={onClose} />
+          </>
+        )}
       </ButtonGroup>
     );
   };
@@ -198,11 +217,16 @@ const PluginModal: FC<Props> = ({ onClose, pluginAction, plugin }) => {
             <ListChild className={classNames("field-body", "is-inline-flex")}>{plugin.author}</ListChild>
           </div>
           {pluginAction === PluginAction.CLOUDOGU && (
-            <div className="field is-horizontal">
-              <Notification type="info" className="is-full-width">
-                {t("plugins.modal.cloudoguInstallInfo")}
-              </Notification>
-            </div>
+            <>
+              <div className="field is-horizontal">
+                <MyCloudoguTag />
+              </div>
+              <div className="field is-horizontal">
+                <Notification type="info" className="is-full-width">
+                  {t("plugins.modal.cloudoguInstallInfo")}
+                </Notification>
+              </div>
+            </>
           )}
           {pluginAction === PluginAction.INSTALL && (
             <div className="field is-horizontal">
@@ -242,6 +266,7 @@ const PluginModal: FC<Props> = ({ onClose, pluginAction, plugin }) => {
       body={body}
       footer={footer()}
       active={true}
+      initialFocusRef={initialFocusRef}
     />
   );
 };

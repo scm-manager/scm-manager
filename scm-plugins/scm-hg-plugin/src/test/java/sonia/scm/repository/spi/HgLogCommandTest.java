@@ -51,7 +51,7 @@ public class HgLogCommandTest extends AbstractHgCommandTestBase
   @Test
   public void testGetAll() {
     ChangesetPagingResult result =
-      createComamnd().getChangesets(new LogCommandRequest());
+      createCommand().getChangesets(new LogCommandRequest());
 
     assertNotNull(result);
     assertEquals(5, result.getTotal());
@@ -64,7 +64,7 @@ public class HgLogCommandTest extends AbstractHgCommandTestBase
 
     request.setPath("a.txt");
 
-    ChangesetPagingResult result = createComamnd().getChangesets(request);
+    ChangesetPagingResult result = createCommand().getChangesets(request);
 
     assertNotNull(result);
     assertEquals(3, result.getTotal());
@@ -83,7 +83,7 @@ public class HgLogCommandTest extends AbstractHgCommandTestBase
 
     request.setPath("a.txt");
 
-    ChangesetPagingResult result = createComamnd().getChangesets(request);
+    ChangesetPagingResult result = createCommand().getChangesets(request);
 
     assertNotNull(result);
     assertEquals(1,
@@ -98,7 +98,7 @@ public class HgLogCommandTest extends AbstractHgCommandTestBase
 
     request.setPagingLimit(2);
 
-    ChangesetPagingResult result = createComamnd().getChangesets(request);
+    ChangesetPagingResult result = createCommand().getChangesets(request);
 
     assertNotNull(result);
     assertEquals(5, result.getTotal());
@@ -122,7 +122,7 @@ public class HgLogCommandTest extends AbstractHgCommandTestBase
     request.setPagingStart(1);
     request.setPagingLimit(2);
 
-    ChangesetPagingResult result = createComamnd().getChangesets(request);
+    ChangesetPagingResult result = createCommand().getChangesets(request);
 
     assertNotNull(result);
     assertEquals(5, result.getTotal());
@@ -141,7 +141,7 @@ public class HgLogCommandTest extends AbstractHgCommandTestBase
 
   @Test
   public void testGetCommit() throws IOException {
-    HgLogCommand command = createComamnd();
+    HgLogCommand command = createCommand();
     String revision = "a9bacaf1b7fa0cebfca71fed4e59ed69a6319427";
     Changeset c =
       command.getChangeset(revision, null);
@@ -173,7 +173,7 @@ public class HgLogCommandTest extends AbstractHgCommandTestBase
     request.setStartChangeset("3049df33fdbb");
     request.setEndChangeset("a9bacaf1b7fa");
 
-    ChangesetPagingResult result = createComamnd().getChangesets(request);
+    ChangesetPagingResult result = createCommand().getChangesets(request);
 
     assertNotNull(result);
     assertEquals(2, result.getTotal());
@@ -194,7 +194,7 @@ public class HgLogCommandTest extends AbstractHgCommandTestBase
    *
    * @return
    */
-  private HgLogCommand createComamnd()
+  private HgLogCommand createCommand()
   {
     return new HgLogCommand(cmdContext);
   }

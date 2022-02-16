@@ -67,7 +67,8 @@ const DeletePermissionButton: FC<Props> = ({ namespaceOrRepository, permission, 
           },
           {
             label: t("permission.delete-permission-button.confirm-alert.cancel"),
-            onClick: () => null
+            onClick: () => null,
+            autofocus: true
           }
         ]}
         close={() => setShowConfirmAlert(false)}

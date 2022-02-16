@@ -23,7 +23,10 @@ pipeline {
 
     stage('Set Version') {
       when {
-        branch pattern: 'release/*', comparator: 'GLOB'
+        anyOf {
+          branch pattern: 'release/*', comparator: 'GLOB'
+          branch pattern: 'hotfix/*', comparator: 'GLOB'
+        }
       }
       steps {
         // read version from branch, set it and commit it
@@ -35,10 +38,14 @@ pipeline {
         sh 'git config --replace-all "remote.origin.fetch" "+refs/heads/*:refs/remotes/origin/*"'
         sh 'git fetch --all'
 
-        // checkout, reset and merge
-        sh 'git checkout master'
-        sh 'git reset --hard origin/master'
-        sh "git merge --ff-only ${env.BRANCH_NAME}"
+        script {
+          if (isReleaseBuild()) {
+            // checkout, reset and merge
+            sh 'git checkout master'
+            sh 'git reset --hard origin/master'
+            sh "git merge --ff-only ${env.BRANCH_NAME}"
+          }
+        }
 
         // set tag
         tag releaseVersion
@@ -101,6 +108,7 @@ pipeline {
       when {
         anyOf {
           branch pattern: 'release/*', comparator: 'GLOB'
+          branch pattern: 'hotfix/*', comparator: 'GLOB'
           branch 'develop'
         }
         expression { return isBuildSuccess() }
@@ -142,16 +150,24 @@ pipeline {
 
     stage('Push Tag') {
       when {
-        branch pattern: 'release/*', comparator: 'GLOB'
+        anyOf {
+          branch pattern: 'release/*', comparator: 'GLOB'
+          branch pattern: 'hotfix/*', comparator: 'GLOB'
+        }
         expression { return isBuildSuccess() }
       }
       steps {
-        // push changes back to remote repository
-        authGit 'cesmarvin-github', 'push origin master --tags'
-        authGit 'cesmarvin-github', 'push origin --tags'
+        script {
+          // push changes back to remote repository
+          if (isReleaseBuild()) {
+            authGit 'cesmarvin-github', 'push origin master --tags'
+          } else {
+            authGit 'cesmarvin-github', "push origin ${env.BRANCH_NAME} --tags"
+          }
+          authGit 'cesmarvin-github', 'push origin --tags'
+        }
       }
     }
-
 
     stage('Set Next Version') {
       when {
@@ -181,6 +197,20 @@ pipeline {
       }
     }
 
+    stage('Send Merge Notification') {
+      when {
+        branch pattern: 'hotfix/*', comparator: 'GLOB'
+        expression { return isBuildSuccess() }
+      }
+      steps {
+        mail to: "scm-team@cloudogu.com",
+          subject: "Jenkins Job ${JOB_NAME} - Merge Hotfix Release #${env.BRANCH_NAME}!",
+          body: """Please,
+          - merge the hotfix release branch ${env.BRANCH_NAME} into master (keep versions of master, merge changelog to keep both versions),
+          - merge master into develop (the changelog should have no conflicts),
+          - if needed, increase version."""
+      }
+    }
   }
 
   post {
@@ -207,8 +237,16 @@ void gradle(String command) {
   sh "./gradlew -Duser.home=${env.WORKSPACE} ${command}"
 }
 
+boolean isReleaseBuild() {
+  return env.BRANCH_NAME.startsWith('release/')
+}
+
 String getReleaseVersion() {
-  return env.BRANCH_NAME.substring("release/".length());
+  if (isReleaseBuild()) {
+    return env.BRANCH_NAME.substring("release/".length());
+  } else {
+    return env.BRANCH_NAME.substring("hotfix/".length());
+  }
 }
 
 void commit(String message) {
@@ -220,7 +258,7 @@ void tag(String version) {
   sh "git -c user.name='CES Marvin' -c user.email='cesmarvin@cloudogu.com' tag -m '${message}' ${version}"
 }
 
-void isBuildSuccess() {
+boolean isBuildSuccess() {
   return currentBuild.result == null || currentBuild.result == 'SUCCESS'
 }
 

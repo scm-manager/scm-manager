@@ -70,38 +70,61 @@ public final class LuceneHighlighter {
     return field.isHighlighted() && queriedFields.contains(field.getName());
   }
 
-  public String[] highlight(String fieldName, Indexed.Analyzer fieldAnalyzer, String value) throws InvalidTokenOffsetsException, IOException {
+  public ContentFragment[] highlight(String fieldName, Indexed.Analyzer fieldAnalyzer, String value) throws InvalidTokenOffsetsException, IOException {
     String[] fragments = highlighter.getBestFragments(analyzer, fieldName, value, MAX_NUM_FRAGMENTS);
     if (fieldAnalyzer == Indexed.Analyzer.CODE) {
-      fragments = keepWholeLine(value, fragments);
+      return keepWholeLine(value, fragments);
     }
-    return Arrays.stream(fragments)
-      .toArray(String[]::new);
+    return Arrays.stream(fragments).map(f -> createContentFragment(value, f))
+      .toArray(ContentFragment[]::new);
   }
 
-  private String[] keepWholeLine(String content, String[] fragments) {
+  private ContentFragment[] keepWholeLine(String content, String[] fragments) {
     return Arrays.stream(fragments)
       .map(fragment -> keepWholeLine(content, fragment))
-      .toArray(String[]::new);
+      .toArray(ContentFragment[]::new);
   }
 
-  private String keepWholeLine(String content, String fragment) {
+  private ContentFragment keepWholeLine(String content, String fragment) {
+    boolean matchesContentStart = false;
+    boolean matchesContentEnd = false;
+
     String raw = fragment.replace(PRE_TAG, "").replace(POST_TAG, "");
     int index = content.indexOf(raw);
 
-    int start = content.lastIndexOf('\n', index);
-    if (start < 0) {
-      start = 0;
+    if (index == 0) {
+      matchesContentStart = true;
     }
 
-    String snippet = content.substring(start, index) + fragment;
+    int start = content.lastIndexOf('\n', index);
+
+    String snippet;
+    if (start == index) {
+      // fragment starts with a linebreak
+      snippet = fragment.substring(1);
+    } else {
+      if (start < 0) {
+        // no leading linebreak
+        start = 0;
+      } else if (start < content.length()) {
+        // skip linebreak
+        start++;
+      }
+      snippet = content.substring(start, index) + fragment;
+    }
 
     int end = content.indexOf('\n', index + raw.length());
     if (end < 0) {
       end = content.length();
+      matchesContentEnd = true;
     }
 
-    return snippet + content.substring(index + raw.length(), end) + "\n";
+    return new ContentFragment(snippet + content.substring(index + raw.length(), end) + (matchesContentEnd ? "" : "\n"), matchesContentStart, matchesContentEnd);
+  }
+
+  private ContentFragment createContentFragment(String content, String fragment) {
+    String raw = fragment.replace(PRE_TAG, "").replace(POST_TAG, "");
+    return new ContentFragment(fragment, content.startsWith(raw), content.endsWith(raw));
   }
 
 }

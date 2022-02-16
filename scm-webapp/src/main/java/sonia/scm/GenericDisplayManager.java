@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm;
 
 import sonia.scm.search.SearchRequest;
@@ -31,8 +31,8 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.function.Function;
 
+import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
-import static sonia.scm.group.DisplayGroup.from;
 
 public abstract class GenericDisplayManager<D, T extends ReducedModelObject> implements DisplayManager<T> {
 
@@ -61,6 +61,9 @@ public abstract class GenericDisplayManager<D, T extends ReducedModelObject> imp
 
   @Override
   public Optional<T> get(String id) {
+    if (id == null) {
+      return empty();
+    }
     return ofNullable(dao.get(id)).map(transform);
   }
 }

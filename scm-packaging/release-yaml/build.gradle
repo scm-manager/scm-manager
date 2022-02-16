@@ -26,7 +26,7 @@ import com.cloudogu.scm.GitHubUploadTask
 
 plugins {
   id 'org.scm-manager.packaging'
-  id 'org.scm-manager.license' version '0.7.1'
+  id 'org.scm-manager.license'
 }
 
 configurations {
@@ -68,6 +68,8 @@ task publish(type: GitHubUploadTask) {
 
 license {
   header rootProject.file("LICENSE.txt")
+  lineEnding = "\n"
+
   tasks {
     gradle {
       files.from('build.gradle')

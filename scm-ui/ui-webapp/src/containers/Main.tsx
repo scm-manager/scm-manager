@@ -24,7 +24,7 @@
 import React, { FC, Suspense } from "react";
 
 import { Redirect, Route, Switch } from "react-router-dom";
-import { Me } from "@scm-manager/ui-types";
+import { Links, Me } from "@scm-manager/ui-types";
 
 import { ErrorBoundary, Loading, ProtectedRoute } from "@scm-manager/ui-components";
 import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
@@ -55,10 +55,13 @@ const Profile = React.lazy(() => import("./Profile"));
 const ImportLog = React.lazy(() => import("../repos/importlog/ImportLog"));
 const Search = React.lazy(() => import("../search/Search"));
 const Syntax = React.lazy(() => import("../search/Syntax"));
+const ExternalError = React.lazy(() => import("./ExternalError"));
+
 
 type Props = {
   me: Me;
   authenticated?: boolean;
+  links: Links;
 };
 
 const Main: FC<Props> = props => {
@@ -82,6 +85,7 @@ const Main: FC<Props> = props => {
             <Redirect exact from="/" to={url} />
             <Route exact path="/login" component={Login} />
             <Route path="/logout" component={Logout} />
+            <Route path="/error/:code" component={ExternalError} />
             <Redirect exact strict from="/repos" to="/repos/" />
             <ProtectedRoute exact path="/repos/" component={Overview} authenticated={authenticated} />
             <ProtectedRoute path="/repos/create" component={CreateRepositoryRoot} authenticated={authenticated} />

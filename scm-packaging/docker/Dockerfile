@@ -22,7 +22,7 @@
 # SOFTWARE.
 #
 
-FROM adoptopenjdk/openjdk11:jdk-11.0.9_11.1-alpine-slim
+FROM adoptopenjdk/openjdk11:jdk-11.0.14_9-alpine-slim
 ENV SCM_HOME=/var/lib/scm
 ENV CACHE_DIR=/var/cache/scm/work
 
@@ -31,16 +31,17 @@ COPY . /
 RUN set -x \
  # ttf-dejavu graphviz are required for the plantuml plugin
  && apk add --no-cache ttf-dejavu graphviz mercurial bash ca-certificates \
- && addgroup -S -g 1000 scm \
- && adduser -S -s /bin/false -G scm -h ${SCM_HOME} -D -H -u 1000 scm \
+ && adduser -S -s /bin/false -h ${SCM_HOME} -D -H -u 1000 -G root scm \
  && mkdir -p ${SCM_HOME} ${CACHE_DIR} \
  && chmod +x /opt/scm-server/bin/scm-server \
- && chown scm:scm ${SCM_HOME} ${CACHE_DIR}
+ # set permissions to group 0 for openshift compatibility
+ && chown 1000:0 ${SCM_HOME} ${CACHE_DIR} \
+ && chmod -R g=u ${SCM_HOME} ${CACHE_DIR}
 
 WORKDIR "/opt/scm-server"
 VOLUME ["${SCM_HOME}", "${CACHE_DIR}"]
 EXPOSE 8080
-USER scm
+USER 1000
 
 # we us a high relative high start period,
 # because the start time depends on the number of installed plugins

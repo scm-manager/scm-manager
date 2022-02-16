@@ -59,3 +59,11 @@ export type PendingPlugins = HalRepresentationWithEmbedded<{
   update: Plugin[];
   uninstall: Plugin[];
 }>;
+
+export type PluginCenterAuthenticationInfo = HalRepresentation & {
+  principal?: string;
+  pluginCenterSubject?: string;
+  date?: string;
+  default: boolean;
+  failed: boolean;
+};

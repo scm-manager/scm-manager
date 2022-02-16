@@ -21,25 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.group.xml;
 
-//~--- non-JDK imports --------------------------------------------------------
+package sonia.scm.group.xml;
 
 import sonia.scm.group.Group;
 import sonia.scm.xml.XmlDatabase;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.util.Collection;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  *
@@ -190,7 +185,7 @@ public class XmlGroupDatabase implements XmlDatabase<Group>
   /** Field description */
   @XmlJavaTypeAdapter(XmlGroupMapAdapter.class)
   @XmlElement(name = "groups")
-  private Map<String, Group> groupMap = new LinkedHashMap<>();
+  private Map<String, Group> groupMap = new TreeMap<>();
 
   /** Field description */
   private Long lastModified;

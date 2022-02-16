@@ -11,6 +11,19 @@
       "no-write-permission-notification": "Please note: You do not have the permission to edit the config!"
     }
   },
+  "pluginSettings": {
+    "subtitle": "Plugin Settings",
+    "pluginUrl": "Plugin Center URL",
+    "pluginAuthUrl": "Plugin Center Authentication URL",
+    "auth": {
+      "loading": "Loading authentication info ...",
+      "notAuthenticated": "Plugin Center is not authenticated",
+      "authenticate": "Authenticate",
+      "authenticated": "Plugin Center is authenticated as <0 />",
+      "subjectTooltip": "Authenticated by {{ principal }} {{ ago }}",
+      "logout": "Logout"
+    }
+  },
   "proxySettings": {
     "subtitle": "Proxy Settings",
     "enable": "Enable Proxy",
@@ -54,7 +67,7 @@
       "off": "Disabled"
     },
     "skip-failed-authenticators": "Skip Failed Authenticators",
-    "plugin-url": "Plugin Center URL",
+    "alerts-url": "Alerts URL",
     "release-feed-url": "Release Feed URL",
     "mail-domain-name": "Fallback Mail Domain Name",
     "enabled-xsrf-protection": "Enabled XSRF Protection",
@@ -79,6 +92,8 @@
     "realmDescriptionHelpText": "Enter authentication realm description.",
     "dateFormatHelpText": "Moments date format. Please have a look at the MomentJS documentation.",
     "pluginUrlHelpText": "The url of the Plugin Center API. Explanation of the placeholders: version = SCM-Manager Version; os = Operation System; arch = Architecture",
+    "pluginAuthUrlHelpText": "The url of the Plugin Center authentication API.",
+    "alertsUrlHelpText": "The url of the alerts api. This provides up-to-date alerts regarding your system. To disable this feature just leave the url blank.",
     "releaseFeedUrlHelpText": "The url of the RSS Release Feed for SCM-Manager. This provides up-to-date version information. To disable this feature just leave the url blank.",
     "mailDomainNameHelpText": "This domain name will be used to create email addresses for users without one when needed. It will not be used to send mails nor will be accessed otherwise.",
     "enableForwardingHelpText": "Enable mod_proxy port forwarding.",

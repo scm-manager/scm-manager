@@ -90,7 +90,7 @@ class PendingPluginResourceTest {
   @BeforeEach
   void prepareEnvironment() {
     dispatcher.registerException(ShiroException.class, Response.Status.UNAUTHORIZED);
-    PluginRootResource pluginRootResource = new PluginRootResource(null, null, Providers.of(pendingPluginResource));
+    PluginRootResource pluginRootResource = new PluginRootResource(null, null, Providers.of(pendingPluginResource), null);
     dispatcher.addSingletonResource(pluginRootResource);
   }
 

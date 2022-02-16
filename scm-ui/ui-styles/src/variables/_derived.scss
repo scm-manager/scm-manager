@@ -43,13 +43,24 @@ $danger-75: scale-color($danger, $lightness: 25%);
 $danger-50: scale-color($danger, $lightness: 50%);
 $danger-25: scale-color($danger, $lightness: 75%);
 
-// TODO
-// $high-contrast-danger-75: scale-color($high-contrast-danger, $lightness: 25%);
-// $high-contrast-danger-50: scale-color($high-contrast-danger, $lightness: 50%);
-// $high-contrast-danger-25: scale-color($high-contrast-danger, $lightness: 75%);
-
-// TODO
-// high-contrast light gray
-// $light-75: darken($high-contrast-light-gray, 15%);
-// $light-50: darken($high-contrast-light-gray, 30%);
-// $light-25: darken($high-contrast-light-gray, 45%);
+$high-contrast-dark-75: scale-color($dark, $lightness: -25%);
+$high-contrast-dark-50: scale-color($dark, $lightness: -50%);
+$high-contrast-dark-25: scale-color($dark, $lightness: -75%);
+$high-contrast-info-75: scale-color($info, $lightness: -25%);
+$high-contrast-info-50: scale-color($info, $lightness: -50%);
+$high-contrast-info-25: scale-color($info, $lightness: -75%);
+$high-contrast-link-75: scale-color($link, $lightness: -25%);
+$high-contrast-link-50: scale-color($link, $lightness: -50%);
+$high-contrast-link-25: scale-color($link, $lightness: -75%);
+$high-contrast-primary-75: scale-color($primary, $lightness: -25%);
+$high-contrast-primary-25: scale-color($primary, $lightness: -75%);
+$high-contrast-primary-50: scale-color($primary, $lightness: -50%);
+$high-contrast-success-75: scale-color($success, $lightness: -25%);
+$high-contrast-success-50: scale-color($success, $lightness: -50%);
+$high-contrast-success-25: scale-color($success, $lightness: -75%);
+$high-contrast-warning-75: scale-color($warning, $lightness: -25%);
+$high-contrast-warning-50: scale-color($warning, $lightness: -50%);
+$high-contrast-warning-25: scale-color($warning, $lightness: -75%);
+$high-contrast-danger-75: scale-color($danger, $lightness: -25%);
+$high-contrast-danger-50: scale-color($danger, $lightness: -50%);
+$high-contrast-danger-25: scale-color($danger, $lightness: -75%);

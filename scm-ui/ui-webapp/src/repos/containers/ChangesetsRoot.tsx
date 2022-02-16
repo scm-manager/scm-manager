@@ -25,9 +25,9 @@
 import React, { FC } from "react";
 import { Route, useRouteMatch, useHistory } from "react-router-dom";
 import { Repository, Branch } from "@scm-manager/ui-types";
-import Changesets from "./Changesets";
 import CodeActionBar from "../codeSection/components/CodeActionBar";
 import { urls } from "@scm-manager/ui-components";
+import Changesets from "./Changesets";
 
 type Props = {
   repository: Repository;
@@ -74,11 +74,9 @@ const ChangesetRoot: FC<Props> = ({ repository, baseUrl, branches, selectedBranc
         onSelectBranch={onSelectBranch}
         switchViewLink={evaluateSwitchViewLink()}
       />
-      <div className="panel">
-        <Route path={`${url}/:page?`}>
-          <Changesets repository={repository} branch={branches?.filter(b => b.name === selectedBranch)[0]} />
-        </Route>
-      </div>
+      <Route path={`${url}/:page?`}>
+        <Changesets repository={repository} branch={branches?.filter(b => b.name === selectedBranch)[0]} />
+      </Route>
     </>
   );
 };

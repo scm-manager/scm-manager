@@ -29,6 +29,8 @@ import org.assertj.core.util.Strings;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -70,6 +72,7 @@ class HgVerifierTest {
     }
 
     @Test
+    @DisabledOnOs(OS.WINDOWS)
     void shouldReturnFalseIfFileIsNotExecutable(@TempDir Path directory) throws IOException {
       Path hg = directory.resolve("hg");
       Files.createFile(hg);
@@ -115,7 +118,7 @@ class HgVerifierTest {
   }
 
   @ParameterizedTest
-  @ValueSource(strings = { "3-2-1", "x.y.z" })
+  @ValueSource(strings = {"3-2-1", "x.y.z"})
   void shouldReturnInvalidVersions(String version, @TempDir Path directory) throws IOException {
     HgVerifier verifier = new HgVerifier(hg -> version);
 

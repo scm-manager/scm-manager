@@ -47,7 +47,7 @@ const HistoryView: FC<Props> = ({ repository, file, revision }) => {
   return (
     <>
       <div className="panel-block">
-        <ChangesetList repository={repository} changesets={history._embedded.changesets} />
+        <ChangesetList repository={repository} changesets={history?._embedded?.changesets || []} file={file} />
       </div>
       <div className="panel-footer">
         <StatePaginator page={page + 1} collection={history} updatePage={(newPage: number) => setPage(newPage - 1)} />

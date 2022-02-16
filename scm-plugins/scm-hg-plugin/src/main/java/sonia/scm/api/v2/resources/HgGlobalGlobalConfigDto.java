@@ -37,6 +37,7 @@ import lombok.Setter;
 public class HgGlobalGlobalConfigDto extends HalRepresentation implements UpdateHgGlobalConfigDto {
 
   private boolean disabled;
+  private boolean allowDisable = false;
 
   @Encoding
   private String encoding;

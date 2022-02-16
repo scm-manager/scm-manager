@@ -27,6 +27,7 @@ import { isPluginCollection, PendingPlugins, Plugin, PluginCollection } from "@s
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { apiClient } from "./apiclient";
 import { requiredLink } from "./links";
+import { BadGatewayError } from "./errors";
 
 type WaitForRestartOptions = {
   initialDelay?: number;
@@ -37,31 +38,38 @@ const waitForRestartAfter = (
   promise: Promise<any>,
   { initialDelay = 1000, timeout = 500 }: WaitForRestartOptions = {}
 ): Promise<void> => {
-  const endTime = Number(new Date()) + 60000;
+  const endTime = Number(new Date()) + 4 * 60 * 1000;
   let started = false;
 
-  const executor =
-    <T = any>(data: T) =>
-    (resolve: (result: T) => void, reject: (error: Error) => void) => {
-      // we need some initial delay
-      if (!started) {
-        started = true;
-        setTimeout(executor(data), initialDelay, resolve, reject);
-      } else {
-        apiClient
-          .get("")
-          .then(() => resolve(data))
-          .catch(() => {
-            if (Number(new Date()) < endTime) {
-              setTimeout(executor(data), timeout, resolve, reject);
-            } else {
-              reject(new Error("timeout reached"));
-            }
-          });
-      }
-    };
+  const executor = <T = any>(data: T) => (resolve: (result: T) => void, reject: (error: Error) => void) => {
+    // we need some initial delay
+    if (!started) {
+      started = true;
+      setTimeout(executor(data), initialDelay, resolve, reject);
+    } else {
+      apiClient
+        .get("")
+        .then(() => resolve(data))
+        .catch(() => {
+          if (Number(new Date()) < endTime) {
+            setTimeout(executor(data), timeout, resolve, reject);
+          } else {
+            reject(new Error("timeout reached"));
+          }
+        });
+    }
+  };
 
-  return promise.then((data) => new Promise<void>(executor(data)));
+  return promise
+    .catch(err => {
+      if (err instanceof BadGatewayError) {
+        // in some rare cases the reverse proxy stops forwarding traffic to scm before the response is returned
+        // in such a case the reverse proxy returns 502 (bad gateway), so we treat 502 not as error
+        return "ok";
+      }
+      throw err;
+    })
+    .then(data => new Promise<void>(executor(data)));
 };
 
 export type UseAvailablePluginsOptions = {
@@ -72,10 +80,10 @@ export const useAvailablePlugins = ({ enabled }: UseAvailablePluginsOptions = {}
   const indexLink = useRequiredIndexLink("availablePlugins");
   return useQuery<PluginCollection, Error>(
     ["plugins", "available"],
-    () => apiClient.get(indexLink).then((response) => response.json()),
+    () => apiClient.get(indexLink).then(response => response.json()),
     {
       enabled,
-      retry: 3,
+      retry: 3
     }
   );
 };
@@ -88,10 +96,10 @@ export const useInstalledPlugins = ({ enabled }: UseInstalledPluginsOptions = {}
   const indexLink = useRequiredIndexLink("installedPlugins");
   return useQuery<PluginCollection, Error>(
     ["plugins", "installed"],
-    () => apiClient.get(indexLink).then((response) => response.json()),
+    () => apiClient.get(indexLink).then(response => response.json()),
     {
       enabled,
-      retry: 3,
+      retry: 3
     }
   );
 };
@@ -100,10 +108,10 @@ export const usePendingPlugins = (): ApiResult<PendingPlugins> => {
   const indexLink = useIndexLink("pendingPlugins");
   return useQuery<PendingPlugins, Error>(
     ["plugins", "pending"],
-    () => apiClient.get(indexLink!).then((response) => response.json()),
+    () => apiClient.get(indexLink!).then(response => response.json()),
     {
       enabled: !!indexLink,
-      retry: 3,
+      retry: 3
     }
   );
 };
@@ -135,19 +143,19 @@ export const useInstallPlugin = () => {
       return promise;
     },
     {
-      onSuccess: () => queryClient.invalidateQueries("plugins"),
+      onSuccess: () => queryClient.invalidateQueries("plugins")
     }
   );
   return {
     install: (plugin: Plugin, restartOptions: RestartOptions = {}) =>
       mutate({
         plugin,
-        restartOptions,
+        restartOptions
       }),
     isLoading,
     error,
     data,
-    isInstalled: !!data,
+    isInstalled: !!data
   };
 };
 
@@ -162,18 +170,18 @@ export const useUninstallPlugin = () => {
       return promise;
     },
     {
-      onSuccess: () => queryClient.invalidateQueries("plugins"),
+      onSuccess: () => queryClient.invalidateQueries("plugins")
     }
   );
   return {
     uninstall: (plugin: Plugin, restartOptions: RestartOptions = {}) =>
       mutate({
         plugin,
-        restartOptions,
+        restartOptions
       }),
     isLoading,
     error,
-    isUninstalled: !!data,
+    isUninstalled: !!data
   };
 };
 
@@ -196,18 +204,18 @@ export const useUpdatePlugins = () => {
       return promise;
     },
     {
-      onSuccess: () => queryClient.invalidateQueries("plugins"),
+      onSuccess: () => queryClient.invalidateQueries("plugins")
     }
   );
   return {
     update: (plugin: Plugin | PluginCollection, restartOptions: RestartOptions = {}) =>
       mutate({
         plugins: plugin,
-        restartOptions,
+        restartOptions
       }),
     isLoading,
     error,
-    isUpdated: !!data,
+    isUpdated: !!data
   };
 };
 
@@ -222,7 +230,7 @@ export const useExecutePendingPlugins = () => {
     ({ pending, restartOptions }) =>
       waitForRestartAfter(apiClient.post(requiredLink(pending, "execute")), restartOptions),
     {
-      onSuccess: () => queryClient.invalidateQueries("plugins"),
+      onSuccess: () => queryClient.invalidateQueries("plugins")
     }
   );
   return {
@@ -230,22 +238,22 @@ export const useExecutePendingPlugins = () => {
       mutate({ pending, restartOptions }),
     isLoading,
     error,
-    isExecuted: !!data,
+    isExecuted: !!data
   };
 };
 
 export const useCancelPendingPlugins = () => {
   const queryClient = useQueryClient();
   const { mutate, isLoading, error, data } = useMutation<unknown, Error, PendingPlugins>(
-    (pending) => apiClient.post(requiredLink(pending, "cancel")),
+    pending => apiClient.post(requiredLink(pending, "cancel")),
     {
-      onSuccess: () => queryClient.invalidateQueries("plugins"),
+      onSuccess: () => queryClient.invalidateQueries("plugins")
     }
   );
   return {
     update: (pending: PendingPlugins) => mutate(pending),
     isLoading,
     error,
-    isCancelled: !!data,
+    isCancelled: !!data
   };
 };

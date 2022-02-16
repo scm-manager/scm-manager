@@ -24,7 +24,7 @@
 
 import { apiClient, createUrl, extractXsrfTokenFromCookie } from "./apiclient";
 import fetchMock from "fetch-mock";
-import { BackendError } from "./errors";
+import { BackendError, BadGatewayError } from "./errors";
 
 describe("create url", () => {
   it("should not change absolute urls", () => {
@@ -45,9 +45,9 @@ describe("error handling tests", () => {
     context: [
       {
         type: "planet",
-        id: "earth",
-      },
-    ],
+        id: "earth"
+      }
+    ]
   };
 
   afterEach(() => {
@@ -55,9 +55,9 @@ describe("error handling tests", () => {
     fetchMock.restore();
   });
 
-  it("should create a normal error, if the content type is not scmm-error", (done) => {
+  it("should create a normal error, if the content type is not scmm-error", done => {
     fetchMock.getOnce("/api/v2/error", {
-      status: 404,
+      status: 404
     });
 
     apiClient.get("/error").catch((err: Error) => {
@@ -67,13 +67,24 @@ describe("error handling tests", () => {
     });
   });
 
-  it("should create an backend error, if the content type is scmm-error", (done) => {
+  it("should create a bad gateway error", done => {
+    fetchMock.getOnce("/api/v2/error", {
+      status: 502
+    });
+
+    apiClient.get("/error").catch((err: Error) => {
+      expect(err).toBeInstanceOf(BadGatewayError);
+      done();
+    });
+  });
+
+  it("should create an backend error, if the content type is scmm-error", done => {
     fetchMock.getOnce("/api/v2/error", {
       status: 404,
       headers: {
-        "Content-Type": "application/vnd.scmm-error+json;v=2",
+        "Content-Type": "application/vnd.scmm-error+json;v=2"
       },
-      body: earthNotFoundError,
+      body: earthNotFoundError
     });
 
     apiClient.get("/error").catch((err: BackendError) => {
@@ -87,8 +98,8 @@ describe("error handling tests", () => {
       expect(err.context).toEqual([
         {
           type: "planet",
-          id: "earth",
-        },
+          id: "earth"
+        }
       ]);
       done();
     });

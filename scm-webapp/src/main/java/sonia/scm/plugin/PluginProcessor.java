@@ -34,6 +34,7 @@ import com.google.common.collect.Sets;
 import com.google.common.hash.Hashing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.SCMContext;
 import sonia.scm.lifecycle.classloading.ClassLoaderLifeCycle;
 
 import javax.xml.bind.JAXBContext;
@@ -175,7 +176,7 @@ public final class PluginProcessor
     Set<ExplodedSmp> plugins = concat(installedPlugins, newlyInstalledPlugins);
 
     logger.trace("start building plugin tree");
-    PluginTree pluginTree = new PluginTree(plugins);
+    PluginTree pluginTree = new PluginTree(SCMContext.getContext().getStage(), plugins);
 
     logger.info("install plugin tree:\n{}", pluginTree);
 
@@ -468,16 +469,13 @@ public final class PluginProcessor
     Path descriptorPath = directory.resolve(PluginConstants.FILE_DESCRIPTOR);
 
     if (Files.exists(descriptorPath)) {
-
-      boolean core = Files.exists(directory.resolve(PluginConstants.FILE_CORE));
-
       ClassLoader cl = createClassLoader(classLoader, smp);
 
       InstalledPluginDescriptor descriptor = createDescriptor(cl, descriptorPath);
 
       WebResourceLoader resourceLoader = createWebResourceLoader(directory);
 
-      plugin = new InstalledPlugin(descriptor, cl, resourceLoader, directory, core);
+      plugin = new InstalledPlugin(descriptor, cl, resourceLoader, directory, smp.isCore());
     } else {
       logger.warn("found plugin directory without plugin descriptor");
     }

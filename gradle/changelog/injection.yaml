@@ -1,2 +1,0 @@
-- type: added
-  description: Fix ScmPathInfoStore injection ([#1889](https://github.com/scm-manager/scm-manager/pull/1889))

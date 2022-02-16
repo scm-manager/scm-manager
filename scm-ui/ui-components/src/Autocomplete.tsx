@@ -37,8 +37,11 @@ type Props = {
   placeholder: string;
   loadingMessage: string;
   noOptionsMessage: string;
+  errorMessage?: string;
+  informationMessage?: string;
   creatable?: boolean;
   className?: string;
+  disabled?: boolean;
 };
 
 type State = {};
@@ -47,7 +50,7 @@ class Autocomplete extends React.Component<Props, State> {
   static defaultProps = {
     placeholder: "Type here",
     loadingMessage: "Loading...",
-    noOptionsMessage: "No suggestion available",
+    noOptionsMessage: "No suggestion available"
   };
 
   handleInputChange = (newValue: ValueType<SelectValue>, action: ActionMeta) => {
@@ -64,7 +67,7 @@ class Autocomplete extends React.Component<Props, State> {
     selectValue: ValueType<SelectValue>,
     selectOptions: readonly SelectValue[]
   ): boolean => {
-    const isNotDuplicated = !selectOptions.map((option) => option.label).includes(inputValue);
+    const isNotDuplicated = !selectOptions.map(option => option.label).includes(inputValue);
     const isNotEmpty = inputValue !== "";
     return isNotEmpty && isNotDuplicated;
   };
@@ -78,9 +81,26 @@ class Autocomplete extends React.Component<Props, State> {
       loadingMessage,
       noOptionsMessage,
       loadSuggestions,
+      errorMessage,
+      informationMessage,
       creatable,
       className,
+      disabled
     } = this.props;
+
+    const asyncProps = {
+      className: "autocomplete-entry",
+      classNamePrefix: "autocomplete-entry",
+      cacheOptions: true,
+      loadOptions: loadSuggestions,
+      onChange: this.handleInputChange,
+      value,
+      placeholder,
+      loadingMessage: () => loadingMessage,
+      noOptionsMessage: () => noOptionsMessage,
+      isDisabled: disabled,
+      "aria-label": helpText || label
+    };
 
     return (
       <div className={classNames("field", className)}>
@@ -88,38 +108,24 @@ class Autocomplete extends React.Component<Props, State> {
         <div className="control">
           {creatable ? (
             <AsyncCreatable
-              cacheOptions
-              loadOptions={loadSuggestions}
-              onChange={this.handleInputChange}
-              value={value}
-              placeholder={placeholder}
-              loadingMessage={() => loadingMessage}
-              noOptionsMessage={() => noOptionsMessage}
+              {...asyncProps}
               isValidNewOption={this.isValidNewOption}
-              onCreateOption={(value) => {
+              onCreateOption={newValue => {
                 this.selectValue({
-                  label: value,
+                  label: newValue,
                   value: {
-                    id: value,
-                    displayName: value,
-                  },
+                    id: newValue,
+                    displayName: newValue
+                  }
                 });
               }}
-              aria-label={helpText || label}
             />
           ) : (
-            <Async
-              cacheOptions
-              loadOptions={loadSuggestions}
-              onChange={this.handleInputChange}
-              value={value}
-              placeholder={placeholder}
-              loadingMessage={() => loadingMessage}
-              noOptionsMessage={() => noOptionsMessage}
-              aria-label={helpText || label}
-            />
+            <Async {...asyncProps} />
           )}
         </div>
+        {errorMessage ? <p className="help is-danger">{errorMessage}</p> : null}
+        {informationMessage ? <p className="help is-info">{informationMessage}</p> : null}
       </div>
     );
   }

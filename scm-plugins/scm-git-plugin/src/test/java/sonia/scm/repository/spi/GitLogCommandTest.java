@@ -295,7 +295,7 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
 
     ChangesetPagingResult changesets = createCommand().getChangesets(new LogCommandRequest());
 
-    assertEquals("master", changesets.getBranchName());
+    assertEquals("main", changesets.getBranchName());
   }
 
   @Test

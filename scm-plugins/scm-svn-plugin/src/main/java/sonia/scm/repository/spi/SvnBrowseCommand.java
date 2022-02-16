@@ -80,6 +80,8 @@ public class SvnBrowseCommand extends AbstractSvnCommand
       logger.debug("browser repository {} in path \"{}\" at revision {}", repository, path, revisionNumber);
     }
 
+    resultCount = 0;
+
     BrowserResult result = null;
 
     try {

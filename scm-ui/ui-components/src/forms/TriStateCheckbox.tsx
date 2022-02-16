@@ -51,11 +51,11 @@ const TriStateCheckbox: FC<Props> = ({ checked, indeterminate, disabled, label, 
 
   let color;
   if (disabled) {
-    color = "grey-light";
+    color = "secondary";
   } else if (checked || indeterminate) {
     color = "link";
   } else {
-    color = "black";
+    color = "secondary-most";
   }
 
   // We need a tabIndex to make the checkbox accessible from keyboard.

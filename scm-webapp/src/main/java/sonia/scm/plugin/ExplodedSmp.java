@@ -30,6 +30,7 @@ import com.google.common.base.Function;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
 
@@ -83,6 +84,16 @@ public final class ExplodedSmp
   }
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Returns {@code true} if the exploded smp contains a core plugin
+   * @return {@code true} for a core plugin
+   * @since 2.30.0
+   */
+  public boolean isCore() {
+    return Files.exists(path.resolve(PluginConstants.FILE_CORE));
+  }
+
 
   /**
    * Returns the path to the plugin directory.

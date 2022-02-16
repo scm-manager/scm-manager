@@ -37,9 +37,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.repository.Compatibility;
+import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.repository.SvnConfig;
 
 import java.net.URI;
+import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -50,10 +53,13 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class SvnConfigToSvnConfigDtoMapperTest {
 
-  private URI baseUri = URI.create("http://example.com/base/");
+  private final URI baseUri = URI.create("http://example.com/base/");
 
   @Mock(answer = Answers.RETURNS_DEEP_STUBS)
   private ScmPathInfoStore scmPathInfoStore;
+
+  @Mock
+  private RepositoryManager manager;
 
   @InjectMocks
   private SvnConfigToSvnConfigDtoMapperImpl mapper;
@@ -80,16 +86,29 @@ public class SvnConfigToSvnConfigDtoMapperTest {
   public void shouldMapFields() {
     SvnConfig config = createConfiguration();
 
+    when(manager.getAll()).thenReturn(Collections.singleton(RepositoryTestData.create42Puzzle("svn")));
     when(subject.isPermitted("configuration:write:svn")).thenReturn(true);
     SvnConfigDto dto = mapper.map(config);
 
     assertTrue(dto.isDisabled());
+    assertFalse(dto.isAllowDisable());
 
     assertEquals(Compatibility.PRE15, dto.getCompatibility());
     assertTrue(dto.isEnabledGZip());
 
     assertEquals(expectedBaseUri.toString(), dto.getLinks().getLinkBy("self").get().getHref());
     assertEquals(expectedBaseUri.toString(), dto.getLinks().getLinkBy("update").get().getHref());
+  }
+
+  @Test
+  public void shouldAllowDisableIfNoSubversionRepositoriesExist() {
+    SvnConfig config = createConfiguration();
+
+    when(manager.getAll()).thenReturn(Collections.singleton(RepositoryTestData.create42Puzzle("git")));
+    when(subject.isPermitted("configuration:write:svn")).thenReturn(true);
+    SvnConfigDto dto = mapper.map(config);
+
+    assertTrue(dto.isAllowDisable());
   }
 
   @Test

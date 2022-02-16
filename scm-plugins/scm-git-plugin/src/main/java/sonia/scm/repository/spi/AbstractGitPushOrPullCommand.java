@@ -45,7 +45,6 @@ import java.util.Collection;
 
 public abstract class AbstractGitPushOrPullCommand extends AbstractGitCommand {
 
-  private static final String SCHEME = ScmTransportProtocol.NAME + "://";
   private static final Logger LOG = LoggerFactory.getLogger(AbstractGitPushOrPullCommand.class);
 
   protected GitRepositoryHandler handler;
@@ -100,7 +99,7 @@ public abstract class AbstractGitPushOrPullCommand extends AbstractGitCommand {
   }
 
   protected String getRemoteUrl(File directory) {
-    return SCHEME.concat(directory.getAbsolutePath());
+    return directory.toURI().toASCIIString();
   }
 
   protected String getRemoteUrl(sonia.scm.repository.Repository repository) {

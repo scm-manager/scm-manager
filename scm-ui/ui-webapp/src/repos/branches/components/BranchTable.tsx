@@ -82,7 +82,8 @@ const BranchTable: FC<Props> = ({ repository, baseUrl, branches, type, branchesD
             },
             {
               label: t("branch.delete.confirmAlert.cancel"),
-              onClick: () => abortDelete()
+              onClick: () => abortDelete(),
+              autofocus: true
             }
           ]}
           close={() => abortDelete()}

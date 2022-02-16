@@ -23,8 +23,13 @@ Auf der Login-Seite des SCM-Managers werden hilfreiche Plugins und Features vorg
 #### XSRF Protection aktivieren 
 Um Angriffe auf den SCM-Manager mit Cross Site Scripting (XSS / XSRF) zu erschweren. Dieses Feature ist noch experimentell.
 
-#### Plugin-Center-URL 
+#### Plugin-Settings 
 Der SCM-Manager kann ein Plugin-Center anbinden, um schnell und bequem Plugins verwalten zu können. Um ein anderes SCM-Plugin-Center als das vorkonfigurierte zu verwenden, reicht es aus diese URL zu ändern. Läuft der SCM-Manager im Cloudogu EcoSystem kann die Plugin Center URL über einen Eintrag im etcd gesetzt werden.
+Wenn das vorkonfigurierte Plugin-Center verwendet wird, kann der SCM-Manager mit myCloudogu verbunden werden. 
+![Einstellungen, Plugin-Center nicht mit myCloudogu verbunden](assets/administration-settings-not-connected.png)
+So können über das Plugin-Center besondere myCloudogu-Plugins bezogen werden. Details sind in der Dokumentation des Plugin-Centers aufgeführt. 
+Eine bestehende Verbindung zwischen dem SCM-Manager und myCloudogu kann hier aufgehoben werden.
+![Einstellungen, Plugin-Center mit myCloudogu verbunden, Button zum Lösen der Verbindung](assets/administration-settings-connected.png)
 
 #### Anonyme Zugriff
 Der SCM-Manager 2 hat das Konzept für anonyme Zugriffe über einen "_anonymous"-Benutzer realisiert. Beim Aktivieren des anonymen Zugriffs wird ein neuer Benutzer erstellt mit dem Namen  "_anonymous". Dieser Nutzer kann wie ein gewöhnlicher Benutzer für unterschiedliche Aktionen berechtigt werden. Bei einem Zugriff auf den SCM-Manager ohne Zugangsdaten wird dieser anonyme Benutzer verwendet.

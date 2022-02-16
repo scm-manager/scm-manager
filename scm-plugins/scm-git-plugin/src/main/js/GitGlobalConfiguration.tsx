@@ -33,6 +33,8 @@ type Props = {
 };
 
 type Configuration = HalRepresentation & {
+  disabled: boolean;
+  allowDisable: boolean;
   repositoryDirectory?: string;
   gcExpression?: string;
   nonFastForwardDisallowed: boolean;
@@ -43,7 +45,7 @@ type Configuration = HalRepresentation & {
 const GitGlobalConfiguration: FC<Props> = ({ link }) => {
   const [t] = useTranslation("plugins");
 
-  const { initialConfiguration, isReadOnly, update, ...formProps } = useConfigLink(link);
+  const { initialConfiguration, isReadOnly, update, ...formProps } = useConfigLink<Configuration>(link);
   const { formState, handleSubmit, register, reset } = useForm<Configuration>({ mode: "onChange" });
 
   useEffect(() => {
@@ -92,6 +94,12 @@ const GitGlobalConfiguration: FC<Props> = ({ link }) => {
         validationError={!!formState.errors.lfsWriteAuthorizationExpirationInMinutes}
         errorMessage={t("scm-git-plugin.config.lfsWriteAuthorizationExpirationInMinutesValidationError")}
         {...register("lfsWriteAuthorizationExpirationInMinutes", { min: 1, required: true })}
+      />
+      <Checkbox
+        label={t("scm-git-plugin.config.disabled")}
+        helpText={t("scm-git-plugin.config.disabledHelpText")}
+        disabled={isReadOnly || !initialConfiguration?.allowDisable}
+        {...register("disabled")}
       />
     </ConfigurationForm>
   );

@@ -24,6 +24,7 @@
 
 package sonia.scm;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -87,6 +88,45 @@ class BasicContextProviderTest {
       assertThat(resolved).isAbsolute();
       assertThat(resolved).startsWithRaw(baseDirectory);
       assertThat(resolved).endsWithRaw(path);
+    }
+
+  }
+
+  @Nested
+  class InstanceIdTests {
+
+    private String originalProperty;
+
+    @BeforeEach
+    void setUp() {
+      originalProperty = System.getProperty(BasicContextProvider.DIRECTORY_PROPERTY);
+    }
+
+    @AfterEach
+    void tearDown() {
+      if (originalProperty != null) {
+        System.setProperty(BasicContextProvider.DIRECTORY_PROPERTY, originalProperty);
+      }
+    }
+
+    @Test
+    void shouldReturnInstanceId(@TempDir Path baseDirectory) {
+      System.setProperty(BasicContextProvider.DIRECTORY_PROPERTY, baseDirectory.toString());
+      BasicContextProvider provider = new BasicContextProvider();
+
+      assertThat(provider.getInstanceId()).isNotBlank();
+    }
+
+    @Test
+    void shouldReturnPersistedInstanceId(@TempDir Path baseDirectory) {
+      System.setProperty(BasicContextProvider.DIRECTORY_PROPERTY, baseDirectory.toString());
+      BasicContextProvider provider = new BasicContextProvider();
+
+      String firstInstanceId = provider.getInstanceId();
+
+      provider = new BasicContextProvider();
+
+      assertThat(provider.getInstanceId()).isEqualTo(firstInstanceId);
     }
 
   }

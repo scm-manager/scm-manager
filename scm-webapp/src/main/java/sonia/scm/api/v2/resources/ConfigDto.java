@@ -54,12 +54,14 @@ public class ConfigDto extends HalRepresentation implements UpdateConfigDto {
   private Set<String> proxyExcludes;
   private boolean skipFailedAuthenticators;
   private String pluginUrl;
+  private String pluginAuthUrl;
   private long loginAttemptLimitTimeout;
   private boolean enabledXsrfProtection;
   private boolean enabledUserConverter;
   private boolean enabledApiKeys;
   private String namespaceStrategy;
   private String loginInfoUrl;
+  private String alertsUrl;
   private String releaseFeedUrl;
   private String mailDomainName;
   private Set<String> emergencyContacts;

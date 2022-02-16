@@ -49,9 +49,6 @@ const ContentRightContainer = styled.div`
 
 const QuickAction = styled(Icon)`
   margin-top: 0.2rem;
-  :hover {
-    color: #363636 !important;
-  }
 `;
 
 const ContactAvatar = styled.img`
@@ -79,9 +76,15 @@ const RepositoryEntry: FC<Props> = ({ repository, baseDate }) => {
 
   const renderContactIcon = () => {
     if (avatarFactory) {
-      return <ContactAvatar className="has-rounded-border" src={avatarFactory({ mail: repository.contact })} alt={repository.contact} />;
+      return (
+        <ContactAvatar
+          className="has-rounded-border"
+          src={avatarFactory({ mail: repository.contact })}
+          alt={repository.contact}
+        />
+      );
     }
-    return <QuickAction className={classNames("is-clickable")} name="envelope" color="info" />;
+    return <QuickAction className={classNames("is-clickable", "has-hover-visible")} name="envelope" color="info" />;
   };
 
   const createContentRight = () => (
@@ -124,7 +127,7 @@ const RepositoryEntry: FC<Props> = ({ repository, baseDate }) => {
           </ContactActionWrapper>
         ) : null}
         <QuickAction
-          className={classNames("is-clickable", "is-size-5")}
+          className={classNames("is-clickable", "is-size-5", "has-hover-visible")}
           name="download"
           color="info"
           onClick={() => setOpenCloneModal(true)}

@@ -50,7 +50,7 @@ export default class PluginAvatar extends React.Component<Props> {
             plugin
           }}
         >
-          <Image src={plugin.avatarUrl ? plugin.avatarUrl : "/images/blib.jpg"} alt="Logo" />
+          <Image src={plugin.avatarUrl ? plugin.avatarUrl : "/images/blibTransparentBG.png"} alt="Logo" />
         </ExtensionPoint>
       </BoundingBox>
     );

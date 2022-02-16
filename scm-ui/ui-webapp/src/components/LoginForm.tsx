@@ -99,7 +99,7 @@ class LoginForm extends React.Component<Props, State> {
   render() {
     const { loading, t } = this.props;
     return (
-      <div className="column is-4 box has-text-centered has-background-white-ter">
+      <div className="column is-4 box has-text-centered has-background-secondary-less">
         <h3 className="title">{t("login.title")}</h3>
         <p className="subtitle">{t("login.subtitle")}</p>
         <TopMarginBox className="box">

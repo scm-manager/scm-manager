@@ -22,14 +22,19 @@
  * SOFTWARE.
  */
 
-import React, { FC, useState } from "react";
-import { CUSTOM_NAMESPACE_STRATEGY, Repository } from "@scm-manager/ui-types";
+import React, { FC, useRef, useState } from "react";
+import { Repository } from "@scm-manager/ui-types";
 import { Button, ButtonGroup, ErrorNotification, InputField, Level, Loading, Modal } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 import { Redirect } from "react-router-dom";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import * as validator from "../components/form/repositoryValidation";
 import { useNamespaceStrategies, useRenameRepository } from "@scm-manager/ui-api";
+import NamespaceInput from "../components/NamespaceInput";
+import styled from "styled-components";
+
+const WithOverflow = styled.div`
+  overflow: visible;
+`;
 
 type Props = {
   repository: Repository;
@@ -48,6 +53,7 @@ const RenameRepository: FC<Props> = ({ repository }) => {
     error: namespaceStrategyLoadError,
     data: namespaceStrategies
   } = useNamespaceStrategies();
+  const initialFocusRef = useRef<HTMLInputElement>(null);
 
   if (isRenamed) {
     return <Redirect to={`/repo/${namespace}/${name}`} />;
@@ -76,25 +82,8 @@ const RenameRepository: FC<Props> = ({ repository }) => {
     setName(name);
   };
 
-  const renderNamespaceField = () => {
-    const props = {
-      label: t("repository.namespace"),
-      helpText: t("help.namespaceHelpText"),
-      value: namespace,
-      onChange: handleNamespaceChange,
-      errorMessage: t("validation.namespace-invalid"),
-      validationError: namespaceValidationError
-    };
-
-    if (namespaceStrategies?.current === CUSTOM_NAMESPACE_STRATEGY) {
-      return <InputField {...props} />;
-    }
-
-    return <ExtensionPoint name="repos.create.namespace" props={props} renderAll={false} />;
-  };
-
   const modalBody = (
-    <div>
+    <WithOverflow>
       {renamingError ? <ErrorNotification error={renamingError} /> : null}
       <InputField
         label={t("renameRepo.modal.label.repoName")}
@@ -103,10 +92,17 @@ const RenameRepository: FC<Props> = ({ repository }) => {
         helpText={t("help.nameHelpText")}
         validationError={nameValidationError}
         value={name}
-        onChange={handleNameChange}
+        onChange={event => handleNameChange(event.target.value)}
+        onReturnPressed={() => isValid && renameRepository(namespace, name)}
+        ref={initialFocusRef}
       />
-      {renderNamespaceField()}
-    </div>
+      <NamespaceInput
+        namespace={namespace}
+        handleNamespaceChange={handleNamespaceChange}
+        namespaceValidationError={namespaceValidationError}
+        namespaceStrategy={namespaceStrategies?.current}
+      />
+    </WithOverflow>
   );
 
   const footer = (
@@ -130,15 +126,21 @@ const RenameRepository: FC<Props> = ({ repository }) => {
     </>
   );
 
+  const modal = (
+    <Modal
+      active={showModal}
+      title={t("renameRepo.modal.title")}
+      footer={footer}
+      body={modalBody}
+      closeFunction={() => setShowModal(false)}
+      initialFocusRef={initialFocusRef}
+      overflowVisible={true}
+    />
+  );
+
   return (
     <>
-      <Modal
-        active={showModal}
-        title={t("renameRepo.modal.title")}
-        footer={footer}
-        body={modalBody}
-        closeFunction={() => setShowModal(false)}
-      />
+      {showModal ? modal : null}
       <Level
         left={
           <div>

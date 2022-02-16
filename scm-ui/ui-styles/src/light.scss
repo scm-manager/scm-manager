@@ -25,16 +25,21 @@
 @import "utils/_pre.scss";
 // colors defined in variables/commons.scss
 $subtitle-color: #666;
-$warning-invert: #88550D;
-$button-disabled-opacity: .25;
-
-$background-accent: $white-ter;
+$warning-invert: #88550d;
+$button-disabled-opacity: 0.25;
 
 @import "utils/_post.scss";
 
 :root {
+  --scm-secondary-background: #{$white};
+  --scm-secondary-text: #{$black};
+  --scm-border: 1px solid #dbdbdb;
+  --scm-info-color: #{$info};
+  --scm-hover-color: #{$black-ter};
+  --scm-column-selection: #{$link-25};
+
   --sh-base-color: #363636;
-  --sh-font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+  --sh-font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
   --sh-block-background: #ffffff;
   --sh-inline-code-color: #ff3860;
   --sh-inline-code-background: #fbe7eb;
@@ -47,8 +52,77 @@ $background-accent: $white-ter;
   --sh-variable-color: #a74eb2;
   --sh-function-color: #ff3860;
   --sh-keyword-color: #00a984;
-  --sh-selected-color: #7fe3cd;
+  --sh-selected-color: #{$warning-25};
   --sh-highlight-background: #f5f5f5;
   --sh-highlight-accent: #99d8f3;
 }
 
+.popover:before {
+  border-bottom-color: white;
+  border-left-color: white;
+  box-shadow: -1px 1px 2px rgba(10, 10, 10, 0.2);
+}
+
+.notifications .dropdown-menu:before {
+  border-bottom-color: white;
+  border-left-color: white;
+}
+
+.has-text-secondary-least {
+  color: $white !important;
+}
+a.has-text-secondary-least:hover,
+a.has-text-secondary-least:focus {
+  color: lighten($white, 10%) !important;
+}
+.has-background-secondary-least {
+  background-color: $white !important;
+}
+
+.has-text-secondary-less {
+  color: $white-ter !important;
+}
+a.has-text-secondary-less:hover,
+a.has-text-secondary-less:focus {
+  color: lighten($white-ter, 10%) !important;
+}
+.has-background-secondary-less {
+  background-color: $white-ter !important;
+}
+
+.has-text-secondary {
+  color: $grey-light !important;
+}
+a.has-text-secondary:hover,
+a.has-text-secondary:focus {
+  color: lighten($grey-light, 10%) !important;
+}
+.has-background-secondary {
+  background-color: $grey-light !important;
+}
+
+.has-text-secondary-more {
+  color: $grey-darker !important;
+}
+a.has-text-secondary-more:hover,
+a.has-text-secondary-more:focus {
+  color: lighten($grey-darker, 10%) !important;
+}
+.has-background-secondary-more {
+  background-color: $grey-darker !important;
+}
+
+.has-text-secondary-most {
+  color: $black !important;
+}
+a.has-text-secondary-most:hover,
+a.has-text-secondary-most:focus {
+  color: lighten($black, 10%) !important;
+}
+.has-background-secondary-most {
+  background-color: $black !important;
+}
+
+.has-hover-visible:hover {
+  color: $grey-darker !important;
+}

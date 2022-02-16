@@ -21,166 +21,143 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.plugin;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import com.google.common.base.Function;
 import com.google.common.collect.Lists;
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-
-import static com.google.common.collect.ImmutableSet.of;
-import static org.hamcrest.Matchers.*;
-
-import static org.junit.Assert.*;
-
-//~--- JDK imports ------------------------------------------------------------
+import sonia.scm.Stage;
 
 import java.io.IOException;
-
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.google.common.collect.ImmutableSet.of;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
 /**
- *
  * @author Sebastian Sdorra
  */
-public class PluginTreeTest
-{
+public class PluginTreeTest {
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
+  @Rule
+  public TemporaryFolder tempFolder = new TemporaryFolder();
+
   @Test(expected = PluginConditionFailedException.class)
-  public void testPluginConditionFailed() throws IOException
-  {
-    PluginCondition condition = new PluginCondition("999",
-                                  new ArrayList<String>(), "hit");
-    InstalledPluginDescriptor plugin = new InstalledPluginDescriptor(2, createInfo("a",  "1"), null, condition,
-                      false, null, null);
+  public void testPluginConditionFailed() throws IOException {
+    PluginCondition condition = new PluginCondition("999", new ArrayList<>(), "hit");
+    InstalledPluginDescriptor plugin = new InstalledPluginDescriptor(2, createInfo("a", "1"), null, condition,
+      false, null, null);
     ExplodedSmp smp = createSmp(plugin);
 
-    new PluginTree(smp).getLeafLastNodes();
+    new PluginTree(Stage.PRODUCTION, smp).getLeafLastNodes();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
-  @Test(expected = PluginNotInstalledException.class)
-  public void testPluginNotInstalled() throws IOException
-  {
-    new PluginTree(createSmpWithDependency("b", "a")).getLeafLastNodes();
+  @Test(expected = PluginConditionFailedException.class)
+  public void testPluginConditionFailedInDevelopmentStage() throws IOException {
+    PluginCondition condition = new PluginCondition("999", new ArrayList<>(), "hit");
+    InstalledPluginDescriptor plugin = new InstalledPluginDescriptor(2, createInfo("a", "1"), null, condition,
+      false, null, null);
+    ExplodedSmp smp = createSmp(plugin);
+
+    new PluginTree(Stage.DEVELOPMENT, smp).getLeafLastNodes();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
+
   @Test
-  public void testNodes() throws IOException
-  {
+  public void testSkipCorePluginValidationOnDevelopment() throws IOException {
+    PluginCondition condition = new PluginCondition("999", new ArrayList<>(), "hit");
+    InstalledPluginDescriptor plugin = new InstalledPluginDescriptor(2, createInfo("a", "1"), null, condition,
+      false, null, null);
+
+    // make it core
+    ExplodedSmp smp = createSmp(plugin);
+    Path path = smp.getPath();
+    Files.createFile(path.resolve(PluginConstants.FILE_CORE));
+
+    List<PluginNode> nodes = new PluginTree(Stage.DEVELOPMENT, smp).getLeafLastNodes();
+    assertFalse(nodes.isEmpty());
+  }
+
+  @Test(expected = PluginNotInstalledException.class)
+  public void testPluginNotInstalled() throws IOException {
+    new PluginTree(Stage.PRODUCTION, createSmpWithDependency("b", "a")).getLeafLastNodes();
+  }
+
+  @Test
+  public void testNodes() throws IOException {
     List<ExplodedSmp> smps = createSmps("a", "b", "c");
-    List<String> nodes = unwrapIds(new PluginTree(smps).getLeafLastNodes());
+    List<String> nodes = unwrapIds(new PluginTree(Stage.PRODUCTION, smps).getLeafLastNodes());
 
     assertThat(nodes, containsInAnyOrder("a", "b", "c"));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
   @Test(expected = PluginException.class)
-  public void testScmVersion() throws IOException
-  {
+  public void testScmVersion() throws IOException {
     InstalledPluginDescriptor plugin = new InstalledPluginDescriptor(1, createInfo("a", "1"), null, null, false,
-                      null, null);
+      null, null);
     ExplodedSmp smp = createSmp(plugin);
 
-    new PluginTree(smp).getLeafLastNodes();
+    new PluginTree(Stage.PRODUCTION, smp).getLeafLastNodes();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
   @Test
-  public void testSimpleDependencies() throws IOException
-  {
-    //J-
-    ExplodedSmp[] smps = new ExplodedSmp[] {
+  public void testSimpleDependencies() throws IOException {
+    ExplodedSmp[] smps = new ExplodedSmp[]{
       createSmpWithDependency("a"),
       createSmpWithDependency("b", "a"),
       createSmpWithDependency("c", "a", "b")
     };
-    //J+
 
-    PluginTree tree = new PluginTree(smps);
+    PluginTree tree = new PluginTree(Stage.PRODUCTION, smps);
     List<PluginNode> nodes = tree.getLeafLastNodes();
-
-    System.out.println(tree);
 
     assertThat(unwrapIds(nodes), contains("a", "b", "c"));
   }
 
   @Test
-  public void testComplexDependencies() throws IOException
-  {
-    //J-
+  public void testComplexDependencies() throws IOException {
     ExplodedSmp[] smps = new ExplodedSmp[]{
       createSmpWithDependency("a", "b", "c", "d"),
       createSmpWithDependency("b", "c"),
       createSmpWithDependency("c"),
       createSmpWithDependency("d")
     };
-    //J+
 
-    PluginTree tree = new PluginTree(smps);
+    PluginTree tree = new PluginTree(Stage.PRODUCTION, smps);
     List<PluginNode> nodes = tree.getLeafLastNodes();
-
-    System.out.println(tree);
 
     assertThat(unwrapIds(nodes), contains("d", "c", "b", "a"));
   }
 
   @Test
   public void testWithOptionalDependency() throws IOException {
-    ExplodedSmp[] smps = new ExplodedSmp[] {
+    ExplodedSmp[] smps = new ExplodedSmp[]{
       createSmpWithDependency("a"),
       createSmpWithDependency("b", null, of("a")),
       createSmpWithDependency("c", null, of("a", "b"))
     };
 
-    PluginTree tree = new PluginTree(smps);
+    PluginTree tree = new PluginTree(Stage.PRODUCTION, smps);
     List<PluginNode> nodes = tree.getLeafLastNodes();
-
-    System.out.println(tree);
 
     assertThat(unwrapIds(nodes), contains("a", "b", "c"));
   }
 
   @Test
   public void testRealWorldDependencies() throws IOException {
-    //J-
     ExplodedSmp[] smps = new ExplodedSmp[]{
       createSmpWithDependency("scm-editor-plugin"),
       createSmpWithDependency("scm-ci-plugin"),
@@ -206,7 +183,7 @@ public class PluginTreeTest
       createSmpWithDependency("scm-script-plugin"),
       createSmpWithDependency("scm-activity-plugin"),
       createSmpWithDependency("scm-mail-plugin"),
-      createSmpWithDependency("scm-branchwp-plugin", of(), of("scm-editor-plugin", "scm-review-plugin", "scm-mail-plugin" )),
+      createSmpWithDependency("scm-branchwp-plugin", of(), of("scm-editor-plugin", "scm-review-plugin", "scm-mail-plugin")),
       createSmpWithDependency("scm-notify-plugin", "scm-mail-plugin"),
       createSmpWithDependency("scm-redmine-plugin", "scm-issuetracker-plugin"),
       createSmpWithDependency("scm-jira-plugin", "scm-mail-plugin", "scm-issuetracker-plugin"),
@@ -214,16 +191,9 @@ public class PluginTreeTest
       createSmpWithDependency("scm-pathwp-plugin", of(), of("scm-editor-plugin")),
       createSmpWithDependency("scm-cockpit-legacy-plugin", "scm-statistic-plugin", "scm-rest-legacy-plugin", "scm-activity-plugin")
     };
-    //J+
 
-    Arrays.stream(smps)
-      .forEach(smp -> System.out.println(smp.getPlugin()));
-
-
-    PluginTree tree = new PluginTree(smps);
+    PluginTree tree = new PluginTree(Stage.PRODUCTION, smps);
     List<PluginNode> nodes = tree.getLeafLastNodes();
-
-    System.out.println(tree);
 
     assertEachParentHasChild(nodes, "scm-review-plugin", "scm-branchwp-plugin");
   }
@@ -239,18 +209,15 @@ public class PluginTreeTest
     assertEachParentHasChild(pluginNode.getChildren(), parentName, childName);
   }
 
-
   @Test
   public void testWithDeepOptionalDependency() throws IOException {
-    ExplodedSmp[] smps = new ExplodedSmp[] {
+    ExplodedSmp[] smps = new ExplodedSmp[]{
       createSmpWithDependency("a"),
       createSmpWithDependency("b", "a"),
       createSmpWithDependency("c", null, of("b"))
     };
 
-    PluginTree tree = new PluginTree(smps);
-
-    System.out.println(tree);
+    PluginTree tree = new PluginTree(Stage.PRODUCTION, smps);
 
     List<PluginNode> nodes = tree.getLeafLastNodes();
 
@@ -259,28 +226,18 @@ public class PluginTreeTest
 
   @Test
   public void testWithNonExistentOptionalDependency() throws IOException {
-    ExplodedSmp[] smps = new ExplodedSmp[] {
+    ExplodedSmp[] smps = new ExplodedSmp[]{
       createSmpWithDependency("a", null, of("b"))
     };
 
-    PluginTree tree = new PluginTree(smps);
+    PluginTree tree = new PluginTree(Stage.PRODUCTION, smps);
     List<PluginNode> nodes = tree.getLeafLastNodes();
 
     assertThat(unwrapIds(nodes), containsInAnyOrder("a"));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param name
-   * @param version
-   *
-   * @return
-   */
   private PluginInformation createInfo(String name,
-    String version)
-  {
+                                       String version) {
     PluginInformation info = new PluginInformation();
 
     info.setName(name);
@@ -289,58 +246,21 @@ public class PluginTreeTest
     return info;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param plugin
-   *
-   * @return
-   *
-   * @throws IOException
-   */
-  private ExplodedSmp createSmp(InstalledPluginDescriptor plugin) throws IOException
-  {
-    return new ExplodedSmp(tempFolder.newFile().toPath(), plugin);
+  private ExplodedSmp createSmp(InstalledPluginDescriptor plugin) throws IOException {
+    return new ExplodedSmp(tempFolder.newFolder().toPath(), plugin);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param name
-   *
-   * @return
-   *
-   * @throws IOException
-   */
-  private ExplodedSmp createSmp(String name) throws IOException
-  {
+  private ExplodedSmp createSmp(String name) throws IOException {
     return createSmp(new InstalledPluginDescriptor(2, createInfo(name, "1.0.0"), null, null,
       false, null, null));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param name
-   * @param dependencies
-   *
-   * @return
-   *
-   * @throws IOException
-   */
   private ExplodedSmp createSmpWithDependency(String name,
-    String... dependencies)
-    throws IOException
-  {
+                                              String... dependencies)
+    throws IOException {
     Set<String> dependencySet = new HashSet<>();
 
-    for (String d : dependencies)
-    {
-      dependencySet.add(d);
-    }
+    Collections.addAll(dependencySet, dependencies);
     return createSmpWithDependency(name, dependencySet, null);
   }
 
@@ -357,52 +277,18 @@ public class PluginTreeTest
     return createSmp(plugin);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param names
-   *
-   * @return
-   *
-   * @throws IOException
-   */
-  private List<ExplodedSmp> createSmps(String... names) throws IOException
-  {
+  private List<ExplodedSmp> createSmps(String... names) throws IOException {
     List<ExplodedSmp> smps = Lists.newArrayList();
 
-    for (String name : names)
-    {
+    for (String name : names) {
       smps.add(createSmp(name));
     }
 
     return smps;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param nodes
-   *
-   * @return
-   */
-  private List<String> unwrapIds(List<PluginNode> nodes)
-  {
-    return Lists.transform(nodes, new Function<PluginNode, String>()
-    {
-
-      @Override
-      public String apply(PluginNode input)
-      {
-        return input.getId();
-      }
-    });
+  private List<String> unwrapIds(List<PluginNode> nodes) {
+    return nodes.stream().map(PluginNode::getId).collect(Collectors.toList());
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  @Rule
-  public TemporaryFolder tempFolder = new TemporaryFolder();
 }

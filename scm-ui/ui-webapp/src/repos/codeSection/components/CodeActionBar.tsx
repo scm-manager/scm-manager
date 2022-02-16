@@ -21,10 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
+import React, { FC, ReactNode } from "react";
 import styled from "styled-components";
 import { useLocation } from "react-router-dom";
-import { Level, BranchSelector } from "@scm-manager/ui-components";
+import { BranchSelector, Level } from "@scm-manager/ui-components";
 import CodeViewSwitcher, { SwitchViewLink } from "./CodeViewSwitcher";
 import { useTranslation } from "react-i18next";
 import { Branch } from "@scm-manager/ui-types";
@@ -44,6 +44,9 @@ const FlexShrinkLevel = styled(Level)`
     flex-shrink: 1;
     margin-right: 0.75rem;
   }
+  .level-item {
+    justify-content: flex-end;
+  }
 `;
 
 type Props = {
@@ -51,14 +54,15 @@ type Props = {
   branches?: Branch[];
   onSelectBranch: () => void;
   switchViewLink: SwitchViewLink;
+  actions?: ReactNode;
 };
 
-const CodeActionBar: FC<Props> = ({ selectedBranch, branches, onSelectBranch, switchViewLink }) => {
+const CodeActionBar: FC<Props> = ({ selectedBranch, branches, onSelectBranch, switchViewLink, actions }) => {
   const { t } = useTranslation("repos");
   const location = useLocation();
 
   return (
-    <ActionBar className={"has-background-accent"}>
+    <ActionBar className="has-background-secondary-less">
       <FlexShrinkLevel
         left={
           branches &&
@@ -71,6 +75,7 @@ const CodeActionBar: FC<Props> = ({ selectedBranch, branches, onSelectBranch, sw
             />
           )
         }
+        children={actions}
         right={<CodeViewSwitcher currentUrl={location.pathname} switchViewLink={switchViewLink} />}
       />
     </ActionBar>

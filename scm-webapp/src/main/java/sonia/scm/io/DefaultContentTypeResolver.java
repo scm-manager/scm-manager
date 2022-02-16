@@ -24,17 +24,32 @@
 
 package sonia.scm.io;
 
-import com.github.sdorra.spotter.ContentTypeDetector;
-import com.github.sdorra.spotter.Language;
+import com.cloudogu.spotter.ContentTypeDetector;
+import com.cloudogu.spotter.Language;
+
+import java.util.Collections;
+import java.util.Map;
+import java.util.Optional;
 
 public final class DefaultContentTypeResolver implements ContentTypeResolver {
 
+  private static final Language[] BOOST = new Language[]{
+    // GCC Machine Description uses .md as extension, but markdown is much more likely
+    Language.MARKDOWN,
+    // XML uses .rs as extension, but rust is much more likely
+    Language.RUST,
+    // XML is also returned by content type boost strategy, but rust is really much more likely
+    Language.RUST,
+  };
+
   private static final ContentTypeDetector PATH_BASED = ContentTypeDetector.builder()
-    .defaultPathBased().boost(Language.MARKDOWN)
+    .defaultPathBased()
+    .boost(BOOST)
     .bestEffortMatch();
 
   private static final ContentTypeDetector PATH_AND_CONTENT_BASED = ContentTypeDetector.builder()
-    .defaultPathAndContentBased().boost(Language.MARKDOWN)
+    .defaultPathAndContentBased()
+    .boost(BOOST)
     .bestEffortMatch();
 
   @Override
@@ -45,5 +60,14 @@ public final class DefaultContentTypeResolver implements ContentTypeResolver {
   @Override
   public DefaultContentType resolve(String path, byte[] contentPrefix) {
     return new DefaultContentType(PATH_AND_CONTENT_BASED.detect(path, contentPrefix));
+  }
+
+  @Override
+  public Map<String, String> findSyntaxModesByLanguage(String language) {
+    Optional<Language> byName = Language.getByName(language);
+    if (byName.isPresent()) {
+      return DefaultContentType.syntaxMode(byName.get());
+    }
+    return Collections.emptyMap();
   }
 }

@@ -40,7 +40,7 @@ type Props = {
 
 const Icon: FC<Props> = ({
   iconStyle = "fas",
-  color = "grey-light",
+  color = "secondary",
   title,
   name,
   className,

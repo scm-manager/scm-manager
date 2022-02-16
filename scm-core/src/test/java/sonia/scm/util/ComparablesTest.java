@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.util;
 
 import org.junit.jupiter.api.Test;
@@ -40,6 +40,16 @@ class ComparablesTest {
 
     Comparator<One> comparable = Comparables.comparator(One.class, "value");
     assertThat(comparable.compare(a, b)).isEqualTo(-1);
+  }
+
+  @Test
+  void shouldCompareWithNullValues() {
+    One a = new One("a");
+    One b = new One(null);
+
+    Comparator<One> comparable = Comparables.comparator(One.class, "value");
+    assertThat(comparable.compare(a, b)).isEqualTo(1);
+    assertThat(comparable.compare(b, a)).isEqualTo(-1);
   }
 
   @Test

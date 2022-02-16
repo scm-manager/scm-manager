@@ -31,7 +31,7 @@
       "lfsWriteAuthorizationExpirationInMinutesHelpText": "Expiration time of the authorization token generated for LFS put requests in minutes. If SCM-Manager is run behind a reverse proxy that buffers http requests (eg. Nginx), this should set up to the time, an LFS upload may take at maximum.",
       "lfsWriteAuthorizationExpirationInMinutesValidationError": "Has to be at least 1 minute",
       "disabled": "Disabled",
-      "disabledHelpText": "Enable or disable the Git plugin",
+      "disabledHelpText": "Enable or disable the Git plugin. Only allowed if no Git Repositories exist.",
       "submit": "Submit"
     },
     "repoConfig": {
