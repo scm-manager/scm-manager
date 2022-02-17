@@ -60,7 +60,6 @@
     "invalidNamespace": "No repositories found. It's likely that the selected namespace does not exist.",
     "createButton": "Add Repository",
     "filterRepositories": "Filter repositories",
-    "namespace": "Namespace",
     "filterByNamespace": "Filter by namespace",
     "allNamespaces": "All namespaces",
     "clone": "Clone/Checkout",
