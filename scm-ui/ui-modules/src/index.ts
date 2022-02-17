@@ -1,17 +1,17 @@
 type Module = {
   dependencies: string[];
-  fn: (...args: any[]) => any;
+  fn: (...args: unknown[]) => Module;
 };
 
-const modules: { [name: string]: any } = {};
-const lazyModules: { [name: string]: any } = {};
+const modules: { [name: string]: unknown } = {};
+const lazyModules: { [name: string]: () => Promise<unknown> } = {};
 const queue: { [name: string]: Module } = {};
 
-export const defineLazy = (name: string, cmp: any) => {
+export const defineLazy = (name: string, cmp: () => Promise<unknown>) => {
   lazyModules[name] = cmp;
 };
 
-export const defineStatic = (name: string, cmp: any) => {
+export const defineStatic = (name: string, cmp: unknown) => {
   modules[name] = cmp;
 };
 
@@ -23,7 +23,7 @@ const resolveModule = (name: string) => {
 
   const lazyModule = lazyModules[name];
   if (lazyModule) {
-    return lazyModule().then((mod: any) => {
+    return lazyModule().then((mod: unknown) => {
       modules[name] = mod;
       return mod;
     });
@@ -49,7 +49,7 @@ const defineModule = (name: string, module: Module) => {
     });
 };
 
-export const define = (name: string, dependencies: string[], fn: (...args: any[]) => any) => {
+export const define = (name: string, dependencies: string[], fn: (...args: unknown[]) => Module) => {
   defineModule(name, { dependencies, fn });
 };
 
