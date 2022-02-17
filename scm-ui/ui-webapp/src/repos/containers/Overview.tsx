@@ -193,7 +193,7 @@ const Overview: FC = () => {
         {showActions ? (
           <>
             <label id="select-namespace" hidden>
-              {t("namespace")}
+              {t("repository.namespace")}
             </label>
             <OverviewPageActions
               showCreateButton={showCreateButton}
