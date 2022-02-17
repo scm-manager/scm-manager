@@ -44,9 +44,9 @@ import { escapeWhitespace } from "./diffs";
 
 const EMPTY_ANNOTATION_FACTORY = {};
 
-type Props = FileProps & WithTranslation;
+type Props = DiffFileProps & WithTranslation;
 
-export type FileProps = DiffObjectProps & {
+export type DiffFileProps = DiffObjectProps & {
   file: FileDiff;
 };
 
