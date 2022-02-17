@@ -163,7 +163,7 @@ const ExportRepository: FC<Props> = ({ repository }) => {
               icon="download"
               link={downloadLink}
               color="info"
-              disabled={!downloadLink}
+              disabled={isLoadingInfo || isLoadingExport || !downloadLink}
             />
             <Button
               color="primary"
