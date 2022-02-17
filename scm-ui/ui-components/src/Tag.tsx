@@ -24,6 +24,7 @@
 import React, { FC } from "react";
 import classNames from "classnames";
 import { Color, Size } from "./styleConstants";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   className?: string;
@@ -51,8 +52,10 @@ const Tag: FC<Props> = ({
   title,
   onClick,
   onRemove,
-  children,
+  children
 }) => {
+  const [t] = useTranslation("commons");
+
   let showIcon = null;
   if (icon) {
     showIcon = (
@@ -64,7 +67,7 @@ const Tag: FC<Props> = ({
   }
   let showDelete = null;
   if (onRemove) {
-    showDelete = <button className="tag is-delete" onClick={onRemove} />;
+    showDelete = <button className="tag is-delete" onClick={onRemove} aria-label={t("tag.delete")} />;
   }
 
   return (
@@ -78,7 +81,7 @@ const Tag: FC<Props> = ({
           {
             "is-outlined": outlined,
             "is-rounded": rounded,
-            "is-clickable": onClick,
+            "is-clickable": onClick
           },
           size === "small" && smallClassNames
         )}

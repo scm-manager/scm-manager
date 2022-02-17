@@ -34,6 +34,7 @@ exports[`Storyshots BranchSelector Default 1`] = `
               className="control select is-fullwidth"
             >
               <select
+                aria-labelledby="branch-select_0"
                 disabled={false}
                 onBlur={[Function]}
                 onChange={[Function]}
@@ -3048,7 +3049,6 @@ exports[`Storyshots Forms/Radio Default 1`] = `
       className="radio mr-2"
     >
       <input
-        aria-describedby="radio_56"
         aria-labelledby="radio_55"
         checked={false}
         onBlur={[Function]}
@@ -3070,7 +3070,6 @@ exports[`Storyshots Forms/Radio Default 1`] = `
       className="radio mr-2"
     >
       <input
-        aria-describedby="radio_58"
         aria-labelledby="radio_57"
         checked={true}
         onBlur={[Function]}
@@ -3100,7 +3099,6 @@ exports[`Storyshots Forms/Radio Disabled 1`] = `
       disabled={true}
     >
       <input
-        aria-describedby="radio_60"
         aria-labelledby="radio_59"
         checked={true}
         disabled={true}
@@ -3128,7 +3126,6 @@ Array [
       className="radio mr-2"
     >
       <input
-        aria-describedby="radio_68"
         aria-labelledby="radio_67"
         checked={false}
         onBlur={[Function]}
@@ -3160,7 +3157,6 @@ exports[`Storyshots Forms/Radio ReactHookForm 1`] = `
         className="radio mr-2"
       >
         <input
-          aria-describedby="radio_70"
           aria-labelledby="radio_69"
           defaultChecked={true}
           name="rememberMe"
@@ -3184,7 +3180,6 @@ exports[`Storyshots Forms/Radio ReactHookForm 1`] = `
         className="radio mr-2"
       >
         <input
-          aria-describedby="radio_72"
           aria-labelledby="radio_71"
           name="rememberMe"
           onBlur={[Function]}
@@ -3208,7 +3203,6 @@ exports[`Storyshots Forms/Radio ReactHookForm 1`] = `
       className="radio mr-2 ml-2"
     >
       <input
-        aria-describedby="radio_74"
         aria-labelledby="radio_73"
         name="scramblePassword"
         onBlur={[Function]}
@@ -3232,7 +3226,6 @@ exports[`Storyshots Forms/Radio ReactHookForm 1`] = `
       disabled={true}
     >
       <input
-        aria-describedby="radio_76"
         aria-labelledby="radio_75"
         disabled={true}
         name="disabled"
@@ -3256,7 +3249,6 @@ exports[`Storyshots Forms/Radio ReactHookForm 1`] = `
       className="radio mr-2"
     >
       <input
-        aria-describedby="radio_78"
         aria-labelledby="radio_77"
         name="readonly"
         onBlur={[Function]}
@@ -3298,7 +3290,6 @@ Array [
       className="radio mr-2"
     >
       <input
-        aria-describedby="radio_66"
         aria-labelledby="radio_65"
         checked={false}
         onBlur={[Function]}

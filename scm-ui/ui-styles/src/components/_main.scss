@@ -511,6 +511,14 @@ ul.is-separated {
         &.is-darker {
           background-color: #e1e1e1;
         }
+        // Explicitly "remove" styles from td element to use it as an empty table column header, which is necessary for
+        // a11y because an empty th element is not allowed.
+        &.has-no-style {
+          background-color: transparent;
+          &.is-darker {
+            background-color: transparent;
+          }
+        }
       }
       a {
         color: $blue;
@@ -527,6 +535,13 @@ ul.is-separated {
     }
     &.is-darker {
       background-color: whitesmoke;
+    }
+    // Explicitly "remove" styles from td element to use it as an empty table column header, which is necessary for
+    // a11y because an empty th element is not allowed.
+    &.has-no-style {
+      padding: 0;
+      background-color: transparent;
+      border: none;
     }
   }
   &.is-hoverable tbody tr:not(.is-selected):hover {

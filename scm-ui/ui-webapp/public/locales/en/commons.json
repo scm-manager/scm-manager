@@ -247,5 +247,8 @@
   },
   "pdfViewer": {
     "error": "Failed to display the document. Please download it from <1>here</1>."
+  },
+  "tag": {
+    "delete": "Delete"
   }
 }
