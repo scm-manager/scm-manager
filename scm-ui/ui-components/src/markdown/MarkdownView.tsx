@@ -22,14 +22,14 @@
  * SOFTWARE.
  */
 import React, { FC, Suspense } from "react";
-import { Props } from "./LazyMarkdownView";
+import { MarkdownProps } from "./LazyMarkdownView";
 import Loading from "../Loading";
 
 const LazyMarkdownView = React.lazy(() => import("./LazyMarkdownView"));
 
-const MarkdownView: FC<Props> = props => (
+const MarkdownView: FC<MarkdownProps> = props => (
   <Suspense fallback={<Loading />}>
-    <LazyMarkdownView {...props}></LazyMarkdownView>
+    <LazyMarkdownView {...props} />
   </Suspense>
 );
 

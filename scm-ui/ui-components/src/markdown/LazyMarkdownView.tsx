@@ -48,18 +48,19 @@ import merge from "deepmerge";
 import { createComponentList } from "./createComponentList";
 import { ProtocolLinkRendererExtension, ProtocolLinkRendererExtensionMap } from "./markdownExtensions";
 
-export type Props = RouteComponentProps &
-  WithTranslation & {
-    content: string;
-    renderContext?: object;
-    renderers?: any;
-    skipHtml?: boolean;
-    enableAnchorHeadings?: boolean;
-    // basePath for markdown links
-    basePath?: string;
-    permalink?: string;
-    mdastPlugins?: AstPlugin[];
-  };
+export type MarkdownProps = {
+  content: string;
+  renderContext?: object;
+  renderers?: any;
+  skipHtml?: boolean;
+  enableAnchorHeadings?: boolean;
+  // basePath for markdown links
+  basePath?: string;
+  permalink?: string;
+  mdastPlugins?: AstPlugin[];
+};
+
+type Props = RouteComponentProps & WithTranslation & MarkdownProps;
 
 type State = {
   contentRef: HTMLDivElement | null | undefined;
@@ -99,13 +100,13 @@ class LazyMarkdownView extends React.Component<Props, State> {
 
   static defaultProps: Partial<Props> = {
     enableAnchorHeadings: false,
-    skipHtml: false,
+    skipHtml: false
   };
 
   constructor(props: Props) {
     super(props);
     this.state = {
-      contentRef: null,
+      contentRef: null
     };
   }
 
@@ -143,7 +144,7 @@ class LazyMarkdownView extends React.Component<Props, State> {
       basePath,
       permalink,
       t,
-      mdastPlugins = [],
+      mdastPlugins = []
     } = this.props;
 
     const rendererFactory = this.context.getExtension("markdown-renderer-factory");
@@ -200,25 +201,25 @@ class LazyMarkdownView extends React.Component<Props, State> {
         sanitize,
         merge(gh, {
           attributes: {
-            code: ["className"], // Allow className for code elements, this is necessary to extract the code language
+            code: ["className"] // Allow className for code elements, this is necessary to extract the code language
           },
           clobberPrefix: "", // Do not prefix user-provided ids and class names,
           protocols: {
-            href: Object.keys(protocolLinkRendererExtensions),
-          },
+            href: Object.keys(protocolLinkRendererExtensions)
+          }
         })
       )
       .use(rehype2react, {
         createElement: React.createElement,
         passNode: true,
-        components: createComponentList(remarkRendererList, { permalink }),
+        components: createComponentList(remarkRendererList, { permalink })
       });
 
     const renderedMarkdown: any = processor.processSync(content).result;
 
     return (
       <ErrorBoundary fallback={MarkdownErrorNotification}>
-        <div ref={(el) => this.setState({ contentRef: el })} className="content is-word-break">
+        <div ref={el => this.setState({ contentRef: el })} className="content is-word-break">
           {renderedMarkdown}
         </div>
       </ErrorBoundary>

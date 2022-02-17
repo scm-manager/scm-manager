@@ -34,7 +34,7 @@ describe("Test base api hooks", () => {
   describe("useIndex tests", () => {
     fetchMock.get("/api/v2/", {
       version: "x.y.z",
-      _links: {},
+      _links: {}
     });
 
     it("should return index", async () => {
@@ -48,9 +48,10 @@ describe("Test base api hooks", () => {
     it("should call onIndexFetched of LegacyContext", async () => {
       let index: IndexResources;
       const context: LegacyContext = {
-        onIndexFetched: (fetchedIndex) => {
+        onIndexFetched: fetchedIndex => {
           index = fetchedIndex;
         },
+        initialize: () => null
       };
       const { result, waitFor } = renderHook(() => useIndex(), { wrapper: createWrapper(context) });
       await waitFor(() => {
@@ -70,10 +71,10 @@ describe("Test base api hooks", () => {
       const queryClient = new QueryClient();
       queryClient.setQueryData("index", {
         version: "x.y.z",
-        _links: {},
+        _links: {}
       });
       const { result } = renderHook(() => useIndexLink("spaceships"), {
-        wrapper: createWrapper(undefined, queryClient),
+        wrapper: createWrapper(undefined, queryClient)
       });
       expect(result.current).toBeUndefined();
     });
@@ -86,17 +87,17 @@ describe("Test base api hooks", () => {
           spaceships: [
             {
               name: "heartOfGold",
-              href: "/spaceships/heartOfGold",
+              href: "/spaceships/heartOfGold"
             },
             {
               name: "razorCrest",
-              href: "/spaceships/razorCrest",
-            },
-          ],
-        },
+              href: "/spaceships/razorCrest"
+            }
+          ]
+        }
       });
       const { result } = renderHook(() => useIndexLink("spaceships"), {
-        wrapper: createWrapper(undefined, queryClient),
+        wrapper: createWrapper(undefined, queryClient)
       });
       expect(result.current).toBeUndefined();
     });
@@ -107,12 +108,12 @@ describe("Test base api hooks", () => {
         version: "x.y.z",
         _links: {
           spaceships: {
-            href: "/api/spaceships",
-          },
-        },
+            href: "/api/spaceships"
+          }
+        }
       });
       const { result } = renderHook(() => useIndexLink("spaceships"), {
-        wrapper: createWrapper(undefined, queryClient),
+        wrapper: createWrapper(undefined, queryClient)
       });
       expect(result.current).toBe("/api/spaceships");
     });
@@ -130,12 +131,12 @@ describe("Test base api hooks", () => {
         version: "x.y.z",
         _links: {
           spaceships: {
-            href: "/api/spaceships",
-          },
-        },
+            href: "/api/spaceships"
+          }
+        }
       });
       const { result } = renderHook(() => useIndexLinks(), {
-        wrapper: createWrapper(undefined, queryClient),
+        wrapper: createWrapper(undefined, queryClient)
       });
       expect((result.current!.spaceships as Link).href).toBe("/api/spaceships");
     });
@@ -150,10 +151,10 @@ describe("Test base api hooks", () => {
     it("should return version", () => {
       const queryClient = new QueryClient();
       queryClient.setQueryData("index", {
-        version: "x.y.z",
+        version: "x.y.z"
       });
       const { result } = renderHook(() => useVersion(), {
-        wrapper: createWrapper(undefined, queryClient),
+        wrapper: createWrapper(undefined, queryClient)
       });
       expect(result.current).toBe("x.y.z");
     });
@@ -164,10 +165,10 @@ describe("Test base api hooks", () => {
       const queryClient = new QueryClient();
       queryClient.setQueryData("index", {
         version: "x.y.z",
-        _links: {},
+        _links: {}
       });
       const { result } = renderHook(() => useRequiredIndexLink("spaceships"), {
-        wrapper: createWrapper(undefined, queryClient),
+        wrapper: createWrapper(undefined, queryClient)
       });
       expect(result.error).toBeDefined();
     });
@@ -178,12 +179,12 @@ describe("Test base api hooks", () => {
         version: "x.y.z",
         _links: {
           spaceships: {
-            href: "/api/spaceships",
-          },
-        },
+            href: "/api/spaceships"
+          }
+        }
       });
       const { result } = renderHook(() => useRequiredIndexLink("spaceships"), {
-        wrapper: createWrapper(undefined, queryClient),
+        wrapper: createWrapper(undefined, queryClient)
       });
       expect(result.current).toBe("/api/spaceships");
     });
@@ -196,19 +197,19 @@ describe("Test base api hooks", () => {
         version: "x.y.z",
         _links: {
           spaceships: {
-            href: "/spaceships",
-          },
-        },
+            href: "/spaceships"
+          }
+        }
       });
 
       const spaceship = {
-        name: "heartOfGold",
+        name: "heartOfGold"
       };
 
       fetchMock.get("/api/v2/spaceships", spaceship);
 
       const { result, waitFor } = renderHook(() => useIndexJsonResource<typeof spaceship>("spaceships"), {
-        wrapper: createWrapper(undefined, queryClient),
+        wrapper: createWrapper(undefined, queryClient)
       });
 
       await waitFor(() => {
@@ -223,11 +224,11 @@ describe("Test base api hooks", () => {
     const queryClient = new QueryClient();
     queryClient.setQueryData("index", {
       version: "x.y.z",
-      _links: {},
+      _links: {}
     });
 
     const { result } = renderHook(() => useIndexJsonResource<{}>("spaceships"), {
-      wrapper: createWrapper(undefined, queryClient),
+      wrapper: createWrapper(undefined, queryClient)
     });
 
     expect(result.current.isLoading).toBe(false);

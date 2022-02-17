@@ -23,12 +23,12 @@
  */
 
 import React, { FC, Suspense } from "react";
-import { Props } from "./LazyDiffFile";
+import { FileProps } from "./LazyDiffFile";
 import Loading from "../Loading";
 
 const LazyDiffFile = React.lazy(() => import("./LazyDiffFile"));
 
-const DiffFile: FC<Props> = props => (
+const DiffFile: FC<FileProps> = props => (
   <Suspense fallback={<Loading />}>
     <LazyDiffFile {...props} />
   </Suspense>
