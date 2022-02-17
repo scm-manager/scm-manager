@@ -22,13 +22,12 @@
  * SOFTWARE.
  */
 
-import React, { FC, ReactNode } from "react";
+import React, { FC, HTMLProps, ReactNode } from "react";
 import styled from "styled-components";
 import classNames from "classnames";
 import { devices } from "../devices";
 
-type Props = {
-  className?: string;
+type Props = Omit<HTMLProps<HTMLTableElement>, "children" | "as" | "ref"> & {
   children: ReactNode;
 };
 
@@ -52,8 +51,9 @@ const StyledTable = styled.table`
   }
 `;
 
-const InfoTable: FC<Props> = ({ className, children }) => {
-  return <StyledTable className={classNames("table", className)}>{children}</StyledTable>;
-};
-
+const InfoTable: FC<Props> = ({ className, children, ...rest }) => (
+  <StyledTable className={classNames("table", className)} {...rest}>
+    {children}
+  </StyledTable>
+);
 export default InfoTable;
