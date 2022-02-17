@@ -26,7 +26,6 @@ const fs = require("fs");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 
-const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 const createIndexMiddleware = require("./middleware/IndexMiddleware");
 const createContextPathMiddleware = require("./middleware/ContextPathMiddleware");
 
@@ -37,6 +36,9 @@ const babelPlugins = [];
 const webpackPlugins = [];
 
 if (process.env.ANALYZE_BUNDLES === "true") {
+  // it is ok to use require here, because we want to load the package conditionally
+  // eslint-disable-next-line global-require
+  const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
   webpackPlugins.push(new BundleAnalyzerPlugin());
 }
 

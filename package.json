@@ -53,6 +53,5 @@
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "eslint",
     "./docs/**/*.md": "remark --frail --"
-  },
-  "version": "0.0.0"
+  }
 }
