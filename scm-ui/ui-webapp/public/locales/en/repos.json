@@ -61,6 +61,7 @@
     "createButton": "Add Repository",
     "filterRepositories": "Filter repositories",
     "namespace": "Namespace",
+    "filterByNamespace": "Filter by namespace",
     "allNamespaces": "All namespaces",
     "clone": "Clone/Checkout",
     "contact": "Send mail to {{contact}}",

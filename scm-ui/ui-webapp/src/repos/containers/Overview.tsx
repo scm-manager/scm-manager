@@ -193,7 +193,7 @@ const Overview: FC = () => {
         {showActions ? (
           <>
             <label id="select-namespace" hidden>
-              {t("repository.namespace")}
+              {t("overview.filterByNamespace")}
             </label>
             <OverviewPageActions
               showCreateButton={showCreateButton}
