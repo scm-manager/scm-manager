@@ -1,0 +1,2 @@
+- type: fixed
+  description: Do not process index types which no longer exist ([#1957](https://github.com/scm-manager/scm-manager/pull/1957))

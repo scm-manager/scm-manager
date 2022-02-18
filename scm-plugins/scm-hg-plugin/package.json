@@ -1,7 +1,7 @@
 {
   "name": "@scm-manager/scm-hg-plugin",
   "private": true,
-  "version": "2.30.2-SNAPSHOT",
+  "version": "2.31.1-SNAPSHOT",
   "license": "MIT",
   "main": "./src/main/js/index.ts",
   "scripts": {
@@ -10,7 +10,7 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@scm-manager/ui-plugins": "^2.30.2-SNAPSHOT"
+    "@scm-manager/ui-plugins": "^2.31.1-SNAPSHOT"
   },
   "devDependencies": {
     "@scm-manager/babel-preset": "^2.12.0",
