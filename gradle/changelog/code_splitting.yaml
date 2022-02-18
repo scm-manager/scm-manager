@@ -1,0 +1,2 @@
+- type: changed
+  description: Split frontend code by routes ([#1955](https://github.com/scm-manager/scm-manager/pull/1955))

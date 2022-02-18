@@ -22,16 +22,29 @@
  * SOFTWARE.
  */
 
-import React, { FC, Suspense } from "react";
-import { DiffFileProps } from "./LazyDiffFile";
-import Loading from "../Loading";
+import React, { FC, useEffect } from "react";
+import { BaseContext, useLegacyContext } from "@scm-manager/ui-api";
+import { connect, Dispatch } from "react-redux";
+import { ActionTypes, fetchIndexResourcesSuccess, fetchMeSuccess } from "./LegacyReduxProvider";
+import { IndexResources, Me } from "@scm-manager/ui-types";
 
-const LazyDiffFile = React.lazy(() => import("./LazyDiffFile"));
+const ReduxLegacy: FC<BaseContext> = ({ children, onIndexFetched, onMeFetched }) => {
+  const context = useLegacyContext();
+  useEffect(() => {
+    context.onIndexFetched = onIndexFetched;
+    context.onMeFetched = onMeFetched;
+    context.initialize();
+  }, [context, onIndexFetched, onMeFetched]);
+  return <>{children}</>;
+};
 
-const DiffFile: FC<DiffFileProps> = props => (
-  <Suspense fallback={<Loading />}>
-    <LazyDiffFile {...props} />
-  </Suspense>
-);
+const mapDispatchToProps = (dispatch: Dispatch<ActionTypes>) => {
+  return {
+    onIndexFetched: (index: IndexResources) => dispatch(fetchIndexResourcesSuccess(index)),
+    onMeFetched: (me: Me) => dispatch(fetchMeSuccess(me))
+  };
+};
 
-export default DiffFile;
+const connector = connect<{}, BaseContext>(undefined, mapDispatchToProps);
+
+export default connector(ReduxLegacy);

@@ -66,3 +66,5 @@ export * from "./compare";
 
 export { default as ApiProvider } from "./ApiProvider";
 export * from "./ApiProvider";
+
+export * from "./LegacyContext";

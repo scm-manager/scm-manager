@@ -18,11 +18,11 @@
   },
   "dependencies": {},
   "devDependencies": {
+    "@scm-manager/remark-preset-lint": "^1.0.0",
     "babel-plugin-reflow": "^0.2.7",
     "husky": "^4.2.5",
     "lerna": "^3.17.0",
     "lint-staged": "^10.2.11",
-    "@scm-manager/remark-preset-lint": "^1.0.0",
     "remark-cli": "^9.0.0"
   },
   "resolutions": {
