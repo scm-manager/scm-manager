@@ -21,20 +21,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { ReactNode } from "react";
-import classNames from "classnames";
 
-type Props = {
-  className?: string;
+import React, { FC, HTMLProps, ReactNode } from "react";
+import styled from "styled-components";
+import classNames from "classnames";
+import { devices } from "../devices";
+
+type Props = Omit<HTMLProps<HTMLTableElement>, "children" | "as" | "ref"> & {
   children: ReactNode;
 };
 
-class ButtonGroup extends React.Component<Props> {
-  render() {
-    const { className, children } = this.props;
-
-    return <div className={classNames("buttons", className)}>{children}</div>;
+const StyledTable = styled.table`
+  @media screen and (max-width: ${devices.mobile.width}px) {
+    td,
+    th {
+      display: block;
+    }
+    td {
+      border-width: 0 0 1px;
+      word-break: break-word;
+    }
+    th {
+      border: none;
+      padding-bottom: 0;
+    }
+    th:after {
+      content: ": ";
+    }
   }
-}
+`;
 
-export default ButtonGroup;
+const InfoTable: FC<Props> = ({ className, children, ...rest }) => (
+  <StyledTable className={classNames("table", className)} {...rest}>
+    {children}
+  </StyledTable>
+);
+export default InfoTable;

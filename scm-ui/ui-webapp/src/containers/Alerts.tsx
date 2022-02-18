@@ -29,13 +29,13 @@ import styled from "styled-components";
 import { Alert } from "@scm-manager/ui-types";
 import { DateFromNow, Icon } from "@scm-manager/ui-components";
 import { useAlerts } from "@scm-manager/ui-api";
-import HeaderDropDown, { Column, NonWrappingColumn, Table } from "../components/HeaderDropDown";
+import HeaderDropDown, { Column, OnlyMobileWrappingColumn, Table } from "../components/HeaderDropDown";
 
 const FullHeightTable = styled(Table)`
   height: 100%;
 `;
 
-const RightColumn = styled(NonWrappingColumn)`
+const RightColumn = styled(OnlyMobileWrappingColumn)`
   height: 100%;
 `;
 

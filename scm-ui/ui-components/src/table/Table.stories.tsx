@@ -48,6 +48,7 @@ storiesOf("Table", module)
     >
       <Column header={"First Name"}>{(row: any) => <h4>{row.firstname}</h4>}</Column>
       <Column
+        className="has-background-success"
         header={"Last Name"}
         createComparator={() => {
           return (a: any, b: any) => {

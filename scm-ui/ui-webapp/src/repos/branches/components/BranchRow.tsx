@@ -25,8 +25,9 @@ import React, { FC } from "react";
 import { Link as ReactLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
+import styled from "styled-components";
 import { Branch, BranchDetails, Link, Repository } from "@scm-manager/ui-types";
-import { Icon, SmallLoadingSpinner } from "@scm-manager/ui-components";
+import { devices, Icon, SmallLoadingSpinner } from "@scm-manager/ui-components";
 import { binder } from "@scm-manager/ui-extensions";
 import DefaultBranchTag from "./DefaultBranchTag";
 import AheadBehindTag from "./AheadBehindTag";
@@ -39,6 +40,26 @@ type Props = {
   onDelete: (branch: Branch) => void;
   details?: BranchDetails;
 };
+
+const AdaptTableFlow = styled.tr`
+  @media screen and (max-width: ${devices.mobile.width}px) {
+    td {
+      display: block;
+      border-left-width: 3px !important;
+    }
+  }
+`;
+
+const MobileFlowSpan = styled.span`
+  @media screen and (min-width: ${devices.tablet.width}px) {
+    margin-left: 1rem;
+  }
+  @media screen and (max-width: ${devices.mobile.width}px) {
+    display: block;
+    white-space: break-spaces;
+    word-break: break-word;
+  }
+`;
 
 const BranchRow: FC<Props> = ({ repository, baseUrl, branch, onDelete, details }) => {
   const to = `${baseUrl}/${encodeURIComponent(branch.name)}/info`;
@@ -53,7 +74,7 @@ const BranchRow: FC<Props> = ({ repository, baseUrl, branch, onDelete, details }
         onKeyDown={e => e.key === "Enter" && onDelete(branch)}
         tabIndex={0}
       >
-        <Icon name="trash" className="fas " title={t("branch.delete.button")} />
+        <Icon name="trash" title={t("branch.delete.button")} />
       </span>
     );
   }
@@ -70,15 +91,15 @@ const BranchRow: FC<Props> = ({ repository, baseUrl, branch, onDelete, details }
 
   const extensionProps = { repository, branch, details };
   return (
-    <tr>
+    <AdaptTableFlow>
       <td>
         <ReactLink to={to} title={branch.name}>
           {branch.name}
         </ReactLink>
         {branch.lastCommitDate && (
-          <span className={classNames("has-text-secondary", "is-ellipsis-overflow", "is-size-7", "ml-4")}>
+          <MobileFlowSpan className={classNames("has-text-secondary", "is-ellipsis-overflow", "is-size-7")}>
             <BranchCommitDateCommitter branch={branch} />
-          </span>
+          </MobileFlowSpan>
         )}
       </td>
       <td className="has-text-centered">{renderBranchTag()}</td>
@@ -86,7 +107,7 @@ const BranchRow: FC<Props> = ({ repository, baseUrl, branch, onDelete, details }
         ? binder.getExtensions("repos.branches.row.details").map(e => <td>{React.createElement(e, extensionProps)}</td>)
         : null}
       <td className="is-darker has-text-centered">{deleteButton}</td>
-    </tr>
+    </AdaptTableFlow>
   );
 };
 

@@ -84,7 +84,7 @@ const HgConfigurationForm: FC<Props> = ({ initialConfiguration, onConfigurationC
   };
 
   return (
-    <div>
+    <div className="is-flex is-flex-direction-column">
       <InputField
         name="hgBinary"
         label={t("scm-hg-plugin.config.hgBinary")}
@@ -131,7 +131,11 @@ const HgConfigurationForm: FC<Props> = ({ initialConfiguration, onConfigurationC
         }}
         disabled={readOnly || !configuration.allowDisable}
       />
-      <Button disabled={!initialConfiguration?._links?.autoConfiguration} action={() => triggerAutoConfigure()}>
+      <Button
+        className="is-align-self-flex-end"
+        disabled={!initialConfiguration?._links?.autoConfiguration}
+        action={() => triggerAutoConfigure()}
+      >
         {t("scm-hg-plugin.config.autoConfigure")}
       </Button>
     </div>

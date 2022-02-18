@@ -51,11 +51,6 @@ const PageActionContainer = styled.div`
   }
 `;
 
-const MaxTitleHeight = styled.div`
-  // remove blank space in repo create form
-  height: 2.25rem;
-`;
-
 export default class Page extends React.Component<Props> {
   componentDidUpdate() {
     const textualTitle = this.getTextualTitle();
@@ -90,7 +85,7 @@ export default class Page extends React.Component<Props> {
 
     let pageActions = null;
     let pageActionsExists = false;
-    React.Children.forEach(children, (child) => {
+    React.Children.forEach(children, child => {
       if (child && !error) {
         if (this.isPageAction(child)) {
           pageActions = (
@@ -118,10 +113,12 @@ export default class Page extends React.Component<Props> {
         <>
           <div className="columns">
             <div className="column">
-              <MaxTitleHeight className="is-flex">
-                <Title title={this.getTextualTitle()}>{this.getTitleComponent()}</Title>
-                {afterTitle && <div className="ml-2">{afterTitle}</div>}
-              </MaxTitleHeight>
+              <div className="is-flex is-flex-wrap-wrap is-align-items-center">
+                <Title className="mb-0 mr-2" title={this.getTextualTitle()}>
+                  {this.getTitleComponent()}
+                </Title>
+                {afterTitle}
+              </div>
               {subtitle ? <Subtitle>{subtitle}</Subtitle> : null}
             </div>
             {pageActions}
@@ -144,7 +141,7 @@ export default class Page extends React.Component<Props> {
     }
 
     const content: ReactNode[] = [];
-    React.Children.forEach(children, (child) => {
+    React.Children.forEach(children, child => {
       if (child) {
         if (!this.isPageAction(child)) {
           content.push(child);

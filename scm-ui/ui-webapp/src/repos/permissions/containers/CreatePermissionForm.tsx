@@ -177,8 +177,8 @@ const CreatePermissionForm: FC<Props> = ({
       ) : null}
       <ErrorNotification error={error} />
       <form onSubmit={submit}>
-        <div className="field is-grouped">
-          <div className="control">
+        <div className="field is-grouped is-grouped-multiline">
+          <div className="control is-flex-shrink-1">
             <Radio
               name="permission_scope"
               value="USER_PERMISSION"

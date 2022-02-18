@@ -24,7 +24,7 @@
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { User } from "@scm-manager/ui-types";
-import { Checkbox, DateFromNow, MailLink, createAttributesForTesting } from "@scm-manager/ui-components";
+import { Checkbox, createAttributesForTesting, DateFromNow, InfoTable, MailLink } from "@scm-manager/ui-components";
 
 type Props = WithTranslation & {
   user: User;
@@ -34,7 +34,7 @@ class Details extends React.Component<Props> {
   render() {
     const { user, t } = this.props;
     return (
-      <table className="table">
+      <InfoTable>
         <tbody>
           <tr>
             <th>{t("user.name")}</th>
@@ -75,7 +75,7 @@ class Details extends React.Component<Props> {
             </td>
           </tr>
         </tbody>
-      </table>
+      </InfoTable>
     );
   }
 }

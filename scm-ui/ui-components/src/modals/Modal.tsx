@@ -25,6 +25,7 @@ import React, { FC, MutableRefObject, useRef } from "react";
 import classNames from "classnames";
 import styled from "styled-components";
 import { Dialog } from "@headlessui/react";
+import { devices } from "../devices";
 
 type ModalSize = "S" | "M" | "L";
 
@@ -47,6 +48,9 @@ type Props = {
 const SizedModal = styled.div<{ size?: ModalSize; overflow: string }>`
   width: ${props => (props.size ? `${modalSizes[props.size]}%` : "640px")};
   overflow: ${props => props.overflow};
+  @media screen and (max-width: ${devices.mobile.width}px) {
+    width: ${props => (props.size ? `${modalSizes[props.size]}%` : "320px")};
+  }
 `;
 
 export const Modal: FC<Props> = ({

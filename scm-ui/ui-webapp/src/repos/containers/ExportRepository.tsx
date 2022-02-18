@@ -113,6 +113,8 @@ const ExportRepository: FC<Props> = ({ repository }) => {
     }
   };
 
+  const downloadLink = (exportInfo?._links.download as Link)?.href;
+
   return (
     <>
       <hr />
@@ -156,14 +158,13 @@ const ExportRepository: FC<Props> = ({ repository }) => {
       <Level
         right={
           <ButtonGroup>
-            <a href={(exportInfo?._links.download as Link)?.href}>
-              <Button
-                color="info"
-                disabled={isLoadingInfo || isLoadingExport || !exportInfo?._links.download}
-                label={t("export.downloadExportButton")}
-                icon="download"
-              />
-            </a>
+            <Button
+              label={t("export.downloadExportButton")}
+              icon="download"
+              link={downloadLink}
+              color="info"
+              disabled={isLoadingInfo || isLoadingExport || !downloadLink}
+            />
             <Button
               color="primary"
               action={() =>

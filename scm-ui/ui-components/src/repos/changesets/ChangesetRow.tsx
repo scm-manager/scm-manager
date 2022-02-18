@@ -48,8 +48,8 @@ const Wrapper = styled.div`
 const ChangesetRow: FC<Props> = ({ repository, changeset, file }) => {
   return (
     <Wrapper>
-      <div className={classNames("columns", "is-gapless", "is-mobile")}>
-        <div className={classNames("column", "is-three-fifths")}>
+      <div className={classNames("columns", "is-variable", "is-1-mobile", "is-0-tablet")}>
+        <div className={classNames("column", "is-three-fifths", "is-full-mobile")}>
           <SingleChangeset repository={repository} changeset={changeset} />
         </div>
         <div className={classNames("column", "is-flex", "is-justify-content-flex-end", "is-align-items-center")}>

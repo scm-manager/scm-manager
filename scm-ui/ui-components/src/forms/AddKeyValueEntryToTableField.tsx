@@ -25,6 +25,7 @@ import React, { FC, useState } from "react";
 import styled from "styled-components";
 import InputField from "./InputField";
 import { AddButton } from "../buttons";
+import { devices } from "../devices";
 
 type Props = {
   addEntry: (key: string, value: string) => void;
@@ -42,8 +43,15 @@ const FullWidthInputField = styled(InputField)`
   width: 100%;
 `;
 
-const MarginTopButton = styled(AddButton)`
-  margin-top: 2rem;
+const MobileWrappedDiv = styled.div`
+  @media screen and (min-width: ${devices.tablet.width}px) {
+    & > ${FullWidthInputField} {
+      margin-right: 1.5rem;
+    }
+  }
+  @media screen and (max-width: ${devices.mobile.width}px) {
+    flex-wrap: wrap;
+  }
 `;
 
 const AddKeyValueEntryToTableField: FC<Props> = ({
@@ -55,7 +63,7 @@ const AddKeyValueEntryToTableField: FC<Props> = ({
   valueHelpText,
   validateEntry,
   errorMessage,
-  addEntry,
+  addEntry
 }) => {
   const [key, setKey] = useState("");
   const [value, setValue] = useState("");
@@ -75,9 +83,8 @@ const AddKeyValueEntryToTableField: FC<Props> = ({
   };
 
   return (
-    <div className="is-flex is-justify-content-space-between">
+    <MobileWrappedDiv className="is-flex is-align-items-flex-end">
       <FullWidthInputField
-        className="mr-5"
         label={keyFieldLabel}
         errorMessage={errorMessage}
         onChange={setKey}
@@ -88,7 +95,6 @@ const AddKeyValueEntryToTableField: FC<Props> = ({
         helpText={keyHelpText}
       />
       <FullWidthInputField
-        className="mr-5"
         label={valueFieldLabel}
         errorMessage={errorMessage}
         onChange={setValue}
@@ -98,12 +104,13 @@ const AddKeyValueEntryToTableField: FC<Props> = ({
         disabled={disabled}
         helpText={valueHelpText}
       />
-      <MarginTopButton
+      <AddButton
+        className="ml-auto mb-3"
         label={buttonLabel}
         action={add}
         disabled={disabled || !key || !value || !isValid(key) || !isValid(value)}
       />
-    </div>
+    </MobileWrappedDiv>
   );
 };
 

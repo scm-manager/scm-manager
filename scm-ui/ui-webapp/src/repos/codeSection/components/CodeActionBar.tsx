@@ -24,7 +24,7 @@
 import React, { FC, ReactNode } from "react";
 import styled from "styled-components";
 import { useLocation } from "react-router-dom";
-import { BranchSelector, Level } from "@scm-manager/ui-components";
+import { BranchSelector, devices, Level } from "@scm-manager/ui-components";
 import CodeViewSwitcher, { SwitchViewLink } from "./CodeViewSwitcher";
 import { useTranslation } from "react-i18next";
 import { Branch } from "@scm-manager/ui-types";
@@ -37,6 +37,9 @@ const ActionBar = styled.div`
   line-height: 1.25;
   padding: 0.5em 0.75em;
   margin-bottom: 1em;
+  @media screen and (max-width: ${devices.tablet.width}px) {
+    padding: 0.5rem 0.25rem;
+  }
 `;
 
 const FlexShrinkLevel = styled(Level)`
@@ -46,6 +49,14 @@ const FlexShrinkLevel = styled(Level)`
   }
   .level-item {
     justify-content: flex-end;
+  }
+  @media screen and (max-width: ${devices.tablet.width}px) {
+    .level-left {
+      margin-right: 0;
+    }
+    .level-item {
+      margin-top: 0.5rem;
+    }
   }
 `;
 
