@@ -1,2 +1,0 @@
-- type: changed
-  description: Docker base image to fix expat vulnerability ([#1948](https://github.com/scm-manager/scm-manager/pull/1948))
