@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { ChangeEvent, FC, FocusEvent } from "react";
+import React, { ChangeEvent, FC, FocusEvent, useMemo } from "react";
 import classNames from "classnames";
 import { Help } from "../index";
 import { createFormFieldWrapper, FieldProps, FieldType, isLegacy, isUsingRef } from "./FormFieldTypes";
@@ -47,8 +47,8 @@ const InnerRadio: FC<FieldProps<BaseProps, HTMLInputElement, boolean>> = ({
   ariaLabelledby,
   ...props
 }) => {
-  const id = ariaLabelledby || createA11yId("radio");
-  const helpId = createA11yId("radio");
+  const id = useMemo(() => ariaLabelledby || createA11yId("radio"), [ariaLabelledby]);
+  const helpId = useMemo(() => createA11yId("radio"), []);
 
   const renderHelp = () => {
     const helpText = props.helpText;
@@ -77,7 +77,7 @@ const InnerRadio: FC<FieldProps<BaseProps, HTMLInputElement, boolean>> = ({
     }
   };
 
-  const labelElement = props.label ? (<span id={id}>{props.label}</span>) : null;
+  const labelElement = props.label ? <span id={id}>{props.label}</span> : null;
 
   return (
     <fieldset className="is-inline-block" disabled={readOnly}>
@@ -98,7 +98,7 @@ const InnerRadio: FC<FieldProps<BaseProps, HTMLInputElement, boolean>> = ({
           ref={props.innerRef}
           defaultChecked={defaultChecked}
           aria-labelledby={id}
-          aria-describedby={helpId}
+          aria-describedby={props.helpText ? helpId : undefined}
         />{" "}
         {labelElement}
         {renderHelp()}

@@ -21,36 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
-import classNames from "classnames";
-import styled from "styled-components";
-import Tooltip from "./Tooltip";
-import HelpIcon from "./HelpIcon";
 
-type Props = {
-  message: string;
-  multiline?: boolean;
-  className?: string;
-  id?: string;
-};
+package sonia.scm.search;
 
-const AbsolutePositionTooltip = styled(Tooltip)`
-  position: absolute;
-`;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.NotFoundException;
 
-const Help: FC<Props> = ({ message, multiline, className, id }) => (
-  <AbsolutePositionTooltip
-    className={classNames("is-inline-block", "pl-1", className)}
-    message={message}
-    id={id}
-    multiline={multiline}
-  >
-    <HelpIcon />
-  </AbsolutePositionTooltip>
-);
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-Help.defaultProps = {
-  multiline: true
-};
+@ExtendWith(MockitoExtension.class)
+class SearchableTypeResolverTest {
 
-export default Help;
+  private final SearchableTypeResolver resolver = new SearchableTypeResolver();
+
+  @Test
+  void shouldThrowNotFoundForNullValue() {
+    assertThrows(NotFoundException.class, () -> resolver.resolve(null));
+  }
+}

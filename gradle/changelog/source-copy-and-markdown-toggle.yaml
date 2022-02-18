@@ -1,4 +1,0 @@
-- type: changed
-  description: Only display source code copy button on hover ([#1939](https://github.com/scm-manager/scm-manager/pull/1939))
-- type: fixed
-  description: Markdown toggle covers source copy button ([#1939](https://github.com/scm-manager/scm-manager/pull/1939))

@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-styles",
-  "version": "2.30.2-SNAPSHOT",
+  "version": "2.31.1-SNAPSHOT",
   "description": "Styles for SCM-Manager",
   "main": "src/scm.scss",
   "license": "MIT",
@@ -12,7 +12,6 @@
     "@fortawesome/fontawesome-free": "^5.11.2",
     "bulma": "^0.9.3",
     "bulma-popover": "^1.0.0",
-    "bulma-tooltip": "^3.0.0",
     "react-diff-view": "^2.4.1"
   },
   "devDependencies": {
