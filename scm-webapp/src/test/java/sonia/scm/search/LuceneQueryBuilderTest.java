@@ -55,14 +55,12 @@ import java.io.IOException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Locale;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.when;
 
 @SuppressWarnings("java:S5976")
 @SubjectAware(value = "trillian", permissions = "abc")
@@ -573,7 +571,7 @@ class LuceneQueryBuilderTest {
   private <T> long count(Class<T> type, String queryString) throws IOException {
     try (DirectoryReader reader = DirectoryReader.open(directory)) {
       SearchableTypeResolver resolver = new SearchableTypeResolver(type);
-      LuceneSearchableType searchableType = resolver.resolve(type);
+      LuceneSearchableType searchableType = resolver.resolve(type).get();
       lenient().when(opener.openForRead(searchableType, "default")).thenReturn(reader);
       LuceneQueryBuilder<T> builder = new LuceneQueryBuilder<T>(
         opener, "default", searchableType, new AnalyzerFactory().create(searchableType)
@@ -596,7 +594,7 @@ class LuceneQueryBuilderTest {
   private <T> QueryResult query(Class<T> type, String queryString, Consumer<LuceneQueryBuilder<T>> consumer) throws IOException {
     try (DirectoryReader reader = DirectoryReader.open(directory)) {
       SearchableTypeResolver resolver = new SearchableTypeResolver(type);
-      LuceneSearchableType searchableType = resolver.resolve(type);
+      LuceneSearchableType searchableType = resolver.resolve(type).get();
 
       lenient().when(opener.openForRead(searchableType, "default")).thenReturn(reader);
       LuceneQueryBuilder<T> builder = new LuceneQueryBuilder<>(

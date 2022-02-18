@@ -28,6 +28,7 @@ import com.google.inject.Injector;
 
 import javax.inject.Inject;
 import java.io.Serializable;
+import java.util.Optional;
 
 public abstract class LuceneIndexTask implements Runnable, Serializable {
 
@@ -62,13 +63,13 @@ public abstract class LuceneIndexTask implements Runnable, Serializable {
 
   @SuppressWarnings({"unchecked", "rawtypes"})
   public void run() {
-    LuceneSearchableType searchableType = searchableTypeResolver.resolve(type);
-    IndexTask<?> task = task(injector);
-    try (LuceneIndex index = indexFactory.create(new IndexParams(indexName, searchableType))) {
-      task.update(index);
+    Optional<LuceneSearchableType> searchableType = searchableTypeResolver.resolve(type);
+    if (searchableType.isPresent()) {
+      IndexTask<?> task = task(injector);
+      try (LuceneIndex index = indexFactory.create(new IndexParams(indexName, searchableType.get()))) {
+        task.update(index);
+      }
+      task.afterUpdate();
     }
-    task.afterUpdate();
   }
-
-
 }

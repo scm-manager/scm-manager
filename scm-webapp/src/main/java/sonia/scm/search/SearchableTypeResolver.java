@@ -35,6 +35,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -81,22 +82,22 @@ class SearchableTypeResolver {
     return Collections.unmodifiableCollection(classToSearchableType.values());
   }
 
-  public LuceneSearchableType resolve(Object object) {
+  public Optional<LuceneSearchableType> resolve(Object object) {
     return resolve(object.getClass());
   }
 
-  public LuceneSearchableType resolve(Class<?> type) {
+  public Optional<LuceneSearchableType> resolve(Class<?> type) {
     if (type == null) {
-      throw notFound(entity("type", "null"));
+      return Optional.empty();
     }
     LuceneSearchableType searchableType = classToSearchableType.get(type);
     if (searchableType == null) {
       throw notFound(entity("type", type.getName()));
     }
-    return searchableType;
+    return Optional.of(searchableType);
   }
 
-  public LuceneSearchableType resolveByName(String typeName) {
+  public Optional<LuceneSearchableType> resolveByName(String typeName) {
     Class<?> type = nameToClass.get(typeName);
     if (type == null) {
       throw notFound(entity("type", typeName));

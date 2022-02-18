@@ -126,7 +126,7 @@ class LuceneSearchEngineTest {
     @SuppressWarnings("unchecked")
     void shouldDelegateSearchWithDefaults() {
       LuceneQueryBuilder<Repository> mockedBuilder = mock(LuceneQueryBuilder.class);
-      when(resolver.resolve(Repository.class)).thenReturn(searchableType);
+      when(resolver.resolve(Repository.class)).thenReturn(Optional.of(searchableType));
 
       IndexParams params = new IndexParams("default", searchableType);
       when(queryBuilderFactory.<Repository>create(params)).thenReturn(mockedBuilder);
@@ -140,7 +140,7 @@ class LuceneSearchEngineTest {
     @SuppressWarnings("unchecked")
     void shouldDelegateSearch() {
       LuceneQueryBuilder<Repository> mockedBuilder = mock(LuceneQueryBuilder.class);
-      when(resolver.resolve(Repository.class)).thenReturn(searchableType);
+      when(resolver.resolve(Repository.class)).thenReturn(Optional.of(searchableType));
 
       IndexParams params = new IndexParams("idx", searchableType);
       when(queryBuilderFactory.<Repository>create(params)).thenReturn(mockedBuilder);
@@ -153,7 +153,7 @@ class LuceneSearchEngineTest {
     @Test
     void shouldFailWithoutRequiredPermission() {
       when(searchableType.getPermission()).thenReturn(Optional.of("repository:read"));
-      when(resolver.resolve(Repository.class)).thenReturn(searchableType);
+      when(resolver.resolve(Repository.class)).thenReturn(Optional.of(searchableType));
 
       SearchEngine.ForType<Repository> forType = searchEngine.forType(Repository.class);
       assertThrows(AuthorizationException.class, forType::search);
@@ -164,7 +164,7 @@ class LuceneSearchEngineTest {
     @SubjectAware(permissions = "repository:read")
     void shouldNotFailWithRequiredPermission() {
       when(searchableType.getPermission()).thenReturn(Optional.of("repository:read"));
-      when(resolver.resolve(Repository.class)).thenReturn(searchableType);
+      when(resolver.resolve(Repository.class)).thenReturn(Optional.of(searchableType));
 
       LuceneQueryBuilder<Object> mockedBuilder = mock(LuceneQueryBuilder.class);
       when(queryBuilderFactory.create(any())).thenReturn(mockedBuilder);
@@ -176,7 +176,7 @@ class LuceneSearchEngineTest {
     @Test
     void shouldFailWithTypeNameWithoutRequiredPermission() {
       when(searchableType.getPermission()).thenReturn(Optional.of("repository:read"));
-      when(resolver.resolveByName("repository")).thenReturn(searchableType);
+      when(resolver.resolveByName("repository")).thenReturn(Optional.of(searchableType));
 
       SearchEngine.ForType<Object> forType = searchEngine.forType("repository");
       assertThrows(AuthorizationException.class, forType::search);
@@ -187,7 +187,7 @@ class LuceneSearchEngineTest {
     @SubjectAware(permissions = "repository:read")
     void shouldNotFailWithTypeNameAndRequiredPermission() {
       when(searchableType.getPermission()).thenReturn(Optional.of("repository:read"));
-      when(resolver.resolveByName("repository")).thenReturn(searchableType);
+      when(resolver.resolveByName("repository")).thenReturn(Optional.of(searchableType));
 
       LuceneQueryBuilder<Object> mockedBuilder = mock(LuceneQueryBuilder.class);
       when(queryBuilderFactory.create(any())).thenReturn(mockedBuilder);
@@ -363,7 +363,7 @@ class LuceneSearchEngineTest {
       LuceneSearchableType searchableType = mock(LuceneSearchableType.class);
       lenient().when(searchableType.getType()).thenAnswer(ic -> type);
       lenient().when(searchableType.getName()).thenReturn(type.getSimpleName().toLowerCase(Locale.ENGLISH));
-      lenient().when(resolver.resolve(type)).thenReturn(searchableType);
+      lenient().when(resolver.resolve(type)).thenReturn(Optional.of(searchableType));
     }
 
   }

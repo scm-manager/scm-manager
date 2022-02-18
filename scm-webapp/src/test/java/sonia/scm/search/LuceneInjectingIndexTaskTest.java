@@ -37,6 +37,8 @@ import sonia.scm.user.User;
 
 import javax.inject.Inject;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
@@ -58,8 +60,8 @@ class LuceneInjectingIndexTaskTest {
   void shouldInjectAndUpdate() {
     Injector injector = createInjector();
 
-    LuceneSearchableType searchableType = resolver.resolve(User.class);
-    IndexParams params = new IndexParams("default", searchableType);
+    Optional<LuceneSearchableType> searchableType = resolver.resolve(User.class);
+    IndexParams params = new IndexParams("default", searchableType.orElse(null));
 
     LuceneInjectingIndexTask task = new LuceneInjectingIndexTask(params, InjectingTask.class);
     injector.injectMembers(task);

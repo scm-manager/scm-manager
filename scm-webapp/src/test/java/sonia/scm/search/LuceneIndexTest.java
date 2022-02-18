@@ -281,7 +281,7 @@ class LuceneIndexTest {
   private <T> LuceneIndex<T> createIndex(Class<T> type, Supplier<IndexWriter> writerFactor) {
     SearchableTypeResolver resolver = new SearchableTypeResolver(type);
     return new LuceneIndex<>(
-      new IndexParams("default", resolver.resolve(type)), writerFactor
+      new IndexParams("default", resolver.resolve(type).get()), writerFactor
     );
   }
 

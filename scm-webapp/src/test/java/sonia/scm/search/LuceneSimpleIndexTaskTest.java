@@ -33,6 +33,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.repository.Repository;
 
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -54,9 +55,9 @@ class LuceneSimpleIndexTaskTest {
   void shouldUpdate() {
     Injector injector = createInjector();
 
-    LuceneSearchableType searchableType = resolver.resolve(Repository.class);
+    Optional<LuceneSearchableType> searchableType = resolver.resolve(Repository.class);
 
-    IndexParams params = new IndexParams("default", searchableType);
+    IndexParams params = new IndexParams("default", searchableType.orElse(null));
 
     AtomicReference<Index<?>> ref = new AtomicReference<>();
     LuceneSimpleIndexTask task = new LuceneSimpleIndexTask(params, ref::set);

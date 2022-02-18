@@ -35,6 +35,7 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -65,12 +66,12 @@ public class LuceneSearchEngine implements SearchEngine {
 
   @Override
   public <T> ForType<T> forType(Class<T> type) {
-    return forType(resolver.resolve(type));
+    return forType(resolver.resolve(type).orElse(null));
   }
 
   @Override
   public ForType<Object> forType(String typeName) {
-    return forType(resolver.resolveByName(typeName));
+    return forType(resolver.resolveByName(typeName).orElse(null));
   }
 
   private <T> ForType<T> forType(LuceneSearchableType searchableType) {
@@ -128,7 +129,8 @@ public class LuceneSearchEngine implements SearchEngine {
       indexManager.all()
         .stream()
         .filter(predicate)
-        .map(details -> new IndexParams(details.getName(), resolver.resolve(details.getType())))
+        .filter(details -> resolver.resolve(details.getType()).isPresent())
+        .map(details -> new IndexParams(details.getName(), resolver.resolve(details.getType()).get()))
         .forEach(consumer);
     }
 
