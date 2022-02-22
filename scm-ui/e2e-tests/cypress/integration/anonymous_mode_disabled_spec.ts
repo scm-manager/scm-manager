@@ -22,4 +22,32 @@
  * SOFTWARE.
  */
 
-module.exports = require("@scm-manager/integration-test-runner/plugins");
+import { hri } from "human-readable-ids";
+
+describe("Anonymous Mode Disabled", () => {
+  beforeEach(() => {
+    cy.restSetAnonymousMode("OFF");
+  });
+
+  it("should show login page when not authenticated", () => {
+    // Act
+    cy.visit("/repos/");
+
+    // Assert
+    cy.byTestId("login-button");
+  });
+
+  it("should show footer for authenticated user", () => {
+    // Arrange
+    const username = hri.random();
+    const password = hri.random();
+    cy.restCreateUser(username, password);
+    cy.restLogin(username, password);
+
+    // Act
+    cy.visit("/home");
+
+    // Assert
+    cy.byTestId("footer-user-profile");
+  });
+});
