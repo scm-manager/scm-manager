@@ -47,7 +47,7 @@ type ThemeForm = {
   theme: string;
 };
 
-const themes = ["light", "highcontrast"];
+const themes = ["light", "highcontrast", "dark"];
 
 const RadioColumn = styled.div`
   flex: none;

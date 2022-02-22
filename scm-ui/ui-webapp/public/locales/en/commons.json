@@ -111,6 +111,10 @@
       "highcontrast": {
         "displayName": "High contrast",
         "description": "The high contrast mode is a dark theme with a high contrast between the colors"
+      },
+      "dark": {
+        "displayName": "Dark",
+        "description": "The dark mode is a more relaxed, dark theme"
       }
     }
   },

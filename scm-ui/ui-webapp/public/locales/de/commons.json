@@ -110,6 +110,10 @@
       "highcontrast": {
         "displayName": "Hoher Kontrast",
         "description": "'Hoher Kontrast' ist ein dunkles Design mit einem hohen Kontrast"
+      },
+      "dark": {
+        "displayName": "Dunkel",
+        "description": "'Dunkel' ist ein entspanntes, dunkles Design"
       }
     }
   },
