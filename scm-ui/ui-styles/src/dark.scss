@@ -1,0 +1,518 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2020-present Cloudogu GmbH and Contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+@import "utils/_pre.scss";
+
+$turquoise: #55abad;
+$blue: #599dad;
+$cyan: $blue;
+$green: #419374;
+$yellow: #ccad5e;
+$red: #ae4e6b;
+
+$scheme-main: #121212;
+$background: $grey-dark;
+//$border:
+$text: $white-ter;
+//$text-strong: $white-bis;
+
+$secondary-least: $scheme-main;
+$secondary-less: $black-ter;
+$secondary: $white-bis;
+$secondary-more: $white-ter;
+$secondary-most: $white;
+
+
+/*
+https://bulma.io/documentation/overview/colors/
+https://bulma.io/documentation/customize/variables/
+https://bulma.io/documentation/elements/box/
+
+
+$light
+$dark
+
+$black-bis:
+$black-ter:
+$grey-darker:
+$grey-dark:
+$grey-light:
+$grey-lighter:
+$white-ter:
+$white-bis:
+ */
+
+/*
+$primary-invert: #050514;
+$link-invert: #050514;
+$link-hover: $white-bis;
+$info-invert: #050514;
+$success-invert: #050514;
+$warning-invert: ;
+$danger-invert: #050514;
+*/
+
+//$code: lighten($danger, 25%);
+/*
+$hr-background-color: $white-bis;
+
+
+$light-gray: #f2f2f2;
+
+$footer-background-color: $black-ter;
+$footer-color: $white-ter;
+
+
+$box-background-color: scale-color($scheme-main, $lightness: 15%);
+$box-background-color: $grey-darker;
+
+$modal-card-head-background-color: $black-ter;
+$modal-card-body-background-color: #17181c;
+
+$input-placeholder-color: $white;
+$input-disabled-color: $white-bis;
+
+$popover-background-color: $grey-dark;
+
+$table-row-hover-background-color: $grey-darker;
+
+$tooltip-background-color: $white-bis;
+$tooltip-background-opacity: 0.9 !default;
+$tooltip-color: $scheme-main;
+*/
+@import "utils/_post.scss";
+/*
+:root {
+  --scm-secondary-background: #{$scheme-main};
+  --scm-secondary-text: #{$white};
+  --scm-border: 2px solid #{$white-ter};
+  --scm-hover-color: #{$grey};
+  --scm-column-selection: #{$link-dark};
+
+  --sh-base-color: #fff;
+  --sh-font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+  --sh-block-background: #{$scheme-main};
+  --sh-inline-code-color: #ff3860;
+  --sh-inline-code-background: #fbe7eb;
+  --sh-comment-color: #9a9a9a;
+  --sh-punctuation-color: #999999;
+  --sh-property-color: #2c99c7;
+  --sh-selector-color: #009dff;
+  --sh-operator-color: #999999;
+  --sh-operator-bg: inherit;
+  --sh-variable-color: #c386ca;
+  --sh-function-color: #ff6181;
+  --sh-keyword-color: #00a984;
+  --sh-selected-color: #{$warning-dark};
+  --sh-highlight-background: #f5f5f5;
+  --sh-highlight-accent: #99d8f3;
+
+  --diff-background-color: #{$scheme-main};
+  --diff-text-color: #{$white-bis};
+  --diff-font-family: Consolas, Courier, monospace;
+  --diff-selection-background-color: #b3d7ff;
+  --diff-gutter-insert-background-color: #05c71d;
+  --diff-gutter-delete-background-color: #eb7a85;
+  --diff-gutter-selected-background-color: #fffce0;
+  --diff-code-insert-background-color: #05240b;
+  --diff-code-delete-background-color: #230608;
+  --diff-code-insert-edit-background-color: #c0dc91;
+  --diff-code-delete-edit-background-color: #000;
+  --diff-code-selected-background-color: #fffce0;
+  --diff-omit-gutter-line-color: #cb2a1d;
+}
+*/
+.button {
+  &.is-primary,
+  &.is-info,
+  &.is-link,
+  &.is-success,
+  &.is-warning,
+  &.is-danger {
+    &.is-outlined {
+      background-color: inherit;
+    }
+  }
+/*
+  &.is-primary:hover,
+  &.is-primary.is-hovered {
+    background-color: scale-color($primary, $lightness: -5%);
+  }
+
+  &.is-primary:active,
+  &.is-primary.is-active {
+    background-color: scale-color($primary, $lightness: -10%);
+  }
+
+  &.is-primary[disabled] {
+    background-color: scale-color($primary, $lightness: -50%);
+  }
+
+  &.is-info:hover,
+  &.is-info.is-hovered {
+    background-color: scale-color($info, $lightness: -5%);
+  }
+
+  &.is-info:active,
+  &.is-info.is-active {
+    background-color: scale-color($info, $lightness: -10%);
+  }
+
+  &.is-info[disabled] {
+    background-color: scale-color($info, $lightness: -50%);
+  }
+
+  &.is-link:hover,
+  &.is-link.is-hovered {
+    background-color: scale-color($link, $lightness: -5%);
+  }
+
+  &.is-link:active,
+  &.is-link.is-active {
+    background-color: scale-color($link, $lightness: -10%);
+  }
+
+  &.is-link[disabled] {
+    background-color: scale-color($link, $lightness: -50%);
+  }
+
+  &.is-success:hover,
+  &.is-success.is-hovered {
+    background-color: scale-color($success, $lightness: -5%);
+  }
+
+  &.is-success:active,
+  &.is-success.is-active {
+    background-color: scale-color($success, $lightness: -10%);
+  }
+
+  &.is-success[disabled] {
+    background-color: scale-color($success, $lightness: -50%);
+  }
+
+  &.is-warning:hover,
+  &.is-warning.is-hovered {
+    background-color: scale-color($warning, $lightness: -5%);
+  }
+
+  &.is-warning:active,
+  &.is-warning.is-active {
+    background-color: scale-color($warning, $lightness: -10%);
+  }
+
+  &.is-warning[disabled] {
+    background-color: scale-color($warning, $lightness: -50%);
+    color: #e1d4c2;
+  }
+
+  &.is-danger:hover,
+  &.is-danger.is-hovered {
+    background-color: scale-color($danger, $lightness: -5%);
+  }
+
+  &.is-danger:active,
+  &.is-danger.is-active {
+    background-color: scale-color($danger, $lightness: -10%);
+  }
+
+  &.is-danger[disabled] {
+    background-color: scale-color($danger, $lightness: -50%);
+  }
+  */
+}
+
+/*
+.menu-label {
+  color: $scheme-main;
+}
+
+.menu-list {
+  a {
+    color: $white-ter;
+
+    &.is-active {
+      background-color: $scheme-main;
+    }
+  }
+}
+
+//footer is overwritten in _main.scss
+footer.footer {
+  background-color: $black-ter;
+  a {
+    color: scale-color($link, $lightness: 25%);
+  }
+}
+
+.card {
+  border: 1px solid $white-ter;
+  box-shadow: none;
+}
+
+//card
+.modal-card {
+  border: 1px solid $white-ter;
+
+  & .modal-close,
+  & .delete {
+    background-color: $white-ter;
+  }
+}
+
+//card tables
+.card-table {
+  tr {
+    a {
+      color: $white-bis;
+    }
+
+    &:hover {
+      td {
+        background-color: $grey-darker;
+
+        &.is-darker {
+          background-color: $grey-darker;
+        }
+      }
+      a {
+        color: $link;
+      }
+    }
+  }
+  td {
+    background-color: $grey-dark;
+    border-bottom: 1px solid $grey;
+
+    &:first-child {
+      border-left-width: 9px;
+    }
+    &.is-darker {
+      background-color: $grey-dark;
+    }
+  }
+  &.is-hoverable tbody tr:not(.is-selected):hover {
+    background-color: $grey-darker;
+  }
+}
+
+// panels
+.panel {
+  border-color: $white-bis;
+
+  .panel-heading {
+    background-color: $black-ter;
+  }
+
+  .panel-footer {
+    background-color: $black-ter;
+    color: $white-bis;
+  }
+}
+
+//diffs
+.diff-code-conflict {
+  background-color: #332900;
+}
+
+.diff-gutter-conflict {
+  background-color: #ffd11a;
+}
+
+.diff-gutter-delete,
+.diff-gutter-insert,
+.diff-gutter-conflict {
+  color: $scheme-main;
+}
+*/
+/* transport meaning with more than color */
+/*td:nth-child(2).diff-gutter-delete:before {
+  content: "-";
+}
+
+td:first-child.diff-gutter-insert:before {
+  content: "+";
+}
+
+td:first-child.diff-gutter-conflict:before {
+  content: "!";
+}
+
+.diff-split td:nth-child(3).diff-gutter-insert:before {
+  content: "+";
+}
+
+.diff-split td:first-child.diff-gutter-delete:before {
+  content: "-";
+}
+
+.diff-split td:nth-child(3).diff-gutter-conflict:before {
+  content: "!";
+}
+
+.diff-decoration-content div {
+  color: $scheme-main;
+}
+
+//inline member tags
+.tag:not(body) {
+  border: 1px solid transparent;
+  background-color: $white;
+
+  &.is-delete {
+    &::before,
+    &::after {
+      background-color: $scheme-main;
+    }
+
+    &:hover::before,
+    &:hover::after {
+      background-color: $white-bis;
+    }
+  }
+
+  //dark tags have light borders to separate from background
+  &.is-dark,
+  &.is-black {
+    border: 1px solid $white-bis;
+  }
+
+  //blue text in light tags
+  &.is-light .has-text-link {
+    color: scale-color($link, $lightness: -50%) !important;
+  }
+
+  //outline-tags
+  &.is-outlined {
+    background-color: $scheme-main;
+  }
+}
+
+//cards receive white border
+.box-link-shadow {
+  box-shadow: 0 0 0 1px $white-bis;
+}
+
+.popover {
+  border: 1px solid $white-ter;
+
+  &:before {
+    border-bottom-color: $grey-dark;
+    border-left-color: $grey-dark;
+  }
+}
+
+.notifications .dropdown-menu {
+  border: 1px solid $white-ter;
+
+  &:before {
+    border-bottom-color: $white-ter;
+    border-left-color: $white-ter;
+  }
+}
+
+//Display darker version of background image
+.has-scm-background {
+  background-image: url(images/scmManagerHeroDark.jpg) !important;
+}
+
+.has-text-secondary-least {
+  color: $scheme-main !important;
+}
+a.has-text-secondary-least:hover,
+a.has-text-secondary-least:focus {
+  color: lighten($scheme-main, 10%) !important;
+}
+.has-background-secondary-least {
+  background-color: $scheme-main !important;
+}
+
+.has-text-secondary-less {
+  color: $black-ter !important;
+}
+a.has-text-secondary-less:hover,
+a.has-text-secondary-less:focus {
+  color: lighten($black-ter, 10%) !important;
+}
+.has-background-secondary-less {
+  background-color: $black-ter !important;
+}
+
+.has-text-secondary {
+  color: $white-bis !important;
+}
+a.has-text-secondary:hover,
+a.has-text-secondary:focus {
+  color: lighten($white-bis, 10%) !important;
+}
+.has-background-secondary {
+  background-color: $white-bis !important;
+}
+
+.has-text-secondary-more {
+  color: $white-ter !important;
+}
+a.has-text-secondary-more:hover,
+a.has-text-secondary-more:focus {
+  color: lighten($white-ter, 10%) !important;
+}
+.has-background-secondary-more {
+  background-color: $white-ter !important;
+}
+
+.has-text-secondary-most {
+  color: $white !important;
+}
+a.has-text-secondary-most:hover,
+a.has-text-secondary-most:focus {
+  color: lighten($white, 10%) !important;
+}
+.has-background-secondary-most {
+  background-color: $white !important;
+}
+
+.has-background-light {
+  color: $grey-dark;
+}
+
+.has-hover-visible:hover {
+  color: $white-bis !important;
+}
+
+[disabled].textarea::placeholder,
+[disabled].input::placeholder,
+fieldset[disabled] .textarea::placeholder,
+fieldset[disabled] .input::placeholder {
+  color: $white-bis;
+}
+
+.repository-export-info-box {
+  background-color: scale-color($info, $lightness: -75%);
+  border: 0.2rem solid;
+}
+
+.search-syntax-accordion {
+  border: 1px solid $info;
+  box-shadow: none;
+}
+*/
