@@ -1,0 +1,2 @@
+- type: fixed
+  description: Branch decoding in overview ([#1963](https://github.com/scm-manager/scm-manager/pull/1963))
