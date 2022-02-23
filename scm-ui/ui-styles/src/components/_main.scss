@@ -21,6 +21,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
+:root {
+  --scm-primary-color: #{$primary};
+  --scm-link-color: #{$link};
+  --scm-info-color: #{$info};
+  --scm-success-color: #{$success};
+  --scm-warning-color: #{$warning};
+  --scm-danger-color: #{$danger};
+
+  --scm-secondary-least-color: #{$secondary-least};
+  --scm-secondary-less-color: #{$secondary-less};
+  --scm-secondary-color: #{$secondary};
+  --scm-secondary-more-color: #{$secondary-more};
+  --scm-secondary-most-color: #{$secondary-most};
+}
+
 // TODO split into multiple files
 
 .is-ellipsis-overflow {
@@ -111,6 +127,61 @@ footer.footer {
 }
 .has-background-blue-light {
   background-color: $blue-light;
+}
+
+.has-text-secondary-least {
+  color: $secondary-least !important;
+}
+a.has-text-secondary-least:hover,
+a.has-text-secondary-least:focus {
+  color: lighten($secondary-least, 10%) !important;
+}
+.has-background-secondary-least {
+  background-color: $secondary-least !important;
+}
+
+.has-text-secondary-less {
+  color: $secondary-less !important;
+}
+a.has-text-secondary-less:hover,
+a.has-text-secondary-less:focus {
+  color: lighten($secondary-less, 10%) !important;
+}
+.has-background-secondary-less {
+  background-color: $secondary-less !important;
+}
+
+.has-text-secondary {
+  color: $secondary !important;
+}
+a.has-text-secondary:hover,
+a.has-text-secondary:focus {
+  color: lighten($secondary, 10%) !important;
+}
+.has-background-secondary {
+  background-color: $secondary !important;
+}
+
+.has-text-secondary-more {
+  color: $secondary-more !important;
+}
+a.has-text-secondary-more:hover,
+a.has-text-secondary-more:focus {
+  color: lighten($secondary-more, 10%) !important;
+}
+.has-background-secondary-more {
+  background-color: $secondary-more !important;
+}
+
+.has-text-secondary-most {
+  color: $secondary-most !important;
+}
+a.has-text-secondary-most:hover,
+a.has-text-secondary-most:focus {
+  color: lighten($secondary-most, 10%) !important;
+}
+.has-background-secondary-most {
+  background-color: $secondary-most !important;
 }
 
 // border and background colors

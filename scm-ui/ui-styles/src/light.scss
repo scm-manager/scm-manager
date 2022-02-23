@@ -23,6 +23,13 @@
  */
 
 @import "utils/_pre.scss";
+
+$secondary-least: $white;
+$secondary-less: $white-ter;
+$secondary: $grey-light;
+$secondary-more: $grey-darker;
+$secondary-most: $black;
+
 // colors defined in variables/commons.scss
 $subtitle-color: #666;
 $warning-invert: #88550d;
@@ -34,7 +41,6 @@ $button-disabled-opacity: 0.25;
   --scm-secondary-background: #{$white};
   --scm-secondary-text: #{$black};
   --scm-border: 1px solid #dbdbdb;
-  --scm-info-color: #{$info};
   --scm-hover-color: #{$black-ter};
   --scm-column-selection: #{$link-25};
 
@@ -66,61 +72,6 @@ $button-disabled-opacity: 0.25;
 .notifications .dropdown-menu:before {
   border-bottom-color: white;
   border-left-color: white;
-}
-
-.has-text-secondary-least {
-  color: $white !important;
-}
-a.has-text-secondary-least:hover,
-a.has-text-secondary-least:focus {
-  color: lighten($white, 10%) !important;
-}
-.has-background-secondary-least {
-  background-color: $white !important;
-}
-
-.has-text-secondary-less {
-  color: $white-ter !important;
-}
-a.has-text-secondary-less:hover,
-a.has-text-secondary-less:focus {
-  color: lighten($white-ter, 10%) !important;
-}
-.has-background-secondary-less {
-  background-color: $white-ter !important;
-}
-
-.has-text-secondary {
-  color: $grey-light !important;
-}
-a.has-text-secondary:hover,
-a.has-text-secondary:focus {
-  color: lighten($grey-light, 10%) !important;
-}
-.has-background-secondary {
-  background-color: $grey-light !important;
-}
-
-.has-text-secondary-more {
-  color: $grey-darker !important;
-}
-a.has-text-secondary-more:hover,
-a.has-text-secondary-more:focus {
-  color: lighten($grey-darker, 10%) !important;
-}
-.has-background-secondary-more {
-  background-color: $grey-darker !important;
-}
-
-.has-text-secondary-most {
-  color: $black !important;
-}
-a.has-text-secondary-most:hover,
-a.has-text-secondary-most:focus {
-  color: lighten($black, 10%) !important;
-}
-.has-background-secondary-most {
-  background-color: $black !important;
 }
 
 .has-hover-visible:hover {

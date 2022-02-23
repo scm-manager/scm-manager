@@ -24,13 +24,19 @@
 
 @import "utils/_pre.scss";
 
-// $text: $white;
+$danger: #e63453;
+
 $scheme-main: #050514;
 $background: $grey-dark;
 $text: $white-ter;
 $text-strong: $white-bis;
 
-$danger: #e63453;
+$secondary-least: $scheme-main;
+$secondary-less: $black-ter;
+$secondary: $white-bis;
+$secondary-more: $white-ter;
+$secondary-most: $white;
+
 $code: lighten($danger, 25%);
 $primary-invert: #050514;
 $info-invert: #050514;
@@ -70,7 +76,6 @@ $tooltip-color: $scheme-main;
   --scm-secondary-background: #{$scheme-main};
   --scm-secondary-text: #{$white};
   --scm-border: 2px solid #{$white-ter};
-  --scm-info-color: #{$info};
   --scm-hover-color: #{$grey};
   --scm-column-selection: #{$link-dark};
 
@@ -398,61 +403,6 @@ td:first-child.diff-gutter-conflict:before {
   background-image: url(images/scmManagerHeroDark.jpg) !important;
 }
 
-.has-text-secondary-least {
-  color: $scheme-main !important;
-}
-a.has-text-secondary-least:hover,
-a.has-text-secondary-least:focus {
-  color: lighten($scheme-main, 10%) !important;
-}
-.has-background-secondary-least {
-  background-color: $scheme-main !important;
-}
-
-.has-text-secondary-less {
-  color: $black-ter !important;
-}
-a.has-text-secondary-less:hover,
-a.has-text-secondary-less:focus {
-  color: lighten($black-ter, 10%) !important;
-}
-.has-background-secondary-less {
-  background-color: $black-ter !important;
-}
-
-.has-text-secondary {
-  color: $white-bis !important;
-}
-a.has-text-secondary:hover,
-a.has-text-secondary:focus {
-  color: lighten($white-bis, 10%) !important;
-}
-.has-background-secondary {
-  background-color: $white-bis !important;
-}
-
-.has-text-secondary-more {
-  color: $white-ter !important;
-}
-a.has-text-secondary-more:hover,
-a.has-text-secondary-more:focus {
-  color: lighten($white-ter, 10%) !important;
-}
-.has-background-secondary-more {
-  background-color: $white-ter !important;
-}
-
-.has-text-secondary-most {
-  color: $white !important;
-}
-a.has-text-secondary-most:hover,
-a.has-text-secondary-most:focus {
-  color: lighten($white, 10%) !important;
-}
-.has-background-secondary-most {
-  background-color: $white !important;
-}
-
 .has-background-light {
   color: $grey-dark;
 }
@@ -469,7 +419,7 @@ fieldset[disabled] .input::placeholder {
 }
 
 .repository-export-info-box {
-  background-color: $high-contrast-info-25;
+  background-color: scale-color($info, $lightness: -75%);
   border: 0.2rem solid;
 }
 
