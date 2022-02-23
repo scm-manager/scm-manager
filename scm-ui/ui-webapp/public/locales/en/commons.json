@@ -115,6 +115,10 @@
       "dark": {
         "displayName": "Dark",
         "description": "The dark mode is a more relaxed, dark theme"
+      },
+      "systemdefault": {
+        "displayName": "System default",
+        "description": "Use the default setting of the system"
       }
     }
   },

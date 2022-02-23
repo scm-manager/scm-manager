@@ -29,12 +29,18 @@
       linkElement.rel = 'stylesheet';
       linkElement.type = 'text/css';
       var theme = localStorage.getItem('scm.theme');
-      if (theme === 'highcontrast') {
-        linkElement.href = "{{ contextPath }}/assets/ui-theme-highcontrast.css"
+      if (theme === 'light') {
+        linkElement.href = "{{ contextPath }}/assets/ui-theme-light.css"
       } else if (theme === 'dark') {
         linkElement.href = "{{ contextPath }}/assets/ui-theme-dark.css"
+      } else if (theme === 'highcontrast') {
+        linkElement.href = "{{ contextPath }}/assets/ui-theme-highcontrast.css"
       } else {
-        linkElement.href = "{{ contextPath }}/assets/ui-theme-light.css"
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          linkElement.href = "{{ contextPath }}/assets/ui-theme-dark.css"
+        } else {
+          linkElement.href = "{{ contextPath }}/assets/ui-theme-light.css"
+        }
       }
       document.head.appendChild(linkElement);
     </script>

@@ -114,6 +114,10 @@
       "dark": {
         "displayName": "Dunkel",
         "description": "'Dunkel' ist ein entspanntes, dunkles Design"
+      },
+      "systemdefault": {
+        "displayName": "System default",
+        "description": "Verwendet die Standardeinstellung des Systems"
       }
     }
   },
