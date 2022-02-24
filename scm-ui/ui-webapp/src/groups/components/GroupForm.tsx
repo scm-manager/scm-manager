@@ -21,9 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
-import { Group, SelectValue } from "@scm-manager/ui-types";
+import React, { FC, FormEvent, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Group, Member, SelectValue } from "@scm-manager/ui-types";
 import {
   AutocompleteAddEntryToTableField,
   Checkbox,
@@ -36,83 +36,61 @@ import {
 } from "@scm-manager/ui-components";
 import * as validator from "./groupValidation";
 
-type Props = WithTranslation & {
+type Props = {
   submitForm: (p: Group) => void;
   loading?: boolean;
   group?: Group;
   loadUserSuggestions: (p: string) => Promise<SelectValue[]>;
 };
 
-type State = {
-  group: Group;
-  nameValidationError: boolean;
-};
+const GroupForm: FC<Props> = ({ submitForm, loading, group, loadUserSuggestions }) => {
+  const [t] = useTranslation("groups");
+  const [groupState, setGroupState] = useState({
+    name: "",
+    description: "",
+    _embedded: {
+      members: [] as Member[]
+    },
+    _links: {},
+    members: [] as string[],
+    type: "",
+    external: false
+  });
+  const [nameValidationError, setNameValidationError] = useState(false);
 
-class GroupForm extends React.Component<Props, State> {
-  constructor(props) {
-    super(props);
-    this.state = {
-      group: {
-        name: "",
-        description: "",
-        _embedded: {
-          members: []
-        },
-        _links: {},
-        members: [],
-        type: "",
-        external: false
-      },
-      nameValidationError: false
-    };
-  }
-
-  componentDidMount() {
-    const { group } = this.props;
+  useEffect(() => {
     if (group) {
-      this.setState({
-        ...this.state,
-        group: {
-          ...group
-        }
-      });
+      setGroupState(group);
     }
-  }
+  }, [group]);
 
-  isFalsy(value) {
-    return !value;
-  }
+  const isValid = !(nameValidationError || !groupState.name);
 
-  isValid = () => {
-    const group = this.state.group;
-    return !(this.state.nameValidationError || this.isFalsy(group.name));
-  };
-
-  submit = (event: Event) => {
+  const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (this.isValid()) {
-      const { group } = this.state;
-      if (group.external) {
-        group.members = [];
+    if (isValid) {
+      if (groupState.external) {
+        groupState.members = [];
       }
-      this.props.submitForm(group);
+      submitForm(groupState);
     }
   };
 
-  renderMemberfields = (group: Group) => {
+  const renderMemberfields = (group: Group) => {
     if (group.external) {
       return null;
     }
 
-    const { loadUserSuggestions, t } = this.props;
     return (
       <>
-        <MemberNameTagGroup members={group.members} memberListChanged={this.memberListChanged} />
+        <MemberNameTagGroup
+          members={group.members}
+          memberListChanged={(memberNames: string[]) => setGroupState({ ...groupState, members: memberNames })}
+        />
         <AutocompleteAddEntryToTableField
-          addEntry={this.addMember}
+          addEntry={addMember}
           disabled={false}
           buttonLabel={t("add-member-button.label")}
-          errorMessage={t("add-member-textfield.error")}
           loadSuggestions={loadUserSuggestions}
           placeholder={t("add-member-autocomplete.placeholder")}
           loadingMessage={t("add-member-autocomplete.loading")}
@@ -122,9 +100,8 @@ class GroupForm extends React.Component<Props, State> {
     );
   };
 
-  renderExternalField = (group: Group) => {
-    const { t } = this.props;
-    if (this.isExistingGroup()) {
+  const renderExternalField = (group: Group) => {
+    if (!group) {
       return null;
     }
     return (
@@ -132,112 +109,60 @@ class GroupForm extends React.Component<Props, State> {
         label={t("group.external")}
         checked={group.external}
         helpText={t("groupForm.help.externalHelpText")}
-        onChange={this.handleExternalChange}
+        onChange={external => setGroupState({ ...groupState, external })}
       />
     );
   };
 
-  isExistingGroup = () => !!this.props.group;
-
-  render() {
-    const { loading, t } = this.props;
-    const { group } = this.state;
-    let nameField = null;
-    let subtitle = null;
-    if (!this.isExistingGroup()) {
-      // create new group
-      nameField = (
-        <InputField
-          label={t("group.name")}
-          errorMessage={t("groupForm.nameError")}
-          onChange={this.handleGroupNameChange}
-          value={group.name}
-          validationError={this.state.nameValidationError}
-          helpText={t("groupForm.help.nameHelpText")}
-        />
-      );
-    } else if (group.external) {
-      subtitle = <Subtitle subtitle={t("groupForm.externalSubtitle")} />;
-    } else {
-      subtitle = <Subtitle subtitle={t("groupForm.subtitle")} />;
-    }
-
-    return (
-      <>
-        {subtitle}
-        <form onSubmit={this.submit}>
-          {nameField}
-          <Textarea
-            label={t("group.description")}
-            errorMessage={t("groupForm.descriptionError")}
-            onChange={this.handleDescriptionChange}
-            value={group.description}
-            validationError={false}
-            helpText={t("groupForm.help.descriptionHelpText")}
-          />
-          {this.renderExternalField(group)}
-          {this.renderMemberfields(group)}
-          <Level right={<SubmitButton disabled={!this.isValid()} label={t("groupForm.submit")} loading={loading} />} />
-        </form>
-      </>
-    );
-  }
-
-  memberListChanged = membernames => {
-    this.setState({
-      ...this.state,
-      group: {
-        ...this.state.group,
-        members: membernames
-      }
-    });
-  };
-
-  addMember = (value: SelectValue) => {
-    if (this.isMember(value.value.id)) {
+  const addMember = (value: SelectValue) => {
+    if (groupState.members.includes(value.value.id)) {
       return;
     }
-
-    this.setState({
-      ...this.state,
-      group: {
-        ...this.state.group,
-        members: [...this.state.group.members, value.value.id]
-      }
-    });
+    setGroupState({ ...groupState, members: [...groupState.members, value.value.id] });
   };
 
-  isMember = (membername: string) => {
-    return this.state.group.members.includes(membername);
-  };
+  let nameField = null;
+  let subtitle = null;
+  if (!group) {
+    // create new group
+    nameField = (
+      <InputField
+        label={t("group.name")}
+        errorMessage={t("groupForm.nameError")}
+        onChange={name => {
+          setNameValidationError(!validator.isNameValid(name));
+          setGroupState({ ...groupState, name });
+        }}
+        value={groupState.name}
+        validationError={nameValidationError}
+        helpText={t("groupForm.help.nameHelpText")}
+      />
+    );
+  } else if (group.external) {
+    subtitle = <Subtitle subtitle={t("groupForm.externalSubtitle")} />;
+  } else {
+    subtitle = <Subtitle subtitle={t("groupForm.subtitle")} />;
+  }
 
-  handleGroupNameChange = (name: string) => {
-    this.setState({
-      nameValidationError: !validator.isNameValid(name),
-      group: {
-        ...this.state.group,
-        name
-      }
-    });
-  };
+  return (
+    <>
+      {subtitle}
+      <form onSubmit={submit}>
+        {nameField}
+        <Textarea
+          label={t("group.description")}
+          errorMessage={t("groupForm.descriptionError")}
+          onChange={description => setGroupState({ ...groupState, description })}
+          value={groupState.description}
+          validationError={false}
+          helpText={t("groupForm.help.descriptionHelpText")}
+        />
+        {renderExternalField(groupState)}
+        {renderMemberfields(groupState)}
+        <Level right={<SubmitButton disabled={!isValid} label={t("groupForm.submit")} loading={loading} />} />
+      </form>
+    </>
+  );
+};
 
-  handleDescriptionChange = (description: string) => {
-    this.setState({
-      group: {
-        ...this.state.group,
-        description
-      }
-    });
-  };
-
-  handleExternalChange = (external: boolean) => {
-    this.setState({
-      group: {
-        ...this.state.group,
-        external
-      }
-    });
-  };
-}
-
-export default withTranslation("groups")(GroupForm);
+export default GroupForm;
