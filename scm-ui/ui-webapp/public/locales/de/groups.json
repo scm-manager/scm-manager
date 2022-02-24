@@ -41,9 +41,6 @@
   "add-member-button": {
     "label": "Mitglied hinzufügen"
   },
-  "add-member-textfield": {
-    "error": "Ungültiger Name für Mitglied"
-  },
   "add-member-autocomplete": {
     "placeholder": "Mitglied hinzufügen",
     "loading": "Suche ...",
