@@ -76,15 +76,15 @@ const GroupForm: FC<Props> = ({ submitForm, loading, group, loadUserSuggestions 
     }
   };
 
-  const renderMemberfields = (group: Group) => {
-    if (group.external) {
+  const renderMemberfields = () => {
+    if (groupState.external) {
       return null;
     }
 
     return (
       <>
         <MemberNameTagGroup
-          members={group.members}
+          members={groupState.members}
           memberListChanged={(memberNames: string[]) => setGroupState({ ...groupState, members: memberNames })}
         />
         <AutocompleteAddEntryToTableField
@@ -100,14 +100,14 @@ const GroupForm: FC<Props> = ({ submitForm, loading, group, loadUserSuggestions 
     );
   };
 
-  const renderExternalField = (group: Group) => {
-    if (!group) {
+  const renderExternalField = () => {
+    if (!groupState) {
       return null;
     }
     return (
       <Checkbox
         label={t("group.external")}
-        checked={group.external}
+        checked={groupState.external}
         helpText={t("groupForm.help.externalHelpText")}
         onChange={external => setGroupState({ ...groupState, external })}
       />
@@ -157,8 +157,8 @@ const GroupForm: FC<Props> = ({ submitForm, loading, group, loadUserSuggestions 
           validationError={false}
           helpText={t("groupForm.help.descriptionHelpText")}
         />
-        {renderExternalField(groupState)}
-        {renderMemberfields(groupState)}
+        {renderExternalField()}
+        {renderMemberfields()}
         <Level right={<SubmitButton disabled={!isValid} label={t("groupForm.submit")} loading={loading} />} />
       </form>
     </>
