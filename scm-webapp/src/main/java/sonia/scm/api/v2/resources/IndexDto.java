@@ -34,17 +34,19 @@ import lombok.Getter;
 public class IndexDto extends HalRepresentation {
 
   private final String version;
+  private final String instanceId;
 
   @JsonInclude(JsonInclude.Include.NON_EMPTY)
   private final String initialization;
 
-  IndexDto(Links links, Embedded embedded, String version) {
-    this(links, embedded, version, null);
+  IndexDto(Links links, Embedded embedded, String version, String instanceId) {
+    this(links, embedded, version, instanceId, null);
   }
 
-  IndexDto(Links links, Embedded embedded, String version, String initialization) {
+  IndexDto(Links links, Embedded embedded, String version, String instanceId, String initialization) {
     super(links, embedded);
     this.version = version;
+    this.instanceId = instanceId;
     this.initialization = initialization;
   }
 }
