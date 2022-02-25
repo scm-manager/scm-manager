@@ -36,7 +36,7 @@ type Props = {
 };
 
 const useFeedbackUrl = (url: string): ApiResult<HalRepresentation> =>
-  useQuery(["feedback"], () => apiClient.get(url).then(r => r.json()));
+  useQuery(["feedback"], () => apiClient.get(url).then(r => r.json()), { refetchOnWindowFocus: false });
 
 const useFeedback = (index: IndexResources) => {
   const feedbackUrl = (index._links.feedback as Link).href;
@@ -67,7 +67,6 @@ const Feedback: FC<Props> = ({ index }) => {
   const { isAvailable, formUrl } = useFeedback(index);
   const [showModal, setShowModal] = useState(false);
 
-  console.log(index);
   if (isAvailable && !showModal) {
     return <FeedbackTriggerButton openModal={() => setShowModal(true)} />;
   }

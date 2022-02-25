@@ -92,7 +92,7 @@ public class ScmConfiguration implements Configuration {
    * @since 2.32.0
    */
   public static final String DEFAULT_FEEDBACK_URL =
-    "https://feedback.cloudogu.com/api/v1/feedback/scm-manager/url";
+    "https://response.cloudogu.com/api/v1/feedback/scm-manager/url";
 
   /**
    * SCM Manager release feed url
