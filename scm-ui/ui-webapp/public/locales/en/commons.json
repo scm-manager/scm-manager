@@ -168,6 +168,10 @@
   "alerts": {
     "shieldTitle": "Alerts"
   },
+  "feedback": {
+    "button": "Feedback",
+    "modalTitle": "Share feedback"
+},
   "cardColumnGroup": {
     "showContent": "Show content",
     "hideContent": "Hide content"
