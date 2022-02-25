@@ -30,7 +30,7 @@ import { useTranslation } from "react-i18next";
 
 const LS_KEY = "scm.theme";
 
-const useThemeState = () => {
+export const useThemeState = () => {
   const [theme] = useState(localStorage.getItem(LS_KEY) || "light");
   const [isLoading, setLoading] = useState(false);
 

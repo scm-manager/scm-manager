@@ -29,6 +29,7 @@ import { HalRepresentation, IndexResources, Link } from "@scm-manager/ui-types";
 import { useTranslation } from "react-i18next";
 import { ApiResult } from "@scm-manager/ui-api";
 import { useQuery } from "react-query";
+import { useThemeState } from "./Theme";
 
 type Props = {
   index: IndexResources;
@@ -37,8 +38,10 @@ type Props = {
 const useFeedbackUrl = (url: string): ApiResult<HalRepresentation> =>
   useQuery(["feedback"], () => apiClient.get(url).then(r => r.json()));
 
-const useFeedback = (link: string) => {
+const useFeedback = (index: IndexResources) => {
+  const feedbackUrl = (index._links.feedback as Link).href;
   const { data, error, isLoading } = useFeedbackUrl("http://localhost:8080/api/v1/feedback/scm-manager/url");
+  const { theme } = useThemeState();
 
   if (error || isLoading) {
     return {
@@ -48,9 +51,10 @@ const useFeedback = (link: string) => {
   }
 
   let formUrl = (data?._links.form as Link).href;
-  // TODO Template url
-  if (data?._links.form.templated) {
-    formUrl = formUrl.replace("", "");
+  if ((data?._links.form as Link).templated) {
+    formUrl = formUrl.replace("{page}", encodeURIComponent(""));
+    formUrl = formUrl.replace("{instanceId}", encodeURIComponent(index.instanceId));
+    formUrl = formUrl.replace("{theme}", encodeURIComponent(theme));
   }
 
   return {
@@ -60,9 +64,10 @@ const useFeedback = (link: string) => {
 };
 
 const Feedback: FC<Props> = ({ index }) => {
-  const { isAvailable, formUrl } = useFeedback((index._links.feedback as Link).href);
+  const { isAvailable, formUrl } = useFeedback(index);
   const [showModal, setShowModal] = useState(false);
 
+  console.log(index);
   if (isAvailable && !showModal) {
     return <FeedbackTriggerButton openModal={() => setShowModal(true)} />;
   }
