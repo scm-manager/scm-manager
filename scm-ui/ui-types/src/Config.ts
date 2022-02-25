@@ -50,6 +50,7 @@ export type Config = HalRepresentation & {
   namespaceStrategy: string;
   loginInfoUrl: string;
   alertsUrl: string;
+  feedbackUrl: string;
   releaseFeedUrl: string;
   mailDomainName: string;
   emergencyContacts: string[];
