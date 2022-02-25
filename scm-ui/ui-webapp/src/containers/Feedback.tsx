@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import React, { FC, useState } from "react";
+import React, { FC, useMemo, useState } from "react";
 import styled from "styled-components";
 import { apiClient, Button, Modal } from "@scm-manager/ui-components";
 import { HalRepresentation, IndexResources, Link } from "@scm-manager/ui-types";
@@ -36,25 +36,39 @@ type Props = {
 };
 
 const useFeedbackUrl = (url: string): ApiResult<HalRepresentation> =>
-  useQuery(["feedback"], () => apiClient.get(url).then(r => r.json()), { refetchOnWindowFocus: false });
+  useQuery(["config", "feedback"], () => apiClient.get(url).then(r => r.json()), {
+    refetchOnWindowFocus: false
+  });
+
+const createFeedbackFormUrl = (instanceId: string, theme: string, data?: HalRepresentation) => {
+  if (data) {
+    let formUrl = (data?._links.form as Link).href;
+    if ((data?._links.form as Link).templated) {
+      formUrl = formUrl.replace("{page}", encodeURIComponent(""));
+      formUrl = formUrl.replace("{instanceId}", encodeURIComponent(instanceId));
+      formUrl = formUrl.replace("{theme}", encodeURIComponent(theme));
+    }
+    return formUrl;
+  }
+  return "";
+};
 
 const useFeedback = (index: IndexResources) => {
-  const feedbackUrl = (index._links.feedback as Link).href;
-  const { data, error, isLoading } = useFeedbackUrl("http://localhost:8080/api/v1/feedback/scm-manager/url");
+  const feedbackUrl = (index._links.feedback as Link)?.href || "";
   const { theme } = useThemeState();
+  const { data, error, isLoading } = useFeedbackUrl("http://localhost:8080/api/v1/feedback/scm-manager/url");
+  const formUrl = useMemo(() => createFeedbackFormUrl(index.instanceId, theme, data), [
+    theme,
+    data,
+    index.instanceId,
+    index._links.feedback
+  ]);
 
-  if (error || isLoading) {
+  if (!index._links.feedback || error || isLoading || !formUrl) {
     return {
       isAvailable: false,
       formUrl: ""
     };
-  }
-
-  let formUrl = (data?._links.form as Link).href;
-  if ((data?._links.form as Link).templated) {
-    formUrl = formUrl.replace("{page}", encodeURIComponent(""));
-    formUrl = formUrl.replace("{instanceId}", encodeURIComponent(index.instanceId));
-    formUrl = formUrl.replace("{theme}", encodeURIComponent(theme));
   }
 
   return {
