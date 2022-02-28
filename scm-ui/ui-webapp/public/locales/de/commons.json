@@ -162,7 +162,8 @@
     "bellTitle": "Benachrichtigungen",
     "empty": "Keine Benachrichtigungen",
     "dismiss": "Löschen",
-    "dismissAll": "Alle löschen"
+    "dismissAll": "Alle löschen",
+    "updateSuccessful": "Die Änderungen wurden gespeichert."
   },
   "alerts": {
     "shieldTitle": "Alerts"

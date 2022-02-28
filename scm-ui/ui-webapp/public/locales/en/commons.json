@@ -163,7 +163,8 @@
     "bellTitle": "Notifications",
     "empty": "No notifications",
     "dismiss": "Dismiss",
-    "dismissAll": "Dismiss all"
+    "dismissAll": "Dismiss all",
+    "updateSuccessful": "The update was successful."
   },
   "alerts": {
     "shieldTitle": "Alerts"

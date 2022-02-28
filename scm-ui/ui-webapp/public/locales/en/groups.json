@@ -41,9 +41,6 @@
   "add-member-button": {
     "label": "Add Member"
   },
-  "add-member-textfield": {
-    "error": "Invalid member name"
-  },
   "add-member-autocomplete": {
     "placeholder": "Add Member",
     "loading": "Loading ...",

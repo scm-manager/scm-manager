@@ -21,30 +21,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
-import { Group } from "@scm-manager/ui-types";
-import { useUpdateGroup, useUserSuggestions } from "@scm-manager/ui-api";
-import { ErrorNotification } from "@scm-manager/ui-components";
-import GroupForm from "../components/GroupForm";
-import DeleteGroup from "./DeleteGroup";
-import UpdateNotification from "../../components/UpdateNotification";
+
+import React, { FC, useEffect, useState } from "react";
+import { Notification } from "@scm-manager/ui-components";
+import { useTranslation } from "react-i18next";
 
 type Props = {
-  group: Group;
+  isUpdated: boolean;
 };
 
-const EditGroup: FC<Props> = ({ group }) => {
-  const { error, isLoading, update, isUpdated } = useUpdateGroup();
-  const userSuggestions = useUserSuggestions();
+const UpdateNotification: FC<Props> = ({ isUpdated }) => {
+  const [t] = useTranslation("commons");
+  const [showSuccess, setShowSuccess] = useState(false);
+  useEffect(() => {
+    setShowSuccess(isUpdated);
+  }, [isUpdated]);
 
-  return (
-    <div>
-      <UpdateNotification isUpdated={isUpdated} />
-      <ErrorNotification error={error || undefined} />
-      <GroupForm group={group} submitForm={update} loading={isLoading} loadUserSuggestions={userSuggestions} />
-      <DeleteGroup group={group} />
-    </div>
-  );
+  if (showSuccess) {
+    return (
+      <Notification type="success" onClose={() => setShowSuccess(false)}>
+        {t("notifications.updateSuccessful")}
+      </Notification>
+    );
+  }
+
+  return null;
 };
 
-export default EditGroup;
+export default UpdateNotification;
