@@ -99,6 +99,12 @@ const TriggerButton = styled(Button)`
   border-radius: 0.2rem 0.2rem 0 0;
 `;
 
+const ModalWrapper = styled(Modal)`
+  .modal-card-body {
+    padding: 0;
+  }
+`;
+
 const FeedbackTriggerButton: FC<{ openModal: () => void }> = ({ openModal }) => {
   const [t] = useTranslation("commons");
   return <TriggerButton action={openModal} color="info" label={t("feedback.button")} icon="comment" />;
@@ -110,7 +116,7 @@ type FormProps = {
 };
 
 const FeedbackWrapper = styled.div`
-  height: 30rem;
+  height: 40rem;
   width: auto;
 `;
 
@@ -118,11 +124,11 @@ const FeedbackForm: FC<FormProps> = ({ close, formUrl }) => {
   const [t] = useTranslation("commons");
 
   return (
-    <Modal title={t("feedback.modalTitle")} active={true} closeFunction={close}>
+    <ModalWrapper title={t("feedback.modalTitle")} active={true} closeFunction={close}>
       <FeedbackWrapper>
         <iframe src={formUrl} height="100%" width="100%" title="feedback-form" />
       </FeedbackWrapper>
-    </Modal>
+    </ModalWrapper>
   );
 };
 
