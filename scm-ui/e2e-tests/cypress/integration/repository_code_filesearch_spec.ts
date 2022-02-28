@@ -22,16 +22,38 @@
  * SOFTWARE.
  */
 
-When("User visits repository", function() {
-  cy.visit(`/repo/${this.repository.namespace}/${this.repository.name}/code/sources`);
-});
+import { hri } from "human-readable-ids";
 
-When("User performs file search inside repository", function() {
-  cy.byTestId("file_search_button").click();
-  cy.url().should("include", `/repo/${this.repository.namespace}/${this.repository.name}/code/search/main?q=`);
-  cy.get("[data-testid=file_search_filter_input]").type("README");
-});
+describe("Repository File Search", () => {
+  let username: string;
+  let password: string;
+  let namespace: string;
+  let name: string;
 
-Then("The search results are found", function() {
-  cy.get("[data-testid=file_search_single_result]").contains("README.md");
+  beforeEach(() => {
+    // Create user and login
+    username = hri.random();
+    password = hri.random();
+    cy.restCreateUser(username, password);
+    cy.restLogin(username, password);
+
+    // Create repo
+    namespace = hri.random();
+    name = hri.random();
+    cy.restCreateRepo("git", namespace, name, true);
+  });
+
+  it("should search file inside repository", () => {
+    // Arrange
+    cy.restSetUserRepositoryRole(username, namespace, name, "WRITE");
+
+    // Act
+    cy.visit(`/repo/${namespace}/${name}/code/sources`);
+    cy.byTestId("file_search_button").click();
+    cy.url().should("include", `/repo/${namespace}/${name}/code/search/main?q=`);
+    cy.byTestId("file_search_filter_input").type("README");
+
+    // Assert
+    cy.byTestId("file_search_single_result").contains("README.md");
+  });
 });
