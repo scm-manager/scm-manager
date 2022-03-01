@@ -4,7 +4,7 @@
   "private": true,
   "main": "src/index.ts",
   "scripts": {
-    "test": "jest",
+    "test": "jest --passWithNoTests",
     "lint": "eslint src"
   },
   "dependencies": {

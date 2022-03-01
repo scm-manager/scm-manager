@@ -23,18 +23,24 @@
  */
 
 import { LegacyContext, LegacyContextProvider, useLegacyContext } from "./LegacyContext";
-import { FC } from "react";
 import * as React from "react";
+import { FC } from "react";
 import { renderHook } from "@testing-library/react-hooks";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 describe("LegacyContext tests", () => {
+  const queryClient = new QueryClient();
   const createWrapper = (context?: LegacyContext): FC => {
-    return ({ children }) => <LegacyContextProvider {...context}>{children}</LegacyContextProvider>;
+    return ({ children }) => (
+      <QueryClientProvider client={queryClient}>
+        <LegacyContextProvider {...context}>{children}</LegacyContextProvider>
+      </QueryClientProvider>
+    );
   };
 
   it("should return provided context", () => {
     const { result } = renderHook(() => useLegacyContext(), {
-      wrapper: createWrapper(),
+      wrapper: createWrapper()
     });
     expect(result.current).toBeDefined();
   });

@@ -33,6 +33,7 @@ export type BaseContext = {
 
 export type LegacyContext = BaseContext & {
   initialize: () => void;
+  queryClient?: QueryClient;
 };
 
 const Context = createContext<LegacyContext | undefined>(undefined);
