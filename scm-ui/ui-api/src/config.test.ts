@@ -58,13 +58,14 @@ describe("Test config hooks", () => {
     proxyUser: null,
     realmDescription: "",
     alertsUrl: "",
+    feedbackUrl: "",
     releaseFeedUrl: "",
     skipFailedAuthenticators: false,
     _links: {
       update: {
-        href: "/config",
-      },
-    },
+        href: "/config"
+      }
+    }
   };
 
   afterEach(() => {
@@ -77,7 +78,7 @@ describe("Test config hooks", () => {
       setIndexLink(queryClient, "config", "/config");
       fetchMock.get("/api/v2/config", config);
       const { result, waitFor } = renderHook(() => useConfig(), {
-        wrapper: createWrapper(undefined, queryClient),
+        wrapper: createWrapper(undefined, queryClient)
       });
       await waitFor(() => !!result.current.data);
       expect(result.current.data).toEqual(config);
@@ -91,15 +92,15 @@ describe("Test config hooks", () => {
 
       const newConfig = {
         ...config,
-        baseUrl: "/hog",
+        baseUrl: "/hog"
       };
 
       fetchMock.putOnce("/api/v2/config", {
-        status: 200,
+        status: 200
       });
 
       const { result, waitForNextUpdate } = renderHook(() => useUpdateConfig(), {
-        wrapper: createWrapper(undefined, queryClient),
+        wrapper: createWrapper(undefined, queryClient)
       });
 
       await act(() => {

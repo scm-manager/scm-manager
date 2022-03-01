@@ -56,13 +56,8 @@ const createFeedbackFormUrl = (instanceId: string, theme: string, data?: HalRepr
 const useFeedback = (index: IndexResources) => {
   const feedbackUrl = (index._links.feedback as Link)?.href || "";
   const { theme } = useThemeState();
-  const { data, error, isLoading } = useFeedbackUrl("http://localhost:8080/api/v1/feedback/scm-manager/url");
-  const formUrl = useMemo(() => createFeedbackFormUrl(index.instanceId, theme, data), [
-    theme,
-    data,
-    index.instanceId,
-    index._links.feedback
-  ]);
+  const { data, error, isLoading } = useFeedbackUrl(feedbackUrl);
+  const formUrl = useMemo(() => createFeedbackFormUrl(index.instanceId, theme, data), [theme, data, index.instanceId]);
 
   if (!index._links.feedback || error || isLoading || !formUrl) {
     return {
