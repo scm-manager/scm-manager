@@ -39,8 +39,8 @@
   --scm-secondary-more-color: #{$secondary-more};
   --scm-secondary-most-color: #{$secondary-most};
 
-  --scm-border-color: #{$border-color};
-  --scm-border: #{$border-width} solid #{$border-color};
+  --scm-border-color: #{$border};
+  --scm-border: #{$border-width} solid #{$border};
 }
 
 // TODO split into multiple files
@@ -103,15 +103,6 @@ hr.header-with-actions {
       width: 100%;
       text-align: center !important;
     }
-  }
-}
-
-footer.footer {
-  background-color: $white-ter;
-  padding: inherit;
-
-  a {
-    color: darken($info, 15%);
   }
 }
 
@@ -258,7 +249,7 @@ a.has-text-secondary-most:focus {
 // tags
 .tag:not(body) {
   border: 1px solid transparent;
-  background-color: $white;
+  background-color: $scheme-main;
 
   &.is-delete {
     background-color: $light;
@@ -270,7 +261,7 @@ a.has-text-secondary-most:focus {
   }
 
   &.is-outlined {
-    background-color: $white;
+    background-color: $scheme-main;
   }
   &.is-black.is-outlined {
     color: $black;
@@ -311,6 +302,13 @@ a.has-text-secondary-most:focus {
   &.is-danger.is-outlined {
     color: $danger;
     border-color: $danger;
+  }
+}
+
+.popover {
+  &:before {
+    border-bottom-color: $popover-background-color;
+    border-left-color: $popover-background-color;
   }
 }
 
@@ -424,8 +422,14 @@ a.has-text-secondary-most:focus {
   }
 }
 
-.notifications .dropdown-menu:before {
-  border: 0.4rem solid transparent;
+.notifications .dropdown-menu {
+  border: 1px solid $border;
+
+  &:before {
+    border: 0.4rem solid transparent;
+    border-bottom-color: $border;
+    border-left-color: $border;
+  }
 }
 
 @import "~@fortawesome/fontawesome-free/scss/fontawesome";
@@ -557,7 +561,7 @@ ul.is-separated {
 
   tr {
     a {
-      color: #363636;
+      color: $grey-darker;
     }
     &.border-is-green td:first-child {
       border-left-color: $green;
@@ -587,7 +591,7 @@ ul.is-separated {
 
     &:hover {
       td {
-        background-color: whitesmoke;
+        background-color: $white-ter;
 
         &.is-darker {
           background-color: #e1e1e1;
@@ -608,15 +612,15 @@ ul.is-separated {
   }
   td {
     padding: 1em 1.25em;
-    background-color: #fafafa;
-    border-bottom: 1px solid whitesmoke;
+    background-color: $white-bis;
+    border-bottom: 1px solid $white-ter;
     border-left-color: $grey;
 
     &:first-child {
       border-left: 3px solid;
     }
     &.is-darker {
-      background-color: whitesmoke;
+      background-color: $white-ter;
     }
     // Explicitly "remove" styles from td element to use it as an empty table column header, which is necessary for
     // a11y because an empty th element is not allowed.
@@ -627,7 +631,7 @@ ul.is-separated {
     }
   }
   &.is-hoverable tbody tr:not(.is-selected):hover {
-    background-color: whitesmoke;
+    background-color: $white-ter;
   }
   thead th {
     background-color: transparent;
@@ -656,8 +660,8 @@ ul.is-separated {
   }
 
   .panel-footer {
-    background-color: whitesmoke;
-    color: #363636;
+    background-color: $panel-heading-background-color;
+    color: $panel-heading-color;
     font-size: 1.25em;
     font-weight: 300;
     line-height: 1.25;
@@ -744,7 +748,7 @@ form .field:not(.is-grouped) {
   .tabs.is-toggle li.is-active a:hover {
     background-color: #28b1e8;
     border-color: #28b1e8;
-    color: #fff;
+    color: $white;
   }
 }
 
@@ -755,7 +759,7 @@ form .field:not(.is-grouped) {
   position: absolute;
   right: 0;
   top: 0;
-  background-color: whitesmoke;
+  background-color: $white-ter;
 }
 
 // menu
@@ -769,7 +773,6 @@ form .field:not(.is-grouped) {
   display: flex;
   height: 3.2rem;
   align-items: center;
-  color: $white;
   font-size: 1em;
   font-weight: 600;
   background-color: $blue;
@@ -784,12 +787,11 @@ form .field:not(.is-grouped) {
 }
 .menu-list {
   a {
-    color: #333;
     padding: 1rem;
 
     &.is-active {
-      color: $info;
-      background-color: #fff;
+      color: $link;
+      background-color: $scheme-main;
     }
   }
 

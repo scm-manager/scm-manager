@@ -47,7 +47,7 @@ $danger-invert: #050514;
 
 $light-gray: #f2f2f2;
 
-$footer-background-color: $grey-dark;
+$footer-background-color: $black-ter;
 $footer-color: $white-ter;
 
 //make horizontal lines pop more
@@ -55,6 +55,11 @@ $hr-background-color: $white-bis;
 
 $box-background-color: scale-color($scheme-main, $lightness: 15%);
 $box-background-color: $grey-darker;
+
+$menu-label-color: $scheme-main;
+$menu-item-color: $white-ter;
+
+$panel-heading-background-color: $black-ter;
 
 $modal-card-head-background-color: $black-ter;
 $modal-card-body-background-color: $scheme-main;
@@ -71,7 +76,7 @@ $tooltip-background-opacity: 0.9 !default;
 $tooltip-color: $scheme-main;
 
 $border-width: 2px;
-$border-color: $white-ter;
+$border: $white-ter;
 
 @import "utils/_post.scss";
 
@@ -201,36 +206,21 @@ $border-color: $white-ter;
   }
 }
 
-.menu-label {
-  color: $scheme-main;
-}
-
-.menu-list {
-  a {
-    color: $white-ter;
-
-    &.is-active {
-      background-color: $scheme-main;
-    }
-  }
-}
-
 //footer is overwritten in _main.scss
 footer.footer {
-  background-color: $black-ter;
   a {
     color: scale-color($link, $lightness: 25%);
   }
 }
 
 .card {
-  border: 1px solid $border-color;
+  border: 1px solid $border;
   box-shadow: none;
 }
 
 //card
 .modal-card {
-  border: 1px solid $border-color;
+  border: 1px solid $border;
 
   & .modal-close,
   & .delete {
@@ -253,9 +243,6 @@ footer.footer {
           background-color: $grey-darker;
         }
       }
-      a {
-        color: $link;
-      }
     }
   }
   td {
@@ -274,18 +261,8 @@ footer.footer {
   }
 }
 
-// panels
 .panel {
   border-color: $white-bis;
-
-  .panel-heading {
-    background-color: $black-ter;
-  }
-
-  .panel-footer {
-    background-color: $black-ter;
-    color: $white-bis;
-  }
 }
 
 //diffs
@@ -334,9 +311,6 @@ td:first-child.diff-gutter-conflict:before {
 
 //inline member tags
 .tag:not(body) {
-  border: 1px solid transparent;
-  background-color: $white;
-
   &.is-delete {
     &::before,
     &::after {
@@ -359,11 +333,6 @@ td:first-child.diff-gutter-conflict:before {
   &.is-light .has-text-link {
     color: scale-color($link, $lightness: -50%) !important;
   }
-
-  //outline-tags
-  &.is-outlined {
-    background-color: $scheme-main;
-  }
 }
 
 //cards receive white border
@@ -372,21 +341,7 @@ td:first-child.diff-gutter-conflict:before {
 }
 
 .popover {
-  border: 1px solid $border-color;
-
-  &:before {
-    border-bottom-color: $grey-dark;
-    border-left-color: $grey-dark;
-  }
-}
-
-.notifications .dropdown-menu {
-  border: 1px solid $border-color;
-
-  &:before {
-    border-bottom-color: $border-color;
-    border-left-color: $border-color;
-  }
+  border: 1px solid $border;
 }
 
 //Display darker version of background image
@@ -400,13 +355,6 @@ td:first-child.diff-gutter-conflict:before {
 
 .has-hover-visible:hover {
   color: $white-bis !important;
-}
-
-[disabled].textarea::placeholder,
-[disabled].input::placeholder,
-fieldset[disabled] .textarea::placeholder,
-fieldset[disabled] .input::placeholder {
-  color: $white-bis;
 }
 
 .repository-export-info-box {
