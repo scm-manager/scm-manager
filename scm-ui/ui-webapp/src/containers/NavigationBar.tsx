@@ -87,7 +87,6 @@ const StyledNavBar = styled.nav`
     padding: 0;
   }
 
-  //TODO Ersetzen?
   .navbar-brand {
     @media screen and (max-width: ${devices.desktop.width - 1}px) {
       border-bottom: 1px solid var(--scm-border-color);
@@ -97,21 +96,6 @@ const StyledNavBar = styled.nav`
   .navbar-menu.is-active .navbar-end .navbar-item {
     border-left: solid 5px transparent;
   }
-
-  .navbar-burger {
-    color: #fff !important;
-  }
-
-  .navbar-item {
-    :hover:not(.logo) {
-      background-color: rgba(10, 10, 10, 0.1) !important;
-      color: #fff;
-    }
-    color: #fff !important;
-    background-color: transparent !important;
-  }
-  color: #fff;
-  background-color: transparent !important;
 `;
 
 type Props = {

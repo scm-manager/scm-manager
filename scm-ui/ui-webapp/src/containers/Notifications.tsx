@@ -222,7 +222,7 @@ const BellNotificationIcon: FC<BellNotificationIconProps> = ({ data }) => {
       className="is-size-4"
       iconStyle={counter === 0 ? "far" : "fas"}
       name="bell"
-      color="white"
+      color="inherit"
       alt={t("notifications.bellTitle")}
     />
   );

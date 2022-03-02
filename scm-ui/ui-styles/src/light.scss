@@ -38,6 +38,11 @@ $button-disabled-opacity: 0.25;
 $border-width: 1px;
 $border-color: $grey-lighter;
 
+$navbar-background-color: transparent;
+$navbar-item-color: $white;
+$navbar-item-hover-color: $navbar-item-color;
+$navbar-item-hover-background-color: rgba(10, 10, 10, 0.1);
+
 @import "utils/_post.scss";
 
 :root {

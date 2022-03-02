@@ -72,6 +72,10 @@ $success-invert: #050514;
 $warning-invert: ;
 $danger-invert: #050514;
 */
+$navbar-background-color: transparent;
+$navbar-item-color: $grey-lighter;
+$navbar-item-hover-color: $navbar-item-color;
+$navbar-item-hover-background-color: rgba(10, 10, 10, 0.1);
 
 //$code: lighten($danger, 25%);
 /*
