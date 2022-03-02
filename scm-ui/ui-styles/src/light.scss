@@ -65,6 +65,19 @@ $border-color: $grey-lighter;
   --sh-highlight-accent: #99d8f3;
 }
 
+.button {
+  &.is-primary,
+  &.is-info,
+  &.is-link,
+  &.is-success,
+  &.is-warning,
+  &.is-danger {
+    &.is-outlined {
+      background-color: $white;
+    }
+  }
+}
+
 .popover:before {
   border-bottom-color: white;
   border-left-color: white;

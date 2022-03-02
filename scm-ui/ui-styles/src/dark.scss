@@ -147,16 +147,6 @@ $tooltip-color: $scheme-main;
 }
 */
 .button {
-  &.is-primary,
-  &.is-info,
-  &.is-link,
-  &.is-success,
-  &.is-warning,
-  &.is-danger {
-    &.is-outlined {
-      background-color: inherit;
-    }
-  }
 /*
   &.is-primary:hover,
   &.is-primary.is-hovered {

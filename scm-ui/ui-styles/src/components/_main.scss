@@ -327,7 +327,7 @@ a.has-text-secondary-most:focus {
   &.is-warning,
   &.is-danger {
     &.is-outlined {
-      background-color: $white;
+      background-color: inherit;
     }
   }
 
