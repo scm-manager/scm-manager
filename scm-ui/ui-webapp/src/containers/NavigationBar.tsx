@@ -89,7 +89,7 @@ const StyledNavBar = styled.nav`
 
   .navbar-brand {
     @media screen and (max-width: ${devices.desktop.width - 1}px) {
-      border-bottom: 1px solid var(--scm-border-color);
+      border-bottom: 1px solid var(--scm-white-color);
     }
   }
 
