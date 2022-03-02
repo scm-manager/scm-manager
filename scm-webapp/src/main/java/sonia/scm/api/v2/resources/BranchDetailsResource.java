@@ -169,7 +169,7 @@ public class BranchDetailsResource {
     @QueryParam("branches") List<@Length(min = 1, max = 100) @Pattern(regexp = VALID_BRANCH_NAMES) String> branches
   ) {
     try (RepositoryService service = serviceFactory.create(new NamespaceAndName(namespace, name))) {
-      List<BranchDetailsDto> dtos = getBranchDetailsDtos(service, decodeBranchNames(branches));
+      List<BranchDetailsDto> dtos = getBranchDetailsDtos(service, branches);
       Links links = Links.linkingTo().self(resourceLinks.branchDetailsCollection().self(namespace, name)).build();
       Embedded embedded = Embedded.embeddedBuilder().with("branchDetails", dtos).build();
 
@@ -193,9 +193,5 @@ public class BranchDetailsResource {
       }
     }
     return dtos;
-  }
-
-  private Collection<String> decodeBranchNames(Collection<String> branches) {
-    return branches.stream().map(HttpUtil::decode).collect(Collectors.toList());
   }
 }

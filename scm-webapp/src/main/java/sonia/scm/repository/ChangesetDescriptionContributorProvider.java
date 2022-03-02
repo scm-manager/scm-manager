@@ -24,19 +24,13 @@
 
 package sonia.scm.repository;
 
-import com.google.common.collect.ImmutableSet;
 import sonia.scm.plugin.Extension;
 
-import java.util.Collection;
+import java.util.Optional;
 import java.util.Scanner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Extension
 public class ChangesetDescriptionContributorProvider implements ChangesetPreProcessorFactory {
-
-  private static final Collection<String> SUPPORTED_CONTRIBUTOR_TYPES = ImmutableSet.of("Co-authored-by", "Reviewed-by", "Signed-off-by", "Committed-by");
-  private static final Pattern CONTRIBUTOR_PATTERN = Pattern.compile("^([\\w-]*):\\W*(.*)\\W+<(.*)>\\W*$");
 
   @Override
   public ChangesetPreProcessor createPreProcessor(Repository repository) {
@@ -82,17 +76,13 @@ public class ChangesetDescriptionContributorProvider implements ChangesetPreProc
     }
 
     private boolean checkForContributor(String line) {
-      Matcher matcher = CONTRIBUTOR_PATTERN.matcher(line);
-      if (matcher.matches()) {
-        String type = matcher.group(1);
-        String name = matcher.group(2);
-        String mail = matcher.group(3);
-        if (SUPPORTED_CONTRIBUTOR_TYPES.contains(type)) {
-          createContributor(type, name, mail);
-          return true;
-        }
+      Optional<Contributor> contributor = Contributor.fromCommitLine(line);
+      if (contributor.isPresent()) {
+        changeset.addContributor(contributor.get());
+        return true;
+      } else{
+        return false;
       }
-      return false;
     }
 
     private void handleEmptyLine(Scanner scanner, String line) {
@@ -105,10 +95,6 @@ public class ChangesetDescriptionContributorProvider implements ChangesetPreProc
       if (scanner.hasNextLine()) {
         newDescription.append('\n');
       }
-    }
-
-    private void createContributor(String type, String name, String mail) {
-      changeset.addContributor(new Contributor(type, new Person(name, mail)));
     }
   }
 }

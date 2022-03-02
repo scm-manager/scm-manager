@@ -21,30 +21,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
-import { Group } from "@scm-manager/ui-types";
-import { useUpdateGroup, useUserSuggestions } from "@scm-manager/ui-api";
-import { ErrorNotification } from "@scm-manager/ui-components";
-import GroupForm from "../components/GroupForm";
-import DeleteGroup from "./DeleteGroup";
-import UpdateNotification from "../../components/UpdateNotification";
 
-type Props = {
-  group: Group;
-};
+import { hri } from "human-readable-ids";
 
-const EditGroup: FC<Props> = ({ group }) => {
-  const { error, isLoading, update, isUpdated } = useUpdateGroup();
-  const userSuggestions = useUserSuggestions();
+describe("Anonymous Mode Disabled", () => {
+  beforeEach(() => {
+    cy.restSetAnonymousMode("OFF");
+  });
 
-  return (
-    <div>
-      <UpdateNotification isUpdated={isUpdated} />
-      <ErrorNotification error={error || undefined} />
-      <GroupForm group={group} submitForm={update} loading={isLoading} loadUserSuggestions={userSuggestions} />
-      <DeleteGroup group={group} />
-    </div>
-  );
-};
+  it("should show login page when not authenticated", () => {
+    // Act
+    cy.visit("/repos/");
 
-export default EditGroup;
+    // Assert
+    cy.byTestId("login-button");
+  });
+
+  it("should show footer for authenticated user", () => {
+    // Arrange
+    const username = hri.random();
+    const password = hri.random();
+    cy.restCreateUser(username, password);
+    cy.restLogin(username, password);
+
+    // Act
+    cy.visit("/home");
+
+    // Assert
+    cy.byTestId("footer-user-profile");
+  });
+});

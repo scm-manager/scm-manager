@@ -22,13 +22,13 @@
  * SOFTWARE.
  */
 import React, { FC } from "react";
-import { Redirect } from "react-router-dom";
 import UserForm from "../components/UserForm";
 import DeleteUser from "./DeleteUser";
 import { User } from "@scm-manager/ui-types";
 import { ErrorNotification } from "@scm-manager/ui-components";
 import UserConverter from "../components/UserConverter";
 import { useUpdateUser } from "@scm-manager/ui-api";
+import UpdateNotification from "../../components/UpdateNotification";
 
 type Props = {
   user: User;
@@ -37,12 +37,9 @@ type Props = {
 const EditUser: FC<Props> = ({ user }) => {
   const { error, isLoading, update, isUpdated } = useUpdateUser();
 
-  if (isUpdated) {
-    return <Redirect to={`/user/${user.name}`} />;
-  }
-
   return (
     <div>
+      <UpdateNotification isUpdated={isUpdated} />
       <ErrorNotification error={error || undefined} />
       <UserForm submitForm={update} user={user} loading={isLoading} />
       <hr />

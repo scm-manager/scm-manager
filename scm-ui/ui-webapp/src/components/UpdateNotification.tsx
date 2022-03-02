@@ -22,16 +22,30 @@
  * SOFTWARE.
  */
 
-When("User visits repository", function() {
-  cy.visit(`/repo/${this.repository.namespace}/${this.repository.name}/code/sources`);
-});
+import React, { FC, useEffect, useState } from "react";
+import { Notification } from "@scm-manager/ui-components";
+import { useTranslation } from "react-i18next";
 
-When("User performs file search inside repository", function() {
-  cy.byTestId("file_search_button").click();
-  cy.url().should("include", `/repo/${this.repository.namespace}/${this.repository.name}/code/search/main?q=`);
-  cy.get("[data-testid=file_search_filter_input]").type("README");
-});
+type Props = {
+  isUpdated: boolean;
+};
 
-Then("The search results are found", function() {
-  cy.get("[data-testid=file_search_single_result]").contains("README.md");
-});
+const UpdateNotification: FC<Props> = ({ isUpdated }) => {
+  const [t] = useTranslation("commons");
+  const [showSuccess, setShowSuccess] = useState(false);
+  useEffect(() => {
+    setShowSuccess(isUpdated);
+  }, [isUpdated]);
+
+  if (showSuccess) {
+    return (
+      <Notification type="success" onClose={() => setShowSuccess(false)}>
+        {t("notifications.updateSuccessful")}
+      </Notification>
+    );
+  }
+
+  return null;
+};
+
+export default UpdateNotification;

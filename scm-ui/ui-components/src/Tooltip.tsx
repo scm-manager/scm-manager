@@ -183,6 +183,7 @@ const Tooltip: FC<Props> = ({ className, message, location = "right", multiline,
               "has-text-white",
               "has-background-grey-dark",
               "has-text-weight-semibold",
+              "p-2",
               className
             )}
             multiline={multiline}
