@@ -27,6 +27,7 @@ import { ButtonGroup, createA11yId, Radio, SubmitButton, Subtitle } from "@scm-m
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
+import classNames from "classnames";
 
 const LS_KEY = "scm.theme";
 
@@ -60,7 +61,8 @@ const Theme: FC = () => {
     register,
     setValue,
     handleSubmit,
-    formState: { isDirty }
+    formState: { isDirty },
+    watch
   } = useForm<ThemeForm>({
     mode: "onChange",
     defaultValues: {
@@ -83,7 +85,16 @@ const Theme: FC = () => {
             <div
               key={theme}
               onClick={() => setValue("theme", theme, { shouldDirty: true })}
-              className="card ml-1 mb-5 control columns is-vcentered has-cursor-pointer"
+              className={classNames(
+                "card",
+                "ml-1",
+                "mb-5",
+                "control",
+                "columns",
+                "is-vcentered",
+                "has-cursor-pointer",
+                { "has-background-secondary-less": theme === watch().theme }
+              )}
             >
               <RadioColumn className="column">
                 <Radio {...register("theme")} value={theme} disabled={isLoading} ariaLabelledby={a11yId} />
