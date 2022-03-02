@@ -274,6 +274,18 @@ $danger-25: scale-color($danger, $lightness: -75%);
   }
 }
 
+.diff-code-conflict {
+  background-color: #332900;
+}
+
+.diff-gutter-conflict {
+  background-color: #bc9f2a;
+}
+
+.diff-decoration-content div {
+  color: $scheme-main;
+}
+
 //Display darker version of background image
 .has-scm-background {
   background-image: url(images/scmManagerHeroDark.jpg) !important;
