@@ -1,0 +1,4 @@
+- type: added
+  description: Introduce darkmode theme ([#1969](https://github.com/scm-manager/scm-manager/pull/1969))
+- type: changed
+  description: Default theme is selected according to system defaults ([#1969](https://github.com/scm-manager/scm-manager/pull/1969))
