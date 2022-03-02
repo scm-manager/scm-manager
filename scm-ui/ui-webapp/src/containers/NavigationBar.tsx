@@ -90,7 +90,7 @@ const StyledNavBar = styled.nav`
   //TODO Ersetzen?
   .navbar-brand {
     @media screen and (max-width: ${devices.desktop.width - 1}px) {
-      border-bottom: 1px solid white;
+      border-bottom: 1px solid var(--scm-border-color);
     }
   }
 

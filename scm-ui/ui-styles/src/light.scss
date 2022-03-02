@@ -35,12 +35,14 @@ $subtitle-color: #666;
 $warning-invert: #88550d;
 $button-disabled-opacity: 0.25;
 
+$border-width: 1px;
+$border-color: $grey-lighter;
+
 @import "utils/_post.scss";
 
 :root {
   --scm-secondary-background: #{$white};
   --scm-secondary-text: #{$black};
-  --scm-border: 1px solid #dbdbdb;
   --scm-hover-color: #{$black-ter};
   --scm-column-selection: #{$link-25};
 

@@ -70,12 +70,14 @@ $tooltip-background-color: $white-bis;
 $tooltip-background-opacity: 0.9 !default;
 $tooltip-color: $scheme-main;
 
+$border-width: 2px;
+$border-color: $white-ter;
+
 @import "utils/_post.scss";
 
 :root {
   --scm-secondary-background: #{$scheme-main};
   --scm-secondary-text: #{$white};
-  --scm-border: 2px solid #{$white-ter};
   --scm-hover-color: #{$grey};
   --scm-column-selection: #{$link-dark};
 
@@ -233,13 +235,13 @@ footer.footer {
 }
 
 .card {
-  border: 1px solid $white-ter;
+  border: 1px solid $border-color;
   box-shadow: none;
 }
 
 //card
 .modal-card {
-  border: 1px solid $white-ter;
+  border: 1px solid $border-color;
 
   & .modal-close,
   & .delete {
@@ -381,7 +383,7 @@ td:first-child.diff-gutter-conflict:before {
 }
 
 .popover {
-  border: 1px solid $white-ter;
+  border: 1px solid $border-color;
 
   &:before {
     border-bottom-color: $grey-dark;
@@ -390,11 +392,11 @@ td:first-child.diff-gutter-conflict:before {
 }
 
 .notifications .dropdown-menu {
-  border: 1px solid $white-ter;
+  border: 1px solid $border-color;
 
   &:before {
-    border-bottom-color: $white-ter;
-    border-left-color: $white-ter;
+    border-bottom-color: $border-color;
+    border-left-color: $border-color;
   }
 }
 

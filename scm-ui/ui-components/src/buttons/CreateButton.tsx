@@ -27,7 +27,7 @@ import Button, { ButtonProps } from "./Button";
 import classNames from "classnames";
 
 const Wrapper = styled.div`
-  border: 2px solid #e9f7fd;
+  border: 2px solid var(--scm-border-color);
 `;
 
 export default class CreateButton extends React.Component<ButtonProps> {

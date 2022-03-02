@@ -30,7 +30,7 @@ import { useTranslation } from "react-i18next";
 import { Branch } from "@scm-manager/ui-types";
 
 const ActionBar = styled.div`
-  border: 1px solid #dbdbdb;
+  border: 1px solid var(--scm-border-color);
   border-radius: 4px;
   font-size: 1.25em;
   font-weight: 300;

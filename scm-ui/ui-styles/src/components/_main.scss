@@ -35,6 +35,9 @@
   --scm-secondary-color: #{$secondary};
   --scm-secondary-more-color: #{$secondary-more};
   --scm-secondary-most-color: #{$secondary-most};
+
+  --scm-border-color: #{$border-color};
+  --scm-border: #{$border-width} solid #{$border-color};
 }
 
 // TODO split into multiple files
