@@ -1,0 +1,2 @@
+- type: fixed
+  description: Do not redirect after simple data updates ([#1965](https://github.com/scm-manager/scm-manager/pull/1965))

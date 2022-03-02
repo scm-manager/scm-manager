@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 import React, { FC } from "react";
-import { Redirect, useRouteMatch } from "react-router-dom";
+import { useRouteMatch } from "react-router-dom";
 import RepositoryForm from "../components/form";
 import { Repository } from "@scm-manager/ui-types";
 import { ErrorNotification, Subtitle, urls } from "@scm-manager/ui-components";
@@ -33,6 +33,7 @@ import ExportRepository from "./ExportRepository";
 import { useUpdateRepository } from "@scm-manager/ui-api";
 import HealthCheckWarning from "./HealthCheckWarning";
 import RunHealthCheck from "./RunHealthCheck";
+import UpdateNotification from "../../components/UpdateNotification";
 
 type Props = {
   repository: Repository;
@@ -42,10 +43,6 @@ const EditRepo: FC<Props> = ({ repository }) => {
   const match = useRouteMatch();
   const { isLoading, error, update, isUpdated } = useUpdateRepository();
   const [t] = useTranslation("repos");
-
-  if (isUpdated) {
-    return <Redirect to={`/repo/${repository.namespace}/${repository.name}`} />;
-  }
 
   const url = urls.matchedUrlFromMatch(match);
   const extensionProps = {
@@ -57,6 +54,7 @@ const EditRepo: FC<Props> = ({ repository }) => {
     <>
       <HealthCheckWarning repository={repository} />
       <Subtitle subtitle={t("repositoryForm.subtitle")} />
+      <UpdateNotification isUpdated={isUpdated} />
       <ErrorNotification error={error} />
       <RepositoryForm repository={repository} loading={isLoading} modifyRepository={update} />
       <ExtensionPoint name="repo-config.details" props={extensionProps} renderAll={true} />
