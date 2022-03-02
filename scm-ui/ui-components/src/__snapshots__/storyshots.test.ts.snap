@@ -4593,7 +4593,7 @@ exports[`Storyshots MarkdownView Code without Lang 1`] = `
       
 
       <div
-        className="SyntaxHighlighter__Container-ks8t62-1 tHcuo is-relative"
+        className="SyntaxHighlighter__Container-ks8t62-1 gJqvQP is-relative"
       >
         <pre
           style={
@@ -4682,7 +4682,7 @@ exports[`Storyshots MarkdownView Code without Lang 1`] = `
           </code>
         </pre>
         <button
-          className="button is-default SyntaxHighlighter__TopRightSmallButton-ks8t62-0 cUmyOH is-small"
+          className="button is-default SyntaxHighlighter__TopRightButton-ks8t62-0 dsrTQ is-small"
           onClick={[Function]}
           title="syntaxHighlighting.copyButton"
           type="button"
@@ -5746,7 +5746,7 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
       
 
       <div
-        className="SyntaxHighlighter__Container-ks8t62-1 tHcuo is-relative"
+        className="SyntaxHighlighter__Container-ks8t62-1 gJqvQP is-relative"
       >
         <pre
           style={
@@ -6915,7 +6915,7 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
           </code>
         </pre>
         <button
-          className="button is-default SyntaxHighlighter__TopRightSmallButton-ks8t62-0 cUmyOH is-small"
+          className="button is-default SyntaxHighlighter__TopRightButton-ks8t62-0 dsrTQ is-small"
           onClick={[Function]}
           title="syntaxHighlighting.copyButton"
           type="button"
@@ -14958,7 +14958,7 @@ exports[`Storyshots MarkdownView Inline Xml 1`] = `
       
 
       <div
-        className="SyntaxHighlighter__Container-ks8t62-1 tHcuo is-relative"
+        className="SyntaxHighlighter__Container-ks8t62-1 gJqvQP is-relative"
       >
         <pre
           style={
@@ -15348,7 +15348,7 @@ exports[`Storyshots MarkdownView Inline Xml 1`] = `
           </code>
         </pre>
         <button
-          className="button is-default SyntaxHighlighter__TopRightSmallButton-ks8t62-0 cUmyOH is-small"
+          className="button is-default SyntaxHighlighter__TopRightButton-ks8t62-0 dsrTQ is-small"
           onClick={[Function]}
           title="syntaxHighlighting.copyButton"
           type="button"
@@ -16536,7 +16536,7 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
       
 
       <div
-        className="SyntaxHighlighter__Container-ks8t62-1 tHcuo is-relative"
+        className="SyntaxHighlighter__Container-ks8t62-1 gJqvQP is-relative"
       >
         <pre
           style={
@@ -17705,7 +17705,7 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
           </code>
         </pre>
         <button
-          className="button is-default SyntaxHighlighter__TopRightSmallButton-ks8t62-0 cUmyOH is-small"
+          className="button is-default SyntaxHighlighter__TopRightButton-ks8t62-0 dsrTQ is-small"
           onClick={[Function]}
           title="syntaxHighlighting.copyButton"
           type="button"
@@ -17913,7 +17913,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
       
 
       <div
-        className="SyntaxHighlighter__Container-ks8t62-1 tHcuo is-relative"
+        className="SyntaxHighlighter__Container-ks8t62-1 gJqvQP is-relative"
       >
         <pre
           style={
@@ -19354,7 +19354,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
           </code>
         </pre>
         <button
-          className="button is-default SyntaxHighlighter__TopRightSmallButton-ks8t62-0 cUmyOH is-small"
+          className="button is-default SyntaxHighlighter__TopRightButton-ks8t62-0 dsrTQ is-small"
           onClick={[Function]}
           title="syntaxHighlighting.copyButton"
           type="button"
@@ -72382,7 +72382,7 @@ exports[`Storyshots SyntaxHighlighter Go 1`] = `
   className="SyntaxHighlighterstories__Spacing-sc-1dcldp5-0 jbrCso"
 >
   <div
-    className="SyntaxHighlighter__Container-ks8t62-1 tHcuo is-relative"
+    className="SyntaxHighlighter__Container-ks8t62-1 gJqvQP is-relative"
   >
     <pre
       style={
@@ -73766,7 +73766,7 @@ exports[`Storyshots SyntaxHighlighter Go 1`] = `
       </code>
     </pre>
     <button
-      className="button is-default SyntaxHighlighter__TopRightSmallButton-ks8t62-0 cUmyOH is-small"
+      className="button is-default SyntaxHighlighter__TopRightButton-ks8t62-0 dsrTQ is-small"
       onClick={[Function]}
       title="syntaxHighlighting.copyButton"
       type="button"
@@ -73786,7 +73786,7 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
   className="SyntaxHighlighterstories__Spacing-sc-1dcldp5-0 jbrCso"
 >
   <div
-    className="SyntaxHighlighter__Container-ks8t62-1 tHcuo is-relative"
+    className="SyntaxHighlighter__Container-ks8t62-1 gJqvQP is-relative"
   >
     <pre
       style={
@@ -76728,7 +76728,7 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
       </code>
     </pre>
     <button
-      className="button is-default SyntaxHighlighter__TopRightSmallButton-ks8t62-0 cUmyOH is-small"
+      className="button is-default SyntaxHighlighter__TopRightButton-ks8t62-0 dsrTQ is-small"
       onClick={[Function]}
       title="syntaxHighlighting.copyButton"
       type="button"
@@ -76748,7 +76748,7 @@ exports[`Storyshots SyntaxHighlighter Javascript 1`] = `
   className="SyntaxHighlighterstories__Spacing-sc-1dcldp5-0 jbrCso"
 >
   <div
-    className="SyntaxHighlighter__Container-ks8t62-1 tHcuo is-relative"
+    className="SyntaxHighlighter__Container-ks8t62-1 gJqvQP is-relative"
   >
     <pre
       style={
@@ -77561,7 +77561,7 @@ exports[`Storyshots SyntaxHighlighter Javascript 1`] = `
       </code>
     </pre>
     <button
-      className="button is-default SyntaxHighlighter__TopRightSmallButton-ks8t62-0 cUmyOH is-small"
+      className="button is-default SyntaxHighlighter__TopRightButton-ks8t62-0 dsrTQ is-small"
       onClick={[Function]}
       title="syntaxHighlighting.copyButton"
       type="button"
@@ -77581,7 +77581,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
   className="SyntaxHighlighterstories__Spacing-sc-1dcldp5-0 jbrCso"
 >
   <div
-    className="SyntaxHighlighter__Container-ks8t62-1 tHcuo is-relative"
+    className="SyntaxHighlighter__Container-ks8t62-1 gJqvQP is-relative"
   >
     <pre
       style={
@@ -85720,7 +85720,7 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
       </code>
     </pre>
     <button
-      className="button is-default SyntaxHighlighter__TopRightSmallButton-ks8t62-0 cUmyOH is-small"
+      className="button is-default SyntaxHighlighter__TopRightButton-ks8t62-0 dsrTQ is-small"
       onClick={[Function]}
       title="syntaxHighlighting.copyButton"
       type="button"
@@ -85740,7 +85740,7 @@ exports[`Storyshots SyntaxHighlighter Python 1`] = `
   className="SyntaxHighlighterstories__Spacing-sc-1dcldp5-0 jbrCso"
 >
   <div
-    className="SyntaxHighlighter__Container-ks8t62-1 tHcuo is-relative"
+    className="SyntaxHighlighter__Container-ks8t62-1 gJqvQP is-relative"
   >
     <pre
       style={
@@ -87217,7 +87217,7 @@ exports[`Storyshots SyntaxHighlighter Python 1`] = `
       </code>
     </pre>
     <button
-      className="button is-default SyntaxHighlighter__TopRightSmallButton-ks8t62-0 cUmyOH is-small"
+      className="button is-default SyntaxHighlighter__TopRightButton-ks8t62-0 dsrTQ is-small"
       onClick={[Function]}
       title="syntaxHighlighting.copyButton"
       type="button"
@@ -87237,7 +87237,7 @@ exports[`Storyshots SyntaxHighlighter Without line numbers 1`] = `
   className="SyntaxHighlighterstories__Spacing-sc-1dcldp5-0 jbrCso"
 >
   <div
-    className="SyntaxHighlighter__Container-ks8t62-1 tHcuo is-relative"
+    className="SyntaxHighlighter__Container-ks8t62-1 gJqvQP is-relative"
   >
     <pre
       style={
@@ -89590,7 +89590,7 @@ exports[`Storyshots SyntaxHighlighter Without line numbers 1`] = `
       </code>
     </pre>
     <button
-      className="button is-default SyntaxHighlighter__TopRightSmallButton-ks8t62-0 cUmyOH is-small"
+      className="button is-default SyntaxHighlighter__TopRightButton-ks8t62-0 dsrTQ is-small"
       onClick={[Function]}
       title="syntaxHighlighting.copyButton"
       type="button"

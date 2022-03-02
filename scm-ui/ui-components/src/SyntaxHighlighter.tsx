@@ -38,7 +38,7 @@ import { Button } from "./buttons";
 
 const LINE_NUMBER_URL_HASH_REGEX = /^#line-(.*)$/;
 
-const TopRightSmallButton = styled(Button)`
+const TopRightButton = styled(Button)`
   height: inherit;
   position: absolute;
   display: none;
@@ -47,7 +47,7 @@ const TopRightSmallButton = styled(Button)`
 `;
 
 const Container = styled.div`
-  &:hover > ${TopRightSmallButton} {
+  &:hover > ${TopRightButton} {
     display: inline-block;
   }
 `;
@@ -102,9 +102,9 @@ const SyntaxHighlighter: FC<Props> = ({ language = defaultLanguage, showLineNumb
       >
         {valueWithoutTrailingLineBreak}
       </ReactSyntaxHighlighter>
-      <TopRightSmallButton className="is-small" title={t("syntaxHighlighting.copyButton")} action={copy}>
+      <TopRightButton className="is-small" title={t("syntaxHighlighting.copyButton")} action={copy}>
         <i className={copied ? "fa fa-clipboard-check" : "fa fa-clipboard"} />
-      </TopRightSmallButton>
+      </TopRightButton>
     </Container>
   );
 };
