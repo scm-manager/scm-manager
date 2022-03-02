@@ -34,10 +34,12 @@ import useScrollToElement from "./useScrollToElement";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 import copyToClipboard from "./CopyToClipboard";
+import { Button } from "./buttons";
 
 const LINE_NUMBER_URL_HASH_REGEX = /^#line-(.*)$/;
 
-const TopRightButton = styled.button`
+const TopRightSmallButton = styled(Button)`
+  height: inherit;
   position: absolute;
   display: none;
   top: 0;
@@ -45,7 +47,7 @@ const TopRightButton = styled.button`
 `;
 
 const Container = styled.div`
-  &:hover > ${TopRightButton} {
+  &:hover > ${TopRightSmallButton} {
     display: inline-block;
   }
 `;
@@ -90,7 +92,6 @@ const SyntaxHighlighter: FC<Props> = ({ language = defaultLanguage, showLineNumb
   if (value && value.length > 1 && value.endsWith("\n")) {
     valueWithoutTrailingLineBreak = value.substr(0, value.length - 1);
   }
-
   return (
     <Container ref={setContentRef} className="is-relative">
       <ReactSyntaxHighlighter
@@ -101,9 +102,9 @@ const SyntaxHighlighter: FC<Props> = ({ language = defaultLanguage, showLineNumb
       >
         {valueWithoutTrailingLineBreak}
       </ReactSyntaxHighlighter>
-      <TopRightButton className="is-clickable" title={t("syntaxHighlighting.copyButton")} onClick={copy}>
+      <TopRightSmallButton className="is-small" title={t("syntaxHighlighting.copyButton")} action={copy}>
         <i className={copied ? "fa fa-clipboard-check" : "fa fa-clipboard"} />
-      </TopRightButton>
+      </TopRightSmallButton>
     </Container>
   );
 };
