@@ -36,78 +36,158 @@ $light: $grey-dark;
 $scheme-main: #121212;
 $background: $grey-dark;
 //$border:
-$text: $white-ter;
-//$text-strong: $white-bis;
+$text: $grey-lighter;
+$text-strong: $grey-lighter;
 
 $secondary-least: $scheme-main;
 $secondary-less: $black-ter;
-$secondary: $white-bis;
-$secondary-more: $white-ter;
-$secondary-most: $white;
+$secondary: $grey; //TODO farben
+$secondary-more: $grey-light;
+$secondary-most: $white-ter;
 
+$color-invert: $white;
+
+$primary-invert: $white;
+$link-invert: $white;
+$info-invert: $white;
+$success-invert: $white;
+$warning-invert: #583708;
+$danger-invert: $white;
+
+$link-hover-color: $grey;
+$link-focus-color: $grey;
+$link-active-color: $grey;
+
+$border-width: 1px;
+$border-color: $grey-dark;
 
 /*
 https://bulma.io/documentation/overview/colors/
 https://bulma.io/documentation/customize/variables/
 https://bulma.io/documentation/elements/box/
 
-
-$light
-$dark
-
-$black-bis:
-$black-ter:
-$grey-darker:
-$grey-dark:
-$grey-light:
-$grey-lighter:
-$white-ter:
-$white-bis:
- */
-
-/*
-$primary-invert: #050514;
-$link-invert: #050514;
-$link-hover: $white-bis;
-$info-invert: #050514;
-$success-invert: #050514;
-$warning-invert: ;
-$danger-invert: #050514;
-*/
 $navbar-item-color: $grey-lighter;
 $navbar-item-hover-color: $navbar-item-color;
 $navbar-item-active-color: $navbar-item-color;
 
-//$code: lighten($danger, 25%);
+$code: lighten($red, 10%);
+$code-background: lighten($scheme-main, 10%);
+
 /*
 $hr-background-color: $white-bis;
 
 
 $light-gray: #f2f2f2;
-
-$footer-background-color: $black-ter;
-$footer-color: $white-ter;
-
-
-$box-background-color: scale-color($scheme-main, $lightness: 15%);
-$box-background-color: $grey-darker;
-
-$modal-card-head-background-color: $black-ter;
-$modal-card-body-background-color: #17181c;
-
-$input-placeholder-color: $white;
-$input-disabled-color: $white-bis;
-
-$popover-background-color: $grey-dark;
-
-$table-row-hover-background-color: $grey-darker;
-
-$tooltip-background-color: $white-bis;
-$tooltip-background-opacity: 0.9 !default;
-$tooltip-color: $scheme-main;
 */
+$footer-background-color: $black-ter;
+$footer-color: $text;
+
+$box-background-color: lighten($scheme-main, 2.5%);
+$card-background-color: $box-background-color;
+
+  /*
+  $modal-card-head-background-color: $black-ter;
+  $modal-card-body-background-color: #17181c;
+
+  $input-placeholder-color: $white;
+  $input-disabled-color: $white-bis;
+
+  $popover-background-color: $grey-dark;
+
+  $table-row-hover-background-color: $grey-darker;
+
+  $tooltip-background-color: $white-bis;
+  $tooltip-background-opacity: 0.9 !default;
+  $tooltip-color: $scheme-main;
+  */
 @import "utils/_post.scss";
-/*
+
+$dark-75: scale-color($dark, $lightness: -25%);
+$dark-50: scale-color($dark, $lightness: -50%);
+$dark-25: scale-color($dark, $lightness: -75%);
+$info-75: scale-color($info, $lightness: -25%);
+$info-50: scale-color($info, $lightness: -50%);
+$info-25: scale-color($info, $lightness: -75%);
+$link-75: scale-color($link, $lightness: -25%);
+$link-50: scale-color($link, $lightness: -50%);
+$link-25: scale-color($link, $lightness: -75%);
+$primary-75: scale-color($primary, $lightness: -25%);
+$primary-50: scale-color($primary, $lightness: -50%);
+$primary-25: scale-color($primary, $lightness: -75%);
+$success-75: scale-color($success, $lightness: -25%);
+$success-50: scale-color($success, $lightness: -50%);
+$success-25: scale-color($success, $lightness: -75%);
+$warning-75: scale-color($warning, $lightness: -25%);
+$warning-50: scale-color($warning, $lightness: -50%);
+$warning-25: scale-color($warning, $lightness: -75%);
+$danger-75: scale-color($danger, $lightness: -25%);
+$danger-50: scale-color($danger, $lightness: -50%);
+$danger-25: scale-color($danger, $lightness: -75%);
+
+.has-background-dark-75 {
+  background-color: $dark-75;
+}
+.has-background-dark-50 {
+  background-color: $dark-50;
+}
+.has-background-dark-25 {
+  background-color: $dark-25;
+}
+.has-background-info-75 {
+  background-color: $info-75;
+}
+.has-background-info-50 {
+  background-color: $info-50;
+}
+.has-background-info-25 {
+  background-color: $info-25;
+}
+.has-background-link-75 {
+  background-color: $link-75;
+}
+.has-background-link-50 {
+  background-color: $link-50;
+}
+.has-background-link-25 {
+  background-color: $link-25;
+}
+.has-background-primary-75 {
+  background-color: $primary-75;
+}
+.has-background-primary-50 {
+  background-color: $primary-50;
+}
+.has-background-primary-25 {
+  background-color: $primary-25;
+}
+.has-background-success-75 {
+  background-color: $success-75;
+}
+.has-background-success-50 {
+  background-color: $success-50;
+}
+.has-background-success-25 {
+  background-color: $success-25;
+}
+.has-background-warning-75 {
+  background-color: $warning-75;
+}
+.has-background-warning-50 {
+  background-color: $warning-50;
+}
+.has-background-warning-25 {
+  background-color: $warning-25;
+}
+.has-background-danger-75 {
+  background-color: $danger-75;
+}
+.has-background-danger-50 {
+  background-color: $danger-50;
+}
+.has-background-danger-25 {
+  background-color: $danger-25;
+}
+
 :root {
   --scm-secondary-background: #{$scheme-main};
   --scm-secondary-text: #{$white};
@@ -147,7 +227,7 @@ $tooltip-color: $scheme-main;
   --diff-code-selected-background-color: #fffce0;
   --diff-omit-gutter-line-color: #cb2a1d;
 }
-*/
+
 .button {
 /*
   &.is-primary:hover,
@@ -237,17 +317,27 @@ $tooltip-color: $scheme-main;
   */
 }
 
-/*
 .menu-label {
-  color: $scheme-main;
+  color: $text;
 }
 
 .menu-list {
   a {
-    color: $white-ter;
+    color: $text; // text color
+
+    &:hover {
+      background-color: $grey-dark; // grey-dark
+    }
 
     &.is-active {
-      background-color: $scheme-main;
+      color: $blue; // todo ebenfalls blau
+      background-color: $scheme-main; // todo verallgemeinern
+    }
+    > li {
+      border-color: $grey-light;
+    }
+    li:last-child {
+      border-color: $grey-light;
     }
   }
 }
@@ -256,10 +346,10 @@ $tooltip-color: $scheme-main;
 footer.footer {
   background-color: $black-ter;
   a {
-    color: scale-color($link, $lightness: 25%);
+    color: $blue;
   }
 }
-
+/*
 .card {
   border: 1px solid $white-ter;
   box-shadow: none;
@@ -325,50 +415,6 @@ footer.footer {
   }
 }
 
-//diffs
-.diff-code-conflict {
-  background-color: #332900;
-}
-
-.diff-gutter-conflict {
-  background-color: #ffd11a;
-}
-
-.diff-gutter-delete,
-.diff-gutter-insert,
-.diff-gutter-conflict {
-  color: $scheme-main;
-}
-*/
-/* transport meaning with more than color */
-/*td:nth-child(2).diff-gutter-delete:before {
-  content: "-";
-}
-
-td:first-child.diff-gutter-insert:before {
-  content: "+";
-}
-
-td:first-child.diff-gutter-conflict:before {
-  content: "!";
-}
-
-.diff-split td:nth-child(3).diff-gutter-insert:before {
-  content: "+";
-}
-
-.diff-split td:first-child.diff-gutter-delete:before {
-  content: "-";
-}
-
-.diff-split td:nth-child(3).diff-gutter-conflict:before {
-  content: "!";
-}
-
-.diff-decoration-content div {
-  color: $scheme-main;
-}
-
 //inline member tags
 .tag:not(body) {
   border: 1px solid transparent;
@@ -425,67 +471,12 @@ td:first-child.diff-gutter-conflict:before {
     border-left-color: $white-ter;
   }
 }
-
+*/
 //Display darker version of background image
 .has-scm-background {
   background-image: url(images/scmManagerHeroDark.jpg) !important;
 }
-
-.has-text-secondary-least {
-  color: $scheme-main !important;
-}
-a.has-text-secondary-least:hover,
-a.has-text-secondary-least:focus {
-  color: lighten($scheme-main, 10%) !important;
-}
-.has-background-secondary-least {
-  background-color: $scheme-main !important;
-}
-
-.has-text-secondary-less {
-  color: $black-ter !important;
-}
-a.has-text-secondary-less:hover,
-a.has-text-secondary-less:focus {
-  color: lighten($black-ter, 10%) !important;
-}
-.has-background-secondary-less {
-  background-color: $black-ter !important;
-}
-
-.has-text-secondary {
-  color: $white-bis !important;
-}
-a.has-text-secondary:hover,
-a.has-text-secondary:focus {
-  color: lighten($white-bis, 10%) !important;
-}
-.has-background-secondary {
-  background-color: $white-bis !important;
-}
-
-.has-text-secondary-more {
-  color: $white-ter !important;
-}
-a.has-text-secondary-more:hover,
-a.has-text-secondary-more:focus {
-  color: lighten($white-ter, 10%) !important;
-}
-.has-background-secondary-more {
-  background-color: $white-ter !important;
-}
-
-.has-text-secondary-most {
-  color: $white !important;
-}
-a.has-text-secondary-most:hover,
-a.has-text-secondary-most:focus {
-  color: lighten($white, 10%) !important;
-}
-.has-background-secondary-most {
-  background-color: $white !important;
-}
-
+/*
 .has-background-light {
   color: $grey-dark;
 }
