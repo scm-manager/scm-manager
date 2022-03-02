@@ -24,7 +24,7 @@
 
 @import "utils/_pre.scss";
 
-$danger: #e63453;
+$red: #e63453;
 
 $scheme-main: #050514;
 $background: $grey-dark;
@@ -37,7 +37,7 @@ $secondary: $white-bis;
 $secondary-more: $white-ter;
 $secondary-most: $white;
 
-$code: lighten($danger, 25%);
+$code: lighten($red, 25%);
 $primary-invert: #050514;
 $info-invert: #050514;
 $link-invert: #050514;
