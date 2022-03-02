@@ -364,12 +364,12 @@ footer.footer {
     background-color: $white-ter;
   }
 }
-
+*/
 //card tables
 .card-table {
   tr {
     a {
-      color: $white-bis;
+      color: $grey-light;
     }
 
     &:hover {
@@ -386,8 +386,8 @@ footer.footer {
     }
   }
   td {
-    background-color: $grey-dark;
-    border-bottom: 1px solid $grey;
+    background-color: $black-ter;
+    border-bottom: none;
 
     &:first-child {
       border-left-width: 9px;
@@ -400,7 +400,7 @@ footer.footer {
     background-color: $grey-darker;
   }
 }
-
+/*
 // panels
 .panel {
   border-color: $white-bis;
