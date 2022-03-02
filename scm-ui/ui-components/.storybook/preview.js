@@ -87,7 +87,8 @@ export const parameters = {
     default: "light",
     list: [
       { name: "light", color: "#fff" },
-      { name: "highcontrast", color: "#000" },
+      { name: "highcontrast", color: "#050514" },
+      { name: "dark", color: "#121212" },
     ],
   },
 };
