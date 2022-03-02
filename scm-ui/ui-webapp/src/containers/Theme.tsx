@@ -78,7 +78,7 @@ const Theme: FC = () => {
   return (
     <>
       <Subtitle>{t("profile.theme.subtitle")}</Subtitle>
-      <form className="is-flex- is-flex-direction-column" onSubmit={handleSubmit(onSubmit)}>
+      <form className="is-flex is-flex-direction-column" onSubmit={handleSubmit(onSubmit)}>
         {themes.map(theme => {
           const a11yId = createA11yId("theme");
           return (
