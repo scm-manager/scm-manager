@@ -23,6 +23,8 @@
  */
 
 :root {
+  --scm-light-color: #{$light};
+  --scm-dark-color: #{$dark};
   --scm-primary-color: #{$primary};
   --scm-link-color: #{$link};
   --scm-info-color: #{$info};
