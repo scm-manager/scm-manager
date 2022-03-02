@@ -263,9 +263,6 @@ $danger-25: scale-color($danger, $lightness: -75%);
     background-color: $black-ter;
     border-bottom: none;
 
-    &:first-child {
-      border-left-width: 9px;
-    }
     &.is-darker {
       background-color: $grey-dark;
     }
