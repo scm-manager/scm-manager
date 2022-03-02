@@ -50,7 +50,7 @@ const AvatarImage = styled(Image)`
   width: 128px;
   height: 128px;
   padding: 5px;
-  background: white;
+  background: var(--scm-white-color);
   border: 1px solid lightgray;
   border-radius: 50%;
 `;

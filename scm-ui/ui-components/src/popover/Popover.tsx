@@ -56,8 +56,8 @@ const PopoverContainer = styled.div<ContainerProps>`
     top: 100%;
     left: ${props => props.width / 2}px;
     border-color: transparent;
-    border-bottom-color: white;
-    border-left-color: white;
+    border-bottom-color: var(--scm-white-color);
+    border-left-color: var(--scm-white-color);
     border-width: 0.4rem;
     margin-left: -0.4rem;
     margin-top: -0.4rem;
