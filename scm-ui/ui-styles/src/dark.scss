@@ -97,6 +97,8 @@ $input-disabled-color: #7A7A7A;
 // extension
 $popover-background-color: $grey-dark;
 
+$popover-border-color: $grey-dark;
+
 @import "utils/_post.scss";
 
 $dark-75: scale-color($dark, $lightness: -25%);
@@ -233,6 +235,15 @@ $danger-25: scale-color($danger, $lightness: -75%);
     li:last-child {
       border-color: $grey-light;
     }
+  }
+}
+
+//popover
+.popover {
+  border: 1px solid $popover-border-color;
+  &:before {
+    border-bottom-color: $popover-border-color !important;
+    border-left-color: $popover-border-color !important;
   }
 }
 
