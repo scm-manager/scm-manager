@@ -116,7 +116,7 @@
         "description": "„Dunkel“ ist ein entspannteres, dunkles Design"
       },
       "systemdefault": {
-        "displayName": "System default",
+        "displayName": "Systemstandard",
         "description": "Verwendet die Standardeinstellung des Systems"
       }
     }
