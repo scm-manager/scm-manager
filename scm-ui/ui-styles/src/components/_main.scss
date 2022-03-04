@@ -41,6 +41,8 @@
 
   --scm-border-color: #{$border};
   --scm-border: #{$border-width} solid #{$border};
+
+  --scm-popover-border-color: #{$white};
 }
 
 // TODO split into multiple files
