@@ -99,6 +99,8 @@ $popover-background-color: $grey-dark;
 
 $popover-border-color: $grey-dark;
 
+$table-row-hover-background-color: $grey-darker;
+
 @import "utils/_post.scss";
 
 $dark-75: scale-color($dark, $lightness: -25%);
