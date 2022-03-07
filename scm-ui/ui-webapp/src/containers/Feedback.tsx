@@ -30,6 +30,7 @@ import { useTranslation } from "react-i18next";
 import { ApiResult } from "@scm-manager/ui-api";
 import { useQuery } from "react-query";
 import { useThemeState } from "./Theme";
+import { createQueryString } from "@scm-manager/ui-api/src/utils";
 
 type Props = {
   index: IndexResources;
@@ -40,15 +41,10 @@ const useFeedbackUrl = (url: string): ApiResult<HalRepresentation> =>
     refetchOnWindowFocus: false
   });
 
-const createFeedbackFormUrl = (instanceId: string, theme: string, data?: HalRepresentation) => {
+const createFeedbackFormUrl = (instanceId: string, scmVersion: string, theme: string, data?: HalRepresentation) => {
   if (data) {
-    let formUrl = (data?._links.form as Link).href;
-    if ((data?._links.form as Link).templated) {
-      formUrl = formUrl.replace("{page}", encodeURIComponent(""));
-      formUrl = formUrl.replace("{instanceId}", encodeURIComponent(instanceId));
-      formUrl = formUrl.replace("{theme}", encodeURIComponent(theme));
-    }
-    return formUrl;
+    const formUrl = (data?._links.form as Link).href;
+    return `${formUrl}?${createQueryString({ instanceId, scmVersion, theme })}`;
   }
   return "";
 };
@@ -57,7 +53,12 @@ const useFeedback = (index: IndexResources) => {
   const feedbackUrl = (index._links.feedback as Link)?.href || "";
   const { theme } = useThemeState();
   const { data, error, isLoading } = useFeedbackUrl(feedbackUrl);
-  const formUrl = useMemo(() => createFeedbackFormUrl(index.instanceId, theme, data), [theme, data, index.instanceId]);
+  const formUrl = useMemo(() => createFeedbackFormUrl(index.instanceId, index.version, theme, data), [
+    theme,
+    data,
+    index.instanceId,
+    index.version
+  ]);
 
   if (!index._links.feedback || error || isLoading || !formUrl) {
     return {
