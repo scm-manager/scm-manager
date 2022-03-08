@@ -139,7 +139,7 @@ Die Suche unterstützt Sonderzeichen, die Teil der Abfragesyntax sind. Die aktue
 
 &plus; &minus; && || ! ( ) { } [ ] ^ " ~ * ? : &bsol; /
 
-Um diese Zeichen zu nutzen, verwenden Sie das „&bsol;" vor dem jeweiligen Zeichen. Um zum Beispiel nach (1+1):2 zu suchen, verwenden Sie diese Abfrage:
+Um diese Zeichen zu nutzen, verwenden Sie „&bsol;" vor dem jeweiligen Zeichen. Um zum Beispiel nach (1+1):2 zu suchen, verwenden Sie diese Abfrage:
 
 &bsol;(1&bsol;+1&bsol;)&bsol;:2
 
