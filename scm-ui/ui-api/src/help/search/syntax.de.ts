@@ -137,11 +137,11 @@ Die Suche unterstützt die Verwendung von Klammern zur Gruppierung von Begriffen
 
 Die Suche unterstützt Sonderzeichen, die Teil der Abfragesyntax sind. Die aktuellen Sonderzeichen der Liste sind
 
-+ - && || ! ( ) { } [ ] ^ " ~ * ? : \\ /
+&plus; &minus; && || ! ( ) { } [ ] ^ " ~ * ? : &bsol; /
 
-Um diese Zeichen zu nutzen, verwenden Sie das „\\" vor dem jeweiligen Zeichen. Um zum Beispiel nach (1+1):2 zu suchen, verwenden Sie diese Abfrage:
+Um diese Zeichen zu nutzen, verwenden Sie „&bsol;" vor dem jeweiligen Zeichen. Um zum Beispiel nach (1+1):2 zu suchen, verwenden Sie diese Abfrage:
 
-\\(1\\+1\\)\\:2
+&bsol;(1&bsol;+1&bsol;)&bsol;:2
 
 Partiell übersetzt mit www.DeepL.com/Translator (kostenlose Version)
 

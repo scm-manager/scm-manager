@@ -1,0 +1,2 @@
+- type: fixed
+  description: Replace escaped characters in search syntax with html-encoded characters to display syntax and examples ([#1963](https://github.com/scm-manager/scm-manager/pull/1972))
