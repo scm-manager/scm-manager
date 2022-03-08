@@ -1,0 +1,308 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2020-present Cloudogu GmbH and Contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+@import "utils/_pre.scss";
+
+$turquoise: #55abad;
+$blue: #599dad;
+$cyan: $blue;
+$green: #419374;
+$yellow: #ccad5e;
+$red: #ae4e6b;
+$white: $grey-lighter;
+$light: $grey-dark;
+
+$primary-invert: $white;
+$link-invert: $white;
+$info-invert: $white;
+$success-invert: $white;
+$warning-invert: #583708;
+$danger-invert: $white;
+$light-invert: $white;
+$dark-invert: $white;
+
+$scheme-main: #121212;
+$background: $grey-dark;
+
+$border: $grey-dark;
+$border-width: 1px;
+
+$text: $grey-lighter;
+$text-strong: $grey-lighter;
+
+$code: lighten($red, 10%);
+$code-background: lighten($scheme-main, 10%);
+
+$link-hover: $grey;
+$link-focus: $grey;
+$link-active: $grey;
+
+$secondary-least: $scheme-main;
+$secondary-less: $black-ter;
+$secondary: $grey;
+$secondary-more: $grey-light;
+$secondary-most: $white-ter;
+
+// layout
+$footer-background-color: $black-ter;
+$footer-color: $text;
+
+// element
+$box-background-color: lighten($scheme-main, 2.5%);
+
+$button-hover-color: lighten($text-strong, 2.5%);
+$button-active-color: lighten($text-strong, 2.5%);
+
+// component
+$card-background-color: $box-background-color;
+
+$menu-label-color: $text;
+$menu-item-color: $text;
+$menu-item-hover-background-color: $grey-dark;
+
+$modal-card-head-background-color: $black-ter;
+$modal-card-body-background-color: #17181c;
+
+$navbar-item-color: $grey-lighter;
+$navbar-item-hover-color: $navbar-item-color;
+$navbar-item-active-color: $navbar-item-color;
+
+$panel-heading-background-color: $black-ter;
+
+// form
+$input-placeholder-color: $grey-light;
+$input-disabled-color: #7A7A7A;
+
+// extension
+$popover-background-color: $grey-dark;
+$popover-border-color: $grey-dark;
+
+$table-row-hover-background-color: $grey-darker;
+
+@import "utils/_post.scss";
+
+:root {
+  --scm-popover-border-color: #{$popover-border-color};
+}
+
+$dark-75: scale-color($dark, $lightness: -25%);
+$dark-50: scale-color($dark, $lightness: -50%);
+$dark-25: scale-color($dark, $lightness: -75%);
+$info-75: scale-color($info, $lightness: -25%);
+$info-50: scale-color($info, $lightness: -50%);
+$info-25: scale-color($info, $lightness: -75%);
+$link-75: scale-color($link, $lightness: -25%);
+$link-50: scale-color($link, $lightness: -50%);
+$link-25: scale-color($link, $lightness: -75%);
+$primary-75: scale-color($primary, $lightness: -25%);
+$primary-50: scale-color($primary, $lightness: -50%);
+$primary-25: scale-color($primary, $lightness: -75%);
+$success-75: scale-color($success, $lightness: -25%);
+$success-50: scale-color($success, $lightness: -50%);
+$success-25: scale-color($success, $lightness: -75%);
+$warning-75: scale-color($warning, $lightness: -25%);
+$warning-50: scale-color($warning, $lightness: -50%);
+$warning-25: scale-color($warning, $lightness: -75%);
+$danger-75: scale-color($danger, $lightness: -25%);
+$danger-50: scale-color($danger, $lightness: -50%);
+$danger-25: scale-color($danger, $lightness: -75%);
+
+.has-background-dark-75 {
+  background-color: $dark-75;
+}
+.has-background-dark-50 {
+  background-color: $dark-50;
+}
+.has-background-dark-25 {
+  background-color: $dark-25;
+}
+.has-background-info-75 {
+  background-color: $info-75;
+}
+.has-background-info-50 {
+  background-color: $info-50;
+}
+.has-background-info-25 {
+  background-color: $info-25;
+}
+.has-background-link-75 {
+  background-color: $link-75;
+}
+.has-background-link-50 {
+  background-color: $link-50;
+}
+.has-background-link-25 {
+  background-color: $link-25;
+}
+.has-background-primary-75 {
+  background-color: $primary-75;
+}
+.has-background-primary-50 {
+  background-color: $primary-50;
+}
+.has-background-primary-25 {
+  background-color: $primary-25;
+}
+.has-background-success-75 {
+  background-color: $success-75;
+}
+.has-background-success-50 {
+  background-color: $success-50;
+}
+.has-background-success-25 {
+  background-color: $success-25;
+}
+.has-background-warning-75 {
+  background-color: $warning-75;
+}
+.has-background-warning-50 {
+  background-color: $warning-50;
+}
+.has-background-warning-25 {
+  background-color: $warning-25;
+}
+.has-background-danger-75 {
+  background-color: $danger-75;
+}
+.has-background-danger-50 {
+  background-color: $danger-50;
+}
+.has-background-danger-25 {
+  background-color: $danger-25;
+}
+
+:root {
+  --scm-secondary-background: #{$scheme-main};
+  --scm-secondary-text: #{$white};
+  --scm-border: 2px solid #{$white-ter};
+  --scm-hover-color: #{$grey};
+  --scm-column-selection: #{$link-dark};
+
+  --sh-base-color: #{$white};
+  --sh-font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+  --sh-block-background: #{$scheme-main};
+  --sh-inline-code-color: #ff3860;
+  --sh-inline-code-background: #fbe7eb;
+  --sh-comment-color: #9a9a9a;
+  --sh-punctuation-color: #999999;
+  --sh-property-color: #2c99c7;
+  --sh-selector-color: #009dff;
+  --sh-operator-color: #999999;
+  --sh-operator-bg: inherit;
+  --sh-variable-color: #c386ca;
+  --sh-function-color: #ff6181;
+  --sh-keyword-color: #00a984;
+  --sh-selected-color: #{$warning-dark};
+  --sh-highlight-background: #f5f5f5;
+  --sh-highlight-accent: #99d8f3;
+
+  --diff-background-color: #{$scheme-main};
+  --diff-text-color: #{$white-bis};
+  --diff-font-family: Consolas, Courier, monospace;
+  --diff-selection-background-color: #{desaturate(#b3d7ff, 20%)};
+  --diff-gutter-insert-background-color: #{desaturate(#05c71d, 20%)};
+  --diff-gutter-delete-background-color: #{desaturate(#eb7a85, 20%)};
+  --diff-gutter-selected-background-color: #{desaturate(#fffce0, 20%)};
+  --diff-code-insert-background-color: #{desaturate(#05240b, 20%)};
+  --diff-code-delete-background-color: #{desaturate(#230608, 20%)};
+  --diff-code-insert-edit-background-color: #{desaturate(#c0dc91, 20%)};
+  --diff-code-delete-edit-background-color: #{desaturate(#000, 20%)};
+  --diff-code-selected-background-color: #{desaturate(#fffce0, 20%)};
+  --diff-omit-gutter-line-color: #cb2a1d;
+}
+
+.menu-list {
+  a {
+    > li {
+      border-color: $grey-light;
+    }
+    li:last-child {
+      border-color: $grey-light;
+    }
+  }
+}
+
+//popover
+.popover {
+  border: 1px solid $popover-border-color;
+}
+
+.modal-card {
+  border: 1px solid $border;
+
+  & .modal-close,
+  & .delete {
+    background-color: $background;
+  }
+}
+
+.card-table {
+  tr {
+    a {
+      color: $grey-light;
+    }
+
+    &:hover {
+      td {
+        background-color: $grey-darker;
+
+        &.is-darker {
+          background-color: $black-ter;
+        }
+      }
+    }
+  }
+  td {
+    background-color: $black-ter;
+    border-bottom: none;
+
+    &.is-darker {
+      background-color: $grey-dark;
+    }
+  }
+  &.is-hoverable tbody tr:not(.is-selected):hover {
+    background-color: $grey-darker;
+  }
+}
+
+.diff-code-conflict {
+  background-color: #332900;
+}
+
+.diff-gutter-conflict {
+  background-color: #bc9f2a;
+}
+
+.diff-decoration-content div {
+  color: $scheme-main;
+}
+
+//Display darker version of background image
+.has-scm-background {
+  background-image: url(images/scmManagerHeroDark.jpg) !important;
+}
+
+.has-hover-visible:hover {
+  color: $grey !important;
+}

@@ -86,7 +86,7 @@ const AlertsList: FC<Props> = ({ data }) => (
 
 const ShieldNotificationIcon: FC = () => {
   const [t] = useTranslation("commons");
-  return <Icon className="is-size-4" name="shield-alt" color="white" alt={t("alerts.shieldTitle")} />;
+  return <Icon className="is-size-4" name="shield-alt" color="inherit" alt={t("alerts.shieldTitle")} />;
 };
 
 type ComponentAlert = Alert & {

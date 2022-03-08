@@ -891,7 +891,7 @@ exports[`Storyshots Buttons/CreateButton Default 1`] = `
   className="indexstories__Spacing-bpoict-0 ieMGHp"
 >
   <div
-    className="CreateButton__Wrapper-f29oo-0 dIjnOP has-text-centered mt-5 p-4"
+    className="CreateButton__Wrapper-f29oo-0 iODeHj has-text-centered mt-5 p-4"
   >
     <button
       className="button is-primary"
@@ -4682,10 +4682,13 @@ exports[`Storyshots MarkdownView Code without Lang 1`] = `
           </code>
         </pre>
         <button
-          className="SyntaxHighlighter__TopRightButton-ks8t62-0 iyikPX is-clickable"
+          className="button is-default SyntaxHighlighter__TopRightButton-ks8t62-0 dsrTQ is-small"
           onClick={[Function]}
           title="syntaxHighlighting.copyButton"
+          type="button"
         >
+           
+           
           <i
             className="fa fa-clipboard"
           />
@@ -6912,10 +6915,13 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
           </code>
         </pre>
         <button
-          className="SyntaxHighlighter__TopRightButton-ks8t62-0 iyikPX is-clickable"
+          className="button is-default SyntaxHighlighter__TopRightButton-ks8t62-0 dsrTQ is-small"
           onClick={[Function]}
           title="syntaxHighlighting.copyButton"
+          type="button"
         >
+           
+           
           <i
             className="fa fa-clipboard"
           />
@@ -15342,10 +15348,13 @@ exports[`Storyshots MarkdownView Inline Xml 1`] = `
           </code>
         </pre>
         <button
-          className="SyntaxHighlighter__TopRightButton-ks8t62-0 iyikPX is-clickable"
+          className="button is-default SyntaxHighlighter__TopRightButton-ks8t62-0 dsrTQ is-small"
           onClick={[Function]}
           title="syntaxHighlighting.copyButton"
+          type="button"
         >
+           
+           
           <i
             className="fa fa-clipboard"
           />
@@ -17696,10 +17705,13 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
           </code>
         </pre>
         <button
-          className="SyntaxHighlighter__TopRightButton-ks8t62-0 iyikPX is-clickable"
+          className="button is-default SyntaxHighlighter__TopRightButton-ks8t62-0 dsrTQ is-small"
           onClick={[Function]}
           title="syntaxHighlighting.copyButton"
+          type="button"
         >
+           
+           
           <i
             className="fa fa-clipboard"
           />
@@ -19342,10 +19354,13 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
           </code>
         </pre>
         <button
-          className="SyntaxHighlighter__TopRightButton-ks8t62-0 iyikPX is-clickable"
+          className="button is-default SyntaxHighlighter__TopRightButton-ks8t62-0 dsrTQ is-small"
           onClick={[Function]}
           title="syntaxHighlighting.copyButton"
+          type="button"
         >
+           
+           
           <i
             className="fa fa-clipboard"
           />
@@ -24494,7 +24509,7 @@ exports[`Storyshots Repositories/Diff Binaries 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -24510,7 +24525,7 @@ exports[`Storyshots Repositories/Diff Binaries 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -24790,7 +24805,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
                 >
                   <button
                     aria-label="diff.sideBySide"
-                    className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                    className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                     onClick={[Function]}
                   >
                     <i
@@ -24806,7 +24821,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
                 >
                   <button
                     aria-label="diff.fullscreen.open"
-                    className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                    className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                     onClick={[Function]}
                   >
                     <i
@@ -25407,7 +25422,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
                 >
                   <button
                     aria-label="diff.sideBySide"
-                    className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                    className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                     onClick={[Function]}
                   >
                     <i
@@ -25423,7 +25438,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
                 >
                   <button
                     aria-label="diff.fullscreen.open"
-                    className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                    className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                     onClick={[Function]}
                   >
                     <i
@@ -26361,7 +26376,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
                 >
                   <button
                     aria-label="diff.sideBySide"
-                    className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                    className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                     onClick={[Function]}
                   >
                     <i
@@ -26377,7 +26392,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
                 >
                   <button
                     aria-label="diff.fullscreen.open"
-                    className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                    className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                     onClick={[Function]}
                   >
                     <i
@@ -26886,7 +26901,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
                 >
                   <button
                     aria-label="diff.sideBySide"
-                    className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                    className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                     onClick={[Function]}
                   >
                     <i
@@ -26902,7 +26917,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
                 >
                   <button
                     aria-label="diff.fullscreen.open"
-                    className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                    className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                     onClick={[Function]}
                   >
                     <i
@@ -27411,7 +27426,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
                 >
                   <button
                     aria-label="diff.sideBySide"
-                    className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                    className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                     onClick={[Function]}
                   >
                     <i
@@ -27427,7 +27442,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
                 >
                   <button
                     aria-label="diff.fullscreen.open"
-                    className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                    className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                     onClick={[Function]}
                   >
                     <i
@@ -28626,7 +28641,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
                 >
                   <button
                     aria-label="diff.sideBySide"
-                    className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                    className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                     onClick={[Function]}
                   >
                     <i
@@ -28642,7 +28657,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
                 >
                   <button
                     aria-label="diff.fullscreen.open"
-                    className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                    className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                     onClick={[Function]}
                   >
                     <i
@@ -29201,7 +29216,7 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -29217,7 +29232,7 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -29233,7 +29248,7 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
               >
                 <a
                   aria-label="Jump to source"
-                  className="JumpToFileButton__Button-sc-72e4b2-0 fQUHyb button is-clickable"
+                  className="JumpToFileButton__Button-sc-72e4b2-0 isBZNz button is-clickable"
                   href="/repo/hitchhiker/heartOfGold/code/changeset/d21cc6c359270aef2196796f4d96af65f51866dc/src/main/java/com/cloudogu/scm/review/events/EventListener.java/"
                   onClick={[Function]}
                 >
@@ -29252,7 +29267,7 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
               >
                 <a
                   aria-label="Jump to target"
-                  className="JumpToFileButton__Button-sc-72e4b2-0 fQUHyb button is-clickable"
+                  className="JumpToFileButton__Button-sc-72e4b2-0 isBZNz button is-clickable"
                   href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825/src/main/java/com/cloudogu/scm/review/events/EventListener.java"
                   onClick={[Function]}
                 >
@@ -29313,7 +29328,7 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -29329,7 +29344,7 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -29345,7 +29360,7 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
               >
                 <a
                   aria-label="Jump to source"
-                  className="JumpToFileButton__Button-sc-72e4b2-0 fQUHyb button is-clickable"
+                  className="JumpToFileButton__Button-sc-72e4b2-0 isBZNz button is-clickable"
                   href="/repo/hitchhiker/heartOfGold/code/changeset/d21cc6c359270aef2196796f4d96af65f51866dc/src/main/js/ChangeNotification.tsx/"
                   onClick={[Function]}
                 >
@@ -29364,7 +29379,7 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
               >
                 <a
                   aria-label="Jump to target"
-                  className="JumpToFileButton__Button-sc-72e4b2-0 fQUHyb button is-clickable"
+                  className="JumpToFileButton__Button-sc-72e4b2-0 isBZNz button is-clickable"
                   href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825/src/main/js/ChangeNotification.tsx"
                   onClick={[Function]}
                 >
@@ -29425,7 +29440,7 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -29441,7 +29456,7 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -29457,7 +29472,7 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
               >
                 <a
                   aria-label="Jump to source"
-                  className="JumpToFileButton__Button-sc-72e4b2-0 fQUHyb button is-clickable"
+                  className="JumpToFileButton__Button-sc-72e4b2-0 isBZNz button is-clickable"
                   href="/repo/hitchhiker/heartOfGold/code/changeset/d21cc6c359270aef2196796f4d96af65f51866dc/src/main/resources/locales/de/plugins.json/"
                   onClick={[Function]}
                 >
@@ -29476,7 +29491,7 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
               >
                 <a
                   aria-label="Jump to target"
-                  className="JumpToFileButton__Button-sc-72e4b2-0 fQUHyb button is-clickable"
+                  className="JumpToFileButton__Button-sc-72e4b2-0 isBZNz button is-clickable"
                   href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825/src/main/resources/locales/de/plugins.json"
                   onClick={[Function]}
                 >
@@ -29537,7 +29552,7 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -29553,7 +29568,7 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -29569,7 +29584,7 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
               >
                 <a
                   aria-label="Jump to source"
-                  className="JumpToFileButton__Button-sc-72e4b2-0 fQUHyb button is-clickable"
+                  className="JumpToFileButton__Button-sc-72e4b2-0 isBZNz button is-clickable"
                   href="/repo/hitchhiker/heartOfGold/code/changeset/d21cc6c359270aef2196796f4d96af65f51866dc/src/main/resources/locales/en/plugins.json/"
                   onClick={[Function]}
                 >
@@ -29588,7 +29603,7 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
               >
                 <a
                   aria-label="Jump to target"
-                  className="JumpToFileButton__Button-sc-72e4b2-0 fQUHyb button is-clickable"
+                  className="JumpToFileButton__Button-sc-72e4b2-0 isBZNz button is-clickable"
                   href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825/src/main/resources/locales/en/plugins.json"
                   onClick={[Function]}
                 >
@@ -29649,7 +29664,7 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -29665,7 +29680,7 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -29681,7 +29696,7 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
               >
                 <a
                   aria-label="Jump to source"
-                  className="JumpToFileButton__Button-sc-72e4b2-0 fQUHyb button is-clickable"
+                  className="JumpToFileButton__Button-sc-72e4b2-0 isBZNz button is-clickable"
                   href="/repo/hitchhiker/heartOfGold/code/changeset/d21cc6c359270aef2196796f4d96af65f51866dc/src/test/java/com/cloudogu/scm/review/events/ClientTest.java/"
                   onClick={[Function]}
                 >
@@ -29700,7 +29715,7 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
               >
                 <a
                   aria-label="Jump to target"
-                  className="JumpToFileButton__Button-sc-72e4b2-0 fQUHyb button is-clickable"
+                  className="JumpToFileButton__Button-sc-72e4b2-0 isBZNz button is-clickable"
                   href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825/src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
                   onClick={[Function]}
                 >
@@ -29761,7 +29776,7 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -29777,7 +29792,7 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -29793,7 +29808,7 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
               >
                 <a
                   aria-label="Jump to source"
-                  className="JumpToFileButton__Button-sc-72e4b2-0 fQUHyb button is-clickable"
+                  className="JumpToFileButton__Button-sc-72e4b2-0 isBZNz button is-clickable"
                   href="/repo/hitchhiker/heartOfGold/code/changeset/d21cc6c359270aef2196796f4d96af65f51866dc/Main.java/"
                   onClick={[Function]}
                 >
@@ -29812,7 +29827,7 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
               >
                 <a
                   aria-label="Jump to target"
-                  className="JumpToFileButton__Button-sc-72e4b2-0 fQUHyb button is-clickable"
+                  className="JumpToFileButton__Button-sc-72e4b2-0 isBZNz button is-clickable"
                   href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825/Main.java"
                   onClick={[Function]}
                 >
@@ -29882,7 +29897,7 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -29898,7 +29913,7 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -29956,7 +29971,7 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -29972,7 +29987,7 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -30813,7 +30828,7 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -30829,7 +30844,7 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -31266,7 +31281,7 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -31282,7 +31297,7 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -31719,7 +31734,7 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -31735,7 +31750,7 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -31793,7 +31808,7 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -31809,7 +31824,7 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -31957,7 +31972,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -31973,7 +31988,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -32574,7 +32589,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -32590,7 +32605,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -33528,7 +33543,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -33544,7 +33559,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -34053,7 +34068,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -34069,7 +34084,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -34578,7 +34593,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -34594,7 +34609,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -35793,7 +35808,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -35809,7 +35824,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -36367,7 +36382,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -36383,7 +36398,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -36984,7 +36999,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -37000,7 +37015,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -37938,7 +37953,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -37954,7 +37969,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -38463,7 +38478,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -38479,7 +38494,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -38988,7 +39003,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -39004,7 +39019,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -40203,7 +40218,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -40219,7 +40234,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -40777,7 +40792,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -40793,7 +40808,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -41361,7 +41376,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -41377,7 +41392,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -42222,7 +42237,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -42238,7 +42253,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -42679,7 +42694,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -42695,7 +42710,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -43136,7 +43151,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -43152,7 +43167,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -44200,7 +44215,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -44216,7 +44231,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -44741,7 +44756,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -44757,7 +44772,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -44773,7 +44788,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
               >
                 <button
                   aria-label="A skull and crossbones or death's head is a symbol consisting of a human skull and two long bones crossed together under or behind the skull. The design originates in the Late Middle Ages as a symbol of death and especially as a memento mori on tombstones."
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -45337,7 +45352,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -45353,7 +45368,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -45369,7 +45384,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
               >
                 <button
                   aria-label="A skull and crossbones or death's head is a symbol consisting of a human skull and two long bones crossed together under or behind the skull. The design originates in the Late Middle Ages as a symbol of death and especially as a memento mori on tombstones."
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -46210,7 +46225,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -46226,7 +46241,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -46242,7 +46257,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
               >
                 <button
                   aria-label="A skull and crossbones or death's head is a symbol consisting of a human skull and two long bones crossed together under or behind the skull. The design originates in the Late Middle Ages as a symbol of death and especially as a memento mori on tombstones."
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -46679,7 +46694,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -46695,7 +46710,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -46711,7 +46726,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
               >
                 <button
                   aria-label="A skull and crossbones or death's head is a symbol consisting of a human skull and two long bones crossed together under or behind the skull. The design originates in the Late Middle Ages as a symbol of death and especially as a memento mori on tombstones."
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -47148,7 +47163,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -47164,7 +47179,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -47180,7 +47195,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
               >
                 <button
                   aria-label="A skull and crossbones or death's head is a symbol consisting of a human skull and two long bones crossed together under or behind the skull. The design originates in the Late Middle Ages as a symbol of death and especially as a memento mori on tombstones."
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -48224,7 +48239,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -48240,7 +48255,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -48256,7 +48271,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
               >
                 <button
                   aria-label="A skull and crossbones or death's head is a symbol consisting of a human skull and two long bones crossed together under or behind the skull. The design originates in the Late Middle Ages as a symbol of death and especially as a memento mori on tombstones."
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -48777,7 +48792,7 @@ exports[`Storyshots Repositories/Diff Hunks 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -48793,7 +48808,7 @@ exports[`Storyshots Repositories/Diff Hunks 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -49621,7 +49636,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -49637,7 +49652,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -50213,7 +50228,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -50229,7 +50244,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -51082,7 +51097,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -51098,7 +51113,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -51535,7 +51550,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -51551,7 +51566,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -51988,7 +52003,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -52004,7 +52019,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -53048,7 +53063,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -53064,7 +53079,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -53597,7 +53612,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -53613,7 +53628,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -54217,7 +54232,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -54233,7 +54248,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -55136,7 +55151,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -55152,7 +55167,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -55619,7 +55634,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -55635,7 +55650,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -56102,7 +56117,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -56118,7 +56133,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -57238,7 +57253,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -57254,7 +57269,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -57811,7 +57826,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
               >
                 <button
                   aria-label="diff.combined"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -57827,7 +57842,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -58484,7 +58499,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
               >
                 <button
                   aria-label="diff.combined"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -58500,7 +58515,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -59431,7 +59446,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
               >
                 <button
                   aria-label="diff.combined"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -59447,7 +59462,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -59936,7 +59951,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
               >
                 <button
                   aria-label="diff.combined"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -59952,7 +59967,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -60441,7 +60456,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
               >
                 <button
                   aria-label="diff.combined"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -60457,7 +60472,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -61670,7 +61685,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
               >
                 <button
                   aria-label="diff.combined"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -61686,7 +61701,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -62280,7 +62295,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting (Markdown) 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -62296,7 +62311,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting (Markdown) 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -62642,7 +62657,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -62658,7 +62673,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -63222,7 +63237,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -63238,7 +63253,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -64079,7 +64094,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -64095,7 +64110,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -64532,7 +64547,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -64548,7 +64563,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -64985,7 +65000,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -65001,7 +65016,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -66045,7 +66060,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -66061,7 +66076,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -66582,7 +66597,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -66598,7 +66613,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -67199,7 +67214,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -67215,7 +67230,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -68153,7 +68168,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -68169,7 +68184,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -68678,7 +68693,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -68694,7 +68709,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -69203,7 +69218,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -69219,7 +69234,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -70418,7 +70433,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
               >
                 <button
                   aria-label="diff.sideBySide"
-                  className="DiffButton__Button-sc-18d99hb-0 bGQXQi button is-clickable"
+                  className="DiffButton__Button-sc-18d99hb-0 klKizq button is-clickable"
                   onClick={[Function]}
                 >
                   <i
@@ -70434,7 +70449,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
               >
                 <button
                   aria-label="diff.fullscreen.open"
-                  className="OpenInFullscreenButton__Button-hpt3du-0 hUMlbr button"
+                  className="OpenInFullscreenButton__Button-hpt3du-0 groTVv button"
                   onClick={[Function]}
                 >
                   <i
@@ -73751,10 +73766,13 @@ exports[`Storyshots SyntaxHighlighter Go 1`] = `
       </code>
     </pre>
     <button
-      className="SyntaxHighlighter__TopRightButton-ks8t62-0 iyikPX is-clickable"
+      className="button is-default SyntaxHighlighter__TopRightButton-ks8t62-0 dsrTQ is-small"
       onClick={[Function]}
       title="syntaxHighlighting.copyButton"
+      type="button"
     >
+       
+       
       <i
         className="fa fa-clipboard"
       />
@@ -76710,10 +76728,13 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
       </code>
     </pre>
     <button
-      className="SyntaxHighlighter__TopRightButton-ks8t62-0 iyikPX is-clickable"
+      className="button is-default SyntaxHighlighter__TopRightButton-ks8t62-0 dsrTQ is-small"
       onClick={[Function]}
       title="syntaxHighlighting.copyButton"
+      type="button"
     >
+       
+       
       <i
         className="fa fa-clipboard"
       />
@@ -77540,10 +77561,13 @@ exports[`Storyshots SyntaxHighlighter Javascript 1`] = `
       </code>
     </pre>
     <button
-      className="SyntaxHighlighter__TopRightButton-ks8t62-0 iyikPX is-clickable"
+      className="button is-default SyntaxHighlighter__TopRightButton-ks8t62-0 dsrTQ is-small"
       onClick={[Function]}
       title="syntaxHighlighting.copyButton"
+      type="button"
     >
+       
+       
       <i
         className="fa fa-clipboard"
       />
@@ -85696,10 +85720,13 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
       </code>
     </pre>
     <button
-      className="SyntaxHighlighter__TopRightButton-ks8t62-0 iyikPX is-clickable"
+      className="button is-default SyntaxHighlighter__TopRightButton-ks8t62-0 dsrTQ is-small"
       onClick={[Function]}
       title="syntaxHighlighting.copyButton"
+      type="button"
     >
+       
+       
       <i
         className="fa fa-clipboard"
       />
@@ -87190,10 +87217,13 @@ exports[`Storyshots SyntaxHighlighter Python 1`] = `
       </code>
     </pre>
     <button
-      className="SyntaxHighlighter__TopRightButton-ks8t62-0 iyikPX is-clickable"
+      className="button is-default SyntaxHighlighter__TopRightButton-ks8t62-0 dsrTQ is-small"
       onClick={[Function]}
       title="syntaxHighlighting.copyButton"
+      type="button"
     >
+       
+       
       <i
         className="fa fa-clipboard"
       />
@@ -89560,10 +89590,13 @@ exports[`Storyshots SyntaxHighlighter Without line numbers 1`] = `
       </code>
     </pre>
     <button
-      className="SyntaxHighlighter__TopRightButton-ks8t62-0 iyikPX is-clickable"
+      className="button is-default SyntaxHighlighter__TopRightButton-ks8t62-0 dsrTQ is-small"
       onClick={[Function]}
       title="syntaxHighlighting.copyButton"
+      type="button"
     >
+       
+       
       <i
         className="fa fa-clipboard"
       />
@@ -89616,11 +89649,7 @@ exports[`Storyshots Table Default 1`] = `
         className="has-background-success"
       >
         <b
-          style={
-            Object {
-              "color": "red",
-            }
-          }
+          className="has-text-danger"
         >
           McMillan
         </b>
@@ -89641,11 +89670,7 @@ exports[`Storyshots Table Default 1`] = `
         className="has-background-success"
       >
         <b
-          style={
-            Object {
-              "color": "red",
-            }
-          }
+          className="has-text-danger"
         >
           Dent
         </b>
