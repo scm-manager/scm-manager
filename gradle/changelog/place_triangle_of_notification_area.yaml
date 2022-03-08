@@ -1,0 +1,2 @@
+- type: fixed
+  description: Triangle of notifications area points towards bell ([#1971](https://github.com/scm-manager/scm-manager/pull/1971))
