@@ -89649,11 +89649,7 @@ exports[`Storyshots Table Default 1`] = `
         className="has-background-success"
       >
         <b
-          style={
-            Object {
-              "color": "red",
-            }
-          }
+          className="has-text-danger"
         >
           McMillan
         </b>
@@ -89674,11 +89670,7 @@ exports[`Storyshots Table Default 1`] = `
         className="has-background-success"
       >
         <b
-          style={
-            Object {
-              "color": "red",
-            }
-          }
+          className="has-text-danger"
         >
           Dent
         </b>
