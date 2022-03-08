@@ -136,10 +136,10 @@ Search supports using parentheses to group clauses to form sub queries. This can
 
 The search supports escaping special characters that are part of the query syntax. The current list special characters are
 
-&plus; &minus; && || ! ( ) { } [ ] ^ " ~ * ? : &bsol;&bsol; /
+&plus; &minus; && || ! ( ) { } [ ] ^ " ~ * ? : &bsol; /
 
-To escape these characters use the "&bsol;&bsol; " before the character. For example to search for (1+1):2 use the query:
+To escape these characters use the "&bsol;" before the character. For example to search for (1+1):2 use the query:
 
-&bsol;&bsol;(1&bsol;&bsol;+1&bsol;&bsol;)&bsol;&bsol;:2
+&bsol;(1&bsol;+1&bsol;)&bsol;:2
 
 Source: [https://javadoc.io/static/org.apache.lucene/lucene-queryparser/8.9.0/org/apache/lucene/queryparser/classic/package-summary.html#package.description](https://javadoc.io/static/org.apache.lucene/lucene-queryparser/8.9.0/org/apache/lucene/queryparser/classic/package-summary.html#package.description)`;
