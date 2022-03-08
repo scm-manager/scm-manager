@@ -71,12 +71,12 @@ const DropDownMenu = styled.div<DropDownMenuProps>`
     top: -7px; // top padding of dropdown-menu + border-spacing
     transform-origin: center;
     transform: rotate(135deg);
-    
-    @media screen and (max-width: ${devices.mobile.width}px)  {
-        left: 4.6rem;
-      }
 
-    @media screen and (min-width: ${devices.mobile.width + 1}px) and (max-width: ${devices.desktop.width-1}px)  {
+    @media screen and (max-width: ${devices.mobile.width}px) {
+      left: 4.6rem;
+    }
+
+    @media screen and (min-width: ${devices.mobile.width + 1}px) and (max-width: ${devices.desktop.width - 1}px) {
       left: 1.3rem;
     }
 
