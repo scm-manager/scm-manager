@@ -26,8 +26,11 @@ package sonia.scm.repository.spi;
 
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffFormatter;
+import org.eclipse.jgit.errors.AmbiguousObjectException;
+import sonia.scm.NotUniqueRevisionException;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.InternalRepositoryException;
+import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.DiffFile;
 import sonia.scm.repository.api.DiffResult;
 import sonia.scm.repository.api.Hunk;
@@ -58,7 +61,11 @@ public class GitDiffResultCommand extends AbstractGitCommand implements DiffResu
   public DiffResult getDiffResult(DiffResultCommandRequest request) throws IOException {
     org.eclipse.jgit.lib.Repository repository = open();
     int offset = request.getOffset() == null ? 0 : request.getOffset();
-    return new GitDiffResult(repository, Differ.diff(repository, request), offset, request.getLimit());
+    try {
+      return new GitDiffResult(repository, Differ.diff(repository, request), offset, request.getLimit());
+    } catch (AmbiguousObjectException ex) {
+      throw new NotUniqueRevisionException(Repository.class, context.getRepository().getId());
+    }
   }
 
   private class GitDiffResult implements DiffResult {

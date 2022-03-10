@@ -195,6 +195,10 @@
       "displayName": "Nicht gefunden",
       "description": "Der gewünschte Datensatz konnte nicht gefunden werden. Möglicherweise wurde er in einer weiteren Session gelöscht."
     },
+    "9tSzgRvIu1": {
+      "displayName": "Revision nicht einzigartig",
+      "description": "Es gab mehrere Treffer zu dieser Revision. Bitte nutzen Sie eine eindeutige Id."
+    },
     "FtR7UznKU1": {
       "displayName": "Existiert bereits",
       "description": "Ein Datensatz mit den gegebenen Schlüsselwerten existiert bereits."
