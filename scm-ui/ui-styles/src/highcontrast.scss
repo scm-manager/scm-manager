@@ -24,14 +24,20 @@
 
 @import "utils/_pre.scss";
 
-// $text: $white;
+$red: #e63453;
+
 $scheme-main: #050514;
 $background: $grey-dark;
 $text: $white-ter;
 $text-strong: $white-bis;
 
-$danger: #e63453;
-$code: lighten($danger, 25%);
+$secondary-least: $scheme-main;
+$secondary-less: $black-ter;
+$secondary: $white-bis;
+$secondary-more: $white-ter;
+$secondary-most: $white;
+
+$code: lighten($red, 25%);
 $primary-invert: #050514;
 $info-invert: #050514;
 $link-invert: #050514;
@@ -41,7 +47,7 @@ $danger-invert: #050514;
 
 $light-gray: #f2f2f2;
 
-$footer-background-color: $grey-dark;
+$footer-background-color: $black-ter;
 $footer-color: $white-ter;
 
 //make horizontal lines pop more
@@ -49,6 +55,11 @@ $hr-background-color: $white-bis;
 
 $box-background-color: scale-color($scheme-main, $lightness: 15%);
 $box-background-color: $grey-darker;
+
+$menu-label-color: $scheme-main;
+$menu-item-color: $white-ter;
+
+$panel-heading-background-color: $black-ter;
 
 $modal-card-head-background-color: $black-ter;
 $modal-card-body-background-color: $scheme-main;
@@ -64,13 +75,14 @@ $tooltip-background-color: $white-bis;
 $tooltip-background-opacity: 0.9 !default;
 $tooltip-color: $scheme-main;
 
+$border-width: 2px;
+$border: $white-ter;
+
 @import "utils/_post.scss";
 
 :root {
   --scm-secondary-background: #{$scheme-main};
   --scm-secondary-text: #{$white};
-  --scm-border: 2px solid #{$white-ter};
-  --scm-info-color: #{$info};
   --scm-hover-color: #{$grey};
   --scm-column-selection: #{$link-dark};
 
@@ -108,17 +120,6 @@ $tooltip-color: $scheme-main;
 }
 
 .button {
-  &.is-primary,
-  &.is-info,
-  &.is-link,
-  &.is-success,
-  &.is-warning,
-  &.is-danger {
-    &.is-outlined {
-      background-color: inherit;
-    }
-  }
-
   &.is-primary:hover,
   &.is-primary.is-hovered {
     background-color: scale-color($primary, $lightness: -5%);
@@ -205,36 +206,21 @@ $tooltip-color: $scheme-main;
   }
 }
 
-.menu-label {
-  color: $scheme-main;
-}
-
-.menu-list {
-  a {
-    color: $white-ter;
-
-    &.is-active {
-      background-color: $scheme-main;
-    }
-  }
-}
-
 //footer is overwritten in _main.scss
 footer.footer {
-  background-color: $black-ter;
   a {
     color: scale-color($link, $lightness: 25%);
   }
 }
 
 .card {
-  border: 1px solid $white-ter;
+  border: 1px solid $border;
   box-shadow: none;
 }
 
 //card
 .modal-card {
-  border: 1px solid $white-ter;
+  border: 1px solid $border;
 
   & .modal-close,
   & .delete {
@@ -257,9 +243,6 @@ footer.footer {
           background-color: $grey-darker;
         }
       }
-      a {
-        color: $link;
-      }
     }
   }
   td {
@@ -278,18 +261,8 @@ footer.footer {
   }
 }
 
-// panels
 .panel {
   border-color: $white-bis;
-
-  .panel-heading {
-    background-color: $black-ter;
-  }
-
-  .panel-footer {
-    background-color: $black-ter;
-    color: $white-bis;
-  }
 }
 
 //diffs
@@ -338,9 +311,6 @@ td:first-child.diff-gutter-conflict:before {
 
 //inline member tags
 .tag:not(body) {
-  border: 1px solid transparent;
-  background-color: $white;
-
   &.is-delete {
     &::before,
     &::after {
@@ -363,11 +333,6 @@ td:first-child.diff-gutter-conflict:before {
   &.is-light .has-text-link {
     color: scale-color($link, $lightness: -50%) !important;
   }
-
-  //outline-tags
-  &.is-outlined {
-    background-color: $scheme-main;
-  }
 }
 
 //cards receive white border
@@ -376,81 +341,12 @@ td:first-child.diff-gutter-conflict:before {
 }
 
 .popover {
-  border: 1px solid $white-ter;
-
-  &:before {
-    border-bottom-color: $grey-dark;
-    border-left-color: $grey-dark;
-  }
-}
-
-.notifications .dropdown-menu {
-  border: 1px solid $white-ter;
-
-  &:before {
-    border-bottom-color: $white-ter;
-    border-left-color: $white-ter;
-  }
+  border: 1px solid $border;
 }
 
 //Display darker version of background image
 .has-scm-background {
   background-image: url(images/scmManagerHeroDark.jpg) !important;
-}
-
-.has-text-secondary-least {
-  color: $scheme-main !important;
-}
-a.has-text-secondary-least:hover,
-a.has-text-secondary-least:focus {
-  color: lighten($scheme-main, 10%) !important;
-}
-.has-background-secondary-least {
-  background-color: $scheme-main !important;
-}
-
-.has-text-secondary-less {
-  color: $black-ter !important;
-}
-a.has-text-secondary-less:hover,
-a.has-text-secondary-less:focus {
-  color: lighten($black-ter, 10%) !important;
-}
-.has-background-secondary-less {
-  background-color: $black-ter !important;
-}
-
-.has-text-secondary {
-  color: $white-bis !important;
-}
-a.has-text-secondary:hover,
-a.has-text-secondary:focus {
-  color: lighten($white-bis, 10%) !important;
-}
-.has-background-secondary {
-  background-color: $white-bis !important;
-}
-
-.has-text-secondary-more {
-  color: $white-ter !important;
-}
-a.has-text-secondary-more:hover,
-a.has-text-secondary-more:focus {
-  color: lighten($white-ter, 10%) !important;
-}
-.has-background-secondary-more {
-  background-color: $white-ter !important;
-}
-
-.has-text-secondary-most {
-  color: $white !important;
-}
-a.has-text-secondary-most:hover,
-a.has-text-secondary-most:focus {
-  color: lighten($white, 10%) !important;
-}
-.has-background-secondary-most {
-  background-color: $white !important;
 }
 
 .has-background-light {
@@ -461,15 +357,8 @@ a.has-text-secondary-most:focus {
   color: $white-bis !important;
 }
 
-[disabled].textarea::placeholder,
-[disabled].input::placeholder,
-fieldset[disabled] .textarea::placeholder,
-fieldset[disabled] .input::placeholder {
-  color: $white-bis;
-}
-
 .repository-export-info-box {
-  background-color: $high-contrast-info-25;
+  background-color: scale-color($info, $lightness: -75%);
   border: 0.2rem solid;
 }
 

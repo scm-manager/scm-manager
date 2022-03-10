@@ -184,6 +184,7 @@ const TimestampConverter: FC = () => {
     <div className="is-flex">
       <span className="is-flex mr-5">
         <InputField
+          className="m-0"
           value={datetime}
           onChange={setDatetime}
           placeholder={t("search.syntax.utilities.datetime.format")}
@@ -194,27 +195,26 @@ const TimestampConverter: FC = () => {
       </span>
       <span className="is-flex">
         <InputField
-          className="mr-4"
+          className="m-0 mr-4"
           value={timestamp}
           readOnly={true}
           placeholder={t("search.syntax.utilities.timestampPlaceholder")}
         />
-        <StyledTooltip
-          message={t("search.syntax.utilities.copyTimestampTooltip")}
-          className="is-flex is-align-items-center"
-        >
-          {copying ? (
-            <span className="small-loading-spinner" />
-          ) : (
-            <Icon
-              name="clipboard"
-              color="inherit"
-              className="is-size-4 fa-fw is-clickable"
-              onClick={copyTimestamp}
-              alt={t("search.syntax.utilities.copyTimestampTooltip")}
-            />
-          )}
-        </StyledTooltip>
+        <div className="is-flex is-align-items-center">
+          <StyledTooltip message={t("search.syntax.utilities.copyTimestampTooltip")}>
+            {copying ? (
+              <span className="small-loading-spinner" />
+            ) : (
+              <Icon
+                name="clipboard"
+                color="inherit"
+                className="is-size-4 fa-fw is-clickable"
+                onClick={copyTimestamp}
+                alt={t("search.syntax.utilities.copyTimestampTooltip")}
+              />
+            )}
+          </StyledTooltip>
+        </div>
       </span>
     </div>
   );

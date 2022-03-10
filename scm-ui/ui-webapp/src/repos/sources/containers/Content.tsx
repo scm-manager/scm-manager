@@ -42,7 +42,7 @@ type Props = {
 };
 
 const HeaderWrapper = styled.div`
-  border-bottom: solid 1px #dbdbdb;
+  border-bottom: 1px solid var(--scm-border-color);
   font-size: 1.25em;
   font-weight: 300;
   line-height: 1.25;
@@ -50,7 +50,7 @@ const HeaderWrapper = styled.div`
 `;
 
 const BorderBottom = styled.div`
-  border-bottom: solid 1px #dbdbdb;
+  border-bottom: 1px solid var(--scm-border-color);
 `;
 
 const FullWidthTitleHeader = styled.div`

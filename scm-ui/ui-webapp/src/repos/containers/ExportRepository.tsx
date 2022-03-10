@@ -43,7 +43,7 @@ const InfoBox = styled.div`
   white-space: pre-line;
   border-radius: 2px;
   border-left: 0.2rem solid;
-  border-color: #33b2e8;
+  border-color: var(--scm-info-color);
 `;
 
 type Props = {

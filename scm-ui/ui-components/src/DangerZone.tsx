@@ -41,10 +41,9 @@ export const DangerZone = styled.div`
     }
   }
 
-  // TODO ersetzen?
   > *:not(:last-child) {
     padding-bottom: 1.5rem;
-    border-bottom: solid 2px whitesmoke;
+    border-bottom: solid 2px var(--scm-border-color);
   }
   @media screen and (max-width: ${devices.tablet.width}px) {
     .button {

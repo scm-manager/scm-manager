@@ -86,9 +86,9 @@ class InfoBox extends React.Component<Props> {
                 "is-align-items-center"
               )}
             >
-              <Icon className="has-text-blue-light mb-2 fa-2x" name={icon} color="inherit" alt="" />
-              <div className="is-size-4">{t("login." + type)}</div>
-              <div className="is-size-4">{t("login.tip")}</div>
+              <Icon className="mb-2 fa-2x" name={icon} color="white" alt="" />
+              <div className="is-size-4 has-text-white">{t("login." + type)}</div>
+              <div className="is-size-4 has-text-white">{t("login.tip")}</div>
             </FixedSizedIconWrapper>
           </figure>
           {this.renderBody()}

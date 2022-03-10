@@ -30,12 +30,13 @@ type Props = {
   icon: string;
 };
 
-export const headerButtonContentClassName = "is-flex is-align-items-center is-justify-content-flex-start";
+export const headerButtonContentClassName =
+  "is-flex is-align-items-center is-justify-content-flex-start has-text-inherit";
 
 const HeaderButtonContent: FC<Props> = ({ burgerMode, icon, label }) => (
   <>
-    <Icon title={label} name={icon} color="white" className={burgerMode ? "is-size-5" : "is-size-4"} />
-    <span className="has-text-white">{" " + label}</span>
+    <Icon title={label} name={icon} color="inherit" className={burgerMode ? "is-size-5" : "is-size-4"} />
+    <span>{" " + label}</span>
   </>
 );
 

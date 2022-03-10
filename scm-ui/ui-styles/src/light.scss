@@ -23,18 +23,38 @@
  */
 
 @import "utils/_pre.scss";
-// colors defined in variables/commons.scss
-$subtitle-color: #666;
+
 $warning-invert: #88550d;
+
+$border: $grey-lighter;
+$border-width: 1px;
+
+$secondary-least: $white;
+$secondary-less: $white-ter;
+$secondary: $grey-light;
+$secondary-more: $grey-darker;
+$secondary-most: $black;
+
+// layout
+$footer-background-color: $white-ter;
+
+// element
 $button-disabled-opacity: 0.25;
+
+$subtitle-color: #666;
+
+// component
+$menu-label-color: $white;
+$menu-item-color: #333;
+
+// extension
+$popover-background-color: $grey-light;
 
 @import "utils/_post.scss";
 
 :root {
   --scm-secondary-background: #{$white};
   --scm-secondary-text: #{$black};
-  --scm-border: 1px solid #dbdbdb;
-  --scm-info-color: #{$info};
   --scm-hover-color: #{$black-ter};
   --scm-column-selection: #{$link-25};
 
@@ -57,70 +77,29 @@ $button-disabled-opacity: 0.25;
   --sh-highlight-accent: #99d8f3;
 }
 
+.button {
+  &.is-primary,
+  &.is-info,
+  &.is-link,
+  &.is-success,
+  &.is-warning,
+  &.is-danger {
+    &.is-outlined {
+      background-color: $white;
+    }
+  }
+}
+
+footer.footer {
+  a {
+    color: darken($info, 15%);
+  }
+}
+
 .popover:before {
   border-bottom-color: white;
   border-left-color: white;
   box-shadow: -1px 1px 2px rgba(10, 10, 10, 0.2);
-}
-
-.notifications .dropdown-menu:before {
-  border-bottom-color: white;
-  border-left-color: white;
-}
-
-.has-text-secondary-least {
-  color: $white !important;
-}
-a.has-text-secondary-least:hover,
-a.has-text-secondary-least:focus {
-  color: lighten($white, 10%) !important;
-}
-.has-background-secondary-least {
-  background-color: $white !important;
-}
-
-.has-text-secondary-less {
-  color: $white-ter !important;
-}
-a.has-text-secondary-less:hover,
-a.has-text-secondary-less:focus {
-  color: lighten($white-ter, 10%) !important;
-}
-.has-background-secondary-less {
-  background-color: $white-ter !important;
-}
-
-.has-text-secondary {
-  color: $grey-light !important;
-}
-a.has-text-secondary:hover,
-a.has-text-secondary:focus {
-  color: lighten($grey-light, 10%) !important;
-}
-.has-background-secondary {
-  background-color: $grey-light !important;
-}
-
-.has-text-secondary-more {
-  color: $grey-darker !important;
-}
-a.has-text-secondary-more:hover,
-a.has-text-secondary-more:focus {
-  color: lighten($grey-darker, 10%) !important;
-}
-.has-background-secondary-more {
-  background-color: $grey-darker !important;
-}
-
-.has-text-secondary-most {
-  color: $black !important;
-}
-a.has-text-secondary-most:hover,
-a.has-text-secondary-most:focus {
-  color: lighten($black, 10%) !important;
-}
-.has-background-secondary-most {
-  background-color: $black !important;
 }
 
 .has-hover-visible:hover {

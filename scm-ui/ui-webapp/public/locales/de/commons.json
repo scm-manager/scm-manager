@@ -105,11 +105,19 @@
       "submit": "Anwenden",
       "light": {
         "displayName": "Hell",
-        "description": "'Hell' is das Standard-Design des SCM-Managers"
+        "description": "„Hell“ is das Standard-Design des SCM-Managers"
       },
       "highcontrast": {
         "displayName": "Hoher Kontrast",
-        "description": "'Hoher Kontrast' ist ein dunkles Design mit einem hohen Kontrast"
+        "description": "„Hoher Kontrast“ ist ein dunkles Design mit einem hohen Kontrast"
+      },
+      "dark": {
+        "displayName": "Dunkel",
+        "description": "„Dunkel“ ist ein entspannteres, dunkles Design"
+      },
+      "systemdefault": {
+        "displayName": "Systemstandard",
+        "description": "Verwendet die Standardeinstellung des Systems"
       }
     }
   },

@@ -3062,7 +3062,7 @@
     eslint-plugin-react-hooks "^2.1.2"
     jest "^26.6.3"
 
-"@scm-manager/integration-test-runner@^3.0.0":
+"@scm-manager/integration-test-runner@^3.3.0":
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/@scm-manager/integration-test-runner/-/integration-test-runner-3.3.0.tgz#0489a59f308092cfe7398c3263b8cc6cdab58e38"
   integrity sha512-uXgCiKvLkO6IZ4sVhlT0EyrE9fzYnW6VgOVRSLMi20KA9cxb1Rq88RJZC7yV+I4B/Q/rzvLXX1t4PqE6Gs0Oqw==

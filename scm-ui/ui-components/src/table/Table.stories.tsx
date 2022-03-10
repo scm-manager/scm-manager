@@ -62,7 +62,7 @@ storiesOf("Table", module)
           };
         }}
       >
-        {(row: any) => <b style={{ color: "red" }}>{row.lastname}</b>}
+        {(row: any) => <b className="has-text-danger">{row.lastname}</b>}
       </Column>
       <Column header={"E-Mail"}>{(row: any) => <span>{row.email}</span>}</Column>
     </Table>
