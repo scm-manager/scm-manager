@@ -104,8 +104,8 @@ const UserForm: FC<Props> = ({ submitForm, user, loading }) => {
 
   const passwordChangeField = (
     <PasswordConfirmation
-      passwordChanged={password => {
-        setPasswordValid(!!password && passwordValid);
+      passwordChanged={(password, isPasswordValid) => {
+        setPasswordValid(isPasswordValid);
         setUserState({ ...userState, password });
       }}
     />
@@ -126,6 +126,7 @@ const UserForm: FC<Props> = ({ submitForm, user, loading }) => {
           validationError={nameValidationError}
           errorMessage={t("validation.name-invalid")}
           helpText={t("help.usernameHelpText")}
+          testId="input-username"
         />
       </div>
     );
@@ -151,6 +152,7 @@ const UserForm: FC<Props> = ({ submitForm, user, loading }) => {
               validationError={displayNameValidationError}
               errorMessage={t("validation.displayname-invalid")}
               helpText={t("help.displayNameHelpText")}
+              testId="input-displayname"
             />
           </div>
           <div className="column is-half">
@@ -164,6 +166,7 @@ const UserForm: FC<Props> = ({ submitForm, user, loading }) => {
               validationError={mailValidationError}
               errorMessage={t("validation.mail-invalid")}
               helpText={t("help.mailHelpText")}
+              testId="input-mail"
             />
           </div>
         </div>

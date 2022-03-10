@@ -41,8 +41,8 @@ const useFeedbackUrl = (url: string): ApiResult<HalRepresentation> =>
   });
 
 const createFeedbackFormUrl = (instanceId: string, scmVersion: string, theme: string, data?: HalRepresentation) => {
-  if (data) {
-    const formUrl = (data?._links.form as Link).href;
+  if (data?._links?.form) {
+    const formUrl = (data._links.form as Link).href;
     return `${formUrl}?${createQueryString({ instanceId, scmVersion, theme })}`;
   }
   return "";
