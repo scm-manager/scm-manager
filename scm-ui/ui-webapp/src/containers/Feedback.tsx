@@ -112,7 +112,7 @@ type FormProps = {
 };
 
 const FeedbackWrapper = styled.div`
-  height: 40rem;
+  height: 45rem;
   width: auto;
 `;
 
