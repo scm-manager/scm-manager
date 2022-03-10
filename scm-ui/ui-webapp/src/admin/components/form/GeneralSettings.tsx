@@ -42,6 +42,7 @@ type Props = {
   anonymousMode: AnonymousMode;
   skipFailedAuthenticators: boolean;
   alertsUrl: string;
+  feedbackUrl: string;
   releaseFeedUrl: string;
   mailDomainName: string;
   enabledXsrfProtection: boolean;
@@ -59,6 +60,7 @@ const GeneralSettings: FC<Props> = ({
   loginInfoUrl,
   anonymousMode,
   alertsUrl,
+  feedbackUrl,
   releaseFeedUrl,
   mailDomainName,
   enabledXsrfProtection,
@@ -93,6 +95,9 @@ const GeneralSettings: FC<Props> = ({
   };
   const handleAlertsUrlChange = (value: string) => {
     onChange(true, value, "alertsUrl");
+  };
+  const handleFeedbackUrlChange = (value: string) => {
+    onChange(true, value, "feedbackUrl");
   };
   const handleReleaseFeedUrlChange = (value: string) => {
     onChange(true, value, "releaseFeedUrl");
@@ -228,6 +233,17 @@ const GeneralSettings: FC<Props> = ({
             value={releaseFeedUrl}
             disabled={!hasUpdatePermission}
             helpText={t("help.releaseFeedUrlHelpText")}
+          />
+        </div>
+      </div>
+      <div className="columns">
+        <div className="column is-full">
+          <InputField
+            label={t("general-settings.feedback-url")}
+            onChange={handleFeedbackUrlChange}
+            value={feedbackUrl}
+            disabled={!hasUpdatePermission}
+            helpText={t("help.feedbackUrlHelpText")}
           />
         </div>
       </div>
