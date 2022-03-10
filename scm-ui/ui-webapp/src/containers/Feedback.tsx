@@ -27,10 +27,9 @@ import styled from "styled-components";
 import { apiClient, Button, Modal } from "@scm-manager/ui-components";
 import { HalRepresentation, IndexResources, Link } from "@scm-manager/ui-types";
 import { useTranslation } from "react-i18next";
-import { ApiResult } from "@scm-manager/ui-api";
+import { ApiResult, createQueryString } from "@scm-manager/ui-api";
 import { useQuery } from "react-query";
 import { useThemeState } from "./Theme";
-import { createQueryString } from "@scm-manager/ui-api/src/utils";
 
 type Props = {
   index: IndexResources;
