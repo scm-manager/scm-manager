@@ -26,6 +26,7 @@ import { Embedded, Links } from "./hal";
 
 export type IndexResources = {
   version: string;
+  instanceId: string;
   initialization?: string;
   _links: Links;
   _embedded?: Embedded;

@@ -31,7 +31,7 @@ import classNames from "classnames";
 
 const LS_KEY = "scm.theme";
 
-const useThemeState = () => {
+export const useThemeState = () => {
   const [theme] = useState(localStorage.getItem(LS_KEY) || "systemdefault");
   const [isLoading, setLoading] = useState(false);
 

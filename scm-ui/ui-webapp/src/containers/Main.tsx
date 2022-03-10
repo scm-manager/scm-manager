@@ -57,7 +57,6 @@ const Search = React.lazy(() => import("../search/Search"));
 const Syntax = React.lazy(() => import("../search/Syntax"));
 const ExternalError = React.lazy(() => import("./ExternalError"));
 
-
 type Props = {
   me: Me;
   authenticated?: boolean;

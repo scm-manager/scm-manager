@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.32.0] - 2022-03-10
+### Added
+- Enhanced contributor api ([#1966](https://github.com/scm-manager/scm-manager/pull/1966))
+- Add feedback button and form ([#1967](https://github.com/scm-manager/scm-manager/pull/1967))
+- Introduce darkmode theme ([#1969](https://github.com/scm-manager/scm-manager/pull/1969))
+
+### Fixed
+- Branch decoding in overview ([#1963](https://github.com/scm-manager/scm-manager/pull/1963))
+- Replace escaped characters in search syntax with html-encoded characters to display syntax and examples ([#1963](https://github.com/scm-manager/scm-manager/pull/1972))
+- Triangle of notifications area points towards bell ([#1971](https://github.com/scm-manager/scm-manager/pull/1971))
+- Do not redirect after simple data updates ([#1965](https://github.com/scm-manager/scm-manager/pull/1965))
+
+### Changed
+- Split frontend code by routes ([#1955](https://github.com/scm-manager/scm-manager/pull/1955))
+- Enhance ui-elements to be more accessible on smaller screens ([#1950](https://github.com/scm-manager/scm-manager/pull/1950))
+- Default theme is selected according to system defaults ([#1969](https://github.com/scm-manager/scm-manager/pull/1969))
+
 ## [2.31.1] - 2022-02-21
 ### Fixed
 - Fix ClassNotFoundException on startup ([#1958](https://github.com/scm-manager/scm-manager/issues/1958))
@@ -960,3 +977,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.30.1]: https://scm-manager.org/download/2.30.1
 [2.31.0]: https://scm-manager.org/download/2.31.0
 [2.31.1]: https://scm-manager.org/download/2.31.1
+[2.32.0]: https://scm-manager.org/download/2.32.0

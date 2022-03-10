@@ -52,7 +52,7 @@ describe("ApiProvider tests", () => {
     });
 
     if (result.current?.onIndexFetched) {
-      result.current.onIndexFetched({ version: "a.b.c", _links: {} });
+      result.current.onIndexFetched({ version: "a.b.c", _links: {}, instanceId: "123" });
     }
 
     expect(msg!).toEqual("hello");
