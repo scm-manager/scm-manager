@@ -1,0 +1,2 @@
+- type: fixed
+  description: Throw more specific exception if revisions are ambiguous ([#1974](https://github.com/scm-manager/scm-manager/pull/1974))
