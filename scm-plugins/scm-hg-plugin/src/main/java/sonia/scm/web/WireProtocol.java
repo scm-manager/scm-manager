@@ -51,7 +51,9 @@ public final class WireProtocol {
     "batch", "between", "branchmap", "branches", "capabilities", "changegroup", "changegroupsubset", "clonebundles",
     "getbundle", "heads", "hello", "listkeys", "lookup", "known", "stream_out",
     // could not find lheads in the wireprotocol description but mercurial 4.5.2 uses it for clone
-    "lheads"
+    "lheads",
+    // For HG Evolve Extension
+    "evoext_obshashrange_v1"
   );
 
   private static final Set<String> WRITE_COMMANDS = ImmutableSet.of(
