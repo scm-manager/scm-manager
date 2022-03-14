@@ -61,10 +61,12 @@ pipeline {
 
     stage('Check') {
       steps {
-        withCheckEnvironment {
-          gradle 'check'
+        catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+            withCheckEnvironment {
+              gradle 'check'
+            }
+            junit allowEmptyResults: true, testResults: '**/build/test-results/test/TEST-*.xml,**/build/test-results/tests/test/TEST-*.xml,**/build/jest-reports/TEST-*.xml'
         }
-        junit allowEmptyResults: true, testResults: '**/build/test-results/test/TEST-*.xml,**/build/test-results/tests/test/TEST-*.xml,**/build/jest-reports/TEST-*.xml'
       }
     }
 

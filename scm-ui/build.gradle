@@ -44,7 +44,7 @@ task typecheck(type: YarnTask) {
     include 'ui-*/**/*.ts'
     include 'ui-*/**/*.tsx'
   })
-  .withPathSensitivity(PathSensitivity.RELATIVE)
+    .withPathSensitivity(PathSensitivity.RELATIVE)
   outputs.file('build/tmp/typecheck/marker')
   dependsOn('yarn_install')
   doLast {
@@ -84,7 +84,7 @@ task test(type: YarnTask) {
     include 'ui-*/**/*.ts'
     include 'ui-*/**/*.tsx'
   })
-  .withPathSensitivity(PathSensitivity.RELATIVE)
+    .withPathSensitivity(PathSensitivity.RELATIVE)
   outputs.dir('build/jest-reports')
 
   if (project.isCI) {
@@ -101,7 +101,7 @@ task chromatic(type: YarnTask) {
     include 'ui-components/src/**'
     include 'ui-components/.storybook/**'
   })
-  .withPathSensitivity(PathSensitivity.RELATIVE)
+    .withPathSensitivity(PathSensitivity.RELATIVE)
   outputs.file('build/tmp/chromatic/marker')
 
   enabled = System.getenv('CHROMATIC_PROJECT_TOKEN') != null
@@ -129,7 +129,7 @@ yarn_install {
   inputs.files(fileTree(project.projectDir) {
     include 'ui-*/package.json'
   })
-  .withPathSensitivity(PathSensitivity.RELATIVE)
+    .withPathSensitivity(PathSensitivity.RELATIVE)
 
   inputs.file(new File(project.rootProject.projectDir, 'package.json'))
   inputs.file(new File(project.rootProject.projectDir, 'yarn.lock'))
@@ -156,7 +156,7 @@ task bundle(type: YarnTask) {
     exclude '**/*.test.ts'
     exclude '**/*.test.tsx'
   })
-  .withPathSensitivity(PathSensitivity.RELATIVE)
+    .withPathSensitivity(PathSensitivity.RELATIVE)
   outputs.dir('build/assets')
   dependsOn('yarn_install')
 }
