@@ -47,7 +47,7 @@ export const useBranches = (repository: Repository): ApiResult<BranchCollection>
     () => apiClient.get(link).then(response => response.json()),
     {
       onSuccess: () => {
-        return queryClient.invalidateQueries(branchQueryKey(repository, "details"));
+        return queryClient.invalidateQueries(branchDetailsQueryKey(repository));
       }
     }
     // we do not populate the cache for a single branch,
@@ -79,10 +79,7 @@ function chunkBranches(branches: Branch[]) {
   return chunks;
 }
 
-const branchDetailsQueryKey = (
-  repository: NamespaceAndName,
-  branch: string | undefined = undefined
-) => {
+const branchDetailsQueryKey = (repository: NamespaceAndName, branch: string | undefined = undefined) => {
   let branchName;
   if (!branch) {
     branchName = "_";
