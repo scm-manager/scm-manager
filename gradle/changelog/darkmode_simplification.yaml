@@ -1,0 +1,2 @@
+- type: fixed
+  description: Improve structure of variables in scss ([#1976](https://github.com/scm-manager/scm-manager/pull/1976))
