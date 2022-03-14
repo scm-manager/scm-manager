@@ -192,7 +192,6 @@ $danger-25: scale-color($danger, $lightness: -75%);
 :root {
   --scm-secondary-background: #{$scheme-main};
   --scm-secondary-text: #{$white};
-  --scm-border: 2px solid #{$white-ter};
   --scm-hover-color: #{$grey};
   --scm-column-selection: #{$link-dark};
 
