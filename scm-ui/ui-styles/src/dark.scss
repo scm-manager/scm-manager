@@ -24,6 +24,7 @@
 
 @import "utils/_pre.scss";
 
+/* Base */
 $turquoise: #55abad;
 $blue: #599dad;
 $cyan: $blue;
@@ -64,17 +65,19 @@ $secondary: $grey;
 $secondary-more: $grey-light;
 $secondary-most: $white-ter;
 
-// layout
+/* Layout */
 $footer-background-color: $black-ter;
 $footer-color: $text;
 
-// element
+/* Elements */
 $box-background-color: lighten($scheme-main, 2.5%);
 
 $button-hover-color: lighten($text-strong, 2.5%);
 $button-active-color: lighten($text-strong, 2.5%);
 
-// component
+$table-row-hover-background-color: $grey-darker;
+
+/* Components */
 $card-background-color: $box-background-color;
 
 $menu-label-color: $text;
@@ -90,15 +93,13 @@ $navbar-item-active-color: $navbar-item-color;
 
 $panel-heading-background-color: $black-ter;
 
-// form
+/* Form */
 $input-placeholder-color: $grey-light;
 $input-disabled-color: #7A7A7A;
 
-// extension
+/* Extensions */
 $popover-background-color: $grey-dark;
 $popover-border-color: $grey-dark;
-
-$table-row-hover-background-color: $grey-darker;
 
 @import "utils/_post.scss";
 

@@ -24,12 +24,31 @@
 
 @import "utils/_pre.scss";
 
+/* Base */
 $red: #e63453;
+
+$light-gray: #f2f2f2;
+
+$primary-invert: #050514;
+$link-invert: #050514;
+$info-invert: #050514;
+$success-invert: #050514;
+$danger-invert: #050514;
 
 $scheme-main: #050514;
 $background: $grey-dark;
+
+$border: $white-ter;
+$border-width: 2px;
+
 $text: $white-ter;
 $text-strong: $white-bis;
+
+$code: lighten($red, 25%);
+
+$link-hover: $white-bis;
+
+$hr-background-color: $white-bis;
 
 $secondary-least: $scheme-main;
 $secondary-less: $black-ter;
@@ -37,46 +56,34 @@ $secondary: $white-bis;
 $secondary-more: $white-ter;
 $secondary-most: $white;
 
-$code: lighten($red, 25%);
-$primary-invert: #050514;
-$info-invert: #050514;
-$link-invert: #050514;
-$link-hover: $white-bis;
-$success-invert: #050514;
-$danger-invert: #050514;
-
-$light-gray: #f2f2f2;
-
+/* Layout */
 $footer-background-color: $black-ter;
 $footer-color: $white-ter;
 
-//make horizontal lines pop more
-$hr-background-color: $white-bis;
-
-$box-background-color: scale-color($scheme-main, $lightness: 15%);
+/* Elements */
 $box-background-color: $grey-darker;
 
+$table-row-hover-background-color: $grey-darker;
+
+/* Components */
 $menu-label-color: $scheme-main;
 $menu-item-color: $white-ter;
-
-$panel-heading-background-color: $black-ter;
 
 $modal-card-head-background-color: $black-ter;
 $modal-card-body-background-color: $scheme-main;
 
+$panel-heading-background-color: $black-ter;
+
+/* Form */
 $input-placeholder-color: $white;
 $input-disabled-color: $white-bis;
 
+/* Extensions */
 $popover-background-color: $grey-dark;
-
-$table-row-hover-background-color: $grey-darker;
 
 $tooltip-background-color: $white-bis;
 $tooltip-background-opacity: 0.9 !default;
 $tooltip-color: $scheme-main;
-
-$border-width: 2px;
-$border: $white-ter;
 
 @import "utils/_post.scss";
 
