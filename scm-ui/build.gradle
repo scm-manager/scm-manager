@@ -88,7 +88,6 @@ task test(type: YarnTask) {
   outputs.dir('build/jest-reports')
 
   if (project.isCI) {
-    ignoreExitValue = project.isCI
     dependsOn('yarn_install', 'updateUiTestTimestamps')
   } else {
     dependsOn('yarn_install')
