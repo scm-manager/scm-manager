@@ -195,6 +195,10 @@
       "displayName": "Not found",
       "description": "The requested entity could not be found. It may have been deleted in another session."
     },
+    "9tSzgRvIu1": {
+      "displayName": "Not unique revision",
+      "description": "This revision is ambiguous. Please use an unique identifier."
+    },
     "FtR7UznKU1": {
       "displayName": "Already exists",
       "description": "There is already an entity with the same key values."
