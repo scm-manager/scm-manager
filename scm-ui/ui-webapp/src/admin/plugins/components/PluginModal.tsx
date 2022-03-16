@@ -129,7 +129,7 @@ const PluginModal: FC<Props> = ({ onClose, pluginAction, plugin }) => {
 
   const renderDependencies = () => {
     let dependencies = null;
-    if (plugin.dependencies && plugin.dependencies.length > 0) {
+    if (pluginAction !== PluginAction.UNINSTALL && plugin.dependencies && plugin.dependencies.length > 0) {
       dependencies = (
         <div className="media">
           <Notification type="warning">
@@ -148,7 +148,11 @@ const PluginModal: FC<Props> = ({ onClose, pluginAction, plugin }) => {
 
   const renderOptionalDependencies = () => {
     let optionalDependencies = null;
-    if (plugin.optionalDependencies && plugin.optionalDependencies.length > 0) {
+    if (
+      pluginAction !== PluginAction.UNINSTALL &&
+      plugin.optionalDependencies &&
+      plugin.optionalDependencies.length > 0
+    ) {
       optionalDependencies = (
         <div className="media">
           <Notification type="warning">

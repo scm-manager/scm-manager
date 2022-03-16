@@ -1,0 +1,2 @@
+- type: fixed
+  description: Hide plugin dependencies on uninstall ([#1977](https://github.com/scm-manager/scm-manager/pull/1977))
