@@ -61,7 +61,7 @@ pipeline {
 
     stage('Check') {
       steps {
-        catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+        catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
             withCheckEnvironment {
               gradle 'check'
             }
