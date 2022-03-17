@@ -1,0 +1,2 @@
+- type: fixed
+  description: Remove plugin center login without url ([#1978](https://github.com/scm-manager/scm-manager/pull/1978))
