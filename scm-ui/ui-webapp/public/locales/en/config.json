@@ -21,7 +21,8 @@
       "authenticate": "Authenticate",
       "authenticated": "Plugin Center is authenticated as <0 />",
       "subjectTooltip": "Authenticated by {{ principal }} {{ ago }}",
-      "logout": "Logout"
+      "logout": "Logout",
+      "notConfiguredHint": "Authentication URL is not configured"
     }
   },
   "proxySettings": {

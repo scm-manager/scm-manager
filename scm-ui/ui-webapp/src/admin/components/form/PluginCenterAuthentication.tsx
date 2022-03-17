@@ -82,6 +82,18 @@ const AuthenticatedInfo: FC<Props> = ({ authenticationInfo }) => {
   );
 };
 
+const LoginButtonOrConfigurationHint: FC<{ link: Link | undefined }> = ({ link }) => {
+  const [t] = useTranslation("config");
+  if (link) {
+    return (
+      <Button color="primary" link={link.href}>
+        {t("pluginSettings.auth.authenticate")}
+      </Button>
+    );
+  }
+  return <Message>{t("pluginSettings.auth.notConfiguredHint")}</Message>
+};
+
 const PluginCenterAuthentication: FC = () => {
   const { data, isLoading, error } = usePluginCenterAuthInfo();
   const [t] = useTranslation("config");
@@ -110,11 +122,7 @@ const PluginCenterAuthentication: FC = () => {
   return (
     <Notification type="inherit" className="is-flex is-justify-content-space-between is-align-content-center">
       <Message>{t("pluginSettings.auth.notAuthenticated")}</Message>
-      {data._links.login ? (
-        <Button color="primary" link={(data._links.login as Link).href}>
-          {t("pluginSettings.auth.authenticate")}
-        </Button>
-      ) : null}
+      <LoginButtonOrConfigurationHint link={data._links.login as Link} />
     </Notification>
   );
 };

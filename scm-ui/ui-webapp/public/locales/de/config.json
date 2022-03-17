@@ -21,7 +21,8 @@
       "authenticate": "Authentifizieren",
       "authenticated": "Das Plugin Center ist als <0 /> authentifiziert",
       "subjectTooltip": "Authentifiziert als {{ principal }} {{ ago }}",
-      "logout": "Abmelden"
+      "logout": "Abmelden",
+      "notConfiguredHint": "Authentifizierungs URL ist nicht gesetzt"
     }
   },
   "proxySettings": {
