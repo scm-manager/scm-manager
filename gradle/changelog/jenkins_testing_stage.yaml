@@ -1,0 +1,2 @@
+- type: fixed
+  description: Do not ignore ui test results on Jenkins ([#1975](https://github.com/scm-manager/scm-manager/pull/1975))
