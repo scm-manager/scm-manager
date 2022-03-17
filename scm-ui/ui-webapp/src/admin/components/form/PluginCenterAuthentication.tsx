@@ -91,7 +91,7 @@ const LoginButtonOrConfigurationHint: FC<{ link: Link | undefined }> = ({ link }
       </Button>
     );
   }
-  return <Message>{t("pluginSettings.auth.notConfiguredHint")}</Message>
+  return <Message>{t("pluginSettings.auth.notConfiguredHint")}</Message>;
 };
 
 const PluginCenterAuthentication: FC = () => {
