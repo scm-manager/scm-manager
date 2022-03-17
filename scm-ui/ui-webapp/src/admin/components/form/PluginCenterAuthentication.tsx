@@ -26,7 +26,6 @@ import React, { FC } from "react";
 import { usePluginCenterAuthInfo, usePluginCenterLogout } from "@scm-manager/ui-api";
 import { Button, ErrorNotification, Notification, Tooltip, useDateFormatter } from "@scm-manager/ui-components";
 import { Link, PluginCenterAuthenticationInfo } from "@scm-manager/ui-types";
-import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { Trans, useTranslation } from "react-i18next";
 
@@ -85,7 +84,6 @@ const AuthenticatedInfo: FC<Props> = ({ authenticationInfo }) => {
 
 const PluginCenterAuthentication: FC = () => {
   const { data, isLoading, error } = usePluginCenterAuthInfo();
-  const location = useLocation();
   const [t] = useTranslation("config");
 
   if (isLoading) {
@@ -113,7 +111,7 @@ const PluginCenterAuthentication: FC = () => {
     <Notification type="inherit" className="is-flex is-justify-content-space-between is-align-content-center">
       <Message>{t("pluginSettings.auth.notAuthenticated")}</Message>
       {data._links.login ? (
-        <Button color="primary" link={(data._links.login as Link).href + "?source=" + location.pathname}>
+        <Button color="primary" link={(data._links.login as Link).href}>
           {t("pluginSettings.auth.authenticate")}
         </Button>
       ) : null}
