@@ -82,16 +82,13 @@ const AuthenticatedInfo: FC<Props> = ({ authenticationInfo }) => {
   );
 };
 
-const LoginButtonOrConfigurationHint: FC<{ link: Link | undefined }> = ({ link }) => {
+const LoginButton: FC<{ link: Link }> = ({ link }) => {
   const [t] = useTranslation("config");
-  if (link) {
-    return (
-      <Button color="primary" link={link.href}>
-        {t("pluginSettings.auth.authenticate")}
-      </Button>
-    );
-  }
-  return <Message>{t("pluginSettings.auth.notConfiguredHint")}</Message>;
+  return (
+    <Button color="primary" link={link.href}>
+      {t("pluginSettings.auth.authenticate")}
+    </Button>
+  );
 };
 
 const PluginCenterAuthentication: FC = () => {
@@ -119,12 +116,16 @@ const PluginCenterAuthentication: FC = () => {
     return <AuthenticatedInfo authenticationInfo={data} />;
   }
 
-  return (
-    <Notification type="inherit" className="is-flex is-justify-content-space-between is-align-content-center">
-      <Message>{t("pluginSettings.auth.notAuthenticated")}</Message>
-      <LoginButtonOrConfigurationHint link={data._links.login as Link} />
-    </Notification>
-  );
+  if (data._links.login) {
+    return (
+      <Notification type="inherit" className="is-flex is-justify-content-space-between is-align-content-center">
+        <Message>{t("pluginSettings.auth.notAuthenticated")}</Message>
+        <LoginButton link={data._links.login as Link} />
+      </Notification>
+    );
+  } else {
+    return null;
+  }
 };
 
 export default PluginCenterAuthentication;
