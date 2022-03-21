@@ -29,13 +29,13 @@ import styled from "styled-components";
 import { Alert } from "@scm-manager/ui-types";
 import { DateFromNow, Icon } from "@scm-manager/ui-components";
 import { useAlerts } from "@scm-manager/ui-api";
-import HeaderDropDown, { Column, NonWrappingColumn, Table } from "../components/HeaderDropDown";
+import HeaderDropDown, { Column, OnlyMobileWrappingColumn, Table } from "../components/HeaderDropDown";
 
 const FullHeightTable = styled(Table)`
   height: 100%;
 `;
 
-const RightColumn = styled(NonWrappingColumn)`
+const RightColumn = styled(OnlyMobileWrappingColumn)`
   height: 100%;
 `;
 
@@ -86,7 +86,7 @@ const AlertsList: FC<Props> = ({ data }) => (
 
 const ShieldNotificationIcon: FC = () => {
   const [t] = useTranslation("commons");
-  return <Icon className="is-size-4" name="shield-alt" color="white" alt={t("alerts.shieldTitle")} />;
+  return <Icon className="is-size-4" name="shield-alt" color="inherit" alt={t("alerts.shieldTitle")} />;
 };
 
 type ComponentAlert = Alert & {

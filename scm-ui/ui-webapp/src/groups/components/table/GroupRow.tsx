@@ -26,6 +26,7 @@ import { WithTranslation, withTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { Group } from "@scm-manager/ui-types";
 import { Icon } from "@scm-manager/ui-components";
+import classNames from "classnames";
 
 type Props = WithTranslation & {
   group: Group;
@@ -47,10 +48,10 @@ class GroupRow extends React.Component<Props> {
 
     return (
       <tr>
-        <td>
+        <td className="is-word-break">
           {iconType} {this.renderLink(to, group.name)}
         </td>
-        <td className="is-hidden-mobile">{group.description}</td>
+        <td className={classNames("is-hidden-mobile", "is-word-break")}>{group.description}</td>
       </tr>
     );
   }

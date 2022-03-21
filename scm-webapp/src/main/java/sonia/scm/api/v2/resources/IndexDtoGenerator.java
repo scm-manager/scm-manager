@@ -150,12 +150,15 @@ public class IndexDtoGenerator extends HalAppenderMapper {
       if (!Strings.isNullOrEmpty(configuration.getAlertsUrl())) {
         builder.single(link("alerts", resourceLinks.alerts().get()));
       }
+      if (!Strings.isNullOrEmpty(configuration.getFeedbackUrl())) {
+        builder.single(link("feedback", configuration.getFeedbackUrl()));
+      }
     } else {
       builder.single(link("login", resourceLinks.authentication().jsonLogin()));
     }
 
     applyEnrichers(new EdisonHalAppender(builder, embeddedBuilder), new Index());
-    return new IndexDto(builder.build(), embeddedBuilder.build(), scmContextProvider.getVersion());
+    return new IndexDto(builder.build(), embeddedBuilder.build(), scmContextProvider.getVersion(), scmContextProvider.getInstanceId());
   }
 
   private List<Link> searchLinks() {
@@ -173,7 +176,7 @@ public class IndexDtoGenerator extends HalAppenderMapper {
     InitializationStep initializationStep = initializationFinisher.missingInitialization();
     initializationFinisher.getResource(initializationStep.name()).setupIndex(initializationLinkBuilder, initializationEmbeddedBuilder);
     embeddedBuilder.with(initializationStep.name(), new InitializationDto(initializationLinkBuilder.build(), initializationEmbeddedBuilder.build()));
-    return new IndexDto(builder.build(), embeddedBuilder.build(), scmContextProvider.getVersion(), initializationStep.name());
+    return new IndexDto(builder.build(), embeddedBuilder.build(), scmContextProvider.getVersion(), scmContextProvider.getInstanceId(), initializationStep.name());
   }
 
   private boolean shouldAppendSubjectRelatedLinks() {

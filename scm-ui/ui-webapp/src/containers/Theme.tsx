@@ -23,15 +23,16 @@
  */
 
 import React, { FC, useState } from "react";
-import { createA11yId, Radio, SubmitButton, Subtitle } from "@scm-manager/ui-components";
+import { ButtonGroup, createA11yId, Radio, SubmitButton, Subtitle } from "@scm-manager/ui-components";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
+import classNames from "classnames";
 
 const LS_KEY = "scm.theme";
 
-const useThemeState = () => {
-  const [theme] = useState(localStorage.getItem(LS_KEY) || "light");
+export const useThemeState = () => {
+  const [theme] = useState(localStorage.getItem(LS_KEY) || "systemdefault");
   const [isLoading, setLoading] = useState(false);
 
   const setTheme = (name: string) => {
@@ -47,7 +48,7 @@ type ThemeForm = {
   theme: string;
 };
 
-const themes = ["light", "highcontrast"];
+const themes = ["light", "dark", "highcontrast", "systemdefault"];
 
 const RadioColumn = styled.div`
   flex: none;
@@ -60,7 +61,8 @@ const Theme: FC = () => {
     register,
     setValue,
     handleSubmit,
-    formState: { isDirty }
+    formState: { isDirty },
+    watch
   } = useForm<ThemeForm>({
     mode: "onChange",
     defaultValues: {
@@ -76,14 +78,23 @@ const Theme: FC = () => {
   return (
     <>
       <Subtitle>{t("profile.theme.subtitle")}</Subtitle>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form className="is-flex is-flex-direction-column" onSubmit={handleSubmit(onSubmit)}>
         {themes.map(theme => {
           const a11yId = createA11yId("theme");
           return (
             <div
               key={theme}
               onClick={() => setValue("theme", theme, { shouldDirty: true })}
-              className="card ml-1 mb-5 control columns is-vcentered has-cursor-pointer"
+              className={classNames(
+                "card",
+                "ml-1",
+                "mb-5",
+                "control",
+                "columns",
+                "is-vcentered",
+                "has-cursor-pointer",
+                { "has-background-secondary-less": theme === watch().theme }
+              )}
             >
               <RadioColumn className="column">
                 <Radio {...register("theme")} value={theme} disabled={isLoading} ariaLabelledby={a11yId} />
@@ -95,7 +106,9 @@ const Theme: FC = () => {
             </div>
           );
         })}
-        <SubmitButton label={t("profile.theme.submit")} loading={isLoading} disabled={!isDirty} />
+        <ButtonGroup className="is-justify-content-flex-end">
+          <SubmitButton label={t("profile.theme.submit")} loading={isLoading} disabled={!isDirty} />
+        </ButtonGroup>
       </form>
     </>
   );

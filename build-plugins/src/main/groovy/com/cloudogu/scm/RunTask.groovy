@@ -45,6 +45,10 @@ class RunTask extends DefaultTask {
   ScmServerExtension extension
 
   @Input
+  @Option(option = 'analyze-bundles', description = 'Include Webpack Bundle Analyzer Plugin')
+  boolean analyzeBundles = false
+
+  @Input
   @Option(option = 'debug-jvm', description = 'Start ScmServer suspended and listening on debug port (default: 5005)')
   boolean debugJvm = false
 
@@ -73,7 +77,7 @@ class RunTask extends DefaultTask {
 
   private void waitForPortToBeOpen() {
     int retries = 180
-    for (int i=0; i<retries; i++) {
+    for (int i = 0; i < retries; i++) {
       try {
         URL urlConnect = new URL("http://localhost:${extension.port}/scm/api/v2");
         URLConnection conn = (HttpURLConnection) urlConnect.openConnection();
@@ -102,9 +106,11 @@ class RunTask extends DefaultTask {
   }
 
   private Closure<Void> createBackend() {
-    Map<String,String> scmProperties = System.getProperties().findAll { e -> {
-      return e.key.startsWith("scm") || e.key.startsWith("sonia")
-    }}
+    Map<String, String> scmProperties = System.getProperties().findAll { e ->
+      {
+        return e.key.startsWith("scm") || e.key.startsWith("sonia")
+      }
+    }
 
     def runProperties = new HashMap<String, String>(scmProperties)
     runProperties.put("user.home", extension.getHome())
@@ -137,7 +143,8 @@ class RunTask extends DefaultTask {
       script = new File(project.rootProject.projectDir, 'scm-ui/ui-scripts/bin/ui-scripts.js')
       args = ['serve']
       environment = [
-        'NODE_ENV': 'development'
+        'NODE_ENV': 'development',
+        'ANALYZE_BUNDLES': analyzeBundles
       ]
     }
     return {

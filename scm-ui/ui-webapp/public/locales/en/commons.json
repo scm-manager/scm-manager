@@ -111,6 +111,14 @@
       "highcontrast": {
         "displayName": "High contrast",
         "description": "The high contrast mode is a dark theme with a high contrast between the colors"
+      },
+      "dark": {
+        "displayName": "Dark",
+        "description": "The dark mode is a more relaxed, dark theme"
+      },
+      "systemdefault": {
+        "displayName": "System default",
+        "description": "Use the default setting of the system"
       }
     }
   },
@@ -163,11 +171,16 @@
     "bellTitle": "Notifications",
     "empty": "No notifications",
     "dismiss": "Dismiss",
-    "dismissAll": "Dismiss all"
+    "dismissAll": "Dismiss all",
+    "updateSuccessful": "The update was successful."
   },
   "alerts": {
     "shieldTitle": "Alerts"
   },
+  "feedback": {
+    "button": "Feedback",
+    "modalTitle": "Share your feedback"
+},
   "cardColumnGroup": {
     "showContent": "Show content",
     "hideContent": "Hide content"
@@ -247,5 +260,8 @@
   },
   "pdfViewer": {
     "error": "Failed to display the document. Please download it from <1>here</1>."
+  },
+  "tag": {
+    "delete": "Delete"
   }
 }

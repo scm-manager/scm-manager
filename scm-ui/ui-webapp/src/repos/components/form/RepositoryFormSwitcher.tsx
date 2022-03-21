@@ -25,19 +25,7 @@ import React, { FC } from "react";
 import { useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
-import styled from "styled-components";
-import { Button, ButtonAddons, Icon, Level, urls } from "@scm-manager/ui-components";
-
-const TopLevel = styled(Level)`
-  margin-top: 1.5rem;
-  margin-bottom: -1.5rem;
-  height: 0;
-  position: absolute;
-  right: 0;
-  @media (max-width: 785px) {
-    margin-top: 4.5rem;
-  }
-`;
+import { Button, ButtonAddons, Icon, urls } from "@scm-manager/ui-components";
 
 type RepositoryForm = {
   path: string;
@@ -57,7 +45,7 @@ const RepositoryFormButton: FC<RepositoryForm> = ({ path, icon, label }) => {
       color={isSelected ? "link is-selected" : undefined}
       link={!isSelected ? href : undefined}
     >
-      <Icon className="pr-2" name={icon} color={isSelected ? "secondary-least" : "inherit"} alt="" />
+      <Icon className="pr-2" name={icon} color="inherit" alt="" />
       <p className={classNames("is-hidden-mobile", "is-hidden-tablet-only")}>{t(`plugins:${label}`, label)}</p>
     </Button>
   );
@@ -68,15 +56,11 @@ type Props = {
 };
 
 const RepositoryFormSwitcher: FC<Props> = ({ forms }) => (
-  <TopLevel
-    right={
-      <ButtonAddons>
-        {(forms || []).map(form => (
-          <RepositoryFormButton key={form.path} {...form} />
-        ))}
-      </ButtonAddons>
-    }
-  />
+  <ButtonAddons className="ml-auto">
+    {(forms || []).map(form => (
+      <RepositoryFormButton key={form.path} {...form} />
+    ))}
+  </ButtonAddons>
 );
 
 export default RepositoryFormSwitcher;

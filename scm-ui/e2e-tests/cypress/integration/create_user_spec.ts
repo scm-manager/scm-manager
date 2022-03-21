@@ -22,28 +22,32 @@
  * SOFTWARE.
  */
 
-import React, { FC } from "react";
-import { ApiProvider, ApiProviderProps } from "@scm-manager/ui-api";
-import { IndexResources, Me } from "@scm-manager/ui-types";
+import { hri } from "human-readable-ids";
 
-import { connect, Dispatch } from "react-redux";
-import { ActionTypes, fetchIndexResourcesSuccess, fetchMeSuccess } from "./LegacyReduxProvider";
+describe("Create User", () => {
+  beforeEach(() => {
+    // Create user and login
+    const username = hri.random();
+    const password = hri.random();
+    cy.restCreateUser(username, password);
+    cy.restLogin(username, password);
+    cy.restSetUserPermissions(username, ["user:*"]);
+  });
 
-const ReduxAwareApiProvider: FC<ApiProviderProps> = ({ children, ...listeners }) => (
-  <ApiProvider {...listeners}>{children}</ApiProvider>
-);
+  it("should create new user", () => {
+    // Prepare data
+    const newUser = hri.random();
+    const password = hri.random();
 
-const mapDispatchToProps = (dispatch: Dispatch<ActionTypes>) => {
-  return {
-    onIndexFetched: (index: IndexResources) => {
-      dispatch(fetchIndexResourcesSuccess(index));
-    },
-    onMeFetched: (me: Me) => {
-      dispatch(fetchMeSuccess(me));
-    }
-  };
-};
+    // Act
+    cy.visit("/users/create");
+    cy.byTestId("input-username").type(newUser);
+    cy.byTestId("input-displayname").type(newUser);
+    cy.byTestId("input-password").type(password);
+    cy.byTestId("input-password-confirmation").type(password);
+    cy.byTestId("submit-button").click();
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-// @ts-ignore no clue how to type it
-export default connect(undefined, mapDispatchToProps)(ReduxAwareApiProvider);
+    // Assert
+    cy.url().should("include", `/user/${newUser}`);
+  });
+});

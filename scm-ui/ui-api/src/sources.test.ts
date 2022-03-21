@@ -126,7 +126,7 @@ describe("Test sources hooks", () => {
   describe("useSources tests", () => {
     it("should return root directory", async () => {
       const queryClient = createInfiniteCachingClient();
-      fetchMock.getOnce("/api/v2/src", rootDirectory);
+      fetchMock.getOnce("/api/v2/src?collapse=true", rootDirectory);
       const { result, waitFor } = renderHook(() => useSources(puzzle42), {
         wrapper: createWrapper(undefined, queryClient),
       });
@@ -136,7 +136,7 @@ describe("Test sources hooks", () => {
 
     it("should return file from url with revision and path", async () => {
       const queryClient = createInfiniteCachingClient();
-      fetchMock.getOnce("/api/v2/src/abc/README.md", readmeMd);
+      fetchMock.getOnce("/api/v2/src/abc/README.md?collapse=true", readmeMd);
       const { result, waitFor } = renderHook(() => useSources(puzzle42, { revision: "abc", path: "README.md" }), {
         wrapper: createWrapper(undefined, queryClient),
       });
@@ -146,7 +146,7 @@ describe("Test sources hooks", () => {
 
     it("should fetch next page", async () => {
       const queryClient = createInfiniteCachingClient();
-      fetchMock.getOnce("/api/v2/src", mainDirectoryTruncated);
+      fetchMock.getOnce("/api/v2/src?collapse=true", mainDirectoryTruncated);
       fetchMock.getOnce("/api/v2/src/2", mainDirectory);
       const { result, waitFor, waitForNextUpdate } = renderHook(() => useSources(puzzle42), {
         wrapper: createWrapper(undefined, queryClient),
@@ -168,7 +168,7 @@ describe("Test sources hooks", () => {
     it("should refetch if partial files exists", async () => {
       const queryClient = createInfiniteCachingClient();
       fetchMock.get(
-        "/api/v2/src",
+        "/api/v2/src?collapse=true",
         {
           ...mainDirectory,
           _embedded: {
@@ -180,7 +180,7 @@ describe("Test sources hooks", () => {
         }
       );
       fetchMock.get(
-        "/api/v2/src",
+        "/api/v2/src?collapse=true",
         {
           ...mainDirectory,
           _embedded: {
@@ -206,9 +206,9 @@ describe("Test sources hooks", () => {
 
     it("should not refetch if computation is aborted", async () => {
       const queryClient = createInfiniteCachingClient();
-      fetchMock.getOnce("/api/v2/src/abc/main/special.md", sepecialMdComputationAborted, { repeat: 1 });
+      fetchMock.getOnce("/api/v2/src/abc/main/special.md?collapse=true", sepecialMdComputationAborted, { repeat: 1 });
       // should never be called
-      fetchMock.getOnce("/api/v2/src/abc/main/special.md", sepecialMd, {
+      fetchMock.getOnce("/api/v2/src/abc/main/special.md?collapse=true", sepecialMd, {
         repeat: 1,
         overwriteRoutes: false,
       });

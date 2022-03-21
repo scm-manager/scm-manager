@@ -8,7 +8,7 @@
   "scripts": {
     "build": "webpack-cli --mode=production --config=scm-ui/ui-scripts/src/webpack.config.js",
     "build:dev": "webpack-cli --mode=development --config=scm-ui/ui-scripts/src/webpack.config.js",
-    "test": "lerna run --scope '@scm-manager/ui-*' test",
+    "test": "lerna run --scope '@scm-manager/ui-*' test --no-bail",
     "e2e-tests": "lerna run --scope '@scm-manager/e2e-tests' ci",
     "typecheck": "lerna run --scope '@scm-manager/ui-*' typecheck",
     "lint": "lerna run --scope '@scm-manager/ui-*' lint",
@@ -18,11 +18,11 @@
   },
   "dependencies": {},
   "devDependencies": {
+    "@scm-manager/remark-preset-lint": "^1.0.0",
     "babel-plugin-reflow": "^0.2.7",
     "husky": "^4.2.5",
     "lerna": "^3.17.0",
     "lint-staged": "^10.2.11",
-    "@scm-manager/remark-preset-lint": "^1.0.0",
     "remark-cli": "^9.0.0"
   },
   "resolutions": {

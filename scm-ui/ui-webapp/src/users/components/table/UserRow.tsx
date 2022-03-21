@@ -25,7 +25,8 @@ import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { User } from "@scm-manager/ui-types";
-import { Icon, createAttributesForTesting } from "@scm-manager/ui-components";
+import { createAttributesForTesting, Icon } from "@scm-manager/ui-components";
+import classNames from "classnames";
 
 type Props = WithTranslation & {
   user: User;
@@ -51,11 +52,13 @@ class UserRow extends React.Component<Props> {
 
     return (
       <tr className={user.active ? "border-is-green" : "border-is-yellow"}>
-        <td>
+        <td className="is-word-break">
           {iconType} {this.renderLink(to, user.name)}
         </td>
-        <td className="is-hidden-mobile">{this.renderLink(to, user.displayName)}</td>
-        <td>{user.mail ? <a href={`mailto:${user.mail}`}>{user.mail}</a> : null}</td>
+        <td className={classNames("is-hidden-mobile", "is-word-break")}>{this.renderLink(to, user.displayName)}</td>
+        <td className={classNames("is-hidden-mobile", "is-word-break")}>
+          {user.mail ? <a href={`mailto:${user.mail}`}>{user.mail}</a> : null}
+        </td>
       </tr>
     );
   }

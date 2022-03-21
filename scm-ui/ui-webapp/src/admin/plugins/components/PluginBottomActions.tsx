@@ -30,7 +30,7 @@ type Props = {
 };
 
 const ActionWrapper = styled.div`
-  border: 2px solid #e9f7fd;
+  border: 2px solid var(--scm-border-color);
 `;
 
 export default class PluginBottomActions extends React.Component<Props> {

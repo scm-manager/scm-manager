@@ -37,6 +37,7 @@ type Props = {
   label?: string;
   testId?: string;
   searchPlaceholder?: string;
+  groupAriaLabelledby?: string;
 };
 
 const createAbsoluteLink = (url: string) => {
@@ -52,7 +53,8 @@ const OverviewPageActions: FC<Props> = ({
   groupSelected,
   label,
   testId,
-  searchPlaceholder
+  searchPlaceholder,
+  groupAriaLabelledby
 }) => {
   const history = useHistory();
   const location = useLocation();
@@ -62,6 +64,7 @@ const OverviewPageActions: FC<Props> = ({
   const groupSelector = groups && (
     <div className="column is-flex">
       <Select
+        ariaLabelledby={groupAriaLabelledby}
         className="is-fullwidth"
         options={groups.map(g => ({ value: g, label: g }))}
         value={currentGroup}

@@ -29,6 +29,7 @@ import { binder, ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensi
 import { Changeset, Link } from "@scm-manager/ui-types";
 import {
   CustomQueryFlexWrappedColumns,
+  devices,
   ErrorPage,
   FileControlFactory,
   HealthCheckFailureDetail,
@@ -65,6 +66,12 @@ import styled from "styled-components";
 const TagGroup = styled.span`
   & > * {
     margin-right: 0.25rem;
+  }
+`;
+
+const MobileWrapped = styled.div`
+  @media screen and (max-width: ${devices.mobile.width}px) {
+    margin-left: auto;
   }
 `;
 
@@ -228,12 +235,12 @@ const RepositoryRoot = () => {
         title={titleComponent}
         documentTitle={`${repository.namespace}/${repository.name}`}
         afterTitle={
-          <div className="is-flex">
-            <ExtensionPoint name={"repository.afterTitle"} props={{ repository }} />
+          <MobileWrapped className="is-flex is-align-items-center">
+            <ExtensionPoint name="repository.afterTitle" props={{ repository }} />
             <TagGroup className="has-text-weight-bold">
               <RepositoryFlags repository={repository} tooltipLocation="bottom" />
             </TagGroup>
-          </div>
+          </MobileWrapped>
         }
       >
         {modal}

@@ -35,6 +35,13 @@ const root = path.resolve(process.cwd(), "scm-ui");
 const babelPlugins = [];
 const webpackPlugins = [];
 
+if (process.env.ANALYZE_BUNDLES === "true") {
+  // it is ok to use require here, because we want to load the package conditionally
+  // eslint-disable-next-line global-require
+  const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
+  webpackPlugins.push(new BundleAnalyzerPlugin());
+}
+
 let mode = "production";
 
 if (isDevelopment) {
@@ -49,8 +56,8 @@ if (isDevelopment) {
 const themedir = path.join(root, "ui-styles", "src");
 const themes = fs
   .readdirSync(themedir)
-  .map((filename) => path.parse(filename))
-  .filter((p) => p.ext === ".scss")
+  .map(filename => path.parse(filename))
+  .filter(p => p.ext === ".scss")
   .reduce((entries, current) => ({ ...entries, [current.name]: path.join(themedir, current.base) }), {});
 
 console.log(`build ${mode} bundles`);
@@ -162,6 +169,7 @@ module.exports = [
     },
     optimization: {
       runtimeChunk: "single",
+      chunkIds: "named",
       splitChunks: {
         chunks: "initial",
         cacheGroups: {

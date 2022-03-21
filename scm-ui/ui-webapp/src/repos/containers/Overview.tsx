@@ -199,19 +199,25 @@ const Overview: FC = () => {
       </div>
       <PageActions>
         {showActions ? (
-          <OverviewPageActions
-            showCreateButton={showCreateButton}
-            currentGroup={
-              namespace && namespaces?._embedded.namespaces.some(n => n.namespace === namespace) ? namespace : ""
-            }
-            groups={namespacesToRender}
-            groupSelected={namespaceSelected}
-            link={namespace ? `repos/${namespace}` : "repos"}
-            createLink="/repos/create/"
-            label={t("overview.createButton")}
-            testId="repository-overview"
-            searchPlaceholder={t("overview.filterRepositories")}
-          />
+          <>
+            <label id="select-namespace" hidden>
+              {t("overview.filterByNamespace")}
+            </label>
+            <OverviewPageActions
+              showCreateButton={showCreateButton}
+              currentGroup={
+                namespace && namespaces?._embedded.namespaces.some(n => n.namespace === namespace) ? namespace : ""
+              }
+              groups={namespacesToRender}
+              groupSelected={namespaceSelected}
+              groupAriaLabelledby="select-namespace"
+              link={namespace ? `repos/${namespace}` : "repos"}
+              createLink="/repos/create/"
+              label={t("overview.createButton")}
+              testId="repository-overview"
+              searchPlaceholder={t("overview.filterRepositories")}
+            />
+          </>
         ) : null}
       </PageActions>
     </Page>

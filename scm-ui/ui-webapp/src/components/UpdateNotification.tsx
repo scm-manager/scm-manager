@@ -21,5 +21,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import "@scm-manager/integration-test-runner/commands";
-import "./commands";
+
+import React, { FC, useEffect, useState } from "react";
+import { Notification } from "@scm-manager/ui-components";
+import { useTranslation } from "react-i18next";
+
+type Props = {
+  isUpdated: boolean;
+};
+
+const UpdateNotification: FC<Props> = ({ isUpdated }) => {
+  const [t] = useTranslation("commons");
+  const [showSuccess, setShowSuccess] = useState(false);
+  useEffect(() => {
+    setShowSuccess(isUpdated);
+  }, [isUpdated]);
+
+  if (showSuccess) {
+    return (
+      <Notification type="success" onClose={() => setShowSuccess(false)}>
+        {t("notifications.updateSuccessful")}
+      </Notification>
+    );
+  }
+
+  return null;
+};
+
+export default UpdateNotification;

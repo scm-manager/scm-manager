@@ -105,11 +105,19 @@
       "submit": "Anwenden",
       "light": {
         "displayName": "Hell",
-        "description": "'Hell' is das Standard-Design des SCM-Managers"
+        "description": "„Hell“ is das Standard-Design des SCM-Managers"
       },
       "highcontrast": {
         "displayName": "Hoher Kontrast",
-        "description": "'Hoher Kontrast' ist ein dunkles Design mit einem hohen Kontrast"
+        "description": "„Hoher Kontrast“ ist ein dunkles Design mit einem hohen Kontrast"
+      },
+      "dark": {
+        "displayName": "Dunkel",
+        "description": "„Dunkel“ ist ein entspannteres, dunkles Design"
+      },
+      "systemdefault": {
+        "displayName": "Systemstandard",
+        "description": "Verwendet die Standardeinstellung des Systems"
       }
     }
   },
@@ -162,10 +170,15 @@
     "bellTitle": "Benachrichtigungen",
     "empty": "Keine Benachrichtigungen",
     "dismiss": "Löschen",
-    "dismissAll": "Alle löschen"
+    "dismissAll": "Alle löschen",
+    "updateSuccessful": "Die Änderungen wurden gespeichert."
   },
   "alerts": {
     "shieldTitle": "Alerts"
+  },
+  "feedback": {
+    "button": "Feedback",
+    "modalTitle": "Feedback senden"
   },
   "cardColumnGroup": {
     "showContent": "Inhalt einblenden",
@@ -246,5 +259,8 @@
   },
   "pdfViewer": {
     "error": "Das Dokument konnte nicht angezeigt werden. Es kann <1>hier</1> heruntergeladen werden."
+  },
+  "tag": {
+    "delete": "Löschen"
   }
 }

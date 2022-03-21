@@ -37,9 +37,9 @@ class UserTable extends React.Component<Props> {
       <table className="card-table table is-hoverable is-fullwidth">
         <thead>
           <tr>
-            <th className="is-hidden-mobile">{t("user.name")}</th>
-            <th>{t("user.displayName")}</th>
-            <th>{t("user.mail")}</th>
+            <th>{t("user.name")}</th>
+            <th className="is-hidden-mobile">{t("user.displayName")}</th>
+            <th className="is-hidden-mobile">{t("user.mail")}</th>
           </tr>
         </thead>
         <tbody>

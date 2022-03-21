@@ -32,24 +32,25 @@ type DropDownMenuProps = {
 };
 
 const DropDownMenu = styled.div<DropDownMenuProps>`
-  min-width: 35rem;
+  min-width: 20rem;
 
-  @media screen and (max-width: ${devices.desktop.width}px) {
+  @media screen and (min-width: ${devices.desktop.width}px) {
     min-width: 30rem;
   }
 
-  @media screen and (max-width: ${devices.tablet.width}px) {
+  @media screen and (min-width: ${devices.tablet.width}px) {
     min-width: 25rem;
   }
 
   @media screen and (max-width: ${devices.mobile.width}px) {
-    min-width: 20rem;
     ${props =>
       props.mobilePosition === "right" &&
       css`
         right: -1.5rem;
         left: auto;
       `};
+    position: fixed;
+    top: auto;
   }
 
   @media screen and (max-width: ${devices.desktop.width - 1}px) {
@@ -71,12 +72,16 @@ const DropDownMenu = styled.div<DropDownMenuProps>`
     transform-origin: center;
     transform: rotate(135deg);
 
-    @media screen and (max-width: ${devices.desktop.width - 1}px) {
+    @media screen and (max-width: ${devices.mobile.width}px) {
+      left: 4.6rem;
+    }
+
+    @media screen and (min-width: ${devices.mobile.width + 1}px) and (max-width: ${devices.desktop.width - 1}px) {
       left: 1.3rem;
     }
 
     @media screen and (min-width: ${devices.desktop.width}px) {
-      right: 1.3rem;
+      right: 1.375rem;
     }
 
     ${props =>
@@ -98,8 +103,11 @@ export const Column = styled.td`
   vertical-align: middle !important;
 `;
 
-export const NonWrappingColumn = styled(Column)`
+export const OnlyMobileWrappingColumn = styled(Column)`
   white-space: nowrap;
+  @media screen and (max-width: ${devices.mobile.width}px) {
+    white-space: break-spaces;
+  }
 `;
 
 const DropdownMenuContainer: FC = ({ children }) => (

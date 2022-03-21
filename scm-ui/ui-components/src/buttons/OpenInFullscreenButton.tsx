@@ -37,7 +37,7 @@ type Props = {
 const Button = styled.button`
   width: 50px;
   &:hover {
-    color: #33b2e8;
+    color: var(--scm-info-color);
   }
 `;
 

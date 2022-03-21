@@ -44,7 +44,7 @@ import {
   ToastNotification,
   ToastType
 } from "@scm-manager/ui-components";
-import HeaderDropDown, { Column, NonWrappingColumn, Table } from "../components/HeaderDropDown";
+import HeaderDropDown, { Column, OnlyMobileWrappingColumn, Table } from "../components/HeaderDropDown";
 
 const DismissColumn = styled.td`
   vertical-align: middle !important;
@@ -74,9 +74,9 @@ const NotificationEntry: FC<EntryProps> = ({ notification, removeToast }) => {
       <Column onClick={() => history.push(notification.link)} className="is-clickable">
         <NotificationMessage message={notification.message} />
       </Column>
-      <NonWrappingColumn className="has-text-right">
+      <OnlyMobileWrappingColumn className="has-text-right">
         <DateFromNow date={notification.createdAt} />
-      </NonWrappingColumn>
+      </OnlyMobileWrappingColumn>
       <DismissColumn className="is-darker is-clickable" onClick={remove}>
         {isLoading ? (
           <div className="small-loading-spinner" aria-label={t("notifications.loading")} />
@@ -222,7 +222,7 @@ const BellNotificationIcon: FC<BellNotificationIconProps> = ({ data }) => {
       className="is-size-4"
       iconStyle={counter === 0 ? "far" : "fas"}
       name="bell"
-      color="white"
+      color="inherit"
       alt={t("notifications.bellTitle")}
     />
   );

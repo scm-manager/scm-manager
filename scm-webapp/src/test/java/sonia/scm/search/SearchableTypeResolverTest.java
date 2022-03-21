@@ -22,4 +22,22 @@
  * SOFTWARE.
  */
 
-module.exports = require("@scm-manager/integration-test-runner/plugins");
+package sonia.scm.search;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.NotFoundException;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+@ExtendWith(MockitoExtension.class)
+class SearchableTypeResolverTest {
+
+  private final SearchableTypeResolver resolver = new SearchableTypeResolver();
+
+  @Test
+  void shouldThrowNotFoundForNullValue() {
+    assertThrows(NotFoundException.class, () -> resolver.resolve(null));
+  }
+}

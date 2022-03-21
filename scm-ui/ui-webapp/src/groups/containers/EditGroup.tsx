@@ -22,12 +22,12 @@
  * SOFTWARE.
  */
 import React, { FC } from "react";
-import { Redirect } from "react-router-dom";
 import { Group } from "@scm-manager/ui-types";
 import { useUpdateGroup, useUserSuggestions } from "@scm-manager/ui-api";
 import { ErrorNotification } from "@scm-manager/ui-components";
 import GroupForm from "../components/GroupForm";
 import DeleteGroup from "./DeleteGroup";
+import UpdateNotification from "../../components/UpdateNotification";
 
 type Props = {
   group: Group;
@@ -37,12 +37,9 @@ const EditGroup: FC<Props> = ({ group }) => {
   const { error, isLoading, update, isUpdated } = useUpdateGroup();
   const userSuggestions = useUserSuggestions();
 
-  if (isUpdated) {
-    return <Redirect to={`/group/${group.name}`} />;
-  }
-
   return (
     <div>
+      <UpdateNotification isUpdated={isUpdated} />
       <ErrorNotification error={error || undefined} />
       <GroupForm group={group} submitForm={update} loading={isLoading} loadUserSuggestions={userSuggestions} />
       <DeleteGroup group={group} />

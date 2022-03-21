@@ -24,7 +24,7 @@
 
 package sonia.scm.lifecycle;
 
-import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang.RandomStringUtils;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;

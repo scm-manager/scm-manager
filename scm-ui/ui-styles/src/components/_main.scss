@@ -21,6 +21,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
+:root {
+  --scm-white-color: #{$white};
+  --scm-light-color: #{$light};
+  --scm-dark-color: #{$dark};
+  --scm-primary-color: #{$primary};
+  --scm-link-color: #{$link};
+  --scm-info-color: #{$info};
+  --scm-success-color: #{$success};
+  --scm-warning-color: #{$warning};
+  --scm-danger-color: #{$danger};
+
+  --scm-secondary-least-color: #{$secondary-least};
+  --scm-secondary-less-color: #{$secondary-less};
+  --scm-secondary-color: #{$secondary};
+  --scm-secondary-more-color: #{$secondary-more};
+  --scm-secondary-most-color: #{$secondary-most};
+
+  --scm-border-color: #{$border};
+  --scm-border: #{$border-width} solid #{$border};
+
+  --scm-popover-border-color: #{$white};
+}
+
 // TODO split into multiple files
 
 .is-ellipsis-overflow {
@@ -43,6 +67,10 @@
 
 .is-full-width {
   width: 100%;
+}
+
+.is-overflow-x-auto {
+  overflow-x: auto;
 }
 
 .fitParent {
@@ -80,15 +108,6 @@ hr.header-with-actions {
   }
 }
 
-footer.footer {
-  background-color: $white-ter;
-  padding: inherit;
-
-  a {
-    color: darken($info, 15%);
-  }
-}
-
 .has-hover-background-blue:hover {
   background-color: scale-color($blue, $alpha: -90%);
 }
@@ -107,6 +126,61 @@ footer.footer {
 }
 .has-background-blue-light {
   background-color: $blue-light;
+}
+
+.has-text-secondary-least {
+  color: $secondary-least !important;
+}
+a.has-text-secondary-least:hover,
+a.has-text-secondary-least:focus {
+  color: lighten($secondary-least, 10%) !important;
+}
+.has-background-secondary-least {
+  background-color: $secondary-least !important;
+}
+
+.has-text-secondary-less {
+  color: $secondary-less !important;
+}
+a.has-text-secondary-less:hover,
+a.has-text-secondary-less:focus {
+  color: lighten($secondary-less, 10%) !important;
+}
+.has-background-secondary-less {
+  background-color: $secondary-less !important;
+}
+
+.has-text-secondary {
+  color: $secondary !important;
+}
+a.has-text-secondary:hover,
+a.has-text-secondary:focus {
+  color: lighten($secondary, 10%) !important;
+}
+.has-background-secondary {
+  background-color: $secondary !important;
+}
+
+.has-text-secondary-more {
+  color: $secondary-more !important;
+}
+a.has-text-secondary-more:hover,
+a.has-text-secondary-more:focus {
+  color: lighten($secondary-more, 10%) !important;
+}
+.has-background-secondary-more {
+  background-color: $secondary-more !important;
+}
+
+.has-text-secondary-most {
+  color: $secondary-most !important;
+}
+a.has-text-secondary-most:hover,
+a.has-text-secondary-most:focus {
+  color: lighten($secondary-most, 10%) !important;
+}
+.has-background-secondary-most {
+  background-color: $secondary-most !important;
 }
 
 // border and background colors
@@ -177,7 +251,7 @@ footer.footer {
 // tags
 .tag:not(body) {
   border: 1px solid transparent;
-  background-color: $white;
+  background-color: $scheme-main;
 
   &.is-delete {
     background-color: $light;
@@ -189,7 +263,7 @@ footer.footer {
   }
 
   &.is-outlined {
-    background-color: $white;
+    background-color: $scheme-main;
   }
   &.is-black.is-outlined {
     color: $black;
@@ -233,6 +307,13 @@ footer.footer {
   }
 }
 
+.popover {
+  &:before {
+    border-bottom-color: $popover-background-color;
+    border-left-color: $popover-background-color;
+  }
+}
+
 // buttons
 .button {
   padding-left: 1.5em;
@@ -247,7 +328,7 @@ footer.footer {
   &.is-warning,
   &.is-danger {
     &.is-outlined {
-      background-color: $white;
+      background-color: inherit;
     }
   }
 
@@ -343,8 +424,14 @@ footer.footer {
   }
 }
 
-.notifications .dropdown-menu:before {
-  border: 0.4rem solid transparent;
+.notifications .dropdown-menu {
+  border: 1px solid $border;
+
+  &:before {
+    border: 0.4rem solid transparent;
+    border-bottom-color: $border;
+    border-left-color: $border;
+  }
 }
 
 @import "~@fortawesome/fontawesome-free/scss/fontawesome";
@@ -476,7 +563,7 @@ ul.is-separated {
 
   tr {
     a {
-      color: #363636;
+      color: $grey-darker;
     }
     &.border-is-green td:first-child {
       border-left-color: $green;
@@ -506,10 +593,18 @@ ul.is-separated {
 
     &:hover {
       td {
-        background-color: whitesmoke;
+        background-color: $white-ter;
 
         &.is-darker {
           background-color: #e1e1e1;
+        }
+        // Explicitly "remove" styles from td element to use it as an empty table column header, which is necessary for
+        // a11y because an empty th element is not allowed.
+        &.has-no-style {
+          background-color: transparent;
+          &.is-darker {
+            background-color: transparent;
+          }
         }
       }
       a {
@@ -519,18 +614,26 @@ ul.is-separated {
   }
   td {
     padding: 1em 1.25em;
-    background-color: #fafafa;
-    border-bottom: 1px solid whitesmoke;
+    background-color: $white-bis;
+    border-bottom: 1px solid $white-ter;
+    border-left-color: $grey;
 
     &:first-child {
-      border-left: 3px solid $grey;
+      border-left: 3px solid;
     }
     &.is-darker {
-      background-color: whitesmoke;
+      background-color: $white-ter;
+    }
+    // Explicitly "remove" styles from td element to use it as an empty table column header, which is necessary for
+    // a11y because an empty th element is not allowed.
+    &.has-no-style {
+      padding: 0;
+      background-color: transparent;
+      border: none;
     }
   }
   &.is-hoverable tbody tr:not(.is-selected):hover {
-    background-color: whitesmoke;
+    background-color: $white-ter;
   }
   thead th {
     background-color: transparent;
@@ -559,8 +662,8 @@ ul.is-separated {
   }
 
   .panel-footer {
-    background-color: whitesmoke;
-    color: #363636;
+    background-color: $panel-heading-background-color;
+    color: $panel-heading-color;
     font-size: 1.25em;
     font-weight: 300;
     line-height: 1.25;
@@ -647,7 +750,7 @@ form .field:not(.is-grouped) {
   .tabs.is-toggle li.is-active a:hover {
     background-color: #28b1e8;
     border-color: #28b1e8;
-    color: #fff;
+    color: $white;
   }
 }
 
@@ -658,7 +761,7 @@ form .field:not(.is-grouped) {
   position: absolute;
   right: 0;
   top: 0;
-  background-color: whitesmoke;
+  background-color: $white-ter;
 }
 
 // menu
@@ -672,7 +775,6 @@ form .field:not(.is-grouped) {
   display: flex;
   height: 3.2rem;
   align-items: center;
-  color: #fff;
   font-size: 1em;
   font-weight: 600;
   background-color: $blue;
@@ -687,12 +789,11 @@ form .field:not(.is-grouped) {
 }
 .menu-list {
   a {
-    color: #333;
     padding: 1rem;
 
     &.is-active {
-      color: $info;
-      background-color: #fff;
+      color: $link;
+      background-color: $scheme-main;
     }
   }
 

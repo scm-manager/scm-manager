@@ -103,22 +103,33 @@ const PluginModal: FC<Props> = ({ onClose, pluginAction, plugin }) => {
     }
     return (
       <ButtonGroup>
-        <Button
-          label={t(label)}
-          color={color}
-          action={handlePluginAction}
-          loading={loading}
-          disabled={!!error || isDone}
-          ref={initialFocusRef}
-        />
-        <Button label={t("plugins.modal.abort")} action={onClose} />
+        {isDone ? (
+          <Button
+            label={t("plugins.modal.reload")}
+            action={() => window.location.reload()}
+            color="success"
+            icon="sync-alt"
+          />
+        ) : (
+          <>
+            <Button
+              label={t(label)}
+              color={color}
+              action={handlePluginAction}
+              loading={loading}
+              disabled={!!error || isDone}
+              ref={initialFocusRef}
+            />
+            <Button label={t("plugins.modal.abort")} action={onClose} />
+          </>
+        )}
       </ButtonGroup>
     );
   };
 
   const renderDependencies = () => {
     let dependencies = null;
-    if (plugin.dependencies && plugin.dependencies.length > 0) {
+    if (pluginAction !== PluginAction.UNINSTALL && plugin.dependencies && plugin.dependencies.length > 0) {
       dependencies = (
         <div className="media">
           <Notification type="warning">
@@ -137,7 +148,11 @@ const PluginModal: FC<Props> = ({ onClose, pluginAction, plugin }) => {
 
   const renderOptionalDependencies = () => {
     let optionalDependencies = null;
-    if (plugin.optionalDependencies && plugin.optionalDependencies.length > 0) {
+    if (
+      pluginAction !== PluginAction.UNINSTALL &&
+      plugin.optionalDependencies &&
+      plugin.optionalDependencies.length > 0
+    ) {
       optionalDependencies = (
         <div className="media">
           <Notification type="warning">

@@ -84,11 +84,11 @@ const HgConfigurationForm: FC<Props> = ({ initialConfiguration, onConfigurationC
   };
 
   return (
-    <div>
+    <div className="is-flex is-flex-direction-column">
       <InputField
         name="hgBinary"
         label={t("scm-hg-plugin.config.hgBinary")}
-        helpText={t("scm-hg-plugin.config.hgBinary.HelpText")}
+        helpText={t("scm-hg-plugin.config.hgBinaryHelpText")}
         value={configuration.hgBinary}
         onChange={value => setConfiguration({ ...configuration, hgBinary: value })}
         validationError={hasValidationError("hgBinary")}
@@ -98,7 +98,7 @@ const HgConfigurationForm: FC<Props> = ({ initialConfiguration, onConfigurationC
       <InputField
         name="encoding"
         label={t("scm-hg-plugin.config.encoding")}
-        helpText={t("scm-hg-plugin.config.encoding.HelpText")}
+        helpText={t("scm-hg-plugin.config.encodingHelpText")}
         value={configuration.encoding}
         onChange={value => setConfiguration({ ...configuration, encoding: value })}
         validationError={hasValidationError("encoding")}
@@ -108,7 +108,7 @@ const HgConfigurationForm: FC<Props> = ({ initialConfiguration, onConfigurationC
       <Checkbox
         name="showRevisionInId"
         label={t("scm-hg-plugin.config.showRevisionInId")}
-        helpText={t("scm-hg-plugin.config.showRevisionInId.HelpText")}
+        helpText={t("scm-hg-plugin.config.showRevisionInIdHelpText")}
         checked={configuration.showRevisionInId}
         onChange={value => setConfiguration({ ...configuration, showRevisionInId: value })}
         disabled={readOnly}
@@ -116,7 +116,7 @@ const HgConfigurationForm: FC<Props> = ({ initialConfiguration, onConfigurationC
       <Checkbox
         name="enableHttpPostArgs"
         label={t("scm-hg-plugin.config.enableHttpPostArgs")}
-        helpText={t("scm-hg-plugin.config.enableHttpPostArgs.HelpText")}
+        helpText={t("scm-hg-plugin.config.enableHttpPostArgsHelpText")}
         checked={configuration.enableHttpPostArgs}
         onChange={value => setConfiguration({ ...configuration, enableHttpPostArgs: value })}
         disabled={readOnly}
@@ -131,7 +131,11 @@ const HgConfigurationForm: FC<Props> = ({ initialConfiguration, onConfigurationC
         }}
         disabled={readOnly || !configuration.allowDisable}
       />
-      <Button disabled={!initialConfiguration?._links?.autoConfiguration} action={() => triggerAutoConfigure()}>
+      <Button
+        className="is-align-self-flex-end"
+        disabled={!initialConfiguration?._links?.autoConfiguration}
+        action={() => triggerAutoConfigure()}
+      >
         {t("scm-hg-plugin.config.autoConfigure")}
       </Button>
     </div>

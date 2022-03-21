@@ -48,6 +48,7 @@ storiesOf("Table", module)
     >
       <Column header={"First Name"}>{(row: any) => <h4>{row.firstname}</h4>}</Column>
       <Column
+        className="has-background-success"
         header={"Last Name"}
         createComparator={() => {
           return (a: any, b: any) => {
@@ -61,7 +62,7 @@ storiesOf("Table", module)
           };
         }}
       >
-        {(row: any) => <b style={{ color: "red" }}>{row.lastname}</b>}
+        {(row: any) => <b className="has-text-danger">{row.lastname}</b>}
       </Column>
       <Column header={"E-Mail"}>{(row: any) => <span>{row.email}</span>}</Column>
     </Table>

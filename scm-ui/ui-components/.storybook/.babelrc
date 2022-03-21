@@ -1,3 +1,4 @@
 {
-  "presets": ["@scm-manager/babel-preset"]
+  "presets": ["@scm-manager/babel-preset"],
+  "plugins": ["@babel/plugin-syntax-dynamic-import"]
 }

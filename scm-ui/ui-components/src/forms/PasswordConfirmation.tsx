@@ -82,6 +82,7 @@ const PasswordConfirmation: FC<InnerProps> = ({ passwordChanged, passwordValidat
           errorMessage={t("password.passwordInvalid")}
           ref={innerRef}
           onReturnPressed={onReturnPressed}
+          testId="input-password"
         />
       </div>
       <div className="column is-half">
@@ -93,6 +94,7 @@ const PasswordConfirmation: FC<InnerProps> = ({ passwordChanged, passwordValidat
           validationError={passwordConfirmationFailed}
           errorMessage={t("password.passwordConfirmFailed")}
           onReturnPressed={onReturnPressed}
+          testId="input-password-confirmation"
         />
       </div>
     </div>

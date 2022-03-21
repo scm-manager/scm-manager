@@ -58,38 +58,40 @@ const PermissionsTable: FC<Props> = ({
   });
 
   return (
-    <table className="card-table table is-hoverable is-fullwidth">
-      <thead>
-        <tr>
-          <th>
-            <LabelWithHelpIcon label={t("permission.name")} helpText={t("permission.help.nameHelpText")} />
-          </th>
-          <th>
-            <LabelWithHelpIcon label={t("permission.role")} helpText={t("permission.help.roleHelpText")} />
-          </th>
-          <th>
-            <LabelWithHelpIcon
-              label={t("permission.permissions")}
-              helpText={t("permission.help.permissionsHelpText")}
-            />
-          </th>
-          <th />
-        </tr>
-      </thead>
-      <tbody>
-        {permissionCollection?._embedded.permissions.map(permission => {
-          return (
-            <SinglePermission
-              availableRoles={availableRoles}
-              availableVerbs={availableVerbs}
-              key={permission.name + permission.groupPermission.toString()}
-              namespaceOrRepository={namespaceOrRepository}
-              permission={permission}
-            />
-          );
-        })}
-      </tbody>
-    </table>
+    <div className="is-overflow-x-auto">
+      <table className="card-table table is-hoverable is-fullwidth">
+        <thead>
+          <tr>
+            <th>
+              <LabelWithHelpIcon label={t("permission.name")} helpText={t("permission.help.nameHelpText")} />
+            </th>
+            <th>
+              <LabelWithHelpIcon label={t("permission.role")} helpText={t("permission.help.roleHelpText")} />
+            </th>
+            <th>
+              <LabelWithHelpIcon
+                label={t("permission.permissions")}
+                helpText={t("permission.help.permissionsHelpText")}
+              />
+            </th>
+            <th />
+          </tr>
+        </thead>
+        <tbody>
+          {permissionCollection?._embedded.permissions.map(permission => {
+            return (
+              <SinglePermission
+                availableRoles={availableRoles}
+                availableVerbs={availableVerbs}
+                key={permission.name + permission.groupPermission.toString()}
+                namespaceOrRepository={namespaceOrRepository}
+                permission={permission}
+              />
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
   );
 };
 

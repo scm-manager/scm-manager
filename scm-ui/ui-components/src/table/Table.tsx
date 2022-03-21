@@ -61,7 +61,10 @@ const Table: FC<Props> = ({ data, sortable, children, emptyMessage, className })
     return (
       <tr key={rowIndex}>
         {React.Children.map(children, (child, columnIndex) => {
-          return <td>{React.cloneElement(child, { ...child.props, columnIndex, row })}</td>;
+          const { className: columnClassName, ...childProperties } = child.props;
+          return (
+            <td className={columnClassName}>{React.cloneElement(child, { ...childProperties, columnIndex, row })}</td>
+          );
         })}
       </tr>
     );
@@ -127,7 +130,7 @@ const Table: FC<Props> = ({ data, sortable, children, emptyMessage, className })
 };
 
 Table.defaultProps = {
-  sortable: true,
+  sortable: true
 };
 
 const renderSortIcon = (child: ReactElement, ascending: boolean, showIcon: boolean) => {

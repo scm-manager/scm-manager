@@ -42,17 +42,20 @@ const TopMarginBox = styled.div`
 `;
 
 const AvatarWrapper = styled.figure`
-  margin-top: -70px;
-  padding-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  margin: -70px auto 20px;
+  width: 128px;
+  height: 128px;
+  background: var(--scm-white-color);
+  border: 1px solid lightgray;
+  border-radius: 50%;
 `;
 
 const AvatarImage = styled(Image)`
-  width: 128px;
-  height: 128px;
+  width: 75%;
+  margin-left: 0.25rem;
   padding: 5px;
-  background: white;
-  border: 1px solid lightgray;
-  border-radius: 50%;
 `;
 
 class LoginForm extends React.Component<Props, State> {
@@ -104,7 +107,7 @@ class LoginForm extends React.Component<Props, State> {
         <p className="subtitle">{t("login.subtitle")}</p>
         <TopMarginBox className="box">
           <AvatarWrapper>
-            <AvatarImage src="/images/blib.jpg" alt={t("login.logo-alt")} />
+            <AvatarImage src="/images/blibSmallLightBackground.svg" alt={t("login.logo-alt")} />
           </AvatarWrapper>
           <ErrorNotification error={this.areCredentialsInvalid()} />
           <form onSubmit={this.handleSubmit}>

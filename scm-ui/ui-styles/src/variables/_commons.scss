@@ -21,16 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-//$link: #007EB0;
-$info: #33b2e8;
+
 $turquoise: #00d1df;
 $blue: #33b2e8;
 $cyan: $blue;
 $green: #00c79b;
-$warning: #ffdd57;
+$yellow: #ffdd57;
+$red: #ff3860;
+
 $blue-light: #98d8f3;
-$danger: #ff3860;
 
 $family-monospace: Consolas, "Andale Mono WT", "Andale Mono", "Lucida Console", "Lucida Sans Typewriter", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Liberation Mono", "Nimbus Mono L", Monaco, "Courier New", Courier, monospace;
 
 $input-border-color: $blue-light;
+
+$navbar-background-color: transparent;
+$navbar-item-color: $white;
+$navbar-item-hover-color: $navbar-item-color;
+$navbar-item-active-color: $navbar-item-color;
+$navbar-item-hover-background-color: rgba(10, 10, 10, 0.1);
+
+$footer-padding: inherit;
+
+$popover-border-color: $white;

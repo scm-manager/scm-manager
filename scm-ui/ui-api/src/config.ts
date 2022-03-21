@@ -30,20 +30,24 @@ import { requiredLink } from "./links";
 
 export const useConfig = (): ApiResult<Config> => {
   const indexLink = useIndexLink("config");
-  return useQuery<Config, Error>("config", () => apiClient.get(indexLink!).then((response) => response.json()), {
-    enabled: !!indexLink,
+  return useQuery<Config, Error>("config", () => apiClient.get(indexLink!).then(response => response.json()), {
+    enabled: !!indexLink
   });
 };
 
 export const useUpdateConfig = () => {
   const queryClient = useQueryClient();
   const { mutate, isLoading, error, data, reset } = useMutation<unknown, Error, Config>(
-    (config) => {
+    config => {
       const updateUrl = requiredLink(config, "update");
       return apiClient.put(updateUrl, config, "application/vnd.scmm-config+json;v=2");
     },
     {
-      onSuccess: () => queryClient.invalidateQueries("config"),
+      onSuccess: async () => {
+        await queryClient.invalidateQueries("config");
+        await queryClient.invalidateQueries("index");
+        await queryClient.invalidateQueries("pluginCenterAuth");
+      }
     }
   );
   return {
@@ -51,6 +55,6 @@ export const useUpdateConfig = () => {
     isLoading,
     error,
     isUpdated: !!data,
-    reset,
+    reset
   };
 };

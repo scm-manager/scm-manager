@@ -23,20 +23,20 @@
  */
 
 import { LegacyContext, useLegacyContext } from "./LegacyContext";
+import * as React from "react";
 import { FC } from "react";
 import { renderHook } from "@testing-library/react-hooks";
-import * as React from "react";
 import ApiProvider from "./ApiProvider";
 import { useQueryClient } from "react-query";
 
 describe("ApiProvider tests", () => {
-  const createWrapper = (context?: LegacyContext): FC => {
+  const createWrapper = (context: LegacyContext): FC => {
     return ({ children }) => <ApiProvider {...context}>{children}</ApiProvider>;
   };
 
   it("should register QueryClient", () => {
     const { result } = renderHook(() => useQueryClient(), {
-      wrapper: createWrapper(),
+      wrapper: createWrapper({ initialize: () => null })
     });
     expect(result.current).toBeDefined();
   });
@@ -48,11 +48,11 @@ describe("ApiProvider tests", () => {
     };
 
     const { result } = renderHook(() => useLegacyContext(), {
-      wrapper: createWrapper({ onIndexFetched }),
+      wrapper: createWrapper({ onIndexFetched, initialize: () => null })
     });
 
     if (result.current?.onIndexFetched) {
-      result.current.onIndexFetched({ version: "a.b.c", _links: {} });
+      result.current.onIndexFetched({ version: "a.b.c", _links: {}, instanceId: "123" });
     }
 
     expect(msg!).toEqual("hello");

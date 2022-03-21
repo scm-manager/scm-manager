@@ -35,8 +35,7 @@ import { binder, extensionPoints } from "@scm-manager/ui-extensions";
 import ChangesetShortLink from "./repos/components/changesets/ChangesetShortLink";
 
 import "./tokenExpired";
-import LegacyReduxProvider from "./LegacyReduxProvider";
-import ReduxAwareApiProvider from "./ReduxAwareApiProvider";
+import { ApiProvider } from "@scm-manager/ui-api";
 
 binder.bind<extensionPoints.ChangesetDescriptionTokens>("changeset.description.tokens", ChangesetShortLink);
 
@@ -46,14 +45,12 @@ if (!root) {
 }
 
 ReactDOM.render(
-  <LegacyReduxProvider>
-    <ReduxAwareApiProvider>
-      <I18nextProvider i18n={i18n}>
-        <Router basename={urls.contextPath}>
-          <Index />
-        </Router>
-      </I18nextProvider>
-    </ReduxAwareApiProvider>
-  </LegacyReduxProvider>,
+  <ApiProvider>
+    <I18nextProvider i18n={i18n}>
+      <Router basename={urls.contextPath}>
+        <Index />
+      </Router>
+    </I18nextProvider>
+  </ApiProvider>,
   root
 );
