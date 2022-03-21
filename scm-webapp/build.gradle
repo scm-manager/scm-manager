@@ -85,6 +85,9 @@ dependencies {
   implementation libraries.resteasyServletInitializer
   implementation libraries.resteasyValidatorProvider
 
+  // cli
+  implementation libraries.picocli
+
   // openapi
   compileOnly libraries.swaggerJaxRs
 

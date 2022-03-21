@@ -54,6 +54,9 @@ ext {
     resteasyServletInitializer: "org.jboss.resteasy:resteasy-servlet-initializer:${resteasyVersion}",
     resteasyValidatorProvider: "org.jboss.resteasy:resteasy-validator-provider:${resteasyVersion}",
 
+    // cli
+    picocli: 'info.picocli:picocli:4.6.3',
+
     // json
     jacksonCore: "com.fasterxml.jackson.core:jackson-core:${jacksonVersion}",
     jacksonAnnotations: "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}",

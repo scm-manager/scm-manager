@@ -37,6 +37,9 @@ dependencies {
   // rest api
   implementation libraries.jaxRs
 
+  // cli
+  implementation libraries.picocli
+
   // mapper
   implementation libraries.mapstruct
 
