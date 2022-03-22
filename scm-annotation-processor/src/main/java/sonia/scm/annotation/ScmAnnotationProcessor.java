@@ -34,6 +34,7 @@ import org.mapstruct.Mapper;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
+import picocli.CommandLine;
 import sonia.scm.annotation.ClassSetElement.ClassWithAttributes;
 import sonia.scm.plugin.PluginAnnotation;
 import sonia.scm.plugin.Requires;
@@ -98,7 +99,8 @@ public final class ScmAnnotationProcessor extends AbstractProcessor {
   private static final Set<ClassAnnotation> CLASS_ANNOTATIONS =
     ImmutableSet.of(new ClassAnnotation("rest-resource", Path.class),
       new ClassAnnotation("rest-provider", Provider.class),
-      new ClassAnnotation("mapper", Mapper.class));
+      new ClassAnnotation("mapper", Mapper.class),
+      new ClassAnnotation("cli-command", CommandLine.Command.class));
 
   @Override
   public boolean process(Set<? extends TypeElement> annotations,
@@ -144,7 +146,8 @@ public final class ScmAnnotationProcessor extends AbstractProcessor {
     TypeElement annotation = null;
 
     for (TypeElement typeElement : annotations) {
-      if (typeElement.getQualifiedName().toString().equals(annotationClass.getName())) {
+      // Replace $ with . to match subclasses
+      if (typeElement.getQualifiedName().toString().equals(annotationClass.getName().replace("$", "."))) {
         annotation = typeElement;
 
         break;
