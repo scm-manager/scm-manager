@@ -87,6 +87,7 @@ public class JsonStreamingCliContext implements CliContext, AutoCloseable {
     private final String name;
 
     public StreamingOutput(OutputStream underlyingOutputStream, String name) throws IOException {
+      //TODO Pass generator
       this.jsonGenerator = mapper.createGenerator(underlyingOutputStream).setPrettyPrinter(new MinimalPrettyPrinter(""));
       this.underlyingOutputStream = underlyingOutputStream;
       this.name = name;

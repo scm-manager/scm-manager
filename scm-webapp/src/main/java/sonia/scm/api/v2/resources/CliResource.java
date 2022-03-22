@@ -24,35 +24,73 @@
 
 package sonia.scm.api.v2.resources;
 
+import lombok.Data;
+import org.apache.shiro.SecurityUtils;
 import sonia.scm.cli.CliProcessor;
 import sonia.scm.cli.JsonStreamingCliContext;
+import sonia.scm.security.ApiKeyService;
 
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.List;
 
 @Path("v2/cli")
 public class CliResource {
 
   private final CliProcessor processor;
+  private final ApiKeyService service;
 
   @Inject
-  public CliResource(CliProcessor processor) {
+  public CliResource(CliProcessor processor, ApiKeyService service) {
     this.processor = processor;
+    this.service = service;
   }
 
   @POST
   @Path("exec")
   public StreamingOutput exec(@QueryParam("args") List<String> args, InputStream stdin) {
-    return (outputStream) -> {
+    return outputStream -> {
       try (JsonStreamingCliContext context = new JsonStreamingCliContext(stdin, outputStream)) {
         processor.execute(context, args.toArray(new String[0]));
       }
     };
   }
 
+  @POST
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Path("login")
+  public Response login(CliAuthenticationDto auth) {
+    String username = SecurityUtils.getSubject().getPrincipal().toString();
+    //TODO Enhance api keys
+    ApiKeyService.CreationResult newKey = service.createNewKey(username, "cli-" + auth.getHostname(), "OWNER");
+    return Response.ok(newKey.getToken()).build();
+  }
+
+  @DELETE
+  @Path("logout/{hostname}")
+  public Response logout(@PathParam("hostname") String hostname) {
+    String username = SecurityUtils.getSubject().getPrincipal().toString();
+    //TODO Enhance api keys
+    service.getKeys(username)
+      .stream()
+      .filter(apiKey -> apiKey.getDisplayName().equals("cli-" + hostname))
+      .findFirst()
+      .ifPresent(apiKey -> service.remove(username, apiKey.getId()));
+    return Response.noContent().build();
+  }
+
+  @Data
+  static class CliAuthenticationDto {
+    private String hostname;
+  }
 }
