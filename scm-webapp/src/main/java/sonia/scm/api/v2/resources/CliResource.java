@@ -41,11 +41,12 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import java.io.InputStream;
-import java.util.Collection;
 import java.util.List;
 
 @Path("v2/cli")
 public class CliResource {
+
+  private static final String API_KEY_PREFIX = "cli-";
 
   private final CliProcessor processor;
   private final ApiKeyService service;
@@ -71,8 +72,7 @@ public class CliResource {
   @Path("login")
   public Response login(CliAuthenticationDto auth) {
     String username = SecurityUtils.getSubject().getPrincipal().toString();
-    //TODO Enhance api keys
-    ApiKeyService.CreationResult newKey = service.createNewKey(username, "cli-" + auth.getHostname(), "OWNER");
+    ApiKeyService.CreationResult newKey = service.createNewKey(username, API_KEY_PREFIX + auth.getHostname(), "*");
     return Response.ok(newKey.getToken()).build();
   }
 
@@ -80,10 +80,9 @@ public class CliResource {
   @Path("logout/{hostname}")
   public Response logout(@PathParam("hostname") String hostname) {
     String username = SecurityUtils.getSubject().getPrincipal().toString();
-    //TODO Enhance api keys
     service.getKeys(username)
       .stream()
-      .filter(apiKey -> apiKey.getDisplayName().equals("cli-" + hostname))
+      .filter(apiKey -> apiKey.getDisplayName().equals(API_KEY_PREFIX + hostname))
       .findFirst()
       .ifPresent(apiKey -> service.remove(username, apiKey.getId()));
     return Response.noContent().build();
