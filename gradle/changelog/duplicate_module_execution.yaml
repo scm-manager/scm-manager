@@ -1,0 +1,2 @@
+- type: fixed
+  description: Some plugin bundles are executed multiple times ([#1980](https://github.com/scm-manager/scm-manager/pull/1980))

@@ -59,12 +59,11 @@ const resolveModule = (name: string) => {
 const defineModule = (name: string, module: Module) => {
   Promise.all(module.dependencies.map(resolveModule))
     .then(resolvedDependencies => {
-      delete queue[name];
-
       modules["@scm-manager/" + name] = module.fn(...resolvedDependencies);
 
       Object.keys(queue).forEach(queuedModuleName => {
         const queueModule = queue[queuedModuleName];
+        delete queue[queuedModuleName];
         defineModule(queuedModuleName, queueModule);
       });
     })
