@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-components",
-  "version": "2.32.2-SNAPSHOT",
+  "version": "2.32.2",
   "description": "UI Components for SCM-Manager and its plugins",
   "main": "src/index.ts",
   "files": [
@@ -25,7 +25,7 @@
     "@scm-manager/jest-preset": "^2.13.0",
     "@scm-manager/prettier-config": "^2.10.1",
     "@scm-manager/tsconfig": "^2.12.0",
-    "@scm-manager/ui-tests": "^2.32.2-SNAPSHOT",
+    "@scm-manager/ui-tests": "^2.32.2",
     "@storybook/addon-actions": "^6.3.12",
     "@storybook/addon-storyshots": "^6.3.12",
     "@storybook/builder-webpack5": "^6.3.12",
@@ -66,9 +66,9 @@
   },
   "dependencies": {
     "@headlessui/react": "^1.4.3",
-    "@scm-manager/ui-api": "^2.32.2-SNAPSHOT",
-    "@scm-manager/ui-extensions": "^2.32.2-SNAPSHOT",
-    "@scm-manager/ui-types": "^2.32.2-SNAPSHOT",
+    "@scm-manager/ui-api": "^2.32.2",
+    "@scm-manager/ui-extensions": "^2.32.2",
+    "@scm-manager/ui-types": "^2.32.2",
     "classnames": "^2.2.6",
     "date-fns": "^2.4.1",
     "deepmerge": "^4.2.2",
