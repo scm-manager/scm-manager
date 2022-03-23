@@ -40,12 +40,15 @@ public class JsonStreamingCliContext implements CliContext, AutoCloseable {
   private final InputStream stdin;
   private final PrintStream stdout;
   private final PrintStream stderr;
+  private final JsonGenerator jsonGenerator;
 
   public JsonStreamingCliContext(InputStream stdin, OutputStream output) {
     this.stdin = stdin;
     try {
-      this.stdout = new PrintStream(new StreamingOutput(output, "out"), true);
-      this.stderr = new PrintStream(new StreamingOutput(output, "err"), true);
+      this.jsonGenerator = mapper.createGenerator(output).setPrettyPrinter(new MinimalPrettyPrinter(""));
+      jsonGenerator.writeStartArray();
+      this.stdout = new PrintStream(new StreamingOutput(jsonGenerator, "out"), true);
+      this.stderr = new PrintStream(new StreamingOutput(jsonGenerator, "err"), true);
     } catch (IOException e) {
       throw new IllegalStateException(e);
     }
@@ -66,13 +69,27 @@ public class JsonStreamingCliContext implements CliContext, AutoCloseable {
     return stdin;
   }
 
+  @Override
+  public void exit(int exitcode) {
+    try {
+      jsonGenerator.writeStartObject();
+      jsonGenerator.writeNumberField("exit", exitcode);
+      jsonGenerator.writeEndObject();
+    } catch (IOException e) {
+      //TODO Handle
+      e.printStackTrace();
+    }
+  }
+
   private static final ObjectMapper mapper = new ObjectMapper();
 
   @Override
   public void close() {
-    stdout.close();
-    stderr.close();
     try {
+      jsonGenerator.writeEndArray();
+      jsonGenerator.close();
+      stdout.close();
+      stderr.close();
       stdin.close();
     } catch (IOException e) {
       throw new IllegalStateException(e);
@@ -83,13 +100,10 @@ public class JsonStreamingCliContext implements CliContext, AutoCloseable {
 
     private final JsonGenerator jsonGenerator;
     private final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    private final OutputStream underlyingOutputStream;
     private final String name;
 
-    public StreamingOutput(OutputStream underlyingOutputStream, String name) throws IOException {
-      //TODO Pass generator
-      this.jsonGenerator = mapper.createGenerator(underlyingOutputStream).setPrettyPrinter(new MinimalPrettyPrinter(""));
-      this.underlyingOutputStream = underlyingOutputStream;
+    public StreamingOutput(JsonGenerator jsonGenerator, String name) {
+      this.jsonGenerator = jsonGenerator;
       this.name = name;
     }
 
@@ -112,7 +126,6 @@ public class JsonStreamingCliContext implements CliContext, AutoCloseable {
         jsonGenerator.writeStringField(name, content);
         jsonGenerator.writeEndObject();
         jsonGenerator.flush();
-        underlyingOutputStream.write(10);
       }
     }
   }

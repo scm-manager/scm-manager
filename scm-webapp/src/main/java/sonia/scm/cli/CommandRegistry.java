@@ -45,10 +45,10 @@ public class CommandRegistry {
 
   @Inject
   public CommandRegistry(PluginLoader pluginLoader) {
-    Set<Class<?>> commands = new HashSet<>();
-    findCommands(pluginLoader.getUberClassLoader(), commands, pluginLoader.getInstalledModules());
-    findCommands(pluginLoader.getUberClassLoader(), commands, pluginLoader.getInstalledPlugins().stream().map(InstalledPlugin::getDescriptor).collect(Collectors.toList()));
-    this.commands = Collections.unmodifiableSet(commands);
+    Set<Class<?>> cmds = new HashSet<>();
+    findCommands(pluginLoader.getUberClassLoader(), cmds, pluginLoader.getInstalledModules());
+    findCommands(pluginLoader.getUberClassLoader(), cmds, pluginLoader.getInstalledPlugins().stream().map(InstalledPlugin::getDescriptor).collect(Collectors.toList()));
+    this.commands = Collections.unmodifiableSet(cmds);
   }
 
   public Set<Class<?>> getCommands() {

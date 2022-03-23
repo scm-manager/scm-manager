@@ -24,31 +24,19 @@
 
 package sonia.scm.cli;
 
-import com.google.common.collect.ImmutableMap;
-import picocli.CommandLine;
-import sonia.scm.repository.RepositoryManager;
-import sonia.scm.template.TemplateEngineFactory;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import javax.inject.Inject;
+import static org.junit.jupiter.api.Assertions.*;
 
-@CommandLine.Command(name = "list", aliases = "ls")
-public class RepositoryListCommand extends TemplateCommand implements Runnable {
+@ExtendWith(MockitoExtension.class)
+class RepositoryGetCommandTest {
 
-  private final RepositoryManager manager;
-  private static final String DEFAULT_TEMPLATE = String.join("\n",
-    "{{#repos}}",
-    "{{namespace}}/{{name}}{{#description}} ({{description}}){{/description}}",
-    "{{/repos}}"
-  );
 
-  @Inject
-  public RepositoryListCommand(CliContext context, RepositoryManager manager, TemplateEngineFactory templateEngineFactory) {
-    super(context, templateEngineFactory);
-    this.manager = manager;
+  @Test
+  void shouldThrowNotFound() {
+
   }
 
-  @Override
-  public void run() {
-    template(DEFAULT_TEMPLATE, ImmutableMap.of("repos", manager.getAll()));
-  }
 }

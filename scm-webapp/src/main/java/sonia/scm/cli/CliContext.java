@@ -33,4 +33,6 @@ interface CliContext {
   PrintStream getStderr();
 
   InputStream getStdin();
+
+  void exit(int exitcode);
 }

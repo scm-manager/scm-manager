@@ -32,6 +32,7 @@ import sonia.scm.template.TemplateEngineFactory;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.PrintStream;
 import java.io.StringReader;
 import java.util.Collections;
 import java.util.HashMap;
@@ -42,7 +43,7 @@ public abstract class TemplateCommand {
   @CommandLine.Option(names = {"--template", "-t"}, paramLabel = "TEMPLATE", description = "Specify rendering template")
   private String template;
 
-  private final CliContext context;
+  protected final CliContext context;
   private final TemplateEngine templateEngine;
 
   TemplateCommand(CliContext context, TemplateEngineFactory templateEngineFactory) {
@@ -50,11 +51,21 @@ public abstract class TemplateCommand {
     this.templateEngine = templateEngineFactory.getDefaultEngine();
   }
 
-  public void exec(String defaultTemplate, Map<String, Object> model) {
-    try (OutputStreamWriter osw = new OutputStreamWriter(context.getStdout())) {
+  public void template(String defaultTemplate, Map<String, Object> model) {
+    exec(context.getStdout(), defaultTemplate, model);
+
+  }
+
+  public void errorTemplate(String defaultTemplate, Map<String, Object> model) {
+    exec(context.getStderr(), defaultTemplate, model);
+  }
+
+  private void exec(PrintStream stream, String defaultTemplate, Map<String, Object> model) {
+    try (OutputStreamWriter osw = new OutputStreamWriter(stream)) {
       Template tpl = templateEngine.getTemplate(getClass().getName(), new StringReader(MoreObjects.firstNonNull(template, defaultTemplate)));
       tpl.execute(osw, createModel(model));
     } catch (IOException e) {
+      // TODO Handle
       e.printStackTrace();
     }
   }

@@ -26,6 +26,6 @@ package sonia.scm.cli;
 
 import picocli.CommandLine;
 
-@CommandLine.Command(name = "repo", aliases = "repos", subcommands = RepositoryListCommand.class)
+@CommandLine.Command(name = "repo", aliases = "repos", subcommands = {RepositoryListCommand.class, RepositoryGetCommand.class})
 public class RepositoryCommand {
 }
