@@ -26,50 +26,50 @@ package sonia.scm.cli;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.plugin.InstalledPlugin;
-import sonia.scm.plugin.PluginLoader;
-import sonia.scm.plugin.ScmModule;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Singleton
 public class CommandRegistry {
 
   private static final Logger LOG = LoggerFactory.getLogger(CommandRegistry.class);
-  private final Set<Class<?>> commands;
+  private final RegisteredCommandCollector commandCollector;
 
   @Inject
-  public CommandRegistry(PluginLoader pluginLoader) {
-    Set<Class<?>> cmds = new HashSet<>();
-    findCommands(pluginLoader.getUberClassLoader(), cmds, pluginLoader.getInstalledModules());
-    findCommands(pluginLoader.getUberClassLoader(), cmds, pluginLoader.getInstalledPlugins().stream().map(InstalledPlugin::getDescriptor).collect(Collectors.toList()));
-    this.commands = Collections.unmodifiableSet(cmds);
+  public CommandRegistry(RegisteredCommandCollector commandCollector) {
+    this.commandCollector = commandCollector;
   }
 
-  public Set<Class<?>> getCommands() {
-    return commands;
-  }
+  public Set<RegisteredCommandNode> createCommandTree() {
+    Set<RegisteredCommandNode> rootCommands = new HashSet<>();
+    Set<RegisteredCommand> registeredCommands = commandCollector.collect();
 
-  private void findCommands(ClassLoader classLoader, Set<Class<?>> commands, Iterable<? extends ScmModule> modules) {
-    modules.forEach(m -> m.getCliCommands().forEach(c -> {
-      Class<?> command = createCommand(classLoader, c.getClazz());
-      if (command != null && command != ScmManagerCommand.class) {
-        commands.add(command);
-      }
-    }));
-  }
+    Map<Class<?>, RegisteredCommandNode> commandNodes = new HashMap<>();
 
-  private Class<?> createCommand(ClassLoader classLoader, String clazz) {
-    try {
-      return classLoader.loadClass(clazz);
-    } catch (ClassNotFoundException e) {
-      LOG.error("Could not find command class: {}", clazz, e);
-      return null;
+    for (RegisteredCommand command : registeredCommands) {
+      commandNodes.put(command.getCommand(), new RegisteredCommandNode(command.getName(), command.getCommand()));
     }
+
+    for (RegisteredCommand command : registeredCommands) {
+      RegisteredCommandNode node = commandNodes.get(command.getCommand());
+      if (command.getParent() == null) {
+        rootCommands.add(node);
+      } else {
+        RegisteredCommandNode parentNode = commandNodes.get(command.getParent());
+        if (parentNode != null) {
+          parentNode.getChildren().add(node);
+        } else {
+          //TODO Handle
+          LOG.warn("Could not find parent command");
+        }
+      }
+    }
+    return rootCommands;
   }
+
 }

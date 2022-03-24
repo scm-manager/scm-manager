@@ -31,8 +31,7 @@ import sonia.scm.template.TemplateEngine;
 import sonia.scm.template.TemplateEngineFactory;
 
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.io.StringReader;
 import java.util.Collections;
 import java.util.HashMap;
@@ -60,12 +59,12 @@ public abstract class TemplateCommand {
     exec(context.getStderr(), defaultTemplate, model);
   }
 
-  private void exec(PrintStream stream, String defaultTemplate, Map<String, Object> model) {
-    try (OutputStreamWriter osw = new OutputStreamWriter(stream)) {
+  private void exec(PrintWriter stream, String defaultTemplate, Map<String, Object> model) {
+    try {
       Template tpl = templateEngine.getTemplate(getClass().getName(), new StringReader(MoreObjects.firstNonNull(template, defaultTemplate)));
-      tpl.execute(osw, createModel(model));
+      tpl.execute(stream, createModel(model));
     } catch (IOException e) {
-      // TODO Handle
+      //TODO Handle
       e.printStackTrace();
     }
   }

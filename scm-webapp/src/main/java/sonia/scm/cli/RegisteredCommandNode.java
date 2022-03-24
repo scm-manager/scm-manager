@@ -24,32 +24,19 @@
 
 package sonia.scm.cli;
 
-import com.google.common.collect.ImmutableMap;
-import picocli.CommandLine;
-import sonia.scm.repository.RepositoryManager;
-import sonia.scm.template.TemplateEngineFactory;
+import lombok.Getter;
 
-import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 
-@ParentCommand(value = RepositoryCommand.class)
-@CommandLine.Command(name = "list", aliases = "ls", mixinStandardHelpOptions = true)
-public class RepositoryListCommand extends TemplateCommand implements Runnable {
+@Getter
+public class RegisteredCommandNode {
+  private final String name;
+  private final Class<?> command;
+  private final List<RegisteredCommandNode> children = new ArrayList<>();
 
-  private final RepositoryManager manager;
-  private static final String DEFAULT_TEMPLATE = String.join("\n",
-    "{{#repos}}",
-    "{{namespace}}/{{name}}{{#description}} ({{description}}){{/description}}",
-    "{{/repos}}"
-  );
-
-  @Inject
-  public RepositoryListCommand(CliContext context, RepositoryManager manager, TemplateEngineFactory templateEngineFactory) {
-    super(context, templateEngineFactory);
-    this.manager = manager;
-  }
-
-  @Override
-  public void run() {
-    template(DEFAULT_TEMPLATE, ImmutableMap.of("repos", manager.getAll()));
+  public RegisteredCommandNode(String name, Class<?> command) {
+    this.name = name;
+    this.command = command;
   }
 }

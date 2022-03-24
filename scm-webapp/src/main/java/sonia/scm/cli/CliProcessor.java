@@ -41,8 +41,26 @@ public class CliProcessor {
   }
 
   public int execute(CliContext context, String... args) {
-    CommandLine cli = new CommandLine(new ScmManagerCommand(), new CommandFactory(injector, context));
-    registry.getCommands().forEach(cli::addSubcommand);
+    CommandFactory factory = new CommandFactory(injector, context);
+    CommandLine cli = new CommandLine(ScmManagerCommand.class, factory);
+    for (RegisteredCommandNode c : registry.createCommandTree()) {
+      CommandLine commandline = createCommandline(factory, c);
+      cli.getCommandSpec().addSubcommand(c.getName(), commandline);
+    }
+    cli.setErr(context.getStderr());
+    cli.setOut(context.getStdout());
     return cli.execute(args);
+  }
+
+  private CommandLine createCommandline(CommandFactory factory, RegisteredCommandNode command) {
+    CommandLine commandLine = new CommandLine(command.getCommand(), factory);
+
+    for (RegisteredCommandNode child : command.getChildren()) {
+      if (!commandLine.getCommandSpec().subcommands().containsKey(child.getName())) {
+        CommandLine childCommandLine = createCommandline(factory, child);
+        commandLine.getCommandSpec().addSubcommand(child.getName(), childCommandLine);
+      }
+    }
+    return commandLine;
   }
 }

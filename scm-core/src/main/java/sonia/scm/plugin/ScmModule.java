@@ -59,7 +59,7 @@ public class ScmModule {
   private Set<ClassElement> restResources;
 
   @XmlElement(name = "cli-command")
-  private Set<ClassElement> cliCommands;
+  private Set<NamedClassElement> cliCommands;
 
   @XmlElement(name = "mapper")
   private Set<ClassElement> mappers;
@@ -90,7 +90,7 @@ public class ScmModule {
     return nonNull(restResources);
   }
 
-  public Iterable<ClassElement> getCliCommands() {
+  public Iterable<NamedClassElement> getCliCommands() {
     return nonNull(cliCommands);
   }
 

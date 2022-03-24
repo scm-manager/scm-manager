@@ -34,6 +34,7 @@ import sonia.scm.template.TemplateEngineFactory;
 
 import javax.inject.Inject;
 
+@ParentCommand(value = RepositoryCommand.class)
 @CommandLine.Command(name = "get")
 public class RepositoryGetCommand extends TemplateCommand implements Runnable {
 

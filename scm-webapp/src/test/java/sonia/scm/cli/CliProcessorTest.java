@@ -31,7 +31,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import picocli.CommandLine;
 
+import javax.annotation.Nonnull;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintWriter;
 import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -50,7 +54,7 @@ class CliProcessorTest {
 
   @Test
   void shouldExecutePingCommand() {
-    when(registry.getCommands()).thenReturn(Collections.singleton(PingCommand.class));
+    when(registry.createCommandTree()).thenReturn(Collections.singleton(new RegisteredCommandNode("ping", PingCommand.class)));
     Injector injector = Guice.createInjector();
     CliProcessor cliProcessor = new CliProcessor(registry, injector);
 
@@ -62,7 +66,7 @@ class CliProcessorTest {
 
   @Test
   void shouldExecutePingCommandWithAlias() {
-    when(registry.getCommands()).thenReturn(Collections.singleton(PingCommand.class));
+    when(registry.createCommandTree()).thenReturn(Collections.singleton(new RegisteredCommandNode("ping", PingCommand.class)));
     Injector injector = Guice.createInjector();
     CliProcessor cliProcessor = new CliProcessor(registry, injector);
 
@@ -73,12 +77,82 @@ class CliProcessorTest {
 
   @Test
   void shouldExecutePingCommandWithExitCode0() {
-    when(registry.getCommands()).thenReturn(Collections.singleton(PingCommand.class));
+    when(registry.createCommandTree()).thenReturn(Collections.singleton(new RegisteredCommandNode("ping", PingCommand.class)));
     Injector injector = Guice.createInjector();
     CliProcessor cliProcessor = new CliProcessor(registry, injector);
 
-    int exitCode = cliProcessor.execute(context, "scmping");
+    int exitCode = cliProcessor.execute(context, "ping");
 
     assertThat(exitCode).isZero();
+  }
+
+  @Test
+  void shouldPrintCommandOne() {
+    String result = executeHierachyCommands("--help");
+
+    assertThat(result).contains("Commands:\n" +
+      "  one");
+  }
+
+  @Test
+  void shouldPrintCommandTwo() {
+    String result = executeHierachyCommands("one","--help");
+
+    assertThat(result).contains("Commands:\n" +
+      "  two");
+  }
+
+  @Test
+  void shouldPrintCommandThree() {
+    String result = executeHierachyCommands("one", "two","--help");
+
+    assertThat(result).contains("Commands:\n" +
+      "  three");
+  }
+
+  @Nonnull
+  private String executeHierachyCommands(String... args) {
+    RegisteredCommandNode one = new RegisteredCommandNode("one", RootCommand.class);
+    RegisteredCommandNode two = new RegisteredCommandNode("two", SubCommand.class);
+    RegisteredCommandNode three = new RegisteredCommandNode("three", SubSubCommand.class);
+    two.getChildren().add(three);
+    one.getChildren().add(two);
+
+    when(registry.createCommandTree()).thenReturn(Collections.singleton(one));
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    when(context.getStdout()).thenReturn(new PrintWriter(baos));
+
+    Injector injector = Guice.createInjector();
+    CliProcessor cliProcessor = new CliProcessor(registry, injector);
+
+    cliProcessor.execute(context, args);
+    return baos.toString();
+  }
+
+  @CommandLine.Command(name = "one", mixinStandardHelpOptions = true)
+  static class RootCommand implements Runnable {
+
+    @Override
+    public void run() {
+
+    }
+  }
+
+  @CommandLine.Command(name = "two", mixinStandardHelpOptions = true)
+  static class SubCommand implements Runnable {
+
+    @Override
+    public void run() {
+
+    }
+  }
+
+  @CommandLine.Command(name = "three", mixinStandardHelpOptions = true)
+  static class SubSubCommand implements Runnable {
+
+    @Override
+    public void run() {
+
+    }
   }
 }

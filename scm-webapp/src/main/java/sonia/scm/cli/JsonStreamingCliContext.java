@@ -25,42 +25,43 @@
 package sonia.scm.cli;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.PrettyPrinter;
 import com.fasterxml.jackson.core.util.MinimalPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import picocli.CommandLine;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintStream;
+import java.io.PrintWriter;
 
 public class JsonStreamingCliContext implements CliContext, AutoCloseable {
 
   private final InputStream stdin;
-  private final PrintStream stdout;
-  private final PrintStream stderr;
+  private final PrintWriter stdout;
+  private final PrintWriter stderr;
   private final JsonGenerator jsonGenerator;
+  private CommandLine commandLine;
 
   public JsonStreamingCliContext(InputStream stdin, OutputStream output) {
     this.stdin = stdin;
     try {
       this.jsonGenerator = mapper.createGenerator(output).setPrettyPrinter(new MinimalPrettyPrinter(""));
       jsonGenerator.writeStartArray();
-      this.stdout = new PrintStream(new StreamingOutput(jsonGenerator, "out"), true);
-      this.stderr = new PrintStream(new StreamingOutput(jsonGenerator, "err"), true);
+      this.stdout = new PrintWriter(new StreamingOutput(jsonGenerator, "out"), true);
+      this.stderr = new PrintWriter(new StreamingOutput(jsonGenerator, "err"), true);
     } catch (IOException e) {
       throw new IllegalStateException(e);
     }
   }
 
   @Override
-  public PrintStream getStdout() {
+  public PrintWriter getStdout() {
     return stdout;
   }
 
   @Override
-  public PrintStream getStderr() {
+  public PrintWriter getStderr() {
     return stderr;
   }
 
@@ -79,6 +80,15 @@ public class JsonStreamingCliContext implements CliContext, AutoCloseable {
       //TODO Handle
       e.printStackTrace();
     }
+  }
+
+  @Override
+  public CommandLine getCommandLine() {
+    return commandLine;
+  }
+
+  public void setCommandLine(CommandLine commandLine) {
+    this.commandLine = commandLine;
   }
 
   private static final ObjectMapper mapper = new ObjectMapper();

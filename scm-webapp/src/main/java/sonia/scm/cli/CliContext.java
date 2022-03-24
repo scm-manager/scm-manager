@@ -24,15 +24,21 @@
 
 package sonia.scm.cli;
 
+import picocli.CommandLine;
+
 import java.io.InputStream;
-import java.io.PrintStream;
+import java.io.PrintWriter;
 
 interface CliContext {
-  PrintStream getStdout();
+  PrintWriter getStdout();
 
-  PrintStream getStderr();
+  PrintWriter getStderr();
 
   InputStream getStdin();
 
   void exit(int exitcode);
+
+  CommandLine getCommandLine();
+
+  void setCommandLine(CommandLine commandLine);
 }

@@ -22,34 +22,24 @@
  * SOFTWARE.
  */
 
-package sonia.scm.cli;
+package sonia.scm.plugin;
 
-import com.google.common.collect.ImmutableMap;
-import picocli.CommandLine;
-import sonia.scm.repository.RepositoryManager;
-import sonia.scm.template.TemplateEngineFactory;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
-import javax.inject.Inject;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 
-@ParentCommand(value = RepositoryCommand.class)
-@CommandLine.Command(name = "list", aliases = "ls", mixinStandardHelpOptions = true)
-public class RepositoryListCommand extends TemplateCommand implements Runnable {
-
-  private final RepositoryManager manager;
-  private static final String DEFAULT_TEMPLATE = String.join("\n",
-    "{{#repos}}",
-    "{{namespace}}/{{name}}{{#description}} ({{description}}){{/description}}",
-    "{{/repos}}"
-  );
-
-  @Inject
-  public RepositoryListCommand(CliContext context, RepositoryManager manager, TemplateEngineFactory templateEngineFactory) {
-    super(context, templateEngineFactory);
-    this.manager = manager;
-  }
-
-  @Override
-  public void run() {
-    template(DEFAULT_TEMPLATE, ImmutableMap.of("repos", manager.getAll()));
-  }
+@Getter
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode(callSuper = true)
+@XmlAccessorType(XmlAccessType.FIELD)
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+public class NamedClassElement extends ClassElement {
+  private String name;
 }
