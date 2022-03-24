@@ -31,6 +31,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.Locale;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -43,7 +44,7 @@ class JsonStreamingCliContextTest {
     ByteArrayInputStream bais = new ByteArrayInputStream(new byte[0]);
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-    try (JsonStreamingCliContext jsonStreamingCliContext = new JsonStreamingCliContext(bais, baos)) {
+    try (JsonStreamingCliContext jsonStreamingCliContext = new JsonStreamingCliContext(Locale.ENGLISH, bais, baos)) {
       jsonStreamingCliContext.getStdout().print("Hello");
     }
 
@@ -57,7 +58,7 @@ class JsonStreamingCliContextTest {
     ByteArrayInputStream bais = new ByteArrayInputStream(new byte[0]);
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-    try(JsonStreamingCliContext jsonStreamingCliContext = new JsonStreamingCliContext(bais, baos)) {
+    try(JsonStreamingCliContext jsonStreamingCliContext = new JsonStreamingCliContext(Locale.ENGLISH, bais, baos)) {
       jsonStreamingCliContext.getStdout().print("Hello");
       jsonStreamingCliContext.getStderr().print("Error 1: Failed");
       jsonStreamingCliContext.getStdout().print(" World");
@@ -75,7 +76,7 @@ class JsonStreamingCliContextTest {
     ByteArrayInputStream bais = new ByteArrayInputStream(new byte[0]);
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-    try(JsonStreamingCliContext jsonStreamingCliContext = new JsonStreamingCliContext(bais, baos)) {
+    try(JsonStreamingCliContext jsonStreamingCliContext = new JsonStreamingCliContext(Locale.ENGLISH, bais, baos)) {
       jsonStreamingCliContext.getStdout().print("Hello");
       jsonStreamingCliContext.exit(1);
     }

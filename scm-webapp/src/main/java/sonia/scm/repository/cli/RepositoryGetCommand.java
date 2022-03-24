@@ -22,11 +22,14 @@
  * SOFTWARE.
  */
 
-package sonia.scm.cli;
+package sonia.scm.repository.cli;
 
 import com.cronutils.utils.VisibleForTesting;
 import com.google.common.collect.ImmutableMap;
 import picocli.CommandLine;
+import sonia.scm.cli.CliContext;
+import sonia.scm.cli.ParentCommand;
+import sonia.scm.cli.TemplateCommand;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
@@ -43,7 +46,7 @@ public class RepositoryGetCommand extends TemplateCommand implements Runnable {
 
   private static final String DEFAULT_TEMPLATE = String.join("\n",
     "{{repo.namespace}}/{{repo.name}}",
-    "Description: {{repo.description}}",
+    "{{i18n.description}}: {{repo.description}}",
     "Type: {{repo.type}}",
     "Contact: {{repo.contact}}"
   );

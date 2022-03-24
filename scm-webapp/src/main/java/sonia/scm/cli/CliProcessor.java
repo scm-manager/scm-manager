@@ -28,6 +28,8 @@ import com.google.inject.Injector;
 import picocli.CommandLine;
 
 import javax.inject.Inject;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class CliProcessor {
 
@@ -43,24 +45,32 @@ public class CliProcessor {
   public int execute(CliContext context, String... args) {
     CommandFactory factory = new CommandFactory(injector, context);
     CommandLine cli = new CommandLine(ScmManagerCommand.class, factory);
+    cli.setResourceBundle(ResourceBundle.getBundle("sonia.scm.cli.i18n", context.getLocale()));
     for (RegisteredCommandNode c : registry.createCommandTree()) {
-      CommandLine commandline = createCommandline(factory, c);
+      CommandLine commandline = createCommandline(context, factory, c);
       cli.getCommandSpec().addSubcommand(c.getName(), commandline);
     }
     cli.setErr(context.getStderr());
     cli.setOut(context.getStdout());
+    cli.getCommandSpec().resourceBundle();
     return cli.execute(args);
   }
 
-  private CommandLine createCommandline(CommandFactory factory, RegisteredCommandNode command) {
+  private CommandLine createCommandline(CliContext context, CommandFactory factory, RegisteredCommandNode command) {
     CommandLine commandLine = new CommandLine(command.getCommand(), factory);
 
+    ResourceBundle resourceBundle = commandLine.getCommandSpec().resourceBundle();
+    if (resourceBundle != null) {
+      String resourceBundleBaseName = resourceBundle.getBaseBundleName();
+      commandLine.setResourceBundle(ResourceBundle.getBundle(resourceBundleBaseName, context.getLocale()));
+    }
     for (RegisteredCommandNode child : command.getChildren()) {
       if (!commandLine.getCommandSpec().subcommands().containsKey(child.getName())) {
-        CommandLine childCommandLine = createCommandline(factory, child);
+        CommandLine childCommandLine = createCommandline(context, factory, child);
         commandLine.getCommandSpec().addSubcommand(child.getName(), childCommandLine);
       }
     }
+
     return commandLine;
   }
 }

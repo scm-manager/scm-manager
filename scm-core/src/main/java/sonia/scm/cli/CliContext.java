@@ -26,5 +26,22 @@ package sonia.scm.cli;
 
 import picocli.CommandLine;
 
-@CommandLine.Command(name = "repo", aliases = "repos", subcommands = {RepositoryListCommand.class, RepositoryGetCommand.class}, mixinStandardHelpOptions = true)
-public class RepositoryCommand {}
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.Locale;
+
+public interface CliContext {
+  PrintWriter getStdout();
+
+  PrintWriter getStderr();
+
+  InputStream getStdin();
+
+  void exit(int exitcode);
+
+  Locale getLocale();
+
+  CommandLine getCommandLine();
+
+  void setCommandLine(CommandLine commandLine);
+}

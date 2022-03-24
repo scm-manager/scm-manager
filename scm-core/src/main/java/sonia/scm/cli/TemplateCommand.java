@@ -33,9 +33,12 @@ import sonia.scm.template.TemplateEngineFactory;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringReader;
+import java.util.AbstractMap;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.Set;
 
 public abstract class TemplateCommand {
 
@@ -44,8 +47,10 @@ public abstract class TemplateCommand {
 
   protected final CliContext context;
   private final TemplateEngine templateEngine;
+  @CommandLine.Spec
+  private CommandLine.Model.CommandSpec spec;
 
-  TemplateCommand(CliContext context, TemplateEngineFactory templateEngineFactory) {
+  protected TemplateCommand(CliContext context, TemplateEngineFactory templateEngineFactory) {
     this.context = context;
     this.templateEngine = templateEngineFactory.getDefaultEngine();
   }
@@ -63,6 +68,7 @@ public abstract class TemplateCommand {
     try {
       Template tpl = templateEngine.getTemplate(getClass().getName(), new StringReader(MoreObjects.firstNonNull(template, defaultTemplate)));
       tpl.execute(stream, createModel(model));
+      stream.flush();
     } catch (IOException e) {
       //TODO Handle
       e.printStackTrace();
@@ -72,6 +78,36 @@ public abstract class TemplateCommand {
   private Object createModel(Map<String, Object> model) {
     Map<String, Object> finalModel = new HashMap<>(model);
     finalModel.put("lf", "\n");
+
+    ResourceBundle resourceBundle = spec.resourceBundle();
+    if (resourceBundle != null) {
+      finalModel.put("i18n", new I18n(resourceBundle));
+    }
     return Collections.unmodifiableMap(finalModel);
+  }
+
+  @SuppressWarnings("java:S2160") // Do not need equals or hashcode
+  static class I18n extends AbstractMap<String, String> {
+
+    private final ResourceBundle resourceBundle;
+
+    I18n(ResourceBundle resourceBundle) {
+      this.resourceBundle = resourceBundle;
+    }
+
+    @Override
+    public String get(Object key) {
+      return resourceBundle.getString(key.toString());
+    }
+
+    @Override
+    public boolean containsKey(Object key) {
+      return resourceBundle.containsKey(key.toString());
+    }
+
+    @Override
+    public Set<Entry<String, String>> entrySet() {
+      throw  new UnsupportedOperationException("Should not be used");
+    }
   }
 }

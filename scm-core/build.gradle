@@ -65,6 +65,9 @@ dependencies {
   api libraries.jaxRs
   testImplementation libraries.resteasyCore
 
+  // cli
+  api libraries.picocli
+
   // json
   api libraries.jacksonCore
   api libraries.jacksonAnnotations

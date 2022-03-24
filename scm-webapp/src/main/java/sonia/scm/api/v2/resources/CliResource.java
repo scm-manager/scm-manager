@@ -31,12 +31,14 @@ import sonia.scm.cli.JsonStreamingCliContext;
 import sonia.scm.security.ApiKeyService;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
@@ -59,9 +61,9 @@ public class CliResource {
 
   @POST
   @Path("exec")
-  public StreamingOutput exec(@QueryParam("args") List<String> args, InputStream stdin) {
+  public StreamingOutput exec(@QueryParam("args") List<String> args, @Context HttpServletRequest request) {
     return outputStream -> {
-      try (JsonStreamingCliContext context = new JsonStreamingCliContext(stdin, outputStream)) {
+      try (JsonStreamingCliContext context = new JsonStreamingCliContext(request.getLocale(), request.getInputStream(), outputStream)) {
         processor.execute(context, args.toArray(new String[0]));
       }
     };

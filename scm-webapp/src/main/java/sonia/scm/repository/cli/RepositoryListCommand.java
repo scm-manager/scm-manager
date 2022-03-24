@@ -22,10 +22,13 @@
  * SOFTWARE.
  */
 
-package sonia.scm.cli;
+package sonia.scm.repository.cli;
 
 import com.google.common.collect.ImmutableMap;
 import picocli.CommandLine;
+import sonia.scm.cli.CliContext;
+import sonia.scm.cli.ParentCommand;
+import sonia.scm.cli.TemplateCommand;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.template.TemplateEngineFactory;
 

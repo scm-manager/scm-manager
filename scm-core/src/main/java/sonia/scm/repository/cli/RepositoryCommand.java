@@ -22,23 +22,9 @@
  * SOFTWARE.
  */
 
-package sonia.scm.cli;
+package sonia.scm.repository.cli;
 
 import picocli.CommandLine;
 
-import java.io.InputStream;
-import java.io.PrintWriter;
-
-interface CliContext {
-  PrintWriter getStdout();
-
-  PrintWriter getStderr();
-
-  InputStream getStdin();
-
-  void exit(int exitcode);
-
-  CommandLine getCommandLine();
-
-  void setCommandLine(CommandLine commandLine);
-}
+@CommandLine.Command(name = "repo", aliases = "repos", mixinStandardHelpOptions = true)
+public class RepositoryCommand {}

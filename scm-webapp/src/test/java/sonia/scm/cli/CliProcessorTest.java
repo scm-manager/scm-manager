@@ -26,6 +26,7 @@ package sonia.scm.cli;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Answers;
@@ -37,6 +38,7 @@ import javax.annotation.Nonnull;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
 import java.util.Collections;
+import java.util.Locale;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
@@ -51,6 +53,11 @@ class CliProcessorTest {
   @Mock(answer = Answers.RETURNS_DEEP_STUBS)
   private CliContext context;
 
+
+  @BeforeEach
+  void setDefaultLocale() {
+    when(context.getLocale()).thenReturn(Locale.ENGLISH);
+  }
 
   @Test
   void shouldExecutePingCommand() {
@@ -129,6 +136,25 @@ class CliProcessorTest {
     return baos.toString();
   }
 
+
+  @Test
+  void shouldUseResourceBundleFromAnnotationWithContextLocale() {
+    when(context.getLocale()).thenReturn(Locale.GERMAN);
+
+    String helpForThree = executeHierachyCommands("one", "two", "three", "--help");
+
+    assertThat(helpForThree).contains("Dies ist meine App.");
+  }
+
+  @Test
+  void shouldUseDefaultWithoutResourceBundle() {
+    when(context.getLocale()).thenReturn(Locale.GERMAN);
+
+    String helpForTwo = executeHierachyCommands("one", "two", "--help");
+
+    assertThat(helpForTwo).contains("Dies ist meine App.");
+  }
+
   @CommandLine.Command(name = "one", mixinStandardHelpOptions = true)
   static class RootCommand implements Runnable {
 
@@ -147,9 +173,8 @@ class CliProcessorTest {
     }
   }
 
-  @CommandLine.Command(name = "three", mixinStandardHelpOptions = true)
+  @CommandLine.Command(name = "three", mixinStandardHelpOptions = true, resourceBundle = "sonia.scm.cli.test")
   static class SubSubCommand implements Runnable {
-
     @Override
     public void run() {
 
