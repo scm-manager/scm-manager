@@ -45,6 +45,11 @@ public abstract class TemplateCommand {
   @CommandLine.Option(names = {"--template", "-t"}, paramLabel = "TEMPLATE", description = "Specify rendering template")
   private String template;
 
+  protected static final String DEFAULT_ERROR_TEMPLATE = String.join("\n",
+    "{{i18n.errorCommandFailed}}", "{{i18n.errorUnknownError}}:",
+    "{{error}}"
+    );
+
   protected final CliContext context;
   private final TemplateEngine templateEngine;
   @CommandLine.Spec

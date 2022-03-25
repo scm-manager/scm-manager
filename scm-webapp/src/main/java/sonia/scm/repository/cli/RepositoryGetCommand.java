@@ -44,15 +44,15 @@ public class RepositoryGetCommand extends TemplateCommand implements Runnable {
   @CommandLine.Parameters(paramLabel = "namespace/name", index = "0")
   private String repository;
 
-  private static final String DEFAULT_TEMPLATE = String.join("\n",
+  static final String DEFAULT_TEMPLATE = String.join("\n",
     "{{repo.namespace}}/{{repo.name}}",
-    "{{i18n.description}}: {{repo.description}}",
-    "Type: {{repo.type}}",
-    "Contact: {{repo.contact}}"
+    "{{i18n.repoDescription}}: {{repo.description}}",
+    "{{i18n.repoType}}: {{repo.type}}",
+    "{{i18n.repoContact}}: {{repo.contact}}"
   );
 
-  private static final String NOT_FOUND_TEMPLATE = "Could not find repository {{repository}}";
-  private static final String INVALID_TEMPLATE = "Invalid input {{repository}}. Use {namespace/name}.";
+  private static final String NOT_FOUND_TEMPLATE = "{{i18n.repoNotFound}}: {{repository}}";
+  private static final String INVALID_TEMPLATE = "{{i18n.repoInvalidInput}}: {{repository}}.";
 
   private final RepositoryManager manager;
 
