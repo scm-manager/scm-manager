@@ -24,6 +24,8 @@
 
 rootProject.name = 'scm'
 
+includeBuild("../gradle-smp-plugin")
+
 // enfore rules
 // http://kordamp.org/enforcer-gradle-plugin/#_applying_the_plugin
 
@@ -48,7 +50,7 @@ enforce {
     r.version = '11'
   }
   rule(enforcer.rules.EnforceBytecodeVersion) { r ->
-    r.maxJdkVersion = '1.8'
+    r.maxJdkVersion = '11'
   }
 }
 

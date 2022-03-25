@@ -23,7 +23,7 @@
  */
 
 plugins {
-  id 'org.scm-manager.smp' version '0.10.1'
+  id 'org.scm-manager.smp' version '0.10.4-SNAPSHOT'
 }
 
 def svnkitVersion = '1.10.3-scm1'
