@@ -25,3 +25,8 @@ Für das Erstellen einer Gruppe wird lediglich ein Name benötigt. Es können ab
 Die Informationsseite einer Gruppe zeigt neben den Metadaten auch eine Liste der Gruppenmitglieder an.
 
 ![Gruppen Informationen](assets/groups-information.png)
+
+### Gruppe aller angemeldeten Benutzer
+Um Einstellungen oder Berechtigungen für alle regulären Benutzerkonten vorzunehmen (also alle Konten mit Ausnahme von anonymen),
+kann die Gruppe `_authenticated` genutzt werden. Diese Gruppe existiert implizit und jedes Benutzerkonto mit Ausnahme
+von `anonymous` ist Mitglied dieser Gruppe.
