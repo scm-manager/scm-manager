@@ -42,13 +42,10 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
-import java.io.InputStream;
 import java.util.List;
 
 @Path("v2/cli")
 public class CliResource {
-
-  private static final String API_KEY_PREFIX = "cli-";
 
   private final CliProcessor processor;
   private final ApiKeyService service;
@@ -74,17 +71,17 @@ public class CliResource {
   @Path("login")
   public Response login(CliAuthenticationDto auth) {
     String username = SecurityUtils.getSubject().getPrincipal().toString();
-    ApiKeyService.CreationResult newKey = service.createNewKey(username, API_KEY_PREFIX + auth.getHostname(), "*");
+    ApiKeyService.CreationResult newKey = service.createNewKey(username, auth.getApiKey(), "*");
     return Response.ok(newKey.getToken()).build();
   }
 
   @DELETE
-  @Path("logout/{hostname}")
-  public Response logout(@PathParam("hostname") String hostname) {
+  @Path("logout/{apiKey}")
+  public Response logout(@PathParam("apiKey") String apiKeyName) {
     String username = SecurityUtils.getSubject().getPrincipal().toString();
     service.getKeys(username)
       .stream()
-      .filter(apiKey -> apiKey.getDisplayName().equals(API_KEY_PREFIX + hostname))
+      .filter(apiKey -> apiKey.getDisplayName().equals(apiKeyName))
       .findFirst()
       .ifPresent(apiKey -> service.remove(username, apiKey.getId()));
     return Response.noContent().build();
@@ -92,6 +89,6 @@ public class CliResource {
 
   @Data
   static class CliAuthenticationDto {
-    private String hostname;
+    private String apiKey;
   }
 }
