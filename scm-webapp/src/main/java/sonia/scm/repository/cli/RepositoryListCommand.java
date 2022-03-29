@@ -27,10 +27,13 @@ package sonia.scm.repository.cli;
 import com.google.common.collect.ImmutableMap;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
+import sonia.scm.cli.Table;
 import sonia.scm.cli.TemplateRenderer;
+import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 
 import javax.inject.Inject;
+import java.util.Collection;
 
 @ParentCommand(value = RepositoryCommand.class)
 @CommandLine.Command(name = "list", aliases = "ls")
@@ -39,10 +42,11 @@ public class RepositoryListCommand implements Runnable {
   @CommandLine.Mixin
   private final TemplateRenderer templateRenderer;
   private final RepositoryManager manager;
+
   private static final String DEFAULT_TEMPLATE = String.join("\n",
-    "{{#repos}}",
-    "{{namespace}}/{{name}}{{#description}} ({{description}}){{/description}}",
-    "{{/repos}}"
+    "{{#rows}}",
+    "{{#cols}}{{value}}{{^last}} {{/last}}{{/cols}}",
+    "{{/rows}}"
   );
 
   @Inject
@@ -53,6 +57,12 @@ public class RepositoryListCommand implements Runnable {
 
   @Override
   public void run() {
-    templateRenderer.renderToStdout(DEFAULT_TEMPLATE, ImmutableMap.of("repos", manager.getAll()));
+    Table table = templateRenderer.createTable();
+    table.addHeaderKeys("repoName", "repoType", "repoContact");
+    Collection<Repository> repos = manager.getAll();
+    for (Repository repository : repos) {
+      table.addRow(repository.getNamespaceAndName().toString(), repository.getType(), repository.getContact());
+    }
+    templateRenderer.renderToStdout(DEFAULT_TEMPLATE, ImmutableMap.of("rows", table, "repos", repos));
   }
 }

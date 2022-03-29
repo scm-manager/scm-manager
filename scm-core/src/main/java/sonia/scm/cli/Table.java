@@ -1,16 +1,33 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2020-present Cloudogu GmbH and Contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package sonia.scm.cli;
 
-import com.github.mustachejava.DefaultMustacheFactory;
-import com.github.mustachejava.Mustache;
-import com.github.mustachejava.MustacheFactory;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
+import com.google.common.base.Strings;
 import lombok.Value;
-import sonia.scm.repository.Repository;
 
 import javax.annotation.Nullable;
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -19,14 +36,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-public class Table implements Iterable<Table.Row> {
+public final class Table implements Iterable<Table.Row> {
 
   private final List<String[]> data = new ArrayList<>();
 
   @Nullable
   private final ResourceBundle bundle;
 
-  public Table(@Nullable ResourceBundle bundle) {
+  Table(@Nullable ResourceBundle bundle) {
     this.bundle = bundle;
   }
 
@@ -54,7 +71,7 @@ public class Table implements Iterable<Table.Row> {
 
       List<Cell> row = new ArrayList<>();
       for (int c = 0; c < rowArray.length; c++) {
-        String value = createValueWithLength(rowArray[c], maxLength.get(c));
+        String value = createValueWithLength(Strings.nullToEmpty(rowArray[c]), maxLength.get(c));
         Cell cell = new Cell(c == 0, c + 1 == rowArray.length, c, value);
         row.add(cell);
       }
@@ -81,7 +98,7 @@ public class Table implements Iterable<Table.Row> {
       for (int i = 0; i < row.length; i++) {
         int currentMaxLength = maxLength.getOrDefault(i, 0);
         String col = row[i];
-        int length = col.length();
+        int length = col != null ? col.length() : 0;
         if (length > currentMaxLength) {
           maxLength.put(i, length);
         }
@@ -114,5 +131,4 @@ public class Table implements Iterable<Table.Row> {
     List<Cell> cols;
 
   }
-
 }

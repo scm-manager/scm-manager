@@ -87,6 +87,10 @@ public final class TemplateRenderer {
     }
   }
 
+  public Table createTable() {
+    return new Table(spec.resourceBundle());
+  }
+
   private Object createModel(Map<String, Object> model) {
     Map<String, Object> finalModel = new HashMap<>(model);
     finalModel.put("lf", "\n");
