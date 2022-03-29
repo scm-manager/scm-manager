@@ -46,9 +46,9 @@ public class RepositoryCreateCommand implements Runnable {
   private final RepositoryInitializer repositoryInitializer;
   private final Provider<NamespaceStrategy> namespaceStrategyProvider;
 
-  @CommandLine.Parameters
+  @CommandLine.Parameters(descriptionKey = "scm.repo.create.type")
   private String type;
-  @CommandLine.Parameters
+  @CommandLine.Parameters(descriptionKey = "scm.repo.create.repository")
   private String repository;
   @CommandLine.Option(names = {"--description", "-d"}, descriptionKey = "scm.repo.create.desc")
   private String description;

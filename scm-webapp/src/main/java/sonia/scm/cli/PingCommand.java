@@ -40,6 +40,6 @@ public class PingCommand implements Runnable {
 
   @Override
   public void run() {
-    context.getStdout().println("pong");
+    context.getStdout().println("PONG");
   }
 }

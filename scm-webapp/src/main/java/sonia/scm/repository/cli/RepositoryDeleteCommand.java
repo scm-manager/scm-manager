@@ -24,8 +24,9 @@
 
 package sonia.scm.repository.cli;
 
-import com.cronutils.utils.VisibleForTesting;
 import com.google.common.collect.ImmutableMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
 import sonia.scm.cli.CliContext;
 import sonia.scm.cli.ParentCommand;
@@ -35,53 +36,53 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 
 import javax.inject.Inject;
+import java.util.Collections;
 
-@ParentCommand(value = RepositoryCommand.class)
-@CommandLine.Command(name = "get")
-public class RepositoryGetCommand implements Runnable {
+@CommandLine.Command(name = "delete")
+@ParentCommand(RepositoryCommand.class)
+public class RepositoryDeleteCommand implements Runnable {
 
-  @CommandLine.Parameters(paramLabel = "namespace/name", index = "0")
+  private static final Logger LOG = LoggerFactory.getLogger(RepositoryDeleteCommand.class);
+
+  private static final String PROMPT_TEMPLATE = "{{i18n.repoDeletePrompt}}";
+
+  @CommandLine.Parameters
   private String repository;
 
-  static final String DEFAULT_TEMPLATE = String.join("\n",
-    "{{repo.namespace}}/{{repo.name}}",
-    "{{i18n.repoDescription}}: {{repo.description}}",
-    "{{i18n.repoType}}: {{repo.type}}",
-    "{{i18n.repoContact}}: {{repo.contact}}"
-  );
-
-  private static final String NOT_FOUND_TEMPLATE = "{{i18n.repoNotFound}}: {{repository}}";
-  static final String INVALID_TEMPLATE = "{{i18n.repoInvalidInput}}: {{repository}}.";
+  @CommandLine.Option(names = {"--yes", "-y"}, descriptionKey = "scm.repo.delete.prompt")
+  private boolean shouldDelete;
 
   @CommandLine.Mixin
   private final TemplateRenderer templateRenderer;
-  private final CliContext context;
   private final RepositoryManager manager;
+  private final CliContext context;
 
   @Inject
-  RepositoryGetCommand(CliContext context, TemplateRenderer templateRenderer, RepositoryManager manager) {
-    this.templateRenderer = templateRenderer;
-    this.context = context;
+  public RepositoryDeleteCommand(RepositoryManager manager, CliContext context, TemplateRenderer templateRenderer) {
     this.manager = manager;
-  }
-
-  @VisibleForTesting
-  public void setRepository(String repository) {
-    this.repository = repository;
+    this.context = context;
+    this.templateRenderer = templateRenderer;
   }
 
   @Override
   public void run() {
+    if (!shouldDelete) {
+      templateRenderer.renderToStderr(PROMPT_TEMPLATE, Collections.emptyMap());
+      return;
+    }
     String[] splitRepo = repository.split("/");
     if (splitRepo.length != 2) {
-      templateRenderer.renderToStderr(INVALID_TEMPLATE, ImmutableMap.of("repo", repository));
       context.exit(2);
+      return;
     }
-    Repository repo = manager.get(new NamespaceAndName(splitRepo[0], splitRepo[1]));
-    if (repo != null) {
-      templateRenderer.renderToStdout(DEFAULT_TEMPLATE, ImmutableMap.of("repo", repo));
-    } else {
-      templateRenderer.renderToStderr(NOT_FOUND_TEMPLATE, ImmutableMap.of("repo", repository));
+    try {
+      Repository repo = manager.get(new NamespaceAndName(splitRepo[0], splitRepo[1]));
+      if (repo != null) {
+        manager.delete(repo);
+      }
+    } catch (Exception e) {
+      LOG.error("Could not delete repository", e);
+      //TODO Which exitcode?
       context.exit(1);
     }
   }
