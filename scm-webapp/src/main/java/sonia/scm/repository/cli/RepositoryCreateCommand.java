@@ -26,22 +26,22 @@ package sonia.scm.repository.cli;
 
 import com.google.common.collect.ImmutableMap;
 import picocli.CommandLine;
-import sonia.scm.cli.CliContext;
 import sonia.scm.cli.ParentCommand;
-import sonia.scm.cli.TemplateCommand;
+import sonia.scm.cli.TemplateRenderer;
 import sonia.scm.repository.NamespaceStrategy;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryInitializer;
 import sonia.scm.repository.RepositoryManager;
-import sonia.scm.template.TemplateEngineFactory;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 
 @CommandLine.Command(name = "create")
 @ParentCommand(value = RepositoryCommand.class)
-public class RepositoryCreateCommand extends TemplateCommand implements Runnable {
+public class RepositoryCreateCommand implements Runnable {
 
+  @CommandLine.Mixin
+  private final TemplateRenderer templateRenderer;
   private final RepositoryManager manager;
   private final RepositoryInitializer repositoryInitializer;
   private final Provider<NamespaceStrategy> namespaceStrategyProvider;
@@ -50,21 +50,19 @@ public class RepositoryCreateCommand extends TemplateCommand implements Runnable
   private String type;
   @CommandLine.Parameters
   private String repository;
-  @CommandLine.Option(names = "--description")
+  @CommandLine.Option(names = {"--description", "-d"}, descriptionKey = "scm.repo.create.desc")
   private String description;
-  @CommandLine.Option(names = "--contact")
+  @CommandLine.Option(names = {"--contact", "-c"})
   private String contact;
-  @CommandLine.Option(names = "--init")
+  @CommandLine.Option(names = {"--init", "-i"})
   private boolean init;
 
 
   @Inject
-  public RepositoryCreateCommand(RepositoryManager manager,
-                                 CliContext context,
-                                 TemplateEngineFactory templateEngineFactory,
+  public RepositoryCreateCommand(TemplateRenderer templateRenderer, RepositoryManager manager,
                                  RepositoryInitializer repositoryInitializer,
                                  Provider<NamespaceStrategy> namespaceStrategyProvider) {
-    super(context, templateEngineFactory);
+    this.templateRenderer = templateRenderer;
     this.manager = manager;
     this.repositoryInitializer = repositoryInitializer;
     this.namespaceStrategyProvider = namespaceStrategyProvider;
@@ -89,10 +87,9 @@ public class RepositoryCreateCommand extends TemplateCommand implements Runnable
       if (init) {
         repositoryInitializer.initialize(createdRepo, ImmutableMap.of());
       }
-      template(RepositoryGetCommand.DEFAULT_TEMPLATE, ImmutableMap.of("repo", createdRepo));
-    }
-    catch (Exception e) {
-      errorTemplate(DEFAULT_ERROR_TEMPLATE, ImmutableMap.of("error", e.getMessage()));
+      templateRenderer.renderToStdout(RepositoryGetCommand.DEFAULT_TEMPLATE, ImmutableMap.of("repo", createdRepo));
+    } catch (Exception e) {
+      templateRenderer.renderDefaultError(e.getMessage());
     }
   }
 }

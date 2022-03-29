@@ -26,18 +26,18 @@ package sonia.scm.repository.cli;
 
 import com.google.common.collect.ImmutableMap;
 import picocli.CommandLine;
-import sonia.scm.cli.CliContext;
 import sonia.scm.cli.ParentCommand;
-import sonia.scm.cli.TemplateCommand;
+import sonia.scm.cli.TemplateRenderer;
 import sonia.scm.repository.RepositoryManager;
-import sonia.scm.template.TemplateEngineFactory;
 
 import javax.inject.Inject;
 
 @ParentCommand(value = RepositoryCommand.class)
 @CommandLine.Command(name = "list", aliases = "ls")
-public class RepositoryListCommand extends TemplateCommand implements Runnable {
+public class RepositoryListCommand implements Runnable {
 
+  @CommandLine.Mixin
+  private final TemplateRenderer templateRenderer;
   private final RepositoryManager manager;
   private static final String DEFAULT_TEMPLATE = String.join("\n",
     "{{#repos}}",
@@ -46,13 +46,13 @@ public class RepositoryListCommand extends TemplateCommand implements Runnable {
   );
 
   @Inject
-  public RepositoryListCommand(CliContext context, RepositoryManager manager, TemplateEngineFactory templateEngineFactory) {
-    super(context, templateEngineFactory);
+  public RepositoryListCommand(RepositoryManager manager, TemplateRenderer templateRenderer) {
     this.manager = manager;
+    this.templateRenderer = templateRenderer;
   }
 
   @Override
   public void run() {
-    template(DEFAULT_TEMPLATE, ImmutableMap.of("repos", manager.getAll()));
+    templateRenderer.renderToStdout(DEFAULT_TEMPLATE, ImmutableMap.of("repos", manager.getAll()));
   }
 }

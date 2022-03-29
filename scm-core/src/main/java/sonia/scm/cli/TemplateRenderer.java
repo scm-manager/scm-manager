@@ -25,11 +25,13 @@
 package sonia.scm.cli;
 
 import com.google.common.base.MoreObjects;
+import com.google.common.collect.ImmutableMap;
 import picocli.CommandLine;
 import sonia.scm.template.Template;
 import sonia.scm.template.TemplateEngine;
 import sonia.scm.template.TemplateEngineFactory;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringReader;
@@ -40,33 +42,38 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-public abstract class TemplateCommand {
+public final class TemplateRenderer {
 
   @CommandLine.Option(names = {"--template", "-t"}, paramLabel = "TEMPLATE", description = "Specify rendering template")
   private String template;
 
-  protected static final String DEFAULT_ERROR_TEMPLATE = String.join("\n",
+  private static final String DEFAULT_ERROR_TEMPLATE = String.join("\n",
     "{{i18n.errorCommandFailed}}", "{{i18n.errorUnknownError}}:",
     "{{error}}"
-    );
+  );
 
-  protected final CliContext context;
+  private final CliContext context;
   private final TemplateEngine templateEngine;
-  @CommandLine.Spec
+  @CommandLine.Spec(CommandLine.Spec.Target.MIXEE)
   private CommandLine.Model.CommandSpec spec;
 
-  protected TemplateCommand(CliContext context, TemplateEngineFactory templateEngineFactory) {
+  @Inject
+  public TemplateRenderer(CliContext context, TemplateEngineFactory templateEngineFactory) {
     this.context = context;
     this.templateEngine = templateEngineFactory.getDefaultEngine();
   }
 
-  public void template(String defaultTemplate, Map<String, Object> model) {
+  public void renderToStdout(String defaultTemplate, Map<String, Object> model) {
     exec(context.getStdout(), defaultTemplate, model);
 
   }
 
-  public void errorTemplate(String defaultTemplate, Map<String, Object> model) {
+  public void renderToStderr(String defaultTemplate, Map<String, Object> model) {
     exec(context.getStderr(), defaultTemplate, model);
+  }
+
+  public void renderDefaultError(String error) {
+    exec(context.getStderr(), DEFAULT_ERROR_TEMPLATE, ImmutableMap.of("error", error));
   }
 
   private void exec(PrintWriter stream, String defaultTemplate, Map<String, Object> model) {
@@ -92,7 +99,7 @@ public abstract class TemplateCommand {
   }
 
   @SuppressWarnings("java:S2160") // Do not need equals or hashcode
-  static class I18n extends AbstractMap<String, String> {
+  private static class I18n extends AbstractMap<String, String> {
 
     private final ResourceBundle resourceBundle;
 

@@ -29,17 +29,16 @@ import com.google.common.collect.ImmutableMap;
 import picocli.CommandLine;
 import sonia.scm.cli.CliContext;
 import sonia.scm.cli.ParentCommand;
-import sonia.scm.cli.TemplateCommand;
+import sonia.scm.cli.TemplateRenderer;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
-import sonia.scm.template.TemplateEngineFactory;
 
 import javax.inject.Inject;
 
 @ParentCommand(value = RepositoryCommand.class)
 @CommandLine.Command(name = "get")
-public class RepositoryGetCommand extends TemplateCommand implements Runnable {
+public class RepositoryGetCommand implements Runnable {
 
   @CommandLine.Parameters(paramLabel = "namespace/name", index = "0")
   private String repository;
@@ -54,11 +53,15 @@ public class RepositoryGetCommand extends TemplateCommand implements Runnable {
   private static final String NOT_FOUND_TEMPLATE = "{{i18n.repoNotFound}}: {{repository}}";
   private static final String INVALID_TEMPLATE = "{{i18n.repoInvalidInput}}: {{repository}}.";
 
+  @CommandLine.Mixin
+  private final TemplateRenderer templateRenderer;
+  private final CliContext context;
   private final RepositoryManager manager;
 
   @Inject
-  RepositoryGetCommand(CliContext context, TemplateEngineFactory templateEngineFactory, RepositoryManager manager) {
-    super(context, templateEngineFactory);
+  RepositoryGetCommand(CliContext context, TemplateRenderer templateRenderer, RepositoryManager manager) {
+    this.templateRenderer = templateRenderer;
+    this.context = context;
     this.manager = manager;
   }
 
@@ -71,14 +74,14 @@ public class RepositoryGetCommand extends TemplateCommand implements Runnable {
   public void run() {
     String[] splitRepo = repository.split("/");
     if (splitRepo.length != 2) {
-      errorTemplate(INVALID_TEMPLATE, ImmutableMap.of("repo", repository));
+      templateRenderer.renderToStderr(INVALID_TEMPLATE, ImmutableMap.of("repo", repository));
       context.exit(2);
     }
     Repository repo = manager.get(new NamespaceAndName(splitRepo[0], splitRepo[1]));
     if (repo != null) {
-      template(DEFAULT_TEMPLATE, ImmutableMap.of("repo", repo));
+      templateRenderer.renderToStdout(DEFAULT_TEMPLATE, ImmutableMap.of("repo", repo));
     } else {
-      errorTemplate(NOT_FOUND_TEMPLATE, ImmutableMap.of("repo", repository));
+      templateRenderer.renderToStderr(NOT_FOUND_TEMPLATE, ImmutableMap.of("repo", repository));
       context.exit(1);
     }
   }
