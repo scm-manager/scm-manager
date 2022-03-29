@@ -26,20 +26,5 @@ package sonia.scm.cli;
 
 import picocli.CommandLine;
 
-import javax.inject.Inject;
-
-@CommandLine.Command(name = "ping")
-public class PingCommand implements Runnable {
-
-  private final CliContext context;
-
-  @Inject
-  public PingCommand(CliContext context) {
-    this.context = context;
-  }
-
-  @Override
-  public void run() {
-    context.getStdout().println("pong");
-  }
-}
+@CommandLine.Command(name = "logout")
+public class LogoutCommand {}
