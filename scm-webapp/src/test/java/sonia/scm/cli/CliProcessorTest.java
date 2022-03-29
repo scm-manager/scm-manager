@@ -155,7 +155,7 @@ class CliProcessorTest {
     assertThat(helpForTwo).contains("Dies ist meine App.");
   }
 
-  @CommandLine.Command(name = "one", mixinStandardHelpOptions = true)
+  @CommandLine.Command(name = "one")
   static class RootCommand implements Runnable {
 
     @Override
@@ -164,7 +164,7 @@ class CliProcessorTest {
     }
   }
 
-  @CommandLine.Command(name = "two", mixinStandardHelpOptions = true)
+  @CommandLine.Command(name = "two")
   static class SubCommand implements Runnable {
 
     @Override
@@ -173,7 +173,7 @@ class CliProcessorTest {
     }
   }
 
-  @CommandLine.Command(name = "three", mixinStandardHelpOptions = true, resourceBundle = "sonia.scm.cli.test")
+  @CommandLine.Command(name = "three", resourceBundle = "sonia.scm.cli.test")
   static class SubSubCommand implements Runnable {
     @Override
     public void run() {

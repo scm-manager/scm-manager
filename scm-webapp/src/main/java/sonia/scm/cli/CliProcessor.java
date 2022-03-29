@@ -28,23 +28,25 @@ import com.google.inject.Injector;
 import picocli.CommandLine;
 
 import javax.inject.Inject;
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class CliProcessor {
 
   private final CommandRegistry registry;
   private final Injector injector;
+  private final CommandLine.Model.CommandSpec usageHelp;
 
   @Inject
   public CliProcessor(CommandRegistry registry, Injector injector) {
     this.registry = registry;
     this.injector = injector;
+    this.usageHelp = new CommandLine(HelpMixin.class).getCommandSpec();
   }
 
   public int execute(CliContext context, String... args) {
     CommandFactory factory = new CommandFactory(injector, context);
     CommandLine cli = new CommandLine(ScmManagerCommand.class, factory);
+    cli.getCommandSpec().addMixin("help", usageHelp);
     cli.setResourceBundle(ResourceBundle.getBundle("sonia.scm.cli.i18n", context.getLocale()));
     for (RegisteredCommandNode c : registry.createCommandTree()) {
       CommandLine commandline = createCommandline(context, factory, c);
@@ -58,6 +60,7 @@ public class CliProcessor {
 
   private CommandLine createCommandline(CliContext context, CommandFactory factory, RegisteredCommandNode command) {
     CommandLine commandLine = new CommandLine(command.getCommand(), factory);
+    commandLine.getCommandSpec().addMixin("help", usageHelp);
 
     ResourceBundle resourceBundle = commandLine.getCommandSpec().resourceBundle();
     if (resourceBundle != null) {

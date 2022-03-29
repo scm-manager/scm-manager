@@ -22,37 +22,12 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.cli;
+package sonia.scm.cli;
 
-import com.google.common.collect.ImmutableMap;
 import picocli.CommandLine;
-import sonia.scm.cli.CliContext;
-import sonia.scm.cli.ParentCommand;
-import sonia.scm.cli.TemplateCommand;
-import sonia.scm.repository.RepositoryManager;
-import sonia.scm.template.TemplateEngineFactory;
 
-import javax.inject.Inject;
+public class HelpMixin {
 
-@ParentCommand(value = RepositoryCommand.class)
-@CommandLine.Command(name = "list", aliases = "ls")
-public class RepositoryListCommand extends TemplateCommand implements Runnable {
-
-  private final RepositoryManager manager;
-  private static final String DEFAULT_TEMPLATE = String.join("\n",
-    "{{#repos}}",
-    "{{namespace}}/{{name}}{{#description}} ({{description}}){{/description}}",
-    "{{/repos}}"
-  );
-
-  @Inject
-  public RepositoryListCommand(CliContext context, RepositoryManager manager, TemplateEngineFactory templateEngineFactory) {
-    super(context, templateEngineFactory);
-    this.manager = manager;
-  }
-
-  @Override
-  public void run() {
-    template(DEFAULT_TEMPLATE, ImmutableMap.of("repos", manager.getAll()));
-  }
+  @CommandLine.Option(names = {"--help", "-h"}, usageHelp = true, description = "Show this help message and exit.")
+  private boolean usageHelp;
 }
