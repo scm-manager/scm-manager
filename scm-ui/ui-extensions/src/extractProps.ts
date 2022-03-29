@@ -22,37 +22,7 @@
  * SOFTWARE.
  */
 import React from "react";
-import BranchDetail from "./BranchDetail";
-import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
-import { Branch, Repository } from "@scm-manager/ui-types";
-import BranchDangerZone from "../containers/BranchDangerZone";
 
-type Props = {
-  repository: Repository;
-  branch: Branch;
-};
+type ExtractProps<T> = T extends React.ComponentType<infer U> ? U : never;
 
-class BranchView extends React.Component<Props> {
-  render() {
-    const { repository, branch } = this.props;
-    return (
-      <>
-        <BranchDetail repository={repository} branch={branch} />
-        <hr />
-        <div className="content">
-          <ExtensionPoint<extensionPoints.ReposBranchDetailsInformation>
-            name="repos.branch-details.information"
-            renderAll={true}
-            props={{
-              repository,
-              branch
-            }}
-          />
-        </div>
-        <BranchDangerZone repository={repository} branch={branch} />
-      </>
-    );
-  }
-}
-
-export default BranchView;
+export default ExtractProps;

@@ -87,7 +87,12 @@ const FileTree: FC<Props> = ({ repository, directory, baseUrl, revision, fetchNe
 
   return (
     <div className="panel-block">
-      <ExtensionPoint name="repos.source.tree.wrapper" props={extProps} renderAll={true} wrapper={true}>
+      <ExtensionPoint<extensionPoints.ReposSourcesTreeWrapper>
+        name="repos.source.tree.wrapper"
+        props={extProps}
+        renderAll={true}
+        wrapper={true}
+      >
         <table className="table table-hover table-sm is-fullwidth">
           <thead>
             <tr>

@@ -24,8 +24,8 @@
 
 import React, { FC } from "react";
 import { Changeset } from "@scm-manager/ui-types";
-import { useBinder } from "@scm-manager/ui-extensions";
-import { SplitAndReplace, Replacement } from "@scm-manager/ui-components";
+import { extensionPoints, useBinder } from "@scm-manager/ui-extensions";
+import { Replacement, SplitAndReplace } from "@scm-manager/ui-components";
 
 type Props = {
   changeset: Changeset;
@@ -35,15 +35,14 @@ type Props = {
 const ChangesetDescription: FC<Props> = ({ changeset, value }) => {
   const binder = useBinder();
 
-  const replacements: ((changeset: Changeset, value: string) => Replacement[])[] = binder.getExtensions(
-    "changeset.description.tokens",
-    {
-      changeset,
-      value,
-    }
-  );
+  const replacements: ((changeset: Changeset, value: string) => Replacement[])[] = binder.getExtensions<
+    extensionPoints.ChangesetDescriptionTokens
+  >("changeset.description.tokens", {
+    changeset,
+    value
+  });
 
-  return <SplitAndReplace text={value} replacements={replacements.flatMap((r) => r(changeset, value))} />;
+  return <SplitAndReplace text={value} replacements={replacements.flatMap(r => r(changeset, value))} />;
 };
 
 export default ChangesetDescription;

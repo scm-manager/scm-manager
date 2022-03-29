@@ -24,7 +24,7 @@
 import React from "react";
 import { Repository } from "@scm-manager/ui-types";
 import RepositoryDetailTable from "./RepositoryDetailTable";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 
 type Props = {
   repository: Repository;
@@ -38,7 +38,7 @@ class RepositoryDetails extends React.Component<Props> {
         <RepositoryDetailTable repository={repository} />
         <hr />
         <div className="content">
-          <ExtensionPoint
+          <ExtensionPoint<extensionPoints.RepositoryDetailsInformation>
             name="repos.repository-details.information"
             renderAll={true}
             props={{

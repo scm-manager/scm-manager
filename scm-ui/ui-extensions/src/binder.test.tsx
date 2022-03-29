@@ -22,7 +22,9 @@
  * SOFTWARE.
  */
 
+import React from "react";
 import { Binder, ExtensionPointDefinition, SimpleDynamicExtensionPointDefinition } from "./binder";
+import ExtensionPoint, { RenderableExtensionPointDefinition } from "./ExtensionPoint";
 
 describe("binder tests", () => {
   let binder: Binder;
@@ -115,6 +117,59 @@ describe("binder tests", () => {
     binder.bind("test.extension.c", 2, () => false);
     const binderExtensionC = binder.getExtension("test.extension.c");
     expect(binderExtensionC).not.toBeNull();
+  });
+
+  it("should allow typings for renderable extension points", () => {
+    type TestExtensionPointA = RenderableExtensionPointDefinition<"test.extension.a">;
+    type TestExtensionPointB = RenderableExtensionPointDefinition<"test.extension.b", { testProp: boolean[] }>;
+
+    binder.bind<TestExtensionPointA>(
+      "test.extension.a",
+      () => <h1>Hello world</h1>,
+      () => false
+    );
+    const binderExtensionA = binder.getExtension<TestExtensionPointA>("test.extension.a");
+    expect(binderExtensionA).not.toBeNull();
+    binder.bind<TestExtensionPointB>("test.extension.b", ({ testProp }) => (
+      <h1>
+        {testProp.map((b) => (
+          <span>{b}</span>
+        ))}
+      </h1>
+    ));
+    const binderExtensionsB = binder.getExtensions<TestExtensionPointB>("test.extension.b", {
+      testProp: [true, false],
+    });
+    expect(binderExtensionsB).toHaveLength(1);
+  });
+
+  it("should render typed extension point", () => {
+    type TestExtensionPointA = RenderableExtensionPointDefinition<"test.extension.a">;
+    type TestExtensionPointB = RenderableExtensionPointDefinition<"test.extension.b", { testProp: boolean[] }>;
+
+    binder.bind<TestExtensionPointA>(
+      "test.extension.a",
+      () => <h1>Hello world</h1>,
+      () => false
+    );
+    const binderExtensionA = <ExtensionPoint<TestExtensionPointA> name="test.extension.a" />;
+    expect(binderExtensionA).not.toBeNull();
+    binder.bind<TestExtensionPointB>("test.extension.b", ({ testProp }) => (
+      <h1>
+        {testProp.map((b) => (
+          <span>{b}</span>
+        ))}
+      </h1>
+    ));
+    const binderExtensionsB = (
+      <ExtensionPoint<TestExtensionPointB>
+        name="test.extension.b"
+        props={{
+          testProp: [true, false],
+        }}
+      />
+    );
+    expect(binderExtensionsB).not.toBeNull();
   });
 
   it("should allow typings for dynamic extension points", () => {

@@ -21,39 +21,70 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, ReactNode } from "react";
-import { Binder } from "./binder";
+import React, { PropsWithChildren, ReactNode } from "react";
+import { Binder, ExtensionPointDefinition } from "./binder";
 import useBinder from "./useBinder";
 
+export type Renderable<P> = React.ReactElement | React.ComponentType<P>;
+export type RenderableExtensionPointDefinition<
+  Name extends string = string,
+  P = undefined
+> = ExtensionPointDefinition<Name, Renderable<P>, P>;
+
+export type SimpleRenderableDynamicExtensionPointDefinition<
+  Prefix extends string,
+  Suffix extends string | undefined,
+  Properties
+> = RenderableExtensionPointDefinition<Suffix extends string ? `${Prefix}${Suffix}` : `${Prefix}${string}`, Properties>;
+
+/**
+ * @deprecated Obsolete type
+ */
 type PropTransformer = (props: object) => object;
 
-type Props = {
-  name: string;
+type BaseProps<E extends RenderableExtensionPointDefinition> = {
+  name: E["name"];
   renderAll?: boolean;
-  props?: object;
+  /**
+   * @deprecated Obsolete property, do not use
+   */
   propTransformer?: PropTransformer;
   wrapper?: boolean;
 };
 
-const createInstance = (Component: any, props: object, key?: number) => {
-  const instanceProps = {
-    ...props,
-    ...(Component.props || {}),
-    key,
-  };
-  if (React.isValidElement(Component)) {
-    return React.cloneElement(Component, instanceProps);
-  }
-  return <Component {...instanceProps} />;
-};
+type Props<E extends RenderableExtensionPointDefinition> = BaseProps<E> &
+  (E["props"] extends undefined
+    ? { props?: E["props"] }
+    : {
+        props: E["props"];
+      });
 
-const renderAllExtensions = (binder: Binder, name: string, props: object) => {
-  const extensions = binder.getExtensions(name, props);
+function createInstance<P>(Component: Renderable<P>, props: P, key?: number) {
+  if (React.isValidElement(Component)) {
+    return React.cloneElement(Component, {
+      ...props,
+      ...Component.props,
+      key,
+    });
+  }
+  return <Component {...props} key={key} />;
+}
+
+const renderAllExtensions = <E extends RenderableExtensionPointDefinition<string, unknown>>(
+  binder: Binder,
+  name: E["name"],
+  props: E["props"]
+) => {
+  const extensions = binder.getExtensions<E>(name, props);
   return <>{extensions.map((cmp, index) => createInstance(cmp, props, index))}</>;
 };
 
-const renderWrapperExtensions = (binder: Binder, name: string, props: object) => {
-  const extensions = [...(binder.getExtensions(name, props) || [])];
+const renderWrapperExtensions = <E extends RenderableExtensionPointDefinition<string, any>>(
+  binder: Binder,
+  name: E["name"],
+  props: E["props"]
+) => {
+  const extensions = binder.getExtensions<E>(name, props);
   extensions.reverse();
 
   let instance: any = null;
@@ -68,8 +99,12 @@ const renderWrapperExtensions = (binder: Binder, name: string, props: object) =>
   return instance;
 };
 
-const renderSingleExtension = (binder: Binder, name: string, props: object) => {
-  const cmp = binder.getExtension(name, props);
+const renderSingleExtension = <E extends RenderableExtensionPointDefinition<string, unknown>>(
+  binder: Binder,
+  name: E["name"],
+  props: E["props"]
+) => {
+  const cmp = binder.getExtension<E>(name, props);
   if (!cmp) {
     return null;
   }
@@ -97,18 +132,21 @@ const createRenderProps = (propTransformer?: PropTransformer, props?: object) =>
 /**
  * ExtensionPoint renders components which are bound to an extension point.
  */
-const ExtensionPoint: FC<Props> = ({ name, propTransformer, props, renderAll, wrapper, children }) => {
+export default function ExtensionPoint<
+  E extends RenderableExtensionPointDefinition<string, any> = RenderableExtensionPointDefinition<string, any>
+>({ name, propTransformer, props, renderAll, wrapper, children }: PropsWithChildren<Props<E>>): JSX.Element | null {
   const binder = useBinder();
-  const renderProps = createRenderProps(propTransformer, { ...(props || {}), children });
-  if (!binder.hasExtension(name, renderProps)) {
+  const renderProps: E["props"] | {} = createRenderProps(propTransformer, {
+    ...(props || {}),
+    children,
+  });
+  if (!binder.hasExtension<E>(name, renderProps)) {
     return renderDefault(children);
   } else if (renderAll) {
     if (wrapper) {
-      return renderWrapperExtensions(binder, name, renderProps);
+      return renderWrapperExtensions<E>(binder, name, renderProps);
     }
-    return renderAllExtensions(binder, name, renderProps);
+    return renderAllExtensions<E>(binder, name, renderProps);
   }
-  return renderSingleExtension(binder, name, renderProps);
-};
-
-export default ExtensionPoint;
+  return renderSingleExtension<E>(binder, name, renderProps);
+}

@@ -26,7 +26,7 @@ import { useRouteMatch } from "react-router-dom";
 import RepositoryForm from "../components/form";
 import { Repository } from "@scm-manager/ui-types";
 import { ErrorNotification, Subtitle, urls } from "@scm-manager/ui-components";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import RepositoryDangerZone from "./RepositoryDangerZone";
 import { useTranslation } from "react-i18next";
 import ExportRepository from "./ExportRepository";
@@ -57,9 +57,17 @@ const EditRepo: FC<Props> = ({ repository }) => {
       <UpdateNotification isUpdated={isUpdated} />
       <ErrorNotification error={error} />
       <RepositoryForm repository={repository} loading={isLoading} modifyRepository={update} />
-      <ExtensionPoint name="repo-config.details" props={extensionProps} renderAll={true} />
+      <ExtensionPoint<extensionPoints.RepoConfigDetails>
+        name="repo-config.details"
+        props={extensionProps}
+        renderAll={true}
+      />
       {repository._links.exportInfo && <ExportRepository repository={repository} />}
-      <ExtensionPoint name="repo-config.route" props={extensionProps} renderAll={true} />
+      <ExtensionPoint<extensionPoints.RepoConfigRoute>
+        name="repo-config.route"
+        props={extensionProps}
+        renderAll={true}
+      />
       {(repository._links.runHealthCheck || repository.healthCheckRunning) && (
         <RunHealthCheck repository={repository} />
       )}

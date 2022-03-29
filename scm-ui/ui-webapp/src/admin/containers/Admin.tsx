@@ -24,7 +24,7 @@
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { Redirect, Route, RouteProps, Switch, useRouteMatch } from "react-router-dom";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import {
   CustomQueryFlexWrappedColumns,
   NavLink,
@@ -97,7 +97,7 @@ const Admin: FC = () => {
               <Route path={`${url}/roles/:page`} exact>
                 <RepositoryRoles baseUrl={`${url}/roles`} />
               </Route>
-              <ExtensionPoint name="admin.route" props={extensionProps} renderAll={true} />
+              <ExtensionPoint<extensionPoints.AdminRoute> name="admin.route" props={extensionProps} renderAll={true} />
             </Switch>
           </PrimaryContentColumn>
           <SecondaryNavigationColumn>
@@ -142,7 +142,11 @@ const Admin: FC = () => {
                 activeWhenMatch={matchesRoles}
                 activeOnlyWhenExact={false}
               />
-              <ExtensionPoint name="admin.navigation" props={extensionProps} renderAll={true} />
+              <ExtensionPoint<extensionPoints.AdminNavigation>
+                name="admin.navigation"
+                props={extensionProps}
+                renderAll={true}
+              />
               <SubNavigation
                 to={`${url}/settings/general`}
                 label={t("admin.menu.settingsNavLink")}
@@ -154,7 +158,11 @@ const Admin: FC = () => {
                   label={t("admin.menu.generalNavLink")}
                   testId="admin-settings-general-link"
                 />
-                <ExtensionPoint name="admin.setting" props={extensionProps} renderAll={true} />
+                <ExtensionPoint<extensionPoints.AdminSetting>
+                  name="admin.setting"
+                  props={extensionProps}
+                  renderAll={true}
+                />
               </SubNavigation>
             </SecondaryNavigation>
           </SecondaryNavigationColumn>

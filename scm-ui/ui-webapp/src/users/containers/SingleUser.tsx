@@ -23,7 +23,7 @@
  */
 import React, { FC } from "react";
 import { Route, useParams, useRouteMatch } from "react-router-dom";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import {
   CustomQueryFlexWrappedColumns,
   ErrorPage,
@@ -97,7 +97,7 @@ const SingleUser: FC = () => {
             <Route path={`${url}/settings/apiKeys`}>
               <SetApiKeys user={user} />
             </Route>
-            <ExtensionPoint name="user.route" props={extensionProps} renderAll={true} />
+            <ExtensionPoint<extensionPoints.UserRoute> name="user.route" props={extensionProps} renderAll={true} />
           </PrimaryContentColumn>
           <SecondaryNavigationColumn>
             <SecondaryNavigation label={t("singleUser.menu.navigationLabel")}>
@@ -119,7 +119,11 @@ const SingleUser: FC = () => {
                 <SetPermissionsNavLink user={user} permissionsUrl={`${url}/settings/permissions`} />
                 <SetPublicKeysNavLink user={user} publicKeyUrl={`${url}/settings/publickeys`} />
                 <SetApiKeysNavLink user={user} apiKeyUrl={`${url}/settings/apiKeys`} />
-                <ExtensionPoint name="user.setting" props={extensionProps} renderAll={true} />
+                <ExtensionPoint<extensionPoints.UserSetting>
+                  name="user.setting"
+                  props={extensionProps}
+                  renderAll={true}
+                />
               </SubNavigation>
             </SecondaryNavigation>
           </SecondaryNavigationColumn>

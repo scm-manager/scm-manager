@@ -24,7 +24,7 @@
 import React, { FC } from "react";
 import { Route, useParams, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import {
   CustomQueryFlexWrappedColumns,
   ErrorPage,
@@ -79,7 +79,7 @@ const SingleGroup: FC = () => {
             <Route path={`${url}/settings/permissions`} exact>
               <SetGroupPermissions group={group} />
             </Route>
-            <ExtensionPoint name="group.route" props={extensionProps} renderAll={true} />
+            <ExtensionPoint<extensionPoints.GroupRoute> name="group.route" props={extensionProps} renderAll={true} />
           </PrimaryContentColumn>
           <SecondaryNavigationColumn>
             <SecondaryNavigation label={t("singleGroup.menu.navigationLabel")}>
@@ -89,7 +89,11 @@ const SingleGroup: FC = () => {
                 label={t("singleGroup.menu.informationNavLink")}
                 title={t("singleGroup.menu.informationNavLink")}
               />
-              <ExtensionPoint name="group.navigation" props={extensionProps} renderAll={true} />
+              <ExtensionPoint<extensionPoints.GroupNavigation>
+                name="group.navigation"
+                props={extensionProps}
+                renderAll={true}
+              />
               <SubNavigation
                 to={`${url}/settings/general`}
                 label={t("singleGroup.menu.settingsNavLink")}
@@ -97,7 +101,11 @@ const SingleGroup: FC = () => {
               >
                 <EditGroupNavLink group={group} editUrl={`${url}/settings/general`} />
                 <SetPermissionsNavLink group={group} permissionsUrl={`${url}/settings/permissions`} />
-                <ExtensionPoint name="group.setting" props={extensionProps} renderAll={true} />
+                <ExtensionPoint<extensionPoints.GroupSetting>
+                  name="group.setting"
+                  props={extensionProps}
+                  renderAll={true}
+                />
               </SubNavigation>
             </SecondaryNavigation>
           </SecondaryNavigationColumn>
