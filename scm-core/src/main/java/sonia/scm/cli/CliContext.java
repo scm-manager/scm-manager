@@ -24,24 +24,45 @@
 
 package sonia.scm.cli;
 
-import picocli.CommandLine;
-
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.Locale;
 
+/**
+ * Context for the CLI client which is used by the CLI commands
+ * @since 2.33.0
+ */
 public interface CliContext {
+  /**
+   * This is the {@link PrintWriter} which writes to the stdout channel of the client terminal.
+   * Use this channel for "normal" messages, for errors use {@link CliContext#getStderr()}.
+   * @return writer for stdout
+   */
   PrintWriter getStdout();
 
+  /**
+   * This is the {@link PrintWriter} which writes to the stderr channel of the client terminal.
+   * Use this channel for error messages, for "normal" messages use {@link CliContext#getStdout()}.
+   * @return writer for stderr
+   */
   PrintWriter getStderr();
 
+  /**
+   * Returns an {@link InputStream} which represents the stdin of the client terminal.
+   * @return the stdin channel of the client terminal
+   */
   InputStream getStdin();
 
+  /**
+   * Sets the exit code for the current command execution and stops the execution.
+   * @param exitcode exit code which will be return to the client terminal
+   * @see {@link ExitCode}
+   */
   void exit(int exitcode);
 
+  /**
+   * Returns the {@link Locale} of the client terminal.
+   * @return locale of the client terminal
+   */
   Locale getLocale();
-
-  CommandLine getCommandLine();
-
-  void setCommandLine(CommandLine commandLine);
 }

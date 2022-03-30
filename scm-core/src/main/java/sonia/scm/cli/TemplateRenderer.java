@@ -43,6 +43,10 @@ import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.function.UnaryOperator;
 
+/**
+ * This is the default template renderer which should be used to write templated content to the channels of the CLI connection.
+ * @since 2.33.0
+ */
 public class TemplateRenderer {
 
   @CommandLine.Option(names = {"--template", "-t"}, paramLabel = "TEMPLATE", description = "Specify rendering template")
@@ -64,20 +68,46 @@ public class TemplateRenderer {
     this.templateEngine = templateEngineFactory.getDefaultEngine();
   }
 
-  public void renderToStdout(String defaultTemplate, Map<String, Object> model) {
-    exec(context.getStdout(), defaultTemplate, model);
+  /**
+   * Writes templated content to the stdout channel
+   * @param template the mustache template
+   * @param model the model which should be used for templating
+   */
+  public void renderToStdout(String template, Map<String, Object> model) {
+    exec(context.getStdout(), template, model);
   }
 
-  public void renderToStderr(String defaultTemplate, Map<String, Object> model) {
-    exec(context.getStderr(), defaultTemplate, model);
+  /**
+   * Writes templated content to the stderr channel
+   * @param template the mustache template
+   * @param model the model which should be used for templating
+   */
+  public void renderToStderr(String template, Map<String, Object> model) {
+    exec(context.getStderr(), template, model);
   }
 
+  /**
+   * Writes an error to the stderr channel using the default error template
+   * @param error the error which should be used for templating
+   */
   public void renderDefaultError(String error) {
     exec(context.getStderr(), DEFAULT_ERROR_TEMPLATE, ImmutableMap.of("error", error));
   }
 
+  /**
+   * Writes the exception message to the stderr channel using the default error template
+   * @param exception the exception which should be used for templating
+   */
   public void renderDefaultError(Exception exception) {
    renderDefaultError(exception.getMessage());
+  }
+
+  /**
+   * Creates the table which should be used to template table-like content.
+   * @return table for templating content
+   */
+  public Table createTable() {
+    return new Table(spec.resourceBundle());
   }
 
   private void exec(PrintWriter stream, String defaultTemplate, Map<String, Object> model) {
@@ -89,10 +119,6 @@ public class TemplateRenderer {
       //TODO Handle
       e.printStackTrace();
     }
-  }
-
-  public Table createTable() {
-    return new Table(spec.resourceBundle());
   }
 
   private Object createModel(Map<String, Object> model) {

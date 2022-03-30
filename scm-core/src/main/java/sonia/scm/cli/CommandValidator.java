@@ -35,7 +35,14 @@ import javax.validation.ValidatorFactory;
 import java.util.Locale;
 import java.util.Set;
 
-@CommandLine.Command(name = "validator")
+/**
+ * This the command validator which should be used to validate CLI commands with Bean validation.
+ * @see <a href="https://beanvalidation.org/2.0/spec/">Bean validation spec</a>
+ * @since 2.33.0
+ */
+// We need to hide this because it is not a real command but a mixin.
+// The command annotation is required for picocli to resolve this properly.
+@CommandLine.Command(name = "validator", hidden = true)
 public final class CommandValidator {
 
   private final CliContext context;
@@ -48,6 +55,9 @@ public final class CommandValidator {
     this.context = context;
   }
 
+  /**
+   * Execute validation and exit the command on validation failure
+   */
   public void validate() {
     ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
 
@@ -93,5 +103,4 @@ public final class CommandValidator {
       return defaultMessageInterpolator.interpolate(messageTemplate, context, locale);
     }
   }
-
 }

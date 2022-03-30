@@ -47,7 +47,6 @@ public class JsonStreamingCliContext implements CliContext, AutoCloseable {
   private final PrintWriter stdout;
   private final PrintWriter stderr;
   private final JsonGenerator jsonGenerator;
-  private CommandLine commandLine;
 
   public JsonStreamingCliContext(Locale locale, InputStream stdin, OutputStream output) {
     this.locale = locale;
@@ -96,15 +95,6 @@ public class JsonStreamingCliContext implements CliContext, AutoCloseable {
   @Override
   public Locale getLocale() {
     return locale;
-  }
-
-  @Override
-  public CommandLine getCommandLine() {
-    return commandLine;
-  }
-
-  public void setCommandLine(CommandLine commandLine) {
-    this.commandLine = commandLine;
   }
 
   private static final ObjectMapper mapper = new ObjectMapper();

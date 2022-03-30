@@ -36,7 +36,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-public final class Table implements Iterable<Table.Row> {
+/**
+ * This table can be used to display table-like command output
+ * @since 2.33.0
+ */
+final class Table implements Iterable<Table.Row> {
 
   private final List<String[]> data = new ArrayList<>();
 
@@ -47,18 +51,37 @@ public final class Table implements Iterable<Table.Row> {
     this.bundle = bundle;
   }
 
+  /**
+   * Sets the table headers.
+   * You can use resource keys which will be translated using the related resource bundle.
+   * @param keys actual names or resource keys for your table header
+   */
   public void addHeader(String... keys) {
     data.add(Arrays.stream(keys).map(this::getLocalizedValue).toArray(String[]::new));
   }
 
+  /**
+   * Add a single row of values to the table
+   * @param row values for a single table row
+   */
   public void addRow(String... row) {
     data.add(row);
   }
 
+  /**
+   * Creates a table entry with two columns
+   * @param label label for the left table column
+   * @param value value for the right table column
+   */
   public void addLabelValueRow(String label, String value) {
     addRow(getLocalizedValue(label), value);
   }
 
+  /**
+   * Returns a list of the table rows.
+   * This is required for the internal table implementation.
+   * @return a list of the table rows
+   */
   public List<Row> getRows() {
     Map<Integer, Integer> maxLength = calculateMaxLength();
 

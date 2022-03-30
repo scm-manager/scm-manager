@@ -38,7 +38,7 @@ import sonia.scm.repository.RepositoryManager;
 import javax.inject.Inject;
 import java.util.Collections;
 
-@CommandLine.Command(name = "delete")
+@CommandLine.Command(name = "delete", aliases = "rm")
 @ParentCommand(RepositoryCommand.class)
 public class RepositoryDeleteCommand implements Runnable {
 
