@@ -24,11 +24,11 @@
 
 package sonia.scm.repository.cli;
 
-import com.google.common.collect.ImmutableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
 import sonia.scm.cli.CliContext;
+import sonia.scm.cli.ExitCode;
 import sonia.scm.cli.ParentCommand;
 import sonia.scm.cli.TemplateRenderer;
 import sonia.scm.repository.NamespaceAndName;
@@ -72,7 +72,7 @@ public class RepositoryDeleteCommand implements Runnable {
     }
     String[] splitRepo = repository.split("/");
     if (splitRepo.length != 2) {
-      context.exit(2);
+      context.exit(ExitCode.INVALID_INPUT);
       return;
     }
     try {
@@ -82,8 +82,7 @@ public class RepositoryDeleteCommand implements Runnable {
       }
     } catch (Exception e) {
       LOG.error("Could not delete repository", e);
-      //TODO Which exitcode?
-      context.exit(1);
+      context.exit(ExitCode.SERVER_ERROR);
     }
   }
 }
