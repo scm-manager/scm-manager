@@ -60,7 +60,6 @@ public class RepositoryGetCommand implements Runnable {
     String[] splitRepo = repository.split("/");
     if (splitRepo.length != 2) {
       templateRenderer.renderInvalidInputError();
-      return;
     }
     Repository repo = manager.get(new NamespaceAndName(splitRepo[0], splitRepo[1]));
     if (repo != null) {

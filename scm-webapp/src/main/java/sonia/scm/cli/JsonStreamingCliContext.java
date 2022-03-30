@@ -83,6 +83,7 @@ public class JsonStreamingCliContext implements CliContext, AutoCloseable {
       jsonGenerator.writeStartObject();
       jsonGenerator.writeNumberField("exit", exitcode);
       jsonGenerator.writeEndObject();
+      throw new CliExitException();
     } catch (IOException e) {
       //TODO Handle
       e.printStackTrace();
