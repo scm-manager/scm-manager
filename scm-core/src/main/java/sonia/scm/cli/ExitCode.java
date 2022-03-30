@@ -26,6 +26,7 @@ package sonia.scm.cli;
 
 /**
  * @see picocli.CommandLine.ExitCode
+ * @since 2.33.0
  */
 public final class ExitCode {
 
