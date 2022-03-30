@@ -54,7 +54,7 @@ public class CliProcessor {
     }
     cli.setErr(context.getStderr());
     cli.setOut(context.getStdout());
-    cli.getCommandSpec().resourceBundle();
+    cli.setExecutionExceptionHandler(new CliExceptionHandler());
     return cli.execute(args);
   }
 

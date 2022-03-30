@@ -24,12 +24,15 @@
 
 package sonia.scm.cli;
 
+/**
+ * @see picocli.CommandLine.ExitCode
+ */
 public final class ExitCode {
 
   public static final int OK = 0;
-  public static final int INVALID_INPUT = 1;
-  public static final int NOT_FOUND = 2;
-  public static final int SERVER_ERROR = 3;
+  public static final int SERVER_ERROR = 1;
+  public static final int USAGE = 2;
+  public static final int NOT_FOUND = 3;
 
   private ExitCode() {}
 }

@@ -89,14 +89,10 @@ public class RepositoryCreateCommand implements Runnable {
     newRepo.setType(type);
     newRepo.setDescription(description);
     newRepo.setContact(contact);
-    try {
-      Repository createdRepo = manager.create(newRepo);
-      if (init) {
-        repositoryInitializer.initialize(createdRepo, ImmutableMap.of());
-      }
-      templateRenderer.render(createdRepo);
-    } catch (Exception e) {
-      templateRenderer.renderException(e);
+    Repository createdRepo = manager.create(newRepo);
+    if (init) {
+      repositoryInitializer.initialize(createdRepo, ImmutableMap.of());
     }
+    templateRenderer.render(createdRepo);
   }
 }

@@ -77,17 +77,20 @@ public class JsonStreamingCliContext implements CliContext, AutoCloseable {
     return stdin;
   }
 
-  @Override
-  public void exit(int exitcode) {
+  public void writeExit(int exitcode) {
     try {
       jsonGenerator.writeStartObject();
       jsonGenerator.writeNumberField("exit", exitcode);
       jsonGenerator.writeEndObject();
-      throw new CliExitException();
     } catch (IOException e) {
       //TODO Handle
       e.printStackTrace();
     }
+  }
+
+  @Override
+  public void exit(int exitCode) {
+    throw new CliExitException(exitCode);
   }
 
   @Override

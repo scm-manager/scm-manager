@@ -25,7 +25,6 @@
 package sonia.scm.repository.cli;
 
 import com.google.common.collect.ImmutableMap;
-import picocli.CommandLine;
 import sonia.scm.cli.CliContext;
 import sonia.scm.cli.ExitCode;
 import sonia.scm.cli.Table;
@@ -70,7 +69,7 @@ public class RepositoryTemplateRenderer extends TemplateRenderer {
 
   public void renderInvalidInputError() {
     renderToStderr(INVALID_INPUT_TEMPLATE, Collections.emptyMap());
-    context.exit(ExitCode.INVALID_INPUT);
+    context.exit(ExitCode.USAGE);
   }
 
   public void renderNotFoundError() {

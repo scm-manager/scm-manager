@@ -61,7 +61,8 @@ public class CliResource {
   public StreamingOutput exec(@QueryParam("args") List<String> args, @Context HttpServletRequest request) {
     return outputStream -> {
       try (JsonStreamingCliContext context = new JsonStreamingCliContext(request.getLocale(), request.getInputStream(), outputStream)) {
-        processor.execute(context, args.toArray(new String[0]));
+        int exitCode = processor.execute(context, args.toArray(new String[0]));
+        context.writeExit(exitCode);
       }
     };
   }

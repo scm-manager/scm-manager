@@ -72,16 +72,11 @@ public class RepositoryDeleteCommand implements Runnable {
     }
     String[] splitRepo = repository.split("/");
     if (splitRepo.length != 2) {
-      context.exit(ExitCode.INVALID_INPUT);
+      context.exit(ExitCode.USAGE);
     }
-    try {
       Repository repo = manager.get(new NamespaceAndName(splitRepo[0], splitRepo[1]));
       if (repo != null) {
         manager.delete(repo);
       }
-    } catch (Exception e) {
-      LOG.error("Could not delete repository", e);
-      context.exit(ExitCode.SERVER_ERROR);
-    }
   }
 }

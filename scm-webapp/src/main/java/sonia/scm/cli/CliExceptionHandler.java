@@ -24,14 +24,29 @@
 
 package sonia.scm.cli;
 
-import lombok.Getter;
+import picocli.CommandLine;
+import sonia.scm.ExceptionWithContext;
 
-@Getter
-public class CliExitException extends RuntimeException {
+import java.io.PrintWriter;
 
-  private final int exitCode;
+public class CliExceptionHandler implements CommandLine.IExecutionExceptionHandler {
 
-  public CliExitException(int exitCode) {
-    this.exitCode = exitCode;
+  @Override
+  public int handleExecutionException(Exception ex, CommandLine commandLine, CommandLine.ParseResult parseResult) {
+    if (ex instanceof CliExitException) {
+      return ((CliExitException) ex).getExitCode();
+    }
+
+    PrintWriter stdErr = commandLine.getErr();
+    stdErr.print("Execution error");
+      if (ex instanceof ExceptionWithContext) {
+        String code = ((ExceptionWithContext) ex).getCode();
+        stdErr.print(" " + code);
+      }
+      stdErr.print(": ");
+      stdErr.println(ex.getMessage());
+      stdErr.println();
+      commandLine.usage(stdErr);
+      return ExitCode.SERVER_ERROR;
   }
 }

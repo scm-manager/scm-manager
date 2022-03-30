@@ -78,7 +78,7 @@ class JsonStreamingCliContextTest {
 
     try (JsonStreamingCliContext jsonStreamingCliContext = new JsonStreamingCliContext(Locale.ENGLISH, bais, baos)) {
       jsonStreamingCliContext.getStdout().print("Hello");
-      jsonStreamingCliContext.exit(1);
+      jsonStreamingCliContext.writeExit(1);
     }
 
     JsonNode json = mapper.readTree(new ByteArrayInputStream(baos.toByteArray()));
