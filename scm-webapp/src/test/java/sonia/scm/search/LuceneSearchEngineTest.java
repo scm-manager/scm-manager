@@ -54,6 +54,7 @@ import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -341,6 +342,15 @@ class LuceneSearchEngineTest {
       verify(enqueue.runAsAdmin()).enqueue(any(Task.class));
     }
 
+    @Test
+    void shouldIgnoreDetailsWithMissingType() {
+      mockDetails(new LuceneIndexDetails(null, "default"));
+
+      searchEngine.forIndices().batch(index -> {});
+
+      verify(enqueue.runAsAdmin(), never()).enqueue(any(Task.class));
+    }
+
     private <T extends IndexDetails> void mockDetails(LuceneIndexDetails... details) {
       for (LuceneIndexDetails detail : details) {
         mockType(detail.getType());
@@ -360,20 +370,19 @@ class LuceneSearchEngineTest {
     }
 
     private void mockType(Class<?> type){
-      LuceneSearchableType searchableType = mock(LuceneSearchableType.class);
-      lenient().when(searchableType.getType()).thenAnswer(ic -> type);
-      lenient().when(searchableType.getName()).thenReturn(type.getSimpleName().toLowerCase(Locale.ENGLISH));
-      lenient().when(resolver.resolve(type)).thenReturn(searchableType);
+      if (type != null) {
+        LuceneSearchableType searchableType = mock(LuceneSearchableType.class);
+        lenient().when(searchableType.getType()).thenAnswer(ic -> type);
+        lenient().when(searchableType.getName()).thenReturn(type.getSimpleName().toLowerCase(Locale.ENGLISH));
+        lenient().when(resolver.resolve(type)).thenReturn(searchableType);
+      }
     }
-
   }
-
 
   public static class DummyIndexTask implements IndexTask<Repository> {
 
     @Override
     public void update(Index<Repository> index) {
-
     }
   }
 
