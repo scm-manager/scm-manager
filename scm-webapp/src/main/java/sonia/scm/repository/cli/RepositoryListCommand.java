@@ -29,11 +29,11 @@ import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
 import sonia.scm.cli.Table;
 import sonia.scm.cli.TemplateRenderer;
-import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 
 import javax.inject.Inject;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 @ParentCommand(value = RepositoryCommand.class)
 @CommandLine.Command(name = "list", aliases = "ls")
@@ -42,27 +42,42 @@ public class RepositoryListCommand implements Runnable {
   @CommandLine.Mixin
   private final TemplateRenderer templateRenderer;
   private final RepositoryManager manager;
+  private final RepositoryToRepositoryCommandDtoMapper mapper;
 
-  private static final String DEFAULT_TEMPLATE = String.join("\n",
+  @CommandLine.Option(names = {"--short", "-s"})
+  private boolean useShortTemplate;
+
+  private static final String TABLE_TEMPLATE = String.join("\n",
     "{{#rows}}",
     "{{#cols}}{{value}}{{^last}} {{/last}}{{/cols}}",
     "{{/rows}}"
   );
 
+  private static final String SHORT_TEMPLATE = String.join("\n",
+    "{{#repos}}",
+    "{{namespace}}/{{name}}",
+    "{{/repos}}"
+  );
+
   @Inject
-  public RepositoryListCommand(RepositoryManager manager, TemplateRenderer templateRenderer) {
+  public RepositoryListCommand(RepositoryManager manager, TemplateRenderer templateRenderer, RepositoryToRepositoryCommandDtoMapper mapper) {
     this.manager = manager;
     this.templateRenderer = templateRenderer;
+    this.mapper = mapper;
   }
 
   @Override
   public void run() {
-    Table table = templateRenderer.createTable();
-    table.addHeaderKeys("repoName", "repoType", "repoContact");
-    Collection<Repository> repos = manager.getAll();
-    for (Repository repository : repos) {
-      table.addRow(repository.getNamespaceAndName().toString(), repository.getType(), repository.getContact());
+    Collection<RepositoryCommandDto> dtos = manager.getAll().stream().map(mapper::map).collect(Collectors.toList());
+    if (useShortTemplate) {
+      templateRenderer.renderToStdout(SHORT_TEMPLATE, ImmutableMap.of("repos", dtos));
+    } else {
+      Table table = templateRenderer.createTable();
+      table.addHeaderKeys("repoName", "repoType", "repoUrl");
+      for (RepositoryCommandDto dto : dtos) {
+        table.addRow(dto.getNamespace() + "/" + dto.getName(), dto.getType(), dto.getUrl());
+      }
+      templateRenderer.renderToStdout(TABLE_TEMPLATE, ImmutableMap.of("rows", table, "repos", dtos));
     }
-    templateRenderer.renderToStdout(DEFAULT_TEMPLATE, ImmutableMap.of("rows", table, "repos", repos));
   }
 }

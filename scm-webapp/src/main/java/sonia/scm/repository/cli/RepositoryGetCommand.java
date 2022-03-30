@@ -47,7 +47,7 @@ public class RepositoryGetCommand implements Runnable {
     "{{repo.namespace}}/{{repo.name}}",
     "{{i18n.repoDescription}}: {{repo.description}}",
     "{{i18n.repoType}}: {{repo.type}}",
-    "{{i18n.repoContact}}: {{repo.contact}}"
+    "{{i18n.repoUrl}}: {{repo.url}}"
   );
 
   private static final String NOT_FOUND_TEMPLATE = "{{i18n.repoNotFound}}: {{repository}}";
@@ -57,12 +57,14 @@ public class RepositoryGetCommand implements Runnable {
   private final TemplateRenderer templateRenderer;
   private final CliContext context;
   private final RepositoryManager manager;
+  private final RepositoryToRepositoryCommandDtoMapper mapper;
 
   @Inject
-  RepositoryGetCommand(CliContext context, TemplateRenderer templateRenderer, RepositoryManager manager) {
+  RepositoryGetCommand(CliContext context, TemplateRenderer templateRenderer, RepositoryManager manager, RepositoryToRepositoryCommandDtoMapper mapper) {
     this.templateRenderer = templateRenderer;
     this.context = context;
     this.manager = manager;
+    this.mapper = mapper;
   }
 
   @VisibleForTesting
@@ -79,7 +81,7 @@ public class RepositoryGetCommand implements Runnable {
     }
     Repository repo = manager.get(new NamespaceAndName(splitRepo[0], splitRepo[1]));
     if (repo != null) {
-      templateRenderer.renderToStdout(DEFAULT_TEMPLATE, ImmutableMap.of("repo", repo));
+      templateRenderer.renderToStdout(DEFAULT_TEMPLATE, ImmutableMap.of("repo", mapper.map(repo)));
     } else {
       templateRenderer.renderToStderr(NOT_FOUND_TEMPLATE, ImmutableMap.of("repo", repository));
       context.exit(1);

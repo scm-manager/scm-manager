@@ -45,6 +45,7 @@ public class RepositoryCreateCommand implements Runnable {
   private final RepositoryManager manager;
   private final RepositoryInitializer repositoryInitializer;
   private final Provider<NamespaceStrategy> namespaceStrategyProvider;
+  private final RepositoryToRepositoryCommandDtoMapper mapper;
 
   @CommandLine.Parameters(descriptionKey = "scm.repo.create.type")
   private String type;
@@ -61,11 +62,12 @@ public class RepositoryCreateCommand implements Runnable {
   @Inject
   public RepositoryCreateCommand(TemplateRenderer templateRenderer, RepositoryManager manager,
                                  RepositoryInitializer repositoryInitializer,
-                                 Provider<NamespaceStrategy> namespaceStrategyProvider) {
+                                 Provider<NamespaceStrategy> namespaceStrategyProvider, RepositoryToRepositoryCommandDtoMapper mapper) {
     this.templateRenderer = templateRenderer;
     this.manager = manager;
     this.repositoryInitializer = repositoryInitializer;
     this.namespaceStrategyProvider = namespaceStrategyProvider;
+    this.mapper = mapper;
   }
 
   @Override
@@ -87,7 +89,7 @@ public class RepositoryCreateCommand implements Runnable {
       if (init) {
         repositoryInitializer.initialize(createdRepo, ImmutableMap.of());
       }
-      templateRenderer.renderToStdout(RepositoryGetCommand.DEFAULT_TEMPLATE, ImmutableMap.of("repo", createdRepo));
+      templateRenderer.renderToStdout(RepositoryGetCommand.DEFAULT_TEMPLATE, ImmutableMap.of("repo", mapper.map(createdRepo)));
     } catch (Exception e) {
       templateRenderer.renderDefaultError(e.getMessage());
     }
