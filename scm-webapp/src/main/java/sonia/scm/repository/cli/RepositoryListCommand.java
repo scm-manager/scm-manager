@@ -49,7 +49,7 @@ public class RepositoryListCommand implements Runnable {
 
   private static final String TABLE_TEMPLATE = String.join("\n",
     "{{#rows}}",
-    "{{#cols}}{{value}}{{^last}} {{/last}}{{/cols}}",
+    "{{#cols}}{{#row.first}}{{#upper}}{{value}}{{/upper}}{{/row.first}}{{^row.first}}{{value}}{{/row.first}}{{^last}} {{/last}}{{/cols}}",
     "{{/rows}}"
   );
 
@@ -73,7 +73,7 @@ public class RepositoryListCommand implements Runnable {
       templateRenderer.renderToStdout(SHORT_TEMPLATE, ImmutableMap.of("repos", dtos));
     } else {
       Table table = templateRenderer.createTable();
-      table.addHeaderKeys("repoName", "repoType", "repoUrl");
+      table.addHeader("repoName", "repoType", "repoUrl");
       for (RepositoryCommandDto dto : dtos) {
         table.addRow(dto.getNamespace() + "/" + dto.getName(), dto.getType(), dto.getUrl());
       }

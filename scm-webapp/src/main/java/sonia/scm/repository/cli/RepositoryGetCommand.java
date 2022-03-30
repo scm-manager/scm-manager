@@ -29,6 +29,7 @@ import com.google.common.collect.ImmutableMap;
 import picocli.CommandLine;
 import sonia.scm.cli.CliContext;
 import sonia.scm.cli.ParentCommand;
+import sonia.scm.cli.Table;
 import sonia.scm.cli.TemplateRenderer;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
@@ -43,12 +44,10 @@ public class RepositoryGetCommand implements Runnable {
   @CommandLine.Parameters(paramLabel = "namespace/name", index = "0")
   private String repository;
 
-  static final String DEFAULT_TEMPLATE = String.join("\n",
-    "{{repo.namespace}}/{{repo.name}}",
-    "{{i18n.repoDescription}}: {{repo.description}}",
-    "{{i18n.repoType}}: {{repo.type}}",
-    "{{i18n.repoUrl}}: {{repo.url}}",
-    "{{{lf}}}"
+  private static final String TABLE_TEMPLATE = String.join("\n",
+    "{{#rows}}",
+    "{{#cols}}{{value}}{{^last}}: {{/last}}{{/cols}}",
+    "{{/rows}}"
   );
 
   private static final String NOT_FOUND_TEMPLATE = "{{i18n.repoNotFound}}: {{repository}}";
@@ -82,7 +81,15 @@ public class RepositoryGetCommand implements Runnable {
     }
     Repository repo = manager.get(new NamespaceAndName(splitRepo[0], splitRepo[1]));
     if (repo != null) {
-      templateRenderer.renderToStdout(DEFAULT_TEMPLATE, ImmutableMap.of("repo", mapper.map(repo)));
+      Table table = templateRenderer.createTable();
+      RepositoryCommandDto dto = mapper.map(repo);
+      table.addLabelValueRow("repoNamespace", dto.getNamespace());
+      table.addLabelValueRow("repoName", dto.getName());
+      table.addLabelValueRow("repoType", dto.getType());
+      table.addLabelValueRow("repoContact", dto.getContact());
+      table.addLabelValueRow("repoUrl", dto.getUrl());
+      table.addLabelValueRow("repoDescription", dto.getDescription());
+      templateRenderer.renderToStdout(TABLE_TEMPLATE, ImmutableMap.of("rows", table, "repo", dto));
     } else {
       templateRenderer.renderToStderr(NOT_FOUND_TEMPLATE, ImmutableMap.of("repo", repository));
       context.exit(1);

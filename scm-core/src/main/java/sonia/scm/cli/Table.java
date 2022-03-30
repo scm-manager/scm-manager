@@ -47,19 +47,16 @@ public final class Table implements Iterable<Table.Row> {
     this.bundle = bundle;
   }
 
-  public void addHeaderKeys(String... keys) {
-    if (bundle == null) {
-      throw new IllegalStateException("no resource bundle found");
-    }
-    data.add(Arrays.stream(keys).map(bundle::getString).toArray(String[]::new));
-  }
-
-  public void addHeader(String... columns) {
-    data.add(columns);
+  public void addHeader(String... keys) {
+    data.add(Arrays.stream(keys).map(this::getLocalizedValue).toArray(String[]::new));
   }
 
   public void addRow(String... row) {
     data.add(row);
+  }
+
+  public void addLabelValueRow(String label, String value) {
+    addRow(getLocalizedValue(label), value);
   }
 
   public List<Row> getRows() {
@@ -69,16 +66,24 @@ public final class Table implements Iterable<Table.Row> {
     for (int r = 0; r < data.size(); r++) {
       String[] rowArray = data.get(r);
 
-      List<Cell> row = new ArrayList<>();
+      List<Cell> cells = new ArrayList<>();
+      Row row = new Row(r == 0, r + 1 == data.size(), r, cells);
       for (int c = 0; c < rowArray.length; c++) {
         String value = createValueWithLength(Strings.nullToEmpty(rowArray[c]), maxLength.get(c));
-        Cell cell = new Cell(c == 0, c + 1 == rowArray.length, c, value);
-        row.add(cell);
+        Cell cell = new Cell(row, c == 0, c + 1 == rowArray.length, c, value);
+        cells.add(cell);
       }
-      rows.add(new Row(r == 0, r + 1 == data.size(), r, row));
+      rows.add(row);
     }
 
     return rows;
+  }
+
+  private String getLocalizedValue(String key) {
+    if (bundle != null && bundle.containsKey(key)) {
+      return bundle.getString(key);
+    }
+    return key;
   }
 
   private String createValueWithLength(String value, int length) {
@@ -115,6 +120,7 @@ public final class Table implements Iterable<Table.Row> {
   @Value
   public class Cell {
 
+    Row row;
     boolean first;
     boolean last;
     int index;

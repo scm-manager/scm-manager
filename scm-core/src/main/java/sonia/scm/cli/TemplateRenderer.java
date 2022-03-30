@@ -41,6 +41,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.function.UnaryOperator;
 
 public final class TemplateRenderer {
 
@@ -94,6 +95,8 @@ public final class TemplateRenderer {
   private Object createModel(Map<String, Object> model) {
     Map<String, Object> finalModel = new HashMap<>(model);
     finalModel.put("lf", "\n");
+    UnaryOperator<String> upper = value -> value.toUpperCase(context.getLocale());
+    finalModel.put("upper", upper);
 
     ResourceBundle resourceBundle = spec.resourceBundle();
     if (resourceBundle != null) {
