@@ -57,12 +57,20 @@ public final class CommandValidator {
     Set<ConstraintViolation<Object>> violations = validator.validate(spec.userObject());
 
     if (!violations.isEmpty()) {
-      String errorMsg = "";
+      StringBuilder errorMsg = new StringBuilder();
       for (ConstraintViolation<Object> violation : violations) {
-        errorMsg += "ERROR: " + violation.getMessage() + "\n";
+        errorMsg.append(evaluateErrorTemplate()).append(violation.getMessage()).append("\n");
       }
-      throw new CommandLine.ParameterException(spec.commandLine(), errorMsg);
+      throw new CommandLine.ParameterException(spec.commandLine(), errorMsg.toString());
     }
+  }
+
+  private String evaluateErrorTemplate() {
+    //TODO Find better solution
+    if (context.getLocale().toString().toLowerCase().startsWith("de")) {
+      return "FEHLER: ";
+    }
+    return "ERROR: ";
   }
 
   private static class LocaleSpecificMessageInterpolator implements MessageInterpolator {
