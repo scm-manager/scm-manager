@@ -25,19 +25,15 @@
 package sonia.scm.repository.cli;
 
 import com.cronutils.utils.VisibleForTesting;
-import com.google.common.collect.ImmutableMap;
 import picocli.CommandLine;
-import sonia.scm.cli.CliContext;
 import sonia.scm.cli.CommandValidator;
 import sonia.scm.cli.ParentCommand;
-import sonia.scm.cli.TemplateRenderer;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 
 import javax.inject.Inject;
 import javax.validation.constraints.Email;
-import java.util.Collections;
 
 @ParentCommand(value = RepositoryCommand.class)
 @CommandLine.Command(name = "modify")
@@ -51,31 +47,16 @@ public class RepositoryModifyCommand implements Runnable {
   @CommandLine.Option(names = {"--contact", "-c"})
   private String contact;
 
-  static final String DEFAULT_TEMPLATE = String.join("\n",
-    "{{repo.namespace}}/{{repo.name}}",
-    "{{i18n.repoDescription}}: {{repo.description}}",
-    "{{i18n.repoType}}: {{repo.type}}",
-    "{{i18n.repoUrl}}: {{repo.url}}",
-    "{{{lf}}}"
-  );
-
-  private static final String NOT_FOUND_TEMPLATE = "{{i18n.repoNotFound}}";
-  static final String INVALID_TEMPLATE = "{{i18n.repoInvalidInput}}.";
-
   @CommandLine.Mixin
-  private final TemplateRenderer templateRenderer;
+  private final RepositoryTemplateRenderer templateRenderer;
   @CommandLine.Mixin
   private final CommandValidator validator;
-  private final RepositoryToRepositoryCommandDtoMapper mapper;
-  private final CliContext context;
   private final RepositoryManager manager;
 
   @Inject
-  RepositoryModifyCommand(CliContext context, TemplateRenderer templateRenderer, CommandValidator validator, RepositoryToRepositoryCommandDtoMapper mapper, RepositoryManager manager) {
+  RepositoryModifyCommand(RepositoryTemplateRenderer templateRenderer, CommandValidator validator, RepositoryManager manager) {
     this.templateRenderer = templateRenderer;
-    this.context = context;
     this.validator = validator;
-    this.mapper = mapper;
     this.manager = manager;
   }
 
@@ -89,8 +70,7 @@ public class RepositoryModifyCommand implements Runnable {
     validator.validate();
     String[] splitRepo = repository.split("/");
     if (splitRepo.length != 2) {
-      templateRenderer.renderToStderr(INVALID_TEMPLATE, Collections.emptyMap());
-      context.exit(2);
+      templateRenderer.renderInvalidInputError();
     }
     Repository repo = manager.get(new NamespaceAndName(splitRepo[0], splitRepo[1]));
 
@@ -103,10 +83,9 @@ public class RepositoryModifyCommand implements Runnable {
       }
 
       manager.modify(repo);
-      templateRenderer.renderToStdout(DEFAULT_TEMPLATE, ImmutableMap.of("repo", mapper.map(repo)));
+      templateRenderer.render(repo);
     } else {
-      templateRenderer.renderToStderr(NOT_FOUND_TEMPLATE, Collections.emptyMap());
-      context.exit(1);
+      templateRenderer.renderNotFoundError();
     }
   }
 }

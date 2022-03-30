@@ -28,7 +28,6 @@ import com.google.common.collect.ImmutableMap;
 import picocli.CommandLine;
 import sonia.scm.cli.CommandValidator;
 import sonia.scm.cli.ParentCommand;
-import sonia.scm.cli.TemplateRenderer;
 import sonia.scm.repository.NamespaceStrategy;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryInitializer;
@@ -43,13 +42,12 @@ import javax.validation.constraints.Email;
 public class RepositoryCreateCommand implements Runnable {
 
   @CommandLine.Mixin
-  private final TemplateRenderer templateRenderer;
+  private final RepositoryTemplateRenderer templateRenderer;
   @CommandLine.Mixin
   private final CommandValidator validator;
   private final RepositoryManager manager;
   private final RepositoryInitializer repositoryInitializer;
   private final Provider<NamespaceStrategy> namespaceStrategyProvider;
-  private final RepositoryToRepositoryCommandDtoMapper mapper;
 
   @CommandLine.Parameters(descriptionKey = "scm.repo.create.type")
   private String type;
@@ -64,15 +62,16 @@ public class RepositoryCreateCommand implements Runnable {
   private boolean init;
 
   @Inject
-  public RepositoryCreateCommand(TemplateRenderer templateRenderer, CommandValidator validator, RepositoryManager manager,
+  public RepositoryCreateCommand(RepositoryTemplateRenderer templateRenderer,
+                                 CommandValidator validator,
+                                 RepositoryManager manager,
                                  RepositoryInitializer repositoryInitializer,
-                                 Provider<NamespaceStrategy> namespaceStrategyProvider, RepositoryToRepositoryCommandDtoMapper mapper) {
+                                 Provider<NamespaceStrategy> namespaceStrategyProvider) {
     this.templateRenderer = templateRenderer;
     this.validator = validator;
     this.manager = manager;
     this.repositoryInitializer = repositoryInitializer;
     this.namespaceStrategyProvider = namespaceStrategyProvider;
-    this.mapper = mapper;
   }
 
   @Override
@@ -95,9 +94,9 @@ public class RepositoryCreateCommand implements Runnable {
       if (init) {
         repositoryInitializer.initialize(createdRepo, ImmutableMap.of());
       }
-      templateRenderer.renderToStdout(RepositoryGetCommand.DEFAULT_TEMPLATE, ImmutableMap.of("repo", mapper.map(createdRepo)));
+      templateRenderer.render(createdRepo);
     } catch (Exception e) {
-      templateRenderer.renderDefaultError(e.getMessage());
+      templateRenderer.renderException(e);
     }
   }
 }

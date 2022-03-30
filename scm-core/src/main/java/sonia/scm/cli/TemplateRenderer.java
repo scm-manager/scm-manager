@@ -43,7 +43,7 @@ import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.function.UnaryOperator;
 
-public final class TemplateRenderer {
+public class TemplateRenderer {
 
   @CommandLine.Option(names = {"--template", "-t"}, paramLabel = "TEMPLATE", description = "Specify rendering template")
   private String template;
@@ -66,7 +66,6 @@ public final class TemplateRenderer {
 
   public void renderToStdout(String defaultTemplate, Map<String, Object> model) {
     exec(context.getStdout(), defaultTemplate, model);
-
   }
 
   public void renderToStderr(String defaultTemplate, Map<String, Object> model) {
@@ -75,6 +74,10 @@ public final class TemplateRenderer {
 
   public void renderDefaultError(String error) {
     exec(context.getStderr(), DEFAULT_ERROR_TEMPLATE, ImmutableMap.of("error", error));
+  }
+
+  public void renderDefaultError(Exception exception) {
+   renderDefaultError(exception.getMessage());
   }
 
   private void exec(PrintWriter stream, String defaultTemplate, Map<String, Object> model) {

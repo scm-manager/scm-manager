@@ -25,12 +25,8 @@
 package sonia.scm.repository.cli;
 
 import com.cronutils.utils.VisibleForTesting;
-import com.google.common.collect.ImmutableMap;
 import picocli.CommandLine;
-import sonia.scm.cli.CliContext;
 import sonia.scm.cli.ParentCommand;
-import sonia.scm.cli.Table;
-import sonia.scm.cli.TemplateRenderer;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
@@ -44,27 +40,14 @@ public class RepositoryGetCommand implements Runnable {
   @CommandLine.Parameters(paramLabel = "namespace/name", index = "0")
   private String repository;
 
-  private static final String TABLE_TEMPLATE = String.join("\n",
-    "{{#rows}}",
-    "{{#cols}}{{value}}{{^last}}: {{/last}}{{/cols}}",
-    "{{/rows}}"
-  );
-
-  private static final String NOT_FOUND_TEMPLATE = "{{i18n.repoNotFound}}: {{repository}}";
-  static final String INVALID_TEMPLATE = "{{i18n.repoInvalidInput}}: {{repository}}.";
-
   @CommandLine.Mixin
-  private final TemplateRenderer templateRenderer;
-  private final CliContext context;
+  private final RepositoryTemplateRenderer templateRenderer;
   private final RepositoryManager manager;
-  private final RepositoryToRepositoryCommandDtoMapper mapper;
 
   @Inject
-  RepositoryGetCommand(CliContext context, TemplateRenderer templateRenderer, RepositoryManager manager, RepositoryToRepositoryCommandDtoMapper mapper) {
+  RepositoryGetCommand(RepositoryTemplateRenderer templateRenderer, RepositoryManager manager) {
     this.templateRenderer = templateRenderer;
-    this.context = context;
     this.manager = manager;
-    this.mapper = mapper;
   }
 
   @VisibleForTesting
@@ -76,23 +59,14 @@ public class RepositoryGetCommand implements Runnable {
   public void run() {
     String[] splitRepo = repository.split("/");
     if (splitRepo.length != 2) {
-      templateRenderer.renderToStderr(INVALID_TEMPLATE, ImmutableMap.of("repo", repository));
-      context.exit(2);
+      templateRenderer.renderInvalidInputError();
+      return;
     }
     Repository repo = manager.get(new NamespaceAndName(splitRepo[0], splitRepo[1]));
     if (repo != null) {
-      Table table = templateRenderer.createTable();
-      RepositoryCommandDto dto = mapper.map(repo);
-      table.addLabelValueRow("repoNamespace", dto.getNamespace());
-      table.addLabelValueRow("repoName", dto.getName());
-      table.addLabelValueRow("repoType", dto.getType());
-      table.addLabelValueRow("repoContact", dto.getContact());
-      table.addLabelValueRow("repoUrl", dto.getUrl());
-      table.addLabelValueRow("repoDescription", dto.getDescription());
-      templateRenderer.renderToStdout(TABLE_TEMPLATE, ImmutableMap.of("rows", table, "repo", dto));
+      templateRenderer.render(repo);
     } else {
-      templateRenderer.renderToStderr(NOT_FOUND_TEMPLATE, ImmutableMap.of("repo", repository));
-      context.exit(1);
+      templateRenderer.renderNotFoundError();
     }
   }
 }

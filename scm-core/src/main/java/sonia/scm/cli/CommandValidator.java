@@ -35,7 +35,7 @@ import javax.validation.ValidatorFactory;
 import java.util.Locale;
 import java.util.Set;
 
-@CommandLine.Command
+@CommandLine.Command(name = "validator")
 public final class CommandValidator {
 
   private final CliContext context;
