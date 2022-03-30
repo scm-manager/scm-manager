@@ -26,6 +26,7 @@ package sonia.scm.repository.cli;
 
 import com.google.common.collect.ImmutableMap;
 import picocli.CommandLine;
+import sonia.scm.cli.CommandValidator;
 import sonia.scm.cli.ParentCommand;
 import sonia.scm.cli.TemplateRenderer;
 import sonia.scm.repository.NamespaceStrategy;
@@ -35,6 +36,7 @@ import sonia.scm.repository.RepositoryManager;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.validation.constraints.Email;
 
 @CommandLine.Command(name = "create")
 @ParentCommand(value = RepositoryCommand.class)
@@ -42,6 +44,8 @@ public class RepositoryCreateCommand implements Runnable {
 
   @CommandLine.Mixin
   private final TemplateRenderer templateRenderer;
+  @CommandLine.Mixin
+  private final CommandValidator validator;
   private final RepositoryManager manager;
   private final RepositoryInitializer repositoryInitializer;
   private final Provider<NamespaceStrategy> namespaceStrategyProvider;
@@ -53,17 +57,18 @@ public class RepositoryCreateCommand implements Runnable {
   private String repository;
   @CommandLine.Option(names = {"--description", "-d"}, descriptionKey = "scm.repo.create.desc")
   private String description;
+  @Email
   @CommandLine.Option(names = {"--contact", "-c"})
   private String contact;
   @CommandLine.Option(names = {"--init", "-i"})
   private boolean init;
 
-
   @Inject
-  public RepositoryCreateCommand(TemplateRenderer templateRenderer, RepositoryManager manager,
+  public RepositoryCreateCommand(TemplateRenderer templateRenderer, CommandValidator validator, RepositoryManager manager,
                                  RepositoryInitializer repositoryInitializer,
                                  Provider<NamespaceStrategy> namespaceStrategyProvider, RepositoryToRepositoryCommandDtoMapper mapper) {
     this.templateRenderer = templateRenderer;
+    this.validator = validator;
     this.manager = manager;
     this.repositoryInitializer = repositoryInitializer;
     this.namespaceStrategyProvider = namespaceStrategyProvider;
@@ -72,6 +77,7 @@ public class RepositoryCreateCommand implements Runnable {
 
   @Override
   public void run() {
+    validator.validate();
     Repository newRepo = new Repository();
     String[] splitRepoName = repository.split("/");
     if (splitRepoName.length == 2) {
