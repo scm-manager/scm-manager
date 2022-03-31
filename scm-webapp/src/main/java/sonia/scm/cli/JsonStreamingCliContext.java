@@ -80,6 +80,8 @@ public class JsonStreamingCliContext implements CliContext, AutoCloseable {
   }
 
   public void writeExit(int exitcode) throws IOException {
+    stdout.flush();
+    stderr.flush();
     jsonGenerator.writeStartObject();
     jsonGenerator.writeNumberField("exit", exitcode);
     jsonGenerator.writeEndObject();
