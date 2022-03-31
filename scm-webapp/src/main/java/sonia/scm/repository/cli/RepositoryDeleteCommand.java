@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.cli;
 
+import com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
@@ -41,8 +42,6 @@ import java.util.Collections;
 @CommandLine.Command(name = "delete", aliases = "rm")
 @ParentCommand(RepositoryCommand.class)
 public class RepositoryDeleteCommand implements Runnable {
-
-  private static final Logger LOG = LoggerFactory.getLogger(RepositoryDeleteCommand.class);
 
   private static final String PROMPT_TEMPLATE = "{{i18n.repoDeletePrompt}}";
 
@@ -78,5 +77,15 @@ public class RepositoryDeleteCommand implements Runnable {
       if (repo != null) {
         manager.delete(repo);
       }
+  }
+
+  @VisibleForTesting
+  void setRepository(String repository) {
+    this.repository = repository;
+  }
+
+  @VisibleForTesting
+  void setShouldDelete(boolean shouldDelete) {
+    this.shouldDelete = shouldDelete;
   }
 }

@@ -22,67 +22,57 @@
  * SOFTWARE.
  */
 
-package sonia.scm.cli;
+package sonia.scm.repository.cli;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.cli.CliContext;
+import sonia.scm.cli.TemplateRenderer;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryTestData;
-import sonia.scm.repository.cli.RepositoryGetCommand;
-import sonia.scm.repository.cli.RepositoryTemplateRenderer;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class RepositoryGetCommandTest {
+class RepositoryDeleteCommandTest {
 
   @Mock
-  private RepositoryManager repositoryManager;
+  private TemplateRenderer templateRenderer;
   @Mock
-  private RepositoryTemplateRenderer templateRenderer;
+  private RepositoryManager manager;
+  @Mock
+  private CliContext context;
+
 
   @InjectMocks
-  private RepositoryGetCommand command;
+  private RepositoryDeleteCommand command;
+
 
   @Test
-  void shouldRenderNotFoundError() {
-    String repo = "test/repo";
-
-    when(repositoryManager.get(new NamespaceAndName("test", "repo"))).thenReturn(null);
-
-    command.setRepository(repo);
+  void shouldRenderPromptWithoutYesFlag() {
+    command.setRepository("test/repo");
     command.run();
 
-    verify(templateRenderer).renderNotFoundError();
+    verify(templateRenderer).renderToStderr(any(), anyMap());
   }
 
   @Test
-  void shouldRenderInvalidInputError() {
-    String repo = "repo";
-
-    command.setRepository(repo);
-    command.run();
-
-    verify(templateRenderer).renderInvalidInputError();
-  }
-
-  @Test
-  void shouldRenderTemplateToStdout() {
-    String repo = "test/repo";
+  void shouldDeleteRepository() {
     Repository puzzle = RepositoryTestData.create42Puzzle();
-    when(repositoryManager.get(new NamespaceAndName("test", "repo"))).thenReturn(puzzle);
-
-    command.setRepository(repo);
+    when(manager.get(new NamespaceAndName("test", "r"))).thenReturn(puzzle);
+    command.setRepository("test/r");
+    command.setShouldDelete(true);
     command.run();
 
-    verify(templateRenderer).render(puzzle);
+    verify(manager).delete(puzzle);
   }
-
 }

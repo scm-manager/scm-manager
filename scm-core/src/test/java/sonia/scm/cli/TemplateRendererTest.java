@@ -24,65 +24,48 @@
 
 package sonia.scm.cli;
 
+import com.google.common.collect.ImmutableMap;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import sonia.scm.repository.NamespaceAndName;
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryManager;
-import sonia.scm.repository.RepositoryTestData;
-import sonia.scm.repository.cli.RepositoryGetCommand;
-import sonia.scm.repository.cli.RepositoryTemplateRenderer;
+import sonia.scm.template.Template;
+import sonia.scm.template.TemplateEngine;
+import sonia.scm.template.TemplateEngineFactory;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringReader;
+import java.io.StringWriter;
+
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class RepositoryGetCommandTest {
+class TemplateRendererTest {
 
   @Mock
-  private RepositoryManager repositoryManager;
+  private CliContext context;
   @Mock
-  private RepositoryTemplateRenderer templateRenderer;
-
-  @InjectMocks
-  private RepositoryGetCommand command;
-
-  @Test
-  void shouldRenderNotFoundError() {
-    String repo = "test/repo";
-
-    when(repositoryManager.get(new NamespaceAndName("test", "repo"))).thenReturn(null);
-
-    command.setRepository(repo);
-    command.run();
-
-    verify(templateRenderer).renderNotFoundError();
-  }
+  private TemplateEngineFactory templateEngineFactory;
+  @Mock
+  private TemplateEngine engine;
+  @Mock
+  private Template template;
 
   @Test
-  void shouldRenderInvalidInputError() {
-    String repo = "repo";
+  void shouldTemplateContentToStdout() throws IOException {
+    TemplateRenderer templateRenderer = new TemplateRenderer(context, templateEngineFactory);
+    StringWriter writer = new StringWriter();
+    when(context.getStdout()).thenReturn(new PrintWriter(writer));
+    when(templateEngineFactory.getDefaultEngine()).thenReturn(engine);
+    when(engine.getTemplate(any(), any(StringReader.class))).thenReturn(template);
 
-    command.setRepository(repo);
-    command.run();
+    templateRenderer.renderToStdout(":{{error}}!", ImmutableMap.of("error", "testerror"));
 
-    verify(templateRenderer).renderInvalidInputError();
-  }
-
-  @Test
-  void shouldRenderTemplateToStdout() {
-    String repo = "test/repo";
-    Repository puzzle = RepositoryTestData.create42Puzzle();
-    when(repositoryManager.get(new NamespaceAndName("test", "repo"))).thenReturn(puzzle);
-
-    command.setRepository(repo);
-    command.run();
-
-    verify(templateRenderer).render(puzzle);
+    verify(template).execute(any(), any());
   }
 
 }

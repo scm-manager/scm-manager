@@ -25,7 +25,6 @@
 package sonia.scm.plugin;
 
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,13 +32,18 @@ import lombok.ToString;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import java.util.HashSet;
 
 @Getter
-@AllArgsConstructor
 @ToString
 @EqualsAndHashCode(callSuper = true)
 @XmlAccessorType(XmlAccessType.FIELD)
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
 public class NamedClassElement extends ClassElement {
   private String name;
+
+  public NamedClassElement(String name, String clazz) {
+    super(clazz, null, new HashSet<>());
+    this.name = name;
+  }
 }

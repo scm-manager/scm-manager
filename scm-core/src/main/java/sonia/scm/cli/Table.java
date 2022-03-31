@@ -40,7 +40,7 @@ import java.util.ResourceBundle;
  * This table can be used to display table-like command output
  * @since 2.33.0
  */
-final class Table implements Iterable<Table.Row> {
+public final class Table implements Iterable<Table.Row> {
 
   private final List<String[]> data = new ArrayList<>();
 

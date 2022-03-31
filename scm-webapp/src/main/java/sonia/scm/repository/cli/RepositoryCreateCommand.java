@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.cli;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableMap;
 import picocli.CommandLine;
 import sonia.scm.cli.CommandValidator;
@@ -94,5 +95,20 @@ public class RepositoryCreateCommand implements Runnable {
       repositoryInitializer.initialize(createdRepo, ImmutableMap.of());
     }
     templateRenderer.render(createdRepo);
+  }
+
+  @VisibleForTesting
+  void setType(String type) {
+    this.type = type;
+  }
+
+  @VisibleForTesting
+  void setRepository(String repository) {
+    this.repository = repository;
+  }
+
+  @VisibleForTesting
+  void setInit(boolean init) {
+    this.init = init;
   }
 }

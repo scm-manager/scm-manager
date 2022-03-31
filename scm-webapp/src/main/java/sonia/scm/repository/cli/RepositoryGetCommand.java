@@ -58,14 +58,15 @@ public class RepositoryGetCommand implements Runnable {
   @Override
   public void run() {
     String[] splitRepo = repository.split("/");
-    if (splitRepo.length != 2) {
-      templateRenderer.renderInvalidInputError();
-    }
-    Repository repo = manager.get(new NamespaceAndName(splitRepo[0], splitRepo[1]));
-    if (repo != null) {
-      templateRenderer.render(repo);
+    if (splitRepo.length == 2) {
+      Repository repo = manager.get(new NamespaceAndName(splitRepo[0], splitRepo[1]));
+      if (repo != null) {
+        templateRenderer.render(repo);
+      } else {
+        templateRenderer.renderNotFoundError();
+      }
     } else {
-      templateRenderer.renderNotFoundError();
+      templateRenderer.renderInvalidInputError();
     }
   }
 }
