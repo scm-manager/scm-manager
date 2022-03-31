@@ -42,7 +42,6 @@ import java.util.Set;
  */
 // We need to hide this because it is not a real command but a mixin.
 // The command annotation is required for picocli to resolve this properly.
-@CommandLine.Command(name = "validator", hidden = true)
 public final class CommandValidator {
 
   private final CliContext context;
@@ -54,6 +53,10 @@ public final class CommandValidator {
   public CommandValidator(CliContext context) {
     this.context = context;
   }
+
+  // We need an option to trick PicoCli into accepting our mixin
+  @CommandLine.Option(names = "--hidden-flag", hidden = true)
+  private boolean hiddenFlag ;
 
   /**
    * Execute validation and exit the command on validation failure
