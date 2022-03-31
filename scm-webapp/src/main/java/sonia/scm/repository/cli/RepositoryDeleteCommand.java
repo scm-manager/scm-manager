@@ -25,8 +25,6 @@
 package sonia.scm.repository.cli;
 
 import com.google.common.annotations.VisibleForTesting;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
 import sonia.scm.cli.CliContext;
 import sonia.scm.cli.ExitCode;

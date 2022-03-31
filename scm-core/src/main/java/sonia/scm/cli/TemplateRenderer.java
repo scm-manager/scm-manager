@@ -116,8 +116,7 @@ public class TemplateRenderer {
       tpl.execute(stream, createModel(model));
       stream.flush();
     } catch (IOException e) {
-      //TODO Handle
-      e.printStackTrace();
+      throw new TemplateRenderingException("failed to render template", e);
     }
   }
 

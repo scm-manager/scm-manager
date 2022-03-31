@@ -29,7 +29,6 @@ import com.fasterxml.jackson.core.util.MinimalPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import picocli.CommandLine;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -48,17 +47,14 @@ public class JsonStreamingCliContext implements CliContext, AutoCloseable {
   private final PrintWriter stderr;
   private final JsonGenerator jsonGenerator;
 
-  public JsonStreamingCliContext(Locale locale, InputStream stdin, OutputStream output) {
+  @SuppressWarnings("java:S2095") // generator is closed in the close method
+  public JsonStreamingCliContext(Locale locale, InputStream stdin, OutputStream output) throws IOException {
     this.locale = locale;
     this.stdin = stdin;
-    try {
-      this.jsonGenerator = mapper.createGenerator(output).setPrettyPrinter(new MinimalPrettyPrinter(""));
-      jsonGenerator.writeStartArray();
-      this.stdout = new PrintWriter(new StreamingOutput(jsonGenerator, "out"), true);
-      this.stderr = new PrintWriter(new StreamingOutput(jsonGenerator, "err"), true);
-    } catch (IOException e) {
-      throw new IllegalStateException(e);
-    }
+    this.jsonGenerator = mapper.createGenerator(output).setPrettyPrinter(new MinimalPrettyPrinter(""));
+    jsonGenerator.writeStartArray();
+    this.stdout = new PrintWriter(new StreamingOutput(jsonGenerator, "out"), true);
+    this.stderr = new PrintWriter(new StreamingOutput(jsonGenerator, "err"), true);
   }
 
   @Override
@@ -76,15 +72,10 @@ public class JsonStreamingCliContext implements CliContext, AutoCloseable {
     return stdin;
   }
 
-  public void writeExit(int exitcode) {
-    try {
-      jsonGenerator.writeStartObject();
-      jsonGenerator.writeNumberField("exit", exitcode);
-      jsonGenerator.writeEndObject();
-    } catch (IOException e) {
-      //TODO Handle
-      e.printStackTrace();
-    }
+  public void writeExit(int exitcode) throws IOException {
+    jsonGenerator.writeStartObject();
+    jsonGenerator.writeNumberField("exit", exitcode);
+    jsonGenerator.writeEndObject();
   }
 
   @Override

@@ -64,8 +64,7 @@ public class CommandRegistry {
         if (parentNode != null) {
           parentNode.getChildren().add(node);
         } else {
-          //TODO Handle
-          LOG.warn("Could not find parent command");
+          throw new NonExistingParentCommandException("parent command of " + command.getName() + " does not exist");
         }
       }
     }
