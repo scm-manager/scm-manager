@@ -29,60 +29,62 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import sonia.scm.cli.CliContext;
-import sonia.scm.cli.ExitCode;
-import sonia.scm.cli.TemplateRenderer;
+import sonia.scm.cli.CommandValidator;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryTestData;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class RepositoryDeleteCommandTest {
+class RepositoryModifyCommandTest {
 
   @Mock
-  private TemplateRenderer templateRenderer;
+  private RepositoryTemplateRenderer templateRenderer;
+  @Mock
+  private CommandValidator validator;
   @Mock
   private RepositoryManager manager;
-  @Mock
-  private CliContext context;
-
 
   @InjectMocks
-  private RepositoryDeleteCommand command;
-
+  private RepositoryModifyCommand command;
 
   @Test
-  void shouldRenderPromptWithoutYesFlag() {
+  void shouldValidateParameters() {
     command.setRepository("test/repo");
     command.run();
 
-    verify(templateRenderer).renderToStderr(any(), anyMap());
+    verify(validator).validate();
   }
 
   @Test
-  void shouldExitOnInvalidInput() {
+  void shouldRenderInvalidInputError() {
     command.setRepository("test");
-    command.setShouldDelete(true);
     command.run();
 
-    verify(context).exit(ExitCode.USAGE);
+    verify(templateRenderer).renderInvalidInputError();
   }
 
   @Test
-  void shouldDeleteRepository() {
-    Repository puzzle = RepositoryTestData.create42Puzzle();
-    when(manager.get(new NamespaceAndName("test", "r"))).thenReturn(puzzle);
-    command.setRepository("test/r");
-    command.setShouldDelete(true);
+  void shouldRenderNotFoundError() {
+    when(manager.get(new NamespaceAndName("test", "repo"))).thenReturn(null);
+    command.setRepository("test/repo");
     command.run();
 
-    verify(manager).delete(puzzle);
+    verify(templateRenderer).renderNotFoundError();
   }
+
+  @Test
+  void shouldModifyRepository() {
+    Repository puzzle = RepositoryTestData.create42Puzzle();
+    when(manager.get(new NamespaceAndName("test", "repo"))).thenReturn(puzzle);
+    command.setRepository("test/repo");
+    command.run();
+
+    verify(manager).modify(puzzle);
+    verify(templateRenderer).render(puzzle);
+  }
+
 }

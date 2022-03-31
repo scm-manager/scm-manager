@@ -46,6 +46,8 @@ class RepositoryToRepositoryCommandDtoMapperTest {
 
   @Mock
   private RepositoryServiceFactory serviceFactory;
+  @Mock
+  private RepositoryService service;
 
   private RepositoryToRepositoryCommandDtoMapperImpl mapper;
 
@@ -58,6 +60,7 @@ class RepositoryToRepositoryCommandDtoMapperTest {
   @Test
   void shouldMapAttributes() {
     Repository testRepo = RepositoryTestData.create42Puzzle();
+    when(serviceFactory.create(testRepo)).thenReturn(service);
     RepositoryCommandDto dto = mapper.map(testRepo);
 
     assertThat(dto.getNamespace()).isEqualTo(testRepo.getNamespace());

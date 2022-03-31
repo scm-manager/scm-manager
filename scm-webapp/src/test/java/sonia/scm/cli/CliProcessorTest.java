@@ -67,19 +67,7 @@ class CliProcessorTest {
 
     cliProcessor.execute(context, "ping");
 
-    verify(context.getStdout()).println("pong");
-  }
-
-
-  @Test
-  void shouldExecutePingCommandWithAlias() {
-    when(registry.createCommandTree()).thenReturn(Collections.singleton(new RegisteredCommandNode("ping", PingCommand.class)));
-    Injector injector = Guice.createInjector();
-    CliProcessor cliProcessor = new CliProcessor(registry, injector);
-
-    cliProcessor.execute(context, "scmping");
-
-    verify(context.getStdout()).println("pong");
+    verify(context.getStdout()).println("PONG");
   }
 
   @Test

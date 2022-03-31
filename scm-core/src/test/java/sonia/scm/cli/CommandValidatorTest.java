@@ -66,7 +66,7 @@ class CommandValidatorTest {
 
     commandLine.execute("--mail=test");
 
-    assertThat(stringWriter.toString()).contains("ERROR: muss eine korrekt formatierte E-Mail-Adresse sein");
+    assertThat(stringWriter.toString()).contains("FEHLER: muss eine korrekt formatierte E-Mail-Adresse sein");
   }
 
   @CommandLine.Command

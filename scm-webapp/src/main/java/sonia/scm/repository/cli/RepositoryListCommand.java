@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.cli;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableMap;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
@@ -79,5 +80,10 @@ public class RepositoryListCommand implements Runnable {
       }
       templateRenderer.renderToStdout(TABLE_TEMPLATE, ImmutableMap.of("rows", table, "repos", dtos));
     }
+  }
+
+  @VisibleForTesting
+  void setShortTemplate(boolean useShortTemplate) {
+    this.useShortTemplate = useShortTemplate;
   }
 }

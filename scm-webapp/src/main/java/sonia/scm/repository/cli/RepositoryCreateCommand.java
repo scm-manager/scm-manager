@@ -50,6 +50,7 @@ public class RepositoryCreateCommand implements Runnable {
   private final RepositoryInitializer repositoryInitializer;
   private final Provider<NamespaceStrategy> namespaceStrategyProvider;
 
+  //TODO validate type
   @CommandLine.Parameters(descriptionKey = "scm.repo.create.type")
   private String type;
   @CommandLine.Parameters(descriptionKey = "scm.repo.create.repository")

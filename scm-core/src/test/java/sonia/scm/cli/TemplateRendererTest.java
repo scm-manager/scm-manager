@@ -27,9 +27,9 @@ package sonia.scm.cli;
 import com.google.common.collect.ImmutableMap;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import picocli.CommandLine;
 import sonia.scm.template.Template;
 import sonia.scm.template.TemplateEngine;
 import sonia.scm.template.TemplateEngineFactory;
@@ -57,15 +57,53 @@ class TemplateRendererTest {
 
   @Test
   void shouldTemplateContentToStdout() throws IOException {
-    TemplateRenderer templateRenderer = new TemplateRenderer(context, templateEngineFactory);
-    StringWriter writer = new StringWriter();
-    when(context.getStdout()).thenReturn(new PrintWriter(writer));
+    when(context.getStdout()).thenReturn(new PrintWriter(new StringWriter()));
     when(templateEngineFactory.getDefaultEngine()).thenReturn(engine);
     when(engine.getTemplate(any(), any(StringReader.class))).thenReturn(template);
+    TemplateRenderer templateRenderer = new TemplateRenderer(context, templateEngineFactory);
+    templateRenderer.setSpec(CommandLine.Model.CommandSpec.create());
 
-    templateRenderer.renderToStdout(":{{error}}!", ImmutableMap.of("error", "testerror"));
+    templateRenderer.renderToStdout(":{{test}}!", ImmutableMap.of("test", "test_output"));
 
     verify(template).execute(any(), any());
   }
 
+  @Test
+  void shouldRenderErrorToStderr() throws IOException {
+    when(context.getStderr()).thenReturn(new PrintWriter(new StringWriter()));
+    when(templateEngineFactory.getDefaultEngine()).thenReturn(engine);
+    when(engine.getTemplate(any(), any(StringReader.class))).thenReturn(template);
+    TemplateRenderer templateRenderer = new TemplateRenderer(context, templateEngineFactory);
+    templateRenderer.setSpec(CommandLine.Model.CommandSpec.create());
+
+    templateRenderer.renderToStderr(":{{error}}!", ImmutableMap.of("error", "testerror"));
+
+    verify(template).execute(any(), any());
+  }
+
+  @Test
+  void shouldRenderDefaultErrorToStderr() throws IOException {
+    when(context.getStderr()).thenReturn(new PrintWriter(new StringWriter()));
+    when(templateEngineFactory.getDefaultEngine()).thenReturn(engine);
+    when(engine.getTemplate(any(), any(StringReader.class))).thenReturn(template);
+    TemplateRenderer templateRenderer = new TemplateRenderer(context, templateEngineFactory);
+    templateRenderer.setSpec(CommandLine.Model.CommandSpec.create());
+
+    templateRenderer.renderDefaultError("testerror");
+
+    verify(template).execute(any(), any());
+  }
+
+  @Test
+  void shouldRenderExceptionToStderr() throws IOException {
+    when(context.getStderr()).thenReturn(new PrintWriter(new StringWriter()));
+    when(templateEngineFactory.getDefaultEngine()).thenReturn(engine);
+    when(engine.getTemplate(any(), any(StringReader.class))).thenReturn(template);
+    TemplateRenderer templateRenderer = new TemplateRenderer(context, templateEngineFactory);
+    templateRenderer.setSpec(CommandLine.Model.CommandSpec.create());
+
+    templateRenderer.renderDefaultError(new RuntimeException("test"));
+
+    verify(template).execute(any(), any());
+  }
 }

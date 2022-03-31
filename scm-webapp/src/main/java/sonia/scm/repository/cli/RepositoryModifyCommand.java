@@ -69,23 +69,24 @@ public class RepositoryModifyCommand implements Runnable {
   public void run() {
     validator.validate();
     String[] splitRepo = repository.split("/");
-    if (splitRepo.length != 2) {
-      templateRenderer.renderInvalidInputError();
-    }
-    Repository repo = manager.get(new NamespaceAndName(splitRepo[0], splitRepo[1]));
+    if (splitRepo.length == 2) {
+      Repository repo = manager.get(new NamespaceAndName(splitRepo[0], splitRepo[1]));
 
-    if (repo != null) {
-      if (contact != null) {
-        repo.setContact(contact);
-      }
-      if (description != null) {
-        repo.setDescription(description);
-      }
+      if (repo != null) {
+        if (contact != null) {
+          repo.setContact(contact);
+        }
+        if (description != null) {
+          repo.setDescription(description);
+        }
 
-      manager.modify(repo);
-      templateRenderer.render(repo);
+        manager.modify(repo);
+        templateRenderer.render(repo);
+      } else {
+        templateRenderer.renderNotFoundError();
+      }
     } else {
-      templateRenderer.renderNotFoundError();
+      templateRenderer.renderInvalidInputError();
     }
   }
 }

@@ -24,6 +24,7 @@
 
 package sonia.scm.cli;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableMap;
 import picocli.CommandLine;
@@ -131,6 +132,11 @@ public class TemplateRenderer {
       finalModel.put("i18n", new I18n(resourceBundle));
     }
     return Collections.unmodifiableMap(finalModel);
+  }
+
+  @VisibleForTesting
+  void setSpec(CommandLine.Model.CommandSpec spec) {
+    this.spec = spec;
   }
 
   @SuppressWarnings("java:S2160") // Do not need equals or hashcode
