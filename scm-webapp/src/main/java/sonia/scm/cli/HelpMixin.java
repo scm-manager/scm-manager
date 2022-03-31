@@ -28,6 +28,6 @@ import picocli.CommandLine;
 
 public class HelpMixin {
 
-  @CommandLine.Option(names = {"--help", "-h"}, usageHelp = true, description = "Show this help message and exit.")
+  @CommandLine.Option(names = {"--help", "-h"}, usageHelp = true, descriptionKey = "scm.help.usage.description.0")
   private boolean usageHelp;
 }
