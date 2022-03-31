@@ -88,7 +88,7 @@ class RepositoryCreateCommandTest {
 
     verify(manager).create(argThat(repository -> {
       assertThat(repository.getType()).isEqualTo(heartOfGold.getType());
-      assertThat(repository.getNamespaceAndName().toString()).hasToString(heartOfGold.getNamespaceAndName().toString());
+      assertThat(repository.getNamespaceAndName().toString()).hasToString("test/HeartOfGold");
       return true;
     }));
     verify(initializer, never()).initialize(eq(heartOfGold), anyMap());

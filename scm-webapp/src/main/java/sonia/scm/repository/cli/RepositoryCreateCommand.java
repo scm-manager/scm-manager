@@ -85,7 +85,8 @@ public class RepositoryCreateCommand implements Runnable {
     if (splitRepoName.length == 2) {
       newRepo.setNamespace(splitRepoName[0]);
       newRepo.setName(splitRepoName[1]);
-      namespaceStrategyProvider.get().createNamespace(newRepo);
+      String namespace = namespaceStrategyProvider.get().createNamespace(newRepo);
+      newRepo.setNamespace(namespace);
     } else {
       newRepo.setName(repository);
     }
