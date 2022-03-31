@@ -30,11 +30,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.io.Writer;
+import java.util.Arrays;
 import java.util.Locale;
 
 public class JsonStreamingCliContext implements CliContext, AutoCloseable {
@@ -53,8 +54,14 @@ public class JsonStreamingCliContext implements CliContext, AutoCloseable {
     this.stdin = stdin;
     this.jsonGenerator = mapper.createGenerator(output).setPrettyPrinter(new MinimalPrettyPrinter(""));
     jsonGenerator.writeStartArray();
-    this.stdout = new PrintWriter(new StreamingOutput(jsonGenerator, "out"), true);
-    this.stderr = new PrintWriter(new StreamingOutput(jsonGenerator, "err"), true);
+
+    StringingOutputWriter out = new StringingOutputWriter(jsonGenerator, "out");
+    StringingOutputWriter err = new StringingOutputWriter(jsonGenerator, "err");
+    out.setOther(err);
+    err.setOther(out);
+
+    this.stdout = new PrintWriter(out);
+    this.stderr = new PrintWriter(err);
   }
 
   @Override
@@ -107,32 +114,34 @@ public class JsonStreamingCliContext implements CliContext, AutoCloseable {
     }
   }
 
-  public static class StreamingOutput extends OutputStream {
+  public static class StringingOutputWriter extends Writer {
 
     private final JsonGenerator jsonGenerator;
-    private final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
     private final String name;
 
-    public StreamingOutput(JsonGenerator jsonGenerator, String name) {
+    private StringBuilder buffer = new StringBuilder();
+    private StringingOutputWriter other;
+
+    private StringingOutputWriter(JsonGenerator jsonGenerator, String name) {
       this.jsonGenerator = jsonGenerator;
       this.name = name;
     }
 
-    @Override
-    public void write(int i) throws IOException {
-      buffer.write(i);
+    public void setOther(StringingOutputWriter other) {
+      this.other = other;
     }
 
     @Override
-    public void write(byte[] b, int off, int len) {
-      buffer.write(b, off, len);
+    public void write(char[] cbuf, int off, int len) throws IOException {
+      other.flush();
+      buffer.append(Arrays.copyOfRange(cbuf, off, len));
     }
 
     @Override
     public void flush() throws IOException {
       String content = buffer.toString();
       if (content.length() > 0) {
-        buffer.reset();
+        buffer = new StringBuilder();
         jsonGenerator.writeStartObject();
         jsonGenerator.writeStringField(name, content);
         jsonGenerator.writeEndObject();
@@ -141,8 +150,7 @@ public class JsonStreamingCliContext implements CliContext, AutoCloseable {
 
     @Override
     public void close() throws IOException {
-      flush();
-      super.close();
+      this.flush();
     }
   }
 }
