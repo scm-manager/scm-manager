@@ -32,10 +32,10 @@ import sonia.scm.cli.ParentCommand;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryInitializer;
 import sonia.scm.repository.RepositoryManager;
+import sonia.scm.validation.RepositoryType;
 
 import javax.inject.Inject;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.Pattern;
 
 @CommandLine.Command(name = "create")
 @ParentCommand(value = RepositoryCommand.class)
@@ -48,10 +48,10 @@ public class RepositoryCreateCommand implements Runnable {
   private final RepositoryManager manager;
   private final RepositoryInitializer repositoryInitializer;
 
-  @Pattern(regexp="^svn$|^git$|^hg$")
+  @RepositoryType
   @CommandLine.Parameters(descriptionKey = "scm.repo.create.type")
   private String type;
-  @CommandLine.Parameters(descriptionKey = "scm.repo.create.repository", paramLabel = "name")
+  @CommandLine.Parameters(descriptionKey = "scm.repo.create.repository", paramLabel = "<name>")
   private String repository;
   @CommandLine.Option(names = {"--description", "-d"}, descriptionKey = "scm.repo.create.desc")
   private String description;

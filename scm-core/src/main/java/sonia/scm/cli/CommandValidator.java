@@ -25,6 +25,7 @@
 package sonia.scm.cli;
 
 import picocli.CommandLine;
+import sonia.scm.validation.LocaleSpecificMessageInterpolator;
 
 import javax.inject.Inject;
 import javax.validation.ConstraintValidatorFactory;
@@ -94,24 +95,5 @@ public final class CommandValidator {
     return "ERROR: ";
   }
 
-  private static class LocaleSpecificMessageInterpolator implements MessageInterpolator {
 
-    private final MessageInterpolator defaultMessageInterpolator;
-    private final Locale defaultLocale;
-
-    private LocaleSpecificMessageInterpolator(MessageInterpolator defaultMessageInterpolator, Locale defaultLocale) {
-      this.defaultMessageInterpolator = defaultMessageInterpolator;
-      this.defaultLocale = defaultLocale;
-    }
-
-    @Override
-    public String interpolate(String messageTemplate, Context context) {
-      return interpolate(messageTemplate, context, defaultLocale);
-    }
-
-    @Override
-    public String interpolate(String messageTemplate, Context context, Locale locale) {
-      return defaultMessageInterpolator.interpolate(messageTemplate, context, locale);
-    }
-  }
 }

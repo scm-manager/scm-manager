@@ -31,7 +31,7 @@ import javax.validation.ConstraintValidatorFactory;
 import javax.validation.Validator;
 import javax.validation.constraints.Size;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
 class DefaultValidatorProviderTest {
 

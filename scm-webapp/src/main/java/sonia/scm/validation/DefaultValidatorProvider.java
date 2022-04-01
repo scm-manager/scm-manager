@@ -27,8 +27,11 @@ package sonia.scm.validation;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.validation.ConstraintValidatorFactory;
+import javax.validation.MessageInterpolator;
 import javax.validation.Validation;
 import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
+import java.util.Locale;
 
 public class DefaultValidatorProvider implements Provider<Validator> {
 
@@ -41,9 +44,17 @@ public class DefaultValidatorProvider implements Provider<Validator> {
 
   @Override
   public Validator get() {
-    return Validation.buildDefaultValidatorFactory()
+    ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
+    //TODO How to get the locale?
+    MessageInterpolator interpolator = new LocaleSpecificMessageInterpolator(
+      validatorFactory.getMessageInterpolator(),
+      Locale.ENGLISH
+    );
+
+    return validatorFactory
       .usingContext()
       .constraintValidatorFactory(constraintValidatorFactory)
+      .messageInterpolator(interpolator)
       .getValidator();
   }
 }

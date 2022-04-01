@@ -24,28 +24,37 @@
 
 package sonia.scm.validation;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.Type;
 import sonia.scm.repository.RepositoryManager;
 
-import static org.assertj.core.api.Assertions.*;
+import javax.inject.Inject;
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
+import java.util.List;
+import java.util.stream.Collectors;
 
-@ExtendWith(MockitoExtension.class)
-class GuiceConstraintValidatorFactoryTest {
+public class RepositoryTypeConstraintValidator implements ConstraintValidator<RepositoryType, String> {
 
-  @Mock
-  private RepositoryManager repositoryManager;
+  private final RepositoryManager repositoryManager;
 
-  @Test
-  void shouldUseInjectorToCreateConstraintInstance() {
-    Injector injector = Guice.createInjector(new RepositoryManagerModule(repositoryManager));
-    GuiceConstraintValidatorFactory factory = new GuiceConstraintValidatorFactory(injector);
-    RepositoryTypeConstraintValidator instance = factory.getInstance(RepositoryTypeConstraintValidator.class);
-    assertThat(instance.getRepositoryManager()).isSameAs(repositoryManager);
+  @Inject
+  public RepositoryTypeConstraintValidator(RepositoryManager repositoryManager) {
+    this.repositoryManager = repositoryManager;
   }
 
+  public RepositoryManager getRepositoryManager() {
+    return repositoryManager;
+  }
+
+  @Override
+  public boolean isValid(String value, ConstraintValidatorContext context) {
+    context.disableDefaultConstraintViolation();
+    //TODO How to get the locale?
+    List<String> supportedTypes = repositoryManager.getConfiguredTypes().stream().map(Type::getName).collect(Collectors.toList());
+    context.buildConstraintViolationWithTemplate("Must be valid type of: " +  String.join(", ", supportedTypes))
+      .addConstraintViolation();
+
+    return repositoryManager.getConfiguredTypes()
+      .stream().anyMatch(t -> t.getName().equalsIgnoreCase(value));
+  }
 }
