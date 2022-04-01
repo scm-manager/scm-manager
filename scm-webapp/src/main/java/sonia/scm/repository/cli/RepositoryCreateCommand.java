@@ -49,32 +49,29 @@ public class RepositoryCreateCommand implements Runnable {
   private final CommandValidator validator;
   private final RepositoryManager manager;
   private final RepositoryInitializer repositoryInitializer;
-  private final Provider<NamespaceStrategy> namespaceStrategyProvider;
 
   @Pattern(regexp="^svn$|^git$|^hg$")
   @CommandLine.Parameters(descriptionKey = "scm.repo.create.type")
   private String type;
-  @CommandLine.Parameters(descriptionKey = "scm.repo.create.repository")
+  @CommandLine.Parameters(descriptionKey = "scm.repo.create.repository", paramLabel = "name")
   private String repository;
   @CommandLine.Option(names = {"--description", "-d"}, descriptionKey = "scm.repo.create.desc")
   private String description;
   @Email
   @CommandLine.Option(names = {"--contact", "-c"})
   private String contact;
-  @CommandLine.Option(names = {"--init", "-i"})
+  @CommandLine.Option(names = {"--init", "-i"}, descriptionKey = "scm.repo.create.init")
   private boolean init;
 
   @Inject
   public RepositoryCreateCommand(RepositoryTemplateRenderer templateRenderer,
                                  CommandValidator validator,
                                  RepositoryManager manager,
-                                 RepositoryInitializer repositoryInitializer,
-                                 Provider<NamespaceStrategy> namespaceStrategyProvider) {
+                                 RepositoryInitializer repositoryInitializer) {
     this.templateRenderer = templateRenderer;
     this.validator = validator;
     this.manager = manager;
     this.repositoryInitializer = repositoryInitializer;
-    this.namespaceStrategyProvider = namespaceStrategyProvider;
   }
 
   @Override
@@ -85,8 +82,6 @@ public class RepositoryCreateCommand implements Runnable {
     if (splitRepoName.length == 2) {
       newRepo.setNamespace(splitRepoName[0]);
       newRepo.setName(splitRepoName[1]);
-      String namespace = namespaceStrategyProvider.get().createNamespace(newRepo);
-      newRepo.setNamespace(namespace);
     } else {
       newRepo.setName(repository);
     }

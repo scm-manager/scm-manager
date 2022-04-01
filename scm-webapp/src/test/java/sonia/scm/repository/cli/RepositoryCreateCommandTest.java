@@ -24,20 +24,16 @@
 
 package sonia.scm.repository.cli;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.cli.CommandValidator;
-import sonia.scm.repository.NamespaceStrategy;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryInitializer;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryTestData;
-
-import javax.inject.Provider;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -59,16 +55,9 @@ class RepositoryCreateCommandTest {
   private RepositoryTemplateRenderer templateRenderer;
   @Mock
   private CommandValidator commandValidator;
-  @Mock
-  private Provider<NamespaceStrategy> namespaceStrategyProvider;
 
   @InjectMocks
   private RepositoryCreateCommand command;
-
-  @BeforeEach
-  void initCommand() {
-    when(namespaceStrategyProvider.get()).thenReturn(repository -> "test");
-  }
 
   @Test
   void shouldValidate() {
@@ -88,7 +77,6 @@ class RepositoryCreateCommandTest {
 
     verify(manager).create(argThat(repository -> {
       assertThat(repository.getType()).isEqualTo(heartOfGold.getType());
-      assertThat(repository.getNamespaceAndName().toString()).hasToString("test/HeartOfGold");
       return true;
     }));
     verify(initializer, never()).initialize(eq(heartOfGold), anyMap());
@@ -117,5 +105,4 @@ class RepositoryCreateCommandTest {
 
     verify(templateRenderer).render(puzzle);
   }
-
 }

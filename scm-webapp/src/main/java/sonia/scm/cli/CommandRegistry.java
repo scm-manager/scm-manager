@@ -24,9 +24,6 @@
 
 package sonia.scm.cli;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.HashMap;
@@ -37,7 +34,6 @@ import java.util.Set;
 @Singleton
 public class CommandRegistry {
 
-  private static final Logger LOG = LoggerFactory.getLogger(CommandRegistry.class);
   private final RegisteredCommandCollector commandCollector;
 
   @Inject
@@ -70,5 +66,4 @@ public class CommandRegistry {
     }
     return rootCommands;
   }
-
 }

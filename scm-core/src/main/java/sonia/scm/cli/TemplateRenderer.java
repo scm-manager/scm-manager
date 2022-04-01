@@ -50,7 +50,7 @@ import java.util.function.UnaryOperator;
  */
 public class TemplateRenderer {
 
-  @CommandLine.Option(names = {"--template", "-t"}, paramLabel = "TEMPLATE", descriptionKey = "scm.templateRender.template")
+  @CommandLine.Option(names = {"--template", "-t"}, paramLabel = "TEMPLATE", descriptionKey = "scm.templateRenderer.template")
   private String template;
 
   private static final String DEFAULT_ERROR_TEMPLATE = String.join("\n",

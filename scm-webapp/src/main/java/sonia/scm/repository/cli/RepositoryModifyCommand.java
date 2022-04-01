@@ -24,22 +24,25 @@
 
 package sonia.scm.repository.cli;
 
-import com.cronutils.utils.VisibleForTesting;
+import com.google.common.annotations.VisibleForTesting;
 import picocli.CommandLine;
 import sonia.scm.cli.CommandValidator;
 import sonia.scm.cli.ParentCommand;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
+import sonia.scm.util.ValidationUtil;
 
 import javax.inject.Inject;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.Pattern;
 
 @ParentCommand(value = RepositoryCommand.class)
 @CommandLine.Command(name = "modify")
 public class RepositoryModifyCommand implements Runnable {
 
-  @CommandLine.Parameters(paramLabel = "namespace/name", index = "0")
+  @CommandLine.Parameters(paramLabel = "namespace/name", index = "0", descriptionKey = "scm.repo.modify.repository")
+  @Pattern(regexp = ValidationUtil.REGEX_REPOSITORYNAME)
   private String repository;
   @CommandLine.Option(names = {"--description", "-d"}, descriptionKey = "scm.repo.create.desc")
   private String description;

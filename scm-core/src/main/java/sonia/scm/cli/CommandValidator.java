@@ -34,6 +34,7 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 /**
@@ -86,9 +87,9 @@ public final class CommandValidator {
   }
 
   private String evaluateErrorTemplate() {
-    //TODO Find better solution
-    if (context.getLocale().toString().toLowerCase().startsWith("de")) {
-      return "FEHLER: ";
+    ResourceBundle bundle = ResourceBundle.getBundle("sonia.scm.cli.i18n", context.getLocale());
+    if (bundle != null && bundle.containsKey("errorLabel")) {
+        return bundle.getString("errorLabel") + ": ";
     }
     return "ERROR: ";
   }

@@ -29,12 +29,13 @@ import picocli.CommandLine;
 import sonia.scm.cli.CliContext;
 import sonia.scm.cli.ExitCode;
 import sonia.scm.cli.ParentCommand;
-import sonia.scm.cli.TemplateRenderer;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
+import sonia.scm.util.ValidationUtil;
 
 import javax.inject.Inject;
+import javax.validation.constraints.Pattern;
 import java.util.Collections;
 
 @CommandLine.Command(name = "delete", aliases = "rm")
@@ -43,19 +44,20 @@ public class RepositoryDeleteCommand implements Runnable {
 
   private static final String PROMPT_TEMPLATE = "{{i18n.repoDeletePrompt}}";
 
-  @CommandLine.Parameters
+  @Pattern(regexp = ValidationUtil.REGEX_REPOSITORYNAME)
+  @CommandLine.Parameters(descriptionKey = "scm.repo.delete.repository", paramLabel = "namespace/name")
   private String repository;
 
   @CommandLine.Option(names = {"--yes", "-y"}, descriptionKey = "scm.repo.delete.prompt")
   private boolean shouldDelete;
 
   @CommandLine.Mixin
-  private final TemplateRenderer templateRenderer;
+  private final RepositoryTemplateRenderer templateRenderer;
   private final RepositoryManager manager;
   private final CliContext context;
 
   @Inject
-  public RepositoryDeleteCommand(RepositoryManager manager, CliContext context, TemplateRenderer templateRenderer) {
+  public RepositoryDeleteCommand(RepositoryManager manager, CliContext context, RepositoryTemplateRenderer templateRenderer) {
     this.manager = manager;
     this.context = context;
     this.templateRenderer = templateRenderer;
@@ -74,7 +76,7 @@ public class RepositoryDeleteCommand implements Runnable {
         manager.delete(repo);
       }
     }
-    context.exit(ExitCode.USAGE);
+    templateRenderer.renderInvalidInputError();
   }
 
   @VisibleForTesting
