@@ -24,26 +24,28 @@
 
 package sonia.scm.validation;
 
-import javax.validation.MessageInterpolator;
-import java.util.Locale;
+import sonia.scm.repository.RepositoryManager;
 
-public class LocaleSpecificMessageInterpolator implements MessageInterpolator {
+import javax.inject.Inject;
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
 
-  private final MessageInterpolator defaultMessageInterpolator;
-  private final Locale defaultLocale;
+public class RepositoryTypeConstraintValidator implements ConstraintValidator<RepositoryType, String> {
 
-  public LocaleSpecificMessageInterpolator(MessageInterpolator defaultMessageInterpolator, Locale defaultLocale) {
-    this.defaultMessageInterpolator = defaultMessageInterpolator;
-    this.defaultLocale = defaultLocale;
+  private final RepositoryManager repositoryManager;
+
+  @Inject
+  public RepositoryTypeConstraintValidator(RepositoryManager repositoryManager) {
+    this.repositoryManager = repositoryManager;
+  }
+
+  public RepositoryManager getRepositoryManager() {
+    return repositoryManager;
   }
 
   @Override
-  public String interpolate(String messageTemplate, Context context) {
-    return interpolate(messageTemplate, context, defaultLocale);
-  }
-
-  @Override
-  public String interpolate(String messageTemplate, Context context, Locale locale) {
-    return defaultMessageInterpolator.interpolate(messageTemplate, context, locale);
+  public boolean isValid(String value, ConstraintValidatorContext context) {
+    return repositoryManager.getConfiguredTypes()
+      .stream().anyMatch(t -> t.getName().equalsIgnoreCase(value));
   }
 }
