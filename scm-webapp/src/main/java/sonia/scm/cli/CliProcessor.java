@@ -25,6 +25,7 @@
 package sonia.scm.cli;
 
 import com.google.inject.Injector;
+import picocli.AutoComplete;
 import picocli.CommandLine;
 
 import javax.inject.Inject;
@@ -52,6 +53,7 @@ public class CliProcessor {
       CommandLine commandline = createCommandline(context, factory, c);
       cli.getCommandSpec().addSubcommand(c.getName(), commandline);
     }
+    cli.addSubcommand(AutoComplete.GenerateCompletion.class);
     cli.setErr(context.getStderr());
     cli.setOut(context.getStdout());
     cli.setExecutionExceptionHandler(new CliExceptionHandler());
