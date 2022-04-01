@@ -30,14 +30,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.cli.CliContext;
-import sonia.scm.cli.ExitCode;
-import sonia.scm.cli.TemplateRenderer;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryTestData;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.Mockito.verify;
@@ -47,16 +44,12 @@ import static org.mockito.Mockito.when;
 class RepositoryDeleteCommandTest {
 
   @Mock
-  private TemplateRenderer templateRenderer;
+  private RepositoryTemplateRenderer templateRenderer;
   @Mock
   private RepositoryManager manager;
-  @Mock
-  private CliContext context;
-
 
   @InjectMocks
   private RepositoryDeleteCommand command;
-
 
   @Test
   void shouldRenderPromptWithoutYesFlag() {
@@ -72,7 +65,7 @@ class RepositoryDeleteCommandTest {
     command.setShouldDelete(true);
     command.run();
 
-    verify(context).exit(ExitCode.USAGE);
+    verify(templateRenderer).renderInvalidInputError();
   }
 
   @Test

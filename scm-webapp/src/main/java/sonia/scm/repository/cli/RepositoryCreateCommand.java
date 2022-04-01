@@ -29,13 +29,11 @@ import com.google.common.collect.ImmutableMap;
 import picocli.CommandLine;
 import sonia.scm.cli.CommandValidator;
 import sonia.scm.cli.ParentCommand;
-import sonia.scm.repository.NamespaceStrategy;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryInitializer;
 import sonia.scm.repository.RepositoryManager;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;
 

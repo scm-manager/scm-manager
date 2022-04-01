@@ -27,7 +27,6 @@ package sonia.scm.repository.cli;
 import com.google.common.annotations.VisibleForTesting;
 import picocli.CommandLine;
 import sonia.scm.cli.CliContext;
-import sonia.scm.cli.ExitCode;
 import sonia.scm.cli.ParentCommand;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
@@ -54,12 +53,10 @@ public class RepositoryDeleteCommand implements Runnable {
   @CommandLine.Mixin
   private final RepositoryTemplateRenderer templateRenderer;
   private final RepositoryManager manager;
-  private final CliContext context;
 
   @Inject
-  public RepositoryDeleteCommand(RepositoryManager manager, CliContext context, RepositoryTemplateRenderer templateRenderer) {
+  public RepositoryDeleteCommand(RepositoryManager manager, RepositoryTemplateRenderer templateRenderer) {
     this.manager = manager;
-    this.context = context;
     this.templateRenderer = templateRenderer;
   }
 

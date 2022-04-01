@@ -36,6 +36,7 @@ import javax.validation.constraints.Email;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Locale;
+import java.util.ResourceBundle;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -48,8 +49,10 @@ class CommandValidatorTest {
 
   @Test
   void shouldValidateCommand() {
+    ResourceBundle resourceBundle = ResourceBundle.getBundle("sonia.scm.cli.i18n", Locale.ENGLISH);
     when(context.getLocale()).thenReturn(Locale.ENGLISH);
     CommandLine commandLine = new CommandLine(Command.class, new TestingCommandFactory());
+    commandLine.setResourceBundle(resourceBundle);
     StringWriter stringWriter = new StringWriter();
     commandLine.setErr(new PrintWriter(stringWriter));
 
@@ -60,8 +63,10 @@ class CommandValidatorTest {
 
   @Test
   void shouldValidateCommandWithGermanLocale() {
+    ResourceBundle resourceBundle = ResourceBundle.getBundle("sonia.scm.cli.i18n", Locale.GERMAN);
     when(context.getLocale()).thenReturn(Locale.GERMAN);
     CommandLine commandLine = new CommandLine(Command.class, new TestingCommandFactory());
+    commandLine.setResourceBundle(resourceBundle);
     StringWriter stringWriter = new StringWriter();
     commandLine.setErr(new PrintWriter(stringWriter));
 

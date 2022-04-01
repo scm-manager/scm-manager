@@ -87,7 +87,7 @@ public final class CommandValidator {
   }
 
   private String evaluateErrorTemplate() {
-    ResourceBundle bundle = ResourceBundle.getBundle("sonia.scm.cli.i18n", context.getLocale());
+    ResourceBundle bundle = spec.resourceBundle();
     if (bundle != null && bundle.containsKey("errorLabel")) {
         return bundle.getString("errorLabel") + ": ";
     }
