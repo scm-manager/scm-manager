@@ -164,7 +164,7 @@ public interface ModifyWorkerHelper extends ModifyCommand.Worker {
     }
     boolean executable = Files.isExecutable(targetFile);
     Files.move(file.toPath(), targetFile, REPLACE_EXISTING);
-    if (targetFile.toFile().setExecutable(executable)) {
+    if (!targetFile.toFile().setExecutable(executable)) {
       LOG.warn("could not set executable flag for file {}", targetFile);
     }
     addFileToScm(path, targetFile);
