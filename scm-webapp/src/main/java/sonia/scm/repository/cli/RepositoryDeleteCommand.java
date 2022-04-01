@@ -26,15 +26,12 @@ package sonia.scm.repository.cli;
 
 import com.google.common.annotations.VisibleForTesting;
 import picocli.CommandLine;
-import sonia.scm.cli.CliContext;
 import sonia.scm.cli.ParentCommand;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
-import sonia.scm.util.ValidationUtil;
 
 import javax.inject.Inject;
-import javax.validation.constraints.Pattern;
 import java.util.Collections;
 
 @CommandLine.Command(name = "delete", aliases = "rm")
@@ -43,7 +40,6 @@ public class RepositoryDeleteCommand implements Runnable {
 
   private static final String PROMPT_TEMPLATE = "{{i18n.repoDeletePrompt}}";
 
-  @Pattern(regexp = ValidationUtil.REGEX_REPOSITORYNAME)
   @CommandLine.Parameters(descriptionKey = "scm.repo.delete.repository", paramLabel = "namespace/name")
   private String repository;
 
@@ -72,8 +68,9 @@ public class RepositoryDeleteCommand implements Runnable {
       if (repo != null) {
         manager.delete(repo);
       }
+    } else {
+      templateRenderer.renderInvalidInputError();
     }
-    templateRenderer.renderInvalidInputError();
   }
 
   @VisibleForTesting
