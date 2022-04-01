@@ -31,30 +31,30 @@ import sonia.scm.cli.ParentCommand;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
-import sonia.scm.util.ValidationUtil;
 
 import javax.inject.Inject;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.Pattern;
 
 @ParentCommand(value = RepositoryCommand.class)
 @CommandLine.Command(name = "modify")
 public class RepositoryModifyCommand implements Runnable {
-
-  @CommandLine.Parameters(paramLabel = "namespace/name", index = "0", descriptionKey = "scm.repo.modify.repository")
-  @Pattern(regexp = ValidationUtil.REGEX_REPOSITORYNAME)
-  private String repository;
-  @CommandLine.Option(names = {"--description", "-d"}, descriptionKey = "scm.repo.create.desc")
-  private String description;
-  @Email
-  @CommandLine.Option(names = {"--contact", "-c"})
-  private String contact;
 
   @CommandLine.Mixin
   private final RepositoryTemplateRenderer templateRenderer;
   @CommandLine.Mixin
   private final CommandValidator validator;
   private final RepositoryManager manager;
+
+  @CommandLine.Parameters(paramLabel = "namespace/name", index = "0", descriptionKey = "scm.repo.modify.repository")
+  private String repository;
+
+  @CommandLine.Option(names = {"--description", "-d"}, descriptionKey = "scm.repo.create.desc")
+  private String description;
+
+  @Email
+  @CommandLine.Option(names = {"--contact", "-c"})
+  private String contact;
+
 
   @Inject
   RepositoryModifyCommand(RepositoryTemplateRenderer templateRenderer, CommandValidator validator, RepositoryManager manager) {

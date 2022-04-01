@@ -32,6 +32,7 @@ import sonia.scm.cli.ParentCommand;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryInitializer;
 import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.RepositoryName;
 import sonia.scm.repository.RepositoryTypeConstraint;
 
 import javax.inject.Inject;
@@ -51,13 +52,18 @@ public class RepositoryCreateCommand implements Runnable {
   @RepositoryTypeConstraint
   @CommandLine.Parameters(descriptionKey = "scm.repo.create.type")
   private String type;
+
+  @RepositoryName(namespace = RepositoryName.Namespace.OPTIONAL)
   @CommandLine.Parameters(descriptionKey = "scm.repo.create.repository", paramLabel = "name")
   private String repository;
+
   @CommandLine.Option(names = {"--description", "-d"}, descriptionKey = "scm.repo.create.desc")
   private String description;
+
   @Email
   @CommandLine.Option(names = {"--contact", "-c"})
   private String contact;
+
   @CommandLine.Option(names = {"--init", "-i"}, descriptionKey = "scm.repo.create.init")
   private boolean init;
 
