@@ -33,6 +33,8 @@ import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.repository.api.ScmProtocol;
 
 import javax.inject.Inject;
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 @Mapper
@@ -51,6 +53,13 @@ public abstract class RepositoryToRepositoryCommandDtoMapper {
       protocolUrl.ifPresent(scmProtocol -> dto.setUrl(scmProtocol.getUrl()));
     }
     return dto;
+  }
+
+  String mapTimestampToISODate(Long timestamp) {
+    if (timestamp != null) {
+      return DateTimeFormatter.ISO_INSTANT.format(Instant.ofEpochMilli(timestamp));
+    }
+    return null;
   }
 
   @VisibleForTesting

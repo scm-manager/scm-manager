@@ -37,5 +37,7 @@ public class RepositoryCommandDto {
   private String type;
   private String contact;
   private String description;
+  private String creationDate;
+  private String lastModified;
   private String url;
 }

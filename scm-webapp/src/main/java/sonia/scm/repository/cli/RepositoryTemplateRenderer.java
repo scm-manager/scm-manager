@@ -62,6 +62,8 @@ public class RepositoryTemplateRenderer extends TemplateRenderer {
     table.addLabelValueRow("repoName", dto.getName());
     table.addLabelValueRow("repoType", dto.getType());
     table.addLabelValueRow("repoContact", dto.getContact());
+    table.addLabelValueRow("repoCreationDate", dto.getCreationDate());
+    table.addLabelValueRow("repoLastModified", dto.getLastModified());
     table.addLabelValueRow("repoUrl", dto.getUrl());
     table.addLabelValueRow("repoDescription", dto.getDescription());
     renderToStdout(DETAILS_TABLE_TEMPLATE, ImmutableMap.of("rows", table, "repo", dto));
