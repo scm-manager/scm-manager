@@ -42,7 +42,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = RepositoryTypeConstraintValidator.class)
 public @interface RepositoryTypeConstraint {
-  String message() default "{sonia.scm.repository.RepositoryTypeConstraintValidator.message}";
+  String message() default "{sonia.scm.repository.RepositoryTypeConstraint.message}";
   Class<?>[] groups() default { };
   Class<? extends Payload>[] payload() default { };
 }
