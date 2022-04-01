@@ -46,6 +46,6 @@ public class GuiceConstraintValidatorFactory implements ConstraintValidatorFacto
 
   @Override
   public void releaseInstance(ConstraintValidator<?, ?> instance) {
-    // nothing todo here
+    // do nothing
   }
 }
