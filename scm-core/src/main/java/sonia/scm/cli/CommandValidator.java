@@ -27,6 +27,7 @@ package sonia.scm.cli;
 import picocli.CommandLine;
 
 import javax.inject.Inject;
+import javax.validation.ConstraintValidatorFactory;
 import javax.validation.ConstraintViolation;
 import javax.validation.MessageInterpolator;
 import javax.validation.Validation;
@@ -45,28 +46,34 @@ import java.util.Set;
 public final class CommandValidator {
 
   private final CliContext context;
+  private final Validator validator;
 
   @CommandLine.Spec(CommandLine.Spec.Target.MIXEE)
   private CommandLine.Model.CommandSpec spec;
-
-  @Inject
-  public CommandValidator(CliContext context) {
-    this.context = context;
-  }
 
   // We need an option to trick PicoCli into accepting our mixin
   @CommandLine.Option(names = "--hidden-flag", hidden = true)
   private boolean hiddenFlag ;
 
+  @Inject
+  public CommandValidator(CliContext context, ConstraintValidatorFactory constraintValidatorFactory) {
+    this.context = context;
+    this.validator = createValidator(constraintValidatorFactory);
+  }
+
+  private Validator createValidator(ConstraintValidatorFactory constraintValidatorFactory) {
+    ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
+
+    return validatorFactory.usingContext()
+      .constraintValidatorFactory(constraintValidatorFactory)
+      .messageInterpolator(new LocaleSpecificMessageInterpolator(validatorFactory.getMessageInterpolator(), context.getLocale()))
+      .getValidator();
+  }
+
   /**
    * Execute validation and exit the command on validation failure
    */
   public void validate() {
-    ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
-
-    Validator validator = validatorFactory.usingContext()
-      .messageInterpolator(new LocaleSpecificMessageInterpolator(validatorFactory.getMessageInterpolator(), context.getLocale()))
-      .getValidator();
     Set<ConstraintViolation<Object>> violations = validator.validate(spec.userObject());
 
     if (!violations.isEmpty()) {

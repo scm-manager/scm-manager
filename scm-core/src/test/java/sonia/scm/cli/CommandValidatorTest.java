@@ -30,8 +30,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import picocli.CommandLine;
 
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorFactory;
 import javax.validation.constraints.Email;
-
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Locale;
@@ -80,7 +81,7 @@ class CommandValidatorTest {
     private String mail;
 
     public Command(CliContext context) {
-      commandValidator = new CommandValidator(context);
+      commandValidator = new CommandValidator(context, new TestingConstraintValidatorFactory());
     }
 
     @Override
@@ -98,6 +99,23 @@ class CommandValidatorTest {
       } catch (Exception e) {
         return CommandLine.defaultFactory().create(cls);
       }
+    }
+  }
+
+  static class TestingConstraintValidatorFactory implements ConstraintValidatorFactory {
+
+    @Override
+    public <T extends ConstraintValidator<?, ?>> T getInstance(Class<T> key) {
+      try {
+        return key.getConstructor().newInstance();
+      } catch (Exception e) {
+        throw new IllegalStateException("Failed to create constraint validator");
+      }
+    }
+
+    @Override
+    public void releaseInstance(ConstraintValidator<?, ?> instance) {
+
     }
   }
 }

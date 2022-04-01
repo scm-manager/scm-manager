@@ -37,6 +37,7 @@ import sonia.scm.filter.WebElementModule;
 import sonia.scm.plugin.ExtensionProcessor;
 import sonia.scm.plugin.PluginLoader;
 import sonia.scm.repository.ExecutorModule;
+import sonia.scm.validation.ValidationModule;
 
 import javax.servlet.ServletContext;
 import java.util.ArrayList;
@@ -62,6 +63,7 @@ public class ApplicationModuleProvider implements ModuleProvider {
 
   private List<Module> createModules(ClassOverrides overrides) {
     List<Module> moduleList = new ArrayList<>();
+    moduleList.add(new ValidationModule());
     moduleList.add(new ResteasyModule());
     moduleList.add(ShiroWebModule.guiceFilterModule());
     moduleList.add(new WebElementModule(pluginLoader));
