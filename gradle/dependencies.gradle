@@ -167,6 +167,9 @@ ext {
     junitVintageEngine: "org.junit.vintage:junit-vintage-engine:${junitJupiterVersion}",
     junit: 'junit:junit:4.13.1',
 
+    // junit 5 extensions
+    junitPioneer: 'org.junit-pioneer:junit-pioneer:1.6.2',
+
     // assertions
     hamcrestCore: "org.hamcrest:hamcrest-core:${hamcrestVersion}",
     hamcrestLibrary: "org.hamcrest:hamcrest-library:${hamcrestVersion}",

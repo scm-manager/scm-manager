@@ -112,6 +112,7 @@ dependencies {
   testImplementation libraries.junitJupiterApi
   testImplementation libraries.junitJupiterParams
   testRuntimeOnly libraries.junitJupiterEngine
+  testImplementation libraries.junitPioneer
 
   // shiro
   testImplementation libraries.shiroExtension
