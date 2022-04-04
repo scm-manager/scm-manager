@@ -18,12 +18,12 @@ The RepositoryCreateCommand is a subcommand of RepositoryCommand and must be exp
 ```
 
 ## Parameters and options
-Every required field for my command must be a parameter. All other fields have to be options.
+Every required field for a command must be a parameter. All other fields have to be options.
 
 `scm repo create git namespace/name --init --description="test"`
 
-The repository `type` and `namespace/name` must be set, so these are annotated as parameters. 
-The other fields like `init` and `description` are optional and are therefore options.
+The repository `type` and `namespace/name` must be set, so they must be annotated as parameters. 
+The other fields like `init` and `description` are optional and are therefore annotated as options.
 ```java
   @CommandLine.Parameters
   private String type;
@@ -38,16 +38,16 @@ The other fields like `init` and `description` are optional and are therefore op
 ```
 
 ## Templating
-Commands which returns large texts or much content should allow templating. 
-This can be achieved by using the TemplateRenderer. 
-If you inject the TemplateRenderer you must annotate it as Mixin:
+Commands which return large texts or much content should allow templating. 
+This can be achieved by using the TemplateRenderer.
+If you inject the TemplateRenderer you must annotate it as a Mixin:
 ```java
   @CommandLine.Mixin
   private final TemplateRenderer templateRenderer;
 ```
 
 ### Table
-Besides, "loose" templates you can use a table-like template to render your output. 
+Besides "loose" templates, you can use a table-like template to render your output. 
 For this purpose use the TemplateRender and create table first. 
 Then add your table headers and rows. 
 
@@ -92,7 +92,7 @@ Type     : git
 ## I18n
 The CLI client commands should support multiple languages. 
 This can be done by using translation keys in the related resource bundles. 
-By default, we support english and german translations.
+By default, we support English and German translations.
 
 ### Example
 ```java
@@ -111,7 +111,7 @@ The fields starting with `repo` are context related model data from the reposito
 There are different options on how to handle errors. 
 You can use the TemplateRender and print the errors or exception messages to stderr channel.
 
-But you also can you throw the exception directly inside your execution. 
+However, you also can throw an exception directly inside your execution. 
 These exceptions will be handled by the CliExceptionHandler and will be printed to the stderr channel based on a specific template.
 
 ## Validation
@@ -128,11 +128,12 @@ Then you can simply annotate your fields with validation annotations.
 
 ```java
   @Inject
-public MyCommand(CommandValidator validator) {
-  this.validator = validator;
+  public MyCommand(CommandValidator validator) {
+    this.validator = validator;
   }
 
 @Override
 public void run() {
   validator.validate();
-```
+  ...
+}
