@@ -1,0 +1,2 @@
+- type: added
+  description: Add cli support with repository actions ([#1987](https://github.com/scm-manager/scm-manager/pull/1987))
