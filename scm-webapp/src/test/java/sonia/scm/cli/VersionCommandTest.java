@@ -60,7 +60,7 @@ class VersionCommandTest {
     command.run();
 
     assertThat(writer.toString()).contains(
-      "Client version: scm-cli/1.0.0 (a1b2c3d; 2022-04-04T12:33:13Z)\n" +
+      "Client version: 1.0.0\n" +
       "Server version: 2.33.0"
     );
   }
