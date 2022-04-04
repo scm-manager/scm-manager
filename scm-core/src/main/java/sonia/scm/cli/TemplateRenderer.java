@@ -32,6 +32,8 @@ import sonia.scm.template.Template;
 import sonia.scm.template.TemplateEngine;
 import sonia.scm.template.TemplateEngineFactory;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -60,6 +62,7 @@ public class TemplateRenderer {
 
   private final CliContext context;
   private final TemplateEngine templateEngine;
+  @Nullable
   @CommandLine.Spec(CommandLine.Spec.Target.MIXEE)
   private CommandLine.Model.CommandSpec spec;
 
@@ -108,7 +111,14 @@ public class TemplateRenderer {
    * @return table for templating content
    */
   public Table createTable() {
-    return new Table(spec.resourceBundle());
+    return new Table(getSpecOrDie().resourceBundle());
+  }
+
+  private CommandLine.Model.CommandSpec getSpecOrDie() {
+    if (spec == null) {
+      throw new IllegalStateException("Failed to resolve command spec. Perhaps you forgot to add @Mixin?");
+    }
+    return spec;
   }
 
   private void exec(PrintWriter stream, String defaultTemplate, Map<String, Object> model) {
@@ -127,7 +137,7 @@ public class TemplateRenderer {
     UnaryOperator<String> upper = value -> value.toUpperCase(context.getLocale());
     finalModel.put("upper", upper);
 
-    ResourceBundle resourceBundle = spec.resourceBundle();
+    ResourceBundle resourceBundle = getSpecOrDie().resourceBundle();
     if (resourceBundle != null) {
       finalModel.put("i18n", new I18n(resourceBundle));
     }
@@ -135,7 +145,7 @@ public class TemplateRenderer {
   }
 
   @VisibleForTesting
-  void setSpec(CommandLine.Model.CommandSpec spec) {
+  void setSpec(@Nonnull CommandLine.Model.CommandSpec spec) {
     this.spec = spec;
   }
 
