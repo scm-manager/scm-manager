@@ -39,7 +39,7 @@ public class RepositoryTemplateRenderer extends TemplateRenderer {
 
   private static final String DETAILS_TABLE_TEMPLATE = String.join("\n",
     "{{#rows}}",
-    "{{#cols}}{{value}}{{^last}}: {{/last}}{{/cols}}",
+    "{{#cols}}{{value}}{{/cols}}",
     "{{/rows}}"
   );
   private static final String INVALID_INPUT_TEMPLATE = "{{i18n.repoInvalidInput}}";

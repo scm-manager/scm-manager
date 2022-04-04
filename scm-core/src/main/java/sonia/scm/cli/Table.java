@@ -42,6 +42,8 @@ import java.util.ResourceBundle;
  */
 public final class Table implements Iterable<Table.Row> {
 
+  private static final String DEFAULT_LABEL_VALUE_SEPARATOR = ": ";
+
   private final List<String[]> data = new ArrayList<>();
 
   @Nullable
@@ -61,7 +63,7 @@ public final class Table implements Iterable<Table.Row> {
   }
 
   /**
-   * Add a single row of values to the table
+   * Add a single row of values to the table.
    * @param row values for a single table row
    */
   public void addRow(String... row) {
@@ -69,12 +71,22 @@ public final class Table implements Iterable<Table.Row> {
   }
 
   /**
-   * Creates a table entry with two columns
+   * Creates a table entry with two columns separated by {@link #DEFAULT_LABEL_VALUE_SEPARATOR}.
    * @param label label for the left table column
    * @param value value for the right table column
    */
   public void addLabelValueRow(String label, String value) {
-    addRow(getLocalizedValue(label), value);
+    addLabelValueRow(label, value, DEFAULT_LABEL_VALUE_SEPARATOR);
+  }
+
+  /**
+   * Creates a table entry with two columns separated by the given separator.
+   * @param label label for the left table column
+   * @param value value for the right table column
+   * @param separator separator used to separate the label from the value
+   */
+  public void addLabelValueRow(String label, String value, String separator) {
+    addRow(getLocalizedValue(label) + separator, value);
   }
 
   /**
