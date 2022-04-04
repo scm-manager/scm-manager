@@ -44,7 +44,7 @@ class JsonStreamingCliContextTest {
     ByteArrayInputStream bais = new ByteArrayInputStream(new byte[0]);
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-    try (JsonStreamingCliContext jsonStreamingCliContext = new JsonStreamingCliContext(Locale.ENGLISH, bais, baos)) {
+    try (JsonStreamingCliContext jsonStreamingCliContext = new JsonStreamingCliContext(Locale.ENGLISH, "scm-cli/1.0.0", bais, baos)) {
       jsonStreamingCliContext.getStdout().print("Hello");
     }
 
@@ -58,7 +58,7 @@ class JsonStreamingCliContextTest {
     ByteArrayInputStream bais = new ByteArrayInputStream(new byte[0]);
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-    try (JsonStreamingCliContext jsonStreamingCliContext = new JsonStreamingCliContext(Locale.ENGLISH, bais, baos)) {
+    try (JsonStreamingCliContext jsonStreamingCliContext = new JsonStreamingCliContext(Locale.ENGLISH, "scm-cli/1.0.0", bais, baos)) {
       jsonStreamingCliContext.getStdout().print("Hello");
       jsonStreamingCliContext.getStderr().print("Error 1: Failed");
       jsonStreamingCliContext.getStdout().print(" World");
@@ -76,7 +76,7 @@ class JsonStreamingCliContextTest {
     ByteArrayInputStream bais = new ByteArrayInputStream(new byte[0]);
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-    try (JsonStreamingCliContext jsonStreamingCliContext = new JsonStreamingCliContext(Locale.ENGLISH, bais, baos)) {
+    try (JsonStreamingCliContext jsonStreamingCliContext = new JsonStreamingCliContext(Locale.ENGLISH, "scm-cli/1.0.0", bais, baos)) {
       jsonStreamingCliContext.getStdout().print("Hello");
       jsonStreamingCliContext.writeExit(1);
     }

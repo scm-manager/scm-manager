@@ -43,14 +43,16 @@ public class JsonStreamingCliContext implements CliContext, AutoCloseable {
   private static final Logger LOG = LoggerFactory.getLogger(JsonStreamingCliContext.class);
 
   private final Locale locale;
+  private final String userAgent;
   private final InputStream stdin;
   private final PrintWriter stdout;
   private final PrintWriter stderr;
   private final JsonGenerator jsonGenerator;
 
   @SuppressWarnings("java:S2095") // generator is closed in the close method
-  public JsonStreamingCliContext(Locale locale, InputStream stdin, OutputStream output) throws IOException {
+  public JsonStreamingCliContext(Locale locale, String userAgent, InputStream stdin, OutputStream output) throws IOException {
     this.locale = locale;
+    this.userAgent = userAgent;
     this.stdin = stdin;
     this.jsonGenerator = mapper.createGenerator(output).setPrettyPrinter(new MinimalPrettyPrinter(""));
     jsonGenerator.writeStartArray();
@@ -95,6 +97,11 @@ public class JsonStreamingCliContext implements CliContext, AutoCloseable {
   @Override
   public Locale getLocale() {
     return locale;
+  }
+
+  @Override
+  public String getUserAgent() {
+    return userAgent;
   }
 
   private static final ObjectMapper mapper = new ObjectMapper();
