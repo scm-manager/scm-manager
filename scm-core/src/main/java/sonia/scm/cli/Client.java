@@ -24,44 +24,49 @@
 
 package sonia.scm.cli;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import sonia.scm.SCMContextProvider;
+import lombok.RequiredArgsConstructor;
+import lombok.Value;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import javax.annotation.Nullable;
+import java.time.Instant;
+import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
+@Value
+@RequiredArgsConstructor
+public class Client {
+  String name;
+  String version;
+  @Nullable
+  String commitHash;
+  @Nullable
+  Instant buildTime;
+  @Nullable
+  String os;
+  @Nullable
+  String arch;
 
-@ExtendWith(MockitoExtension.class)
-class VersionCommandTest {
+  public Client(String name, String version) {
+    this.name = name;
+    this.version = version;
+    this.commitHash = null;
+    this.buildTime = null;
+    this.os = null;
+    this.arch = null;
+  }
 
-  @Mock
-  private CliContext context;
+  public Optional<String> getCommitHash() {
+    return Optional.ofNullable(commitHash);
+  }
 
-  @Mock
-  private SCMContextProvider scmContextProvider;
+  public Optional<Instant> getBuildTime() {
+    return Optional.ofNullable(buildTime);
+  }
 
-  @InjectMocks
-  private VersionCommand command;
+  public Optional<String> getOs() {
+    return Optional.ofNullable(os);
+  }
 
-  @Test
-  void shouldPrintVersions() {
-    String userAgent = "scm-cli/1.0.0 (a1b2c3d; 2022-04-04T12:33:13Z)";
-    StringWriter writer = new StringWriter();
-    when(context.getStdout()).thenReturn(new PrintWriter(writer));
-//    when(context.getUserAgent()).thenReturn(userAgent);
-    when(scmContextProvider.getVersion()).thenReturn("2.33.0");
-
-    command.run();
-
-    assertThat(writer.toString()).contains(
-      "Client version: 1.0.0\n" +
-      "Server version: 2.33.0"
-    );
+  public Optional<String> getArch() {
+    return Optional.ofNullable(arch);
   }
 }

@@ -24,6 +24,8 @@
 
 package sonia.scm.cli;
 
+import com.google.common.collect.ImmutableMap;
+import lombok.Value;
 import picocli.CommandLine;
 import sonia.scm.SCMContextProvider;
 
@@ -32,18 +34,34 @@ import javax.inject.Inject;
 @CommandLine.Command(name = "version")
 public class VersionCommand implements Runnable{
 
+  private static final String TEMPLATE = String.join("\n","Client Version: {{client.version}}", "Server Version: {{server.version}}");
+
   private final CliContext context;
   private final SCMContextProvider scmContextProvider;
+  @CommandLine.Mixin
+  private final TemplateRenderer templateRenderer;
 
   @Inject
-  public VersionCommand(CliContext context, SCMContextProvider scmContextProvider) {
+  public VersionCommand(CliContext context, SCMContextProvider scmContextProvider, TemplateRenderer templateRenderer) {
     this.context = context;
     this.scmContextProvider = scmContextProvider;
+    this.templateRenderer = templateRenderer;
   }
 
   @Override
   public void run() {
-    context.getStdout().println("Client version: " + context.getUserAgent().split("/")[1].split(" ")[0]);
-    context.getStdout().println("Server version: " + scmContextProvider.getVersion());
+    templateRenderer.renderToStdout(
+      TEMPLATE,
+      createModel()
+    );
+  }
+
+  private ImmutableMap<String, Object> createModel() {
+    return ImmutableMap.of("client", context.getClient(), "server", new Server(scmContextProvider.getVersion()));
+  }
+
+  @Value
+  static class Server {
+    String version;
   }
 }

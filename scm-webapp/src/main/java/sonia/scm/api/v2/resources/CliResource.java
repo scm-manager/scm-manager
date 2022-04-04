@@ -27,7 +27,9 @@ package sonia.scm.api.v2.resources;
 import lombok.Data;
 import org.apache.shiro.SecurityUtils;
 import sonia.scm.cli.CliProcessor;
+import sonia.scm.cli.Client;
 import sonia.scm.cli.JsonStreamingCliContext;
+import sonia.scm.cli.UserAgentClientParser;
 import sonia.scm.security.ApiKeyService;
 
 import javax.inject.Inject;
@@ -43,6 +45,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import java.util.List;
+
+import static sonia.scm.cli.UserAgentClientParser.*;
 
 @Path("v2/cli")
 public class CliResource {
@@ -60,7 +64,12 @@ public class CliResource {
   @Path("exec")
   public StreamingOutput exec(@QueryParam("args") List<String> args, @Context HttpServletRequest request) {
     return outputStream -> {
-      try (JsonStreamingCliContext context = new JsonStreamingCliContext(request.getLocale(), request.getHeader("User-Agent"), request.getInputStream(), outputStream)) {
+      try (JsonStreamingCliContext context = new JsonStreamingCliContext(
+        request.getLocale(),
+        parse(request.getHeader("User-Agent")),
+        request.getInputStream(),
+        outputStream
+      )) {
         int exitCode = processor.execute(context, args.toArray(new String[0]));
         context.writeExit(exitCode);
       }

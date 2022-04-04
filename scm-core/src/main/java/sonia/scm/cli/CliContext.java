@@ -67,8 +67,8 @@ public interface CliContext {
   Locale getLocale();
 
   /**
-   * Returns the user agent of the client terminal.
-   * @return user agent of the client terminal
+   * Returns the client.
+   * @return client
    */
-  String getUserAgent();
+  Client getClient();
 }
