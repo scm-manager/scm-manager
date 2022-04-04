@@ -27,19 +27,12 @@ package sonia.scm.web.i18n;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.legman.Subscribe;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.SCMContextProvider;
-import sonia.scm.Stage;
-import sonia.scm.cache.Cache;
-import sonia.scm.cache.CacheManager;
 import sonia.scm.filter.WebElement;
-import sonia.scm.lifecycle.RestartEvent;
-import sonia.scm.plugin.PluginLoader;
-import sonia.scm.util.JsonMerger;
+import sonia.scm.i18n.I18nCollector;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServlet;
@@ -47,9 +40,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.URL;
-import java.util.Enumeration;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -62,28 +55,14 @@ public class I18nServlet extends HttpServlet {
   private static final Logger LOG = LoggerFactory.getLogger(I18nServlet.class);
 
   public static final String PLUGINS_JSON = "plugins.json";
-  public static final String PATTERN = "/locales/[a-z\\-A-Z]*/" + PLUGINS_JSON;
-  public static final String CACHE_NAME = "sonia.cache.plugins.translations";
+  public static final String PATTERN = "/locales/([a-z\\-A-Z]*)/" + PLUGINS_JSON;
 
-  private final SCMContextProvider context;
-  private final ClassLoader classLoader;
-  private final Cache<String, JsonNode> cache;
+  private final I18nCollector i18nCollector;
   private final ObjectMapper objectMapper = new ObjectMapper();
-  private final JsonMerger jsonMerger;
-
 
   @Inject
-  public I18nServlet(SCMContextProvider context, PluginLoader pluginLoader, CacheManager cacheManager, JsonMerger jsonMerger) {
-    this.context = context;
-    this.classLoader = pluginLoader.getUberClassLoader();
-    this.cache = cacheManager.getCache(CACHE_NAME);
-    this.jsonMerger = jsonMerger;
-  }
-
-  @Subscribe(async = false)
-  public void handleRestartEvent(RestartEvent event) {
-    LOG.debug("Clear cache on restart event with reason {}", event.getReason());
-    cache.clear();
+  public I18nServlet(I18nCollector i18nCollector) {
+    this.i18nCollector = i18nCollector;
   }
 
   @VisibleForTesting
@@ -91,16 +70,26 @@ public class I18nServlet extends HttpServlet {
   protected void doGet(HttpServletRequest request, HttpServletResponse response) {
     String path = request.getServletPath();
     try {
-      Optional<JsonNode> json = findJson(path);
+      String languageCode = extractLanguage(path);
+      Optional<JsonNode> json = i18nCollector.findJson(languageCode);
       if (json.isPresent()) {
         write(response, json.get());
       } else {
-        LOG.debug("could not find translation at {}", path);
+        LOG.debug("could not find translation for lanugage {}", languageCode);
         response.setStatus(HttpServletResponse.SC_NOT_FOUND);
       }
     } catch (IOException ex) {
       LOG.error("Error on getting the translation of the plugins", ex);
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  private String extractLanguage(String path) {
+    Matcher matcher = Pattern.compile(PATTERN).matcher(path);
+    if (matcher.matches()) {
+      return matcher.group(1);
+    } else {
+      throw new IllegalStateException("Path from servlet did not match regular expression: " + path);
     }
   }
 
@@ -113,47 +102,4 @@ public class I18nServlet extends HttpServlet {
       objectMapper.writeValue(writer, jsonNode);
     }
   }
-
-  public Optional<JsonNode> findJson(String path) throws IOException {
-    if (isProductionStage()) {
-      return findJsonCached(path);
-    }
-    return collectJsonFile(path);
-  }
-
-  private Optional<JsonNode> findJsonCached(String path) throws IOException {
-    JsonNode jsonNode = cache.get(path);
-    if (jsonNode != null) {
-      LOG.debug("return json node from cache for path {}", path);
-      return Optional.of(jsonNode);
-    }
-
-    LOG.debug("collect json for path {}", path);
-    Optional<JsonNode> collected = collectJsonFile(path);
-    collected.ifPresent(node -> cache.put(path, node));
-    return collected;
-  }
-
-  @VisibleForTesting
-  protected boolean isProductionStage() {
-    return context.getStage() == Stage.PRODUCTION;
-  }
-
-  private Optional<JsonNode> collectJsonFile(String path) throws IOException {
-    LOG.debug("Collect plugin translations from path {} for every plugin", path);
-    JsonNode mergedJsonNode = null;
-    Enumeration<URL> resources = classLoader.getResources(path.replaceFirst("/", ""));
-    while (resources.hasMoreElements()) {
-      URL url = resources.nextElement();
-      JsonNode jsonNode = objectMapper.readTree(url);
-      if (mergedJsonNode != null) {
-        mergedJsonNode = jsonMerger.fromJson(mergedJsonNode).mergeWithJson(jsonNode).toJsonNode();
-      } else {
-        mergedJsonNode = jsonNode;
-      }
-    }
-
-    return Optional.ofNullable(mergedJsonNode);
-  }
-
 }
