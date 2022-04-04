@@ -28,7 +28,7 @@ import picocli.CommandLine;
 
 import javax.inject.Inject;
 
-@CommandLine.Command(name = "ping")
+@CommandLine.Command(name = "ping", hidden = true)
 public class PingCommand implements Runnable {
 
   private final CliContext context;
