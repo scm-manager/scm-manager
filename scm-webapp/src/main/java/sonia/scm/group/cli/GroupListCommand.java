@@ -24,53 +24,62 @@
 
 package sonia.scm.group.cli;
 
+import com.google.common.collect.ImmutableMap;
 import picocli.CommandLine;
-import sonia.scm.cli.CommandValidator;
 import sonia.scm.cli.ParentCommand;
-import sonia.scm.group.Group;
+import sonia.scm.cli.Table;
+import sonia.scm.cli.TemplateRenderer;
 import sonia.scm.group.GroupManager;
 import sonia.scm.repository.cli.GroupCommand;
 
 import javax.inject.Inject;
+import java.util.Collection;
+
+import static java.util.stream.Collectors.toList;
 
 @ParentCommand(GroupCommand.class)
-@CommandLine.Command(name = "create")
-public class GroupCreateCommand implements Runnable {
+@CommandLine.Command(name = "list", aliases = "ls")
+public class GroupListCommand implements Runnable {
 
   @CommandLine.Mixin
-  private final GroupTemplateRenderer templateRenderer;
-  @CommandLine.Mixin
-  private final CommandValidator validator;
+  private final TemplateRenderer templateRenderer;
   private final GroupManager manager;
   private final GroupBeanMapper beanMapper;
 
-  @CommandLine.Parameters(descriptionKey = "scm.group.create.name")
-  private String name;
+  @CommandLine.Option(names = {"--short", "-s"})
+  private boolean useShortTemplate;
 
-  @CommandLine.Option(names = {"--description", "-d"}, descriptionKey = "scm.group.create.desc")
-  private String description;
+  private static final String TABLE_TEMPLATE = String.join("\n",
+    "{{#rows}}",
+    "{{#cols}}{{#row.first}}{{#upper}}{{value}}{{/upper}}{{/row.first}}{{^row.first}}{{value}}{{/row.first}}{{^last}} {{/last}}{{/cols}}",
+    "{{/rows}}"
+  );
 
-  @CommandLine.Option(names = {"--member", "-m"}, descriptionKey = "scm.group.create.member")
-  private String[] members;
-
-  @CommandLine.Option(names = {"--external", "-e"}, descriptionKey = "scm.group.create.external")
-  private boolean external;
+  private static final String SHORT_TEMPLATE = String.join("\n",
+    "{{#repos}}",
+    "{{name}}",
+    "{{/repos}}"
+  );
 
   @Inject
-  public GroupCreateCommand(GroupTemplateRenderer templateRenderer, CommandValidator validator, GroupManager manager, GroupBeanMapper beanMapper) {
+  public GroupListCommand(TemplateRenderer templateRenderer, GroupManager manager, GroupBeanMapper beanMapper) {
     this.templateRenderer = templateRenderer;
-    this.validator = validator;
     this.manager = manager;
     this.beanMapper = beanMapper;
   }
 
   @Override
   public void run() {
-    validator.validate();
-    Group newGroup = new Group("xml", name, members);
-    newGroup.setDescription(description);
-    newGroup.setExternal(external);
-    Group createdGroup = manager.create(newGroup);
-    templateRenderer.render(beanMapper.map(createdGroup));
+    Collection<GroupBean> groupBeans = manager.getAll().stream().map(beanMapper::map).collect(toList());
+    if (useShortTemplate) {
+      templateRenderer.renderToStdout(SHORT_TEMPLATE, ImmutableMap.of("repos", groupBeans));
+    } else {
+      Table table = templateRenderer.createTable();
+      table.addHeader("groupName", "groupExternal");
+      for (GroupBean bean : groupBeans) {
+        table.addRow(bean.getName(), bean.getExternal());
+      }
+      templateRenderer.renderToStdout(TABLE_TEMPLATE, ImmutableMap.of("rows", table, "groups", groupBeans));
+    }
   }
 }

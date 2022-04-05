@@ -24,36 +24,29 @@
 
 package sonia.scm.group.cli;
 
-import com.google.common.collect.ImmutableMap;
-import sonia.scm.cli.CliContext;
-import sonia.scm.cli.Table;
-import sonia.scm.cli.TemplateRenderer;
-import sonia.scm.template.TemplateEngineFactory;
+import org.mapstruct.Mapper;
+import sonia.scm.group.Group;
 
-import javax.inject.Inject;
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
-public class GroupTemplateRenderer extends TemplateRenderer {
+@Mapper
+interface GroupBeanMapper {
 
-  private static final String DETAILS_TABLE_TEMPLATE = String.join("\n",
-    "{{#rows}}",
-    "{{#cols}}{{value}}{{/cols}}",
-    "{{/rows}}"
-  );
+  GroupBean map(Group group);
 
-  @Inject
-  public GroupTemplateRenderer(CliContext context, TemplateEngineFactory templateEngineFactory) {
-    super(context, templateEngineFactory);
+  default String mapMembers(List<String> members) {
+    if (members != null) {
+      return String.join(", ", members);
+    }
+    return null;
   }
 
-  public void render(GroupBean group) {
-    Table table = createTable();
-    table.addLabelValueRow("groupName", group.getName());
-    table.addLabelValueRow("groupDescription", group.getDescription());
-    table.addLabelValueRow("groupMembers", group.getMembers());
-    table.addLabelValueRow("groupExternal", group.getExternal());
-    table.addLabelValueRow("groupCreationDate", group.getCreationDate());
-    table.addLabelValueRow("groupLastModified", group.getLastModified());
-
-    renderToStdout(DETAILS_TABLE_TEMPLATE, ImmutableMap.of("rows", table, "repo", group));
+  default String mapTimestampToISODate(Long timestamp) {
+    if (timestamp != null) {
+      return DateTimeFormatter.ISO_INSTANT.format(Instant.ofEpochMilli(timestamp));
+    }
+    return null;
   }
 }

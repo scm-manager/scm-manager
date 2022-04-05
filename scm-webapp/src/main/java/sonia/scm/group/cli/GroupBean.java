@@ -24,36 +24,15 @@
 
 package sonia.scm.group.cli;
 
-import com.google.common.collect.ImmutableMap;
-import sonia.scm.cli.CliContext;
-import sonia.scm.cli.Table;
-import sonia.scm.cli.TemplateRenderer;
-import sonia.scm.template.TemplateEngineFactory;
+import lombok.Data;
 
-import javax.inject.Inject;
+@Data
+class GroupBean {
 
-public class GroupTemplateRenderer extends TemplateRenderer {
-
-  private static final String DETAILS_TABLE_TEMPLATE = String.join("\n",
-    "{{#rows}}",
-    "{{#cols}}{{value}}{{/cols}}",
-    "{{/rows}}"
-  );
-
-  @Inject
-  public GroupTemplateRenderer(CliContext context, TemplateEngineFactory templateEngineFactory) {
-    super(context, templateEngineFactory);
-  }
-
-  public void render(GroupBean group) {
-    Table table = createTable();
-    table.addLabelValueRow("groupName", group.getName());
-    table.addLabelValueRow("groupDescription", group.getDescription());
-    table.addLabelValueRow("groupMembers", group.getMembers());
-    table.addLabelValueRow("groupExternal", group.getExternal());
-    table.addLabelValueRow("groupCreationDate", group.getCreationDate());
-    table.addLabelValueRow("groupLastModified", group.getLastModified());
-
-    renderToStdout(DETAILS_TABLE_TEMPLATE, ImmutableMap.of("rows", table, "repo", group));
-  }
+  private String name;
+  private String description;
+  private String members;
+  private String external;
+  private String creationDate;
+  private String lastModified;
 }
