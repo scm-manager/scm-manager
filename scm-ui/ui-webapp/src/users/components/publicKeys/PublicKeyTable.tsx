@@ -46,7 +46,7 @@ const PublicKeyTable: FC<Props> = ({ publicKeys, onDelete }) => {
       <thead>
         <tr>
           <th>{t("publicKey.displayName")}</th>
-          <th>{t("publicKey.created")}</th>
+          <th className="is-hidden-mobile">{t("publicKey.created")}</th>
           <th className="is-hidden-mobile">{t("publicKey.raw")}</th>
           <th />
         </tr>

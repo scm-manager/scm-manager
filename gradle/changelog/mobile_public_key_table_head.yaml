@@ -1,0 +1,2 @@
+- type: fixed
+  description: A wrong label was displayed above the action column in mobile mode for the public keys.

@@ -84,7 +84,7 @@
     "description": "Zum Prüfen von Signaturen für z. B. Commits können hier die entsprechenden öffentlichen GPG-Schlüssel hinterlegt werden. Zudem können hier die vom SCM-Manager erstellten Signaturschlüssel heruntergeladen werden.",
     "noStoredKeys": "Es wurden keine Schlüssel gefunden.",
     "displayName": "Anzeigename",
-    "created": "Eingetragen an",
+    "created": "Eingetragen",
     "raw": "Schlüssel",
     "download": "Herunterladen",
     "delete": "Löschen",
@@ -102,7 +102,7 @@
       "label": "Berechtigte Rolle",
       "help": "Mit der Rolle können Sie die Berechtigung für diesen Schlüssel einschränken"
     },
-    "created": "Eingetragen an",
+    "created": "Eingetragen",
     "addSubtitle": "Neuen Schlüssel hinzufügen",
     "addKey": "Schlüssel hinzufügen",
     "delete": "Löschen",
