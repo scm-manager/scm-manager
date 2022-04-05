@@ -65,4 +65,10 @@ public interface CliContext {
    * @return locale of the client terminal
    */
   Locale getLocale();
+
+  /**
+   * Returns the client.
+   * @return client
+   */
+  Client getClient();
 }
