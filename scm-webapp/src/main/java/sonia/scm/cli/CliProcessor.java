@@ -36,11 +36,13 @@ public class CliProcessor {
   private final CommandRegistry registry;
   private final Injector injector;
   private final CommandLine.Model.CommandSpec usageHelp;
+  private final CliExceptionHandlerFactory exceptionHandlerFactory;
 
   @Inject
-  public CliProcessor(CommandRegistry registry, Injector injector) {
+  public CliProcessor(CommandRegistry registry, Injector injector, CliExceptionHandlerFactory exceptionHandlerFactory) {
     this.registry = registry;
     this.injector = injector;
+    this.exceptionHandlerFactory = exceptionHandlerFactory;
     this.usageHelp = new CommandLine(HelpMixin.class).getCommandSpec();
   }
 
@@ -56,7 +58,7 @@ public class CliProcessor {
     cli.addSubcommand(AutoComplete.GenerateCompletion.class);
     cli.setErr(context.getStderr());
     cli.setOut(context.getStdout());
-    cli.setExecutionExceptionHandler(new CliExceptionHandler());
+    cli.setExecutionExceptionHandler(exceptionHandlerFactory.createExceptionHandler(context.getLocale().getLanguage()));
     return cli.execute(args);
   }
 
