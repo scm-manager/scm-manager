@@ -41,8 +41,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 /**
@@ -55,7 +53,8 @@ public class I18nServlet extends HttpServlet {
   private static final Logger LOG = LoggerFactory.getLogger(I18nServlet.class);
 
   public static final String PLUGINS_JSON = "plugins.json";
-  public static final String PATTERN = "/locales/([a-z\\-A-Z]*)/" + PLUGINS_JSON;
+  public static final String PATTERN = "/locales/[a-z\\-A-Z]*/" + PLUGINS_JSON;
+  public static final int POSITION_OF_LANGUAGE_IN_PATH = 2;
 
   private final I18nCollector i18nCollector;
   private final ObjectMapper objectMapper = new ObjectMapper();
@@ -85,12 +84,7 @@ public class I18nServlet extends HttpServlet {
   }
 
   private String extractLanguage(String path) {
-    Matcher matcher = Pattern.compile(PATTERN).matcher(path);
-    if (matcher.matches()) {
-      return matcher.group(1);
-    } else {
-      throw new IllegalStateException("Path from servlet did not match regular expression: " + path);
-    }
+    return path.split("/")[POSITION_OF_LANGUAGE_IN_PATH];
   }
 
   private void write(HttpServletResponse response, JsonNode jsonNode) throws IOException {
