@@ -27,6 +27,7 @@ package sonia.scm.cli;
 import com.fasterxml.jackson.databind.JsonNode;
 import picocli.CommandLine;
 import sonia.scm.ExceptionWithContext;
+import sonia.scm.TransactionId;
 import sonia.scm.i18n.I18nCollector;
 
 import java.io.IOException;
@@ -55,24 +56,24 @@ public class CliExceptionHandler implements CommandLine.IExecutionExceptionHandl
     }
 
     PrintWriter stdErr = commandLine.getErr();
-    stdErr.print(getErrorExecutionFailedMessage());
+    stdErr.print(getMessage("errorExecutionFailed"));
+    stdErr.print(": ");
     String message = ex.getMessage();
     if (ex instanceof ExceptionWithContext) {
       String code = ((ExceptionWithContext) ex).getCode();
       message = getMessageFromI18nBundle(code).orElse(message);
-      stdErr.print(" " + code);
     }
-    stdErr.print(": ");
     stdErr.println(message);
+    TransactionId.get().ifPresent(transactionId -> stdErr.println(getMessage("transactionId") + ": " + transactionId));
     stdErr.println();
     commandLine.usage(stdErr);
     return ExitCode.SERVER_ERROR;
   }
 
-  private String getErrorExecutionFailedMessage() {
+  private String getMessage(String key) {
     return ResourceBundle
       .getBundle("sonia.scm.cli.i18n", new Locale(languageCode))
-      .getString("errorExecutionFailed");
+      .getString(key);
   }
 
   private Optional<String> getMessageFromI18nBundle(String code) {

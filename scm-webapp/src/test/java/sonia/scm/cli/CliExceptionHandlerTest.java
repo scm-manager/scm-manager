@@ -35,6 +35,7 @@ import picocli.CommandLine;
 import sonia.scm.AlreadyExistsException;
 import sonia.scm.ContextEntry;
 import sonia.scm.NotFoundException;
+import sonia.scm.TransactionId;
 import sonia.scm.group.Group;
 import sonia.scm.i18n.I18nCollector;
 import sonia.scm.store.StoreReadOnlyException;
@@ -49,8 +50,6 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class CliExceptionHandlerTest {
-
-
 
   private static final String PLUGIN_BUNDLE_EN = "{" +
     "  \"errors\": {" +
@@ -101,8 +100,17 @@ class CliExceptionHandlerTest {
     void shouldPrintSimpleException() {
       int exitCode = callHandler(new NullPointerException("expected error"));
 
-      assertThat(errorStream.toString()).contains("Execution error: expected error");
+      assertThat(errorStream.toString()).contains("Error: expected error");
       assertThat(exitCode).isEqualTo(1);
+    }
+
+    @Test
+    void shouldPrintTransactionIdIfPresent() {
+      TransactionId.set("42");
+
+      callHandler(new NullPointerException("expected error"));
+
+      assertThat(errorStream.toString()).contains("Transaction ID: 42");
     }
 
     @Test
@@ -112,7 +120,7 @@ class CliExceptionHandlerTest {
 
       callHandler(NotFoundException.notFound(new ContextEntry.ContextBuilder()));
 
-      assertThat(errorStream.toString()).contains("Execution error AGR7UzkhA1: The requested entity could not be found. It may have been deleted in another session.");
+      assertThat(errorStream.toString()).contains("Error: The requested entity could not be found. It may have been deleted in another session.");
     }
 
     @Test
@@ -122,7 +130,7 @@ class CliExceptionHandlerTest {
 
       callHandler(new AlreadyExistsException(new Group("test", "hog")));
 
-      assertThat(errorStream.toString()).contains("Execution error FtR7UznKU1: group with id hog already exists");
+      assertThat(errorStream.toString()).contains("Error: group with id hog already exists");
     }
 
     @Test
@@ -132,7 +140,7 @@ class CliExceptionHandlerTest {
 
       callHandler(new StoreReadOnlyException("test"));
 
-      assertThat(errorStream.toString()).contains("Execution error 3FSIYtBJw1: Store is read only, could not write location test");
+      assertThat(errorStream.toString()).contains("Error: Store is read only, could not write location test");
     }
   }
 
@@ -148,8 +156,18 @@ class CliExceptionHandlerTest {
     void shouldPrintSimpleException() {
       int exitCode = callHandler(new NullPointerException("expected error"));
 
-      assertThat(errorStream.toString()).contains("Ausführungsfehler: expected error");
+      assertThat(errorStream.toString()).contains("Fehler: expected error");
       assertThat(exitCode).isEqualTo(1);
+    }
+
+
+    @Test
+    void shouldPrintTransactionIdIfPresent() {
+      TransactionId.set("42");
+
+      callHandler(new NullPointerException("expected error"));
+
+      assertThat(errorStream.toString()).contains("Transaktions-ID: 42");
     }
 
     @Test
@@ -159,7 +177,7 @@ class CliExceptionHandlerTest {
 
       callHandler(new StoreReadOnlyException("test"));
 
-      assertThat(errorStream.toString()).contains("Ausführungsfehler 3FSIYtBJw1: Ein Datensatz konnte nicht gespeichert werden, da der entsprechende Speicher als schreibgeschützt markiert wurde. Weitere Hinweise finden sich im Log.");
+      assertThat(errorStream.toString()).contains("Fehler: Ein Datensatz konnte nicht gespeichert werden, da der entsprechende Speicher als schreibgeschützt markiert wurde. Weitere Hinweise finden sich im Log.");
     }
 
     @Test
@@ -171,7 +189,7 @@ class CliExceptionHandlerTest {
 
       callHandler(NotFoundException.notFound(new ContextEntry.ContextBuilder()));
 
-      assertThat(errorStream.toString()).contains("Ausführungsfehler AGR7UzkhA1: The requested entity could not be found. It may have been deleted in another session.");
+      assertThat(errorStream.toString()).contains("Fehler: The requested entity could not be found. It may have been deleted in another session.");
     }
   }
 
