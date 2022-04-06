@@ -114,6 +114,10 @@ public class TemplateRenderer {
     return new Table(getBundle());
   }
 
+  protected CliContext getContext() {
+    return context;
+  }
+
   protected ResourceBundle getBundle() {
     return getSpecOrDie().resourceBundle();
   }

@@ -48,7 +48,8 @@ class GroupDeleteCommandTest {
   private GroupManager manager;
 
   private final TemplateTestRenderer testRenderer = new TemplateTestRenderer();
-  private final GroupTemplateRenderer templateRenderer = new GroupTemplateRenderer(testRenderer.getContextMock(), testRenderer.getTemplateEngineFactory()) {
+  private final GroupCommandBeanMapper mapper = new GroupCommandBeanMapperImpl();
+  private final GroupTemplateRenderer templateRenderer = new GroupTemplateRenderer(testRenderer.getContextMock(), testRenderer.getTemplateEngineFactory(), mapper) {
     @Override
     protected ResourceBundle getBundle() {
       return testRenderer.getResourceBundle();

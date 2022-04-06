@@ -51,7 +51,7 @@ class RepositoryGetCommand implements Runnable {
   }
 
   @VisibleForTesting
-  public void setRepository(String repository) {
+  void setRepository(String repository) {
     this.repository = repository;
   }
 

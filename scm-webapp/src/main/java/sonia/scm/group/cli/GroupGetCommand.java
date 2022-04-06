@@ -26,72 +26,39 @@ package sonia.scm.group.cli;
 
 import com.google.common.annotations.VisibleForTesting;
 import picocli.CommandLine;
-import sonia.scm.cli.CommandValidator;
 import sonia.scm.cli.ParentCommand;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
 import sonia.scm.repository.cli.GroupCommand;
 
-import javax.inject.Inject;
-import javax.validation.constraints.NotBlank;
-
 @ParentCommand(GroupCommand.class)
-@CommandLine.Command(name = "create")
-class GroupCreateCommand implements Runnable {
+@CommandLine.Command(name = "get")
+public class GroupGetCommand implements Runnable{
+
+  @CommandLine.Parameters(paramLabel = "namespace/name", index = "0")
+  private String name;
 
   @CommandLine.Mixin
   private final GroupTemplateRenderer templateRenderer;
-  @CommandLine.Mixin
-  private final CommandValidator validator;
   private final GroupManager manager;
 
-  @NotBlank
-  @CommandLine.Parameters(descriptionKey = "scm.group.create.name")
-  private String name;
-
-  @CommandLine.Option(names = {"--description", "-d"}, descriptionKey = "scm.group.create.desc")
-  private String description;
-
-  @CommandLine.Option(names = {"--member", "-m"}, descriptionKey = "scm.group.create.member")
-  private String[] members;
-
-  @CommandLine.Option(names = {"--external", "-e"}, descriptionKey = "scm.group.create.external")
-  private boolean external;
-
-  @Inject
-  public GroupCreateCommand(GroupTemplateRenderer templateRenderer, CommandValidator validator, GroupManager manager) {
+  public GroupGetCommand(GroupTemplateRenderer templateRenderer, GroupManager manager) {
     this.templateRenderer = templateRenderer;
-    this.validator = validator;
     this.manager = manager;
+  }
+
+  @VisibleForTesting
+  public void setName(String name) {
+    this.name = name;
   }
 
   @Override
   public void run() {
-    validator.validate();
-    Group newGroup = new Group("xml", name, members);
-    newGroup.setDescription(description);
-    newGroup.setExternal(external);
-    Group createdGroup = manager.create(newGroup);
-    templateRenderer.render(createdGroup);
-  }
-
-  @VisibleForTesting
-  void setName(String name) {
-    this.name = name;
-  }
-
-  @VisibleForTesting
-  void setDescription(String description) {
-    this.description = description;
-  }
-
-  @VisibleForTesting
-  void setMembers(String[] members) {
-    this.members = members;
-  }
-
-  @VisibleForTesting
-  void setExternal(boolean external) {
-    this.external = external;
+    Group group = manager.get(name);
+    if (group != null) {
+      templateRenderer.render(group);
+    } else {
+      templateRenderer.renderNotFoundError();
+    }
   }
 }

@@ -26,13 +26,18 @@ package sonia.scm.group.cli;
 
 import com.google.common.collect.ImmutableMap;
 import sonia.scm.cli.CliContext;
+import sonia.scm.cli.ExitCode;
 import sonia.scm.cli.Table;
 import sonia.scm.cli.TemplateRenderer;
+import sonia.scm.group.Group;
 import sonia.scm.template.TemplateEngineFactory;
 
 import javax.inject.Inject;
+import java.util.Collections;
 
 class GroupTemplateRenderer extends TemplateRenderer {
+
+  private static final String NOT_FOUND_TEMPLATE = "{{i18n.groupNotFound}}";
 
   private static final String DETAILS_TABLE_TEMPLATE = String.join("\n",
     "{{#rows}}",
@@ -40,22 +45,31 @@ class GroupTemplateRenderer extends TemplateRenderer {
     "{{/rows}}"
   );
 
+  private final GroupCommandBeanMapper mapper;
+
   @Inject
-  public GroupTemplateRenderer(CliContext context, TemplateEngineFactory templateEngineFactory) {
+  public GroupTemplateRenderer(CliContext context, TemplateEngineFactory templateEngineFactory, GroupCommandBeanMapper mapper) {
     super(context, templateEngineFactory);
+    this.mapper = mapper;
   }
 
-  public void render(GroupCommandBean group) {
+  public void render(Group group) {
+    GroupCommandBean groupBean = mapper.map(group);
     Table table = createTable();
     String yes = getBundle().getString("yes");
     String no = getBundle().getString("no");
-    table.addLabelValueRow("groupName", group.getName());
-    table.addLabelValueRow("groupDescription", group.getDescription());
-    table.addLabelValueRow("groupMembers", group.getMembersList());
-    table.addLabelValueRow("groupExternal", group.isExternal() ? yes : no);
-    table.addLabelValueRow("groupCreationDate", group.getCreationDate());
-    table.addLabelValueRow("groupLastModified", group.getLastModified());
+    table.addLabelValueRow("groupName", groupBean.getName());
+    table.addLabelValueRow("groupDescription", groupBean.getDescription());
+    table.addLabelValueRow("groupMembers", groupBean.getMembersList());
+    table.addLabelValueRow("groupExternal", groupBean.isExternal() ? yes : no);
+    table.addLabelValueRow("groupCreationDate", groupBean.getCreationDate());
+    table.addLabelValueRow("groupLastModified", groupBean.getLastModified());
 
-    renderToStdout(DETAILS_TABLE_TEMPLATE, ImmutableMap.of("rows", table, "repo", group));
+    renderToStdout(DETAILS_TABLE_TEMPLATE, ImmutableMap.of("rows", table, "repo", groupBean));
+  }
+
+  public void renderNotFoundError() {
+    renderToStderr(NOT_FOUND_TEMPLATE, Collections.emptyMap());
+    getContext().exit(ExitCode.NOT_FOUND);
   }
 }
