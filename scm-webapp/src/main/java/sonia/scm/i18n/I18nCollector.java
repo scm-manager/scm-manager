@@ -63,12 +63,6 @@ public class I18nCollector {
     this.jsonMerger = jsonMerger;
   }
 
-  @Subscribe(async = false)
-  public void handleRestartEvent(RestartEvent event) {
-    log.debug("Clear cache on restart event with reason {}", event.getReason());
-    cache.clear();
-  }
-
   public Optional<JsonNode> findJson(String languageCode) throws IOException {
     if (isProductionStage()) {
       return findJsonCached(languageCode);
