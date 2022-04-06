@@ -39,7 +39,7 @@ import static java.util.stream.Collectors.toList;
 
 @ParentCommand(GroupCommand.class)
 @CommandLine.Command(name = "list", aliases = "ls")
-public class GroupListCommand implements Runnable {
+class GroupListCommand implements Runnable {
 
   @CommandLine.Mixin
   private final TemplateRenderer templateRenderer;

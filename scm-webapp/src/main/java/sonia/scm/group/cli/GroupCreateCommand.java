@@ -35,7 +35,7 @@ import javax.inject.Inject;
 
 @ParentCommand(GroupCommand.class)
 @CommandLine.Command(name = "create")
-public class GroupCreateCommand implements Runnable {
+class GroupCreateCommand implements Runnable {
 
   @CommandLine.Mixin
   private final GroupTemplateRenderer templateRenderer;

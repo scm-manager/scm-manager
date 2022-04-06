@@ -35,7 +35,7 @@ import java.util.Collections;
 
 @CommandLine.Command(name = "delete", aliases = "rm")
 @ParentCommand(GroupCommand.class)
-public class GroupDeleteCommand implements Runnable {
+class GroupDeleteCommand implements Runnable {
 
   private static final String PROMPT_TEMPLATE = "{{i18n.groupDeletePrompt}}";
 

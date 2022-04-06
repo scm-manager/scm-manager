@@ -32,7 +32,7 @@ import sonia.scm.template.TemplateEngineFactory;
 
 import javax.inject.Inject;
 
-public class GroupTemplateRenderer extends TemplateRenderer {
+class GroupTemplateRenderer extends TemplateRenderer {
 
   private static final String DETAILS_TABLE_TEMPLATE = String.join("\n",
     "{{#rows}}",
