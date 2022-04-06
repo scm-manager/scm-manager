@@ -27,6 +27,7 @@ package sonia.scm.cli;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Answers;
@@ -53,60 +54,103 @@ class CliProcessorTest {
   @Mock(answer = Answers.RETURNS_DEEP_STUBS)
   private CliContext context;
 
+  @Mock
+  private CliExceptionHandlerFactory exceptionHandlerFactory;
+  @Mock
+  private CliExceptionHandler exceptionHandler;
 
-  @BeforeEach
-  void setDefaultLocale() {
-    when(context.getLocale()).thenReturn(Locale.ENGLISH);
+  @Nested
+  class ForDefaultLanguageTest {
+
+    @BeforeEach
+    void setDefaultLocale() {
+      when(context.getLocale()).thenReturn(Locale.ENGLISH);
+      when(exceptionHandlerFactory.createExceptionHandler("en")).thenReturn(exceptionHandler);
+    }
+
+    @Test
+    void shouldExecutePingCommand() {
+      when(registry.createCommandTree()).thenReturn(Collections.singleton(new RegisteredCommandNode("ping", PingCommand.class)));
+      Injector injector = Guice.createInjector();
+      CliProcessor cliProcessor = new CliProcessor(registry, injector, exceptionHandlerFactory);
+
+      cliProcessor.execute(context, "ping");
+
+      verify(context.getStdout()).println("PONG");
+    }
+
+    @Test
+    void shouldExecutePingCommandWithExitCode0() {
+      when(registry.createCommandTree()).thenReturn(Collections.singleton(new RegisteredCommandNode("ping", PingCommand.class)));
+      Injector injector = Guice.createInjector();
+      CliProcessor cliProcessor = new CliProcessor(registry, injector, exceptionHandlerFactory);
+
+      int exitCode = cliProcessor.execute(context, "ping");
+
+      assertThat(exitCode).isZero();
+    }
+
+    @Test
+    void shouldPrintCommandOne() {
+      String result = executeHierarchyCommands("--help");
+
+      assertThat(result).contains("Commands:\n" +
+        "  one");
+    }
+
+    @Test
+    void shouldPrintCommandTwo() {
+      String result = executeHierarchyCommands("one", "--help");
+
+      assertThat(result).contains("Commands:\n" +
+        "  two");
+    }
+
+    @Test
+    void shouldPrintCommandThree() {
+      String result = executeHierarchyCommands("one", "two", "--help");
+
+      assertThat(result).contains("Commands:\n" +
+        "  three");
+    }
   }
 
-  @Test
-  void shouldExecutePingCommand() {
-    when(registry.createCommandTree()).thenReturn(Collections.singleton(new RegisteredCommandNode("ping", PingCommand.class)));
-    Injector injector = Guice.createInjector();
-    CliProcessor cliProcessor = new CliProcessor(registry, injector);
+  @Nested
+  class ForAnotherLanguageTest {
 
-    cliProcessor.execute(context, "ping");
+    @Mock
+    private CliExceptionHandler germanExceptionHandler;
 
-    verify(context.getStdout()).println("PONG");
-  }
+    @BeforeEach
+    void setUpOtherLanguage() {
+      when(exceptionHandlerFactory.createExceptionHandler("de")).thenReturn(germanExceptionHandler);
+      when(context.getLocale()).thenReturn(Locale.GERMAN);
+    }
 
-  @Test
-  void shouldExecutePingCommandWithExitCode0() {
-    when(registry.createCommandTree()).thenReturn(Collections.singleton(new RegisteredCommandNode("ping", PingCommand.class)));
-    Injector injector = Guice.createInjector();
-    CliProcessor cliProcessor = new CliProcessor(registry, injector);
+    @Test
+    void shouldUseResourceBundleFromAnnotationWithContextLocale() {
+      String helpForThree = executeHierarchyCommands("one", "two", "three", "--help");
 
-    int exitCode = cliProcessor.execute(context, "ping");
+      assertThat(helpForThree).contains("Dies ist meine App.");
+    }
 
-    assertThat(exitCode).isZero();
-  }
+    @Test
+    void shouldUseDefaultWithoutResourceBundle() {
+      String helpForTwo = executeHierarchyCommands("one", "two", "--help");
 
-  @Test
-  void shouldPrintCommandOne() {
-    String result = executeHierachyCommands("--help");
+      assertThat(helpForTwo).contains("Dies ist meine App.");
+    }
 
-    assertThat(result).contains("Commands:\n" +
-      "  one");
-  }
+    @Test
+    void shouldUseExceptionHandlerForOtherLanguage() {
+      executeHierarchyCommands("one", "two", "--help");
 
-  @Test
-  void shouldPrintCommandTwo() {
-    String result = executeHierachyCommands("one","--help");
-
-    assertThat(result).contains("Commands:\n" +
-      "  two");
-  }
-
-  @Test
-  void shouldPrintCommandThree() {
-    String result = executeHierachyCommands("one", "two","--help");
-
-    assertThat(result).contains("Commands:\n" +
-      "  three");
+      verify(exceptionHandlerFactory).createExceptionHandler("de");
+    }
   }
 
   @Nonnull
-  private String executeHierachyCommands(String... args) {
+  private String executeHierarchyCommands(String... args) {
     RegisteredCommandNode one = new RegisteredCommandNode("one", RootCommand.class);
     RegisteredCommandNode two = new RegisteredCommandNode("two", SubCommand.class);
     RegisteredCommandNode three = new RegisteredCommandNode("three", SubSubCommand.class);
@@ -118,29 +162,10 @@ class CliProcessorTest {
     when(context.getStdout()).thenReturn(new PrintWriter(baos));
 
     Injector injector = Guice.createInjector();
-    CliProcessor cliProcessor = new CliProcessor(registry, injector);
+    CliProcessor cliProcessor = new CliProcessor(registry, injector, exceptionHandlerFactory);
 
     cliProcessor.execute(context, args);
     return baos.toString();
-  }
-
-
-  @Test
-  void shouldUseResourceBundleFromAnnotationWithContextLocale() {
-    when(context.getLocale()).thenReturn(Locale.GERMAN);
-
-    String helpForThree = executeHierachyCommands("one", "two", "three", "--help");
-
-    assertThat(helpForThree).contains("Dies ist meine App.");
-  }
-
-  @Test
-  void shouldUseDefaultWithoutResourceBundle() {
-    when(context.getLocale()).thenReturn(Locale.GERMAN);
-
-    String helpForTwo = executeHierachyCommands("one", "two", "--help");
-
-    assertThat(helpForTwo).contains("Dies ist meine App.");
   }
 
   @CommandLine.Command(name = "one")
