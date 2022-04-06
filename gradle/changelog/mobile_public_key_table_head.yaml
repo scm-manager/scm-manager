@@ -1,2 +1,2 @@
 - type: fixed
-  description: A wrong label was displayed above the action column in mobile mode for the public keys.
+  description: Wrong label displayed above the action column in mobile mode for keys ([#1990](https://github.com/scm-manager/scm-manager/pull/1990))
