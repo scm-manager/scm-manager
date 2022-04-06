@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 
 @ParentCommand(value = RepositoryCommand.class)
 @CommandLine.Command(name = "list", aliases = "ls")
-public class RepositoryListCommand implements Runnable {
+class RepositoryListCommand implements Runnable {
 
   @CommandLine.Mixin
   private final TemplateRenderer templateRenderer;
@@ -69,16 +69,16 @@ public class RepositoryListCommand implements Runnable {
 
   @Override
   public void run() {
-    Collection<RepositoryCommandDto> dtos = manager.getAll().stream().map(mapper::map).collect(Collectors.toList());
+    Collection<RepositoryCommandBean> beans = manager.getAll().stream().map(mapper::map).collect(Collectors.toList());
     if (useShortTemplate) {
-      templateRenderer.renderToStdout(SHORT_TEMPLATE, ImmutableMap.of("repos", dtos));
+      templateRenderer.renderToStdout(SHORT_TEMPLATE, ImmutableMap.of("repos", beans));
     } else {
       Table table = templateRenderer.createTable();
       table.addHeader("repoName", "repoType", "repoUrl");
-      for (RepositoryCommandDto dto : dtos) {
-        table.addRow(dto.getNamespace() + "/" + dto.getName(), dto.getType(), dto.getUrl());
+      for (RepositoryCommandBean bean : beans) {
+        table.addRow(bean.getNamespace() + "/" + bean.getName(), bean.getType(), bean.getUrl());
       }
-      templateRenderer.renderToStdout(TABLE_TEMPLATE, ImmutableMap.of("rows", table, "repos", dtos));
+      templateRenderer.renderToStdout(TABLE_TEMPLATE, ImmutableMap.of("rows", table, "repos", beans));
     }
   }
 

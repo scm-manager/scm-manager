@@ -37,7 +37,7 @@ import javax.validation.constraints.Email;
 
 @ParentCommand(value = RepositoryCommand.class)
 @CommandLine.Command(name = "modify")
-public class RepositoryModifyCommand implements Runnable {
+class RepositoryModifyCommand implements Runnable {
 
   @CommandLine.Mixin
   private final RepositoryTemplateRenderer templateRenderer;

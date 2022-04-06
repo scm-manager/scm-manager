@@ -26,6 +26,7 @@ package sonia.scm.repository.cli;
 
 import com.google.common.annotations.VisibleForTesting;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.ObjectFactory;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.RepositoryService;
@@ -43,16 +44,17 @@ public abstract class RepositoryToRepositoryCommandDtoMapper {
   @Inject
   private RepositoryServiceFactory serviceFactory;
 
-  public abstract RepositoryCommandDto map(Repository modelObject);
+  @Mapping(target = "url", ignore = true)
+  abstract RepositoryCommandBean map(Repository modelObject);
 
   @ObjectFactory
-  RepositoryCommandDto createDto(Repository repository) {
-    RepositoryCommandDto dto = new RepositoryCommandDto();
+  RepositoryCommandBean createBean(Repository repository) {
+    RepositoryCommandBean bean = new RepositoryCommandBean();
     try (RepositoryService service = serviceFactory.create(repository)) {
       Optional<ScmProtocol> protocolUrl = service.getSupportedProtocols().filter(p -> p.getType().equals("http")).findFirst();
-      protocolUrl.ifPresent(scmProtocol -> dto.setUrl(scmProtocol.getUrl()));
+      protocolUrl.ifPresent(scmProtocol -> bean.setUrl(scmProtocol.getUrl()));
     }
-    return dto;
+    return bean;
   }
 
   String mapTimestampToISODate(Long timestamp) {

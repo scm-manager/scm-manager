@@ -31,7 +31,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class RepositoryCommandDto {
+class RepositoryCommandBean {
   private String name;
   private String namespace;
   private String type;

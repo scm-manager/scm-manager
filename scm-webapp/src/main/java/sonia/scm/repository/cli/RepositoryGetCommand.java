@@ -35,7 +35,7 @@ import javax.inject.Inject;
 
 @ParentCommand(value = RepositoryCommand.class)
 @CommandLine.Command(name = "get")
-public class RepositoryGetCommand implements Runnable {
+class RepositoryGetCommand implements Runnable {
 
   @CommandLine.Parameters(paramLabel = "namespace/name", index = "0")
   private String repository;
