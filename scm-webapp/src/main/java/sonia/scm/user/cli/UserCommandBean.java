@@ -31,7 +31,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserCommandDto {
+public class UserCommandBean {
+
   private String name;
   private String displayName;
   private String mail;

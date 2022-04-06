@@ -48,10 +48,10 @@ public class UserTemplateRenderer extends TemplateRenderer {
   private static final String NOT_FOUND_TEMPLATE = "{{i18n.scmUserErrorNotFound}}";
 
   private final CliContext context;
-  private final UserToUserCommandDtoMapper mapper;
+  private final UserToUserCommandBeanMapper mapper;
 
   @Inject
-  UserTemplateRenderer(CliContext context, TemplateEngineFactory templateEngineFactory, UserToUserCommandDtoMapper mapper) {
+  UserTemplateRenderer(CliContext context, TemplateEngineFactory templateEngineFactory, UserToUserCommandBeanMapper mapper) {
     super(context, templateEngineFactory);
     this.context = context;
     this.mapper = mapper;
@@ -61,15 +61,15 @@ public class UserTemplateRenderer extends TemplateRenderer {
     Table table = createTable();
     String yes = table.getLocalizedValue("yes");
     String no = table.getLocalizedValue("no");
-    UserCommandDto dto = mapper.map(user);
-    table.addLabelValueRow("scm.user.username", dto.getName());
-    table.addLabelValueRow("scm.user.displayName", dto.getDisplayName());
-    table.addLabelValueRow("scm.user.email", dto.getMail());
-    table.addLabelValueRow("scm.user.external", dto.isExternal() ? yes : no);
-    table.addLabelValueRow("scm.user.active", dto.isActive() ? yes : no);
-    table.addLabelValueRow("creationDate", dto.getCreationDate());
-    table.addLabelValueRow("lastModified", dto.getLastModified());
-    renderToStdout(DETAILS_TABLE_TEMPLATE, ImmutableMap.of("rows", table, "user", dto));
+    UserCommandBean bean = mapper.map(user);
+    table.addLabelValueRow("scm.user.username", bean.getName());
+    table.addLabelValueRow("scm.user.displayName", bean.getDisplayName());
+    table.addLabelValueRow("scm.user.email", bean.getMail());
+    table.addLabelValueRow("scm.user.external", bean.isExternal() ? yes : no);
+    table.addLabelValueRow("scm.user.active", bean.isActive() ? yes : no);
+    table.addLabelValueRow("creationDate", bean.getCreationDate());
+    table.addLabelValueRow("lastModified", bean.getLastModified());
+    renderToStdout(DETAILS_TABLE_TEMPLATE, ImmutableMap.of("rows", table, "user", bean));
   }
 
   public void renderPasswordError() {

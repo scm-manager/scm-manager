@@ -25,23 +25,17 @@
 package sonia.scm.user.cli;
 
 import org.mapstruct.Mapper;
-import org.mapstruct.ObjectFactory;
 import sonia.scm.user.User;
 
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 
 @Mapper
-public abstract class UserToUserCommandDtoMapper {
+interface UserToUserCommandBeanMapper {
 
-  public abstract UserCommandDto map(User modelObject);
+  UserCommandBean map(User modelObject);
 
-  @ObjectFactory
-  UserCommandDto createDto(User user) {
-    return new UserCommandDto();
-  }
-
-  String mapTimestampToISODate(Long timestamp) {
+  default String mapTimestampToISODate(Long timestamp) {
     if (timestamp != null) {
       return DateTimeFormatter.ISO_INSTANT.format(Instant.ofEpochMilli(timestamp));
     }

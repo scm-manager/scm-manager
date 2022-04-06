@@ -42,7 +42,7 @@ public class UserListCommand implements Runnable {
   @CommandLine.Mixin
   private final TemplateRenderer templateRenderer;
   private final UserManager manager;
-  private final UserToUserCommandDtoMapper mapper;
+  private final UserToUserCommandBeanMapper mapper;
 
   @CommandLine.Option(names = {"--short", "-s"})
   private boolean useShortTemplate;
@@ -60,7 +60,7 @@ public class UserListCommand implements Runnable {
   );
 
   @Inject
-  public UserListCommand(UserManager manager, TemplateRenderer templateRenderer, UserToUserCommandDtoMapper mapper) {
+  public UserListCommand(UserManager manager, TemplateRenderer templateRenderer, UserToUserCommandBeanMapper mapper) {
     this.manager = manager;
     this.templateRenderer = templateRenderer;
     this.mapper = mapper;
@@ -68,18 +68,18 @@ public class UserListCommand implements Runnable {
 
   @Override
   public void run() {
-    Collection<UserCommandDto> dtos = manager.getAll().stream().map(mapper::map).collect(Collectors.toList());
+    Collection<UserCommandBean> beans = manager.getAll().stream().map(mapper::map).collect(Collectors.toList());
     if (useShortTemplate) {
-      templateRenderer.renderToStdout(SHORT_TEMPLATE, ImmutableMap.of("users", dtos));
+      templateRenderer.renderToStdout(SHORT_TEMPLATE, ImmutableMap.of("users", beans));
     } else {
       Table table = templateRenderer.createTable();
       String yes = table.getLocalizedValue("yes");
       String no = table.getLocalizedValue("no");
       table.addHeader("scm.user.username", "scm.user.displayName", "scm.user.email", "scm.user.external", "scm.user.active");
-      for (UserCommandDto dto : dtos) {
-        table.addRow(dto.getName(), dto.getDisplayName(), dto.getMail(), dto.isExternal() ? yes : no, dto.isActive() ? yes : no);
+      for (UserCommandBean bean : beans) {
+        table.addRow(bean.getName(), bean.getDisplayName(), bean.getMail(), bean.isExternal() ? yes : no, bean.isActive() ? yes : no);
       }
-      templateRenderer.renderToStdout(TABLE_TEMPLATE, ImmutableMap.of("rows", table, "users", dtos));
+      templateRenderer.renderToStdout(TABLE_TEMPLATE, ImmutableMap.of("rows", table, "users", beans));
     }
   }
 
