@@ -1,0 +1,2 @@
+- type: fixed
+  description: Wrong label displayed above the action column in mobile mode for keys ([#1990](https://github.com/scm-manager/scm-manager/pull/1990))
