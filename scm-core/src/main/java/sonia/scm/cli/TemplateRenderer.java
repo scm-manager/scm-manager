@@ -111,7 +111,11 @@ public class TemplateRenderer {
    * @return table for templating content
    */
   public Table createTable() {
-    return new Table(getSpecOrDie().resourceBundle());
+    return new Table(getBundle());
+  }
+
+  protected ResourceBundle getBundle() {
+    return getSpecOrDie().resourceBundle();
   }
 
   private CommandLine.Model.CommandSpec getSpecOrDie() {
@@ -137,7 +141,7 @@ public class TemplateRenderer {
     UnaryOperator<String> upper = value -> value.toUpperCase(context.getLocale());
     finalModel.put("upper", upper);
 
-    ResourceBundle resourceBundle = getSpecOrDie().resourceBundle();
+    ResourceBundle resourceBundle = getBundle();
     if (resourceBundle != null) {
       finalModel.put("i18n", new I18n(resourceBundle));
     }

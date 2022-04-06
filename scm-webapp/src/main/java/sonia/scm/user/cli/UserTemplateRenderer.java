@@ -59,8 +59,9 @@ public class UserTemplateRenderer extends TemplateRenderer {
 
   public void render(User user) {
     Table table = createTable();
-    String yes = table.getLocalizedValue("yes");
-    String no = table.getLocalizedValue("no");
+
+    String yes = getBundle().getString("yes");
+    String no = getBundle().getString("no");
     UserCommandBean bean = mapper.map(user);
     table.addLabelValueRow("scm.user.username", bean.getName());
     table.addLabelValueRow("scm.user.displayName", bean.getDisplayName());

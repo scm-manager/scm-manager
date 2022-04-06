@@ -116,7 +116,7 @@ public final class Table implements Iterable<Table.Row> {
     return rows;
   }
 
-  public String getLocalizedValue(String key) {
+  private String getLocalizedValue(String key) {
     if (bundle != null && bundle.containsKey(key)) {
       return bundle.getString(key);
     }

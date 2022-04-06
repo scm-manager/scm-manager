@@ -43,6 +43,8 @@ public class UserListCommand implements Runnable {
   private final TemplateRenderer templateRenderer;
   private final UserManager manager;
   private final UserToUserCommandBeanMapper mapper;
+  @CommandLine.Spec
+  private CommandLine.Model.CommandSpec spec;
 
   @CommandLine.Option(names = {"--short", "-s"})
   private boolean useShortTemplate;
@@ -73,8 +75,8 @@ public class UserListCommand implements Runnable {
       templateRenderer.renderToStdout(SHORT_TEMPLATE, ImmutableMap.of("users", beans));
     } else {
       Table table = templateRenderer.createTable();
-      String yes = table.getLocalizedValue("yes");
-      String no = table.getLocalizedValue("no");
+      String yes = spec.resourceBundle().getString("yes");
+      String no = spec.resourceBundle().getString("no");
       table.addHeader("scm.user.username", "scm.user.displayName", "scm.user.email", "scm.user.external", "scm.user.active");
       for (UserCommandBean bean : beans) {
         table.addRow(bean.getName(), bean.getDisplayName(), bean.getMail(), bean.isExternal() ? yes : no, bean.isActive() ? yes : no);
