@@ -24,6 +24,7 @@
 
 package sonia.scm.group.cli;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableMap;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
@@ -44,7 +45,9 @@ class GroupListCommand implements Runnable {
   @CommandLine.Mixin
   private final TemplateRenderer templateRenderer;
   private final GroupManager manager;
-  private final GroupBeanMapper beanMapper;
+  private final GroupCommandBeanMapper beanMapper;
+  @CommandLine.Spec
+  private CommandLine.Model.CommandSpec spec;
 
   @CommandLine.Option(names = {"--short", "-s"})
   private boolean useShortTemplate;
@@ -56,13 +59,13 @@ class GroupListCommand implements Runnable {
   );
 
   private static final String SHORT_TEMPLATE = String.join("\n",
-    "{{#repos}}",
+    "{{#groups}}",
     "{{name}}",
-    "{{/repos}}"
+    "{{/groups}}"
   );
 
   @Inject
-  public GroupListCommand(TemplateRenderer templateRenderer, GroupManager manager, GroupBeanMapper beanMapper) {
+  public GroupListCommand(TemplateRenderer templateRenderer, GroupManager manager, GroupCommandBeanMapper beanMapper) {
     this.templateRenderer = templateRenderer;
     this.manager = manager;
     this.beanMapper = beanMapper;
@@ -70,16 +73,28 @@ class GroupListCommand implements Runnable {
 
   @Override
   public void run() {
-    Collection<GroupBean> groupBeans = manager.getAll().stream().map(beanMapper::map).collect(toList());
+    Collection<GroupCommandBean> groupCommandBeans = manager.getAll().stream().map(beanMapper::map).collect(toList());
     if (useShortTemplate) {
-      templateRenderer.renderToStdout(SHORT_TEMPLATE, ImmutableMap.of("repos", groupBeans));
+      templateRenderer.renderToStdout(SHORT_TEMPLATE, ImmutableMap.of("groups", groupCommandBeans));
     } else {
       Table table = templateRenderer.createTable();
-      table.addHeader("groupName", "groupExternal");
-      for (GroupBean bean : groupBeans) {
-        table.addRow(bean.getName(), bean.getExternal());
+      table.addHeader("scm.group.name", "scm.group.external");
+      String yes = spec.resourceBundle().getString("yes");
+      String no = spec.resourceBundle().getString("no");
+      for (GroupCommandBean bean : groupCommandBeans) {
+        table.addRow(bean.getName(), bean.isExternal()? yes: no);
       }
-      templateRenderer.renderToStdout(TABLE_TEMPLATE, ImmutableMap.of("rows", table, "groups", groupBeans));
+      templateRenderer.renderToStdout(TABLE_TEMPLATE, ImmutableMap.of("rows", table, "groups", groupCommandBeans));
     }
+  }
+
+  @VisibleForTesting
+  void setUseShortTemplate(boolean useShortTemplate) {
+    this.useShortTemplate = useShortTemplate;
+  }
+
+  @VisibleForTesting
+  void setSpec(CommandLine.Model.CommandSpec spec) {
+    this.spec = spec;
   }
 }

@@ -24,29 +24,18 @@
 
 package sonia.scm.group.cli;
 
-import org.mapstruct.Mapper;
-import sonia.scm.group.Group;
+import lombok.Data;
 
-import java.time.Instant;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-@Mapper
-interface GroupBeanMapper {
+@Data
+class GroupCommandBean {
 
-  GroupBean map(Group group);
-
-  default String mapMembers(List<String> members) {
-    if (members != null) {
-      return String.join(", ", members);
-    }
-    return null;
-  }
-
-  default String mapTimestampToISODate(Long timestamp) {
-    if (timestamp != null) {
-      return DateTimeFormatter.ISO_INSTANT.format(Instant.ofEpochMilli(timestamp));
-    }
-    return null;
-  }
+  private String name;
+  private String description;
+  private List<String> members;
+  private String membersList;
+  private boolean external;
+  private String creationDate;
+  private String lastModified;
 }

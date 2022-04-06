@@ -45,12 +45,14 @@ class GroupTemplateRenderer extends TemplateRenderer {
     super(context, templateEngineFactory);
   }
 
-  public void render(GroupBean group) {
+  public void render(GroupCommandBean group) {
     Table table = createTable();
+    String yes = getBundle().getString("yes");
+    String no = getBundle().getString("no");
     table.addLabelValueRow("groupName", group.getName());
     table.addLabelValueRow("groupDescription", group.getDescription());
-    table.addLabelValueRow("groupMembers", group.getMembers());
-    table.addLabelValueRow("groupExternal", group.getExternal());
+    table.addLabelValueRow("groupMembers", group.getMembersList());
+    table.addLabelValueRow("groupExternal", group.isExternal() ? yes : no);
     table.addLabelValueRow("groupCreationDate", group.getCreationDate());
     table.addLabelValueRow("groupLastModified", group.getLastModified());
 

@@ -24,6 +24,7 @@
 
 package sonia.scm.group.cli;
 
+import com.google.common.annotations.VisibleForTesting;
 import picocli.CommandLine;
 import sonia.scm.cli.CommandValidator;
 import sonia.scm.cli.ParentCommand;
@@ -32,6 +33,7 @@ import sonia.scm.group.GroupManager;
 import sonia.scm.repository.cli.GroupCommand;
 
 import javax.inject.Inject;
+import javax.validation.constraints.NotBlank;
 
 @ParentCommand(GroupCommand.class)
 @CommandLine.Command(name = "create")
@@ -42,8 +44,9 @@ class GroupCreateCommand implements Runnable {
   @CommandLine.Mixin
   private final CommandValidator validator;
   private final GroupManager manager;
-  private final GroupBeanMapper beanMapper;
+  private final GroupCommandBeanMapper beanMapper;
 
+  @NotBlank
   @CommandLine.Parameters(descriptionKey = "scm.group.create.name")
   private String name;
 
@@ -57,7 +60,7 @@ class GroupCreateCommand implements Runnable {
   private boolean external;
 
   @Inject
-  public GroupCreateCommand(GroupTemplateRenderer templateRenderer, CommandValidator validator, GroupManager manager, GroupBeanMapper beanMapper) {
+  public GroupCreateCommand(GroupTemplateRenderer templateRenderer, CommandValidator validator, GroupManager manager, GroupCommandBeanMapper beanMapper) {
     this.templateRenderer = templateRenderer;
     this.validator = validator;
     this.manager = manager;
@@ -72,5 +75,25 @@ class GroupCreateCommand implements Runnable {
     newGroup.setExternal(external);
     Group createdGroup = manager.create(newGroup);
     templateRenderer.render(beanMapper.map(createdGroup));
+  }
+
+  @VisibleForTesting
+  void setName(String name) {
+    this.name = name;
+  }
+
+  @VisibleForTesting
+  void setDescription(String description) {
+    this.description = description;
+  }
+
+  @VisibleForTesting
+  void setMembers(String[] members) {
+    this.members = members;
+  }
+
+  @VisibleForTesting
+  void setExternal(boolean external) {
+    this.external = external;
   }
 }

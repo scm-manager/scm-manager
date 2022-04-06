@@ -24,6 +24,7 @@
 
 package sonia.scm.group.cli;
 
+import com.google.common.annotations.VisibleForTesting;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
 import sonia.scm.group.Group;
@@ -65,5 +66,15 @@ class GroupDeleteCommand implements Runnable {
     if (group != null) {
       manager.delete(group);
     }
+  }
+
+  @VisibleForTesting
+  void setName(String name) {
+    this.name = name;
+  }
+
+  @VisibleForTesting
+  void setShouldDelete(boolean shouldDelete) {
+    this.shouldDelete = shouldDelete;
   }
 }

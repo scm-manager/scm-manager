@@ -22,17 +22,33 @@
  * SOFTWARE.
  */
 
-package sonia.scm.group.cli;
+package sonia.scm.template;
 
-import lombok.Data;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+import sonia.scm.plugin.PluginLoader;
 
-@Data
-class GroupBean {
+import javax.servlet.ServletContext;
 
-  private String name;
-  private String description;
-  private String members;
-  private String external;
-  private String creationDate;
-  private String lastModified;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+/**
+ * This class can be used to create a mustache renderer in unit test
+ */
+public class MustacheTemplateTestEngine {
+
+  public TemplateEngine createEngine(ServletContext context) {
+    PluginLoader loader = mock(PluginLoader.class);
+
+    when(loader.getUberClassLoader()).thenReturn(
+      Thread.currentThread().getContextClassLoader());
+
+    MustacheTemplateEngine.PluginLoaderHolder pluginLoaderHolder = new MustacheTemplateEngine.PluginLoaderHolder();
+    pluginLoaderHolder.pluginLoader = loader;
+
+    MustacheTemplateEngine.MeterRegistryHolder meterRegistryHolder = new MustacheTemplateEngine.MeterRegistryHolder();
+    meterRegistryHolder.registry = new SimpleMeterRegistry();
+
+    return new MustacheTemplateEngine(context, pluginLoaderHolder, meterRegistryHolder);
+  }
 }
