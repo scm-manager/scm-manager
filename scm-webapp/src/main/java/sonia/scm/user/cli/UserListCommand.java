@@ -55,7 +55,7 @@ public class UserListCommand implements Runnable {
 
   private static final String SHORT_TEMPLATE = String.join("\n",
     "{{#users}}",
-    "{{username}}",
+    "{{name}}",
     "{{/users}}"
   );
 
