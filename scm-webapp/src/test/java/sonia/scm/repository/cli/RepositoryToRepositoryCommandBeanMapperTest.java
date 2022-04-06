@@ -28,7 +28,6 @@ import com.google.common.collect.ImmutableList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.repository.Repository;
@@ -42,7 +41,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class RepositoryToRepositoryCommandDtoMapperTest {
+class RepositoryToRepositoryCommandBeanMapperTest {
 
   @Mock
   private RepositoryServiceFactory serviceFactory;
@@ -61,7 +60,7 @@ class RepositoryToRepositoryCommandDtoMapperTest {
   void shouldMapAttributes() {
     Repository testRepo = RepositoryTestData.create42Puzzle();
     when(serviceFactory.create(testRepo)).thenReturn(service);
-    RepositoryCommandDto dto = mapper.map(testRepo);
+    RepositoryCommandBean dto = mapper.map(testRepo);
 
     assertThat(dto.getNamespace()).isEqualTo(testRepo.getNamespace());
     assertThat(dto.getName()).isEqualTo(testRepo.getName());
@@ -88,7 +87,7 @@ class RepositoryToRepositoryCommandDtoMapperTest {
     when(serviceFactory.create(testRepo)).thenReturn(service);
     when(service.getSupportedProtocols()).thenReturn(ImmutableList.of(scmProtocol).stream());
 
-    RepositoryCommandDto dto = mapper.map(testRepo);
+    RepositoryCommandBean dto = mapper.map(testRepo);
 
     assertThat(dto.getUrl()).isEqualTo("http://localhost:8081/scm");
   }

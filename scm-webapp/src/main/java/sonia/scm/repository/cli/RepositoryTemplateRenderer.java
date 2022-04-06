@@ -35,7 +35,7 @@ import sonia.scm.template.TemplateEngineFactory;
 import javax.inject.Inject;
 import java.util.Collections;
 
-public class RepositoryTemplateRenderer extends TemplateRenderer {
+class RepositoryTemplateRenderer extends TemplateRenderer {
 
   private static final String DETAILS_TABLE_TEMPLATE = String.join("\n",
     "{{#rows}}",
@@ -57,16 +57,16 @@ public class RepositoryTemplateRenderer extends TemplateRenderer {
 
   public void render(Repository repository) {
     Table table = createTable();
-    RepositoryCommandDto dto = mapper.map(repository);
-    table.addLabelValueRow("repoNamespace", dto.getNamespace());
-    table.addLabelValueRow("repoName", dto.getName());
-    table.addLabelValueRow("repoType", dto.getType());
-    table.addLabelValueRow("repoContact", dto.getContact());
-    table.addLabelValueRow("repoCreationDate", dto.getCreationDate());
-    table.addLabelValueRow("repoLastModified", dto.getLastModified());
-    table.addLabelValueRow("repoUrl", dto.getUrl());
-    table.addLabelValueRow("repoDescription", dto.getDescription());
-    renderToStdout(DETAILS_TABLE_TEMPLATE, ImmutableMap.of("rows", table, "repo", dto));
+    RepositoryCommandBean bean = mapper.map(repository);
+    table.addLabelValueRow("repoNamespace", bean.getNamespace());
+    table.addLabelValueRow("repoName", bean.getName());
+    table.addLabelValueRow("repoType", bean.getType());
+    table.addLabelValueRow("repoContact", bean.getContact());
+    table.addLabelValueRow("repoCreationDate", bean.getCreationDate());
+    table.addLabelValueRow("repoLastModified", bean.getLastModified());
+    table.addLabelValueRow("repoUrl", bean.getUrl());
+    table.addLabelValueRow("repoDescription", bean.getDescription());
+    renderToStdout(DETAILS_TABLE_TEMPLATE, ImmutableMap.of("rows", table, "repo", bean));
   }
 
   public void renderInvalidInputError() {

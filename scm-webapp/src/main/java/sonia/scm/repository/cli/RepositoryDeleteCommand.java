@@ -36,7 +36,7 @@ import java.util.Collections;
 
 @CommandLine.Command(name = "delete", aliases = "rm")
 @ParentCommand(RepositoryCommand.class)
-public class RepositoryDeleteCommand implements Runnable {
+class RepositoryDeleteCommand implements Runnable {
 
   private static final String PROMPT_TEMPLATE = "{{i18n.repoDeletePrompt}}";
 
