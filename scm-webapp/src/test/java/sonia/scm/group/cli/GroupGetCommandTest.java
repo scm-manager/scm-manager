@@ -29,11 +29,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import sonia.scm.cli.TemplateTestRenderer;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
-
-import java.util.ResourceBundle;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -41,14 +38,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class GroupGetCommandTest {
 
-  private final TemplateTestRenderer testRenderer = new TemplateTestRenderer();
-  private final GroupCommandBeanMapper beanMapper = new GroupCommandBeanMapperImpl();
-  private final GroupTemplateRenderer templateRenderer = new GroupTemplateRenderer(testRenderer.getContextMock(), testRenderer.getTemplateEngineFactory(), beanMapper) {
-    @Override
-    protected ResourceBundle getBundle() {
-      return testRenderer.getResourceBundle();
-    }
-  };
+  private final GroupTemplateTestRenderer testRenderer = new GroupTemplateTestRenderer();
 
   @Mock
   private GroupManager manager;
@@ -57,7 +47,7 @@ class GroupGetCommandTest {
 
   @BeforeEach
   void initCommand() {
-    command = new GroupGetCommand(templateRenderer, manager);
+    command = new GroupGetCommand(testRenderer.getTemplateRenderer(), manager);
   }
 
   @Test

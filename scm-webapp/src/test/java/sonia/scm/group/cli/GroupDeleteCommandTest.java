@@ -29,11 +29,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import sonia.scm.cli.TemplateTestRenderer;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
-
-import java.util.ResourceBundle;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -47,20 +44,13 @@ class GroupDeleteCommandTest {
   @Mock
   private GroupManager manager;
 
-  private final TemplateTestRenderer testRenderer = new TemplateTestRenderer();
-  private final GroupCommandBeanMapper mapper = new GroupCommandBeanMapperImpl();
-  private final GroupTemplateRenderer templateRenderer = new GroupTemplateRenderer(testRenderer.getContextMock(), testRenderer.getTemplateEngineFactory(), mapper) {
-    @Override
-    protected ResourceBundle getBundle() {
-      return testRenderer.getResourceBundle();
-    }
-  };
+  private final GroupTemplateTestRenderer testRenderer = new GroupTemplateTestRenderer();
 
   private GroupDeleteCommand command;
 
   @BeforeEach
   void initCommand() {
-    command = new GroupDeleteCommand(templateRenderer, manager);
+    command = new GroupDeleteCommand(testRenderer.getTemplateRenderer(), manager);
   }
 
   @Test

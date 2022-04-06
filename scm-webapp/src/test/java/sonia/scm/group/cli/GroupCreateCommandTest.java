@@ -48,14 +48,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class GroupCreateCommandTest {
 
-  private final TemplateTestRenderer testRenderer = new TemplateTestRenderer();
-  private final GroupCommandBeanMapper beanMapper = new GroupCommandBeanMapperImpl();
-  private final GroupTemplateRenderer templateRenderer = new GroupTemplateRenderer(testRenderer.getContextMock(), testRenderer.getTemplateEngineFactory(), beanMapper) {
-    @Override
-    protected ResourceBundle getBundle() {
-      return testRenderer.getResourceBundle();
-    }
-  };
+  private final GroupTemplateTestRenderer testRenderer = new GroupTemplateTestRenderer();
 
   @Mock
   private CommandValidator validator;
@@ -66,7 +59,7 @@ class GroupCreateCommandTest {
 
   @BeforeEach
   void initCommand() {
-    command = new GroupCreateCommand(templateRenderer, validator, manager);
+    command = new GroupCreateCommand(testRenderer.getTemplateRenderer(), validator, manager);
   }
 
   @Nested
