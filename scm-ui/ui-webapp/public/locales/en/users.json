@@ -84,7 +84,7 @@
     "description": "To check signatures (for example for commits), gpg public keys can be stored here. Additionally the keys created by SCM-Manager can be accessed here, too.",
     "noStoredKeys": "No keys found.",
     "displayName": "Display Name",
-    "created": "Created",
+    "created": "Created on",
     "raw": "Key",
     "download": "Download",
     "delete": "Delete",
@@ -102,7 +102,7 @@
       "label": "Permitted Role",
       "help": "The api key will be restricted to permissions of this role"
     },
-    "created": "Created",
+    "created": "Created on",
     "addSubtitle": "Add New Key",
     "addKey": "Add Key",
     "delete": "Delete",
