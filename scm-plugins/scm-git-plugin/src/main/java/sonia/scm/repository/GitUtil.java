@@ -73,6 +73,7 @@ import java.util.concurrent.TimeUnit;
 
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
+import static java.util.Optional.ofNullable;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -648,7 +649,7 @@ public final class GitUtil {
     Attribute filter = attributes.get("filter");
     if (filter != null && "lfs".equals(filter.getValue())) {
       try (InputStream is = repo.open(blobId, Constants.OBJ_BLOB).openStream()) {
-        return of(LfsPointer.parseLfsPointer(is));
+        return ofNullable(LfsPointer.parseLfsPointer(is));
       }
     } else {
       return empty();

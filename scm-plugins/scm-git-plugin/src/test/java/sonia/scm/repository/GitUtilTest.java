@@ -21,30 +21,43 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.assertj.core.api.Assertions;
+import org.eclipse.jgit.attributes.Attribute;
+import org.eclipse.jgit.attributes.Attributes;
+import org.eclipse.jgit.lfs.LfsPointer;
+import org.eclipse.jgit.lib.Constants;
+import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.ObjectLoader;
+import org.eclipse.jgit.lib.ObjectStream;
+import org.eclipse.jgit.lib.Repository;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.Assert.*;
 
 import static org.mockito.Mockito.*;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 
 import sonia.scm.util.HttpUtil;
 
 /**
  * Unit tests for {@link GitUtil}.
- * 
+ *
  * @author Sebastian Sdorra
  */
 public class GitUtilTest
@@ -88,7 +101,7 @@ public class GitUtilTest
     assertEquals("1.0.0", GitUtil.getTagName("refs/tags/1.0.0"));
     assertEquals("super/1.0.0", GitUtil.getTagName("refs/tags/super/1.0.0"));
   }
-  
+
   /**
    * Tests {@link GitUtil#isBranch(java.lang.String)}.
    */
@@ -112,25 +125,58 @@ public class GitUtilTest
     return repo;
   }
 
-  /** Field description */
-  @Rule
-  public TemporaryFolder temp = new TemporaryFolder();
-  
   @Test
   public void testIsGitClient() {
     HttpServletRequest request = mockRequestWithUserAgent("Git/2.9.3");
     assertTrue(GitUtil.isGitClient(request));
-    
+
     request = mockRequestWithUserAgent("JGit/2.9.3");
     assertTrue(GitUtil.isGitClient(request));
-    
+
     request = mockRequestWithUserAgent("Mozilla/5.0 (Linux; Android 4.0.4; Galaxy Nexus Build/IMM76B) ...");
     assertFalse(GitUtil.isGitClient(request));
   }
-  
+
+  @Test
+  public void testLfsPointerWithRealPointer() throws IOException {
+    String lfsPointer = "version https://git-lfs.github.com/spec/v1\n" +
+      "oid sha256:e84d872d96a5e6320825968a7745cdaaf6c67c98fab7f480ea6edb2b040a4293\n" +
+      "size 6976827\n";
+
+    Optional<LfsPointer> result = callGetLfsPointer(lfsPointer);
+
+    Assertions.assertThat(result).isNotEmpty();
+    Assertions.assertThat(result.get().getOid().getName())
+      .isEqualTo("e84d872d96a5e6320825968a7745cdaaf6c67c98fab7f480ea6edb2b040a4293");
+  }
+
+  @Test
+  public void testLfsPointerWithIllegalPointer() throws IOException {
+    String lfsPointer = "This is anything, but not an lfs pointer. But it should not raise an exception\n";
+
+    Optional<LfsPointer> result = callGetLfsPointer(lfsPointer);
+
+    Assertions.assertThat(result).isEmpty();
+  }
+
+  private Optional<LfsPointer> callGetLfsPointer(String lfsPointer) throws IOException {
+    Repository repository = mock(Repository.class);
+    ObjectId objectId = new ObjectId(1, 2, 3, 4, 5);
+    Attributes attributes = mock(Attributes.class);
+    Attribute filter = mock(Attribute.class);
+    ObjectLoader objectLoader = mock(ObjectLoader.class);
+    when(attributes.get("filter")).thenReturn(filter);
+    when(filter.getValue()).thenReturn("lfs");
+    when(repository.open(objectId, Constants.OBJ_BLOB)).thenReturn(objectLoader);
+    when(objectLoader.openStream()).thenReturn(new ObjectStream.SmallStream(1, lfsPointer.getBytes(UTF_8)));
+
+    Optional<LfsPointer> result = GitUtil.getLfsPointer(repository, objectId, attributes);
+    return result;
+  }
+
   private HttpServletRequest mockRequestWithUserAgent(String userAgent) {
     HttpServletRequest request = mock(HttpServletRequest.class);
-    when(request.getHeader(HttpUtil.HEADER_USERAGENT)).thenReturn(userAgent);    
+    when(request.getHeader(HttpUtil.HEADER_USERAGENT)).thenReturn(userAgent);
     return request;
   }
 }
