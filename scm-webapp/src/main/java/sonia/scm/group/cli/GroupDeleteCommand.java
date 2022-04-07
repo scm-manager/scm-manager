@@ -51,7 +51,7 @@ class GroupDeleteCommand implements Runnable {
   private final GroupManager manager;
 
   @Inject
-  public GroupDeleteCommand(GroupTemplateRenderer templateRenderer, GroupManager manager) {
+  GroupDeleteCommand(GroupTemplateRenderer templateRenderer, GroupManager manager) {
     this.templateRenderer = templateRenderer;
     this.manager = manager;
   }

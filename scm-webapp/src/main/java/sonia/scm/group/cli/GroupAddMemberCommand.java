@@ -51,7 +51,7 @@ class GroupAddMemberCommand implements Runnable {
   private String[] members;
 
   @Inject
-  public GroupAddMemberCommand(GroupTemplateRenderer templateRenderer, CommandValidator validator, GroupManager manager) {
+  GroupAddMemberCommand(GroupTemplateRenderer templateRenderer, CommandValidator validator, GroupManager manager) {
     this.templateRenderer = templateRenderer;
     this.validator = validator;
     this.manager = manager;

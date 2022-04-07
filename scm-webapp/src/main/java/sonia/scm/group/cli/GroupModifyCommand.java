@@ -38,7 +38,7 @@ import static java.util.Arrays.asList;
 
 @ParentCommand(GroupCommand.class)
 @CommandLine.Command(name = "modify")
-public class GroupModifyCommand implements Runnable {
+class GroupModifyCommand implements Runnable {
 
   @CommandLine.Mixin
   private final GroupTemplateRenderer templateRenderer;
@@ -59,7 +59,7 @@ public class GroupModifyCommand implements Runnable {
   private boolean external;
 
   @Inject
-  public GroupModifyCommand(GroupTemplateRenderer templateRenderer, CommandValidator validator, GroupManager manager) {
+  GroupModifyCommand(GroupTemplateRenderer templateRenderer, CommandValidator validator, GroupManager manager) {
     this.templateRenderer = templateRenderer;
     this.validator = validator;
     this.manager = manager;

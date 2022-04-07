@@ -48,12 +48,12 @@ class GroupTemplateRenderer extends TemplateRenderer {
   private final GroupCommandBeanMapper mapper;
 
   @Inject
-  public GroupTemplateRenderer(CliContext context, TemplateEngineFactory templateEngineFactory, GroupCommandBeanMapper mapper) {
+  GroupTemplateRenderer(CliContext context, TemplateEngineFactory templateEngineFactory, GroupCommandBeanMapper mapper) {
     super(context, templateEngineFactory);
     this.mapper = mapper;
   }
 
-  public void render(Group group) {
+  void render(Group group) {
     GroupCommandBean groupBean = mapper.map(group);
     Table table = createTable();
     String yes = getBundle().getString("yes");
@@ -68,7 +68,7 @@ class GroupTemplateRenderer extends TemplateRenderer {
     renderToStdout(DETAILS_TABLE_TEMPLATE, ImmutableMap.of("rows", table, "repo", groupBean));
   }
 
-  public void renderNotFoundError() {
+  void renderNotFoundError() {
     renderToStderr(NOT_FOUND_TEMPLATE, Collections.emptyMap());
     getContext().exit(ExitCode.NOT_FOUND);
   }

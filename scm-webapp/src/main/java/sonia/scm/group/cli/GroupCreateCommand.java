@@ -57,7 +57,7 @@ class GroupCreateCommand implements Runnable {
   private boolean external;
 
   @Inject
-  public GroupCreateCommand(GroupTemplateRenderer templateRenderer, CommandValidator validator, GroupManager manager) {
+  GroupCreateCommand(GroupTemplateRenderer templateRenderer, CommandValidator validator, GroupManager manager) {
     this.templateRenderer = templateRenderer;
     this.validator = validator;
     this.manager = manager;

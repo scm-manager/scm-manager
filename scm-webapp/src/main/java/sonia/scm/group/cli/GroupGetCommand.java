@@ -35,7 +35,7 @@ import javax.inject.Inject;
 
 @ParentCommand(GroupCommand.class)
 @CommandLine.Command(name = "get")
-public class GroupGetCommand implements Runnable{
+class GroupGetCommand implements Runnable{
 
   @CommandLine.Parameters(paramLabel = "namespace/name", index = "0")
   private String name;
@@ -45,13 +45,13 @@ public class GroupGetCommand implements Runnable{
   private final GroupManager manager;
 
   @Inject
-  public GroupGetCommand(GroupTemplateRenderer templateRenderer, GroupManager manager) {
+  GroupGetCommand(GroupTemplateRenderer templateRenderer, GroupManager manager) {
     this.templateRenderer = templateRenderer;
     this.manager = manager;
   }
 
   @VisibleForTesting
-  public void setName(String name) {
+  void setName(String name) {
     this.name = name;
   }
 

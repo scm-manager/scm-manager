@@ -65,7 +65,7 @@ class GroupListCommand implements Runnable {
   );
 
   @Inject
-  public GroupListCommand(TemplateRenderer templateRenderer, GroupManager manager, GroupCommandBeanMapper beanMapper) {
+  GroupListCommand(TemplateRenderer templateRenderer, GroupManager manager, GroupCommandBeanMapper beanMapper) {
     this.templateRenderer = templateRenderer;
     this.manager = manager;
     this.beanMapper = beanMapper;
