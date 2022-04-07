@@ -46,7 +46,7 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class GroupAddMemberCommandTest {
+class GroupRemoveMemberCommandTest {
 
   private final GroupTemplateTestRenderer testRenderer = new GroupTemplateTestRenderer();
 
@@ -55,11 +55,11 @@ class GroupAddMemberCommandTest {
   @Mock
   private GroupManager manager;
 
-  private GroupAddMemberCommand command;
+  private GroupRemoveMemberCommand command;
 
   @BeforeEach
   void initCommand() {
-    command = new GroupAddMemberCommand(testRenderer.getTemplateRenderer(), validator, manager);
+    command = new GroupRemoveMemberCommand(testRenderer.getTemplateRenderer(), validator, manager);
   }
 
   @Nested
@@ -69,7 +69,7 @@ class GroupAddMemberCommandTest {
 
     @BeforeEach
     void mockModification() {
-      group = new Group("test", "hog", "zaphod");
+      group = new Group("test", "hog", "zaphod", "marvin", "trillian");
 
       when(manager.get("hog")).thenAnswer(invocation -> group);
       doAnswer(invocation -> {
@@ -80,7 +80,7 @@ class GroupAddMemberCommandTest {
       }).when(manager).modify(any());
 
       command.setName("hog");
-      command.setMembers(new String[]{"trillian", "arthur", "ford"});
+      command.setMembers(new String[]{"zaphod", "marvin"});
     }
 
     @Test
@@ -89,7 +89,7 @@ class GroupAddMemberCommandTest {
 
       verify(manager).modify(argThat(argument -> {
         assertThat(argument.getName()).isEqualTo("hog");
-        assertThat(argument.getMembers()).contains("zaphod", "trillian", "arthur", "ford");
+        assertThat(argument.getMembers()).contains("trillian");
         return true;
       }));
     }
@@ -101,7 +101,7 @@ class GroupAddMemberCommandTest {
       assertThat(testRenderer.getStdOut())
         .contains(
           "groupName:         hog",
-          "groupMembers:      zaphod, trillian, arthur, ford",
+          "groupMembers:      trillian",
           "groupLastModified: 2022-04-11T07:26:40Z"
         );
       assertThat(testRenderer.getStdErr())

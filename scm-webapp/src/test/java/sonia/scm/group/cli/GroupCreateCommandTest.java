@@ -32,11 +32,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.cli.CommandValidator;
-import sonia.scm.cli.TemplateTestRenderer;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
-
-import java.util.ResourceBundle;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
