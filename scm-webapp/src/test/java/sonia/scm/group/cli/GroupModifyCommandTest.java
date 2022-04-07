@@ -32,22 +32,20 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.cli.CommandValidator;
-import sonia.scm.cli.TemplateTestRenderer;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
-
-import java.util.ResourceBundle;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class GroupCreateCommandTest {
+class GroupModifyCommandTest {
 
   private final GroupTemplateTestRenderer testRenderer = new GroupTemplateTestRenderer();
 
@@ -56,54 +54,76 @@ class GroupCreateCommandTest {
   @Mock
   private GroupManager manager;
 
-  private GroupCreateCommand command;
+  private GroupModifyCommand command;
 
   @BeforeEach
   void initCommand() {
-    command = new GroupCreateCommand(testRenderer.getTemplateRenderer(), validator, manager);
+    command = new GroupModifyCommand(testRenderer.getTemplateRenderer(), validator, manager);
   }
 
   @Nested
-  class ForSuccessfulCreationTest {
+  class ForSuccessfulModificationTest {
+
+    private Group group;
 
     @BeforeEach
-    void mockCreation() {
-      when(manager.create(any()))
-        .thenAnswer(invocation -> {
-          Group createdGroup = invocation.getArgument(0, Group.class);
-          createdGroup.setCreationDate(1649262000000L);
-          return createdGroup;
-        });
+    void mockModification() {
+      group = new Group("test", "hog", "zaphod", "trillian");
+      group.setCreationDate(1649262000000L);
+      group.setLastModified(1649462000000L);
+      group.setDescription("Crew of the Heart of Gold");
+
+      when(manager.get("hog")).thenAnswer(invocation -> group);
+      doAnswer(invocation -> {
+        Group modifiedGroup = invocation.getArgument(0, Group.class);
+        modifiedGroup.setLastModified(1649662000000L);
+        group = modifiedGroup;
+        return null;
+      }).when(manager).modify(any());
 
       command.setName("hog");
-      command.setDescription("Crew of the Heart of Gold");
-      command.setMembers(new String[]{"zaphod", "trillian"});
+      command.setDescription("Earthlings on the Heart of Gold");
+      command.setMembers(new String[]{"arthur", "trillian"});
     }
 
     @Test
-    void shouldCreateGroup() {
+    void shouldModifyGroup() {
       command.run();
 
-      verify(manager).create(argThat(argument -> {
+      verify(manager).modify(argThat(argument -> {
         assertThat(argument.getName()).isEqualTo("hog");
-        assertThat(argument.getDescription()).isEqualTo("Crew of the Heart of Gold");
-        assertThat(argument.getMembers()).contains("zaphod", "trillian");
+        assertThat(argument.getDescription()).isEqualTo("Earthlings on the Heart of Gold");
+        assertThat(argument.getMembers()).contains("arthur", "trillian");
+        assertThat(argument.isExternal()).isFalse();
         return true;
       }));
     }
 
     @Test
-    void shouldPrintGroupAfterCreation() {
+    void shouldSetGroupExternal() {
+      command.setExternal(true);
+
+      command.run();
+
+      verify(manager).modify(argThat(argument -> {
+        assertThat(argument.getMembers()).isEmpty();
+        assertThat(argument.isExternal()).isTrue();
+        return true;
+      }));
+    }
+
+    @Test
+    void shouldPrintGroupAfterModification() {
       command.run();
 
       assertThat(testRenderer.getStdOut())
         .contains(
           "groupName:         hog",
-          "groupDescription:  Crew of the Heart of Gold",
-          "groupMembers:      zaphod, trillian",
+          "groupDescription:  Earthlings on the Heart of Gold",
+          "groupMembers:      arthur, trillian",
           "groupExternal:     no",
           "groupCreationDate: 2022-04-06T16:20:00Z",
-          "groupLastModified:"
+          "groupLastModified: 2022-04-11T07:26:40Z"
         );
       assertThat(testRenderer.getStdErr())
         .isEmpty();

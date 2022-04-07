@@ -34,9 +34,11 @@ import sonia.scm.repository.cli.GroupCommand;
 
 import javax.inject.Inject;
 
+import static java.util.Arrays.asList;
+
 @ParentCommand(GroupCommand.class)
-@CommandLine.Command(name = "create")
-class GroupCreateCommand implements Runnable {
+@CommandLine.Command(name = "modify")
+public class GroupModifyCommand implements Runnable {
 
   @CommandLine.Mixin
   private final GroupTemplateRenderer templateRenderer;
@@ -57,7 +59,7 @@ class GroupCreateCommand implements Runnable {
   private boolean external;
 
   @Inject
-  public GroupCreateCommand(GroupTemplateRenderer templateRenderer, CommandValidator validator, GroupManager manager) {
+  public GroupModifyCommand(GroupTemplateRenderer templateRenderer, CommandValidator validator, GroupManager manager) {
     this.templateRenderer = templateRenderer;
     this.validator = validator;
     this.manager = manager;
@@ -66,11 +68,17 @@ class GroupCreateCommand implements Runnable {
   @Override
   public void run() {
     validator.validate();
-    Group newGroup = new Group("xml", name, members);
-    newGroup.setDescription(description);
-    newGroup.setExternal(external);
-    Group createdGroup = manager.create(newGroup);
-    templateRenderer.render(createdGroup);
+    Group existingGroup = manager.get(name);
+    if (existingGroup == null) {
+      templateRenderer.renderNotFoundError();
+    }
+    existingGroup.setDescription(description);
+    existingGroup.setExternal(external);
+    existingGroup.setMembers(asList(members));
+    manager.modify(existingGroup);
+    Group modifiedGroup = manager.get(name);
+    templateRenderer.render(modifiedGroup);
+
   }
 
   @VisibleForTesting
