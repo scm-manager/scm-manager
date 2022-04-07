@@ -37,7 +37,7 @@ import javax.inject.Inject;
 @CommandLine.Command(name = "get")
 class GroupGetCommand implements Runnable{
 
-  @CommandLine.Parameters(paramLabel = "namespace/name", index = "0")
+  @CommandLine.Parameters(paramLabel = "name")
   private String name;
 
   @CommandLine.Mixin

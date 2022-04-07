@@ -47,7 +47,7 @@ class GroupAddMemberCommand implements Runnable {
 
   @CommandLine.Parameters(index = "0", arity = "1", descriptionKey = "scm.group.add-member.name")
   private String name;
-  @CommandLine.Parameters(index = "1..", arity = "1..", descriptionKey = "scm.group.add-member.name")
+  @CommandLine.Parameters(index = "1..", arity = "1..", descriptionKey = "scm.group.add-member.members")
   private String[] members;
 
   @Inject

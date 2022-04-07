@@ -67,12 +67,12 @@ class GroupGetCommandTest {
 
     assertThat(testRenderer.getStdOut())
       .contains(
-        "groupName:         hog",
-        "groupDescription:  Crew of the Heart of Gold",
-        "groupMembers:      zaphod, trillian",
-        "groupExternal:     no",
-        "groupCreationDate: 2022-04-06T16:20:00Z",
-        "groupLastModified: 2022-04-08T23:53:20Z"
+        "Name:          hog",
+        "Description:   Crew of the Heart of Gold",
+        "Members:       zaphod, trillian",
+        "External:      no",
+        "Creation Date: 2022-04-06T16:20:00Z",
+        "Last Modified: 2022-04-08T23:53:20Z"
       );
     assertThat(testRenderer.getStdErr())
       .isEmpty();

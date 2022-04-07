@@ -58,12 +58,12 @@ class GroupTemplateRenderer extends TemplateRenderer {
     Table table = createTable();
     String yes = getBundle().getString("yes");
     String no = getBundle().getString("no");
-    table.addLabelValueRow("groupName", groupBean.getName());
-    table.addLabelValueRow("groupDescription", groupBean.getDescription());
-    table.addLabelValueRow("groupMembers", groupBean.getMembersList());
-    table.addLabelValueRow("groupExternal", groupBean.isExternal() ? yes : no);
-    table.addLabelValueRow("groupCreationDate", groupBean.getCreationDate());
-    table.addLabelValueRow("groupLastModified", groupBean.getLastModified());
+    table.addLabelValueRow("scm.group.name", groupBean.getName());
+    table.addLabelValueRow("scm.group.description", groupBean.getDescription());
+    table.addLabelValueRow("scm.group.members", groupBean.getMembersList());
+    table.addLabelValueRow("scm.group.external", groupBean.isExternal() ? yes : no);
+    table.addLabelValueRow("creationDate", groupBean.getCreationDate());
+    table.addLabelValueRow("lastModified", groupBean.getLastModified());
 
     renderToStdout(DETAILS_TABLE_TEMPLATE, ImmutableMap.of("rows", table, "repo", groupBean));
   }

@@ -155,12 +155,12 @@ class GroupModifyCommandTest {
 
       assertThat(testRenderer.getStdOut())
         .contains(
-          "groupName:         hog",
-          "groupDescription:  Earthlings on the Heart of Gold",
-          "groupMembers:      arthur, trillian",
-          "groupExternal:     no",
-          "groupCreationDate: 2022-04-06T16:20:00Z",
-          "groupLastModified: 2022-04-11T07:26:40Z"
+          "Name:          hog",
+          "Description:   Earthlings on the Heart of Gold",
+          "Members:       arthur, trillian",
+          "External:      no",
+          "Creation Date: 2022-04-06T16:20:00Z",
+          "Last Modified: 2022-04-11T07:26:40Z"
         );
       assertThat(testRenderer.getStdErr())
         .isEmpty();

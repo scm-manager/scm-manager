@@ -100,9 +100,9 @@ class GroupRemoveMemberCommandTest {
 
       assertThat(testRenderer.getStdOut())
         .contains(
-          "groupName:         hog",
-          "groupMembers:      trillian",
-          "groupLastModified: 2022-04-11T07:26:40Z"
+          "Name:          hog",
+          "Members:       trillian",
+          "Last Modified: 2022-04-11T07:26:40Z"
         );
       assertThat(testRenderer.getStdErr())
         .isEmpty();

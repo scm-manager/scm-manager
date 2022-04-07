@@ -100,9 +100,9 @@ class GroupAddMemberCommandTest {
 
       assertThat(testRenderer.getStdOut())
         .contains(
-          "groupName:         hog",
-          "groupMembers:      zaphod, trillian, arthur, ford",
-          "groupLastModified: 2022-04-11T07:26:40Z"
+          "Name:          hog",
+          "Members:       zaphod, trillian, arthur, ford",
+          "Last Modified: 2022-04-11T07:26:40Z"
         );
       assertThat(testRenderer.getStdErr())
         .isEmpty();
