@@ -83,12 +83,13 @@ class GroupModifyCommandTest {
       }).when(manager).modify(any());
 
       command.setName("hog");
-      command.setDescription("Earthlings on the Heart of Gold");
-      command.setMembers(new String[]{"arthur", "trillian"});
     }
 
     @Test
     void shouldModifyGroup() {
+      command.setDescription("Earthlings on the Heart of Gold");
+      command.setMembers(new String[]{"arthur", "trillian"});
+
       command.run();
 
       verify(manager).modify(argThat(argument -> {
@@ -96,6 +97,38 @@ class GroupModifyCommandTest {
         assertThat(argument.getDescription()).isEqualTo("Earthlings on the Heart of Gold");
         assertThat(argument.getMembers()).contains("arthur", "trillian");
         assertThat(argument.isExternal()).isFalse();
+        return true;
+      }));
+    }
+
+    @Test
+    void shouldNotModifyDescriptionIfNotSet() {
+      command.run();
+
+      verify(manager).modify(argThat(argument -> {
+        assertThat(argument.getDescription()).isEqualTo("Crew of the Heart of Gold");
+        return true;
+      }));
+    }
+
+    @Test
+    void shouldNotModifyExternalIfNotSet() {
+      group.setExternal(true);
+
+      command.run();
+
+      verify(manager).modify(argThat(argument -> {
+        assertThat(argument.isExternal()).isTrue();
+        return true;
+      }));
+    }
+
+    @Test
+    void shouldNotModifyMembersIfNotSet() {
+      command.run();
+
+      verify(manager).modify(argThat(argument -> {
+        assertThat(argument.getMembers()).contains("zaphod", "trillian");
         return true;
       }));
     }
@@ -115,6 +148,9 @@ class GroupModifyCommandTest {
 
     @Test
     void shouldPrintGroupAfterModification() {
+      command.setDescription("Earthlings on the Heart of Gold");
+      command.setMembers(new String[]{"arthur", "trillian"});
+
       command.run();
 
       assertThat(testRenderer.getStdOut())

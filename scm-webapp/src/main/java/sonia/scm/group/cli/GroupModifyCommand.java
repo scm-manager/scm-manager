@@ -56,7 +56,7 @@ class GroupModifyCommand implements Runnable {
   private String[] members;
 
   @CommandLine.Option(names = {"--external", "-e"}, descriptionKey = "scm.group.modify.external")
-  private boolean external;
+  private Boolean external;
 
   @Inject
   GroupModifyCommand(GroupTemplateRenderer templateRenderer, CommandValidator validator, GroupManager manager) {
@@ -72,9 +72,15 @@ class GroupModifyCommand implements Runnable {
     if (existingGroup == null) {
       templateRenderer.renderNotFoundError();
     } else {
-      existingGroup.setDescription(description);
-      existingGroup.setExternal(external);
-      existingGroup.setMembers(asList(members));
+      if (description != null) {
+        existingGroup.setDescription(description);
+      }
+      if (external != null) {
+        existingGroup.setExternal(external);
+      }
+      if (members != null) {
+        existingGroup.setMembers(asList(members));
+      }
       manager.modify(existingGroup);
       Group modifiedGroup = manager.get(name);
       templateRenderer.render(modifiedGroup);
