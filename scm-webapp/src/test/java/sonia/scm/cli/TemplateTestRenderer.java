@@ -38,6 +38,7 @@ import java.util.ResourceBundle;
 
 import static java.util.Collections.singleton;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -53,9 +54,11 @@ public class TemplateTestRenderer {
   private final CliContext context = mock(CliContext.class);
   private final TemplateEngineFactory templateEngineFactory;
 
+  @SuppressWarnings("UnstableApiUsage")
   public TemplateTestRenderer() {
     lenient().when(context.getStdout()).thenReturn(new PrintWriter(stdOut));
     lenient().when(context.getStderr()).thenReturn(new PrintWriter(stdErr));
+    lenient().doThrow(CliExitException.class).when(context).exit(anyInt());
 
     ServletContext servletContext = mock(ServletContext.class);
     lenient().when(servletContext.getResourceAsStream(any()))
@@ -77,7 +80,12 @@ public class TemplateTestRenderer {
   }
 
   public ResourceBundle getResourceBundle() {
-    return ResourceBundle.getBundle("sonia.scm.cli.i18n");
+    return ResourceBundle.getBundle("sonia.scm.cli.i18n", context.getLocale(), new ResourceBundle.Control() {
+      @Override
+      public Locale getFallbackLocale(String baseName, Locale locale) {
+        return Locale.ROOT;
+      }
+    });
   }
 
   public void setLocale(String locale) {
