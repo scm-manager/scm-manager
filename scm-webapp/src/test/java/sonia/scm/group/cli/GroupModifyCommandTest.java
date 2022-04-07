@@ -31,6 +31,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.cli.CliExitException;
 import sonia.scm.cli.CommandValidator;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
@@ -128,6 +129,22 @@ class GroupModifyCommandTest {
       assertThat(testRenderer.getStdErr())
         .isEmpty();
     }
+  }
+
+  @Test
+  void shouldFailIfGroupDoesNotExists() {
+    when(manager.get("hog")).thenReturn(null);
+    command.setName("hog");
+
+    Assertions.assertThrows(
+      CliExitException.class,
+      () -> command.run()
+    );
+
+    assertThat(testRenderer.getStdOut())
+      .isEmpty();
+    assertThat(testRenderer.getStdErr())
+      .isEqualTo("Could not find group");
   }
 
   @Test

@@ -78,7 +78,6 @@ public class GroupModifyCommand implements Runnable {
     manager.modify(existingGroup);
     Group modifiedGroup = manager.get(name);
     templateRenderer.render(modifiedGroup);
-
   }
 
   @VisibleForTesting
