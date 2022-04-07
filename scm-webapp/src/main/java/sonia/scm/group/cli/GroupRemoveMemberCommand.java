@@ -36,7 +36,7 @@ import javax.inject.Inject;
 import java.util.Arrays;
 
 @ParentCommand(GroupCommand.class)
-@CommandLine.Command(name = "remove-member")
+@CommandLine.Command(name = "remove-member", aliases = "remove")
 class GroupRemoveMemberCommand implements Runnable {
 
   @CommandLine.Mixin

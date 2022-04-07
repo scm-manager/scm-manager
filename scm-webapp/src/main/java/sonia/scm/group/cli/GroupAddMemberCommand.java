@@ -36,7 +36,7 @@ import javax.inject.Inject;
 import java.util.Arrays;
 
 @ParentCommand(GroupCommand.class)
-@CommandLine.Command(name = "add-member")
+@CommandLine.Command(name = "add-member", aliases = "add")
 class GroupAddMemberCommand implements Runnable {
 
   @CommandLine.Mixin
