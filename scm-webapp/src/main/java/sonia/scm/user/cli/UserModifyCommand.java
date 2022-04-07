@@ -24,6 +24,7 @@
 
 package sonia.scm.user.cli;
 
+import com.google.common.annotations.VisibleForTesting;
 import picocli.CommandLine;
 import sonia.scm.cli.CommandValidator;
 import sonia.scm.cli.ParentCommand;
@@ -78,5 +79,17 @@ public class UserModifyCommand implements Runnable {
     } else {
       templateRenderer.renderNotFoundError();
     }
+  }
+
+  @SuppressWarnings("SameParameterValue")
+  @VisibleForTesting
+  void setDisplayName(String displayName) {
+    this.displayName = displayName;
+  }
+
+  @SuppressWarnings("SameParameterValue")
+  @VisibleForTesting
+  void setEmail(String email) {
+    this.email = email;
   }
 }

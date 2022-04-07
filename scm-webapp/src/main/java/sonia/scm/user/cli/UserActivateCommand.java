@@ -25,7 +25,6 @@
 package sonia.scm.user.cli;
 
 import picocli.CommandLine;
-import sonia.scm.cli.CommandValidator;
 import sonia.scm.cli.ParentCommand;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
@@ -38,24 +37,19 @@ public class UserActivateCommand implements Runnable {
 
   @CommandLine.Mixin
   private final UserTemplateRenderer templateRenderer;
-  @CommandLine.Mixin
-  private final CommandValidator validator;
   private final UserManager manager;
 
   @CommandLine.Parameters(index = "0", paramLabel = "<username>", descriptionKey = "scm.user.username")
   private String username;
 
   @Inject
-  UserActivateCommand(UserTemplateRenderer templateRenderer, CommandValidator validator, UserManager manager) {
+  UserActivateCommand(UserTemplateRenderer templateRenderer, UserManager manager) {
     this.templateRenderer = templateRenderer;
-    this.validator = validator;
     this.manager = manager;
   }
 
   @Override
   public void run() {
-    validator.validate();
-
     User user = manager.get(username);
 
     if (user != null) {

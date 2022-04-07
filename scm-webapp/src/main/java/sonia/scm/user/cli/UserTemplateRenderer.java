@@ -48,10 +48,10 @@ public class UserTemplateRenderer extends TemplateRenderer {
   private static final String NOT_FOUND_TEMPLATE = "{{i18n.scmUserErrorNotFound}}";
 
   private final CliContext context;
-  private final UserToUserCommandBeanMapper mapper;
+  private final UserCommandBeanMapper mapper;
 
   @Inject
-  UserTemplateRenderer(CliContext context, TemplateEngineFactory templateEngineFactory, UserToUserCommandBeanMapper mapper) {
+  UserTemplateRenderer(CliContext context, TemplateEngineFactory templateEngineFactory, UserCommandBeanMapper mapper) {
     super(context, templateEngineFactory);
     this.context = context;
     this.mapper = mapper;
@@ -91,10 +91,5 @@ public class UserTemplateRenderer extends TemplateRenderer {
   public void renderNotFoundError() {
     renderToStderr(NOT_FOUND_TEMPLATE, Collections.emptyMap());
     context.exit(ExitCode.NOT_FOUND);
-  }
-
-  public void renderException(Exception exception) {
-    renderDefaultError(exception);
-    context.exit(ExitCode.SERVER_ERROR);
   }
 }

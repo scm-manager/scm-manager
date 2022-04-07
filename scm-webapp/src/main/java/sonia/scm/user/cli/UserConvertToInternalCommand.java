@@ -24,8 +24,8 @@
 
 package sonia.scm.user.cli;
 
+import com.google.common.annotations.VisibleForTesting;
 import picocli.CommandLine;
-import sonia.scm.cli.CommandValidator;
 import sonia.scm.cli.ParentCommand;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
@@ -33,13 +33,11 @@ import sonia.scm.user.UserManager;
 import javax.inject.Inject;
 
 @ParentCommand(value = UserCommand.class)
-@CommandLine.Command(name = "convertToInternal", aliases = "int")
+@CommandLine.Command(name = "convert-to-internal", aliases = "conv-int")
 public class UserConvertToInternalCommand implements Runnable {
 
   @CommandLine.Mixin
   private final UserTemplateRenderer templateRenderer;
-  @CommandLine.Mixin
-  private final CommandValidator validator;
   private final UserManager manager;
 
   @CommandLine.Parameters(index = "0", paramLabel = "<username>", descriptionKey = "scm.user.username")
@@ -49,16 +47,13 @@ public class UserConvertToInternalCommand implements Runnable {
   private String password;
 
   @Inject
-  UserConvertToInternalCommand(UserTemplateRenderer templateRenderer, CommandValidator validator, UserManager manager) {
+  UserConvertToInternalCommand(UserTemplateRenderer templateRenderer, UserManager manager) {
     this.templateRenderer = templateRenderer;
-    this.validator = validator;
     this.manager = manager;
   }
 
   @Override
   public void run() {
-    validator.validate();
-
     User user = manager.get(username);
 
     if (user != null) {
@@ -69,5 +64,11 @@ public class UserConvertToInternalCommand implements Runnable {
     } else {
       templateRenderer.renderNotFoundError();
     }
+  }
+
+  @SuppressWarnings("SameParameterValue")
+  @VisibleForTesting
+  void setPassword(String password) {
+    this.password = password;
   }
 }

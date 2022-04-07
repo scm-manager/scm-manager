@@ -24,6 +24,7 @@
 
 package sonia.scm.user.cli;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableMap;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
@@ -42,7 +43,7 @@ public class UserListCommand implements Runnable {
   @CommandLine.Mixin
   private final TemplateRenderer templateRenderer;
   private final UserManager manager;
-  private final UserToUserCommandBeanMapper mapper;
+  private final UserCommandBeanMapper mapper;
   @CommandLine.Spec
   private CommandLine.Model.CommandSpec spec;
 
@@ -62,9 +63,9 @@ public class UserListCommand implements Runnable {
   );
 
   @Inject
-  public UserListCommand(UserManager manager, TemplateRenderer templateRenderer, UserToUserCommandBeanMapper mapper) {
-    this.manager = manager;
+  public UserListCommand(TemplateRenderer templateRenderer, UserManager manager, UserCommandBeanMapper mapper) {
     this.templateRenderer = templateRenderer;
+    this.manager = manager;
     this.mapper = mapper;
   }
 
@@ -85,4 +86,14 @@ public class UserListCommand implements Runnable {
     }
   }
 
+  @SuppressWarnings("SameParameterValue")
+  @VisibleForTesting
+  void setUseShortTemplate(boolean useShortTemplate) {
+    this.useShortTemplate = useShortTemplate;
+  }
+
+  @VisibleForTesting
+  void setSpec(CommandLine.Model.CommandSpec spec) {
+    this.spec = spec;
+  }
 }

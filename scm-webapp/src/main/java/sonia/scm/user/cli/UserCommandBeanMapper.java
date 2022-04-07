@@ -31,7 +31,7 @@ import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 
 @Mapper
-interface UserToUserCommandBeanMapper {
+interface UserCommandBeanMapper {
 
   UserCommandBean map(User modelObject);
 

@@ -24,6 +24,7 @@
 
 package sonia.scm.user.cli;
 
+import com.google.common.annotations.VisibleForTesting;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
 import sonia.scm.user.User;
@@ -36,7 +37,8 @@ import java.util.Collections;
 @ParentCommand(UserCommand.class)
 public class UserDeleteCommand implements Runnable {
 
-  private static final String PROMPT_TEMPLATE = "{{i18n.scm.user.delete.confirm}}";
+  private static final String CONFIRM_TEMPLATE = "{{i18n.scmUserDeleteConfirm}}";
+  private static final String SUCCESS_TEMPLATE = "{{i18n.scmUserDeleteSuccess}}";
 
   @CommandLine.Parameters(index = "0", paramLabel = "<username>", descriptionKey = "scm.user.username")
   private String username;
@@ -49,20 +51,27 @@ public class UserDeleteCommand implements Runnable {
   private final UserManager manager;
 
   @Inject
-  public UserDeleteCommand(UserManager manager, UserTemplateRenderer templateRenderer) {
-    this.manager = manager;
+  public UserDeleteCommand(UserTemplateRenderer templateRenderer, UserManager manager) {
     this.templateRenderer = templateRenderer;
+    this.manager = manager;
   }
 
   @Override
   public void run() {
     if (!shouldDelete) {
-      templateRenderer.renderToStderr(PROMPT_TEMPLATE, Collections.emptyMap());
+      templateRenderer.renderToStderr(CONFIRM_TEMPLATE, Collections.emptyMap());
       return;
     }
     User user = manager.get(username);
     if (user != null) {
       manager.delete(user);
+      templateRenderer.renderToStdout(SUCCESS_TEMPLATE, Collections.emptyMap());
     }
+  }
+
+  @SuppressWarnings("SameParameterValue")
+  @VisibleForTesting
+  void setShouldDelete(boolean shouldDelete) {
+    this.shouldDelete = shouldDelete;
   }
 }

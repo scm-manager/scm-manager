@@ -24,6 +24,7 @@
 
 package sonia.scm.user.cli;
 
+import com.google.common.annotations.VisibleForTesting;
 import picocli.CommandLine;
 import sonia.scm.cli.CommandValidator;
 import sonia.scm.cli.ParentCommand;
@@ -77,6 +78,7 @@ public class UserCreateCommand implements Runnable {
     User newUser = new User();
     newUser.setName(username);
     newUser.setDisplayName(displayName);
+    newUser.setMail(email);
     newUser.setExternal(external);
     if (!external) {
       if (password == null) {
@@ -91,5 +93,41 @@ public class UserCreateCommand implements Runnable {
     }
     User createdUser = manager.create(newUser);
     templateRenderer.render(createdUser);
+  }
+
+  @SuppressWarnings("SameParameterValue")
+  @VisibleForTesting
+  void setUsername(String username) {
+    this.username = username;
+  }
+
+  @SuppressWarnings("SameParameterValue")
+  @VisibleForTesting
+  void setDisplayName(String displayName) {
+    this.displayName = displayName;
+  }
+
+  @SuppressWarnings("SameParameterValue")
+  @VisibleForTesting
+  void setEmail(String email) {
+    this.email = email;
+  }
+
+  @SuppressWarnings("SameParameterValue")
+  @VisibleForTesting
+  void setExternal(boolean external) {
+    this.external = external;
+  }
+
+  @SuppressWarnings("SameParameterValue")
+  @VisibleForTesting
+  void setPassword(String password) {
+    this.password = password;
+  }
+
+  @SuppressWarnings("SameParameterValue")
+  @VisibleForTesting
+  void setInactive(boolean inactive) {
+    this.inactive = inactive;
   }
 }

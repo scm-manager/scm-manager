@@ -24,44 +24,33 @@
 
 package sonia.scm.user.cli;
 
-import picocli.CommandLine;
-import sonia.scm.cli.ParentCommand;
-import sonia.scm.user.User;
-import sonia.scm.user.UserManager;
+import sonia.scm.cli.TemplateTestRenderer;
 
-import javax.inject.Inject;
+import java.util.ResourceBundle;
 
-@ParentCommand(value = UserCommand.class)
-@CommandLine.Command(name = "deactivate")
-public class UserDeactivateCommand implements Runnable {
+class UserTemplateTestRenderer {
+  private final TemplateTestRenderer testRenderer = new TemplateTestRenderer();
+  private final UserCommandBeanMapper beanMapper = new UserCommandBeanMapperImpl();
+  private final UserTemplateRenderer templateRenderer = new UserTemplateRenderer(testRenderer.getContextMock(), testRenderer.getTemplateEngineFactory(), beanMapper) {
+    @Override
+    protected ResourceBundle getBundle() {
+      return testRenderer.getResourceBundle();
+    }
+  };
 
-  @CommandLine.Mixin
-  private final UserTemplateRenderer templateRenderer;
-  private final UserManager manager;
-
-  @CommandLine.Parameters(index = "0", paramLabel = "<username>", descriptionKey = "scm.user.username")
-  private String username;
-
-  @Inject
-  UserDeactivateCommand(UserTemplateRenderer templateRenderer, UserManager manager) {
-    this.templateRenderer = templateRenderer;
-    this.manager = manager;
+  UserTemplateRenderer getTemplateRenderer() {
+    return templateRenderer;
   }
 
-  @Override
-  public void run() {
-    User user = manager.get(username);
+  String getStdOut() {
+    return testRenderer.getStdOut();
+  }
 
-    if (user != null) {
-      if (user.isExternal()) {
-        templateRenderer.renderExternalDeactivateError();
-      } else {
-        user.setActive(false);
-        manager.modify(user);
-        templateRenderer.render(user);
-      }
-    } else {
-      templateRenderer.renderNotFoundError();
-    }
+  String getStdErr() {
+    return testRenderer.getStdErr();
+  }
+
+  public void setLocale(String locale) {
+    testRenderer.setLocale(locale);
   }
 }
