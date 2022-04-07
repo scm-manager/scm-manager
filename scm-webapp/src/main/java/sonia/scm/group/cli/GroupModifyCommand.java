@@ -46,16 +46,16 @@ public class GroupModifyCommand implements Runnable {
   private final CommandValidator validator;
   private final GroupManager manager;
 
-  @CommandLine.Parameters(descriptionKey = "scm.group.create.name")
+  @CommandLine.Parameters(descriptionKey = "scm.group.modify.name")
   private String name;
 
-  @CommandLine.Option(names = {"--description", "-d"}, descriptionKey = "scm.group.create.desc")
+  @CommandLine.Option(names = {"--description", "-d"}, descriptionKey = "scm.group.modify.desc")
   private String description;
 
-  @CommandLine.Option(names = {"--member", "-m"}, descriptionKey = "scm.group.create.member")
+  @CommandLine.Option(names = {"--member", "-m"}, descriptionKey = "scm.group.modify.member")
   private String[] members;
 
-  @CommandLine.Option(names = {"--external", "-e"}, descriptionKey = "scm.group.create.external")
+  @CommandLine.Option(names = {"--external", "-e"}, descriptionKey = "scm.group.modify.external")
   private boolean external;
 
   @Inject
