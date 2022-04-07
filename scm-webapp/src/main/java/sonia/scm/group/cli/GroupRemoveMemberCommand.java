@@ -63,11 +63,12 @@ class GroupRemoveMemberCommand implements Runnable {
     Group existingGroup = manager.get(name);
     if (existingGroup == null) {
       templateRenderer.renderNotFoundError();
+    } else {
+      Arrays.stream(members).forEach(existingGroup::remove);
+      manager.modify(existingGroup);
+      Group modifiedGroup = manager.get(name);
+      templateRenderer.render(modifiedGroup);
     }
-    Arrays.stream(members).forEach(existingGroup::remove);
-    manager.modify(existingGroup);
-    Group modifiedGroup = manager.get(name);
-    templateRenderer.render(modifiedGroup);
   }
 
   @VisibleForTesting

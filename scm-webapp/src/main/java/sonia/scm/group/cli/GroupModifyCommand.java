@@ -71,13 +71,14 @@ class GroupModifyCommand implements Runnable {
     Group existingGroup = manager.get(name);
     if (existingGroup == null) {
       templateRenderer.renderNotFoundError();
+    } else {
+      existingGroup.setDescription(description);
+      existingGroup.setExternal(external);
+      existingGroup.setMembers(asList(members));
+      manager.modify(existingGroup);
+      Group modifiedGroup = manager.get(name);
+      templateRenderer.render(modifiedGroup);
     }
-    existingGroup.setDescription(description);
-    existingGroup.setExternal(external);
-    existingGroup.setMembers(asList(members));
-    manager.modify(existingGroup);
-    Group modifiedGroup = manager.get(name);
-    templateRenderer.render(modifiedGroup);
   }
 
   @VisibleForTesting
