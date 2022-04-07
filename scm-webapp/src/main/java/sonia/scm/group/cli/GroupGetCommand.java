@@ -31,6 +31,8 @@ import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
 import sonia.scm.repository.cli.GroupCommand;
 
+import javax.inject.Inject;
+
 @ParentCommand(GroupCommand.class)
 @CommandLine.Command(name = "get")
 public class GroupGetCommand implements Runnable{
@@ -42,6 +44,7 @@ public class GroupGetCommand implements Runnable{
   private final GroupTemplateRenderer templateRenderer;
   private final GroupManager manager;
 
+  @Inject
   public GroupGetCommand(GroupTemplateRenderer templateRenderer, GroupManager manager) {
     this.templateRenderer = templateRenderer;
     this.manager = manager;
