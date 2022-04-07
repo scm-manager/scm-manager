@@ -24,11 +24,13 @@
 
 package sonia.scm.group.cli;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.cli.CliExitException;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
 
@@ -80,7 +82,10 @@ class GroupGetCommandTest {
   void shouldFailForNotExistingGroup() {
     command.setName("hog");
 
-    command.run();
+    Assertions.assertThrows(
+      CliExitException.class,
+      () -> command.run()
+    );
 
     assertThat(testRenderer.getStdOut())
       .isEmpty();

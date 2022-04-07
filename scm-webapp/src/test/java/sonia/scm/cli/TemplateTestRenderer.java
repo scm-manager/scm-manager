@@ -109,8 +109,9 @@ public class TemplateTestRenderer {
   }
 
   public CommandLine.Model.CommandSpec getMockedSpeck() {
+    ResourceBundle resourceBundle = getResourceBundle();
     CommandLine.Model.CommandSpec mock = mock(CommandLine.Model.CommandSpec.class);
-    lenient().when(mock.resourceBundle()).thenReturn(getResourceBundle());
+    lenient().when(mock.resourceBundle()).thenReturn(resourceBundle);
     return mock;
   }
 }
