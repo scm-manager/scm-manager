@@ -1,0 +1,2 @@
+- type: fixed
+  description: Handling of illegal lfs pointers ([#1994](https://github.com/scm-manager/scm-manager/pull/1994))
