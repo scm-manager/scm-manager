@@ -27,6 +27,7 @@ import { NavLink } from "../navigation";
 import { Route } from "react-router-dom";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { Repository, Links, Link } from "@scm-manager/ui-types";
+import { urls } from "@scm-manager/ui-api";
 
 type GlobalRouteProps = {
   url: string;
@@ -49,7 +50,7 @@ class ConfigurationBinder {
 
   route(path: string, Component: any) {
     return (
-      <Route path={path} exact>
+      <Route path={urls.escapeUrlForRoute(path)} exact>
         {Component}
       </Route>
     );
