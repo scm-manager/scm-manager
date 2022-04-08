@@ -3131,6 +3131,18 @@
   dependencies:
     prettier "^1.19.1"
 
+"@scm-manager/refractor-flatten@^1.0.0":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@scm-manager/refractor-flatten/-/refractor-flatten-1.0.1.tgz#2879aaccf8abc2d7d701f337695272c76a36fb19"
+  integrity sha512-94AgVivhYpIx3EGvUUrZfcdM9poJvKJjlpIzimkW1/2rvYV7RqYQBx+pHs72xJRJc7hEyNeJ4hzd7S1P9fMDDw==
+
+"@scm-manager/refractor-group-by-lines@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@scm-manager/refractor-group-by-lines/-/refractor-group-by-lines-1.0.1.tgz#4e4a1195801b3f2cf1f5377def6185716a5baff8"
+  integrity sha512-LwUyC4b9JMKOpb505pJcTndt3VzNbxfCYSxS8JpnSnkraShimhxl8PGnCD0aA4CL4aPhM2rAI8YREHJKRlcc1g==
+  dependencies:
+    "@scm-manager/refractor-flatten" "^1.0.0"
+
 "@scm-manager/remark-preset-lint@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@scm-manager/remark-preset-lint/-/remark-preset-lint-1.0.0.tgz#57cc148d681de9b10d538fb2e4aa5d888a290c14"
@@ -4429,18 +4441,6 @@
     regenerator-runtime "^0.13.7"
     resolve-from "^5.0.0"
     store2 "^2.12.0"
-
-"@suin/refractor-flatten@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@suin/refractor-flatten/-/refractor-flatten-1.0.0.tgz#17341ea563f58ffd34e55410e3e30c100d6a94cb"
-  integrity sha512-cliowxHoxwM6mM2uXHJvAH8qsqPb85vwrKmmbL9Tenq60lxaFDrJG0IZ3+tC1wxC6DkbtL83d3VDO/8/mD3dBQ==
-
-"@suin/refractor-group-by-lines@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@suin/refractor-group-by-lines/-/refractor-group-by-lines-1.0.0.tgz#687151e0b65118eaf1f0e31cb7af236cebba57cc"
-  integrity sha512-YZqpCR6C9JQDLODlNMtRKDrUk8uKr4n/Mck9+acG5F1lkVB72wxKYW3HreOFshbmt+EuhBiVN8tBy2fys9pyXg==
-  dependencies:
-    "@suin/refractor-flatten" "^1.0.0"
 
 "@testing-library/dom@^8.3.0":
   version "8.13.0"
@@ -6131,11 +6131,6 @@ axobject-query@^2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/axobject-query/-/axobject-query-2.2.0.tgz#943d47e10c0b704aa42275e20edf3722648989be"
   integrity sha512-Td525n+iPOOyUQIeBfcASuG6uJsDOITl7Mds5gFyerkWiX7qhUTdYUBlSgNMyVqtSJqwpt1kXGLdUt6SykLMRA==
-
-babel-core@7.0.0-bridge.0:
-  version "7.0.0-bridge.0"
-  resolved "https://registry.yarnpkg.com/babel-core/-/babel-core-7.0.0-bridge.0.tgz#95a492ddd90f9b4e9a4a1da14eb335b87b634ece"
-  integrity sha512-poPX9mZH/5CSanm50Q+1toVci6pv5KSRv/5TWCwtzQS5XEwn40BcCrgIeMFWP9CKKIniKXNxoIOnOq4VVlGXhg==
 
 babel-eslint@^10.0.3:
   version "10.1.0"
@@ -10529,9 +10524,10 @@ gitconfiglocal@^1.0.0:
   dependencies:
     ini "^1.3.2"
 
-gitdiff-parser@^0.1.2, "gitdiff-parser@https://github.com/scm-manager/gitdiff-parser#420d6cfa17a6a8f9bf1a517a2c629dcb332dbe13":
-  version "0.2.2"
-  resolved "https://github.com/scm-manager/gitdiff-parser#420d6cfa17a6a8f9bf1a517a2c629dcb332dbe13"
+gitdiff-parser@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/gitdiff-parser/-/gitdiff-parser-0.1.2.tgz#26a256e05e9c2d5016b512a96c1dacb40862b92a"
+  integrity sha512-glDM6E1AwLYYTOPyI0CqamNEUSuwwAkmwULWpE2sHMpMZNzGJwErt7+eV+yIZcsbDza0pVSlwlBHFWbTf2Wu7A==
 
 github-slugger@^1.0.0:
   version "1.4.0"

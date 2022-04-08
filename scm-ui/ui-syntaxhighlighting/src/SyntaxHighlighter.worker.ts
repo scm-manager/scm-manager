@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+import groupByLines from "@scm-manager/refractor-group-by-lines";
 import type { RefractorElement, Text } from "refractor";
 import createRefractor, { RefractorAdapter } from "./refractorAdapter";
 
@@ -86,9 +87,9 @@ function doHighlighting({ id, payload }: HighlightingMessage) {
   const highlightContent = (worker: Worker) => {
     try {
       const tree = refractor.highlight(value, language);
-
+      const lines = groupByLines(tree.children);
       if (nodeLimit > 0) {
-        const count = countNodes(tree.children);
+        const count = countNodes(lines);
         if (count > nodeLimit) {
           const payload = {
             success: false,
@@ -98,7 +99,7 @@ function doHighlighting({ id, payload }: HighlightingMessage) {
         } else {
           const payload = {
             success: true,
-            tree,
+            tree: lines,
             count,
             nodeLimit,
           };

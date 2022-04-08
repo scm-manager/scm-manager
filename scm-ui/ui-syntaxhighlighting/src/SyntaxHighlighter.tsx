@@ -39,9 +39,9 @@ export type Props = {
   lineWrapper?: LineWrapperType;
 };
 
-function mapWithDepth(depth: number) {
+function mapWithDepth(depth: number, lineWrapper?: LineWrapperType) {
   return function mapChildrenWithDepth(child: RefractorNode, i: number) {
-    return mapChild(child, i, depth);
+    return mapChild(child, i, depth, lineWrapper);
   };
 }
 
@@ -49,12 +49,23 @@ function isRefractorElement(node: RefractorNode): node is RefractorElement {
   return (node as RefractorElement).tagName !== undefined;
 }
 
-function mapChild(childNode: RefractorNode, i: number, depth: number): ReactNode {
+function mapChild(childNode: RefractorNode, i: number, depth: number, LineWrapper?: LineWrapperType): ReactNode {
   if (isRefractorElement(childNode)) {
     const child = childNode as Element;
     const className =
       child.properties &&
       (Array.isArray(child.properties.className) ? child.properties.className.join(" ") : child.properties.className);
+
+    if (LineWrapper && child.properties) {
+      const line = child.properties["data-line-number"];
+      if (line) {
+        return (
+          <LineWrapper key={`line-${depth}-${i}`} lineNumber={Number(line)}>
+            {childNode.children && childNode.children.map(mapWithDepth(depth + 1, LineWrapper))}
+          </LineWrapper>
+        );
+      }
+    }
 
     return React.createElement(
       child.tagName,
@@ -93,7 +104,7 @@ const SyntaxHighlighter = ({ value, lineWrapper, language = "text" }: Props) => 
 
   return (
     <pre>
-      <code className={`language-${language}`}>{tree?.children.map(mapWithDepth(0))}</code>
+      <code className={`language-${language}`}>{tree?.map(mapWithDepth(0, lineWrapper))}</code>
     </pre>
   );
 };
