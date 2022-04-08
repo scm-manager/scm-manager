@@ -108,3 +108,7 @@ export function matchedUrl(props: any) {
   const match = props.match;
   return matchedUrlFromMatch(match);
 }
+
+export function escapeUrlForRoute(url: string) {
+  return url.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+}

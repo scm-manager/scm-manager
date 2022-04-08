@@ -52,7 +52,7 @@ const TagRoot: FC<Props> = ({ repository, baseUrl }) => {
 
   const url = urls.matchedUrlFromMatch(match);
 
-  const escapedUrl = url.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+  const escapedUrl = urls.escapeUrlForRoute(url);
 
   return (
     <Switch>

@@ -65,7 +65,7 @@ const SingleGroup: FC = () => {
     url
   };
 
-  const escapedUrl = url.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+  const escapedUrl = urls.escapeUrlForRoute(url);
 
   return (
     <StateMenuContextProvider>

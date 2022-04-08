@@ -61,7 +61,7 @@ const BranchRoot: FC<Props> = ({ repository }) => {
     return null;
   }
 
-  const escapedUrl = url.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+  const escapedUrl = urls.escapeUrlForRoute(url);
 
   return (
     <Switch>
