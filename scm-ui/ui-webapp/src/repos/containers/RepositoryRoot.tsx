@@ -229,6 +229,8 @@ const RepositoryRoot = () => {
     />
   );
 
+  const escapedUrl = urls.escapeUrlForRoute(url);
+
   return (
     <StateMenuContextProvider>
       <Page
@@ -250,49 +252,52 @@ const RepositoryRoot = () => {
               <Redirect exact from={match.url} to={redirectedUrl} />
 
               {/* redirect pre 2.0.0-rc2 links */}
-              <Redirect from={`${url}/changeset/:id`} to={`${url}/code/changeset/:id`} />
-              <Redirect exact from={`${url}/sources`} to={`${url}/code/sources`} />
-              <Redirect from={`${url}/sources/:revision/:path*`} to={`${url}/code/sources/:revision/:path*`} />
-              <Redirect exact from={`${url}/changesets`} to={`${url}/code/changesets`} />
-              <Redirect from={`${url}/branch/:branch/changesets`} to={`${url}/code/branch/:branch/changesets/`} />
+              <Redirect from={`${escapedUrl}/changeset/:id`} to={`${url}/code/changeset/:id`} />
+              <Redirect exact from={`${escapedUrl}/sources`} to={`${url}/code/sources`} />
+              <Redirect from={`${escapedUrl}/sources/:revision/:path*`} to={`${url}/code/sources/:revision/:path*`} />
+              <Redirect exact from={`${escapedUrl}/changesets`} to={`${url}/code/changesets`} />
+              <Redirect
+                from={`${escapedUrl}/branch/:branch/changesets`}
+                to={`${url}/code/branch/:branch/changesets/`}
+              />
 
-              <Route path={`${url}/info`} exact>
+              <Route path={`${escapedUrl}/info`} exact>
                 <RepositoryDetails repository={repository} />
               </Route>
-              <Route path={`${url}/settings/general`}>
+              <Route path={`${escapedUrl}/settings/general`}>
                 <EditRepo repository={repository} />
               </Route>
-              <Route path={`${url}/settings/permissions`}>
+              <Route path={`${escapedUrl}/settings/permissions`}>
                 <Permissions namespaceOrRepository={repository} />
               </Route>
-              <Route exact path={`${url}/code/changeset/:id`}>
+              <Route exact path={`${escapedUrl}/code/changeset/:id`}>
                 <ChangesetView repository={repository} fileControlFactoryFactory={fileControlFactoryFactory} />
               </Route>
-              <Route path={`${url}/code/sourceext/:extension`} exact={true}>
+              <Route path={`${escapedUrl}/code/sourceext/:extension`} exact={true}>
                 <SourceExtensions repository={repository} />
               </Route>
-              <Route path={`${url}/code/sourceext/:extension/:revision/:path*`}>
+              <Route path={`${escapedUrl}/code/sourceext/:extension/:revision/:path*`}>
                 <SourceExtensions repository={repository} baseUrl={`${url}/code/sources`} />
               </Route>
-              <Route path={`${url}/code`}>
+              <Route path={`${escapedUrl}/code`}>
                 <CodeOverview baseUrl={`${url}/code`} repository={repository} />
               </Route>
-              <Route path={`${url}/branch/:branch`}>
+              <Route path={`${escapedUrl}/branch/:branch`}>
                 <BranchRoot repository={repository} />
               </Route>
-              <Route path={`${url}/branches`} exact={true}>
+              <Route path={`${escapedUrl}/branches`} exact={true}>
                 <BranchesOverview repository={repository} baseUrl={`${url}/branch`} />
               </Route>
-              <Route path={`${url}/branches/create`}>
+              <Route path={`${escapedUrl}/branches/create`}>
                 <CreateBranch repository={repository} />
               </Route>
-              <Route path={`${url}/tag/:tag`}>
+              <Route path={`${escapedUrl}/tag/:tag`}>
                 <TagRoot repository={repository} baseUrl={`${url}/tag`} />
               </Route>
-              <Route path={`${url}/tags`} exact={true}>
+              <Route path={`${escapedUrl}/tags`} exact={true}>
                 <TagsOverview repository={repository} baseUrl={`${url}/tag`} />
               </Route>
-              <Route path={`${url}/compare/:sourceType/:sourceName`}>
+              <Route path={`${escapedUrl}/compare/:sourceType/:sourceName`}>
                 <CompareRoot repository={repository} baseUrl={`${url}/compare`} />
               </Route>
               <ExtensionPoint<extensionPoints.RepositoryRoute>
@@ -330,7 +335,7 @@ const RepositoryRoot = () => {
                 linkName="tags"
                 to={`${url}/tags/`}
                 icon="fas fa-tags"
-                label={t("repositoryRoot.menu.tagsNavLink")}
+                label={t("repositoryRoot.menu.tagsNavL" + "ink")}
                 activeWhenMatch={matchesTags}
                 activeOnlyWhenExact={false}
                 title={t("repositoryRoot.menu.tagsNavLink")}
