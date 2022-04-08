@@ -52,10 +52,12 @@ const TagRoot: FC<Props> = ({ repository, baseUrl }) => {
 
   const url = urls.matchedUrlFromMatch(match);
 
+  const escapedUrl = url.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+
   return (
     <Switch>
-      <Redirect exact from={url} to={`${url}/info`} />
-      <Route path={`${url}/info`}>
+      <Redirect exact from={escapedUrl} to={`${url}/info`} />
+      <Route path={`${escapedUrl}/info`}>
         <TagView repository={repository} tag={tag} />
       </Route>
     </Switch>

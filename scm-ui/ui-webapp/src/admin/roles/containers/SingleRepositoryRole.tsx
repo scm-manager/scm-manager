@@ -53,13 +53,15 @@ const SingleRepositoryRole: FC = () => {
     url
   };
 
+  const escapedUrl = url.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+
   return (
     <>
       <Title title={t("repositoryRole.title")} />
-      <Route path={`${url}/info`}>
+      <Route path={`${escapedUrl}/info`}>
         <PermissionRoleDetail role={role} url={url} />
       </Route>
-      <Route path={`${url}/edit`} exact>
+      <Route path={`${escapedUrl}/edit`} exact>
         <EditRepositoryRole role={role} />
       </Route>
       <ExtensionPoint<extensionPoints.RolesRoute> name="roles.route" props={extensionProps} renderAll={true} />

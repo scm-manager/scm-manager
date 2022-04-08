@@ -65,21 +65,23 @@ const SingleGroup: FC = () => {
     url
   };
 
+  const escapedUrl = url.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+
   return (
     <StateMenuContextProvider>
       <Page title={group.name}>
         <CustomQueryFlexWrappedColumns>
           <PrimaryContentColumn>
-            <Route path={url} exact>
-              <Details group={group} />
+            <Route path={escapedUrl} exact>
+              <Details group={group}/>
             </Route>
-            <Route path={`${url}/settings/general`} exact>
-              <EditGroup group={group} />
+            <Route path={`${escapedUrl}/settings/general`} exact>
+              <EditGroup group={group}/>
             </Route>
-            <Route path={`${url}/settings/permissions`} exact>
-              <SetGroupPermissions group={group} />
+            <Route path={`${escapedUrl}/settings/permissions`} exact>
+              <SetGroupPermissions group={group}/>
             </Route>
-            <ExtensionPoint<extensionPoints.GroupRoute> name="group.route" props={extensionProps} renderAll={true} />
+            <ExtensionPoint<extensionPoints.GroupRoute> name="group.route" props={extensionProps} renderAll={true}/>
           </PrimaryContentColumn>
           <SecondaryNavigationColumn>
             <SecondaryNavigation label={t("singleGroup.menu.navigationLabel")}>
@@ -99,8 +101,8 @@ const SingleGroup: FC = () => {
                 label={t("singleGroup.menu.settingsNavLink")}
                 title={t("singleGroup.menu.settingsNavLink")}
               >
-                <EditGroupNavLink group={group} editUrl={`${url}/settings/general`} />
-                <SetPermissionsNavLink group={group} permissionsUrl={`${url}/settings/permissions`} />
+                <EditGroupNavLink group={group} editUrl={`${url}/settings/general`}/>
+                <SetPermissionsNavLink group={group} permissionsUrl={`${url}/settings/permissions`}/>
                 <ExtensionPoint<extensionPoints.GroupSetting>
                   name="group.setting"
                   props={extensionProps}
