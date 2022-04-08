@@ -24,7 +24,7 @@
     "@scm-manager/eslint-config": "^2.13.0",
     "@scm-manager/jest-preset": "^2.13.0",
     "@scm-manager/prettier-config": "^2.10.1",
-    "@scm-manager/tsconfig": "^2.12.0",
+    "@scm-manager/tsconfig": "^2.13.0",
     "@scm-manager/ui-tests": "^2.32.3-SNAPSHOT",
     "@storybook/addon-actions": "^6.4.20",
     "@storybook/addon-storyshots": "^6.4.20",

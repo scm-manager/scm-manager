@@ -24,7 +24,7 @@
     "@scm-manager/jest-preset": "^2.13.0",
     "@scm-manager/plugin-scripts": "^1.2.2",
     "@scm-manager/prettier-config": "^2.10.1",
-    "@scm-manager/tsconfig": "^2.12.0",
+    "@scm-manager/tsconfig": "^2.13.0",
     "@scm-manager/ui-scripts": "^2.32.3-SNAPSHOT",
     "@scm-manager/ui-tests": "^2.32.3-SNAPSHOT",
     "@scm-manager/ui-types": "^2.32.3-SNAPSHOT",
