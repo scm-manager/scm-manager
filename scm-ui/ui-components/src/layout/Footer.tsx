@@ -114,6 +114,7 @@ const Footer: FC<Props> = ({ me, version, links }) => {
           ) : null}
           <FooterSection title={<TitleWithIcon title={t("footer.information.title")} icon="info-circle" />}>
             <ExternalNavLink to="https://scm-manager.org/" label={`SCM-Manager ${version}`} />
+            <ExternalNavLink to="https://scm-manager.org/cli/" label="CLI Client" />
             <ExtensionPoint name="footer.information" props={extensionProps} renderAll={true} />
           </FooterSection>
           <FooterSection title={<TitleWithIcon title={t("footer.support.title")} icon="life-ring" />}>

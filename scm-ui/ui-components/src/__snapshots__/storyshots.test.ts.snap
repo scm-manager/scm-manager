@@ -1520,6 +1520,16 @@ exports[`Storyshots Footer Default 1`] = `
               SCM-Manager 2.0.0
             </a>
           </li>
+          <li>
+            <a
+              className=""
+              href="https://scm-manager.org/cli/"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              CLI Client
+            </a>
+          </li>
         </ul>
       </section>
       <section
@@ -1644,6 +1654,16 @@ exports[`Storyshots Footer Full 1`] = `
               target="_blank"
             >
               SCM-Manager 2.0.0
+            </a>
+          </li>
+          <li>
+            <a
+              className=""
+              href="https://scm-manager.org/cli/"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              CLI Client
             </a>
           </li>
           <li>
@@ -1793,6 +1813,16 @@ exports[`Storyshots Footer With Avatar 1`] = `
               SCM-Manager 2.0.0
             </a>
           </li>
+          <li>
+            <a
+              className=""
+              href="https://scm-manager.org/cli/"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              CLI Client
+            </a>
+          </li>
         </ul>
       </section>
       <section
@@ -1909,6 +1939,16 @@ exports[`Storyshots Footer With Plugin Links 1`] = `
               target="_blank"
             >
               SCM-Manager 2.0.0
+            </a>
+          </li>
+          <li>
+            <a
+              className=""
+              href="https://scm-manager.org/cli/"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              CLI Client
             </a>
           </li>
           <li>
