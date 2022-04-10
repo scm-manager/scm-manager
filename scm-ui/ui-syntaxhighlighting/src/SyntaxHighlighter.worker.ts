@@ -23,33 +23,18 @@
  */
 
 import groupByLines from "@scm-manager/refractor-group-by-lines";
-import type { RefractorElement, Text } from "refractor";
+import type { RefractorElement } from "refractor";
 import createRefractor, { RefractorAdapter } from "./refractorAdapter";
-
-type RefractorNode = RefractorElement | Text;
-
-type Theme = { [key: string]: string };
-
-type LoadThemeMessage = {
-  theme: Theme;
-};
-
-type HighlightingMessage = {
-  id: string;
-  payload: {
-    language: string;
-    value: string;
-    nodeLimit: number;
-  };
-};
-
-type Message = {
-  data: LoadThemeMessage | HighlightingMessage;
-};
-
-const isLoadThemeMessage = (message: LoadThemeMessage | HighlightingMessage): message is LoadThemeMessage => {
-  return !!(message as LoadThemeMessage).theme;
-};
+import type {
+  FailureResponse,
+  HighlightingRequest,
+  LoadThemeRequest,
+  RefractorNode,
+  Request,
+  RequestMessage,
+  SuccessResponse,
+  Theme,
+} from "./types";
 
 // the WorkerGlobalScope is assigned to self
 // see https://developer.mozilla.org/en-US/docs/Web/API/WorkerGlobalScope/self
@@ -57,7 +42,7 @@ declare const self: Worker;
 
 let refractor: RefractorAdapter;
 
-function initRefractor(theme: { [key: string]: string }) {
+function initRefractor(theme: Theme) {
   refractor = createRefractor(theme);
 }
 
@@ -65,53 +50,42 @@ function isRefractorElement(node: RefractorNode): node is RefractorElement {
   return (node as RefractorElement).tagName !== undefined;
 }
 
-function countChildren(node: RefractorNode) {
-  if (isRefractorElement(node)) {
-    let count = node.children.length;
-    node.children.forEach((child) => (count += countChildren(child)));
-    return count;
-  } else {
-    return 1;
-  }
-}
+const countChildren = (node: RefractorNode) => (isRefractorElement(node) ? countNodes(node.children) : 1);
+const countNodes = (nodes: RefractorNode[]): number => nodes.reduce((count, node) => count + countChildren(node), 0);
 
-function countNodes(nodes: RefractorNode[]) {
-  let count = 0;
-  nodes.forEach((node) => (count += countChildren(node)));
-  return count;
-}
-
-function doHighlighting({ id, payload }: HighlightingMessage) {
-  const { value, language, nodeLimit } = payload;
-
+function doHighlighting({ id, payload: { value, language, nodeLimit, groupByLine } }: HighlightingRequest) {
   const highlightContent = (worker: Worker) => {
     try {
-      const tree = refractor.highlight(value, language);
-      const lines = groupByLines(tree.children);
+      // console.time("highlight");
+      let tree = refractor.highlight(value, language).children;
+      // console.timeEnd("highlight");
+      if (groupByLine) {
+        // console.time("groupByLines");
+        tree = groupByLines(tree);
+        // console.timeEnd("groupByLines");
+      }
+
       if (nodeLimit > 0) {
-        const count = countNodes(lines);
+        // console.time("countNodes");
+        const count = countNodes(tree);
+        // console.timeEnd("countNodes");
         if (count > nodeLimit) {
-          const payload = {
-            success: false,
+          const payload: FailureResponse["payload"] = {
             reason: `node limit of ${nodeLimit} reached. Total nodes ${count}.`,
           };
-          worker.postMessage({ id, payload });
+          worker.postMessage({ id, type: "failure", payload } as FailureResponse);
         } else {
-          const payload = {
-            success: true,
-            tree: lines,
-            count,
-            nodeLimit,
+          const payload: SuccessResponse["payload"] = {
+            tree,
           };
-          worker.postMessage({ id, payload });
+          worker.postMessage({ id, type: "success", payload } as SuccessResponse);
         }
       }
     } catch (ex) {
-      const payload = {
-        success: false,
-        reason: ex,
+      const payload: FailureResponse["payload"] = {
+        reason: String(ex),
       };
-      worker.postMessage({ id, payload });
+      worker.postMessage({ id, type: "failure", payload } as FailureResponse);
     }
   };
 
@@ -120,9 +94,13 @@ function doHighlighting({ id, payload }: HighlightingMessage) {
   }
 }
 
-self.addEventListener("message", ({ data }: Message) => {
+const isLoadThemeMessage = (message: Request): message is LoadThemeRequest => {
+  return message.type === "theme";
+};
+
+self.addEventListener("message", ({ data }: RequestMessage) => {
   if (isLoadThemeMessage(data)) {
-    initRefractor(data.theme);
+    initRefractor(data.payload);
   } else {
     doHighlighting(data);
   }

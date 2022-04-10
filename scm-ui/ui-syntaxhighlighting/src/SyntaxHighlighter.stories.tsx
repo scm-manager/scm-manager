@@ -94,5 +94,5 @@ export const LargeCss: ComponentStory<typeof SyntaxHighlighter> = () => {
     return <p>Loading ...</p>;
   }
 
-  return <SyntaxHighlighter language="css" value={content} />;
+  return <SyntaxHighlighter language="css" value={content} lineWrapper={LineWrapper} />;
 };

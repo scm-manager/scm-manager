@@ -22,16 +22,16 @@
  * SOFTWARE.
  */
 
-import React, { ComponentType, PropsWithChildren, ReactNode, useMemo } from "react";
+import React, { ComponentType, ReactNode, useMemo } from "react";
 import useSyntaxHighlighting from "./useSyntaxHighlighting";
-import { RefractorElement, Text } from "refractor";
-import { Element } from "hast";
+import type { RefractorElement } from "refractor";
+import type { Element } from "hast";
+import type { RefractorNode } from "./types";
 
 // marker
 // line wrapper
 
-type RefractorNode = RefractorElement | Text;
-type LineWrapperType = ComponentType<PropsWithChildren<{ lineNumber: number }>>;
+type LineWrapperType = ComponentType<{ lineNumber: number }>;
 
 export type Props = {
   value: string;
@@ -45,9 +45,7 @@ function mapWithDepth(depth: number, lineWrapper?: LineWrapperType) {
   };
 }
 
-function isRefractorElement(node: RefractorNode): node is RefractorElement {
-  return (node as RefractorElement).tagName !== undefined;
-}
+const isRefractorElement = (node: RefractorNode): node is RefractorElement => "tagName" in node;
 
 function mapChild(childNode: RefractorNode, i: number, depth: number, LineWrapper?: LineWrapperType): ReactNode {
   if (isRefractorElement(childNode)) {
@@ -90,7 +88,7 @@ const createFallbackContent = (value: string, LineWrapper?: LineWrapperType): Re
 
 const SyntaxHighlighter = ({ value, lineWrapper, language = "text" }: Props) => {
   // TODO error
-  const { isLoading, tree } = useSyntaxHighlighting(value, language, 1000);
+  const { isLoading, tree } = useSyntaxHighlighting({ value, language, nodeLimit: 1000, groupByLine: !!lineWrapper });
   const fallbackContent = useMemo(() => createFallbackContent(value, lineWrapper), [value, lineWrapper]);
 
   if (isLoading || !tree) {

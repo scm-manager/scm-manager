@@ -27,7 +27,14 @@ import { useEffect, useRef, useState } from "react";
 // @ts-ignore TODO
 import theme from "./syntax-highlighting.module.css";
 import { nanoid } from "nanoid";
-import type { RefractorRoot } from "refractor";
+import {
+  HighlightingRequest,
+  LoadThemeRequest,
+  RefractorNode,
+  Response,
+  ResponseMessage,
+  SuccessResponse,
+} from "./types";
 
 // WebWorker which creates tokens for syntax highlighting
 // @ts-ignore
@@ -40,36 +47,23 @@ const worker = new Worker(
   }
 );
 
-worker.postMessage({ theme });
+worker.postMessage({ type: "theme", payload: theme } as LoadThemeRequest);
 
-type PayloadSuccess = {
-  success: true;
-  tree: any;
-  html: string;
+const isSuccess = (response: Response): response is SuccessResponse => {
+  return response.type === "success";
 };
 
-type PayloadFailure = {
-  success: false;
-  reason: string;
+export type UseSyntaxHighlightingOptions = {
+  value: string;
+  language: string;
+  nodeLimit: number;
+  groupByLine?: boolean;
 };
 
-type Payload = PayloadSuccess | PayloadFailure;
-
-const isSuccess = (payload: Payload): payload is PayloadSuccess => {
-  return payload.success;
-};
-
-type Message = {
-  data: {
-    id: string;
-    payload: Payload;
-  };
-};
-
-const useSyntaxHighlighting = (value: string, language: string, nodeLimit: number) => {
+const useSyntaxHighlighting = ({ value, language, nodeLimit, groupByLine = false }: UseSyntaxHighlightingOptions) => {
   const job = useRef(nanoid());
   const [isLoading, setIsLoading] = useState(true);
-  const [tree, setTree] = useState<RefractorRoot | undefined>(undefined);
+  const [tree, setTree] = useState<Array<RefractorNode> | undefined>(undefined);
   const [error, setError] = useState<string | undefined>(undefined);
 
   useEffect(() => {
@@ -77,18 +71,21 @@ const useSyntaxHighlighting = (value: string, language: string, nodeLimit: numbe
     setError(undefined);
     setTree(undefined);
 
+    const payload: HighlightingRequest["payload"] = {
+      value,
+      language,
+      nodeLimit,
+      groupByLine,
+    };
+
     worker.postMessage({
       id: job.current,
-      payload: {
-        value,
-        language,
-        nodeLimit,
-      },
-    });
+      payload,
+    } as HighlightingRequest);
 
-    const listener = ({ data }: Message) => {
+    const listener = ({ data }: ResponseMessage) => {
       if (data.id === job.current) {
-        if (isSuccess(data.payload)) {
+        if (isSuccess(data)) {
           setTree(data.payload.tree);
         } else {
           setError(data.payload.reason);
