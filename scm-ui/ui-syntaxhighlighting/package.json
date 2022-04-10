@@ -10,7 +10,6 @@
     "build-storybook": "build-storybook"
   },
   "dependencies": {
-    "@scm-manager/refractor-group-by-lines": "^1.0.1",
     "nanoid": "^3.3.2",
     "refractor": "^4.5.0"
   },

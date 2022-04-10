@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import groupByLines from "@scm-manager/refractor-group-by-lines";
+import groupByLines from "./groupByLines";
 import type { RefractorElement } from "refractor";
 import createRefractor, { RefractorAdapter } from "./refractorAdapter";
 import type {
@@ -61,8 +61,17 @@ function doHighlighting({ id, payload: { value, language, nodeLimit, groupByLine
       // console.timeEnd("highlight");
       if (groupByLine) {
         // console.time("groupByLines");
-        tree = groupByLines(tree);
-        // console.timeEnd("groupByLines");
+        try {
+          tree = groupByLines(tree, nodeLimit);
+        } catch (e) {
+          const payload: FailureResponse["payload"] = {
+            reason: e instanceof Error ? e.message : `node limit of ${nodeLimit} reached.`,
+          };
+          worker.postMessage({ id, type: "failure", payload } as FailureResponse);
+          return;
+        } finally {
+          // console.timeEnd("groupByLines");
+        }
       }
 
       if (nodeLimit > 0) {
