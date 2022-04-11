@@ -96,3 +96,21 @@ export const LargeCss: ComponentStory<typeof SyntaxHighlighter> = () => {
 
   return <SyntaxHighlighter language="css" value={content} lineWrapper={LineWrapper} />;
 };
+
+export const HugeCss: ComponentStory<typeof SyntaxHighlighter> = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [content, setContent] = useState<string>();
+  useEffect(() => {
+    setIsLoading(true);
+    fetch("/next.css")
+      .then((r) => r.text())
+      .then((text) => setContent(text))
+      .finally(() => setIsLoading(false));
+  }, []);
+
+  if (isLoading || !content) {
+    return <p>Loading ...</p>;
+  }
+
+  return <SyntaxHighlighter language="css" value={content} lineWrapper={LineWrapper} />;
+};
