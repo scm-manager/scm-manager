@@ -22,51 +22,58 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.cli;
+package sonia.scm.group.cli;
 
-import com.cronutils.utils.VisibleForTesting;
+import com.google.common.annotations.VisibleForTesting;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
-import sonia.scm.repository.NamespaceAndName;
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryManager;
+import sonia.scm.group.Group;
+import sonia.scm.group.GroupManager;
+import sonia.scm.repository.cli.GroupCommand;
 
 import javax.inject.Inject;
+import java.util.Arrays;
 
-@ParentCommand(value = RepositoryCommand.class)
-@CommandLine.Command(name = "get")
-class RepositoryGetCommand implements Runnable {
-
-  @CommandLine.Parameters(paramLabel = "namespace/name", index = "0")
-  private String repository;
+@ParentCommand(GroupCommand.class)
+@CommandLine.Command(name = "add-member", aliases = "add")
+class GroupAddMemberCommand implements Runnable {
 
   @CommandLine.Mixin
-  private final RepositoryTemplateRenderer templateRenderer;
-  private final RepositoryManager manager;
+  private final GroupTemplateRenderer templateRenderer;
+  private final GroupManager manager;
+
+  @CommandLine.Parameters(index = "0", arity = "1", descriptionKey = "scm.group.add-member.name")
+  private String name;
+  @CommandLine.Parameters(index = "1..", arity = "1..", descriptionKey = "scm.group.add-member.members")
+  private String[] members;
 
   @Inject
-  RepositoryGetCommand(RepositoryTemplateRenderer templateRenderer, RepositoryManager manager) {
+  GroupAddMemberCommand(GroupTemplateRenderer templateRenderer, GroupManager manager) {
     this.templateRenderer = templateRenderer;
     this.manager = manager;
   }
 
-  @VisibleForTesting
-  void setRepository(String repository) {
-    this.repository = repository;
-  }
-
   @Override
   public void run() {
-    String[] splitRepo = repository.split("/");
-    if (splitRepo.length == 2) {
-      Repository repo = manager.get(new NamespaceAndName(splitRepo[0], splitRepo[1]));
-      if (repo != null) {
-        templateRenderer.render(repo);
-      } else {
-        templateRenderer.renderNotFoundError();
-      }
+    Group existingGroup = manager.get(name);
+    if (existingGroup == null) {
+      templateRenderer.renderNotFoundError();
     } else {
-      templateRenderer.renderInvalidInputError();
+      Arrays.stream(members).forEach(existingGroup::add);
+      manager.modify(existingGroup);
+      Group modifiedGroup = manager.get(name);
+      templateRenderer.render(modifiedGroup);
     }
+  }
+
+  @SuppressWarnings("SameParameterValue")
+  @VisibleForTesting
+  void setName(String name) {
+    this.name = name;
+  }
+
+  @VisibleForTesting
+  void setMembers(String[] members) {
+    this.members = members;
   }
 }

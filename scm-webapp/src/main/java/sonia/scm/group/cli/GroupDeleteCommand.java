@@ -22,51 +22,59 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.cli;
+package sonia.scm.group.cli;
 
-import com.cronutils.utils.VisibleForTesting;
+import com.google.common.annotations.VisibleForTesting;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
-import sonia.scm.repository.NamespaceAndName;
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryManager;
+import sonia.scm.group.Group;
+import sonia.scm.group.GroupManager;
+import sonia.scm.repository.cli.GroupCommand;
 
 import javax.inject.Inject;
+import java.util.Collections;
 
-@ParentCommand(value = RepositoryCommand.class)
-@CommandLine.Command(name = "get")
-class RepositoryGetCommand implements Runnable {
+@CommandLine.Command(name = "delete", aliases = "rm")
+@ParentCommand(GroupCommand.class)
+class GroupDeleteCommand implements Runnable {
 
-  @CommandLine.Parameters(paramLabel = "namespace/name", index = "0")
-  private String repository;
+  private static final String PROMPT_TEMPLATE = "{{i18n.groupDeletePrompt}}";
+
+  @CommandLine.Parameters(descriptionKey = "scm.group.delete.group", paramLabel = "name")
+  private String name;
+
+  @CommandLine.Option(names = {"--yes", "-y"}, descriptionKey = "scm.group.delete.prompt")
+  private boolean shouldDelete;
 
   @CommandLine.Mixin
-  private final RepositoryTemplateRenderer templateRenderer;
-  private final RepositoryManager manager;
+  private final GroupTemplateRenderer templateRenderer;
+  private final GroupManager manager;
 
   @Inject
-  RepositoryGetCommand(RepositoryTemplateRenderer templateRenderer, RepositoryManager manager) {
+  GroupDeleteCommand(GroupTemplateRenderer templateRenderer, GroupManager manager) {
     this.templateRenderer = templateRenderer;
     this.manager = manager;
   }
 
-  @VisibleForTesting
-  void setRepository(String repository) {
-    this.repository = repository;
-  }
-
   @Override
   public void run() {
-    String[] splitRepo = repository.split("/");
-    if (splitRepo.length == 2) {
-      Repository repo = manager.get(new NamespaceAndName(splitRepo[0], splitRepo[1]));
-      if (repo != null) {
-        templateRenderer.render(repo);
-      } else {
-        templateRenderer.renderNotFoundError();
-      }
-    } else {
-      templateRenderer.renderInvalidInputError();
+    if (!shouldDelete) {
+      templateRenderer.renderToStderr(PROMPT_TEMPLATE, Collections.emptyMap());
+      return;
     }
+    Group group = manager.get(name);
+    if (group != null) {
+      manager.delete(group);
+    }
+  }
+
+  @VisibleForTesting
+  void setName(String name) {
+    this.name = name;
+  }
+
+  @VisibleForTesting
+  void setShouldDelete(boolean shouldDelete) {
+    this.shouldDelete = shouldDelete;
   }
 }

@@ -49,7 +49,12 @@ class CommandValidatorTest {
 
   @Test
   void shouldValidateCommand() {
-    ResourceBundle resourceBundle = ResourceBundle.getBundle("sonia.scm.cli.i18n", Locale.ENGLISH);
+    ResourceBundle resourceBundle = ResourceBundle.getBundle("sonia.scm.cli.i18n", Locale.ENGLISH, new ResourceBundle.Control() {
+      @Override
+      public Locale getFallbackLocale(String baseName, Locale locale) {
+        return Locale.ROOT;
+      }
+    });
     when(context.getLocale()).thenReturn(Locale.ENGLISH);
     CommandLine commandLine = new CommandLine(Command.class, new TestingCommandFactory());
     commandLine.setResourceBundle(resourceBundle);
@@ -63,7 +68,12 @@ class CommandValidatorTest {
 
   @Test
   void shouldValidateCommandWithGermanLocale() {
-    ResourceBundle resourceBundle = ResourceBundle.getBundle("sonia.scm.cli.i18n", Locale.GERMAN);
+    ResourceBundle resourceBundle = ResourceBundle.getBundle("sonia.scm.cli.i18n", Locale.GERMAN, new ResourceBundle.Control() {
+      @Override
+      public Locale getFallbackLocale(String baseName, Locale locale) {
+        return Locale.ROOT;
+      }
+    });
     when(context.getLocale()).thenReturn(Locale.GERMAN);
     CommandLine commandLine = new CommandLine(Command.class, new TestingCommandFactory());
     commandLine.setResourceBundle(resourceBundle);
@@ -79,7 +89,7 @@ class CommandValidatorTest {
   public static class Command implements Runnable {
 
     @CommandLine.Mixin
-    private CommandValidator commandValidator;
+    private final CommandValidator commandValidator;
 
     @Email
     @CommandLine.Option(names = "--mail")

@@ -22,51 +22,46 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.cli;
+package sonia.scm.user.cli;
 
-import com.cronutils.utils.VisibleForTesting;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
-import sonia.scm.repository.NamespaceAndName;
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryManager;
+import sonia.scm.user.User;
+import sonia.scm.user.UserManager;
 
 import javax.inject.Inject;
 
-@ParentCommand(value = RepositoryCommand.class)
-@CommandLine.Command(name = "get")
-class RepositoryGetCommand implements Runnable {
-
-  @CommandLine.Parameters(paramLabel = "namespace/name", index = "0")
-  private String repository;
+@ParentCommand(value = UserCommand.class)
+@CommandLine.Command(name = "deactivate")
+class UserDeactivateCommand implements Runnable {
 
   @CommandLine.Mixin
-  private final RepositoryTemplateRenderer templateRenderer;
-  private final RepositoryManager manager;
+  private final UserTemplateRenderer templateRenderer;
+  private final UserManager manager;
+
+  @CommandLine.Parameters(index = "0", paramLabel = "<username>", descriptionKey = "scm.user.username")
+  private String username;
 
   @Inject
-  RepositoryGetCommand(RepositoryTemplateRenderer templateRenderer, RepositoryManager manager) {
+  UserDeactivateCommand(UserTemplateRenderer templateRenderer, UserManager manager) {
     this.templateRenderer = templateRenderer;
     this.manager = manager;
   }
 
-  @VisibleForTesting
-  void setRepository(String repository) {
-    this.repository = repository;
-  }
-
   @Override
   public void run() {
-    String[] splitRepo = repository.split("/");
-    if (splitRepo.length == 2) {
-      Repository repo = manager.get(new NamespaceAndName(splitRepo[0], splitRepo[1]));
-      if (repo != null) {
-        templateRenderer.render(repo);
+    User user = manager.get(username);
+
+    if (user != null) {
+      if (user.isExternal()) {
+        templateRenderer.renderExternalDeactivateError();
       } else {
-        templateRenderer.renderNotFoundError();
+        user.setActive(false);
+        manager.modify(user);
+        templateRenderer.render(user);
       }
     } else {
-      templateRenderer.renderInvalidInputError();
+      templateRenderer.renderNotFoundError();
     }
   }
 }

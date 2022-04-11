@@ -22,51 +22,56 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.cli;
+package sonia.scm.user.cli;
 
-import com.cronutils.utils.VisibleForTesting;
+import com.google.common.annotations.VisibleForTesting;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
-import sonia.scm.repository.NamespaceAndName;
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryManager;
+import sonia.scm.user.User;
+import sonia.scm.user.UserManager;
 
 import javax.inject.Inject;
+import java.util.Collections;
 
-@ParentCommand(value = RepositoryCommand.class)
-@CommandLine.Command(name = "get")
-class RepositoryGetCommand implements Runnable {
+@CommandLine.Command(name = "delete", aliases = "rm")
+@ParentCommand(UserCommand.class)
+class UserDeleteCommand implements Runnable {
 
-  @CommandLine.Parameters(paramLabel = "namespace/name", index = "0")
-  private String repository;
+  private static final String CONFIRM_TEMPLATE = "{{i18n.scmUserDeleteConfirm}}";
+  private static final String SUCCESS_TEMPLATE = "{{i18n.scmUserDeleteSuccess}}";
+
+  @CommandLine.Parameters(index = "0", paramLabel = "<username>", descriptionKey = "scm.user.username")
+  private String username;
+
+  @CommandLine.Option(names = {"--yes", "-y"}, descriptionKey = "scm.user.delete.prompt")
+  private boolean shouldDelete;
 
   @CommandLine.Mixin
-  private final RepositoryTemplateRenderer templateRenderer;
-  private final RepositoryManager manager;
+  private final UserTemplateRenderer templateRenderer;
+  private final UserManager manager;
 
   @Inject
-  RepositoryGetCommand(RepositoryTemplateRenderer templateRenderer, RepositoryManager manager) {
+  public UserDeleteCommand(UserTemplateRenderer templateRenderer, UserManager manager) {
     this.templateRenderer = templateRenderer;
     this.manager = manager;
   }
 
-  @VisibleForTesting
-  void setRepository(String repository) {
-    this.repository = repository;
-  }
-
   @Override
   public void run() {
-    String[] splitRepo = repository.split("/");
-    if (splitRepo.length == 2) {
-      Repository repo = manager.get(new NamespaceAndName(splitRepo[0], splitRepo[1]));
-      if (repo != null) {
-        templateRenderer.render(repo);
-      } else {
-        templateRenderer.renderNotFoundError();
-      }
-    } else {
-      templateRenderer.renderInvalidInputError();
+    if (!shouldDelete) {
+      templateRenderer.renderToStderr(CONFIRM_TEMPLATE, Collections.emptyMap());
+      return;
     }
+    User user = manager.get(username);
+    if (user != null) {
+      manager.delete(user);
+      templateRenderer.renderToStdout(SUCCESS_TEMPLATE, Collections.emptyMap());
+    }
+  }
+
+  @SuppressWarnings("SameParameterValue")
+  @VisibleForTesting
+  void setShouldDelete(boolean shouldDelete) {
+    this.shouldDelete = shouldDelete;
   }
 }

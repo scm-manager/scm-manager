@@ -29,6 +29,7 @@ import picocli.AutoComplete;
 import picocli.CommandLine;
 
 import javax.inject.Inject;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class CliProcessor {
@@ -50,7 +51,7 @@ public class CliProcessor {
     CommandFactory factory = new CommandFactory(injector, context);
     CommandLine cli = new CommandLine(ScmManagerCommand.class, factory);
     cli.getCommandSpec().addMixin("help", usageHelp);
-    cli.setResourceBundle(ResourceBundle.getBundle("sonia.scm.cli.i18n", context.getLocale()));
+    cli.setResourceBundle(getBundle("sonia.scm.cli.i18n", context.getLocale()));
     for (RegisteredCommandNode c : registry.createCommandTree()) {
       CommandLine commandline = createCommandline(context, factory, c);
       cli.getCommandSpec().addSubcommand(c.getName(), commandline);
@@ -69,7 +70,7 @@ public class CliProcessor {
     ResourceBundle resourceBundle = commandLine.getCommandSpec().resourceBundle();
     if (resourceBundle != null) {
       String resourceBundleBaseName = resourceBundle.getBaseBundleName();
-      commandLine.setResourceBundle(ResourceBundle.getBundle(resourceBundleBaseName, context.getLocale()));
+      commandLine.setResourceBundle(getBundle(resourceBundleBaseName, context.getLocale()));
     }
     for (RegisteredCommandNode child : command.getChildren()) {
       if (!commandLine.getCommandSpec().subcommands().containsKey(child.getName())) {
@@ -79,5 +80,14 @@ public class CliProcessor {
     }
 
     return commandLine;
+  }
+
+  private ResourceBundle getBundle(String baseName, Locale locale) {
+    return ResourceBundle.getBundle(baseName, locale, new ResourceBundle.Control() {
+      @Override
+      public Locale getFallbackLocale(String baseName, Locale locale) {
+        return Locale.ROOT;
+      }
+    });
   }
 }
