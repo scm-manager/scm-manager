@@ -30,6 +30,7 @@ import HttpServerGo from "./__resources__/HttpServer.go";
 import HttpServerJava from "./__resources__/HttpServer.java";
 import HttpServerJs from "./__resources__/HttpServer.js";
 import HttpServerPy from "./__resources__/HttpServer.py";
+import HttpServerWithMarkerJs from "./__resources__/HttpServerWithMarker.js";
 
 export default {
   title: "SyntaxHighlighter",
@@ -113,4 +114,29 @@ export const HugeCss: ComponentStory<typeof SyntaxHighlighter> = () => {
   }
 
   return <SyntaxHighlighter language="css" value={content} lineWrapper={LineWrapper} />;
+};
+
+const Mark: FC = ({ children }) => <mark>{children}</mark>;
+
+export const Marker = Template.bind({});
+Marker.args = {
+  language: "javascript",
+  value: HttpServerWithMarkerJs,
+  markerConfig: {
+    start: "<|[[--",
+    end: "--]]|>",
+    wrapper: Mark,
+  },
+};
+
+export const MarkerWithLineNumbers = Template.bind({});
+MarkerWithLineNumbers.args = {
+  language: "javascript",
+  value: HttpServerWithMarkerJs,
+  lineWrapper: LineWrapper,
+  markerConfig: {
+    start: "<|[[--",
+    end: "--]]|>",
+    wrapper: Mark,
+  },
 };

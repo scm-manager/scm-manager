@@ -6,6 +6,11 @@ export type MessageData<T extends string, P> = { id: string; type: T; payload: P
 export type RefractorNode = RefractorElement | Text;
 export type Theme = Record<string, string>;
 
+export type MarkerBounds = {
+  start: string;
+  end: string;
+};
+
 export type LoadThemeRequest = MessageData<"theme", Theme>;
 
 export type HighlightingRequest = MessageData<
@@ -15,6 +20,7 @@ export type HighlightingRequest = MessageData<
     value: string;
     nodeLimit: number;
     groupByLine: boolean;
+    markerBounds?: MarkerBounds;
   }
 >;
 

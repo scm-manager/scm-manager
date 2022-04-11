@@ -3131,18 +3131,6 @@
   dependencies:
     prettier "^1.19.1"
 
-"@scm-manager/refractor-flatten@^1.0.0":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@scm-manager/refractor-flatten/-/refractor-flatten-1.0.1.tgz#2879aaccf8abc2d7d701f337695272c76a36fb19"
-  integrity sha512-94AgVivhYpIx3EGvUUrZfcdM9poJvKJjlpIzimkW1/2rvYV7RqYQBx+pHs72xJRJc7hEyNeJ4hzd7S1P9fMDDw==
-
-"@scm-manager/refractor-group-by-lines@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@scm-manager/refractor-group-by-lines/-/refractor-group-by-lines-1.0.1.tgz#4e4a1195801b3f2cf1f5377def6185716a5baff8"
-  integrity sha512-LwUyC4b9JMKOpb505pJcTndt3VzNbxfCYSxS8JpnSnkraShimhxl8PGnCD0aA4CL4aPhM2rAI8YREHJKRlcc1g==
-  dependencies:
-    "@scm-manager/refractor-flatten" "^1.0.0"
-
 "@scm-manager/remark-preset-lint@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@scm-manager/remark-preset-lint/-/remark-preset-lint-1.0.0.tgz#57cc148d681de9b10d538fb2e4aa5d888a290c14"
