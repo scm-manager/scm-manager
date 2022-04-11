@@ -33,7 +33,7 @@ import javax.inject.Inject;
 
 @ParentCommand(value = UserCommand.class)
 @CommandLine.Command(name = "get")
-public class UserGetCommand implements Runnable {
+class UserGetCommand implements Runnable {
 
   @CommandLine.Parameters(index = "0", paramLabel = "<username>", descriptionKey = "scm.user.username")
   private String username;

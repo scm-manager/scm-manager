@@ -26,7 +26,6 @@ package sonia.scm.group.cli;
 
 import com.google.common.annotations.VisibleForTesting;
 import picocli.CommandLine;
-import sonia.scm.cli.CommandValidator;
 import sonia.scm.cli.ParentCommand;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
@@ -41,8 +40,6 @@ class GroupAddMemberCommand implements Runnable {
 
   @CommandLine.Mixin
   private final GroupTemplateRenderer templateRenderer;
-  @CommandLine.Mixin
-  private final CommandValidator validator;
   private final GroupManager manager;
 
   @CommandLine.Parameters(index = "0", arity = "1", descriptionKey = "scm.group.add-member.name")
@@ -51,15 +48,13 @@ class GroupAddMemberCommand implements Runnable {
   private String[] members;
 
   @Inject
-  GroupAddMemberCommand(GroupTemplateRenderer templateRenderer, CommandValidator validator, GroupManager manager) {
+  GroupAddMemberCommand(GroupTemplateRenderer templateRenderer, GroupManager manager) {
     this.templateRenderer = templateRenderer;
-    this.validator = validator;
     this.manager = manager;
   }
 
   @Override
   public void run() {
-    validator.validate();
     Group existingGroup = manager.get(name);
     if (existingGroup == null) {
       templateRenderer.renderNotFoundError();
@@ -71,6 +66,7 @@ class GroupAddMemberCommand implements Runnable {
     }
   }
 
+  @SuppressWarnings("SameParameterValue")
   @VisibleForTesting
   void setName(String name) {
     this.name = name;

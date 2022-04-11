@@ -35,7 +35,7 @@ import sonia.scm.user.User;
 import javax.inject.Inject;
 import java.util.Collections;
 
-public class UserTemplateRenderer extends TemplateRenderer {
+class UserTemplateRenderer extends TemplateRenderer {
 
   private static final String DETAILS_TABLE_TEMPLATE = String.join("\n",
     "{{#rows}}",

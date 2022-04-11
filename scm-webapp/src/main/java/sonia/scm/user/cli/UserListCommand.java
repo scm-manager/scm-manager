@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 
 @ParentCommand(value = UserCommand.class)
 @CommandLine.Command(name = "list", aliases = "ls")
-public class UserListCommand implements Runnable {
+class UserListCommand implements Runnable {
 
   @CommandLine.Mixin
   private final TemplateRenderer templateRenderer;

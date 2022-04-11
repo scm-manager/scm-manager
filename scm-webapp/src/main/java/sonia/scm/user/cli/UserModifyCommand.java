@@ -36,7 +36,7 @@ import javax.validation.constraints.Email;
 
 @ParentCommand(value = UserCommand.class)
 @CommandLine.Command(name = "modify")
-public class UserModifyCommand implements Runnable {
+class UserModifyCommand implements Runnable {
 
   @CommandLine.Mixin
   private final UserTemplateRenderer templateRenderer;
@@ -51,8 +51,11 @@ public class UserModifyCommand implements Runnable {
   private String displayName;
 
   @Email
-  @CommandLine.Option(names = {"--email", "-e"}, descriptionKey = "scm.user.create.email")
+  @CommandLine.Option(names = {"--email", "-e"}, descriptionKey = "scm.user.email")
   private String email;
+
+  @CommandLine.Option(names = {"--password", "-p"}, descriptionKey = "scm.user.password")
+  private String password;
 
   @Inject
   UserModifyCommand(UserTemplateRenderer templateRenderer, CommandValidator validator, UserManager manager) {
@@ -74,6 +77,9 @@ public class UserModifyCommand implements Runnable {
       if (email != null) {
         user.setMail(email);
       }
+      if (password != null) {
+        user.setPassword(password);
+      }
       manager.modify(user);
       templateRenderer.render(user);
     } else {
@@ -91,5 +97,11 @@ public class UserModifyCommand implements Runnable {
   @VisibleForTesting
   void setEmail(String email) {
     this.email = email;
+  }
+
+  @SuppressWarnings("SameParameterValue")
+  @VisibleForTesting
+  void setPassword(String password) {
+    this.password = password;
   }
 }

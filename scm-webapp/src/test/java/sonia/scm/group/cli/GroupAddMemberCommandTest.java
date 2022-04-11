@@ -32,7 +32,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.cli.CliExitException;
-import sonia.scm.cli.CommandValidator;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
 
@@ -40,9 +39,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -51,15 +48,13 @@ class GroupAddMemberCommandTest {
   private final GroupTemplateTestRenderer testRenderer = new GroupTemplateTestRenderer();
 
   @Mock
-  private CommandValidator validator;
-  @Mock
   private GroupManager manager;
 
   private GroupAddMemberCommand command;
 
   @BeforeEach
   void initCommand() {
-    command = new GroupAddMemberCommand(testRenderer.getTemplateRenderer(), validator, manager);
+    command = new GroupAddMemberCommand(testRenderer.getTemplateRenderer(), manager);
   }
 
   @Nested
@@ -123,19 +118,5 @@ class GroupAddMemberCommandTest {
       .isEmpty();
     assertThat(testRenderer.getStdErr())
       .isEqualTo("Could not find group");
-  }
-
-  @Test
-  void shouldFailIfValidatorFails() {
-    doThrow(picocli.CommandLine.ParameterException.class).when(validator).validate();
-
-    Assertions.assertThrows(
-      picocli.CommandLine.ParameterException.class,
-      () -> command.run()
-    );
-
-    assertThat(testRenderer.getStdOut())
-      .isEmpty();
-    verifyNoInteractions(manager);
   }
 }

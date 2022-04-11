@@ -35,7 +35,7 @@ import java.util.Collections;
 
 @CommandLine.Command(name = "delete", aliases = "rm")
 @ParentCommand(UserCommand.class)
-public class UserDeleteCommand implements Runnable {
+class UserDeleteCommand implements Runnable {
 
   private static final String CONFIRM_TEMPLATE = "{{i18n.scmUserDeleteConfirm}}";
   private static final String SUCCESS_TEMPLATE = "{{i18n.scmUserDeleteSuccess}}";

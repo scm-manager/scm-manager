@@ -33,7 +33,7 @@ import javax.inject.Inject;
 
 @ParentCommand(value = UserCommand.class)
 @CommandLine.Command(name = "convert-to-external", aliases = "conv-ext")
-public class UserConvertToExternalCommand implements Runnable {
+class UserConvertToExternalCommand implements Runnable {
 
   @CommandLine.Mixin
   private final UserTemplateRenderer templateRenderer;

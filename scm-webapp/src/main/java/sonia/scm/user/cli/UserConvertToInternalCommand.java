@@ -34,7 +34,7 @@ import javax.inject.Inject;
 
 @ParentCommand(value = UserCommand.class)
 @CommandLine.Command(name = "convert-to-internal", aliases = "conv-int")
-public class UserConvertToInternalCommand implements Runnable {
+class UserConvertToInternalCommand implements Runnable {
 
   @CommandLine.Mixin
   private final UserTemplateRenderer templateRenderer;

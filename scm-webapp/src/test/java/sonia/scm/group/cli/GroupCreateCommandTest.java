@@ -24,23 +24,19 @@
 
 package sonia.scm.group.cli;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import sonia.scm.cli.CommandValidator;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -49,15 +45,13 @@ class GroupCreateCommandTest {
   private final GroupTemplateTestRenderer testRenderer = new GroupTemplateTestRenderer();
 
   @Mock
-  private CommandValidator validator;
-  @Mock
   private GroupManager manager;
 
   private GroupCreateCommand command;
 
   @BeforeEach
   void initCommand() {
-    command = new GroupCreateCommand(testRenderer.getTemplateRenderer(), validator, manager);
+    command = new GroupCreateCommand(testRenderer.getTemplateRenderer(), manager);
   }
 
   @Nested
@@ -105,19 +99,5 @@ class GroupCreateCommandTest {
       assertThat(testRenderer.getStdErr())
         .isEmpty();
     }
-  }
-
-  @Test
-  void shouldFailIfValidatorFails() {
-    doThrow(picocli.CommandLine.ParameterException.class).when(validator).validate();
-
-    Assertions.assertThrows(
-      picocli.CommandLine.ParameterException.class,
-      () -> command.run()
-    );
-
-    assertThat(testRenderer.getStdOut())
-      .isEmpty();
-    verifyNoInteractions(manager);
   }
 }

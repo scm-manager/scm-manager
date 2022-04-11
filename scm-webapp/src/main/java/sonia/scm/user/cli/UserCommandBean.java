@@ -31,7 +31,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserCommandBean {
+class UserCommandBean {
 
   private String name;
   private String displayName;

@@ -26,7 +26,6 @@ package sonia.scm.group.cli;
 
 import com.google.common.annotations.VisibleForTesting;
 import picocli.CommandLine;
-import sonia.scm.cli.CommandValidator;
 import sonia.scm.cli.ParentCommand;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
@@ -42,8 +41,6 @@ class GroupModifyCommand implements Runnable {
 
   @CommandLine.Mixin
   private final GroupTemplateRenderer templateRenderer;
-  @CommandLine.Mixin
-  private final CommandValidator validator;
   private final GroupManager manager;
 
   @CommandLine.Parameters(descriptionKey = "scm.group.modify.name")
@@ -59,15 +56,13 @@ class GroupModifyCommand implements Runnable {
   private Boolean external;
 
   @Inject
-  GroupModifyCommand(GroupTemplateRenderer templateRenderer, CommandValidator validator, GroupManager manager) {
+  GroupModifyCommand(GroupTemplateRenderer templateRenderer, GroupManager manager) {
     this.templateRenderer = templateRenderer;
-    this.validator = validator;
     this.manager = manager;
   }
 
   @Override
   public void run() {
-    validator.validate();
     Group existingGroup = manager.get(name);
     if (existingGroup == null) {
       templateRenderer.renderNotFoundError();
@@ -87,21 +82,25 @@ class GroupModifyCommand implements Runnable {
     }
   }
 
+  @SuppressWarnings("SameParameterValue")
   @VisibleForTesting
   void setName(String name) {
     this.name = name;
   }
 
+  @SuppressWarnings("SameParameterValue")
   @VisibleForTesting
   void setDescription(String description) {
     this.description = description;
   }
 
+  @SuppressWarnings("SameParameterValue")
   @VisibleForTesting
   void setMembers(String[] members) {
     this.members = members;
   }
 
+  @SuppressWarnings("SameParameterValue")
   @VisibleForTesting
   void setExternal(boolean external) {
     this.external = external;

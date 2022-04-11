@@ -36,7 +36,7 @@ import javax.validation.constraints.Email;
 
 @CommandLine.Command(name = "create")
 @ParentCommand(value = UserCommand.class)
-public class UserCreateCommand implements Runnable {
+class UserCreateCommand implements Runnable {
 
   @CommandLine.Mixin
   private final UserTemplateRenderer templateRenderer;

@@ -79,6 +79,7 @@ class UserModifyCommandTest {
     void shouldModifyUser() {
       command.setDisplayName("Lord Vetinari");
       command.setEmail("patrician@discworld");
+      command.setPassword("havelock");
 
       command.run();
 
@@ -86,7 +87,7 @@ class UserModifyCommandTest {
         assertThat(argument.getName()).isEqualTo("havelock");
         assertThat(argument.getDisplayName()).isEqualTo("Lord Vetinari");
         assertThat(argument.isExternal()).isFalse();
-        assertThat(argument.getPassword()).isEqualTo("patrician");
+        assertThat(argument.getPassword()).isEqualTo("havelock");
         assertThat(argument.getMail()).isEqualTo("patrician@discworld");
         assertThat(argument.isActive()).isTrue();
         return true;
@@ -96,6 +97,7 @@ class UserModifyCommandTest {
     @Test
     void shouldNotModifyDisplayNameIfNotSet() {
       command.setEmail("patrician@discworld");
+      command.setPassword("havelock");
 
       command.run();
 
@@ -103,7 +105,7 @@ class UserModifyCommandTest {
         assertThat(argument.getName()).isEqualTo("havelock");
         assertThat(argument.getDisplayName()).isEqualTo("Havelock Vetinari");
         assertThat(argument.isExternal()).isFalse();
-        assertThat(argument.getPassword()).isEqualTo("patrician");
+        assertThat(argument.getPassword()).isEqualTo("havelock");
         assertThat(argument.getMail()).isEqualTo("patrician@discworld");
         assertThat(argument.isActive()).isTrue();
         return true;
@@ -113,6 +115,25 @@ class UserModifyCommandTest {
     @Test
     void shouldNotModifyEmailIfNotSet() {
       command.setDisplayName("Lord Vetinari");
+      command.setPassword("havelock");
+
+      command.run();
+
+      verify(manager).modify(argThat(argument -> {
+        assertThat(argument.getName()).isEqualTo("havelock");
+        assertThat(argument.getDisplayName()).isEqualTo("Lord Vetinari");
+        assertThat(argument.isExternal()).isFalse();
+        assertThat(argument.getPassword()).isEqualTo("havelock");
+        assertThat(argument.getMail()).isEqualTo("havelock.vetinari@discworld");
+        assertThat(argument.isActive()).isTrue();
+        return true;
+      }));
+    }
+
+    @Test
+    void shouldNotModifyPasswordIfNotSet() {
+      command.setEmail("patrician@discworld");
+      command.setDisplayName("Lord Vetinari");
 
       command.run();
 
@@ -121,7 +142,7 @@ class UserModifyCommandTest {
         assertThat(argument.getDisplayName()).isEqualTo("Lord Vetinari");
         assertThat(argument.isExternal()).isFalse();
         assertThat(argument.getPassword()).isEqualTo("patrician");
-        assertThat(argument.getMail()).isEqualTo("havelock.vetinari@discworld");
+        assertThat(argument.getMail()).isEqualTo("patrician@discworld");
         assertThat(argument.isActive()).isTrue();
         return true;
       }));

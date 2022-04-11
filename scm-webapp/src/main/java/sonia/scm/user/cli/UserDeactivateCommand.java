@@ -33,7 +33,7 @@ import javax.inject.Inject;
 
 @ParentCommand(value = UserCommand.class)
 @CommandLine.Command(name = "deactivate")
-public class UserDeactivateCommand implements Runnable {
+class UserDeactivateCommand implements Runnable {
 
   @CommandLine.Mixin
   private final UserTemplateRenderer templateRenderer;
