@@ -70,7 +70,7 @@ const Button: FC<InnerProps> = ({
   innerRef
 }) => {
   const renderIcon = () => {
-    return <>{icon ? <Icon name={icon} color="inherit" className="is-medium pr-1" /> : null}</>;
+    return <>{icon ? <Icon name={icon} color="inherit" className="is-medium pr-5" /> : null}</>;
   };
 
   const classes = classNames(
