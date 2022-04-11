@@ -553,7 +553,7 @@ exports[`Storyshots Buttons/AddButton Default 1`] = `
     type="button"
   >
     <i
-      className="fas fa-fw fa-plus has-text-inherit is-medium pr-1"
+      className="fas fa-fw fa-plus has-text-inherit is-medium pr-5"
       onKeyPress={[Function]}
     />
      
@@ -916,7 +916,7 @@ exports[`Storyshots Buttons/DeleteButton Default 1`] = `
     type="button"
   >
     <i
-      className="fas fa-fw fa-times has-text-inherit is-medium pr-1"
+      className="fas fa-fw fa-times has-text-inherit is-medium pr-5"
       onKeyPress={[Function]}
     />
      
@@ -2094,7 +2094,7 @@ exports[`Storyshots Forms/AddKeyValueEntryToTableField Default 1`] = `
       type="button"
     >
       <i
-        className="fas fa-fw fa-plus has-text-inherit is-medium pr-1"
+        className="fas fa-fw fa-plus has-text-inherit is-medium pr-5"
         onKeyPress={[Function]}
       />
        
@@ -2175,7 +2175,7 @@ exports[`Storyshots Forms/AddKeyValueEntryToTableField Disabled 1`] = `
       type="button"
     >
       <i
-        className="fas fa-fw fa-plus has-text-inherit is-medium pr-1"
+        className="fas fa-fw fa-plus has-text-inherit is-medium pr-5"
         onKeyPress={[Function]}
       />
        
@@ -4205,7 +4205,7 @@ exports[`Storyshots GroupEntry Default 1`] = `
             type="button"
           >
             <i
-              className="fas fa-fw fa-download has-text-inherit is-medium pr-1"
+              className="fas fa-fw fa-download has-text-inherit is-medium pr-5"
               onKeyPress={[Function]}
             />
              
@@ -4279,7 +4279,7 @@ exports[`Storyshots GroupEntry With long texts 1`] = `
             type="button"
           >
             <i
-              className="fas fa-fw fa-download has-text-inherit is-medium pr-1"
+              className="fas fa-fw fa-download has-text-inherit is-medium pr-5"
               onKeyPress={[Function]}
             />
              
@@ -22613,12 +22613,12 @@ exports[`Storyshots Repositories/Changesets Co-Authors with avatar 1`] = `
           >
             <a
               aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile"
+              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 bPgAjN"
               href="/repo/hitchhiker/heartOfGold/code/changeset/b6c6f8fbd0d490936fae7d26ffdd4695cc2a0930"
               onClick={[Function]}
             >
               <i
-                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-1"
+                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
                 onKeyPress={[Function]}
               />
                
@@ -22631,12 +22631,12 @@ exports[`Storyshots Repositories/Changesets Co-Authors with avatar 1`] = `
           >
             <a
               aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile"
+              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 bPgAjN"
               href="/repo/hitchhiker/heartOfGold/code/sources/b6c6f8fbd0d490936fae7d26ffdd4695cc2a0930"
               onClick={[Function]}
             >
               <i
-                className="fas fa-fw fa-code has-text-inherit is-medium pr-1"
+                className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
                 onKeyPress={[Function]}
               />
                
@@ -22766,12 +22766,12 @@ exports[`Storyshots Repositories/Changesets Commiter and Co-Authors with avatar 
           >
             <a
               aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile"
+              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 bPgAjN"
               href="/repo/hitchhiker/heartOfGold/code/changeset/a88567ef1e9528a700555cad8c4576b72fc7c6dd"
               onClick={[Function]}
             >
               <i
-                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-1"
+                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
                 onKeyPress={[Function]}
               />
                
@@ -22784,12 +22784,12 @@ exports[`Storyshots Repositories/Changesets Commiter and Co-Authors with avatar 
           >
             <a
               aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile"
+              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 bPgAjN"
               href="/repo/hitchhiker/heartOfGold/code/sources/a88567ef1e9528a700555cad8c4576b72fc7c6dd"
               onClick={[Function]}
             >
               <i
-                className="fas fa-fw fa-code has-text-inherit is-medium pr-1"
+                className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
                 onKeyPress={[Function]}
               />
                
@@ -22877,12 +22877,12 @@ exports[`Storyshots Repositories/Changesets Default 1`] = `
           >
             <a
               aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile"
+              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 bPgAjN"
               href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
               <i
-                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-1"
+                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
                 onKeyPress={[Function]}
               />
                
@@ -22895,12 +22895,12 @@ exports[`Storyshots Repositories/Changesets Default 1`] = `
           >
             <a
               aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile"
+              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 bPgAjN"
               href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
               <i
-                className="fas fa-fw fa-code has-text-inherit is-medium pr-1"
+                className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
                 onKeyPress={[Function]}
               />
                
@@ -22998,12 +22998,12 @@ exports[`Storyshots Repositories/Changesets Replacements 1`] = `
           >
             <a
               aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile"
+              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 bPgAjN"
               href="/repo/hitchhiker/heartOfGold/code/changeset/d21cc6c359270aef2196796f4d96af65f51866dc"
               onClick={[Function]}
             >
               <i
-                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-1"
+                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
                 onKeyPress={[Function]}
               />
                
@@ -23016,12 +23016,12 @@ exports[`Storyshots Repositories/Changesets Replacements 1`] = `
           >
             <a
               aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile"
+              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 bPgAjN"
               href="/repo/hitchhiker/heartOfGold/code/sources/d21cc6c359270aef2196796f4d96af65f51866dc"
               onClick={[Function]}
             >
               <i
-                className="fas fa-fw fa-code has-text-inherit is-medium pr-1"
+                className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
                 onKeyPress={[Function]}
               />
                
@@ -23121,12 +23121,12 @@ exports[`Storyshots Repositories/Changesets With Committer 1`] = `
           >
             <a
               aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile"
+              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 bPgAjN"
               href="/repo/hitchhiker/heartOfGold/code/changeset/d21cc6c359270aef2196796f4d96af65f51866dc"
               onClick={[Function]}
             >
               <i
-                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-1"
+                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
                 onKeyPress={[Function]}
               />
                
@@ -23139,12 +23139,12 @@ exports[`Storyshots Repositories/Changesets With Committer 1`] = `
           >
             <a
               aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile"
+              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 bPgAjN"
               href="/repo/hitchhiker/heartOfGold/code/sources/d21cc6c359270aef2196796f4d96af65f51866dc"
               onClick={[Function]}
             >
               <i
-                className="fas fa-fw fa-code has-text-inherit is-medium pr-1"
+                className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
                 onKeyPress={[Function]}
               />
                
@@ -23253,12 +23253,12 @@ exports[`Storyshots Repositories/Changesets With Committer and Co-Author 1`] = `
           >
             <a
               aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile"
+              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 bPgAjN"
               href="/repo/hitchhiker/heartOfGold/code/changeset/a88567ef1e9528a700555cad8c4576b72fc7c6dd"
               onClick={[Function]}
             >
               <i
-                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-1"
+                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
                 onKeyPress={[Function]}
               />
                
@@ -23271,12 +23271,12 @@ exports[`Storyshots Repositories/Changesets With Committer and Co-Author 1`] = `
           >
             <a
               aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile"
+              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 bPgAjN"
               href="/repo/hitchhiker/heartOfGold/code/sources/a88567ef1e9528a700555cad8c4576b72fc7c6dd"
               onClick={[Function]}
             >
               <i
-                className="fas fa-fw fa-code has-text-inherit is-medium pr-1"
+                className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
                 onKeyPress={[Function]}
               />
                
@@ -23377,12 +23377,12 @@ exports[`Storyshots Repositories/Changesets With avatar 1`] = `
           >
             <a
               aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile"
+              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 bPgAjN"
               href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
               <i
-                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-1"
+                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
                 onKeyPress={[Function]}
               />
                
@@ -23395,12 +23395,12 @@ exports[`Storyshots Repositories/Changesets With avatar 1`] = `
           >
             <a
               aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile"
+              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 bPgAjN"
               href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
               <i
-                className="fas fa-fw fa-code has-text-inherit is-medium pr-1"
+                className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
                 onKeyPress={[Function]}
               />
                
@@ -23497,12 +23497,12 @@ exports[`Storyshots Repositories/Changesets With contactless signature 1`] = `
           >
             <a
               aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile"
+              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 bPgAjN"
               href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
               <i
-                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-1"
+                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
                 onKeyPress={[Function]}
               />
                
@@ -23515,12 +23515,12 @@ exports[`Storyshots Repositories/Changesets With contactless signature 1`] = `
           >
             <a
               aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile"
+              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 bPgAjN"
               href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
               <i
-                className="fas fa-fw fa-code has-text-inherit is-medium pr-1"
+                className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
                 onKeyPress={[Function]}
               />
                
@@ -23617,12 +23617,12 @@ exports[`Storyshots Repositories/Changesets With invalid signature 1`] = `
           >
             <a
               aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile"
+              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 bPgAjN"
               href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
               <i
-                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-1"
+                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
                 onKeyPress={[Function]}
               />
                
@@ -23635,12 +23635,12 @@ exports[`Storyshots Repositories/Changesets With invalid signature 1`] = `
           >
             <a
               aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile"
+              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 bPgAjN"
               href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
               <i
-                className="fas fa-fw fa-code has-text-inherit is-medium pr-1"
+                className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
                 onKeyPress={[Function]}
               />
                
@@ -23741,12 +23741,12 @@ exports[`Storyshots Repositories/Changesets With multiple Co-Authors 1`] = `
           >
             <a
               aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile"
+              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 bPgAjN"
               href="/repo/hitchhiker/heartOfGold/code/changeset/b6c6f8fbd0d490936fae7d26ffdd4695cc2a0930"
               onClick={[Function]}
             >
               <i
-                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-1"
+                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
                 onKeyPress={[Function]}
               />
                
@@ -23759,12 +23759,12 @@ exports[`Storyshots Repositories/Changesets With multiple Co-Authors 1`] = `
           >
             <a
               aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile"
+              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 bPgAjN"
               href="/repo/hitchhiker/heartOfGold/code/sources/b6c6f8fbd0d490936fae7d26ffdd4695cc2a0930"
               onClick={[Function]}
             >
               <i
-                className="fas fa-fw fa-code has-text-inherit is-medium pr-1"
+                className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
                 onKeyPress={[Function]}
               />
                
@@ -23861,12 +23861,12 @@ exports[`Storyshots Repositories/Changesets With multiple signatures and invalid
           >
             <a
               aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile"
+              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 bPgAjN"
               href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
               <i
-                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-1"
+                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
                 onKeyPress={[Function]}
               />
                
@@ -23879,12 +23879,12 @@ exports[`Storyshots Repositories/Changesets With multiple signatures and invalid
           >
             <a
               aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile"
+              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 bPgAjN"
               href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
               <i
-                className="fas fa-fw fa-code has-text-inherit is-medium pr-1"
+                className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
                 onKeyPress={[Function]}
               />
                
@@ -23981,12 +23981,12 @@ exports[`Storyshots Repositories/Changesets With multiple signatures and not fou
           >
             <a
               aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile"
+              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 bPgAjN"
               href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
               <i
-                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-1"
+                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
                 onKeyPress={[Function]}
               />
                
@@ -23999,12 +23999,12 @@ exports[`Storyshots Repositories/Changesets With multiple signatures and not fou
           >
             <a
               aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile"
+              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 bPgAjN"
               href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
               <i
-                className="fas fa-fw fa-code has-text-inherit is-medium pr-1"
+                className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
                 onKeyPress={[Function]}
               />
                
@@ -24101,12 +24101,12 @@ exports[`Storyshots Repositories/Changesets With multiple signatures and valid s
           >
             <a
               aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile"
+              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 bPgAjN"
               href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
               <i
-                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-1"
+                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
                 onKeyPress={[Function]}
               />
                
@@ -24119,12 +24119,12 @@ exports[`Storyshots Repositories/Changesets With multiple signatures and valid s
           >
             <a
               aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile"
+              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 bPgAjN"
               href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
               <i
-                className="fas fa-fw fa-code has-text-inherit is-medium pr-1"
+                className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
                 onKeyPress={[Function]}
               />
                
@@ -24221,12 +24221,12 @@ exports[`Storyshots Repositories/Changesets With unknown signature 1`] = `
           >
             <a
               aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile"
+              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 bPgAjN"
               href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
               <i
-                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-1"
+                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
                 onKeyPress={[Function]}
               />
                
@@ -24239,12 +24239,12 @@ exports[`Storyshots Repositories/Changesets With unknown signature 1`] = `
           >
             <a
               aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile"
+              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 bPgAjN"
               href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
               <i
-                className="fas fa-fw fa-code has-text-inherit is-medium pr-1"
+                className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
                 onKeyPress={[Function]}
               />
                
@@ -24341,12 +24341,12 @@ exports[`Storyshots Repositories/Changesets With unowned signature 1`] = `
           >
             <a
               aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile"
+              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 bPgAjN"
               href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
               <i
-                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-1"
+                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
                 onKeyPress={[Function]}
               />
                
@@ -24359,12 +24359,12 @@ exports[`Storyshots Repositories/Changesets With unowned signature 1`] = `
           >
             <a
               aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile"
+              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 bPgAjN"
               href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
               <i
-                className="fas fa-fw fa-code has-text-inherit is-medium pr-1"
+                className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
                 onKeyPress={[Function]}
               />
                
@@ -24461,12 +24461,12 @@ exports[`Storyshots Repositories/Changesets With valid signature 1`] = `
           >
             <a
               aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile"
+              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 bPgAjN"
               href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
               <i
-                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-1"
+                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
                 onKeyPress={[Function]}
               />
                
@@ -24479,12 +24479,12 @@ exports[`Storyshots Repositories/Changesets With valid signature 1`] = `
           >
             <a
               aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile"
+              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 bPgAjN"
               href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
               <i
-                className="fas fa-fw fa-code has-text-inherit is-medium pr-1"
+                className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
                 onKeyPress={[Function]}
               />
                

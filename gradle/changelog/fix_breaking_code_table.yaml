@@ -1,0 +1,2 @@
+- type: fixed
+  description: Table in code view breaks at certain screensizes ([1992](https://github.com/scm-manager/scm-manager/issues/1992))
