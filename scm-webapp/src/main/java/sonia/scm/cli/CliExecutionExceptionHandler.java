@@ -39,12 +39,12 @@ import java.util.ResourceBundle;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
-public class CliExceptionHandler implements CommandLine.IExecutionExceptionHandler {
+public class CliExecutionExceptionHandler implements CommandLine.IExecutionExceptionHandler {
 
   private final I18nCollector i18nCollector;
   private final String languageCode;
 
-  CliExceptionHandler(I18nCollector i18nCollector, String languageCode) {
+  CliExecutionExceptionHandler(I18nCollector i18nCollector, String languageCode) {
     this.i18nCollector = i18nCollector;
     this.languageCode = languageCode;
   }

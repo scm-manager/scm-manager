@@ -57,7 +57,9 @@ class CliProcessorTest {
   @Mock
   private CliExceptionHandlerFactory exceptionHandlerFactory;
   @Mock
-  private CliExceptionHandler exceptionHandler;
+  private CliExecutionExceptionHandler executionExceptionHandler;
+  @Mock
+  private CliParameterExceptionHandler parameterExceptionHandler;
 
   @Nested
   class ForDefaultLanguageTest {
@@ -65,7 +67,8 @@ class CliProcessorTest {
     @BeforeEach
     void setDefaultLocale() {
       when(context.getLocale()).thenReturn(Locale.ENGLISH);
-      when(exceptionHandlerFactory.createExceptionHandler("en")).thenReturn(exceptionHandler);
+      when(exceptionHandlerFactory.createExecutionExceptionHandler("en")).thenReturn(executionExceptionHandler);
+      when(exceptionHandlerFactory.createParameterExceptionHandler("en")).thenReturn(parameterExceptionHandler);
     }
 
     @Test
@@ -119,11 +122,14 @@ class CliProcessorTest {
   class ForAnotherLanguageTest {
 
     @Mock
-    private CliExceptionHandler germanExceptionHandler;
+    private CliExecutionExceptionHandler germanExecutionExceptionHandler;
+    @Mock
+    private CliParameterExceptionHandler germanParamExceptionHandler;
 
     @BeforeEach
     void setUpOtherLanguage() {
-      when(exceptionHandlerFactory.createExceptionHandler("de")).thenReturn(germanExceptionHandler);
+      when(exceptionHandlerFactory.createParameterExceptionHandler("de")).thenReturn(germanParamExceptionHandler);
+      when(exceptionHandlerFactory.createExecutionExceptionHandler("de")).thenReturn(germanExecutionExceptionHandler);
       when(context.getLocale()).thenReturn(Locale.GERMAN);
     }
 
@@ -145,7 +151,8 @@ class CliProcessorTest {
     void shouldUseExceptionHandlerForOtherLanguage() {
       executeHierarchyCommands("one", "two", "--help");
 
-      verify(exceptionHandlerFactory).createExceptionHandler("de");
+      verify(exceptionHandlerFactory).createExecutionExceptionHandler("de");
+      verify(exceptionHandlerFactory).createParameterExceptionHandler("de");
     }
   }
 
