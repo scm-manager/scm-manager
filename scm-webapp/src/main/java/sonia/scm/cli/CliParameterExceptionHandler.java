@@ -47,47 +47,53 @@ public class CliParameterExceptionHandler implements IParameterExceptionHandler 
 
     if (languageCode.equals("en")) {
       // Do not use translated exceptions for english since the default ones are more specific
-      stderr.println(ex.getMessage());
-      CommandLine.UnmatchedArgumentException.printSuggestions(ex, stderr);
-      stderr.print(cmd.getHelp().fullSynopsis());
-      CommandLine.Model.CommandSpec spec = cmd.getCommandSpec();
-      stderr.printf("Try '%s --help' for more information.", spec.qualifiedName());
-      stderr.println();
+      printError(stderr, ex.getMessage());
+      if (!CommandLine.UnmatchedArgumentException.printSuggestions(ex, stderr)) {
+        ex.getCommandLine().usage(stderr);
+      }
     } else {
-      handleTranslatedExceptions(ex, cmd, stderr);
+      handleTranslatedExceptions(ex, stderr);
     }
     return ExitCode.USAGE;
   }
 
-  private void handleTranslatedExceptions(CommandLine.ParameterException ex, CommandLine cmd, PrintWriter stderr) {
+  private void handleTranslatedExceptions(CommandLine.ParameterException ex, PrintWriter stderr) {
     if (ex.getCause() instanceof CommandLine.TypeConversionException) {
-      stderr.println(getMessage("exception.typeConversion") + ex.getArgSpec().paramLabel());
+      printError(stderr, getMessage("exception.typeConversion") + ex.getArgSpec().paramLabel());
     }
     if (ex instanceof CommandLine.MissingParameterException) {
-      stderr.println(getMessage("exception.missingParameter") +
+      printError(stderr, getMessage("exception.missingParameter") +
         ((CommandLine.MissingParameterException) ex).getMissing()
           .stream()
           .map(CommandLine.Model.ArgSpec::paramLabel)
-          .collect(Collectors.toList())
-      );
+          .collect(Collectors.toList()));
     }
     if (ex instanceof CommandLine.OverwrittenOptionException) {
-      stderr.println(getMessage("exception.overwrittenOption")
+      printError(stderr, getMessage("exception.overwrittenOption")
         + ((CommandLine.OverwrittenOptionException) ex).getOverwritten().paramLabel());
     }
     if (ex instanceof CommandLine.MaxValuesExceededException) {
-      stderr.println(getMessage("exception.maxValuesExceeded"));
+      printError(stderr, getMessage("exception.maxValuesExceeded"));
     }
     if (ex instanceof CommandLine.MutuallyExclusiveArgsException) {
-      stderr.println(getMessage("exception.mutuallyExclusiveArgs"));
+      printError(stderr, getMessage("exception.mutuallyExclusiveArgs"));
     }
     if (ex instanceof CommandLine.UnmatchedArgumentException) {
-      stderr.println(getMessage("exception.unmatchedArguments")
+      printError(stderr, getMessage("exception.unmatchedArguments")
         + ((CommandLine.UnmatchedArgumentException) ex).getUnmatched());
     }
-    stderr.print(cmd.getHelp().fullSynopsis());
-    stderr.println(getMessage("exception.help"));
-    stderr.println();
+    if (ex.getMessage().equals("Missing required subcommand")) {
+      printError(stderr, getMessage("exception.missingSubCommand"));
+    }
+
+    // Print command description or suggestions to avoid this error
+    if (!CommandLine.UnmatchedArgumentException.printSuggestions(ex, stderr)) {
+      ex.getCommandLine().usage(stderr);
+    }
+  }
+
+  private void printError(PrintWriter stderr, String message) {
+    stderr.println(getMessage("errorLabel") + ": " + message);
   }
 
   private String getMessage(String key) {
