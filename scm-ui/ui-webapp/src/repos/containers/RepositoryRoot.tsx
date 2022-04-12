@@ -176,7 +176,7 @@ const RepositoryRoot = () => {
 
   const extensionProps = {
     repository,
-    url,
+    url: urls.escapeUrlForRoute(url),
     indexLinks
   };
 
@@ -249,7 +249,7 @@ const RepositoryRoot = () => {
         <CustomQueryFlexWrappedColumns>
           <PrimaryContentColumn>
             <Switch>
-              <Redirect exact from={match.url} to={redirectedUrl} />
+              <Redirect exact from={urls.escapeUrlForRoute(match.url)} to={urls.escapeUrlForRoute(redirectedUrl)} />
 
               {/* redirect pre 2.0.0-rc2 links */}
               <Redirect from={`${escapedUrl}/changeset/:id`} to={`${url}/code/changeset/:id`} />

@@ -43,7 +43,7 @@ const ChangesetRoot: FC<Props> = ({ repository, baseUrl, branches, selectedBranc
     return null;
   }
 
-  const url = urls.stripEndingSlash(match.url);
+  const url = urls.stripEndingSlash(urls.escapeUrlForRoute(match.url));
   const defaultBranch = branches?.find(b => b.defaultBranch === true);
 
   const isBranchAvailable = () => {
