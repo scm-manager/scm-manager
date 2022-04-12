@@ -42,7 +42,7 @@
   --scm-border-color: #{$border};
   --scm-border: #{$border-width} solid #{$border};
 
-  --scm-popover-border-color: #{$white};
+  --scm-popover-border-color: #{$popover-border-color};
 }
 
 // TODO split into multiple files
@@ -308,6 +308,8 @@ a.has-text-secondary-most:focus {
 }
 
 .popover {
+  border: 1px solid $popover-border-color;
+
   &:before {
     border-bottom-color: $popover-background-color;
     border-left-color: $popover-background-color;

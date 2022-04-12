@@ -24,6 +24,7 @@
 
 @import "utils/_pre.scss";
 
+/* Base */
 $warning-invert: #88550d;
 
 $border: $grey-lighter;
@@ -35,19 +36,19 @@ $secondary: $grey-light;
 $secondary-more: $grey-darker;
 $secondary-most: $black;
 
-// layout
+/* Layout */
 $footer-background-color: $white-ter;
 
-// element
+/* Elements */
 $button-disabled-opacity: 0.25;
 
 $subtitle-color: #666;
 
-// component
+/* Components */
 $menu-label-color: $white;
 $menu-item-color: #333;
 
-// extension
+/* Extensions */
 $popover-background-color: $grey-light;
 
 @import "utils/_post.scss";
