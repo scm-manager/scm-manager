@@ -891,7 +891,7 @@ exports[`Storyshots Buttons/CreateButton Default 1`] = `
   className="indexstories__Spacing-bpoict-0 ieMGHp"
 >
   <div
-    className="CreateButton__Wrapper-f29oo-0 iODeHj has-text-centered mt-5 p-4"
+    className="CreateButton__Wrapper-f29oo-0 iVaJIs has-text-centered mt-5 p-4"
   >
     <button
       className="button is-primary"
