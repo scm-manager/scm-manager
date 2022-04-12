@@ -111,10 +111,16 @@ class LazyMarkdownView extends React.Component<Props, State> {
   }
 
   shouldComponentUpdate(nextProps: Readonly<Props>, nextState: Readonly<State>): boolean {
-    // We have check if the contentRef changed and update afterwards so the page can scroll to the anchor links.
-    // Otherwise it can happen that componentDidUpdate is never executed depending on how fast the markdown got rendered
+    // We have to check if the contentRef changed and update afterwards so the page can scroll to the anchor links.
+    // Otherwise, it can happen that componentDidUpdate is never executed depending on how fast the markdown got rendered
     // We also have to check if props have changed, because we also want to rerender if one of our props has changed
-    return this.state.contentRef !== nextState.contentRef || this.props !== nextProps;
+    const propsChanged = Object.entries(nextProps).some(([key, val]) => {
+      if (key === "match") {
+        return JSON.stringify(this.props[key]) !== JSON.stringify(nextProps[key]);
+      }
+      return this.props[key as keyof Props] !== val;
+    });
+    return this.state.contentRef !== nextState.contentRef || propsChanged;
   }
 
   componentDidUpdate() {
