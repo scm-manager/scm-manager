@@ -100,13 +100,13 @@ class LazyMarkdownView extends React.Component<Props, State> {
 
   static defaultProps: Partial<Props> = {
     enableAnchorHeadings: false,
-    skipHtml: false
+    skipHtml: false,
   };
 
   constructor(props: Props) {
     super(props);
     this.state = {
-      contentRef: null
+      contentRef: null,
     };
   }
 
@@ -114,7 +114,14 @@ class LazyMarkdownView extends React.Component<Props, State> {
     // We have check if the contentRef changed and update afterwards so the page can scroll to the anchor links.
     // Otherwise it can happen that componentDidUpdate is never executed depending on how fast the markdown got rendered
     // We also have to check if props have changed, because we also want to rerender if one of our props has changed
-    return this.state.contentRef !== nextState.contentRef || this.props !== nextProps;
+    const propsChanged = Object.entries(nextProps).some(([key, val]) => {
+      if (this.props[key] !== val) {
+        console.log("props changed", key, val, this.props[key]);
+        return true;
+      }
+      return false;
+    });
+    return this.state.contentRef !== nextState.contentRef || propsChanged;
   }
 
   componentDidUpdate() {
@@ -144,7 +151,7 @@ class LazyMarkdownView extends React.Component<Props, State> {
       basePath,
       permalink,
       t,
-      mdastPlugins = []
+      mdastPlugins = [],
     } = this.props;
 
     const rendererFactory = this.context.getExtension("markdown-renderer-factory");
@@ -201,25 +208,25 @@ class LazyMarkdownView extends React.Component<Props, State> {
         sanitize,
         merge(gh, {
           attributes: {
-            code: ["className"] // Allow className for code elements, this is necessary to extract the code language
+            code: ["className"], // Allow className for code elements, this is necessary to extract the code language
           },
           clobberPrefix: "", // Do not prefix user-provided ids and class names,
           protocols: {
-            href: Object.keys(protocolLinkRendererExtensions)
-          }
+            href: Object.keys(protocolLinkRendererExtensions),
+          },
         })
       )
       .use(rehype2react, {
         createElement: React.createElement,
         passNode: true,
-        components: createComponentList(remarkRendererList, { permalink })
+        components: createComponentList(remarkRendererList, { permalink }),
       });
 
     const renderedMarkdown: any = processor.processSync(content).result;
 
     return (
       <ErrorBoundary fallback={MarkdownErrorNotification}>
-        <div ref={el => this.setState({ contentRef: el })} className="content is-word-break">
+        <div ref={(el) => this.setState({ contentRef: el })} className="content is-word-break">
           {renderedMarkdown}
         </div>
       </ErrorBoundary>
