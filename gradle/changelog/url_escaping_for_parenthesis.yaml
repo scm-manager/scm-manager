@@ -1,0 +1,2 @@
+- type: fixed
+  description: Escape parenthesis for entity names to fix routing ([#1998](https://github.com/scm-manager/scm-manager/pull/1998))
