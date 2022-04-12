@@ -47,13 +47,12 @@ const SingleRepositoryRole: FC = () => {
   }
 
   const url = urls.matchedUrlFromMatch(match);
+  const escapedUrl = urls.escapeUrlForRoute(url);
 
   const extensionProps = {
     role,
-    url
+    url: escapedUrl
   };
-
-  const escapedUrl = urls.escapeUrlForRoute(url);
 
   return (
     <>

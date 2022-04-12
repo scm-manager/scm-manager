@@ -59,13 +59,12 @@ const SingleGroup: FC = () => {
   }
 
   const url = urls.matchedUrlFromMatch(match);
+  const escapedUrl = urls.escapeUrlForRoute(url);
 
   const extensionProps = {
     group,
-    url
+    url: escapedUrl
   };
-
-  const escapedUrl = urls.escapeUrlForRoute(url);
 
   return (
     <StateMenuContextProvider>
@@ -73,15 +72,15 @@ const SingleGroup: FC = () => {
         <CustomQueryFlexWrappedColumns>
           <PrimaryContentColumn>
             <Route path={escapedUrl} exact>
-              <Details group={group}/>
+              <Details group={group} />
             </Route>
             <Route path={`${escapedUrl}/settings/general`} exact>
-              <EditGroup group={group}/>
+              <EditGroup group={group} />
             </Route>
             <Route path={`${escapedUrl}/settings/permissions`} exact>
-              <SetGroupPermissions group={group}/>
+              <SetGroupPermissions group={group} />
             </Route>
-            <ExtensionPoint<extensionPoints.GroupRoute> name="group.route" props={extensionProps} renderAll={true}/>
+            <ExtensionPoint<extensionPoints.GroupRoute> name="group.route" props={extensionProps} renderAll={true} />
           </PrimaryContentColumn>
           <SecondaryNavigationColumn>
             <SecondaryNavigation label={t("singleGroup.menu.navigationLabel")}>
@@ -101,8 +100,8 @@ const SingleGroup: FC = () => {
                 label={t("singleGroup.menu.settingsNavLink")}
                 title={t("singleGroup.menu.settingsNavLink")}
               >
-                <EditGroupNavLink group={group} editUrl={`${url}/settings/general`}/>
-                <SetPermissionsNavLink group={group} permissionsUrl={`${url}/settings/permissions`}/>
+                <EditGroupNavLink group={group} editUrl={`${url}/settings/general`} />
+                <SetPermissionsNavLink group={group} permissionsUrl={`${url}/settings/permissions`} />
                 <ExtensionPoint<extensionPoints.GroupSetting>
                   name="group.setting"
                   props={extensionProps}

@@ -335,7 +335,7 @@ const RepositoryRoot = () => {
                 linkName="tags"
                 to={`${url}/tags/`}
                 icon="fas fa-tags"
-                label={t("repositoryRoot.menu.tagsNavL" + "ink")}
+                label={t("repositoryRoot.menu.tagsNavLink")}
                 activeWhenMatch={matchesTags}
                 activeOnlyWhenExact={false}
                 title={t("repositoryRoot.menu.tagsNavLink")}
