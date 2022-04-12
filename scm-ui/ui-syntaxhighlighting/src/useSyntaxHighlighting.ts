@@ -25,29 +25,9 @@
 import { useEffect, useRef, useState } from "react";
 
 // @ts-ignore TODO
-import theme from "./syntax-highlighting.module.css";
 import { nanoid } from "nanoid";
-import {
-  HighlightingRequest,
-  LoadThemeRequest,
-  RefractorNode,
-  Response,
-  ResponseMessage,
-  SuccessResponse,
-} from "./types";
-
-// WebWorker which creates tokens for syntax highlighting
-// @ts-ignore
-const worker = new Worker(
-  // @ts-ignore TODO
-  new URL("./SyntaxHighlighter.worker.ts", import.meta.url),
-  {
-    name: "SyntaxHighlighter",
-    type: "module",
-  }
-);
-
-worker.postMessage({ type: "theme", payload: theme } as LoadThemeRequest);
+import { HighlightingRequest, RefractorNode, Response, ResponseMessage, SuccessResponse } from "./types";
+import useSyntaxHighlightingWorker from "./useSyntaxHighlightingWorker";
 
 const isSuccess = (response: Response): response is SuccessResponse => {
   return response.type === "success";
@@ -68,6 +48,7 @@ const useSyntaxHighlighting = ({
   groupByLine = false,
   markedTexts,
 }: UseSyntaxHighlightingOptions) => {
+  const worker = useSyntaxHighlightingWorker();
   const job = useRef(nanoid());
   const [isLoading, setIsLoading] = useState(true);
   const [tree, setTree] = useState<Array<RefractorNode> | undefined>(undefined);
