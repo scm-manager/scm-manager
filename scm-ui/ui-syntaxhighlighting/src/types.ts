@@ -20,7 +20,7 @@ export type HighlightingRequest = MessageData<
     value: string;
     nodeLimit: number;
     groupByLine: boolean;
-    markerBounds?: MarkerBounds;
+    markedTexts?: string[];
   }
 >;
 

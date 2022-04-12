@@ -46,6 +46,7 @@ export type Props = {
   language?: string;
   lineWrapper?: LineWrapperType;
   markerConfig?: MarkerConfig;
+  nodeLimit?: number;
 };
 
 function mapWithDepth(depth: number, lineWrapper?: LineWrapperType, markerReplacement?: ComponentType) {
@@ -161,15 +162,15 @@ const createFallbackContent = (
   return <SplitAndReplace key="fract" text={value} replacements={replacements} textWrapper={(s) => s} />;
 };
 
-const SyntaxHighlighter = ({ value, lineWrapper, language = "text", markerConfig }: Props) => {
+const SyntaxHighlighter = ({ value, lineWrapper, language = "text", markerConfig, nodeLimit = 10000 }: Props) => {
   // TODO error
   const { strippedValue, replacements } = markContent(value, markerConfig);
   const { isLoading, tree } = useSyntaxHighlighting({
     value: strippedValue,
     language,
-    nodeLimit: 1000,
+    nodeLimit,
     groupByLine: !!lineWrapper,
-    markerBounds: markerConfig ? { start: markerConfig.start, end: markerConfig.end } : undefined,
+    markedTexts: replacements.length ? replacements.map((replacement) => replacement.textToReplace) : undefined,
   });
   const fallbackContent = useMemo(
     () => createFallbackContent(strippedValue, lineWrapper, replacements),

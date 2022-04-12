@@ -30,7 +30,6 @@ import { nanoid } from "nanoid";
 import {
   HighlightingRequest,
   LoadThemeRequest,
-  MarkerBounds,
   RefractorNode,
   Response,
   ResponseMessage,
@@ -59,7 +58,7 @@ export type UseSyntaxHighlightingOptions = {
   language: string;
   nodeLimit: number;
   groupByLine?: boolean;
-  markerBounds?: MarkerBounds;
+  markedTexts?: string[];
 };
 
 const useSyntaxHighlighting = ({
@@ -67,7 +66,7 @@ const useSyntaxHighlighting = ({
   language,
   nodeLimit,
   groupByLine = false,
-  markerBounds,
+  markedTexts,
 }: UseSyntaxHighlightingOptions) => {
   const job = useRef(nanoid());
   const [isLoading, setIsLoading] = useState(true);
@@ -84,7 +83,7 @@ const useSyntaxHighlighting = ({
       language,
       nodeLimit,
       groupByLine,
-      markerBounds,
+      markedTexts,
     };
 
     worker.postMessage({

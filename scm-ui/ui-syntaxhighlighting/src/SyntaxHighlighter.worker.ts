@@ -23,13 +23,12 @@
  */
 
 import groupByLines from "./groupByLines";
-import type { RefractorElement, Text } from "refractor";
+import type { RefractorElement } from "refractor";
 import createRefractor, { RefractorAdapter } from "./refractorAdapter";
 import type {
   FailureResponse,
   HighlightingRequest,
   LoadThemeRequest,
-  MarkerBounds,
   RefractorNode,
   Request,
   RequestMessage,
@@ -51,44 +50,55 @@ function isRefractorElement(node: RefractorNode): node is RefractorElement {
   return (node as RefractorElement).tagName !== undefined;
 }
 
-const countChildren = (node: RefractorNode, markerBounds?: MarkerBounds) => {
+const countChildrenAndApplyMarkers = (node: RefractorNode, markedTexts?: string[]) => {
   if (isRefractorElement(node)) {
-    return countAndMarkNodes(node.children, markerBounds);
+    return countAndMarkNodes(node.children, markedTexts);
   } else {
-    if (markerBounds) {
-      const { start: preTag, end: postTag } = markerBounds;
+    if (markedTexts) {
       let content = node.value;
-      const newChildren = [];
+      const newChildren: RefractorNode[] = [];
       while (content.length) {
-        const start = content.indexOf(preTag);
-        const end = content.indexOf(postTag);
-        if (start >= 0 && end >= 0) {
-          newChildren.push(content.substring(0, start));
-          newChildren.push(content.substring(start + preTag.length, end));
-          content = content.substring(end + postTag.length);
-        } else {
+        let foundSomething = false;
+        for (const markedText of markedTexts) {
+          const start = content.indexOf(markedText);
+          if (start >= 0) {
+            foundSomething = true;
+            const end = start + markedText.length;
+            newChildren.push({ type: "text", value: content.substring(0, start) });
+            newChildren.push({
+              type: "element",
+              tagName: "mark",
+              properties: {
+                ["data-marked"]: true,
+              },
+              children: [{ type: "text", value: content.substring(start, end) }],
+            });
+            content = content.substring(end);
+          }
+        }
+        if (!foundSomething) {
           break;
         }
       }
+      if (content.length) {
+        newChildren.push({ type: "text", value: content });
+      }
       if (newChildren.length > 0) {
-        node.children = newChildren.map<Text>((value) => ({ type: "text", value }));
+        node.children = newChildren;
         (node as any).type = "element";
-        node.tagName = "mark";
-        node.properties = {
-          ["data-marked"]: true,
-        };
+        node.tagName = "span";
         return newChildren.length + 1;
       }
     }
     return 1;
   }
 };
-const countAndMarkNodes = (nodes: RefractorNode[], markerBounds?: MarkerBounds): number =>
-  nodes.reduce((count, node) => count + countChildren(node, markerBounds), 0);
+const countAndMarkNodes = (nodes: RefractorNode[], markedTexts?: string[]): number =>
+  nodes.reduce((count, node) => count + countChildrenAndApplyMarkers(node, markedTexts), 0);
 
 function doHighlighting({
   id,
-  payload: { value, language, nodeLimit, groupByLine, markerBounds },
+  payload: { value, language, nodeLimit, groupByLine, markedTexts },
 }: HighlightingRequest) {
   const highlightContent = (worker: Worker) => {
     try {
@@ -106,7 +116,7 @@ function doHighlighting({
       }
 
       if (nodeLimit > 0) {
-        const count = countAndMarkNodes(tree, markerBounds);
+        const count = countAndMarkNodes(tree, markedTexts);
         if (count > nodeLimit) {
           const payload: FailureResponse["payload"] = {
             reason: `node limit of ${nodeLimit} reached. Total nodes ${count}.`,

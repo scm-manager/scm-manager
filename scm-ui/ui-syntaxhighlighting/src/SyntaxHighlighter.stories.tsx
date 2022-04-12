@@ -140,3 +140,16 @@ MarkerWithLineNumbers.args = {
     wrapper: Mark,
   },
 };
+
+export const MarkerWithLineNumbersAndLimit = Template.bind({});
+MarkerWithLineNumbersAndLimit.args = {
+  language: "javascript",
+  value: HttpServerWithMarkerJs,
+  nodeLimit: 10,
+  lineWrapper: LineWrapper,
+  markerConfig: {
+    start: "<|[[--",
+    end: "--]]|>",
+    wrapper: Mark,
+  },
+};
