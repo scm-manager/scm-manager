@@ -21,8 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-type Predicate<P extends Record<any, any> = Record<any, any>> = (props: P) => boolean;
+type Predicate<P extends Record<any, any> = Record<any, any>> = (props: P) => unknown;
 
 type ExtensionRegistration<P, T> = {
   predicate: Predicate<P>;
@@ -78,15 +77,29 @@ export class Binder {
    *
    * @param extensionPoint name of extension point
    * @param extension provided extension
-   * @param predicate to decide if the extension gets rendered for the given props
    */
   bind<E extends ExtensionPointDefinition<string, unknown>>(extensionPoint: E["name"], extension: E["type"]): void;
+  /**
+   * Binds an extension to the extension point.
+   *
+   * @param extensionPoint name of extension point
+   * @param extension provided extension
+   * @param predicate to decide if the extension gets rendered for the given props
+   * @param extensionName name used for sorting alphabetically on retrieval (ASC)
+   */
   bind<E extends ExtensionPointDefinition<string, unknown, any>>(
     extensionPoint: E["name"],
     extension: E["type"],
     predicate?: Predicate<E["props"]>,
     extensionName?: string
   ): void;
+  /**
+   * Binds an extension to the extension point.
+   *
+   * @param extensionPoint name of extension point
+   * @param extension provided extension
+   * @param options object with additional settings
+   */
   bind<E extends ExtensionPointDefinition<string, unknown, any>>(
     extensionPoint: E["name"],
     extension: E["type"],
@@ -129,9 +142,14 @@ export class Binder {
    * Returns the first extension or null for the given extension point and its props.
    *
    * @param extensionPoint name of extension point
+   */
+  getExtension<E extends ExtensionPointDefinition<string, any>>(extensionPoint: E["name"]): E["type"] | null;
+  /**
+   * Returns the first extension or null for the given extension point and its props.
+   *
+   * @param extensionPoint name of extension point
    * @param props of the extension point
    */
-  getExtension<E extends ExtensionPointDefinition<string, any, undefined>>(extensionPoint: E["name"]): E["type"] | null;
   getExtension<E extends ExtensionPointDefinition<string, any, any>>(
     extensionPoint: E["name"],
     props: E["props"]
@@ -151,12 +169,15 @@ export class Binder {
    * Returns all registered extensions for the given extension point and its props.
    *
    * @param extensionPoint name of extension point
+   */
+  getExtensions<E extends ExtensionPointDefinition<string, unknown>>(extensionPoint: E["name"]): Array<E["type"]>;
+  /**
+   * Returns all registered extensions for the given extension point and its props.
+   *
+   * @param extensionPoint name of extension point
    * @param props of the extension point
    */
-  getExtensions<E extends ExtensionPointDefinition<string, any, undefined>>(
-    extensionPoint: E["name"]
-  ): Array<E["type"]>;
-  getExtensions<E extends ExtensionPointDefinition<string, any, any>>(
+  getExtensions<E extends ExtensionPointDefinition<string, unknown, any>>(
     extensionPoint: E["name"],
     props: E["props"]
   ): Array<E["type"]>;
@@ -175,11 +196,19 @@ export class Binder {
   /**
    * Returns true if at least one extension is bound to the extension point and its props.
    */
+  hasExtension<E extends ExtensionPointDefinition<string, unknown>>(extensionPoint: E["name"]): boolean;
+  /**
+   * Returns true if at least one extension is bound to the extension point and its props.
+   */
+  hasExtension<E extends ExtensionPointDefinition<string, unknown, any>>(
+    extensionPoint: E["name"],
+    props: E["props"]
+  ): boolean;
   hasExtension<E extends ExtensionPointDefinition<any, unknown, any>>(
     extensionPoint: E["name"],
     props?: E["props"]
   ): boolean {
-    return this.getExtensions<E>(extensionPoint, props).length > 0;
+    return this.getExtensions(extensionPoint, props).length > 0;
   }
 
   /**

@@ -65,6 +65,9 @@ dependencies {
   api libraries.jaxRs
   testImplementation libraries.resteasyCore
 
+  // cli
+  api libraries.picocli
+
   // json
   api libraries.jacksonCore
   api libraries.jacksonAnnotations
@@ -109,6 +112,7 @@ dependencies {
   testImplementation libraries.junitJupiterApi
   testImplementation libraries.junitJupiterParams
   testRuntimeOnly libraries.junitJupiterEngine
+  testImplementation libraries.junitPioneer
 
   // shiro
   testImplementation libraries.shiroExtension

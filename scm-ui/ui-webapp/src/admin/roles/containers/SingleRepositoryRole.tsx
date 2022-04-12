@@ -24,7 +24,7 @@
 import React, { FC } from "react";
 import { Route, useParams, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import { ErrorPage, Loading, Title, urls } from "@scm-manager/ui-components";
 import PermissionRoleDetail from "../components/PermissionRoleDetails";
 import EditRepositoryRole from "./EditRepositoryRole";
@@ -62,7 +62,7 @@ const SingleRepositoryRole: FC = () => {
       <Route path={`${url}/edit`} exact>
         <EditRepositoryRole role={role} />
       </Route>
-      <ExtensionPoint name="roles.route" props={extensionProps} renderAll={true} />
+      <ExtensionPoint<extensionPoints.RolesRoute> name="roles.route" props={extensionProps} renderAll={true} />
     </>
   );
 };

@@ -46,6 +46,7 @@ export const useUpdateConfig = () => {
       onSuccess: async () => {
         await queryClient.invalidateQueries("config");
         await queryClient.invalidateQueries("index");
+        await queryClient.invalidateQueries("pluginCenterAuth");
       }
     }
   );

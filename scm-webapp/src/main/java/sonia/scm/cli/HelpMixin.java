@@ -22,22 +22,12 @@
  * SOFTWARE.
  */
 
-package sonia.scm.search;
+package sonia.scm.cli;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
-import sonia.scm.NotFoundException;
+import picocli.CommandLine;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+public class HelpMixin {
 
-@ExtendWith(MockitoExtension.class)
-class SearchableTypeResolverTest {
-
-  private final SearchableTypeResolver resolver = new SearchableTypeResolver();
-
-  @Test
-  void shouldThrowNotFoundForNullValue() {
-    assertThrows(NotFoundException.class, () -> resolver.resolve(null));
-  }
+  @CommandLine.Option(names = {"--help", "-h"}, usageHelp = true, descriptionKey = "scm.help.usage.description.0")
+  private boolean usageHelp;
 }

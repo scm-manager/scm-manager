@@ -24,7 +24,7 @@
 
 import React, { FC } from "react";
 import SyntaxHighlighter from "../SyntaxHighlighter";
-import { ExtensionPoint, useBinder } from "@scm-manager/ui-extensions";
+import { ExtensionPoint, extensionPoints, useBinder } from "@scm-manager/ui-extensions";
 import { useIndexLinks } from "@scm-manager/ui-api";
 
 type Props = {
@@ -32,14 +32,15 @@ type Props = {
   value: string;
 };
 
-const MarkdownCodeRenderer: FC<Props> = (props) => {
+const MarkdownCodeRenderer: FC<Props> = props => {
   const binder = useBinder();
   const indexLinks = useIndexLinks();
   const { language } = props;
 
-  const extensionKey = `markdown-renderer.code.${language}`;
-  if (binder.hasExtension(extensionKey, props)) {
-    return <ExtensionPoint name={extensionKey} props={{ ...props, indexLinks }} />;
+  const extensionProps = { ...props, indexLinks };
+  const extensionKey = `markdown-renderer.code.${language}` as const;
+  if (binder.hasExtension<extensionPoints.MarkdownCodeRenderer>(extensionKey, extensionProps)) {
+    return <ExtensionPoint<extensionPoints.MarkdownCodeRenderer> name={extensionKey} props={extensionProps} />;
   }
   return <SyntaxHighlighter {...props} />;
 };

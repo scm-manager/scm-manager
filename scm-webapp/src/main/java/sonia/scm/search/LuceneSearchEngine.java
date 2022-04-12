@@ -27,6 +27,8 @@ package sonia.scm.search;
 import com.google.common.base.Joiner;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.work.CentralWorkQueue;
 import sonia.scm.work.CentralWorkQueue.Enqueue;
 import sonia.scm.work.Task;
@@ -40,6 +42,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class LuceneSearchEngine implements SearchEngine {
+
+  private static final Logger LOG = LoggerFactory.getLogger(LuceneSearchEngine.class);
 
   private final IndexManager indexManager;
   private final SearchableTypeResolver resolver;
@@ -128,8 +132,17 @@ public class LuceneSearchEngine implements SearchEngine {
       indexManager.all()
         .stream()
         .filter(predicate)
+        .filter(this::isTypeAvailable)
         .map(details -> new IndexParams(details.getName(), resolver.resolve(details.getType())))
         .forEach(consumer);
+    }
+
+    private boolean isTypeAvailable(IndexDetails details) {
+      if (details.getType() == null) {
+        LOG.info("no type found for index with name '{}'; index will not be updated", details.getName());
+        return false;
+      }
+      return true;
     }
 
     private void batch(IndexParams params, Task task) {

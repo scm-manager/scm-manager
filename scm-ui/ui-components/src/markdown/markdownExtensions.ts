@@ -21,18 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import { FC } from "react";
+import { extensionPoints, ExtractProps } from "@scm-manager/ui-extensions";
 
-export type ProtocolLinkRendererProps = {
-  protocol: string;
-  href: string;
-};
+export type ProtocolLinkRendererProps<Protocol extends string | undefined = undefined> = ExtractProps<
+  extensionPoints.MarkdownLinkProtocolRenderer<Protocol>["type"]["renderer"]
+>;
 
-export type ProtocolLinkRendererExtension = {
-  protocol: string;
-  renderer: FC<ProtocolLinkRendererProps>;
-};
+/**
+ * @deprecated use {@link MarkdownLinkProtocolRenderer}`["type"]` instead
+ */
+export type ProtocolLinkRendererExtension = extensionPoints.MarkdownLinkProtocolRenderer["type"];
 
 export type ProtocolLinkRendererExtensionMap = {
-  [protocol: string]: FC<ProtocolLinkRendererProps>;
+  [protocol: string]: extensionPoints.MarkdownLinkProtocolRenderer["type"]["renderer"] | undefined;
 };

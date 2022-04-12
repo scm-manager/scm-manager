@@ -26,7 +26,7 @@ import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
 import { Repository } from "@scm-manager/ui-types";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import { TooltipLocation } from "../Tooltip";
 import RepositoryFlag from "./RepositoryFlag";
 import HealthCheckFailureDetail from "./HealthCheckFailureDetail";
@@ -90,7 +90,11 @@ const RepositoryFlags: FC<Props> = ({ repository, className, tooltipLocation = "
       {modal}
       <RepositoryFlagContainer>
         {repositoryFlags}
-        <ExtensionPoint name="repository.flags" props={{ repository, tooltipLocation }} renderAll={true} />
+        <ExtensionPoint<extensionPoints.RepositoryFlags>
+          name="repository.flags"
+          props={{ repository, tooltipLocation }}
+          renderAll={true}
+        />
       </RepositoryFlagContainer>
     </div>
   );

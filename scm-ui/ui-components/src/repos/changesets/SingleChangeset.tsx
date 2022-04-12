@@ -24,7 +24,7 @@
 import React, { FC } from "react";
 import classNames from "classnames";
 import { AvatarImage, AvatarWrapper } from "../../avatar";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import ChangesetDescription from "./ChangesetDescription";
 import { Trans } from "react-i18next";
 import ChangesetAuthor from "./ChangesetAuthor";
@@ -72,7 +72,7 @@ const SingleChangeset: FC<Props> = ({ repository, changeset }) => {
           </AvatarWrapper>
           <FullWidthDiv className={classNames("media-right", "ml-0")}>
             <h4 className={classNames("has-text-weight-bold", "is-ellipsis-overflow")}>
-              <ExtensionPoint
+              <ExtensionPoint<extensionPoints.ChangesetDescription>
                 name="changeset.description"
                 props={{
                   changeset,

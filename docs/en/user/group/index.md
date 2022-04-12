@@ -23,3 +23,8 @@ Groups only require a name. It is also possible to add members to a group direct
 The information page of a group shows the meta data as well as the members.
 
 ![Group-Information](assets/groups-information.png)
+
+### Group for all Users
+To apply settings or permissions for all regular users (that is all accounts except anonymous),
+one can use the group `_authenticated`. This group is an implicit one and every user account except `anonymous` is a
+member of this group.

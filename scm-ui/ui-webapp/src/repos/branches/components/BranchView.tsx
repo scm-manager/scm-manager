@@ -23,7 +23,7 @@
  */
 import React from "react";
 import BranchDetail from "./BranchDetail";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import { Branch, Repository } from "@scm-manager/ui-types";
 import BranchDangerZone from "../containers/BranchDangerZone";
 
@@ -40,7 +40,7 @@ class BranchView extends React.Component<Props> {
         <BranchDetail repository={repository} branch={branch} />
         <hr />
         <div className="content">
-          <ExtensionPoint
+          <ExtensionPoint<extensionPoints.ReposBranchDetailsInformation>
             name="repos.branch-details.information"
             renderAll={true}
             props={{

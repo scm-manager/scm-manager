@@ -24,7 +24,7 @@
 import React, { FC } from "react";
 import classNames from "classnames";
 import styled from "styled-components";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import { Changeset, File, Repository } from "@scm-manager/ui-types";
 import ChangesetButtonGroup from "./ChangesetButtonGroup";
 import SingleChangeset from "./SingleChangeset";
@@ -54,7 +54,7 @@ const ChangesetRow: FC<Props> = ({ repository, changeset, file }) => {
         </div>
         <div className={classNames("column", "is-flex", "is-justify-content-flex-end", "is-align-items-center")}>
           <ChangesetButtonGroup repository={repository} changeset={changeset} file={file} />
-          <ExtensionPoint
+          <ExtensionPoint<extensionPoints.ChangesetRight>
             name="changeset.right"
             props={{
               repository,

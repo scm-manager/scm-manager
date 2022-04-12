@@ -149,6 +149,16 @@ class PluginCenterAuthResourceTest {
 
     @Test
     @SubjectAware(value = "marvin", permissions = "plugin:write")
+    void shouldNotReturnLoginLinkIfPermittedButNotConfigured() throws URISyntaxException, IOException {
+      scmConfiguration.setPluginAuthUrl(null);
+
+      JsonNode root = getJson("/v2/plugins/auth");
+
+      assertThat(root.get("_links").get("login")).isNull();
+    }
+
+    @Test
+    @SubjectAware(value = "marvin", permissions = "plugin:write")
     void shouldReturnReconnectAndLogoutLinkForFailedAuthentication() throws URISyntaxException, IOException {
       JsonNode root = requestAuthInfo(true);
 

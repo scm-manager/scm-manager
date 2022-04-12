@@ -86,9 +86,6 @@ class SearchableTypeResolver {
   }
 
   public LuceneSearchableType resolve(Class<?> type) {
-    if (type == null) {
-      throw notFound(entity("type", "null"));
-    }
     LuceneSearchableType searchableType = classToSearchableType.get(type);
     if (searchableType == null) {
       throw notFound(entity("type", type.getName()));

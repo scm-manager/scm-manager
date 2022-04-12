@@ -61,6 +61,10 @@ const RowContainer = styled.div`
   &:hover i {
     visibility: visible;
   }
+  // override bulma default styling of .section
+  .section {
+    padding: 0;
+  }
 `;
 
 type CreateLinePermaLinkFn = (lineNumber: number) => string;

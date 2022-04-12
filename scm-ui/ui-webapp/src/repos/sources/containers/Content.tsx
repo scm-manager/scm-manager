@@ -25,7 +25,7 @@ import React, { FC, ReactNode, useState } from "react";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import { File, Repository } from "@scm-manager/ui-types";
 import { DateFromNow, ErrorNotification, FileSize, Icon, OpenInFullscreenButton } from "@scm-manager/ui-components";
 import FileButtonAddons from "../components/content/FileButtonAddons";
@@ -136,7 +136,7 @@ const Content: FC<Props> = ({ file, repository, revision, breadcrumb, error }) =
               modalBody={<BorderLessDiv className="panel">{content}</BorderLessDiv>}
               tooltipStyle="htmlTitle"
             />
-            <ExtensionPoint
+            <ExtensionPoint<extensionPoints.ReposSourcesContentActionBar>
               name="repos.sources.content.actionbar"
               props={{
                 repository,
@@ -195,7 +195,7 @@ const Content: FC<Props> = ({ file, repository, revision, breadcrumb, error }) =
                   <td>{t("sources.content.description")}</td>
                   <td className="is-word-break">{description}</td>
                 </tr>
-                <ExtensionPoint
+                <ExtensionPoint<extensionPoints.ReposContentMetaData>
                   name="repos.content.metadata"
                   renderAll={true}
                   props={{

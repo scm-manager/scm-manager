@@ -38,8 +38,8 @@ import MarkdownChangelog from "../__resources__/markdown-changelog.md";
 import Title from "../layout/Title";
 import { Subtitle } from "../layout";
 import { MemoryRouter } from "react-router-dom";
-import { Binder, BinderContext } from "@scm-manager/ui-extensions";
-import { ProtocolLinkRendererExtension, ProtocolLinkRendererProps } from "./markdownExtensions";
+import { Binder, BinderContext, extensionPoints } from "@scm-manager/ui-extensions";
+import { ProtocolLinkRendererProps } from "./markdownExtensions";
 
 const Spacing = styled.div`
   padding: 2em;
@@ -64,10 +64,10 @@ storiesOf("MarkdownView", module)
   ))
   .add("Links", () => {
     const binder = new Binder("custom protocol link renderer");
-    binder.bind("markdown-renderer.link.protocol", {
+    binder.bind<extensionPoints.MarkdownLinkProtocolRenderer<"scw">>("markdown-renderer.link.protocol", {
       protocol: "scw",
       renderer: ProtocolLinkRenderer
-    } as ProtocolLinkRendererExtension);
+    });
     return (
       <BinderContext.Provider value={binder}>
         <MarkdownView content={MarkdownLinks} basePath="/scm/" />
@@ -76,10 +76,10 @@ storiesOf("MarkdownView", module)
   })
   .add("Links without Base Path", () => {
     const binder = new Binder("custom protocol link renderer");
-    binder.bind("markdown-renderer.link.protocol", {
+    binder.bind<extensionPoints.MarkdownLinkProtocolRenderer<"scw">>("markdown-renderer.link.protocol", {
       protocol: "scw",
       renderer: ProtocolLinkRenderer
-    } as ProtocolLinkRendererExtension);
+    });
     return (
       <BinderContext.Provider value={binder}>
         <MarkdownView content={MarkdownLinks} />
@@ -107,7 +107,7 @@ storiesOf("MarkdownView", module)
         </div>
       );
     };
-    binder.bind("markdown-renderer.code.uml", Container);
+    binder.bind<extensionPoints.MarkdownCodeRenderer<"uml">>("markdown-renderer.code.uml", Container);
     return (
       <BinderContext.Provider value={binder}>
         <MarkdownView content={MarkdownUmlCodeBlock} />
@@ -116,7 +116,7 @@ storiesOf("MarkdownView", module)
   })
   .add("XSS Prevention", () => <MarkdownView content={MarkdownXss} skipHtml={false} />);
 
-export const ProtocolLinkRenderer: FC<ProtocolLinkRendererProps> = ({ protocol, href, children }) => {
+export const ProtocolLinkRenderer: FC<ProtocolLinkRendererProps<"scw">> = ({ protocol, href, children }) => {
   return (
     <div style={{ border: "1px dashed lightgray", padding: "2px" }}>
       <h4>

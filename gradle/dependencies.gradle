@@ -54,6 +54,9 @@ ext {
     resteasyServletInitializer: "org.jboss.resteasy:resteasy-servlet-initializer:${resteasyVersion}",
     resteasyValidatorProvider: "org.jboss.resteasy:resteasy-validator-provider:${resteasyVersion}",
 
+    // cli
+    picocli: 'info.picocli:picocli:4.6.3',
+
     // json
     jacksonCore: "com.fasterxml.jackson.core:jackson-core:${jacksonVersion}",
     jacksonAnnotations: "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}",
@@ -163,6 +166,9 @@ ext {
     // junit 4 support
     junitVintageEngine: "org.junit.vintage:junit-vintage-engine:${junitJupiterVersion}",
     junit: 'junit:junit:4.13.1',
+
+    // junit 5 extensions
+    junitPioneer: 'org.junit-pioneer:junit-pioneer:1.6.2',
 
     // assertions
     hamcrestCore: "org.hamcrest:hamcrest-core:${hamcrestVersion}",

@@ -23,7 +23,7 @@
  */
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import { RepositoryRole } from "@scm-manager/ui-types";
 import { Button, Level } from "@scm-manager/ui-components";
 import PermissionRoleDetailsTable from "./PermissionRoleDetailsTable";
@@ -54,7 +54,7 @@ class PermissionRoleDetails extends React.Component<Props> {
       <>
         <PermissionRoleDetailsTable role={role} />
         {this.renderEditButton()}
-        <ExtensionPoint
+        <ExtensionPoint<extensionPoints.RepositoryRoleDetailsInformation>
           name="repositoryRole.role-details.information"
           renderAll={true}
           props={{

@@ -38,7 +38,7 @@ import {
 } from "@scm-manager/ui-components";
 import ChangeUserPassword from "./ChangeUserPassword";
 import ProfileInfo from "./ProfileInfo";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import SetPublicKeys from "../users/components/publicKeys/SetPublicKeys";
 import SetPublicKeysNavLink from "../users/components/navLinks/SetPublicKeysNavLink";
 import SetApiKeys from "../users/components/apiKeys/SetApiKeys";
@@ -100,7 +100,11 @@ const Profile: FC = () => {
                 <SetApiKeys user={me} />
               </Route>
             )}
-            <ExtensionPoint name="profile.route" props={extensionProps} renderAll={true} />
+            <ExtensionPoint<extensionPoints.ProfileRoute>
+              name="profile.route"
+              props={extensionProps}
+              renderAll={true}
+            />
           </PrimaryContentColumn>
           <SecondaryNavigationColumn>
             <SecondaryNavigation label={t("profile.navigationLabel")}>

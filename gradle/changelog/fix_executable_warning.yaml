@@ -1,0 +1,2 @@
+- type: fixed
+  description: Incorrect log warning "could not set executable flag"

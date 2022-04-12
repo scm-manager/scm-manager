@@ -27,7 +27,7 @@ import { Redirect, Route, Switch } from "react-router-dom";
 import { Links, Me } from "@scm-manager/ui-types";
 
 import { ErrorBoundary, Loading, ProtectedRoute } from "@scm-manager/ui-components";
-import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
+import { binder, ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 
 // auth routes
 const Login = React.lazy(() => import("../containers/Login"));
@@ -65,7 +65,7 @@ type Props = {
 
 const Main: FC<Props> = props => {
   const { authenticated, me } = props;
-  const redirectUrlFactory = binder.getExtension("main.redirect", props);
+  const redirectUrlFactory = binder.getExtension<extensionPoints.MainRedirect>("main.redirect", props);
   let url = "/";
   if (authenticated) {
     url = "/repos/";
@@ -110,7 +110,7 @@ const Main: FC<Props> = props => {
             <ProtectedRoute path="/search/:type/:page" component={Search} authenticated={authenticated} />
             <ProtectedRoute path="/search/:type/" component={Search} authenticated={authenticated} />
             <ProtectedRoute path="/help/search-syntax/" component={Syntax} authenticated={authenticated} />
-            <ExtensionPoint name="main.route" renderAll={true} props={props} />
+            <ExtensionPoint<extensionPoints.MainRoute> name="main.route" renderAll={true} props={props} />
           </Switch>
         </Suspense>
       </div>

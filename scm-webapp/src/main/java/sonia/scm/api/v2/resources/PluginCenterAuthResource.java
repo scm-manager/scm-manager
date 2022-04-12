@@ -263,7 +263,7 @@ public class PluginCenterAuthResource {
             .toASCIIString();
           builder.single(Link.link("reconnect", reconnectLink));
         }
-      } else {
+      } else if (!Strings.isNullOrEmpty(configuration.getPluginAuthUrl())) {
         builder.single(Link.link(METHOD_LOGIN, uriInfo.getAbsolutePathBuilder().path(METHOD_LOGIN).build().toASCIIString()));
       }
     }

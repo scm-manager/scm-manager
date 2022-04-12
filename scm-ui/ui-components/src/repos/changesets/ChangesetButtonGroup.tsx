@@ -26,6 +26,7 @@ import { Changeset, File, Repository } from "@scm-manager/ui-types";
 import { Button, ButtonAddons } from "../../buttons";
 import { createChangesetLink, createSourcesLink } from "./changesets";
 import { useTranslation } from "react-i18next";
+import styled from "styled-components";
 
 type Props = {
   repository: Repository;
@@ -33,14 +34,24 @@ type Props = {
   file?: File;
 };
 
+const SwitcherButton = styled(Button)`
+  padding-right: 0.75rem;
+  padding-left: 0.75rem;
+`;
+
 const ChangesetButtonGroup: FC<Props> = ({ repository, changeset, file }) => {
   const [t] = useTranslation("repos");
   const changesetLink = createChangesetLink(repository, changeset);
   const sourcesLink = createSourcesLink(repository, changeset, file);
   return (
     <ButtonAddons className="m-0">
-      <Button link={changesetLink} icon="exchange-alt" label={t("changeset.buttons.details")} reducedMobile={true} />
-      <Button link={sourcesLink} icon="code" label={t("changeset.buttons.sources")} reducedMobile={true} />
+      <SwitcherButton
+        link={changesetLink}
+        icon="exchange-alt"
+        label={t("changeset.buttons.details")}
+        reducedMobile={true}
+      />
+      <SwitcherButton link={sourcesLink} icon="code" label={t("changeset.buttons.sources")} reducedMobile={true} />
     </ButtonAddons>
   );
 };

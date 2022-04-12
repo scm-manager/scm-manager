@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import { binder } from "@scm-manager/ui-extensions";
+import { binder, extensionPoints } from "@scm-manager/ui-extensions";
 import ProtocolInformation from "./ProtocolInformation";
 import GitAvatar from "./GitAvatar";
 
@@ -40,9 +40,18 @@ export const gitPredicate = (props: any) => {
   return !!(props && props.repository && props.repository.type === "git");
 };
 
-binder.bind("repos.repository-details.information", ProtocolInformation, gitPredicate);
+binder.bind<extensionPoints.RepositoryDetailsInformation>(
+  "repos.repository-details.information",
+  ProtocolInformation,
+  gitPredicate
+);
 binder.bind("repos.branch-details.information", GitBranchInformation, { priority: 100, predicate: gitPredicate });
-binder.bind("repos.tag-details.information", GitTagInformation, gitPredicate);
+
+binder.bind<extensionPoints.RepositoryTagDetailsInformation>(
+  "repos.tag-details.information",
+  GitTagInformation,
+  gitPredicate
+);
 binder.bind("repos.repository-merge.information", GitMergeInformation, gitPredicate);
 binder.bind("repos.repository-avatar", GitAvatar, gitPredicate);
 

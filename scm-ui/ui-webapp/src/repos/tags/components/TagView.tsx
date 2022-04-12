@@ -24,7 +24,7 @@
 
 import React, { FC } from "react";
 import { Repository, Tag } from "@scm-manager/ui-types";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import TagDetail from "./TagDetail";
 import TagDangerZone from "../container/TagDangerZone";
 
@@ -39,7 +39,7 @@ const TagView: FC<Props> = ({ repository, tag }) => {
       <TagDetail tag={tag} repository={repository} />
       <hr />
       <div className="content">
-        <ExtensionPoint
+        <ExtensionPoint<extensionPoints.RepositoryTagDetailsInformation>
           name="repos.tag-details.information"
           renderAll={true}
           props={{
