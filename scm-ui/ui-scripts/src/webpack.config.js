@@ -127,6 +127,9 @@ module.exports = [
         fs: false,
         net: false,
         tls: false
+      },
+      alias: {
+        "decode-named-character-reference": require.resolve("decode-named-character-reference"),
       }
     },
     output: {
