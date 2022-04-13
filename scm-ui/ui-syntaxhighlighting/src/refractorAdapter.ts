@@ -44,8 +44,7 @@ const createAdapter = (theme: { [key: string]: string }): RefractorAdapter => {
     if (isLanguageRegistered(lang)) {
       callback();
     } else {
-      /* webpackChunkName: "refractor-[request]" */
-      import(`refractor/lang/${lang}.js`)
+      import(/* webpackChunkName: "sh-lang-[request]" */ `refractor/lang/${lang}.js`)
         .then((loadedLanguage) => {
           refractor.register(loadedLanguage.default);
           callback();

@@ -16831,11 +16831,6 @@ react-colorful@^5.1.2:
   resolved "https://registry.yarnpkg.com/react-colorful/-/react-colorful-5.5.0.tgz#8359f218984a927095477a190ab9927eaf865c0c"
   integrity sha512-BuzrlrM0ylg7coPkXOrRqlf2BgHLw5L44sybbr9Lg4xy7w9e5N7fGYbojOO0s8J0nvrM3PERN2rVFkvSa24lnQ==
 
-react-diff-view@^2.4.1:
-  version "2.4.7"
-  resolved "https://registry.yarnpkg.com/react-diff-view/-/react-diff-view-2.4.7.tgz#b0583ed85d61db300872014b08a289b2f363ac7e"
-  integrity sha512-M8NrVffIOPLqnQGfbv8VVnUVi80GefATRtneMQKo+uuqTx3IORO1mjrPUe3L0rmW/0xJucINjLWuLhSd1JX/tg==
-
 react-diff-view@^2.4.10:
   version "2.4.10"
   resolved "https://registry.yarnpkg.com/react-diff-view/-/react-diff-view-2.4.10.tgz#7d38ebd43683f0e506d0d38472c0607e24f30a58"
