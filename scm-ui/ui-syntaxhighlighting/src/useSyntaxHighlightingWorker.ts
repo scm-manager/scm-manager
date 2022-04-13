@@ -1,7 +1,7 @@
 // WebWorker which creates tokens for syntax highlighting
 // @ts-ignore
 import theme from "./syntax-highlighting.module.css";
-import { LoadThemeRequest } from "./types";
+import type { LoadThemeRequest } from "./types";
 
 const worker = new Worker(
   // @ts-ignore TODO

@@ -1,4 +1,4 @@
-import { RefractorElement, Text } from "refractor";
+import type { RefractorElement, Text } from "refractor/lib/core";
 
 export type Message<T> = { data: T };
 export type MessageData<T extends string, P> = { id: string; type: T; payload: P };
@@ -33,3 +33,7 @@ export type FailureResponse = MessageData<"failure", { reason: string }>;
 
 export type Response = SuccessResponse | FailureResponse;
 export type ResponseMessage = Message<Response>;
+
+export function isRefractorElement(node: RefractorNode): node is RefractorElement {
+  return (node as RefractorElement).tagName !== undefined;
+}

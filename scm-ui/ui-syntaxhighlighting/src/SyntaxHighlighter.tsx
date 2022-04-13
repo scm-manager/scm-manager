@@ -22,18 +22,18 @@
  * SOFTWARE.
  */
 
-import React, { ComponentType, ReactNode, useMemo } from "react";
+import React, { ComponentType, ReactChild, ReactNode, useMemo } from "react";
 import useSyntaxHighlighting from "./useSyntaxHighlighting";
 import type { RefractorElement } from "refractor";
 import type { Element } from "hast";
-import type { RefractorNode } from "./types";
-import { MarkerBounds } from "./types";
+import type { MarkerBounds, RefractorNode } from "./types";
 import { SplitAndReplace } from "@scm-manager/ui-text";
 
 type LineWrapperType = ComponentType<{ lineNumber: number }>;
 type MarkerConfig = MarkerBounds & {
   wrapper: ComponentType;
 };
+type RendererType = ComponentType<{ children: ReactChild[] }>;
 
 type Replacement = {
   textToReplace: string;
@@ -41,12 +41,16 @@ type Replacement = {
   replaceAll: boolean;
 };
 
+const DEFAULT_RENDERER = React.Fragment;
+const DEFAULT_LINE_WRAPPER: LineWrapperType = ({ children }) => <>{children}</>;
+
 export type Props = {
   value: string;
   language?: string;
   lineWrapper?: LineWrapperType;
   markerConfig?: MarkerConfig;
   nodeLimit?: number;
+  renderer?: RendererType;
 };
 
 function mapWithDepth(depth: number, lineWrapper?: LineWrapperType, markerReplacement?: ComponentType) {
@@ -63,7 +67,7 @@ function mapChild(
   depth: number,
   LineWrapper?: LineWrapperType,
   MarkerReplacement?: ComponentType
-): ReactNode {
+): ReactChild {
   if (isRefractorElement(childNode)) {
     const child = childNode as Element;
     const className =
@@ -85,7 +89,7 @@ function mapChild(
         const isMarked = child.properties["data-marked"];
         if (isMarked) {
           return (
-            <MarkerReplacement>
+            <MarkerReplacement key={`marker-${depth}-${i}`}>
               {childNode.children && childNode.children.map(mapWithDepth(depth + 1, LineWrapper, MarkerReplacement))}
             </MarkerReplacement>
           );
@@ -145,49 +149,69 @@ const markContent = (value: string, markerConfig?: MarkerConfig) =>
 
 const createFallbackContent = (
   value: string,
-  LineWrapper?: LineWrapperType,
+  lineWrapper?: LineWrapperType,
+  renderer?: RendererType,
   replacements: Replacement[] = []
 ): ReactNode => {
-  if (LineWrapper) {
-    return value.split("\n").map((line, i) => (
-      <LineWrapper key={i} lineNumber={i + 1}>
-        {replacements.length ? (
-          <SplitAndReplace key={`fract-${i}`} text={line} replacements={replacements} textWrapper={(s) => s} />
-        ) : (
-          line
-        )}
-      </LineWrapper>
-    ));
+  if (lineWrapper || renderer) {
+    const Renderer = renderer ?? DEFAULT_RENDERER;
+    const LineWrapper = lineWrapper ?? DEFAULT_LINE_WRAPPER;
+    return (
+      <Renderer>
+        {value.split("\n").map((line, i) => (
+          <LineWrapper key={i} lineNumber={i + 1}>
+            {replacements.length ? (
+              <SplitAndReplace key={`fract-${i}`} text={line} replacements={replacements} textWrapper={(s) => s} />
+            ) : (
+              line
+            )}
+          </LineWrapper>
+        ))}
+      </Renderer>
+    );
   }
   return <SplitAndReplace key="fract" text={value} replacements={replacements} textWrapper={(s) => s} />;
 };
 
-const SyntaxHighlighter = ({ value, lineWrapper, language = "text", markerConfig, nodeLimit = 10000 }: Props) => {
+const SyntaxHighlighter = ({
+  value,
+  lineWrapper,
+  language = "text",
+  markerConfig,
+  nodeLimit = 10000,
+  renderer,
+}: Props) => {
   // TODO error
   const { strippedValue, replacements } = markContent(value, markerConfig);
-  const { isLoading, tree } = useSyntaxHighlighting({
+  const { isLoading, tree, error } = useSyntaxHighlighting({
     value: strippedValue,
     language,
     nodeLimit,
-    groupByLine: !!lineWrapper,
+    groupByLine: !!lineWrapper || !!renderer,
     markedTexts: replacements.length ? replacements.map((replacement) => replacement.textToReplace) : undefined,
   });
   const fallbackContent = useMemo(
-    () => createFallbackContent(strippedValue, lineWrapper, replacements),
+    () => createFallbackContent(strippedValue, lineWrapper, renderer, replacements),
     [value, lineWrapper, markerConfig]
   );
+  const Renderer = renderer ?? DEFAULT_RENDERER;
 
-  if (isLoading || !tree) {
+  if (isLoading || !tree || error) {
     return (
-      <pre>
-        <code className={`language-${language}`}>{fallbackContent}</code>
-      </pre>
+      <>
+        {error ? <div>{error}</div> : null}
+        <pre>
+          <code className={`language-${language}`}>{fallbackContent}</code>
+        </pre>
+      </>
     );
   }
 
   return (
     <pre>
-      <code className={`language-${language}`}>{tree?.map(mapWithDepth(0, lineWrapper, markerConfig?.wrapper))}</code>
+      <code className={`language-${language}`}>
+        <Renderer>{tree?.map(mapWithDepth(0, lineWrapper, markerConfig?.wrapper))}</Renderer>
+      </code>
     </pre>
   );
 };

@@ -153,3 +153,40 @@ MarkerWithLineNumbersAndLimit.args = {
     wrapper: Mark,
   },
 };
+
+export const WithRenderer = Template.bind({});
+WithRenderer.args = {
+  language: "javascript",
+  value: HttpServerJs,
+  renderer: ({ children }) => (
+    <table>
+      <tbody>
+        {children.map((child, i) => (
+          <tr key={i}>
+            <td style={{ border: "1px solid black" }}>{i + 1}</td>
+            <td style={{ border: "1px solid black" }}>{child}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  ),
+};
+
+export const WithRendererWithLimit = Template.bind({});
+WithRendererWithLimit.args = {
+  language: "javascript",
+  value: HttpServerJs,
+  nodeLimit: 10,
+  renderer: ({ children }) => (
+    <table style={{ border: 1 }}>
+      <tbody>
+        {children.map((child, i) => (
+          <tr key={i}>
+            <td style={{ border: "1px solid black" }}>{i + 1}</td>
+            <td style={{ border: "1px solid black" }}>{child}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  ),
+};

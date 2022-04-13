@@ -24,9 +24,8 @@
 
 import { useEffect, useRef, useState } from "react";
 
-// @ts-ignore TODO
 import { nanoid } from "nanoid";
-import { HighlightingRequest, RefractorNode, Response, ResponseMessage, SuccessResponse } from "./types";
+import type { HighlightingRequest, RefractorNode, Response, ResponseMessage, SuccessResponse } from "./types";
 import useSyntaxHighlightingWorker from "./useSyntaxHighlightingWorker";
 
 const isSuccess = (response: Response): response is SuccessResponse => {

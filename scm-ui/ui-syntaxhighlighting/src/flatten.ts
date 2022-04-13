@@ -1,11 +1,6 @@
-import { RefractorElement, Text } from "refractor";
-import { Element } from "hast";
-
-type RefractorNode = RefractorElement | Text;
-
-function isElement(node: RefractorNode): node is RefractorElement {
-  return node.type === "element";
-}
+/*eslint-disable */
+import type { Element } from "hast";
+import { isRefractorElement, RefractorNode } from "./types";
 
 function flatten(
   nodes: RefractorNode[],
@@ -15,7 +10,7 @@ function flatten(
 ): FlatNodes {
   const result: FlatNodes = [];
   for (const node of nodes) {
-    if (isElement(node)) {
+    if (isRefractorElement(node)) {
       const subNodes = flatten(
         node.children,
         nodeLimit,

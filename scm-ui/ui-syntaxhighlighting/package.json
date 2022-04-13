@@ -10,6 +10,7 @@
     "build-storybook": "build-storybook"
   },
   "dependencies": {
+    "@scm-manager/ui-text": "2.32.3-SNAPSHOT",
     "nanoid": "^3.3.2",
     "refractor": "^4.5.0"
   },

@@ -23,7 +23,6 @@
  */
 
 import groupByLines from "./groupByLines";
-import type { RefractorElement } from "refractor";
 import createRefractor, { RefractorAdapter } from "./refractorAdapter";
 import type {
   FailureResponse,
@@ -35,6 +34,7 @@ import type {
   SuccessResponse,
   Theme,
 } from "./types";
+import { isRefractorElement } from "./types";
 
 // the WorkerGlobalScope is assigned to self
 // see https://developer.mozilla.org/en-US/docs/Web/API/WorkerGlobalScope/self
@@ -44,10 +44,6 @@ let refractor: RefractorAdapter;
 
 function initRefractor(theme: Theme) {
   refractor = createRefractor(theme);
-}
-
-function isRefractorElement(node: RefractorNode): node is RefractorElement {
-  return (node as RefractorElement).tagName !== undefined;
 }
 
 const countChildrenAndApplyMarkers = (node: RefractorNode, markedTexts?: string[]) => {
