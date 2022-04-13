@@ -99,7 +99,10 @@ const SingleUser: FC = () => {
             <Route path={`${escapedUrl}/settings/apiKeys`}>
               <SetApiKeys user={user} />
             </Route>
-            <ExtensionPoint<extensionPoints.UserRoute> name="user.route" props={extensionProps} renderAll={true} />
+            <ExtensionPoint<extensionPoints.UserRoute> name="user.route" props={{
+              user,
+              url: escapedUrl
+            }} renderAll={true} />
           </PrimaryContentColumn>
           <SecondaryNavigationColumn>
             <SecondaryNavigation label={t("singleUser.menu.navigationLabel")}>

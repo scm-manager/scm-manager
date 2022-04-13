@@ -112,3 +112,7 @@ export function matchedUrl(props: any) {
 export function escapeUrlForRoute(url: string) {
   return url.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
 }
+
+export function unescapeUrlForRoute(url: string) {
+  return url.replace(/\\/g, "");
+}

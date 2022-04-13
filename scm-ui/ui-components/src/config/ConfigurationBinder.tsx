@@ -136,7 +136,7 @@ class ConfigurationBinder {
       const link = repository._links[linkName];
       if (link) {
         return this.route(
-          url + "/settings" + to,
+          urls.unescapeUrlForRoute(url) + "/settings" + to,
           <RepositoryComponent repository={repository} link={(link as Link).href} {...additionalProps} />
         );
       }

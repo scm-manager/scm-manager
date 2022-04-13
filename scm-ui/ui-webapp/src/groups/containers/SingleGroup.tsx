@@ -63,7 +63,7 @@ const SingleGroup: FC = () => {
 
   const extensionProps = {
     group,
-    url: escapedUrl
+    url
   };
 
   return (
@@ -80,7 +80,14 @@ const SingleGroup: FC = () => {
             <Route path={`${escapedUrl}/settings/permissions`} exact>
               <SetGroupPermissions group={group} />
             </Route>
-            <ExtensionPoint<extensionPoints.GroupRoute> name="group.route" props={extensionProps} renderAll={true} />
+            <ExtensionPoint<extensionPoints.GroupRoute>
+              name="group.route"
+              props={{
+                group,
+                url: escapedUrl
+              }}
+              renderAll={true}
+            />
           </PrimaryContentColumn>
           <SecondaryNavigationColumn>
             <SecondaryNavigation label={t("singleGroup.menu.navigationLabel")}>

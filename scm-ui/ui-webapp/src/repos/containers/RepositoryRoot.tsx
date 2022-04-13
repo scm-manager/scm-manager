@@ -176,7 +176,7 @@ const RepositoryRoot = () => {
 
   const extensionProps = {
     repository,
-    url: urls.escapeUrlForRoute(url),
+    url,
     indexLinks
   };
 
@@ -302,7 +302,11 @@ const RepositoryRoot = () => {
               </Route>
               <ExtensionPoint<extensionPoints.RepositoryRoute>
                 name="repository.route"
-                props={extensionProps}
+                props={{
+                  repository,
+                  url: urls.escapeUrlForRoute(url),
+                  indexLinks
+                }}
                 renderAll={true}
               />
             </Switch>
