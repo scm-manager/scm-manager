@@ -26,7 +26,7 @@ import { Route, useLocation } from "react-router-dom";
 import Sources from "../../sources/containers/Sources";
 import ChangesetsRoot from "../../containers/ChangesetsRoot";
 import { Branch, Repository } from "@scm-manager/ui-types";
-import { ErrorPage, Loading } from "@scm-manager/ui-components";
+import { ErrorPage, Loading, urls } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 import { useBranches } from "@scm-manager/ui-api";
 import FileSearch from "./FileSearch";
@@ -84,24 +84,28 @@ type RoutingProps = {
   selectedBranch?: string;
 };
 
-const CodeRouting: FC<RoutingProps> = ({ repository, baseUrl, branches, selectedBranch }) => (
-  <>
-    <Route path={`${baseUrl}/sources`} exact={true}>
-      <Sources repository={repository} baseUrl={baseUrl} branches={branches} />
-    </Route>
-    <Route path={`${baseUrl}/sources/:revision/:path*`}>
-      <Sources repository={repository} baseUrl={baseUrl} branches={branches} selectedBranch={selectedBranch} />
-    </Route>
-    <Route path={`${baseUrl}/changesets`}>
-      <ChangesetsRoot repository={repository} baseUrl={baseUrl} branches={branches} />
-    </Route>
-    <Route path={`${baseUrl}/branch/:branch/changesets/`}>
-      <ChangesetsRoot repository={repository} baseUrl={baseUrl} branches={branches} selectedBranch={selectedBranch} />
-    </Route>
-    <Route path={`${baseUrl}/search/:revision/`}>
-      <FileSearch repository={repository} baseUrl={baseUrl} branches={branches} selectedBranch={selectedBranch} />
-    </Route>
-  </>
-);
+const CodeRouting: FC<RoutingProps> = ({ repository, baseUrl, branches, selectedBranch }) => {
+
+  const escapedUrl = urls.escapeUrlForRoute(baseUrl);
+  return (
+    <>
+      <Route path={`${escapedUrl}/sources`} exact={true}>
+        <Sources repository={repository} baseUrl={baseUrl} branches={branches} />
+      </Route>
+      <Route path={`${escapedUrl}/sources/:revision/:path*`}>
+        <Sources repository={repository} baseUrl={baseUrl} branches={branches} selectedBranch={selectedBranch} />
+      </Route>
+      <Route path={`${escapedUrl}/changesets`}>
+        <ChangesetsRoot repository={repository} baseUrl={baseUrl} branches={branches} />
+      </Route>
+      <Route path={`${escapedUrl}/branch/:branch/changesets/`}>
+        <ChangesetsRoot repository={repository} baseUrl={baseUrl} branches={branches} selectedBranch={selectedBranch} />
+      </Route>
+      <Route path={`${escapedUrl}/search/:revision/`}>
+        <FileSearch repository={repository} baseUrl={baseUrl} branches={branches} selectedBranch={selectedBranch} />
+      </Route>
+    </>
+  );
+};
 
 export default CodeOverview;

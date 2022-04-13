@@ -24,7 +24,7 @@
 import React, { FC, ReactNode } from "react";
 import styled from "styled-components";
 import { useLocation } from "react-router-dom";
-import { BranchSelector, devices, Level } from "@scm-manager/ui-components";
+import { BranchSelector, devices, Level, urls } from "@scm-manager/ui-components";
 import CodeViewSwitcher, { SwitchViewLink } from "./CodeViewSwitcher";
 import { useTranslation } from "react-i18next";
 import { Branch } from "@scm-manager/ui-types";
@@ -87,7 +87,9 @@ const CodeActionBar: FC<Props> = ({ selectedBranch, branches, onSelectBranch, sw
           )
         }
         children={actions}
-        right={<CodeViewSwitcher currentUrl={location.pathname} switchViewLink={switchViewLink} />}
+        right={
+          <CodeViewSwitcher currentUrl={urls.escapeUrlForRoute(location.pathname)} switchViewLink={switchViewLink} />
+        }
       />
     </ActionBar>
   );

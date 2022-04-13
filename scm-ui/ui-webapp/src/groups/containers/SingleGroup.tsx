@@ -59,6 +59,7 @@ const SingleGroup: FC = () => {
   }
 
   const url = urls.matchedUrlFromMatch(match);
+  const escapedUrl = urls.escapeUrlForRoute(url);
 
   const extensionProps = {
     group,
@@ -70,16 +71,23 @@ const SingleGroup: FC = () => {
       <Page title={group.name}>
         <CustomQueryFlexWrappedColumns>
           <PrimaryContentColumn>
-            <Route path={url} exact>
+            <Route path={escapedUrl} exact>
               <Details group={group} />
             </Route>
-            <Route path={`${url}/settings/general`} exact>
+            <Route path={`${escapedUrl}/settings/general`} exact>
               <EditGroup group={group} />
             </Route>
-            <Route path={`${url}/settings/permissions`} exact>
+            <Route path={`${escapedUrl}/settings/permissions`} exact>
               <SetGroupPermissions group={group} />
             </Route>
-            <ExtensionPoint<extensionPoints.GroupRoute> name="group.route" props={extensionProps} renderAll={true} />
+            <ExtensionPoint<extensionPoints.GroupRoute>
+              name="group.route"
+              props={{
+                group,
+                url: escapedUrl
+              }}
+              renderAll={true}
+            />
           </PrimaryContentColumn>
           <SecondaryNavigationColumn>
             <SecondaryNavigation label={t("singleGroup.menu.navigationLabel")}>

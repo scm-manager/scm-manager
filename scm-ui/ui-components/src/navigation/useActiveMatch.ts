@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+import { urls } from "@scm-manager/ui-api";
 import { useLocation, useRouteMatch } from "react-router-dom";
 import { RoutingProps } from "./RoutingProps";
 
@@ -33,8 +34,8 @@ const useActiveMatch = ({ to, activeOnlyWhenExact, activeWhenMatch }: RoutingPro
   }
 
   const match = useRouteMatch({
-    path,
-    exact: activeOnlyWhenExact,
+    path: urls.escapeUrlForRoute(path),
+    exact: activeOnlyWhenExact
   });
 
   const location = useLocation();
@@ -42,7 +43,7 @@ const useActiveMatch = ({ to, activeOnlyWhenExact, activeWhenMatch }: RoutingPro
   const isActiveWhenMatch = () => {
     if (activeWhenMatch) {
       return activeWhenMatch({
-        location,
+        location
       });
     }
     return false;

@@ -74,30 +74,35 @@ const SingleUser: FC = () => {
     url
   };
 
+  const escapedUrl = urls.escapeUrlForRoute(url);
+
   return (
     <StateMenuContextProvider>
       <Page title={user.displayName}>
         <CustomQueryFlexWrappedColumns>
           <PrimaryContentColumn>
-            <Route path={url} exact>
+            <Route path={escapedUrl} exact>
               <Details user={user} />
             </Route>
-            <Route path={`${url}/settings/general`}>
+            <Route path={`${escapedUrl}/settings/general`}>
               <EditUser user={user} />
             </Route>
-            <Route path={`${url}/settings/password`}>
+            <Route path={`${escapedUrl}/settings/password`}>
               <SetUserPassword user={user} />
             </Route>
-            <Route path={`${url}/settings/permissions`}>
+            <Route path={`${escapedUrl}/settings/permissions`}>
               <SetUserPermissions user={user} />
             </Route>
-            <Route path={`${url}/settings/publickeys`}>
+            <Route path={`${escapedUrl}/settings/publickeys`}>
               <SetPublicKeys user={user} />
             </Route>
-            <Route path={`${url}/settings/apiKeys`}>
+            <Route path={`${escapedUrl}/settings/apiKeys`}>
               <SetApiKeys user={user} />
             </Route>
-            <ExtensionPoint<extensionPoints.UserRoute> name="user.route" props={extensionProps} renderAll={true} />
+            <ExtensionPoint<extensionPoints.UserRoute> name="user.route" props={{
+              user,
+              url: escapedUrl
+            }} renderAll={true} />
           </PrimaryContentColumn>
           <SecondaryNavigationColumn>
             <SecondaryNavigation label={t("singleUser.menu.navigationLabel")}>

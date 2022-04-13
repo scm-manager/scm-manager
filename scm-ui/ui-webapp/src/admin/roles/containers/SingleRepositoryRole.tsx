@@ -47,19 +47,20 @@ const SingleRepositoryRole: FC = () => {
   }
 
   const url = urls.matchedUrlFromMatch(match);
+  const escapedUrl = urls.escapeUrlForRoute(url);
 
   const extensionProps = {
     role,
-    url
+    url: escapedUrl
   };
 
   return (
     <>
       <Title title={t("repositoryRole.title")} />
-      <Route path={`${url}/info`}>
+      <Route path={`${escapedUrl}/info`}>
         <PermissionRoleDetail role={role} url={url} />
       </Route>
-      <Route path={`${url}/edit`} exact>
+      <Route path={`${escapedUrl}/edit`} exact>
         <EditRepositoryRole role={role} />
       </Route>
       <ExtensionPoint<extensionPoints.RolesRoute> name="roles.route" props={extensionProps} renderAll={true} />

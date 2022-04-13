@@ -61,10 +61,12 @@ const BranchRoot: FC<Props> = ({ repository }) => {
     return null;
   }
 
+  const escapedUrl = urls.escapeUrlForRoute(url);
+
   return (
     <Switch>
-      <Redirect exact from={url} to={`${url}/info`} />
-      <Route path={`${url}/info`}>
+      <Redirect exact from={escapedUrl} to={`${url}/info`} />
+      <Route path={`${escapedUrl}/info`}>
         <BranchView repository={repository} branch={branch} />
       </Route>
     </Switch>
