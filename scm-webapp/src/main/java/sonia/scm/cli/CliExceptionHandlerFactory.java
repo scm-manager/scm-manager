@@ -37,7 +37,11 @@ class CliExceptionHandlerFactory {
     this.i18nCollector = i18nCollector;
   }
 
-  CliExceptionHandler createExceptionHandler(String languageCode) {
-    return new CliExceptionHandler(i18nCollector, languageCode);
+  CliExecutionExceptionHandler createExecutionExceptionHandler(String languageCode) {
+    return new CliExecutionExceptionHandler(i18nCollector, languageCode);
+  }
+
+  CliParameterExceptionHandler createParameterExceptionHandler(String languageCode) {
+    return new CliParameterExceptionHandler(languageCode);
   }
 }

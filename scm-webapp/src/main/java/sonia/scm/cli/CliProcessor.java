@@ -59,7 +59,8 @@ public class CliProcessor {
     cli.addSubcommand(AutoComplete.GenerateCompletion.class);
     cli.setErr(context.getStderr());
     cli.setOut(context.getStdout());
-    cli.setExecutionExceptionHandler(exceptionHandlerFactory.createExceptionHandler(context.getLocale().getLanguage()));
+    cli.setExecutionExceptionHandler(exceptionHandlerFactory.createExecutionExceptionHandler(context.getLocale().getLanguage()));
+    cli.setParameterExceptionHandler(exceptionHandlerFactory.createParameterExceptionHandler(context.getLocale().getLanguage()));
     return cli.execute(args);
   }
 

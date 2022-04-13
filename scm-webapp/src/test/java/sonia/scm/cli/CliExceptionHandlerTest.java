@@ -46,6 +46,8 @@ import java.io.PrintWriter;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -78,7 +80,8 @@ class CliExceptionHandlerTest {
   @Mock
   private CommandLine commandLine;
 
-  private CliExceptionHandler handler;
+  private CliExecutionExceptionHandler executionExceptionHandler;
+  private CliParameterExceptionHandler parameterExceptionHandler;
 
   private final ByteArrayOutputStream errorStream = new ByteArrayOutputStream();
   private final PrintWriter stdErr = new PrintWriter(errorStream);
@@ -93,12 +96,13 @@ class CliExceptionHandlerTest {
 
     @BeforeEach
     void setUpHandler() {
-      handler = new CliExceptionHandler(i18nCollector, "en");
+      executionExceptionHandler = new CliExecutionExceptionHandler(i18nCollector, "en");
+      parameterExceptionHandler = new CliParameterExceptionHandler("en");
     }
 
     @Test
     void shouldPrintSimpleException() {
-      int exitCode = callHandler(new NullPointerException("expected error"));
+      int exitCode = callExecHandler(new NullPointerException("expected error"));
 
       assertThat(errorStream.toString()).contains("Error: expected error");
       assertThat(exitCode).isEqualTo(1);
@@ -108,7 +112,7 @@ class CliExceptionHandlerTest {
     void shouldPrintTransactionIdIfPresent() {
       TransactionId.set("42");
 
-      callHandler(new NullPointerException("expected error"));
+      callExecHandler(new NullPointerException("expected error"));
 
       assertThat(errorStream.toString()).contains("Transaction ID: 42");
     }
@@ -118,7 +122,7 @@ class CliExceptionHandlerTest {
       when(i18nCollector.findJson("en"))
         .thenReturn(Optional.of(new ObjectMapper().readTree(PLUGIN_BUNDLE_EN)));
 
-      callHandler(NotFoundException.notFound(new ContextEntry.ContextBuilder()));
+      callExecHandler(NotFoundException.notFound(new ContextEntry.ContextBuilder()));
 
       assertThat(errorStream.toString()).contains("Error: The requested entity could not be found. It may have been deleted in another session.");
     }
@@ -128,7 +132,7 @@ class CliExceptionHandlerTest {
       when(i18nCollector.findJson("en"))
         .thenReturn(Optional.of(new ObjectMapper().readTree(PLUGIN_BUNDLE_EN)));
 
-      callHandler(new AlreadyExistsException(new Group("test", "hog")));
+      callExecHandler(new AlreadyExistsException(new Group("test", "hog")));
 
       assertThat(errorStream.toString()).contains("Error: group with id hog already exists");
     }
@@ -138,9 +142,16 @@ class CliExceptionHandlerTest {
       when(i18nCollector.findJson("en"))
         .thenReturn(Optional.of(new ObjectMapper().readTree(PLUGIN_BUNDLE_EN)));
 
-      callHandler(new StoreReadOnlyException("test"));
+      callExecHandler(new StoreReadOnlyException("test"));
 
       assertThat(errorStream.toString()).contains("Error: Store is read only, could not write location test");
+    }
+
+    @Test
+    void shouldUseParameterExceptionHandlerWithDefaultExceptionMessages() {
+      callParamHandler(new CommandLine.OverwrittenOptionException(commandLine, null, "My default exception which will not be overwritten"), "");
+
+      assertThat(errorStream.toString()).contains("ERROR: My default exception which will not be overwritten");
     }
   }
 
@@ -149,12 +160,13 @@ class CliExceptionHandlerTest {
 
     @BeforeEach
     void setUpHandler() {
-      handler = new CliExceptionHandler(i18nCollector, "de");
+      executionExceptionHandler = new CliExecutionExceptionHandler(i18nCollector, "de");
+      parameterExceptionHandler = new CliParameterExceptionHandler("de");
     }
 
     @Test
     void shouldPrintSimpleException() {
-      int exitCode = callHandler(new NullPointerException("expected error"));
+      int exitCode = callExecHandler(new NullPointerException("expected error"));
 
       assertThat(errorStream.toString()).contains("Fehler: expected error");
       assertThat(exitCode).isEqualTo(1);
@@ -165,7 +177,7 @@ class CliExceptionHandlerTest {
     void shouldPrintTransactionIdIfPresent() {
       TransactionId.set("42");
 
-      callHandler(new NullPointerException("expected error"));
+      callExecHandler(new NullPointerException("expected error"));
 
       assertThat(errorStream.toString()).contains("Transaktions-ID: 42");
     }
@@ -175,7 +187,7 @@ class CliExceptionHandlerTest {
       when(i18nCollector.findJson("de"))
         .thenReturn(Optional.of(new ObjectMapper().readTree(PLUGIN_BUNDLE_DE)));
 
-      callHandler(new StoreReadOnlyException("test"));
+      callExecHandler(new StoreReadOnlyException("test"));
 
       assertThat(errorStream.toString()).contains("Fehler: Ein Datensatz konnte nicht gespeichert werden, da der entsprechende Speicher als schreibgeschützt markiert wurde. Weitere Hinweise finden sich im Log.");
     }
@@ -187,15 +199,34 @@ class CliExceptionHandlerTest {
       when(i18nCollector.findJson("de"))
         .thenReturn(Optional.of(new ObjectMapper().readTree(PLUGIN_BUNDLE_DE)));
 
-      callHandler(NotFoundException.notFound(new ContextEntry.ContextBuilder()));
+      callExecHandler(NotFoundException.notFound(new ContextEntry.ContextBuilder()));
 
       assertThat(errorStream.toString()).contains("Fehler: The requested entity could not be found. It may have been deleted in another session.");
     }
+
+    @Test
+    void shouldUseParamExceptionHandlerWithTranslations() {
+      CommandLine.Model.ArgSpec argSpec = mock(CommandLine.Model.ArgSpec.class);
+      when(argSpec.paramLabel()).thenReturn("<name>");
+
+      callParamHandler(new CommandLine.OverwrittenOptionException(commandLine, argSpec, "Option overwritten"), "<name>");
+
+      assertThat(errorStream.toString())
+        .contains("FEHLER: Option wurde mehrfach gesetzt: <name>");
+    }
   }
 
-  private int callHandler(Exception ex) {
+  private int callExecHandler(Exception ex) {
     try {
-      return handler.handleExecutionException(ex, commandLine, null);
+      return executionExceptionHandler.handleExecutionException(ex, commandLine, null);
+    } finally {
+      stdErr.flush();
+    }
+  }
+
+  private void callParamHandler(CommandLine.ParameterException ex, String... args) {
+    try {
+      parameterExceptionHandler.handleParseException(ex, args);
     } finally {
       stdErr.flush();
     }

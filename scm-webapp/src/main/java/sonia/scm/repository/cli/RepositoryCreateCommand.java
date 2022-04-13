@@ -54,7 +54,7 @@ class RepositoryCreateCommand implements Runnable {
   private String type;
 
   @RepositoryName(namespace = RepositoryName.Namespace.OPTIONAL)
-  @CommandLine.Parameters(descriptionKey = "scm.repo.create.repository", paramLabel = "name")
+  @CommandLine.Parameters(descriptionKey = "scm.repo.create.repository", paramLabel = "<name>")
   private String repository;
 
   @CommandLine.Option(names = {"--description", "-d"}, descriptionKey = "scm.repo.create.desc")
