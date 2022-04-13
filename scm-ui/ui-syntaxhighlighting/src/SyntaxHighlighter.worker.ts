@@ -35,7 +35,9 @@ import type {
   RequestMessage,
   SuccessResponse,
   Theme,
+  TokenizeFailureResponse,
   TokenizeRequest,
+  TokenizeSuccessResponse,
 } from "./types";
 import { isRefractorElement } from "./types";
 
@@ -149,6 +151,8 @@ const isTokenizeMessage = (message: Request): message is TokenizeRequest => {
   return message.type === "tokenize";
 };
 
+const TOKENIZE_NODE_LIMIT = 100;
+
 const runTokenize = ({ id, payload }: TokenizeRequest) => {
   const { hunks, language } = payload;
 
@@ -157,26 +161,61 @@ const runTokenize = ({ id, payload }: TokenizeRequest) => {
     language: language,
     refractor: {
       ...refractor,
-      highlight: (value: string, language: string) => {
-        return refractor.highlight(value, language).children;
+      highlight: (value: string, lang: string) => {
+        return refractor.highlight(value, lang).children;
       },
     },
   };
 
   const doTokenization = (worker: Worker) => {
     try {
-      const tokens = tokenize(hunks, options);
-      const payload = {
-        success: true,
-        tokens: tokens,
-      };
-      worker.postMessage({ id, payload });
+      const tokens: { old: RefractorNode[]; new: RefractorNode[] } = tokenize(hunks, options);
+      const oldTokensCount = countAndMarkNodes(tokens.old);
+      console.log("doTokenization.old", oldTokensCount);
+      if (oldTokensCount > TOKENIZE_NODE_LIMIT) {
+        console.log("doTokenization.oldLimitReached", tokens.old);
+        const response: TokenizeFailureResponse = {
+          id,
+          payload: {
+            success: false,
+            reason: `Node limit (${TOKENIZE_NODE_LIMIT}) reached. Current nodes: ${oldTokensCount}`,
+          },
+        };
+        worker.postMessage(response);
+      } else {
+        const newTokensCount = countAndMarkNodes(tokens.new);
+        console.log("doTokenization.new", newTokensCount);
+        if (newTokensCount > TOKENIZE_NODE_LIMIT) {
+          console.log("doTokenization.newLimitReached", tokens.new);
+          const response: TokenizeFailureResponse = {
+            id,
+            payload: {
+              success: false,
+              reason: `Node limit (${TOKENIZE_NODE_LIMIT}) reached. Current nodes: ${newTokensCount}`,
+            },
+          };
+          worker.postMessage(response);
+        } else {
+          console.log("doTokenization.allGood", hunks);
+          const response: TokenizeSuccessResponse = {
+            id,
+            payload: {
+              success: true,
+              tokens,
+            },
+          };
+          worker.postMessage(response);
+        }
+      }
     } catch (ex) {
-      const payload = {
-        success: false,
-        reason: String(ex),
+      const response: TokenizeFailureResponse = {
+        id,
+        payload: {
+          success: false,
+          reason: String(ex),
+        },
       };
-      worker.postMessage({ id, payload });
+      worker.postMessage(response);
     }
   };
 

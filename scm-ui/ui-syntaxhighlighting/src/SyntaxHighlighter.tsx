@@ -198,12 +198,9 @@ const SyntaxHighlighter = ({
 
   if (isLoading || !tree || error) {
     return (
-      <>
-        {error ? <div>{error}</div> : null}
-        <pre>
-          <code className={`language-${language}`}>{fallbackContent}</code>
-        </pre>
-      </>
+      <pre>
+        <code className={`language-${language}`}>{fallbackContent}</code>
+      </pre>
     );
   }
 

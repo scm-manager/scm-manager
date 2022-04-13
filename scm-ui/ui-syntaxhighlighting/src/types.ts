@@ -45,3 +45,22 @@ export type ResponseMessage = Message<Response>;
 export function isRefractorElement(node: RefractorNode): node is RefractorElement {
   return (node as RefractorElement).tagName !== undefined;
 }
+
+export type TokenizeSuccessResponse = {
+  id: string;
+  payload: {
+    success: true;
+    tokens: {
+      old: Array<RefractorNode>;
+      new: Array<RefractorNode>;
+    };
+  };
+};
+
+export type TokenizeFailureResponse = {
+  id: string;
+  payload: {
+    success: false;
+    reason: string;
+  };
+};
