@@ -24,7 +24,15 @@ export type HighlightingRequest = MessageData<
   }
 >;
 
-export type Request = LoadThemeRequest | HighlightingRequest;
+export type TokenizeRequest = MessageData<
+  "tokenize",
+  {
+    language: string;
+    hunks: any;
+  }
+>;
+
+export type Request = LoadThemeRequest | HighlightingRequest | TokenizeRequest;
 export type RequestMessage = Message<Request>;
 
 export type SuccessResponse = MessageData<"success", { tree: Array<RefractorNode> }>;

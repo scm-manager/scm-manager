@@ -8662,6 +8662,11 @@ dezalgo@^1.0.0:
     asap "^2.0.0"
     wrappy "1"
 
+diff-match-patch@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/diff-match-patch/-/diff-match-patch-1.0.5.tgz#abb584d5f10cd1196dfc55aa03701592ae3f7b37"
+  integrity sha512-IayShXAgj/QMXgB0IWmKx+rOPuGMhqm5w6jvFxmVenXKIzRqTAAsbBPT3kWQeGANj3jGgvcvv4yK6SxqYmikgw==
+
 diff-sequences@^24.9.0:
   version "24.9.0"
   resolved "https://registry.yarnpkg.com/diff-sequences/-/diff-sequences-24.9.0.tgz#5715d6244e2aa65f48bba0bc972db0b0b11e95b5"
@@ -16831,6 +16836,16 @@ react-diff-view@^2.4.1:
   resolved "https://registry.yarnpkg.com/react-diff-view/-/react-diff-view-2.4.7.tgz#b0583ed85d61db300872014b08a289b2f363ac7e"
   integrity sha512-M8NrVffIOPLqnQGfbv8VVnUVi80GefATRtneMQKo+uuqTx3IORO1mjrPUe3L0rmW/0xJucINjLWuLhSd1JX/tg==
 
+react-diff-view@^2.4.10:
+  version "2.4.10"
+  resolved "https://registry.yarnpkg.com/react-diff-view/-/react-diff-view-2.4.10.tgz#7d38ebd43683f0e506d0d38472c0607e24f30a58"
+  integrity sha512-H9cyh+a002RyP4BMkSaL4OOBDNhkVpaCA+8oHeb6kS3X9Sj8cZymRHf/CyVkTmm+je/qWMa8Po0VBwSnktQ79w==
+  dependencies:
+    classnames "^2.2.6"
+    diff-match-patch "^1.0.5"
+    shallow-equal "^1.2.1"
+    warning "^4.0.2"
+
 react-docgen-typescript@^2.0.0:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/react-docgen-typescript/-/react-docgen-typescript-2.1.1.tgz#c9f9ccb1fa67e0f4caf3b12f2a07512a201c2dcf"
@@ -18491,7 +18506,7 @@ shallow-clone@^3.0.0:
   dependencies:
     kind-of "^6.0.2"
 
-shallow-equal@^1.1.0:
+shallow-equal@^1.1.0, shallow-equal@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/shallow-equal/-/shallow-equal-1.2.1.tgz#4c16abfa56043aa20d050324efa68940b0da79da"
   integrity sha512-S4vJDjHHMBaiZuT9NPb616CSmLf618jawtv3sufLl6ivK8WocjAo58cXwbRV1cgqxH0Qbv+iUt6m05eqEa2IRA==

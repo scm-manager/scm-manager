@@ -23,3 +23,4 @@
  */
 
 export { default as SyntaxHighlighter } from "./SyntaxHighlighter";
+export { default as useSyntaxHighlightingWorker } from "./useSyntaxHighlightingWorker";

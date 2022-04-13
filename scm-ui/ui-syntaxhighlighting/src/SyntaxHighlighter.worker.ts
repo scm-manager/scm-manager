@@ -23,6 +23,8 @@
  */
 
 import groupByLines from "./groupByLines";
+// @ts-ignore we have no types for react-diff-view
+import { tokenize } from "react-diff-view";
 import createRefractor, { RefractorAdapter } from "./refractorAdapter";
 import type {
   FailureResponse,
@@ -33,6 +35,7 @@ import type {
   RequestMessage,
   SuccessResponse,
   Theme,
+  TokenizeRequest,
 } from "./types";
 import { isRefractorElement } from "./types";
 
@@ -142,9 +145,53 @@ const isLoadThemeMessage = (message: Request): message is LoadThemeRequest => {
   return message.type === "theme";
 };
 
+const isTokenizeMessage = (message: Request): message is TokenizeRequest => {
+  return message.type === "tokenize";
+};
+
+const runTokenize = ({ id, payload }: TokenizeRequest) => {
+  const { hunks, language } = payload;
+
+  const options = {
+    highlight: language !== "text",
+    language: language,
+    refractor: {
+      ...refractor,
+      highlight: (value: string, language: string) => {
+        return refractor.highlight(value, language).children;
+      },
+    },
+  };
+
+  const doTokenization = (worker: Worker) => {
+    try {
+      const tokens = tokenize(hunks, options);
+      const payload = {
+        success: true,
+        tokens: tokens,
+      };
+      worker.postMessage({ id, payload });
+    } catch (ex) {
+      const payload = {
+        success: false,
+        reason: String(ex),
+      };
+      worker.postMessage({ id, payload });
+    }
+  };
+
+  const createTokenizer = (worker: Worker) => () => doTokenization(worker);
+
+  if (options.highlight) {
+    refractor.loadLanguage(language, createTokenizer(self));
+  }
+};
+
 self.addEventListener("message", ({ data }: RequestMessage) => {
   if (isLoadThemeMessage(data)) {
     initRefractor(data.payload);
+  } else if (isTokenizeMessage(data)) {
+    runTokenize(data);
   } else {
     doHighlighting(data);
   }
