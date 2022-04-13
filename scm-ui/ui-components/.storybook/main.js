@@ -26,7 +26,6 @@ const path = require("path");
 const fs = require("fs");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const RemoveThemesPlugin = require("./RemoveThemesPlugin");
-const WorkerPlugin = require("worker-plugin");
 const ReactDOM = require("react-dom");
 
 const root = path.resolve("..");
