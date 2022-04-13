@@ -149,15 +149,9 @@ class CliExceptionHandlerTest {
 
     @Test
     void shouldUseParameterExceptionHandlerWithDefaultExceptionMessages() {
-      CommandLine.Model.CommandSpec spec = mock(CommandLine.Model.CommandSpec.class);
-      when(spec.qualifiedName()).thenReturn("mocked-spec");
-      when(commandLine.getCommandSpec()).thenReturn(spec);
-      CommandLine.Help help = mock(CommandLine.Help.class);
-      when(commandLine.getHelp()).thenReturn(help);
-
       callParamHandler(new CommandLine.OverwrittenOptionException(commandLine, null, "My default exception which will not be overwritten"), "");
 
-      assertThat(errorStream.toString()).contains("My default exception which will not be overwritten");
+      assertThat(errorStream.toString()).contains("ERROR: My default exception which will not be overwritten");
     }
   }
 
@@ -212,16 +206,13 @@ class CliExceptionHandlerTest {
 
     @Test
     void shouldUseParamExceptionHandlerWithTranslations() {
-      CommandLine.Help help = mock(CommandLine.Help.class);
-      when(commandLine.getHelp()).thenReturn(help);
       CommandLine.Model.ArgSpec argSpec = mock(CommandLine.Model.ArgSpec.class);
       when(argSpec.paramLabel()).thenReturn("<name>");
 
       callParamHandler(new CommandLine.OverwrittenOptionException(commandLine, argSpec, "Option overwritten"), "<name>");
 
       assertThat(errorStream.toString())
-        .contains("Option wurde mehrfach gesetzt: <name>")
-        .contains("Versuchen Sie '--help' für hilfreiche Informationen.");
+        .contains("FEHLER: Option wurde mehrfach gesetzt: <name>");
     }
   }
 
