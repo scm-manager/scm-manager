@@ -18,6 +18,8 @@ When you log in, an API key is generated on the server, which will be used for a
 This API key has all rights that the logged in user has on the server.
 If the CLI client is no longer to be used with the server, it is sufficient to remove the API key on the server side.
 
+**Attention**: If API keys have been disabled on the server, the CLI client will not be able to connect.
+
 ### Local configuration
 When the API key is created on the server, the same key is simultaneously stored in encrypted form on the executing system.
 
@@ -31,8 +33,13 @@ Many commands are nested, with the top level representing the resource, e.g. `re
 The actions such as `create`, `get` or `list` then follow below.
 Besides the command structure the CLI client distinguishes between `parameters` as mandatory arguments and `options` as optional arguments.
 
+## Autocompletion
+The CLI currently supports autocompletion for bash and zsh. 
+To enable this use `source <(scm generate-completion)` in your terminal. 
+Also you can add it to your `.zshrc` or `.bashrc`.
+
 # Language
-The CLI client is available in several languages. The language setting of the underlying operating system decides which language is used for the output. 
+The CLI client is available in german and english. The language setting of the underlying operating system decides which language is used for the output. 
 The fallback language is english.
 
 # Logout

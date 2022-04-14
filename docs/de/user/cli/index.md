@@ -18,6 +18,8 @@ Beim Login wird ein API Schlüssel auf dem Server erzeugt, der für alle weitere
 Dieser API Schlüssel verfügt über alle Rechte, die der angemeldete Benutzer auf dem Server hat. 
 Soll der CLI Client nicht mehr mit dem Server verwendet werden dürfen, reicht es diesen Schlüssel serverseitig zu entfernen.
 
+**Achtung**: Wenn API Schlüssel auf dem Server deaktiviert wurden, kann sich der CLI Client nicht verbinden.
+
 ### Lokale Konfiguration
 Beim Anlegen des API Schlüssels auf dem Server wird zeitgleich derselbe Schlüssel in verschlüsselter Form auf dem ausführenden System hinterlegt.
 
@@ -31,8 +33,13 @@ Viele Befehle sind geschachtelt, wobei die oberste Ebene die Resource abbildet, 
 Darunter folgen dann die Aktionen wie `create`, `get` oder `list`.
 Neben der Befehlsstruktur unterscheidet der CLI Client noch zwischen `Parametern` als Pflichtargumente und `Optionen` als optionale Argumente.
 
+## Autovervollständigung
+Die CLI unterstützt derzeit die Autovervollständigung für bash und zsh.
+Um dies zu aktivieren, verwenden Sie `source <(scm generate-completion)` in Ihrem Terminal.
+Sie können es auch zu Ihrer `.zshrc` oder `.bashrc` hinzufügen.
+
 # Sprache
-Der CLI Client steht in mehreren Sprachen zu Verfügung. Dabei entscheidet die Spracheinstellung des unterliegenden Betriebssystems welche Sprache für die Ausgaben verwendet wird.
+Der CLI Client steht in Deutsch und Englisch zur Verfügung. Dabei entscheidet die Spracheinstellung des unterliegenden Betriebssystems welche Sprache für die Ausgaben verwendet wird.
 
 # Abmelden
 Soll der CLI Client vom Server abgemeldet werden, reicht der Befehl `scm logout`. 
