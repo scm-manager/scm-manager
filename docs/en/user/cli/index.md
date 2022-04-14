@@ -6,7 +6,7 @@ partiallyActive: true
 SCM Manager provides a CLI client to directly access e.g. repositories, users and group of the SCM server inside your terminal.
 
 # Installation / Setup
-The CLI Client is available for different operating systems and architecture on the official website for [download](https://scm-manager.org/cli/).
+The CLI Client is available for different operating systems and architectures on the official website for [download](https://scm-manager.org/cli/).
 Choose the appropriate installation for you and follow the installation instructions.
 
 ## Log in
