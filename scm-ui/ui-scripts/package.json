@@ -27,7 +27,7 @@
     "webpack-dev-server": "^4.4.0"
   },
   "devDependencies": {
-    "@scm-manager/eslint-config": "^2.12.0",
+    "@scm-manager/eslint-config": "^2.14.0",
     "@scm-manager/prettier-config": "^2.10.1",
     "webpack-bundle-analyzer": "^4.5.0"
   },

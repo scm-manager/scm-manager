@@ -11,10 +11,12 @@
   "author": "Sebastian Sdorra <sebastian.sdorra@cloudogu.com>",
   "license": "MIT",
   "scripts": {
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "lint": "eslint src"
   },
   "devDependencies": {
-    "@scm-manager/tsconfig": "^2.13.0"
+    "@scm-manager/tsconfig": "^2.13.0",
+    "@scm-manager/eslint-config": "^2.14.0"
   },
   "babel": {
     "presets": [
@@ -22,6 +24,9 @@
     ]
   },
   "prettier": "@scm-manager/prettier-config",
+  "eslintConfig": {
+    "extends": "@scm-manager/eslint-config"
+  },
   "publishConfig": {
     "access": "public"
   }

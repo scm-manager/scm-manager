@@ -24,6 +24,7 @@
     "@scm-manager/jest-preset": "^2.13.0",
     "@scm-manager/prettier-config": "^2.10.1",
     "@scm-manager/tsconfig": "^2.13.0",
+    "@scm-manager/eslint-config": "^2.14.0",
     "@storybook/addon-actions": "^6.4.20",
     "@storybook/addon-essentials": "^6.4.20",
     "@storybook/addon-interactions": "^6.4.20",
@@ -47,6 +48,9 @@
     "preset": "@scm-manager/jest-preset"
   },
   "prettier": "@scm-manager/prettier-config",
+  "eslintConfig": {
+    "extends": "@scm-manager/eslint-config"
+  },
   "publishConfig": {
     "access": "restricted"
   }

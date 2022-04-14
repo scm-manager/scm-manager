@@ -111,7 +111,6 @@ function doHighlighting({
           const payload: FailureResponse["payload"] = {
             reason: e instanceof Error ? e.message : `node limit of ${nodeLimit} reached.`,
           };
-          console.log("doHighlighting.grouping.countOverLimit", nodeLimit, payload.reason);
           worker.postMessage({ id, type: "failure", payload } as FailureResponse);
           return;
         }
@@ -119,10 +118,7 @@ function doHighlighting({
 
       if (nodeLimit > 0) {
         const count = countAndMarkNodes(tree, markedTexts);
-        console.log("doHighlighting.count", count);
         if (count > nodeLimit) {
-          console.log("doHighlighting.countOverLimit", nodeLimit);
-
           const payload: FailureResponse["payload"] = {
             reason: `node limit of ${nodeLimit} reached. Total nodes ${count}.`,
           };
@@ -175,9 +171,7 @@ const runTokenize = ({ id, payload }: TokenizeRequest) => {
     try {
       const tokens: { old: RefractorNode[]; new: RefractorNode[] } = tokenize(hunks, options);
       const tokensCount = countAndMarkNodes(tokens.old) + countAndMarkNodes(tokens.new);
-      console.log("doTokenization.count", tokensCount);
       if (tokensCount > TOKENIZE_NODE_LIMIT) {
-        console.log("doTokenization.limitReached", tokens);
         const response: TokenizeFailureResponse = {
           id,
           payload: {
@@ -187,7 +181,6 @@ const runTokenize = ({ id, payload }: TokenizeRequest) => {
         };
         worker.postMessage(response);
       } else {
-        console.log("doTokenization.allGood", tokens);
         const response: TokenizeSuccessResponse = {
           id,
           payload: {
