@@ -111,6 +111,7 @@ function doHighlighting({
           const payload: FailureResponse["payload"] = {
             reason: e instanceof Error ? e.message : `node limit of ${nodeLimit} reached.`,
           };
+          console.log("doHighlighting.grouping.countOverLimit", nodeLimit, payload.reason);
           worker.postMessage({ id, type: "failure", payload } as FailureResponse);
           return;
         }
@@ -118,7 +119,10 @@ function doHighlighting({
 
       if (nodeLimit > 0) {
         const count = countAndMarkNodes(tree, markedTexts);
+        console.log("doHighlighting.count", count);
         if (count > nodeLimit) {
+          console.log("doHighlighting.countOverLimit", nodeLimit);
+
           const payload: FailureResponse["payload"] = {
             reason: `node limit of ${nodeLimit} reached. Total nodes ${count}.`,
           };
@@ -151,7 +155,7 @@ const isTokenizeMessage = (message: Request): message is TokenizeRequest => {
   return message.type === "tokenize";
 };
 
-const TOKENIZE_NODE_LIMIT = 100;
+const TOKENIZE_NODE_LIMIT = 600;
 
 const runTokenize = ({ id, payload }: TokenizeRequest) => {
   const { hunks, language } = payload;
@@ -170,42 +174,28 @@ const runTokenize = ({ id, payload }: TokenizeRequest) => {
   const doTokenization = (worker: Worker) => {
     try {
       const tokens: { old: RefractorNode[]; new: RefractorNode[] } = tokenize(hunks, options);
-      const oldTokensCount = countAndMarkNodes(tokens.old);
-      console.log("doTokenization.old", oldTokensCount);
-      if (oldTokensCount > TOKENIZE_NODE_LIMIT) {
-        console.log("doTokenization.oldLimitReached", tokens.old);
+      const tokensCount = countAndMarkNodes(tokens.old) + countAndMarkNodes(tokens.new);
+      console.log("doTokenization.count", tokensCount);
+      if (tokensCount > TOKENIZE_NODE_LIMIT) {
+        console.log("doTokenization.limitReached", tokens);
         const response: TokenizeFailureResponse = {
           id,
           payload: {
             success: false,
-            reason: `Node limit (${TOKENIZE_NODE_LIMIT}) reached. Current nodes: ${oldTokensCount}`,
+            reason: `Node limit (${TOKENIZE_NODE_LIMIT}) reached. Current nodes: ${tokensCount}`,
           },
         };
         worker.postMessage(response);
       } else {
-        const newTokensCount = countAndMarkNodes(tokens.new);
-        console.log("doTokenization.new", newTokensCount);
-        if (newTokensCount > TOKENIZE_NODE_LIMIT) {
-          console.log("doTokenization.newLimitReached", tokens.new);
-          const response: TokenizeFailureResponse = {
-            id,
-            payload: {
-              success: false,
-              reason: `Node limit (${TOKENIZE_NODE_LIMIT}) reached. Current nodes: ${newTokensCount}`,
-            },
-          };
-          worker.postMessage(response);
-        } else {
-          console.log("doTokenization.allGood", hunks);
-          const response: TokenizeSuccessResponse = {
-            id,
-            payload: {
-              success: true,
-              tokens,
-            },
-          };
-          worker.postMessage(response);
-        }
+        console.log("doTokenization.allGood", tokens);
+        const response: TokenizeSuccessResponse = {
+          id,
+          payload: {
+            success: true,
+            tokens,
+          },
+        };
+        worker.postMessage(response);
       }
     } catch (ex) {
       const response: TokenizeFailureResponse = {
