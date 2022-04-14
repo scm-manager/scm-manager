@@ -77,7 +77,12 @@ module.exports = [
   {
     ...base,
     entry: {
-      webapp: [path.resolve(__dirname, "webpack-public-path.js"), "./ui-webapp/src/index.tsx"]
+      webapp: [
+        path.resolve(__dirname, "webpack-public-path.js"),
+        // enable async/await
+        "regenerator-runtime/runtime",
+        "./ui-webapp/src/index.tsx"
+      ]
     },
     devtool: "eval-cheap-module-source-map",
     module: {
