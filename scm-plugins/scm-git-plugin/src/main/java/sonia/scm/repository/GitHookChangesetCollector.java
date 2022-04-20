@@ -29,7 +29,6 @@ package sonia.scm.repository;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-import org.eclipse.jgit.errors.IncorrectObjectTypeException;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevSort;
@@ -40,7 +39,6 @@ import org.eclipse.jgit.transport.ReceivePack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sonia.scm.util.IOUtil;
 import sonia.scm.web.CollectingPackParserListener;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -92,16 +90,12 @@ public class GitHookChangesetCollector
   {
     Map<String, Changeset> changesets = Maps.newLinkedHashMap();
 
-    org.eclipse.jgit.lib.Repository repository = rpack.getRepository();
-
-    RevWalk walk = null;
-
-    GitChangesetConverter converter = null;
-
-    try
-    {
-      walk = rpack.getRevWalk();
-      converter = converterFactory.create(repository, walk);
+    try (
+         org.eclipse.jgit.lib.Repository repository = rpack.getRepository();
+         RevWalk walk = rpack.getRevWalk();
+         GitChangesetConverter converter = converterFactory.create(repository, walk)
+    ) {
+      repository.incrementOpen();
 
       for (ReceiveCommand rc : receiveCommands)
       {
@@ -142,18 +136,13 @@ public class GitHookChangesetCollector
     {
       logger.error("could not collect changesets", ex);
     }
-    finally
-    {
-      IOUtil.close(converter);
-      GitUtil.release(walk);
-    }
 
     return Lists.newArrayList(changesets.values());
   }
 
   private void collectChangesets(Map<String, Changeset> changesets,
     GitChangesetConverter converter, RevWalk walk, ReceiveCommand rc)
-    throws IncorrectObjectTypeException, IOException
+    throws IOException
   {
     ObjectId newId = rc.getNewId();
 
