@@ -37,7 +37,7 @@ const ActionBar = styled.div`
   line-height: 1.25;
   padding: 0.5em 0.75em;
   margin-bottom: 1em;
-  @media screen and (max-width: ${devices.tablet.width}px) {
+  @media screen and (max-width: ${devices.tablet.width}-1px) {
     padding: 0.5rem 0.25rem;
   }
 `;
@@ -50,7 +50,7 @@ const FlexShrinkLevel = styled(Level)`
   .level-item {
     justify-content: flex-end;
   }
-  @media screen and (max-width: ${devices.tablet.width}px) {
+  @media screen and (max-width: ${devices.tablet.width}-1px) {
     .level-left {
       margin-right: 0;
     }
