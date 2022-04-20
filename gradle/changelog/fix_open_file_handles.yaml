@@ -1,0 +1,2 @@
+- type: fixed
+  description: Open file handle prevent deleting a repository on Windows ([#2008](https://github.com/scm-manager/scm-manager/pull/2008))
