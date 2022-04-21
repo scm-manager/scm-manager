@@ -10,7 +10,7 @@
     "ui-scripts": "./bin/ui-scripts.js"
   },
   "dependencies": {
-    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.1",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.5",
     "babel-loader": "^8.2.3",
     "css-loader": "^6.5.0",
     "file-loader": "^6.2.0",
