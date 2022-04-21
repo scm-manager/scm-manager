@@ -24,8 +24,8 @@
 
 import groupByLines from "./groupByLines";
 // @ts-ignore we have no types for react-diff-view
-import { tokenize } from "react-diff-view";
-import createRefractor, { RefractorAdapter } from "./refractorAdapter";
+import {tokenize} from "react-diff-view";
+import createRefractor, {RefractorAdapter} from "./refractorAdapter";
 import type {
   FailureResponse,
   HighlightingRequest,
@@ -38,8 +38,8 @@ import type {
   TokenizeFailureResponse,
   TokenizeRequest,
   TokenizeSuccessResponse,
-} from "./types";
-import { isRefractorElement } from "./types";
+} from "../types";
+import {isRefractorElement} from "../types";
 
 // the WorkerGlobalScope is assigned to self
 // see https://developer.mozilla.org/en-US/docs/Web/API/WorkerGlobalScope/self

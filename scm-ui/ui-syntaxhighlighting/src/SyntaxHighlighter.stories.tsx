@@ -35,8 +35,22 @@ import HttpServerWithMarkerJs from "./__resources__/HttpServerWithMarker.js";
 export default {
   title: "SyntaxHighlighter",
   component: SyntaxHighlighter,
-  parameters: {
-    layout: "fullscreen",
+  argTypes: {
+    lineWrapper: {
+      table: {
+        disable: true,
+      },
+    },
+    markerConfig: {
+      table: {
+        disable: true,
+      },
+    },
+    renderer: {
+      table: {
+        disable: true,
+      },
+    },
   },
 } as ComponentMeta<typeof SyntaxHighlighter>;
 

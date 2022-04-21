@@ -23,8 +23,8 @@
  */
 
 /*eslint-disable */
-import flatten, { FlatElement, FlatNode, FlatNodes, FlatText } from "./flatten";
-import type { RefractorNode } from "./types";
+import flatten, {FlatElement, FlatNode, FlatNodes, FlatText} from "./flatten";
+import type {RefractorNode} from "../types";
 
 function groupByLines(nodes: RefractorNode[], nodeLimit?: number): Array<LineElement> {
   return group(flatten(nodes, nodeLimit));

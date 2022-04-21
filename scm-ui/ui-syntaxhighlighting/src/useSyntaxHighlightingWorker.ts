@@ -29,7 +29,7 @@ import type { LoadThemeRequest } from "./types";
 
 const worker = new Worker(
   // @ts-ignore TODO
-  new URL("./SyntaxHighlighter.worker.ts", import.meta.url),
+  new URL("./worker/SyntaxHighlighter.worker.ts", import.meta.url),
   {
     name: "SyntaxHighlighter",
     type: "module",

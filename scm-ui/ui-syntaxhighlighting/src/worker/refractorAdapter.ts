@@ -23,7 +23,7 @@
  */
 
 import "./prismConfig";
-import { refractor } from "refractor/lib/core";
+import {refractor} from "refractor/lib/core";
 
 type RunHookEnv = {
   classes: string[];
