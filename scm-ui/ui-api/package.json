@@ -16,7 +16,7 @@
   },
   "devDependencies": {
     "@scm-manager/babel-preset": "^2.12.0",
-    "@scm-manager/eslint-config": "^2.14.0",
+    "@scm-manager/eslint-config": "^2.15.0",
     "@scm-manager/jest-preset": "^2.13.0",
     "@scm-manager/prettier-config": "^2.10.1",
     "@scm-manager/tsconfig": "^2.13.0",
@@ -27,7 +27,7 @@
   "dependencies": {
     "@scm-manager/ui-types": "^2.32.3-SNAPSHOT",
     "fetch-mock-jest": "^1.5.1",
-    "gitdiff-parser": "^0.1.2",
+    "gitdiff-parser": "^0.2.2",
     "query-string": "6.14.1",
     "react": "^17.0.1",
     "react-query": "^3.25.1"

@@ -52,7 +52,7 @@ export type TokenizeRequest = MessageData<
   "tokenize",
   {
     language: string;
-    hunks: any;
+    hunks: unknown;
   }
 >;
 

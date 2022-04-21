@@ -173,6 +173,30 @@ const createFallbackContent = (
   return <SplitAndReplace key="fract" text={value} replacements={replacements} textWrapper={(s) => s} />;
 };
 
+const useMarkedContent = (value: string, markerConfig?: MarkerConfig) => {
+  return useMemo(() => {
+    const markedContent = markContent(value, markerConfig);
+    return {
+      ...markedContent,
+      markedTexts: markedContent.replacements.length
+        ? markedContent.replacements.map((replacement) => replacement.textToReplace)
+        : undefined,
+    };
+  }, [value, markerConfig]);
+};
+
+const useFallbackContent = (
+  strippedValue: string,
+  replacements: Replacement[],
+  lineWrapper?: LineWrapperType,
+  renderer?: RendererType
+) => {
+  return useMemo(
+    () => createFallbackContent(strippedValue, lineWrapper, renderer, replacements),
+    [strippedValue, lineWrapper, renderer, replacements]
+  );
+};
+
 const SyntaxHighlighter = ({
   value,
   lineWrapper,
@@ -181,21 +205,18 @@ const SyntaxHighlighter = ({
   nodeLimit = 10000,
   renderer,
 }: Props) => {
-  // TODO error
-  const { strippedValue, replacements } = markContent(value, markerConfig);
+  const { strippedValue, replacements, markedTexts } = useMarkedContent(value, markerConfig);
   const { isLoading, tree, error } = useSyntaxHighlighting({
     value: strippedValue,
     language,
     nodeLimit,
     groupByLine: !!lineWrapper || !!renderer,
-    markedTexts: replacements.length ? replacements.map((replacement) => replacement.textToReplace) : undefined,
+    markedTexts: markedTexts,
   });
-  const fallbackContent = useMemo(
-    () => createFallbackContent(strippedValue, lineWrapper, renderer, replacements),
-    [value, lineWrapper, markerConfig]
-  );
+  const fallbackContent = useFallbackContent(strippedValue, replacements, lineWrapper, renderer);
   const Renderer = renderer ?? DEFAULT_RENDERER;
 
+  // we do not expose the error for now, because we have no idea how to display it
   if (isLoading || !tree || error) {
     return (
       <pre>

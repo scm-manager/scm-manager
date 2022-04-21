@@ -23,12 +23,12 @@
  */
 
 // WebWorker which creates tokens for syntax highlighting
-// @ts-ignore
+// @ts-ignore typescript does not know the css module syntax
 import theme from "./syntax-highlighting.module.css";
 import type { LoadThemeRequest } from "./types";
 
 const worker = new Worker(
-  // @ts-ignore TODO
+  // @ts-ignore typscript does not know the import.meta object
   new URL("./worker/SyntaxHighlighter.worker.ts", import.meta.url),
   {
     name: "SyntaxHighlighter",

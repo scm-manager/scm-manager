@@ -132,15 +132,17 @@ export const HugeCss: ComponentStory<typeof SyntaxHighlighter> = () => {
 
 const Mark: FC = ({ children }) => <mark>{children}</mark>;
 
+const markerConfig = {
+  start: "<|[[--",
+  end: "--]]|>",
+  wrapper: Mark,
+};
+
 export const Marker = Template.bind({});
 Marker.args = {
   language: "javascript",
   value: HttpServerWithMarkerJs,
-  markerConfig: {
-    start: "<|[[--",
-    end: "--]]|>",
-    wrapper: Mark,
-  },
+  markerConfig,
 };
 
 export const MarkerWithLineNumbers = Template.bind({});
@@ -148,11 +150,7 @@ MarkerWithLineNumbers.args = {
   language: "javascript",
   value: HttpServerWithMarkerJs,
   lineWrapper: LineWrapper,
-  markerConfig: {
-    start: "<|[[--",
-    end: "--]]|>",
-    wrapper: Mark,
-  },
+  markerConfig,
 };
 
 export const MarkerWithLineNumbersAndLimit = Template.bind({});

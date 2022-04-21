@@ -23,7 +23,7 @@
  */
 
 import "./prismConfig";
-import {refractor} from "refractor/lib/core";
+import { refractor } from "refractor/lib/core";
 
 type RunHookEnv = {
   classes: string[];
@@ -58,14 +58,13 @@ const createAdapter = (theme: { [key: string]: string }): RefractorAdapter => {
 
   // @ts-ignore hooks are not in the type definition
   const originalRunHook = refractor.hooks.run;
-  const runHook = (name: string, env: RunHookEnv) => {
+  // @ts-ignore hooks are not in the type definition
+  refractor.hooks.run = (name: string, env: RunHookEnv) => {
     originalRunHook.apply(name, env);
     if (env.classes) {
       env.classes = env.classes.map((className) => theme[className] || className);
     }
   };
-  // @ts-ignore hooks are not in the type definition
-  refractor.hooks.run = runHook;
 
   return {
     isLanguageRegistered,

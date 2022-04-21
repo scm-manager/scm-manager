@@ -84,7 +84,7 @@ const useSyntaxHighlighting = ({
 
     worker.addEventListener("message", listener);
     return () => worker.removeEventListener("message", listener);
-  }, [value, language, nodeLimit]);
+  }, [value, language, nodeLimit, groupByLine, worker, markedTexts]);
 
   return {
     tree,

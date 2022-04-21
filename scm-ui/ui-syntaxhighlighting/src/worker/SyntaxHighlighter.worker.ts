@@ -24,8 +24,8 @@
 
 import groupByLines from "./groupByLines";
 // @ts-ignore we have no types for react-diff-view
-import {tokenize} from "react-diff-view";
-import createRefractor, {RefractorAdapter} from "./refractorAdapter";
+import { tokenize } from "react-diff-view";
+import createRefractor, { RefractorAdapter } from "./refractorAdapter";
 import type {
   FailureResponse,
   HighlightingRequest,
@@ -39,7 +39,7 @@ import type {
   TokenizeRequest,
   TokenizeSuccessResponse,
 } from "../types";
-import {isRefractorElement} from "../types";
+import { isRefractorElement } from "../types";
 
 // the WorkerGlobalScope is assigned to self
 // see https://developer.mozilla.org/en-US/docs/Web/API/WorkerGlobalScope/self
@@ -54,94 +54,94 @@ function initRefractor(theme: Theme) {
 const countChildrenAndApplyMarkers = (node: RefractorNode, markedTexts?: string[]) => {
   if (isRefractorElement(node)) {
     return countAndMarkNodes(node.children, markedTexts);
-  } else {
-    if (markedTexts) {
-      let content = node.value;
-      const newChildren: RefractorNode[] = [];
-      while (content.length) {
-        let foundSomething = false;
-        for (const markedText of markedTexts) {
-          const start = content.indexOf(markedText);
-          if (start >= 0) {
-            foundSomething = true;
-            const end = start + markedText.length;
-            newChildren.push({ type: "text", value: content.substring(0, start) });
-            newChildren.push({
-              type: "element",
-              tagName: "mark",
-              properties: {
-                ["data-marked"]: true,
-              },
-              children: [{ type: "text", value: content.substring(start, end) }],
-            });
-            content = content.substring(end);
-          }
-        }
-        if (!foundSomething) {
-          break;
-        }
-      }
-      if (content.length) {
-        newChildren.push({ type: "text", value: content });
-      }
-      if (newChildren.length > 0) {
-        node.children = newChildren;
-        (node as any).type = "element";
-        node.tagName = "span";
-        return newChildren.length + 1;
-      }
-    }
+  }
+
+  if (!markedTexts || markedTexts.length === 0) {
     return 1;
   }
+
+  let content = node.value;
+  const newChildren: RefractorNode[] = [];
+  while (content.length) {
+    let foundSomething = false;
+    for (const markedText of markedTexts) {
+      const start = content.indexOf(markedText);
+      if (start >= 0) {
+        foundSomething = true;
+        const end = start + markedText.length;
+        newChildren.push({ type: "text", value: content.substring(0, start) });
+        newChildren.push({
+          type: "element",
+          tagName: "mark",
+          properties: {
+            "data-marked": true,
+          },
+          children: [{ type: "text", value: content.substring(start, end) }],
+        });
+        content = content.substring(end);
+      }
+    }
+    if (!foundSomething) {
+      break;
+    }
+  }
+
+  if (content.length) {
+    newChildren.push({ type: "text", value: content });
+  }
+
+  if (newChildren.length > 0) {
+    const el = node as RefractorNode;
+    el.type = "element";
+    el.tagName = "span";
+    el.children = newChildren;
+    return newChildren.length + 1;
+  }
+
+  return 1;
 };
 const countAndMarkNodes = (nodes: RefractorNode[], markedTexts?: string[]): number =>
   nodes.reduce((count, node) => count + countChildrenAndApplyMarkers(node, markedTexts), 0);
 
-function doHighlighting({
-  id,
-  payload: { value, language, nodeLimit, groupByLine, markedTexts },
-}: HighlightingRequest) {
-  const highlightContent = (worker: Worker) => {
-    try {
-      let tree = refractor.highlight(value, language).children;
-      if (groupByLine) {
-        try {
-          tree = groupByLines(tree, nodeLimit);
-        } catch (e) {
-          const payload: FailureResponse["payload"] = {
-            reason: e instanceof Error ? e.message : `node limit of ${nodeLimit} reached.`,
-          };
-          worker.postMessage({ id, type: "failure", payload } as FailureResponse);
-          return;
-        }
+const doHighlighting = (
+  worker: Worker,
+  { id, payload: { value, language, nodeLimit, groupByLine, markedTexts } }: HighlightingRequest
+) => {
+  try {
+    let tree = refractor.highlight(value, language).children;
+    if (groupByLine) {
+      try {
+        tree = groupByLines(tree, nodeLimit);
+      } catch (e) {
+        const payload: FailureResponse["payload"] = {
+          reason: e instanceof Error ? e.message : `node limit of ${nodeLimit} reached.`,
+        };
+        worker.postMessage({ id, type: "failure", payload } as FailureResponse);
+        return;
       }
-
-      if (nodeLimit > 0) {
-        const count = countAndMarkNodes(tree, markedTexts);
-        if (count > nodeLimit) {
-          const payload: FailureResponse["payload"] = {
-            reason: `node limit of ${nodeLimit} reached. Total nodes ${count}.`,
-          };
-          worker.postMessage({ id, type: "failure", payload } as FailureResponse);
-        } else {
-          const payload: SuccessResponse["payload"] = {
-            tree,
-          };
-          worker.postMessage({ id, type: "success", payload } as SuccessResponse);
-        }
-      }
-    } catch (ex) {
-      const payload: FailureResponse["payload"] = {
-        reason: String(ex),
-      };
-      worker.postMessage({ id, type: "failure", payload } as FailureResponse);
     }
-  };
 
-  if (language !== "text") {
-    refractor.loadLanguage(language, () => highlightContent(self));
+    if (nodeLimit > 0) {
+      const count = countAndMarkNodes(tree, markedTexts);
+      if (count > nodeLimit) {
+        const payload: FailureResponse["payload"] = {
+          reason: `node limit of ${nodeLimit} reached. Total nodes ${count}.`,
+        };
+        worker.postMessage({ id, type: "failure", payload } as FailureResponse);
+      } else {
+        const payload: SuccessResponse["payload"] = {
+          tree,
+        };
+        worker.postMessage({ id, type: "success", payload } as SuccessResponse);
+      }
+    }
+  } catch (ex) {
+    const payload: FailureResponse["payload"] = {
+      reason: String(ex),
+    };
+    worker.postMessage({ id, type: "failure", payload } as FailureResponse);
   }
-}
+};
 
 const isLoadThemeMessage = (message: Request): message is LoadThemeRequest => {
   return message.type === "theme";
@@ -214,7 +214,7 @@ self.addEventListener("message", ({ data }: RequestMessage) => {
     initRefractor(data.payload);
   } else if (isTokenizeMessage(data)) {
     runTokenize(data);
-  } else {
-    doHighlighting(data);
+  } else if (data.payload.language !== "text") {
+    refractor.loadLanguage(data.payload.language, () => doHighlighting(self, data));
   }
 });

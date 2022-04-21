@@ -16,7 +16,9 @@
     "deploy": "ui-scripts publish",
     "set-version": "ui-scripts version"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@scm-manager/eslint-config": "2.15.0"
+  },
   "devDependencies": {
     "@scm-manager/remark-preset-lint": "^1.0.0",
     "babel-plugin-reflow": "^0.2.7",

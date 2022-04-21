@@ -3047,10 +3047,10 @@
     "@babel/preset-typescript" "^7.13.0"
     babel-plugin-styled-components "^1.12.0"
 
-"@scm-manager/eslint-config@^2.14.0":
-  version "2.14.0"
-  resolved "https://registry.yarnpkg.com/@scm-manager/eslint-config/-/eslint-config-2.14.0.tgz#2ab2053562068411137e731f1ed14180a1d78071"
-  integrity sha512-0Q8FEDq4q+SuqOrH8heAuVn5/Cv7eoxRQH3hCqPdQwxknttms2fWlAIiL7eEMLEu+sr8HfAFxfbzGShF75a7BQ==
+"@scm-manager/eslint-config@2.15.0", "@scm-manager/eslint-config@^2.15.0":
+  version "2.15.0"
+  resolved "https://registry.yarnpkg.com/@scm-manager/eslint-config/-/eslint-config-2.15.0.tgz#b0bac1ba721d393e6ca5571f61e9e4158598bbf6"
+  integrity sha512-1xCEY+CFKD25sqop2Lc/UGUwfMv5Nd3HZ7O6DrZZP9WYozjsq499X/Cx5/Y1k9TRjyQOHgSOh1MRZz9YYnjTZg==
   dependencies:
     "@typescript-eslint/eslint-plugin" "^5.19.0"
     "@typescript-eslint/parser" "^5.19.0"

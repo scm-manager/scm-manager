@@ -15,7 +15,7 @@
     "react-diff-view": "^2.4.10"
   },
   "devDependencies": {
-    "@scm-manager/eslint-config": "^2.14.0",
+    "@scm-manager/eslint-config": "^2.15.0",
     "@scm-manager/prettier-config": "^2.11.1",
     "css-loader": "^6.5.0",
     "html-webpack-plugin": "^5.5.0",
