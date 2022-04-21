@@ -29,12 +29,33 @@ import SplitAndReplace from "./SplitAndReplace";
 export default {
   title: "SplitAndReplace",
   component: SplitAndReplace,
-  parameters: {
-    layout: "fullscreen",
-  },
 } as ComponentMeta<typeof SplitAndReplace>;
 
-export const SimpleReplacement: ComponentStory<typeof SplitAndReplace> = () => {
+const textOne = "'So this is it,` said Arthur, 'We are going to die.`";
+const textTwo = "'Yes,` said Ford, 'except... no! Wait a minute!`";
+
+export const ReplaceOnce: ComponentStory<typeof SplitAndReplace> = () => {
+  const replacements = [
+    {
+      textToReplace: "'",
+      replacement: <span>!</span>,
+      replaceAll: false,
+    },
+  ];
+  return (
+    <div>
+      <h3>Replace ' with ! once</h3>
+      <label>Original text:</label>
+      <p>{textOne}</p>
+      <label>Text with replacements:</label>
+      <p>
+        <SplitAndReplace text={textOne} replacements={replacements} />
+      </p>
+    </div>
+  );
+};
+
+export const ReplaceAll: ComponentStory<typeof SplitAndReplace> = () => {
   const replacements = [
     {
       textToReplace: "'",
@@ -48,13 +69,15 @@ export const SimpleReplacement: ComponentStory<typeof SplitAndReplace> = () => {
     },
   ];
   return (
-    <>
-      <div className="m-6">
-        <SplitAndReplace text={"'So this is it,` said Arthur, 'We are going to die.`"} replacements={replacements} />
-      </div>
-      <div className="m-6">
-        <SplitAndReplace text={"'Yes,` said Ford, 'except... no! Wait a minute!`"} replacements={replacements} />
-      </div>
-    </>
+    <div>
+      <h3>Replace all ` with ? and ' with !</h3>
+      <label>Original text:</label>
+      <p>{textTwo}</p>
+
+      <label> Text with replacements: </label>
+      <p>
+        <SplitAndReplace text={textTwo} replacements={replacements} />
+      </p>
+    </div>
   );
 };

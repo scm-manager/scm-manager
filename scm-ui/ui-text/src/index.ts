@@ -22,4 +22,4 @@
  * SOFTWARE.
  */
 
-export { default as SplitAndReplace } from "./SplitAndReplace";
+export { default as SplitAndReplace, Replacement } from "./SplitAndReplace";

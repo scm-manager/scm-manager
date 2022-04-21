@@ -37,7 +37,7 @@ import {
   DiffEventHandler,
   File,
   FileChangeType,
-  Hunk
+  Hunk,
 } from "./repos";
 
 export { validation, repositories };
@@ -81,7 +81,7 @@ export { default as CreateTagModal } from "./modals/CreateTagModal";
 export { default as CardColumn } from "./CardColumn";
 export { default as CardColumnSmall } from "./CardColumnSmall";
 export { default as CommaSeparatedList } from "./CommaSeparatedList";
-export { default as SplitAndReplace, Replacement } from "./SplitAndReplace";
+export { SplitAndReplace, Replacement } from "@scm-manager/ui-text";
 export { regExpPattern as changesetShortLinkRegex } from "./markdown/remarkChangesetShortLinkParser";
 export * from "./markdown/PluginApi";
 export * from "./devices";
@@ -114,7 +114,7 @@ export {
   AnnotationFactory,
   AnnotationFactoryContext,
   DiffEventHandler,
-  DiffEventContext
+  DiffEventContext,
 };
 
 // Re-export from ui-api
@@ -131,7 +131,7 @@ export {
   MissingLinkError,
   createBackendError,
   isBackendError,
-  TOKEN_EXPIRED_ERROR_CODE
+  TOKEN_EXPIRED_ERROR_CODE,
 } from "@scm-manager/ui-api";
 
 export { urls };

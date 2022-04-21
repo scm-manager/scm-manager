@@ -63,7 +63,14 @@ type FieldFragmentProps = {
 
 const FieldFragment: FC<FieldFragmentProps> = ({ fragment, syntaxHighlightingLanguage }) => {
   if (syntaxHighlightingLanguage) {
-    return <SyntaxHighlighter value={fragment} language={syntaxHighlightingLanguage} markerConfig={MARKER_CONFIG} />;
+    return (
+      <SyntaxHighlighter
+        value={fragment}
+        language={syntaxHighlightingLanguage}
+        markerConfig={MARKER_CONFIG}
+        nodeLimit={600}
+      />
+    );
   }
   return <HighlightedFragment value={fragment} />;
 };

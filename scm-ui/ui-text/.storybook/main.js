@@ -23,16 +23,9 @@
  */
 
 module.exports = {
-  stories: ["../src/**/*.stories.mdx", "../src/**/*.stories.@(js|jsx|ts|tsx)"],
-  addons: ["@storybook/addon-links", "@storybook/addon-essentials", "@storybook/addon-interactions"],
-  staticDirs: ["../static"],
+  stories: ["../src/**/*.stories.@(ts|tsx)"],
   framework: "@storybook/react",
   core: {
     builder: "webpack5",
-  },
-  webpackFinal: async (config) => {
-    // force node version of "decode-named-character-reference" instead of browser version which does not work in web worker
-    config.resolve.alias["decode-named-character-reference"] = require.resolve("decode-named-character-reference");
-    return config;
   },
 };
