@@ -7,7 +7,8 @@
     "test": "jest --passWithNoTests",
     "lint": "eslint src",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "write-mapping": "node scripts/write-mapping.mjs"
   },
   "dependencies": {
     "@scm-manager/ui-text": "2.32.3-SNAPSHOT",

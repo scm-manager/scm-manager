@@ -24,6 +24,8 @@
 
 import "./prismConfig";
 import { refractor } from "refractor/lib/core";
+// @ts-ignore e have no types fpr json import
+import aliases from "./mapping.json";
 
 type RunHookEnv = {
   classes: string[];
@@ -40,10 +42,11 @@ const createAdapter = (theme: { [key: string]: string }): RefractorAdapter => {
     return registeredLanguages.includes(lang);
   };
 
-  const loadLanguage = (lang: string, callback: () => void) => {
-    if (isLanguageRegistered(lang)) {
+  const loadLanguage = (alias: string, callback: () => void) => {
+    if (isLanguageRegistered(alias)) {
       callback();
     } else {
+      const lang = aliases[alias] || alias;
       import(/* webpackChunkName: "sh-lang-[request]" */ `refractor/lang/${lang}.js`)
         .then((loadedLanguage) => {
           refractor.register(loadedLanguage.default);

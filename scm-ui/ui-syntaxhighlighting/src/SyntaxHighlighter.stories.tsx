@@ -31,6 +31,7 @@ import HttpServerJava from "./__resources__/HttpServer.java";
 import HttpServerJs from "./__resources__/HttpServer.js";
 import HttpServerPy from "./__resources__/HttpServer.py";
 import HttpServerWithMarkerJs from "./__resources__/HttpServerWithMarker.js";
+import LogbackXml from "./__resources__/Logback.xml";
 
 export default {
   title: "SyntaxHighlighter",
@@ -201,4 +202,10 @@ WithRendererWithLimit.args = {
       </tbody>
     </table>
   ),
+};
+
+export const XmlAsMarkup = Template.bind({});
+XmlAsMarkup.args = {
+  language: "xml",
+  value: LogbackXml,
 };

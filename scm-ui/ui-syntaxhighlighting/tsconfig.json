@@ -1,3 +1,4 @@
 {
-  "extends": "@scm-manager/tsconfig"
+  "extends": "@scm-manager/tsconfig",
+  "exclude": ["./scripts"]
 }
