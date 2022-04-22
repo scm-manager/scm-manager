@@ -56,8 +56,8 @@ if (isDevelopment) {
 const themedir = path.join(root, "ui-styles", "src");
 const themes = fs
   .readdirSync(themedir)
-  .map(filename => path.parse(filename))
-  .filter(p => p.ext === ".scss")
+  .map((filename) => path.parse(filename))
+  .filter((p) => p.ext === ".scss")
   .reduce((entries, current) => ({ ...entries, [current.name]: path.join(themedir, current.base) }), {});
 
 console.log(`build ${mode} bundles`);
@@ -69,8 +69,8 @@ const base = {
   resolveLoader: {
     modules: [path.join(__dirname, "..", "node_modules"), "node_modules"],
     extensions: [".js", ".json"],
-    mainFields: ["loader", "main"]
-  }
+    mainFields: ["loader", "main"],
+  },
 };
 
 module.exports = [
@@ -81,8 +81,8 @@ module.exports = [
         path.resolve(__dirname, "webpack-public-path.js"),
         // enable async/await
         "regenerator-runtime/runtime",
-        "./ui-webapp/src/index.tsx"
-      ]
+        "./ui-webapp/src/index.tsx",
+      ],
     },
     devtool: "eval-cheap-module-source-map",
     module: {
@@ -96,10 +96,10 @@ module.exports = [
               options: {
                 cacheDirectory: true,
                 presets: ["@scm-manager/babel-preset"],
-                plugins: babelPlugins
-              }
-            }
-          ]
+                plugins: babelPlugins,
+              },
+            },
+          ],
         },
         {
           test: /\.(css|scss|sass)$/i,
@@ -113,46 +113,46 @@ module.exports = [
                 // If you need run `sass-loader` and `postcss-loader` on each CSS `@import` please set it to `2`
                 importLoaders: 1,
                 // Automatically enable css modules for files satisfying `/\.module\.\w+$/i` RegExp.
-                modules: { auto: true }
-              }
+                modules: { auto: true },
+              },
             },
             // Compiles Sass to CSS
-            "sass-loader"
-          ]
+            "sass-loader",
+          ],
         },
         {
           test: /\.(png|svg|jpg|gif|woff2?|eot|ttf)$/,
-          use: ["file-loader"]
-        }
-      ]
+          use: ["file-loader"],
+        },
+      ],
     },
     resolve: {
       extensions: [".ts", ".tsx", ".js", ".jsx", ".css", ".scss", ".json"],
       fallback: {
         fs: false,
         net: false,
-        tls: false
+        tls: false,
       },
       alias: {
         "decode-named-character-reference": require.resolve("decode-named-character-reference"),
-      }
+      },
     },
     output: {
       path: path.join(root, "build", "webapp", "assets"),
       filename: "[name].bundle.js",
-      chunkFilename: "[name].bundle.js"
+      chunkFilename: "[name].bundle.js",
     },
     devServer: {
       static: [
         {
-          directory: path.join(root, "ui-webapp", "public")
-        }
+          directory: path.join(root, "ui-webapp", "public"),
+        },
       ],
       client: {
         overlay: {
           errors: true,
-          warnings: false
-        }
+          warnings: false,
+        },
       },
       historyApiFallback: true,
       host: "127.0.0.1",
@@ -160,7 +160,7 @@ module.exports = [
       hot: true,
       devMiddleware: {
         index: false,
-        publicPath: "/assets/"
+        publicPath: "/assets/",
       },
       onBeforeSetupMiddleware: ({ app }) => {
         app.use(createContextPathMiddleware("/scm"));
@@ -170,10 +170,10 @@ module.exports = [
         const stage = process.env.NODE_ENV || "DEVELOPMENT";
         const renderParams = {
           contextPath: "/scm",
-          scmStage: stage.toUpperCase()
+          scmStage: stage.toUpperCase(),
         };
         app.use(createIndexMiddleware(templatePath, renderParams));
-      }
+      },
     },
     optimization: {
       runtimeChunk: "single",
@@ -185,17 +185,17 @@ module.exports = [
             test: /[\\/]node_modules[\\/]/,
             priority: -10,
             filename: "vendors~webapp.bundle.js",
-            reuseExistingChunk: true
+            reuseExistingChunk: true,
           },
           default: {
             minChunks: 2,
             priority: -20,
-            reuseExistingChunk: true
-          }
-        }
-      }
+            reuseExistingChunk: true,
+          },
+        },
+      },
     },
-    plugins: webpackPlugins
+    plugins: webpackPlugins,
   },
   {
     ...base,
@@ -206,37 +206,37 @@ module.exports = [
           test: /\.(css|scss|sass)$/i,
           use: [
             {
-              loader: MiniCssExtractPlugin.loader
+              loader: MiniCssExtractPlugin.loader,
             },
             "css-loader",
-            "sass-loader"
-          ]
-        }
-      ]
+            "sass-loader",
+          ],
+        },
+      ],
     },
     plugins: [
       new MiniCssExtractPlugin({
         filename: "ui-theme-[name].css",
-        ignoreOrder: false
-      })
+        ignoreOrder: false,
+      }),
     ],
     optimization: {
       // TODO only on production?
-      minimizer: [new OptimizeCSSAssetsPlugin({})]
+      minimizer: [new OptimizeCSSAssetsPlugin({})],
     },
     output: {
       path: path.join(root, "build", "webapp", "assets"),
-      filename: "ui-theme-[name].bundle.js"
-    }
+      filename: "ui-theme-[name].bundle.js",
+    },
   },
   {
     ...base,
     entry: {
-      polyfills: "./ui-polyfill/src/index.js"
+      polyfills: "./ui-polyfill/src/index.js",
     },
     output: {
       path: path.resolve(root, "build", "webapp", "assets"),
-      filename: "[name].bundle.js"
-    }
-  }
+      filename: "[name].bundle.js",
+    },
+  },
 ];

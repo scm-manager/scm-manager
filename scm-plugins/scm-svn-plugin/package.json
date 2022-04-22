@@ -13,7 +13,7 @@
     "@scm-manager/ui-plugins": "^2.32.3-SNAPSHOT"
   },
   "devDependencies": {
-    "@scm-manager/babel-preset": "^2.12.0",
+    "@scm-manager/babel-preset": "^2.13.0",
     "@scm-manager/eslint-config": "^2.15.0",
     "@scm-manager/jest-preset": "^2.13.0",
     "@scm-manager/plugin-scripts": "^1.2.2",

@@ -32,6 +32,7 @@ import HttpServerJs from "./__resources__/HttpServer.js";
 import HttpServerPy from "./__resources__/HttpServer.py";
 import HttpServerWithMarkerJs from "./__resources__/HttpServerWithMarker.js";
 import LogbackXml from "./__resources__/Logback.xml";
+import ReadmeMd from "./__resources__/Readme.md";
 
 export default {
   title: "SyntaxHighlighter",
@@ -216,3 +217,9 @@ export const RenderAsFragment: ComponentStory<typeof SyntaxHighlighter> = () => 
     <SyntaxHighlighter value={HttpServerGo} language="go" as={Fragment} />
   </>
 );
+
+export const MarkdownWithFrontmatter = Template.bind({});
+MarkdownWithFrontmatter.args = {
+  language: "markdown",
+  value: ReadmeMd,
+};
