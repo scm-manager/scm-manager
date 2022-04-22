@@ -1,0 +1,6 @@
+- type: fixed
+  description: Freezing browser if large files with syntax highlighting were displayed ([#2010](https://github.com/scm-manager/scm-manager/pull/2010))
+- type: fixed
+  description: Multiline highlighting with line numbers ([#2010](https://github.com/scm-manager/scm-manager/pull/2010))
+- type: changed
+  description: Skip syntax highlighting on very large files ([#2010](https://github.com/scm-manager/scm-manager/pull/2010))
