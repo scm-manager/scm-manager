@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import React, { ComponentType, ReactChild, ReactNode, useMemo } from "react";
+import React, { ComponentType, FC, ReactChild, ReactNode, useMemo } from "react";
 import useSyntaxHighlighting from "./useSyntaxHighlighting";
 import type { RefractorElement } from "refractor";
 import type { Element } from "hast";
@@ -51,6 +51,7 @@ export type Props = {
   markerConfig?: MarkerConfig;
   nodeLimit?: number;
   renderer?: RendererType;
+  as?: ComponentType;
 };
 
 function mapWithDepth(depth: number, lineWrapper?: LineWrapperType, markerReplacement?: ComponentType) {
@@ -197,6 +198,23 @@ const useFallbackContent = (
   );
 };
 
+type RootWrapperProps = {
+  language: string;
+  as?: ComponentType;
+};
+
+const RootWrapper: FC<RootWrapperProps> = ({ language, children, as: AsComponent }) => {
+  if (!AsComponent) {
+    return (
+      <pre className={language ? `language-${language}` : ""}>
+        <code>{children}</code>
+      </pre>
+    );
+  }
+
+  return <AsComponent>{children}</AsComponent>;
+};
+
 const SyntaxHighlighter = ({
   value,
   lineWrapper,
@@ -204,6 +222,7 @@ const SyntaxHighlighter = ({
   markerConfig,
   nodeLimit = 10000,
   renderer,
+  as,
 }: Props) => {
   const { strippedValue, replacements, markedTexts } = useMarkedContent(value, markerConfig);
   const { isLoading, tree, error } = useSyntaxHighlighting({
@@ -219,18 +238,16 @@ const SyntaxHighlighter = ({
   // we do not expose the error for now, because we have no idea how to display it
   if (isLoading || !tree || error) {
     return (
-      <pre>
-        <code className={`language-${language}`}>{fallbackContent}</code>
-      </pre>
+      <RootWrapper as={as} language={language}>
+        <code>{fallbackContent}</code>
+      </RootWrapper>
     );
   }
 
   return (
-    <pre>
-      <code className={`language-${language}`}>
-        <Renderer>{tree?.map(mapWithDepth(0, lineWrapper, markerConfig?.wrapper))}</Renderer>
-      </code>
-    </pre>
+    <RootWrapper as={as} language={language}>
+      <Renderer>{tree?.map(mapWithDepth(0, lineWrapper, markerConfig?.wrapper))}</Renderer>
+    </RootWrapper>
   );
 };
 

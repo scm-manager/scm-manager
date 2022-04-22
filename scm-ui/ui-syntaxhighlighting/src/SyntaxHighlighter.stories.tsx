@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, Fragment, useEffect, useState } from "react";
 import SyntaxHighlighter, { Props } from "./SyntaxHighlighter";
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 
@@ -209,3 +209,10 @@ XmlAsMarkup.args = {
   language: "xml",
   value: LogbackXml,
 };
+
+export const RenderAsFragment: ComponentStory<typeof SyntaxHighlighter> = () => (
+  <>
+    <h2>This is rendered as fragment without code or pre tags</h2>
+    <SyntaxHighlighter value={HttpServerGo} language="go" as={Fragment} />
+  </>
+);

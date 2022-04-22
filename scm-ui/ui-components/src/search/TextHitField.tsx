@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import React, { FC } from "react";
+import React, { FC, Fragment } from "react";
 import { HighlightedHitField, Hit } from "@scm-manager/ui-types";
 import HighlightedFragment from "./HighlightedFragment";
 import { isHighlightedHitField } from "./fields";
@@ -69,6 +69,7 @@ const FieldFragment: FC<FieldFragmentProps> = ({ fragment, syntaxHighlightingLan
         language={syntaxHighlightingLanguage}
         markerConfig={MARKER_CONFIG}
         nodeLimit={600}
+        as={Fragment}
       />
     );
   }
