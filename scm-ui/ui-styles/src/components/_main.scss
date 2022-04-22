@@ -336,8 +336,9 @@ a.has-text-secondary-most:focus {
 
   &:focus,
   &.is-focused {
-    outline: 3px solid #AF3EE7;
-    outline-offset: 2px;
+    outline: $focus-outline-style;
+    outline-color: $focus-outline-color;
+    outline-offset: $focus-outline-offset;
     &:not(:active) {
       box-shadow: none !important;
     }
