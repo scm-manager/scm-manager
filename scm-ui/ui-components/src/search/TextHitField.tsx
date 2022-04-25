@@ -22,11 +22,19 @@
  * SOFTWARE.
  */
 
-import React, { FC } from "react";
+import React, { FC, Fragment } from "react";
 import { HighlightedHitField, Hit } from "@scm-manager/ui-types";
 import HighlightedFragment from "./HighlightedFragment";
 import { isHighlightedHitField } from "./fields";
-import SyntaxHighlightedFragment from "./SyntaxHighlightedFragment";
+import { SyntaxHighlighter } from "@scm-manager/ui-syntaxhighlighting";
+
+const MarkerWrapper: FC = ({ children }) => <mark>{children}</mark>;
+
+const MARKER_CONFIG = {
+  start: "<|[[--",
+  end: "--]]|>",
+  wrapper: MarkerWrapper,
+};
 
 type HighlightedTextFieldProps = {
   field: HighlightedHitField;
@@ -55,7 +63,15 @@ type FieldFragmentProps = {
 
 const FieldFragment: FC<FieldFragmentProps> = ({ fragment, syntaxHighlightingLanguage }) => {
   if (syntaxHighlightingLanguage) {
-    return <SyntaxHighlightedFragment value={fragment} language={syntaxHighlightingLanguage} />;
+    return (
+      <SyntaxHighlighter
+        value={fragment}
+        language={syntaxHighlightingLanguage}
+        markerConfig={MARKER_CONFIG}
+        nodeLimit={600}
+        as={Fragment}
+      />
+    );
   }
   return <HighlightedFragment value={fragment} />;
 };
@@ -67,10 +83,10 @@ type Props = {
   syntaxHighlightingLanguage?: string;
 };
 
-function truncate(value: string, truncateValueAt: number = 0, syntaxHighlightingLanguage?: string): string {
+function truncate(value: string, truncateValueAt = 0, syntaxHighlightingLanguage?: string): string {
   if (truncateValueAt > 0 && value.length > truncateValueAt) {
     if (syntaxHighlightingLanguage) {
-      let nextLineBreak = value.indexOf("\n", truncateValueAt);
+      const nextLineBreak = value.indexOf("\n", truncateValueAt);
       if (nextLineBreak >= 0 && nextLineBreak < value.length - 1) {
         value = value.substring(0, nextLineBreak) + "\n...";
       }
@@ -86,7 +102,7 @@ const TextHitField: FC<Props> = ({
   field: fieldName,
   children,
   syntaxHighlightingLanguage,
-  truncateValueAt = 0
+  truncateValueAt = 0,
 }) => {
   const field = hit.fields[fieldName];
   if (!field) {
@@ -94,7 +110,7 @@ const TextHitField: FC<Props> = ({
   } else if (isHighlightedHitField(field)) {
     return <HighlightedTextField field={field} syntaxHighlightingLanguage={syntaxHighlightingLanguage} />;
   } else {
-    let value = field.value;
+    const value = field.value;
     if (value === "") {
       return <>{children}</>;
     } else if (typeof value === "string") {

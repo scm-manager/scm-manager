@@ -21,12 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, useState } from "react";
-
-import { PrismAsyncLight as ReactSyntaxHighlighter } from "react-syntax-highlighter";
+import React, { FC, useCallback, useMemo, useState } from "react";
 import { defaultLanguage, determineLanguage } from "./languages";
-// eslint-disable-next-line no-restricted-imports
-import highlightingTheme from "./syntax-highlighting";
 import { useLocation } from "react-router-dom";
 import { urls } from "@scm-manager/ui-api";
 import createSyntaxHighlighterRenderer from "./SyntaxHighlighterRenderer";
@@ -35,6 +31,7 @@ import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 import copyToClipboard from "./CopyToClipboard";
 import { Button } from "./buttons";
+import { SyntaxHighlighter as NewSyntaxHighlighter } from "@scm-manager/ui-syntaxhighlighting";
 
 const LINE_NUMBER_URL_HASH_REGEX = /^#line-(.*)$/;
 
@@ -64,6 +61,18 @@ const SyntaxHighlighter: FC<Props> = ({ language = defaultLanguage, showLineNumb
   const [contentRef, setContentRef] = useState<HTMLElement | null>();
   const [copied, setCopied] = useState(false);
   const [t] = useTranslation("commons");
+  const createLinePermaLink = useCallback(
+    (lineNumber: number) =>
+      window.location.protocol +
+      "//" +
+      window.location.host +
+      urls.withContextPath((permalink || location.pathname) + "#line-" + lineNumber),
+    [permalink, location]
+  );
+  const Renderer = useMemo(
+    () => createSyntaxHighlighterRenderer(createLinePermaLink, showLineNumbers),
+    [createLinePermaLink, showLineNumbers]
+  );
 
   useScrollToElement(
     contentRef,
@@ -76,17 +85,7 @@ const SyntaxHighlighter: FC<Props> = ({ language = defaultLanguage, showLineNumb
     value
   );
 
-  const copy = () => {
-    copyToClipboard(value).then(() => setCopied(true));
-  };
-
-  const createLinePermaLink = (lineNumber: number) =>
-    window.location.protocol +
-    "//" +
-    window.location.host +
-    urls.withContextPath((permalink || location.pathname) + "#line-" + lineNumber);
-
-  const defaultRenderer = createSyntaxHighlighterRenderer(createLinePermaLink, showLineNumbers);
+  const copy = () => copyToClipboard(value).then(() => setCopied(true));
 
   let valueWithoutTrailingLineBreak = value;
   if (value && value.length > 1 && value.endsWith("\n")) {
@@ -94,14 +93,11 @@ const SyntaxHighlighter: FC<Props> = ({ language = defaultLanguage, showLineNumb
   }
   return (
     <Container ref={setContentRef} className="is-relative">
-      <ReactSyntaxHighlighter
-        showLineNumbers={false}
+      <NewSyntaxHighlighter
+        value={valueWithoutTrailingLineBreak}
         language={determineLanguage(language)}
-        style={highlightingTheme}
-        renderer={defaultRenderer}
-      >
-        {valueWithoutTrailingLineBreak}
-      </ReactSyntaxHighlighter>
+        renderer={Renderer}
+      />
       <TopRightButton className="is-small" title={t("syntaxHighlighting.copyButton")} action={copy}>
         <i className={copied ? "fa fa-clipboard-check" : "fa fa-clipboard"} />
       </TopRightButton>

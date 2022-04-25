@@ -26,47 +26,47 @@ const path = require("path");
 const fs = require("fs");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const RemoveThemesPlugin = require("./RemoveThemesPlugin");
-const WorkerPlugin = require("worker-plugin");
 const ReactDOM = require("react-dom");
 
 const root = path.resolve("..");
 
 const themedir = path.join(root, "ui-styles", "src");
 
-ReactDOM.createPortal = node => node;
+ReactDOM.createPortal = (node) => node;
 
 const themes = fs
   .readdirSync(themedir)
-  .map(filename => path.parse(filename))
-  .filter(p => p.ext === ".scss")
+  .map((filename) => path.parse(filename))
+  .filter((p) => p.ext === ".scss")
   .reduce((entries, current) => ({ ...entries, [`ui-theme-${current.name}`]: path.join(themedir, current.base) }), {});
 // .map(f => path.join(themedir, f.base));
 
 module.exports = {
   core: {
-    builder: "webpack5"
+    builder: "webpack5",
   },
   typescript: { reactDocgen: false },
   stories: ["../src/**/*.stories.tsx"],
-  addons: ["storybook-addon-i18next", "storybook-addon-themes"],
-  webpackFinal: async config => {
+  framework: "@storybook/react",
+  addons: ["storybook-addon-i18next", "storybook-addon-themes", "@storybook/addon-links", "@storybook/addon-essentials", "@storybook/addon-interactions"],
+  webpackFinal: async (config) => {
     // add our themes to webpack entry points
     config.entry = {
       main: config.entry,
-      ...themes
+      ...themes,
     };
 
     // create separate css files for our themes
     config.plugins.push(
       new MiniCssExtractPlugin({
         filename: "[name].css",
-        ignoreOrder: false
+        ignoreOrder: false,
       })
     );
 
     config.module.rules.push({
       test: /\.scss$/,
-      use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"]
+      use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"],
     });
 
     // the html-webpack-plugin adds the generated css and js files to the iframe,
@@ -75,6 +75,9 @@ module.exports = {
     // to filter our themes from the output.
     config.plugins.push(new RemoveThemesPlugin());
 
+    // force node version of "decode-named-character-reference" instead of browser version which does not work in web worker
+    config.resolve.alias["decode-named-character-reference"] = require.resolve("decode-named-character-reference");
+
     return config;
-  }
+  },
 };

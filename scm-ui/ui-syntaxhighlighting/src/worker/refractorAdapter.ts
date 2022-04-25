@@ -22,7 +22,11 @@
  * SOFTWARE.
  */
 
-import refractor from "refractor/core";
+import "./prismConfig";
+import { refractor } from "refractor/lib/core";
+// @ts-ignore e have no types fpr json import
+import aliases from "./mapping.json";
+import dependencies from "./dependencies";
 
 type RunHookEnv = {
   classes: string[];
@@ -39,40 +43,45 @@ const createAdapter = (theme: { [key: string]: string }): RefractorAdapter => {
     return registeredLanguages.includes(lang);
   };
 
-  const loadLanguage = (lang: string, callback: () => void) => {
-    if (isLanguageRegistered(lang)) {
-      callback();
-    } else {
-      import(
-        /* webpackChunkName: "tokenizer-refractor-[request]" */
-        `refractor/lang/${lang}`
-      )
-        .then(loadedLanguage => {
-          refractor.register(loadedLanguage.default);
-          callback();
-        })
-        .catch(e => {
-          // eslint-disable-next-line no-console
-          console.log(`failed to load refractor language ${lang}: ${e}`);
-        });
+  const loadLanguageWithDependencies = async (alias: string) => {
+    const lang = aliases[alias] || alias;
+    const deps = dependencies[lang] || [];
+    for (const dep of deps) {
+      await loadLanguageWithDependencies(dep);
     }
+
+    if (isLanguageRegistered(lang)) {
+      return Promise.resolve();
+    } else {
+      try {
+        const loadedLanguage = await import(/* webpackChunkName: "sh-lang-[request]" */ `refractor/lang/${lang}.js`);
+        refractor.register(loadedLanguage.default);
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.log(`failed to load refractor language ${lang}: ${e}`);
+      }
+    }
+  };
+
+  const loadLanguage = async (alias: string, callback: () => void) => {
+    await loadLanguageWithDependencies(alias);
+    callback();
   };
 
   // @ts-ignore hooks are not in the type definition
   const originalRunHook = refractor.hooks.run;
-  const runHook = (name: string, env: RunHookEnv) => {
+  // @ts-ignore hooks are not in the type definition
+  refractor.hooks.run = (name: string, env: RunHookEnv) => {
     originalRunHook.apply(name, env);
     if (env.classes) {
-      env.classes = env.classes.map(className => theme[className] || className);
+      env.classes = env.classes.map((className) => theme[className] || className);
     }
   };
-  // @ts-ignore hooks are not in the type definition
-  refractor.hooks.run = runHook;
 
   return {
     isLanguageRegistered,
     loadLanguage,
-    ...refractor
+    ...refractor,
   };
 };
 

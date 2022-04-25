@@ -26,10 +26,8 @@ import styled from "styled-components";
 // @ts-ignore we have no typings for react-diff-view
 import { Diff, useTokenizeWorker } from "react-diff-view";
 import { FileDiff } from "@scm-manager/ui-types";
-
-// @ts-ignore no types for css modules
-import theme from "../syntax-highlighting.module.css";
 import { determineLanguage } from "../languages";
+import { useSyntaxHighlightingWorker } from "@scm-manager/ui-syntaxhighlighting";
 
 const DiffView = styled(Diff)`
   /* align line numbers */
@@ -71,11 +69,6 @@ const DiffView = styled(Diff)`
   }
 `;
 
-// WebWorker which creates tokens for syntax highlighting
-// @ts-ignore
-const tokenize = new Worker(new URL("./Tokenize.worker.ts", import.meta.url), { name: "tokenizer", type: "module" });
-tokenize.postMessage({ theme });
-
 type Props = {
   file: FileDiff;
   viewType: "split" | "unified";
@@ -90,7 +83,8 @@ const findSyntaxHighlightingLanguage = (file: FileDiff) => {
 };
 
 const TokenizedDiffView: FC<Props> = ({ file, viewType, className, children }) => {
-  const { tokens } = useTokenizeWorker(tokenize, {
+  const worker = useSyntaxHighlightingWorker();
+  const { tokens } = useTokenizeWorker(worker, {
     hunks: file.hunks,
     language: determineLanguage(findSyntaxHighlightingLanguage(file))
   });
