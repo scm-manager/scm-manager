@@ -23,8 +23,8 @@
  */
 
 /*eslint-disable */
-import type {Element} from "hast";
-import {isRefractorElement, RefractorNode} from "../types";
+import type { Element } from "hast";
+import { isRefractorElement, RefractorNode } from "../types";
 
 function flatten(
   nodes: RefractorNode[],
