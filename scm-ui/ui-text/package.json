@@ -6,6 +6,7 @@
   "scripts": {
     "test": "jest",
     "lint": "eslint src",
+    "typecheck": "tsc",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
   },
