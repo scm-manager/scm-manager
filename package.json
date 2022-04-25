@@ -8,10 +8,10 @@
   "scripts": {
     "build": "webpack-cli --mode=production --config=scm-ui/ui-scripts/src/webpack.config.js",
     "build:dev": "webpack-cli --mode=development --config=scm-ui/ui-scripts/src/webpack.config.js",
-    "test": "turbo run test --continue --filter='@scm-manager/ui-*'",
-    "e2e-tests": "turbo run ci --filter='@scm-manager/e2e-tests'",
-    "typecheck": "turbo run typecheck --filter='@scm-manager/ui-*'",
-    "lint": "turbo run lint --filter='@scm-manager/ui-*'",
+    "test": "turbo run test --continue --filter=\"@scm-manager/ui-*\"",
+    "e2e-tests": "turbo run ci --filter=\"@scm-manager/e2e-tests\"",
+    "typecheck": "turbo run typecheck --filter=\"@scm-manager/ui-*\"",
+    "lint": "turbo run lint --filter=\"@scm-manager/ui-*\"",
     "serve": "ui-scripts serve development",
     "deploy": "ui-scripts publish",
     "set-version": "ui-scripts version"
