@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-const lerna = require("../lerna");
+const yarn = require("../yarn");
 const versions = require("../versions");
 
 module.exports = args => {
@@ -35,11 +35,11 @@ module.exports = args => {
   if (index > 0) {
     const snapshotVersion = `${version.substring(0, index)}-${versions.createSnapshotVersion()}`;
     console.log(`publish snapshot release ${snapshotVersion}`);
-    lerna.version(snapshotVersion);
-    lerna.publish();
-    lerna.version(version);
+    yarn.workspaceVersion(snapshotVersion);
+    yarn.workspacePublish();
+    yarn.workspaceVersion(version);
   } else {
     // ?? not sure
-    lerna.publish();
+    yarn.workspacePublish();
   }
 };

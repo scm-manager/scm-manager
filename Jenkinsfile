@@ -31,7 +31,7 @@ pipeline {
       steps {
         // read version from branch, set it and commit it
         gradle "setVersion -PnewVersion=${releaseVersion}"
-        sh "git add gradle.properties lerna.json '**.json'"
+        sh "git add gradle.properties '**.json'"
         commit "Release version ${releaseVersion}"
 
         // fetch all remotes from origin
@@ -183,7 +183,7 @@ pipeline {
 
         gradle "setVersionToNextSnapshot"
 
-        sh "git add gradle.properties lerna.json '**.json'"
+        sh "git add gradle.properties '**.json'"
         commit 'Prepare for next development iteration'
         authGit 'cesmarvin-github', 'push origin develop'
       }

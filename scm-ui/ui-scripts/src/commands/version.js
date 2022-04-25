@@ -21,7 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-const lerna = require("../lerna");
+
+const yarn = require("../yarn");
 
 module.exports = args => {
   if (args.length < 1) {
@@ -30,6 +31,5 @@ module.exports = args => {
   }
 
   const version = args[0];
-
-  lerna.version(version);
+  yarn.workspaceVersion(version);
 };
