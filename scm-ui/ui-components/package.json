@@ -20,7 +20,7 @@
     "update-storyshots": "jest --testPathPattern=\"storyshots.test.ts\" --collectCoverage=false -u"
   },
   "devDependencies": {
-    "@scm-manager/babel-preset": "^2.13.0",
+    "@scm-manager/babel-preset": "^2.13.1",
     "@scm-manager/eslint-config": "^2.15.0",
     "@scm-manager/jest-preset": "^2.13.0",
     "@scm-manager/prettier-config": "^2.10.1",
