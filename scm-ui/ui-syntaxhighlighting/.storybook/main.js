@@ -28,18 +28,19 @@ module.exports = {
     {
       name: "@storybook/addon-essentials",
       options: {
-        actions: false,
-      },
-    },
+        actions: false
+      }
+    }
   ],
+  typescript: { reactDocgen: false },
   staticDirs: ["../static"],
   framework: "@storybook/react",
   core: {
-    builder: "webpack5",
+    builder: "webpack5"
   },
-  webpackFinal: async (config) => {
+  webpackFinal: async config => {
     // force node version of "decode-named-character-reference" instead of browser version which does not work in web worker
     config.resolve.alias["decode-named-character-reference"] = require.resolve("decode-named-character-reference");
     return config;
-  },
+  }
 };
