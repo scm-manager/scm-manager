@@ -334,6 +334,16 @@ a.has-text-secondary-most:focus {
     }
   }
 
+  &:focus,
+  &.is-focused {
+    outline: $focus-outline-style;
+    outline-color: $focus-outline-color;
+    outline-offset: $focus-outline-offset;
+    &:not(:active) {
+      box-shadow: none !important;
+    }
+  }
+
   &.is-primary:hover,
   &.is-primary.is-hovered {
     background-color: scale-color($primary, $lightness: -10%);
