@@ -19,7 +19,7 @@
     "@scm-manager/jest-preset": "^2.13.0",
     "@scm-manager/prettier-config": "^2.10.1",
     "@scm-manager/tsconfig": "^2.13.0",
-    "@scm-manager/eslint-config": "^2.15.0",
+    "@scm-manager/eslint-config": "^2.15.1",
     "@storybook/builder-webpack5": "^6.4.20",
     "@storybook/manager-webpack5": "^6.4.20",
     "@storybook/react": "^6.4.20",

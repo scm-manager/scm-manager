@@ -4008,10 +4008,30 @@
     "@babel/preset-typescript" "^7.16.7"
     babel-plugin-styled-components "^1.13.3"
 
-"@scm-manager/eslint-config@2.15.0", "@scm-manager/eslint-config@^2.15.0":
+"@scm-manager/eslint-config@2.15.0":
   version "2.15.0"
   resolved "https://registry.yarnpkg.com/@scm-manager/eslint-config/-/eslint-config-2.15.0.tgz#b0bac1ba721d393e6ca5571f61e9e4158598bbf6"
   integrity sha512-1xCEY+CFKD25sqop2Lc/UGUwfMv5Nd3HZ7O6DrZZP9WYozjsq499X/Cx5/Y1k9TRjyQOHgSOh1MRZz9YYnjTZg==
+  dependencies:
+    "@typescript-eslint/eslint-plugin" "^5.19.0"
+    "@typescript-eslint/parser" "^5.19.0"
+    babel-eslint "^10.0.3"
+    eslint "^7.32.0"
+    eslint-config-airbnb-base "^14.2.0"
+    eslint-config-prettier "^6.4.0"
+    eslint-config-react-app "^5.0.2"
+    eslint-plugin-flowtype "^4.3.0"
+    eslint-plugin-import "^2.18.2"
+    eslint-plugin-jsx-a11y "^6.2.3"
+    eslint-plugin-prettier "^3.1.1"
+    eslint-plugin-react "^7.16.0"
+    eslint-plugin-react-hooks "^2.1.2"
+    jest "^26.6.3"
+
+"@scm-manager/eslint-config@^2.15.1":
+  version "2.15.1"
+  resolved "https://registry.yarnpkg.com/@scm-manager/eslint-config/-/eslint-config-2.15.1.tgz#0963adcc2605905c84924872fe899ea49ab63f72"
+  integrity sha512-RJC3IXlZ/nnIYweM1AUAe+VlZnvzGflSbFukytG6gpqJnIqQd9r09NgtKsQVGFbiXjF6QdI3x2n2mRIqybaRUQ==
   dependencies:
     "@typescript-eslint/eslint-plugin" "^5.19.0"
     "@typescript-eslint/parser" "^5.19.0"

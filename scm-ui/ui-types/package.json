@@ -16,7 +16,7 @@
   },
   "devDependencies": {
     "@scm-manager/tsconfig": "^2.13.0",
-    "@scm-manager/eslint-config": "^2.15.0"
+    "@scm-manager/eslint-config": "^2.15.1"
   },
   "babel": {
     "presets": [

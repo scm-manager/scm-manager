@@ -17,7 +17,7 @@
     "fluent-ffmpeg": "^2.1.2"
   },
   "devDependencies": {
-    "@scm-manager/eslint-config": "^2.15.0"
+    "@scm-manager/eslint-config": "^2.15.1"
   },
   "prettier": "@scm-manager/prettier-config",
   "eslintConfig": {
