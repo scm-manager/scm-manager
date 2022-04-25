@@ -1,0 +1,16 @@
+{
+  "$schema": "https://turborepo.org/schema.json",
+  "baseBranch": "origin/main",
+  "pipeline": {
+    "typecheck": {
+    },
+    "lint": {
+    },
+    "test": {
+      "outputs": ["build/jest-reports"]
+    },
+    "ci": {
+
+    }
+  }
+}
