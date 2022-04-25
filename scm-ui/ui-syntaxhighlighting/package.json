@@ -30,11 +30,9 @@
     "@storybook/builder-webpack5": "^6.4.20",
     "@storybook/manager-webpack5": "^6.4.20",
     "@storybook/react": "^6.4.20",
-    "babel-loader": "^8.2.4",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "webpack": "^5.72.0",
-    "webpack-cli": "^4.9.2"
+    "webpack": "^5.72.0"
   },
   "babel": {
     "presets": [
