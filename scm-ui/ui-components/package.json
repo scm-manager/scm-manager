@@ -45,7 +45,7 @@
     "@types/react-select": "^2.0.19",
     "@types/react-syntax-highlighter": "^11.0.1",
     "@types/refractor": "^3.0.0",
-    "@types/styled-components": "^5.1.0",
+    "@types/styled-components": "^5.1.25",
     "@types/to-camel-case": "^1.0.0",
     "@types/unist": "^2.0.3",
     "chromatic": "^5.8.0",
