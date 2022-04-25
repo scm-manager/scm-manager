@@ -23,9 +23,6 @@
  */
 
 import React, { FC, useEffect, useState } from "react";
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-// @ts-ignore
-import { createElement } from "react-syntax-highlighter";
 import Icon from "./Icon";
 import Tooltip from "./Tooltip";
 import styled from "styled-components";
