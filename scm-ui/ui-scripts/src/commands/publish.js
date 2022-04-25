@@ -36,7 +36,7 @@ module.exports = args => {
     const snapshotVersion = `${version.substring(0, index)}-${versions.createSnapshotVersion()}`;
     console.log(`publish snapshot release ${snapshotVersion}`);
     yarn.workspaceVersion(snapshotVersion);
-    yarn.workspacePublish();
+    yarn.workspacePublish(snapshotVersion);
     yarn.workspaceVersion(version);
   } else {
     // ?? not sure

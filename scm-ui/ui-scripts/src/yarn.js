@@ -79,17 +79,25 @@ const workspaceVersion = v => {
   });
 };
 
-const forEachModule = args => {
+const forEachModule = fn => {
   const workspaces = findWorkspaces();
   Object.keys(workspaces).forEach(name => {
     const workspace = workspaces[name];
     const cwd = path.join(process.cwd(), workspace.location);
-    yarn(args, cwd);
+    const packageJson = JSON.parse(fs.readFileSync(path.join(cwd, "package.json"), { encoding: "utf8" }));
+    fn(packageJson, cwd)
   });
 };
 
 const workspacePublish = v => {
-  forEachModule(["publish", "--new-version", v]);
+  forEachModule((module, cwd) => {
+    if (!module.private) {
+      console.log(`publish module ${module.name}`)
+      yarn(["publish", "--new-version", v], cwd)
+    } else {
+      console.log(`skip private module ${module.name}`)
+    }
+  });
 };
 
 module.exports = {
