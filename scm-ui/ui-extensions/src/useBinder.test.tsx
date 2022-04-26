@@ -24,7 +24,7 @@
 import useBinder, { BinderContext } from "./useBinder";
 import { Binder } from "./binder";
 import { mount } from "enzyme";
-import "@scm-manager/ui-tests/enzyme";
+import "@scm-manager/ui-tests";
 import React from "react";
 
 describe("useBinder tests", () => {

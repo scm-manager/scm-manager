@@ -136,7 +136,7 @@ export default function ExtensionPoint<
   E extends RenderableExtensionPointDefinition<string, any> = RenderableExtensionPointDefinition<string, any>
 >({ name, propTransformer, props, renderAll, wrapper, children }: PropsWithChildren<Props<E>>): JSX.Element | null {
   const binder = useBinder();
-  const renderProps: E["props"] | {} = createRenderProps(propTransformer, {
+  const renderProps: E["props"] | Record<string, unknown> = createRenderProps(propTransformer, {
     ...(props || {}),
     children,
   });
