@@ -30,7 +30,7 @@ const createIndexMiddleware = require("./middleware/IndexMiddleware");
 const createContextPathMiddleware = require("./middleware/ContextPathMiddleware");
 
 const isDevelopment = process.env.NODE_ENV === "development";
-const root = path.resolve(process.cwd(), "scm-ui");
+const root = path.resolve(process.cwd(), "..");
 
 const babelPlugins = [];
 const webpackPlugins = [];

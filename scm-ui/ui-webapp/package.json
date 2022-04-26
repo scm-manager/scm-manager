@@ -31,11 +31,14 @@
   },
   "scripts": {
     "test": "jest",
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "serve": "ui-scripts serve development",
+    "build": "webpack-cli --mode=production --config=../ui-scripts/src/webpack.config.js"
   },
   "devDependencies": {
     "@scm-manager/eslint-config": "^2.15.1",
     "@scm-manager/jest-preset": "^2.13.0",
+    "@scm-manager/ui-tests": "^2.36.2-SNAPSHOT",
     "@scm-manager/ui-tests": "^2.36.2-SNAPSHOT",
     "@types/classnames": "^2.2.9",
     "@types/enzyme": "^3.10.3",

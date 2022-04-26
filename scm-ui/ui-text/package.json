@@ -2,8 +2,12 @@
   "name": "@scm-manager/ui-text",
   "version": "2.36.2-SNAPSHOT",
   "private": true,
-  "main": "src/index.ts",
+  "main": "build/index.js",
+  "module": "build/index.mjs",
+  "types": "build/index.d.ts",
+  "files": ["build"],
   "scripts": {
+    "build": "tsup ./src/index.ts -d build --format esm,cjs --dts",
     "test": "jest",
     "lint": "eslint src",
     "typecheck": "tsc",

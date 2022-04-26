@@ -7,7 +7,7 @@
     "test": "jest --passWithNoTests",
     "lint": "eslint src",
     "typecheck": "tsc",
-    "storybook": "start-storybook -p 6006",
+    "storybook": "start-storybook",
     "build-storybook": "build-storybook",
     "write-mapping": "node scripts/write-mapping.mjs"
   },
