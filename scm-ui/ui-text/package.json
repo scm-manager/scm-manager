@@ -5,7 +5,9 @@
   "main": "build/index.js",
   "module": "build/index.mjs",
   "types": "build/index.d.ts",
-  "files": ["build"],
+  "files": [
+    "build"
+  ],
   "scripts": {
     "build": "tsup ./src/index.ts -d build --format esm,cjs --dts",
     "test": "jest",
@@ -29,7 +31,8 @@
     "@storybook/react": "^6.4.20",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "webpack": "^5.71.0"
+    "webpack": "^5.71.0",
+    "tsup": "^5.12.6"
   },
   "babel": {
     "presets": [
