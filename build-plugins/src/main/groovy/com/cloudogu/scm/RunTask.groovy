@@ -62,7 +62,7 @@ class RunTask extends DefaultTask {
 
   @TaskAction
   void exec() {
-    List<Closure<Void>> actions = new ArrayList<>();
+    List<Closure<Void>> actions = new ArrayList<>()
     actions.add(createBackend())
     if (frontend) {
       actions.add(createFrontend())
@@ -79,8 +79,8 @@ class RunTask extends DefaultTask {
     int retries = 180
     for (int i = 0; i < retries; i++) {
       try {
-        URL urlConnect = new URL("http://localhost:${extension.port}/scm/api/v2");
-        URLConnection conn = (HttpURLConnection) urlConnect.openConnection();
+        URL urlConnect = new URL("http://localhost:${extension.port}/scm/api/v2")
+        URLConnection conn = (HttpURLConnection) urlConnect.openConnection()
         if (conn.getResponseCode() == 200) {
           return
         }
@@ -140,8 +140,8 @@ class RunTask extends DefaultTask {
 
   private Closure<Void> createFrontend() {
     def frontend = project.tasks.create('boot-frontend', NodeTask) {
-      script = new File(project.rootProject.projectDir, 'scm-ui/ui-scripts/bin/ui-scripts.js')
-      args = ['serve']
+      script = new File(project.rootProject.projectDir, 'node_modules/turbo/bin/turbo')
+      args = ['run', 'serve', '--filter="@scm-manager/ui-webapp"']
       environment = [
         'NODE_ENV': 'development',
         'ANALYZE_BUNDLES': analyzeBundles

@@ -12,7 +12,6 @@
     "e2e-tests": "turbo run ci --filter=\"@scm-manager/e2e-tests\"",
     "typecheck": "turbo run typecheck --filter=\"@scm-manager/ui-*\"",
     "lint": "turbo run lint --filter=\"@scm-manager/ui-*\"",
-    "serve": "turbo run serve --filter=\"@scm-manager/ui-webapp\"",
     "predeploy": "turbo run build --filter=\"@scm-manager/ui-*\"",
     "deploy": "ui-scripts publish",
     "set-version": "ui-scripts version"
