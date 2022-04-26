@@ -30,6 +30,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.util.HttpUtil;
@@ -40,6 +41,8 @@ import java.net.MalformedURLException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -56,12 +59,14 @@ class DefaultRootURLTest {
 
   private ScmConfiguration configuration;
 
-  private RootURL rootURL;
+  private DefaultRootURL rootURL;
+  @Spy
+  private DefaultRootURL.UrlFromString cacheLoader;
 
   @BeforeEach
   void init() {
     configuration = new ScmConfiguration();
-    rootURL = new DefaultRootURL(requestProvider, configuration);
+    rootURL = new DefaultRootURL(requestProvider, configuration, cacheLoader);
   }
 
   @Test
@@ -113,7 +118,6 @@ class DefaultRootURLTest {
 
     IllegalStateException exception = assertThrows(IllegalStateException.class, () -> rootURL.get());
     assertThat(exception.getMessage()).contains("malformed", "non_url");
-    assertThat(exception.getCause()).isInstanceOf(MalformedURLException.class);
   }
 
   @Test
@@ -128,6 +132,16 @@ class DefaultRootURLTest {
   void shouldUseRootURLFromForwardedRequest() {
     bindForwardedRequestUrl();
     assertThat(rootURL.get()).hasHost("hitchhiker.com");
+  }
+
+  @Test
+  void shouldUseUrlCache() throws MalformedURLException {
+    bindForwardedRequestUrl();
+
+    rootURL.get();
+    rootURL.get();
+
+    verify(cacheLoader).load(any());
   }
 
   private void bindForwardedRequestUrl() {
