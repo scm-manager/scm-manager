@@ -1,6 +1,6 @@
 {
   "extends": "@scm-manager/tsconfig",
-  "exclude": [
-    "./scripts"
+  "include": [
+    "./src"
   ]
 }

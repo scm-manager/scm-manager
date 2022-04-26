@@ -73,7 +73,7 @@ export const useSources = (repository: Repository, opts: UseSourcesOptions = Use
       }
     }, options.refetchPartialInterval);
     return () => clearInterval(intervalId);
-  }, [options.refetchPartialInterval, file]);
+  }, [options.refetchPartialInterval, file, refetch]);
 
   return {
     isLoading,

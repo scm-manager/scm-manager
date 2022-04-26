@@ -128,7 +128,10 @@ const useObserveAsync = <D extends any[], R, E = Error>(fn: (...args: D) => Prom
       .then(setData)
       .catch(setError)
       .finally(() => setLoading(false));
-  }, deps);
+  },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    deps
+  );
   return { data, isLoading, error };
 };
 
