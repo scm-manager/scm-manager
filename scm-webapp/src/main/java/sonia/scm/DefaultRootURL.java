@@ -58,15 +58,23 @@ public class DefaultRootURL implements RootURL {
 
   @Override
   public URL get() {
-    String url = fromRequest().orElse(configuration.getBaseUrl());
+    String url = fromRequest().orElseGet(configuration::getBaseUrl);
     if (url == null) {
       throw new IllegalStateException("The configured base url is empty. This can only happened if SCM-Manager has not received any requests.");
     }
     try {
-      return new URL(url);
+      return createUrl(url);
     } catch (MalformedURLException e) {
       throw new IllegalStateException(String.format("base url \"%s\" is malformed", url), e);
     }
+  }
+
+  private URL createUrl(String urlString) throws MalformedURLException {
+    URL url = new URL(urlString);
+    if (url.getPort() == url.getDefaultPort()) {
+      return new URL(url.getProtocol(), url.getHost(), -1, url.getFile());
+    }
+    return url;
   }
 
   private Optional<String> fromRequest() {

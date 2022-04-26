@@ -84,6 +84,13 @@ class DefaultRootURLTest {
     assertThat(rootURL.getAsString()).isEqualTo(URL_CONFIG);
   }
 
+  @Test
+  void shouldSuppressDefaultPorts() {
+    bindNonHttpScope();
+    configuration.setBaseUrl("https://hitchhiker.com:443/from-configuration");
+    assertThat(rootURL.getAsString()).isEqualTo(URL_CONFIG);
+  }
+
   private void bindNonHttpScope() {
     when(requestProvider.get()).thenThrow(
       new ProvisionException("no request available", new OutOfScopeException("out of scope"))
