@@ -23,28 +23,44 @@
  */
 
 import { binder, extensionPoints } from "@scm-manager/ui-extensions";
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 import { ContentActionExtensionProps } from "./Content";
 import { Button, Icon } from "@scm-manager/ui-components";
 import styled from "styled-components";
+import { Menu } from "@headlessui/react";
+import classNames from "classnames";
 
-const Menu = styled.div`
+const MenuButton = styled(Menu.Button)`
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  height: 2.5rem;
+  margin-bottom: 0.5rem;
+`;
+
+const MenuItems = styled(Menu.Items)`
+  padding: 0.5rem;
   position: absolute;
-  border-radius: 2px;
-  z-index: 99;
-  border: solid 1px whitesmoke; //TODO Replace white global color definition
-  ul {
-    border-bottom: red solid 1px;
-  }
+  z-index: 999;
+  width: max-content;
+  background: var(--scm-white-color);
+  border: var(--scm-border);
+  border-radius: 5px;
+`;
 
-  li + li:not(last-child) {
-    border-bottom: solid 1px red;
-  }
+const MenuItemContainer = styled.div`
+  border-radius: 5px;
+  padding: 0.25rem;
 `;
 
 const Category = styled.span`
   font-weight: bold;
-  padding: 0.25rem;
+  padding: 0.5rem 0;
+`;
+
+const HR = styled.hr`
+  margin: 0.25rem;
+  background: var(--scm-border-color);
 `;
 
 type Props = {
@@ -52,7 +68,6 @@ type Props = {
 };
 
 const ContentActionMenu: FC<Props> = ({ extensionProps }) => {
-  const [showMenu, setShowMenu] = useState(false);
   const extensions = binder.getExtensions<extensionPoints.FileViewActionBarOverflowMenu>(
     "repos.sources.content.actionbar.menu",
     extensionProps
@@ -67,72 +82,52 @@ const ContentActionMenu: FC<Props> = ({ extensionProps }) => {
     return <Button title={extension.label} action={() => extension.action} icon={extension.icon} />;
   }
 
-  const renderMenuTrigger = () => {
-    if (showMenu) {
-      return (
-        <Icon
-          className="has-cursor-pointer"
-          name="times"
-          onClick={() => setShowMenu(false)}
-          color="inherit"
-          tabIndex={0}
-          onEnter={() => setShowMenu(false)}
-        />
-      );
-    }
-    return (
-      <i
-        className="has-cursor-pointer fas fa-fw fa-ellipsis-v"
-        onClick={() => setShowMenu(true)}
-        color="inherit"
-        onMouseEnter={() => setShowMenu(true)}
-        tabIndex={0}
-        onKeyPress={e => (e.key === "Enter" ? setShowMenu(true) : null)}
-      />
-    );
-  };
-
   const categories = extensions.map(e => e.category);
+  const filteredCategories = categories.filter((item, index) => categories?.indexOf(item) === index);
 
-  const renderMenu = () => {
-    return (
-      <>
-        {showMenu ? (
-          <Menu className="has-background-white p-2">
-            {categories
-              .filter((item, index) => categories.indexOf(item) === index)
-              .map(category => {
-                return (
-                  <ul>
-                    <Category>{category}</Category>
+  const renderMenu = () => (
+    <>
+      <Menu as="div" className="is-relative">
+        {({ open }) => (
+          <>
+            <MenuButton>
+              <Icon name="ellipsis-v" color="inherit" />
+            </MenuButton>
+            {open && (
+              <MenuItems>
+                {filteredCategories.map((category, index) => (
+                  <>
+                    <Category className="is-unselectable">{category}</Category>
                     {extensions
                       .filter(extension => extension.category === category)
                       .map(extension => (
-                        <li
-                          className="has-cursor-pointer p-1"
-                          onClick={() => extension.action}
-                          tabIndex={0}
-                          onKeyPress={e => (e.key === "Enter" ? extension.action() : null)}
-                        >
-                          <Icon name={extension.icon} color="inherit" />
-                          {extension.label}
-                        </li>
+                        <Menu.Item as={React.Fragment}>
+                          {({ active }) => (
+                            <MenuItemContainer
+                              className={classNames("is-clickable", {
+                                "has-background-info has-text-white": active
+                              })}
+                              key={extension.label}
+                              onClick={() => extension.action(extensionProps)}
+                            >
+                              {extension.label}
+                              <Icon name={extension.icon} color="inherit" />
+                            </MenuItemContainer>
+                          )}
+                        </Menu.Item>
                       ))}
-                  </ul>
-                );
-              })}
-          </Menu>
-        ) : null}
-      </>
-    );
-  };
-
-  return (
-    <div>
-      {renderMenuTrigger()}
-      {renderMenu()}
-    </div>
+                    {filteredCategories.length > index + 1 ? <HR /> : null}
+                  </>
+                ))}
+              </MenuItems>
+            )}
+          </>
+        )}
+      </Menu>
+    </>
   );
+
+  return <div>{renderMenu()}</div>;
 };
 
 export default ContentActionMenu;
