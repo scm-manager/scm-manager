@@ -37,9 +37,16 @@ class RunPlugin implements Plugin<Project> {
     project.plugins.apply("com.github.node-gradle.node")
     def nodeExt = NodeExtension.get(project)
     nodeExt.setDownload(true)
-    nodeExt.setVersion('16.13.0')
-    nodeExt.setYarnVersion('1.22.15')
+    nodeExt.setVersion('16.14.2')
+    nodeExt.setYarnVersion('1.22.18')
     nodeExt.setNodeModulesDir( project.rootProject.projectDir )
+
+    project.tasks.getByName('yarn_install').configure {
+      inputs.file( project.rootProject.file('yarn.lock') )
+      outputs.dir( project.rootProject.file('node_modules') )
+
+      description = "Install ui dependencies"
+    }
 
     project.tasks.register('write-server-config', WriteServerConfigTask) {
       it.extension = extension
