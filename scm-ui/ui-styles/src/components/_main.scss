@@ -633,6 +633,7 @@ ul.is-separated {
     &:first-child {
       border-left: 3px solid;
     }
+    // Deprecated
     &.is-darker {
       background-color: $white-ter;
     }
