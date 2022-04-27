@@ -47,7 +47,7 @@ const TagRow: FC<Props> = ({ tag, baseUrl, onDelete }) => {
         onKeyDown={e => e.key === "Enter" && onDelete(tag)}
         tabIndex={0}
       >
-        <Icon name="trash" className="fas" title={t("tag.delete.button")} />
+        <Icon name="trash" className="has-hover-secondary-invert p-1" title={t("tag.delete.button")} />
       </span>
     );
   }
@@ -63,7 +63,7 @@ const TagRow: FC<Props> = ({ tag, baseUrl, onDelete }) => {
           </span>
         </RouterLink>
       </td>
-      <td className="is-darker has-text-centered">{deleteButton}</td>
+      <td className="has-text-centered">{deleteButton}</td>
     </tr>
   );
 };

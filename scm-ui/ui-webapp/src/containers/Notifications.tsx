@@ -31,7 +31,7 @@ import {
   useClearNotifications,
   useDismissNotification,
   useNotifications,
-  useNotificationSubscription
+  useNotificationSubscription,
 } from "@scm-manager/ui-api";
 import { Notification, NotificationCollection } from "@scm-manager/ui-types";
 import {
@@ -42,7 +42,7 @@ import {
   Notification as InfoNotification,
   ToastArea,
   ToastNotification,
-  ToastType
+  ToastType,
 } from "@scm-manager/ui-components";
 import HeaderDropDown, { Column, OnlyMobileWrappingColumn, Table } from "../components/HeaderDropDown";
 
@@ -77,11 +77,13 @@ const NotificationEntry: FC<EntryProps> = ({ notification, removeToast }) => {
       <OnlyMobileWrappingColumn className="has-text-right">
         <DateFromNow date={notification.createdAt} />
       </OnlyMobileWrappingColumn>
-      <DismissColumn className="is-darker is-clickable" onClick={remove}>
+      <DismissColumn>
         {isLoading ? (
           <div className="small-loading-spinner" aria-label={t("notifications.loading")} />
         ) : (
-          <Icon name="trash" color="secondary-most" title={t("notifications.dismiss")} />
+          <span className="icon is-small is-hovered is-clickable" onClick={remove}>
+            <Icon name="trash" className="has-hover-secondary-invert p-1" title={t("notifications.dismiss")} />
+          </span>
         )}
       </DismissColumn>
     </tr>

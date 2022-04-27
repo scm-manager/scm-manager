@@ -298,3 +298,7 @@ $danger-25: scale-color($danger, $lightness: -75%);
 .has-hover-visible:hover {
   color: $grey !important;
 }
+
+.has-hover-secondary-invert:hover {
+  color: $secondary-most !important;
+}

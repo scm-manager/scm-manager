@@ -74,7 +74,7 @@ const BranchRow: FC<Props> = ({ repository, baseUrl, branch, onDelete, details }
         onKeyDown={e => e.key === "Enter" && onDelete(branch)}
         tabIndex={0}
       >
-        <Icon name="trash" title={t("branch.delete.button")} />
+        <Icon name="trash" className="has-hover-secondary-invert p-1" title={t("branch.delete.button")} />
       </span>
     );
   }
@@ -106,7 +106,7 @@ const BranchRow: FC<Props> = ({ repository, baseUrl, branch, onDelete, details }
       {binder.hasExtension("repos.branches.row.details")
         ? binder.getExtensions("repos.branches.row.details").map(e => <td>{React.createElement(e, extensionProps)}</td>)
         : null}
-      <td className="is-darker has-text-centered">{deleteButton}</td>
+      <td className="has-text-centered">{deleteButton}</td>
     </AdaptTableFlow>
   );
 };

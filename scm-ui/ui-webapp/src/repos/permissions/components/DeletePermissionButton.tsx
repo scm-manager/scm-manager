@@ -81,6 +81,7 @@ const DeletePermissionButton: FC<Props> = ({ namespaceOrRepository, permission, 
       <ErrorNotification error={error} />
       <Icon
         name="trash"
+        className="has-hover-secondary-invert"
         onClick={action}
         onEnter={action}
         tabIndex={0}
