@@ -21,18 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, ReactNode, useState } from "react";
+import React, { FC, ReactNode, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
 import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
-import { File, Repository } from "@scm-manager/ui-types";
+import { File, Link, Repository } from "@scm-manager/ui-types";
 import { DateFromNow, ErrorNotification, FileSize, Icon, OpenInFullscreenButton } from "@scm-manager/ui-components";
 import FileButtonAddons from "../components/content/FileButtonAddons";
 import SourcesView from "./SourcesView";
 import HistoryView from "./HistoryView";
 import AnnotateView from "./AnnotateView";
 import ContentActionMenu from "./ContentActionMenu";
+import { useContentType } from "@scm-manager/ui-api";
 
 type Props = {
   file: File;
@@ -64,13 +65,6 @@ const BorderLessDiv = styled.div`
   box-shadow: none;
 `;
 
-export type ContentActionExtensionProps = {
-  repository: Repository;
-  file: File;
-  revision: string;
-  handleExtensionError: React.Dispatch<React.SetStateAction<Error | undefined>>;
-};
-
 export type SourceViewSelection = "source" | "annotations" | "history";
 
 const Content: FC<Props> = ({ file, repository, revision, breadcrumb, error }) => {
@@ -78,6 +72,7 @@ const Content: FC<Props> = ({ file, repository, revision, breadcrumb, error }) =
   const [collapsed, setCollapsed] = useState(true);
   const [selected, setSelected] = useState<SourceViewSelection>("source");
   const [errorFromExtension, setErrorFromExtension] = useState<Error>();
+  const { data: contentType } = useContentType((file._links.self as Link).href);
 
   const wrapContent = (content: ReactNode) => {
     return (
@@ -127,11 +122,12 @@ const Content: FC<Props> = ({ file, repository, revision, breadcrumb, error }) =
       />
     ) : null;
 
-    const extensionProps: ContentActionExtensionProps = {
+    const extensionProps: extensionPoints.ContentActionExtensionProps = {
       repository,
       file,
       revision: revision ? encodeURIComponent(revision) : "",
-      handleExtensionError: setErrorFromExtension
+      handleExtensionError: setErrorFromExtension,
+      contentType
     };
 
     return (

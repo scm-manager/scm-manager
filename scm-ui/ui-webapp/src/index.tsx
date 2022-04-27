@@ -39,27 +39,6 @@ import { ApiProvider } from "@scm-manager/ui-api";
 
 binder.bind<extensionPoints.ChangesetDescriptionTokens>("changeset.description.tokens", ChangesetShortLink);
 
-binder.bind("repos.sources.content.actionbar.menu", {
-  action: () => console.log("abc"),
-  label: "Löschen",
-  icon: "trash",
-  category: "Editor"
-});
-
-binder.bind("repos.sources.content.actionbar.menu", {
-  action: () => console.log("abc"),
-  label: "Vergrößern",
-  icon: "search-plus",
-  category: "Helper"
-});
-
-binder.bind("repos.sources.content.actionbar.menu", {
-  action: () => console.log("abc"),
-  label: "Bearbeiten",
-  icon: "edit",
-  category: "Editor"
-});
-
 const root = document.getElementById("root");
 if (!root) {
   throw new Error("could not find root element");

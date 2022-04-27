@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import React, { ReactNode } from "react";
+import React, { FunctionComponent, ReactNode } from "react";
 import {
   Branch,
   Changeset,
@@ -43,11 +43,12 @@ import {
   RepositoryRoleBase,
   RepositoryTypeCollection,
   Tag,
-  User,
+  User
 } from "@scm-manager/ui-types";
 import { ExtensionPointDefinition } from "./binder";
 import { RenderableExtensionPointDefinition, SimpleRenderableDynamicExtensionPointDefinition } from "./ExtensionPoint";
 import ExtractProps from "./extractProps";
+import { ContentType } from "@scm-manager/ui-api";
 
 type RepositoryCreatorSubFormProps = {
   repository: RepositoryCreation;
@@ -62,7 +63,8 @@ export type RepositoryCreatorComponentProps = ExtractProps<RepositoryCreator["ty
  * @deprecated use {@link RepositoryCreator}`["type"]` instead
  */
 export type RepositoryCreatorExtension = RepositoryCreator["type"];
-export type RepositoryCreator = ExtensionPointDefinition<"repos.creator",
+export type RepositoryCreator = ExtensionPointDefinition<
+  "repos.creator",
   {
     subtitle: string;
     path: string;
@@ -76,10 +78,13 @@ export type RepositoryCreator = ExtensionPointDefinition<"repos.creator",
       nameForm: React.ComponentType<RepositoryCreatorSubFormProps>;
       informationForm: React.ComponentType<RepositoryCreatorSubFormProps>;
     }>;
-  }>;
+  }
+>;
 
-export type RepositoryFlags = RenderableExtensionPointDefinition<"repository.flags",
-  { repository: Repository; tooltipLocation?: "bottom" | "right" | "top" | "left" }>;
+export type RepositoryFlags = RenderableExtensionPointDefinition<
+  "repository.flags",
+  { repository: Repository; tooltipLocation?: "bottom" | "right" | "top" | "left" }
+>;
 
 /**
  * @deprecated use {@link ReposSourcesActionbar}`["props"]` instead
@@ -89,7 +94,8 @@ export type ReposSourcesActionbarExtensionProps = ReposSourcesActionbar["props"]
  * @deprecated use {@link ReposSourcesActionbar} instead
  */
 export type ReposSourcesActionbarExtension = ReposSourcesActionbar;
-export type ReposSourcesActionbar = RenderableExtensionPointDefinition<"repos.sources.actionbar",
+export type ReposSourcesActionbar = RenderableExtensionPointDefinition<
+  "repos.sources.actionbar",
   {
     baseUrl: string;
     revision: string;
@@ -97,7 +103,8 @@ export type ReposSourcesActionbar = RenderableExtensionPointDefinition<"repos.so
     path: string;
     sources: File;
     repository: Repository;
-  }>;
+  }
+>;
 
 /**
  * @deprecated use {@link ReposSourcesEmptyActionbar}`["props"]` instead
@@ -107,11 +114,13 @@ export type ReposSourcesEmptyActionbarExtensionProps = ReposSourcesEmptyActionba
  * @deprecated use {@link ReposSourcesEmptyActionbar} instead
  */
 export type ReposSourcesEmptyActionbarExtension = ReposSourcesEmptyActionbar;
-export type ReposSourcesEmptyActionbar = RenderableExtensionPointDefinition<"repos.sources.empty.actionbar",
+export type ReposSourcesEmptyActionbar = RenderableExtensionPointDefinition<
+  "repos.sources.empty.actionbar",
   {
     sources: File;
     repository: Repository;
-  }>;
+  }
+>;
 
 /**
  * @deprecated use {@link ReposSourcesTreeWrapper}`["props"]` instead
@@ -122,13 +131,15 @@ export type ReposSourcesTreeWrapperProps = ReposSourcesTreeWrapper["props"];
  * @deprecated use {@link ReposSourcesTreeWrapper} instead
  */
 export type ReposSourcesTreeWrapperExtension = ReposSourcesTreeWrapper;
-export type ReposSourcesTreeWrapper = RenderableExtensionPointDefinition<"repos.source.tree.wrapper",
+export type ReposSourcesTreeWrapper = RenderableExtensionPointDefinition<
+  "repos.source.tree.wrapper",
   {
     repository: Repository;
     directory: File;
     baseUrl: string;
     revision: string;
-  }>;
+  }
+>;
 
 export type ReposSourcesTreeRowProps = {
   repository: Repository;
@@ -139,15 +150,19 @@ export type ReposSourcesTreeRowProps = {
  * @deprecated use {@link ReposSourcesTreeRowRight} instead
  */
 export type ReposSourcesTreeRowRightExtension = ReposSourcesTreeRowRight;
-export type ReposSourcesTreeRowRight = RenderableExtensionPointDefinition<"repos.sources.tree.row.right",
-  ReposSourcesTreeRowProps>;
+export type ReposSourcesTreeRowRight = RenderableExtensionPointDefinition<
+  "repos.sources.tree.row.right",
+  ReposSourcesTreeRowProps
+>;
 
 /**
  * @deprecated use {@link ReposSourcesTreeRowAfter} instead
  */
 export type ReposSourcesTreeRowAfterExtension = ReposSourcesTreeRowAfter;
-export type ReposSourcesTreeRowAfter = RenderableExtensionPointDefinition<"repos.sources.tree.row.after",
-  ReposSourcesTreeRowProps>;
+export type ReposSourcesTreeRowAfter = RenderableExtensionPointDefinition<
+  "repos.sources.tree.row.after",
+  ReposSourcesTreeRowProps
+>;
 
 /**
  * @deprecated use {@link PrimaryNavigationLoginButton}`["props"]` instead
@@ -158,7 +173,8 @@ export type PrimaryNavigationLoginButtonProps = PrimaryNavigationLoginButton["pr
  * use {@link PrimaryNavigationLoginButton} instead
  */
 export type PrimaryNavigationLoginButtonExtension = PrimaryNavigationLoginButton;
-export type PrimaryNavigationLoginButton = RenderableExtensionPointDefinition<"primary-navigation.login",
+export type PrimaryNavigationLoginButton = RenderableExtensionPointDefinition<
+  "primary-navigation.login",
   {
     links: Links;
     label: string;
@@ -167,7 +183,8 @@ export type PrimaryNavigationLoginButton = RenderableExtensionPointDefinition<"p
     to: string;
     className: string;
     content: React.ReactNode;
-  }>;
+  }
+>;
 
 /**
  * @deprecated use {@link PrimaryNavigationLogoutButtonExtension}`["props"]` instead
@@ -178,19 +195,22 @@ export type PrimaryNavigationLogoutButtonProps = PrimaryNavigationLogoutButton["
  * @deprecated use {@link PrimaryNavigationLogoutButton} instead
  */
 export type PrimaryNavigationLogoutButtonExtension = PrimaryNavigationLogoutButton;
-export type PrimaryNavigationLogoutButton = RenderableExtensionPointDefinition<"primary-navigation.logout",
+export type PrimaryNavigationLogoutButton = RenderableExtensionPointDefinition<
+  "primary-navigation.logout",
   {
     links: Links;
     label: string;
     className: string;
     content: React.ReactNode;
-  }>;
+  }
+>;
 
 /**
  * @deprecated use {@link SourceExtension}`["props"]` instead
  */
 export type SourceExtensionProps = SourceExtension["props"];
-export type SourceExtension = RenderableExtensionPointDefinition<"repos.sources.extensions",
+export type SourceExtension = RenderableExtensionPointDefinition<
+  "repos.sources.extensions",
   {
     repository: Repository;
     baseUrl: string;
@@ -198,7 +218,8 @@ export type SourceExtension = RenderableExtensionPointDefinition<"repos.sources.
     extension: string;
     sources: File | undefined;
     path: string;
-  }>;
+  }
+>;
 
 /**
  * @deprecated use {@link RepositoryOverviewTop}`["props"]` instead
@@ -209,12 +230,14 @@ export type RepositoryOverviewTopExtensionProps = RepositoryOverviewTop["props"]
  * @deprecated use {@link RepositoryOverviewTop} instead
  */
 export type RepositoryOverviewTopExtension = RepositoryOverviewTop;
-export type RepositoryOverviewTop = RenderableExtensionPointDefinition<"repository.overview.top",
+export type RepositoryOverviewTop = RenderableExtensionPointDefinition<
+  "repository.overview.top",
   {
     page: number;
     search: string;
     namespace?: string;
-  }>;
+  }
+>;
 
 /**
  * @deprecated use {@link RepositoryOverviewLeft} instead
@@ -247,8 +270,10 @@ export type AdminSetting = RenderableExtensionPointDefinition<"admin.setting", {
  *
  * @deprecated Use `changeset.description.tokens` instead
  */
-export type ChangesetDescription = RenderableExtensionPointDefinition<"changeset.description",
-  { changeset: Changeset; value: string }>;
+export type ChangesetDescription = RenderableExtensionPointDefinition<
+  "changeset.description",
+  { changeset: Changeset; value: string }
+>;
 
 /**
  * - Can be used to replace parts of a changeset description with components
@@ -257,19 +282,28 @@ export type ChangesetDescription = RenderableExtensionPointDefinition<"changeset
  * - replacement: The component to take instead of the text to replace
  * - replaceAll: Optional boolean; if set to `true`, all occurances of the text will be replaced (default: `false`)
  */
-export type ChangesetDescriptionTokens = ExtensionPointDefinition<"changeset.description.tokens",
-  (changeset: Changeset, value: string) => Array<{
+export type ChangesetDescriptionTokens = ExtensionPointDefinition<
+  "changeset.description.tokens",
+  (
+    changeset: Changeset,
+    value: string
+  ) => Array<{
     textToReplace: string;
     replacement: ReactNode;
     replaceAll?: boolean;
   }>,
-  { changeset: Changeset; value: string }>;
+  { changeset: Changeset; value: string }
+>;
 
-export type ChangesetRight = RenderableExtensionPointDefinition<"changeset.right",
-  { repository: Repository; changeset: Changeset }>;
+export type ChangesetRight = RenderableExtensionPointDefinition<
+  "changeset.right",
+  { repository: Repository; changeset: Changeset }
+>;
 
-export type ChangesetsAuthorSuffix = RenderableExtensionPointDefinition<"changesets.author.suffix",
-  { changeset: Changeset }>;
+export type ChangesetsAuthorSuffix = RenderableExtensionPointDefinition<
+  "changesets.author.suffix",
+  { changeset: Changeset }
+>;
 
 export type GroupNavigation = RenderableExtensionPointDefinition<"group.navigation", { group: Group; url: string }>;
 
@@ -280,16 +314,20 @@ export type GroupSetting = RenderableExtensionPointDefinition<"group.setting", {
  * - Add a new Route to the main Route (scm/)
  * - Props: authenticated?: boolean, links: Links
  */
-export type MainRoute = RenderableExtensionPointDefinition<"main.route",
+export type MainRoute = RenderableExtensionPointDefinition<
+  "main.route",
   {
     me: Me;
     authenticated?: boolean;
-  }>;
+  }
+>;
 
-export type PluginAvatar = RenderableExtensionPointDefinition<"plugins.plugin-avatar",
+export type PluginAvatar = RenderableExtensionPointDefinition<
+  "plugins.plugin-avatar",
   {
     plugin: Plugin;
-  }>;
+  }
+>;
 
 export type PrimaryNavigation = RenderableExtensionPointDefinition<"primary-navigation", { links: Links }>;
 
@@ -298,31 +336,44 @@ export type PrimaryNavigation = RenderableExtensionPointDefinition<"primary-navi
  * - A PrimaryNavigationLink Component can be used here
  * - Actually this Extension Point is used from the Activity Plugin to display the activities at the first Main Navigation menu.
  */
-export type PrimaryNavigationFirstMenu = RenderableExtensionPointDefinition<"primary-navigation.first-menu",
-  { links: Links; label: string }>;
+export type PrimaryNavigationFirstMenu = RenderableExtensionPointDefinition<
+  "primary-navigation.first-menu",
+  { links: Links; label: string }
+>;
 
 export type ProfileRoute = RenderableExtensionPointDefinition<"profile.route", { me: Me; url: string }>;
-export type ProfileSetting = RenderableExtensionPointDefinition<"profile.setting",
-  { me?: Me; url: string; links: Links }>;
+export type ProfileSetting = RenderableExtensionPointDefinition<
+  "profile.setting",
+  { me?: Me; url: string; links: Links }
+>;
 
-export type RepoConfigRoute = RenderableExtensionPointDefinition<"repo-config.route",
-  { repository: Repository; url: string }>;
+export type RepoConfigRoute = RenderableExtensionPointDefinition<
+  "repo-config.route",
+  { repository: Repository; url: string }
+>;
 
-export type RepoConfigDetails = RenderableExtensionPointDefinition<"repo-config.details",
-  { repository: Repository; url: string }>;
+export type RepoConfigDetails = RenderableExtensionPointDefinition<
+  "repo-config.details",
+  { repository: Repository; url: string }
+>;
 
-export type ReposBranchDetailsInformation = RenderableExtensionPointDefinition<"repos.branch-details.information",
-  { repository: Repository; branch: Branch }>;
+export type ReposBranchDetailsInformation = RenderableExtensionPointDefinition<
+  "repos.branch-details.information",
+  { repository: Repository; branch: Branch }
+>;
 
 /**
  * - Location: At meta data view for file
  * - can be used to render additional meta data line
  * - Props: file: string, repository: Repository, revision: string
  */
-export type ReposContentMetaData = RenderableExtensionPointDefinition<"repos.content.metadata",
-  { file: File; repository: Repository; revision: string }>;
+export type ReposContentMetaData = RenderableExtensionPointDefinition<
+  "repos.content.metadata",
+  { file: File; repository: Repository; revision: string }
+>;
 
-export type ReposCreateNamespace = RenderableExtensionPointDefinition<"repos.create.namespace",
+export type ReposCreateNamespace = RenderableExtensionPointDefinition<
+  "repos.create.namespace",
   {
     label: string;
     helpText: string;
@@ -330,54 +381,75 @@ export type ReposCreateNamespace = RenderableExtensionPointDefinition<"repos.cre
     onChange: (namespace: string) => void;
     errorMessage: string;
     validationError?: boolean;
-  }>;
+  }
+>;
 
-export type ReposSourcesContentActionBar = RenderableExtensionPointDefinition<"repos.sources.content.actionbar",
+export type ReposSourcesContentActionBar = RenderableExtensionPointDefinition<
+  "repos.sources.content.actionbar",
   {
     repository: Repository;
     file: File;
     revision: string;
     handleExtensionError: React.Dispatch<React.SetStateAction<Error | undefined>>;
-  }>;
+  }
+>;
 
-export type RepositoryNavigation = RenderableExtensionPointDefinition<"repository.navigation",
-  { repository: Repository; url: string; indexLinks: Links }>;
+export type RepositoryNavigation = RenderableExtensionPointDefinition<
+  "repository.navigation",
+  { repository: Repository; url: string; indexLinks: Links }
+>;
 
-export type RepositoryNavigationTopLevel = RenderableExtensionPointDefinition<"repository.navigation.topLevel",
-  { repository: Repository; url: string; indexLinks: Links }>;
+export type RepositoryNavigationTopLevel = RenderableExtensionPointDefinition<
+  "repository.navigation.topLevel",
+  { repository: Repository; url: string; indexLinks: Links }
+>;
 
-export type RepositoryRoleDetailsInformation = RenderableExtensionPointDefinition<"repositoryRole.role-details.information",
-  { role: RepositoryRole }>;
+export type RepositoryRoleDetailsInformation = RenderableExtensionPointDefinition<
+  "repositoryRole.role-details.information",
+  { role: RepositoryRole }
+>;
 
-export type RepositorySetting = RenderableExtensionPointDefinition<"repository.setting",
-  { repository: Repository; url: string; indexLinks: Links }>;
+export type RepositorySetting = RenderableExtensionPointDefinition<
+  "repository.setting",
+  { repository: Repository; url: string; indexLinks: Links }
+>;
 
-export type RepositoryAvatar = RenderableExtensionPointDefinition<"repos.repository-avatar",
-  { repository: Repository }>;
+export type RepositoryAvatar = RenderableExtensionPointDefinition<
+  "repos.repository-avatar",
+  { repository: Repository }
+>;
 
 /**
  * - Location: At each repository in repository overview
  * - can be used to add avatar for each repository (e.g., to mark repository type)
  */
-export type PrimaryRepositoryAvatar = RenderableExtensionPointDefinition<"repos.repository-avatar.primary",
-  { repository: Repository }>;
+export type PrimaryRepositoryAvatar = RenderableExtensionPointDefinition<
+  "repos.repository-avatar.primary",
+  { repository: Repository }
+>;
 
 /**
  * - Location: At bottom of a single repository view
  * - can be used to show detailed information about the repository (how to clone, e.g.)
  */
-export type RepositoryDetailsInformation = RenderableExtensionPointDefinition<"repos.repository-details.information",
-  { repository: Repository }>;
+export type RepositoryDetailsInformation = RenderableExtensionPointDefinition<
+  "repos.repository-details.information",
+  { repository: Repository }
+>;
 
 /**
  * - Location: At sources viewer
  * - can  be used to render a special source that is not an image or a source code
  */
-export type RepositorySourcesView = RenderableExtensionPointDefinition<"repos.sources.view",
-  { file: File; contentType: string; revision: string; basePath: string }>;
+export type RepositorySourcesView = RenderableExtensionPointDefinition<
+  "repos.sources.view",
+  { file: File; contentType: string; revision: string; basePath: string }
+>;
 
-export type RolesRoute = RenderableExtensionPointDefinition<"roles.route",
-  { role: HalRepresentation & RepositoryRoleBase & { creationDate?: string; lastModified?: string }; url: string }>;
+export type RolesRoute = RenderableExtensionPointDefinition<
+  "roles.route",
+  { role: HalRepresentation & RepositoryRoleBase & { creationDate?: string; lastModified?: string }; url: string }
+>;
 
 export type UserRoute = RenderableExtensionPointDefinition<"user.route", { user: User; url: string }>;
 export type UserSetting = RenderableExtensionPointDefinition<"user.setting", { user: User; url: string }>;
@@ -387,14 +459,17 @@ export type UserSetting = RenderableExtensionPointDefinition<"user.setting", { u
  * - Overrides the default Syntax Highlighter for the given language
  * - Used by the Markdown Plantuml Plugin
  */
-export type MarkdownCodeRenderer<Language extends string | undefined = undefined> =
-  SimpleRenderableDynamicExtensionPointDefinition<"markdown-renderer.code.",
-    Language,
-    {
-      language?: Language extends string ? Language : string;
-      value: string;
-      indexLinks: Links;
-    }>;
+export type MarkdownCodeRenderer<
+  Language extends string | undefined = undefined
+> = SimpleRenderableDynamicExtensionPointDefinition<
+  "markdown-renderer.code.",
+  Language,
+  {
+    language?: Language extends string ? Language : string;
+    value: string;
+    indexLinks: Links;
+  }
+>;
 
 /**
  * - Define custom protocols and their renderers for links in markdown
@@ -408,14 +483,16 @@ export type MarkdownCodeRenderer<Language extends string | undefined = undefined
  * binder.bind<extensionPoints.MarkdownLinkProtocolRenderer<"myprotocol">>("markdown-renderer.link.protocol", { protocol: "myprotocol", renderer: MyProtocolRenderer })
  * ```
  */
-export type MarkdownLinkProtocolRenderer<Protocol extends string | undefined = undefined> = ExtensionPointDefinition<"markdown-renderer.link.protocol",
+export type MarkdownLinkProtocolRenderer<Protocol extends string | undefined = undefined> = ExtensionPointDefinition<
+  "markdown-renderer.link.protocol",
   {
     protocol: Protocol extends string ? Protocol : string;
     renderer: React.ComponentType<{
       protocol: Protocol extends string ? Protocol : string;
       href: string;
     }>;
-  }>;
+  }
+>;
 
 /**
  * Used to determine an avatar image url from a given {@link Person}.
@@ -430,8 +507,10 @@ export type AvatarFactory = ExtensionPointDefinition<"avatar.factory", (person: 
  *
  * @deprecated Has no effect, use {@link AvatarFactory} instead
  */
-export type ChangesetAvatarFactory = ExtensionPointDefinition<"changeset.avatar-factory",
-  (changeset: Changeset) => void>;
+export type ChangesetAvatarFactory = ExtensionPointDefinition<
+  "changeset.avatar-factory",
+  (changeset: Changeset) => void
+>;
 
 type MainRedirectProps = {
   me: Me;
@@ -442,9 +521,11 @@ type MainRedirectProps = {
  * - Extension Point for a link factory that provide the Redirect Link
  * - Actually used from the activity plugin: binder.bind("main.redirect", () => "/activity");
  */
-export type MainRedirect = ExtensionPointDefinition<"main.redirect",
+export type MainRedirect = ExtensionPointDefinition<
+  "main.redirect",
   (props: MainRedirectProps) => string,
-  MainRedirectProps>;
+  MainRedirectProps
+>;
 
 /**
  * - A Factory function to create markdown [renderer](https://github.com/rexxars/react-markdown#node-types)
@@ -452,13 +533,18 @@ export type MainRedirect = ExtensionPointDefinition<"main.redirect",
  *
  * @deprecated Use {@link MarkdownCodeRenderer} or {@link MarkdownLinkProtocolRenderer} instead
  */
-export type MarkdownRendererFactory = ExtensionPointDefinition<"markdown-renderer-factory",
-  (renderContext: unknown) => Record<string, React.ComponentType<any>>>;
+export type MarkdownRendererFactory = ExtensionPointDefinition<
+  "markdown-renderer-factory",
+  (renderContext: unknown) => Record<string, React.ComponentType<any>>
+>;
 
-export type RepositoryCardBeforeTitle = RenderableExtensionPointDefinition<"repository.card.beforeTitle",
-  { repository: Repository }>;
+export type RepositoryCardBeforeTitle = RenderableExtensionPointDefinition<
+  "repository.card.beforeTitle",
+  { repository: Repository }
+>;
 
-export type RepositoryCreationInitialization = RenderableExtensionPointDefinition<"repos.create.initialize",
+export type RepositoryCreationInitialization = RenderableExtensionPointDefinition<
+  "repos.create.initialize",
   {
     repository: Repository;
     setCreationContextEntry: (key: string, value: any) => void;
@@ -467,28 +553,41 @@ export type RepositoryCreationInitialization = RenderableExtensionPointDefinitio
       version?: string;
       initialization?: string;
     };
-  }>;
+  }
+>;
 
-export type NamespaceTopLevelNavigation = RenderableExtensionPointDefinition<"namespace.navigation.topLevel",
-  { namespace: Namespace; url: string }>;
+export type NamespaceTopLevelNavigation = RenderableExtensionPointDefinition<
+  "namespace.navigation.topLevel",
+  { namespace: Namespace; url: string }
+>;
 
-export type NamespaceRoute = RenderableExtensionPointDefinition<"namespace.route",
-  { namespace: Namespace; url: string }>;
+export type NamespaceRoute = RenderableExtensionPointDefinition<
+  "namespace.route",
+  { namespace: Namespace; url: string }
+>;
 
-export type NamespaceSetting = RenderableExtensionPointDefinition<"namespace.setting",
-  { namespace: Namespace; url: string }>;
+export type NamespaceSetting = RenderableExtensionPointDefinition<
+  "namespace.setting",
+  { namespace: Namespace; url: string }
+>;
 
-export type RepositoryTagDetailsInformation = RenderableExtensionPointDefinition<"repos.tag-details.information",
-  { repository: Repository; tag: Tag }>;
+export type RepositoryTagDetailsInformation = RenderableExtensionPointDefinition<
+  "repos.tag-details.information",
+  { repository: Repository; tag: Tag }
+>;
 
 export type SearchHitRenderer<Type extends string | undefined = undefined> = RenderableExtensionPointDefinition<Type extends string ? `search.hit.${Type}.renderer` : `search.hit.${string}.renderer`,
   { hit: Hit }>;
 
-export type RepositorySourcesContentDownloadButton = RenderableExtensionPointDefinition<"repos.sources.content.downloadButton",
-  { repository: Repository; file: File }>;
+export type RepositorySourcesContentDownloadButton = RenderableExtensionPointDefinition<
+  "repos.sources.content.downloadButton",
+  { repository: Repository; file: File }
+>;
 
-export type RepositoryRoute = RenderableExtensionPointDefinition<"repository.route",
-  { repository: Repository; url: string; indexLinks: Links }>;
+export type RepositoryRoute = RenderableExtensionPointDefinition<
+  "repository.route",
+  { repository: Repository; url: string; indexLinks: Links }
+>;
 
 type RepositoryRedirectProps = {
   namespace: string;
@@ -509,22 +608,29 @@ type RepositoryRedirectProps = {
   };
 };
 
-export type RepositoryRedirect = ExtensionPointDefinition<"repository.redirect",
+export type RepositoryRedirect = ExtensionPointDefinition<
+  "repository.redirect",
   (props: RepositoryRedirectProps) => string,
-  RepositoryRedirectProps>;
+  RepositoryRedirectProps
+>;
 
-export type InitializationStep<Step extends string | undefined = undefined> =
-  SimpleRenderableDynamicExtensionPointDefinition<"initialization.step.",
-    Step,
-    {
-      data: HalRepresentation;
-    }>;
+export type InitializationStep<
+  Step extends string | undefined = undefined
+> = SimpleRenderableDynamicExtensionPointDefinition<
+  "initialization.step.",
+  Step,
+  {
+    data: HalRepresentation;
+  }
+>;
 
-type FileViewActionBarOverflowMenuActionProps = {
+export type ContentActionExtensionProps = {
   repository: Repository;
   file: File;
   revision: string;
   handleExtensionError: React.Dispatch<React.SetStateAction<Error | undefined>>;
+  contentType?: ContentType;
+  unmountComponent: () => void;
 };
 
 export type FileViewActionBarOverflowMenu = ExtensionPointDefinition<
@@ -533,7 +639,8 @@ export type FileViewActionBarOverflowMenu = ExtensionPointDefinition<
     category: string;
     label: string;
     icon: string;
-    action: (props: FileViewActionBarOverflowMenuActionProps) => void;
+    component: FunctionComponent<ContentActionExtensionProps>;
+    props?: unknown;
   },
-  FileViewActionBarOverflowMenuActionProps
+  ContentActionExtensionProps
 >;
