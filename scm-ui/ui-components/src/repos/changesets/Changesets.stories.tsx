@@ -34,7 +34,7 @@ import { Binder, BinderContext } from "@scm-manager/ui-extensions";
 import hitchhiker from "../../__resources__/hitchhiker.png";
 import { Person } from "../../avatar/Avatar";
 import { Changeset } from "@scm-manager/ui-types";
-import { Replacement } from "../../SplitAndReplace";
+import { Replacement } from "@scm-manager/ui-text";
 
 const Wrapper = styled.div`
   margin: 25rem 4rem;

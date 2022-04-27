@@ -39,6 +39,7 @@ type State = {
   loading?: boolean;
 };
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 type NoOpErrorBoundaryProps = {};
 
 type NoOpErrorBoundaryState = {

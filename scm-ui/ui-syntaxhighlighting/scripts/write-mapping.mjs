@@ -21,45 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, ReactNode } from "react";
-import textSplitAndReplace from "./textSplitAndReplace";
 
-export type Replacement = {
-  textToReplace: string;
-  replacement: ReactNode;
-  replaceAll?: boolean;
+import fs from "fs/promises";
+import path from "path";
+import { refractor } from "refractor/lib/all.js";
+
+const findAliases = async (lang) => {
+  const mod = await import(`refractor/lang/${lang}.js`);
+  return mod.default.aliases;
 };
 
-type Props = {
-  text: string;
-  replacements: Replacement[];
-  textWrapper?: (s: string) => ReactNode;
-};
-
-const defaultTextWrapper = (s: string) => {
-  const first = s.startsWith(" ") ? <>&nbsp;</> : "";
-  const last = s.endsWith(" ") ? <>&nbsp;</> : "";
-  return (
-    <>
-      {first}
-      {s}
-      {last}
-    </>
-  );
-};
-
-const SplitAndReplace: FC<Props> = ({ text, replacements, textWrapper = defaultTextWrapper }) => {
-  const parts = textSplitAndReplace<ReactNode>(text, replacements, textWrapper);
-  if (parts.length === 0) {
-    return <>{parts[0]}</>;
+const createMapping = async () => {
+  const langs = refractor.listLanguages();
+  const mapping = {};
+  for (let lang of langs) {
+    try {
+      const aliases = await findAliases(lang);
+      for (let alias of aliases) {
+        mapping[alias] = lang;
+      }
+    } catch (e) {
+      console.log(`failed to find aliases for ${lang}`);
+    }
   }
-  return (
-    <>
-      {parts.map((part, index) => (
-        <React.Fragment key={index}>{part}</React.Fragment>
-      ))}
-    </>
-  );
+
+  return mapping;
 };
 
-export default SplitAndReplace;
+const writeMapping = async () => {
+  const mapping = await createMapping();
+  const filepath = path.join(process.cwd(), "src", "worker", "mapping.json");
+  await fs.writeFile(filepath, JSON.stringify(mapping, null, 2), { encoding: "utf-8" });
+};
+
+writeMapping().then(() => console.log("successfully written mapping"));

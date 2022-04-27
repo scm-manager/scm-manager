@@ -22,32 +22,21 @@
  * SOFTWARE.
  */
 
-import React from "react";
-import { Icon } from "@scm-manager/ui-components";
-import { storiesOf } from "@storybook/react";
-import SplitAndReplace from "./SplitAndReplace";
+// WebWorker which creates tokens for syntax highlighting
+// @ts-ignore typescript does not know the css module syntax
+import theme from "./syntax-highlighting.module.css";
+import type { LoadThemeRequest } from "./types";
 
-storiesOf("SplitAndReplace", module).add("Simple replacement", () => {
-  const replacements = [
-    {
-      textToReplace: "'",
-      replacement: <Icon name="quote-left" alt="" />,
-      replaceAll: true,
-    },
-    {
-      textToReplace: "`",
-      replacement: <Icon name="quote-right" alt="" />,
-      replaceAll: true,
-    },
-  ];
-  return (
-    <>
-      <div className="m-6">
-        <SplitAndReplace text={"'So this is it,` said Arthur, 'We are going to die.`"} replacements={replacements} />
-      </div>
-      <div className="m-6">
-        <SplitAndReplace text={"'Yes,` said Ford, 'except... no! Wait a minute!`"} replacements={replacements} />
-      </div>
-    </>
-  );
-});
+const worker = new Worker(
+  // @ts-ignore typscript does not know the import.meta object
+  new URL("./worker/SyntaxHighlighter.worker.ts", import.meta.url),
+  {
+    name: "SyntaxHighlighter",
+    type: "module",
+  }
+);
+
+worker.postMessage({ type: "theme", payload: theme } as LoadThemeRequest);
+
+const useSyntaxHighlightingWorker = (): Worker => worker;
+export default useSyntaxHighlightingWorker;

@@ -8,12 +8,16 @@
   "private": false,
   "scripts": {
     "headless": "cypress run",
-    "ci": "integration-test-runner run -u scmadmin -p scmadmin -O ../build/target/ -d ./"
+    "ci": "integration-test-runner run -u scmadmin -p scmadmin -O ../build/target/ -d ./",
+    "lint": "eslint src"
   },
   "dependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.0.20",
     "@scm-manager/integration-test-runner": "^3.3.0",
     "fluent-ffmpeg": "^2.1.2"
+  },
+  "devDependencies": {
+    "@scm-manager/eslint-config": "^2.15.1"
   },
   "prettier": "@scm-manager/prettier-config",
   "eslintConfig": {

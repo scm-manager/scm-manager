@@ -27,6 +27,12 @@ type Module = {
   fn: (...args: unknown[]) => Module;
 };
 
+class ModuleResolutionError extends Error {
+  constructor(module: string) {
+    super("Could not resolve module: " + module);
+  }
+}
+
 const modules: { [name: string]: unknown } = {};
 const lazyModules: { [name: string]: () => Promise<unknown> } = {};
 const queue: { [name: string]: Module } = {};
@@ -53,22 +59,26 @@ const resolveModule = (name: string) => {
     });
   }
 
-  return Promise.reject("Could not resolve module: " + name);
+  return Promise.reject(new ModuleResolutionError(name));
 };
 
 const defineModule = (name: string, module: Module) => {
   Promise.all(module.dependencies.map(resolveModule))
-    .then(resolvedDependencies => {
+    .then((resolvedDependencies) => {
       modules["@scm-manager/" + name] = module.fn(...resolvedDependencies);
 
-      Object.keys(queue).forEach(queuedModuleName => {
+      Object.keys(queue).forEach((queuedModuleName) => {
         const queueModule = queue[queuedModuleName];
         delete queue[queuedModuleName];
         defineModule(queuedModuleName, queueModule);
       });
     })
-    .catch(() => {
-      queue[name] = module;
+    .catch((e) => {
+      if (e instanceof ModuleResolutionError) {
+        queue[name] = module;
+      } else {
+        throw e;
+      }
     });
 };
 

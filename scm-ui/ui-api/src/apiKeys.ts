@@ -41,7 +41,7 @@ const createApiKey =
       throw new Error("Server does not return required Location header");
     }
     const locationResponse = await apiClient.get(location);
-    const [apiKey, token] = await Promise.all<ApiKey, string>([locationResponse.json(), creationResponse.text()]);
+    const [apiKey, token] = await Promise.all([locationResponse.json(), creationResponse.text()]);
     return { ...apiKey, token } as ApiKeyWithToken;
   };
 
