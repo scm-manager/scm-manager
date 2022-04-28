@@ -40,7 +40,7 @@ const ActionMenuItem: FC<
 
   return (
     <MenuItemContainer
-      className={classNames("is-clickable", "is-flex", "is-justify-content-space-between", {
+      className={classNames("is-clickable", "is-flex", "is-align-items-centered", {
         "has-background-info has-text-white": active,
       })}
       title={t(label)}
@@ -51,8 +51,8 @@ const ActionMenuItem: FC<
         action(extensionProps);
       }}
     >
-      <span className="pr-2">{t(label)}</span>
-      <Icon name={icon} color="inherit" />
+      <Icon name={icon} color="inherit" className="pr-5" />
+      <span>{t(label)}</span>
     </MenuItemContainer>
   );
 };

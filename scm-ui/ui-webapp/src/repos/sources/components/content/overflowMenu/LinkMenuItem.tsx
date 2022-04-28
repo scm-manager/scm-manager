@@ -46,7 +46,7 @@ const LinkMenuItem: FC<
 
   return (
     <MenuItemLinkContainer
-      className={classNames("is-clickable", "is-flex", "is-justify-content-space-between", {
+      className={classNames("is-clickable", "is-flex", "is-align-items-centered", {
         "has-background-info": active,
       })}
       to={link(extensionProps)}
@@ -55,8 +55,8 @@ const LinkMenuItem: FC<
       {...props}
       {...rest}
     >
-      <span className="pr-2">{t(label)}</span>
-      <Icon name={icon} color="inherit" />
+      <Icon name={icon} color="inherit" className="pr-5" />
+      <span>{t(label)}</span>
     </MenuItemLinkContainer>
   );
 };
