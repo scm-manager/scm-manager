@@ -31,6 +31,7 @@ import { useTranslation } from "react-i18next";
 import ActionMenuItem from "./ActionMenuItem";
 import LinkMenuItem from "./LinkMenuItem";
 import ModalMenuItem from "./ModalMenuItem";
+import { Link } from "react-router-dom";
 
 const MenuButton = styled(Menu.Button)`
   background: transparent;
@@ -47,6 +48,16 @@ const FallbackButton = styled(Button)`
   margin-bottom: 0.5rem;
   > i {
     padding: 0 !important;
+  }
+  &:hover {
+    color: var(--scm-link-color);
+  }
+`;
+
+const FallbackLink = styled(Link)`
+  width: 50px;
+  &:hover {
+    color: var(--scm-link-color);
   }
 `;
 
@@ -143,7 +154,41 @@ const ContentActionMenu: FC<Props> = ({ extensionProps }) => {
     {}
   );
 
-  const renderSingleButton = () => {};
+  const renderSingleButton = (extension: extensionPoints.FileViewActionBarOverflowMenu["type"]) => {
+    if ("action" in extension) {
+      return (
+        <FallbackButton
+          icon={extension.icon}
+          title={t(extension.label)}
+          action={() => extension.action(extensionProps)}
+        />
+      );
+    }
+    if ("link" in extension) {
+      return (
+        <FallbackLink to={extension.link(extensionProps)} className="button" title={t(extension.label)}>
+          <Icon name={extension.icon} color="inherit" />
+        </FallbackLink>
+      );
+    }
+    if ("modalElement" in extension) {
+      return (
+        <FallbackButton
+          icon={extension.icon}
+          title={t(extension.label)}
+          action={() =>
+            setSelectedModal(
+              React.createElement(extension.modalElement, {
+                ...extensionProps,
+                close: () => setSelectedModal(undefined),
+              })
+            )
+          }
+        />
+      );
+    }
+    return null;
+  };
 
   const renderMenu = () => (
     <>
@@ -192,7 +237,7 @@ const ContentActionMenu: FC<Props> = ({ extensionProps }) => {
 
   return (
     <>
-      {extensions.length === 1 ? renderSingleButton() : renderMenu()} {selectedModal || null}
+      {extensions.length === 1 ? renderSingleButton(extensions[0]) : renderMenu()} {selectedModal || null}
     </>
   );
 };
