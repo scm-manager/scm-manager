@@ -92,9 +92,9 @@ const ContentActionMenu: FC<Props> = ({ extensionProps }) => {
             {open && (
               <div className="has-background-secondary-least">
                 <MenuItems>
-                  {Object.entries(categories).map(([category, extensions], index) => (
+                  {Object.entries(categories).map(([_category, extensionSet], index) => (
                     <>
-                      {extensions.map((extension) => (
+                      {extensionSet.map((extension) => (
                         <Menu.Item as={React.Fragment} key={extension.label}>
                           {({ active }) => {
                             return (

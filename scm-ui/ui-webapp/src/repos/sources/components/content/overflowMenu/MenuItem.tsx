@@ -45,6 +45,7 @@ const MenuItem: FC<
         extensionProps={extensionProps}
         active={active}
         onClick={onClick}
+        props={props}
         {...rest}
       />
     );
@@ -57,6 +58,7 @@ const MenuItem: FC<
         icon={icon}
         active={active}
         extensionProps={extensionProps}
+        props={props}
         {...rest}
       />
     );
@@ -71,6 +73,7 @@ const MenuItem: FC<
         active={active}
         onClick={onClick}
         setSelectedModal={setSelectedModal}
+        props={props}
         {...rest}
       />
     );
