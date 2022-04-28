@@ -23,12 +23,13 @@
  */
 
 import { binder, extensionPoints } from "@scm-manager/ui-extensions";
-import React, { FC, FunctionComponent, ReactElement, useState } from "react";
+import React, { ComponentType, FC, ReactElement, useState } from "react";
 import { Button, Icon } from "@scm-manager/ui-components";
 import styled from "styled-components";
 import { Menu } from "@headlessui/react";
 import classNames from "classnames";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
 const MenuButton = styled(Menu.Button)`
   background: transparent;
@@ -63,6 +64,11 @@ const MenuItemContainer = styled.div`
   padding: 0.5rem;
 `;
 
+const MenuItemLinkContainer = styled(Link)`
+  border-radius: 5px;
+  padding: 0.5rem;
+`;
+
 const HR = styled.hr`
   margin: 0.25rem;
   background: var(--scm-border-color);
@@ -72,6 +78,145 @@ type Props = {
   extensionProps: extensionPoints.ContentActionExtensionProps;
 };
 
+const ActionMenuItem: FC<extensionPoints.ActionMenuProps & Props & { active: boolean }> = ({
+  action,
+  active,
+  label,
+  icon,
+  props,
+  extensionProps,
+  ...rest
+}) => {
+  const [t] = useTranslation("plugins");
+
+  return (
+    <MenuItemContainer
+      className={classNames("is-clickable", "is-flex", "is-justify-content-space-between", {
+        "has-background-info has-text-white": active
+      })}
+      title={t(label)}
+      {...props}
+      {...rest}
+      onClick={event => {
+        rest.onClick(event);
+        action(extensionProps);
+      }}
+    >
+      <span className="pr-2">{t(label)}</span>
+      <Icon name={icon} color="inherit" />
+    </MenuItemContainer>
+  );
+};
+
+const LinkMenuItem: FC<extensionPoints.LinkMenuProps & Props & { active: boolean }> = ({
+  link,
+  active,
+  label,
+  icon,
+  props,
+  extensionProps,
+  ...rest
+}) => {
+  const [t] = useTranslation("plugins");
+
+  return (
+    <MenuItemLinkContainer
+      className={classNames("is-clickable", "is-flex", "is-justify-content-space-between", {
+        "has-background-info has-text-white": active
+      })}
+      to={link(extensionProps)}
+      title={t(label)}
+      {...props}
+      {...rest}
+    >
+      <span className="pr-2">{t(label)}</span>
+      <Icon name={icon} color="inherit" />
+    </MenuItemLinkContainer>
+  );
+};
+
+const ModalMenuItem: FC<extensionPoints.ModalMenuProps & Props & { active: boolean }> = ({
+  modalElement,
+  active,
+  label,
+  icon,
+  props,
+  extensionProps,
+  ...rest
+}) => {
+  const [t] = useTranslation("plugins");
+  const [showModal, setShowModal] = useState(false);
+
+  return (
+    <MenuItemContainer
+      className={classNames("is-clickable", "is-flex", "is-justify-content-space-between", {
+        "has-background-info has-text-white": active
+      })}
+      title={t(label)}
+      {...props}
+      {...rest}
+      onClick={event => {
+        //TODO fix modal for keyboard actions
+        rest.onClick(event);
+        setShowModal(true);
+      }}
+    >
+      <span className="pr-2">{t(label)}</span>
+      <Icon name={icon} color="inherit" />
+      {showModal ? React.createElement(modalElement, { ...extensionProps, close: () => setShowModal(false) }) : null}
+    </MenuItemContainer>
+  );
+};
+
+const MenuItem: FC<extensionPoints.FileViewActionBarOverflowMenu["type"] & Props & { active: boolean }> = ({
+  extensionProps,
+  label,
+  icon,
+  props,
+  category,
+  active,
+  ...rest
+}) => {
+  console.log("rest", rest);
+  if ("action" in rest) {
+    return (
+      <ActionMenuItem
+        label={label}
+        icon={icon}
+        category={category}
+        extensionProps={extensionProps}
+        active={active}
+        {...rest}
+      />
+    );
+  }
+  if ("link" in rest) {
+    return (
+      <LinkMenuItem
+        category={category}
+        label={label}
+        icon={icon}
+        active={active}
+        extensionProps={extensionProps}
+        {...rest}
+      />
+    );
+  }
+  if ("modalElement" in rest) {
+    return (
+      <ModalMenuItem
+        category={category}
+        label={label}
+        icon={icon}
+        extensionProps={extensionProps}
+        active={active}
+        {...rest}
+      />
+    );
+  }
+  return null;
+};
+
 const ContentActionMenu: FC<Props> = ({ extensionProps }) => {
   const [t] = useTranslation("plugins");
   const [selectedComponent, setSelectedComponent] = useState<ReactElement | undefined>();
@@ -79,13 +224,19 @@ const ContentActionMenu: FC<Props> = ({ extensionProps }) => {
     "repos.sources.content.actionbar.menu",
     extensionProps
   );
-  const categories = extensions.map(e => e.category);
-  const filteredCategories = categories.filter((item, index) => categories?.indexOf(item) === index);
+  const categories = extensions.reduce<Record<string, extensionPoints.FileViewActionBarOverflowMenu["type"][]>>(
+    (result, extension) => {
+      if (!(extension.category in result)) {
+        result[extension.category] = [];
+      }
+      result[extension.category].push(extension);
+      return result;
+    },
+    {}
+  );
 
-  const renderSelectedComponent = (component: FunctionComponent<extensionPoints.ContentActionExtensionProps>) => {
-    setSelectedComponent(
-      React.createElement(component, { ...extensionProps, unmountComponent: () => setSelectedComponent(undefined) })
-    );
+  const renderSelectedComponent = (component: ComponentType<extensionPoints.ContentActionExtensionProps>) => {
+    setSelectedComponent(React.createElement(component, { ...extensionProps }));
   };
 
   const renderMenu = () => (
@@ -98,29 +249,15 @@ const ContentActionMenu: FC<Props> = ({ extensionProps }) => {
           {open && (
             <div className="has-background-secondary-least">
               <MenuItems>
-                {filteredCategories.map((category, index) => (
-                  <div key={category}>
-                    {extensions
-                      .filter(extension => extension.category === category)
-                      .map(extension => (
-                        <Menu.Item as={React.Fragment} key={extension.label}>
-                          {({ active }) => (
-                            <MenuItemContainer
-                              className={classNames("is-clickable", "is-flex", "is-justify-content-space-between", {
-                                "has-background-info has-text-white": active
-                              })}
-                              onClick={() => renderSelectedComponent(extension.component)}
-                              title={t(extension.label)}
-                              {...extension.props}
-                            >
-                              <span className="pr-2">{t(extension.label)}</span>
-                              <Icon name={extension.icon} color="inherit" />
-                            </MenuItemContainer>
-                          )}
-                        </Menu.Item>
-                      ))}
-                    {filteredCategories.length > index + 1 ? <HR /> : null}
-                  </div>
+                {Object.entries(categories).map(([category, extensions], index) => (
+                  <>
+                    {extensions.map(extension => (
+                      <Menu.Item as={React.Fragment} key={extension.label}>
+                        {({ active }) => <MenuItem extensionProps={extensionProps} active={active} {...extension} />}
+                      </Menu.Item>
+                    ))}
+                    {Object.keys(categories).length > index + 1 ? <HR /> : null}
+                  </>
                 ))}
               </MenuItems>
             </div>

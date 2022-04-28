@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import React, { FunctionComponent, ReactNode } from "react";
+import React, { ComponentType, ReactNode } from "react";
 import {
   Branch,
   Changeset,
@@ -43,7 +43,7 @@ import {
   RepositoryRoleBase,
   RepositoryTypeCollection,
   Tag,
-  User
+  User,
 } from "@scm-manager/ui-types";
 import { ExtensionPointDefinition } from "./binder";
 import { RenderableExtensionPointDefinition, SimpleRenderableDynamicExtensionPointDefinition } from "./ExtensionPoint";
@@ -459,17 +459,16 @@ export type UserSetting = RenderableExtensionPointDefinition<"user.setting", { u
  * - Overrides the default Syntax Highlighter for the given language
  * - Used by the Markdown Plantuml Plugin
  */
-export type MarkdownCodeRenderer<
-  Language extends string | undefined = undefined
-> = SimpleRenderableDynamicExtensionPointDefinition<
-  "markdown-renderer.code.",
-  Language,
-  {
-    language?: Language extends string ? Language : string;
-    value: string;
-    indexLinks: Links;
-  }
->;
+export type MarkdownCodeRenderer<Language extends string | undefined = undefined> =
+  SimpleRenderableDynamicExtensionPointDefinition<
+    "markdown-renderer.code.",
+    Language,
+    {
+      language?: Language extends string ? Language : string;
+      value: string;
+      indexLinks: Links;
+    }
+  >;
 
 /**
  * - Define custom protocols and their renderers for links in markdown
@@ -576,8 +575,10 @@ export type RepositoryTagDetailsInformation = RenderableExtensionPointDefinition
   { repository: Repository; tag: Tag }
 >;
 
-export type SearchHitRenderer<Type extends string | undefined = undefined> = RenderableExtensionPointDefinition<Type extends string ? `search.hit.${Type}.renderer` : `search.hit.${string}.renderer`,
-  { hit: Hit }>;
+export type SearchHitRenderer<Type extends string | undefined = undefined> = RenderableExtensionPointDefinition<
+  Type extends string ? `search.hit.${Type}.renderer` : `search.hit.${string}.renderer`,
+  { hit: Hit }
+>;
 
 export type RepositorySourcesContentDownloadButton = RenderableExtensionPointDefinition<
   "repos.sources.content.downloadButton",
@@ -614,15 +615,14 @@ export type RepositoryRedirect = ExtensionPointDefinition<
   RepositoryRedirectProps
 >;
 
-export type InitializationStep<
-  Step extends string | undefined = undefined
-> = SimpleRenderableDynamicExtensionPointDefinition<
-  "initialization.step.",
-  Step,
-  {
-    data: HalRepresentation;
-  }
->;
+export type InitializationStep<Step extends string | undefined = undefined> =
+  SimpleRenderableDynamicExtensionPointDefinition<
+    "initialization.step.",
+    Step,
+    {
+      data: HalRepresentation;
+    }
+  >;
 
 export type ContentActionExtensionProps = {
   repository: Repository;
@@ -630,17 +630,23 @@ export type ContentActionExtensionProps = {
   revision: string;
   handleExtensionError: React.Dispatch<React.SetStateAction<Error | undefined>>;
   contentType?: ContentType;
-  unmountComponent: () => void;
 };
+
+type BaseActionBarOverflowMenuProps = {
+  category: string;
+  label: string;
+  icon: string;
+  props?: unknown;
+};
+
+export type ActionMenuProps = BaseActionBarOverflowMenuProps & { action: (props: ContentActionExtensionProps) => void };
+export type ModalMenuProps = BaseActionBarOverflowMenuProps & {
+  modalElement: ComponentType<ContentActionExtensionProps & { close: () => void }>;
+};
+export type LinkMenuProps = BaseActionBarOverflowMenuProps & { link: (props: ContentActionExtensionProps) => string };
 
 export type FileViewActionBarOverflowMenu = ExtensionPointDefinition<
   "repos.sources.content.actionbar.menu",
-  {
-    category: string;
-    label: string;
-    icon: string;
-    component: FunctionComponent<ContentActionExtensionProps>;
-    props?: unknown;
-  },
+  ActionMenuProps | ModalMenuProps | LinkMenuProps,
   ContentActionExtensionProps
 >;
