@@ -32,7 +32,7 @@ import FileButtonAddons from "../components/content/FileButtonAddons";
 import SourcesView from "./SourcesView";
 import HistoryView from "./HistoryView";
 import AnnotateView from "./AnnotateView";
-import ContentActionMenu from "./ContentActionMenu";
+import ContentActionMenu from "../components/content/overflowMenu/ContentActionMenu";
 import { useContentType } from "@scm-manager/ui-api";
 
 type Props = {
@@ -127,7 +127,7 @@ const Content: FC<Props> = ({ file, repository, revision, breadcrumb, error }) =
       file,
       revision: revision ? encodeURIComponent(revision) : "",
       handleExtensionError: setErrorFromExtension,
-      contentType
+      contentType,
     };
 
     return (
@@ -208,7 +208,7 @@ const Content: FC<Props> = ({ file, repository, revision, breadcrumb, error }) =
                   props={{
                     file,
                     repository,
-                    revision
+                    revision,
                   }}
                 />
               </tbody>
