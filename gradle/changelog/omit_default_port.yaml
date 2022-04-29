@@ -1,0 +1,2 @@
+- type: changed
+  description: Omit default port in protocol urls ([#2014](https://github.com/scm-manager/scm-manager/pull/2014))
