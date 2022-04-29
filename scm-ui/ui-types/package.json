@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-types",
-  "version": "2.32.3-SNAPSHOT",
+  "version": "2.33.0",
   "description": "Typescript types for SCM-Manager related Objects",
   "main": "src/index.ts",
   "files": [
@@ -15,8 +15,8 @@
     "lint": "eslint src"
   },
   "devDependencies": {
-    "@scm-manager/tsconfig": "^2.13.0",
-    "@scm-manager/eslint-config": "^2.15.1"
+    "@scm-manager/eslint-config": "^2.15.1",
+    "@scm-manager/tsconfig": "^2.13.0"
   },
   "babel": {
     "presets": [
