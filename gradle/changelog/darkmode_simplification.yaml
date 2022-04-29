@@ -1,4 +1,0 @@
-- type: fixed
-  description: Improve organization of variables in scss ([#1976](https://github.com/scm-manager/scm-manager/pull/1976))
-- type: fixed
-  description: Small tweaks in darkmode ([#1976](https://github.com/scm-manager/scm-manager/pull/1976))

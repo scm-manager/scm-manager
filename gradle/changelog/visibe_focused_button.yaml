@@ -1,4 +1,0 @@
-- type: fixed
-  description: Make focused buttons clearly visible ([#2009](https://github.com/scm-manager/scm-manager/pull/2009))
-- type: fixed
-  description: Label on focused button in high-contrast mode has enough contrast ([#2009](https://github.com/scm-manager/scm-manager/pull/2009))

@@ -5,6 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.33.0] - 2022-04-29
+### Added
+- Add cli support for repositories, users and groups ([#1987](https://github.com/scm-manager/scm-manager/pull/1987), [#1993](https://github.com/scm-manager/scm-manager/pull/1993))
+
+### Fixed
+- Table in code view breaks at certain screensizes ([#1995](https://github.com/scm-manager/scm-manager/pull/1995))
+- Freezing browser if large files with syntax highlighting were displayed ([#2010](https://github.com/scm-manager/scm-manager/pull/2010))
+- Multiline highlighting with line numbers ([#2010](https://github.com/scm-manager/scm-manager/pull/2010))
+- White space next to button group in code action bar missing at screen size 769px ([#2006](https://github.com/scm-manager/scm-manager/pull/2006))
+- Wrong label displayed above the action column in mobile mode for keys ([#1990](https://github.com/scm-manager/scm-manager/pull/1990))
+- Do not process index types which no longer exist ([#1985](https://github.com/scm-manager/scm-manager/pull/1985))
+- Incorrect log warning "could not set executable flag"
+- Correct styling of syntax highlighter .section elements ([#1984](https://github.com/scm-manager/scm-manager/pull/1984))
+- Improve organization of variables in scss ([#1976](https://github.com/scm-manager/scm-manager/pull/1976))
+- Small tweaks in darkmode ([#1976](https://github.com/scm-manager/scm-manager/pull/1976))
+- Escape parenthesis for entity names to fix routing ([#1998](https://github.com/scm-manager/scm-manager/pull/1998))
+- Unnecessary re-render of markdown view ([#1999](https://github.com/scm-manager/scm-manager/pull/1999))
+- Handling of illegal lfs pointers ([#1994](https://github.com/scm-manager/scm-manager/pull/1994))
+- Open file handle prevent deleting a repository on Windows ([#2008](https://github.com/scm-manager/scm-manager/pull/2008))
+- Make focused buttons clearly visible ([#2009](https://github.com/scm-manager/scm-manager/pull/2009))
+- Label on focused button in high-contrast mode has enough contrast ([#2009](https://github.com/scm-manager/scm-manager/pull/2009))
+
+### Changed
+- Skip syntax highlighting on very large files ([#2010](https://github.com/scm-manager/scm-manager/pull/2010))
+- Omit default port in protocol urls ([#2014](https://github.com/scm-manager/scm-manager/pull/2014))
+
 ## [2.32.2] - 2022-03-23
 ### Fixed
 - Some plugin bundles are executed multiple times ([#1980](https://github.com/scm-manager/scm-manager/pull/1980))
@@ -994,3 +1020,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.32.0]: https://scm-manager.org/download/2.32.0
 [2.32.1]: https://scm-manager.org/download/2.32.1
 [2.32.2]: https://scm-manager.org/download/2.32.2
+[2.33.0]: https://scm-manager.org/download/2.33.0

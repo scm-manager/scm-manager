@@ -1,2 +1,0 @@
-- type: fixed
-  description: Unnecessary re-render of markdown view ([#1999](https://github.com/scm-manager/scm-manager/pull/1999))

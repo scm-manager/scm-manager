@@ -1,2 +1,0 @@
-- type: fixed
-  description: White space next to button group in code action bar missing at screen size 769px ([#2006](https://github.com/scm-manager/scm-manager/pull/2006))
