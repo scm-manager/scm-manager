@@ -1,12 +1,12 @@
 {
   "name": "@scm-manager/ui-webapp",
-  "version": "2.33.0",
+  "version": "2.33.1-SNAPSHOT",
   "private": true,
   "dependencies": {
-    "@scm-manager/ui-api": "^2.33.0",
-    "@scm-manager/ui-components": "^2.33.0",
-    "@scm-manager/ui-extensions": "^2.33.0",
-    "@scm-manager/ui-modules": "^2.33.0",
+    "@scm-manager/ui-api": "^2.33.1-SNAPSHOT",
+    "@scm-manager/ui-components": "^2.33.1-SNAPSHOT",
+    "@scm-manager/ui-extensions": "^2.33.1-SNAPSHOT",
+    "@scm-manager/ui-modules": "^2.33.1-SNAPSHOT",
     "classnames": "^2.2.5",
     "history": "^4.10.1",
     "i18next": "^19.6.0",
@@ -33,7 +33,7 @@
   "devDependencies": {
     "@scm-manager/eslint-config": "^2.15.1",
     "@scm-manager/jest-preset": "^2.13.0",
-    "@scm-manager/ui-tests": "^2.33.0",
+    "@scm-manager/ui-tests": "^2.33.1-SNAPSHOT",
     "@types/classnames": "^2.2.9",
     "@types/enzyme": "^3.10.3",
     "@types/fetch-mock": "^7.3.1",
