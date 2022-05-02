@@ -70,7 +70,10 @@ task context(type: Copy) {
 
 task build(type: Exec) {
   commandLine = ["./build.sh"]
-  environment [VERSION: dockerTag, COMMIT_SHA: revision, IMAGE: dockerRepository]
+  environment "VERSION", dockerTag
+  environment "COMMIT_SHA", revision
+  environment "IMAGE", dockerRepository
+
   doLast {
     File file = new File(project.buildDir, 'docker.tag')
     file.text = dockerTag
@@ -80,7 +83,9 @@ task build(type: Exec) {
 
 task publish(type: Exec) {
   commandLine = ["./build.sh", "--push"]
-  environment [VERSION: dockerTag, COMMIT_SHA: revision, IMAGE: dockerRepository]
+  environment "VERSION", dockerTag
+  environment "COMMIT_SHA", revision
+  environment "IMAGE", dockerRepository
   dependsOn 'build'
 }
 
