@@ -26,17 +26,16 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-BUILDER=scm-builder
-if ! docker buildx inspect ${BUILDER} > /dev/null 2>&1; then
+if ! docker buildx inspect scm-builder > /dev/null 2>&1; then
   # https://github.com/docker/buildx/issues/495#issuecomment-761562905
   # https://github.com/docker/buildx#building-multi-platform-images
   # https://hub.docker.com/r/tonistiigi/binfmt
   docker run --privileged --rm tonistiigi/binfmt --install "arm,arm64"
-  docker buildx create --name ${BUILDER} --driver docker-container --platform linux/arm/v7,linux/arm64/v8,linux/amd64
-  docker buildx inspect --bootstrap ${BUILDER}
+  docker buildx create --name scm-builder --driver docker-container --platform linux/arm/v7,linux/arm64/v8,linux/amd64
+  docker buildx inspect --bootstrap scm-builder
 else
-  echo "builder ${BUILDER} is already installed"
+  echo "builder scm-builder is already installed"
 fi
 
 # build and push
-docker buildx bake --builder ${BUILDER} -f docker-bake.hcl $@
+docker buildx bake --builder scm-builder -f docker-bake.hcl $@
