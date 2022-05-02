@@ -23,13 +23,11 @@
  */
 
 plugins {
-  id 'com.bmuschko.docker-remote-api' version '6.6.1'
   id 'org.scm-manager.packaging'
   id 'org.scm-manager.license'
 }
 
 import org.gradle.util.VersionNumber
-import com.bmuschko.gradle.docker.tasks.image.*
 
 configurations {
   server
@@ -70,9 +68,9 @@ task context(type: Copy) {
   }
 }
 
-task dockerImage(type: DockerBuildImage) {
-  inputDir = file('build/docker')
-  images = images()
+task build(type: Exec) {
+  commandLine = ["./build.sh"]
+  environment [VERSION: dockerTag, COMMIT_SHA: revision, IMAGE: dockerRepository]
   doLast {
     File file = new File(project.buildDir, 'docker.tag')
     file.text = dockerTag
@@ -80,35 +78,15 @@ task dockerImage(type: DockerBuildImage) {
   dependsOn 'context'
 }
 
-def images() {
-  if (isSnapshot) {
-    return [
-      "${dockerRepository}:${dockerTag}"
-    ]
-  } else {
-    // What about patch releases?
-    // It is a good idea to push always latest
-    return [
-      "${dockerRepository}:${dockerTag}",
-      "${dockerRepository}:latest"
-    ]
-  }
-}
-
-task publish(type: DockerPushImage) {
-  images = images()
-  if (project.hasProperty("dockerUsername") && project.hasProperty("dockerPassword")) {
-    registryCredentials {
-      username = project.property("dockerUsername")
-      password = project.property("dockerPassword")
-    }
-  }
-  dependsOn dockerImage
+task publish(type: Exec) {
+  commandLine = ["./build.sh", "--push"]
+  environment [VERSION: dockerTag, COMMIT_SHA: revision, IMAGE: dockerRepository]
+  dependsOn 'build'
 }
 
 task distribution(type: PackageYaml)  {
   type = 'docker'
-  dependsOn dockerImage
+  dependsOn build
 }
 
 artifacts {
