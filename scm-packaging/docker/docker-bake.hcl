@@ -38,7 +38,7 @@ variable "COMMIT_SHA" {
 }
 
 variable "IMAGE" {
-  default = "scmmanager/scm-multiarch-test"
+  default = "docker.io/cloudogu/scm-manager"
 }
 
 target "base" {
