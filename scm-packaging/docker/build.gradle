@@ -68,8 +68,28 @@ task context(type: Copy) {
   }
 }
 
+task setupBuilder() {
+  doLast {
+    def inspect = exec {
+      commandLine = ["docker", "buildx", "inspect", "scm-builder"]
+      ignoreExitValue = true
+    }
+    if (inspect.exitValue != 0) {
+      exec {
+        commandLine = ["docker", "run", "--privileged", "--rm", "tonistiigi/binfmt", "--install", "arm,arm64"]
+      }
+      exec {
+        commandLine = ["docker", "buildx", "create", "--name", "scm-builder", "--driver", "docker-container", "--platform", "linux/arm/v7,linux/arm64/v8,linux/amd64"]
+      }
+      exec {
+        commandLine = ["docker", "buildx", "inspect", "scm-builder"]
+      }
+    }
+  }
+}
+
 task build(type: Exec) {
-  commandLine = ["./build.sh"]
+  commandLine = ["docker", "buildx", "bake", "--builder", "scm-builder"]
   environment "VERSION", dockerTag
   environment "COMMIT_SHA", revision
   environment "IMAGE", dockerRepository
@@ -78,11 +98,11 @@ task build(type: Exec) {
     File file = new File(project.buildDir, 'docker.tag')
     file.text = dockerTag
   }
-  dependsOn 'context'
+  dependsOn 'context', 'setupBuilder'
 }
 
 task publish(type: Exec) {
-  commandLine = ["./build.sh", "--push"]
+  commandLine = ["docker", "buildx", "bake", "--builder", "scm-builder", "--push"]
   environment "VERSION", dockerTag
   environment "COMMIT_SHA", revision
   environment "IMAGE", dockerRepository
