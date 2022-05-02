@@ -32,7 +32,7 @@ if ! docker buildx inspect ${BUILDER} > /dev/null 2>&1; then
   # https://github.com/docker/buildx#building-multi-platform-images
   # https://hub.docker.com/r/tonistiigi/binfmt
   docker run --privileged --rm tonistiigi/binfmt --install "arm,arm64"
-  docker buildx create --name ${BUILDER} --driver docker-container --platform "linux/arm/v7,linux/arm64/v8,linux/amd64"
+  docker buildx create --name ${BUILDER} --driver docker-container --platform linux/arm/v7,linux/arm64/v8,linux/amd64
   docker buildx inspect --bootstrap ${BUILDER}
 else
   echo "builder ${BUILDER} is already installed"
