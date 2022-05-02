@@ -88,7 +88,7 @@ module.exports = [
     module: {
       rules: [
         {
-          test: /\.(js|ts|jsx|tsx)$/i,
+          test: /\.(mjs|js|ts|jsx|tsx)$/i,
           exclude: /node_modules/,
           use: [
             {
@@ -127,7 +127,7 @@ module.exports = [
       ],
     },
     resolve: {
-      extensions: [".ts", ".tsx", ".js", ".jsx", ".css", ".scss", ".json"],
+      extensions: [".ts", ".tsx", ".mjs", ".js", ".jsx", ".css", ".scss", ".json"],
       fallback: {
         fs: false,
         net: false,
@@ -135,6 +135,9 @@ module.exports = [
       },
       alias: {
         "decode-named-character-reference": require.resolve("decode-named-character-reference"),
+        // force cjs instead of esm
+        // https://github.com/tannerlinsley/react-query/issues/3513
+        "react-query/devtools": require.resolve("react-query/devtools"),
       },
     },
     output: {
