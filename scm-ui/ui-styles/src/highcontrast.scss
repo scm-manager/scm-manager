@@ -361,10 +361,6 @@ td:first-child.diff-gutter-conflict:before {
   color: $white-bis !important;
 }
 
-.has-hover-secondary-invert:hover {
-  color: $secondary-least !important;
-}
-
 .repository-export-info-box {
   background-color: scale-color($info, $lightness: -75%);
   border: 0.2rem solid;
