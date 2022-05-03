@@ -23,7 +23,7 @@
  */
 
 import React, { FC } from "react";
-import { DateFromNow, Icon } from "@scm-manager/ui-components";
+import { Button, DateFromNow } from "@scm-manager/ui-components";
 import { ApiKey } from "@scm-manager/ui-types";
 import { useTranslation } from "react-i18next";
 import { DeleteFunction } from "@scm-manager/ui-api";
@@ -37,9 +37,7 @@ export const ApiKeyEntry: FC<Props> = ({ apiKey, onDelete }) => {
   const [t] = useTranslation("users");
   let deleteButton;
   if (apiKey?._links?.delete) {
-    deleteButton = (
-      <Icon name="trash" className="has-hover-secondary-invert p-1" title={t("apiKey.delete")} onClick={() => onDelete(apiKey)} />
-    );
+    deleteButton = <Button color="text" icon="trash" action={() => onDelete(apiKey)} title={t("apiKey.delete")} />;
   }
 
   return (

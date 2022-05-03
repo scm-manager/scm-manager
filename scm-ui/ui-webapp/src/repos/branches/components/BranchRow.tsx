@@ -27,7 +27,7 @@ import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
 import { Branch, BranchDetails, Link, Repository } from "@scm-manager/ui-types";
-import { devices, Icon, SmallLoadingSpinner } from "@scm-manager/ui-components";
+import { Button, devices, SmallLoadingSpinner } from "@scm-manager/ui-components";
 import { binder } from "@scm-manager/ui-extensions";
 import DefaultBranchTag from "./DefaultBranchTag";
 import AheadBehindTag from "./AheadBehindTag";
@@ -68,14 +68,7 @@ const BranchRow: FC<Props> = ({ repository, baseUrl, branch, onDelete, details }
   let deleteButton;
   if ((branch?._links?.delete as Link)?.href) {
     deleteButton = (
-      <span
-        className="icon is-small is-hovered is-clickable"
-        onClick={() => onDelete(branch)}
-        onKeyDown={e => e.key === "Enter" && onDelete(branch)}
-        tabIndex={0}
-      >
-        <Icon name="trash" className="has-hover-secondary-invert p-1" title={t("branch.delete.button")} />
-      </span>
+      <Button color="text" icon="trash" action={() => onDelete(branch)} title={t("branch.delete.button")} />
     );
   }
 

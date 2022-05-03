@@ -26,7 +26,7 @@ import { Link as RouterLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import { Tag, Link } from "@scm-manager/ui-types";
-import { DateFromNow, Icon } from "@scm-manager/ui-components";
+import { Button, DateFromNow } from "@scm-manager/ui-components";
 
 type Props = {
   tag: Tag;
@@ -40,16 +40,7 @@ const TagRow: FC<Props> = ({ tag, baseUrl, onDelete }) => {
 
   let deleteButton;
   if ((tag?._links?.delete as Link)?.href) {
-    deleteButton = (
-      <span
-        className="icon is-small is-clickable"
-        onClick={() => onDelete(tag)}
-        onKeyDown={e => e.key === "Enter" && onDelete(tag)}
-        tabIndex={0}
-      >
-        <Icon name="trash" className="has-hover-secondary-invert p-1" title={t("tag.delete.button")} />
-      </span>
-    );
+    deleteButton = <Button color="text" icon="trash" action={() => onDelete(tag)} title={t("tag.delete.button")} />;
   }
 
   const to = `${baseUrl}/${encodeURIComponent(tag.name)}/info`;

@@ -24,7 +24,7 @@
 import React, { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Namespace, Permission, Repository } from "@scm-manager/ui-types";
-import { ConfirmAlert, ErrorNotification, Icon } from "@scm-manager/ui-components";
+import { Button, ConfirmAlert, ErrorNotification } from "@scm-manager/ui-components";
 import { useDeletePermission } from "@scm-manager/ui-api";
 
 type Props = {
@@ -63,13 +63,13 @@ const DeletePermissionButton: FC<Props> = ({ namespaceOrRepository, permission, 
             className: "is-outlined",
             label: t("permission.delete-permission-button.confirm-alert.submit"),
             isLoading,
-            onClick: () => deletePermission()
+            onClick: () => deletePermission(),
           },
           {
             label: t("permission.delete-permission-button.confirm-alert.cancel"),
             onClick: () => null,
-            autofocus: true
-          }
+            autofocus: true,
+          },
         ]}
         close={() => setShowConfirmAlert(false)}
       />
@@ -79,14 +79,7 @@ const DeletePermissionButton: FC<Props> = ({ namespaceOrRepository, permission, 
   return (
     <>
       <ErrorNotification error={error} />
-      <Icon
-        name="trash"
-        className="has-hover-secondary-invert"
-        onClick={action}
-        onEnter={action}
-        tabIndex={0}
-        title={t("permission.delete-permission-button.label")}
-      />
+      <Button color="text" icon="trash" action={action} title={t("permission.delete-permission-button.label")} />
     </>
   );
 };

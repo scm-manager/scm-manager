@@ -81,9 +81,7 @@ const NotificationEntry: FC<EntryProps> = ({ notification, removeToast }) => {
         {isLoading ? (
           <div className="small-loading-spinner" aria-label={t("notifications.loading")} />
         ) : (
-          <span className="icon is-small is-hovered is-clickable" onClick={remove}>
-            <Icon name="trash" className="has-hover-secondary-invert p-1" title={t("notifications.dismiss")} />
-          </span>
+          <Button color="text" icon="trash" action={remove} title={t("notifications.dismiss")} />
         )}
       </DismissColumn>
     </tr>
