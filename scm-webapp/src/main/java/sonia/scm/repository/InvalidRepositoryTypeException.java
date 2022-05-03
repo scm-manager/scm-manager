@@ -29,8 +29,6 @@ import sonia.scm.ExceptionWithContext;
 
 import java.util.List;
 
-import static java.util.stream.Collectors.joining;
-
 public class InvalidRepositoryTypeException extends ExceptionWithContext {
 
   private static final String CODE = "8OT4gBVvp1";
@@ -40,17 +38,11 @@ public class InvalidRepositoryTypeException extends ExceptionWithContext {
   }
 
   private InvalidRepositoryTypeException(List<ContextEntry> context) {
-    super(context, createMessage(context));
+    super(context, "The repository type is not supported");
   }
 
   @Override
   public String getCode() {
     return CODE;
-  }
-
-  private static String createMessage(List<ContextEntry> context) {
-    return context.stream()
-      .map(c -> c.getType().toLowerCase() + " with id " + c.getId())
-      .collect(joining(" in ", "", " has invalid type"));
   }
 }
