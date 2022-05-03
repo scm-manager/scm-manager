@@ -53,7 +53,7 @@ public class CliExecutionExceptionHandler implements CommandLine.IExecutionExcep
 
   @Override
   public int handleExecutionException(Exception ex, CommandLine commandLine, CommandLine.ParseResult parseResult) {
-    log.debug("got exception in cli execution of {}", commandLine.getCommand().getClass().getSimpleName(), ex);
+    log.debug("got exception in cli execution", ex);
     if (ex instanceof CliExitException) {
       return ((CliExitException) ex).getExitCode();
     }
