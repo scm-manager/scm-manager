@@ -47,8 +47,10 @@ describe("Anonymous Mode Full", () => {
   });
 
   it("should navigate to login page", () => {
+    // Arrange
+    cy.visit("/");
     // Act
-    cy.byTestId("login-button").click();
+    cy.byTestId("primary-navigation-login").click();
     // Assert
     cy.byTestId("login-button");
   });
