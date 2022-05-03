@@ -1,0 +1,2 @@
+- type: fixed
+  description: separate definition of padding to produce valid CSS ([#2023](https://github.com/scm-manager/scm-manager/pull/2023))
