@@ -22,7 +22,7 @@
 # SOFTWARE.
 #
 
-group "default" {
+group "prod" {
   targets = [
     "alpine",
     "debian"
@@ -62,13 +62,14 @@ target "base" {
 target "dev" {
   inherits = ["base"]
   dockerfile = "Dockerfile.alpine"
-  tags = ["${IMAGE}:dev"]  
+  tags = ["${IMAGE}:${VERSION}"]  
 }
 
 target "alpine" {
   inherits = ["base"]
   dockerfile = "Dockerfile.alpine"
   tags = [
+    "${IMAGE}:latest",
     "${IMAGE}:${VERSION}",
     "${IMAGE}:${VERSION}-alpine"
   ]
