@@ -31,10 +31,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -52,7 +50,7 @@ class CommandRegistryTest {
   void shouldCreateTreeWithOnlyRootNodes() {
     mockCommands(rc(Object.class), rc(String.class), rc(Integer.class));
 
-    Set<RegisteredCommandNode> commandTree = registry.createCommandTree();
+    List<RegisteredCommandNode> commandTree = registry.createCommandTree();
     assertContainsCommands(commandTree, Object.class, String.class, Integer.class);
   }
 
@@ -60,7 +58,7 @@ class CommandRegistryTest {
   void shouldCreateTreeWithParents() {
     mockCommands(rc(Object.class), rc(String.class, Object.class), rc(Integer.class, Object.class));
 
-    Set<RegisteredCommandNode> commandTree = registry.createCommandTree();
+    List<RegisteredCommandNode> commandTree = registry.createCommandTree();
 
     assertContainsCommands(commandTree, Object.class);
     assertContainsCommands(commandTree.iterator().next().getChildren(), Integer.class, String.class);
@@ -70,12 +68,24 @@ class CommandRegistryTest {
   void shouldCreateTreeWithParentsSecondLevel() {
     mockCommands(rc(Object.class), rc(String.class, Object.class), rc(Integer.class, String.class));
 
-    Set<RegisteredCommandNode> commandTree = registry.createCommandTree();
+    List<RegisteredCommandNode> commandTree = registry.createCommandTree();
 
     assertContainsCommands(commandTree, Object.class);
     RegisteredCommandNode rootNode = commandTree.iterator().next();
     assertContainsCommands(rootNode.getChildren(), String.class);
     assertContainsCommands(rootNode.getChildren().get(0).getChildren(), Integer.class);
+  }
+
+  @Test
+  void shouldSortCommandsAlphabetically() {
+    mockCommands(rc(Object.class), rc(String.class, Object.class), rc(Float.class, Object.class), rc(Integer.class, Object.class));
+
+    List<RegisteredCommandNode> commandTree = registry.createCommandTree();
+
+    List<RegisteredCommandNode> subCommands = commandTree.get(0).getChildren();
+    assertThat(subCommands.get(0).getCommand()).isEqualTo(Float.class);
+    assertThat(subCommands.get(1).getCommand()).isEqualTo(Integer.class);
+    assertThat(subCommands.get(2).getCommand()).isEqualTo(String.class);
   }
 
   private void mockCommands(RegisteredCommand... commands) {
