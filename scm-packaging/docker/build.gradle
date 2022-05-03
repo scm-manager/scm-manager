@@ -28,6 +28,7 @@ plugins {
 }
 
 import org.gradle.util.VersionNumber
+import groovy.json.JsonSlurper
 
 configurations {
   server
@@ -88,6 +89,22 @@ task setupBuilder() {
   }
 }
 
+task appendArmImage() {
+  doLast {
+    def stdout = new ByteArrayOutputStream()
+    exec {
+      commandLine = ["docker", "buildx", "imagetools", "inspect", "--raw", "${dockerRepository}:${dockerTag}-debian"]
+      standardOutput = stdout
+    }
+    def inspect = new JsonSlurper().parseText(stdout.toString())
+    def manifest = inspect.manifests.find { m -> m.platform.architecture == "arm" }
+    exec {
+      commandLine = ["docker", "buildx", "imagetools", "create", "--append", "-t", "${dockerRepository}:${dockerTag}", "${dockerRepository}:${dockerTag}-debian@${manifest.digest}"]
+    }
+  }
+  dependsOn 'build'
+}
+
 task build(type: Exec) {
   commandLine = ["docker", "buildx", "bake", "--builder", "scm-builder"]
   environment "VERSION", dockerTag
@@ -106,7 +123,7 @@ task publish(type: Exec) {
   environment "VERSION", dockerTag
   environment "COMMIT_SHA", revision
   environment "IMAGE", dockerRepository
-  dependsOn 'build'
+  dependsOn 'appendArmImage'
 }
 
 task distribution(type: PackageYaml)  {
