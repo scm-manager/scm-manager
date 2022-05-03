@@ -187,7 +187,9 @@ pre[class*="language-"] > code[class*="language-"] {
   position: absolute;
   left: 0;
   right: 0;
-  padding: inherit 0;
+  padding: inherit;
+  padding-left: 0;
+  padding-right: 0;
   margin-top: 1em;
   background: var(--sh-highlight-background);
   box-shadow: inset 5px 0 0 var(--sh-highlight-accent);
