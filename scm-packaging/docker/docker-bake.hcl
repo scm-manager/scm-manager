@@ -30,7 +30,7 @@ group "prod" {
 }
 
 variable "VERSION" {
-  default = "2.32.2"
+  default = "unknown"
 }
 
 variable "COMMIT_SHA" {
