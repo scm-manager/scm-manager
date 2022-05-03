@@ -398,6 +398,10 @@
     "52SqQBdpO1": {
       "displayName": "Fehlender params Parameter",
       "description": "Die Antwort der Authentifizierung enthält keinen params Parameter."
+    },
+    "8OT4gBVvp1": {
+      "displayName": "Repository Typ ungültig",
+      "description": "Dieser Repository Typ wird nicht unterstützt."
     }
   },
   "healthCheckFailures": {

@@ -148,6 +148,9 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
   }
 
   public Repository create(Repository repository, Consumer<Repository> afterCreation, boolean initRepository) {
+    if (!isSupportedType(repository.getType())) {
+      throw InvalidRepositoryTypeException.create(repository);
+    }
     repository.setId(keyGenerator.createKey());
     repository.setNamespace(namespaceStrategyProvider.get().createNamespace(repository));
 
@@ -181,6 +184,11 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
     );
   }
 
+  private boolean isSupportedType(String type) {
+    return getConfiguredTypes()
+      .stream().anyMatch(t -> t.getName().equals(type));
+  }
+
   private void invalidateRepositoryPermissions() {
     ScmEventBus.getInstance().post(AuthorizationChangedEvent.createForEveryUser());
   }
@@ -209,6 +217,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
 
   @Override
   public void init(SCMContextProvider context) {
+    // Do nothing
   }
 
   @Override
