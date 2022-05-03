@@ -90,9 +90,7 @@ task setupBuilder() {
 }
 
 task build(type: Exec) {
-  // TOOD 
-  // commandLine = ["docker", "buildx", "bake", "--builder", "scm-builder", isSnapshot ? "dev": "prod"]
-  commandLine = ["docker", "buildx", "bake", "--builder", "scm-builder", "prod"]
+  commandLine = ["docker", "buildx", "bake", "--builder", "scm-builder", isSnapshot ? "dev": "prod"]
   environment "VERSION", dockerTag
   environment "COMMIT_SHA", revision
   environment "IMAGE", dockerRepository
@@ -105,9 +103,7 @@ task build(type: Exec) {
 }
 
 task pushImages(type: Exec) {
-  // TODO
-  // commandLine = ["docker", "buildx", "bake", "--builder", "scm-builder", isSnapshot ? "dev": "prod", "--push"]
-  commandLine = ["docker", "buildx", "bake", "--builder", "scm-builder", "prod", "--push"]
+  commandLine = ["docker", "buildx", "bake", "--builder", "scm-builder",  isSnapshot ? "dev": "prod", "--push"]
   environment "VERSION", dockerTag
   environment "COMMIT_SHA", revision
   environment "IMAGE", dockerRepository
@@ -117,7 +113,7 @@ task pushImages(type: Exec) {
 
 task publish() {
   doLast {
-    // if (!isSnapshot) {
+    if (!isSnapshot) {
       // get digest of debian arm v7 image
       def stdout = new ByteArrayOutputStream()
       exec {
@@ -135,7 +131,7 @@ task publish() {
       exec {
         commandLine = ["docker", "buildx", "imagetools", "create", "--append", "-t", "${dockerRepository}:latest", "${dockerRepository}:${dockerTag}-debian@${manifest.digest}"]
       }
-    // }
+    }
   }
   dependsOn 'pushImages'
 }
