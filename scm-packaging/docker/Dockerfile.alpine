@@ -22,11 +22,33 @@
 # SOFTWARE.
 #
 
-FROM adoptopenjdk/openjdk11:jdk-11.0.14_9-alpine-slim
-ENV SCM_HOME=/var/lib/scm
-ENV CACHE_DIR=/var/cache/scm/work
+# Create minimal java version
+FROM alpine:3.15.4 as jre-build
 
-COPY . /
+RUN set -x \
+ && apk add --no-cache openjdk11-jdk openjdk11-jmods \
+ && jlink \
+    --add-modules ALL-MODULE-PATH \
+    --strip-debug \
+    --no-man-pages \
+    --no-header-files \
+    --compress=2 \
+    --output /javaruntime
+
+
+# ---
+
+# SCM-Manager runtime
+FROM alpine:3.15.4 as runtime
+
+ENV SCM_HOME /var/lib/scm
+ENV CACHE_DIR /var/cache/scm/work
+ENV JAVA_HOME /opt/java/openjdk
+ENV PATH "${JAVA_HOME}/bin:${PATH}"
+
+COPY --from=jre-build /javaruntime "${JAVA_HOME}"
+COPY build/docker/etc /etc
+COPY build/docker/opt /opt
 
 RUN set -x \
  # ttf-dejavu graphviz are required for the plantuml plugin
@@ -38,10 +60,11 @@ RUN set -x \
  && chown 1000:0 ${SCM_HOME} ${CACHE_DIR} \
  && chmod -R g=u ${SCM_HOME} ${CACHE_DIR}
 
+USER 1000
+
 WORKDIR "/opt/scm-server"
 VOLUME ["${SCM_HOME}", "${CACHE_DIR}"]
 EXPOSE 8080
-USER 1000
 
 # we us a high relative high start period,
 # because the start time depends on the number of installed plugins

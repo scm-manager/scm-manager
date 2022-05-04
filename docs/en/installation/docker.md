@@ -18,7 +18,6 @@ for example:
 docker run --name scm -p 8080:8080 -v scm-home:/var/lib/scm scmmanager/scm-manager:2.0.0
 ```
 
-
 ## Persistence
 
 It is recommended to create a persistent volume for the scm-manager home directory.
@@ -60,7 +59,6 @@ docker run -e JAVA_OPTS="-Dsome.property=value" scmmanager/scm-manager:<version>
 
 ```
 
-
 ## Docker Compose
 
 If you want to use the image with docker-compose have a look at the example below. 
@@ -79,3 +77,33 @@ services:
 volumes:
   scmhome: {}
 ```
+
+## Variants
+
+We are offer two variants of the SCM-Manager docker image one with OpenJDK on Alpine and the other with Eclipse Temurin on Debian.
+
+### scmmanager/scm-manager:<version>-alpine
+
+This image uses the Alpine operating system and the OpenJDK distribution from the official apk repository.
+The image is available for the following os/architectures:
+
+* linux/amd64
+* linux/arm64
+
+### scmmanager/scm-manager:<version>-debian
+
+This image uses the Debian operating system and the Eclipse Temurin JDK.
+The image is available for the following os/architectures:
+
+* linux/amd64
+* linux/arm64
+* linux/arm/v7
+
+### scmmanager/scm-manager:<version>
+
+The default image is mainly an alias for the alpine variant, but there is no alpine variant for arm/v7. 
+For arm/v7 the debian variant is used.
+
+* linux/amd64 uses the alpine variant
+* linux/arm64 uses the alpine variant
+* linux/arm/v7 uses the debian variant
