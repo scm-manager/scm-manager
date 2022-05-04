@@ -24,7 +24,8 @@
     "redux": "^4.0.0",
     "string_score": "^0.1.22",
     "styled-components": "^5.3.5",
-    "systemjs": "0.21.6"
+    "systemjs": "0.21.6",
+    "@headlessui/react": "^1.4.3"
   },
   "scripts": {
     "test": "jest",
