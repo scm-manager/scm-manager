@@ -903,6 +903,10 @@ form .field:not(.is-grouped) {
   border-bottom-right-radius: unset;
 }
 
+.is-vertical-align-middle {
+  vertical-align: middle !important
+}
+
 // radio
 //overwrite bulma's default margin
 .radio + .radio {
