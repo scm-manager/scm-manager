@@ -1,2 +1,2 @@
 - type: added
-  description: Add extension point to render file actions in overflow menu ([#2015](https://github.com/scm-manager/scm-manager/pull/2015))
+  description: Extension point to render file actions in overflow menu ([#2015](https://github.com/scm-manager/scm-manager/pull/2015))
