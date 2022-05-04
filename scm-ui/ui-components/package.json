@@ -25,8 +25,6 @@
     "@scm-manager/jest-preset": "^2.13.0",
     "@scm-manager/prettier-config": "^2.10.1",
     "@scm-manager/tsconfig": "^2.13.0",
-    "@scm-manager/ui-syntaxhighlighting": "^2.33.1-SNAPSHOT",
-    "@scm-manager/ui-text": "^2.33.1-SNAPSHOT",
     "@scm-manager/ui-tests": "^2.33.1-SNAPSHOT",
     "@storybook/addon-actions": "^6.4.20",
     "@storybook/addon-essentials": "^6.4.20",
@@ -91,6 +89,10 @@
     "remark-rehype": "^8.0.0",
     "tabbable": "^5.2.1",
     "unified": "^9.2.1"
+  },
+  "peerDependencies": {
+    "@scm-manager/ui-syntaxhighlighting": "^2.33.1-SNAPSHOT",
+    "@scm-manager/ui-text": "^2.33.1-SNAPSHOT"
   },
   "babel": {
     "presets": [
