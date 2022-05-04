@@ -1,2 +1,2 @@
 - type: added
-  description: docker images for linux/arm/v7 and linux/arm64 ([#2021](https://github.com/scm-manager/scm-manager/pull/2021))
+  description: Docker images for linux/arm/v7 and linux/arm64 ([#2021](https://github.com/scm-manager/scm-manager/pull/2021))

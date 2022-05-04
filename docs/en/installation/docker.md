@@ -78,7 +78,7 @@ volumes:
   scmhome: {}
 ```
 
-## Varianst
+## Variants
 
 We are offer two variants of the SCM-Manager docker image one with OpenJDK on Alpine and the other with Eclipse Temurin on Debian.
 
@@ -92,7 +92,7 @@ The image is available for the following os/architectures:
 
 ### scmmanager/scm-manager:<version>-debian
 
-This image uses the Debian operating system and the Eclipse Termurin JDK.
+This image uses the Debian operating system and the Eclipse Temurin JDK.
 The image is available for the following os/architectures:
 
 * linux/amd64
