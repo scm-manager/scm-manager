@@ -68,7 +68,13 @@ const BranchRow: FC<Props> = ({ repository, baseUrl, branch, onDelete, details }
   let deleteButton;
   if ((branch?._links?.delete as Link)?.href) {
     deleteButton = (
-      <Button color="text" icon="trash" action={() => onDelete(branch)} title={t("branch.delete.button")} />
+      <Button
+        color="text"
+        icon="trash"
+        action={() => onDelete(branch)}
+        title={t("branch.delete.button")}
+        className="px-2"
+      />
     );
   }
 
@@ -85,7 +91,7 @@ const BranchRow: FC<Props> = ({ repository, baseUrl, branch, onDelete, details }
   const extensionProps = { repository, branch, details };
   return (
     <AdaptTableFlow>
-      <td>
+      <td className="is-vertical-align-middle">
         <ReactLink to={to} title={branch.name}>
           {branch.name}
         </ReactLink>
@@ -95,11 +101,13 @@ const BranchRow: FC<Props> = ({ repository, baseUrl, branch, onDelete, details }
           </MobileFlowSpan>
         )}
       </td>
-      <td className="has-text-centered">{renderBranchTag()}</td>
+      <td className="is-vertical-align-middle has-text-centered">{renderBranchTag()}</td>
       {binder.hasExtension("repos.branches.row.details")
-        ? binder.getExtensions("repos.branches.row.details").map(e => <td>{React.createElement(e, extensionProps)}</td>)
+        ? binder
+            .getExtensions("repos.branches.row.details")
+            .map((e) => <td>{React.createElement(e, extensionProps)}</td>)
         : null}
-      <td className="has-text-centered">{deleteButton}</td>
+      <td className="is-vertical-align-middle has-text-centered">{deleteButton}</td>
     </AdaptTableFlow>
   );
 };

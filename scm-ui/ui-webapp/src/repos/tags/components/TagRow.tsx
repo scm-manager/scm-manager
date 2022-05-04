@@ -40,13 +40,15 @@ const TagRow: FC<Props> = ({ tag, baseUrl, onDelete }) => {
 
   let deleteButton;
   if ((tag?._links?.delete as Link)?.href) {
-    deleteButton = <Button color="text" icon="trash" action={() => onDelete(tag)} title={t("tag.delete.button")} />;
+    deleteButton = (
+      <Button color="text" icon="trash" action={() => onDelete(tag)} title={t("tag.delete.button")} className="px-2" />
+    );
   }
 
   const to = `${baseUrl}/${encodeURIComponent(tag.name)}/info`;
   return (
     <tr>
-      <td>
+      <td className="is-vertical-align-middle">
         <RouterLink to={to} title={tag.name}>
           {tag.name}
           <span className={classNames("has-text-secondary", "is-ellipsis-overflow", "ml-2", "is-size-7")}>
@@ -54,7 +56,7 @@ const TagRow: FC<Props> = ({ tag, baseUrl, onDelete }) => {
           </span>
         </RouterLink>
       </td>
-      <td className="has-text-centered">{deleteButton}</td>
+      <td className="is-vertical-align-middle has-text-centered">{deleteButton}</td>
     </tr>
   );
 };

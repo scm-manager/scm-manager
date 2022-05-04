@@ -81,7 +81,7 @@ const NotificationEntry: FC<EntryProps> = ({ notification, removeToast }) => {
         {isLoading ? (
           <div className="small-loading-spinner" aria-label={t("notifications.loading")} />
         ) : (
-          <Button color="text" icon="trash" action={remove} title={t("notifications.dismiss")} />
+          <Button color="text" icon="trash" action={remove} title={t("notifications.dismiss")} className="px-1" />
         )}
       </DismissColumn>
     </tr>

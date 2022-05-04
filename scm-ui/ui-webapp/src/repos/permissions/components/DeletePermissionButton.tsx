@@ -79,7 +79,13 @@ const DeletePermissionButton: FC<Props> = ({ namespaceOrRepository, permission, 
   return (
     <>
       <ErrorNotification error={error} />
-      <Button color="text" icon="trash" action={action} title={t("permission.delete-permission-button.label")} />
+      <Button
+        color="text"
+        icon="trash"
+        action={action}
+        title={t("permission.delete-permission-button.label")}
+        className="px-2"
+      />
     </>
   );
 };

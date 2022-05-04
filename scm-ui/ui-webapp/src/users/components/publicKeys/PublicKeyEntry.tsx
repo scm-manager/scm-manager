@@ -39,18 +39,24 @@ export const PublicKeyEntry: FC<Props> = ({ publicKey, onDelete }) => {
   let deleteButton;
   if (publicKey?._links?.delete) {
     deleteButton = (
-      <Button color="text" icon="trash" action={() => onDelete(publicKey)} title={t("publicKey.delete")} />
+      <Button
+        color="text"
+        icon="trash"
+        action={() => onDelete(publicKey)}
+        title={t("publicKey.delete")}
+        className="px-2"
+      />
     );
   }
 
   return (
     <>
       <tr>
-        <td>{publicKey.displayName}</td>
-        <td className="is-hidden-mobile">
+        <td className="is-vertical-align-middle">{publicKey.displayName}</td>
+        <td className="is-vertical-align-middle is-hidden-mobile">
           <DateFromNow date={publicKey.created} />
         </td>
-        <td className="is-hidden-mobile">
+        <td className="is-vertical-align-middle is-hidden-mobile">
           {publicKey._links?.raw ? (
             <a title={t("publicKey.download")} href={(publicKey._links.raw as Link).href}>
               {publicKey.id}
@@ -59,7 +65,7 @@ export const PublicKeyEntry: FC<Props> = ({ publicKey, onDelete }) => {
             publicKey.id
           )}
         </td>
-        <td className="has-text-centered">{deleteButton}</td>
+        <td className="is-vertical-align-middle has-text-centered">{deleteButton}</td>
       </tr>
     </>
   );

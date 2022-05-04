@@ -37,18 +37,20 @@ export const ApiKeyEntry: FC<Props> = ({ apiKey, onDelete }) => {
   const [t] = useTranslation("users");
   let deleteButton;
   if (apiKey?._links?.delete) {
-    deleteButton = <Button color="text" icon="trash" action={() => onDelete(apiKey)} title={t("apiKey.delete")} />;
+    deleteButton = (
+      <Button color="text" icon="trash" action={() => onDelete(apiKey)} title={t("apiKey.delete")} className="px-2" />
+    );
   }
 
   return (
     <>
       <tr>
-        <td>{apiKey.displayName}</td>
-        <td>{apiKey.permissionRole}</td>
-        <td className="is-hidden-mobile">
+        <td className="is-vertical-align-middle">{apiKey.displayName}</td>
+        <td className="is-vertical-align-middle">{apiKey.permissionRole}</td>
+        <td className="is-vertical-align-middle is-hidden-mobile">
           <DateFromNow date={apiKey.created} />
         </td>
-        <td className="has-text-centered">{deleteButton}</td>
+        <td className="is-vertical-align-middle has-text-centered">{deleteButton}</td>
       </tr>
     </>
   );
