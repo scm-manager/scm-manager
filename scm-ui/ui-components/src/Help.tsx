@@ -23,7 +23,6 @@
  */
 import React, { FC } from "react";
 import classNames from "classnames";
-import styled from "styled-components";
 import Tooltip from "./Tooltip";
 import HelpIcon from "./HelpIcon";
 
@@ -34,19 +33,15 @@ type Props = {
   id?: string;
 };
 
-const AbsolutePositionTooltip = styled(Tooltip)`
-  position: absolute;
-`;
-
 const Help: FC<Props> = ({ message, multiline, className, id }) => (
-  <AbsolutePositionTooltip
+  <Tooltip
     className={classNames("is-inline-block", "pl-1", className)}
     message={message}
     id={id}
     multiline={multiline}
   >
     <HelpIcon />
-  </AbsolutePositionTooltip>
+  </Tooltip>
 );
 
 Help.defaultProps = {
