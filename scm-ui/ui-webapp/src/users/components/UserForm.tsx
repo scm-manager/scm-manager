@@ -31,7 +31,7 @@ import {
   PasswordConfirmation,
   SubmitButton,
   Subtitle,
-  validation as validator
+  validation as validator,
 } from "@scm-manager/ui-components";
 import * as userValidator from "./userValidation";
 
@@ -50,7 +50,7 @@ const UserForm: FC<Props> = ({ submitForm, user, loading }) => {
     password: "",
     active: true,
     external: false,
-    _links: {}
+    _links: {},
   });
   const [mailValidationError, setMailValidationError] = useState(false);
   const [displayNameValidationError, setDisplayNameValidationError] = useState(false);
@@ -91,6 +91,7 @@ const UserForm: FC<Props> = ({ submitForm, user, loading }) => {
       mailValidationError ||
       displayNameValidationError ||
       nameValidationError ||
+      (userState && !userState.external && !userState.password) ||
       !userState.displayName
     );
   };
@@ -118,7 +119,7 @@ const UserForm: FC<Props> = ({ submitForm, user, loading }) => {
       <div className="column is-half">
         <InputField
           label={t("user.name")}
-          onChange={name => {
+          onChange={(name) => {
             setNameValidationError(!!name && !validator.isNameValid(name));
             setUserState({ ...userState, name });
           }}
@@ -144,7 +145,7 @@ const UserForm: FC<Props> = ({ submitForm, user, loading }) => {
           <div className="column is-half">
             <InputField
               label={t("user.displayName")}
-              onChange={displayName => {
+              onChange={(displayName) => {
                 setDisplayNameValidationError(!userValidator.isDisplayNameValid(displayName));
                 setUserState({ ...userState, displayName });
               }}
@@ -158,7 +159,7 @@ const UserForm: FC<Props> = ({ submitForm, user, loading }) => {
           <div className="column is-half">
             <InputField
               label={t("user.mail")}
-              onChange={mail => {
+              onChange={(mail) => {
                 setMailValidationError(!!mail && !validator.isMailValid(mail));
                 setUserState({ ...userState, mail });
               }}
@@ -176,7 +177,7 @@ const UserForm: FC<Props> = ({ submitForm, user, loading }) => {
               <div className="column">
                 <Checkbox
                   label={t("user.externalFlag")}
-                  onChange={external => setUserState({ ...userState, external })}
+                  onChange={(external) => setUserState({ ...userState, external })}
                   checked={userState.external}
                   helpText={t("help.externalFlagHelpText")}
                 />
@@ -191,7 +192,7 @@ const UserForm: FC<Props> = ({ submitForm, user, loading }) => {
               <div className="column">
                 <Checkbox
                   label={t("user.active")}
-                  onChange={active => setUserState({ ...userState, active })}
+                  onChange={(active) => setUserState({ ...userState, active })}
                   checked={userState ? userState.active : false}
                   helpText={t("help.activeHelpText")}
                 />
