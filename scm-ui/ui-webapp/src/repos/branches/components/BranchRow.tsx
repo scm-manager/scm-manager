@@ -27,7 +27,7 @@ import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
 import { Branch, BranchDetails, Link, Repository } from "@scm-manager/ui-types";
-import { devices, Icon, SmallLoadingSpinner } from "@scm-manager/ui-components";
+import { Button, devices, SmallLoadingSpinner } from "@scm-manager/ui-components";
 import { binder } from "@scm-manager/ui-extensions";
 import DefaultBranchTag from "./DefaultBranchTag";
 import AheadBehindTag from "./AheadBehindTag";
@@ -68,14 +68,13 @@ const BranchRow: FC<Props> = ({ repository, baseUrl, branch, onDelete, details }
   let deleteButton;
   if ((branch?._links?.delete as Link)?.href) {
     deleteButton = (
-      <span
-        className="icon is-small is-hovered is-clickable"
-        onClick={() => onDelete(branch)}
-        onKeyDown={e => e.key === "Enter" && onDelete(branch)}
-        tabIndex={0}
-      >
-        <Icon name="trash" title={t("branch.delete.button")} />
-      </span>
+      <Button
+        color="text"
+        icon="trash"
+        action={() => onDelete(branch)}
+        title={t("branch.delete.button")}
+        className="px-2"
+      />
     );
   }
 
@@ -92,7 +91,7 @@ const BranchRow: FC<Props> = ({ repository, baseUrl, branch, onDelete, details }
   const extensionProps = { repository, branch, details };
   return (
     <AdaptTableFlow>
-      <td>
+      <td className="is-vertical-align-middle">
         <ReactLink to={to} title={branch.name}>
           {branch.name}
         </ReactLink>
@@ -102,11 +101,13 @@ const BranchRow: FC<Props> = ({ repository, baseUrl, branch, onDelete, details }
           </MobileFlowSpan>
         )}
       </td>
-      <td className="has-text-centered">{renderBranchTag()}</td>
+      <td className="is-vertical-align-middle has-text-centered">{renderBranchTag()}</td>
       {binder.hasExtension("repos.branches.row.details")
-        ? binder.getExtensions("repos.branches.row.details").map(e => <td>{React.createElement(e, extensionProps)}</td>)
+        ? binder
+            .getExtensions("repos.branches.row.details")
+            .map((e) => <td>{React.createElement(e, extensionProps)}</td>)
         : null}
-      <td className="is-darker has-text-centered">{deleteButton}</td>
+      <td className="is-vertical-align-middle has-text-centered">{deleteButton}</td>
     </AdaptTableFlow>
   );
 };

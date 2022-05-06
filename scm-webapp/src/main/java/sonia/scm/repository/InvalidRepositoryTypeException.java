@@ -21,31 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
-import classNames from "classnames";
-import Tooltip from "./Tooltip";
-import HelpIcon from "./HelpIcon";
 
-type Props = {
-  message: string;
-  multiline?: boolean;
-  className?: string;
-  id?: string;
-};
+package sonia.scm.repository;
 
-const Help: FC<Props> = ({ message, multiline, className, id }) => (
-  <Tooltip
-    className={classNames("is-inline-block", "pl-1", className)}
-    message={message}
-    id={id}
-    multiline={multiline}
-  >
-    <HelpIcon />
-  </Tooltip>
-);
+import sonia.scm.ContextEntry;
+import sonia.scm.ExceptionWithContext;
 
-Help.defaultProps = {
-  multiline: true
-};
+import java.util.List;
 
-export default Help;
+public class InvalidRepositoryTypeException extends ExceptionWithContext {
+
+  private static final String CODE = "8OT4gBVvp1";
+
+  public static InvalidRepositoryTypeException create(Repository repository) {
+    return new InvalidRepositoryTypeException(ContextEntry.ContextBuilder.entity(repository).build());
+  }
+
+  private InvalidRepositoryTypeException(List<ContextEntry> context) {
+    super(context, "The repository type is not supported");
+  }
+
+  @Override
+  public String getCode() {
+    return CODE;
+  }
+}

@@ -117,7 +117,7 @@ const FileSearch: FC<Props> = ({ repository, baseUrl, branches, selectedBranch }
             <HomeIcon title={t("fileSearch.home")} name="home" color="inherit" />
           </HomeLink>
           <FilterInput
-            className="is-full-width"
+            className="is-full-width pr-2"
             placeholder={t("fileSearch.input.placeholder")}
             value={query}
             filter={search}
@@ -125,7 +125,7 @@ const FileSearch: FC<Props> = ({ repository, baseUrl, branches, selectedBranch }
             id={id}
             testId="file_search_filter_input"
           />
-          <Help className="ml-3" message={t("fileSearch.input.help")} id={id} />
+          <Help message={t("fileSearch.input.help")} id={id} />
         </div>
         <ErrorNotification error={error} />
         {isLoading ? <Loading /> : <FileSearchResults contentBaseUrl={contentBaseUrl} query={query} paths={result} />}

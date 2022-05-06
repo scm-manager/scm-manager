@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 
+import { Button, ConfirmAlert, DateFromNow } from "@scm-manager/ui-components";
 import React, { FC, useState } from "react";
-import { ConfirmAlert, DateFromNow, Icon } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 import { Link, PublicKey } from "@scm-manager/ui-types";
 import { DeleteFunction } from "@scm-manager/ui-api";
@@ -40,13 +40,12 @@ export const PublicKeyEntry: FC<Props> = ({ publicKey, onDelete }) => {
   let deleteButton;
   if (publicKey?._links?.delete) {
     deleteButton = (
-      <Icon
-        name="trash"
+      <Button
+        color="text"
+        icon="trash"
+        action={() => setShowModal(true)}
         title={t("publicKey.delete")}
-        color="inherit"
-        onClick={() => setShowModal(true)}
-        onEnter={() => setShowModal(true)}
-        tabIndex={0}
+        className="px-2"
       />
     );
   }
@@ -54,11 +53,11 @@ export const PublicKeyEntry: FC<Props> = ({ publicKey, onDelete }) => {
   return (
     <>
       <tr>
-        <td>{publicKey.displayName}</td>
-        <td className="is-hidden-mobile">
+        <td className="is-vertical-align-middle">{publicKey.displayName}</td>
+        <td className="is-vertical-align-middle is-hidden-mobile">
           <DateFromNow date={publicKey.created} />
         </td>
-        <td className="is-hidden-mobile">
+        <td className="is-vertical-align-middle is-hidden-mobile">
           {publicKey._links?.raw ? (
             <a title={t("publicKey.download")} href={(publicKey._links.raw as Link).href}>
               {publicKey.id}
@@ -67,7 +66,7 @@ export const PublicKeyEntry: FC<Props> = ({ publicKey, onDelete }) => {
             publicKey.id
           )}
         </td>
-        <td className="is-darker has-text-centered">{deleteButton}</td>
+        <td className="is-vertical-align-middle has-text-centered">{deleteButton}</td>
       </tr>
       {showModal ? (
         <ConfirmAlert
@@ -84,7 +83,7 @@ export const PublicKeyEntry: FC<Props> = ({ publicKey, onDelete }) => {
             },
             {
               label: t("publicKey.deleteConfirmAlert.cancel"),
-              onClick: () => null,
+              onClick: () => setShowModal(false),
               autofocus: true,
             },
           ]}

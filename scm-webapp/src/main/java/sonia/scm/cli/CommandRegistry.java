@@ -26,10 +26,11 @@ package sonia.scm.cli;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 @Singleton
 public class CommandRegistry {
@@ -41,17 +42,17 @@ public class CommandRegistry {
     this.commandCollector = commandCollector;
   }
 
-  public Set<RegisteredCommandNode> createCommandTree() {
-    Set<RegisteredCommandNode> rootCommands = new HashSet<>();
-    Set<RegisteredCommand> registeredCommands = commandCollector.collect();
+  public List<RegisteredCommandNode> createCommandTree() {
+    List<RegisteredCommandNode> rootCommands = new ArrayList<>();
+    List<RegisteredCommand> sortedCommands = collectSortedCommands();
 
     Map<Class<?>, RegisteredCommandNode> commandNodes = new HashMap<>();
 
-    for (RegisteredCommand command : registeredCommands) {
+    for (RegisteredCommand command : sortedCommands) {
       commandNodes.put(command.getCommand(), new RegisteredCommandNode(command.getName(), command.getCommand()));
     }
 
-    for (RegisteredCommand command : registeredCommands) {
+    for (RegisteredCommand command : sortedCommands) {
       RegisteredCommandNode node = commandNodes.get(command.getCommand());
       if (command.getParent() == null) {
         rootCommands.add(node);
@@ -65,5 +66,12 @@ public class CommandRegistry {
       }
     }
     return rootCommands;
+  }
+
+  private List<RegisteredCommand> collectSortedCommands() {
+    return commandCollector.collect()
+      .stream()
+      .sorted((a, b) -> a.getName().compareToIgnoreCase(b.getName()))
+      .collect(Collectors.toList());
   }
 }

@@ -21,44 +21,43 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
-import { Link as RouterLink } from "react-router-dom";
+
+import React, { FC, ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
-import { Tag, Link } from "@scm-manager/ui-types";
-import { Button, DateFromNow } from "@scm-manager/ui-components";
+import { Icon } from "@scm-manager/ui-components";
+import { MenuItemContainer } from "./ContentActionMenu";
+import { extensionPoints } from "@scm-manager/ui-extensions";
 
-type Props = {
-  tag: Tag;
-  baseUrl: string;
-  onDelete: (tag: Tag) => void;
-  // deleting: boolean;
-};
-
-const TagRow: FC<Props> = ({ tag, baseUrl, onDelete }) => {
-  const [t] = useTranslation("repos");
-
-  let deleteButton;
-  if ((tag?._links?.delete as Link)?.href) {
-    deleteButton = (
-      <Button color="text" icon="trash" action={() => onDelete(tag)} title={t("tag.delete.button")} className="px-2" />
-    );
+const ModalMenuItem: FC<
+  extensionPoints.ModalMenuProps & {
+    active: boolean;
+    onClick: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+    setSelectedModal: (element: ReactElement | undefined) => void;
+    extensionProps: extensionPoints.ContentActionExtensionProps;
   }
+> = ({ modalElement, active, label, icon, props, extensionProps, setSelectedModal, ...rest }) => {
+  const [t] = useTranslation("plugins");
 
-  const to = `${baseUrl}/${encodeURIComponent(tag.name)}/info`;
   return (
-    <tr>
-      <td className="is-vertical-align-middle">
-        <RouterLink to={to} title={tag.name}>
-          {tag.name}
-          <span className={classNames("has-text-secondary", "is-ellipsis-overflow", "ml-2", "is-size-7")}>
-            {t("tags.overview.created")} <DateFromNow date={tag.date} />
-          </span>
-        </RouterLink>
-      </td>
-      <td className="is-vertical-align-middle has-text-centered">{deleteButton}</td>
-    </tr>
+    <MenuItemContainer
+      className={classNames("is-clickable", "is-flex", "is-align-items-centered", {
+        "has-background-info has-text-white": active,
+      })}
+      title={t(label)}
+      {...props}
+      {...rest}
+      onClick={(event) => {
+        setSelectedModal(
+          React.createElement(modalElement, { ...extensionProps, close: () => setSelectedModal(undefined) })
+        );
+        rest.onClick(event);
+      }}
+    >
+      <Icon name={icon} color="inherit" className="pr-5" />
+      <span>{t(label)}</span>
+    </MenuItemContainer>
   );
 };
 
-export default TagRow;
+export default ModalMenuItem;

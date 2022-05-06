@@ -1,0 +1,2 @@
+- type: fixed
+  description: Sort CLI commands alphabetically ([#2020](https://github.com/scm-manager/scm-manager/pull/2020))

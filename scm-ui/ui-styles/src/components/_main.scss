@@ -633,6 +633,7 @@ ul.is-separated {
     &:first-child {
       border-left: 3px solid;
     }
+    // Deprecated
     &.is-darker {
       background-color: $white-ter;
     }
@@ -900,6 +901,10 @@ form .field:not(.is-grouped) {
 .is-border-bottom-radius-unset {
   border-bottom-left-radius: unset;
   border-bottom-right-radius: unset;
+}
+
+.is-vertical-align-middle {
+  vertical-align: middle !important
 }
 
 // radio

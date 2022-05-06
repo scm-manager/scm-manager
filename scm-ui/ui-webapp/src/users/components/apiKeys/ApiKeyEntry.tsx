@@ -23,7 +23,7 @@
  */
 
 import React, { FC, useState } from "react";
-import { ConfirmAlert, DateFromNow, Icon } from "@scm-manager/ui-components";
+import { ConfirmAlert, Button, DateFromNow } from "@scm-manager/ui-components";
 import { ApiKey } from "@scm-manager/ui-types";
 import { useTranslation } from "react-i18next";
 import { DeleteFunction } from "@scm-manager/ui-api";
@@ -39,26 +39,19 @@ export const ApiKeyEntry: FC<Props> = ({ apiKey, onDelete }) => {
   let deleteButton;
   if (apiKey?._links?.delete) {
     deleteButton = (
-      <Icon
-        name="trash"
-        title={t("apiKey.delete")}
-        color="inherit"
-        onClick={() => setShowModal(true)}
-        onEnter={() => setShowModal(true)}
-        tabIndex={0}
-      />
+      <Button color="text" icon="trash" action={() => setShowModal(true)} title={t("apiKey.delete")} className="px-2" />
     );
   }
 
   return (
     <>
       <tr>
-        <td>{apiKey.displayName}</td>
-        <td>{apiKey.permissionRole}</td>
-        <td className="is-hidden-mobile">
+        <td className="is-vertical-align-middle">{apiKey.displayName}</td>
+        <td className="is-vertical-align-middle">{apiKey.permissionRole}</td>
+        <td className="is-vertical-align-middle is-hidden-mobile">
           <DateFromNow date={apiKey.created} />
         </td>
-        <td className="is-darker has-text-centered">{deleteButton}</td>
+        <td className="is-vertical-align-middle has-text-centered">{deleteButton}</td>
       </tr>
       {showModal ? (
         <ConfirmAlert
@@ -75,7 +68,7 @@ export const ApiKeyEntry: FC<Props> = ({ apiKey, onDelete }) => {
             },
             {
               label: t("apiKey.deleteConfirmAlert.cancel"),
-              onClick: () => null,
+              onClick: () => setShowModal(false),
               autofocus: true,
             },
           ]}

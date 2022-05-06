@@ -21,31 +21,40 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
 import classNames from "classnames";
-import Tooltip from "./Tooltip";
-import HelpIcon from "./HelpIcon";
+import { Icon } from "@scm-manager/ui-components";
+import { extensionPoints } from "@scm-manager/ui-extensions";
+import { MenuItemContainer } from "./ContentActionMenu";
 
-type Props = {
-  message: string;
-  multiline?: boolean;
-  className?: string;
-  id?: string;
+const ActionMenuItem: FC<
+  extensionPoints.ActionMenuProps & {
+    active: boolean;
+    onClick: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+    extensionProps: extensionPoints.ContentActionExtensionProps;
+  }
+> = ({ action, active, label, icon, props, extensionProps, ...rest }) => {
+  const [t] = useTranslation("plugins");
+
+  return (
+    <MenuItemContainer
+      className={classNames("is-clickable", "is-flex", "is-align-items-centered", {
+        "has-background-info has-text-white": active,
+      })}
+      title={t(label)}
+      {...props}
+      {...rest}
+      onClick={(event) => {
+        rest.onClick(event);
+        action(extensionProps);
+      }}
+    >
+      <Icon name={icon} color="inherit" className="pr-5" />
+      <span>{t(label)}</span>
+    </MenuItemContainer>
+  );
 };
 
-const Help: FC<Props> = ({ message, multiline, className, id }) => (
-  <Tooltip
-    className={classNames("is-inline-block", "pl-1", className)}
-    message={message}
-    id={id}
-    multiline={multiline}
-  >
-    <HelpIcon />
-  </Tooltip>
-);
-
-Help.defaultProps = {
-  multiline: true
-};
-
-export default Help;
+export default ActionMenuItem;

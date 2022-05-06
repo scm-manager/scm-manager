@@ -21,31 +21,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
 import classNames from "classnames";
-import Tooltip from "./Tooltip";
-import HelpIcon from "./HelpIcon";
+import { Icon } from "@scm-manager/ui-components";
+import styled from "styled-components";
+import { Link } from "react-router-dom";
+import { extensionPoints } from "@scm-manager/ui-extensions";
 
-type Props = {
-  message: string;
-  multiline?: boolean;
-  className?: string;
-  id?: string;
+const MenuItemLinkContainer = styled(Link)<{ active: boolean }>`
+  border-radius: 5px;
+  padding: 0.5rem;
+  color: ${(props) => (props.active ? "var(--scm-white-color)" : "inherit")};
+  :hover {
+    color: var(--scm-white-color);
+  }
+`;
+
+const LinkMenuItem: FC<
+  extensionPoints.LinkMenuProps & { active: boolean; extensionProps: extensionPoints.ContentActionExtensionProps }
+> = ({ link, active, label, icon, props, extensionProps, ...rest }) => {
+  const [t] = useTranslation("plugins");
+
+  return (
+    <MenuItemLinkContainer
+      className={classNames("is-clickable", "is-flex", "is-align-items-centered", {
+        "has-background-info": active,
+      })}
+      to={link(extensionProps)}
+      title={t(label)}
+      active={active}
+      {...props}
+      {...rest}
+    >
+      <Icon name={icon} color="inherit" className="pr-5" />
+      <span>{t(label)}</span>
+    </MenuItemLinkContainer>
+  );
 };
 
-const Help: FC<Props> = ({ message, multiline, className, id }) => (
-  <Tooltip
-    className={classNames("is-inline-block", "pl-1", className)}
-    message={message}
-    id={id}
-    multiline={multiline}
-  >
-    <HelpIcon />
-  </Tooltip>
-);
-
-Help.defaultProps = {
-  multiline: true
-};
-
-export default Help;
+export default LinkMenuItem;

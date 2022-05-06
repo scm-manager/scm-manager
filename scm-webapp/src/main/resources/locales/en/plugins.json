@@ -406,6 +406,10 @@
     "52SqQBdpO1": {
       "displayName": "Params missing",
       "description": "The parameter params is missing."
+    },
+    "8OT4gBVvp1": {
+      "displayName": "Repository type invalid",
+      "description": "The repository type is not supported."
     }
   },
   "healthChecksFailures": {
