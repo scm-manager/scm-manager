@@ -32,7 +32,7 @@ import {
   Level,
   Modal,
   PasswordConfirmation,
-  SubmitButton
+  SubmitButton,
 } from "@scm-manager/ui-components";
 
 type Props = {
@@ -47,12 +47,12 @@ const UserConverter: FC<Props> = ({ user }) => {
   const {
     isLoading: isConvertingToInternal,
     error: convertingToInternalError,
-    convertToInternal
+    convertToInternal,
   } = useConvertToInternal();
   const {
     isLoading: isConvertingToExternal,
     error: convertingToExternalError,
-    convertToExternal
+    convertToExternal,
   } = useConvertToExternal();
   const error = convertingToExternalError || convertingToInternalError || undefined;
   const isLoading = isConvertingToExternal || isConvertingToInternal;
@@ -114,7 +114,7 @@ const UserConverter: FC<Props> = ({ user }) => {
         <SubmitButton
           action={() => password && passwordValid && convertToInternal(user, password)}
           loading={isLoading}
-          disabled={!passwordValid || isLoading}
+          disabled={!password || !passwordValid || isLoading}
           scrollToTop={false}
           label={t("userForm.modal.convertToInternal")}
         />
