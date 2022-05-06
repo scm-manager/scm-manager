@@ -89,7 +89,13 @@
     "download": "Herunterladen",
     "delete": "Löschen",
     "addSubtitle": "Neuen Schlüssel hinzufügen",
-    "addKey": "Schlüssel hinzufügen"
+    "addKey": "Schlüssel hinzufügen",
+    "deleteConfirmAlert": {
+      "title": "Öffentlicher Schlüssel",
+      "message": "Soll der öffentliche Schlüssel wirklich gelöscht werden?",
+      "submit": "Ja",
+      "cancel": "Nein"
+    }
   },
   "apiKey": {
     "subtitle": "API Schlüssel",
@@ -114,6 +120,12 @@
       "alt": "Api Key",
       "clipboard": "In die Zwischenablage kopieren",
       "close": "Schließen"
+    },
+    "deleteConfirmAlert": {
+      "title": "API Schlüssel",
+      "message": "Soll der API Schlüssel wirklich gelöscht werden?",
+      "submit": "Ja",
+      "cancel": "Nein"
     }
   }
 }

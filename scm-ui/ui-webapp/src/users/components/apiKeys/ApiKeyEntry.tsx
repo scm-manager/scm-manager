@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 
-import React, { FC } from "react";
-import { DateFromNow, Icon } from "@scm-manager/ui-components";
+import React, { FC, useState } from "react";
+import { ConfirmAlert, DateFromNow, Icon } from "@scm-manager/ui-components";
 import { ApiKey } from "@scm-manager/ui-types";
 import { useTranslation } from "react-i18next";
 import { DeleteFunction } from "@scm-manager/ui-api";
@@ -35,9 +35,19 @@ type Props = {
 
 export const ApiKeyEntry: FC<Props> = ({ apiKey, onDelete }) => {
   const [t] = useTranslation("users");
+  const [showModal, setShowModal] = useState(false);
   let deleteButton;
   if (apiKey?._links?.delete) {
-    deleteButton = <Icon name="trash" title={t("apiKey.delete")} color="inherit" onClick={() => onDelete(apiKey)} />;
+    deleteButton = (
+      <Icon
+        name="trash"
+        title={t("apiKey.delete")}
+        color="inherit"
+        onClick={() => setShowModal(true)}
+        onEnter={() => setShowModal(true)}
+        tabIndex={0}
+      />
+    );
   }
 
   return (
@@ -50,6 +60,28 @@ export const ApiKeyEntry: FC<Props> = ({ apiKey, onDelete }) => {
         </td>
         <td className="is-darker has-text-centered">{deleteButton}</td>
       </tr>
+      {showModal ? (
+        <ConfirmAlert
+          title={t("apiKey.deleteConfirmAlert.title")}
+          message={t("apiKey.deleteConfirmAlert.message")}
+          buttons={[
+            {
+              className: "is-outlined",
+              label: t("apiKey.deleteConfirmAlert.submit"),
+              onClick: () => {
+                onDelete(apiKey);
+                setShowModal(false);
+              },
+            },
+            {
+              label: t("apiKey.deleteConfirmAlert.cancel"),
+              onClick: () => null,
+              autofocus: true,
+            },
+          ]}
+          close={() => setShowModal(false)}
+        />
+      ) : null}
     </>
   );
 };

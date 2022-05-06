@@ -89,7 +89,13 @@
     "download": "Download",
     "delete": "Delete",
     "addSubtitle": "Add New Key",
-    "addKey": "Add Key"
+    "addKey": "Add Key",
+    "deleteConfirmAlert": {
+      "title": "Public Key",
+      "message": "Do you really want to delete this Public Key?",
+      "submit": "Yes",
+      "cancel": "No"
+    }
   },
   "apiKey": {
     "subtitle": "API Keys",
@@ -114,6 +120,12 @@
       "alt": "Api Key",
       "clipboard": "Copy to clipboard",
       "close": "Close"
+    },
+    "deleteConfirmAlert": {
+      "title": "API Key",
+      "message": "Do you really want to delete this API Key?",
+      "submit": "Yes",
+      "cancel": "No"
     }
   }
 }

@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 
-import React, { FC } from "react";
-import { DateFromNow, Icon } from "@scm-manager/ui-components";
+import React, { FC, useState } from "react";
+import { ConfirmAlert, DateFromNow, Icon } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 import { Link, PublicKey } from "@scm-manager/ui-types";
 import { DeleteFunction } from "@scm-manager/ui-api";
@@ -35,11 +35,19 @@ type Props = {
 
 export const PublicKeyEntry: FC<Props> = ({ publicKey, onDelete }) => {
   const [t] = useTranslation("users");
+  const [showModal, setShowModal] = useState(false);
 
   let deleteButton;
   if (publicKey?._links?.delete) {
     deleteButton = (
-      <Icon name="trash" title={t("publicKey.delete")} color="inherit" onClick={() => onDelete(publicKey)} />
+      <Icon
+        name="trash"
+        title={t("publicKey.delete")}
+        color="inherit"
+        onClick={() => setShowModal(true)}
+        onEnter={() => setShowModal(true)}
+        tabIndex={0}
+      />
     );
   }
 
@@ -61,6 +69,28 @@ export const PublicKeyEntry: FC<Props> = ({ publicKey, onDelete }) => {
         </td>
         <td className="is-darker has-text-centered">{deleteButton}</td>
       </tr>
+      {showModal ? (
+        <ConfirmAlert
+          title={t("publicKey.deleteConfirmAlert.title")}
+          message={t("publicKey.deleteConfirmAlert.message")}
+          buttons={[
+            {
+              className: "is-outlined",
+              label: t("publicKey.deleteConfirmAlert.submit"),
+              onClick: () => {
+                onDelete(publicKey);
+                setShowModal(false);
+              },
+            },
+            {
+              label: t("publicKey.deleteConfirmAlert.cancel"),
+              onClick: () => null,
+              autofocus: true,
+            },
+          ]}
+          close={() => setShowModal(false)}
+        />
+      ) : null}
     </>
   );
 };
