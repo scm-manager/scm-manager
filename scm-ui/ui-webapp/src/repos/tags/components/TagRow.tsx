@@ -26,7 +26,7 @@ import { Link as RouterLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import { Tag, Link } from "@scm-manager/ui-types";
-import { DateFromNow, Icon } from "@scm-manager/ui-components";
+import { Button, DateFromNow } from "@scm-manager/ui-components";
 
 type Props = {
   tag: Tag;
@@ -41,21 +41,14 @@ const TagRow: FC<Props> = ({ tag, baseUrl, onDelete }) => {
   let deleteButton;
   if ((tag?._links?.delete as Link)?.href) {
     deleteButton = (
-      <span
-        className="icon is-small is-clickable"
-        onClick={() => onDelete(tag)}
-        onKeyDown={e => e.key === "Enter" && onDelete(tag)}
-        tabIndex={0}
-      >
-        <Icon name="trash" className="fas" title={t("tag.delete.button")} />
-      </span>
+      <Button color="text" icon="trash" action={() => onDelete(tag)} title={t("tag.delete.button")} className="px-2" />
     );
   }
 
   const to = `${baseUrl}/${encodeURIComponent(tag.name)}/info`;
   return (
     <tr>
-      <td>
+      <td className="is-vertical-align-middle">
         <RouterLink to={to} title={tag.name}>
           {tag.name}
           <span className={classNames("has-text-secondary", "is-ellipsis-overflow", "ml-2", "is-size-7")}>
@@ -63,7 +56,7 @@ const TagRow: FC<Props> = ({ tag, baseUrl, onDelete }) => {
           </span>
         </RouterLink>
       </td>
-      <td className="is-darker has-text-centered">{deleteButton}</td>
+      <td className="is-vertical-align-middle has-text-centered">{deleteButton}</td>
     </tr>
   );
 };

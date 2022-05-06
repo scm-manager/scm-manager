@@ -23,7 +23,7 @@
  */
 
 import React, { FC } from "react";
-import { DateFromNow, Icon } from "@scm-manager/ui-components";
+import { Button, DateFromNow } from "@scm-manager/ui-components";
 import { ApiKey } from "@scm-manager/ui-types";
 import { useTranslation } from "react-i18next";
 import { DeleteFunction } from "@scm-manager/ui-api";
@@ -37,18 +37,20 @@ export const ApiKeyEntry: FC<Props> = ({ apiKey, onDelete }) => {
   const [t] = useTranslation("users");
   let deleteButton;
   if (apiKey?._links?.delete) {
-    deleteButton = <Icon name="trash" title={t("apiKey.delete")} color="inherit" onClick={() => onDelete(apiKey)} />;
+    deleteButton = (
+      <Button color="text" icon="trash" action={() => onDelete(apiKey)} title={t("apiKey.delete")} className="px-2" />
+    );
   }
 
   return (
     <>
       <tr>
-        <td>{apiKey.displayName}</td>
-        <td>{apiKey.permissionRole}</td>
-        <td className="is-hidden-mobile">
+        <td className="is-vertical-align-middle">{apiKey.displayName}</td>
+        <td className="is-vertical-align-middle">{apiKey.permissionRole}</td>
+        <td className="is-vertical-align-middle is-hidden-mobile">
           <DateFromNow date={apiKey.created} />
         </td>
-        <td className="is-darker has-text-centered">{deleteButton}</td>
+        <td className="is-vertical-align-middle has-text-centered">{deleteButton}</td>
       </tr>
     </>
   );

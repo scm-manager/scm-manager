@@ -118,7 +118,7 @@ const SinglePermission: FC<Props> = ({
       <VCenteredTd>
         <Button label={t("permission.advanced-button.label")} action={() => setShowAdvancedDialog(true)} />
       </VCenteredTd>
-      <VCenteredTd className="is-darker has-text-centered">
+      <VCenteredTd className="has-text-centered">
         {permission._links.delete ? (
           <DeletePermissionButton permission={permission} namespaceOrRepository={namespaceOrRepository} />
         ) : null}

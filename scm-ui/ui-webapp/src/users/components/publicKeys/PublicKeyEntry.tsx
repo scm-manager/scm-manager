@@ -23,7 +23,7 @@
  */
 
 import React, { FC } from "react";
-import { DateFromNow, Icon } from "@scm-manager/ui-components";
+import { Button, DateFromNow } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 import { Link, PublicKey } from "@scm-manager/ui-types";
 import { DeleteFunction } from "@scm-manager/ui-api";
@@ -39,18 +39,24 @@ export const PublicKeyEntry: FC<Props> = ({ publicKey, onDelete }) => {
   let deleteButton;
   if (publicKey?._links?.delete) {
     deleteButton = (
-      <Icon name="trash" title={t("publicKey.delete")} color="inherit" onClick={() => onDelete(publicKey)} />
+      <Button
+        color="text"
+        icon="trash"
+        action={() => onDelete(publicKey)}
+        title={t("publicKey.delete")}
+        className="px-2"
+      />
     );
   }
 
   return (
     <>
       <tr>
-        <td>{publicKey.displayName}</td>
-        <td className="is-hidden-mobile">
+        <td className="is-vertical-align-middle">{publicKey.displayName}</td>
+        <td className="is-vertical-align-middle is-hidden-mobile">
           <DateFromNow date={publicKey.created} />
         </td>
-        <td className="is-hidden-mobile">
+        <td className="is-vertical-align-middle is-hidden-mobile">
           {publicKey._links?.raw ? (
             <a title={t("publicKey.download")} href={(publicKey._links.raw as Link).href}>
               {publicKey.id}
@@ -59,7 +65,7 @@ export const PublicKeyEntry: FC<Props> = ({ publicKey, onDelete }) => {
             publicKey.id
           )}
         </td>
-        <td className="is-darker has-text-centered">{deleteButton}</td>
+        <td className="is-vertical-align-middle has-text-centered">{deleteButton}</td>
       </tr>
     </>
   );
