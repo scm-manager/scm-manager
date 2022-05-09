@@ -32,9 +32,7 @@ type Props = WithTranslation & {
   disabled: boolean;
 };
 
-type State = {};
-
-class ProxyExcludesTable extends React.Component<Props, State> {
+class ProxyExcludesTable extends React.Component<Props> {
   render() {
     const { proxyExcludes, disabled, t } = this.props;
     return (

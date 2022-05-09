@@ -23,9 +23,6 @@
  */
 
 import React, { FC, useEffect, useState } from "react";
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-// @ts-ignore
-import { createElement } from "react-syntax-highlighter";
 import Icon from "./Icon";
 import Tooltip from "./Tooltip";
 import styled from "styled-components";
@@ -69,21 +66,18 @@ const RowContainer = styled.div`
 
 type CreateLinePermaLinkFn = (lineNumber: number) => string;
 
-type Props = {
-  rows: React.ReactNode[];
-  stylesheet: any;
-  useInlineStyles: boolean;
+type ExternalProps = {
   createLinePermaLink: CreateLinePermaLinkFn;
   showLineNumbers: boolean;
 };
 
-const SyntaxHighlighterRenderer: FC<Props> = ({
-  rows,
-  stylesheet,
-  useInlineStyles,
-  createLinePermaLink,
-  showLineNumbers = true,
-}) => {
+type BaseProps = {
+  children: React.ReactChild[];
+};
+
+type Props = ExternalProps & BaseProps;
+
+const SyntaxHighlighterRenderer: FC<Props> = ({ children: rows, createLinePermaLink, showLineNumbers = true }) => {
   const location = useLocation();
   const history = useHistory();
   const [focusedLine, setLineToFocus] = useState<number | undefined>(undefined);
@@ -106,14 +100,8 @@ const SyntaxHighlighterRenderer: FC<Props> = ({
 
   return (
     <>
-      {rows.map((node: React.ReactNode, i: number) => {
+      {rows.map((line: React.ReactNode, i: number) => {
         const lineNumber = i + 1;
-        const line = createElement({
-          node,
-          stylesheet,
-          useInlineStyles,
-          key: `code-segment${i}`,
-        });
         return (
           <RowContainer
             id={`line-${lineNumber}`}
@@ -150,7 +138,7 @@ const SyntaxHighlighterRenderer: FC<Props> = ({
 };
 
 //
-export const create = (createLinePermaLink: CreateLinePermaLinkFn, showLineNumbers = false): FC<Props> => {
+export const create = (createLinePermaLink: CreateLinePermaLinkFn, showLineNumbers = false): FC<BaseProps> => {
   return (props) => (
     <SyntaxHighlighterRenderer {...props} createLinePermaLink={createLinePermaLink} showLineNumbers={showLineNumbers} />
   );

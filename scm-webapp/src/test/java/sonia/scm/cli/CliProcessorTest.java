@@ -24,6 +24,7 @@
 
 package sonia.scm.cli;
 
+import com.google.common.collect.ImmutableList;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.junit.jupiter.api.BeforeEach;
@@ -73,7 +74,7 @@ class CliProcessorTest {
 
     @Test
     void shouldExecutePingCommand() {
-      when(registry.createCommandTree()).thenReturn(Collections.singleton(new RegisteredCommandNode("ping", PingCommand.class)));
+      when(registry.createCommandTree()).thenReturn(ImmutableList.of(new RegisteredCommandNode("ping", PingCommand.class)));
       Injector injector = Guice.createInjector();
       CliProcessor cliProcessor = new CliProcessor(registry, injector, exceptionHandlerFactory);
 
@@ -84,7 +85,7 @@ class CliProcessorTest {
 
     @Test
     void shouldExecutePingCommandWithExitCode0() {
-      when(registry.createCommandTree()).thenReturn(Collections.singleton(new RegisteredCommandNode("ping", PingCommand.class)));
+      when(registry.createCommandTree()).thenReturn(ImmutableList.of(new RegisteredCommandNode("ping", PingCommand.class)));
       Injector injector = Guice.createInjector();
       CliProcessor cliProcessor = new CliProcessor(registry, injector, exceptionHandlerFactory);
 
@@ -164,7 +165,7 @@ class CliProcessorTest {
     two.getChildren().add(three);
     one.getChildren().add(two);
 
-    when(registry.createCommandTree()).thenReturn(Collections.singleton(one));
+    when(registry.createCommandTree()).thenReturn(ImmutableList.of(one));
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     when(context.getStdout()).thenReturn(new PrintWriter(baos));
 

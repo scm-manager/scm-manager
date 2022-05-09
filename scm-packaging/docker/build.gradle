@@ -23,13 +23,12 @@
  */
 
 plugins {
-  id 'com.bmuschko.docker-remote-api' version '6.6.1'
   id 'org.scm-manager.packaging'
   id 'org.scm-manager.license'
 }
 
 import org.gradle.util.VersionNumber
-import com.bmuschko.gradle.docker.tasks.image.*
+import groovy.json.JsonSlurper
 
 configurations {
   server
@@ -70,45 +69,76 @@ task context(type: Copy) {
   }
 }
 
-task dockerImage(type: DockerBuildImage) {
-  inputDir = file('build/docker')
-  images = images()
+task setupBuilder() {
+  doLast {
+    def inspect = exec {
+      commandLine = ["docker", "buildx", "inspect", "scm-builder"]
+      ignoreExitValue = true
+    }
+    if (inspect.exitValue != 0) {
+      exec {
+        commandLine = ["docker", "run", "--privileged", "--rm", "tonistiigi/binfmt", "--install", "arm,arm64"]
+      }
+      exec {
+        commandLine = ["docker", "buildx", "create", "--name", "scm-builder", "--driver", "docker-container", "--platform", "linux/arm/v7,linux/arm64/v8,linux/amd64"]
+      }
+      exec {
+        commandLine = ["docker", "buildx", "inspect", "scm-builder"]
+      }
+    }
+  }
+}
+
+task build(type: Exec) {
+  commandLine = ["docker", "buildx", "bake", "--builder", "scm-builder", isSnapshot ? "dev": "prod"]
+  environment "VERSION", dockerTag
+  environment "COMMIT_SHA", revision
+  environment "IMAGE", dockerRepository
+
   doLast {
     File file = new File(project.buildDir, 'docker.tag')
     file.text = dockerTag
   }
-  dependsOn 'context'
+  dependsOn 'context', 'setupBuilder'
 }
 
-def images() {
-  if (isSnapshot) {
-    return [
-      "${dockerRepository}:${dockerTag}"
-    ]
-  } else {
-    // What about patch releases?
-    // It is a good idea to push always latest
-    return [
-      "${dockerRepository}:${dockerTag}",
-      "${dockerRepository}:latest"
-    ]
-  }
+task pushImages(type: Exec) {
+  commandLine = ["docker", "buildx", "bake", "--builder", "scm-builder",  isSnapshot ? "dev": "prod", "--push"]
+  environment "VERSION", dockerTag
+  environment "COMMIT_SHA", revision
+  environment "IMAGE", dockerRepository
+
+  dependsOn 'build'
 }
 
-task publish(type: DockerPushImage) {
-  images = images()
-  if (project.hasProperty("dockerUsername") && project.hasProperty("dockerPassword")) {
-    registryCredentials {
-      username = project.property("dockerUsername")
-      password = project.property("dockerPassword")
+task publish() {
+  doLast {
+    if (!isSnapshot) {
+      // get digest of debian arm v7 image
+      def stdout = new ByteArrayOutputStream()
+      exec {
+        commandLine = ["docker", "buildx", "imagetools", "inspect", "--raw", "${dockerRepository}:${dockerTag}-debian"]
+        standardOutput = stdout
+      }
+      def inspect = new JsonSlurper().parseText(stdout.toString())
+      def manifest = inspect.manifests.find { m -> m.platform.architecture == "arm" }
+      
+      // append arm image to manifest with version and without os suffix
+      exec {
+        commandLine = ["docker", "buildx", "imagetools", "create", "--append", "-t", "${dockerRepository}:${dockerTag}", "${dockerRepository}:${dockerTag}-debian@${manifest.digest}"]
+      }
+      // append arm image to latest manifest
+      exec {
+        commandLine = ["docker", "buildx", "imagetools", "create", "--append", "-t", "${dockerRepository}:latest", "${dockerRepository}:${dockerTag}-debian@${manifest.digest}"]
+      }
     }
   }
-  dependsOn dockerImage
+  dependsOn 'pushImages'
 }
 
 task distribution(type: PackageYaml)  {
   type = 'docker'
-  dependsOn dockerImage
+  dependsOn build
 }
 
 artifacts {

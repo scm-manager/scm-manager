@@ -25,6 +25,7 @@
 package sonia.scm.cli;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import lombok.extern.slf4j.Slf4j;
 import picocli.CommandLine;
 import sonia.scm.ExceptionWithContext;
 import sonia.scm.TransactionId;
@@ -39,6 +40,7 @@ import java.util.ResourceBundle;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
+@Slf4j
 public class CliExecutionExceptionHandler implements CommandLine.IExecutionExceptionHandler {
 
   private final I18nCollector i18nCollector;
@@ -51,6 +53,7 @@ public class CliExecutionExceptionHandler implements CommandLine.IExecutionExcep
 
   @Override
   public int handleExecutionException(Exception ex, CommandLine commandLine, CommandLine.ParseResult parseResult) {
+    log.debug("got exception in cli execution", ex);
     if (ex instanceof CliExitException) {
       return ((CliExitException) ex).getExitCode();
     }

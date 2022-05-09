@@ -48,26 +48,26 @@ const App: FC = () => {
 
   let content;
 
-  // authenticated means authorized, we stick on authenticated for compatibility reasons
-  const authenticated = isAuthenticated || isAnonymous;
+  // authenticatedOrAnonymous means authorized, we stick on authenticatedOrAnonymous for compatibility reasons
+  const authenticatedOrAnonymous = isAuthenticated || isAnonymous;
 
   if (index?.initialization) {
     const Extension = binder.getExtension(`initialization.step.${index.initialization}`);
     content = <Extension data={index?._embedded ? index._embedded[index.initialization] : undefined} />;
-  } else if (!authenticated && !isLoading) {
+  } else if (!authenticatedOrAnonymous && !isLoading) {
     content = <Login />;
   } else if (isLoading) {
     content = <Loading />;
   } else if (error) {
     content = <ErrorPage title={t("app.error.title")} subtitle={t("app.error.subtitle")} error={error} />;
   } else if (me) {
-    content = <Main authenticated={authenticated} me={me} links={index._links} />;
+    content = <Main authenticated={authenticatedOrAnonymous} me={me} links={index._links} />;
   }
 
   return (
     <AppWrapper className="App">
-      {authenticated ? <Feedback index={index} /> : null}
-      <Header authenticated={authenticated} links={index._links}>
+      {isAuthenticated ? <Feedback index={index} /> : null}
+      <Header authenticated={authenticatedOrAnonymous} links={index._links}>
         <NavigationBar links={index._links} />
       </Header>
       <div className="is-flex-grow-1">{content}</div>

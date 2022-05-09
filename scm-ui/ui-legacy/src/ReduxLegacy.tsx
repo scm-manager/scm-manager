@@ -45,6 +45,7 @@ const mapDispatchToProps = (dispatch: Dispatch<ActionTypes>) => {
   };
 };
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 const connector = connect<{}, BaseContext>(undefined, mapDispatchToProps);
 
 export default connector(ReduxLegacy);

@@ -1,0 +1,2 @@
+- type: fixed
+  description: Validate repository types on creation ([#2019](https://github.com/scm-manager/scm-manager/pull/2019))

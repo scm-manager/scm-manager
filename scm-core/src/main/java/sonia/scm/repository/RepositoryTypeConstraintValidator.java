@@ -61,7 +61,7 @@ public class RepositoryTypeConstraintValidator implements ConstraintValidator<Re
 
   private boolean isSupportedType(String type) {
     return repositoryManager.getConfiguredTypes()
-      .stream().anyMatch(t -> t.getName().equalsIgnoreCase(type));
+      .stream().anyMatch(t -> t.getName().equals(type));
   }
 
   private String createMessage(ConstraintValidatorContext context) {

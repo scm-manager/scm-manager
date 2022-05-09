@@ -136,6 +136,12 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
     assertRepositoriesEquals(dbRepo, heartOfGold);
   }
 
+  @Test
+  public void shouldThrowInvalidTypeExceptionOnCreate() {
+    Repository testRepo = RepositoryTestData.create42Puzzle("test_type");
+    assertThrows(InvalidRepositoryTypeException.class, () -> manager.create(testRepo));
+  }
+
   @SubjectAware(
     username = "unpriv"
   )

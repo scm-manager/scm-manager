@@ -23,19 +23,13 @@
  */
 
 import React, { FC, useReducer } from "react";
-import { Repository, AnnotatedSource, AnnotatedLine } from "@scm-manager/ui-types";
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-// @ts-ignore
-import { PrismAsyncLight as ReactSyntaxHighlighter, createElement } from "react-syntax-highlighter";
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-// @ts-ignore
-// eslint-disable-next-line no-restricted-imports
-import highlightingTheme from "../../syntax-highlighting";
+import { AnnotatedLine, AnnotatedSource, Repository } from "@scm-manager/ui-types";
 import { DateInput } from "../../useDateFormatter";
 import AnnotatePopover from "./AnnotatePopover";
 import AnnotateLine from "./AnnotateLine";
 import { Action } from "./actions";
 import { determineLanguage } from "../../languages";
+import { SyntaxHighlighter } from "@scm-manager/ui-syntaxhighlighting";
 
 type Props = {
   source: AnnotatedSource;
@@ -100,29 +94,32 @@ const reducer = (state: State, action: Action): State => {
 const Annotate: FC<Props> = ({ source, repository, baseDate }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const defaultRenderer = ({ rows, stylesheet, useInlineStyles }: any) => {
+  const defaultRenderer: FC = ({ children }: any) => {
     let lastRevision = "";
-    return rows.map((node: React.ReactNode, i: number) => {
-      const line = createElement({
-        node,
-        stylesheet,
-        useInlineStyles,
-        key: `code-segment${i}`,
-      });
-
-      if (i + 1 < rows.length) {
-        const annotation = source.lines[i];
-        const newAnnotation = annotation.revision !== lastRevision;
-        lastRevision = annotation.revision;
-        return (
-          <AnnotateLine dispatch={dispatch} annotation={annotation} showAnnotation={newAnnotation} nr={i + 1}>
-            {line}
-          </AnnotateLine>
-        );
-      }
-
-      return line;
-    });
+    const rows = React.Children.toArray(children);
+    return (
+      <>
+        {rows.map((line: React.ReactNode, i: number) => {
+          const annotation = source.lines[i];
+          if (annotation) {
+            const newAnnotation = annotation.revision !== lastRevision;
+            lastRevision = annotation.revision;
+            return (
+              <AnnotateLine
+                key={`line-${i}`}
+                dispatch={dispatch}
+                annotation={annotation}
+                showAnnotation={newAnnotation}
+                nr={i + 1}
+              >
+                {line}
+              </AnnotateLine>
+            );
+          }
+          return line;
+        })}
+      </>
+    );
   };
 
   let popover = null;
@@ -146,15 +143,7 @@ const Annotate: FC<Props> = ({ source, repository, baseDate }) => {
   return (
     <div className="panel-block">
       {popover}
-      <ReactSyntaxHighlighter
-        className="m-0 p-0"
-        showLineNumbers={false}
-        language={determineLanguage(source.language)}
-        style={highlightingTheme}
-        renderer={defaultRenderer}
-      >
-        {code}
-      </ReactSyntaxHighlighter>
+      <SyntaxHighlighter value={code} language={determineLanguage(source.language)} renderer={defaultRenderer} />
     </div>
   );
 };

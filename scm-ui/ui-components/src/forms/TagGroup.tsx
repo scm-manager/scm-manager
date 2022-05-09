@@ -37,17 +37,17 @@ export default class TagGroup extends React.Component<Props> {
     const { items, label, helpText } = this.props;
     let help = null;
     if (helpText) {
-      help = <Help className="is-relative" message={helpText} />;
+      help = <Help message={helpText} />;
     }
     return (
       <div className="field is-grouped is-grouped-multiline">
         {label && items ? (
           <div className="control">
-            <strong>
-              {label}
+            <label className="label">
+              <span>{label} </span>
               {help}
               {items.length > 0 ? ":" : ""}
-            </strong>
+            </label>
           </div>
         ) : (
           ""

@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-styles",
-  "version": "2.32.3-SNAPSHOT",
+  "version": "2.33.1-SNAPSHOT",
   "description": "Styles for SCM-Manager",
   "main": "src/scm.scss",
   "license": "MIT",
@@ -12,10 +12,10 @@
     "@fortawesome/fontawesome-free": "^5.11.2",
     "bulma": "^0.9.3",
     "bulma-popover": "^1.0.0",
-    "react-diff-view": "^2.4.1"
+    "react-diff-view": "^2.4.10"
   },
   "devDependencies": {
-    "@scm-manager/eslint-config": "^2.13.0",
+    "@scm-manager/eslint-config": "^2.15.1",
     "@scm-manager/prettier-config": "^2.11.1",
     "css-loader": "^6.5.0",
     "html-webpack-plugin": "^5.5.0",
@@ -27,5 +27,8 @@
     "webpack-cli": "^4.9.1",
     "webpack-dev-server": "^4.4.0"
   },
-  "prettier": "@scm-manager/prettier-config"
+  "prettier": "@scm-manager/prettier-config",
+  "eslintConfig": {
+    "extends": "@scm-manager/eslint-config"
+  }
 }

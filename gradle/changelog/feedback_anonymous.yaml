@@ -1,0 +1,2 @@
+- type: fixed
+  description: Do not show feedback form for anonymous users

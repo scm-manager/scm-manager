@@ -26,12 +26,14 @@ import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
 import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
-import { File, Repository } from "@scm-manager/ui-types";
+import { File, Link, Repository } from "@scm-manager/ui-types";
 import { DateFromNow, ErrorNotification, FileSize, Icon, OpenInFullscreenButton } from "@scm-manager/ui-components";
 import FileButtonAddons from "../components/content/FileButtonAddons";
 import SourcesView from "./SourcesView";
 import HistoryView from "./HistoryView";
 import AnnotateView from "./AnnotateView";
+import ContentActionMenu from "../components/content/overflowMenu/ContentActionMenu";
+import { useContentType } from "@scm-manager/ui-api";
 
 type Props = {
   file: File;
@@ -70,6 +72,7 @@ const Content: FC<Props> = ({ file, repository, revision, breadcrumb, error }) =
   const [collapsed, setCollapsed] = useState(true);
   const [selected, setSelected] = useState<SourceViewSelection>("source");
   const [errorFromExtension, setErrorFromExtension] = useState<Error>();
+  const { data: contentType } = useContentType((file._links.self as Link).href);
 
   const wrapContent = (content: ReactNode) => {
     return (
@@ -119,6 +122,14 @@ const Content: FC<Props> = ({ file, repository, revision, breadcrumb, error }) =
       />
     ) : null;
 
+    const extensionProps: extensionPoints.ContentActionExtensionProps = {
+      repository,
+      file,
+      revision: revision ? encodeURIComponent(revision) : "",
+      handleExtensionError: setErrorFromExtension,
+      contentType,
+    };
+
     return (
       <HeaderWrapper>
         <div className={classNames("level", "is-flex-wrap-wrap")}>
@@ -138,14 +149,10 @@ const Content: FC<Props> = ({ file, repository, revision, breadcrumb, error }) =
             />
             <ExtensionPoint<extensionPoints.ReposSourcesContentActionBar>
               name="repos.sources.content.actionbar"
-              props={{
-                repository,
-                file,
-                revision: revision ? encodeURIComponent(revision) : "",
-                handleExtensionError: setErrorFromExtension
-              }}
+              props={extensionProps}
               renderAll={true}
             />
+            <ContentActionMenu extensionProps={extensionProps} />
           </div>
         </div>
       </HeaderWrapper>
@@ -201,7 +208,7 @@ const Content: FC<Props> = ({ file, repository, revision, breadcrumb, error }) =
                   props={{
                     file,
                     repository,
-                    revision
+                    revision,
                   }}
                 />
               </tbody>

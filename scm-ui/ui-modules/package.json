@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-modules",
-  "version": "2.32.3-SNAPSHOT",
+  "version": "2.33.1-SNAPSHOT",
   "private": true,
   "main": "src/index.ts",
   "scripts": {
@@ -8,7 +8,8 @@
     "lint": "eslint src"
   },
   "devDependencies": {
-    "@scm-manager/babel-preset": "^2.12.0",
+    "@scm-manager/babel-preset": "^2.13.1",
+    "@scm-manager/eslint-config": "^2.15.1",
     "@scm-manager/jest-preset": "^2.13.0",
     "@scm-manager/prettier-config": "^2.10.1"
   },
@@ -21,6 +22,9 @@
     "preset": "@scm-manager/jest-preset"
   },
   "prettier": "@scm-manager/prettier-config",
+  "eslintConfig": {
+    "extends": "@scm-manager/eslint-config"
+  },
   "publishConfig": {
     "access": "public"
   }
