@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 
-import React, { FC } from "react";
-import { Button, DateFromNow } from "@scm-manager/ui-components";
+import { Button, ConfirmAlert, DateFromNow } from "@scm-manager/ui-components";
+import React, { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, PublicKey } from "@scm-manager/ui-types";
 import { DeleteFunction } from "@scm-manager/ui-api";
@@ -35,6 +35,7 @@ type Props = {
 
 export const PublicKeyEntry: FC<Props> = ({ publicKey, onDelete }) => {
   const [t] = useTranslation("users");
+  const [showModal, setShowModal] = useState(false);
 
   let deleteButton;
   if (publicKey?._links?.delete) {
@@ -42,7 +43,7 @@ export const PublicKeyEntry: FC<Props> = ({ publicKey, onDelete }) => {
       <Button
         color="text"
         icon="trash"
-        action={() => onDelete(publicKey)}
+        action={() => setShowModal(true)}
         title={t("publicKey.delete")}
         className="px-2"
       />
@@ -67,6 +68,28 @@ export const PublicKeyEntry: FC<Props> = ({ publicKey, onDelete }) => {
         </td>
         <td className="is-vertical-align-middle has-text-centered">{deleteButton}</td>
       </tr>
+      {showModal ? (
+        <ConfirmAlert
+          title={t("publicKey.deleteConfirmAlert.title")}
+          message={t("publicKey.deleteConfirmAlert.message")}
+          buttons={[
+            {
+              className: "is-outlined",
+              label: t("publicKey.deleteConfirmAlert.submit"),
+              onClick: () => {
+                onDelete(publicKey);
+                setShowModal(false);
+              },
+            },
+            {
+              label: t("publicKey.deleteConfirmAlert.cancel"),
+              onClick: () => setShowModal(false),
+              autofocus: true,
+            },
+          ]}
+          close={() => setShowModal(false)}
+        />
+      ) : null}
     </>
   );
 };
