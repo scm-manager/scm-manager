@@ -92,7 +92,7 @@
     "addKey": "Add Key",
     "deleteConfirmAlert": {
       "title": "Public Key",
-      "message": "Do you really want to delete this Public Key?",
+      "message": "Do you really want to delete this public key?",
       "submit": "Yes",
       "cancel": "No"
     }
@@ -123,7 +123,7 @@
     },
     "deleteConfirmAlert": {
       "title": "API Key",
-      "message": "Do you really want to delete this API Key?",
+      "message": "Do you really want to delete this API key?",
       "submit": "Yes",
       "cancel": "No"
     }
