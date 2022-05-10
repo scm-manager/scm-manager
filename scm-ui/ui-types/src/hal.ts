@@ -56,4 +56,3 @@ export type PagedCollection<T extends Embedded = Embedded> = HalRepresentationWi
  * @deprecated use HalRepresentation instead
  */
 export type Collection = HalRepresentation;
-

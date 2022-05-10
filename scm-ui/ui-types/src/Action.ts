@@ -24,7 +24,7 @@
 
 export type Action = {
   type: string;
-  payload?: any;
+  payload?: unknown;
   itemId?: string | number;
   resetPending?: boolean;
 };

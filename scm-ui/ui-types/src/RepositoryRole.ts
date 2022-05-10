@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import {HalRepresentation, PagedCollection} from "./hal";
+import { HalRepresentation, PagedCollection } from "./hal";
 
 export type RepositoryRoleBase = {
   name: string;
@@ -30,10 +30,11 @@ export type RepositoryRoleBase = {
   type?: string;
 };
 
-export type RepositoryRole = HalRepresentation & RepositoryRoleBase & {
-  creationDate?: string;
-  lastModified?: string;
-};
+export type RepositoryRole = HalRepresentation &
+  RepositoryRoleBase & {
+    creationDate?: string;
+    lastModified?: string;
+  };
 export type RepositoryRoleCreation = RepositoryRoleBase;
 
 type RepositoryRoleEmbedded = {

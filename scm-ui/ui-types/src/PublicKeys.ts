@@ -32,9 +32,10 @@ export type PublicKeyBase = {
   raw: string;
 };
 
-export type PublicKey = HalRepresentation & PublicKeyBase & {
-  id: string;
-  created?: string;
-};
+export type PublicKey = HalRepresentation &
+  PublicKeyBase & {
+    id: string;
+    created?: string;
+  };
 
 export type PublicKeyCreation = PublicKeyBase;
