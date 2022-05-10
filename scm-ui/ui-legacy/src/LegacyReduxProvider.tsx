@@ -69,16 +69,16 @@ const reducer: Reducer<State, ActionTypes> = (
         ...state,
         indexResources: {
           version: action.payload.version,
-          links: action.payload._links
-        }
+          links: action.payload._links,
+        },
       };
     }
     case ACTION_TYPE_ME: {
       return {
         ...state,
         auth: {
-          me: action.payload
-        }
+          me: action.payload,
+        },
       };
     }
     default: {
@@ -94,14 +94,14 @@ const store = createStore(reducer);
 export const fetchIndexResourcesSuccess = (index: IndexResources): IndexActionSuccess => {
   return {
     type: ACTION_TYPE_INDEX,
-    payload: index
+    payload: index,
   };
 };
 
 export const fetchMeSuccess = (me: Me): MeActionSuccess => {
   return {
     type: ACTION_TYPE_ME,
-    payload: me
+    payload: me,
   };
 };
 

@@ -41,7 +41,7 @@ const ReduxLegacy: FC<BaseContext> = ({ children, onIndexFetched, onMeFetched })
 const mapDispatchToProps = (dispatch: Dispatch<ActionTypes>) => {
   return {
     onIndexFetched: (index: IndexResources) => dispatch(fetchIndexResourcesSuccess(index)),
-    onMeFetched: (me: Me) => dispatch(fetchMeSuccess(me))
+    onMeFetched: (me: Me) => dispatch(fetchMeSuccess(me)),
   };
 };
 
