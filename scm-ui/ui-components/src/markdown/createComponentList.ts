@@ -32,10 +32,10 @@ export type CreateComponentListOptions = {
 };
 
 export const createComponentList = (
-  remarkRendererList: Record<string, unknown>,
+  remarkRendererList: any,
   { permalink }: CreateComponentListOptions
 ) => {
-  const components: Record<string, unknown> = {};
+  const components: any = {};
 
   if (remarkRendererList.code) {
     components.pre = createRemark2RehypeCodeRendererAdapter(remarkRendererList.code);

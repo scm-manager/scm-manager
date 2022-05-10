@@ -24,13 +24,14 @@
 import { AstPlugin } from "./PluginApi";
 import { Node } from "unist";
 import visit from "unist-util-visit";
+import unified from "unified";
 
 /**
  * Transforms the abstraction layer into an actual remark plugin to be used with unified.
  *
  * @see https://unifiedjs.com/learn/guide/create-a-plugin/
  */
-export default function createMdastPlugin(plugin: AstPlugin): unknown {
+export default function createMdastPlugin(plugin: AstPlugin): unified.Plugin {
   return function attach() {
     return function transform(tree: Node) {
       plugin({
