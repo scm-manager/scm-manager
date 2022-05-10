@@ -49,7 +49,7 @@ export const usePluginCenterAuthInfo = (): ApiResult<PluginCenterAuthenticationI
       }
       return apiClient
         .get(link)
-        .then(response => response.json())
+        .then((response) => response.json())
         .then((result: PluginCenterAuthenticationInfo) => {
           if (result._links?.login) {
             appendQueryParam(result._links.login as Link, "source", location.pathname);
@@ -61,7 +61,7 @@ export const usePluginCenterAuthInfo = (): ApiResult<PluginCenterAuthenticationI
         });
     },
     {
-      enabled: !!link
+      enabled: !!link,
     }
   );
 };
@@ -77,7 +77,7 @@ export const usePluginCenterLogout = (authenticationInfo: PluginCenterAuthentica
       return apiClient.delete(logout.href);
     },
     {
-      onSuccess: () => queryClient.invalidateQueries("pluginCenterAuth")
+      onSuccess: () => queryClient.invalidateQueries("pluginCenterAuth"),
     }
   );
 
@@ -86,6 +86,6 @@ export const usePluginCenterLogout = (authenticationInfo: PluginCenterAuthentica
       mutate();
     },
     isLoading,
-    error
+    error,
   };
 };

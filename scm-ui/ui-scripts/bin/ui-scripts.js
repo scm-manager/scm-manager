@@ -29,17 +29,17 @@ const path = require("path");
 const commandDir = path.join(__dirname, "../src/commands");
 const commands = fs
   .readdirSync(commandDir)
-  .map(script => {
+  .map((script) => {
     if (script.endsWith(".js")) {
       return script.replace(".js", "");
     }
     return undefined;
   })
-  .filter(cmd => !!cmd);
+  .filter((cmd) => !!cmd);
 
 const args = process.argv.slice(2);
 
-const commandIndex = args.findIndex(arg => {
+const commandIndex = args.findIndex((arg) => {
   return commands.includes(arg);
 });
 

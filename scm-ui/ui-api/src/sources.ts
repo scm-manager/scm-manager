@@ -41,7 +41,7 @@ export type UseSourcesOptions = {
 const UseSourcesDefaultOptions: UseSourcesOptions = {
   enabled: true,
   refetchPartialInterval: 3000,
-  collapse: true
+  collapse: true,
 };
 
 export const useSources = (repository: Repository, opts: UseSourcesOptions = UseSourcesDefaultOptions) => {

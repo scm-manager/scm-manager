@@ -29,6 +29,7 @@ import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.Links;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.ObjectFactory;
 import sonia.scm.repository.BranchDetails;
 import sonia.scm.repository.Repository;
@@ -43,6 +44,7 @@ public abstract class BranchDetailsMapper extends BaseMapper<BranchDetails, Bran
   @Inject
   private ResourceLinks resourceLinks;
 
+  @Mapping(target = "attributes", ignore = true) // We do not map HAL attributes
   abstract BranchDetailsDto map(@Context Repository repository, String branchName, BranchDetails result);
 
   @ObjectFactory

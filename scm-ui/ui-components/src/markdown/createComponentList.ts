@@ -31,10 +31,7 @@ export type CreateComponentListOptions = {
   permalink?: string;
 };
 
-export const createComponentList = (
-  remarkRendererList: any,
-  { permalink }: CreateComponentListOptions
-) => {
+export const createComponentList = (remarkRendererList: any, { permalink }: CreateComponentListOptions) => {
   const components: any = {};
 
   if (remarkRendererList.code) {

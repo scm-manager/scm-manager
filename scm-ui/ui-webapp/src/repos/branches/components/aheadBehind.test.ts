@@ -32,6 +32,7 @@ describe("ahead/behind percentage", () => {
 
   let lastPercentage = 5;
   for (let changesets = 1; changesets < 4000; changesets++) {
+    // eslint-disable-next-line no-loop-func
     it(`${changesets} should have percentage value less or equal to last value`, () => {
       const percentage = calculateBarLength(changesets);
       expect(percentage).toBeGreaterThanOrEqual(lastPercentage);

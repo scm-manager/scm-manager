@@ -35,5 +35,5 @@ const createSnapshotVersion = () => {
 };
 
 module.exports = {
-  createSnapshotVersion
+  createSnapshotVersion,
 };

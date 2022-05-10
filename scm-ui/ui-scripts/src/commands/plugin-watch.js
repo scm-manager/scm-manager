@@ -31,7 +31,7 @@ module.exports = () => {
   compiler.watch({}, (err, stats) => {
     console.log(
       stats.toString({
-        colors: true
+        colors: true,
       })
     );
   });

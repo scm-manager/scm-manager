@@ -32,7 +32,7 @@ export type BaseContext = {
 };
 
 export type LegacyContext = BaseContext & {
-  initialize: () => void;
+  initialize?: () => void;
 };
 
 const Context = createContext<LegacyContext | undefined>(undefined);
@@ -61,7 +61,7 @@ const createInitialContext = (queryClient: QueryClient, base: BaseContext): Lega
           ctx.onMeFetched(me);
         }
       }
-    }
+    },
   };
 
   return ctx;

@@ -40,7 +40,7 @@ describe("LegacyContext tests", () => {
 
   it("should return provided context", () => {
     const { result } = renderHook(() => useLegacyContext(), {
-      wrapper: createWrapper()
+      wrapper: createWrapper(),
     });
     expect(result.current).toBeDefined();
   });

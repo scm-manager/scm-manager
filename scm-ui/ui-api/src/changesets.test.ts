@@ -35,9 +35,9 @@ describe("Test changeset hooks", () => {
     type: "hg",
     _links: {
       changesets: {
-        href: "/r/c"
-      }
-    }
+        href: "/r/c",
+      },
+    },
   };
 
   const develop: Branch = {
@@ -46,9 +46,9 @@ describe("Test changeset hooks", () => {
     lastCommitter: { name: "trillian" },
     _links: {
       history: {
-        href: "/r/b/c"
-      }
-    }
+        href: "/r/b/c",
+      },
+    },
   };
 
   const changeset: Changeset = {
@@ -56,19 +56,19 @@ describe("Test changeset hooks", () => {
     description: "Awesome change",
     date: new Date(),
     author: {
-      name: "Arthur Dent"
+      name: "Arthur Dent",
     },
     _embedded: {},
-    _links: {}
+    _links: {},
   };
 
   const changesets: ChangesetCollection = {
     page: 1,
     pageTotal: 1,
     _embedded: {
-      changesets: [changeset]
+      changesets: [changeset],
     },
-    _links: {}
+    _links: {},
   };
 
   const expectChangesetCollection = (result?: ChangesetCollection) => {
@@ -86,7 +86,7 @@ describe("Test changeset hooks", () => {
       const queryClient = createInfiniteCachingClient();
 
       const { result, waitFor } = renderHook(() => useChangesets(repository), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
 
       await waitFor(() => {
@@ -99,14 +99,14 @@ describe("Test changeset hooks", () => {
     it("should return changesets for page", async () => {
       fetchMock.getOnce("/api/v2/r/c", changesets, {
         query: {
-          page: 42
-        }
+          page: 42,
+        },
       });
 
       const queryClient = createInfiniteCachingClient();
 
       const { result, waitFor } = renderHook(() => useChangesets(repository, { page: 42 }), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
 
       await waitFor(() => {
@@ -122,7 +122,7 @@ describe("Test changeset hooks", () => {
       const queryClient = createInfiniteCachingClient();
 
       const { result, waitFor } = renderHook(() => useChangesets(repository, { branch: develop }), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
 
       await waitFor(() => {
@@ -138,7 +138,7 @@ describe("Test changeset hooks", () => {
       const queryClient = createInfiniteCachingClient();
 
       const { result, waitFor } = renderHook(() => useChangesets(repository), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
 
       await waitFor(() => {
@@ -150,7 +150,7 @@ describe("Test changeset hooks", () => {
         "hitchhiker",
         "heart-of-gold",
         "changeset",
-        "42"
+        "42",
       ]);
 
       expect(changeset?.id).toBe("42");
@@ -164,7 +164,7 @@ describe("Test changeset hooks", () => {
       const queryClient = createInfiniteCachingClient();
 
       const { result, waitFor } = renderHook(() => useChangeset(repository, "42"), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
 
       await waitFor(() => {

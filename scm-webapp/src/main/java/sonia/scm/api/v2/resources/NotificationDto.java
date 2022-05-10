@@ -27,12 +27,14 @@ package sonia.scm.api.v2.resources;
 import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Links;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import sonia.scm.notifications.StoredNotification;
 import sonia.scm.notifications.Type;
 
 import java.time.Instant;
 
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class NotificationDto extends HalRepresentation {
 
   private Instant createdAt;

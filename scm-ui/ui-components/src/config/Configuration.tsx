@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { ComponentType, FC, FormEvent, useState } from "react";
+import React, { FC, FormEvent, useState } from "react";
 import { HalRepresentation } from "@scm-manager/ui-types";
 import { useConfigLink } from "@scm-manager/ui-api";
 import ConfigurationForm from "./ConfigurationForm";
@@ -34,7 +34,7 @@ type RenderProps = {
 
 type Props = {
   link: string;
-  render: (props: RenderProps) => ComponentType;
+  render: (props: RenderProps) => JSX.Element;
 };
 
 const Configuration: FC<Props> = ({ link, render }) => {

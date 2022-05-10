@@ -27,11 +27,11 @@ export const jestMock = jest.mock("react-i18next", () => ({
   withTranslation: () => (Component: any) => {
     Component.defaultProps = {
       ...Component.defaultProps,
-      t: (key: string) => key
+      t: (key: string) => key,
     };
     return Component;
   },
   useTranslation: (ns: string) => {
     return [(key: string) => key];
-  }
+  },
 }));

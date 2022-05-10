@@ -78,13 +78,13 @@ export const useIncomingChangesets = (
 
   return useQuery<ChangesetCollection, Error>(
     ["repository", repository.namespace, repository.name, "compare", source, target, "changesets", request?.page || 0],
-    () => apiClient.get(link).then(response => response.json()),
+    () => apiClient.get(link).then((response) => response.json()),
     {
-      onSuccess: changesetCollection => {
-        changesetCollection._embedded?.changesets.forEach(changeset => {
+      onSuccess: (changesetCollection) => {
+        changesetCollection._embedded?.changesets.forEach((changeset) => {
           queryClient.setQueryData(changesetQueryKey(repository, changeset.id), changeset);
         });
-      }
+      },
     }
   );
 };

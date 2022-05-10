@@ -37,7 +37,7 @@ describe("Test login hooks", () => {
     name: "tricia",
     displayName: "Tricia",
     groups: [],
-    _links: {}
+    _links: {},
   };
 
   describe("useMe tests", () => {
@@ -45,7 +45,7 @@ describe("Test login hooks", () => {
       name: "tricia",
       displayName: "Tricia",
       groups: [],
-      _links: {}
+      _links: {},
     });
 
     it("should return me", async () => {
@@ -65,10 +65,10 @@ describe("Test login hooks", () => {
 
       let me: Me;
       const context: LegacyContext = {
-        onMeFetched: fetchedMe => {
+        onMeFetched: (fetchedMe) => {
           me = fetchedMe;
         },
-        initialize: () => null
+        initialize: () => null,
       };
 
       const { result, waitFor } = renderHook(() => useMe(), { wrapper: createWrapper(context, queryClient) });
@@ -131,7 +131,7 @@ describe("Test login hooks", () => {
         name: "_anonymous",
         displayName: "Anonymous",
         groups: [],
-        _links: {}
+        _links: {},
       });
       const { result } = renderHook(() => useSubject(), { wrapper: createWrapper(undefined, queryClient) });
 
@@ -159,8 +159,8 @@ describe("Test login hooks", () => {
           cookie: true,
           grant_type: "password",
           username: "tricia",
-          password: "hitchhikersSecret!"
-        }
+          password: "hitchhikersSecret!",
+        },
       });
 
       // required because we invalidate the whole cache and react-query refetches the index
@@ -168,13 +168,13 @@ describe("Test login hooks", () => {
         version: "x.y.z",
         _links: {
           login: {
-            href: "/second/login"
-          }
-        }
+            href: "/second/login",
+          },
+        },
       });
 
       const { result, waitForNextUpdate } = renderHook(() => useLogin(), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
       const { login } = result.current;
       expect(login).toBeDefined();
@@ -195,7 +195,7 @@ describe("Test login hooks", () => {
       queryClient.setQueryData("me", tricia);
 
       const { result } = renderHook(() => useLogin(), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
 
       expect(result.current.login).toBeUndefined();
@@ -210,7 +210,7 @@ describe("Test login hooks", () => {
       fetchMock.deleteOnce("/api/v2/logout", {});
 
       const { result, waitForNextUpdate } = renderHook(() => useLogout(), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
       const { logout } = result.current;
       expect(logout).toBeDefined();
@@ -230,7 +230,7 @@ describe("Test login hooks", () => {
       setEmptyIndex(queryClient);
 
       const { result } = renderHook(() => useLogout(), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
 
       const { logout } = result.current;

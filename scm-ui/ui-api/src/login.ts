@@ -33,13 +33,13 @@ import { useCallback } from "react";
 export const useMe = (): ApiResult<Me> => {
   const legacy = useLegacyContext();
   const link = useIndexLink("me");
-  return useQuery<Me, Error>("me", () => apiClient.get(link!).then(response => response.json()), {
+  return useQuery<Me, Error>("me", () => apiClient.get(link!).then((response) => response.json()), {
     enabled: !!link,
-    onSuccess: me => {
+    onSuccess: (me) => {
       if (legacy.onMeFetched) {
         legacy.onMeFetched(me);
       }
-    }
+    },
   });
 };
 
@@ -61,7 +61,7 @@ export const useSubject = () => {
     isAnonymous,
     isLoading,
     error,
-    me
+    me,
   };
 };
 
@@ -76,9 +76,9 @@ export const useLogin = () => {
   const link = useIndexLink("login");
   const reset = useReset();
   const { mutate, isLoading, error } = useMutation<unknown, Error, Credentials>(
-    credentials => apiClient.post(link!, credentials),
+    (credentials) => apiClient.post(link!, credentials),
     {
-      onSuccess: reset
+      onSuccess: reset,
     }
   );
 
@@ -92,7 +92,7 @@ export const useLogin = () => {
   return {
     login: link ? login : undefined,
     isLoading,
-    error
+    error,
   };
 };
 
@@ -105,14 +105,14 @@ export const useLogout = () => {
   const reset = useReset();
 
   const { mutate, isLoading, error, data } = useMutation<LogoutResponse, Error, unknown>(
-    () => apiClient.delete(link!).then(r => (r.status === 200 ? r.json() : {})),
+    () => apiClient.delete(link!).then((r) => (r.status === 200 ? r.json() : {})),
     {
-      onSuccess: response => {
+      onSuccess: (response) => {
         if (response?.logoutRedirect) {
           window.location.assign(response.logoutRedirect);
         }
         return reset();
-      }
+      },
     }
   );
 
@@ -123,6 +123,6 @@ export const useLogout = () => {
   return {
     logout: link && !data ? logout : undefined,
     isLoading,
-    error
+    error,
   };
 };

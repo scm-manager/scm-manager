@@ -23,7 +23,7 @@
  */
 const lerna = require("../lerna");
 
-module.exports = args => {
+module.exports = (args) => {
   if (args.length < 1) {
     console.log("usage ui-scripts version <new-version>");
     process.exit(1);

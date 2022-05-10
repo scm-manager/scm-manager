@@ -24,7 +24,7 @@
 const lerna = require("../lerna");
 const versions = require("../versions");
 
-module.exports = args => {
+module.exports = (args) => {
   if (args.length < 1) {
     console.log("usage ui-scripts publish <version>");
     process.exit(1);

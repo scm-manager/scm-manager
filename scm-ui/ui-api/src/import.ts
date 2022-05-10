@@ -30,12 +30,12 @@ import { requiredLink } from "./links";
 
 export const useImportLog = (logId: string): ApiResult<string> => {
   const link = useRequiredIndexLink("importLog").replace("{logId}", logId);
-  return useQuery<string, Error>(["importLog", logId], () => apiClient.get(link).then(response => response.text()));
+  return useQuery<string, Error>(["importLog", logId], () => apiClient.get(link).then((response) => response.text()));
 };
 
 export const useImportRepositoryFromUrl = (repositoryType: RepositoryType) => {
   const url = requiredLink(repositoryType, "import", "url");
-  const { isLoading, error, data, mutate } = useMutation<Repository, Error, RepositoryUrlImport>(repo =>
+  const { isLoading, error, data, mutate } = useMutation<Repository, Error, RepositoryUrlImport>((repo) =>
     apiClient
       .post(url, repo, "application/vnd.scmm-repository+json;v=2")
       .then(fetchResourceFromLocationHeader)
@@ -46,13 +46,13 @@ export const useImportRepositoryFromUrl = (repositoryType: RepositoryType) => {
     isLoading,
     error,
     importRepositoryFromUrl: (repository: RepositoryUrlImport) => mutate(repository),
-    importedRepository: data
+    importedRepository: data,
   };
 };
 
 const importRepository = (url: string, repository: RepositoryCreation, file: File, password?: string) => {
   return apiClient
-    .postBinary(url, formData => {
+    .postBinary(url, (formData) => {
       formData.append("bundle", file, file.name);
       formData.append("repository", JSON.stringify({ ...repository, password }));
     })
@@ -82,9 +82,9 @@ export const useImportRepositoryFromBundle = (repositoryType: RepositoryType) =>
         repository,
         file,
         compressed,
-        password
+        password,
       }),
-    importedRepository: data
+    importedRepository: data,
   };
 };
 
@@ -107,8 +107,8 @@ export const useImportFullRepository = (repositoryType: RepositoryType) => {
       mutate({
         repository,
         file,
-        password
+        password,
       }),
-    importedRepository: data
+    importedRepository: data,
   };
 };

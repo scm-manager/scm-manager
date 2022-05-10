@@ -51,21 +51,21 @@ const fetchAlerts = (request: AlertRequest) => {
   return fetch(url, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify(request.body)
+    body: JSON.stringify(request.body),
   })
-    .then(response => {
+    .then((response) => {
       if (!response.ok) {
         throw new Error("Failed to fetch alerts");
       }
       return response;
     })
-    .then(response => response.json())
+    .then((response) => response.json())
     .then((data: AlertsResponse) => {
       const storageItem: LocalStorageAlerts = {
         ...data,
-        checksum: request.checksum
+        checksum: request.checksum,
       };
       localStorage.setItem("alerts", JSON.stringify(storageItem));
       return data;
@@ -90,18 +90,18 @@ export const useAlerts = (): ApiResult<AlertsResponse> => {
       }
       return apiClient
         .get(link)
-        .then(response => response.json())
+        .then((response) => response.json())
         .then(restoreOrFetch);
     },
     {
       enabled: !!link,
-      staleTime: Infinity
+      staleTime: Infinity,
     }
   );
 
   return {
     data,
     error,
-    isLoading
+    isLoading,
   };
 };

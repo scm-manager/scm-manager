@@ -36,7 +36,7 @@ describe("ApiProvider tests", () => {
 
   it("should register QueryClient", () => {
     const { result } = renderHook(() => useQueryClient(), {
-      wrapper: createWrapper({ initialize: () => null })
+      wrapper: createWrapper({ initialize: () => null }),
     });
     expect(result.current).toBeDefined();
   });
@@ -48,7 +48,7 @@ describe("ApiProvider tests", () => {
     };
 
     const { result } = renderHook(() => useLegacyContext(), {
-      wrapper: createWrapper({ onIndexFetched, initialize: () => null })
+      wrapper: createWrapper({ onIndexFetched, initialize: () => null }),
     });
 
     if (result.current?.onIndexFetched) {

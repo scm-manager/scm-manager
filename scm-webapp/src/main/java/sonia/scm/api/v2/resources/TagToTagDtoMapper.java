@@ -62,7 +62,7 @@ public abstract class TagToTagDtoMapper extends HalAppenderMapper {
       .single(link("sources", resourceLinks.source().self(repository.getNamespace(), repository.getName(), tag.getRevision())))
       .single(link("changeset", resourceLinks.changeset().self(repository.getNamespace(), repository.getName(), tag.getRevision())));
 
-    if (tag.getDeletable() && RepositoryPermissions.push(repository).isPermitted()) {
+    if (Boolean.TRUE.equals(tag.getDeletable()) && RepositoryPermissions.push(repository).isPermitted()) {
       linksBuilder
         .single(link("delete", resourceLinks.tag().delete(repository.getNamespace(), repository.getName(), tag.getName())));
     }

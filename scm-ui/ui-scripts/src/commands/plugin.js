@@ -30,7 +30,7 @@ module.exports = () => {
   webpack(config, (err, stats) => {
     console.log(
       stats.toString({
-        colors: true
+        colors: true,
       })
     );
     if (err || stats.hasErrors()) {

@@ -70,22 +70,25 @@ module.exports = {
       },
       {
         test: /\.(png|svg|jpg|gif)$/,
-        use: ["file-loader"]
-      }
-    ]
+        use: ["file-loader"],
+      },
+    ],
   },
   output: {
     filename: "theme-[name].bundle.js",
   },
   plugins,
   devServer: {
-    static: [{
-      directory: path.join(__dirname, "public"),
-      publicPath: "/",
-    }, {
-      directory: path.join(__dirname, "..", "ui-webapp", "public"),
-      publicPath: "/ui-webapp",
-    }],
+    static: [
+      {
+        directory: path.join(__dirname, "public"),
+        publicPath: "/",
+      },
+      {
+        directory: path.join(__dirname, "..", "ui-webapp", "public"),
+        publicPath: "/ui-webapp",
+      },
+    ],
     port: 5000,
     client: {
       overlay: true,

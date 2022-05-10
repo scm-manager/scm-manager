@@ -23,7 +23,7 @@
  */
 const { yarn } = require("./yarn");
 
-const version = v => {
+const version = (v) => {
   yarn(["run", "lerna", "--no-git-tag-version", "--no-push", "version", "--force-publish", "--yes", v]);
 };
 
@@ -33,5 +33,5 @@ const publish = () => {
 
 module.exports = {
   version,
-  publish
+  publish,
 };

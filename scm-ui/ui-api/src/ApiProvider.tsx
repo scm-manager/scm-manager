@@ -31,9 +31,9 @@ import { reset } from "./reset";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: false
-    }
-  }
+      retry: false,
+    },
+  },
 });
 
 type Props = LegacyContext & {

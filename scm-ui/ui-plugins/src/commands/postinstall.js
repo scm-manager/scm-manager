@@ -39,7 +39,7 @@ const sync = (left, right, key) => {
   let changed = false;
 
   const keys = Object.keys(left[key]);
-  keys.forEach(name => {
+  keys.forEach((name) => {
     if (right[key][name] !== left[key][name]) {
       console.log(name, "has changed from", right[key][name], "to", left[key][name]);
       right[key][name] = left[key][name];
@@ -51,8 +51,8 @@ const sync = (left, right, key) => {
 };
 
 const update = () => {
-  let dep = sync(reference, packageJSON, "dependencies");
-  let devDep = sync(reference, packageJSON, "devDependencies");
+  const dep = sync(reference, packageJSON, "dependencies");
+  const devDep = sync(reference, packageJSON, "devDependencies");
   return dep || devDep;
 };
 

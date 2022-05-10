@@ -26,7 +26,7 @@ const os = require("os");
 
 const yarnCmd = os.platform() === "win32" ? "yarn.cmd" : "yarn";
 
-const yarn = args => {
+const yarn = (args) => {
   const result = spawnSync(yarnCmd, args, { stdio: "inherit" });
   if (result.error) {
     console.log("could not start yarn command:", result.error);
@@ -37,16 +37,16 @@ const yarn = args => {
   }
 };
 
-const version = v => {
+const version = (v) => {
   yarn(["version", "--no-git-tag-version", "--new-version", v]);
 };
 
-const publish = v => {
+const publish = (v) => {
   yarn(["publish", "--new-version", v]);
 };
 
 module.exports = {
   version,
   publish,
-  yarn
+  yarn,
 };

@@ -60,10 +60,10 @@ const SwitchableMarkdownViewer: FC<Props> = ({ file, basePath }) => {
       <div className="tabs is-toggle is-right">
         <ul>
           <li className={classNames({ "is-active": renderMarkdown })} onClick={toggleMarkdown}>
-            <a>{t("sources.content.toggleButton.showMarkdown")}</a>
+            <button>{t("sources.content.toggleButton.showMarkdown")}</button>
           </li>
           <li className={classNames({ "is-active": !renderMarkdown })} onClick={toggleMarkdown}>
-            <a>{t("sources.content.toggleButton.showSources")}</a>
+            <button>{t("sources.content.toggleButton.showSources")}</button>
           </li>
         </ul>
       </div>

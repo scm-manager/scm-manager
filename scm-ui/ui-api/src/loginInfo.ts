@@ -29,15 +29,15 @@ export const useLoginInfo = (disabled = false): ApiResult<LoginInfo> => {
   const loginInfoLink = useIndexLink("loginInfo");
   const { error, isLoading, data } = useQuery<LoginInfo, Error>(
     ["loginInfo"],
-    () => fetch(loginInfoLink!).then(response => response.json()),
+    () => fetch(loginInfoLink!).then((response) => response.json()),
     {
       enabled: !disabled && !!loginInfoLink,
-      refetchOnWindowFocus: false
+      refetchOnWindowFocus: false,
     }
   );
   return {
     data,
     error,
-    isLoading
+    isLoading,
   };
 };

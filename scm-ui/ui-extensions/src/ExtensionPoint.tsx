@@ -26,10 +26,11 @@ import { Binder, ExtensionPointDefinition } from "./binder";
 import useBinder from "./useBinder";
 
 export type Renderable<P> = React.ReactElement | React.ComponentType<P>;
-export type RenderableExtensionPointDefinition<
-  Name extends string = string,
-  P = undefined
-> = ExtensionPointDefinition<Name, Renderable<P>, P>;
+export type RenderableExtensionPointDefinition<Name extends string = string, P = undefined> = ExtensionPointDefinition<
+  Name,
+  Renderable<P>,
+  P
+>;
 
 export type SimpleRenderableDynamicExtensionPointDefinition<
   Prefix extends string,

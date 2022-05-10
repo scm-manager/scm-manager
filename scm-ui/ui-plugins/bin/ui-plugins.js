@@ -30,7 +30,7 @@ const commands = ["postinstall"];
 
 const args = process.argv.slice(2);
 
-const commandIndex = args.findIndex(arg => {
+const commandIndex = args.findIndex((arg) => {
   return commands.includes(arg);
 });
 
@@ -40,7 +40,7 @@ const nodeArgs = commandIndex > 0 ? args.slice(0, commandIndex) : [];
 if (commands.includes(command)) {
   const result = spawnSync(
     "node",
-    nodeArgs.concat(require.resolve("../src/commands/" + command)).concat(args.slice(commandIndex + 1)),
+    nodeArgs.concat(require.resolve(`../src/commands/${command}`)).concat(args.slice(commandIndex + 1)),
     { stdio: "inherit" }
   );
   if (result.signal) {

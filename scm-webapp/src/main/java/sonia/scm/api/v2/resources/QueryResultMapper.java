@@ -32,9 +32,11 @@ import de.otto.edison.hal.Links;
 import de.otto.edison.hal.paging.NumberedPaging;
 import de.otto.edison.hal.paging.PagingRel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.ObjectFactory;
 import sonia.scm.repository.Repository;
@@ -74,8 +76,12 @@ public abstract class QueryResultMapper extends HalAppenderMapper {
     this.resourceLinks = resourceLinks;
   }
 
+  @Mapping(target = "page", ignore = true)
+  @Mapping(target = "pageTotal", ignore = true)
+  @Mapping(target = "attributes", ignore = true)
   public abstract QueryResultDto map(@Context SearchParameters params, QueryResult result);
 
+  @Mapping(target = "attributes", ignore = true)
   public abstract EmbeddedRepositoryDto map(Repository repository);
 
   @AfterMapping
@@ -165,10 +171,11 @@ public abstract class QueryResultMapper extends HalAppenderMapper {
       return totalHits / pageSize;
     }
   }
-
+  @Mapping(target = "attributes", ignore = true)
   protected abstract HitDto map(@Context QueryResult queryResult, Hit hit);
 
   @Data
+  @EqualsAndHashCode(callSuper = false)
   public static class EmbeddedRepositoryDto extends HalRepresentation {
     private String namespace;
     private String name;

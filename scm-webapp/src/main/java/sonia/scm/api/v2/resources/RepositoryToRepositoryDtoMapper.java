@@ -75,6 +75,7 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
   @Inject
   private SCMContextProvider contextProvider;
 
+  @Mapping(target = "attributes", ignore = true) // We do not map HAL attributes
   abstract HealthCheckFailureDto toDto(HealthCheckFailure failure);
 
   @ObjectFactory
@@ -94,6 +95,7 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
 
   @Mapping(target = "attributes", ignore = true) // We do not map HAL attributes
   @Mapping(target = "exporting", ignore = true)
+  @Mapping(target = "healthCheckRunning", ignore = true)
   @Override
   public abstract RepositoryDto map(Repository modelObject);
 

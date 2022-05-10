@@ -36,9 +36,9 @@ describe("Test branches hooks", () => {
     type: "hg",
     _links: {
       branches: {
-        href: "/hog/branches"
-      }
-    }
+        href: "/hog/branches",
+      },
+    },
   };
 
   const develop: Branch = {
@@ -47,9 +47,9 @@ describe("Test branches hooks", () => {
     lastCommitter: { name: "trillian" },
     _links: {
       delete: {
-        href: "/hog/branches/develop"
-      }
-    }
+        href: "/hog/branches/develop",
+      },
+    },
   };
 
   const feature: Branch = {
@@ -58,16 +58,16 @@ describe("Test branches hooks", () => {
     lastCommitter: { name: "trillian" },
     _links: {
       delete: {
-        href: "/hog/branches/feature%2Fsomething-special"
-      }
-    }
+        href: "/hog/branches/feature%2Fsomething-special",
+      },
+    },
   };
 
   const branches: BranchCollection = {
     _embedded: {
-      branches: [develop]
+      branches: [develop],
     },
-    _links: {}
+    _links: {},
   };
 
   const queryClient = createInfiniteCachingClient();
@@ -85,7 +85,7 @@ describe("Test branches hooks", () => {
       fetchMock.getOnce("/api/v2/hog/branches", branches);
 
       const { result, waitFor } = renderHook(() => useBranches(repository), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
       await waitFor(() => {
         return !!result.current.data;
@@ -106,7 +106,7 @@ describe("Test branches hooks", () => {
         "repository",
         "hitchhiker",
         "heart-of-gold",
-        "branches"
+        "branches",
       ]);
       expect(data).toEqual(branches);
     });
@@ -117,7 +117,7 @@ describe("Test branches hooks", () => {
       fetchMock.getOnce("/api/v2/hog/branches/" + encodeURIComponent(name), branch);
 
       const { result, waitFor } = renderHook(() => useBranch(repository, name), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
 
       expect(result.error).toBeUndefined();
@@ -145,14 +145,14 @@ describe("Test branches hooks", () => {
       fetchMock.postOnce("/api/v2/hog/branches", {
         status: 201,
         headers: {
-          Location: "/hog/branches/develop"
-        }
+          Location: "/hog/branches/develop",
+        },
       });
 
       fetchMock.getOnce("/api/v2/hog/branches/develop", develop);
 
       const { result, waitForNextUpdate } = renderHook(() => useCreateBranch(repository), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
 
       await act(() => {
@@ -177,7 +177,7 @@ describe("Test branches hooks", () => {
         "hitchhiker",
         "heart-of-gold",
         "branch",
-        "develop"
+        "develop",
       ]);
       expect(branch).toEqual(develop);
     });
@@ -194,11 +194,11 @@ describe("Test branches hooks", () => {
   describe("useDeleteBranch tests", () => {
     const deleteBranch = async () => {
       fetchMock.deleteOnce("/api/v2/hog/branches/develop", {
-        status: 204
+        status: 204,
       });
 
       const { result, waitForNextUpdate } = renderHook(() => useDeleteBranch(repository), {
-        wrapper: createWrapper(undefined, queryClient)
+        wrapper: createWrapper(undefined, queryClient),
       });
 
       await act(() => {

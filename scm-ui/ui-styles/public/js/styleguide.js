@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-const rgb2hex = (c) => "#" + c.match(/\d+/g).map((x) => (+x).toString(16).padStart(2, 0)).join``;
+const rgb2hex = (c) => `#${c.match(/\d+/g).map((x) => (+x).toString(16).padStart(2, 0)).join``}`;
 
 function onClickColorButton(e) {
   const button = e.target;
