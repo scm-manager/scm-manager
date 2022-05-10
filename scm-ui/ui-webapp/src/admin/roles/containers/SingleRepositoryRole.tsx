@@ -51,7 +51,7 @@ const SingleRepositoryRole: FC = () => {
 
   const extensionProps = {
     role,
-    url: escapedUrl
+    url: escapedUrl,
   };
 
   return (

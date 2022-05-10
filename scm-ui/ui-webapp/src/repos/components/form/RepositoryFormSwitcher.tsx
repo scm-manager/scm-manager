@@ -57,7 +57,7 @@ type Props = {
 
 const RepositoryFormSwitcher: FC<Props> = ({ forms }) => (
   <ButtonAddons className="ml-auto">
-    {(forms || []).map(form => (
+    {(forms || []).map((form) => (
       <RepositoryFormButton key={form.path} {...form} />
     ))}
   </ButtonAddons>

@@ -41,7 +41,7 @@ export type FileAnnotationFactory = (file: File) => ReactNode[];
 
 // key = change id, value = react component
 export type AnnotationFactory = (context: AnnotationFactoryContext) => {
-  [key: string]: any;
+  [key: string]: unknown;
 };
 
 export type DiffEventContext = BaseContext & {

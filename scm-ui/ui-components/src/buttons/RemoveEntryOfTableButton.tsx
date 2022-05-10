@@ -32,7 +32,7 @@ type Props = {
   label: string;
 };
 
-type State = {};
+type State = unknown;
 
 class RemoveEntryOfTableButton extends React.Component<Props, State> {
   render() {

@@ -36,8 +36,8 @@ type Props = {
 };
 
 const useFeedbackUrl = (url: string): ApiResult<HalRepresentation> =>
-  useQuery(["config", "feedback"], () => apiClient.get(url).then(r => r.json()), {
-    refetchOnWindowFocus: false
+  useQuery(["config", "feedback"], () => apiClient.get(url).then((r) => r.json()), {
+    refetchOnWindowFocus: false,
   });
 
 const createFeedbackFormUrl = (instanceId: string, scmVersion: string, theme: string, data?: HalRepresentation) => {
@@ -52,23 +52,21 @@ const useFeedback = (index: IndexResources) => {
   const feedbackUrl = (index._links.feedback as Link)?.href || "";
   const { theme } = useThemeState();
   const { data, error, isLoading } = useFeedbackUrl(feedbackUrl);
-  const formUrl = useMemo(() => createFeedbackFormUrl(index.instanceId, index.version, theme, data), [
-    theme,
-    data,
-    index.instanceId,
-    index.version
-  ]);
+  const formUrl = useMemo(
+    () => createFeedbackFormUrl(index.instanceId, index.version, theme, data),
+    [theme, data, index.instanceId, index.version]
+  );
 
   if (!index._links.feedback || error || isLoading || !formUrl) {
     return {
       isAvailable: false,
-      formUrl: ""
+      formUrl: "",
     };
   }
 
   return {
     isAvailable: true,
-    formUrl
+    formUrl,
   };
 };
 

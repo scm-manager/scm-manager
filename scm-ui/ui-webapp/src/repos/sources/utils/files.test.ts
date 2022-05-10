@@ -33,8 +33,8 @@ describe("files tests", () => {
       directory: true,
       _links: {},
       _embedded: {
-        children: []
-      }
+        children: [],
+      },
     };
   };
 
@@ -43,7 +43,7 @@ describe("files tests", () => {
     path: "README.md",
     revision: "42",
     directory: false,
-    _links: {}
+    _links: {},
   };
 
   describe("isRootPath tests", () => {

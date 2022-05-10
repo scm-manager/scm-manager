@@ -117,7 +117,7 @@ const BreadcrumbNode: FC<{ clickable: boolean; text: string; url: string; curren
   clickable,
   text,
   url,
-  current
+  current,
 }) => {
   if (clickable) {
     return (
@@ -144,7 +144,7 @@ const Breadcrumb: FC<Props> = ({
   sources,
   permalink,
   preButtons,
-  clickable = true
+  clickable = true,
 }) => {
   const location = useLocation();
   const history = useHistory();
@@ -231,7 +231,7 @@ const Breadcrumb: FC<Props> = ({
           </li>
           {pathSection()}
         </ul>
-        <PermaLinkWrapper tabIndex={0} onKeyDown={e => e.key === "Enter" && copySource()}>
+        <PermaLinkWrapper tabIndex={0} onKeyDown={(e) => e.key === "Enter" && copySource()}>
           {copying ? (
             <Icon name="spinner fa-spin" alt={t("breadcrumb.loading")} />
           ) : (
@@ -250,7 +250,7 @@ const Breadcrumb: FC<Props> = ({
     branch: branch ? branch : defaultBranch,
     path,
     sources,
-    repository
+    repository,
   };
 
   const renderExtensionPoints = () => {

@@ -33,7 +33,7 @@ export const colors = [
   "info",
   "success",
   "warning",
-  "danger"
+  "danger",
 ] as const;
 export type Color = typeof colors[number];
 

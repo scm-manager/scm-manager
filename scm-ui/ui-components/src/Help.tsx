@@ -34,18 +34,13 @@ type Props = {
 };
 
 const Help: FC<Props> = ({ message, multiline, className, id }) => (
-  <Tooltip
-    className={classNames("is-inline-block", "pl-1", className)}
-    message={message}
-    id={id}
-    multiline={multiline}
-  >
+  <Tooltip className={classNames("is-inline-block", "pl-1", className)} message={message} id={id} multiline={multiline}>
     <HelpIcon />
   </Tooltip>
 );
 
 Help.defaultProps = {
-  multiline: true
+  multiline: true,
 };
 
 export default Help;

@@ -113,7 +113,7 @@ const ErrorDisplay: FC<ErrorDisplayProps> = ({ error, errorInfo, fallback: Fallb
 
   const fallbackProps = {
     error,
-    errorInfo
+    errorInfo,
   };
 
   return <FallbackComponent {...fallbackProps} />;
@@ -135,7 +135,7 @@ class ErrorBoundary extends React.Component<Props, State> {
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     this.setState({
       error,
-      errorInfo
+      errorInfo,
     });
   }
 

@@ -38,7 +38,7 @@ export default function groupByNamespace(
       group = {
         name: groupName,
         namespace: namespace,
-        repositories: []
+        repositories: [],
       };
       groups[groupName] = group;
     }
@@ -65,5 +65,5 @@ function sortByName(a, b) {
 }
 
 function findNamespace(namespaces: NamespaceCollection, namespaceToFind: string) {
-  return namespaces._embedded.namespaces.find(namespace => namespace.namespace === namespaceToFind);
+  return namespaces._embedded.namespaces.find((namespace) => namespace.namespace === namespaceToFind);
 }

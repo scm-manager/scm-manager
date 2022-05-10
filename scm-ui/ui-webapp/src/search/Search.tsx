@@ -31,7 +31,7 @@ import {
   PrimaryContentColumn,
   SecondaryNavigation,
   Tag,
-  urls
+  urls,
 } from "@scm-manager/ui-components";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { useSearch, useSearchCounts, useSearchTypes } from "@scm-manager/ui-api";
@@ -70,7 +70,7 @@ const usePageParams = () => {
   return {
     page,
     selectedType,
-    query
+    query,
   };
 };
 
@@ -100,7 +100,7 @@ const SearchSubTitle: FC<Props> = ({ selectedType, query }) => {
     <>
       {t("search.subtitle", {
         query,
-        type: t(`plugins:search.types.${selectedType}.subtitle`, selectedType)
+        type: t(`plugins:search.types.${selectedType}.subtitle`, selectedType),
       })}
       <br />
       <Trans i18nKey="search.syntaxHelp" components={[<SyntaxHelpLink />]} />
@@ -115,22 +115,22 @@ const Search: FC = () => {
   const { data, isLoading, error } = useSearch(query, {
     type: selectedType,
     page: page - 1,
-    pageSize: 25
+    pageSize: 25,
   });
   const types = useSearchTypes();
   types.sort(orderTypes);
 
   const searchCounts = useSearchCounts(
-    types.filter(t => t !== selectedType),
+    types.filter((t) => t !== selectedType),
     query
   );
   const counts = {
     [selectedType]: {
       isLoading,
       error,
-      data: data?.totalHits
+      data: data?.totalHits,
     },
-    ...searchCounts
+    ...searchCounts,
   };
 
   return (
@@ -147,7 +147,7 @@ const Search: FC = () => {
             <Results result={data} query={query} page={page} type={selectedType} />
           </PrimaryContentColumn>
           <SecondaryNavigation label={t("search.types")} collapsible={false}>
-            {types.map(type => (
+            {types.map((type) => (
               <NavLink key={type} to={`/search/${type}/?q=${query}`} label={type} activeOnlyWhenExact={false}>
                 <Level
                   left={t(`plugins:search.types.${type}.navItem`, type)}

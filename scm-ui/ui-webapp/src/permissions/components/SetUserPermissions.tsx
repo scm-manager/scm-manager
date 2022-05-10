@@ -31,14 +31,16 @@ type Props = {
 };
 
 const SetUserPermissions: FC<Props> = ({ user }) => {
-  const { data: selectedPermissions, isLoading: loadingPermissions, error: permissionsLoadError } = useUserPermissions(
-    user
-  );
+  const {
+    data: selectedPermissions,
+    isLoading: loadingPermissions,
+    error: permissionsLoadError,
+  } = useUserPermissions(user);
   const {
     isLoading: isUpdatingPermissions,
     isUpdated: permissionsUpdated,
     setPermissions,
-    error: permissionsUpdateError
+    error: permissionsUpdateError,
   } = useSetUserPermissions(user, selectedPermissions);
   return (
     <SetPermissions

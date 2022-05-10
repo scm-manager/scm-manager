@@ -45,7 +45,7 @@ const CompareSelectorListEntry: FC<Props> = ({ children, isSelected = false, onC
   <li role="option" aria-selected={isSelected}>
     <FocusButton
       className={classNames("dropdown-item", "is-flex", "has-text-weight-medium", "px-4", "py-2", {
-        "is-active": isSelected
+        "is-active": isSelected,
       })}
       onClick={onClick}
     >

@@ -43,7 +43,7 @@ type ContainerProps = {
 const PopoverContainer = styled.div<ContainerProps>`
   position: absolute;
   z-index: 100;
-  width: ${props => props.width}px;
+  width: ${(props) => props.width}px;
   display: block;
 
   &:before {
@@ -54,7 +54,7 @@ const PopoverContainer = styled.div<ContainerProps>`
     height: 0;
     width: 0;
     top: 100%;
-    left: ${props => props.width / 2}px;
+    left: ${(props) => props.width / 2}px;
     border-color: transparent;
     border-bottom-color: var(--scm-popover-border-color);
     border-left-color: var(--scm-popover-border-color);
@@ -71,14 +71,14 @@ const PopoverHeading = styled.div`
   height: 1.5em;
 `;
 
-const Popover: FC<Props> = props => {
+const Popover: FC<Props> = (props) => {
   if (!props.show) {
     return null;
   }
   return <InnerPopover {...props} />;
 };
 
-const InnerPopover: FC<Props> = ({ title, show, width, offsetTop, offsetLeft, dispatch, children }) => {
+const InnerPopover: FC<Props> = ({ title, width = 120, offsetTop, offsetLeft, dispatch, children }) => {
   const [height, setHeight] = useState(125);
   const ref = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
@@ -89,25 +89,25 @@ const InnerPopover: FC<Props> = ({ title, show, width, offsetTop, offsetLeft, di
 
   const onMouseEnter = () => {
     dispatch({
-      type: "enter-popover"
+      type: "enter-popover",
     });
   };
 
   const onMouseLeave = () => {
     dispatch({
-      type: "leave-popover"
+      type: "leave-popover",
     });
   };
 
   const top = (offsetTop || 0) - height - 5;
-  const left = (offsetLeft || 0) - width! / 2;
+  const left = (offsetLeft || 0) - width / 2;
   return (
     <PopoverContainer
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       className="box popover"
       style={{ top: `${top}px`, left: `${left}px` }}
-      width={width!}
+      width={width}
       ref={ref}
     >
       <PopoverHeading>{title}</PopoverHeading>
@@ -115,10 +115,6 @@ const InnerPopover: FC<Props> = ({ title, show, width, offsetTop, offsetLeft, di
       {children}
     </PopoverContainer>
   );
-};
-
-Popover.defaultProps = {
-  width: 120
 };
 
 export default Popover;

@@ -40,7 +40,7 @@ export const isMailValid = (mail: string) => {
   return mailRegex.test(mail);
 };
 
-export const isNumberValid = (number: any) => {
+export const isNumberValid = (number: number) => {
   return !isNaN(number);
 };
 

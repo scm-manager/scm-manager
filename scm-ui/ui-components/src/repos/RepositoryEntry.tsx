@@ -107,7 +107,7 @@ const RepositoryEntry: FC<Props> = ({ repository, baseDate }) => {
               name="repos.repository-details.information"
               renderAll={true}
               props={{
-                repository
+                repository,
               }}
             />
           }

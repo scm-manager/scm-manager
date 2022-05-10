@@ -43,7 +43,7 @@ const DropDownMenu = styled.div<DropDownMenuProps>`
   }
 
   @media screen and (max-width: ${devices.mobile.width}px) {
-    ${props =>
+    ${(props) =>
       props.mobilePosition === "right" &&
       css`
         right: -1.5rem;
@@ -84,7 +84,7 @@ const DropDownMenu = styled.div<DropDownMenuProps>`
       right: 1.375rem;
     }
 
-    ${props =>
+    ${(props) =>
       props.mobilePosition === "right" &&
       css`
         @media screen and (max-width: ${devices.mobile.width}px) {
@@ -143,7 +143,7 @@ type CounterProps = {
 const Counter = styled.span<CounterProps>`
   position: absolute;
   top: -0.75rem;
-  right: ${props => (props.count.length <= 1 ? "-0.25" : "-0.50")}rem;
+  right: ${(props) => (props.count.length <= 1 ? "-0.25" : "-0.50")}rem;
 `;
 
 type IconWrapperProps = {
@@ -188,15 +188,15 @@ const HeaderDropDown: FC<Props> = ({ className, icon, count, error, isLoading, m
           "is-hoverable",
           "p-0",
           {
-            "is-active": open
+            "is-active": open,
           },
           className
         )}
-        onClick={e => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()}
       >
         <DropDownTrigger
           className={classNames("is-flex", "dropdown-trigger", "is-clickable")}
-          onClick={() => setOpen(o => !o)}
+          onClick={() => setOpen((o) => !o)}
         >
           <IconWrapper icon={icon} count={count} />
         </DropDownTrigger>

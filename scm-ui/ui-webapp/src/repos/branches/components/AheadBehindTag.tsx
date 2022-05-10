@@ -52,11 +52,11 @@ const Count = styled.span`
   width: max-content;
 `;
 
-const Bar = styled.span.attrs<BarProps>(props => ({
+const Bar = styled.span.attrs<BarProps>((props) => ({
   style: {
     width: props.width + "%",
-    borderRadius: props.direction === "left" ? "25px 0 0 25px" : "0 25px 25px 0"
-  }
+    borderRadius: props.direction === "left" ? "25px 0 0 25px" : "0 25px 25px 0",
+  },
 }))<BarProps>`
   height: 3px;
   max-width: 100%;

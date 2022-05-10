@@ -74,7 +74,7 @@ const FilterInput: FC<Props> = ({ filter, value, testId, placeholder, autoFocus,
           type="search"
           placeholder={placeholder || t("filterEntries")}
           value={stateValue}
-          onChange={event => setStateValue(event.target.value)}
+          onChange={(event) => setStateValue(event.target.value)}
           autoFocus={autoFocus || false}
           aria-describedby={id}
           aria-label={t("filterEntries")}

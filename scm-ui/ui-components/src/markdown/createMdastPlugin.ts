@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 import { AstPlugin } from "./PluginApi";
-// @ts-ignore No types available
+import { Node } from "unist";
 import visit from "unist-util-visit";
 
 /**
@@ -30,9 +30,9 @@ import visit from "unist-util-visit";
  *
  * @see https://unifiedjs.com/learn/guide/create-a-plugin/
  */
-export default function createMdastPlugin(plugin: AstPlugin): any {
+export default function createMdastPlugin(plugin: AstPlugin): unknown {
   return function attach() {
-    return function transform(tree: any) {
+    return function transform(tree: Node) {
       plugin({
         visit: (type, visitor) => visit(tree, type, visitor),
       });

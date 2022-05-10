@@ -102,7 +102,7 @@ const AnnotateLine: FC<Props> = ({ annotation, showAnnotation, dispatch, nr, chi
       dispatchDeferred(dispatch, {
         annotation,
         line: nr,
-        offset: link.current!.offsetTop,
+        offset: link.current?.offsetTop || 0,
         type: "enter-line",
       });
     }

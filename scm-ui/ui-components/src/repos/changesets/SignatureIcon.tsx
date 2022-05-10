@@ -32,7 +32,7 @@ import classNames from "classnames";
 
 type Props = {
   signatures: Signature[];
-  className: any;
+  className?: string;
 };
 
 const StyledIcon = styled(Icon)`

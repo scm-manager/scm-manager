@@ -86,7 +86,7 @@ const TokenizedDiffView: FC<Props> = ({ file, viewType, className, children }) =
   const worker = useSyntaxHighlightingWorker();
   const { tokens } = useTokenizeWorker(worker, {
     hunks: file.hunks,
-    language: determineLanguage(findSyntaxHighlightingLanguage(file))
+    language: determineLanguage(findSyntaxHighlightingLanguage(file)),
   });
 
   return (

@@ -58,7 +58,7 @@ const ChangesetRow: FC<Props> = ({ repository, changeset, file }) => {
             name="changeset.right"
             props={{
               repository,
-              changeset
+              changeset,
             }}
             renderAll={true}
           />

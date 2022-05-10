@@ -63,7 +63,7 @@ type Props = {
   links: Links;
 };
 
-const Main: FC<Props> = props => {
+const Main: FC<Props> = (props) => {
   const { authenticated, me } = props;
   const redirectUrlFactory = binder.getExtension<extensionPoints.MainRedirect>("main.redirect", props);
   let url = "/";

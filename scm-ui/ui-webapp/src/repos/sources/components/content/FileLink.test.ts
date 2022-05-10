@@ -48,8 +48,8 @@ describe("create folder link tests", () => {
       revision: "1a",
       _links: {},
       _embedded: {
-        children: []
-      }
+        children: [],
+      },
     };
   }
 

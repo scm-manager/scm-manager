@@ -32,7 +32,7 @@ import {
   Loading,
   Notification,
   Subtitle,
-  Title
+  Title,
 } from "@scm-manager/ui-components";
 import PluginsList from "../components/PluginList";
 import PluginTopActions from "../components/PluginTopActions";
@@ -45,7 +45,7 @@ import {
   useAvailablePlugins,
   useInstalledPlugins,
   usePendingPlugins,
-  usePluginCenterAuthInfo
+  usePluginCenterAuthInfo,
 } from "@scm-manager/ui-api";
 import PluginModal from "../components/PluginModal";
 import MyCloudoguBanner from "../components/MyCloudoguBanner";
@@ -55,7 +55,7 @@ export enum PluginAction {
   INSTALL = "install",
   UPDATE = "update",
   UNINSTALL = "uninstall",
-  CLOUDOGU = "cloudoguInstall"
+  CLOUDOGU = "cloudoguInstall",
 }
 
 export type PluginModalContent = {
@@ -72,12 +72,12 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
   const {
     data: availablePlugins,
     isLoading: isLoadingAvailablePlugins,
-    error: availablePluginsError
+    error: availablePluginsError,
   } = useAvailablePlugins({ enabled: !installed });
   const {
     data: installedPlugins,
     isLoading: isLoadingInstalledPlugins,
-    error: installedPluginsError
+    error: installedPluginsError,
   } = useInstalledPlugins({ enabled: installed });
   const { data: pendingPlugins, isLoading: isLoadingPendingPlugins, error: pendingPluginsError } = usePendingPlugins();
   const pluginCenterAuthInfo = usePluginCenterAuthInfo();
@@ -177,7 +177,7 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
   const computeUpdateAllSize = () => {
     const outdatedPlugins = collection?._embedded?.plugins.filter((p: Plugin) => p._links.update).length;
     return t("plugins.outdatedPlugins", {
-      count: outdatedPlugins
+      count: outdatedPlugins,
     });
   };
 

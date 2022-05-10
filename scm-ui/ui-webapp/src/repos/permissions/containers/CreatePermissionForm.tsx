@@ -30,7 +30,7 @@ import {
   PermissionCreateEntry,
   Repository,
   RepositoryRole,
-  SelectValue
+  SelectValue,
 } from "@scm-manager/ui-types";
 import {
   Button,
@@ -41,7 +41,7 @@ import {
   Radio,
   SubmitButton,
   Subtitle,
-  UserAutocomplete
+  UserAutocomplete,
 } from "@scm-manager/ui-components";
 import * as validator from "../utils/permissionValidation";
 import RoleSelector from "../components/RoleSelector";
@@ -64,8 +64,8 @@ type PermissionState = PermissionCreateEntry & {
 const useAutoCompleteLinks = () => {
   const links = useIndexLinks()?.autocomplete as Link[];
   return {
-    groups: links?.find(l => l.name === "groups"),
-    users: links?.find(l => l.name === "users")
+    groups: links?.find((l) => l.name === "groups"),
+    users: links?.find((l) => l.name === "users"),
   };
 };
 
@@ -73,14 +73,14 @@ const CreatePermissionForm: FC<Props> = ({
   availableRoles,
   availableVerbs,
   currentPermissions,
-  namespaceOrRepository
+  namespaceOrRepository,
 }) => {
   const initialPermissionState = {
     name: "",
     role: "READ",
     verbs: [],
     groupPermission: false,
-    valid: false
+    valid: false,
   };
   const links = useAutoCompleteLinks();
   const { isLoading, error, create, permission: createdPermission } = useCreatePermission(namespaceOrRepository);
@@ -92,7 +92,7 @@ const CreatePermissionForm: FC<Props> = ({
       ...initialPermissionState,
       groupPermission: createdPermission ? createdPermission.groupPermission : initialPermissionState.groupPermission,
       role: createdPermission ? createdPermission.role : initialPermissionState.role,
-      verbs: createdPermission ? createdPermission?.verbs : initialPermissionState.verbs
+      verbs: createdPermission ? createdPermission?.verbs : initialPermissionState.verbs,
     });
     //eslint-disable-next-line
   }, [createdPermission]);
@@ -107,7 +107,7 @@ const CreatePermissionForm: FC<Props> = ({
         value.value.id,
         permission.groupPermission,
         currentPermissions._embedded?.permissions || []
-      )
+      ),
     });
   };
 
@@ -126,7 +126,7 @@ const CreatePermissionForm: FC<Props> = ({
   const permissionScopeChanged = (groupPermission: boolean) => {
     setPermission({
       ...permission,
-      groupPermission
+      groupPermission,
     });
   };
 
@@ -138,7 +138,7 @@ const CreatePermissionForm: FC<Props> = ({
     setPermission({
       ...permission,
       verbs: [],
-      role
+      role,
     });
   };
 
@@ -146,7 +146,7 @@ const CreatePermissionForm: FC<Props> = ({
     setPermission({
       ...permission,
       role: undefined,
-      verbs
+      verbs,
     });
     setShowAdvancedDialog(false);
   };
@@ -157,7 +157,7 @@ const CreatePermissionForm: FC<Props> = ({
   };
 
   const findAvailableRole = (roleName: string) => {
-    return availableRoles.find(role => role.name === roleName);
+    return availableRoles.find((role) => role.name === roleName);
   };
 
   const empty = { value: { id: "", displayName: "" }, label: "" };
@@ -216,7 +216,7 @@ const CreatePermissionForm: FC<Props> = ({
             <div className="columns">
               <div className="column is-narrow">
                 <RoleSelector
-                  availableRoles={availableRoles.map(r => r.name)}
+                  availableRoles={availableRoles.map((r) => r.name)}
                   label={t("permission.role")}
                   helpText={t("permission.help.roleHelpText")}
                   handleRoleChange={handleRoleChange}

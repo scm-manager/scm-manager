@@ -34,7 +34,7 @@ type Props = {
 };
 
 const PluginGroupEntry: FC<Props> = ({ openModal, group, pluginCenterAuthInfo }) => {
-  const entries = group.plugins.map(plugin => {
+  const entries = group.plugins.map((plugin) => {
     return (
       <PluginEntry
         plugin={plugin}

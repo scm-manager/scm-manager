@@ -40,7 +40,7 @@ const usePermissionData = (namespaceOrRepository: Namespace | Repository) => {
     isLoading: permissions.isLoading || availablePermissions.isLoading,
     error: permissions.error || availablePermissions.error,
     permissions: permissions.data,
-    availablePermissions: availablePermissions.data
+    availablePermissions: availablePermissions.data,
   };
 };
 

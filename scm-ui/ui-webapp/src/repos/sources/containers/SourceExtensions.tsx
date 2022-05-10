@@ -48,7 +48,7 @@ const useUrlParams = () => {
   return {
     revision: revision ? decodeURIComponent(revision) : undefined,
     path: path,
-    extension
+    extension,
   };
 };
 
@@ -81,7 +81,7 @@ const SourceExtensionsWithBranches: FC<PropsWithBranches> = ({
   revision,
   extension,
   sources,
-  path
+  path,
 }) => {
   const { isFetching, data: branch } = useBranch(repository, revision);
   const [t] = useTranslation("repos");
@@ -101,7 +101,7 @@ const SourceExtensionsWithBranches: FC<PropsWithBranches> = ({
     resolvedRevision,
     path,
     sources,
-    baseUrl
+    baseUrl,
   };
 
   if (!binder.hasExtension(extensionPointName, extprops)) {
@@ -117,7 +117,7 @@ const SourceExtensionsWithoutBranches: FC<PropsWithoutBranches> = ({
   revision,
   extension,
   sources,
-  path
+  path,
 }) => {
   const [t] = useTranslation("repos");
 
@@ -137,7 +137,7 @@ const SourceExtensionsWithoutBranches: FC<PropsWithoutBranches> = ({
     resolvedRevision,
     path,
     sources,
-    baseUrl
+    baseUrl,
   };
 
   if (!binder.hasExtension(extensionPointName, extprops)) {

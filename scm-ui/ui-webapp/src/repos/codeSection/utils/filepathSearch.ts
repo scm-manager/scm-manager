@@ -33,10 +33,10 @@ declare global {
 export const filepathSearch = (paths: string[], query: string): string[] => {
   return paths
     .map(createMatcher(query))
-    .filter(m => m.matches)
+    .filter((m) => m.matches)
     .sort((a, b) => b.score - a.score)
     .slice(0, 50)
-    .map(m => m.path);
+    .map((m) => m.path);
 };
 
 const includes = (value: string, query: string) => {
@@ -58,7 +58,7 @@ export const createMatcher = (query: string) => {
     return {
       matches: score > 0,
       score,
-      path
+      path,
     };
   };
 };

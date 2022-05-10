@@ -78,7 +78,7 @@ type ResultTableProps = {
 const ResultTable: FC<ResultTableProps> = ({ contentBaseUrl, paths }) => (
   <table className="table table-hover table-sm is-fullwidth">
     <tbody>
-      {paths.map(path => (
+      {paths.map((path) => (
         <PathResultRow contentBaseUrl={contentBaseUrl} path={path} />
       ))}
     </tbody>

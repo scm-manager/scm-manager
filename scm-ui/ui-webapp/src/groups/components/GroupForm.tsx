@@ -32,7 +32,7 @@ import {
   MemberNameTagGroup,
   SubmitButton,
   Subtitle,
-  Textarea
+  Textarea,
 } from "@scm-manager/ui-components";
 import * as validator from "./groupValidation";
 
@@ -49,12 +49,12 @@ const GroupForm: FC<Props> = ({ submitForm, loading, group, loadUserSuggestions 
     name: "",
     description: "",
     _embedded: {
-      members: [] as Member[]
+      members: [] as Member[],
     },
     _links: {},
     members: [] as string[],
     type: "",
-    external: false
+    external: false,
   });
   const [nameValidationError, setNameValidationError] = useState(false);
 
@@ -109,7 +109,7 @@ const GroupForm: FC<Props> = ({ submitForm, loading, group, loadUserSuggestions 
         label={t("group.external")}
         checked={groupState.external}
         helpText={t("groupForm.help.externalHelpText")}
-        onChange={external => setGroupState({ ...groupState, external })}
+        onChange={(external) => setGroupState({ ...groupState, external })}
       />
     );
   };
@@ -129,7 +129,7 @@ const GroupForm: FC<Props> = ({ submitForm, loading, group, loadUserSuggestions 
       <InputField
         label={t("group.name")}
         errorMessage={t("groupForm.nameError")}
-        onChange={name => {
+        onChange={(name) => {
           setNameValidationError(!validator.isNameValid(name));
           setGroupState({ ...groupState, name });
         }}
@@ -152,7 +152,7 @@ const GroupForm: FC<Props> = ({ submitForm, loading, group, loadUserSuggestions 
         <Textarea
           label={t("group.description")}
           errorMessage={t("groupForm.descriptionError")}
-          onChange={description => setGroupState({ ...groupState, description })}
+          onChange={(description) => setGroupState({ ...groupState, description })}
           value={groupState.description}
           validationError={false}
           helpText={t("groupForm.help.descriptionHelpText")}

@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-import React from "react";
 import { headingToAnchorId } from "./MarkdownHeadingRenderer";
 
 describe("headingToAnchorId tests", () => {

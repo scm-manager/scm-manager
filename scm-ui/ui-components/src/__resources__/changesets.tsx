@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import { Changeset, ChangesetCollection, PagedCollection } from "@scm-manager/ui-types";
+import { Changeset, ChangesetCollection } from "@scm-manager/ui-types";
 
 const one: Changeset = {
   id: "a88567ef1e9528a700555cad8c4576b72fc7c6dd",

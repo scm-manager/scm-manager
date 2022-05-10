@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, MutableRefObject, useRef } from "react";
+import React, { FC, MutableRefObject, ReactNode, useRef } from "react";
 import classNames from "classnames";
 import styled from "styled-components";
 import { Dialog } from "@headlessui/react";
@@ -34,8 +34,8 @@ const modalSizes: { [key in ModalSize]: number } = { S: 33, M: 50, L: 66 };
 type Props = {
   title: string;
   closeFunction: () => void;
-  body?: any;
-  footer?: any;
+  body?: ReactNode;
+  footer?: ReactNode;
   active: boolean;
   className?: string;
   headColor?: string;
@@ -46,10 +46,10 @@ type Props = {
 };
 
 const SizedModal = styled.div<{ size?: ModalSize; overflow: string }>`
-  width: ${props => (props.size ? `${modalSizes[props.size]}%` : "640px")};
-  overflow: ${props => props.overflow};
+  width: ${(props) => (props.size ? `${modalSizes[props.size]}%` : "640px")};
+  overflow: ${(props) => props.overflow};
   @media screen and (max-width: ${devices.mobile.width}px) {
-    width: ${props => (props.size ? `${modalSizes[props.size]}%` : "320px")};
+    width: ${(props) => (props.size ? `${modalSizes[props.size]}%` : "320px")};
   }
 `;
 
@@ -65,7 +65,7 @@ export const Modal: FC<Props> = ({
   headTextColor = "secondary-most",
   size,
   initialFocusRef,
-  overflowVisible
+  overflowVisible,
 }) => {
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
   let showFooter = null;

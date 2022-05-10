@@ -30,7 +30,7 @@ import {
   Checkbox,
   InputField,
   MemberNameTagGroup,
-  Select
+  Select,
 } from "@scm-manager/ui-components";
 import NamespaceStrategySelect from "./NamespaceStrategySelect";
 
@@ -70,7 +70,7 @@ const GeneralSettings: FC<Props> = ({
   namespaceStrategy,
   namespaceStrategies,
   onChange,
-  hasUpdatePermission
+  hasUpdatePermission,
 }) => {
   const { t } = useTranslation("config");
   const userSuggestions = useUserSuggestions();
@@ -178,7 +178,7 @@ const GeneralSettings: FC<Props> = ({
             options={[
               { label: t("general-settings.anonymousMode.full"), value: "FULL" },
               { label: t("general-settings.anonymousMode.protocolOnly"), value: "PROTOCOL_ONLY" },
-              { label: t("general-settings.anonymousMode.off"), value: "OFF" }
+              { label: t("general-settings.anonymousMode.off"), value: "OFF" },
             ]}
             helpText={t("help.allowAnonymousAccessHelpText")}
             testId={"anonymous-mode-select"}

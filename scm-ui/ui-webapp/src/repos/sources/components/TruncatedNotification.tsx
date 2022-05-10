@@ -38,7 +38,7 @@ const TruncatedNotification: FC<Props> = ({ directory, isFetchingNextPage, fetch
     return null;
   }
 
-  const fileCount = (directory._embedded?.children || []).filter(file => !file.directory).length;
+  const fileCount = (directory._embedded?.children || []).filter((file) => !file.directory).length;
 
   return (
     <Notification type="info">

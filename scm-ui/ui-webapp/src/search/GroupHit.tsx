@@ -29,7 +29,7 @@ import {
   DateFromNow,
   TextHitField,
   useDateHitFieldValue,
-  useStringHitFieldValue
+  useStringHitFieldValue,
 } from "@scm-manager/ui-components";
 import { Link } from "react-router-dom";
 

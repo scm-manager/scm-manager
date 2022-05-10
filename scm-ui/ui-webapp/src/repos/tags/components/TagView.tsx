@@ -44,7 +44,7 @@ const TagView: FC<Props> = ({ repository, tag }) => {
           renderAll={true}
           props={{
             repository,
-            tag
+            tag,
           }}
         />
       </div>

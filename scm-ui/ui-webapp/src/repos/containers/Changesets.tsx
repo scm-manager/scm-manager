@@ -31,7 +31,7 @@ import {
   LinkPaginator,
   Loading,
   Notification,
-  urls
+  urls,
 } from "@scm-manager/ui-components";
 import { useChangesets } from "@scm-manager/ui-api";
 

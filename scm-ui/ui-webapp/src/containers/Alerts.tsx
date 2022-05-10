@@ -97,8 +97,8 @@ const useFlattenedAlerts = () => {
   const { data, error } = useAlerts();
 
   if (data) {
-    const flattenedAlerts: ComponentAlert[] = data.alerts?.map(a => ({ ...a, component: "core" })) || [];
-    data.plugins?.forEach(p => flattenedAlerts.push(...(p.alerts || []).map(a => ({ ...a, component: p.name }))));
+    const flattenedAlerts: ComponentAlert[] = data.alerts?.map((a) => ({ ...a, component: "core" })) || [];
+    data.plugins?.forEach((p) => flattenedAlerts.push(...(p.alerts || []).map((a) => ({ ...a, component: p.name }))));
     flattenedAlerts.sort((a, b) => {
       if (new Date(a.issuedAt) < new Date(b.issuedAt)) {
         return 1;
@@ -107,13 +107,13 @@ const useFlattenedAlerts = () => {
     });
     return {
       data: flattenedAlerts,
-      error
+      error,
     };
   }
 
   return {
     data,
-    error
+    error,
   };
 };
 

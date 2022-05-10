@@ -42,14 +42,14 @@ const AddApiKey: FC<Props> = ({ user, apiKeys }) => {
     error: errorAddingKey,
     apiKey: addedKey,
     create,
-    reset: resetCreationHook
+    reset: resetCreationHook,
   } = useCreateApiKey(user, apiKeys);
   const [displayName, setDisplayName] = useState("");
   const [permissionRole, setPermissionRole] = useState("");
   const {
     isLoading: isLoadingRepositoryRoles,
     data: availableRepositoryRoles,
-    error: errorLoadingRepositoryRoles
+    error: errorLoadingRepositoryRoles,
   } = useRepositoryRoles();
 
   const isValid = () => {
@@ -70,7 +70,7 @@ const AddApiKey: FC<Props> = ({ user, apiKeys }) => {
   }
 
   const availableRoleNames = availableRepositoryRoles
-    ? availableRepositoryRoles._embedded?.repositoryRoles.map(r => r.name)
+    ? availableRepositoryRoles._embedded?.repositoryRoles.map((r) => r.name)
     : [];
 
   const closeModal = () => {

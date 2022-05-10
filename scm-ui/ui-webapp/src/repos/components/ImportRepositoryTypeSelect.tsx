@@ -38,11 +38,11 @@ const ImportRepositoryTypeSelect: FC<Props> = ({ repositoryTypes, repositoryType
 
   const createSelectOptions = () => {
     const options = repositoryTypes
-      .filter(repoType => !!repoType._links.import)
-      .map(repositoryType => {
+      .filter((repoType) => !!repoType._links.import)
+      .map((repositoryType) => {
         return {
           label: repositoryType.displayName,
-          value: repositoryType.name
+          value: repositoryType.name,
         };
       });
     options.unshift({ label: "", value: "" });
@@ -50,7 +50,7 @@ const ImportRepositoryTypeSelect: FC<Props> = ({ repositoryTypes, repositoryType
   };
 
   const onChangeType = (type: string) => {
-    const repositoryType = repositoryTypes.filter(t => t.name === type)[0];
+    const repositoryType = repositoryTypes.filter((t) => t.name === type)[0];
     setRepositoryType(repositoryType);
   };
 

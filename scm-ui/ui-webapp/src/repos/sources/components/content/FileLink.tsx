@@ -63,10 +63,7 @@ export const createRelativeLink = (repositoryUrl: string) => {
 export const createFolderLink = (base: string, file: File) => {
   let link = base;
   if (file.path) {
-    let path = file.path
-      .split("/")
-      .map(encodePart)
-      .join("/");
+    let path = file.path.split("/").map(encodePart).join("/");
     if (path.startsWith("/")) {
       path = path.substring(1);
     }

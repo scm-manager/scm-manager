@@ -35,14 +35,16 @@ type Props = {
 };
 
 const AnnotateView: FC<Props> = ({ file, repository, revision }) => {
-  const { data: annotation, isLoading: isAnnotationLoading, error: annotationLoadError } = useAnnotations(
-    repository,
-    revision,
-    file
-  );
-  const { data: contentType, isLoading: isContentTypeLoading, error: contentTypeLoadError } = useContentType(
-    (file._links.self as Link).href
-  );
+  const {
+    data: annotation,
+    isLoading: isAnnotationLoading,
+    error: annotationLoadError,
+  } = useAnnotations(repository, revision, file);
+  const {
+    data: contentType,
+    isLoading: isContentTypeLoading,
+    error: contentTypeLoadError,
+  } = useContentType((file._links.self as Link).href);
   const error = annotationLoadError || contentTypeLoadError;
 
   if (error) {

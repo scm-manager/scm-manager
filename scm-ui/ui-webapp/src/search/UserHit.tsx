@@ -30,7 +30,7 @@ import {
   useStringHitFieldValue,
   TextHitField,
   Hit,
-  HitProps
+  HitProps,
 } from "@scm-manager/ui-components";
 
 const UserHit: FC<HitProps> = ({ hit }) => {

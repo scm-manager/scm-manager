@@ -30,7 +30,7 @@ import {
   AnnotationFactoryContext,
   DiffEventHandler,
   DiffEventContext,
-  DiffObjectProps
+  DiffObjectProps,
 } from "./DiffTypes";
 
 import { FileDiff as File, FileChangeType, Hunk, Change, ChangeType } from "@scm-manager/ui-types";
@@ -65,5 +65,5 @@ export {
   AnnotationFactoryContext,
   DiffEventHandler,
   DiffEventContext,
-  DiffObjectProps
+  DiffObjectProps,
 };

@@ -31,7 +31,7 @@ import {
   InputField,
   Level,
   Notification,
-  Subtitle
+  Subtitle,
 } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 import { ExportInfo, Link, Repository } from "@scm-manager/ui-types";
@@ -88,7 +88,7 @@ const ExportRepository: FC<Props> = ({ repository }) => {
     isLoading: isLoadingExport,
     error: errorExport,
     data: exportedInfo,
-    exportRepository
+    exportRepository,
   } = useExportRepository();
 
   useEffect(() => {
@@ -171,7 +171,7 @@ const ExportRepository: FC<Props> = ({ repository }) => {
                 exportRepository(repository, {
                   compressed,
                   password: encrypt ? password : "",
-                  withMetadata: fullExport
+                  withMetadata: fullExport,
                 })
               }
               loading={isLoadingInfo || isLoadingExport}

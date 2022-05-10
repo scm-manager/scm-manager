@@ -41,13 +41,13 @@ class CardColumnGroup extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      collapsed: false
+      collapsed: false,
     };
   }
 
   toggleCollapse = () => {
-    this.setState(prevState => ({
-      collapsed: !prevState.collapsed
+    this.setState((prevState) => ({
+      collapsed: !prevState.collapsed,
     }));
   };
 

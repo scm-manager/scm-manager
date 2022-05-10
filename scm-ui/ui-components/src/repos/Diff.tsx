@@ -64,14 +64,14 @@ const Diff: FC<Props> = ({ diff, ...fileProps }) => {
       {diff.length === 0 ? (
         <Notification type="info">{t("diff.noDiffFound")}</Notification>
       ) : (
-        diff.map(file => <DiffFile key={createKey(file)} file={file} {...fileProps} />)
+        diff.map((file) => <DiffFile key={createKey(file)} file={file} {...fileProps} />)
       )}
     </div>
   );
 };
 
 Diff.defaultProps = {
-  sideBySide: false
+  sideBySide: false,
 };
 
 export default Diff;

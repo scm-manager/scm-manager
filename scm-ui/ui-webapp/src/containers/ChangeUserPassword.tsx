@@ -29,7 +29,7 @@ import {
   Notification,
   PasswordConfirmation,
   SubmitButton,
-  Subtitle
+  Subtitle,
 } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 import { Me } from "@scm-manager/ui-types";

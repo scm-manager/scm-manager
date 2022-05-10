@@ -39,7 +39,7 @@ describe("repository name validation", () => {
   it("should allow same names as the backend", () => {
     const validPaths = ["scm", "scm.gitz", "s", "sc", ".hiddenrepo", "b.", "...", "..c", "d..", "a..c"];
 
-    validPaths.forEach(path => expect(validator.isNameValid(path)).toBe(true));
+    validPaths.forEach((path) => expect(validator.isNameValid(path)).toBe(true));
   });
 
   it("should deny same names as the backend", () => {
@@ -93,10 +93,10 @@ describe("repository name validation", () => {
       "scm/main",
       "scm/plugins/git-plugin",
       "scm/plugins/git-plugin",
-      "scm.git"
+      "scm.git",
     ];
 
-    invalidPaths.forEach(path => expect(validator.isNameValid(path)).toBe(false));
+    invalidPaths.forEach((path) => expect(validator.isNameValid(path)).toBe(false));
   });
 });
 

@@ -25,7 +25,7 @@ import React, { FC, ReactNode } from "react";
 import { ColumnProps } from "./types";
 
 type Props = ColumnProps & {
-  children: (row: any, columnIndex: number) => ReactNode;
+  children: (row: unknown, columnIndex: number) => ReactNode;
 };
 
 const Column: FC<Props> = ({ row, columnIndex, children }) => {

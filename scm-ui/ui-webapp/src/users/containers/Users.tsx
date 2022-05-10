@@ -31,7 +31,7 @@ import {
   OverviewPageActions,
   Page,
   PageActions,
-  urls
+  urls,
 } from "@scm-manager/ui-components";
 import { UserTable } from "./../components/table";
 import { useUsers } from "@scm-manager/ui-api";

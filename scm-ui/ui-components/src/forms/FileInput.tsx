@@ -59,7 +59,7 @@ const FileInput: FC<Props> = ({
   const [file, setFile] = useState<File | null>(null);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const uploadedFile = event?.target?.files![0];
+    const uploadedFile = event?.target.files?.[0];
     // @ts-ignore the uploaded file doesn't match our types
     setFile(uploadedFile);
 

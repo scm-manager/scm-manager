@@ -45,13 +45,13 @@ const SetPermissions: FC<Props> = ({
   permissionsUpdateError,
   updatePermissions,
   permissionsUpdated,
-  selectedPermissions
+  selectedPermissions,
 }) => {
   const [t] = useTranslation("permissions");
   const {
     data: availablePermissions,
     error: availablePermissionsLoadError,
-    isLoading: isLoadingAvailablePermissions
+    isLoading: isLoadingAvailablePermissions,
   } = useAvailableGlobalPermissions();
   const [permissions, setPermissions] = useState<Record<string, boolean>>({});
   const [permissionsSubmitted, setPermissionsSubmitted] = useState(false);
@@ -61,8 +61,8 @@ const SetPermissions: FC<Props> = ({
   useEffect(() => {
     if (selectedPermissions && availablePermissions) {
       const newPermissions: Record<string, boolean> = {};
-      availablePermissions.permissions.forEach(p => (newPermissions[p] = false));
-      selectedPermissions.permissions.forEach(p => (newPermissions[p] = true));
+      availablePermissions.permissions.forEach((p) => (newPermissions[p] = false));
+      selectedPermissions.permissions.forEach((p) => (newPermissions[p] = true));
       setPermissions(newPermissions);
     }
   }, [availablePermissions, selectedPermissions]);
@@ -85,7 +85,7 @@ const SetPermissions: FC<Props> = ({
   const valueChanged = (value: boolean, name: string) => {
     setPermissions({
       ...permissions,
-      [name]: value
+      [name]: value,
     });
     setPermissionsChanged(true);
   };
@@ -96,8 +96,8 @@ const SetPermissions: FC<Props> = ({
     event.preventDefault();
     if (permissions) {
       const selectedPermissions = Object.entries(permissions)
-        .filter(e => e[1])
-        .map(e => e[0]);
+        .filter((e) => e[1])
+        .map((e) => e[0]);
       if (updatePermissions) {
         updatePermissions(selectedPermissions);
       }

@@ -33,11 +33,11 @@ type Props = {
 class DownloadButton extends React.Component<Props> {
   render() {
     const { displayName, url, disabled, onClick } = this.props;
-    const onClickOrDefault = !!onClick ? onClick : () => {};
+    const onClickOrDefault = !!onClick ? onClick : () => null;
     return (
       <>
         {/*
-        we have to ignore the next line, 
+        we have to ignore the next line,
         because jsx a does not the custom disabled attribute
         but bulma does.
         // @ts-ignore */}

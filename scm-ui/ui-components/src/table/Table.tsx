@@ -130,7 +130,7 @@ const Table: FC<Props> = ({ data, sortable, children, emptyMessage, className })
 };
 
 Table.defaultProps = {
-  sortable: true
+  sortable: true,
 };
 
 const renderSortIcon = (child: ReactElement, ascending: boolean, showIcon: boolean) => {

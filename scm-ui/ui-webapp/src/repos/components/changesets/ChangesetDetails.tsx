@@ -43,7 +43,7 @@ import {
   Level,
   SignatureIcon,
   Tooltip,
-  SubSubtitle
+  SubSubtitle,
 } from "@scm-manager/ui-components";
 import ContributorTable from "./ContributorTable";
 import { Link as ReactLink } from "react-router-dom";
@@ -93,7 +93,7 @@ const Contributors: FC<{ changeset: Changeset }> = ({ changeset }) => {
     return (
       <div className="is-flex is-flex-direction-column mb-4">
         <div className="is-flex">
-          <p className="is-ellipsis-overflow is-clickable mb-2" onClick={e => setOpen(!open)}>
+          <p className="is-ellipsis-overflow is-clickable mb-2" onClick={(e) => setOpen(!open)}>
             <Icon name="angle-down" alt={t("changeset.contributors.hideList")} /> {t("changeset.contributors.list")}
           </p>
           {signatureIcon}
@@ -105,7 +105,7 @@ const Contributors: FC<{ changeset: Changeset }> = ({ changeset }) => {
 
   return (
     <>
-      <div className="is-flex is-clickable" onClick={e => setOpen(!open)}>
+      <div className="is-flex is-clickable" onClick={(e) => setOpen(!open)}>
         <ContributorColumn className="is-ellipsis-overflow">
           <Icon name="angle-right" alt={t("changeset.contributors.showList")} />{" "}
           <ChangesetAuthor changeset={changeset} />
@@ -150,7 +150,7 @@ const ChangesetDetails: FC<Props> = ({ changeset, repository, fileControlFactory
             name="changeset.description"
             props={{
               changeset,
-              value: description.title
+              value: description.title,
             }}
             renderAll={false}
           >
@@ -210,7 +210,7 @@ const ChangesetDetails: FC<Props> = ({ changeset, repository, fileControlFactory
                   name="changeset.description"
                   props={{
                     changeset,
-                    value: item
+                    value: item,
                   }}
                   renderAll={false}
                 >

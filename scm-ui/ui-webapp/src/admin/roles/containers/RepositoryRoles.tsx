@@ -32,7 +32,7 @@ import {
   Notification,
   Subtitle,
   Title,
-  urls
+  urls,
 } from "@scm-manager/ui-components";
 import PermissionRoleTable from "../components/PermissionRoleTable";
 import { useRepositoryRoles } from "@scm-manager/ui-api";

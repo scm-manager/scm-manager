@@ -24,7 +24,6 @@
 import React, { ReactNode, useEffect, useState } from "react";
 import { storiesOf } from "@storybook/react";
 import Diff from "./Diff";
-// @ts-ignore
 import parser from "gitdiff-parser";
 import simpleDiff from "../__resources__/Diff.simple";
 import hunksDiff from "../__resources__/Diff.hunks";
@@ -112,7 +111,7 @@ storiesOf("Repositories/Diff", module)
   .add("Line Annotation", () => (
     <Diff
       diff={diffFiles}
-      annotationFactory={(ctx) => {
+      annotationFactory={() => {
         return {
           N2: <p key="N2">Line Annotation</p>,
         };
@@ -121,12 +120,11 @@ storiesOf("Repositories/Diff", module)
   ))
   .add("OnClick", () => {
     const OnClickDemo = () => {
-      const [changeId, setChangeId] = useState();
+      const [changeId, setChangeId] = useState<string | undefined>();
       useEffect(() => {
         const interval = setInterval(() => setChangeId(undefined), 2000);
         return () => clearInterval(interval);
       });
-      // @ts-ignore
       const onClick = (context: DiffEventContext) => setChangeId(context.changeId);
       return (
         <>
@@ -158,15 +156,14 @@ storiesOf("Repositories/Diff", module)
     return <Diff diff={filesWithLanguage} />;
   })
   .add("SyntaxHighlighting (Markdown)", () => {
-    // @ts-ignore
-    return <Diff diff={markdownDiff.files} />;
+    return <Diff diff={markdownDiff.files as FileDiff[]} />;
   })
   .add("CollapsingWithFunction", () => (
-    <Diff diff={diffFiles} defaultCollapse={(oldPath, newPath) => oldPath.endsWith(".java")} />
+    <Diff diff={diffFiles} defaultCollapse={(oldPath) => oldPath.endsWith(".java")} />
   ))
   .add("Expandable", () => {
     const filesWithLanguage = diffFiles.map((file: FileDiff) => {
-      file._links = { lines: { href: "http://example.com/" } };
+      file._links = { lines: { href: "https://example.com/" } };
       return file;
     });
     return <Diff diff={filesWithLanguage} />;
@@ -180,8 +177,7 @@ storiesOf("Repositories/Diff", module)
           <Button className="mb-5" action={() => setMarkdown((m) => !m)}>
             Change content
           </Button>
-          {/* @ts-ignore */}
-          <Diff diff={markdown ? markdownDiff.files : diffFiles} />
+          <Diff diff={markdown ? (markdownDiff.files as FileDiff[]) : diffFiles} />
         </div>
       );
     };

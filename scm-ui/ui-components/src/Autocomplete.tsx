@@ -26,7 +26,7 @@ import classNames from "classnames";
 import { Async, AsyncCreatable } from "react-select";
 import { SelectValue } from "@scm-manager/ui-types";
 import LabelWithHelpIcon from "./forms/LabelWithHelpIcon";
-import { ActionMeta, ValueType } from "react-select/lib/types";
+import { ValueType } from "react-select/lib/types";
 
 type Props = {
   loadSuggestions: (p: string) => Promise<SelectValue[]>;
@@ -44,16 +44,16 @@ type Props = {
   disabled?: boolean;
 };
 
-type State = {};
+type State = unknown;
 
 class Autocomplete extends React.Component<Props, State> {
   static defaultProps = {
     placeholder: "Type here",
     loadingMessage: "Loading...",
-    noOptionsMessage: "No suggestion available"
+    noOptionsMessage: "No suggestion available",
   };
 
-  handleInputChange = (newValue: ValueType<SelectValue>, action: ActionMeta) => {
+  handleInputChange = (newValue: ValueType<SelectValue>) => {
     this.selectValue(newValue as SelectValue);
   };
 
@@ -64,10 +64,10 @@ class Autocomplete extends React.Component<Props, State> {
   // We overwrite this to avoid running into a bug (https://github.com/JedWatson/react-select/issues/2944)
   isValidNewOption = (
     inputValue: string,
-    selectValue: ValueType<SelectValue>,
+    _selectValue: ValueType<SelectValue>,
     selectOptions: readonly SelectValue[]
   ): boolean => {
-    const isNotDuplicated = !selectOptions.map(option => option.label).includes(inputValue);
+    const isNotDuplicated = !selectOptions.map((option) => option.label).includes(inputValue);
     const isNotEmpty = inputValue !== "";
     return isNotEmpty && isNotDuplicated;
   };
@@ -85,7 +85,7 @@ class Autocomplete extends React.Component<Props, State> {
       informationMessage,
       creatable,
       className,
-      disabled
+      disabled,
     } = this.props;
 
     const asyncProps = {
@@ -99,7 +99,7 @@ class Autocomplete extends React.Component<Props, State> {
       loadingMessage: () => loadingMessage,
       noOptionsMessage: () => noOptionsMessage,
       isDisabled: disabled,
-      "aria-label": helpText || label
+      "aria-label": helpText || label,
     };
 
     return (
@@ -110,13 +110,13 @@ class Autocomplete extends React.Component<Props, State> {
             <AsyncCreatable
               {...asyncProps}
               isValidNewOption={this.isValidNewOption}
-              onCreateOption={newValue => {
+              onCreateOption={(newValue) => {
                 this.selectValue({
                   label: newValue,
                   value: {
                     id: newValue,
-                    displayName: newValue
-                  }
+                    displayName: newValue,
+                  },
                 });
               }}
             />

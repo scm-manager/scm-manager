@@ -21,9 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import { mount, shallow } from "@scm-manager/ui-tests";
 import React from "react";
-import { mount, shallow } from "@scm-manager/ui-tests/enzyme-router";
-import "@scm-manager/ui-tests/i18n";
 import Paginator from "./Paginator";
 
 xdescribe("paginator rendering tests", () => {

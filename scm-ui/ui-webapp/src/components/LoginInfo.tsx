@@ -77,17 +77,17 @@ class LoginInfo extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      loading: !!props.loginInfoLink
+      loading: !!props.loginInfoLink,
     };
   }
 
   fetchLoginInfo = (url: string) => {
     return fetch(url)
-      .then(response => response.json())
-      .then(info => {
+      .then((response) => response.json())
+      .then((info) => {
         this.setState({
           info,
-          loading: false
+          loading: false,
         });
       });
   };
@@ -108,7 +108,7 @@ class LoginInfo extends React.Component<Props, State> {
     }
     this.timeout(1000, this.fetchLoginInfo(loginInfoLink)).catch(() => {
       this.setState({
-        loading: false
+        loading: false,
       });
     });
   }

@@ -58,7 +58,7 @@ const RepositoryInformationForm: FC<Props> = ({ repository, onChange, disabled, 
       />
       <Textarea
         label={t("repository.description")}
-        onChange={description => onChange({ ...repository, description })}
+        onChange={(description) => onChange({ ...repository, description })}
         value={repository ? repository.description : ""}
         helpText={t("help.descriptionHelpText")}
         disabled={disabled}

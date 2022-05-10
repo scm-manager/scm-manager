@@ -28,7 +28,7 @@ import classNames from "classnames";
 type Props = {
   icon: string;
   text: string;
-  onClick: () => Promise<any>;
+  onClick: () => Promise<unknown>;
 };
 
 const HunkExpandLink: FC<Props> = ({ icon, text, onClick }) => {

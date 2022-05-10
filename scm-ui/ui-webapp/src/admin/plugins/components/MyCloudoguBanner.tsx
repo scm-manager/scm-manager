@@ -112,7 +112,7 @@ const Unauthenticated: FC<PropsWithLink> = ({ link, info }) => {
           i18nKey="plugins.myCloudogu.login.description"
           components={[
             <a href="https://my.cloudogu.com/">myCloudogu</a>,
-            <a href="https://scm-manager.org/data-processing">Data Processing</a>
+            <a href="https://scm-manager.org/data-processing">Data Processing</a>,
           ]}
         />
       </p>

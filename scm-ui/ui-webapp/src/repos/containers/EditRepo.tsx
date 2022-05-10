@@ -47,7 +47,7 @@ const EditRepo: FC<Props> = ({ repository }) => {
   const url = urls.matchedUrlFromMatch(match);
   const extensionProps = {
     repository,
-    url
+    url,
   };
 
   return (

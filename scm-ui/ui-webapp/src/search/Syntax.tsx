@@ -33,7 +33,7 @@ import {
   Loading,
   MarkdownView,
   Page,
-  Tooltip
+  Tooltip,
 } from "@scm-manager/ui-components";
 import { parse } from "date-fns";
 import styled from "styled-components";
@@ -83,7 +83,7 @@ const Examples: FC<ExampleProps> = ({ searchableType }) => {
   const [t] = useTranslation(["commons", "plugins"]);
   const examples = t<Example[]>(`plugins:search.types.${searchableType.name}.examples`, {
     returnObjects: true,
-    defaultValue: []
+    defaultValue: [],
   });
 
   if (examples.length === 0) {
@@ -126,7 +126,7 @@ const SearchableTypes: FC = () => {
 
   return (
     <>
-      {data.map(searchableType => (
+      {data.map((searchableType) => (
         <Expandable
           key={searchableType.name}
           className="mb-1"
@@ -139,18 +139,18 @@ const SearchableTypes: FC = () => {
               <th>{t("search.syntax.fields.exampleValue")}</th>
               <th>{t("search.syntax.fields.hints")}</th>
             </tr>
-            {searchableType.fields.map(searchableField => (
+            {searchableType.fields.map((searchableField) => (
               <tr>
                 <th>{searchableField.name}</th>
                 <td>{searchableField.type}</td>
                 <td>
                   {t(`plugins:search.types.${searchableType.name}.fields.${searchableField.name}.exampleValue`, {
-                    defaultValue: ""
+                    defaultValue: "",
                   })}
                 </td>
                 <td>
                   {t(`plugins:search.types.${searchableType.name}.fields.${searchableField.name}.hints`, {
-                    defaultValue: ""
+                    defaultValue: "",
                   })}
                 </td>
               </tr>

@@ -56,7 +56,7 @@ describe("key comparator tests", () => {
   });
 
   it("should not fail if item is undefined", () => {
-    const array: any[] = createObjects("key", ["a"]);
+    const array: unknown[] = createObjects("key", ["a"]);
     array.push(undefined);
     array.push(createObject("key", "z"));
     array.sort(byKey("key"));
@@ -86,7 +86,7 @@ describe("length comparator tests", () => {
   });
 
   it("should not fail if item is undefined", () => {
-    const array: any[] = createObjects("key", ["."]);
+    const array: unknown[] = createObjects("key", ["."]);
     array.push(undefined);
     array.push(createObject("key", ".."));
     array.sort(byValueLength("key"));
@@ -141,7 +141,7 @@ describe("nested key comparator tests", () => {
   });
 
   it("should not fail if item is undefined", () => {
-    const array: any[] = createObjects("key", "nested", ["a"]);
+    const array: unknown[] = createObjects("key", "nested", ["a"]);
     array.push(undefined);
     array.push(createObject("key", "nested", "z"));
     array.sort(byNestedKeys("key", "nested"));

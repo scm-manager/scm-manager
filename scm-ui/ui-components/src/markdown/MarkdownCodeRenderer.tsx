@@ -32,7 +32,7 @@ type Props = {
   value: string;
 };
 
-const MarkdownCodeRenderer: FC<Props> = props => {
+const MarkdownCodeRenderer: FC<Props> = (props) => {
   const binder = useBinder();
   const indexLinks = useIndexLinks();
   const { language } = props;

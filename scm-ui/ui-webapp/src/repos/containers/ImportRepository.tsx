@@ -53,7 +53,7 @@ const ImportPendingLoading = ({ importPending }: { importPending: boolean }) => 
 const ImportRepository: extensionPoints.RepositoryCreatorExtension["component"] = ({
   repositoryTypes,
   nameForm,
-  informationForm
+  informationForm,
 }) => {
   const [importPending, setImportPending] = useState(false);
   const [importedRepository, setImportedRepository] = useState<Repository>();

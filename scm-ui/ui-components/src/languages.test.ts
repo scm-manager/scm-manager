@@ -44,5 +44,4 @@ describe("syntax highlighter", () => {
     const lang = determineLanguage("");
     expect(lang).toBe("text");
   });
-
 });

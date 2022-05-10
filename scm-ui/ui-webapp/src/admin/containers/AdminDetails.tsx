@@ -71,7 +71,7 @@ const AdminDetails: FC = () => {
               <h3 className="has-text-weight-medium">{t("admin.info.newRelease.title")}</h3>
               <p>
                 {t("admin.info.newRelease.description", {
-                  version: updateInfo?.latestVersion
+                  version: updateInfo?.latestVersion,
                 })}
               </p>
               <a className="button is-warning is-pulled-right" target="_blank" href={updateInfo?.link} rel="noreferrer">

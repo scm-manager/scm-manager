@@ -31,7 +31,7 @@ describe("GeneralNavLink", () => {
       namespace: "space",
       name: "name",
       type: "git",
-      _links: {}
+      _links: {},
     };
 
     const navLink = shallow(<EditRepoNavLink repository={repository} editUrl="" />);
@@ -45,9 +45,9 @@ describe("GeneralNavLink", () => {
       type: "git",
       _links: {
         update: {
-          href: "/repositories"
-        }
-      }
+          href: "/repositories",
+        },
+      },
     };
 
     const navLink = mount(<EditRepoNavLink repository={repository} editUrl="" />);

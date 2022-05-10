@@ -128,7 +128,7 @@ const CompareSelector: FC<Props> = ({ onSelect, selected, label, repository }) =
                 <input
                   className="input is-small"
                   placeholder={t("compare.selector.filter")}
-                  onChange={e => setFilter(e.target.value)}
+                  onChange={(e) => setFilter(e.target.value)}
                   type="search"
                 />
                 <CompareSelectorList

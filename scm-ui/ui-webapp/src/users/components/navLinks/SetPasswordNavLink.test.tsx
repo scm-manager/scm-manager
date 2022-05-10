@@ -33,7 +33,7 @@ it("should render nothing, if the password link is missing", () => {
     password: "hitchhiker",
     external: true,
     active: true,
-    _links: {}
+    _links: {},
   };
 
   const navLink = shallow(<ChangePasswordNavLink user={user} passwordUrl="/user/password" />);
@@ -49,9 +49,9 @@ it("should render the navLink", () => {
     active: true,
     _links: {
       password: {
-        href: "/password"
-      }
-    }
+        href: "/password",
+      },
+    },
   };
 
   const navLink = shallow(<ChangePasswordNavLink user={user} passwordUrl="/user/password" />);

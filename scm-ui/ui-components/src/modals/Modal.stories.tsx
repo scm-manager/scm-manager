@@ -24,7 +24,7 @@
 
 import { storiesOf } from "@storybook/react";
 import { MemoryRouter } from "react-router-dom";
-import React, { FC, useRef, useState } from "react";
+import React, { FC, ReactNode, useRef, useState } from "react";
 import Modal from "./Modal";
 import Checkbox from "../forms/Checkbox";
 import styled from "styled-components";
@@ -75,20 +75,20 @@ const withFormElementsFooter = (
 );
 
 const loadSuggestions: (p: string) => Promise<SelectValue[]> = () =>
-  new Promise(resolve => {
+  new Promise((resolve) => {
     setTimeout(() => {
       resolve([
         { value: { id: "trillian", displayName: "Tricia McMillan" }, label: "Tricia McMillan" },
         { value: { id: "zaphod", displayName: "Zaphod Beeblebrox" }, label: "Zaphod Beeblebrox" },
         { value: { id: "ford", displayName: "Ford Prefect" }, label: "Ford Prefect" },
         { value: { id: "dent", displayName: "Arthur Dent" }, label: "Arthur Dent" },
-        { value: { id: "marvin", displayName: "Marvin" }, label: "Marvin the Paranoid Android " }
+        { value: { id: "marvin", displayName: "Marvin" }, label: "Marvin the Paranoid Android " },
       ]);
     });
   });
 
 storiesOf("Modal/Modal", module)
-  .addDecorator(story => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
+  .addDecorator((story) => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
   .add("Default", () => (
     <NonCloseableModal>
       <p>{text}</p>
@@ -270,7 +270,7 @@ storiesOf("Modal/Modal", module)
     );
   });
 
-type NonCloseableModalProps = { overflowVisible?: boolean; footer?: any };
+type NonCloseableModalProps = { overflowVisible?: boolean; footer?: ReactNode };
 
 const NonCloseableModal: FC<NonCloseableModalProps> = ({ overflowVisible, footer, children }) => {
   return (

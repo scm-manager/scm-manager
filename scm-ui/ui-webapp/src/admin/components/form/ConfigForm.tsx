@@ -46,7 +46,7 @@ const ConfigForm: FC<Props> = ({
   loading,
   configReadPermission,
   configUpdatePermission,
-  namespaceStrategies
+  namespaceStrategies,
 }) => {
   const [t] = useTranslation("config");
   const [innerConfig, setInnerConfig] = useState<Config>({
@@ -78,7 +78,7 @@ const ConfigForm: FC<Props> = ({
     mailDomainName: "",
     emergencyContacts: [],
     enabledApiKeys: true,
-    _links: {}
+    _links: {},
   });
   const [showNotification, setShowNotification] = useState(false);
   const [changed, setChanged] = useState(false);
@@ -87,7 +87,7 @@ const ConfigForm: FC<Props> = ({
     loginAttemptLimit: boolean;
   }>({
     loginAttemptLimitTimeout: false,
-    loginAttemptLimit: false
+    loginAttemptLimit: false,
   });
 
   useEffect(() => {

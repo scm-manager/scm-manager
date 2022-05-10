@@ -29,7 +29,7 @@ import {
   Modal,
   NoStyleButton,
   SmallLoadingSpinner,
-  Tooltip
+  Tooltip,
 } from "@scm-manager/ui-components";
 import { PluginCenterAuthenticationInfo } from "@scm-manager/ui-types";
 import { useTranslation } from "react-i18next";
@@ -40,7 +40,7 @@ type PluginCenterAuthInfoProps = {
   error: Error | null;
 };
 
-const PluginCenterAuthInfo: FC<PluginCenterAuthInfoProps> = props => (
+const PluginCenterAuthInfo: FC<PluginCenterAuthInfoProps> = (props) => (
   <div className="ml-3 is-flex is-align-items-center is-size-5">
     <Inner {...props} />
   </div>
@@ -105,7 +105,7 @@ const AuthenticationFailed: FC<InfoProps> = ({ info }) => {
   return (
     <Tooltip
       message={t("plugins.myCloudogu.failed.info", {
-        pluginCenterSubject: info.pluginCenterSubject
+        pluginCenterSubject: info.pluginCenterSubject,
       })}
       multiline={true}
     >
@@ -119,7 +119,7 @@ const Authenticated: FC<InfoProps> = ({ info }) => {
   return (
     <Tooltip
       message={t("plugins.myCloudogu.connectionInfo", {
-        pluginCenterSubject: info.pluginCenterSubject
+        pluginCenterSubject: info.pluginCenterSubject,
       })}
       multiline={true}
     >

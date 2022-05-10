@@ -32,7 +32,7 @@ import {
   OverviewPageActions,
   Page,
   PageActions,
-  urls
+  urls,
 } from "@scm-manager/ui-components";
 import RepositoryList from "../components/list";
 import { useNamespaces, useRepositories } from "@scm-manager/ui-api";
@@ -65,7 +65,7 @@ const useOverviewData = () => {
   const search = urls.getQueryStringFromLocation(location);
 
   const request = {
-    namespace: namespaces?._embedded.namespaces.find(n => n.namespace === namespace),
+    namespace: namespaces?._embedded.namespaces.find((n) => n.namespace === namespace),
     // ui starts counting by 1,
     // but backend starts counting by 0
     page: page - 1,
@@ -75,7 +75,7 @@ const useOverviewData = () => {
     // also do not fetch repositories if an invalid namespace is selected
     disabled:
       (!!namespace && !namespaces) ||
-      (!!namespace && !namespaces?._embedded.namespaces.some(n => n.namespace === namespace))
+      (!!namespace && !namespaces?._embedded.namespaces.some((n) => n.namespace === namespace)),
   };
   const { isLoading: isLoadingRepositories, error: errorRepositories, data: repositories } = useRepositories(request);
 
@@ -86,7 +86,7 @@ const useOverviewData = () => {
     namespace,
     repositories,
     search,
-    page
+    page,
   };
 };
 
@@ -152,7 +152,7 @@ const Overview: FC = () => {
   const allNamespacesPlaceholder = t("overview.allNamespaces");
   let namespacesToRender: string[] = [];
   if (namespaces) {
-    namespacesToRender = [allNamespacesPlaceholder, ...namespaces._embedded.namespaces.map(n => n.namespace).sort()];
+    namespacesToRender = [allNamespacesPlaceholder, ...namespaces._embedded.namespaces.map((n) => n.namespace).sort()];
   }
   const namespaceSelected = (newNamespace: string) => {
     if (newNamespace === allNamespacesPlaceholder) {
@@ -183,7 +183,7 @@ const Overview: FC = () => {
       <div className="columns">
         {hasExtensions ? (
           <StickyColumn className="column is-one-third">
-            {extensions.map(extension => React.createElement(extension))}
+            {extensions.map((extension) => React.createElement(extension))}
           </StickyColumn>
         ) : null}
         <div className="column is-clipped">
@@ -206,7 +206,7 @@ const Overview: FC = () => {
             <OverviewPageActions
               showCreateButton={showCreateButton}
               currentGroup={
-                namespace && namespaces?._embedded.namespaces.some(n => n.namespace === namespace) ? namespace : ""
+                namespace && namespaces?._embedded.namespaces.some((n) => n.namespace === namespace) ? namespace : ""
               }
               groups={namespacesToRender}
               groupSelected={namespaceSelected}

@@ -32,7 +32,7 @@ describe("RepositoryNavLink", () => {
       namespace: "Namespace",
       name: "Repo",
       type: "GIT",
-      _links: {}
+      _links: {},
     };
 
     const navLink = shallow(
@@ -54,9 +54,9 @@ describe("RepositoryNavLink", () => {
       type: "GIT",
       _links: {
         sources: {
-          href: "/sources"
-        }
-      }
+          href: "/sources",
+        },
+      },
     };
 
     const navLink = mount(

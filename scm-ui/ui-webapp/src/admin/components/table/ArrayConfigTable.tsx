@@ -42,7 +42,7 @@ class ArrayConfigTable extends React.Component<Props> {
           <LabelWithHelpIcon label={label} helpText={helpText} />
           <table className="table is-hoverable is-fullwidth">
             <tbody>
-              {items.map(item => {
+              {items.map((item) => {
                 return (
                   <tr key={item}>
                     <td>{item}</td>
@@ -66,7 +66,7 @@ class ArrayConfigTable extends React.Component<Props> {
   }
 
   removeEntry = (item: string) => {
-    const newItems = this.props.items.filter(name => name !== item);
+    const newItems = this.props.items.filter((name) => name !== item);
     this.props.onRemove(newItems, item);
   };
 }

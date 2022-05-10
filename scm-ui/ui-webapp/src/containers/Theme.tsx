@@ -62,12 +62,12 @@ const Theme: FC = () => {
     setValue,
     handleSubmit,
     formState: { isDirty },
-    watch
+    watch,
   } = useForm<ThemeForm>({
     mode: "onChange",
     defaultValues: {
-      theme
-    }
+      theme,
+    },
   });
   const [t] = useTranslation("commons");
 
@@ -79,7 +79,7 @@ const Theme: FC = () => {
     <>
       <Subtitle>{t("profile.theme.subtitle")}</Subtitle>
       <form className="is-flex is-flex-direction-column" onSubmit={handleSubmit(onSubmit)}>
-        {themes.map(theme => {
+        {themes.map((theme) => {
           const a11yId = createA11yId("theme");
           return (
             <div

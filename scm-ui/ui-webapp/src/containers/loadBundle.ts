@@ -59,7 +59,7 @@ defineStatic("@scm-manager/ui-components", UIComponents);
 defineStatic("@scm-manager/ui-api", UIApi);
 
 // redux is deprecated in favor of ui-api
-defineLazy("redux", () => import("@scm-manager/ui-legacy").then(legacy => legacy.Redux));
-defineLazy("react-redux", () => import("@scm-manager/ui-legacy").then(legacy => legacy.ReactRedux));
+defineLazy("redux", () => import("@scm-manager/ui-legacy").then((legacy) => legacy.Redux));
+defineLazy("react-redux", () => import("@scm-manager/ui-legacy").then((legacy) => legacy.ReactRedux));
 
 export default load;

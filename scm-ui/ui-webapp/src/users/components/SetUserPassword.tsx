@@ -30,7 +30,7 @@ import {
   Notification,
   PasswordConfirmation,
   SubmitButton,
-  Subtitle
+  Subtitle,
 } from "@scm-manager/ui-components";
 import { useSetUserPassword } from "@scm-manager/ui-api";
 

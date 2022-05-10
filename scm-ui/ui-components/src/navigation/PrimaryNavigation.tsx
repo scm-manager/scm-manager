@@ -60,7 +60,7 @@ const PrimaryNavigation: FC<Props> = ({ links }) => {
 
     const extensionProps = {
       links,
-      label: t("primary-navigation.first-menu")
+      label: t("primary-navigation.first-menu"),
     };
 
     const append = createNavigationAppender(navItems);
@@ -86,7 +86,7 @@ const PrimaryNavigation: FC<Props> = ({ links }) => {
         name="primary-navigation"
         renderAll={true}
         props={{
-          links
+          links,
         }}
       />
     );

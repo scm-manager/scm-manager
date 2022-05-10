@@ -31,7 +31,7 @@ import {
   RepositoryAvatar,
   TextHitField,
   Hit,
-  HitProps
+  HitProps,
 } from "@scm-manager/ui-components";
 
 const RepositoryHit: FC<HitProps> = ({ hit }) => {

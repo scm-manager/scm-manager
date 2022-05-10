@@ -76,7 +76,7 @@ const PasswordConfirmation: FC<InnerProps> = ({ passwordChanged, passwordValidat
         <InputField
           label={t("password.newPassword")}
           type="password"
-          onChange={event => handlePasswordChange(event)}
+          onChange={(event) => handlePasswordChange(event)}
           value={password}
           validationError={!passwordValid}
           errorMessage={t("password.passwordInvalid")}

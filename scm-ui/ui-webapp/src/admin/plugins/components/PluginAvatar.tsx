@@ -47,7 +47,7 @@ export default class PluginAvatar extends React.Component<Props> {
         <ExtensionPoint<extensionPoints.PluginAvatar>
           name="plugins.plugin-avatar"
           props={{
-            plugin
+            plugin,
           }}
         >
           <Image src={plugin.avatarUrl ? plugin.avatarUrl : "/images/blibTransparentBG.png"} alt="Logo" />

@@ -44,10 +44,10 @@ const ChangesetRoot: FC<Props> = ({ repository, baseUrl, branches, selectedBranc
   }
 
   const url = urls.stripEndingSlash(urls.escapeUrlForRoute(match.url));
-  const defaultBranch = branches?.find(b => b.defaultBranch === true);
+  const defaultBranch = branches?.find((b) => b.defaultBranch === true);
 
   const isBranchAvailable = () => {
-    return branches?.filter(b => b.name === selectedBranch).length === 0;
+    return branches?.filter((b) => b.name === selectedBranch).length === 0;
   };
 
   const evaluateSwitchViewLink = () => {
@@ -75,7 +75,7 @@ const ChangesetRoot: FC<Props> = ({ repository, baseUrl, branches, selectedBranc
         switchViewLink={evaluateSwitchViewLink()}
       />
       <Route path={`${url}/:page?`}>
-        <Changesets repository={repository} branch={branches?.filter(b => b.name === selectedBranch)[0]} />
+        <Changesets repository={repository} branch={branches?.filter((b) => b.name === selectedBranch)[0]} />
       </Route>
     </>
   );

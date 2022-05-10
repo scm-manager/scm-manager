@@ -94,7 +94,7 @@ const reducer = (state: State, action: Action): State => {
 const Annotate: FC<Props> = ({ source, repository, baseDate }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const defaultRenderer: FC = ({ children }: any) => {
+  const defaultRenderer: FC = ({ children }) => {
     let lastRevision = "";
     const rows = React.Children.toArray(children);
     return (

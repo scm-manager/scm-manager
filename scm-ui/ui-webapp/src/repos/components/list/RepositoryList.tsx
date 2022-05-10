@@ -50,10 +50,10 @@ class RepositoryList extends React.Component<Props> {
           props={{
             page,
             search,
-            namespace
+            namespace,
           }}
         />
-        {groups.map(group => {
+        {groups.map((group) => {
           return <RepositoryGroupEntry group={group} key={group.name} />;
         })}
       </div>

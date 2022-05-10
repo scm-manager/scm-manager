@@ -49,8 +49,8 @@ const prefix = (
 );
 
 storiesOf("BreadCrumb", module)
-  .addDecorator(story => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
-  .addDecorator(storyFn => <Wrapper>{storyFn()}</Wrapper>)
+  .addDecorator((story) => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
+  .addDecorator((storyFn) => <Wrapper>{storyFn()}</Wrapper>)
   .add("Default", () => (
     <Breadcrumb
       repository={repository}

@@ -48,7 +48,7 @@ describe("filepathSearch tests", () => {
       "SomeResolver",
       "SomeTokenResolver",
       "accesstokenresolver",
-      "ActorExpression"
+      "ActorExpression",
     ];
 
     const matches = filepathSearch(paths, "AcToRe");

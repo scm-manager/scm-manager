@@ -47,7 +47,7 @@ const LogoutButton: FC<Props> = ({ burgerMode, links, className }) => {
     links,
     label,
     className: headerButtonContentClassName,
-    content
+    content,
   };
 
   if (links?.logout) {

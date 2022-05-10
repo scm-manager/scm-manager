@@ -79,11 +79,11 @@ const ContributorTable: FC<Props> = ({ changeset }) => {
     if (!changeset.contributors) {
       return [];
     }
-    return getUnique(changeset.contributors.map(contributor => contributor.type));
+    return getUnique(changeset.contributors.map((contributor) => contributor.type));
   };
 
   const getPersonsByContributorType = (type: string) => {
-    return changeset.contributors?.filter(contributor => contributor.type === type).map(t => t.person);
+    return changeset.contributors?.filter((contributor) => contributor.type === type).map((t) => t.person);
   };
 
   const getContributorsByType = () => {
@@ -104,12 +104,12 @@ const ContributorTable: FC<Props> = ({ changeset }) => {
           <Contributor person={changeset.author} />
         </td>
       </tr>
-      {getContributorsByType().map(contributor => (
+      {getContributorsByType().map((contributor) => (
         <tr key={contributor.type}>
           <SizedTd>{t("changeset.contributor.type." + contributor.type)}:</SizedTd>
           <td className="is-ellipsis-overflow m-0">
             <CommaSeparatedList>
-              {contributor.persons?.map(person => (
+              {contributor.persons?.map((person) => (
                 <Contributor key={person.name} person={person} />
               ))}
             </CommaSeparatedList>

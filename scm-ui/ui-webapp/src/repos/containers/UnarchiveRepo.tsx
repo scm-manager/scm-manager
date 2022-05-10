@@ -57,12 +57,12 @@ const UnarchiveRepo: FC<Props> = ({ repository, confirmDialog = true }) => {
           label: t("unarchiveRepo.confirmAlert.submit"),
           isLoading,
           onClick: () => unarchiveRepoCallback(),
-          autofocus: true
+          autofocus: true,
         },
         {
           label: t("unarchiveRepo.confirmAlert.cancel"),
-          onClick: () => null
-        }
+          onClick: () => null,
+        },
       ]}
       close={() => setShowConfirmAlert(false)}
     />

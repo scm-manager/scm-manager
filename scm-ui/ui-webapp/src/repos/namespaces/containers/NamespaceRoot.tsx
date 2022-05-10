@@ -64,7 +64,7 @@ const NamespaceRoot: FC = () => {
 
   const extensionProps = {
     namespace,
-    url
+    url,
   };
 
   return (

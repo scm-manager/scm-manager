@@ -39,7 +39,7 @@ const PermissionsTable: FC<Props> = ({
   availableRoles,
   availableVerbs,
   namespaceOrRepository,
-  permissions: permissionCollection
+  permissions: permissionCollection,
 }) => {
   const [t] = useTranslation("repos");
 
@@ -78,7 +78,7 @@ const PermissionsTable: FC<Props> = ({
           </tr>
         </thead>
         <tbody>
-          {permissionCollection?._embedded.permissions.map(permission => {
+          {permissionCollection?._embedded.permissions.map((permission) => {
             return (
               <SinglePermission
                 availableRoles={availableRoles}

@@ -172,7 +172,7 @@ const ChangesetAuthor: FC<Props> = ({ changeset }) => {
 
   // extensions
   const extensions = binder.getExtensions<extensionPoints.ChangesetsAuthorSuffix>("changesets.author.suffix", {
-    changeset
+    changeset,
   });
   if (extensions) {
     authorLine.push(...extensions);

@@ -40,7 +40,7 @@ const ChangesetShortLink: (changeset: Changeset, value: string) => Replacement[]
     const link = `/repo/${namespace}/${name}/code/changeset/${revision}`;
     replacements.push({
       textToReplace: m[0],
-      replacement: <Link to={link}>{m[0]}</Link>
+      replacement: <Link to={link}>{m[0]}</Link>,
     });
     m = regex.exec(value);
   }

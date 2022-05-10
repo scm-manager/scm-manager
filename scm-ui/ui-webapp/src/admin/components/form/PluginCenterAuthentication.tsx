@@ -46,7 +46,7 @@ const PluginCenterSubject: FC<Props> = ({ authenticationInfo }) => {
         location="top"
         message={t("pluginSettings.auth.subjectTooltip", {
           principal: authenticationInfo.principal,
-          ago: formatter?.formatDistance()
+          ago: formatter?.formatDistance(),
         })}
       >
         <strong>{authenticationInfo.pluginCenterSubject}</strong>

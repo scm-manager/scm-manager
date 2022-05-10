@@ -85,7 +85,6 @@ type RoutingProps = {
 };
 
 const CodeRouting: FC<RoutingProps> = ({ repository, baseUrl, branches, selectedBranch }) => {
-
   const escapedUrl = urls.escapeUrlForRoute(baseUrl);
   return (
     <>

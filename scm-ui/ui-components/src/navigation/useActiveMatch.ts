@@ -35,7 +35,7 @@ const useActiveMatch = ({ to, activeOnlyWhenExact, activeWhenMatch }: RoutingPro
 
   const match = useRouteMatch({
     path: urls.escapeUrlForRoute(path),
-    exact: activeOnlyWhenExact
+    exact: activeOnlyWhenExact,
   });
 
   const location = useLocation();
@@ -43,7 +43,7 @@ const useActiveMatch = ({ to, activeOnlyWhenExact, activeWhenMatch }: RoutingPro
   const isActiveWhenMatch = () => {
     if (activeWhenMatch) {
       return activeWhenMatch({
-        location
+        location,
       });
     }
     return false;

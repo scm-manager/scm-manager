@@ -38,7 +38,7 @@ type Props = {
 
 const createPreSelection = (availableVerbs: string[], selectedVerbs?: string[]): SelectedVerbs => {
   const verbs: SelectedVerbs = {};
-  availableVerbs.forEach(verb => (verbs[verb] = selectedVerbs ? selectedVerbs.includes(verb) : false));
+  availableVerbs.forEach((verb) => (verbs[verb] = selectedVerbs ? selectedVerbs.includes(verb) : false));
   return verbs;
 };
 
@@ -55,7 +55,7 @@ const AdvancedPermissionsDialog: FC<Props> = ({ availableVerbs, selectedVerbs, r
     if (name) {
       setVerbs({
         ...verbs,
-        [name]: value
+        [name]: value,
       });
     }
   };

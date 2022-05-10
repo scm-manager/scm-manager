@@ -56,7 +56,7 @@ const useCreateAdmin = (link: string) => {
     create: mutate,
     isLoading,
     error,
-    isCreated: isSuccess
+    isCreated: isSuccess,
   };
 };
 
@@ -68,9 +68,9 @@ const InitializationAdminAccountStep: FC<Props> = ({ data }) => {
       displayName: "SCM Administrator",
       email: "",
       password: "",
-      passwordConfirmation: ""
+      passwordConfirmation: "",
     },
-    mode: "onChange"
+    mode: "onChange",
   });
 
   const { create, isLoading, error, isCreated } = useCreateAdmin((data._links.initialAdminUser as Link).href);

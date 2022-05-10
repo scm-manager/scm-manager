@@ -44,7 +44,7 @@ const Section: FC<SectionProps> = ({ pendingPlugins, type, label }) => {
     <>
       <strong>{label}</strong>
       <ul>
-        {plugins.map(plugin => (
+        {plugins.map((plugin) => (
           <li key={plugin.name}>{plugin.name}</li>
         ))}
       </ul>

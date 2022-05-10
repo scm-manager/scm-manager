@@ -69,8 +69,8 @@ const FileTree: FC<Props> = ({ repository, directory, baseUrl, revision, fetchNe
       revision,
       _links: {},
       _embedded: {
-        children: []
-      }
+        children: [],
+      },
     });
   }
 
@@ -82,7 +82,7 @@ const FileTree: FC<Props> = ({ repository, directory, baseUrl, revision, fetchNe
     repository,
     directory,
     baseUrl,
-    revision
+    revision,
   };
 
   return (

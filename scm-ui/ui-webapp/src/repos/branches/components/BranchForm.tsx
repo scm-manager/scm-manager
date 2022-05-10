@@ -52,15 +52,15 @@ const BranchForm: FC<Props> = ({ submitForm, branches, disabled, transmittedName
     if (isValid()) {
       submitForm({
         name,
-        parent: source
+        parent: source,
       });
     }
   };
 
   orderBranches(branches);
-  const options = branches.map(branch => ({
+  const options = branches.map((branch) => ({
     label: branch.name,
-    value: branch.name
+    value: branch.name,
   }));
 
   return (

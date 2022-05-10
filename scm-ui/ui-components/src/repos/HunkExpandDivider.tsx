@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 import React, { FC } from "react";
-// @ts-ignore
+// @ts-ignore Unknown types
 import { Decoration } from "react-diff-view";
 import styled from "styled-components";
 

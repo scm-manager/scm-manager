@@ -67,13 +67,13 @@ const DeleteRepositoryRole: FC<Props> = ({ confirmDialog = true, role }: Props) 
           {
             className: "is-outlined",
             label: t("repositoryRole.delete.confirmAlert.submit"),
-            onClick: deleteRoleCallback
+            onClick: deleteRoleCallback,
           },
           {
             label: t("repositoryRole.delete.confirmAlert.cancel"),
             onClick: () => null,
-            autofocus: true
-          }
+            autofocus: true,
+          },
         ]}
         close={() => setShowConfirmAlert(false)}
       />

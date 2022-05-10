@@ -40,11 +40,11 @@ const BranchTableWrapper: FC<Props> = ({ repository, baseUrl, data }) => {
   const [t] = useTranslation("repos");
   const branches: Branch[] = (data?._embedded?.branches as Branch[]) || [];
   orderBranches(branches);
-  const staleBranches = branches.filter(b => b.stale);
-  const activeBranches = branches.filter(b => !b.stale);
+  const staleBranches = branches.filter((b) => b.stale);
+  const activeBranches = branches.filter((b) => !b.stale);
   const { error, data: branchesDetails } = useBranchDetailsCollection(repository, [
     ...activeBranches,
-    ...staleBranches
+    ...staleBranches,
   ]);
 
   if (branches.length === 0) {

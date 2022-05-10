@@ -30,7 +30,7 @@ import repository from "../../__resources__/repository";
 import ChangesetRow from "./ChangesetRow";
 import { one, two, three, four, five } from "../../__resources__/changesets";
 import { Binder, BinderContext } from "@scm-manager/ui-extensions";
-// @ts-ignore
+// @ts-ignore Import unknown file type
 import hitchhiker from "../../__resources__/hitchhiker.png";
 import { Person } from "../../avatar/Avatar";
 import { Changeset } from "@scm-manager/ui-types";

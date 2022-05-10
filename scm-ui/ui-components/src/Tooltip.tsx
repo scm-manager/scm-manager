@@ -92,7 +92,7 @@ const Arrow = {
   bottom: ArrowBottom,
   left: ArrowLeft,
   right: ArrowRight,
-  top: ArrowTop
+  top: ArrowTop,
 };
 
 const TooltipContainerBase = styled.div<{ multiline?: boolean }>`
@@ -136,7 +136,7 @@ const Container = {
   bottom: TooltipContainerBottom,
   left: TooltipContainerLeft,
   right: TooltipContainerRight,
-  top: TooltipContainerTop
+  top: TooltipContainerTop,
 };
 
 type Props = {

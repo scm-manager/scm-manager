@@ -54,7 +54,7 @@ const OverviewPageActions: FC<Props> = ({
   label,
   testId,
   searchPlaceholder,
-  groupAriaLabelledby
+  groupAriaLabelledby,
 }) => {
   const history = useHistory();
   const location = useLocation();
@@ -66,7 +66,7 @@ const OverviewPageActions: FC<Props> = ({
       <Select
         ariaLabelledby={groupAriaLabelledby}
         className="is-fullwidth"
-        options={groups.map(g => ({ value: g, label: g }))}
+        options={groups.map((g) => ({ value: g, label: g }))}
         value={currentGroup}
         onChange={groupSelected}
       />

@@ -29,7 +29,6 @@ import Button from "../buttons/Button";
 import { useForm } from "react-hook-form";
 import { SubmitButton } from "../buttons";
 import { MemoryRouter } from "react-router-dom";
-import InputField from "./InputField";
 
 const Spacing = styled.div`
   padding: 2em;

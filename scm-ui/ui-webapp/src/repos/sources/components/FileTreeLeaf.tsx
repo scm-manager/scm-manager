@@ -104,7 +104,7 @@ class FileTreeLeaf extends React.Component<Props> {
 
     const extProps: extensionPoints.ReposSourcesTreeRowProps = {
       repository,
-      file
+      file,
     };
 
     return (
@@ -117,7 +117,7 @@ class FileTreeLeaf extends React.Component<Props> {
           </NoWrapTd>
           <td className="is-hidden-mobile">{this.contentIfPresent(file, "commitDate", renderCommitDate)}</td>
           <MinWidthTd className={classNames("is-word-break", "is-hidden-touch")}>
-            {this.contentIfPresent(file, "description", file => file.description)}
+            {this.contentIfPresent(file, "description", (file) => file.description)}
           </MinWidthTd>
 
           {binder.hasExtension<extensionPoints.ReposSourcesTreeRowRight>("repos.sources.tree.row.right", extProps) && (

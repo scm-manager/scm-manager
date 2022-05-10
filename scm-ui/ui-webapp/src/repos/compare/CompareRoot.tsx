@@ -52,7 +52,7 @@ const CompareRoot: FC<Props> = ({ repository, baseUrl }) => {
         <CompareView repository={repository} baseUrl={baseUrl} />
       </Route>
       {data._embedded && (
-        <Redirect from={url} to={`${url}/b/${data._embedded.branches.filter(b => b.defaultBranch)[0].name}`} />
+        <Redirect from={url} to={`${url}/b/${data._embedded.branches.filter((b) => b.defaultBranch)[0].name}`} />
       )}
     </Switch>
   );

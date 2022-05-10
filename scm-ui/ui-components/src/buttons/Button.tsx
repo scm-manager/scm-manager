@@ -67,7 +67,7 @@ const Button: FC<InnerProps> = ({
   disabled,
   action,
   color = "default",
-  innerRef
+  innerRef,
 }) => {
   const renderIcon = () => {
     return (
@@ -119,7 +119,7 @@ const Button: FC<InnerProps> = ({
       type={type}
       title={title}
       disabled={disabled}
-      onClick={event => action && action(event)}
+      onClick={(event) => action && action(event)}
       className={classes}
       ref={innerRef}
       {...createAttributesForTesting(testId)}

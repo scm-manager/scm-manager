@@ -44,7 +44,7 @@ const FileUpload: FC<Props> = ({ handleFile, filenamePlaceholder = "", disabled 
           name="resume"
           disabled={disabled}
           onChange={(event: ChangeEvent<HTMLInputElement>) => {
-            const uploadedFile = event?.target?.files![0];
+            const uploadedFile = event?.target?.files?.[0];
             // @ts-ignore the uploaded file doesn't match our types
             setFile(uploadedFile);
             // @ts-ignore the uploaded file doesn't match our types

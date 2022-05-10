@@ -51,7 +51,7 @@ const RenameRepository: FC<Props> = ({ repository }) => {
   const {
     isLoading: isLoadingNamespaceStrategies,
     error: namespaceStrategyLoadError,
-    data: namespaceStrategies
+    data: namespaceStrategies,
   } = useNamespaceStrategies();
   const initialFocusRef = useRef<HTMLInputElement>(null);
 
@@ -92,7 +92,7 @@ const RenameRepository: FC<Props> = ({ repository }) => {
         helpText={t("help.nameHelpText")}
         validationError={nameValidationError}
         value={name}
-        onChange={event => handleNameChange(event.target.value)}
+        onChange={(event) => handleNameChange(event.target.value)}
         onReturnPressed={() => isValid && renameRepository(namespace, name)}
         ref={initialFocusRef}
       />

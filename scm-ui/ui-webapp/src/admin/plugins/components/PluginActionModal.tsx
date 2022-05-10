@@ -50,7 +50,7 @@ const PluginActionModal: FC<Props> = ({
   label,
   loading,
   onClose,
-  execute
+  execute,
 }) => {
   const [t] = useTranslation("admin");
   const initialFocusRef = useRef<HTMLButtonElement>(null);
@@ -71,8 +71,8 @@ const PluginActionModal: FC<Props> = ({
           <strong>{t("plugins.modal.updateQueue")}</strong>
           <ul>
             {installedPlugins._embedded.plugins
-              .filter(plugin => plugin._links && plugin._links.update)
-              .map(plugin => (
+              .filter((plugin) => plugin._links && plugin._links.update)
+              .map((plugin) => (
                 <li key={plugin.name}>{plugin.name}</li>
               ))}
           </ul>
@@ -87,7 +87,7 @@ const PluginActionModal: FC<Props> = ({
         <>
           <strong>{t("plugins.modal.installQueue")}</strong>
           <ul>
-            {pendingPlugins._embedded.new.map(plugin => (
+            {pendingPlugins._embedded.new.map((plugin) => (
               <li key={plugin.name}>{plugin.name}</li>
             ))}
           </ul>
@@ -100,23 +100,25 @@ const PluginActionModal: FC<Props> = ({
     <>
       <strong>{t("plugins.modal.updateQueue")}</strong>
       <ul>
-        {pendingPlugins._embedded.update.map(plugin => (
+        {pendingPlugins._embedded.update.map((plugin) => (
           <li key={plugin.name}>{plugin.name}</li>
         ))}
       </ul>
     </>
   );
 
-  const uninstallQueue = pendingPlugins && pendingPlugins._embedded && pendingPlugins._embedded.uninstall.length > 0 && (
-    <>
-      <strong>{t("plugins.modal.uninstallQueue")}</strong>
-      <ul>
-        {pendingPlugins._embedded.uninstall.map(plugin => (
-          <li key={plugin.name}>{plugin.name}</li>
-        ))}
-      </ul>
-    </>
-  );
+  const uninstallQueue = pendingPlugins &&
+    pendingPlugins._embedded &&
+    pendingPlugins._embedded.uninstall.length > 0 && (
+      <>
+        <strong>{t("plugins.modal.uninstallQueue")}</strong>
+        <ul>
+          {pendingPlugins._embedded.uninstall.map((plugin) => (
+            <li key={plugin.name}>{plugin.name}</li>
+          ))}
+        </ul>
+      </>
+    );
 
   const content = (
     <>

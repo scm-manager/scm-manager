@@ -71,7 +71,7 @@ const ImportFromUrlForm: FC<Props> = ({ repository, onChange, setValid, disabled
       <div className="column is-half px-3">
         <InputField
           label={t("import.username")}
-          onChange={username => onChange({ ...repository, username })}
+          onChange={(username) => onChange({ ...repository, username })}
           value={repository.username}
           helpText={t("help.usernameHelpText")}
           disabled={disabled}
@@ -80,7 +80,7 @@ const ImportFromUrlForm: FC<Props> = ({ repository, onChange, setValid, disabled
       <div className="column is-half px-3">
         <InputField
           label={t("import.password")}
-          onChange={password => onChange({ ...repository, password })}
+          onChange={(password) => onChange({ ...repository, password })}
           value={repository.password}
           type="password"
           helpText={t("help.passwordHelpText")}

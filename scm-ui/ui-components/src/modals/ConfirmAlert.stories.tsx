@@ -37,27 +37,27 @@ const buttons = [
   {
     className: "is-outlined",
     label: "Cancel",
-    onClick: () => null
+    onClick: () => null,
   },
   {
-    label: "Submit"
-  }
+    label: "Submit",
+  },
 ];
 
 const buttonsWithAutofocus = [
   {
     className: "is-outlined",
     label: "Cancel",
-    onClick: () => null
+    onClick: () => null,
   },
   {
     label: "I should be focused",
-    autofocus: true
-  }
+    autofocus: true,
+  },
 ];
 
 storiesOf("Modal/ConfirmAlert", module)
-  .addDecorator(story => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
+  .addDecorator((story) => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
   .add("Default", () => <ConfirmAlert message={body} title={"Are you sure about that?"} buttons={buttons} />)
   .add("WithButton", () => {
     const buttonClick = () => {

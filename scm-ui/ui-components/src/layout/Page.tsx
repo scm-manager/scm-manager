@@ -85,7 +85,7 @@ export default class Page extends React.Component<Props> {
 
     let pageActions = null;
     let pageActionsExists = false;
-    React.Children.forEach(children, child => {
+    React.Children.forEach(children, (child) => {
       if (child && !error) {
         if (this.isPageAction(child)) {
           pageActions = (
@@ -141,7 +141,7 @@ export default class Page extends React.Component<Props> {
     }
 
     const content: ReactNode[] = [];
-    React.Children.forEach(children, child => {
+    React.Children.forEach(children, (child) => {
       if (child) {
         if (!this.isPageAction(child)) {
           content.push(child);

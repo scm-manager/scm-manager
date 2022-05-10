@@ -33,7 +33,9 @@ export const MenuContext = React.createContext<MenuContext>({
   isCollapsed() {
     return false;
   },
-  setCollapsed() {},
+  setCollapsed() {
+    return null;
+  },
 });
 
 export const StateMenuContextProvider: FC = ({ children }) => {

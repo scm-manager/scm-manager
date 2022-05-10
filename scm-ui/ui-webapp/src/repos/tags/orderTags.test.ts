@@ -28,19 +28,19 @@ const tag1 = {
   name: "tag1",
   revision: "revision1",
   date: new Date(2020, 1, 1),
-  _links: {}
+  _links: {},
 };
 const tag2 = {
   name: "tag2",
   revision: "revision2",
   date: new Date(2020, 1, 3),
-  _links: {}
+  _links: {},
 };
 const tag3 = {
   name: "tag3",
   revision: "revision3",
   date: new Date(2020, 1, 2),
-  _links: {}
+  _links: {},
 };
 
 describe("order tags", () => {

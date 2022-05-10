@@ -64,20 +64,20 @@ const PermissionCheckbox: FC<InnerProps> = ({ name, checked, onChange, disabled,
     helpText,
     checked,
     disabled,
-    testId: label
+    testId: label,
   };
 
   if (innerRef) {
     return (
       <Checkbox
         {...commonCheckboxProps}
-        onChange={onChange ? event => onChange(event.target.checked, name) : undefined}
+        onChange={onChange ? (event) => onChange(event.target.checked, name) : undefined}
         ref={innerRef}
       />
     );
   }
 
-  return <Checkbox {...commonCheckboxProps} onChange={onChange ? newValue => onChange(newValue, name) : undefined} />;
+  return <Checkbox {...commonCheckboxProps} onChange={onChange ? (newValue) => onChange(newValue, name) : undefined} />;
 };
 
 export default React.forwardRef<HTMLInputElement, Props>((props, ref) => (

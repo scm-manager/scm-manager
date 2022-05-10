@@ -40,7 +40,7 @@ type Props = {
 const hitComponents: { [name: string]: FC<HitProps> } = {
   repository: RepositoryHit,
   user: UserHit,
-  group: GroupHit
+  group: GroupHit,
 };
 
 const findComponent = (type: string) => {

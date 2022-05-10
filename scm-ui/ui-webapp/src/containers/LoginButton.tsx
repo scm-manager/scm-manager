@@ -58,7 +58,7 @@ const LoginButton: FC<Props> = ({ burgerMode, links, className }) => {
     from,
     to,
     className: headerButtonContentClassName,
-    content
+    content,
   };
 
   if (links?.login) {

@@ -49,7 +49,7 @@ const useCreateRepositoryData = () => {
     pageLoadingError: errorNS || errorRT || errorIdx || undefined,
     namespaceStrategies,
     repositoryTypes,
-    index
+    index,
   };
 };
 
@@ -96,15 +96,15 @@ const CreateRepositoryRoot: FC = () => {
       path: "",
       icon: "plus",
       label: t("repositoryForm.createButton"),
-      component: CreateRepository
+      component: CreateRepository,
     },
     {
       subtitle: t("import.subtitle"),
       path: "import",
       icon: "file-upload",
       label: t("repositoryForm.importButton"),
-      component: ImportRepository
-    }
+      component: ImportRepository,
+    },
   ];
 
   const extCreators = binder.getExtensions<extensionPoints.RepositoryCreator>("repos.creator");
@@ -114,7 +114,7 @@ const CreateRepositoryRoot: FC = () => {
 
   return (
     <Switch>
-      {creators.map(creator => (
+      {creators.map((creator) => (
         <Route key={creator.path} exact path={urls.concat("/repos/create", creator.path)}>
           <CreatorRoute creator={creator} creators={creators} />
         </Route>

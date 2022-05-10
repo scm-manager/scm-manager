@@ -99,7 +99,7 @@ const BranchTabContent: FC<BranchTabContentProps> = ({ elements, selection, onSe
 
   return (
     <>
-      {elements.map(branch => {
+      {elements.map((branch) => {
         return (
           <CompareSelectorListEntry
             isSelected={selection.type === "b" && selection.name === branch.name}
@@ -128,7 +128,7 @@ const TagTabContent: FC<TagTabContentProps> = ({ elements, selection, onSelectEn
 
   return (
     <>
-      {elements.map(tag => (
+      {elements.map((tag) => (
         <CompareSelectorListEntry
           isSelected={selection.type === "t" && selection.name === tag.name}
           onClick={() => onSelectEntry("t", tag.name)}
@@ -171,7 +171,7 @@ const RevisionTabContent: FC<RevisionTabContentProps> = ({ selected, onSelect })
           <input
             className="input is-small"
             placeholder={t("compare.selector.revision.input")}
-            onChange={e => setRevision(e.target.value.trim())}
+            onChange={(e) => setRevision(e.target.value.trim())}
             onKeyPress={handleKeyPress}
             value={revision.trim()}
           />
@@ -191,7 +191,7 @@ const ScrollableList: FC<{ selectedTab: CompareTypes } & Props> = ({
   onSelect,
   selected,
   repository,
-  filter
+  filter,
 }) => {
   const { isLoading: branchesIsLoading, error: branchesError, data: branchesData } = useBranches(repository);
   const branches: Branch[] = (branchesData?._embedded?.branches as Branch[]) || [];
@@ -216,14 +216,14 @@ const ScrollableList: FC<{ selectedTab: CompareTypes } & Props> = ({
       <ScrollableUl className="py-2 pr-2" aria-expanded="true" role="listbox">
         {selectedTab === "b" && (
           <BranchTabContent
-            elements={branches.filter(branch => branch.name.includes(filter))}
+            elements={branches.filter((branch) => branch.name.includes(filter))}
             selection={selection}
             onSelectEntry={onSelectEntry}
           />
         )}
         {selectedTab === "t" && (
           <TagTabContent
-            elements={tags.filter(tag => tag.name.includes(filter))}
+            elements={tags.filter((tag) => tag.name.includes(filter))}
             selection={selection}
             onSelectEntry={onSelectEntry}
           />
@@ -243,7 +243,7 @@ const CompareSelectorList: FC<Props> = ({ onSelect, selected, repository, filter
     <>
       <div className="tabs is-small mt-3 mb-0">
         <ul>
-          {tabs.map(tab => {
+          {tabs.map((tab) => {
             return (
               <li key={tab}>
                 <TabStyleButton

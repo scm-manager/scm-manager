@@ -34,7 +34,7 @@ const GenericHit: FC<HitProps> = ({ hit }) => (
   <Hit>
     <Hit.Content>
       <table>
-        {Object.keys(hit.fields).map(field => (
+        {Object.keys(hit.fields).map((field) => (
           <tr key={field}>
             <LabelColumn>{field}:</LabelColumn>
             <td>

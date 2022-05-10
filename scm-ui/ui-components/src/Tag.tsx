@@ -52,7 +52,7 @@ const Tag: FC<Props> = ({
   title,
   onClick,
   onRemove,
-  children
+  children,
 }) => {
   const [t] = useTranslation("commons");
 
@@ -81,7 +81,7 @@ const Tag: FC<Props> = ({
           {
             "is-outlined": outlined,
             "is-rounded": rounded,
-            "is-clickable": onClick
+            "is-clickable": onClick,
           },
           size === "small" && smallClassNames
         )}

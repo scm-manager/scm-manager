@@ -36,7 +36,7 @@ import {
   SecondaryNavigationColumn,
   StateMenuContextProvider,
   SubNavigation,
-  urls
+  urls,
 } from "@scm-manager/ui-components";
 import { Details } from "./../components/table";
 import { EditGroupNavLink, SetPermissionsNavLink } from "./../components/navLinks";
@@ -63,7 +63,7 @@ const SingleGroup: FC = () => {
 
   const extensionProps = {
     group,
-    url
+    url,
   };
 
   return (
@@ -84,7 +84,7 @@ const SingleGroup: FC = () => {
               name="group.route"
               props={{
                 group,
-                url: escapedUrl
+                url: escapedUrl,
               }}
               renderAll={true}
             />

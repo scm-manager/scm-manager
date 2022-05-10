@@ -67,11 +67,11 @@ const CompareSelectBar: FC<Props> = ({ repository, baseUrl }) => {
   const history = useHistory();
   const [source, setSource] = useState<CompareProps>({
     type: params?.sourceType,
-    name: decodeURIComponent(params?.sourceName)
+    name: decodeURIComponent(params?.sourceName),
   });
   const [target, setTarget] = useState<CompareProps>({
     type: params?.targetType,
-    name: decodeURIComponent(params?.targetName)
+    name: decodeURIComponent(params?.targetName),
   });
 
   useEffect(() => {

@@ -63,7 +63,7 @@ class LoginForm extends React.Component<Props, State> {
     super(props);
     this.state = {
       username: "",
-      password: ""
+      password: "",
     };
   }
 
@@ -76,13 +76,13 @@ class LoginForm extends React.Component<Props, State> {
 
   handleUsernameChange = (value: string) => {
     this.setState({
-      username: value
+      username: value,
     });
   };
 
   handlePasswordChange = (value: string) => {
     this.setState({
-      password: value
+      password: value,
     });
   };
 

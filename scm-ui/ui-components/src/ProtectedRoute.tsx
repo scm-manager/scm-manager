@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { Component } from "react";
+import React, { Component, ComponentType } from "react";
 import { Redirect, Route, RouteComponentProps, RouteProps, withRouter } from "react-router-dom";
 
 type Props = RouteComponentProps &
@@ -37,12 +37,12 @@ class ProtectedRoute extends Component<Props> {
     };
   }
 
-  renderRoute = (Component: any) => {
+  renderRoute = (MyComponent: ComponentType) => {
     const { authenticated } = this.props;
 
-    return (routeProps: any) => {
+    return (routeProps: RouteProps) => {
       if (authenticated) {
-        return <Component {...routeProps} />;
+        return <MyComponent {...routeProps} />;
       } else {
         return (
           <Redirect

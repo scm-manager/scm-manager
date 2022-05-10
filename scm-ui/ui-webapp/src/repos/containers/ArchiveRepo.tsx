@@ -55,13 +55,13 @@ const ArchiveRepo: FC<Props> = ({ repository, confirmDialog = true }) => {
         {
           className: "is-outlined",
           label: t("archiveRepo.confirmAlert.submit"),
-          onClick: () => archiveRepoCallback()
+          onClick: () => archiveRepoCallback(),
         },
         {
           label: t("archiveRepo.confirmAlert.cancel"),
           onClick: () => null,
-          autofocus: true
-        }
+          autofocus: true,
+        },
       ]}
       close={() => setShowConfirmAlert(false)}
     />

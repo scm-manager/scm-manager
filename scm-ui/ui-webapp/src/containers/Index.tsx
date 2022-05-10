@@ -39,7 +39,7 @@ const Index: FC = () => {
 
   // TODO check componentDidUpdate method for anonymous user stuff
 
-  i18next.on("languageChanged", lng => {
+  i18next.on("languageChanged", (lng) => {
     document.documentElement.setAttribute("lang", lng);
   });
 

@@ -42,7 +42,7 @@ const ImportRepositoryFromUrl: FC<Props> = ({
   setImportPending,
   setImportedRepository,
   nameForm: NameForm,
-  informationForm: InformationForm
+  informationForm: InformationForm,
 }) => {
   const [repo, setRepo] = useState<RepositoryUrlImport>({
     name: "",
@@ -52,21 +52,22 @@ const ImportRepositoryFromUrl: FC<Props> = ({
     description: "",
     importUrl: "",
     username: "",
-    password: ""
+    password: "",
   });
 
   const [valid, setValid] = useState({ namespaceAndName: false, contact: true, importUrl: false });
   const [t] = useTranslation("repos");
   const { importRepositoryFromUrl, importedRepository, error, isLoading } = useImportRepositoryFromUrl(repositoryType);
-  const setContactValid = useCallback((contact: boolean) => setValid(currentValid => ({ ...currentValid, contact })), [
-    setValid
-  ]);
+  const setContactValid = useCallback(
+    (contact: boolean) => setValid((currentValid) => ({ ...currentValid, contact })),
+    [setValid]
+  );
   const setNamespaceAndNameValid = useCallback(
-    (namespaceAndName: boolean) => setValid(currentValid => ({ ...currentValid, namespaceAndName })),
+    (namespaceAndName: boolean) => setValid((currentValid) => ({ ...currentValid, namespaceAndName })),
     [setValid]
   );
   const setImportUrlValid = useCallback(
-    (importUrl: boolean) => setValid(currentValid => ({ ...currentValid, importUrl })),
+    (importUrl: boolean) => setValid((currentValid) => ({ ...currentValid, importUrl })),
     [setValid]
   );
 
@@ -77,7 +78,7 @@ const ImportRepositoryFromUrl: FC<Props> = ({
     }
   }, [importedRepository, setImportedRepository]);
 
-  const isValid = () => Object.values(valid).every(v => v);
+  const isValid = () => Object.values(valid).every((v) => v);
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();

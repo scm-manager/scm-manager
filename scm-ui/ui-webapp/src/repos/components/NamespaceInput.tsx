@@ -42,7 +42,7 @@ const NamespaceInput: FC<Props> = ({
   handleNamespaceChange,
   namespaceStrategy,
   namespaceValidationError,
-  disabled
+  disabled,
 }) => {
   const [t] = useTranslation("repos");
   const loadNamespaceSuggestions = useNamespaceSuggestions();
@@ -61,7 +61,7 @@ const NamespaceInput: FC<Props> = ({
     errorMessage: namespaceValidationError ? t("validation.namespace-invalid") : "",
     informationMessage: informationMessage,
     validationError: namespaceValidationError,
-    disabled: disabled
+    disabled: disabled,
   };
 
   if (namespaceStrategy === CUSTOM_NAMESPACE_STRATEGY) {
@@ -70,7 +70,7 @@ const NamespaceInput: FC<Props> = ({
         {...props}
         loadSuggestions={loadNamespaceSuggestions}
         value={repositorySelectValue}
-        valueSelected={namespaceValue => handleNamespaceChange(namespaceValue.value.id)}
+        valueSelected={(namespaceValue) => handleNamespaceChange(namespaceValue.value.id)}
         placeholder={""}
         creatable={true}
       />

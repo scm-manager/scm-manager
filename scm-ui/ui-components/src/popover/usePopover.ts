@@ -105,12 +105,14 @@ const usePopover = () => {
   const triggerRef = useRef<HTMLElement | null>(null);
 
   const onMouseOver = () => {
-    const current = triggerRef.current!;
-    dispatchDeferred(dispatch, {
-      type: "enter-trigger",
-      offsetTop: current.offsetTop,
-      offsetLeft: current.offsetLeft + current.offsetWidth / 2,
-    });
+    const current = triggerRef.current;
+    if (current) {
+      dispatchDeferred(dispatch, {
+        type: "enter-trigger",
+        offsetTop: current.offsetTop,
+        offsetLeft: current.offsetLeft + current.offsetWidth / 2,
+      });
+    }
   };
 
   const onMouseLeave = () => {

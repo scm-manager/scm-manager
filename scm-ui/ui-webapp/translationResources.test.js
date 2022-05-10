@@ -32,12 +32,12 @@ describe("locales folder", () => {
   });
 });
 
-dirs.forEach(languageDirName => {
+dirs.forEach((languageDirName) => {
   const languageDir = `public/locales/${languageDirName}`;
   const languageDirFiles = fs.readdirSync(languageDir);
   languageDirFiles
-    .filter(fileName => fileName.endsWith(".json"))
-    .forEach(translationFileName => {
+    .filter((fileName) => fileName.endsWith(".json"))
+    .forEach((translationFileName) => {
       const translationFile = `${languageDir}/${translationFileName}`;
       describe(`translation file ${translationFile}`, () => {
         it("should contain only valid json", () => {
