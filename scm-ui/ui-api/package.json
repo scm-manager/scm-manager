@@ -12,7 +12,7 @@
   "author": "SCM Team <scm-team@cloudogu.com>",
   "license": "MIT",
   "scripts": {
-    "build": "tsup ./src/index.ts -d build --format esm,cjs --dts && tsup ./src/help/search/*.ts -d build/help/search --format esm,cjs",
+    "build": "tsup ./src/index.ts -d build --format esm,cjs --dts",
     "typecheck": "tsc",
     "lint": "eslint src",
     "test": "jest src/"
