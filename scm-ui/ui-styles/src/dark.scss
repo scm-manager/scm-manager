@@ -195,6 +195,8 @@ $danger-25: scale-color($danger, $lightness: -75%);
   --scm-secondary-text: #{$white};
   --scm-hover-color: #{$grey};
   --scm-column-selection: #{$link-dark};
+  --scm-sh-focus-line-background: hsl(0, 0%, 18%);
+  --scm-sh-focus-line-contrast: hsl(0, 0%, 60%);
 
   --sh-base-color: #{$white};
   --sh-font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;

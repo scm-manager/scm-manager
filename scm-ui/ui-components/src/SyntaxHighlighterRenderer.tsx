@@ -34,10 +34,10 @@ const RowContainer = styled.div`
   .linenumber {
     display: inline-block;
     min-width: 3em;
-    padding-right: 1em;
+    padding-right: 0.75em;
     text-align: right;
     user-select: none;
-    color: rgb(154, 154, 154);
+    color: var(--scm-secondary-text);
   }
   span.linenumber:hover {
     cursor: pointer;
@@ -45,9 +45,11 @@ const RowContainer = styled.div`
   span.linenumber + span > span.linenumber {
     display: none !important;
   }
-  &.focused,
-  &.focused > span:last-child {
-    background-color: rgb(229, 245, 252);
+  &.focused > span.linenumber {
+    box-shadow: inset -3px 0 0 var(--scm-sh-focus-line-contrast);
+  }
+  &.focused {
+    background: var(--scm-sh-focus-line-background);
   }
   i {
     visibility: hidden;
@@ -61,6 +63,9 @@ const RowContainer = styled.div`
   // override bulma default styling of .section
   .section {
     padding: 0;
+  }
+  & > span:last-child {
+    margin-left: 0.75em;
   }
 `;
 

@@ -93,6 +93,8 @@ $tooltip-color: $scheme-main;
   --scm-secondary-text: #{$white};
   --scm-hover-color: #{$grey};
   --scm-column-selection: #{$link-dark};
+  --scm-sh-focus-line-background: hsl(0, 0%, 10%);
+  --scm-sh-focus-line-contrast: hsl(0, 0%, 60%);
 
   --sh-base-color: #fff;
   --sh-font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;

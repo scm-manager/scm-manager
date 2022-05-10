@@ -58,6 +58,8 @@ $popover-background-color: $grey-light;
   --scm-secondary-text: #{$black};
   --scm-hover-color: #{$black-ter};
   --scm-column-selection: #{$link-25};
+  --scm-sh-focus-line-background: hsl(0, 0%, 95%);
+  --scm-sh-focus-line-contrast: hsl(0, 0%, 70%);
 
   --sh-base-color: #363636;
   --sh-font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
