@@ -48,7 +48,8 @@ const RowContainer = styled.div`
   &.focused > span.linenumber {
     box-shadow: inset -3px 0 0 var(--scm-sh-focus-line-contrast);
   }
-  &.focused {
+  &.focused,
+  &.focused > span:last-child {
     background: var(--scm-sh-focus-line-background);
   }
   i {
