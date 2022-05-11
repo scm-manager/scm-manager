@@ -423,7 +423,7 @@ class DiffFile extends React.Component<Props, State> {
 
     const fileAnnotations = fileAnnotationFactory ? fileAnnotationFactory(file) : null;
     const innerContent = (
-      <div className="panel-block p-0">
+      <div className={classNames("panel-block", "diff-file", "p-0")}>
         {fileAnnotations}
         <TokenizedDiffView className={viewType} viewType={viewType} file={file}>
           {(hunks: HunkType[]) =>
