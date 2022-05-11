@@ -1,0 +1,2 @@
+- type: bugfix
+  description: Add diff file identifier ([#2034](https://github.com/scm-manager/scm-manager/pull/2034))
