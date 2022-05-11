@@ -26,7 +26,7 @@ plugins {
   id 'java-platform'
   id 'maven-publish'
   id "org.sonarqube" version "3.0"
-  id "org.scm-manager.changelog" version "0.1.6"
+  id "org.scm-manager.changelog" version "0.1.7"
   id 'org.scm-manager.license' version "0.7.1"
 }
 
