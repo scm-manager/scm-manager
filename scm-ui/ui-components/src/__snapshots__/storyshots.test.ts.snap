@@ -21214,7 +21214,7 @@ exports[`Storyshots Repositories/Diff Binaries 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -21399,7 +21399,7 @@ exports[`Storyshots Repositories/Diff Binaries 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -21510,7 +21510,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
           </div>
         </div>
         <div
-          className="panel-block p-0"
+          className="panel-block diff-file p-0"
         >
           <table
             className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -22127,7 +22127,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
           </div>
         </div>
         <div
-          className="panel-block p-0"
+          className="panel-block diff-file p-0"
         >
           <table
             className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -23081,7 +23081,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
           </div>
         </div>
         <div
-          className="panel-block p-0"
+          className="panel-block diff-file p-0"
         >
           <table
             className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -23606,7 +23606,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
           </div>
         </div>
         <div
-          className="panel-block p-0"
+          className="panel-block diff-file p-0"
         >
           <table
             className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -24131,7 +24131,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
           </div>
         </div>
         <div
-          className="panel-block p-0"
+          className="panel-block diff-file p-0"
         >
           <table
             className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -25346,7 +25346,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
           </div>
         </div>
         <div
-          className="panel-block p-0"
+          className="panel-block diff-file p-0"
         >
           <table
             className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -26676,7 +26676,7 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -27533,7 +27533,7 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -27986,7 +27986,7 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -28677,7 +28677,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -29294,7 +29294,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -30248,7 +30248,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -30773,7 +30773,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -31298,7 +31298,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -32513,7 +32513,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -33087,7 +33087,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -33704,7 +33704,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -34658,7 +34658,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -35183,7 +35183,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -35708,7 +35708,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -36923,7 +36923,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -37497,7 +37497,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <p>
           Custom File annotation for 
@@ -38081,7 +38081,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <p>
           Custom File annotation for 
@@ -38942,7 +38942,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <p>
           Custom File annotation for 
@@ -39399,7 +39399,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <p>
           Custom File annotation for 
@@ -39856,7 +39856,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <p>
           Custom File annotation for 
@@ -40920,7 +40920,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <p>
           Custom File annotation for 
@@ -41477,7 +41477,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -42073,7 +42073,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -42946,7 +42946,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -43415,7 +43415,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -43884,7 +43884,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -44960,7 +44960,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -45497,7 +45497,7 @@ exports[`Storyshots Repositories/Diff Hunks 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -46341,7 +46341,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -46933,7 +46933,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -47802,7 +47802,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -48255,7 +48255,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -48708,7 +48708,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -49768,7 +49768,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -50317,7 +50317,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -50937,7 +50937,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -51856,7 +51856,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -52339,7 +52339,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -52822,7 +52822,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -53958,7 +53958,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -54531,7 +54531,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-split TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg split"
@@ -55204,7 +55204,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-split TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg split"
@@ -56151,7 +56151,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-split TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg split"
@@ -56656,7 +56656,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-split TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg split"
@@ -57161,7 +57161,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-split TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg split"
@@ -58390,7 +58390,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-split TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg split"
@@ -59000,7 +59000,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting (Markdown) 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -59362,7 +59362,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -59942,7 +59942,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -60799,7 +60799,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -61252,7 +61252,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -61705,7 +61705,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -62765,7 +62765,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -63302,7 +63302,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -63919,7 +63919,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -64873,7 +64873,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -65398,7 +65398,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -65923,7 +65923,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
@@ -67138,7 +67138,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
         </div>
       </div>
       <div
-        className="panel-block p-0"
+        className="panel-block diff-file p-0"
       >
         <table
           className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
