@@ -1,2 +1,2 @@
 - type: fixed
-  description: Diff command content was always empty because the results were ignored ([#2036](https://github.com/scm-manager/scm-manager/pull/2036))
+  description: Diff command content ([#2036](https://github.com/scm-manager/scm-manager/pull/2036))
