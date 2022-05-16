@@ -110,7 +110,7 @@ public final class DiffCommandBuilder extends AbstractDiffCommandBuilder<DiffCom
    */
   public String getContent() throws IOException {
     try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-      getDiffResult();
+      getDiffResult().accept(baos);
       return baos.toString();
     }
   }

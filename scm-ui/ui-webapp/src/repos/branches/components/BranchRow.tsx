@@ -102,10 +102,12 @@ const BranchRow: FC<Props> = ({ repository, baseUrl, branch, onDelete, details }
         )}
       </td>
       <td className="is-vertical-align-middle has-text-centered">{renderBranchTag()}</td>
-      {binder.hasExtension("repos.branches.row.details")
+      {binder.hasExtension("repos.branches.row.details", extensionProps)
         ? binder
-            .getExtensions("repos.branches.row.details")
-            .map((e) => <td>{React.createElement(e, extensionProps)}</td>)
+            .getExtensions("repos.branches.row.details", extensionProps)
+            .map((e) => (
+              <td className="is-vertical-align-middle has-text-centered">{React.createElement(e, extensionProps)}</td>
+            ))
         : null}
       <td className="is-vertical-align-middle has-text-centered">{deleteButton}</td>
     </AdaptTableFlow>

@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.34.0] - 2022-05-13
+### Added
+- Docker images for linux/arm/v7 and linux/arm64 ([#2021](https://github.com/scm-manager/scm-manager/pull/2021))
+- Extension point to render file actions in overflow menu ([#2015](https://github.com/scm-manager/scm-manager/pull/2015))
+
+### Fixed
+- Dependencies for ui-syntaxhighlighting and ui-text ([#2024](https://github.com/scm-manager/scm-manager/pull/2024))
+- Jumping and broken tool tips ([#2026](https://github.com/scm-manager/scm-manager/pull/2026))
+- Do not show feedback form for anonymous users
+- Require password for internal user creation ([#2027](https://github.com/scm-manager/scm-manager/pull/2027))
+- Improve visibility of focused line in source view ([#2031](https://github.com/scm-manager/scm-manager/pull/2031))
+- Show confirmation modal before deleting key ([#2028](https://github.com/scm-manager/scm-manager/pull/2028))
+- Validate repository types on creation ([#2019](https://github.com/scm-manager/scm-manager/pull/2019))
+- Remove card-table action area ([#2016](https://github.com/scm-manager/scm-manager/pull/2016))
+- Separate definition of padding to produce valid CSS ([#2023](https://github.com/scm-manager/scm-manager/pull/2023))
+- Sort CLI commands alphabetically ([#2020](https://github.com/scm-manager/scm-manager/pull/2020))
+
 ## [2.33.0] - 2022-04-29
 ### Added
 - Add cli support for repositories, users and groups ([#1987](https://github.com/scm-manager/scm-manager/pull/1987), [#1993](https://github.com/scm-manager/scm-manager/pull/1993))
@@ -1021,3 +1038,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.32.1]: https://scm-manager.org/download/2.32.1
 [2.32.2]: https://scm-manager.org/download/2.32.2
 [2.33.0]: https://scm-manager.org/download/2.33.0
+[2.34.0]: https://scm-manager.org/download/2.34.0
