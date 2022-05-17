@@ -1,35 +1,35 @@
 {
-  "name": "@scm-manager/scm-hg-plugin",
-  "private": true,
-  "version": "2.34.1-SNAPSHOT",
-  "license": "MIT",
-  "main": "./src/main/js/index.ts",
-  "scripts": {
-    "build": "plugin-scripts build",
-    "watch": "plugin-scripts watch",
-    "typecheck": "tsc"
-  },
-  "dependencies": {
-    "@scm-manager/ui-plugins": "^2.34.1-SNAPSHOT"
-  },
-  "devDependencies": {
-    "@scm-manager/babel-preset": "^2.13.1",
-    "@scm-manager/eslint-config": "^2.15.1",
-    "@scm-manager/jest-preset": "^2.13.0",
-    "@scm-manager/plugin-scripts": "^1.2.2",
-    "@scm-manager/prettier-config": "^2.11.1",
-    "@types/react": "^17.0.1"
-  },
-  "babel": {
-    "presets": [
-      "@scm-manager/babel-preset"
-    ]
-  },
-  "jest": {
-    "preset": "@scm-manager/jest-preset"
-  },
-  "prettier": "@scm-manager/prettier-config",
-  "eslintConfig": {
-    "extends": "@scm-manager/eslint-config"
-  }
+    "name": "@scm-manager/scm-hg-plugin",
+    "private": true,
+    "version": "2.35.0-SNAPSHOT",
+    "license": "MIT",
+    "main": "./src/main/js/index.ts",
+    "scripts": {
+        "build": "plugin-scripts build",
+        "watch": "plugin-scripts watch",
+        "typecheck": "tsc"
+    },
+    "dependencies": {
+        "@scm-manager/ui-plugins": "^2.35.0-SNAPSHOT"
+    },
+    "devDependencies": {
+        "@scm-manager/babel-preset": "^2.13.1",
+        "@scm-manager/eslint-config": "^2.15.1",
+        "@scm-manager/jest-preset": "^2.13.0",
+        "@scm-manager/plugin-scripts": "^1.2.2",
+        "@scm-manager/prettier-config": "^2.11.1",
+        "@types/react": "^17.0.1"
+    },
+    "babel": {
+        "presets": [
+            "@scm-manager/babel-preset"
+        ]
+    },
+    "jest": {
+        "preset": "@scm-manager/jest-preset"
+    },
+    "prettier": "@scm-manager/prettier-config",
+    "eslintConfig": {
+        "extends": "@scm-manager/eslint-config"
+    }
 }
