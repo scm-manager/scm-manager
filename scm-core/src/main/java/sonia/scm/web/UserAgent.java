@@ -264,7 +264,7 @@ public final class UserAgent
     private boolean scmClient = false;
 
     /** basic authentication charset */
-    private Charset basicAuthenticationCharset = StandardCharsets.ISO_8859_1;
+    private Charset basicAuthenticationCharset = StandardCharsets.UTF_8;
   }
 
 
