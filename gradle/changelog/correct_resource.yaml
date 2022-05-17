@@ -1,0 +1,2 @@
+- type: fixed
+  description: Correct resource for branch leaf ([#2037](https://github.com/scm-manager/scm-manager/pull/2037))
