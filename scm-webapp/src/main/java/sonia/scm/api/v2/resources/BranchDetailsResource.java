@@ -57,7 +57,6 @@ import java.util.stream.Collectors;
 
 import static sonia.scm.repository.Branch.VALID_BRANCH_NAMES;
 
-@Path("")
 public class BranchDetailsResource {
 
   private final RepositoryServiceFactory serviceFactory;
