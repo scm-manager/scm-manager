@@ -60,6 +60,9 @@ dependencies {
   implementation libraries.shiroWeb
   implementation libraries.shiroGuice
 
+  // tests
+  testImplementation libraries.junitPioneer
+
   // jwt
   implementation libraries.jjwtApi
   implementation libraries.jjwtRuntime
