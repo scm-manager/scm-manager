@@ -37,7 +37,7 @@ import javax.inject.Inject;
 @CommandLine.Command(name = "get")
 class RepositoryGetCommand implements Runnable {
 
-  @CommandLine.Parameters(paramLabel = "namespace/name", index = "0")
+  @CommandLine.Parameters(paramLabel = "namespace/name", descriptionKey = "scm.repo.create.repository", index = "0")
   private String repository;
 
   @CommandLine.Mixin
