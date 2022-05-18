@@ -42,7 +42,7 @@ The build of SCM-Manager requires the following installed packages:
 * Mercurial (required for tests)
 * Docker (required for the docker package)
 
-The build of SCM-Manager requires Java 11, but the target runtime platform is still Java 8. 
+The build of SCM-Manager requires Java 11. 
 
 ### Tasks
 
