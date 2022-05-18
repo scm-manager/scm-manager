@@ -48,7 +48,7 @@ enforce {
     r.version = '11'
   }
   rule(enforcer.rules.EnforceBytecodeVersion) { r ->
-    r.maxJdkVersion = '1.8'
+    r.maxJdkVersion = '11'
   }
 }
 
