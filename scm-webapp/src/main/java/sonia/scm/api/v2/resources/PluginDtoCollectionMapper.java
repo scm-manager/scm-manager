@@ -32,8 +32,10 @@ import sonia.scm.plugin.AvailablePlugin;
 import sonia.scm.plugin.InstalledPlugin;
 import sonia.scm.plugin.PluginManager;
 import sonia.scm.plugin.PluginPermissions;
+import sonia.scm.plugin.PluginSet;
 
 import java.util.List;
+import java.util.Set;
 
 import static de.otto.edison.hal.Embedded.embeddedBuilder;
 import static de.otto.edison.hal.Link.link;
@@ -44,13 +46,16 @@ public class PluginDtoCollectionMapper {
 
   private final ResourceLinks resourceLinks;
   private final PluginDtoMapper mapper;
+
+  private final PluginSetDtoMapper pluginSetDtoMapper;
   private final PluginManager manager;
 
   @Inject
-  public PluginDtoCollectionMapper(ResourceLinks resourceLinks, PluginDtoMapper mapper, PluginManager manager) {
+  public PluginDtoCollectionMapper(ResourceLinks resourceLinks, PluginDtoMapper mapper, PluginManager manager, PluginSetDtoMapper pluginSetDtoMapper) {
     this.resourceLinks = resourceLinks;
     this.mapper = mapper;
     this.manager = manager;
+    this.pluginSetDtoMapper = pluginSetDtoMapper;
   }
 
   public HalRepresentation mapInstalled(List<InstalledPlugin> plugins, List<AvailablePlugin> availablePlugins) {
@@ -61,9 +66,10 @@ public class PluginDtoCollectionMapper {
     return new HalRepresentation(createInstalledPluginsLinks(), embedDtos(dtos));
   }
 
-  public HalRepresentation mapAvailable(List<AvailablePlugin> plugins) {
+  public HalRepresentation mapAvailable(List<AvailablePlugin> plugins, Set<PluginSet> pluginSets) {
     List<PluginDto> dtos = plugins.stream().map(mapper::mapAvailable).collect(toList());
-    return new HalRepresentation(createAvailablePluginsLinks(plugins), embedDtos(dtos));
+    List<PluginSetDto> pluginSetDtos = pluginSets.stream().map(pluginSetDtoMapper::map).collect(toList());
+    return new HalRepresentation(createAvailablePluginsLinks(plugins), embedDtos(dtos, pluginSetDtos));
   }
 
   private Links createInstalledPluginsLinks() {
@@ -92,9 +98,16 @@ public class PluginDtoCollectionMapper {
     return plugins.stream().anyMatch(AvailablePlugin::isPending);
   }
 
-  private Embedded embedDtos(List<PluginDto> dtos) {
+  private Embedded embedDtos(List<PluginDto> pluginDtos) {
     return embeddedBuilder()
-      .with("plugins", dtos)
+      .with("plugins", pluginDtos)
+      .build();
+  }
+
+  private Embedded embedDtos(List<PluginDto> pluginDtos, List<PluginSetDto> pluginSetDtos) {
+    return embeddedBuilder()
+      .with("plugins", pluginDtos)
+      .with("pluginSets", pluginSetDtos)
       .build();
   }
 }

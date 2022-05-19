@@ -162,7 +162,7 @@ class DefaultPluginManagerTest {
       AvailablePlugin review = createAvailable("scm-review-plugin");
       AvailablePlugin git = createAvailable("scm-git-plugin");
 
-      when(center.getAvailable()).thenReturn(ImmutableSet.of(review, git));
+      when(center.getAvailablePlugins()).thenReturn(ImmutableSet.of(review, git));
 
       List<AvailablePlugin> available = manager.getAvailable();
       assertThat(available).containsOnly(review, git);
@@ -175,7 +175,7 @@ class DefaultPluginManagerTest {
 
       AvailablePlugin review = createAvailable("scm-review-plugin");
       AvailablePlugin git = createAvailable("scm-git-plugin");
-      when(center.getAvailable()).thenReturn(ImmutableSet.of(review, git));
+      when(center.getAvailablePlugins()).thenReturn(ImmutableSet.of(review, git));
 
       List<AvailablePlugin> available = manager.getAvailable();
       assertThat(available).containsOnly(review);
@@ -185,7 +185,7 @@ class DefaultPluginManagerTest {
     void shouldReturnAvailable() {
       AvailablePlugin review = createAvailable("scm-review-plugin");
       AvailablePlugin git = createAvailable("scm-git-plugin");
-      when(center.getAvailable()).thenReturn(ImmutableSet.of(review, git));
+      when(center.getAvailablePlugins()).thenReturn(ImmutableSet.of(review, git));
 
       Optional<AvailablePlugin> available = manager.getAvailable("scm-git-plugin");
       assertThat(available).contains(git);
@@ -194,7 +194,7 @@ class DefaultPluginManagerTest {
     @Test
     void shouldReturnEmptyForNonExistingAvailable() {
       AvailablePlugin review = createAvailable("scm-review-plugin");
-      when(center.getAvailable()).thenReturn(ImmutableSet.of(review));
+      when(center.getAvailablePlugins()).thenReturn(ImmutableSet.of(review));
 
       Optional<AvailablePlugin> available = manager.getAvailable("scm-git-plugin");
       assertThat(available).isEmpty();
@@ -206,7 +206,7 @@ class DefaultPluginManagerTest {
       when(loader.getInstalledPlugins()).thenReturn(ImmutableList.of(installedGit));
 
       AvailablePlugin git = createAvailable("scm-git-plugin");
-      when(center.getAvailable()).thenReturn(ImmutableSet.of(git));
+      when(center.getAvailablePlugins()).thenReturn(ImmutableSet.of(git));
 
       Optional<AvailablePlugin> available = manager.getAvailable("scm-git-plugin");
       assertThat(available).isEmpty();
@@ -215,7 +215,7 @@ class DefaultPluginManagerTest {
     @Test
     void shouldInstallThePlugin() {
       AvailablePlugin git = createAvailable("scm-git-plugin");
-      when(center.getAvailable()).thenReturn(ImmutableSet.of(git));
+      when(center.getAvailablePlugins()).thenReturn(ImmutableSet.of(git));
 
       manager.install("scm-git-plugin", false);
 
@@ -228,7 +228,7 @@ class DefaultPluginManagerTest {
       AvailablePlugin review = createAvailable("scm-review-plugin");
       when(review.getDescriptor().getDependencies()).thenReturn(ImmutableSet.of("scm-mail-plugin"));
       AvailablePlugin mail = createAvailable("scm-mail-plugin");
-      when(center.getAvailable()).thenReturn(ImmutableSet.of(review, mail));
+      when(center.getAvailablePlugins()).thenReturn(ImmutableSet.of(review, mail));
 
       manager.install("scm-review-plugin", false);
 
@@ -241,7 +241,7 @@ class DefaultPluginManagerTest {
       AvailablePlugin review = createAvailable("scm-review-plugin");
       when(review.getDescriptor().getDependencies()).thenReturn(ImmutableSet.of("scm-mail-plugin"));
       AvailablePlugin mail = createAvailable("scm-mail-plugin");
-      when(center.getAvailable()).thenReturn(ImmutableSet.of(review, mail));
+      when(center.getAvailablePlugins()).thenReturn(ImmutableSet.of(review, mail));
 
       InstalledPlugin installedMail = createInstalled("scm-mail-plugin");
       when(loader.getInstalledPlugins()).thenReturn(ImmutableList.of(installedMail));
@@ -259,7 +259,7 @@ class DefaultPluginManagerTest {
       AvailablePlugin review = createAvailable("scm-review-plugin");
       when(review.getDescriptor().getDependencies()).thenReturn(ImmutableSet.of("scm-mail-plugin"));
       AvailablePlugin mail = createAvailable("scm-mail-plugin", "1.1.0");
-      when(center.getAvailable()).thenReturn(ImmutableSet.of(review, mail));
+      when(center.getAvailablePlugins()).thenReturn(ImmutableSet.of(review, mail));
 
       InstalledPlugin installedMail = createInstalled("scm-mail-plugin", "1.0.0");
       when(loader.getInstalledPlugins()).thenReturn(ImmutableList.of(installedMail));
@@ -275,7 +275,7 @@ class DefaultPluginManagerTest {
       AvailablePlugin review = createAvailable("scm-review-plugin");
       when(review.getDescriptor().getOptionalDependencies()).thenReturn(ImmutableSet.of("scm-mail-plugin"));
       AvailablePlugin mail = createAvailable("scm-mail-plugin", "1.1.0");
-      when(center.getAvailable()).thenReturn(ImmutableSet.of(review, mail));
+      when(center.getAvailablePlugins()).thenReturn(ImmutableSet.of(review, mail));
 
       InstalledPlugin installedMail = createInstalled("scm-mail-plugin", "1.0.0");
       when(loader.getInstalledPlugins()).thenReturn(ImmutableList.of(installedMail));
@@ -291,7 +291,7 @@ class DefaultPluginManagerTest {
       AvailablePlugin review = createAvailable("scm-review-plugin");
       when(review.getDescriptor().getOptionalDependencies()).thenReturn(ImmutableSet.of("scm-mail-plugin"));
       AvailablePlugin mail = createAvailable("scm-mail-plugin", "1.1.0");
-      when(center.getAvailable()).thenReturn(ImmutableSet.of(review, mail));
+      when(center.getAvailablePlugins()).thenReturn(ImmutableSet.of(review, mail));
 
       manager.install("scm-review-plugin", false);
 
@@ -306,7 +306,7 @@ class DefaultPluginManagerTest {
       AvailablePlugin mail = createAvailable("scm-mail-plugin");
       when(mail.getDescriptor().getDependencies()).thenReturn(ImmutableSet.of("scm-notification-plugin"));
       AvailablePlugin notification = createAvailable("scm-notification-plugin");
-      when(center.getAvailable()).thenReturn(ImmutableSet.of(review, mail, notification));
+      when(center.getAvailablePlugins()).thenReturn(ImmutableSet.of(review, mail, notification));
 
       PendingPluginInstallation pendingNotification = mock(PendingPluginInstallation.class);
       doReturn(pendingNotification).when(installer).install(context, notification);
@@ -328,7 +328,7 @@ class DefaultPluginManagerTest {
       when(review.getDescriptor().getDependencies()).thenReturn(ImmutableSet.of("scm-mail-plugin"));
       AvailablePlugin mail = createAvailable("scm-mail-plugin");
       when(mail.getDescriptor().getDependencies()).thenReturn(ImmutableSet.of("scm-notification-plugin"));
-      when(center.getAvailable()).thenReturn(ImmutableSet.of(review, mail));
+      when(center.getAvailablePlugins()).thenReturn(ImmutableSet.of(review, mail));
 
       assertThrows(NotFoundException.class, () -> manager.install("scm-review-plugin", false));
 
@@ -338,7 +338,7 @@ class DefaultPluginManagerTest {
     @Test
     void shouldSendRestartEventAfterInstallation() {
       AvailablePlugin git = createAvailable("scm-git-plugin");
-      when(center.getAvailable()).thenReturn(ImmutableSet.of(git));
+      when(center.getAvailablePlugins()).thenReturn(ImmutableSet.of(git));
 
       manager.install("scm-git-plugin", true);
 
@@ -358,7 +358,7 @@ class DefaultPluginManagerTest {
     @Test
     void shouldNotInstallAlreadyPendingPlugins() {
       AvailablePlugin review = createAvailable("scm-review-plugin");
-      when(center.getAvailable()).thenReturn(ImmutableSet.of(review));
+      when(center.getAvailablePlugins()).thenReturn(ImmutableSet.of(review));
 
       manager.install("scm-review-plugin", false);
       manager.install("scm-review-plugin", false);
@@ -369,7 +369,7 @@ class DefaultPluginManagerTest {
     @Test
     void shouldSendRestartEvent() {
       AvailablePlugin review = createAvailable("scm-review-plugin");
-      when(center.getAvailable()).thenReturn(ImmutableSet.of(review));
+      when(center.getAvailablePlugins()).thenReturn(ImmutableSet.of(review));
 
       manager.install("scm-review-plugin", false);
       manager.executePendingAndRestart();
@@ -387,7 +387,7 @@ class DefaultPluginManagerTest {
     @Test
     void shouldReturnSingleAvailableAsPending() {
       AvailablePlugin review = createAvailable("scm-review-plugin");
-      when(center.getAvailable()).thenReturn(ImmutableSet.of(review));
+      when(center.getAvailablePlugins()).thenReturn(ImmutableSet.of(review));
 
       manager.install("scm-review-plugin", false);
 
@@ -398,7 +398,7 @@ class DefaultPluginManagerTest {
     @Test
     void shouldReturnAvailableAsPending() {
       AvailablePlugin review = createAvailable("scm-review-plugin");
-      when(center.getAvailable()).thenReturn(ImmutableSet.of(review));
+      when(center.getAvailablePlugins()).thenReturn(ImmutableSet.of(review));
 
       manager.install("scm-review-plugin", false);
 
@@ -514,7 +514,7 @@ class DefaultPluginManagerTest {
       when(reviewPlugin.getDescriptor().getDependencies()).thenReturn(singleton("scm-mail-plugin"));
 
       when(loader.getInstalledPlugins()).thenReturn(singletonList(mailPlugin));
-      when(center.getAvailable()).thenReturn(singleton(reviewPlugin));
+      when(center.getAvailablePlugins()).thenReturn(singleton(reviewPlugin));
 
       manager.computeInstallationDependencies();
 
@@ -546,7 +546,7 @@ class DefaultPluginManagerTest {
       doNothing().when(mailPlugin).setMarkedForUninstall(uninstallCaptor.capture());
 
       AvailablePlugin git = createAvailable("scm-git-plugin");
-      when(center.getAvailable()).thenReturn(ImmutableSet.of(git));
+      when(center.getAvailablePlugins()).thenReturn(ImmutableSet.of(git));
       PendingPluginInstallation gitPendingPluginInformation = mock(PendingPluginInstallation.class);
       when(installer.install(context, git)).thenReturn(gitPendingPluginInformation);
 
@@ -577,7 +577,7 @@ class DefaultPluginManagerTest {
       AvailablePlugin newMailPlugin = createAvailable("scm-mail-plugin", "2.0.0");
       AvailablePlugin newReviewPlugin = createAvailable("scm-review-plugin", "2.0.0");
 
-      when(center.getAvailable()).thenReturn(ImmutableSet.of(newMailPlugin, newReviewPlugin));
+      when(center.getAvailablePlugins()).thenReturn(ImmutableSet.of(newMailPlugin, newReviewPlugin));
 
       manager.updateAll();
 
@@ -593,7 +593,7 @@ class DefaultPluginManagerTest {
       when(loader.getInstalledPlugins()).thenReturn(ImmutableList.of(scriptPlugin));
       AvailablePlugin oldScriptPlugin = createAvailable("scm-script-plugin", "0.9");
 
-      when(center.getAvailable()).thenReturn(ImmutableSet.of(oldScriptPlugin));
+      when(center.getAvailablePlugins()).thenReturn(ImmutableSet.of(oldScriptPlugin));
 
       manager.updateAll();
 
@@ -603,7 +603,7 @@ class DefaultPluginManagerTest {
     @Test
     void shouldFirePluginEventOnInstallation() {
       AvailablePlugin review = createAvailable("scm-review-plugin");
-      when(center.getAvailable()).thenReturn(ImmutableSet.of(review));
+      when(center.getAvailablePlugins()).thenReturn(ImmutableSet.of(review));
 
       manager.install("scm-review-plugin", false);
 
@@ -616,7 +616,7 @@ class DefaultPluginManagerTest {
     @Test
     void shouldFirePluginEventOnFailedInstallation() {
       AvailablePlugin review = createAvailable("scm-review-plugin");
-      when(center.getAvailable()).thenReturn(ImmutableSet.of(review));
+      when(center.getAvailablePlugins()).thenReturn(ImmutableSet.of(review));
       doThrow(new PluginDownloadException(review, new IOException())).when(installer).install(context, review);
 
       assertThrows(PluginDownloadException.class, () -> manager.install("scm-review-plugin", false));
@@ -637,7 +637,7 @@ class DefaultPluginManagerTest {
       when(jenkins.getDescriptor().getDependencies()).thenReturn(ImmutableSet.of("scm-el-plugin"));
       when(webhook.getDescriptor().getDependencies()).thenReturn(ImmutableSet.of("scm-el-plugin"));
       AvailablePlugin el = createAvailable("scm-el-plugin");
-      when(center.getAvailable()).thenReturn(ImmutableSet.of(jenkins, el, webhook));
+      when(center.getAvailablePlugins()).thenReturn(ImmutableSet.of(jenkins, el, webhook));
 
       manager.install("scm-jenkins-plugin", false);
       manager.install("scm-webhook-plugin", false);

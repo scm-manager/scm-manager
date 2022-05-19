@@ -21,40 +21,41 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, ReactNode } from "react";
-import Logo from "./../Logo";
-import { Links } from "@scm-manager/ui-types";
+
+import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
+import { HalRepresentationWithEmbedded, Links } from "@scm-manager/ui-types";
+import { useQuery } from "react-query";
+import { apiClient, ApiResult, requiredLink } from "@scm-manager/ui-api";
+
+type PluginSet = {
+  id: string;
+  name: string;
+  sequence: number;
+  features: string[];
+  plugins: string[];
+};
+
+type AvailablePluginSets = HalRepresentationWithEmbedded<{ pluginSets: PluginSet[] }>;
 
 type Props = {
-  authenticated?: boolean;
+  data: { _links: Links };
 };
 
-const SmallHeader: FC = ({ children }) => {
-  return <div className="has-scm-background">{children}</div>;
-};
+const useAvailablePluginSets = (link: string): ApiResult<AvailablePluginSets> =>
+  useQuery<AvailablePluginSets, Error>("pluginSets", () => apiClient.get(link).then((r) => r.json()));
 
-const LargeHeader: FC = () => {
+const InitializationPluginWizardStep: FC<Props> = ({ data }) => {
+  const { data: pluginSets, isLoading, error } = useAvailablePluginSets(requiredLink(data, "pluginSets"));
+  const [t] = useTranslation("initialization");
   return (
-    <div className="hero has-scm-background is-small">
-      <div className="hero-body">
-        <div className="container">
-          <div className="columns is-vcentered">
-            <div className="column">
-              <Logo />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <>
+      <h1>Hello World</h1>
+      {pluginSets?._embedded?.pluginSets.map((pluginSet) => (
+        <div>{pluginSet.name}</div>
+      ))}
+    </>
   );
 };
 
-const Header: FC<Props> = ({ authenticated, children }) => {
-  if (authenticated) {
-    return <SmallHeader>{children}</SmallHeader>;
-  } else {
-    return <LargeHeader />;
-  }
-};
-
-export default Header;
+export default InitializationPluginWizardStep;

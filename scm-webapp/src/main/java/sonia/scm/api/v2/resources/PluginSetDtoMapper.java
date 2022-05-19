@@ -21,40 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, ReactNode } from "react";
-import Logo from "./../Logo";
-import { Links } from "@scm-manager/ui-types";
 
-type Props = {
-  authenticated?: boolean;
-};
+package sonia.scm.api.v2.resources;
 
-const SmallHeader: FC = ({ children }) => {
-  return <div className="has-scm-background">{children}</div>;
-};
+import org.mapstruct.Mapper;
+import sonia.scm.plugin.PluginSet;
 
-const LargeHeader: FC = () => {
-  return (
-    <div className="hero has-scm-background is-small">
-      <div className="hero-body">
-        <div className="container">
-          <div className="columns is-vcentered">
-            <div className="column">
-              <Logo />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const Header: FC<Props> = ({ authenticated, children }) => {
-  if (authenticated) {
-    return <SmallHeader>{children}</SmallHeader>;
-  } else {
-    return <LargeHeader />;
-  }
-};
-
-export default Header;
+@Mapper
+public abstract class PluginSetDtoMapper {
+  public abstract PluginSetDto map(PluginSet pluginSet);
+}

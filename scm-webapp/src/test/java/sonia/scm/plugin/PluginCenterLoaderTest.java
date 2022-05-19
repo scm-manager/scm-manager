@@ -43,7 +43,6 @@ import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static sonia.scm.plugin.Tracing.SPAN_KIND;
 
 @ExtendWith(MockitoExtension.class)
 class PluginCenterLoaderTest {
@@ -71,12 +70,15 @@ class PluginCenterLoaderTest {
   @Test
   void shouldFetch() throws IOException {
     Set<AvailablePlugin> plugins = Collections.emptySet();
+    Set<PluginSet> pluginSets = Collections.emptySet();
     PluginCenterDto dto = new PluginCenterDto();
+    PluginCenterResult pluginCenterResult = new PluginCenterResult(plugins, pluginSets);
     when(request().contentFromJson(PluginCenterDto.class)).thenReturn(dto);
-    when(mapper.map(dto)).thenReturn(plugins);
+    when(mapper.map(dto)).thenReturn(pluginCenterResult);
 
-    Set<AvailablePlugin> fetched = loader.load(PLUGIN_URL);
-    assertThat(fetched).isSameAs(plugins);
+    PluginCenterResult fetched = loader.load(PLUGIN_URL);
+    assertThat(fetched.getPlugins()).isSameAs(plugins);
+    assertThat(fetched.getPluginSets()).isSameAs(pluginSets);
   }
 
   private AdvancedHttpResponse request() throws IOException {
@@ -91,8 +93,9 @@ class PluginCenterLoaderTest {
     when(client.get(PLUGIN_URL)).thenReturn(request);
     when(request.request()).thenThrow(new IOException("failed to fetch"));
 
-    Set<AvailablePlugin> fetch = loader.load(PLUGIN_URL);
-    assertThat(fetch).isEmpty();
+    PluginCenterResult fetch = loader.load(PLUGIN_URL);
+    assertThat(fetch.getPlugins()).isEmpty();
+    assertThat(fetch.getPluginSets()).isEmpty();
   }
 
   @Test
@@ -119,8 +122,9 @@ class PluginCenterLoaderTest {
   private Set<AvailablePlugin> mockResponse() throws IOException {
     PluginCenterDto dto = new PluginCenterDto();
     Set<AvailablePlugin> plugins = Collections.emptySet();
+    Set<PluginSet> pluginSets = Collections.emptySet();
     when(request().contentFromJson(PluginCenterDto.class)).thenReturn(dto);
-    when(mapper.map(dto)).thenReturn(plugins);
+    when(mapper.map(dto)).thenReturn(new PluginCenterResult(plugins, pluginSets));
     return plugins;
   }
 

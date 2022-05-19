@@ -24,6 +24,7 @@
 
 package sonia.scm.api.v2.resources;
 
+import com.github.sdorra.shiro.SubjectAware;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,7 +34,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.lifecycle.AdminAccountStartupAction;
+import sonia.scm.security.AccessToken;
+import sonia.scm.security.AccessTokenBuilder;
+import sonia.scm.security.AccessTokenBuilderFactory;
+import sonia.scm.security.AccessTokenCookieIssuer;
+import sonia.scm.security.DefaultAccessTokenCookieIssuer;
 import sonia.scm.web.RestDispatcher;
 
 import javax.inject.Provider;
@@ -46,9 +53,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.jboss.resteasy.mock.MockHttpRequest.post;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@SubjectAware(
+  configuration = "classpath:sonia/scm/repository/shiro.ini"
+)
 @ExtendWith(MockitoExtension.class)
 class AdminAccountStartupResourceTest {
 
@@ -63,6 +74,11 @@ class AdminAccountStartupResourceTest {
   private ScmPathInfoStore pathInfoStore;
   @Mock
   private ScmPathInfo pathInfo;
+  @Mock
+  private AccessTokenBuilderFactory accessTokenBuilderFactory;
+  @Mock
+  private AccessTokenBuilder accessTokenBuilder;
+  private final AccessTokenCookieIssuer cookieIssuer = new DefaultAccessTokenCookieIssuer(mock(ScmConfiguration.class));
 
   @InjectMocks
   private AdminAccountStartupResource resource;
@@ -73,6 +89,9 @@ class AdminAccountStartupResourceTest {
     lenient().when(pathInfoStore.get()).thenReturn(pathInfo);
     dispatcher.addSingletonResource(new InitializationResource(singleton(resource)));
     lenient().when(startupAction.name()).thenReturn("adminAccount");
+    lenient().when(accessTokenBuilderFactory.create()).thenReturn(accessTokenBuilder);
+    AccessToken accessToken = mock(AccessToken.class);
+    lenient().when(accessTokenBuilder.build()).thenReturn(accessToken);
   }
 
   @Test

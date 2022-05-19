@@ -24,21 +24,16 @@
     
 package sonia.scm.plugin;
 
-import com.google.common.collect.ImmutableSet;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.cache.MapCacheManager;
 import sonia.scm.config.ScmConfiguration;
-import sonia.scm.net.ahc.AdvancedHttpClient;
-import sonia.scm.util.SystemUtil;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -81,36 +76,52 @@ class PluginCenterTest {
   @Test
   void shouldFetchPlugins() {
     Set<AvailablePlugin> plugins = new HashSet<>();
-    when(loader.load(PLUGIN_URL_BASE + "2.0.0")).thenReturn(plugins);
+    Set<PluginSet> pluginSets = new HashSet<>();
 
-    assertThat(pluginCenter.getAvailable()).isSameAs(plugins);
+    PluginCenterResult pluginCenterResult = new PluginCenterResult(plugins, pluginSets);
+    when(loader.load(PLUGIN_URL_BASE + "2.0.0")).thenReturn(pluginCenterResult);
+
+    assertThat(pluginCenter.getAvailablePlugins()).isSameAs(plugins);
+    assertThat(pluginCenter.getAvailablePluginSets()).isSameAs(pluginSets);
   }
 
   @Test
   @SuppressWarnings("unchecked")
   void shouldCache() {
-    Set<AvailablePlugin> first = new HashSet<>();
-    when(loader.load(anyString())).thenReturn(first, new HashSet<>());
+    Set<AvailablePlugin> plugins = new HashSet<>();
+    Set<PluginSet> pluginSets = new HashSet<>();
 
-    assertThat(pluginCenter.getAvailable()).isSameAs(first);
-    assertThat(pluginCenter.getAvailable()).isSameAs(first);
+    PluginCenterResult first = new PluginCenterResult(plugins, pluginSets);
+    when(loader.load(anyString())).thenReturn(first, new PluginCenterResult(Collections.emptySet(), Collections.emptySet()));
+
+    assertThat(pluginCenter.getAvailablePlugins()).isSameAs(plugins);
+    assertThat(pluginCenter.getAvailablePlugins()).isSameAs(plugins);
+    assertThat(pluginCenter.getAvailablePluginSets()).isSameAs(pluginSets);
   }
 
   @Test
   @SuppressWarnings("unchecked")
   void shouldClearCache() {
-    Set<AvailablePlugin> first = new HashSet<>();
-    when(loader.load(anyString())).thenReturn(first, new HashSet<>());
+    Set<AvailablePlugin> plugins = new HashSet<>();
+    Set<PluginSet> pluginSets = new HashSet<>();
 
-    assertThat(pluginCenter.getAvailable()).isSameAs(first);
+    PluginCenterResult first = new PluginCenterResult(plugins, pluginSets);
+    when(loader.load(anyString())).thenReturn(first, new PluginCenterResult(Collections.emptySet(), Collections.emptySet()));
+
+    assertThat(pluginCenter.getAvailablePlugins()).isSameAs(plugins);
+    assertThat(pluginCenter.getAvailablePluginSets()).isSameAs(pluginSets);
     pluginCenter.handle(new PluginCenterLoginEvent(null));
-    assertThat(pluginCenter.getAvailable()).isNotSameAs(first);
+    assertThat(pluginCenter.getAvailablePlugins()).isNotSameAs(plugins);
+    assertThat(pluginCenter.getAvailablePluginSets()).isNotSameAs(pluginSets);
   }
 
   @Test
   void shouldLoadOnRefresh() {
     Set<AvailablePlugin> plugins = new HashSet<>();
-    when(loader.load(PLUGIN_URL_BASE + "2.0.0")).thenReturn(plugins);
+    Set<PluginSet> pluginSets = new HashSet<>();
+
+    PluginCenterResult pluginCenterResult = new PluginCenterResult(plugins, pluginSets);
+    when(loader.load(PLUGIN_URL_BASE + "2.0.0")).thenReturn(pluginCenterResult);
 
     pluginCenter.refresh();
 

@@ -56,11 +56,21 @@ public final class PluginCenterDto implements Serializable {
     @XmlElement(name = "plugins")
     private List<Plugin> plugins;
 
+    @XmlElement(name = "plugin-sets")
+    private List<PluginSet> pluginSets;
+
     public List<Plugin> getPlugins() {
       if (plugins == null) {
         plugins = ImmutableList.of();
       }
       return plugins;
+    }
+
+    public List<PluginSet> getPluginSets() {
+      if (pluginSets == null) {
+        pluginSets = ImmutableList.of();
+      }
+      return pluginSets;
     }
   }
 
@@ -91,6 +101,33 @@ public final class PluginCenterDto implements Serializable {
 
     @XmlElement(name = "_links")
     private final Map<String, Link> links;
+  }
+
+  @XmlAccessorType(XmlAccessType.FIELD)
+  @XmlRootElement(name = "pluginSets")
+  @Getter
+  @AllArgsConstructor
+  public static class PluginSet {
+    private final String id;
+    private final String versions;
+    private final int sequence;
+
+    @XmlElement(name = "plugins")
+    private final Set<String> plugins;
+
+    @XmlElement(name = "descriptions")
+    private final Map<String, Description> descriptions;
+  }
+
+  @XmlAccessorType(XmlAccessType.FIELD)
+  @Getter
+  @NoArgsConstructor
+  @AllArgsConstructor
+  public static class Description {
+    private String name;
+
+    @XmlElement(name = "features")
+    private Set<String> features;
   }
 
   @XmlAccessorType(XmlAccessType.FIELD)

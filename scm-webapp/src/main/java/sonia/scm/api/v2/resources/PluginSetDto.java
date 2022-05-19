@@ -21,40 +21,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, ReactNode } from "react";
-import Logo from "./../Logo";
-import { Links } from "@scm-manager/ui-types";
 
-type Props = {
-  authenticated?: boolean;
-};
+package sonia.scm.api.v2.resources;
 
-const SmallHeader: FC = ({ children }) => {
-  return <div className="has-scm-background">{children}</div>;
-};
+import de.otto.edison.hal.HalRepresentation;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-const LargeHeader: FC = () => {
-  return (
-    <div className="hero has-scm-background is-small">
-      <div className="hero-body">
-        <div className="container">
-          <div className="columns is-vcentered">
-            <div className="column">
-              <Logo />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
+import java.util.Set;
 
-const Header: FC<Props> = ({ authenticated, children }) => {
-  if (authenticated) {
-    return <SmallHeader>{children}</SmallHeader>;
-  } else {
-    return <LargeHeader />;
-  }
-};
-
-export default Header;
+@Getter
+@Setter
+@NoArgsConstructor
+public class PluginSetDto extends HalRepresentation {
+  private String id;
+  private String name;
+  private Set<String> features;
+  private Set<String> plugins;
+}

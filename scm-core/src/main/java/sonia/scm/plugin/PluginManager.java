@@ -26,6 +26,7 @@ package sonia.scm.plugin;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * The plugin manager is responsible for plugin related tasks, such as install, uninstall or updating.
@@ -63,6 +64,14 @@ public interface PluginManager {
    * @return a list of available plugins.
    */
   List<AvailablePlugin> getAvailable();
+
+  /**
+   * Returns all available plugin sets from the plugin center.
+   *
+   * @return a list of available plugin sets
+   * @since 2.35.0
+   */
+  Set<PluginSet> getPluginSets();
 
   /**
    * Returns all updatable plugins.

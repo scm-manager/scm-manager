@@ -45,6 +45,7 @@ import sonia.scm.plugin.InstalledPluginDescriptor;
 import sonia.scm.plugin.PluginCondition;
 import sonia.scm.plugin.PluginInformation;
 import sonia.scm.plugin.PluginManager;
+import sonia.scm.plugin.PluginSet;
 import sonia.scm.web.RestDispatcher;
 import sonia.scm.web.VndMediaType;
 
@@ -53,7 +54,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.util.Collections;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -115,10 +118,15 @@ class AvailablePluginResourceTest {
     @Test
     void getAvailablePlugins() throws URISyntaxException, UnsupportedEncodingException {
       AvailablePlugin plugin = createAvailablePlugin();
+      PluginSet pluginSet = createPluginSet();
 
       when(pluginManager.getAvailable()).thenReturn(Collections.singletonList(plugin));
       when(pluginManager.getInstalled()).thenReturn(Collections.emptyList());
-      when(collectionMapper.mapAvailable(Collections.singletonList(plugin))).thenReturn(new MockedResultDto());
+      when(pluginManager.getPluginSets()).thenReturn(Collections.singleton(pluginSet));
+      when(collectionMapper.mapAvailable(
+        Collections.singletonList(plugin),
+        Collections.singleton(pluginSet))
+      ).thenReturn(new MockedResultDto());
 
       MockHttpRequest request = MockHttpRequest.get("/v2/plugins/available");
       request.accept(VndMediaType.PLUGIN_COLLECTION);
@@ -134,10 +142,15 @@ class AvailablePluginResourceTest {
     void shouldNotReturnInstalledPlugins() throws URISyntaxException, UnsupportedEncodingException {
       AvailablePlugin availablePlugin = createAvailablePlugin();
       InstalledPlugin installedPlugin = createInstalledPlugin();
+      PluginSet pluginSet = createPluginSet();
 
       when(pluginManager.getAvailable()).thenReturn(Collections.singletonList(availablePlugin));
       when(pluginManager.getInstalled()).thenReturn(Collections.singletonList(installedPlugin));
-      lenient().when(collectionMapper.mapAvailable(Collections.singletonList(availablePlugin))).thenReturn(new MockedResultDto());
+      when(pluginManager.getPluginSets()).thenReturn(Collections.singleton(pluginSet));
+      lenient().when(collectionMapper.mapAvailable(
+        Collections.singletonList(availablePlugin),
+        Collections.singleton(pluginSet)
+      )).thenReturn(new MockedResultDto());
 
       MockHttpRequest request = MockHttpRequest.get("/v2/plugins/available");
       request.accept(VndMediaType.PLUGIN_COLLECTION);
@@ -183,6 +196,20 @@ class AvailablePluginResourceTest {
       verify(pluginManager).install("pluginName", false);
       assertThat(HttpServletResponse.SC_OK).isEqualTo(response.getStatus());
     }
+  }
+
+  private PluginSet createPluginSet() {
+    return new PluginSet(
+      "default",
+      0,
+      Collections.singleton("scm-some-plugin"),
+      Collections.singletonMap("en",
+        new PluginSet.Description(
+          "Default",
+          Collections.singleton("this is an awesome set")
+        )
+      )
+    );
   }
 
   private AvailablePlugin createAvailablePlugin() {

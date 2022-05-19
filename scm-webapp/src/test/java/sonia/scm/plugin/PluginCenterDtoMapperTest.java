@@ -33,17 +33,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
+import static sonia.scm.plugin.PluginCenterDto.Condition;
+import static sonia.scm.plugin.PluginCenterDto.Link;
 import static sonia.scm.plugin.PluginCenterDto.Plugin;
-import static sonia.scm.plugin.PluginCenterDto.*;
 
 @ExtendWith(MockitoExtension.class)
 class PluginCenterDtoMapperTest {
@@ -73,7 +71,7 @@ class PluginCenterDtoMapperTest {
     );
 
     when(dto.getEmbedded().getPlugins()).thenReturn(Collections.singletonList(plugin));
-    AvailablePluginDescriptor descriptor = mapper.map(dto).iterator().next().getDescriptor();
+    AvailablePluginDescriptor descriptor = mapper.map(dto).getPlugins().iterator().next().getDescriptor();
     PluginInformation information = descriptor.getInformation();
     PluginCondition condition = descriptor.getCondition();
 
@@ -126,7 +124,8 @@ class PluginCenterDtoMapperTest {
 
     when(dto.getEmbedded().getPlugins()).thenReturn(Arrays.asList(plugin1, plugin2));
 
-    Set<AvailablePlugin> resultSet = mapper.map(dto);
+    PluginCenterResult pluginCenterResult = mapper.map(dto);
+    Set<AvailablePlugin> resultSet = pluginCenterResult.getPlugins();
 
     PluginInformation pluginInformation1 = findPlugin(resultSet, plugin1.getName());
     PluginInformation pluginInformation2 = findPlugin(resultSet, plugin2.getName());

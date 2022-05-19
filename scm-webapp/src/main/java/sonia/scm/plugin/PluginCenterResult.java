@@ -21,40 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, ReactNode } from "react";
-import Logo from "./../Logo";
-import { Links } from "@scm-manager/ui-types";
 
-type Props = {
-  authenticated?: boolean;
-};
+package sonia.scm.plugin;
 
-const SmallHeader: FC = ({ children }) => {
-  return <div className="has-scm-background">{children}</div>;
-};
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-const LargeHeader: FC = () => {
-  return (
-    <div className="hero has-scm-background is-small">
-      <div className="hero-body">
-        <div className="container">
-          <div className="columns is-vcentered">
-            <div className="column">
-              <Logo />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
+import java.util.Set;
 
-const Header: FC<Props> = ({ authenticated, children }) => {
-  if (authenticated) {
-    return <SmallHeader>{children}</SmallHeader>;
-  } else {
-    return <LargeHeader />;
-  }
-};
-
-export default Header;
+@AllArgsConstructor
+@Getter
+public class PluginCenterResult {
+  private Set<AvailablePlugin> plugins;
+  private Set<PluginSet> pluginSets;
+}

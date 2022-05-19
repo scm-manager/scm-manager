@@ -109,7 +109,7 @@ public class DefaultPluginManager implements PluginManager {
   @Override
   public Optional<AvailablePlugin> getAvailable(String name) {
     PluginPermissions.read().check();
-    return center.getAvailable()
+    return center.getAvailablePlugins()
       .stream()
       .filter(filterByName(name))
       .filter(this::isNotInstalledOrMoreUpToDate)
@@ -143,11 +143,16 @@ public class DefaultPluginManager implements PluginManager {
   @Override
   public List<AvailablePlugin> getAvailable() {
     PluginPermissions.read().check();
-    return center.getAvailable()
+    return center.getAvailablePlugins()
       .stream()
       .filter(this::isNotInstalledOrMoreUpToDate)
       .map(p -> getPending(p.getDescriptor().getInformation().getName()).orElse(p))
       .collect(Collectors.toList());
+  }
+
+  @Override
+  public Set<PluginSet> getPluginSets() {
+    return center.getAvailablePluginSets();
   }
 
   @Override
