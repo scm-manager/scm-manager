@@ -1,0 +1,2 @@
+- type: fixed
+  description: NPE on synchronous repository export ([#2040](https://github.com/scm-manager/scm-manager/pull/2040))
