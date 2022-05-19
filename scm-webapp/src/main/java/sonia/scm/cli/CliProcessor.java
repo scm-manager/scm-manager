@@ -27,6 +27,7 @@ package sonia.scm.cli;
 import com.google.inject.Injector;
 import picocli.AutoComplete;
 import picocli.CommandLine;
+import sonia.scm.plugin.PluginLoader;
 
 import javax.inject.Inject;
 import java.util.Locale;
@@ -38,12 +39,14 @@ public class CliProcessor {
   private final Injector injector;
   private final CommandLine.Model.CommandSpec usageHelp;
   private final CliExceptionHandlerFactory exceptionHandlerFactory;
+  private final PluginLoader pluginLoader;
 
   @Inject
-  public CliProcessor(CommandRegistry registry, Injector injector, CliExceptionHandlerFactory exceptionHandlerFactory) {
+  public CliProcessor(CommandRegistry registry, Injector injector, CliExceptionHandlerFactory exceptionHandlerFactory, PluginLoader pluginLoader) {
     this.registry = registry;
     this.injector = injector;
     this.exceptionHandlerFactory = exceptionHandlerFactory;
+    this.pluginLoader = pluginLoader;
     this.usageHelp = new CommandLine(HelpMixin.class).getCommandSpec();
   }
 
@@ -68,9 +71,9 @@ public class CliProcessor {
     CommandLine commandLine = new CommandLine(command.getCommand(), factory);
     commandLine.getCommandSpec().addMixin("help", usageHelp);
 
-    ResourceBundle resourceBundle = commandLine.getCommandSpec().resourceBundle();
-    if (resourceBundle != null) {
-      String resourceBundleBaseName = resourceBundle.getBaseBundleName();
+    CliResourceBundle customResourceBundle = command.getCommand().getAnnotation(CliResourceBundle.class);
+    if (customResourceBundle != null) {
+      String resourceBundleBaseName = customResourceBundle.value();
       commandLine.setResourceBundle(getBundle(resourceBundleBaseName, context.getLocale()));
     }
     for (RegisteredCommandNode child : command.getChildren()) {
@@ -84,7 +87,7 @@ public class CliProcessor {
   }
 
   private ResourceBundle getBundle(String baseName, Locale locale) {
-    return ResourceBundle.getBundle(baseName, locale, new ResourceBundle.Control() {
+    return ResourceBundle.getBundle(baseName, locale, pluginLoader.getUberClassLoader(), new ResourceBundle.Control() {
       @Override
       public Locale getFallbackLocale(String baseName, Locale locale) {
         return Locale.ROOT;
