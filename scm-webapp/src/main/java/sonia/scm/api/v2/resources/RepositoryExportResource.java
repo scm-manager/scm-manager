@@ -457,8 +457,6 @@ public class RepositoryExportResource {
       return Response.status(204).build();
     } else {
       StreamingOutput output = os -> fullScmRepositoryExporter.export(repository, os, password);
-      exportService.setExportFinished(repository);
-
       return Response
         .ok(output, "application/x-gzip")
         .header("content-disposition", createContentDispositionHeaderValue(repository, fileExtension))
