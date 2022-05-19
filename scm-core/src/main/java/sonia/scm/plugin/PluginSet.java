@@ -39,6 +39,7 @@ public class PluginSet {
   private final Map<String, Description> descriptions;
 
   @AllArgsConstructor
+  @Getter
   public static class Description {
     private final String name;
     private final Set<String> features;

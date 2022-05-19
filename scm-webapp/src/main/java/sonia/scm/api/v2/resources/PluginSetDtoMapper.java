@@ -29,5 +29,9 @@ import sonia.scm.plugin.PluginSet;
 
 @Mapper
 public abstract class PluginSetDtoMapper {
-  public abstract PluginSetDto map(PluginSet pluginSet);
+  public PluginSetDto map(PluginSet pluginSet) {
+    // TODO: Detect language
+    PluginSet.Description description = pluginSet.getDescriptions().get("en");
+    return new PluginSetDto(pluginSet.getId(), pluginSet.getSequence(), pluginSet.getPlugins(), description.getName(), description.getFeatures());
+  };
 }

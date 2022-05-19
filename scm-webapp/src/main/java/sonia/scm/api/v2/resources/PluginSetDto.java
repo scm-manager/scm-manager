@@ -25,6 +25,7 @@
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.HalRepresentation;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -34,9 +35,12 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class PluginSetDto extends HalRepresentation {
   private String id;
+  private int sequence;
+  private Set<String> plugins;
+
   private String name;
   private Set<String> features;
-  private Set<String> plugins;
 }
