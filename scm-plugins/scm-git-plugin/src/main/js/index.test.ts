@@ -22,23 +22,17 @@
  * SOFTWARE.
  */
 
-import "@scm-manager/ui-tests/i18n";
+import "@scm-manager/ui-tests";
+import { Repository } from "@scm-manager/ui-types";
 import { gitPredicate } from "./index";
+
+const repository: Repository = { _links: {}, namespace: "hitchhiker", name: "HeartOfGold", type: "git" };
 
 describe("test git predicate", () => {
   it("should return false", () => {
-    expect(gitPredicate(undefined)).toBe(false);
-    expect(gitPredicate({})).toBe(false);
     expect(
       gitPredicate({
-        repository: {},
-      })
-    ).toBe(false);
-    expect(
-      gitPredicate({
-        repository: {
-          type: "hg",
-        },
+        repository: { ...repository, type: "hg" },
       })
     ).toBe(false);
   });
@@ -46,9 +40,7 @@ describe("test git predicate", () => {
   it("should return true", () => {
     expect(
       gitPredicate({
-        repository: {
-          type: "git",
-        },
+        repository,
       })
     ).toBe(true);
   });
