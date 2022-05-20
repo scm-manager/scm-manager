@@ -35,6 +35,7 @@ import java.util.ResourceBundle;
 
 public class CliProcessor {
 
+  private static final String CORE_RESOURCE_BUNDLE = "sonia.scm.cli.i18n";
   private final CommandRegistry registry;
   private final Injector injector;
   private final CommandLine.Model.CommandSpec usageHelp;
@@ -54,7 +55,7 @@ public class CliProcessor {
     CommandFactory factory = new CommandFactory(injector, context);
     CommandLine cli = new CommandLine(ScmManagerCommand.class, factory);
     cli.getCommandSpec().addMixin("help", usageHelp);
-    cli.setResourceBundle(getBundle("sonia.scm.cli.i18n", context.getLocale()));
+    cli.setResourceBundle(getBundle(CORE_RESOURCE_BUNDLE, context.getLocale()));
     for (RegisteredCommandNode c : registry.createCommandTree()) {
       CommandLine commandline = createCommandline(context, factory, c);
       cli.getCommandSpec().addSubcommand(c.getName(), commandline);
@@ -74,7 +75,10 @@ public class CliProcessor {
     CliResourceBundle customResourceBundle = command.getCommand().getAnnotation(CliResourceBundle.class);
     if (customResourceBundle != null) {
       String resourceBundleBaseName = customResourceBundle.value();
-      commandLine.setResourceBundle(getBundle(resourceBundleBaseName, context.getLocale()));
+      ResourceBundle pluginResourceBundle = getBundle(resourceBundleBaseName, context.getLocale());
+      ResourceBundle coreResourceBundle = getBundle(CORE_RESOURCE_BUNDLE, context.getLocale());
+      CombinedResourceBundle combinedResourceBundle = new CombinedResourceBundle(pluginResourceBundle, coreResourceBundle);
+      commandLine.setResourceBundle(combinedResourceBundle);
     }
     for (RegisteredCommandNode child : command.getChildren()) {
       if (!commandLine.getCommandSpec().subcommands().containsKey(child.getName())) {
