@@ -29,6 +29,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junitpioneer.jupiter.DefaultLocale;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import picocli.CommandLine;
@@ -46,7 +47,6 @@ import java.io.PrintWriter;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -92,6 +92,7 @@ class CliExceptionHandlerTest {
   }
 
   @Nested
+  @DefaultLocale("en")
   class EnglishLanguageTest {
 
     @BeforeEach
@@ -156,6 +157,7 @@ class CliExceptionHandlerTest {
   }
 
   @Nested
+  @DefaultLocale("de")
   class GermanLanguageTest {
 
     @BeforeEach

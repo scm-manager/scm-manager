@@ -39,9 +39,9 @@ import picocli.CommandLine;
 import javax.annotation.Nonnull;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
-import java.util.Collections;
 import java.util.Locale;
 
+import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -98,24 +98,24 @@ class CliProcessorTest {
     void shouldPrintCommandOne() {
       String result = executeHierarchyCommands("--help");
 
-      assertThat(result).contains("Commands:\n" +
-        "  one");
+      assertThat(result).contains(format("Commands:%n" +
+        "  one"));
     }
 
     @Test
     void shouldPrintCommandTwo() {
       String result = executeHierarchyCommands("one", "--help");
 
-      assertThat(result).contains("Commands:\n" +
-        "  two");
+      assertThat(result).contains(format("Commands:%n" +
+        "  two"));
     }
 
     @Test
     void shouldPrintCommandThree() {
       String result = executeHierarchyCommands("one", "two", "--help");
 
-      assertThat(result).contains("Commands:\n" +
-        "  three");
+      assertThat(result).contains(format("Commands:%n" +
+        "  three"));
     }
   }
 
