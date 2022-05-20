@@ -24,64 +24,29 @@
 
 package sonia.scm.cli;
 
-import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.ListResourceBundle;
 import java.util.ResourceBundle;
-import java.util.Set;
+import java.util.stream.Collectors;
 
-public class CombinedResourceBundle extends ResourceBundle {
+public class CombinedResourceBundle extends ListResourceBundle {
 
-  private static final Map<String, Object> TRANSLATIONS = new HashMap<>();
+  private final Object[][] contents;
+
+  @Override
+  protected Object[][] getContents() {
+    return contents;
+  }
 
   public CombinedResourceBundle(ResourceBundle... bundles) {
-    Arrays.stream(bundles).forEach(resourceBundle -> {
-      Enumeration<String> keys = resourceBundle.getKeys();
-      for (String key : IterableEnumeration.make(keys)) {
-        TRANSLATIONS.put(key, resourceBundle.getObject(key));
-      }
-    });
-  }
-
-  @Override
-  protected Object handleGetObject(@Nonnull String key) {
-    return TRANSLATIONS.get(key);
-  }
-
-  @Override
-  protected Set<String> handleKeySet() {
-    return TRANSLATIONS.keySet();
-  }
-
-  @Override
-  public Enumeration<String> getKeys() {
-    return Collections.enumeration(TRANSLATIONS.keySet());
-  }
-
-  static class IterableEnumeration<T> implements Iterable<T> {
-    private final Enumeration<T> en;
-    public IterableEnumeration(Enumeration<T> en) {
-      this.en = en;
-    }
-    public Iterator<T> iterator() {
-      return new Iterator<T>() {
-        public boolean hasNext() {
-          return en.hasMoreElements();
-        }
-        public T next() {
-          return en.nextElement();
-        }
-        public void remove() {
-          throw new UnsupportedOperationException();
-        }
-      };
-    }
-    public static <T> Iterable<T> make(Enumeration<T> en) {
-      return new IterableEnumeration<T>(en);
-    }
+    this.contents = Arrays
+      .stream(bundles)
+      .flatMap(resourceBundle ->
+        Collections
+          .list(resourceBundle.getKeys())
+          .stream().map(key -> new Object[]{key, resourceBundle.getObject(key)}))
+      .collect(Collectors.toList())
+      .toArray(new Object[0][0]);
   }
 }
