@@ -22,26 +22,45 @@
  * SOFTWARE.
  */
 
-import React, { FC } from "react";
-import { useTranslation } from "react-i18next";
-import { Links } from "@scm-manager/ui-types";
-import { useAvailablePlugins } from "@scm-manager/ui-api";
+package sonia.scm.lifecycle;
 
-type Props = {
-  data: { _links: Links };
-};
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sonia.scm.initialization.InitializationStep;
+import sonia.scm.plugin.Extension;
+import sonia.scm.plugin.PluginSetsConfig;
+import sonia.scm.store.ConfigurationStore;
+import sonia.scm.store.ConfigurationStoreFactory;
 
-const InitializationPluginWizardStep: FC<Props> = ({ data: initializationContext }) => {
-  const { data, isLoading, error } = useAvailablePlugins({ enabled: true });
-  const [t] = useTranslation("initialization");
-  return (
-    <>
-      <h1>Hello World</h1>
-      {data?._embedded?.pluginSets.map((pluginSet) => (
-        <div>{pluginSet.name}</div>
-      ))}
-    </>
-  );
-};
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
-export default InitializationPluginWizardStep;
+@Extension
+@Singleton
+public class PluginWizardStartupAction implements InitializationStep {
+
+  private final ConfigurationStore<PluginSetsConfig> store;
+
+  private static final Logger LOG = LoggerFactory.getLogger(PluginWizardStartupAction.class);
+
+  @Inject
+  public PluginWizardStartupAction(ConfigurationStoreFactory configurationStoreFactory) {
+    this.store = configurationStoreFactory.withType(PluginSetsConfig.class).withName("pluginSets").build();
+  }
+
+  @Override
+  public String name() {
+    return "pluginWizard";
+  }
+
+  @Override
+  public int sequence() {
+    return 1;
+  }
+
+  @Override
+  public boolean done() {
+    return !store.getOptional().isPresent();
+  }
+
+}

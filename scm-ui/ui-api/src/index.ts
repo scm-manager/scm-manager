@@ -64,7 +64,6 @@ export * from "./loginInfo";
 export * from "./usePluginCenterAuthInfo";
 export * from "./compare";
 export * from "./utils";
-export * from "./links";
 
 export { default as ApiProvider } from "./ApiProvider";
 export * from "./ApiProvider";

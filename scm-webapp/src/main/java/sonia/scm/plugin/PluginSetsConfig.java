@@ -22,26 +22,24 @@
  * SOFTWARE.
  */
 
-import React, { FC } from "react";
-import { useTranslation } from "react-i18next";
-import { Links } from "@scm-manager/ui-types";
-import { useAvailablePlugins } from "@scm-manager/ui-api";
+package sonia.scm.plugin;
 
-type Props = {
-  data: { _links: Links };
-};
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-const InitializationPluginWizardStep: FC<Props> = ({ data: initializationContext }) => {
-  const { data, isLoading, error } = useAvailablePlugins({ enabled: true });
-  const [t] = useTranslation("initialization");
-  return (
-    <>
-      <h1>Hello World</h1>
-      {data?._embedded?.pluginSets.map((pluginSet) => (
-        <div>{pluginSet.name}</div>
-      ))}
-    </>
-  );
-};
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Set;
 
-export default InitializationPluginWizardStep;
+@Data
+@XmlRootElement
+@AllArgsConstructor
+@NoArgsConstructor
+@XmlAccessorType(XmlAccessType.FIELD)
+public class PluginSetsConfig {
+  @XmlElement(name = "pluginSets")
+  Set<String> pluginSets;
+}
