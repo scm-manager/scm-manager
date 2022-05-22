@@ -73,7 +73,8 @@ public class PluginWizardStartupResource implements InitializationStepResource {
 
   @Override
   public void setupIndex(Links.Builder builder, Embedded.Builder embeddedBuilder) {
-
+    String link = resourceLinks.availablePluginCollection().self();
+    builder.single(link("pluginSets", link));
   }
 
   @Override

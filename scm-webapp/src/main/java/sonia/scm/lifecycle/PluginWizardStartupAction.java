@@ -41,8 +41,6 @@ public class PluginWizardStartupAction implements InitializationStep {
 
   private final ConfigurationStore<PluginSetsConfig> store;
 
-  private static final Logger LOG = LoggerFactory.getLogger(PluginWizardStartupAction.class);
-
   @Inject
   public PluginWizardStartupAction(ConfigurationStoreFactory configurationStoreFactory) {
     this.store = configurationStoreFactory.withType(PluginSetsConfig.class).withName("pluginSets").build();

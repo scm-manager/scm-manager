@@ -24,15 +24,19 @@
 
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
-import { Links } from "@scm-manager/ui-types";
-import { useAvailablePlugins } from "@scm-manager/ui-api";
+import { Links, PluginCollection } from "@scm-manager/ui-types";
+import { apiClient, ApiResult, requiredLink } from "@scm-manager/ui-api";
+import { useQuery } from "react-query";
 
 type Props = {
   data: { _links: Links };
 };
 
+const useAvailablePluginSets = (link: string): ApiResult<PluginCollection> =>
+  useQuery<PluginCollection, Error>("pluginSets", () => apiClient.get(link).then((r) => r.json()));
+
 const InitializationPluginWizardStep: FC<Props> = ({ data: initializationContext }) => {
-  const { data, isLoading, error } = useAvailablePlugins({ enabled: true });
+  const { data, isLoading, error } = useAvailablePluginSets(requiredLink(initializationContext, "pluginSets"));
   const [t] = useTranslation("initialization");
   return (
     <>

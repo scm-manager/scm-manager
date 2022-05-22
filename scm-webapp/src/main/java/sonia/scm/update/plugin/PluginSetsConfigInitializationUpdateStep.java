@@ -30,6 +30,7 @@ import sonia.scm.plugin.PluginSetsConfig;
 import sonia.scm.store.ConfigurationStore;
 import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.user.UserManager;
+import sonia.scm.user.xml.XmlUserDAO;
 import sonia.scm.version.Version;
 
 import javax.inject.Inject;
@@ -38,21 +39,21 @@ import java.util.Collections;
 @Extension
 public class PluginSetsConfigInitializationUpdateStep implements UpdateStep {
   private final ConfigurationStoreFactory configurationStoreFactory;
-  private final UserManager userManager;
+  private final XmlUserDAO userDAO;
 
   @Inject
-  public PluginSetsConfigInitializationUpdateStep(ConfigurationStoreFactory configurationStoreFactory, UserManager userManager) {
+  public PluginSetsConfigInitializationUpdateStep(ConfigurationStoreFactory configurationStoreFactory, XmlUserDAO userDAO) {
     this.configurationStoreFactory = configurationStoreFactory;
-    this.userManager = userManager;
+    this.userDAO = userDAO;
   }
 
   @Override
   public void doUpdate() throws Exception {
-    if (!userManager.getAll().isEmpty()) {
+    if (!userDAO.getAll().isEmpty()) {
       ConfigurationStore<PluginSetsConfig> pluginSetsConfigStore = configurationStoreFactory.withType(PluginSetsConfig.class).withName("pluginSets").build();
       if (!pluginSetsConfigStore.getOptional().isPresent()) {
         pluginSetsConfigStore.set(new PluginSetsConfig(Collections.emptySet()));
-      };
+      }
     }
   }
 
