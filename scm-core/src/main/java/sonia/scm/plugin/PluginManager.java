@@ -74,6 +74,14 @@ public interface PluginManager {
   Set<PluginSet> getPluginSets();
 
   /**
+   * Collects and installs all plugins and their dependencies for the given plugin sets.
+   *
+   * @param pluginSets Ids of plugin sets to install
+   * @since 2.35.0
+   */
+  void installPluginSets(Set<String> pluginSets);
+
+  /**
    * Returns all updatable plugins.
    *
    * @return a list of updatable plugins.

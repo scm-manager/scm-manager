@@ -118,6 +118,8 @@ public class PluginWizardStartupResource implements InitializationStepResource {
   public Response installPluginSets(@Valid PluginSetsInstallDto dto) {
     PluginPermissions.write().check();
 
+    pluginManager.installPluginSets(dto.getPluginSets());
+
     return Response.ok().build();
   }
 }

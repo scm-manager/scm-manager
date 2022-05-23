@@ -156,6 +156,24 @@ public class DefaultPluginManager implements PluginManager {
   }
 
   @Override
+  public void installPluginSets(Set<String> pluginSetIds) {
+    Set<PluginSet> pluginSets = getPluginSets();
+    Set<AvailablePlugin> pluginsToInstall = pluginSetIds.stream()
+      .map(id -> pluginSets.stream().filter(pluginSet -> pluginSet.getId().equals(id)).findFirst())
+      .filter(Optional::isPresent)
+      .map(Optional::get)
+      .map(pluginSet -> pluginSet
+        .getPlugins()
+        .stream()
+        .map(this::collectPluginsToInstall).flatMap(Collection::stream).collect(Collectors.toSet())
+      )
+      .flatMap(Collection::stream)
+      .collect(Collectors.toSet());
+
+    installPlugins(new ArrayList<>(pluginsToInstall), true);
+  }
+
+  @Override
   public List<InstalledPlugin> getUpdatable() {
     return getInstalled()
       .stream()
@@ -189,6 +207,10 @@ public class DefaultPluginManager implements PluginManager {
       );
 
     List<AvailablePlugin> plugins = collectPluginsToInstall(name);
+    installPlugins(plugins, restartAfterInstallation);
+  }
+
+  private void installPlugins(List<AvailablePlugin> plugins, boolean restartAfterInstallation) {
     List<PendingPluginInstallation> pendingInstallations = new ArrayList<>();
 
     for (AvailablePlugin plugin : plugins) {
