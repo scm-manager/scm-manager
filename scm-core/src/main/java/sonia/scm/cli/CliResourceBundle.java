@@ -22,26 +22,25 @@
  * SOFTWARE.
  */
 
-import "@scm-manager/ui-tests";
-import { Repository } from "@scm-manager/ui-types";
-import { gitPredicate } from "./index";
+package sonia.scm.cli;
 
-const repository: Repository = { _links: {}, namespace: "hitchhiker", name: "HeartOfGold", type: "git" };
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-describe("test git predicate", () => {
-  it("should return false", () => {
-    expect(
-      gitPredicate({
-        repository: { ...repository, type: "hg" },
-      })
-    ).toBe(false);
-  });
-
-  it("should return true", () => {
-    expect(
-      gitPredicate({
-        repository,
-      })
-    ).toBe(true);
-  });
-});
+/**
+ * Defines a custom resource bundle for the CLI command
+ *
+ * We need to use this workaround instead the picocli way because we cannot ensure that the resource bundles can be found by the classloader.
+ * Currently there is no solution for picocli to chose which classloader should be used to load command-related resource bundle.
+ *
+ * @since 2.35.0
+ */
+@Documented
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface CliResourceBundle {
+  String value();
+}

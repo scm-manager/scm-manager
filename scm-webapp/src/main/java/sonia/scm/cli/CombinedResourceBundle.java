@@ -22,26 +22,31 @@
  * SOFTWARE.
  */
 
-import "@scm-manager/ui-tests";
-import { Repository } from "@scm-manager/ui-types";
-import { gitPredicate } from "./index";
+package sonia.scm.cli;
 
-const repository: Repository = { _links: {}, namespace: "hitchhiker", name: "HeartOfGold", type: "git" };
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.ListResourceBundle;
+import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
-describe("test git predicate", () => {
-  it("should return false", () => {
-    expect(
-      gitPredicate({
-        repository: { ...repository, type: "hg" },
-      })
-    ).toBe(false);
-  });
+public class CombinedResourceBundle extends ListResourceBundle {
 
-  it("should return true", () => {
-    expect(
-      gitPredicate({
-        repository,
-      })
-    ).toBe(true);
-  });
-});
+  private final Object[][] contents;
+
+  @Override
+  protected Object[][] getContents() {
+    return contents;
+  }
+
+  public CombinedResourceBundle(ResourceBundle... bundles) {
+    this.contents = Arrays
+      .stream(bundles)
+      .flatMap(resourceBundle ->
+        Collections
+          .list(resourceBundle.getKeys())
+          .stream().map(key -> new Object[]{key, resourceBundle.getObject(key)}))
+      .collect(Collectors.toList())
+      .toArray(new Object[0][0]);
+  }
+}
