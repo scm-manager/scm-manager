@@ -68,6 +68,6 @@ EXPOSE 8080
 # we us a high relative high start period,
 # because the start time depends on the number of installed plugins
 HEALTHCHECK --interval=30s --timeout=3s --start-period=30s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://localhost:8080/scm/api/v2 || exit 1
+  CMD /opt/scm-server/bin/healthcheck || exit 1
 
 ENTRYPOINT [ "/opt/scm-server/bin/scm-server" ]

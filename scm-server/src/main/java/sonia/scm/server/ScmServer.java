@@ -27,11 +27,6 @@ package sonia.scm.server;
 //~--- non-JDK imports --------------------------------------------------------
 
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.xml.XmlConfiguration;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.net.URL;
 
 /**
  *
@@ -39,10 +34,6 @@ import java.net.URL;
  */
 public class ScmServer extends Thread
 {
-
-  /** Field description */
-  public static final String CONFIGURATION = "/server-config.xml";
-
   /** Field description */
   static final int GRACEFUL_TIMEOUT = 2000;
 
@@ -54,25 +45,9 @@ public class ScmServer extends Thread
    */
   public ScmServer()
   {
-    URL configURL = ScmServer.class.getResource(CONFIGURATION);
-
-    if (configURL == null)
-    {
-      throw new ScmServerException("could not find server-config.xml");
-    }
-
+    ServerConfiguration config = new ServerConfiguration();
     server = new org.eclipse.jetty.server.Server();
-
-    try
-    {
-      XmlConfiguration config = new XmlConfiguration(configURL);
-
-      config.configure(server);
-    }
-    catch (Exception ex)
-    {
-      throw new ScmServerException("error during server configuration", ex);
-    }
+    config.configure(server);
   }
 
   //~--- methods --------------------------------------------------------------

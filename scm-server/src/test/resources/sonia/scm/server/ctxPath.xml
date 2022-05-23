@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    MIT License
+
+    Copyright (c) 2020-present Cloudogu GmbH and Contributors
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+-->
+
+<!DOCTYPE Configure PUBLIC "-//Jetty//Configure//EN" "http://www.eclipse.org/jetty/configure_9_0.dtd">
+<Configure id="ScmServer" class="org.eclipse.jetty.server.Server">
+
+  <!--
+    This default configuration should match 90% of the use cases,
+    if you have to change something ensure you know what you are doing.
+
+    For further information on configuration scm-server have a look at:
+    https://scm-manager.org/docs/${version.major}.${version.minor}.x/en/administration/scm-server/
+  -->
+
+  <New id="httpConfig" class="org.eclipse.jetty.server.HttpConfiguration">
+    <!-- increase header size for mercurial -->
+    <Set name="requestHeaderSize">16384</Set>
+    <Set name="responseHeaderSize">16384</Set>
+
+    <Call name="addCustomizer">
+      <Arg><New class="org.eclipse.jetty.server.ForwardedRequestCustomizer"/></Arg>
+    </Call>
+  </New>
+
+  <!--
+  Connectors
+  -->
+  <Call name="addConnector">
+    <Arg>
+      <New class="org.eclipse.jetty.server.ServerConnector">
+        <Arg name="server">
+          <Ref refid="ScmServer" />
+        </Arg>
+        <Arg name="factories">
+          <Array type="org.eclipse.jetty.server.ConnectionFactory">
+            <Item>
+              <New class="org.eclipse.jetty.server.HttpConnectionFactory">
+                <Arg name="config">
+                  <Ref refid="httpConfig" />
+                </Arg>
+              </New>
+            </Item>
+          </Array>
+        </Arg>
+        <Set name="host">
+          <SystemProperty name="jetty.host" default="0.0.0.0" />
+        </Set>
+        <Set name="port">
+          <SystemProperty name="jetty.port" default="8080" />
+        </Set>
+      </New>
+    </Arg>
+  </Call>
+
+  <New id="scm-webapp" class="org.eclipse.jetty.webapp.WebAppContext">
+    <Set name="contextPath">/myscm</Set>
+    <Set name="war">
+      <SystemProperty name="basedir" default="."/>/var/webapp/scm-webapp.war
+    </Set>
+    <!-- disable directory listings -->
+    <Call name="setInitParameter">
+      <Arg>org.eclipse.jetty.servlet.Default.dirAllowed</Arg>
+      <Arg>false</Arg>
+    </Call>
+    <Set name="tempDirectory">/var/cache/scm/work/webapp</Set>
+  </New>
+
+  <New id="docroot" class="org.eclipse.jetty.webapp.WebAppContext">
+    <Set name="contextPath">/</Set>
+    <Set name="baseResource">
+      <New class="org.eclipse.jetty.util.resource.ResourceCollection">
+        <Arg>
+          <Array type="java.lang.String">
+            <Item>
+              <SystemProperty name="basedir" default="."/>/var/webapp/docroot</Item>
+          </Array>
+        </Arg>
+      </New>
+    </Set>
+    <Set name="tempDirectory">/var/cache/scm/work/work/docroot</Set>
+  </New>
+
+  <Set name="handler">
+    <New class="org.eclipse.jetty.server.handler.HandlerCollection">
+      <Set name="handlers">
+        <Array type="org.eclipse.jetty.server.Handler">
+          <Item>
+            <Ref id="scm-webapp" />
+          </Item>
+          <Item>
+            <Ref id="docroot" />
+          </Item>
+        </Array>
+      </Set>
+    </New>
+  </Set>
+
+</Configure>
