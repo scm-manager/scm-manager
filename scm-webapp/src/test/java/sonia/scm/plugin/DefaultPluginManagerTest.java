@@ -84,6 +84,9 @@ class DefaultPluginManagerTest {
   private Restarter restarter;
 
   @Mock
+  private PluginSetConfigStore pluginSetConfigStore;
+
+  @Mock
   private ScmEventBus eventBus;
 
   @Captor
@@ -110,7 +113,7 @@ class DefaultPluginManagerTest {
   @BeforeEach
   void setUpObjectUnderTest() {
     manager = new DefaultPluginManager(
-      loader, center, installer, restarter, eventBus, plugins -> context
+      loader, center, installer, restarter, eventBus, plugins -> context, pluginSetConfigStore
     );
   }
 

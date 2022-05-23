@@ -22,10 +22,10 @@
  * SOFTWARE.
  */
 
-import React, { FC } from "react";
+import React, {FC, useCallback, useEffect, useMemo} from "react";
 import { useTranslation } from "react-i18next";
 import { HalRepresentationWithEmbedded, PluginSet } from "@scm-manager/ui-types";
-import { apiClient, requiredLink } from "@scm-manager/ui-api";
+import { apiClient, requiredLink, waitForRestartAfter } from "@scm-manager/ui-api";
 import { useMutation } from "react-query";
 import { useForm } from "react-hook-form";
 import { Checkbox, ErrorNotification, SubmitButton } from "@scm-manager/ui-components";
@@ -40,7 +40,7 @@ type PluginSetsInstallation = {
 };
 
 const installPluginSets = (link: string) => (data: PluginSetsInstallation) =>
-  apiClient.post(link, data, "application/json");
+  waitForRestartAfter(apiClient.post(link, data, "application/json"));
 
 const useInstallPluginSets = (link: string) => {
   const { mutate, isLoading, error, isSuccess } = useMutation<unknown, Error, PluginSetsInstallation>(
@@ -64,22 +64,37 @@ const InitializationPluginWizardStep: FC<Props> = ({ data: initializationContext
   const {
     installPluginSets,
     isLoading: isInstalling,
+    isInstalled,
     error: installationError,
   } = useInstallPluginSets(requiredLink(initializationContext, "installPluginSets"));
+
   const { register, handleSubmit, watch } = useForm<FormValue>();
   const data = initializationContext._embedded?.pluginSets;
   const [t] = useTranslation("initialization");
-  const value = watch();
-
-  const submit = (formValue: FormValue) =>
-    installPluginSets({
-      pluginSetIds: Object.entries(formValue).reduce<string[]>((p, [id, flag]) => {
+  const values = watch();
+  const pluginSetIds = useMemo(
+    () =>
+      Object.entries(values).reduce<string[]>((p, [id, flag]) => {
         if (flag) {
           p.push(id);
         }
         return p;
       }, []),
-    });
+    [values]
+  );
+  const submit = useCallback(
+    () =>
+      installPluginSets({
+        pluginSetIds,
+      }),
+    [installPluginSets, pluginSetIds]
+  );
+
+  useEffect(() => {
+    if (isInstalled) {
+      window.location.reload();
+    }
+  }, [isInstalled]);
 
   let content;
 
@@ -87,17 +102,14 @@ const InitializationPluginWizardStep: FC<Props> = ({ data: initializationContext
     content = <ErrorNotification error={installationError} />;
   } else {
     content = (
-      <>
-        {JSON.stringify(value)}
-        <form onSubmit={handleSubmit(submit)}>
-          {data?.map((pluginSet) => (
-            <Checkbox {...register(pluginSet.id)} label={pluginSet.name} />
-          ))}
-          <SubmitButton disabled={isInstalling} loading={isInstalling}>
-            Submit
-          </SubmitButton>
-        </form>
-      </>
+      <form onSubmit={handleSubmit(submit)}>
+        {data?.map((pluginSet) => (
+          <Checkbox {...register(pluginSet.id)} label={pluginSet.name} />
+        ))}
+        <SubmitButton disabled={isInstalling} loading={isInstalling}>
+          {pluginSetIds.length ? "Submit" : "Skip"}
+        </SubmitButton>
+      </form>
     );
   }
 
