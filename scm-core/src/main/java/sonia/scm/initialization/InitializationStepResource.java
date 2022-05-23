@@ -29,6 +29,7 @@ import de.otto.edison.hal.Links;
 import sonia.scm.plugin.ExtensionPoint;
 
 @ExtensionPoint
+@Deprecated(since = "2.35.0", forRemoval = true)
 public interface InitializationStepResource {
   String name();
 
