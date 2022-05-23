@@ -36,5 +36,5 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PluginSetsInstallDto {
-  private Set<String> pluginSets;
+  private Set<String> pluginSetIds;
 }

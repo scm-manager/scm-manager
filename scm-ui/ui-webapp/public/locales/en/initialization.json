@@ -11,6 +11,9 @@
     "password-confirmation": "Confirm Password",
     "submit": "Submit"
   },
+  "pluginWizardStep": {
+    "title": "Plugin Sets"
+  },
   "error": {
     "forbidden": "Incorrect token"
   }

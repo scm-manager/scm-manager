@@ -29,6 +29,11 @@ import { apiClient, requiredLink } from "@scm-manager/ui-api";
 import { useMutation } from "react-query";
 import { useForm } from "react-hook-form";
 import { Checkbox, ErrorNotification, SubmitButton } from "@scm-manager/ui-components";
+import styled from "styled-components";
+
+const HeroSection = styled.section`
+  padding-top: 2em;
+`;
 
 type PluginSetsInstallation = {
   pluginSetIds: string[];
@@ -76,23 +81,40 @@ const InitializationPluginWizardStep: FC<Props> = ({ data: initializationContext
       }, []),
     });
 
+  let content;
+
   if (installationError) {
-    return <ErrorNotification error={installationError} />;
+    content = <ErrorNotification error={installationError} />;
+  } else {
+    content = (
+      <>
+        {JSON.stringify(value)}
+        <form onSubmit={handleSubmit(submit)}>
+          {data?.map((pluginSet) => (
+            <Checkbox {...register(pluginSet.id)} label={pluginSet.name} />
+          ))}
+          <SubmitButton disabled={isInstalling} loading={isInstalling}>
+            Submit
+          </SubmitButton>
+        </form>
+      </>
+    );
   }
 
   return (
-    <>
-      <h1>Plugin Wizard</h1>
-      {JSON.stringify(value)}
-      <form onSubmit={handleSubmit(submit)}>
-        {data?.map((pluginSet) => (
-          <Checkbox {...register(pluginSet.id)} label={pluginSet.name} />
-        ))}
-        <SubmitButton disabled={isInstalling} loading={isInstalling}>
-          Submit
-        </SubmitButton>
-      </form>
-    </>
+    <HeroSection className="hero">
+      <div className="hero-body">
+        <div className="container">
+          <div className="columns is-centered">
+            <div className="column is-8 box  has-background-secondary-less">
+              <h3 className="title">{t("title")}</h3>
+              <h4 className="subtitle">{t("pluginWizardStep.title")}</h4>
+              {content}
+            </div>
+          </div>
+        </div>
+      </div>
+    </HeroSection>
   );
 };
 
