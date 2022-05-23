@@ -27,6 +27,8 @@ import { useTranslation } from "react-i18next";
 import { HalRepresentationWithEmbedded, PluginSet } from "@scm-manager/ui-types";
 import { apiClient, requiredLink } from "@scm-manager/ui-api";
 import { useMutation } from "react-query";
+import { useForm } from "react-hook-form";
+import { Checkbox, ErrorNotification, SubmitButton } from "@scm-manager/ui-components";
 
 type PluginSetsInstallation = {
   pluginSetIds: string[];
@@ -51,21 +53,45 @@ type Props = {
   data: HalRepresentationWithEmbedded<{ pluginSets: PluginSet[] }>;
 };
 
+type FormValue = { [id: string]: boolean };
+
 const InitializationPluginWizardStep: FC<Props> = ({ data: initializationContext }) => {
   const {
     installPluginSets,
-    isInstalled,
     isLoading: isInstalling,
     error: installationError,
   } = useInstallPluginSets(requiredLink(initializationContext, "installPluginSets"));
+  const { register, handleSubmit, watch } = useForm<FormValue>();
   const data = initializationContext._embedded?.pluginSets;
   const [t] = useTranslation("initialization");
+  const value = watch();
+
+  const submit = (formValue: FormValue) =>
+    installPluginSets({
+      pluginSetIds: Object.entries(formValue).reduce<string[]>((p, [id, flag]) => {
+        if (flag) {
+          p.push(id);
+        }
+        return p;
+      }, []),
+    });
+
+  if (installationError) {
+    return <ErrorNotification error={installationError} />;
+  }
+
   return (
     <>
-      <h1>Hello World</h1>
-      {data?.map((pluginSet) => (
-        <div>{pluginSet.name}</div>
-      ))}
+      <h1>Plugin Wizard</h1>
+      {JSON.stringify(value)}
+      <form onSubmit={handleSubmit(submit)}>
+        {data?.map((pluginSet) => (
+          <Checkbox {...register(pluginSet.id)} label={pluginSet.name} />
+        ))}
+        <SubmitButton disabled={isInstalling} loading={isInstalling}>
+          Submit
+        </SubmitButton>
+      </form>
     </>
   );
 };
