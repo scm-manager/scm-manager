@@ -36,15 +36,14 @@ import GitTagInformation from "./GitTagInformation";
 // repository
 
 // @visibleForTesting
-export const gitPredicate = (props: any) => {
+export const gitPredicate = (props: extensionPoints.RepositoryDetailsInformation["props"]) => {
   return !!(props && props.repository && props.repository.type === "git");
 };
 
-binder.bind<extensionPoints.RepositoryDetailsInformation>(
-  "repos.repository-details.information",
-  ProtocolInformation,
-  gitPredicate
-);
+binder.bind<extensionPoints.RepositoryDetailsInformation>("repos.repository-details.information", ProtocolInformation, {
+  predicate: gitPredicate,
+  priority: 100,
+});
 binder.bind("repos.branch-details.information", GitBranchInformation, { priority: 100, predicate: gitPredicate });
 
 binder.bind<extensionPoints.RepositoryTagDetailsInformation>(

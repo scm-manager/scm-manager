@@ -35,6 +35,7 @@ import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import picocli.CommandLine;
+import sonia.scm.plugin.PluginLoader;
 
 import javax.annotation.Nonnull;
 import java.io.ByteArrayOutputStream;
@@ -56,11 +57,18 @@ class CliProcessorTest {
   private CliContext context;
 
   @Mock
+  private PluginLoader pluginLoader;
+  @Mock
   private CliExceptionHandlerFactory exceptionHandlerFactory;
   @Mock
   private CliExecutionExceptionHandler executionExceptionHandler;
   @Mock
   private CliParameterExceptionHandler parameterExceptionHandler;
+
+  @BeforeEach
+  void mockPluginLoader() {
+    when(pluginLoader.getUberClassLoader()).thenReturn(this.getClass().getClassLoader());
+  }
 
   @Nested
   class ForDefaultLanguageTest {
@@ -76,7 +84,7 @@ class CliProcessorTest {
     void shouldExecutePingCommand() {
       when(registry.createCommandTree()).thenReturn(ImmutableList.of(new RegisteredCommandNode("ping", PingCommand.class)));
       Injector injector = Guice.createInjector();
-      CliProcessor cliProcessor = new CliProcessor(registry, injector, exceptionHandlerFactory);
+      CliProcessor cliProcessor = new CliProcessor(registry, injector, exceptionHandlerFactory, pluginLoader);
 
       cliProcessor.execute(context, "ping");
 
@@ -87,7 +95,7 @@ class CliProcessorTest {
     void shouldExecutePingCommandWithExitCode0() {
       when(registry.createCommandTree()).thenReturn(ImmutableList.of(new RegisteredCommandNode("ping", PingCommand.class)));
       Injector injector = Guice.createInjector();
-      CliProcessor cliProcessor = new CliProcessor(registry, injector, exceptionHandlerFactory);
+      CliProcessor cliProcessor = new CliProcessor(registry, injector, exceptionHandlerFactory, pluginLoader);
 
       int exitCode = cliProcessor.execute(context, "ping");
 
@@ -170,7 +178,7 @@ class CliProcessorTest {
     when(context.getStdout()).thenReturn(new PrintWriter(baos));
 
     Injector injector = Guice.createInjector();
-    CliProcessor cliProcessor = new CliProcessor(registry, injector, exceptionHandlerFactory);
+    CliProcessor cliProcessor = new CliProcessor(registry, injector, exceptionHandlerFactory, pluginLoader);
 
     cliProcessor.execute(context, args);
     return baos.toString();
@@ -194,7 +202,8 @@ class CliProcessorTest {
     }
   }
 
-  @CommandLine.Command(name = "three", resourceBundle = "sonia.scm.cli.test")
+  @CommandLine.Command(name = "three")
+  @CliResourceBundle("sonia.scm.cli.test")
   static class SubSubCommand implements Runnable {
     @Override
     public void run() {

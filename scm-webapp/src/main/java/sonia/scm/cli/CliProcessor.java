@@ -27,6 +27,7 @@ package sonia.scm.cli;
 import com.google.inject.Injector;
 import picocli.AutoComplete;
 import picocli.CommandLine;
+import sonia.scm.plugin.PluginLoader;
 
 import javax.inject.Inject;
 import java.util.Locale;
@@ -34,16 +35,19 @@ import java.util.ResourceBundle;
 
 public class CliProcessor {
 
+  private static final String CORE_RESOURCE_BUNDLE = "sonia.scm.cli.i18n";
   private final CommandRegistry registry;
   private final Injector injector;
   private final CommandLine.Model.CommandSpec usageHelp;
   private final CliExceptionHandlerFactory exceptionHandlerFactory;
+  private final PluginLoader pluginLoader;
 
   @Inject
-  public CliProcessor(CommandRegistry registry, Injector injector, CliExceptionHandlerFactory exceptionHandlerFactory) {
+  public CliProcessor(CommandRegistry registry, Injector injector, CliExceptionHandlerFactory exceptionHandlerFactory, PluginLoader pluginLoader) {
     this.registry = registry;
     this.injector = injector;
     this.exceptionHandlerFactory = exceptionHandlerFactory;
+    this.pluginLoader = pluginLoader;
     this.usageHelp = new CommandLine(HelpMixin.class).getCommandSpec();
   }
 
@@ -51,7 +55,7 @@ public class CliProcessor {
     CommandFactory factory = new CommandFactory(injector, context);
     CommandLine cli = new CommandLine(ScmManagerCommand.class, factory);
     cli.getCommandSpec().addMixin("help", usageHelp);
-    cli.setResourceBundle(getBundle("sonia.scm.cli.i18n", context.getLocale()));
+    cli.setResourceBundle(getBundle(CORE_RESOURCE_BUNDLE, context.getLocale()));
     for (RegisteredCommandNode c : registry.createCommandTree()) {
       CommandLine commandline = createCommandline(context, factory, c);
       cli.getCommandSpec().addSubcommand(c.getName(), commandline);
@@ -68,10 +72,13 @@ public class CliProcessor {
     CommandLine commandLine = new CommandLine(command.getCommand(), factory);
     commandLine.getCommandSpec().addMixin("help", usageHelp);
 
-    ResourceBundle resourceBundle = commandLine.getCommandSpec().resourceBundle();
-    if (resourceBundle != null) {
-      String resourceBundleBaseName = resourceBundle.getBaseBundleName();
-      commandLine.setResourceBundle(getBundle(resourceBundleBaseName, context.getLocale()));
+    CliResourceBundle customResourceBundle = command.getCommand().getAnnotation(CliResourceBundle.class);
+    if (customResourceBundle != null) {
+      String resourceBundleBaseName = customResourceBundle.value();
+      ResourceBundle pluginResourceBundle = getBundle(resourceBundleBaseName, context.getLocale());
+      ResourceBundle coreResourceBundle = getBundle(CORE_RESOURCE_BUNDLE, context.getLocale());
+      CombinedResourceBundle combinedResourceBundle = new CombinedResourceBundle(pluginResourceBundle, coreResourceBundle);
+      commandLine.setResourceBundle(combinedResourceBundle);
     }
     for (RegisteredCommandNode child : command.getChildren()) {
       if (!commandLine.getCommandSpec().subcommands().containsKey(child.getName())) {
@@ -84,7 +91,7 @@ public class CliProcessor {
   }
 
   private ResourceBundle getBundle(String baseName, Locale locale) {
-    return ResourceBundle.getBundle(baseName, locale, new ResourceBundle.Control() {
+    return ResourceBundle.getBundle(baseName, locale, pluginLoader.getUberClassLoader(), new ResourceBundle.Control() {
       @Override
       public Locale getFallbackLocale(String baseName, Locale locale) {
         return Locale.ROOT;

@@ -1,0 +1,4 @@
+- type: changed
+  description: Set order priority for repository information extensions ([#2041](https://github.com/scm-manager/scm-manager/pull/2041))
+- type: fixed
+  description: Resource bundle loading from plugins ([#2041](https://github.com/scm-manager/scm-manager/pull/2041))
