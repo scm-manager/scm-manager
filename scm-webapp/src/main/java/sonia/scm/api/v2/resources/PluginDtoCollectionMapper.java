@@ -47,15 +47,13 @@ public class PluginDtoCollectionMapper {
   private final ResourceLinks resourceLinks;
   private final PluginDtoMapper mapper;
 
-  private final PluginSetDtoMapper pluginSetDtoMapper;
   private final PluginManager manager;
 
   @Inject
-  public PluginDtoCollectionMapper(ResourceLinks resourceLinks, PluginDtoMapper mapper, PluginManager manager, PluginSetDtoMapper pluginSetDtoMapper) {
+  public PluginDtoCollectionMapper(ResourceLinks resourceLinks, PluginDtoMapper mapper, PluginManager manager) {
     this.resourceLinks = resourceLinks;
     this.mapper = mapper;
     this.manager = manager;
-    this.pluginSetDtoMapper = pluginSetDtoMapper;
   }
 
   public HalRepresentation mapInstalled(List<InstalledPlugin> plugins, List<AvailablePlugin> availablePlugins) {
@@ -66,10 +64,9 @@ public class PluginDtoCollectionMapper {
     return new HalRepresentation(createInstalledPluginsLinks(), embedDtos(dtos));
   }
 
-  public HalRepresentation mapAvailable(List<AvailablePlugin> plugins, Set<PluginSet> pluginSets) {
+  public HalRepresentation mapAvailable(List<AvailablePlugin> plugins) {
     List<PluginDto> dtos = plugins.stream().map(mapper::mapAvailable).collect(toList());
-    List<PluginSetDto> pluginSetDtos = pluginSets.stream().map(pluginSetDtoMapper::map).collect(toList());
-    return new HalRepresentation(createAvailablePluginsLinks(plugins), embedDtos(dtos, pluginSetDtos));
+    return new HalRepresentation(createAvailablePluginsLinks(plugins), embedDtos(dtos));
   }
 
   private Links createInstalledPluginsLinks() {
@@ -101,13 +98,6 @@ public class PluginDtoCollectionMapper {
   private Embedded embedDtos(List<PluginDto> pluginDtos) {
     return embeddedBuilder()
       .with("plugins", pluginDtos)
-      .build();
-  }
-
-  private Embedded embedDtos(List<PluginDto> pluginDtos, List<PluginSetDto> pluginSetDtos) {
-    return embeddedBuilder()
-      .with("plugins", pluginDtos)
-      .with("pluginSets", pluginSetDtos)
       .build();
   }
 }

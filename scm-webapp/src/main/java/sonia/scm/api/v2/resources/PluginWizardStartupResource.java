@@ -26,59 +26,98 @@ package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.Links;
-import lombok.Data;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authz.UnauthenticatedException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import sonia.scm.initialization.InitializationStepResource;
-import sonia.scm.lifecycle.AdminAccountStartupAction;
 import sonia.scm.lifecycle.PluginWizardStartupAction;
 import sonia.scm.plugin.Extension;
-import sonia.scm.security.AccessToken;
-import sonia.scm.security.AccessTokenBuilder;
-import sonia.scm.security.AccessTokenBuilderFactory;
-import sonia.scm.security.AccessTokenCookieIssuer;
-import sonia.scm.security.AllowAnonymousAccess;
-import sonia.scm.security.Tokens;
-import sonia.scm.util.ValidationUtil;
+import sonia.scm.plugin.PluginManager;
+import sonia.scm.plugin.PluginPermissions;
+import sonia.scm.plugin.PluginSet;
+import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Pattern;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static de.otto.edison.hal.Link.link;
-import static sonia.scm.ScmConstraintViolationException.Builder.doThrow;
 
-@AllowAnonymousAccess
 @Extension
 public class PluginWizardStartupResource implements InitializationStepResource {
 
   private final PluginWizardStartupAction pluginWizardStartupAction;
   private final ResourceLinks resourceLinks;
+  private final PluginManager pluginManager;
+
+  private final PluginSetDtoMapper pluginSetDtoMapper;
 
 
   @Inject
-  public PluginWizardStartupResource(PluginWizardStartupAction pluginWizardStartupAction, ResourceLinks resourceLinks) {
+  public PluginWizardStartupResource(PluginWizardStartupAction pluginWizardStartupAction, ResourceLinks resourceLinks, PluginManager pluginManager, PluginSetDtoMapper pluginSetDtoMapper) {
     this.pluginWizardStartupAction = pluginWizardStartupAction;
     this.resourceLinks = resourceLinks;
+    this.pluginManager = pluginManager;
+    this.pluginSetDtoMapper = pluginSetDtoMapper;
   }
 
   @Override
   public void setupIndex(Links.Builder builder, Embedded.Builder embeddedBuilder) {
-    String link = resourceLinks.availablePluginCollection().self();
-    builder.single(link("pluginSets", link));
+    Set<PluginSet> pluginSets = pluginManager.getPluginSets();
+    List<PluginSetDto> pluginSetDtos = pluginSets.stream().map(pluginSetDtoMapper::map).collect(Collectors.toList());
+    embeddedBuilder.with("pluginSets", pluginSetDtos);
+    String link = resourceLinks.pluginWizard().indexLink(name());
+    builder.single(link("installPluginSets", link));
   }
 
   @Override
   public String name() {
     return pluginWizardStartupAction.name();
+  }
+
+  @POST
+  @Path("")
+  @Consumes("application/json")
+  @Operation(
+    summary = "Install plugin sets and restart",
+    description = "Installs all plugins contained in the provided plugin sets and restarts the server",
+    tags = "Plugin Management",
+    requestBody = @RequestBody(
+      content = @Content(
+        mediaType = MediaType.APPLICATION_JSON,
+        schema = @Schema(implementation = PluginSetsInstallDto.class),
+        examples = @ExampleObject(
+          name = "Change password to a more difficult one.",
+          value = "{  \"oldPassword\":\"scmadmin\",\n  \"newPassword\":\"5cm4dm1n\"\n}",
+          summary = "Simple change password"
+        )
+      )
+    )
+  )
+  @ApiResponse(responseCode = "200", description = "success")
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current user does not have the \"plugin:manage\" privilege")
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
+  public Response installPluginSets(@Valid PluginSetsInstallDto dto) {
+    PluginPermissions.write().check();
+
+    return Response.ok().build();
   }
 }

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.HalRepresentation;
@@ -123,10 +123,7 @@ class AvailablePluginResourceTest {
       when(pluginManager.getAvailable()).thenReturn(Collections.singletonList(plugin));
       when(pluginManager.getInstalled()).thenReturn(Collections.emptyList());
       when(pluginManager.getPluginSets()).thenReturn(Collections.singleton(pluginSet));
-      when(collectionMapper.mapAvailable(
-        Collections.singletonList(plugin),
-        Collections.singleton(pluginSet))
-      ).thenReturn(new MockedResultDto());
+      when(collectionMapper.mapAvailable(Collections.singletonList(plugin))).thenReturn(new MockedResultDto());
 
       MockHttpRequest request = MockHttpRequest.get("/v2/plugins/available");
       request.accept(VndMediaType.PLUGIN_COLLECTION);
@@ -147,10 +144,7 @@ class AvailablePluginResourceTest {
       when(pluginManager.getAvailable()).thenReturn(Collections.singletonList(availablePlugin));
       when(pluginManager.getInstalled()).thenReturn(Collections.singletonList(installedPlugin));
       when(pluginManager.getPluginSets()).thenReturn(Collections.singleton(pluginSet));
-      lenient().when(collectionMapper.mapAvailable(
-        Collections.singletonList(availablePlugin),
-        Collections.singleton(pluginSet)
-      )).thenReturn(new MockedResultDto());
+      lenient().when(collectionMapper.mapAvailable(Collections.singletonList(availablePlugin))).thenReturn(new MockedResultDto());
 
       MockHttpRequest request = MockHttpRequest.get("/v2/plugins/available");
       request.accept(VndMediaType.PLUGIN_COLLECTION);

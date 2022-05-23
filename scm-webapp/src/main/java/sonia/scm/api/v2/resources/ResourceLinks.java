@@ -1207,6 +1207,25 @@ class ResourceLinks {
     }
   }
 
+  public PluginWizardLinks pluginWizard() {
+    return new PluginWizardLinks(new LinkBuilder(accessScmPathInfoStore().get(), InitializationResource.class, PluginWizardStartupResource.class));
+  }
+
+  public static class PluginWizardLinks {
+    private final LinkBuilder initializationLinkBuilder;
+
+    private PluginWizardLinks(LinkBuilder initializationLinkBuilder) {
+      this.initializationLinkBuilder = initializationLinkBuilder;
+    }
+
+    public String indexLink(String stepName) {
+      return initializationLinkBuilder
+        .method("step").parameters(stepName)
+        .method("installPluginSets").parameters()
+        .href();
+    }
+  }
+
   public PluginCenterAuthLinks pluginCenterAuth() {
     return new PluginCenterAuthLinks(scmPathInfoStore.get().get());
   }

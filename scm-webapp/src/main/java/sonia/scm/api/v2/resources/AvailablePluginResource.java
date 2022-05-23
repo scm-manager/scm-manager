@@ -26,7 +26,9 @@ package sonia.scm.api.v2.resources;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import sonia.scm.plugin.AvailablePlugin;
 import sonia.scm.plugin.InstalledPlugin;
@@ -42,6 +44,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.Optional;
@@ -99,9 +103,8 @@ public class AvailablePluginResource {
     PluginPermissions.read().check();
     List<InstalledPlugin> installed = pluginManager.getInstalled();
     List<AvailablePlugin> available = pluginManager.getAvailable().stream().filter(a -> notInstalled(a, installed)).collect(Collectors.toList());
-    Set<PluginSet> pluginSets = pluginManager.getPluginSets();
 
-    return Response.ok(collectionMapper.mapAvailable(available, pluginSets)).build();
+    return Response.ok(collectionMapper.mapAvailable(available)).build();
   }
 
   private boolean notInstalled(AvailablePlugin a, List<InstalledPlugin> installed) {

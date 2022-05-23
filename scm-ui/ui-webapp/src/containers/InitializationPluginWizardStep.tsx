@@ -24,24 +24,46 @@
 
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
-import { Links, PluginCollection } from "@scm-manager/ui-types";
-import { apiClient, ApiResult, requiredLink } from "@scm-manager/ui-api";
-import { useQuery } from "react-query";
+import { HalRepresentationWithEmbedded, PluginSet } from "@scm-manager/ui-types";
+import { apiClient, requiredLink } from "@scm-manager/ui-api";
+import { useMutation } from "react-query";
 
-type Props = {
-  data: { _links: Links };
+type PluginSetsInstallation = {
+  pluginSetIds: string[];
 };
 
-const useAvailablePluginSets = (link: string): ApiResult<PluginCollection> =>
-  useQuery<PluginCollection, Error>("pluginSets", () => apiClient.get(link).then((r) => r.json()));
+const installPluginSets = (link: string) => (data: PluginSetsInstallation) =>
+  apiClient.post(link, data, "application/json");
+
+const useInstallPluginSets = (link: string) => {
+  const { mutate, isLoading, error, isSuccess } = useMutation<unknown, Error, PluginSetsInstallation>(
+    installPluginSets(link)
+  );
+  return {
+    installPluginSets: mutate,
+    isLoading,
+    error,
+    isInstalled: isSuccess,
+  };
+};
+
+type Props = {
+  data: HalRepresentationWithEmbedded<{ pluginSets: PluginSet[] }>;
+};
 
 const InitializationPluginWizardStep: FC<Props> = ({ data: initializationContext }) => {
-  const { data, isLoading, error } = useAvailablePluginSets(requiredLink(initializationContext, "pluginSets"));
+  const {
+    installPluginSets,
+    isInstalled,
+    isLoading: isInstalling,
+    error: installationError,
+  } = useInstallPluginSets(requiredLink(initializationContext, "installPluginSets"));
+  const data = initializationContext._embedded?.pluginSets;
   const [t] = useTranslation("initialization");
   return (
     <>
       <h1>Hello World</h1>
-      {data?._embedded?.pluginSets.map((pluginSet) => (
+      {data?.map((pluginSet) => (
         <div>{pluginSet.name}</div>
       ))}
     </>

@@ -26,10 +26,8 @@ package sonia.scm.update.plugin;
 
 import sonia.scm.migration.UpdateStep;
 import sonia.scm.plugin.Extension;
+import sonia.scm.plugin.PluginSetConfigStore;
 import sonia.scm.plugin.PluginSetsConfig;
-import sonia.scm.store.ConfigurationStore;
-import sonia.scm.store.ConfigurationStoreFactory;
-import sonia.scm.user.UserManager;
 import sonia.scm.user.xml.XmlUserDAO;
 import sonia.scm.version.Version;
 
@@ -38,21 +36,20 @@ import java.util.Collections;
 
 @Extension
 public class PluginSetsConfigInitializationUpdateStep implements UpdateStep {
-  private final ConfigurationStoreFactory configurationStoreFactory;
+  private final PluginSetConfigStore pluginSetConfigStore;
   private final XmlUserDAO userDAO;
 
   @Inject
-  public PluginSetsConfigInitializationUpdateStep(ConfigurationStoreFactory configurationStoreFactory, XmlUserDAO userDAO) {
-    this.configurationStoreFactory = configurationStoreFactory;
+  public PluginSetsConfigInitializationUpdateStep(PluginSetConfigStore pluginSetConfigStore, XmlUserDAO userDAO) {
+    this.pluginSetConfigStore = pluginSetConfigStore;
     this.userDAO = userDAO;
   }
 
   @Override
   public void doUpdate() throws Exception {
     if (!userDAO.getAll().isEmpty()) {
-      ConfigurationStore<PluginSetsConfig> pluginSetsConfigStore = configurationStoreFactory.withType(PluginSetsConfig.class).withName("pluginSets").build();
-      if (!pluginSetsConfigStore.getOptional().isPresent()) {
-        pluginSetsConfigStore.set(new PluginSetsConfig(Collections.emptySet()));
+      if (!pluginSetConfigStore.getPluginSets().isPresent()) {
+        pluginSetConfigStore.setPluginSets(new PluginSetsConfig(Collections.emptySet()));
       }
     }
   }

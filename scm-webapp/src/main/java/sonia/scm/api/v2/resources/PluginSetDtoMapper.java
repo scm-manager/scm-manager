@@ -27,6 +27,8 @@ package sonia.scm.api.v2.resources;
 import org.mapstruct.Mapper;
 import sonia.scm.plugin.PluginSet;
 
+import java.util.Set;
+
 @Mapper
 public abstract class PluginSetDtoMapper {
   public PluginSetDto map(PluginSet pluginSet) {

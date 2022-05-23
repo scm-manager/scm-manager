@@ -22,39 +22,30 @@
  * SOFTWARE.
  */
 
-package sonia.scm.lifecycle;
+package sonia.scm.plugin;
 
-import sonia.scm.initialization.InitializationStep;
-import sonia.scm.plugin.Extension;
-import sonia.scm.plugin.PluginSetConfigStore;
+import sonia.scm.store.ConfigurationStore;
+import sonia.scm.store.ConfigurationStoreFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Optional;
 
-@Extension
 @Singleton
-public class PluginWizardStartupAction implements InitializationStep {
+public class PluginSetConfigStore {
 
-  private final PluginSetConfigStore store;
+  private final ConfigurationStore<PluginSetsConfig> pluginSets;
 
   @Inject
-  public PluginWizardStartupAction(PluginSetConfigStore pluginSetConfigStore) {
-    this.store = pluginSetConfigStore;
+  PluginSetConfigStore(ConfigurationStoreFactory configurationStoreFactory) {
+    pluginSets = configurationStoreFactory.withType(PluginSetsConfig.class).withName("pluginSets").build();
   }
 
-  @Override
-  public String name() {
-    return "pluginWizard";
+  public Optional<PluginSetsConfig> getPluginSets() {
+    return pluginSets.getOptional();
   }
 
-  @Override
-  public int sequence() {
-    return 1;
+  public void setPluginSets(PluginSetsConfig config) {
+    this.pluginSets.set(config);
   }
-
-  @Override
-  public boolean done() {
-    return store.getPluginSets().isPresent();
-  }
-
 }

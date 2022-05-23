@@ -52,7 +52,6 @@ export type Plugin = HalRepresentation & {
 
 export type PluginCollection = HalRepresentationWithEmbedded<{
   plugins: Plugin[];
-  pluginSets: PluginSet[];
 }>;
 
 export const isPluginCollection = (input: HalRepresentation): input is PluginCollection =>
