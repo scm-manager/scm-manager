@@ -27,13 +27,11 @@ package sonia.scm.api.v2.resources;
 import org.mapstruct.Mapper;
 import sonia.scm.plugin.PluginSet;
 
-import java.util.Set;
-
 @Mapper
 public abstract class PluginSetDtoMapper {
   public PluginSetDto map(PluginSet pluginSet) {
     // TODO: Detect language
     PluginSet.Description description = pluginSet.getDescriptions().get("en");
-    return new PluginSetDto(pluginSet.getId(), pluginSet.getSequence(), pluginSet.getPlugins(), description.getName(), description.getFeatures());
+    return new PluginSetDto(pluginSet.getId(), pluginSet.getSequence(), pluginSet.getPlugins(), description.getName(), description.getFeatures(), pluginSet.getImages());
   };
 }

@@ -37,6 +37,7 @@ public class PluginSet {
   private final int sequence;
   private final Set<String> plugins;
   private final Map<String, Description> descriptions;
+  private final Map<String, String> images;
 
   @AllArgsConstructor
   @Getter

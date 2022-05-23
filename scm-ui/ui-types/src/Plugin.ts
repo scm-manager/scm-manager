@@ -32,6 +32,7 @@ export type PluginSet = HalRepresentation & {
   sequence: number;
   features: string[];
   plugins: string[];
+  images: Record<string, string>;
 };
 
 export type Plugin = HalRepresentation & {

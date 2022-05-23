@@ -56,7 +56,8 @@ public abstract class PluginCenterDtoMapper {
           .collect(Collectors.toMap(
             Map.Entry::getKey,
             e -> new PluginSet.Description(e.getValue().getName(), e.getValue().getFeatures())
-          ))
+          )),
+        pluginSet.getImages()
       ));
     }
     for (PluginCenterDto.Plugin plugin : pluginCenterDto.getEmbedded().getPlugins()) {

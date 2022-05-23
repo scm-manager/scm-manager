@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import React, {FC, useCallback, useEffect, useMemo} from "react";
+import React, { FC, useCallback, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { HalRepresentationWithEmbedded, PluginSet } from "@scm-manager/ui-types";
 import { apiClient, requiredLink, waitForRestartAfter } from "@scm-manager/ui-api";

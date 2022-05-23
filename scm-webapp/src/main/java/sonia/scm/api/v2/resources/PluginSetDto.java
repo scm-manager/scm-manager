@@ -30,6 +30,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Map;
 import java.util.Set;
 
 @Getter
@@ -43,4 +44,5 @@ public class PluginSetDto extends HalRepresentation {
 
   private String name;
   private Set<String> features;
+  private Map<String, String> images;
 }

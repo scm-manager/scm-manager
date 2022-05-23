@@ -202,7 +202,8 @@ class AvailablePluginResourceTest {
           "Default",
           Collections.singleton("this is an awesome set")
         )
-      )
+      ),
+      Collections.singletonMap("standard", "base64image")
     );
   }
 

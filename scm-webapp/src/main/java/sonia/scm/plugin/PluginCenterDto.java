@@ -117,6 +117,9 @@ public final class PluginCenterDto implements Serializable {
 
     @XmlElement(name = "descriptions")
     private final Map<String, Description> descriptions;
+
+    @XmlElement(name = "images")
+    private final Map<String, String> images;
   }
 
   @XmlAccessorType(XmlAccessType.FIELD)
