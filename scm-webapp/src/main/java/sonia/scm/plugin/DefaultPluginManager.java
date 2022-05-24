@@ -162,6 +162,8 @@ public class DefaultPluginManager implements PluginManager {
 
   @Override
   public void installPluginSets(Set<String> pluginSetIds) {
+    PluginPermissions.write().check();
+
     Set<PluginSet> pluginSets = getPluginSets();
     Set<PluginSet> pluginSetsToInstall = pluginSetIds.stream()
       .map(id -> pluginSets.stream().filter(pluginSet -> pluginSet.getId().equals(id)).findFirst())

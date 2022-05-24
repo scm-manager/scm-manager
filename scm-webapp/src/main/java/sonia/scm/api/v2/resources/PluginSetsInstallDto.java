@@ -29,6 +29,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Getter
@@ -36,5 +37,6 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PluginSetsInstallDto {
+  @NotNull
   private Set<String> pluginSetIds;
 }

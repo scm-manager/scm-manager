@@ -32,10 +32,8 @@ import sonia.scm.plugin.AvailablePlugin;
 import sonia.scm.plugin.InstalledPlugin;
 import sonia.scm.plugin.PluginManager;
 import sonia.scm.plugin.PluginPermissions;
-import sonia.scm.plugin.PluginSet;
 
 import java.util.List;
-import java.util.Set;
 
 import static de.otto.edison.hal.Embedded.embeddedBuilder;
 import static de.otto.edison.hal.Link.link;
@@ -46,7 +44,6 @@ public class PluginDtoCollectionMapper {
 
   private final ResourceLinks resourceLinks;
   private final PluginDtoMapper mapper;
-
   private final PluginManager manager;
 
   @Inject
@@ -95,9 +92,9 @@ public class PluginDtoCollectionMapper {
     return plugins.stream().anyMatch(AvailablePlugin::isPending);
   }
 
-  private Embedded embedDtos(List<PluginDto> pluginDtos) {
+  private Embedded embedDtos(List<PluginDto> dtos) {
     return embeddedBuilder()
-      .with("plugins", pluginDtos)
+      .with("plugins", dtos)
       .build();
   }
 }

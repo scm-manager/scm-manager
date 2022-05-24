@@ -103,12 +103,7 @@ public class PluginWizardStartupResource implements InitializationStepResource {
     requestBody = @RequestBody(
       content = @Content(
         mediaType = MediaType.APPLICATION_JSON,
-        schema = @Schema(implementation = PluginSetsInstallDto.class),
-        examples = @ExampleObject(
-          name = "Change password to a more difficult one.",
-          value = "{  \"oldPassword\":\"scmadmin\",\n  \"newPassword\":\"5cm4dm1n\"\n}",
-          summary = "Simple change password"
-        )
+        schema = @Schema(implementation = PluginSetsInstallDto.class)
       )
     )
   )
@@ -124,8 +119,6 @@ public class PluginWizardStartupResource implements InitializationStepResource {
     )
   )
   public Response installPluginSets(@Valid PluginSetsInstallDto dto) {
-    PluginPermissions.write().check();
-
     pluginManager.installPluginSets(dto.getPluginSetIds());
 
     return Response.ok().build();
