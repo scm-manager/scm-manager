@@ -480,7 +480,8 @@
   "notifications": {
     "exportFinished": "Der Repository Export wurde abgeschlossen.",
     "exportFailed": "Der Repository Export ist fehlgeschlagen. Versuchen Sie es erneut oder wenden Sie sich an einen Administrator.",
-    "healthCheckFailed": "Der Repository Health Check ist fehlgeschlagen."
+    "healthCheckFailed": "Der Repository Health Check ist fehlgeschlagen.",
+    "healthCheckSuccess": "Der Repository Health Check war erfolgreich."
   },
   "search": {
     "types": {

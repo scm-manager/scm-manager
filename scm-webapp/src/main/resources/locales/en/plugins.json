@@ -424,7 +424,8 @@
   "notifications": {
     "exportFinished": "The repository export has been finished.",
     "exportFailed": "The repository export has failed. Try it again or contact your administrator.",
-    "healthCheckFailed": "The repository health check has failed."
+    "healthCheckFailed": "The repository health check has failed.",
+    "healthCheckSuccess": "The repository health check was successful."
   },
   "search": {
     "types": {
