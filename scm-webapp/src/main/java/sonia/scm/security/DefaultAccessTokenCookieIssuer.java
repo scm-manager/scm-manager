@@ -29,6 +29,7 @@ import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.initialization.InitializationWebTokenGenerator;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 
@@ -36,7 +37,7 @@ import javax.inject.Inject;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -95,8 +96,20 @@ public final class DefaultAccessTokenCookieIssuer implements AccessTokenCookieIs
    */
   public void invalidate(HttpServletRequest request, HttpServletResponse response) {
     LOG.trace("invalidates access token cookie");
+    invalidateCookie(request, response, HttpUtil.COOKIE_BEARER_AUTHENTICATION);
 
-    Cookie c = new Cookie(HttpUtil.COOKIE_BEARER_AUTHENTICATION, Util.EMPTY_STRING);
+    if (Arrays.stream(request.getCookies()).anyMatch(cookie -> cookie.getName().equals(InitializationWebTokenGenerator.INIT_TOKEN_HEADER))) {
+      LOG.trace("invalidates initialization token cookie");
+      invalidateInitTokenCookie(request, response);
+    }
+  }
+
+  private void invalidateInitTokenCookie(HttpServletRequest request, HttpServletResponse response) {
+    invalidateCookie(request, response, InitializationWebTokenGenerator.INIT_TOKEN_HEADER);
+  }
+
+  private void invalidateCookie(HttpServletRequest request, HttpServletResponse response, String cookieBearerAuthentication) {
+    Cookie c = new Cookie(cookieBearerAuthentication, Util.EMPTY_STRING);
     c.setPath(contextPath(request));
     c.setMaxAge(0);
     c.setHttpOnly(isHttpOnly());

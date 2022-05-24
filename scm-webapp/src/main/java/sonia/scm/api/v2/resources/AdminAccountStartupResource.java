@@ -29,18 +29,16 @@ import de.otto.edison.hal.Links;
 import lombok.Data;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.UnauthenticatedException;
+import sonia.scm.initialization.InitializationAuthenticationService;
 import sonia.scm.initialization.InitializationStepResource;
 import sonia.scm.lifecycle.AdminAccountStartupAction;
 import sonia.scm.plugin.Extension;
-import sonia.scm.security.AccessToken;
-import sonia.scm.security.AccessTokenBuilder;
-import sonia.scm.security.AccessTokenBuilderFactory;
-import sonia.scm.security.AccessTokenCookieIssuer;
 import sonia.scm.security.AllowAnonymousAccess;
 import sonia.scm.security.Tokens;
 import sonia.scm.util.ValidationUtil;
 
 import javax.inject.Inject;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -55,6 +53,7 @@ import javax.ws.rs.core.Response;
 
 import static de.otto.edison.hal.Link.link;
 import static sonia.scm.ScmConstraintViolationException.Builder.doThrow;
+import static sonia.scm.initialization.InitializationWebTokenGenerator.INIT_TOKEN_HEADER;
 
 @AllowAnonymousAccess
 @Extension
@@ -62,17 +61,13 @@ public class AdminAccountStartupResource implements InitializationStepResource {
 
   private final AdminAccountStartupAction adminAccountStartupAction;
   private final ResourceLinks resourceLinks;
-
-  private final AccessTokenBuilderFactory tokenBuilderFactory;
-
-  private final AccessTokenCookieIssuer cookieIssuer;
+  private final InitializationAuthenticationService authenticationService;
 
   @Inject
-  public AdminAccountStartupResource(AdminAccountStartupAction adminAccountStartupAction, ResourceLinks resourceLinks, AccessTokenBuilderFactory tokenBuilderFactory, AccessTokenCookieIssuer cookieIssuer) {
+  public AdminAccountStartupResource(AdminAccountStartupAction adminAccountStartupAction, ResourceLinks resourceLinks, InitializationAuthenticationService authenticationService) {
     this.adminAccountStartupAction = adminAccountStartupAction;
     this.resourceLinks = resourceLinks;
-    this.tokenBuilderFactory = tokenBuilderFactory;
-    this.cookieIssuer = cookieIssuer;
+    this.authenticationService = authenticationService;
   }
 
   @POST
@@ -88,10 +83,11 @@ public class AdminAccountStartupResource implements InitializationStepResource {
     createAdminUser(data);
 
     SecurityUtils.getSubject().login(Tokens.createAuthenticationToken(request, data.userName, data.password));
-
-    AccessTokenBuilder tokenBuilder = tokenBuilderFactory.create();
-    AccessToken token = tokenBuilder.build();
-    cookieIssuer.authenticate(request, response, token);
+    Cookie cookie = new Cookie(INIT_TOKEN_HEADER, authenticationService.getToken());
+    cookie.setPath(request.getContextPath());
+    cookie.setMaxAge(9999999);
+    cookie.setSecure(request.isSecure());
+    response.addCookie(cookie);
     return Response.noContent().build();
   }
 

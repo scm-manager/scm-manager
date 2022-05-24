@@ -37,16 +37,20 @@ import sonia.scm.lifecycle.PluginWizardStartupAction;
 import sonia.scm.plugin.AvailablePlugin;
 import sonia.scm.plugin.Extension;
 import sonia.scm.plugin.PluginManager;
-import sonia.scm.plugin.PluginPermissions;
 import sonia.scm.plugin.PluginSet;
+import sonia.scm.util.Util;
 import sonia.scm.web.VndMediaType;
 import sonia.scm.web.security.AdministrationContext;
 
 import javax.inject.Inject;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
@@ -54,6 +58,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static de.otto.edison.hal.Link.link;
+import static sonia.scm.initialization.InitializationWebTokenGenerator.INIT_TOKEN_HEADER;
 
 @Extension
 public class PluginWizardStartupResource implements InitializationStepResource {
@@ -118,7 +123,15 @@ public class PluginWizardStartupResource implements InitializationStepResource {
       schema = @Schema(implementation = ErrorDto.class)
     )
   )
-  public Response installPluginSets(@Valid PluginSetsInstallDto dto) {
+  public Response installPluginSets(@Context HttpServletRequest request,
+                                    @Context HttpServletResponse response,
+                                    @Valid PluginSetsInstallDto dto) {
+    Cookie cookie = new Cookie(INIT_TOKEN_HEADER, Util.EMPTY_STRING);
+    cookie.setPath(request.getContextPath());
+    cookie.setMaxAge(0);
+    cookie.setSecure(request.isSecure());
+    response.addCookie(cookie);
+
     pluginManager.installPluginSets(dto.getPluginSetIds());
 
     return Response.ok().build();
