@@ -173,22 +173,4 @@ class AdminAccountStartupResourceTest {
   private byte[] json(String s) {
     return s.replaceAll("'", "\"").getBytes(UTF_8);
   }
-
-  static class BetterMockHttpRequest extends MockHttpRequest {
-
-    @Override
-    public String getRemoteAddress() {
-      return "my_scm";
-    }
-
-    @Override
-    public void setRequestUri(URI requestUri) throws IllegalStateException {
-      try {
-        MockHttpRequest mockHttpRequest = initWithUri(requestUri.toString());
-        super.setRequestUri(mockHttpRequest.getUri().getRequestUri());
-      } catch (URISyntaxException e) {
-        throw new RuntimeException(e);
-      }
-    }
-  }
 }
