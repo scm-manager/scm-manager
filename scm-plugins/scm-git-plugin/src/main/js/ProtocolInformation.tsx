@@ -112,7 +112,7 @@ export default class ProtocolInformation extends React.Component<Props, State> {
     }
 
     return (
-      <div className="is-relative">
+      <div className="content is-relative">
         <Switcher>{protocols.map(this.renderProtocolButton)}</Switcher>
         {cloneInformation}
       </div>
