@@ -28,7 +28,6 @@ import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.Links;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -54,6 +53,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -83,10 +83,15 @@ public class PluginWizardStartupResource implements InitializationStepResource {
 
   @Override
   public void setupIndex(Links.Builder builder, Embedded.Builder embeddedBuilder) {
+    setupIndex(builder, embeddedBuilder, Locale.getDefault());
+  }
+
+  @Override
+  public void setupIndex(Links.Builder builder, Embedded.Builder embeddedBuilder, Locale locale) {
     context.runAsAdmin(() -> {
       Set<PluginSet> pluginSets = pluginManager.getPluginSets();
       List<AvailablePlugin> availablePlugins = pluginManager.getAvailable();
-      List<PluginSetDto> pluginSetDtos = pluginSets.stream().map(it -> pluginSetDtoMapper.map(it, availablePlugins)).collect(Collectors.toList());
+      List<PluginSetDto> pluginSetDtos = pluginSets.stream().map(it -> pluginSetDtoMapper.map(it, availablePlugins, locale)).collect(Collectors.toList());
       embeddedBuilder.with("pluginSets", pluginSetDtos);
       String link = resourceLinks.pluginWizard().indexLink(name());
       builder.single(link("installPluginSets", link));

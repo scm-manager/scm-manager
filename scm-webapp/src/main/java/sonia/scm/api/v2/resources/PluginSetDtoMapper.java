@@ -29,6 +29,7 @@ import sonia.scm.plugin.PluginSet;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -41,7 +42,7 @@ public class PluginSetDtoMapper {
     this.pluginDtoMapper = pluginDtoMapper;
   }
 
-  public PluginSetDto map(PluginSet pluginSet, List<AvailablePlugin> availablePlugins) {
+  public PluginSetDto map(PluginSet pluginSet, List<AvailablePlugin> availablePlugins, Locale locale) {
     Set<PluginDto> pluginDtos = pluginSet.getPlugins().stream()
       .map(it -> availablePlugins.stream().filter(avail -> avail.getDescriptor().getInformation().getName().equals(it)).findFirst())
       .filter(Optional::isPresent)
@@ -49,8 +50,7 @@ public class PluginSetDtoMapper {
       .map(pluginDtoMapper::mapAvailable)
       .collect(Collectors.toSet());
 
-    // TODO: Detect language
-    PluginSet.Description description = pluginSet.getDescriptions().get("en");
+    PluginSet.Description description = pluginSet.getDescriptions().get(locale.getLanguage());
 
     return new PluginSetDto(pluginSet.getId(), pluginSet.getSequence(), pluginDtos, description.getName(), description.getFeatures(), pluginSet.getImages());
   };

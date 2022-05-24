@@ -28,10 +28,19 @@ import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.Links;
 import sonia.scm.plugin.ExtensionPoint;
 
+import java.util.Locale;
+
 @ExtensionPoint
 @Deprecated(since = "2.35.0", forRemoval = true)
 public interface InitializationStepResource {
   String name();
+
+  /**
+   * @since 2.35.0
+   */
+  default void setupIndex(Links.Builder builder, Embedded.Builder embeddedBuilder, Locale locale) {
+    setupIndex(builder, embeddedBuilder);
+  }
 
   void setupIndex(Links.Builder builder, Embedded.Builder embeddedBuilder);
 }

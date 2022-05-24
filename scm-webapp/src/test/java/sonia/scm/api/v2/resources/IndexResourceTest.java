@@ -30,12 +30,13 @@ import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.Mock;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.initialization.InitializationFinisher;
-import sonia.scm.plugin.PluginCenterAuthenticator;
 import sonia.scm.search.SearchEngine;
 
+import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.util.Optional;
 
@@ -51,6 +52,9 @@ public class IndexResourceTest {
   private ScmConfiguration configuration;
   private SCMContextProvider scmContextProvider;
   private IndexResource indexResource;
+
+  @Mock
+  private HttpServletRequest httpServletRequest;
 
   @Before
   public void setUpObjectUnderTest() {
@@ -72,7 +76,7 @@ public class IndexResourceTest {
   @Test
   @SubjectAware(username = "dent", password = "secret")
   public void shouldRenderPluginCenterAuthLink() {
-    IndexDto index = indexResource.getIndex();
+    IndexDto index = indexResource.getIndex(httpServletRequest);
 
     Assertions.assertThat(index.getLinks().getLinkBy("pluginCenterAuth")).isPresent();
   }
@@ -80,21 +84,21 @@ public class IndexResourceTest {
   @Test
   @SubjectAware(username = "trillian", password = "secret")
   public void shouldNotRenderPluginCenterLoginLinkIfPermissionsAreMissing() {
-    IndexDto index = indexResource.getIndex();
+    IndexDto index = indexResource.getIndex(httpServletRequest);
 
     Assertions.assertThat(index.getLinks().getLinkBy("pluginCenterAuth")).isNotPresent();
   }
 
   @Test
   public void shouldRenderLoginUrlsForUnauthenticatedRequest() {
-    IndexDto index = indexResource.getIndex();
+    IndexDto index = indexResource.getIndex(httpServletRequest);
 
     Assertions.assertThat(index.getLinks().getLinkBy("login")).matches(Optional::isPresent);
   }
 
   @Test
   public void shouldRenderLoginInfoUrl() {
-    IndexDto index = indexResource.getIndex();
+    IndexDto index = indexResource.getIndex(httpServletRequest);
 
     Assertions.assertThat(index.getLinks().getLinkBy("loginInfo")).isPresent();
   }
@@ -103,21 +107,21 @@ public class IndexResourceTest {
   public void shouldNotRenderLoginInfoUrlWhenNoUrlIsConfigured() {
     configuration.setLoginInfoUrl("");
 
-    IndexDto index = indexResource.getIndex();
+    IndexDto index = indexResource.getIndex(httpServletRequest);
 
     Assertions.assertThat(index.getLinks().getLinkBy("loginInfo")).isNotPresent();
   }
 
   @Test
   public void shouldRenderSelfLinkForUnauthenticatedRequest() {
-    IndexDto index = indexResource.getIndex();
+    IndexDto index = indexResource.getIndex(httpServletRequest);
 
     Assertions.assertThat(index.getLinks().getLinkBy("self")).matches(Optional::isPresent);
   }
 
   @Test
   public void shouldRenderUiPluginsLinkForUnauthenticatedRequest() {
-    IndexDto index = indexResource.getIndex();
+    IndexDto index = indexResource.getIndex(httpServletRequest);
 
     Assertions.assertThat(index.getLinks().getLinkBy("uiPlugins")).matches(Optional::isPresent);
   }
@@ -125,7 +129,7 @@ public class IndexResourceTest {
   @Test
   @SubjectAware(username = "trillian", password = "secret")
   public void shouldRenderSelfLinkForAuthenticatedRequest() {
-    IndexDto index = indexResource.getIndex();
+    IndexDto index = indexResource.getIndex(httpServletRequest);
 
     Assertions.assertThat(index.getLinks().getLinkBy("self")).matches(Optional::isPresent);
   }
@@ -133,7 +137,7 @@ public class IndexResourceTest {
   @Test
   @SubjectAware(username = "trillian", password = "secret")
   public void shouldRenderUiPluginsLinkForAuthenticatedRequest() {
-    IndexDto index = indexResource.getIndex();
+    IndexDto index = indexResource.getIndex(httpServletRequest);
 
     Assertions.assertThat(index.getLinks().getLinkBy("uiPlugins")).matches(Optional::isPresent);
   }
@@ -141,7 +145,7 @@ public class IndexResourceTest {
   @Test
   @SubjectAware(username = "trillian", password = "secret")
   public void shouldRenderMeUrlForAuthenticatedRequest() {
-    IndexDto index = indexResource.getIndex();
+    IndexDto index = indexResource.getIndex(httpServletRequest);
 
     Assertions.assertThat(index.getLinks().getLinkBy("me")).matches(Optional::isPresent);
   }
@@ -149,7 +153,7 @@ public class IndexResourceTest {
   @Test
   @SubjectAware(username = "trillian", password = "secret")
   public void shouldRenderLogoutUrlForAuthenticatedRequest() {
-    IndexDto index = indexResource.getIndex();
+    IndexDto index = indexResource.getIndex(httpServletRequest);
 
     Assertions.assertThat(index.getLinks().getLinkBy("logout")).matches(Optional::isPresent);
   }
@@ -157,7 +161,7 @@ public class IndexResourceTest {
   @Test
   @SubjectAware(username = "trillian", password = "secret")
   public void shouldRenderRepositoriesForAuthenticatedRequest() {
-    IndexDto index = indexResource.getIndex();
+    IndexDto index = indexResource.getIndex(httpServletRequest);
 
     Assertions.assertThat(index.getLinks().getLinkBy("repositories")).matches(Optional::isPresent);
   }
@@ -165,7 +169,7 @@ public class IndexResourceTest {
   @Test
   @SubjectAware(username = "trillian", password = "secret")
   public void shouldNotRenderAdminLinksIfNotAuthorized() {
-    IndexDto index = indexResource.getIndex();
+    IndexDto index = indexResource.getIndex(httpServletRequest);
 
     Assertions.assertThat(index.getLinks().getLinkBy("users")).matches(o -> !o.isPresent());
     Assertions.assertThat(index.getLinks().getLinkBy("groups")).matches(o -> !o.isPresent());
@@ -175,7 +179,7 @@ public class IndexResourceTest {
   @Test
   @SubjectAware(username = "trillian", password = "secret")
   public void shouldRenderAutoCompleteLinks() {
-    IndexDto index = indexResource.getIndex();
+    IndexDto index = indexResource.getIndex(httpServletRequest);
 
     Assertions.assertThat(index.getLinks().getLinksBy("autocomplete"))
       .extracting("name")
@@ -185,7 +189,7 @@ public class IndexResourceTest {
   @Test
   @SubjectAware(username = "user_without_autocomplete_permission", password = "secret")
   public void userWithoutAutocompletePermissionShouldSeeAutoCompleteLinksOnlyForNamespaces() {
-    IndexDto index = indexResource.getIndex();
+    IndexDto index = indexResource.getIndex(httpServletRequest);
 
     Assertions.assertThat(index.getLinks().getLinksBy("autocomplete"))
       .extracting("name")
@@ -195,7 +199,7 @@ public class IndexResourceTest {
   @Test
   @SubjectAware(username = "dent", password = "secret")
   public void shouldRenderAdminLinksIfAuthorized() {
-    IndexDto index = indexResource.getIndex();
+    IndexDto index = indexResource.getIndex(httpServletRequest);
 
     Assertions.assertThat(index.getLinks().getLinkBy("users")).matches(Optional::isPresent);
     Assertions.assertThat(index.getLinks().getLinkBy("groups")).matches(Optional::isPresent);
@@ -206,7 +210,7 @@ public class IndexResourceTest {
   public void shouldGenerateVersion() {
     when(scmContextProvider.getVersion()).thenReturn("v1");
 
-    IndexDto index = indexResource.getIndex();
+    IndexDto index = indexResource.getIndex(httpServletRequest);
 
     Assertions.assertThat(index.getVersion()).isEqualTo("v1");
   }

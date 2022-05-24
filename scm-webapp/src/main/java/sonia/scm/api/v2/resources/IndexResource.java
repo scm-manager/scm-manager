@@ -35,9 +35,11 @@ import sonia.scm.security.AllowAnonymousAccess;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 
 @OpenAPIDefinition(
   security = {
@@ -80,7 +82,7 @@ public class IndexResource {
       schema = @Schema(implementation = ErrorDto.class)
     )
   )
-  public IndexDto getIndex() {
-    return indexDtoGenerator.generate();
+  public IndexDto getIndex(@Context HttpServletRequest request) {
+    return indexDtoGenerator.generate(request.getLocale());
   }
 }
