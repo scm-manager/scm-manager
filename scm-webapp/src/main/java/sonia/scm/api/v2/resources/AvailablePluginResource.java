@@ -26,15 +26,12 @@ package sonia.scm.api.v2.resources;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import sonia.scm.plugin.AvailablePlugin;
 import sonia.scm.plugin.InstalledPlugin;
 import sonia.scm.plugin.PluginManager;
 import sonia.scm.plugin.PluginPermissions;
-import sonia.scm.plugin.PluginSet;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
@@ -44,12 +41,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
