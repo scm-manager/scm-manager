@@ -36,6 +36,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@SuppressWarnings("squid:S2160") // we do not need equals for dto
 public class PluginSetCollectionDto extends HalRepresentation {
   Set<PluginSetDto> pluginSets;
 }

@@ -53,5 +53,5 @@ public class PluginSetDtoMapper {
     PluginSet.Description description = pluginSet.getDescriptions().get(locale.getLanguage());
 
     return new PluginSetDto(pluginSet.getId(), pluginSet.getSequence(), pluginDtos, description.getName(), description.getFeatures(), pluginSet.getImages());
-  };
+  }
 }

@@ -47,10 +47,8 @@ public class PluginSetsConfigInitializationUpdateStep implements UpdateStep {
 
   @Override
   public void doUpdate() throws Exception {
-    if (!userDAO.getAll().isEmpty()) {
-      if (!pluginSetConfigStore.getPluginSets().isPresent()) {
+    if (!userDAO.getAll().isEmpty() && pluginSetConfigStore.getPluginSets().isEmpty()) {
         pluginSetConfigStore.setPluginSets(new PluginSetsConfig(Collections.emptySet()));
-      }
     }
   }
 

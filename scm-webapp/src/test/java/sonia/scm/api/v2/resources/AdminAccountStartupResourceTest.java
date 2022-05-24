@@ -25,6 +25,8 @@
 package sonia.scm.api.v2.resources;
 
 import com.github.sdorra.shiro.SubjectAware;
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.util.ThreadContext;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,6 +37,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.initialization.InitializationAuthenticationService;
 import sonia.scm.lifecycle.AdminAccountStartupAction;
 import sonia.scm.security.AccessToken;
 import sonia.scm.security.AccessTokenBuilder;
@@ -44,6 +47,8 @@ import sonia.scm.security.DefaultAccessTokenCookieIssuer;
 import sonia.scm.web.RestDispatcher;
 
 import javax.inject.Provider;
+import javax.servlet.http.HttpServletRequest;
+import java.net.URI;
 import java.net.URISyntaxException;
 
 import static java.lang.String.format;
@@ -70,6 +75,8 @@ class AdminAccountStartupResourceTest {
   private AdminAccountStartupAction startupAction;
   @Mock
   private Provider<ScmPathInfoStore> pathInfoStoreProvider;
+  @Mock
+  private InitializationAuthenticationService authenticationService;
   @Mock
   private ScmPathInfoStore pathInfoStore;
   @Mock
@@ -140,10 +147,17 @@ class AdminAccountStartupResourceTest {
 
     @Test
     void shouldCreateAdminUser() throws URISyntaxException {
+      Subject subject = mock(Subject.class);
+      ThreadContext.bind(subject);
+
       MockHttpRequest request =
         post("/v2/initialization/adminAccount")
           .contentType("application/json")
           .content(createInput("initial-token", "trillian", "Tricia", "tricia@hitchhiker.com", "password", "password"));
+
+      HttpServletRequest servletRequest = mock(HttpServletRequest.class);
+      dispatcher.putDefaultContextObject(HttpServletRequest.class, servletRequest);
+
       dispatcher.invoke(request, response);
 
       assertThat(response.getStatus()).isEqualTo(204);
@@ -158,5 +172,23 @@ class AdminAccountStartupResourceTest {
 
   private byte[] json(String s) {
     return s.replaceAll("'", "\"").getBytes(UTF_8);
+  }
+
+  static class BetterMockHttpRequest extends MockHttpRequest {
+
+    @Override
+    public String getRemoteAddress() {
+      return "my_scm";
+    }
+
+    @Override
+    public void setRequestUri(URI requestUri) throws IllegalStateException {
+      try {
+        MockHttpRequest mockHttpRequest = initWithUri(requestUri.toString());
+        super.setRequestUri(mockHttpRequest.getUri().getRequestUri());
+      } catch (URISyntaxException e) {
+        throw new RuntimeException(e);
+      }
+    }
   }
 }

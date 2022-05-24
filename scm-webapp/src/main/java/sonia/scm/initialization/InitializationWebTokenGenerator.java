@@ -37,10 +37,6 @@ public class InitializationWebTokenGenerator implements WebTokenGenerator {
 
   public static final String INIT_TOKEN_HEADER = "SCM-Init-Token";
 
-  @Inject
-  public InitializationWebTokenGenerator() {
-  }
-
   @Override
   public AuthenticationToken createToken(HttpServletRequest request) {
     Cookie[] cookies = request.getCookies();

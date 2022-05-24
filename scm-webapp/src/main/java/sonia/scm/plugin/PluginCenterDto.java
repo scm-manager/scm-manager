@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.plugin;
 
 import com.google.common.collect.ImmutableList;
@@ -61,14 +61,14 @@ public final class PluginCenterDto implements Serializable {
 
     public List<Plugin> getPlugins() {
       if (plugins == null) {
-        plugins = ImmutableList.of();
+        plugins = List.of();
       }
       return plugins;
     }
 
     public List<PluginSet> getPluginSets() {
       if (pluginSets == null) {
-        pluginSets = ImmutableList.of();
+        pluginSets = List.of();
       }
       return pluginSets;
     }

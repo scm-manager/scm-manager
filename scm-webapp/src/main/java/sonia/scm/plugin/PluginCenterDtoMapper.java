@@ -24,7 +24,6 @@
 
 package sonia.scm.plugin;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 

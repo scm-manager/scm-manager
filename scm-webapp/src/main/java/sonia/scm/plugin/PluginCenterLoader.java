@@ -25,7 +25,6 @@
 package sonia.scm.plugin;
 
 import com.google.common.annotations.VisibleForTesting;
-import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.event.ScmEventBus;
@@ -34,7 +33,6 @@ import sonia.scm.net.ahc.AdvancedHttpRequest;
 
 import javax.inject.Inject;
 import java.util.Collections;
-import java.util.Set;
 
 import static sonia.scm.plugin.Tracing.SPAN_KIND;
 

@@ -25,6 +25,7 @@
 package sonia.scm.initialization;
 
 import org.apache.shiro.authc.AuthenticationException;
+import sonia.scm.security.AccessTokenCookieIssuer;
 import sonia.scm.security.KeyGenerator;
 import sonia.scm.security.PermissionAssigner;
 import sonia.scm.security.PermissionDescriptor;
@@ -33,6 +34,8 @@ import sonia.scm.web.security.AdministrationContext;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Set;
 
 @Singleton
@@ -41,19 +44,17 @@ public class InitializationAuthenticationService {
   private String initToken;
   private final Provider<InitializationFinisher> initializationFinisherProvider;
   private final PermissionAssigner permissionAssigner;
+  private final AccessTokenCookieIssuer cookieIssuer;
 
   private final AdministrationContext administrationContext;
 
   @Inject
-  public InitializationAuthenticationService(KeyGenerator generator, Provider<InitializationFinisher> initializationFinisherProvider, PermissionAssigner permissionAssigner, AdministrationContext administrationContext) {
+  public InitializationAuthenticationService(KeyGenerator generator, Provider<InitializationFinisher> initializationFinisherProvider, PermissionAssigner permissionAssigner, AccessTokenCookieIssuer cookieIssuer, AdministrationContext administrationContext) {
     this.initToken = generator.createKey();
     this.initializationFinisherProvider = initializationFinisherProvider;
     this.permissionAssigner = permissionAssigner;
+    this.cookieIssuer = cookieIssuer;
     this.administrationContext = administrationContext;
-  }
-
-  public String getToken() {
-    return initToken;
   }
 
   public void validateToken(String token) {
@@ -72,6 +73,9 @@ public class InitializationAuthenticationService {
     ));
   }
 
+  public void authenticate(HttpServletRequest request, HttpServletResponse response) {
+    cookieIssuer.authenticateForInitialization(request, response, initToken);
+  }
 
   private void invalidateToken() {
     this.initToken = null;

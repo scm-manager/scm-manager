@@ -29,7 +29,6 @@ import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.config.ScmConfiguration;
-import sonia.scm.initialization.InitializationWebTokenGenerator;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 
@@ -39,6 +38,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
+
+import static sonia.scm.initialization.InitializationWebTokenGenerator.INIT_TOKEN_HEADER;
 
 /**
  * Generates cookies and invalidates access token cookies.
@@ -89,6 +90,25 @@ public final class DefaultAccessTokenCookieIssuer implements AccessTokenCookieIs
   }
 
   /**
+   * Creates a cookie for authentication during the initialization process and attaches it to the response.
+   *
+   * @param request http servlet request
+   * @param response http servlet response
+   * @param token initialization access token
+   */
+  public void authenticateForInitialization(HttpServletRequest request, HttpServletResponse response, String token) {
+    LOG.trace("create and attach cookie for initialization access token {}", token);
+    Cookie c = new Cookie(INIT_TOKEN_HEADER, token);
+    c.setPath(contextPath(request));
+    c.setMaxAge(999999999);
+    c.setHttpOnly(isHttpOnly());
+    c.setSecure(isSecure(request));
+
+    // attach cookie to response
+    response.addCookie(c);
+  }
+
+  /**
    * Invalidates the authentication cookie.
    *
    * @param request http servlet request
@@ -98,14 +118,14 @@ public final class DefaultAccessTokenCookieIssuer implements AccessTokenCookieIs
     LOG.trace("invalidates access token cookie");
     invalidateCookie(request, response, HttpUtil.COOKIE_BEARER_AUTHENTICATION);
 
-    if (Arrays.stream(request.getCookies()).anyMatch(cookie -> cookie.getName().equals(InitializationWebTokenGenerator.INIT_TOKEN_HEADER))) {
+    if (request.getCookies() != null && Arrays.stream(request.getCookies()).anyMatch(cookie -> cookie.getName().equals(INIT_TOKEN_HEADER))) {
       LOG.trace("invalidates initialization token cookie");
       invalidateInitTokenCookie(request, response);
     }
   }
 
   private void invalidateInitTokenCookie(HttpServletRequest request, HttpServletResponse response) {
-    invalidateCookie(request, response, InitializationWebTokenGenerator.INIT_TOKEN_HEADER);
+    invalidateCookie(request, response, INIT_TOKEN_HEADER);
   }
 
   private void invalidateCookie(HttpServletRequest request, HttpServletResponse response, String cookieBearerAuthentication) {

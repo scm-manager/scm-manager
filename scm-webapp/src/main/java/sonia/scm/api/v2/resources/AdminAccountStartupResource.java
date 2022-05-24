@@ -83,11 +83,8 @@ public class AdminAccountStartupResource implements InitializationStepResource {
     createAdminUser(data);
 
     SecurityUtils.getSubject().login(Tokens.createAuthenticationToken(request, data.userName, data.password));
-    Cookie cookie = new Cookie(INIT_TOKEN_HEADER, authenticationService.getToken());
-    cookie.setPath(request.getContextPath());
-    cookie.setMaxAge(9999999);
-    cookie.setSecure(request.isSecure());
-    response.addCookie(cookie);
+    // Create cookie which will be used for authentication during the initialization process
+    authenticationService.authenticate(request, response);
     return Response.noContent().build();
   }
 
