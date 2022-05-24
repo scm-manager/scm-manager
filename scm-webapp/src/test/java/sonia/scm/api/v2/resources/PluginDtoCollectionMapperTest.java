@@ -106,7 +106,7 @@ class PluginDtoCollectionMapperTest {
 
   @Test
   void shouldSetNewVersionInInstalledPluginWhenAvailableVersionIsNewer() {
-    PluginDtoCollectionMapper mapper = new PluginDtoCollectionMapper(resourceLinks, pluginDtoMapper, manager);
+    PluginDtoCollectionMapper mapper = new PluginDtoCollectionMapper(resourceLinks, pluginDtoMapper,manager);
 
     HalRepresentation result = mapper.mapInstalled(
       singletonList(createInstalledPlugin("scm-some-plugin", "1")),
