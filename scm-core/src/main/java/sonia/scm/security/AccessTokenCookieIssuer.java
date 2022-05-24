@@ -50,6 +50,8 @@ public interface AccessTokenCookieIssuer {
    * @param request http servlet request
    * @param response http servlet response
    * @param token initialization access token
+   *
+   * @since 2.35.0
    */
   void authenticateForInitialization(HttpServletRequest request, HttpServletResponse response, String token);
 
