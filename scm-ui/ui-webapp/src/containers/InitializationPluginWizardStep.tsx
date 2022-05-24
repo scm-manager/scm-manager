@@ -31,6 +31,12 @@ import { useForm } from "react-hook-form";
 import { Checkbox, ErrorNotification, Icon, SubmitButton } from "@scm-manager/ui-components";
 import styled from "styled-components";
 
+const HighlightedImg = styled.img`
+  &:hover {
+    filter: drop-shadow(0px 2px 2px #00c79b);
+  }
+`;
+
 const HiddenInput = styled.input`
   display: none;
 `;
@@ -96,7 +102,7 @@ const PluginSetCard: FC<PluginSetCardProps> = ({ pluginSet, children }) => {
               {pluginSet.plugins.map((plugin, idx) => (
                 <li key={idx} className="py-2">
                   <div className="is-size-6 has-text-weight-semibold">{plugin.displayName}</div>
-                  <div className="is-size-6">{plugin.description}</div>
+                  <div className="is-size-6"><a href={`https://scm-manager.org/plugins/${plugin.name}`} target="_blank">{plugin.description}</a></div>
                 </li>
               ))}
             </ul>
@@ -168,8 +174,8 @@ const InitializationPluginWizardStep: FC<Props> = ({ data: initializationContext
         <div className="block">
           {data?.map((pluginSet, idx) => (
             <PluginSetCard pluginSet={pluginSet} key={idx}>
-              <label htmlFor={`plugin-set-${idx}`}>
-                <img
+              <label htmlFor={`plugin-set-${idx}`} className="has-cursor-pointer">
+                <HighlightedImg
                   alt={pluginSet.name}
                   src={`data:image/svg+xml;base64,${pluginSet.images[isSelected(pluginSet.id) ? "check" : "standard"]}`}
                 />
