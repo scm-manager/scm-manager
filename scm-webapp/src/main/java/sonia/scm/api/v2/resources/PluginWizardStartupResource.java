@@ -37,12 +37,11 @@ import sonia.scm.plugin.AvailablePlugin;
 import sonia.scm.plugin.Extension;
 import sonia.scm.plugin.PluginManager;
 import sonia.scm.plugin.PluginSet;
-import sonia.scm.util.Util;
+import sonia.scm.security.AccessTokenCookieIssuer;
 import sonia.scm.web.VndMediaType;
 import sonia.scm.web.security.AdministrationContext;
 
 import javax.inject.Inject;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -58,7 +57,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static de.otto.edison.hal.Link.link;
-import static sonia.scm.initialization.InitializationWebTokenGenerator.INIT_TOKEN_HEADER;
 
 @Extension
 public class PluginWizardStartupResource implements InitializationStepResource {
@@ -67,16 +65,19 @@ public class PluginWizardStartupResource implements InitializationStepResource {
   private final ResourceLinks resourceLinks;
   private final PluginManager pluginManager;
 
+  private final AccessTokenCookieIssuer cookieIssuer;
+
   private final PluginSetDtoMapper pluginSetDtoMapper;
 
   private final AdministrationContext context;
 
 
   @Inject
-  public PluginWizardStartupResource(PluginWizardStartupAction pluginWizardStartupAction, ResourceLinks resourceLinks, PluginManager pluginManager, PluginSetDtoMapper pluginSetDtoMapper, AdministrationContext context) {
+  public PluginWizardStartupResource(PluginWizardStartupAction pluginWizardStartupAction, ResourceLinks resourceLinks, PluginManager pluginManager, AccessTokenCookieIssuer cookieIssuer, PluginSetDtoMapper pluginSetDtoMapper, AdministrationContext context) {
     this.pluginWizardStartupAction = pluginWizardStartupAction;
     this.resourceLinks = resourceLinks;
     this.pluginManager = pluginManager;
+    this.cookieIssuer = cookieIssuer;
     this.pluginSetDtoMapper = pluginSetDtoMapper;
     this.context = context;
   }
@@ -131,11 +132,7 @@ public class PluginWizardStartupResource implements InitializationStepResource {
   public Response installPluginSets(@Context HttpServletRequest request,
                                     @Context HttpServletResponse response,
                                     @Valid PluginSetsInstallDto dto) {
-    Cookie cookie = new Cookie(INIT_TOKEN_HEADER, Util.EMPTY_STRING);
-    cookie.setPath(request.getContextPath());
-    cookie.setMaxAge(0);
-    cookie.setSecure(request.isSecure());
-    response.addCookie(cookie);
+    cookieIssuer.invalidate(request, response);
 
     pluginManager.installPluginSets(dto.getPluginSetIds());
 
