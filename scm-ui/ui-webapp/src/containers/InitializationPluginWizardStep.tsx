@@ -89,7 +89,7 @@ const PluginSetCard: FC<PluginSetCardProps> = ({ pluginSet, children }) => {
             onClick={() => setCollapsed((value) => !value)}
           >
             <span>{t(`pluginWizardStep.pluginSet.${collapsed ? "expand" : "collapse"}`)}</span>
-            <Icon name={collapsed ? "angle-down" : "angle-up"} />
+            <Icon color="inherit" name={collapsed ? "angle-down" : "angle-up"} />
           </div>
           {!collapsed ? (
             <ul className="pt-2">
@@ -147,6 +147,12 @@ const InitializationPluginWizardStep: FC<Props> = ({ data: initializationContext
   const hasPluginSets = useMemo(() => pluginSetIds.length > 0, [pluginSetIds]);
 
   useEffect(() => {
+    if (hasPluginSets) {
+      setSkipInstallation(false);
+    }
+  }, [hasPluginSets]);
+
+  useEffect(() => {
     if (isInstalled) {
       window.location.reload();
     }
@@ -181,7 +187,11 @@ const InitializationPluginWizardStep: FC<Props> = ({ data: initializationContext
             ></Checkbox>
           </BorderedDiv>
         </div>
-        <SubmitButton disabled={isInstalling || !(hasPluginSets || skipInstallation)} loading={isInstalling} className="is-align-self-flex-end">
+        <SubmitButton
+          disabled={isInstalling || !(hasPluginSets || skipInstallation)}
+          loading={isInstalling}
+          className="is-align-self-flex-end"
+        >
           {t("pluginWizardStep.submit")}
         </SubmitButton>
       </form>
