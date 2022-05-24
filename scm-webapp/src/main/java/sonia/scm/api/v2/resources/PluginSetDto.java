@@ -40,7 +40,7 @@ import java.util.Set;
 public class PluginSetDto extends HalRepresentation {
   private String id;
   private int sequence;
-  private Set<String> plugins;
+  private Set<PluginDto> plugins;
 
   private String name;
   private Set<String> features;

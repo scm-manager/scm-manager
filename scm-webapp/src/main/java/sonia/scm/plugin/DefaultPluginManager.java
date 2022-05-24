@@ -156,6 +156,7 @@ public class DefaultPluginManager implements PluginManager {
 
   @Override
   public Set<PluginSet> getPluginSets() {
+    PluginPermissions.read().check();
     return center.getAvailablePluginSets();
   }
 

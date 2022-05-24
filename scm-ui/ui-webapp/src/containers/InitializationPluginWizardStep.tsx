@@ -22,17 +22,27 @@
  * SOFTWARE.
  */
 
-import React, { FC, useCallback, useEffect, useMemo } from "react";
+import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { HalRepresentationWithEmbedded, PluginSet } from "@scm-manager/ui-types";
 import { apiClient, requiredLink, waitForRestartAfter } from "@scm-manager/ui-api";
 import { useMutation } from "react-query";
 import { useForm } from "react-hook-form";
-import { Checkbox, ErrorNotification, SubmitButton } from "@scm-manager/ui-components";
+import { Checkbox, ErrorNotification, Icon, SubmitButton } from "@scm-manager/ui-components";
 import styled from "styled-components";
+
+const HiddenInput = styled.input`
+  display: none;
+`;
 
 const HeroSection = styled.section`
   padding-top: 2em;
+`;
+
+const BorderedDiv = styled.div`
+  border-radius: 4px;
+  border-width: 1px;
+  border-style: solid;
 `;
 
 type PluginSetsInstallation = {
@@ -54,6 +64,49 @@ const useInstallPluginSets = (link: string) => {
   };
 };
 
+type PluginSetCardProps = {
+  pluginSet: PluginSet;
+};
+const PluginSetCard: FC<PluginSetCardProps> = ({ pluginSet, children }) => {
+  const [t] = useTranslation("initialization");
+  const [collapsed, setCollapsed] = useState(true);
+
+  return (
+    <div className="card block">
+      <div className="card-image pt-5">{children}</div>
+      <div className="card-content">
+        <h5 className="subtitle is-5">{pluginSet.name}</h5>
+        <div className="content">
+          <ul>
+            {pluginSet.features.map((feature) => (
+              <li>{feature}</li>
+            ))}
+          </ul>
+        </div>
+        <div className="block pl-4">
+          <div
+            className="is-flex is-justify-content-space-between has-cursor-pointer"
+            onClick={() => setCollapsed((value) => !value)}
+          >
+            <span>{t(`pluginWizardStep.pluginSet.${collapsed ? "expand" : "collapse"}`)}</span>
+            <Icon name={collapsed ? "angle-down" : "angle-up"} />
+          </div>
+          {!collapsed ? (
+            <ul className="pt-2">
+              {pluginSet.plugins.map((plugin, idx) => (
+                <li key={idx} className="py-2">
+                  <div className="is-size-6 has-text-weight-semibold">{plugin.displayName}</div>
+                  <div className="is-size-6">{plugin.description}</div>
+                </li>
+              ))}
+            </ul>
+          ) : null}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 type Props = {
   data: HalRepresentationWithEmbedded<{ pluginSets: PluginSet[] }>;
 };
@@ -67,6 +120,7 @@ const InitializationPluginWizardStep: FC<Props> = ({ data: initializationContext
     isInstalled,
     error: installationError,
   } = useInstallPluginSets(requiredLink(initializationContext, "installPluginSets"));
+  const [skipInstallation, setSkipInstallation] = useState(false);
 
   const { register, handleSubmit, watch } = useForm<FormValue>();
   const data = initializationContext._embedded?.pluginSets;
@@ -89,6 +143,8 @@ const InitializationPluginWizardStep: FC<Props> = ({ data: initializationContext
       }),
     [installPluginSets, pluginSetIds]
   );
+  const isSelected = useCallback((pluginSetId: string) => pluginSetIds.includes(pluginSetId), [pluginSetIds]);
+  const hasPluginSets = useMemo(() => pluginSetIds.length > 0, [pluginSetIds]);
 
   useEffect(() => {
     if (isInstalled) {
@@ -102,12 +158,31 @@ const InitializationPluginWizardStep: FC<Props> = ({ data: initializationContext
     content = <ErrorNotification error={installationError} />;
   } else {
     content = (
-      <form onSubmit={handleSubmit(submit)}>
-        {data?.map((pluginSet) => (
-          <Checkbox {...register(pluginSet.id)} label={pluginSet.name} />
-        ))}
-        <SubmitButton disabled={isInstalling} loading={isInstalling}>
-          {pluginSetIds.length ? "Submit" : "Skip"}
+      <form onSubmit={handleSubmit(submit)} className="is-flex is-flex-direction-column">
+        <div className="block">
+          {data?.map((pluginSet, idx) => (
+            <PluginSetCard pluginSet={pluginSet} key={idx}>
+              <label htmlFor={`plugin-set-${idx}`}>
+                <img
+                  alt={pluginSet.name}
+                  src={`data:image/svg+xml;base64,${pluginSet.images[isSelected(pluginSet.id) ? "check" : "standard"]}`}
+                />
+              </label>
+              <HiddenInput type="checkbox" id={`plugin-set-${idx}`} {...register(pluginSet.id)} />
+            </PluginSetCard>
+          ))}
+          <BorderedDiv className="card-block has-border-danger px-4 pt-3">
+            <Checkbox
+              disabled={hasPluginSets}
+              checked={skipInstallation}
+              onChange={setSkipInstallation}
+              title={t("pluginWizardStep.skip.title")}
+              label={t("pluginWizardStep.skip.subtitle")}
+            ></Checkbox>
+          </BorderedDiv>
+        </div>
+        <SubmitButton disabled={isInstalling || !(hasPluginSets || skipInstallation)} loading={isInstalling} className="is-align-self-flex-end">
+          {t("pluginWizardStep.submit")}
         </SubmitButton>
       </form>
     );
@@ -118,9 +193,10 @@ const InitializationPluginWizardStep: FC<Props> = ({ data: initializationContext
       <div className="hero-body">
         <div className="container">
           <div className="columns is-centered">
-            <div className="column is-8 box  has-background-secondary-less">
+            <div className="column is-8 box has-background-secondary-less">
               <h3 className="title">{t("title")}</h3>
               <h4 className="subtitle">{t("pluginWizardStep.title")}</h4>
+              <p className="is-size-6 block">{t("pluginWizardStep.description")}</p>
               {content}
             </div>
           </div>

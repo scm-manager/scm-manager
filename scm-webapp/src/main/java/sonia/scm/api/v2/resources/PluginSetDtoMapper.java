@@ -24,14 +24,34 @@
 
 package sonia.scm.api.v2.resources;
 
-import org.mapstruct.Mapper;
+import sonia.scm.plugin.AvailablePlugin;
 import sonia.scm.plugin.PluginSet;
 
-@Mapper
-public abstract class PluginSetDtoMapper {
-  public PluginSetDto map(PluginSet pluginSet) {
+import javax.inject.Inject;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+public class PluginSetDtoMapper {
+  private final PluginDtoMapper pluginDtoMapper;
+
+  @Inject
+  protected PluginSetDtoMapper(PluginDtoMapper pluginDtoMapper) {
+    this.pluginDtoMapper = pluginDtoMapper;
+  }
+
+  public PluginSetDto map(PluginSet pluginSet, List<AvailablePlugin> availablePlugins) {
+    Set<PluginDto> pluginDtos = pluginSet.getPlugins().stream()
+      .map(it -> availablePlugins.stream().filter(avail -> avail.getDescriptor().getInformation().getName().equals(it)).findFirst())
+      .filter(Optional::isPresent)
+      .map(Optional::get)
+      .map(pluginDtoMapper::mapAvailable)
+      .collect(Collectors.toSet());
+
     // TODO: Detect language
     PluginSet.Description description = pluginSet.getDescriptions().get("en");
-    return new PluginSetDto(pluginSet.getId(), pluginSet.getSequence(), pluginSet.getPlugins(), description.getName(), description.getFeatures(), pluginSet.getImages());
+
+    return new PluginSetDto(pluginSet.getId(), pluginSet.getSequence(), pluginDtos, description.getName(), description.getFeatures(), pluginSet.getImages());
   };
 }

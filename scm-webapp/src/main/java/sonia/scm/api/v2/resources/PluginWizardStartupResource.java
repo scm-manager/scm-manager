@@ -34,11 +34,13 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import sonia.scm.initialization.InitializationStepResource;
 import sonia.scm.lifecycle.PluginWizardStartupAction;
+import sonia.scm.plugin.AvailablePlugin;
 import sonia.scm.plugin.Extension;
 import sonia.scm.plugin.PluginManager;
 import sonia.scm.plugin.PluginPermissions;
 import sonia.scm.plugin.PluginSet;
 import sonia.scm.web.VndMediaType;
+import sonia.scm.web.security.AdministrationContext;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
@@ -62,22 +64,28 @@ public class PluginWizardStartupResource implements InitializationStepResource {
 
   private final PluginSetDtoMapper pluginSetDtoMapper;
 
+  private final AdministrationContext context;
+
 
   @Inject
-  public PluginWizardStartupResource(PluginWizardStartupAction pluginWizardStartupAction, ResourceLinks resourceLinks, PluginManager pluginManager, PluginSetDtoMapper pluginSetDtoMapper) {
+  public PluginWizardStartupResource(PluginWizardStartupAction pluginWizardStartupAction, ResourceLinks resourceLinks, PluginManager pluginManager, PluginSetDtoMapper pluginSetDtoMapper, AdministrationContext context) {
     this.pluginWizardStartupAction = pluginWizardStartupAction;
     this.resourceLinks = resourceLinks;
     this.pluginManager = pluginManager;
     this.pluginSetDtoMapper = pluginSetDtoMapper;
+    this.context = context;
   }
 
   @Override
   public void setupIndex(Links.Builder builder, Embedded.Builder embeddedBuilder) {
-    Set<PluginSet> pluginSets = pluginManager.getPluginSets();
-    List<PluginSetDto> pluginSetDtos = pluginSets.stream().map(pluginSetDtoMapper::map).collect(Collectors.toList());
-    embeddedBuilder.with("pluginSets", pluginSetDtos);
-    String link = resourceLinks.pluginWizard().indexLink(name());
-    builder.single(link("installPluginSets", link));
+    context.runAsAdmin(() -> {
+      Set<PluginSet> pluginSets = pluginManager.getPluginSets();
+      List<AvailablePlugin> availablePlugins = pluginManager.getAvailable();
+      List<PluginSetDto> pluginSetDtos = pluginSets.stream().map(it -> pluginSetDtoMapper.map(it, availablePlugins)).collect(Collectors.toList());
+      embeddedBuilder.with("pluginSets", pluginSetDtos);
+      String link = resourceLinks.pluginWizard().indexLink(name());
+      builder.single(link("installPluginSets", link));
+    });
   }
 
   @Override

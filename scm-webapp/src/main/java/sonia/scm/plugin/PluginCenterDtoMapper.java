@@ -36,6 +36,8 @@ import java.util.stream.Collectors;
 @Mapper
 public abstract class PluginCenterDtoMapper {
 
+  PluginCenterDtoMapper() {}
+
   static final PluginCenterDtoMapper INSTANCE = Mappers.getMapper(PluginCenterDtoMapper.class);
 
   abstract PluginInformation map(PluginCenterDto.Plugin plugin);

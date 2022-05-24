@@ -12,7 +12,17 @@
     "submit": "Absenden"
   },
   "pluginWizardStep": {
-    "title": "Plugin Sets"
+    "title": "Plugin Sets",
+    "description": "Der SCM-Manager ist ein minimalistisches Werkzeug, um Git, SVN und mercurial Repositories zu verwalten. Mit Plugins vereinfachen Sie Ihren Workflow und erreichen mehr mit Ihrem SCM-Manager. Wählen Sie ein oder mehrere Plugin-Sets, um ihren Start zu beschleunigen.",
+    "submit": "Absenden",
+    "skip": {
+      "title": "",
+      "subtitle": ""
+    },
+    "pluginSet": {
+      "expand": "Enthaltene Plugins anzeigen",
+      "collapse": "Enthaltene Plugins"
+    }
   },
   "error": {
     "forbidden": "Falscher Token"
