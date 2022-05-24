@@ -30,7 +30,9 @@ import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.initialization.InitializationFinisher;
@@ -38,12 +40,14 @@ import sonia.scm.search.SearchEngine;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
+import java.util.Locale;
 import java.util.Optional;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @SubjectAware(configuration = "classpath:sonia/scm/shiro-002.ini")
+@RunWith(MockitoJUnitRunner.class)
 public class IndexResourceTest {
 
   @Rule
@@ -58,6 +62,7 @@ public class IndexResourceTest {
 
   @Before
   public void setUpObjectUnderTest() {
+    when(httpServletRequest.getLocale()).thenReturn(Locale.ENGLISH);
     this.configuration = new ScmConfiguration();
     this.scmContextProvider = mock(SCMContextProvider.class);
     InitializationFinisher initializationFinisher = mock(InitializationFinisher.class);
