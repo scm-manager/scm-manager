@@ -119,6 +119,7 @@ class HealthCheckerTest {
 
     @Test
     void shouldComputeLightChecks() {
+      when(subject.getPrincipal()).thenReturn("trillian");
       when(healthCheck1.check(repository)).thenReturn(HealthCheckResult.unhealthy(createFailure("error1")));
       when(healthCheck2.check(repository)).thenReturn(HealthCheckResult.unhealthy(createFailure("error2")));
 
@@ -261,8 +262,8 @@ class HealthCheckerTest {
 
         checker.fullCheck(repositoryId);
 
-        verify(notificationSender, never()).send(any());
-        verify(notificationSender,times(1)).send(any(), eq("trillian"));
+        verify(notificationSender, times(1)).send(any());
+        verify(notificationSender, never()).send(any(), eq("trillian"));
       }
 
       @Test
@@ -274,7 +275,7 @@ class HealthCheckerTest {
 
         checker.fullCheck(repositoryId);
 
-        verify(notificationSender).send(any(), eq("trillian"));
+        verify(notificationSender).send(any());
         verify(notificationSender).send(any(), eq("Arthur"));
       }
     }
