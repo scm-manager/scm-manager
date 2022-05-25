@@ -194,6 +194,7 @@ const InitializationPluginWizardStep: FC<Props> = ({ data: initializationContext
           </BorderedDiv>
         </div>
         <SubmitButton
+          scrollToTop={false}
           disabled={isInstalling || !(hasPluginSets || skipInstallation)}
           loading={isInstalling}
           className="is-align-self-flex-end"
