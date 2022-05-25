@@ -227,22 +227,28 @@ final class HealthChecker {
   }
 
   private void notifyCurrentUser(Repository repository, HealthCheckResult result) {
-    if (!(repository.isHealthy() && result.isHealthy())) {
-      String currentUser = SecurityUtils.getSubject().getPrincipal().toString();
-      if (!scmConfiguration.getEmergencyContacts().contains(currentUser)) {
-        notificationSender.send(getHealthCheckFailedNotification(repository));
-      }
+    if (repository.isHealthy() && result.isHealthy()) {
+      notificationSender.send(getHealthCheckSuccessNotification(repository));
+    } else {
+      notificationSender.send(getHealthCheckFailedNotification(repository));
     }
   }
 
   private void notifyEmergencyContacts(Repository repository) {
+    String currentUser = SecurityUtils.getSubject().getPrincipal().toString();
     Set<String> emergencyContacts = scmConfiguration.getEmergencyContacts();
     for (String user : emergencyContacts) {
-      notificationSender.send(getHealthCheckFailedNotification(repository), user);
+      if (!user.equals(currentUser)) {
+        notificationSender.send(getHealthCheckFailedNotification(repository), user);
+      }
     }
   }
 
   private Notification getHealthCheckFailedNotification(Repository repository) {
     return new Notification(Type.ERROR, "/repo/" + repository.getNamespaceAndName() + "/settings/general", "healthCheckFailed");
+  }
+
+  private Notification getHealthCheckSuccessNotification(Repository repository) {
+    return new Notification(Type.SUCCESS, "/repo/" + repository.getNamespaceAndName() + "/settings/general", "healthCheckSuccess");
   }
 }
