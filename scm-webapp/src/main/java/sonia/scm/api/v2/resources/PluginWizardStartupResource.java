@@ -51,6 +51,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -92,7 +93,10 @@ public class PluginWizardStartupResource implements InitializationStepResource {
     context.runAsAdmin(() -> {
       Set<PluginSet> pluginSets = pluginManager.getPluginSets();
       List<AvailablePlugin> availablePlugins = pluginManager.getAvailable();
-      List<PluginSetDto> pluginSetDtos = pluginSets.stream().map(it -> pluginSetDtoMapper.map(it, availablePlugins, locale)).collect(Collectors.toList());
+      List<PluginSetDto> pluginSetDtos = pluginSets.stream()
+        .map(it -> pluginSetDtoMapper.map(it, availablePlugins, locale))
+        .sorted(Comparator.comparingInt(PluginSetDto::getSequence))
+        .collect(Collectors.toList());
       embeddedBuilder.with("pluginSets", pluginSetDtos);
       String link = resourceLinks.pluginWizard().indexLink(name());
       builder.single(link("installPluginSets", link));
