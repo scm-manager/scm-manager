@@ -28,7 +28,6 @@ import org.apache.shiro.authc.AuthenticationToken;
 import sonia.scm.plugin.Extension;
 import sonia.scm.web.WebTokenGenerator;
 
-import javax.inject.Inject;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 

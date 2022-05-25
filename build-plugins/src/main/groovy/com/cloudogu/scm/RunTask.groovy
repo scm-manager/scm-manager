@@ -115,6 +115,7 @@ class RunTask extends DefaultTask {
     def runProperties = new HashMap<String, String>(scmProperties)
     runProperties.put("user.home", extension.getHome())
     runProperties.put("scm.initialPassword", "scmadmin")
+    runProperties.put("sonia.scm.skipPluginWizard", "true")
     runProperties.put("scm.workingCopyPoolStrategy", "sonia.scm.repository.work.SimpleCachingWorkingCopyPool")
 
     return {

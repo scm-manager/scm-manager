@@ -54,7 +54,7 @@ public class PluginWizardStartupAction implements InitializationStep {
 
   @Override
   public boolean done() {
-    return store.getPluginSets().isPresent();
+    return Boolean.getBoolean("sonia.scm.skipPluginWizard") || store.getPluginSets().isPresent();
   }
 
 }

@@ -24,7 +24,6 @@
 
 package sonia.scm.plugin;
 
-import com.google.common.collect.ImmutableList;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
