@@ -82,6 +82,9 @@ public class AdminAccountStartupResource implements InitializationStepResource {
     verifyToken(data);
     createAdminUser(data);
 
+    // Invalidate old access token cookies to prevent conflicts during authentication
+    authenticationService.invalidateCookies(request, response);
+
     SecurityUtils.getSubject().login(Tokens.createAuthenticationToken(request, data.userName, data.password));
     // Create cookie which will be used for authentication during the initialization process
     authenticationService.authenticate(request, response);

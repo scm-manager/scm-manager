@@ -77,6 +77,10 @@ public class InitializationAuthenticationService {
     cookieIssuer.authenticateForInitialization(request, response, initToken);
   }
 
+  public void invalidateCookies(HttpServletRequest request, HttpServletResponse response) {
+    cookieIssuer.invalidate(request, response);
+  }
+
   private void invalidateToken() {
     this.initToken = null;
   }
