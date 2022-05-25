@@ -77,9 +77,10 @@ public interface PluginManager {
    * Collects and installs all plugins and their dependencies for the given plugin sets.
    *
    * @param pluginSets Ids of plugin sets to install
+   * @param restartAfterInstallation restart context after all plugins have been installed
    * @since 2.35.0
    */
-  void installPluginSets(Set<String> pluginSets);
+  void installPluginSets(Set<String> pluginSets, boolean restartAfterInstallation);
 
   /**
    * Returns all updatable plugins.

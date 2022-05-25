@@ -134,7 +134,7 @@ public class PluginWizardStartupResource implements InitializationStepResource {
                                     @Valid PluginSetsInstallDto dto) {
     cookieIssuer.invalidate(request, response);
 
-    pluginManager.installPluginSets(dto.getPluginSetIds());
+    pluginManager.installPluginSets(dto.getPluginSetIds(), true);
 
     return Response.ok().build();
   }

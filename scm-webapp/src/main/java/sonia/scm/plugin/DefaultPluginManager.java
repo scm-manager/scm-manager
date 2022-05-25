@@ -161,7 +161,7 @@ public class DefaultPluginManager implements PluginManager {
   }
 
   @Override
-  public void installPluginSets(Set<String> pluginSetIds) {
+  public void installPluginSets(Set<String> pluginSetIds, boolean restartAfterInstallation) {
     PluginPermissions.write().check();
 
     Set<PluginSet> pluginSets = getPluginSets();
@@ -181,13 +181,13 @@ public class DefaultPluginManager implements PluginManager {
       .flatMap(Collection::stream)
       .collect(Collectors.toSet());
 
-    Set<String> newlyIinstalledPluginSetIds = pluginSetsToInstall.stream().map(PluginSet::getId).collect(Collectors.toSet());
+    Set<String> newlyInstalledPluginSetIds = pluginSetsToInstall.stream().map(PluginSet::getId).collect(Collectors.toSet());
 
     Set<String> installedPluginSetIds = pluginSetConfigStore.getPluginSets().map(PluginSetsConfig::getPluginSets).orElse(new HashSet<>());
-    installedPluginSetIds.addAll(newlyIinstalledPluginSetIds);
+    installedPluginSetIds.addAll(newlyInstalledPluginSetIds);
     pluginSetConfigStore.setPluginSets(new PluginSetsConfig(installedPluginSetIds));
 
-    installPlugins(new ArrayList<>(pluginsToInstall), true);
+    installPlugins(new ArrayList<>(pluginsToInstall), restartAfterInstallation);
   }
 
   @Override

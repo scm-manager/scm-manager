@@ -25,6 +25,7 @@
 package sonia.scm.plugin;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.subject.Subject;
@@ -38,6 +39,7 @@ import org.junit.jupiter.api.io.TempDir;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.NotFoundException;
 import sonia.scm.ScmConstraintViolationException;
@@ -49,6 +51,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
@@ -653,6 +656,55 @@ class DefaultPluginManagerTest {
       assertThat(pluginInstallationContext.find("scm-webhook-plugin")).isPresent();
       assertThat(pluginInstallationContext.find("scm-el-plugin")).isPresent();
     }
+
+    @Test
+    void shouldGetPluginSets() {
+      PluginSet pluginSet = new PluginSet(
+        "my-plugin-set",
+        0,
+        ImmutableSet.of("scm-jenkins-plugin", "scm-webhook-plugin", "scm-el-plugin"),
+        ImmutableMap.of("en", new PluginSet.Description("My Plugin Set", ImmutableSet.of("this is awesome!"))),
+        ImmutableMap.of("standard", "base64image")
+      );
+      when(center.getAvailablePluginSets()).thenReturn(ImmutableSet.of(pluginSet));
+      Set<PluginSet> pluginSets = manager.getPluginSets();
+      assertThat(pluginSets).containsExactly(pluginSet);
+    }
+
+    @Test
+    void shouldInstallPluginSets() {
+      AvailablePlugin git = createAvailable("scm-git-plugin");
+      AvailablePlugin svn = createAvailable("scm-svn-plugin");
+      AvailablePlugin hg = createAvailable("scm-hg-plugin");
+
+      when(center.getAvailablePlugins()).thenReturn(ImmutableSet.of(git, svn, hg));
+
+      PluginSet pluginSet = new PluginSet(
+        "my-plugin-set",
+        0,
+        ImmutableSet.of("scm-git-plugin", "scm-hg-plugin"),
+        ImmutableMap.of("en", new PluginSet.Description("My Plugin Set", ImmutableSet.of("this is awesome!"))),
+        ImmutableMap.of("standard", "base64image")
+      );
+
+      PluginSet pluginSet2 = new PluginSet(
+        "my-other-plugin-set",
+        0,
+        ImmutableSet.of("scm-svn-plugin", "scm-hg-plugin"),
+        ImmutableMap.of("en", new PluginSet.Description("My Plugin Set", ImmutableSet.of("this is awesome!"))),
+        ImmutableMap.of("standard", "base64image")
+      );
+      when(center.getAvailablePluginSets()).thenReturn(ImmutableSet.of(pluginSet, pluginSet2));
+
+      manager.installPluginSets(ImmutableSet.of("my-plugin-set", "my-other-plugin-set"), false);
+
+      verify(pluginSetConfigStore).setPluginSets(new PluginSetsConfig(ImmutableSet.of("my-plugin-set", "my-other-plugin-set")));
+      verify(installer, Mockito.times(1)).install(context, git);
+      verify(installer, Mockito.times(1)).install(context, hg);
+      verify(installer, Mockito.times(1)).install(context, svn);
+
+      verify(restarter, never()).restart(any(), any());
+    }
   }
 
   @Nested
@@ -675,6 +727,7 @@ class DefaultPluginManagerTest {
       assertThrows(AuthorizationException.class, () -> manager.getInstalled("test"));
       assertThrows(AuthorizationException.class, () -> manager.getAvailable());
       assertThrows(AuthorizationException.class, () -> manager.getAvailable("test"));
+      assertThrows(AuthorizationException.class, () -> manager.getPluginSets());
     }
 
   }
@@ -696,6 +749,11 @@ class DefaultPluginManagerTest {
     @Test
     void shouldThrowAuthorizationExceptionsForInstallMethod() {
       assertThrows(AuthorizationException.class, () -> manager.install("test", false));
+    }
+
+    @Test
+    void shouldThrowAuthorizationExceptionsForInstallPluginSetsMethod() {
+      assertThrows(AuthorizationException.class, () -> manager.installPluginSets(ImmutableSet.of("test"), false));
     }
 
     @Test
