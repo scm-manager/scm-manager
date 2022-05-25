@@ -55,12 +55,12 @@ type PluginSetsInstallation = {
   pluginSetIds: string[];
 };
 
-const installPluginSets = (link: string) => (data: PluginSetsInstallation) =>
+const install = (link: string) => (data: PluginSetsInstallation) =>
   waitForRestartAfter(apiClient.post(link, data, "application/json"));
 
 const useInstallPluginSets = (link: string) => {
   const { mutate, isLoading, error, isSuccess } = useMutation<unknown, Error, PluginSetsInstallation>(
-    installPluginSets(link)
+    install(link)
   );
   return {
     installPluginSets: mutate,

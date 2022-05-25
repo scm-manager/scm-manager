@@ -26,6 +26,9 @@ package sonia.scm.initialization;
 
 import sonia.scm.plugin.ExtensionPoint;
 
+/**
+ * @deprecated Limited use for Plugin Development, see as internal
+ */
 @ExtensionPoint
 @Deprecated(since = "2.35.0", forRemoval = true)
 public interface InitializationStep {
