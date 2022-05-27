@@ -28,6 +28,8 @@ import sonia.scm.plugin.AvailablePlugin;
 import sonia.scm.plugin.PluginSet;
 
 import javax.inject.Inject;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -42,7 +44,14 @@ public class PluginSetDtoMapper {
     this.pluginDtoMapper = pluginDtoMapper;
   }
 
-  public PluginSetDto map(PluginSet pluginSet, List<AvailablePlugin> availablePlugins, Locale locale) {
+  public List<PluginSetDto> map(Collection<PluginSet> pluginSets, List<AvailablePlugin> availablePlugins, Locale locale) {
+    return pluginSets.stream()
+      .map(it -> map(it, availablePlugins, locale))
+      .sorted(Comparator.comparingInt(PluginSetDto::getSequence))
+      .collect(Collectors.toList());
+  }
+
+  private PluginSetDto map(PluginSet pluginSet, List<AvailablePlugin> availablePlugins, Locale locale) {
     Set<PluginDto> pluginDtos = pluginSet.getPlugins().stream()
       .map(it -> availablePlugins.stream().filter(avail -> avail.getDescriptor().getInformation().getName().equals(it)).findFirst())
       .filter(Optional::isPresent)

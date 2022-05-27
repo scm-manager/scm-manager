@@ -33,6 +33,7 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import sonia.scm.initialization.InitializationStepResource;
 import sonia.scm.lifecycle.PluginWizardStartupAction;
+import sonia.scm.lifecycle.PrivilegedStartupAction;
 import sonia.scm.plugin.AvailablePlugin;
 import sonia.scm.plugin.Extension;
 import sonia.scm.plugin.PluginManager;
@@ -55,9 +56,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static de.otto.edison.hal.Link.link;
+import static sonia.scm.ScmConstraintViolationException.Builder.doThrow;
 
 @Extension
 public class PluginWizardStartupResource implements InitializationStepResource {
@@ -90,13 +91,10 @@ public class PluginWizardStartupResource implements InitializationStepResource {
 
   @Override
   public void setupIndex(Links.Builder builder, Embedded.Builder embeddedBuilder, Locale locale) {
-    context.runAsAdmin(() -> {
+    context.runAsAdmin((PrivilegedStartupAction)() -> {
       Set<PluginSet> pluginSets = pluginManager.getPluginSets();
       List<AvailablePlugin> availablePlugins = pluginManager.getAvailable();
-      List<PluginSetDto> pluginSetDtos = pluginSets.stream()
-        .map(it -> pluginSetDtoMapper.map(it, availablePlugins, locale))
-        .sorted(Comparator.comparingInt(PluginSetDto::getSequence))
-        .collect(Collectors.toList());
+      List<PluginSetDto> pluginSetDtos = pluginSetDtoMapper.map(pluginSets, availablePlugins, locale);
       embeddedBuilder.with("pluginSets", pluginSetDtos);
       String link = resourceLinks.pluginWizard().indexLink(name());
       builder.single(link("installPluginSets", link));
@@ -136,10 +134,17 @@ public class PluginWizardStartupResource implements InitializationStepResource {
   public Response installPluginSets(@Context HttpServletRequest request,
                                     @Context HttpServletResponse response,
                                     @Valid PluginSetsInstallDto dto) {
+    verifyInInitialization();
     cookieIssuer.invalidate(request, response);
 
     pluginManager.installPluginSets(dto.getPluginSetIds(), true);
 
     return Response.ok().build();
+  }
+
+  private void verifyInInitialization() {
+    doThrow()
+      .violation("initialization not necessary")
+      .when(pluginWizardStartupAction.done());
   }
 }

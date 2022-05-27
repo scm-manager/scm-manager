@@ -28,4 +28,4 @@ import sonia.scm.plugin.ExtensionPoint;
 import sonia.scm.web.security.PrivilegedAction;
 
 @ExtensionPoint
-interface PrivilegedStartupAction extends PrivilegedAction {}
+public interface PrivilegedStartupAction extends PrivilegedAction {}
