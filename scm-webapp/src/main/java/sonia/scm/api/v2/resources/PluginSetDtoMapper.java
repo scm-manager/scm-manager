@@ -52,12 +52,12 @@ public class PluginSetDtoMapper {
   }
 
   private PluginSetDto map(PluginSet pluginSet, List<AvailablePlugin> availablePlugins, Locale locale) {
-    Set<PluginDto> pluginDtos = pluginSet.getPlugins().stream()
+    List<PluginDto> pluginDtos = pluginSet.getPlugins().stream()
       .map(it -> availablePlugins.stream().filter(avail -> avail.getDescriptor().getInformation().getName().equals(it)).findFirst())
       .filter(Optional::isPresent)
       .map(Optional::get)
       .map(pluginDtoMapper::mapAvailable)
-      .collect(Collectors.toSet());
+      .collect(Collectors.toList());
 
     PluginSet.Description description = pluginSet.getDescriptions().get(locale.getLanguage());
 

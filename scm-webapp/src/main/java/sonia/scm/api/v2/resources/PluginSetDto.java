@@ -30,6 +30,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -41,7 +42,7 @@ import java.util.Set;
 public class PluginSetDto extends HalRepresentation {
   private String id;
   private int sequence;
-  private Set<PluginDto> plugins;
+  private List<PluginDto> plugins;
 
   private String name;
   private Set<String> features;
