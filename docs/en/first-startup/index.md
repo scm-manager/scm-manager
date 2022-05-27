@@ -33,4 +33,14 @@ The password of the administration user cannot be recovered.
 For automated processes, you might want to bypass the initial user creation. To do so, you can set the initial password
 in a system property `scm.initialPassword`. If this is present, a user `scmadmin` with this password will be created,
 if it does not already exist. To change the name of this user, you can set this with the property `scm.initialUser`
-in addition.
+in addition. 
+
+When set, this also causes the initialization to skip the Plugin Wizard.
+
+# Plugin Wizard
+
+Once an initial user is created, the Plugin Wizard is going to appear.
+Here you can select a series of pre-defined sets of plugins to kickstart
+your development experience with the SCM-Manager.
+
+![Form to select plugin sets](assets/plugin-wizard.png)
