@@ -54,7 +54,7 @@ public class PluginWizardStartupAction implements InitializationStep {
 
   @Override
   public boolean done() {
-    return Boolean.getBoolean("sonia.scm.skipPluginWizard") || store.getPluginSets().isPresent();
+    return System.getProperty(AdminAccountStartupAction.INITIAL_PASSWORD_PROPERTY) != null || store.getPluginSets().isPresent();
   }
 
 }

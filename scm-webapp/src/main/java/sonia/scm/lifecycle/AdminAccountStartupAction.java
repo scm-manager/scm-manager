@@ -48,7 +48,7 @@ public class AdminAccountStartupAction implements InitializationStep {
 
   private static final Logger LOG = LoggerFactory.getLogger(AdminAccountStartupAction.class);
 
-  private static final String INITIAL_PASSWORD_PROPERTY = "scm.initialPassword";
+  public static final String INITIAL_PASSWORD_PROPERTY = "scm.initialPassword";
   private static final String INITIAL_USER_PROPERTY = "scm.initialUser";
 
   private final PasswordService passwordService;
