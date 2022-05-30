@@ -42,62 +42,54 @@ import java.util.Set;
 @Singleton
 public class PluginCenter {
 
-  private static final String PLUGINS_CACHE_NAME = "sonia.cache.plugins";
-  private static final String PLUGIN_SETS_CACHE_NAME = "sonia.cache.pluginSets";
+  private static final String PLUGIN_CENTER_RESULT_CACHE_NAME = "sonia.cache.plugin-center";
 
   private static final Logger LOG = LoggerFactory.getLogger(PluginCenter.class);
 
   private final SCMContextProvider context;
   private final ScmConfiguration configuration;
   private final PluginCenterLoader loader;
-  private final Cache<String, Set<AvailablePlugin>> pluginsCache;
-  private final Cache<String, Set<PluginSet>> pluginSetsCache;
+  private final Cache<String, PluginCenterResult> pluginCenterResultCache;
 
   @Inject
   public PluginCenter(SCMContextProvider context, CacheManager cacheManager, ScmConfiguration configuration, PluginCenterLoader loader) {
     this.context = context;
     this.configuration = configuration;
     this.loader = loader;
-    this.pluginsCache = cacheManager.getCache(PLUGINS_CACHE_NAME);
-    this.pluginSetsCache = cacheManager.getCache(PLUGIN_SETS_CACHE_NAME);
+    this.pluginCenterResultCache = cacheManager.getCache(PLUGIN_CENTER_RESULT_CACHE_NAME);
   }
 
   @Subscribe
   public void handle(PluginCenterAuthenticationEvent event) {
     LOG.debug("clear plugin center cache, because of {}", event);
-    pluginsCache.clear();
-    pluginSetsCache.clear();
+    pluginCenterResultCache.clear();
   }
 
   synchronized Set<AvailablePlugin> getAvailablePlugins() {
     String url = buildPluginUrl(configuration.getPluginUrl());
-    Set<AvailablePlugin> plugins = pluginsCache.get(url);
-    if (plugins == null) {
-      LOG.debug("no cached available plugins found, start fetching");
-      plugins = fetchPluginCenter(url).getPlugins();
-    } else {
-      LOG.debug("return available plugins from cache");
-    }
-    return plugins;
+    return getPluginCenterResult(url).getPlugins();
   }
 
   synchronized Set<PluginSet> getAvailablePluginSets() {
     String url = buildPluginUrl(configuration.getPluginUrl());
-    Set<PluginSet> pluginSets = pluginSetsCache.get(url);
-    if (pluginSets == null) {
-      LOG.debug("no cached available plugins found, start fetching");
-      pluginSets = fetchPluginCenter(url).getPluginSets();
+    return getPluginCenterResult(url).getPluginSets();
+  }
+
+  private PluginCenterResult getPluginCenterResult(String url) {
+    PluginCenterResult pluginCenterResult = pluginCenterResultCache.get(url);
+    if (pluginCenterResult == null) {
+      LOG.debug("no cached plugin center result found, start fetching");
+      pluginCenterResult = fetchPluginCenter(url);
     } else {
-      LOG.debug("return available plugins from cache");
+      LOG.debug("return plugin center result from cache");
     }
-    return pluginSets;
+    return pluginCenterResult;
   }
 
   @CanIgnoreReturnValue
   private PluginCenterResult fetchPluginCenter(String url) {
     PluginCenterResult pluginCenterResult = loader.load(url);
-    pluginsCache.put(url, pluginCenterResult.getPlugins());
-    pluginSetsCache.put(url, pluginCenterResult.getPluginSets());
+    pluginCenterResultCache.put(url, pluginCenterResult);
     return pluginCenterResult;
   }
 
