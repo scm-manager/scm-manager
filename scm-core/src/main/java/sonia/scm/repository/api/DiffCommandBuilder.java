@@ -36,6 +36,7 @@ import sonia.scm.repository.spi.DiffCommandRequest;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Set;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -111,7 +112,7 @@ public final class DiffCommandBuilder extends AbstractDiffCommandBuilder<DiffCom
   public String getContent() throws IOException {
     try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
       getDiffResult().accept(baos);
-      return baos.toString();
+      return baos.toString(StandardCharsets.UTF_8);
     }
   }
 

@@ -38,6 +38,7 @@ import sonia.scm.repository.api.Hunk;
 import javax.inject.Inject;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -184,7 +185,7 @@ public class GitDiffResultCommand extends AbstractGitCommand implements DiffResu
       try (ByteArrayOutputStream baos = new ByteArrayOutputStream(); DiffFormatter formatter = new DiffFormatter(baos)) {
         formatter.setRepository(repository);
         formatter.format(entry);
-        return baos.toString();
+        return baos.toString(StandardCharsets.UTF_8);
       } catch (IOException ex) {
         throw new InternalRepositoryException(GitDiffResultCommand.this.repository, "failed to format diff entry", ex);
       }
