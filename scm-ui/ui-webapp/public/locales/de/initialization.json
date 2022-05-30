@@ -15,6 +15,7 @@
     "title": "Plugin Sets",
     "description": "Der SCM-Manager ist ein minimalistisches Werkzeug, um Git, SVN und mercurial Repositories zu verwalten. Mit Plugins vereinfachen Sie Ihren Workflow und erreichen mehr mit Ihrem SCM-Manager. Wählen Sie ein oder mehrere Plugin-Sets, um ihren Start zu beschleunigen.",
     "submit": "Absenden",
+    "submitAndRestart": "Absenden und Neustarten",
     "skip": {
       "title": "Ohne weitere Plugins starten",
       "subtitle": "Ausschließlich Core-Plugins werden installiert. Es können weiterhin jederzeit Plugins manuell über das Plugin-Center installiert werden."

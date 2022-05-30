@@ -59,9 +59,7 @@ const install = (link: string) => (data: PluginSetsInstallation) =>
   waitForRestartAfter(apiClient.post(link, data, "application/json"));
 
 const useInstallPluginSets = (link: string) => {
-  const { mutate, isLoading, error, isSuccess } = useMutation<unknown, Error, PluginSetsInstallation>(
-    install(link)
-  );
+  const { mutate, isLoading, error, isSuccess } = useMutation<unknown, Error, PluginSetsInstallation>(install(link));
   return {
     installPluginSets: mutate,
     isLoading,
@@ -102,7 +100,11 @@ const PluginSetCard: FC<PluginSetCardProps> = ({ pluginSet, children }) => {
               {pluginSet.plugins.map((plugin, idx) => (
                 <li key={idx} className="py-2">
                   <div className="is-size-6 has-text-weight-semibold">{plugin.displayName}</div>
-                  <div className="is-size-6"><a href={`https://scm-manager.org/plugins/${plugin.name}`} target="_blank">{plugin.description}</a></div>
+                  <div className="is-size-6">
+                    <a href={`https://scm-manager.org/plugins/${plugin.name}`} target="_blank">
+                      {plugin.description}
+                    </a>
+                  </div>
                 </li>
               ))}
             </ul>
@@ -199,7 +201,7 @@ const InitializationPluginWizardStep: FC<Props> = ({ data: initializationContext
           loading={isInstalling}
           className="is-align-self-flex-end"
         >
-          {t("pluginWizardStep.submit")}
+          {t(`pluginWizardStep.${hasPluginSets ? "submitAndRestart" : "submit"}`)}
         </SubmitButton>
       </form>
     );
