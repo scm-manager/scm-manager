@@ -24,6 +24,7 @@
 
 package sonia.scm.initialization;
 
+import com.cronutils.utils.VisibleForTesting;
 import org.apache.shiro.authc.AuthenticationException;
 import sonia.scm.security.AccessTokenCookieIssuer;
 import sonia.scm.security.KeyGenerator;
@@ -85,5 +86,15 @@ public class InitializationAuthenticationService {
 
   private void invalidateToken() {
     this.initToken = null;
+  }
+
+  @VisibleForTesting
+  String getInitToken() {
+    return initToken;
+  }
+
+  @VisibleForTesting
+  void setInitToken(String initToken) {
+    this.initToken = initToken;
   }
 }
