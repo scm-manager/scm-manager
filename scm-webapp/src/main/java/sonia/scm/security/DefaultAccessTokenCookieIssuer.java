@@ -29,6 +29,7 @@ import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.initialization.InitializationCookieIssuer;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 
@@ -47,7 +48,7 @@ import static sonia.scm.initialization.InitializationWebTokenGenerator.INIT_TOKE
  * @author Sebastian Sdorra
  * @since 2.0.0
  */
-public final class DefaultAccessTokenCookieIssuer implements AccessTokenCookieIssuer {
+public final class DefaultAccessTokenCookieIssuer implements AccessTokenCookieIssuer, InitializationCookieIssuer {
 
   /**
    * the logger for DefaultAccessTokenCookieIssuer

@@ -45,15 +45,17 @@ public class InitializationAuthenticationService {
   private final Provider<InitializationFinisher> initializationFinisherProvider;
   private final PermissionAssigner permissionAssigner;
   private final AccessTokenCookieIssuer cookieIssuer;
+  private final InitializationCookieIssuer initializationCookieIssuer;
 
   private final AdministrationContext administrationContext;
 
   @Inject
-  public InitializationAuthenticationService(KeyGenerator generator, Provider<InitializationFinisher> initializationFinisherProvider, PermissionAssigner permissionAssigner, AccessTokenCookieIssuer cookieIssuer, AdministrationContext administrationContext) {
+  public InitializationAuthenticationService(KeyGenerator generator, Provider<InitializationFinisher> initializationFinisherProvider, PermissionAssigner permissionAssigner, AccessTokenCookieIssuer cookieIssuer, InitializationCookieIssuer initializationCookieIssuer, AdministrationContext administrationContext) {
     this.initToken = generator.createKey();
     this.initializationFinisherProvider = initializationFinisherProvider;
     this.permissionAssigner = permissionAssigner;
     this.cookieIssuer = cookieIssuer;
+    this.initializationCookieIssuer = initializationCookieIssuer;
     this.administrationContext = administrationContext;
   }
 
@@ -74,7 +76,7 @@ public class InitializationAuthenticationService {
   }
 
   public void authenticate(HttpServletRequest request, HttpServletResponse response) {
-    cookieIssuer.authenticateForInitialization(request, response, initToken);
+    initializationCookieIssuer.authenticateForInitialization(request, response, initToken);
   }
 
   public void invalidateCookies(HttpServletRequest request, HttpServletResponse response) {

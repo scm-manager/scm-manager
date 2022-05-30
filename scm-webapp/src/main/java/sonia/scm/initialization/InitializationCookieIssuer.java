@@ -22,34 +22,25 @@
  * SOFTWARE.
  */
 
-package sonia.scm.security;
+package sonia.scm.initialization;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Generates cookies and invalidates access token cookies.
+ * Generates cookies and invalidates initialization token cookies.
  *
  * @author Sebastian Sdorra
- * @since 2.0.0
+ * @since 2.35.0
  */
-public interface AccessTokenCookieIssuer {
+public interface InitializationCookieIssuer {
 
   /**
    * Creates a cookie for token authentication and attaches it to the response.
    *
    * @param request http servlet request
    * @param response http servlet response
-   * @param accessToken access token
+   * @param token initialization access token
    */
-  void authenticate(HttpServletRequest request, HttpServletResponse response, AccessToken accessToken);
-
-  /**
-   * Invalidates the authentication cookie.
-   *
-   * @param request http servlet request
-   * @param response http servlet response
-   */
-  void invalidate(HttpServletRequest request, HttpServletResponse response);
-
+  void authenticateForInitialization(HttpServletRequest request, HttpServletResponse response, String token);
 }
