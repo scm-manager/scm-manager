@@ -31,7 +31,7 @@ import java.util.Set;
 
 @AllArgsConstructor
 @Getter
-public class PluginCenterResult {
+class PluginCenterResult {
   private Set<AvailablePlugin> plugins;
   private Set<PluginSet> pluginSets;
 }
