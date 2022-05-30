@@ -663,7 +663,7 @@ class DefaultPluginManagerTest {
         "my-plugin-set",
         0,
         ImmutableSet.of("scm-jenkins-plugin", "scm-webhook-plugin", "scm-el-plugin"),
-        ImmutableMap.of("en", new PluginSet.Description("My Plugin Set", ImmutableSet.of("this is awesome!"))),
+        ImmutableMap.of("en", new PluginSet.Description("My Plugin Set", List.of("this is awesome!"))),
         ImmutableMap.of("standard", "base64image")
       );
       when(center.getAvailablePluginSets()).thenReturn(ImmutableSet.of(pluginSet));
@@ -683,7 +683,7 @@ class DefaultPluginManagerTest {
         "my-plugin-set",
         0,
         ImmutableSet.of("scm-git-plugin", "scm-hg-plugin"),
-        ImmutableMap.of("en", new PluginSet.Description("My Plugin Set", ImmutableSet.of("this is awesome!"))),
+        ImmutableMap.of("en", new PluginSet.Description("My Plugin Set", List.of("this is awesome!"))),
         ImmutableMap.of("standard", "base64image")
       );
 
@@ -691,7 +691,7 @@ class DefaultPluginManagerTest {
         "my-other-plugin-set",
         0,
         ImmutableSet.of("scm-svn-plugin", "scm-hg-plugin"),
-        ImmutableMap.of("en", new PluginSet.Description("My Plugin Set", ImmutableSet.of("this is awesome!"))),
+        ImmutableMap.of("en", new PluginSet.Description("My Plugin Set", List.of("this is awesome!"))),
         ImmutableMap.of("standard", "base64image")
       );
       when(center.getAvailablePluginSets()).thenReturn(ImmutableSet.of(pluginSet, pluginSet2));
@@ -753,7 +753,8 @@ class DefaultPluginManagerTest {
 
     @Test
     void shouldThrowAuthorizationExceptionsForInstallPluginSetsMethod() {
-      assertThrows(AuthorizationException.class, () -> manager.installPluginSets(ImmutableSet.of("test"), false));
+      ImmutableSet<String> pluginSetIds = ImmutableSet.of("test");
+      assertThrows(AuthorizationException.class, () -> manager.installPluginSets(pluginSetIds, false));
     }
 
     @Test

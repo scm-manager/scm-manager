@@ -26,23 +26,30 @@ package sonia.scm.plugin;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
+@Setter
 public class PluginSet {
-  private final String id;
-  private final int sequence;
-  private final Set<String> plugins;
-  private final Map<String, Description> descriptions;
-  private final Map<String, String> images;
+  private String id;
+  private int sequence;
+  private Set<String> plugins;
+  private Map<String, Description> descriptions;
+  private Map<String, String> images;
 
   @AllArgsConstructor
+  @NoArgsConstructor
   @Getter
+  @Setter
   public static class Description {
-    private final String name;
-    private final Set<String> features;
+    private String name;
+    private List<String> features;
   }
 }

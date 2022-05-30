@@ -43,24 +43,18 @@ public abstract class PluginCenterDtoMapper {
 
   abstract PluginCondition map(PluginCenterDto.Condition condition);
 
+  abstract PluginSet map(PluginCenterDto.PluginSet set);
+  abstract PluginSet.Description map(PluginCenterDto.Description description);
+
   PluginCenterResult map(PluginCenterDto pluginCenterDto) {
     Set<AvailablePlugin> plugins = new HashSet<>();
-    Set<PluginSet> pluginSets = new HashSet<>();
-    for (PluginCenterDto.PluginSet pluginSet : pluginCenterDto.getEmbedded().getPluginSets()) {
-      pluginSets.add(new PluginSet(
-        pluginSet.getId(),
-        pluginSet.getSequence(),
-        pluginSet.getPlugins(),
-        pluginSet.getDescriptions()
-          .entrySet()
-          .stream()
-          .collect(Collectors.toMap(
-            Map.Entry::getKey,
-            e -> new PluginSet.Description(e.getValue().getName(), e.getValue().getFeatures())
-          )),
-        pluginSet.getImages()
-      ));
-    }
+    Set<PluginSet> pluginSets = pluginCenterDto
+      .getEmbedded()
+      .getPluginSets()
+      .stream()
+      .map(this::map)
+      .collect(Collectors.toSet());
+
     for (PluginCenterDto.Plugin plugin : pluginCenterDto.getEmbedded().getPlugins()) {
       // plugin center api returns always a download link,
       // but for cloudogu plugin without authentication the href is an empty string

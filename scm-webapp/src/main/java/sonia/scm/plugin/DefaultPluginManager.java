@@ -173,12 +173,12 @@ public class DefaultPluginManager implements PluginManager {
 
     Set<AvailablePlugin> pluginsToInstall = pluginSetsToInstall
       .stream()
-      .map(pluginSet -> pluginSet
+      .flatMap(pluginSet -> pluginSet
         .getPlugins()
         .stream()
-        .map(this::collectPluginsToInstall).flatMap(Collection::stream).collect(Collectors.toSet())
+        .map(this::collectPluginsToInstall)
+        .flatMap(Collection::stream)
       )
-      .flatMap(Collection::stream)
       .collect(Collectors.toSet());
 
     Set<String> newlyInstalledPluginSetIds = pluginSetsToInstall.stream().map(PluginSet::getId).collect(Collectors.toSet());

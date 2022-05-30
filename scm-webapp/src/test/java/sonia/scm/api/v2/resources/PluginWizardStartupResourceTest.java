@@ -146,7 +146,7 @@ class PluginWizardStartupResourceTest {
       "my-plugin-set",
       0,
       ImmutableSet.of("scm-git-plugin", "scm-hg-plugin"),
-      ImmutableMap.of("en", new PluginSet.Description("My Plugin Set", ImmutableSet.of("this is awesome!"))),
+      ImmutableMap.of("en", new PluginSet.Description("My Plugin Set", List.of("this is awesome!"))),
       ImmutableMap.of("standard", "base64image")
     );
 
@@ -154,7 +154,7 @@ class PluginWizardStartupResourceTest {
       "my-other-plugin-set",
       0,
       ImmutableSet.of("scm-svn-plugin", "scm-hg-plugin"),
-      ImmutableMap.of("en", new PluginSet.Description("My Plugin Set", ImmutableSet.of("this is awesome!"))),
+      ImmutableMap.of("en", new PluginSet.Description("My Plugin Set", List.of("this is awesome!"))),
       ImmutableMap.of("standard", "base64image")
     );
     ImmutableSet<PluginSet> pluginSets = ImmutableSet.of(pluginSet, pluginSet2);

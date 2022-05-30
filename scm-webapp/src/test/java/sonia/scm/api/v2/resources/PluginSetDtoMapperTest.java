@@ -72,7 +72,7 @@ class PluginSetDtoMapperTest {
       "my-plugin-set",
       1,
       ImmutableSet.of("scm-git-plugin", "scm-hg-plugin"),
-      ImmutableMap.of("en", new PluginSet.Description("My Plugin Set", ImmutableSet.of("this is awesome!"))),
+      ImmutableMap.of("en", new PluginSet.Description("My Plugin Set", List.of("this is awesome!"))),
       ImmutableMap.of("standard", "base64image")
     );
 
@@ -80,7 +80,7 @@ class PluginSetDtoMapperTest {
       "my-other-plugin-set",
       0,
       ImmutableSet.of("scm-svn-plugin", "scm-hg-plugin"),
-      ImmutableMap.of("en", new PluginSet.Description("My Plugin Set 2", ImmutableSet.of("this is also awesome!"))),
+      ImmutableMap.of("en", new PluginSet.Description("My Plugin Set 2", List.of("this is also awesome!"))),
       ImmutableMap.of("standard", "base64image")
     );
     ImmutableSet<PluginSet> pluginSets = ImmutableSet.of(pluginSet, pluginSet2);
@@ -88,7 +88,7 @@ class PluginSetDtoMapperTest {
     List<PluginSetDto> dtos = mapper.map(pluginSets, availablePlugins, Locale.ENGLISH);
     assertThat(dtos).hasSize(2);
     PluginSetDto first = dtos.get(0);
-    assertThat(first.getSequence()).isEqualTo(0);
+    assertThat(first.getSequence()).isZero();
     assertThat(first.getName()).isEqualTo("My Plugin Set 2");
     assertThat(first.getFeatures()).contains("this is also awesome!");
     assertThat(first.getImages()).isNotEmpty();

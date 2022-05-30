@@ -129,7 +129,7 @@ public final class PluginCenterDto implements Serializable {
     private String name;
 
     @XmlElement(name = "features")
-    private Set<String> features;
+    private List<String> features;
   }
 
   @XmlAccessorType(XmlAccessType.FIELD)

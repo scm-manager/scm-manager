@@ -52,7 +52,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
