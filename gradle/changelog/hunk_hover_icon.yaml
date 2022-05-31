@@ -1,0 +1,2 @@
+- type: added
+  description: new diff view props for controlling hunk/line interaction ([#2047](https://github.com/scm-manager/scm-manager/pull/2047))
