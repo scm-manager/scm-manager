@@ -24,26 +24,27 @@
 
 package sonia.scm.initialization;
 
-import com.cronutils.utils.VisibleForTesting;
 import org.apache.shiro.authc.AuthenticationException;
+import sonia.scm.security.AccessToken;
+import sonia.scm.security.AccessTokenBuilderFactory;
 import sonia.scm.security.AccessTokenCookieIssuer;
-import sonia.scm.security.KeyGenerator;
 import sonia.scm.security.PermissionAssigner;
 import sonia.scm.security.PermissionDescriptor;
 import sonia.scm.web.security.AdministrationContext;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 @Singleton
 public class InitializationAuthenticationService {
 
-  private String initToken;
-  private final Provider<InitializationFinisher> initializationFinisherProvider;
+  private static final String INITIALIZATION_SUBJECT = "SCM-INIT";
+
+  private final AccessTokenBuilderFactory tokenBuilderFactory;
   private final PermissionAssigner permissionAssigner;
   private final AccessTokenCookieIssuer cookieIssuer;
   private final InitializationCookieIssuer initializationCookieIssuer;
@@ -51,20 +52,16 @@ public class InitializationAuthenticationService {
   private final AdministrationContext administrationContext;
 
   @Inject
-  public InitializationAuthenticationService(KeyGenerator generator, Provider<InitializationFinisher> initializationFinisherProvider, PermissionAssigner permissionAssigner, AccessTokenCookieIssuer cookieIssuer, InitializationCookieIssuer initializationCookieIssuer, AdministrationContext administrationContext) {
-    this.initToken = generator.createKey();
-    this.initializationFinisherProvider = initializationFinisherProvider;
+  public InitializationAuthenticationService(AccessTokenBuilderFactory tokenBuilderFactory, PermissionAssigner permissionAssigner, AccessTokenCookieIssuer cookieIssuer, InitializationCookieIssuer initializationCookieIssuer, AdministrationContext administrationContext) {
+    this.tokenBuilderFactory = tokenBuilderFactory;
     this.permissionAssigner = permissionAssigner;
     this.cookieIssuer = cookieIssuer;
     this.initializationCookieIssuer = initializationCookieIssuer;
     this.administrationContext = administrationContext;
   }
 
-  public void validateToken(String token) {
-    if (initializationFinisherProvider.get().isFullyInitialized()) {
-      invalidateToken();
-    }
-    if (token == null || !token.equals(initToken)) {
+  public void validateToken(AccessToken token) {
+    if (token == null || !INITIALIZATION_SUBJECT.equals(token.getSubject())) {
       throw new AuthenticationException("Could not authenticate to initialization realm because of missing or invalid token.");
     }
   }
@@ -77,24 +74,16 @@ public class InitializationAuthenticationService {
   }
 
   public void authenticate(HttpServletRequest request, HttpServletResponse response) {
+    AccessToken initToken =
+      tokenBuilderFactory.create()
+        .subject(INITIALIZATION_SUBJECT)
+        .expiresIn(365, TimeUnit.DAYS)
+        .refreshableFor(0, TimeUnit.SECONDS)
+        .build();
     initializationCookieIssuer.authenticateForInitialization(request, response, initToken);
   }
 
   public void invalidateCookies(HttpServletRequest request, HttpServletResponse response) {
     cookieIssuer.invalidate(request, response);
-  }
-
-  private void invalidateToken() {
-    this.initToken = null;
-  }
-
-  @VisibleForTesting
-  String getInitToken() {
-    return initToken;
-  }
-
-  @VisibleForTesting
-  void setInitToken(String initToken) {
-    this.initToken = initToken;
   }
 }

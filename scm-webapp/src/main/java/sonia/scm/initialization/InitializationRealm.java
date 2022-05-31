@@ -32,6 +32,9 @@ import org.apache.shiro.authc.credential.AllowAllCredentialsMatcher;
 import org.apache.shiro.realm.AuthenticatingRealm;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import sonia.scm.plugin.Extension;
+import sonia.scm.security.AccessToken;
+import sonia.scm.security.AccessTokenResolver;
+import sonia.scm.security.BearerToken;
 import sonia.scm.user.User;
 
 import javax.inject.Inject;
@@ -47,10 +50,12 @@ public class InitializationRealm extends AuthenticatingRealm {
   public static final String INIT_PRINCIPAL = "__SCM_INIT__";
 
   private final InitializationAuthenticationService authenticationService;
+  private final AccessTokenResolver accessTokenResolver;
 
   @Inject
-  public InitializationRealm(InitializationAuthenticationService authenticationService) {
+  public InitializationRealm(InitializationAuthenticationService authenticationService, AccessTokenResolver accessTokenResolver) {
     this.authenticationService = authenticationService;
+    this.accessTokenResolver = accessTokenResolver;
     setAuthenticationTokenClass(InitializationToken.class);
     setCredentialsMatcher(new AllowAllCredentialsMatcher());
   }
@@ -58,7 +63,8 @@ public class InitializationRealm extends AuthenticatingRealm {
   @Override
   protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
     checkArgument(token instanceof InitializationToken, "%s is required", InitializationToken.class);
-    authenticationService.validateToken((String) token.getCredentials());
+    AccessToken accessToken = accessTokenResolver.resolve(BearerToken.valueOf(token.getCredentials().toString()));
+    authenticationService.validateToken(accessToken);
     SimplePrincipalCollection principalCollection = new SimplePrincipalCollection(INIT_PRINCIPAL, REALM);
     principalCollection.add(new User(INIT_PRINCIPAL), REALM);
     authenticationService.setPermissions();

@@ -83,7 +83,7 @@ export const extractXsrfTokenFromCookie = (cookieString?: string) => {
     const cookies = cookieString.split(";");
     for (const c of cookies) {
       const parts = c.trim().split("=");
-      if (parts[0] === "X-Bearer-Token") {
+      if (parts[0] === "X-Bearer-Token" || parts[0] === "X-SCM-Init-Token") {
         return extractXsrfTokenFromJwt(parts[1]);
       }
     }

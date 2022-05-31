@@ -95,11 +95,11 @@ public final class DefaultAccessTokenCookieIssuer implements AccessTokenCookieIs
    *
    * @param request http servlet request
    * @param response http servlet response
-   * @param token initialization access token
+   * @param accessToken initialization access token
    */
-  public void authenticateForInitialization(HttpServletRequest request, HttpServletResponse response, String token) {
-    LOG.trace("create and attach cookie for initialization access token {}", token);
-    Cookie c = new Cookie(INIT_TOKEN_HEADER, token);
+  public void authenticateForInitialization(HttpServletRequest request, HttpServletResponse response, AccessToken accessToken) {
+    LOG.trace("create and attach cookie for initialization access token {}", accessToken.getId());
+    Cookie c = new Cookie(INIT_TOKEN_HEADER, accessToken.compact());
     c.setPath(contextPath(request));
     c.setMaxAge(999999999);
     c.setHttpOnly(isHttpOnly());

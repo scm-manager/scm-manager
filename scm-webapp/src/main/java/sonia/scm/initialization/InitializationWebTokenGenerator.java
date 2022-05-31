@@ -34,7 +34,7 @@ import javax.servlet.http.HttpServletRequest;
 @Extension
 public class InitializationWebTokenGenerator implements WebTokenGenerator {
 
-  public static final String INIT_TOKEN_HEADER = "SCM-Init-Token";
+  public static final String INIT_TOKEN_HEADER = "X-SCM-Init-Token";
 
   @Override
   public AuthenticationToken createToken(HttpServletRequest request) {
