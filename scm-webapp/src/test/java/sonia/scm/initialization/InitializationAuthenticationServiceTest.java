@@ -27,20 +27,20 @@ package sonia.scm.initialization;
 import org.apache.shiro.authc.AuthenticationException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.security.AccessToken;
+import sonia.scm.security.AccessTokenBuilder;
+import sonia.scm.security.AccessTokenBuilderFactory;
 import sonia.scm.security.AccessTokenCookieIssuer;
-import sonia.scm.security.KeyGenerator;
-import sonia.scm.security.PermissionAssigner;
 import sonia.scm.web.security.AdministrationContext;
 import sonia.scm.web.security.PrivilegedAction;
 
-import javax.inject.Provider;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -50,16 +50,12 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class InitializationAuthenticationServiceTest {
 
-  private static final String INIT_TOKEN = "my_init_token";
-
   @Mock
-  private KeyGenerator generator;
+  private AccessTokenBuilderFactory tokenBuilderFactory;
+  @Mock(answer = Answers.RETURNS_SELF)
+  private AccessTokenBuilder tokenBuilder;
   @Mock
-  private Provider<InitializationFinisher> initializationFinisherProvider;
-  @Mock
-  private InitializationFinisher initializationFinisher;
-  @Mock
-  private PermissionAssigner permissionAssigner;
+  private AccessToken token;
   @Mock
   private AccessTokenCookieIssuer cookieIssuer;
   @Mock
@@ -71,23 +67,17 @@ class InitializationAuthenticationServiceTest {
   private InitializationAuthenticationService service;
 
   @Test
-  void shouldInvalidateTokenIfInitializationFinished() {
-    when(initializationFinisherProvider.get()).thenReturn(initializationFinisher);
-    when(initializationFinisher.isFullyInitialized()).thenReturn(true);
+  void shouldNotThrowExceptionIfTokenIsValid() {
+    when(token.getSubject()).thenReturn("SCM-INIT");
 
-    assertThrows(AuthenticationException.class, () -> service.validateToken("abcdef"));
-
-    assertThat(service.getInitToken()).isNull();
+    service.validateToken(token);
   }
 
   @Test
-  void shouldNotThrowExceptionIfTokenIsValid() {
-    when(initializationFinisherProvider.get()).thenReturn(initializationFinisher);
+  void shouldThrowExceptionIfTokenIsInvalid() {
+    when(token.getSubject()).thenReturn("FAKE");
 
-    service.setInitToken(INIT_TOKEN);
-    when(initializationFinisher.isFullyInitialized()).thenReturn(false);
-
-    service.validateToken(INIT_TOKEN);
+    assertThrows(AuthenticationException.class, () -> service.validateToken(token));
   }
 
   @Test
@@ -99,14 +89,18 @@ class InitializationAuthenticationServiceTest {
 
   @Test
   void shouldAuthenticate() {
-    service.setInitToken(INIT_TOKEN);
-
     HttpServletRequest request = mock(HttpServletRequest.class);
     HttpServletResponse response = mock(HttpServletResponse.class);
 
+    when(tokenBuilderFactory.create()).thenReturn(tokenBuilder);
+    AccessToken accessToken = mock(AccessToken.class);
+    when(tokenBuilder.build()).thenReturn(accessToken);
+
     service.authenticate(request, response);
 
-    verify(initializationCookieIssuer).authenticateForInitialization(request, response, INIT_TOKEN);
+    verify(initializationCookieIssuer)
+      .authenticateForInitialization(request, response, accessToken);
+    verify(tokenBuilder).subject("SCM-INIT");
   }
 
   @Test

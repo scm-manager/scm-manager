@@ -24,6 +24,8 @@
 
 package sonia.scm.initialization;
 
+import sonia.scm.security.AccessToken;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -40,7 +42,7 @@ public interface InitializationCookieIssuer {
    *
    * @param request http servlet request
    * @param response http servlet response
-   * @param token initialization access token
+   * @param accessToken initialization access token
    */
-  void authenticateForInitialization(HttpServletRequest request, HttpServletResponse response, String token);
+  void authenticateForInitialization(HttpServletRequest request, HttpServletResponse response, AccessToken accessToken);
 }
