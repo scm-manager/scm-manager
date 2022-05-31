@@ -21141,7 +21141,7 @@ exports[`Storyshots Repositories/Diff Binaries 1`] = `
 >
   <div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="main-java"
     >
       <div
@@ -21151,7 +21151,7 @@ exports[`Storyshots Repositories/Diff Binaries 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="Main.java"
           >
@@ -21230,7 +21230,7 @@ exports[`Storyshots Repositories/Diff Binaries 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -21362,7 +21362,7 @@ exports[`Storyshots Repositories/Diff Binaries 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 fFTYsI panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 eXWwaR panel is-size-6"
       id="conflict-png"
     >
       <div
@@ -21372,7 +21372,7 @@ exports[`Storyshots Repositories/Diff Binaries 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="conflict.png"
           >
@@ -21437,7 +21437,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
     </button>
     <div>
       <div
-        className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+        className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
         id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
       >
         <div
@@ -21447,7 +21447,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
             className="level is-flex-wrap-wrap"
           >
             <div
-              className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+              className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
               onClick={[Function]}
               title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
             >
@@ -21527,7 +21527,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
             </colgroup>
             <span />
             <tbody
-              className="diff-hunk"
+              className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
             >
               <tr
                 className="diff-line"
@@ -22054,7 +22054,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
         </div>
       </div>
       <div
-        className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+        className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
         id="src-main-js-changenotification-tsx"
       >
         <div
@@ -22064,7 +22064,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
             className="level is-flex-wrap-wrap"
           >
             <div
-              className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+              className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
               onClick={[Function]}
               title="src/main/js/ChangeNotification.tsx"
             >
@@ -22168,7 +22168,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
               </tr>
             </tbody>
             <tbody
-              className="diff-hunk"
+              className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
             >
               <tr
                 className="diff-line"
@@ -22395,7 +22395,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
               </tr>
             </tbody>
             <tbody
-              className="diff-hunk"
+              className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
             >
               <tr
                 className="diff-line"
@@ -23008,7 +23008,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
         </div>
       </div>
       <div
-        className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+        className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
         id="src-main-resources-locales-de-plugins-json"
       >
         <div
@@ -23018,7 +23018,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
             className="level is-flex-wrap-wrap"
           >
             <div
-              className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+              className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
               onClick={[Function]}
               title="src/main/resources/locales/de/plugins.json"
             >
@@ -23133,7 +23133,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
               </tr>
             </tbody>
             <tbody
-              className="diff-hunk"
+              className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
             >
               <tr
                 className="diff-line"
@@ -23533,7 +23533,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
         </div>
       </div>
       <div
-        className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+        className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
         id="src-main-resources-locales-en-plugins-json"
       >
         <div
@@ -23543,7 +23543,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
             className="level is-flex-wrap-wrap"
           >
             <div
-              className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+              className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
               onClick={[Function]}
               title="src/main/resources/locales/en/plugins.json"
             >
@@ -23658,7 +23658,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
               </tr>
             </tbody>
             <tbody
-              className="diff-hunk"
+              className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
             >
               <tr
                 className="diff-line"
@@ -24058,7 +24058,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
         </div>
       </div>
       <div
-        className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+        className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
         id="src-test-java-com-cloudogu-scm-review-events-clienttest-java"
       >
         <div
@@ -24068,7 +24068,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
             className="level is-flex-wrap-wrap"
           >
             <div
-              className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+              className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
               onClick={[Function]}
               title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
             >
@@ -24172,7 +24172,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
               </tr>
             </tbody>
             <tbody
-              className="diff-hunk"
+              className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
             >
               <tr
                 className="diff-line"
@@ -24738,7 +24738,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
               </tr>
             </tbody>
             <tbody
-              className="diff-hunk"
+              className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
             >
               <tr
                 className="diff-line"
@@ -24988,7 +24988,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
               </tr>
             </tbody>
             <tbody
-              className="diff-hunk"
+              className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
             >
               <tr
                 className="diff-line"
@@ -25273,7 +25273,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
         </div>
       </div>
       <div
-        className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+        className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
         id="main-java"
       >
         <div
@@ -25283,7 +25283,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
             className="level is-flex-wrap-wrap"
           >
             <div
-              className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+              className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
               onClick={[Function]}
               title="Main.java"
             >
@@ -25363,7 +25363,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
             </colgroup>
             <span />
             <tbody
-              className="diff-hunk"
+              className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
             >
               <tr
                 className="diff-line"
@@ -25848,7 +25848,7 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
 >
   <div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 fFTYsI panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 eXWwaR panel is-size-6"
       id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
     >
       <div
@@ -25858,7 +25858,7 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
           >
@@ -25960,7 +25960,7 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 fFTYsI panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 eXWwaR panel is-size-6"
       id="src-main-js-changenotification-tsx"
     >
       <div
@@ -25970,7 +25970,7 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/js/ChangeNotification.tsx"
           >
@@ -26072,7 +26072,7 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 fFTYsI panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 eXWwaR panel is-size-6"
       id="src-main-resources-locales-de-plugins-json"
     >
       <div
@@ -26082,7 +26082,7 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/resources/locales/de/plugins.json"
           >
@@ -26184,7 +26184,7 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 fFTYsI panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 eXWwaR panel is-size-6"
       id="src-main-resources-locales-en-plugins-json"
     >
       <div
@@ -26194,7 +26194,7 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/resources/locales/en/plugins.json"
           >
@@ -26296,7 +26296,7 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 fFTYsI panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 eXWwaR panel is-size-6"
       id="src-test-java-com-cloudogu-scm-review-events-clienttest-java"
     >
       <div
@@ -26306,7 +26306,7 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
           >
@@ -26408,7 +26408,7 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 fFTYsI panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 eXWwaR panel is-size-6"
       id="main-java"
     >
       <div
@@ -26418,7 +26418,7 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="Main.java"
           >
@@ -26529,7 +26529,7 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
 >
   <div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 fFTYsI panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 eXWwaR panel is-size-6"
       id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
     >
       <div
@@ -26539,7 +26539,7 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
           >
@@ -26603,7 +26603,7 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="src-main-js-changenotification-tsx"
     >
       <div
@@ -26613,7 +26613,7 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/js/ChangeNotification.tsx"
           >
@@ -26692,7 +26692,7 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -26883,7 +26883,7 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -27460,7 +27460,7 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="src-main-resources-locales-de-plugins-json"
     >
       <div
@@ -27470,7 +27470,7 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/resources/locales/de/plugins.json"
           >
@@ -27549,7 +27549,7 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -27913,7 +27913,7 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="src-main-resources-locales-en-plugins-json"
     >
       <div
@@ -27923,7 +27923,7 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/resources/locales/en/plugins.json"
           >
@@ -28002,7 +28002,7 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -28366,7 +28366,7 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 fFTYsI panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 eXWwaR panel is-size-6"
       id="src-test-java-com-cloudogu-scm-review-events-clienttest-java"
     >
       <div
@@ -28376,7 +28376,7 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
           >
@@ -28440,7 +28440,7 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 fFTYsI panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 eXWwaR panel is-size-6"
       id="main-java"
     >
       <div
@@ -28450,7 +28450,7 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="Main.java"
           >
@@ -28604,7 +28604,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
 >
   <div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
     >
       <div
@@ -28614,7 +28614,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
           >
@@ -28694,7 +28694,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
           </colgroup>
           <span />
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -29221,7 +29221,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="src-main-js-changenotification-tsx"
     >
       <div
@@ -29231,7 +29231,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/js/ChangeNotification.tsx"
           >
@@ -29335,7 +29335,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -29562,7 +29562,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -30175,7 +30175,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="src-main-resources-locales-de-plugins-json"
     >
       <div
@@ -30185,7 +30185,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/resources/locales/de/plugins.json"
           >
@@ -30300,7 +30300,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -30700,7 +30700,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="src-main-resources-locales-en-plugins-json"
     >
       <div
@@ -30710,7 +30710,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/resources/locales/en/plugins.json"
           >
@@ -30825,7 +30825,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -31225,7 +31225,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="src-test-java-com-cloudogu-scm-review-events-clienttest-java"
     >
       <div
@@ -31235,7 +31235,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
           >
@@ -31339,7 +31339,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -31905,7 +31905,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -32155,7 +32155,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -32440,7 +32440,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="main-java"
     >
       <div
@@ -32450,7 +32450,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="Main.java"
           >
@@ -32530,7 +32530,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
           </colgroup>
           <span />
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -33014,7 +33014,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
 >
   <div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
     >
       <div
@@ -33024,7 +33024,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
           >
@@ -33104,7 +33104,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
           </colgroup>
           <span />
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -33631,7 +33631,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="src-main-js-changenotification-tsx"
     >
       <div
@@ -33641,7 +33641,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/js/ChangeNotification.tsx"
           >
@@ -33745,7 +33745,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -33972,7 +33972,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -34585,7 +34585,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="src-main-resources-locales-de-plugins-json"
     >
       <div
@@ -34595,7 +34595,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/resources/locales/de/plugins.json"
           >
@@ -34710,7 +34710,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -35110,7 +35110,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="src-main-resources-locales-en-plugins-json"
     >
       <div
@@ -35120,7 +35120,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/resources/locales/en/plugins.json"
           >
@@ -35235,7 +35235,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -35635,7 +35635,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="src-test-java-com-cloudogu-scm-review-events-clienttest-java"
     >
       <div
@@ -35645,7 +35645,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
           >
@@ -35749,7 +35749,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -36315,7 +36315,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -36565,7 +36565,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -36850,7 +36850,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="main-java"
     >
       <div
@@ -36860,7 +36860,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="Main.java"
           >
@@ -36940,7 +36940,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
           </colgroup>
           <span />
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -37424,7 +37424,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
 >
   <div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
     >
       <div
@@ -37434,7 +37434,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
           >
@@ -37517,7 +37517,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -38008,7 +38008,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="src-main-js-changenotification-tsx"
     >
       <div
@@ -38018,7 +38018,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/js/ChangeNotification.tsx"
           >
@@ -38101,7 +38101,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -38292,7 +38292,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -38869,7 +38869,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="src-main-resources-locales-de-plugins-json"
     >
       <div
@@ -38879,7 +38879,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/resources/locales/de/plugins.json"
           >
@@ -38962,7 +38962,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -39326,7 +39326,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="src-main-resources-locales-en-plugins-json"
     >
       <div
@@ -39336,7 +39336,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/resources/locales/en/plugins.json"
           >
@@ -39419,7 +39419,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -39783,7 +39783,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="src-test-java-com-cloudogu-scm-review-events-clienttest-java"
     >
       <div
@@ -39793,7 +39793,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
           >
@@ -39876,7 +39876,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -40384,7 +40384,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -40598,7 +40598,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -40847,7 +40847,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="main-java"
     >
       <div
@@ -40857,7 +40857,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="Main.java"
           >
@@ -40940,7 +40940,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -41388,7 +41388,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
 >
   <div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
     >
       <div
@@ -41398,7 +41398,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
           >
@@ -41493,7 +41493,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -41984,7 +41984,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="src-main-js-changenotification-tsx"
     >
       <div
@@ -41994,7 +41994,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/js/ChangeNotification.tsx"
           >
@@ -42089,7 +42089,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -42280,7 +42280,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -42857,7 +42857,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="src-main-resources-locales-de-plugins-json"
     >
       <div
@@ -42867,7 +42867,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/resources/locales/de/plugins.json"
           >
@@ -42962,7 +42962,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -43326,7 +43326,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="src-main-resources-locales-en-plugins-json"
     >
       <div
@@ -43336,7 +43336,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/resources/locales/en/plugins.json"
           >
@@ -43431,7 +43431,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -43795,7 +43795,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="src-test-java-com-cloudogu-scm-review-events-clienttest-java"
     >
       <div
@@ -43805,7 +43805,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
           >
@@ -43900,7 +43900,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -44408,7 +44408,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -44622,7 +44622,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -44871,7 +44871,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="main-java"
     >
       <div
@@ -44881,7 +44881,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="Main.java"
           >
@@ -44976,7 +44976,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -45418,13 +45418,13 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
 </div>
 `;
 
-exports[`Storyshots Repositories/Diff Hunks 1`] = `
+exports[`Storyshots Repositories/Diff Highlight line on hover 1`] = `
 <div
   className="Diffstories__Container-sc-28kjjp-0 dmSnCH"
 >
   <div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="src-main-java-com-cloudogu-scm-review-pullrequest-service-defaultpullrequestservice-java"
     >
       <div
@@ -45434,7 +45434,7 @@ exports[`Storyshots Repositories/Diff Hunks 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/java/com/cloudogu/scm/review/pullrequest/service/DefaultPullRequestService.java"
           >
@@ -45513,7 +45513,7 @@ exports[`Storyshots Repositories/Diff Hunks 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 hAJfJS"
           >
             <tr
               className="diff-line"
@@ -45727,7 +45727,7 @@ exports[`Storyshots Repositories/Diff Hunks 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 hAJfJS"
           >
             <tr
               className="diff-line"
@@ -45918,7 +45918,1695 @@ exports[`Storyshots Repositories/Diff Hunks 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 hAJfJS"
+          >
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                211
+              </td>
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                214
+              </td>
+              <td
+                className="diff-code diff-code-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                    approver.stream()
+              </td>
+            </tr>
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                212
+              </td>
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                215
+              </td>
+              <td
+                className="diff-code diff-code-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                      .filter(recipient -&gt; user.getId().equals(recipient))
+              </td>
+            </tr>
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                213
+              </td>
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                216
+              </td>
+              <td
+                className="diff-code diff-code-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                      .findFirst()
+              </td>
+            </tr>
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-delete"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                214
+              </td>
+              <td
+                className="diff-gutter diff-gutter-delete"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              />
+              <td
+                className="diff-code diff-code-delete"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                      .ifPresent(pullRequest::removeApprover);
+              </td>
+            </tr>
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-delete"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                215
+              </td>
+              <td
+                className="diff-gutter diff-gutter-delete"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              />
+              <td
+                className="diff-code diff-code-delete"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                    getStore(repository).update(pullRequest);
+              </td>
+            </tr>
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              />
+              <td
+                className="diff-gutter diff-gutter-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                217
+              </td>
+              <td
+                className="diff-code diff-code-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                      .ifPresent(
+              </td>
+            </tr>
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              />
+              <td
+                className="diff-gutter diff-gutter-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                218
+              </td>
+              <td
+                className="diff-code diff-code-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                        approval -&gt; {
+              </td>
+            </tr>
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              />
+              <td
+                className="diff-gutter diff-gutter-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                219
+              </td>
+              <td
+                className="diff-code diff-code-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                          pullRequest.removeApprover(approval);
+              </td>
+            </tr>
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              />
+              <td
+                className="diff-gutter diff-gutter-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                220
+              </td>
+              <td
+                className="diff-code diff-code-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                          getStore(repository).update(pullRequest);
+              </td>
+            </tr>
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              />
+              <td
+                className="diff-gutter diff-gutter-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                221
+              </td>
+              <td
+                className="diff-code diff-code-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                          eventBus.post(new PullRequestApprovalEvent(repository, pullRequest, APPROVAL_REMOVED));
+              </td>
+            </tr>
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              />
+              <td
+                className="diff-gutter diff-gutter-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                222
+              </td>
+              <td
+                className="diff-code diff-code-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                        });
+              </td>
+            </tr>
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                216
+              </td>
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                223
+              </td>
+              <td
+                className="diff-code diff-code-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                  }
+              </td>
+            </tr>
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                217
+              </td>
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                224
+              </td>
+              <td
+                className="diff-code diff-code-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                 
+              </td>
+            </tr>
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                218
+              </td>
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                225
+              </td>
+              <td
+                className="diff-code diff-code-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                  @Override
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Storyshots Repositories/Diff Hunk gutter hover icon 1`] = `
+<div
+  className="Diffstories__Container-sc-28kjjp-0 dmSnCH"
+>
+  <div>
+    <div
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      id="src-main-java-com-cloudogu-scm-review-pullrequest-service-defaultpullrequestservice-java"
+    >
+      <div
+        className="panel-heading"
+      >
+        <div
+          className="level is-flex-wrap-wrap"
+        >
+          <div
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            onClick={[Function]}
+            title="src/main/java/com/cloudogu/scm/review/pullrequest/service/DefaultPullRequestService.java"
+          >
+            <i
+              aria-label="diff.hideContent"
+              className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
+            />
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+            >
+              src/main/java/com/cloudogu/scm/review/pullrequest/service/DefaultPullRequestService.java
+            </h4>
+            <span
+              className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
+            >
+              modify
+            </span>
+          </div>
+          <div
+            className="level-right is-flex ml-auto"
+          >
+            <div
+              className="buttons"
+            >
+              <div
+                className="Tooltip__TooltipWrapper-sc-fmp853-0 fJWuAF"
+                onClick={[Function]}
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                <button
+                  aria-label="diff.sideBySide"
+                  className="DiffButton__Button-sc-18d99hb-0 bNUZSb button is-clickable"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-columns"
+                  />
+                </button>
+              </div>
+              <div
+                className="Tooltip__TooltipWrapper-sc-fmp853-0 fJWuAF"
+                onClick={[Function]}
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                <button
+                  aria-label="diff.fullscreen.open"
+                  className="OpenInFullscreenButton__Button-sc-hpt3du-0 eYNgfL button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-search-plus"
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="panel-block p-0"
+      >
+        <table
+          className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
+          onMouseDown={[Function]}
+        >
+          <colgroup>
+            <col
+              className="diff-gutter-col"
+            />
+            <col
+              className="diff-gutter-col"
+            />
+            <col />
+          </colgroup>
+          <tbody
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 hdvkJC"
+          >
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                25
+              </td>
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                25
+              </td>
+              <td
+                className="diff-code diff-code-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                import java.util.Set;
+              </td>
+            </tr>
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                26
+              </td>
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                26
+              </td>
+              <td
+                className="diff-code diff-code-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                import java.util.stream.Collectors;
+              </td>
+            </tr>
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                27
+              </td>
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                27
+              </td>
+              <td
+                className="diff-code diff-code-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                 
+              </td>
+            </tr>
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              />
+              <td
+                className="diff-gutter diff-gutter-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                28
+              </td>
+              <td
+                className="diff-code diff-code-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                import static com.cloudogu.scm.review.pullrequest.service.PullRequestApprovalEvent.ApprovalCause.APPROVAL_REMOVED;
+              </td>
+            </tr>
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              />
+              <td
+                className="diff-gutter diff-gutter-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                29
+              </td>
+              <td
+                className="diff-code diff-code-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                import static com.cloudogu.scm.review.pullrequest.service.PullRequestApprovalEvent.ApprovalCause.APPROVED;
+              </td>
+            </tr>
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                28
+              </td>
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                30
+              </td>
+              <td
+                className="diff-code diff-code-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                import static com.cloudogu.scm.review.pullrequest.service.PullRequestStatus.MERGED;
+              </td>
+            </tr>
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                29
+              </td>
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                31
+              </td>
+              <td
+                className="diff-code diff-code-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                import static com.cloudogu.scm.review.pullrequest.service.PullRequestStatus.OPEN;
+              </td>
+            </tr>
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                30
+              </td>
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                32
+              </td>
+              <td
+                className="diff-code diff-code-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                import static com.cloudogu.scm.review.pullrequest.service.PullRequestStatus.REJECTED;
+              </td>
+            </tr>
+          </tbody>
+          <tbody
+            className="diff-decoration"
+          >
+            <tr>
+              <td
+                className="diff-decoration-content"
+                colSpan={3}
+              >
+                <hr
+                  className="my-2"
+                />
+              </td>
+            </tr>
+          </tbody>
+          <tbody
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 hdvkJC"
+          >
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                200
+              </td>
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                202
+              </td>
+              <td
+                className="diff-code diff-code-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                    PullRequest pullRequest = getPullRequestFromStore(repository, pullRequestId);
+              </td>
+            </tr>
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                201
+              </td>
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                203
+              </td>
+              <td
+                className="diff-code diff-code-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                    pullRequest.addApprover(user.getId());
+              </td>
+            </tr>
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                202
+              </td>
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                204
+              </td>
+              <td
+                className="diff-code diff-code-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                    getStore(repository).update(pullRequest);
+              </td>
+            </tr>
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              />
+              <td
+                className="diff-gutter diff-gutter-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                205
+              </td>
+              <td
+                className="diff-code diff-code-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                    eventBus.post(new PullRequestApprovalEvent(repository, pullRequest, APPROVED));
+              </td>
+            </tr>
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                203
+              </td>
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                206
+              </td>
+              <td
+                className="diff-code diff-code-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                  }
+              </td>
+            </tr>
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                204
+              </td>
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                207
+              </td>
+              <td
+                className="diff-code diff-code-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                 
+              </td>
+            </tr>
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                205
+              </td>
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                208
+              </td>
+              <td
+                className="diff-code diff-code-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                  @Override
+              </td>
+            </tr>
+          </tbody>
+          <tbody
+            className="diff-decoration"
+          >
+            <tr>
+              <td
+                className="diff-decoration-content"
+                colSpan={3}
+              >
+                <hr
+                  className="my-2"
+                />
+              </td>
+            </tr>
+          </tbody>
+          <tbody
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 hdvkJC"
+          >
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                211
+              </td>
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                214
+              </td>
+              <td
+                className="diff-code diff-code-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                    approver.stream()
+              </td>
+            </tr>
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                212
+              </td>
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                215
+              </td>
+              <td
+                className="diff-code diff-code-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                      .filter(recipient -&gt; user.getId().equals(recipient))
+              </td>
+            </tr>
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                213
+              </td>
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                216
+              </td>
+              <td
+                className="diff-code diff-code-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                      .findFirst()
+              </td>
+            </tr>
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-delete"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                214
+              </td>
+              <td
+                className="diff-gutter diff-gutter-delete"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              />
+              <td
+                className="diff-code diff-code-delete"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                      .ifPresent(pullRequest::removeApprover);
+              </td>
+            </tr>
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-delete"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                215
+              </td>
+              <td
+                className="diff-gutter diff-gutter-delete"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              />
+              <td
+                className="diff-code diff-code-delete"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                    getStore(repository).update(pullRequest);
+              </td>
+            </tr>
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              />
+              <td
+                className="diff-gutter diff-gutter-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                217
+              </td>
+              <td
+                className="diff-code diff-code-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                      .ifPresent(
+              </td>
+            </tr>
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              />
+              <td
+                className="diff-gutter diff-gutter-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                218
+              </td>
+              <td
+                className="diff-code diff-code-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                        approval -&gt; {
+              </td>
+            </tr>
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              />
+              <td
+                className="diff-gutter diff-gutter-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                219
+              </td>
+              <td
+                className="diff-code diff-code-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                          pullRequest.removeApprover(approval);
+              </td>
+            </tr>
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              />
+              <td
+                className="diff-gutter diff-gutter-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                220
+              </td>
+              <td
+                className="diff-code diff-code-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                          getStore(repository).update(pullRequest);
+              </td>
+            </tr>
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              />
+              <td
+                className="diff-gutter diff-gutter-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                221
+              </td>
+              <td
+                className="diff-code diff-code-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                          eventBus.post(new PullRequestApprovalEvent(repository, pullRequest, APPROVAL_REMOVED));
+              </td>
+            </tr>
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              />
+              <td
+                className="diff-gutter diff-gutter-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                222
+              </td>
+              <td
+                className="diff-code diff-code-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                        });
+              </td>
+            </tr>
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                216
+              </td>
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                223
+              </td>
+              <td
+                className="diff-code diff-code-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                  }
+              </td>
+            </tr>
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                217
+              </td>
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                224
+              </td>
+              <td
+                className="diff-code diff-code-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                 
+              </td>
+            </tr>
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                218
+              </td>
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                225
+              </td>
+              <td
+                className="diff-code diff-code-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                  @Override
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Storyshots Repositories/Diff Hunks 1`] = `
+<div
+  className="Diffstories__Container-sc-28kjjp-0 dmSnCH"
+>
+  <div>
+    <div
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      id="src-main-java-com-cloudogu-scm-review-pullrequest-service-defaultpullrequestservice-java"
+    >
+      <div
+        className="panel-heading"
+      >
+        <div
+          className="level is-flex-wrap-wrap"
+        >
+          <div
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            onClick={[Function]}
+            title="src/main/java/com/cloudogu/scm/review/pullrequest/service/DefaultPullRequestService.java"
+          >
+            <i
+              aria-label="diff.hideContent"
+              className="fas fa-fw fa-angle-down has-text-inherit"
+              onKeyPress={[Function]}
+            />
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+            >
+              src/main/java/com/cloudogu/scm/review/pullrequest/service/DefaultPullRequestService.java
+            </h4>
+            <span
+              className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
+            >
+              modify
+            </span>
+          </div>
+          <div
+            className="level-right is-flex ml-auto"
+          >
+            <div
+              className="buttons"
+            >
+              <div
+                className="Tooltip__TooltipWrapper-sc-fmp853-0 fJWuAF"
+                onClick={[Function]}
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                <button
+                  aria-label="diff.sideBySide"
+                  className="DiffButton__Button-sc-18d99hb-0 bNUZSb button is-clickable"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-columns"
+                  />
+                </button>
+              </div>
+              <div
+                className="Tooltip__TooltipWrapper-sc-fmp853-0 fJWuAF"
+                onClick={[Function]}
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                <button
+                  aria-label="diff.fullscreen.open"
+                  className="OpenInFullscreenButton__Button-sc-hpt3du-0 eYNgfL button"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-search-plus"
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="panel-block p-0"
+      >
+        <table
+          className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
+          onMouseDown={[Function]}
+        >
+          <colgroup>
+            <col
+              className="diff-gutter-col"
+            />
+            <col
+              className="diff-gutter-col"
+            />
+            <col />
+          </colgroup>
+          <tbody
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+          >
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                25
+              </td>
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                25
+              </td>
+              <td
+                className="diff-code diff-code-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                import java.util.Set;
+              </td>
+            </tr>
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                26
+              </td>
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                26
+              </td>
+              <td
+                className="diff-code diff-code-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                import java.util.stream.Collectors;
+              </td>
+            </tr>
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                27
+              </td>
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                27
+              </td>
+              <td
+                className="diff-code diff-code-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                 
+              </td>
+            </tr>
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              />
+              <td
+                className="diff-gutter diff-gutter-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                28
+              </td>
+              <td
+                className="diff-code diff-code-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                import static com.cloudogu.scm.review.pullrequest.service.PullRequestApprovalEvent.ApprovalCause.APPROVAL_REMOVED;
+              </td>
+            </tr>
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              />
+              <td
+                className="diff-gutter diff-gutter-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                29
+              </td>
+              <td
+                className="diff-code diff-code-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                import static com.cloudogu.scm.review.pullrequest.service.PullRequestApprovalEvent.ApprovalCause.APPROVED;
+              </td>
+            </tr>
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                28
+              </td>
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                30
+              </td>
+              <td
+                className="diff-code diff-code-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                import static com.cloudogu.scm.review.pullrequest.service.PullRequestStatus.MERGED;
+              </td>
+            </tr>
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                29
+              </td>
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                31
+              </td>
+              <td
+                className="diff-code diff-code-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                import static com.cloudogu.scm.review.pullrequest.service.PullRequestStatus.OPEN;
+              </td>
+            </tr>
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                30
+              </td>
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                32
+              </td>
+              <td
+                className="diff-code diff-code-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                import static com.cloudogu.scm.review.pullrequest.service.PullRequestStatus.REJECTED;
+              </td>
+            </tr>
+          </tbody>
+          <tbody
+            className="diff-decoration"
+          >
+            <tr>
+              <td
+                className="diff-decoration-content"
+                colSpan={3}
+              >
+                <hr
+                  className="my-2"
+                />
+              </td>
+            </tr>
+          </tbody>
+          <tbody
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+          >
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                200
+              </td>
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                202
+              </td>
+              <td
+                className="diff-code diff-code-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                    PullRequest pullRequest = getPullRequestFromStore(repository, pullRequestId);
+              </td>
+            </tr>
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                201
+              </td>
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                203
+              </td>
+              <td
+                className="diff-code diff-code-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                    pullRequest.addApprover(user.getId());
+              </td>
+            </tr>
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                202
+              </td>
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                204
+              </td>
+              <td
+                className="diff-code diff-code-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                    getStore(repository).update(pullRequest);
+              </td>
+            </tr>
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              />
+              <td
+                className="diff-gutter diff-gutter-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                205
+              </td>
+              <td
+                className="diff-code diff-code-insert"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                    eventBus.post(new PullRequestApprovalEvent(repository, pullRequest, APPROVED));
+              </td>
+            </tr>
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                203
+              </td>
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                206
+              </td>
+              <td
+                className="diff-code diff-code-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                  }
+              </td>
+            </tr>
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                204
+              </td>
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                207
+              </td>
+              <td
+                className="diff-code diff-code-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                 
+              </td>
+            </tr>
+            <tr
+              className="diff-line"
+            >
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                205
+              </td>
+              <td
+                className="diff-gutter diff-gutter-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                208
+              </td>
+              <td
+                className="diff-code diff-code-normal"
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+              >
+                  @Override
+              </td>
+            </tr>
+          </tbody>
+          <tbody
+            className="diff-decoration"
+          >
+            <tr>
+              <td
+                className="diff-decoration-content"
+                colSpan={3}
+              >
+                <hr
+                  className="my-2"
+                />
+              </td>
+            </tr>
+          </tbody>
+          <tbody
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -46268,7 +47956,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
 >
   <div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
     >
       <div
@@ -46278,7 +47966,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
           >
@@ -46357,7 +48045,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -46860,7 +48548,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="src-main-js-changenotification-tsx"
     >
       <div
@@ -46870,7 +48558,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/js/ChangeNotification.tsx"
           >
@@ -46949,7 +48637,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -47152,7 +48840,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -47729,7 +49417,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="src-main-resources-locales-de-plugins-json"
     >
       <div
@@ -47739,7 +49427,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/resources/locales/de/plugins.json"
           >
@@ -47818,7 +49506,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -48182,7 +49870,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="src-main-resources-locales-en-plugins-json"
     >
       <div
@@ -48192,7 +49880,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/resources/locales/en/plugins.json"
           >
@@ -48271,7 +49959,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -48635,7 +50323,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="src-test-java-com-cloudogu-scm-review-events-clienttest-java"
     >
       <div
@@ -48645,7 +50333,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
           >
@@ -48724,7 +50412,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -49232,7 +50920,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -49446,7 +51134,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -49695,7 +51383,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="main-java"
     >
       <div
@@ -49705,7 +51393,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="Main.java"
           >
@@ -49784,7 +51472,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -50244,7 +51932,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
 >
   <div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
     >
       <div
@@ -50254,7 +51942,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
           >
@@ -50333,7 +52021,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0"
           >
             <tr
               className="diff-line"
@@ -50864,7 +52552,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="src-main-js-changenotification-tsx"
     >
       <div
@@ -50874,7 +52562,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/js/ChangeNotification.tsx"
           >
@@ -50953,7 +52641,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0"
           >
             <tr
               className="diff-line"
@@ -51158,7 +52846,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0"
           >
             <tr
               className="diff-line"
@@ -51783,7 +53471,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="src-main-resources-locales-de-plugins-json"
     >
       <div
@@ -51793,7 +53481,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/resources/locales/de/plugins.json"
           >
@@ -51872,7 +53560,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0"
           >
             <tr
               className="diff-line"
@@ -52266,7 +53954,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="src-main-resources-locales-en-plugins-json"
     >
       <div
@@ -52276,7 +53964,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/resources/locales/en/plugins.json"
           >
@@ -52355,7 +54043,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0"
           >
             <tr
               className="diff-line"
@@ -52749,7 +54437,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="src-test-java-com-cloudogu-scm-review-events-clienttest-java"
     >
       <div
@@ -52759,7 +54447,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
           >
@@ -52838,7 +54526,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0"
           >
             <tr
               className="diff-line"
@@ -53386,7 +55074,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0"
           >
             <tr
               className="diff-line"
@@ -53616,7 +55304,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0"
           >
             <tr
               className="diff-line"
@@ -53885,7 +55573,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="main-java"
     >
       <div
@@ -53895,7 +55583,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="Main.java"
           >
@@ -53974,7 +55662,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0"
           >
             <tr
               className="diff-line"
@@ -54458,7 +56146,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
 >
   <div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
     >
       <div
@@ -54468,7 +56156,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
           >
@@ -54548,7 +56236,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line diff-line-normal"
@@ -55131,7 +56819,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="src-main-js-changenotification-tsx"
     >
       <div
@@ -55141,7 +56829,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/js/ChangeNotification.tsx"
           >
@@ -55221,7 +56909,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line diff-line-normal"
@@ -55455,7 +57143,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line diff-line-normal"
@@ -56078,7 +57766,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="src-main-resources-locales-de-plugins-json"
     >
       <div
@@ -56088,7 +57776,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/resources/locales/de/plugins.json"
           >
@@ -56168,7 +57856,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line diff-line-normal"
@@ -56583,7 +58271,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="src-main-resources-locales-en-plugins-json"
     >
       <div
@@ -56593,7 +58281,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/resources/locales/en/plugins.json"
           >
@@ -56673,7 +58361,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line diff-line-normal"
@@ -57088,7 +58776,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="src-test-java-com-cloudogu-scm-review-events-clienttest-java"
     >
       <div
@@ -57098,7 +58786,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
           >
@@ -57178,7 +58866,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line diff-line-normal"
@@ -57796,7 +59484,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line diff-line-normal"
@@ -58038,7 +59726,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line diff-line-normal"
@@ -58317,7 +60005,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="main-java"
     >
       <div
@@ -58327,7 +60015,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="Main.java"
           >
@@ -58407,7 +60095,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line diff-line-new-only"
@@ -58927,7 +60615,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting (Markdown) 1`] = `
 >
   <div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="changelog-md"
     >
       <div
@@ -58937,7 +60625,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting (Markdown) 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="CHANGELOG.md"
           >
@@ -59041,7 +60729,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting (Markdown) 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -59289,7 +60977,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
 >
   <div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
     >
       <div
@@ -59299,7 +60987,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
           >
@@ -59378,7 +61066,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -59869,7 +61557,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="src-main-js-changenotification-tsx"
     >
       <div
@@ -59879,7 +61567,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/js/ChangeNotification.tsx"
           >
@@ -59958,7 +61646,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -60149,7 +61837,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -60726,7 +62414,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="src-main-resources-locales-de-plugins-json"
     >
       <div
@@ -60736,7 +62424,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/resources/locales/de/plugins.json"
           >
@@ -60815,7 +62503,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -61179,7 +62867,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="src-main-resources-locales-en-plugins-json"
     >
       <div
@@ -61189,7 +62877,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/resources/locales/en/plugins.json"
           >
@@ -61268,7 +62956,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -61632,7 +63320,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="src-test-java-com-cloudogu-scm-review-events-clienttest-java"
     >
       <div
@@ -61642,7 +63330,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
           >
@@ -61721,7 +63409,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -62229,7 +63917,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -62443,7 +64131,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -62692,7 +64380,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="main-java"
     >
       <div
@@ -62702,7 +64390,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="Main.java"
           >
@@ -62781,7 +64469,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -63229,7 +64917,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
 >
   <div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
     >
       <div
@@ -63239,7 +64927,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
           >
@@ -63319,7 +65007,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
           </colgroup>
           <span />
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -63846,7 +65534,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="src-main-js-changenotification-tsx"
     >
       <div
@@ -63856,7 +65544,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/js/ChangeNotification.tsx"
           >
@@ -63960,7 +65648,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -64187,7 +65875,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -64800,7 +66488,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="src-main-resources-locales-de-plugins-json"
     >
       <div
@@ -64810,7 +66498,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/resources/locales/de/plugins.json"
           >
@@ -64925,7 +66613,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -65325,7 +67013,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="src-main-resources-locales-en-plugins-json"
     >
       <div
@@ -65335,7 +67023,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/main/resources/locales/en/plugins.json"
           >
@@ -65450,7 +67138,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -65850,7 +67538,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="src-test-java-com-cloudogu-scm-review-events-clienttest-java"
     >
       <div
@@ -65860,7 +67548,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
           >
@@ -65964,7 +67652,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -66530,7 +68218,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -66780,7 +68468,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"
@@ -67065,7 +68753,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-0 iOZSNJ panel is-size-6"
+      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
       id="main-java"
     >
       <div
@@ -67075,7 +68763,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-1 uMPyP level-left is-flex is-clickable"
+            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
             onClick={[Function]}
             title="Main.java"
           >
@@ -67155,7 +68843,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
           </colgroup>
           <span />
           <tbody
-            className="diff-hunk"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
           >
             <tr
               className="diff-line"

@@ -64,4 +64,13 @@ export type DiffObjectProps = {
   isCollapsed?: (file: File) => boolean;
   onCollapseStateChange?: (file: File, newState?: boolean) => void;
   hunkClass?: (hunk: Hunk) => string;
+  /**
+   * Fontawesome Icon Unicode
+   *
+   * @see https://fontawesome.com/icons
+   * @example
+   * "\f075"
+   */
+  hunkGutterHoverIcon?: string;
+  highlightLineOnHover?: boolean;
 };

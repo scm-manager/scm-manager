@@ -61,6 +61,33 @@ type State = Collapsible & {
   expansionError?: any;
 };
 
+const StyledHunk = styled(Hunk)`${props => {
+  let style = props.icon ? `
+    .diff-gutter:hover::before {
+      font-size: inherit;
+      padding-right: 0.5em;
+      font-family: "Font Awesome 5 Free";
+      content: "${props.icon}";
+      color: var(--scm-column-selection);
+    }
+  ` : "";
+  if (!props.actionable) {
+    style += `
+      .diff-gutter {
+        cursor: default;
+      }
+    `;
+  }
+  if (props.highlightLineOnHover) {
+    style += `
+      tr.diff-line:hover > td {
+        background-color: var(--sh-selected-color);
+      }
+    `;
+  }
+  return style;
+}}`;
+
 const DiffFilePanel = styled.div`
   /* remove bottom border for collapsed panels */
   ${(props: Collapsible) => (props.collapsed ? "border-bottom: none;" : "")};
@@ -315,13 +342,18 @@ class DiffFile extends React.Component<Props, State> {
       );
     }
 
+    const gutterEvents = this.createGutterEvents(hunk);
+
     items.push(
-      <Hunk
+      <StyledHunk
         key={"hunk-" + hunk.content}
         hunk={expandableHunk.hunk}
         widgets={this.collectHunkAnnotations(hunk)}
-        gutterEvents={this.createGutterEvents(hunk)}
+        gutterEvents={gutterEvents}
         className={this.props.hunkClass ? this.props.hunkClass(hunk) : null}
+        icon={this.props.hunkGutterHoverIcon}
+        actionable={!!gutterEvents}
+        highlightLineOnHover={this.props.highlightLineOnHover}
       />
     );
     if (file._links?.lines) {
