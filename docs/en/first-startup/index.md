@@ -41,6 +41,7 @@ When set, this also causes the initialization to skip the Plugin Wizard.
 
 Once an initial user is created, the Plugin Wizard is going to appear.
 Here you can select a series of pre-defined sets of plugins to kickstart
-your development experience with the SCM-Manager.
+your development experience with the SCM-Manager. To install the selected
+plugins, the server has to restart once.
 
 ![Form to select plugin sets](assets/plugin-wizard.png)
