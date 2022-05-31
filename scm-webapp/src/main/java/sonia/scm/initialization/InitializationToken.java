@@ -24,18 +24,26 @@
 
 package sonia.scm.initialization;
 
-import sonia.scm.plugin.ExtensionPoint;
+import org.apache.shiro.authc.AuthenticationToken;
 
-/**
- * @deprecated Limited use for Plugin Development, see as internal
- */
-@ExtensionPoint
-@Deprecated(since = "2.35.0", forRemoval = true)
-public interface InitializationStep {
 
-  String name();
+public class InitializationToken implements AuthenticationToken {
 
-  int sequence();
+  private final String token;
+  private final String principal;
 
-  boolean done();
+  public InitializationToken(String token, String principal) {
+    this.token = token;
+    this.principal = principal;
+  }
+
+  @Override
+  public Object getPrincipal() {
+    return principal;
+  }
+
+  @Override
+  public Object getCredentials() {
+    return token;
+  }
 }

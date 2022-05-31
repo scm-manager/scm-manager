@@ -184,7 +184,7 @@ The following shows user as an example.
         "configuration:read",
         "configuration:write",
         "plugin:read",
-        "plugin:manage",
+        "plugin:write",
         "group:read",
         "user:read",
         "repository:read"
@@ -206,7 +206,7 @@ The following shows user as an example.
         "configuration:read",
         "configuration:write",
         "plugin:read",
-        "plugin:manage",
+        "plugin:write",
         "group:read",
         "user:read",
         "repository:read"

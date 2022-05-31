@@ -32,6 +32,7 @@ import { Link } from "@scm-manager/ui-types";
 import i18next from "i18next";
 import { binder, extensionPoints } from "@scm-manager/ui-extensions";
 import InitializationAdminAccountStep from "./InitializationAdminAccountStep";
+import InitializationPluginWizardStep from "./InitializationPluginWizardStep";
 
 const Index: FC = () => {
   const { isLoading, error, data } = useIndex();
@@ -39,7 +40,7 @@ const Index: FC = () => {
 
   // TODO check componentDidUpdate method for anonymous user stuff
 
-  i18next.on("languageChanged", lng => {
+  i18next.on("languageChanged", (lng) => {
     document.documentElement.setAttribute("lang", lng);
   });
 
@@ -72,4 +73,9 @@ export default Index;
 binder.bind<extensionPoints.InitializationStep<"adminAccount">>(
   "initialization.step.adminAccount",
   InitializationAdminAccountStep
+);
+
+binder.bind<extensionPoints.InitializationStep<"pluginWizard">>(
+  "initialization.step.pluginWizard",
+  InitializationPluginWizardStep
 );

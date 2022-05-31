@@ -29,9 +29,12 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Mapper
 public abstract class PluginCenterDtoMapper {
+
+  PluginCenterDtoMapper() {}
 
   static final PluginCenterDtoMapper INSTANCE = Mappers.getMapper(PluginCenterDtoMapper.class);
 
@@ -39,8 +42,18 @@ public abstract class PluginCenterDtoMapper {
 
   abstract PluginCondition map(PluginCenterDto.Condition condition);
 
-  Set<AvailablePlugin> map(PluginCenterDto pluginCenterDto) {
+  abstract PluginSet map(PluginCenterDto.PluginSet set);
+  abstract PluginSet.Description map(PluginCenterDto.Description description);
+
+  PluginCenterResult map(PluginCenterDto pluginCenterDto) {
     Set<AvailablePlugin> plugins = new HashSet<>();
+    Set<PluginSet> pluginSets = pluginCenterDto
+      .getEmbedded()
+      .getPluginSets()
+      .stream()
+      .map(this::map)
+      .collect(Collectors.toSet());
+
     for (PluginCenterDto.Plugin plugin : pluginCenterDto.getEmbedded().getPlugins()) {
       // plugin center api returns always a download link,
       // but for cloudogu plugin without authentication the href is an empty string
@@ -51,7 +64,7 @@ public abstract class PluginCenterDtoMapper {
       );
       plugins.add(new AvailablePlugin(descriptor));
     }
-    return plugins;
+    return new PluginCenterResult(plugins, pluginSets);
   }
 
   private String getInstallLink(PluginCenterDto.Plugin plugin) {

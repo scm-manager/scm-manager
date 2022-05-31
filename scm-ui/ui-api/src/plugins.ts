@@ -34,7 +34,7 @@ type WaitForRestartOptions = {
   timeout?: number;
 };
 
-const waitForRestartAfter = (
+export const waitForRestartAfter = (
   promise: Promise<any>,
   { initialDelay = 1000, timeout = 500 }: WaitForRestartOptions = {}
 ): Promise<void> => {

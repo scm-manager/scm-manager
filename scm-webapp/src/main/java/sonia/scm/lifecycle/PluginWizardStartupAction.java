@@ -22,20 +22,39 @@
  * SOFTWARE.
  */
 
-package sonia.scm.initialization;
+package sonia.scm.lifecycle;
 
-import sonia.scm.plugin.ExtensionPoint;
+import sonia.scm.initialization.InitializationStep;
+import sonia.scm.plugin.Extension;
+import sonia.scm.plugin.PluginSetConfigStore;
 
-/**
- * @deprecated Limited use for Plugin Development, see as internal
- */
-@ExtensionPoint
-@Deprecated(since = "2.35.0", forRemoval = true)
-public interface InitializationStep {
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
-  String name();
+@Extension
+@Singleton
+public class PluginWizardStartupAction implements InitializationStep {
 
-  int sequence();
+  private final PluginSetConfigStore store;
 
-  boolean done();
+  @Inject
+  public PluginWizardStartupAction(PluginSetConfigStore pluginSetConfigStore) {
+    this.store = pluginSetConfigStore;
+  }
+
+  @Override
+  public String name() {
+    return "pluginWizard";
+  }
+
+  @Override
+  public int sequence() {
+    return 1;
+  }
+
+  @Override
+  public boolean done() {
+    return System.getProperty(AdminAccountStartupAction.INITIAL_PASSWORD_PROPERTY) != null || store.getPluginSets().isPresent();
+  }
+
 }

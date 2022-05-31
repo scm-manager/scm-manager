@@ -27,14 +27,20 @@ package sonia.scm.api.v2.resources;
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.Links;
 import lombok.Data;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.UnauthenticatedException;
+import sonia.scm.initialization.InitializationAuthenticationService;
 import sonia.scm.initialization.InitializationStepResource;
 import sonia.scm.lifecycle.AdminAccountStartupAction;
 import sonia.scm.plugin.Extension;
 import sonia.scm.security.AllowAnonymousAccess;
+import sonia.scm.security.Tokens;
 import sonia.scm.util.ValidationUtil;
 
 import javax.inject.Inject;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -42,9 +48,12 @@ import javax.validation.constraints.Pattern;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
 
 import static de.otto.edison.hal.Link.link;
 import static sonia.scm.ScmConstraintViolationException.Builder.doThrow;
+import static sonia.scm.initialization.InitializationWebTokenGenerator.INIT_TOKEN_HEADER;
 
 @AllowAnonymousAccess
 @Extension
@@ -52,20 +61,34 @@ public class AdminAccountStartupResource implements InitializationStepResource {
 
   private final AdminAccountStartupAction adminAccountStartupAction;
   private final ResourceLinks resourceLinks;
+  private final InitializationAuthenticationService authenticationService;
 
   @Inject
-  public AdminAccountStartupResource(AdminAccountStartupAction adminAccountStartupAction, ResourceLinks resourceLinks) {
+  public AdminAccountStartupResource(AdminAccountStartupAction adminAccountStartupAction, ResourceLinks resourceLinks, InitializationAuthenticationService authenticationService) {
     this.adminAccountStartupAction = adminAccountStartupAction;
     this.resourceLinks = resourceLinks;
+    this.authenticationService = authenticationService;
   }
 
   @POST
   @Path("")
   @Consumes("application/json")
-  public void postAdminInitializationData(@Valid AdminInitializationData data) {
+  public Response postAdminInitializationData(
+    @Context HttpServletRequest request,
+    @Context HttpServletResponse response,
+    @Valid AdminInitializationData data
+  ) {
     verifyInInitialization();
     verifyToken(data);
     createAdminUser(data);
+
+    // Invalidate old access token cookies to prevent conflicts during authentication
+    authenticationService.invalidateCookies(request, response);
+
+    SecurityUtils.getSubject().login(Tokens.createAuthenticationToken(request, data.userName, data.password));
+    // Create cookie which will be used for authentication during the initialization process
+    authenticationService.authenticate(request, response);
+    return Response.noContent().build();
   }
 
   private void verifyInInitialization() {

@@ -39,6 +39,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -65,6 +66,8 @@ public class DefaultPluginManager implements PluginManager {
   private final Restarter restarter;
   private final ScmEventBus eventBus;
 
+  private final PluginSetConfigStore pluginSetConfigStore;
+
   private final Collection<PendingPluginInstallation> pendingInstallQueue = new ArrayList<>();
   private final Collection<PendingPluginUninstallation> pendingUninstallQueue = new ArrayList<>();
   private final PluginDependencyTracker dependencyTracker = new PluginDependencyTracker();
@@ -72,16 +75,17 @@ public class DefaultPluginManager implements PluginManager {
   private final Function<List<AvailablePlugin>, PluginInstallationContext> contextFactory;
 
   @Inject
-  public DefaultPluginManager(PluginLoader loader, PluginCenter center, PluginInstaller installer, Restarter restarter, ScmEventBus eventBus) {
-    this(loader, center, installer, restarter, eventBus, null);
+  public DefaultPluginManager(PluginLoader loader, PluginCenter center, PluginInstaller installer, Restarter restarter, ScmEventBus eventBus, PluginSetConfigStore pluginSetConfigStore) {
+    this(loader, center, installer, restarter, eventBus, null, pluginSetConfigStore);
   }
 
-  DefaultPluginManager(PluginLoader loader, PluginCenter center, PluginInstaller installer, Restarter restarter, ScmEventBus eventBus, Function<List<AvailablePlugin>, PluginInstallationContext> contextFactory) {
+  DefaultPluginManager(PluginLoader loader, PluginCenter center, PluginInstaller installer, Restarter restarter, ScmEventBus eventBus, Function<List<AvailablePlugin>, PluginInstallationContext> contextFactory, PluginSetConfigStore pluginSetConfigStore) {
     this.loader = loader;
     this.center = center;
     this.installer = installer;
     this.restarter = restarter;
     this.eventBus = eventBus;
+    this.pluginSetConfigStore = pluginSetConfigStore;
 
     if (contextFactory != null) {
       this.contextFactory = contextFactory;
@@ -109,7 +113,7 @@ public class DefaultPluginManager implements PluginManager {
   @Override
   public Optional<AvailablePlugin> getAvailable(String name) {
     PluginPermissions.read().check();
-    return center.getAvailable()
+    return center.getAvailablePlugins()
       .stream()
       .filter(filterByName(name))
       .filter(this::isNotInstalledOrMoreUpToDate)
@@ -143,11 +147,47 @@ public class DefaultPluginManager implements PluginManager {
   @Override
   public List<AvailablePlugin> getAvailable() {
     PluginPermissions.read().check();
-    return center.getAvailable()
+    return center.getAvailablePlugins()
       .stream()
       .filter(this::isNotInstalledOrMoreUpToDate)
       .map(p -> getPending(p.getDescriptor().getInformation().getName()).orElse(p))
       .collect(Collectors.toList());
+  }
+
+  @Override
+  public Set<PluginSet> getPluginSets() {
+    PluginPermissions.read().check();
+    return center.getAvailablePluginSets();
+  }
+
+  @Override
+  public void installPluginSets(Set<String> pluginSetIds, boolean restartAfterInstallation) {
+    PluginPermissions.write().check();
+
+    Set<PluginSet> pluginSets = getPluginSets();
+    Set<PluginSet> pluginSetsToInstall = pluginSetIds.stream()
+      .map(id -> pluginSets.stream().filter(pluginSet -> pluginSet.getId().equals(id)).findFirst())
+      .filter(Optional::isPresent)
+      .map(Optional::get)
+      .collect(Collectors.toSet());
+
+    Set<AvailablePlugin> pluginsToInstall = pluginSetsToInstall
+      .stream()
+      .flatMap(pluginSet -> pluginSet
+        .getPlugins()
+        .stream()
+        .map(this::collectPluginsToInstall)
+        .flatMap(Collection::stream)
+      )
+      .collect(Collectors.toSet());
+
+    Set<String> newlyInstalledPluginSetIds = pluginSetsToInstall.stream().map(PluginSet::getId).collect(Collectors.toSet());
+
+    Set<String> installedPluginSetIds = pluginSetConfigStore.getPluginSets().map(PluginSetsConfig::getPluginSets).orElse(new HashSet<>());
+    installedPluginSetIds.addAll(newlyInstalledPluginSetIds);
+    pluginSetConfigStore.setPluginSets(new PluginSetsConfig(installedPluginSetIds));
+
+    installPlugins(new ArrayList<>(pluginsToInstall), restartAfterInstallation);
   }
 
   @Override
@@ -184,6 +224,10 @@ public class DefaultPluginManager implements PluginManager {
       );
 
     List<AvailablePlugin> plugins = collectPluginsToInstall(name);
+    installPlugins(plugins, restartAfterInstallation);
+  }
+
+  private void installPlugins(List<AvailablePlugin> plugins, boolean restartAfterInstallation) {
     List<PendingPluginInstallation> pendingInstallations = new ArrayList<>();
 
     for (AvailablePlugin plugin : plugins) {

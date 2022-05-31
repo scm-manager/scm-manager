@@ -22,20 +22,24 @@
  * SOFTWARE.
  */
 
-package sonia.scm.initialization;
+package sonia.scm.plugin;
 
-import sonia.scm.plugin.ExtensionPoint;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-/**
- * @deprecated Limited use for Plugin Development, see as internal
- */
-@ExtensionPoint
-@Deprecated(since = "2.35.0", forRemoval = true)
-public interface InitializationStep {
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Set;
 
-  String name();
-
-  int sequence();
-
-  boolean done();
+@Data
+@XmlRootElement
+@AllArgsConstructor
+@NoArgsConstructor
+@XmlAccessorType(XmlAccessType.FIELD)
+public class PluginSetsConfig {
+  @XmlElement(name = "pluginSets")
+  Set<String> pluginSets;
 }

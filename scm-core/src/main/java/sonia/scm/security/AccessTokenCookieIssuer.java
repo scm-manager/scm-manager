@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.security;
 
 import javax.servlet.http.HttpServletRequest;
@@ -43,6 +43,7 @@ public interface AccessTokenCookieIssuer {
    * @param accessToken access token
    */
   void authenticate(HttpServletRequest request, HttpServletResponse response, AccessToken accessToken);
+
   /**
    * Invalidates the authentication cookie.
    *

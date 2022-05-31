@@ -22,20 +22,43 @@
  * SOFTWARE.
  */
 
-package sonia.scm.initialization;
+package sonia.scm.update.plugin;
 
-import sonia.scm.plugin.ExtensionPoint;
+import sonia.scm.migration.UpdateStep;
+import sonia.scm.plugin.Extension;
+import sonia.scm.plugin.PluginSetConfigStore;
+import sonia.scm.plugin.PluginSetsConfig;
+import sonia.scm.user.xml.XmlUserDAO;
+import sonia.scm.version.Version;
 
-/**
- * @deprecated Limited use for Plugin Development, see as internal
- */
-@ExtensionPoint
-@Deprecated(since = "2.35.0", forRemoval = true)
-public interface InitializationStep {
+import javax.inject.Inject;
+import java.util.Collections;
 
-  String name();
+@Extension
+public class PluginSetsConfigInitializationUpdateStep implements UpdateStep {
+  private final PluginSetConfigStore pluginSetConfigStore;
+  private final XmlUserDAO userDAO;
 
-  int sequence();
+  @Inject
+  public PluginSetsConfigInitializationUpdateStep(PluginSetConfigStore pluginSetConfigStore, XmlUserDAO userDAO) {
+    this.pluginSetConfigStore = pluginSetConfigStore;
+    this.userDAO = userDAO;
+  }
 
-  boolean done();
+  @Override
+  public void doUpdate() throws Exception {
+    if (!userDAO.getAll().isEmpty() && pluginSetConfigStore.getPluginSets().isEmpty()) {
+        pluginSetConfigStore.setPluginSets(new PluginSetsConfig(Collections.emptySet()));
+    }
+  }
+
+  @Override
+  public Version getTargetVersion() {
+    return Version.parse("2.0.0");
+  }
+
+  @Override
+  public String getAffectedDataType() {
+    return "sonia.scm.plugin.PluginSetsConfig";
+  }
 }

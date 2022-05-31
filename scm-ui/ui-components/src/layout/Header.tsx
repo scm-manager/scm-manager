@@ -21,17 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, ReactNode } from "react";
+import React, { FC } from "react";
 import Logo from "./../Logo";
-import { Links } from "@scm-manager/ui-types";
 
 type Props = {
-  links: Links;
-  authenticated: boolean;
-  children: ReactNode;
+  authenticated?: boolean;
 };
 
-const SmallHeader: FC<{ children: ReactNode }> = ({ children }) => {
+const SmallHeader: FC = ({ children }) => {
   return <div className="has-scm-background">{children}</div>;
 };
 
@@ -51,7 +48,7 @@ const LargeHeader: FC = () => {
   );
 };
 
-const Header: FC<Props> = ({ authenticated, children, links }) => {
+const Header: FC<Props> = ({ authenticated, children }) => {
   if (authenticated) {
     return <SmallHeader>{children}</SmallHeader>;
   } else {

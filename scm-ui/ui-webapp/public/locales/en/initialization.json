@@ -11,6 +11,21 @@
     "password-confirmation": "Confirm Password",
     "submit": "Submit"
   },
+  "pluginWizardStep": {
+    "title": "Plugin Sets",
+    "description": "Out of the box SCM-Manager is a streamlined tool to manage Git, SVN and mercurial repositories. Plugins enhance your workflow and help you to get more out of your SCM-Manager. Select one or more of our plugin-sets to jump-start your journey!",
+    "submit": "Submit",
+    "submitAndRestart": "Submit and restart",
+    "skip": {
+      "title": "Start without additional plugins",
+      "subtitle": "Only core-plugins will be installed. You may manually install plugins through the Plugin-Center any time."
+    },
+    "pluginSet": {
+      "expand": "View included Plugins",
+      "collapse": "Included Plugins"
+    }
+
+  },
   "error": {
     "forbidden": "Incorrect token"
   }

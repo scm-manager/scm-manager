@@ -22,20 +22,21 @@
  * SOFTWARE.
  */
 
-package sonia.scm.initialization;
+package sonia.scm.api.v2.resources;
 
-import sonia.scm.plugin.ExtensionPoint;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-/**
- * @deprecated Limited use for Plugin Development, see as internal
- */
-@ExtensionPoint
-@Deprecated(since = "2.35.0", forRemoval = true)
-public interface InitializationStep {
+import javax.validation.constraints.NotNull;
+import java.util.Set;
 
-  String name();
-
-  int sequence();
-
-  boolean done();
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class PluginSetsInstallDto {
+  @NotNull
+  private Set<String> pluginSetIds;
 }

@@ -58,6 +58,7 @@ import sonia.scm.group.GroupManager;
 import sonia.scm.group.GroupManagerProvider;
 import sonia.scm.group.xml.XmlGroupDAO;
 import sonia.scm.initialization.DefaultInitializationFinisher;
+import sonia.scm.initialization.InitializationCookieIssuer;
 import sonia.scm.initialization.InitializationFinisher;
 import sonia.scm.io.ContentTypeResolver;
 import sonia.scm.io.DefaultContentTypeResolver;
@@ -271,6 +272,7 @@ class ScmServletModule extends ServletModule {
     // bind events
 
     bind(AccessTokenCookieIssuer.class).to(DefaultAccessTokenCookieIssuer.class);
+    bind(InitializationCookieIssuer.class).to(DefaultAccessTokenCookieIssuer.class);
     bind(PushStateDispatcher.class).toProvider(PushStateDispatcherProvider.class);
 
     // bind api link provider

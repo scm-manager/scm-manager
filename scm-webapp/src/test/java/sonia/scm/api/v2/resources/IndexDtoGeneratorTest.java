@@ -183,7 +183,7 @@ class IndexDtoGeneratorTest {
         Embedded.Builder initializationEmbeddedBuilder = invocationOnMock.getArgument(1, Embedded.Builder.class);
         initializationLinkBuilder.single(link("init", "/init"));
         return null;
-      }).when(initializationStepResource).setupIndex(any(), any());
+      }).when(initializationStepResource).setupIndex(any(), any(), any());
 
       IndexDto dto = generator.generate();
 

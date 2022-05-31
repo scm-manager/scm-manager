@@ -1,0 +1,2 @@
+- type: added
+  description: Initialization step to install pre-defined plugin sets ([#2045](https://github.com/scm-manager/scm-manager/pull/2045))

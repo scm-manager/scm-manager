@@ -29,6 +29,7 @@ import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.initialization.InitializationCookieIssuer;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 
@@ -36,8 +37,10 @@ import javax.inject.Inject;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
+
+import static sonia.scm.initialization.InitializationWebTokenGenerator.INIT_TOKEN_HEADER;
 
 /**
  * Generates cookies and invalidates access token cookies.
@@ -45,7 +48,7 @@ import java.util.concurrent.TimeUnit;
  * @author Sebastian Sdorra
  * @since 2.0.0
  */
-public final class DefaultAccessTokenCookieIssuer implements AccessTokenCookieIssuer {
+public final class DefaultAccessTokenCookieIssuer implements AccessTokenCookieIssuer, InitializationCookieIssuer {
 
   /**
    * the logger for DefaultAccessTokenCookieIssuer
@@ -88,6 +91,25 @@ public final class DefaultAccessTokenCookieIssuer implements AccessTokenCookieIs
   }
 
   /**
+   * Creates a cookie for authentication during the initialization process and attaches it to the response.
+   *
+   * @param request http servlet request
+   * @param response http servlet response
+   * @param accessToken initialization access token
+   */
+  public void authenticateForInitialization(HttpServletRequest request, HttpServletResponse response, AccessToken accessToken) {
+    LOG.trace("create and attach cookie for initialization access token {}", accessToken.getId());
+    Cookie c = new Cookie(INIT_TOKEN_HEADER, accessToken.compact());
+    c.setPath(contextPath(request));
+    c.setMaxAge(999999999);
+    c.setHttpOnly(isHttpOnly());
+    c.setSecure(isSecure(request));
+
+    // attach cookie to response
+    response.addCookie(c);
+  }
+
+  /**
    * Invalidates the authentication cookie.
    *
    * @param request http servlet request
@@ -95,8 +117,20 @@ public final class DefaultAccessTokenCookieIssuer implements AccessTokenCookieIs
    */
   public void invalidate(HttpServletRequest request, HttpServletResponse response) {
     LOG.trace("invalidates access token cookie");
+    invalidateCookie(request, response, HttpUtil.COOKIE_BEARER_AUTHENTICATION);
 
-    Cookie c = new Cookie(HttpUtil.COOKIE_BEARER_AUTHENTICATION, Util.EMPTY_STRING);
+    if (request.getCookies() != null && Arrays.stream(request.getCookies()).anyMatch(cookie -> cookie.getName().equals(INIT_TOKEN_HEADER))) {
+      LOG.trace("invalidates initialization token cookie");
+      invalidateInitTokenCookie(request, response);
+    }
+  }
+
+  private void invalidateInitTokenCookie(HttpServletRequest request, HttpServletResponse response) {
+    invalidateCookie(request, response, INIT_TOKEN_HEADER);
+  }
+
+  private void invalidateCookie(HttpServletRequest request, HttpServletResponse response, String cookieBearerAuthentication) {
+    Cookie c = new Cookie(cookieBearerAuthentication, Util.EMPTY_STRING);
     c.setPath(contextPath(request));
     c.setMaxAge(0);
     c.setHttpOnly(isHttpOnly());

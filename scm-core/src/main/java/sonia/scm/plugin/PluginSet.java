@@ -22,20 +22,34 @@
  * SOFTWARE.
  */
 
-package sonia.scm.initialization;
+package sonia.scm.plugin;
 
-import sonia.scm.plugin.ExtensionPoint;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-/**
- * @deprecated Limited use for Plugin Development, see as internal
- */
-@ExtensionPoint
-@Deprecated(since = "2.35.0", forRemoval = true)
-public interface InitializationStep {
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-  String name();
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+public class PluginSet {
+  private String id;
+  private int sequence;
+  private Set<String> plugins;
+  private Map<String, Description> descriptions;
+  private Map<String, String> images;
 
-  int sequence();
-
-  boolean done();
+  @AllArgsConstructor
+  @NoArgsConstructor
+  @Getter
+  @Setter
+  public static class Description {
+    private String name;
+    private List<String> features;
+  }
 }

@@ -21,10 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.plugin;
 
-import com.google.common.collect.ImmutableList;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -56,11 +55,21 @@ public final class PluginCenterDto implements Serializable {
     @XmlElement(name = "plugins")
     private List<Plugin> plugins;
 
+    @XmlElement(name = "plugin-sets")
+    private List<PluginSet> pluginSets;
+
     public List<Plugin> getPlugins() {
       if (plugins == null) {
-        plugins = ImmutableList.of();
+        plugins = List.of();
       }
       return plugins;
+    }
+
+    public List<PluginSet> getPluginSets() {
+      if (pluginSets == null) {
+        pluginSets = List.of();
+      }
+      return pluginSets;
     }
   }
 
@@ -91,6 +100,36 @@ public final class PluginCenterDto implements Serializable {
 
     @XmlElement(name = "_links")
     private final Map<String, Link> links;
+  }
+
+  @XmlAccessorType(XmlAccessType.FIELD)
+  @XmlRootElement(name = "pluginSets")
+  @Getter
+  @AllArgsConstructor
+  public static class PluginSet {
+    private final String id;
+    private final String versions;
+    private final int sequence;
+
+    @XmlElement(name = "plugins")
+    private final Set<String> plugins;
+
+    @XmlElement(name = "descriptions")
+    private final Map<String, Description> descriptions;
+
+    @XmlElement(name = "images")
+    private final Map<String, String> images;
+  }
+
+  @XmlAccessorType(XmlAccessType.FIELD)
+  @Getter
+  @NoArgsConstructor
+  @AllArgsConstructor
+  public static class Description {
+    private String name;
+
+    @XmlElement(name = "features")
+    private List<String> features;
   }
 
   @XmlAccessorType(XmlAccessType.FIELD)

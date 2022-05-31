@@ -22,20 +22,21 @@
  * SOFTWARE.
  */
 
-package sonia.scm.initialization;
+package sonia.scm.api.v2.resources;
 
-import sonia.scm.plugin.ExtensionPoint;
+import de.otto.edison.hal.HalRepresentation;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-/**
- * @deprecated Limited use for Plugin Development, see as internal
- */
-@ExtensionPoint
-@Deprecated(since = "2.35.0", forRemoval = true)
-public interface InitializationStep {
+import java.util.Set;
 
-  String name();
-
-  int sequence();
-
-  boolean done();
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@SuppressWarnings("squid:S2160") // we do not need equals for dto
+public class PluginSetCollectionDto extends HalRepresentation {
+  Set<PluginSetDto> pluginSets;
 }

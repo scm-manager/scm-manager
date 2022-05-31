@@ -47,6 +47,7 @@ import sonia.scm.web.EdisonHalAppender;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 import static de.otto.edison.hal.Embedded.embeddedBuilder;
@@ -75,6 +76,10 @@ public class IndexDtoGenerator extends HalAppenderMapper {
   }
 
   public IndexDto generate() {
+    return generate(Locale.getDefault());
+  }
+
+  public IndexDto generate(Locale locale) {
     Links.Builder builder = Links.linkingTo();
     Embedded.Builder embeddedBuilder = embeddedBuilder();
 
@@ -84,7 +89,7 @@ public class IndexDtoGenerator extends HalAppenderMapper {
     if (initializationFinisher.isFullyInitialized()) {
       return handleNormalIndex(builder, embeddedBuilder);
     } else {
-      return handleInitialization(builder, embeddedBuilder);
+      return handleInitialization(builder, embeddedBuilder, locale);
     }
   }
 
@@ -170,11 +175,11 @@ public class IndexDtoGenerator extends HalAppenderMapper {
       .collect(Collectors.toList());
   }
 
-  private IndexDto handleInitialization(Links.Builder builder, Embedded.Builder embeddedBuilder) {
+  private IndexDto handleInitialization(Links.Builder builder, Embedded.Builder embeddedBuilder, Locale locale) {
     Links.Builder initializationLinkBuilder = Links.linkingTo();
     Embedded.Builder initializationEmbeddedBuilder = embeddedBuilder();
     InitializationStep initializationStep = initializationFinisher.missingInitialization();
-    initializationFinisher.getResource(initializationStep.name()).setupIndex(initializationLinkBuilder, initializationEmbeddedBuilder);
+    initializationFinisher.getResource(initializationStep.name()).setupIndex(initializationLinkBuilder, initializationEmbeddedBuilder, locale);
     embeddedBuilder.with(initializationStep.name(), new InitializationDto(initializationLinkBuilder.build(), initializationEmbeddedBuilder.build()));
     return new IndexDto(builder.build(), embeddedBuilder.build(), scmContextProvider.getVersion(), scmContextProvider.getInstanceId(), initializationStep.name());
   }

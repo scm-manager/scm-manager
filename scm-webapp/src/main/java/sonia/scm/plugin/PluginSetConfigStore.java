@@ -22,20 +22,30 @@
  * SOFTWARE.
  */
 
-package sonia.scm.initialization;
+package sonia.scm.plugin;
 
-import sonia.scm.plugin.ExtensionPoint;
+import sonia.scm.store.ConfigurationStore;
+import sonia.scm.store.ConfigurationStoreFactory;
 
-/**
- * @deprecated Limited use for Plugin Development, see as internal
- */
-@ExtensionPoint
-@Deprecated(since = "2.35.0", forRemoval = true)
-public interface InitializationStep {
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import java.util.Optional;
 
-  String name();
+@Singleton
+public class PluginSetConfigStore {
 
-  int sequence();
+  private final ConfigurationStore<PluginSetsConfig> pluginSets;
 
-  boolean done();
+  @Inject
+  PluginSetConfigStore(ConfigurationStoreFactory configurationStoreFactory) {
+    pluginSets = configurationStoreFactory.withType(PluginSetsConfig.class).withName("pluginSets").build();
+  }
+
+  public Optional<PluginSetsConfig> getPluginSets() {
+    return pluginSets.getOptional();
+  }
+
+  public void setPluginSets(PluginSetsConfig config) {
+    this.pluginSets.set(config);
+  }
 }

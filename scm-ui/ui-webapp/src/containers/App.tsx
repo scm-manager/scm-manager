@@ -67,7 +67,7 @@ const App: FC = () => {
   return (
     <AppWrapper className="App">
       {isAuthenticated ? <Feedback index={index} /> : null}
-      <Header authenticated={authenticatedOrAnonymous} links={index._links}>
+      <Header authenticated={authenticatedOrAnonymous}>
         <NavigationBar links={index._links} />
       </Header>
       <div className="is-flex-grow-1">{content}</div>

@@ -24,18 +24,25 @@
 
 package sonia.scm.initialization;
 
-import sonia.scm.plugin.ExtensionPoint;
+import sonia.scm.security.AccessToken;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
- * @deprecated Limited use for Plugin Development, see as internal
+ * Generates cookies and invalidates initialization token cookies.
+ *
+ * @author Sebastian Sdorra
+ * @since 2.35.0
  */
-@ExtensionPoint
-@Deprecated(since = "2.35.0", forRemoval = true)
-public interface InitializationStep {
+public interface InitializationCookieIssuer {
 
-  String name();
-
-  int sequence();
-
-  boolean done();
+  /**
+   * Creates a cookie for token authentication and attaches it to the response.
+   *
+   * @param request http servlet request
+   * @param response http servlet response
+   * @param accessToken initialization access token
+   */
+  void authenticateForInitialization(HttpServletRequest request, HttpServletResponse response, AccessToken accessToken);
 }

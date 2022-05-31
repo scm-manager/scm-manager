@@ -24,18 +24,29 @@
 
 package sonia.scm.initialization;
 
-import sonia.scm.plugin.ExtensionPoint;
+import org.apache.shiro.authc.AuthenticationToken;
+import sonia.scm.plugin.Extension;
+import sonia.scm.web.WebTokenGenerator;
 
-/**
- * @deprecated Limited use for Plugin Development, see as internal
- */
-@ExtensionPoint
-@Deprecated(since = "2.35.0", forRemoval = true)
-public interface InitializationStep {
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 
-  String name();
+@Extension
+public class InitializationWebTokenGenerator implements WebTokenGenerator {
 
-  int sequence();
+  public static final String INIT_TOKEN_HEADER = "X-SCM-Init-Token";
 
-  boolean done();
+  @Override
+  public AuthenticationToken createToken(HttpServletRequest request) {
+    Cookie[] cookies = request.getCookies();
+    AuthenticationToken token = null;
+    if (cookies != null) {
+      for (Cookie cookie : cookies) {
+        if (cookie.getName().equals(INIT_TOKEN_HEADER)) {
+          token = new InitializationToken(cookie.getValue(), "SCM_INIT");
+        }
+      }
+    }
+    return token;
+  }
 }
