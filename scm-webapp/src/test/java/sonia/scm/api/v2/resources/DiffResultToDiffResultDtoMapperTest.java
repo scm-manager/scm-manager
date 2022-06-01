@@ -36,6 +36,7 @@ import sonia.scm.repository.api.DiffResult;
 import sonia.scm.repository.api.Hunk;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.OptionalInt;
@@ -53,7 +54,7 @@ class DiffResultToDiffResultDtoMapperTest {
   private static final Repository REPOSITORY = new Repository("1", "git", "space", "X");
 
   ResourceLinks resourceLinks = ResourceLinksMock.createMock(create("/scm/api/v2"));
-  DiffResultToDiffResultDtoMapper mapper = new DiffResultToDiffResultDtoMapper(resourceLinks, new DefaultContentTypeResolver());
+  DiffResultToDiffResultDtoMapper mapper = new DiffResultToDiffResultDtoMapper(resourceLinks, new DefaultContentTypeResolver(Collections.emptySet()));
 
   @Test
   void shouldMapDiffResult() {

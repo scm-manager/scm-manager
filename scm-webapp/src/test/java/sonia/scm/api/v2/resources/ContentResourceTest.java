@@ -46,6 +46,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -74,7 +75,7 @@ public class ContentResourceTest {
 
   @Before
   public void initService() throws Exception {
-    contentResource = new ContentResource(repositoryServiceFactory, new DefaultContentTypeResolver());
+    contentResource = new ContentResource(repositoryServiceFactory, new DefaultContentTypeResolver(Collections.emptySet()));
 
     NamespaceAndName existingNamespaceAndName = new NamespaceAndName(NAMESPACE, REPO_NAME);
     RepositoryService repositoryService = repositoryServiceFactory.create(existingNamespaceAndName);
