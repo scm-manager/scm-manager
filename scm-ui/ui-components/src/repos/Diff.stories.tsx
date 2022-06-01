@@ -147,7 +147,7 @@ storiesOf("Repositories/Diff", module)
   })
   .add("Highlight line on hover", () => {
     const hunkDiffFiles = parser.parse(hunksDiff);
-    return <Diff diff={hunkDiffFiles} highlightLineOnHover/>;
+    return <Diff diff={hunkDiffFiles} highlightLineOnHover />;
   })
   .add("Binaries", () => {
     const binaryDiffFiles = parser.parse(binaryDiff);
