@@ -1,0 +1,2 @@
+- type: changed
+  description: Visually separate focused and hovered buttons in confirmation dialogues ([#2050](https://github.com/scm-manager/scm-manager/pull/2050))

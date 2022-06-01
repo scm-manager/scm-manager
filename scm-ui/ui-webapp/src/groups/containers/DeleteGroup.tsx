@@ -60,11 +60,11 @@ export const DeleteGroup: FC<Props> = ({ confirmDialog = true, group }) => {
         message={t("deleteGroup.confirmAlert.message")}
         buttons={[
           {
-            className: "is-outlined",
             label: t("deleteGroup.confirmAlert.submit"),
             onClick: deleteGroupCallback
           },
           {
+            className: "is-info",
             label: t("deleteGroup.confirmAlert.cancel"),
             onClick: () => null,
             autofocus: true

@@ -74,12 +74,12 @@ const TagTable: FC<Props> = ({ repository, baseUrl, tags }) => {
           message={t("tag.delete.confirmAlert.message", { tag: tagToBeDeleted?.name })}
           buttons={[
             {
-              className: "is-outlined",
               label: t("tag.delete.confirmAlert.submit"),
               isLoading,
               onClick: () => deleteTag()
             },
             {
+              className: "is-info",
               label: t("tag.delete.confirmAlert.cancel"),
               onClick: () => abortDelete(),
               autofocus: true
