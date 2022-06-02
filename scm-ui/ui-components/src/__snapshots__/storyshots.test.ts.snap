@@ -46357,7 +46357,7 @@ exports[`Storyshots Repositories/Diff Hunk gutter hover icon 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 hdvkJC"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 gtRJTD"
           >
             <tr
               className="diff-line"
@@ -46571,7 +46571,7 @@ exports[`Storyshots Repositories/Diff Hunk gutter hover icon 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 hdvkJC"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 gtRJTD"
           >
             <tr
               className="diff-line"
@@ -46762,7 +46762,7 @@ exports[`Storyshots Repositories/Diff Hunk gutter hover icon 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 hdvkJC"
+            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 gtRJTD"
           >
             <tr
               className="diff-line"
