@@ -75,12 +75,12 @@ const BranchTable: FC<Props> = ({ repository, baseUrl, branches, type, branchesD
           message={t("branch.delete.confirmAlert.message", { branch: branchToBeDeleted?.name })}
           buttons={[
             {
-              className: "is-outlined",
               label: t("branch.delete.confirmAlert.submit"),
               isLoading,
               onClick: () => deleteBranch()
             },
             {
+              className: "is-info",
               label: t("branch.delete.confirmAlert.cancel"),
               onClick: () => abortDelete(),
               autofocus: true

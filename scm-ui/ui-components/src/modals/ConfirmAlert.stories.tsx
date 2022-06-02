@@ -46,11 +46,11 @@ const buttons = [
 
 const buttonsWithAutofocus = [
   {
-    className: "is-outlined",
     label: "Cancel",
     onClick: () => null
   },
   {
+    className: "is-info",
     label: "I should be focused",
     autofocus: true
   }

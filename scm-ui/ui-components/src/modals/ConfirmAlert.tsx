@@ -68,7 +68,7 @@ export const ConfirmAlert: FC<Props> = ({ title, message, buttons, close }) => {
       {buttons.map((button, index) => (
         <p className="control" key={index}>
           <button
-            className={classNames("button", "is-info", button.className, button.isLoading ? "is-loading" : "")}
+            className={classNames("button", button.className, button.isLoading ? "is-loading" : "")}
             key={index}
             onClick={() => handleClickButton(button)}
             onKeyDown={e => e.key === "Enter" && handleClickButton(button)}

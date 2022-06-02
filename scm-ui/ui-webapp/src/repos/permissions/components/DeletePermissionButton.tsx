@@ -60,12 +60,12 @@ const DeletePermissionButton: FC<Props> = ({ namespaceOrRepository, permission, 
         message={t("permission.delete-permission-button.confirm-alert.message")}
         buttons={[
           {
-            className: "is-outlined",
             label: t("permission.delete-permission-button.confirm-alert.submit"),
             isLoading,
             onClick: () => deletePermission(),
           },
           {
+            className: "is-info",
             label: t("permission.delete-permission-button.confirm-alert.cancel"),
             onClick: () => null,
             autofocus: true,

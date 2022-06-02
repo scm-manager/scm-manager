@@ -16885,7 +16885,7 @@ exports[`Storyshots Modal/ConfirmAlert Autofocus 1`] = `
           className="control"
         >
           <button
-            className="button is-info is-outlined"
+            className="button"
             onClick={[Function]}
             onKeyDown={[Function]}
             tabIndex={0}
@@ -16963,7 +16963,7 @@ exports[`Storyshots Modal/ConfirmAlert Default 1`] = `
           className="control"
         >
           <button
-            className="button is-info is-outlined"
+            className="button is-outlined"
             onClick={[Function]}
             onKeyDown={[Function]}
             tabIndex={0}
@@ -16975,7 +16975,7 @@ exports[`Storyshots Modal/ConfirmAlert Default 1`] = `
           className="control"
         >
           <button
-            className="button is-info"
+            className="button"
             onClick={[Function]}
             onKeyDown={[Function]}
             tabIndex={0}

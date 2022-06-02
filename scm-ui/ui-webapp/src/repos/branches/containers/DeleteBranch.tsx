@@ -54,12 +54,12 @@ const DeleteBranch: FC<Props> = ({ repository, branch }: Props) => {
         message={t("branch.delete.confirmAlert.message", { branch: branch.name })}
         buttons={[
           {
-            className: "is-outlined",
             label: t("branch.delete.confirmAlert.submit"),
             onClick: () => remove(branch),
             isLoading
           },
           {
+            className: "is-info",
             label: t("branch.delete.confirmAlert.cancel"),
             onClick: () => null,
             autofocus: true

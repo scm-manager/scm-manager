@@ -74,7 +74,6 @@ export const PublicKeyEntry: FC<Props> = ({ publicKey, onDelete }) => {
           message={t("publicKey.deleteConfirmAlert.message")}
           buttons={[
             {
-              className: "is-outlined",
               label: t("publicKey.deleteConfirmAlert.submit"),
               onClick: () => {
                 onDelete(publicKey);
@@ -82,6 +81,7 @@ export const PublicKeyEntry: FC<Props> = ({ publicKey, onDelete }) => {
               },
             },
             {
+              className: "is-info",
               label: t("publicKey.deleteConfirmAlert.cancel"),
               onClick: () => setShowModal(false),
               autofocus: true,

@@ -59,7 +59,6 @@ export const ApiKeyEntry: FC<Props> = ({ apiKey, onDelete }) => {
           message={t("apiKey.deleteConfirmAlert.message")}
           buttons={[
             {
-              className: "is-outlined",
               label: t("apiKey.deleteConfirmAlert.submit"),
               onClick: () => {
                 onDelete(apiKey);
@@ -67,6 +66,7 @@ export const ApiKeyEntry: FC<Props> = ({ apiKey, onDelete }) => {
               },
             },
             {
+              className: "is-info",
               label: t("apiKey.deleteConfirmAlert.cancel"),
               onClick: () => setShowModal(false),
               autofocus: true,
