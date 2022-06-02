@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.35.0] - 2022-06-02
+### Added
+- Initialization step to install pre-defined plugin sets ([#2045](https://github.com/scm-manager/scm-manager/pull/2045))
+
+### Fixed
+- Diff command content ([#2036](https://github.com/scm-manager/scm-manager/pull/2036))
+- Correct resource for branch leaf ([#2037](https://github.com/scm-manager/scm-manager/pull/2037))
+- NPE on synchronous repository export ([#2040](https://github.com/scm-manager/scm-manager/pull/2040))
+- character encoding for basic authentication ([#2038](https://github.com/scm-manager/scm-manager/pull/2038))
+- Character encoding in diffs ([#2046](https://github.com/scm-manager/scm-manager/pull/2046))
+- Resource bundle loading from plugins ([#2041](https://github.com/scm-manager/scm-manager/pull/2041))
+
+### Changed
+- Visually separate focused and hovered buttons in confirmation dialogues ([#2050](https://github.com/scm-manager/scm-manager/pull/2050))
+- Migrate to Java 11 ([#1982](https://github.com/scm-manager/scm-manager/pull/1982))
+- Notify user about results of manually executed health check ([#2044](https://github.com/scm-manager/scm-manager/pull/2044))
+- Set order priority for repository information extensions ([#2041](https://github.com/scm-manager/scm-manager/pull/2041))
+
 ## [2.34.0] - 2022-05-13
 ### Added
 - Docker images for linux/arm/v7 and linux/arm64 ([#2021](https://github.com/scm-manager/scm-manager/pull/2021))
@@ -1039,3 +1057,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.32.2]: https://scm-manager.org/download/2.32.2
 [2.33.0]: https://scm-manager.org/download/2.33.0
 [2.34.0]: https://scm-manager.org/download/2.34.0
+[2.35.0]: https://scm-manager.org/download/2.35.0

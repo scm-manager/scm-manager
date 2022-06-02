@@ -1,2 +1,0 @@
-- type: changed
-  description: Notify user about results of manually executed health check ([#2044](https://github.com/scm-manager/scm-manager/pull/2044))
