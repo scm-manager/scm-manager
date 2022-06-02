@@ -63,9 +63,9 @@ type State = Collapsible & {
 
 const StyledHunk = styled(Hunk)`${props => {
   let style = props.icon ? `
-    .diff-gutter:hover::before {
+    .diff-gutter:hover::after {
       font-size: inherit;
-      padding-right: 0.5em;
+      margin-left: 0.5em;
       font-family: "Font Awesome 5 Free";
       content: "${props.icon}";
       color: var(--scm-column-selection);
