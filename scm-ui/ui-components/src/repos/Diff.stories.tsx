@@ -141,6 +141,14 @@ storiesOf("Repositories/Diff", module)
     const hunkDiffFiles = parser.parse(hunksDiff);
     return <Diff diff={hunkDiffFiles} />;
   })
+  .add("Hunk gutter hover icon", () => {
+    const hunkDiffFiles = parser.parse(hunksDiff);
+    return <Diff diff={hunkDiffFiles} hunkGutterHoverIcon="\f075" />;
+  })
+  .add("Highlight line on hover", () => {
+    const hunkDiffFiles = parser.parse(hunksDiff);
+    return <Diff diff={hunkDiffFiles} highlightLineOnHover />;
+  })
   .add("Binaries", () => {
     const binaryDiffFiles = parser.parse(binaryDiff);
     return <Diff diff={binaryDiffFiles} />;
