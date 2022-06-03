@@ -34,6 +34,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static sonia.scm.BasicContextProvider.DEVELOPMENT_INSTANCE_ID;
+import static sonia.scm.BasicContextProvider.STAGE_PROPERTY;
 
 class BasicContextProviderTest {
 
@@ -129,6 +131,26 @@ class BasicContextProviderTest {
       assertThat(provider.getInstanceId()).isEqualTo(firstInstanceId);
     }
 
-  }
+    @Nested
+    class WithStageDevelopment {
+      @BeforeEach
+      void setStage() {
+        System.setProperty(STAGE_PROPERTY, Stage.DEVELOPMENT.name());
+      }
 
+      @Test
+      void shouldReturnHardCodeInstanceIfIfStageDevelopment() {
+        BasicContextProvider basicContextProvider = new BasicContextProvider();
+
+        String instanceId = basicContextProvider.getInstanceId();
+
+        assertThat(instanceId).isEqualTo(DEVELOPMENT_INSTANCE_ID);
+      }
+
+      @AfterEach
+      void resetStage() {
+        System.setProperty(STAGE_PROPERTY, Stage.PRODUCTION.name());
+      }
+    }
+  }
 }
