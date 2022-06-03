@@ -86,6 +86,8 @@ public class BasicContextProvider implements SCMContextProvider
    */
   public static final String STAGE_PROPERTY = "scm.stage";
 
+  public static final String DEVELOPMENT_INSTANCE_ID = "00000000-0000-0000-0000-000000000000";
+
   //~--- constructors ---------------------------------------------------------
 
   /**
@@ -286,6 +288,9 @@ public class BasicContextProvider implements SCMContextProvider
   }
 
   private String readOrCreateInstanceId() throws IOException {
+    if (stage == Stage.DEVELOPMENT) {
+      return DEVELOPMENT_INSTANCE_ID;
+    }
     File configDirectory = new File(baseDirectory, "config");
     IOUtil.mkdirs(configDirectory);
     File instanceIdFile = new File(configDirectory, ".instance-id");
