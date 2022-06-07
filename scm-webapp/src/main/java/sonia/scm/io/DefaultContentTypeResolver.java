@@ -24,14 +24,19 @@
 
 package sonia.scm.io;
 
+import com.cloudogu.spotter.ContentType;
 import com.cloudogu.spotter.ContentTypeDetector;
 import com.cloudogu.spotter.Language;
 
+import javax.inject.Inject;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 public final class DefaultContentTypeResolver implements ContentTypeResolver {
+
+  private final Set<ContentTypeResolverExtension> resolverExtensions;
 
   private static final Language[] BOOST = new Language[]{
     // GCC Machine Description uses .md as extension, but markdown is much more likely
@@ -52,14 +57,25 @@ public final class DefaultContentTypeResolver implements ContentTypeResolver {
     .boost(BOOST)
     .bestEffortMatch();
 
+  @Inject
+  public DefaultContentTypeResolver(Set<ContentTypeResolverExtension> resolverExtensions) {
+    this.resolverExtensions = resolverExtensions;
+  }
+
   @Override
   public DefaultContentType resolve(String path) {
-    return new DefaultContentType(PATH_BASED.detect(path));
+    Optional<String> extensionContentType = resolveContentTypeFromExtensions(path, new byte[]{});
+    return extensionContentType
+      .map(rawContentType -> new DefaultContentType(new ContentType(rawContentType)))
+      .orElseGet(() -> new DefaultContentType(PATH_BASED.detect(path)));
   }
 
   @Override
   public DefaultContentType resolve(String path, byte[] contentPrefix) {
-    return new DefaultContentType(PATH_AND_CONTENT_BASED.detect(path, contentPrefix));
+    Optional<String> extensionContentType = resolveContentTypeFromExtensions(path, contentPrefix);
+    return extensionContentType
+      .map(rawContentType -> new DefaultContentType(new ContentType(rawContentType)))
+      .orElseGet(() -> new DefaultContentType(PATH_AND_CONTENT_BASED.detect(path, contentPrefix)));
   }
 
   @Override
@@ -69,5 +85,13 @@ public final class DefaultContentTypeResolver implements ContentTypeResolver {
       return DefaultContentType.syntaxMode(byName.get());
     }
     return Collections.emptyMap();
+  }
+
+  private Optional<String> resolveContentTypeFromExtensions(String path, byte[] contentPrefix) {
+    return resolverExtensions.stream()
+      .map(r -> r.resolve(path, contentPrefix))
+      .filter(Optional::isPresent)
+      .map(Optional::get)
+      .findFirst();
   }
 }

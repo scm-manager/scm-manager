@@ -81,7 +81,7 @@ const SourcesView: FC<Props> = ({ file, repository, revision }) => {
           file,
           contentType,
           revision,
-          basePath
+          basePath,
         }}
       >
         <DownloadViewer repository={repository} file={file} />

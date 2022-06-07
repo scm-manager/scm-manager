@@ -24,19 +24,22 @@
 
 package sonia.scm.io;
 
+import com.google.common.collect.ImmutableSet;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class DefaultContentTypeResolverTest {
 
-  private final DefaultContentTypeResolver contentTypeResolver = new DefaultContentTypeResolver();
+  private final DefaultContentTypeResolver contentTypeResolver = new DefaultContentTypeResolver(Collections.emptySet());
 
   @Test
   void shouldReturnPrimaryPart() {
@@ -54,6 +57,14 @@ class DefaultContentTypeResolverTest {
   void shouldReturnRaw() {
     ContentType contentType = contentTypeResolver.resolve("hog.pdf");
     assertThat(contentType.getRaw()).isEqualTo("application/pdf");
+  }
+
+  @Test
+  void shouldReturnContentTypeFromExtension() {
+    DefaultContentTypeResolver contentTypeResolver = new DefaultContentTypeResolver(ImmutableSet.of((path, contentPrefix) -> Optional.of("scm/test")));
+
+    ContentType contentType = contentTypeResolver.resolve("hog.pdf");
+    assertThat(contentType.getRaw()).isEqualTo("scm/test");
   }
 
   @Nested
