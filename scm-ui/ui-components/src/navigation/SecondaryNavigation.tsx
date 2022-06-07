@@ -78,7 +78,7 @@ const SecondaryNavigation: FC<Props> = ({ label, children, collapsible = true })
     }
   };
 
-  const arrowIcon = isCollapsed ? <i className="fas fa-caret-down" /> : <i className="fas fa-caret-right" />;
+  const arrowIcon = isCollapsed ? <i className="fas fa-caret-left" /> : <i className="fas fa-caret-down" />;
   const menuAriaLabel = isCollapsed ? t("secondaryNavigation.showContent") : t("secondaryNavigation.hideContent");
 
   return (
