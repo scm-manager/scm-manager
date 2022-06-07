@@ -97,10 +97,7 @@
     "error": "Fehler",
     "error-message": "'me' ist nicht definiert",
     "theme": {
-      "nav": {
-        "label": "Design",
-        "title": "Design wählen"
-      },
+      "navLink": "Design",
       "subtitle": "Design wählen",
       "submit": "Anwenden",
       "light": {

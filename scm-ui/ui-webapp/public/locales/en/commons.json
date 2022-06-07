@@ -98,10 +98,7 @@
     "error": "Error",
     "error-message": "'me' is undefined",
     "theme": {
-      "nav": {
-        "label": "Theme",
-        "title": "Choose your Theme"
-      },
+      "navLink": "Theme",
       "subtitle": "Choose your Theme",
       "submit": "Activate",
       "light": {
