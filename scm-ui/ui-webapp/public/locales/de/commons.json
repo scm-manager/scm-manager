@@ -135,7 +135,8 @@
   },
   "footer": {
     "user": {
-      "profile": "Profil"
+      "profile": "Profil",
+      "theme": "Theme"
     },
     "information": {
       "title": "Information"
