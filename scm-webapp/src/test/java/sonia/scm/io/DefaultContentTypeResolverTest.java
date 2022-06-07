@@ -65,7 +65,6 @@ class DefaultContentTypeResolverTest {
 
     ContentType contentType = contentTypeResolver.resolve("hog.pdf");
     assertThat(contentType.getRaw()).isEqualTo("scm/test");
-
   }
 
   @Nested
