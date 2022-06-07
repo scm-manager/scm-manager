@@ -70,14 +70,6 @@ public final class DefaultContentTypeResolver implements ContentTypeResolver {
       .orElseGet(() -> new DefaultContentType(PATH_BASED.detect(path)));
   }
 
-  private Optional<String> resolveContentTypeFromExtensions(String path, byte[] contentPrefix) {
-    return resolverExtensions.stream()
-      .map(r -> r.resolve(path, contentPrefix))
-      .filter(Optional::isPresent)
-      .map(Optional::get)
-      .findFirst();
-  }
-
   @Override
   public DefaultContentType resolve(String path, byte[] contentPrefix) {
     Optional<String> extensionContentType = resolveContentTypeFromExtensions(path, contentPrefix);
@@ -93,5 +85,13 @@ public final class DefaultContentTypeResolver implements ContentTypeResolver {
       return DefaultContentType.syntaxMode(byName.get());
     }
     return Collections.emptyMap();
+  }
+
+  private Optional<String> resolveContentTypeFromExtensions(String path, byte[] contentPrefix) {
+    return resolverExtensions.stream()
+      .map(r -> r.resolve(path, contentPrefix))
+      .filter(Optional::isPresent)
+      .map(Optional::get)
+      .findFirst();
   }
 }
