@@ -27,11 +27,12 @@ import {
   CustomQueryFlexWrappedColumns,
   Level,
   NavLink,
+  Notification,
   Page,
   PrimaryContentColumn,
   SecondaryNavigation,
   Tag,
-  urls
+  urls,
 } from "@scm-manager/ui-components";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { useSearch, useSearchCounts, useSearchTypes } from "@scm-manager/ui-api";
@@ -163,7 +164,9 @@ const Search: FC = () => {
             ))}
           </SecondaryNavigation>
         </CustomQueryFlexWrappedColumns>
-      ) : null}
+      ) : (
+        <Notification type="info">{t("search.unspecified")}</Notification>
+      )}
     </Page>
   );
 };

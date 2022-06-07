@@ -113,7 +113,7 @@ export const useSearch = (query: string, optionParam = defaultSearchOptions): Ap
     ["search", options.type, queryParams],
     () => apiClient.get(`${link}?${createQueryString(queryParams)}`).then((response) => response.json()),
     {
-      enabled: query.length > 1,
+      enabled: query?.length > 1,
     }
   );
 };
