@@ -1,0 +1,2 @@
+- type: fixed
+  description: Calling search results without parameters ([#2056](https://github.com/scm-manager/scm-manager/pull/2056))
