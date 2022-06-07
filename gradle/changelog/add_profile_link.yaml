@@ -1,0 +1,2 @@
+- type: fixed
+  description: Missing profile link in footer ([#2057](https://github.com/scm-manager/scm-manager/pull/2057))
