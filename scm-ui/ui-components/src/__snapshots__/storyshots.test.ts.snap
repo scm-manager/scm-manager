@@ -70404,7 +70404,7 @@ exports[`Storyshots Secondary Navigation Active when match 1`] = `
             className="SecondaryNavigation__Icon-sc-8p1rgi-1 hDCYCs is-medium"
           >
             <i
-              className="fas fa-caret-right"
+              className="fas fa-caret-down"
             />
           </i>
           Hitchhiker
@@ -70466,7 +70466,7 @@ exports[`Storyshots Secondary Navigation Default 1`] = `
             className="SecondaryNavigation__Icon-sc-8p1rgi-1 hDCYCs is-medium"
           >
             <i
-              className="fas fa-caret-right"
+              className="fas fa-caret-down"
             />
           </i>
           Hitchhiker
@@ -70528,7 +70528,7 @@ exports[`Storyshots Secondary Navigation Extension Point 1`] = `
             className="SecondaryNavigation__Icon-sc-8p1rgi-1 hDCYCs is-medium"
           >
             <i
-              className="fas fa-caret-right"
+              className="fas fa-caret-down"
             />
           </i>
           Hitchhiker
@@ -70616,7 +70616,7 @@ exports[`Storyshots Secondary Navigation Sub Navigation 1`] = `
             className="SecondaryNavigation__Icon-sc-8p1rgi-1 hDCYCs is-medium"
           >
             <i
-              className="fas fa-caret-right"
+              className="fas fa-caret-down"
             />
           </i>
           Hitchhiker
