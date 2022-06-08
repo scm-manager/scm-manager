@@ -66,11 +66,11 @@ const App: FC = () => {
 
   return (
     <AppWrapper className="App">
-      {isAuthenticated ? <Feedback index={index} /> : null}
       <Header authenticated={authenticatedOrAnonymous}>
         <NavigationBar links={index._links} />
       </Header>
       <div className="is-flex-grow-1">{content}</div>
+      {isAuthenticated ? <Feedback index={index} /> : null}
       <Footer me={me} version={index.version} links={index._links} />
     </AppWrapper>
   );
