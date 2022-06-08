@@ -1,0 +1,2 @@
+- type: fixed
+  description: remove underline under icon in buttons with class is-text ([#2065](https://github.com/scm-manager/scm-manager/pull/2065))
