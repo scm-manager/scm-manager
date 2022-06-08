@@ -1,0 +1,2 @@
+- type: changed
+  description: feedback button should not mask warp menu in when SCM-Manager is used as a dogu in Cloudogu EcoSystem ([#2051](https://github.com/scm-manager/scm-manager/pull/2062))
