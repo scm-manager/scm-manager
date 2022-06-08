@@ -119,12 +119,7 @@ const Profile: FC = () => {
                 label={t("profile.settingsNavLink")}
                 title={t("profile.settingsNavLink")}
               >
-                <NavLink
-                  to={`${url}/settings/theme`}
-                  icon="fas fa-palette"
-                  label={t("profile.theme.nav.label")}
-                  title={t("profile.theme.nav.title")}
-                />
+                <NavLink to={`${url}/settings/theme`} label={t("profile.theme.navLink")} />
                 {mayChangePassword && (
                   <NavLink to={`${url}/settings/password`} label={t("profile.changePasswordNavLink")} />
                 )}

@@ -1,0 +1,2 @@
+- type: fixed
+  description: Remove superfluous user theme link properties ([#2058](https://github.com/scm-manager/scm-manager/pull/2058))
