@@ -1486,10 +1486,20 @@ exports[`Storyshots Footer Default 1`] = `
             <a
               className=""
               data-testid="footer-user-profile"
-              href="/me/settings/theme"
+              href="/me"
               onClick={[Function]}
             >
               footer.user.profile
+            </a>
+          </li>
+          <li>
+            <a
+              className=""
+              data-testid="footer-user-theme"
+              href="/me/settings/theme"
+              onClick={[Function]}
+            >
+              footer.user.theme
             </a>
           </li>
         </ul>
@@ -1613,10 +1623,20 @@ exports[`Storyshots Footer Full 1`] = `
             <a
               className=""
               data-testid="footer-user-profile"
-              href="/me/settings/theme"
+              href="/me"
               onClick={[Function]}
             >
               footer.user.profile
+            </a>
+          </li>
+          <li>
+            <a
+              className=""
+              data-testid="footer-user-theme"
+              href="/me/settings/theme"
+              onClick={[Function]}
+            >
+              footer.user.theme
             </a>
           </li>
           <li>
@@ -1779,10 +1799,20 @@ exports[`Storyshots Footer With Avatar 1`] = `
             <a
               className=""
               data-testid="footer-user-profile"
-              href="/me/settings/theme"
+              href="/me"
               onClick={[Function]}
             >
               footer.user.profile
+            </a>
+          </li>
+          <li>
+            <a
+              className=""
+              data-testid="footer-user-theme"
+              href="/me/settings/theme"
+              onClick={[Function]}
+            >
+              footer.user.theme
             </a>
           </li>
         </ul>
@@ -1898,10 +1928,20 @@ exports[`Storyshots Footer With Plugin Links 1`] = `
             <a
               className=""
               data-testid="footer-user-profile"
-              href="/me/settings/theme"
+              href="/me"
               onClick={[Function]}
             >
               footer.user.profile
+            </a>
+          </li>
+          <li>
+            <a
+              className=""
+              data-testid="footer-user-theme"
+              href="/me/settings/theme"
+              onClick={[Function]}
+            >
+              footer.user.theme
             </a>
           </li>
           <li>
