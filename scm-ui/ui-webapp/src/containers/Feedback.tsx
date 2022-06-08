@@ -88,7 +88,7 @@ const Feedback: FC<Props> = ({ index }) => {
 
 const TriggerButton = styled(Button)`
   position: fixed;
-  z-index: 2;
+  z-index: 5;
   left: 1rem;
   right: unset;
   bottom: -1px;
