@@ -1,0 +1,2 @@
+- type: fixed
+  description: Remove branch validation on overview ([#2064](https://github.com/scm-manager/scm-manager/pull/2064))

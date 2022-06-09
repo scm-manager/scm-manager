@@ -165,7 +165,7 @@ public class BranchDetailsResource {
   public Response getBranchDetailsCollection(
     @PathParam("namespace") String namespace,
     @PathParam("name") String name,
-    @QueryParam("branches") List<@Length(min = 1, max = 100) @Pattern(regexp = VALID_BRANCH_NAMES) String> branches
+    @QueryParam("branches") List<@Length(min = 1, max = 100) String> branches
   ) {
     try (RepositoryService service = serviceFactory.create(new NamespaceAndName(namespace, name))) {
       List<BranchDetailsDto> dtos = getBranchDetailsDtos(service, branches);

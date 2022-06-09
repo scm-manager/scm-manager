@@ -158,7 +158,6 @@ class BranchDetailsResourceTest extends RepositoryTestBase {
 
   @ParameterizedTest
   @ValueSource(strings = {
-    "%2Fmaster",
     "",
     "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890X"
   })
