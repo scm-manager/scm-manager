@@ -1,0 +1,2 @@
+- type: fixed
+  description: Add wget to fix docker health check ([#2066](https://github.com/scm-manager/scm-manager/pull/2066))
