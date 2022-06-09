@@ -50,7 +50,7 @@ COPY build/docker/opt /opt
 RUN set -x \
  && apt-get update \
  # libfreetype6 libfontconfig1 graphviz
- && apt-get install -y --no-install-recommends libfreetype6 libfontconfig1 graphviz mercurial bash ca-certificates \
+ && apt-get install -y --no-install-recommends libfreetype6 libfontconfig1 graphviz mercurial bash ca-certificates wget \
  # use gid 0 for openshift compatibility
  && useradd -d "${SCM_HOME}" -u 1000 -g 0 -m -s /bin/bash scm \
  && mkdir -p ${SCM_HOME} ${CACHE_DIR} \
