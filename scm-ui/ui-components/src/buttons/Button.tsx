@@ -89,14 +89,14 @@ const Button: FC<InnerProps> = ({
   );
 
   const content = (
-    <>
+    <span>
       {renderIcon()}{" "}
       {(label || children) && (
         <>
           {label} {children}
         </>
       )}
-    </>
+    </span>
   );
 
   if (link && !disabled) {

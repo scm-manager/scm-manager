@@ -552,13 +552,15 @@ exports[`Storyshots Buttons/AddButton Default 1`] = `
     onClick={[Function]}
     type="button"
   >
-    <i
-      className="fas fa-fw fa-plus has-text-inherit is-medium pr-5"
-      onKeyPress={[Function]}
-    />
-     
-     
-    Add
+    <span>
+      <i
+        className="fas fa-fw fa-plus has-text-inherit is-medium pr-5"
+        onKeyPress={[Function]}
+      />
+       
+       
+      Add
+    </span>
   </button>
 </div>
 `;
@@ -573,9 +575,11 @@ exports[`Storyshots Buttons/Button Colors 1`] = `
       onClick={[Function]}
       type="button"
     >
-       
-      primary
-       
+      <span>
+         
+        primary
+         
+      </span>
     </button>
   </div>
   <div
@@ -586,9 +590,11 @@ exports[`Storyshots Buttons/Button Colors 1`] = `
       onClick={[Function]}
       type="button"
     >
-       
-      link
-       
+      <span>
+         
+        link
+         
+      </span>
     </button>
   </div>
   <div
@@ -599,9 +605,11 @@ exports[`Storyshots Buttons/Button Colors 1`] = `
       onClick={[Function]}
       type="button"
     >
-       
-      info
-       
+      <span>
+         
+        info
+         
+      </span>
     </button>
   </div>
   <div
@@ -612,9 +620,11 @@ exports[`Storyshots Buttons/Button Colors 1`] = `
       onClick={[Function]}
       type="button"
     >
-       
-      success
-       
+      <span>
+         
+        success
+         
+      </span>
     </button>
   </div>
   <div
@@ -625,9 +635,11 @@ exports[`Storyshots Buttons/Button Colors 1`] = `
       onClick={[Function]}
       type="button"
     >
-       
-      warning
-       
+      <span>
+         
+        warning
+         
+      </span>
     </button>
   </div>
   <div
@@ -638,9 +650,11 @@ exports[`Storyshots Buttons/Button Colors 1`] = `
       onClick={[Function]}
       type="button"
     >
-       
-      danger
-       
+      <span>
+         
+        danger
+         
+      </span>
     </button>
   </div>
   <div
@@ -651,9 +665,11 @@ exports[`Storyshots Buttons/Button Colors 1`] = `
       onClick={[Function]}
       type="button"
     >
-       
-      white
-       
+      <span>
+         
+        white
+         
+      </span>
     </button>
   </div>
   <div
@@ -664,9 +680,11 @@ exports[`Storyshots Buttons/Button Colors 1`] = `
       onClick={[Function]}
       type="button"
     >
-       
-      light
-       
+      <span>
+         
+        light
+         
+      </span>
     </button>
   </div>
   <div
@@ -677,9 +695,11 @@ exports[`Storyshots Buttons/Button Colors 1`] = `
       onClick={[Function]}
       type="button"
     >
-       
-      dark
-       
+      <span>
+         
+        dark
+         
+      </span>
     </button>
   </div>
   <div
@@ -690,9 +710,11 @@ exports[`Storyshots Buttons/Button Colors 1`] = `
       onClick={[Function]}
       type="button"
     >
-       
-      black
-       
+      <span>
+         
+        black
+         
+      </span>
     </button>
   </div>
   <div
@@ -703,9 +725,11 @@ exports[`Storyshots Buttons/Button Colors 1`] = `
       onClick={[Function]}
       type="button"
     >
-       
-      text
-       
+      <span>
+         
+        text
+         
+      </span>
     </button>
   </div>
 </div>
@@ -722,9 +746,11 @@ exports[`Storyshots Buttons/Button Disabled 1`] = `
       onClick={[Function]}
       type="button"
     >
-       
-      primary
-       
+      <span>
+         
+        primary
+         
+      </span>
     </button>
   </div>
   <div
@@ -736,9 +762,11 @@ exports[`Storyshots Buttons/Button Disabled 1`] = `
       onClick={[Function]}
       type="button"
     >
-       
-      link
-       
+      <span>
+         
+        link
+         
+      </span>
     </button>
   </div>
   <div
@@ -750,9 +778,11 @@ exports[`Storyshots Buttons/Button Disabled 1`] = `
       onClick={[Function]}
       type="button"
     >
-       
-      info
-       
+      <span>
+         
+        info
+         
+      </span>
     </button>
   </div>
   <div
@@ -764,9 +794,11 @@ exports[`Storyshots Buttons/Button Disabled 1`] = `
       onClick={[Function]}
       type="button"
     >
-       
-      success
-       
+      <span>
+         
+        success
+         
+      </span>
     </button>
   </div>
   <div
@@ -778,9 +810,11 @@ exports[`Storyshots Buttons/Button Disabled 1`] = `
       onClick={[Function]}
       type="button"
     >
-       
-      warning
-       
+      <span>
+         
+        warning
+         
+      </span>
     </button>
   </div>
   <div
@@ -792,9 +826,11 @@ exports[`Storyshots Buttons/Button Disabled 1`] = `
       onClick={[Function]}
       type="button"
     >
-       
-      danger
-       
+      <span>
+         
+        danger
+         
+      </span>
     </button>
   </div>
   <div
@@ -806,9 +842,11 @@ exports[`Storyshots Buttons/Button Disabled 1`] = `
       onClick={[Function]}
       type="button"
     >
-       
-      white
-       
+      <span>
+         
+        white
+         
+      </span>
     </button>
   </div>
   <div
@@ -820,9 +858,11 @@ exports[`Storyshots Buttons/Button Disabled 1`] = `
       onClick={[Function]}
       type="button"
     >
-       
-      light
-       
+      <span>
+         
+        light
+         
+      </span>
     </button>
   </div>
   <div
@@ -834,9 +874,11 @@ exports[`Storyshots Buttons/Button Disabled 1`] = `
       onClick={[Function]}
       type="button"
     >
-       
-      dark
-       
+      <span>
+         
+        dark
+         
+      </span>
     </button>
   </div>
   <div
@@ -848,9 +890,11 @@ exports[`Storyshots Buttons/Button Disabled 1`] = `
       onClick={[Function]}
       type="button"
     >
-       
-      black
-       
+      <span>
+         
+        black
+         
+      </span>
     </button>
   </div>
   <div
@@ -862,9 +906,11 @@ exports[`Storyshots Buttons/Button Disabled 1`] = `
       onClick={[Function]}
       type="button"
     >
-       
-      text
-       
+      <span>
+         
+        text
+         
+      </span>
     </button>
   </div>
 </div>
@@ -879,9 +925,11 @@ exports[`Storyshots Buttons/Button Loading 1`] = `
     onClick={[Function]}
     type="button"
   >
-     
-     
-    Loading Button
+    <span>
+       
+       
+      Loading Button
+    </span>
   </button>
 </div>
 `;
@@ -898,9 +946,11 @@ exports[`Storyshots Buttons/CreateButton Default 1`] = `
       onClick={[Function]}
       type="button"
     >
-       
-       
-      Create
+      <span>
+         
+         
+        Create
+      </span>
     </button>
   </div>
 </div>
@@ -915,13 +965,15 @@ exports[`Storyshots Buttons/DeleteButton Default 1`] = `
     onClick={[Function]}
     type="button"
   >
-    <i
-      className="fas fa-fw fa-times has-text-inherit is-medium pr-5"
-      onKeyPress={[Function]}
-    />
-     
-     
-    Delete
+    <span>
+      <i
+        className="fas fa-fw fa-times has-text-inherit is-medium pr-5"
+        onKeyPress={[Function]}
+      />
+       
+       
+      Delete
+    </span>
   </button>
 </div>
 `;
@@ -983,9 +1035,11 @@ exports[`Storyshots Buttons/EditButton Default 1`] = `
     onClick={[Function]}
     type="button"
   >
-     
-     
-    Edit
+    <span>
+       
+       
+      Edit
+    </span>
   </button>
 </div>
 `;
@@ -1000,9 +1054,11 @@ exports[`Storyshots Buttons/SubmitButton Default 1`] = `
     onClick={[Function]}
     type="submit"
   >
-     
-     
-    Submit
+    <span>
+       
+       
+      Submit
+    </span>
   </button>
 </div>
 `;
@@ -2133,13 +2189,15 @@ exports[`Storyshots Forms/AddKeyValueEntryToTableField Default 1`] = `
       onClick={[Function]}
       type="button"
     >
-      <i
-        className="fas fa-fw fa-plus has-text-inherit is-medium pr-5"
-        onKeyPress={[Function]}
-      />
-       
-      Add to Table
-       
+      <span>
+        <i
+          className="fas fa-fw fa-plus has-text-inherit is-medium pr-5"
+          onKeyPress={[Function]}
+        />
+         
+        Add to Table
+         
+      </span>
     </button>
   </div>
 </div>
@@ -2214,13 +2272,15 @@ exports[`Storyshots Forms/AddKeyValueEntryToTableField Disabled 1`] = `
       onClick={[Function]}
       type="button"
     >
-      <i
-        className="fas fa-fw fa-plus has-text-inherit is-medium pr-5"
-        onKeyPress={[Function]}
-      />
-       
-      Add to Table
-       
+      <span>
+        <i
+          className="fas fa-fw fa-plus has-text-inherit is-medium pr-5"
+          onKeyPress={[Function]}
+        />
+         
+        Add to Table
+         
+      </span>
     </button>
   </div>
 </div>
@@ -2475,9 +2535,11 @@ exports[`Storyshots Forms/Checkbox ReactHookForm 1`] = `
       onClick={[Function]}
       type="submit"
     >
-       
-       
-      Submit
+      <span>
+         
+         
+        Submit
+      </span>
     </button>
   </div>
 </form>
@@ -2513,9 +2575,11 @@ Array [
     onClick={[Function]}
     type="button"
   >
-     
-     
-    Toggle Checkbox
+    <span>
+       
+       
+      Toggle Checkbox
+    </span>
   </button>,
 ]
 `;
@@ -2787,9 +2851,11 @@ exports[`Storyshots Forms/FileInput Default 1`] = `
           onClick={[Function]}
           type="submit"
         >
-           
-           
-          Submit
+          <span>
+             
+             
+            Submit
+          </span>
         </button>
       </div>
     </div>
@@ -2875,9 +2941,11 @@ exports[`Storyshots Forms/InputField AutoFocusAndRef 1`] = `
     onClick={[Function]}
     type="button"
   >
-     
-     
-    Focus First InputField
+    <span>
+       
+       
+      Focus First InputField
+    </span>
   </button>
 </div>
 `;
@@ -3075,9 +3143,11 @@ exports[`Storyshots Forms/InputField React Hook Form 1`] = `
         onClick={[Function]}
         type="submit"
       >
-         
-         
-        Submit
+        <span>
+           
+           
+          Submit
+        </span>
       </button>
     </div>
   </form>
@@ -3111,9 +3181,11 @@ exports[`Storyshots Forms/InputField Ref 1`] = `
     onClick={[Function]}
     type="button"
   >
-     
-     
-    Focus InputField
+    <span>
+       
+       
+      Focus InputField
+    </span>
   </button>
 </div>
 `;
@@ -3353,9 +3425,11 @@ exports[`Storyshots Forms/Radio ReactHookForm 1`] = `
       onClick={[Function]}
       type="submit"
     >
-       
-       
-      Submit
+      <span>
+         
+         
+        Submit
+      </span>
     </button>
   </div>
 </form>
@@ -3389,9 +3463,11 @@ Array [
     onClick={[Function]}
     type="button"
   >
-     
-     
-    Check InputField
+    <span>
+       
+       
+      Check InputField
+    </span>
   </button>,
 ]
 `;
@@ -3740,9 +3816,11 @@ exports[`Storyshots Forms/Select ReactHookForm 1`] = `
       onClick={[Function]}
       type="submit"
     >
-       
-       
-      Submit
+      <span>
+         
+         
+        Submit
+      </span>
     </button>
   </div>
 </form>
@@ -3790,9 +3868,11 @@ Array [
     onClick={[Function]}
     type="button"
   >
-     
-     
-    Focus Select Field
+    <span>
+       
+       
+      Focus Select Field
+    </span>
   </button>,
   "false",
 ]
@@ -3870,9 +3950,11 @@ Array [
     onClick={[Function]}
     type="button"
   >
-     
-     
-    Focus First InputField
+    <span>
+       
+       
+      Focus First InputField
+    </span>
   </button>,
 ]
 `;
@@ -4144,9 +4226,11 @@ exports[`Storyshots Forms/Textarea ReactHookForm 1`] = `
       onClick={[Function]}
       type="submit"
     >
-       
-       
-      Submit
+      <span>
+         
+         
+        Submit
+      </span>
     </button>
   </div>
 </form>
@@ -4176,9 +4260,11 @@ Array [
     onClick={[Function]}
     type="button"
   >
-     
-     
-    Focus InputField
+    <span>
+       
+       
+      Focus InputField
+    </span>
   </button>,
 ]
 `;
@@ -4244,11 +4330,13 @@ exports[`Storyshots GroupEntry Default 1`] = `
             title="Copy clone command to clipboard"
             type="button"
           >
-            <i
-              className="fas fa-fw fa-download has-text-inherit is-medium"
-              onKeyPress={[Function]}
-            />
-             
+            <span>
+              <i
+                className="fas fa-fw fa-download has-text-inherit is-medium"
+                onKeyPress={[Function]}
+              />
+               
+            </span>
           </button>
         </div>
       </div>
@@ -4318,11 +4406,13 @@ exports[`Storyshots GroupEntry With long texts 1`] = `
             title="Copy clone command to clipboard"
             type="button"
           >
-            <i
-              className="fas fa-fw fa-download has-text-inherit is-medium"
-              onKeyPress={[Function]}
-            />
-             
+            <span>
+              <i
+                className="fas fa-fw fa-download has-text-inherit is-medium"
+                onKeyPress={[Function]}
+              />
+               
+            </span>
           </button>
         </div>
       </div>
@@ -4714,11 +4804,13 @@ exports[`Storyshots MarkdownView Code without Lang 1`] = `
           title="syntaxHighlighting.copyButton"
           type="button"
         >
-           
-           
-          <i
-            className="fa fa-clipboard"
-          />
+          <span>
+             
+             
+            <i
+              className="fa fa-clipboard"
+            />
+          </span>
         </button>
       </div>
     </div>
@@ -6164,11 +6256,13 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
           title="syntaxHighlighting.copyButton"
           type="button"
         >
-           
-           
-          <i
-            className="fa fa-clipboard"
-          />
+          <span>
+             
+             
+            <i
+              className="fa fa-clipboard"
+            />
+          </span>
         </button>
       </div>
       
@@ -14493,11 +14587,13 @@ exports[`Storyshots MarkdownView Inline Xml 1`] = `
           title="syntaxHighlighting.copyButton"
           type="button"
         >
-           
-           
-          <i
-            className="fa fa-clipboard"
-          />
+          <span>
+             
+             
+            <i
+              className="fa fa-clipboard"
+            />
+          </span>
         </button>
       </div>
       
@@ -16067,11 +16163,13 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
           title="syntaxHighlighting.copyButton"
           type="button"
         >
-           
-           
-          <i
-            className="fa fa-clipboard"
-          />
+          <span>
+             
+             
+            <i
+              className="fa fa-clipboard"
+            />
+          </span>
         </button>
       </div>
       
@@ -16861,11 +16959,13 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
           title="syntaxHighlighting.copyButton"
           type="button"
         >
-           
-           
-          <i
-            className="fa fa-clipboard"
-          />
+          <span>
+             
+             
+            <i
+              className="fa fa-clipboard"
+            />
+          </span>
         </button>
       </div>
     </div>
@@ -17303,9 +17403,11 @@ exports[`Storyshots Modal/Modal Nested 1`] = `
         title="Open inner modal"
         type="button"
       >
-         
-         
-        Open inner modal
+        <span>
+           
+           
+          Open inner modal
+        </span>
       </button>
     </section>
   </div>
@@ -17467,18 +17569,22 @@ exports[`Storyshots Modal/Modal With form elements 1`] = `
           onClick={[Function]}
           type="button"
         >
-           
-          One
-           
+          <span>
+             
+            One
+             
+          </span>
         </button>
         <button
           className="button is-default"
           onClick={[Function]}
           type="button"
         >
-           
-          Two
-           
+          <span>
+             
+            Two
+             
+          </span>
         </button>
       </div>
     </footer>
@@ -17538,18 +17644,22 @@ exports[`Storyshots Modal/Modal With initial button focus 1`] = `
           onClick={[Function]}
           type="button"
         >
-           
-          One
-           
+          <span>
+             
+            One
+             
+          </span>
         </button>
         <button
           className="button is-default"
           onClick={[Function]}
           type="button"
         >
-           
-          Two
-           
+          <span>
+             
+            Two
+             
+          </span>
         </button>
       </div>
     </footer>
@@ -17623,18 +17733,22 @@ exports[`Storyshots Modal/Modal With initial input field focus 1`] = `
           onClick={[Function]}
           type="button"
         >
-           
-          One
-           
+          <span>
+             
+            One
+             
+          </span>
         </button>
         <button
           className="button is-default"
           onClick={[Function]}
           type="button"
         >
-           
-          Two
-           
+          <span>
+             
+            Two
+             
+          </span>
         </button>
       </div>
     </footer>
@@ -18187,18 +18301,22 @@ exports[`Storyshots Modal/Modal With overflow and footer 1`] = `
           onClick={[Function]}
           type="button"
         >
-           
-          One
-           
+          <span>
+             
+            One
+             
+          </span>
         </button>
         <button
           className="button is-default"
           onClick={[Function]}
           type="button"
         >
-           
-          Two
-           
+          <span>
+             
+            Two
+             
+          </span>
         </button>
       </div>
     </footer>
@@ -19293,13 +19411,15 @@ exports[`Storyshots Repositories/Changesets Co-Authors with avatar 1`] = `
               href="/repo/hitchhiker/heartOfGold/code/changeset/b6c6f8fbd0d490936fae7d26ffdd4695cc2a0930"
               onClick={[Function]}
             >
-              <i
-                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
-                onKeyPress={[Function]}
-              />
-               
-              changeset.buttons.details
-               
+              <span>
+                <i
+                  className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
+                  onKeyPress={[Function]}
+                />
+                 
+                changeset.buttons.details
+                 
+              </span>
             </a>
           </p>
           <p
@@ -19311,13 +19431,15 @@ exports[`Storyshots Repositories/Changesets Co-Authors with avatar 1`] = `
               href="/repo/hitchhiker/heartOfGold/code/sources/b6c6f8fbd0d490936fae7d26ffdd4695cc2a0930"
               onClick={[Function]}
             >
-              <i
-                className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                onKeyPress={[Function]}
-              />
-               
-              changeset.buttons.sources
-               
+              <span>
+                <i
+                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
+                  onKeyPress={[Function]}
+                />
+                 
+                changeset.buttons.sources
+                 
+              </span>
             </a>
           </p>
         </div>
@@ -19446,13 +19568,15 @@ exports[`Storyshots Repositories/Changesets Commiter and Co-Authors with avatar 
               href="/repo/hitchhiker/heartOfGold/code/changeset/a88567ef1e9528a700555cad8c4576b72fc7c6dd"
               onClick={[Function]}
             >
-              <i
-                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
-                onKeyPress={[Function]}
-              />
-               
-              changeset.buttons.details
-               
+              <span>
+                <i
+                  className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
+                  onKeyPress={[Function]}
+                />
+                 
+                changeset.buttons.details
+                 
+              </span>
             </a>
           </p>
           <p
@@ -19464,13 +19588,15 @@ exports[`Storyshots Repositories/Changesets Commiter and Co-Authors with avatar 
               href="/repo/hitchhiker/heartOfGold/code/sources/a88567ef1e9528a700555cad8c4576b72fc7c6dd"
               onClick={[Function]}
             >
-              <i
-                className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                onKeyPress={[Function]}
-              />
-               
-              changeset.buttons.sources
-               
+              <span>
+                <i
+                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
+                  onKeyPress={[Function]}
+                />
+                 
+                changeset.buttons.sources
+                 
+              </span>
             </a>
           </p>
         </div>
@@ -19557,13 +19683,15 @@ exports[`Storyshots Repositories/Changesets Default 1`] = `
               href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <i
-                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
-                onKeyPress={[Function]}
-              />
-               
-              changeset.buttons.details
-               
+              <span>
+                <i
+                  className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
+                  onKeyPress={[Function]}
+                />
+                 
+                changeset.buttons.details
+                 
+              </span>
             </a>
           </p>
           <p
@@ -19575,13 +19703,15 @@ exports[`Storyshots Repositories/Changesets Default 1`] = `
               href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <i
-                className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                onKeyPress={[Function]}
-              />
-               
-              changeset.buttons.sources
-               
+              <span>
+                <i
+                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
+                  onKeyPress={[Function]}
+                />
+                 
+                changeset.buttons.sources
+                 
+              </span>
             </a>
           </p>
         </div>
@@ -19678,13 +19808,15 @@ exports[`Storyshots Repositories/Changesets Replacements 1`] = `
               href="/repo/hitchhiker/heartOfGold/code/changeset/d21cc6c359270aef2196796f4d96af65f51866dc"
               onClick={[Function]}
             >
-              <i
-                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
-                onKeyPress={[Function]}
-              />
-               
-              changeset.buttons.details
-               
+              <span>
+                <i
+                  className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
+                  onKeyPress={[Function]}
+                />
+                 
+                changeset.buttons.details
+                 
+              </span>
             </a>
           </p>
           <p
@@ -19696,13 +19828,15 @@ exports[`Storyshots Repositories/Changesets Replacements 1`] = `
               href="/repo/hitchhiker/heartOfGold/code/sources/d21cc6c359270aef2196796f4d96af65f51866dc"
               onClick={[Function]}
             >
-              <i
-                className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                onKeyPress={[Function]}
-              />
-               
-              changeset.buttons.sources
-               
+              <span>
+                <i
+                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
+                  onKeyPress={[Function]}
+                />
+                 
+                changeset.buttons.sources
+                 
+              </span>
             </a>
           </p>
         </div>
@@ -19801,13 +19935,15 @@ exports[`Storyshots Repositories/Changesets With Committer 1`] = `
               href="/repo/hitchhiker/heartOfGold/code/changeset/d21cc6c359270aef2196796f4d96af65f51866dc"
               onClick={[Function]}
             >
-              <i
-                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
-                onKeyPress={[Function]}
-              />
-               
-              changeset.buttons.details
-               
+              <span>
+                <i
+                  className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
+                  onKeyPress={[Function]}
+                />
+                 
+                changeset.buttons.details
+                 
+              </span>
             </a>
           </p>
           <p
@@ -19819,13 +19955,15 @@ exports[`Storyshots Repositories/Changesets With Committer 1`] = `
               href="/repo/hitchhiker/heartOfGold/code/sources/d21cc6c359270aef2196796f4d96af65f51866dc"
               onClick={[Function]}
             >
-              <i
-                className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                onKeyPress={[Function]}
-              />
-               
-              changeset.buttons.sources
-               
+              <span>
+                <i
+                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
+                  onKeyPress={[Function]}
+                />
+                 
+                changeset.buttons.sources
+                 
+              </span>
             </a>
           </p>
         </div>
@@ -19933,13 +20071,15 @@ exports[`Storyshots Repositories/Changesets With Committer and Co-Author 1`] = `
               href="/repo/hitchhiker/heartOfGold/code/changeset/a88567ef1e9528a700555cad8c4576b72fc7c6dd"
               onClick={[Function]}
             >
-              <i
-                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
-                onKeyPress={[Function]}
-              />
-               
-              changeset.buttons.details
-               
+              <span>
+                <i
+                  className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
+                  onKeyPress={[Function]}
+                />
+                 
+                changeset.buttons.details
+                 
+              </span>
             </a>
           </p>
           <p
@@ -19951,13 +20091,15 @@ exports[`Storyshots Repositories/Changesets With Committer and Co-Author 1`] = `
               href="/repo/hitchhiker/heartOfGold/code/sources/a88567ef1e9528a700555cad8c4576b72fc7c6dd"
               onClick={[Function]}
             >
-              <i
-                className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                onKeyPress={[Function]}
-              />
-               
-              changeset.buttons.sources
-               
+              <span>
+                <i
+                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
+                  onKeyPress={[Function]}
+                />
+                 
+                changeset.buttons.sources
+                 
+              </span>
             </a>
           </p>
         </div>
@@ -20057,13 +20199,15 @@ exports[`Storyshots Repositories/Changesets With avatar 1`] = `
               href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <i
-                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
-                onKeyPress={[Function]}
-              />
-               
-              changeset.buttons.details
-               
+              <span>
+                <i
+                  className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
+                  onKeyPress={[Function]}
+                />
+                 
+                changeset.buttons.details
+                 
+              </span>
             </a>
           </p>
           <p
@@ -20075,13 +20219,15 @@ exports[`Storyshots Repositories/Changesets With avatar 1`] = `
               href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <i
-                className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                onKeyPress={[Function]}
-              />
-               
-              changeset.buttons.sources
-               
+              <span>
+                <i
+                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
+                  onKeyPress={[Function]}
+                />
+                 
+                changeset.buttons.sources
+                 
+              </span>
             </a>
           </p>
         </div>
@@ -20177,13 +20323,15 @@ exports[`Storyshots Repositories/Changesets With contactless signature 1`] = `
               href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <i
-                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
-                onKeyPress={[Function]}
-              />
-               
-              changeset.buttons.details
-               
+              <span>
+                <i
+                  className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
+                  onKeyPress={[Function]}
+                />
+                 
+                changeset.buttons.details
+                 
+              </span>
             </a>
           </p>
           <p
@@ -20195,13 +20343,15 @@ exports[`Storyshots Repositories/Changesets With contactless signature 1`] = `
               href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <i
-                className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                onKeyPress={[Function]}
-              />
-               
-              changeset.buttons.sources
-               
+              <span>
+                <i
+                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
+                  onKeyPress={[Function]}
+                />
+                 
+                changeset.buttons.sources
+                 
+              </span>
             </a>
           </p>
         </div>
@@ -20297,13 +20447,15 @@ exports[`Storyshots Repositories/Changesets With invalid signature 1`] = `
               href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <i
-                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
-                onKeyPress={[Function]}
-              />
-               
-              changeset.buttons.details
-               
+              <span>
+                <i
+                  className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
+                  onKeyPress={[Function]}
+                />
+                 
+                changeset.buttons.details
+                 
+              </span>
             </a>
           </p>
           <p
@@ -20315,13 +20467,15 @@ exports[`Storyshots Repositories/Changesets With invalid signature 1`] = `
               href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <i
-                className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                onKeyPress={[Function]}
-              />
-               
-              changeset.buttons.sources
-               
+              <span>
+                <i
+                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
+                  onKeyPress={[Function]}
+                />
+                 
+                changeset.buttons.sources
+                 
+              </span>
             </a>
           </p>
         </div>
@@ -20421,13 +20575,15 @@ exports[`Storyshots Repositories/Changesets With multiple Co-Authors 1`] = `
               href="/repo/hitchhiker/heartOfGold/code/changeset/b6c6f8fbd0d490936fae7d26ffdd4695cc2a0930"
               onClick={[Function]}
             >
-              <i
-                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
-                onKeyPress={[Function]}
-              />
-               
-              changeset.buttons.details
-               
+              <span>
+                <i
+                  className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
+                  onKeyPress={[Function]}
+                />
+                 
+                changeset.buttons.details
+                 
+              </span>
             </a>
           </p>
           <p
@@ -20439,13 +20595,15 @@ exports[`Storyshots Repositories/Changesets With multiple Co-Authors 1`] = `
               href="/repo/hitchhiker/heartOfGold/code/sources/b6c6f8fbd0d490936fae7d26ffdd4695cc2a0930"
               onClick={[Function]}
             >
-              <i
-                className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                onKeyPress={[Function]}
-              />
-               
-              changeset.buttons.sources
-               
+              <span>
+                <i
+                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
+                  onKeyPress={[Function]}
+                />
+                 
+                changeset.buttons.sources
+                 
+              </span>
             </a>
           </p>
         </div>
@@ -20541,13 +20699,15 @@ exports[`Storyshots Repositories/Changesets With multiple signatures and invalid
               href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <i
-                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
-                onKeyPress={[Function]}
-              />
-               
-              changeset.buttons.details
-               
+              <span>
+                <i
+                  className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
+                  onKeyPress={[Function]}
+                />
+                 
+                changeset.buttons.details
+                 
+              </span>
             </a>
           </p>
           <p
@@ -20559,13 +20719,15 @@ exports[`Storyshots Repositories/Changesets With multiple signatures and invalid
               href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <i
-                className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                onKeyPress={[Function]}
-              />
-               
-              changeset.buttons.sources
-               
+              <span>
+                <i
+                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
+                  onKeyPress={[Function]}
+                />
+                 
+                changeset.buttons.sources
+                 
+              </span>
             </a>
           </p>
         </div>
@@ -20661,13 +20823,15 @@ exports[`Storyshots Repositories/Changesets With multiple signatures and not fou
               href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <i
-                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
-                onKeyPress={[Function]}
-              />
-               
-              changeset.buttons.details
-               
+              <span>
+                <i
+                  className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
+                  onKeyPress={[Function]}
+                />
+                 
+                changeset.buttons.details
+                 
+              </span>
             </a>
           </p>
           <p
@@ -20679,13 +20843,15 @@ exports[`Storyshots Repositories/Changesets With multiple signatures and not fou
               href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <i
-                className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                onKeyPress={[Function]}
-              />
-               
-              changeset.buttons.sources
-               
+              <span>
+                <i
+                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
+                  onKeyPress={[Function]}
+                />
+                 
+                changeset.buttons.sources
+                 
+              </span>
             </a>
           </p>
         </div>
@@ -20781,13 +20947,15 @@ exports[`Storyshots Repositories/Changesets With multiple signatures and valid s
               href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <i
-                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
-                onKeyPress={[Function]}
-              />
-               
-              changeset.buttons.details
-               
+              <span>
+                <i
+                  className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
+                  onKeyPress={[Function]}
+                />
+                 
+                changeset.buttons.details
+                 
+              </span>
             </a>
           </p>
           <p
@@ -20799,13 +20967,15 @@ exports[`Storyshots Repositories/Changesets With multiple signatures and valid s
               href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <i
-                className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                onKeyPress={[Function]}
-              />
-               
-              changeset.buttons.sources
-               
+              <span>
+                <i
+                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
+                  onKeyPress={[Function]}
+                />
+                 
+                changeset.buttons.sources
+                 
+              </span>
             </a>
           </p>
         </div>
@@ -20901,13 +21071,15 @@ exports[`Storyshots Repositories/Changesets With unknown signature 1`] = `
               href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <i
-                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
-                onKeyPress={[Function]}
-              />
-               
-              changeset.buttons.details
-               
+              <span>
+                <i
+                  className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
+                  onKeyPress={[Function]}
+                />
+                 
+                changeset.buttons.details
+                 
+              </span>
             </a>
           </p>
           <p
@@ -20919,13 +21091,15 @@ exports[`Storyshots Repositories/Changesets With unknown signature 1`] = `
               href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <i
-                className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                onKeyPress={[Function]}
-              />
-               
-              changeset.buttons.sources
-               
+              <span>
+                <i
+                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
+                  onKeyPress={[Function]}
+                />
+                 
+                changeset.buttons.sources
+                 
+              </span>
             </a>
           </p>
         </div>
@@ -21021,13 +21195,15 @@ exports[`Storyshots Repositories/Changesets With unowned signature 1`] = `
               href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <i
-                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
-                onKeyPress={[Function]}
-              />
-               
-              changeset.buttons.details
-               
+              <span>
+                <i
+                  className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
+                  onKeyPress={[Function]}
+                />
+                 
+                changeset.buttons.details
+                 
+              </span>
             </a>
           </p>
           <p
@@ -21039,13 +21215,15 @@ exports[`Storyshots Repositories/Changesets With unowned signature 1`] = `
               href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <i
-                className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                onKeyPress={[Function]}
-              />
-               
-              changeset.buttons.sources
-               
+              <span>
+                <i
+                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
+                  onKeyPress={[Function]}
+                />
+                 
+                changeset.buttons.sources
+                 
+              </span>
             </a>
           </p>
         </div>
@@ -21141,13 +21319,15 @@ exports[`Storyshots Repositories/Changesets With valid signature 1`] = `
               href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <i
-                className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
-                onKeyPress={[Function]}
-              />
-               
-              changeset.buttons.details
-               
+              <span>
+                <i
+                  className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
+                  onKeyPress={[Function]}
+                />
+                 
+                changeset.buttons.details
+                 
+              </span>
             </a>
           </p>
           <p
@@ -21159,13 +21339,15 @@ exports[`Storyshots Repositories/Changesets With valid signature 1`] = `
               href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
-              <i
-                className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
-                onKeyPress={[Function]}
-              />
-               
-              changeset.buttons.sources
-               
+              <span>
+                <i
+                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
+                  onKeyPress={[Function]}
+                />
+                 
+                changeset.buttons.sources
+                 
+              </span>
             </a>
           </p>
         </div>
@@ -21471,9 +21653,11 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
       onClick={[Function]}
       type="button"
     >
-       
-       
-      Change content
+      <span>
+         
+         
+        Change content
+      </span>
     </button>
     <div>
       <div
@@ -71156,11 +71340,13 @@ exports[`Storyshots SyntaxHighlighter Go 1`] = `
       title="syntaxHighlighting.copyButton"
       type="button"
     >
-       
-       
-      <i
-        className="fa fa-clipboard"
-      />
+      <span>
+         
+         
+        <i
+          className="fa fa-clipboard"
+        />
+      </span>
     </button>
   </div>
 </div>
@@ -71962,11 +72148,13 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
       title="syntaxHighlighting.copyButton"
       type="button"
     >
-       
-       
-      <i
-        className="fa fa-clipboard"
-      />
+      <span>
+         
+         
+        <i
+          className="fa fa-clipboard"
+        />
+      </span>
     </button>
   </div>
 </div>
@@ -72168,11 +72356,13 @@ exports[`Storyshots SyntaxHighlighter Javascript 1`] = `
       title="syntaxHighlighting.copyButton"
       type="button"
     >
-       
-       
-      <i
-        className="fa fa-clipboard"
-      />
+      <span>
+         
+         
+        <i
+          className="fa fa-clipboard"
+        />
+      </span>
     </button>
   </div>
 </div>
@@ -76474,11 +76664,13 @@ exports[`Storyshots SyntaxHighlighter Markdown 1`] = `
       title="syntaxHighlighting.copyButton"
       type="button"
     >
-       
-       
-      <i
-        className="fa fa-clipboard"
-      />
+      <span>
+         
+         
+        <i
+          className="fa fa-clipboard"
+        />
+      </span>
     </button>
   </div>
 </div>
@@ -77005,11 +77197,13 @@ exports[`Storyshots SyntaxHighlighter Python 1`] = `
       title="syntaxHighlighting.copyButton"
       type="button"
     >
-       
-       
-      <i
-        className="fa fa-clipboard"
-      />
+      <span>
+         
+         
+        <i
+          className="fa fa-clipboard"
+        />
+      </span>
     </button>
   </div>
 </div>
@@ -77222,11 +77416,13 @@ exports[`Storyshots SyntaxHighlighter Without line numbers 1`] = `
       title="syntaxHighlighting.copyButton"
       type="button"
     >
-       
-       
-      <i
-        className="fa fa-clipboard"
-      />
+      <span>
+         
+         
+        <i
+          className="fa fa-clipboard"
+        />
+      </span>
     </button>
   </div>
 </div>
@@ -78215,9 +78411,11 @@ exports[`Storyshots Tooltip Default 1`] = `
         onClick={[Function]}
         type="button"
       >
-         
-        right
-         
+        <span>
+           
+          right
+           
+        </span>
       </button>
        
     </div>
@@ -78236,9 +78434,11 @@ exports[`Storyshots Tooltip Default 1`] = `
         onClick={[Function]}
         type="button"
       >
-         
-        top
-         
+        <span>
+           
+          top
+           
+        </span>
       </button>
        
     </div>
@@ -78257,9 +78457,11 @@ exports[`Storyshots Tooltip Default 1`] = `
         onClick={[Function]}
         type="button"
       >
-         
-        left
-         
+        <span>
+           
+          left
+           
+        </span>
       </button>
        
     </div>
@@ -78278,9 +78480,11 @@ exports[`Storyshots Tooltip Default 1`] = `
         onClick={[Function]}
         type="button"
       >
-         
-        bottom
-         
+        <span>
+           
+          bottom
+           
+        </span>
       </button>
        
     </div>
@@ -78306,9 +78510,11 @@ exports[`Storyshots Tooltip Multiline 1`] = `
         onClick={[Function]}
         type="button"
       >
-         
-        right
-         
+        <span>
+           
+          right
+           
+        </span>
       </button>
        
     </div>
@@ -78327,9 +78533,11 @@ exports[`Storyshots Tooltip Multiline 1`] = `
         onClick={[Function]}
         type="button"
       >
-         
-        top
-         
+        <span>
+           
+          top
+           
+        </span>
       </button>
        
     </div>
@@ -78348,9 +78556,11 @@ exports[`Storyshots Tooltip Multiline 1`] = `
         onClick={[Function]}
         type="button"
       >
-         
-        left
-         
+        <span>
+           
+          left
+           
+        </span>
       </button>
        
     </div>
@@ -78369,9 +78579,11 @@ exports[`Storyshots Tooltip Multiline 1`] = `
         onClick={[Function]}
         type="button"
       >
-         
-        bottom
-         
+        <span>
+           
+          bottom
+           
+        </span>
       </button>
        
     </div>
@@ -78397,9 +78609,11 @@ exports[`Storyshots Tooltip Short Multiline 1`] = `
         onClick={[Function]}
         type="button"
       >
-         
-        right
-         
+        <span>
+           
+          right
+           
+        </span>
       </button>
        
     </div>
@@ -78418,9 +78632,11 @@ exports[`Storyshots Tooltip Short Multiline 1`] = `
         onClick={[Function]}
         type="button"
       >
-         
-        top
-         
+        <span>
+           
+          top
+           
+        </span>
       </button>
        
     </div>
@@ -78439,9 +78655,11 @@ exports[`Storyshots Tooltip Short Multiline 1`] = `
         onClick={[Function]}
         type="button"
       >
-         
-        left
-         
+        <span>
+           
+          left
+           
+        </span>
       </button>
        
     </div>
@@ -78460,9 +78678,11 @@ exports[`Storyshots Tooltip Short Multiline 1`] = `
         onClick={[Function]}
         type="button"
       >
-         
-        bottom
-         
+        <span>
+           
+          bottom
+           
+        </span>
       </button>
        
     </div>
@@ -78488,9 +78708,11 @@ exports[`Storyshots Tooltip Styled 1`] = `
         onClick={[Function]}
         type="button"
       >
-         
-        right
-         
+        <span>
+           
+          right
+           
+        </span>
       </button>
        
     </div>
@@ -78509,9 +78731,11 @@ exports[`Storyshots Tooltip Styled 1`] = `
         onClick={[Function]}
         type="button"
       >
-         
-        top
-         
+        <span>
+           
+          top
+           
+        </span>
       </button>
        
     </div>
@@ -78530,9 +78754,11 @@ exports[`Storyshots Tooltip Styled 1`] = `
         onClick={[Function]}
         type="button"
       >
-         
-        left
-         
+        <span>
+           
+          left
+           
+        </span>
       </button>
        
     </div>
@@ -78551,9 +78777,11 @@ exports[`Storyshots Tooltip Styled 1`] = `
         onClick={[Function]}
         type="button"
       >
-         
-        bottom
-         
+        <span>
+           
+          bottom
+           
+        </span>
       </button>
        
     </div>
