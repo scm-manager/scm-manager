@@ -24,7 +24,7 @@
 
 import React, { FC, useMemo, useState } from "react";
 import styled from "styled-components";
-import { apiClient, Button, Modal } from "@scm-manager/ui-components";
+import { apiClient, Button, Modal, devices } from "@scm-manager/ui-components";
 import { HalRepresentation, IndexResources, Link } from "@scm-manager/ui-types";
 import { useTranslation } from "react-i18next";
 import { ApiResult, createQueryString } from "@scm-manager/ui-api";
@@ -88,10 +88,15 @@ const Feedback: FC<Props> = ({ index }) => {
 
 const TriggerButton = styled(Button)`
   position: fixed;
-  z-index: 9999999;
-  right: 1rem;
+  z-index: 5;
+  left: 1rem;
+  right: unset;
   bottom: -1px;
   border-radius: 0.2rem 0.2rem 0 0;
+  @media screen and (min-width: ${devices.desktop.width}px) {
+    right: 1rem;
+    left: unset;
+  }
 `;
 
 const ModalWrapper = styled(Modal)`
