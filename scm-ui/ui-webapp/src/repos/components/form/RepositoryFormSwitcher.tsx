@@ -46,7 +46,7 @@ const RepositoryFormButton: FC<RepositoryForm> = ({ path, icon, label }) => {
       link={!isSelected ? href : undefined}
     >
       <Icon className="pr-2" name={icon} color="inherit" alt="" />
-      <p className={classNames("is-hidden-mobile", "is-hidden-tablet-only")}>{t(`plugins:${label}`, label)}</p>
+      <span className={classNames("is-hidden-mobile", "is-hidden-tablet-only")}>{t(`plugins:${label}`, label)}</span>
     </Button>
   );
 };
@@ -57,7 +57,7 @@ type Props = {
 
 const RepositoryFormSwitcher: FC<Props> = ({ forms }) => (
   <ButtonAddons className="ml-auto">
-    {(forms || []).map(form => (
+    {(forms || []).map((form) => (
       <RepositoryFormButton key={form.path} {...form} />
     ))}
   </ButtonAddons>
