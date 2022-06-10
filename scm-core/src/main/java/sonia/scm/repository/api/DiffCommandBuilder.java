@@ -110,8 +110,12 @@ public final class DiffCommandBuilder extends AbstractDiffCommandBuilder<DiffCom
    * @throws IOException
    */
   public String getContent() throws IOException {
+    checkArguments();
+
+    logger.debug("create diff content for {}", request);
+
     try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-      getDiffResult().accept(baos);
+      diffCommand.getDiffResultInternal(request).accept(baos);
       return baos.toString(StandardCharsets.UTF_8);
     }
   }
@@ -147,12 +151,16 @@ public final class DiffCommandBuilder extends AbstractDiffCommandBuilder<DiffCom
    * @return
    */
   private OutputStreamConsumer getDiffResult() throws IOException {
-    Preconditions.checkArgument(request.isValid(),
-      "path and/or revision is required");
+    checkArguments();
 
     logger.debug("create diff for {}", request);
 
     return diffCommand.getDiffResult(request);
+  }
+
+  private void checkArguments() {
+    Preconditions.checkArgument(request.isValid(),
+      "path and/or revision is required");
   }
 
   @Override
