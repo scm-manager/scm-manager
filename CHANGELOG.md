@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.36.0] - 2022-06-13
+### Added
+- Add api to overwrite content type resolver ([#2051](https://github.com/scm-manager/scm-manager/pull/2051))
+- New diff view props for controlling hunk/line interaction ([#2047](https://github.com/scm-manager/scm-manager/pull/2047))
+
+### Fixed
+- Missing profile link in footer ([#2057](https://github.com/scm-manager/scm-manager/pull/2057))
+- Remove branch validation on overview ([#2064](https://github.com/scm-manager/scm-manager/pull/2064))
+- Do not close hg context for diff as string ([#2067](https://github.com/scm-manager/scm-manager/pull/2067))
+- Calling search results without parameters ([#2056](https://github.com/scm-manager/scm-manager/pull/2056))
+- Add wget to fix docker health check ([#2066](https://github.com/scm-manager/scm-manager/pull/2066))
+- Remove underline under icon in buttons with class is-text ([#2065](https://github.com/scm-manager/scm-manager/pull/2065))
+- Arrow icon of secondary navigation is inconsistent ([#2060](https://github.com/scm-manager/scm-manager/pull/2060))
+- Remove superfluous user theme link properties ([#2058](https://github.com/scm-manager/scm-manager/pull/2058))
+
+### Changed
+- Feedback button should not mask warp menu in when SCM-Manager is used as a dogu in Cloudogu EcoSystem ([#2062](https://github.com/scm-manager/scm-manager/pull/2062))
+
 ## [2.35.0] - 2022-06-02
 ### Added
 - Initialization step to install pre-defined plugin sets ([#2045](https://github.com/scm-manager/scm-manager/pull/2045))
@@ -1058,3 +1076,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.33.0]: https://scm-manager.org/download/2.33.0
 [2.34.0]: https://scm-manager.org/download/2.34.0
 [2.35.0]: https://scm-manager.org/download/2.35.0
+[2.36.0]: https://scm-manager.org/download/2.36.0

@@ -1,2 +1,0 @@
-- type: fixed
-  description: Do not close hg context for diff as string ([#2067](https://github.com/scm-manager/scm-manager/pull/2067))

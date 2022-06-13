@@ -1,2 +1,0 @@
-- type: added
-  description: Add api to overwrite content type resolver ([#2051](https://github.com/scm-manager/scm-manager/pull/2051))
