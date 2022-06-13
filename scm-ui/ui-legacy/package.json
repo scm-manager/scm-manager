@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-legacy",
-  "version": "2.36.0",
+  "version": "2.36.1-SNAPSHOT",
   "private": true,
   "main": "src/index.ts",
   "scripts": {
@@ -8,9 +8,9 @@
     "lint": "eslint src"
   },
   "dependencies": {
-    "@scm-manager/ui-api": "^2.36.0",
-    "@scm-manager/ui-extensions": "^2.36.0",
-    "@scm-manager/ui-types": "^2.36.0",
+    "@scm-manager/ui-api": "^2.36.1-SNAPSHOT",
+    "@scm-manager/ui-extensions": "^2.36.1-SNAPSHOT",
+    "@scm-manager/ui-types": "^2.36.1-SNAPSHOT",
     "react": "^17.0.1",
     "react-redux": "^5.0.7",
     "redux": "^4.0.0"
