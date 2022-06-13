@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import sonia.scm.repository.api.DiffCommandBuilder;
@@ -37,13 +37,25 @@ public interface DiffCommand
 {
 
   /**
-   * Method description
+   * Implementations of this method have to ensure, that all resources are released when the stream ends.
+   * This implementation is used for streaming results, where there are no more requests with the same
+   * context will be expected, whatsoever.
    *
-   *
-   * @param request
-   * @throws IOException
-   * @throws RuntimeException
-   * @return
+   * <b>If</b> this closes resources that will prevent further commands from execution, you have to override
+   * {@link #getDiffResultInternal(DiffCommandRequest)} that will return the same as this functions, but
+   * must not release these resources so that subsequent commands will still function.
    */
   DiffCommandBuilder.OutputStreamConsumer getDiffResult(DiffCommandRequest request) throws IOException;
+
+  /**
+   * Override this if {@link #getDiffResult(DiffCommandRequest)} releases resources that will prevent other
+   * commands from execution, so that these resources are not released with this function.
+   *
+   * Defaults to a simple call to {@link #getDiffResult(DiffCommandRequest)}.
+   *
+   * @since 2.36.0
+   */
+  default DiffCommandBuilder.OutputStreamConsumer getDiffResultInternal(DiffCommandRequest request) throws IOException {
+    return getDiffResult(request);
+  }
 }

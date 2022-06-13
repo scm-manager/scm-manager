@@ -58,7 +58,14 @@ public class HgDiffCommand extends AbstractCommand implements DiffCommand {
     };
   }
 
-  @SuppressWarnings("UnstableApiUsage")
+  @Override
+  public DiffCommandBuilder.OutputStreamConsumer getDiffResultInternal(DiffCommandRequest request) {
+    return output -> {
+      Repository hgRepo = open();
+      diff(hgRepo, request, output);
+    };
+  }
+
   private void diff(Repository hgRepo, DiffCommandRequest request, OutputStream output) throws IOException {
     HgDiffInternalCommand cmd = createDiffCommand(hgRepo, request);
     try (InputStream inputStream = streamDiff(hgRepo, cmd, request.getPath())) {

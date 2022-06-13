@@ -31,7 +31,9 @@ import sonia.scm.repository.api.DiffFormat;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
@@ -51,6 +53,27 @@ public class HgDiffCommandTest extends AbstractHgCommandTestBase {
 
     String content = diff(cmdContext, request);
     assertThat(content).contains("git");
+  }
+
+  @Test
+  public void shouldCreateDiffInternal() throws IOException {
+    DiffCommandRequest request = new DiffCommandRequest();
+    request.setRevision("3049df33fdbbded08b707bac3eccd0f7b453c58b");
+
+    String content = getStringFromDiffStream(new HgDiffCommand(cmdContext).getDiffResultInternal(request));
+    assertThat(content)
+      .contains("+++ b/c/d.txt");
+  }
+
+  @Test
+  public void shouldNotCloseInternalStream() throws IOException {
+    HgCommandContext context = spy(cmdContext);
+    DiffCommandRequest request = new DiffCommandRequest();
+    request.setRevision("3049df33fdbbded08b707bac3eccd0f7b453c58b");
+
+    new HgDiffCommand(cmdContext).getDiffResultInternal(request);
+
+    verify(context, never()).close();
   }
 
   @Test
@@ -92,9 +115,13 @@ public class HgDiffCommandTest extends AbstractHgCommandTestBase {
   private String diff(HgCommandContext context, DiffCommandRequest request) throws IOException {
     HgDiffCommand diff = new HgDiffCommand(context);
     DiffCommandBuilder.OutputStreamConsumer consumer = diff.getDiffResult(request);
+    return getStringFromDiffStream(consumer);
+  }
+
+  private String getStringFromDiffStream(DiffCommandBuilder.OutputStreamConsumer consumer) throws IOException {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     consumer.accept(baos);
-    return baos.toString("UTF-8");
+    return baos.toString(UTF_8);
   }
 
 }
