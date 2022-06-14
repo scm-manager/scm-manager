@@ -136,7 +136,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
       gitTagConverter,
       workingCopyFactory,
       gitHeadModifier,
-      storeProvider);
+      storeProvider, lfsBlobStoreFactory);
   }
 
   @Before

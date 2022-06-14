@@ -29,35 +29,15 @@ import sonia.scm.plugin.Extension;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.MediaType;
-import java.util.Arrays;
 
 @Slf4j
 @Extension
-public class GitLfsLockApiDetector implements ScmClientDetector {
+public class GitLfsObjectApiDetector implements ScmClientDetector {
 
   public static final MediaType LFS_APPLICATION_TYPE = MediaType.valueOf("application/vnd.git-lfs+json");
 
   @Override
   public boolean isScmClient(HttpServletRequest request, UserAgent userAgent) {
-    return isLfsType(request, "Content-Type")
-      || isLfsType(request, "Accept");
-  }
-
-  private boolean isLfsType(HttpServletRequest request, String name) {
-    String headerValue = request.getHeader(name);
-
-    if (headerValue == null) {
-      return false;
-    }
-
-    log.trace("checking '{}' header with value '{}'", name, headerValue);
-
-    return Arrays.stream(headerValue.split(",\\s*"))
-      .anyMatch(v -> {
-        MediaType headerMediaType = MediaType.valueOf(v);
-        return
-          !(headerMediaType.isWildcardType() || headerMediaType.isWildcardSubtype())
-          && headerMediaType.isCompatible(LFS_APPLICATION_TYPE);
-      });
+    return request.getRequestURI().contains("info/lfs/objects");
   }
 }

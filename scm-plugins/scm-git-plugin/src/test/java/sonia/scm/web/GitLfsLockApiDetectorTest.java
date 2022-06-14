@@ -24,40 +24,42 @@
 
 package sonia.scm.web;
 
-import lombok.extern.slf4j.Slf4j;
-import sonia.scm.plugin.Extension;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.core.MediaType;
-import java.util.Arrays;
 
-@Slf4j
-@Extension
-public class GitLfsLockApiDetector implements ScmClientDetector {
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-  public static final MediaType LFS_APPLICATION_TYPE = MediaType.valueOf("application/vnd.git-lfs+json");
+@ExtendWith(MockitoExtension.class)
+class GitLfsLockApiDetectorTest {
 
-  @Override
-  public boolean isScmClient(HttpServletRequest request, UserAgent userAgent) {
-    return isLfsType(request, "Content-Type")
-      || isLfsType(request, "Accept");
+  @Test
+  void shouldAcceptComplexHeader() {
+    HttpServletRequest request = mock(HttpServletRequest.class);
+    when(request.getHeader("Content-Type"))
+      .thenReturn("text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2");
+
+    boolean result = new GitLfsLockApiDetector().isScmClient(request, null);
+
+    assertThat(result).isFalse();
   }
 
-  private boolean isLfsType(HttpServletRequest request, String name) {
-    String headerValue = request.getHeader(name);
+  @Test
+  void shouldAcceptComplexHeader2() {
+    HttpServletRequest request = mock(HttpServletRequest.class);
+    when(request.getHeader("Content-Type"))
+      .thenReturn(null);
+    when(request.getHeader("Accept"))
+      .thenReturn("text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2");
 
-    if (headerValue == null) {
-      return false;
-    }
+    boolean result = new GitLfsLockApiDetector().isScmClient(request, null);
 
-    log.trace("checking '{}' header with value '{}'", name, headerValue);
-
-    return Arrays.stream(headerValue.split(",\\s*"))
-      .anyMatch(v -> {
-        MediaType headerMediaType = MediaType.valueOf(v);
-        return
-          !(headerMediaType.isWildcardType() || headerMediaType.isWildcardSubtype())
-          && headerMediaType.isCompatible(LFS_APPLICATION_TYPE);
-      });
+    assertThat(result).isFalse();
   }
+
+  /// application/vnd.git-lfs+json; charset=utf-8
 }
