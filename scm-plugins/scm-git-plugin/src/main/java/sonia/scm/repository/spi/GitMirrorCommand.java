@@ -86,16 +86,18 @@ import static sonia.scm.repository.api.MirrorCommandResult.ResultType.OK;
 import static sonia.scm.repository.api.MirrorCommandResult.ResultType.REJECTED_UPDATES;
 
 /**
- * Implementation of the mirror command for git. This implementation makes use of a special
- * "ref" called <code>mirror</code>. A synchronization works in principal in the following way:
+ * Implementation of the mirror command for git.
+ *
+ * The general workflow is the same for the first call and all subsequent updates and looks like this:
+ *
  * <ol>
- *   <li>The mirror reference is updated. This is done by calling the jgit equivalent of
- *     <pre>git fetch -pf <source url> "refs/heads/*:refs/mirror/heads/*" "refs/tags/*:refs/mirror/tags/*"</pre>
- *   </li>
- *   <li>These updates are then presented to the filter. Here single updates can be rejected.
- *     Such rejected updates have to be reverted in the mirror, too.
- *   </li>
- *   <li>Accepted ref updates are copied to the "normal" refs.</li>
+ *   <li>Create a local working copy for the repository.</li>
+ *   <li>Fetch updates from the source and override all local refs in the working copy
+ *     (like <code>git fetch "refs/heads/*:refs/heads/*" "refs/tags/*:refs/tags/*"</code>).</li>
+ *   <li>Iterate the updates and decide, whether to keep each single update or not. If an update is rejected,
+ *     the reference is set to its old oid (or deleted, if this is a new reference).</li>
+ *   <li>Push the changed references from the working copy to the repository.</li>
+ *   <li>Release the working copy.</li>
  * </ol>
  */
 public class GitMirrorCommand extends AbstractGitCommand implements MirrorCommand {
