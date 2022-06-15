@@ -21,13 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web.lfs.servlet;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.apache.commons.codec.binary.Hex;
 import org.apache.http.HttpStatus;
 import org.eclipse.jgit.lfs.errors.CorruptLongObjectException;
 import org.eclipse.jgit.lfs.errors.InvalidLongObjectIdException;
@@ -45,7 +46,6 @@ import sonia.scm.store.BlobStore;
 import sonia.scm.util.IOUtil;
 
 import javax.servlet.ServletException;
-import javax.servlet.ServletInputStream;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -54,6 +54,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.security.DigestInputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.MessageFormat;
 
 /**
@@ -269,22 +272,27 @@ public class ScmFileTransferServlet extends HttpServlet {
   }
 
   private void readBlobFromResponse(HttpServletRequest request, HttpServletResponse response, AnyLongObjectId objectId) throws IOException {
-
     Blob blob = blobStore.create(objectId.getName());
     try (OutputStream blobOutputStream = blob.getOutputStream();
-         ServletInputStream requestInputStream = request.getInputStream()) {
+         DigestInputStream requestInputStream = new DigestInputStream(request.getInputStream(), MessageDigest.getInstance("SHA-256"))) {
 
       IOUtil.copy(requestInputStream, blobOutputStream);
+      validateStoredFile(blob, requestInputStream);
       blob.commit();
 
       response.setContentType(Constants.CONTENT_TYPE_GIT_LFS_JSON);
       response.setStatus(HttpServletResponse.SC_OK);
-    } catch (CorruptLongObjectException ex) {
-
+    } catch (CorruptLongObjectException | IOException | NoSuchAlgorithmException ex) {
+      blobStore.remove(blob);
       sendErrorAndLog(response, HttpStatus.SC_BAD_REQUEST, ex);
     }
+  }
 
-
+  private void validateStoredFile(Blob blob, DigestInputStream requestInputStream) throws IOException {
+    byte[] digest = requestInputStream.getMessageDigest().digest();
+    if (!blob.getId().equals(Hex.encodeHexString(digest, true))) {
+      throw new IOException("Transferred file seems to be corrupt");
+    }
   }
 
   /**
