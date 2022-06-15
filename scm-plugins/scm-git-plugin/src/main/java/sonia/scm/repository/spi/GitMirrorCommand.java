@@ -68,6 +68,7 @@ import sonia.scm.repository.api.MirrorCommandResult.ResultType;
 import sonia.scm.repository.api.MirrorFilter;
 import sonia.scm.repository.api.MirrorFilter.Result;
 import sonia.scm.repository.api.UsernamePasswordCredential;
+import sonia.scm.store.BlobStore;
 import sonia.scm.store.ConfigurationStore;
 import sonia.scm.web.lfs.LfsBlobStoreFactory;
 
@@ -261,17 +262,20 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
               AnyLongObjectId oid = lfsPointer.getOid();
               mirrorLog.add(oid.toString());
 
-              Lfs lfs = new Lfs(repo);
-              lfs.getMediaFile(oid);
+              BlobStore lfsBlobStore = lfsBlobStoreFactory.getLfsBlobStore(repository);
+              if (lfsBlobStore.get(oid.name()) == null) {
+                Lfs lfs = new Lfs(repo);
+                lfs.getMediaFile(oid);
 
-              Collection<Path> paths = SmudgeFilter.downloadLfsResource(lfs, repo, lfsPointer);
-              paths.stream().map(Object::toString).forEach(mirrorLog::add);
-              Files.copy(
-                paths.iterator().next(),
-                lfsBlobStoreFactory.getLfsBlobStore(repository)
-                  .create(oid.name())
-                  .getOutputStream()
-              );
+                Collection<Path> paths = SmudgeFilter.downloadLfsResource(lfs, repo, lfsPointer);
+                paths.stream().map(Object::toString).forEach(mirrorLog::add);
+                Files.copy(
+                  paths.iterator().next(),
+                  lfsBlobStore
+                    .create(oid.name())
+                    .getOutputStream()
+                );
+              }
             } catch (Exception e) {
               mirrorLog.add("Failed to load lfs file:");
               mirrorLog.add(e.getMessage());

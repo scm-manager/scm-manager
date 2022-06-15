@@ -24,12 +24,14 @@
 
 package sonia.scm.repository.spi;
 
+import org.apache.commons.codec.binary.Base64;
 import org.eclipse.jgit.transport.http.HttpConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.net.HttpConnectionOptions;
 import sonia.scm.net.HttpURLConnectionFactory;
 import sonia.scm.repository.api.Pkcs12ClientCertificateCredential;
+import sonia.scm.repository.api.UsernamePasswordCredential;
 import sonia.scm.web.ScmHttpConnectionFactory;
 
 import javax.inject.Inject;
@@ -37,6 +39,7 @@ import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import java.util.List;
@@ -59,6 +62,12 @@ class MirrorHttpConnectionProvider {
       .ifPresent(c -> options.withKeyManagers(createKeyManagers(c, log)));
     mirrorCommandRequest.getProxyConfiguration()
       .ifPresent(options::withProxyConfiguration);
+    mirrorCommandRequest.getCredential(UsernamePasswordCredential.class)
+      .ifPresent(credential -> {
+        byte[] encodedAuth = Base64.encodeBase64((credential.username() + ":" + new String(credential.password())).getBytes(StandardCharsets.UTF_8));
+        String authHeaderValue = "Basic " + new String(encodedAuth);
+        options.addRequestProperty("Authorization", authHeaderValue);
+      });
 
     return new ScmHttpConnectionFactory(httpURLConnectionFactory, options);
   }

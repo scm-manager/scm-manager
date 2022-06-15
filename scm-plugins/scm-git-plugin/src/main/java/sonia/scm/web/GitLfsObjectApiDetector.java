@@ -34,8 +34,6 @@ import javax.ws.rs.core.MediaType;
 @Extension
 public class GitLfsObjectApiDetector implements ScmClientDetector {
 
-  public static final MediaType LFS_APPLICATION_TYPE = MediaType.valueOf("application/vnd.git-lfs+json");
-
   @Override
   public boolean isScmClient(HttpServletRequest request, UserAgent userAgent) {
     return request.getRequestURI().contains("info/lfs/objects");
