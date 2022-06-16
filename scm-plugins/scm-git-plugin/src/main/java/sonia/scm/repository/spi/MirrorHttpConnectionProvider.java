@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.spi;
 
-import org.apache.commons.codec.binary.Base64;
 import org.eclipse.jgit.transport.http.HttpConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +41,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
+import java.util.Base64;
 import java.util.List;
 
 class MirrorHttpConnectionProvider {
@@ -64,8 +64,8 @@ class MirrorHttpConnectionProvider {
       .ifPresent(options::withProxyConfiguration);
     mirrorCommandRequest.getCredential(UsernamePasswordCredential.class)
       .ifPresent(credential -> {
-        byte[] encodedAuth = Base64.encodeBase64((credential.username() + ":" + new String(credential.password())).getBytes(StandardCharsets.UTF_8));
-        String authHeaderValue = "Basic " + new String(encodedAuth);
+        String encodedAuth = Base64.getEncoder().encodeToString((credential.username() + ":" + new String(credential.password())).getBytes(StandardCharsets.UTF_8));
+        String authHeaderValue = "Basic " + encodedAuth;
         options.addRequestProperty("Authorization", authHeaderValue);
       });
 

@@ -51,6 +51,7 @@ import org.eclipse.jgit.transport.ReceiveCommand;
 import org.eclipse.jgit.transport.TrackingRefUpdate;
 import org.eclipse.jgit.transport.TransportHttp;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
+import org.eclipse.jgit.transport.http.HttpConnectionFactory;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,7 +82,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -250,6 +250,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
         RevWalk revWalk = new RevWalk(repo);
         revWalk.markStart(revWalk.parseCommit(newObjectId));
         BlobStore lfsBlobStore = lfsBlobStoreFactory.getLfsBlobStore(repository);
+        HttpConnectionFactory httpConnectionFactory = mirrorHttpConnectionProvider.createHttpConnectionFactory(mirrorCommandRequest, mirrorLog);
 
         for (RevCommit commit : revWalk) {
           treeWalk.reset();
@@ -265,7 +266,12 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
                 Lfs lfs = new Lfs(repo);
                 lfs.getMediaFile(oid);
 
-                Collection<Path> paths = SmudgeFilter.downloadLfsResource(lfs, repo, lfsPointer);
+                Collection<Path> paths = SmudgeFilter.downloadLfsResource(
+                  lfs,
+                  repo,
+                  httpConnectionFactory,
+                  lfsPointer
+                );
                 paths.stream().map(Object::toString).forEach(mirrorLog::add);
                 Files.copy(
                   paths.iterator().next(),
