@@ -28,7 +28,6 @@ import lombok.extern.slf4j.Slf4j;
 import sonia.scm.plugin.Extension;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.core.MediaType;
 
 @Slf4j
 @Extension
