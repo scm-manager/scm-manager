@@ -35,11 +35,17 @@ public final class MirrorCommandResult {
   private final ResultType result;
   private final List<String> log;
   private final Duration duration;
+  private final LfsUpdateResult lfsUpdateResult;
 
   public MirrorCommandResult(ResultType result, List<String> log, Duration duration) {
+    this(result, log, duration, null);
+  }
+
+  public MirrorCommandResult(ResultType result, List<String> log, Duration duration, LfsUpdateResult lfsUpdateResult) {
     this.result = result;
     this.log = log;
     this.duration = duration;
+    this.lfsUpdateResult = lfsUpdateResult;
   }
 
   public ResultType getResult() {
@@ -54,9 +60,38 @@ public final class MirrorCommandResult {
     return duration;
   }
 
+  public LfsUpdateResult getLfsUpdateResult() {
+    return lfsUpdateResult;
+  }
+
   public enum ResultType {
     OK,
     REJECTED_UPDATES,
     FAILED
+  }
+
+  public static class LfsUpdateResult {
+    private int overallCount = 0;
+    private int failureCount = 0;
+
+    public void increaseOverallCount() {
+      overallCount++;
+    }
+
+    public void increaseFailureCount() {
+      failureCount++;
+    }
+
+    public int getOverallCount() {
+      return overallCount;
+    }
+
+    public int getFailureCount() {
+      return failureCount;
+    }
+
+    public boolean hasFailures() {
+      return failureCount > 0;
+    }
   }
 }

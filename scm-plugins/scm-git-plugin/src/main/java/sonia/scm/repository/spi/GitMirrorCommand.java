@@ -188,6 +188,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
     private MirrorFilter.Filter filter;
 
     private ResultType result = OK;
+    private MirrorCommandResult.LfsUpdateResult lfsUpdateResult = new MirrorCommandResult.LfsUpdateResult();
 
     private Worker(GitContext context, MirrorCommandRequest mirrorCommandRequest, sonia.scm.repository.Repository repository, Git git) {
       super(git, context, repository);
@@ -204,7 +205,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
         result = FAILED;
         LOG.info("got exception while trying to synchronize mirror for repository {}", context.getRepository(), e);
         mirrorLog.add("failed to synchronize: " + e.getMessage());
-        return new MirrorCommandResult(FAILED, mirrorLog, stopwatch.stop().elapsed());
+        return new MirrorCommandResult(FAILED, mirrorLog, stopwatch.stop().elapsed(), lfsUpdateResult);
       }
     }
 
@@ -217,7 +218,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       if (fetchResult.getTrackingRefUpdates().isEmpty()) {
         LOG.trace("No updates found for mirror repository {}", repository);
         mirrorLog.add("No updates found");
-        return new MirrorCommandResult(result, mirrorLog, stopwatch.stop().elapsed());
+        return new MirrorCommandResult(result, mirrorLog, stopwatch.stop().elapsed(), lfsUpdateResult);
       } else {
         handleBranches();
         handleTags();
@@ -225,14 +226,14 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
 
       if (!defaultBranchSelector.isChanged()) {
         mirrorLog.add("No effective changes detected");
-        return new MirrorCommandResult(result, mirrorLog, stopwatch.stop().elapsed());
+        return new MirrorCommandResult(result, mirrorLog, stopwatch.stop().elapsed(), lfsUpdateResult);
       }
 
       defaultBranchSelector.newDefaultBranch().ifPresent(this::setNewDefaultBranch);
 
       String[] pushRefSpecs = generatePushRefSpecs().toArray(new String[0]);
       push(pushRefSpecs);
-      return new MirrorCommandResult(result, mirrorLog, stopwatch.stop().elapsed());
+      return new MirrorCommandResult(result, mirrorLog, stopwatch.stop().elapsed(), lfsUpdateResult);
     }
 
     private void inspectTree(ObjectId newObjectId) {
@@ -260,9 +261,11 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
             try (InputStream is = repo.open(treeWalk.getObjectId(0), Constants.OBJ_BLOB).openStream()) {
               LfsPointer lfsPointer = LfsPointer.parseLfsPointer(is);
               AnyLongObjectId oid = lfsPointer.getOid();
-              mirrorLog.add(oid.toString());
 
               if (lfsBlobStore.get(oid.name()) == null) {
+                lfsUpdateResult.increaseOverallCount();
+                LOG.trace("trying to load lfs file '{}' for repository {}", oid.name(), repository);
+                mirrorLog.add(String.format("Loading lfs file with id '%s'", oid.name()));
                 Lfs lfs = new Lfs(repo);
                 lfs.getMediaFile(oid);
 
@@ -272,17 +275,20 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
                   httpConnectionFactory,
                   lfsPointer
                 );
-                paths.stream().map(Object::toString).forEach(mirrorLog::add);
+                Path tempFilePath = paths.iterator().next();
+                LOG.trace("temporary lfs file: {}", tempFilePath);
                 Files.copy(
-                  paths.iterator().next(),
+                  tempFilePath,
                   lfsBlobStore
                     .create(oid.name())
                     .getOutputStream()
                 );
               }
             } catch (Exception e) {
+              LOG.warn("failed to load lfs file", e);
               mirrorLog.add("Failed to load lfs file:");
               mirrorLog.add(e.getMessage());
+              lfsUpdateResult.increaseFailureCount();
             }
           }
         }
