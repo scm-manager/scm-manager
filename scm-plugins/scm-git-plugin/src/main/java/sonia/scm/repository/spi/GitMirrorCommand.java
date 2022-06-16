@@ -283,6 +283,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
                     .create(oid.name())
                     .getOutputStream()
                 );
+                Files.delete(tempFilePath);
               }
             } catch (Exception e) {
               LOG.warn("failed to load lfs file", e);
