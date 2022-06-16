@@ -28,13 +28,16 @@ import lombok.extern.slf4j.Slf4j;
 import sonia.scm.plugin.Extension;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.regex.Pattern;
 
 @Slf4j
 @Extension
 public class GitLfsObjectApiDetector implements ScmClientDetector {
 
+  private static final Pattern OBJECT_PATH_PATTERN = Pattern.compile("/[^/]*/repo/[^/]*/[^/]*\\.git/info/lfs/objects/.*");
+
   @Override
   public boolean isScmClient(HttpServletRequest request, UserAgent userAgent) {
-    return request.getRequestURI().contains("info/lfs/objects");
+    return OBJECT_PATH_PATTERN.matcher(request.getRequestURI()).matches();
   }
 }

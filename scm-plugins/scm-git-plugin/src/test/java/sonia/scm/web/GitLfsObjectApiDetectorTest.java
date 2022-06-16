@@ -24,56 +24,40 @@
 
 package sonia.scm.web;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class GitLfsLockApiDetectorTest {
+class GitLfsObjectApiDetectorTest {
 
   @Mock
   private HttpServletRequest request;
 
-  private static Stream<Arguments> testParameters() {
-    return Stream.of(
-      Arguments.of("text/html, image/gif, image/jpeg", false),
-      Arguments.of("text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2", false),
-      Arguments.of("*", false),
-      Arguments.of("application/vnd.git-lfs+json; charset=utf-8", true),
-      Arguments.of("application/vnd.git-lfs+json", true)
-    );
+  @Test
+  void shouldAcceptObjectRequest() {
+    when(request.getRequestURI())
+      .thenReturn("/scm/repo/scmadmin/lfs.git/info/lfs/objects/abc123");
+
+    boolean result = new GitLfsObjectApiDetector().isScmClient(request, null);
+
+    assertThat(result).isTrue();
   }
 
-  @ParameterizedTest
-  @MethodSource("testParameters")
-  void shouldHandleContentTypeHeaderCorrectly(String headerValue, boolean expected) {
-    when(request.getHeader("Content-Type"))
-      .thenReturn(headerValue);
+  @Test
+  void shouldRejectFakeObjectRequest() {
+    when(request.getRequestURI())
+      .thenReturn("/scm/repo/scmadmin/lfs.git/code/info/lfs/objects/abc123");
 
-    boolean result = new GitLfsLockApiDetector().isScmClient(request, null);
+    boolean result = new GitLfsObjectApiDetector().isScmClient(request, null);
 
-    assertThat(result).isEqualTo(expected);
-  }
-
-  @ParameterizedTest
-  @MethodSource("testParameters")
-  void shouldHandleAcceptHeaderCorrectly(String headerValue, boolean expected) {
-    when(request.getHeader("Content-Type"))
-      .thenReturn(null);
-    when(request.getHeader("Accept"))
-      .thenReturn(headerValue);
-
-    boolean result = new GitLfsLockApiDetector().isScmClient(request, null);
-
-    assertThat(result).isEqualTo(expected);
+    assertThat(result).isFalse();
   }
 }
