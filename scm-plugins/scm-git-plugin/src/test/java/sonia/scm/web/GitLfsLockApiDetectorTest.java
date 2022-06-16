@@ -24,11 +24,14 @@
 
 package sonia.scm.web;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -37,29 +40,39 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class GitLfsLockApiDetectorTest {
 
-  @Test
-  void shouldAcceptComplexHeader() {
-    HttpServletRequest request = mock(HttpServletRequest.class);
+  private final HttpServletRequest request = mock(HttpServletRequest.class);
+
+  private static Stream<Arguments> testParameters() {
+    return Stream.of(
+      Arguments.of("text/html, image/gif, image/jpeg", false),
+      Arguments.of("text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2", false),
+      Arguments.of("*", false),
+      Arguments.of("application/vnd.git-lfs+json; charset=utf-8", true),
+      Arguments.of("application/vnd.git-lfs+json", true)
+    );
+  }
+
+  @ParameterizedTest
+  @MethodSource("testParameters")
+  void shouldHandleContentTypeHeaderCorrectly(String headerValue, boolean expected) {
     when(request.getHeader("Content-Type"))
-      .thenReturn("text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2");
+      .thenReturn(headerValue);
 
     boolean result = new GitLfsLockApiDetector().isScmClient(request, null);
 
-    assertThat(result).isFalse();
+    assertThat(result).isEqualTo(expected);
   }
 
-  @Test
-  void shouldAcceptComplexHeader2() {
-    HttpServletRequest request = mock(HttpServletRequest.class);
+  @ParameterizedTest
+  @MethodSource("testParameters")
+  void shouldHandleAcceptHeaderCorrectly(String headerValue, boolean expected) {
     when(request.getHeader("Content-Type"))
       .thenReturn(null);
     when(request.getHeader("Accept"))
-      .thenReturn("text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2");
+      .thenReturn(headerValue);
 
     boolean result = new GitLfsLockApiDetector().isScmClient(request, null);
 
-    assertThat(result).isFalse();
+    assertThat(result).isEqualTo(expected);
   }
-
-  /// application/vnd.git-lfs+json; charset=utf-8
 }

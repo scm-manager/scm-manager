@@ -35,7 +35,8 @@ import java.util.Arrays;
 @Extension
 public class GitLfsLockApiDetector implements ScmClientDetector {
 
-  public static final MediaType LFS_APPLICATION_TYPE = MediaType.valueOf("application/vnd.git-lfs+json");
+  private static final String APPLICATION_TYPE = "application";
+  private static final String LFS_VND_SUB_TYPE = "vnd.git-lfs+json";
 
   @Override
   public boolean isScmClient(HttpServletRequest request, UserAgent userAgent) {
@@ -55,9 +56,8 @@ public class GitLfsLockApiDetector implements ScmClientDetector {
     return Arrays.stream(headerValue.split(",\\s*"))
       .anyMatch(v -> {
         MediaType headerMediaType = MediaType.valueOf(v);
-        return
-          !(headerMediaType.isWildcardType() || headerMediaType.isWildcardSubtype())
-          && headerMediaType.isCompatible(LFS_APPLICATION_TYPE);
+        return APPLICATION_TYPE.equals(headerMediaType.getType())
+          && LFS_VND_SUB_TYPE.equals(headerMediaType.getSubtype());
       });
   }
 }
