@@ -249,11 +249,10 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
 
         RevWalk revWalk = new RevWalk(repo);
         revWalk.markStart(revWalk.parseCommit(newObjectId));
-        Iterator<RevCommit> iterator = revWalk.iterator();
+        BlobStore lfsBlobStore = lfsBlobStoreFactory.getLfsBlobStore(repository);
 
-        while (iterator.hasNext()) {
+        for (RevCommit commit : revWalk) {
           treeWalk.reset();
-          RevCommit commit = iterator.next();
           treeWalk.addTree(commit.getTree());
           while (treeWalk.next()) {
             treeWalk.getNameString();
@@ -262,7 +261,6 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
               AnyLongObjectId oid = lfsPointer.getOid();
               mirrorLog.add(oid.toString());
 
-              BlobStore lfsBlobStore = lfsBlobStoreFactory.getLfsBlobStore(repository);
               if (lfsBlobStore.get(oid.name()) == null) {
                 Lfs lfs = new Lfs(repo);
                 lfs.getMediaFile(oid);

@@ -56,9 +56,11 @@ import sonia.scm.repository.work.NoneCachingWorkingCopyPool;
 import sonia.scm.repository.work.SimpleWorkingCopyFactory;
 import sonia.scm.repository.work.WorkdirProvider;
 import sonia.scm.security.GPG;
+import sonia.scm.store.BlobStore;
 import sonia.scm.store.ConfigurationStore;
 import sonia.scm.store.InMemoryConfigurationStoreFactory;
 import sonia.scm.util.IOUtil;
+import sonia.scm.web.lfs.LfsBlobStoreFactory;
 
 import javax.net.ssl.TrustManager;
 import java.io.File;
@@ -104,6 +106,9 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
 
   private final GitRepositoryConfigStoreProvider storeProvider = mock(GitRepositoryConfigStoreProvider.class);
   private final ConfigurationStore<GitRepositoryConfig> configurationStore = mock(ConfigurationStore.class);
+  private final LfsBlobStoreFactory lfsBlobStoreFactory = mock(LfsBlobStoreFactory.class);
+  private final BlobStore lfsBlobStore = mock(BlobStore.class);
+
   private final GitRepositoryConfig gitRepositoryConfig = new GitRepositoryConfig();
 
   @Before
@@ -136,13 +141,16 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
       gitTagConverter,
       workingCopyFactory,
       gitHeadModifier,
-      storeProvider, lfsBlobStoreFactory);
+      storeProvider,
+      lfsBlobStoreFactory);
   }
 
   @Before
-  public void initializeStore() {
+  public void initializeStores() {
     when(storeProvider.get(repository)).thenReturn(configurationStore);
     when(configurationStore.get()).thenReturn(gitRepositoryConfig);
+
+    when(lfsBlobStoreFactory.getLfsBlobStore(repository)).thenReturn(lfsBlobStore);
   }
 
   @After
