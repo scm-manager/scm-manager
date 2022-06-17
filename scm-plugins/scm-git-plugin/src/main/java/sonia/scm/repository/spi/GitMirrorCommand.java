@@ -365,7 +365,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
           defaultBranchSelector.accepted(refType, referenceName);
           logger.logChange(ref, referenceName, getUpdateType(ref));
 
-          lfsLoader.inspectTree(ref.getNewObjectId(), mirrorCommandRequest, git, mirrorLog, lfsUpdateResult, repository);
+          lfsLoader.inspectTree(ref.getNewObjectId(), mirrorCommandRequest, git.getRepository(), mirrorLog, lfsUpdateResult, repository);
         }
       }
 
