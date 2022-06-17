@@ -106,8 +106,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
 
   private final GitRepositoryConfigStoreProvider storeProvider = mock(GitRepositoryConfigStoreProvider.class);
   private final ConfigurationStore<GitRepositoryConfig> configurationStore = mock(ConfigurationStore.class);
-  private final LfsBlobStoreFactory lfsBlobStoreFactory = mock(LfsBlobStoreFactory.class);
-  private final BlobStore lfsBlobStore = mock(BlobStore.class);
+  private final LfsLoader lfsLoader = mock(LfsLoader.class);
 
   private final GitRepositoryConfig gitRepositoryConfig = new GitRepositoryConfig();
 
@@ -142,15 +141,13 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
       workingCopyFactory,
       gitHeadModifier,
       storeProvider,
-      lfsBlobStoreFactory);
+      lfsLoader);
   }
 
   @Before
   public void initializeStores() {
     when(storeProvider.get(repository)).thenReturn(configurationStore);
     when(configurationStore.get()).thenReturn(gitRepositoryConfig);
-
-    when(lfsBlobStoreFactory.getLfsBlobStore(repository)).thenReturn(lfsBlobStore);
   }
 
   @After

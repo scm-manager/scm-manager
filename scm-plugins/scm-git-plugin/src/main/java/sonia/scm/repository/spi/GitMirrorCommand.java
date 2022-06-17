@@ -29,13 +29,6 @@ import com.google.common.base.Strings;
 import org.eclipse.jgit.api.FetchCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.lfs.Lfs;
-import org.eclipse.jgit.lfs.LfsPointer;
-import org.eclipse.jgit.lfs.Protocol;
-import org.eclipse.jgit.lfs.SmudgeFilter;
-import org.eclipse.jgit.lfs.lib.AnyLongObjectId;
-import org.eclipse.jgit.lfs.lib.LfsPointerFilter;
-import org.eclipse.jgit.lib.ConfigConstants;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
@@ -51,8 +44,6 @@ import org.eclipse.jgit.transport.ReceiveCommand;
 import org.eclipse.jgit.transport.TrackingRefUpdate;
 import org.eclipse.jgit.transport.TransportHttp;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
-import org.eclipse.jgit.transport.http.HttpConnectionFactory;
-import org.eclipse.jgit.treewalk.TreeWalk;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
@@ -69,15 +60,11 @@ import sonia.scm.repository.api.MirrorCommandResult.ResultType;
 import sonia.scm.repository.api.MirrorFilter;
 import sonia.scm.repository.api.MirrorFilter.Result;
 import sonia.scm.repository.api.UsernamePasswordCredential;
-import sonia.scm.store.BlobStore;
 import sonia.scm.store.ConfigurationStore;
 import sonia.scm.web.lfs.LfsBlobStoreFactory;
 
 import javax.inject.Inject;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -124,7 +111,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
   private final GitWorkingCopyFactory workingCopyFactory;
   private final GitHeadModifier gitHeadModifier;
   private final GitRepositoryConfigStoreProvider storeProvider;
-  private final LfsBlobStoreFactory lfsBlobStoreFactory;
+  private final LfsLoader lfsLoader;
 
   @Inject
   GitMirrorCommand(GitContext context,
@@ -134,7 +121,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
                    GitWorkingCopyFactory workingCopyFactory,
                    GitHeadModifier gitHeadModifier,
                    GitRepositoryConfigStoreProvider storeProvider,
-                   LfsBlobStoreFactory lfsBlobStoreFactory) {
+                   LfsLoader lfsLoader) {
     super(context);
     this.mirrorHttpConnectionProvider = mirrorHttpConnectionProvider;
     this.converterFactory = converterFactory;
@@ -142,7 +129,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
     this.workingCopyFactory = workingCopyFactory;
     this.gitHeadModifier = gitHeadModifier;
     this.storeProvider = storeProvider;
-    this.lfsBlobStoreFactory = lfsBlobStoreFactory;
+    this.lfsLoader = lfsLoader;
   }
 
   @Override
@@ -234,69 +221,6 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       String[] pushRefSpecs = generatePushRefSpecs().toArray(new String[0]);
       push(pushRefSpecs);
       return new MirrorCommandResult(result, mirrorLog, stopwatch.stop().elapsed(), lfsUpdateResult);
-    }
-
-    private void inspectTree(ObjectId newObjectId) {
-
-      String mirrorUrl = mirrorCommandRequest.getSourceUrl();
-
-      try {
-        Repository repo = git.getRepository();
-
-        repo.getConfig().setString(ConfigConstants.CONFIG_SECTION_LFS, null, ConfigConstants.CONFIG_KEY_URL, mirrorUrl + ".git" + Protocol.INFO_LFS_ENDPOINT);
-
-        TreeWalk treeWalk = new TreeWalk(repo);
-        treeWalk.setFilter(new LfsPointerFilter());
-
-        RevWalk revWalk = new RevWalk(repo);
-        revWalk.markStart(revWalk.parseCommit(newObjectId));
-        BlobStore lfsBlobStore = lfsBlobStoreFactory.getLfsBlobStore(repository);
-        HttpConnectionFactory httpConnectionFactory = mirrorHttpConnectionProvider.createHttpConnectionFactory(mirrorCommandRequest, mirrorLog);
-
-        for (RevCommit commit : revWalk) {
-          treeWalk.reset();
-          treeWalk.addTree(commit.getTree());
-          while (treeWalk.next()) {
-            treeWalk.getNameString();
-            try (InputStream is = repo.open(treeWalk.getObjectId(0), Constants.OBJ_BLOB).openStream()) {
-              LfsPointer lfsPointer = LfsPointer.parseLfsPointer(is);
-              AnyLongObjectId oid = lfsPointer.getOid();
-
-              if (lfsBlobStore.get(oid.name()) == null) {
-                lfsUpdateResult.increaseOverallCount();
-                LOG.trace("trying to load lfs file '{}' for repository {}", oid.name(), repository);
-                mirrorLog.add(String.format("Loading lfs file with id '%s'", oid.name()));
-                Lfs lfs = new Lfs(repo);
-                lfs.getMediaFile(oid);
-
-                Collection<Path> paths = SmudgeFilter.downloadLfsResource(
-                  lfs,
-                  repo,
-                  httpConnectionFactory,
-                  lfsPointer
-                );
-                Path tempFilePath = paths.iterator().next();
-                LOG.trace("temporary lfs file: {}", tempFilePath);
-                Files.copy(
-                  tempFilePath,
-                  lfsBlobStore
-                    .create(oid.name())
-                    .getOutputStream()
-                );
-                Files.delete(tempFilePath);
-              }
-            } catch (Exception e) {
-              LOG.warn("failed to load lfs file", e);
-              mirrorLog.add("Failed to load lfs file:");
-              mirrorLog.add(e.getMessage());
-              lfsUpdateResult.increaseFailureCount();
-            }
-          }
-        }
-      } catch (Exception e) {
-        mirrorLog.add("Failed to load lfs files:");
-        mirrorLog.add(e.getMessage());
-      }
     }
 
     private void setNewDefaultBranch(String newDefaultBranch) {
@@ -441,7 +365,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
           defaultBranchSelector.accepted(refType, referenceName);
           logger.logChange(ref, referenceName, getUpdateType(ref));
 
-          inspectTree(ref.getNewObjectId());
+          lfsLoader.inspectTree(ref.getNewObjectId(), mirrorCommandRequest, git, mirrorLog, lfsUpdateResult, repository);
         }
       }
 
