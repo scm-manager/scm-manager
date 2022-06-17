@@ -56,11 +56,9 @@ import sonia.scm.repository.work.NoneCachingWorkingCopyPool;
 import sonia.scm.repository.work.SimpleWorkingCopyFactory;
 import sonia.scm.repository.work.WorkdirProvider;
 import sonia.scm.security.GPG;
-import sonia.scm.store.BlobStore;
 import sonia.scm.store.ConfigurationStore;
 import sonia.scm.store.InMemoryConfigurationStoreFactory;
 import sonia.scm.util.IOUtil;
-import sonia.scm.web.lfs.LfsBlobStoreFactory;
 
 import javax.net.ssl.TrustManager;
 import java.io.File;
@@ -80,8 +78,8 @@ import static org.mockito.AdditionalMatchers.not;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static sonia.scm.repository.api.MirrorCommandResult.ResultType.FAILED;
@@ -860,6 +858,14 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     }).forEach(expectedRevision ->
       verify(lfsLoader)
       .inspectTree(eq(ObjectId.fromString(expectedRevision)), any(), any(), any(), any(), eq(repository)));
+  }
+
+  @Test
+  public void shouldNotCallLfsLoaderIfDeactivated() {
+    callMirrorCommand(repositoryDirectory.getAbsolutePath(), c -> c.setIgnoreLfs(true));
+
+    verify(lfsLoader, never())
+      .inspectTree(any(), any(), any(), any(), any(), any());
   }
 
   public static class DefaultBranchSelectorTest {

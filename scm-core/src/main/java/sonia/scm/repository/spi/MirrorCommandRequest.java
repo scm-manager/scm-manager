@@ -53,6 +53,7 @@ public final class MirrorCommandRequest {
 
   @Nullable
   private ProxyConfiguration proxyConfiguration;
+  private boolean ignoreLfs;
 
   public String getSourceUrl() {
     return sourceUrl;
@@ -84,6 +85,14 @@ public final class MirrorCommandRequest {
 
   public void setFilter(MirrorFilter filter) {
     this.filter = filter;
+  }
+
+  public void setIgnoreLfs(boolean ignoreLfs) {
+    this.ignoreLfs = ignoreLfs;
+  }
+
+  public boolean isIgnoreLfs() {
+    return ignoreLfs;
   }
 
   public boolean isValid() {
