@@ -78,6 +78,7 @@ import static org.mockito.AdditionalMatchers.not;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -858,6 +859,21 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     }).forEach(expectedRevision ->
       verify(lfsLoader)
       .inspectTree(eq(ObjectId.fromString(expectedRevision)), any(), any(), any(), any(), eq(repository)));
+  }
+
+  @Test
+  public void shouldMarkMirrorAsFailedIfLfsFileFailes() {
+    doAnswer(invocation -> {
+      invocation.getArgument(4, MirrorCommandResult.LfsUpdateResult.class).increaseFailureCount();
+      return null;
+    })
+      .when(lfsLoader)
+      .inspectTree(eq(ObjectId.fromString("a8495c0335a13e6e432df90b3727fa91943189a7")), any(), any(), any(), any(), eq(repository));
+
+
+    MirrorCommandResult mirrorCommandResult = callMirrorCommand();
+
+    assertThat(mirrorCommandResult.getResult()).isEqualTo(FAILED);
   }
 
   @Test
