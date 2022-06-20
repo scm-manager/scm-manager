@@ -26,7 +26,7 @@ import React, { FC } from "react";
 import { Notification, Page } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 
-const NotFoundPage: FC = ({}) => {
+const NotFoundPage: FC = () => {
   const [t] = useTranslation("commons");
   return (
     <Page>
