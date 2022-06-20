@@ -169,13 +169,13 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
     private final Git git;
 
     private final Collection<String> deletedRefs = new ArrayList<>();
+    private final MirrorCommandResult.LfsUpdateResult lfsUpdateResult = new MirrorCommandResult.LfsUpdateResult();
 
     private FetchResult fetchResult;
     private GitFilterContext filterContext;
     private MirrorFilter.Filter filter;
 
     private ResultType result = OK;
-    private MirrorCommandResult.LfsUpdateResult lfsUpdateResult = new MirrorCommandResult.LfsUpdateResult();
 
     private Worker(GitContext context, MirrorCommandRequest mirrorCommandRequest, sonia.scm.repository.Repository repository, Git git) {
       super(git, context, repository);
