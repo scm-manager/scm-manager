@@ -260,5 +260,6 @@
   },
   "tag": {
     "delete": "Löschen"
-  }
+  },
+  "pageNotFound": "Die angefragte Seite existiert nicht."
 }

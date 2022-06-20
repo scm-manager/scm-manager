@@ -1,0 +1,2 @@
+- type: added
+  description: Show dedicated notfound page for invalid routes ([#2070](https://github.com/scm-manager/scm-manager/pull/2070))
