@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.36.1] - 2022-06-21
+### Fixed
+- Zip CRC error on startup in Alpine image ([#2071](https://github.com/scm-manager/scm-manager/pull/2071))
+
 ## [2.36.0] - 2022-06-13
 ### Added
 - Add api to overwrite content type resolver ([#2051](https://github.com/scm-manager/scm-manager/pull/2051))
@@ -1077,3 +1081,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.34.0]: https://scm-manager.org/download/2.34.0
 [2.35.0]: https://scm-manager.org/download/2.35.0
 [2.36.0]: https://scm-manager.org/download/2.36.0
+[2.36.1]: https://scm-manager.org/download/2.36.1
