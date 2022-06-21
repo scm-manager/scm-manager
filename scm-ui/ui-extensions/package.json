@@ -1,7 +1,6 @@
 {
   "name": "@scm-manager/ui-extensions",
   "version": "2.36.2-SNAPSHOT",
-  "main": "src/index.ts",
   "license": "MIT",
   "private": false,
   "author": "Sebastian Sdorra <sebastian.sdorra@cloudogu.com>",
