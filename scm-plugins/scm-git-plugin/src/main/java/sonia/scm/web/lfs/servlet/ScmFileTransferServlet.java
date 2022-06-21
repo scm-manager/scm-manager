@@ -72,7 +72,7 @@ import java.text.MessageFormat;
  */
 public class ScmFileTransferServlet extends HttpServlet {
 
-  private static final Logger logger = LoggerFactory.getLogger(ScmFileTransferServlet.class);
+  private static final Logger LOG = LoggerFactory.getLogger(ScmFileTransferServlet.class);
 
   private static final long serialVersionUID = 1L;
 
@@ -118,7 +118,7 @@ public class ScmFileTransferServlet extends HttpServlet {
    */
   private static void sendErrorAndLog(HttpServletResponse response, int status, String message) throws IOException {
 
-    logger.warn("Error occurred during git-lfs file transfer: {}", message);
+    LOG.warn("Error occurred during git-lfs file transfer: {}", message);
 
     sendError(response, status, message);
   }
@@ -132,7 +132,7 @@ public class ScmFileTransferServlet extends HttpServlet {
    */
   private static void sendErrorAndLog(HttpServletResponse response, int status, Exception exception) throws IOException {
 
-    logger.warn("Error occurred during git-lfs file transfer.", exception);
+    LOG.warn("Error occurred during git-lfs file transfer.", exception);
     String message = exception.getMessage();
 
 
@@ -179,12 +179,12 @@ public class ScmFileTransferServlet extends HttpServlet {
     } else {
 
       final String objectIdName = objectId.getName();
-      logger.trace("---- providing download for LFS-Oid: {}", objectIdName);
+      LOG.trace("---- providing download for LFS-Oid: {}", objectIdName);
 
       Blob savedBlob = blobStore.get(objectIdName);
       if (isBlobPresent(savedBlob)) {
 
-        logger.trace("----- Object {}: providing {} bytes", objectIdName, savedBlob.getSize());
+        LOG.trace("----- Object {}: providing {} bytes", objectIdName, savedBlob.getSize());
         writeBlobIntoResponse(savedBlob, response);
       } else {
 
@@ -213,7 +213,7 @@ public class ScmFileTransferServlet extends HttpServlet {
       logInvalidObjectId(request.getRequestURI());
     } else {
 
-      logger.trace("---- receiving upload for LFS-Oid: {}", objectId.getName());
+      LOG.trace("---- receiving upload for LFS-Oid: {}", objectId.getName());
       readBlobFromResponse(request, response, objectId);
     }
   }
@@ -247,7 +247,7 @@ public class ScmFileTransferServlet extends HttpServlet {
 
   private void logInvalidObjectId(String requestURI) {
 
-    logger.warn("---- could not extract Oid from Request. Path seems to be invalid: {}", requestURI);
+    LOG.warn("---- could not extract Oid from Request. Path seems to be invalid: {}", requestURI);
   }
 
   private boolean isBlobPresent(Blob savedBlob) {
@@ -289,8 +289,9 @@ public class ScmFileTransferServlet extends HttpServlet {
   }
 
   private void validateStoredFile(Blob blob, DigestInputStream requestInputStream) throws IOException {
-    byte[] digest = requestInputStream.getMessageDigest().digest();
-    if (!blob.getId().equals(Hex.encodeHexString(digest, true))) {
+    String digestHash = Hex.encodeHexString(requestInputStream.getMessageDigest().digest(), true);
+    if (!blob.getId().equals(digestHash)) {
+      LOG.error("Expected hash {} but got {}", blob.getId(), digestHash);
       throw new IOException("Transferred file seems to be corrupt");
     }
   }
