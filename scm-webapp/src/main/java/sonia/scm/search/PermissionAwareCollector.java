@@ -28,6 +28,7 @@ import com.google.common.base.Strings;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.LeafReaderContext;
+import org.apache.lucene.search.CollectionTerminatedException;
 import org.apache.lucene.search.Collector;
 import org.apache.lucene.search.LeafCollector;
 import org.apache.lucene.search.Scorable;
@@ -45,6 +46,8 @@ public class PermissionAwareCollector implements Collector {
 
   private final IndexReader reader;
   private final Collector delegate;
+  private int totalHits = 0;
+
 
   public PermissionAwareCollector(IndexReader reader, Collector delegate) {
     this.reader = reader;
@@ -81,7 +84,15 @@ public class PermissionAwareCollector implements Collector {
       Document document = reader.document(docBase + doc, FIELDS);
       String permission = document.get(FIELD_PERMISSION);
       if (Strings.isNullOrEmpty(permission) || SecurityUtils.getSubject().isPermitted(permission)) {
+        ensureSearchResultLimit();
         this.delegate.collect(doc);
+      }
+    }
+
+    private void ensureSearchResultLimit() {
+      totalHits++;
+      if (totalHits > 500) {
+        throw new CollectionTerminatedException();
       }
     }
   }
