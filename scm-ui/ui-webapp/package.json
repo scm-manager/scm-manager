@@ -10,6 +10,7 @@
     "@scm-manager/ui-modules": "^2.36.2-SNAPSHOT",
     "@scm-manager/ui-syntaxhighlighting": "^2.36.2-SNAPSHOT",
     "@scm-manager/ui-text": "^2.36.2-SNAPSHOT",
+    "@scm-manager/ui-legacy": "^2.36.2-SNAPSHOT",
     "classnames": "^2.2.5",
     "history": "^4.10.1",
     "i18next": "^19.6.0",
