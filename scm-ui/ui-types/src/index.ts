@@ -73,3 +73,4 @@ export * from "./PublicKeys";
 export * from "./GlobalPermissions";
 export * from "./Search";
 export * from "./General";
+export * from "./ContentType";
