@@ -21,13 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web.lfs.servlet;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.apache.commons.codec.binary.Hex;
 import org.apache.http.HttpStatus;
 import org.eclipse.jgit.lfs.errors.CorruptLongObjectException;
 import org.eclipse.jgit.lfs.errors.InvalidLongObjectIdException;
@@ -45,7 +46,6 @@ import sonia.scm.store.BlobStore;
 import sonia.scm.util.IOUtil;
 
 import javax.servlet.ServletException;
-import javax.servlet.ServletInputStream;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -54,6 +54,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.security.DigestInputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.MessageFormat;
 
 /**
@@ -69,7 +72,7 @@ import java.text.MessageFormat;
  */
 public class ScmFileTransferServlet extends HttpServlet {
 
-  private static final Logger logger = LoggerFactory.getLogger(ScmFileTransferServlet.class);
+  private static final Logger LOG = LoggerFactory.getLogger(ScmFileTransferServlet.class);
 
   private static final long serialVersionUID = 1L;
 
@@ -115,7 +118,7 @@ public class ScmFileTransferServlet extends HttpServlet {
    */
   private static void sendErrorAndLog(HttpServletResponse response, int status, String message) throws IOException {
 
-    logger.warn("Error occurred during git-lfs file transfer: {}", message);
+    LOG.warn("Error occurred during git-lfs file transfer: {}", message);
 
     sendError(response, status, message);
   }
@@ -129,7 +132,7 @@ public class ScmFileTransferServlet extends HttpServlet {
    */
   private static void sendErrorAndLog(HttpServletResponse response, int status, Exception exception) throws IOException {
 
-    logger.warn("Error occurred during git-lfs file transfer.", exception);
+    LOG.warn("Error occurred during git-lfs file transfer.", exception);
     String message = exception.getMessage();
 
 
@@ -176,12 +179,12 @@ public class ScmFileTransferServlet extends HttpServlet {
     } else {
 
       final String objectIdName = objectId.getName();
-      logger.trace("---- providing download for LFS-Oid: {}", objectIdName);
+      LOG.trace("---- providing download for LFS-Oid: {}", objectIdName);
 
       Blob savedBlob = blobStore.get(objectIdName);
       if (isBlobPresent(savedBlob)) {
 
-        logger.trace("----- Object {}: providing {} bytes", objectIdName, savedBlob.getSize());
+        LOG.trace("----- Object {}: providing {} bytes", objectIdName, savedBlob.getSize());
         writeBlobIntoResponse(savedBlob, response);
       } else {
 
@@ -210,7 +213,7 @@ public class ScmFileTransferServlet extends HttpServlet {
       logInvalidObjectId(request.getRequestURI());
     } else {
 
-      logger.trace("---- receiving upload for LFS-Oid: {}", objectId.getName());
+      LOG.trace("---- receiving upload for LFS-Oid: {}", objectId.getName());
       readBlobFromResponse(request, response, objectId);
     }
   }
@@ -244,7 +247,7 @@ public class ScmFileTransferServlet extends HttpServlet {
 
   private void logInvalidObjectId(String requestURI) {
 
-    logger.warn("---- could not extract Oid from Request. Path seems to be invalid: {}", requestURI);
+    LOG.warn("---- could not extract Oid from Request. Path seems to be invalid: {}", requestURI);
   }
 
   private boolean isBlobPresent(Blob savedBlob) {
@@ -269,22 +272,28 @@ public class ScmFileTransferServlet extends HttpServlet {
   }
 
   private void readBlobFromResponse(HttpServletRequest request, HttpServletResponse response, AnyLongObjectId objectId) throws IOException {
-
     Blob blob = blobStore.create(objectId.getName());
     try (OutputStream blobOutputStream = blob.getOutputStream();
-         ServletInputStream requestInputStream = request.getInputStream()) {
+         DigestInputStream requestInputStream = new DigestInputStream(request.getInputStream(), MessageDigest.getInstance("SHA-256"))) {
 
       IOUtil.copy(requestInputStream, blobOutputStream);
+      validateStoredFile(blob, requestInputStream);
       blob.commit();
 
       response.setContentType(Constants.CONTENT_TYPE_GIT_LFS_JSON);
       response.setStatus(HttpServletResponse.SC_OK);
-    } catch (CorruptLongObjectException ex) {
-
+    } catch (CorruptLongObjectException | IOException | NoSuchAlgorithmException ex) {
+      blobStore.remove(blob);
       sendErrorAndLog(response, HttpStatus.SC_BAD_REQUEST, ex);
     }
+  }
 
-
+  private void validateStoredFile(Blob blob, DigestInputStream requestInputStream) throws IOException {
+    String digestHash = Hex.encodeHexString(requestInputStream.getMessageDigest().digest(), true);
+    if (!blob.getId().equals(digestHash)) {
+      LOG.error("Expected hash {} but got {}", blob.getId(), digestHash);
+      throw new IOException("Transferred file seems to be corrupt");
+    }
   }
 
   /**
