@@ -1,0 +1,2 @@
+- type: fixed
+  description: Zip CRC error on startup in Alpine image ([#2071](https://github.com/scm-manager/scm-manager/pull/2071))
