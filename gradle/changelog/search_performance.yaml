@@ -1,0 +1,2 @@
+- type: changed
+  description: Improve search performance by limiting results ([#2072](https://github.com/scm-manager/scm-manager/pull/2072))
