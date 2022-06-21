@@ -1,7 +1,7 @@
 {
     "name": "@scm-manager/scm-git-plugin",
     "private": true,
-    "version": "2.36.0",
+    "version": "2.36.1",
     "license": "MIT",
     "main": "./src/main/js/index.ts",
     "scripts": {
@@ -11,7 +11,7 @@
         "typecheck": "tsc"
     },
     "dependencies": {
-        "@scm-manager/ui-plugins": "^2.36.0"
+        "@scm-manager/ui-plugins": "^2.36.1"
     },
     "devDependencies": {
         "@scm-manager/babel-preset": "^2.13.1",
