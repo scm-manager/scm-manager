@@ -53,4 +53,12 @@ storiesOf("CardColumnSmall", module)
       contentRight={<small>over 42 years ago</small>}
       footer="New: scmadmin/spaceship"
     />
+  ))
+  .add("Linkless", () => (
+    <CardColumnSmall
+      avatar={<Icon name="eraser" className="fa-fw fa-lg" color="inherit" alt="avatar" />}
+      contentLeft={<strong>Repository deleted</strong>}
+      contentRight={<small>over 1337 minutes ago</small>}
+      footer="Deleted: scmadmin/spaceship"
+    />
   ));
