@@ -1282,6 +1282,49 @@ exports[`Storyshots CardColumnSmall Default 1`] = `
 </div>
 `;
 
+exports[`Storyshots CardColumnSmall Linkless 1`] = `
+<div
+  className="CardColumnSmallstories__Wrapper-sc-ofr817-0 jjqVte"
+>
+  <div
+    className="p-2 media has-hover-background-blue"
+  >
+    <figure
+      className="media-left mr-2 mt-1"
+    >
+      <i
+        aria-label="avatar"
+        className="fas fa-fw fa-eraser has-text-inherit fa-fw fa-lg"
+        onKeyPress={[Function]}
+      />
+    </figure>
+    <div
+      className="media-content text-box is-flex is-flex-direction-column is-justify-content-space-around is-align-self-stretch"
+    >
+      <div
+        className="is-flex is-flex-direction-column is-flex-align-items-start"
+      >
+        <div
+          className="is-clipped"
+        >
+          <strong>
+            Repository deleted
+          </strong>
+        </div>
+        <div>
+          <small>
+            over 1337 minutes ago
+          </small>
+        </div>
+      </div>
+      <small>
+        Deleted: scmadmin/spaceship
+      </small>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Storyshots CardColumnSmall Minimal 1`] = `
 <div
   className="CardColumnSmallstories__Wrapper-sc-ofr817-0 jjqVte"
