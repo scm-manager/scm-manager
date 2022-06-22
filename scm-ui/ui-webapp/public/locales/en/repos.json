@@ -85,7 +85,7 @@
       "helpText": "Select dump file from which the repository should be imported.",
       "password": {
         "title": "Password",
-        "helpText": "Provide a pasword for encrypted dumps"
+        "helpText": "Provide a password for encrypted dumps"
       }
     },
     "fullImport": {
