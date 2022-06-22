@@ -70,7 +70,7 @@ class LfsLoader {
     EntryHandler entryHandler = new EntryHandler(repository, gitRepository, mirrorCommandRequest, mirrorLog, lfsUpdateResult);
 
     try {
-      gitRepository.getConfig().setString(ConfigConstants.CONFIG_SECTION_LFS, null, ConfigConstants.CONFIG_KEY_URL, mirrorUrl + ".git" + Protocol.INFO_LFS_ENDPOINT);
+      gitRepository.getConfig().setString(ConfigConstants.CONFIG_SECTION_LFS, null, ConfigConstants.CONFIG_KEY_URL, computeLfsUrl(mirrorUrl));
 
       TreeWalk treeWalk = new TreeWalk(gitRepository);
       treeWalk.setFilter(new LfsPointerFilter());
@@ -90,6 +90,14 @@ class LfsLoader {
       mirrorLog.add("Failed to load lfs files:");
       mirrorLog.add(e.getMessage());
       lfsUpdateResult.increaseFailureCount();
+    }
+  }
+
+  private String computeLfsUrl(String mirrorUrl) {
+    if (mirrorUrl.endsWith(".git")) {
+      return mirrorUrl + Protocol.INFO_LFS_ENDPOINT;
+    } else {
+      return mirrorUrl + ".git" + Protocol.INFO_LFS_ENDPOINT;
     }
   }
 
