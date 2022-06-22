@@ -83,9 +83,6 @@ export const useLogin = () => {
   );
 
   const login = (username: string, password: string) => {
-    // grant_type is specified by the oauth standard with the underscore
-    // so we stick with it, even if eslint does not like it.
-    // eslint-disable-next-line @typescript-eslint/camelcase
     mutate({ cookie: true, grant_type: "password", username, password });
   };
 

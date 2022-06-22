@@ -1,9 +1,0 @@
-{
-  "packages": [
-    "scm-ui/*",
-    "scm-plugins/*"
-  ],
-  "npmClient": "yarn",
-  "useWorkspaces": true,
-  "version": "2.36.2-SNAPSHOT"
-}

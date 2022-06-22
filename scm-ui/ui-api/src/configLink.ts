@@ -74,6 +74,8 @@ export const useConfigLink = <C extends HalRepresentation>(link: string) => {
         });
       }
     },
+    // eslint means we should add C to the dependency array, but C is only a type
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [mutate, data, isReadOnly]
   );
 

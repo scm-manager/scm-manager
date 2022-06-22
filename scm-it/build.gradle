@@ -93,6 +93,11 @@ node {
   nodeModulesDir = file(project.rootProject.projectDir)
 }
 
+tasks.getByName('yarn_install').configure {
+  inputs.file( project.rootProject.file('yarn.lock') )
+  outputs.dir( project.rootProject.file('node_modules') )
+}
+
 task e2eTests(type: YarnTask) {
   inputs.files(fileTree(project.project(":scm-ui").projectDir) {
     include 'e2e-*/**'

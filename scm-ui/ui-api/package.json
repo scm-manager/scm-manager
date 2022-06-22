@@ -2,17 +2,20 @@
   "name": "@scm-manager/ui-api",
   "version": "2.36.2-SNAPSHOT",
   "description": "React hook api for the SCM-Manager backend",
-  "main": "src/index.ts",
+  "main": "build/index.js",
+  "module": "build/index.mjs",
+  "types": "build/index.d.ts",
   "files": [
-    "dist",
-    "src"
+    "build"
   ],
   "repository": "https://github.com/scm-manager/scm-manager",
   "author": "SCM Team <scm-team@cloudogu.com>",
   "license": "MIT",
   "scripts": {
-    "test": "jest src/",
-    "typecheck": "tsc"
+    "build": "tsup ./src/index.ts -d build --format esm,cjs --dts",
+    "typecheck": "tsc",
+    "lint": "eslint src",
+    "test": "jest src/"
   },
   "devDependencies": {
     "@scm-manager/babel-preset": "^2.13.1",
@@ -22,7 +25,8 @@
     "@scm-manager/tsconfig": "^2.13.0",
     "@testing-library/react-hooks": "^5.0.3",
     "@types/react": "^17.0.1",
-    "react-test-renderer": "^17.0.1"
+    "react-test-renderer": "^17.0.1",
+    "tsup": "^5.12.6"
   },
   "dependencies": {
     "@scm-manager/ui-types": "^2.36.2-SNAPSHOT",
@@ -30,7 +34,8 @@
     "gitdiff-parser": "^0.2.2",
     "query-string": "6.14.1",
     "react": "^17.0.1",
-    "react-query": "^3.25.1"
+    "react-query": "^3.25.1",
+    "react-router-dom": "^5.3.1"
   },
   "babel": {
     "presets": [

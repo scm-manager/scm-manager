@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /*
  * MIT License
  *
@@ -21,17 +22,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-const { yarn } = require("./yarn");
+// eslint-disable-next-line import/no-extraneous-dependencies
+const { generateBinPath } = require("turbo/node-platform");
+const { spawn } = require("child_process");
 
-const version = v => {
-  yarn(["run", "lerna", "--no-git-tag-version", "--no-push", "version", "--force-publish", "--yes", v]);
-};
+const turbo = spawn(generateBinPath(), process.argv.slice(2), { stdio: "inherit" });
 
-const publish = () => {
-  yarn(["run", "lerna", "publish", "from-package", "--yes"]);
-};
+turbo.on("close", (code) => {
+  process.exit(code);
+});
 
-module.exports = {
-  version,
-  publish
-};
+process.once("SIGTERM", () => {
+  turbo.kill();
+});
+
+if (process.ppid) {
+  const { ppid } = process;
+  setInterval(() => {
+    if (ppid !== process.ppid) {
+      turbo.kill();
+    }
+  }, 500);
+}

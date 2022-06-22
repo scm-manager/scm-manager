@@ -30,7 +30,7 @@ const createIndexMiddleware = require("./middleware/IndexMiddleware");
 const createContextPathMiddleware = require("./middleware/ContextPathMiddleware");
 
 const isDevelopment = process.env.NODE_ENV === "development";
-const root = path.resolve(process.cwd(), "scm-ui");
+const root = path.resolve(process.cwd(), "..");
 
 const babelPlugins = [];
 const webpackPlugins = [];
@@ -88,7 +88,7 @@ module.exports = [
     module: {
       rules: [
         {
-          test: /\.(js|ts|jsx|tsx)$/i,
+          test: /\.(mjs|js|ts|jsx|tsx)$/i,
           exclude: /node_modules/,
           use: [
             {
@@ -127,7 +127,7 @@ module.exports = [
       ],
     },
     resolve: {
-      extensions: [".ts", ".tsx", ".js", ".jsx", ".css", ".scss", ".json"],
+      extensions: [".ts", ".tsx", ".mjs", ".js", ".jsx", ".css", ".scss", ".json"],
       fallback: {
         fs: false,
         net: false,
@@ -135,6 +135,9 @@ module.exports = [
       },
       alias: {
         "decode-named-character-reference": require.resolve("decode-named-character-reference"),
+        // force cjs instead of esm
+        // https://github.com/tannerlinsley/react-query/issues/3513
+        "react-query/devtools": require.resolve("react-query/devtools"),
       },
     },
     output: {

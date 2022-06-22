@@ -23,8 +23,8 @@ ext {
   jerseyClientVersion = '1.19.4'
   micrometerVersion = '1.6.4'
 
-  nodeVersion = '16.13.0'
-  yarnVersion = '1.22.15'
+  nodeVersion = '16.14.2'
+  yarnVersion = '1.22.18'
 
   libraries = [
     // lombok

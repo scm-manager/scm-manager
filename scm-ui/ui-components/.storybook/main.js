@@ -78,6 +78,10 @@ module.exports = {
     // force node version of "decode-named-character-reference" instead of browser version which does not work in web worker
     config.resolve.alias["decode-named-character-reference"] = require.resolve("decode-named-character-reference");
 
+    // force cjs instead of esm
+    // https://github.com/tannerlinsley/react-query/issues/3513
+    config.resolve.alias["react-query/devtools"] = require.resolve("react-query/devtools");
+
     return config;
   },
 };

@@ -28,6 +28,8 @@ import { apiClient } from "./apiclient";
 import { createQueryString } from "./utils";
 import { useQueries, useQuery } from "react-query";
 import { useEffect, useState } from "react";
+import SYNTAX from "./help/search/syntax";
+import MODAL from "./help/search/modal";
 
 export type SearchOptions = {
   type: string;
@@ -118,36 +120,45 @@ export const useSearch = (query: string, optionParam = defaultSearchOptions): Ap
   );
 };
 
-const useObserveAsync = <D extends any[], R, E = Error>(fn: (...args: D) => Promise<R>, deps: D) => {
+const useObserveAsync = <D extends unknown[], R, E = Error>(fn: (...args: D) => Promise<R>, deps: D) => {
   const [data, setData] = useState<R>();
   const [isLoading, setLoading] = useState(false);
   const [error, setError] = useState<E>();
-  useEffect(() => {
-    setLoading(true);
-    fn(...deps)
-      .then(setData)
-      .catch(setError)
-      .finally(() => setLoading(false));
-  }, deps);
+  useEffect(
+    () => {
+      setLoading(true);
+      fn(...deps)
+        .then(setData)
+        .catch(setError)
+        .finally(() => setLoading(false));
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    deps
+  );
   return { data, isLoading, error };
 };
 
-const supportedLanguages = ["de", "en"];
+const getTypedKeys = <K extends string>(input: { readonly [_ in K]: unknown }) => Object.keys(input) as K[];
 
-const pickLang = (language: string) => {
-  if (!supportedLanguages.includes(language)) {
-    return "en";
-  }
-  return language;
-};
+const isSupportedLanguage = <T>(input: unknown, supportedLanguages: T[]): input is T =>
+  supportedLanguages.includes(input as T);
+
+const pickLang = <T>(language: unknown, supportedLanguages: T[], fallback: T): T =>
+  isSupportedLanguage(language, supportedLanguages) ? language : fallback;
+
+const SUPPORTED_MODAL_LANGUAGES = getTypedKeys(MODAL);
+const SUPPORTED_SYNTAX_LANGUAGES = getTypedKeys(SYNTAX);
+
+const FALLBACK_LANGUAGE = "en";
 
 export const useSearchHelpContent = (language: string) =>
   useObserveAsync(
-    (lang) => import(`./help/search/modal.${pickLang(lang)}`).then((module) => module.default),
+    (lang) => Promise.resolve(MODAL[pickLang(lang, SUPPORTED_MODAL_LANGUAGES, FALLBACK_LANGUAGE)]),
     [language]
   );
+
 export const useSearchSyntaxContent = (language: string) =>
   useObserveAsync(
-    (lang) => import(`./help/search/syntax.${pickLang(lang)}`).then((module) => module.default),
+    (lang) => Promise.resolve(SYNTAX[pickLang(lang, SUPPORTED_SYNTAX_LANGUAGES, FALLBACK_LANGUAGE)]),
     [language]
   );

@@ -227,7 +227,7 @@ describe("Test base api hooks", () => {
       _links: {}
     });
 
-    const { result } = renderHook(() => useIndexJsonResource<{}>("spaceships"), {
+    const { result } = renderHook(() => useIndexJsonResource<Record<string, unknown>>("spaceships"), {
       wrapper: createWrapper(undefined, queryClient)
     });
 

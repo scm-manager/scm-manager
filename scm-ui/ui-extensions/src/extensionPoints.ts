@@ -44,11 +44,11 @@ import {
   RepositoryTypeCollection,
   Tag,
   User,
+  ContentType
 } from "@scm-manager/ui-types";
 import { ExtensionPointDefinition } from "./binder";
 import { RenderableExtensionPointDefinition, SimpleRenderableDynamicExtensionPointDefinition } from "./ExtensionPoint";
 import ExtractProps from "./extractProps";
-import { ContentType } from "@scm-manager/ui-api";
 
 type RepositoryCreatorSubFormProps = {
   repository: RepositoryCreation;

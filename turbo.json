@@ -1,0 +1,26 @@
+{
+  "$schema": "https://turborepo.org/schema.json",
+  "baseBranch": "origin/main",
+  "globalDependencies": [
+    "$NODE_ENV"
+  ],
+  "pipeline": {
+    "typecheck": {
+    },
+    "lint": {
+    },
+    "test": {
+      "outputs": ["build/jest-reports"]
+    },
+    "ci": {
+    },
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["build"]
+    },
+    "serve": {
+      "dependsOn": ["^build"],
+      "cache": false
+    }
+  }
+}

@@ -6,26 +6,27 @@
     "scm-plugins/*"
   ],
   "scripts": {
-    "build": "webpack-cli --mode=production --config=scm-ui/ui-scripts/src/webpack.config.js",
-    "build:dev": "webpack-cli --mode=development --config=scm-ui/ui-scripts/src/webpack.config.js",
-    "test": "lerna run --scope '@scm-manager/ui-*' test --no-bail",
-    "e2e-tests": "lerna run --scope '@scm-manager/e2e-tests' ci",
-    "typecheck": "lerna run --scope '@scm-manager/ui-*' typecheck",
-    "lint": "lerna run --scope '@scm-manager/ui-*' lint",
-    "serve": "ui-scripts serve development",
+    "build": "turbo run build --filter=\"@scm-manager/ui-webapp\"",
+    "build:dev": "cross-env NODE_ENV=development turbo run build --filter=\"@scm-manager/ui-webapp\"",
+    "test": "turbo run test --continue --filter=\"@scm-manager/ui-*\"",
+    "e2e-tests": "turbo run ci --filter=\"@scm-manager/e2e-tests\"",
+    "typecheck": "turbo run typecheck --filter=\"@scm-manager/ui-*\"",
+    "lint": "turbo run lint --filter=\"@scm-manager/ui-*\"",
+    "predeploy": "turbo run build --filter=\"@scm-manager/ui-*\"",
     "deploy": "ui-scripts publish",
     "set-version": "ui-scripts version"
   },
   "dependencies": {
-    "@scm-manager/eslint-config": "2.15.0"
+    "@scm-manager/eslint-config": "^2.15.1"
   },
   "devDependencies": {
     "@scm-manager/remark-preset-lint": "^1.0.0",
     "babel-plugin-reflow": "^0.2.7",
     "husky": "^4.2.5",
-    "lerna": "^3.17.0",
     "lint-staged": "^10.2.11",
-    "remark-cli": "^9.0.0"
+    "remark-cli": "^9.0.0",
+    "turbo": "^1.2.5",
+    "cross-env": "^7.0.3"
   },
   "resolutions": {
     "babel-core": "7.0.0-bridge.0",

@@ -177,22 +177,17 @@ artifacts {
 
 // In order to publish the packages to npm we have to do some tricks
 // 1. If we deploy a snapshot version, we replace the snapshot version in the package.json files with a unique version.
-//    This causes lerna to fail, because it does a dirty working copy check before publish.
-//    To trick lerna we move the git folder to .git-disabled before publishing and restore it afterwards.
 // 2. Authentication with yarn/npm requires a .npmrc file which contains the token and a .yarnrc file which contains
 //    the registry url and some settings. Those files are normally stored in the home directory of the user, but
 //    fortunately they could be stored in the current working directory as well. So we create an .npmrc file from a
 //    a project property "npmToken" and a .yarnrc in the root directory of the project. Both files are removed after
 //    publishing.
 
-File dotGit = new File(project.rootDir, ".git")
-File dotGitDisabled = new File(project.rootDir, ".git-disabled")
 File npmrc = new File(project.rootDir, ".npmrc")
 File yarnrc = new File(project.rootDir, ".yarnrc")
 
 task publish(type: YarnTask) {
   doFirst {
-    dotGit.renameTo(dotGitDisabled)
     if (project.hasProperty("npmToken")) {
       npmrc.createNewFile()
       npmrc.append "//registry.npmjs.org/:_authToken=${project.property('npmToken')}\n"
@@ -211,7 +206,6 @@ task publish(type: YarnTask) {
 
 task cleanUpAfterPublishing {
   doLast {
-    dotGitDisabled.renameTo(dotGit)
     if (npmrc.exists()) {
       npmrc.delete()
     }

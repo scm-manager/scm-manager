@@ -1,12 +1,19 @@
 {
   "name": "@scm-manager/ui-extensions",
   "version": "2.36.2-SNAPSHOT",
-  "main": "src/index.ts",
   "license": "MIT",
   "private": false,
   "author": "Sebastian Sdorra <sebastian.sdorra@cloudogu.com>",
+  "main": "build/index.js",
+  "module": "build/index.mjs",
+  "types": "build/index.d.ts",
+  "files": [
+    "build"
+  ],
   "scripts": {
+    "build": "tsup ./src/index.ts -d build --format esm,cjs --dts",
     "typecheck": "tsc",
+    "lint": "eslint src",
     "test": "jest"
   },
   "dependencies": {
@@ -21,7 +28,8 @@
     "@scm-manager/tsconfig": "^2.13.0",
     "@types/enzyme": "^3.10.3",
     "@types/jest": "^24.0.19",
-    "@types/react": "^17.0.1"
+    "@types/react": "^17.0.1",
+    "tsup": "^5.12.6"
   },
   "babel": {
     "presets": [
