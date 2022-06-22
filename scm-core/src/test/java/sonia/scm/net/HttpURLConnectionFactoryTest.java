@@ -345,6 +345,17 @@ class HttpURLConnectionFactoryTest {
       assertThat(keyManagers).containsOnly(keyManager);
     }
 
+    @Test
+    void shouldSetGivenRequestProperties() throws IOException {
+      HttpConnectionOptions options = new HttpConnectionOptions();
+      options.addRequestProperty("valid_until", "end of the universe");
+
+      HttpURLConnection connection = connectionFactory.create(new URL("https://hitchhiker.org"), options);
+
+      verify(connection).setRequestProperty("valid_until", "end of the universe");
+      assertThat(usedProxy).isNull();
+    }
+
     private TrustManager[] usedTrustManagers(HttpURLConnection connection) throws KeyManagementException {
       ArgumentCaptor<TrustManager[]> captor = ArgumentCaptor.forClass(TrustManager[].class);
       assertThat(connection).isInstanceOfSatisfying(
