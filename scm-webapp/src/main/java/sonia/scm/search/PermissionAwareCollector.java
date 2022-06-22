@@ -47,6 +47,7 @@ public class PermissionAwareCollector implements Collector {
   private final IndexReader reader;
   private final Collector delegate;
   private int totalHits = 0;
+  private static final int SEARCH_RESULT_LIMIT = 500;
 
 
   public PermissionAwareCollector(IndexReader reader, Collector delegate) {
@@ -91,7 +92,7 @@ public class PermissionAwareCollector implements Collector {
 
     private void ensureSearchResultLimit() {
       totalHits++;
-      if (totalHits > 500) {
+      if (totalHits > SEARCH_RESULT_LIMIT) {
         throw new CollectionTerminatedException();
       }
     }
