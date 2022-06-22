@@ -78,19 +78,19 @@
     "password": "Passwort",
     "compressed": {
       "label": "Komprimiert",
-      "helpText": "Anwählen, wenn die Datei komprimiert ist."
+      "helpText": "Nur wählen, wenn die Datei komprimiert ist."
     },
     "bundle": {
-      "title": "Wählen Sie Ihre Datei aus",
-      "helpText": "Wählen Sie die Datei aus der das Repository importiert werden soll.",
+      "title": "Datei wählen",
+      "helpText": "Datei aus der das Repository importiert werden soll.",
       "password": {
         "title": "Passwort",
-        "helpText": "Wenn der importierte Dump verschlüsselt ist, muss das korrekte Passwort mitgeliefert werden."
+        "helpText": "Geben Sie das Passwort für verschlüsselte Dumps an."
       }
     },
     "fullImport": {
-      "title": "SCM-Manager Repository Archiv",
-      "helpText": "Wählen Sie das Repository Archiv aus. Das Archiv muss von einer SCM-Manager Instanz exportiert worden sein.",
+      "title": "Dump mit SCM-Manager-Metadaten wählen",
+      "helpText": "Das Archiv muss von einer SCM-Manager-Instanz mit Metadaten exportiert worden sein.",
       "password": {
         "title": "Passwort",
         "helpText": "Wenn das importierte Repository Archiv verschlüsselt ist, muss das korrekte Passwort mitgeliefert werden."
@@ -107,12 +107,12 @@
         "helpText": "Das Repository wird über eine URL importiert."
       },
       "bundle": {
-        "label": "Import aus Dump",
-        "helpText": "Das Repository wird aus einem Datei Dump importiert."
+        "label": "Import aus Dump ohne Metadaten",
+        "helpText": "Repository aus einem Datei-Dump ohne SCM-Manager-spezifische Metadaten importieren."
       },
       "fullImport": {
-        "label": "Import aus Archiv mit Metadaten (Experimentell)",
-        "helpText": "Das Repository inkl. der Metadaten wird aus einem archivierten Dump importiert. Das Import Archiv muss von einem anderen SCM-Manager generiert worden sein."
+        "label": "Import aus SCM-Manager-Dump mit Metadaten",
+        "helpText": "Der Dump muss von einer SCM-Manager-Instanz mit Metadaten erstellt worden sein."
       }
     },
     "navigationWarning": "Es wird dringend empfohlen auf dieser Seite zu warten bis der Import abgeschlossen ist. Beim Verlassen der Seite könnte der Import abbrechen. Seite trotzdem verlassen?"
@@ -316,8 +316,8 @@
       "helpText": "Export Datei vor dem Download komprimieren. Reduziert die Downloadgröße."
     },
     "fullExport": {
-      "label": "Mit Metadaten (Experimentell)",
-      "helpText": "Zusätzlich zum Repository Dump werden Metadaten zum Repository und zur SCM-Instanz exportiert. Installierte Plugins sollten nach Möglichkeit in der neuesten Version installiert sein. Gespeicherte Passwörter funktionieren nicht bei einem Import in andere SCM-Manager Instanzen. Dieses Feature ist noch experimentell. Es sollte (noch) nicht für Backups genutzt werden!"
+      "label": "Mit Metadaten",
+      "helpText": "Zusätzlich zum Repository Dump werden Metadaten zum Repository und zur SCM-Instanz exportiert. Installierte Plugins sollten in der neuesten Version installiert sein. Gespeicherte Passwörter funktionieren nicht bei einem Import in andere SCM-Manager Instanzen."
     },
     "encrypt": {
       "label": "Verschlüsseln",
