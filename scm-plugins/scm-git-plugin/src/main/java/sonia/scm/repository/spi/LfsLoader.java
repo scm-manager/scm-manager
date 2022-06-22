@@ -40,7 +40,7 @@ import org.eclipse.jgit.transport.http.HttpConnectionFactory;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.repository.api.MirrorCommandResult;
+import sonia.scm.repository.api.MirrorCommandResult.LfsUpdateResult;
 import sonia.scm.store.BlobStore;
 import sonia.scm.web.lfs.LfsBlobStoreFactory;
 
@@ -65,12 +65,19 @@ class LfsLoader {
     this.mirrorHttpConnectionProvider = mirrorHttpConnectionProvider;
   }
 
-  void inspectTree(ObjectId newObjectId, MirrorCommandRequest mirrorCommandRequest, Repository gitRepository, List<String> mirrorLog, MirrorCommandResult.LfsUpdateResult lfsUpdateResult, sonia.scm.repository.Repository repository) {
+  void inspectTree(ObjectId newObjectId,
+                   MirrorCommandRequest mirrorCommandRequest,
+                   Repository gitRepository,
+                   List<String> mirrorLog,
+                   LfsUpdateResult lfsUpdateResult,
+                   sonia.scm.repository.Repository repository) {
     String mirrorUrl = mirrorCommandRequest.getSourceUrl();
     EntryHandler entryHandler = new EntryHandler(repository, gitRepository, mirrorCommandRequest, mirrorLog, lfsUpdateResult);
 
     try {
-      gitRepository.getConfig().setString(ConfigConstants.CONFIG_SECTION_LFS, null, ConfigConstants.CONFIG_KEY_URL, computeLfsUrl(mirrorUrl));
+      gitRepository
+        .getConfig()
+        .setString(ConfigConstants.CONFIG_SECTION_LFS, null, ConfigConstants.CONFIG_KEY_URL, computeLfsUrl(mirrorUrl));
 
       TreeWalk treeWalk = new TreeWalk(gitRepository);
       treeWalk.setFilter(new LfsPointerFilter());
@@ -106,11 +113,15 @@ class LfsLoader {
     private final BlobStore lfsBlobStore;
     private final Repository gitRepository;
     private final List<String> mirrorLog;
-    private final MirrorCommandResult.LfsUpdateResult lfsUpdateResult;
+    private final LfsUpdateResult lfsUpdateResult;
     private final sonia.scm.repository.Repository repository;
     private final HttpConnectionFactory httpConnectionFactory;
 
-    private EntryHandler(sonia.scm.repository.Repository repository, Repository gitRepository, MirrorCommandRequest mirrorCommandRequest, List<String> mirrorLog, MirrorCommandResult.LfsUpdateResult lfsUpdateResult) {
+    private EntryHandler(sonia.scm.repository.Repository repository,
+                         Repository gitRepository,
+                         MirrorCommandRequest mirrorCommandRequest,
+                         List<String> mirrorLog,
+                         LfsUpdateResult lfsUpdateResult) {
       this.lfsBlobStore = lfsBlobStoreFactory.getLfsBlobStore(repository);
       this.repository = repository;
       this.gitRepository = gitRepository;
