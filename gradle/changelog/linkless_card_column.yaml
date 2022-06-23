@@ -1,0 +1,2 @@
+- type: added
+  description: Developers can omit the link prop of the CardColumnSmall component ([#2076](https://github.com/scm-manager/scm-manager/pull/2076))

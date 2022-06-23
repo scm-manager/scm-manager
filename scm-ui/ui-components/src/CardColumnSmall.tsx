@@ -28,7 +28,7 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 
 type Props = {
-  link: string;
+  link?: string;
   avatar?: ReactNode;
   contentLeft: ReactNode;
   contentRight: ReactNode;
@@ -42,30 +42,31 @@ const StyledLink = styled(Link)`
 const CardColumnSmall: FC<Props> = ({ link, avatar, contentLeft, contentRight, footer }) => {
   const renderAvatar = avatar ? <figure className="media-left mr-2 mt-1">{avatar}</figure> : null;
   const renderFooter = footer ? <small>{footer}</small> : null;
-
-  return (
-    <StyledLink to={link}>
-      <div className="p-2 media has-hover-background-blue">
-        {renderAvatar}
-        <div
-          className={classNames(
-            "media-content",
-            "text-box",
-            "is-flex",
-            "is-flex-direction-column",
-            "is-justify-content-space-around",
-            "is-align-self-stretch"
-          )}
-        >
-          <div className="is-flex is-flex-direction-column is-flex-align-items-start">
-            <div className="is-clipped">{contentLeft}</div>
-            <div>{contentRight}</div>
-          </div>
-          {renderFooter}
+  const content = (
+    <div className="p-2 media has-hover-background-blue">
+      {renderAvatar}
+      <div
+        className={classNames(
+          "media-content",
+          "text-box",
+          "is-flex",
+          "is-flex-direction-column",
+          "is-justify-content-space-around",
+          "is-align-self-stretch"
+        )}
+      >
+        <div className="is-flex is-flex-direction-column is-flex-align-items-start">
+          <div className="is-clipped">{contentLeft}</div>
+          <div>{contentRight}</div>
         </div>
+        {renderFooter}
       </div>
-    </StyledLink>
+    </div>
   );
+  if (!link) {
+    return content;
+  }
+  return <StyledLink to={link}>{content}</StyledLink>;
 };
 
 export default CardColumnSmall;
