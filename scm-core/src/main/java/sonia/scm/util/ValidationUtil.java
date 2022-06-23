@@ -88,6 +88,17 @@ public final class ValidationUtil {
   }
 
   /**
+   * Returns {@code true} if the user password is valid.
+   *
+   * @param password password to be validated
+   * @param isExternal whether user is external
+   * @return {@code true} if password is valid
+   */
+  public static boolean isPasswordValid(String password, Boolean isExternal) {
+    return isExternal || (password.length() >= 6 && password.length() <= 32);
+  }
+
+  /**
    * Returns {@code true} if the object is valid.
    *
    * @param value             value to be checked

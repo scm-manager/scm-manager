@@ -215,7 +215,8 @@ public class User extends BasicPropertiesAware implements Principal, ModelObject
   @Override
   public boolean isValid() {
     return ValidationUtil.isNameValid(name) && Util.isNotEmpty(displayName)
-      && ((Util.isEmpty(mail)) || ValidationUtil.isMailAddressValid(mail));
+      && ((Util.isEmpty(mail)) || ValidationUtil.isMailAddressValid(mail))
+      && ValidationUtil.isPasswordValid(password, external);
   }
 
   @Override

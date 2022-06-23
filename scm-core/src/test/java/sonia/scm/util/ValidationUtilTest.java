@@ -156,6 +156,22 @@ class ValidationUtilTest {
   }
 
   @Test
+  void shouldAcceptExternal() {
+    assertTrue(ValidationUtil.isPasswordValid(null, true));
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {
+    "1",
+    " ",
+    "asdf",
+    "12345678901234567890123456789012345"
+  })
+  void shouldRejectPassword(String value) {
+    assertFalse(ValidationUtil.isPasswordValid(value, false));
+  }
+
+  @Test
   void testIsNotContaining() {
 
     // true
