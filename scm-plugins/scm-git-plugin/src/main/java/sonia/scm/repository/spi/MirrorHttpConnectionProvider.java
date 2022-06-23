@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.spi;
 
+import org.eclipse.jgit.transport.UserAgent;
 import org.eclipse.jgit.transport.http.HttpConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,7 @@ import sonia.scm.net.HttpConnectionOptions;
 import sonia.scm.net.HttpURLConnectionFactory;
 import sonia.scm.repository.api.Pkcs12ClientCertificateCredential;
 import sonia.scm.repository.api.UsernamePasswordCredential;
+import sonia.scm.util.HttpUtil;
 import sonia.scm.web.ScmHttpConnectionFactory;
 
 import javax.inject.Inject;
@@ -68,6 +70,7 @@ class MirrorHttpConnectionProvider {
         String authHeaderValue = "Basic " + encodedAuth;
         options.addRequestProperty("Authorization", authHeaderValue);
       });
+    options.addRequestProperty(HttpUtil.HEADER_USERAGENT, "git-lfs/2");
 
     return new ScmHttpConnectionFactory(httpURLConnectionFactory, options);
   }
