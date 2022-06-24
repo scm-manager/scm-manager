@@ -24,12 +24,15 @@
 
 package sonia.scm.repository.spi;
 
+import org.eclipse.jgit.transport.UserAgent;
 import org.eclipse.jgit.transport.http.HttpConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.net.HttpConnectionOptions;
 import sonia.scm.net.HttpURLConnectionFactory;
 import sonia.scm.repository.api.Pkcs12ClientCertificateCredential;
+import sonia.scm.repository.api.UsernamePasswordCredential;
+import sonia.scm.util.HttpUtil;
 import sonia.scm.web.ScmHttpConnectionFactory;
 
 import javax.inject.Inject;
@@ -37,8 +40,10 @@ import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
+import java.util.Base64;
 import java.util.List;
 
 class MirrorHttpConnectionProvider {
@@ -59,6 +64,13 @@ class MirrorHttpConnectionProvider {
       .ifPresent(c -> options.withKeyManagers(createKeyManagers(c, log)));
     mirrorCommandRequest.getProxyConfiguration()
       .ifPresent(options::withProxyConfiguration);
+    mirrorCommandRequest.getCredential(UsernamePasswordCredential.class)
+      .ifPresent(credential -> {
+        String encodedAuth = Base64.getEncoder().encodeToString((credential.username() + ":" + new String(credential.password())).getBytes(StandardCharsets.UTF_8));
+        String authHeaderValue = "Basic " + encodedAuth;
+        options.addRequestProperty("Authorization", authHeaderValue);
+      });
+    options.addRequestProperty(HttpUtil.HEADER_USERAGENT, "git-lfs/2");
 
     return new ScmHttpConnectionFactory(httpURLConnectionFactory, options);
   }

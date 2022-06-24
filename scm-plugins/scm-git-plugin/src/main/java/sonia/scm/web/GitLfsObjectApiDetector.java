@@ -22,55 +22,22 @@
  * SOFTWARE.
  */
 
-plugins {
-  id 'org.scm-manager.smp' version '0.11.0'
-}
+package sonia.scm.web;
 
-def jgitVersion = '5.11.1.202105131744-r-scm3'
+import lombok.extern.slf4j.Slf4j;
+import sonia.scm.plugin.Extension;
 
-dependencies {
-  // required by scm-it
-  api "sonia.jgit:org.eclipse.jgit:${jgitVersion}"
-  implementation "sonia.jgit:org.eclipse.jgit.http.server:${jgitVersion}"
-  implementation "sonia.jgit:org.eclipse.jgit.lfs.server:${jgitVersion}"
-  implementation "sonia.jgit:org.eclipse.jgit.gpg.bc:${jgitVersion}"
-  implementation libraries.commonsCompress
+import javax.servlet.http.HttpServletRequest;
+import java.util.regex.Pattern;
 
-  testImplementation "sonia.jgit:org.eclipse.jgit.junit.http:${jgitVersion}"
-  testImplementation libraries.shiroUnit
-  testImplementation libraries.awaitility
-}
+@Slf4j
+@Extension
+public class GitLfsObjectApiDetector implements ScmClientDetector {
 
-scmPlugin {
-  scmVersion = project.version
-  core = true
-  name = "scm-git-plugin"
-  displayName = 'Git'
-  description = 'Plugin for the version control system Git'
-  author = 'Cloudogu GmbH'
-  category = 'Source Code Management'
-  avatarUrl = '/images/git-logo.png'
+  private static final Pattern OBJECT_PATH_PATTERN = Pattern.compile("/[^/]*/repo/[^/]*/[^/]*\\.git/info/lfs/objects/.*");
 
-  openapi {
-    packages = [
-      'sonia.scm.api.v2.resources'
-    ]
+  @Override
+  public boolean isScmClient(HttpServletRequest request, UserAgent userAgent) {
+    return OBJECT_PATH_PATTERN.matcher(request.getRequestURI()).matches();
   }
-
-}
-
-task testJar(type: Jar) {
- 	classifier = 'tests'
-	from sourceSets.test.output
-}
-
-configurations {
-  tests {
-    canBeConsumed = true
-    canBeResolved = false
-  }
-}
-
-artifacts {
-  tests(testJar)
 }

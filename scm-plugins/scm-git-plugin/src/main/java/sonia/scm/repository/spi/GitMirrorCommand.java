@@ -61,6 +61,7 @@ import sonia.scm.repository.api.MirrorFilter;
 import sonia.scm.repository.api.MirrorFilter.Result;
 import sonia.scm.repository.api.UsernamePasswordCredential;
 import sonia.scm.store.ConfigurationStore;
+import sonia.scm.web.lfs.LfsBlobStoreFactory;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -86,16 +87,18 @@ import static sonia.scm.repository.api.MirrorCommandResult.ResultType.OK;
 import static sonia.scm.repository.api.MirrorCommandResult.ResultType.REJECTED_UPDATES;
 
 /**
- * Implementation of the mirror command for git. This implementation makes use of a special
- * "ref" called <code>mirror</code>. A synchronization works in principal in the following way:
+ * Implementation of the mirror command for git.
+ *
+ * The general workflow is the same for the first call and all subsequent updates and looks like this:
+ *
  * <ol>
- *   <li>The mirror reference is updated. This is done by calling the jgit equivalent of
- *     <pre>git fetch -pf <source url> "refs/heads/*:refs/mirror/heads/*" "refs/tags/*:refs/mirror/tags/*"</pre>
- *   </li>
- *   <li>These updates are then presented to the filter. Here single updates can be rejected.
- *     Such rejected updates have to be reverted in the mirror, too.
- *   </li>
- *   <li>Accepted ref updates are copied to the "normal" refs.</li>
+ *   <li>Create a local working copy for the repository.</li>
+ *   <li>Fetch updates from the source and override all local refs in the working copy
+ *     (like <code>git fetch "refs/heads/*:refs/heads/*" "refs/tags/*:refs/tags/*"</code>).</li>
+ *   <li>Iterate the updates and decide, whether to keep each single update or not. If an update is rejected,
+ *     the reference is set to its old oid (or deleted, if this is a new reference).</li>
+ *   <li>Push the changed references from the working copy to the repository.</li>
+ *   <li>Release the working copy.</li>
  * </ol>
  */
 public class GitMirrorCommand extends AbstractGitCommand implements MirrorCommand {
@@ -108,6 +111,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
   private final GitWorkingCopyFactory workingCopyFactory;
   private final GitHeadModifier gitHeadModifier;
   private final GitRepositoryConfigStoreProvider storeProvider;
+  private final LfsLoader lfsLoader;
 
   @Inject
   GitMirrorCommand(GitContext context,
@@ -116,7 +120,8 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
                    GitTagConverter gitTagConverter,
                    GitWorkingCopyFactory workingCopyFactory,
                    GitHeadModifier gitHeadModifier,
-                   GitRepositoryConfigStoreProvider storeProvider) {
+                   GitRepositoryConfigStoreProvider storeProvider,
+                   LfsLoader lfsLoader) {
     super(context);
     this.mirrorHttpConnectionProvider = mirrorHttpConnectionProvider;
     this.converterFactory = converterFactory;
@@ -124,6 +129,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
     this.workingCopyFactory = workingCopyFactory;
     this.gitHeadModifier = gitHeadModifier;
     this.storeProvider = storeProvider;
+    this.lfsLoader = lfsLoader;
   }
 
   @Override
@@ -163,6 +169,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
     private final Git git;
 
     private final Collection<String> deletedRefs = new ArrayList<>();
+    private final MirrorCommandResult.LfsUpdateResult lfsUpdateResult = new MirrorCommandResult.LfsUpdateResult();
 
     private FetchResult fetchResult;
     private GitFilterContext filterContext;
@@ -185,7 +192,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
         result = FAILED;
         LOG.info("got exception while trying to synchronize mirror for repository {}", context.getRepository(), e);
         mirrorLog.add("failed to synchronize: " + e.getMessage());
-        return new MirrorCommandResult(FAILED, mirrorLog, stopwatch.stop().elapsed());
+        return new MirrorCommandResult(FAILED, mirrorLog, stopwatch.stop().elapsed(), lfsUpdateResult);
       }
     }
 
@@ -198,7 +205,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       if (fetchResult.getTrackingRefUpdates().isEmpty()) {
         LOG.trace("No updates found for mirror repository {}", repository);
         mirrorLog.add("No updates found");
-        return new MirrorCommandResult(result, mirrorLog, stopwatch.stop().elapsed());
+        return new MirrorCommandResult(result, mirrorLog, stopwatch.stop().elapsed(), lfsUpdateResult);
       } else {
         handleBranches();
         handleTags();
@@ -206,14 +213,15 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
 
       if (!defaultBranchSelector.isChanged()) {
         mirrorLog.add("No effective changes detected");
-        return new MirrorCommandResult(result, mirrorLog, stopwatch.stop().elapsed());
+        return new MirrorCommandResult(result, mirrorLog, stopwatch.stop().elapsed(), lfsUpdateResult);
       }
 
       defaultBranchSelector.newDefaultBranch().ifPresent(this::setNewDefaultBranch);
 
       String[] pushRefSpecs = generatePushRefSpecs().toArray(new String[0]);
       push(pushRefSpecs);
-      return new MirrorCommandResult(result, mirrorLog, stopwatch.stop().elapsed());
+      ResultType finalResult = lfsUpdateResult.hasFailures()? FAILED: result;
+      return new MirrorCommandResult(finalResult, mirrorLog, stopwatch.stop().elapsed(), lfsUpdateResult);
     }
 
     private void setNewDefaultBranch(String newDefaultBranch) {
@@ -357,6 +365,10 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
           LOG.trace("updating {} ref in {}: {}", refType.typeForLog, GitMirrorCommand.this.repository, targetRef);
           defaultBranchSelector.accepted(refType, referenceName);
           logger.logChange(ref, referenceName, getUpdateType(ref));
+
+          if (!mirrorCommandRequest.isIgnoreLfs()) {
+            lfsLoader.inspectTree(ref.getNewObjectId(), mirrorCommandRequest, git.getRepository(), mirrorLog, lfsUpdateResult, repository);
+          }
         }
       }
 

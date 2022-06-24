@@ -22,55 +22,42 @@
  * SOFTWARE.
  */
 
-plugins {
-  id 'org.scm-manager.smp' version '0.11.0'
-}
+package sonia.scm.web;
 
-def jgitVersion = '5.11.1.202105131744-r-scm3'
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-dependencies {
-  // required by scm-it
-  api "sonia.jgit:org.eclipse.jgit:${jgitVersion}"
-  implementation "sonia.jgit:org.eclipse.jgit.http.server:${jgitVersion}"
-  implementation "sonia.jgit:org.eclipse.jgit.lfs.server:${jgitVersion}"
-  implementation "sonia.jgit:org.eclipse.jgit.gpg.bc:${jgitVersion}"
-  implementation libraries.commonsCompress
+import javax.servlet.http.HttpServletRequest;
 
-  testImplementation "sonia.jgit:org.eclipse.jgit.junit.http:${jgitVersion}"
-  testImplementation libraries.shiroUnit
-  testImplementation libraries.awaitility
-}
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-scmPlugin {
-  scmVersion = project.version
-  core = true
-  name = "scm-git-plugin"
-  displayName = 'Git'
-  description = 'Plugin for the version control system Git'
-  author = 'Cloudogu GmbH'
-  category = 'Source Code Management'
-  avatarUrl = '/images/git-logo.png'
+@ExtendWith(MockitoExtension.class)
+class GitLfsObjectApiDetectorTest {
 
-  openapi {
-    packages = [
-      'sonia.scm.api.v2.resources'
-    ]
+  @Mock
+  private HttpServletRequest request;
+
+  @Test
+  void shouldAcceptObjectRequest() {
+    when(request.getRequestURI())
+      .thenReturn("/scm/repo/scmadmin/lfs.git/info/lfs/objects/abc123");
+
+    boolean result = new GitLfsObjectApiDetector().isScmClient(request, null);
+
+    assertThat(result).isTrue();
   }
 
-}
+  @Test
+  void shouldRejectFakeObjectRequest() {
+    when(request.getRequestURI())
+      .thenReturn("/scm/repo/scmadmin/lfs.git/code/info/lfs/objects/abc123");
 
-task testJar(type: Jar) {
- 	classifier = 'tests'
-	from sourceSets.test.output
-}
+    boolean result = new GitLfsObjectApiDetector().isScmClient(request, null);
 
-configurations {
-  tests {
-    canBeConsumed = true
-    canBeResolved = false
+    assertThat(result).isFalse();
   }
-}
-
-artifacts {
-  tests(testJar)
 }

@@ -58,6 +58,7 @@ public final class MirrorCommandBuilder {
   private Collection<Credential> credentials = emptyList();
   private List<PublicKey> publicKeys = emptyList();
   private MirrorFilter filter = new MirrorFilter() {};
+  private boolean ignoreLfs;
 
   @Nullable
   private ProxyConfiguration proxyConfiguration;
@@ -100,6 +101,16 @@ public final class MirrorCommandBuilder {
   }
 
   /**
+   * If set to <code>true</code>, lfs files will not be mirrored. Defaults to <code>false</code>.
+   * @return This builder instance
+   * @since 2.37.0
+   */
+  public MirrorCommandBuilder setIgnoreLfs(boolean ignoreLfs) {
+    this.ignoreLfs = ignoreLfs;
+    return this;
+  }
+
+  /**
    * Set the proxy configuration which should be used to access the source repository of the mirror.
    * If not proxy configuration is set the global configuration should be used instead.
    * @param proxyConfiguration proxy configuration to access the source repository
@@ -130,6 +141,7 @@ public final class MirrorCommandBuilder {
     mirrorCommandRequest.setFilter(filter);
     mirrorCommandRequest.setPublicKeys(publicKeys);
     mirrorCommandRequest.setProxyConfiguration(proxyConfiguration);
+    mirrorCommandRequest.setIgnoreLfs(ignoreLfs);
     Preconditions.checkArgument(mirrorCommandRequest.isValid(), "source url has to be specified");
     return mirrorCommandRequest;
   }

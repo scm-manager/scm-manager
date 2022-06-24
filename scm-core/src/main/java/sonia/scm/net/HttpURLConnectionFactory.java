@@ -181,6 +181,8 @@ public final class HttpURLConnectionFactory {
       if (connection instanceof HttpsURLConnection) {
         applySSLSettings((HttpsURLConnection) connection);
       }
+      options.getConnectionProperties()
+        .forEach(connection::setRequestProperty);
       return connection;
     }
 

@@ -33,6 +33,9 @@ import javax.annotation.Nullable;
 import javax.net.ssl.KeyManager;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -65,6 +68,7 @@ public final class HttpConnectionOptions {
   private int connectionTimeout = DEFAULT_CONNECTION_TIMEOUT;
   private int readTimeout = DEFAULT_READ_TIMEOUT;
   private boolean ignoreProxySettings = false;
+  private Map<String, String> connectionProperties = new HashMap<>();
 
   /**
    * Returns optional local proxy configuration.
@@ -84,6 +88,10 @@ public final class HttpConnectionOptions {
       return Optional.of(Arrays.copyOf(keyManagers, keyManagers.length));
     }
     return Optional.empty();
+  }
+
+  public Map<String, String> getConnectionProperties() {
+    return Collections.unmodifiableMap(connectionProperties);
   }
 
   /**
@@ -160,6 +168,17 @@ public final class HttpConnectionOptions {
    */
   public HttpConnectionOptions withIgnoreProxySettings() {
     this.ignoreProxySettings = true;
+    return this;
+  }
+
+  /**
+   * Add a request property that will be converted to headers in the request.
+   * @param key The property (aka header) name (eg. "User-Agent").
+   * @param value The value of the property.
+   * @return {@code this}
+   */
+  public HttpConnectionOptions addRequestProperty(String key, String value) {
+    connectionProperties.put(key, value);
     return this;
   }
 }

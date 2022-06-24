@@ -64,6 +64,7 @@ import javax.net.ssl.TrustManager;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -74,9 +75,12 @@ import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.AdditionalMatchers.not;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static sonia.scm.repository.api.MirrorCommandResult.ResultType.FAILED;
@@ -104,6 +108,8 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
 
   private final GitRepositoryConfigStoreProvider storeProvider = mock(GitRepositoryConfigStoreProvider.class);
   private final ConfigurationStore<GitRepositoryConfig> configurationStore = mock(ConfigurationStore.class);
+  private final LfsLoader lfsLoader = mock(LfsLoader.class);
+
   private final GitRepositoryConfig gitRepositoryConfig = new GitRepositoryConfig();
 
   @Before
@@ -136,11 +142,12 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
       gitTagConverter,
       workingCopyFactory,
       gitHeadModifier,
-      storeProvider);
+      storeProvider,
+      lfsLoader);
   }
 
   @Before
-  public void initializeStore() {
+  public void initializeStores() {
     when(storeProvider.get(repository)).thenReturn(configurationStore);
     when(configurationStore.get()).thenReturn(gitRepositoryConfig);
   }
@@ -831,6 +838,50 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
       assertThat(argument.getDefaultBranch()).isNotEqualTo("master");
       return true;
     }));
+  }
+
+  @Test
+  public void shouldCallLfsLoader() {
+    callMirrorCommand();
+
+    Arrays.stream(new String[] {
+      "a8495c0335a13e6e432df90b3727fa91943189a7",
+      "d81ad6c63d7e2162308d69637b339dedd1d9201c",
+      "2f95f02d9c568594d31e78464bd11a96c62e3f91",
+      "91b99de908fcd04772798a31c308a64aea1a5523",
+      "03ca33468c2094249973d0ca11b80243a20de368",
+      "1fcebf45a215a43f0713a57b807d55e8387a6d70",
+      "383b954b27e052db6880d57f1c860dc208795247",
+      "35597e9e98fe53167266583848bfef985c2adb27",
+      "3f76a12f08a6ba0dc988c68b7f0b2cd190efc3c4",
+      "86a6645eceefe8b9a247db5eb16e3d89a7e6e6d1"
+      // one revision is missing here ("fcd0ef1831e4002ac43ea539f4094334c79ea9ec"), because this is iterated twice, what is hard to test
+    }).forEach(expectedRevision ->
+      verify(lfsLoader)
+      .inspectTree(eq(ObjectId.fromString(expectedRevision)), any(), any(), any(), any(), eq(repository)));
+  }
+
+  @Test
+  public void shouldMarkMirrorAsFailedIfLfsFileFailes() {
+    doAnswer(invocation -> {
+      invocation.getArgument(4, MirrorCommandResult.LfsUpdateResult.class).increaseFailureCount();
+      return null;
+    })
+      .when(lfsLoader)
+      .inspectTree(eq(ObjectId.fromString("a8495c0335a13e6e432df90b3727fa91943189a7")), any(), any(), any(), any(), eq(repository));
+
+
+    MirrorCommandResult mirrorCommandResult = callMirrorCommand();
+
+    assertThat(mirrorCommandResult.getResult()).isEqualTo(FAILED);
+  }
+
+  @Test
+  public void shouldNotCallLfsLoaderIfDeactivated() {
+    callMirrorCommand(repositoryDirectory.getAbsolutePath(), c -> c.setIgnoreLfs(true));
+
+    verify(lfsLoader, never())
+      .inspectTree(any(), any(), any(), any(), any(), any());
   }
 
   public static class DefaultBranchSelectorTest {

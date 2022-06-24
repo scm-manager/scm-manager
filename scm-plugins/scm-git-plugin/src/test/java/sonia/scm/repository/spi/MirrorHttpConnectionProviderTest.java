@@ -36,6 +36,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.net.HttpConnectionOptions;
 import sonia.scm.net.HttpURLConnectionFactory;
 import sonia.scm.net.ProxyConfiguration;
+import sonia.scm.repository.api.SimpleUsernamePasswordCredential;
 
 import java.io.IOException;
 import java.net.URL;
@@ -77,6 +78,25 @@ class MirrorHttpConnectionProviderTest {
     HttpConnectionOptions value = create(request);
 
     assertThat(value.getProxyConfiguration()).containsSame(proxy);
+  }
+
+  @Test
+  void shouldConfigureAuthorizationHeader() throws IOException {
+    MirrorCommandRequest request = new MirrorCommandRequest();
+    request.setCredentials(List.of(new SimpleUsernamePasswordCredential("dent", "yellow".toCharArray())));
+
+    HttpConnectionOptions value = create(request);
+
+    assertThat(value.getConnectionProperties()).containsEntry("Authorization", "Basic ZGVudDp5ZWxsb3c=");
+  }
+
+  @Test
+  void shouldSetUserAgentHeader() throws IOException {
+    MirrorCommandRequest request = new MirrorCommandRequest();
+
+    HttpConnectionOptions value = create(request);
+
+    assertThat(value.getConnectionProperties()).containsEntry("User-Agent", "git-lfs/2");
   }
 
   private HttpConnectionOptions create(MirrorCommandRequest request) throws IOException {

@@ -24,18 +24,40 @@
 
 package sonia.scm.web;
 
+import lombok.extern.slf4j.Slf4j;
 import sonia.scm.plugin.Extension;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.core.MediaType;
+import java.util.Arrays;
 
+@Slf4j
 @Extension
 public class GitLfsLockApiDetector implements ScmClientDetector {
 
-  public static final String LOCK_APPLICATION_TYPE = "application/vnd.git-lfs+json";
+  private static final String APPLICATION_TYPE = "application";
+  private static final String LFS_VND_SUB_TYPE = "vnd.git-lfs+json";
 
   @Override
   public boolean isScmClient(HttpServletRequest request, UserAgent userAgent) {
-    return LOCK_APPLICATION_TYPE.equals(request.getHeader("Content-Type"))
-      || LOCK_APPLICATION_TYPE.equals(request.getHeader("Accept"));
+    return isLfsType(request, "Content-Type")
+      || isLfsType(request, "Accept");
+  }
+
+  private boolean isLfsType(HttpServletRequest request, String name) {
+    String headerValue = request.getHeader(name);
+
+    if (headerValue == null) {
+      return false;
+    }
+
+    log.trace("checking '{}' header with value '{}'", name, headerValue);
+
+    return Arrays.stream(headerValue.split(",\\s*"))
+      .anyMatch(v -> {
+        MediaType headerMediaType = MediaType.valueOf(v);
+        return APPLICATION_TYPE.equals(headerMediaType.getType())
+          && LFS_VND_SUB_TYPE.equals(headerMediaType.getSubtype());
+      });
   }
 }
