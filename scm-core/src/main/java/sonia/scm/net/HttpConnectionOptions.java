@@ -171,6 +171,12 @@ public final class HttpConnectionOptions {
     return this;
   }
 
+  /**
+   * Add a request property that will be converted to headers in the request.
+   * @param key The property (aka header) name (eg. "User-Agent").
+   * @param value The value of the property.
+   * @return {@code this}
+   */
   public HttpConnectionOptions addRequestProperty(String key, String value) {
     connectionProperties.put(key, value);
     return this;
