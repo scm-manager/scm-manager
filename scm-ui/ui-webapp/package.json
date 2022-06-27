@@ -26,15 +26,14 @@
     "string_score": "^0.1.22",
     "styled-components": "^5.3.5",
     "date-fns": "^2.21.3",
-    "react-query": "^3.25.1",
-    "systemjs": "0.21.6"
+    "react-query": "^3.25.1"
   },
   "scripts": {
     "test": "jest",
     "lint": "eslint src",
     "serve": "ui-scripts serve development",
     "build": "webpack-cli --mode=production --config=../ui-scripts/src/webpack.config.js",
-    "depcheck": "depcheck --ignores=@scm-manager/jest-preset"
+    "depcheck": "depcheck --ignores=@scm-manager/jest-preset,@scm-manager/ui-types"
   },
   "devDependencies": {
     "@scm-manager/eslint-config": "^2.15.1",

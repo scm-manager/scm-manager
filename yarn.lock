@@ -3350,11 +3350,6 @@
   dependencies:
     typescript "^4.6.0"
 
-"@scm-manager/ui-types@^2.36.1":
-  version "2.36.1"
-  resolved "https://registry.yarnpkg.com/@scm-manager/ui-types/-/ui-types-2.36.1.tgz#17a35d519e499fc2e0a6b4e7a11cbc2a2c71b49c"
-  integrity sha512-7+5OhB41xH/tgeJrqKzdxdpGiWpL377fD8RCp5eBUG77zNLod5MYdGKqVDXwTardOEpDEX2OKHeOBEC/+V5Bdg==
-
 "@sinonjs/commons@^1.7.0":
   version "1.8.3"
   resolved "https://registry.yarnpkg.com/@sinonjs/commons/-/commons-1.8.3.tgz#3802ddd21a50a949b6721ddd72da36e67e7f1b2d"
@@ -18885,11 +18880,6 @@ synchronous-promise@^2.0.15:
   version "2.0.15"
   resolved "https://registry.yarnpkg.com/synchronous-promise/-/synchronous-promise-2.0.15.tgz#07ca1822b9de0001f5ff73595f3d08c4f720eb8e"
   integrity sha512-k8uzYIkIVwmT+TcglpdN50pS2y1BDcUnBPK9iJeGu0Pl1lOI8pD6wtzgw91Pjpe+RxtTncw32tLxs/R0yNL2Mg==
-
-systemjs@0.21.6:
-  version "0.21.6"
-  resolved "https://registry.yarnpkg.com/systemjs/-/systemjs-0.21.6.tgz#9d15e79d9f60abbac23f0d179f887ec01f260a1b"
-  integrity sha512-R+5S9eV9vcQgWOoS4D87joZ4xkFJHb19ZsyKY07D1+VBDE9bwYcU+KXE0r5XlDA8mFoJGyuWDbfrNoh90JsA8g==
 
 tabbable@^5.2.1:
   version "5.2.1"
