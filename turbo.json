@@ -5,6 +5,8 @@
     "$NODE_ENV"
   ],
   "pipeline": {
+    "depcheck": {
+    },
     "typecheck": {
     },
     "lint": {
