@@ -75,6 +75,26 @@ task lint(type: YarnTask) {
   }
 }
 
+task depcheck(type: YarnTask) {
+  args = ['depcheck']
+  inputs.files(fileTree(project.projectDir) {
+    include 'ui-*/src/**'
+    include 'ui-*/**/*.js'
+    include 'ui-*/**/*.jsx'
+    include 'ui-*/**/*.ts'
+    include 'ui-*/**/*.tsx'
+  })
+    .withPathSensitivity(PathSensitivity.RELATIVE)
+  outputs.file('build/tmp/depcheck/marker')
+  dependsOn('yarn_install')
+  doLast {
+    File directory = new File(project.buildDir, 'tmp/depcheck')
+    directory.mkdirs()
+    File marker = new File(directory, 'marker')
+    marker.createNewFile()
+  }
+}
+
 task test(type: YarnTask) {
   args = ['run', 'test']
   inputs.files(fileTree(project.projectDir) {
@@ -122,7 +142,7 @@ task updateUiTestTimestamps(type: TouchFiles) {
 }
 
 task check {
-  dependsOn('typecheck', 'test', 'chromatic', 'checkLicenses', 'lint')
+  dependsOn('typecheck', 'test', 'chromatic', 'checkLicenses', 'lint', 'depcheck')
 }
 
 yarn_install {

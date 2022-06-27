@@ -9,6 +9,7 @@
     "build": "turbo run build --filter=\"@scm-manager/ui-webapp\"",
     "build:dev": "cross-env NODE_ENV=development turbo run build --filter=\"@scm-manager/ui-webapp\"",
     "test": "turbo run test --continue --filter=\"@scm-manager/ui-*\"",
+    "depcheck": "turbo run depcheck --filter=\"@scm-manager/ui-*\"",
     "e2e-tests": "turbo run ci --filter=\"@scm-manager/e2e-tests\"",
     "typecheck": "turbo run typecheck --filter=\"@scm-manager/ui-*\"",
     "lint": "turbo run lint --filter=\"@scm-manager/ui-*\"",
