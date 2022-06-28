@@ -14,7 +14,8 @@
     "lint": "eslint src",
     "typecheck": "tsc",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "depcheck": "depcheck --ignores=@scm-manager/jest-preset,@scm-manager/tsconfig,@storybook/*,webpack"
   },
   "peerDependencies": {
     "react": "^17.0.1",
@@ -32,7 +33,8 @@
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "webpack": "^5.71.0",
-    "tsup": "^5.12.6"
+    "tsup": "^5.12.6",
+    "depcheck": "^1.4.3"
   },
   "babel": {
     "presets": [
