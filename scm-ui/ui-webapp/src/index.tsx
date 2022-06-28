@@ -36,10 +36,8 @@ import ChangesetShortLink from "./repos/components/changesets/ChangesetShortLink
 
 import "./tokenExpired";
 import { ApiProvider } from "@scm-manager/ui-api";
-import NotFoundPage from "./containers/NotFoundPage";
 
 binder.bind<extensionPoints.ChangesetDescriptionTokens>("changeset.description.tokens", ChangesetShortLink);
-binder.bind<extensionPoints.MainRoute>("main.route", NotFoundPage, { priority: -1 });
 
 const root = document.getElementById("root");
 if (!root) {

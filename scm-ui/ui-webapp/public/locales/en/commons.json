@@ -261,6 +261,5 @@
   },
   "tag": {
     "delete": "Delete"
-  },
-  "pageNotFound": "The requested page does not exist."
+  }
 }

@@ -133,7 +133,7 @@ export class Binder {
       predicate,
       extension,
       extensionName: extensionName ? extensionName : "",
-      priority: priority || 0,
+      priority,
     } as ExtensionRegistration<E["props"], E["type"]>;
     this.extensionPoints[extensionPoint].push(registration);
   }
