@@ -1,2 +1,0 @@
-- type: fixed
-  description: Validate lfs files after upload and discard corrupt files ([#2068](https://github.com/scm-manager/scm-manager/pull/2068))

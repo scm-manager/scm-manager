@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.37.0] - 2022-06-28
+### Added
+- Developers can omit the link prop of the CardColumnSmall component ([#2076](https://github.com/scm-manager/scm-manager/pull/2076))
+- Mirror LFS files for git ([#2075](https://github.com/scm-manager/scm-manager/pull/2075))
+
+### Fixed
+- Validate lfs files after upload and discard corrupt files ([#2068](https://github.com/scm-manager/scm-manager/pull/2068))
+
+### Changed
+- clarify options for import with and without metadata ([#2074](https://github.com/scm-manager/scm-manager/pull/2074))
+
 ## [2.36.1] - 2022-06-21
 ### Fixed
 - Zip CRC error on startup in Alpine image ([#2071](https://github.com/scm-manager/scm-manager/pull/2071))
@@ -1082,3 +1093,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.35.0]: https://scm-manager.org/download/2.35.0
 [2.36.0]: https://scm-manager.org/download/2.36.0
 [2.36.1]: https://scm-manager.org/download/2.36.1
+[2.37.0]: https://scm-manager.org/download/2.37.0
