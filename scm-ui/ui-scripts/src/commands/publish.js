@@ -39,7 +39,6 @@ module.exports = args => {
     yarn.workspacePublish(snapshotVersion);
     yarn.workspaceVersion(version);
   } else {
-    // ?? not sure
-    yarn.workspacePublish();
+    yarn.workspacePublish(version);
   }
 };
