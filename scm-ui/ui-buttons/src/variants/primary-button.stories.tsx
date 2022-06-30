@@ -21,39 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 import React from "react";
-import ReactDOM from "react-dom";
-import Index from "./containers/Index";
 
-import { I18nextProvider } from "react-i18next";
-import i18n from "./i18n";
+import Button from "./button";
+import PrimaryButton from "./primary-button";
 
-import { BrowserRouter as Router } from "react-router-dom";
+// More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
+export default {
+  title: "PrimaryButton",
+  component: PrimaryButton,
+  // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
+  argTypes: {},
+};
 
-import { urls } from "@scm-manager/ui-components";
-import { binder, extensionPoints } from "@scm-manager/ui-extensions";
-import ChangesetShortLink from "./repos/components/changesets/ChangesetShortLink";
+// More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
+const Template = (args) => <PrimaryButton {...args} />;
 
-import "./tokenExpired";
-import { ApiProvider } from "@scm-manager/ui-api";
-
-// eslint-disable-next-line no-restricted-imports
-import "@scm-manager/ui-buttons/build/index.css";
-
-binder.bind<extensionPoints.ChangesetDescriptionTokens>("changeset.description.tokens", ChangesetShortLink);
-
-const root = document.getElementById("root");
-if (!root) {
-  throw new Error("could not find root element");
-}
-
-ReactDOM.render(
-  <ApiProvider>
-    <I18nextProvider i18n={i18n}>
-      <Router basename={urls.contextPath}>
-        <Index />
-      </Router>
-    </I18nextProvider>
-  </ApiProvider>,
-  root
-);
+export const Default = Template.bind({});
+// More on args: https://storybook.js.org/docs/react/writing-stories/args
+Default.args = {
+  children: "Hello"
+};

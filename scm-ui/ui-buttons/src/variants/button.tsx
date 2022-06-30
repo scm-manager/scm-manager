@@ -21,39 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import ReactDOM from "react-dom";
-import Index from "./containers/Index";
 
-import { I18nextProvider } from "react-i18next";
-import i18n from "./i18n";
+import React, { FC, ButtonHTMLAttributes } from "react";
 
-import { BrowserRouter as Router } from "react-router-dom";
+export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement>;
 
-import { urls } from "@scm-manager/ui-components";
-import { binder, extensionPoints } from "@scm-manager/ui-extensions";
-import ChangesetShortLink from "./repos/components/changesets/ChangesetShortLink";
-
-import "./tokenExpired";
-import { ApiProvider } from "@scm-manager/ui-api";
-
-// eslint-disable-next-line no-restricted-imports
-import "@scm-manager/ui-buttons/build/index.css";
-
-binder.bind<extensionPoints.ChangesetDescriptionTokens>("changeset.description.tokens", ChangesetShortLink);
-
-const root = document.getElementById("root");
-if (!root) {
-  throw new Error("could not find root element");
-}
-
-ReactDOM.render(
-  <ApiProvider>
-    <I18nextProvider i18n={i18n}>
-      <Router basename={urls.contextPath}>
-        <Index />
-      </Router>
-    </I18nextProvider>
-  </ApiProvider>,
-  root
+const Button: FC<ButtonProps> = ({ className, children, ...props }) => (
+  <button className={`font-semibold border rounded py-2 px-6 text-center border-gray-300 hover:border-gray-400 ${className || ""}`} {...props}>
+    {children}
+  </button>
 );
+
+export default Button;

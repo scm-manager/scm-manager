@@ -21,39 +21,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import ReactDOM from "react-dom";
-import Index from "./containers/Index";
 
-import { I18nextProvider } from "react-i18next";
-import i18n from "./i18n";
+const path = require("path");
 
-import { BrowserRouter as Router } from "react-router-dom";
+module.exports = {
+  typescript: { reactDocgen: false },
+  core: {
+    builder: "webpack5"
+  },
+  stories: ["../src/**/*.stories.mdx", "../src/**/*.stories.@(js|jsx|ts|tsx)"],
+  addons: ["@storybook/addon-links", "@storybook/addon-essentials", "@storybook/addon-interactions"],
+  framework: "@storybook/react",
+  webpackFinal: async config => {
+    config.module.rules.push({
+      test: /\.css$/,
+      use: [
+        {
+          loader: "postcss-loader",
+          options: {
+            postcssOptions: {
+              plugins: [require("tailwindcss"), require("autoprefixer")]
+            }
+          }
+        }
+      ],
+      include: path.resolve(__dirname, "../")
+    });
 
-import { urls } from "@scm-manager/ui-components";
-import { binder, extensionPoints } from "@scm-manager/ui-extensions";
-import ChangesetShortLink from "./repos/components/changesets/ChangesetShortLink";
-
-import "./tokenExpired";
-import { ApiProvider } from "@scm-manager/ui-api";
-
-// eslint-disable-next-line no-restricted-imports
-import "@scm-manager/ui-buttons/build/index.css";
-
-binder.bind<extensionPoints.ChangesetDescriptionTokens>("changeset.description.tokens", ChangesetShortLink);
-
-const root = document.getElementById("root");
-if (!root) {
-  throw new Error("could not find root element");
-}
-
-ReactDOM.render(
-  <ApiProvider>
-    <I18nextProvider i18n={i18n}>
-      <Router basename={urls.contextPath}>
-        <Index />
-      </Router>
-    </I18nextProvider>
-  </ApiProvider>,
-  root
-);
+    return config;
+  }
+};
