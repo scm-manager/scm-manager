@@ -21,17 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import * as React from "react";
+import { ApiProvider } from "@scm-manager/ui-api";
 
-const path = require("path");
-
-module.exports = {
-  content: [path.join(__dirname, "src/**/*.tsx")],
-  theme: {
-    extend: {
-      colors: {
-        primary: "var(--scm-primary-color)",
-      },
+const withApiProvider = (storyFn) => {
+  return React.createElement(ApiProvider, {
+    index: {
+      version: "x.y.z",
+      _links: {}
     },
-  },
-  plugins: [],
-};
+    me: {
+      name: "trillian",
+      displayName: "Trillian McMillan",
+      mail: "trillian@hitchhiker.com",
+      groups: [],
+      _links: {}
+    },
+    devtools: false,
+    children: storyFn()
+  });
+}
+
+export default withApiProvider;

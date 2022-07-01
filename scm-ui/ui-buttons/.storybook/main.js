@@ -23,6 +23,22 @@
  */
 
 const path = require("path");
+const fs = require("fs");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const RemoveThemesPlugin = require("./RemoveThemesPlugin");
+const ReactDOM = require("react-dom");
+
+const root = path.resolve("..");
+
+const themedir = path.join(root, "ui-styles", "src");
+
+ReactDOM.createPortal = (node) => node;
+
+const themes = fs
+  .readdirSync(themedir)
+  .map((filename) => path.parse(filename))
+  .filter((p) => p.ext === ".scss")
+  .reduce((entries, current) => ({ ...entries, [`ui-theme-${current.name}`]: path.join(themedir, current.base) }), {});
 
 module.exports = {
   typescript: { reactDocgen: false },
@@ -30,9 +46,28 @@ module.exports = {
     builder: "webpack5"
   },
   stories: ["../src/**/*.stories.mdx", "../src/**/*.stories.@(js|jsx|ts|tsx)"],
-  addons: ["@storybook/addon-links", "@storybook/addon-essentials", "@storybook/addon-interactions"],
+  addons: ["storybook-addon-i18next", "storybook-addon-themes", "@storybook/addon-links", "@storybook/addon-essentials", "@storybook/addon-interactions"],
   framework: "@storybook/react",
   webpackFinal: async config => {
+    // add our themes to webpack entry points
+    config.entry = {
+      main: config.entry,
+      ...themes,
+    };
+
+    // create separate css files for our themes
+    config.plugins.push(
+      new MiniCssExtractPlugin({
+        filename: "[name].css",
+        ignoreOrder: false,
+      })
+    );
+
+    config.module.rules.push({
+      test: /\.scss$/,
+      use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"],
+    });
+
     config.module.rules.push({
       test: /\.css$/,
       use: [
@@ -47,6 +82,16 @@ module.exports = {
       ],
       include: path.resolve(__dirname, "../")
     });
+
+    // the html-webpack-plugin adds the generated css and js files to the iframe,
+    // which overrides our manually loaded css files.
+    // So we use a custom plugin which uses a hook of html-webpack-plugin
+    // to filter our themes from the output.
+    config.plugins.push(new RemoveThemesPlugin());
+
+    // force cjs instead of esm
+    // https://github.com/tannerlinsley/react-query/issues/3513
+    config.resolve.alias["react-query/devtools"] = require.resolve("react-query/devtools");
 
     return config;
   }

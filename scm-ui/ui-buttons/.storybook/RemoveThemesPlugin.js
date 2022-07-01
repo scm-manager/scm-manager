@@ -22,16 +22,36 @@
  * SOFTWARE.
  */
 
-const path = require("path");
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-module.exports = {
-  content: [path.join(__dirname, "src/**/*.tsx")],
-  theme: {
-    extend: {
-      colors: {
-        primary: "var(--scm-primary-color)",
-      },
-    },
-  },
-  plugins: [],
-};
+class RemoveThemesPlugin {
+  apply (compiler) {
+    compiler.hooks.compilation.tap('RemoveThemesPlugin', (compilation) => {
+
+      HtmlWebpackPlugin.getHooks(compilation).beforeAssetTagGeneration.tapAsync(
+        'RemoveThemesPlugin',
+        (data, cb) => {
+          
+          // remove generated style-loader bundles from the page
+          // there should be a better way, which does not generate the bundles at all
+          // but for now it works
+          if (data.assets.js) {
+            data.assets.js = data.assets.js.filter(bundle => !bundle.startsWith("ui-theme-"))
+                                           .filter(bundle => !bundle.startsWith("runtime~ui-theme-"))
+          }
+
+          // remove css links to avoid conflicts with the themes
+          // so we remove all and add our own via preview-head.html
+          if (data.assets.css) {
+            data.assets.css = data.assets.css.filter(css => !css.startsWith("ui-theme-"))
+          }
+
+          // Tell webpack to move on
+          cb(null, data)
+        }
+      )
+    })
+  }
+}
+
+module.exports = RemoveThemesPlugin

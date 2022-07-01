@@ -27,7 +27,7 @@ import React, { FC, ButtonHTMLAttributes } from "react";
 export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement>;
 
 const Button: FC<ButtonProps> = ({ className, children, ...props }) => (
-  <button className={`font-semibold border rounded py-2 px-6 text-center border-gray-300 hover:border-gray-400 ${className || ""}`} {...props}>
+  <button className={`font-semibold border rounded py-2 px-6 text-center ${className || ""}`} {...props}>
     {children}
   </button>
 );

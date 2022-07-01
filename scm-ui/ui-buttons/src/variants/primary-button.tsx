@@ -22,14 +22,20 @@
  * SOFTWARE.
  */
 
-import React, { ButtonHTMLAttributes, FC } from "react";
+import React, { FC } from "react";
+import Button, { ButtonProps } from "./button";
 
-export type PrimaryButtonProps = ButtonHTMLAttributes<HTMLButtonElement>;
+export type PrimaryButtonProps = ButtonProps;
 
 const PrimaryButton: FC<PrimaryButtonProps> = ({ className, children, ...props }) => (
-  <button className={`font-semibold border rounded py-2 px-6 text-center bg-red-500 hover:bg-red-700 text-white ${className || ""}`} {...props}>
+  <Button
+    className={`bg-green-400 hover:bg-cyan-600 active:bg-cyan-700 disabled:opacity-50 disabled:cursor-not-allowed text-gray-50 border-transparent ${
+      className || ""
+    }`}
+    {...props}
+  >
     {children}
-  </button>
+  </Button>
 );
 
 export default PrimaryButton;
