@@ -75,21 +75,25 @@ class UserTemplateRenderer extends TemplateRenderer {
 
   public void renderPasswordError() {
     renderToStderr(PASSWORD_ERROR_TEMPLATE, Collections.emptyMap());
+    context.getStderr().println();
     context.exit(ExitCode.USAGE);
   }
 
   public void renderExternalActivateError() {
     renderToStderr(EXTERNAL_ACTIVATE_TEMPLATE, Collections.emptyMap());
+    context.getStderr().println();
     context.exit(ExitCode.USAGE);
   }
 
   public void renderExternalDeactivateError() {
     renderToStderr(EXTERNAL_DEACTIVATE_TEMPLATE, Collections.emptyMap());
+    context.getStderr().println();
     context.exit(ExitCode.USAGE);
   }
 
   public void renderNotFoundError() {
     renderToStderr(NOT_FOUND_TEMPLATE, Collections.emptyMap());
+    context.getStderr().println();
     context.exit(ExitCode.NOT_FOUND);
   }
 }
