@@ -25,6 +25,7 @@
 package sonia.scm.user.cli;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Strings;
 import picocli.CommandLine;
 import sonia.scm.cli.CommandValidator;
 import sonia.scm.cli.ParentCommand;
@@ -76,7 +77,7 @@ class UserCreateCommand implements Runnable {
   @Override
   public void run() {
     validator.validate();
-    if (!ValidationUtil.isPasswordValid(password, external)) {
+    if (!Strings.isNullOrEmpty(password) && !ValidationUtil.isPasswordValid(password, external)) {
       templateRenderer.renderPasswordError();
     }
     User newUser = new User();

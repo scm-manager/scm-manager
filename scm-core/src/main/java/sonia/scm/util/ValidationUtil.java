@@ -24,6 +24,7 @@
 
 package sonia.scm.util;
 
+import com.google.common.base.Strings;
 import sonia.scm.Validateable;
 
 import java.util.regex.Pattern;
@@ -95,7 +96,15 @@ public final class ValidationUtil {
    * @return {@code true} if password is valid
    */
   public static boolean isPasswordValid(String password, Boolean isExternal) {
-    return isExternal || (password.length() >= 6 && password.length() <= 32);
+    String pw = Strings.nullToEmpty(password);
+    if (Boolean.TRUE.equals(isExternal) || isPasswordEncrypted(pw)) {
+      return true;
+    }
+    return pw.length() >= 6 && pw.length() <= 1024;
+  }
+
+  private static boolean isPasswordEncrypted(String pw) {
+    return pw.startsWith("$shiro1$SHA-512$8192$$");
   }
 
   /**

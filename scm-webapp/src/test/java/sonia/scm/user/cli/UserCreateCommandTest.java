@@ -194,7 +194,7 @@ class UserCreateCommandTest {
 
       verifyNoInteractions(manager);
       assertThat(testRenderer.getStdOut()).isEmpty();
-      assertThat(testRenderer.getStdErr()).contains("Password is required for internal users");
+      assertThat(testRenderer.getStdErr()).contains("Valid password is required for internal users");
     }
 
     @Test
@@ -205,12 +205,13 @@ class UserCreateCommandTest {
 
       verifyNoInteractions(manager);
       assertThat(testRenderer.getStdOut()).isEmpty();
-      assertThat(testRenderer.getStdErr()).contains("Für interne Benutzer muss ein Passwort gesetzt werden");
+      assertThat(testRenderer.getStdErr()).contains("Für interne Benutzer muss ein gültiges Passwort gesetzt werden");
     }
 
     @Test
     void shouldFailWithEnglishMsgIfExternalUserAndInactive() {
       testRenderer.setLocale("en");
+      command.setPassword("123456");
       command.setExternal(true);
       command.setInactive(true);
 
@@ -224,6 +225,7 @@ class UserCreateCommandTest {
     @Test
     void shouldFailWithGermanMsgIfExternalUserWithInactive() {
       testRenderer.setLocale("de");
+      command.setPassword("123456");
       command.setExternal(true);
       command.setInactive(true);
 

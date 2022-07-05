@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.user;
 
 /**
@@ -103,6 +103,7 @@ public final class UserTestData
   public static User createTrillian()
   {
     User user = new User("trillian", "Tricia McMillan", "tricia.mcmillan@hitchhiker.com");
+    user.setPassword("123456");
     user.setType("xml");
     return user;
   }
@@ -117,6 +118,7 @@ public final class UserTestData
   {
     User user = new User("zaphod", "Zaphod Beeblebrox", "zaphod.beeblebrox@hitchhiker.com");
     user.setType("xml");
+    user.setPassword("123456");
     return user;
   }
 }
