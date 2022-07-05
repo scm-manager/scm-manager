@@ -30,6 +30,7 @@ import sonia.scm.cli.CommandValidator;
 import sonia.scm.cli.ParentCommand;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
+import sonia.scm.util.ValidationUtil;
 
 import javax.inject.Inject;
 import javax.validation.constraints.Email;
@@ -67,6 +68,9 @@ class UserModifyCommand implements Runnable {
   @Override
   public void run() {
     validator.validate();
+    if (!ValidationUtil.isPasswordValid(password, false)) {
+      templateRenderer.renderPasswordError();
+    }
 
     User user = manager.get(username);
 

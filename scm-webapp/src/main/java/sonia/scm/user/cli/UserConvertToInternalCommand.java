@@ -29,6 +29,7 @@ import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
+import sonia.scm.util.ValidationUtil;
 
 import javax.inject.Inject;
 
@@ -57,6 +58,9 @@ class UserConvertToInternalCommand implements Runnable {
     User user = manager.get(username);
 
     if (user != null) {
+      if (!ValidationUtil.isPasswordValid(password, false)) {
+        templateRenderer.renderPasswordError();
+      }
       user.setExternal(false);
       user.setPassword(password);
       manager.modify(user);
