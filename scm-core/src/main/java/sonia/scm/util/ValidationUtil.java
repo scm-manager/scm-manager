@@ -92,12 +92,11 @@ public final class ValidationUtil {
    * Returns {@code true} if the user password is valid.
    *
    * @param password password to be validated
-   * @param isExternal whether user is external
    * @return {@code true} if password is valid
    */
-  public static boolean isPasswordValid(String password, Boolean isExternal) {
+  public static boolean isPasswordValid(String password) {
     String pw = Strings.nullToEmpty(password);
-    if (Boolean.TRUE.equals(isExternal) || isPasswordEncrypted(pw)) {
+    if (isPasswordEncrypted(pw)) {
       return true;
     }
     return pw.length() >= 6 && pw.length() <= 1024;

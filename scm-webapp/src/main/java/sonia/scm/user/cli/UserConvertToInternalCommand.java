@@ -58,7 +58,7 @@ class UserConvertToInternalCommand implements Runnable {
     User user = manager.get(username);
 
     if (user != null) {
-      if (!ValidationUtil.isPasswordValid(password, false)) {
+      if (!ValidationUtil.isPasswordValid(password)) {
         templateRenderer.renderPasswordError();
       }
       user.setExternal(false);

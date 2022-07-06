@@ -77,7 +77,7 @@ class UserCreateCommand implements Runnable {
   @Override
   public void run() {
     validator.validate();
-    if (password != null && !ValidationUtil.isPasswordValid(password, external)) {
+    if (!external && password != null && !ValidationUtil.isPasswordValid(password)) {
       templateRenderer.renderPasswordError();
     }
     User newUser = new User();

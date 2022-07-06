@@ -39,12 +39,10 @@ import sonia.scm.search.Indexed;
 import sonia.scm.search.IndexedType;
 import sonia.scm.util.Util;
 import sonia.scm.util.ValidationUtil;
-import sonia.scm.xml.XmlPasswordAdapter;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.security.Principal;
 
 @StaticPermissions(
@@ -76,7 +74,6 @@ public class User extends BasicPropertiesAware implements Principal, ModelObject
   private String mail;
   @Indexed(defaultQuery = true, boost = 1.5f)
   private String name;
-  @XmlJavaTypeAdapter(XmlPasswordAdapter.class)
   private String password;
 
   /**
@@ -219,7 +216,7 @@ public class User extends BasicPropertiesAware implements Principal, ModelObject
   public boolean isValid() {
     return ValidationUtil.isNameValid(name) && Util.isNotEmpty(displayName)
       && ((Util.isEmpty(mail)) || ValidationUtil.isMailAddressValid(mail))
-      && ValidationUtil.isPasswordValid(password, external);
+      && (external || ValidationUtil.isPasswordValid(password));
   }
 
   @Override

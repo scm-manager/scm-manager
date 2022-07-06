@@ -156,13 +156,8 @@ class ValidationUtilTest {
   }
 
   @Test
-  void shouldAcceptExternal() {
-    assertTrue(ValidationUtil.isPasswordValid(null, true));
-  }
-
-  @Test
   void shouldAcceptEncrypted() {
-    assertTrue(ValidationUtil.isPasswordValid("$shiro1$SHA-512$8196$$secret", false));
+    assertTrue(ValidationUtil.isPasswordValid("$shiro1$SHA-512$8196$$secret"));
   }
 
   @ParameterizedTest
@@ -172,7 +167,7 @@ class ValidationUtilTest {
     "asdf"
   })
   void shouldRejectPassword(String value) {
-    assertFalse(ValidationUtil.isPasswordValid(value, false));
+    assertFalse(ValidationUtil.isPasswordValid(value));
   }
 
   @Test

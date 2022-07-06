@@ -69,7 +69,7 @@ class UserModifyCommand implements Runnable {
   @Override
   public void run() {
     validator.validate();
-    if (password != null && !ValidationUtil.isPasswordValid(password, false)) {
+    if (password != null && !ValidationUtil.isPasswordValid(password)) {
       templateRenderer.renderPasswordError();
     }
 
@@ -82,7 +82,7 @@ class UserModifyCommand implements Runnable {
       if (email != null) {
         user.setMail(email);
       }
-      if (password != null) {
+      if (!user.isExternal() && password != null) {
         user.setPassword(password);
       }
       manager.modify(user);
