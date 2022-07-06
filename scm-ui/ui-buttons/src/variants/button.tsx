@@ -35,7 +35,7 @@ export const ButtonVariantList = Object.values(ButtonVariants);
 export type ButtonVariant = typeof ButtonVariants[keyof typeof ButtonVariants];
 
 const BASE_BUTTON_CLASSES =
-  "font-semibold border rounded py-2 px-12 text-center disabled:opacity-50 disabled:cursor-not-allowed";
+  "font-semibold border rounded py-2 px-12 inline-block text-center disabled:opacity-50 disabled:cursor-not-allowed";
 const DEFAULT_BUTTON_CLASSES =
   "border-gray-200 hover:border-gray-400 active:shadow-inner disabled:active:shadow-none disabled:hover:border-gray-200";
 const PRIMARY_BUTTON_CLASSES =
