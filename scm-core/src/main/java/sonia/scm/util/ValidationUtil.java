@@ -104,7 +104,7 @@ public final class ValidationUtil {
   }
 
   private static boolean isPasswordEncrypted(String pw) {
-    return pw.startsWith("$shiro1$SHA-512$8192$$");
+    return pw.startsWith("$shiro1$");
   }
 
   /**

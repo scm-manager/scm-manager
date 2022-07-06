@@ -91,7 +91,7 @@ class UserConvertToInternalCommandTest {
     @Test
     void shouldPrintUserAfterActivationInEnglish() {
       testRenderer.setLocale("en");
-      command.setPassword("123456");
+      command.setPassword("havelock123");
 
       command.run();
 
@@ -111,7 +111,7 @@ class UserConvertToInternalCommandTest {
     @Test
     void shouldPrintUserAfterActivationInGerman() {
       testRenderer.setLocale("de");
-      command.setPassword("123456");
+      command.setPassword("havelock123");
 
       command.run();
 

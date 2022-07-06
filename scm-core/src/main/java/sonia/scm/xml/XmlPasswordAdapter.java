@@ -22,18 +22,26 @@
  * SOFTWARE.
  */
 
-import { validation } from "@scm-manager/ui-components";
+package sonia.scm.xml;
 
-const { isNameValid, isMailValid, isPathValid } = validation;
+import sonia.scm.security.ScmSecurityException;
 
-export { isNameValid, isMailValid, isPathValid };
+import javax.xml.bind.annotation.adapters.XmlAdapter;
 
-export const isDisplayNameValid = (displayName: string) => {
-  if (displayName) {
-    return true;
+public class XmlPasswordAdapter extends XmlAdapter<String, String> {
+
+  private static final String PASSWORD_ENCRYPTION_PREFIX = "$shiro1$";
+
+  @Override
+  public String unmarshal(String password) throws Exception {
+    return password;
   }
-  return false;
-};
-export const isPasswordValid = (password: string) => {
-  return password.length >= 6 && password.length < 1024;
-};
+
+  @Override
+  public String marshal(String password) throws Exception {
+    if (!password.startsWith(PASSWORD_ENCRYPTION_PREFIX)) {
+      throw new ScmSecurityException("Unencrypted passwords cannot be saved.");
+    }
+    return password;
+  }
+}

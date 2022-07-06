@@ -160,12 +160,16 @@ class ValidationUtilTest {
     assertTrue(ValidationUtil.isPasswordValid(null, true));
   }
 
+  @Test
+  void shouldAcceptEncrypted() {
+    assertTrue(ValidationUtil.isPasswordValid("$shiro1$SHA-512$8196$$secret", false));
+  }
+
   @ParameterizedTest
   @ValueSource(strings = {
     "1",
     " ",
-    "asdf",
-    "12345678901234567890123456789012345"
+    "asdf"
   })
   void shouldRejectPassword(String value) {
     assertFalse(ValidationUtil.isPasswordValid(value, false));

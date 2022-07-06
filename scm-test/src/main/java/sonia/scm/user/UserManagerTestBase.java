@@ -282,7 +282,7 @@ public abstract class UserManagerTestBase extends ManagerTestBase<User> {
       String id = UUID.randomUUID().toString();
       User user = new User(id, id.concat(" displayName"),
                     id.concat("@mail.com"));
-      user.setPassword("123456");
+      user.setPassword("$shiro1$secret");
 
       manager.create(user);
 

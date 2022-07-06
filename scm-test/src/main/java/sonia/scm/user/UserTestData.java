@@ -103,7 +103,7 @@ public final class UserTestData
   public static User createTrillian()
   {
     User user = new User("trillian", "Tricia McMillan", "tricia.mcmillan@hitchhiker.com");
-    user.setPassword("123456");
+    user.setPassword("$shiro1$trillisSecret");
     user.setType("xml");
     return user;
   }
@@ -118,7 +118,7 @@ public final class UserTestData
   {
     User user = new User("zaphod", "Zaphod Beeblebrox", "zaphod.beeblebrox@hitchhiker.com");
     user.setType("xml");
-    user.setPassword("123456");
+    user.setPassword("$shiro1$zaphodsSecret");
     return user;
   }
 }

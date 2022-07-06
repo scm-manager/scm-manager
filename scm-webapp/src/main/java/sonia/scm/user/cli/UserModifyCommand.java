@@ -69,7 +69,7 @@ class UserModifyCommand implements Runnable {
   @Override
   public void run() {
     validator.validate();
-    if (!Strings.isNullOrEmpty(password) && !ValidationUtil.isPasswordValid(password, false)) {
+    if (password != null && !ValidationUtil.isPasswordValid(password, false)) {
       templateRenderer.renderPasswordError();
     }
 

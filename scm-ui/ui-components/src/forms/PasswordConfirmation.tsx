@@ -50,7 +50,7 @@ const PasswordConfirmation: FC<InnerProps> = ({ passwordChanged, passwordValidat
       return passwordValidator(newPassword);
     }
 
-    return newPassword.length >= 6 && newPassword.length < 32;
+    return newPassword.length >= 6 && newPassword.length < 1024;
   };
 
   const handlePasswordValidationChange = (newConfirmedPassword: string) => {
@@ -76,7 +76,7 @@ const PasswordConfirmation: FC<InnerProps> = ({ passwordChanged, passwordValidat
         <InputField
           label={t("password.newPassword")}
           type="password"
-          onChange={event => handlePasswordChange(event)}
+          onChange={(event) => handlePasswordChange(event)}
           value={password}
           validationError={!passwordValid}
           errorMessage={t("password.passwordInvalid")}
