@@ -24,5 +24,4 @@
 
 import "./index.css";
 
-export { default as Button } from "./variants/button";
-export { default as PrimaryButton } from "./variants/primary-button";
+export { Button, LinkButton, ExternalLinkButton } from "./variants/button";

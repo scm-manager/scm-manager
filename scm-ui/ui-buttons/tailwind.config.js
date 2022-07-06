@@ -24,6 +24,13 @@
 
 const path = require("path");
 
+const sizes = [5, 6];
+const helpers = ["m", "p"];
+const variants = ["", "x", "y", "t", "r", "l", "b"];
+const bulmaHelpers = helpers
+  .map((helper) => sizes.map((size) => variants.map((variant) => `${helper}${variant}-${size}`)))
+  .flat(3);
+
 module.exports = {
   content: [path.join(__dirname, "src/**/*.tsx")],
   theme: {
@@ -33,5 +40,6 @@ module.exports = {
       },
     },
   },
+  safelist: bulmaHelpers,
   plugins: [],
 };

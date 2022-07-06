@@ -22,20 +22,29 @@
  * SOFTWARE.
  */
 
-import React, { FC } from "react";
-import Button, { ButtonProps } from "./button";
+import React from "react";
 
-export type PrimaryButtonProps = ButtonProps;
+import { ButtonVariantList, ExternalLinkButton } from "./button";
 
-const PrimaryButton: FC<PrimaryButtonProps> = ({ className, children, ...props }) => (
-  <Button
-    className={`bg-green-400 hover:bg-cyan-600 active:bg-cyan-700 disabled:opacity-50 disabled:cursor-not-allowed text-gray-50 border-transparent ${
-      className || ""
-    }`}
-    {...props}
-  >
-    {children}
-  </Button>
-);
+// More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
+export default {
+  title: "External Link Button",
+  component: ExternalLinkButton,
+  // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
+  argTypes: {
+    variant: {
+      options: ButtonVariantList,
+      control: { type: "select" },
+    },
+  },
+};
 
-export default PrimaryButton;
+// More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
+const Template = (args) => <ExternalLinkButton {...args} />;
+
+export const Default = Template.bind({});
+// More on args: https://storybook.js.org/docs/react/writing-stories/args
+Default.args = {
+  children: "Hello",
+  href: "https://scm-manager.org",
+};

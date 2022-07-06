@@ -22,14 +22,61 @@
  * SOFTWARE.
  */
 
-import React, { FC, ButtonHTMLAttributes } from "react";
+import React, { AnchorHTMLAttributes, ButtonHTMLAttributes } from "react";
+import { Link as ReactRouterLink, LinkProps as ReactRouterLinkProps } from "react-router-dom";
+import classNames from "classnames";
 
-export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement>;
+export const ButtonVariants = {
+  PRIMARY: "primary",
+} as const;
 
-const Button: FC<ButtonProps> = ({ className, children, ...props }) => (
-  <button className={`font-semibold border rounded py-2 px-6 text-center ${className || ""}`} {...props}>
-    {children}
-  </button>
+export const ButtonVariantList = Object.values(ButtonVariants);
+
+export type ButtonVariant = typeof ButtonVariants[keyof typeof ButtonVariants];
+
+const BASE_BUTTON_CLASSES =
+  "font-semibold border rounded py-2 px-12 text-center disabled:opacity-50 disabled:cursor-not-allowed";
+const DEFAULT_BUTTON_CLASSES =
+  "border-gray-200 hover:border-gray-400 active:shadow-inner disabled:active:shadow-none disabled:hover:border-gray-200";
+const PRIMARY_BUTTON_CLASSES =
+  "bg-cyan-400 hover:bg-cyan-600 active:bg-cyan-700 disabled:hover:bg-cyan-400 disabled:active:bg-cyan-400 text-gray-50 border-transparent";
+
+export const createButtonClasses = (variant?: ButtonVariant) =>
+  classNames(BASE_BUTTON_CLASSES, {
+    [DEFAULT_BUTTON_CLASSES]: !variant,
+    [PRIMARY_BUTTON_CLASSES]: variant === "primary",
+  });
+
+export type BaseButtonProps = {
+  variant?: ButtonVariant;
+};
+
+export type ButtonProps = BaseButtonProps & ButtonHTMLAttributes<HTMLButtonElement>;
+
+export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant, children, ...props }, ref) => (
+    <button {...props} className={classNames(createButtonClasses(variant), className)} ref={ref}>
+      {children}
+    </button>
+  )
 );
 
-export default Button;
+export type LinkButtonProps = BaseButtonProps & ReactRouterLinkProps;
+
+export const LinkButton = React.forwardRef<HTMLAnchorElement, LinkButtonProps>(
+  ({ className, variant, children, ...props }, ref) => (
+    <ReactRouterLink {...props} className={classNames(createButtonClasses(variant), className)} ref={ref}>
+      {children}
+    </ReactRouterLink>
+  )
+);
+
+export type ExternalLinkButtonProps = BaseButtonProps & AnchorHTMLAttributes<HTMLAnchorElement>;
+
+export const ExternalLinkButton = React.forwardRef<HTMLAnchorElement, ExternalLinkButtonProps>(
+  ({ className, variant, children, ...props }, ref) => (
+    <a {...props} className={classNames(createButtonClasses(variant), className)} ref={ref}>
+      {children}
+    </a>
+  )
+);

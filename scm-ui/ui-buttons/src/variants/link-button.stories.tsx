@@ -24,30 +24,26 @@
 
 import React from "react";
 
-import Button from "./button";
-import PrimaryButton from "./primary-button";
+import { ButtonVariantList, LinkButton } from "./button";
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
-  title: "PrimaryButton",
-  component: PrimaryButton,
+  title: "Link Button",
+  component: LinkButton,
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
-  argTypes: {},
+  argTypes: {
+    variant: {
+      options: ButtonVariantList,
+      control: { type: "select" },
+    },
+  },
 };
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const Template = (args) => <PrimaryButton {...args} />;
+const Template = (args) => <LinkButton {...args} />;
 
 export const Default = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 Default.args = {
-  children: "Hello"
-};
-
-export const Disabled = Template.bind({});
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
-Disabled.args = {
   children: "Hello",
-  disabled: true
 };
-
