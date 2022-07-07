@@ -25,6 +25,7 @@
 package sonia.scm.user.cli;
 
 import com.google.common.annotations.VisibleForTesting;
+import org.apache.shiro.authc.credential.PasswordService;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
 import sonia.scm.user.User;
@@ -40,6 +41,7 @@ class UserConvertToInternalCommand implements Runnable {
   @CommandLine.Mixin
   private final UserTemplateRenderer templateRenderer;
   private final UserManager manager;
+  private final PasswordService passwordService;
 
   @CommandLine.Parameters(index = "0", paramLabel = "<username>", descriptionKey = "scm.user.username")
   private String username;
@@ -48,9 +50,10 @@ class UserConvertToInternalCommand implements Runnable {
   private String password;
 
   @Inject
-  UserConvertToInternalCommand(UserTemplateRenderer templateRenderer, UserManager manager) {
+  UserConvertToInternalCommand(UserTemplateRenderer templateRenderer, UserManager manager, PasswordService passwordService) {
     this.templateRenderer = templateRenderer;
     this.manager = manager;
+    this.passwordService = passwordService;
   }
 
   @Override
@@ -62,7 +65,7 @@ class UserConvertToInternalCommand implements Runnable {
         templateRenderer.renderPasswordError();
       }
       user.setExternal(false);
-      user.setPassword(password);
+      user.setPassword(passwordService.encryptPassword(password));
       manager.modify(user);
       templateRenderer.render(user);
     } else {

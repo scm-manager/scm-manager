@@ -24,6 +24,7 @@
 
 package sonia.scm.user.cli;
 
+import org.apache.shiro.authc.credential.PasswordService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -49,12 +50,14 @@ class UserConvertToInternalCommandTest {
 
   @Mock
   private UserManager manager;
+  @Mock
+  private PasswordService passwordService;
 
   private UserConvertToInternalCommand command;
 
   @BeforeEach
   void initCommand() {
-    command = new UserConvertToInternalCommand(testRenderer.getTemplateRenderer(), manager);
+    command = new UserConvertToInternalCommand(testRenderer.getTemplateRenderer(), manager, passwordService);
   }
 
   @Nested
@@ -73,7 +76,10 @@ class UserConvertToInternalCommandTest {
 
     @Test
     void shouldActivateInternalUser() {
-      command.setPassword("havelock123");
+      String password = "havelock123";
+      String enc_password = "enc_havelock123";
+      when(passwordService.encryptPassword(password)).thenReturn(enc_password);
+      command.setPassword(password);
 
       command.run();
 
@@ -81,7 +87,7 @@ class UserConvertToInternalCommandTest {
         assertThat(argument.getName()).isEqualTo("havelock");
         assertThat(argument.getDisplayName()).isEqualTo("Havelock Vetinari");
         assertThat(argument.isExternal()).isFalse();
-        assertThat(argument.getPassword()).isEqualTo("havelock123");
+        assertThat(argument.getPassword()).isEqualTo(enc_password);
         assertThat(argument.getMail()).isEqualTo("havelock.vetinari@discworld");
         assertThat(argument.isActive()).isTrue();
         return true;

@@ -24,6 +24,7 @@
 
 package sonia.scm.user.cli;
 
+import org.apache.shiro.authc.credential.PasswordService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -40,6 +41,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -53,16 +55,20 @@ class UserModifyCommandTest {
   private CommandValidator validator;
   @Mock
   private UserManager manager;
+  @Mock
+  private PasswordService passwordService;
 
   private UserModifyCommand command;
 
   @BeforeEach
   void initCommand() {
-    command = new UserModifyCommand(testRenderer.getTemplateRenderer(), validator, manager);
+    command = new UserModifyCommand(testRenderer.getTemplateRenderer(), validator, manager, passwordService);
   }
 
   @Nested
   class ForSuccessfulModificationTest {
+    private static final String NEW_PASSWORD = "havelock";
+    private static final String NEW_ENC_PASSWORD = "enc_havelock";
 
     @BeforeEach
     void mockGet() {
@@ -73,13 +79,14 @@ class UserModifyCommandTest {
       user.setCreationDate(1649262000000L);
       user.setLastModified(1649272000000L);
       when(manager.get(any())).thenReturn(user);
+      lenient().when(passwordService.encryptPassword(NEW_PASSWORD)).thenReturn(NEW_ENC_PASSWORD);
     }
 
     @Test
     void shouldModifyUser() {
       command.setDisplayName("Lord Vetinari");
       command.setEmail("patrician@discworld");
-      command.setPassword("havelock");
+      command.setPassword(NEW_PASSWORD);
 
       command.run();
 
@@ -87,7 +94,7 @@ class UserModifyCommandTest {
         assertThat(argument.getName()).isEqualTo("havelock");
         assertThat(argument.getDisplayName()).isEqualTo("Lord Vetinari");
         assertThat(argument.isExternal()).isFalse();
-        assertThat(argument.getPassword()).isEqualTo("havelock");
+        assertThat(argument.getPassword()).isEqualTo(NEW_ENC_PASSWORD);
         assertThat(argument.getMail()).isEqualTo("patrician@discworld");
         assertThat(argument.isActive()).isTrue();
         return true;
@@ -97,7 +104,7 @@ class UserModifyCommandTest {
     @Test
     void shouldNotModifyDisplayNameIfNotSet() {
       command.setEmail("patrician@discworld");
-      command.setPassword("havelock");
+      command.setPassword(NEW_PASSWORD);
 
       command.run();
 
@@ -105,7 +112,7 @@ class UserModifyCommandTest {
         assertThat(argument.getName()).isEqualTo("havelock");
         assertThat(argument.getDisplayName()).isEqualTo("Havelock Vetinari");
         assertThat(argument.isExternal()).isFalse();
-        assertThat(argument.getPassword()).isEqualTo("havelock");
+        assertThat(argument.getPassword()).isEqualTo(NEW_ENC_PASSWORD);
         assertThat(argument.getMail()).isEqualTo("patrician@discworld");
         assertThat(argument.isActive()).isTrue();
         return true;
@@ -115,7 +122,7 @@ class UserModifyCommandTest {
     @Test
     void shouldNotModifyEmailIfNotSet() {
       command.setDisplayName("Lord Vetinari");
-      command.setPassword("havelock");
+      command.setPassword(NEW_PASSWORD);
 
       command.run();
 
@@ -123,7 +130,7 @@ class UserModifyCommandTest {
         assertThat(argument.getName()).isEqualTo("havelock");
         assertThat(argument.getDisplayName()).isEqualTo("Lord Vetinari");
         assertThat(argument.isExternal()).isFalse();
-        assertThat(argument.getPassword()).isEqualTo("havelock");
+        assertThat(argument.getPassword()).isEqualTo(NEW_ENC_PASSWORD);
         assertThat(argument.getMail()).isEqualTo("havelock.vetinari@discworld");
         assertThat(argument.isActive()).isTrue();
         return true;
