@@ -78,6 +78,7 @@ public class User extends BasicPropertiesAware implements Principal, ModelObject
 
   /**
    * The user type is replaced by {@link #external} flag
+   *
    * @deprecated Use {@link #external} instead.
    */
   @Deprecated
@@ -215,8 +216,9 @@ public class User extends BasicPropertiesAware implements Principal, ModelObject
   @Override
   public boolean isValid() {
     return ValidationUtil.isNameValid(name) && Util.isNotEmpty(displayName)
-      && ((Util.isEmpty(mail)) || ValidationUtil.isMailAddressValid(mail))
-      && (external || ValidationUtil.isPasswordValid(password));
+      && ((Util.isEmpty(mail)) || ValidationUtil.isMailAddressValid(mail));
+    //TODO Ensure that passwords are encrypted
+    // && (external || ValidationUtil.isPasswordValid(password));
   }
 
   @Override

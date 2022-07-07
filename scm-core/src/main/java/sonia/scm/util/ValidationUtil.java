@@ -96,14 +96,7 @@ public final class ValidationUtil {
    */
   public static boolean isPasswordValid(String password) {
     String pw = Strings.nullToEmpty(password);
-    if (isPasswordEncrypted(pw)) {
-      return true;
-    }
     return pw.length() >= 6 && pw.length() <= 1024;
-  }
-
-  private static boolean isPasswordEncrypted(String pw) {
-    return pw.startsWith("$shiro1$");
   }
 
   /**
