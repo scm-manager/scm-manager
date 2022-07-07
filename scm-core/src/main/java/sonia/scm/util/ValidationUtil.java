@@ -24,6 +24,7 @@
 
 package sonia.scm.util;
 
+import com.google.common.base.Strings;
 import sonia.scm.Validateable;
 
 import java.util.regex.Pattern;
@@ -85,6 +86,17 @@ public final class ValidationUtil {
    */
   public static boolean isNameValid(String name) {
     return Util.isNotEmpty(name) && name.matches(REGEX_NAME) && !name.equals("..");
+  }
+
+  /**
+   * Returns {@code true} if the user password is valid.
+   *
+   * @param password password to be validated
+   * @return {@code true} if password is valid
+   */
+  public static boolean isPasswordValid(String password) {
+    String pw = Strings.nullToEmpty(password);
+    return pw.length() >= 6 && pw.length() <= 1024;
   }
 
   /**

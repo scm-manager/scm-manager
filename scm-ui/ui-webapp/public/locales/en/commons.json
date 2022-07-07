@@ -126,7 +126,7 @@
     "currentPassword": "Current Password",
     "currentPasswordHelpText": "The password currently in use",
     "confirmPassword": "Confirm Password",
-    "passwordInvalid": "Password has to be between 6 and 32 characters",
+    "passwordInvalid": "Password has to be between 6 and 1024 characters",
     "passwordConfirmFailed": "Passwords have to be identical",
     "submit": "Submit",
     "changedSuccessfully": "Password changed successfully"

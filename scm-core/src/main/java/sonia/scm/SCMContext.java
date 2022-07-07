@@ -26,6 +26,7 @@ package sonia.scm;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.security.CipherUtil;
 import sonia.scm.user.User;
 import sonia.scm.util.ServiceUtil;
 
@@ -51,7 +52,10 @@ public final class SCMContext
   public static final User ANONYMOUS = new User(
     USER_ANONYMOUS,
     "SCM Anonymous",
-    "scm-anonymous@scm-manager.org"
+    "scm-anonymous@scm-manager.org",
+    CipherUtil.getInstance().encode("__not_necessary_password__"),
+    "xml",
+    true
   );
 
   /** Singleton instance of {@link SCMContextProvider} */

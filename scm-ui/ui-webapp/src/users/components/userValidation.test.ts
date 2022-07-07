@@ -36,7 +36,7 @@ describe("test displayName validation", () => {
       "Tricia.McMillan@hitchhiker.com",
       "Ford Prefect (ford.prefect@hitchhiker.com)",
       "Zaphod Beeblebrox <zaphod.beeblebrox@hitchhiker.com>",
-      "Marvin, der depressive Roboter"
+      "Marvin, der depressive Roboter",
     ];
     for (const name of validNames) {
       expect(validator.isDisplayNameValid(name)).toBe(true);
@@ -47,7 +47,7 @@ describe("test displayName validation", () => {
 describe("test password validation", () => {
   it("should return false", () => {
     // invalid taken from ValidationUtilTest.java
-    const invalid = ["", "abc", "aaabbbcccdddeeefffggghhhiiijjjkkk"];
+    const invalid = ["", "abc"];
     for (const password of invalid) {
       expect(validator.isPasswordValid(password)).toBe(false);
     }
@@ -55,7 +55,7 @@ describe("test password validation", () => {
 
   it("should return true", () => {
     // valid taken from ValidationUtilTest.java
-    const valid = ["secret123", "mySuperSecretPassword"];
+    const valid = ["secret123", "mySuperSecretPassword", "mySuperSecretPasswordWithMoreThan1024Characters"];
     for (const password of valid) {
       expect(validator.isPasswordValid(password)).toBe(true);
     }

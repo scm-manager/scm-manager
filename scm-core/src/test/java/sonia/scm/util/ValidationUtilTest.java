@@ -155,6 +155,16 @@ class ValidationUtilTest {
     assertFalse(ValidationUtil.isNameValid(value));
   }
 
+  @ParameterizedTest
+  @ValueSource(strings = {
+    "1",
+    " ",
+    "asdf"
+  })
+  void shouldRejectPassword(String value) {
+    assertFalse(ValidationUtil.isPasswordValid(value));
+  }
+
   @Test
   void testIsNotContaining() {
 

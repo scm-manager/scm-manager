@@ -78,7 +78,7 @@ public class DefaultUserManagerTest extends UserManagerTestBase {
   public void shouldFailChangePasswordForWrongOldPassword() {
     UserManager userManager = new DefaultUserManager(userDAO);
 
-    userManager.changePasswordForLoggedInUser("wrongPassword", "---");
+    userManager.changePasswordForLoggedInUser("wrongPassword", "$shiro1$secret");
   }
 
   @Test

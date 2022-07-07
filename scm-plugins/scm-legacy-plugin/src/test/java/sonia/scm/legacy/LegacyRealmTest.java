@@ -102,7 +102,9 @@ public class LegacyRealmTest {
 
   @Test
   public void testDoGetAuthenticationInfoWithNullPassword() {
-    when(userDAO.get("tricia")).thenReturn(UserTestData.createTrillian());
+    User trillian = UserTestData.createTrillian();
+    trillian.setPassword(null);
+    when(userDAO.get("tricia")).thenReturn(trillian);
 
     AuthenticationToken token = new UsernamePasswordToken("tricia", "secret");
 

@@ -125,7 +125,7 @@
     "currentPassword": "Aktuelles Passwort",
     "currentPasswordHelpText": "Dieses Passwort wird momentan bereits verwendet.",
     "confirmPassword": "Passwort wiederholen",
-    "passwordInvalid": "Das Passwort muss zwischen 6 und 32 Zeichen lang sein!",
+    "passwordInvalid": "Das Passwort muss zwischen 6 und 1024 Zeichen lang sein!",
     "passwordConfirmFailed": "Passwörter müssen identisch sein!",
     "submit": "Speichern",
     "changedSuccessfully": "Passwort erfolgreich geändert!"

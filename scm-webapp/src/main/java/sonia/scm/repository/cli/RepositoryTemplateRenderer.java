@@ -71,11 +71,13 @@ class RepositoryTemplateRenderer extends TemplateRenderer {
 
   public void renderInvalidInputError() {
     renderToStderr(INVALID_INPUT_TEMPLATE, Collections.emptyMap());
+    context.getStderr().println();
     context.exit(ExitCode.USAGE);
   }
 
   public void renderNotFoundError() {
     renderToStderr(NOT_FOUND_TEMPLATE, Collections.emptyMap());
+    context.getStderr().println();
     context.exit(ExitCode.NOT_FOUND);
   }
 

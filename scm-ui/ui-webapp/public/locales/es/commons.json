@@ -85,7 +85,7 @@
     "currentPassword": "Contraseña actual",
     "currentPasswordHelpText": "La contraseña ya está en uso",
     "confirmPassword": "Confirme la contraseña",
-    "passwordInvalid": "La contraseña debe tener entre 6 y 32 caracteres",
+    "passwordInvalid": "La contraseña debe tener entre 6 y 1024 caracteres",
     "passwordConfirmFailed": "Las contraseñas deben ser identicas",
     "submit": "Guardar",
     "changedSuccessfully": "Contraseña cambiada correctamente"

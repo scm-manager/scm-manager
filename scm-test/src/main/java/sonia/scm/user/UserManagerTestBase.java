@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.user;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -282,6 +282,7 @@ public abstract class UserManagerTestBase extends ManagerTestBase<User> {
       String id = UUID.randomUUID().toString();
       User user = new User(id, id.concat(" displayName"),
                     id.concat("@mail.com"));
+      user.setPassword("$shiro1$secret");
 
       manager.create(user);
 

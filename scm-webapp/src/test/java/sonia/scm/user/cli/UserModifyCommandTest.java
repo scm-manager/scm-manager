@@ -158,6 +158,7 @@ class UserModifyCommandTest {
     @Test
     void shouldPrintUserAfterModificationInEnglish() {
       testRenderer.setLocale("en");
+      command.setPassword("havelock");
       command.setDisplayName("Lord Vetinari");
       command.setEmail("patrician@discworld");
 
@@ -179,6 +180,7 @@ class UserModifyCommandTest {
     @Test
     void shouldPrintUserAfterModificationInGerman() {
       testRenderer.setLocale("de");
+      command.setPassword("havelock");
       command.setDisplayName("Lord Vetinari");
       command.setEmail("patrician@discworld");
 
@@ -216,6 +218,7 @@ class UserModifyCommandTest {
     @Test
     void shouldFailWithEnglishMsgIfUserNotFound() {
       testRenderer.setLocale("en");
+      command.setPassword("havelock");
       when(manager.get(any())).thenReturn(null);
 
       assertThrows(CliExitException.class, () -> command.run());
@@ -228,6 +231,7 @@ class UserModifyCommandTest {
     @Test
     void shouldFailWithGermanMsgIfUserNotFound() {
       testRenderer.setLocale("de");
+      command.setPassword("havelock");
       when(manager.get(any())).thenReturn(null);
 
       assertThrows(CliExitException.class, () -> command.run());
