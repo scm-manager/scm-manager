@@ -39,8 +39,10 @@ class PluginTemplateRenderer extends TemplateRenderer {
   private static final String PLUGIN_NOT_INSTALLED_ERROR_TEMPLATE = "{{i18n.scmPluginNotInstalled}}";
   private static final String PLUGIN_ALREADY_INSTALLED_ERROR_TEMPLATE = "{{i18n.scmPluginAlreadyInstalled}}";
   private static final String PLUGIN_NOT_REMOVED_ERROR_TEMPLATE = "{{i18n.scmPluginNotRemoved}}";
+  private static final String PLUGIN_NOT_UPDATABLE_ERROR_TEMPLATE = "{{i18n.scmPluginNotUpdatable}}";
   private static final String PLUGIN_ADDED_TEMPLATE = "{{i18n.scmPluginAdded}}";
   private static final String PLUGIN_REMOVED_TEMPLATE = "{{i18n.scmPluginRemoved}}";
+  private static final String PLUGIN_UPDATED_TEMPLATE = "{{i18n.scmPluginUpdated}}";
   private static final String SERVER_RESTART_REQUIRED_TEMPLATE = "{{i18n.scmServerRestartRequired}}";
   private static final String SERVER_RESTART_TRIGGERED_TEMPLATE = "{{i18n.scmServerRestartTriggered}}";
   private static final String SERVER_RESTART_SKIPPED_TEMPLATE = "{{i18n.scmServerRestartSkipped}}";
@@ -64,8 +66,19 @@ class PluginTemplateRenderer extends TemplateRenderer {
     context.getStderr().println();
   }
 
+  public void renderPluginUpdated(String pluginName) {
+    renderToStdout(PLUGIN_UPDATED_TEMPLATE, Map.of("plugin", pluginName));
+    context.getStderr().println();
+  }
+
   public void renderPluginCouldNotBeRemoved(String pluginName) {
     renderToStdout(PLUGIN_NOT_REMOVED_ERROR_TEMPLATE, Map.of("plugin", pluginName));
+    context.getStderr().println();
+    context.exit(ExitCode.USAGE);
+  }
+
+  public void renderPluginNotUpdatable(String pluginName) {
+    renderToStdout(PLUGIN_NOT_UPDATABLE_ERROR_TEMPLATE, Map.of("plugin", pluginName));
     context.getStderr().println();
     context.exit(ExitCode.USAGE);
   }
