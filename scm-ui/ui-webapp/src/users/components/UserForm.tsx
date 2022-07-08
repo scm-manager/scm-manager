@@ -91,7 +91,7 @@ const UserForm: FC<Props> = ({ submitForm, user, loading }) => {
       mailValidationError ||
       displayNameValidationError ||
       nameValidationError ||
-      (userState && !userState.external && !userState.password) ||
+      (!user && userState && !userState.external && !userState.password) ||
       !userState.displayName
     );
   };
