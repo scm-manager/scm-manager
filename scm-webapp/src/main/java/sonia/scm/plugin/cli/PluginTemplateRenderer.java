@@ -36,9 +36,15 @@ import java.util.Map;
 class PluginTemplateRenderer extends TemplateRenderer {
 
   private static final String PLUGIN_NOT_AVAILABLE_ERROR_TEMPLATE = "{{i18n.scmPluginNotAvailable}}";
-  private static final String PLUGIN_ADDED_FOR_INSTALLATION_TEMPLATE = "{{i18n.scmPluginAddedForInstallation}}";
+  private static final String PLUGIN_NOT_INSTALLED_ERROR_TEMPLATE = "{{i18n.scmPluginNotInstalled}}";
+  private static final String PLUGIN_ALREADY_INSTALLED_ERROR_TEMPLATE = "{{i18n.scmPluginAlreadyInstalled}}";
+  private static final String PLUGIN_NOT_REMOVED_ERROR_TEMPLATE = "{{i18n.scmPluginNotRemoved}}";
+  private static final String PLUGIN_ADDED_TEMPLATE = "{{i18n.scmPluginAdded}}";
+  private static final String PLUGIN_REMOVED_TEMPLATE = "{{i18n.scmPluginRemoved}}";
   private static final String SERVER_RESTART_REQUIRED_TEMPLATE = "{{i18n.scmServerRestartRequired}}";
   private static final String SERVER_RESTART_TRIGGERED_TEMPLATE = "{{i18n.scmServerRestartTriggered}}";
+  private static final String SERVER_RESTART_SKIPPED_TEMPLATE = "{{i18n.scmServerRestartSkipped}}";
+  private static final String SERVER_RESTART_CONFIRMATION_TEMPLATE = "{{i18n.scmServerRestartConfirmation}}";
 
   private final CliContext context;
 
@@ -48,21 +54,57 @@ class PluginTemplateRenderer extends TemplateRenderer {
     this.context = context;
   }
 
-  public void renderPluginAddedForInstallation(String pluginName) {
-    renderToStdout(PLUGIN_ADDED_FOR_INSTALLATION_TEMPLATE, Map.of("plugin", pluginName));
+  public void renderPluginAdded(String pluginName) {
+    renderToStdout(PLUGIN_ADDED_TEMPLATE, Map.of("plugin", pluginName));
     context.getStderr().println();
+  }
+
+  public void renderPluginRemoved(String pluginName) {
+    renderToStdout(PLUGIN_REMOVED_TEMPLATE, Map.of("plugin", pluginName));
+    context.getStderr().println();
+  }
+
+  public void renderPluginCouldNotBeRemoved(String pluginName) {
+    renderToStdout(PLUGIN_NOT_REMOVED_ERROR_TEMPLATE, Map.of("plugin", pluginName));
+    context.getStderr().println();
+    context.exit(ExitCode.USAGE);
   }
 
   public void renderServerRestartRequired() {
     renderToStdout(SERVER_RESTART_REQUIRED_TEMPLATE, Collections.emptyMap());
     context.getStderr().println();
   }
+
   public void renderServerRestartTriggered() {
     renderToStdout(SERVER_RESTART_TRIGGERED_TEMPLATE, Collections.emptyMap());
     context.getStderr().println();
   }
+
+  public void renderSkipServerRestart() {
+    renderToStdout(SERVER_RESTART_SKIPPED_TEMPLATE, Collections.emptyMap());
+    context.getStderr().println();
+  }
+
+  public void renderConfirmServerRestart() {
+    renderToStdout(SERVER_RESTART_CONFIRMATION_TEMPLATE, Collections.emptyMap());
+    context.getStderr().println();
+    context.exit(ExitCode.USAGE);
+  }
+
   public void renderPluginNotAvailableError() {
     renderToStderr(PLUGIN_NOT_AVAILABLE_ERROR_TEMPLATE, Collections.emptyMap());
+    context.getStderr().println();
+    context.exit(ExitCode.USAGE);
+  }
+
+  public void renderPluginNotInstalledError() {
+    renderToStderr(PLUGIN_NOT_INSTALLED_ERROR_TEMPLATE, Collections.emptyMap());
+    context.getStderr().println();
+    context.exit(ExitCode.USAGE);
+  }
+
+  public void renderPluginAlreadyInstalledError() {
+    renderToStderr(PLUGIN_ALREADY_INSTALLED_ERROR_TEMPLATE, Collections.emptyMap());
     context.getStderr().println();
     context.exit(ExitCode.USAGE);
   }

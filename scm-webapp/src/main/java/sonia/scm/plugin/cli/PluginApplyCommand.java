@@ -31,14 +31,11 @@ import sonia.scm.plugin.PluginManager;
 import javax.inject.Inject;
 
 @ParentCommand(value = PluginCommand.class)
-@CommandLine.Command(name = "add")
-class PluginAddCommand implements Runnable {
+@CommandLine.Command(name = "apply")
+class PluginApplyCommand implements Runnable {
 
-  @CommandLine.Parameters(index = "0", paramLabel = "<name>", descriptionKey = "scm.plugin.name")
-  private String name;
-
-  @CommandLine.Option(names = {"--apply", "-a"}, descriptionKey = "scm.plugin.apply")
-  private boolean apply;
+  @CommandLine.Option(names = {"--yes", "-y"}, descriptionKey = "scm.plugin.restart")
+  private boolean restart;
 
   @CommandLine.Mixin
   private final PluginTemplateRenderer templateRenderer;
@@ -47,26 +44,18 @@ class PluginAddCommand implements Runnable {
   private CommandLine.Model.CommandSpec spec;
 
   @Inject
-  PluginAddCommand(PluginTemplateRenderer templateRenderer, PluginManager manager) {
+  PluginApplyCommand(PluginTemplateRenderer templateRenderer, PluginManager manager) {
     this.templateRenderer = templateRenderer;
     this.manager = manager;
   }
 
   @Override
   public void run() {
-    if (manager.getInstalled(name).isPresent()) {
-      templateRenderer.renderPluginAlreadyInstalledError();
+    if (!restart) {
+      templateRenderer.renderConfirmServerRestart();
     }
-    if (manager.getAvailable(name).isEmpty()) {
-      templateRenderer.renderPluginNotAvailableError();
-    }
-
-    templateRenderer.renderPluginAdded(name);
-    if (!apply) {
-      templateRenderer.renderServerRestartRequired();
-    } else {
-      templateRenderer.renderServerRestartTriggered();
-    }
-    manager.install(name, apply);
+    manager.executePendingAndRestart();
+    //TODO Check if changes are pending? Extend the plugin manager?
+//    templateRenderer.renderSkipServerRestart();
   }
 }
