@@ -28,7 +28,7 @@ import { hri } from "human-readable-ids";
 
 import UserForm from "./UserForm";
 import { I18nextProvider } from "react-i18next";
-import i18nTest from "../../i18n.test";
+import i18nTest from "../../i18n.mock";
 import { User } from "@scm-manager/ui-types";
 
 const renderWithI18n = (component) => render(<I18nextProvider i18n={i18nTest}>{component}</I18nextProvider>);
