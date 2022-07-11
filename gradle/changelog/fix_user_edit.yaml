@@ -1,0 +1,2 @@
+- type: fixed
+  description: users cannot be edited ([#2084](https://github.com/scm-manager/scm-manager/pull/2084))
