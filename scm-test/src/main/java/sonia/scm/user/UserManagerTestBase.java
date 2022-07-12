@@ -166,7 +166,7 @@ public abstract class UserManagerTestBase extends ManagerTestBase<User> {
     }
 
     assertNotNull(reference);
-    assertEquals(reference.getDisplayName(), "Tricia McMillan");
+    assertEquals("Tricia McMillan", reference.getDisplayName());
   }
 
   @Test
@@ -181,7 +181,7 @@ public abstract class UserManagerTestBase extends ManagerTestBase<User> {
     User otherUser = manager.get("zaphod");
 
     assertNotNull(otherUser);
-    assertEquals(otherUser.getDisplayName(), "Tricia McMillan");
+    assertEquals("Tricia McMillan", otherUser.getDisplayName());
   }
 
   @Test(expected = NotFoundException.class)
@@ -234,7 +234,7 @@ public abstract class UserManagerTestBase extends ManagerTestBase<User> {
     assertNotNull(manager.get("zaphod"));
     zaphod.setDisplayName("Tricia McMillan");
     manager.refresh(zaphod);
-    assertEquals(zaphod.getDisplayName(), "Zaphod Beeblebrox");
+    assertEquals("Zaphod Beeblebrox", zaphod.getDisplayName());
   }
 
   @Test(expected = NotFoundException.class)

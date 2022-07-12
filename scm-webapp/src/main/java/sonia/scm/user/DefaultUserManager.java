@@ -28,6 +28,7 @@ import com.github.sdorra.ssp.PermissionActionCheck;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.credential.PasswordService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.ContextEntry;
@@ -36,11 +37,9 @@ import sonia.scm.HandlerEventType;
 import sonia.scm.ManagerDaoAdapter;
 import sonia.scm.NotFoundException;
 import sonia.scm.SCMContextProvider;
-import sonia.scm.TransformFilter;
 import sonia.scm.search.SearchRequest;
 import sonia.scm.search.SearchUtil;
 import sonia.scm.security.Authentications;
-import sonia.scm.util.CollectionAppender;
 import sonia.scm.util.Util;
 
 import java.io.IOException;
@@ -68,14 +67,18 @@ public class DefaultUserManager extends AbstractUserManager
 
   //~--- constructors ---------------------------------------------------------
 
+  private final PasswordService passwordService;
+
   /**
    * Constructs ...
    *
+   * @param passwordService
    * @param userDAO
    */
   @Inject
-  public DefaultUserManager(UserDAO userDAO)
+  public DefaultUserManager(PasswordService passwordService, UserDAO userDAO)
   {
+    this.passwordService = passwordService;
     this.userDAO = userDAO;
     this.managerDaoAdapter = new ManagerDaoAdapter<>(userDAO);
   }
@@ -125,6 +128,7 @@ public class DefaultUserManager extends AbstractUserManager
     }
 
     logger.info("create user {} of type {}", user.getName(), user.getType());
+    ensurePasswordEncrypted(user);
 
     return managerDaoAdapter.create(
       user,
@@ -167,11 +171,16 @@ public class DefaultUserManager extends AbstractUserManager
   @Override
   public void modify(User user) {
     logger.info("modify user {} of type {}", user.getName(), user.getType());
+    ensurePasswordEncrypted(user);
     managerDaoAdapter.modify(
       user,
       UserPermissions::modify,
       notModified -> fireEvent(HandlerEventType.BEFORE_MODIFY, user, notModified),
       notModified -> fireEvent(HandlerEventType.MODIFY, user, notModified));
+  }
+
+  private void ensurePasswordEncrypted(User user) {
+    user.setPassword(passwordService.encryptPassword(user.getPassword()));
   }
 
   /**
@@ -364,7 +373,7 @@ public class DefaultUserManager extends AbstractUserManager
       throw new InvalidPasswordException(ContextEntry.ContextBuilder.entity("PasswordChange", "-").in(User.class, user.getName()));
     }
 
-    user.setPassword(newPassword);
+    user.setPassword(passwordService.encryptPassword(newPassword));
 
     managerDaoAdapter.modify(
       user,

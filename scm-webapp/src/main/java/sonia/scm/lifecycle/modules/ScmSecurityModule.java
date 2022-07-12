@@ -103,7 +103,6 @@ public class ScmSecurityModule extends ShiroWebModule
     bind(RememberMeManager.class).to(DisabledRememberMeManager.class);
 
     // bind authentication strategy
-    bind(ModularRealmAuthenticator.class);
     bind(Authenticator.class).to(ModularRealmAuthenticator.class);
     bind(AuthenticationStrategy.class).to(ScmAtLeastOneSuccessfulStrategy.class);
     bind(PermissionResolver.class).to(ScmPermissionResolver.class);
@@ -148,7 +147,7 @@ public class ScmSecurityModule extends ShiroWebModule
    */
   private PasswordService createPasswordService()
   {
-    DefaultPasswordService passwordService = new DefaultPasswordService();
+    DefaultPasswordService passwordService = new IdempotentPasswordService();
     DefaultHashService hashService = new DefaultHashService();
 
     hashService.setHashIterations(ITERATIONS);
@@ -161,4 +160,19 @@ public class ScmSecurityModule extends ShiroWebModule
 
   /** Field description */
   private final ExtensionProcessor extensionProcessor;
+
+  static class IdempotentPasswordService extends DefaultPasswordService {
+
+    private boolean isEncrypted(Object password) {
+      return password instanceof String && ((String) password).startsWith("$shiro1$SHA-512$");
+    }
+
+    @Override
+    public String encryptPassword(Object plaintext) {
+      if (isEncrypted(plaintext)) {
+        return plaintext.toString();
+      }
+      return super.encryptPassword(plaintext);
+    }
+  }
 }
