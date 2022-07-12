@@ -52,6 +52,35 @@ class PluginSetDtoMapperTest {
 
   @Test
   void shouldMap() {
+    List<AvailablePlugin> availablePlugins = createAvailablePlugins();
+    ImmutableSet<PluginSet> pluginSets = createPluginSets();
+
+    List<PluginSetDto> dtos = mapper.map(pluginSets, availablePlugins, Locale.ENGLISH);
+
+    assertThat(dtos).hasSize(2);
+    PluginSetDto first = dtos.get(0);
+    assertThat(first.getSequence()).isZero();
+    assertThat(first.getName()).isEqualTo("My Plugin Set 2");
+    assertThat(first.getFeatures()).contains("this is also awesome!");
+    assertThat(first.getImages()).isNotEmpty();
+    assertThat(first.getPlugins()).hasSize(2);
+
+    assertThat(dtos.get(1).getSequence()).isEqualTo(1);
+  }
+
+  @Test
+  void shouldMapWithOtherLanguage() {
+    List<AvailablePlugin> availablePlugins = createAvailablePlugins();
+    ImmutableSet<PluginSet> pluginSets = createPluginSets();
+
+    List<PluginSetDto> dtos = mapper.map(pluginSets, availablePlugins, Locale.FRENCH);
+
+    assertThat(dtos).hasSize(2);
+    PluginSetDto first = dtos.get(0);
+    assertThat(first.getName()).isEqualTo("My Plugin Set 2");
+  }
+
+  private List<AvailablePlugin> createAvailablePlugins() {
     AvailablePlugin git = createAvailable("scm-git-plugin");
     AvailablePlugin svn = createAvailable("scm-svn-plugin");
     AvailablePlugin hg = createAvailable("scm-hg-plugin");
@@ -66,8 +95,10 @@ class PluginSetDtoMapperTest {
     when(pluginDtoMapper.mapAvailable(svn)).thenReturn(svnDto);
     when(pluginDtoMapper.mapAvailable(hg)).thenReturn(hgDto);
 
-    List<AvailablePlugin> availablePlugins = List.of(git, svn, hg);
+    return List.of(git, svn, hg);
+  }
 
+  private ImmutableSet<PluginSet> createPluginSets() {
     PluginSet pluginSet = new PluginSet(
       "my-plugin-set",
       1,
@@ -83,17 +114,6 @@ class PluginSetDtoMapperTest {
       ImmutableMap.of("en", new PluginSet.Description("My Plugin Set 2", List.of("this is also awesome!"))),
       ImmutableMap.of("standard", "base64image")
     );
-    ImmutableSet<PluginSet> pluginSets = ImmutableSet.of(pluginSet, pluginSet2);
-
-    List<PluginSetDto> dtos = mapper.map(pluginSets, availablePlugins, Locale.ENGLISH);
-    assertThat(dtos).hasSize(2);
-    PluginSetDto first = dtos.get(0);
-    assertThat(first.getSequence()).isZero();
-    assertThat(first.getName()).isEqualTo("My Plugin Set 2");
-    assertThat(first.getFeatures()).contains("this is also awesome!");
-    assertThat(first.getImages()).isNotEmpty();
-    assertThat(first.getPlugins()).hasSize(2);
-
-    assertThat(dtos.get(1).getSequence()).isEqualTo(1);
+    return ImmutableSet.of(pluginSet, pluginSet2);
   }
 }

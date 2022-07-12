@@ -59,6 +59,9 @@ public class PluginSetDtoMapper {
       .collect(Collectors.toList());
 
     PluginSet.Description description = pluginSet.getDescriptions().get(locale.getLanguage());
+    if (description == null) {
+      description = pluginSet.getDescriptions().get(Locale.ENGLISH.getLanguage());
+    }
 
     return new PluginSetDto(pluginSet.getId(), pluginSet.getSequence(), pluginDtos, description.getName(), description.getFeatures(), pluginSet.getImages());
   }
