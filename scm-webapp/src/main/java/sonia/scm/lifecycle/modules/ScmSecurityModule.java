@@ -149,7 +149,7 @@ public class ScmSecurityModule extends ShiroWebModule
   {
     DefaultPasswordService passwordService = new IdempotentPasswordService();
     DefaultHashService hashService = new DefaultHashService();
-
+    hashService.setGeneratePublicSalt(true);
     hashService.setHashIterations(ITERATIONS);
     passwordService.setHashService(hashService);
 
