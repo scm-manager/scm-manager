@@ -195,6 +195,7 @@ const UserForm: FC<Props> = ({ submitForm, user, loading }) => {
                   onChange={(active) => setUserState({ ...userState, active })}
                   checked={userState ? userState.active : false}
                   helpText={t("help.activeHelpText")}
+                  testId="checkbox-active"
                 />
               </div>
             </div>

@@ -24,7 +24,6 @@
 
 import * as React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
-import { hri } from "human-readable-ids";
 
 import UserForm from "./UserForm";
 import { I18nextProvider } from "react-i18next";
@@ -33,21 +32,14 @@ import { User } from "@scm-manager/ui-types";
 
 const renderWithI18n = (component) => render(<I18nextProvider i18n={i18nTest}>{component}</I18nextProvider>);
 
-describe("create", () => {
-  it("should allow to create user", () => {
-    const mockSubmitForm = jest.fn();
-
-    renderWithI18n(<UserForm submitForm={mockSubmitForm} />);
-
-    const newUser = hri.random();
-    const password = hri.random();
-
+describe("for user creation", () => {
+  const fillForm = (userId: string, displayName: string, password: string, confirmation: string) => {
     fireEvent.change(screen.getByTestId("input-username"), {
-      target: { value: newUser },
+      target: { value: userId },
     });
 
     fireEvent.change(screen.getByTestId("input-displayname"), {
-      target: { value: newUser },
+      target: { value: displayName },
     });
 
     fireEvent.change(screen.getByTestId("input-password"), {
@@ -55,7 +47,99 @@ describe("create", () => {
     });
 
     fireEvent.change(screen.getByTestId("input-password-confirmation"), {
-      target: { value: password },
+      target: { value: confirmation },
+    });
+  };
+
+  it("should allow to create user", () => {
+    const mockSubmitForm = jest.fn();
+
+    renderWithI18n(<UserForm submitForm={mockSubmitForm} />);
+
+    fillForm("trillian", "Tricia McMillan", "password", "password");
+
+    fireEvent.click(screen.getByTestId("submit-button"));
+
+    expect(mockSubmitForm).toBeCalled();
+  });
+
+  it("should prevent to submit empty form", () => {
+    const mockSubmitForm = jest.fn();
+
+    renderWithI18n(<UserForm submitForm={mockSubmitForm} />);
+
+    fireEvent.click(screen.getByTestId("submit-button"));
+
+    expect(mockSubmitForm).not.toBeCalled();
+  });
+
+  it("should prevent to submit form without user id", () => {
+    const mockSubmitForm = jest.fn();
+
+    renderWithI18n(<UserForm submitForm={mockSubmitForm} />);
+
+    fillForm("", "Arthur Dent", "password", "password");
+
+    fireEvent.click(screen.getByTestId("submit-button"));
+
+    expect(mockSubmitForm).not.toBeCalled();
+  });
+
+  it("should prevent to submit form without display name", () => {
+    const mockSubmitForm = jest.fn();
+
+    renderWithI18n(<UserForm submitForm={mockSubmitForm} />);
+
+    fillForm("trillian", "", "password", "password");
+
+    fireEvent.click(screen.getByTestId("submit-button"));
+
+    expect(mockSubmitForm).not.toBeCalled();
+  });
+
+  it("should prevent to submit form without password", () => {
+    const mockSubmitForm = jest.fn();
+
+    renderWithI18n(<UserForm submitForm={mockSubmitForm} />);
+
+    fillForm("trillian", "Tricia McMillan", "", "");
+
+    fireEvent.click(screen.getByTestId("submit-button"));
+
+    expect(mockSubmitForm).not.toBeCalled();
+  });
+
+  it("should prevent to submit form with wrong password confirmation", () => {
+    const mockSubmitForm = jest.fn();
+
+    renderWithI18n(<UserForm submitForm={mockSubmitForm} />);
+
+    fillForm("trillian", "Tricia McMillan", "password", "different");
+
+    fireEvent.click(screen.getByTestId("submit-button"));
+
+    expect(mockSubmitForm).not.toBeCalled();
+  });
+});
+
+describe("for user edit", () => {
+  const user: User = {
+    name: "trillian",
+    mail: "tricia@hog.space",
+    displayName: "Tricia McMillan",
+    password: undefined,
+    active: true,
+    external: false,
+    _links: {},
+  };
+
+  it("should allow to edit user with changed display name", () => {
+    const mockSubmitForm = jest.fn();
+
+    renderWithI18n(<UserForm user={user} submitForm={mockSubmitForm} />);
+
+    fireEvent.change(screen.getByTestId("input-displayname"), {
+      target: { value: "Just Tricia" },
     });
 
     fireEvent.click(screen.getByTestId("submit-button"));
@@ -63,31 +147,67 @@ describe("create", () => {
     expect(mockSubmitForm).toBeCalled();
   });
 
-  it("should allow to edit user", () => {
+  it("should allow to edit user with changed email", () => {
     const mockSubmitForm = jest.fn();
-
-    const oldUser = hri.random();
-
-    const user: User = {
-      name: oldUser,
-      mail: oldUser,
-      displayName: oldUser,
-      password: undefined,
-      active: true,
-      external: false,
-      _links: {},
-    };
 
     renderWithI18n(<UserForm user={user} submitForm={mockSubmitForm} />);
 
-    const newUser = hri.random();
-
-    fireEvent.change(screen.getByTestId("input-displayname"), {
-      target: { value: newUser },
+    fireEvent.change(screen.getByTestId("input-mail"), {
+      target: { value: "tricia@hg2g.com" },
     });
 
     fireEvent.click(screen.getByTestId("submit-button"));
 
     expect(mockSubmitForm).toBeCalled();
+  });
+
+  it("should allow to edit user with changed active flag", () => {
+    const mockSubmitForm = jest.fn();
+
+    renderWithI18n(<UserForm user={user} submitForm={mockSubmitForm} />);
+
+    fireEvent.click(screen.getByTestId("checkbox-active"));
+
+    fireEvent.click(screen.getByTestId("submit-button"));
+
+    expect(mockSubmitForm).toBeCalled();
+  });
+
+  it("should prevent to submit unchanged user", () => {
+    const mockSubmitForm = jest.fn();
+
+    renderWithI18n(<UserForm user={user} submitForm={mockSubmitForm} />);
+
+    fireEvent.click(screen.getByTestId("submit-button"));
+
+    expect(mockSubmitForm).not.toBeCalled();
+  });
+
+  it("should prevent to edit user with incorrect email", () => {
+    const mockSubmitForm = jest.fn();
+
+    renderWithI18n(<UserForm user={user} submitForm={mockSubmitForm} />);
+
+    fireEvent.change(screen.getByTestId("input-mail"), {
+      target: { value: "do_not_reply" },
+    });
+
+    fireEvent.click(screen.getByTestId("submit-button"));
+
+    expect(mockSubmitForm).not.toBeCalled();
+  });
+
+  it("should prevent to edit user with empty display name", () => {
+    const mockSubmitForm = jest.fn();
+
+    renderWithI18n(<UserForm user={user} submitForm={mockSubmitForm} />);
+
+    fireEvent.change(screen.getByTestId("input-displayname"), {
+      target: { value: "" },
+    });
+
+    fireEvent.click(screen.getByTestId("submit-button"));
+
+    expect(mockSubmitForm).not.toBeCalled();
   });
 });
