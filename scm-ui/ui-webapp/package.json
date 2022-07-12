@@ -38,6 +38,7 @@
     "@scm-manager/eslint-config": "^2.15.1",
     "@scm-manager/jest-preset": "^2.13.0",
     "@scm-manager/ui-tests": "2.37.2-SNAPSHOT",
+    "@testing-library/react": "^12.1.5",
     "@types/classnames": "^2.2.9",
     "@types/enzyme": "^3.10.3",
     "@types/fetch-mock": "^7.3.1",
