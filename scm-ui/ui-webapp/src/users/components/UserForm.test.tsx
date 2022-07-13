@@ -26,11 +26,8 @@ import * as React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 
 import UserForm from "./UserForm";
-import { I18nextProvider } from "react-i18next";
-import i18nTest from "../../i18n.mock";
 import { User } from "@scm-manager/ui-types";
-
-const renderWithI18n = (component) => render(<I18nextProvider i18n={i18nTest}>{component}</I18nextProvider>);
+import "@scm-manager/ui-tests";
 
 describe("for user creation", () => {
   const fillForm = (userId: string, displayName: string, password: string, confirmation: string) => {
@@ -54,7 +51,7 @@ describe("for user creation", () => {
   it("should allow to create user", () => {
     const mockSubmitForm = jest.fn();
 
-    renderWithI18n(<UserForm submitForm={mockSubmitForm} />);
+    render(<UserForm submitForm={mockSubmitForm} />);
 
     fillForm("trillian", "Tricia McMillan", "password", "password");
 
@@ -66,7 +63,7 @@ describe("for user creation", () => {
   it("should prevent to submit empty form", () => {
     const mockSubmitForm = jest.fn();
 
-    renderWithI18n(<UserForm submitForm={mockSubmitForm} />);
+    render(<UserForm submitForm={mockSubmitForm} />);
 
     fireEvent.click(screen.getByTestId("submit-button"));
 
@@ -76,7 +73,7 @@ describe("for user creation", () => {
   it("should prevent to submit form without user id", () => {
     const mockSubmitForm = jest.fn();
 
-    renderWithI18n(<UserForm submitForm={mockSubmitForm} />);
+    render(<UserForm submitForm={mockSubmitForm} />);
 
     fillForm("", "Arthur Dent", "password", "password");
 
@@ -88,7 +85,7 @@ describe("for user creation", () => {
   it("should prevent to submit form without display name", () => {
     const mockSubmitForm = jest.fn();
 
-    renderWithI18n(<UserForm submitForm={mockSubmitForm} />);
+    render(<UserForm submitForm={mockSubmitForm} />);
 
     fillForm("trillian", "", "password", "password");
 
@@ -100,7 +97,7 @@ describe("for user creation", () => {
   it("should prevent to submit form without password", () => {
     const mockSubmitForm = jest.fn();
 
-    renderWithI18n(<UserForm submitForm={mockSubmitForm} />);
+    render(<UserForm submitForm={mockSubmitForm} />);
 
     fillForm("trillian", "Tricia McMillan", "", "");
 
@@ -112,7 +109,7 @@ describe("for user creation", () => {
   it("should prevent to submit form with wrong password confirmation", () => {
     const mockSubmitForm = jest.fn();
 
-    renderWithI18n(<UserForm submitForm={mockSubmitForm} />);
+    render(<UserForm submitForm={mockSubmitForm} />);
 
     fillForm("trillian", "Tricia McMillan", "password", "different");
 
@@ -136,7 +133,7 @@ describe("for user edit", () => {
   it("should allow to edit user with changed display name", () => {
     const mockSubmitForm = jest.fn();
 
-    renderWithI18n(<UserForm user={user} submitForm={mockSubmitForm} />);
+    render(<UserForm user={user} submitForm={mockSubmitForm} />);
 
     fireEvent.change(screen.getByTestId("input-displayname"), {
       target: { value: "Just Tricia" },
@@ -150,7 +147,7 @@ describe("for user edit", () => {
   it("should allow to edit user with changed email", () => {
     const mockSubmitForm = jest.fn();
 
-    renderWithI18n(<UserForm user={user} submitForm={mockSubmitForm} />);
+    render(<UserForm user={user} submitForm={mockSubmitForm} />);
 
     fireEvent.change(screen.getByTestId("input-mail"), {
       target: { value: "tricia@hg2g.com" },
@@ -164,7 +161,7 @@ describe("for user edit", () => {
   it("should allow to edit user with changed active flag", () => {
     const mockSubmitForm = jest.fn();
 
-    renderWithI18n(<UserForm user={user} submitForm={mockSubmitForm} />);
+    render(<UserForm user={user} submitForm={mockSubmitForm} />);
 
     fireEvent.click(screen.getByTestId("checkbox-active"));
 
@@ -176,7 +173,7 @@ describe("for user edit", () => {
   it("should prevent to submit unchanged user", () => {
     const mockSubmitForm = jest.fn();
 
-    renderWithI18n(<UserForm user={user} submitForm={mockSubmitForm} />);
+    render(<UserForm user={user} submitForm={mockSubmitForm} />);
 
     fireEvent.click(screen.getByTestId("submit-button"));
 
@@ -186,7 +183,7 @@ describe("for user edit", () => {
   it("should prevent to edit user with incorrect email", () => {
     const mockSubmitForm = jest.fn();
 
-    renderWithI18n(<UserForm user={user} submitForm={mockSubmitForm} />);
+    render(<UserForm user={user} submitForm={mockSubmitForm} />);
 
     fireEvent.change(screen.getByTestId("input-mail"), {
       target: { value: "do_not_reply" },
@@ -200,7 +197,7 @@ describe("for user edit", () => {
   it("should prevent to edit user with empty display name", () => {
     const mockSubmitForm = jest.fn();
 
-    renderWithI18n(<UserForm user={user} submitForm={mockSubmitForm} />);
+    render(<UserForm user={user} submitForm={mockSubmitForm} />);
 
     fireEvent.change(screen.getByTestId("input-displayname"), {
       target: { value: "" },

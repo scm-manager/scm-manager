@@ -23,8 +23,7 @@
  */
 import React, { FormEvent } from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
-import styled from "styled-components";
-import { ErrorNotification, Image, InputField, SubmitButton, UnauthorizedError } from "@scm-manager/ui-components";
+import { ErrorNotification, InputField, SubmitButton, UnauthorizedError } from "@scm-manager/ui-components";
 
 type Props = WithTranslation & {
   error?: Error | null;
@@ -37,33 +36,12 @@ type State = {
   password: string;
 };
 
-const TopMarginBox = styled.div`
-  margin-top: 5rem;
-`;
-
-const AvatarWrapper = styled.figure`
-  display: flex;
-  justify-content: center;
-  margin: -70px auto 20px;
-  width: 128px;
-  height: 128px;
-  background: var(--scm-white-color);
-  border: 1px solid lightgray;
-  border-radius: 50%;
-`;
-
-const AvatarImage = styled(Image)`
-  width: 75%;
-  margin-left: 0.25rem;
-  padding: 5px;
-`;
-
 class LoginForm extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
       username: "",
-      password: ""
+      password: "",
     };
   }
 
@@ -76,13 +54,13 @@ class LoginForm extends React.Component<Props, State> {
 
   handleUsernameChange = (value: string) => {
     this.setState({
-      username: value
+      username: value,
     });
   };
 
   handlePasswordChange = (value: string) => {
     this.setState({
-      password: value
+      password: value,
     });
   };
 
@@ -92,7 +70,7 @@ class LoginForm extends React.Component<Props, State> {
 
   areCredentialsInvalid() {
     const { t, error } = this.props;
-    if (error instanceof UnauthorizedError) {
+    if (error && error instanceof UnauthorizedError) {
       return new Error(t("errorNotification.wrongLoginCredentials"));
     } else {
       return error;
@@ -102,31 +80,24 @@ class LoginForm extends React.Component<Props, State> {
   render() {
     const { loading, t } = this.props;
     return (
-      <div className="column is-4 box has-text-centered has-background-secondary-less">
-        <h3 className="title">{t("login.title")}</h3>
-        <p className="subtitle">{t("login.subtitle")}</p>
-        <TopMarginBox className="box">
-          <AvatarWrapper>
-            <AvatarImage src="/images/blibSmallLightBackground.svg" alt={t("login.logo-alt")} />
-          </AvatarWrapper>
-          <ErrorNotification error={this.areCredentialsInvalid()} />
-          <form onSubmit={this.handleSubmit}>
-            <InputField
-              testId="username-input"
-              placeholder={t("login.username-placeholder")}
-              autofocus={true}
-              onChange={this.handleUsernameChange}
-            />
-            <InputField
-              testId="password-input"
-              placeholder={t("login.password-placeholder")}
-              type="password"
-              onChange={this.handlePasswordChange}
-            />
-            <SubmitButton label={t("login.submit")} fullWidth={true} loading={loading} testId="login-button" />
-          </form>
-        </TopMarginBox>
-      </div>
+      <>
+        <ErrorNotification error={this.areCredentialsInvalid()} />
+        <form onSubmit={this.handleSubmit}>
+          <InputField
+            testId="username-input"
+            placeholder={t("login.username-placeholder")}
+            autofocus={true}
+            onChange={this.handleUsernameChange}
+          />
+          <InputField
+            testId="password-input"
+            placeholder={t("login.password-placeholder")}
+            type="password"
+            onChange={this.handlePasswordChange}
+          />
+          <SubmitButton label={t("login.submit")} fullWidth={true} loading={loading} testId="login-button" />
+        </form>
+      </>
     );
   }
 }

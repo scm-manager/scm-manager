@@ -22,26 +22,32 @@
  * SOFTWARE.
  */
 
-import i18n from "i18next";
-import { initReactI18next } from "react-i18next";
-import users from "../public/locales/en/users.json";
-import commons from "../public/locales/en/commons.json";
+import * as React from "react";
+import * as TestRenderer from "react-test-renderer";
+import { LoginInfo as LoginInfoType } from "@scm-manager/ui-types";
 
-i18n.use(initReactI18next).init({
-  lng: "en",
-  fallbackLng: "en",
+import "@scm-manager/ui-tests";
+import LoginInfo from "./LoginInfo";
 
-  // have a common namespace used around the full app
-  ns: ["translationsNS"],
-  defaultNS: "translationsNS",
-
-  debug: true,
-
-  interpolation: {
-    escapeValue: false, // not needed for react!!
+jest.mock("@scm-manager/ui-api", () => ({
+  useLoginInfo: jest.fn(() => ({
+    isLoading: false,
+    data: {
+      _links: {},
+      feature: { title: "Test", summary: "Test" },
+      plugin: { summary: "Test", title: "Test" },
+    } as LoginInfoType,
+  })),
+  urls: {
+    getPageFromMatch: jest.fn(() => 1),
+    withContextPath: jest.fn((it) => it),
   },
+}));
 
-  resources: { en: { users, commons } },
+describe("LoginInfo", () => {
+  it("should render login page", () => {
+    const loginHandler = jest.fn();
+    const reactTestRenderer = TestRenderer.create(<LoginInfo loginHandler={loginHandler} />);
+    expect(reactTestRenderer.toJSON()).toMatchSnapshot();
+  });
 });
-
-export default i18n;
