@@ -194,6 +194,7 @@ public class DefaultPluginManager implements PluginManager {
 
   @Override
   public List<InstalledPlugin> getUpdatable() {
+    PluginPermissions.read().check();
     return getInstalled()
       .stream()
       .filter(p -> isUpdatable(p.getDescriptor().getInformation().getName()))
@@ -203,6 +204,7 @@ public class DefaultPluginManager implements PluginManager {
 
   @Override
   public PendingPlugins getPending() {
+    PluginPermissions.read().check();
     return new PendingPlugins(getAvailable(), getInstalled());
   }
 
