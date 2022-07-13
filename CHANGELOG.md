@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.37.2] - 2022-07-13
+### Fixed
+- Unify password validation ([#2077](https://github.com/scm-manager/scm-manager/pull/2077))
+- users cannot be edited ([#2084](https://github.com/scm-manager/scm-manager/pull/2084))
+- Plugin wizard for foreign languages ([#2086](https://github.com/scm-manager/scm-manager/pull/2086))
+
 ## [2.37.1] - 2022-07-06
 ### Fixed
 - Encrypt passwords stored via cli commands ([#2080](https://github.com/scm-manager/scm-manager/pull/2080))
@@ -1099,3 +1105,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.36.1]: https://scm-manager.org/download/2.36.1
 [2.37.0]: https://scm-manager.org/download/2.37.0
 [2.37.1]: https://scm-manager.org/download/2.37.1
+[2.37.2]: https://scm-manager.org/download/2.37.2
