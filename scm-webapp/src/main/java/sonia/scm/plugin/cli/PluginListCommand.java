@@ -24,17 +24,26 @@
 
 package sonia.scm.plugin.cli;
 
+import com.cronutils.utils.VisibleForTesting;
+import lombok.Getter;
+import lombok.Setter;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
 import sonia.scm.cli.Table;
 import sonia.scm.cli.TemplateRenderer;
-import sonia.scm.plugin.Plugin;
+import sonia.scm.plugin.AvailablePlugin;
+import sonia.scm.plugin.InstalledPlugin;
+import sonia.scm.plugin.PendingPlugins;
+import sonia.scm.plugin.PluginDescriptor;
 import sonia.scm.plugin.PluginManager;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @ParentCommand(value = PluginCommand.class)
@@ -70,21 +79,85 @@ class PluginListCommand implements Runnable {
 
   @Override
   public void run() {
-    Collection<Plugin> plugins = new ArrayList<>(manager.getInstalled());
+    Collection<ListablePlugin> plugins = getListablePlugins();
     if (useShortTemplate) {
-      templateRenderer.renderToStdout(SHORT_TEMPLATE, Map.of("plugins", plugins.stream().map(p -> p.getDescriptor().getInformation()).collect(Collectors.toList())));
+      templateRenderer.renderToStdout(SHORT_TEMPLATE, Map.of("plugins", plugins));
     } else {
       Table table = templateRenderer.createTable();
-      table.addHeader("scm.plugin.name", "scm.plugin.displayName", "scm.plugin.version", "scm.plugin.description");
-      for (Plugin plugin : plugins) {
+      String yes = spec.resourceBundle().getString("yes");
+      table.addHeader("scm.plugin.name", "scm.plugin.displayName", "scm.plugin.installedVersion", "scm.plugin.availableVersion", "scm.plugin.pending");
+
+      for (ListablePlugin plugin : plugins) {
         table.addRow(
-          plugin.getDescriptor().getInformation().getName(),
-          plugin.getDescriptor().getInformation().getDisplayName(),
-          plugin.getDescriptor().getInformation().getVersion(),
-          plugin.getDescriptor().getInformation().getDescription()
+          plugin.getName(),
+          plugin.getDisplayName(),
+          plugin.getInstalledVersion(),
+          plugin.getAvailableVersion(),
+          plugin.isPending() ? yes : ""
         );
       }
       templateRenderer.renderToStdout(TABLE_TEMPLATE, Map.of("rows", table, "plugins", plugins));
+    }
+  }
+
+  private List<ListablePlugin> getListablePlugins() {
+    List<InstalledPlugin> installedPlugins = manager.getInstalled();
+    List<AvailablePlugin> availablePlugins = manager.getAvailable();
+    PendingPlugins pendingPlugins = manager.getPending();
+
+    Set<ListablePlugin> plugins = new HashSet<>();
+    for (PluginDescriptor pluginDesc : installedPlugins.stream().map(InstalledPlugin::getDescriptor).collect(Collectors.toList())) {
+      ListablePlugin listablePlugin = new ListablePlugin(pendingPlugins, pluginDesc, true);
+      setAvailableVersion(listablePlugin);
+      plugins.add(listablePlugin);
+    }
+
+    for (PluginDescriptor pluginDesc : availablePlugins.stream().map(AvailablePlugin::getDescriptor).collect(Collectors.toList())) {
+      if (plugins.stream().noneMatch(p -> p.name.equals(pluginDesc.getInformation().getName()))) {
+        plugins.add(new ListablePlugin(pendingPlugins, pluginDesc, false));
+      }
+    }
+
+    return plugins.stream().sorted((a, b) -> a.name.compareToIgnoreCase(b.name)).collect(Collectors.toList());
+  }
+
+  private void setAvailableVersion(ListablePlugin listablePlugin) {
+    Optional<AvailablePlugin> availablePlugin = manager.getAvailable().stream().filter(p -> p.getDescriptor().getInformation().getName().equals(listablePlugin.name)).findFirst();
+    if (availablePlugin.isPresent() && !availablePlugin.get().getDescriptor().getInformation().getVersion().equals(listablePlugin.installedVersion)) {
+      listablePlugin.setAvailableVersion(availablePlugin.get().getDescriptor().getInformation().getVersion());
+    }
+  }
+
+  @VisibleForTesting
+  void setSpec(CommandLine.Model.CommandSpec spec) {
+    this.spec = spec;
+  }
+
+  @VisibleForTesting
+  void setUseShortTemplate(boolean useShortTemplate) {
+    this.useShortTemplate = useShortTemplate;
+  }
+
+  @Getter
+  @Setter
+  static class ListablePlugin {
+    private String name;
+    private String displayName;
+    private String installedVersion;
+    private String availableVersion;
+    private boolean pending;
+    private boolean installed;
+
+    ListablePlugin(PendingPlugins pendingPlugins, PluginDescriptor descriptor, boolean installed) {
+      this.name = descriptor.getInformation().getName();
+      this.displayName = descriptor.getInformation().getDisplayName();
+      if (installed) {
+        this.installedVersion = descriptor.getInformation().getVersion();
+      } else {
+        this.availableVersion = descriptor.getInformation().getVersion();
+      }
+      this.pending = pendingPlugins.isPending(descriptor.getInformation().getName());
+      this.installed = installed;
     }
   }
 }

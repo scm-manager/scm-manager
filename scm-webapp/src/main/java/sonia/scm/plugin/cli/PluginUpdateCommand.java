@@ -24,11 +24,13 @@
 
 package sonia.scm.plugin.cli;
 
+import com.cronutils.utils.VisibleForTesting;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
 import sonia.scm.plugin.PluginManager;
 
 import javax.inject.Inject;
+import java.util.Objects;
 
 @ParentCommand(value = PluginCommand.class)
 @CommandLine.Command(name = "update")
@@ -47,7 +49,7 @@ class PluginUpdateCommand implements Runnable {
   private CommandLine.Model.CommandSpec spec;
 
   @Inject
-  PluginUpdateCommand(PluginTemplateRenderer templateRenderer, PluginManager manager) {
+    PluginUpdateCommand(PluginTemplateRenderer templateRenderer, PluginManager manager) {
     this.templateRenderer = templateRenderer;
     this.manager = manager;
   }
@@ -56,9 +58,11 @@ class PluginUpdateCommand implements Runnable {
   public void run() {
     if (manager.getInstalled(name).isEmpty()) {
       templateRenderer.renderPluginNotInstalledError();
+      return;
     }
-    if (manager.getUpdatable().stream().noneMatch(p -> p.getDescriptor().getInformation().getName() == name)) {
+    if (manager.getUpdatable().stream().noneMatch(p -> Objects.equals(p.getDescriptor().getInformation().getName(), name))) {
       templateRenderer.renderPluginNotUpdatable(name);
+      return;
     }
     manager.install(name, apply);
     templateRenderer.renderPluginUpdated(name);
@@ -67,5 +71,13 @@ class PluginUpdateCommand implements Runnable {
     } else {
       templateRenderer.renderServerRestartTriggered();
     }
+  }
+  @VisibleForTesting
+  void setName(String name) {
+    this.name = name;
+  }
+  @VisibleForTesting
+  void setApply(boolean apply) {
+    this.apply = apply;
   }
 }

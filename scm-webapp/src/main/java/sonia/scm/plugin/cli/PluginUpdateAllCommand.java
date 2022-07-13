@@ -30,13 +30,11 @@ import sonia.scm.cli.ParentCommand;
 import sonia.scm.plugin.PluginManager;
 
 import javax.inject.Inject;
+import java.util.Objects;
 
 @ParentCommand(value = PluginCommand.class)
-@CommandLine.Command(name = "remove", aliases = "rm")
-class PluginRemoveCommand implements Runnable {
-
-  @CommandLine.Parameters(index = "0", paramLabel = "<name>", descriptionKey = "scm.plugin.name")
-  private String name;
+@CommandLine.Command(name = "update-all")
+class PluginUpdateAllCommand implements Runnable {
 
   @CommandLine.Option(names = {"--apply", "-a"}, descriptionKey = "scm.plugin.apply")
   private boolean apply;
@@ -48,36 +46,26 @@ class PluginRemoveCommand implements Runnable {
   private CommandLine.Model.CommandSpec spec;
 
   @Inject
-  PluginRemoveCommand(PluginTemplateRenderer templateRenderer, PluginManager manager) {
+  PluginUpdateAllCommand(PluginTemplateRenderer templateRenderer, PluginManager manager) {
     this.templateRenderer = templateRenderer;
     this.manager = manager;
   }
 
-
   @Override
   public void run() {
-    if (manager.getInstalled(name).isEmpty()) {
-      templateRenderer.renderPluginNotInstalledError();
-      return;
-    }
-
     try {
-      manager.uninstall(name, apply);
+      manager.updateAll();
     } catch (Exception e) {
-      templateRenderer.renderPluginCouldNotBeRemoved(name);
+      templateRenderer.renderPluginsUpdateError();
       throw e;
     }
-    templateRenderer.renderPluginRemoved(name);
+    templateRenderer.renderAllPluginsUpdated();
     if (!apply) {
       templateRenderer.renderServerRestartRequired();
     } else {
+      manager.executePendingAndRestart();
       templateRenderer.renderServerRestartTriggered();
     }
-  }
-
-  @VisibleForTesting
-  void setName(String name) {
-    this.name = name;
   }
 
   @VisibleForTesting

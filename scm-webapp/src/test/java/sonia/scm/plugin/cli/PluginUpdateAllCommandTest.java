@@ -22,64 +22,58 @@
  * SOFTWARE.
  */
 
-package sonia.scm.group.cli;
+package sonia.scm.plugin.cli;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import sonia.scm.cli.TemplateTestRenderer;
-import sonia.scm.group.Group;
-import sonia.scm.group.GroupManager;
+import sonia.scm.plugin.PluginManager;
 
-import static java.util.Arrays.asList;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-class GroupListCommandTest {
+class PluginUpdateAllCommandTest {
 
   @Mock
-  private GroupManager manager;
+  private PluginTemplateRenderer templateRenderer;
+  @Mock
+  private PluginManager pluginManager;
 
-  private final GroupCommandBeanMapper beanMapper = new GroupCommandBeanMapperImpl();
-  private final TemplateTestRenderer testRenderer = new TemplateTestRenderer();
+  @InjectMocks
+  private PluginUpdateAllCommand command;
 
-  private GroupListCommand command;
+  @Test
+  void shouldUpdateAll() {
+    command.run();
 
-  @BeforeEach
-  void initCommand() {
-    command = new GroupListCommand(testRenderer.createTemplateRenderer(), manager, beanMapper);
-    command.setSpec(testRenderer.getMockedSpec());
-  }
-
-  @BeforeEach
-  void mockGroups() {
-    Group internalGroup = new Group("test", "hog");
-    Group externalGroup = new Group("test", "vogons");
-    externalGroup.setExternal(true);
-    when(manager.getAll())
-      .thenReturn(
-        asList(
-          internalGroup,
-          externalGroup));
+    verify(pluginManager).updateAll();
+    verify(templateRenderer).renderAllPluginsUpdated();
+    verify(templateRenderer).renderServerRestartRequired();
   }
 
   @Test
-  void shouldRenderShortTable() {
-    command.setUseShortTemplate(true);
+  void shouldUpdateAllWithRestart() {
+    command.setApply(true);
 
     command.run();
 
-    assertThat(testRenderer.getStdOut()).isEqualTo("hog\nvogons\n");
+    verify(pluginManager).updateAll();
+    verify(pluginManager).executePendingAndRestart();
+    verify(templateRenderer).renderAllPluginsUpdated();
+    verify(templateRenderer).renderServerRestartTriggered();
   }
 
-  @Test
-  void shouldRenderLongTable() {
-    command.run();
 
-    assertThat(testRenderer.getStdOut())
-      .isEqualTo("NAME   EXTERNAL\nhog    no      \nvogons yes     \n");
+  @Test
+  void shouldRenderErrorIfUpdateFailed() {
+    doThrow(RuntimeException.class).when(pluginManager).updateAll();
+
+    assertThrows(RuntimeException.class, () -> command.run());
+
+    verify(templateRenderer).renderPluginsUpdateError();
   }
 }

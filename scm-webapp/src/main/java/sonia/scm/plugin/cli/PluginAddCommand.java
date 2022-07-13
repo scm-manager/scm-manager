@@ -24,6 +24,7 @@
 
 package sonia.scm.plugin.cli;
 
+import com.cronutils.utils.VisibleForTesting;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
 import sonia.scm.plugin.PluginManager;
@@ -56,17 +57,34 @@ class PluginAddCommand implements Runnable {
   public void run() {
     if (manager.getInstalled(name).isPresent()) {
       templateRenderer.renderPluginAlreadyInstalledError();
+      return;
     }
     if (manager.getAvailable(name).isEmpty()) {
       templateRenderer.renderPluginNotAvailableError();
+      return;
     }
 
+    try {
+      manager.install(name, apply);
+    } catch (Exception e) {
+      templateRenderer.renderPluginCouldNotBeAdded(name);
+      throw e;
+    }
     templateRenderer.renderPluginAdded(name);
     if (!apply) {
       templateRenderer.renderServerRestartRequired();
     } else {
       templateRenderer.renderServerRestartTriggered();
     }
-    manager.install(name, apply);
+  }
+
+  @VisibleForTesting
+  void setName(String name) {
+    this.name = name;
+  }
+
+  @VisibleForTesting
+  void setApply(boolean apply) {
+    this.apply = apply;
   }
 }

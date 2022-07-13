@@ -22,64 +22,63 @@
  * SOFTWARE.
  */
 
-package sonia.scm.group.cli;
+package sonia.scm.plugin.cli;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import sonia.scm.cli.TemplateTestRenderer;
-import sonia.scm.group.Group;
-import sonia.scm.group.GroupManager;
+import sonia.scm.plugin.PendingPlugins;
+import sonia.scm.plugin.PluginManager;
 
-import static java.util.Arrays.asList;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class GroupListCommandTest {
+class PluginApplyCommandTest {
 
   @Mock
-  private GroupManager manager;
+  private PluginTemplateRenderer templateRenderer;
+  @Mock
+  private PluginManager manager;
 
-  private final GroupCommandBeanMapper beanMapper = new GroupCommandBeanMapperImpl();
-  private final TemplateTestRenderer testRenderer = new TemplateTestRenderer();
-
-  private GroupListCommand command;
-
-  @BeforeEach
-  void initCommand() {
-    command = new GroupListCommand(testRenderer.createTemplateRenderer(), manager, beanMapper);
-    command.setSpec(testRenderer.getMockedSpec());
-  }
-
-  @BeforeEach
-  void mockGroups() {
-    Group internalGroup = new Group("test", "hog");
-    Group externalGroup = new Group("test", "vogons");
-    externalGroup.setExternal(true);
-    when(manager.getAll())
-      .thenReturn(
-        asList(
-          internalGroup,
-          externalGroup));
-  }
+  @InjectMocks
+  private PluginApplyCommand command;
 
   @Test
-  void shouldRenderShortTable() {
-    command.setUseShortTemplate(true);
+  void shouldRestartServer() {
+    command.setRestart(true);
+    PendingPlugins pendingPlugins = mock(PendingPlugins.class);
+    when(manager.getPending()).thenReturn(pendingPlugins);
+    when(pendingPlugins.existPendingChanges()).thenReturn(true);
 
     command.run();
 
-    assertThat(testRenderer.getStdOut()).isEqualTo("hog\nvogons\n");
+    verify(manager).executePendingAndRestart();
+    verify(templateRenderer).renderServerRestartTriggered();
   }
 
   @Test
-  void shouldRenderLongTable() {
+  void shouldNotRestartServerIfFlagIsMissing() {
     command.run();
 
-    assertThat(testRenderer.getStdOut())
-      .isEqualTo("NAME   EXTERNAL\nhog    no      \nvogons yes     \n");
+    verify(manager, never()).executePendingAndRestart();
+    verify(templateRenderer).renderConfirmServerRestart();
+  }
+
+  @Test
+  void shouldNotRestartServerIfNoPendingChanges() {
+    command.setRestart(true);
+    PendingPlugins pendingPlugins = mock(PendingPlugins.class);
+    when(manager.getPending()).thenReturn(pendingPlugins);
+    when(pendingPlugins.existPendingChanges()).thenReturn(false);
+
+    command.run();
+
+    verify(manager, never()).executePendingAndRestart();
+    verify(templateRenderer).renderSkipServerRestart();
   }
 }

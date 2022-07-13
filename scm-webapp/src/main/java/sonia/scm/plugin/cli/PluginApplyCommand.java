@@ -24,6 +24,7 @@
 
 package sonia.scm.plugin.cli;
 
+import com.cronutils.utils.VisibleForTesting;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
 import sonia.scm.plugin.PluginManager;
@@ -53,9 +54,18 @@ class PluginApplyCommand implements Runnable {
   public void run() {
     if (!restart) {
       templateRenderer.renderConfirmServerRestart();
+      return;
     }
-    manager.executePendingAndRestart();
-    //TODO Check if changes are pending? Extend the plugin manager?
-//    templateRenderer.renderSkipServerRestart();
+    if (manager.getPending().existPendingChanges()) {
+      manager.executePendingAndRestart();
+      templateRenderer.renderServerRestartTriggered();
+    } else {
+      templateRenderer.renderSkipServerRestart();
+    }
+  }
+
+  @VisibleForTesting
+  void setRestart(boolean restart) {
+    this.restart = restart;
   }
 }

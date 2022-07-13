@@ -39,14 +39,19 @@ class PluginTemplateRenderer extends TemplateRenderer {
   private static final String PLUGIN_NOT_INSTALLED_ERROR_TEMPLATE = "{{i18n.scmPluginNotInstalled}}";
   private static final String PLUGIN_ALREADY_INSTALLED_ERROR_TEMPLATE = "{{i18n.scmPluginAlreadyInstalled}}";
   private static final String PLUGIN_NOT_REMOVED_ERROR_TEMPLATE = "{{i18n.scmPluginNotRemoved}}";
+  private static final String PLUGIN_NOT_ADDED_ERROR_TEMPLATE = "{{i18n.scmPluginNotAdded}}";
   private static final String PLUGIN_NOT_UPDATABLE_ERROR_TEMPLATE = "{{i18n.scmPluginNotUpdatable}}";
+  private static final String PLUGIN_UPDATE_ERROR_TEMPLATE = "{{i18n.scmPluginsUpdateFailed}}";
   private static final String PLUGIN_ADDED_TEMPLATE = "{{i18n.scmPluginAdded}}";
   private static final String PLUGIN_REMOVED_TEMPLATE = "{{i18n.scmPluginRemoved}}";
   private static final String PLUGIN_UPDATED_TEMPLATE = "{{i18n.scmPluginUpdated}}";
+  private static final String ALL_PLUGINS_UPDATED_TEMPLATE = "{{i18n.scmPluginsUpdated}}";
   private static final String SERVER_RESTART_REQUIRED_TEMPLATE = "{{i18n.scmServerRestartRequired}}";
   private static final String SERVER_RESTART_TRIGGERED_TEMPLATE = "{{i18n.scmServerRestartTriggered}}";
   private static final String SERVER_RESTART_SKIPPED_TEMPLATE = "{{i18n.scmServerRestartSkipped}}";
   private static final String SERVER_RESTART_CONFIRMATION_TEMPLATE = "{{i18n.scmServerRestartConfirmation}}";
+  private static final String PLUGINS_NOT_PENDING_ERROR_TEMPLATE = "{{i18n.scmPluginsNotPending}}";
+  private static final String ALL_PENDING_PLUGINS_CANCELLED = "{{i18n.scmPendingPluginsCancelled}}";
 
   private final CliContext context;
 
@@ -58,48 +63,69 @@ class PluginTemplateRenderer extends TemplateRenderer {
 
   public void renderPluginAdded(String pluginName) {
     renderToStdout(PLUGIN_ADDED_TEMPLATE, Map.of("plugin", pluginName));
-    context.getStderr().println();
+    context.getStdout().println();
   }
 
   public void renderPluginRemoved(String pluginName) {
     renderToStdout(PLUGIN_REMOVED_TEMPLATE, Map.of("plugin", pluginName));
-    context.getStderr().println();
+    context.getStdout().println();
   }
 
   public void renderPluginUpdated(String pluginName) {
     renderToStdout(PLUGIN_UPDATED_TEMPLATE, Map.of("plugin", pluginName));
-    context.getStderr().println();
+    context.getStdout().println();
+  }
+
+  public void renderAllPluginsUpdated() {
+    renderToStdout(ALL_PLUGINS_UPDATED_TEMPLATE, Collections.emptyMap());
+    context.getStdout().println();
   }
 
   public void renderPluginCouldNotBeRemoved(String pluginName) {
-    renderToStdout(PLUGIN_NOT_REMOVED_ERROR_TEMPLATE, Map.of("plugin", pluginName));
+    renderToStderr(PLUGIN_NOT_REMOVED_ERROR_TEMPLATE, Map.of("plugin", pluginName));
     context.getStderr().println();
     context.exit(ExitCode.USAGE);
   }
 
+  public void renderPluginCouldNotBeAdded(String pluginName) {
+    renderToStderr(PLUGIN_NOT_ADDED_ERROR_TEMPLATE, Map.of("plugin", pluginName));
+    context.getStderr().println();
+    context.exit(ExitCode.SERVER_ERROR);
+  }
+
   public void renderPluginNotUpdatable(String pluginName) {
-    renderToStdout(PLUGIN_NOT_UPDATABLE_ERROR_TEMPLATE, Map.of("plugin", pluginName));
+    renderToStderr(PLUGIN_NOT_UPDATABLE_ERROR_TEMPLATE, Map.of("plugin", pluginName));
     context.getStderr().println();
     context.exit(ExitCode.USAGE);
   }
 
   public void renderServerRestartRequired() {
     renderToStdout(SERVER_RESTART_REQUIRED_TEMPLATE, Collections.emptyMap());
-    context.getStderr().println();
+    context.getStdout().println();
   }
 
   public void renderServerRestartTriggered() {
     renderToStdout(SERVER_RESTART_TRIGGERED_TEMPLATE, Collections.emptyMap());
-    context.getStderr().println();
+    context.getStdout().println();
   }
 
   public void renderSkipServerRestart() {
     renderToStdout(SERVER_RESTART_SKIPPED_TEMPLATE, Collections.emptyMap());
+    context.getStdout().println();
+  }
+
+  public void renderPluginsReseted() {
+    renderToStdout(ALL_PENDING_PLUGINS_CANCELLED, Collections.emptyMap());
+    context.getStdout().println();
+  }
+
+  public void renderNoPendingPlugins() {
+    renderToStderr(PLUGINS_NOT_PENDING_ERROR_TEMPLATE, Collections.emptyMap());
     context.getStderr().println();
   }
 
   public void renderConfirmServerRestart() {
-    renderToStdout(SERVER_RESTART_CONFIRMATION_TEMPLATE, Collections.emptyMap());
+    renderToStderr(SERVER_RESTART_CONFIRMATION_TEMPLATE, Collections.emptyMap());
     context.getStderr().println();
     context.exit(ExitCode.USAGE);
   }
@@ -108,6 +134,12 @@ class PluginTemplateRenderer extends TemplateRenderer {
     renderToStderr(PLUGIN_NOT_AVAILABLE_ERROR_TEMPLATE, Collections.emptyMap());
     context.getStderr().println();
     context.exit(ExitCode.USAGE);
+  }
+
+  public void renderPluginsUpdateError() {
+    renderToStderr(PLUGIN_UPDATE_ERROR_TEMPLATE, Collections.emptyMap());
+    context.getStderr().println();
+    context.exit(ExitCode.SERVER_ERROR);
   }
 
   public void renderPluginNotInstalledError() {

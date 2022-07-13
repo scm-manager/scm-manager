@@ -24,7 +24,6 @@
 
 package sonia.scm.plugin.cli;
 
-import com.cronutils.utils.VisibleForTesting;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
 import sonia.scm.plugin.PluginManager;
@@ -32,56 +31,28 @@ import sonia.scm.plugin.PluginManager;
 import javax.inject.Inject;
 
 @ParentCommand(value = PluginCommand.class)
-@CommandLine.Command(name = "remove", aliases = "rm")
-class PluginRemoveCommand implements Runnable {
+@CommandLine.Command(name = "cancel-pending", aliases = "reset")
+class PluginResetChangesCommand implements Runnable {
 
-  @CommandLine.Parameters(index = "0", paramLabel = "<name>", descriptionKey = "scm.plugin.name")
-  private String name;
-
-  @CommandLine.Option(names = {"--apply", "-a"}, descriptionKey = "scm.plugin.apply")
-  private boolean apply;
-
-  @CommandLine.Mixin
+ @CommandLine.Mixin
   private final PluginTemplateRenderer templateRenderer;
   private final PluginManager manager;
   @CommandLine.Spec
   private CommandLine.Model.CommandSpec spec;
 
   @Inject
-  PluginRemoveCommand(PluginTemplateRenderer templateRenderer, PluginManager manager) {
+  PluginResetChangesCommand(PluginTemplateRenderer templateRenderer, PluginManager manager) {
     this.templateRenderer = templateRenderer;
     this.manager = manager;
   }
 
-
   @Override
   public void run() {
-    if (manager.getInstalled(name).isEmpty()) {
-      templateRenderer.renderPluginNotInstalledError();
-      return;
-    }
-
-    try {
-      manager.uninstall(name, apply);
-    } catch (Exception e) {
-      templateRenderer.renderPluginCouldNotBeRemoved(name);
-      throw e;
-    }
-    templateRenderer.renderPluginRemoved(name);
-    if (!apply) {
-      templateRenderer.renderServerRestartRequired();
+    if (manager.getPending().existPendingChanges()) {
+      manager.cancelPending();
+      templateRenderer.renderPluginsReseted();
     } else {
-      templateRenderer.renderServerRestartTriggered();
+      templateRenderer.renderNoPendingPlugins();
     }
-  }
-
-  @VisibleForTesting
-  void setName(String name) {
-    this.name = name;
-  }
-
-  @VisibleForTesting
-  void setApply(boolean apply) {
-    this.apply = apply;
   }
 }

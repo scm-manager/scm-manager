@@ -39,14 +39,20 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import static com.google.common.collect.Iterables.contains;
+import static java.util.stream.Collectors.toList;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.ScmConstraintViolationException.Builder.doThrow;
 
@@ -87,15 +93,11 @@ public class DefaultPluginManager implements PluginManager {
     this.eventBus = eventBus;
     this.pluginSetConfigStore = pluginSetConfigStore;
 
-    if (contextFactory != null) {
-      this.contextFactory = contextFactory;
-    } else {
-      this.contextFactory = (plugins -> {
-        List<AvailablePlugin> pendingPlugins = new ArrayList<>(plugins);
-        pendingInstallQueue.stream().map(PendingPluginInstallation::getPlugin).forEach(pendingPlugins::add);
-        return PluginInstallationContext.from(getInstalled(), pendingPlugins);
-      });
-    }
+    this.contextFactory = Objects.requireNonNullElseGet(contextFactory, () -> (plugins -> {
+      List<AvailablePlugin> pendingPlugins = new ArrayList<>(plugins);
+      pendingInstallQueue.stream().map(PendingPluginInstallation::getPlugin).forEach(pendingPlugins::add);
+      return PluginInstallationContext.from(getInstalled(), pendingPlugins);
+    }));
 
     this.computeInstallationDependencies();
   }
@@ -197,6 +199,11 @@ public class DefaultPluginManager implements PluginManager {
       .filter(p -> isUpdatable(p.getDescriptor().getInformation().getName()))
       .filter(p -> !p.isMarkedForUninstall())
       .collect(Collectors.toList());
+  }
+
+  @Override
+  public PendingPlugins getPending() {
+    return new PendingPlugins(getAvailable(), getInstalled());
   }
 
   private <T extends Plugin> Predicate<T> filterByName(String name) {
@@ -361,7 +368,7 @@ public class DefaultPluginManager implements PluginManager {
   }
 
   private boolean isUpdatable(String name) {
-    return getAvailable(name).isPresent() && !getPending(name).isPresent();
+    return getAvailable(name).isPresent() && getPending(name).isEmpty();
   }
 
   @Override
