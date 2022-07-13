@@ -28,6 +28,7 @@ import { LoginInfo as LoginInfoType } from "@scm-manager/ui-types";
 
 import "@scm-manager/ui-tests";
 import LoginInfo from "./LoginInfo";
+import { binder, extensionPoints } from "@scm-manager/ui-extensions";
 
 jest.mock("@scm-manager/ui-api", () => ({
   useLoginInfo: jest.fn(() => ({
@@ -44,8 +45,17 @@ jest.mock("@scm-manager/ui-api", () => ({
   },
 }));
 
+const Extension = () => <button data-testid={"TestExtensionButton"}>Login with OAuth2</button>;
+
 describe("LoginInfo", () => {
   it("should render login page", () => {
+    const loginHandler = jest.fn();
+    const reactTestRenderer = TestRenderer.create(<LoginInfo loginHandler={loginHandler} />);
+    expect(reactTestRenderer.toJSON()).toMatchSnapshot();
+  });
+
+  it("should render extension", () => {
+    binder.bind<extensionPoints.LoginForm>("login.form", Extension);
     const loginHandler = jest.fn();
     const reactTestRenderer = TestRenderer.create(<LoginInfo loginHandler={loginHandler} />);
     expect(reactTestRenderer.toJSON()).toMatchSnapshot();
