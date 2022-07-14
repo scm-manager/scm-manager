@@ -74,7 +74,7 @@ public class I18nServlet extends HttpServlet {
       if (json.isPresent()) {
         write(response, json.get());
       } else {
-        LOG.debug("could not find translation for lanugage {}", languageCode);
+        LOG.debug("could not find translation for language {}", languageCode);
         response.setStatus(HttpServletResponse.SC_NOT_FOUND);
       }
     } catch (IOException ex) {
