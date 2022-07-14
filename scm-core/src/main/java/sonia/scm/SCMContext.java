@@ -36,17 +36,21 @@ import sonia.scm.util.ServiceUtil;
  *
  * @author Sebastian Sdorra
  */
-public final class SCMContext
-{
+public final class SCMContext {
 
-  /** Default java package for finding extensions */
+  /**
+   * Default java package for finding extensions
+   */
   public static final String DEFAULT_PACKAGE = "sonia.scm";
 
-  /** Name of the anonymous user */
+  /**
+   * Name of the anonymous user
+   */
   public static final String USER_ANONYMOUS = "_anonymous";
 
   /**
    * the anonymous user
+   *
    * @since 1.21
    */
   public static final User ANONYMOUS = new User(
@@ -58,39 +62,33 @@ public final class SCMContext
     true
   );
 
-  /** Singleton instance of {@link SCMContextProvider} */
-  private static volatile SCMContextProvider provider;
+  /**
+   * Singleton instance of {@link SCMContextProvider}
+   */
+  private static SCMContextProvider provider = null;
 
   //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
-   *
    */
-  private SCMContext() {}
+  private SCMContext() {
+  }
 
   //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns the singleton instance of {@link SCMContextProvider}
    *
-   *
    * @return singleton instance of {@link SCMContextProvider}
    */
-  public static SCMContextProvider getContext()
-  {
-    if (provider == null)
-    {
-      synchronized (SCMContext.class)
-      {
-        if (provider == null)
-        {
-          provider = ServiceUtil.getService(SCMContextProvider.class);
+  public static SCMContextProvider getContext() {
+    synchronized (SCMContext.class) {
+      if (provider == null) {
+        provider = ServiceUtil.getService(SCMContextProvider.class);
 
-          if (provider == null)
-          {
-            provider = new BasicContextProvider();
-          }
+        if (provider == null) {
+          provider = new BasicContextProvider();
         }
       }
     }

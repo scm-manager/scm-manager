@@ -973,36 +973,6 @@ public class SCMSvnDiffGenerator implements ISvnDiffGenerator {
     }
   }
 
-  private String getGitDiffLabel1(SvnDiffCallback.OperationKind operationKind, String path1, String path2, String copyFromPath, String revision) {
-    if (operationKind == SvnDiffCallback.OperationKind.Deleted) {
-      return getLabel("a/" + path1, revision);
-    } else if (operationKind == SvnDiffCallback.OperationKind.Copied) {
-      return getLabel("a/" + copyFromPath, revision);
-    } else if (operationKind == SvnDiffCallback.OperationKind.Added) {
-      return getLabel("/dev/null", revision);
-    } else if (operationKind == SvnDiffCallback.OperationKind.Modified) {
-      return getLabel("a/" + path1, revision);
-    } else if (operationKind == SvnDiffCallback.OperationKind.Moved) {
-      return getLabel("a/" + copyFromPath, revision);
-    }
-    throw new IllegalArgumentException("Unsupported operation: " + operationKind);
-  }
-
-  private String getGitDiffLabel2(SvnDiffCallback.OperationKind operationKind, String path1, String path2, String copyFromPath, String revision) {
-    if (operationKind == SvnDiffCallback.OperationKind.Deleted) {
-      return getLabel("/dev/null", revision);
-    } else if (operationKind == SvnDiffCallback.OperationKind.Copied) {
-      return getLabel("b/" + path2, revision);
-    } else if (operationKind == SvnDiffCallback.OperationKind.Added) {
-      return getLabel("b/" + path2, revision);
-    } else if (operationKind == SvnDiffCallback.OperationKind.Modified) {
-      return getLabel("b/" + path2, revision);
-    } else if (operationKind == SvnDiffCallback.OperationKind.Moved) {
-      return getLabel("b/" + path2, revision);
-    }
-    throw new IllegalArgumentException("Unsupported operation: " + operationKind);
-  }
-
   private void displayGitDiffHeader(OutputStream outputStream, SvnDiffCallback.OperationKind operationKind, String path1, String path2, String copyFromPath) throws SVNException {
     if (operationKind == SvnDiffCallback.OperationKind.Deleted) {
       displayGitDiffHeaderDeleted(outputStream, path1, path2, copyFromPath);
@@ -1124,11 +1094,6 @@ public class SCMSvnDiffGenerator implements ISvnDiffGenerator {
   private void displayGitPath(OutputStream outputStream, String path1, String pathPrefix) throws IOException {
     displayString(outputStream, pathPrefix);
     displayString(outputStream, path1);
-  }
-
-  private String getAdjustedPathWithLabel(String displayPath, String path, String revision, String commonAncestor) {
-    String adjustedPath = getAdjustedPath(displayPath, path, commonAncestor);
-    return getLabel(adjustedPath, revision);
   }
 
   private String getAdjustedPath(String displayPath, String path1, String commonAncestor) {

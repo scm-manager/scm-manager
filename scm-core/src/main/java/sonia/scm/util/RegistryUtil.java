@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.util;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -39,13 +39,13 @@ import java.io.IOException;
 import java.util.Scanner;
 
 /**
- *
  * @author Sebastian Sdorra
  */
-public final class RegistryUtil
-{
+public final class RegistryUtil {
 
-  /** the logger for RegistryUtil */
+  /**
+   * the logger for RegistryUtil
+   */
   private static final Logger logger =
     LoggerFactory.getLogger(RegistryUtil.class);
 
@@ -53,100 +53,81 @@ public final class RegistryUtil
 
   /**
    * Constructs ...
-   *
    */
-  private RegistryUtil() {}
+  private RegistryUtil() {
+  }
 
   //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
    *
-   *
    * @param key
-   *
    * @return
    */
-  public static String getRegistryValue(String key)
-  {
+  public static String getRegistryValue(String key) {
     return getRegistryValue(key, null, null);
   }
 
   /**
    * Method description
    *
-   *
    * @param key
    * @param defaultValue
-   *
    * @return
    */
-  public static String getRegistryValue(String key, String defaultValue)
-  {
+  public static String getRegistryValue(String key, String defaultValue) {
     return getRegistryValue(key, null, defaultValue);
   }
 
   /**
    * Method description
    *
-   *
    * @param key
    * @param subKey
    * @param defaultValue
-   *
    * @return
    */
   public static String getRegistryValue(String key, String subKey,
-    String defaultValue)
-  {
+                                        String defaultValue) {
     String value = defaultValue;
     SimpleCommand command = null;
 
-    if (subKey != null)
-    {
+    if (subKey != null) {
       command = new SimpleCommand("reg", "query", key, "/v", subKey);
-    }
-    else
-    {
+    } else {
       command = new SimpleCommand("reg", "query", key, "/ve");
     }
 
-    try
-    {
+    try {
       SimpleCommandResult result = command.execute();
 
-      if (result.isSuccessfull())
-      {
+      if (result.isSuccessfull()) {
         String output = result.getOutput();
-        Scanner scanner = new Scanner(output);
+        try (Scanner scanner = new Scanner(output)) {
 
-        while (scanner.hasNextLine())
-        {
-          String line = scanner.nextLine();
-          int index = line.indexOf("REG_SZ");
+          while (scanner.hasNextLine()) {
+            String line = scanner.nextLine();
+            int index = line.indexOf("REG_SZ");
 
-          if (index > 0)
-          {
-            value = line.substring(index + "REG_SZ".length()).trim();
+            if (index > 0) {
+              value = line.substring(index + "REG_SZ".length()).trim();
 
-            if (value.startsWith("\""))
-            {
-              value = value.substring(1);
-              value = value.substring(0, value.indexOf('"'));
+              if (value.startsWith("\"")) {
+                value = value.substring(1);
+                value = value.substring(0, value.indexOf('"'));
+              }
+
+              if (logger.isDebugEnabled()) {
+                logger.debug("registry value {} at {}", value, key);
+              }
+
+              break;
             }
-
-            if (logger.isDebugEnabled())
-            {
-              logger.debug("registry value {} at {}", value, key);
-            }
-
-            break;
           }
         }
       }
-    }
-    catch (IOException ex)
-    {
+    } catch (IOException ex) {
       logger.error(ex.getMessage(), ex);
     }
 

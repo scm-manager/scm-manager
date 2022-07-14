@@ -65,10 +65,10 @@ class InvalidFormatExceptionMapperTest {
   }
 
   static class ObjectWithEnum {
-    public Enum e;
+    public TestEnum e;
   }
 
-  enum Enum {
+  enum TestEnum {
     ONE, TWO
   }
 }
