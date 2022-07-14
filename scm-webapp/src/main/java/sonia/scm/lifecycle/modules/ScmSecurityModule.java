@@ -103,6 +103,7 @@ public class ScmSecurityModule extends ShiroWebModule
     bind(RememberMeManager.class).to(DisabledRememberMeManager.class);
 
     // bind authentication strategy
+    bind(ModularRealmAuthenticator.class);
     bind(Authenticator.class).to(ModularRealmAuthenticator.class);
     bind(AuthenticationStrategy.class).to(ScmAtLeastOneSuccessfulStrategy.class);
     bind(PermissionResolver.class).to(ScmPermissionResolver.class);
