@@ -88,7 +88,7 @@ const LoginInfo: FC<Props> = (props) => {
           <AvatarWrapper>
             <AvatarImage src="/images/blibSmallLightBackground.svg" alt={t("login.logo-alt")} />
           </AvatarWrapper>
-          <ExtensionPoint<extensionPoints.LoginForm> name="login.form">
+          <ExtensionPoint<extensionPoints.LoginForm> name="login.form" props={{}}>
             <LoginForm {...props} />
           </ExtensionPoint>
         </TopMarginBox>

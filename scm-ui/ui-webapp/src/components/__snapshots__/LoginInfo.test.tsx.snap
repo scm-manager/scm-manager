@@ -163,8 +163,8 @@ Array [
             className="control"
           >
             <input
-              aria-describedby="input_1"
-              aria-labelledby="input_0"
+              aria-describedby="input_5"
+              aria-labelledby="input_4"
               className="input"
               data-testid="username-input"
               onBlur={[Function]}
@@ -182,8 +182,8 @@ Array [
             className="control"
           >
             <input
-              aria-describedby="input_3"
-              aria-labelledby="input_2"
+              aria-describedby="input_7"
+              aria-labelledby="input_6"
               className="input"
               data-testid="password-input"
               onBlur={[Function]}
