@@ -52,6 +52,9 @@ const AvatarImage = styled(Image)`
 `;
 
 type Props = {
+  /**
+   * @deprecated Unused because the component now uses {@link useLoginInfo} internally.
+   */
   loginInfoLink?: string;
   loading?: boolean;
   error?: Error | null;
