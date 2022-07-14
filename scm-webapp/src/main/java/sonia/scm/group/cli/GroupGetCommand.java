@@ -29,7 +29,6 @@ import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
-import sonia.scm.repository.cli.GroupCommand;
 
 import javax.inject.Inject;
 

@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.cli;
+package sonia.scm.group.cli;
 
 import picocli.CommandLine;
 
