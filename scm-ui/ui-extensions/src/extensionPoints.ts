@@ -651,4 +651,4 @@ export type FileViewActionBarOverflowMenu = ExtensionPointDefinition<
   ContentActionExtensionProps
 >;
 
-export type LoginForm = RenderableExtensionPointDefinition<"login.form", void>;
+export type LoginForm = RenderableExtensionPointDefinition<"login.form">;
