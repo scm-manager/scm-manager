@@ -53,6 +53,7 @@ class PluginTemplateRenderer extends TemplateRenderer {
   private static final String PLUGINS_NOT_PENDING_ERROR_TEMPLATE = "{{i18n.scmPluginsNotPending}}";
   private static final String ALL_PENDING_PLUGINS_CANCELLED = "{{i18n.scmPendingPluginsCancelled}}";
 
+  private static final String PLUGIN = "plugin";
   private final CliContext context;
 
   @Inject
@@ -62,17 +63,17 @@ class PluginTemplateRenderer extends TemplateRenderer {
   }
 
   public void renderPluginAdded(String pluginName) {
-    renderToStdout(PLUGIN_ADDED_TEMPLATE, Map.of("plugin", pluginName));
+    renderToStdout(PLUGIN_ADDED_TEMPLATE, Map.of(PLUGIN, pluginName));
     context.getStdout().println();
   }
 
   public void renderPluginRemoved(String pluginName) {
-    renderToStdout(PLUGIN_REMOVED_TEMPLATE, Map.of("plugin", pluginName));
+    renderToStdout(PLUGIN_REMOVED_TEMPLATE, Map.of(PLUGIN, pluginName));
     context.getStdout().println();
   }
 
   public void renderPluginUpdated(String pluginName) {
-    renderToStdout(PLUGIN_UPDATED_TEMPLATE, Map.of("plugin", pluginName));
+    renderToStdout(PLUGIN_UPDATED_TEMPLATE, Map.of(PLUGIN, pluginName));
     context.getStdout().println();
   }
 
@@ -82,19 +83,19 @@ class PluginTemplateRenderer extends TemplateRenderer {
   }
 
   public void renderPluginCouldNotBeRemoved(String pluginName) {
-    renderToStderr(PLUGIN_NOT_REMOVED_ERROR_TEMPLATE, Map.of("plugin", pluginName));
+    renderToStderr(PLUGIN_NOT_REMOVED_ERROR_TEMPLATE, Map.of(PLUGIN, pluginName));
     context.getStderr().println();
     context.exit(ExitCode.USAGE);
   }
 
   public void renderPluginCouldNotBeAdded(String pluginName) {
-    renderToStderr(PLUGIN_NOT_ADDED_ERROR_TEMPLATE, Map.of("plugin", pluginName));
+    renderToStderr(PLUGIN_NOT_ADDED_ERROR_TEMPLATE, Map.of(PLUGIN, pluginName));
     context.getStderr().println();
     context.exit(ExitCode.SERVER_ERROR);
   }
 
   public void renderPluginNotUpdatable(String pluginName) {
-    renderToStderr(PLUGIN_NOT_UPDATABLE_ERROR_TEMPLATE, Map.of("plugin", pluginName));
+    renderToStderr(PLUGIN_NOT_UPDATABLE_ERROR_TEMPLATE, Map.of(PLUGIN, pluginName));
     context.getStderr().println();
     context.exit(ExitCode.USAGE);
   }

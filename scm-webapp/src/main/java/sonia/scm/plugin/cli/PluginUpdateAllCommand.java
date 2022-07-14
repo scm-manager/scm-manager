@@ -30,7 +30,6 @@ import sonia.scm.cli.ParentCommand;
 import sonia.scm.plugin.PluginManager;
 
 import javax.inject.Inject;
-import java.util.Objects;
 
 @ParentCommand(value = PluginCommand.class)
 @CommandLine.Command(name = "update-all")
