@@ -21,125 +21,81 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
+import React, { FC } from "react";
 import InfoBox from "./InfoBox";
-import { LoginInfo as LoginInfoResponse } from "@scm-manager/ui-types";
 import LoginForm from "./LoginForm";
-import { Loading } from "@scm-manager/ui-components";
+import { Image, Loading } from "@scm-manager/ui-components";
+import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
+import styled from "styled-components";
+import { useLoginInfo } from "@scm-manager/ui-api";
+import { useTranslation } from "react-i18next";
+
+const TopMarginBox = styled.div`
+  margin-top: 5rem;
+`;
+
+const AvatarWrapper = styled.figure`
+  display: flex;
+  justify-content: center;
+  margin: -70px auto 20px;
+  width: 128px;
+  height: 128px;
+  background: var(--scm-white-color);
+  border: 1px solid lightgray;
+  border-radius: 50%;
+`;
+
+const AvatarImage = styled(Image)`
+  width: 75%;
+  margin-left: 0.25rem;
+  padding: 5px;
+`;
 
 type Props = {
+  /**
+   * @deprecated Unused because the component now uses {@link useLoginInfo} internally.
+   */
   loginInfoLink?: string;
   loading?: boolean;
   error?: Error | null;
   loginHandler: (username: string, password: string) => void;
 };
 
-type State = {
-  info?: LoginInfoResponse;
-  loading?: boolean;
-};
+const LoginInfo: FC<Props> = (props) => {
+  const { isLoading: isLoadingLoginInfo, data: info } = useLoginInfo();
+  const [t] = useTranslation("commons");
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-type NoOpErrorBoundaryProps = {};
-
-type NoOpErrorBoundaryState = {
-  error?: Error;
-};
-
-class NoOpErrorBoundary extends React.Component<NoOpErrorBoundaryProps, NoOpErrorBoundaryState> {
-  constructor(props: NoOpErrorBoundaryProps) {
-    super(props);
-    this.state = {};
+  if (isLoadingLoginInfo) {
+    return <Loading />;
   }
 
-  static getDerivedStateFromError(error: Error) {
-    return { error };
-  }
-
-  componentDidCatch(error: Error) {
-    // eslint-disable-next-line no-console
-    if (console && console.error) {
-      // eslint-disable-next-line no-console
-      console.error("failed to render login info", error);
-    }
-  }
-
-  render() {
-    if (this.state.error) {
-      return null;
-    }
-
-    return this.props.children;
-  }
-}
-
-class LoginInfo extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      loading: !!props.loginInfoLink
-    };
-  }
-
-  fetchLoginInfo = (url: string) => {
-    return fetch(url)
-      .then(response => response.json())
-      .then(info => {
-        this.setState({
-          info,
-          loading: false
-        });
-      });
-  };
-
-  timeout = (ms: number, promise: Promise<void>) => {
-    return new Promise<void>((resolve, reject) => {
-      setTimeout(() => {
-        reject(new Error("timeout during fetch of login info"));
-      }, ms);
-      promise.then(resolve, reject);
-    });
-  };
-
-  componentDidMount() {
-    const { loginInfoLink } = this.props;
-    if (!loginInfoLink) {
-      return;
-    }
-    this.timeout(1000, this.fetchLoginInfo(loginInfoLink)).catch(() => {
-      this.setState({
-        loading: false
-      });
-    });
-  }
-
-  createInfoPanel = (info: LoginInfoResponse) => (
-    <NoOpErrorBoundary>
+  let infoPanel;
+  if (info) {
+    infoPanel = (
       <div className="column is-7 is-offset-1 p-0">
         <InfoBox item={info.feature} type="feature" />
         <InfoBox item={info.plugin} type="plugin" />
       </div>
-    </NoOpErrorBoundary>
-  );
-
-  render() {
-    const { info, loading } = this.state;
-    if (loading) {
-      return <Loading />;
-    }
-
-    let infoPanel;
-    if (info) {
-      infoPanel = this.createInfoPanel(info);
-    }
-
-    return (
-      <>
-        <LoginForm {...this.props} />
-        {infoPanel}
-      </>
     );
   }
-}
+
+  return (
+    <>
+      <div className="column is-4 box has-text-centered has-background-secondary-less">
+        <h3 className="title">{t("login.title")}</h3>
+        <p className="subtitle">{t("login.subtitle")}</p>
+        <TopMarginBox className="box">
+          <AvatarWrapper>
+            <AvatarImage src="/images/blibSmallLightBackground.svg" alt={t("login.logo-alt")} />
+          </AvatarWrapper>
+          <ExtensionPoint<extensionPoints.LoginForm> name="login.form" props={{}}>
+            <LoginForm {...props} />
+          </ExtensionPoint>
+        </TopMarginBox>
+      </div>
+      {infoPanel}
+    </>
+  );
+};
 
 export default LoginInfo;

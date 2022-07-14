@@ -25,7 +25,7 @@ import * as React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
-import { InfoItem } from "@scm-manager/ui-types";
+import { InfoItem, Link } from "@scm-manager/ui-types";
 import { devices, Icon } from "@scm-manager/ui-components";
 
 type Props = WithTranslation & {
@@ -70,7 +70,7 @@ class InfoBox extends React.Component<Props> {
     const { item, type, t } = this.props;
     const icon = type === "plugin" ? "puzzle-piece" : "star";
     return (
-      <a className="is-block mb-5" href={item._links.self.href}>
+      <a className="is-block mb-5" href={(item?._links?.self as Link)?.href}>
         <InfoBoxWrapper className="box media">
           <figure className="media-left">
             <FixedSizedIconWrapper

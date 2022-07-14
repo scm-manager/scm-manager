@@ -44,7 +44,7 @@ import {
   RepositoryTypeCollection,
   Tag,
   User,
-  ContentType
+  ContentType,
 } from "@scm-manager/ui-types";
 import { ExtensionPointDefinition } from "./binder";
 import { RenderableExtensionPointDefinition, SimpleRenderableDynamicExtensionPointDefinition } from "./ExtensionPoint";
@@ -650,3 +650,5 @@ export type FileViewActionBarOverflowMenu = ExtensionPointDefinition<
   ActionMenuProps | ModalMenuProps | LinkMenuProps,
   ContentActionExtensionProps
 >;
+
+export type LoginForm = RenderableExtensionPointDefinition<"login.form">;
