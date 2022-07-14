@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.xml;
 
 import sonia.scm.SCMContextProvider;
@@ -66,8 +66,8 @@ public class PathBasedRepositoryLocationResolver extends BasicRepositoryLocation
 
   private final Clock clock;
 
-  private Long creationTime;
-  private Long lastModified;
+  private long creationTime;
+  private long lastModified;
 
   @Inject
   public PathBasedRepositoryLocationResolver(SCMContextProvider contextProvider, InitialRepositoryLocationResolver initialRepositoryLocationResolver, FileSystem fileSystem) {
@@ -162,7 +162,7 @@ public class PathBasedRepositoryLocationResolver extends BasicRepositoryLocation
     }
   }
 
-  private void onLoadDates(Long creationTime, Long lastModified) {
+  private void onLoadDates(long creationTime, long lastModified) {
     this.creationTime = creationTime;
     this.lastModified = lastModified;
   }

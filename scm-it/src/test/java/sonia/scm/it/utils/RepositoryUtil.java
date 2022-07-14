@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.it.utils;
 
 import com.google.common.base.Charsets;
@@ -92,11 +92,11 @@ public class RepositoryUtil {
    * @throws IOException
    */
   public static Changeset commitMultipleFileModifications(RepositoryClient repositoryClient, String username, Map<String, String> addedFiles, Map<String, String> modifiedFiles, List<String> removedFiles) throws IOException {
-    for (String fileName : addedFiles.keySet()) {
-      writeAndAddFile(repositoryClient, fileName, addedFiles.get(fileName));
+    for (Map.Entry<String,String> entry : addedFiles.entrySet()) {
+      writeAndAddFile(repositoryClient, entry.getKey(), entry.getValue());
     }
-    for (String fileName : modifiedFiles.keySet()) {
-      writeAndAddFile(repositoryClient, fileName, modifiedFiles.get(fileName));
+    for (Map.Entry<String,String> entry : modifiedFiles.entrySet()) {
+      writeAndAddFile(repositoryClient, entry.getKey(), entry.getValue());
     }
     for (String fileName : removedFiles) {
       deleteFileAndApplyRemoveCommand(repositoryClient, fileName);

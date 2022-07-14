@@ -42,6 +42,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -169,10 +170,8 @@ public class DefaultAdvancedHttpClient extends AdvancedHttpClient {
 
   private void applyHeaders(BaseHttpRequest<?> request, HttpURLConnection connection) {
     Multimap<String, String> headers = request.getHeaders();
-    for (String key : headers.keySet()) {
-      for (String value : headers.get(key)) {
-        connection.addRequestProperty(key, value);
-      }
+    for (Map.Entry<String, String> entry : headers.entries()) {
+        connection.addRequestProperty(entry.getKey(), entry.getValue());
     }
   }
 

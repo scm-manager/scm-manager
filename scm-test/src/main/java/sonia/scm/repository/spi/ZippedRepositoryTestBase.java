@@ -92,7 +92,7 @@ public abstract class ZippedRepositoryTestBase extends AbstractTestBase
    *
    * @param date
    */
-  protected void checkDate(Long date)
+  protected void checkDate(long date)
   {
     assertNotNull(date);
     assertTrue("Date should not be older than current date",
