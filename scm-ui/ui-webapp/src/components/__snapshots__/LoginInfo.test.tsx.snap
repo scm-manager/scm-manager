@@ -27,9 +27,187 @@ Array [
           src="/images/blibSmallLightBackground.svg"
         />
       </figure>
-      <button
-        data-testid="TestExtensionButton"
+      <button>
+        Login with OAuth2
+      </button>
+    </div>
+  </div>,
+  <div
+    className="column is-7 is-offset-1 p-0"
+  >
+    <a
+      className="is-block mb-5"
+    >
+      <div
+        className="InfoBox__InfoBoxWrapper-sc-qh4uzj-2 dgRYgc box media"
       >
+        <figure
+          className="media-left"
+        >
+          <div
+            className="InfoBox__FixedSizedIconWrapper-sc-qh4uzj-0 bCVWB image box has-text-weight-bold has-text-secondary-least has-background-info is-flex is-flex-direction-column is-justify-content-center is-align-items-center"
+          >
+            <i
+              aria-label=""
+              className="fas fa-fw fa-star has-text-white mb-2 fa-2x"
+              onKeyPress={[Function]}
+            />
+            <div
+              className="is-size-4 has-text-white"
+            >
+              login.feature
+            </div>
+            <div
+              className="is-size-4 has-text-white"
+            >
+              login.tip
+            </div>
+          </div>
+        </figure>
+        <div
+          className="InfoBox__ContentWrapper-sc-qh4uzj-1 eiUgVo media-content content ml-5"
+        >
+          <h4
+            className="has-text-link"
+          >
+            Test
+          </h4>
+          <p>
+            Test
+          </p>
+        </div>
+      </div>
+    </a>
+    <a
+      className="is-block mb-5"
+    >
+      <div
+        className="InfoBox__InfoBoxWrapper-sc-qh4uzj-2 dgRYgc box media"
+      >
+        <figure
+          className="media-left"
+        >
+          <div
+            className="InfoBox__FixedSizedIconWrapper-sc-qh4uzj-0 bCVWB image box has-text-weight-bold has-text-secondary-least has-background-info is-flex is-flex-direction-column is-justify-content-center is-align-items-center"
+          >
+            <i
+              aria-label=""
+              className="fas fa-fw fa-puzzle-piece has-text-white mb-2 fa-2x"
+              onKeyPress={[Function]}
+            />
+            <div
+              className="is-size-4 has-text-white"
+            >
+              login.plugin
+            </div>
+            <div
+              className="is-size-4 has-text-white"
+            >
+              login.tip
+            </div>
+          </div>
+        </figure>
+        <div
+          className="InfoBox__ContentWrapper-sc-qh4uzj-1 eiUgVo media-content content ml-5"
+        >
+          <h4
+            className="has-text-link"
+          >
+            Test
+          </h4>
+          <p>
+            Test
+          </p>
+        </div>
+      </div>
+    </a>
+  </div>,
+]
+`;
+
+exports[`LoginInfo should render extension with login form 1`] = `
+Array [
+  <div
+    className="column is-4 box has-text-centered has-background-secondary-less"
+  >
+    <h3
+      className="title"
+    >
+      login.title
+    </h3>
+    <p
+      className="subtitle"
+    >
+      login.subtitle
+    </p>
+    <div
+      className="LoginInfo__TopMarginBox-sc-dmmy9i-0 hXYZcL box"
+    >
+      <figure
+        className="LoginInfo__AvatarWrapper-sc-dmmy9i-1 ikoLxp"
+      >
+        <img
+          alt="login.logo-alt"
+          className="LoginInfo__AvatarImage-sc-dmmy9i-2 gFcMrK"
+          src="/images/blibSmallLightBackground.svg"
+        />
+      </figure>
+      <form
+        onSubmit={[Function]}
+      >
+        <fieldset
+          className="field"
+        >
+          
+          <div
+            className="control"
+          >
+            <input
+              aria-describedby="input_1"
+              aria-labelledby="input_0"
+              className="input"
+              data-testid="username-input"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onKeyPress={[Function]}
+              placeholder="login.username-placeholder"
+            />
+          </div>
+        </fieldset>
+        <fieldset
+          className="field"
+        >
+          
+          <div
+            className="control"
+          >
+            <input
+              aria-describedby="input_3"
+              aria-labelledby="input_2"
+              className="input"
+              data-testid="password-input"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onKeyPress={[Function]}
+              placeholder="login.password-placeholder"
+              type="password"
+            />
+          </div>
+        </fieldset>
+        <button
+          className="button is-primary is-fullwidth"
+          data-testid="login-button"
+          onClick={[Function]}
+          type="submit"
+        >
+          <span>
+             
+            login.submit
+             
+          </span>
+        </button>
+      </form>
+      <button>
         Login with OAuth2
       </button>
     </div>

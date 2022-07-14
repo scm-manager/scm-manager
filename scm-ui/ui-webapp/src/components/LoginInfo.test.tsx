@@ -28,7 +28,7 @@ import { LoginInfo as LoginInfoType } from "@scm-manager/ui-types";
 
 import "@scm-manager/ui-tests";
 import LoginInfo from "./LoginInfo";
-import { binder, extensionPoints } from "@scm-manager/ui-extensions";
+import { Binder, BinderContext, extensionPoints } from "@scm-manager/ui-extensions";
 
 jest.mock("@scm-manager/ui-api", () => ({
   useLoginInfo: jest.fn(() => ({
@@ -45,19 +45,34 @@ jest.mock("@scm-manager/ui-api", () => ({
   },
 }));
 
-const Extension = () => <button data-testid={"TestExtensionButton"}>Login with OAuth2</button>;
-
 describe("LoginInfo", () => {
+  const withBinder = (ui, binder) => <BinderContext.Provider value={binder}>{ui}</BinderContext.Provider>;
+
   it("should render login page", () => {
     const loginHandler = jest.fn();
-    const reactTestRenderer = TestRenderer.create(<LoginInfo loginHandler={loginHandler} />);
+    const binder = new Binder("test");
+    const reactTestRenderer = TestRenderer.create(withBinder(<LoginInfo loginHandler={loginHandler} />, binder));
     expect(reactTestRenderer.toJSON()).toMatchSnapshot();
   });
 
   it("should render extension", () => {
-    binder.bind<extensionPoints.LoginForm>("login.form", Extension);
     const loginHandler = jest.fn();
-    const reactTestRenderer = TestRenderer.create(<LoginInfo loginHandler={loginHandler} />);
+    const binder = new Binder("test");
+    binder.bind<extensionPoints.LoginForm>("login.form", () => <button>Login with OAuth2</button>);
+    const reactTestRenderer = TestRenderer.create(withBinder(<LoginInfo loginHandler={loginHandler} />, binder));
+    expect(reactTestRenderer.toJSON()).toMatchSnapshot();
+  });
+
+  it("should render extension with login form", () => {
+    const loginHandler = jest.fn();
+    const binder = new Binder("test");
+    binder.bind<extensionPoints.LoginForm>("login.form", ({ children }) => (
+      <>
+        {children}
+        <button>Login with OAuth2</button>
+      </>
+    ));
+    const reactTestRenderer = TestRenderer.create(withBinder(<LoginInfo loginHandler={loginHandler} />, binder));
     expect(reactTestRenderer.toJSON()).toMatchSnapshot();
   });
 });
