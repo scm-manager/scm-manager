@@ -34,6 +34,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.cli.CommandValidator;
+import sonia.scm.cli.PermissionDescriptionResolver;
 import sonia.scm.cli.Table;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
@@ -47,6 +48,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Optional.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.lenient;
@@ -64,6 +66,8 @@ class RepositoryListPermissionsCommandTest {
   private RepositoryManager manager;
   @Mock
   private RepositoryRoleManager roleManager;
+  @Mock
+  private PermissionDescriptionResolver permissionDescriptionResolver;
 
   @InjectMocks
   private RepositoryListPermissionsCommand command;
@@ -126,6 +130,10 @@ class RepositoryListPermissionsCommandTest {
     void shouldListUserPermissionWithVerbs() {
       RepositoryPermission permission = new RepositoryPermission("trillian", List.of("read", "write"), false);
       repository.setPermissions(List.of(permission));
+      when(permissionDescriptionResolver.getDescription("read"))
+        .thenReturn(of("read repository"));
+      when(permissionDescriptionResolver.getDescription("write"))
+        .thenReturn(of("write repository"));
 
       command.run();
 
@@ -140,7 +148,7 @@ class RepositoryListPermissionsCommandTest {
         return true;
       });
       assertThat(tableCaptor.getAllValues())
-        .containsExactly("", "trillian", null, "read, write");
+        .containsExactly("", "trillian", null, "read repository, write repository");
     }
 
     @Test

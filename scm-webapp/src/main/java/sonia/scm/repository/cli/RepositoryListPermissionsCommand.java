@@ -28,6 +28,7 @@ import com.google.common.annotations.VisibleForTesting;
 import picocli.CommandLine;
 import sonia.scm.cli.CommandValidator;
 import sonia.scm.cli.ParentCommand;
+import sonia.scm.cli.PermissionDescriptionResolver;
 import sonia.scm.cli.Table;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
@@ -38,6 +39,7 @@ import sonia.scm.repository.RepositoryRoleManager;
 import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static java.util.Map.entry;
 
@@ -57,16 +59,18 @@ public class RepositoryListPermissionsCommand implements Runnable {
   private final CommandValidator validator;
   private final RepositoryManager manager;
   private final RepositoryRoleManager roleManager;
+  private final PermissionDescriptionResolver permissionDescriptionResolver;
 
   @CommandLine.Parameters(paramLabel = "namespace/name", index = "0", descriptionKey = "scm.repo.list-permissions.repository")
   private String repository;
 
   @Inject
-  public RepositoryListPermissionsCommand(RepositoryTemplateRenderer templateRenderer, CommandValidator validator, RepositoryManager manager, RepositoryRoleManager roleManager) {
+  public RepositoryListPermissionsCommand(RepositoryTemplateRenderer templateRenderer, CommandValidator validator, RepositoryManager manager, RepositoryRoleManager roleManager, PermissionDescriptionResolver permissionDescriptionResolver) {
     this.templateRenderer = templateRenderer;
     this.validator = validator;
     this.manager = manager;
     this.roleManager = roleManager;
+    this.permissionDescriptionResolver = permissionDescriptionResolver;
   }
 
   @VisibleForTesting
@@ -104,6 +108,15 @@ public class RepositoryListPermissionsCommand implements Runnable {
     } else {
       effectiveVerbs = roleManager.get(permission.getRole()).getVerbs();
     }
-    table.addRow(permission.isGroupPermission()? "X": "", permission.getName(), permission.getRole(), String.join(", ", effectiveVerbs));
+    Collection<String> verbDescriptions = getDescriptions(effectiveVerbs);
+    table.addRow(permission.isGroupPermission()? "X": "", permission.getName(), permission.getRole(), String.join(", ", verbDescriptions));
+  }
+
+  private Collection<String> getDescriptions(Collection<String> effectiveVerbs) {
+    return effectiveVerbs.stream().map(this::getDescription).collect(Collectors.toList());
+  }
+
+  private String getDescription(String verb) {
+    return permissionDescriptionResolver.getDescription(verb).orElse(verb);
   }
 }
