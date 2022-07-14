@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.cli;
 
-import com.google.common.collect.ImmutableMap;
 import sonia.scm.cli.CliContext;
 import sonia.scm.cli.ExitCode;
 import sonia.scm.cli.Table;
@@ -33,13 +32,22 @@ import sonia.scm.repository.Repository;
 import sonia.scm.template.TemplateEngineFactory;
 
 import javax.inject.Inject;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Map;
+
+import static java.util.Map.entry;
 
 class RepositoryTemplateRenderer extends TemplateRenderer {
 
   private static final String DETAILS_TABLE_TEMPLATE = String.join("\n",
     "{{#rows}}",
     "{{#cols}}{{value}}{{/cols}}",
+    "{{/rows}}"
+  );
+  private static final String TABLE_TEMPLATE = String.join("\n",
+    "{{#rows}}",
+    "{{#cols}}{{#row.first}}{{#upper}}{{value}}{{/upper}}{{/row.first}}{{^row.first}}{{value}}{{/row.first}}{{^last}} {{/last}}{{/cols}}",
     "{{/rows}}"
   );
   private static final String INVALID_INPUT_TEMPLATE = "{{i18n.repoInvalidInput}}";
@@ -66,7 +74,38 @@ class RepositoryTemplateRenderer extends TemplateRenderer {
     table.addLabelValueRow("repoLastModified", bean.getLastModified());
     table.addLabelValueRow("repoUrl", bean.getUrl());
     table.addLabelValueRow("repoDescription", bean.getDescription());
-    renderToStdout(DETAILS_TABLE_TEMPLATE, ImmutableMap.of("rows", table, "repo", bean));
+    renderToStdout(DETAILS_TABLE_TEMPLATE, Map.of("rows", table, "repo", bean));
+  }
+
+  public void render(Collection<RepositoryPermissionBean> permissions) {
+    Table table = createTable();
+    table.addHeader("scm.repo.permissions.type", "scm.repo.permissions.name", "scm.repo.permissions.role");
+    permissions.forEach(permission -> addPermissionToTable(table, permission));
+    renderToStdout(TABLE_TEMPLATE, Map.ofEntries(entry("rows", table), entry("permissions", permissions)));
+  }
+
+  public void renderVerbose(Collection<RepositoryPermissionBean> permissions) {
+    Table table = createTable();
+    table.addHeader("scm.repo.permissions.type", "scm.repo.permissions.name", "scm.repo.permissions.role", "scm.repo.permissions.verbs");
+    permissions.forEach(permission -> addVerbosePermissionToTable(table, permission));
+    renderToStdout(TABLE_TEMPLATE, Map.ofEntries(entry("rows", table), entry("permissions", permissions)));
+  }
+
+  private void addPermissionToTable(Table table, RepositoryPermissionBean permission) {
+    table.addRow(
+      getBundle().getString(permission.isGroupPermission()? "scm.repo.permissions.isGroup": "scm.repo.permissions.isUser"),
+      permission.getName(),
+      permission.getRole()
+    );
+  }
+
+  private void addVerbosePermissionToTable(Table table, RepositoryPermissionBean permission) {
+    table.addRow(
+      getBundle().getString(permission.isGroupPermission()? "scm.repo.permissions.isGroup": "scm.repo.permissions.isUser"),
+      permission.getName(),
+      permission.getRole(),
+      String.join(", ", permission.getVerbs())
+    );
   }
 
   public void renderInvalidInputError() {

@@ -35,7 +35,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.cli.CommandValidator;
 import sonia.scm.cli.PermissionDescriptionResolver;
-import sonia.scm.cli.Table;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
@@ -46,12 +45,11 @@ import sonia.scm.repository.RepositoryTestData;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 import static java.util.Optional.of;
+import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -85,24 +83,9 @@ class RepositoryListPermissionsCommandTest {
   class ForExistingRepository {
 
     @Captor
-    private ArgumentCaptor<Map<String, Object>> mapCaptor;
-    @Captor
-    private ArgumentCaptor<String> templateCaptor;
-    @Mock
-    private Table table;
-    @Captor
-    private ArgumentCaptor<String> tableCaptor;
+    private ArgumentCaptor<Collection<RepositoryPermissionBean>> permissionsCaptor;
 
     private final Repository repository = RepositoryTestData.createHeartOfGold();
-
-    @BeforeEach
-    void setUpTableMock() {
-      when(templateRenderer.createTable()).thenReturn(table);
-      doNothing().when(templateRenderer)
-        .renderToStdout(templateCaptor.capture(), mapCaptor.capture());
-      lenient().doNothing().when(table)
-        .addRow(tableCaptor.capture());
-    }
 
     @BeforeEach
     void mockRepository() {
@@ -111,66 +94,121 @@ class RepositoryListPermissionsCommandTest {
       command.setRepository("hitchhiker/HeartOfGold");
     }
 
-    @Test
-    void shouldRenderEmptyTableWithoutPermissions() {
-      command.run();
+    @Nested
+    class WithoutVerboseFlag {
 
-      Map<String, Object> map = mapCaptor.getValue();
-      assertThat(map).hasSize(2);
-      assertThat(map.get("rows")).isSameAs(table);
-      assertThat(map.get("permissions")).matches(o -> {
-        assertThat(o).isInstanceOf(Collection.class)
-          .extracting("empty")
-          .isEqualTo(true);
-        return true;
-      });
+      @BeforeEach
+      void setUpRenderer() {
+        doNothing().when(templateRenderer).render(permissionsCaptor.capture());
+      }
+
+      @Test
+      void shouldRenderEmptyTableWithoutPermissions() {
+        command.run();
+
+        Collection<RepositoryPermissionBean> beans = permissionsCaptor.getValue();
+        assertThat(beans).isEmpty();
+      }
+
+      @Test
+      void shouldListCustomUserPermission() {
+        RepositoryPermission permission = new RepositoryPermission("trillian", List.of("read", "write"), false);
+        repository.setPermissions(List.of(permission));
+        when(permissionDescriptionResolver.getDescription("read"))
+          .thenReturn(of("read repository"));
+        when(permissionDescriptionResolver.getDescription("write"))
+          .thenReturn(of("write repository"));
+
+        command.run();
+
+        Collection<RepositoryPermissionBean> beans = permissionsCaptor.getValue();
+        assertThat(beans).extracting("groupPermission")
+          .containsExactly(false);
+        assertThat(beans).extracting("name")
+          .containsExactly("trillian");
+        assertThat(beans).extracting("role")
+          .containsExactly(new Object[]{null});
+      }
     }
 
-    @Test
-    void shouldListUserPermissionWithVerbs() {
-      RepositoryPermission permission = new RepositoryPermission("trillian", List.of("read", "write"), false);
-      repository.setPermissions(List.of(permission));
-      when(permissionDescriptionResolver.getDescription("read"))
-        .thenReturn(of("read repository"));
-      when(permissionDescriptionResolver.getDescription("write"))
-        .thenReturn(of("write repository"));
+    @Nested
+    class WithVerboseFlag {
 
-      command.run();
+      @BeforeEach
+      void setUpRenderer() {
+        doNothing().when(templateRenderer).renderVerbose(permissionsCaptor.capture());
+      }
 
-      Map<String, Object> map = mapCaptor.getValue();
-      assertThat(map).hasSize(2);
-      assertThat(map.get("rows")).isSameAs(table);
-      assertThat(map.get("permissions")).matches(o -> {
-        assertThat((Collection) o)
-          .hasSize(1)
-          .first()
-          .isEqualTo(permission);
-        return true;
-      });
-      assertThat(tableCaptor.getAllValues())
-        .containsExactly("", "trillian", null, "read repository, write repository");
-    }
+      @BeforeEach
+      void setVerbose() {
+        command.setVerbose(true);
+      }
 
-    @Test
-    void shouldListUserPermissionWithRole() {
-      RepositoryPermission permission = new RepositoryPermission("trillian", "READ", false);
-      repository.setPermissions(List.of(permission));
-      when(roleManager.get("READ")).thenReturn(new RepositoryRole("READ", List.of("read", "pull"), ""));
+      @Test
+      void shouldListUserPermissionWithVerbs() {
+        RepositoryPermission permission = new RepositoryPermission("trillian", List.of("read", "write"), false);
+        repository.setPermissions(List.of(permission));
+        when(permissionDescriptionResolver.getDescription("read"))
+          .thenReturn(of("read repository"));
+        when(permissionDescriptionResolver.getDescription("write"))
+          .thenReturn(of("write repository"));
 
-      command.run();
+        command.run();
 
-      Map<String, Object> map = mapCaptor.getValue();
-      assertThat(map).hasSize(2);
-      assertThat(map.get("rows")).isSameAs(table);
-      assertThat(map.get("permissions")).matches(o -> {
-        assertThat((Collection) o)
-          .hasSize(1)
-          .first()
-          .isEqualTo(permission);
-        return true;
-      });
-      assertThat(tableCaptor.getAllValues())
-        .containsExactly("", "trillian", "READ", "read, pull");
+        Collection<RepositoryPermissionBean> beans = permissionsCaptor.getValue();
+        assertThat(beans).extracting("groupPermission")
+          .containsExactly(false);
+        assertThat(beans).extracting("name")
+          .containsExactly("trillian");
+        assertThat(beans).extracting("role")
+          .containsNull();
+        assertThat(beans).extracting("verbs")
+          .containsExactly(List.of("read repository", "write repository"));
+      }
+
+      @Test
+      void shouldListUserPermissionWithRole() {
+        RepositoryPermission permission = new RepositoryPermission("trillian", "READ", false);
+        repository.setPermissions(List.of(permission));
+        when(roleManager.get("READ"))
+          .thenReturn(new RepositoryRole("READ", List.of("read", "pull"), ""));
+        when(permissionDescriptionResolver.getDescription("read"))
+          .thenReturn(of("read repository"));
+        when(permissionDescriptionResolver.getDescription("pull"))
+          .thenReturn(of("clone/checkout repository"));
+
+        command.run();
+
+        Collection<RepositoryPermissionBean> beans = permissionsCaptor.getValue();
+        assertThat(beans).extracting("groupPermission")
+          .containsExactly(false);
+        assertThat(beans).extracting("name")
+          .containsExactly("trillian");
+        assertThat(beans).extracting("role")
+          .containsExactly("READ");
+        assertThat(beans).extracting("verbs")
+          .containsExactly(List.of("read repository", "clone/checkout repository"));
+      }
+
+      @Test
+      void shouldListUserPermissionWithVerbsAsKeys() {
+        RepositoryPermission permission = new RepositoryPermission("trillian", List.of("read", "write"), false);
+        repository.setPermissions(List.of(permission));
+
+        command.setKeys(true);
+        command.run();
+
+        Collection<RepositoryPermissionBean> beans = permissionsCaptor.getValue();
+        assertThat(beans).extracting("groupPermission")
+          .containsExactly(false);
+        assertThat(beans).extracting("name")
+          .containsExactly("trillian");
+        assertThat(beans).extracting("role")
+          .containsExactly(new Object[] {null});
+        assertThat(beans).extracting("verbs")
+          .map(c -> ((Collection) c).stream().collect(toList())) // to satisfy equal in the comparison, we have to use this form
+          .containsExactly(List.of("read", "write"));
+      }
     }
   }
 }

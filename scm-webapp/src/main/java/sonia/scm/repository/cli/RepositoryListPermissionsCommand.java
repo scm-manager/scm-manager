@@ -29,7 +29,6 @@ import picocli.CommandLine;
 import sonia.scm.cli.CommandValidator;
 import sonia.scm.cli.ParentCommand;
 import sonia.scm.cli.PermissionDescriptionResolver;
-import sonia.scm.cli.Table;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
@@ -38,20 +37,11 @@ import sonia.scm.repository.RepositoryRoleManager;
 
 import javax.inject.Inject;
 import java.util.Collection;
-import java.util.Map;
 import java.util.stream.Collectors;
-
-import static java.util.Map.entry;
 
 @CommandLine.Command(name = "list-permissions")
 @ParentCommand(value = RepositoryCommand.class)
 public class RepositoryListPermissionsCommand implements Runnable {
-
-  private static final String TABLE_TEMPLATE = String.join("\n",
-    "{{#rows}}",
-    "{{#cols}}{{#row.first}}{{#upper}}{{value}}{{/upper}}{{/row.first}}{{^row.first}}{{value}}{{/row.first}}{{^last}} {{/last}}{{/cols}}",
-    "{{/rows}}"
-  );
 
   @CommandLine.Mixin
   private final RepositoryTemplateRenderer templateRenderer;
@@ -63,6 +53,10 @@ public class RepositoryListPermissionsCommand implements Runnable {
 
   @CommandLine.Parameters(paramLabel = "namespace/name", index = "0", descriptionKey = "scm.repo.list-permissions.repository")
   private String repository;
+  @CommandLine.Option(names = {"--verbose", "-v"}, descriptionKey = "scm.repo.list-permissions.verbose")
+  private boolean verbose;
+  @CommandLine.Option(names = {"--keys", "-k"}, descriptionKey = "scm.repo.list-permissions.keys")
+  private boolean keys;
 
   @Inject
   public RepositoryListPermissionsCommand(RepositoryTemplateRenderer templateRenderer, CommandValidator validator, RepositoryManager manager, RepositoryRoleManager roleManager, PermissionDescriptionResolver permissionDescriptionResolver) {
@@ -78,6 +72,15 @@ public class RepositoryListPermissionsCommand implements Runnable {
     this.repository = repository;
   }
 
+  @VisibleForTesting
+  void setVerbose(boolean verbose) {
+    this.verbose = verbose;
+  }
+
+  public void setKeys(boolean keys) {
+    this.keys = keys;
+  }
+
   @Override
   public void run() {
     validator.validate();
@@ -86,13 +89,13 @@ public class RepositoryListPermissionsCommand implements Runnable {
       Repository repo = manager.get(new NamespaceAndName(splitRepo[0], splitRepo[1]));
 
       if (repo != null) {
-        Collection<RepositoryPermission> permissions = repo.getPermissions();
-        Table table = templateRenderer.createTable();
-        table.addHeader("isGroup", "name", "role", "verbs");
-        for (RepositoryPermission permission : permissions) {
-          addPermissionToTable(table, permission);
+        Collection<RepositoryPermissionBean> permissions =
+          repo.getPermissions().stream().map(this::createPermissionBean).collect(Collectors.toList());
+        if (verbose) {
+          templateRenderer.renderVerbose(permissions);
+        } else {
+          templateRenderer.render(permissions);
         }
-        templateRenderer.renderToStdout(TABLE_TEMPLATE, Map.ofEntries(entry("rows", table), entry("permissions", permissions)));
       } else {
         templateRenderer.renderNotFoundError();
       }
@@ -101,15 +104,19 @@ public class RepositoryListPermissionsCommand implements Runnable {
     }
   }
 
-  private void addPermissionToTable(Table table, RepositoryPermission permission) {
+  private RepositoryPermissionBean createPermissionBean(RepositoryPermission permission) {
     Collection<String> effectiveVerbs;
     if (permission.getRole() == null) {
       effectiveVerbs = permission.getVerbs();
     } else {
       effectiveVerbs = roleManager.get(permission.getRole()).getVerbs();
     }
-    Collection<String> verbDescriptions = getDescriptions(effectiveVerbs);
-    table.addRow(permission.isGroupPermission()? "X": "", permission.getName(), permission.getRole(), String.join(", ", verbDescriptions));
+    return new RepositoryPermissionBean(
+      permission.isGroupPermission(),
+      permission.getName(),
+      permission.getRole(),
+      keys? effectiveVerbs: getDescriptions(effectiveVerbs)
+    );
   }
 
   private Collection<String> getDescriptions(Collection<String> effectiveVerbs) {
