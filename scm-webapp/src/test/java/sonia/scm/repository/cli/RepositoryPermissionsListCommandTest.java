@@ -49,6 +49,7 @@ import java.util.List;
 import static java.util.Optional.of;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.groups.Tuple.tuple;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -156,14 +157,8 @@ class RepositoryPermissionsListCommandTest {
         command.run();
 
         Collection<RepositoryPermissionBean> beans = permissionsCaptor.getValue();
-        assertThat(beans).extracting("groupPermission")
-          .containsExactly(false);
-        assertThat(beans).extracting("name")
-          .containsExactly("trillian");
-        assertThat(beans).extracting("role")
-          .containsNull();
-        assertThat(beans).extracting("verbs")
-          .containsExactly(List.of("read repository", "write repository"));
+        assertThat(beans).extracting("groupPermission", "name", "role", "verbs")
+          .containsExactly(tuple(false, "trillian", null, List.of("read repository", "write repository")));
       }
 
       @Test
@@ -180,14 +175,8 @@ class RepositoryPermissionsListCommandTest {
         command.run();
 
         Collection<RepositoryPermissionBean> beans = permissionsCaptor.getValue();
-        assertThat(beans).extracting("groupPermission")
-          .containsExactly(false);
-        assertThat(beans).extracting("name")
-          .containsExactly("trillian");
-        assertThat(beans).extracting("role")
-          .containsExactly("READ");
-        assertThat(beans).extracting("verbs")
-          .containsExactly(List.of("read repository", "clone/checkout repository"));
+        assertThat(beans).extracting("groupPermission", "name", "verbs")
+          .containsExactly(tuple(false, "trillian", List.of("read repository", "clone/checkout repository")));
       }
 
       @Test
@@ -199,12 +188,8 @@ class RepositoryPermissionsListCommandTest {
         command.run();
 
         Collection<RepositoryPermissionBean> beans = permissionsCaptor.getValue();
-        assertThat(beans).extracting("groupPermission")
-          .containsExactly(false);
-        assertThat(beans).extracting("name")
-          .containsExactly("trillian");
-        assertThat(beans).extracting("role")
-          .containsExactly(new Object[] {null});
+        assertThat(beans).extracting("groupPermission", "name", "role")
+          .containsExactly(tuple(false, "trillian", null));
         assertThat(beans).extracting("verbs")
           .map(c -> ((Collection) c).stream().collect(toList())) // to satisfy equal in the comparison, we have to use this form
           .containsExactly(List.of("read", "write"));
