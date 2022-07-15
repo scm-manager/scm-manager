@@ -80,7 +80,7 @@ public class ScmFileTransferServlet extends HttpServlet {
    * Gson is used because the implementation was based on the jgit implementation. However the {@link LfsProtocolServlet} (which we do use in
    * {@link ScmLfsProtocolServlet}) also uses Gson, which currently ties us to Gson anyway.
    */
-  private static Gson gson = createGson();
+  private static final Gson gson = createGson();
 
   private final BlobStore blobStore;
 

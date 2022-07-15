@@ -63,7 +63,7 @@ class PathDatabase {
     this.storePath = storePath;
   }
 
-  void write(Long creationTime, Long lastModified, Map<String, Path> pathDatabase) {
+  void write(long creationTime, long lastModified, Map<String, Path> pathDatabase) {
     ensureParentDirectoryExists();
     LOG.trace("write repository path database to {}", storePath);
 
@@ -107,7 +107,7 @@ class PathDatabase {
     }
   }
 
-  private void writeRepositoriesStart(XMLStreamWriter writer, Long creationTime, Long lastModified) throws XMLStreamException {
+  private void writeRepositoriesStart(XMLStreamWriter writer, long creationTime, long lastModified) throws XMLStreamException {
     writer.writeStartElement(ELEMENT_REPOSITORIES);
     writer.writeAttribute(ATTRIBUTE_CREATION_TIME, String.valueOf(creationTime));
     writer.writeAttribute(ATTRIBUTE_LAST_MODIFIED, String.valueOf(lastModified));

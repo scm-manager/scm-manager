@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.event;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -43,17 +43,17 @@ import java.util.ServiceLoader;
  * themselves. The ScmEventBus searches its implementation with the
  * {@link ServiceLoader}.
  *
- * @see EventBus
  * @author Sebastian Sdorra
- * @since 1.23
- *
  * @apiviz.landmark
+ * @see EventBus
+ * @since 1.23
  */
-public abstract class ScmEventBus
-{
+public abstract class ScmEventBus {
 
-  /** Field description */
-  private volatile static ScmEventBus instance;
+  /**
+   * Field description
+   */
+  private static ScmEventBus instance;
 
   /**
    * the logger for ScmEventBus
@@ -66,29 +66,19 @@ public abstract class ScmEventBus
   /**
    * Returns the singleton instance of the ScmEventBus
    *
-   *
    * @return singleton instance
    */
-  public static ScmEventBus getInstance()
-  {
-    if (instance == null)
-    {
-      synchronized (ScmEventBus.class)
-      {
-        if (instance == null)
-        {
-          instance = ServiceUtil.getService(ScmEventBus.class);
+  public static ScmEventBus getInstance() {
+    synchronized (ScmEventBus.class) {
+      if (instance == null) {
+        instance = ServiceUtil.getService(ScmEventBus.class);
 
-          if (instance == null)
-          {
-            throw new IllegalStateException(
-              "could not find a event bus implementation");
-          }
-          else
-          {
-            logger.info("use {} as event bus implementation",
-              instance.getClass().getName());
-          }
+        if (instance == null) {
+          throw new IllegalStateException(
+            "could not find a event bus implementation");
+        } else {
+          logger.info("use {} as event bus implementation",
+            instance.getClass().getName());
         }
       }
     }

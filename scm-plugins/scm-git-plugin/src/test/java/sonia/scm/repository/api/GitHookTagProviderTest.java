@@ -99,7 +99,7 @@ public class GitHookTagProviderTest {
   public void testGetCreatedTags() {
     try (MockedStatic<GitUtil> dummy = Mockito.mockStatic(GitUtil.class)) {
       String revision = REVISION_1;
-      Long timestamp = 1339416344000L;
+      long timestamp = 1339416344000L;
       String tagName = "1.0.0";
       String ref = "refs/tags/" + tagName;
 
@@ -121,7 +121,7 @@ public class GitHookTagProviderTest {
   public void testGetDeletedTags() {
     try (MockedStatic<GitUtil> dummy = Mockito.mockStatic(GitUtil.class)) {
       String revision = REVISION_1;
-      Long timestamp = 1339416344000L;
+      long timestamp = 1339416344000L;
       String tagName = "1.0.0";
       String ref = "refs/tags/" + tagName;
 
@@ -157,7 +157,7 @@ public class GitHookTagProviderTest {
       String oldRevision = REVISION_2;
       String newRevision = REVISION_1;
 
-      Long timestamp = 1339416344000L;
+      long timestamp = 1339416344000L;
       String tagName = "1.0.0";
       String ref = "refs/tags/" + tagName;
 
@@ -183,7 +183,7 @@ public class GitHookTagProviderTest {
       String oldRevision = REVISION_2;
       String newRevision = REVISION_1;
 
-      Long timestamp = 1339416344000L;
+      long timestamp = 1339416344000L;
       String tagName = "1.0.0";
       String ref = "refs/tags/" + tagName;
 
@@ -205,8 +205,8 @@ public class GitHookTagProviderTest {
     try (MockedStatic<GitUtil> dummy = Mockito.mockStatic(GitUtil.class)) {
       String revisionOfTag = REVISION_1;
       String revisionOfCommit = REVISION_2;
-      Long timestampOfTag = 6666666000L;
-      Long timestampOfCommit = 1339416344000L;
+      long timestampOfTag = 6666666000L;
+      long timestampOfCommit = 1339416344000L;
       String tagName = "1.0.0";
       String ref = "refs/tags/" + tagName;
 

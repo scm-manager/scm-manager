@@ -162,7 +162,7 @@ public class DefaultRepositoryManagerPerfTest {
 private long calculateAverage(List<Long> times) {
   Long sum = 0L;
   if(!times.isEmpty()) {
-    for (Long time : times) {
+    for (long time : times) {
         sum += time;
     }
     return Math.round(sum.doubleValue() / times.size());
