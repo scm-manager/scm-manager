@@ -28,7 +28,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import picocli.CommandLine;
 
-public class CommandFactory implements CommandLine.IFactory {
+class CommandFactory implements CommandLine.IFactory {
 
   private final Injector injector;
 

@@ -26,7 +26,7 @@ package sonia.scm.cli;
 
 import picocli.CommandLine;
 
-public class HelpMixin {
+class HelpMixin {
 
   @CommandLine.Option(names = {"--help", "-h"}, usageHelp = true, descriptionKey = "scm.help.usage.description.0")
   private boolean usageHelp;

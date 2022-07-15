@@ -36,7 +36,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class RegisteredCommandCollector {
+class RegisteredCommandCollector {
 
   private static final Logger LOG = LoggerFactory.getLogger(RegisteredCommandCollector.class);
 

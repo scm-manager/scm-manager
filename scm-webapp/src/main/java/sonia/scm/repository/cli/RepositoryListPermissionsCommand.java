@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
 
 @CommandLine.Command(name = "list-permissions")
 @ParentCommand(value = RepositoryCommand.class)
-public class RepositoryListPermissionsCommand implements Runnable {
+class RepositoryListPermissionsCommand implements Runnable {
 
   @CommandLine.Mixin
   private final RepositoryTemplateRenderer templateRenderer;

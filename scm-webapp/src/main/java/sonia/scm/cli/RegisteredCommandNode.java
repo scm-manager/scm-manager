@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-public class RegisteredCommandNode {
+class RegisteredCommandNode {
   private final String name;
   private final Class<?> command;
   private final List<RegisteredCommandNode> children = new ArrayList<>();

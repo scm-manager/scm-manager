@@ -32,7 +32,7 @@ import sonia.scm.SCMContextProvider;
 import javax.inject.Inject;
 
 @CommandLine.Command(name = "version")
-public class VersionCommand implements Runnable{
+class VersionCommand implements Runnable{
 
   private static final String TEMPLATE = String.join("\n","Client Version: {{client.version}}", "Server Version: {{server.version}}");
 
