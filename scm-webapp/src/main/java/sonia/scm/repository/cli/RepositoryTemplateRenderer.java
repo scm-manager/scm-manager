@@ -33,9 +33,9 @@ import sonia.scm.template.TemplateEngineFactory;
 
 import javax.inject.Inject;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Map;
 
+import static java.util.Collections.emptyMap;
 import static java.util.Map.entry;
 
 class RepositoryTemplateRenderer extends TemplateRenderer {
@@ -109,13 +109,13 @@ class RepositoryTemplateRenderer extends TemplateRenderer {
   }
 
   public void renderInvalidInputError() {
-    renderToStderr(INVALID_INPUT_TEMPLATE, Collections.emptyMap());
+    renderToStderr(INVALID_INPUT_TEMPLATE, emptyMap());
     context.getStderr().println();
     context.exit(ExitCode.USAGE);
   }
 
   public void renderNotFoundError() {
-    renderToStderr(NOT_FOUND_TEMPLATE, Collections.emptyMap());
+    renderToStderr(NOT_FOUND_TEMPLATE, emptyMap());
     context.getStderr().println();
     context.exit(ExitCode.NOT_FOUND);
   }
@@ -134,5 +134,16 @@ class RepositoryTemplateRenderer extends TemplateRenderer {
 
   private void addVerbToTable(Table table, VerbBean verb) {
     table.addRow(verb.getVerb(), verb.getDescription());
+  }
+
+  public void renderRoles(Collection<RoleBean> roles) {
+    Table table = createTable();
+    table.addHeader("scm.repo.permissions.role", "scm.repo.permissions.verbs");
+    roles.forEach(role -> addRoleToTable(table, role));
+    renderToStdout(TABLE_TEMPLATE, Map.ofEntries(entry("rows", table), entry("roles", roles)));
+  }
+
+  private void addRoleToTable(Table table, RoleBean role) {
+    table.addRow(role.getName(), String.join(", ", role.getVerbs()));
   }
 }

@@ -32,14 +32,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.cli.PermissionDescriptionResolver;
+import sonia.scm.repository.RepositoryRole;
+import sonia.scm.repository.RepositoryRoleManager;
 import sonia.scm.security.RepositoryPermissionProvider;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
+import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
@@ -53,16 +55,20 @@ class RepositoryPermissionsAvailableCommandTest {
   private RepositoryPermissionProvider repositoryPermissionProvider;
   @Mock
   private PermissionDescriptionResolver permissionDescriptionResolver;
+  @Mock
+  private RepositoryRoleManager repositoryRoleManager;
 
   @InjectMocks
   private RepositoryPermissionsAvailableCommand command;
 
   @Captor
-  private ArgumentCaptor<Collection<VerbBean>> verbCaptor;
+  private ArgumentCaptor<Collection<VerbBean>> verbsCaptor;
+  @Captor
+  private ArgumentCaptor<Collection<RoleBean>> rolesCaptor;
 
   @Test
   void shouldListVerbs() {
-    doNothing().when(templateRenderer).renderVerbs(verbCaptor.capture());
+    doNothing().when(templateRenderer).renderVerbs(verbsCaptor.capture());
     when(repositoryPermissionProvider.availableVerbs())
       .thenReturn(List.of("read", "write"));
     when(permissionDescriptionResolver.getDescription("read"))
@@ -72,7 +78,7 @@ class RepositoryPermissionsAvailableCommandTest {
 
     command.run();
 
-    Collection<VerbBean> capturedVerbs = verbCaptor.getValue();
+    Collection<VerbBean> capturedVerbs = verbsCaptor.getValue();
 
     assertThat(capturedVerbs).
       extracting("verb")
@@ -84,7 +90,7 @@ class RepositoryPermissionsAvailableCommandTest {
 
   @Test
   void shouldHandleMissingDescription() {
-    doNothing().when(templateRenderer).renderVerbs(verbCaptor.capture());
+    doNothing().when(templateRenderer).renderVerbs(verbsCaptor.capture());
     when(repositoryPermissionProvider.availableVerbs())
       .thenReturn(List.of("unknown"));
     when(permissionDescriptionResolver.getDescription("unknown"))
@@ -92,7 +98,7 @@ class RepositoryPermissionsAvailableCommandTest {
 
     command.run();
 
-    Collection<VerbBean> capturedVerbs = verbCaptor.getValue();
+    Collection<VerbBean> capturedVerbs = verbsCaptor.getValue();
 
     assertThat(capturedVerbs).
       extracting("verb")
@@ -100,5 +106,24 @@ class RepositoryPermissionsAvailableCommandTest {
     assertThat(capturedVerbs).
       extracting("description")
       .containsExactly("unknown");
+  }
+
+  @Test
+  void shouldRenderRoles() {
+    doNothing().when(templateRenderer).renderRoles(rolesCaptor.capture());
+    when(repositoryRoleManager.getAll())
+      .thenReturn(List.of(new RepositoryRole("READ", List.of("read", "pull"), null)));
+
+    command.run();
+
+    Collection<RoleBean> capturedRoles = rolesCaptor.getValue();
+
+    assertThat(capturedRoles)
+      .extracting("name")
+      .containsExactly("READ");
+    assertThat(capturedRoles)
+      .extracting("verbs")
+      .map(c -> ((Collection) c).stream().collect(toList())) // to satisfy equal in the comparison, we have to use this form
+      .containsExactly(List.of("read", "pull"));
   }
 }

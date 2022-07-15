@@ -27,6 +27,8 @@ package sonia.scm.repository.cli;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
 import sonia.scm.cli.PermissionDescriptionResolver;
+import sonia.scm.repository.RepositoryRole;
+import sonia.scm.repository.RepositoryRoleManager;
 import sonia.scm.security.RepositoryPermissionProvider;
 
 import javax.inject.Inject;
@@ -41,20 +43,27 @@ class RepositoryPermissionsAvailableCommand implements Runnable {
   private final RepositoryTemplateRenderer templateRenderer;
   private final RepositoryPermissionProvider repositoryPermissionProvider;
   private final PermissionDescriptionResolver permissionDescriptionResolver;
+  private final RepositoryRoleManager repositoryRoleManager;
 
   @Inject
-  public RepositoryPermissionsAvailableCommand(RepositoryTemplateRenderer templateRenderer, RepositoryPermissionProvider repositoryPermissionProvider, PermissionDescriptionResolver permissionDescriptionResolver) {
+  public RepositoryPermissionsAvailableCommand(RepositoryTemplateRenderer templateRenderer, RepositoryPermissionProvider repositoryPermissionProvider, PermissionDescriptionResolver permissionDescriptionResolver, RepositoryRoleManager repositoryRoleManager) {
     this.templateRenderer = templateRenderer;
     this.repositoryPermissionProvider = repositoryPermissionProvider;
     this.permissionDescriptionResolver = permissionDescriptionResolver;
+    this.repositoryRoleManager = repositoryRoleManager;
   }
 
   @Override
   public void run() {
     templateRenderer.renderVerbs(repositoryPermissionProvider.availableVerbs().stream().map(this::createBean).collect(toList()));
+    templateRenderer.renderRoles(repositoryRoleManager.getAll().stream().map(this::createBean).collect(toList()));
   }
 
   private VerbBean createBean(String verb) {
     return new VerbBean(verb, permissionDescriptionResolver.getDescription(verb).orElse(verb));
+  }
+
+  private RoleBean createBean(RepositoryRole role) {
+    return new RoleBean(role.getName(), role.getVerbs());
   }
 }
