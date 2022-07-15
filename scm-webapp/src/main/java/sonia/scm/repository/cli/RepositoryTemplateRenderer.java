@@ -124,4 +124,15 @@ class RepositoryTemplateRenderer extends TemplateRenderer {
     renderDefaultError(exception);
     context.exit(ExitCode.SERVER_ERROR);
   }
+
+  public void renderVerbs(Collection<VerbBean> verbs) {
+    Table table = createTable();
+    table.addHeader("scm.repo.permissions.verb", "scm.repo.permissions.description");
+    verbs.forEach(verb -> addVerbToTable(table, verb));
+    renderToStdout(TABLE_TEMPLATE, Map.ofEntries(entry("rows", table), entry("verbs", verbs)));
+  }
+
+  private void addVerbToTable(Table table, VerbBean verb) {
+    table.addRow(verb.getVerb(), verb.getDescription());
+  }
 }
