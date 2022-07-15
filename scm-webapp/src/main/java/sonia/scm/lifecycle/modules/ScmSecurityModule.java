@@ -148,9 +148,8 @@ public class ScmSecurityModule extends ShiroWebModule
    */
   private PasswordService createPasswordService()
   {
-    DefaultPasswordService passwordService = new DefaultPasswordService();
+    DefaultPasswordService passwordService = new IdempotentPasswordService();
     DefaultHashService hashService = new DefaultHashService();
-
     hashService.setHashIterations(ITERATIONS);
     passwordService.setHashService(hashService);
 
@@ -161,4 +160,19 @@ public class ScmSecurityModule extends ShiroWebModule
 
   /** Field description */
   private final ExtensionProcessor extensionProcessor;
+
+  static class IdempotentPasswordService extends DefaultPasswordService {
+
+    private boolean isEncrypted(Object password) {
+      return password instanceof String && ((String) password).startsWith("$shiro1$SHA-512$");
+    }
+
+    @Override
+    public String encryptPassword(Object plaintext) {
+      if (isEncrypted(plaintext)) {
+        return plaintext.toString();
+      }
+      return super.encryptPassword(plaintext);
+    }
+  }
 }

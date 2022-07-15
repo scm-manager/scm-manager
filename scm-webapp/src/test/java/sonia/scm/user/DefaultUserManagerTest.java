@@ -26,6 +26,7 @@ package sonia.scm.user;
 
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
+import org.apache.shiro.authc.credential.PasswordService;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Rule;
@@ -35,6 +36,9 @@ import sonia.scm.NotFoundException;
 import sonia.scm.store.JAXBConfigurationStoreFactory;
 import sonia.scm.user.xml.XmlUserDAO;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -52,52 +56,54 @@ public class DefaultUserManagerTest extends UserManagerTestBase {
   @Rule
   public ShiroRule shiro = new ShiroRule();
 
-  private UserDAO userDAO;
+  private final UserDAO userDAO = mock(UserDAO.class);
+  private final ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
+  private final PasswordService passwordService = mock(PasswordService.class);
 
-  /**
-   * Method description
-   *
-   * @return
-   */
+  private UserManager userManager;
+
   @Override
   public UserManager createManager() {
-    return new DefaultUserManager(createXmlUserDAO());
+    return new DefaultUserManager(passwordService, createXmlUserDAO());
   }
 
   @Before
-  public void initDao() {
+  public void initMocks() {
     User trillian = UserTestData.createTrillian();
     trillian.setPassword("oldEncrypted");
 
-    userDAO = mock(UserDAO.class);
     when(userDAO.getType()).thenReturn("xml");
     when(userDAO.get("trillian")).thenReturn(trillian);
+    doNothing().when(userDAO).modify(userCaptor.capture());
+
+    when(passwordService.encryptPassword(anyString())).thenAnswer(invocation -> invocation.getArgument(0));
+
+    userManager = new DefaultUserManager(passwordService, userDAO);
   }
 
   @Test(expected = InvalidPasswordException.class)
   public void shouldFailChangePasswordForWrongOldPassword() {
-    UserManager userManager = new DefaultUserManager(userDAO);
-
     userManager.changePasswordForLoggedInUser("wrongPassword", "$shiro1$secret");
   }
 
   @Test
   public void shouldSucceedChangePassword() {
-    ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
-
-    doNothing().when(userDAO).modify(userCaptor.capture());
-
-    UserManager userManager = new DefaultUserManager(userDAO);
-
     userManager.changePasswordForLoggedInUser("oldEncrypted", "newEncrypted");
+
+    Assertions.assertThat(userCaptor.getValue().getPassword()).isEqualTo("newEncrypted");
+  }
+
+  @Test
+  public void shouldEncryptChangedPassword() {
+    when(passwordService.encryptPassword("newPassword")).thenReturn("newEncrypted");
+
+    userManager.changePasswordForLoggedInUser("oldEncrypted", "newPassword");
 
     Assertions.assertThat(userCaptor.getValue().getPassword()).isEqualTo("newEncrypted");
   }
 
   @Test(expected = NotFoundException.class)
   public void shouldFailOverwritePasswordForMissingUser() {
-    UserManager userManager = new DefaultUserManager(userDAO);
-
     userManager.overwritePassword("notExisting", "---");
   }
 
@@ -106,25 +112,53 @@ public class DefaultUserManagerTest extends UserManagerTestBase {
     User trillian = new User("trillian");
     trillian.setExternal(true);
     when(userDAO.get("trillian")).thenReturn(trillian);
-    UserManager userManager = new DefaultUserManager(userDAO);
 
     userManager.overwritePassword("trillian", "---");
   }
 
   @Test
   public void shouldSucceedOverwritePassword() {
-    ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
-
-    doNothing().when(userDAO).modify(userCaptor.capture());
-
-    UserManager userManager = new DefaultUserManager(userDAO);
-
     userManager.overwritePassword("trillian", "newEncrypted");
 
     Assertions.assertThat(userCaptor.getValue().getPassword()).isEqualTo("newEncrypted");
   }
 
-  //~--- methods --------------------------------------------------------------
+  @Test
+  public void shouldEncryptOverwrittenPassword() {
+    when(passwordService.encryptPassword("newPassword")).thenReturn("newEncrypted");
+
+    userManager.overwritePassword("trillian", "newPassword");
+
+    Assertions.assertThat(userCaptor.getValue().getPassword()).isEqualTo("newEncrypted");
+  }
+
+  @Test
+  public void shouldEncryptPasswordOnModify() {
+    User zaphod = UserTestData.createZaphod();
+    when(passwordService.encryptPassword("password")).thenReturn("encrypted");
+
+    manager.create(zaphod);
+    zaphod.setPassword("password");
+    manager.modify(zaphod);
+
+    User otherUser = manager.get("zaphod");
+
+    assertNotNull(otherUser);
+    assertEquals("encrypted" , otherUser.getPassword());
+  }
+
+  @Test
+  public void shouldEncryptPasswordOnCreate() {
+    User zaphod = UserTestData.createZaphod();
+    zaphod.setPassword("password");
+    when(passwordService.encryptPassword("password")).thenReturn("encrypted");
+
+    manager.create(zaphod);
+
+    User otherUser = manager.get("zaphod");
+
+    assertEquals("encrypted", otherUser.getPassword());
+  }
 
   private XmlUserDAO createXmlUserDAO() {
     return new XmlUserDAO(new JAXBConfigurationStoreFactory(contextProvider, locationResolver, null));
