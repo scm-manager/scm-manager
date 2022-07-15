@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.cli;
 
+import com.google.common.annotations.VisibleForTesting;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
 import sonia.scm.cli.PermissionDescriptionResolver;
@@ -33,11 +34,18 @@ import sonia.scm.security.RepositoryPermissionProvider;
 
 import javax.inject.Inject;
 
+import java.util.List;
+
 import static java.util.stream.Collectors.toList;
 
 @CommandLine.Command(name = "available-permissions")
 @ParentCommand(value = RepositoryCommand.class)
 class RepositoryPermissionsAvailableCommand implements Runnable {
+
+  @CommandLine.Option(names = {"--roles", "-r"}, descriptionKey = "scm.repo.list-permissions.roles-only")
+  private boolean roles;
+  @CommandLine.Option(names = {"--verbs", "-v"}, descriptionKey = "scm.repo.list-permissions.verbs-only")
+  private boolean verbs;
 
   @CommandLine.Mixin
   private final RepositoryTemplateRenderer templateRenderer;
@@ -53,10 +61,33 @@ class RepositoryPermissionsAvailableCommand implements Runnable {
     this.repositoryRoleManager = repositoryRoleManager;
   }
 
+  @VisibleForTesting
+  void setRoles(boolean roles) {
+    this.roles = roles;
+  }
+
+  @VisibleForTesting
+  void setVerbs(boolean verbs) {
+    this.verbs = verbs;
+  }
+
   @Override
   public void run() {
-    templateRenderer.renderVerbs(repositoryPermissionProvider.availableVerbs().stream().map(this::createBean).collect(toList()));
-    templateRenderer.renderRoles(repositoryRoleManager.getAll().stream().map(this::createBean).collect(toList()));
+    if (roles) {
+      templateRenderer.renderRoles(getRoleBeans());
+    } else if (verbs) {
+      templateRenderer.renderVerbs(getVerbBeans());
+    } else {
+      templateRenderer.render(getRoleBeans(), getVerbBeans());
+    }
+  }
+
+  private List<VerbBean> getVerbBeans() {
+    return repositoryPermissionProvider.availableVerbs().stream().map(this::createBean).collect(toList());
+  }
+
+  private List<RoleBean> getRoleBeans() {
+    return repositoryRoleManager.getAll().stream().map(this::createBean).collect(toList());
   }
 
   private VerbBean createBean(String verb) {

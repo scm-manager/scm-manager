@@ -146,4 +146,10 @@ class RepositoryTemplateRenderer extends TemplateRenderer {
   private void addRoleToTable(Table table, RoleBean role) {
     table.addRow(role.getName(), String.join(", ", role.getVerbs()));
   }
+
+  public void render(Collection<RoleBean> roles, Collection<VerbBean> verbs) {
+    renderRoles(roles);
+    renderToStdout("\n", emptyMap());
+    renderVerbs(verbs);
+  }
 }

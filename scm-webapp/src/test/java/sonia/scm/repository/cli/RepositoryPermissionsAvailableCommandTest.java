@@ -39,11 +39,15 @@ import sonia.scm.security.RepositoryPermissionProvider;
 import java.util.Collection;
 import java.util.List;
 
+import static java.util.Collections.emptyList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -68,7 +72,7 @@ class RepositoryPermissionsAvailableCommandTest {
 
   @Test
   void shouldListVerbs() {
-    doNothing().when(templateRenderer).renderVerbs(verbsCaptor.capture());
+    doNothing().when(templateRenderer).render(any(), verbsCaptor.capture());
     when(repositoryPermissionProvider.availableVerbs())
       .thenReturn(List.of("read", "write"));
     when(permissionDescriptionResolver.getDescription("read"))
@@ -90,7 +94,7 @@ class RepositoryPermissionsAvailableCommandTest {
 
   @Test
   void shouldHandleMissingDescription() {
-    doNothing().when(templateRenderer).renderVerbs(verbsCaptor.capture());
+    doNothing().when(templateRenderer).render(any(), verbsCaptor.capture());
     when(repositoryPermissionProvider.availableVerbs())
       .thenReturn(List.of("unknown"));
     when(permissionDescriptionResolver.getDescription("unknown"))
@@ -110,7 +114,7 @@ class RepositoryPermissionsAvailableCommandTest {
 
   @Test
   void shouldRenderRoles() {
-    doNothing().when(templateRenderer).renderRoles(rolesCaptor.capture());
+    doNothing().when(templateRenderer).render(rolesCaptor.capture(), any());
     when(repositoryRoleManager.getAll())
       .thenReturn(List.of(new RepositoryRole("READ", List.of("read", "pull"), null)));
 
@@ -125,5 +129,25 @@ class RepositoryPermissionsAvailableCommandTest {
       .extracting("verbs")
       .map(c -> ((Collection) c).stream().collect(toList())) // to satisfy equal in the comparison, we have to use this form
       .containsExactly(List.of("read", "pull"));
+  }
+
+  @Test
+  void shouldRenderRolesOnlyWithFlag() {
+    command.setRoles(true);
+
+    command.run();
+
+    verify(templateRenderer).renderRoles(emptyList());
+    verify(templateRenderer, never()).renderVerbs(any());
+  }
+
+  @Test
+  void shouldRenderVerbsOnlyWithFlag() {
+    command.setVerbs(true);
+
+    command.run();
+
+    verify(templateRenderer).renderVerbs(emptyList());
+    verify(templateRenderer, never()).renderRoles(any());
   }
 }
