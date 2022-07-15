@@ -54,7 +54,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class RepositoryListPermissionsCommandTest {
+class RepositoryPermissionsListCommandTest {
 
   @Mock
   private RepositoryTemplateRenderer templateRenderer;
@@ -68,7 +68,7 @@ class RepositoryListPermissionsCommandTest {
   private PermissionDescriptionResolver permissionDescriptionResolver;
 
   @InjectMocks
-  private RepositoryListPermissionsCommand command;
+  private RepositoryPermissionsListCommand command;
 
   @Test
   void shouldPrintNotFoundErrorForUnknownRepository() {

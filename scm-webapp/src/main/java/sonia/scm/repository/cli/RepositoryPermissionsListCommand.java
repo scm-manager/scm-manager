@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
 
 @CommandLine.Command(name = "list-permissions")
 @ParentCommand(value = RepositoryCommand.class)
-class RepositoryListPermissionsCommand implements Runnable {
+class RepositoryPermissionsListCommand implements Runnable {
 
   @CommandLine.Mixin
   private final RepositoryTemplateRenderer templateRenderer;
@@ -59,7 +59,7 @@ class RepositoryListPermissionsCommand implements Runnable {
   private boolean keys;
 
   @Inject
-  public RepositoryListPermissionsCommand(RepositoryTemplateRenderer templateRenderer, CommandValidator validator, RepositoryManager manager, RepositoryRoleManager roleManager, PermissionDescriptionResolver permissionDescriptionResolver) {
+  public RepositoryPermissionsListCommand(RepositoryTemplateRenderer templateRenderer, CommandValidator validator, RepositoryManager manager, RepositoryRoleManager roleManager, PermissionDescriptionResolver permissionDescriptionResolver) {
     this.templateRenderer = templateRenderer;
     this.validator = validator;
     this.manager = manager;
