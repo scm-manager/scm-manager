@@ -55,7 +55,7 @@ class RepositorySetRoleCommandTest {
   private final Repository repository = RepositoryTestData.createHeartOfGold();
 
   @Test
-  void shouldAddRepositoryPermission() {
+  void shouldAddRepositoryPermissionForUser() {
     when(repositoryManager.get(new NamespaceAndName("hitchhiker", "HeartOfGold")))
       .thenReturn(repository);
 
@@ -68,6 +68,25 @@ class RepositorySetRoleCommandTest {
     verify(repositoryManager).modify(argThat(argument -> {
       assertThat(argument.getPermissions()).extracting("name", "role", "groupPermission")
         .containsExactly(tuple("trillian", "OWNER", false));
+      return true;
+    }));
+  }
+
+  @Test
+  void shouldAddRepositoryPermissionForGroup() {
+    when(repositoryManager.get(new NamespaceAndName("hitchhiker", "HeartOfGold")))
+      .thenReturn(repository);
+
+    command.setRepository("hitchhiker/HeartOfGold");
+    command.setUser("crew");
+    command.setRole("READ");
+    command.setForGroup(true);
+
+    command.run();
+
+    verify(repositoryManager).modify(argThat(argument -> {
+      assertThat(argument.getPermissions()).extracting("name", "role", "groupPermission")
+        .containsExactly(tuple("crew", "READ", true));
       return true;
     }));
   }

@@ -47,9 +47,27 @@ class RepositorySetRoleCommand implements Runnable {
   @CommandLine.Parameters(paramLabel = "role", index = "2", descriptionKey = "scm.repo.set-role.role")
   private String role;
 
+  @CommandLine.Option(names = {"--user", "-u"}, descriptionKey = "scm.repo.set-role.forUser")
+  private boolean forUser;
+  @CommandLine.Option(names = {"--group", "-g"}, descriptionKey = "scm.repo.set-role.forGroup")
+  private boolean forGroup;
+
+
   @Inject
   public RepositorySetRoleCommand(RepositoryManager repositoryManager) {
     this.repositoryManager = repositoryManager;
+  }
+
+  @Override
+  public void run() {
+    NamespaceAndName namespaceAndName = NamespaceAndName.fromString(repository);
+    Repository repo = repositoryManager.get(namespaceAndName);
+
+    repo.findUserPermission(user).ifPresent(repo::removePermission);
+
+    repo.addPermission(new RepositoryPermission(user, role, forGroup));
+
+    repositoryManager.modify(repo);
   }
 
   @VisibleForTesting
@@ -67,15 +85,11 @@ class RepositorySetRoleCommand implements Runnable {
     this.role = role;
   }
 
-  @Override
-  public void run() {
-    NamespaceAndName namespaceAndName = NamespaceAndName.fromString(repository);
-    Repository repo = repositoryManager.get(namespaceAndName);
+  public void setForUser(boolean forUser) {
+    this.forUser = forUser;
+  }
 
-    repo.findUserPermission(user).ifPresent(repo::removePermission);
-
-    repo.addPermission(new RepositoryPermission(user, role, false));
-
-    repositoryManager.modify(repo);
+  public void setForGroup(boolean forGroup) {
+    this.forGroup = forGroup;
   }
 }
