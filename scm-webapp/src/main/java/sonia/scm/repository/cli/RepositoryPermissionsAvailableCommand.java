@@ -42,9 +42,9 @@ import static java.util.stream.Collectors.toList;
 @ParentCommand(value = RepositoryCommand.class)
 class RepositoryPermissionsAvailableCommand implements Runnable {
 
-  @CommandLine.Option(names = {"--roles", "-r"}, descriptionKey = "scm.repo.list-permissions.roles-only")
+  @CommandLine.Option(names = {"--roles", "-r"}, descriptionKey = "scm.repo.available-permissions.roles-only")
   private boolean roles;
-  @CommandLine.Option(names = {"--verbs", "-v"}, descriptionKey = "scm.repo.list-permissions.verbs-only")
+  @CommandLine.Option(names = {"--verbs", "-v"}, descriptionKey = "scm.repo.available-permissions.verbs-only")
   private boolean verbs;
 
   @CommandLine.Mixin
