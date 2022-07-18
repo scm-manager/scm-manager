@@ -33,25 +33,28 @@ import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermission;
 
 import javax.inject.Inject;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
-@CommandLine.Command(name = "set-role")
+@CommandLine.Command(name = "add-permission")
 @ParentCommand(value = RepositoryCommand.class)
-class RepositorySetRoleCommand implements Runnable {
+class RepositoryAddPermissionCommand implements Runnable {
 
   private final RepositoryManager repositoryManager;
 
-  @CommandLine.Parameters(paramLabel = "namespace/name", index = "0", descriptionKey = "scm.repo.set-role.repository")
+  @CommandLine.Parameters(paramLabel = "namespace/name", index = "0", descriptionKey = "scm.repo.add-permission.repository")
   private String repository;
-  @CommandLine.Parameters(paramLabel = "name", index = "1", descriptionKey = "scm.repo.set-role.name")
+  @CommandLine.Parameters(paramLabel = "name", index = "1", descriptionKey = "scm.repo.add-permission.name")
   private String name;
-  @CommandLine.Parameters(paramLabel = "role", index = "2", descriptionKey = "scm.repo.set-role.role")
-  private String role;
+  @CommandLine.Parameters(paramLabel = "verb", index = "2", descriptionKey = "scm.repo.add-permission.verb")
+  private String verb;
 
-  @CommandLine.Option(names = {"--group", "-g"}, descriptionKey = "scm.repo.set-role.forGroup")
+  @CommandLine.Option(names = {"--group", "-g"}, descriptionKey = "scm.repo.add-permission.forGroup")
   private boolean forGroup;
 
   @Inject
-  public RepositorySetRoleCommand(RepositoryManager repositoryManager) {
+  public RepositoryAddPermissionCommand(RepositoryManager repositoryManager) {
     this.repositoryManager = repositoryManager;
   }
 
@@ -60,15 +63,29 @@ class RepositorySetRoleCommand implements Runnable {
     NamespaceAndName namespaceAndName = NamespaceAndName.fromString(repository);
     Repository repo = repositoryManager.get(namespaceAndName);
 
+    Set<String> permissions =
+      getExistingPermissions(repo)
+        .map(RepositoryPermission::getVerbs)
+        .map(HashSet::new)
+        .orElseGet(HashSet::new);
     if (!forGroup) {
       repo.findUserPermission(name).ifPresent(repo::removePermission);
     } else {
       repo.findGroupPermission(name).ifPresent(repo::removePermission);
     }
+    permissions.add(verb);
 
-    repo.addPermission(new RepositoryPermission(name, role, forGroup));
+    repo.addPermission(new RepositoryPermission(name, permissions, forGroup));
 
     repositoryManager.modify(repo);
+  }
+
+  private Optional<RepositoryPermission> getExistingPermissions(Repository repo) {
+    if (!forGroup) {
+      return repo.findUserPermission(name);
+    } else {
+      return repo.findGroupPermission(name);
+    }
   }
 
   @VisibleForTesting
@@ -82,8 +99,8 @@ class RepositorySetRoleCommand implements Runnable {
   }
 
   @VisibleForTesting
-  void setRole(String role) {
-    this.role = role;
+  void setVerb(String verb) {
+    this.verb = verb;
   }
 
   public void setForGroup(boolean forGroup) {
