@@ -47,7 +47,7 @@ class RepositorySetRoleCommand implements Runnable {
   @CommandLine.Parameters(paramLabel = "role", index = "2", descriptionKey = "scm.repo.set-role.role")
   private String role;
 
-  @CommandLine.Option(names = {"--group", "-g"}, descriptionKey = "scm.repo.set-role.roleForGroup")
+  @CommandLine.Option(names = {"--group", "-g"}, descriptionKey = "scm.repo.set-role.forGroup")
   private boolean forGroup;
 
 
