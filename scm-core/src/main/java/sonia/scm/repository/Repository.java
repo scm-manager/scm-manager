@@ -317,9 +317,6 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
   }
 
   public void addPermission(RepositoryPermission newPermission) {
-    if (findPermission(newPermission.getName(), newPermission.isGroupPermission()).isPresent()) {
-      throw alreadyExists(entity("Permission", newPermission.getName()).in(this));
-    }
     this.permissions.add(newPermission);
   }
 
