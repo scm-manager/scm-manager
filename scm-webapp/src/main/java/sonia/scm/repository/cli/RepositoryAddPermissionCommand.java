@@ -61,7 +61,7 @@ class RepositoryAddPermissionCommand implements Runnable {
         Set<String> verbs =
           permissionCommandManager.getPermissionsAdModifiableSet(repository, name, forGroup);
         verbs.add(verb);
-        permissionCommandManager.addPerission(repository, new RepositoryPermission(name, verbs, forGroup));
+        permissionCommandManager.replacePermission(repository, new RepositoryPermission(name, verbs, forGroup));
       }
     );
   }

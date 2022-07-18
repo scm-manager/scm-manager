@@ -47,17 +47,35 @@ class PermissionCommandManager {
     this.templateRenderer = templateRenderer;
   }
 
+  void modifyRepository(String repositoryName, Consumer<Repository> modifier) {
+    NamespaceAndName namespaceAndName = null;
+    try {
+      namespaceAndName = NamespaceAndName.fromString(repositoryName);
+    } catch (IllegalArgumentException e) {
+      templateRenderer.renderInvalidInputError();
+      return;
+    }
+
+    Repository repository = repositoryManager.get(namespaceAndName);
+    if (repository != null) {
+      modifier.accept(repository);
+      repositoryManager.modify(repository);
+    } else {
+      templateRenderer.renderNotFoundError();
+    }
+  }
+
+  void replacePermission(Repository repository, RepositoryPermission permission) {
+    this.removeExistingPermission(repository, permission.getName(), permission.isGroupPermission());
+    repository.addPermission(permission);
+  }
+
   void removeExistingPermission(Repository repository, String name, boolean forGroup) {
     if (!forGroup) {
       repository.findUserPermission(name).ifPresent(repository::removePermission);
     } else {
       repository.findGroupPermission(name).ifPresent(repository::removePermission);
     }
-  }
-
-  void addPerission(Repository repository, RepositoryPermission permission) {
-    new PermissionCommandManager(repositoryManager, roleManager, templateRenderer).removeExistingPermission(repository, permission.getName(), permission.isGroupPermission());
-    repository.addPermission(permission);
   }
 
   HashSet<String> getPermissionsAdModifiableSet(Repository repository, String name, boolean forGroup) {
@@ -80,24 +98,6 @@ class PermissionCommandManager {
       return permission.getVerbs();
     } else {
       return roleManager.get(permission.getRole()).getVerbs();
-    }
-  }
-
-  void modifyRepository(String repositoryName, Consumer<Repository> modifier) {
-    NamespaceAndName namespaceAndName = null;
-    try {
-      namespaceAndName = NamespaceAndName.fromString(repositoryName);
-    } catch (IllegalArgumentException e) {
-      templateRenderer.renderInvalidInputError();
-      return;
-    }
-
-    Repository repository = repositoryManager.get(namespaceAndName);
-    if (repository != null) {
-      modifier.accept(repository);
-      repositoryManager.modify(repository);
-    } else {
-      templateRenderer.renderNotFoundError();
     }
   }
 }

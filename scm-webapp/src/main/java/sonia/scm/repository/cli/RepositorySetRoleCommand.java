@@ -56,7 +56,7 @@ class RepositorySetRoleCommand implements Runnable {
   public void run() {
     permissionCommandManager.modifyRepository(
       repositoryName,
-      repository -> permissionCommandManager.addPerission(repository, new RepositoryPermission(name, role, forGroup))
+      repository -> permissionCommandManager.replacePermission(repository, new RepositoryPermission(name, role, forGroup))
     );
   }
 
