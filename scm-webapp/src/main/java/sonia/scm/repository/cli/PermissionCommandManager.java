@@ -30,6 +30,7 @@ import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.RepositoryRoleManager;
 
+import javax.inject.Inject;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;
@@ -41,6 +42,7 @@ class PermissionCommandManager {
   private final RepositoryRoleManager roleManager;
   private final RepositoryTemplateRenderer templateRenderer;
 
+  @Inject
   PermissionCommandManager(RepositoryManager repositoryManager, RepositoryRoleManager roleManager, RepositoryTemplateRenderer templateRenderer) {
     this.repositoryManager = repositoryManager;
     this.roleManager = roleManager;
