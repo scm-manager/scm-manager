@@ -31,6 +31,7 @@ import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.RepositoryRoleManager;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -59,7 +60,14 @@ class PermissionCommandManager {
     repository.addPermission(permission);
   }
 
-  Optional<RepositoryPermission> getExistingPermissions(Repository repo, String name, boolean forGroup) {
+  HashSet<String> getPermissionsAdModifiableSet(Repository repository, String name, boolean forGroup) {
+    return this.getExistingPermissions(repository, name, forGroup)
+      .map(this::getVerbs)
+      .map(HashSet::new)
+      .orElseGet(HashSet::new);
+  }
+
+  private Optional<RepositoryPermission> getExistingPermissions(Repository repo, String name, boolean forGroup) {
     if (!forGroup) {
       return repo.findUserPermission(name);
     } else {
@@ -67,7 +75,7 @@ class PermissionCommandManager {
     }
   }
 
-  Collection<String> getVerbs(RepositoryPermission permission) {
+  private Collection<String> getVerbs(RepositoryPermission permission) {
     if (permission.getRole() == null) {
       return permission.getVerbs();
     } else {

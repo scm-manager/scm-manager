@@ -30,7 +30,6 @@ import sonia.scm.cli.ParentCommand;
 import sonia.scm.repository.RepositoryPermission;
 
 import javax.inject.Inject;
-import java.util.HashSet;
 import java.util.Set;
 
 @CommandLine.Command(name = "remove-permission")
@@ -59,19 +58,10 @@ class RepositoryRemovePermissionCommand implements Runnable {
     permissionCommandManager.modifyRepository(
       repositoryName,
       repository -> {
-        Set<String> permissions =
-          permissionCommandManager.getExistingPermissions(repository, name, forGroup)
-            .map(permissionCommandManager::getVerbs)
-            .map(HashSet::new)
-            .orElseGet(HashSet::new);
-        if (!forGroup) {
-          repository.findUserPermission(name).ifPresent(repository::removePermission);
-        } else {
-          repository.findGroupPermission(name).ifPresent(repository::removePermission);
-        }
-        permissions.remove(verb);
-
-        repository.addPermission(new RepositoryPermission(name, permissions, forGroup));
+        Set<String> verbs =
+          permissionCommandManager.getPermissionsAdModifiableSet(repository, name, forGroup);
+        verbs.remove(verb);
+        permissionCommandManager.addPerission(repository, new RepositoryPermission(name, verbs, forGroup));
       }
     );
   }

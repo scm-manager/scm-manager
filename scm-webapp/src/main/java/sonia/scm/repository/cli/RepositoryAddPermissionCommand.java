@@ -30,7 +30,6 @@ import sonia.scm.cli.ParentCommand;
 import sonia.scm.repository.RepositoryPermission;
 
 import javax.inject.Inject;
-import java.util.HashSet;
 import java.util.Set;
 
 @CommandLine.Command(name = "add-permission")
@@ -60,12 +59,8 @@ class RepositoryAddPermissionCommand implements Runnable {
       repositoryName,
       repository -> {
         Set<String> verbs =
-          permissionCommandManager.getExistingPermissions(repository, name, forGroup)
-            .map(permissionCommandManager::getVerbs)
-            .map(HashSet::new)
-            .orElseGet(HashSet::new);
+          permissionCommandManager.getPermissionsAdModifiableSet(repository, name, forGroup);
         verbs.add(verb);
-
         permissionCommandManager.addPerission(repository, new RepositoryPermission(name, verbs, forGroup));
       }
     );
