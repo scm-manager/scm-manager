@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.cli;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -54,13 +55,16 @@ class RepositorySetRoleCommandTest {
 
   private final Repository repository = RepositoryTestData.createHeartOfGold();
 
-  @Test
-  void shouldAddRepositoryPermissionForUser() {
+  @BeforeEach
+  void mockRepository() {
     when(repositoryManager.get(new NamespaceAndName("hitchhiker", "HeartOfGold")))
       .thenReturn(repository);
+  }
 
+  @Test
+  void shouldAddRepositoryPermissionForUser() {
     command.setRepository("hitchhiker/HeartOfGold");
-    command.setUser("trillian");
+    command.setName("trillian");
     command.setRole("OWNER");
 
     command.run();
@@ -74,11 +78,8 @@ class RepositorySetRoleCommandTest {
 
   @Test
   void shouldAddRepositoryPermissionForGroup() {
-    when(repositoryManager.get(new NamespaceAndName("hitchhiker", "HeartOfGold")))
-      .thenReturn(repository);
-
     command.setRepository("hitchhiker/HeartOfGold");
-    command.setUser("crew");
+    command.setName("crew");
     command.setRole("READ");
     command.setForGroup(true);
 
@@ -92,9 +93,7 @@ class RepositorySetRoleCommandTest {
   }
 
   @Test
-  void shouldReplaceRepositoryPermission() {
-    when(repositoryManager.get(new NamespaceAndName("hitchhiker", "HeartOfGold")))
-      .thenReturn(repository);
+  void shouldReplaceRepositoryPermissionForUser() {
     repository.setPermissions(
       List.of(
         new RepositoryPermission("trillian", List.of("read"), false)
@@ -102,7 +101,7 @@ class RepositorySetRoleCommandTest {
     );
 
     command.setRepository("hitchhiker/HeartOfGold");
-    command.setUser("trillian");
+    command.setName("trillian");
     command.setRole("OWNER");
 
     command.run();
@@ -110,6 +109,28 @@ class RepositorySetRoleCommandTest {
     verify(repositoryManager).modify(argThat(argument -> {
       assertThat(argument.getPermissions()).extracting("name", "role", "groupPermission")
         .containsExactly(tuple("trillian", "OWNER", false));
+      return true;
+    }));
+  }
+
+  @Test
+  void shouldReplaceRepositoryPermissionForGroup() {
+    repository.setPermissions(
+      List.of(
+        new RepositoryPermission("trillian", List.of("read"), true)
+      )
+    );
+
+    command.setRepository("hitchhiker/HeartOfGold");
+    command.setName("trillian");
+    command.setRole("OWNER");
+    command.setForGroup(true);
+
+    command.run();
+
+    verify(repositoryManager).modify(argThat(argument -> {
+      assertThat(argument.getPermissions()).extracting("name", "role", "groupPermission")
+        .containsExactly(tuple("trillian", "OWNER", true));
       return true;
     }));
   }

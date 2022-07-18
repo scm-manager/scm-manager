@@ -42,14 +42,12 @@ class RepositorySetRoleCommand implements Runnable {
 
   @CommandLine.Parameters(paramLabel = "namespace/name", index = "0", descriptionKey = "scm.repo.set-role.repository")
   private String repository;
-  @CommandLine.Parameters(paramLabel = "user", index = "1", descriptionKey = "scm.repo.set-role.user")
-  private String user;
+  @CommandLine.Parameters(paramLabel = "name", index = "1", descriptionKey = "scm.repo.set-role.name")
+  private String name;
   @CommandLine.Parameters(paramLabel = "role", index = "2", descriptionKey = "scm.repo.set-role.role")
   private String role;
 
-  @CommandLine.Option(names = {"--user", "-u"}, descriptionKey = "scm.repo.set-role.forUser")
-  private boolean forUser;
-  @CommandLine.Option(names = {"--group", "-g"}, descriptionKey = "scm.repo.set-role.forGroup")
+  @CommandLine.Option(names = {"--group", "-g"}, descriptionKey = "scm.repo.set-role.roleForGroup")
   private boolean forGroup;
 
 
@@ -63,9 +61,13 @@ class RepositorySetRoleCommand implements Runnable {
     NamespaceAndName namespaceAndName = NamespaceAndName.fromString(repository);
     Repository repo = repositoryManager.get(namespaceAndName);
 
-    repo.findUserPermission(user).ifPresent(repo::removePermission);
+    if (!forGroup) {
+      repo.findUserPermission(name).ifPresent(repo::removePermission);
+    } else {
+      repo.findGroupPermission(name).ifPresent(repo::removePermission);
+    }
 
-    repo.addPermission(new RepositoryPermission(user, role, forGroup));
+    repo.addPermission(new RepositoryPermission(name, role, forGroup));
 
     repositoryManager.modify(repo);
   }
@@ -76,17 +78,13 @@ class RepositorySetRoleCommand implements Runnable {
   }
 
   @VisibleForTesting
-  void setUser(String user) {
-    this.user = user;
+  void setName(String name) {
+    this.name = name;
   }
 
   @VisibleForTesting
   void setRole(String role) {
     this.role = role;
-  }
-
-  public void setForUser(boolean forUser) {
-    this.forUser = forUser;
   }
 
   public void setForGroup(boolean forGroup) {
