@@ -102,6 +102,28 @@ class RepositoryRemovePermissionCommandTest {
     }
 
     @Test
+    void shouldRemoveMultipleVerbsFromExistingVerbsForUser() {
+      repository.setPermissions(
+        List.of(
+          new RepositoryPermission("dent", List.of("read", "write", "push", "pull"), false)
+        )
+      );
+
+      command.setRepositoryName("hitchhiker/HeartOfGold");
+      command.setName("dent");
+      command.setVerb("write");
+      command.setMoreVerbs("push", "pull");
+
+      command.run();
+
+      verify(repositoryManager).modify(argThat(argument -> {
+        assertThat(argument.getPermissions()).extracting("name", "verbs", "groupPermission")
+          .containsExactly(tuple("dent", Set.of("read"), false));
+        return true;
+      }));
+    }
+
+    @Test
     void shouldRemoveNewVerbFromExistingVerbsForGroup() {
       repository.setPermissions(
         List.of(

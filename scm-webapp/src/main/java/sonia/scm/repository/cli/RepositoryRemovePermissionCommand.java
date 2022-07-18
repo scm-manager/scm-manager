@@ -32,6 +32,8 @@ import sonia.scm.repository.RepositoryPermission;
 import javax.inject.Inject;
 import java.util.Set;
 
+import static java.util.Arrays.asList;
+
 @CommandLine.Command(name = "remove-permission")
 @ParentCommand(value = RepositoryCommand.class)
 class RepositoryRemovePermissionCommand implements Runnable {
@@ -44,6 +46,8 @@ class RepositoryRemovePermissionCommand implements Runnable {
   private String name;
   @CommandLine.Parameters(paramLabel = "verb", index = "2", descriptionKey = "scm.repo.remove-permission.verb")
   private String verb;
+  @CommandLine.Parameters(paramLabel = "moreVerbs", index = "3..", arity = "0..", descriptionKey = "scm.repo.remove-permission.moreVerbs")
+  private String[] moreVerbs = new String[0];
 
   @CommandLine.Option(names = {"--group", "-g"}, descriptionKey = "scm.repo.remove-permission.forGroup")
   private boolean forGroup;
@@ -61,6 +65,7 @@ class RepositoryRemovePermissionCommand implements Runnable {
         Set<String> verbs =
           permissionCommandManager.getPermissionsAdModifiableSet(repository, name, forGroup);
         verbs.remove(verb);
+        verbs.removeAll(asList(moreVerbs));
         permissionCommandManager.replacePermission(repository, new RepositoryPermission(name, verbs, forGroup));
       }
     );
@@ -79,6 +84,10 @@ class RepositoryRemovePermissionCommand implements Runnable {
   @VisibleForTesting
   void setVerb(String verb) {
     this.verb = verb;
+  }
+
+  public void setMoreVerbs(String... moreVerbs) {
+    this.moreVerbs = moreVerbs;
   }
 
   public void setForGroup(boolean forGroup) {

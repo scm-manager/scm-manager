@@ -95,6 +95,22 @@ class RepositoryAddPermissionCommandTest {
     }
 
     @Test
+    void shouldSetMultipleVerbsForNewUser() {
+      command.setRepositoryName("hitchhiker/HeartOfGold");
+      command.setName("trillian");
+      command.setVerb("read");
+      command.setMoreVerbs("pull", "push");
+
+      command.run();
+
+      verify(repositoryManager).modify(argThat(argument -> {
+        assertThat(argument.getPermissions()).extracting("name", "verbs", "groupPermission")
+          .containsExactly(tuple("trillian", Set.of("read", "pull", "push"), false));
+        return true;
+      }));
+    }
+
+    @Test
     void shouldAddNewVerbToExistingVerbsForUser() {
       repository.setPermissions(
         List.of(
