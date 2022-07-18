@@ -25,6 +25,7 @@
 package sonia.scm.repository.cli;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -48,6 +49,9 @@ class RepositoryClearPermissionsCommandTest {
 
   @Mock
   private RepositoryManager repositoryManager;
+  @Mock
+  private RepositoryTemplateRenderer templateRenderer;
+
   @InjectMocks
   private PermissionCommandManager permissionCommandManager;
 
@@ -60,48 +64,72 @@ class RepositoryClearPermissionsCommandTest {
     command = new RepositoryClearPermissionsCommand(permissionCommandManager);
   }
 
-  @BeforeEach
-  void mockRepository() {
-    when(repositoryManager.get(new NamespaceAndName("hitchhiker", "HeartOfGold")))
-      .thenReturn(repository);
+  @Nested
+  class ForExistingRepository {
+
+    @BeforeEach
+    void mockRepository() {
+      when(repositoryManager.get(new NamespaceAndName("hitchhiker", "HeartOfGold")))
+        .thenReturn(repository);
+    }
+
+    @Test
+    void shouldClearPermissionsForUser() {
+      repository.setPermissions(
+        List.of(
+          new RepositoryPermission("trillian", List.of("read"), false)
+        )
+      );
+
+      command.setRepositoryName("hitchhiker/HeartOfGold");
+      command.setName("trillian");
+
+      command.run();
+
+      verify(repositoryManager).modify(argThat(argument -> {
+        assertThat(argument.getPermissions()).isEmpty();
+        return true;
+      }));
+    }
+
+    @Test
+    void shouldClearPermissionsForGroup() {
+      repository.setPermissions(
+        List.of(
+          new RepositoryPermission("hog", "READ", true)
+        )
+      );
+
+      command.setRepositoryName("hitchhiker/HeartOfGold");
+      command.setName("hog");
+      command.setForGroup(true);
+
+      command.run();
+
+      verify(repositoryManager).modify(argThat(argument -> {
+        assertThat(argument.getPermissions()).isEmpty();
+        return true;
+      }));
+    }
   }
 
   @Test
-  void shouldClearPermissionsForUser() {
-    repository.setPermissions(
-      List.of(
-        new RepositoryPermission("trillian", List.of("read"), false)
-      )
-    );
-
-    command.setRepositoryName("hitchhiker/HeartOfGold");
+  void shouldHandleIllegalNamespaceNameParameter() {
+    command.setRepositoryName("illegal name");
     command.setName("trillian");
 
     command.run();
 
-    verify(repositoryManager).modify(argThat(argument -> {
-      assertThat(argument.getPermissions()).isEmpty();
-      return true;
-    }));
+    verify(templateRenderer).renderInvalidInputError();
   }
 
   @Test
-  void shouldClearPermissionsForGroup() {
-    repository.setPermissions(
-      List.of(
-        new RepositoryPermission("hog", "READ", true)
-      )
-    );
-
-    command.setRepositoryName("hitchhiker/HeartOfGold");
-    command.setName("hog");
-    command.setForGroup(true);
+  void shouldHandleNotExistingRepository() {
+    command.setRepositoryName("no/repository");
+    command.setName("trillian");
 
     command.run();
 
-    verify(repositoryManager).modify(argThat(argument -> {
-      assertThat(argument.getPermissions()).isEmpty();
-      return true;
-    }));
+    verify(templateRenderer).renderNotFoundError();
   }
 }

@@ -25,6 +25,7 @@
 package sonia.scm.repository.cli;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -49,6 +50,8 @@ class RepositorySetRoleCommandTest {
 
   @Mock
   private RepositoryManager repositoryManager;
+  @Mock
+  private RepositoryTemplateRenderer templateRenderer;
 
   @InjectMocks
   private PermissionCommandManager permissionCommandManager;
@@ -62,83 +65,109 @@ class RepositorySetRoleCommandTest {
     command = new RepositorySetRoleCommand(permissionCommandManager);
   }
 
-  @BeforeEach
-  void mockRepository() {
-    when(repositoryManager.get(new NamespaceAndName("hitchhiker", "HeartOfGold")))
-      .thenReturn(repository);
+  @Nested
+  class ForExistingRepository {
+
+    @BeforeEach
+    void mockRepository() {
+      when(repositoryManager.get(new NamespaceAndName("hitchhiker", "HeartOfGold")))
+        .thenReturn(repository);
+    }
+
+    @Test
+    void shouldSetRoleForUser() {
+      command.setRepositoryName("hitchhiker/HeartOfGold");
+      command.setName("trillian");
+      command.setRole("OWNER");
+
+      command.run();
+
+      verify(repositoryManager).modify(argThat(argument -> {
+        assertThat(argument.getPermissions()).extracting("name", "role", "groupPermission")
+          .containsExactly(tuple("trillian", "OWNER", false));
+        return true;
+      }));
+    }
+
+    @Test
+    void shouldSetRoleForGroup() {
+      command.setRepositoryName("hitchhiker/HeartOfGold");
+      command.setName("crew");
+      command.setRole("READ");
+      command.setForGroup(true);
+
+      command.run();
+
+      verify(repositoryManager).modify(argThat(argument -> {
+        assertThat(argument.getPermissions()).extracting("name", "role", "groupPermission")
+          .containsExactly(tuple("crew", "READ", true));
+        return true;
+      }));
+    }
+
+    @Test
+    void shouldReplaceRepositoryPermissionForUser() {
+      repository.setPermissions(
+        List.of(
+          new RepositoryPermission("trillian", List.of("read"), false)
+        )
+      );
+
+      command.setRepositoryName("hitchhiker/HeartOfGold");
+      command.setName("trillian");
+      command.setRole("OWNER");
+
+      command.run();
+
+      verify(repositoryManager).modify(argThat(argument -> {
+        assertThat(argument.getPermissions()).extracting("name", "role", "groupPermission")
+          .containsExactly(tuple("trillian", "OWNER", false));
+        return true;
+      }));
+    }
+
+    @Test
+    void shouldReplaceRepositoryPermissionForGroup() {
+      repository.setPermissions(
+        List.of(
+          new RepositoryPermission("trillian", List.of("read"), true)
+        )
+      );
+
+      command.setRepositoryName("hitchhiker/HeartOfGold");
+      command.setName("trillian");
+      command.setRole("OWNER");
+      command.setForGroup(true);
+
+      command.run();
+
+      verify(repositoryManager).modify(argThat(argument -> {
+        assertThat(argument.getPermissions()).extracting("name", "role", "groupPermission")
+          .containsExactly(tuple("trillian", "OWNER", true));
+        return true;
+      }));
+    }
   }
 
   @Test
-  void shouldSetRoleForUser() {
-    command.setRepositoryName("hitchhiker/HeartOfGold");
+  void shouldHandleIllegalNamespaceNameParameter() {
+    command.setRepositoryName("illegal name");
     command.setName("trillian");
-    command.setRole("OWNER");
-
-    command.run();
-
-    verify(repositoryManager).modify(argThat(argument -> {
-      assertThat(argument.getPermissions()).extracting("name", "role", "groupPermission")
-        .containsExactly(tuple("trillian", "OWNER", false));
-      return true;
-    }));
-  }
-
-  @Test
-  void shouldSetRoleForGroup() {
-    command.setRepositoryName("hitchhiker/HeartOfGold");
-    command.setName("crew");
     command.setRole("READ");
-    command.setForGroup(true);
 
     command.run();
 
-    verify(repositoryManager).modify(argThat(argument -> {
-      assertThat(argument.getPermissions()).extracting("name", "role", "groupPermission")
-        .containsExactly(tuple("crew", "READ", true));
-      return true;
-    }));
+    verify(templateRenderer).renderInvalidInputError();
   }
 
   @Test
-  void shouldReplaceRepositoryPermissionForUser() {
-    repository.setPermissions(
-      List.of(
-        new RepositoryPermission("trillian", List.of("read"), false)
-      )
-    );
-
-    command.setRepositoryName("hitchhiker/HeartOfGold");
+  void shouldHandleNotExistingRepository() {
+    command.setRepositoryName("no/repository");
     command.setName("trillian");
-    command.setRole("OWNER");
+    command.setRole("READ");
 
     command.run();
 
-    verify(repositoryManager).modify(argThat(argument -> {
-      assertThat(argument.getPermissions()).extracting("name", "role", "groupPermission")
-        .containsExactly(tuple("trillian", "OWNER", false));
-      return true;
-    }));
-  }
-
-  @Test
-  void shouldReplaceRepositoryPermissionForGroup() {
-    repository.setPermissions(
-      List.of(
-        new RepositoryPermission("trillian", List.of("read"), true)
-      )
-    );
-
-    command.setRepositoryName("hitchhiker/HeartOfGold");
-    command.setName("trillian");
-    command.setRole("OWNER");
-    command.setForGroup(true);
-
-    command.run();
-
-    verify(repositoryManager).modify(argThat(argument -> {
-      assertThat(argument.getPermissions()).extracting("name", "role", "groupPermission")
-        .containsExactly(tuple("trillian", "OWNER", true));
-      return true;
-    }));
+    verify(templateRenderer).renderNotFoundError();
   }
 }

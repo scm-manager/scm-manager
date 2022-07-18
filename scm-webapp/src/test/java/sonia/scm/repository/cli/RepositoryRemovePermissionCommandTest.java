@@ -25,6 +25,7 @@
 package sonia.scm.repository.cli;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -54,6 +55,9 @@ class RepositoryRemovePermissionCommandTest {
   private RepositoryManager repositoryManager;
   @Mock
   private RepositoryRoleManager roleManager;
+  @Mock
+  private RepositoryTemplateRenderer templateRenderer;
+
   @InjectMocks
   private PermissionCommandManager permissionCommandManager;
 
@@ -67,75 +71,101 @@ class RepositoryRemovePermissionCommandTest {
     command = new RepositoryRemovePermissionCommand(permissionCommandManager);
   }
 
-  @BeforeEach
-  void mockRepository() {
-    when(repositoryManager.get(new NamespaceAndName("hitchhiker", "HeartOfGold")))
-      .thenReturn(repository);
+  @Nested
+  class ForExistingRepository {
+
+    @BeforeEach
+    void mockRepository() {
+      when(repositoryManager.get(new NamespaceAndName("hitchhiker", "HeartOfGold")))
+        .thenReturn(repository);
+    }
+
+    @Test
+    void shouldRemoveVerbFromExistingVerbsForUser() {
+      repository.setPermissions(
+        List.of(
+          new RepositoryPermission("dent", List.of("read", "write"), false)
+        )
+      );
+
+      command.setRepositoryName("hitchhiker/HeartOfGold");
+      command.setName("dent");
+      command.setVerb("write");
+
+      command.run();
+
+      verify(repositoryManager).modify(argThat(argument -> {
+        assertThat(argument.getPermissions()).extracting("name", "verbs", "groupPermission")
+          .containsExactly(tuple("dent", Set.of("read"), false));
+        return true;
+      }));
+    }
+
+    @Test
+    void shouldRemoveNewVerbFromExistingVerbsForGroup() {
+      repository.setPermissions(
+        List.of(
+          new RepositoryPermission("hog", List.of("read", "write"), true)
+        )
+      );
+
+      command.setRepositoryName("hitchhiker/HeartOfGold");
+      command.setName("hog");
+      command.setVerb("write");
+      command.setForGroup(true);
+
+      command.run();
+
+      verify(repositoryManager).modify(argThat(argument -> {
+        assertThat(argument.getPermissions()).extracting("name", "verbs", "groupPermission")
+          .containsExactly(tuple("hog", Set.of("read"), true));
+        return true;
+      }));
+    }
+
+    @Test
+    void shouldRemoveNewVerbToRoleAndReplaceRoleWithCustomPermissionsForUser() {
+      repository.setPermissions(
+        List.of(
+          new RepositoryPermission("dent", "READ", false)
+        )
+      );
+      when(roleManager.get("READ"))
+        .thenReturn(new RepositoryRole("READ", List.of("read", "pull"), ""));
+
+      command.setRepositoryName("hitchhiker/HeartOfGold");
+      command.setName("dent");
+      command.setVerb("pull");
+
+      command.run();
+
+      verify(repositoryManager).modify(argThat(argument -> {
+        assertThat(argument.getPermissions()).extracting("name", "verbs", "groupPermission")
+          .containsExactly(tuple("dent", Set.of("read"), false));
+        return true;
+      }));
+    }
   }
 
   @Test
-  void shouldRemoveVerbFromExistingVerbsForUser() {
-    repository.setPermissions(
-      List.of(
-        new RepositoryPermission("dent", List.of("read", "write"), false)
-      )
-    );
-
-    command.setRepositoryName("hitchhiker/HeartOfGold");
-    command.setName("dent");
+  void shouldHandleIllegalNamespaceNameParameter() {
+    command.setRepositoryName("illegal name");
+    command.setName("trillian");
     command.setVerb("write");
 
     command.run();
 
-    verify(repositoryManager).modify(argThat(argument -> {
-      assertThat(argument.getPermissions()).extracting("name", "verbs", "groupPermission")
-        .containsExactly(tuple("dent", Set.of("read"), false));
-      return true;
-    }));
+    verify(templateRenderer).renderInvalidInputError();
   }
 
   @Test
-  void shouldRemoveNewVerbFromExistingVerbsForGroup() {
-    repository.setPermissions(
-      List.of(
-        new RepositoryPermission("hog", List.of("read", "write"), true)
-      )
-    );
-
-    command.setRepositoryName("hitchhiker/HeartOfGold");
-    command.setName("hog");
+  void shouldHandleNotExistingRepository() {
+    command.setRepositoryName("no/repository");
+    command.setName("trillian");
     command.setVerb("write");
-    command.setForGroup(true);
 
     command.run();
 
-    verify(repositoryManager).modify(argThat(argument -> {
-      assertThat(argument.getPermissions()).extracting("name", "verbs", "groupPermission")
-        .containsExactly(tuple("hog", Set.of("read"), true));
-      return true;
-    }));
-  }
-
-  @Test
-  void shouldRemoveNewVerbToRoleAndReplaceRoleWithCustomPermissionsForUser() {
-    repository.setPermissions(
-      List.of(
-        new RepositoryPermission("dent", "READ", false)
-      )
-    );
-    when(roleManager.get("READ"))
-      .thenReturn(new RepositoryRole("READ", List.of("read", "pull"), ""));
-
-    command.setRepositoryName("hitchhiker/HeartOfGold");
-    command.setName("dent");
-    command.setVerb("pull");
-
-    command.run();
-
-    verify(repositoryManager).modify(argThat(argument -> {
-      assertThat(argument.getPermissions()).extracting("name", "verbs", "groupPermission")
-        .containsExactly(tuple("dent", Set.of("read"), false));
-      return true;
-    }));
+    verify(templateRenderer).renderNotFoundError();
   }
 }
