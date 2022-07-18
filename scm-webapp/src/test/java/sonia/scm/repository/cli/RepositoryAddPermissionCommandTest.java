@@ -103,6 +103,28 @@ class RepositoryAddPermissionCommandTest {
   }
 
   @Test
+  void shouldAddNewVerbToExistingVerbsForGroup() {
+    repository.setPermissions(
+      List.of(
+        new RepositoryPermission("hog", List.of("read"), true)
+      )
+    );
+
+    command.setRepository("hitchhiker/HeartOfGold");
+    command.setName("hog");
+    command.setVerb("write");
+    command.setForGroup(true);
+
+    command.run();
+
+    verify(repositoryManager).modify(argThat(argument -> {
+      assertThat(argument.getPermissions()).extracting("name", "verbs", "groupPermission")
+        .containsExactly(tuple("hog", Set.of("read", "write"), true));
+      return true;
+    }));
+  }
+
+  @Test
   void shouldAddNewVerbToRoleAndReplaceRoleWithCustomPermissionsForUser() {
     repository.setPermissions(
       List.of(

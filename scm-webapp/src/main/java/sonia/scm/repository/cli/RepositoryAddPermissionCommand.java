@@ -93,7 +93,6 @@ class RepositoryAddPermissionCommand implements Runnable {
   }
 
   private Collection<String> getVerbs(RepositoryPermission permission) {
-    Collection<String> effectiveVerbs;
     if (permission.getRole() == null) {
       return permission.getVerbs();
     } else {
