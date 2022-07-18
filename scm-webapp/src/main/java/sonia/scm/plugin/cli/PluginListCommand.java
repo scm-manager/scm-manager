@@ -85,14 +85,14 @@ class PluginListCommand implements Runnable {
     } else {
       Table table = templateRenderer.createTable();
       String yes = spec.resourceBundle().getString("yes");
-      table.addHeader("scm.plugin.name", "scm.plugin.displayName", "scm.plugin.installedVersion", "scm.plugin.availableVersion", "scm.plugin.pending");
+      table.addHeader("scm.plugin.name", "scm.plugin.displayName", "scm.plugin.availableVersion", "scm.plugin.installedVersion", "scm.plugin.pending");
 
       for (ListablePlugin plugin : plugins) {
         table.addRow(
           plugin.getName(),
           plugin.getDisplayName(),
-          plugin.getInstalledVersion(),
           plugin.getAvailableVersion(),
+          plugin.getInstalledVersion(),
           plugin.isPending() ? yes : ""
         );
       }
