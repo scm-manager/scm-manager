@@ -56,9 +56,16 @@ class RepositoryAddPermissionCommandTest {
   private RepositoryRoleManager roleManager;
 
   @InjectMocks
+  private PermissionCommandManager permissionCommandManager;
+
   private RepositoryAddPermissionCommand command;
 
   private final Repository repository = RepositoryTestData.createHeartOfGold();
+
+  @BeforeEach
+  void setUpCommand() {
+    command = new RepositoryAddPermissionCommand(permissionCommandManager);
+  }
 
   @BeforeEach
   void mockRepository() {
@@ -68,7 +75,7 @@ class RepositoryAddPermissionCommandTest {
 
   @Test
   void shouldSetVerbForNewUser() {
-    command.setRepository("hitchhiker/HeartOfGold");
+    command.setRepositoryName("hitchhiker/HeartOfGold");
     command.setName("trillian");
     command.setVerb("*");
 
@@ -89,7 +96,7 @@ class RepositoryAddPermissionCommandTest {
       )
     );
 
-    command.setRepository("hitchhiker/HeartOfGold");
+    command.setRepositoryName("hitchhiker/HeartOfGold");
     command.setName("trillian");
     command.setVerb("write");
 
@@ -110,7 +117,7 @@ class RepositoryAddPermissionCommandTest {
       )
     );
 
-    command.setRepository("hitchhiker/HeartOfGold");
+    command.setRepositoryName("hitchhiker/HeartOfGold");
     command.setName("hog");
     command.setVerb("write");
     command.setForGroup(true);
@@ -134,7 +141,7 @@ class RepositoryAddPermissionCommandTest {
     when(roleManager.get("READ"))
       .thenReturn(new RepositoryRole("READ", List.of("read", "pull"), ""));
 
-    command.setRepository("hitchhiker/HeartOfGold");
+    command.setRepositoryName("hitchhiker/HeartOfGold");
     command.setName("trillian");
     command.setVerb("write");
 

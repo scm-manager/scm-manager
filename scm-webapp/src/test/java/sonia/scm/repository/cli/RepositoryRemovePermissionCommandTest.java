@@ -54,11 +54,18 @@ class RepositoryRemovePermissionCommandTest {
   private RepositoryManager repositoryManager;
   @Mock
   private RepositoryRoleManager roleManager;
+  @InjectMocks
+  private PermissionCommandManager permissionCommandManager;
 
   @InjectMocks
   private RepositoryRemovePermissionCommand command;
 
   private final Repository repository = RepositoryTestData.createHeartOfGold();
+
+  @BeforeEach
+  void setUpCommand() {
+    command = new RepositoryRemovePermissionCommand(permissionCommandManager);
+  }
 
   @BeforeEach
   void mockRepository() {
@@ -67,14 +74,14 @@ class RepositoryRemovePermissionCommandTest {
   }
 
   @Test
-  void shouldRemoveNewVerbFromExistingVerbsForUser() {
+  void shouldRemoveVerbFromExistingVerbsForUser() {
     repository.setPermissions(
       List.of(
         new RepositoryPermission("dent", List.of("read", "write"), false)
       )
     );
 
-    command.setRepository("hitchhiker/HeartOfGold");
+    command.setRepositoryName("hitchhiker/HeartOfGold");
     command.setName("dent");
     command.setVerb("write");
 
@@ -95,7 +102,7 @@ class RepositoryRemovePermissionCommandTest {
       )
     );
 
-    command.setRepository("hitchhiker/HeartOfGold");
+    command.setRepositoryName("hitchhiker/HeartOfGold");
     command.setName("hog");
     command.setVerb("write");
     command.setForGroup(true);
@@ -119,7 +126,7 @@ class RepositoryRemovePermissionCommandTest {
     when(roleManager.get("READ"))
       .thenReturn(new RepositoryRole("READ", List.of("read", "pull"), ""));
 
-    command.setRepository("hitchhiker/HeartOfGold");
+    command.setRepositoryName("hitchhiker/HeartOfGold");
     command.setName("dent");
     command.setVerb("pull");
 

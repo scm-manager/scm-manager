@@ -27,27 +27,20 @@ package sonia.scm.repository.cli;
 import com.google.common.annotations.VisibleForTesting;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
-import sonia.scm.repository.NamespaceAndName;
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermission;
-import sonia.scm.repository.RepositoryRoleManager;
 
 import javax.inject.Inject;
-import java.util.Collection;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 @CommandLine.Command(name = "add-permission")
 @ParentCommand(value = RepositoryCommand.class)
 class RepositoryAddPermissionCommand implements Runnable {
 
-  private final RepositoryManager repositoryManager;
-  private final RepositoryRoleManager roleManager;
+  private final PermissionCommandManager permissionCommandManager;
 
   @CommandLine.Parameters(paramLabel = "namespace/name", index = "0", descriptionKey = "scm.repo.add-permission.repository")
-   private String repository;
+   private String repositoryName;
   @CommandLine.Parameters(paramLabel = "name", index = "1", descriptionKey = "scm.repo.add-permission.name")
   private String name;
   @CommandLine.Parameters(paramLabel = "verb", index = "2", descriptionKey = "scm.repo.add-permission.verb")
@@ -57,52 +50,30 @@ class RepositoryAddPermissionCommand implements Runnable {
   private boolean forGroup;
 
   @Inject
-  public RepositoryAddPermissionCommand(RepositoryManager repositoryManager, RepositoryRoleManager roleManager) {
-    this.repositoryManager = repositoryManager;
-    this.roleManager = roleManager;
+  RepositoryAddPermissionCommand(PermissionCommandManager permissionCommandManager) {
+    this.permissionCommandManager = permissionCommandManager;
   }
 
   @Override
   public void run() {
-    NamespaceAndName namespaceAndName = NamespaceAndName.fromString(repository);
-    Repository repo = repositoryManager.get(namespaceAndName);
+    permissionCommandManager.modifyRepository(
+      repositoryName,
+      repository -> {
+        Set<String> verbs =
+          permissionCommandManager.getExistingPermissions(repository, name, forGroup)
+            .map(permissionCommandManager::getVerbs)
+            .map(HashSet::new)
+            .orElseGet(HashSet::new);
+        verbs.add(verb);
 
-    Set<String> permissions =
-      getExistingPermissions(repo)
-        .map(this::getVerbs)
-        .map(HashSet::new)
-        .orElseGet(HashSet::new);
-    if (!forGroup) {
-      repo.findUserPermission(name).ifPresent(repo::removePermission);
-    } else {
-      repo.findGroupPermission(name).ifPresent(repo::removePermission);
-    }
-    permissions.add(verb);
-
-    repo.addPermission(new RepositoryPermission(name, permissions, forGroup));
-
-    repositoryManager.modify(repo);
-  }
-
-  private Optional<RepositoryPermission> getExistingPermissions(Repository repo) {
-    if (!forGroup) {
-      return repo.findUserPermission(name);
-    } else {
-      return repo.findGroupPermission(name);
-    }
-  }
-
-  private Collection<String> getVerbs(RepositoryPermission permission) {
-    if (permission.getRole() == null) {
-      return permission.getVerbs();
-    } else {
-      return roleManager.get(permission.getRole()).getVerbs();
-    }
+        permissionCommandManager.addPerission(repository, new RepositoryPermission(name, verbs, forGroup));
+      }
+    );
   }
 
   @VisibleForTesting
-  void setRepository(String repository) {
-    this.repository = repository;
+  void setRepositoryName(String repositoryName) {
+    this.repositoryName = repositoryName;
   }
 
   @VisibleForTesting

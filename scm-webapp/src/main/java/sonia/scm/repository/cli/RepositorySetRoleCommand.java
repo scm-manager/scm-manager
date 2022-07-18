@@ -27,9 +27,6 @@ package sonia.scm.repository.cli;
 import com.google.common.annotations.VisibleForTesting;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
-import sonia.scm.repository.NamespaceAndName;
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermission;
 
 import javax.inject.Inject;
@@ -38,10 +35,10 @@ import javax.inject.Inject;
 @ParentCommand(value = RepositoryCommand.class)
 class RepositorySetRoleCommand implements Runnable {
 
-  private final RepositoryManager repositoryManager;
+  private final PermissionCommandManager permissionCommandManager;
 
   @CommandLine.Parameters(paramLabel = "namespace/name", index = "0", descriptionKey = "scm.repo.set-role.repository")
-  private String repository;
+  private String repositoryName;
   @CommandLine.Parameters(paramLabel = "name", index = "1", descriptionKey = "scm.repo.set-role.name")
   private String name;
   @CommandLine.Parameters(paramLabel = "role", index = "2", descriptionKey = "scm.repo.set-role.role")
@@ -51,29 +48,21 @@ class RepositorySetRoleCommand implements Runnable {
   private boolean forGroup;
 
   @Inject
-  public RepositorySetRoleCommand(RepositoryManager repositoryManager) {
-    this.repositoryManager = repositoryManager;
+  public RepositorySetRoleCommand(PermissionCommandManager permissionCommandManager) {
+    this.permissionCommandManager = permissionCommandManager;
   }
 
   @Override
   public void run() {
-    NamespaceAndName namespaceAndName = NamespaceAndName.fromString(repository);
-    Repository repo = repositoryManager.get(namespaceAndName);
-
-    if (!forGroup) {
-      repo.findUserPermission(name).ifPresent(repo::removePermission);
-    } else {
-      repo.findGroupPermission(name).ifPresent(repo::removePermission);
-    }
-
-    repo.addPermission(new RepositoryPermission(name, role, forGroup));
-
-    repositoryManager.modify(repo);
+    permissionCommandManager.modifyRepository(
+      repositoryName,
+      repository -> permissionCommandManager.addPerission(repository, new RepositoryPermission(name, role, forGroup))
+    );
   }
 
   @VisibleForTesting
-  void setRepository(String repository) {
-    this.repository = repository;
+  void setRepositoryName(String repositoryName) {
+    this.repositoryName = repositoryName;
   }
 
   @VisibleForTesting

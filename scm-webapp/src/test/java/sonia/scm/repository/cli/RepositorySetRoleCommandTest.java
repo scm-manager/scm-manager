@@ -51,9 +51,16 @@ class RepositorySetRoleCommandTest {
   private RepositoryManager repositoryManager;
 
   @InjectMocks
+  private PermissionCommandManager permissionCommandManager;
+
   private RepositorySetRoleCommand command;
 
   private final Repository repository = RepositoryTestData.createHeartOfGold();
+
+  @BeforeEach
+  void setUpCommand() {
+    command = new RepositorySetRoleCommand(permissionCommandManager);
+  }
 
   @BeforeEach
   void mockRepository() {
@@ -63,7 +70,7 @@ class RepositorySetRoleCommandTest {
 
   @Test
   void shouldSetRoleForUser() {
-    command.setRepository("hitchhiker/HeartOfGold");
+    command.setRepositoryName("hitchhiker/HeartOfGold");
     command.setName("trillian");
     command.setRole("OWNER");
 
@@ -78,7 +85,7 @@ class RepositorySetRoleCommandTest {
 
   @Test
   void shouldSetRoleForGroup() {
-    command.setRepository("hitchhiker/HeartOfGold");
+    command.setRepositoryName("hitchhiker/HeartOfGold");
     command.setName("crew");
     command.setRole("READ");
     command.setForGroup(true);
@@ -100,7 +107,7 @@ class RepositorySetRoleCommandTest {
       )
     );
 
-    command.setRepository("hitchhiker/HeartOfGold");
+    command.setRepositoryName("hitchhiker/HeartOfGold");
     command.setName("trillian");
     command.setRole("OWNER");
 
@@ -121,7 +128,7 @@ class RepositorySetRoleCommandTest {
       )
     );
 
-    command.setRepository("hitchhiker/HeartOfGold");
+    command.setRepositoryName("hitchhiker/HeartOfGold");
     command.setName("trillian");
     command.setRole("OWNER");
     command.setForGroup(true);

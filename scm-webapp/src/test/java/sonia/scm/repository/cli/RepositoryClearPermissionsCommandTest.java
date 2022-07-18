@@ -48,11 +48,17 @@ class RepositoryClearPermissionsCommandTest {
 
   @Mock
   private RepositoryManager repositoryManager;
-
   @InjectMocks
+  private PermissionCommandManager permissionCommandManager;
+
   private RepositoryClearPermissionsCommand command;
 
   private final Repository repository = RepositoryTestData.createHeartOfGold();
+
+  @BeforeEach
+  void setUpCommand() {
+    command = new RepositoryClearPermissionsCommand(permissionCommandManager);
+  }
 
   @BeforeEach
   void mockRepository() {
@@ -68,7 +74,7 @@ class RepositoryClearPermissionsCommandTest {
       )
     );
 
-    command.setRepository("hitchhiker/HeartOfGold");
+    command.setRepositoryName("hitchhiker/HeartOfGold");
     command.setName("trillian");
 
     command.run();
@@ -87,7 +93,7 @@ class RepositoryClearPermissionsCommandTest {
       )
     );
 
-    command.setRepository("hitchhiker/HeartOfGold");
+    command.setRepositoryName("hitchhiker/HeartOfGold");
     command.setName("hog");
     command.setForGroup(true);
 

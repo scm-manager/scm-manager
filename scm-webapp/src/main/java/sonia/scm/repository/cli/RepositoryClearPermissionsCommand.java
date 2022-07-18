@@ -27,9 +27,6 @@ package sonia.scm.repository.cli;
 import com.google.common.annotations.VisibleForTesting;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
-import sonia.scm.repository.NamespaceAndName;
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryManager;
 
 import javax.inject.Inject;
 
@@ -37,10 +34,10 @@ import javax.inject.Inject;
 @ParentCommand(value = RepositoryCommand.class)
 class RepositoryClearPermissionsCommand implements Runnable {
 
-  private final RepositoryManager repositoryManager;
+  private final PermissionCommandManager permissionCommandManager;
 
   @CommandLine.Parameters(paramLabel = "namespace/name", index = "0", descriptionKey = "scm.repo.clear-permissions.repository")
-   private String repository;
+   private String repositoryName;
   @CommandLine.Parameters(paramLabel = "name", index = "1", descriptionKey = "scm.repo.clear-permissions.name")
   private String name;
 
@@ -48,27 +45,21 @@ class RepositoryClearPermissionsCommand implements Runnable {
   private boolean forGroup;
 
   @Inject
-  public RepositoryClearPermissionsCommand(RepositoryManager repositoryManager) {
-    this.repositoryManager = repositoryManager;
+  public RepositoryClearPermissionsCommand(PermissionCommandManager permissionCommandManager) {
+    this.permissionCommandManager = permissionCommandManager;
   }
 
   @Override
   public void run() {
-    NamespaceAndName namespaceAndName = NamespaceAndName.fromString(repository);
-    Repository repo = repositoryManager.get(namespaceAndName);
-
-    if (!forGroup) {
-      repo.findUserPermission(name).ifPresent(repo::removePermission);
-    } else {
-      repo.findGroupPermission(name).ifPresent(repo::removePermission);
-    }
-
-    repositoryManager.modify(repo);
+    permissionCommandManager.modifyRepository(
+      repositoryName,
+      repo -> permissionCommandManager.removeExistingPermission(repo, name, forGroup)
+    );
   }
 
   @VisibleForTesting
-  void setRepository(String repository) {
-    this.repository = repository;
+  void setRepositoryName(String repositoryName) {
+    this.repositoryName = repositoryName;
   }
 
   @VisibleForTesting
