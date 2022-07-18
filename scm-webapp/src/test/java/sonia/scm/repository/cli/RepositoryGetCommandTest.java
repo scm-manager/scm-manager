@@ -33,10 +33,7 @@ import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryTestData;
-import sonia.scm.repository.cli.RepositoryGetCommand;
-import sonia.scm.repository.cli.RepositoryTemplateRenderer;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
