@@ -80,26 +80,10 @@ class RepositoryAddPermissionCommandTest {
     }
 
     @Test
-    void shouldSetVerbForNewUser() {
-      command.setRepositoryName("hitchhiker/HeartOfGold");
-      command.setName("trillian");
-      command.setVerb("*");
-
-      command.run();
-
-      verify(repositoryManager).modify(argThat(argument -> {
-        assertThat(argument.getPermissions()).extracting("name", "verbs", "groupPermission")
-          .containsExactly(tuple("trillian", Set.of("*"), false));
-        return true;
-      }));
-    }
-
-    @Test
     void shouldSetMultipleVerbsForNewUser() {
       command.setRepositoryName("hitchhiker/HeartOfGold");
       command.setName("trillian");
-      command.setVerb("read");
-      command.setMoreVerbs("pull", "push");
+      command.setVerbs("read", "pull", "push");
 
       command.run();
 
@@ -120,7 +104,7 @@ class RepositoryAddPermissionCommandTest {
 
       command.setRepositoryName("hitchhiker/HeartOfGold");
       command.setName("trillian");
-      command.setVerb("write");
+      command.setVerbs("write");
 
       command.run();
 
@@ -141,7 +125,7 @@ class RepositoryAddPermissionCommandTest {
 
       command.setRepositoryName("hitchhiker/HeartOfGold");
       command.setName("hog");
-      command.setVerb("write");
+      command.setVerbs("write");
       command.setForGroup(true);
 
       command.run();
@@ -165,7 +149,7 @@ class RepositoryAddPermissionCommandTest {
 
       command.setRepositoryName("hitchhiker/HeartOfGold");
       command.setName("trillian");
-      command.setVerb("write");
+      command.setVerbs("write");
 
       command.run();
 
@@ -181,7 +165,7 @@ class RepositoryAddPermissionCommandTest {
   void shouldHandleIllegalNamespaceNameParameter() {
     command.setRepositoryName("illegal name");
     command.setName("trillian");
-    command.setVerb("write");
+    command.setVerbs("write");
 
     command.run();
 
@@ -192,7 +176,7 @@ class RepositoryAddPermissionCommandTest {
   void shouldHandleNotExistingRepository() {
     command.setRepositoryName("no/repository");
     command.setName("trillian");
-    command.setVerb("write");
+    command.setVerbs("write");
 
     command.run();
 

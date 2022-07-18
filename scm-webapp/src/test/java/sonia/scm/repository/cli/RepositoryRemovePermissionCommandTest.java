@@ -81,27 +81,6 @@ class RepositoryRemovePermissionCommandTest {
     }
 
     @Test
-    void shouldRemoveVerbFromExistingVerbsForUser() {
-      repository.setPermissions(
-        List.of(
-          new RepositoryPermission("dent", List.of("read", "write"), false)
-        )
-      );
-
-      command.setRepositoryName("hitchhiker/HeartOfGold");
-      command.setName("dent");
-      command.setVerb("write");
-
-      command.run();
-
-      verify(repositoryManager).modify(argThat(argument -> {
-        assertThat(argument.getPermissions()).extracting("name", "verbs", "groupPermission")
-          .containsExactly(tuple("dent", Set.of("read"), false));
-        return true;
-      }));
-    }
-
-    @Test
     void shouldRemoveMultipleVerbsFromExistingVerbsForUser() {
       repository.setPermissions(
         List.of(
@@ -111,8 +90,7 @@ class RepositoryRemovePermissionCommandTest {
 
       command.setRepositoryName("hitchhiker/HeartOfGold");
       command.setName("dent");
-      command.setVerb("write");
-      command.setMoreVerbs("push", "pull");
+      command.setVerbs("write", "push", "pull");
 
       command.run();
 
@@ -133,7 +111,7 @@ class RepositoryRemovePermissionCommandTest {
 
       command.setRepositoryName("hitchhiker/HeartOfGold");
       command.setName("hog");
-      command.setVerb("write");
+      command.setVerbs("write");
       command.setForGroup(true);
 
       command.run();
@@ -157,7 +135,7 @@ class RepositoryRemovePermissionCommandTest {
 
       command.setRepositoryName("hitchhiker/HeartOfGold");
       command.setName("dent");
-      command.setVerb("pull");
+      command.setVerbs("pull");
 
       command.run();
 
@@ -173,7 +151,7 @@ class RepositoryRemovePermissionCommandTest {
   void shouldHandleIllegalNamespaceNameParameter() {
     command.setRepositoryName("illegal name");
     command.setName("trillian");
-    command.setVerb("write");
+    command.setVerbs("write");
 
     command.run();
 
@@ -184,7 +162,7 @@ class RepositoryRemovePermissionCommandTest {
   void shouldHandleNotExistingRepository() {
     command.setRepositoryName("no/repository");
     command.setName("trillian");
-    command.setVerb("write");
+    command.setVerbs("write");
 
     command.run();
 
