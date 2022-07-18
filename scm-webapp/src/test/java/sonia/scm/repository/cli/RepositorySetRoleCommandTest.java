@@ -62,7 +62,7 @@ class RepositorySetRoleCommandTest {
   }
 
   @Test
-  void shouldAddRepositoryPermissionForUser() {
+  void shouldSetRoleForUser() {
     command.setRepository("hitchhiker/HeartOfGold");
     command.setName("trillian");
     command.setRole("OWNER");
@@ -77,7 +77,7 @@ class RepositorySetRoleCommandTest {
   }
 
   @Test
-  void shouldAddRepositoryPermissionForGroup() {
+  void shouldSetRoleForGroup() {
     command.setRepository("hitchhiker/HeartOfGold");
     command.setName("crew");
     command.setRole("READ");
