@@ -31,8 +31,10 @@ import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermission;
+import sonia.scm.repository.RepositoryRoleManager;
 
 import javax.inject.Inject;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -42,9 +44,10 @@ import java.util.Set;
 class RepositoryAddPermissionCommand implements Runnable {
 
   private final RepositoryManager repositoryManager;
+  private final RepositoryRoleManager roleManager;
 
   @CommandLine.Parameters(paramLabel = "namespace/name", index = "0", descriptionKey = "scm.repo.add-permission.repository")
-  private String repository;
+   private String repository;
   @CommandLine.Parameters(paramLabel = "name", index = "1", descriptionKey = "scm.repo.add-permission.name")
   private String name;
   @CommandLine.Parameters(paramLabel = "verb", index = "2", descriptionKey = "scm.repo.add-permission.verb")
@@ -54,8 +57,9 @@ class RepositoryAddPermissionCommand implements Runnable {
   private boolean forGroup;
 
   @Inject
-  public RepositoryAddPermissionCommand(RepositoryManager repositoryManager) {
+  public RepositoryAddPermissionCommand(RepositoryManager repositoryManager, RepositoryRoleManager roleManager) {
     this.repositoryManager = repositoryManager;
+    this.roleManager = roleManager;
   }
 
   @Override
@@ -65,7 +69,7 @@ class RepositoryAddPermissionCommand implements Runnable {
 
     Set<String> permissions =
       getExistingPermissions(repo)
-        .map(RepositoryPermission::getVerbs)
+        .map(this::getVerbs)
         .map(HashSet::new)
         .orElseGet(HashSet::new);
     if (!forGroup) {
@@ -85,6 +89,15 @@ class RepositoryAddPermissionCommand implements Runnable {
       return repo.findUserPermission(name);
     } else {
       return repo.findGroupPermission(name);
+    }
+  }
+
+  private Collection<String> getVerbs(RepositoryPermission permission) {
+    Collection<String> effectiveVerbs;
+    if (permission.getRole() == null) {
+      return permission.getVerbs();
+    } else {
+      return roleManager.get(permission.getRole()).getVerbs();
     }
   }
 

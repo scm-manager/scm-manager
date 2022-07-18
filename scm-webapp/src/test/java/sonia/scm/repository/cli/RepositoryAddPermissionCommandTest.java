@@ -34,6 +34,8 @@ import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermission;
+import sonia.scm.repository.RepositoryRole;
+import sonia.scm.repository.RepositoryRoleManager;
 import sonia.scm.repository.RepositoryTestData;
 
 import java.util.List;
@@ -50,6 +52,8 @@ class RepositoryAddPermissionCommandTest {
 
   @Mock
   private RepositoryManager repositoryManager;
+  @Mock
+  private RepositoryRoleManager roleManager;
 
   @InjectMocks
   private RepositoryAddPermissionCommand command;
@@ -94,6 +98,29 @@ class RepositoryAddPermissionCommandTest {
     verify(repositoryManager).modify(argThat(argument -> {
       assertThat(argument.getPermissions()).extracting("name", "verbs", "groupPermission")
         .containsExactly(tuple("trillian", Set.of("read", "write"), false));
+      return true;
+    }));
+  }
+
+  @Test
+  void shouldAddNewVerbToRoleAndReplaceRoleWithCustomPermissionsForUser() {
+    repository.setPermissions(
+      List.of(
+        new RepositoryPermission("trillian", "READ", false)
+      )
+    );
+    when(roleManager.get("READ"))
+      .thenReturn(new RepositoryRole("READ", List.of("read", "pull"), ""));
+
+    command.setRepository("hitchhiker/HeartOfGold");
+    command.setName("trillian");
+    command.setVerb("write");
+
+    command.run();
+
+    verify(repositoryManager).modify(argThat(argument -> {
+      assertThat(argument.getPermissions()).extracting("name", "verbs", "groupPermission")
+        .containsExactly(tuple("trillian", Set.of("pull", "read", "write"), false));
       return true;
     }));
   }
