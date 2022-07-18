@@ -136,15 +136,15 @@
   "verbs": {
     "repository": {
       "read": {
-        "displayName": "Repository Lesen",
+        "displayName": "Repository lesen",
         "description": "Darf das Repository im SCM-Manager sehen."
       },
       "modify": {
-        "displayName": "Repository Modifizieren",
+        "displayName": "Repository modifizieren",
         "description": "Darf die Eigenschaften des Repository verändern."
       },
       "delete": {
-        "displayName": "Repository Löschen",
+        "displayName": "Repository löschen",
         "description": "Darf das Repository löschen."
       },
       "rename": {
