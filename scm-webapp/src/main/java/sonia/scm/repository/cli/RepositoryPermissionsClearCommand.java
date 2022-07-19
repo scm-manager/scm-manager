@@ -53,7 +53,10 @@ class RepositoryPermissionsClearCommand implements Runnable {
   public void run() {
     permissionCommandManager.modifyRepository(
       repositoryName,
-      repo -> permissionCommandManager.removeExistingPermission(repo, name, forGroup)
+      repo -> {
+        permissionCommandManager.removeExistingPermission(repo, name, forGroup);
+        return true;
+      }
     );
   }
 

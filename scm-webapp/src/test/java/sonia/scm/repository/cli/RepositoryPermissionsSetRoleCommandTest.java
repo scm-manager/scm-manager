@@ -46,6 +46,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -172,7 +173,8 @@ class RepositoryPermissionsSetRoleCommandTest {
 
       command.run();
 
-      verify(templateRenderer).renderNotFoundError();
+      verify(templateRenderer).renderRoleNotFoundError();
+      verify(repositoryManager, never()).modify(any());
     }
   }
 
@@ -185,6 +187,7 @@ class RepositoryPermissionsSetRoleCommandTest {
     command.run();
 
     verify(templateRenderer).renderInvalidInputError();
+    verify(repositoryManager, never()).modify(any());
   }
 
   @Test
@@ -196,5 +199,6 @@ class RepositoryPermissionsSetRoleCommandTest {
     command.run();
 
     verify(templateRenderer).renderNotFoundError();
+    verify(repositoryManager, never()).modify(any());
   }
 }

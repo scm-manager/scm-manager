@@ -53,6 +53,12 @@ class RepositoryTemplateRenderer extends TemplateRenderer {
   private static final String INVALID_INPUT_TEMPLATE = "{{i18n.repoInvalidInput}}";
   private static final String NOT_FOUND_TEMPLATE = "{{i18n.repoNotFound}}";
   private static final String ROLE_NOT_FOUND_TEMPLATE = "{{i18n.roleNotFound}}";
+  private static final String VERB_NOT_FOUND_TEMPLATE = "{{i18n.verbNotFound}}";
+
+  private static final String TYPE_HEADER_KEY = "scm.repo.permissions.type";
+  private static final String NAME_HEADER_KEY = "scm.repo.permissions.name";
+  private static final String ROLE_HEADER_KEY = "scm.repo.permissions.role";
+  private static final String VERBS_HEADER_KEY = "scm.repo.permissions.verbs";
 
   private final CliContext context;
   private final RepositoryToRepositoryCommandDtoMapper mapper;
@@ -80,14 +86,14 @@ class RepositoryTemplateRenderer extends TemplateRenderer {
 
   public void render(Collection<RepositoryPermissionBean> permissions) {
     Table table = createTable();
-    table.addHeader("scm.repo.permissions.type", "scm.repo.permissions.name", "scm.repo.permissions.role");
+    table.addHeader(TYPE_HEADER_KEY, NAME_HEADER_KEY, ROLE_HEADER_KEY);
     permissions.forEach(permission -> addPermissionToTable(table, permission));
     renderToStdout(TABLE_TEMPLATE, Map.ofEntries(entry("rows", table), entry("permissions", permissions)));
   }
 
   public void renderVerbose(Collection<RepositoryPermissionBean> permissions) {
     Table table = createTable();
-    table.addHeader("scm.repo.permissions.type", "scm.repo.permissions.name", "scm.repo.permissions.role", "scm.repo.permissions.verbs");
+    table.addHeader(TYPE_HEADER_KEY, NAME_HEADER_KEY, ROLE_HEADER_KEY, VERBS_HEADER_KEY);
     permissions.forEach(permission -> addVerbosePermissionToTable(table, permission));
     renderToStdout(TABLE_TEMPLATE, Map.ofEntries(entry("rows", table), entry("permissions", permissions)));
   }
@@ -127,6 +133,12 @@ class RepositoryTemplateRenderer extends TemplateRenderer {
     context.exit(ExitCode.NOT_FOUND);
   }
 
+  public void renderVerbNotFoundError() {
+    renderToStderr(VERB_NOT_FOUND_TEMPLATE, emptyMap());
+    context.getStderr().println();
+    context.exit(ExitCode.NOT_FOUND);
+  }
+
   public void renderException(Exception exception) {
     renderDefaultError(exception);
     context.exit(ExitCode.SERVER_ERROR);
@@ -145,7 +157,7 @@ class RepositoryTemplateRenderer extends TemplateRenderer {
 
   public void renderRoles(Collection<RoleBean> roles) {
     Table table = createTable();
-    table.addHeader("scm.repo.permissions.role", "scm.repo.permissions.verbs");
+    table.addHeader(ROLE_HEADER_KEY, VERBS_HEADER_KEY);
     roles.forEach(role -> addRoleToTable(table, role));
     renderToStdout(TABLE_TEMPLATE, Map.ofEntries(entry("rows", table), entry("roles", roles)));
   }

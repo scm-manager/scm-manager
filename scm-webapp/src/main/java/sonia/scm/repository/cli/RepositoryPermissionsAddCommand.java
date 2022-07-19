@@ -27,9 +27,11 @@ package sonia.scm.repository.cli;
 import com.google.common.annotations.VisibleForTesting;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
+import sonia.scm.cli.PermissionDescriptionResolver;
 import sonia.scm.repository.RepositoryPermission;
 
 import javax.inject.Inject;
+import java.util.Arrays;
 import java.util.Set;
 
 import static java.util.Arrays.asList;
@@ -39,6 +41,8 @@ import static java.util.Arrays.asList;
 class RepositoryPermissionsAddCommand implements Runnable {
 
   private final RepositoryPermissionCommandManager permissionCommandManager;
+  private final PermissionDescriptionResolver permissionDescriptionResolver;
+  private final RepositoryTemplateRenderer templateRenderer;
 
   @CommandLine.Parameters(paramLabel = "namespace/name", index = "0", descriptionKey = "scm.repo.add-permissions.repository")
   private String repositoryName;
@@ -51,8 +55,10 @@ class RepositoryPermissionsAddCommand implements Runnable {
   private boolean forGroup;
 
   @Inject
-  RepositoryPermissionsAddCommand(RepositoryPermissionCommandManager permissionCommandManager) {
+  RepositoryPermissionsAddCommand(RepositoryPermissionCommandManager permissionCommandManager, PermissionDescriptionResolver permissionDescriptionResolver, RepositoryTemplateRenderer templateRenderer) {
     this.permissionCommandManager = permissionCommandManager;
+    this.permissionDescriptionResolver = permissionDescriptionResolver;
+    this.templateRenderer = templateRenderer;
   }
 
   @Override
@@ -60,12 +66,24 @@ class RepositoryPermissionsAddCommand implements Runnable {
     permissionCommandManager.modifyRepository(
       repositoryName,
       repository -> {
+        if (!Arrays.stream(verbs).allMatch(this::verifyVerbExists)) {
+          return false;
+        }
         Set<String> resultingVerbs =
           permissionCommandManager.getPermissionsAdModifiableSet(repository, name, forGroup);
         resultingVerbs.addAll(asList(this.verbs));
         permissionCommandManager.replacePermission(repository, new RepositoryPermission(name, resultingVerbs, forGroup));
+        return true;
       }
     );
+  }
+
+  private boolean verifyVerbExists(String verb) {
+    if (permissionDescriptionResolver.getDescription(verb).isEmpty()) {
+      templateRenderer.renderVerbNotFoundError();
+      return false;
+    }
+    return true;
   }
 
   @VisibleForTesting

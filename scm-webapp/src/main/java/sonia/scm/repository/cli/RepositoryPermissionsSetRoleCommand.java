@@ -62,9 +62,10 @@ class RepositoryPermissionsSetRoleCommand implements Runnable {
       repository -> {
         if (roleManager.get(role) == null) {
           permissionCommandManager.renderRoleNotFoundError();
-          return;
+          return false;
         }
         permissionCommandManager.replacePermission(repository, new RepositoryPermission(name, role, forGroup));
+        return true;
       }
     );
   }

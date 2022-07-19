@@ -64,6 +64,7 @@ class RepositoryPermissionsRemoveCommand implements Runnable {
           permissionCommandManager.getPermissionsAdModifiableSet(repository, name, forGroup);
         resultingVerbs.removeAll(asList(this.verbs));
         permissionCommandManager.replacePermission(repository, new RepositoryPermission(name, resultingVerbs, forGroup));
+        return true;
       }
     );
   }

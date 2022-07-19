@@ -34,7 +34,8 @@ import javax.inject.Inject;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;
-import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 class RepositoryPermissionCommandManager {
 
@@ -49,8 +50,8 @@ class RepositoryPermissionCommandManager {
     this.templateRenderer = templateRenderer;
   }
 
-  void modifyRepository(String repositoryName, Consumer<Repository> modifier) {
-    NamespaceAndName namespaceAndName = null;
+  void modifyRepository(String repositoryName, Predicate<Repository> modifier) {
+    NamespaceAndName namespaceAndName;
     try {
       namespaceAndName = NamespaceAndName.fromString(repositoryName);
     } catch (IllegalArgumentException e) {
@@ -60,8 +61,9 @@ class RepositoryPermissionCommandManager {
 
     Repository repository = repositoryManager.get(namespaceAndName);
     if (repository != null) {
-      modifier.accept(repository);
-      repositoryManager.modify(repository);
+      if (modifier.test(repository)) {
+        repositoryManager.modify(repository);
+      }
     } else {
       templateRenderer.renderNotFoundError();
     }
