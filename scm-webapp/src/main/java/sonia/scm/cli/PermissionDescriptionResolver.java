@@ -45,16 +45,22 @@ public class PermissionDescriptionResolver {
     this.locale = locale;
   }
 
-  public Optional<String> getDescription(String verb, boolean global) {
+  public Optional<String> getDescription(String verb) {
+    collectI18nJson();
+    return getVerbDescriptionFromI18nBundle(verb);
+  }
+
+  public Optional<String> getGlobalDescription(String verb) {
+    collectI18nJson();
+    return getGlobalVerbDescriptionFromI18nBundle(verb);
+  }
+
+  private void collectI18nJson() {
     try {
       i18nCollector.findJson(locale.getLanguage());
     } catch (IOException e) {
       throw new RuntimeException("failed to load i18n package", e);
     }
-    if (global) {
-      return getGlobalVerbDescriptionFromI18nBundle(verb);
-    }
-    return getVerbDescriptionFromI18nBundle(verb);
   }
 
   private Optional<String> getVerbDescriptionFromI18nBundle(String verb) {

@@ -27,70 +27,48 @@ package sonia.scm.group.cli;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
 import sonia.scm.cli.PermissionDescriptionResolver;
-import sonia.scm.group.Group;
-import sonia.scm.group.GroupManager;
+import sonia.scm.cli.Table;
 import sonia.scm.repository.cli.GroupCommand;
 import sonia.scm.security.PermissionAssigner;
 import sonia.scm.security.PermissionDescriptor;
 
 import javax.inject.Inject;
 import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 @ParentCommand(value = GroupCommand.class)
-@CommandLine.Command(name = "list-permissions")
-class GroupPermissionListCommand implements Runnable {
+@CommandLine.Command(name = "available-permissions")
+class GroupPermissionAvailableCommand implements Runnable {
 
-  @CommandLine.Parameters(index = "0", paramLabel = "<name>", descriptionKey = "scm.group.name")
-  private String name;
-
-  @CommandLine.Option(names = {"--keys", "-k"}, descriptionKey = "scm.group.list-permissions.keys")
-  private boolean keys;
+  private static final String TABLE_TEMPLATE = String.join("\n",
+    "{{#rows}}",
+    "{{#cols}}{{#row.first}}{{#upper}}{{value}}{{/upper}}{{/row.first}}{{^row.first}}{{value}}{{/row.first}}{{^last}} {{/last}}{{/cols}}",
+    "{{/rows}}"
+  );
 
   @CommandLine.Mixin
   private final GroupTemplateRenderer templateRenderer;
   private final PermissionAssigner permissionAssigner;
   private final PermissionDescriptionResolver descriptionResolver;
-  private final GroupManager groupManager;
   @CommandLine.Spec
   private CommandLine.Model.CommandSpec spec;
 
-
   @Inject
-  GroupPermissionListCommand(GroupTemplateRenderer templateRenderer, PermissionAssigner permissionAssigner, PermissionDescriptionResolver descriptionResolver, GroupManager groupManager) {
+  GroupPermissionAvailableCommand(GroupTemplateRenderer templateRenderer, PermissionAssigner permissionAssigner, PermissionDescriptionResolver descriptionResolver) {
     this.templateRenderer = templateRenderer;
     this.permissionAssigner = permissionAssigner;
     this.descriptionResolver = descriptionResolver;
-    this.groupManager = groupManager;
   }
-
 
   @Override
   public void run() {
-    Collection<PermissionDescriptor> permissions;
-    Group group = groupManager.get(name);
-    if (group == null) {
-      templateRenderer.renderNotFoundError();
-      return;
-    } else {
-      permissions = permissionAssigner.readPermissionsForGroup(name);
+    Collection<PermissionDescriptor> availablePermissions = permissionAssigner.getAvailablePermissions();
+    Table table = templateRenderer.createTable();
+    table.addHeader("value", "description");
+    for (PermissionDescriptor descriptor : availablePermissions) {
+      String verb = descriptor.getValue();
+      table.addRow(verb, descriptionResolver.getGlobalDescription(verb).orElse(verb));
     }
-    if (keys) {
-      templateRenderer.render(resolvePermissions(permissions));
-    } else {
-      templateRenderer.render(resolvePermissionDescriptions(permissions));
-    }
-  }
-
-  private List<String> resolvePermissions(Collection<PermissionDescriptor> permissions) {
-    return permissions.stream().map(PermissionDescriptor::getValue).collect(Collectors.toList());
-  }
-
-  private List<String> resolvePermissionDescriptions(Collection<PermissionDescriptor> permissions) {
-    return permissions.stream()
-      .map(p -> descriptionResolver.getGlobalDescription(p.getValue()).orElse(p.getValue()))
-      .collect(Collectors.toList());
+    templateRenderer.renderToStdout(TABLE_TEMPLATE, Map.of("rows", table, "permissions", availablePermissions));
   }
 }
-

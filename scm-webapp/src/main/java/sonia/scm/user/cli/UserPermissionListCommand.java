@@ -88,7 +88,7 @@ class UserPermissionListCommand implements Runnable {
 
   private List<String> resolvePermissionDescriptions(Collection<PermissionDescriptor> permissions) {
     return permissions.stream()
-      .map(p -> descriptionResolver.getDescription(p.getValue(), true).orElse(p.getValue()))
+      .map(p -> descriptionResolver.getGlobalDescription(p.getValue()).orElse(p.getValue()))
       .collect(Collectors.toList());
   }
 }
