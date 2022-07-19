@@ -49,9 +49,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import static sonia.scm.AlreadyExistsException.alreadyExists;
-import static sonia.scm.ContextEntry.ContextBuilder.entity;
-
 /**
  * Source code repository.
  *
