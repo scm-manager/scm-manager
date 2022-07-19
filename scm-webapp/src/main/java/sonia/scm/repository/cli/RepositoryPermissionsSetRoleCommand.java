@@ -30,28 +30,25 @@ import sonia.scm.cli.ParentCommand;
 import sonia.scm.repository.RepositoryPermission;
 
 import javax.inject.Inject;
-import java.util.Set;
 
-import static java.util.Arrays.asList;
-
-@CommandLine.Command(name = "remove-permission")
+@CommandLine.Command(name = "set-role")
 @ParentCommand(value = RepositoryCommand.class)
-class RepositoryRemovePermissionCommand implements Runnable {
+class RepositoryPermissionsSetRoleCommand implements Runnable {
 
   private final PermissionCommandManager permissionCommandManager;
 
-  @CommandLine.Parameters(paramLabel = "namespace/name", index = "0", descriptionKey = "scm.repo.remove-permission.repository")
+  @CommandLine.Parameters(paramLabel = "namespace/name", index = "0", descriptionKey = "scm.repo.set-role.repository")
   private String repositoryName;
-  @CommandLine.Parameters(paramLabel = "name", index = "1", descriptionKey = "scm.repo.remove-permission.name")
+  @CommandLine.Parameters(paramLabel = "name", index = "1", descriptionKey = "scm.repo.set-role.name")
   private String name;
-  @CommandLine.Parameters(paramLabel = "verbs", index = "2..", arity = "1..", descriptionKey = "scm.repo.remove-permission.verbs")
-  private String[] verbs = new String[0];
+  @CommandLine.Parameters(paramLabel = "role", index = "2", descriptionKey = "scm.repo.set-role.role")
+  private String role;
 
-  @CommandLine.Option(names = {"--group", "-g"}, descriptionKey = "scm.repo.remove-permission.forGroup")
+  @CommandLine.Option(names = {"--group", "-g"}, descriptionKey = "scm.repo.set-role.forGroup")
   private boolean forGroup;
 
   @Inject
-  public RepositoryRemovePermissionCommand(PermissionCommandManager permissionCommandManager) {
+  public RepositoryPermissionsSetRoleCommand(PermissionCommandManager permissionCommandManager) {
     this.permissionCommandManager = permissionCommandManager;
   }
 
@@ -59,12 +56,7 @@ class RepositoryRemovePermissionCommand implements Runnable {
   public void run() {
     permissionCommandManager.modifyRepository(
       repositoryName,
-      repository -> {
-        Set<String> resultingVerbs =
-          permissionCommandManager.getPermissionsAdModifiableSet(repository, name, forGroup);
-        resultingVerbs.removeAll(asList(this.verbs));
-        permissionCommandManager.replacePermission(repository, new RepositoryPermission(name, resultingVerbs, forGroup));
-      }
+      repository -> permissionCommandManager.replacePermission(repository, new RepositoryPermission(name, role, forGroup))
     );
   }
 
@@ -78,8 +70,9 @@ class RepositoryRemovePermissionCommand implements Runnable {
     this.name = name;
   }
 
-  public void setVerbs(String... verbs) {
-    this.verbs = verbs;
+  @VisibleForTesting
+  void setRole(String role) {
+    this.role = role;
   }
 
   public void setForGroup(boolean forGroup) {

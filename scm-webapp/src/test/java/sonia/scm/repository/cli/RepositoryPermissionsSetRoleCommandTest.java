@@ -40,12 +40,13 @@ import sonia.scm.repository.RepositoryTestData;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.groups.Tuple.tuple;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class RepositoryClearPermissionsCommandTest {
+class RepositoryPermissionsSetRoleCommandTest {
 
   @Mock
   private RepositoryManager repositoryManager;
@@ -55,13 +56,13 @@ class RepositoryClearPermissionsCommandTest {
   @InjectMocks
   private PermissionCommandManager permissionCommandManager;
 
-  private RepositoryClearPermissionsCommand command;
+  private RepositoryPermissionsSetRoleCommand command;
 
   private final Repository repository = RepositoryTestData.createHeartOfGold();
 
   @BeforeEach
   void setUpCommand() {
-    command = new RepositoryClearPermissionsCommand(permissionCommandManager);
+    command = new RepositoryPermissionsSetRoleCommand(permissionCommandManager);
   }
 
   @Nested
@@ -74,7 +75,38 @@ class RepositoryClearPermissionsCommandTest {
     }
 
     @Test
-    void shouldClearPermissionsForUser() {
+    void shouldSetRoleForUser() {
+      command.setRepositoryName("hitchhiker/HeartOfGold");
+      command.setName("trillian");
+      command.setRole("OWNER");
+
+      command.run();
+
+      verify(repositoryManager).modify(argThat(argument -> {
+        assertThat(argument.getPermissions()).extracting("name", "role", "groupPermission")
+          .containsExactly(tuple("trillian", "OWNER", false));
+        return true;
+      }));
+    }
+
+    @Test
+    void shouldSetRoleForGroup() {
+      command.setRepositoryName("hitchhiker/HeartOfGold");
+      command.setName("crew");
+      command.setRole("READ");
+      command.setForGroup(true);
+
+      command.run();
+
+      verify(repositoryManager).modify(argThat(argument -> {
+        assertThat(argument.getPermissions()).extracting("name", "role", "groupPermission")
+          .containsExactly(tuple("crew", "READ", true));
+        return true;
+      }));
+    }
+
+    @Test
+    void shouldReplaceRepositoryPermissionForUser() {
       repository.setPermissions(
         List.of(
           new RepositoryPermission("trillian", List.of("read"), false)
@@ -83,31 +115,35 @@ class RepositoryClearPermissionsCommandTest {
 
       command.setRepositoryName("hitchhiker/HeartOfGold");
       command.setName("trillian");
+      command.setRole("OWNER");
 
       command.run();
 
       verify(repositoryManager).modify(argThat(argument -> {
-        assertThat(argument.getPermissions()).isEmpty();
+        assertThat(argument.getPermissions()).extracting("name", "role", "groupPermission")
+          .containsExactly(tuple("trillian", "OWNER", false));
         return true;
       }));
     }
 
     @Test
-    void shouldClearPermissionsForGroup() {
+    void shouldReplaceRepositoryPermissionForGroup() {
       repository.setPermissions(
         List.of(
-          new RepositoryPermission("hog", "READ", true)
+          new RepositoryPermission("trillian", List.of("read"), true)
         )
       );
 
       command.setRepositoryName("hitchhiker/HeartOfGold");
-      command.setName("hog");
+      command.setName("trillian");
+      command.setRole("OWNER");
       command.setForGroup(true);
 
       command.run();
 
       verify(repositoryManager).modify(argThat(argument -> {
-        assertThat(argument.getPermissions()).isEmpty();
+        assertThat(argument.getPermissions()).extracting("name", "role", "groupPermission")
+          .containsExactly(tuple("trillian", "OWNER", true));
         return true;
       }));
     }
@@ -117,6 +153,7 @@ class RepositoryClearPermissionsCommandTest {
   void shouldHandleIllegalNamespaceNameParameter() {
     command.setRepositoryName("illegal name");
     command.setName("trillian");
+    command.setRole("READ");
 
     command.run();
 
@@ -127,6 +164,7 @@ class RepositoryClearPermissionsCommandTest {
   void shouldHandleNotExistingRepository() {
     command.setRepositoryName("no/repository");
     command.setName("trillian");
+    command.setRole("READ");
 
     command.run();
 

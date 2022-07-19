@@ -27,25 +27,31 @@ package sonia.scm.repository.cli;
 import com.google.common.annotations.VisibleForTesting;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
+import sonia.scm.repository.RepositoryPermission;
 
 import javax.inject.Inject;
+import java.util.Set;
 
-@CommandLine.Command(name = "clear-permissions")
+import static java.util.Arrays.asList;
+
+@CommandLine.Command(name = "add-permissions")
 @ParentCommand(value = RepositoryCommand.class)
-class RepositoryClearPermissionsCommand implements Runnable {
+class RepositoryPermissionsAddCommand implements Runnable {
 
   private final PermissionCommandManager permissionCommandManager;
 
-  @CommandLine.Parameters(paramLabel = "namespace/name", index = "0", descriptionKey = "scm.repo.clear-permissions.repository")
-   private String repositoryName;
-  @CommandLine.Parameters(paramLabel = "name", index = "1", descriptionKey = "scm.repo.clear-permissions.name")
+  @CommandLine.Parameters(paramLabel = "namespace/name", index = "0", descriptionKey = "scm.repo.add-permissions.repository")
+  private String repositoryName;
+  @CommandLine.Parameters(paramLabel = "name", index = "1", descriptionKey = "scm.repo.add-permissions.name")
   private String name;
+  @CommandLine.Parameters(paramLabel = "verbs", index = "2..", arity = "1..", descriptionKey = "scm.repo.add-permissions.verbs")
+  private String[] verbs = new String[0];
 
-  @CommandLine.Option(names = {"--group", "-g"}, descriptionKey = "scm.repo.clear-permissions.forGroup")
+  @CommandLine.Option(names = {"--group", "-g"}, descriptionKey = "scm.repo.add-permissions.forGroup")
   private boolean forGroup;
 
   @Inject
-  public RepositoryClearPermissionsCommand(PermissionCommandManager permissionCommandManager) {
+  RepositoryPermissionsAddCommand(PermissionCommandManager permissionCommandManager) {
     this.permissionCommandManager = permissionCommandManager;
   }
 
@@ -53,7 +59,12 @@ class RepositoryClearPermissionsCommand implements Runnable {
   public void run() {
     permissionCommandManager.modifyRepository(
       repositoryName,
-      repo -> permissionCommandManager.removeExistingPermission(repo, name, forGroup)
+      repository -> {
+        Set<String> resultingVerbs =
+          permissionCommandManager.getPermissionsAdModifiableSet(repository, name, forGroup);
+        resultingVerbs.addAll(asList(this.verbs));
+        permissionCommandManager.replacePermission(repository, new RepositoryPermission(name, resultingVerbs, forGroup));
+      }
     );
   }
 
@@ -65,6 +76,11 @@ class RepositoryClearPermissionsCommand implements Runnable {
   @VisibleForTesting
   void setName(String name) {
     this.name = name;
+  }
+
+  @VisibleForTesting
+  void setVerbs(String... verbs) {
+    this.verbs = verbs;
   }
 
   public void setForGroup(boolean forGroup) {

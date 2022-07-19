@@ -27,28 +27,25 @@ package sonia.scm.repository.cli;
 import com.google.common.annotations.VisibleForTesting;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
-import sonia.scm.repository.RepositoryPermission;
 
 import javax.inject.Inject;
 
-@CommandLine.Command(name = "set-role")
+@CommandLine.Command(name = "clear-permissions")
 @ParentCommand(value = RepositoryCommand.class)
-class RepositorySetRoleCommand implements Runnable {
+class RepositoryPermissionsClearCommand implements Runnable {
 
   private final PermissionCommandManager permissionCommandManager;
 
-  @CommandLine.Parameters(paramLabel = "namespace/name", index = "0", descriptionKey = "scm.repo.set-role.repository")
-  private String repositoryName;
-  @CommandLine.Parameters(paramLabel = "name", index = "1", descriptionKey = "scm.repo.set-role.name")
+  @CommandLine.Parameters(paramLabel = "namespace/name", index = "0", descriptionKey = "scm.repo.clear-permissions.repository")
+   private String repositoryName;
+  @CommandLine.Parameters(paramLabel = "name", index = "1", descriptionKey = "scm.repo.clear-permissions.name")
   private String name;
-  @CommandLine.Parameters(paramLabel = "role", index = "2", descriptionKey = "scm.repo.set-role.role")
-  private String role;
 
-  @CommandLine.Option(names = {"--group", "-g"}, descriptionKey = "scm.repo.set-role.forGroup")
+  @CommandLine.Option(names = {"--group", "-g"}, descriptionKey = "scm.repo.clear-permissions.forGroup")
   private boolean forGroup;
 
   @Inject
-  public RepositorySetRoleCommand(PermissionCommandManager permissionCommandManager) {
+  public RepositoryPermissionsClearCommand(PermissionCommandManager permissionCommandManager) {
     this.permissionCommandManager = permissionCommandManager;
   }
 
@@ -56,7 +53,7 @@ class RepositorySetRoleCommand implements Runnable {
   public void run() {
     permissionCommandManager.modifyRepository(
       repositoryName,
-      repository -> permissionCommandManager.replacePermission(repository, new RepositoryPermission(name, role, forGroup))
+      repo -> permissionCommandManager.removeExistingPermission(repo, name, forGroup)
     );
   }
 
@@ -68,11 +65,6 @@ class RepositorySetRoleCommand implements Runnable {
   @VisibleForTesting
   void setName(String name) {
     this.name = name;
-  }
-
-  @VisibleForTesting
-  void setRole(String role) {
-    this.role = role;
   }
 
   public void setForGroup(boolean forGroup) {

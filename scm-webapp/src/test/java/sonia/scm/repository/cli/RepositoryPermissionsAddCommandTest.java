@@ -35,9 +35,12 @@ import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermission;
+import sonia.scm.repository.RepositoryRole;
+import sonia.scm.repository.RepositoryRoleManager;
 import sonia.scm.repository.RepositoryTestData;
 
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
@@ -46,23 +49,25 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class RepositorySetRoleCommandTest {
+class RepositoryPermissionsAddCommandTest {
 
   @Mock
   private RepositoryManager repositoryManager;
+  @Mock
+  private RepositoryRoleManager roleManager;
   @Mock
   private RepositoryTemplateRenderer templateRenderer;
 
   @InjectMocks
   private PermissionCommandManager permissionCommandManager;
 
-  private RepositorySetRoleCommand command;
+  private RepositoryPermissionsAddCommand command;
 
   private final Repository repository = RepositoryTestData.createHeartOfGold();
 
   @BeforeEach
   void setUpCommand() {
-    command = new RepositorySetRoleCommand(permissionCommandManager);
+    command = new RepositoryPermissionsAddCommand(permissionCommandManager);
   }
 
   @Nested
@@ -75,38 +80,22 @@ class RepositorySetRoleCommandTest {
     }
 
     @Test
-    void shouldSetRoleForUser() {
+    void shouldSetMultipleVerbsForNewUser() {
       command.setRepositoryName("hitchhiker/HeartOfGold");
       command.setName("trillian");
-      command.setRole("OWNER");
+      command.setVerbs("read", "pull", "push");
 
       command.run();
 
       verify(repositoryManager).modify(argThat(argument -> {
-        assertThat(argument.getPermissions()).extracting("name", "role", "groupPermission")
-          .containsExactly(tuple("trillian", "OWNER", false));
+        assertThat(argument.getPermissions()).extracting("name", "verbs", "groupPermission")
+          .containsExactly(tuple("trillian", Set.of("read", "pull", "push"), false));
         return true;
       }));
     }
 
     @Test
-    void shouldSetRoleForGroup() {
-      command.setRepositoryName("hitchhiker/HeartOfGold");
-      command.setName("crew");
-      command.setRole("READ");
-      command.setForGroup(true);
-
-      command.run();
-
-      verify(repositoryManager).modify(argThat(argument -> {
-        assertThat(argument.getPermissions()).extracting("name", "role", "groupPermission")
-          .containsExactly(tuple("crew", "READ", true));
-        return true;
-      }));
-    }
-
-    @Test
-    void shouldReplaceRepositoryPermissionForUser() {
+    void shouldAddNewVerbToExistingVerbsForUser() {
       repository.setPermissions(
         List.of(
           new RepositoryPermission("trillian", List.of("read"), false)
@@ -115,35 +104,58 @@ class RepositorySetRoleCommandTest {
 
       command.setRepositoryName("hitchhiker/HeartOfGold");
       command.setName("trillian");
-      command.setRole("OWNER");
+      command.setVerbs("write");
 
       command.run();
 
       verify(repositoryManager).modify(argThat(argument -> {
-        assertThat(argument.getPermissions()).extracting("name", "role", "groupPermission")
-          .containsExactly(tuple("trillian", "OWNER", false));
+        assertThat(argument.getPermissions()).extracting("name", "verbs", "groupPermission")
+          .containsExactly(tuple("trillian", Set.of("read", "write"), false));
         return true;
       }));
     }
 
     @Test
-    void shouldReplaceRepositoryPermissionForGroup() {
+    void shouldAddNewVerbToExistingVerbsForGroup() {
       repository.setPermissions(
         List.of(
-          new RepositoryPermission("trillian", List.of("read"), true)
+          new RepositoryPermission("hog", List.of("read"), true)
         )
       );
 
       command.setRepositoryName("hitchhiker/HeartOfGold");
-      command.setName("trillian");
-      command.setRole("OWNER");
+      command.setName("hog");
+      command.setVerbs("write");
       command.setForGroup(true);
 
       command.run();
 
       verify(repositoryManager).modify(argThat(argument -> {
-        assertThat(argument.getPermissions()).extracting("name", "role", "groupPermission")
-          .containsExactly(tuple("trillian", "OWNER", true));
+        assertThat(argument.getPermissions()).extracting("name", "verbs", "groupPermission")
+          .containsExactly(tuple("hog", Set.of("read", "write"), true));
+        return true;
+      }));
+    }
+
+    @Test
+    void shouldAddNewVerbToRoleAndReplaceRoleWithCustomPermissionsForUser() {
+      repository.setPermissions(
+        List.of(
+          new RepositoryPermission("trillian", "READ", false)
+        )
+      );
+      when(roleManager.get("READ"))
+        .thenReturn(new RepositoryRole("READ", List.of("read", "pull"), ""));
+
+      command.setRepositoryName("hitchhiker/HeartOfGold");
+      command.setName("trillian");
+      command.setVerbs("write");
+
+      command.run();
+
+      verify(repositoryManager).modify(argThat(argument -> {
+        assertThat(argument.getPermissions()).extracting("name", "verbs", "groupPermission")
+          .containsExactly(tuple("trillian", Set.of("pull", "read", "write"), false));
         return true;
       }));
     }
@@ -153,7 +165,7 @@ class RepositorySetRoleCommandTest {
   void shouldHandleIllegalNamespaceNameParameter() {
     command.setRepositoryName("illegal name");
     command.setName("trillian");
-    command.setRole("READ");
+    command.setVerbs("write");
 
     command.run();
 
@@ -164,7 +176,7 @@ class RepositorySetRoleCommandTest {
   void shouldHandleNotExistingRepository() {
     command.setRepositoryName("no/repository");
     command.setName("trillian");
-    command.setRole("READ");
+    command.setVerbs("write");
 
     command.run();
 

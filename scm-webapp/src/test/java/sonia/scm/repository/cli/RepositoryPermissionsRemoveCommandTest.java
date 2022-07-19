@@ -49,7 +49,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class RepositoryRemovePermissionCommandTest {
+class RepositoryPermissionsRemoveCommandTest {
 
   @Mock
   private RepositoryManager repositoryManager;
@@ -62,13 +62,13 @@ class RepositoryRemovePermissionCommandTest {
   private PermissionCommandManager permissionCommandManager;
 
   @InjectMocks
-  private RepositoryRemovePermissionCommand command;
+  private RepositoryPermissionsRemoveCommand command;
 
   private final Repository repository = RepositoryTestData.createHeartOfGold();
 
   @BeforeEach
   void setUpCommand() {
-    command = new RepositoryRemovePermissionCommand(permissionCommandManager);
+    command = new RepositoryPermissionsRemoveCommand(permissionCommandManager);
   }
 
   @Nested
