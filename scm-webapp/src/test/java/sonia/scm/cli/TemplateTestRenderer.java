@@ -108,7 +108,7 @@ public class TemplateTestRenderer {
     return templateEngineFactory;
   }
 
-  public CommandLine.Model.CommandSpec getMockedSpeck() {
+  public CommandLine.Model.CommandSpec getMockedSpec() {
     ResourceBundle resourceBundle = getResourceBundle();
     CommandLine.Model.CommandSpec mock = mock(CommandLine.Model.CommandSpec.class);
     lenient().when(mock.resourceBundle()).thenReturn(resourceBundle);

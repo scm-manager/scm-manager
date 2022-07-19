@@ -32,8 +32,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import sonia.scm.lifecycle.Restarter;
-import sonia.scm.plugin.AvailablePlugin;
-import sonia.scm.plugin.InstalledPlugin;
+import sonia.scm.plugin.PendingPlugins;
 import sonia.scm.plugin.PluginManager;
 import sonia.scm.plugin.PluginPermissions;
 import sonia.scm.web.VndMediaType;
@@ -44,9 +43,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Stream;
 
 import static de.otto.edison.hal.Link.link;
 import static de.otto.edison.hal.Links.linkingTo;
@@ -94,28 +91,13 @@ public class PendingPluginResource {
     )
   )
   public Response getPending() {
-    List<AvailablePlugin> pending = pluginManager
-      .getAvailable()
-      .stream()
-      .filter(AvailablePlugin::isPending)
-      .collect(toList());
-    List<InstalledPlugin> installed = pluginManager.getInstalled();
-
-    Stream<AvailablePlugin> newPlugins = pending
-      .stream()
-      .filter(a -> !contains(installed, a));
-    Stream<InstalledPlugin> updatePlugins = installed
-      .stream()
-      .filter(i -> contains(pending, i));
-    Stream<InstalledPlugin> uninstallPlugins = installed
-      .stream()
-      .filter(InstalledPlugin::isMarkedForUninstall);
+    PendingPlugins pending = pluginManager.getPending();
 
     Links.Builder linksBuilder = linkingTo().self(resourceLinks.pendingPluginCollection().self());
 
-    List<PluginDto> installDtos = newPlugins.map(mapper::mapAvailable).collect(toList());
-    List<PluginDto> updateDtos = updatePlugins.map(i -> mapper.mapInstalled(i, pending)).collect(toList());
-    List<PluginDto> uninstallDtos = uninstallPlugins.map(i -> mapper.mapInstalled(i, pending)).collect(toList());
+    List<PluginDto> installDtos = pending.getInstall().stream().map(mapper::mapAvailable).collect(toList());
+    List<PluginDto> updateDtos = pending.getUpdate().stream().map(p -> mapper.mapInstalled(p, pending.getInstall())).collect(toList());
+    List<PluginDto> uninstallDtos = pending.getUninstall().stream().map(i -> mapper.mapInstalled(i, pending.getInstall())).collect(toList());
 
     if (
       PluginPermissions.write().isPermitted() &&
@@ -133,22 +115,6 @@ public class PendingPluginResource {
     embedded.with("uninstall", uninstallDtos);
 
     return Response.ok(new HalRepresentation(linksBuilder.build(), embedded.build())).build();
-  }
-
-  private boolean contains(Collection<InstalledPlugin> installedPlugins, AvailablePlugin availablePlugin) {
-    return installedPlugins
-      .stream()
-      .anyMatch(installedPlugin -> haveSameName(installedPlugin, availablePlugin));
-  }
-
-  private boolean contains(Collection<AvailablePlugin> availablePlugins, InstalledPlugin installedPlugin) {
-    return availablePlugins
-      .stream()
-      .anyMatch(availablePlugin -> haveSameName(installedPlugin, availablePlugin));
-  }
-
-  private boolean haveSameName(InstalledPlugin installedPlugin, AvailablePlugin availablePlugin) {
-    return installedPlugin.getDescriptor().getInformation().getName().equals(availablePlugin.getDescriptor().getInformation().getName());
   }
 
   @POST

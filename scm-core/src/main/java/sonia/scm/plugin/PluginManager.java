@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.plugin;
 
 import java.util.List;
@@ -88,6 +88,14 @@ public interface PluginManager {
    * @return a list of updatable plugins.
    */
   List<InstalledPlugin> getUpdatable();
+
+  /**
+   * Returns all pending plugins.
+   *
+   * @return a list of pending plugins.
+   * @since 2.38.0
+   */
+  PendingPlugins getPending();
 
   /**
    * Installs the plugin with the given name from the list of available plugins.

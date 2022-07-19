@@ -69,7 +69,7 @@ class UserListCommandTest {
   @Test
   void shouldRenderShortTableInEnglish() {
     testRenderer.setLocale("en");
-    command.setSpec(testRenderer.getMockedSpeck());
+    command.setSpec(testRenderer.getMockedSpec());
     command.setUseShortTemplate(true);
 
     command.run();
@@ -81,7 +81,7 @@ class UserListCommandTest {
   @Test
   void shouldRenderShortTableInGerman() {
     testRenderer.setLocale("de");
-    command.setSpec(testRenderer.getMockedSpeck());
+    command.setSpec(testRenderer.getMockedSpec());
     command.setUseShortTemplate(true);
 
     command.run();
@@ -93,7 +93,7 @@ class UserListCommandTest {
   @Test
   void shouldRenderLongTableInEnglish() {
     testRenderer.setLocale("en");
-    command.setSpec(testRenderer.getMockedSpeck());
+    command.setSpec(testRenderer.getMockedSpec());
 
     command.run();
 
@@ -107,7 +107,7 @@ class UserListCommandTest {
   @Test
   void shouldRenderLongTableInGerman() {
     testRenderer.setLocale("de");
-    command.setSpec(testRenderer.getMockedSpeck());
+    command.setSpec(testRenderer.getMockedSpec());
 
     command.run();
 

@@ -1,0 +1,2 @@
+- type: added
+  description: Enable plugin management via CLI ([#2087](https://github.com/scm-manager/scm-manager/pull/2087))

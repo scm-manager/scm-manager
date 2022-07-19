@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
@@ -87,15 +88,11 @@ public class DefaultPluginManager implements PluginManager {
     this.eventBus = eventBus;
     this.pluginSetConfigStore = pluginSetConfigStore;
 
-    if (contextFactory != null) {
-      this.contextFactory = contextFactory;
-    } else {
-      this.contextFactory = (plugins -> {
-        List<AvailablePlugin> pendingPlugins = new ArrayList<>(plugins);
-        pendingInstallQueue.stream().map(PendingPluginInstallation::getPlugin).forEach(pendingPlugins::add);
-        return PluginInstallationContext.from(getInstalled(), pendingPlugins);
-      });
-    }
+    this.contextFactory = Objects.requireNonNullElseGet(contextFactory, () -> (plugins -> {
+      List<AvailablePlugin> pendingPlugins = new ArrayList<>(plugins);
+      pendingInstallQueue.stream().map(PendingPluginInstallation::getPlugin).forEach(pendingPlugins::add);
+      return PluginInstallationContext.from(getInstalled(), pendingPlugins);
+    }));
 
     this.computeInstallationDependencies();
   }
@@ -192,11 +189,18 @@ public class DefaultPluginManager implements PluginManager {
 
   @Override
   public List<InstalledPlugin> getUpdatable() {
+    PluginPermissions.read().check();
     return getInstalled()
       .stream()
       .filter(p -> isUpdatable(p.getDescriptor().getInformation().getName()))
       .filter(p -> !p.isMarkedForUninstall())
       .collect(Collectors.toList());
+  }
+
+  @Override
+  public PendingPlugins getPending() {
+    PluginPermissions.read().check();
+    return new PendingPlugins(getAvailable(), getInstalled());
   }
 
   private <T extends Plugin> Predicate<T> filterByName(String name) {
@@ -361,7 +365,7 @@ public class DefaultPluginManager implements PluginManager {
   }
 
   private boolean isUpdatable(String name) {
-    return getAvailable(name).isPresent() && !getPending(name).isPresent();
+    return getAvailable(name).isPresent() && getPending(name).isEmpty();
   }
 
   @Override
