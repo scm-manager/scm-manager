@@ -43,11 +43,14 @@ import sonia.scm.repository.RepositoryTestData;
 import java.util.List;
 import java.util.Set;
 
+import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -165,6 +168,25 @@ class RepositoryPermissionsAddCommandTest {
             .containsExactly(tuple("trillian", Set.of("pull", "read", "write"), false));
           return true;
         }));
+      }
+
+      @Test
+      void shouldNotModifyRoleIfNewVerbIsPartOfRole() {
+        repository.setPermissions(
+          List.of(
+            new RepositoryPermission("trillian", "READ", false)
+          )
+        );
+        when(roleManager.get("READ"))
+          .thenReturn(new RepositoryRole("READ", List.of("read", "pull"), ""));
+
+        command.setRepositoryName("hitchhiker/HeartOfGold");
+        command.setName("trillian");
+        command.setVerbs("read");
+
+        command.run();
+
+        verify(repositoryManager, never()).modify(any());
       }
     }
 

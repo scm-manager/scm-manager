@@ -70,6 +70,9 @@ class RepositoryPermissionsAddCommand extends RepositoryPermissionBaseCommand im
         }
         Set<String> resultingVerbs =
           getPermissionsAdModifiableSet(repository, name, forGroup);
+        if (resultingVerbs.containsAll(asList(this.verbs))) {
+          return false;
+        }
         resultingVerbs.addAll(asList(this.verbs));
         replacePermission(repository, new RepositoryPermission(name, resultingVerbs, forGroup));
         return true;
