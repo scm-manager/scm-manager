@@ -52,6 +52,7 @@ class RepositoryTemplateRenderer extends TemplateRenderer {
   );
   private static final String INVALID_INPUT_TEMPLATE = "{{i18n.repoInvalidInput}}";
   private static final String NOT_FOUND_TEMPLATE = "{{i18n.repoNotFound}}";
+  private static final String ROLE_NOT_FOUND_TEMPLATE = "{{i18n.roleNotFound}}";
 
   private final CliContext context;
   private final RepositoryToRepositoryCommandDtoMapper mapper;
@@ -116,6 +117,12 @@ class RepositoryTemplateRenderer extends TemplateRenderer {
 
   public void renderNotFoundError() {
     renderToStderr(NOT_FOUND_TEMPLATE, emptyMap());
+    context.getStderr().println();
+    context.exit(ExitCode.NOT_FOUND);
+  }
+
+  public void renderRoleNotFoundError() {
+    renderToStderr(ROLE_NOT_FOUND_TEMPLATE, emptyMap());
     context.getStderr().println();
     context.exit(ExitCode.NOT_FOUND);
   }

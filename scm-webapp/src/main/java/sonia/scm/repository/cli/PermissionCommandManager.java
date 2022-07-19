@@ -102,4 +102,8 @@ class PermissionCommandManager {
       return roleManager.get(permission.getRole()).getVerbs();
     }
   }
+
+  public void renderRoleNotFoundError() {
+    templateRenderer.renderRoleNotFoundError();
+  }
 }

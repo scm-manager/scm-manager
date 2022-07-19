@@ -28,6 +28,7 @@ import com.google.common.annotations.VisibleForTesting;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
 import sonia.scm.repository.RepositoryPermission;
+import sonia.scm.repository.RepositoryRoleManager;
 
 import javax.inject.Inject;
 
@@ -36,6 +37,7 @@ import javax.inject.Inject;
 class RepositoryPermissionsSetRoleCommand implements Runnable {
 
   private final PermissionCommandManager permissionCommandManager;
+  private final RepositoryRoleManager roleManager;
 
   @CommandLine.Parameters(paramLabel = "namespace/name", index = "0", descriptionKey = "scm.repo.set-role.repository")
   private String repositoryName;
@@ -48,15 +50,22 @@ class RepositoryPermissionsSetRoleCommand implements Runnable {
   private boolean forGroup;
 
   @Inject
-  public RepositoryPermissionsSetRoleCommand(PermissionCommandManager permissionCommandManager) {
+  public RepositoryPermissionsSetRoleCommand(PermissionCommandManager permissionCommandManager, RepositoryRoleManager roleManager) {
     this.permissionCommandManager = permissionCommandManager;
+    this.roleManager = roleManager;
   }
 
   @Override
   public void run() {
     permissionCommandManager.modifyRepository(
       repositoryName,
-      repository -> permissionCommandManager.replacePermission(repository, new RepositoryPermission(name, role, forGroup))
+      repository -> {
+        if (roleManager.get(role) == null) {
+          permissionCommandManager.renderRoleNotFoundError();
+          return;
+        }
+        permissionCommandManager.replacePermission(repository, new RepositoryPermission(name, role, forGroup));
+      }
     );
   }
 
