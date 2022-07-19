@@ -33,7 +33,11 @@ import sonia.scm.group.Group;
 import sonia.scm.template.TemplateEngineFactory;
 
 import javax.inject.Inject;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Map;
+
+import static java.util.Map.entry;
 
 class GroupTemplateRenderer extends TemplateRenderer {
 
@@ -43,6 +47,12 @@ class GroupTemplateRenderer extends TemplateRenderer {
     "{{#rows}}",
     "{{#cols}}{{value}}{{/cols}}",
     "{{/rows}}"
+  );
+
+  private static final String PERMISSION_LIST_TEMPLATE = String.join("\n",
+    "{{#permissions}}",
+    "{{.}}",
+    "{{/permissions}}"
   );
 
   private final GroupCommandBeanMapper mapper;
@@ -71,5 +81,9 @@ class GroupTemplateRenderer extends TemplateRenderer {
   void renderNotFoundError() {
     renderToStderr(NOT_FOUND_TEMPLATE, Collections.emptyMap());
     getContext().exit(ExitCode.NOT_FOUND);
+  }
+
+  public void render(Collection<String> permissions) {
+    renderToStdout(PERMISSION_LIST_TEMPLATE, Map.ofEntries(entry("permissions", permissions)));
   }
 }

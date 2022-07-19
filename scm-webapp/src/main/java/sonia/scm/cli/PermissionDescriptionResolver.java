@@ -35,6 +35,8 @@ import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
 public class PermissionDescriptionResolver {
+
+  private static final String DISPLAYNAME = "displayName";
   private final I18nCollector i18nCollector;
   private final Locale locale;
 
@@ -43,11 +45,14 @@ public class PermissionDescriptionResolver {
     this.locale = locale;
   }
 
-  public Optional<String> getDescription(String verb) {
+  public Optional<String> getDescription(String verb, boolean global) {
     try {
       i18nCollector.findJson(locale.getLanguage());
     } catch (IOException e) {
       throw new RuntimeException("failed to load i18n package", e);
+    }
+    if (global) {
+      return getGlobalVerbDescriptionFromI18nBundle(verb);
     }
     return getVerbDescriptionFromI18nBundle(verb);
   }
@@ -74,11 +79,86 @@ public class PermissionDescriptionResolver {
     if (permissionNode == null) {
       return empty();
     }
-    JsonNode displayNameNode = permissionNode.get("displayName");
+    JsonNode displayNameNode = permissionNode.get(DISPLAYNAME);
     if (displayNameNode == null) {
       return empty();
     }
 
+    return of(displayNameNode.asText());
+  }
+
+  private Optional<String> getGlobalVerbDescriptionFromI18nBundle(String verb) {
+    String[] verbParts = verb.split(":");
+
+    Optional<JsonNode> jsonNode;
+    try {
+      jsonNode = i18nCollector.findJson(locale.getLanguage());
+    } catch (IOException e) {
+      return empty();
+    }
+    if (jsonNode.isEmpty()) {
+      return empty();
+    }
+    JsonNode permissionsNode = jsonNode.get().get("permissions");
+    if (permissionsNode == null) {
+      return empty();
+    }
+    if (verbParts.length == 1) {
+      return resolveSinglePartPermission(verb, permissionsNode);
+    } else if (verbParts.length == 2) {
+      return resolveTwoPartPermission(verbParts, permissionsNode);
+    } else if (verbParts.length == 3) {
+      return resolveThreePartPermission(verbParts, permissionsNode);
+    }
+
+    return empty();
+  }
+
+  private Optional<String> resolveSinglePartPermission(String verb, JsonNode permissionsNode) {
+    JsonNode firstNode = permissionsNode.get(verb);
+    if (firstNode == null) {
+      return empty();
+    }
+    JsonNode displayNameNode = firstNode.get(DISPLAYNAME);
+    if (displayNameNode == null) {
+      return empty();
+    }
+    return of(displayNameNode.asText());
+  }
+
+  private Optional<String> resolveTwoPartPermission(String[] verbParts, JsonNode permissionsNode) {
+    JsonNode firstNode = permissionsNode.get(verbParts[0]);
+    if (firstNode == null) {
+      return empty();
+    }
+    JsonNode secondNode = firstNode.get(verbParts[1]);
+    if (secondNode == null) {
+      return empty();
+    }
+    JsonNode displayNameNode = secondNode.get(DISPLAYNAME);
+    if (displayNameNode == null) {
+      return empty();
+    }
+    return of(displayNameNode.asText());
+  }
+
+  private Optional<String> resolveThreePartPermission(String[] verbParts, JsonNode permissionsNode) {
+    JsonNode firstNode = permissionsNode.get(verbParts[0]);
+    if (firstNode == null) {
+      return empty();
+    }
+    JsonNode secondNode = firstNode.get(verbParts[1]);
+    if (secondNode == null) {
+      return empty();
+    }
+    JsonNode thirdNode = secondNode.get(verbParts[2]);
+    if (thirdNode == null) {
+      return empty();
+    }
+    JsonNode displayNameNode = thirdNode.get(DISPLAYNAME);
+    if (displayNameNode == null) {
+      return empty();
+    }
     return of(displayNameNode.asText());
   }
 }
