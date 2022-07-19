@@ -44,7 +44,9 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -136,6 +138,23 @@ class RepositoryPermissionsRemoveCommandTest {
           .containsExactly(tuple("dent", Set.of("read"), false));
         return true;
       }));
+    }
+
+    @Test
+    void shouldNotModifyRepositoryIfVerbsAreNotSet() {
+      repository.setPermissions(
+        List.of(
+          new RepositoryPermission("dent", List.of("read", "write"), false)
+        )
+      );
+
+      command.setRepositoryName("hitchhiker/HeartOfGold");
+      command.setName("dent");
+      command.setVerbs("push", "pull");
+
+      command.run();
+
+      verify(repositoryManager, never()).modify(any());
     }
   }
 

@@ -62,6 +62,9 @@ class RepositoryPermissionsRemoveCommand extends RepositoryPermissionBaseCommand
       repository -> {
         Set<String> resultingVerbs =
           getPermissionsAdModifiableSet(repository, name, forGroup);
+        if (resultingVerbs.stream().noneMatch(verb -> asList(verbs).contains(verb))) {
+          return false;
+        }
         resultingVerbs.removeAll(asList(this.verbs));
         replacePermission(repository, new RepositoryPermission(name, resultingVerbs, forGroup));
         return true;
