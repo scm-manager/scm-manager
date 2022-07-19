@@ -36,14 +36,14 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-class PermissionCommandManager {
+class RepositoryPermissionCommandManager {
 
   private final RepositoryManager repositoryManager;
   private final RepositoryRoleManager roleManager;
   private final RepositoryTemplateRenderer templateRenderer;
 
   @Inject
-  PermissionCommandManager(RepositoryManager repositoryManager, RepositoryRoleManager roleManager, RepositoryTemplateRenderer templateRenderer) {
+  RepositoryPermissionCommandManager(RepositoryManager repositoryManager, RepositoryRoleManager roleManager, RepositoryTemplateRenderer templateRenderer) {
     this.repositoryManager = repositoryManager;
     this.roleManager = roleManager;
     this.templateRenderer = templateRenderer;

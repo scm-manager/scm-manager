@@ -60,7 +60,7 @@ class RepositoryPermissionsSetRoleCommandTest {
   private RepositoryTemplateRenderer templateRenderer;
 
   @InjectMocks
-  private PermissionCommandManager permissionCommandManager;
+  private RepositoryPermissionCommandManager permissionCommandManager;
 
   private RepositoryPermissionsSetRoleCommand command;
 

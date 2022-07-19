@@ -34,7 +34,7 @@ import javax.inject.Inject;
 @ParentCommand(value = RepositoryCommand.class)
 class RepositoryPermissionsClearCommand implements Runnable {
 
-  private final PermissionCommandManager permissionCommandManager;
+  private final RepositoryPermissionCommandManager permissionCommandManager;
 
   @CommandLine.Parameters(paramLabel = "namespace/name", index = "0", descriptionKey = "scm.repo.clear-permissions.repository")
    private String repositoryName;
@@ -45,7 +45,7 @@ class RepositoryPermissionsClearCommand implements Runnable {
   private boolean forGroup;
 
   @Inject
-  public RepositoryPermissionsClearCommand(PermissionCommandManager permissionCommandManager) {
+  public RepositoryPermissionsClearCommand(RepositoryPermissionCommandManager permissionCommandManager) {
     this.permissionCommandManager = permissionCommandManager;
   }
 

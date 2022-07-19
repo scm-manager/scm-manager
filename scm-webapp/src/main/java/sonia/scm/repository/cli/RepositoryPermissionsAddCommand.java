@@ -38,7 +38,7 @@ import static java.util.Arrays.asList;
 @ParentCommand(value = RepositoryCommand.class)
 class RepositoryPermissionsAddCommand implements Runnable {
 
-  private final PermissionCommandManager permissionCommandManager;
+  private final RepositoryPermissionCommandManager permissionCommandManager;
 
   @CommandLine.Parameters(paramLabel = "namespace/name", index = "0", descriptionKey = "scm.repo.add-permissions.repository")
   private String repositoryName;
@@ -51,7 +51,7 @@ class RepositoryPermissionsAddCommand implements Runnable {
   private boolean forGroup;
 
   @Inject
-  RepositoryPermissionsAddCommand(PermissionCommandManager permissionCommandManager) {
+  RepositoryPermissionsAddCommand(RepositoryPermissionCommandManager permissionCommandManager) {
     this.permissionCommandManager = permissionCommandManager;
   }
 

@@ -59,7 +59,7 @@ class RepositoryPermissionsAddCommandTest {
   private RepositoryTemplateRenderer templateRenderer;
 
   @InjectMocks
-  private PermissionCommandManager permissionCommandManager;
+  private RepositoryPermissionCommandManager permissionCommandManager;
 
   private RepositoryPermissionsAddCommand command;
 

@@ -36,7 +36,7 @@ import javax.inject.Inject;
 @ParentCommand(value = RepositoryCommand.class)
 class RepositoryPermissionsSetRoleCommand implements Runnable {
 
-  private final PermissionCommandManager permissionCommandManager;
+  private final RepositoryPermissionCommandManager permissionCommandManager;
   private final RepositoryRoleManager roleManager;
 
   @CommandLine.Parameters(paramLabel = "namespace/name", index = "0", descriptionKey = "scm.repo.set-role.repository")
@@ -50,7 +50,7 @@ class RepositoryPermissionsSetRoleCommand implements Runnable {
   private boolean forGroup;
 
   @Inject
-  public RepositoryPermissionsSetRoleCommand(PermissionCommandManager permissionCommandManager, RepositoryRoleManager roleManager) {
+  public RepositoryPermissionsSetRoleCommand(RepositoryPermissionCommandManager permissionCommandManager, RepositoryRoleManager roleManager) {
     this.permissionCommandManager = permissionCommandManager;
     this.roleManager = roleManager;
   }

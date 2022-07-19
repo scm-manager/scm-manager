@@ -59,7 +59,7 @@ class RepositoryPermissionsRemoveCommandTest {
   private RepositoryTemplateRenderer templateRenderer;
 
   @InjectMocks
-  private PermissionCommandManager permissionCommandManager;
+  private RepositoryPermissionCommandManager permissionCommandManager;
 
   @InjectMocks
   private RepositoryPermissionsRemoveCommand command;
