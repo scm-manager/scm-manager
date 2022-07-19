@@ -34,6 +34,7 @@ import sonia.scm.user.User;
 
 import javax.inject.Inject;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 
 import static java.util.Collections.emptyMap;
@@ -53,10 +54,12 @@ class UserTemplateRenderer extends TemplateRenderer {
     "{{/permissions}}"
   );
 
-  private static final String PASSWORD_ERROR_TEMPLATE = "{{i18n.scmUserErrorPassword}}";
-  private static final String EXTERNAL_ACTIVATE_TEMPLATE = "{{i18n.scmUserErrorExternalActivate}}";
-  private static final String EXTERNAL_DEACTIVATE_TEMPLATE = "{{i18n.scmUserErrorExternalDeactivate}}";
-  private static final String NOT_FOUND_TEMPLATE = "{{i18n.scmUserErrorNotFound}}";
+  private static final String PASSWORD_ERROR_TEMPLATE = "{{i18n.scmUserErrorPassword}}\n";
+  private static final String EXTERNAL_ACTIVATE_TEMPLATE = "{{i18n.scmUserErrorExternalActivate}}\n";
+  private static final String EXTERNAL_DEACTIVATE_TEMPLATE = "{{i18n.scmUserErrorExternalDeactivate}}\n";
+  private static final String NOT_FOUND_TEMPLATE = "{{i18n.scmUserErrorNotFound}}\n";
+  private static final String UNKNOWN_PERMISSION_TEMPLATE = "{{i18n.permissionUnknown}}\n";
+
 
   private final CliContext context;
   private final UserCommandBeanMapper mapper;
@@ -106,6 +109,11 @@ class UserTemplateRenderer extends TemplateRenderer {
     renderToStderr(NOT_FOUND_TEMPLATE, emptyMap());
     context.getStderr().println();
     context.exit(ExitCode.NOT_FOUND);
+  }
+
+  void renderUnknownPermissionError() {
+    renderToStderr(UNKNOWN_PERMISSION_TEMPLATE, Collections.emptyMap());
+    getContext().exit(ExitCode.USAGE);
   }
 
   public void render(Collection<String> permissions) {
