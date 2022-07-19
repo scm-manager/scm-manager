@@ -28,7 +28,9 @@ import com.google.common.annotations.VisibleForTesting;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
 import sonia.scm.cli.PermissionDescriptionResolver;
+import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermission;
+import sonia.scm.repository.RepositoryRoleManager;
 
 import javax.inject.Inject;
 import java.util.Arrays;
@@ -38,11 +40,9 @@ import static java.util.Arrays.asList;
 
 @CommandLine.Command(name = "add-permissions")
 @ParentCommand(value = RepositoryCommand.class)
-class RepositoryPermissionsAddCommand implements Runnable {
+class RepositoryPermissionsAddCommand extends RepositoryPermissionBaseCommand implements Runnable {
 
-  private final RepositoryPermissionCommandManager permissionCommandManager;
   private final PermissionDescriptionResolver permissionDescriptionResolver;
-  private final RepositoryTemplateRenderer templateRenderer;
 
   @CommandLine.Parameters(paramLabel = "namespace/name", index = "0", descriptionKey = "scm.repo.add-permissions.repository")
   private String repositoryName;
@@ -55,24 +55,23 @@ class RepositoryPermissionsAddCommand implements Runnable {
   private boolean forGroup;
 
   @Inject
-  RepositoryPermissionsAddCommand(RepositoryPermissionCommandManager permissionCommandManager, PermissionDescriptionResolver permissionDescriptionResolver, RepositoryTemplateRenderer templateRenderer) {
-    this.permissionCommandManager = permissionCommandManager;
+  RepositoryPermissionsAddCommand(RepositoryManager repositoryManager, RepositoryPermissionBaseCommand permissionCommandManager, RepositoryRoleManager roleManager, PermissionDescriptionResolver permissionDescriptionResolver, RepositoryTemplateRenderer templateRenderer) {
+    super(repositoryManager, roleManager, templateRenderer);
     this.permissionDescriptionResolver = permissionDescriptionResolver;
-    this.templateRenderer = templateRenderer;
   }
 
   @Override
   public void run() {
-    permissionCommandManager.modifyRepository(
+    modifyRepository(
       repositoryName,
       repository -> {
         if (!Arrays.stream(verbs).allMatch(this::verifyVerbExists)) {
           return false;
         }
         Set<String> resultingVerbs =
-          permissionCommandManager.getPermissionsAdModifiableSet(repository, name, forGroup);
+          getPermissionsAdModifiableSet(repository, name, forGroup);
         resultingVerbs.addAll(asList(this.verbs));
-        permissionCommandManager.replacePermission(repository, new RepositoryPermission(name, resultingVerbs, forGroup));
+        replacePermission(repository, new RepositoryPermission(name, resultingVerbs, forGroup));
         return true;
       }
     );
@@ -80,7 +79,7 @@ class RepositoryPermissionsAddCommand implements Runnable {
 
   private boolean verifyVerbExists(String verb) {
     if (permissionDescriptionResolver.getDescription(verb).isEmpty()) {
-      templateRenderer.renderVerbNotFoundError();
+      renderVerbNotFoundError();
       return false;
     }
     return true;

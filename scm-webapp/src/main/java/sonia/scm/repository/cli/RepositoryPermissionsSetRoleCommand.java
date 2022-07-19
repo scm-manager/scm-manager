@@ -27,6 +27,7 @@ package sonia.scm.repository.cli;
 import com.google.common.annotations.VisibleForTesting;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
+import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.RepositoryRoleManager;
 
@@ -34,9 +35,8 @@ import javax.inject.Inject;
 
 @CommandLine.Command(name = "set-role")
 @ParentCommand(value = RepositoryCommand.class)
-class RepositoryPermissionsSetRoleCommand implements Runnable {
+class RepositoryPermissionsSetRoleCommand extends RepositoryPermissionBaseCommand implements Runnable {
 
-  private final RepositoryPermissionCommandManager permissionCommandManager;
   private final RepositoryRoleManager roleManager;
 
   @CommandLine.Parameters(paramLabel = "namespace/name", index = "0", descriptionKey = "scm.repo.set-role.repository")
@@ -50,21 +50,21 @@ class RepositoryPermissionsSetRoleCommand implements Runnable {
   private boolean forGroup;
 
   @Inject
-  public RepositoryPermissionsSetRoleCommand(RepositoryPermissionCommandManager permissionCommandManager, RepositoryRoleManager roleManager) {
-    this.permissionCommandManager = permissionCommandManager;
+  public RepositoryPermissionsSetRoleCommand(RepositoryManager repositoryManager, RepositoryRoleManager roleManager, RepositoryTemplateRenderer templateRenderer) {
+    super(repositoryManager, roleManager, templateRenderer);
     this.roleManager = roleManager;
   }
 
   @Override
   public void run() {
-    permissionCommandManager.modifyRepository(
+    modifyRepository(
       repositoryName,
       repository -> {
         if (roleManager.get(role) == null) {
-          permissionCommandManager.renderRoleNotFoundError();
+          renderRoleNotFoundError();
           return false;
         }
-        permissionCommandManager.replacePermission(repository, new RepositoryPermission(name, role, forGroup));
+        replacePermission(repository, new RepositoryPermission(name, role, forGroup));
         return true;
       }
     );

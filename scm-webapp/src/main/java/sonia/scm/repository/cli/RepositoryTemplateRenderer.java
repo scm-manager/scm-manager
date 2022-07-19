@@ -52,8 +52,6 @@ class RepositoryTemplateRenderer extends TemplateRenderer {
   );
   private static final String INVALID_INPUT_TEMPLATE = "{{i18n.repoInvalidInput}}";
   private static final String NOT_FOUND_TEMPLATE = "{{i18n.repoNotFound}}";
-  private static final String ROLE_NOT_FOUND_TEMPLATE = "{{i18n.roleNotFound}}";
-  private static final String VERB_NOT_FOUND_TEMPLATE = "{{i18n.verbNotFound}}";
 
   private static final String TYPE_HEADER_KEY = "scm.repo.permissions.type";
   private static final String NAME_HEADER_KEY = "scm.repo.permissions.name";
@@ -127,14 +125,14 @@ class RepositoryTemplateRenderer extends TemplateRenderer {
     context.exit(ExitCode.NOT_FOUND);
   }
 
-  public void renderRoleNotFoundError() {
-    renderToStderr(ROLE_NOT_FOUND_TEMPLATE, emptyMap());
+  void renderRoleNotFoundError() {
+    renderToStderr("{{i18n.roleNotFound}}", emptyMap());
     context.getStderr().println();
     context.exit(ExitCode.NOT_FOUND);
   }
 
-  public void renderVerbNotFoundError() {
-    renderToStderr(VERB_NOT_FOUND_TEMPLATE, emptyMap());
+  void renderVerbNotFoundError() {
+    renderToStderr("{{i18n.verbNotFound}}", emptyMap());
     context.getStderr().println();
     context.exit(ExitCode.NOT_FOUND);
   }

@@ -33,7 +33,6 @@ import sonia.scm.repository.RepositoryRoleManager;
 import sonia.scm.security.RepositoryPermissionProvider;
 
 import javax.inject.Inject;
-
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;

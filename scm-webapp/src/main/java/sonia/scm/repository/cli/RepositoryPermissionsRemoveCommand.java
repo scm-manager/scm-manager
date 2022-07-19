@@ -27,7 +27,9 @@ package sonia.scm.repository.cli;
 import com.google.common.annotations.VisibleForTesting;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
+import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermission;
+import sonia.scm.repository.RepositoryRoleManager;
 
 import javax.inject.Inject;
 import java.util.Set;
@@ -36,9 +38,7 @@ import static java.util.Arrays.asList;
 
 @CommandLine.Command(name = "remove-permissions")
 @ParentCommand(value = RepositoryCommand.class)
-class RepositoryPermissionsRemoveCommand implements Runnable {
-
-  private final RepositoryPermissionCommandManager permissionCommandManager;
+class RepositoryPermissionsRemoveCommand extends RepositoryPermissionBaseCommand implements Runnable {
 
   @CommandLine.Parameters(paramLabel = "namespace/name", index = "0", descriptionKey = "scm.repo.remove-permissions.repository")
   private String repositoryName;
@@ -51,19 +51,19 @@ class RepositoryPermissionsRemoveCommand implements Runnable {
   private boolean forGroup;
 
   @Inject
-  public RepositoryPermissionsRemoveCommand(RepositoryPermissionCommandManager permissionCommandManager) {
-    this.permissionCommandManager = permissionCommandManager;
+  public RepositoryPermissionsRemoveCommand(RepositoryManager repositoryManager, RepositoryRoleManager roleManager, RepositoryTemplateRenderer templateRenderer) {
+    super(repositoryManager, roleManager, templateRenderer);
   }
 
   @Override
   public void run() {
-    permissionCommandManager.modifyRepository(
+    modifyRepository(
       repositoryName,
       repository -> {
         Set<String> resultingVerbs =
-          permissionCommandManager.getPermissionsAdModifiableSet(repository, name, forGroup);
+          getPermissionsAdModifiableSet(repository, name, forGroup);
         resultingVerbs.removeAll(asList(this.verbs));
-        permissionCommandManager.replacePermission(repository, new RepositoryPermission(name, resultingVerbs, forGroup));
+        replacePermission(repository, new RepositoryPermission(name, resultingVerbs, forGroup));
         return true;
       }
     );

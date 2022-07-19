@@ -61,16 +61,9 @@ class RepositoryPermissionsSetRoleCommandTest {
   private RepositoryTemplateRenderer templateRenderer;
 
   @InjectMocks
-  private RepositoryPermissionCommandManager permissionCommandManager;
-
   private RepositoryPermissionsSetRoleCommand command;
 
   private final Repository repository = RepositoryTestData.createHeartOfGold();
-
-  @BeforeEach
-  void setUpCommand() {
-    command = new RepositoryPermissionsSetRoleCommand(permissionCommandManager, roleManager);
-  }
 
   @Nested
   class ForExistingRepository {
@@ -174,7 +167,6 @@ class RepositoryPermissionsSetRoleCommandTest {
       command.run();
 
       verify(templateRenderer).renderRoleNotFoundError();
-      verify(repositoryManager, never()).modify(any());
     }
   }
 

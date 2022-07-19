@@ -59,17 +59,9 @@ class RepositoryPermissionsRemoveCommandTest {
   private RepositoryTemplateRenderer templateRenderer;
 
   @InjectMocks
-  private RepositoryPermissionCommandManager permissionCommandManager;
-
-  @InjectMocks
   private RepositoryPermissionsRemoveCommand command;
 
   private final Repository repository = RepositoryTestData.createHeartOfGold();
-
-  @BeforeEach
-  void setUpCommand() {
-    command = new RepositoryPermissionsRemoveCommand(permissionCommandManager);
-  }
 
   @Nested
   class ForExistingRepository {

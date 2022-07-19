@@ -27,14 +27,14 @@ package sonia.scm.repository.cli;
 import com.google.common.annotations.VisibleForTesting;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
+import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.RepositoryRoleManager;
 
 import javax.inject.Inject;
 
 @CommandLine.Command(name = "clear-permissions")
 @ParentCommand(value = RepositoryCommand.class)
-class RepositoryPermissionsClearCommand implements Runnable {
-
-  private final RepositoryPermissionCommandManager permissionCommandManager;
+class RepositoryPermissionsClearCommand extends RepositoryPermissionBaseCommand implements Runnable {
 
   @CommandLine.Parameters(paramLabel = "namespace/name", index = "0", descriptionKey = "scm.repo.clear-permissions.repository")
    private String repositoryName;
@@ -45,16 +45,16 @@ class RepositoryPermissionsClearCommand implements Runnable {
   private boolean forGroup;
 
   @Inject
-  public RepositoryPermissionsClearCommand(RepositoryPermissionCommandManager permissionCommandManager) {
-    this.permissionCommandManager = permissionCommandManager;
+  public RepositoryPermissionsClearCommand(RepositoryManager repositoryManager, RepositoryRoleManager roleManager, RepositoryTemplateRenderer templateRenderer) {
+    super(repositoryManager, roleManager, templateRenderer);
   }
 
   @Override
   public void run() {
-    permissionCommandManager.modifyRepository(
+    modifyRepository(
       repositoryName,
       repo -> {
-        permissionCommandManager.removeExistingPermission(repo, name, forGroup);
+        removeExistingPermission(repo, name, forGroup);
         return true;
       }
     );

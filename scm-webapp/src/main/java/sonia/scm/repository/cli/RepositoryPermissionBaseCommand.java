@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.cli;
 
+import picocli.CommandLine;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
@@ -34,17 +35,17 @@ import javax.inject.Inject;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
-class RepositoryPermissionCommandManager {
+class RepositoryPermissionBaseCommand {
 
   private final RepositoryManager repositoryManager;
   private final RepositoryRoleManager roleManager;
+  @CommandLine.Mixin
   private final RepositoryTemplateRenderer templateRenderer;
 
   @Inject
-  RepositoryPermissionCommandManager(RepositoryManager repositoryManager, RepositoryRoleManager roleManager, RepositoryTemplateRenderer templateRenderer) {
+  RepositoryPermissionBaseCommand(RepositoryManager repositoryManager, RepositoryRoleManager roleManager, RepositoryTemplateRenderer templateRenderer) {
     this.repositoryManager = repositoryManager;
     this.roleManager = roleManager;
     this.templateRenderer = templateRenderer;
@@ -105,7 +106,11 @@ class RepositoryPermissionCommandManager {
     }
   }
 
-  public void renderRoleNotFoundError() {
+  void renderRoleNotFoundError() {
     templateRenderer.renderRoleNotFoundError();
+  }
+
+  void renderVerbNotFoundError() {
+    templateRenderer.renderVerbNotFoundError();
   }
 }

@@ -53,16 +53,9 @@ class RepositoryPermissionsClearCommandTest {
   private RepositoryTemplateRenderer templateRenderer;
 
   @InjectMocks
-  private RepositoryPermissionCommandManager permissionCommandManager;
-
   private RepositoryPermissionsClearCommand command;
 
   private final Repository repository = RepositoryTestData.createHeartOfGold();
-
-  @BeforeEach
-  void setUpCommand() {
-    command = new RepositoryPermissionsClearCommand(permissionCommandManager);
-  }
 
   @Nested
   class ForExistingRepository {

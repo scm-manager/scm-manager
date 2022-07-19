@@ -46,10 +46,8 @@ import java.util.Set;
 import static java.util.Optional.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -66,16 +64,9 @@ class RepositoryPermissionsAddCommandTest {
   private RepositoryTemplateRenderer templateRenderer;
 
   @InjectMocks
-  private RepositoryPermissionCommandManager permissionCommandManager;
-
   private RepositoryPermissionsAddCommand command;
 
   private final Repository repository = RepositoryTestData.createHeartOfGold();
-
-  @BeforeEach
-  void setUpCommand() {
-    command = new RepositoryPermissionsAddCommand(permissionCommandManager, permissionDescriptionResolver, templateRenderer);
-  }
 
   @Nested
   class ForExistingRepository {
@@ -186,7 +177,6 @@ class RepositoryPermissionsAddCommandTest {
       command.run();
 
       verify(templateRenderer).renderVerbNotFoundError();
-      verify(repositoryManager, never()).modify(any());
     }
   }
 
