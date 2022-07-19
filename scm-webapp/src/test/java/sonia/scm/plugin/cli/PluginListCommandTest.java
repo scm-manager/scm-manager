@@ -67,9 +67,9 @@ class PluginListCommandTest {
     command.run();
 
     assertThat(templateTestRenderer.getStdOut())
-      .contains("NAME              DISPLAY NAME INSTALLED AVAILABLE PENDING?")
-      .contains("scm-review-plugin                        1.0")
-      .contains("scm-test-plugin                1.0       1.1.0");
+      .contains("NAME              DISPLAY NAME AVAILABLE INSTALLED PENDING?")
+      .contains("scm-review-plugin              1.0")
+      .contains("scm-test-plugin                1.1.0     1.0");
   }
 
   @Test
