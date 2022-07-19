@@ -114,7 +114,7 @@ class RepositoryPermissionsListCommand implements Runnable {
     return new RepositoryPermissionBean(
       permission.isGroupPermission(),
       permission.getName(),
-      permission.getRole(),
+      permission.getRole() == null? "CUSTOM": permission.getRole(),
       keys? effectiveVerbs: getDescriptions(effectiveVerbs)
     );
   }

@@ -123,12 +123,8 @@ class RepositoryPermissionsListCommandTest {
         command.run();
 
         Collection<RepositoryPermissionBean> beans = permissionsCaptor.getValue();
-        assertThat(beans).extracting("groupPermission")
-          .containsExactly(false);
-        assertThat(beans).extracting("name")
-          .containsExactly("trillian");
-        assertThat(beans).extracting("role")
-          .containsExactly(new Object[]{null});
+        assertThat(beans).extracting("groupPermission", "name", "role")
+          .containsExactly(tuple(false, "trillian", "CUSTOM"));
       }
     }
 
@@ -158,7 +154,7 @@ class RepositoryPermissionsListCommandTest {
 
         Collection<RepositoryPermissionBean> beans = permissionsCaptor.getValue();
         assertThat(beans).extracting("groupPermission", "name", "role", "verbs")
-          .containsExactly(tuple(false, "trillian", null, List.of("read repository", "write repository")));
+          .containsExactly(tuple(false, "trillian", "CUSTOM", List.of("read repository", "write repository")));
       }
 
       @Test
@@ -189,7 +185,7 @@ class RepositoryPermissionsListCommandTest {
 
         Collection<RepositoryPermissionBean> beans = permissionsCaptor.getValue();
         assertThat(beans).extracting("groupPermission", "name", "role")
-          .containsExactly(tuple(false, "trillian", null));
+          .containsExactly(tuple(false, "trillian", "CUSTOM"));
         assertThat(beans).extracting("verbs")
           .map(c -> ((Collection) c).stream().collect(toList())) // to satisfy equal in the comparison, we have to use this form
           .containsExactly(List.of("read", "write"));
