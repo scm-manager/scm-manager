@@ -28,7 +28,6 @@ import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
 import sonia.scm.cli.PermissionDescriptionResolver;
 import sonia.scm.cli.Table;
-import sonia.scm.repository.cli.GroupCommand;
 import sonia.scm.security.PermissionAssigner;
 import sonia.scm.security.PermissionDescriptor;
 

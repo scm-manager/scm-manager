@@ -58,7 +58,7 @@ class UserTemplateRenderer extends TemplateRenderer {
   private static final String EXTERNAL_ACTIVATE_TEMPLATE = "{{i18n.scmUserErrorExternalActivate}}\n";
   private static final String EXTERNAL_DEACTIVATE_TEMPLATE = "{{i18n.scmUserErrorExternalDeactivate}}\n";
   private static final String NOT_FOUND_TEMPLATE = "{{i18n.scmUserErrorNotFound}}\n";
-  private static final String UNKNOWN_PERMISSION_TEMPLATE = "{{i18n.permissionUnknown}}\n";
+  private static final String UNKNOWN_PERMISSION_TEMPLATE = "{{i18n.permissionUnknown}}: {{permission}}\n";
 
 
   private final CliContext context;
@@ -111,8 +111,8 @@ class UserTemplateRenderer extends TemplateRenderer {
     context.exit(ExitCode.NOT_FOUND);
   }
 
-  void renderUnknownPermissionError() {
-    renderToStderr(UNKNOWN_PERMISSION_TEMPLATE, Collections.emptyMap());
+  void renderUnknownPermissionError(String permission) {
+    renderToStderr(UNKNOWN_PERMISSION_TEMPLATE, Map.of("permission", permission));
     getContext().exit(ExitCode.USAGE);
   }
 

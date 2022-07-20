@@ -24,6 +24,7 @@
 
 package sonia.scm.user.cli;
 
+import com.google.common.annotations.VisibleForTesting;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
 import sonia.scm.security.PermissionAssigner;
@@ -41,8 +42,8 @@ class UserPermissionAddCommand implements Runnable {
   @CommandLine.Parameters(index = "0", paramLabel = "<username>", descriptionKey = "scm.user.name")
   private String name;
 
-  @CommandLine.Parameters(index = "1", paramLabel = "<permission>", descriptionKey = "scm.user.permission")
-  private String permission;
+  @CommandLine.Parameters(index = "1..", arity = "1..", paramLabel = "<permission>", descriptionKey = "scm.user.permissions")
+  private String[] addedPermissions;
 
   @CommandLine.Mixin
   private final UserTemplateRenderer templateRenderer;
@@ -66,17 +67,28 @@ class UserPermissionAddCommand implements Runnable {
       return;
     }
     Collection<PermissionDescriptor> permissions = permissionAssigner.readPermissionsForUser(name);
-    if (isPermissionInvalid()) {
-      templateRenderer.renderUnknownPermissionError();
-      return;
+    for (String addedPermission : addedPermissions) {
+      if (isPermissionInvalid(addedPermission)) {
+        templateRenderer.renderUnknownPermissionError(addedPermission);
+        return;
+      }
+      permissions.add(new PermissionDescriptor(addedPermission));
     }
-    permissions.add(new PermissionDescriptor(permission));
     permissionAssigner.setPermissionsForUser(name, permissions);
   }
 
-  private boolean isPermissionInvalid() {
+  private boolean isPermissionInvalid(String permission) {
     return permissionAssigner.getAvailablePermissions()
       .stream()
       .noneMatch(p -> p.getValue().equals(permission));
+  }
+
+  @VisibleForTesting
+  void setName(String name) {
+    this.name = name;
+  }
+  @VisibleForTesting
+  void setAddedPermissions(String[] addedPermissions) {
+    this.addedPermissions = addedPermissions;
   }
 }

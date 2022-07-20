@@ -24,16 +24,18 @@
 
 package sonia.scm.group.cli;
 
+import com.google.common.annotations.VisibleForTesting;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
-import sonia.scm.repository.cli.GroupCommand;
 import sonia.scm.security.PermissionAssigner;
 import sonia.scm.security.PermissionDescriptor;
 
 import javax.inject.Inject;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @ParentCommand(value = GroupCommand.class)
@@ -43,8 +45,8 @@ class GroupPermissionRemoveCommand implements Runnable {
   @CommandLine.Parameters(index = "0", paramLabel = "<name>", descriptionKey = "scm.group.name")
   private String name;
 
-  @CommandLine.Parameters(index = "1", paramLabel = "<permission>", descriptionKey = "scm.group.permission")
-  private String permission;
+  @CommandLine.Parameters(index = "1..", arity = "1..", paramLabel = "<permission>", descriptionKey = "scm.group.permissions")
+  private String[] removedPermissions;
 
   @CommandLine.Mixin
   private final GroupTemplateRenderer templateRenderer;
@@ -68,6 +70,24 @@ class GroupPermissionRemoveCommand implements Runnable {
       return;
     }
     Collection<PermissionDescriptor> permissions = permissionAssigner.readPermissionsForGroup(name);
-    permissionAssigner.setPermissionsForGroup(name, permissions.stream().filter(p -> !p.getValue().equals(permission)).collect(Collectors.toList()));
+    permissionAssigner.setPermissionsForGroup(name, getReducedPermissions(permissions));
+  }
+
+  private List<PermissionDescriptor> getReducedPermissions(Collection<PermissionDescriptor> permissions) {
+    return permissions.stream()
+      .filter(p -> Arrays.stream(removedPermissions)
+        .noneMatch(rp -> rp.equals(p.getValue()))
+      )
+      .collect(Collectors.toList());
+  }
+
+  @VisibleForTesting
+  void setName(String name) {
+    this.name = name;
+  }
+
+  @VisibleForTesting
+  void setRemovedPermissions(String[] removedPermissions) {
+    this.removedPermissions = removedPermissions;
   }
 }

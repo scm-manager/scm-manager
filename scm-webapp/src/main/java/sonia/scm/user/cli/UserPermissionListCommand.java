@@ -24,6 +24,7 @@
 
 package sonia.scm.user.cli;
 
+import com.google.common.annotations.VisibleForTesting;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
 import sonia.scm.cli.PermissionDescriptionResolver;
@@ -42,7 +43,7 @@ import java.util.stream.Collectors;
 class UserPermissionListCommand implements Runnable {
 
   @CommandLine.Parameters(index = "0", paramLabel = "<username>", descriptionKey = "scm.user.username")
-  private String username;
+  private String name;
 
   @CommandLine.Option(names = {"--keys", "-k"}, descriptionKey = "scm.user.list-permissions.keys")
   private boolean keys;
@@ -67,12 +68,12 @@ class UserPermissionListCommand implements Runnable {
   @Override
   public void run() {
     Collection<PermissionDescriptor> permissions;
-    User user = userManager.get(username);
+    User user = userManager.get(name);
     if (user == null) {
       templateRenderer.renderNotFoundError();
       return;
     } else {
-      permissions = permissionAssigner.readPermissionsForUser(username);
+      permissions = permissionAssigner.readPermissionsForUser(name);
     }
 
     if (keys) {
@@ -90,5 +91,15 @@ class UserPermissionListCommand implements Runnable {
     return permissions.stream()
       .map(p -> descriptionResolver.getGlobalDescription(p.getValue()).orElse(p.getValue()))
       .collect(Collectors.toList());
+  }
+
+  @VisibleForTesting
+  void setName(String name) {
+    this.name = name;
+  }
+
+  @VisibleForTesting
+  void setKeys(boolean keys) {
+    this.keys = keys;
   }
 }

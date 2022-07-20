@@ -24,6 +24,7 @@
 
 package sonia.scm.user.cli;
 
+import com.google.common.annotations.VisibleForTesting;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
 import sonia.scm.security.PermissionAssigner;
@@ -32,7 +33,9 @@ import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
 
 import javax.inject.Inject;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @ParentCommand(value = UserCommand.class)
@@ -42,8 +45,8 @@ class UserPermissionRemoveCommand implements Runnable {
   @CommandLine.Parameters(index = "0", paramLabel = "<username>", descriptionKey = "scm.user.name")
   private String name;
 
-  @CommandLine.Parameters(index = "1", paramLabel = "<permission>", descriptionKey = "scm.user.permission")
-  private String permission;
+  @CommandLine.Parameters(index = "1..", arity = "1..", paramLabel = "<permission>", descriptionKey = "scm.user.permissions")
+  private String[] removedPermissions;
 
   @CommandLine.Mixin
   private final UserTemplateRenderer templateRenderer;
@@ -67,6 +70,24 @@ class UserPermissionRemoveCommand implements Runnable {
       return;
     }
     Collection<PermissionDescriptor> permissions = permissionAssigner.readPermissionsForUser(name);
-    permissionAssigner.setPermissionsForUser(name,  permissions.stream().filter(p -> !p.getValue().equals(permission)).collect(Collectors.toList()));
+    permissionAssigner.setPermissionsForUser(name, getReducedPermissions(permissions));
+  }
+
+  private List<PermissionDescriptor> getReducedPermissions(Collection<PermissionDescriptor> permissions) {
+    return permissions.stream()
+      .filter(p -> Arrays.stream(removedPermissions)
+        .noneMatch(rp -> rp.equals(p.getValue()))
+      )
+      .collect(Collectors.toList());
+  }
+
+  @VisibleForTesting
+  void setName(String name) {
+    this.name = name;
+  }
+
+  @VisibleForTesting
+  void setRemovedPermissions(String[] removedPermissions) {
+    this.removedPermissions = removedPermissions;
   }
 }

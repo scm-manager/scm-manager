@@ -24,6 +24,7 @@
 
 package sonia.scm.user.cli;
 
+import com.google.common.annotations.VisibleForTesting;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
 import sonia.scm.security.PermissionAssigner;
@@ -38,7 +39,7 @@ import java.util.Collections;
 class UserPermissionClearCommand implements Runnable {
 
   @CommandLine.Parameters(index = "0", paramLabel = "<username>", descriptionKey = "scm.user.name")
-  private String username;
+  private String name;
 
   @CommandLine.Mixin
   private final UserTemplateRenderer templateRenderer;
@@ -56,11 +57,16 @@ class UserPermissionClearCommand implements Runnable {
 
   @Override
   public void run() {
-    User user = userManager.get(username);
+    User user = userManager.get(name);
     if (user == null) {
       templateRenderer.renderNotFoundError();
       return;
     }
-    permissionAssigner.setPermissionsForUser(username, Collections.emptyList());
+    permissionAssigner.setPermissionsForUser(name, Collections.emptyList());
+  }
+
+  @VisibleForTesting
+  void setName(String name) {
+    this.name = name;
   }
 }

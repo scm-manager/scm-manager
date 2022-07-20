@@ -24,12 +24,12 @@
 
 package sonia.scm.group.cli;
 
+import com.google.common.annotations.VisibleForTesting;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
 import sonia.scm.cli.PermissionDescriptionResolver;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
-import sonia.scm.repository.cli.GroupCommand;
 import sonia.scm.security.PermissionAssigner;
 import sonia.scm.security.PermissionDescriptor;
 
@@ -91,6 +91,16 @@ class GroupPermissionListCommand implements Runnable {
     return permissions.stream()
       .map(p -> descriptionResolver.getGlobalDescription(p.getValue()).orElse(p.getValue()))
       .collect(Collectors.toList());
+  }
+
+  @VisibleForTesting
+  void setName(String name) {
+    this.name = name;
+  }
+
+  @VisibleForTesting
+  void setKeys(boolean keys) {
+    this.keys = keys;
   }
 }
 

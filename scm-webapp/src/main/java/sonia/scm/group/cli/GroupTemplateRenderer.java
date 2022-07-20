@@ -43,7 +43,7 @@ class GroupTemplateRenderer extends TemplateRenderer {
 
   private static final String NOT_FOUND_TEMPLATE = "{{i18n.groupNotFound}}\n";
 
-  private static final String UNKNOWN_PERMISSION_TEMPLATE = "{{i18n.permissionUnknown}}\n";
+  private static final String UNKNOWN_PERMISSION_TEMPLATE = "{{i18n.permissionUnknown}}: {{permission}}\n";
   private static final String DETAILS_TABLE_TEMPLATE = String.join("\n",
     "{{#rows}}",
     "{{#cols}}{{value}}{{/cols}}",
@@ -84,8 +84,8 @@ class GroupTemplateRenderer extends TemplateRenderer {
     getContext().exit(ExitCode.NOT_FOUND);
   }
 
-  void renderUnknownPermissionError() {
-    renderToStderr(UNKNOWN_PERMISSION_TEMPLATE, Collections.emptyMap());
+  void renderUnknownPermissionError(String permission) {
+    renderToStderr(UNKNOWN_PERMISSION_TEMPLATE, Map.of("permission", permission));
     getContext().exit(ExitCode.USAGE);
   }
 

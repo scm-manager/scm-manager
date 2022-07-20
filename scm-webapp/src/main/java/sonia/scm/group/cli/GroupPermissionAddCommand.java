@@ -24,11 +24,11 @@
 
 package sonia.scm.group.cli;
 
+import com.google.common.annotations.VisibleForTesting;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
-import sonia.scm.repository.cli.GroupCommand;
 import sonia.scm.security.PermissionAssigner;
 import sonia.scm.security.PermissionDescriptor;
 
@@ -42,8 +42,8 @@ class GroupPermissionAddCommand implements Runnable {
   @CommandLine.Parameters(index = "0", paramLabel = "<name>", descriptionKey = "scm.group.name")
   private String name;
 
-  @CommandLine.Parameters(index = "1", paramLabel = "<permission>", descriptionKey = "scm.group.permission")
-  private String permission;
+  @CommandLine.Parameters(index = "1..", arity = "1..", paramLabel = "<permission>", descriptionKey = "scm.group.permissions")
+  private String[] addedPermissions;
 
   @CommandLine.Mixin
   private final GroupTemplateRenderer templateRenderer;
@@ -67,17 +67,28 @@ class GroupPermissionAddCommand implements Runnable {
       return;
     }
     Collection<PermissionDescriptor> permissions = permissionAssigner.readPermissionsForGroup(name);
-    if (isPermissionInvalid()) {
-      templateRenderer.renderUnknownPermissionError();
-      return;
+    for (String addedPermission : addedPermissions) {
+      if (isPermissionInvalid(addedPermission)) {
+        templateRenderer.renderUnknownPermissionError(addedPermission);
+        return;
+      }
+      permissions.add(new PermissionDescriptor(addedPermission));
     }
-    permissions.add(new PermissionDescriptor(permission));
     permissionAssigner.setPermissionsForGroup(name, permissions);
   }
 
-  private boolean isPermissionInvalid() {
+  private boolean isPermissionInvalid(String permission) {
     return permissionAssigner.getAvailablePermissions()
       .stream()
       .noneMatch(p -> p.getValue().equals(permission));
+  }
+
+  @VisibleForTesting
+  void setName(String name) {
+    this.name = name;
+  }
+  @VisibleForTesting
+  void setAddedPermissions(String[] addedPermissions) {
+    this.addedPermissions = addedPermissions;
   }
 }
