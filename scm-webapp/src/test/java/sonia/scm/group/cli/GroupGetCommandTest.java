@@ -90,6 +90,6 @@ class GroupGetCommandTest {
     assertThat(testRenderer.getStdOut())
       .isEmpty();
     assertThat(testRenderer.getStdErr())
-      .contains("Could not find group");
+      .contains("Could not find group\n");
   }
 }
