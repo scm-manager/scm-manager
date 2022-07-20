@@ -25,8 +25,10 @@
 package sonia.scm.cli;
 
 import com.google.common.collect.ImmutableList;
+import com.google.inject.Binder;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Module;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -35,6 +37,7 @@ import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import picocli.CommandLine;
+import sonia.scm.i18n.I18nCollector;
 import sonia.scm.plugin.PluginLoader;
 
 import javax.annotation.Nonnull;
@@ -44,6 +47,7 @@ import java.util.Locale;
 
 import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -64,6 +68,8 @@ class CliProcessorTest {
   private CliExecutionExceptionHandler executionExceptionHandler;
   @Mock
   private CliParameterExceptionHandler parameterExceptionHandler;
+  @Mock
+  private PermissionDescriptionResolverFactory permissionDescriptionResolverFactory;
 
   @BeforeEach
   void mockPluginLoader() {
@@ -83,7 +89,7 @@ class CliProcessorTest {
     @Test
     void shouldExecutePingCommand() {
       when(registry.createCommandTree()).thenReturn(ImmutableList.of(new RegisteredCommandNode("ping", PingCommand.class)));
-      Injector injector = Guice.createInjector();
+      Injector injector = Guice.createInjector(new MockedModule());
       CliProcessor cliProcessor = new CliProcessor(registry, injector, exceptionHandlerFactory, pluginLoader);
 
       cliProcessor.execute(context, "ping");
@@ -94,7 +100,7 @@ class CliProcessorTest {
     @Test
     void shouldExecutePingCommandWithExitCode0() {
       when(registry.createCommandTree()).thenReturn(ImmutableList.of(new RegisteredCommandNode("ping", PingCommand.class)));
-      Injector injector = Guice.createInjector();
+      Injector injector = Guice.createInjector(new MockedModule());
       CliProcessor cliProcessor = new CliProcessor(registry, injector, exceptionHandlerFactory, pluginLoader);
 
       int exitCode = cliProcessor.execute(context, "ping");
@@ -177,7 +183,7 @@ class CliProcessorTest {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     when(context.getStdout()).thenReturn(new PrintWriter(baos));
 
-    Injector injector = Guice.createInjector();
+    Injector injector = Guice.createInjector(new MockedModule());
     CliProcessor cliProcessor = new CliProcessor(registry, injector, exceptionHandlerFactory, pluginLoader);
 
     cliProcessor.execute(context, args);
@@ -208,6 +214,16 @@ class CliProcessorTest {
     @Override
     public void run() {
 
+    }
+  }
+
+  static class MockedModule implements Module {
+
+    @Override
+    public void configure(Binder binder) {
+      I18nCollector i18nCollector = mock(I18nCollector.class);
+      binder.bind(PermissionDescriptionResolverFactory.class)
+        .toInstance(new PermissionDescriptionResolverFactory(i18nCollector));
     }
   }
 }

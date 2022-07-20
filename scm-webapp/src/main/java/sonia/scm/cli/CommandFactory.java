@@ -28,12 +28,13 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import picocli.CommandLine;
 
-public class CommandFactory implements CommandLine.IFactory {
+class CommandFactory implements CommandLine.IFactory {
 
   private final Injector injector;
 
   public CommandFactory(Injector injector, CliContext context) {
-    this.injector = injector.createChildInjector(new CliContextModule(context));
+    PermissionDescriptionResolverFactory permissionDescriptionResolverFactory = injector.getInstance(PermissionDescriptionResolverFactory.class);
+    this.injector = injector.createChildInjector(new CliContextModule(permissionDescriptionResolverFactory, context));
   }
 
   @Override
@@ -44,14 +45,17 @@ public class CommandFactory implements CommandLine.IFactory {
   static class CliContextModule extends AbstractModule {
 
     private final CliContext context;
+    private final PermissionDescriptionResolver permissionDescriptionResolver;
 
-    private CliContextModule(CliContext context) {
+    private CliContextModule(PermissionDescriptionResolverFactory permissionDescriptionResolverFactory, CliContext context) {
       this.context = context;
+      permissionDescriptionResolver = permissionDescriptionResolverFactory.createResolver(context.getLocale());
     }
 
     @Override
     protected void configure() {
       bind(CliContext.class).toInstance(context);
+      bind(PermissionDescriptionResolver.class).toInstance(permissionDescriptionResolver);
     }
   }
 }

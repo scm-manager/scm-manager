@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 import com.google.common.base.Preconditions;
@@ -39,6 +39,17 @@ public class NamespaceAndName implements Comparable<NamespaceAndName> {
     Preconditions.checkArgument(!Strings.isNullOrEmpty(name), "a non empty name is required");
     this.namespace = namespace;
     this.name = name;
+  }
+
+  /**
+   * @since 2.38.0
+   */
+  public static NamespaceAndName fromString(String namespaceAndName) {
+    String[] parts = namespaceAndName.split("/");
+    if (parts.length != 2) {
+      throw new IllegalArgumentException("namespace and name must be divided by a slash (/)");
+    }
+    return new NamespaceAndName(parts[0], parts[1]);
   }
 
   public String getNamespace() {

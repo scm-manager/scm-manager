@@ -32,7 +32,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-public class CliParameterExceptionHandler implements IParameterExceptionHandler {
+class CliParameterExceptionHandler implements IParameterExceptionHandler {
 
   private final String languageCode;
 

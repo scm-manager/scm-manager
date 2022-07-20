@@ -30,7 +30,7 @@ import java.util.ListResourceBundle;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-public class CombinedResourceBundle extends ListResourceBundle {
+class CombinedResourceBundle extends ListResourceBundle {
 
   private final Object[][] contents;
 

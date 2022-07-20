@@ -1,0 +1,2 @@
+- type: added
+  description: Cli commands to modify repository permissions ([#2090](https://github.com/scm-manager/scm-manager/pull/2090))

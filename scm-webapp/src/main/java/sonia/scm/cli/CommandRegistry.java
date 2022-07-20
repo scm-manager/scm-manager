@@ -33,7 +33,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Singleton
-public class CommandRegistry {
+class CommandRegistry {
 
   private final RegisteredCommandCollector commandCollector;
 

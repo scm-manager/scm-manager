@@ -24,7 +24,10 @@
 
 package sonia.scm.repository.cli;
 
-import picocli.CommandLine;
+import lombok.Value;
 
-@CommandLine.Command(name = "group")
-public class GroupCommand {}
+@Value
+class VerbBean {
+  String verb;
+  String description;
+}

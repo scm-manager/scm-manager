@@ -22,45 +22,23 @@
  * SOFTWARE.
  */
 
-package sonia.scm.group.cli;
+package sonia.scm.cli;
 
-import com.google.common.annotations.VisibleForTesting;
-import picocli.CommandLine;
-import sonia.scm.cli.ParentCommand;
-import sonia.scm.group.Group;
-import sonia.scm.group.GroupManager;
+import sonia.scm.i18n.I18nCollector;
 
 import javax.inject.Inject;
+import java.util.Locale;
 
-@ParentCommand(GroupCommand.class)
-@CommandLine.Command(name = "get")
-class GroupGetCommand implements Runnable{
+class PermissionDescriptionResolverFactory {
 
-  @CommandLine.Parameters(paramLabel = "name")
-  private String name;
-
-  @CommandLine.Mixin
-  private final GroupTemplateRenderer templateRenderer;
-  private final GroupManager manager;
+  private final I18nCollector i18nCollector;
 
   @Inject
-  GroupGetCommand(GroupTemplateRenderer templateRenderer, GroupManager manager) {
-    this.templateRenderer = templateRenderer;
-    this.manager = manager;
+  PermissionDescriptionResolverFactory(I18nCollector i18nCollector) {
+    this.i18nCollector = i18nCollector;
   }
 
-  @VisibleForTesting
-  void setName(String name) {
-    this.name = name;
-  }
-
-  @Override
-  public void run() {
-    Group group = manager.get(name);
-    if (group != null) {
-      templateRenderer.render(group);
-    } else {
-      templateRenderer.renderNotFoundError();
-    }
+  PermissionDescriptionResolver createResolver(Locale locale) {
+    return new PermissionDescriptionResolver(i18nCollector, locale);
   }
 }

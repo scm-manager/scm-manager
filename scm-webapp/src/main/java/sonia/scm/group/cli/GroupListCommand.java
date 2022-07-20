@@ -31,7 +31,6 @@ import sonia.scm.cli.ParentCommand;
 import sonia.scm.cli.Table;
 import sonia.scm.cli.TemplateRenderer;
 import sonia.scm.group.GroupManager;
-import sonia.scm.repository.cli.GroupCommand;
 
 import javax.inject.Inject;
 import java.util.Collection;

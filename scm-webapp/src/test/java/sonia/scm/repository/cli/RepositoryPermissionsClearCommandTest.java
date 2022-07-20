@@ -24,6 +24,8 @@
 
 package sonia.scm.repository.cli;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -32,13 +34,18 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.RepositoryTestData;
 
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class RepositoryGetCommandTest {
+class RepositoryPermissionsClearCommandTest {
 
   @Mock
   private RepositoryManager repositoryManager;
@@ -46,40 +53,76 @@ class RepositoryGetCommandTest {
   private RepositoryTemplateRenderer templateRenderer;
 
   @InjectMocks
-  private RepositoryGetCommand command;
+  private RepositoryPermissionsClearCommand command;
 
-  @Test
-  void shouldRenderNotFoundError() {
-    String repo = "test/repo";
+  private final Repository repository = RepositoryTestData.createHeartOfGold();
 
-    when(repositoryManager.get(new NamespaceAndName("test", "repo"))).thenReturn(null);
+  @Nested
+  class ForExistingRepository {
 
-    command.setRepository(repo);
-    command.run();
+    @BeforeEach
+    void mockRepository() {
+      when(repositoryManager.get(new NamespaceAndName("hitchhiker", "HeartOfGold")))
+        .thenReturn(repository);
+    }
 
-    verify(templateRenderer).renderNotFoundError();
+    @Test
+    void shouldClearPermissionsForUser() {
+      repository.setPermissions(
+        List.of(
+          new RepositoryPermission("trillian", List.of("read"), false)
+        )
+      );
+
+      command.setRepositoryName("hitchhiker/HeartOfGold");
+      command.setName("trillian");
+
+      command.run();
+
+      verify(repositoryManager).modify(argThat(argument -> {
+        assertThat(argument.getPermissions()).isEmpty();
+        return true;
+      }));
+    }
+
+    @Test
+    void shouldClearPermissionsForGroup() {
+      repository.setPermissions(
+        List.of(
+          new RepositoryPermission("hog", "READ", true)
+        )
+      );
+
+      command.setRepositoryName("hitchhiker/HeartOfGold");
+      command.setName("hog");
+      command.setForGroup(true);
+
+      command.run();
+
+      verify(repositoryManager).modify(argThat(argument -> {
+        assertThat(argument.getPermissions()).isEmpty();
+        return true;
+      }));
+    }
   }
 
   @Test
-  void shouldRenderInvalidInputError() {
-    String repo = "repo";
+  void shouldHandleIllegalNamespaceNameParameter() {
+    command.setRepositoryName("illegal name");
+    command.setName("trillian");
 
-    command.setRepository(repo);
     command.run();
 
     verify(templateRenderer).renderInvalidInputError();
   }
 
   @Test
-  void shouldRenderTemplateToStdout() {
-    String repo = "test/repo";
-    Repository puzzle = RepositoryTestData.create42Puzzle();
-    when(repositoryManager.get(new NamespaceAndName("test", "repo"))).thenReturn(puzzle);
+  void shouldHandleNotExistingRepository() {
+    command.setRepositoryName("no/repository");
+    command.setName("trillian");
 
-    command.setRepository(repo);
     command.run();
 
-    verify(templateRenderer).render(puzzle);
+    verify(templateRenderer).renderNotFoundError();
   }
-
 }

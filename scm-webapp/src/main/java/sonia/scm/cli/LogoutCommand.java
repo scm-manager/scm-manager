@@ -27,4 +27,4 @@ package sonia.scm.cli;
 import picocli.CommandLine;
 
 @CommandLine.Command(name = "logout")
-public class LogoutCommand {}
+class LogoutCommand {}

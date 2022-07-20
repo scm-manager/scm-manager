@@ -27,4 +27,4 @@ package sonia.scm.cli;
 import picocli.CommandLine;
 
 @CommandLine.Command(name = "scm")
-public class ScmManagerCommand {}
+class ScmManagerCommand {}

@@ -24,43 +24,7 @@
 
 package sonia.scm.group.cli;
 
-import com.google.common.annotations.VisibleForTesting;
 import picocli.CommandLine;
-import sonia.scm.cli.ParentCommand;
-import sonia.scm.group.Group;
-import sonia.scm.group.GroupManager;
 
-import javax.inject.Inject;
-
-@ParentCommand(GroupCommand.class)
-@CommandLine.Command(name = "get")
-class GroupGetCommand implements Runnable{
-
-  @CommandLine.Parameters(paramLabel = "name")
-  private String name;
-
-  @CommandLine.Mixin
-  private final GroupTemplateRenderer templateRenderer;
-  private final GroupManager manager;
-
-  @Inject
-  GroupGetCommand(GroupTemplateRenderer templateRenderer, GroupManager manager) {
-    this.templateRenderer = templateRenderer;
-    this.manager = manager;
-  }
-
-  @VisibleForTesting
-  void setName(String name) {
-    this.name = name;
-  }
-
-  @Override
-  public void run() {
-    Group group = manager.get(name);
-    if (group != null) {
-      templateRenderer.render(group);
-    } else {
-      templateRenderer.renderNotFoundError();
-    }
-  }
-}
+@CommandLine.Command(name = "group")
+public class GroupCommand {}

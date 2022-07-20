@@ -22,45 +22,17 @@
  * SOFTWARE.
  */
 
-package sonia.scm.group.cli;
+package sonia.scm.repository.cli;
 
-import com.google.common.annotations.VisibleForTesting;
-import picocli.CommandLine;
-import sonia.scm.cli.ParentCommand;
-import sonia.scm.group.Group;
-import sonia.scm.group.GroupManager;
+import lombok.Value;
 
-import javax.inject.Inject;
+import java.util.Collection;
 
-@ParentCommand(GroupCommand.class)
-@CommandLine.Command(name = "get")
-class GroupGetCommand implements Runnable{
+@Value
+class RepositoryPermissionBean {
 
-  @CommandLine.Parameters(paramLabel = "name")
-  private String name;
-
-  @CommandLine.Mixin
-  private final GroupTemplateRenderer templateRenderer;
-  private final GroupManager manager;
-
-  @Inject
-  GroupGetCommand(GroupTemplateRenderer templateRenderer, GroupManager manager) {
-    this.templateRenderer = templateRenderer;
-    this.manager = manager;
-  }
-
-  @VisibleForTesting
-  void setName(String name) {
-    this.name = name;
-  }
-
-  @Override
-  public void run() {
-    Group group = manager.get(name);
-    if (group != null) {
-      templateRenderer.render(group);
-    } else {
-      templateRenderer.renderNotFoundError();
-    }
-  }
+  boolean groupPermission;
+  String name;
+  String role;
+  Collection<String> verbs;
 }

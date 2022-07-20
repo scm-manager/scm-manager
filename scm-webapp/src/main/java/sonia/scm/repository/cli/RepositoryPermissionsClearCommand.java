@@ -22,31 +22,47 @@
  * SOFTWARE.
  */
 
-package sonia.scm.group.cli;
+package sonia.scm.repository.cli;
 
 import com.google.common.annotations.VisibleForTesting;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
-import sonia.scm.group.Group;
-import sonia.scm.group.GroupManager;
+import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.RepositoryRoleManager;
 
 import javax.inject.Inject;
 
-@ParentCommand(GroupCommand.class)
-@CommandLine.Command(name = "get")
-class GroupGetCommand implements Runnable{
+@CommandLine.Command(name = "clear-permissions")
+@ParentCommand(value = RepositoryCommand.class)
+class RepositoryPermissionsClearCommand extends RepositoryPermissionBaseCommand implements Runnable {
 
-  @CommandLine.Parameters(paramLabel = "name")
+  @CommandLine.Parameters(paramLabel = "namespace/name", index = "0", descriptionKey = "scm.repo.clear-permissions.repository")
+   private String repositoryName;
+  @CommandLine.Parameters(paramLabel = "name", index = "1", descriptionKey = "scm.repo.clear-permissions.name")
   private String name;
 
-  @CommandLine.Mixin
-  private final GroupTemplateRenderer templateRenderer;
-  private final GroupManager manager;
+  @CommandLine.Option(names = {"--group", "-g"}, descriptionKey = "scm.repo.clear-permissions.forGroup")
+  private boolean forGroup;
 
   @Inject
-  GroupGetCommand(GroupTemplateRenderer templateRenderer, GroupManager manager) {
-    this.templateRenderer = templateRenderer;
-    this.manager = manager;
+  public RepositoryPermissionsClearCommand(RepositoryManager repositoryManager, RepositoryRoleManager roleManager, RepositoryTemplateRenderer templateRenderer) {
+    super(repositoryManager, roleManager, templateRenderer);
+  }
+
+  @Override
+  public void run() {
+    modifyRepository(
+      repositoryName,
+      repo -> {
+        removeExistingPermission(repo, name, forGroup);
+        return true;
+      }
+    );
+  }
+
+  @VisibleForTesting
+  void setRepositoryName(String repositoryName) {
+    this.repositoryName = repositoryName;
   }
 
   @VisibleForTesting
@@ -54,13 +70,7 @@ class GroupGetCommand implements Runnable{
     this.name = name;
   }
 
-  @Override
-  public void run() {
-    Group group = manager.get(name);
-    if (group != null) {
-      templateRenderer.render(group);
-    } else {
-      templateRenderer.renderNotFoundError();
-    }
+  public void setForGroup(boolean forGroup) {
+    this.forGroup = forGroup;
   }
 }

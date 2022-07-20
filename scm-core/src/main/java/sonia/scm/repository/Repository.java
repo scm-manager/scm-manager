@@ -46,6 +46,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -207,6 +208,28 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
 
   public Collection<RepositoryPermission> getPermissions() {
     return Collections.unmodifiableCollection(permissions);
+  }
+
+  /**
+   * Returns the permission for the given user, if present, or an empty {@link Optional} otherwise.
+   *
+   * @since 2.38.0
+   */
+  public Optional<RepositoryPermission> findUserPermission(String userId) {
+    return findPermission(userId, false);
+  }
+
+  /**
+   * Returns the permission for the given group, if present, or an empty {@link Optional} otherwise.
+   *
+   * @since 2.38.0
+   */
+  public Optional<RepositoryPermission> findGroupPermission(String groupId) {
+    return findPermission(groupId, true);
+  }
+
+  private Optional<RepositoryPermission> findPermission(String x, boolean isGroup) {
+    return getPermissions().stream().filter(p -> p.isGroupPermission() == isGroup && p.getName().equals(x)).findFirst();
   }
 
   /**

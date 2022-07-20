@@ -41,7 +41,7 @@ import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
 @Slf4j
-public class CliExecutionExceptionHandler implements CommandLine.IExecutionExceptionHandler {
+class CliExecutionExceptionHandler implements CommandLine.IExecutionExceptionHandler {
 
   private final I18nCollector i18nCollector;
   private final String languageCode;

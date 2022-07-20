@@ -28,7 +28,7 @@ package sonia.scm.cli;
  * Exception is thrown if a command is registered with parent which does not exist.
  * @since 2.33.0
  */
-public class NonExistingParentCommandException extends CliException {
+class NonExistingParentCommandException extends CliException {
   public NonExistingParentCommandException(String message) {
     super(message);
   }

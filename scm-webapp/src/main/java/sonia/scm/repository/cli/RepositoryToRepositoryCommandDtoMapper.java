@@ -39,7 +39,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 @Mapper
-public abstract class RepositoryToRepositoryCommandDtoMapper {
+abstract class RepositoryToRepositoryCommandDtoMapper {
 
   @Inject
   private RepositoryServiceFactory serviceFactory;
