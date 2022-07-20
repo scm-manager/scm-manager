@@ -42,13 +42,13 @@ const BASE_BUTTON_CLASSES =
 const DEFAULT_BUTTON_CLASSES =
   "border-gray-200 hover:border-gray-400 active:shadow-inner disabled:active:shadow-none disabled:hover:border-gray-200";
 const PRIMARY_BUTTON_CLASSES =
-  "bg-cyan-400 hover:bg-cyan-600 active:bg-cyan-700 disabled:hover:bg-cyan-400 disabled:active:bg-cyan-400 text-gray-50 border-transparent";
+  "bg-primary hover:bg-primary-hover active:bg-primary-active disabled:hover:bg-primary disabled:active:bg-primary text-primary-contrast border-transparent";
 const SECONDARY_BUTTON_CLASSES =
-  "text-cyan-400 hover:text-cyan-600 active:text-cyan-700 disabled:hover:text-cyan-400 disabled:active:text-cyan-400 border-cyan-400 hover:border-cyan-600 active:border-cyan-700 disabled:hover:border-cyan-400 disabled:active:border-cyan-400";
+  "text-primary hover:text-primary-hover active:text-primary-active disabled:hover:text-primary disabled:active:text-primary border-primary hover:border-primary-hover active:border-primary-active disabled:hover:border-primary disabled:active:border-primary";
 const TERTIARY_BUTTON_CLASSES =
-  "text-cyan-400 hover:bg-cyan-50 active:bg-cyan-100 disabled:hover:bg-transparent disabled:active:bg-transparent border-transparent";
+  "text-primary disabled:text-text hover:bg-primary-hover-contrast active:bg-primary-active-contrast disabled:hover:bg-transparent disabled:active:bg-transparent border-transparent";
 const SIGNAL_BUTTON_CLASSES =
-  "bg-orange-400 hover:bg-orange-600 active:bg-orange-700 disabled:hover:bg-orange-400 disabled:active:bg-orange-400 text-gray-50 border-transparent";
+  "bg-signal hover:bg-signal-hover active:bg-signal-active disabled:hover:bg-signal disabled:active:bg-signal text-signal-contrast border-transparent";
 
 export const createButtonClasses = (variant?: ButtonVariant) =>
   classNames(BASE_BUTTON_CLASSES, {

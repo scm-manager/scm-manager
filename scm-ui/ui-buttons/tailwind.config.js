@@ -36,7 +36,20 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: "var(--scm-primary-color)",
+        primary: {
+          DEFAULT: "var(--scm-primary-color)",
+          hover: "var(--scm-primary-hover-color)",
+          active: "var(--scm-primary-active-color)",
+          contrast: "var(--scm-primary-contrast-color)",
+          "hover-contrast": "var(--scm-primary-hover-contrast-color)",
+          "active-contrast": "var(--scm-primary-active-contrast-color)",
+        },
+        signal: {
+          DEFAULT: "var(--scm-warning-color)",
+          hover: "var(--scm-warning-hover-color)",
+          active: "var(--scm-warning-active-color)",
+          contrast: "var(--scm-warning-contrast-color)",
+        },
       },
     },
   },

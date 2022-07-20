@@ -78,6 +78,17 @@ $popover-background-color: $grey-light;
   --sh-selected-color: #{$warning-25};
   --sh-highlight-background: #f5f5f5;
   --sh-highlight-accent: #99d8f3;
+
+  // Tailwind
+  --scm-primary-hover-color: #{darken($primary, 10%)};
+  --scm-primary-active-color: #{darken($primary, 20%)};
+  --scm-primary-contrast-color: #{hsl(0, 0%, 99%)};
+  --scm-primary-hover-contrast-color: #{hsl(0, 0%, 95%)};
+  --scm-primary-active-contrast-color: #{hsl(0, 0%, 90%)};
+
+  --scm-warning-hover-color: #{darken($warning, 10%)};
+  --scm-warning-active-color: #{darken($warning, 20%)};
+  --scm-warning-contrast-color: #{hsl(0, 0%, 1%)};
 }
 
 .button {
