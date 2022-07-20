@@ -83,7 +83,7 @@ class RepositoryPermissionBaseCommand {
     }
   }
 
-  HashSet<String> getPermissionsAdModifiableSet(Repository repository, String name, boolean forGroup) {
+  HashSet<String> getPermissionsAsModifiableSet(Repository repository, String name, boolean forGroup) {
     return this.getExistingPermissions(repository, name, forGroup)
       .map(this::getVerbs)
       .map(HashSet::new)

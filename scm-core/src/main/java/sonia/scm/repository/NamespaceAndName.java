@@ -41,6 +41,9 @@ public class NamespaceAndName implements Comparable<NamespaceAndName> {
     this.name = name;
   }
 
+  /**
+   * @since 2.38.0
+   */
   public static NamespaceAndName fromString(String namespaceAndName) {
     String[] parts = namespaceAndName.split("/");
     if (parts.length != 2) {
