@@ -61,7 +61,7 @@ public class SvnMirrorCommand extends AbstractSvnCommand implements MirrorComman
 
   @Override
   public MirrorCommandResult mirror(MirrorCommandRequest mirrorCommandRequest) {
-    return mirror(mirrorCommandRequest, this::doUpdate);
+    return mirror(mirrorCommandRequest, SVNAdminClient::doCompleteSynchronize);
   }
 
   @Override
