@@ -23,8 +23,9 @@
  */
 
 import React from "react";
+import StoryRouter from "storybook-react-router";
 
-import { ButtonVariantList, LinkButton } from "./button";
+import { ButtonVariantList, ButtonVariants, LinkButton } from "./button";
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
@@ -37,13 +38,15 @@ export default {
       control: { type: "select" },
     },
   },
+  decorators: [StoryRouter()],
 };
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
 const Template = (args) => <LinkButton {...args} />;
 
-export const Default = Template.bind({});
+export const Primary = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
-Default.args = {
+Primary.args = {
   children: "Hello",
+  variant: ButtonVariants.PRIMARY,
 };

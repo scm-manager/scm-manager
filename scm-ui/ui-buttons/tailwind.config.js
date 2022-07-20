@@ -42,4 +42,5 @@ module.exports = {
   },
   safelist: bulmaHelpers,
   plugins: [],
+  important: true,
 };

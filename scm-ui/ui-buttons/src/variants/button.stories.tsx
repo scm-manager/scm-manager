@@ -24,7 +24,7 @@
 
 import React from "react";
 
-import { Button, ButtonVariantList } from "./button";
+import { Button, ButtonVariantList, ButtonVariants } from "./button";
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
@@ -42,17 +42,34 @@ export default {
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
 const Template = (args) => <Button {...args} />;
 
-export const Default = Template.bind({});
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
-Default.args = {
-  children: "Hello",
-  disabled: false,
-};
-
 export const Primary = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 Primary.args = {
   children: "Hello",
-  variant: "primary",
+  variant: ButtonVariants.PRIMARY,
+  disabled: false,
+};
+
+export const Secondary = Template.bind({});
+// More on args: https://storybook.js.org/docs/react/writing-stories/args
+Secondary.args = {
+  children: "Hello",
+  variant: ButtonVariants.SECONDARY,
+  disabled: false,
+};
+
+export const Tertiary = Template.bind({});
+// More on args: https://storybook.js.org/docs/react/writing-stories/args
+Tertiary.args = {
+  children: "Hello",
+  variant: ButtonVariants.TERTIARY,
+  disabled: false,
+};
+
+export const Signal = Template.bind({});
+// More on args: https://storybook.js.org/docs/react/writing-stories/args
+Signal.args = {
+  children: "Hello",
+  variant: ButtonVariants.SIGNAL,
   disabled: false,
 };

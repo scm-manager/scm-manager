@@ -28,6 +28,9 @@ import classNames from "classnames";
 
 export const ButtonVariants = {
   PRIMARY: "primary",
+  SECONDARY: "secondary",
+  TERTIARY: "tertiary",
+  SIGNAL: "signal",
 } as const;
 
 export const ButtonVariantList = Object.values(ButtonVariants);
@@ -40,15 +43,24 @@ const DEFAULT_BUTTON_CLASSES =
   "border-gray-200 hover:border-gray-400 active:shadow-inner disabled:active:shadow-none disabled:hover:border-gray-200";
 const PRIMARY_BUTTON_CLASSES =
   "bg-cyan-400 hover:bg-cyan-600 active:bg-cyan-700 disabled:hover:bg-cyan-400 disabled:active:bg-cyan-400 text-gray-50 border-transparent";
+const SECONDARY_BUTTON_CLASSES =
+  "text-cyan-400 hover:text-cyan-600 active:text-cyan-700 disabled:hover:text-cyan-400 disabled:active:text-cyan-400 border-cyan-400 hover:border-cyan-600 active:border-cyan-700 disabled:hover:border-cyan-400 disabled:active:border-cyan-400";
+const TERTIARY_BUTTON_CLASSES =
+  "text-cyan-400 hover:bg-cyan-50 active:bg-cyan-100 disabled:hover:bg-transparent disabled:active:bg-transparent border-transparent";
+const SIGNAL_BUTTON_CLASSES =
+  "bg-orange-400 hover:bg-orange-600 active:bg-orange-700 disabled:hover:bg-orange-400 disabled:active:bg-orange-400 text-gray-50 border-transparent";
 
 export const createButtonClasses = (variant?: ButtonVariant) =>
   classNames(BASE_BUTTON_CLASSES, {
     [DEFAULT_BUTTON_CLASSES]: !variant,
     [PRIMARY_BUTTON_CLASSES]: variant === "primary",
+    [SECONDARY_BUTTON_CLASSES]: variant === "secondary",
+    [TERTIARY_BUTTON_CLASSES]: variant === "tertiary",
+    [SIGNAL_BUTTON_CLASSES]: variant === "signal",
   });
 
 export type BaseButtonProps = {
-  variant?: ButtonVariant;
+  variant: ButtonVariant;
 };
 
 export type ButtonProps = BaseButtonProps & ButtonHTMLAttributes<HTMLButtonElement>;

@@ -24,7 +24,7 @@
 
 import React from "react";
 
-import { ButtonVariantList, ExternalLinkButton } from "./button";
+import { ButtonVariantList, ButtonVariants, ExternalLinkButton } from "./button";
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
@@ -42,9 +42,9 @@ export default {
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
 const Template = (args) => <ExternalLinkButton {...args} />;
 
-export const Default = Template.bind({});
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
-Default.args = {
+export const Primary = Template.bind({});
+Primary.args = {
   children: "Hello",
   href: "https://scm-manager.org",
+  variant: ButtonVariants.PRIMARY,
 };
