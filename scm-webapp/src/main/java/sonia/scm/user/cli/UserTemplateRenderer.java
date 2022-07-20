@@ -34,7 +34,6 @@ import sonia.scm.user.User;
 
 import javax.inject.Inject;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Map;
 
 import static java.util.Collections.emptyMap;
