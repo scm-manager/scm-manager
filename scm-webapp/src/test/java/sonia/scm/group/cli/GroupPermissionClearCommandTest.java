@@ -24,9 +24,7 @@
 
 package sonia.scm.group.cli;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -34,89 +32,52 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.cli.CliExitException;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
+import sonia.scm.security.PermissionAssigner;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.Mockito.doAnswer;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class GroupAddMemberCommandTest {
+class GroupPermissionClearCommandTest {
 
   private final GroupTemplateTestRenderer testRenderer = new GroupTemplateTestRenderer();
 
   @Mock
   private GroupManager manager;
+  @Mock
+  private PermissionAssigner permissionAssigner;
 
-  private GroupAddMemberCommand command;
+  private GroupPermissionClearCommand command;
 
   @BeforeEach
   void initCommand() {
-    command = new GroupAddMemberCommand(testRenderer.getTemplateRenderer(), manager);
-  }
-
-  @Nested
-  class ForSuccessfulModificationTest {
-
-    private Group group;
-
-    @BeforeEach
-    void mockModification() {
-      group = new Group("test", "hog", "zaphod");
-
-      when(manager.get("hog")).thenAnswer(invocation -> group);
-      doAnswer(invocation -> {
-        Group modifiedGroup = invocation.getArgument(0, Group.class);
-        modifiedGroup.setLastModified(1649662000000L);
-        group = modifiedGroup;
-        return null;
-      }).when(manager).modify(any());
-
-      command.setName("hog");
-      command.setMembers(new String[]{"trillian", "arthur", "ford"});
-    }
-
-    @Test
-    void shouldModifyGroup() {
-      command.run();
-
-      verify(manager).modify(argThat(argument -> {
-        assertThat(argument.getName()).isEqualTo("hog");
-        assertThat(argument.getMembers()).contains("zaphod", "trillian", "arthur", "ford");
-        return true;
-      }));
-    }
-
-    @Test
-    void shouldPrintGroupAfterModification() {
-      command.run();
-
-      assertThat(testRenderer.getStdOut())
-        .contains(
-          "Name:          hog",
-          "Members:       zaphod, trillian, arthur, ford",
-          "Last Modified: 2022-04-11T07:26:40Z"
-        );
-      assertThat(testRenderer.getStdErr())
-        .isEmpty();
-    }
+    command = new GroupPermissionClearCommand(testRenderer.getTemplateRenderer(), permissionAssigner, manager);
   }
 
   @Test
-  void shouldFailIfGroupDoesNotExists() {
-    when(manager.get("hog")).thenReturn(null);
-    command.setName("hog");
+  void shouldRenderErrorForUnknownUser() {
+    when(manager.get(any())).thenReturn(null);
 
-    Assertions.assertThrows(
-      CliExitException.class,
-      () -> command.run()
-    );
+    assertThrows(CliExitException.class, () -> command.run());
 
-    assertThat(testRenderer.getStdOut())
-      .isEmpty();
-    assertThat(testRenderer.getStdErr())
-      .isEqualTo("Could not find group\n");
+    assertThat(testRenderer.getStdErr()).isEqualTo("Could not find group\n");
+  }
+
+  @Test
+  void shouldClearAllUserPermissions() {
+    when(manager.get(any())).thenReturn(new Group());
+    command.setName("hitchhikers");
+
+    command.run();
+
+    verify(permissionAssigner).setPermissionsForGroup(eq("hitchhikers"), argThat(arg -> {
+      assertThat(arg).isEmpty();
+      return true;
+    }));
   }
 }

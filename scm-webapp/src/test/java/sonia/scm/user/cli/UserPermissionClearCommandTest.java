@@ -22,74 +22,62 @@
  * SOFTWARE.
  */
 
-package sonia.scm.group.cli;
+package sonia.scm.user.cli;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.cli.CliExitException;
-import sonia.scm.group.Group;
-import sonia.scm.group.GroupManager;
+import sonia.scm.security.PermissionAssigner;
+import sonia.scm.user.User;
+import sonia.scm.user.UserManager;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class GroupGetCommandTest {
+class UserPermissionClearCommandTest {
 
-  private final GroupTemplateTestRenderer testRenderer = new GroupTemplateTestRenderer();
+  private final UserTemplateTestRenderer testRenderer = new UserTemplateTestRenderer();
 
   @Mock
-  private GroupManager manager;
+  private UserManager manager;
+  @Mock
+  private PermissionAssigner permissionAssigner;
 
-  private GroupGetCommand command;
+  private UserPermissionClearCommand command;
 
   @BeforeEach
   void initCommand() {
-    command = new GroupGetCommand(testRenderer.getTemplateRenderer(), manager);
+    command = new UserPermissionClearCommand(testRenderer.getTemplateRenderer(), permissionAssigner, manager);
   }
 
   @Test
-  void shouldGetGroup() {
-    Group group = new Group("test", "hog", "zaphod", "trillian");
-    group.setCreationDate(1649262000000L);
-    group.setLastModified(1649462000000L);
-    group.setDescription("Crew of the Heart of Gold");
+  void shouldRenderErrorForUnknownUser() {
+    when(manager.get(any())).thenReturn(null);
 
-    when(manager.get("hog")).thenReturn(group);
+    assertThrows(CliExitException.class, () -> command.run());
 
-    command.setName("hog");
+    assertThat(testRenderer.getStdErr()).isEqualTo("Could not find user\n");
+  }
+
+  @Test
+  void shouldClearAllUserPermissions() {
+    when(manager.get(any())).thenReturn(new User());
+    command.setName("trillian");
 
     command.run();
 
-    assertThat(testRenderer.getStdOut())
-      .contains(
-        "Name:          hog",
-        "Description:   Crew of the Heart of Gold",
-        "Members:       zaphod, trillian",
-        "External:      no",
-        "Creation Date: 2022-04-06T16:20:00Z",
-        "Last Modified: 2022-04-08T23:53:20Z"
-      );
-    assertThat(testRenderer.getStdErr())
-      .isEmpty();
-  }
-
-  @Test
-  void shouldFailForNotExistingGroup() {
-    command.setName("hog");
-
-    Assertions.assertThrows(
-      CliExitException.class,
-      () -> command.run()
-    );
-
-    assertThat(testRenderer.getStdOut())
-      .isEmpty();
-    assertThat(testRenderer.getStdErr())
-      .contains("Could not find group\n");
+    verify(permissionAssigner).setPermissionsForUser(eq("trillian"), argThat(arg -> {
+      assertThat(arg).isEmpty();
+      return true;
+    }));
   }
 }

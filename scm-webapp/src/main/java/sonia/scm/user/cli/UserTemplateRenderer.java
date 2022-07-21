@@ -33,7 +33,11 @@ import sonia.scm.template.TemplateEngineFactory;
 import sonia.scm.user.User;
 
 import javax.inject.Inject;
-import java.util.Collections;
+import java.util.Collection;
+import java.util.Map;
+
+import static java.util.Collections.emptyMap;
+import static java.util.Map.entry;
 
 class UserTemplateRenderer extends TemplateRenderer {
 
@@ -42,10 +46,19 @@ class UserTemplateRenderer extends TemplateRenderer {
     "{{#cols}}{{value}}{{/cols}}",
     "{{/rows}}"
   );
-  private static final String PASSWORD_ERROR_TEMPLATE = "{{i18n.scmUserErrorPassword}}";
-  private static final String EXTERNAL_ACTIVATE_TEMPLATE = "{{i18n.scmUserErrorExternalActivate}}";
-  private static final String EXTERNAL_DEACTIVATE_TEMPLATE = "{{i18n.scmUserErrorExternalDeactivate}}";
-  private static final String NOT_FOUND_TEMPLATE = "{{i18n.scmUserErrorNotFound}}";
+
+  private static final String PERMISSION_LIST_TEMPLATE = String.join("\n",
+    "{{#permissions}}",
+    "{{.}}",
+    "{{/permissions}}"
+  );
+
+  private static final String PASSWORD_ERROR_TEMPLATE = "{{i18n.scmUserErrorPassword}}\n";
+  private static final String EXTERNAL_ACTIVATE_TEMPLATE = "{{i18n.scmUserErrorExternalActivate}}\n";
+  private static final String EXTERNAL_DEACTIVATE_TEMPLATE = "{{i18n.scmUserErrorExternalDeactivate}}\n";
+  private static final String NOT_FOUND_TEMPLATE = "{{i18n.scmUserErrorNotFound}}\n";
+  private static final String UNKNOWN_PERMISSION_TEMPLATE = "{{i18n.permissionUnknown}}: {{permission}}\n";
+
 
   private final CliContext context;
   private final UserCommandBeanMapper mapper;
@@ -74,26 +87,35 @@ class UserTemplateRenderer extends TemplateRenderer {
   }
 
   public void renderPasswordError() {
-    renderToStderr(PASSWORD_ERROR_TEMPLATE, Collections.emptyMap());
+    renderToStderr(PASSWORD_ERROR_TEMPLATE, emptyMap());
     context.getStderr().println();
     context.exit(ExitCode.USAGE);
   }
 
   public void renderExternalActivateError() {
-    renderToStderr(EXTERNAL_ACTIVATE_TEMPLATE, Collections.emptyMap());
+    renderToStderr(EXTERNAL_ACTIVATE_TEMPLATE, emptyMap());
     context.getStderr().println();
     context.exit(ExitCode.USAGE);
   }
 
   public void renderExternalDeactivateError() {
-    renderToStderr(EXTERNAL_DEACTIVATE_TEMPLATE, Collections.emptyMap());
+    renderToStderr(EXTERNAL_DEACTIVATE_TEMPLATE, emptyMap());
     context.getStderr().println();
     context.exit(ExitCode.USAGE);
   }
 
   public void renderNotFoundError() {
-    renderToStderr(NOT_FOUND_TEMPLATE, Collections.emptyMap());
+    renderToStderr(NOT_FOUND_TEMPLATE, emptyMap());
     context.getStderr().println();
     context.exit(ExitCode.NOT_FOUND);
+  }
+
+  void renderUnknownPermissionError(String permission) {
+    renderToStderr(UNKNOWN_PERMISSION_TEMPLATE, Map.of("permission", permission));
+    getContext().exit(ExitCode.USAGE);
+  }
+
+  public void render(Collection<String> permissions) {
+    renderToStdout(PERMISSION_LIST_TEMPLATE, Map.ofEntries(entry("permissions", permissions)));
   }
 }

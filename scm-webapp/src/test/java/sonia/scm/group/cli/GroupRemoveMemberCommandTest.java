@@ -117,6 +117,6 @@ class GroupRemoveMemberCommandTest {
     assertThat(testRenderer.getStdOut())
       .isEmpty();
     assertThat(testRenderer.getStdErr())
-      .isEqualTo("Could not find group");
+      .isEqualTo("Could not find group\n");
   }
 }

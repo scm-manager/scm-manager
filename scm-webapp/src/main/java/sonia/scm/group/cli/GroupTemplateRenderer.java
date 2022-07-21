@@ -33,16 +33,27 @@ import sonia.scm.group.Group;
 import sonia.scm.template.TemplateEngineFactory;
 
 import javax.inject.Inject;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Map;
+
+import static java.util.Map.entry;
 
 class GroupTemplateRenderer extends TemplateRenderer {
 
-  private static final String NOT_FOUND_TEMPLATE = "{{i18n.groupNotFound}}";
+  private static final String NOT_FOUND_TEMPLATE = "{{i18n.groupNotFound}}\n";
 
+  private static final String UNKNOWN_PERMISSION_TEMPLATE = "{{i18n.permissionUnknown}}: {{permission}}\n";
   private static final String DETAILS_TABLE_TEMPLATE = String.join("\n",
     "{{#rows}}",
     "{{#cols}}{{value}}{{/cols}}",
     "{{/rows}}"
+  );
+
+  private static final String PERMISSION_LIST_TEMPLATE = String.join("\n",
+    "{{#permissions}}",
+    "{{.}}",
+    "{{/permissions}}"
   );
 
   private final GroupCommandBeanMapper mapper;
@@ -71,5 +82,14 @@ class GroupTemplateRenderer extends TemplateRenderer {
   void renderNotFoundError() {
     renderToStderr(NOT_FOUND_TEMPLATE, Collections.emptyMap());
     getContext().exit(ExitCode.NOT_FOUND);
+  }
+
+  void renderUnknownPermissionError(String permission) {
+    renderToStderr(UNKNOWN_PERMISSION_TEMPLATE, Map.of("permission", permission));
+    getContext().exit(ExitCode.USAGE);
+  }
+
+  void render(Collection<String> permissions) {
+    renderToStdout(PERMISSION_LIST_TEMPLATE, Map.ofEntries(entry("permissions", permissions)));
   }
 }
