@@ -72,9 +72,8 @@ class UserPermissionListCommand implements Runnable {
     if (user == null) {
       templateRenderer.renderNotFoundError();
       return;
-    } else {
-      permissions = permissionAssigner.readPermissionsForUser(name);
     }
+    permissions = permissionAssigner.readPermissionsForUser(name);
 
     if (keys) {
       templateRenderer.render(resolvePermissions(permissions));
