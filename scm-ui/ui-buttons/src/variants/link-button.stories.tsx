@@ -25,7 +25,7 @@
 import React from "react";
 import StoryRouter from "storybook-react-router";
 
-import { ButtonVariantList, ButtonVariants, LinkButton } from "./button";
+import { ButtonVariantList, ButtonVariants, LinkButton } from "../button";
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {

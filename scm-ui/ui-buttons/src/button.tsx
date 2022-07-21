@@ -71,6 +71,9 @@ export type BaseButtonProps = {
 
 export type ButtonProps = BaseButtonProps & ButtonHTMLAttributes<HTMLButtonElement>;
 
+/**
+ * Styled html button
+ */
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, children, ...props }, ref) => (
     <button {...props} className={classNames(createButtonClasses(variant), className)} ref={ref}>
@@ -81,6 +84,9 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
 export type LinkButtonProps = BaseButtonProps & ReactRouterLinkProps;
 
+/**
+ * Styled react router link
+ */
 export const LinkButton = React.forwardRef<HTMLAnchorElement, LinkButtonProps>(
   ({ className, variant, children, ...props }, ref) => (
     <ReactRouterLink {...props} className={classNames(createButtonClasses(variant), className)} ref={ref}>
@@ -91,6 +97,9 @@ export const LinkButton = React.forwardRef<HTMLAnchorElement, LinkButtonProps>(
 
 export type ExternalLinkButtonProps = BaseButtonProps & AnchorHTMLAttributes<HTMLAnchorElement>;
 
+/**
+ * Styled html anchor
+ */
 export const ExternalLinkButton = React.forwardRef<HTMLAnchorElement, ExternalLinkButtonProps>(
   ({ className, variant, children, ...props }, ref) => (
     <a {...props} className={classNames(createButtonClasses(variant), className)} ref={ref}>

@@ -22,6 +22,41 @@
  * SOFTWARE.
  */
 
-import "./index.css";
+import React from "react";
+import {
+  Button as ButtonComponent,
+  LinkButton as LinkButtonComponent,
+  ExternalLinkButton as ExternalLinkButtonComponent,
+  ButtonVariantList,
+} from "./button";
+import StoryRouter from "storybook-react-router";
 
-export { Button, LinkButton, ExternalLinkButton } from "./button";
+const variantProps =
+  (Component, props = {}) =>
+  () =>
+    (
+      <div className="grid grid-cols-4 gap-4">
+        {ButtonVariantList.map((variant) => (
+          <Component {...props} variant={variant}>
+            {variant.toUpperCase()}
+          </Component>
+        ))}
+      </div>
+    );
+
+export default {
+  title: "Variants",
+  decorators: [StoryRouter()],
+  subcomponents: { ButtonComponent, LinkButtonComponent, ExternalLinkButtonComponent },
+  parameters: {
+    docs: {
+      description: {
+        component: "Button Variants",
+      },
+    },
+  },
+};
+
+export const Button = variantProps(ButtonComponent);
+export const LinkButton = variantProps(LinkButtonComponent, { to: "https://scm-manager" });
+export const ExternalLinkButton = variantProps(ExternalLinkButtonComponent, { href: "https://scm-manager.org" });

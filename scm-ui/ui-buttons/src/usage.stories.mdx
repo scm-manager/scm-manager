@@ -1,0 +1,19 @@
+import { Meta, Story } from "@storybook/addon-docs";
+import { Button } from "./button";
+
+<Meta title="Usage" />
+
+In confirmation dialogs, there are two actions.<br/>
+One to cancel the current process and one to confirm it.<br/>
+Aborting is **always** the primary action, confirmation always the secondary.
+
+<Story name="Confirmation Dialog">
+  <div className="max-w-2xl rounded border p-4">
+    <h4 className="mb-2 font-bold">Delete User</h4>
+    <p>Do you really want to delete this user ?</p>
+    <div className="flex justify-end gap-2">
+      <Button variant="primary">Cancel</Button>
+      <Button variant="secondary">Delete</Button>
+    </div>
+  </div>
+</Story>

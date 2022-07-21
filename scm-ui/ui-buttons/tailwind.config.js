@@ -32,7 +32,7 @@ const bulmaHelpers = helpers
   .flat(3);
 
 module.exports = {
-  content: [path.join(__dirname, "src/**/*.tsx")],
+  content: [path.join(__dirname, "src/**/*.tsx"), path.join(__dirname, "src/**/*.mdx")],
   theme: {
     extend: {
       colors: {

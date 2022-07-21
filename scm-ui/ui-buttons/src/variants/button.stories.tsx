@@ -24,7 +24,7 @@
 
 import React from "react";
 
-import { Button, ButtonVariantList, ButtonVariants } from "./button";
+import { Button, ButtonVariantList, ButtonVariants } from "../button";
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
