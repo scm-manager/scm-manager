@@ -18,16 +18,16 @@
     "set-version": "ui-scripts version"
   },
   "dependencies": {
-    "@scm-manager/eslint-config": "^2.15.1"
+    "@scm-manager/eslint-config": "2.16.0-1658403197"
   },
   "devDependencies": {
     "@scm-manager/remark-preset-lint": "^1.0.0",
     "babel-plugin-reflow": "^0.2.7",
+    "cross-env": "^7.0.3",
     "husky": "^4.2.5",
     "lint-staged": "^10.2.11",
     "remark-cli": "^9.0.0",
-    "turbo": "^1.2.5",
-    "cross-env": "^7.0.3"
+    "turbo": "^1.2.5"
   },
   "resolutions": {
     "babel-core": "7.0.0-bridge.0",
