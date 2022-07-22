@@ -28,33 +28,33 @@ import com.google.common.annotations.VisibleForTesting;
 import picocli.CommandLine;
 import sonia.scm.cli.CommandValidator;
 import sonia.scm.cli.ParentCommand;
-import sonia.scm.repository.NamespaceAndName;
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.Namespace;
+import sonia.scm.repository.NamespaceManager;
 
 import javax.inject.Inject;
 import java.util.Collection;
+import java.util.Optional;
 
 @CommandLine.Command(name = "list-permissions")
-@ParentCommand(value = RepositoryCommand.class)
-class RepositoryPermissionsListCommand implements Runnable {
+@ParentCommand(value = NamespaceCommand.class)
+class NamespacePermissionsListCommand implements Runnable {
 
   @CommandLine.Mixin
   private final RepositoryTemplateRenderer templateRenderer;
   @CommandLine.Mixin
   private final CommandValidator validator;
-  private final RepositoryManager manager;
+  private final NamespaceManager manager;
   private final RepositoryPermissionBeanMapper beanMapper;
 
-  @CommandLine.Parameters(paramLabel = "namespace/name", index = "0", descriptionKey = "scm.repo.list-permissions.repository")
-  private String repository;
-  @CommandLine.Option(names = {"--verbose", "-v"}, descriptionKey = "scm.repo.list-permissions.verbose")
+  @CommandLine.Parameters(paramLabel = "namespace", index = "0", descriptionKey = "scm.namespace.list-permissions.namespace")
+  private String namespace;
+  @CommandLine.Option(names = {"--verbose", "-v"}, descriptionKey = "scm.namespace.list-permissions.verbose")
   private boolean verbose;
-  @CommandLine.Option(names = {"--keys", "-k"}, descriptionKey = "scm.repo.list-permissions.keys")
+  @CommandLine.Option(names = {"--keys", "-k"}, descriptionKey = "scm.namespace.list-permissions.keys")
   private boolean keys;
 
   @Inject
-  public RepositoryPermissionsListCommand(RepositoryTemplateRenderer templateRenderer, CommandValidator validator, RepositoryManager manager, RepositoryPermissionBeanMapper beanMapper) {
+  public NamespacePermissionsListCommand(RepositoryTemplateRenderer templateRenderer, CommandValidator validator, NamespaceManager manager, RepositoryPermissionBeanMapper beanMapper) {
     this.templateRenderer = templateRenderer;
     this.validator = validator;
     this.manager = manager;
@@ -62,8 +62,8 @@ class RepositoryPermissionsListCommand implements Runnable {
   }
 
   @VisibleForTesting
-  void setRepository(String repository) {
-    this.repository = repository;
+  void setNamespace(String namespace) {
+    this.namespace = namespace;
   }
 
   @VisibleForTesting
@@ -78,22 +78,17 @@ class RepositoryPermissionsListCommand implements Runnable {
   @Override
   public void run() {
     validator.validate();
-    String[] splitRepo = repository.split("/");
-    if (splitRepo.length == 2) {
-      Repository repo = manager.get(new NamespaceAndName(splitRepo[0], splitRepo[1]));
+    Optional<Namespace> ns = manager.get(namespace);
 
-      if (repo != null) {
-        Collection<RepositoryPermissionBean> permissions = beanMapper.createPermissionBeans(repo.getPermissions(), keys);
-        if (verbose) {
-          templateRenderer.renderVerbose(permissions);
-        } else {
-          templateRenderer.render(permissions);
-        }
+    if (ns.isPresent()) {
+      Collection<RepositoryPermissionBean> permissions = beanMapper.createPermissionBeans(ns.get().getPermissions(), keys);
+      if (verbose) {
+        templateRenderer.renderVerbose(permissions);
       } else {
-        templateRenderer.renderNotFoundError();
+        templateRenderer.render(permissions);
       }
     } else {
-      templateRenderer.renderInvalidInputError();
+      templateRenderer.renderNotFoundError();
     }
   }
 }
