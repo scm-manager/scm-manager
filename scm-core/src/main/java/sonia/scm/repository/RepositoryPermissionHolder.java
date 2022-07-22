@@ -22,22 +22,40 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.cli;
+package sonia.scm.repository;
 
-import picocli.CommandLine;
-import sonia.scm.cli.ParentCommand;
-import sonia.scm.cli.PermissionDescriptionResolver;
-import sonia.scm.repository.RepositoryRoleManager;
-import sonia.scm.security.RepositoryPermissionProvider;
+import java.util.Collection;
+import java.util.Optional;
 
-import javax.inject.Inject;
+public interface RepositoryPermissionHolder {
 
-@CommandLine.Command(name = "available-permissions")
-@ParentCommand(value = RepositoryCommand.class)
-class RepositoryPermissionsAvailableCommand extends PermissionsAvailableCommand {
+  Collection<RepositoryPermission> getPermissions();
 
-  @Inject
-  public RepositoryPermissionsAvailableCommand(RepositoryTemplateRenderer templateRenderer, RepositoryPermissionProvider repositoryPermissionProvider, PermissionDescriptionResolver permissionDescriptionResolver, RepositoryRoleManager repositoryRoleManager) {
-    super(templateRenderer, repositoryPermissionProvider, permissionDescriptionResolver, repositoryRoleManager);
+  void setPermissions(Collection<RepositoryPermission> permissions);
+
+  void addPermission(RepositoryPermission newPermission);
+
+  boolean removePermission(RepositoryPermission permission);
+
+  /**
+   * Returns the permission for the given user, if present, or an empty {@link Optional} otherwise.
+   *
+   * @since 2.38.0
+   */
+  default Optional<RepositoryPermission> findUserPermission(String userId) {
+    return findPermission(userId, false);
+  }
+
+  /**
+   * Returns the permission for the given group, if present, or an empty {@link Optional} otherwise.
+   *
+   * @since 2.38.0
+   */
+  default Optional<RepositoryPermission> findGroupPermission(String groupId) {
+    return findPermission(groupId, true);
+  }
+
+  private Optional<RepositoryPermission> findPermission(String x, boolean isGroup) {
+    return getPermissions().stream().filter(p -> p.isGroupPermission() == isGroup && p.getName().equals(x)).findFirst();
   }
 }

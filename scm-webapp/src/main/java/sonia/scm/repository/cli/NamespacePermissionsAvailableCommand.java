@@ -33,11 +33,11 @@ import sonia.scm.security.RepositoryPermissionProvider;
 import javax.inject.Inject;
 
 @CommandLine.Command(name = "available-permissions")
-@ParentCommand(value = RepositoryCommand.class)
-class RepositoryPermissionsAvailableCommand extends PermissionsAvailableCommand {
+@ParentCommand(value = NamespaceCommand.class)
+class NamespacePermissionsAvailableCommand extends PermissionsAvailableCommand {
 
   @Inject
-  public RepositoryPermissionsAvailableCommand(RepositoryTemplateRenderer templateRenderer, RepositoryPermissionProvider repositoryPermissionProvider, PermissionDescriptionResolver permissionDescriptionResolver, RepositoryRoleManager repositoryRoleManager) {
+  public NamespacePermissionsAvailableCommand(RepositoryTemplateRenderer templateRenderer, RepositoryPermissionProvider repositoryPermissionProvider, PermissionDescriptionResolver permissionDescriptionResolver, RepositoryRoleManager repositoryRoleManager) {
     super(templateRenderer, repositoryPermissionProvider, permissionDescriptionResolver, repositoryRoleManager);
   }
 }
