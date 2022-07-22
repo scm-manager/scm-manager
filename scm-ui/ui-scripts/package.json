@@ -10,6 +10,7 @@
     "ui-scripts": "./bin/ui-scripts.js"
   },
   "dependencies": {
+    "@scm-manager/ui-styles": "2.37.1-SNAPSHOT",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.5",
     "babel-loader": "^8.2.3",
     "css-loader": "^6.5.0",

@@ -22,20 +22,6 @@
  * SOFTWARE.
  */
 
-const path = require("path");
-
-const root = path.resolve(process.cwd(), "scm-ui");
-
-const sizes = [1, 2, 3, 4, 5, 6];
-const helpers = ["m", "p"];
-const variants = ["", "x", "y", "t", "r", "l", "b"];
-const bulmaHelpers = helpers
-  .map((helper) => sizes.map((size) => variants.map((variant) => `${helper}${variant}-${size}`)))
-  .flat(3);
-
-module.exports = {
-  // eslint-disable-next-line global-require
-  presets: [require("@scm-manager/ui-styles/src/tailwind.config.preset")],
-  content: [path.join(root, "ui-webapp", "src", "**", "*.tsx")],
-  safelist: bulmaHelpers,
-};
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

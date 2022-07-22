@@ -23,6 +23,8 @@
     "classnames": "^2.2.6"
   },
   "devDependencies": {
+    "@scm-manager/ui-scripts": "2.37.1-SNAPSHOT",
+    "@scm-manager/ui-styles": "2.37.1-SNAPSHOT",
     "@types/storybook-react-router": "^1.0.1",
     "@babel/core": "^7.17.8",
     "@scm-manager/tsconfig": "^2.12.0",

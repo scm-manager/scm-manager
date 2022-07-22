@@ -24,18 +24,14 @@
 
 const path = require("path");
 
-const root = path.resolve(process.cwd(), "scm-ui");
-
-const sizes = [1, 2, 3, 4, 5, 6];
-const helpers = ["m", "p"];
-const variants = ["", "x", "y", "t", "r", "l", "b"];
-const bulmaHelpers = helpers
-  .map((helper) => sizes.map((size) => variants.map((variant) => `${helper}${variant}-${size}`)))
-  .flat(3);
-
 module.exports = {
-  // eslint-disable-next-line global-require
-  presets: [require("@scm-manager/ui-styles/src/tailwind.config.preset")],
-  content: [path.join(root, "ui-webapp", "src", "**", "*.tsx")],
-  safelist: bulmaHelpers,
+  presets: [
+    // eslint-disable-next-line global-require,import/no-extraneous-dependencies
+    require("@scm-manager/ui-scripts/src/tailwind.config"),
+  ],
+  content: [
+    path.join(__dirname, "src/**/*.tsx"),
+    path.join(__dirname, "src/**/*.mdx"),
+    path.join(__dirname, "docs/**/*.mdx"),
+  ],
 };

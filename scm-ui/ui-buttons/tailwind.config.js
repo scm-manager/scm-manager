@@ -24,40 +24,11 @@
 
 const path = require("path");
 
-const sizes = [1, 2, 3, 4, 5, 6];
-const helpers = ["m", "p"];
-const variants = ["", "x", "y", "t", "r", "l", "b"];
-const bulmaHelpers = helpers
-  .map((helper) => sizes.map((size) => variants.map((variant) => `${helper}${variant}-${size}`)))
-  .flat(3);
-
 module.exports = {
-  content: [
-    path.join(__dirname, "src/**/*.tsx"),
-    path.join(__dirname, "src/**/*.mdx"),
-    path.join(__dirname, "docs/**/*.mdx"),
+  presets: [
+    // eslint-disable-next-line global-require,import/no-extraneous-dependencies
+    require("@scm-manager/ui-styles/src/tailwind.config.preset"),
   ],
-  theme: {
-    extend: {
-      colors: {
-        primary: {
-          DEFAULT: "var(--scm-primary-color)",
-          hover: "var(--scm-primary-hover-color)",
-          active: "var(--scm-primary-active-color)",
-          contrast: "var(--scm-primary-contrast-color)",
-          "hover-contrast": "var(--scm-primary-hover-contrast-color)",
-          "active-contrast": "var(--scm-primary-active-contrast-color)",
-        },
-        signal: {
-          DEFAULT: "var(--scm-warning-color)",
-          hover: "var(--scm-warning-hover-color)",
-          active: "var(--scm-warning-active-color)",
-          contrast: "var(--scm-warning-contrast-color)",
-        },
-      },
-    },
-  },
-  safelist: bulmaHelpers,
-  plugins: [],
+  content: [path.join(__dirname, "src/**/*.tsx")],
   important: true,
 };

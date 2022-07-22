@@ -21,21 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-const path = require("path");
-
-const root = path.resolve(process.cwd(), "scm-ui");
-
-const sizes = [1, 2, 3, 4, 5, 6];
-const helpers = ["m", "p"];
-const variants = ["", "x", "y", "t", "r", "l", "b"];
-const bulmaHelpers = helpers
-  .map((helper) => sizes.map((size) => variants.map((variant) => `${helper}${variant}-${size}`)))
-  .flat(3);
-
 module.exports = {
-  // eslint-disable-next-line global-require
-  presets: [require("@scm-manager/ui-styles/src/tailwind.config.preset")],
-  content: [path.join(root, "ui-webapp", "src", "**", "*.tsx")],
-  safelist: bulmaHelpers,
+  theme: {
+    extend: {
+      colors: {
+        primary: {
+          DEFAULT: "var(--scm-primary-color)",
+          hover: "var(--scm-primary-hover-color)",
+          active: "var(--scm-primary-active-color)",
+          contrast: "var(--scm-primary-contrast-color)",
+          "hover-contrast": "var(--scm-primary-hover-contrast-color)",
+          "active-contrast": "var(--scm-primary-active-contrast-color)",
+        },
+        signal: {
+          DEFAULT: "var(--scm-warning-color)",
+          hover: "var(--scm-warning-hover-color)",
+          active: "var(--scm-warning-active-color)",
+          contrast: "var(--scm-warning-contrast-color)",
+        },
+      },
+    },
+  },
+  important: true,
 };

@@ -30,7 +30,7 @@ import {
   ButtonVariants,
   ExternalLinkButton as ExternalLinkButtonComponent,
   LinkButton as LinkButtonComponent,
-} from "../button";
+} from "./button";
 import StoryRouter from "storybook-react-router";
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
