@@ -24,52 +24,58 @@
 
 import React from "react";
 
-import { Button, ButtonVariantList, ButtonVariants } from "../button";
+import {
+  Button as ButtonComponent,
+  ButtonVariantList,
+  ButtonVariants,
+  ExternalLinkButton as ExternalLinkButtonComponent,
+  LinkButton as LinkButtonComponent,
+} from "../button";
+import StoryRouter from "storybook-react-router";
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
-  title: "Button",
-  component: Button,
-  // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
+  title: "Components",
+  component: null,
+  subcomponents: {
+    Button: ButtonComponent,
+    LinkButton: LinkButtonComponent,
+    ExternalLinkButton: ExternalLinkButtonComponent,
+  },
   argTypes: {
     variant: {
       options: ButtonVariantList,
       control: { type: "select" },
     },
   },
+  decorators: [StoryRouter()],
 };
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const Template = (args) => <Button {...args} />;
+const ButtonTemplate = (args) => <ButtonComponent {...args} />;
+const LinkButtonTemplate = (args) => <LinkButtonComponent {...args} />;
+const ExternalLinkButtonTemplate = (args) => <ExternalLinkButtonComponent {...args} />;
 
-export const Primary = Template.bind({});
+export const Button = ButtonTemplate.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
-Primary.args = {
-  children: "Hello",
+Button.args = {
+  children: "Button",
   variant: ButtonVariants.PRIMARY,
   disabled: false,
 };
 
-export const Secondary = Template.bind({});
+export const LinkButton = LinkButtonTemplate.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
-Secondary.args = {
-  children: "Hello",
-  variant: ButtonVariants.SECONDARY,
-  disabled: false,
+LinkButton.args = {
+  children: "Link Button",
+  to: "/repos",
+  variant: ButtonVariants.PRIMARY,
 };
 
-export const Tertiary = Template.bind({});
+export const ExternalLinkButton = ExternalLinkButtonTemplate.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
-Tertiary.args = {
-  children: "Hello",
-  variant: ButtonVariants.TERTIARY,
-  disabled: false,
-};
-
-export const Signal = Template.bind({});
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
-Signal.args = {
-  children: "Hello",
-  variant: ButtonVariants.SIGNAL,
-  disabled: false,
+ExternalLinkButton.args = {
+  children: "External Link Button",
+  href: "https://scm-manager.org",
+  variant: ButtonVariants.PRIMARY,
 };

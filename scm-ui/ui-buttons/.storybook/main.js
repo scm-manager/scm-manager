@@ -45,7 +45,7 @@ module.exports = {
   core: {
     builder: "webpack5"
   },
-  stories: ["../src/**/*.stories.mdx", "../src/**/*.stories.@(js|jsx|ts|tsx)"],
+  stories: ["../docs/**/*.stories.mdx", "../src/**/*.stories.mdx", "../src/**/*.stories.@(js|jsx|ts|tsx)"],
   addons: ["storybook-addon-i18next", "storybook-addon-themes", "@storybook/addon-links", "@storybook/addon-essentials", "@storybook/addon-interactions"],
   framework: "@storybook/react",
   webpackFinal: async config => {
