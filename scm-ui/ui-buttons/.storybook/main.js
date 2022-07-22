@@ -43,12 +43,18 @@ const themes = fs
 module.exports = {
   typescript: { reactDocgen: false },
   core: {
-    builder: "webpack5"
+    builder: "webpack5",
   },
   stories: ["../docs/**/*.stories.mdx", "../src/**/*.stories.mdx", "../src/**/*.stories.@(js|jsx|ts|tsx)"],
-  addons: ["storybook-addon-i18next", "storybook-addon-themes", "@storybook/addon-links", "@storybook/addon-essentials", "@storybook/addon-interactions"],
+  addons: [
+    "storybook-addon-i18next",
+    "storybook-addon-themes",
+    "@storybook/addon-links",
+    "@storybook/addon-essentials",
+    "@storybook/addon-interactions",
+  ],
   framework: "@storybook/react",
-  webpackFinal: async config => {
+  webpackFinal: async (config) => {
     // add our themes to webpack entry points
     config.entry = {
       main: config.entry,
@@ -76,16 +82,14 @@ module.exports = {
           options: {
             postcssOptions: {
               plugins: {
-                tailwindcss: {
-                  config: require("./tailwind.config")
-                },
-                autoprefixer: {}
-              }
-            }
-          }
-        }
+                tailwindcss: { config: require("./tailwind.config") },
+                autoprefixer: {},
+              },
+            },
+          },
+        },
       ],
-      include: path.resolve(__dirname, "./")
+      include: path.resolve(__dirname, "../"),
     });
 
     // the html-webpack-plugin adds the generated css and js files to the iframe,
@@ -99,5 +103,5 @@ module.exports = {
     config.resolve.alias["react-query/devtools"] = require.resolve("react-query/devtools");
 
     return config;
-  }
+  },
 };

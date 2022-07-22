@@ -29,9 +29,5 @@ module.exports = {
     // eslint-disable-next-line global-require,import/no-extraneous-dependencies
     require("@scm-manager/ui-scripts/src/tailwind.config"),
   ],
-  content: [
-    path.join(__dirname, "src/**/*.tsx"),
-    path.join(__dirname, "src/**/*.mdx"),
-    path.join(__dirname, "docs/**/*.mdx"),
-  ],
+  content: [path.join(__dirname, "../{src,docs}/**/*.{tsx,mdx}")],
 };
