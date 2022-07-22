@@ -52,7 +52,8 @@ module.exports = {
     "@storybook/addon-links",
     "@storybook/addon-essentials",
     "@storybook/addon-interactions",
-    "@storybook/addon-a11y"
+    "@storybook/addon-a11y",
+    "storybook-addon-pseudo-states"
   ],
   framework: "@storybook/react",
   webpackFinal: async (config) => {

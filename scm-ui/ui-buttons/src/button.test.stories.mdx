@@ -1,0 +1,23 @@
+import {Meta, Story} from "@storybook/addon-docs"; import {Button, ButtonVariantList} from "./button";
+
+<Meta title="Tests"/>
+
+<Story name="States" parameters={{
+  pseudo: {
+    hover: ButtonVariantList.map(variant => `#${variant}-Hover`),
+    focus: ButtonVariantList.map(variant => `#${variant}-Focus`),
+    active: ButtonVariantList.map(variant => `#${variant}-Active`),
+  },
+}}>
+  <table className="border-separate border-spacing-4">
+    <tr>
+      <th>STATE</th>
+      {ButtonVariantList.map(variant => <th>{variant.toUpperCase()}</th>)}
+    </tr>
+    {["Normal", "Hover", "Active", "Focus", "Disabled"].map(state => <tr>
+      <td>{state}</td>
+      {ButtonVariantList.map(variant => <td><Button id={`${variant}-${state}`} disabled={state === "Disabled"}
+                                                    variant={variant}>Button</Button></td>)}
+    </tr>)}
+  </table>
+</Story>
