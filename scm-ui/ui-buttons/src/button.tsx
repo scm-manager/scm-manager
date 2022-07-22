@@ -35,10 +35,10 @@ export const ButtonVariants = {
 
 export const ButtonVariantList = Object.values(ButtonVariants);
 
-export type ButtonVariant = typeof ButtonVariants[keyof typeof ButtonVariants];
+type ButtonVariant = typeof ButtonVariants[keyof typeof ButtonVariants];
 
 const BASE_BUTTON_CLASSES = classNames(
-  "inline-block rounded border py-2 px-12 text-center font-semibold disabled:cursor-not-allowed disabled:opacity-50"
+  "inline-block rounded border py-2 px-6 text-center font-semibold disabled:cursor-not-allowed disabled:opacity-50"
 );
 const DEFAULT_BUTTON_CLASSES = classNames(
   "border-gray-200 hover:border-gray-400 active:shadow-inner disabled:hover:border-gray-200 disabled:active:shadow-none"
@@ -56,7 +56,7 @@ const SIGNAL_BUTTON_CLASSES = classNames(
   "border-transparent bg-signal text-signal-contrast hover:bg-signal-hover active:bg-signal-active disabled:hover:bg-signal disabled:active:bg-signal"
 );
 
-export const createButtonClasses = (variant?: ButtonVariant) =>
+const createButtonClasses = (variant?: ButtonVariant) =>
   classNames(BASE_BUTTON_CLASSES, {
     [DEFAULT_BUTTON_CLASSES]: !variant,
     [PRIMARY_BUTTON_CLASSES]: variant === "primary",
@@ -65,11 +65,11 @@ export const createButtonClasses = (variant?: ButtonVariant) =>
     [SIGNAL_BUTTON_CLASSES]: variant === "signal",
   });
 
-export type BaseButtonProps = {
+type BaseButtonProps = {
   variant: ButtonVariant;
 };
 
-export type ButtonProps = BaseButtonProps & ButtonHTMLAttributes<HTMLButtonElement>;
+type ButtonProps = BaseButtonProps & ButtonHTMLAttributes<HTMLButtonElement>;
 
 /**
  * Styled html button
@@ -82,7 +82,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   )
 );
 
-export type LinkButtonProps = BaseButtonProps & ReactRouterLinkProps;
+type LinkButtonProps = BaseButtonProps & ReactRouterLinkProps;
 
 /**
  * Styled react router link
@@ -95,7 +95,7 @@ export const LinkButton = React.forwardRef<HTMLAnchorElement, LinkButtonProps>(
   )
 );
 
-export type ExternalLinkButtonProps = BaseButtonProps & AnchorHTMLAttributes<HTMLAnchorElement>;
+type ExternalLinkButtonProps = BaseButtonProps & AnchorHTMLAttributes<HTMLAnchorElement>;
 
 /**
  * Styled html anchor

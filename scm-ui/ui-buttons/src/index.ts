@@ -24,4 +24,4 @@
 
 import "./index.css";
 
-export { Button, LinkButton, ExternalLinkButton } from "./button";
+export { Button, LinkButton, ExternalLinkButton, ButtonVariants } from "./button";

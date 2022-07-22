@@ -22,11 +22,11 @@
  * SOFTWARE.
  */
 import React, { FC, useState } from "react";
-import { Link, useHistory, useLocation } from "react-router-dom";
-import classNames from "classnames";
+import { useHistory, useLocation } from "react-router-dom";
 import { urls } from "./index";
 import { FilterInput, Select } from "./forms";
-import { PrimaryButton } from "@scm-manager/ui-buttons";
+import { ButtonVariants, LinkButton } from "@scm-manager/ui-buttons";
+import classNames from "classnames";
 
 type Props = {
   showCreateButton: boolean;
@@ -77,10 +77,10 @@ const OverviewPageActions: FC<Props> = ({
   const renderCreateButton = () => {
     if (showCreateButton) {
       return (
-        <div className={classNames("input-button", "control", "column")}>
-          <Link to={createLink || `${link}create/`}>
-            <PrimaryButton>{label}</PrimaryButton>
-          </Link>
+        <div className={classNames("control", "column")}>
+          <LinkButton variant={ButtonVariants.PRIMARY} to={createLink || `${link}create/`}>
+            {label}
+          </LinkButton>
         </div>
       );
     }
