@@ -24,84 +24,38 @@
 
 package sonia.scm.repository.cli;
 
-import picocli.CommandLine;
 import sonia.scm.repository.Namespace;
 import sonia.scm.repository.NamespaceManager;
-import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.RepositoryRoleManager;
 
 import javax.inject.Inject;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.function.Predicate;
 
-class NamespacePermissionBaseCommand {
+import static java.util.Optional.empty;
+
+class NamespacePermissionBaseCommand extends PermissionBaseCommand<Namespace> {
 
   private final NamespaceManager namespaceManager;
-  private final RepositoryRoleManager roleManager;
-  @CommandLine.Mixin
-  private final RepositoryTemplateRenderer templateRenderer;
 
   @Inject
   NamespacePermissionBaseCommand(NamespaceManager namespaceManager, RepositoryRoleManager roleManager, RepositoryTemplateRenderer templateRenderer) {
+    super(roleManager, templateRenderer);
     this.namespaceManager = namespaceManager;
-    this.roleManager = roleManager;
-    this.templateRenderer = templateRenderer;
   }
 
-  void modifyNamespace(String namespace, Predicate<Namespace> modifier) {
+  @Override
+  Optional<Namespace> get(String namespace) {
     Optional<Namespace> ns = namespaceManager.get(namespace);
     if (ns.isPresent()) {
-      if (modifier.test(ns.get())) {
-        namespaceManager.modify(ns.get());
-      }
+      return ns;
     } else {
-      templateRenderer.renderNotFoundError();
+      getTemplateRenderer().renderNotFoundError();
+      return empty();
     }
   }
 
-  void replacePermission(Namespace namespace, RepositoryPermission permission) {
-    removeExistingPermission(namespace, permission.getName(), permission.isGroupPermission());
-    namespace.addPermission(permission);
-  }
-
-  void removeExistingPermission(Namespace namespace, String name, boolean forGroup) {
-    if (!forGroup) {
-      namespace.findUserPermission(name).ifPresent(namespace::removePermission);
-    } else {
-      namespace.findGroupPermission(name).ifPresent(namespace::removePermission);
-    }
-  }
-
-  HashSet<String> getPermissionsAsModifiableSet(Namespace namespace, String name, boolean forGroup) {
-    return getExistingPermissions(namespace, name, forGroup)
-      .map(this::getVerbs)
-      .map(HashSet::new)
-      .orElseGet(HashSet::new);
-  }
-
-  private Optional<RepositoryPermission> getExistingPermissions(Namespace namespace, String name, boolean forGroup) {
-    if (!forGroup) {
-      return namespace.findUserPermission(name);
-    } else {
-      return namespace.findGroupPermission(name);
-    }
-  }
-
-  private Collection<String> getVerbs(RepositoryPermission permission) {
-    if (permission.getRole() == null) {
-      return permission.getVerbs();
-    } else {
-      return roleManager.get(permission.getRole()).getVerbs();
-    }
-  }
-
-  void renderRoleNotFoundError() {
-    templateRenderer.renderRoleNotFoundError();
-  }
-
-  void renderVerbNotFoundError() {
-    templateRenderer.renderVerbNotFoundError();
+  @Override
+  void set(Namespace namespace) {
+    namespaceManager.modify(namespace);
   }
 }

@@ -51,7 +51,7 @@ class RepositoryPermissionsClearCommand extends RepositoryPermissionBaseCommand 
 
   @Override
   public void run() {
-    modifyRepository(
+    modify(
       repositoryName,
       repo -> {
         removeExistingPermission(repo, name, forGroup);

@@ -57,7 +57,7 @@ class RepositoryPermissionsSetRoleCommand extends RepositoryPermissionBaseComman
 
   @Override
   public void run() {
-    modifyRepository(
+    modify(
       repositoryName,
       repository -> {
         if (roleManager.get(role) == null) {

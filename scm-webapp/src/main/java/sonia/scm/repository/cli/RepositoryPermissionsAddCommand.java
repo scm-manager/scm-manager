@@ -62,7 +62,7 @@ class RepositoryPermissionsAddCommand extends RepositoryPermissionBaseCommand im
 
   @Override
   public void run() {
-    modifyRepository(
+    modify(
       repositoryName,
       repository -> {
         if (!Arrays.stream(verbs).allMatch(this::verifyVerbExists)) {

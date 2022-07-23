@@ -57,7 +57,7 @@ class RepositoryPermissionsRemoveCommand extends RepositoryPermissionBaseCommand
 
   @Override
   public void run() {
-    modifyRepository(
+    modify(
       repositoryName,
       repository -> {
         Set<String> resultingVerbs =

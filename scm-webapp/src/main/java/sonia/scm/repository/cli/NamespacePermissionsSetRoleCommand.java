@@ -57,7 +57,7 @@ class NamespacePermissionsSetRoleCommand extends NamespacePermissionBaseCommand 
 
   @Override
   public void run() {
-    modifyNamespace(
+    modify(
       namespace,
       ns -> {
         if (roleManager.get(role) == null) {

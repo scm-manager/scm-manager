@@ -24,93 +24,47 @@
 
 package sonia.scm.repository.cli;
 
-import picocli.CommandLine;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
-import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.RepositoryRoleManager;
 
 import javax.inject.Inject;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.function.Predicate;
 
-class RepositoryPermissionBaseCommand {
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
+
+class RepositoryPermissionBaseCommand extends PermissionBaseCommand<Repository> {
 
   private final RepositoryManager repositoryManager;
-  private final RepositoryRoleManager roleManager;
-  @CommandLine.Mixin
-  private final RepositoryTemplateRenderer templateRenderer;
 
   @Inject
   RepositoryPermissionBaseCommand(RepositoryManager repositoryManager, RepositoryRoleManager roleManager, RepositoryTemplateRenderer templateRenderer) {
+    super(roleManager, templateRenderer);
     this.repositoryManager = repositoryManager;
-    this.roleManager = roleManager;
-    this.templateRenderer = templateRenderer;
   }
 
-  void modifyRepository(String repositoryName, Predicate<Repository> modifier) {
+  @Override
+  Optional<Repository> get(String repositoryName) {
     NamespaceAndName namespaceAndName;
     try {
       namespaceAndName = NamespaceAndName.fromString(repositoryName);
     } catch (IllegalArgumentException e) {
-      templateRenderer.renderInvalidInputError();
-      return;
+      getTemplateRenderer().renderInvalidInputError();
+      return empty();
     }
-
     Repository repository = repositoryManager.get(namespaceAndName);
-    if (repository != null) {
-      if (modifier.test(repository)) {
-        repositoryManager.modify(repository);
-      }
+    if (repository == null) {
+      getTemplateRenderer().renderNotFoundError();
+      return empty();
     } else {
-      templateRenderer.renderNotFoundError();
+      return of(repository);
     }
   }
 
-  void replacePermission(Repository repository, RepositoryPermission permission) {
-    this.removeExistingPermission(repository, permission.getName(), permission.isGroupPermission());
-    repository.addPermission(permission);
-  }
-
-  void removeExistingPermission(Repository repository, String name, boolean forGroup) {
-    if (!forGroup) {
-      repository.findUserPermission(name).ifPresent(repository::removePermission);
-    } else {
-      repository.findGroupPermission(name).ifPresent(repository::removePermission);
-    }
-  }
-
-  HashSet<String> getPermissionsAsModifiableSet(Repository repository, String name, boolean forGroup) {
-    return this.getExistingPermissions(repository, name, forGroup)
-      .map(this::getVerbs)
-      .map(HashSet::new)
-      .orElseGet(HashSet::new);
-  }
-
-  private Optional<RepositoryPermission> getExistingPermissions(Repository repo, String name, boolean forGroup) {
-    if (!forGroup) {
-      return repo.findUserPermission(name);
-    } else {
-      return repo.findGroupPermission(name);
-    }
-  }
-
-  private Collection<String> getVerbs(RepositoryPermission permission) {
-    if (permission.getRole() == null) {
-      return permission.getVerbs();
-    } else {
-      return roleManager.get(permission.getRole()).getVerbs();
-    }
-  }
-
-  void renderRoleNotFoundError() {
-    templateRenderer.renderRoleNotFoundError();
-  }
-
-  void renderVerbNotFoundError() {
-    templateRenderer.renderVerbNotFoundError();
+  @Override
+  void set(Repository repository) {
+    repositoryManager.modify(repository);
   }
 }

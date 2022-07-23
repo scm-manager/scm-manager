@@ -57,7 +57,7 @@ class NamespacePermissionsRemoveCommand extends NamespacePermissionBaseCommand i
 
   @Override
   public void run() {
-    modifyNamespace(
+    modify(
       namespace,
       ns -> {
         Set<String> resultingVerbs =

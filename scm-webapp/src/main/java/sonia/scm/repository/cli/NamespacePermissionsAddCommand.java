@@ -62,7 +62,7 @@ class NamespacePermissionsAddCommand extends NamespacePermissionBaseCommand impl
 
   @Override
   public void run() {
-    modifyNamespace(
+    modify(
       namespace,
       ns -> {
         if (!Arrays.stream(verbs).allMatch(this::verifyVerbExists)) {

@@ -51,7 +51,7 @@ class NamespacePermissionsClearCommand extends NamespacePermissionBaseCommand im
 
   @Override
   public void run() {
-    modifyNamespace(
+    modify(
       namespace,
       ns -> {
         removeExistingPermission(ns, name, forGroup);
