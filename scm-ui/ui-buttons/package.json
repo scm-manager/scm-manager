@@ -15,6 +15,8 @@
     "typecheck": "tsc",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
+    "image-snapshots": "jest \"./src/image-snapshot.test.ts\"",
+    "a11y-check": "jest \"./src/a11y.test.ts\"",
     "depcheck": "depcheck --ignores=@scm-manager/jest-preset,@scm-manager/tsconfig,@storybook/*,webpack"
   },
   "peerDependencies": {
@@ -37,6 +39,10 @@
     "@storybook/manager-webpack5": "^6.4.19",
     "@storybook/react": "^6.4.19",
     "@storybook/testing-library": "^0.0.9",
+    "@storybook/addon-storyshots-puppeteer": "^6.5.9",
+    "@storybook/addon-storyshots": "^6.5.9",
+    "jest-transform-css": "^4.0.1",
+    "puppeteer": "^15.5.0",
     "storybook-addon-pseudo-states": "^1.15.1",
     "storybook-react-router": "^1.0.8",
     "sass-loader": "^12.3.0",
@@ -57,7 +63,11 @@
     ]
   },
   "jest": {
-    "preset": "@scm-manager/jest-preset"
+    "transform": {
+      "^.+\\.[tj]sx?$": "babel-jest",
+      "^.+\\.(css|less|scss)$": "jest-transform-css",
+      "^.+\\.mdx?$": "@storybook/addon-docs/jest-transform-mdx"
+    }
   },
   "prettier": "@scm-manager/prettier-config",
   "eslintConfig": {

@@ -23,11 +23,14 @@
  */
 
 import { ApiResult, useIndexLink, useRequiredIndexLink } from "./base";
-import { isPluginCollection, PendingPlugins, Plugin, PluginCollection } from "@scm-manager/ui-types";
+import type { PendingPlugins, Plugin, PluginCollection, HalRepresentation } from "@scm-manager/ui-types";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { apiClient } from "./apiclient";
 import { requiredLink } from "./links";
 import { BadGatewayError } from "./errors";
+
+const isPluginCollection = (input: HalRepresentation): input is PluginCollection =>
+  input._embedded ? "plugins" in input._embedded : false;
 
 type WaitForRestartOptions = {
   initialDelay?: number;
