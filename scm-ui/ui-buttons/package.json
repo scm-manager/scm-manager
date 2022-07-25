@@ -13,11 +13,12 @@
     "dev": "tsup ./src/index.ts -d build --format esm,cjs --dts --watch",
     "lint": "eslint src",
     "typecheck": "tsc",
-    "storybook": "start-storybook -p 6006",
+    "storybook": "start-storybook -p 6006 -s ../ui-webapp/public",
     "build-storybook": "build-storybook",
-    "image-snapshots": "jest \"./src/image-snapshot.test.ts\"",
-    "a11y-check": "jest \"./src/a11y.test.ts\"",
-    "depcheck": "depcheck --ignores=@scm-manager/jest-preset,@scm-manager/tsconfig,@storybook/*,webpack"
+    "image-snapshots": "jest \"image-snapshot.test.ts\"",
+    "a11y-check": "jest \"a11y.test.ts\"",
+    "depcheck": "depcheck --ignores=@scm-manager/jest-preset,@scm-manager/tsconfig,@storybook/*,webpack",
+    "test": "yarn run build-storybook && jest"
   },
   "peerDependencies": {
     "react": "^17.0.1",

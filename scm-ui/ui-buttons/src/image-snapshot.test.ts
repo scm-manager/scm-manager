@@ -21,10 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import path from "path";
 import initStoryshots from "@storybook/addon-storyshots";
 import { imageSnapshot } from "@storybook/addon-storyshots-puppeteer";
 
 initStoryshots({
   suite: "Image snapshots",
-  test: imageSnapshot(),
+  test: imageSnapshot({
+    storybookUrl: `file://${path.resolve(__dirname, "../storybook-static")}`,
+  })
 });

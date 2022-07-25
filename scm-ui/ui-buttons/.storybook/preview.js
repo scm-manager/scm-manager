@@ -75,7 +75,7 @@ const Decorator = ({children, themeName}) => {
   useEffect(() => {
     const link = document.querySelector("#ui-theme");
     if (link && link["data-theme"] !== themeName) {
-      link.href = `/ui-theme-${themeName}.css`;
+      link.href = `ui-theme-${themeName}.css`;
       link["data-theme"] = themeName;
     }
   }, [themeName]);
