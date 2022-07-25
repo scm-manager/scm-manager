@@ -27,6 +27,7 @@ package sonia.scm.repository.cli;
 import com.google.common.annotations.VisibleForTesting;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
+import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryRoleManager;
 
@@ -34,43 +35,23 @@ import javax.inject.Inject;
 
 @CommandLine.Command(name = "clear-permissions")
 @ParentCommand(value = RepositoryCommand.class)
-class RepositoryPermissionsClearCommand extends RepositoryPermissionBaseCommand implements Runnable {
+class RepositoryPermissionsClearCommand extends PermissionClearCommand<Repository> {
 
   @CommandLine.Parameters(paramLabel = "namespace/name", index = "0", descriptionKey = "scm.repo.clear-permissions.repository")
-   private String repositoryName;
-  @CommandLine.Parameters(paramLabel = "name", index = "1", descriptionKey = "scm.repo.clear-permissions.name")
-  private String name;
-
-  @CommandLine.Option(names = {"--group", "-g"}, descriptionKey = "scm.repo.clear-permissions.forGroup")
-  private boolean forGroup;
+  private String repositoryNamespaceAndName;
 
   @Inject
   public RepositoryPermissionsClearCommand(RepositoryManager repositoryManager, RepositoryRoleManager roleManager, RepositoryTemplateRenderer templateRenderer) {
-    super(repositoryManager, roleManager, templateRenderer);
+    super(roleManager, templateRenderer, new RepositoryPermissionBaseAdapter(repositoryManager, templateRenderer));
   }
 
   @Override
-  public void run() {
-    modify(
-      repositoryName,
-      repo -> {
-        removeExistingPermission(repo, name, forGroup);
-        return true;
-      }
-    );
+  String getIdentifier() {
+    return repositoryNamespaceAndName;
   }
 
   @VisibleForTesting
-  void setRepositoryName(String repositoryName) {
-    this.repositoryName = repositoryName;
-  }
-
-  @VisibleForTesting
-  void setName(String name) {
-    this.name = name;
-  }
-
-  public void setForGroup(boolean forGroup) {
-    this.forGroup = forGroup;
+  void setRepositoryNamespaceAndName(String repositoryNamespaceAndName) {
+    this.repositoryNamespaceAndName = repositoryNamespaceAndName;
   }
 }

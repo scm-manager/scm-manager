@@ -32,63 +32,26 @@ import sonia.scm.repository.Namespace;
 import sonia.scm.repository.NamespaceManager;
 
 import javax.inject.Inject;
-import java.util.Collection;
-import java.util.Optional;
 
 @CommandLine.Command(name = "list-permissions")
 @ParentCommand(value = NamespaceCommand.class)
-class NamespacePermissionsListCommand implements Runnable {
-
-  @CommandLine.Mixin
-  private final RepositoryTemplateRenderer templateRenderer;
-  @CommandLine.Mixin
-  private final CommandValidator validator;
-  private final NamespaceManager manager;
-  private final RepositoryPermissionBeanMapper beanMapper;
+class NamespacePermissionsListCommand extends PermissionsListCommand<Namespace> {
 
   @CommandLine.Parameters(paramLabel = "namespace", index = "0", descriptionKey = "scm.namespace.list-permissions.namespace")
   private String namespace;
-  @CommandLine.Option(names = {"--verbose", "-v"}, descriptionKey = "scm.namespace.list-permissions.verbose")
-  private boolean verbose;
-  @CommandLine.Option(names = {"--keys", "-k"}, descriptionKey = "scm.namespace.list-permissions.keys")
-  private boolean keys;
 
   @Inject
   public NamespacePermissionsListCommand(RepositoryTemplateRenderer templateRenderer, CommandValidator validator, NamespaceManager manager, RepositoryPermissionBeanMapper beanMapper) {
-    this.templateRenderer = templateRenderer;
-    this.validator = validator;
-    this.manager = manager;
-    this.beanMapper = beanMapper;
+    super(templateRenderer, validator, new NamespacePermissionBaseAdapter(manager, templateRenderer), beanMapper);
+  }
+
+  @Override
+  String getIdentifier() {
+    return namespace;
   }
 
   @VisibleForTesting
   void setNamespace(String namespace) {
     this.namespace = namespace;
-  }
-
-  @VisibleForTesting
-  void setVerbose(boolean verbose) {
-    this.verbose = verbose;
-  }
-
-  public void setKeys(boolean keys) {
-    this.keys = keys;
-  }
-
-  @Override
-  public void run() {
-    validator.validate();
-    Optional<Namespace> ns = manager.get(namespace);
-
-    if (ns.isPresent()) {
-      Collection<RepositoryPermissionBean> permissions = beanMapper.createPermissionBeans(ns.get().getPermissions(), keys);
-      if (verbose) {
-        templateRenderer.renderVerbose(permissions);
-      } else {
-        templateRenderer.render(permissions);
-      }
-    } else {
-      templateRenderer.renderNotFoundError();
-    }
   }
 }

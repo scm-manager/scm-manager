@@ -43,7 +43,6 @@ import sonia.scm.repository.RepositoryTestData;
 import java.util.List;
 import java.util.Set;
 
-import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
@@ -91,7 +90,7 @@ class RepositoryPermissionsAddCommandTest {
 
       @Test
       void shouldSetMultipleVerbsForNewUser() {
-        command.setRepositoryName("hitchhiker/HeartOfGold");
+        command.setRepositoryNamespaceAndName("hitchhiker/HeartOfGold");
         command.setName("trillian");
         command.setVerbs("read", "pull", "push");
 
@@ -112,7 +111,7 @@ class RepositoryPermissionsAddCommandTest {
           )
         );
 
-        command.setRepositoryName("hitchhiker/HeartOfGold");
+        command.setRepositoryNamespaceAndName("hitchhiker/HeartOfGold");
         command.setName("trillian");
         command.setVerbs("write");
 
@@ -133,7 +132,7 @@ class RepositoryPermissionsAddCommandTest {
           )
         );
 
-        command.setRepositoryName("hitchhiker/HeartOfGold");
+        command.setRepositoryNamespaceAndName("hitchhiker/HeartOfGold");
         command.setName("hog");
         command.setVerbs("write");
         command.setForGroup(true);
@@ -157,7 +156,7 @@ class RepositoryPermissionsAddCommandTest {
         when(roleManager.get("READ"))
           .thenReturn(new RepositoryRole("READ", List.of("read", "pull"), ""));
 
-        command.setRepositoryName("hitchhiker/HeartOfGold");
+        command.setRepositoryNamespaceAndName("hitchhiker/HeartOfGold");
         command.setName("trillian");
         command.setVerbs("write");
 
@@ -180,7 +179,7 @@ class RepositoryPermissionsAddCommandTest {
         when(roleManager.get("READ"))
           .thenReturn(new RepositoryRole("READ", List.of("read", "pull"), ""));
 
-        command.setRepositoryName("hitchhiker/HeartOfGold");
+        command.setRepositoryNamespaceAndName("hitchhiker/HeartOfGold");
         command.setName("trillian");
         command.setVerbs("read");
 
@@ -192,7 +191,7 @@ class RepositoryPermissionsAddCommandTest {
 
     @Test
     void shouldHandleMissingVerb() {
-      command.setRepositoryName("hitchhiker/HeartOfGold");
+      command.setRepositoryNamespaceAndName("hitchhiker/HeartOfGold");
       command.setName("trillian");
       command.setVerbs("make-party");
 
@@ -204,7 +203,7 @@ class RepositoryPermissionsAddCommandTest {
 
   @Test
   void shouldHandleIllegalNamespaceNameParameter() {
-    command.setRepositoryName("illegal name");
+    command.setRepositoryNamespaceAndName("illegal name");
     command.setName("trillian");
     command.setVerbs("write");
 
@@ -215,7 +214,7 @@ class RepositoryPermissionsAddCommandTest {
 
   @Test
   void shouldHandleNotExistingRepository() {
-    command.setRepositoryName("no/repository");
+    command.setRepositoryNamespaceAndName("no/repository");
     command.setName("trillian");
     command.setVerbs("write");
 

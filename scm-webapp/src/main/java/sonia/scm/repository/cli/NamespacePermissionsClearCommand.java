@@ -24,9 +24,9 @@
 
 package sonia.scm.repository.cli;
 
-import com.google.common.annotations.VisibleForTesting;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
+import sonia.scm.repository.Namespace;
 import sonia.scm.repository.NamespaceManager;
 import sonia.scm.repository.RepositoryRoleManager;
 
@@ -34,43 +34,18 @@ import javax.inject.Inject;
 
 @CommandLine.Command(name = "clear-permissions")
 @ParentCommand(value = NamespaceCommand.class)
-class NamespacePermissionsClearCommand extends NamespacePermissionBaseCommand implements Runnable {
+class NamespacePermissionsClearCommand extends PermissionClearCommand<Namespace> {
 
   @CommandLine.Parameters(paramLabel = "namespace", index = "0", descriptionKey = "scm.namespace.clear-permissions.namespace")
-   private String namespace;
-  @CommandLine.Parameters(paramLabel = "name", index = "1", descriptionKey = "scm.namespace.clear-permissions.name")
-  private String name;
-
-  @CommandLine.Option(names = {"--group", "-g"}, descriptionKey = "scm.namespace.namespace-permissions.forGroup")
-  private boolean forGroup;
+  private String namespace;
 
   @Inject
   public NamespacePermissionsClearCommand(NamespaceManager namespaceManager, RepositoryRoleManager roleManager, RepositoryTemplateRenderer templateRenderer) {
-    super(namespaceManager, roleManager, templateRenderer);
+    super(roleManager, templateRenderer, new NamespacePermissionBaseAdapter(namespaceManager, templateRenderer));
   }
 
   @Override
-  public void run() {
-    modify(
-      namespace,
-      ns -> {
-        removeExistingPermission(ns, name, forGroup);
-        return true;
-      }
-    );
-  }
-
-  @VisibleForTesting
-  void setNamespace(String namespace) {
-    this.namespace = namespace;
-  }
-
-  @VisibleForTesting
-  void setName(String name) {
-    this.name = name;
-  }
-
-  public void setForGroup(boolean forGroup) {
-    this.forGroup = forGroup;
+  String getIdentifier() {
+    return namespace;
   }
 }

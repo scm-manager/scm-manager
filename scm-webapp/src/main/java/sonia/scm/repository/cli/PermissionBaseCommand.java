@@ -40,19 +40,25 @@ abstract class PermissionBaseCommand<T extends RepositoryPermissionHolder> {
   private final RepositoryRoleManager roleManager;
   @CommandLine.Mixin
   private final RepositoryTemplateRenderer templateRenderer;
+  private final PermissionBaseAdapter<T> adapter;
 
   @Inject
-  PermissionBaseCommand(RepositoryRoleManager roleManager, RepositoryTemplateRenderer templateRenderer) {
+  PermissionBaseCommand(RepositoryRoleManager roleManager, RepositoryTemplateRenderer templateRenderer, PermissionBaseAdapter<T> adapter) {
     this.roleManager = roleManager;
     this.templateRenderer = templateRenderer;
+    this.adapter = adapter;
   }
 
-  abstract Optional<T> get(String name);
+  Optional<T> get(String idendifier) {
+    return adapter.get(idendifier);
+  }
 
-  abstract void set(T object);
+  void set(T object) {
+    adapter.set(object);
+  }
 
-  void modify(String namespace, Predicate<T> modifier) {
-    Optional<T> ns = get(namespace);
+  void modify(String idendifier, Predicate<T> modifier) {
+    Optional<T> ns = get(idendifier);
     if (ns.isPresent() && modifier.test(ns.get())) {
       set(ns.get());
     }

@@ -74,7 +74,7 @@ class RepositoryPermissionsClearCommandTest {
         )
       );
 
-      command.setRepositoryName("hitchhiker/HeartOfGold");
+      command.setRepositoryNamespaceAndName("hitchhiker/HeartOfGold");
       command.setName("trillian");
 
       command.run();
@@ -93,7 +93,7 @@ class RepositoryPermissionsClearCommandTest {
         )
       );
 
-      command.setRepositoryName("hitchhiker/HeartOfGold");
+      command.setRepositoryNamespaceAndName("hitchhiker/HeartOfGold");
       command.setName("hog");
       command.setForGroup(true);
 
@@ -108,7 +108,7 @@ class RepositoryPermissionsClearCommandTest {
 
   @Test
   void shouldHandleIllegalNamespaceNameParameter() {
-    command.setRepositoryName("illegal name");
+    command.setRepositoryNamespaceAndName("illegal name");
     command.setName("trillian");
 
     command.run();
@@ -118,7 +118,7 @@ class RepositoryPermissionsClearCommandTest {
 
   @Test
   void shouldHandleNotExistingRepository() {
-    command.setRepositoryName("no/repository");
+    command.setRepositoryNamespaceAndName("no/repository");
     command.setName("trillian");
 
     command.run();

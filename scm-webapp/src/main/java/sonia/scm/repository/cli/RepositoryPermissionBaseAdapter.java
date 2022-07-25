@@ -27,36 +27,34 @@ package sonia.scm.repository.cli;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
-import sonia.scm.repository.RepositoryRoleManager;
 
-import javax.inject.Inject;
 import java.util.Optional;
 
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
-class RepositoryPermissionBaseCommand extends PermissionBaseCommand<Repository> {
+class RepositoryPermissionBaseAdapter implements PermissionBaseAdapter<Repository> {
 
   private final RepositoryManager repositoryManager;
+  private final RepositoryTemplateRenderer templateRenderer;
 
-  @Inject
-  RepositoryPermissionBaseCommand(RepositoryManager repositoryManager, RepositoryRoleManager roleManager, RepositoryTemplateRenderer templateRenderer) {
-    super(roleManager, templateRenderer);
+  RepositoryPermissionBaseAdapter(RepositoryManager repositoryManager, RepositoryTemplateRenderer templateRenderer) {
     this.repositoryManager = repositoryManager;
+    this.templateRenderer = templateRenderer;
   }
 
   @Override
-  Optional<Repository> get(String repositoryName) {
+  public Optional<Repository> get(String repositoryNamespaceAndName) {
     NamespaceAndName namespaceAndName;
     try {
-      namespaceAndName = NamespaceAndName.fromString(repositoryName);
+      namespaceAndName = NamespaceAndName.fromString(repositoryNamespaceAndName);
     } catch (IllegalArgumentException e) {
-      getTemplateRenderer().renderInvalidInputError();
+      templateRenderer.renderInvalidInputError();
       return empty();
     }
     Repository repository = repositoryManager.get(namespaceAndName);
     if (repository == null) {
-      getTemplateRenderer().renderNotFoundError();
+      templateRenderer.renderNotFoundError();
       return empty();
     } else {
       return of(repository);
@@ -64,7 +62,7 @@ class RepositoryPermissionBaseCommand extends PermissionBaseCommand<Repository> 
   }
 
   @Override
-  void set(Repository repository) {
+  public void set(Repository repository) {
     repositoryManager.modify(repository);
   }
 }

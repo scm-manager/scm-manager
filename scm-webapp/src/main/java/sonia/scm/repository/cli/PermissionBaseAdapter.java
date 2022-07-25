@@ -24,38 +24,13 @@
 
 package sonia.scm.repository.cli;
 
-import sonia.scm.repository.Namespace;
-import sonia.scm.repository.NamespaceManager;
-import sonia.scm.repository.RepositoryRoleManager;
+import sonia.scm.repository.RepositoryPermissionHolder;
 
-import javax.inject.Inject;
 import java.util.Optional;
 
-import static java.util.Optional.empty;
+public interface PermissionBaseAdapter<T extends RepositoryPermissionHolder> {
 
-class NamespacePermissionBaseCommand extends PermissionBaseCommand<Namespace> {
+  Optional<T> get(String identifier);
 
-  private final NamespaceManager namespaceManager;
-
-  @Inject
-  NamespacePermissionBaseCommand(NamespaceManager namespaceManager, RepositoryRoleManager roleManager, RepositoryTemplateRenderer templateRenderer) {
-    super(roleManager, templateRenderer);
-    this.namespaceManager = namespaceManager;
-  }
-
-  @Override
-  Optional<Namespace> get(String namespace) {
-    Optional<Namespace> ns = namespaceManager.get(namespace);
-    if (ns.isPresent()) {
-      return ns;
-    } else {
-      getTemplateRenderer().renderNotFoundError();
-      return empty();
-    }
-  }
-
-  @Override
-  void set(Namespace namespace) {
-    namespaceManager.modify(namespace);
-  }
+  void set(T object);
 }
