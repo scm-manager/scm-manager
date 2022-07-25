@@ -49,6 +49,9 @@ export default {
     },
   },
   decorators: [StoryRouter()],
+  parameters: {
+    storyshots: { disable: true },
+  }
 };
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
