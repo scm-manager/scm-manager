@@ -32,6 +32,9 @@ import {
   LinkButton as LinkButtonComponent,
 } from "./button";
 import StoryRouter from "storybook-react-router";
+import { StoryFn } from "@storybook/react";
+
+type ExtractProps<T> = T extends React.ComponentType<infer U> ? U : never;
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
@@ -51,13 +54,17 @@ export default {
   decorators: [StoryRouter()],
   parameters: {
     storyshots: { disable: true },
-  }
+  },
 };
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const ButtonTemplate = (args) => <ButtonComponent {...args} />;
-const LinkButtonTemplate = (args) => <LinkButtonComponent {...args} />;
-const ExternalLinkButtonTemplate = (args) => <ExternalLinkButtonComponent {...args} />;
+const ButtonTemplate: StoryFn<ExtractProps<typeof ButtonComponent>> = (args) => <ButtonComponent {...args} />;
+const LinkButtonTemplate: StoryFn<ExtractProps<typeof LinkButtonComponent>> = (args) => (
+  <LinkButtonComponent {...args} />
+);
+const ExternalLinkButtonTemplate: StoryFn<ExtractProps<typeof ExternalLinkButtonComponent>> = (args) => (
+  <ExternalLinkButtonComponent {...args} />
+);
 
 export const Button = ButtonTemplate.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
