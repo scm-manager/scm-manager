@@ -38,7 +38,7 @@ const CreateGroup: FC = () => {
   }
 
   return (
-    <Page title={t("add-group.title")} subtitle={t("add-group.subtitle")} error={error || undefined}>
+    <Page title={t("addGroup.title")} subtitle={t("addGroup.subtitle")} error={error || undefined}>
       <div>
         <GroupForm submitForm={create} loading={isLoading} loadUserSuggestions={userSuggestions} />
       </div>

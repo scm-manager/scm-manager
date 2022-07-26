@@ -90,11 +90,11 @@ const GroupForm: FC<Props> = ({ submitForm, loading, group, loadUserSuggestions 
         <AutocompleteAddEntryToTableField
           addEntry={addMember}
           disabled={false}
-          buttonLabel={t("add-member-button.label")}
+          buttonLabel={t("groupForm.addMemberAutocomplete.buttonLabel")}
           loadSuggestions={loadUserSuggestions}
-          placeholder={t("add-member-autocomplete.placeholder")}
-          loadingMessage={t("add-member-autocomplete.loading")}
-          noOptionsMessage={t("add-member-autocomplete.no-options")}
+          placeholder={t("groupForm.addMemberAutocomplete.placeholder")}
+          loadingMessage={t("groupForm.addMemberAutocomplete.loading")}
+          noOptionsMessage={t("groupForm.addMemberAutocomplete.noOptions")}
         />
       </>
     );

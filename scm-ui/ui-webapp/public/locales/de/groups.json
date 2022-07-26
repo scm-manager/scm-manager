@@ -12,7 +12,8 @@
   "groups": {
     "title": "Gruppen",
     "subtitle": "Verwaltung der Gruppen",
-    "noGroups": "Keine Gruppen gefunden."
+    "noGroups": "Keine Gruppen gefunden.",
+    "createButton": "Gruppe erstellen"
   },
   "singleGroup": {
     "errorTitle": "Fehler",
@@ -28,23 +29,9 @@
   "overview": {
     "filterGroup": "Gruppen filtern"
   },
-  "add-group": {
+  "addGroup": {
     "title": "Gruppe erstellen",
     "subtitle": "Erstellen einer neuen Gruppe"
-  },
-  "create-group-button": {
-    "label": "Gruppe erstellen"
-  },
-  "edit-group-button": {
-    "label": "Bearbeiten"
-  },
-  "add-member-button": {
-    "label": "Mitglied hinzufügen"
-  },
-  "add-member-autocomplete": {
-    "placeholder": "Mitglied hinzufügen",
-    "loading": "Suche ...",
-    "no-options": "Kein Vorschlag für Benutzername verfügbar"
   },
   "groupForm": {
     "subtitle": "Gruppe bearbeiten",
@@ -57,6 +44,12 @@
       "descriptionHelpText": "Eine kurze Beschreibung der Gruppe",
       "memberHelpText": "Benutzername des Mitglieds der Gruppe",
       "externalHelpText": "Mitglieder dieser Gruppe werden von einem externen System wie z.B.: einem LDAP-Server verwaltet"
+    },
+    "addMemberAutocomplete": {
+      "buttonLabel": "Mitglied hinzufügen",
+      "placeholder": "Mitglied hinzufügen",
+      "loading": "Suche ...",
+      "noOptions": "Kein Vorschlag für Benutzername verfügbar"
     }
   },
   "deleteGroup": {
