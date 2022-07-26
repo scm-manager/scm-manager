@@ -26,32 +26,33 @@ package sonia.scm.repository.cli;
 
 import com.google.common.annotations.VisibleForTesting;
 import picocli.CommandLine;
-import sonia.scm.cli.CommandValidator;
 import sonia.scm.cli.ParentCommand;
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryManager;
+import sonia.scm.cli.PermissionDescriptionResolver;
+import sonia.scm.repository.Namespace;
+import sonia.scm.repository.NamespaceManager;
+import sonia.scm.repository.RepositoryRoleManager;
 
 import javax.inject.Inject;
 
-@CommandLine.Command(name = "list-permissions")
-@ParentCommand(value = RepositoryCommand.class)
-class RepositoryPermissionsListCommand extends PermissionsListCommand<Repository> {
+@CommandLine.Command(name = "add-permissions")
+@ParentCommand(value = NamespaceCommand.class)
+class NamespacePermissionsAddCommand extends PermissionsAddCommand<Namespace> implements Runnable {
 
-  @CommandLine.Parameters(paramLabel = "namespace/name", index = "0", descriptionKey = "scm.repo.list-permissions.repository")
-  private String repository;
+  @CommandLine.Parameters(paramLabel = "namespace", index = "0", descriptionKey = "scm.namespace.add-permissions.namespace")
+  private String namespace;
 
   @Inject
-  public RepositoryPermissionsListCommand(RepositoryTemplateRenderer templateRenderer, CommandValidator validator, RepositoryManager manager, RepositoryPermissionBeanMapper beanMapper) {
-    super(templateRenderer, validator, new RepositoryPermissionBaseAdapter(manager, templateRenderer), beanMapper);
+  NamespacePermissionsAddCommand(NamespaceManager namespaceManager, RepositoryRoleManager roleManager, PermissionDescriptionResolver permissionDescriptionResolver, RepositoryTemplateRenderer templateRenderer) {
+    super(roleManager, permissionDescriptionResolver, templateRenderer, new NamespacePermissionBaseAdapter(namespaceManager, templateRenderer));
   }
 
   @Override
   String getIdentifier() {
-    return repository;
+    return namespace;
   }
 
   @VisibleForTesting
-  void setRepository(String repository) {
-    this.repository = repository;
+  void setNamespace(String namespace) {
+    this.namespace = namespace;
   }
 }

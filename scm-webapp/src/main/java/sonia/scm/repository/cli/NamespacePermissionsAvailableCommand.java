@@ -24,34 +24,20 @@
 
 package sonia.scm.repository.cli;
 
-import com.google.common.annotations.VisibleForTesting;
 import picocli.CommandLine;
-import sonia.scm.cli.CommandValidator;
 import sonia.scm.cli.ParentCommand;
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryManager;
+import sonia.scm.cli.PermissionDescriptionResolver;
+import sonia.scm.repository.RepositoryRoleManager;
+import sonia.scm.security.RepositoryPermissionProvider;
 
 import javax.inject.Inject;
 
-@CommandLine.Command(name = "list-permissions")
-@ParentCommand(value = RepositoryCommand.class)
-class RepositoryPermissionsListCommand extends PermissionsListCommand<Repository> {
-
-  @CommandLine.Parameters(paramLabel = "namespace/name", index = "0", descriptionKey = "scm.repo.list-permissions.repository")
-  private String repository;
+@CommandLine.Command(name = "available-permissions")
+@ParentCommand(value = NamespaceCommand.class)
+class NamespacePermissionsAvailableCommand extends PermissionsAvailableCommand {
 
   @Inject
-  public RepositoryPermissionsListCommand(RepositoryTemplateRenderer templateRenderer, CommandValidator validator, RepositoryManager manager, RepositoryPermissionBeanMapper beanMapper) {
-    super(templateRenderer, validator, new RepositoryPermissionBaseAdapter(manager, templateRenderer), beanMapper);
-  }
-
-  @Override
-  String getIdentifier() {
-    return repository;
-  }
-
-  @VisibleForTesting
-  void setRepository(String repository) {
-    this.repository = repository;
+  public NamespacePermissionsAvailableCommand(RepositoryTemplateRenderer templateRenderer, RepositoryPermissionProvider repositoryPermissionProvider, PermissionDescriptionResolver permissionDescriptionResolver, RepositoryRoleManager repositoryRoleManager) {
+    super(templateRenderer, repositoryPermissionProvider, permissionDescriptionResolver, repositoryRoleManager);
   }
 }

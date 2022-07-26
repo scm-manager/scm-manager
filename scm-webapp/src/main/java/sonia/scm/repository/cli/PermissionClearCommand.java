@@ -26,32 +26,40 @@ package sonia.scm.repository.cli;
 
 import com.google.common.annotations.VisibleForTesting;
 import picocli.CommandLine;
-import sonia.scm.cli.CommandValidator;
-import sonia.scm.cli.ParentCommand;
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.RepositoryPermissionHolder;
+import sonia.scm.repository.RepositoryRoleManager;
 
-import javax.inject.Inject;
+abstract class PermissionClearCommand<T extends RepositoryPermissionHolder> extends PermissionBaseCommand<T> implements Runnable {
 
-@CommandLine.Command(name = "list-permissions")
-@ParentCommand(value = RepositoryCommand.class)
-class RepositoryPermissionsListCommand extends PermissionsListCommand<Repository> {
+  @CommandLine.Parameters(paramLabel = "name", index = "1", descriptionKey = "scm.repo.clear-permissions.name")
+  private String name;
+  @CommandLine.Option(names = {"--group", "-g"}, descriptionKey = "scm.repo.clear-permissions.forGroup")
+  private boolean forGroup;
 
-  @CommandLine.Parameters(paramLabel = "namespace/name", index = "0", descriptionKey = "scm.repo.list-permissions.repository")
-  private String repository;
-
-  @Inject
-  public RepositoryPermissionsListCommand(RepositoryTemplateRenderer templateRenderer, CommandValidator validator, RepositoryManager manager, RepositoryPermissionBeanMapper beanMapper) {
-    super(templateRenderer, validator, new RepositoryPermissionBaseAdapter(manager, templateRenderer), beanMapper);
+  PermissionClearCommand(RepositoryRoleManager roleManager, RepositoryTemplateRenderer templateRenderer, PermissionBaseAdapter<T> adapter) {
+    super(roleManager, templateRenderer, adapter);
   }
 
   @Override
-  String getIdentifier() {
-    return repository;
+  public void run() {
+    modify(
+      getIdentifier(),
+      ns -> {
+        removeExistingPermission(ns, name, forGroup);
+        return true;
+      }
+    );
+  }
+
+  abstract String getIdentifier();
+
+  @VisibleForTesting
+  void setName(String name) {
+    this.name = name;
   }
 
   @VisibleForTesting
-  void setRepository(String repository) {
-    this.repository = repository;
+  void setForGroup(boolean forGroup) {
+    this.forGroup = forGroup;
   }
 }

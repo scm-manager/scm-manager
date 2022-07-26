@@ -85,7 +85,7 @@ class RepositoryPermissionsSetRoleCommandTest {
 
       @Test
       void shouldSetRoleForUser() {
-        command.setRepositoryName("hitchhiker/HeartOfGold");
+        command.setRepositoryNamespaceAndName("hitchhiker/HeartOfGold");
         command.setName("trillian");
         command.setRole("OWNER");
 
@@ -100,7 +100,7 @@ class RepositoryPermissionsSetRoleCommandTest {
 
       @Test
       void shouldSetRoleForGroup() {
-        command.setRepositoryName("hitchhiker/HeartOfGold");
+        command.setRepositoryNamespaceAndName("hitchhiker/HeartOfGold");
         command.setName("crew");
         command.setRole("READ");
         command.setForGroup(true);
@@ -122,7 +122,7 @@ class RepositoryPermissionsSetRoleCommandTest {
           )
         );
 
-        command.setRepositoryName("hitchhiker/HeartOfGold");
+        command.setRepositoryNamespaceAndName("hitchhiker/HeartOfGold");
         command.setName("trillian");
         command.setRole("OWNER");
 
@@ -143,7 +143,7 @@ class RepositoryPermissionsSetRoleCommandTest {
           )
         );
 
-        command.setRepositoryName("hitchhiker/HeartOfGold");
+        command.setRepositoryNamespaceAndName("hitchhiker/HeartOfGold");
         command.setName("trillian");
         command.setRole("OWNER");
         command.setForGroup(true);
@@ -160,7 +160,7 @@ class RepositoryPermissionsSetRoleCommandTest {
 
     @Test
     void shouldHandleMissingRole() {
-      command.setRepositoryName("hitchhiker/HeartOfGold");
+      command.setRepositoryNamespaceAndName("hitchhiker/HeartOfGold");
       command.setName("trillian");
       command.setRole("FUNNY");
 
@@ -172,7 +172,7 @@ class RepositoryPermissionsSetRoleCommandTest {
 
   @Test
   void shouldHandleIllegalNamespaceNameParameter() {
-    command.setRepositoryName("illegal name");
+    command.setRepositoryNamespaceAndName("illegal name");
     command.setName("trillian");
     command.setRole("READ");
 
@@ -184,7 +184,7 @@ class RepositoryPermissionsSetRoleCommandTest {
 
   @Test
   void shouldHandleNotExistingRepository() {
-    command.setRepositoryName("no/repository");
+    command.setRepositoryNamespaceAndName("no/repository");
     command.setName("trillian");
     command.setRole("READ");
 

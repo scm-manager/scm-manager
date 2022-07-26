@@ -82,7 +82,7 @@ class RepositoryPermissionsRemoveCommandTest {
         )
       );
 
-      command.setRepositoryName("hitchhiker/HeartOfGold");
+      command.setRepositoryNamespaceAndName("hitchhiker/HeartOfGold");
       command.setName("dent");
       command.setVerbs("write", "push", "pull");
 
@@ -103,7 +103,7 @@ class RepositoryPermissionsRemoveCommandTest {
         )
       );
 
-      command.setRepositoryName("hitchhiker/HeartOfGold");
+      command.setRepositoryNamespaceAndName("hitchhiker/HeartOfGold");
       command.setName("hog");
       command.setVerbs("write");
       command.setForGroup(true);
@@ -127,7 +127,7 @@ class RepositoryPermissionsRemoveCommandTest {
       when(roleManager.get("READ"))
         .thenReturn(new RepositoryRole("READ", List.of("read", "pull"), ""));
 
-      command.setRepositoryName("hitchhiker/HeartOfGold");
+      command.setRepositoryNamespaceAndName("hitchhiker/HeartOfGold");
       command.setName("dent");
       command.setVerbs("pull");
 
@@ -148,7 +148,7 @@ class RepositoryPermissionsRemoveCommandTest {
         )
       );
 
-      command.setRepositoryName("hitchhiker/HeartOfGold");
+      command.setRepositoryNamespaceAndName("hitchhiker/HeartOfGold");
       command.setName("dent");
       command.setVerbs("push", "pull");
 
@@ -160,7 +160,7 @@ class RepositoryPermissionsRemoveCommandTest {
 
   @Test
   void shouldHandleIllegalNamespaceNameParameter() {
-    command.setRepositoryName("illegal name");
+    command.setRepositoryNamespaceAndName("illegal name");
     command.setName("trillian");
     command.setVerbs("write");
 
@@ -171,7 +171,7 @@ class RepositoryPermissionsRemoveCommandTest {
 
   @Test
   void shouldHandleNotExistingRepository() {
-    command.setRepositoryName("no/repository");
+    command.setRepositoryNamespaceAndName("no/repository");
     command.setName("trillian");
     command.setVerbs("write");
 

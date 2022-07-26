@@ -35,7 +35,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.cli.CommandValidator;
 import sonia.scm.cli.PermissionDescriptionResolver;
+import sonia.scm.repository.Namespace;
 import sonia.scm.repository.NamespaceAndName;
+import sonia.scm.repository.NamespaceManager;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermission;
@@ -55,14 +57,14 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class RepositoryPermissionsListCommandTest {
+class NamespacePermissionsListCommandTest {
 
   @Mock
   private RepositoryTemplateRenderer templateRenderer;
   @Mock
   private CommandValidator validator;
   @Mock
-  private RepositoryManager manager;
+  private NamespaceManager manager;
   @Mock
   private RepositoryRoleManager roleManager;
   @Mock
@@ -71,16 +73,16 @@ class RepositoryPermissionsListCommandTest {
   @InjectMocks
   private RepositoryPermissionBeanMapper beanMapper;
 
-  private RepositoryPermissionsListCommand command;
+  private NamespacePermissionsListCommand command;
 
   @BeforeEach
   void initCommand() {
-    command = new RepositoryPermissionsListCommand(templateRenderer, validator, manager, beanMapper);
+    command = new NamespacePermissionsListCommand(templateRenderer, validator, manager, beanMapper);
   }
 
   @Test
   void shouldPrintNotFoundErrorForUnknownRepository() {
-    command.setRepository("hg2g/hog");
+    command.setNamespace("hg2g");
 
     command.run();
 
@@ -93,13 +95,13 @@ class RepositoryPermissionsListCommandTest {
     @Captor
     private ArgumentCaptor<Collection<RepositoryPermissionBean>> permissionsCaptor;
 
-    private final Repository repository = RepositoryTestData.createHeartOfGold();
+    private final Namespace namespace = new Namespace("hitchhiker");
 
     @BeforeEach
     void mockRepository() {
-      when(manager.get(new NamespaceAndName("hitchhiker", "HeartOfGold")))
-        .thenReturn(repository);
-      command.setRepository("hitchhiker/HeartOfGold");
+      when(manager.get("hitchhiker"))
+        .thenReturn(of(namespace));
+      command.setNamespace("hitchhiker");
     }
 
     @Nested
@@ -121,7 +123,7 @@ class RepositoryPermissionsListCommandTest {
       @Test
       void shouldListCustomUserPermission() {
         RepositoryPermission permission = new RepositoryPermission("trillian", List.of("read", "write"), false);
-        repository.setPermissions(List.of(permission));
+        namespace.setPermissions(List.of(permission));
         when(permissionDescriptionResolver.getDescription("read"))
           .thenReturn(of("read repository"));
         when(permissionDescriptionResolver.getDescription("write"))
@@ -151,7 +153,7 @@ class RepositoryPermissionsListCommandTest {
       @Test
       void shouldListUserPermissionWithVerbs() {
         RepositoryPermission permission = new RepositoryPermission("trillian", List.of("read", "write"), false);
-        repository.setPermissions(List.of(permission));
+        namespace.setPermissions(List.of(permission));
         when(permissionDescriptionResolver.getDescription("read"))
           .thenReturn(of("read repository"));
         when(permissionDescriptionResolver.getDescription("write"))
@@ -167,7 +169,7 @@ class RepositoryPermissionsListCommandTest {
       @Test
       void shouldListUserPermissionWithRole() {
         RepositoryPermission permission = new RepositoryPermission("trillian", "READ", false);
-        repository.setPermissions(List.of(permission));
+        namespace.setPermissions(List.of(permission));
         when(roleManager.get("READ"))
           .thenReturn(new RepositoryRole("READ", List.of("read", "pull"), ""));
         when(permissionDescriptionResolver.getDescription("read"))
@@ -185,7 +187,7 @@ class RepositoryPermissionsListCommandTest {
       @Test
       void shouldListUserPermissionWithVerbsAsKeys() {
         RepositoryPermission permission = new RepositoryPermission("trillian", List.of("read", "write"), false);
-        repository.setPermissions(List.of(permission));
+        namespace.setPermissions(List.of(permission));
 
         command.setKeys(true);
         command.run();

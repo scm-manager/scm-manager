@@ -24,34 +24,36 @@
 
 package sonia.scm.repository.cli;
 
-import com.google.common.annotations.VisibleForTesting;
-import picocli.CommandLine;
-import sonia.scm.cli.CommandValidator;
-import sonia.scm.cli.ParentCommand;
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.Namespace;
+import sonia.scm.repository.NamespaceManager;
 
-import javax.inject.Inject;
+import java.util.Optional;
 
-@CommandLine.Command(name = "list-permissions")
-@ParentCommand(value = RepositoryCommand.class)
-class RepositoryPermissionsListCommand extends PermissionsListCommand<Repository> {
+import static java.util.Optional.empty;
 
-  @CommandLine.Parameters(paramLabel = "namespace/name", index = "0", descriptionKey = "scm.repo.list-permissions.repository")
-  private String repository;
+class NamespacePermissionBaseAdapter implements PermissionBaseAdapter<Namespace> {
 
-  @Inject
-  public RepositoryPermissionsListCommand(RepositoryTemplateRenderer templateRenderer, CommandValidator validator, RepositoryManager manager, RepositoryPermissionBeanMapper beanMapper) {
-    super(templateRenderer, validator, new RepositoryPermissionBaseAdapter(manager, templateRenderer), beanMapper);
+  private final NamespaceManager namespaceManager;
+  private final RepositoryTemplateRenderer templateRenderer;
+
+  NamespacePermissionBaseAdapter(NamespaceManager namespaceManager, RepositoryTemplateRenderer templateRenderer) {
+    this.namespaceManager = namespaceManager;
+    this.templateRenderer = templateRenderer;
   }
 
   @Override
-  String getIdentifier() {
-    return repository;
+  public Optional<Namespace> get(String namespace) {
+    Optional<Namespace> ns = namespaceManager.get(namespace);
+    if (ns.isPresent()) {
+      return ns;
+    } else {
+      templateRenderer.renderNotFoundError();
+      return empty();
+    }
   }
 
-  @VisibleForTesting
-  void setRepository(String repository) {
-    this.repository = repository;
+  @Override
+  public void modify(Namespace namespace) {
+    namespaceManager.modify(namespace);
   }
 }

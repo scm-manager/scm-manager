@@ -24,34 +24,37 @@
 
 package sonia.scm.repository.cli;
 
-import com.google.common.annotations.VisibleForTesting;
 import picocli.CommandLine;
-import sonia.scm.cli.CommandValidator;
 import sonia.scm.cli.ParentCommand;
-import sonia.scm.repository.Repository;
+import sonia.scm.cli.TemplateRenderer;
 import sonia.scm.repository.RepositoryManager;
 
 import javax.inject.Inject;
 
-@CommandLine.Command(name = "list-permissions")
-@ParentCommand(value = RepositoryCommand.class)
-class RepositoryPermissionsListCommand extends PermissionsListCommand<Repository> {
+import static java.util.Collections.emptyMap;
 
-  @CommandLine.Parameters(paramLabel = "namespace/name", index = "0", descriptionKey = "scm.repo.list-permissions.repository")
-  private String repository;
+@ParentCommand(value = NamespaceCommand.class)
+@CommandLine.Command(name = "list", aliases = "ls")
+class NamespaceListCommand implements Runnable {
+
+
+  @CommandLine.Mixin
+  private final TemplateRenderer templateRenderer;
+  private final RepositoryManager manager;
 
   @Inject
-  public RepositoryPermissionsListCommand(RepositoryTemplateRenderer templateRenderer, CommandValidator validator, RepositoryManager manager, RepositoryPermissionBeanMapper beanMapper) {
-    super(templateRenderer, validator, new RepositoryPermissionBaseAdapter(manager, templateRenderer), beanMapper);
+  public NamespaceListCommand(RepositoryManager manager, TemplateRenderer templateRenderer, RepositoryToRepositoryCommandDtoMapper mapper) {
+    this.manager = manager;
+    this.templateRenderer = templateRenderer;
   }
 
   @Override
-  String getIdentifier() {
-    return repository;
+  public void run() {
+    manager.getAllNamespaces()
+      .forEach(this::render);
   }
 
-  @VisibleForTesting
-  void setRepository(String repository) {
-    this.repository = repository;
+  private void render(String namespace) {
+    templateRenderer.renderToStdout(namespace + "\n", emptyMap());
   }
 }

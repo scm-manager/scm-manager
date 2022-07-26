@@ -28,82 +28,31 @@ import com.google.common.annotations.VisibleForTesting;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
 import sonia.scm.cli.PermissionDescriptionResolver;
+import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
-import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.RepositoryRoleManager;
 
 import javax.inject.Inject;
-import java.util.Arrays;
-import java.util.Set;
-
-import static java.util.Arrays.asList;
 
 @CommandLine.Command(name = "add-permissions")
 @ParentCommand(value = RepositoryCommand.class)
-class RepositoryPermissionsAddCommand extends RepositoryPermissionBaseCommand implements Runnable {
-
-  private final PermissionDescriptionResolver permissionDescriptionResolver;
+class RepositoryPermissionsAddCommand extends PermissionsAddCommand<Repository> implements Runnable {
 
   @CommandLine.Parameters(paramLabel = "namespace/name", index = "0", descriptionKey = "scm.repo.add-permissions.repository")
-  private String repositoryName;
-  @CommandLine.Parameters(paramLabel = "name", index = "1", descriptionKey = "scm.repo.add-permissions.name")
-  private String name;
-  @CommandLine.Parameters(paramLabel = "verbs", index = "2..", arity = "1..", descriptionKey = "scm.repo.add-permissions.verbs")
-  private String[] verbs = new String[0];
-
-  @CommandLine.Option(names = {"--group", "-g"}, descriptionKey = "scm.repo.add-permissions.forGroup")
-  private boolean forGroup;
+  private String repositoryNamespaceAndName;
 
   @Inject
-  RepositoryPermissionsAddCommand(RepositoryManager repositoryManager, RepositoryPermissionBaseCommand permissionCommandManager, RepositoryRoleManager roleManager, PermissionDescriptionResolver permissionDescriptionResolver, RepositoryTemplateRenderer templateRenderer) {
-    super(repositoryManager, roleManager, templateRenderer);
-    this.permissionDescriptionResolver = permissionDescriptionResolver;
+  RepositoryPermissionsAddCommand(RepositoryManager repositoryManager, RepositoryRoleManager roleManager, PermissionDescriptionResolver permissionDescriptionResolver, RepositoryTemplateRenderer templateRenderer) {
+    super(roleManager, permissionDescriptionResolver, templateRenderer, new RepositoryPermissionBaseAdapter(repositoryManager, templateRenderer));
   }
 
   @Override
-  public void run() {
-    modifyRepository(
-      repositoryName,
-      repository -> {
-        if (!Arrays.stream(verbs).allMatch(this::verifyVerbExists)) {
-          return false;
-        }
-        Set<String> resultingVerbs =
-          getPermissionsAsModifiableSet(repository, name, forGroup);
-        if (resultingVerbs.containsAll(asList(this.verbs))) {
-          return false;
-        }
-        resultingVerbs.addAll(asList(this.verbs));
-        replacePermission(repository, new RepositoryPermission(name, resultingVerbs, forGroup));
-        return true;
-      }
-    );
-  }
-
-  private boolean verifyVerbExists(String verb) {
-    if (permissionDescriptionResolver.getDescription(verb).isEmpty()) {
-      renderVerbNotFoundError();
-      return false;
-    }
-    return true;
+  String getIdentifier() {
+    return repositoryNamespaceAndName;
   }
 
   @VisibleForTesting
-  void setRepositoryName(String repositoryName) {
-    this.repositoryName = repositoryName;
-  }
-
-  @VisibleForTesting
-  void setName(String name) {
-    this.name = name;
-  }
-
-  @VisibleForTesting
-  void setVerbs(String... verbs) {
-    this.verbs = verbs;
-  }
-
-  public void setForGroup(boolean forGroup) {
-    this.forGroup = forGroup;
+  void setRepositoryNamespaceAndName(String repositoryNamespaceAndName) {
+    this.repositoryNamespaceAndName = repositoryNamespaceAndName;
   }
 }
