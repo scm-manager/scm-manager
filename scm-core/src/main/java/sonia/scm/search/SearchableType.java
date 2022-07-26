@@ -57,4 +57,12 @@ public interface SearchableType {
    * @since 2.23.0
    */
   Collection<? extends SearchableField> getFields();
+
+  default boolean limitableToRepository() {
+    return false;
+  }
+
+  default boolean limitableToNamespace() {
+    return false;
+  }
 }

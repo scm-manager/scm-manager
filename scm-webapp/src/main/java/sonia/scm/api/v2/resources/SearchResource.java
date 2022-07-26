@@ -72,9 +72,7 @@ public class SearchResource {
     this.repositoryManager = repositoryManager;
   }
 
-  @GET
-  @Path("query/{type}")
-  @Produces(VndMediaType.QUERY_RESULT)
+  @Path("query")
   @Operation(
     summary = "Query result",
     description = "Returns a collection of matched hits.",
@@ -114,11 +112,39 @@ public class SearchResource {
     name = "countOnly",
     description = "If set to 'true', no results will be returned, only the count of hits and the page count"
   )
-  public QueryResultDto query(@Valid @BeanParam SearchParameters params) {
-    if (params.isCountOnly()) {
-      return count(params);
+  public SearchEndpoints query() {
+    return new SearchEndpoints();
+  }
+
+  @Produces(VndMediaType.QUERY_RESULT)
+  public class SearchEndpoints {
+
+    @GET
+    @Path("{type}")
+    public QueryResultDto query(@Valid @BeanParam SearchParameters params) {
+      if (params.isCountOnly()) {
+        return count(params);
+      }
+      return search(params);
     }
-    return search(params);
+
+    @GET
+    @Path("{namespace}/{type}")
+    public QueryResultDto queryForNamespace(@Valid @BeanParam SearchParameters params) {
+      if (params.isCountOnly()) {
+        return count(params);
+      }
+      return search(params);
+    }
+
+    @GET
+    @Path("{namespace}/{name}/{type}")
+    public QueryResultDto queryForRepository(@Valid @BeanParam SearchParameters params) {
+      if (params.isCountOnly()) {
+        return count(params);
+      }
+      return search(params);
+    }
   }
 
   @GET
@@ -162,8 +188,8 @@ public class SearchResource {
 
   private void filterByContext(SearchParameters params, QueryBuilder<Object> queryBuilder) {
     if (!Strings.isNullOrEmpty(params.getNamespace())) {
-      if (!Strings.isNullOrEmpty(params.getRepo())) {
-        Repository repository = repositoryManager.get(new NamespaceAndName(params.getNamespace(), params.getRepo()));
+      if (!Strings.isNullOrEmpty(params.getRepositoryName())) {
+        Repository repository = repositoryManager.get(new NamespaceAndName(params.getNamespace(), params.getRepositoryName()));
         queryBuilder.filter(repository);
       } else {
           repositoryManager.getAll().stream()

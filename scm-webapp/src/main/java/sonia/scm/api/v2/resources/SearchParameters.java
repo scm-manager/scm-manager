@@ -48,12 +48,12 @@ public class SearchParameters {
   private String query;
 
   @Size(min = 1)
-  @QueryParam("namespace")
+  @PathParam("namespace")
   private String namespace;
 
   @Size(min = 1)
-  @QueryParam("repo")
-  private String repo;
+  @PathParam("name")
+  private String repositoryName;
 
   @Min(0)
   @QueryParam("page")

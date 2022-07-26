@@ -60,4 +60,6 @@ public @interface IndexedType {
    * @return required permission for searching this type.
    */
   String permission() default "";
+
+  boolean repositoryScoped() default false;
 }

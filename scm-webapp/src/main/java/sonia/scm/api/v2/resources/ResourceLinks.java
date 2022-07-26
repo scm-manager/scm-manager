@@ -1176,11 +1176,32 @@ class ResourceLinks {
     private final LinkBuilder searchLinkBuilder;
 
     SearchLinks(ScmPathInfo pathInfo) {
-      this.searchLinkBuilder = new LinkBuilder(pathInfo, SearchResource.class);
+      this.searchLinkBuilder = new LinkBuilder(pathInfo, SearchResource.class, SearchResource.SearchEndpoints.class);
     }
 
     public String query(String type) {
-      return searchLinkBuilder.method("query").parameters(type).href();
+      return searchLinkBuilder.method("query").parameters().method("query").parameters(type).href();
+    }
+
+    public String queryForNamespace(String namespace, String type) {
+      return searchLinkBuilder.method("query").parameters().method("queryForNamespace").parameters(type, namespace).href();
+    }
+
+    public String queryForRepository(String namespace, String name, String type) {
+      return searchLinkBuilder.method("query").parameters().method("queryForRepository").parameters(type, namespace, name).href();
+    }
+  }
+
+  public SearchableTypesLinks searchableTypes() {
+    return new SearchableTypesLinks(accessScmPathInfoStore().get());
+  }
+
+  public static class SearchableTypesLinks {
+
+    private final LinkBuilder searchLinkBuilder;
+
+    SearchableTypesLinks(ScmPathInfo pathInfo) {
+      this.searchLinkBuilder = new LinkBuilder(pathInfo, SearchResource.class);
     }
 
     public String searchableTypes() {
