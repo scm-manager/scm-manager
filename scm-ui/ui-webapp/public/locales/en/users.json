@@ -27,7 +27,7 @@
   "users": {
     "title": "Users",
     "subtitle": "Create, read, update and delete users",
-    "noUsers": "No users found.",
+    "noUsers": "No users matching the selected criteria found.",
     "createButton": "Create User"
   },
   "singleUser": {

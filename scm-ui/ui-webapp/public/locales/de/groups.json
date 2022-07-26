@@ -12,7 +12,7 @@
   "groups": {
     "title": "Gruppen",
     "subtitle": "Verwaltung der Gruppen",
-    "noGroups": "Keine Gruppen gefunden.",
+    "noGroups": "Keine Gruppen mit diesen Kriterien gefunden.",
     "createButton": "Gruppe erstellen"
   },
   "singleGroup": {
