@@ -47,6 +47,14 @@ public class SearchParameters {
   @QueryParam("q")
   private String query;
 
+  @Size(min = 1)
+  @QueryParam("namespace")
+  private String namespace;
+
+  @Size(min = 1)
+  @QueryParam("repo")
+  private String repo;
+
   @Min(0)
   @QueryParam("page")
   @DefaultValue("0")

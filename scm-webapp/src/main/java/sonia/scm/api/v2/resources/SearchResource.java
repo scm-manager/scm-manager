@@ -24,6 +24,7 @@
 
 package sonia.scm.api.v2.resources;
 
+import com.google.common.base.Strings;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -31,6 +32,10 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import sonia.scm.repository.NamespaceAndName;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryManager;
+import sonia.scm.search.QueryBuilder;
 import sonia.scm.search.QueryCountResult;
 import sonia.scm.search.QueryResult;
 import sonia.scm.search.SearchEngine;
@@ -57,12 +62,14 @@ public class SearchResource {
   private final SearchEngine engine;
   private final QueryResultMapper queryResultMapper;
   private final SearchableTypeMapper searchableTypeMapper;
+  private final RepositoryManager repositoryManager;
 
   @Inject
-  public SearchResource(SearchEngine engine, QueryResultMapper mapper, SearchableTypeMapper searchableTypeMapper) {
+  public SearchResource(SearchEngine engine, QueryResultMapper mapper, SearchableTypeMapper searchableTypeMapper, RepositoryManager repositoryManager) {
     this.engine = engine;
     this.queryResultMapper = mapper;
     this.searchableTypeMapper = searchableTypeMapper;
+    this.repositoryManager = repositoryManager;
   }
 
   @GET
@@ -143,19 +150,36 @@ public class SearchResource {
   }
 
   private QueryResultDto search(SearchParameters params) {
-    QueryResult result = engine.forType(params.getType())
+    QueryBuilder<Object> queryBuilder = engine.forType(params.getType())
       .search()
       .start(params.getPage() * params.getPageSize())
-      .limit(params.getPageSize())
-      .execute(params.getQuery());
+      .limit(params.getPageSize());
 
-    return queryResultMapper.map(params, result);
+    filterByContext(params, queryBuilder);
+
+    return queryResultMapper.map(params, queryBuilder.execute(params.getQuery()));
+  }
+
+  private void filterByContext(SearchParameters params, QueryBuilder<Object> queryBuilder) {
+    if (!Strings.isNullOrEmpty(params.getNamespace())) {
+      if (!Strings.isNullOrEmpty(params.getRepo())) {
+        Repository repository = repositoryManager.get(new NamespaceAndName(params.getNamespace(), params.getRepo()));
+        queryBuilder.filter(repository);
+      } else {
+          repositoryManager.getAll().stream()
+            .filter(r -> r.getNamespace().equals(params.getNamespace()))
+            .forEach(queryBuilder::filter);
+      }
+    }
   }
 
   private QueryResultDto count(SearchParameters params) {
-    QueryCountResult result = engine.forType(params.getType())
-      .search()
-      .count(params.getQuery());
+    QueryBuilder<Object> queryBuilder = engine.forType(params.getType())
+      .search();
+
+    filterByContext(params, queryBuilder);
+
+    QueryCountResult result = queryBuilder.count(params.getQuery());
 
     return queryResultMapper.map(params, new QueryResult(result.getTotalHits(), result.getType(), Collections.emptyList()));
   }

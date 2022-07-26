@@ -101,7 +101,7 @@ class SearchResourceTest {
     SearchableTypeMapper searchableTypeMapper = Mappers.getMapper(SearchableTypeMapper.class);
     queryResultMapper.setRegistry(enricherRegistry);
     SearchResource resource = new SearchResource(
-      searchEngine, queryResultMapper, searchableTypeMapper
+      searchEngine, queryResultMapper, searchableTypeMapper, repositoryManager
     );
     dispatcher = new RestDispatcher();
     dispatcher.addSingletonResource(resource);
