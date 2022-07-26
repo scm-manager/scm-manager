@@ -38,22 +38,22 @@ export const ButtonVariantList = Object.values(ButtonVariants);
 type ButtonVariant = typeof ButtonVariants[keyof typeof ButtonVariants];
 
 const BASE_BUTTON_CLASSES = classNames(
-  "inline-block rounded border py-2 px-6 text-center font-semibold focus:outline-none focus:ring focus:ring-purple-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+  "inline-block rounded border py-2 px-6 text-center font-semibold focus:outline-none focus:ring focus:ring-purple-500 focus:ring-offset-2 disabled:cursor-not-allowed"
 );
 const DEFAULT_BUTTON_CLASSES = classNames(
   "border-gray-200 hover:border-gray-400 active:shadow-inner disabled:hover:border-gray-200 disabled:active:shadow-none"
 );
 const PRIMARY_BUTTON_CLASSES = classNames(
-  "border-transparent bg-primary text-primary-contrast hover:bg-primary-hover active:bg-primary-active disabled:hover:bg-primary disabled:active:bg-primary"
+  "border-transparent bg-primary text-primary-contrast hover:bg-primary-hover active:bg-primary-active disabled:bg-primary-disabled disabled:text-primary-disabled-contrast "
 );
 const SECONDARY_BUTTON_CLASSES = classNames(
-  "border-primary text-primary hover:border-primary-hover hover:text-primary-hover active:border-primary-active active:text-primary-active disabled:hover:border-primary disabled:hover:text-primary disabled:active:border-primary disabled:active:text-primary"
+  "border-primary text-primary hover:border-primary-hover hover:text-primary-hover active:border-primary-active active:text-primary-active disabled:border-primary-disabled disabled:text-primary-disabled"
 );
 const TERTIARY_BUTTON_CLASSES = classNames(
-  "border-transparent text-primary hover:bg-primary-hover-contrast active:bg-primary-active-contrast disabled:hover:bg-transparent disabled:active:bg-transparent"
+  "border-transparent text-primary hover:bg-primary-hover-contrast hover:text-primary-hover active:bg-primary-active-contrast active:text-primary-active disabled:text-primary-disabled"
 );
 const SIGNAL_BUTTON_CLASSES = classNames(
-  "border-transparent bg-signal text-signal-contrast hover:bg-signal-hover active:bg-signal-active disabled:hover:bg-signal disabled:active:bg-signal"
+  "border-transparent bg-signal text-signal-contrast hover:bg-signal-hover hover:text-signal-hover-contrast active:bg-signal-active active:text-signal-active-contrast disabled:bg-signal-disabled disabled:text-signal-disabled-contrast"
 );
 
 const createButtonClasses = (variant?: ButtonVariant) =>
