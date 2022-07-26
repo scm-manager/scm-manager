@@ -21,34 +21,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
-import GroupRow from "./GroupRow";
+import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
 import { Group } from "@scm-manager/ui-types";
+import { Notification } from "@scm-manager/ui-components";
+import GroupRow from "./GroupRow";
 
-type Props = WithTranslation & {
-  groups: Group[];
+type Props = {
+  groups?: Group[];
 };
 
-class GroupTable extends React.Component<Props> {
-  render() {
-    const { groups, t } = this.props;
-    return (
-      <table className="card-table table is-hoverable is-fullwidth">
-        <thead>
-          <tr>
-            <th>{t("group.name")}</th>
-            <th className="is-hidden-mobile">{t("group.description")}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {groups.map((group, index) => {
-            return <GroupRow key={index} group={group} />;
-          })}
-        </tbody>
-      </table>
-    );
-  }
-}
+const GroupTable: FC<Props> = ({ groups }) => {
+  const [t] = useTranslation("groups");
 
-export default withTranslation("groups")(GroupTable);
+  if (!groups || groups.length === 0) {
+    return <Notification type="info">{t("groups.noGroups")}</Notification>;
+  }
+
+  return (
+    <table className="card-table table is-hoverable is-fullwidth">
+      <thead>
+        <tr>
+          <th>{t("group.name")}</th>
+          <th className="is-hidden-mobile">{t("group.description")}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {groups.map((group, index) => {
+          return <GroupRow key={index} group={group} />;
+        })}
+      </tbody>
+    </table>
+  );
+};
+
+export default GroupTable;

@@ -241,6 +241,7 @@
     "errorTitle": "Fehler",
     "errorSubtitle": "Changesets konnten nicht abgerufen werden",
     "noChangesets": "Keine Changesets in diesem Branch gefunden. Die Commits könnten gelöscht worden sein.",
+    "noFilteredChangesets": "Keine Changesets in diesem Branch mit diesen Kriterien gefunden. Die Commits könnten gelöscht worden sein.",
     "branchSelectorLabel": "Branches",
     "collapseDiffs": "Auf-/Zuklappen",
     "moreDiffsAvailable": "Es sind weitere Diffs verfügbar",

@@ -24,6 +24,7 @@
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation, useParams } from "react-router-dom";
+import { useUsers } from "@scm-manager/ui-api";
 import {
   CreateButton,
   LinkPaginator,
@@ -31,10 +32,9 @@ import {
   OverviewPageActions,
   Page,
   PageActions,
-  urls
+  urls,
 } from "@scm-manager/ui-components";
 import { UserTable } from "./../components/table";
-import { useUsers } from "@scm-manager/ui-api";
 
 const Users: FC = () => {
   const location = useLocation();
@@ -42,28 +42,13 @@ const Users: FC = () => {
   const search = urls.getQueryStringFromLocation(location);
   const page = urls.getPageFromMatch({ params });
   const { isLoading, error, data } = useUsers({ page: page - 1, search });
-  const users = data?._embedded.users;
   const [t] = useTranslation("users");
+  const users = data?._embedded?.users;
   const canAddUsers = !!data?._links.create;
 
-  const renderUserTable = () => {
-    if (data && users && users.length > 0) {
-      return (
-        <>
-          <UserTable users={users} />
-          <LinkPaginator collection={data} page={page} filter={urls.getQueryStringFromLocation(location)} />
-        </>
-      );
-    }
+  if (!data) {
     return <Notification type="info">{t("users.noUsers")}</Notification>;
-  };
-
-  const renderCreateButton = () => {
-    if (canAddUsers) {
-      return <CreateButton link="/users/create" label={t("users.createButton")} />;
-    }
-    return null;
-  };
+  }
 
   return (
     <Page
@@ -72,8 +57,9 @@ const Users: FC = () => {
       loading={isLoading || !users}
       error={error || undefined}
     >
-      {renderUserTable()}
-      {renderCreateButton()}
+      <UserTable users={users} />
+      <LinkPaginator collection={data} page={page} filter={search} />
+      {canAddUsers ? <CreateButton link="/users/create" label={t("users.createButton")} /> : null}
       <PageActions>
         <OverviewPageActions
           showCreateButton={canAddUsers}

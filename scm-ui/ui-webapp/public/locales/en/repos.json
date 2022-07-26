@@ -241,6 +241,7 @@
     "errorTitle": "Error",
     "errorSubtitle": "Could not fetch changesets",
     "noChangesets": "No changesets found for this branch. The commits could have been removed.",
+    "noFilteredChangesets": "No changesets matching the selected criteria found for this branch. The commits could have been removed.",
     "branchSelectorLabel": "Branches",
     "collapseDiffs": "Collapse",
     "moreDiffsAvailable": "There are more diffs available",

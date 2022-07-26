@@ -31,7 +31,7 @@ import {
   OverviewPageActions,
   Page,
   PageActions,
-  urls
+  urls,
 } from "@scm-manager/ui-components";
 import { GroupTable } from "./../components/table";
 import { useGroups } from "@scm-manager/ui-api";
@@ -41,22 +41,14 @@ const Groups: FC = () => {
   const params = useParams();
   const search = urls.getQueryStringFromLocation(location);
   const page = urls.getPageFromMatch({ params });
-  const { isLoading, error, data: list } = useGroups({ search, page: page - 1 });
+  const { isLoading, error, data } = useGroups({ search, page: page - 1 });
   const [t] = useTranslation("groups");
-  const groups = list?._embedded.groups;
-  const canCreateGroups = !!list?._links.create;
+  const groups = data?._embedded?.groups;
+  const canCreateGroups = !!data?._links.create;
 
-  const renderGroupTable = () => {
-    if (list && groups && groups.length > 0) {
-      return (
-        <>
-          <GroupTable groups={groups} />
-          <LinkPaginator collection={list} page={page} filter={urls.getQueryStringFromLocation(location)} />
-        </>
-      );
-    }
+  if (!data) {
     return <Notification type="info">{t("groups.noGroups")}</Notification>;
-  };
+  }
 
   return (
     <Page
@@ -65,8 +57,9 @@ const Groups: FC = () => {
       loading={isLoading || !groups}
       error={error || undefined}
     >
-      {renderGroupTable()}
-      {canCreateGroups ? <CreateButton label={t("groups.createButton")} link="/groups/create" /> : null}
+      <GroupTable groups={groups} />
+      <LinkPaginator collection={data} page={page} filter={search} />
+      {canCreateGroups ? <CreateButton link="/groups/create" label={t("groups.createButton")} /> : null}
       <PageActions>
         <OverviewPageActions
           showCreateButton={canCreateGroups}
