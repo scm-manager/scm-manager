@@ -197,7 +197,7 @@ class RepositoryPermissionsAddCommandTest {
 
       command.run();
 
-      verify(templateRenderer).renderVerbNotFoundError();
+      verify(templateRenderer).renderVerbNotFoundError("make-party");
     }
   }
 

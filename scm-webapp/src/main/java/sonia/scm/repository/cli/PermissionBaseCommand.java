@@ -104,7 +104,7 @@ abstract class PermissionBaseCommand<T extends RepositoryPermissionHolder> {
     templateRenderer.renderRoleNotFoundError();
   }
 
-  void renderVerbNotFoundError() {
-    templateRenderer.renderVerbNotFoundError();
+  void renderVerbNotFoundError(String verb) {
+    templateRenderer.renderVerbNotFoundError(verb);
   }
 }

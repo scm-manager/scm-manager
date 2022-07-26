@@ -76,7 +76,7 @@ abstract class PermissionsAddCommand<T extends RepositoryPermissionHolder> exten
 
   private boolean verifyVerbExists(String verb) {
     if (permissionDescriptionResolver.getDescription(verb).isEmpty()) {
-      renderVerbNotFoundError();
+      renderVerbNotFoundError(verb);
       return false;
     }
     return true;

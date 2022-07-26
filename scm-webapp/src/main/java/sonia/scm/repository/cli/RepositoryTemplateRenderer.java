@@ -131,8 +131,8 @@ class RepositoryTemplateRenderer extends TemplateRenderer {
     context.exit(ExitCode.NOT_FOUND);
   }
 
-  void renderVerbNotFoundError() {
-    renderToStderr("{{i18n.verbNotFound}}", emptyMap());
+  void renderVerbNotFoundError(String verb) {
+    renderToStderr("{{i18n.verbNotFound}}: {{verb}}", Map.of("verb", verb));
     context.getStderr().println();
     context.exit(ExitCode.NOT_FOUND);
   }
