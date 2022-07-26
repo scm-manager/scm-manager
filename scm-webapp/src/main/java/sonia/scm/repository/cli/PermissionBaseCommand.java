@@ -49,16 +49,16 @@ abstract class PermissionBaseCommand<T extends RepositoryPermissionHolder> {
     this.adapter = adapter;
   }
 
-  Optional<T> get(String idendifier) {
-    return adapter.get(idendifier);
+  Optional<T> get(String identifier) {
+    return adapter.get(identifier);
   }
 
   void set(T object) {
     adapter.set(object);
   }
 
-  void modify(String idendifier, Predicate<T> modifier) {
-    Optional<T> ns = get(idendifier);
+  void modify(String identifier, Predicate<T> modifier) {
+    Optional<T> ns = get(identifier);
     if (ns.isPresent() && modifier.test(ns.get())) {
       set(ns.get());
     }
@@ -106,9 +106,5 @@ abstract class PermissionBaseCommand<T extends RepositoryPermissionHolder> {
 
   void renderVerbNotFoundError() {
     templateRenderer.renderVerbNotFoundError();
-  }
-
-  RepositoryTemplateRenderer getTemplateRenderer() {
-    return templateRenderer;
   }
 }
