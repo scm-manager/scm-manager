@@ -24,7 +24,7 @@
 
 package sonia.scm.plugin.cli;
 
-import com.cronutils.utils.VisibleForTesting;
+import com.google.common.annotations.VisibleForTesting;
 import lombok.Getter;
 import lombok.Setter;
 import picocli.CommandLine;

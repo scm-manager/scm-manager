@@ -24,7 +24,7 @@
 
 package sonia.scm.plugin.cli;
 
-import com.cronutils.utils.VisibleForTesting;
+import com.google.common.annotations.VisibleForTesting;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
 import sonia.scm.cli.Table;
