@@ -32,5 +32,5 @@ public interface PermissionBaseAdapter<T extends RepositoryPermissionHolder> {
 
   Optional<T> get(String identifier);
 
-  void set(T object);
+  void modify(T object);
 }

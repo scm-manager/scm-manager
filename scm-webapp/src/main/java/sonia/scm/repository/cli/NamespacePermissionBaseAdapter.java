@@ -53,7 +53,7 @@ class NamespacePermissionBaseAdapter implements PermissionBaseAdapter<Namespace>
   }
 
   @Override
-  public void set(Namespace namespace) {
+  public void modify(Namespace namespace) {
     namespaceManager.modify(namespace);
   }
 }

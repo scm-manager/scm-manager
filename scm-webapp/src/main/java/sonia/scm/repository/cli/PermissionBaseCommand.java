@@ -54,7 +54,7 @@ abstract class PermissionBaseCommand<T extends RepositoryPermissionHolder> {
   }
 
   void set(T object) {
-    adapter.set(object);
+    adapter.modify(object);
   }
 
   void modify(String identifier, Predicate<T> modifier) {

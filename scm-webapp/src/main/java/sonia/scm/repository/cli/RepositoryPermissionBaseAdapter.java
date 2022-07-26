@@ -62,7 +62,7 @@ class RepositoryPermissionBaseAdapter implements PermissionBaseAdapter<Repositor
   }
 
   @Override
-  public void set(Repository repository) {
+  public void modify(Repository repository) {
     repositoryManager.modify(repository);
   }
 }
