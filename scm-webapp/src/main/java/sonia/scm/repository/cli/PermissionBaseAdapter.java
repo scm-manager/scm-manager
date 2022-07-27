@@ -24,34 +24,13 @@
 
 package sonia.scm.repository.cli;
 
-import com.google.common.annotations.VisibleForTesting;
-import picocli.CommandLine;
-import sonia.scm.cli.CommandValidator;
-import sonia.scm.cli.ParentCommand;
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.RepositoryPermissionHolder;
 
-import javax.inject.Inject;
+import java.util.Optional;
 
-@CommandLine.Command(name = "list-permissions")
-@ParentCommand(value = RepositoryCommand.class)
-class RepositoryPermissionsListCommand extends PermissionsListCommand<Repository> {
+public interface PermissionBaseAdapter<T extends RepositoryPermissionHolder> {
 
-  @CommandLine.Parameters(paramLabel = "namespace/name", index = "0", descriptionKey = "scm.repo.list-permissions.repository")
-  private String repository;
+  Optional<T> get(String identifier);
 
-  @Inject
-  public RepositoryPermissionsListCommand(RepositoryTemplateRenderer templateRenderer, CommandValidator validator, RepositoryManager manager, RepositoryPermissionBeanMapper beanMapper) {
-    super(templateRenderer, validator, new RepositoryPermissionBaseAdapter(manager, templateRenderer), beanMapper);
-  }
-
-  @Override
-  String getIdentifier() {
-    return repository;
-  }
-
-  @VisibleForTesting
-  void setRepository(String repository) {
-    this.repository = repository;
-  }
+  void modify(T object);
 }

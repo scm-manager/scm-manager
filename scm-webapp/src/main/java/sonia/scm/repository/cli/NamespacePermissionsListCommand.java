@@ -28,30 +28,30 @@ import com.google.common.annotations.VisibleForTesting;
 import picocli.CommandLine;
 import sonia.scm.cli.CommandValidator;
 import sonia.scm.cli.ParentCommand;
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.Namespace;
+import sonia.scm.repository.NamespaceManager;
 
 import javax.inject.Inject;
 
 @CommandLine.Command(name = "list-permissions")
-@ParentCommand(value = RepositoryCommand.class)
-class RepositoryPermissionsListCommand extends PermissionsListCommand<Repository> {
+@ParentCommand(value = NamespaceCommand.class)
+class NamespacePermissionsListCommand extends PermissionsListCommand<Namespace> {
 
-  @CommandLine.Parameters(paramLabel = "namespace/name", index = "0", descriptionKey = "scm.repo.list-permissions.repository")
-  private String repository;
+  @CommandLine.Parameters(paramLabel = "namespace", index = "0", descriptionKey = "scm.namespace.list-permissions.namespace")
+  private String namespace;
 
   @Inject
-  public RepositoryPermissionsListCommand(RepositoryTemplateRenderer templateRenderer, CommandValidator validator, RepositoryManager manager, RepositoryPermissionBeanMapper beanMapper) {
-    super(templateRenderer, validator, new RepositoryPermissionBaseAdapter(manager, templateRenderer), beanMapper);
+  public NamespacePermissionsListCommand(RepositoryTemplateRenderer templateRenderer, CommandValidator validator, NamespaceManager manager, RepositoryPermissionBeanMapper beanMapper) {
+    super(templateRenderer, validator, new NamespacePermissionBaseAdapter(manager, templateRenderer), beanMapper);
   }
 
   @Override
   String getIdentifier() {
-    return repository;
+    return namespace;
   }
 
   @VisibleForTesting
-  void setRepository(String repository) {
-    this.repository = repository;
+  void setNamespace(String namespace) {
+    this.namespace = namespace;
   }
 }

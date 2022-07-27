@@ -27,66 +27,31 @@ package sonia.scm.repository.cli;
 import com.google.common.annotations.VisibleForTesting;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
+import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
-import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.RepositoryRoleManager;
 
 import javax.inject.Inject;
-import java.util.Set;
-
-import static java.util.Arrays.asList;
 
 @CommandLine.Command(name = "remove-permissions")
 @ParentCommand(value = RepositoryCommand.class)
-class RepositoryPermissionsRemoveCommand extends RepositoryPermissionBaseCommand implements Runnable {
+class RepositoryPermissionsRemoveCommand extends PermissionsRemoveCommand<Repository> {
 
   @CommandLine.Parameters(paramLabel = "namespace/name", index = "0", descriptionKey = "scm.repo.remove-permissions.repository")
-  private String repositoryName;
-  @CommandLine.Parameters(paramLabel = "name", index = "1", descriptionKey = "scm.repo.remove-permissions.name")
-  private String name;
-  @CommandLine.Parameters(paramLabel = "verbs", index = "2..", arity = "1..", descriptionKey = "scm.repo.remove-permissions.verbs")
-  private String[] verbs = new String[0];
-
-  @CommandLine.Option(names = {"--group", "-g"}, descriptionKey = "scm.repo.remove-permissions.forGroup")
-  private boolean forGroup;
+  private String repositoryNamespaceAndName;
 
   @Inject
   public RepositoryPermissionsRemoveCommand(RepositoryManager repositoryManager, RepositoryRoleManager roleManager, RepositoryTemplateRenderer templateRenderer) {
-    super(repositoryManager, roleManager, templateRenderer);
+    super(roleManager, templateRenderer, new RepositoryPermissionBaseAdapter(repositoryManager, templateRenderer));
   }
 
   @Override
-  public void run() {
-    modifyRepository(
-      repositoryName,
-      repository -> {
-        Set<String> resultingVerbs =
-          getPermissionsAsModifiableSet(repository, name, forGroup);
-        if (resultingVerbs.stream().noneMatch(verb -> asList(verbs).contains(verb))) {
-          return false;
-        }
-        resultingVerbs.removeAll(asList(this.verbs));
-        replacePermission(repository, new RepositoryPermission(name, resultingVerbs, forGroup));
-        return true;
-      }
-    );
+  String getIdentifier() {
+    return repositoryNamespaceAndName;
   }
 
   @VisibleForTesting
-  void setRepositoryName(String repositoryName) {
-    this.repositoryName = repositoryName;
-  }
-
-  @VisibleForTesting
-  void setName(String name) {
-    this.name = name;
-  }
-
-  public void setVerbs(String... verbs) {
-    this.verbs = verbs;
-  }
-
-  public void setForGroup(boolean forGroup) {
-    this.forGroup = forGroup;
+  void setRepositoryNamespaceAndName(String repositoryNamespaceAndName) {
+    this.repositoryNamespaceAndName = repositoryNamespaceAndName;
   }
 }

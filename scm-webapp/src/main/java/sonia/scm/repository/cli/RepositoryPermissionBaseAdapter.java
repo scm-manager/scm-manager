@@ -24,34 +24,45 @@
 
 package sonia.scm.repository.cli;
 
-import com.google.common.annotations.VisibleForTesting;
-import picocli.CommandLine;
-import sonia.scm.cli.CommandValidator;
-import sonia.scm.cli.ParentCommand;
+import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 
-import javax.inject.Inject;
+import java.util.Optional;
 
-@CommandLine.Command(name = "list-permissions")
-@ParentCommand(value = RepositoryCommand.class)
-class RepositoryPermissionsListCommand extends PermissionsListCommand<Repository> {
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 
-  @CommandLine.Parameters(paramLabel = "namespace/name", index = "0", descriptionKey = "scm.repo.list-permissions.repository")
-  private String repository;
+class RepositoryPermissionBaseAdapter implements PermissionBaseAdapter<Repository> {
 
-  @Inject
-  public RepositoryPermissionsListCommand(RepositoryTemplateRenderer templateRenderer, CommandValidator validator, RepositoryManager manager, RepositoryPermissionBeanMapper beanMapper) {
-    super(templateRenderer, validator, new RepositoryPermissionBaseAdapter(manager, templateRenderer), beanMapper);
+  private final RepositoryManager repositoryManager;
+  private final RepositoryTemplateRenderer templateRenderer;
+
+  RepositoryPermissionBaseAdapter(RepositoryManager repositoryManager, RepositoryTemplateRenderer templateRenderer) {
+    this.repositoryManager = repositoryManager;
+    this.templateRenderer = templateRenderer;
   }
 
   @Override
-  String getIdentifier() {
-    return repository;
+  public Optional<Repository> get(String repositoryNamespaceAndName) {
+    NamespaceAndName namespaceAndName;
+    try {
+      namespaceAndName = NamespaceAndName.fromString(repositoryNamespaceAndName);
+    } catch (IllegalArgumentException e) {
+      templateRenderer.renderInvalidInputError();
+      return empty();
+    }
+    Repository repository = repositoryManager.get(namespaceAndName);
+    if (repository == null) {
+      templateRenderer.renderNotFoundError();
+      return empty();
+    } else {
+      return of(repository);
+    }
   }
 
-  @VisibleForTesting
-  void setRepository(String repository) {
-    this.repository = repository;
+  @Override
+  public void modify(Repository repository) {
+    repositoryManager.modify(repository);
   }
 }

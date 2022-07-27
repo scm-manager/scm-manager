@@ -27,65 +27,31 @@ package sonia.scm.repository.cli;
 import com.google.common.annotations.VisibleForTesting;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
+import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
-import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.RepositoryRoleManager;
 
 import javax.inject.Inject;
 
 @CommandLine.Command(name = "set-role")
 @ParentCommand(value = RepositoryCommand.class)
-class RepositoryPermissionsSetRoleCommand extends RepositoryPermissionBaseCommand implements Runnable {
-
-  private final RepositoryRoleManager roleManager;
+class RepositoryPermissionsSetRoleCommand extends PermissionsSetRoleCommand<Repository> {
 
   @CommandLine.Parameters(paramLabel = "namespace/name", index = "0", descriptionKey = "scm.repo.set-role.repository")
-  private String repositoryName;
-  @CommandLine.Parameters(paramLabel = "name", index = "1", descriptionKey = "scm.repo.set-role.name")
-  private String name;
-  @CommandLine.Parameters(paramLabel = "role", index = "2", descriptionKey = "scm.repo.set-role.role")
-  private String role;
-
-  @CommandLine.Option(names = {"--group", "-g"}, descriptionKey = "scm.repo.set-role.forGroup")
-  private boolean forGroup;
+  private String repositoryNamespaceAndName;
 
   @Inject
   public RepositoryPermissionsSetRoleCommand(RepositoryManager repositoryManager, RepositoryRoleManager roleManager, RepositoryTemplateRenderer templateRenderer) {
-    super(repositoryManager, roleManager, templateRenderer);
-    this.roleManager = roleManager;
+    super(roleManager, templateRenderer, new RepositoryPermissionBaseAdapter(repositoryManager, templateRenderer));
   }
 
   @Override
-  public void run() {
-    modifyRepository(
-      repositoryName,
-      repository -> {
-        if (roleManager.get(role) == null) {
-          renderRoleNotFoundError();
-          return false;
-        }
-        replacePermission(repository, new RepositoryPermission(name, role, forGroup));
-        return true;
-      }
-    );
+  protected String getIdentifier() {
+    return repositoryNamespaceAndName;
   }
 
   @VisibleForTesting
-  void setRepositoryName(String repositoryName) {
-    this.repositoryName = repositoryName;
-  }
-
-  @VisibleForTesting
-  void setName(String name) {
-    this.name = name;
-  }
-
-  @VisibleForTesting
-  void setRole(String role) {
-    this.role = role;
-  }
-
-  public void setForGroup(boolean forGroup) {
-    this.forGroup = forGroup;
+  void setRepositoryNamespaceAndName(String repositoryNamespaceAndName) {
+    this.repositoryNamespaceAndName = repositoryNamespaceAndName;
   }
 }

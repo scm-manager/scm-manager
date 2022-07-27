@@ -46,7 +46,7 @@ import static java.util.Collections.unmodifiableCollection;
 )
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "namespaces")
-public class Namespace implements PermissionObject, Cloneable {
+public class Namespace implements PermissionObject, Cloneable, RepositoryPermissionHolder {
 
   private String namespace;
   private Set<RepositoryPermission> permissions = new HashSet<>();
