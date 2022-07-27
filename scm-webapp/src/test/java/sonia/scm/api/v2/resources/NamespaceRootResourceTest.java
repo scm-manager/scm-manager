@@ -41,11 +41,14 @@ import sonia.scm.repository.Namespace;
 import sonia.scm.repository.NamespaceManager;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermission;
+import sonia.scm.search.SearchEngine;
+import sonia.scm.search.SearchableType;
 import sonia.scm.web.RestDispatcher;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.Optional;
 
 import static com.google.inject.util.Providers.of;
@@ -58,6 +61,7 @@ import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class NamespaceRootResourceTest {
@@ -68,6 +72,11 @@ class NamespaceRootResourceTest {
   NamespaceManager namespaceManager;
   @Mock
   Subject subject;
+  @Mock
+  SearchEngine searchEngine;
+
+  @Mock
+  SearchableType searchableType;
 
   RestDispatcher dispatcher = new RestDispatcher();
   MockHttpResponse response = new MockHttpResponse();
@@ -89,7 +98,7 @@ class NamespaceRootResourceTest {
 
   @BeforeEach
   void setUpResources() {
-    NamespaceToNamespaceDtoMapper namespaceMapper = new NamespaceToNamespaceDtoMapper(links, null);
+    NamespaceToNamespaceDtoMapper namespaceMapper = new NamespaceToNamespaceDtoMapper(links, searchEngine);
     NamespaceCollectionToDtoMapper namespaceCollectionToDtoMapper = new NamespaceCollectionToDtoMapper(namespaceMapper, links);
     RepositoryPermissionCollectionToDtoMapper repositoryPermissionCollectionToDtoMapper = new RepositoryPermissionCollectionToDtoMapper(repositoryPermissionToRepositoryPermissionDtoMapper, links);
     RepositoryPermissionDtoToRepositoryPermissionMapperImpl dtoToModelMapper = new RepositoryPermissionDtoToRepositoryPermissionMapperImpl();
@@ -109,6 +118,12 @@ class NamespaceRootResourceTest {
     lenient().when(namespaceManager.getAll()).thenReturn(asList(hitchhikerNamespace, spaceNamespace));
     lenient().when(namespaceManager.get("hitchhiker")).thenReturn(Optional.of(hitchhikerNamespace));
     lenient().when(namespaceManager.get("space")).thenReturn(Optional.of(spaceNamespace));
+  }
+
+  @BeforeEach
+  void mockEmptySearchableTypes() {
+    lenient().when(searchEngine.getSearchableTypes())
+      .thenReturn(List.of(searchableType));
   }
 
   @Nested
@@ -164,6 +179,20 @@ class NamespaceRootResourceTest {
       dispatcher.invoke(request, response);
 
       assertThat(response.getStatus()).isEqualTo(403);
+    }
+
+    @Test
+    void shouldReturnSearchLink() throws URISyntaxException, UnsupportedEncodingException {
+      when(searchableType.limitableToNamespace()).thenReturn(true);
+      when(searchableType.getName()).thenReturn("crew");
+
+      MockHttpRequest request = MockHttpRequest.get("/" + NamespaceRootResource.NAMESPACE_PATH_V2 + "space");
+
+      dispatcher.invoke(request, response);
+
+      assertThat(response.getStatus()).isEqualTo(200);
+      assertThat(response.getContentAsString())
+        .contains("\"search\":[{\"href\":\"/v2/search/query/space/crew\",\"name\":\"crew\"}]");
     }
   }
 
