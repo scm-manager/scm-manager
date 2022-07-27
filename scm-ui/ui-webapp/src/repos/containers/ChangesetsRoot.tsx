@@ -58,13 +58,11 @@ const ChangesetRoot: FC<Props> = ({ repository, baseUrl, branches, selectedBranc
   };
 
   const onSelectBranch = (branch?: Branch) => {
-    let url;
     if (branch) {
-      url = `${baseUrl}/branch/${encodeURIComponent(branch.name)}/changesets/`;
+      history.push(`${baseUrl}/branch/${encodeURIComponent(branch.name)}/changesets/`);
     } else {
-      url = `${baseUrl}/changesets/`;
+      history.push(`${baseUrl}/changesets/`);
     }
-    history.push(url);
   };
 
   return (
@@ -76,7 +74,7 @@ const ChangesetRoot: FC<Props> = ({ repository, baseUrl, branches, selectedBranc
         switchViewLink={evaluateSwitchViewLink()}
       />
       <Route path={`${url}/:page?`}>
-        <Changesets repository={repository} branch={branches?.filter(b => b.name === selectedBranch)[0]} />
+        <Changesets repository={repository} branch={branches?.filter(b => b.name === selectedBranch)[0]} url={url} />
       </Route>
     </>
   );
