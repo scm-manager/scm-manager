@@ -402,6 +402,10 @@ public class RepositoryToRepositoryDtoMapperTest {
       .get()
       .extracting("name", "href")
       .containsExactly("crew", "http://example.com/base/v2/search/query/testspace/test/crew");
+    assertThat(dto.getLinks().getLinkBy("searchableTypes"))
+      .get()
+      .extracting("href")
+      .isEqualTo("http://example.com/base/v2/search/searchableTypes/testspace/test");
   }
 
   private ScmProtocol mockProtocol(String type, String protocol) {

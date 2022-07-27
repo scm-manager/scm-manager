@@ -24,6 +24,7 @@
 
 package sonia.scm.api.v2.resources;
 
+import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,6 +39,7 @@ import sonia.scm.search.QueryBuilder;
 import sonia.scm.search.QueryCountResult;
 import sonia.scm.search.QueryResult;
 import sonia.scm.search.SearchEngine;
+import sonia.scm.search.SearchableType;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
@@ -45,9 +47,11 @@ import javax.validation.Valid;
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Path(SearchResource.PATH)
@@ -103,7 +107,7 @@ public class SearchResource {
       tags = "Search",
       operationId = "search_query"
     )
-    public QueryResultDto query(@Valid @BeanParam SearchParameters params) {
+    public QueryResultDto globally(@Valid @BeanParam SearchParameters params) {
       if (params.isCountOnly()) {
         return count(params);
       }
@@ -116,9 +120,9 @@ public class SearchResource {
       summary = "Query result for a namespace",
       description = "Returns a collection of matched hits limited to the namespace.",
       tags = "Search",
-      operationId = "search_query"
+      operationId = "search_query_for_namespace"
     )
-    public QueryResultDto queryForNamespace(@Valid @BeanParam SearchParametersLimitedToNamespace params) {
+    public QueryResultDto forNamespace(@Valid @BeanParam SearchParametersLimitedToNamespace params) {
       if (params.isCountOnly()) {
         return count(params);
       }
@@ -131,9 +135,9 @@ public class SearchResource {
       summary = "Query result for a repository",
       description = "Returns a collection of matched hits limited to the repository specified by namespace and name.",
       tags = "Search",
-      operationId = "search_query"
+      operationId = "search_query_for_repository"
     )
-    public QueryResultDto queryForRepository(@Valid @BeanParam SearchParametersLimitedToRepository params) {
+    public QueryResultDto forRepository(@Valid @BeanParam SearchParametersLimitedToRepository params) {
       if (params.isCountOnly()) {
         return count(params);
       }
@@ -141,15 +145,12 @@ public class SearchResource {
     }
   }
 
-  @GET
   @Path("searchableTypes")
+  public SearchableTypesEndpoints searchableTypes() {
+    return new SearchableTypesEndpoints();
+  }
+
   @Produces(VndMediaType.SEARCHABLE_TYPE_COLLECTION)
-  @Operation(
-    summary = "Searchable types",
-    description = "Returns a collection of all searchable types.",
-    tags = "Search",
-    operationId = "searchable_types"
-  )
   @ApiResponse(
     responseCode = "200",
     description = "success",
@@ -165,8 +166,50 @@ public class SearchResource {
       mediaType = VndMediaType.ERROR_TYPE,
       schema = @Schema(implementation = ErrorDto.class)
     ))
-  public Collection<SearchableTypeDto> searchableTypes() {
-    return engine.getSearchableTypes().stream().map(searchableTypeMapper::map).collect(Collectors.toList());
+  public class SearchableTypesEndpoints {
+
+    @GET
+    @Path("")
+    @Operation(
+      summary = "Globally searchable types",
+      description = "Returns a collection of all searchable types.",
+      tags = "Search",
+      operationId = "searchable_types"
+    )
+    public Collection<SearchableTypeDto> globally() {
+      return getTypes(t -> true);
+    }
+
+    @GET
+    @Path("{namespace}")
+    @Operation(
+      summary = "Searchable types in a namespace",
+      description = "Returns a collection of all searchable types when scoped to a namespace.",
+      tags = "Search",
+      operationId = "searchable_types_for_namespace"
+    )
+    public Collection<SearchableTypeDto> forNamespace(@PathParam("namespace") String namespace) {
+      return getTypes(SearchableType::limitableToNamespace);
+    }
+
+    @GET
+    @Path("{namespace}/{name}")
+    @Operation(
+      summary = "Searchable types in a repository",
+      description = "Returns a collection of all searchable types when scoped to a repository.",
+      tags = "Search",
+      operationId = "searchable_types_for_repository"
+    )
+    public Collection<SearchableTypeDto> forRepository(@PathParam("namespace") String namespace, @PathParam("name") String name) {
+      return getTypes(SearchableType::limitableToRepository);
+    }
+
+    private List<SearchableTypeDto> getTypes(Predicate<SearchableType> predicate) {
+      return engine.getSearchableTypes().stream()
+        .filter(predicate)
+        .map(searchableTypeMapper::map)
+        .collect(Collectors.toList());
+    }
   }
 
   private QueryResultDto search(SearchParameters params) {

@@ -31,7 +31,6 @@ import sonia.scm.search.SearchEngine;
 import sonia.scm.search.SearchableType;
 
 import javax.inject.Inject;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -61,6 +60,7 @@ class NamespaceToNamespaceDtoMapper {
         .single(link("permissions", links.namespacePermission().all(namespace)));
     }
     linkingTo.array(searchLinks(namespace));
+    linkingTo.single(link("searchableTypes", links.searchableTypes().searchableTypesForNamespace(namespace)));
     return new NamespaceDto(namespace, linkingTo.build());
   }
 

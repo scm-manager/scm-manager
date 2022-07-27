@@ -182,7 +182,7 @@ class NamespaceRootResourceTest {
     }
 
     @Test
-    void shouldReturnSearchLink() throws URISyntaxException, UnsupportedEncodingException {
+    void shouldReturnSearchLinks() throws URISyntaxException, UnsupportedEncodingException {
       when(searchableType.limitableToNamespace()).thenReturn(true);
       when(searchableType.getName()).thenReturn("crew");
 
@@ -192,7 +192,8 @@ class NamespaceRootResourceTest {
 
       assertThat(response.getStatus()).isEqualTo(200);
       assertThat(response.getContentAsString())
-        .contains("\"search\":[{\"href\":\"/v2/search/query/space/crew\",\"name\":\"crew\"}]");
+        .contains("\"search\":[{\"href\":\"/v2/search/query/space/crew\",\"name\":\"crew\"}]")
+        .contains("\"searchableTypes\":{\"href\":\"/v2/search/searchableTypes/space\"}");
     }
   }
 

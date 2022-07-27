@@ -88,12 +88,6 @@ class SearchResourceTest {
   @Mock
   private HalEnricherRegistry enricherRegistry;
 
-  @Mock
-  private SearchableType searchableTypeOne;
-
-  @Mock
-  private SearchableType searchableTypeTwo;
-
   @BeforeEach
   void setUpDispatcher() {
     ScmPathInfoStore scmPathInfoStore = new ScmPathInfoStore();
@@ -112,21 +106,64 @@ class SearchResourceTest {
     dispatcher.addSingletonResource(resource);
   }
 
-  @Test
-  void shouldReturnSearchableTypes() throws URISyntaxException {
-    when(searchEngine.getSearchableTypes()).thenReturn(Lists.list(searchableTypeOne, searchableTypeTwo));
-    when(searchableTypeOne.getName()).thenReturn("Type One");
-    when(searchableTypeTwo.getName()).thenReturn("Type Two");
+  @Nested
+  class SearchableTypes {
 
-    MockHttpRequest request = MockHttpRequest.get("/v2/search/searchableTypes");
-    JsonMockHttpResponse response = new JsonMockHttpResponse();
-    dispatcher.invoke(request, response);
+    @Mock
+    private SearchableType searchableTypeOne;
+    @Mock
+    private SearchableType searchableTypeTwo;
 
-    JsonNode contentAsJson = response.getContentAsJson();
-    assertThat(response.getStatus()).isEqualTo(200);
-    assertThat(contentAsJson.isArray()).isTrue();
-    assertThat(contentAsJson.get(0).get("name").asText()).isEqualTo("Type One");
-    assertThat(contentAsJson.get(1).get("name").asText()).isEqualTo("Type Two");
+    @Test
+    void shouldReturnGlobalSearchableTypes() throws URISyntaxException {
+      when(searchEngine.getSearchableTypes()).thenReturn(Lists.list(searchableTypeOne, searchableTypeTwo));
+      when(searchableTypeOne.getName()).thenReturn("Type One");
+      when(searchableTypeTwo.getName()).thenReturn("Type Two");
+
+      MockHttpRequest request = MockHttpRequest.get("/v2/search/searchableTypes");
+      JsonMockHttpResponse response = new JsonMockHttpResponse();
+      dispatcher.invoke(request, response);
+
+      JsonNode contentAsJson = response.getContentAsJson();
+      assertThat(response.getStatus()).isEqualTo(200);
+      assertThat(contentAsJson.isArray()).isTrue();
+      assertThat(contentAsJson.get(0).get("name").asText()).isEqualTo("Type One");
+      assertThat(contentAsJson.get(1).get("name").asText()).isEqualTo("Type Two");
+    }
+
+    @Test
+    void shouldReturnSearchableTypesForNamespace() throws URISyntaxException {
+      when(searchEngine.getSearchableTypes()).thenReturn(Lists.list(searchableTypeOne, searchableTypeTwo));
+      when(searchableTypeOne.getName()).thenReturn("Type One");
+      when(searchableTypeOne.limitableToNamespace()).thenReturn(true);
+
+      MockHttpRequest request = MockHttpRequest.get("/v2/search/searchableTypes/space");
+      JsonMockHttpResponse response = new JsonMockHttpResponse();
+      dispatcher.invoke(request, response);
+
+      JsonNode contentAsJson = response.getContentAsJson();
+      assertThat(response.getStatus()).isEqualTo(200);
+      assertThat(contentAsJson.isArray()).isTrue();
+      assertThat(contentAsJson.get(0).get("name").asText()).isEqualTo("Type One");
+      assertThat(contentAsJson.get(1)).isNull();
+    }
+
+    @Test
+    void shouldReturnSearchableTypesForRepository() throws URISyntaxException {
+      when(searchEngine.getSearchableTypes()).thenReturn(Lists.list(searchableTypeOne, searchableTypeTwo));
+      when(searchableTypeOne.getName()).thenReturn("Type One");
+      when(searchableTypeOne.limitableToRepository()).thenReturn(true);
+
+      MockHttpRequest request = MockHttpRequest.get("/v2/search/searchableTypes/hitchhiker/hog");
+      JsonMockHttpResponse response = new JsonMockHttpResponse();
+      dispatcher.invoke(request, response);
+
+      JsonNode contentAsJson = response.getContentAsJson();
+      assertThat(response.getStatus()).isEqualTo(200);
+      assertThat(contentAsJson.isArray()).isTrue();
+      assertThat(contentAsJson.get(0).get("name").asText()).isEqualTo("Type One");
+      assertThat(contentAsJson.get(1)).isNull();
+    }
   }
 
   @Test

@@ -1180,15 +1180,15 @@ class ResourceLinks {
     }
 
     public String query(String type) {
-      return searchLinkBuilder.method("query").parameters().method("query").parameters(type).href();
+      return searchLinkBuilder.method("query").parameters().method("globally").parameters(type).href();
     }
 
     public String queryForNamespace(String namespace, String type) {
-      return searchLinkBuilder.method("query").parameters().method("queryForNamespace").parameters(type, namespace).href();
+      return searchLinkBuilder.method("query").parameters().method("forNamespace").parameters(type, namespace).href();
     }
 
     public String queryForRepository(String namespace, String name, String type) {
-      return searchLinkBuilder.method("query").parameters().method("queryForRepository").parameters(namespace, name, type).href();
+      return searchLinkBuilder.method("query").parameters().method("forRepository").parameters(namespace, name, type).href();
     }
   }
 
@@ -1201,11 +1201,19 @@ class ResourceLinks {
     private final LinkBuilder searchLinkBuilder;
 
     SearchableTypesLinks(ScmPathInfo pathInfo) {
-      this.searchLinkBuilder = new LinkBuilder(pathInfo, SearchResource.class);
+      this.searchLinkBuilder = new LinkBuilder(pathInfo, SearchResource.class, SearchResource.SearchableTypesEndpoints.class);
     }
 
     public String searchableTypes() {
-      return searchLinkBuilder.method("searchableTypes").parameters().href();
+      return searchLinkBuilder.method("searchableTypes").parameters().method("globally").parameters().href();
+    }
+
+    public String searchableTypesForNamespace(String namespace) {
+      return searchLinkBuilder.method("searchableTypes").parameters().method("forNamespace").parameters(namespace).href();
+    }
+
+    public String searchableTypesForRepository(String namespace, String name) {
+      return searchLinkBuilder.method("searchableTypes").parameters().method("forRepository").parameters(namespace, name).href();
     }
   }
 

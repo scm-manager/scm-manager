@@ -171,6 +171,7 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
     if (RepositoryPermissions.healthCheck(repository).isPermitted() && !healthCheckService.checkRunning(repository)) {
       linksBuilder.single(link("runHealthCheck", resourceLinks.repository().runHealthCheck(repository.getNamespace(), repository.getName())));
     }
+    linksBuilder.single(link("searchableTypes", resourceLinks.searchableTypes().searchableTypesForRepository(repository.getNamespace(), repository.getName())));
     linksBuilder.array(searchLinks(repository.getNamespace(), repository.getName()));
 
     Embedded.Builder embeddedBuilder = embeddedBuilder();
