@@ -24,19 +24,14 @@
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { User } from "@scm-manager/ui-types";
-import { Notification } from "@scm-manager/ui-components";
 import UserRow from "./UserRow";
 
 type Props = {
-  users?: User[];
+  users: User[];
 };
 
 const UserTable: FC<Props> = ({ users }) => {
   const [t] = useTranslation("users");
-
-  if (!users || users.length === 0) {
-    return <Notification type="info">{t("users.noUsers")}</Notification>;
-  }
 
   return (
     <table className="card-table table is-hoverable is-fullwidth">

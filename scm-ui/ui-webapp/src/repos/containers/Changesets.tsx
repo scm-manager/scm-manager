@@ -22,9 +22,10 @@
  * SOFTWARE.
  */
 import React, { FC } from "react";
-import { useRouteMatch } from "react-router-dom";
+import { Redirect, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Branch, ChangesetCollection, Repository } from "@scm-manager/ui-types";
+import { useChangesets } from "@scm-manager/ui-api";
+import { Branch, Repository } from "@scm-manager/ui-types";
 import {
   ChangesetList,
   ErrorNotification,
@@ -33,38 +34,23 @@ import {
   Notification,
   urls,
 } from "@scm-manager/ui-components";
-import { useChangesets } from "@scm-manager/ui-api";
-
-type ChangesetsPanelListProps = {
-  data?: ChangesetCollection;
-  repository: Repository;
-};
-
-const ChangesetsPanelList: FC<ChangesetsPanelListProps> = ({ data, repository }) => {
-  const [t] = useTranslation("repos");
-  const changesets = data?._embedded?.changesets;
-
-  if (!changesets || changesets.length === 0) {
-    return <Notification type="info">{t("changesets.noFilteredChangesets")}</Notification>;
-  }
-
-  return <ChangesetList repository={repository} changesets={changesets} />;
-};
 
 export const usePage = () => {
   const match = useRouteMatch();
   return urls.getPageFromMatch(match);
 };
 
-type ChangesetProps = Props & {
-  error: Error | null;
-  isLoading: boolean;
-  data?: ChangesetCollection;
+type Props = {
+  repository: Repository;
+  branch?: Branch;
+  url: string;
 };
 
-export const ChangesetsPanel: FC<ChangesetProps> = ({ error, isLoading, data, repository }) => {
-  const [t] = useTranslation("repos");
+const Changesets: FC<Props> = ({ repository, branch, url }) => {
   const page = usePage();
+  const { isLoading, error, data } = useChangesets(repository, { branch, page: page - 1 });
+  const [t] = useTranslation("repos");
+  const changesets = data?._embedded?.changesets;
 
   if (error) {
     return <ErrorNotification error={error} />;
@@ -74,33 +60,24 @@ export const ChangesetsPanel: FC<ChangesetProps> = ({ error, isLoading, data, re
     return <Loading />;
   }
 
-  if (!data) {
+  if (data && data.pageTotal < page) {
+    return <Redirect to={`${url}/${data.pageTotal}`} />;
+  }
+
+  if (!data || !changesets || changesets.length === 0) {
     return <Notification type="info">{t("changesets.noChangesets")}</Notification>;
   }
 
   return (
     <div className="panel">
       <div className="panel-block">
-        <ChangesetsPanelList data={data} repository={repository} />
+        <ChangesetList repository={repository} changesets={changesets} />
       </div>
       <div className="panel-footer">
         <LinkPaginator collection={data} page={page} />
       </div>
     </div>
   );
-};
-
-type Props = {
-  repository: Repository;
-  branch?: Branch;
-};
-
-const Changesets: FC<Props> = ({ repository, branch }) => {
-  const page = usePage();
-
-  const { isLoading, error, data } = useChangesets(repository, { branch, page: page - 1 });
-
-  return <ChangesetsPanel repository={repository} branch={branch} error={error} isLoading={isLoading} data={data} />;
 };
 
 export default Changesets;

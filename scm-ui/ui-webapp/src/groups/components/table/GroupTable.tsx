@@ -24,19 +24,14 @@
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { Group } from "@scm-manager/ui-types";
-import { Notification } from "@scm-manager/ui-components";
 import GroupRow from "./GroupRow";
 
 type Props = {
-  groups?: Group[];
+  groups: Group[];
 };
 
 const GroupTable: FC<Props> = ({ groups }) => {
   const [t] = useTranslation("groups");
-
-  if (!groups || groups.length === 0) {
-    return <Notification type="info">{t("groups.noGroups")}</Notification>;
-  }
 
   return (
     <table className="card-table table is-hoverable is-fullwidth">

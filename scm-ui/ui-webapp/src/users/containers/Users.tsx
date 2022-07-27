@@ -22,9 +22,10 @@
  * SOFTWARE.
  */
 import React, { FC } from "react";
+import { Redirect, useLocation, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { useLocation, useParams } from "react-router-dom";
 import { useUsers } from "@scm-manager/ui-api";
+import { User, UserCollection } from "@scm-manager/ui-types";
 import {
   CreateButton,
   LinkPaginator,
@@ -36,6 +37,28 @@ import {
 } from "@scm-manager/ui-components";
 import { UserTable } from "./../components/table";
 
+type UserPageProps = {
+  data?: UserCollection;
+  users?: User[];
+  page: number;
+  search?: string;
+};
+
+const UserPage: FC<UserPageProps> = ({ data, users, page, search }) => {
+  const [t] = useTranslation("users");
+
+  if (!data || !users || users.length === 0) {
+    return <Notification type="info">{t("users.noUsers")}</Notification>;
+  }
+
+  return (
+    <>
+      <UserTable users={users} />
+      <LinkPaginator collection={data} page={page} filter={search} />
+    </>
+  );
+};
+
 const Users: FC = () => {
   const location = useLocation();
   const params = useParams();
@@ -46,8 +69,8 @@ const Users: FC = () => {
   const users = data?._embedded?.users;
   const canAddUsers = !!data?._links.create;
 
-  if (!data) {
-    return <Notification type="info">{t("users.noUsers")}</Notification>;
+  if (data && data.pageTotal < page) {
+    return <Redirect to={`/users/${data.pageTotal}`} />;
   }
 
   return (
@@ -57,8 +80,7 @@ const Users: FC = () => {
       loading={isLoading || !users}
       error={error || undefined}
     >
-      <UserTable users={users} />
-      <LinkPaginator collection={data} page={page} filter={search} />
+      <UserPage data={data} users={users} page={page} search={search} />
       {canAddUsers ? <CreateButton link="/users/create" label={t("users.createButton")} /> : null}
       <PageActions>
         <OverviewPageActions

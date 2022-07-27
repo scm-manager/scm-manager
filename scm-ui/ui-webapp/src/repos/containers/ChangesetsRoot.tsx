@@ -58,12 +58,13 @@ const ChangesetRoot: FC<Props> = ({ repository, baseUrl, branches, selectedBranc
   };
 
   const onSelectBranch = (branch?: Branch) => {
+    let url;
     if (branch) {
-      const url = `${baseUrl}/branch/${encodeURIComponent(branch.name)}/changesets/`;
-      history.push(url);
+      url = `${baseUrl}/branch/${encodeURIComponent(branch.name)}/changesets/`;
     } else {
-      history.push(`${baseUrl}/changesets/`);
+      url = `${baseUrl}/changesets/`;
     }
+    history.push(url);
   };
 
   return (

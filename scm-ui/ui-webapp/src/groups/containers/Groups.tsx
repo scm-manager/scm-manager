@@ -22,8 +22,10 @@
  * SOFTWARE.
  */
 import React, { FC } from "react";
+import { Redirect, useLocation, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { useLocation, useParams } from "react-router-dom";
+import { useGroups } from "@scm-manager/ui-api";
+import { Group, GroupCollection } from "@scm-manager/ui-types";
 import {
   CreateButton,
   LinkPaginator,
@@ -34,7 +36,28 @@ import {
   urls,
 } from "@scm-manager/ui-components";
 import { GroupTable } from "./../components/table";
-import { useGroups } from "@scm-manager/ui-api";
+
+type GroupPageProps = {
+  data?: GroupCollection;
+  groups?: Group[];
+  page: number;
+  search?: string;
+};
+
+const GroupPage: FC<GroupPageProps> = ({ data, groups, page, search }) => {
+  const [t] = useTranslation("groups");
+
+  if (!data || !groups || groups.length === 0) {
+    return <Notification type="info">{t("groups.noGroups")}</Notification>;
+  }
+
+  return (
+    <>
+      <GroupTable groups={groups} />
+      <LinkPaginator collection={data} page={page} filter={search} />
+    </>
+  );
+};
 
 const Groups: FC = () => {
   const location = useLocation();
@@ -46,8 +69,8 @@ const Groups: FC = () => {
   const groups = data?._embedded?.groups;
   const canCreateGroups = !!data?._links.create;
 
-  if (!data) {
-    return <Notification type="info">{t("groups.noGroups")}</Notification>;
+  if (data && data.pageTotal < page) {
+    return <Redirect to={`/groups/${data.pageTotal}`} />;
   }
 
   return (
@@ -57,8 +80,7 @@ const Groups: FC = () => {
       loading={isLoading || !groups}
       error={error || undefined}
     >
-      <GroupTable groups={groups} />
-      <LinkPaginator collection={data} page={page} filter={search} />
+      <GroupPage data={data} groups={groups} page={page} search={search} />
       {canCreateGroups ? <CreateButton link="/groups/create" label={t("groups.createButton")} /> : null}
       <PageActions>
         <OverviewPageActions
