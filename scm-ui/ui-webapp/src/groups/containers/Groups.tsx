@@ -66,12 +66,12 @@ const Groups: FC = () => {
       error={error || undefined}
     >
       {renderGroupTable()}
-      {canCreateGroups ? <CreateButton label={t("create-group-button.label")} link="/groups/create" /> : null}
+      {canCreateGroups ? <CreateButton label={t("groups.createButton")} link="/groups/create" /> : null}
       <PageActions>
         <OverviewPageActions
           showCreateButton={canCreateGroups}
           link="groups"
-          label={t("create-group-button.label")}
+          label={t("groups.createButton")}
           searchPlaceholder={t("overview.filterGroup")}
         />
       </PageActions>

@@ -12,7 +12,8 @@
   "groups": {
     "title": "Groups",
     "subtitle": "Create, read, update and delete groups",
-    "noGroups": "No groups found."
+    "noGroups": "No groups found.",
+    "createButton": "Create Group"
   },
   "singleGroup": {
     "errorTitle": "Error",
@@ -28,23 +29,9 @@
   "overview": {
     "filterGroup": "Filter groups"
   },
-  "add-group": {
+  "addGroup": {
     "title": "Create Group",
     "subtitle": "Create a new group"
-  },
-  "create-group-button": {
-    "label": "Create Group"
-  },
-  "edit-group-button": {
-    "label": "Edit"
-  },
-  "add-member-button": {
-    "label": "Add Member"
-  },
-  "add-member-autocomplete": {
-    "placeholder": "Add Member",
-    "loading": "Loading ...",
-    "no-options": "No suggestion available"
   },
   "groupForm": {
     "subtitle": "Edit Group",
@@ -57,6 +44,12 @@
       "descriptionHelpText": "A short description of the group",
       "memberHelpText": "Usernames of the group members",
       "externalHelpText": "Members are managed by an external system such as LDAP"
+    },
+    "addMemberAutocomplete": {
+      "buttonLabel": "Add Member",
+      "placeholder": "Add Member",
+      "loading": "Loading ...",
+      "noOptions": "No suggestion available"
     }
   },
   "deleteGroup": {

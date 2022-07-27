@@ -12,7 +12,8 @@
   "groups": {
     "title": "Grupos",
     "subtitle": "Crear, leer, actualizar y borrar grupos",
-    "noGroups": "No se han encontrado grupos."
+    "noGroups": "No se han encontrado grupos.",
+    "createButton": "Crear grupo"
   },
   "singleGroup": {
     "errorTitle": "Error",
@@ -25,23 +26,9 @@
       "setPermissionsNavLink": "Permisos"
     }
   },
-  "add-group": {
+  "addGroup": {
     "title": "Crear grupo",
     "subtitle": "Crear un nuevo grupo"
-  },
-  "create-group-button": {
-    "label": "Crear grupo"
-  },
-  "edit-group-button": {
-    "label": "Editar"
-  },
-  "add-member-button": {
-    "label": "Añadir miembro"
-  },
-  "add-member-autocomplete": {
-    "placeholder": "Añadir miembro",
-    "loading": "Cargando...",
-    "no-options": "No hay sugerencias disponibles"
   },
   "groupForm": {
     "subtitle": "Editar grupo",
@@ -54,6 +41,12 @@
       "descriptionHelpText": "Descripción breve del grupo",
       "memberHelpText": "Nombres de usuario de los miembros del grupo",
       "externalHelpText": "Los miembros son gestionados por un sistema externo como por ejemplo LDAP"
+    },
+    "addMemberAutocomplete": {
+      "buttonLabel": "Añadir miembro",
+      "placeholder": "Añadir miembro",
+      "loading": "Cargando ...",
+      "noOptions": "No hay sugerencias disponibles"
     }
   },
   "deleteGroup": {
