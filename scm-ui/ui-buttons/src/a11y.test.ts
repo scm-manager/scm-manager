@@ -30,4 +30,5 @@ initStoryshots({
   test: axeTest({
     storybookUrl: `file://${path.resolve(__dirname, "../storybook-static")}`,
   }),
+  storyNameRegex: /High-Contrast States/,
 });
