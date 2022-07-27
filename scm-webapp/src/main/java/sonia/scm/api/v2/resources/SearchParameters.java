@@ -24,6 +24,7 @@
 
 package sonia.scm.api.v2.resources;
 
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.Getter;
 
 import javax.validation.constraints.Max;
@@ -37,7 +38,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 
 @Getter
-public class SearchParameters {
+class SearchParameters {
 
   @Context
   private UriInfo uriInfo;
@@ -45,34 +46,57 @@ public class SearchParameters {
   @NotNull
   @Size(min = 2)
   @QueryParam("q")
+  @Parameter(
+    name = "q",
+    description = "The search expression",
+    required = true,
+    example = "query"
+  )
   private String query;
-
-  @Size(min = 1)
-  @PathParam("namespace")
-  private String namespace;
-
-  @Size(min = 1)
-  @PathParam("name")
-  private String repositoryName;
 
   @Min(0)
   @QueryParam("page")
   @DefaultValue("0")
+  @Parameter(
+    name = "page",
+    description = "The requested page number of the search results (zero based, defaults to 0)"
+  )
   private int page = 0;
 
   @Min(1)
   @Max(100)
   @QueryParam("pageSize")
   @DefaultValue("10")
+  @Parameter(
+    name = "pageSize",
+    description = "The maximum number of results per page (defaults to 10)"
+  )
   private int pageSize = 10;
 
   @PathParam("type")
+  @Parameter(
+    name = "type",
+    description = "The type to search for",
+    example = "repository"
+  )
   private String type;
 
   @QueryParam("countOnly")
+  @Parameter(
+    name = "countOnly",
+    description = "If set to 'true', no results will be returned, only the count of hits and the page count"
+  )
   private boolean countOnly = false;
 
   String getSelfLink() {
     return uriInfo.getAbsolutePath().toASCIIString();
+  }
+
+  String getNamespace() {
+    return null;
+  }
+
+  String getRepositoryName() {
+    return null;
   }
 }

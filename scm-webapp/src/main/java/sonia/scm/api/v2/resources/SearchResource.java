@@ -27,7 +27,6 @@ package sonia.scm.api.v2.resources;
 import com.google.common.base.Strings;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -73,12 +72,11 @@ public class SearchResource {
   }
 
   @Path("query")
-  @Operation(
-    summary = "Query result",
-    description = "Returns a collection of matched hits.",
-    tags = "Search",
-    operationId = "search_query"
-  )
+  public SearchEndpoints query() {
+    return new SearchEndpoints();
+  }
+
+  @Produces(VndMediaType.QUERY_RESULT)
   @ApiResponse(
     responseCode = "200",
     description = "success",
@@ -95,32 +93,16 @@ public class SearchResource {
       mediaType = VndMediaType.ERROR_TYPE,
       schema = @Schema(implementation = ErrorDto.class)
     ))
-  @Parameter(
-    name = "query",
-    description = "The search expression",
-    required = true
-  )
-  @Parameter(
-    name = "page",
-    description = "The requested page number of the search results (zero based, defaults to 0)"
-  )
-  @Parameter(
-    name = "pageSize",
-    description = "The maximum number of results per page (defaults to 10)"
-  )
-  @Parameter(
-    name = "countOnly",
-    description = "If set to 'true', no results will be returned, only the count of hits and the page count"
-  )
-  public SearchEndpoints query() {
-    return new SearchEndpoints();
-  }
-
-  @Produces(VndMediaType.QUERY_RESULT)
   public class SearchEndpoints {
 
     @GET
     @Path("{type}")
+    @Operation(
+      summary = "Global query result",
+      description = "Returns a collection of matched hits.",
+      tags = "Search",
+      operationId = "search_query"
+    )
     public QueryResultDto query(@Valid @BeanParam SearchParameters params) {
       if (params.isCountOnly()) {
         return count(params);
@@ -130,7 +112,13 @@ public class SearchResource {
 
     @GET
     @Path("{namespace}/{type}")
-    public QueryResultDto queryForNamespace(@Valid @BeanParam SearchParameters params) {
+    @Operation(
+      summary = "Query result for a namespace",
+      description = "Returns a collection of matched hits limited to the namespace.",
+      tags = "Search",
+      operationId = "search_query"
+    )
+    public QueryResultDto queryForNamespace(@Valid @BeanParam SearchParametersLimitedToNamespace params) {
       if (params.isCountOnly()) {
         return count(params);
       }
@@ -139,7 +127,13 @@ public class SearchResource {
 
     @GET
     @Path("{namespace}/{name}/{type}")
-    public QueryResultDto queryForRepository(@Valid @BeanParam SearchParameters params) {
+    @Operation(
+      summary = "Query result for a repository",
+      description = "Returns a collection of matched hits limited to the repository specified by namespace and name.",
+      tags = "Search",
+      operationId = "search_query"
+    )
+    public QueryResultDto queryForRepository(@Valid @BeanParam SearchParametersLimitedToRepository params) {
       if (params.isCountOnly()) {
         return count(params);
       }
@@ -186,19 +180,6 @@ public class SearchResource {
     return queryResultMapper.map(params, queryBuilder.execute(params.getQuery()));
   }
 
-  private void filterByContext(SearchParameters params, QueryBuilder<Object> queryBuilder) {
-    if (!Strings.isNullOrEmpty(params.getNamespace())) {
-      if (!Strings.isNullOrEmpty(params.getRepositoryName())) {
-        Repository repository = repositoryManager.get(new NamespaceAndName(params.getNamespace(), params.getRepositoryName()));
-        queryBuilder.filter(repository);
-      } else {
-          repositoryManager.getAll().stream()
-            .filter(r -> r.getNamespace().equals(params.getNamespace()))
-            .forEach(queryBuilder::filter);
-      }
-    }
-  }
-
   private QueryResultDto count(SearchParameters params) {
     QueryBuilder<Object> queryBuilder = engine.forType(params.getType())
       .search();
@@ -208,6 +189,19 @@ public class SearchResource {
     QueryCountResult result = queryBuilder.count(params.getQuery());
 
     return queryResultMapper.map(params, new QueryResult(result.getTotalHits(), result.getType(), Collections.emptyList()));
+  }
+
+  private void filterByContext(SearchParameters params, QueryBuilder<Object> queryBuilder) {
+    if (!Strings.isNullOrEmpty(params.getNamespace())) {
+      if (!Strings.isNullOrEmpty(params.getRepositoryName())) {
+        Repository repository = repositoryManager.get(new NamespaceAndName(params.getNamespace(), params.getRepositoryName()));
+        queryBuilder.filter(repository);
+      } else {
+        repositoryManager.getAll().stream()
+          .filter(r -> r.getNamespace().equals(params.getNamespace()))
+          .forEach(queryBuilder::filter);
+      }
+    }
   }
 
 }
