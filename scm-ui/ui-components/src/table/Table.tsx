@@ -50,8 +50,8 @@ const Table: FC<Props> = ({ data, sortable, children, emptyMessage, className })
 
   const sortFunctions: Comparator | undefined[] = [];
   React.Children.forEach(children, (child, index) => {
-    if (child && isSortable(child)) {
-      sortFunctions.push(child.props.createComparator(child.props, index));
+    if (child && isSortable(child as ReactElement)) {
+      sortFunctions.push((child as ReactElement).props.createComparator((child as ReactElement).props, index));
     } else {
       sortFunctions.push(undefined);
     }
@@ -61,9 +61,9 @@ const Table: FC<Props> = ({ data, sortable, children, emptyMessage, className })
     return (
       <tr key={rowIndex}>
         {React.Children.map(children, (child, columnIndex) => {
-          const { className: columnClassName, ...childProperties } = child.props;
+          const { className: columnClassName, ...childProperties } = (child as ReactElement).props;
           return (
-            <td className={columnClassName}>{React.cloneElement(child, { ...childProperties, columnIndex, row })}</td>
+            <td className={columnClassName}>{React.cloneElement((child as ReactElement), { ...childProperties, columnIndex, row })}</td>
           );
         })}
       </tr>
@@ -112,14 +112,14 @@ const Table: FC<Props> = ({ data, sortable, children, emptyMessage, className })
         <tr>
           {React.Children.map(children, (child, index) => (
             <th
-              className={isSortable(child) && "is-clickable"}
-              onClick={isSortable(child) ? () => tableSort(index) : undefined}
+              className={isSortable((child as ReactElement)) && "is-clickable"}
+              onClick={isSortable((child as ReactElement)) ? () => tableSort(index) : undefined}
               onMouseEnter={() => setHoveredColumnIndex(index)}
               onMouseLeave={() => setHoveredColumnIndex(undefined)}
               key={index}
             >
-              {child.props.header}
-              {isSortable(child) && renderSortIcon(child, ascending, shouldShowIcon(index))}
+              {(child as ReactElement).props.header}
+              {isSortable((child as ReactElement)) && renderSortIcon((child as ReactElement), ascending, shouldShowIcon(index))}
             </th>
           ))}
         </tr>

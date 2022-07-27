@@ -24,7 +24,7 @@
 
 export { default as binder, Binder, ExtensionPointDefinition } from "./binder";
 export * from "./useBinder";
-export { default as ExtensionPoint } from "./ExtensionPoint";
+export { default as ExtensionPoint, RenderableExtensionPointDefinition } from "./ExtensionPoint";
 export { default as ExtractProps } from "./extractProps";
 
 // suppress eslint prettier warning,

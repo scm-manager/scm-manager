@@ -31,6 +31,7 @@ import {
   ExternalLinkButton as ExternalLinkButtonComponent,
   LinkButton as LinkButtonComponent,
 } from "./button";
+// @ts-ignore
 import StoryRouter from "storybook-react-router";
 import { StoryFn } from "@storybook/react";
 
