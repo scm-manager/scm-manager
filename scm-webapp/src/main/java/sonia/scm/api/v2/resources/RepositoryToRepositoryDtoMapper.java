@@ -186,7 +186,7 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
       .filter(SearchableType::limitableToRepository)
       .map(SearchableType::getName)
       .map(typeName ->
-        linkBuilder("search", resourceLinks.search().queryForRepository(typeName, namespace, name)).withName(typeName).build()
+        linkBuilder("search", resourceLinks.search().queryForRepository(namespace, name, typeName)).withName(typeName).build()
       )
       .collect(Collectors.toList());
   }

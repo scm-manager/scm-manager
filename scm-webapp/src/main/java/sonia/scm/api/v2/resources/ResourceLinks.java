@@ -1188,7 +1188,7 @@ class ResourceLinks {
     }
 
     public String queryForRepository(String namespace, String name, String type) {
-      return searchLinkBuilder.method("query").parameters().method("queryForRepository").parameters(type, namespace, name).href();
+      return searchLinkBuilder.method("query").parameters().method("queryForRepository").parameters(namespace, name, type).href();
     }
   }
 
