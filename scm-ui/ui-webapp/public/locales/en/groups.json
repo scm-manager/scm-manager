@@ -12,7 +12,7 @@
   "groups": {
     "title": "Groups",
     "subtitle": "Create, read, update and delete groups",
-    "noGroups": "No groups matching the selected criteria found.",
+    "noGroups": "No groups found.",
     "createButton": "Create Group"
   },
   "singleGroup": {
