@@ -62,4 +62,6 @@ public @interface IndexedType {
   String permission() default "";
 
   boolean repositoryScoped() default false;
+
+  boolean namespaceScoped() default false;
 }

@@ -51,6 +51,7 @@ public class LuceneSearchableType implements SearchableType {
   Map<String, PointsConfig> pointsConfig;
   TypeConverter typeConverter;
   boolean repositoryScoped;
+  boolean namespaceScoped;
 
   public LuceneSearchableType(Class<?> type, @Nonnull IndexedType annotation, List<LuceneSearchableField> fields) {
     this.type = type;
@@ -62,6 +63,7 @@ public class LuceneSearchableType implements SearchableType {
     this.pointsConfig = pointsConfig(fields);
     this.typeConverter = TypeConverters.create(type);
     this.repositoryScoped = annotation.repositoryScoped();
+    this.namespaceScoped = annotation.namespaceScoped();
   }
 
   public Optional<String> getPermission() {
@@ -116,6 +118,6 @@ public class LuceneSearchableType implements SearchableType {
 
   @Override
   public boolean limitableToNamespace() {
-    return repositoryScoped;
+    return repositoryScoped || namespaceScoped;
   }
 }

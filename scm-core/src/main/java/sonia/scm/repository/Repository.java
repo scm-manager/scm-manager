@@ -53,7 +53,7 @@ import java.util.Set;
  *
  * @author Sebastian Sdorra
  */
-@IndexedType
+@IndexedType(namespaceScoped = true)
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "repositories")
 @StaticPermissions(
