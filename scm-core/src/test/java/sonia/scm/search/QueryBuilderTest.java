@@ -29,6 +29,8 @@ import sonia.scm.group.Group;
 import sonia.scm.repository.Repository;
 import sonia.scm.user.User;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 class QueryBuilderTest {
@@ -44,7 +46,7 @@ class QueryBuilderTest {
 
     queryBuilder.filter(repository).execute("awesome");
 
-    assertThat(params.getFilters()).containsEntry(Repository.class, "hog");
+    assertThat(params.getFilters()).containsEntry(Repository.class, List.of("hog"));
   }
 
   @Test
@@ -54,8 +56,8 @@ class QueryBuilderTest {
       .count("awesome");
 
     assertThat(params.getFilters())
-      .containsEntry(User.class, "one")
-      .containsEntry(Group.class, "crew");
+      .containsEntry(User.class, List.of("one"))
+      .containsEntry(Group.class, List.of("crew"));
   }
 
   @Test
