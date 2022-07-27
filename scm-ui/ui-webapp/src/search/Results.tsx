@@ -44,7 +44,7 @@ const Results: FC<Props> = ({ result, type, page, query }) => {
     pathname = pathname.substring(0, pathname.lastIndexOf("/") + 1);
   }
 
-  if (result && result.pageTotal < page) {
+  if (result && result.pageTotal < page && page > 1) {
     return <Redirect to={`${pathname}${result.pageTotal}${location.search}`} />;
   }
 

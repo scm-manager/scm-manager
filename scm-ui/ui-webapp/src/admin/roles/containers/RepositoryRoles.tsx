@@ -79,7 +79,7 @@ const RepositoryRoles: FC<Props> = ({ baseUrl }) => {
     return <Loading />;
   }
 
-  if (data && data.pageTotal < page) {
+  if (data && data.pageTotal < page && page > 1) {
     return <Redirect to={`${baseUrl}/${data.pageTotal}`} />;
   }
 

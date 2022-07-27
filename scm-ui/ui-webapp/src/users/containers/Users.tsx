@@ -69,7 +69,7 @@ const Users: FC = () => {
   const users = data?._embedded?.users;
   const canAddUsers = !!data?._links.create;
 
-  if (data && data.pageTotal < page) {
+  if (data && data.pageTotal < page && page > 1) {
     return <Redirect to={`/users/${data.pageTotal}`} />;
   }
 

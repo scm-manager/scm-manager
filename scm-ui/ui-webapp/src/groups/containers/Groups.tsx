@@ -68,8 +68,7 @@ const Groups: FC = () => {
   const [t] = useTranslation("groups");
   const groups = data?._embedded?.groups;
   const canCreateGroups = !!data?._links.create;
-
-  if (data && data.pageTotal < page) {
+  if (data && data.pageTotal < page && page > 1) {
     return <Redirect to={`/groups/${data.pageTotal}`} />;
   }
 

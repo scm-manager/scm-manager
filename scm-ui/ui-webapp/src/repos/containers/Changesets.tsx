@@ -60,7 +60,7 @@ const Changesets: FC<Props> = ({ repository, branch, url }) => {
     return <Loading />;
   }
 
-  if (data && data.pageTotal < page) {
+  if (data && data.pageTotal < page && page > 1) {
     return <Redirect to={`${url}/${data.pageTotal}`} />;
   }
 
