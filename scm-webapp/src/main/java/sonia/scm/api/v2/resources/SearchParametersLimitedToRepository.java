@@ -25,9 +25,11 @@
 package sonia.scm.api.v2.resources;
 
 import io.swagger.v3.oas.annotations.Parameter;
+import lombok.Getter;
 
 import javax.ws.rs.PathParam;
 
+@Getter
 class SearchParametersLimitedToRepository extends SearchParameters {
 
   @PathParam("namespace")

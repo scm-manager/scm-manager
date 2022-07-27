@@ -39,11 +39,13 @@ import org.mapstruct.factory.Mappers;
 import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryCoordinates;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.search.Hit;
+import sonia.scm.search.QueryBuilder;
 import sonia.scm.search.QueryCountResult;
 import sonia.scm.search.QueryResult;
 import sonia.scm.search.SearchEngine;
@@ -66,7 +68,10 @@ import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -292,7 +297,73 @@ class SearchResourceTest {
       assertThat(repositoryNode.get("type").asText()).isEqualTo(heartOfGold.getType());
       assertThat(repositoryNode.get("_links").get("self").get("href").asText()).isEqualTo("/v2/repositories/hitchhiker/HeartOfGold");
     }
+  }
 
+  @Nested
+  class WithScope {
+
+    @Mock
+    private QueryBuilder<Object> internalQueryBuilder;
+
+    private final Repository repository1 = new Repository("1", "git", "space", "hog");
+    private final Repository repository2 = new Repository("2", "git", "space", "hitchhiker");
+    private final Repository repository3 = new Repository("3", "git", "earth", "42");
+
+    @BeforeEach
+    void mockRepositories() {
+      lenient().when(repositoryManager.getAll())
+        .thenReturn(
+          List.of(
+            repository1,
+            repository2,
+            repository3
+          )
+        );
+      lenient().when(repositoryManager.get(new NamespaceAndName("space", "hog")))
+        .thenReturn(repository1);
+    }
+
+    @BeforeEach
+    void mockSearchResult() {
+      when(
+        searchEngine.forType("string")
+          .search()
+          .start(0)
+          .limit(10)
+      ).thenReturn(internalQueryBuilder);
+      when(internalQueryBuilder.filter(any())).thenReturn(internalQueryBuilder);
+      when(
+        internalQueryBuilder.execute("Hello")
+      ).thenReturn(result(2L, "Hello", "Hello Again"));
+    }
+
+    @Test
+    void shouldReturnResultsScopedToNamespace() throws URISyntaxException {
+      MockHttpRequest request = MockHttpRequest.get("/v2/search/query/space/string?q=Hello");
+      JsonMockHttpResponse response = new JsonMockHttpResponse();
+      dispatcher.invoke(request, response);
+
+      JsonNode hits = response.getContentAsJson().get("_embedded").get("hits");
+      assertThat(hits.size()).isEqualTo(2);
+
+      verify(internalQueryBuilder).filter(repository1);
+      verify(internalQueryBuilder).filter(repository2);
+      verify(internalQueryBuilder, never()).filter(repository3);
+    }
+
+    @Test
+    void shouldReturnResultsScopedToRepository() throws URISyntaxException {
+      MockHttpRequest request = MockHttpRequest.get("/v2/search/query/space/hog/string?q=Hello");
+      JsonMockHttpResponse response = new JsonMockHttpResponse();
+      dispatcher.invoke(request, response);
+
+      JsonNode hits = response.getContentAsJson().get("_embedded").get("hits");
+      assertThat(hits.size()).isEqualTo(2);
+
+      verify(internalQueryBuilder).filter(repository1);
+      verify(internalQueryBuilder, never()).filter(repository2);
+      verify(internalQueryBuilder, never()).filter(repository3);
+    }
   }
 
   private void assertLink(JsonNode links, String self, String s) {
