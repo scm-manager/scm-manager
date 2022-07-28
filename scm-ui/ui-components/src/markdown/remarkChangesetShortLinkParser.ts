@@ -45,7 +45,7 @@ function match(value: string): RegExpMatchArray[] {
 export const createTransformer = (t: TFunction): AstPlugin => {
   return ({ visit }) => {
     visit("text", (node: Node, index: number, parent?: Parent) => {
-      if (!parent || parent.type === "link" || !("value" in node) || !(node as Literal).value) {
+      if (!parent || parent.type === "link" || !(node as Literal).value) {
         return;
       }
 
