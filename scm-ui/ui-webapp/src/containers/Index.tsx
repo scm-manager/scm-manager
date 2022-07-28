@@ -27,7 +27,7 @@ import { ErrorBoundary, Header, Loading } from "@scm-manager/ui-components";
 import PluginLoader from "./PluginLoader";
 import ScrollToTop from "./ScrollToTop";
 import IndexErrorPage from "./IndexErrorPage";
-import { useIndex } from "@scm-manager/ui-api";
+import { useIndex, NamespaceAndNameContextProvider } from "@scm-manager/ui-api";
 import { Link } from "@scm-manager/ui-types";
 import i18next from "i18next";
 import { binder, extensionPoints } from "@scm-manager/ui-extensions";
@@ -60,9 +60,11 @@ const Index: FC = () => {
   return (
     <ErrorBoundary fallback={IndexErrorPage}>
       <ScrollToTop>
-        <PluginLoader link={link} loaded={pluginsLoaded} callback={() => setPluginsLoaded(true)}>
-          <App />
-        </PluginLoader>
+        <NamespaceAndNameContextProvider>
+          <PluginLoader link={link} loaded={pluginsLoaded} callback={() => setPluginsLoaded(true)}>
+            <App />
+          </PluginLoader>
+        </NamespaceAndNameContextProvider>
       </ScrollToTop>
     </ErrorBoundary>
   );

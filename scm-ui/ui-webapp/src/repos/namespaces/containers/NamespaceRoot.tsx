@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import React, { FC } from "react";
+import React, { FC, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Redirect, Route, Switch, useRouteMatch } from "react-router-dom";
 import {
@@ -40,7 +40,7 @@ import {
 import Permissions from "../../permissions/containers/Permissions";
 import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import PermissionsNavLink from "./PermissionsNavLink";
-import { useNamespace } from "@scm-manager/ui-api";
+import { useNamespace, useNamespaceAndNameContext } from "@scm-manager/ui-api";
 
 type Params = {
   namespaceName: string;
@@ -51,6 +51,16 @@ const NamespaceRoot: FC = () => {
   const { isLoading, error, data: namespace } = useNamespace(match.params.namespaceName);
   const [t] = useTranslation("namespaces");
   const url = urls.matchedUrlFromMatch(match);
+  const context = useNamespaceAndNameContext();
+
+  useEffect(() => {
+    if (namespace) {
+      context.setNamespace(namespace.namespace);
+    }
+    return () => {
+      context.setNamespace("");
+    };
+  }, [namespace, context]);
 
   if (error) {
     return (
@@ -64,7 +74,7 @@ const NamespaceRoot: FC = () => {
 
   const extensionProps = {
     namespace,
-    url
+    url,
   };
 
   return (
