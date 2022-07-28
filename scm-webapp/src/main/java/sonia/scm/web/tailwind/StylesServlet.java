@@ -69,7 +69,7 @@ public class StylesServlet extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     try {
-      URL url = webResourceLoader.getResource("/assets/webapp.bundle.css");
+      URL url = webResourceLoader.getResource("/assets/webapp.tailwind.css");
       if (url != null) {
         // TODO: Merge css
         sender.resource(url).get(request, response);
