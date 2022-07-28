@@ -41,7 +41,7 @@ class SearchParametersLimitedToRepository extends SearchParameters {
 
   @PathParam("name")
   @Parameter(
-    name = "namespace",
+    name = "name",
     description = "The name of the repository the search will be limited to"
   )
   private String repositoryName;

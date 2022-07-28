@@ -24,10 +24,10 @@
 
 package sonia.scm.api.v2.resources;
 
-import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -52,6 +52,7 @@ import javax.ws.rs.Produces;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Path(SearchResource.PATH)
@@ -143,6 +144,41 @@ public class SearchResource {
       }
       return search(params);
     }
+
+    private QueryResultDto search(SearchParameters params) {
+      QueryBuilder<Object> queryBuilder = engine.forType(params.getType())
+        .search()
+        .start(params.getPage() * params.getPageSize())
+        .limit(params.getPageSize());
+
+      filterByContext(params, queryBuilder);
+
+      return queryResultMapper.map(params, queryBuilder.execute(params.getQuery()));
+    }
+
+    private QueryResultDto count(SearchParameters params) {
+      QueryBuilder<Object> queryBuilder = engine.forType(params.getType())
+        .search();
+
+      filterByContext(params, queryBuilder);
+
+      QueryCountResult result = queryBuilder.count(params.getQuery());
+
+      return queryResultMapper.map(params, new QueryResult(result.getTotalHits(), result.getType(), Collections.emptyList()));
+    }
+
+    private void filterByContext(SearchParameters params, QueryBuilder<Object> queryBuilder) {
+      if (!Strings.isNullOrEmpty(params.getNamespace())) {
+        if (!Strings.isNullOrEmpty(params.getRepositoryName())) {
+          Repository repository = repositoryManager.get(new NamespaceAndName(params.getNamespace(), params.getRepositoryName()));
+          queryBuilder.filter(repository);
+        } else {
+          repositoryManager.getAll().stream()
+            .filter(r -> r.getNamespace().equals(params.getNamespace()))
+            .forEach(queryBuilder::filter);
+        }
+      }
+    }
   }
 
   @Path("searchableTypes")
@@ -188,7 +224,12 @@ public class SearchResource {
       tags = "Search",
       operationId = "searchable_types_for_namespace"
     )
-    public Collection<SearchableTypeDto> forNamespace(@PathParam("namespace") String namespace) {
+    public Collection<SearchableTypeDto> forNamespace(
+      @Parameter(
+        name = "namespace",
+        description = "The namespace to get the types for"
+      )
+      @PathParam("namespace") String namespace) {
       return getTypes(SearchableType::limitableToNamespace);
     }
 
@@ -200,7 +241,20 @@ public class SearchResource {
       tags = "Search",
       operationId = "searchable_types_for_repository"
     )
-    public Collection<SearchableTypeDto> forRepository(@PathParam("namespace") String namespace, @PathParam("name") String name) {
+    public Collection<SearchableTypeDto> forRepository(
+      @Parameter(
+        name = "namespace",
+        description = "The namespace of the repository to get the types for"
+      )
+      @PathParam("namespace")
+      String namespace,
+      @Parameter(
+        name = "name",
+        description = "The name of the repository to get the types for"
+      )
+      @PathParam("name")
+      String name
+    ) {
       return getTypes(SearchableType::limitableToRepository);
     }
 
@@ -211,40 +265,4 @@ public class SearchResource {
         .collect(Collectors.toList());
     }
   }
-
-  private QueryResultDto search(SearchParameters params) {
-    QueryBuilder<Object> queryBuilder = engine.forType(params.getType())
-      .search()
-      .start(params.getPage() * params.getPageSize())
-      .limit(params.getPageSize());
-
-    filterByContext(params, queryBuilder);
-
-    return queryResultMapper.map(params, queryBuilder.execute(params.getQuery()));
-  }
-
-  private QueryResultDto count(SearchParameters params) {
-    QueryBuilder<Object> queryBuilder = engine.forType(params.getType())
-      .search();
-
-    filterByContext(params, queryBuilder);
-
-    QueryCountResult result = queryBuilder.count(params.getQuery());
-
-    return queryResultMapper.map(params, new QueryResult(result.getTotalHits(), result.getType(), Collections.emptyList()));
-  }
-
-  private void filterByContext(SearchParameters params, QueryBuilder<Object> queryBuilder) {
-    if (!Strings.isNullOrEmpty(params.getNamespace())) {
-      if (!Strings.isNullOrEmpty(params.getRepositoryName())) {
-        Repository repository = repositoryManager.get(new NamespaceAndName(params.getNamespace(), params.getRepositoryName()));
-        queryBuilder.filter(repository);
-      } else {
-        repositoryManager.getAll().stream()
-          .filter(r -> r.getNamespace().equals(params.getNamespace()))
-          .forEach(queryBuilder::filter);
-      }
-    }
-  }
-
 }
