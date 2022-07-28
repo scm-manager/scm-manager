@@ -26,9 +26,9 @@
     "classnames": "^2.2.6"
   },
   "devDependencies": {
-    "@scm-manager/ui-scripts": "2.37.1-SNAPSHOT",
-    "@scm-manager/ui-styles": "2.37.1-SNAPSHOT",
-    "@scm-manager/ui-api": "2.37.1-SNAPSHOT",
+    "@scm-manager/ui-scripts": "2.37.3-SNAPSHOT",
+    "@scm-manager/ui-styles": "2.37.3-SNAPSHOT",
+    "@scm-manager/ui-api": "2.37.3-SNAPSHOT",
     "@scm-manager/eslint-config": "^2.16.0-1658403197",
     "@babel/core": "^7.17.8",
     "@scm-manager/tsconfig": "^2.12.0",
