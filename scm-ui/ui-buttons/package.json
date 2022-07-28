@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-buttons",
-  "version": "2.37.1-SNAPSHOT",
+  "version": "2.37.3-SNAPSHOT",
   "private": true,
   "main": "build/index.js",
   "module": "build/index.mjs",
