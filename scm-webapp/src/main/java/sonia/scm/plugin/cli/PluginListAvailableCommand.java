@@ -24,39 +24,25 @@
 
 package sonia.scm.plugin.cli;
 
-import com.google.common.annotations.VisibleForTesting;
 import picocli.CommandLine;
 import sonia.scm.cli.ParentCommand;
-import sonia.scm.cli.Table;
 import sonia.scm.cli.TemplateRenderer;
-import sonia.scm.plugin.PendingPlugins;
 import sonia.scm.plugin.PluginInformation;
 import sonia.scm.plugin.PluginManager;
 
 import javax.inject.Inject;
 import java.util.Collection;
-import java.util.Map;
 import java.util.stream.Collectors;
-
-import static sonia.scm.plugin.cli.PluginListCommand.SHORT_TEMPLATE;
-import static sonia.scm.plugin.cli.PluginListCommand.TABLE_TEMPLATE;
 
 @ParentCommand(value = PluginCommand.class)
 @CommandLine.Command(name = "list-available", aliases = "lsa")
-class PluginListAvailableCommand implements Runnable {
+class PluginListAvailableCommand extends PluginSingleListBaseCommand implements Runnable {
 
-  @CommandLine.Mixin
-  private final TemplateRenderer templateRenderer;
   private final PluginManager manager;
-  @CommandLine.Spec
-  private CommandLine.Model.CommandSpec spec;
-
-  @CommandLine.Option(names = {"--short", "-s"}, descriptionKey = "scm.plugin.list.short")
-  private boolean useShortTemplate;
 
   @Inject
   public PluginListAvailableCommand(TemplateRenderer templateRenderer, PluginManager manager) {
-    this.templateRenderer = templateRenderer;
+    super(templateRenderer, manager);
     this.manager = manager;
   }
 
@@ -66,33 +52,7 @@ class PluginListAvailableCommand implements Runnable {
       .map(p -> p.getDescriptor().getInformation())
       .sorted((a, b) -> a.getName().compareToIgnoreCase(b.getName()))
       .collect(Collectors.toList());
-    if (useShortTemplate) {
-      templateRenderer.renderToStdout(SHORT_TEMPLATE, Map.of("plugins", plugins));
-    } else {
-      Table table = templateRenderer.createTable();
-      String yes = spec.resourceBundle().getString("yes");
-      table.addHeader("scm.plugin.name", "scm.plugin.displayName", "scm.plugin.availableVersion", "scm.plugin.pending");
-
-      PendingPlugins pendingPlugins = manager.getPending();
-      for (PluginInformation plugin : plugins) {
-        table.addRow(
-          plugin.getName(),
-          plugin.getDisplayName(),
-          plugin.getVersion(),
-          pendingPlugins.isPending(plugin.getName()) ? yes : ""
-        );
-      }
-      templateRenderer.renderToStdout(TABLE_TEMPLATE, Map.of("rows", table, "plugins", plugins));
-    }
-  }
-
-  @VisibleForTesting
-  void setUseShortTemplate(boolean useShortTemplate) {
-    this.useShortTemplate = useShortTemplate;
-  }
-
-  @VisibleForTesting
-  void setSpec(CommandLine.Model.CommandSpec spec) {
-    this.spec = spec;
+    String[] header = {"scm.plugin.name", "scm.plugin.displayName", "scm.plugin.availableVersion", "scm.plugin.pending"};
+    renderResult(plugins, header);
   }
 }
