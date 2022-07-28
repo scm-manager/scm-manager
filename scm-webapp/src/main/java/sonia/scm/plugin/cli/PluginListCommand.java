@@ -24,7 +24,7 @@
 
 package sonia.scm.plugin.cli;
 
-import com.cronutils.utils.VisibleForTesting;
+import com.google.common.annotations.VisibleForTesting;
 import lombok.Getter;
 import lombok.Setter;
 import picocli.CommandLine;
@@ -59,13 +59,13 @@ class PluginListCommand implements Runnable {
   @CommandLine.Option(names = {"--short", "-s"})
   private boolean useShortTemplate;
 
-  private static final String TABLE_TEMPLATE = String.join("\n",
+  static final String TABLE_TEMPLATE = String.join("\n",
     "{{#rows}}",
     "{{#cols}}{{#row.first}}{{#upper}}{{value}}{{/upper}}{{/row.first}}{{^row.first}}{{value}}{{/row.first}}{{^last}} {{/last}}{{/cols}}",
     "{{/rows}}"
   );
 
-  private static final String SHORT_TEMPLATE = String.join("\n",
+  static final String SHORT_TEMPLATE = String.join("\n",
     "{{#plugins}}",
     "{{name}}",
     "{{/plugins}}"
