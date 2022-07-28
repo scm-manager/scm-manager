@@ -45,9 +45,6 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Map;
 
 import static sonia.scm.PushStateDispatcherProvider.PROPERTY_TARGET;
 
@@ -88,14 +85,12 @@ public class StylesServlet extends HttpServlet {
   private void getLocally(URL url, HttpServletRequest request, HttpServletResponse response) throws IOException {
     HttpURLConnection connection = openConnection(url);
     connection.setRequestMethod(request.getMethod());
-//    copyRequestHeaders(request, connection);
 
     int responseCode = connection.getResponseCode();
     response.setStatus(responseCode);
     try (InputStream input = getConnectionInput(connection); OutputStream output = response.getOutputStream()) {
       ByteStreams.copy(input, output);
     }
-//    copyResponseHeaders(response, connection);
   }
 
   private InputStream getConnectionInput(HttpURLConnection connection) throws IOException {
@@ -111,29 +106,6 @@ public class StylesServlet extends HttpServlet {
 
   private static HttpURLConnection openConnection(URL url) throws IOException {
     return (HttpURLConnection) url.openConnection();
-  }
-
-  private void copyRequestHeaders(HttpServletRequest request, HttpURLConnection connection) {
-    Enumeration<String> headers = request.getHeaderNames();
-    while (headers.hasMoreElements()) {
-      String header = headers.nextElement();
-      Enumeration<String> values = request.getHeaders(header);
-      while (values.hasMoreElements()) {
-        String value = values.nextElement();
-        connection.setRequestProperty(header, value);
-      }
-    }
-  }
-
-  private void copyResponseHeaders(HttpServletResponse response, HttpURLConnection connection) {
-    Map<String, List<String>> headerFields = connection.getHeaderFields();
-    for (Map.Entry<String, List<String>> entry : headerFields.entrySet()) {
-      if (entry.getKey() != null && !"Transfer-Encoding".equalsIgnoreCase(entry.getKey())) {
-        for (String value : entry.getValue()) {
-          response.addHeader(entry.getKey(), value);
-        }
-      }
-    }
   }
 
 }
