@@ -24,7 +24,7 @@
 
 import React, { createContext, FC, useContext, useState } from "react";
 
-type NamespaceAndNameContext = {
+export type NamespaceAndNameContext = {
   namespace?: string;
   setNamespace: (namespace: string) => void;
   name?: string;

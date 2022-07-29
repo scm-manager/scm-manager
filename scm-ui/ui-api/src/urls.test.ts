@@ -22,7 +22,13 @@
  * SOFTWARE.
  */
 
-import { concat, getNamespaceAndPageFromMatch, getQueryStringFromLocation, withEndingSlash } from "./urls";
+import {
+  concat,
+  getNamespaceAndPageFromMatch,
+  getQueryStringFromLocation,
+  getValueStringFromLocationByKey,
+  withEndingSlash,
+} from "./urls";
 
 describe("tests for withEndingSlash", () => {
   it("should append missing slash", () => {
@@ -100,5 +106,30 @@ describe("tests for getQueryStringFromLocation", () => {
   it("should return undefined if q is not available", () => {
     const location = createLocation("?x=a&y=b&z=c");
     expect(getQueryStringFromLocation(location)).toBeUndefined();
+  });
+});
+
+describe("tests for getValueStringFromLocationByKey", () => {
+  function createLocation(search: string) {
+    return {
+      search,
+    };
+  }
+
+  it("should return the value string", () => {
+    const location = createLocation("?name=abc");
+    expect(getValueStringFromLocationByKey(location, "name")).toBe("abc");
+  });
+
+  it("should return value string from multiple parameters", () => {
+    const location = createLocation("?x=a&y=b&q=abc&z=c");
+    expect(getValueStringFromLocationByKey(location, "x")).toBe("a");
+    expect(getValueStringFromLocationByKey(location, "y")).toBe("b");
+    expect(getValueStringFromLocationByKey(location, "z")).toBe("c");
+  });
+
+  it("should return undefined if q is not available", () => {
+    const location = createLocation("?x=a&y=b&z=c");
+    expect(getValueStringFromLocationByKey(location, "namespace")).toBeUndefined();
   });
 });

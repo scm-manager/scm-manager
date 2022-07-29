@@ -22,24 +22,18 @@
  * SOFTWARE.
  */
 import React, { FC, KeyboardEvent as ReactKeyboardEvent, MouseEvent, useCallback, useEffect, useState } from "react";
-import { Hit, Links, ValueHitField } from "@scm-manager/ui-types";
+import { Hit, Links, Repository, ValueHitField } from "@scm-manager/ui-types";
 import styled from "styled-components";
-import { useSearch } from "@scm-manager/ui-api";
+import { useNamespaceAndNameContext, useOmniSearch, useRepository, useSearchTypes } from "@scm-manager/ui-api";
 import classNames from "classnames";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import {
-  Button,
-  devices,
-  HitProps,
-  Notification,
-  RepositoryAvatar,
-  useStringHitFieldValue
-} from "@scm-manager/ui-components";
+import { devices, Notification, RepositoryAvatar } from "@scm-manager/ui-components";
 import SyntaxHelp from "../search/SyntaxHelp";
 import SyntaxModal from "../search/SyntaxModal";
 import SearchErrorNotification from "../search/SearchErrorNotification";
 import queryString from "query-string";
+import { orderTypes } from "../search/Search";
 
 const Input = styled.input`
   border-radius: 4px !important;
@@ -59,15 +53,11 @@ type HitsProps = {
   hits: Hit[];
   index: number;
   showHelp: () => void;
-  gotoDetailSearch: () => void;
+  query: string;
   clear: () => void;
 };
 
 const QuickSearchNotification: FC = ({ children }) => <div className="dropdown-content p-4">{children}</div>;
-
-type GotoProps = {
-  gotoDetailSearch: () => void;
-};
 
 const EmptyHits: FC = () => {
   const [t] = useTranslation("commons");
@@ -86,23 +76,14 @@ const DropdownMenu = styled.div`
   max-width: 20rem;
 `;
 
-const ResultFooter = styled.div`
-  border-top: 1px solid lightgray;
-`;
-
 const SearchInput = styled(Input)`
   @media screen and (max-width: ${devices.mobile.width}px) {
     width: 9rem;
   }
 `;
 
-const AvatarSection: FC<HitProps> = ({ hit }) => {
-  const namespace = useStringHitFieldValue(hit, "namespace");
-  const name = useStringHitFieldValue(hit, "name");
-  const type = useStringHitFieldValue(hit, "type");
-
-  const repository = hit._embedded?.repository;
-  if (!namespace || !name || !type || !repository) {
+const AvatarSection: FC<{ repository: Repository }> = ({ repository }) => {
+  if (!repository) {
     return null;
   }
 
@@ -113,47 +94,86 @@ const AvatarSection: FC<HitProps> = ({ hit }) => {
   );
 };
 
-const MoreResults: FC<GotoProps> = ({ gotoDetailSearch }) => {
-  const [t] = useTranslation("commons");
-  return (
-    <ResultFooter className={classNames("dropdown-item", "has-text-centered", "mx-2", "px-2", "py-1")}>
-      <Button action={gotoDetailSearch} color="primary" data-omnisearch="true">
-        {t("search.quickSearch.moreResults")}
-      </Button>
-    </ResultFooter>
-  );
-};
-
-const HitsList: FC<HitsProps> = ({ hits, index, clear, gotoDetailSearch }) => {
+const HitsList: FC<HitsProps> = ({ hits, index, clear, query }) => {
+  const context = useNamespaceAndNameContext();
+  const searchTypes = useSearchTypes({
+    type: "",
+    namespaceContext: context.namespace || "",
+    repositoryNameContext: context.name || "",
+  });
+  searchTypes.sort(orderTypes);
+  const { data: repository, isLoading } = useRepository(context.namespace || "", context.name || "");
   const id = useCallback(namespaceAndName, [hits]);
   if (hits.length === 0) {
     return <EmptyHits />;
   }
   return (
     <ul id="omni-search-results" aria-expanded="true" role="listbox">
-      {hits.map((hit, idx) => (
-        <li
-          key={id(hit)}
-          onMouseDown={e => e.preventDefault()}
-          onClick={clear}
-          role="option"
-          aria-selected={idx === index}
-          id={idx === index ? "omni-search-selected-option" : undefined}
-        >
-          <Link
-            className={classNames("is-flex", "dropdown-item", "has-text-weight-medium", "is-ellipsis-overflow", {
-              "is-active": idx === index
-            })}
-            title={id(hit)}
-            to={`/repo/${id(hit)}`}
-            data-omnisearch="true"
-          >
-            <AvatarSection hit={hit} />
-            {id(hit)}
-          </Link>
-        </li>
+      {!isLoading && context.namespace && context.name && searchTypes.length > 0 ? (
+        <HitEntry
+          selected={index === 0}
+          clear={clear}
+          label={"Search in repo"}
+          link={`/search/${searchTypes[0]}/?q=${query}&namespace=${context.namespace}&name=${context.name}`}
+          repository={repository}
+        />
+      ) : null}
+      {!isLoading && context.namespace ? (
+        <HitEntry
+          selected={index === 1}
+          clear={clear}
+          label={"Search in Namespace"}
+          link={`/search/repository/?q=${query}&namespace=${context.namespace}`}
+        />
+      ) : null}
+      <HitEntry
+        selected={index === 2}
+        clear={clear}
+        label={"Search everywhere"}
+        link={`/search/repository/?q=${query}`}
+      />
+      {hits?.map((hit, idx) => (
+        <HitEntry
+          key={idx}
+          selected={idx === index}
+          clear={clear}
+          label={id(hit)}
+          link={`/repo/${id(hit)}`}
+          repository={hit._embedded?.repository}
+        />
       ))}
     </ul>
+  );
+};
+
+const HitEntry: FC<{ selected: boolean; link: string; label: string; clear: () => void; repository?: Repository }> = ({
+  selected,
+  link,
+  label,
+  clear,
+  repository,
+}) => {
+  return (
+    <li
+      key={label}
+      onMouseDown={(e) => e.preventDefault()}
+      onClick={clear}
+      role="option"
+      aria-selected={selected}
+      id={selected ? "omni-search-selected-option" : undefined}
+    >
+      <Link
+        className={classNames("is-flex", "dropdown-item", "has-text-weight-medium", "is-ellipsis-overflow", {
+          "is-active": selected,
+        })}
+        title={label}
+        to={link}
+        data-omnisearch="true"
+      >
+        {repository ? <AvatarSection repository={repository} /> : null}
+        {label}
+      </Link>
+    </li>
   );
 };
 
@@ -171,7 +191,7 @@ const ScreenReaderHitSummary: FC<ScreenReaderHitSummaryProps> = ({ hits }) => {
   );
 };
 
-const Hits: FC<HitsProps> = ({ showHelp, gotoDetailSearch, hits, ...rest }) => {
+const Hits: FC<HitsProps> = ({ showHelp, query, hits, ...rest }) => {
   const [t] = useTranslation("commons");
 
   return (
@@ -193,8 +213,7 @@ const Hits: FC<HitsProps> = ({ showHelp, gotoDetailSearch, hits, ...rest }) => {
           <span>{t("search.quickSearch.resultHeading")}</span>
           <SyntaxHelp onClick={showHelp} />
         </ResultHeading>
-        <HitsList showHelp={showHelp} gotoDetailSearch={gotoDetailSearch} hits={hits} {...rest} />
-        <MoreResults gotoDetailSearch={gotoDetailSearch} />
+        <HitsList showHelp={showHelp} query={query} hits={hits} {...rest} />
       </div>
     </>
   );
@@ -213,7 +232,7 @@ const useKeyBoardNavigation = (gotoDetailSearch: () => void, clear: () => void, 
     switch (e.which) {
       case 40: // e.code: ArrowDown
         if (hits) {
-          setIndex(idx => {
+          setIndex((idx) => {
             if (idx + 1 < hits.length) {
               return idx + 1;
             }
@@ -223,7 +242,7 @@ const useKeyBoardNavigation = (gotoDetailSearch: () => void, clear: () => void, 
         break;
       case 38: // e.code: ArrowUp
         if (hits) {
-          setIndex(idx => {
+          setIndex((idx) => {
             if (idx > 0) {
               return idx - 1;
             }
@@ -253,7 +272,7 @@ const useKeyBoardNavigation = (gotoDetailSearch: () => void, clear: () => void, 
 
   return {
     onKeyDown,
-    index
+    index,
   };
 };
 
@@ -270,12 +289,8 @@ const useDebounce = (value: string, delay: number) => {
   return debouncedValue;
 };
 
-const isMoreResultsButton = (element: Element) => {
-  return element.tagName.toLocaleLowerCase("en") === "button" && element.className.includes("is-primary");
-};
-
 const isOnmiSearchElement = (element: Element) => {
-  return element.getAttribute("data-omnisearch") || isMoreResultsButton(element);
+  return element.getAttribute("data-omnisearch");
 };
 
 const useShowResultsOnFocus = () => {
@@ -312,7 +327,7 @@ const useShowResultsOnFocus = () => {
     },
     onKeyPress: () => setShowResults(true),
     onFocus: () => setShowResults(true),
-    hideResults: () => setShowResults(false)
+    hideResults: () => setShowResults(false),
   };
 };
 
@@ -342,7 +357,7 @@ const useSearchParams = () => {
 
   return {
     searchType,
-    initialQuery
+    initialQuery,
   };
 };
 
@@ -351,7 +366,10 @@ const OmniSearch: FC = () => {
   const { searchType, initialQuery } = useSearchParams();
   const [query, setQuery] = useState(initialQuery);
   const debouncedQuery = useDebounce(query, 250);
-  const { data, isLoading, error } = useSearch(debouncedQuery, { type: "repository", pageSize: 5 });
+  const { data, isLoading, error } = useOmniSearch(debouncedQuery, {
+    type: "repository",
+    pageSize: 5,
+  });
   const { showResults, hideResults, ...handlers } = useShowResultsOnFocus();
   const [showHelp, setShowHelp] = useState(false);
   const history = useHistory();
@@ -374,7 +392,7 @@ const OmniSearch: FC = () => {
       {showHelp ? <SyntaxModal close={closeHelp} /> : null}
       <div
         className={classNames("control", "has-icons-right", {
-          "is-loading": isLoading
+          "is-loading": isLoading,
         })}
       >
         <div className={classNames("dropdown", { "is-active": (!!data || error) && showResults })}>
@@ -383,7 +401,7 @@ const OmniSearch: FC = () => {
               className="input is-small"
               type="text"
               placeholder={t("search.placeholder")}
-              onChange={e => setQuery(e.target.value)}
+              onChange={(e) => setQuery(e.target.value)}
               onKeyDown={onKeyDown}
               value={query}
               role="combobox"
@@ -401,7 +419,7 @@ const OmniSearch: FC = () => {
               </span>
             )}
           </div>
-          <DropdownMenu className="dropdown-menu" onMouseDown={e => e.preventDefault()}>
+          <DropdownMenu className="dropdown-menu" onMouseDown={(e) => e.preventDefault()}>
             {error ? (
               <QuickSearchNotification>
                 <SearchErrorNotification error={error} showHelp={openHelp} />
@@ -410,7 +428,7 @@ const OmniSearch: FC = () => {
             {!error && data ? (
               <Hits
                 showHelp={openHelp}
-                gotoDetailSearch={gotoDetailSearch}
+                query={query}
                 clear={clearQuery}
                 index={index}
                 hits={data._embedded?.hits || []}

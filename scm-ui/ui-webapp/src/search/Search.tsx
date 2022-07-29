@@ -31,7 +31,7 @@ import {
   PrimaryContentColumn,
   SecondaryNavigation,
   Tag,
-  urls
+  urls,
 } from "@scm-manager/ui-components";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { useSearch, useSearchCounts, useSearchTypes } from "@scm-manager/ui-api";
@@ -43,6 +43,8 @@ import SyntaxModal from "./SyntaxModal";
 type PathParams = {
   type: string;
   page: string;
+  namespace: string;
+  name: string;
 };
 
 type CountProps = {
@@ -67,14 +69,18 @@ const usePageParams = () => {
   const { type: selectedType, ...params } = useParams<PathParams>();
   const page = urls.getPageFromMatch({ params });
   const query = urls.getQueryStringFromLocation(location);
+  const namespace = urls.getValueStringFromLocationByKey(location, "namespace");
+  const name = urls.getValueStringFromLocationByKey(location, "name");
   return {
     page,
     selectedType,
-    query
+    query,
+    namespace,
+    name,
   };
 };
 
-const orderTypes = (left: string, right: string) => {
+export const orderTypes = (left: string, right: string) => {
   if (left === "repository" && right !== "repository") {
     return -1;
   } else if (left !== "repository" && right === "repository") {
@@ -100,7 +106,7 @@ const SearchSubTitle: FC<Props> = ({ selectedType, query }) => {
     <>
       {t("search.subtitle", {
         query,
-        type: t(`plugins:search.types.${selectedType}.subtitle`, selectedType)
+        type: t(`plugins:search.types.${selectedType}.subtitle`, selectedType),
       })}
       <br />
       <Trans i18nKey="search.syntaxHelp" components={[<SyntaxHelpLink />]} />
@@ -111,26 +117,30 @@ const SearchSubTitle: FC<Props> = ({ selectedType, query }) => {
 const Search: FC = () => {
   const [t] = useTranslation(["commons", "plugins"]);
   const [showHelp, setShowHelp] = useState(false);
-  const { query, selectedType, page } = usePageParams();
-  const { data, isLoading, error } = useSearch(query, {
+  const { query, selectedType, page, namespace, name } = usePageParams();
+  const searchOptions = {
     type: selectedType,
     page: page - 1,
-    pageSize: 25
-  });
-  const types = useSearchTypes();
+    pageSize: 25,
+    namespaceContext: namespace,
+    repositoryNameContext: name,
+  };
+  const { data, isLoading, error } = useSearch(query, searchOptions);
+  const types = useSearchTypes(searchOptions);
   types.sort(orderTypes);
 
   const searchCounts = useSearchCounts(
-    types.filter(t => t !== selectedType),
-    query
+    types.filter((t) => t !== selectedType),
+    query,
+    searchOptions
   );
   const counts = {
     [selectedType]: {
       isLoading,
       error,
-      data: data?.totalHits
+      data: data?.totalHits,
     },
-    ...searchCounts
+    ...searchCounts,
   };
 
   return (
@@ -147,8 +157,15 @@ const Search: FC = () => {
             <Results result={data} query={query} page={page} type={selectedType} />
           </PrimaryContentColumn>
           <SecondaryNavigation label={t("search.types")} collapsible={false}>
-            {types.map(type => (
-              <NavLink key={type} to={`/search/${type}/?q=${query}`} label={type} activeOnlyWhenExact={false}>
+            {types.map((type) => (
+              <NavLink
+                key={type}
+                to={`/search/${type}/?q=${query}${namespace ? "&namespace=" + namespace : ""}${
+                  name ? "&name=" + name : ""
+                }`}
+                label={type}
+                activeOnlyWhenExact={false}
+              >
                 <Level
                   left={t(`plugins:search.types.${type}.navItem`, type)}
                   right={

@@ -93,6 +93,15 @@ export function getQueryStringFromLocation(location: { search?: string }): strin
   }
 }
 
+export function getValueStringFromLocationByKey(location: { search?: string }, key: string): string | undefined {
+  if (location.search) {
+    const value = queryString.parse(location.search)[key];
+    if (value && !Array.isArray(value)) {
+      return value;
+    }
+  }
+}
+
 export function stripEndingSlash(url: string) {
   if (url.endsWith("/")) {
     return url.substring(0, url.length - 1);
