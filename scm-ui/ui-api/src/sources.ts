@@ -93,7 +93,7 @@ const createSourcesLink = (repository: Repository, options: UseSourcesOptions) =
     link = urls.concat(link, encodeURIComponent(options.revision));
 
     if (options.path) {
-      link = urls.concat(link, options.path);
+      link = urls.concat(link, encodeURIComponent(options.path));
     }
   }
   if (options.collapse) {

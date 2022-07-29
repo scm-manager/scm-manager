@@ -206,9 +206,9 @@ describe("Test sources hooks", () => {
 
     it("should not refetch if computation is aborted", async () => {
       const queryClient = createInfiniteCachingClient();
-      fetchMock.getOnce("/api/v2/src/abc/main/special.md?collapse=true", sepecialMdComputationAborted, { repeat: 1 });
+      fetchMock.getOnce("/api/v2/src/abc/main%2Fspecial.md?collapse=true", sepecialMdComputationAborted, { repeat: 1 });
       // should never be called
-      fetchMock.getOnce("/api/v2/src/abc/main/special.md?collapse=true", sepecialMd, {
+      fetchMock.getOnce("/api/v2/src/abc/main%2Fspecial.md?collapse=true", sepecialMd, {
         repeat: 1,
         overwriteRoutes: false,
       });

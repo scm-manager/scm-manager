@@ -1,0 +1,2 @@
+- type: fixed
+  description: URL-encode path in source link ([#2099](https://github.com/scm-manager/scm-manager/pull/2099))
