@@ -4996,7 +4996,7 @@ exports[`Storyshots MarkdownView Custom code renderer 1`] = `
             }
           }
         >
-          To render plantuml as images within markdown, please install the scm-markdown-plantuml-plguin
+          To render plantuml as images within markdown, please install the scm-markdown-plantuml-plugin
         </h4>
         <pre>
           actor Foo1
