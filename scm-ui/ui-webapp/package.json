@@ -36,7 +36,7 @@
     "build": "webpack-cli --mode=production --config=../ui-scripts/src/webpack.config.js"
   },
   "devDependencies": {
-    "@scm-manager/eslint-config": "^2.15.1",
+    "@scm-manager/eslint-config": "^2.16.0",
     "@scm-manager/jest-preset": "^2.13.0",
     "@scm-manager/ui-tests": "2.37.3-SNAPSHOT",
     "@testing-library/react": "^12.1.5",
