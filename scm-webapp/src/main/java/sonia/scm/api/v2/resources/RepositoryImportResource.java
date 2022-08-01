@@ -263,6 +263,27 @@ public class RepositoryImportResource {
   @GET
   @Path("log/{logId}")
   @Produces(MediaType.TEXT_PLAIN)
+  @Operation(
+    summary = "Import log",
+    description = "Returns the import log",
+    tags = "Repository"
+  )
+  @ApiResponse(
+    responseCode = "200",
+    description = "success",
+    content = @Content(
+      mediaType = MediaType.TEXT_PLAIN
+    )
+  )
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(
+    responseCode = "404",
+    description = "not found, no log found for the given id",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
   public StreamingOutput getImportLog(@PathParam("logId") String logId) throws IOException {
     importLoggerFactory.checkCanReadLog(logId);
     return out -> importLoggerFactory.getLog(logId, out);
