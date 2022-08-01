@@ -2235,10 +2235,10 @@
     "@babel/preset-typescript" "^7.16.7"
     babel-plugin-styled-components "^1.13.3"
 
-"@scm-manager/eslint-config@2.16.0-1658403197", "@scm-manager/eslint-config@^2.16.0-1658403197":
-  version "2.16.0-1658403197"
-  resolved "https://registry.yarnpkg.com/@scm-manager/eslint-config/-/eslint-config-2.16.0-1658403197.tgz#0adf4e7f67c59a6bf5332ab91636e87b9d3759b3"
-  integrity sha512-4i6P0DgWUZMnqHkAAkNIDqJ2aKTzdtNMLcJHtyw/51YXWfXYoST0MPxXeFQnb4YbymTUldTKRZOryTmQziRZMw==
+"@scm-manager/eslint-config@2.16.0", "@scm-manager/eslint-config@^2.16.0":
+  version "2.16.0"
+  resolved "https://registry.yarnpkg.com/@scm-manager/eslint-config/-/eslint-config-2.16.0.tgz#fe682a1e1d53355c13fff8bffd9b44505e734a63"
+  integrity sha512-x1o+2RKnTOkuEfNz6zAir6lAaapBWtwy7PLMrs+d7i5kEfE9gJwNOYZqORxBdGZ3u3r6w/PJCc+LNEmOHdwxUA==
   dependencies:
     "@typescript-eslint/eslint-plugin" "^5.19.0"
     "@typescript-eslint/parser" "^5.19.0"
@@ -2254,26 +2254,6 @@
     eslint-plugin-react "^7.16.0"
     eslint-plugin-react-hooks "^2.1.2"
     eslint-plugin-tailwindcss "^3.6.0"
-    jest "^26.6.3"
-
-"@scm-manager/eslint-config@^2.15.1":
-  version "2.15.1"
-  resolved "https://registry.yarnpkg.com/@scm-manager/eslint-config/-/eslint-config-2.15.1.tgz#0963adcc2605905c84924872fe899ea49ab63f72"
-  integrity sha512-RJC3IXlZ/nnIYweM1AUAe+VlZnvzGflSbFukytG6gpqJnIqQd9r09NgtKsQVGFbiXjF6QdI3x2n2mRIqybaRUQ==
-  dependencies:
-    "@typescript-eslint/eslint-plugin" "^5.19.0"
-    "@typescript-eslint/parser" "^5.19.0"
-    babel-eslint "^10.0.3"
-    eslint "^7.32.0"
-    eslint-config-airbnb-base "^14.2.0"
-    eslint-config-prettier "^6.4.0"
-    eslint-config-react-app "^5.0.2"
-    eslint-plugin-flowtype "^4.3.0"
-    eslint-plugin-import "^2.18.2"
-    eslint-plugin-jsx-a11y "^6.2.3"
-    eslint-plugin-prettier "^3.1.1"
-    eslint-plugin-react "^7.16.0"
-    eslint-plugin-react-hooks "^2.1.2"
     jest "^26.6.3"
 
 "@scm-manager/integration-test-runner@^3.3.0":
