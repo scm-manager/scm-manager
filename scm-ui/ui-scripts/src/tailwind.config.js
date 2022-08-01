@@ -26,7 +26,7 @@ const path = require("path");
 
 const root = path.resolve(process.cwd(), "scm-ui");
 
-const sizes = [1, 2, 3, 4, 5, 6];
+const sizes = [0, 1, 2, 3, 4, 5, 6];
 const helpers = ["m", "p"];
 const variants = ["", "x", "y", "t", "r", "l", "b"];
 const bulmaHelpers = helpers
