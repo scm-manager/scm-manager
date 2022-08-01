@@ -24,12 +24,15 @@
 
 package sonia.scm.api.v2.resources;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Data;
 import org.apache.shiro.SecurityUtils;
 import sonia.scm.cli.CliProcessor;
-import sonia.scm.cli.Client;
 import sonia.scm.cli.JsonStreamingCliContext;
-import sonia.scm.cli.UserAgentClientParser;
 import sonia.scm.security.ApiKeyService;
 
 import javax.inject.Inject;
@@ -46,8 +49,11 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import java.util.List;
 
-import static sonia.scm.cli.UserAgentClientParser.*;
+import static sonia.scm.cli.UserAgentClientParser.parse;
 
+@OpenAPIDefinition(tags = {
+  @Tag(name = "CLI", description = "Command-line interface related endpoints")
+})
 @Path("v2/cli")
 public class CliResource {
 
@@ -62,6 +68,16 @@ public class CliResource {
 
   @POST
   @Path("exec")
+  @Consumes(MediaType.APPLICATION_OCTET_STREAM)
+  @Operation(summary = "Execute", description = "Execute commands", tags = "CLI")
+  @ApiResponse(
+    responseCode = "200",
+    description = "success",
+    content = @Content(
+      mediaType = MediaType.APPLICATION_OCTET_STREAM
+    )
+  )
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
   public StreamingOutput exec(@QueryParam("args") List<String> args, @Context HttpServletRequest request) {
     return outputStream -> {
       try (JsonStreamingCliContext context = new JsonStreamingCliContext(
@@ -77,8 +93,18 @@ public class CliResource {
   }
 
   @POST
-  @Consumes(MediaType.APPLICATION_JSON)
   @Path("login")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Operation(summary = "Log in", description = "Create api key to connect to the SCM-Manager server", tags = "CLI")
+  @ApiResponse(
+    responseCode = "200",
+    description = "success",
+    content = @Content(
+      mediaType = MediaType.APPLICATION_JSON
+    )
+  )
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "500", description = "internal server error")
   public Response login(CliAuthenticationDto auth) {
     String username = SecurityUtils.getSubject().getPrincipal().toString();
     ApiKeyService.CreationResult newKey = service.createNewKey(username, auth.getApiKey(), "*");
@@ -87,6 +113,10 @@ public class CliResource {
 
   @DELETE
   @Path("logout/{apiKey}")
+  @Operation(summary = "Log out", description = "Remove api key from SCM-Manager server", tags = "CLI")
+  @ApiResponse(responseCode = "204", description = "delete success or nothing to delete")
+  @ApiResponse(responseCode = "400", description = "bad request, required parameter is missing")
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
   public Response logout(@PathParam("apiKey") String apiKeyName) {
     String username = SecurityUtils.getSubject().getPrincipal().toString();
     service.getKeys(username)

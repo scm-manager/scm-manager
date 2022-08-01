@@ -25,6 +25,7 @@
 package sonia.scm.legacy;
 
 import com.google.inject.Inject;
+import io.swagger.v3.oas.annotations.Operation;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
@@ -48,6 +49,11 @@ public class LegacyRepositoryService {
   @GET
   @Path("{id}")
   @Produces(MediaType.APPLICATION_JSON)
+  @Operation(
+    summary = "Repository namespace and name",
+    description = "Returns the repository namespace and name",
+    tags = "Repository"
+  )
   public NamespaceAndNameDto getNameAndNamespaceForRepositoryId(@PathParam("id") String repositoryId) {
     Repository repo = repositoryManager.get(repositoryId);
     if (repo == null) {
