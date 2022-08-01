@@ -24,11 +24,16 @@
 import React, { FC, KeyboardEvent as ReactKeyboardEvent, MouseEvent, useCallback, useEffect, useState } from "react";
 import { Hit, Links, Repository, ValueHitField } from "@scm-manager/ui-types";
 import styled from "styled-components";
-import { useNamespaceAndNameContext, useOmniSearch, useRepository, useSearchTypes } from "@scm-manager/ui-api";
+import {
+  NamespaceAndNameContext,
+  useNamespaceAndNameContext,
+  useOmniSearch,
+  useSearchTypes,
+} from "@scm-manager/ui-api";
 import classNames from "classnames";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { devices, Notification, RepositoryAvatar } from "@scm-manager/ui-components";
+import { devices, Icon, RepositoryAvatar } from "@scm-manager/ui-components";
 import SyntaxHelp from "../search/SyntaxHelp";
 import SyntaxModal from "../search/SyntaxModal";
 import SearchErrorNotification from "../search/SearchErrorNotification";
@@ -59,15 +64,6 @@ type HitsProps = {
 
 const QuickSearchNotification: FC = ({ children }) => <div className="dropdown-content p-4">{children}</div>;
 
-const EmptyHits: FC = () => {
-  const [t] = useTranslation("commons");
-  return (
-    <Notification className="m-4" type="info">
-      {t("search.quickSearch.noResults")}
-    </Notification>
-  );
-};
-
 const ResultHeading = styled.h3`
   border-bottom: 1px solid lightgray;
 `;
@@ -94,7 +90,18 @@ const AvatarSection: FC<{ repository: Repository }> = ({ repository }) => {
   );
 };
 
+const getActionCount = (context: NamespaceAndNameContext) => {
+  if (context.namespace) {
+    if (context.name) {
+      return 3;
+    }
+    return 2;
+  }
+  return 1;
+};
+
 const HitsList: FC<HitsProps> = ({ hits, index, clear, query }) => {
+  const [t] = useTranslation("commons");
   const context = useNamespaceAndNameContext();
   const searchTypes = useSearchTypes({
     type: "",
@@ -102,34 +109,29 @@ const HitsList: FC<HitsProps> = ({ hits, index, clear, query }) => {
     repositoryNameContext: context.name || "",
   });
   searchTypes.sort(orderTypes);
-  const { data: repository, isLoading } = useRepository(context.namespace || "", context.name || "");
   const id = useCallback(namespaceAndName, [hits]);
-  if (hits.length === 0) {
-    return <EmptyHits />;
-  }
   return (
     <ul id="omni-search-results" aria-expanded="true" role="listbox">
-      {!isLoading && context.namespace && context.name && searchTypes.length > 0 ? (
+      {context.namespace && context.name && searchTypes.length > 0 ? (
         <HitEntry
           selected={index === 0}
           clear={clear}
-          label={"Search in repo"}
+          label={t("search.quickSearch.searchRepo")}
           link={`/search/${searchTypes[0]}/?q=${query}&namespace=${context.namespace}&name=${context.name}`}
-          repository={repository}
         />
       ) : null}
-      {!isLoading && context.namespace ? (
+      {context.namespace ? (
         <HitEntry
           selected={index === 1}
           clear={clear}
-          label={"Search in Namespace"}
+          label={t("search.quickSearch.searchNamespace")}
           link={`/search/repository/?q=${query}&namespace=${context.namespace}`}
         />
       ) : null}
       <HitEntry
         selected={index === 2}
         clear={clear}
-        label={"Search everywhere"}
+        label={t("search.quickSearch.searchEverywhere")}
         link={`/search/repository/?q=${query}`}
       />
       {hits?.map((hit, idx) => (
@@ -170,7 +172,7 @@ const HitEntry: FC<{ selected: boolean; link: string; label: string; clear: () =
         to={link}
         data-omnisearch="true"
       >
-        {repository ? <AvatarSection repository={repository} /> : null}
+        {repository ? <AvatarSection repository={repository} /> : <Icon name="search" className="mr-3 ml-1 mt-1" />}
         {label}
       </Link>
     </li>
@@ -219,21 +221,25 @@ const Hits: FC<HitsProps> = ({ showHelp, query, hits, ...rest }) => {
   );
 };
 
-const useKeyBoardNavigation = (gotoDetailSearch: () => void, clear: () => void, hits?: Array<Hit>) => {
+const useKeyBoardNavigation = (gotoDetailSearch: (index: number) => void, clear: () => void, hits?: Array<Hit>) => {
   const [index, setIndex] = useState(-1);
+  const context = useNamespaceAndNameContext();
+  const actionCount = getActionCount(context);
   const history = useHistory();
   useEffect(() => {
     setIndex(-1);
   }, [hits]);
 
   const onKeyDown = (e: ReactKeyboardEvent<HTMLInputElement>) => {
+    const indexSize = (hits?.length || 0) + actionCount;
     // We use e.which, because ie 11 does not support e.code
     // https://caniuse.com/keyboardevent-code
     switch (e.which) {
       case 40: // e.code: ArrowDown
         if (hits) {
           setIndex((idx) => {
-            if (idx + 1 < hits.length) {
+            if (idx <= indexSize) {
+              console.log(idx + 1);
               return idx + 1;
             }
             return idx;
@@ -244,6 +250,7 @@ const useKeyBoardNavigation = (gotoDetailSearch: () => void, clear: () => void, 
         if (hits) {
           setIndex((idx) => {
             if (idx > 0) {
+              console.log(idx - 1);
               return idx - 1;
             }
             return idx;
@@ -251,13 +258,13 @@ const useKeyBoardNavigation = (gotoDetailSearch: () => void, clear: () => void, 
         }
         break;
       case 13: // e.code: Enter
-        if (hits && index >= 0) {
-          const hit = hits[index];
+        if (hits && index > actionCount) {
+          const hit = hits[index - actionCount];
           history.push(`/repo/${namespaceAndName(hit)}`);
           clear();
         } else {
           e.preventDefault();
-          gotoDetailSearch();
+          gotoDetailSearch(index);
         }
         break;
       case 27: // e.code: Escape
@@ -366,6 +373,7 @@ const OmniSearch: FC = () => {
   const { searchType, initialQuery } = useSearchParams();
   const [query, setQuery] = useState(initialQuery);
   const debouncedQuery = useDebounce(query, 250);
+  const context = useNamespaceAndNameContext();
   const { data, isLoading, error } = useOmniSearch(debouncedQuery, {
     type: "repository",
     pageSize: 5,
@@ -378,9 +386,13 @@ const OmniSearch: FC = () => {
   const closeHelp = () => setShowHelp(false);
   const clearQuery = () => setQuery("");
 
-  const gotoDetailSearch = () => {
+  const gotoDetailSearch = (index: number) => {
     if (query.length > 1) {
-      history.push(`/search/${searchType}/?q=${query}`);
+      history.push(
+        `/search/${searchType}/?q=${query}${context.namespace && index > 1 ? "&namespace=" + context.namespace : ""}${
+          context.name && index > 2 ? "&name=" + context.name : ""
+        }`
+      );
       hideResults();
     }
   };
