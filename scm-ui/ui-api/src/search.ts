@@ -57,7 +57,6 @@ export const useSearchTypes = (options?: SearchOptions) => {
   if (searchLinks?.isLoading) {
     return [];
   }
-  console.log(searchLinks.links);
   return searchLinks?.links?.map((link) => link.name).filter(isString) || [];
 };
 

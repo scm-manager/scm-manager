@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import {
   CustomQueryFlexWrappedColumns,
   Level,
@@ -34,7 +34,7 @@ import {
   urls,
 } from "@scm-manager/ui-components";
 import { Link, useLocation, useParams } from "react-router-dom";
-import { useSearch, useSearchCounts, useSearchTypes } from "@scm-manager/ui-api";
+import { useSearch, useSearchCounts, useSearchTypes, useNamespaceAndNameContext } from "@scm-manager/ui-api";
 import Results from "./Results";
 import { Trans, useTranslation } from "react-i18next";
 import SearchErrorNotification from "./SearchErrorNotification";
@@ -118,6 +118,16 @@ const Search: FC = () => {
   const [t] = useTranslation(["commons", "plugins"]);
   const [showHelp, setShowHelp] = useState(false);
   const { query, selectedType, page, namespace, name } = usePageParams();
+  const context = useNamespaceAndNameContext();
+  useEffect(() => {
+    context.setNamespace(namespace || "");
+    context.setName(name || "");
+
+    return () => {
+      context.setNamespace("");
+      context.setName("");
+    };
+  }, [namespace, name, context]);
   const searchOptions = {
     type: selectedType,
     page: page - 1,
