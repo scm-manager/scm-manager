@@ -21,15 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, KeyboardEvent as ReactKeyboardEvent, MouseEvent, useCallback, useEffect, useState } from "react";
+import React, {
+  Dispatch,
+  FC,
+  KeyboardEvent as ReactKeyboardEvent,
+  MouseEvent,
+  ReactElement,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { Hit, Links, Repository, ValueHitField } from "@scm-manager/ui-types";
 import styled from "styled-components";
-import {
-  NamespaceAndNameContext,
-  useNamespaceAndNameContext,
-  useOmniSearch,
-  useSearchTypes,
-} from "@scm-manager/ui-api";
+import { useNamespaceAndNameContext, useOmniSearch, useSearchTypes } from "@scm-manager/ui-api";
 import classNames from "classnames";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -39,6 +45,7 @@ import SyntaxModal from "../search/SyntaxModal";
 import SearchErrorNotification from "../search/SearchErrorNotification";
 import queryString from "query-string";
 import { orderTypes } from "../search/Search";
+import { headOnce } from "fetch-mock";
 
 const Input = styled.input`
   border-radius: 4px !important;
@@ -53,13 +60,12 @@ const namespaceAndName = (hit: Hit) => {
   const name = (hit.fields["name"] as ValueHitField).value as string;
   return `${namespace}/${name}`;
 };
+type ExtractProps<T> = T extends React.ComponentType<infer U> ? U : never;
 
 type HitsProps = {
+  entries: ReactElement<ExtractProps<typeof HitEntry>>[];
   hits: Hit[];
-  index: number;
   showHelp: () => void;
-  query: string;
-  clear: () => void;
 };
 
 const QuickSearchNotification: FC = ({ children }) => <div className="dropdown-content p-4">{children}</div>;
@@ -90,60 +96,10 @@ const AvatarSection: FC<{ repository: Repository }> = ({ repository }) => {
   );
 };
 
-const getActionCount = (context: NamespaceAndNameContext) => {
-  if (context.namespace) {
-    if (context.name) {
-      return 3;
-    }
-    return 2;
-  }
-  return 1;
-};
-
-const HitsList: FC<HitsProps> = ({ hits, index, clear, query }) => {
-  const [t] = useTranslation("commons");
-  const context = useNamespaceAndNameContext();
-  const searchTypes = useSearchTypes({
-    type: "",
-    namespaceContext: context.namespace || "",
-    repositoryNameContext: context.name || "",
-  });
-  searchTypes.sort(orderTypes);
-  const id = useCallback(namespaceAndName, [hits]);
+const HitsList: FC<Omit<HitsProps, "showHelp" | "hits">> = ({ entries }) => {
   return (
     <ul id="omni-search-results" aria-expanded="true" role="listbox">
-      {context.namespace && context.name && searchTypes.length > 0 ? (
-        <HitEntry
-          selected={index === 0}
-          clear={clear}
-          label={t("search.quickSearch.searchRepo")}
-          link={`/search/${searchTypes[0]}/?q=${query}&namespace=${context.namespace}&name=${context.name}`}
-        />
-      ) : null}
-      {context.namespace ? (
-        <HitEntry
-          selected={index === 1}
-          clear={clear}
-          label={t("search.quickSearch.searchNamespace")}
-          link={`/search/repository/?q=${query}&namespace=${context.namespace}`}
-        />
-      ) : null}
-      <HitEntry
-        selected={index === 2}
-        clear={clear}
-        label={t("search.quickSearch.searchEverywhere")}
-        link={`/search/repository/?q=${query}`}
-      />
-      {hits?.map((hit, idx) => (
-        <HitEntry
-          key={idx}
-          selected={idx === index}
-          clear={clear}
-          label={id(hit)}
-          link={`/repo/${id(hit)}`}
-          repository={hit._embedded?.repository}
-        />
-      ))}
+      {entries}
     </ul>
   );
 };
@@ -193,7 +149,7 @@ const ScreenReaderHitSummary: FC<ScreenReaderHitSummaryProps> = ({ hits }) => {
   );
 };
 
-const Hits: FC<HitsProps> = ({ showHelp, query, hits, ...rest }) => {
+const Hits: FC<HitsProps> = ({ entries, hits, showHelp, ...rest }) => {
   const [t] = useTranslation("commons");
 
   return (
@@ -215,55 +171,54 @@ const Hits: FC<HitsProps> = ({ showHelp, query, hits, ...rest }) => {
           <span>{t("search.quickSearch.resultHeading")}</span>
           <SyntaxHelp onClick={showHelp} />
         </ResultHeading>
-        <HitsList showHelp={showHelp} query={query} hits={hits} {...rest} />
+        <HitsList entries={entries} {...rest} />
       </div>
     </>
   );
 };
 
-const useKeyBoardNavigation = (gotoDetailSearch: (index: number) => void, clear: () => void, hits?: Array<Hit>) => {
-  const [index, setIndex] = useState(-1);
-  const context = useNamespaceAndNameContext();
-  const actionCount = getActionCount(context);
+const useKeyBoardNavigation = (
+  entries: HitsProps["entries"],
+  clear: () => void,
+  hideResults: () => void,
+  index: number,
+  setIndex: Dispatch<SetStateAction<number>>,
+  defaultLink: string
+) => {
   const history = useHistory();
-  useEffect(() => {
-    setIndex(-1);
-  }, [hits]);
 
   const onKeyDown = (e: ReactKeyboardEvent<HTMLInputElement>) => {
-    const indexSize = (hits?.length || 0) + actionCount;
     // We use e.which, because ie 11 does not support e.code
     // https://caniuse.com/keyboardevent-code
     switch (e.which) {
       case 40: // e.code: ArrowDown
-        if (hits) {
-          setIndex((idx) => {
-            if (idx <= indexSize) {
-              return idx + 1;
-            }
-            return idx;
-          });
-        }
+        setIndex((idx) => {
+          if (idx < entries.length) {
+            return idx + 1;
+          }
+          return idx;
+        });
         break;
       case 38: // e.code: ArrowUp
-        if (hits) {
-          setIndex((idx) => {
-            if (idx > 0) {
-              return idx - 1;
-            }
-            return idx;
-          });
-        }
+        setIndex((idx) => {
+          if (idx > 0) {
+            return idx - 1;
+          }
+          return idx;
+        });
         break;
       case 13: // e.code: Enter
-        if (hits && index > actionCount) {
-          const hit = hits[index - actionCount];
-          history.push(`/repo/${namespaceAndName(hit)}`);
-          clear();
+        if (index < 0) {
+          history.push(defaultLink);
         } else {
-          e.preventDefault();
-          gotoDetailSearch(index);
+          const entry = entries[index];
+          if (entry.props.link) {
+            history.push(entry.props.link);
+          }
         }
+        clear();
+        hideResults();
+
         break;
       case 27: // e.code: Escape
         if (index >= 0) {
@@ -378,24 +333,74 @@ const OmniSearch: FC = () => {
   });
   const { showResults, hideResults, ...handlers } = useShowResultsOnFocus();
   const [showHelp, setShowHelp] = useState(false);
-  const history = useHistory();
+  const [index, setIndex] = useState(-1);
+  useEffect(() => {
+    setIndex(-1);
+  }, []);
 
   const openHelp = () => setShowHelp(true);
   const closeHelp = () => setShowHelp(false);
-  const clearQuery = () => setQuery("");
+  const clearQuery = useCallback(() => setQuery(""), []);
 
-  const gotoDetailSearch = (index: number) => {
-    if (query.length > 1) {
-      history.push(
-        `/search/${searchType}/?q=${query}${context.namespace && index > 1 ? "&namespace=" + context.namespace : ""}${
-          context.name && index > 2 ? "&name=" + context.name : ""
-        }`
+  const hits = data?._embedded?.hits || [];
+  const searchTypes = useSearchTypes({
+    type: "",
+    namespaceContext: context.namespace || "",
+    repositoryNameContext: context.name || "",
+  });
+  searchTypes.sort(orderTypes);
+
+  const id = useCallback(namespaceAndName, []);
+
+  const entries = useMemo(() => {
+    const newEntries = [];
+
+    if (context.namespace && context.name && searchTypes.length > 0) {
+      newEntries.push(
+        <HitEntry
+          selected={newEntries.length === index}
+          clear={clearQuery}
+          label={t("search.quickSearch.searchRepo")}
+          link={`/search/${searchTypes[0]}/?q=${query}&namespace=${context.namespace}&name=${context.name}`}
+        />
       );
-      hideResults();
     }
-  };
+    if (context.namespace) {
+      newEntries.push(
+        <HitEntry
+          selected={newEntries.length === index}
+          clear={clearQuery}
+          label={t("search.quickSearch.searchNamespace")}
+          link={`/search/repository/?q=${query}&namespace=${context.namespace}`}
+        />
+      );
+    }
+    newEntries.push(
+      <HitEntry
+        selected={newEntries.length === index}
+        clear={clearQuery}
+        label={t("search.quickSearch.searchEverywhere")}
+        link={`/search/repository/?q=${query}`}
+      />
+    );
+    const length = newEntries.length;
+    hits?.forEach((hit, idx) => {
+      newEntries.push(
+        <HitEntry
+          key={idx}
+          selected={length + idx === index}
+          clear={clearQuery}
+          label={id(hit)}
+          link={`/repo/${id(hit)}`}
+          repository={hit._embedded?.repository}
+        />
+      );
+    });
+    return newEntries;
+  }, [clearQuery, context.name, context.namespace, hits, id, index, query, searchTypes, t]);
 
-  const { onKeyDown, index } = useKeyBoardNavigation(gotoDetailSearch, clearQuery, data?._embedded?.hits);
+  const defaultLink = `/search/${searchType}/?q=${query}`;
+  const { onKeyDown } = useKeyBoardNavigation(entries, clearQuery, hideResults, index, setIndex, defaultLink);
 
   return (
     <div className={classNames("navbar-item", "field", "mb-0")}>
@@ -435,15 +440,7 @@ const OmniSearch: FC = () => {
                 <SearchErrorNotification error={error} showHelp={openHelp} />
               </QuickSearchNotification>
             ) : null}
-            {!error && data ? (
-              <Hits
-                showHelp={openHelp}
-                query={query}
-                clear={clearQuery}
-                index={index}
-                hits={data._embedded?.hits || []}
-              />
-            ) : null}
+            {!error && data ? <Hits showHelp={openHelp} hits={hits} entries={entries} /> : null}
           </DropdownMenu>
         </div>
       </div>
