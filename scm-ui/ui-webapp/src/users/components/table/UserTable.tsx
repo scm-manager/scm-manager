@@ -21,35 +21,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
+import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
 import { User } from "@scm-manager/ui-types";
 import UserRow from "./UserRow";
 
-type Props = WithTranslation & {
+type Props = {
   users: User[];
 };
 
-class UserTable extends React.Component<Props> {
-  render() {
-    const { users, t } = this.props;
-    return (
-      <table className="card-table table is-hoverable is-fullwidth">
-        <thead>
-          <tr>
-            <th>{t("user.name")}</th>
-            <th className="is-hidden-mobile">{t("user.displayName")}</th>
-            <th className="is-hidden-mobile">{t("user.mail")}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map((user, index) => {
-            return <UserRow key={index} user={user} />;
-          })}
-        </tbody>
-      </table>
-    );
-  }
-}
+const UserTable: FC<Props> = ({ users }) => {
+  const [t] = useTranslation("users");
 
-export default withTranslation("users")(UserTable);
+  return (
+    <table className="card-table table is-hoverable is-fullwidth">
+      <thead>
+        <tr>
+          <th>{t("user.name")}</th>
+          <th className="is-hidden-mobile">{t("user.displayName")}</th>
+          <th className="is-hidden-mobile">{t("user.mail")}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {users.map((user, index) => {
+          return <UserRow key={index} user={user} />;
+        })}
+      </tbody>
+    </table>
+  );
+};
+
+export default UserTable;

@@ -26,6 +26,7 @@ import React, { FC } from "react";
 import { QueryResult } from "@scm-manager/ui-types";
 import Hits from "./Hits";
 import { LinkPaginator } from "@scm-manager/ui-components";
+import { Redirect, useLocation } from "react-router-dom";
 
 type Props = {
   result: QueryResult;
@@ -35,9 +36,21 @@ type Props = {
 };
 
 const Results: FC<Props> = ({ result, type, page, query }) => {
+  const location = useLocation();
+  const hits = result?._embedded?.hits;
+
+  let pathname = location.pathname;
+  if (!pathname.endsWith("/")) {
+    pathname = pathname.substring(0, pathname.lastIndexOf("/") + 1);
+  }
+
+  if (result && result.pageTotal < page && page > 1) {
+    return <Redirect to={`${pathname}${result.pageTotal}${location.search}`} />;
+  }
+
   return (
     <div className="panel">
-      <Hits type={type} hits={result._embedded.hits} />
+      <Hits type={type} hits={hits} />
       <div className="panel-footer">
         <LinkPaginator collection={result} page={page} filter={query} />
       </div>

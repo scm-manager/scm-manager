@@ -101,7 +101,7 @@ storiesOf("MarkdownView", module)
       return (
         <div>
           <h4 style={{ border: "1px dashed lightgray", padding: "2px" }}>
-            To render plantuml as images within markdown, please install the scm-markdown-plantuml-plguin
+            To render plantuml as images within markdown, please install the scm-markdown-plantuml-plugin
           </h4>
           <pre>{value}</pre>
         </div>

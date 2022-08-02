@@ -34,7 +34,7 @@ import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 
 type Props = {
   type: string;
-  hits: HitType[];
+  hits?: HitType[];
 };
 
 const hitComponents: { [name: string]: FC<HitProps> } = {
@@ -69,12 +69,12 @@ const HitComponent: FC<HitComponentProps> = ({ hit, type }) => (
 
 const NoHits: FC = () => {
   const [t] = useTranslation("commons");
-  return <Notification>{t("search.noHits")}</Notification>;
+  return <Notification type="info">{t("search.noHits")}</Notification>;
 };
 
 const Hits: FC<Props> = ({ type, hits }) => (
   <div className="panel-block">
-    {hits.length > 0 ? (
+    {hits && hits.length > 0 ? (
       hits.map((hit, c) => <HitComponent key={`${type}_${c}_${hit.score}`} hit={hit} type={type} />)
     ) : (
       <NoHits />

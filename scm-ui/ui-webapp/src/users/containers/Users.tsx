@@ -22,8 +22,10 @@
  * SOFTWARE.
  */
 import React, { FC } from "react";
+import { Redirect, useLocation, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { useLocation, useParams } from "react-router-dom";
+import { useUsers } from "@scm-manager/ui-api";
+import { User, UserCollection } from "@scm-manager/ui-types";
 import {
   CreateButton,
   LinkPaginator,
@@ -31,10 +33,31 @@ import {
   OverviewPageActions,
   Page,
   PageActions,
-  urls
+  urls,
 } from "@scm-manager/ui-components";
 import { UserTable } from "./../components/table";
-import { useUsers } from "@scm-manager/ui-api";
+
+type UserPageProps = {
+  data?: UserCollection;
+  users?: User[];
+  page: number;
+  search?: string;
+};
+
+const UserPage: FC<UserPageProps> = ({ data, users, page, search }) => {
+  const [t] = useTranslation("users");
+
+  if (!data || !users || users.length === 0) {
+    return <Notification type="info">{t("users.noUsers")}</Notification>;
+  }
+
+  return (
+    <>
+      <UserTable users={users} />
+      <LinkPaginator collection={data} page={page} filter={search} />
+    </>
+  );
+};
 
 const Users: FC = () => {
   const location = useLocation();
@@ -42,28 +65,13 @@ const Users: FC = () => {
   const search = urls.getQueryStringFromLocation(location);
   const page = urls.getPageFromMatch({ params });
   const { isLoading, error, data } = useUsers({ page: page - 1, search });
-  const users = data?._embedded.users;
   const [t] = useTranslation("users");
+  const users = data?._embedded?.users;
   const canAddUsers = !!data?._links.create;
 
-  const renderUserTable = () => {
-    if (data && users && users.length > 0) {
-      return (
-        <>
-          <UserTable users={users} />
-          <LinkPaginator collection={data} page={page} filter={urls.getQueryStringFromLocation(location)} />
-        </>
-      );
-    }
-    return <Notification type="info">{t("users.noUsers")}</Notification>;
-  };
-
-  const renderCreateButton = () => {
-    if (canAddUsers) {
-      return <CreateButton link="/users/create" label={t("users.createButton")} />;
-    }
-    return null;
-  };
+  if (data && data.pageTotal < page && page > 1) {
+    return <Redirect to={`/users/${data.pageTotal}`} />;
+  }
 
   return (
     <Page
@@ -72,8 +80,8 @@ const Users: FC = () => {
       loading={isLoading || !users}
       error={error || undefined}
     >
-      {renderUserTable()}
-      {renderCreateButton()}
+      <UserPage data={data} users={users} page={page} search={search} />
+      {canAddUsers ? <CreateButton link="/users/create" label={t("users.createButton")} /> : null}
       <PageActions>
         <OverviewPageActions
           showCreateButton={canAddUsers}
