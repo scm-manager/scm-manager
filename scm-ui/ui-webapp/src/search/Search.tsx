@@ -140,7 +140,7 @@ const Search: FC = () => {
   types.sort(orderTypes);
 
   const searchCounts = useSearchCounts(
-    types.filter((t) => t !== selectedType),
+    types.filter((type) => type !== selectedType),
     query,
     searchOptions
   );
