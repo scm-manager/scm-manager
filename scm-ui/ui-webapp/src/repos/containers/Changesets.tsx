@@ -61,7 +61,7 @@ const Changesets: FC<Props> = ({ repository, branch, url }) => {
   }
 
   if (data && data.pageTotal < page && page > 1) {
-    return <Redirect to={`${url}/${data.pageTotal}`} />;
+    return <Redirect to={`${urls.unescapeUrlForRoute(url)}/${data.pageTotal}`} />;
   }
 
   if (!data || !changesets || changesets.length === 0) {
