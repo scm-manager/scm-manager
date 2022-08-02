@@ -239,7 +239,6 @@ const useKeyBoardNavigation = (gotoDetailSearch: (index: number) => void, clear:
         if (hits) {
           setIndex((idx) => {
             if (idx <= indexSize) {
-              console.log(idx + 1);
               return idx + 1;
             }
             return idx;
@@ -250,7 +249,6 @@ const useKeyBoardNavigation = (gotoDetailSearch: (index: number) => void, clear:
         if (hits) {
           setIndex((idx) => {
             if (idx > 0) {
-              console.log(idx - 1);
               return idx - 1;
             }
             return idx;
