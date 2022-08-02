@@ -25,7 +25,7 @@
 import { nameRegex } from "../validation";
 import { TFunction } from "i18next";
 import { AstPlugin } from "./PluginApi";
-import { Node, Parent } from "unist";
+import { Literal, Node, Parent } from "unist";
 
 const namePartRegex = nameRegex.source.substring(1, nameRegex.source.length - 1).replace(/\[\^([^\]s]+)\]/, "[^$1\\s]");
 
@@ -45,11 +45,11 @@ function match(value: string): RegExpMatchArray[] {
 export const createTransformer = (t: TFunction): AstPlugin => {
   return ({ visit }) => {
     visit("text", (node: Node, index: number, parent?: Parent) => {
-      if (!parent || parent.type === "link" || !node.value) {
+      if (!parent || parent.type === "link" || !(node as Literal).value) {
         return;
       }
 
-      let nodeText = node.value as string;
+      let nodeText = (node as Literal).value as string;
       const matches = match(nodeText);
 
       if (matches.length > 0) {
@@ -92,7 +92,7 @@ export const createTransformer = (t: TFunction): AstPlugin => {
         parent.children[index] = {
           type: "text",
           children,
-        };
+        } as Node;
       }
     });
   };

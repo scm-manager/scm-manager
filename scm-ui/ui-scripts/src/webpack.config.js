@@ -33,7 +33,13 @@ const isDevelopment = process.env.NODE_ENV === "development";
 const root = path.resolve(process.cwd(), "..");
 
 const babelPlugins = [];
-const webpackPlugins = [];
+const webpackPlugins = [
+  new MiniCssExtractPlugin({
+    filename: "webapp.tailwind.css",
+    chunkFilename: "webapp.tailwind.css",
+    ignoreOrder: false,
+  }),
+];
 
 if (process.env.ANALYZE_BUNDLES === "true") {
   // it is ok to use require here, because we want to load the package conditionally
@@ -82,6 +88,7 @@ module.exports = [
         // enable async/await
         "regenerator-runtime/runtime",
         "./ui-webapp/src/index.tsx",
+        "./ui-scripts/src/tailwind.css",
       ],
     },
     devtool: "eval-cheap-module-source-map",
@@ -102,7 +109,39 @@ module.exports = [
           ],
         },
         {
+          test: /tailwind\.css$/i,
+          exclude: /node_modules/,
+          use: [
+            {
+              loader: MiniCssExtractPlugin.loader,
+            },
+            {
+              loader: "css-loader",
+              options: {
+                importLoaders: 1,
+              },
+            },
+            {
+              loader: "postcss-loader",
+              options: {
+                postcssOptions: {
+                  plugins: [
+                    [
+                      "tailwindcss",
+                      {
+                        config: path.join(root, "ui-scripts", "src", "tailwind.config.js"),
+                      },
+                    ],
+                    ["autoprefixer", {}],
+                  ],
+                },
+              },
+            },
+          ],
+        },
+        {
           test: /\.(css|scss|sass)$/i,
+          exclude: /tailwind\.css$/i,
           use: [
             // Creates `style` nodes from JS strings
             "style-loader",

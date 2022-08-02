@@ -279,6 +279,7 @@ license {
   exclude '**/*.snap'
   exclude '**/*.iml'
   exclude '**/.babelrc'
+  exclude '**/storybook-static/**'
 
   tasks {
     modules {

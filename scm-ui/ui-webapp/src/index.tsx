@@ -37,6 +37,9 @@ import ChangesetShortLink from "./repos/components/changesets/ChangesetShortLink
 import "./tokenExpired";
 import { ApiProvider } from "@scm-manager/ui-api";
 
+// eslint-disable-next-line no-restricted-imports
+import "@scm-manager/ui-buttons/build/index.css";
+
 binder.bind<extensionPoints.ChangesetDescriptionTokens>("changeset.description.tokens", ChangesetShortLink);
 
 const root = document.getElementById("root");

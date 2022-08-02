@@ -15,7 +15,7 @@
     "lint": "eslint src"
   },
   "devDependencies": {
-    "@scm-manager/eslint-config": "^2.15.1",
+    "@scm-manager/eslint-config": "^2.16.0",
     "@scm-manager/tsconfig": "^2.13.0"
   },
   "babel": {

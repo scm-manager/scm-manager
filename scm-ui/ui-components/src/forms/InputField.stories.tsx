@@ -29,7 +29,6 @@ import Button from "../buttons/Button";
 import { MemoryRouter } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { SubmitButton } from "../buttons";
-import { Person } from "@scm-manager/ui-types";
 
 const Decorator = styled.div`
   padding: 2rem;
@@ -74,9 +73,9 @@ const ReactHookForm: FC = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<Name>();
-  const [stored, setStored] = useState<Person>();
+  const [stored, setStored] = useState<Name>();
 
-  const onSubmit = (person: Person) => {
+  const onSubmit = (person: Name) => {
     setStored(person);
   };
 

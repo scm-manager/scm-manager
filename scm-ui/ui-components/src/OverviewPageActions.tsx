@@ -23,9 +23,10 @@
  */
 import React, { FC, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
-import classNames from "classnames";
-import { Button, urls } from "./index";
+import { urls } from "./index";
 import { FilterInput, Select } from "./forms";
+import { ButtonVariants, LinkButton } from "@scm-manager/ui-buttons";
+import classNames from "classnames";
 
 type Props = {
   showCreateButton: boolean;
@@ -54,7 +55,7 @@ const OverviewPageActions: FC<Props> = ({
   label,
   testId,
   searchPlaceholder,
-  groupAriaLabelledby
+  groupAriaLabelledby,
 }) => {
   const history = useHistory();
   const location = useLocation();
@@ -66,7 +67,7 @@ const OverviewPageActions: FC<Props> = ({
       <Select
         ariaLabelledby={groupAriaLabelledby}
         className="is-fullwidth"
-        options={groups.map(g => ({ value: g, label: g }))}
+        options={groups.map((g) => ({ value: g, label: g }))}
         value={currentGroup}
         onChange={groupSelected}
       />
@@ -76,8 +77,10 @@ const OverviewPageActions: FC<Props> = ({
   const renderCreateButton = () => {
     if (showCreateButton) {
       return (
-        <div className={classNames("input-button", "control", "column")}>
-          <Button label={label} link={createLink || `${link}create/`} color="primary" />
+        <div className={classNames("control", "column")}>
+          <LinkButton variant={ButtonVariants.PRIMARY} to={createLink || `${link}create/`}>
+            {label}
+          </LinkButton>
         </div>
       );
     }

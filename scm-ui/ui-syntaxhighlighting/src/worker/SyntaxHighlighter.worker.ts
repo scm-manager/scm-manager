@@ -40,6 +40,7 @@ import type {
   TokenizeSuccessResponse,
 } from "../types";
 import { isRefractorElement } from "../types";
+import type { RefractorElement } from "refractor";
 
 // the WorkerGlobalScope is assigned to self
 // see https://developer.mozilla.org/en-US/docs/Web/API/WorkerGlobalScope/self
@@ -91,7 +92,7 @@ const countChildrenAndApplyMarkers = (node: RefractorNode, markedTexts?: string[
   }
 
   if (newChildren.length > 0) {
-    const el = node as RefractorNode;
+    const el = node as unknown as RefractorElement;
     el.type = "element";
     el.tagName = "span";
     el.children = newChildren;
