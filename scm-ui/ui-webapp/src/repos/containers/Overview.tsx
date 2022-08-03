@@ -122,6 +122,10 @@ const Repositories: FC<RepositoriesProps> = ({ namespaces, namespace, repositori
   }
 };
 
+function getCurrentGroup(namespace?: string, namespaces?: NamespaceCollection) {
+  return namespace && namespaces?._embedded.namespaces.some((n) => n.namespace === namespace) ? namespace : "";
+}
+
 const Overview: FC = () => {
   const { isLoading, error, namespace, namespaces, repositories, search, page } = useOverviewData();
   const history = useHistory();
@@ -212,9 +216,7 @@ const Overview: FC = () => {
             </label>
             <OverviewPageActions
               showCreateButton={showCreateButton}
-              currentGroup={
-                namespace && namespaces?._embedded.namespaces.some((n) => n.namespace === namespace) ? namespace : ""
-              }
+              currentGroup={getCurrentGroup(namespace, namespaces)}
               groups={namespacesToRender}
               groupSelected={namespaceSelected}
               groupAriaLabelledby="select-namespace"
