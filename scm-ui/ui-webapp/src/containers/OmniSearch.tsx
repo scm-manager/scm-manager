@@ -45,7 +45,6 @@ import SyntaxModal from "../search/SyntaxModal";
 import SearchErrorNotification from "../search/SearchErrorNotification";
 import queryString from "query-string";
 import { orderTypes } from "../search/Search";
-import { headOnce } from "fetch-mock";
 
 const Input = styled.input`
   border-radius: 4px !important;
