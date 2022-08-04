@@ -21,25 +21,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, KeyboardEvent as ReactKeyboardEvent, MouseEvent, useCallback, useEffect, useState } from "react";
-import { Hit, Links, ValueHitField } from "@scm-manager/ui-types";
+import React, {
+  Dispatch,
+  FC,
+  KeyboardEvent as ReactKeyboardEvent,
+  MouseEvent,
+  ReactElement,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import { Hit, Links, Repository, ValueHitField } from "@scm-manager/ui-types";
 import styled from "styled-components";
-import { useSearch } from "@scm-manager/ui-api";
+import { useNamespaceAndNameContext, useOmniSearch, useSearchTypes } from "@scm-manager/ui-api";
 import classNames from "classnames";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import {
-  Button,
-  devices,
-  HitProps,
-  Notification,
-  RepositoryAvatar,
-  useStringHitFieldValue
-} from "@scm-manager/ui-components";
+import { devices, Icon, RepositoryAvatar } from "@scm-manager/ui-components";
 import SyntaxHelp from "../search/SyntaxHelp";
 import SyntaxModal from "../search/SyntaxModal";
 import SearchErrorNotification from "../search/SearchErrorNotification";
 import queryString from "query-string";
+import { orderTypes } from "../search/Search";
 
 const Input = styled.input`
   border-radius: 4px !important;
@@ -54,29 +59,15 @@ const namespaceAndName = (hit: Hit) => {
   const name = (hit.fields["name"] as ValueHitField).value as string;
   return `${namespace}/${name}`;
 };
+type ExtractProps<T> = T extends React.ComponentType<infer U> ? U : never;
 
 type HitsProps = {
+  entries: ReactElement<ExtractProps<typeof HitEntry>>[];
   hits: Hit[];
-  index: number;
   showHelp: () => void;
-  gotoDetailSearch: () => void;
-  clear: () => void;
 };
 
 const QuickSearchNotification: FC = ({ children }) => <div className="dropdown-content p-4">{children}</div>;
-
-type GotoProps = {
-  gotoDetailSearch: () => void;
-};
-
-const EmptyHits: FC = () => {
-  const [t] = useTranslation("commons");
-  return (
-    <Notification className="m-4" type="info">
-      {t("search.quickSearch.noResults")}
-    </Notification>
-  );
-};
 
 const ResultHeading = styled.h3`
   border-bottom: 1px solid lightgray;
@@ -86,23 +77,14 @@ const DropdownMenu = styled.div`
   max-width: 20rem;
 `;
 
-const ResultFooter = styled.div`
-  border-top: 1px solid lightgray;
-`;
-
 const SearchInput = styled(Input)`
   @media screen and (max-width: ${devices.mobile.width}px) {
     width: 9rem;
   }
 `;
 
-const AvatarSection: FC<HitProps> = ({ hit }) => {
-  const namespace = useStringHitFieldValue(hit, "namespace");
-  const name = useStringHitFieldValue(hit, "name");
-  const type = useStringHitFieldValue(hit, "type");
-
-  const repository = hit._embedded?.repository;
-  if (!namespace || !name || !type || !repository) {
+const AvatarSection: FC<{ repository: Repository }> = ({ repository }) => {
+  if (!repository) {
     return null;
   }
 
@@ -113,47 +95,42 @@ const AvatarSection: FC<HitProps> = ({ hit }) => {
   );
 };
 
-const MoreResults: FC<GotoProps> = ({ gotoDetailSearch }) => {
-  const [t] = useTranslation("commons");
+const HitsList: FC<Omit<HitsProps, "showHelp" | "hits">> = ({ entries }) => {
   return (
-    <ResultFooter className={classNames("dropdown-item", "has-text-centered", "mx-2", "px-2", "py-1")}>
-      <Button action={gotoDetailSearch} color="primary" data-omnisearch="true">
-        {t("search.quickSearch.moreResults")}
-      </Button>
-    </ResultFooter>
+    <ul id="omni-search-results" aria-expanded="true" role="listbox">
+      {entries}
+    </ul>
   );
 };
 
-const HitsList: FC<HitsProps> = ({ hits, index, clear, gotoDetailSearch }) => {
-  const id = useCallback(namespaceAndName, [hits]);
-  if (hits.length === 0) {
-    return <EmptyHits />;
-  }
+const HitEntry: FC<{ selected: boolean; link: string; label: string; clear: () => void; repository?: Repository }> = ({
+  selected,
+  link,
+  label,
+  clear,
+  repository,
+}) => {
   return (
-    <ul id="omni-search-results" aria-expanded="true" role="listbox">
-      {hits.map((hit, idx) => (
-        <li
-          key={id(hit)}
-          onMouseDown={e => e.preventDefault()}
-          onClick={clear}
-          role="option"
-          aria-selected={idx === index}
-          id={idx === index ? "omni-search-selected-option" : undefined}
-        >
-          <Link
-            className={classNames("is-flex", "dropdown-item", "has-text-weight-medium", "is-ellipsis-overflow", {
-              "is-active": idx === index
-            })}
-            title={id(hit)}
-            to={`/repo/${id(hit)}`}
-            data-omnisearch="true"
-          >
-            <AvatarSection hit={hit} />
-            {id(hit)}
-          </Link>
-        </li>
-      ))}
-    </ul>
+    <li
+      key={label}
+      onMouseDown={(e) => e.preventDefault()}
+      onClick={clear}
+      role="option"
+      aria-selected={selected}
+      id={selected ? "omni-search-selected-option" : undefined}
+    >
+      <Link
+        className={classNames("is-flex", "dropdown-item", "has-text-weight-medium", "is-ellipsis-overflow", {
+          "is-active": selected,
+        })}
+        title={label}
+        to={link}
+        data-omnisearch="true"
+      >
+        {repository ? <AvatarSection repository={repository} /> : <Icon name="search" className="mr-3 ml-1 mt-1" />}
+        {label}
+      </Link>
+    </li>
   );
 };
 
@@ -171,7 +148,7 @@ const ScreenReaderHitSummary: FC<ScreenReaderHitSummaryProps> = ({ hits }) => {
   );
 };
 
-const Hits: FC<HitsProps> = ({ showHelp, gotoDetailSearch, hits, ...rest }) => {
+const Hits: FC<HitsProps> = ({ entries, hits, showHelp, ...rest }) => {
   const [t] = useTranslation("commons");
 
   return (
@@ -193,53 +170,54 @@ const Hits: FC<HitsProps> = ({ showHelp, gotoDetailSearch, hits, ...rest }) => {
           <span>{t("search.quickSearch.resultHeading")}</span>
           <SyntaxHelp onClick={showHelp} />
         </ResultHeading>
-        <HitsList showHelp={showHelp} gotoDetailSearch={gotoDetailSearch} hits={hits} {...rest} />
-        <MoreResults gotoDetailSearch={gotoDetailSearch} />
+        <HitsList entries={entries} {...rest} />
       </div>
     </>
   );
 };
 
-const useKeyBoardNavigation = (gotoDetailSearch: () => void, clear: () => void, hits?: Array<Hit>) => {
-  const [index, setIndex] = useState(-1);
+const useKeyBoardNavigation = (
+  entries: HitsProps["entries"],
+  clear: () => void,
+  hideResults: () => void,
+  index: number,
+  setIndex: Dispatch<SetStateAction<number>>,
+  defaultLink: string
+) => {
   const history = useHistory();
-  useEffect(() => {
-    setIndex(-1);
-  }, [hits]);
 
   const onKeyDown = (e: ReactKeyboardEvent<HTMLInputElement>) => {
     // We use e.which, because ie 11 does not support e.code
     // https://caniuse.com/keyboardevent-code
     switch (e.which) {
       case 40: // e.code: ArrowDown
-        if (hits) {
-          setIndex(idx => {
-            if (idx + 1 < hits.length) {
-              return idx + 1;
-            }
-            return idx;
-          });
-        }
+        setIndex((idx) => {
+          if (idx < entries.length) {
+            return idx + 1;
+          }
+          return idx;
+        });
         break;
       case 38: // e.code: ArrowUp
-        if (hits) {
-          setIndex(idx => {
-            if (idx > 0) {
-              return idx - 1;
-            }
-            return idx;
-          });
-        }
+        setIndex((idx) => {
+          if (idx > 0) {
+            return idx - 1;
+          }
+          return idx;
+        });
         break;
       case 13: // e.code: Enter
-        if (hits && index >= 0) {
-          const hit = hits[index];
-          history.push(`/repo/${namespaceAndName(hit)}`);
-          clear();
+        if (index < 0) {
+          history.push(defaultLink);
         } else {
-          e.preventDefault();
-          gotoDetailSearch();
+          const entry = entries[index];
+          if (entry.props.link) {
+            history.push(entry.props.link);
+          }
         }
+        clear();
+        hideResults();
+
         break;
       case 27: // e.code: Escape
         if (index >= 0) {
@@ -253,7 +231,7 @@ const useKeyBoardNavigation = (gotoDetailSearch: () => void, clear: () => void, 
 
   return {
     onKeyDown,
-    index
+    index,
   };
 };
 
@@ -270,12 +248,8 @@ const useDebounce = (value: string, delay: number) => {
   return debouncedValue;
 };
 
-const isMoreResultsButton = (element: Element) => {
-  return element.tagName.toLocaleLowerCase("en") === "button" && element.className.includes("is-primary");
-};
-
 const isOnmiSearchElement = (element: Element) => {
-  return element.getAttribute("data-omnisearch") || isMoreResultsButton(element);
+  return element.getAttribute("data-omnisearch");
 };
 
 const useShowResultsOnFocus = () => {
@@ -312,7 +286,7 @@ const useShowResultsOnFocus = () => {
     },
     onKeyPress: () => setShowResults(true),
     onFocus: () => setShowResults(true),
-    hideResults: () => setShowResults(false)
+    hideResults: () => setShowResults(false),
   };
 };
 
@@ -342,7 +316,7 @@ const useSearchParams = () => {
 
   return {
     searchType,
-    initialQuery
+    initialQuery,
   };
 };
 
@@ -351,30 +325,88 @@ const OmniSearch: FC = () => {
   const { searchType, initialQuery } = useSearchParams();
   const [query, setQuery] = useState(initialQuery);
   const debouncedQuery = useDebounce(query, 250);
-  const { data, isLoading, error } = useSearch(debouncedQuery, { type: "repository", pageSize: 5 });
+  const context = useNamespaceAndNameContext();
+  const { data, isLoading, error } = useOmniSearch(debouncedQuery, {
+    type: "repository",
+    pageSize: 5,
+  });
   const { showResults, hideResults, ...handlers } = useShowResultsOnFocus();
   const [showHelp, setShowHelp] = useState(false);
-  const history = useHistory();
+  const [index, setIndex] = useState(-1);
+  useEffect(() => {
+    setIndex(-1);
+  }, []);
 
   const openHelp = () => setShowHelp(true);
   const closeHelp = () => setShowHelp(false);
-  const clearQuery = () => setQuery("");
+  const clearQuery = useCallback(() => setQuery(""), []);
 
-  const gotoDetailSearch = () => {
-    if (query.length > 1) {
-      history.push(`/search/${searchType}/?q=${query}`);
-      hideResults();
+  const hits = data?._embedded?.hits || [];
+  const searchTypes = useSearchTypes({
+    type: "",
+    namespaceContext: context.namespace || "",
+    repositoryNameContext: context.name || "",
+  });
+  searchTypes.sort(orderTypes);
+
+  const id = useCallback(namespaceAndName, []);
+
+  const entries = useMemo(() => {
+    const newEntries = [];
+
+    if (context.namespace && context.name && searchTypes.length > 0) {
+      newEntries.push(
+        <HitEntry
+          selected={newEntries.length === index}
+          clear={clearQuery}
+          label={t("search.quickSearch.searchRepo")}
+          link={`/search/${searchTypes[0]}/?q=${query}&namespace=${context.namespace}&name=${context.name}`}
+        />
+      );
     }
-  };
+    if (context.namespace) {
+      newEntries.push(
+        <HitEntry
+          selected={newEntries.length === index}
+          clear={clearQuery}
+          label={t("search.quickSearch.searchNamespace")}
+          link={`/search/repository/?q=${query}&namespace=${context.namespace}`}
+        />
+      );
+    }
+    newEntries.push(
+      <HitEntry
+        selected={newEntries.length === index}
+        clear={clearQuery}
+        label={t("search.quickSearch.searchEverywhere")}
+        link={`/search/repository/?q=${query}`}
+      />
+    );
+    const length = newEntries.length;
+    hits?.forEach((hit, idx) => {
+      newEntries.push(
+        <HitEntry
+          key={idx}
+          selected={length + idx === index}
+          clear={clearQuery}
+          label={id(hit)}
+          link={`/repo/${id(hit)}`}
+          repository={hit._embedded?.repository}
+        />
+      );
+    });
+    return newEntries;
+  }, [clearQuery, context.name, context.namespace, hits, id, index, query, searchTypes, t]);
 
-  const { onKeyDown, index } = useKeyBoardNavigation(gotoDetailSearch, clearQuery, data?._embedded?.hits);
+  const defaultLink = `/search/${searchType}/?q=${query}`;
+  const { onKeyDown } = useKeyBoardNavigation(entries, clearQuery, hideResults, index, setIndex, defaultLink);
 
   return (
     <div className={classNames("navbar-item", "field", "mb-0")}>
       {showHelp ? <SyntaxModal close={closeHelp} /> : null}
       <div
         className={classNames("control", "has-icons-right", {
-          "is-loading": isLoading
+          "is-loading": isLoading,
         })}
       >
         <div className={classNames("dropdown", { "is-active": (!!data || error) && showResults })}>
@@ -383,7 +415,7 @@ const OmniSearch: FC = () => {
               className="input is-small"
               type="text"
               placeholder={t("search.placeholder")}
-              onChange={e => setQuery(e.target.value)}
+              onChange={(e) => setQuery(e.target.value)}
               onKeyDown={onKeyDown}
               value={query}
               role="combobox"
@@ -401,21 +433,13 @@ const OmniSearch: FC = () => {
               </span>
             )}
           </div>
-          <DropdownMenu className="dropdown-menu" onMouseDown={e => e.preventDefault()}>
+          <DropdownMenu className="dropdown-menu" onMouseDown={(e) => e.preventDefault()}>
             {error ? (
               <QuickSearchNotification>
                 <SearchErrorNotification error={error} showHelp={openHelp} />
               </QuickSearchNotification>
             ) : null}
-            {!error && data ? (
-              <Hits
-                showHelp={openHelp}
-                gotoDetailSearch={gotoDetailSearch}
-                clear={clearQuery}
-                index={index}
-                hits={data._embedded?.hits || []}
-              />
-            ) : null}
+            {!error && data ? <Hits showHelp={openHelp} hits={hits} entries={entries} /> : null}
           </DropdownMenu>
         </div>
       </div>

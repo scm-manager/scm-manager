@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { match as Match } from "react-router";
 import { Link as RouteLink, Redirect, Route, RouteProps, Switch, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -43,7 +43,7 @@ import {
   SecondaryNavigationColumn,
   StateMenuContextProvider,
   SubNavigation,
-  urls
+  urls,
 } from "@scm-manager/ui-components";
 import RepositoryDetails from "../components/RepositoryDetails";
 import EditRepo from "./EditRepo";
@@ -60,7 +60,7 @@ import SourceExtensions from "../sources/containers/SourceExtensions";
 import TagsOverview from "../tags/container/TagsOverview";
 import CompareRoot from "../compare/CompareRoot";
 import TagRoot from "../tags/container/TagRoot";
-import { useIndexLinks, useRepository } from "@scm-manager/ui-api";
+import { useIndexLinks, useNamespaceAndNameContext, useRepository } from "@scm-manager/ui-api";
 import styled from "styled-components";
 
 const TagGroup = styled.span`
@@ -85,7 +85,7 @@ const useRepositoryFromUrl = (match: Match<UrlParams>) => {
   const { data: repository, ...rest } = useRepository(namespace, name);
   return {
     repository,
-    ...rest
+    ...rest,
   };
 };
 
@@ -94,8 +94,19 @@ const RepositoryRoot = () => {
   const { isLoading, error, repository } = useRepositoryFromUrl(match);
   const indexLinks = useIndexLinks();
   const [showHealthCheck, setShowHealthCheck] = useState(false);
-
   const [t] = useTranslation("repos");
+  const context = useNamespaceAndNameContext();
+
+  useEffect(() => {
+    if (repository) {
+      context.setNamespace(repository.namespace);
+      context.setName(repository.name);
+    }
+    return () => {
+      context.setNamespace("");
+      context.setName("");
+    };
+  }, [repository, context]);
 
   if (error) {
     return (
@@ -119,7 +130,7 @@ const RepositoryRoot = () => {
     error,
     repoLink: (indexLinks.repositories as Link)?.href,
     indexLinks,
-    match
+    match,
   };
 
   const redirectUrlFactory = binder.getExtension<extensionPoints.RepositoryRedirect>("repository.redirect", props);
@@ -130,16 +141,16 @@ const RepositoryRoot = () => {
     redirectedUrl = url + "/code/sources/";
   }
 
-  const fileControlFactoryFactory: (changeset: Changeset) => FileControlFactory = changeset => file => {
+  const fileControlFactoryFactory: (changeset: Changeset) => FileControlFactory = (changeset) => (file) => {
     const baseUrl = `${url}/code/sources`;
     const sourceLink = file.newPath && {
       url: `${baseUrl}/${changeset.id}/${file.newPath}/`,
-      label: t("diff.jumpToSource")
+      label: t("diff.jumpToSource"),
     };
     const targetLink = file.oldPath &&
       changeset._embedded?.parents?.length === 1 && {
         url: `${baseUrl}/${changeset._embedded.parents[0].id}/${file.oldPath}`,
-        label: t("diff.jumpToTarget")
+        label: t("diff.jumpToTarget"),
       };
 
     const links = [];
@@ -177,7 +188,7 @@ const RepositoryRoot = () => {
   const extensionProps = {
     repository,
     url,
-    indexLinks
+    indexLinks,
   };
 
   const matchesBranches = (route: RouteProps) => {
@@ -305,7 +316,7 @@ const RepositoryRoot = () => {
                 props={{
                   repository,
                   url: urls.escapeUrlForRoute(url),
-                  indexLinks
+                  indexLinks,
                 }}
                 renderAll={true}
               />

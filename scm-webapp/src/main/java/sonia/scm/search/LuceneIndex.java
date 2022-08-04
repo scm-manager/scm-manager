@@ -37,10 +37,12 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import static java.util.Collections.singleton;
 import static sonia.scm.search.FieldNames.ID;
 import static sonia.scm.search.FieldNames.PERMISSION;
 
@@ -153,15 +155,15 @@ class LuceneIndex<T> implements Index<T>, AutoCloseable {
 
   private class LuceneDeleteBy implements DeleteBy {
 
-    private final Map<Class<?>, String> map = new HashMap<>();
+    private final Map<Class<?>, Collection<String>> map = new HashMap<>();
 
     private LuceneDeleteBy(Class<?> type, String id) {
-      map.put(type, id);
+      map.put(type, singleton(id));
     }
 
     @Override
     public DeleteBy and(Class<?> type, String id) {
-      map.put(type, id);
+      map.put(type, singleton(id));
       return this;
     }
 

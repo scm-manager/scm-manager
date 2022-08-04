@@ -24,21 +24,29 @@
 
 package sonia.scm.api.v2.resources;
 
+import de.otto.edison.hal.Link;
 import de.otto.edison.hal.Links;
 import sonia.scm.repository.NamespacePermissions;
+import sonia.scm.search.SearchEngine;
+import sonia.scm.search.SearchableType;
 
 import javax.inject.Inject;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static de.otto.edison.hal.Link.link;
+import static de.otto.edison.hal.Link.linkBuilder;
 import static de.otto.edison.hal.Links.linkingTo;
 
 class NamespaceToNamespaceDtoMapper {
 
   private final ResourceLinks links;
+  private final SearchEngine searchEngine;
 
   @Inject
-  NamespaceToNamespaceDtoMapper(ResourceLinks links) {
+  NamespaceToNamespaceDtoMapper(ResourceLinks links, SearchEngine searchEngine) {
     this.links = links;
+    this.searchEngine = searchEngine;
   }
 
   NamespaceDto map(String namespace) {
@@ -51,6 +59,18 @@ class NamespaceToNamespaceDtoMapper {
       linkingTo
         .single(link("permissions", links.namespacePermission().all(namespace)));
     }
+    linkingTo.array(searchLinks(namespace));
+    linkingTo.single(link("searchableTypes", links.searchableTypes().searchableTypesForNamespace(namespace)));
     return new NamespaceDto(namespace, linkingTo.build());
+  }
+
+  private List<Link> searchLinks(String namespace) {
+    return searchEngine.getSearchableTypes().stream()
+      .filter(SearchableType::limitableToNamespace)
+      .map(SearchableType::getName)
+      .map(typeName ->
+        linkBuilder("search", links.search().queryForNamespace(typeName, namespace)).withName(typeName).build()
+      )
+      .collect(Collectors.toList());
   }
 }

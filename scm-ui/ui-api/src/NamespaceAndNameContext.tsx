@@ -22,47 +22,27 @@
  * SOFTWARE.
  */
 
-package sonia.scm.search;
+import React, { createContext, FC, useContext, useState } from "react";
 
-import com.google.common.annotations.Beta;
+export type NamespaceAndNameContext = {
+  namespace?: string;
+  setNamespace: (namespace: string) => void;
+  name?: string;
+  setName: (name: string) => void;
+};
+const Context = createContext<NamespaceAndNameContext | undefined>(undefined);
 
-import java.util.Collection;
-
-/**
- * A type which can be searched with the {@link SearchEngine}.
- *
- * @since 2.21.0
- */
-@Beta
-public interface SearchableType {
-
-  /**
-   * Return name of the type.
-   *
-   * @return name of type
-   */
-  String getName();
-
-  /**
-   * Return type in form of class.
-   *
-   * @return class of type
-   */
-  Class<?> getType();
-
-  /**
-   * Returns collection of searchable fields.
-   *
-   * @return collection of searchable fields
-   * @since 2.23.0
-   */
-  Collection<? extends SearchableField> getFields();
-
-  default boolean limitableToRepository() {
-    return false;
+export const useNamespaceAndNameContext = () => {
+  const context = useContext(Context);
+  if (!context) {
+    throw new Error("useNamespaceAndNameContext can't be used outside of ApiProvider");
   }
+  return context;
+};
 
-  default boolean limitableToNamespace() {
-    return false;
-  }
-}
+export const NamespaceAndNameContextProvider: FC = ({ children }) => {
+  const [namespace, setNamespace] = useState("");
+  const [name, setName] = useState("");
+
+  return <Context.Provider value={{ namespace, setNamespace, name, setName }}>{children}</Context.Provider>;
+};

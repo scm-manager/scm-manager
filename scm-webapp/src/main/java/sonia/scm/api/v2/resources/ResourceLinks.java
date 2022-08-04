@@ -1176,15 +1176,44 @@ class ResourceLinks {
     private final LinkBuilder searchLinkBuilder;
 
     SearchLinks(ScmPathInfo pathInfo) {
-      this.searchLinkBuilder = new LinkBuilder(pathInfo, SearchResource.class);
+      this.searchLinkBuilder = new LinkBuilder(pathInfo, SearchResource.class, SearchResource.SearchEndpoints.class);
     }
 
     public String query(String type) {
-      return searchLinkBuilder.method("query").parameters(type).href();
+      return searchLinkBuilder.method("query").parameters().method("globally").parameters(type).href();
+    }
+
+    public String queryForNamespace(String namespace, String type) {
+      return searchLinkBuilder.method("query").parameters().method("forNamespace").parameters(type, namespace).href();
+    }
+
+    public String queryForRepository(String namespace, String name, String type) {
+      return searchLinkBuilder.method("query").parameters().method("forRepository").parameters(namespace, name, type).href();
+    }
+  }
+
+  public SearchableTypesLinks searchableTypes() {
+    return new SearchableTypesLinks(accessScmPathInfoStore().get());
+  }
+
+  public static class SearchableTypesLinks {
+
+    private final LinkBuilder searchLinkBuilder;
+
+    SearchableTypesLinks(ScmPathInfo pathInfo) {
+      this.searchLinkBuilder = new LinkBuilder(pathInfo, SearchResource.class, SearchResource.SearchableTypesEndpoints.class);
     }
 
     public String searchableTypes() {
-      return searchLinkBuilder.method("searchableTypes").parameters().href();
+      return searchLinkBuilder.method("searchableTypes").parameters().method("globally").parameters().href();
+    }
+
+    public String searchableTypesForNamespace(String namespace) {
+      return searchLinkBuilder.method("searchableTypes").parameters().method("forNamespace").parameters(namespace).href();
+    }
+
+    public String searchableTypesForRepository(String namespace, String name) {
+      return searchLinkBuilder.method("searchableTypes").parameters().method("forRepository").parameters(namespace, name).href();
     }
   }
 

@@ -30,11 +30,20 @@ import { useQueries, useQuery } from "react-query";
 import { useEffect, useState } from "react";
 import SYNTAX from "./help/search/syntax";
 import MODAL from "./help/search/modal";
+import { useRepository } from "./repositories";
+import { useNamespace } from "./namespaces";
 
 export type SearchOptions = {
   type: string;
   page?: number;
   pageSize?: number;
+  namespaceContext?: string;
+  repositoryNameContext?: string;
+};
+
+type SearchLinks = {
+  links: Link[];
+  isLoading: boolean;
 };
 
 const defaultSearchOptions: SearchOptions = {
@@ -43,24 +52,29 @@ const defaultSearchOptions: SearchOptions = {
 
 const isString = (str: string | undefined): str is string => !!str;
 
-export const useSearchTypes = () => {
-  return useSearchLinks()
-    .map((link) => link.name)
-    .filter(isString);
+export const useSearchTypes = (options?: SearchOptions) => {
+  const searchLinks = useSearchLinks(options);
+  if (searchLinks?.isLoading) {
+    return [];
+  }
+  return searchLinks?.links?.map((link) => link.name).filter(isString) || [];
 };
 
 export const useSearchableTypes = () => useIndexJsonResource<SearchableType[]>("searchableTypes");
 
-export const useSearchCounts = (types: string[], query: string) => {
-  const searchLinks = useSearchLinks();
+export const useSearchCounts = (types: string[], query: string, options?: SearchOptions) => {
+  const { links, isLoading } = useSearchLinks(options);
+  const result: { [type: string]: ApiResultWithFetching<number> } = {};
+
   const queries = useQueries(
     types.map((type) => ({
       queryKey: ["search", type, query, "count"],
       queryFn: () =>
-        apiClient.get(`${findLink(searchLinks, type)}?q=${query}&countOnly=true`).then((response) => response.json()),
+        apiClient.get(`${findLink(links, type)}?q=${query}&countOnly=true`).then((response) => response.json()),
+      enabled: !isLoading,
     }))
   );
-  const result: { [type: string]: ApiResultWithFetching<number> } = {};
+
   queries.forEach((q, i) => {
     result[types[i]] = {
       isLoading: q.isLoading,
@@ -69,6 +83,7 @@ export const useSearchCounts = (types: string[], query: string) => {
       data: (q.data as QueryResult)?.totalHits,
     };
   });
+
   return result;
 };
 
@@ -81,28 +96,55 @@ const findLink = (links: Link[], name: string) => {
   throw new Error(`could not find search link for ${name}`);
 };
 
-const useSearchLinks = () => {
+const useSearchLinks = (options?: SearchOptions): SearchLinks => {
   const links = useIndexLinks();
+  const { data: namespace, isLoading: namespaceLoading } = useNamespace(options?.namespaceContext || "");
+  const { data: repo, isLoading: repoLoading } = useRepository(
+    options?.namespaceContext || "",
+    options?.repositoryNameContext || ""
+  );
+
+  if (options?.repositoryNameContext) {
+    return { links: repo?._links["search"] as Link[], isLoading: repoLoading };
+  }
+
+  if (options?.namespaceContext) {
+    return { links: namespace?._links["search"] as Link[], isLoading: namespaceLoading };
+  }
+
   const searchLinks = links["search"];
   if (!searchLinks) {
-    throw new Error("could not find search links in index");
+    throw new Error("could not find useInternalSearch links in index");
   }
 
   if (!Array.isArray(searchLinks)) {
-    throw new Error("search links returned in wrong format, array is expected");
+    throw new Error("useInternalSearch links returned in wrong format, array is expected");
   }
-  return searchLinks as Link[];
+  return { links: searchLinks, isLoading: false };
 };
 
-const useSearchLink = (name: string) => {
-  const searchLinks = useSearchLinks();
-  return findLink(searchLinks, name);
+const useSearchLink = (options: SearchOptions) => {
+  const { links, isLoading } = useSearchLinks(options);
+  if (isLoading) {
+    return undefined;
+  }
+  return findLink(links, options.type);
+};
+
+export const useOmniSearch = (query: string, optionParam = defaultSearchOptions): ApiResult<QueryResult> => {
+  const options = { ...defaultSearchOptions, ...optionParam };
+  const link = useSearchLink({ ...options, repositoryNameContext: "", namespaceContext: "" });
+  return useInternalSearch(query, options, link);
 };
 
 export const useSearch = (query: string, optionParam = defaultSearchOptions): ApiResult<QueryResult> => {
   const options = { ...defaultSearchOptions, ...optionParam };
-  const link = useSearchLink(options.type);
+  const link = useSearchLink(options);
 
+  return useInternalSearch(query, options, link);
+};
+
+const useInternalSearch = (query: string, options: SearchOptions, link?: string) => {
   const queryParams: Record<string, string> = {};
   queryParams.q = query;
   if (options.page) {
@@ -115,7 +157,7 @@ export const useSearch = (query: string, optionParam = defaultSearchOptions): Ap
     ["search", options.type, queryParams],
     () => apiClient.get(`${link}?${createQueryString(queryParams)}`).then((response) => response.json()),
     {
-      enabled: query?.length > 1,
+      enabled: query?.length > 1 && !!link,
     }
   );
 };

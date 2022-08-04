@@ -29,8 +29,12 @@ import lombok.Value;
 import sonia.scm.ModelObject;
 import sonia.scm.repository.Repository;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
+import static java.util.Arrays.asList;
 
 /**
  * Build and execute queries against an index.
@@ -41,7 +45,7 @@ import java.util.Map;
 @Beta
 public abstract class QueryBuilder<T> {
 
-  private final Map<Class<?>, String> filters = new HashMap<>();
+  private final Map<Class<?>, Collection<String>> filters = new HashMap<>();
   private int start = 0;
   private int limit = 10;
 
@@ -55,7 +59,7 @@ public abstract class QueryBuilder<T> {
    * @see Id#and(Class, String)
    */
   public QueryBuilder<T> filter(Class<?> type, String id) {
-    filters.put(type, id);
+    addToFilter(type, id);
     return this;
   }
 
@@ -67,8 +71,16 @@ public abstract class QueryBuilder<T> {
    * @see Id#and(Class, String)
    */
   public QueryBuilder<T> filter(Repository repository) {
-    filters.put(Repository.class, repository.getId());
+    addToFilter(Repository.class, repository.getId());
     return this;
+  }
+
+  private void addToFilter(Class<?> type, String id) {
+    if (filters.containsKey(type)) {
+      filters.get(type).add(id);
+    } else {
+      filters.put(type, new ArrayList<>(asList(id)));
+    }
   }
 
   /**
@@ -152,7 +164,7 @@ public abstract class QueryBuilder<T> {
   @Value
   static class QueryParams {
     String queryString;
-    Map<Class<?>, String> filters;
+    Map<Class<?>, Collection<String>> filters;
     int start;
     int limit;
 

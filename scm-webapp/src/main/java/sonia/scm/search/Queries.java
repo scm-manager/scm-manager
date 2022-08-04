@@ -25,13 +25,16 @@
 package sonia.scm.search;
 
 import org.apache.lucene.index.Term;
+import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TermQuery;
 
+import java.util.Collection;
 import java.util.Map;
 
 import static org.apache.lucene.search.BooleanClause.Occur.MUST;
+import static org.apache.lucene.search.BooleanClause.Occur.SHOULD;
 
 final class Queries {
 
@@ -39,7 +42,7 @@ final class Queries {
   }
 
   static Query filter(Query query, QueryBuilder.QueryParams params) {
-    Map<Class<?>, String> filters = params.getFilters();
+    Map<Class<?>, Collection<String>> filters = params.getFilters();
     if (!filters.isEmpty()) {
       BooleanQuery.Builder builder = builder(filters);
       builder.add(query, MUST);
@@ -48,15 +51,21 @@ final class Queries {
     return query;
   }
 
-  static Query filterQuery(Map<Class<?>, String> filters) {
+  static Query filterQuery(Map<Class<?>, Collection<String>> filters) {
     return builder(filters).build();
   }
 
-  private static BooleanQuery.Builder builder(Map<Class<?>, String> filters) {
+  private static BooleanQuery.Builder builder(Map<Class<?>, Collection<String>> filters) {
     BooleanQuery.Builder builder = new BooleanQuery.Builder();
-    for (Map.Entry<Class<?>, String> e : filters.entrySet()) {
-      Term term = createTerm(e.getKey(), e.getValue());
-      builder.add(new TermQuery(term), MUST);
+    for (Map.Entry<Class<?>, Collection<String>> e : filters.entrySet()) {
+      BooleanQuery.Builder filterBuilder = new BooleanQuery.Builder();
+      e.getValue().forEach(
+        value -> {
+          Term term = createTerm(e.getKey(), value);
+          filterBuilder.add(new TermQuery(term), SHOULD);
+        }
+      );
+      builder.add(new BooleanClause(filterBuilder.build(), MUST));
     }
     return builder;
   }

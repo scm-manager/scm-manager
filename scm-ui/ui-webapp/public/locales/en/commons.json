@@ -178,7 +178,7 @@
   "feedback": {
     "button": "Feedback",
     "modalTitle": "Share your feedback"
-},
+  },
   "cardColumnGroup": {
     "showContent": "Show content",
     "hideContent": "Hide content"
@@ -206,16 +206,17 @@
     "noHits": "No results found",
     "syntaxHelp": "Find better results by using the full <0>search syntax</0>",
     "quickSearch": {
-      "resultHeading": "Top repository results",
+      "resultHeading": "Quick results",
       "parseError": "Failed to parse query.",
       "parseErrorHelp": "Hints for your Search",
-      "noResults": "Could not find matching repository",
-      "moreResults": "More Results",
       "hintsIcon": "Search Hints",
       "hints": "Hints for your Search",
       "screenReaderHintNoResult": "No repositories found. Other result types may be available, hit enter to navigate to complete search result.",
       "screenReaderHint": "Found one repository. Hit enter to see search results of all types or use arrow keys to navigate to repository quick results and hit enter to select one of them.",
-      "screenReaderHint_plural": "Found at least {{ count }} repositories. Hit enter to see search results of all types or use arrow keys to navigate to repository quick results and hit enter to select one of them."
+      "screenReaderHint_plural": "Found at least {{ count }} repositories. Hit enter to see search results of all types or use arrow keys to navigate to repository quick results and hit enter to select one of them.",
+      "searchRepo": "Search in repository",
+      "searchNamespace": "Search in namespace",
+      "searchEverywhere": "Search everywhere"
     },
     "syntax": {
       "title": "Expert Search",

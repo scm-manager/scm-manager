@@ -60,4 +60,32 @@ public @interface IndexedType {
    * @return required permission for searching this type.
    */
   String permission() default "";
+
+  /**
+   * If this is <code>true</code>, objects of this type will be available to be searched for in
+   * the scope of a single repository or a namespace. This implies, that the id for this type
+   * has to have a repository set that can be queried. This implicitly enables the search in
+   * the scope of a namespace, too (so implicitly sets {@link #namespaceScoped()}
+   * <code>true</code>).
+   *
+   * @return <code>true</code>, if this object shall be available to be searched for in the
+   * scope of a repository.
+   *
+   * @since 2.38.0
+   */
+  boolean repositoryScoped() default false;
+
+  /**
+   * If this is <code>true</code>, objects of this type will be available to be searched for in
+   * the scope of a single namespace. This implies, that the id for this type has a repository
+   * set that can be queried. If {@link #repositoryScoped()} is set to <code>true</code>, this
+   * will be assumed to be <code>true</code>, too, so this does not have to be set explicitly
+   * in this case.
+   *
+   * @return <code>true</code>, if this object shall be available to be searched for in the
+   * scope of a namespace.
+   *
+   * @since 2.38.0
+   */
+  boolean namespaceScoped() default false;
 }

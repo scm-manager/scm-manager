@@ -45,8 +45,11 @@ import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.repository.api.ScmProtocol;
+import sonia.scm.search.SearchEngine;
+import sonia.scm.search.SearchableType;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Set;
 
 import static java.util.Collections.singletonList;
@@ -57,6 +60,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static sonia.scm.repository.HealthCheckFailure.templated;
@@ -90,6 +94,8 @@ public class RepositoryToRepositoryDtoMapperTest {
   private HealthCheckService healthCheckService;
   @Mock
   private SCMContextProvider scmContextProvider;
+  @Mock
+  private SearchEngine searchEngine;
 
   @InjectMocks
   private RepositoryToRepositoryDtoMapperImpl mapper;
@@ -380,6 +386,26 @@ public class RepositoryToRepositoryDtoMapperTest {
 
     assertThat(dto.getHealthCheckFailures().get(0).getLinks().getLinkBy("documentation"))
       .isNotPresent();
+  }
+
+  @Test
+  public void shouldCreateSearchLink() {
+    SearchableType searchableType = mock(SearchableType.class);
+    when(searchableType.getName()).thenReturn("crew");
+    when(searchableType.limitableToRepository()).thenReturn(true);
+    when(searchEngine.getSearchableTypes()).thenReturn(List.of(searchableType));
+    Repository testRepository = createTestRepository();
+
+    RepositoryDto dto = mapper.map(testRepository);
+
+    assertThat(dto.getLinks().getLinkBy("search"))
+      .get()
+      .extracting("name", "href")
+      .containsExactly("crew", "http://example.com/base/v2/search/query/testspace/test/crew");
+    assertThat(dto.getLinks().getLinkBy("searchableTypes"))
+      .get()
+      .extracting("href")
+      .isEqualTo("http://example.com/base/v2/search/searchableTypes/testspace/test");
   }
 
   private ScmProtocol mockProtocol(String type, String protocol) {

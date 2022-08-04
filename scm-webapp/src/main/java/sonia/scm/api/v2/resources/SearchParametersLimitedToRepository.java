@@ -22,47 +22,27 @@
  * SOFTWARE.
  */
 
-package sonia.scm.search;
+package sonia.scm.api.v2.resources;
 
-import com.google.common.annotations.Beta;
+import io.swagger.v3.oas.annotations.Parameter;
+import lombok.Getter;
 
-import java.util.Collection;
+import javax.ws.rs.PathParam;
 
-/**
- * A type which can be searched with the {@link SearchEngine}.
- *
- * @since 2.21.0
- */
-@Beta
-public interface SearchableType {
+@Getter
+class SearchParametersLimitedToRepository extends SearchParameters {
 
-  /**
-   * Return name of the type.
-   *
-   * @return name of type
-   */
-  String getName();
+  @PathParam("namespace")
+  @Parameter(
+    name = "namespace",
+    description = "The namespace of the repository the search will be limited to"
+  )
+  private String namespace;
 
-  /**
-   * Return type in form of class.
-   *
-   * @return class of type
-   */
-  Class<?> getType();
-
-  /**
-   * Returns collection of searchable fields.
-   *
-   * @return collection of searchable fields
-   * @since 2.23.0
-   */
-  Collection<? extends SearchableField> getFields();
-
-  default boolean limitableToRepository() {
-    return false;
-  }
-
-  default boolean limitableToNamespace() {
-    return false;
-  }
+  @PathParam("name")
+  @Parameter(
+    name = "name",
+    description = "The name of the repository the search will be limited to"
+  )
+  private String repositoryName;
 }

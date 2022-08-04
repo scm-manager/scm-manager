@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { useHistory, useLocation, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
@@ -32,10 +32,10 @@ import {
   OverviewPageActions,
   Page,
   PageActions,
-  urls
+  urls,
 } from "@scm-manager/ui-components";
 import RepositoryList from "../components/list";
-import { useNamespaces, useRepositories } from "@scm-manager/ui-api";
+import { useNamespaceAndNameContext, useNamespaces, useRepositories } from "@scm-manager/ui-api";
 import { NamespaceCollection, RepositoryCollection } from "@scm-manager/ui-types";
 import { ExtensionPoint, extensionPoints, useBinder } from "@scm-manager/ui-extensions";
 import styled from "styled-components";
@@ -65,7 +65,7 @@ const useOverviewData = () => {
   const search = urls.getQueryStringFromLocation(location);
 
   const request = {
-    namespace: namespaces?._embedded.namespaces.find(n => n.namespace === namespace),
+    namespace: namespaces?._embedded.namespaces.find((n) => n.namespace === namespace),
     // ui starts counting by 1,
     // but backend starts counting by 0
     page: page - 1,
@@ -75,7 +75,7 @@ const useOverviewData = () => {
     // also do not fetch repositories if an invalid namespace is selected
     disabled:
       (!!namespace && !namespaces) ||
-      (!!namespace && !namespaces?._embedded.namespaces.some(n => n.namespace === namespace))
+      (!!namespace && !namespaces?._embedded.namespaces.some((n) => n.namespace === namespace)),
   };
   const { isLoading: isLoadingRepositories, error: errorRepositories, data: repositories } = useRepositories(request);
 
@@ -86,7 +86,7 @@ const useOverviewData = () => {
     namespace,
     repositories,
     search,
-    page
+    page,
   };
 };
 
@@ -122,11 +122,22 @@ const Repositories: FC<RepositoriesProps> = ({ namespaces, namespace, repositori
   }
 };
 
+function getCurrentGroup(namespace?: string, namespaces?: NamespaceCollection) {
+  return namespace && namespaces?._embedded.namespaces.some((n) => n.namespace === namespace) ? namespace : "";
+}
+
 const Overview: FC = () => {
   const { isLoading, error, namespace, namespaces, repositories, search, page } = useOverviewData();
   const history = useHistory();
   const [t] = useTranslation("repos");
   const binder = useBinder();
+  const context = useNamespaceAndNameContext();
+  useEffect(() => {
+    context.setNamespace(namespace || "");
+    return () => {
+      context.setNamespace("");
+    };
+  }, [namespace, context]);
 
   const extensions = binder.getExtensions<extensionPoints.RepositoryOverviewLeft>("repository.overview.left");
 
@@ -152,7 +163,7 @@ const Overview: FC = () => {
   const allNamespacesPlaceholder = t("overview.allNamespaces");
   let namespacesToRender: string[] = [];
   if (namespaces) {
-    namespacesToRender = [allNamespacesPlaceholder, ...namespaces._embedded.namespaces.map(n => n.namespace).sort()];
+    namespacesToRender = [allNamespacesPlaceholder, ...namespaces._embedded.namespaces.map((n) => n.namespace).sort()];
   }
   const namespaceSelected = (newNamespace: string) => {
     if (newNamespace === allNamespacesPlaceholder) {
@@ -183,7 +194,7 @@ const Overview: FC = () => {
       <div className="columns">
         {hasExtensions ? (
           <StickyColumn className="column is-one-third">
-            {extensions.map(extension => React.createElement(extension))}
+            {extensions.map((extension) => React.createElement(extension))}
           </StickyColumn>
         ) : null}
         <div className="column is-clipped">
@@ -205,9 +216,7 @@ const Overview: FC = () => {
             </label>
             <OverviewPageActions
               showCreateButton={showCreateButton}
-              currentGroup={
-                namespace && namespaces?._embedded.namespaces.some(n => n.namespace === namespace) ? namespace : ""
-              }
+              currentGroup={getCurrentGroup(namespace, namespaces)}
               groups={namespacesToRender}
               groupSelected={namespaceSelected}
               groupAriaLabelledby="select-namespace"

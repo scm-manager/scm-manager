@@ -205,16 +205,17 @@
     "noHits": "Die Suche ergab keine Treffer",
     "syntaxHelp": "Finden Sie bessere Ergebnisse durch die Nutzung der vollen <0>Such-Syntax</0>",
     "quickSearch": {
-      "resultHeading": "Top-Ergebnisse Repositories",
+      "resultHeading": "Top Ergebnisse",
       "parseError": "Der Suchstring is ungültig.",
       "parseErrorHelp": "Hinweise zu ihrer Suche",
-      "moreResults": "Mehr Ergebnisse",
-      "noResults": "Es konnten keine Repositories gefunden werden",
       "hintsIcon": "Suchtipps",
       "hints": "Hinweise zu ihrer Suche",
       "screenReaderHintNoResult": "Keine Repositories gefunden. Mögliche weitere Ergebnistypen mit Enter anzeigen.",
       "screenReaderHint": "Ein Repository gefunden. Mögliche weitere Ergebnistypen mit Enter anzeigen oder Pfeiltasten verwenden um zu den gefunden Repositories zu navigieren und mit Enter bestätigen.",
-      "screenReaderHint_plural": "Mindestens {{ count }} Repositories gefunden. Mögliche weitere Ergebnistypen mit Enter anzeigen oder Pfeiltasten verwenden um zu den gefunden Repositories zu navigieren und mit Enter bestätigen."
+      "screenReaderHint_plural": "Mindestens {{ count }} Repositories gefunden. Mögliche weitere Ergebnistypen mit Enter anzeigen oder Pfeiltasten verwenden um zu den gefunden Repositories zu navigieren und mit Enter bestätigen.",
+      "searchRepo": "In Repository suchen",
+      "searchNamespace": "In Namespace suchen",
+      "searchEverywhere": "Überall suchen"
     },
     "syntax": {
       "title": "Experten-Suche",

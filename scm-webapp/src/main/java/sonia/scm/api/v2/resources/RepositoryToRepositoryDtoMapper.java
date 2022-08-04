@@ -45,15 +45,19 @@ import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.repository.api.ScmProtocol;
+import sonia.scm.search.SearchEngine;
+import sonia.scm.search.SearchableType;
 import sonia.scm.web.EdisonHalAppender;
 import sonia.scm.web.api.RepositoryToHalMapper;
 
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static de.otto.edison.hal.Embedded.embeddedBuilder;
 import static de.otto.edison.hal.Link.link;
+import static de.otto.edison.hal.Link.linkBuilder;
 import static de.otto.edison.hal.Links.linkingTo;
 import static java.util.stream.Collectors.toList;
 
@@ -74,6 +78,8 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
   private HealthCheckService healthCheckService;
   @Inject
   private SCMContextProvider contextProvider;
+  @Inject
+  private SearchEngine searchEngine;
 
   abstract HealthCheckFailureDto toDto(HealthCheckFailure failure);
 
@@ -165,6 +171,8 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
     if (RepositoryPermissions.healthCheck(repository).isPermitted() && !healthCheckService.checkRunning(repository)) {
       linksBuilder.single(link("runHealthCheck", resourceLinks.repository().runHealthCheck(repository.getNamespace(), repository.getName())));
     }
+    linksBuilder.single(link("searchableTypes", resourceLinks.searchableTypes().searchableTypesForRepository(repository.getNamespace(), repository.getName())));
+    linksBuilder.array(searchLinks(repository.getNamespace(), repository.getName()));
 
     Embedded.Builder embeddedBuilder = embeddedBuilder();
     applyEnrichers(new EdisonHalAppender(linksBuilder, embeddedBuilder), repository);
@@ -172,6 +180,16 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
     RepositoryDto repositoryDto = new RepositoryDto(linksBuilder.build(), embeddedBuilder.build());
     repositoryDto.setHealthCheckRunning(healthCheckService.checkRunning(repository));
     return repositoryDto;
+  }
+
+  private List<Link> searchLinks(String namespace, String name) {
+    return searchEngine.getSearchableTypes().stream()
+      .filter(SearchableType::limitableToRepository)
+      .map(SearchableType::getName)
+      .map(typeName ->
+        linkBuilder("search", resourceLinks.search().queryForRepository(namespace, name, typeName)).withName(typeName).build()
+      )
+      .collect(Collectors.toList());
   }
 
   private boolean isRenameNamespacePossible() {

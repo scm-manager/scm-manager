@@ -68,6 +68,7 @@ import sonia.scm.repository.api.BundleCommandBuilder;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
+import sonia.scm.search.SearchEngine;
 import sonia.scm.user.User;
 import sonia.scm.web.RestDispatcher;
 import sonia.scm.web.VndMediaType;
@@ -163,6 +164,8 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   private HealthCheckService healthCheckService;
   @Mock
   private ExportNotificationHandler notificationHandler;
+  @Mock
+  private SearchEngine searchEngine;
 
   @Captor
   private ArgumentCaptor<Predicate<Repository>> filterCaptor;
