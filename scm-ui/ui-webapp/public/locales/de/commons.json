@@ -201,11 +201,12 @@
     "placeholder": "Suche...",
     "title": "Suche",
     "subtitle": "{{type}} Ergebnisse für \"{{query}}\"",
+    "subtitleWithContext": "{{type}} Ergebnisse für \"{{query}}\" in \"{{context}}\"",
     "types": "Ergebnisse",
     "noHits": "Die Suche ergab keine Treffer",
     "syntaxHelp": "Finden Sie bessere Ergebnisse durch die Nutzung der vollen <0>Such-Syntax</0>",
     "quickSearch": {
-      "resultHeading": "Top Ergebnisse",
+      "resultHeading": "Hilfe beim Suchen?",
       "parseError": "Der Suchstring is ungültig.",
       "parseErrorHelp": "Hinweise zu ihrer Suche",
       "hintsIcon": "Suchtipps",

@@ -70,7 +70,7 @@ type HitsProps = {
 const QuickSearchNotification: FC = ({ children }) => <div className="dropdown-content p-4">{children}</div>;
 
 const ResultHeading = styled.h3`
-  border-bottom: 1px solid lightgray;
+  border-top: 1px solid lightgray;
 `;
 
 const DropdownMenu = styled.div`
@@ -153,8 +153,9 @@ const Hits: FC<HitsProps> = ({ entries, hits, showHelp, ...rest }) => {
 
   return (
     <>
-      <div className="dropdown-content">
+      <div className="dropdown-content p-0">
         <ScreenReaderHitSummary hits={hits} />
+        <HitsList entries={entries} {...rest} />
         <ResultHeading
           className={classNames(
             "dropdown-item",
@@ -164,13 +165,13 @@ const Hits: FC<HitsProps> = ({ entries, hits, showHelp, ...rest }) => {
             "mx-2",
             "px-2",
             "py-1",
+            "mt-1",
             "has-text-weight-bold"
           )}
         >
           <span>{t("search.quickSearch.resultHeading")}</span>
           <SyntaxHelp onClick={showHelp} />
         </ResultHeading>
-        <HitsList entries={entries} {...rest} />
       </div>
     </>
   );
@@ -191,14 +192,16 @@ const useKeyBoardNavigation = (
     // https://caniuse.com/keyboardevent-code
     switch (e.which) {
       case 40: // e.code: ArrowDown
+        e.preventDefault();
         setIndex((idx) => {
-          if (idx < entries.length) {
+          if (idx < entries.length - 1) {
             return idx + 1;
           }
           return idx;
         });
         break;
       case 38: // e.code: ArrowUp
+        e.preventDefault();
         setIndex((idx) => {
           if (idx > 0) {
             return idx - 1;
@@ -211,7 +214,7 @@ const useKeyBoardNavigation = (
           history.push(defaultLink);
         } else {
           const entry = entries[index];
-          if (entry.props.link) {
+          if (entry?.props.link) {
             history.push(entry.props.link);
           }
         }

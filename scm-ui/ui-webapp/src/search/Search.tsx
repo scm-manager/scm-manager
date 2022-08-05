@@ -102,12 +102,19 @@ const SyntaxHelpLink: FC = ({ children }) => <Link to="/help/search-syntax">{chi
 
 const SearchSubTitle: FC<Props> = ({ selectedType, query }) => {
   const [t] = useTranslation("commons");
+  const context = useNamespaceAndNameContext();
   return (
     <>
-      {t("search.subtitle", {
-        query,
-        type: t(`plugins:search.types.${selectedType}.subtitle`, selectedType),
-      })}
+      {context.namespace
+        ? t("search.subtitleWithContext", {
+            query,
+            type: t(`plugins:search.types.${selectedType}.subtitle`, selectedType),
+            context: `${context.namespace}${context.name ? `/${context.name}` : ""}`,
+          })
+        : t("search.subtitle", {
+            query,
+            type: t(`plugins:search.types.${selectedType}.subtitle`, selectedType),
+          })}
       <br />
       <Trans i18nKey="search.syntaxHelp" components={[<SyntaxHelpLink />]} />
     </>

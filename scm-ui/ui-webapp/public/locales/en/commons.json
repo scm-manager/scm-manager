@@ -202,11 +202,12 @@
     "placeholder": "Search...",
     "title": "Search",
     "subtitle": "{{type}} results for \"{{query}}\"",
+    "subtitleWithContext": "{{type}} results for \"{{query}}\" in \"{{context}}\"",
     "types": "Results",
     "noHits": "No results found",
     "syntaxHelp": "Find better results by using the full <0>search syntax</0>",
     "quickSearch": {
-      "resultHeading": "Quick results",
+      "resultHeading": "Need help?",
       "parseError": "Failed to parse query.",
       "parseErrorHelp": "Hints for your Search",
       "hintsIcon": "Search Hints",
