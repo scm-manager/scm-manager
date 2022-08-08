@@ -124,8 +124,10 @@ pipeline {
 
     stage('Update tap') {
       when {
-        branch pattern: 'release/*', comparator: 'GLOB'
-        branch pattern: 'hotfix/*', comparator: 'GLOB'
+        anyOf {
+          branch pattern: 'release/*', comparator: 'GLOB'
+          branch pattern: 'hotfix/*', comparator: 'GLOB'
+        }
         expression { return isBuildSuccess() }
       }
       steps {
