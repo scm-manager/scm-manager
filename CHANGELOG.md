@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.38.0] - 2022-08-08
+### Added
+- Cli commands to modify repository and namespace permissions ([#2090](https://github.com/scm-manager/scm-manager/pull/2090) and [#2093](https://github.com/scm-manager/scm-manager/pull/2093))
+- Enable plugin management via CLI ([#2087](https://github.com/scm-manager/scm-manager/pull/2087)) & ([#2094](https://github.com/scm-manager/scm-manager/pull/2094))
+- CLI commands for user/group permission management ([#2091](https://github.com/scm-manager/scm-manager/pull/2091))
+
+### Fixed
+- Make sure, that passwords are always stored encrypted ([#2085](https://github.com/scm-manager/scm-manager/pull/2085))
+- Reduce code smells ([#2089](https://github.com/scm-manager/scm-manager/pull/2089))
+- Fix paging for too large page numbers ([#2097](https://github.com/scm-manager/scm-manager/pull/2097))
+
+### Changed
+- Extend global search to enable context-sensitive search queries. ([#2102](https://github.com/scm-manager/scm-manager/pull/2102))
+
 ## [2.37.2] - 2022-07-13
 ### Fixed
 - Unify password validation ([#2077](https://github.com/scm-manager/scm-manager/pull/2077))
@@ -1106,3 +1120,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.37.0]: https://scm-manager.org/download/2.37.0
 [2.37.1]: https://scm-manager.org/download/2.37.1
 [2.37.2]: https://scm-manager.org/download/2.37.2
+[2.38.0]: https://scm-manager.org/download/2.38.0
