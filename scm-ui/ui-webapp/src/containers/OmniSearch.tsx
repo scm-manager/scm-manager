@@ -210,16 +210,18 @@ const useKeyBoardNavigation = (
         });
         break;
       case 13: // e.code: Enter
-        if (index < 0) {
-          history.push(defaultLink);
-        } else {
-          const entry = entries[index];
-          if (entry?.props.link) {
-            history.push(entry.props.link);
+        if ((e.target as HTMLInputElement).value.length >= 2) {
+          if (index < 0) {
+            history.push(defaultLink);
+          } else {
+            const entry = entries[index];
+            if (entry?.props.link) {
+              history.push(entry.props.link);
+            }
           }
+          clear();
+          hideResults();
         }
-        clear();
-        hideResults();
 
         break;
       case 27: // e.code: Escape
