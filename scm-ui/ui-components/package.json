@@ -20,6 +20,8 @@
     "update-storyshots": "jest --testPathPattern=\"storyshots.test.ts\" --collectCoverage=false -u"
   },
   "devDependencies": {
+    "@scm-manager/ui-syntaxhighlighting": "2.38.1-SNAPSHOT",
+    "@scm-manager/ui-text": "2.38.1-SNAPSHOT",
     "@scm-manager/babel-preset": "^2.13.1",
     "@scm-manager/eslint-config": "^2.16.0",
     "@scm-manager/jest-preset": "^2.13.0",
@@ -89,10 +91,6 @@
     "remark-rehype": "^8.0.0",
     "tabbable": "^5.2.1",
     "unified": "^9.2.1"
-  },
-  "peerDependencies": {
-    "@scm-manager/ui-syntaxhighlighting": "2.38.1-SNAPSHOT",
-    "@scm-manager/ui-text": "2.38.1-SNAPSHOT"
   },
   "babel": {
     "presets": [

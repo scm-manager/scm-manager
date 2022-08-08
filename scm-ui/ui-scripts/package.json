@@ -10,7 +10,6 @@
     "ui-scripts": "./bin/ui-scripts.js"
   },
   "dependencies": {
-    "@scm-manager/ui-styles": "2.38.1-SNAPSHOT",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.5",
     "babel-loader": "^8.2.3",
     "css-loader": "^6.5.0",
@@ -32,6 +31,7 @@
     "autoprefixer": "^10.4.4"
   },
   "devDependencies": {
+    "@scm-manager/ui-styles": "2.38.1-SNAPSHOT",
     "@scm-manager/babel-preset": "^2.13.1",
     "@scm-manager/eslint-config": "^2.16.0",
     "@scm-manager/prettier-config": "^2.10.1",
