@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.38.1] - 2022-08-09
+### Fixed
+- Incorrect plugin dependency declaration breaks plugin builds
+
 ## [2.38.0] - 2022-08-08
 ### Added
 - Cli commands to modify repository and namespace permissions ([#2090](https://github.com/scm-manager/scm-manager/pull/2090) and [#2093](https://github.com/scm-manager/scm-manager/pull/2093))
@@ -1121,3 +1125,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.37.1]: https://scm-manager.org/download/2.37.1
 [2.37.2]: https://scm-manager.org/download/2.37.2
 [2.38.0]: https://scm-manager.org/download/2.38.0
+[2.38.1]: https://scm-manager.org/download/2.38.1
