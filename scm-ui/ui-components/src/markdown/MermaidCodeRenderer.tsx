@@ -22,34 +22,36 @@
  * SOFTWARE.
  */
 
-import React, { FC } from "react";
-import SyntaxHighlighter from "../SyntaxHighlighter";
-import { ExtensionPoint, extensionPoints, useBinder } from "@scm-manager/ui-extensions";
-import { useIndexLinks } from "@scm-manager/ui-api";
-import MermaidCodeRenderer from "./MermaidCodeRenderer";
+import { extensionPoints } from "@scm-manager/ui-extensions";
+import React, { FC, useEffect, useRef, useState } from "react";
+import mermaid from "mermaid";
+import Loading from "../Loading";
 
-type Props = {
-  language?: string;
-  value: string;
-};
+const MermaidCodeRenderer: FC<extensionPoints.MarkdownCodeRenderer["props"]> = ({ value }) => {
+  const [content, setContent] = useState<string>();
+  const ref = useRef<HTMLDivElement>(null);
 
-const MarkdownCodeRenderer: FC<Props> = (props) => {
-  const binder = useBinder();
-  const indexLinks = useIndexLinks();
-  const { language } = props;
+  useEffect(() => {
+    try {
+      mermaid.render("MERMAID", value, (svgCode, bindFunctions) => {
+        setContent(svgCode);
+        if (ref.current) {
+          bindFunctions(ref.current);
+        }
+      });
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error(e);
+      // @ts-ignore mermaid error
+      setContent(e.str);
+    }
+  }, [value]);
 
-  const extensionProps = { ...props, indexLinks };
-  const extensionKey = `markdown-renderer.code.${language}` as const;
-
-  if (binder.hasExtension<extensionPoints.MarkdownCodeRenderer>(extensionKey, extensionProps)) {
-    return <ExtensionPoint<extensionPoints.MarkdownCodeRenderer> name={extensionKey} props={extensionProps} />;
+  if (content) {
+    return <div ref={ref} className="mermaid" dangerouslySetInnerHTML={{ __html: content }} />;
   }
 
-  if (language === "mermaid") {
-    return <MermaidCodeRenderer {...extensionProps} />;
-  }
-
-  return <SyntaxHighlighter {...props} />;
+  return <Loading />;
 };
 
-export default MarkdownCodeRenderer;
+export default MermaidCodeRenderer;
