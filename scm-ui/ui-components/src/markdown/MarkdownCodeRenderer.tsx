@@ -26,7 +26,8 @@ import React, { FC } from "react";
 import SyntaxHighlighter from "../SyntaxHighlighter";
 import { ExtensionPoint, extensionPoints, useBinder } from "@scm-manager/ui-extensions";
 import { useIndexLinks } from "@scm-manager/ui-api";
-import MermaidCodeRenderer from "./MermaidCodeRenderer";
+
+const MermaidCodeRenderer = React.lazy(() => import("./MermaidCodeRenderer"));
 
 type Props = {
   language?: string;
