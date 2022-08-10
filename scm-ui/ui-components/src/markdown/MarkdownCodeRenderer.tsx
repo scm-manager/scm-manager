@@ -27,7 +27,7 @@ import SyntaxHighlighter from "../SyntaxHighlighter";
 import { ExtensionPoint, extensionPoints, useBinder } from "@scm-manager/ui-extensions";
 import { useIndexLinks } from "@scm-manager/ui-api";
 
-const MermaidCodeRenderer = React.lazy(() => import("./MermaidCodeRenderer"));
+const LazyMermaidCodeRenderer = React.lazy(() => import("./MermaidCodeRenderer"));
 
 type Props = {
   language?: string;
@@ -47,7 +47,7 @@ const MarkdownCodeRenderer: FC<Props> = (props) => {
   }
 
   if (language === "mermaid") {
-    return <MermaidCodeRenderer {...extensionProps} />;
+    return <LazyMermaidCodeRenderer {...extensionProps} />;
   }
 
   return <SyntaxHighlighter {...props} />;
