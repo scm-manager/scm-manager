@@ -23,32 +23,40 @@
  */
 
 import { extensionPoints } from "@scm-manager/ui-extensions";
-import React, { FC, useEffect, useRef, useState } from "react";
+import React, { FC, useEffect, useMemo, useRef, useState } from "react";
 import mermaid from "mermaid";
+import ErrorNotification from "../ErrorNotification";
 import Loading from "../Loading";
 
 const MermaidCodeRenderer: FC<extensionPoints.MarkdownCodeRenderer["props"]> = ({ value }) => {
-  const [content, setContent] = useState<string>();
-  const ref = useRef<HTMLDivElement>(null);
+  const [content, setContent] = useState<string>("Loading...");
+  const [error, setError] = useState<Error>();
+  const id = useRef(`MERMAID-${Date.now()}`);
+  const dangerousHtmlObject = useMemo(() => ({ __html: content }), [content]);
 
   useEffect(() => {
     try {
-      mermaid.render("MERMAID", value, (svgCode, bindFunctions) => {
+      setError(undefined);
+      setContent("");
+      mermaid.render(id.current, value, (svgCode) => {
         setContent(svgCode);
-        if (ref.current) {
-          bindFunctions(ref.current);
-        }
       });
     } catch (e) {
-      // eslint-disable-next-line no-console
-      console.error(e);
-      // @ts-ignore mermaid error
-      setContent(e.str);
+      if (e instanceof Error) {
+        setError(e);
+      } else {
+        // @ts-ignore Unknown mermaid error
+        setError(new Error(e.str));
+      }
     }
   }, [value]);
 
+  if (error) {
+    return <ErrorNotification error={error} />;
+  }
+
   if (content) {
-    return <div ref={ref} className="mermaid" dangerouslySetInnerHTML={{ __html: content }} />;
+    return <figure className="mermaid" dangerouslySetInnerHTML={dangerousHtmlObject} />;
   }
 
   return <Loading />;
