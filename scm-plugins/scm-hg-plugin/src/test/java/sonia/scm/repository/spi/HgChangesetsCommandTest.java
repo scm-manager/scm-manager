@@ -22,74 +22,29 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.api;
+package sonia.scm.repository.spi;
 
-/**
- * Enumeration of available commands.
- *
- * @author Sebastian Sdorra
- * @since 1.17
- */
-public enum Command
-{
-  LOG, BROWSE, CAT, DIFF, BLAME,
+import org.junit.Test;
+import sonia.scm.repository.Changeset;
 
-  /**
-   * @since 1.18
-   */
-  TAGS,
+import static org.assertj.core.api.Assertions.assertThat;
 
-  /**
-   * @since 1.18
-   */
-  BRANCHES,
+public class HgChangesetsCommandTest extends AbstractHgCommandTestBase {
 
-  /**
-   * @since 1.31
-   */
-  INCOMING, OUTGOING, PUSH, PULL,
+  @Test
+  public void getAllChangesetsFromRepository() {
+    Iterable<Changeset> changesets = createCommand()
+      .getChangesets(new ChangesetsCommandRequest());
 
-  /**
-   * @since 1.43
-   */
-  BUNDLE, UNBUNDLE,
+    assertThat(changesets).hasSize(13);
+  }
 
-  /**
-   * @since 2.0
-   */
-  MODIFICATIONS, MERGE, DIFF_RESULT, BRANCH, MODIFY,
+  private HgChangesetsCommand createCommand() {
+    return new HgChangesetsCommand(cmdContext);
+  }
 
-  /**
-   * @since 2.10.0
-   */
-  LOOKUP,
-
-  /**
-   * @since 2.11.0
-   */
-  TAG,
-
-  /**
-   * @since 2.17.0
-   */
-  FULL_HEALTH_CHECK,
-
-  /**
-   * @since 2.19.0
-   */
-  MIRROR,
-
-  /**
-   * @since 2.26.0
-   */
-  FILE_LOCK,
-
-  /**
-   * @since 2.28.0
-   */
-  BRANCH_DETAILS,
-  /**
-   * @since 2.39.0
-   */
-  CHANGESETS
+  @Override
+  protected String getZippedRepositoryResource() {
+    return "sonia/scm/repository/spi/scm-hg-ahead-behind-test.zip";
+  }
 }

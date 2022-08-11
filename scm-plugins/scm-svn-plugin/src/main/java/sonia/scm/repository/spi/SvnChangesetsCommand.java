@@ -22,74 +22,34 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.api;
+package sonia.scm.repository.spi;
 
-/**
- * Enumeration of available commands.
- *
- * @author Sebastian Sdorra
- * @since 1.17
- */
-public enum Command
-{
-  LOG, BROWSE, CAT, DIFF, BLAME,
+import com.google.common.collect.Lists;
+import org.tmatesoft.svn.core.SVNException;
+import org.tmatesoft.svn.core.io.SVNRepository;
+import sonia.scm.repository.Changeset;
+import sonia.scm.repository.InternalRepositoryException;
 
-  /**
-   * @since 1.18
-   */
-  TAGS,
+import java.util.List;
 
-  /**
-   * @since 1.18
-   */
-  BRANCHES,
+public class SvnChangesetsCommand extends AbstractSvnCommand implements ChangesetsCommand {
 
-  /**
-   * @since 1.31
-   */
-  INCOMING, OUTGOING, PUSH, PULL,
+  SvnChangesetsCommand(SvnContext context) {
+    super(context);
+  }
 
-  /**
-   * @since 1.43
-   */
-  BUNDLE, UNBUNDLE,
+  @Override
+  public Iterable<Changeset> getChangesets(ChangesetsCommandRequest request) {
+    try {
+      SVNRepository repo = open();
+      long startRev =  repo.getLatestRevision();
+      long endRev = 0;
+      final List<Changeset> changesets = Lists.newArrayList();
 
-  /**
-   * @since 2.0
-   */
-  MODIFICATIONS, MERGE, DIFF_RESULT, BRANCH, MODIFY,
-
-  /**
-   * @since 2.10.0
-   */
-  LOOKUP,
-
-  /**
-   * @since 2.11.0
-   */
-  TAG,
-
-  /**
-   * @since 2.17.0
-   */
-  FULL_HEALTH_CHECK,
-
-  /**
-   * @since 2.19.0
-   */
-  MIRROR,
-
-  /**
-   * @since 2.26.0
-   */
-  FILE_LOCK,
-
-  /**
-   * @since 2.28.0
-   */
-  BRANCH_DETAILS,
-  /**
-   * @since 2.39.0
-   */
-  CHANGESETS
+      repo.log(null, startRev, endRev, true, true, new ChangesetCollector(changesets));
+      return changesets;
+    } catch (SVNException ex) {
+      throw new InternalRepositoryException(repository, "could not open repository", ex);
+    }
+  }
 }

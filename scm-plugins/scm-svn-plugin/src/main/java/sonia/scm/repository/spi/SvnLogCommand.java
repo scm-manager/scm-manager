@@ -179,21 +179,4 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand {
     return new ChangesetPagingResult(total,
       SvnUtil.createChangesets(changesetList));
   }
-
-  /**
-   * Collect and convert changesets.
-   */
-  private static class ChangesetCollector implements ISVNLogEntryHandler {
-
-    private final Collection<Changeset> changesets;
-
-    public ChangesetCollector(Collection<Changeset> changesets) {
-      this.changesets = changesets;
-    }
-
-    @Override
-    public void handleLogEntry(SVNLogEntry logEntry) {
-      changesets.add(SvnUtil.createChangeset(logEntry));
-    }
-  }
 }

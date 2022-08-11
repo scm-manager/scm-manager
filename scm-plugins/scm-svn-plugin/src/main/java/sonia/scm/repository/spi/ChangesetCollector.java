@@ -22,74 +22,28 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.api;
+package sonia.scm.repository.spi;
+
+import org.tmatesoft.svn.core.ISVNLogEntryHandler;
+import org.tmatesoft.svn.core.SVNLogEntry;
+import sonia.scm.repository.Changeset;
+import sonia.scm.repository.SvnUtil;
+
+import java.util.Collection;
 
 /**
- * Enumeration of available commands.
- *
- * @author Sebastian Sdorra
- * @since 1.17
+ * Collect and convert changesets.
  */
-public enum Command
-{
-  LOG, BROWSE, CAT, DIFF, BLAME,
+class ChangesetCollector implements ISVNLogEntryHandler {
 
-  /**
-   * @since 1.18
-   */
-  TAGS,
+  private final Collection<Changeset> changesets;
 
-  /**
-   * @since 1.18
-   */
-  BRANCHES,
+  public ChangesetCollector(Collection<Changeset> changesets) {
+    this.changesets = changesets;
+  }
 
-  /**
-   * @since 1.31
-   */
-  INCOMING, OUTGOING, PUSH, PULL,
-
-  /**
-   * @since 1.43
-   */
-  BUNDLE, UNBUNDLE,
-
-  /**
-   * @since 2.0
-   */
-  MODIFICATIONS, MERGE, DIFF_RESULT, BRANCH, MODIFY,
-
-  /**
-   * @since 2.10.0
-   */
-  LOOKUP,
-
-  /**
-   * @since 2.11.0
-   */
-  TAG,
-
-  /**
-   * @since 2.17.0
-   */
-  FULL_HEALTH_CHECK,
-
-  /**
-   * @since 2.19.0
-   */
-  MIRROR,
-
-  /**
-   * @since 2.26.0
-   */
-  FILE_LOCK,
-
-  /**
-   * @since 2.28.0
-   */
-  BRANCH_DETAILS,
-  /**
-   * @since 2.39.0
-   */
-  CHANGESETS
+  @Override
+  public void handleLogEntry(SVNLogEntry logEntry) {
+    changesets.add(SvnUtil.createChangeset(logEntry));
+  }
 }
