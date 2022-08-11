@@ -31,6 +31,7 @@ import sonia.scm.repository.Changeset;
 import sonia.scm.repository.InternalRepositoryException;
 
 import java.util.List;
+import java.util.Optional;
 
 public class SvnChangesetsCommand extends AbstractSvnCommand implements ChangesetsCommand {
 
@@ -48,6 +49,24 @@ public class SvnChangesetsCommand extends AbstractSvnCommand implements Changese
 
       repo.log(null, startRev, endRev, true, true, new ChangesetCollector(changesets));
       return changesets;
+    } catch (SVNException ex) {
+      throw new InternalRepositoryException(repository, "could not open repository", ex);
+    }
+  }
+
+  @Override
+  public Optional<Changeset> getLatestChangeset() {
+    try {
+      SVNRepository repo = open();
+      long latestRevision =  repo.getLatestRevision();
+      final List<Changeset> changesets = Lists.newArrayList();
+
+      repo.log(null, latestRevision, latestRevision, true, true, new ChangesetCollector(changesets));
+
+      if (!changesets.isEmpty()) {
+        return Optional.of(changesets.get(0));
+      }
+      return Optional.empty();
     } catch (SVNException ex) {
       throw new InternalRepositoryException(repository, "could not open repository", ex);
     }

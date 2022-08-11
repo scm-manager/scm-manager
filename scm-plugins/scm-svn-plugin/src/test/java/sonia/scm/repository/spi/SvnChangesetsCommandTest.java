@@ -27,15 +27,25 @@ package sonia.scm.repository.spi;
 import org.junit.Test;
 import sonia.scm.repository.Changeset;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class SvnChangesetsCommandTest extends AbstractSvnCommandTestBase {
 
   @Test
-  public void testGetAll() {
+  public void getAllChangesetsFromRepository() {
     Iterable<Changeset> changesets = createCommand().getChangesets(new ChangesetsCommandRequest());
 
     assertThat(changesets).hasSize(6);
+  }
+
+  @Test
+  public void getLatestChangesetFromRepository() {
+    Optional<Changeset> changeset = createCommand().getLatestChangeset();
+
+    assertThat(changeset).isPresent();
+    assertThat(changeset.get().getId()).isEqualTo("5");
   }
 
   private SvnChangesetsCommand createCommand()

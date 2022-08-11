@@ -27,6 +27,9 @@ package sonia.scm.repository.spi;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.spi.javahg.HgLogChangesetCommand;
 
+import java.util.List;
+import java.util.Optional;
+
 import static sonia.scm.repository.spi.javahg.HgLogChangesetCommand.on;
 
 public class HgChangesetsCommand extends AbstractCommand implements ChangesetsCommand {
@@ -42,5 +45,16 @@ public class HgChangesetsCommand extends AbstractCommand implements ChangesetsCo
     // Get all changesets between the first changeset and the repository tip, both inclusive.
     cmd.rev("tip:0");
     return cmd.execute();
+  }
+
+  @Override
+  public Optional<Changeset> getLatestChangeset() {
+    org.javahg.Repository repository = open();
+    HgLogChangesetCommand cmd = on(repository, context.getConfig());
+    Changeset tip = cmd.rev("tip").single();
+    if (tip != null) {
+      return Optional.of(tip);
+    }
+    return Optional.empty();
   }
 }

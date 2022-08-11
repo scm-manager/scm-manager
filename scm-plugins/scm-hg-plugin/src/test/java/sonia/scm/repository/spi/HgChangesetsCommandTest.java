@@ -27,6 +27,8 @@ package sonia.scm.repository.spi;
 import org.junit.Test;
 import sonia.scm.repository.Changeset;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class HgChangesetsCommandTest extends AbstractHgCommandTestBase {
@@ -37,6 +39,15 @@ public class HgChangesetsCommandTest extends AbstractHgCommandTestBase {
       .getChangesets(new ChangesetsCommandRequest());
 
     assertThat(changesets).hasSize(13);
+  }
+
+  @Test
+  public void getLatestChangesetFromRepository() {
+    Optional<Changeset> changeset = createCommand()
+      .getLatestChangeset();
+
+    assertThat(changeset).isPresent();
+    assertThat(changeset.get().getId()).isEqualTo("67a658097e5aba664eaabb7a79a60f8d63c59b97");
   }
 
   private HgChangesetsCommand createCommand() {

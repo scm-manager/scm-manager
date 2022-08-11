@@ -26,13 +26,24 @@ package sonia.scm.repository.spi;
 
 import sonia.scm.repository.Changeset;
 
+import java.util.Optional;
+
 /**
- * Retrieve all changesets (over all branches/tags) from the repository
  *
  * @since 2.39.0
  */
 public interface ChangesetsCommand {
-
+  /**
+   * Retrieve all changesets (over all branches/tags) from the repository
+   * @param request
+   * @return iterable of all changesets
+   */
   Iterable<Changeset> getChangesets(ChangesetsCommandRequest request);
+
+  /**
+   * Retrieve the latest changeset (over all branches/tags) from the repository
+   * @return optional of latest changeset or empty
+   */
+  Optional<Changeset> getLatestChangeset();
 
 }

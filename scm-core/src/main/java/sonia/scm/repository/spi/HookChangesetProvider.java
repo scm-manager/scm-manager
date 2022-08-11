@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 /**
@@ -32,13 +32,5 @@ package sonia.scm.repository.spi;
 public interface HookChangesetProvider
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   */
-  public HookChangesetResponse handleRequest(HookChangesetRequest request);
+  HookChangesetResponse handleRequest(HookChangesetRequest request);
 }
