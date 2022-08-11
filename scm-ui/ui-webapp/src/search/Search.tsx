@@ -34,11 +34,12 @@ import {
   urls,
 } from "@scm-manager/ui-components";
 import { Link, useLocation, useParams } from "react-router-dom";
-import { useSearch, useSearchCounts, useSearchTypes, useNamespaceAndNameContext } from "@scm-manager/ui-api";
+import { useNamespaceAndNameContext, useSearch, useSearchCounts, useSearchTypes } from "@scm-manager/ui-api";
 import Results from "./Results";
 import { Trans, useTranslation } from "react-i18next";
 import SearchErrorNotification from "./SearchErrorNotification";
 import SyntaxModal from "./SyntaxModal";
+import type { TFunction } from "i18next";
 
 type PathParams = {
   type: string;
@@ -80,17 +81,16 @@ const usePageParams = () => {
   };
 };
 
-export const orderTypes = (left: string, right: string) => {
-  if (left === "repository" && right !== "repository") {
+export const orderTypes = (t: TFunction) => (a: string, b: string) => {
+  if (!a || !b) {
+    return 0;
+  }
+  if (a === "repository" && b !== "repository") {
     return -1;
-  } else if (left !== "repository" && right === "repository") {
-    return 1;
-  } else if (left < right) {
-    return -1;
-  } else if (left > right) {
+  } else if (a !== "repository" && b === "repository") {
     return 1;
   }
-  return 0;
+  return t(`plugins:search.types.${a}.navItem`, a)?.localeCompare(t(`plugins:search.types.${b}.navItem`, b)) ?? 0;
 };
 
 type Props = {
@@ -144,7 +144,7 @@ const Search: FC = () => {
   };
   const { data, isLoading, error } = useSearch(query, searchOptions);
   const types = useSearchTypes(searchOptions);
-  types.sort(orderTypes);
+  types.sort(orderTypes(t));
 
   const searchCounts = useSearchCounts(
     types.filter((type) => type !== selectedType),

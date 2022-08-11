@@ -95,7 +95,7 @@ const AvatarSection: FC<{ repository: Repository }> = ({ repository }) => {
   );
 };
 
-const HitsList: FC<Omit<HitsProps, "showHelp" | "hits">> = ({ entries }) => {
+const HitList: FC<Omit<HitsProps, "showHelp" | "hits">> = ({ entries }) => {
   return (
     <ul id="omni-search-results" aria-expanded="true" role="listbox">
       {entries}
@@ -155,7 +155,7 @@ const Hits: FC<HitsProps> = ({ entries, hits, showHelp, ...rest }) => {
     <>
       <div className="dropdown-content p-0">
         <ScreenReaderHitSummary hits={hits} />
-        <HitsList entries={entries} {...rest} />
+        <HitList entries={entries} {...rest} />
         <ResultHeading
           className={classNames(
             "dropdown-item",
@@ -352,7 +352,7 @@ const OmniSearch: FC = () => {
     namespaceContext: context.namespace || "",
     repositoryNameContext: context.name || "",
   });
-  searchTypes.sort(orderTypes);
+  searchTypes.sort(orderTypes(t));
 
   const id = useCallback(namespaceAndName, []);
 
@@ -362,6 +362,7 @@ const OmniSearch: FC = () => {
     if (context.namespace && context.name && searchTypes.length > 0) {
       newEntries.push(
         <HitEntry
+          key="search.quickSearch.searchRepo"
           selected={newEntries.length === index}
           clear={clearQuery}
           label={t("search.quickSearch.searchRepo")}
@@ -372,6 +373,7 @@ const OmniSearch: FC = () => {
     if (context.namespace) {
       newEntries.push(
         <HitEntry
+          key="search.quickSearch.searchNamespace"
           selected={newEntries.length === index}
           clear={clearQuery}
           label={t("search.quickSearch.searchNamespace")}
@@ -381,6 +383,7 @@ const OmniSearch: FC = () => {
     }
     newEntries.push(
       <HitEntry
+        key="search.quickSearch.searchEverywhere"
         selected={newEntries.length === index}
         clear={clearQuery}
         label={t("search.quickSearch.searchEverywhere")}
@@ -391,7 +394,7 @@ const OmniSearch: FC = () => {
     hits?.forEach((hit, idx) => {
       newEntries.push(
         <HitEntry
-          key={idx}
+          key={`search.quickSearch.hit${idx}`}
           selected={length + idx === index}
           clear={clearQuery}
           label={id(hit)}
