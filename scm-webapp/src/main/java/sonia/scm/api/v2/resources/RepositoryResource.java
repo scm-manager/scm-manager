@@ -316,8 +316,8 @@ public class RepositoryResource {
   @ApiResponse(responseCode = "500", description = "internal server error")
   public void reindex(@PathParam("namespace") String namespace, @PathParam("name") String name) {
     Repository repository = loadBy(namespace, name).get();
-    RepositoryPermissions.modify(repository).check();
-    ScmEventBus.getInstance().post(new ReindexRepositoryEvent(HandlerEventType.MODIFY, repository));
+    RepositoryPermissions.custom("*", repository).check();
+    ScmEventBus.getInstance().post(new ReindexRepositoryEvent(repository));
   }
 
   private Repository processUpdate(RepositoryDto repositoryDto, Repository existing) {

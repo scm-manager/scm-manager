@@ -492,6 +492,12 @@
     "descriptionNotRunning": "Starten der Integritätsprüfung dieses Repositories. Dieser Vorgang kann einige Zeit in Anspruch nehmen.",
     "descriptionRunning": "Die Integritätsprüfung für dieses Repository läuft bereits und kann nicht parallel erneut gestartet werden."
   },
+  "reindex": {
+    "button": "Reindizieren",
+    "subtitle": "Suchindizes neu erstellen",
+    "description": "Lösche alle existierenden Suchindizes für dieses Repository and erstelle sie komplett neu. Dieser Vorgang kann einige Zeit in Anspruch nehmen.",
+    "started": "Die Reindizierung wurde erfolgreich gestartet. Dies ist eine asynchrone Operation und kann einige Zeit in Anspruch nehmen."
+  },
   "diff": {
     "jumpToSource": "Zur Quelldatei springen",
     "jumpToTarget": "Zur vorherigen Version der Datei springen",

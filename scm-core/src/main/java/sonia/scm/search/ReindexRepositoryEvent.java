@@ -24,15 +24,17 @@
 
 package sonia.scm.search;
 
-import sonia.scm.HandlerEventType;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import sonia.scm.event.Event;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryEvent;
 
 /**
  * @since 2.39.0
  */
-public class ReindexRepositoryEvent extends RepositoryEvent {
-  public ReindexRepositoryEvent(HandlerEventType eventType, Repository repository) {
-    super(eventType, repository);
-  }
+@Event
+@AllArgsConstructor
+@Getter
+public class ReindexRepositoryEvent {
+  private Repository repository;
 }

@@ -27,6 +27,7 @@ import React, { FC } from "react";
 import { useReindexRepository } from "@scm-manager/ui-api";
 import { Button, ErrorNotification, Level, Subtitle } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
+import SuccessNotification from "../../admin/plugins/components/SuccessNotification";
 
 type Props = {
   repository: Repository;
@@ -34,12 +35,13 @@ type Props = {
 
 const Reindex: FC<Props> = ({ repository }) => {
   const [t] = useTranslation("repos");
-  const { reindex, error, isLoading } = useReindexRepository();
+  const { reindex, error, isLoading, isRunning } = useReindexRepository();
 
   return (
     <>
       <hr />
       <ErrorNotification error={error} />
+      {isRunning ? <SuccessNotification>{t("reindex.started")}</SuccessNotification> : null}
       <Subtitle>{t("reindex.subtitle")}</Subtitle>
       <p>{t("reindex.description")}</p>
       <Level
