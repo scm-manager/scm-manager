@@ -111,6 +111,9 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
   @ObjectFactory
   RepositoryDto createDto(Repository repository) {
     Links.Builder linksBuilder = linkingTo().self(resourceLinks.repository().self(repository.getNamespace(), repository.getName()));
+    if (RepositoryPermissions.custom("*", repository).isPermitted()) {
+      linksBuilder.single(link("reindex", resourceLinks.repository().reindex(repository.getNamespace(), repository.getName())));
+    }
     if (RepositoryPermissions.delete(repository).isPermitted()) {
       linksBuilder.single(link("delete", resourceLinks.repository().delete(repository.getNamespace(), repository.getName())));
     }
