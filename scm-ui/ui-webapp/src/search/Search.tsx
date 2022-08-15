@@ -43,7 +43,7 @@ import type { TFunction } from "i18next";
 import styled from "styled-components";
 
 const DisabledNavLink = styled.div`
-  opacity: 0.6;
+  opacity: 0.4;
   cursor: not-allowed;
 `;
 
