@@ -40,6 +40,12 @@ import { Trans, useTranslation } from "react-i18next";
 import SearchErrorNotification from "./SearchErrorNotification";
 import SyntaxModal from "./SyntaxModal";
 import type { TFunction } from "i18next";
+import styled from "styled-components";
+
+const DisabledNavLink = styled.div`
+  opacity: 0.6;
+  cursor: not-allowed;
+`;
 
 type PathParams = {
   type: string;
@@ -174,27 +180,44 @@ const Search: FC = () => {
             <Results result={data} query={query} page={page} type={selectedType} />
           </PrimaryContentColumn>
           <SecondaryNavigation label={t("search.types")} collapsible={false}>
-            {types.map((type) => (
-              <NavLink
-                key={type}
-                to={`/search/${type}/?q=${query}${namespace ? "&namespace=" + namespace : ""}${
-                  name ? "&name=" + name : ""
-                }`}
-                label={type}
-                activeOnlyWhenExact={false}
-              >
-                <Level
-                  left={t(`plugins:search.types.${type}.navItem`, type)}
-                  right={
-                    <Count
-                      isLoading={counts[type].isLoading}
-                      isSelected={type === selectedType}
-                      count={counts[type].data}
+            {types.map((type) =>
+              type !== selectedType && (counts[type].isLoading || counts[type].data === 0) ? (
+                <li>
+                  <DisabledNavLink className="p-4 is-unselectable">
+                    <Level
+                      left={t(`plugins:search.types.${type}.navItem`, type)}
+                      right={
+                        <Count
+                          isLoading={counts[type].isLoading}
+                          isSelected={type === selectedType}
+                          count={counts[type].data}
+                        />
+                      }
                     />
-                  }
-                />
-              </NavLink>
-            ))}
+                  </DisabledNavLink>
+                </li>
+              ) : (
+                <NavLink
+                  key={type}
+                  to={`/search/${type}/?q=${query}${namespace ? "&namespace=" + namespace : ""}${
+                    name ? "&name=" + name : ""
+                  }`}
+                  label={type}
+                  activeOnlyWhenExact={false}
+                >
+                  <Level
+                    left={t(`plugins:search.types.${type}.navItem`, type)}
+                    right={
+                      <Count
+                        isLoading={counts[type].isLoading}
+                        isSelected={type === selectedType}
+                        count={counts[type].data}
+                      />
+                    }
+                  />
+                </NavLink>
+              )
+            )}
           </SecondaryNavigation>
         </CustomQueryFlexWrappedColumns>
       ) : null}
