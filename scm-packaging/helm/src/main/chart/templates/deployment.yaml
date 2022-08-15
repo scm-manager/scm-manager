@@ -97,9 +97,9 @@ spec:
             mountPath: /var/lib/scm
           - name: config
             mountPath: /opt/scm-server/conf
-            {{- with .Values.extraVolumeMounts }}
-            {{- tpl . $ | nindent 12 }}
-            {{- end }}
+          {{- with .Values.extraVolumeMounts }}
+          {{- tpl . $ | nindent 10 }}
+          {{- end }}
           env:
             {{- with .Values.extraEnv }}
             {{- tpl . $ | nindent 12 }}
@@ -125,7 +125,7 @@ spec:
           name: {{ include "scm-manager.fullname" . }}-scripts
       {{- end }}
       {{- with .Values.extraVolumes }}
-      {{- tpl . $ | nindent 8 }}
+      {{- tpl . $ | nindent 6 }}
       {{- end }}
     {{- with .Values.nodeSelector }}
       nodeSelector:
