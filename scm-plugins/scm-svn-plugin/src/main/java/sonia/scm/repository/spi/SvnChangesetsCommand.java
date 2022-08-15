@@ -44,7 +44,8 @@ public class SvnChangesetsCommand extends AbstractSvnCommand implements Changese
     try {
       SVNRepository repo = open();
       long startRev =  repo.getLatestRevision();
-      long endRev = 0;
+      // We ignore the changeset 0, because it doesn't have any values like author or description
+      long endRev = 1;
       final List<Changeset> changesets = Lists.newArrayList();
 
       repo.log(null, startRev, endRev, true, true, new ChangesetCollector(changesets));

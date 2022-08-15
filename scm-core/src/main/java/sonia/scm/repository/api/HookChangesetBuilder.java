@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.api;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -46,6 +46,8 @@ import sonia.scm.repository.spi.HookChangesetResponse;
 import java.io.IOException;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 /**
  * The {@link HookChangesetBuilder} is able to return all {@link Changeset}s
@@ -142,6 +144,33 @@ public final class HookChangesetBuilder
         }
 
       });
+    }
+
+    return changesets;
+  }
+
+  public Iterable<Changeset> getRemovedChangesets() {
+    HookChangesetResponse hookChangesetResponse = provider.handleRequest(request);
+    Iterable<Changeset> changesets = hookChangesetResponse.getRemovedChangesets();
+
+    if (!disablePreProcessors)
+    {
+      changesets = StreamSupport.stream(changesets.spliterator(), false).map(c -> {
+        Changeset copy = null;
+
+        try {
+          copy = DeepCopy.copy(c);
+          preProcessorUtil.prepareForReturn(repository, copy);
+        } catch (IOException ex) {
+          logger.error("could not create a copy of changeset", ex);
+        }
+
+        if (copy == null) {
+          return c;
+        }
+
+        return copy;
+      }).collect(Collectors.toList());
     }
 
     return changesets;

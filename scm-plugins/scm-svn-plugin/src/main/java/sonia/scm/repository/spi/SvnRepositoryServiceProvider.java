@@ -162,4 +162,7 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider {
   public FileLockCommand getFileLockCommand() {
     return new SvnFileLockCommand(context);
   }
+
+  @Override
+  public ChangesetsCommand getChangesetsCommand() { return new SvnChangesetsCommand(context);}
 }

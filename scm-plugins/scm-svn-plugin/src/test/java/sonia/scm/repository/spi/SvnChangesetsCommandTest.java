@@ -37,7 +37,7 @@ public class SvnChangesetsCommandTest extends AbstractSvnCommandTestBase {
   public void getAllChangesetsFromRepository() {
     Iterable<Changeset> changesets = createCommand().getChangesets(new ChangesetsCommandRequest());
 
-    assertThat(changesets).hasSize(6);
+    assertThat(changesets).hasSize(5);
   }
 
   @Test

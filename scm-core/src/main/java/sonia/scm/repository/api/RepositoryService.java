@@ -102,11 +102,11 @@ public final class RepositoryService implements Closeable {
    * Constructs a new {@link RepositoryService}. This constructor should only
    * be called from the {@link RepositoryServiceFactory}.
    *
-   * @param cacheManager    cache manager
-   * @param provider        implementation for {@link RepositoryServiceProvider}
-   * @param repository      the repository
-   * @param workdirProvider provider for workdirs
-   * @param eMail           utility to compute email addresses if missing
+   * @param cacheManager             cache manager
+   * @param provider                 implementation for {@link RepositoryServiceProvider}
+   * @param repository               the repository
+   * @param workdirProvider          provider for workdirs
+   * @param eMail                    utility to compute email addresses if missing
    * @param repositoryExportingCheck
    */
   RepositoryService(CacheManager cacheManager,
@@ -502,6 +502,11 @@ public final class RepositoryService implements Closeable {
   public BranchDetailsCommandBuilder getBranchDetailsCommand() {
     LOG.debug("create branch details command for repository {}", repository);
     return new BranchDetailsCommandBuilder(repository, provider.getBranchDetailsCommand(), cacheManager);
+  }
+
+  public ChangesetsCommandBuilder getChangesetsCommand() {
+    LOG.debug("create changesets command for repository {}", repository);
+    return new ChangesetsCommandBuilder(cacheManager, repository, provider.getChangesetsCommand());
   }
 
   /**

@@ -25,12 +25,10 @@
 package sonia.scm.repository.spi;
 
 /**
- *
  * @author Sebastian Sdorra
  * @since 1.33
  */
-public interface HookChangesetProvider
-{
+public interface HookChangesetProvider {
 
   HookChangesetResponse handleRequest(HookChangesetRequest request);
 }

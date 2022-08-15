@@ -27,7 +27,6 @@ package sonia.scm.repository.spi;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.spi.javahg.HgLogChangesetCommand;
 
-import java.util.List;
 import java.util.Optional;
 
 import static sonia.scm.repository.spi.javahg.HgLogChangesetCommand.on;

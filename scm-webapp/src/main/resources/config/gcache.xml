@@ -24,25 +24,25 @@
 -->
 
 <caches>
-    
-  <defaultCache 
-    maximumSize="200" 
-    expireAfterAccess="1200" 
+
+  <defaultCache
+    maximumSize="200"
+    expireAfterAccess="1200"
     expireAfterWrite="2400"
   />
-  
+
   <!--
     External group cache
     average: 1K
   -->
-    
+
   <cache
     name="sonia.cache.externalGroups"
     maximumSize="1000"
     expireAfterAccess="60"
     expireAfterWrite="120"
   />
-  
+
   <!--
     Authorization cache
     average: 3K
@@ -50,11 +50,11 @@
   <cache
     name="sonia.cache.authorizing"
     maximumSize="1000"
-    expireAfterAccess="1200" 
+    expireAfterAccess="1200"
     expireAfterWrite="2400"
     copyStrategy="read"
   />
-  
+
   <!--
     PluginCenter cache
     average: 30K
@@ -75,7 +75,7 @@
     expireAfterWrite="3600"
   />
 
-  <!-- 
+  <!--
     Search cache for users
     average: 0.5K
   -->
@@ -94,7 +94,16 @@
     expireAfterAccess="60000"
   />
 
-  <!-- 
+  <!--
+Search cache for repository changesets
+-->
+  <cache
+    name="sonia.cache.cmd.changesets"
+    maximumSize="1000000"
+    expireAfterAccess="60000"
+  />
+
+  <!--
     Search cache for groups
     average: 0.5K
   -->
@@ -103,9 +112,9 @@
     maximumSize="1000"
     expireAfterWrite="5400"
   />
-  
+
   <!-- repository api -->
-  
+
   <!--
     Changeset cache
     average: 25K
@@ -115,7 +124,7 @@
     maximumSize="500"
     copyStrategy="read-write"
   />
-  
+
   <!--
     FileObject cache
     average: 1.5K
@@ -135,7 +144,7 @@
     maximumSize="1000"
     copyStrategy="read-write"
   />
-  
+
   <!--
     Tag cache
     average: 5K
@@ -144,7 +153,7 @@
     name="sonia.cache.cmd.tags"
     maximumSize="500"
   />
-  
+
   <!--
     Branch cache
     average: 2.5K
