@@ -203,7 +203,7 @@
     "subtitle": "{{type}} Ergebnisse für \"{{query}}\"",
     "subtitleWithContext": "{{type}} Ergebnisse für \"{{query}}\" in \"{{context}}\"",
     "types": "Ergebnisse",
-    "noHits": "Die Suche ergab keine Treffer",
+    "noHits": "Keine Ergebnisse gefunden. Auf der rechten Seite finden Sie weitere Kategorien, in denen Ergebnisse vorhanden sein könnten",
     "syntaxHelp": "Finden Sie bessere Ergebnisse durch die Nutzung der vollen <0>Such-Syntax</0>",
     "quickSearch": {
       "resultHeading": "Hilfe beim Suchen?",
