@@ -791,7 +791,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
 
     dispatcher.invoke(request, response);
 
-    assertEquals(response.getStatus(), 403);
+    assertEquals(403, response.getStatus());
     assertNull(listener.event);
   }
 
