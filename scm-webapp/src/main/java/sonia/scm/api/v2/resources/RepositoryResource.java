@@ -302,7 +302,7 @@ public class RepositoryResource {
   @Operation(summary = "Manually reindex repository", description = "Asynchronously update search indices for repository", tags = "Repository")
   @ApiResponse(responseCode = "204", description = "event submitted")
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
-  @ApiResponse(responseCode = "403", description = "not authorized, the current user does not have the \"repository:reindex\" privilege")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current user does not have owner permissions for this repository")
   @ApiResponse(
     responseCode = "404",
     description = "not found, no repository with the specified namespace and name available",
