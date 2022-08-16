@@ -1,0 +1,2 @@
+- type: fixed
+  description: Fix broken compare view due to missing export ([#2105](https://github.com/scm-manager/scm-manager/pull/2105))
