@@ -45,7 +45,14 @@ const Reindex: FC<Props> = ({ repository }) => {
       <p>{t("reindex.description")}</p>
       <Level
         right={
-          <Button className="mt-4" action={() => reindex(repository)} disabled={isLoading} loading={isLoading}>
+          <Button
+            color="warning"
+            icon="sync-alt"
+            className="mt-4"
+            action={() => reindex(repository)}
+            disabled={isLoading}
+            loading={isLoading}
+          >
             {t("reindex.button")}
           </Button>
         }
