@@ -24,11 +24,13 @@
 
 package sonia.scm.api.v2.resources;
 
+import com.github.legman.Subscribe;
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Resources;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.jboss.resteasy.mock.MockHttpRequest;
@@ -45,6 +47,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.NotFoundException;
 import sonia.scm.PageResult;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.event.ScmEventBus;
 import sonia.scm.importexport.ExportFileExtensionResolver;
 import sonia.scm.importexport.ExportNotificationHandler;
 import sonia.scm.importexport.ExportService;
@@ -68,6 +71,7 @@ import sonia.scm.repository.api.BundleCommandBuilder;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
+import sonia.scm.search.ReindexRepositoryEvent;
 import sonia.scm.search.SearchEngine;
 import sonia.scm.user.User;
 import sonia.scm.web.RestDispatcher;
@@ -97,6 +101,8 @@ import static javax.servlet.http.HttpServletResponse.SC_OK;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
@@ -748,6 +754,60 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     assertEquals(SC_OK, response.getStatus());
     verify(exportService).getExportInformation(repository);
   }
+
+
+  @Test
+  public void shouldDispatchReindexEvent() throws URISyntaxException {
+    ReindexTestListener listener = new ReindexTestListener();
+
+    ScmEventBus.getInstance().register(listener);
+
+    Repository repository = createRepository("space", "repo");
+
+    MockHttpRequest request = MockHttpRequest
+      .post("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/reindex");
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+    assertNotNull(listener.event);
+    assertEquals(repository, listener.repository);
+  }
+
+  @Test
+  public void shouldThrowErrorWhenMissingPermissions() throws URISyntaxException {
+    Subject subject = mock(Subject.class);
+    doThrow(new AuthorizationException()).when(subject).checkPermission("repository:*:space-repo");
+    shiro.setSubject(subject);
+
+    ReindexTestListener listener = new ReindexTestListener();
+
+    ScmEventBus.getInstance().register(listener);
+
+    createRepository("space", "repo");
+
+    MockHttpRequest request = MockHttpRequest
+      .post("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/reindex");
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(response.getStatus(), 403);
+    assertNull(listener.event);
+  }
+
+  private static class ReindexTestListener {
+
+    private ReindexRepositoryEvent event;
+
+    private Repository repository;
+
+    @Subscribe(async = false)
+    public void onEvent(ReindexRepositoryEvent event) {
+        this.repository = event.getRepository();
+        this.event = event;
+    }
+  }
+
 
   private void mockRepositoryHandler(Set<Command> cmds) {
     RepositoryHandler repositoryHandler = mock(RepositoryHandler.class);
