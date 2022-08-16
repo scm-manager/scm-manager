@@ -408,6 +408,23 @@ public class RepositoryToRepositoryDtoMapperTest {
       .isEqualTo("http://example.com/base/v2/search/searchableTypes/testspace/test");
   }
 
+  @Test
+  public void shouldCreateReindexLink() {
+    Repository testRepository = createTestRepository();
+    RepositoryDto dto = mapper.map(testRepository);
+    assertThat(dto.getLinks().getLinkBy("reindex"))
+      .get()
+      .hasFieldOrPropertyWithValue("href", "http://example.com/base/v2/repositories/testspace/test/reindex");
+  }
+
+  @SubjectAware(username = "unpriv")
+  @Test
+  public void shouldNotCreateReindexLinkWithoutPermission() {
+    Repository testRepository = createTestRepository();
+    RepositoryDto dto = mapper.map(testRepository);
+    assertThat(dto.getLinks().getLinkBy("reindex")).isEmpty();
+  }
+
   private ScmProtocol mockProtocol(String type, String protocol) {
     return new MockScmProtocol(type, protocol);
   }
