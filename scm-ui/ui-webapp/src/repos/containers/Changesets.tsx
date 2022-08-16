@@ -25,7 +25,7 @@ import React, { FC } from "react";
 import { Redirect, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useChangesets } from "@scm-manager/ui-api";
-import { Branch, Repository } from "@scm-manager/ui-types";
+import { Branch, ChangesetCollection, Repository } from "@scm-manager/ui-types";
 import {
   ChangesetList,
   ErrorNotification,
@@ -48,7 +48,20 @@ type Props = {
 
 const Changesets: FC<Props> = ({ repository, branch, url }) => {
   const page = usePage();
+
   const { isLoading, error, data } = useChangesets(repository, { branch, page: page - 1 });
+
+  return <ChangesetsPanel repository={repository} error={error} isLoading={isLoading} data={data} url={url} />;
+};
+
+type ChangesetsPanelProps = Props & {
+  error: Error | null;
+  isLoading: boolean;
+  data?: ChangesetCollection;
+};
+
+export const ChangesetsPanel: FC<ChangesetsPanelProps> = ({ repository, error, isLoading, data, url }) => {
+  const page = usePage();
   const [t] = useTranslation("repos");
   const changesets = data?._embedded?.changesets;
 
