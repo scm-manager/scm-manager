@@ -22,74 +22,28 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.api;
+package sonia.scm.repository.spi;
+
+import sonia.scm.repository.Changeset;
+
+import java.util.Optional;
 
 /**
- * Enumeration of available commands.
  *
- * @author Sebastian Sdorra
- * @since 1.17
+ * @since 2.39.0
  */
-public enum Command
-{
-  LOG, BROWSE, CAT, DIFF, BLAME,
+public interface ChangesetsCommand {
+  /**
+   * Retrieve all changesets (over all branches/tags) from the repository
+   * @param request
+   * @return iterable of all changesets
+   */
+  Iterable<Changeset> getChangesets(ChangesetsCommandRequest request);
 
   /**
-   * @since 1.18
+   * Retrieve the latest changeset (over all branches/tags) from the repository
+   * @return optional of latest changeset or empty
    */
-  TAGS,
+  Optional<Changeset> getLatestChangeset();
 
-  /**
-   * @since 1.18
-   */
-  BRANCHES,
-
-  /**
-   * @since 1.31
-   */
-  INCOMING, OUTGOING, PUSH, PULL,
-
-  /**
-   * @since 1.43
-   */
-  BUNDLE, UNBUNDLE,
-
-  /**
-   * @since 2.0
-   */
-  MODIFICATIONS, MERGE, DIFF_RESULT, BRANCH, MODIFY,
-
-  /**
-   * @since 2.10.0
-   */
-  LOOKUP,
-
-  /**
-   * @since 2.11.0
-   */
-  TAG,
-
-  /**
-   * @since 2.17.0
-   */
-  FULL_HEALTH_CHECK,
-
-  /**
-   * @since 2.19.0
-   */
-  MIRROR,
-
-  /**
-   * @since 2.26.0
-   */
-  FILE_LOCK,
-
-  /**
-   * @since 2.28.0
-   */
-  BRANCH_DETAILS,
-  /**
-   * @since 2.39.0
-   */
-  CHANGESETS
 }

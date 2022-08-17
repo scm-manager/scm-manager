@@ -56,7 +56,8 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider {
     Command.LOOKUP,
     Command.FULL_HEALTH_CHECK,
     Command.MIRROR,
-    Command.FILE_LOCK
+    Command.FILE_LOCK,
+    Command.CHANGESETS
   );
 
   public static final Set<Feature> FEATURES = EnumSet.of(
@@ -161,4 +162,7 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider {
   public FileLockCommand getFileLockCommand() {
     return new SvnFileLockCommand(context);
   }
+
+  @Override
+  public ChangesetsCommand getChangesetsCommand() { return new SvnChangesetsCommand(context);}
 }

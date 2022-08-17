@@ -22,74 +22,40 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.api;
+package sonia.scm.repository.spi;
 
-/**
- * Enumeration of available commands.
- *
- * @author Sebastian Sdorra
- * @since 1.17
- */
-public enum Command
-{
-  LOG, BROWSE, CAT, DIFF, BLAME,
+import org.junit.Test;
+import sonia.scm.repository.Changeset;
 
-  /**
-   * @since 1.18
-   */
-  TAGS,
+import java.util.Optional;
 
-  /**
-   * @since 1.18
-   */
-  BRANCHES,
+import static org.assertj.core.api.Assertions.assertThat;
 
-  /**
-   * @since 1.31
-   */
-  INCOMING, OUTGOING, PUSH, PULL,
+public class HgChangesetsCommandTest extends AbstractHgCommandTestBase {
 
-  /**
-   * @since 1.43
-   */
-  BUNDLE, UNBUNDLE,
+  @Test
+  public void getAllChangesetsFromRepository() {
+    Iterable<Changeset> changesets = createCommand()
+      .getChangesets(new ChangesetsCommandRequest());
 
-  /**
-   * @since 2.0
-   */
-  MODIFICATIONS, MERGE, DIFF_RESULT, BRANCH, MODIFY,
+    assertThat(changesets).hasSize(13);
+  }
 
-  /**
-   * @since 2.10.0
-   */
-  LOOKUP,
+  @Test
+  public void getLatestChangesetFromRepository() {
+    Optional<Changeset> changeset = createCommand()
+      .getLatestChangeset();
 
-  /**
-   * @since 2.11.0
-   */
-  TAG,
+    assertThat(changeset).isPresent();
+    assertThat(changeset.get().getId()).isEqualTo("67a658097e5aba664eaabb7a79a60f8d63c59b97");
+  }
 
-  /**
-   * @since 2.17.0
-   */
-  FULL_HEALTH_CHECK,
+  private HgChangesetsCommand createCommand() {
+    return new HgChangesetsCommand(cmdContext);
+  }
 
-  /**
-   * @since 2.19.0
-   */
-  MIRROR,
-
-  /**
-   * @since 2.26.0
-   */
-  FILE_LOCK,
-
-  /**
-   * @since 2.28.0
-   */
-  BRANCH_DETAILS,
-  /**
-   * @since 2.39.0
-   */
-  CHANGESETS
+  @Override
+  protected String getZippedRepositoryResource() {
+    return "sonia/scm/repository/spi/scm-hg-ahead-behind-test.zip";
+  }
 }

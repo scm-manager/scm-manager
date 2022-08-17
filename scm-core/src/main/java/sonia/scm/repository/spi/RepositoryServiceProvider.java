@@ -318,4 +318,8 @@ public abstract class RepositoryServiceProvider implements Closeable
   public BranchDetailsCommand getBranchDetailsCommand() {
     throw new CommandNotSupportedException(Command.BRANCH_DETAILS);
   }
+
+  public ChangesetsCommand getChangesetsCommand() {
+    throw new CommandNotSupportedException(Command.CHANGESETS);
+  }
 }

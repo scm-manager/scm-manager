@@ -21,48 +21,50 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
+package sonia.scm.repository.spi;
 
 import sonia.scm.repository.Changeset;
 
+import static java.util.Collections.emptyList;
+
 /**
- * Response object to retrieve {@link Changeset}s during a hook. 
+ * Response object to retrieve {@link Changeset}s during a hook.
  *
  * @author Sebastian Sdorra
  * @since 1.33
  */
-public final class HookChangesetResponse
-{
+public final class HookChangesetResponse {
+  private final Iterable<Changeset> addedChangesets;
+  private final Iterable<Changeset> removedChangesets;
 
-  /**
-   * Constructs a new {@link HookChangesetResponse}.
-   *
-   *
-   * @param changesets added changesets
-   */
-  public HookChangesetResponse(Iterable<Changeset> changesets)
-  {
-    this.changesets = changesets;
+  public HookChangesetResponse(Iterable<Changeset> addedChangesets, Iterable<Changeset> removedChangesets) {
+    this.addedChangesets = addedChangesets;
+    this.removedChangesets = removedChangesets;
   }
 
-  //~--- get methods ----------------------------------------------------------
+  public HookChangesetResponse(Iterable<Changeset> changesets) {
+    this(changesets, emptyList());
+  }
+
 
   /**
    * Return added changesets.
    *
-   *
    * @return added changesets
    */
-  public Iterable<Changeset> getChangesets()
-  {
-    return changesets;
+  public Iterable<Changeset> getChangesets() {
+    return addedChangesets;
   }
 
-  //~--- fields ---------------------------------------------------------------
+  /**
+   * Return removed changesets.
+   *
+   * @return removed changesets
+   * @since 2.39.0
+   */
+  public Iterable<Changeset> getRemovedChangesets() {
+    return removedChangesets;
+  }
 
-  /** added changesets */
-  private Iterable<Changeset> changesets;
 }

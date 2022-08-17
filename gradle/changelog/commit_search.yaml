@@ -1,0 +1,2 @@
+- type: added
+  description: Changesets command to find all repository changesets ([#2106](https://github.com/scm-manager/scm-manager/pull/2106))

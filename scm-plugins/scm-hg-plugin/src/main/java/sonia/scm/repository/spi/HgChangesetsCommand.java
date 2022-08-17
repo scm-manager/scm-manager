@@ -22,74 +22,38 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.api;
+package sonia.scm.repository.spi;
 
-/**
- * Enumeration of available commands.
- *
- * @author Sebastian Sdorra
- * @since 1.17
- */
-public enum Command
-{
-  LOG, BROWSE, CAT, DIFF, BLAME,
+import sonia.scm.repository.Changeset;
+import sonia.scm.repository.spi.javahg.HgLogChangesetCommand;
 
-  /**
-   * @since 1.18
-   */
-  TAGS,
+import java.util.Optional;
 
-  /**
-   * @since 1.18
-   */
-  BRANCHES,
+import static sonia.scm.repository.spi.javahg.HgLogChangesetCommand.on;
 
-  /**
-   * @since 1.31
-   */
-  INCOMING, OUTGOING, PUSH, PULL,
+public class HgChangesetsCommand extends AbstractCommand implements ChangesetsCommand {
 
-  /**
-   * @since 1.43
-   */
-  BUNDLE, UNBUNDLE,
+  public HgChangesetsCommand(HgCommandContext context) {
+    super(context);
+  }
 
-  /**
-   * @since 2.0
-   */
-  MODIFICATIONS, MERGE, DIFF_RESULT, BRANCH, MODIFY,
+  @Override
+  public Iterable<Changeset> getChangesets(ChangesetsCommandRequest request) {
+    org.javahg.Repository repository = open();
+    HgLogChangesetCommand cmd = on(repository, context.getConfig());
+    // Get all changesets between the first changeset and the repository tip, both inclusive.
+    cmd.rev("tip:0");
+    return cmd.execute();
+  }
 
-  /**
-   * @since 2.10.0
-   */
-  LOOKUP,
-
-  /**
-   * @since 2.11.0
-   */
-  TAG,
-
-  /**
-   * @since 2.17.0
-   */
-  FULL_HEALTH_CHECK,
-
-  /**
-   * @since 2.19.0
-   */
-  MIRROR,
-
-  /**
-   * @since 2.26.0
-   */
-  FILE_LOCK,
-
-  /**
-   * @since 2.28.0
-   */
-  BRANCH_DETAILS,
-  /**
-   * @since 2.39.0
-   */
-  CHANGESETS
+  @Override
+  public Optional<Changeset> getLatestChangeset() {
+    org.javahg.Repository repository = open();
+    HgLogChangesetCommand cmd = on(repository, context.getConfig());
+    Changeset tip = cmd.rev("tip").single();
+    if (tip != null) {
+      return Optional.of(tip);
+    }
+    return Optional.empty();
+  }
 }
