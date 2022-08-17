@@ -484,7 +484,7 @@
   "reindex": {
     "button": "Reindex",
     "subtitle": "Recreate Search Indices",
-    "description": "Delete all existing search indices for this repository and recreate them from scratch. This may take a while.",
+    "description": "Deletes all existing search indices for this repository and recreates them from scratch. This may take a while.",
     "started": "Reindexing has been started successfully. This is an asynchronous operation and may take a while."
   },
   "archive": {

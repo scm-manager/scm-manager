@@ -495,7 +495,7 @@
   "reindex": {
     "button": "Reindizieren",
     "subtitle": "Suchindizes neu erstellen",
-    "description": "Lösche alle existierenden Suchindizes für dieses Repository and erstelle sie komplett neu. Dieser Vorgang kann einige Zeit in Anspruch nehmen.",
+    "description": "Löscht alle existierenden Suchindizes für dieses Repository and erstellt sie komplett neu. Dieser Vorgang kann einige Zeit in Anspruch nehmen.",
     "started": "Die Reindizierung wurde erfolgreich gestartet. Dies ist eine asynchrone Operation und kann einige Zeit in Anspruch nehmen."
   },
   "diff": {
