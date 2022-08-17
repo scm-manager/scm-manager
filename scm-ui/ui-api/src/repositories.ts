@@ -373,3 +373,24 @@ export const useRenameRepository = (repository: Repository) => {
     isRenamed: !!data
   };
 };
+
+export const useReindexRepository = () => {
+  const queryClient = useQueryClient();
+  const { mutate, isLoading, error, data } = useMutation<unknown, Error, Repository>(
+    (repository) => {
+      const link = requiredLink(repository, "reindex");
+      return apiClient.post(link);
+    },
+    {
+      onSuccess: async (_, repository) => {
+        await queryClient.invalidateQueries(repoQueryKey(repository));
+      },
+    }
+  );
+  return {
+    reindex: (repository: Repository) => mutate(repository),
+    isLoading,
+    error,
+    isRunning: !!data,
+  };
+};

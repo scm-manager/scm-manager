@@ -481,6 +481,12 @@
     "descriptionNotRunning": "Run the health checks for this repository. This may take a while.",
     "descriptionRunning": "Health checks for this repository are currently running and cannot be started again in parallel."
   },
+  "reindex": {
+    "button": "Reindex",
+    "subtitle": "Recreate Search Indices",
+    "description": "Deletes all existing search indices for this repository and recreates them from scratch. This may take a while.",
+    "started": "Reindexing has been started successfully. This is an asynchronous operation and may take a while."
+  },
   "archive": {
     "tooltip": "Read only. The archive cannot be changed."
   },

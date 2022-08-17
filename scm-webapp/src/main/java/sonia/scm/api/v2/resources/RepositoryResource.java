@@ -30,10 +30,13 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.HealthCheckService;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.RepositoryPermissions;
+import sonia.scm.search.ReindexRepositoryEvent;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
@@ -292,6 +295,26 @@ public class RepositoryResource {
   public void runHealthCheck(@PathParam("namespace") String namespace, @PathParam("name") String name) {
     Repository repository = loadBy(namespace, name).get();
     healthCheckService.fullCheck(repository);
+  }
+
+  @POST
+  @Path("reindex")
+  @Operation(summary = "Manually reindex repository", description = "Asynchronously update search indices for repository", tags = "Repository")
+  @ApiResponse(responseCode = "204", description = "event submitted")
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current user does not have owner permissions for this repository")
+  @ApiResponse(
+    responseCode = "404",
+    description = "not found, no repository with the specified namespace and name available",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
+  @ApiResponse(responseCode = "500", description = "internal server error")
+  public void reindex(@PathParam("namespace") String namespace, @PathParam("name") String name) {
+    Repository repository = loadBy(namespace, name).get();
+    RepositoryPermissions.custom("*", repository).check();
+    ScmEventBus.getInstance().post(new ReindexRepositoryEvent(repository));
   }
 
   private Repository processUpdate(RepositoryDto repositoryDto, Repository existing) {

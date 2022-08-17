@@ -34,6 +34,7 @@ import { useUpdateRepository } from "@scm-manager/ui-api";
 import HealthCheckWarning from "./HealthCheckWarning";
 import RunHealthCheck from "./RunHealthCheck";
 import UpdateNotification from "../../components/UpdateNotification";
+import Reindex from "../components/Reindex";
 
 type Props = {
   repository: Repository;
@@ -71,6 +72,7 @@ const EditRepo: FC<Props> = ({ repository }) => {
       {(repository._links.runHealthCheck || repository.healthCheckRunning) && (
         <RunHealthCheck repository={repository} />
       )}
+      {repository._links.reindex ? <Reindex repository={repository} /> : null}
       <RepositoryDangerZone repository={repository} />
     </>
   );
