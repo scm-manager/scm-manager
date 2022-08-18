@@ -204,7 +204,7 @@
     "subtitle": "{{type}} results for \"{{query}}\"",
     "subtitleWithContext": "{{type}} results for \"{{query}}\" in \"{{context}}\"",
     "types": "Results",
-    "noHits": "No results found",
+    "noHits": "No results found. On the right side you will find other categories where results might be available",
     "syntaxHelp": "Find better results by using the full <0>search syntax</0>",
     "quickSearch": {
       "resultHeading": "Need help?",

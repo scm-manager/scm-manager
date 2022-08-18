@@ -49,12 +49,12 @@ const Results: FC<Props> = ({ result, type, page, query }) => {
   }
 
   return (
-    <div className="panel">
-      <Hits type={type} hits={hits} />
-      <div className="panel-footer">
-        <LinkPaginator collection={result} page={page} filter={query} />
+    <>
+      <div className="panel">
+        <Hits type={type} hits={hits} />
       </div>
-    </div>
+      <LinkPaginator collection={result} page={page} filter={query} />
+    </>
   );
 };
 

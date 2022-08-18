@@ -34,11 +34,18 @@ import {
   urls,
 } from "@scm-manager/ui-components";
 import { Link, useLocation, useParams } from "react-router-dom";
-import { useSearch, useSearchCounts, useSearchTypes, useNamespaceAndNameContext } from "@scm-manager/ui-api";
+import { useNamespaceAndNameContext, useSearch, useSearchCounts, useSearchTypes } from "@scm-manager/ui-api";
 import Results from "./Results";
 import { Trans, useTranslation } from "react-i18next";
 import SearchErrorNotification from "./SearchErrorNotification";
 import SyntaxModal from "./SyntaxModal";
+import type { TFunction } from "i18next";
+import styled from "styled-components";
+
+const DisabledNavLink = styled.div`
+  opacity: 0.4;
+  cursor: not-allowed;
+`;
 
 type PathParams = {
   type: string;
@@ -80,17 +87,16 @@ const usePageParams = () => {
   };
 };
 
-export const orderTypes = (left: string, right: string) => {
-  if (left === "repository" && right !== "repository") {
+export const orderTypes = (t: TFunction) => (a: string, b: string) => {
+  if (!a || !b) {
+    return 0;
+  }
+  if (a === "repository" && b !== "repository") {
     return -1;
-  } else if (left !== "repository" && right === "repository") {
-    return 1;
-  } else if (left < right) {
-    return -1;
-  } else if (left > right) {
+  } else if (a !== "repository" && b === "repository") {
     return 1;
   }
-  return 0;
+  return t(`plugins:search.types.${a}.navItem`, a)?.localeCompare(t(`plugins:search.types.${b}.navItem`, b)) ?? 0;
 };
 
 type Props = {
@@ -144,7 +150,7 @@ const Search: FC = () => {
   };
   const { data, isLoading, error } = useSearch(query, searchOptions);
   const types = useSearchTypes(searchOptions);
-  types.sort(orderTypes);
+  types.sort(orderTypes(t));
 
   const searchCounts = useSearchCounts(
     types.filter((type) => type !== selectedType),
@@ -174,27 +180,44 @@ const Search: FC = () => {
             <Results result={data} query={query} page={page} type={selectedType} />
           </PrimaryContentColumn>
           <SecondaryNavigation label={t("search.types")} collapsible={false}>
-            {types.map((type) => (
-              <NavLink
-                key={type}
-                to={`/search/${type}/?q=${query}${namespace ? "&namespace=" + namespace : ""}${
-                  name ? "&name=" + name : ""
-                }`}
-                label={type}
-                activeOnlyWhenExact={false}
-              >
-                <Level
-                  left={t(`plugins:search.types.${type}.navItem`, type)}
-                  right={
-                    <Count
-                      isLoading={counts[type].isLoading}
-                      isSelected={type === selectedType}
-                      count={counts[type].data}
+            {types.map((type) =>
+              type !== selectedType && (counts[type].isLoading || counts[type].data === 0) ? (
+                <li>
+                  <DisabledNavLink className="p-4 is-unselectable">
+                    <Level
+                      left={t(`plugins:search.types.${type}.navItem`, type)}
+                      right={
+                        <Count
+                          isLoading={counts[type].isLoading}
+                          isSelected={type === selectedType}
+                          count={counts[type].data}
+                        />
+                      }
                     />
-                  }
-                />
-              </NavLink>
-            ))}
+                  </DisabledNavLink>
+                </li>
+              ) : (
+                <NavLink
+                  key={type}
+                  to={`/search/${type}/?q=${query}${namespace ? "&namespace=" + namespace : ""}${
+                    name ? "&name=" + name : ""
+                  }`}
+                  label={type}
+                  activeOnlyWhenExact={false}
+                >
+                  <Level
+                    left={t(`plugins:search.types.${type}.navItem`, type)}
+                    right={
+                      <Count
+                        isLoading={counts[type].isLoading}
+                        isSelected={type === selectedType}
+                        count={counts[type].data}
+                      />
+                    }
+                  />
+                </NavLink>
+              )
+            )}
           </SecondaryNavigation>
         </CustomQueryFlexWrappedColumns>
       ) : null}

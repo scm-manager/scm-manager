@@ -1,0 +1,2 @@
+- type: changed
+  description: Enhance search result view by sorting translated categories and disable categories with no search results ([#2107](https://github.com/scm-manager/scm-manager/pull/2107))
