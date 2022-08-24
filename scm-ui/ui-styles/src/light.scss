@@ -78,23 +78,6 @@ $popover-background-color: $grey-light;
   --sh-selected-color: #{$warning-25};
   --sh-highlight-background: #f5f5f5;
   --sh-highlight-accent: #99d8f3;
-
-  // Tailwind
-  --scm-primary-contrast-color: #{$white};
-  --scm-primary-hover-color: #{darken($primary, 10%)};
-  --scm-primary-hover-contrast-color: #{$white};
-  --scm-primary-active-color: #{darken($primary, 20%)};
-  --scm-primary-active-contrast-color: #{$white};
-  --scm-primary-disabled-color: #bff3f7;
-  --scm-primary-disabled-contrast-color: #{$white};
-
-  --scm-warning-contrast-color: #88550D;
-  --scm-warning-hover-contrast-color: #{rgba(0,0,0,0.7)};
-  --scm-warning-hover-color: #{darken($warning, 10%)};
-  --scm-warning-active-color: #{darken($warning, 20%)};
-  --scm-warning-active-contrast-color: #{rgba(0,0,0,0.7)};
-  --scm-warning-disabled-color: #fff6d5;
-  --scm-warning-disabled-contrast-color: #e1d4c2;
 }
 
 .button {

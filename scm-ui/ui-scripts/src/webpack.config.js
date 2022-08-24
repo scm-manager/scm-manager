@@ -109,39 +109,7 @@ module.exports = [
           ],
         },
         {
-          test: /tailwind\.css$/i,
-          exclude: /node_modules/,
-          use: [
-            {
-              loader: MiniCssExtractPlugin.loader,
-            },
-            {
-              loader: "css-loader",
-              options: {
-                importLoaders: 1,
-              },
-            },
-            {
-              loader: "postcss-loader",
-              options: {
-                postcssOptions: {
-                  plugins: [
-                    [
-                      "tailwindcss",
-                      {
-                        config: path.join(root, "ui-scripts", "src", "tailwind.config.js"),
-                      },
-                    ],
-                    ["autoprefixer", {}],
-                  ],
-                },
-              },
-            },
-          ],
-        },
-        {
           test: /\.(css|scss|sass)$/i,
-          exclude: /tailwind\.css$/i,
           use: [
             // Creates `style` nodes from JS strings
             "style-loader",

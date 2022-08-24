@@ -76,24 +76,6 @@ module.exports = {
       use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"],
     });
 
-    config.module.rules.push({
-      test: /\.css$/,
-      use: [
-        {
-          loader: "postcss-loader",
-          options: {
-            postcssOptions: {
-              plugins: {
-                tailwindcss: { config: require("./tailwind.config") },
-                autoprefixer: {},
-              },
-            },
-          },
-        },
-      ],
-      include: path.resolve(__dirname, "../"),
-    });
-
     // the html-webpack-plugin adds the generated css and js files to the iframe,
     // which overrides our manually loaded css files.
     // So we use a custom plugin which uses a hook of html-webpack-plugin

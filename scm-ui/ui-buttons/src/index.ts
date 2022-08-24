@@ -22,6 +22,4 @@
  * SOFTWARE.
  */
 
-import "./index.css";
-
 export { Button, LinkButton, ExternalLinkButton, ButtonVariants } from "./button";

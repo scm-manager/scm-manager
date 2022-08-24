@@ -229,23 +229,6 @@ $danger-25: scale-color($danger, $lightness: -75%);
   --diff-code-delete-edit-background-color: #{desaturate(#000, 20%)};
   --diff-code-selected-background-color: #{desaturate(#fffce0, 20%)};
   --diff-omit-gutter-line-color: #cb2a1d;
-
-  // Tailwind
-  --scm-primary-contrast-color: #{lighten($text-strong, 2.5%)};
-  --scm-primary-hover-color: #{darken($primary, 5%)};
-  --scm-primary-hover-contrast-color: #{lighten($text-strong, 2.5%)};
-  --scm-primary-active-color: #{darken($primary, 10%)};
-  --scm-primary-active-contrast-color: #{lighten($text-strong, 2.5%)};
-  --scm-primary-disabled-color: #{rgba($primary, 0.5)};
-  --scm-primary-disabled-contrast-color: #{rgba(lighten($text-strong, 2.5%), 0.5)};
-
-  --scm-warning-contrast-color: #88550D;
-  --scm-warning-hover-contrast-color: #{rgba(0,0,0,0.7)};
-  --scm-warning-hover-color: #{darken($warning, 10%)};
-  --scm-warning-active-color: #{darken($warning, 20%)};
-  --scm-warning-active-contrast-color: #{rgba(0,0,0,0.7)};
-  --scm-warning-disabled-color: #{rgba($warning, 0.5)};
-  --scm-warning-disabled-contrast-color: #{rgba(0,0,0,0.7)};
 }
 
 .menu-list {

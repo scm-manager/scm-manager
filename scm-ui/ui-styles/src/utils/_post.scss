@@ -21,21 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-@import "bulma/sass/utilities/_all";
-@import "bulma/sass/base/_all";
-@import "bulma/sass/elements/_all";
-@import "bulma/sass/form/_all";
-@import "bulma/sass/components/_all";
-@import "bulma/sass/grid/_all";
-@import "bulma/sass/helpers/color";
-@import "bulma/sass/helpers/flexbox";
-@import "bulma/sass/helpers/float";
-@import "bulma/sass/helpers/other";
-@import "bulma/sass/helpers/overflow";
-@import "bulma/sass/helpers/position";
-@import "bulma/sass/helpers/typography";
-@import "bulma/sass/helpers/visibility";
-@import "bulma/sass/layout/_all";
+@import "bulma/bulma";
 @import "../variables/_derived.scss";
 @import "bulma-popover/css/bulma-popover";
 @import "../components/_main.scss";
