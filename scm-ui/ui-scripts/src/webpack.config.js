@@ -33,13 +33,7 @@ const isDevelopment = process.env.NODE_ENV === "development";
 const root = path.resolve(process.cwd(), "..");
 
 const babelPlugins = [];
-const webpackPlugins = [
-  new MiniCssExtractPlugin({
-    filename: "webapp.tailwind.css",
-    chunkFilename: "webapp.tailwind.css",
-    ignoreOrder: false,
-  }),
-];
+const webpackPlugins = [];
 
 if (process.env.ANALYZE_BUNDLES === "true") {
   // it is ok to use require here, because we want to load the package conditionally
@@ -87,8 +81,7 @@ module.exports = [
         path.resolve(__dirname, "webpack-public-path.js"),
         // enable async/await
         "regenerator-runtime/runtime",
-        "./ui-webapp/src/index.tsx",
-        "./ui-scripts/src/tailwind.css",
+        "./ui-webapp/src/index.tsx"
       ],
     },
     devtool: "eval-cheap-module-source-map",

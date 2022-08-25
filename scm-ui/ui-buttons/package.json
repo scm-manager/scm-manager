@@ -17,7 +17,7 @@
     "build-storybook": "build-storybook",
     "image-snapshots": "jest \"image-snapshot.test.ts\"",
     "a11y-check": "jest \"a11y.test.ts\"",
-    "depcheck": "depcheck --ignores=@scm-manager/prettier-config,@scm-manager/tsconfig,@babel/core,sass-loader,autoprefixer,babel-loader,postcss-loader,tailwindcss,storybook-addon-*,@storybook/*,webpack"
+    "depcheck": "depcheck --ignores=@scm-manager/prettier-config,@scm-manager/tsconfig,@babel/core,sass-loader,autoprefixer,babel-loader,postcss-loader,storybook-addon-*,@storybook/*,webpack"
   },
   "peerDependencies": {
     "react": "^17.0.1",
