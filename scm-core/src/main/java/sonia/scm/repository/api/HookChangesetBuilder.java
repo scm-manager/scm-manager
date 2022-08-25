@@ -26,13 +26,10 @@ package sonia.scm.repository.api;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.io.DeepCopy;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.PreProcessorUtil;
@@ -41,13 +38,8 @@ import sonia.scm.repository.spi.HookChangesetProvider;
 import sonia.scm.repository.spi.HookChangesetRequest;
 import sonia.scm.repository.spi.HookChangesetResponse;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
-
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 /**
  * The {@link HookChangesetBuilder} is able to return all {@link Changeset}s
@@ -113,67 +105,36 @@ public final class HookChangesetBuilder
   {
     HookChangesetResponse hookChangesetResponse = provider.handleRequest(request);
     Iterable<Changeset> changesets = hookChangesetResponse.getChangesets();
-
-    if (!disablePreProcessors)
-    {
-      changesets = Iterables.transform(changesets,
-        new Function<Changeset, Changeset>()
-      {
-
-        @Override
-        public Changeset apply(Changeset c)
-        {
-          Changeset copy = null;
-
-          try
-          {
-            copy = DeepCopy.copy(c);
-            preProcessorUtil.prepareForReturn(repository, copy);
-          }
-          catch (IOException ex)
-          {
-            logger.error("could not create a copy of changeset", ex);
-          }
-
-          if (copy == null)
-          {
-            copy = c;
-          }
-
-          return copy;
-        }
-
-      });
-    }
-
-    return changesets;
+    return applyPreprocessorsIfNotDisabled(changesets);
   }
 
   public Iterable<Changeset> getRemovedChangesets() {
     HookChangesetResponse hookChangesetResponse = provider.handleRequest(request);
     Iterable<Changeset> changesets = hookChangesetResponse.getRemovedChangesets();
+    return applyPreprocessorsIfNotDisabled(changesets);
+  }
 
-    if (!disablePreProcessors)
-    {
-      changesets = StreamSupport.stream(changesets.spliterator(), false).map(c -> {
-        Changeset copy = null;
-
-        try {
-          copy = DeepCopy.copy(c);
-          preProcessorUtil.prepareForReturn(repository, copy);
-        } catch (IOException ex) {
-          logger.error("could not create a copy of changeset", ex);
-        }
-
-        if (copy == null) {
-          return c;
-        }
-
-        return copy;
-      }).collect(Collectors.toList());
+  private Iterable<Changeset> applyPreprocessorsIfNotDisabled(Iterable<Changeset> changesets) {
+    if (disablePreProcessors) {
+      return changesets;
     }
 
-    return changesets;
+    return Iterables.transform(changesets, c -> {
+      Changeset copy = null;
+
+      try {
+        copy = DeepCopy.copy(c);
+        preProcessorUtil.prepareForReturn(repository, copy);
+      } catch (IOException ex) {
+        logger.error("could not create a copy of changeset", ex);
+      }
+
+      if (copy == null) {
+        copy = c;
+      }
+
+      return copy;
+    });
   }
 
   //~--- set methods ----------------------------------------------------------

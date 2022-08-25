@@ -30,7 +30,6 @@ import org.eclipse.jgit.transport.ReceiveCommand;
 import org.eclipse.jgit.transport.ReceivePack;
 
 import sonia.scm.repository.GitChangesetConverterFactory;
-import sonia.scm.repository.GitHookChangesetCollector;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -59,7 +58,7 @@ public class GitHookChangesetProvider implements HookChangesetProvider {
   public synchronized HookChangesetResponse handleRequest(HookChangesetRequest request) {
     if (response == null) {
       GitHookChangesetCollector collector = new GitHookChangesetCollector(converterFactory, receivePack, receiveCommands);
-      response = new HookChangesetResponse(collector.collectChangesets());
+      response = new HookChangesetResponse(collector.collectChangesets(), collector.collectRemovedChangesets());
     }
     return response;
   }

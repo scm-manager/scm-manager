@@ -233,6 +233,17 @@ public final class GitUtil {
     return Strings.nullToEmpty(refName).startsWith(PREFIX_HEADS);
   }
 
+  /**
+   * Returns {@code true} if the provided reference name is a tag name.
+   *
+   * @param refName reference name
+   * @return {@code true} if the name is a tag name
+   * @since 2.39.0
+   */
+  public static boolean isTag(String refName) {
+    return Strings.nullToEmpty(refName).startsWith(PREFIX_TAG);
+  }
+
   public static Ref getBranchIdOrCurrentHead(org.eclipse.jgit.lib.Repository gitRepository, String requestedBranch) throws IOException {
     if (Strings.isNullOrEmpty(requestedBranch)) {
       logger.trace("no default branch configured, use repository head as default");
