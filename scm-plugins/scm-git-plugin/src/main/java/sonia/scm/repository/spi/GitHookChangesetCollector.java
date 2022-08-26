@@ -24,9 +24,6 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
@@ -46,6 +43,8 @@ import sonia.scm.web.CollectingPackParserListener;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+
+import static java.util.Collections.unmodifiableCollection;
 
 /**
  * @author Sebastian Sdorra
@@ -98,12 +97,12 @@ class GitHookChangesetCollector {
     }
   }
 
-  List<Changeset> getAddedChangesets() {
-    return Lists.newArrayList(addedChangesets.values());
+  Iterable<Changeset> getAddedChangesets() {
+    return unmodifiableCollection(addedChangesets.values());
   }
 
-  List<Changeset> getRemovedChangesets() {
-    return Lists.newArrayList(removedChangesets.values());
+  Iterable<Changeset> getRemovedChangesets() {
+    return unmodifiableCollection(removedChangesets.values());
   }
 
   void handle(Repository repository, RevWalk walk, GitChangesetConverter converter, ReceiveCommand rc, String ref) {
@@ -114,6 +113,7 @@ class GitHookChangesetCollector {
         LOG.debug("handle deleted ref {}", ref);
         collectRemovedChangeset(repository, walk, converter, rc);
       } else {
+        LOG.debug("handle added ref {}", ref);
         collectAddedChangesets(converter, walk, rc, ref);
       }
     } catch (IOException ex) {
@@ -146,7 +146,6 @@ class GitHookChangesetCollector {
 
     if ((oldId != null) && !oldId.equals(ObjectId.zeroId())) {
       LOG.trace("mark {} as uninteresting for rev walk", oldId.getName());
-
       walk.markUninteresting(walk.parseCommit(oldId));
     }
 
