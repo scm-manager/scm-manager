@@ -86,7 +86,7 @@ class GitHookChangesetCollector {
           LOG.debug("skip ref {}, because it is neither branch nor tag", ref);
         } else {
           try {
-            collectAddedChangesets(converter, walk, rc);
+            collectAddedChangesets(converter, walk, rc, ref);
           } catch (IOException ex) {
             String message = "could not handle receive command, type=" +
               rc.getType() + ", ref=" +
@@ -100,7 +100,8 @@ class GitHookChangesetCollector {
 
       private void collectAddedChangesets(GitChangesetConverter converter,
                                           RevWalk walk,
-                                          ReceiveCommand rc)
+                                          ReceiveCommand rc,
+                                          String ref)
         throws IOException {
         ObjectId newId = rc.getNewId();
 
@@ -128,10 +129,12 @@ class GitHookChangesetCollector {
           Changeset changeset = changesets.get(id);
 
           if (changeset != null) {
-            LOG.trace(
-              "commit {} already received during this push, add branch {} to the commit",
-              commit, branch);
-            changeset.getBranches().add(branch);
+            if (GitUtil.isBranch(ref)) {
+              LOG.trace(
+                "commit {} already received during this push, add branch {} to the commit",
+                commit, branch);
+              changeset.getBranches().add(branch);
+            }
           } else if (listener.isNew(commit)) {
             // only append new commits
             addToCollection(converter, walk, commit, id, branch);
