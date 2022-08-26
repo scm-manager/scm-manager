@@ -30,7 +30,6 @@
     "autoprefixer": "^10.4.4"
   },
   "devDependencies": {
-    "@scm-manager/ui-styles": "2.38.2-SNAPSHOT",
     "@scm-manager/babel-preset": "^2.13.1",
     "@scm-manager/eslint-config": "^2.16.0",
     "@scm-manager/prettier-config": "^2.10.1",
