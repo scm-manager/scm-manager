@@ -65,12 +65,8 @@ public class GitChangesetConverter implements Closeable {
     this.treeWalk = new TreeWalk(repository);
   }
 
-  public Changeset createChangeset(RevCommit commit) {
-    return createChangeset(commit, Collections.emptyList());
-  }
-
-  public Changeset createChangeset(RevCommit commit, String branch) {
-    return createChangeset(commit, Lists.newArrayList(branch));
+  public Changeset createChangeset(RevCommit commit, String... branches) {
+    return createChangeset(commit, Arrays.asList(branches));
   }
 
   public Changeset createChangeset(RevCommit commit, List<String> branches) {
@@ -142,7 +138,7 @@ public class GitChangesetConverter implements Closeable {
     }
 
     Optional<PublicKey> publicKeyById = gpg.findPublicKey(publicKeyId);
-    if (!publicKeyById.isPresent()) {
+    if (publicKeyById.isEmpty()) {
       // key not found
       return new Signature(publicKeyId, "gpg", SignatureStatus.NOT_FOUND, null, Collections.emptySet());
     }

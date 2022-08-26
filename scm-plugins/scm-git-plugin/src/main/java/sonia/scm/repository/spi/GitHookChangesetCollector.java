@@ -79,14 +79,14 @@ class GitHookChangesetCollector {
   List<Changeset> collectAddedChangesets() {
     return new Collector() {
       @Override
-      void handle(Repository repository, RevWalk walk, GitChangesetConverter converter, ReceiveCommand rc, String ref) throws IOException {
+      void handle(Repository repository, RevWalk walk, GitChangesetConverter converter, ReceiveCommand rc, String ref) {
         if (rc.getType() == ReceiveCommand.Type.DELETE) {
           LOG.debug("skip delete of ref {}", ref);
         } else if (!(GitUtil.isBranch(ref) || GitUtil.isTag(ref))) {
           LOG.debug("skip ref {}, because it is neither branch nor tag", ref);
         } else {
           try {
-            collectAddedChangesets(changesets, converter, walk, rc);
+            collectAddedChangesets(converter, walk, rc);
           } catch (IOException ex) {
             String message = "could not handle receive command, type=" +
               rc.getType() + ", ref=" +
@@ -98,8 +98,7 @@ class GitHookChangesetCollector {
         }
       }
 
-      private void collectAddedChangesets(Map<String, Changeset> changesets,
-                                          GitChangesetConverter converter,
+      private void collectAddedChangesets(GitChangesetConverter converter,
                                           RevWalk walk,
                                           ReceiveCommand rc)
         throws IOException {
@@ -107,7 +106,6 @@ class GitHookChangesetCollector {
 
         String branch = GitUtil.getBranch(rc.getRefName());
 
-        walk.reset();
         walk.sort(RevSort.TOPO);
         walk.sort(RevSort.REVERSE, true);
 
@@ -134,21 +132,11 @@ class GitHookChangesetCollector {
               "commit {} already received during this push, add branch {} to the commit",
               commit, branch);
             changeset.getBranches().add(branch);
-          } else {
-
+          } else if (listener.isNew(commit)) {
             // only append new commits
-            if (listener.isNew(commit)) {
-              // parse commit body to avoid npe
-              walk.parseBody(commit);
-
-              changeset = converter.createChangeset(commit, branch);
-
-              LOG.trace("retrieve commit {} for hook", changeset.getId());
-
-              changesets.put(id, changeset);
-            } else {
-              LOG.trace("commit {} was already received", commit.getId());
-            }
+            addToCollection(converter, walk, commit, id, branch);
+          } else {
+            LOG.trace("commit {} was already received", commit.getId());
           }
 
           commit = walk.next();
@@ -170,7 +158,6 @@ class GitHookChangesetCollector {
       private void collectRemovedChangeset(Repository repository, RevWalk walk, GitChangesetConverter converter, ReceiveCommand rc) throws IOException {
         ObjectId oldId = rc.getOldId();
 
-        walk.reset();
         walk.markStart(walk.parseCommit(oldId));
         GitUtil.getAllCommits(repository, walk).forEach(c -> {
           try {
@@ -187,14 +174,7 @@ class GitHookChangesetCollector {
           Changeset changeset = changesets.get(id);
 
           if (changeset == null) {
-            // parse commit body to avoid npe
-            walk.parseBody(commit);
-
-            changeset = converter.createChangeset(commit);
-
-            LOG.trace("retrieve commit {} for hook", changeset.getId());
-
-            changesets.put(id, changeset);
+            addToCollection(converter, walk, commit, id);
           }
 
           commit = walk.next();
@@ -217,6 +197,8 @@ class GitHookChangesetCollector {
 
           LOG.trace("handle receive command, type={}, ref={}, result={}", rc.getType(), ref, rc.getResult());
 
+          walk.reset();
+
           handle(repository, walk, converter, rc, ref);
         }
       } catch (Exception ex) {
@@ -224,6 +206,18 @@ class GitHookChangesetCollector {
       }
 
       return Lists.newArrayList(changesets.values());
+    }
+
+
+    void addToCollection(GitChangesetConverter converter, RevWalk walk, RevCommit commit, String id, String... branches) throws IOException {
+      // parse commit body to avoid npe
+      walk.parseBody(commit);
+
+      Changeset newChangeset = converter.createChangeset(commit, branches);
+
+      LOG.trace("retrieve commit {} for hook", newChangeset.getId());
+
+      changesets.put(id, newChangeset);
     }
 
     abstract void handle(Repository repository, RevWalk walk, GitChangesetConverter converter, ReceiveCommand rc, String ref) throws IOException;
