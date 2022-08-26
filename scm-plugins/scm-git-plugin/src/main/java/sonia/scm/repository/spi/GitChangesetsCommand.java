@@ -25,7 +25,6 @@
 package sonia.scm.repository.spi;
 
 import lombok.extern.slf4j.Slf4j;
-import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -39,7 +38,7 @@ import sonia.scm.repository.InternalRepositoryException;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -58,11 +57,13 @@ public class GitChangesetsCommand extends AbstractGitCommand implements Changese
   @Override
   public Iterable<Changeset> getChangesets(ChangesetsCommandRequest request) {
     try {
+      log.debug("computing changesets for repository {}", repository);
       Repository repository = open();
 
       try (RevWalk revWalk = new RevWalk(repository)) {
         revWalk.markStart(getAllCommits(repository, revWalk).collect(Collectors.toList()));
         Iterator<RevCommit> iterator = revWalk.iterator();
+        log.trace("got git iterator for all changesets for repository {}", repository);
         return () -> new Iterator<>() {
           private final GitChangesetConverter changesetConverter = converterFactory.create(repository, revWalk);
 
@@ -74,13 +75,15 @@ public class GitChangesetsCommand extends AbstractGitCommand implements Changese
           @Override
           public Changeset next() {
             try {
-              log.trace("next");
+              log.trace("mapping changeset for repository {}", repository);
               return changesetConverter.createChangeset(revWalk.parseCommit(iterator.next()));
             } catch (IOException e) {
               throw new InternalRepositoryException(context.getRepository(), "failed to create changeset for single git revision", e);
             }
           }
         };
+      } finally {
+        log.trace("returned iterator for all changesets for repository {}", repository);
       }
     } catch (IOException e) {
       throw new InternalRepositoryException(context.getRepository(), "failed to get latest commit", e);
@@ -117,14 +120,16 @@ public class GitChangesetsCommand extends AbstractGitCommand implements Changese
     return repository.getRefDatabase()
       .getRefs()
       .stream()
-      .map(ref -> getCommitFromRef(ref, revWalk));
+      .map(ref -> getCommitFromRef(ref, revWalk))
+      .filter(Objects::nonNull);
   }
 
   private RevCommit getCommitFromRef(Ref ref, RevWalk revWalk) {
     try {
       return GitUtil.getCommit(null, revWalk, ref);
     } catch (IOException e) {
-      throw new InternalRepositoryException(context.getRepository(), "failed to parse commit", e);
+      log.info("could not get commit for {} in repository {}", ref, repository, e);
+      return null;
     }
   }
 }
