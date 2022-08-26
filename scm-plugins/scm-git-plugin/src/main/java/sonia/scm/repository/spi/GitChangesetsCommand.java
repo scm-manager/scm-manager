@@ -25,7 +25,6 @@
 package sonia.scm.repository.spi;
 
 import lombok.extern.slf4j.Slf4j;
-import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
@@ -38,10 +37,8 @@ import sonia.scm.repository.InternalRepositoryException;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Slf4j
 public class GitChangesetsCommand extends AbstractGitCommand implements ChangesetsCommand {
@@ -61,7 +58,7 @@ public class GitChangesetsCommand extends AbstractGitCommand implements Changese
       Repository repository = open();
 
       try (RevWalk revWalk = new RevWalk(repository)) {
-        revWalk.markStart(getAllCommits(repository, revWalk).collect(Collectors.toList()));
+        revWalk.markStart(GitUtil.getAllCommits(repository, revWalk).collect(Collectors.toList()));
         Iterator<RevCommit> iterator = revWalk.iterator();
         log.trace("got git iterator for all changesets for repository {}", repository);
         return () -> new Iterator<>() {
@@ -96,7 +93,7 @@ public class GitChangesetsCommand extends AbstractGitCommand implements Changese
       Repository repository = open();
 
       try (RevWalk revWalk = new RevWalk(repository)) {
-        return getAllCommits(repository, revWalk)
+        return GitUtil.getAllCommits(repository, revWalk)
           .max((ref1, ref2) -> {
             long commitTime1 = ref1.getCommitTime();
             long commitTime2 = ref2.getCommitTime();
@@ -113,23 +110,6 @@ public class GitChangesetsCommand extends AbstractGitCommand implements Changese
       }
     } catch (IOException e) {
       throw new InternalRepositoryException(context.getRepository(), "failed to get latest commit", e);
-    }
-  }
-
-  private Stream<RevCommit> getAllCommits(Repository repository, RevWalk revWalk) throws IOException {
-    return repository.getRefDatabase()
-      .getRefs()
-      .stream()
-      .map(ref -> getCommitFromRef(ref, revWalk))
-      .filter(Objects::nonNull);
-  }
-
-  private RevCommit getCommitFromRef(Ref ref, RevWalk revWalk) {
-    try {
-      return GitUtil.getCommit(null, revWalk, ref);
-    } catch (IOException e) {
-      log.info("could not get commit for {} in repository {}", ref, repository, e);
-      return null;
     }
   }
 }

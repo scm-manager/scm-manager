@@ -24,14 +24,9 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import org.eclipse.jgit.transport.ReceiveCommand;
 import org.eclipse.jgit.transport.ReceivePack;
-
 import sonia.scm.repository.GitChangesetConverterFactory;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.util.List;
 
@@ -58,7 +53,7 @@ public class GitHookChangesetProvider implements HookChangesetProvider {
   public synchronized HookChangesetResponse handleRequest(HookChangesetRequest request) {
     if (response == null) {
       GitHookChangesetCollector collector = new GitHookChangesetCollector(converterFactory, receivePack, receiveCommands);
-      response = new HookChangesetResponse(collector.collectChangesets(), collector.collectRemovedChangesets());
+      response = new HookChangesetResponse(collector.collectAddedChangesets(), collector.collectRemovedChangesets());
     }
     return response;
   }
