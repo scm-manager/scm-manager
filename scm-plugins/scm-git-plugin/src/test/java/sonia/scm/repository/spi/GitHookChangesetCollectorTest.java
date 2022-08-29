@@ -55,18 +55,16 @@ import static org.mockito.Mockito.when;
 
 public class GitHookChangesetCollectorTest extends AbstractGitCommandTestBase {
 
-  private ReceivePack rpack;
-  private Collection<ReceiveCommand> receiveCommands = new ArrayList<>();
+  private final ReceivePack rpack = mock(ReceivePack.class);
+  private final Collection<ReceiveCommand> receiveCommands = new ArrayList<>();
+  private final CollectingPackParserListener listener = mock(CollectingPackParserListener.class);
 
-  private CollectingPackParserListener listener;
   private GitHookChangesetCollector collector;
 
   @Before
   public void init() throws IOException {
     GitChangesetConverterFactory converterFactory = mock(GitChangesetConverterFactory.class);
     GitChangesetConverter converter = mock(GitChangesetConverter.class);
-    rpack = mock(ReceivePack.class);
-    listener = mock(CollectingPackParserListener.class);
 
     GitContext context = createContext();
     Repository repository = context.open();
