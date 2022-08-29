@@ -506,7 +506,7 @@ public final class RepositoryService implements Closeable {
 
   public ChangesetsCommandBuilder getChangesetsCommand() {
     LOG.debug("create changesets command for repository {}", repository);
-    return new ChangesetsCommandBuilder(cacheManager, repository, provider.getChangesetsCommand());
+    return new ChangesetsCommandBuilder(repository, provider.getChangesetsCommand());
   }
 
   /**

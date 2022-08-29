@@ -24,24 +24,17 @@
 
 package sonia.scm.repository.api;
 
-import com.google.common.collect.Iterables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.cache.Cache;
-import sonia.scm.cache.CacheManager;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryCacheKey;
 import sonia.scm.repository.spi.ChangesetsCommand;
 import sonia.scm.repository.spi.ChangesetsCommandRequest;
 
-import java.io.Serializable;
 import java.util.Optional;
 
 public class ChangesetsCommandBuilder {
 
-  static final String CACHE_NAME = "sonia.cache.cmd.changesets";
-  private final Cache<CacheKey, Iterable<Changeset>> cache;
   private static final Logger LOG = LoggerFactory.getLogger(ChangesetsCommandBuilder.class);
 
   private final Repository repository;
@@ -49,43 +42,18 @@ public class ChangesetsCommandBuilder {
 
   private final ChangesetsCommandRequest request = new ChangesetsCommandRequest();
 
-  public ChangesetsCommandBuilder(CacheManager cacheManager, Repository repository, ChangesetsCommand changesetsCommand) {
+  public ChangesetsCommandBuilder( Repository repository, ChangesetsCommand changesetsCommand) {
     this.repository = repository;
     this.changesetsCommand = changesetsCommand;
-    this.cache = cacheManager.getCache(CACHE_NAME);
   }
 
   public Iterable<Changeset> getChangesets() {
-    CacheKey cacheKey = new CacheKey(repository);
-    Iterable<Changeset> changesets = cache.get(cacheKey);
-
-    if (changesets == null || Iterables.isEmpty(changesets)) {
       LOG.debug("Retrieve all changesets from {{}}", repository);
-      changesets = changesetsCommand.getChangesets(request);
-      cache.put(cacheKey, changesets);
-    } else {
-      LOG.debug("Use cached changesets from {{}}", repository);
-    }
-
-    return changesets;
+      return changesetsCommand.getChangesets(request);
   }
 
   public Optional<Changeset> getLatestChangeset() {
     LOG.debug("Retrieve latest changeset from {{}}", repository);
     return changesetsCommand.getLatestChangeset();
   }
-
-  static class CacheKey implements RepositoryCacheKey, Serializable {
-    private final Repository repository;
-
-    CacheKey(Repository repository) {
-      this.repository = repository;
-    }
-
-    @Override
-    public String getRepositoryId() {
-      return repository.getId();
-    }
-  }
-
 }
