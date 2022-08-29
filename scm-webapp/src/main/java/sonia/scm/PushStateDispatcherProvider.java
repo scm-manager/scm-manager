@@ -40,7 +40,7 @@ import javax.inject.Provider;
 public class PushStateDispatcherProvider implements Provider<PushStateDispatcher> {
 
   @VisibleForTesting
-  public static final String PROPERTY_TARGET = "sonia.scm.ui.proxy";
+  static final String PROPERTY_TARGET = "sonia.scm.ui.proxy";
 
   private Provider<TemplatingPushStateDispatcher> templatingPushStateDispatcherProvider;
 

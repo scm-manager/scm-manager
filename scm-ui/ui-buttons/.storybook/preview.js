@@ -22,8 +22,6 @@
  * SOFTWARE.
  */
 
-import "./index.css";
-
 import i18next from "i18next";
 import { initReactI18next } from "react-i18next";
 import { withI18next } from "storybook-addon-i18next";
