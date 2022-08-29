@@ -41,7 +41,7 @@ import sonia.scm.repository.GitUtil;
 import sonia.scm.web.CollectingPackParserListener;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 
 import static java.util.Collections.unmodifiableCollection;
@@ -58,7 +58,7 @@ class GitHookChangesetCollector {
    */
   private final CollectingPackParserListener listener;
 
-  private final List<ReceiveCommand> receiveCommands;
+  private final Collection<ReceiveCommand> receiveCommands;
 
   private final GitChangesetConverterFactory converterFactory;
   private final ReceivePack rpack;
@@ -66,7 +66,7 @@ class GitHookChangesetCollector {
   private final Map<String, Changeset> addedChangesets = Maps.newLinkedHashMap();
   private final Map<String, Changeset> removedChangesets = Maps.newLinkedHashMap();
 
-  GitHookChangesetCollector(GitChangesetConverterFactory converterFactory, ReceivePack rpack, List<ReceiveCommand> receiveCommands) {
+  GitHookChangesetCollector(GitChangesetConverterFactory converterFactory, ReceivePack rpack, Collection<ReceiveCommand> receiveCommands) {
     this.converterFactory = converterFactory;
     this.rpack = rpack;
     this.receiveCommands = receiveCommands;
