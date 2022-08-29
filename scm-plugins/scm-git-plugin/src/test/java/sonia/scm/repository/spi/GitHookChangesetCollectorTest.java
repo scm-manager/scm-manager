@@ -97,7 +97,7 @@ public class GitHookChangesetCollectorTest extends AbstractGitCommandTestBase {
         fromString("91b99de908fcd04772798a31c308a64aea1a5523"),
         "refs/heads/mergeable")
     );
-    mockExistingCommits(
+    mockNewCommits(
       "91b99de908fcd04772798a31c308a64aea1a5523",
       "3f76a12f08a6ba0dc988c68b7f0b2cd190efc3c4",
       "592d797cd36432e591416e8b2b98154f4f163411");
@@ -112,11 +112,6 @@ public class GitHookChangesetCollectorTest extends AbstractGitCommandTestBase {
     assertThat(collector.getRemovedChangesets()).isEmpty();
   }
 
-  private void mockExistingCommits(String... objectIds) {
-    when(listener.isNew(any()))
-      .thenAnswer(invocation -> asList(objectIds).contains(invocation.getArgument(0, RevCommit.class).name()));
-  }
-
   @Test
   public void shouldFindAddedChangesetsFromChangedBranchWithoutIteratingOldCommits() {
     receiveCommands.add(
@@ -125,7 +120,7 @@ public class GitHookChangesetCollectorTest extends AbstractGitCommandTestBase {
         fromString("3f76a12f08a6ba0dc988c68b7f0b2cd190efc3c4"),
         "refs/heads/test-branch")
     );
-    mockExistingCommits("3f76a12f08a6ba0dc988c68b7f0b2cd190efc3c4");
+    mockNewCommits("3f76a12f08a6ba0dc988c68b7f0b2cd190efc3c4");
 
     collector.collectChangesets();
 
@@ -138,7 +133,7 @@ public class GitHookChangesetCollectorTest extends AbstractGitCommandTestBase {
   }
 
   @Test
-  public void shouldFindRemovedChangesetsFromChangedBranchWithoutIteratingOldCommits() throws IOException, GitAPIException {
+  public void shouldFindRemovedChangesetsFromDeletedBranch() throws IOException, GitAPIException {
     new Git(createContext().open()).branchDelete().setBranchNames("test-branch").setForce(true).call();
     receiveCommands.add(
       new ReceiveCommand(
@@ -147,7 +142,7 @@ public class GitHookChangesetCollectorTest extends AbstractGitCommandTestBase {
         "refs/heads/test-branch",
         ReceiveCommand.Type.DELETE)
     );
-    mockExistingCommits("3f76a12f08a6ba0dc988c68b7f0b2cd190efc3c4");
+    mockNewCommits("3f76a12f08a6ba0dc988c68b7f0b2cd190efc3c4");
 
     collector.collectChangesets();
 
@@ -157,5 +152,32 @@ public class GitHookChangesetCollectorTest extends AbstractGitCommandTestBase {
       .contains("3f76a12f08a6ba0dc988c68b7f0b2cd190efc3c4");
 
     verify(listener, never()).isNew(argThat(argument -> argument.name().equals("592d797cd36432e591416e8b2b98154f4f163411")));
+  }
+
+  @Test
+  public void shouldFindRemovedAndAddedChangesetsFromNonFastForwardChanged() throws IOException, GitAPIException {
+    new Git(createContext().open()).branchDelete().setBranchNames("test-branch").setForce(true).call();
+    receiveCommands.add(
+      new ReceiveCommand(
+        fromString("3f76a12f08a6ba0dc988c68b7f0b2cd190efc3c4"),
+        fromString("91b99de908fcd04772798a31c308a64aea1a5523"),
+        "refs/heads/test-branch",
+        ReceiveCommand.Type.UPDATE_NONFASTFORWARD)
+    );
+    mockNewCommits("91b99de908fcd04772798a31c308a64aea1a5523");
+
+    collector.collectChangesets();
+
+    assertThat(collector.getAddedChangesets())
+      .extracting("id")
+      .contains("91b99de908fcd04772798a31c308a64aea1a5523");
+    assertThat(collector.getRemovedChangesets())
+      .extracting("id")
+      .contains("3f76a12f08a6ba0dc988c68b7f0b2cd190efc3c4");
+  }
+
+  private void mockNewCommits(String... objectIds) {
+    when(listener.isNew(any()))
+      .thenAnswer(invocation -> asList(objectIds).contains(invocation.getArgument(0, RevCommit.class).name()));
   }
 }

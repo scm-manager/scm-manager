@@ -88,8 +88,6 @@ class GitHookChangesetCollector {
 
         LOG.trace("handle receive command, type={}, ref={}, result={}", rc.getType(), ref, rc.getResult());
 
-        walk.reset();
-
         handle(repository, walk, converter, rc, ref);
       }
     } catch (Exception ex) {
@@ -135,6 +133,7 @@ class GitHookChangesetCollector {
                                       ReceiveCommand rc,
                                       String ref)
     throws IOException {
+    walk.reset();
     ObjectId newId = rc.getNewId();
 
     String branch = GitUtil.getBranch(rc.getRefName());
@@ -178,6 +177,7 @@ class GitHookChangesetCollector {
   }
 
   private void collectRemovedChangeset(Repository repository, RevWalk walk, GitChangesetConverter converter, ReceiveCommand rc) throws IOException {
+    walk.reset();
     ObjectId oldId = rc.getOldId();
 
     walk.markStart(walk.parseCommit(oldId));
