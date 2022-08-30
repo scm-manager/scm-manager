@@ -111,6 +111,37 @@ public class GitHookChangesetCollectorTest extends AbstractGitCommandTestBase {
   }
 
   @Test
+  public void shouldFindAddedChangesetsFromNewBranchesOnce() throws IOException, GitAPIException {
+    new Git(createContext().open()).branchCreate().setStartPoint("mergeable").setName("second").call();
+    receiveCommands.add(
+      new ReceiveCommand(
+        zeroId(),
+        fromString("91b99de908fcd04772798a31c308a64aea1a5523"),
+        "refs/heads/mergeable")
+    );
+    receiveCommands.add(
+      new ReceiveCommand(
+        zeroId(),
+        fromString("91b99de908fcd04772798a31c308a64aea1a5523"),
+        "refs/heads/second")
+    );
+    mockNewCommits(
+      "91b99de908fcd04772798a31c308a64aea1a5523",
+      "3f76a12f08a6ba0dc988c68b7f0b2cd190efc3c4",
+      "592d797cd36432e591416e8b2b98154f4f163411");
+
+    collector.collectChangesets();
+
+    assertThat(collector.getAddedChangesets())
+      .extracting("id")
+      .hasSize(2)
+      .contains(
+        "91b99de908fcd04772798a31c308a64aea1a5523",
+        "592d797cd36432e591416e8b2b98154f4f163411");
+    assertThat(collector.getRemovedChangesets()).isEmpty();
+  }
+
+  @Test
   public void shouldFindAddedChangesetsFromChangedBranchWithoutIteratingOldCommits() {
     receiveCommands.add(
       new ReceiveCommand(
