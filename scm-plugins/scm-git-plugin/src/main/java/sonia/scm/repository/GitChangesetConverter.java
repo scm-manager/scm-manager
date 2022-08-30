@@ -108,7 +108,7 @@ public class GitChangesetConverter implements Closeable {
       changeset.getTags().addAll(Lists.newArrayList(tagCollection));
     }
 
-    changeset.setBranches(branches);
+    changeset.setBranches(new ArrayList<>(branches));
 
     Signature signature = createSignature(commit);
     if (signature != null) {
