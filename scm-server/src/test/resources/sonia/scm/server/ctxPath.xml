@@ -65,17 +65,17 @@
           </Array>
         </Arg>
         <Set name="host">
-          <Env name="SCM_HTTP_HOST" default="0.0.0.0" />
+          <SystemProperty name="jetty.host" default="0.0.0.0" />
         </Set>
         <Set name="port">
-          <Env name="SCM_HTTP_PORT" default="8080" />
+          <SystemProperty name="jetty.port" default="8080" />
         </Set>
       </New>
     </Arg>
   </Call>
 
   <New id="scm-webapp" class="org.eclipse.jetty.webapp.WebAppContext">
-    <Set name="contextPath">/scm</Set>
+    <Set name="contextPath">/myscm</Set>
     <Set name="war">
       <SystemProperty name="basedir" default="."/>/var/webapp/scm-webapp.war
     </Set>

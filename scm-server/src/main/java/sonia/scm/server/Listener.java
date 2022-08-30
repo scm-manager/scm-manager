@@ -22,26 +22,29 @@
  * SOFTWARE.
  */
 
-plugins {
-  id 'java-library'
-  id 'org.scm-manager.java'
-}
+package sonia.scm.server;
 
-dependencies {
-  api platform(project(':'))
-  
-  implementation libraries.commonsDaemon
-  implementation libraries.jettyServer
-  implementation libraries.jettyWebapp
-  // TODO do we need jetty jmx?
-  implementation libraries.jettyJmx
+public class Listener {
 
-  // tests
-  testImplementation libraries.junitJupiterApi
-  testImplementation libraries.junitJupiterParams
-  testRuntimeOnly libraries.junitJupiterEngine
-  testImplementation libraries.junitPioneer
-  testImplementation libraries.assertj
+  private final String scheme;
+  private final int port;
+  private final String contextPath;
 
-  testImplementation libraries.guava
+  public Listener(String scheme, int port, String contextPath) {
+    this.scheme = scheme;
+    this.port = port;
+    this.contextPath = contextPath;
+  }
+
+  public String getScheme() {
+    return scheme;
+  }
+
+  public int getPort() {
+    return port;
+  }
+
+  public String getContextPath() {
+    return contextPath;
+  }
 }

@@ -1,0 +1,2 @@
+- type: fixed
+  description: Fix docker healthcheck for custom ports, https and forced base url ([#2110](https://github.com/scm-manager/scm-manager/pull/2110))

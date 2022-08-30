@@ -65,10 +65,10 @@
           </Array>
         </Arg>
         <Set name="host">
-          <Env name="SCM_HTTP_HOST" default="0.0.0.0" />
+          <SystemProperty name="jetty.host" default="0.0.0.0" />
         </Set>
         <Set name="port">
-          <Env name="SCM_HTTP_PORT" default="8080" />
+          <SystemProperty name="jetty.port" default="8080" />
         </Set>
       </New>
     </Arg>
