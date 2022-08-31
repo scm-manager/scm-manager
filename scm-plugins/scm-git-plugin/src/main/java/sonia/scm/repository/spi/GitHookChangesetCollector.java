@@ -124,7 +124,7 @@ class GitHookChangesetCollector {
       if (!(GitUtil.isBranch(ref) || GitUtil.isTag(ref))) {
         LOG.debug("skip ref {}, because it is neither branch nor tag", ref);
       } else if (rc.getType() == ReceiveCommand.Type.UPDATE_NONFASTFORWARD) {
-        LOG.debug("handle deleted ref {}", ref);
+        LOG.debug("handle deleted/added ref {}", ref);
         collectRemovedChangeset(repository, walk, converter, rc);
         collectAddedChangesets(converter, walk, rc, ref);
       } else if (rc.getType() == ReceiveCommand.Type.DELETE) {

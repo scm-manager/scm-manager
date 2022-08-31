@@ -36,6 +36,7 @@ import sonia.scm.repository.InternalRepositoryException;
 
 import javax.inject.Inject;
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -55,32 +56,15 @@ public class GitChangesetsCommand extends AbstractGitCommand implements Changese
   public Iterable<Changeset> getChangesets(ChangesetsCommandRequest request) {
     try {
       log.debug("computing changesets for repository {}", repository);
-      Repository repository = open();
+      Repository gitRepository = open();
 
-      try (RevWalk revWalk = new RevWalk(repository)) {
-        revWalk.markStart(GitUtil.getAllCommits(repository, revWalk).collect(Collectors.toList()));
-        Iterator<RevCommit> iterator = revWalk.iterator();
+      try (RevWalk revWalk = new RevWalk(gitRepository)) {
+        revWalk.markStart(GitUtil.getAllCommits(gitRepository, revWalk).collect(Collectors.toList()));
         log.trace("got git iterator for all changesets for repository {}", repository);
-        return () -> new Iterator<>() {
-          private final GitChangesetConverter changesetConverter = converterFactory.create(repository, revWalk);
-
-          @Override
-          public boolean hasNext() {
-            return iterator.hasNext();
-          }
-
-          @Override
-          public Changeset next() {
-            try {
-              log.trace("mapping changeset for repository {}", repository);
-              return changesetConverter.createChangeset(revWalk.parseCommit(iterator.next()));
-            } catch (IOException e) {
-              throw new InternalRepositoryException(context.getRepository(), "failed to create changeset for single git revision", e);
-            }
-          }
-        };
+        Iterator<RevCommit> iterator = revWalk.iterator();
+        return () -> new ChangesetIterator(iterator, revWalk, gitRepository);
       } finally {
-        log.trace("returned iterator for all changesets for repository {}", repository);
+        log.trace("returned iterator for all changesets for repository {}", gitRepository);
       }
     } catch (IOException e) {
       throw new InternalRepositoryException(context.getRepository(), "failed to get latest commit", e);
@@ -94,22 +78,48 @@ public class GitChangesetsCommand extends AbstractGitCommand implements Changese
 
       try (RevWalk revWalk = new RevWalk(repository)) {
         return GitUtil.getAllCommits(repository, revWalk)
-          .max((ref1, ref2) -> {
-            long commitTime1 = ref1.getCommitTime();
-            long commitTime2 = ref2.getCommitTime();
-            return Long.compare(commitTime1, commitTime2);
-          })
-          .map(id -> {
-            try {
-              return revWalk.parseCommit(id);
-            } catch (IOException e) {
-              throw new InternalRepositoryException(context.getRepository(), "failed to parse commit " + id, e);
-            }
-          })
+          .max(new ByCommitDateComparator())
           .map(commit -> converterFactory.create(repository, revWalk).createChangeset(commit));
       }
     } catch (IOException e) {
       throw new InternalRepositoryException(context.getRepository(), "failed to get latest commit", e);
+    }
+  }
+
+  private class ChangesetIterator implements Iterator<Changeset> {
+
+    private final Iterator<RevCommit> iterator;
+    private final GitChangesetConverter changesetConverter;
+    private final RevWalk revWalk;
+
+    ChangesetIterator(Iterator<RevCommit> iterator, RevWalk revWalk, Repository gitRepository) {
+      this.iterator = iterator;
+      this.changesetConverter = converterFactory.create(gitRepository, revWalk);
+      this.revWalk = revWalk;
+    }
+
+    @Override
+    public boolean hasNext() {
+      return iterator.hasNext();
+    }
+
+    @Override
+    public Changeset next() {
+      try {
+        log.trace("mapping changeset for repository {}", repository);
+        return changesetConverter.createChangeset(revWalk.parseCommit(iterator.next()));
+      } catch (IOException e) {
+        throw new InternalRepositoryException(context.getRepository(), "failed to create changeset for single git revision", e);
+      }
+    }
+  }
+
+  private static class ByCommitDateComparator implements Comparator<RevCommit> {
+    @Override
+    public int compare(RevCommit rev1, RevCommit rev2) {
+      long commitTime1 = rev1.getCommitTime();
+      long commitTime2 = rev2.getCommitTime();
+      return Long.compare(commitTime1, commitTime2);
     }
   }
 }
