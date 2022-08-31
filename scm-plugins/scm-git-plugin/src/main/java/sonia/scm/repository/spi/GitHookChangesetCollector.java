@@ -53,34 +53,50 @@ class GitHookChangesetCollector {
 
   private static final Logger LOG = LoggerFactory.getLogger(GitHookChangesetCollector.class);
 
-  /**
-   * listener to track new objects
-   */
-  private final CollectingPackParserListener listener;
 
   private final Collection<ReceiveCommand> receiveCommands;
 
   private final GitChangesetConverterFactory converterFactory;
-  private final ReceivePack rpack;
+
+  /**
+   * listener to track new objects
+   */
+  private final NewCommitDetector newCommitDetector;
+
+  private final Repository repository;
+  private final RevWalk walk;
 
   private final Map<String, Changeset> addedChangesets = Maps.newLinkedHashMap();
   private final Map<String, Changeset> removedChangesets = Maps.newLinkedHashMap();
 
-  GitHookChangesetCollector(GitChangesetConverterFactory converterFactory, ReceivePack rpack, Collection<ReceiveCommand> receiveCommands) {
+  private GitHookChangesetCollector(GitChangesetConverterFactory converterFactory, Collection<ReceiveCommand> receiveCommands, NewCommitDetector newCommitDetector, Repository repository, RevWalk walk) {
     this.converterFactory = converterFactory;
-    this.rpack = rpack;
     this.receiveCommands = receiveCommands;
-    this.listener = CollectingPackParserListener.get(rpack);
+    this.newCommitDetector = newCommitDetector;
+    this.repository = repository;
+    this.walk = walk;
+  }
+
+  static GitHookChangesetCollector collectChangesets(GitChangesetConverterFactory converterFactory, Collection<ReceiveCommand> receiveCommands, ReceivePack rpack) {
+    try (Repository repository = rpack.getRepository();
+         RevWalk walk = rpack.getRevWalk()) {
+      CollectingPackParserListener listener = CollectingPackParserListener.get(rpack);
+      return collectChangesets(converterFactory, receiveCommands, repository, walk, listener::isNew);
+    }
+  }
+
+  static GitHookChangesetCollector collectChangesets(GitChangesetConverterFactory converterFactory, Collection<ReceiveCommand> receiveCommands, Repository repository, RevWalk walk, NewCommitDetector newCommitDetector) {
+    GitHookChangesetCollector gitHookChangesetCollector = new GitHookChangesetCollector(converterFactory, receiveCommands, newCommitDetector, repository, walk);
+    gitHookChangesetCollector.collectChangesets();
+    return gitHookChangesetCollector;
   }
 
   /**
    * Collect all new changesets from the received hook. Afterwards, the results can be
    * retrieved with {@link #getAddedChangesets()} and {@link #getRemovedChangesets()}
    */
-  void collectChangesets() {
-    try (Repository repository = rpack.getRepository();
-         RevWalk walk = rpack.getRevWalk();
-         GitChangesetConverter converter = converterFactory.create(repository, walk)) {
+  private void collectChangesets() {
+    try (GitChangesetConverter converter = converterFactory.create(repository, walk)) {
       repository.incrementOpen();
 
       for (ReceiveCommand rc : receiveCommands) {
@@ -165,7 +181,7 @@ class GitHookChangesetCollector {
             commit, branch);
           changeset.getBranches().add(branch);
         }
-      } else if (listener.isNew(commit)) {
+      } else if (newCommitDetector.isNew(commit)) {
         // only append new commits
         addToCollection(addedChangesets, converter, walk, commit, id, branch);
       } else {
@@ -212,5 +228,9 @@ class GitHookChangesetCollector {
     LOG.trace("retrieve commit {} for hook", newChangeset.getId());
 
     changesets.put(id, newChangeset);
+  }
+
+  interface NewCommitDetector {
+    boolean isNew(RevCommit commit);
   }
 }

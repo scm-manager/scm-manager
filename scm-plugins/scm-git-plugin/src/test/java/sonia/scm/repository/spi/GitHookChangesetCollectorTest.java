@@ -59,12 +59,13 @@ public class GitHookChangesetCollectorTest extends AbstractGitCommandTestBase {
   private final Collection<ReceiveCommand> receiveCommands = new ArrayList<>();
   private final CollectingPackParserListener listener = mock(CollectingPackParserListener.class);
 
+  private final GitChangesetConverterFactory converterFactory = mock(GitChangesetConverterFactory.class);
+  private final GitChangesetConverter converter = mock(GitChangesetConverter.class);
+
   private GitHookChangesetCollector collector;
 
   @Before
   public void init() throws IOException {
-    GitChangesetConverterFactory converterFactory = mock(GitChangesetConverterFactory.class);
-    GitChangesetConverter converter = mock(GitChangesetConverter.class);
 
     GitContext context = createContext();
     Repository repository = context.open();
@@ -75,13 +76,11 @@ public class GitHookChangesetCollectorTest extends AbstractGitCommandTestBase {
     when(converterFactory.create(repository, revWalk)).thenReturn(converter);
     when(converter.createChangeset(any(), (String[]) any()))
       .thenAnswer(invocation -> new Changeset(invocation.getArgument(0, RevCommit.class).name(), null, null));
-
-    collector = new GitHookChangesetCollector(converterFactory, rpack, receiveCommands);
   }
 
   @Test
   public void shouldCreateEmptyCollectionsWithoutChanges() {
-    collector.collectChangesets();
+    collector = GitHookChangesetCollector.collectChangesets(converterFactory, receiveCommands, rpack);
 
     assertThat(collector.getAddedChangesets()).isEmpty();
     assertThat(collector.getRemovedChangesets()).isEmpty();
@@ -100,7 +99,7 @@ public class GitHookChangesetCollectorTest extends AbstractGitCommandTestBase {
       "3f76a12f08a6ba0dc988c68b7f0b2cd190efc3c4",
       "592d797cd36432e591416e8b2b98154f4f163411");
 
-    collector.collectChangesets();
+    collector = GitHookChangesetCollector.collectChangesets(converterFactory, receiveCommands, rpack);
 
     assertThat(collector.getAddedChangesets())
       .extracting("id")
@@ -130,7 +129,7 @@ public class GitHookChangesetCollectorTest extends AbstractGitCommandTestBase {
       "3f76a12f08a6ba0dc988c68b7f0b2cd190efc3c4",
       "592d797cd36432e591416e8b2b98154f4f163411");
 
-    collector.collectChangesets();
+    collector = GitHookChangesetCollector.collectChangesets(converterFactory, receiveCommands, rpack);
 
     assertThat(collector.getAddedChangesets())
       .extracting("id")
@@ -151,7 +150,7 @@ public class GitHookChangesetCollectorTest extends AbstractGitCommandTestBase {
     );
     mockNewCommits("3f76a12f08a6ba0dc988c68b7f0b2cd190efc3c4");
 
-    collector.collectChangesets();
+    collector = GitHookChangesetCollector.collectChangesets(converterFactory, receiveCommands, rpack);
 
     assertThat(collector.getAddedChangesets())
       .extracting("id")
@@ -173,7 +172,7 @@ public class GitHookChangesetCollectorTest extends AbstractGitCommandTestBase {
     );
     mockNewCommits("3f76a12f08a6ba0dc988c68b7f0b2cd190efc3c4");
 
-    collector.collectChangesets();
+    collector = GitHookChangesetCollector.collectChangesets(converterFactory, receiveCommands, rpack);
 
     assertThat(collector.getAddedChangesets()).isEmpty();
     assertThat(collector.getRemovedChangesets())
@@ -195,7 +194,7 @@ public class GitHookChangesetCollectorTest extends AbstractGitCommandTestBase {
     );
     mockNewCommits("91b99de908fcd04772798a31c308a64aea1a5523");
 
-    collector.collectChangesets();
+    collector = GitHookChangesetCollector.collectChangesets(converterFactory, receiveCommands, rpack);
 
     assertThat(collector.getAddedChangesets())
       .extracting("id")

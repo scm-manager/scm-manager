@@ -28,24 +28,33 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.mgt.DefaultSecurityManager;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.GpgSigner;
+import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevWalk;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.event.ScmEventBus;
+import sonia.scm.repository.Changeset;
+import sonia.scm.repository.GitChangesetConverter;
+import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.GitTestHelper;
 import sonia.scm.repository.PostReceiveRepositoryHookEvent;
+import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.PreReceiveRepositoryHookEvent;
 import sonia.scm.repository.Tag;
-import sonia.scm.repository.api.HookContext;
+import sonia.scm.repository.api.HookChangesetBuilder;
 import sonia.scm.repository.api.HookContextFactory;
-import sonia.scm.repository.api.TagDeleteRequest;
+import sonia.scm.repository.api.HookTagProvider;
 import sonia.scm.repository.api.TagCreateRequest;
+import sonia.scm.repository.api.TagDeleteRequest;
 import sonia.scm.security.GPG;
 import sonia.scm.util.MockUtil;
 
@@ -66,12 +75,15 @@ public class GitTagCommandTest extends AbstractGitCommandTestBase {
   private GPG gpg;
 
   @Mock
+  private PreProcessorUtil preProcessorUtil;
   private HookContextFactory hookContextFactory;
 
   @Mock
   private ScmEventBus eventBus;
 
-  private Subject subject;
+  @Mock
+  private GitChangesetConverterFactory converterFactory;
+
 
   @Before
   public void setSigner() {
@@ -81,8 +93,23 @@ public class GitTagCommandTest extends AbstractGitCommandTestBase {
   @Before
   public void bindThreadContext() {
     SecurityUtils.setSecurityManager(new DefaultSecurityManager());
-    subject = MockUtil.createUserSubject(SecurityUtils.getSecurityManager());
+    Subject subject = MockUtil.createUserSubject(SecurityUtils.getSecurityManager());
     ThreadContext.bind(subject);
+  }
+
+  @Before
+  public void mockConverterFactory() {
+    GitChangesetConverter gitChangesetConverter = mock(GitChangesetConverter.class);
+    when(converterFactory.create(any(), any()))
+      .thenReturn(gitChangesetConverter);
+    when(gitChangesetConverter.createChangeset(any(), (String[]) any()))
+      .thenAnswer(invocation -> {
+        RevCommit revCommit = invocation.getArgument(0, RevCommit.class);
+        Changeset changeset = new Changeset(revCommit.name(), null, null);
+//        changeset.setBranches(asList(invocation.getArgument(1)));
+        return changeset;
+      });
+    hookContextFactory = new HookContextFactory(preProcessorUtil);
   }
 
   @After
@@ -105,7 +132,6 @@ public class GitTagCommandTest extends AbstractGitCommandTestBase {
   public void shouldPostCreateEvent() {
       ArgumentCaptor<Object> captor = ArgumentCaptor.forClass(Object.class);
       doNothing().when(eventBus).post(captor.capture());
-      when(hookContextFactory.createContext(any(), any())).thenAnswer(this::createMockedContext);
 
       createCommand().create(new TagCreateRequest("592d797cd36432e591416e8b2b98154f4f163411", "newtag"));
 
@@ -131,26 +157,36 @@ public class GitTagCommandTest extends AbstractGitCommandTestBase {
   }
 
   @Test
-  public void shouldPostDeleteEvent() {
+  public void shouldPostDeleteEvent() throws IOException, GitAPIException {
+    Git git = new Git(createContext().open());
+    git.tag().setName("to-be-deleted").setObjectId(getCommit("383b954b27e052db6880d57f1c860dc208795247")).call();
+    git.branchDelete().setBranchNames("rename").setForce(true).call();
+
     ArgumentCaptor<Object> captor = ArgumentCaptor.forClass(Object.class);
     doNothing().when(eventBus).post(captor.capture());
-    when(hookContextFactory.createContext(any(), any())).thenAnswer(this::createMockedContext);
 
-    createCommand().delete(new TagDeleteRequest("test-tag"));
+    createCommand().delete(new TagDeleteRequest("to-be-deleted"));
 
     List<Object> events = captor.getAllValues();
     assertThat(events.get(0)).isInstanceOf(PreReceiveRepositoryHookEvent.class);
     assertThat(events.get(1)).isInstanceOf(PostReceiveRepositoryHookEvent.class);
 
     PreReceiveRepositoryHookEvent event = (PreReceiveRepositoryHookEvent) events.get(0);
-    assertThat(event.getContext().getTagProvider().getCreatedTags()).isEmpty();
-    final Tag deletedTag = event.getContext().getTagProvider().getDeletedTags().get(0);
-    assertThat(deletedTag.getName()).isEqualTo("test-tag");
-    assertThat(deletedTag.getRevision()).isEqualTo("86a6645eceefe8b9a247db5eb16e3d89a7e6e6d1");
+    HookTagProvider tagProvider = event.getContext().getTagProvider();
+    assertThat(tagProvider.getCreatedTags()).isEmpty();
+    Tag deletedTag = tagProvider.getDeletedTags().get(0);
+    assertThat(deletedTag.getName()).isEqualTo("to-be-deleted");
+    assertThat(deletedTag.getRevision()).isEqualTo("383b954b27e052db6880d57f1c860dc208795247");
+
+    HookChangesetBuilder changesetProvider = event.getContext().getChangesetProvider();
+    assertThat(changesetProvider.getChangesets()).isEmpty();
+    assertThat(changesetProvider.getRemovedChangesets())
+      .extracting("id")
+      .containsExactly("383b954b27e052db6880d57f1c860dc208795247");
   }
 
   private GitTagCommand createCommand() {
-    return new GitTagCommand(createContext(), hookContextFactory, eventBus);
+    return new GitTagCommand(createContext(), hookContextFactory, eventBus, converterFactory);
   }
 
   private List<Tag> readTags(GitContext context) throws IOException {
@@ -162,9 +198,10 @@ public class GitTagCommandTest extends AbstractGitCommandTestBase {
     return tags.stream().filter(t -> name.equals(t.getName())).findFirst();
   }
 
-  private HookContext createMockedContext(InvocationOnMock invocation) {
-    HookContext mock = mock(HookContext.class);
-    when(mock.getTagProvider()).thenReturn(((HookContextProvider) invocation.getArgument(0)).getTagProvider());
-    return mock;
+  private RevCommit getCommit(String revision) throws IOException {
+    ObjectId commitId = ObjectId.fromString(revision);
+    try (RevWalk revWalk = new RevWalk(createContext().open())) {
+      return revWalk.parseCommit(commitId);
+    }
   }
 }

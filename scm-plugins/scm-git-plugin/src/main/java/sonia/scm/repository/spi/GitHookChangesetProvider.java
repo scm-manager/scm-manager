@@ -52,8 +52,7 @@ public class GitHookChangesetProvider implements HookChangesetProvider {
   @Override
   public synchronized HookChangesetResponse handleRequest(HookChangesetRequest request) {
     if (response == null) {
-      GitHookChangesetCollector collector = new GitHookChangesetCollector(converterFactory, receivePack, receiveCommands);
-      collector.collectChangesets();
+      GitHookChangesetCollector collector = GitHookChangesetCollector.collectChangesets(converterFactory, receiveCommands, receivePack);
       response = new HookChangesetResponse(collector.getAddedChangesets(), collector.getRemovedChangesets());
     }
     return response;
