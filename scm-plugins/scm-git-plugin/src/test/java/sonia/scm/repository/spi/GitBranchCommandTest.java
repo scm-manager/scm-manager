@@ -24,6 +24,8 @@
 
 package sonia.scm.repository.spi;
 
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -32,9 +34,14 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.Branch;
+import sonia.scm.repository.Changeset;
+import sonia.scm.repository.GitChangesetConverter;
+import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.PostReceiveRepositoryHookEvent;
+import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.PreReceiveRepositoryHookEvent;
 import sonia.scm.repository.api.BranchRequest;
+import sonia.scm.repository.api.HookChangesetBuilder;
 import sonia.scm.repository.api.HookContext;
 import sonia.scm.repository.api.HookContextFactory;
 
@@ -48,14 +55,30 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-
 @RunWith(MockitoJUnitRunner.class)
 public class GitBranchCommandTest extends AbstractGitCommandTestBase {
 
   @Mock
+  private PreProcessorUtil preProcessorUtil;
   private HookContextFactory hookContextFactory;
   @Mock
   private ScmEventBus eventBus;
+  @Mock
+  private GitChangesetConverterFactory converterFactory;
+
+  @Before
+  public void mockConverterFactory() {
+    GitChangesetConverter gitChangesetConverter = mock(GitChangesetConverter.class);
+    when(converterFactory.create(any(), any()))
+      .thenReturn(gitChangesetConverter);
+    when(gitChangesetConverter.createChangeset(any(), (String[]) any()))
+      .thenAnswer(invocation -> {
+        RevCommit revCommit = invocation.getArgument(0, RevCommit.class);
+        Changeset changeset = new Changeset(revCommit.name(), null, null);
+        return changeset;
+      });
+    hookContextFactory = new HookContextFactory(preProcessorUtil);
+  }
 
   @Test
   public void shouldCreateBranchWithDefinedSourceBranch() throws IOException {
@@ -108,7 +131,7 @@ public class GitBranchCommandTest extends AbstractGitCommandTestBase {
   }
 
   private GitBranchCommand createCommand() {
-    return new GitBranchCommand(createContext(), hookContextFactory, eventBus);
+    return new GitBranchCommand(createContext(), hookContextFactory, eventBus, converterFactory);
   }
 
   private List<Branch> readBranches(GitContext context) throws IOException {
@@ -119,7 +142,6 @@ public class GitBranchCommandTest extends AbstractGitCommandTestBase {
   public void shouldPostCreateEvents() {
     ArgumentCaptor<Object> captor = ArgumentCaptor.forClass(Object.class);
     doNothing().when(eventBus).post(captor.capture());
-    when(hookContextFactory.createContext(any(), any())).thenAnswer(this::createMockedContext);
 
     BranchRequest branchRequest = new BranchRequest();
     branchRequest.setParentBranch("mergeable");
@@ -140,7 +162,6 @@ public class GitBranchCommandTest extends AbstractGitCommandTestBase {
   public void shouldPostDeleteEvents() {
     ArgumentCaptor<Object> captor = ArgumentCaptor.forClass(Object.class);
     doNothing().when(eventBus).post(captor.capture());
-    when(hookContextFactory.createContext(any(), any())).thenAnswer(this::createMockedContext);
 
     createCommand().deleteOrClose("squash");
 
@@ -151,11 +172,15 @@ public class GitBranchCommandTest extends AbstractGitCommandTestBase {
     PreReceiveRepositoryHookEvent event = (PreReceiveRepositoryHookEvent) events.get(0);
     assertThat(event.getContext().getBranchProvider().getDeletedOrClosed()).containsExactly("squash");
     assertThat(event.getContext().getBranchProvider().getCreatedOrModified()).isEmpty();
-  }
 
-  private HookContext createMockedContext(InvocationOnMock invocation) {
-    HookContext mock = mock(HookContext.class);
-    when(mock.getBranchProvider()).thenReturn(((HookContextProvider) invocation.getArgument(0)).getBranchProvider());
-    return mock;
+    HookChangesetBuilder changesetProvider = event.getContext().getChangesetProvider();
+    assertThat(changesetProvider.getChangesets()).isEmpty();
+    assertThat(changesetProvider.getRemovedChangesets())
+      .extracting("id")
+      .containsExactly(
+        "35597e9e98fe53167266583848bfef985c2adb27",
+        "f360a8738e4a29333786c5817f97a2c912814536",
+        "d1dfecbfd5b4a2f77fe40e1bde29e640f7f944be"
+      );
   }
 }

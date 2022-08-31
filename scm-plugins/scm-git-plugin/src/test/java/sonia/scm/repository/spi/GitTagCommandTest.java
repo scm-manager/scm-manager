@@ -106,7 +106,6 @@ public class GitTagCommandTest extends AbstractGitCommandTestBase {
       .thenAnswer(invocation -> {
         RevCommit revCommit = invocation.getArgument(0, RevCommit.class);
         Changeset changeset = new Changeset(revCommit.name(), null, null);
-//        changeset.setBranches(asList(invocation.getArgument(1)));
         return changeset;
       });
     hookContextFactory = new HookContextFactory(preProcessorUtil);
