@@ -35,7 +35,9 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevObject;
 import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.transport.ReceiveCommand;
 import sonia.scm.event.ScmEventBus;
+import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.PostReceiveRepositoryHookEvent;
@@ -53,6 +55,8 @@ import sonia.scm.user.User;
 
 import javax.inject.Inject;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -60,18 +64,23 @@ import java.util.Set;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
+import static org.eclipse.jgit.lib.ObjectId.fromString;
+import static org.eclipse.jgit.lib.ObjectId.zeroId;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
 
 public class GitTagCommand extends AbstractGitCommand implements TagCommand {
+  public static final String REFS_TAGS_PREFIX = "refs/tags/";
   private final HookContextFactory hookContextFactory;
   private final ScmEventBus eventBus;
+  private final GitChangesetConverterFactory converterFactory;
 
   @Inject
-  GitTagCommand(GitContext context, HookContextFactory hookContextFactory, ScmEventBus eventBus) {
+  GitTagCommand(GitContext context, HookContextFactory hookContextFactory, ScmEventBus eventBus, GitChangesetConverterFactory converterFactory) {
     super(context);
     this.hookContextFactory = hookContextFactory;
     this.eventBus = eventBus;
+    this.converterFactory = converterFactory;
   }
 
   @Override
@@ -105,7 +114,7 @@ public class GitTagCommand extends AbstractGitCommand implements TagCommand {
 
       Tag tag = new Tag(name, revision, tagTime);
 
-      RepositoryHookEvent hookEvent = createTagHookEvent(TagHookContextProvider.createHookEvent(tag));
+      RepositoryHookEvent hookEvent = createTagHookEvent(createHookEvent(tag), RepositoryHookType.PRE_RECEIVE);
       eventBus.post(new PreReceiveRepositoryHookEvent(hookEvent));
 
       User user = SecurityUtils.getSubject().getPrincipals().oneByType(User.class);
@@ -140,7 +149,7 @@ public class GitTagCommand extends AbstractGitCommand implements TagCommand {
 
       // Deleting a non-existent tag is a valid action and simply succeeds without
       // anything happening.
-      if (!tagRef.isPresent()) {
+      if (tagRef.isEmpty()) {
         return;
       }
 
@@ -150,40 +159,43 @@ public class GitTagCommand extends AbstractGitCommand implements TagCommand {
         tag = new Tag(name, commit.name(), tagTime);
       }
 
-      RepositoryHookEvent hookEvent = createTagHookEvent(TagHookContextProvider.deleteHookEvent(tag));
-      eventBus.post(new PreReceiveRepositoryHookEvent(hookEvent));
+      eventBus.post(new PreReceiveRepositoryHookEvent(
+        createTagHookEvent(deleteHookEvent(tag), RepositoryHookType.PRE_RECEIVE)
+      ));
       git.tagDelete().setTags(name).call();
-      eventBus.post(new PostReceiveRepositoryHookEvent(hookEvent));
+      eventBus.post(new PostReceiveRepositoryHookEvent(
+        createTagHookEvent(deleteHookEvent(tag), RepositoryHookType.POST_RECEIVE)
+      ));
     } catch (GitAPIException | IOException e) {
       throw new InternalRepositoryException(repository, "could not delete tag " + name, e);
     }
   }
 
   private Optional<Ref> findTagRef(Git git, String name) throws GitAPIException {
-    final String tagRef = "refs/tags/" + name;
+    final String tagRef = REFS_TAGS_PREFIX + name;
     return git.tagList().call().stream().filter(it -> it.getName().equals(tagRef)).findAny();
   }
 
-  private RepositoryHookEvent createTagHookEvent(TagHookContextProvider hookEvent) {
+  private RepositoryHookEvent createTagHookEvent(TagHookContextProvider hookEvent, RepositoryHookType type) {
     HookContext context = hookContextFactory.createContext(hookEvent, this.context.getRepository());
-    return new RepositoryHookEvent(context, this.context.getRepository(), RepositoryHookType.PRE_RECEIVE);
+    return new RepositoryHookEvent(context, this.context.getRepository(), type);
   }
 
-  private static class TagHookContextProvider extends HookContextProvider {
+  private TagHookContextProvider createHookEvent(Tag newTag) {
+    return new TagHookContextProvider(singletonList(newTag), emptyList());
+  }
+
+  private TagHookContextProvider deleteHookEvent(Tag deletedTag) {
+    return new TagHookContextProvider(emptyList(), singletonList(deletedTag));
+  }
+
+  private class TagHookContextProvider extends HookContextProvider {
     private final List<Tag> newTags;
     private final List<Tag> deletedTags;
 
     private TagHookContextProvider(List<Tag> newTags, List<Tag> deletedTags) {
       this.newTags = newTags;
       this.deletedTags = deletedTags;
-    }
-
-    static TagHookContextProvider createHookEvent(Tag newTag) {
-      return new TagHookContextProvider(singletonList(newTag), emptyList());
-    }
-
-    static TagHookContextProvider deleteHookEvent(Tag deletedTag) {
-      return new TagHookContextProvider(emptyList(), singletonList(deletedTag));
     }
 
     @Override
@@ -208,7 +220,30 @@ public class GitTagCommand extends AbstractGitCommand implements TagCommand {
 
     @Override
     public HookChangesetProvider getChangesetProvider() {
-      return r -> new HookChangesetResponse(emptyList());
+      Collection<ReceiveCommand> receiveCommands = new ArrayList<>();
+      newTags.stream()
+        .map(tag -> new ReceiveCommand(zeroId(), fromString(tag.getRevision()), REFS_TAGS_PREFIX + tag.getName()))
+        .forEach(receiveCommands::add);
+      deletedTags.stream()
+        .map(tag -> new ReceiveCommand(fromString(tag.getRevision()), zeroId(), REFS_TAGS_PREFIX + tag.getName()))
+        .forEach(receiveCommands::add);
+      return x -> {
+        Repository gitRepo;
+        try {
+          gitRepo = context.open();
+        } catch (IOException e) {
+          throw new InternalRepositoryException(repository, "failed to open repository for post receive hook after internal change", e);
+        }
+        GitHookChangesetCollector collector =
+          GitHookChangesetCollector.collectChangesets(
+            converterFactory,
+            receiveCommands,
+            gitRepo,
+            new RevWalk(gitRepo),
+            commit -> false // we cannot create new commits with this tag command
+          );
+        return new HookChangesetResponse(collector.getAddedChangesets(), collector.getRemovedChangesets());
+      };
     }
   }
 }

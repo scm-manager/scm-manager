@@ -27,9 +27,14 @@ package sonia.scm.repository.spi;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.CannotDeleteCurrentBranchException;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.transport.ReceiveCommand;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.Branch;
+import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.PostReceiveRepositoryHookEvent;
@@ -44,28 +49,41 @@ import sonia.scm.repository.api.HookFeature;
 
 import javax.inject.Inject;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import static java.util.Collections.*;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singleton;
+import static java.util.Collections.singletonList;
+import static org.eclipse.jgit.lib.ObjectId.zeroId;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 
 public class GitBranchCommand extends AbstractGitCommand implements BranchCommand {
 
   private final HookContextFactory hookContextFactory;
   private final ScmEventBus eventBus;
+  private final GitChangesetConverterFactory converterFactory;
 
   @Inject
-  GitBranchCommand(GitContext context, HookContextFactory hookContextFactory, ScmEventBus eventBus) {
+  GitBranchCommand(GitContext context, HookContextFactory hookContextFactory, ScmEventBus eventBus, GitChangesetConverterFactory converterFactory) {
     super(context);
     this.hookContextFactory = hookContextFactory;
     this.eventBus = eventBus;
+    this.converterFactory = converterFactory;
   }
 
   @Override
   public Branch branch(BranchRequest request) {
     try (Git git = new Git(context.open())) {
-      RepositoryHookEvent hookEvent = createBranchHookEvent(BranchHookContextProvider.createHookEvent(request.getNewBranch()));
+      ObjectId newRef;
+      if (request.getParentBranch() == null) {
+        newRef = git.log().call().iterator().next();
+      } else {
+        newRef = getRef(git.getRepository(), request.getParentBranch());
+      }
+      RepositoryHookEvent hookEvent = createBranchHookEvent(createHookEvent(request.getNewBranch(), newRef));
       eventBus.post(new PreReceiveRepositoryHookEvent(hookEvent));
       Ref ref = git.branchCreate().setStartPoint(request.getParentBranch()).setName(request.getNewBranch()).call();
       eventBus.post(new PostReceiveRepositoryHookEvent(hookEvent));
@@ -78,7 +96,8 @@ public class GitBranchCommand extends AbstractGitCommand implements BranchComman
   @Override
   public void deleteOrClose(String branchName) {
     try (Git gitRepo = new Git(context.open())) {
-      RepositoryHookEvent hookEvent = createBranchHookEvent(BranchHookContextProvider.deleteHookEvent(branchName));
+      ObjectId oldRef = getRef(gitRepo.getRepository(), branchName);
+      RepositoryHookEvent hookEvent = createBranchHookEvent(deleteHookEvent(branchName, oldRef));
       eventBus.post(new PreReceiveRepositoryHookEvent(hookEvent));
       gitRepo
         .branchDelete()
@@ -98,21 +117,31 @@ public class GitBranchCommand extends AbstractGitCommand implements BranchComman
     return new RepositoryHookEvent(context, this.context.getRepository(), RepositoryHookType.PRE_RECEIVE);
   }
 
-  private static class BranchHookContextProvider extends HookContextProvider {
+  private ObjectId getRef(Repository gitRepo, String branch) {
+    try {
+      return gitRepo.getRefDatabase().findRef("refs/heads/" + branch).getObjectId();
+    } catch (IOException e) {
+      throw new InternalRepositoryException(repository, "error reading ref for branch", e);
+    }
+  }
+
+  private BranchHookContextProvider createHookEvent(String newBranch, ObjectId objectId) {
+    return new BranchHookContextProvider(singletonList(newBranch), emptyList(), objectId);
+  }
+
+  private BranchHookContextProvider deleteHookEvent(String deletedBranch, ObjectId oldObjectId) {
+    return new BranchHookContextProvider(emptyList(), singletonList(deletedBranch), oldObjectId);
+  }
+
+  private class BranchHookContextProvider extends HookContextProvider {
     private final List<String> newBranches;
     private final List<String> deletedBranches;
+    private final ObjectId objectId;
 
-    private BranchHookContextProvider(List<String> newBranches, List<String> deletedBranches) {
+    private BranchHookContextProvider(List<String> newBranches, List<String> deletedBranches, ObjectId objectId) {
       this.newBranches = newBranches;
       this.deletedBranches = deletedBranches;
-    }
-
-    static BranchHookContextProvider createHookEvent(String newBranch) {
-      return new BranchHookContextProvider(singletonList(newBranch), emptyList());
-    }
-
-    static BranchHookContextProvider deleteHookEvent(String deletedBranch) {
-      return new BranchHookContextProvider(emptyList(), singletonList(deletedBranch));
+      this.objectId = objectId;
     }
 
     @Override
@@ -137,7 +166,31 @@ public class GitBranchCommand extends AbstractGitCommand implements BranchComman
 
     @Override
     public HookChangesetProvider getChangesetProvider() {
-      return r -> new HookChangesetResponse(emptyList());
+      Repository gitRepo;
+      try {
+        gitRepo = context.open();
+      } catch (IOException e) {
+        throw new InternalRepositoryException(repository, "failed to open repository for post receive hook after internal change", e);
+      }
+
+      Collection<ReceiveCommand> receiveCommands = new ArrayList<>();
+      newBranches.stream()
+        .map(branch -> new ReceiveCommand(zeroId(), objectId, "refs/heads/" + branch))
+        .forEach(receiveCommands::add);
+      deletedBranches.stream()
+        .map(branch -> new ReceiveCommand(objectId, zeroId(), "refs/heads/" + branch))
+        .forEach(receiveCommands::add);
+      return x -> {
+        GitHookChangesetCollector collector =
+          GitHookChangesetCollector.collectChangesets(
+            converterFactory,
+            receiveCommands,
+            gitRepo,
+            new RevWalk(gitRepo),
+            commit -> false // we cannot create new commits with this tag command
+          );
+        return new HookChangesetResponse(collector.getAddedChangesets(), collector.getRemovedChangesets());
+      };
     }
   }
 }

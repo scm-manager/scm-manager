@@ -68,8 +68,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
 
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
@@ -231,6 +233,17 @@ public final class GitUtil {
    */
   public static boolean isBranch(String refName) {
     return Strings.nullToEmpty(refName).startsWith(PREFIX_HEADS);
+  }
+
+  /**
+   * Returns {@code true} if the provided reference name is a tag name.
+   *
+   * @param refName reference name
+   * @return {@code true} if the name is a tag name
+   * @since 2.39.0
+   */
+  public static boolean isTag(String refName) {
+    return Strings.nullToEmpty(refName).startsWith(PREFIX_TAG);
   }
 
   public static Ref getBranchIdOrCurrentHead(org.eclipse.jgit.lib.Repository gitRepository, String requestedBranch) throws IOException {
@@ -699,5 +712,22 @@ public final class GitUtil {
     return git.fetch()
       .setRefSpecs(new RefSpec(REF_SPEC))
       .setTagOpt(TagOpt.FETCH_TAGS);
+  }
+
+  public static Stream<RevCommit> getAllCommits(org.eclipse.jgit.lib.Repository repository, RevWalk revWalk) throws IOException {
+    return repository.getRefDatabase()
+      .getRefs()
+      .stream()
+      .map(ref -> getCommitFromRef(ref, revWalk))
+      .filter(Objects::nonNull);
+  }
+
+  public static RevCommit getCommitFromRef(Ref ref, RevWalk revWalk) {
+    try {
+      return getCommit(null, revWalk, ref);
+    } catch (IOException e) {
+      logger.info("could not get commit for {}", ref, e);
+      return null;
+    }
   }
 }
