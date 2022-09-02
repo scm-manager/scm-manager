@@ -38,3 +38,14 @@ The overview of all available plugins shows all plugins that are compatible with
 Special myCloudogu-plugins can be installed the same way if your instance of SCM-Manager is connected to myCloudogu as described above.
 
 ![Administration-Plugins-Available](assets/administration-plugins-available.png)
+
+### Manual Installation
+Plugins are packaged as `smp` files. To install a plugin using such a file, simply copy it to the `plugins`
+folder in your scm home directory (you should find directories for other plugins there, for example `scm-git-plugin`).
+The server will find these files on startup and finish the installation. Keep in mind though, that manual installation
+might have some risks, because the server cannot check for missing dependencies to other plugins or other requirements
+beforehand, and therefore the startup may fail. So keep an eye on your log if you choose this way.
+
+To remove a plugin, simply delete the directory created by the server for this plugin. Here, too, one has to be
+cautious, because other plugins may depend on this plugin. The so-called core plugins (git, mercurial, svn und legacy)
+cannot be deleted.
