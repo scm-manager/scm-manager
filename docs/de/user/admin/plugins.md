@@ -37,3 +37,16 @@ Auf der Übersicht für installierte Plugins werden alle auf der SCM-Manager Ins
 Auf der Übersicht der verfügbaren Plugins werden alle kompatiblen Plugins, die über das SCM-Plugin-Center zur Verfügung stehen, aufgeführt. Die Plugins können über den Download-Icon heruntergeladen und mit einem Neustart des SCM-Manager-Servers installiert werden. 
 
 ![Administration-Plugins-Available](assets/administration-plugins-available.png)
+
+### Manuelle Installation
+Plugins sind als `smp` Dateien gepackt. Um ein Plugin mithilfe einer solchen Datei zu installieren, muss diese Datei
+einfach in den Ordner `plugins` im SCM-Home Verzeichnis kopiert werden (in diesem Verzeichnis liegen bereits
+Verzeichnisse für andere Plugins, z. B. `scm-git-plugin`).
+Beim nächsten Start des Servers findet dieser diese Dateien und schließt die Installation ab. Zu beachten ist hierbei,
+dass die manuelle Installation gewisse Risiken birgt, da der Server im Vorfeld nicht prüfen kann, ob alle Voraussetzungen
+wie z. B. andere Plugins vorhanden sind. Der Start kann bei fehlenden Voraussetzungen abbrechen. Daher sollte das Log
+beim Start im Blick bleiben.
+
+Zum manuellen Entfernen eines Plugins reicht es, das entsprechende Verzeichnis, in dem das Plugin vom Server entpackt wurde, zu
+löschen. Auch hier ist zu beachten, dass hierdurch gewisse andere Plugins in Mitleidenschaft gezogen werden könne, wenn
+diese von dem Plugin abhängen. Die sogenannten Core Plugins (Git, Mercurial, SVN und Legacy) können nicht gelöscht werden.
