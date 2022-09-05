@@ -173,6 +173,14 @@ class IndexManagerTest {
     }
   }
 
+  @Test
+  void shouldOpenNoOpIndexReaderForMissingIndex() throws IOException {
+    open(Songs.class, "idx-for-read");
+    try (IndexReader reader = indexManager.openForRead(searchableType, "idx-for-read")) {
+      assertThat(reader).isInstanceOf(NoOpIndexReader.class);
+    }
+  }
+
   private void addDoc(IndexWriter writer, String name) throws IOException {
     Document doc = new Document();
     doc.add(new TextField("hitchhiker", name, Field.Store.YES));

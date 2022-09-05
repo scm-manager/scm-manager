@@ -83,7 +83,11 @@ public class IndexManager {
 
   public IndexReader openForRead(LuceneSearchableType type, String indexName) throws IOException {
     Path path = resolveIndexDirectory(type, indexName);
-    return DirectoryReader.open(FSDirectory.open(path));
+    FSDirectory fsDirectory = FSDirectory.open(path);
+    if (DirectoryReader.indexExists(fsDirectory)) {
+      return DirectoryReader.open(fsDirectory);
+    }
+    return new NoOpIndexReader();
   }
 
   public IndexWriter openForWrite(IndexParams indexParams) {
