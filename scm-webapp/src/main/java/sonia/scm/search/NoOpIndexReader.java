@@ -37,6 +37,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+@SuppressWarnings("java:S2272") // Exception obsolete
 public class NoOpIndexReader extends CompositeReader {
 
   public NoOpIndexReader() {
@@ -135,12 +136,12 @@ public class NoOpIndexReader extends CompositeReader {
 
   @Override
   public void document(int docID, StoredFieldVisitor visitor) throws IOException {
-
+    // do nothing
   }
 
   @Override
   protected void doClose() {
-
+    // do nothing
   }
 
   @Override
