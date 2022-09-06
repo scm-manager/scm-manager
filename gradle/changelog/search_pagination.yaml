@@ -1,0 +1,2 @@
+- type: fixed
+  description: Keep search context for search results pagination ([#2115](https://github.com/scm-manager/scm-manager/pull/2115))
