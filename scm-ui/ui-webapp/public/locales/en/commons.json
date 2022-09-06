@@ -206,6 +206,7 @@
     "types": "Results",
     "noHits": "No results found. On the right side you will find other categories where results might be available",
     "syntaxHelp": "Find better results by using the full <0>search syntax</0>",
+    "invalid": "Your search request is invalid. Please be sure to use a valid search context.",
     "quickSearch": {
       "resultHeading": "Need help?",
       "parseError": "Failed to parse query.",

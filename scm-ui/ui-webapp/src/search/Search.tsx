@@ -27,6 +27,7 @@ import {
   CustomQueryFlexWrappedColumns,
   Level,
   NavLink,
+  Notification,
   Page,
   PrimaryContentColumn,
   SecondaryNavigation,
@@ -75,7 +76,7 @@ const usePageParams = () => {
   const location = useLocation();
   const { type: selectedType, ...params } = useParams<PathParams>();
   const page = urls.getPageFromMatch({ params });
-  const query = urls.getQueryStringFromLocation(location);
+  const query = urls.getQueryStringFromLocation(location) || "";
   const namespace = urls.getValueStringFromLocationByKey(location, "namespace");
   const name = urls.getValueStringFromLocationByKey(location, "name");
   return {
@@ -125,6 +126,11 @@ const SearchSubTitle: FC<Props> = ({ selectedType, query }) => {
       <Trans i18nKey="search.syntaxHelp" components={[<SyntaxHelpLink />]} />
     </>
   );
+};
+
+const InvalidSearch: FC = () => {
+  const [t] = useTranslation("commons");
+  return <Notification type="warning">{t("search.invalid")}</Notification>;
 };
 
 const Search: FC = () => {
@@ -220,7 +226,9 @@ const Search: FC = () => {
             )}
           </SecondaryNavigation>
         </CustomQueryFlexWrappedColumns>
-      ) : null}
+      ) : (
+        <InvalidSearch />
+      )}
     </Page>
   );
 };
