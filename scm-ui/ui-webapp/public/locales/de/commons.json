@@ -205,7 +205,7 @@
     "types": "Ergebnisse",
     "noHits": "Keine Ergebnisse gefunden. Auf der rechten Seite finden Sie weitere Kategorien, in denen Ergebnisse vorhanden sein könnten",
     "syntaxHelp": "Finden Sie bessere Ergebnisse durch die Nutzung der vollen <0>Such-Syntax</0>",
-    "invalid": "Ihre Suchanfrage war ungültig. Bitte verwenden Sie einen gültigen Suchkontext.",
+    "invalid": "Ihre Suchanfrage ist ungültig. Bitte verwenden Sie einen gültigen Suchkontext.",
     "quickSearch": {
       "resultHeading": "Hilfe beim Suchen?",
       "parseError": "Der Suchstring is ungültig.",
