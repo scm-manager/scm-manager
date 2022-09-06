@@ -25,6 +25,7 @@
 {{ if .Values.ingress.enabled }}
 {{- $fullName := include "scm-manager.fullname" . -}}
 {{- $ingressPath := .Values.ingress.path -}}
+{{- $ingressPort := .Values.service.port -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -60,6 +61,6 @@ spec:
               service:
                 name: {{ $fullName }}
                 port:
-                  number: {{ .Values.service.port }}
+                  number: {{ $ingressPort }}
   {{- end }}
 {{ end }}
