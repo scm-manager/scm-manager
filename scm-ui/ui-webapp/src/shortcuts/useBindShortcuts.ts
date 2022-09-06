@@ -22,46 +22,22 @@
  * SOFTWARE.
  */
 
-export default class ShortcutBinder {
-  static readonly DEBOUNCE_TIMEOUT_MS = 500;
-  private idCount = 0;
-  private pressedKeys: Record<string, boolean> = {};
-  private timer?: NodeJS.Timeout;
+import { useContext, useEffect } from "react";
+import shortcutBinderContext from "./shortcutBinderContext";
 
-  register(key: string, callback: (event: KeyboardEvent) => void): number {
-    const id = ++this.idCount;
-    // TODO: Implement
-    return id;
-  }
+export default (node?: HTMLElement) => {
+  const shortcutBinder = useContext(shortcutBinderContext);
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const actualNode = node ?? document.getElementById("root")!;
 
-  unregister(id: number) {
-    // TODO: Implement
-  }
-
-  trigger() {
-    // eslint-disable-next-line no-console
-    console.log(Object.keys(this.pressedKeys));
-    this.pressedKeys = {};
-  }
-
-  debounce() {
-    if (this.timer) {
-      clearTimeout(this.timer);
-    }
-    this.timer = setTimeout(this.trigger.bind(this), ShortcutBinder.DEBOUNCE_TIMEOUT_MS);
-  }
-
-  handleKeyUp = (event: KeyboardEvent) => {
-    // delete this.pressedKeys[event.key];
-    // this.debounce();
-    // eslint-disable-next-line no-console
-    console.log(event);
-  };
-
-  handleKeyDown = (event: KeyboardEvent) => {
-    // this.pressedKeys[event.code] = true;
-    // this.debounce();
-    // eslint-disable-next-line no-console
-    console.log(event);
-  };
-}
+  useEffect(() => {
+    const onKeyUp = shortcutBinder.handleKeyUp.bind(shortcutBinder);
+    const onKeyDown = shortcutBinder.handleKeyDown.bind(shortcutBinder);
+    actualNode.addEventListener("keyup", onKeyUp);
+    actualNode.addEventListener("keydown", onKeyDown);
+    return () => {
+      actualNode.removeEventListener("keyup", onKeyUp);
+      actualNode.removeEventListener("keydown", onKeyDown);
+    };
+  });
+};

@@ -30,7 +30,7 @@ import React, {
   SetStateAction,
   useCallback,
   useEffect,
-  useMemo,
+  useMemo, useRef,
   useState,
 } from "react";
 import { Hit, Links, Repository, ValueHitField } from "@scm-manager/ui-types";
@@ -45,6 +45,7 @@ import SyntaxModal from "../search/SyntaxModal";
 import SearchErrorNotification from "../search/SearchErrorNotification";
 import queryString from "query-string";
 import { orderTypes } from "../search/Search";
+import useShortcut from "../shortcuts/useShortcut";
 
 const Input = styled.input`
   border-radius: 4px !important;
@@ -329,6 +330,7 @@ const OmniSearch: FC = () => {
   const [t] = useTranslation("commons");
   const { searchType, initialQuery } = useSearchParams();
   const [query, setQuery] = useState(initialQuery);
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const debouncedQuery = useDebounce(query, 250);
   const context = useNamespaceAndNameContext();
   const { data, isLoading, error } = useOmniSearch(debouncedQuery, {
@@ -355,6 +357,10 @@ const OmniSearch: FC = () => {
   searchTypes.sort(orderTypes(t));
 
   const id = useCallback(namespaceAndName, []);
+  useShortcut("/", () => {
+    searchInputRef.current?.focus();
+    return false;
+  });
 
   const entries = useMemo(() => {
     const newEntries = [];
@@ -433,6 +439,7 @@ const OmniSearch: FC = () => {
               aria-label={t("search.ariaLabel")}
               aria-owns="omni-search-results"
               aria-activedescendant={index >= 0 ? "omni-search-selected-option" : undefined}
+              ref={searchInputRef}
               {...handlers}
             />
             {isLoading ? null : (

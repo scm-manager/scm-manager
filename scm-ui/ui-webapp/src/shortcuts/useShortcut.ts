@@ -22,14 +22,20 @@
  * SOFTWARE.
  */
 
-import { useContext, useEffect } from "react";
-import ShortcutBinderContext from "./shortcutBinderContext";
+import { useEffect } from "react";
+import Mousetrap from "mousetrap";
 
-export default function useShortcut(key: string, callback: (event: KeyboardEvent) => void) {
-  const shortcutBinder = useContext(ShortcutBinderContext);
-
+export default function useShortcut(key: string, callback: () => void) {
   useEffect(() => {
-    const id = shortcutBinder.register(key, callback);
-    return () => shortcutBinder.unregister(id);
-  }, [key, callback, shortcutBinder]);
+    const cb = (e: Mousetrap.ExtendedKeyboardEvent) => {
+      // eslint-disable-next-line no-console
+      console.log(e);
+      callback();
+      return false;
+    };
+    Mousetrap.bind(key, cb);
+    return () => {
+      Mousetrap.unbind(key);
+    };
+  }, [key, callback]);
 }

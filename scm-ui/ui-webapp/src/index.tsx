@@ -36,6 +36,7 @@ import ChangesetShortLink from "./repos/components/changesets/ChangesetShortLink
 
 import "./tokenExpired";
 import { ApiProvider } from "@scm-manager/ui-api";
+import "mousetrap";
 
 binder.bind<extensionPoints.ChangesetDescriptionTokens>("changeset.description.tokens", ChangesetShortLink);
 

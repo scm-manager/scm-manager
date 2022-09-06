@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, useContext } from "react";
+import React, { FC } from "react";
 import Main from "./Main";
 import { useTranslation } from "react-i18next";
 import { ErrorPage, Footer, Header, Loading } from "@scm-manager/ui-components";
@@ -31,7 +31,6 @@ import { useIndex, useSubject } from "@scm-manager/ui-api";
 import NavigationBar from "./NavigationBar";
 import styled from "styled-components";
 import Feedback from "./Feedback";
-import shortcutBinderContext from "../shortcuts/shortcutBinderContext";
 
 const AppWrapper = styled.div`
   min-height: 100vh;
@@ -42,7 +41,6 @@ const App: FC = () => {
   const { data: index } = useIndex();
   const { isLoading, error, isAuthenticated, isAnonymous, me } = useSubject();
   const [t] = useTranslation("commons");
-  const shortcutBinder = useContext(shortcutBinderContext);
 
   if (!index) {
     return null;
@@ -67,7 +65,7 @@ const App: FC = () => {
   }
 
   return (
-    <AppWrapper className="App" onKeyPress={shortcutBinder.handle.bind(shortcutBinder)}>
+    <AppWrapper className="App">
       <Header authenticated={authenticatedOrAnonymous}>
         <NavigationBar links={index._links} />
       </Header>
