@@ -93,7 +93,6 @@ const findLink = (links: Link[], name: string) => {
       return l.href;
     }
   }
-  throw new Error(`could not find search link for ${name}`);
 };
 
 const useSearchLinks = (options?: SearchOptions): SearchLinks => {
@@ -105,11 +104,11 @@ const useSearchLinks = (options?: SearchOptions): SearchLinks => {
   );
 
   if (options?.repositoryNameContext) {
-    return { links: repo?._links["search"] as Link[], isLoading: repoLoading };
+    return { links: (repo?._links["search"] as Link[]) || [], isLoading: repoLoading };
   }
 
   if (options?.namespaceContext) {
-    return { links: namespace?._links["search"] as Link[], isLoading: namespaceLoading };
+    return { links: (namespace?._links["search"] as Link[]) || [], isLoading: namespaceLoading };
   }
 
   const searchLinks = links["search"];
