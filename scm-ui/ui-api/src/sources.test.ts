@@ -135,8 +135,8 @@ describe("Test sources hooks", () => {
     };
 
     it("should return file from url with revision and path", () => testPath("README.md", "README.md"));
-    it("should encode square brackets in path", () => testPath("[...nextauth].ts", "%5B...nextauth%5D.ts/"));
-    it("should not double-encode path", () => testPath("Datei#42.txt", "Datei#42.txt"));
+    it("should encode square brackets in path", () => testPath("[...nextauth].ts", "%5B...nextauth%5D.ts"));
+    it("should not double-encode path", () => testPath("%7BDatei%7D#42.txt", "%7BDatei%7D#42.txt"));
 
     it("should return root directory", async () => {
       const queryClient = createInfiniteCachingClient();
