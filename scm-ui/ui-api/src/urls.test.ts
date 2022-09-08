@@ -98,6 +98,16 @@ describe("tests for getQueryStringFromLocation", () => {
     expect(getQueryStringFromLocation(location)).toBe("abc");
   });
 
+  it("should return the query string with a space instead of a plus symbol", () => {
+    const location = createLocation("?q=+(Test)");
+    expect(getQueryStringFromLocation(location)).toBe(" (Test)");
+  });
+
+  it("should return the query string with a plus symbol", () => {
+    const location = createLocation("?q=%2B(Test)");
+    expect(getQueryStringFromLocation(location)).toBe("+(Test)");
+  });
+
   it("should return query string from multiple parameters", () => {
     const location = createLocation("?x=a&y=b&q=abc&z=c");
     expect(getQueryStringFromLocation(location)).toBe("abc");

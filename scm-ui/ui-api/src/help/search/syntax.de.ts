@@ -89,28 +89,33 @@ Hinweis: Logische Operatoren müssen in Großbuchstaben eingegeben werden (z. B.
 
 <table>
   <tr>
+    <th>Operator</th>
     <th>Definition</th>
     <th>Beispiel</th>
   </tr>
   <tr>
-    <td>AND – beide Terme müssen enthalten sein</td>
-    <td>Ultimate AND Repository – findet z.B. Ultimate Repository, Ultimate Special Repository
- </td>
+    <td>AND</td>
+    <td>Beide Terme müssen enthalten sein</td>
+    <td>Ultimate AND Repository – findet z.B. Ultimate Repository, Ultimate Special Repository</td>
   </tr>
   <tr>
-    <td>OR – mindestens einer der Terme muss enthalten sein</td>
+    <td>OR</td>
+    <td>Mindestens einer der Terme muss enthalten sein</td>
     <td>Ultimate OR Repository – findet z.B.. Ultimate Repository, Ultimate User, Special Repository</td>
   </tr>
   <tr>
-    <td>NOT – der nachfolgende Term darf nicht enthalten sein. „!" kann alternativ verwendet werden.</td>
+    <td>NOT</td>
+    <td>Der nachfolgende Term darf nicht enthalten sein, „!" kann alternativ verwendet werden</td>
     <td>Ultimate NOT Repository – findet z.B.. Ultimate user, nicht jedoch z.B. Ultimate Repository</td>
   </tr>
   <tr>
-    <td>– schließt den folgenden Term von der Suche aus</td>
+    <td>–</td>
+    <td>Schließt den folgenden Term von der Suche aus</td>
     <td>Ultimate Repository -Special – findet z.B. Ultimate Repository, schließt z.B. Ultimate Special Repository aus</td>
   </tr>
   <tr>
-    <td>– der folgende Term muss enthalten sein</td>
+    <td>+</td>
+    <td>Der folgende Term muss enthalten sein</td>
     <td>Ultimate +Repository – findet z.B. my Repository, Ultimate Repository</td>
   </tr>
 </table>
