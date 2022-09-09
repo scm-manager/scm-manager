@@ -172,6 +172,8 @@ const Search: FC = () => {
     ...searchCounts,
   };
 
+  const contextQuery = `${query}${namespace ? "&namespace=" + namespace : ""}${name ? "&name=" + name : ""}`;
+
   return (
     <Page
       title={t("search.title")}
@@ -183,7 +185,7 @@ const Search: FC = () => {
       {data ? (
         <CustomQueryFlexWrappedColumns>
           <PrimaryContentColumn>
-            <Results result={data} query={query} page={page} type={selectedType} />
+            <Results result={data} query={contextQuery} page={page} type={selectedType} />
           </PrimaryContentColumn>
           <SecondaryNavigation label={t("search.types")} collapsible={false}>
             {types.map((type) =>
@@ -203,14 +205,7 @@ const Search: FC = () => {
                   </DisabledNavLink>
                 </li>
               ) : (
-                <NavLink
-                  key={type}
-                  to={`/search/${type}/?q=${query}${namespace ? "&namespace=" + namespace : ""}${
-                    name ? "&name=" + name : ""
-                  }`}
-                  label={type}
-                  activeOnlyWhenExact={false}
-                >
+                <NavLink key={type} to={`/search/${type}/?q=${contextQuery}`} label={type} activeOnlyWhenExact={false}>
                   <Level
                     left={t(`plugins:search.types.${type}.navItem`, type)}
                     right={
