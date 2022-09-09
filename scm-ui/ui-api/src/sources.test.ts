@@ -124,6 +124,21 @@ describe("Test sources hooks", () => {
   };
 
   describe("useSources tests", () => {
+    const testPath = async (path: string, expectedPath: string) => {
+      const queryClient = createInfiniteCachingClient();
+      fetchMock.getOnce(`/api/v2/src/abc/${expectedPath}?collapse=true`, readmeMd);
+      const { result, waitFor } = renderHook(() => useSources(puzzle42, { revision: "abc", path }), {
+        wrapper: createWrapper(undefined, queryClient),
+      });
+      await waitFor(() => !!result.current.data);
+      expect(result.current.data).toEqual(readmeMd);
+    };
+
+    it("should return file from url with revision and path", () => testPath("README.md", "README.md"));
+    it("should encode square brackets in path", () =>
+      testPath("[...nextauth][...other].ts", "%5B...nextauth%5D%5B...other%5D.ts"));
+    it("should not double-encode path", () => testPath("%7BDatei%7D#42.txt", "%7BDatei%7D#42.txt"));
+
     it("should return root directory", async () => {
       const queryClient = createInfiniteCachingClient();
       fetchMock.getOnce("/api/v2/src?collapse=true", rootDirectory);
@@ -132,16 +147,6 @@ describe("Test sources hooks", () => {
       });
       await waitFor(() => !!result.current.data);
       expect(result.current.data).toEqual(rootDirectory);
-    });
-
-    it("should return file from url with revision and path", async () => {
-      const queryClient = createInfiniteCachingClient();
-      fetchMock.getOnce("/api/v2/src/abc/README.md?collapse=true", readmeMd);
-      const { result, waitFor } = renderHook(() => useSources(puzzle42, { revision: "abc", path: "README.md" }), {
-        wrapper: createWrapper(undefined, queryClient),
-      });
-      await waitFor(() => !!result.current.data);
-      expect(result.current.data).toEqual(readmeMd);
     });
 
     it("should fetch next page", async () => {

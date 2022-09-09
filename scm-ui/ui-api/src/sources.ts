@@ -93,7 +93,7 @@ const createSourcesLink = (repository: Repository, options: UseSourcesOptions) =
     link = urls.concat(link, encodeURIComponent(options.revision));
 
     if (options.path) {
-      link = urls.concat(link, options.path);
+      link = urls.concat(link, encodeInvalidCharacters(options.path));
     }
   }
   if (options.collapse) {
@@ -101,6 +101,8 @@ const createSourcesLink = (repository: Repository, options: UseSourcesOptions) =
   }
   return link;
 };
+
+const encodeInvalidCharacters = (input: string) => input.replace(/\[/g, "%5B").replace(/]/g, "%5D");
 
 const merge = (files?: File[]): File | undefined => {
   if (!files || files.length === 0) {
