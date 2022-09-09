@@ -172,7 +172,9 @@ const Search: FC = () => {
     ...searchCounts,
   };
 
-  const contextQuery = `${query}${namespace ? "&namespace=" + namespace : ""}${name ? "&name=" + name : ""}`;
+  const contextQuery = `${encodeURIComponent(query)}${namespace ? "&namespace=" + namespace : ""}${
+    name ? "&name=" + name : ""
+  }`;
 
   return (
     <Page
