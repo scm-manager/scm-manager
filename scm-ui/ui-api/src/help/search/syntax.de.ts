@@ -87,39 +87,13 @@ Standardmäßig werden Repository-Namen um 1,5 und Namespace-Namen um 1,25 geboo
 
 Hinweis: Logische Operatoren müssen in Großbuchstaben eingegeben werden (z. B. „AND").
 
-<table>
-  <tr>
-    <th>Operator</th>
-    <th>Definition</th>
-    <th>Beispiel</th>
-  </tr>
-  <tr>
-    <td>AND</td>
-    <td>Beide Terme müssen enthalten sein</td>
-    <td>Ultimate AND Repository – findet z.B. Ultimate Repository, Ultimate Special Repository</td>
-  </tr>
-  <tr>
-    <td>OR</td>
-    <td>Mindestens einer der Terme muss enthalten sein</td>
-    <td>Ultimate OR Repository – findet z.B.. Ultimate Repository, Ultimate User, Special Repository</td>
-  </tr>
-  <tr>
-    <td>NOT</td>
-    <td>Der nachfolgende Term darf nicht enthalten sein, „!" kann alternativ verwendet werden</td>
-    <td>Ultimate NOT Repository – findet z.B.. Ultimate user, nicht jedoch z.B. Ultimate Repository</td>
-  </tr>
-  <tr>
-    <td>–</td>
-    <td>Schließt den folgenden Term von der Suche aus</td>
-    <td>Ultimate Repository -Special – findet z.B. Ultimate Repository, schließt z.B. Ultimate Special Repository aus</td>
-  </tr>
-  <tr>
-    <td>+</td>
-    <td>Der folgende Term muss enthalten sein</td>
-    <td>Ultimate +Repository – findet z.B. my Repository, Ultimate Repository</td>
-  </tr>
-</table>
-
+|Operator|Definition|Beispiel|
+|--|--|--|
+|AND|Beide Terme müssen enthalten sein|Ultimate AND Repository – findet z.B. Ultimate Repository, Ultimate Special Repository|
+|OR|Mindestens einer der Terme muss enthalten sein|Ultimate OR Repository – findet z.B.. Ultimate Repository, Ultimate User, Special Repository|
+|NOT|Der nachfolgende Term darf nicht enthalten sein, „!" kann alternativ verwendet werden|Ultimate NOT Repository – findet z.B.. Ultimate user, nicht jedoch z.B. Ultimate Repository|
+|–|Schließt den folgenden Term von der Suche aus|Ultimate Repository -Special – findet z.B. Ultimate Repository, schließt z.B. Ultimate Special Repository aus|
+|+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |Der folgende Term muss enthalten sein|Ultimate +Repository – findet z.B. my Repository, Ultimate Repository|  </tr>
 
 ## Gruppieren
 
