@@ -26,6 +26,7 @@ import classNames from "classnames";
 import styled from "styled-components";
 import { Dialog } from "@headlessui/react";
 import { devices } from "../devices";
+import useRegisterModal from "./useRegisterModal";
 
 type ModalSize = "S" | "M" | "L";
 
@@ -67,6 +68,7 @@ export const Modal: FC<Props> = ({
   initialFocusRef,
   overflowVisible
 }) => {
+  useRegisterModal(active);
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
   let showFooter = null;
 

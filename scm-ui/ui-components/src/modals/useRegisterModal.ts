@@ -22,46 +22,26 @@
  * SOFTWARE.
  */
 
-export default class ShortcutBinder {
-  static readonly DEBOUNCE_TIMEOUT_MS = 500;
-  private idCount = 0;
-  private pressedKeys: Record<string, boolean> = {};
-  private timer?: NodeJS.Timeout;
+import { useContext, useEffect, useRef } from "react";
+import ActiveModalCount from "./activeModalCountContext";
 
-  register(key: string, callback: (event: KeyboardEvent) => void): number {
-    const id = ++this.idCount;
-    // TODO: Implement
-    return id;
-  }
-
-  unregister(id: number) {
-    // TODO: Implement
-  }
-
-  trigger() {
-    // eslint-disable-next-line no-console
-    console.log(Object.keys(this.pressedKeys));
-    this.pressedKeys = {};
-  }
-
-  debounce() {
-    if (this.timer) {
-      clearTimeout(this.timer);
+export default function useRegisterModal(active: boolean) {
+  const { setModalCount } = useContext(ActiveModalCount);
+  const previousActiveState = useRef<boolean | null>(null);
+  useEffect(() => {
+    if (active) {
+      previousActiveState.current = true;
+      setModalCount((prev) => prev + 1);
+    } else {
+      if (previousActiveState.current !== null) {
+        setModalCount((prev) => prev - 1);
+      }
+      previousActiveState.current = false;
     }
-    this.timer = setTimeout(this.trigger.bind(this), ShortcutBinder.DEBOUNCE_TIMEOUT_MS);
-  }
-
-  handleKeyUp = (event: KeyboardEvent) => {
-    // delete this.pressedKeys[event.key];
-    // this.debounce();
-    // eslint-disable-next-line no-console
-    console.log(event);
-  };
-
-  handleKeyDown = (event: KeyboardEvent) => {
-    // this.pressedKeys[event.code] = true;
-    // this.debounce();
-    // eslint-disable-next-line no-console
-    console.log(event);
-  };
+    return () => {
+      if (previousActiveState.current) {
+        setModalCount((prev) => prev - 1);
+      }
+    };
+  }, [active, setModalCount]);
 }

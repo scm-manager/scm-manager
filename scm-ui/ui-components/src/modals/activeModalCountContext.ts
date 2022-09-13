@@ -22,22 +22,8 @@
  * SOFTWARE.
  */
 
-import { useContext, useEffect } from "react";
-import shortcutBinderContext from "./shortcutBinderContext";
+import React from "react";
 
-export default (node?: HTMLElement) => {
-  const shortcutBinder = useContext(shortcutBinderContext);
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const actualNode = node ?? document.getElementById("root")!;
+export type ModalStateContextType = { modalCount: number, setModalCount: (fn: (oldValue: number) => number) => void };
 
-  useEffect(() => {
-    const onKeyUp = shortcutBinder.handleKeyUp.bind(shortcutBinder);
-    const onKeyDown = shortcutBinder.handleKeyDown.bind(shortcutBinder);
-    actualNode.addEventListener("keyup", onKeyUp);
-    actualNode.addEventListener("keydown", onKeyDown);
-    return () => {
-      actualNode.removeEventListener("keyup", onKeyUp);
-      actualNode.removeEventListener("keydown", onKeyDown);
-    };
-  });
-};
+export default React.createContext<ModalStateContextType>({} as ModalStateContextType);

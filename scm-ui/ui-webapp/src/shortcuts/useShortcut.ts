@@ -22,20 +22,23 @@
  * SOFTWARE.
  */
 
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import Mousetrap from "mousetrap";
+import { ActiveModalCountContext } from "@scm-manager/ui-components";
 
 export default function useShortcut(key: string, callback: () => void) {
+  const { modalCount } = useContext(ActiveModalCountContext);
+
   useEffect(() => {
-    const cb = (e: Mousetrap.ExtendedKeyboardEvent) => {
-      // eslint-disable-next-line no-console
-      console.log(e);
-      callback();
-      return false;
-    };
-    Mousetrap.bind(key, cb);
+    if (!modalCount) {
+      const cb = () => {
+        callback();
+        return false;
+      };
+      Mousetrap.bind(key, cb);
+    }
     return () => {
       Mousetrap.unbind(key);
     };
-  }, [key, callback]);
+  }, [key, callback, modalCount]);
 }

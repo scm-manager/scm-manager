@@ -357,10 +357,7 @@ const OmniSearch: FC = () => {
   searchTypes.sort(orderTypes(t));
 
   const id = useCallback(namespaceAndName, []);
-  useShortcut("/", () => {
-    searchInputRef.current?.focus();
-    return false;
-  });
+  useShortcut("/", () => searchInputRef.current?.focus());
 
   const entries = useMemo(() => {
     const newEntries = [];

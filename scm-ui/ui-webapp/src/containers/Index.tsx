@@ -23,11 +23,11 @@
  */
 import React, { FC, useState } from "react";
 import App from "./App";
-import { ErrorBoundary, Header, Loading } from "@scm-manager/ui-components";
+import { ActiveModalCountContext, ErrorBoundary, Header, Loading } from "@scm-manager/ui-components";
 import PluginLoader from "./PluginLoader";
 import ScrollToTop from "./ScrollToTop";
 import IndexErrorPage from "./IndexErrorPage";
-import { useIndex, NamespaceAndNameContextProvider } from "@scm-manager/ui-api";
+import { NamespaceAndNameContextProvider, useIndex } from "@scm-manager/ui-api";
 import { Link } from "@scm-manager/ui-types";
 import i18next from "i18next";
 import { binder, extensionPoints } from "@scm-manager/ui-extensions";
@@ -37,6 +37,7 @@ import InitializationPluginWizardStep from "./InitializationPluginWizardStep";
 const Index: FC = () => {
   const { isLoading, error, data } = useIndex();
   const [pluginsLoaded, setPluginsLoaded] = useState(false);
+  const [modalCount, setModalCount] = useState(0);
 
   // TODO check componentDidUpdate method for anonymous user stuff
 
@@ -58,15 +59,17 @@ const Index: FC = () => {
 
   const link = (data._links.uiPlugins as Link).href;
   return (
-    <ErrorBoundary fallback={IndexErrorPage}>
-      <ScrollToTop>
-        <NamespaceAndNameContextProvider>
-          <PluginLoader link={link} loaded={pluginsLoaded} callback={() => setPluginsLoaded(true)}>
-            <App />
-          </PluginLoader>
-        </NamespaceAndNameContextProvider>
-      </ScrollToTop>
-    </ErrorBoundary>
+    <ActiveModalCountContext.Provider value={{ modalCount, setModalCount }}>
+      <ErrorBoundary fallback={IndexErrorPage}>
+        <ScrollToTop>
+          <NamespaceAndNameContextProvider>
+            <PluginLoader link={link} loaded={pluginsLoaded} callback={() => setPluginsLoaded(true)}>
+              <App />
+            </PluginLoader>
+          </NamespaceAndNameContextProvider>
+        </ScrollToTop>
+      </ErrorBoundary>
+    </ActiveModalCountContext.Provider>
   );
 };
 
