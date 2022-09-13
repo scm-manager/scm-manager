@@ -22,23 +22,10 @@
  * SOFTWARE.
  */
 
-import { useEffect } from "react";
-import Mousetrap from "mousetrap";
-import { useActiveModals } from "@scm-manager/ui-components";
+import { useContext } from "react";
+import ActiveModalCountContext from "./activeModalCountContext";
 
-export default function useShortcut(key: string, callback: () => void) {
-  const modalsActive = useActiveModals();
-
-  useEffect(() => {
-    if (!modalsActive) {
-      const cb = () => {
-        callback();
-        return false;
-      };
-      Mousetrap.bind(key, cb);
-    }
-    return () => {
-      Mousetrap.unbind(key);
-    };
-  }, [key, callback, modalsActive]);
-}
+export default () => {
+  const { value } = useContext(ActiveModalCountContext);
+  return value > 0;
+};

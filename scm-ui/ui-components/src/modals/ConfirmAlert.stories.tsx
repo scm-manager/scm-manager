@@ -26,7 +26,7 @@ import { storiesOf } from "@storybook/react";
 import { MemoryRouter } from "react-router-dom";
 import * as React from "react";
 import ConfirmAlert, { confirmAlert } from "./ConfirmAlert";
-import { ActiveModalCountContext } from "./index";
+import ActiveModalCountContext from "./activeModalCountContext";
 
 const body =
   "Mind-paralyzing change needed improbability vortex machine sorts sought same theory upending job just allows\n " +

@@ -32,8 +32,9 @@ import ExternalLink from "../navigation/ExternalLink";
 import { InputField, Radio, Textarea } from "../forms";
 import { Button, ButtonGroup } from "../buttons";
 import Notification from "../Notification";
-import { ActiveModalCountContext, Autocomplete } from "../index";
+import { Autocomplete } from "../index";
 import { SelectValue } from "@scm-manager/ui-types";
+import ActiveModalCountContext from "./activeModalCountContext";
 
 const TopAndBottomMargin = styled.div`
   margin: 0.75rem 0; // only for aesthetic reasons

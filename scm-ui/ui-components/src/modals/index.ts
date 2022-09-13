@@ -27,4 +27,5 @@
 export { default as ConfirmAlert, confirmAlert } from "./ConfirmAlert";
 export { default as Modal } from "./Modal";
 export { default as FullscreenModal } from "./FullscreenModal";
-export { default as ActiveModalCountContext } from "./activeModalCountContext";
+export { default as ActiveModalCountContextProvider } from "./ActiveModalCountContextProvider";
+export { default as useActiveModals } from "./useActiveModals";
