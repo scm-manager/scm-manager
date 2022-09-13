@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 
-export type ModalStateContextType = { modalCount: number, setModalCount: (fn: (oldValue: number) => number) => void };
+export type ModalStateContextType = { value: number; setValue: Dispatch<SetStateAction<number>> };
 
 export default React.createContext<ModalStateContextType>({} as ModalStateContextType);

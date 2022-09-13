@@ -59,7 +59,7 @@ const Index: FC = () => {
 
   const link = (data._links.uiPlugins as Link).href;
   return (
-    <ActiveModalCountContext.Provider value={{ modalCount, setModalCount }}>
+    <ActiveModalCountContext.Provider value={{ value: modalCount, setValue: setModalCount }}>
       <ErrorBoundary fallback={IndexErrorPage}>
         <ScrollToTop>
           <NamespaceAndNameContextProvider>

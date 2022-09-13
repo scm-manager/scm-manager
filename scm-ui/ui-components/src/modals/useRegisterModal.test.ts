@@ -22,26 +22,22 @@
  * SOFTWARE.
  */
 
-import { useContext, useEffect, useRef } from "react";
-import ActiveModalCount from "./activeModalCountContext";
+import {renderHook} from "@testing-library/react-hooks";
+import {FC} from "react";
+import { ActiveModalCountContext } from ".";
+import useRegisterModal from "./useRegisterModal";
 
-export default function useRegisterModal(active: boolean) {
-  const { setValue } = useContext(ActiveModalCount);
-  const previousActiveState = useRef<boolean | null>(null);
-  useEffect(() => {
-    if (active) {
-      previousActiveState.current = true;
-      setValue((prev) => prev + 1);
-    } else {
-      if (previousActiveState.current !== null) {
-        setValue((prev) => prev - 1);
-      }
-      previousActiveState.current = false;
-    }
-    return () => {
-      if (previousActiveState.current) {
-        setValue((prev) => prev - 1);
-      }
-    };
-  }, [active, setValue]);
-}
+// const wrapper: FC = ({children}) => {
+//   return (
+//     <ActiveModalCountContext.Provider>
+//       {children}
+//     </ActiveModalCountContext.Provider>
+//   );
+// };
+
+describe("useRegisterModal", () => {
+  it("should increment on registration", () => {
+    const { result } = renderHook(() => useRegisterModal(true)); // , { wrapper }
+
+  });
+});

@@ -27,10 +27,10 @@ import Mousetrap from "mousetrap";
 import { ActiveModalCountContext } from "@scm-manager/ui-components";
 
 export default function useShortcut(key: string, callback: () => void) {
-  const { modalCount } = useContext(ActiveModalCountContext);
+  const { value } = useContext(ActiveModalCountContext);
 
   useEffect(() => {
-    if (!modalCount) {
+    if (!value) {
       const cb = () => {
         callback();
         return false;
@@ -40,5 +40,5 @@ export default function useShortcut(key: string, callback: () => void) {
     return () => {
       Mousetrap.unbind(key);
     };
-  }, [key, callback, modalCount]);
+  }, [key, callback, value]);
 }
