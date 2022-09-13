@@ -1,2 +1,2 @@
-ignores: ["@scm-manager/tsconfig", "storybook-addon-*", "@storybook/*", "tsup", "*-loader"]
-specials: ["babel", "webpack", "jest", "eslint", "prettier"]
+ignores: ["@scm-manager/tsconfig", "@scm-manager/jest-preset", "storybook-addon-*", "@storybook/*", "*-loader", "tsup"]
+specials: ["babel", "webpack", "jest", "eslint", "prettier", "bin"]

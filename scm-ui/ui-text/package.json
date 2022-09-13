@@ -15,7 +15,7 @@
     "typecheck": "tsc",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
-    "depcheck": "depcheck --ignores=@scm-manager/jest-preset,@scm-manager/tsconfig,@storybook/*,webpack"
+    "depcheck": "depcheck"
   },
   "peerDependencies": {
     "react": "^17.0.1",
@@ -32,7 +32,6 @@
     "@storybook/react": "^6.4.20",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "webpack": "^5.71.0",
     "tsup": "^5.12.6",
     "depcheck": "^1.4.3"
   },
