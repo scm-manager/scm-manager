@@ -32,7 +32,7 @@ import ExternalLink from "../navigation/ExternalLink";
 import { InputField, Radio, Textarea } from "../forms";
 import { Button, ButtonGroup } from "../buttons";
 import Notification from "../Notification";
-import { Autocomplete } from "../index";
+import { ActiveModalCountContext, Autocomplete } from "../index";
 import { SelectValue } from "@scm-manager/ui-types";
 
 const TopAndBottomMargin = styled.div`
@@ -75,20 +75,25 @@ const withFormElementsFooter = (
 );
 
 const loadSuggestions: (p: string) => Promise<SelectValue[]> = () =>
-  new Promise(resolve => {
+  new Promise((resolve) => {
     setTimeout(() => {
       resolve([
         { value: { id: "trillian", displayName: "Tricia McMillan" }, label: "Tricia McMillan" },
         { value: { id: "zaphod", displayName: "Zaphod Beeblebrox" }, label: "Zaphod Beeblebrox" },
         { value: { id: "ford", displayName: "Ford Prefect" }, label: "Ford Prefect" },
         { value: { id: "dent", displayName: "Arthur Dent" }, label: "Arthur Dent" },
-        { value: { id: "marvin", displayName: "Marvin" }, label: "Marvin the Paranoid Android " }
+        { value: { id: "marvin", displayName: "Marvin" }, label: "Marvin the Paranoid Android " },
       ]);
     });
   });
 
 storiesOf("Modal/Modal", module)
-  .addDecorator(story => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
+  .addDecorator((story) => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
+  .addDecorator((story) => (
+    <ActiveModalCountContext.Provider value={{ value: 0, increment: doNothing, decrement: doNothing }}>
+      {story()}
+    </ActiveModalCountContext.Provider>
+  ))
   .add("Default", () => (
     <NonCloseableModal>
       <p>{text}</p>

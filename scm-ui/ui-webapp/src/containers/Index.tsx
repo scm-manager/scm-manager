@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, useState } from "react";
+import React, { FC, useCallback, useState } from "react";
 import App from "./App";
 import { ActiveModalCountContext, ErrorBoundary, Header, Loading } from "@scm-manager/ui-components";
 import PluginLoader from "./PluginLoader";
@@ -37,7 +37,9 @@ import InitializationPluginWizardStep from "./InitializationPluginWizardStep";
 const Index: FC = () => {
   const { isLoading, error, data } = useIndex();
   const [pluginsLoaded, setPluginsLoaded] = useState(false);
-  const [modalCount, setModalCount] = useState(0);
+  const [activeModalCount, setActiveModalCount] = useState(0);
+  const incrementModalCount = useCallback(() => setActiveModalCount((prev) => prev + 1), []);
+  const decrementModalCount = useCallback(() => setActiveModalCount((prev) => prev - 1), []);
 
   // TODO check componentDidUpdate method for anonymous user stuff
 
@@ -59,7 +61,9 @@ const Index: FC = () => {
 
   const link = (data._links.uiPlugins as Link).href;
   return (
-    <ActiveModalCountContext.Provider value={{ value: modalCount, setValue: setModalCount }}>
+    <ActiveModalCountContext.Provider
+      value={{ value: activeModalCount, increment: incrementModalCount, decrement: decrementModalCount }}
+    >
       <ErrorBoundary fallback={IndexErrorPage}>
         <ScrollToTop>
           <NamespaceAndNameContextProvider>

@@ -25,23 +25,23 @@
 import { useContext, useEffect, useRef } from "react";
 import ActiveModalCount from "./activeModalCountContext";
 
-export default function useRegisterModal(active: boolean) {
-  const { setValue } = useContext(ActiveModalCount);
-  const previousActiveState = useRef<boolean | null>(null);
+export default function useRegisterModal(active: boolean, initialValue: boolean | null = null) {
+  const { increment, decrement } = useContext(ActiveModalCount);
+  const previousActiveState = useRef<boolean | null>(initialValue);
   useEffect(() => {
     if (active) {
       previousActiveState.current = true;
-      setValue((prev) => prev + 1);
+      increment();
     } else {
       if (previousActiveState.current !== null) {
-        setValue((prev) => prev - 1);
+        decrement();
       }
       previousActiveState.current = false;
     }
     return () => {
       if (previousActiveState.current) {
-        setValue((prev) => prev - 1);
+        decrement();
       }
     };
-  }, [active, setValue]);
+  }, [active, decrement, increment]);
 }
