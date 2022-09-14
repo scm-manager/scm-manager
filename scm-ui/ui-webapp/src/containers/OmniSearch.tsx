@@ -366,7 +366,9 @@ const OmniSearch: FC = () => {
           selected={newEntries.length === index}
           clear={clearQuery}
           label={t("search.quickSearch.searchRepo")}
-          link={`/search/${searchTypes[0]}/?q=${query}&namespace=${context.namespace}&name=${context.name}`}
+          link={`/search/${searchTypes[0]}/?q=${encodeURIComponent(query)}&namespace=${context.namespace}&name=${
+            context.name
+          }`}
         />
       );
     }
@@ -377,7 +379,7 @@ const OmniSearch: FC = () => {
           selected={newEntries.length === index}
           clear={clearQuery}
           label={t("search.quickSearch.searchNamespace")}
-          link={`/search/repository/?q=${query}&namespace=${context.namespace}`}
+          link={`/search/repository/?q=${encodeURIComponent(query)}&namespace=${context.namespace}`}
         />
       );
     }
@@ -387,7 +389,7 @@ const OmniSearch: FC = () => {
         selected={newEntries.length === index}
         clear={clearQuery}
         label={t("search.quickSearch.searchEverywhere")}
-        link={`/search/repository/?q=${query}`}
+        link={`/search/repository/?q=${encodeURIComponent(query)}`}
       />
     );
     const length = newEntries.length;
@@ -406,7 +408,7 @@ const OmniSearch: FC = () => {
     return newEntries;
   }, [clearQuery, context.name, context.namespace, hits, id, index, query, searchTypes, t]);
 
-  const defaultLink = `/search/${searchType}/?q=${query}`;
+  const defaultLink = `/search/${searchType}/?q=${encodeURIComponent(query)}`;
   const { onKeyDown } = useKeyBoardNavigation(entries, clearQuery, hideResults, index, setIndex, defaultLink);
 
   return (
