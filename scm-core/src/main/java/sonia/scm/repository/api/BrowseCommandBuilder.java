@@ -41,6 +41,7 @@ import sonia.scm.repository.spi.BrowseCommandRequest;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.function.Supplier;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -80,21 +81,23 @@ public final class BrowseCommandBuilder
   //~--- constructors ---------------------------------------------------------
 
   /**
-   * Constructs a new {@link LogCommandBuilder}, this constructor should
+   * Constructs a new {@link BrowseCommandBuilder}, this constructor should
    * only be called from the {@link RepositoryService}.
    *
    * @param cacheManager cache manager
    * @param browseCommand implementation of the {@link BrowseCommand}
    * @param repository repository to query
-   * @param preProcessorUtil
+   * @param preProcessorUtil this factory is used to create browse commands for the collapse feature
    */
   BrowseCommandBuilder(CacheManager cacheManager, BrowseCommand browseCommand,
-    Repository repository, PreProcessorUtil preProcessorUtil)
+                       Repository repository, PreProcessorUtil preProcessorUtil,
+                       Supplier<BrowseCommand> browseCommandFactory)
   {
     this.cache = cacheManager.getCache(CACHE_NAME);
     this.browseCommand = browseCommand;
     this.repository = repository;
     this.preProcessorUtil = preProcessorUtil;
+    this.browseCommandFactory = browseCommandFactory;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -174,7 +177,7 @@ public final class BrowseCommandBuilder
   private BrowserResult computeBrowserResult() throws IOException {
     BrowserResult result = browseCommand.getBrowserResult(request);
     if (result != null && !request.isRecursive() && request.isCollapse()) {
-      new BrowserResultCollapser().collapseFolders(browseCommand, request, result.getFile());
+      new BrowserResultCollapser().collapseFolders(browseCommandFactory.get(), request, result.getFile());
     }
     return result;
   }
@@ -457,6 +460,7 @@ public final class BrowseCommandBuilder
 
   /** Field description */
   private final PreProcessorUtil preProcessorUtil;
+  private final Supplier<BrowseCommand> browseCommandFactory;
 
   /** the repsitory */
   private final Repository repository;
