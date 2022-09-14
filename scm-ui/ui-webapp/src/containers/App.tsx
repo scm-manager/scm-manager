@@ -31,6 +31,7 @@ import { useIndex, useSubject } from "@scm-manager/ui-api";
 import NavigationBar from "./NavigationBar";
 import styled from "styled-components";
 import Feedback from "./Feedback";
+import usePauseShortcutsWhenModalsActive from "../shortcuts/usePauseShortcutsWhenModalsActive";
 
 const AppWrapper = styled.div`
   min-height: 100vh;
@@ -41,6 +42,7 @@ const App: FC = () => {
   const { data: index } = useIndex();
   const { isLoading, error, isAuthenticated, isAnonymous, me } = useSubject();
   const [t] = useTranslation("commons");
+  usePauseShortcutsWhenModalsActive();
 
   if (!index) {
     return null;

@@ -25,6 +25,12 @@
 import { useContext, useEffect, useRef } from "react";
 import ActiveModalCount from "./activeModalCountContext";
 
+/**
+ * Should not yet be part of the public API, as it is exclusively used by the {@link Modal} component.
+ *
+ * @param active Whether the modal is currently open
+ * @param initialValue DO NOT USE - Used only for testing purposes
+ */
 export default function useRegisterModal(active: boolean, initialValue: boolean | null = null) {
   const { increment, decrement } = useContext(ActiveModalCount);
   const previousActiveState = useRef<boolean | null>(initialValue);

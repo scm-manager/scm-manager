@@ -22,28 +22,15 @@
  * SOFTWARE.
  */
 
-import ActiveModalCountContext from "./activeModalCountContext";
-import React, { FC, useCallback, useState } from "react";
+import { useActiveModals } from "@scm-manager/ui-components";
+import usePauseShortcuts from "./usePauseShortcuts";
 
 /**
- * A simple counter that allows developers to keep track of how many modals are currently open.
+ * Keyboard shortcuts are not active in modals using {@link useActiveModals} to determine whether any modals are open.
  *
- * A default provider instance wraps the SCM-Manager so there is no need for plugins to use this component.
- *
- * Required by {@link useActiveModals}.
+ * Has to be used inside a {@link ActiveModalCountContextProvider}.
  */
-const ActiveModalCountContextProvider: FC = ({ children }) => {
-  const [activeModalCount, setActiveModalCount] = useState(0);
-  const incrementModalCount = useCallback(() => setActiveModalCount((prev) => prev + 1), []);
-  const decrementModalCount = useCallback(() => setActiveModalCount((prev) => prev - 1), []);
-
-  return (
-    <ActiveModalCountContext.Provider
-      value={{ value: activeModalCount, increment: incrementModalCount, decrement: decrementModalCount }}
-    >
-      {children}
-    </ActiveModalCountContext.Provider>
-  );
-};
-
-export default ActiveModalCountContextProvider;
+export default function usePauseShortcutsWhenModalsActive() {
+  const areModalsActive = useActiveModals();
+  usePauseShortcuts(areModalsActive);
+}

@@ -22,28 +22,22 @@
  * SOFTWARE.
  */
 
-import ActiveModalCountContext from "./activeModalCountContext";
-import React, { FC, useCallback, useState } from "react";
+import { useEffect } from "react";
+import Mousetrap from "mousetrap";
 
 /**
- * A simple counter that allows developers to keep track of how many modals are currently open.
+ * Pauses or unpauses all shortcuts provided by {@link useShortcut}.
  *
- * A default provider instance wraps the SCM-Manager so there is no need for plugins to use this component.
- *
- * Required by {@link useActiveModals}.
+ * @param pause Whether shortcuts should be paused
  */
-const ActiveModalCountContextProvider: FC = ({ children }) => {
-  const [activeModalCount, setActiveModalCount] = useState(0);
-  const incrementModalCount = useCallback(() => setActiveModalCount((prev) => prev + 1), []);
-  const decrementModalCount = useCallback(() => setActiveModalCount((prev) => prev - 1), []);
-
-  return (
-    <ActiveModalCountContext.Provider
-      value={{ value: activeModalCount, increment: incrementModalCount, decrement: decrementModalCount }}
-    >
-      {children}
-    </ActiveModalCountContext.Provider>
-  );
-};
-
-export default ActiveModalCountContextProvider;
+export default function usePauseShortcuts(pause: boolean) {
+  useEffect(() => {
+    if (pause) {
+      // @ts-ignore method comes from plugin
+      Mousetrap.pause();
+    } else {
+      // @ts-ignore method comes from plugin
+      Mousetrap.unpause();
+    }
+  }, [pause]);
+}

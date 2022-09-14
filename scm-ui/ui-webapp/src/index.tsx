@@ -36,7 +36,10 @@ import ChangesetShortLink from "./repos/components/changesets/ChangesetShortLink
 
 import "./tokenExpired";
 import { ApiProvider } from "@scm-manager/ui-api";
+// Used by useShortcut
 import "mousetrap";
+// Used by usePauseShortcuts
+import "mousetrap/plugins/pause/mousetrap-pause.min";
 
 binder.bind<extensionPoints.ChangesetDescriptionTokens>("changeset.description.tokens", ChangesetShortLink);
 

@@ -24,21 +24,50 @@
 
 import { useEffect } from "react";
 import Mousetrap from "mousetrap";
-import { useActiveModals } from "@scm-manager/ui-components";
 
-export default function useShortcut(key: string, callback: () => void) {
-  const modalsActive = useActiveModals();
-
+/**
+ * ## Summary
+ *
+ * Binds a global keyboard shortcut to a given callback.
+ *
+ * The callback is automatically cleaned up upon unmount.
+ *
+ * ## Supported keys
+ *
+ * For modifier keys you can use shift, ctrl, alt, or meta.
+ *
+ * You can substitute option for alt and command for meta.
+ *
+ * Other special keys are backspace, tab, enter, return, capslock, esc, escape, space, pageup, pagedown, end, home, left, up, right, down, ins, del, and plus.
+ *
+ * Any other key you should be able to reference by name like a, /, $, *, or =.
+ *
+ * A "mod" helper exists which maps to either "command" on Mac and "ctrl" on Windows and Linux.
+ *
+ * ## Combinations
+ *
+ * Keys can be combined with the "+" separator, but without extra whitespaces.
+ *
+ * @param key
+ * @param callback
+ * @example useShortcut("/", ...)
+ * @example useShortcut("ctrl+shift+k", ...)
+ * @see https://github.com/ccampbell/mousetrap
+ */
+export default function useShortcut(key: string, callback: (e: KeyboardEvent) => void) {
   useEffect(() => {
-    if (!modalsActive) {
-      const cb = () => {
-        callback();
-        return false;
-      };
-      Mousetrap.bind(key, cb);
-    }
+    Mousetrap.bind(key, (e) => {
+      callback(e);
+      /*
+       * Returning false disables default event behaviour and stops event bubbling.
+       * Otherwise, a shortcut that moves focus to an input field would cause the key to be entered into the input at the same time.
+       * We could move the decision to the callback, but this behaviour is an implementation detail of Mousetrap which we would like to hide.
+       */
+      return false;
+    });
+
     return () => {
       Mousetrap.unbind(key);
     };
-  }, [key, callback, modalsActive]);
+  }, [key, callback]);
 }

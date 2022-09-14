@@ -25,7 +25,12 @@
 import { useContext } from "react";
 import ActiveModalCountContext from "./activeModalCountContext";
 
-export default () => {
+/**
+ * @returns Whether any modals are currently open
+ */
+const useActiveModals = () => {
   const { value } = useContext(ActiveModalCountContext);
   return value > 0;
 };
+
+export default useActiveModals;
