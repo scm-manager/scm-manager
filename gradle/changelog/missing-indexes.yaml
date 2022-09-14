@@ -1,2 +1,0 @@
-- type: fixed
-  description: Handle missing indexes with own No Op IndexReader ([#2113](https://github.com/scm-manager/scm-manager/pull/2113))

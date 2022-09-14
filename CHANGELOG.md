@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.39.0] - 2022-09-14
+### Added
+- Reindex mechanism for search ([#2104](https://github.com/scm-manager/scm-manager/pull/2104))
+- Changesets command to find all repository changesets ([#2106](https://github.com/scm-manager/scm-manager/pull/2106))
+- Implement commit search features for git ([#2111](https://github.com/scm-manager/scm-manager/pull/2111))
+
+### Fixed
+- Fix docker healthcheck for custom ports, https and forced base url ([#2110](https://github.com/scm-manager/scm-manager/pull/2110))
+- Handle missing indexes with own No Op IndexReader ([#2113](https://github.com/scm-manager/scm-manager/pull/2113))
+- Handle missing encoding of square brackets in filenames ([#2117](https://github.com/scm-manager/scm-manager/pull/2117))
+- Show warning message for invalid search requests ([#2114](https://github.com/scm-manager/scm-manager/pull/2114))
+- Encoding in global search ([#2116](https://github.com/scm-manager/scm-manager/pull/2116))
+- Lazy loading in the source view ([#2120](https://github.com/scm-manager/scm-manager/pull/2120))
+- Fix broken compare view due to missing export ([#2105](https://github.com/scm-manager/scm-manager/pull/2105))
+- Keep search context for search results pagination ([#2115](https://github.com/scm-manager/scm-manager/pull/2115))
+- Fixed wrong indentation of extraVolumes and extraVolumeMounts ([#2103](https://github.com/scm-manager/scm-manager/pull/2103))
+
+### Changed
+- Reduce the output from the realm trace log ([#2121](https://github.com/scm-manager/scm-manager/pull/2121))
+- Enhance search result view by sorting translated categories and disable categories with no search results ([#2107](https://github.com/scm-manager/scm-manager/pull/2107))
+
 ## [2.38.1] - 2022-08-09
 ### Fixed
 - Incorrect plugin dependency declaration breaks plugin builds
@@ -1126,3 +1147,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.37.2]: https://scm-manager.org/download/2.37.2
 [2.38.0]: https://scm-manager.org/download/2.38.0
 [2.38.1]: https://scm-manager.org/download/2.38.1
+[2.39.0]: https://scm-manager.org/download/2.39.0
