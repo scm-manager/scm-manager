@@ -205,7 +205,7 @@ public final class RepositoryService implements Closeable {
     LOG.debug("create browse command for repository {}", repository);
 
     return new BrowseCommandBuilder(cacheManager, provider.getBrowseCommand(),
-      repository, preProcessorUtil);
+      repository, preProcessorUtil, provider::getBrowseCommand);
   }
 
   /**

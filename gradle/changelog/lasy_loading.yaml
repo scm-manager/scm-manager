@@ -1,0 +1,2 @@
+- type: fixed
+  description: Lazy loading in the source view ([#2120](https://github.com/scm-manager/scm-manager/pull/2120))
