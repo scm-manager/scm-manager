@@ -10,7 +10,7 @@
     "storybook": "start-storybook",
     "build-storybook": "build-storybook",
     "write-mapping": "node scripts/write-mapping.mjs",
-    "depcheck": "depcheck --ignores=@scm-manager/jest-preset,@scm-manager/tsconfig,@storybook/*,webpack"
+    "depcheck": "depcheck"
   },
   "dependencies": {
     "@scm-manager/ui-text": "2.38.2-SNAPSHOT",
@@ -35,7 +35,6 @@
     "@types/hast": "^2.3.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "webpack": "^5.72.0",
     "depcheck": "^1.4.3",
     "decode-named-character-reference": "^1.0.1"
   },

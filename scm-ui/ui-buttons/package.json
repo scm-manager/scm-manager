@@ -17,7 +17,7 @@
     "build-storybook": "build-storybook",
     "image-snapshots": "jest \"image-snapshot.test.ts\"",
     "a11y-check": "jest \"a11y.test.ts\"",
-    "depcheck": "depcheck --ignores=@scm-manager/prettier-config,@scm-manager/tsconfig,@babel/core,sass-loader,autoprefixer,babel-loader,postcss-loader,storybook-addon-*,@storybook/*,webpack"
+    "depcheck": "depcheck"
   },
   "peerDependencies": {
     "react": "^17.0.1",
@@ -26,6 +26,7 @@
     "classnames": "^2.2.6"
   },
   "devDependencies": {
+    "@scm-manager/prettier-config": "^2.11.1",
     "@scm-manager/ui-api": "2.38.2-SNAPSHOT",
     "@scm-manager/eslint-config": "^2.16.0",
     "@babel/core": "^7.17.8",
@@ -47,7 +48,6 @@
     "@types/storybook-react-router": "^1.0.2",
     "sass-loader": "^12.3.0",
     "storybook-addon-themes": "^6.1.0",
-    "autoprefixer": "^10.4.4",
     "babel-loader": "^8.2.4",
     "postcss": "^8.4.12",
     "postcss-loader": "^6.2.1",
@@ -58,7 +58,8 @@
     "react-query": "^3.25.1",
     "i18next": "^19.9.2",
     "react-i18next": "^10.13.2",
-    "i18next-fetch-backend": "^2.3.1"
+    "i18next-fetch-backend": "^2.3.1",
+    "depcheck": "^1.4.3"
   },
   "babel": {
     "presets": [
