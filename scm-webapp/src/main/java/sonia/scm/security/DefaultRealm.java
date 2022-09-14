@@ -43,6 +43,7 @@ import sonia.scm.plugin.Extension;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -163,8 +164,11 @@ public class DefaultRealm extends AuthorizingRealm {
 
   private void append(StringBuilder buffer, Iterable<?> iterable) {
     if (iterable != null) {
-      for (Object item : iterable) {
-        buffer.append(SEPARATOR).append(" - ").append(item);
+      for (Iterator<?> iter = iterable.iterator(); iter.hasNext(); ) {
+        buffer.append(iter.next());
+        if (iter.hasNext()) {
+          buffer.append(" , ");
+        }
       }
     }
   }
