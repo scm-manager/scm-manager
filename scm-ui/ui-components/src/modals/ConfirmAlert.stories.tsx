@@ -26,6 +26,7 @@ import { storiesOf } from "@storybook/react";
 import { MemoryRouter } from "react-router-dom";
 import * as React from "react";
 import ConfirmAlert, { confirmAlert } from "./ConfirmAlert";
+import ActiveModalCountContext from "./activeModalCountContext";
 
 const body =
   "Mind-paralyzing change needed improbability vortex machine sorts sought same theory upending job just allows\n " +
@@ -37,27 +38,36 @@ const buttons = [
   {
     className: "is-outlined",
     label: "Cancel",
-    onClick: () => null
+    onClick: () => null,
   },
   {
-    label: "Submit"
-  }
+    label: "Submit",
+  },
 ];
 
 const buttonsWithAutofocus = [
   {
     label: "Cancel",
-    onClick: () => null
+    onClick: () => null,
   },
   {
     className: "is-info",
     label: "I should be focused",
-    autofocus: true
-  }
+    autofocus: true,
+  },
 ];
 
+const doNothing = () => {
+  // Do nothing
+};
+
 storiesOf("Modal/ConfirmAlert", module)
-  .addDecorator(story => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
+  .addDecorator((story) => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
+  .addDecorator((story) => (
+    <ActiveModalCountContext.Provider value={{ value: 0, increment: doNothing, decrement: doNothing }}>
+      {story()}
+    </ActiveModalCountContext.Provider>
+  ))
   .add("Default", () => <ConfirmAlert message={body} title={"Are you sure about that?"} buttons={buttons} />)
   .add("WithButton", () => {
     const buttonClick = () => {

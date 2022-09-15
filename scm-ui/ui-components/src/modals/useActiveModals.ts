@@ -22,10 +22,15 @@
  * SOFTWARE.
  */
 
-// @create-index
+import { useContext } from "react";
+import ActiveModalCountContext from "./activeModalCountContext";
 
-export { default as ConfirmAlert, confirmAlert } from "./ConfirmAlert";
-export { default as Modal } from "./Modal";
-export { default as FullscreenModal } from "./FullscreenModal";
-export { default as ActiveModalCountContextProvider } from "./ActiveModalCountContextProvider";
-export { default as useActiveModals } from "./useActiveModals";
+/**
+ * @returns Whether any modals are currently open
+ */
+const useActiveModals = () => {
+  const { value } = useContext(ActiveModalCountContext);
+  return value > 0;
+};
+
+export default useActiveModals;

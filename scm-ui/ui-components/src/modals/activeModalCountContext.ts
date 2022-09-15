@@ -22,10 +22,8 @@
  * SOFTWARE.
  */
 
-// @create-index
+import React from "react";
 
-export { default as ConfirmAlert, confirmAlert } from "./ConfirmAlert";
-export { default as Modal } from "./Modal";
-export { default as FullscreenModal } from "./FullscreenModal";
-export { default as ActiveModalCountContextProvider } from "./ActiveModalCountContextProvider";
-export { default as useActiveModals } from "./useActiveModals";
+export type ModalStateContextType = { value: number; increment: () => void; decrement: () => void };
+
+export default React.createContext<ModalStateContextType>({} as ModalStateContextType);

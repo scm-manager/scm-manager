@@ -22,10 +22,28 @@
  * SOFTWARE.
  */
 
-// @create-index
+import ActiveModalCountContext from "./activeModalCountContext";
+import React, { FC, useCallback, useState } from "react";
 
-export { default as ConfirmAlert, confirmAlert } from "./ConfirmAlert";
-export { default as Modal } from "./Modal";
-export { default as FullscreenModal } from "./FullscreenModal";
-export { default as ActiveModalCountContextProvider } from "./ActiveModalCountContextProvider";
-export { default as useActiveModals } from "./useActiveModals";
+/**
+ * A simple counter that allows developers to keep track of how many modals are currently open.
+ *
+ * A default provider instance wraps the SCM-Manager so there is no need for plugins to use this component.
+ *
+ * Required by {@link useActiveModals}.
+ */
+const ActiveModalCountContextProvider: FC = ({ children }) => {
+  const [activeModalCount, setActiveModalCount] = useState(0);
+  const incrementModalCount = useCallback(() => setActiveModalCount((prev) => prev + 1), []);
+  const decrementModalCount = useCallback(() => setActiveModalCount((prev) => prev - 1), []);
+
+  return (
+    <ActiveModalCountContext.Provider
+      value={{ value: activeModalCount, increment: incrementModalCount, decrement: decrementModalCount }}
+    >
+      {children}
+    </ActiveModalCountContext.Provider>
+  );
+};
+
+export default ActiveModalCountContextProvider;

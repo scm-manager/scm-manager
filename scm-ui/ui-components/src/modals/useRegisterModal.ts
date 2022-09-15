@@ -22,10 +22,32 @@
  * SOFTWARE.
  */
 
-// @create-index
+import { useContext, useEffect, useRef } from "react";
+import ActiveModalCount from "./activeModalCountContext";
 
-export { default as ConfirmAlert, confirmAlert } from "./ConfirmAlert";
-export { default as Modal } from "./Modal";
-export { default as FullscreenModal } from "./FullscreenModal";
-export { default as ActiveModalCountContextProvider } from "./ActiveModalCountContextProvider";
-export { default as useActiveModals } from "./useActiveModals";
+/**
+ * Should not yet be part of the public API, as it is exclusively used by the {@link Modal} component.
+ *
+ * @param active Whether the modal is currently open
+ * @param initialValue DO NOT USE - Used only for testing purposes
+ */
+export default function useRegisterModal(active: boolean, initialValue: boolean | null = null) {
+  const { increment, decrement } = useContext(ActiveModalCount);
+  const previousActiveState = useRef<boolean | null>(initialValue);
+  useEffect(() => {
+    if (active) {
+      previousActiveState.current = true;
+      increment();
+    } else {
+      if (previousActiveState.current !== null) {
+        decrement();
+      }
+      previousActiveState.current = false;
+    }
+    return () => {
+      if (previousActiveState.current) {
+        decrement();
+      }
+    };
+  }, [active, decrement, increment]);
+}

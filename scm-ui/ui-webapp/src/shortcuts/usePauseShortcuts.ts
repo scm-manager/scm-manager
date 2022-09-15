@@ -22,10 +22,22 @@
  * SOFTWARE.
  */
 
-// @create-index
+import { useEffect } from "react";
+import Mousetrap from "mousetrap";
 
-export { default as ConfirmAlert, confirmAlert } from "./ConfirmAlert";
-export { default as Modal } from "./Modal";
-export { default as FullscreenModal } from "./FullscreenModal";
-export { default as ActiveModalCountContextProvider } from "./ActiveModalCountContextProvider";
-export { default as useActiveModals } from "./useActiveModals";
+/**
+ * Pauses or unpauses all shortcuts provided by {@link useShortcut}.
+ *
+ * @param pause Whether shortcuts should be paused
+ */
+export default function usePauseShortcuts(pause: boolean) {
+  useEffect(() => {
+    if (pause) {
+      // @ts-ignore method comes from plugin
+      Mousetrap.pause();
+    } else {
+      // @ts-ignore method comes from plugin
+      Mousetrap.unpause();
+    }
+  }, [pause]);
+}

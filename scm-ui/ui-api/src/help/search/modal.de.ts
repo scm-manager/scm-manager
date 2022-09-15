@@ -30,4 +30,8 @@ Um mehr über die fortgeschrittene Suche zu erfahren, lesen sie unsere [Experten
 - Die relevantesten Repositories werden in den Quick Results angezeigt.
 - Über die Eingabe-Taste oder den Button "Alle Ergebnisse anzeigen" bekommen Sie Ergebnisse aller durchsuchten Entitäten wie Nutzern oder Gruppen.
 - Eine Wildcard für eine beliebige Anzahl an beliebigen Zeichen wird Ihrer Suche standardmäßig angehängt.
-- Geben Sie keine Wildcards vor dem Suchbegriff ein!`;
+- Geben Sie keine Wildcards vor dem Suchbegriff ein!
+
+### Tastenkombinationen
+
+Sie können von überall aus "/" drücken, um den Tastaturfokus auf die globale Suchleiste bewegen.`;

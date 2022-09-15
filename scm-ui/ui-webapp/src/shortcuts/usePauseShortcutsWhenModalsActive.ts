@@ -22,10 +22,15 @@
  * SOFTWARE.
  */
 
-// @create-index
+import { useActiveModals } from "@scm-manager/ui-components";
+import usePauseShortcuts from "./usePauseShortcuts";
 
-export { default as ConfirmAlert, confirmAlert } from "./ConfirmAlert";
-export { default as Modal } from "./Modal";
-export { default as FullscreenModal } from "./FullscreenModal";
-export { default as ActiveModalCountContextProvider } from "./ActiveModalCountContextProvider";
-export { default as useActiveModals } from "./useActiveModals";
+/**
+ * Keyboard shortcuts are not active in modals using {@link useActiveModals} to determine whether any modals are open.
+ *
+ * Has to be used inside a {@link ActiveModalCountContextProvider}.
+ */
+export default function usePauseShortcutsWhenModalsActive() {
+  const areModalsActive = useActiveModals();
+  usePauseShortcuts(areModalsActive);
+}

@@ -30,4 +30,9 @@ To learn about advanced search read our [Expert Search Site](/help/search-syntax
 - The most relevant repositories are shown in the quick results.
 - Press "enter" or click the "Show all results" button to find more results for all entities like users or groups.
 - A multi-character wildcard (*) is added to your search by default.
-- Do not enter Wildcards in front of the search!`;
+- Do not enter Wildcards in front of the search!
+
+### Shortcuts
+
+You can press "/" from anywhere to move keyboard focus to the global search bar.
+`;
