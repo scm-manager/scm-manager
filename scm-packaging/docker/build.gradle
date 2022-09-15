@@ -90,7 +90,7 @@ task setupBuilder() {
 }
 
 task build(type: Exec) {
-  commandLine = ["docker", "buildx", "bake", isSnapshot ? "--load" : "", "--builder", "scm-builder", isSnapshot ? "dev": "prod"]
+  commandLine = ["docker", "buildx", "bake", "--builder", "scm-builder", isSnapshot ? "dev": "prod"]
   environment "VERSION", dockerTag
   environment "COMMIT_SHA", revision
   environment "IMAGE", dockerRepository
