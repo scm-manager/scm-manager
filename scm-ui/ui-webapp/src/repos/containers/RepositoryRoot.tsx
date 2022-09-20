@@ -99,6 +99,24 @@ const RepositoryRoot = () => {
   const context = useNamespaceAndNameContext();
   const history = useHistory();
 
+  const url = urls.matchedUrlFromMatch(match);
+
+  useShortcut("g i", () => {
+    history.push(`${url}/info`);
+  });
+  useShortcut("g b", () => {
+    history.push(`${url}/branches/`);
+  });
+  useShortcut("g t", () => {
+    history.push(`${url}/tags/`);
+  });
+  useShortcut("g c", () => {
+    history.push(evaluateDestinationForCodeLink());
+  });
+  useShortcut("g s", () => {
+    history.push(`${url}/settings/general`);
+  });
+
   useEffect(() => {
     if (repository) {
       context.setNamespace(repository.namespace);
@@ -119,24 +137,6 @@ const RepositoryRoot = () => {
   if (!repository || isLoading) {
     return <Loading />;
   }
-
-  const url = urls.matchedUrlFromMatch(match);
-
-  useShortcut("g i", () => {
-    history.push(`${url}/info`);
-  });
-  useShortcut("g b", () => {
-    history.push(`${url}/branches/`);
-  });
-  useShortcut("g t", () => {
-    history.push(`${url}/tags/`);
-  });
-  useShortcut("g c", () => {
-    history.push(evaluateDestinationForCodeLink());
-  });
-  useShortcut("g s", () => {
-    history.push(`${url}/settings/general`);
-  });
 
   // props used for extensions
   // most of the props required for compatibility
