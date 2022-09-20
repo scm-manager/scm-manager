@@ -53,6 +53,7 @@ import Mousetrap from "mousetrap";
  * @example useShortcut("/", ...)
  * @example useShortcut("ctrl+shift+k", ...)
  * @see https://github.com/ccampbell/mousetrap
+ * @see https://craig.is/killing/mice
  */
 export default function useShortcut(key: string, callback: (e: KeyboardEvent) => void) {
   useEffect(() => {
