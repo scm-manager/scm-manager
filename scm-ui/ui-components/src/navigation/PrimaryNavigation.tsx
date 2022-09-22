@@ -26,8 +26,6 @@ import PrimaryNavigationLink from "./PrimaryNavigationLink";
 import { Links } from "@scm-manager/ui-types";
 import { binder, ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import { useTranslation } from "react-i18next";
-import useShortcut from "@scm-manager/ui-webapp/src/shortcuts/useShortcut";
-import { useHistory } from "react-router-dom";
 
 type Props = {
   links: Links;
@@ -37,20 +35,6 @@ type Appender = (to: string, match: string, label: string, linkName: string) => 
 
 const PrimaryNavigation: FC<Props> = ({ links }) => {
   const [t] = useTranslation("commons");
-
-  const history = useHistory();
-  useShortcut("option+r", () => {
-    history.push("/repos/");
-  });
-  useShortcut("option+u", () => {
-    history.push("/users/");
-  });
-  useShortcut("option+g", () => {
-    history.push("/groups/");
-  });
-  useShortcut("option+a", () => {
-    history.push("/admin/");
-  });
 
   const createNavigationAppender = (navItems: ReactNode[]): Appender => {
     return (to: string, match: string, label: string, linkName: string) => {
@@ -76,7 +60,7 @@ const PrimaryNavigation: FC<Props> = ({ links }) => {
 
     const extensionProps = {
       links,
-      label: t("primary-navigation.first-menu"),
+      label: t("primary-navigation.first-menu")
     };
 
     const append = createNavigationAppender(navItems);
@@ -102,7 +86,7 @@ const PrimaryNavigation: FC<Props> = ({ links }) => {
         name="primary-navigation"
         renderAll={true}
         props={{
-          links,
+          links
         }}
       />
     );

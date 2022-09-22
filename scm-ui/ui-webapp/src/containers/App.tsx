@@ -23,15 +23,17 @@
  */
 import React, { FC } from "react";
 import Main from "./Main";
+import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import styled from "styled-components";
+import { useIndex, useSubject } from "@scm-manager/ui-api";
 import { ErrorPage, Footer, Header, Loading } from "@scm-manager/ui-components";
 import { binder } from "@scm-manager/ui-extensions";
-import Login from "./Login";
-import { useIndex, useSubject } from "@scm-manager/ui-api";
-import NavigationBar from "./NavigationBar";
-import styled from "styled-components";
-import Feedback from "./Feedback";
 import usePauseShortcutsWhenModalsActive from "../shortcuts/usePauseShortcutsWhenModalsActive";
+import useShortcut from "../shortcuts/useShortcut";
+import Login from "./Login";
+import NavigationBar from "./NavigationBar";
+import Feedback from "./Feedback";
 
 const AppWrapper = styled.div`
   min-height: 100vh;
@@ -43,6 +45,20 @@ const App: FC = () => {
   const { isLoading, error, isAuthenticated, isAnonymous, me } = useSubject();
   const [t] = useTranslation("commons");
   usePauseShortcutsWhenModalsActive();
+
+  const history = useHistory();
+  useShortcut("option+r", () => {
+    history.push("/repos/");
+  });
+  useShortcut("option+u", () => {
+    history.push("/users/");
+  });
+  useShortcut("option+g", () => {
+    history.push("/groups/");
+  });
+  useShortcut("option+a", () => {
+    history.push("/admin/");
+  });
 
   if (!index) {
     return null;
