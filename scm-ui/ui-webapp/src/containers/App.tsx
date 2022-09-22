@@ -48,16 +48,24 @@ const App: FC = () => {
 
   const history = useHistory();
   useShortcut("option+r", () => {
-    history.push("/repos/");
+    if (index && index._links["repositories"]) {
+      history.push("/repos/");
+    }
   });
   useShortcut("option+u", () => {
-    history.push("/users/");
+    if (index && index._links["users"]) {
+      history.push("/users/");
+    }
   });
   useShortcut("option+g", () => {
-    history.push("/groups/");
+    if (index && index._links["groups"]) {
+      history.push("/groups/");
+    }
   });
   useShortcut("option+a", () => {
-    history.push("/admin/");
+    if (index && index._links["config"]) {
+      history.push("/admin/");
+    }
   });
 
   if (!index) {

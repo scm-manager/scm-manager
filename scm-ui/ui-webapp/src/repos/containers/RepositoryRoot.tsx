@@ -105,13 +105,19 @@ const RepositoryRoot = () => {
     history.push(`${url}/info`);
   });
   useShortcut("g b", () => {
-    history.push(`${url}/branches/`);
+    if (repository && repository._links["branches"]) {
+      history.push(`${url}/branches/`);
+    }
   });
   useShortcut("g t", () => {
-    history.push(`${url}/tags/`);
+    if (repository && repository._links["tags"]) {
+      history.push(`${url}/tags/`);
+    }
   });
   useShortcut("g c", () => {
-    history.push(evaluateDestinationForCodeLink());
+    if (repository && repository._links[getCodeLinkname()]) {
+      history.push(evaluateDestinationForCodeLink());
+    }
   });
   useShortcut("g s", () => {
     history.push(`${url}/settings/general`);
