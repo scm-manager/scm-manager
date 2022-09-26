@@ -23,7 +23,7 @@
  */
 import React, { useEffect, useState } from "react";
 import { match as Match } from "react-router";
-import { Link as RouteLink, Redirect, Route, RouteProps, Switch, useRouteMatch } from "react-router-dom";
+import { Link as RouteLink, Redirect, Route, RouteProps, Switch, useHistory, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { binder, ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import { Changeset, Link } from "@scm-manager/ui-types";
@@ -62,6 +62,7 @@ import CompareRoot from "../compare/CompareRoot";
 import TagRoot from "../tags/container/TagRoot";
 import { useIndexLinks, useNamespaceAndNameContext, useRepository } from "@scm-manager/ui-api";
 import styled from "styled-components";
+import useShortcut from "../../shortcuts/useShortcut";
 
 const TagGroup = styled.span`
   & > * {
@@ -96,6 +97,31 @@ const RepositoryRoot = () => {
   const [showHealthCheck, setShowHealthCheck] = useState(false);
   const [t] = useTranslation("repos");
   const context = useNamespaceAndNameContext();
+  const history = useHistory();
+
+  const url = urls.matchedUrlFromMatch(match);
+
+  useShortcut("g i", () => {
+    history.push(`${url}/info`);
+  });
+  useShortcut("g b", () => {
+    if (repository && repository._links["branches"]) {
+      history.push(`${url}/branches/`);
+    }
+  });
+  useShortcut("g t", () => {
+    if (repository && repository._links["tags"]) {
+      history.push(`${url}/tags/`);
+    }
+  });
+  useShortcut("g c", () => {
+    if (repository && repository._links[getCodeLinkname()]) {
+      history.push(evaluateDestinationForCodeLink());
+    }
+  });
+  useShortcut("g s", () => {
+    history.push(`${url}/settings/general`);
+  });
 
   useEffect(() => {
     if (repository) {
@@ -117,8 +143,6 @@ const RepositoryRoot = () => {
   if (!repository || isLoading) {
     return <Loading />;
   }
-
-  const url = urls.matchedUrlFromMatch(match);
 
   // props used for extensions
   // most of the props required for compatibility
