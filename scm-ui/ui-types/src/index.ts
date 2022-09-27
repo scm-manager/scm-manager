@@ -74,3 +74,4 @@ export * from "./GlobalPermissions";
 export * from "./Search";
 export * from "./General";
 export * from "./ContentType";
+export * from "./Feedback";

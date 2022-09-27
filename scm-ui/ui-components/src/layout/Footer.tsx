@@ -22,7 +22,8 @@
  * SOFTWARE.
  */
 import React, { FC } from "react";
-import { Links, Me } from "@scm-manager/ui-types";
+import { Feedback, Links, Me } from "@scm-manager/ui-types";
+import { useIndex } from "@scm-manager/ui-api";
 import { ExtensionPoint, extensionPoints, useBinder } from "@scm-manager/ui-extensions";
 import { AvatarImage } from "../avatar";
 import NavLink from "../navigation/NavLink";
@@ -80,6 +81,7 @@ const TitleWithAvatar: FC<TitleWithAvatarProps> = ({ me }) => (
 const Footer: FC<Props> = ({ me, version, links }) => {
   const [t] = useTranslation("commons");
   const binder = useBinder();
+  const index = useIndex();
 
   const extensionProps = { me, url: "/me", links };
   let meSectionTile;
@@ -124,6 +126,18 @@ const Footer: FC<Props> = ({ me, version, links }) => {
               to="https://cloudogu.com/en/scm-manager-enterprise/"
               label={t("footer.support.enterprise")}
             />
+            {!(index.data?._embedded?.feedback as Feedback)?.disabled ? (
+              <>
+                <ExternalNavLink
+                  to="https://community.cloudogu.com/new-topic?category=scm-manager/bug-reports-scmm"
+                  label={t("footer.support.bugReport")}
+                />
+                <ExternalNavLink
+                  to="https://community.cloudogu.com/new-topic?category=scm-manager/feature-requests-scmm"
+                  label={t("footer.support.featureRequest")}
+                />
+              </>
+            ) : null}
             <ExtensionPoint name="footer.support" props={extensionProps} renderAll={true} />
           </FooterSection>
         </div>
