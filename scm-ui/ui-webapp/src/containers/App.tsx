@@ -25,7 +25,6 @@ import React, { FC } from "react";
 import Main from "./Main";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import styled from "styled-components";
 import { useIndex, useSubject } from "@scm-manager/ui-api";
 import { ErrorPage, Footer, Header, Loading } from "@scm-manager/ui-components";
 import { binder } from "@scm-manager/ui-extensions";
@@ -33,7 +32,7 @@ import usePauseShortcutsWhenModalsActive from "../shortcuts/usePauseShortcutsWhe
 import useShortcut from "../shortcuts/useShortcut";
 import Login from "./Login";
 import NavigationBar from "./NavigationBar";
-import Feedback from "./Feedback";
+import styled from "styled-components";
 
 const AppWrapper = styled.div`
   min-height: 100vh;
@@ -96,7 +95,6 @@ const App: FC = () => {
         <NavigationBar links={index._links} />
       </Header>
       <div className="is-flex-grow-1">{content}</div>
-      {isAuthenticated ? <Feedback index={index} /> : null}
       <Footer me={me} version={index.version} links={index._links} />
     </AppWrapper>
   );
