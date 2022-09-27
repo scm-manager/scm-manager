@@ -58,7 +58,6 @@ describe("Test config hooks", () => {
     proxyUser: null,
     realmDescription: "",
     alertsUrl: "",
-    feedbackUrl: "",
     releaseFeedUrl: "",
     skipFailedAuthenticators: false,
     _links: {

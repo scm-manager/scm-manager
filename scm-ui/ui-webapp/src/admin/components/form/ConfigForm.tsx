@@ -73,7 +73,6 @@ const ConfigForm: FC<Props> = ({
     namespaceStrategy: "",
     loginInfoUrl: "",
     alertsUrl: "",
-    feedbackUrl: "",
     releaseFeedUrl: "",
     mailDomainName: "",
     emergencyContacts: [],
@@ -154,7 +153,6 @@ const ConfigForm: FC<Props> = ({
         enabledApiKeys={innerConfig.enabledApiKeys}
         emergencyContacts={innerConfig.emergencyContacts}
         namespaceStrategy={innerConfig.namespaceStrategy}
-        feedbackUrl={innerConfig.feedbackUrl}
         onChange={onChange}
         hasUpdatePermission={configUpdatePermission}
       />

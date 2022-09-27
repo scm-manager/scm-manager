@@ -174,10 +174,6 @@
   "alerts": {
     "shieldTitle": "Alerts"
   },
-  "feedback": {
-    "button": "Feedback",
-    "modalTitle": "Feedback senden"
-  },
   "cardColumnGroup": {
     "showContent": "Inhalt einblenden",
     "hideContent": "Inhalt ausblenden"

@@ -85,15 +85,6 @@ public class ScmConfiguration implements Configuration {
   public static final String DEFAULT_ALERTS_URL =
     "https://alerts.scm-manager.org/api/v1/alerts";
 
-
-  /**
-   * SCM Manager alerts url.
-   *
-   * @since 2.32.0
-   */
-  public static final String DEFAULT_FEEDBACK_URL =
-    "https://response.cloudogu.com/api/v1/feedback/scm-manager/url";
-
   /**
    * SCM Manager release feed url
    */
@@ -189,14 +180,6 @@ public class ScmConfiguration implements Configuration {
    */
   @XmlElement(name = "alerts-url")
   private String alertsUrl = DEFAULT_ALERTS_URL;
-
-  /**
-   * Url of the alerts api.
-   *
-   * @since 2.32.0
-   */
-  @XmlElement(name = "feedback-url")
-  private String feedbackUrl = DEFAULT_FEEDBACK_URL;
 
   @XmlElement(name = "release-feed-url")
   private String releaseFeedUrl = DEFAULT_RELEASE_FEED_URL;
@@ -305,7 +288,6 @@ public class ScmConfiguration implements Configuration {
     this.namespaceStrategy = other.namespaceStrategy;
     this.loginInfoUrl = other.loginInfoUrl;
     this.alertsUrl = other.alertsUrl;
-    this.feedbackUrl = other.feedbackUrl;
     this.releaseFeedUrl = other.releaseFeedUrl;
     this.mailDomainName = other.mailDomainName;
     this.emergencyContacts = other.emergencyContacts;
@@ -395,17 +377,6 @@ public class ScmConfiguration implements Configuration {
   public String getAlertsUrl() {
     return alertsUrl;
   }
-
-  /**
-   * Returns the url of the feedback api.
-   *
-   * @return the feedback url.
-   * @since 2.32.0
-   */
-  public String getFeedbackUrl() {
-    return feedbackUrl;
-  }
-
 
   /**
    * Returns the url of the rss release feed.
@@ -649,16 +620,6 @@ public class ScmConfiguration implements Configuration {
    */
   public void setAlertsUrl(String alertsUrl) {
     this.alertsUrl = alertsUrl;
-  }
-
-  /**
-   * Set the url for the feedback api.
-   *
-   * @param feedbackUrl feedbackUrl url
-   * @since 2.32.0
-   */
-  public void setFeedbackUrl(String feedbackUrl) {
-    this.feedbackUrl = feedbackUrl;
   }
 
   public void setReleaseFeedUrl(String releaseFeedUrl) {
