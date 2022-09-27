@@ -1677,6 +1677,26 @@ exports[`Storyshots Footer Default 1`] = `
               footer.support.enterprise
             </a>
           </li>
+          <li>
+            <a
+              className=""
+              href="https://community.cloudogu.com/new-topic?category=scm-manager/bug-reports-scmm"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              footer.support.bugReport
+            </a>
+          </li>
+          <li>
+            <a
+              className=""
+              href="https://community.cloudogu.com/new-topic?category=scm-manager/feature-requests-scmm"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              footer.support.featureRequest
+            </a>
+          </li>
         </ul>
       </section>
     </div>
@@ -1846,6 +1866,26 @@ exports[`Storyshots Footer Full 1`] = `
           <li>
             <a
               className=""
+              href="https://community.cloudogu.com/new-topic?category=scm-manager/bug-reports-scmm"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              footer.support.bugReport
+            </a>
+          </li>
+          <li>
+            <a
+              className=""
+              href="https://community.cloudogu.com/new-topic?category=scm-manager/feature-requests-scmm"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              footer.support.featureRequest
+            </a>
+          </li>
+          <li>
+            <a
+              className=""
               href="#"
               rel="noopener noreferrer"
               target="_blank"
@@ -1988,6 +2028,26 @@ exports[`Storyshots Footer With Avatar 1`] = `
               target="_blank"
             >
               footer.support.enterprise
+            </a>
+          </li>
+          <li>
+            <a
+              className=""
+              href="https://community.cloudogu.com/new-topic?category=scm-manager/bug-reports-scmm"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              footer.support.bugReport
+            </a>
+          </li>
+          <li>
+            <a
+              className=""
+              href="https://community.cloudogu.com/new-topic?category=scm-manager/feature-requests-scmm"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              footer.support.featureRequest
             </a>
           </li>
         </ul>
@@ -2146,6 +2206,26 @@ exports[`Storyshots Footer With Plugin Links 1`] = `
               target="_blank"
             >
               footer.support.enterprise
+            </a>
+          </li>
+          <li>
+            <a
+              className=""
+              href="https://community.cloudogu.com/new-topic?category=scm-manager/bug-reports-scmm"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              footer.support.bugReport
+            </a>
+          </li>
+          <li>
+            <a
+              className=""
+              href="https://community.cloudogu.com/new-topic?category=scm-manager/feature-requests-scmm"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              footer.support.featureRequest
             </a>
           </li>
           <li>

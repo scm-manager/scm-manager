@@ -142,7 +142,9 @@
     "support": {
       "title": "Support",
       "community": "Community",
-      "enterprise": "Enterprise"
+      "enterprise": "Enterprise",
+      "bugReport": "Bug Report",
+      "featureRequest": "Feature Request"
     }
   },
   "commaSeparatedList": {

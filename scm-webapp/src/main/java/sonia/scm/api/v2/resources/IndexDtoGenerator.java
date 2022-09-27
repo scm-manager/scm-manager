@@ -86,6 +86,8 @@ public class IndexDtoGenerator extends HalAppenderMapper {
     builder.self(resourceLinks.index().self());
     builder.single(link("uiPlugins", resourceLinks.uiPluginCollection().self()));
 
+    embeddedBuilder.with("feedback", new FeedbackDto(Boolean.getBoolean("sonia.scm.disableFeedback")));
+
     if (initializationFinisher.isFullyInitialized()) {
       return handleNormalIndex(builder, embeddedBuilder);
     } else {
