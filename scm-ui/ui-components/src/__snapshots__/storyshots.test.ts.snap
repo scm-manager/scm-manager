@@ -1680,7 +1680,7 @@ exports[`Storyshots Footer Default 1`] = `
           <li>
             <a
               className=""
-              href="https://community.cloudogu.com/new-topic?category=scm-manager/bug-reports-scmm"
+              href="https://community.cloudogu.com/c/scm-manager/bug-reports-scmm"
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -1690,7 +1690,7 @@ exports[`Storyshots Footer Default 1`] = `
           <li>
             <a
               className=""
-              href="https://community.cloudogu.com/new-topic?category=scm-manager/feature-requests-scmm"
+              href="https://community.cloudogu.com/c/scm-manager/feature-requests-scmm"
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -1866,7 +1866,7 @@ exports[`Storyshots Footer Full 1`] = `
           <li>
             <a
               className=""
-              href="https://community.cloudogu.com/new-topic?category=scm-manager/bug-reports-scmm"
+              href="https://community.cloudogu.com/c/scm-manager/bug-reports-scmm"
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -1876,7 +1876,7 @@ exports[`Storyshots Footer Full 1`] = `
           <li>
             <a
               className=""
-              href="https://community.cloudogu.com/new-topic?category=scm-manager/feature-requests-scmm"
+              href="https://community.cloudogu.com/c/scm-manager/feature-requests-scmm"
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -2033,7 +2033,7 @@ exports[`Storyshots Footer With Avatar 1`] = `
           <li>
             <a
               className=""
-              href="https://community.cloudogu.com/new-topic?category=scm-manager/bug-reports-scmm"
+              href="https://community.cloudogu.com/c/scm-manager/bug-reports-scmm"
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -2043,7 +2043,7 @@ exports[`Storyshots Footer With Avatar 1`] = `
           <li>
             <a
               className=""
-              href="https://community.cloudogu.com/new-topic?category=scm-manager/feature-requests-scmm"
+              href="https://community.cloudogu.com/c/scm-manager/feature-requests-scmm"
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -2211,7 +2211,7 @@ exports[`Storyshots Footer With Plugin Links 1`] = `
           <li>
             <a
               className=""
-              href="https://community.cloudogu.com/new-topic?category=scm-manager/bug-reports-scmm"
+              href="https://community.cloudogu.com/c/scm-manager/bug-reports-scmm"
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -2221,7 +2221,7 @@ exports[`Storyshots Footer With Plugin Links 1`] = `
           <li>
             <a
               className=""
-              href="https://community.cloudogu.com/new-topic?category=scm-manager/feature-requests-scmm"
+              href="https://community.cloudogu.com/c/scm-manager/feature-requests-scmm"
               rel="noopener noreferrer"
               target="_blank"
             >
