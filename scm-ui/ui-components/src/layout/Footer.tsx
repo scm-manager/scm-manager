@@ -129,11 +129,11 @@ const Footer: FC<Props> = ({ me, version, links }) => {
             {!(index.data?._embedded?.feedback as Feedback)?.disabled ? (
               <>
                 <ExternalNavLink
-                  to="https://community.cloudogu.com/new-topic?category=scm-manager/bug-reports-scmm"
+                  to="https://community.cloudogu.com/c/scm-manager/bug-reports-scmm"
                   label={t("footer.support.bugReport")}
                 />
                 <ExternalNavLink
-                  to="https://community.cloudogu.com/new-topic?category=scm-manager/feature-requests-scmm"
+                  to="https://community.cloudogu.com/c/scm-manager/feature-requests-scmm"
                   label={t("footer.support.featureRequest")}
                 />
               </>
