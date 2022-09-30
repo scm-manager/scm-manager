@@ -135,4 +135,15 @@ public class SvnCatCommandTest extends AbstractSvnCommandTestBase {
 
     return content;
   }
+
+  @Test
+  public void shouldNotThrowExceptionForNonFileNodeCatCommand() throws IOException {
+    CatCommandRequest request = new CatCommandRequest();
+    request.setPath("/");
+    request.setRevision("1");
+
+    InputStream catResultStream = new SvnCatCommand(createContext()).getCatResultStream(request);
+
+    catResultStream.close();
+  }
 }
