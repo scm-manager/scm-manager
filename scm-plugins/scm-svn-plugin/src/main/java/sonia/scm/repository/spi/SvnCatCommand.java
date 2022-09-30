@@ -48,11 +48,9 @@ import static sonia.scm.NotFoundException.notFound;
 //~--- JDK imports ------------------------------------------------------------
 
 /**
- *
  * @author Sebastian Sdorra
  */
-public class SvnCatCommand extends AbstractSvnCommand implements CatCommand
-{
+public class SvnCatCommand extends AbstractSvnCommand implements CatCommand {
 
   /**
    * the logger for SvnCatCommand
@@ -62,8 +60,7 @@ public class SvnCatCommand extends AbstractSvnCommand implements CatCommand
 
   //~--- constructors ---------------------------------------------------------
 
-  SvnCatCommand(SvnContext context)
-  {
+  SvnCatCommand(SvnContext context) {
     super(context);
   }
 
@@ -71,21 +68,17 @@ public class SvnCatCommand extends AbstractSvnCommand implements CatCommand
 
   @Override
   public void getCatResult(CatCommandRequest request, OutputStream output) {
-    if (logger.isDebugEnabled())
-    {
+    if (logger.isDebugEnabled()) {
       logger.debug("try to get content for {}", request);
     }
 
     String revision = request.getRevision();
 
-    if (SvnUtil.isTransactionEntryId(revision))
-    {
+    if (SvnUtil.isTransactionEntryId(revision)) {
       String txn = SvnUtil.getTransactionId(revision);
 
       getCatFromTransaction(request, output, txn);
-    }
-    else
-    {
+    } else {
 
       long revisionNumber = SvnUtil.getRevisionNumber(revision, repository);
 
@@ -107,15 +100,12 @@ public class SvnCatCommand extends AbstractSvnCommand implements CatCommand
     logger.debug("try to read content from revision {} and path {}", revision,
       request.getPath());
 
-    try
-    {
+    try {
       SVNRepository svnRepository = open();
 
       svnRepository.getFile(request.getPath(), revision, new SVNProperties(),
         output);
-    }
-    catch (SVNException ex)
-    {
+    } catch (SVNException ex) {
       handleSvnException(request, ex);
     }
   }
@@ -126,6 +116,8 @@ public class SvnCatCommand extends AbstractSvnCommand implements CatCommand
       throw notFound(entity("Path", request.getPath()).in("Revision", request.getRevision()).in(repository));
     } else if (SVNErrorCode.FS_NO_SUCH_REVISION.getCode() == svnErrorCode) {
       throw notFound(entity("Revision", request.getRevision()).in(repository));
+    } else if (SVNErrorCode.FS_NOT_FILE.getCode() == svnErrorCode) {
+      logger.debug("Skip cat command for non-file node");
     } else {
       throw new InternalRepositoryException(repository, "could not get content from revision", ex);
     }
@@ -137,20 +129,15 @@ public class SvnCatCommand extends AbstractSvnCommand implements CatCommand
 
     SVNClientManager cm = null;
 
-    try
-    {
+    try {
       cm = SVNClientManager.newInstance();
 
       SVNLookClient client = cm.getLookClient();
 
       client.doCat(context.getDirectory(), request.getPath(), txn, output);
-    }
-    catch (SVNException ex)
-    {
+    } catch (SVNException ex) {
       throw new InternalRepositoryException(repository, "could not get content from transaction", ex);
-    }
-    finally
-    {
+    } finally {
       SvnUtil.dispose(cm);
     }
   }
