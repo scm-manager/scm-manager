@@ -33,6 +33,7 @@ import lombok.ToString;
 import javax.validation.constraints.NotEmpty;
 import sonia.scm.util.ValidationUtil;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 import java.util.Collection;
@@ -43,6 +44,7 @@ public class RepositoryPermissionDto extends HalRepresentation implements Update
 
   public static final String GROUP_PREFIX = "@";
 
+  @NotNull
   @Pattern(regexp = ValidationUtil.REGEX_NAME)
   private String name;
 

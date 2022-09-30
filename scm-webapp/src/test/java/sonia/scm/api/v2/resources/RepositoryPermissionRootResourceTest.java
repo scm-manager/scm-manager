@@ -276,6 +276,21 @@ public class RepositoryPermissionRootResourceTest extends RepositoryTestBase {
   }
 
   @Test
+  public void shouldGet400OnCreatingNewPermissionWithoutName() throws URISyntaxException {
+    createUserWithRepository("user");
+    String permissionJson = "{ \"verbs\": [\"*\"] }";
+    MockHttpRequest request = MockHttpRequest
+      .post("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + PATH_OF_ALL_PERMISSIONS)
+      .content(permissionJson.getBytes())
+      .contentType(VndMediaType.REPOSITORY_PERMISSION);
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(400, response.getStatus());
+  }
+
+  @Test
   public void shouldGetCreatedPermissions() throws URISyntaxException {
     createUserWithRepositoryAndPermissions(TEST_PERMISSIONS, PERMISSION_WRITE);
     RepositoryPermission newPermission = new RepositoryPermission("new_group_perm", asList("read", "pull", "push"), true);
