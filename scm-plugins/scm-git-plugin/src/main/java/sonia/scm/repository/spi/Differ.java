@@ -92,6 +92,9 @@ final class Differ implements AutoCloseable {
 
     if (!Strings.isNullOrEmpty(request.getAncestorChangeset())) {
       ObjectId otherRevision = repository.resolve(request.getAncestorChangeset());
+      if (otherRevision == null) {
+        throw new NotFoundException("Revision", request.getAncestorChangeset());
+      }
       ObjectId ancestorId = GitUtil.computeCommonAncestor(repository, revision, otherRevision);
       RevTree tree = walk.parseCommit(ancestorId).getTree();
       treeWalk.addTree(tree);
