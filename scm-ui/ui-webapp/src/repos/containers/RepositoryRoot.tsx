@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import { match as Match } from "react-router";
 import { Link as RouteLink, Redirect, Route, RouteProps, Switch, useHistory, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -101,27 +101,31 @@ const RepositoryRoot = () => {
 
   const url = urls.matchedUrlFromMatch(match);
 
-  useShortcut("g i", () => {
-    history.push(`${url}/info`);
-  });
-  useShortcut("g b", () => {
-    if (repository && repository._links["branches"]) {
-      history.push(`${url}/branches/`);
+  const codeLinkname = useMemo(() => {
+    if (repository?._links?.sources) {
+      return "sources";
     }
-  });
-  useShortcut("g t", () => {
-    if (repository && repository._links["tags"]) {
-      history.push(`${url}/tags/`);
+    if (repository?._links?.changesets) {
+      return "changesets";
     }
-  });
-  useShortcut("g c", () => {
-    if (repository && repository._links[getCodeLinkname()]) {
-      history.push(evaluateDestinationForCodeLink());
-    }
-  });
-  useShortcut("g s", () => {
-    history.push(`${url}/settings/general`);
-  });
+    return "";
+  }, [repository]);
+
+  useShortcut("g i", () => history.push(`${url}/info`), t("shortcuts.repository.info"));
+  useShortcut(
+    "g b",
+    () => history.push(`${url}/branches/`),
+    t("shortcuts.repository.branches"),
+    !!repository?._links["branches"]
+  );
+  useShortcut("g t", () => history.push(`${url}/tags/`), t("shortcuts.repository.tags"), !!repository?._links["tags"]);
+  useShortcut(
+    "g c",
+    () => history.push(evaluateDestinationForCodeLink()),
+    t("shortcuts.repository.code"),
+    !!repository?._links[codeLinkname]
+  );
+  useShortcut("g s", () => history.push(`${url}/settings/general`), t("shortcuts.repository.settings"));
 
   useEffect(() => {
     if (repository) {
@@ -237,16 +241,6 @@ const RepositoryRoot = () => {
       return false;
     }
     return !!route.location.pathname.match(regex);
-  };
-
-  const getCodeLinkname = () => {
-    if (repository?._links?.sources) {
-      return "sources";
-    }
-    if (repository?._links?.changesets) {
-      return "changesets";
-    }
-    return "";
   };
 
   const evaluateDestinationForCodeLink = () => {
@@ -381,7 +375,7 @@ const RepositoryRoot = () => {
               />
               <RepositoryNavLink
                 repository={repository}
-                linkName={getCodeLinkname()}
+                linkName={codeLinkname}
                 to={evaluateDestinationForCodeLink()}
                 icon="fas fa-code"
                 label={t("repositoryRoot.menu.sourcesNavLink")}

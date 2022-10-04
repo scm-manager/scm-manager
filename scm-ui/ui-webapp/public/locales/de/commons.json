@@ -261,5 +261,28 @@
   },
   "tag": {
     "delete": "Löschen"
+  },
+  "shortcuts": {
+    "search": "Globale Schnellsuche",
+    "repositories": "Repositories",
+    "users": "Benutzer",
+    "groups": "Gruppen",
+    "admin": "Administration",
+    "docs": "Tastaturkürzelübersicht",
+    "repository": {
+      "info": "Info",
+      "branches": "Branches",
+      "tags": "Tags",
+      "code": "Code",
+      "settings": "Einstellungen"
+    },
+    "title": "Kontextsensitive Tastaturkürzel",
+    "description": "Die folgende Tabelle listet alle für Sie auf der aktuellen Seite verfügbaren Tastaturkürzel auf.",
+    "table": {
+      "headers": {
+        "keyCombination": "Tastaturkürzel",
+        "description": "Beschreibung"
+      }
+    }
   }
 }
