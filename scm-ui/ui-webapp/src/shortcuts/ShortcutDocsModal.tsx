@@ -21,15 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import useShortcutDocs from "./useShortcutDocs";
 import { Column, Modal, Table } from "@scm-manager/ui-components";
 import useShortcut from "./useShortcut";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
+import splitKeyCombination from "./splitKeyCombination";
 
 const keyComparator = ([a]: [string, string], [b]: [string, string]) => (a > b ? 1 : -1);
 
@@ -47,7 +45,7 @@ const ShortcutDocsModal = () => {
       <Table data={entries}>
         <Column header={t("shortcutDocsModal.table.headers.keyCombination")}>
           {([key]: [string, string]) =>
-            getSeparateKeys(key).map((k, i) => (
+            splitKeyCombination(key).map((k, i) => (
               <span
                 className={classNames(
                   "has-background-secondary-less has-text-secondary-most py-1 px-2 has-rounded-border",
@@ -70,7 +68,3 @@ const ShortcutDocsModal = () => {
 };
 
 export default ShortcutDocsModal;
-
-function getSeparateKeys(key: string) {
-  return key.replace("option", window.navigator.userAgent.includes("MacOS") ? "option" : "alt").split(/[+ ]/);
-}

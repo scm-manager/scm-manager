@@ -56,13 +56,16 @@ export type UseShortcutOptions = {
  *
  * ## Combinations
  *
- * Keys can be combined with the "+" separator, but without extra whitespaces.
+ * Keys can be combined by separating them with a whitespace.
+ * For using modifiers, prefix the key with the modifier and concat them with a "+".
+ *
+ * Please also refer to the examples.
  *
  * @param key The keycode combination that triggers the callback
  * @param callback The function that is executed when the key combination is pressed
  * @param description The translated description used for the shortcut documentation
  * @param options Whether the shortcut is currently active, defaults to true
- * @example useShortcut("/", ...)
+ * @example useShortcut("a b", ...)
  * @example useShortcut("ctrl+shift+k", ...)
  * @see https://github.com/ccampbell/mousetrap
  * @see https://craig.is/killing/mice
