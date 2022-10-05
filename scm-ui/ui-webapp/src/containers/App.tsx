@@ -48,41 +48,18 @@ const App: FC = () => {
 
   const history = useHistory();
 
-  const openRepos = useCallback(() => history.push("/repos/"), [history]);
-  const reposShortcutOptions = useMemo(
-    () => ({
-      active: !!index?._links["repositories"],
-    }),
-    [index]
-  );
-  useShortcut("option+r", openRepos, t("shortcuts.repositories"), reposShortcutOptions);
-
-  const openUsers = useCallback(() => history.push("/users/"), [history]);
-  const userShortcutOptions = useMemo(
-    () => ({
-      active: !!index?._links["users"],
-    }),
-    [index]
-  );
-  useShortcut("option+u", openUsers, t("shortcuts.users"), userShortcutOptions);
-
-  const openGroups = useCallback(() => history.push("/groups/"), [history]);
-  const groupsShortcutOptions = useMemo(
-    () => ({
-      active: !!index?._links["groups"],
-    }),
-    [index]
-  );
-  useShortcut("option+g", openGroups, t("shortcuts.groups"), groupsShortcutOptions);
-
-  const openAdmin = useCallback(() => history.push("/admin/"), [history]);
-  const adminShortcutOptions = useMemo(
-    () => ({
-      active: !!index?._links["config"],
-    }),
-    [index]
-  );
-  useShortcut("option+a", openAdmin, t("shortcuts.admin"), adminShortcutOptions);
+  useShortcut("option+r", () => history.push("/repos/"), t("shortcuts.repositories"), {
+    active: !!index?._links["repositories"],
+  });
+  useShortcut("option+u", () => history.push("/users/"), t("shortcuts.users"), {
+    active: !!index?._links["users"],
+  });
+  useShortcut("option+g", () => history.push("/groups/"), t("shortcuts.groups"), {
+    active: !!index?._links["groups"],
+  });
+  useShortcut("option+a", () => history.push("/admin/"), t("shortcuts.admin"), {
+    active: !!index?._links["config"],
+  });
 
   if (!index) {
     return null;

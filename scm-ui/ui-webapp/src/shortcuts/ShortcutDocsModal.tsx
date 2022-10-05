@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useState } from "react";
 import useShortcutDocs from "./useShortcutDocs";
 import { Column, Modal, Table } from "@scm-manager/ui-components";
 import useShortcut from "./useShortcut";
@@ -35,14 +35,12 @@ const ShortcutDocsModal = () => {
   const { docs } = useShortcutDocs();
   const [open, setOpen] = useState(false);
   const [t] = useTranslation("commons");
-  const entries = useMemo(() => Object.entries(docs).sort(keyComparator), [docs]);
-  const openModal = useCallback(() => setOpen(true), []);
-  useShortcut("?", openModal, t("shortcuts.docs"));
+  useShortcut("?", () => setOpen(true), t("shortcuts.docs"));
 
   return (
     <Modal title={t("shortcutDocsModal.title")} closeFunction={() => setOpen(false)} active={open}>
       <p className="mb-2">{t("shortcutDocsModal.description")}</p>
-      <Table data={entries}>
+      <Table data={Object.entries(docs).sort(keyComparator)}>
         <Column header={t("shortcutDocsModal.table.headers.keyCombination")}>
           {([key]: [string, string]) =>
             splitKeyCombination(key).map((k, i) => (
