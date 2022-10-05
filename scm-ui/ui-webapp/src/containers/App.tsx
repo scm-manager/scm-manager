@@ -25,6 +25,7 @@ import React, { FC } from "react";
 import Main from "./Main";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import classNames from "classnames";
 import { useIndex, useSubject } from "@scm-manager/ui-api";
 import { ErrorPage, Footer, Header, Loading } from "@scm-manager/ui-components";
 import { binder } from "@scm-manager/ui-extensions";
@@ -90,7 +91,7 @@ const App: FC = () => {
   }
 
   return (
-    <AppWrapper className="App">
+    <AppWrapper className={classNames("App", { "has-navbar-fixed-top": authenticatedOrAnonymous})}>
       <Header authenticated={authenticatedOrAnonymous}>
         <NavigationBar links={index._links} />
       </Header>

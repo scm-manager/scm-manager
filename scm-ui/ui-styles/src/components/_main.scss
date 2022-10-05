@@ -490,6 +490,11 @@ ul.is-separated {
   }
 }
 
+// navbar
+.has-navbar-fixed-top {
+  padding-top: $navbar-height;
+}
+
 // card columns for repo and plugins overview
 .card-columns {
   .column {
@@ -904,7 +909,7 @@ form .field:not(.is-grouped) {
 }
 
 .is-vertical-align-middle {
-  vertical-align: middle !important
+  vertical-align: middle !important;
 }
 
 // radio
