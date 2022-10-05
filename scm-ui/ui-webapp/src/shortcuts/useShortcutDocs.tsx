@@ -22,14 +22,40 @@
  * SOFTWARE.
  */
 
-const docs: Record<string, string> = {};
+import React, {FC, useCallback, useContext, useMemo, useState} from "react";
+
+export type ShortcutDocsContextType = {
+  docs: Readonly<Record<string, string>>;
+  add: (key: string, description: string) => void;
+  remove: (key: string) => void;
+};
+
+const ShortcutDocsContext = React.createContext<ShortcutDocsContextType>({} as ShortcutDocsContextType);
+
+export const ShortcutDocsContextProvider: FC = ({ children }) => {
+  const [docs, setDocs] = useState<Record<string, string>>({});
+  const add = useCallback(
+    (key: string, description: string) =>
+      setDocs((prev) => ({
+        ...prev,
+        [key]: description,
+      })),
+    []
+  );
+  const remove = useCallback(
+    (key: string) =>
+      setDocs((prev) => {
+        const next = { ...prev };
+        delete next[key];
+        return next;
+      }),
+    []
+  );
+  const value = useMemo(() => ({ add, docs, remove }), [add, docs, remove]);
+
+  return <ShortcutDocsContext.Provider value={value}>{children}</ShortcutDocsContext.Provider>;
+};
 
 export default function useShortcutDocs() {
-  return {
-    write: (key: string, description: string) => (docs[key] = description),
-    remove: (key: string) => {
-      delete docs[key];
-    },
-    get: () => docs,
-  };
+  return useContext(ShortcutDocsContext);
 }

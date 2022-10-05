@@ -263,21 +263,8 @@
   "tag": {
     "delete": "Delete"
   },
-  "shortcuts": {
-    "search": "Global quick search",
-    "repositories": "Repositories",
-    "users": "Users",
-    "groups": "Groups",
-    "admin": "Administration",
-    "docs": "Shortcut summary",
-    "repository": {
-      "info": "Info",
-      "branches": "Branches",
-      "tags": "Tags",
-      "code": "Code",
-      "settings": "Settings"
-    },
-    "title": "Context-Sensitive Keyboard Shortcuts",
+  "shortcutDocsModal": {
+    "title": "Keyboard Shortcuts",
     "description": "The following table lists all keyboard shortcuts available to you on the current page.",
     "table": {
       "headers": {
@@ -285,5 +272,13 @@
         "description": "Description"
       }
     }
+  },
+  "shortcuts": {
+    "search": "Focus global quick search",
+    "repositories": "Navigate to Repositories",
+    "users": "Navigate to Users",
+    "groups": "Navigate to Groups",
+    "admin": "Navigate to Administration",
+    "docs": "Open the shortcut summary"
   }
 }

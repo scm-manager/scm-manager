@@ -33,6 +33,7 @@ import i18next from "i18next";
 import { binder, extensionPoints } from "@scm-manager/ui-extensions";
 import InitializationAdminAccountStep from "./InitializationAdminAccountStep";
 import InitializationPluginWizardStep from "./InitializationPluginWizardStep";
+import { ShortcutDocsContextProvider } from "../shortcuts/useShortcutDocs";
 
 const Index: FC = () => {
   const { isLoading, error, data } = useIndex();
@@ -60,13 +61,15 @@ const Index: FC = () => {
   return (
     <ErrorBoundary fallback={IndexErrorPage}>
       <ScrollToTop>
-        <ActiveModalCountContextProvider>
-          <NamespaceAndNameContextProvider>
-            <PluginLoader link={link} loaded={pluginsLoaded} callback={() => setPluginsLoaded(true)}>
-              <App />
-            </PluginLoader>
-          </NamespaceAndNameContextProvider>
-        </ActiveModalCountContextProvider>
+        <ShortcutDocsContextProvider>
+          <ActiveModalCountContextProvider>
+            <NamespaceAndNameContextProvider>
+              <PluginLoader link={link} loaded={pluginsLoaded} callback={() => setPluginsLoaded(true)}>
+                <App />
+              </PluginLoader>
+            </NamespaceAndNameContextProvider>
+          </ActiveModalCountContextProvider>
+        </ShortcutDocsContextProvider>
       </ScrollToTop>
     </ErrorBoundary>
   );

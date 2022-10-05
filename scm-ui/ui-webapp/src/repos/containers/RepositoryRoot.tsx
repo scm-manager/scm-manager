@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, {useEffect, useMemo, useState} from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { match as Match } from "react-router";
 import { Link as RouteLink, Redirect, Route, RouteProps, Switch, useHistory, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -110,22 +110,44 @@ const RepositoryRoot = () => {
     }
     return "";
   }, [repository]);
+  const destinationForCodeLink = useMemo(() => {
+    if (repository?._links?.sources) {
+      return `${url}/code/sources/`;
+    }
+    return `${url}/code/changesets`;
+  }, [repository, url]);
 
-  useShortcut("g i", () => history.push(`${url}/info`), t("shortcuts.repository.info"));
-  useShortcut(
-    "g b",
-    () => history.push(`${url}/branches/`),
-    t("shortcuts.repository.branches"),
-    !!repository?._links["branches"]
+  const navigateToInfo = useCallback(() => history.push(`${url}/info`), [history, url]);
+  useShortcut("g i", navigateToInfo, t("shortcuts.info"));
+
+  const navigateToBranches = useCallback(() => history.push(`${url}/branches/`), [history, url]);
+  const branchesShortcutOptions = useMemo(
+    () => ({
+      active: !!repository?._links["branches"],
+    }),
+    [repository]
   );
-  useShortcut("g t", () => history.push(`${url}/tags/`), t("shortcuts.repository.tags"), !!repository?._links["tags"]);
-  useShortcut(
-    "g c",
-    () => history.push(evaluateDestinationForCodeLink()),
-    t("shortcuts.repository.code"),
-    !!repository?._links[codeLinkname]
+  useShortcut("g b", navigateToBranches, t("shortcuts.branches"), branchesShortcutOptions);
+  const navigateToTags = useCallback(() => history.push(`${url}/tags/`), [history, url]);
+  const tagsShortcutOptions = useMemo(
+    () => ({
+      active: !!repository?._links["tags"],
+    }),
+    [repository]
   );
-  useShortcut("g s", () => history.push(`${url}/settings/general`), t("shortcuts.repository.settings"));
+  useShortcut("g t", navigateToTags, t("shortcuts.tags"), tagsShortcutOptions);
+
+  const navigateToCode = useCallback(() => history.push(destinationForCodeLink), [destinationForCodeLink, history]);
+  const codeShortcutOptions = useMemo(
+    () => ({
+      active: !!repository?._links[codeLinkname],
+    }),
+    [codeLinkname, repository]
+  );
+  useShortcut("g c", navigateToCode, t("shortcuts.code"), codeShortcutOptions);
+
+  const navigateToSettings = useCallback(() => history.push(`${url}/settings/general`), [history, url]);
+  useShortcut("g s", navigateToSettings, t("shortcuts.settings"));
 
   useEffect(() => {
     if (repository) {
@@ -241,13 +263,6 @@ const RepositoryRoot = () => {
       return false;
     }
     return !!route.location.pathname.match(regex);
-  };
-
-  const evaluateDestinationForCodeLink = () => {
-    if (repository?._links?.sources) {
-      return `${url}/code/sources/`;
-    }
-    return `${url}/code/changesets`;
   };
 
   const modal = (
@@ -376,7 +391,7 @@ const RepositoryRoot = () => {
               <RepositoryNavLink
                 repository={repository}
                 linkName={codeLinkname}
-                to={evaluateDestinationForCodeLink()}
+                to={destinationForCodeLink}
                 icon="fas fa-code"
                 label={t("repositoryRoot.menu.sourcesNavLink")}
                 activeWhenMatch={matchesCode}

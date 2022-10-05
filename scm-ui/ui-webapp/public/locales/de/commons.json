@@ -262,27 +262,22 @@
   "tag": {
     "delete": "Löschen"
   },
-  "shortcuts": {
-    "search": "Globale Schnellsuche",
-    "repositories": "Repositories",
-    "users": "Benutzer",
-    "groups": "Gruppen",
-    "admin": "Administration",
-    "docs": "Tastaturkürzelübersicht",
-    "repository": {
-      "info": "Info",
-      "branches": "Branches",
-      "tags": "Tags",
-      "code": "Code",
-      "settings": "Einstellungen"
-    },
-    "title": "Kontextsensitive Tastaturkürzel",
+  "shortcutDocsModal": {
+    "title": "Tastaturkürzel",
     "description": "Die folgende Tabelle listet alle für Sie auf der aktuellen Seite verfügbaren Tastaturkürzel auf.",
     "table": {
       "headers": {
-        "keyCombination": "Tastaturkürzel",
+        "keyCombination": "Tastenkombination",
         "description": "Beschreibung"
       }
     }
+  },
+  "shortcuts": {
+    "search": "Fokussiere die globale Schnellsuche",
+    "repositories": "Navigiere zur Repositoryübersicht",
+    "users": "Navigiere zur Benutzerübersicht",
+    "groups": "Navigiere zur Gruppenübersicht",
+    "admin": "Navigiere zur Administration",
+    "docs": "Öffne die Tastaturkürzelübersicht"
   }
 }

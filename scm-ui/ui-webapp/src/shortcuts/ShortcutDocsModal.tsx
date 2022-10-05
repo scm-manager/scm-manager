@@ -24,26 +24,44 @@
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import React, { useState } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import useShortcutDocs from "./useShortcutDocs";
 import { Column, Modal, Table } from "@scm-manager/ui-components";
 import useShortcut from "./useShortcut";
 import { useTranslation } from "react-i18next";
+import classNames from "classnames";
+
+const keyComparator = ([a]: [string, string], [b]: [string, string]) => (a > b ? 1 : -1);
 
 const ShortcutDocsModal = () => {
-  const { get } = useShortcutDocs();
+  const { docs } = useShortcutDocs();
   const [open, setOpen] = useState(false);
   const [t] = useTranslation("commons");
-  useShortcut("?", () => setOpen(true), t("shortcuts.docs"));
+  const entries = useMemo(() => Object.entries(docs).sort(keyComparator), [docs]);
+  const openModal = useCallback(() => setOpen(true), []);
+  useShortcut("?", openModal, t("shortcuts.docs"));
 
   return (
-    <Modal title={t("shortcuts.title")} closeFunction={() => setOpen(false)} active={open}>
-      <p className="mb-2">{t("shortcuts.description")}</p>
-      <Table data={Object.entries(get())}>
-        <Column header={t("shortcuts.table.headers.keyCombination")}>
-          {([key]: [string, string]) => <>{prettifyKey(key)}</>}
+    <Modal title={t("shortcutDocsModal.title")} closeFunction={() => setOpen(false)} active={open}>
+      <p className="mb-2">{t("shortcutDocsModal.description")}</p>
+      <Table data={entries}>
+        <Column header={t("shortcutDocsModal.table.headers.keyCombination")}>
+          {([key]: [string, string]) =>
+            getSeparateKeys(key).map((k, i) => (
+              <span
+                className={classNames(
+                  "has-background-secondary-less has-text-secondary-most py-1 px-2 has-rounded-border",
+                  {
+                    "ml-1": i > 0,
+                  }
+                )}
+              >
+                {k}
+              </span>
+            ))
+          }
         </Column>
-        <Column header={t("shortcuts.table.headers.description")}>
+        <Column header={t("shortcutDocsModal.table.headers.description")}>
           {([, description]: [string, string]) => description}
         </Column>
       </Table>
@@ -53,6 +71,6 @@ const ShortcutDocsModal = () => {
 
 export default ShortcutDocsModal;
 
-function prettifyKey(key: string) {
-  return key;
+function getSeparateKeys(key: string) {
+  return key.replace("option", window.navigator.userAgent.includes("MacOS") ? "option" : "alt").split(/[+ ]/);
 }

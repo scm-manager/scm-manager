@@ -26,6 +26,15 @@ import { useEffect } from "react";
 import Mousetrap from "mousetrap";
 import useShortcutDocs from "./useShortcutDocs";
 
+export type UseShortcutOptions = {
+  /**
+   * Whether the shortcut is currently active
+   *
+   * @default true
+   */
+  active?: boolean;
+};
+
 /**
  * ## Summary
  *
@@ -52,7 +61,7 @@ import useShortcutDocs from "./useShortcutDocs";
  * @param key The keycode combination that triggers the callback
  * @param callback The function that is executed when the key combination is pressed
  * @param description The translated description used for the shortcut documentation
- * @param active Whether the shortcut is currently active, defaults to true
+ * @param options Whether the shortcut is currently active, defaults to true
  * @example useShortcut("/", ...)
  * @example useShortcut("ctrl+shift+k", ...)
  * @see https://github.com/ccampbell/mousetrap
@@ -62,14 +71,13 @@ export default function useShortcut(
   key: string,
   callback: (e: KeyboardEvent) => void,
   description: string,
-  active = true
+  options?: UseShortcutOptions
 ) {
-  const { write, remove } = useShortcutDocs();
+  const { add, remove } = useShortcutDocs();
   useEffect(() => {
+    const active = !options || options.active === undefined || options.active;
     if (active) {
-      if (description) {
-        write(key, description);
-      }
+      add(key, description);
       Mousetrap.bind(key, (e) => {
         callback(e);
         /*
@@ -85,5 +93,5 @@ export default function useShortcut(
       remove(key);
       Mousetrap.unbind(key);
     };
-  }, [key, callback, write, remove, active, description]);
+  }, [key, callback, add, remove, options, description]);
 }
