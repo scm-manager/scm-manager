@@ -71458,7 +71458,7 @@ exports[`Storyshots Secondary Navigation Active when match 1`] = `
     className="column is-3"
   >
     <aside
-      className="SecondaryNavigation__SectionContainer-sc-8p1rgi-0 NSEld menu"
+      className="SecondaryNavigation__SectionContainer-sc-8p1rgi-0 cZyrQa menu"
     >
       <div>
         <p
@@ -71520,7 +71520,7 @@ exports[`Storyshots Secondary Navigation Default 1`] = `
     className="column is-3"
   >
     <aside
-      className="SecondaryNavigation__SectionContainer-sc-8p1rgi-0 NSEld menu"
+      className="SecondaryNavigation__SectionContainer-sc-8p1rgi-0 cZyrQa menu"
     >
       <div>
         <p
@@ -71582,7 +71582,7 @@ exports[`Storyshots Secondary Navigation Extension Point 1`] = `
     className="column is-3"
   >
     <aside
-      className="SecondaryNavigation__SectionContainer-sc-8p1rgi-0 NSEld menu"
+      className="SecondaryNavigation__SectionContainer-sc-8p1rgi-0 cZyrQa menu"
     >
       <div>
         <p
@@ -71670,7 +71670,7 @@ exports[`Storyshots Secondary Navigation Sub Navigation 1`] = `
     className="column is-3"
   >
     <aside
-      className="SecondaryNavigation__SectionContainer-sc-8p1rgi-0 NSEld menu"
+      className="SecondaryNavigation__SectionContainer-sc-8p1rgi-0 cZyrQa menu"
     >
       <div>
         <p
