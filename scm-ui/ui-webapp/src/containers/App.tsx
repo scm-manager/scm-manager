@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, useCallback, useMemo } from "react";
+import React, { FC } from "react";
 import Main from "./Main";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
