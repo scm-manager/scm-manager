@@ -16,6 +16,7 @@
     - /user/profile/
     - /user/notification/
     - /user/cli/
+    - /user/shortcuts/
 
 - section: Administration
   entries:

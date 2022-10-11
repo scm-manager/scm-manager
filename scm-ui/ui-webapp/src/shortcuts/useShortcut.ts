@@ -24,6 +24,16 @@
 
 import { useEffect } from "react";
 import Mousetrap from "mousetrap";
+import useShortcutDocs from "./useShortcutDocs";
+
+export type UseShortcutOptions = {
+  /**
+   * Whether the shortcut is currently active
+   *
+   * @default true
+   */
+  active?: boolean;
+};
 
 /**
  * ## Summary
@@ -46,29 +56,45 @@ import Mousetrap from "mousetrap";
  *
  * ## Combinations
  *
- * Keys can be combined with the "+" separator, but without extra whitespaces.
+ * Keys can be combined by separating them with a whitespace.
+ * For using modifiers, prefix the key with the modifier and concat them with a "+".
  *
- * @param key
- * @param callback
- * @example useShortcut("/", ...)
+ * Please also refer to the examples.
+ *
+ * @param key The keycode combination that triggers the callback
+ * @param callback The function that is executed when the key combination is pressed
+ * @param description The translated description used for the shortcut documentation
+ * @param options Whether the shortcut is currently active, defaults to true
+ * @example useShortcut("a b", ...)
  * @example useShortcut("ctrl+shift+k", ...)
  * @see https://github.com/ccampbell/mousetrap
  * @see https://craig.is/killing/mice
  */
-export default function useShortcut(key: string, callback: (e: KeyboardEvent) => void) {
+export default function useShortcut(
+  key: string,
+  callback: (e: KeyboardEvent) => void,
+  description: string,
+  options?: UseShortcutOptions
+) {
+  const { add, remove } = useShortcutDocs();
   useEffect(() => {
-    Mousetrap.bind(key, (e) => {
-      callback(e);
-      /*
-       * Returning false disables default event behaviour and stops event bubbling.
-       * Otherwise, a shortcut that moves focus to an input field would cause the key to be entered into the input at the same time.
-       * We could move the decision to the callback, but this behaviour is an implementation detail of Mousetrap which we would like to hide.
-       */
-      return false;
-    });
+    const active = !options || options.active === undefined || options.active;
+    if (active) {
+      add(key, description);
+      Mousetrap.bind(key, (e) => {
+        callback(e);
+        /*
+         * Returning false disables default event behaviour and stops event bubbling.
+         * Otherwise, a shortcut that moves focus to an input field would cause the key to be entered into the input at the same time.
+         * We could move the decision to the callback, but this behaviour is an implementation detail of Mousetrap which we would like to hide.
+         */
+        return false;
+      });
+    }
 
     return () => {
+      remove(key);
       Mousetrap.unbind(key);
     };
-  }, [key, callback]);
+  }, [key, callback, add, remove, options, description]);
 }

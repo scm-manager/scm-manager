@@ -261,5 +261,23 @@
   },
   "tag": {
     "delete": "Löschen"
+  },
+  "shortcutDocsModal": {
+    "title": "Tastaturkürzel",
+    "description": "Die folgende Tabelle listet alle für Sie auf der aktuellen Seite verfügbaren Tastaturkürzel auf.",
+    "table": {
+      "headers": {
+        "keyCombination": "Tastenkombination",
+        "description": "Beschreibung"
+      }
+    }
+  },
+  "shortcuts": {
+    "search": "Fokussiere die globale Schnellsuche",
+    "repositories": "Navigiere zur Repositoryübersicht",
+    "users": "Navigiere zur Benutzerübersicht",
+    "groups": "Navigiere zur Gruppenübersicht",
+    "admin": "Navigiere zur Administration",
+    "docs": "Öffne die Tastaturkürzelübersicht"
   }
 }

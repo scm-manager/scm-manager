@@ -34,6 +34,7 @@ import useShortcut from "../shortcuts/useShortcut";
 import Login from "./Login";
 import NavigationBar from "./NavigationBar";
 import styled from "styled-components";
+import ShortcutDocsModal from "../shortcuts/ShortcutDocsModal";
 
 const AppWrapper = styled.div`
   min-height: 100vh;
@@ -47,25 +48,18 @@ const App: FC = () => {
   usePauseShortcutsWhenModalsActive();
 
   const history = useHistory();
-  useShortcut("option+r", () => {
-    if (index && index._links["repositories"]) {
-      history.push("/repos/");
-    }
+
+  useShortcut("option+r", () => history.push("/repos/"), t("shortcuts.repositories"), {
+    active: !!index?._links["repositories"],
   });
-  useShortcut("option+u", () => {
-    if (index && index._links["users"]) {
-      history.push("/users/");
-    }
+  useShortcut("option+u", () => history.push("/users/"), t("shortcuts.users"), {
+    active: !!index?._links["users"],
   });
-  useShortcut("option+g", () => {
-    if (index && index._links["groups"]) {
-      history.push("/groups/");
-    }
+  useShortcut("option+g", () => history.push("/groups/"), t("shortcuts.groups"), {
+    active: !!index?._links["groups"],
   });
-  useShortcut("option+a", () => {
-    if (index && index._links["config"]) {
-      history.push("/admin/");
-    }
+  useShortcut("option+a", () => history.push("/admin/"), t("shortcuts.admin"), {
+    active: !!index?._links["config"],
   });
 
   if (!index) {
@@ -95,6 +89,7 @@ const App: FC = () => {
       <Header authenticated={authenticatedOrAnonymous}>
         <NavigationBar links={index._links} />
       </Header>
+      <ShortcutDocsModal />
       <div className="is-flex-grow-1">{content}</div>
       <Footer me={me} version={index.version} links={index._links} />
     </AppWrapper>

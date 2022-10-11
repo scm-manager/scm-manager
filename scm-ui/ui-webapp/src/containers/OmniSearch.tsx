@@ -30,7 +30,8 @@ import React, {
   SetStateAction,
   useCallback,
   useEffect,
-  useMemo, useRef,
+  useMemo,
+  useRef,
   useState,
 } from "react";
 import { Hit, Links, Repository, ValueHitField } from "@scm-manager/ui-types";
@@ -357,7 +358,7 @@ const OmniSearch: FC = () => {
   searchTypes.sort(orderTypes(t));
 
   const id = useCallback(namespaceAndName, []);
-  useShortcut("/", () => searchInputRef.current?.focus());
+  useShortcut("/", () => searchInputRef.current?.focus(), t("shortcuts.search"));
 
   const entries = useMemo(() => {
     const newEntries = [];

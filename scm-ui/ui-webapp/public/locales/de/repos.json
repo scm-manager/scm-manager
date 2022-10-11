@@ -538,5 +538,12 @@
       "queryToShort": "Tippe mindestens 2 Zeichen ein, um die Suche zu starten",
       "emptyResult": "Es wurden keine Ergebnisse für <0>{{query}}</0> gefunden"
     }
+  },
+  "shortcuts": {
+    "info": "Info",
+    "branches": "Branches",
+    "tags": "Tags",
+    "code": "Code",
+    "settings": "Einstellungen"
   }
 }

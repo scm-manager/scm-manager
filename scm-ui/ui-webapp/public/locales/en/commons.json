@@ -262,5 +262,23 @@
   },
   "tag": {
     "delete": "Delete"
+  },
+  "shortcutDocsModal": {
+    "title": "Keyboard Shortcuts",
+    "description": "The following table lists all keyboard shortcuts available to you on the current page.",
+    "table": {
+      "headers": {
+        "keyCombination": "Key Combination",
+        "description": "Description"
+      }
+    }
+  },
+  "shortcuts": {
+    "search": "Focus global quick search",
+    "repositories": "Navigate to Repositories",
+    "users": "Navigate to Users",
+    "groups": "Navigate to Groups",
+    "admin": "Navigate to Administration",
+    "docs": "Open the shortcut summary"
   }
 }
