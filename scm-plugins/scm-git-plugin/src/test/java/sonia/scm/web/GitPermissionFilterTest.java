@@ -120,7 +120,7 @@ public class GitPermissionFilterTest {
 
     permissionFilter.sendNotEnoughPrivilegesError(request, response);
 
-    verify(response).setStatus(HttpServletResponse.SC_OK);
+    verify(response).setStatus(HttpServletResponse.SC_FORBIDDEN);
     assertThat(stream.toString(), containsString("privileges"));
   }
 
