@@ -26,7 +26,7 @@ import React, { FC, useEffect, useState } from "react";
 import { Links } from "@scm-manager/ui-types";
 import classNames from "classnames";
 import styled from "styled-components";
-import { Logo, PrimaryNavigation } from "@scm-manager/ui-components";
+import { devices, Logo, PrimaryNavigation } from "@scm-manager/ui-components";
 import Notifications from "./Notifications";
 import OmniSearch from "./OmniSearch";
 import LogoutButton from "./LogoutButton";
@@ -40,6 +40,62 @@ const StyledMenuBar = styled.div`
 
 const LogoItem = styled.a`
   cursor: default !important;
+`;
+
+const StyledSmallHeader = styled.nav`
+  @media screen and (max-width: ${devices.desktop.width - 1}px) {
+    .navbar-header-actions {
+      position: absolute;
+      top: 0;
+      left: 52px;
+      flex-direction: row-reverse;
+    }
+  }
+
+  @media screen and (min-width: ${devices.desktop.width - 1}px) {
+    .navbar-header-actions {
+      position: absolute;
+      right: 120px;
+    }
+  }
+
+  .navbar-header-actions {
+    display: flex;
+    flex-grow: 2;
+    justify-content: flex-end;
+    .navbar-item {
+      padding: 0.65rem 0.75rem;
+    }
+  }
+
+  .navbar-start .navbar-item {
+    border-bottom: solid 5px transparent;
+    &.is-active {
+      border-bottom: solid 5px #28b1e8;
+    }
+  }
+
+  .navbar-menu.is-active .navbar-start .navbar-item {
+    border-bottom: none;
+    border-left: solid 5px transparent;
+    &.is-active {
+      border-left: solid 5px #28b1e8;
+    }
+  }
+
+  .navbar-menu {
+    padding: 0;
+  }
+
+  .navbar-brand {
+    @media screen and (max-width: ${devices.desktop.width - 1}px) {
+      border-bottom: 1px solid var(--scm-white-color);
+    }
+  }
+
+  .navbar-menu.is-active .navbar-end .navbar-item {
+    border-left: solid 5px transparent;
+  }
 `;
 
 type Props = {
@@ -60,7 +116,7 @@ const NavigationBar: FC<Props> = ({ links }) => {
   }, [burgerActive]);
 
   return (
-    <>
+    <StyledSmallHeader className="navbar is-fixed-top has-scm-background" aria-label="main navigation">
       <div className="navbar-brand">
         <LogoItem className="navbar-item logo">
           <Logo withText={false} className="image is-32x32" />
@@ -90,7 +146,7 @@ const NavigationBar: FC<Props> = ({ links }) => {
           <LoginButton burgerMode={burgerActive} links={links} />
         </div>
       </StyledMenuBar>
-    </>
+    </StyledSmallHeader>
   );
 };
 

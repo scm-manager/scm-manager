@@ -23,75 +23,13 @@
  */
 import React, { FC } from "react";
 import Logo from "./../Logo";
-import styled from "styled-components";
-import { devices } from "../devices";
 
 type Props = {
   authenticated?: boolean;
 };
 
-const StyledSmallHeader = styled.nav`
-  @media screen and (max-width: ${devices.desktop.width - 1}px) {
-    .navbar-header-actions {
-      position: absolute;
-      top: 0;
-      left: 52px;
-      flex-direction: row-reverse;
-    }
-  }
-
-  @media screen and (min-width: ${devices.desktop.width - 1}px) {
-    .navbar-header-actions {
-      position: absolute;
-      right: 120px;
-    }
-  }
-
-  .navbar-header-actions {
-    display: flex;
-    flex-grow: 2;
-    justify-content: flex-end;
-    .navbar-item {
-      padding: 0.65rem 0.75rem;
-    }
-  }
-
-  .navbar-start .navbar-item {
-    border-bottom: solid 5px transparent;
-    &.is-active {
-      border-bottom: solid 5px #28b1e8;
-    }
-  }
-
-  .navbar-menu.is-active .navbar-start .navbar-item {
-    border-bottom: none;
-    border-left: solid 5px transparent;
-    &.is-active {
-      border-left: solid 5px #28b1e8;
-    }
-  }
-
-  .navbar-menu {
-    padding: 0;
-  }
-
-  .navbar-brand {
-    @media screen and (max-width: ${devices.desktop.width - 1}px) {
-      border-bottom: 1px solid var(--scm-white-color);
-    }
-  }
-
-  .navbar-menu.is-active .navbar-end .navbar-item {
-    border-left: solid 5px transparent;
-  }
-`;
-
 const SmallHeader: FC = ({ children }) => {
-  return (
-    <StyledSmallHeader className="navbar is-fixed-top has-scm-background" aria-label="main navigation">
-      <div className="container">{children}</div>
-    </StyledSmallHeader>
-  );
+  return <div className="container">{children}</div>;
 };
 
 const LargeHeader: FC = () => {
