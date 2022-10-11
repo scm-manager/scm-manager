@@ -123,20 +123,12 @@ public class CollectingPackParserListener implements PackParserListener
     if (newObjectIdMap != null)
     {
       newObjectIds = ImmutableSet.copyOf(newObjectIdMap);
-    }
-    else
-    {
-      logger.warn("pack parser returned no newObjectIds");
-      newObjectIds = ImmutableSet.of();
-    }
-
-    if (newObjectIds.isEmpty())
-    {
-      logger.debug("new object ids are empty, we treat every commit as new");
-    }
-    else
-    {
       logger.debug("collected {} new object ids", newObjectIds.size());
+    }
+    else
+    {
+      logger.warn("pack parser returned no newObjectIds; no commit will be treated as a new one");
+      newObjectIds = Set.of();
     }
   }
 
@@ -161,10 +153,7 @@ public class CollectingPackParserListener implements PackParserListener
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Returns {@code true} if the object is a new object. The method will also
-   * return {@code true}, if the pack parser does not return a list with new
-   * object ids.
-   *
+   * Returns {@code true} if the object is a new object.
    *
    * @param object rev object
    *
@@ -174,7 +163,7 @@ public class CollectingPackParserListener implements PackParserListener
   {
     ensureAfterWasCalled();
 
-    return newObjectIds.isEmpty() || newObjectIds.contains(object.getId());
+    return newObjectIds.contains(object.getId());
   }
 
   //~--- methods --------------------------------------------------------------
