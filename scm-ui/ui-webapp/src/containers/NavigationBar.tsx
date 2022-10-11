@@ -116,36 +116,38 @@ const NavigationBar: FC<Props> = ({ links }) => {
   }, [burgerActive]);
 
   return (
-    <StyledNavBar className="navbar mb-0 container" aria-label="main navigation">
-      <div className="navbar-brand">
-        <LogoItem className="navbar-item logo">
-          <Logo withText={false} className="image is-32x32" />
-        </LogoItem>
-        <button
-          className={classNames("navbar-burger", { "is-active": burgerActive })}
-          aria-expanded="true"
-          onClick={() => setBurgerActive(active => !active)}
-          aria-label={t("primary-navigation.navbarBurger")}
-        >
-          <span aria-hidden="true" />
-          <span aria-hidden="true" />
-          <span aria-hidden="true" />
-        </button>
-      </div>
-      <div className="is-active navbar-header-actions">
-        <Alerts className="navbar-item" />
-        <OmniSearch links={links} />
-        <Notifications className="navbar-item" />
-      </div>
-      <StyledMenuBar className={classNames("navbar-menu", { "is-active": burgerActive })}>
-        <div className="navbar-start">
-          <PrimaryNavigation links={links} />
+    <StyledNavBar className="navbar is-fixed-top has-scm-background" aria-label="main navigation">
+      <div className="container">
+        <div className="navbar-brand">
+          <LogoItem className="navbar-item logo">
+            <Logo withText={false} className="image is-32x32" />
+          </LogoItem>
+          <button
+            className={classNames("navbar-burger", { "is-active": burgerActive })}
+            aria-expanded="true"
+            onClick={() => setBurgerActive((active) => !active)}
+            aria-label={t("primary-navigation.navbarBurger")}
+          >
+            <span aria-hidden="true" />
+            <span aria-hidden="true" />
+            <span aria-hidden="true" />
+          </button>
         </div>
-        <div className="navbar-end">
-          <LogoutButton burgerMode={burgerActive} links={links} />
-          <LoginButton burgerMode={burgerActive} links={links} />
+        <div className="is-active navbar-header-actions">
+          <Alerts className="navbar-item" />
+          <OmniSearch links={links} />
+          <Notifications className="navbar-item" />
         </div>
-      </StyledMenuBar>
+        <StyledMenuBar className={classNames("navbar-menu", { "is-active": burgerActive })}>
+          <div className="navbar-start">
+            <PrimaryNavigation links={links} />
+          </div>
+          <div className="navbar-end">
+            <LogoutButton burgerMode={burgerActive} links={links} />
+            <LoginButton burgerMode={burgerActive} links={links} />
+          </div>
+        </StyledMenuBar>
+      </div>
     </StyledNavBar>
   );
 };

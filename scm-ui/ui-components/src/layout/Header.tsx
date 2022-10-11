@@ -28,10 +28,6 @@ type Props = {
   authenticated?: boolean;
 };
 
-const SmallHeader: FC = ({ children }) => {
-  return <div className="has-scm-background">{children}</div>;
-};
-
 const LargeHeader: FC = () => {
   return (
     <div className="hero has-scm-background is-small">
@@ -50,7 +46,7 @@ const LargeHeader: FC = () => {
 
 const Header: FC<Props> = ({ authenticated, children }) => {
   if (authenticated) {
-    return <SmallHeader>{children}</SmallHeader>;
+    return <>{children}</>;
   } else {
     return <LargeHeader />;
   }

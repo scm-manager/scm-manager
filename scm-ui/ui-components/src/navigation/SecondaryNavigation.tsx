@@ -40,7 +40,7 @@ type CollapsedProps = {
 const SectionContainer = styled.aside`
   position: sticky;
   position: -webkit-sticky; /* Safari */
-  top: 2rem;
+  top: 5rem;
   width: 100%;
 
   @media (max-height: 900px) {
