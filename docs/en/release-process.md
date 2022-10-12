@@ -152,3 +152,25 @@ If you are creating a new plugin which doesn't exist in the SCM-Manager Plugin-C
 First you have to create a `plugin.yml` in the website repository. 
 
 Example: https://github.com/scm-manager/website/blob/master/content/plugins/scm-teamscale-plugin/plugin.yml
+
+## Hotfix Release
+
+The release of a hotfix version is still a partly manual process that requires some knowledge
+of git and the versioning of SCM-Manager. Here is a helping hand as a guideline of how to release
+a bugfix version of the latest release (for example a 2.x.1 after 2.x.0 has been released).
+Mind that this process is only necessary, when there are commits on `develop` that shall **not** be
+released, yet.
+
+1. Checkout the tag of the release you want to create a bugfix release for (`git checkout 2.x.0`)
+2. Create a hotfix branch for the new version (`git checkout -b hotfix/2.x.1`)
+3. Apply the changes upon this branch
+4. Create the changelog either manually or by running `./gradlew :updateChangelog --release=2.x.1`
+5. Double check this all
+6. Push the hotfix branch
+7. Jenkins will build and release this hotfix with the given version
+8. When Jenkins has finished, fetch the changes (and the new tag)
+9. Merge this new Tag into `master` (or fast-forward `master` if possible) and push `master`
+10. If the hotfix is based upon the latest release, set the version to the next snapshot (`./gradlew setVersionToNextSnapshot`) and commit these changes
+11. Merge this commit into `develop`
+
+If the hotfix has been created for an older release, this process might be somewhat more complicated.
