@@ -6,7 +6,7 @@ displayToc: true
 
 ## Requirements
 
-Ensure that Java JRE is installed at least in version 8, we recommend currently Java 11.
+Ensure that Java JRE is installed at least in version 11.
 If you want to use [Mercurial](https://www.mercurial-scm.org/), ensure it is installed on your machine.
 
 ## Installation
