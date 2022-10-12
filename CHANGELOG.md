@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.39.1] - 2022-10-12
+### Fixed
+- Handling of old commits as new ones in new branches ([#2130](https://github.com/scm-manager/scm-manager/pull/2130))
+
 ## [2.39.0] - 2022-09-14
 ### Added
 - Reindex mechanism for search ([#2104](https://github.com/scm-manager/scm-manager/pull/2104))
@@ -1148,3 +1152,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.38.0]: https://scm-manager.org/download/2.38.0
 [2.38.1]: https://scm-manager.org/download/2.38.1
 [2.39.0]: https://scm-manager.org/download/2.39.0
+[2.39.1]: https://scm-manager.org/download/2.39.1
