@@ -35,7 +35,7 @@ ext {
     // logging
     slf4jApi: "org.slf4j:slf4j-api:${slf4jVersion}",
     slf4jJcl: "org.slf4j:jcl-over-slf4j:${slf4jVersion}",
-    logback: 'ch.qos.logback:logback-classic:1.2.9',
+    logback: 'ch.qos.logback:logback-classic:1.4.4',
 
     // injection
     guice: "com.google.inject:guice:${guiceVersion}",

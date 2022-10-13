@@ -2,8 +2,8 @@
 # Manual edits can break the build and are not advised.
 # This file is expected to be part of source control.
 aopalliance:aopalliance:1.0=annotationProcessor,compileClasspath,runtimeClasspath,runtimePluginElements,scmCoreDependency,testCompileClasspath,testRuntimeClasspath
-ch.qos.logback:logback-classic:1.2.9=testCompileClasspath,testRuntimeClasspath
-ch.qos.logback:logback-core:1.2.9=testCompileClasspath,testRuntimeClasspath
+ch.qos.logback:logback-classic:1.4.4=testCompileClasspath,testRuntimeClasspath
+ch.qos.logback:logback-core:1.4.4=testCompileClasspath,testRuntimeClasspath
 com.cloudogu.conveyor:conveyor:1.0.0=annotationProcessor,compileClasspath,runtimeClasspath,runtimePluginElements,scmCoreDependency,testCompileClasspath,testRuntimeClasspath
 com.cloudogu.jaxrs-tie:jaxrs-tie:1.0.5=annotationProcessor,compileClasspath,runtimeClasspath,runtimePluginElements,scmCoreDependency,testCompileClasspath,testRuntimeClasspath
 com.cloudogu.legman:core:2.0.0=annotationProcessor,compileClasspath,runtimeClasspath,runtimePluginElements,scmCoreDependency,testCompileClasspath,testRuntimeClasspath
