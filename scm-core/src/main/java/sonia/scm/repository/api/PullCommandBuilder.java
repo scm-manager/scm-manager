@@ -87,6 +87,19 @@ public final class PullCommandBuilder {
   }
 
   /**
+   * Set whether to fetch LFS files (<code>true</code>) or not (<code>false</code>).
+   * This may not work for all repository types.
+   *
+   * @param fetchLfs Whether to fetch LFS files or not
+   * @return this builder instance.
+   * @since 2.40.0
+   */
+  public PullCommandBuilder doFetchLfs(boolean fetchLfs) {
+    request.setFetchLfs(fetchLfs);
+    return this;
+  }
+
+  /**
    * Pull all changes from the given remote url.
    *
    * @param url remote url

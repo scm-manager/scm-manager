@@ -110,7 +110,8 @@ public class FromUrlImporter {
           logger.step("setting username and password for pull");
           pullCommand
             .withUsername(parameters.getUsername())
-            .withPassword(parameters.getPassword());
+            .withPassword(parameters.getPassword())
+            .doFetchLfs(true);
         }
 
         logger.step("pulling repository from " + parameters.getImportUrl());
