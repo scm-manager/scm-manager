@@ -41,11 +41,13 @@ import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.ImportFailedException;
+import sonia.scm.repository.api.MirrorCommandResult;
 import sonia.scm.repository.api.PullResponse;
 
 import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * @author Sebastian Sdorra
@@ -54,14 +56,17 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
   implements PullCommand {
 
   private static final Logger LOG = LoggerFactory.getLogger(GitPullCommand.class);
+
   private final PostReceiveRepositoryHookEventFactory postReceiveRepositoryHookEventFactory;
+  private final LfsLoader lfsLoader;
 
   @Inject
   public GitPullCommand(GitRepositoryHandler handler,
                         GitContext context,
-                        PostReceiveRepositoryHookEventFactory postReceiveRepositoryHookEventFactory) {
+                        PostReceiveRepositoryHookEventFactory postReceiveRepositoryHookEventFactory, LfsLoader lfsLoader) {
     super(handler, context);
     this.postReceiveRepositoryHookEventFactory = postReceiveRepositoryHookEventFactory;
+    this.lfsLoader = lfsLoader;
   }
 
   @Override
@@ -178,6 +183,18 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
         .call();
       //J+
 
+      if (request.isFetchLfs()) {
+        open().getRefDatabase().getRefs().forEach(
+          ref -> lfsLoader.inspectTree(
+            ref.getObjectId(),
+            request,
+            git.getRepository(),
+            new ArrayList<>(),
+            new MirrorCommandResult.LfsUpdateResult(),
+            repository,
+            request.getRemoteUrl().toString())
+        );
+      }
       response = convert(git, result);
     } catch
     (GitAPIException ex) {

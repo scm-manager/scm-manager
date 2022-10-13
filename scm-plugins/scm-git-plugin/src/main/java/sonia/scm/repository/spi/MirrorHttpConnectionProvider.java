@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.spi;
 
-import org.eclipse.jgit.transport.UserAgent;
 import org.eclipse.jgit.transport.http.HttpConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

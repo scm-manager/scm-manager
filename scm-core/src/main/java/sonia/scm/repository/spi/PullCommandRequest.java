@@ -21,13 +21,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
+
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * Request object for {@link PullCommand}.
- * 
+ *
  * @author Sebastian Sdorra
  * @since 1.31
  */
-public final class PullCommandRequest extends RemoteCommandRequest {}
+@Getter
+@Setter
+@EqualsAndHashCode(callSuper = true)
+@ToString
+public final class PullCommandRequest extends RemoteCommandRequest {
+  /**
+   * @since 2.40.0
+   */
+  private boolean fetchLfs;
+}

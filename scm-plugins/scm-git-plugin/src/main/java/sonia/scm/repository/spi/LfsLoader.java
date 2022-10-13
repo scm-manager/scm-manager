@@ -58,11 +58,13 @@ class LfsLoader {
 
   private final LfsBlobStoreFactory lfsBlobStoreFactory;
   private final MirrorHttpConnectionProvider mirrorHttpConnectionProvider;
+  private final PullHttpConnectionProvider pullHttpConnectionProvider;
 
   @Inject
-  LfsLoader(LfsBlobStoreFactory lfsBlobStoreFactory, MirrorHttpConnectionProvider mirrorHttpConnectionProvider) {
+  LfsLoader(LfsBlobStoreFactory lfsBlobStoreFactory, MirrorHttpConnectionProvider mirrorHttpConnectionProvider, PullHttpConnectionProvider pullHttpConnectionProvider) {
     this.lfsBlobStoreFactory = lfsBlobStoreFactory;
     this.mirrorHttpConnectionProvider = mirrorHttpConnectionProvider;
+    this.pullHttpConnectionProvider = pullHttpConnectionProvider;
   }
 
   void inspectTree(ObjectId newObjectId,
@@ -71,13 +73,32 @@ class LfsLoader {
                    List<String> mirrorLog,
                    LfsUpdateResult lfsUpdateResult,
                    sonia.scm.repository.Repository repository) {
-    String mirrorUrl = mirrorCommandRequest.getSourceUrl();
     EntryHandler entryHandler = new EntryHandler(repository, gitRepository, mirrorCommandRequest, mirrorLog, lfsUpdateResult);
+    String mirrorUrl = mirrorCommandRequest.getSourceUrl();
+    inspectTree(newObjectId, entryHandler, gitRepository, mirrorLog, lfsUpdateResult, mirrorUrl);
+  }
 
+  void inspectTree(ObjectId newObjectId,
+                   PullCommandRequest pullCommandRequest,
+                   Repository gitRepository,
+                   List<String> mirrorLog,
+                   LfsUpdateResult lfsUpdateResult,
+                   sonia.scm.repository.Repository repository,
+                   String sourceUrl) {
+    EntryHandler entryHandler = new EntryHandler(repository, gitRepository, pullCommandRequest, mirrorLog, lfsUpdateResult);
+    inspectTree(newObjectId, entryHandler, gitRepository, mirrorLog, lfsUpdateResult, sourceUrl);
+  }
+
+  private void inspectTree(ObjectId newObjectId,
+                   EntryHandler entryHandler,
+                   Repository gitRepository,
+                   List<String> mirrorLog,
+                   LfsUpdateResult lfsUpdateResult,
+                   String sourceUrl) {
     try {
       gitRepository
         .getConfig()
-        .setString(ConfigConstants.CONFIG_SECTION_LFS, null, ConfigConstants.CONFIG_KEY_URL, computeLfsUrl(mirrorUrl));
+        .setString(ConfigConstants.CONFIG_SECTION_LFS, null, ConfigConstants.CONFIG_KEY_URL, computeLfsUrl(sourceUrl));
 
       TreeWalk treeWalk = new TreeWalk(gitRepository);
       treeWalk.setFilter(new LfsPointerFilter());
@@ -100,11 +121,11 @@ class LfsLoader {
     }
   }
 
-  private String computeLfsUrl(String mirrorUrl) {
-    if (mirrorUrl.endsWith(".git")) {
-      return mirrorUrl + Protocol.INFO_LFS_ENDPOINT;
+  private String computeLfsUrl(String sourceUrl) {
+    if (sourceUrl.endsWith(".git")) {
+      return sourceUrl + Protocol.INFO_LFS_ENDPOINT;
     } else {
-      return mirrorUrl + ".git" + Protocol.INFO_LFS_ENDPOINT;
+      return sourceUrl + ".git" + Protocol.INFO_LFS_ENDPOINT;
     }
   }
 
@@ -122,12 +143,28 @@ class LfsLoader {
                          MirrorCommandRequest mirrorCommandRequest,
                          List<String> mirrorLog,
                          LfsUpdateResult lfsUpdateResult) {
+      this(repository, gitRepository, mirrorLog, lfsUpdateResult, mirrorHttpConnectionProvider.createHttpConnectionFactory(mirrorCommandRequest, mirrorLog));
+    }
+
+    private EntryHandler(sonia.scm.repository.Repository repository,
+                         Repository gitRepository,
+                         PullCommandRequest pullCommandRequest,
+                         List<String> mirrorLog,
+                         LfsUpdateResult lfsUpdateResult) {
+      this(repository, gitRepository, mirrorLog, lfsUpdateResult, pullHttpConnectionProvider.createHttpConnectionFactory(pullCommandRequest));
+    }
+
+    private EntryHandler(sonia.scm.repository.Repository repository,
+                         Repository gitRepository,
+                         List<String> mirrorLog,
+                         LfsUpdateResult lfsUpdateResult,
+                         HttpConnectionFactory httpConnectionFactory) {
       this.lfsBlobStore = lfsBlobStoreFactory.getLfsBlobStore(repository);
       this.repository = repository;
       this.gitRepository = gitRepository;
       this.mirrorLog = mirrorLog;
       this.lfsUpdateResult = lfsUpdateResult;
-      this.httpConnectionFactory = mirrorHttpConnectionProvider.createHttpConnectionFactory(mirrorCommandRequest, mirrorLog);
+      this.httpConnectionFactory = httpConnectionFactory;
     }
 
     private void handleTreeEntry(TreeWalk treeWalk) {
