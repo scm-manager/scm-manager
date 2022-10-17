@@ -60,8 +60,8 @@ import sonia.scm.repository.api.MirrorCommandResult.ResultType;
 import sonia.scm.repository.api.MirrorFilter;
 import sonia.scm.repository.api.MirrorFilter.Result;
 import sonia.scm.repository.api.UsernamePasswordCredential;
+import sonia.scm.repository.spi.LfsLoader.LfsLoaderLogger;
 import sonia.scm.store.ConfigurationStore;
-import sonia.scm.web.lfs.LfsBlobStoreFactory;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -367,7 +367,16 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
           logger.logChange(ref, referenceName, getUpdateType(ref));
 
           if (!mirrorCommandRequest.isIgnoreLfs()) {
-            lfsLoader.inspectTree(ref.getNewObjectId(), mirrorCommandRequest, git.getRepository(), mirrorLog, lfsUpdateResult, repository);
+            LfsLoaderLogger lfsLoaderLogger = new MirrorLfsLoaderLogger();
+            lfsLoader.inspectTree(
+              ref.getNewObjectId(),
+              git.getRepository(),
+              lfsLoaderLogger,
+              lfsUpdateResult,
+              repository,
+              mirrorHttpConnectionProvider.createHttpConnectionFactory(mirrorCommandRequest, mirrorLog),
+              mirrorCommandRequest.getSourceUrl()
+            );
           }
         }
       }
@@ -405,6 +414,19 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
 
       private String getUpdateType(TrackingRefUpdate trackingRefUpdate) {
         return trackingRefUpdate.getResult().name().toLowerCase(Locale.ENGLISH);
+      }
+
+      private class MirrorLfsLoaderLogger implements LfsLoaderLogger {
+        @Override
+        public void failed(Exception e) {
+          mirrorLog.add("Failed to load lfs file:");
+          mirrorLog.add(e.getMessage());
+        }
+
+        @Override
+        public void loading(String name) {
+          mirrorLog.add(String.format("Loading lfs file with id '%s'", name));
+        }
       }
     }
 
@@ -653,7 +675,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
     }
 
     private boolean isOfTypeOrEmpty(Optional<MirrorFilter.UpdateType> updateType, MirrorFilter.UpdateType type) {
-      return !updateType.isPresent() || updateType.get() == type;
+      return updateType.isEmpty() || updateType.get() == type;
     }
 
     private Optional<MirrorFilter.UpdateType> getUpdateTypeFor(ReceiveCommand receiveCommand) {

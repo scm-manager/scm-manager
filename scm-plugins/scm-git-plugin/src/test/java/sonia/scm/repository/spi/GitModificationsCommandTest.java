@@ -52,6 +52,8 @@ public class GitModificationsCommandTest extends AbstractRemoteCommandTestBase {
 
   @Mock
   private LfsLoader lfsLoader;
+  @Mock
+  private PullHttpConnectionProvider pullHttpConnectionProvider;
 
   @Before
   public void init() {
@@ -176,7 +178,8 @@ public class GitModificationsCommandTest extends AbstractRemoteCommandTestBase {
       handler,
       context,
       postReceiveRepositoryHookEventFactory,
-      lfsLoader);
+      lfsLoader,
+      pullHttpConnectionProvider);
     PullCommandRequest pullRequest = new PullCommandRequest();
     pullRequest.setRemoteRepository(incomingRepository);
     pullCommand.pull(pullRequest);

@@ -47,7 +47,6 @@ import sonia.scm.repository.api.PullResponse;
 import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  * @author Sebastian Sdorra
@@ -59,14 +58,18 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
 
   private final PostReceiveRepositoryHookEventFactory postReceiveRepositoryHookEventFactory;
   private final LfsLoader lfsLoader;
+  private final PullHttpConnectionProvider pullHttpConnectionProvider;
 
   @Inject
   public GitPullCommand(GitRepositoryHandler handler,
                         GitContext context,
-                        PostReceiveRepositoryHookEventFactory postReceiveRepositoryHookEventFactory, LfsLoader lfsLoader) {
+                        PostReceiveRepositoryHookEventFactory postReceiveRepositoryHookEventFactory,
+                        LfsLoader lfsLoader,
+                        PullHttpConnectionProvider pullHttpConnectionProvider) {
     super(handler, context);
     this.postReceiveRepositoryHookEventFactory = postReceiveRepositoryHookEventFactory;
     this.lfsLoader = lfsLoader;
+    this.pullHttpConnectionProvider = pullHttpConnectionProvider;
   }
 
   @Override
@@ -184,16 +187,7 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
       //J+
 
       if (request.isFetchLfs()) {
-        open().getRefDatabase().getRefs().forEach(
-          ref -> lfsLoader.inspectTree(
-            ref.getObjectId(),
-            request,
-            git.getRepository(),
-            new ArrayList<>(),
-            new MirrorCommandResult.LfsUpdateResult(),
-            repository,
-            request.getRemoteUrl().toString())
-        );
+        fetchLfs(request, git);
       }
       response = convert(git, result);
     } catch
@@ -208,6 +202,30 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
     firePostReceiveRepositoryHookEvent(git, result);
 
     return response;
+  }
+
+  private void fetchLfs(PullCommandRequest request, Git git) throws IOException {
+    open().getRefDatabase().getRefs().forEach(
+      ref -> lfsLoader.inspectTree(
+        ref.getObjectId(),
+        git.getRepository(),
+        new LfsLoader.LfsLoaderLogger() {
+          @Override
+          public void failed(Exception e) {
+            // TODO
+          }
+
+          @Override
+          public void loading(String name) {
+            // TODO
+          }
+        },
+        new MirrorCommandResult.LfsUpdateResult(),
+        repository,
+        pullHttpConnectionProvider.createHttpConnectionFactory(request),
+        request.getRemoteUrl().toString()
+      )
+    );
   }
 
   private void firePostReceiveRepositoryHookEvent(Git git, FetchResult result) {

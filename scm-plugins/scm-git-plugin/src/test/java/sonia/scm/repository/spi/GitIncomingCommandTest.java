@@ -51,6 +51,7 @@ public class GitIncomingCommandTest
   extends AbstractRemoteCommandTestBase {
 
   private final LfsLoader lfsLoader = mock(LfsLoader.class);
+  private final PullHttpConnectionProvider pullHttpConnectionProvider = mock(PullHttpConnectionProvider.class);
 
   /**
    * Method description
@@ -103,7 +104,8 @@ public class GitIncomingCommandTest
       handler,
       context,
       postReceiveRepositoryHookEventFactory,
-      lfsLoader);
+      lfsLoader,
+      pullHttpConnectionProvider);
     PullCommandRequest req = new PullCommandRequest();
     req.setRemoteRepository(outgoingRepository);
     pull.pull(req);
