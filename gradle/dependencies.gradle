@@ -57,9 +57,9 @@ ext {
     picocli: 'info.picocli:picocli:4.6.3',
 
     // json
-    jacksonCore: "com.fasterxml.jackson.core:jackson-core:${jacksonVersion}",
-    jacksonAnnotations: "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}",
-    jacksonDatabind: "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}",
+    jacksonCore: "com.fasterxml.jackson.core:jackson-core:${jacksonVersion}!!",
+    jacksonAnnotations: "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}!!",
+    jacksonDatabind: "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}!!",
     jacksonJaxbAnnotations: "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:${jacksonVersion}",
     jacksonJaxRsBase: "com.fasterxml.jackson.jaxrs:jackson-jaxrs-base:${jacksonVersion}",
     jacksonJaxRsJsonProvider: "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:${jacksonVersion}",

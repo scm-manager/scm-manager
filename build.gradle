@@ -90,7 +90,6 @@ dependencies {
     // json
     api libraries.jacksonCore
     api libraries.jacksonAnnotations
-    api libraries.jacksonDatabind
 
     // hypermedia
     api libraries.edison
