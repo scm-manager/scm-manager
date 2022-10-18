@@ -30,8 +30,13 @@ export default function splitKeyCombination(key: string, userAgent = window.navi
   } = parser(userAgent);
   const isMacOS = osName === "Mac OS";
   return key
-    .replace(/(option|alt)/g, isMacOS ? "option" : "alt")
+    .replace(/(option|alt)/g, isMacOS ? "⌥" : "alt")
     .replace(/(command|meta)/g, isMacOS ? "⌘" : "meta")
     .replace("mod", isMacOS ? "⌘" : "ctrl")
+    .replace(/shift/g, "⇧")
+    .replace(/up/g, "↑")
+    .replace(/down/g, "↓")
+    .replace(/left/g, "←")
+    .replace(/right/g, "→")
     .split(/[+ ]/);
 }

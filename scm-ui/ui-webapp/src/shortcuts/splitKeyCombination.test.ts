@@ -30,9 +30,10 @@ const WINDOWS_USER_AGENT =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.157 Safari/537.36";
 const LINUX_USER_AGENT =
   "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36";
+const NO_USER_AGENT = "";
 
 describe("splitKeyCombination", () => {
-  it("should split and replace correctly", () => {
+  it("should split and replace correctly based on user agent", () => {
     expect(splitKeyCombination("alt+a meta+b meta+c", WINDOWS_USER_AGENT)).toEqual([
       "alt",
       "a",
@@ -51,6 +52,10 @@ describe("splitKeyCombination", () => {
       "ctrl",
       "d",
     ]);
-    expect(splitKeyCombination("alt+a meta+b mod+c", MAC_USER_AGENT)).toEqual(["option", "a", "⌘", "b", "⌘", "c"]);
+    expect(splitKeyCombination("alt+a meta+b mod+c", MAC_USER_AGENT)).toEqual(["⌥", "a", "⌘", "b", "⌘", "c"]);
+  });
+
+  it("should replace arrow key keywords with unicode characters", () => {
+    expect(splitKeyCombination("up down left right", NO_USER_AGENT)).toEqual(["↑", "↓", "←", "→"]);
   });
 });
