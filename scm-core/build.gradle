@@ -72,6 +72,8 @@ dependencies {
   api libraries.jacksonCore
   api libraries.jacksonAnnotations
   api libraries.jacksonDatabind
+  api libraries.jacksonDatatypeJdk8
+  api libraries.jacksonDatatypeJsr310
 
   // hypermedia
   api libraries.edison
