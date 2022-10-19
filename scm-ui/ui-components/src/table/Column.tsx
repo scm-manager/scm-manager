@@ -25,17 +25,20 @@ import React, { FC, ReactNode } from "react";
 import { ColumnProps } from "./types";
 
 type Props = ColumnProps & {
-  children: (row: any, columnIndex: number) => ReactNode;
+  children: (row: any, columnIndex: number, rowIndex: number) => ReactNode;
 };
 
-const Column: FC<Props> = ({ row, columnIndex, children }) => {
+const Column: FC<Props> = ({ row, columnIndex, rowIndex, children }) => {
   if (row === undefined) {
     throw new Error("missing row, use column only as child of Table");
   }
   if (columnIndex === undefined) {
     throw new Error("missing row, use column only as child of Table");
   }
-  return <>{children(row, columnIndex)}</>;
+  if (rowIndex === undefined) {
+    throw new Error("missing row, use column only as child of Table");
+  }
+  return <>{children(row, columnIndex, rowIndex)}</>;
 };
 
 export default Column;

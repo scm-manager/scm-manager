@@ -30,6 +30,7 @@ export type ColumnProps = {
   header: ReactNode;
   row?: any;
   columnIndex?: number;
+  rowIndex?: number;
   createComparator?: (props: any, columnIndex: number) => Comparator;
   ascendingIcon?: string;
   descendingIcon?: string;
