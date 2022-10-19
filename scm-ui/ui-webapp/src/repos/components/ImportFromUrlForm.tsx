@@ -24,7 +24,7 @@
 import React, { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { RepositoryUrlImport } from "@scm-manager/ui-types";
-import { InputField, validation } from "@scm-manager/ui-components";
+import { Checkbox, InputField, validation } from "@scm-manager/ui-components";
 
 type Props = {
   repository: RepositoryUrlImport;
@@ -84,6 +84,15 @@ const ImportFromUrlForm: FC<Props> = ({ repository, onChange, setValid, disabled
           value={repository.password}
           type="password"
           helpText={t("help.passwordHelpText")}
+          disabled={disabled}
+        />
+      </div>
+      <div className="column is-full px-3">
+        <Checkbox
+          label={t("import.skipLfs")}
+          onChange={skipLfs => onChange({ ...repository, skipLfs })}
+          checked={repository.skipLfs}
+          helpText={t("help.skipLfsHelpText")}
           disabled={disabled}
         />
       </div>

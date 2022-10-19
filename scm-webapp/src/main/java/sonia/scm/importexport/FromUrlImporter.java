@@ -110,9 +110,9 @@ public class FromUrlImporter {
           logger.step("setting username and password for pull");
           pullCommand
             .withUsername(parameters.getUsername())
-            .withPassword(parameters.getPassword())
-            .doFetchLfs(true);
+            .withPassword(parameters.getPassword());
         }
+        pullCommand.doFetchLfs(!parameters.isSkipLfs());
 
         logger.step("pulling repository from " + parameters.getImportUrl());
         pullCommand.pull(parameters.getImportUrl());
@@ -129,5 +129,6 @@ public class FromUrlImporter {
     private String importUrl;
     private String username;
     private String password;
+    private boolean skipLfs;
   }
 }

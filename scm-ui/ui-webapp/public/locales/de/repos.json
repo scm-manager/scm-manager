@@ -30,7 +30,8 @@
     "initializeRepository": "Erstellt einen ersten Branch und committet eine README.md.",
     "importUrlHelpText": "Importiert das gesamte Repository inkl. aller Branches und Tags über die Remote URL.",
     "usernameHelpText": "Benutzername könnte für den Import benötigt werden. Wird ignoriert, falls nicht gesetzt.",
-    "passwordHelpText": "Password könnte für den Import benötigt werden. Wird ignoriert, falls nicht gesetzt."
+    "passwordHelpText": "Password könnte für den Import benötigt werden. Wird ignoriert, falls nicht gesetzt.",
+    "skipLfsHelpText": "Ist diese Option aktiviert, werden beim Import keine (potentiell vorhandenen) LFS-Dateien in den SCM-Manager geladen. Diese Option ist nur für Git Repositories relevant."
   },
   "repositoryRoot": {
     "errorTitle": "Fehler",
@@ -115,7 +116,8 @@
         "helpText": "Der Dump muss von einer SCM-Manager-Instanz mit Metadaten erstellt worden sein."
       }
     },
-    "navigationWarning": "Es wird dringend empfohlen auf dieser Seite zu warten bis der Import abgeschlossen ist. Beim Verlassen der Seite könnte der Import abbrechen. Seite trotzdem verlassen?"
+    "navigationWarning": "Es wird dringend empfohlen auf dieser Seite zu warten bis der Import abgeschlossen ist. Beim Verlassen der Seite könnte der Import abbrechen. Seite trotzdem verlassen?",
+    "skipLfs": "Keine LFS Dateien laden (nur für Git Repositories)"
   },
   "branches": {
     "overview": {

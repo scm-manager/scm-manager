@@ -60,6 +60,7 @@ export type RepositoryUrlImport = RepositoryCreation & {
   importUrl: string;
   username?: string;
   password?: string;
+  skipLfs?: boolean;
 };
 
 export type ExportInfo = HalRepresentation & {

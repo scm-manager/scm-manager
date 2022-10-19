@@ -30,6 +30,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -54,7 +55,6 @@ import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.Mockito.RETURNS_SELF;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -78,6 +78,8 @@ class FromUrlImporterTest {
   private RepositoryImportLogger logger;
   @Mock
   private Subject subject;
+  @Mock(answer = Answers.RETURNS_SELF)
+  private PullCommandBuilder pullCommandBuilder;
 
   @InjectMocks
   private FromUrlImporter importer;
@@ -97,6 +99,7 @@ class FromUrlImporterTest {
         return createdRepository;
       }
     );
+    when(service.getPullCommand()).thenReturn(pullCommandBuilder);
   }
 
   @BeforeEach
@@ -121,9 +124,6 @@ class FromUrlImporterTest {
 
   @Test
   void shouldPullChangesFromRemoteUrl() throws IOException {
-    PullCommandBuilder pullCommandBuilder = mock(PullCommandBuilder.class, RETURNS_SELF);
-    when(service.getPullCommand()).thenReturn(pullCommandBuilder);
-
     FromUrlImporter.RepositoryImportParameters parameters = new FromUrlImporter.RepositoryImportParameters();
     parameters.setImportUrl("https://scm-manager.org/scm/repo/scmadmin/scm-manager.git");
 
@@ -145,9 +145,6 @@ class FromUrlImporterTest {
 
   @Test
   void shouldPullChangesFromRemoteUrlWithCredentials() {
-    PullCommandBuilder pullCommandBuilder = mock(PullCommandBuilder.class, RETURNS_SELF);
-    when(service.getPullCommand()).thenReturn(pullCommandBuilder);
-
     FromUrlImporter.RepositoryImportParameters parameters = new FromUrlImporter.RepositoryImportParameters();
     parameters.setImportUrl("https://scm-manager.org/scm/repo/scmadmin/scm-manager.git");
     parameters.setUsername("trillian");
@@ -160,9 +157,27 @@ class FromUrlImporterTest {
   }
 
   @Test
+  void shouldPullChangesWithLfsIfNotDisabled() {
+    FromUrlImporter.RepositoryImportParameters parameters = new FromUrlImporter.RepositoryImportParameters();
+    parameters.setSkipLfs(false);
+
+    importer.importFromUrl(parameters, repository);
+
+    verify(pullCommandBuilder).doFetchLfs(true);
+  }
+
+  @Test
+  void shouldPullChangesWithoutLfsIfSelected() {
+    FromUrlImporter.RepositoryImportParameters parameters = new FromUrlImporter.RepositoryImportParameters();
+    parameters.setSkipLfs(true);
+
+    importer.importFromUrl(parameters, repository);
+
+    verify(pullCommandBuilder).doFetchLfs(false);
+  }
+
+  @Test
   void shouldThrowImportFailedEvent() throws IOException {
-    PullCommandBuilder pullCommandBuilder = mock(PullCommandBuilder.class, RETURNS_SELF);
-    when(service.getPullCommand()).thenReturn(pullCommandBuilder);
     doThrow(TestException.class).when(pullCommandBuilder).pull(anyString());
     when(logger.started()).thenReturn(true);
 
