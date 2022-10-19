@@ -1,0 +1,42 @@
+{
+  "name": "@scm-manager/ui-shortcuts",
+  "version": "2.39.2-SNAPSHOT",
+  "license": "MIT",
+  "private": true,
+  "main": "build/index.js",
+  "module": "build/index.mjs",
+  "types": "build/index.d.ts",
+  "files": [
+    "build"
+  ],
+  "scripts": {
+    "build": "tsup ./src/index.ts -d build --format esm,cjs --dts",
+    "lint": "eslint src",
+    "typecheck": "tsc"
+  },
+  "peerDependencies": {
+    "react": "17"
+  },
+  "dependencies": {
+    "mousetrap": "1.6.5"
+  },
+  "devDependencies": {
+    "@types/mousetrap": "1.6.5",
+    "@scm-manager/babel-preset": "^2.13.1",
+    "@scm-manager/prettier-config": "^2.10.1",
+    "@scm-manager/eslint-config": "^2.16.0",
+    "@scm-manager/tsconfig": "^2.13.0"
+  },
+  "babel": {
+    "presets": [
+      "@scm-manager/babel-preset"
+    ]
+  },
+  "prettier": "@scm-manager/prettier-config",
+  "eslintConfig": {
+    "extends": "@scm-manager/eslint-config"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

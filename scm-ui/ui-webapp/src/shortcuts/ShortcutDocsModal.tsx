@@ -22,9 +22,8 @@
  * SOFTWARE.
  */
 import React, { useState } from "react";
-import useShortcutDocs from "./useShortcutDocs";
+import { useShortcutDocs, useShortcut } from "@scm-manager/ui-shortcuts";
 import { Column, Modal, Table } from "@scm-manager/ui-components";
-import useShortcut from "./useShortcut";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import splitKeyCombination from "./splitKeyCombination";

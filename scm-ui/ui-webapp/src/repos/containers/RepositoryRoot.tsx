@@ -62,7 +62,7 @@ import CompareRoot from "../compare/CompareRoot";
 import TagRoot from "../tags/container/TagRoot";
 import { useIndexLinks, useNamespaceAndNameContext, useRepository } from "@scm-manager/ui-api";
 import styled from "styled-components";
-import useShortcut from "../../shortcuts/useShortcut";
+import { useShortcut } from "@scm-manager/ui-shortcuts";
 
 const TagGroup = styled.span`
   & > * {
@@ -111,17 +111,24 @@ const RepositoryRoot = () => {
     return "";
   }, [repository]);
 
-  useShortcut("g i", () => history.push(`${url}/info`), t("shortcuts.info"));
-  useShortcut("g b", () => history.push(`${url}/branches/`), t("shortcuts.branches"), {
+  useShortcut("g i", () => history.push(`${url}/info`), {
+    description: t("shortcuts.info"),
+  });
+  useShortcut("g b", () => history.push(`${url}/branches/`), {
     active: !!repository?._links["branches"],
+    description: t("shortcuts.branches"),
   });
-  useShortcut("g t", () => history.push(`${url}/tags/`), t("shortcuts.tags"), {
+  useShortcut("g t", () => history.push(`${url}/tags/`), {
     active: !!repository?._links["tags"],
+    description: t("shortcuts.tags"),
   });
-  useShortcut("g c", () => history.push(evaluateDestinationForCodeLink()), t("shortcuts.code"), {
+  useShortcut("g c", () => history.push(evaluateDestinationForCodeLink()), {
     active: !!repository?._links[codeLinkname],
+    description: t("shortcuts.code"),
   });
-  useShortcut("g s", () => history.push(`${url}/settings/general`), t("shortcuts.settings"));
+  useShortcut("g s", () => history.push(`${url}/settings/general`), {
+    description: t("shortcuts.settings"),
+  });
 
   useEffect(() => {
     if (repository) {

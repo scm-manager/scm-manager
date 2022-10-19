@@ -33,6 +33,13 @@ export type UseShortcutOptions = {
    * @default true
    */
   active?: boolean;
+
+  /**
+   * The translated description used for the shortcut documentation.
+   *
+   * If no description is supplied, there will be no entry in the shortcut summary table.
+   */
+  description?: string;
 };
 
 /**
@@ -62,8 +69,7 @@ export type UseShortcutOptions = {
  * Please also refer to the examples.
  *
  * @param key The keycode combination that triggers the callback
- * @param callback The function that is executed when the key combination is pressed
- * @param description The translated description used for the shortcut documentation
+ * @param callback The function that is executed when the key combination is pressed, returning `true` additionally executes default browser behaviour
  * @param options Whether the shortcut is currently active, defaults to true
  * @example useShortcut("a b", ...)
  * @example useShortcut("ctrl+shift+k", ...)
@@ -72,29 +78,33 @@ export type UseShortcutOptions = {
  */
 export default function useShortcut(
   key: string,
-  callback: (e: KeyboardEvent) => void,
-  description: string,
+  callback: (e: KeyboardEvent) => void | boolean,
   options?: UseShortcutOptions
 ) {
   const { add, remove } = useShortcutDocs();
   useEffect(() => {
-    const active = !options || options.active === undefined || options.active;
+    const active = options?.active ?? true;
+    const description = options?.description;
     if (active) {
-      add(key, description);
+      if (description) {
+        add(key, description);
+      }
       Mousetrap.bind(key, (e) => {
-        callback(e);
+        const callbackResult = callback(e);
         /*
          * Returning false disables default event behaviour and stops event bubbling.
          * Otherwise, a shortcut that moves focus to an input field would cause the key to be entered into the input at the same time.
          * We could move the decision to the callback, but this behaviour is an implementation detail of Mousetrap which we would like to hide.
          */
-        return false;
+        return callbackResult ?? false;
       });
     }
 
     return () => {
-      remove(key);
+      if (description) {
+        remove(key);
+      }
       Mousetrap.unbind(key);
     };
-  }, [key, callback, add, remove, options, description]);
+  }, [key, callback, add, remove, options]);
 }

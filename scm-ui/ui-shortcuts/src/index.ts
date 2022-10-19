@@ -22,15 +22,6 @@
  * SOFTWARE.
  */
 
-import { useActiveModals } from "@scm-manager/ui-components";
-import { usePauseShortcuts } from "@scm-manager/ui-shortcuts";
-
-/**
- * Keyboard shortcuts are not active in modals using {@link useActiveModals} to determine whether any modals are open.
- *
- * Has to be used inside a {@link ActiveModalCountContextProvider}.
- */
-export default function usePauseShortcutsWhenModalsActive() {
-  const areModalsActive = useActiveModals();
-  usePauseShortcuts(areModalsActive);
-}
+export { default as useShortcut } from "./useShortcut";
+export { default as useShortcutDocs, ShortcutDocsContextProvider } from "./useShortcutDocs";
+export { default as usePauseShortcuts } from "./usePauseShortcuts";

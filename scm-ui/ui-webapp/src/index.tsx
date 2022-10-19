@@ -30,16 +30,13 @@ import i18n from "./i18n";
 
 import { BrowserRouter as Router } from "react-router-dom";
 
-import { urls } from "@scm-manager/ui-components";
+import { ActiveModalCountContextProvider, urls } from "@scm-manager/ui-components";
 import { binder, extensionPoints } from "@scm-manager/ui-extensions";
 import ChangesetShortLink from "./repos/components/changesets/ChangesetShortLink";
 
 import "./tokenExpired";
 import { ApiProvider } from "@scm-manager/ui-api";
-// Used by useShortcut
-import "mousetrap";
-// Used by usePauseShortcuts
-import "mousetrap/plugins/pause/mousetrap-pause.min";
+import { ShortcutDocsContextProvider } from "@scm-manager/ui-shortcuts";
 
 binder.bind<extensionPoints.ChangesetDescriptionTokens>("changeset.description.tokens", ChangesetShortLink);
 
@@ -51,9 +48,13 @@ if (!root) {
 ReactDOM.render(
   <ApiProvider>
     <I18nextProvider i18n={i18n}>
-      <Router basename={urls.contextPath}>
-        <Index />
-      </Router>
+      <ShortcutDocsContextProvider>
+        <ActiveModalCountContextProvider>
+          <Router basename={urls.contextPath}>
+            <Index />
+          </Router>
+        </ActiveModalCountContextProvider>
+      </ShortcutDocsContextProvider>
     </I18nextProvider>
   </ApiProvider>,
   root
