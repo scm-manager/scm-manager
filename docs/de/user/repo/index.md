@@ -37,16 +37,28 @@ neu erstellt werden.
 ![Repository erstellen](assets/create-repository.png)
 
 ### Repository importieren
-Neben dem Erstellen von neuen Repository können auch bestehende Repository in SCM-Manager importiert werden.
+Neben dem Erstellen von neuen Repository können auch bestehende Repository in den SCM-Manager importiert werden.
 Wechseln Sie über den Schalter oben rechts auf die Importseite und füllen Sie die benötigten Informationen aus.
 
-Das gewählte Repository wird zum SCM-Manager hinzugefügt und sämtliche Repository Daten inklusive aller Branches und Tags werden importiert.
-Zusätzlich zum normalen Repository Import gibt es die Möglichkeit ein Repository Archiv mit Metadaten zu importieren. 
-Dieses Repository Archiv muss von einem anderen SCM-Manager exportiert worden sein und wird vor dem Import auf
-Kompatibilität der Daten überprüft (der SCM-Manager und alle installierten Plugins müssen mindestens die Version des
-exportierenden Systems haben).
-Ist die zu importierende Datei verschlüsselt, muss das korrekte Passwort zum Entschlüsseln mitgeliefert werden. 
+In Abhängigkeit vom Typen des zu importierenden Repositories gibt es verschiedene Möglichkeiten:
+- **Import via URL** (nur Git und Mercurial): Hier wird ein Repository von einem anderen Server über die gegebene URL
+  importiert. Zusätzlich kann ein Benutzername und ein Passwort für die Authentifizierung angegeben werden. Für Git
+  Repositories kann darüber hinaus der Import von LFS Dateien (falls vorhanden) ausgeschlossen werden.
+- **Import aus Dump ohne Metadaten**: Hier kann eine Datei hochgeladen werden. Dieses kann entweder ein einfacher Export
+  aus einer anderen SCM-Manager Instanz sein oder ein Dump aus einem anderen Repository:
+  - Für Git und Mercurial muss es das per Tar gepackte "interne" Verzeichnis sein (das `.git` bzw. das `.hg` Verzeichnis).
+  - Für SVN kann ein per `svnamdin` erstellter Dump genutzt werden.
+  Wenn diese Dateien per Zip komprimiert sind, muss die Option "Komprimiert" gewählt werden.
+- **Import aus SCM-Manager-Dump mit Metadaten**: Mit dieser Option können Exporte mit Metadaten aus anderen SCM-Manager
+  Instanzen importiert werden. Dieses Repository Archiv wird vor dem Import auf
+  Kompatibilität der Daten überprüft (der SCM-Manager und alle installierten Plugins müssen mindestens die Version des
+  exportierenden Systems haben).
+
+Ist die zu importierende Datei verschlüsselt, muss das korrekte Passwort zum Entschlüsseln mitgeliefert werden.
 Wird kein Passwort gesetzt, geht der SCM-Manager davon aus, dass die Datei unverschlüsselt ist.
+
+Das gewählte Repository wird zum SCM-Manager hinzugefügt und sämtliche Repository Daten inklusive aller Branches und Tags werden importiert.
+
 
 ![Repository importieren](assets/import-repository.png)
 
