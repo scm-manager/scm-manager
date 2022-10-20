@@ -357,7 +357,13 @@ public class DefaultPluginManager implements PluginManager {
       }
     }
 
-    plugins.add(plugin);
+    if (pluginWasNotAddedYet(plugins, plugin)) {
+      plugins.add(plugin);
+    }
+  }
+
+  private static boolean pluginWasNotAddedYet(List<AvailablePlugin> plugins, AvailablePlugin plugin) {
+    return plugins.stream().noneMatch(p -> p.getDescriptor().getInformation().getName().equals(plugin.getDescriptor().getInformation().getName()));
   }
 
   private boolean isInstalledOrPending(String name) {

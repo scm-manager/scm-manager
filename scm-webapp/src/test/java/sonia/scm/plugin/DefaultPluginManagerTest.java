@@ -243,6 +243,24 @@ class DefaultPluginManagerTest {
     }
 
     @Test
+    void shouldInstallMultipleSameDependingPluginsOnlyOnce() {
+      AvailablePlugin review = createAvailable("scm-review-plugin");
+      AvailablePlugin ci = createAvailable("scm-ci-plugin", "1.1.0");
+      InstalledPlugin oldCi = createInstalled("scm-ci-plugin", "1.0.0");
+      when(review.getDescriptor().getDependencies()).thenReturn(ImmutableSet.of("scm-mail-plugin", "scm-ci-plugin"));
+      AvailablePlugin mail = createAvailable("scm-mail-plugin");
+      when(mail.getDescriptor().getOptionalDependencies()).thenReturn(ImmutableSet.of("scm-ci-plugin"));
+      when(center.getAvailablePlugins()).thenReturn(ImmutableSet.of(review, mail, ci));
+      when(loader.getInstalledPlugins()).thenReturn(ImmutableSet.of(oldCi));
+
+      manager.install("scm-review-plugin", false);
+
+      verify(installer).install(context, mail);
+      verify(installer).install(context, review);
+      verify(installer, times(1)).install(context, ci);
+    }
+
+    @Test
     void shouldNotInstallAlreadyInstalledDependenciesWhenUpToDate() {
       AvailablePlugin review = createAvailable("scm-review-plugin");
       when(review.getDescriptor().getDependencies()).thenReturn(ImmutableSet.of("scm-mail-plugin"));
