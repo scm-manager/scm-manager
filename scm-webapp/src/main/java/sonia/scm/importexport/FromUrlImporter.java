@@ -124,7 +124,7 @@ public class FromUrlImporter {
       } catch (IOException e) {
         throw new InternalRepositoryException(repository, "Failed to import from remote url: " + e.getMessage(), e);
       } catch (ImportFailedException e) {
-        notificationHandler.handleFailedImport(repository);
+        notificationHandler.handleFailedImport();
         throw e;
       }
     };

@@ -35,12 +35,9 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.repository.api.PullResponse;
 
-import java.util.Map;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ImportNotificationHandlerTest {
@@ -82,7 +79,7 @@ class ImportNotificationHandlerTest {
 
   @Test
   void shouldCreateFailureNotification() {
-    handler.handleFailedImport(repository);
+    handler.handleFailedImport();
 
     verify(notificationSender).send(argThat(
       notification -> {

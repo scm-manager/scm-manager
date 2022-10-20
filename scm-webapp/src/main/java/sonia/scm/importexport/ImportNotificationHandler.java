@@ -38,24 +38,24 @@ public class ImportNotificationHandler {
   private final NotificationSender notificationSender;
 
   @Inject
-  public ImportNotificationHandler(NotificationSender notificationSender) {
+  ImportNotificationHandler(NotificationSender notificationSender) {
     this.notificationSender = notificationSender;
   }
 
-  public void handleSuccessfulImport(Repository repository) {
+  void handleSuccessfulImport(Repository repository) {
     handleSuccessfulImport(repository, new PullResponse.LfsCount(0, 0));
   }
 
-  public void handleSuccessfulImport(Repository repository, PullResponse.LfsCount lfsCount) {
+  void handleSuccessfulImport(Repository repository, PullResponse.LfsCount lfsCount) {
     notificationSender.send(getImportSuccessfulNotification(repository, lfsCount));
   }
 
-  public void handleSuccessfulImportWithLfsFailures(Repository repository, PullResponse.LfsCount lfsCount) {
+  void handleSuccessfulImportWithLfsFailures(Repository repository, PullResponse.LfsCount lfsCount) {
     notificationSender.send(getImportLfsFailedNotification(repository, lfsCount));
   }
 
-  public void handleFailedImport(Repository repository) {
-    notificationSender.send(getImportFailedNotification(repository));
+  void handleFailedImport() {
+    notificationSender.send(getImportFailedNotification());
   }
 
   private Notification getImportSuccessfulNotification(Repository repository, PullResponse.LfsCount lfsCount) {
@@ -78,7 +78,7 @@ public class ImportNotificationHandler {
     );
   }
 
-  private Notification getImportFailedNotification(Repository repository) {
+  private Notification getImportFailedNotification() {
     return new Notification(Type.ERROR, null, "importFailed");
   }
 
