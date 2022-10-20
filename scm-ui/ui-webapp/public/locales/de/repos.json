@@ -540,10 +540,10 @@
     }
   },
   "shortcuts": {
-    "info": "Info",
-    "branches": "Branches",
-    "tags": "Tags",
-    "code": "Code",
-    "settings": "Einstellungen"
+    "info": "Wechsel zur Repository-Info",
+    "branches": "Wechsel zu den Branches",
+    "tags": "Wechsel zu den Tags",
+    "code": "Wechsel zum Code",
+    "settings": "Wechsel zu den Einstellungen"
   }
 }
