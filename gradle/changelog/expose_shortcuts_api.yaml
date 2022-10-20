@@ -1,0 +1,2 @@
+- type: changed
+  description: Expose api for declaring keyboard shortcuts ([#2139](https://github.com/scm-manager/scm-manager/pull/2139))
