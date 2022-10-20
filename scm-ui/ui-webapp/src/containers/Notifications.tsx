@@ -71,7 +71,7 @@ const NotificationEntry: FC<EntryProps> = ({ notification, removeToast }) => {
   }
   return (
     <tr className={`is-${color(notification)}`}>
-      <Column onClick={() => history.push(notification.link)} className="is-clickable">
+      <Column onClick={notification.link ? () => history.push(notification.link) : undefined} className="is-clickable">
         <NotificationMessage message={notification.message} parameters={notification.parameters} />
       </Column>
       <OnlyMobileWrappingColumn className="has-text-right">
@@ -189,6 +189,14 @@ type SubscriptionProps = {
   remove: (notification: Notification) => void;
 };
 
+const PotentialLink: FC<{ link?: string }> = ({ link, children }) => {
+  if (link) {
+    return <Link to={link}>{children}</Link>;
+  } else {
+    return <>{children}</>;
+  }
+};
+
 const NotificationSubscription: FC<SubscriptionProps> = ({ notifications, remove }) => {
   const [t] = useTranslation("commons");
 
@@ -204,9 +212,9 @@ const NotificationSubscription: FC<SubscriptionProps> = ({ notifications, remove
           close={() => remove(notification)}
         >
           <p>
-            <Link to={notification.link}>
+            <PotentialLink link={notification.link}>
               <NotificationMessage message={notification.message} parameters={notification.parameters} />
-            </Link>
+            </PotentialLink>
           </p>
         </ToastNotification>
       ))}
