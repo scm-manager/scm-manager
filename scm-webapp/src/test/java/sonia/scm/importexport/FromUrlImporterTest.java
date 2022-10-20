@@ -28,6 +28,7 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Answers;
@@ -43,6 +44,7 @@ import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.repository.RepositoryType;
 import sonia.scm.repository.api.ImportFailedException;
 import sonia.scm.repository.api.PullCommandBuilder;
+import sonia.scm.repository.api.PullResponse;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 
@@ -80,11 +82,16 @@ class FromUrlImporterTest {
   private Subject subject;
   @Mock(answer = Answers.RETURNS_SELF)
   private PullCommandBuilder pullCommandBuilder;
+  @Mock
+  private ImportNotificationHandler notificationHandler;
 
   @InjectMocks
   private FromUrlImporter importer;
 
   private final Repository repository = RepositoryTestData.createHeartOfGold("git");
+  private Repository createdRepository;
+
+  private PullResponse mockedResponse = new PullResponse();
 
   @BeforeEach
   void setUpMocks() {
@@ -93,7 +100,7 @@ class FromUrlImporterTest {
     when(manager.create(any(), any())).thenAnswer(
       invocation -> {
         Repository repository = invocation.getArgument(0, Repository.class);
-        Repository createdRepository = repository.clone();
+        createdRepository = repository.clone();
         createdRepository.setNamespace("created");
         invocation.getArgument(1, Consumer.class).accept(createdRepository);
         return createdRepository;
@@ -122,58 +129,82 @@ class FromUrlImporterTest {
     ThreadContext.unbindSubject();
   }
 
-  @Test
-  void shouldPullChangesFromRemoteUrl() throws IOException {
-    FromUrlImporter.RepositoryImportParameters parameters = new FromUrlImporter.RepositoryImportParameters();
-    parameters.setImportUrl("https://scm-manager.org/scm/repo/scmadmin/scm-manager.git");
+  @Nested
+  class ForSuccessfulImports {
 
-    Repository createdRepository = importer.importFromUrl(parameters, repository);
+    @BeforeEach
+    void mockImportResult() throws IOException {
+      when(pullCommandBuilder.pull(anyString())).thenAnswer(invocation -> mockedResponse);
+    }
 
-    assertThat(createdRepository.getNamespace()).isEqualTo("created");
-    verify(pullCommandBuilder).pull("https://scm-manager.org/scm/repo/scmadmin/scm-manager.git");
-    verify(logger).finished();
-    verify(eventBus).post(argThat(
-      event -> {
-        assertThat(event).isInstanceOf(RepositoryImportEvent.class);
-        RepositoryImportEvent repositoryImportEvent = (RepositoryImportEvent) event;
-        assertThat(repositoryImportEvent.getItem().getNamespace()).isEqualTo("created");
-        assertThat(repositoryImportEvent.isFailed()).isFalse();
-        return true;
-      }
-    ));
-  }
+    @Test
+    void shouldPullChangesFromRemoteUrl() throws IOException {
+      FromUrlImporter.RepositoryImportParameters parameters = new FromUrlImporter.RepositoryImportParameters();
+      parameters.setImportUrl("https://scm-manager.org/scm/repo/scmadmin/scm-manager.git");
 
-  @Test
-  void shouldPullChangesFromRemoteUrlWithCredentials() {
-    FromUrlImporter.RepositoryImportParameters parameters = new FromUrlImporter.RepositoryImportParameters();
-    parameters.setImportUrl("https://scm-manager.org/scm/repo/scmadmin/scm-manager.git");
-    parameters.setUsername("trillian");
-    parameters.setPassword("secret");
+      Repository createdRepository = importer.importFromUrl(parameters, repository);
 
-    importer.importFromUrl(parameters, repository);
+      assertThat(createdRepository.getNamespace()).isEqualTo("created");
+      verify(pullCommandBuilder).pull("https://scm-manager.org/scm/repo/scmadmin/scm-manager.git");
+      verify(logger).finished();
+      verify(eventBus).post(argThat(
+        event -> {
+          assertThat(event).isInstanceOf(RepositoryImportEvent.class);
+          RepositoryImportEvent repositoryImportEvent = (RepositoryImportEvent) event;
+          assertThat(repositoryImportEvent.getItem().getNamespace()).isEqualTo("created");
+          assertThat(repositoryImportEvent.isFailed()).isFalse();
+          return true;
+        }
+      ));
+      verify(notificationHandler).handleSuccessfulImport(createdRepository);
+    }
 
-    verify(pullCommandBuilder).withUsername("trillian");
-    verify(pullCommandBuilder).withPassword("secret");
-  }
+    @Test
+    void shouldPullChangesFromRemoteUrlWithCredentials() {
+      FromUrlImporter.RepositoryImportParameters parameters = new FromUrlImporter.RepositoryImportParameters();
+      parameters.setImportUrl("https://scm-manager.org/scm/repo/scmadmin/scm-manager.git");
+      parameters.setUsername("trillian");
+      parameters.setPassword("secret");
 
-  @Test
-  void shouldPullChangesWithLfsIfNotDisabled() {
-    FromUrlImporter.RepositoryImportParameters parameters = new FromUrlImporter.RepositoryImportParameters();
-    parameters.setSkipLfs(false);
+      importer.importFromUrl(parameters, repository);
 
-    importer.importFromUrl(parameters, repository);
+      verify(pullCommandBuilder).withUsername("trillian");
+      verify(pullCommandBuilder).withPassword("secret");
+    }
 
-    verify(pullCommandBuilder).doFetchLfs(true);
-  }
+    @Test
+    void shouldPullChangesWithLfsIfNotDisabled() {
+      FromUrlImporter.RepositoryImportParameters parameters = new FromUrlImporter.RepositoryImportParameters();
+      parameters.setImportUrl("https://scm-manager.org/scm/repo/scmadmin/scm-manager.git");
+      parameters.setSkipLfs(false);
 
-  @Test
-  void shouldPullChangesWithoutLfsIfSelected() {
-    FromUrlImporter.RepositoryImportParameters parameters = new FromUrlImporter.RepositoryImportParameters();
-    parameters.setSkipLfs(true);
+      importer.importFromUrl(parameters, repository);
 
-    importer.importFromUrl(parameters, repository);
+      verify(pullCommandBuilder).doFetchLfs(true);
+    }
 
-    verify(pullCommandBuilder).doFetchLfs(false);
+    @Test
+    void shouldPullChangesWithoutLfsIfSelected() {
+      FromUrlImporter.RepositoryImportParameters parameters = new FromUrlImporter.RepositoryImportParameters();
+      parameters.setImportUrl("https://scm-manager.org/scm/repo/scmadmin/scm-manager.git");
+      parameters.setSkipLfs(true);
+
+      importer.importFromUrl(parameters, repository);
+
+      verify(pullCommandBuilder).doFetchLfs(false);
+    }
+
+    @Test
+    void shouldHandleFailedLfsFiles() {
+      FromUrlImporter.RepositoryImportParameters parameters = new FromUrlImporter.RepositoryImportParameters();
+      parameters.setImportUrl("https://scm-manager.org/scm/repo/scmadmin/scm-manager.git");
+      parameters.setSkipLfs(false);
+      mockedResponse = new PullResponse(42, new PullResponse.LfsCount(0, 1));
+
+      importer.importFromUrl(parameters, repository);
+
+      verify(notificationHandler).handleSuccessfulImportWithLfsFailures(createdRepository);
+    }
   }
 
   @Test

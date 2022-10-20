@@ -89,7 +89,7 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
     return response;
   }
 
-  private PullResponse convert(Git git, FetchResult fetch) {
+  private PullResponse convert(Git git, FetchResult fetch, CountingLfsLoaderLogger lfsLoaderLogger) {
     long counter = 0;
 
     for (TrackingRefUpdate tru : fetch.getTrackingRefUpdates()) {
@@ -98,7 +98,7 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
 
     LOG.debug("received {} changesets by pull", counter);
 
-    return new PullResponse(counter);
+    return new PullResponse(counter, new PullResponse.LfsCount(lfsLoaderLogger.getSuccessCount(), lfsLoaderLogger.getFailureCount()));
   }
 
   private long count(Git git, TrackingRefUpdate tru) {
@@ -186,10 +186,11 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
         .call();
       //J+
 
+      CountingLfsLoaderLogger lfsLoaderLogger = new CountingLfsLoaderLogger();
       if (request.isFetchLfs()) {
-        fetchLfs(request, git);
+        fetchLfs(request, git, lfsLoaderLogger);
       }
-      response = convert(git, result);
+      response = convert(git, result, lfsLoaderLogger);
     } catch
     (GitAPIException ex) {
       throw new ImportFailedException(
@@ -204,22 +205,12 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
     return response;
   }
 
-  private void fetchLfs(PullCommandRequest request, Git git) throws IOException {
+  private void fetchLfs(PullCommandRequest request, Git git, LfsLoader.LfsLoaderLogger lfsLoaderLogger) throws IOException {
     open().getRefDatabase().getRefs().forEach(
       ref -> lfsLoader.inspectTree(
         ref.getObjectId(),
         git.getRepository(),
-        new LfsLoader.LfsLoaderLogger() {
-          @Override
-          public void failed(Exception e) {
-            // TODO
-          }
-
-          @Override
-          public void loading(String name) {
-            // TODO
-          }
-        },
+        lfsLoaderLogger,
         new MirrorCommandResult.LfsUpdateResult(),
         repository,
         pullHttpConnectionProvider.createHttpConnectionFactory(request),
@@ -230,5 +221,29 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
 
   private void firePostReceiveRepositoryHookEvent(Git git, FetchResult result) {
     postReceiveRepositoryHookEventFactory.fireForFetch(git, result);
+  }
+
+  private static class CountingLfsLoaderLogger implements LfsLoader.LfsLoaderLogger {
+
+    private int successCount = 0;
+    private int failureCount = 0;
+
+    @Override
+    public void failed(Exception e) {
+      ++failureCount;
+    }
+
+    @Override
+    public void loading(String name) {
+      ++successCount;
+    }
+
+    public int getSuccessCount() {
+      return successCount;
+    }
+
+    public int getFailureCount() {
+      return failureCount;
+    }
   }
 }

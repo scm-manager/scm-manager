@@ -42,6 +42,7 @@ import sonia.scm.repository.RepositoryType;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.ImportFailedException;
 import sonia.scm.repository.api.PullCommandBuilder;
+import sonia.scm.repository.api.PullResponse;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 
@@ -63,13 +64,15 @@ public class FromUrlImporter {
   private final RepositoryServiceFactory serviceFactory;
   private final ScmEventBus eventBus;
   private final RepositoryImportLoggerFactory loggerFactory;
+  private final ImportNotificationHandler notificationHandler;
 
   @Inject
-  public FromUrlImporter(RepositoryManager manager, RepositoryServiceFactory serviceFactory, ScmEventBus eventBus, RepositoryImportLoggerFactory loggerFactory) {
+  public FromUrlImporter(RepositoryManager manager, RepositoryServiceFactory serviceFactory, ScmEventBus eventBus, RepositoryImportLoggerFactory loggerFactory, ImportNotificationHandler notificationHandler) {
     this.manager = manager;
     this.serviceFactory = serviceFactory;
     this.eventBus = eventBus;
     this.loggerFactory = loggerFactory;
+    this.notificationHandler = notificationHandler;
   }
 
   public Repository importFromUrl(RepositoryImportParameters parameters, Repository repository) {
@@ -115,12 +118,24 @@ public class FromUrlImporter {
         pullCommand.doFetchLfs(!parameters.isSkipLfs());
 
         logger.step("pulling repository from " + parameters.getImportUrl());
-        pullCommand.pull(parameters.getImportUrl());
+        PullResponse pullResponse = pullCommand.pull(parameters.getImportUrl());
         logger.finished();
+        handle(pullResponse, repository);
       } catch (IOException e) {
         throw new InternalRepositoryException(repository, "Failed to import from remote url: " + e.getMessage(), e);
+      } catch (ImportFailedException e) {
+        notificationHandler.handleFailedImport(repository);
+        throw e;
       }
     };
+  }
+
+  private void handle(PullResponse pullResponse, Repository repository) {
+    if (pullResponse.getLfsCount().getFailureCount() == 0) {
+      notificationHandler.handleSuccessfulImport(repository);
+    } else {
+      notificationHandler.handleSuccessfulImportWithLfsFailures(repository);
+    }
   }
 
   @Getter
