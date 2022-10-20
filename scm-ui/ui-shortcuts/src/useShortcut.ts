@@ -92,9 +92,9 @@ export default function useShortcut(
       Mousetrap.bind(key, (e) => {
         const callbackResult = callback(e);
         /*
-         * Returning false disables default event behaviour and stops event bubbling.
+         * Returning false by default disables standard browser event behaviour and stops event bubbling.
          * Otherwise, a shortcut that moves focus to an input field would cause the key to be entered into the input at the same time.
-         * We could move the decision to the callback, but this behaviour is an implementation detail of Mousetrap which we would like to hide.
+         * Shortcuts can explicitly return `true` to re-enable event bubbling and browser behaviour.
          */
         return callbackResult ?? false;
       });
