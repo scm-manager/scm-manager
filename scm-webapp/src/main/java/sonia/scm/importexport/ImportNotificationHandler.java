@@ -28,8 +28,10 @@ import sonia.scm.notifications.Notification;
 import sonia.scm.notifications.NotificationSender;
 import sonia.scm.notifications.Type;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.api.PullResponse;
 
 import javax.inject.Inject;
+import java.util.Map;
 
 public class ImportNotificationHandler {
 
@@ -41,23 +43,39 @@ public class ImportNotificationHandler {
   }
 
   public void handleSuccessfulImport(Repository repository) {
-    notificationSender.send(getImportSuccessfulNotification(repository));
+    handleSuccessfulImport(repository, new PullResponse.LfsCount(0, 0));
   }
 
-  public void handleSuccessfulImportWithLfsFailures(Repository repository) {
-    notificationSender.send(getImportLfsFailedNotification(repository));
+  public void handleSuccessfulImport(Repository repository, PullResponse.LfsCount lfsCount) {
+    notificationSender.send(getImportSuccessfulNotification(repository, lfsCount));
+  }
+
+  public void handleSuccessfulImportWithLfsFailures(Repository repository, PullResponse.LfsCount lfsCount) {
+    notificationSender.send(getImportLfsFailedNotification(repository, lfsCount));
   }
 
   public void handleFailedImport(Repository repository) {
     notificationSender.send(getImportFailedNotification(repository));
   }
 
-  private Notification getImportSuccessfulNotification(Repository repository) {
-    return new Notification(Type.SUCCESS, createLink(repository), "importFinished");
+  private Notification getImportSuccessfulNotification(Repository repository, PullResponse.LfsCount lfsCount) {
+    if (lfsCount.getSuccessCount() > 0 || lfsCount.getFailureCount() > 0) {
+      return new Notification(Type.SUCCESS, createLink(repository), "importWithLfsFinished", createParameters(lfsCount));
+    } else {
+      return new Notification(Type.SUCCESS, createLink(repository), "importFinished");
+    }
   }
 
-  private Notification getImportLfsFailedNotification(Repository repository) {
-    return new Notification(Type.ERROR, createLink(repository), "importLfsFailed");
+  private Notification getImportLfsFailedNotification(Repository repository, PullResponse.LfsCount lfsCount) {
+    return new Notification(Type.ERROR, createLink(repository), "importLfsFailed", createParameters(lfsCount));
+  }
+
+  private static Map<String, String> createParameters(PullResponse.LfsCount lfsCount) {
+    return Map.of(
+      "successCount", Integer.toString(lfsCount.getSuccessCount()),
+      "failureCount", Integer.toString(lfsCount.getFailureCount()),
+      "overallCount", Integer.toString(lfsCount.getSuccessCount() + lfsCount.getFailureCount())
+    );
   }
 
   private Notification getImportFailedNotification(Repository repository) {

@@ -132,9 +132,9 @@ public class FromUrlImporter {
 
   private void handle(PullResponse pullResponse, Repository repository) {
     if (pullResponse.getLfsCount().getFailureCount() == 0) {
-      notificationHandler.handleSuccessfulImport(repository);
+      notificationHandler.handleSuccessfulImport(repository, pullResponse.getLfsCount());
     } else {
-      notificationHandler.handleSuccessfulImportWithLfsFailures(repository);
+      notificationHandler.handleSuccessfulImportWithLfsFailures(repository, pullResponse.getLfsCount());
     }
   }
 

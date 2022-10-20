@@ -481,8 +481,9 @@
     "exportFinished": "Der Repository Export wurde abgeschlossen.",
     "exportFailed": "Der Repository Export ist fehlgeschlagen. Versuchen Sie es erneut oder wenden Sie sich an einen Administrator.",
     "importFinished": "Der Repository Import wurde abgeschlossen.",
+    "importWithLfsFinished": "Der Repository Import wurde abgeschlossen. Dabei wurden {{successCount}} LFS Dateien importiert.",
+    "importLfsFailed": "Der Repository Import wurde abgeschlossen. Jedoch konnten {{failureCount}} von {{overallCount}} LFS Dateien nicht geladen werden.",
     "importFailed": "Der Repository Import ist fehlgeschlagen. Versuchen Sie es erneut oder wenden Sie sich an einen Administrator.",
-    "importLfsFailed": "Der Repository Import wurde abgeschlossen. Es konnten jedoch nicht alle LFS Dateien geladen werden.",
     "healthCheckFailed": "Der Repository Health Check ist fehlgeschlagen.",
     "healthCheckSuccess": "Der Repository Health Check war erfolgreich."
   },

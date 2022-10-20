@@ -203,7 +203,10 @@ class FromUrlImporterTest {
 
       importer.importFromUrl(parameters, repository);
 
-      verify(notificationHandler).handleSuccessfulImportWithLfsFailures(createdRepository);
+      verify(notificationHandler).
+        handleSuccessfulImportWithLfsFailures(
+          createdRepository,
+          argThat(argument -> argument.getFailureCount() == 0 && argument.getSuccessCount() == 0));
     }
   }
 

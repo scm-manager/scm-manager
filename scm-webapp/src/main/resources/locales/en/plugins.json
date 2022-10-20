@@ -425,7 +425,8 @@
     "exportFinished": "The repository export has been finished.",
     "exportFailed": "The repository export has failed. Try it again or contact your administrator.",
     "importFinished": "The repository import has been finished.",
-    "importLfsFailed": "The repository import has been finished. There were errors during the import of LFS files.",
+    "importWithLfsFinished": "The repository import has been finished. {{successCount}} LFS files have been imported, too.",
+    "importLfsFailed": "The repository import has been finished. There were {{failureCount}} errors during the import of {{overallCount}} LFS files.",
     "importFailed": "The repository import has failed. Try it again or contact your administrator.",
     "healthCheckFailed": "The repository health check has failed.",
     "healthCheckSuccess": "The repository health check was successful."

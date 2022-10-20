@@ -72,7 +72,7 @@ const NotificationEntry: FC<EntryProps> = ({ notification, removeToast }) => {
   return (
     <tr className={`is-${color(notification)}`}>
       <Column onClick={() => history.push(notification.link)} className="is-clickable">
-        <NotificationMessage message={notification.message} />
+        <NotificationMessage message={notification.message} parameters={notification.parameters} />
       </Column>
       <OnlyMobileWrappingColumn className="has-text-right">
         <DateFromNow date={notification.createdAt} />
@@ -175,9 +175,13 @@ const color = (notification: Notification) => {
   return c;
 };
 
-const NotificationMessage: FC<{ message: string }> = ({ message }) => {
+const NotificationMessage: FC<{ message: string; parameters?: Map<string, string> }> = ({ message, parameters }) => {
   const [t] = useTranslation("plugins");
-  return t("notifications." + message, message);
+  if (parameters) {
+    return t("notifications." + message, message, parameters);
+  } else {
+    return t("notifications." + message, message);
+  }
 };
 
 type SubscriptionProps = {
@@ -201,7 +205,7 @@ const NotificationSubscription: FC<SubscriptionProps> = ({ notifications, remove
         >
           <p>
             <Link to={notification.link}>
-              <NotificationMessage message={notification.message} />
+              <NotificationMessage message={notification.message} parameters={notification.parameters} />
             </Link>
           </p>
         </ToastNotification>

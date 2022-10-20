@@ -27,6 +27,7 @@ package sonia.scm.notifications;
 import lombok.Value;
 
 import java.time.Instant;
+import java.util.Map;
 
 /**
  * Notifications can be used to send a message to specific user.
@@ -39,16 +40,22 @@ public class Notification {
   Type type;
   String link;
   String message;
+  Map<String, String> parameters;
   Instant createdAt;
 
   public Notification(Type type, String link, String message) {
-    this(type, link, message, Instant.now());
+    this(type, link, message, null);
   }
 
-  Notification(Type type, String link, String message, Instant createdAt) {
+  public Notification(Type type, String link, String message, Map<String, String> parameters) {
+    this(type, link, message, parameters, Instant.now());
+  }
+
+  Notification(Type type, String link, String message, Map<String, String> parameters, Instant createdAt) {
     this.type = type;
     this.link = link;
     this.message = message;
+    this.parameters = parameters;
     this.createdAt = createdAt;
   }
 

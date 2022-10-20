@@ -29,6 +29,7 @@ export type Notification = HalRepresentation & {
   type: "INFO" | "SUCCESS" | "WARNING" | "ERROR";
   link: string;
   message: string;
+  parameters?: Map<string, string>;
 };
 
 type EmbeddedNotifications = {
