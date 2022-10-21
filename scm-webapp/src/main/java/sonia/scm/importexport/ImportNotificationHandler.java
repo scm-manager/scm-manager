@@ -33,7 +33,7 @@ import sonia.scm.repository.api.PullResponse;
 import javax.inject.Inject;
 import java.util.Map;
 
-public class ImportNotificationHandler {
+class ImportNotificationHandler {
 
   private final NotificationSender notificationSender;
 
