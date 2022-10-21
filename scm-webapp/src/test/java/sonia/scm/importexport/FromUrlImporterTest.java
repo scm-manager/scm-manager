@@ -57,6 +57,7 @@ import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -156,7 +157,10 @@ class FromUrlImporterTest {
           return true;
         }
       ));
-      verify(notificationHandler).handleSuccessfulImport(createdRepository);
+      verify(notificationHandler)
+        .handleSuccessfulImport(
+          eq(createdRepository),
+          argThat(argument -> argument.getSuccessCount() == 0));
     }
 
     @Test
@@ -205,8 +209,8 @@ class FromUrlImporterTest {
 
       verify(notificationHandler).
         handleSuccessfulImportWithLfsFailures(
-          createdRepository,
-          argThat(argument -> argument.getFailureCount() == 0 && argument.getSuccessCount() == 0));
+          eq(createdRepository),
+          argThat(argument -> argument.getFailureCount() == 1 && argument.getSuccessCount() == 0));
     }
   }
 
