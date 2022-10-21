@@ -46,7 +46,7 @@ import SyntaxModal from "../search/SyntaxModal";
 import SearchErrorNotification from "../search/SearchErrorNotification";
 import queryString from "query-string";
 import { orderTypes } from "../search/Search";
-import useShortcut from "../shortcuts/useShortcut";
+import { useShortcut } from "@scm-manager/ui-shortcuts";
 
 const Input = styled.input`
   border-radius: 4px !important;
@@ -358,7 +358,9 @@ const OmniSearch: FC = () => {
   searchTypes.sort(orderTypes(t));
 
   const id = useCallback(namespaceAndName, []);
-  useShortcut("/", () => searchInputRef.current?.focus(), t("shortcuts.search"));
+  useShortcut("/", () => searchInputRef.current?.focus(), {
+    description: t("shortcuts.search"),
+  });
 
   const entries = useMemo(() => {
     const newEntries = [];

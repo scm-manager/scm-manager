@@ -23,7 +23,7 @@
  */
 
 import { useActiveModals } from "@scm-manager/ui-components";
-import usePauseShortcuts from "./usePauseShortcuts";
+import { usePauseShortcuts } from "@scm-manager/ui-shortcuts";
 
 /**
  * Keyboard shortcuts are not active in modals using {@link useActiveModals} to determine whether any modals are open.

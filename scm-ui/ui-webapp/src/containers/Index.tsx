@@ -23,7 +23,7 @@
  */
 import React, { FC, useState } from "react";
 import App from "./App";
-import { ActiveModalCountContextProvider, ErrorBoundary, Header, Loading } from "@scm-manager/ui-components";
+import { ErrorBoundary, Header, Loading } from "@scm-manager/ui-components";
 import PluginLoader from "./PluginLoader";
 import ScrollToTop from "./ScrollToTop";
 import IndexErrorPage from "./IndexErrorPage";
@@ -33,7 +33,6 @@ import i18next from "i18next";
 import { binder, extensionPoints } from "@scm-manager/ui-extensions";
 import InitializationAdminAccountStep from "./InitializationAdminAccountStep";
 import InitializationPluginWizardStep from "./InitializationPluginWizardStep";
-import { ShortcutDocsContextProvider } from "../shortcuts/useShortcutDocs";
 
 const Index: FC = () => {
   const { isLoading, error, data } = useIndex();
@@ -61,15 +60,11 @@ const Index: FC = () => {
   return (
     <ErrorBoundary fallback={IndexErrorPage}>
       <ScrollToTop>
-        <ShortcutDocsContextProvider>
-          <ActiveModalCountContextProvider>
-            <NamespaceAndNameContextProvider>
-              <PluginLoader link={link} loaded={pluginsLoaded} callback={() => setPluginsLoaded(true)}>
-                <App />
-              </PluginLoader>
-            </NamespaceAndNameContextProvider>
-          </ActiveModalCountContextProvider>
-        </ShortcutDocsContextProvider>
+        <NamespaceAndNameContextProvider>
+          <PluginLoader link={link} loaded={pluginsLoaded} callback={() => setPluginsLoaded(true)}>
+            <App />
+          </PluginLoader>
+        </NamespaceAndNameContextProvider>
       </ScrollToTop>
     </ErrorBoundary>
   );

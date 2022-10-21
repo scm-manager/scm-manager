@@ -30,7 +30,7 @@ import { useIndex, useSubject } from "@scm-manager/ui-api";
 import { ErrorPage, Footer, Header, Loading } from "@scm-manager/ui-components";
 import { binder } from "@scm-manager/ui-extensions";
 import usePauseShortcutsWhenModalsActive from "../shortcuts/usePauseShortcutsWhenModalsActive";
-import useShortcut from "../shortcuts/useShortcut";
+import { useShortcut } from "@scm-manager/ui-shortcuts";
 import Login from "./Login";
 import NavigationBar from "./NavigationBar";
 import styled from "styled-components";
@@ -41,6 +41,7 @@ const AppWrapper = styled.div`
   display: flex;
   flex-direction: column;
 `;
+
 const App: FC = () => {
   const { data: index } = useIndex();
   const { isLoading, error, isAuthenticated, isAnonymous, me } = useSubject();
@@ -49,17 +50,21 @@ const App: FC = () => {
 
   const history = useHistory();
 
-  useShortcut("option+r", () => history.push("/repos/"), t("shortcuts.repositories"), {
+  useShortcut("option+r", () => history.push("/repos/"), {
     active: !!index?._links["repositories"],
+    description: t("shortcuts.repositories"),
   });
-  useShortcut("option+u", () => history.push("/users/"), t("shortcuts.users"), {
+  useShortcut("option+u", () => history.push("/users/"), {
     active: !!index?._links["users"],
+    description: t("shortcuts.users"),
   });
-  useShortcut("option+g", () => history.push("/groups/"), t("shortcuts.groups"), {
+  useShortcut("option+g", () => history.push("/groups/"), {
     active: !!index?._links["groups"],
+    description: t("shortcuts.groups"),
   });
-  useShortcut("option+a", () => history.push("/admin/"), t("shortcuts.admin"), {
+  useShortcut("option+a", () => history.push("/admin/"), {
     active: !!index?._links["config"],
+    description: t("shortcuts.admin"),
   });
 
   if (!index) {
@@ -85,7 +90,7 @@ const App: FC = () => {
   }
 
   return (
-    <AppWrapper className={classNames("App", { "has-navbar-fixed-top": authenticatedOrAnonymous})}>
+    <AppWrapper className={classNames("App", { "has-navbar-fixed-top": authenticatedOrAnonymous })}>
       <Header authenticated={authenticatedOrAnonymous}>
         <NavigationBar links={index._links} />
       </Header>

@@ -22,22 +22,33 @@
  * SOFTWARE.
  */
 
-import { useEffect } from "react";
-import Mousetrap from "mousetrap";
+import type { FC } from "react";
+import React, { useContext, useMemo, useRef } from "react";
 
-/**
- * Pauses or unpauses all shortcuts provided by {@link useShortcut}.
- *
- * @param pause Whether shortcuts should be paused
- */
-export default function usePauseShortcuts(pause: boolean) {
-  useEffect(() => {
-    if (pause) {
-      // @ts-ignore method comes from plugin
-      Mousetrap.pause();
-    } else {
-      // @ts-ignore method comes from plugin
-      Mousetrap.unpause();
-    }
-  }, [pause]);
+export type ShortcutDocsContextType = {
+  docs: Readonly<Record<string, string>>;
+  add: (key: string, description: string) => void;
+  remove: (key: string) => void;
+};
+
+const ShortcutDocsContext = React.createContext<ShortcutDocsContextType>({} as ShortcutDocsContextType);
+
+export const ShortcutDocsContextProvider: FC = ({ children }) => {
+  const docs = useRef<Record<string, string>>({});
+  const value = useMemo(
+    () => ({
+      docs: docs.current,
+      add: (key: string, description: string) => (docs.current[key] = description),
+      remove: (key: string) => {
+        delete docs.current[key];
+      },
+    }),
+    []
+  );
+
+  return <ShortcutDocsContext.Provider value={value}>{children}</ShortcutDocsContext.Provider>;
+};
+
+export default function useShortcutDocs() {
+  return useContext(ShortcutDocsContext);
 }

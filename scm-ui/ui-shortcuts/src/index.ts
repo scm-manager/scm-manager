@@ -21,24 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, ReactNode } from "react";
-import { ColumnProps } from "./types";
 
-type Props = ColumnProps & {
-  children: (row: any, columnIndex: number, rowIndex: number) => ReactNode;
-};
-
-const Column: FC<Props> = ({ row, columnIndex, rowIndex, children }) => {
-  if (row === undefined) {
-    throw new Error("missing row, use column only as child of Table");
-  }
-  if (columnIndex === undefined) {
-    throw new Error("missing row, use column only as child of Table");
-  }
-  if (rowIndex === undefined) {
-    throw new Error("missing row, use column only as child of Table");
-  }
-  return <>{children(row, columnIndex, rowIndex)}</>;
-};
-
-export default Column;
+export { default as useShortcut } from "./useShortcut";
+export { default as useShortcutDocs, ShortcutDocsContextProvider } from "./useShortcutDocs";
+export { default as usePauseShortcuts } from "./usePauseShortcuts";
