@@ -37,13 +37,14 @@ import org.eclipse.jgit.treewalk.AbstractTreeIterator;
 import org.eclipse.jgit.treewalk.EmptyTreeIterator;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.treewalk.filter.PathFilter;
-import sonia.scm.ContextEntry;
-import sonia.scm.NotFoundException;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.util.Util;
 
 import java.io.IOException;
 import java.util.List;
+
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import static sonia.scm.NotFoundException.notFound;
 
 final class Differ implements AutoCloseable {
 
@@ -70,13 +71,13 @@ final class Differ implements AutoCloseable {
 
     ObjectId revision = repository.resolve(request.getRevision());
     if (revision == null) {
-      throw NotFoundException.notFound(ContextEntry.ContextBuilder.entity("revision not found", request.getRevision()));
+      throw notFound(entity("Revision", request.getRevision()));
     }
     RevCommit commit;
     try {
       commit = walk.parseCommit(revision);
     } catch (MissingObjectException ex) {
-      throw NotFoundException.notFound(ContextEntry.ContextBuilder.entity("revision not found", request.getRevision()));
+      throw notFound(entity("Revision", request.getRevision()));
     }
 
     walk.markStart(commit);
@@ -92,6 +93,9 @@ final class Differ implements AutoCloseable {
 
     if (!Strings.isNullOrEmpty(request.getAncestorChangeset())) {
       ObjectId otherRevision = repository.resolve(request.getAncestorChangeset());
+      if (otherRevision == null) {
+        throw notFound(entity("Revision", request.getAncestorChangeset()));
+      }
       ObjectId ancestorId = GitUtil.computeCommonAncestor(repository, revision, otherRevision);
       RevTree tree = walk.parseCommit(ancestorId).getTree();
       treeWalk.addTree(tree);
