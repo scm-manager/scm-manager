@@ -27,8 +27,13 @@ import { Column, Modal, Table } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import splitKeyCombination from "./splitKeyCombination";
+import styled from "styled-components";
 
 const keyComparator = ([a]: [string, string], [b]: [string, string]) => (a > b ? 1 : -1);
+
+const KeyDisplay = styled.span`
+  border: 1px solid var(--scm-border-color);
+`;
 
 const ShortcutDocsModal = () => {
   const { docs } = useShortcutDocs();
@@ -43,7 +48,7 @@ const ShortcutDocsModal = () => {
         <Column header={t("shortcutDocsModal.table.headers.keyCombination")}>
           {([key]: [string, string]) =>
             splitKeyCombination(key).map((k, i) => (
-              <span
+              <KeyDisplay
                 className={classNames(
                   "has-background-secondary-less has-text-secondary-most py-1 px-2 has-rounded-border",
                   {
@@ -52,7 +57,7 @@ const ShortcutDocsModal = () => {
                 )}
               >
                 {k}
-              </span>
+              </KeyDisplay>
             ))
           }
         </Column>
