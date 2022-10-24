@@ -175,7 +175,7 @@ const color = (notification: Notification) => {
   return c;
 };
 
-const NotificationMessage: FC<{ message: string; parameters?: Map<string, string> }> = ({ message, parameters }) => {
+const NotificationMessage: FC<{ message: string; parameters?: Record<string, string> }> = ({ message, parameters }) => {
   const [t] = useTranslation("plugins");
   if (parameters) {
     return t("notifications." + message, message, parameters);

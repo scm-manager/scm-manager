@@ -30,7 +30,7 @@
     "initializeRepository": "Erstellt einen ersten Branch und committet eine README.md.",
     "importUrlHelpText": "Importiert das gesamte Repository inkl. aller Branches und Tags über die Remote URL.",
     "usernameHelpText": "Benutzername könnte für den Import benötigt werden. Wird ignoriert, falls nicht gesetzt.",
-    "passwordHelpText": "Password könnte für den Import benötigt werden. Wird ignoriert, falls nicht gesetzt.",
+    "passwordHelpText": "Passwort könnte für den Import benötigt werden. Wird ignoriert, falls nicht gesetzt.",
     "skipLfsHelpText": "Ist diese Option aktiviert, werden beim Import keine (potentiell vorhandenen) LFS-Dateien in den SCM-Manager geladen. Diese Option ist nur für Git Repositories relevant."
   },
   "repositoryRoot": {
