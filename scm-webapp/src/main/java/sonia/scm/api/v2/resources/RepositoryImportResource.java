@@ -383,6 +383,7 @@ public class RepositoryImportResource {
     private String importUrl;
     private String username;
     private String password;
+    private boolean skipLfs;
   }
 
   @Getter
@@ -400,6 +401,8 @@ public class RepositoryImportResource {
     String getUsername();
 
     String getPassword();
+
+    boolean isSkipLfs();
   }
 
   interface ImportRepositoryFromFileDto extends CreateRepositoryDto {

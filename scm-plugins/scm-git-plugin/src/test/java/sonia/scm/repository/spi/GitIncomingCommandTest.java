@@ -40,6 +40,7 @@ import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.mock;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -48,6 +49,9 @@ import static org.junit.Assert.assertNotNull;
  */
 public class GitIncomingCommandTest
   extends AbstractRemoteCommandTestBase {
+
+  private final LfsLoader lfsLoader = mock(LfsLoader.class);
+  private final PullHttpConnectionProvider pullHttpConnectionProvider = mock(PullHttpConnectionProvider.class);
 
   /**
    * Method description
@@ -99,7 +103,9 @@ public class GitIncomingCommandTest
     GitPullCommand pull = new GitPullCommand(
       handler,
       context,
-      postReceiveRepositoryHookEventFactory);
+      postReceiveRepositoryHookEventFactory,
+      lfsLoader,
+      pullHttpConnectionProvider);
     PullCommandRequest req = new PullCommandRequest();
     req.setRemoteRepository(outgoingRepository);
     pull.pull(req);

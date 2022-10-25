@@ -33,16 +33,28 @@ be chosen. To create a new namespace, this has to be chosen from the drop down e
 ![Create Repository](assets/create-repository.png)
 
 ### Import a Repository
-Beneath creating new repositories you also may import existing repositories to SCM-Manager. 
+Besided creating new repositories you also may import existing repositories to SCM-Manager. 
 Just use the Switcher on top right to navigate to the import page and fill the import wizard with the required information.
 
-Your repository will be added to SCM-Manager and all repository data including all branches and tags will be imported.
-In addition to the normal repository import, there is the possibility to import a repository archive with metadata.
-This repository archive must have been exported from another SCM-Manager and is checked for data compatibility before
-import (the SCM-Manager and all its installed plugins have to have at least the versions of the system the export has
-been created on).
-If the file to be imported is encrypted, the correct password must be supplied for decryption.
+Depending on the type of the new repository, there are different "ways" to import repositories:
+- **Import via URL** (Git and Mercurial only): Here the repository is imported from a remote server specified by the
+  remote repository's URL. In addition, a username and a password can be provided. Furthermore, for Git repositories
+  LFS files can be excluded (if LFS is used in the remote repository).
+- **Import from dump without metadata**: Here a file can be uploaded. This may be a simple export from another SCN-Manager
+  instance, or a dump file from another repository:
+  - For Git and Mercurial, this has to be a tar packed file of the "internal" repository (the `.git` or the
+    `.hg` directory).
+  - For SVN a standard dump file created with `svnadmin` can be used.
+  If the import file is zip compressed, check the "compressed" option.
+- **Import from SCM-Manager dump with metadata**: This option is to be used with exports of repositories with metadata
+  from other SCM-Manager instances. It will be checked for data compatibility before
+  import (the SCM-Manager and all its installed plugins have to have at least the versions of the system the export has
+  been created on).
+
+File dumps can be encrypted if they were exported from an SCM-Manager. In this case, the password has to be specified.
 If no password is set, the SCM Manager assumes that the file is unencrypted.
+
+Your repository will be added to SCM-Manager and all repository data including all branches and tags will be imported.
 
 ![Import Repository](assets/import-repository.png)
 

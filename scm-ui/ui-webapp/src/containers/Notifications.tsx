@@ -71,8 +71,8 @@ const NotificationEntry: FC<EntryProps> = ({ notification, removeToast }) => {
   }
   return (
     <tr className={`is-${color(notification)}`}>
-      <Column onClick={() => history.push(notification.link)} className="is-clickable">
-        <NotificationMessage message={notification.message} />
+      <Column onClick={notification.link ? () => history.push(notification.link) : undefined} className="is-clickable">
+        <NotificationMessage message={notification.message} parameters={notification.parameters} />
       </Column>
       <OnlyMobileWrappingColumn className="has-text-right">
         <DateFromNow date={notification.createdAt} />
@@ -175,14 +175,26 @@ const color = (notification: Notification) => {
   return c;
 };
 
-const NotificationMessage: FC<{ message: string }> = ({ message }) => {
+const NotificationMessage: FC<{ message: string; parameters?: Record<string, string> }> = ({ message, parameters }) => {
   const [t] = useTranslation("plugins");
-  return t("notifications." + message, message);
+  if (parameters) {
+    return t("notifications." + message, message, parameters);
+  } else {
+    return t("notifications." + message, message);
+  }
 };
 
 type SubscriptionProps = {
   notifications: Notification[];
   remove: (notification: Notification) => void;
+};
+
+const PotentialLink: FC<{ link?: string }> = ({ link, children }) => {
+  if (link) {
+    return <Link to={link}>{children}</Link>;
+  } else {
+    return <>{children}</>;
+  }
 };
 
 const NotificationSubscription: FC<SubscriptionProps> = ({ notifications, remove }) => {
@@ -200,9 +212,9 @@ const NotificationSubscription: FC<SubscriptionProps> = ({ notifications, remove
           close={() => remove(notification)}
         >
           <p>
-            <Link to={notification.link}>
-              <NotificationMessage message={notification.message} />
-            </Link>
+            <PotentialLink link={notification.link}>
+              <NotificationMessage message={notification.message} parameters={notification.parameters} />
+            </PotentialLink>
           </p>
         </ToastNotification>
       ))}

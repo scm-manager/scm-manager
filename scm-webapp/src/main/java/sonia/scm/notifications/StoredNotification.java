@@ -33,6 +33,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.time.Instant;
+import java.util.Map;
 
 @Data
 @NoArgsConstructor
@@ -44,6 +45,7 @@ public class StoredNotification {
   Type type;
   String link;
   String message;
+  Map<String, String> parameters;
   @XmlJavaTypeAdapter(XmlInstantAdapter.class)
   Instant createdAt;
 
@@ -53,5 +55,6 @@ public class StoredNotification {
     this.type = notification.getType();
     this.link = notification.getLink();
     this.message = notification.getMessage();
+    this.parameters = notification.getParameters();
   }
 }

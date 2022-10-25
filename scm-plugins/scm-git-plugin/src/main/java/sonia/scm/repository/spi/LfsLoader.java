@@ -50,34 +50,39 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
-import java.util.List;
 
 class LfsLoader {
 
   private static final Logger LOG = LoggerFactory.getLogger(LfsLoader.class);
 
   private final LfsBlobStoreFactory lfsBlobStoreFactory;
-  private final MirrorHttpConnectionProvider mirrorHttpConnectionProvider;
 
   @Inject
-  LfsLoader(LfsBlobStoreFactory lfsBlobStoreFactory, MirrorHttpConnectionProvider mirrorHttpConnectionProvider) {
+  LfsLoader(LfsBlobStoreFactory lfsBlobStoreFactory) {
     this.lfsBlobStoreFactory = lfsBlobStoreFactory;
-    this.mirrorHttpConnectionProvider = mirrorHttpConnectionProvider;
   }
 
   void inspectTree(ObjectId newObjectId,
-                   MirrorCommandRequest mirrorCommandRequest,
                    Repository gitRepository,
-                   List<String> mirrorLog,
+                   LfsLoaderLogger mirrorLog,
                    LfsUpdateResult lfsUpdateResult,
-                   sonia.scm.repository.Repository repository) {
-    String mirrorUrl = mirrorCommandRequest.getSourceUrl();
-    EntryHandler entryHandler = new EntryHandler(repository, gitRepository, mirrorCommandRequest, mirrorLog, lfsUpdateResult);
+                   sonia.scm.repository.Repository repository,
+                   HttpConnectionFactory httpConnectionFactory,
+                   String url) {
+    EntryHandler entryHandler = new EntryHandler(repository, gitRepository, mirrorLog, lfsUpdateResult, httpConnectionFactory);
+    inspectTree(newObjectId, entryHandler, gitRepository, mirrorLog, lfsUpdateResult, url);
+  }
 
+  private void inspectTree(ObjectId newObjectId,
+                           EntryHandler entryHandler,
+                           Repository gitRepository,
+                           LfsLoaderLogger mirrorLog,
+                           LfsUpdateResult lfsUpdateResult,
+                           String sourceUrl) {
     try {
       gitRepository
         .getConfig()
-        .setString(ConfigConstants.CONFIG_SECTION_LFS, null, ConfigConstants.CONFIG_KEY_URL, computeLfsUrl(mirrorUrl));
+        .setString(ConfigConstants.CONFIG_SECTION_LFS, null, ConfigConstants.CONFIG_KEY_URL, computeLfsUrl(sourceUrl));
 
       TreeWalk treeWalk = new TreeWalk(gitRepository);
       treeWalk.setFilter(new LfsPointerFilter());
@@ -94,17 +99,16 @@ class LfsLoader {
       }
     } catch (Exception e) {
       LOG.warn("failed to load lfs files", e);
-      mirrorLog.add("Failed to load lfs files:");
-      mirrorLog.add(e.getMessage());
+      mirrorLog.failed(e);
       lfsUpdateResult.increaseFailureCount();
     }
   }
 
-  private String computeLfsUrl(String mirrorUrl) {
-    if (mirrorUrl.endsWith(".git")) {
-      return mirrorUrl + Protocol.INFO_LFS_ENDPOINT;
+  private String computeLfsUrl(String sourceUrl) {
+    if (sourceUrl.endsWith(".git")) {
+      return sourceUrl + Protocol.INFO_LFS_ENDPOINT;
     } else {
-      return mirrorUrl + ".git" + Protocol.INFO_LFS_ENDPOINT;
+      return sourceUrl + ".git" + Protocol.INFO_LFS_ENDPOINT;
     }
   }
 
@@ -112,22 +116,22 @@ class LfsLoader {
 
     private final BlobStore lfsBlobStore;
     private final Repository gitRepository;
-    private final List<String> mirrorLog;
+    private final LfsLoaderLogger mirrorLog;
     private final LfsUpdateResult lfsUpdateResult;
     private final sonia.scm.repository.Repository repository;
     private final HttpConnectionFactory httpConnectionFactory;
 
     private EntryHandler(sonia.scm.repository.Repository repository,
                          Repository gitRepository,
-                         MirrorCommandRequest mirrorCommandRequest,
-                         List<String> mirrorLog,
-                         LfsUpdateResult lfsUpdateResult) {
+                         LfsLoaderLogger mirrorLog,
+                         LfsUpdateResult lfsUpdateResult,
+                         HttpConnectionFactory httpConnectionFactory) {
       this.lfsBlobStore = lfsBlobStoreFactory.getLfsBlobStore(repository);
       this.repository = repository;
       this.gitRepository = gitRepository;
       this.mirrorLog = mirrorLog;
       this.lfsUpdateResult = lfsUpdateResult;
-      this.httpConnectionFactory = mirrorHttpConnectionProvider.createHttpConnectionFactory(mirrorCommandRequest, mirrorLog);
+      this.httpConnectionFactory = httpConnectionFactory;
     }
 
     private void handleTreeEntry(TreeWalk treeWalk) {
@@ -142,8 +146,7 @@ class LfsLoader {
         }
       } catch (Exception e) {
         LOG.warn("failed to load lfs file", e);
-        mirrorLog.add("Failed to load lfs file:");
-        mirrorLog.add(e.getMessage());
+        mirrorLog.failed(e);
         lfsUpdateResult.increaseFailureCount();
       }
     }
@@ -151,7 +154,7 @@ class LfsLoader {
     private Path loadLfsFile(LfsPointer lfsPointer) throws IOException {
       lfsUpdateResult.increaseOverallCount();
       LOG.trace("trying to load lfs file '{}' for repository {}", lfsPointer.getOid(), repository);
-      mirrorLog.add(String.format("Loading lfs file with id '%s'", lfsPointer.getOid().name()));
+      mirrorLog.loading(lfsPointer.getOid().name());
       Lfs lfs = new Lfs(gitRepository);
       lfs.getMediaFile(lfsPointer.getOid());
 
@@ -173,5 +176,12 @@ class LfsLoader {
           .getOutputStream()
       );
     }
+  }
+
+  interface LfsLoaderLogger {
+
+    void failed(Exception e);
+
+    void loading(String name);
   }
 }

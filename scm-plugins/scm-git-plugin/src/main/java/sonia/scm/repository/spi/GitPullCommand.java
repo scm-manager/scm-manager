@@ -41,6 +41,7 @@ import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.ImportFailedException;
+import sonia.scm.repository.api.MirrorCommandResult;
 import sonia.scm.repository.api.PullResponse;
 
 import javax.inject.Inject;
@@ -54,14 +55,21 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
   implements PullCommand {
 
   private static final Logger LOG = LoggerFactory.getLogger(GitPullCommand.class);
+
   private final PostReceiveRepositoryHookEventFactory postReceiveRepositoryHookEventFactory;
+  private final LfsLoader lfsLoader;
+  private final PullHttpConnectionProvider pullHttpConnectionProvider;
 
   @Inject
   public GitPullCommand(GitRepositoryHandler handler,
                         GitContext context,
-                        PostReceiveRepositoryHookEventFactory postReceiveRepositoryHookEventFactory) {
+                        PostReceiveRepositoryHookEventFactory postReceiveRepositoryHookEventFactory,
+                        LfsLoader lfsLoader,
+                        PullHttpConnectionProvider pullHttpConnectionProvider) {
     super(handler, context);
     this.postReceiveRepositoryHookEventFactory = postReceiveRepositoryHookEventFactory;
+    this.lfsLoader = lfsLoader;
+    this.pullHttpConnectionProvider = pullHttpConnectionProvider;
   }
 
   @Override
@@ -81,7 +89,7 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
     return response;
   }
 
-  private PullResponse convert(Git git, FetchResult fetch) {
+  private PullResponse convert(Git git, FetchResult fetch, CountingLfsLoaderLogger lfsLoaderLogger) {
     long counter = 0;
 
     for (TrackingRefUpdate tru : fetch.getTrackingRefUpdates()) {
@@ -90,7 +98,7 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
 
     LOG.debug("received {} changesets by pull", counter);
 
-    return new PullResponse(counter);
+    return new PullResponse(counter, new PullResponse.LfsCount(lfsLoaderLogger.getSuccessCount(), lfsLoaderLogger.getFailureCount()));
   }
 
   private long count(Git git, TrackingRefUpdate tru) {
@@ -178,7 +186,11 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
         .call();
       //J+
 
-      response = convert(git, result);
+      CountingLfsLoaderLogger lfsLoaderLogger = new CountingLfsLoaderLogger();
+      if (request.isFetchLfs()) {
+        fetchLfs(request, git, lfsLoaderLogger);
+      }
+      response = convert(git, result, lfsLoaderLogger);
     } catch
     (GitAPIException ex) {
       throw new ImportFailedException(
@@ -193,7 +205,45 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
     return response;
   }
 
+  private void fetchLfs(PullCommandRequest request, Git git, LfsLoader.LfsLoaderLogger lfsLoaderLogger) throws IOException {
+    open().getRefDatabase().getRefs().forEach(
+      ref -> lfsLoader.inspectTree(
+        ref.getObjectId(),
+        git.getRepository(),
+        lfsLoaderLogger,
+        new MirrorCommandResult.LfsUpdateResult(),
+        repository,
+        pullHttpConnectionProvider.createHttpConnectionFactory(request),
+        request.getRemoteUrl().toString()
+      )
+    );
+  }
+
   private void firePostReceiveRepositoryHookEvent(Git git, FetchResult result) {
     postReceiveRepositoryHookEventFactory.fireForFetch(git, result);
+  }
+
+  private static class CountingLfsLoaderLogger implements LfsLoader.LfsLoaderLogger {
+
+    private int successCount = 0;
+    private int failureCount = 0;
+
+    @Override
+    public void failed(Exception e) {
+      ++failureCount;
+    }
+
+    @Override
+    public void loading(String name) {
+      ++successCount;
+    }
+
+    public int getSuccessCount() {
+      return successCount;
+    }
+
+    public int getFailureCount() {
+      return failureCount;
+    }
   }
 }

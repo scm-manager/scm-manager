@@ -858,18 +858,17 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
       // one revision is missing here ("fcd0ef1831e4002ac43ea539f4094334c79ea9ec"), because this is iterated twice, what is hard to test
     }).forEach(expectedRevision ->
       verify(lfsLoader)
-      .inspectTree(eq(ObjectId.fromString(expectedRevision)), any(), any(), any(), any(), eq(repository)));
+      .inspectTree(eq(ObjectId.fromString(expectedRevision)), any(), any(), any(), eq(repository), any(), any()));
   }
 
   @Test
-  public void shouldMarkMirrorAsFailedIfLfsFileFailes() {
+  public void shouldMarkMirrorAsFailedIfLfsFileFails() {
     doAnswer(invocation -> {
-      invocation.getArgument(4, MirrorCommandResult.LfsUpdateResult.class).increaseFailureCount();
+      invocation.getArgument(3, MirrorCommandResult.LfsUpdateResult.class).increaseFailureCount();
       return null;
     })
       .when(lfsLoader)
-      .inspectTree(eq(ObjectId.fromString("a8495c0335a13e6e432df90b3727fa91943189a7")), any(), any(), any(), any(), eq(repository));
-
+      .inspectTree(eq(ObjectId.fromString("a8495c0335a13e6e432df90b3727fa91943189a7")), any(), any(), any(), eq(repository), any(), any());
 
     MirrorCommandResult mirrorCommandResult = callMirrorCommand();
 
@@ -881,7 +880,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     callMirrorCommand(repositoryDirectory.getAbsolutePath(), c -> c.setIgnoreLfs(true));
 
     verify(lfsLoader, never())
-      .inspectTree(any(), any(), any(), any(), any(), any());
+      .inspectTree(any(), any(), any(), any(), any(), any(), any());
   }
 
   public static class DefaultBranchSelectorTest {

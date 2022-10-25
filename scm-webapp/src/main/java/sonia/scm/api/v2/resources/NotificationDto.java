@@ -31,6 +31,7 @@ import sonia.scm.notifications.StoredNotification;
 import sonia.scm.notifications.Type;
 
 import java.time.Instant;
+import java.util.Map;
 
 @Data
 public class NotificationDto extends HalRepresentation {
@@ -39,12 +40,14 @@ public class NotificationDto extends HalRepresentation {
   private Type type;
   private String link;
   private String message;
+  private Map<String, String> parameters;
 
   public NotificationDto(StoredNotification notification, Links links) {
     super(links);
     this.type = notification.getType();
     this.link = notification.getLink();
     this.message = notification.getMessage();
+    this.parameters = notification.getParameters();
     this.createdAt = notification.getCreatedAt();
   }
 }

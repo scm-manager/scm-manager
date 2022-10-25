@@ -21,11 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.api;
 
+import lombok.Value;
+
 /**
- * The {@link PullResponse} is the result of the 
+ * The {@link PullResponse} is the result of the
  * {@link PullCommandBuilder#pull(sonia.scm.repository.Repository)} method and
  * contains informations over the executed pull command.
  *
@@ -35,20 +37,53 @@ package sonia.scm.repository.api;
 public final class PullResponse extends AbstractPushOrPullResponse
 {
 
-  /**
-   * Constructs a new PullResponse.
-   *
-   */
-  public PullResponse() {}
+  private final LfsCount lfsCount;
 
   /**
    * Constructs a new PullResponse.
    *
+   */
+  public PullResponse() {
+    this.lfsCount = new LfsCount(0, 0);
+  }
+
+  /**
+   * Constructs a new PullResponse.
    *
    * @param changesetCount count of pulled changesets
    */
   public PullResponse(long changesetCount)
   {
+    this(changesetCount, new LfsCount(0, 0));
+  }
+
+  /**
+   * Constructs a new PullResponse.
+   *
+   * @param changesetCount count of pulled changesets
+   * @param lfsCount Object for the count of potentially loaded lfs files
+   */
+  public PullResponse(long changesetCount, LfsCount lfsCount) {
     super(changesetCount);
+    this.lfsCount = lfsCount;
+  }
+
+  /**
+   * Object for the count of potentially loaded lfs files.
+   */
+  public LfsCount getLfsCount() {
+    return lfsCount;
+  }
+
+  @Value
+  public static class LfsCount {
+    /**
+     * Count of successfully loaded lfs files.
+     */
+    int successCount;
+    /**
+     * Count of failed lfs files.
+     */
+    int failureCount;
   }
 }

@@ -30,6 +30,7 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.repository.GitConfig;
@@ -48,6 +49,11 @@ public class GitModificationsCommandTest extends AbstractRemoteCommandTestBase {
 
   private GitModificationsCommand incomingModificationsCommand;
   private GitModificationsCommand outgoingModificationsCommand;
+
+  @Mock
+  private LfsLoader lfsLoader;
+  @Mock
+  private PullHttpConnectionProvider pullHttpConnectionProvider;
 
   @Before
   public void init() {
@@ -171,7 +177,9 @@ public class GitModificationsCommandTest extends AbstractRemoteCommandTestBase {
     GitPullCommand pullCommand = new GitPullCommand(
       handler,
       context,
-      postReceiveRepositoryHookEventFactory);
+      postReceiveRepositoryHookEventFactory,
+      lfsLoader,
+      pullHttpConnectionProvider);
     PullCommandRequest pullRequest = new PullCommandRequest();
     pullRequest.setRemoteRepository(incomingRepository);
     pullCommand.pull(pullRequest);

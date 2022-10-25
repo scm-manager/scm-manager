@@ -33,7 +33,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import sonia.scm.notifications.Notification;
 import sonia.scm.notifications.NotificationStore;
 import sonia.scm.notifications.StoredNotification;
 import sonia.scm.notifications.Type;
@@ -50,6 +49,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static java.util.Collections.emptyMap;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -162,7 +162,7 @@ class NotificationResourceTest {
   }
 
   private StoredNotification notification(String m) {
-    return new StoredNotification(UUID.randomUUID().toString(), Type.INFO, "/notify", m, Instant.now());
+    return new StoredNotification(UUID.randomUUID().toString(), Type.INFO, "/notify", m, emptyMap(), Instant.now());
   }
 
   @Path("/api/v2")
