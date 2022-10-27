@@ -41,12 +41,11 @@ import java.util.concurrent.locks.Lock;
  * javasecurity:S2083: SonarQube thinks that the path (targetFile) is generated from an http header (HttpUtil), but
  * this is not true. It looks like a false-positive, so we suppress the warning for now.
  */
-@SuppressWarnings("javasecurity:S2083")
+@SuppressWarnings({"javasecurity:S2083", "UnstableApiUsage"})
 public final class CopyOnWrite {
 
   private static final Logger LOG = LoggerFactory.getLogger(CopyOnWrite.class);
 
-  @SuppressWarnings("UnstableApiUsage")
   private static final Striped<Lock> concurrencyLock = Striped.lock(10);
 
   private CopyOnWrite() {
@@ -54,7 +53,7 @@ public final class CopyOnWrite {
 
   public static void withTemporaryFile(FileWriter writer, Path targetFile) {
     validateInput(targetFile);
-    Lock lock = concurrencyLock.get(targetFile.toUri().toString());
+    Lock lock = concurrencyLock.get(targetFile.toString());
     try {
       lock.lock();
       Path temporaryFile = createTemporaryFile(targetFile);
