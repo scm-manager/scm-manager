@@ -21,9 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.store;
 
+import com.google.common.util.concurrent.Striped;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,26 +32,36 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.UUID;
+import java.util.concurrent.locks.Lock;
 
 /**
  * CopyOnWrite creates a copy of the target file, before it is modified. This should prevent empty or incomplete files
  * on errors such as full disk.
- *
+ * <p>
  * javasecurity:S2083: SonarQube thinks that the path (targetFile) is generated from an http header (HttpUtil), but
  * this is not true. It looks like a false-positive, so we suppress the warning for now.
  */
-@SuppressWarnings("javasecurity:S2083")
+@SuppressWarnings({"javasecurity:S2083", "UnstableApiUsage"})
 public final class CopyOnWrite {
 
   private static final Logger LOG = LoggerFactory.getLogger(CopyOnWrite.class);
 
-  private CopyOnWrite() {}
+  private static final Striped<Lock> concurrencyLock = Striped.lock(10);
+
+  private CopyOnWrite() {
+  }
 
   public static void withTemporaryFile(FileWriter writer, Path targetFile) {
     validateInput(targetFile);
-    Path temporaryFile = createTemporaryFile(targetFile);
-    executeCallback(writer, targetFile, temporaryFile);
-    replaceOriginalFile(targetFile, temporaryFile);
+    Lock lock = concurrencyLock.get(targetFile.toString());
+    try {
+      lock.lock();
+      Path temporaryFile = createTemporaryFile(targetFile);
+      executeCallback(writer, targetFile, temporaryFile);
+      replaceOriginalFile(targetFile, temporaryFile);
+    } finally {
+      lock.unlock();
+    }
   }
 
   @SuppressWarnings("squid:S3725") // performance of Files#isDirectory
