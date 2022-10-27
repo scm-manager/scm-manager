@@ -1,0 +1,2 @@
+- type: fixed
+  description: Remove forced word break from markdown view ([#2142](https://github.com/scm-manager/scm-manager/pull/2142))
