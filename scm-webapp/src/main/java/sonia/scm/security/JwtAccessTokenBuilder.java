@@ -160,7 +160,7 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
   public JwtAccessToken build() {
     final Scope principalScope = SecurityUtils.getSubject().getPrincipals().oneByType(Scope.class);
     if (principalScope != null && !principalScope.isEmpty()) {
-      if (scope != null && !scope.isEmpty()) {
+      if (scope != null && !supportsAll()) {
         throw new AuthorizationException(String.format("cannot merge builder scope (%s) with principal scope (%s)", scope, principalScope));
       }
       LOG.debug("using existing scope for new access token: {}", principalScope);
@@ -214,4 +214,12 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
     return new JwtAccessToken(claims, compact);
   }
 
+  private boolean supportsAll() {
+    for (String permission : scope) {
+      if (!SecurityUtils.getSubject().isPermitted(permission)) {
+        return false;
+      }
+    }
+    return true;
+  }
 }

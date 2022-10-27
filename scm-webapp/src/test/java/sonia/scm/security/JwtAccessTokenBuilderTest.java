@@ -213,8 +213,16 @@ class JwtAccessTokenBuilderTest {
 
     @Test
     void shouldThrowExceptionWhenScopeAlreadyDefinedInBuilder() {
+      when(subject.isPermitted("an:incompatible:scope")).thenReturn(false);
       JwtAccessTokenBuilder builder = factory.create().scope(Scope.valueOf("an:incompatible:scope")).subject("dent");
       assertThrows(AuthorizationException.class, builder::build);
+    }
+
+    @Test
+    void shouldAcceptRequestedScopeIfPermittedByCurrentScope() {
+      when(subject.isPermitted("dummy:scope:42")).thenReturn(true);
+      JwtAccessTokenBuilder builder = factory.create().scope(Scope.valueOf("dummy:scope:42")).subject("dent");
+      builder.build();
     }
   }
 
