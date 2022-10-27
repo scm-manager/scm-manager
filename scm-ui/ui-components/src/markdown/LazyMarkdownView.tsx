@@ -225,7 +225,7 @@ class LazyMarkdownView extends React.Component<Props, State> {
 
     return (
       <ErrorBoundary fallback={MarkdownErrorNotification}>
-        <div ref={el => this.setState({ contentRef: el })} className="content is-word-break">
+        <div ref={el => this.setState({ contentRef: el })} className="content">
           {renderedMarkdown}
         </div>
       </ErrorBoundary>
