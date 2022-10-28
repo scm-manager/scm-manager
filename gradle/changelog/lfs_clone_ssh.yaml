@@ -1,0 +1,2 @@
+- type: fixed
+  description: Clone of git repositories with lfs files via ssh ([#2144](https://github.com/scm-manager/scm-manager/pull/2144))
