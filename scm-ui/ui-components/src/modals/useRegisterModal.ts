@@ -47,6 +47,7 @@ export default function useRegisterModal(active: boolean, initialValue: boolean 
     return () => {
       if (previousActiveState.current) {
         decrement();
+        previousActiveState.current = null;
       }
     };
   }, [active, decrement, increment]);
