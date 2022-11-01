@@ -22,18 +22,18 @@
  * SOFTWARE.
  */
 
-import { renderHook } from "@testing-library/react-hooks";
-import React, { FC } from "react";
-import { KeyboardIteratorContextProvider, useKeyboardIteratorTarget } from "./keyboardIterator";
-import { render } from "@testing-library/react";
-import { ShortcutDocsContextProvider } from "../useShortcutDocs";
+import {renderHook} from "@testing-library/react-hooks";
+import React, {FC} from "react";
+import {KeyboardIteratorContextProvider, useKeyboardIteratorCallback,} from "./keyboardIterator";
+import {render} from "@testing-library/react";
+import {ShortcutDocsContextProvider} from "../useShortcutDocs";
 import Mousetrap from "mousetrap";
 
 jest.mock("react-i18next", () => ({
   useTranslation: () => [jest.fn()],
 }));
 
-const Wrapper: FC<{ initialIndex?: number }> = ({ children, initialIndex }) => {
+const Wrapper: FC<{ initialIndex?: number }> = ({children, initialIndex}) => {
   return (
     <ShortcutDocsContextProvider>
       <KeyboardIteratorContextProvider initialIndex={initialIndex}>{children}</KeyboardIteratorContextProvider>
@@ -47,7 +47,7 @@ const createWrapper =
     <Wrapper initialIndex={initialIndex}>{children}</Wrapper>;
 
 const Item: FC<{ callback: () => void }> = ({ callback }) => {
-  useKeyboardIteratorTarget(callback);
+  useKeyboardIteratorCallback(callback);
   return <li>example</li>;
 };
 
@@ -67,7 +67,7 @@ describe("shortcutIterator", () => {
   it("should not call callback upon registration", () => {
     const callback = jest.fn();
 
-    renderHook(() => useKeyboardIteratorTarget(callback), {
+    renderHook(() => useKeyboardIteratorCallback(callback), {
       wrapper: Wrapper,
     });
 
@@ -208,5 +208,19 @@ describe("shortcutIterator", () => {
     expect(callback).not.toHaveBeenCalled();
     expect(callback2).not.toHaveBeenCalled();
     expect(callback3).not.toHaveBeenCalled();
+  });
+
+  it("should not explode if the last item in the list is removed", async () => {
+    const callback = jest.fn();
+
+    const { rerender } = render(<List callbacks={[callback]} />, {
+      wrapper: createWrapper(),
+    });
+
+    expect(callback).not.toHaveBeenCalled();
+
+    rerender(<List callbacks={[]} />);
+
+    expect(callback).not.toHaveBeenCalled();
   });
 });

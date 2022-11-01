@@ -25,3 +25,4 @@
 export { default as useShortcut } from "./useShortcut";
 export { default as useShortcutDocs, ShortcutDocsContextProvider } from "./useShortcutDocs";
 export { default as usePauseShortcuts } from "./usePauseShortcuts";
+export { useKeyboardIteratorTarget, KeyboardIterator } from "./iterator/keyboardIterator";
