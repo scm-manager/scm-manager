@@ -25,7 +25,10 @@
     "@scm-manager/babel-preset": "^2.13.1",
     "@scm-manager/prettier-config": "^2.10.1",
     "@scm-manager/eslint-config": "^2.16.0",
-    "@scm-manager/tsconfig": "^2.13.0"
+    "@scm-manager/tsconfig": "^2.13.0",
+    "@testing-library/react-hooks": "8.0.1",
+    "@testing-library/react": "12.1.5",
+    "jest-environment-jsdom-sixteen": "1.0.3"
   },
   "babel": {
     "presets": [
