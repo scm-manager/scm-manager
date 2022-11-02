@@ -12,7 +12,9 @@
   "scripts": {
     "build": "tsup ./src/index.ts -d build --format esm,cjs --dts",
     "lint": "eslint src",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "depcheck": "depcheck",
+    "test": "jest"
   },
   "peerDependencies": {
     "react": "17",
@@ -28,8 +30,7 @@
     "@scm-manager/eslint-config": "^2.16.0",
     "@scm-manager/tsconfig": "^2.13.0",
     "@testing-library/react-hooks": "8.0.1",
-    "@testing-library/react": "12.1.5",
-    "jest-environment-jsdom-sixteen": "1.0.3"
+    "@testing-library/react": "12.1.5"
   },
   "babel": {
     "presets": [
