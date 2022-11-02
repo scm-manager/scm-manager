@@ -35,10 +35,17 @@ type KeyboardIteratorContextType = {
 
 const KeyboardIteratorContext = React.createContext<KeyboardIteratorContextType>({
   register: () => {
-    throw new Error("Keyboard iterator targets have to be declared inside a KeyboardIterator");
+    if (process.env.NODE_ENV === "development") {
+      // eslint-disable-next-line no-console
+      console.warn("Keyboard iterator targets have to be declared inside a KeyboardIterator");
+    }
+    return 0;
   },
   deregister: () => {
-    throw new Error("Keyboard iterator targets have to be declared inside a KeyboardIterator");
+    if (process.env.NODE_ENV === "development") {
+      // eslint-disable-next-line no-console
+      console.warn("Keyboard iterator targets have to be declared inside a KeyboardIterator");
+    }
   },
 });
 
