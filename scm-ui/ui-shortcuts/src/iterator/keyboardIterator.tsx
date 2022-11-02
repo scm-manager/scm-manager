@@ -22,9 +22,9 @@
  * SOFTWARE.
  */
 
-import React, {FC, useCallback, useContext, useEffect, useMemo, useRef} from "react";
-import {useTranslation} from "react-i18next";
-import {useShortcut} from "../index";
+import React, { FC, useCallback, useContext, useEffect, useMemo, useRef } from "react";
+import { useTranslation } from "react-i18next";
+import { useShortcut } from "../index";
 
 type Callback = () => void;
 
