@@ -22,18 +22,18 @@
  * SOFTWARE.
  */
 
-import {renderHook} from "@testing-library/react-hooks";
-import React, {FC} from "react";
-import {KeyboardIteratorContextProvider, useKeyboardIteratorCallback} from "./keyboardIterator";
-import {render} from "@testing-library/react";
-import {ShortcutDocsContextProvider} from "../useShortcutDocs";
+import { renderHook } from "@testing-library/react-hooks";
+import React, { FC } from "react";
+import { KeyboardIteratorContextProvider, useKeyboardIteratorCallback } from "./keyboardIterator";
+import { render } from "@testing-library/react";
+import { ShortcutDocsContextProvider } from "../useShortcutDocs";
 import Mousetrap from "mousetrap";
 
 jest.mock("react-i18next", () => ({
   useTranslation: () => [jest.fn()],
 }));
 
-const Wrapper: FC<{ initialIndex?: number }> = ({children, initialIndex}) => {
+const Wrapper: FC<{ initialIndex?: number }> = ({ children, initialIndex }) => {
   return (
     <ShortcutDocsContextProvider>
       <KeyboardIteratorContextProvider initialIndex={initialIndex}>{children}</KeyboardIteratorContextProvider>

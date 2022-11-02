@@ -46,5 +46,4 @@ Plugins können selbst neue Tastenkürzel definieren.
 Diese können global oder repository-spezifisch sein oder in einem komplett anderen Kontext angewandt werden.
 Sie werden automatisch in der Übersicht im SCM-Manager mit aufgelistet.
 Um die Tastenkürzel eines Plugins innerhalb der Benutzerdokumentation zu finden, verweisen wir hier auf die
-Dokumentation
-des jeweiligen Plugins.
+Dokumentation des jeweiligen Plugins.
