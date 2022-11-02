@@ -23,12 +23,12 @@
  */
 import React from "react";
 
-import {NamespaceCollection, Repository} from "@scm-manager/ui-types";
+import { NamespaceCollection, Repository } from "@scm-manager/ui-types";
 
 import groupByNamespace from "./groupByNamespace";
 import RepositoryGroupEntry from "./RepositoryGroupEntry";
-import {ExtensionPoint, extensionPoints} from "@scm-manager/ui-extensions";
-import {KeyboardIterator} from "@scm-manager/ui-shortcuts";
+import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
+import { KeyboardIterator } from "@scm-manager/ui-shortcuts";
 
 type Props = {
   repositories: Repository[];
