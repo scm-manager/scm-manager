@@ -21,12 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, {FC, ReactNode} from "react";
-import {Link} from "react-router-dom";
+import React, { FC, ReactNode } from "react";
+import { Link } from "react-router-dom";
 import classNames from "classnames";
 import styled from "styled-components";
-import {useTranslation} from "react-i18next";
-import {useKeyboardIteratorTarget} from "@scm-manager/ui-shortcuts";
+import { useTranslation } from "react-i18next";
+import { useKeyboardIteratorTarget } from "@scm-manager/ui-shortcuts";
 
 const StyledGroupEntry = styled.div`
   max-height: calc(90px - 1.5rem);
