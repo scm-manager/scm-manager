@@ -82,7 +82,7 @@ export { default as CardColumn } from "./CardColumn";
 export { default as CardColumnSmall } from "./CardColumnSmall";
 export { default as CommaSeparatedList } from "./CommaSeparatedList";
 export { SplitAndReplace, Replacement } from "@scm-manager/ui-text";
-export { useShortcut, KeyboardIterator, useKeyboardIteratorTarget } from "@scm-manager/ui-shortcuts";
+export { useShortcut } from "@scm-manager/ui-shortcuts";
 export { regExpPattern as changesetShortLinkRegex } from "./markdown/remarkChangesetShortLinkParser";
 export * from "./markdown/PluginApi";
 export * from "./devices";

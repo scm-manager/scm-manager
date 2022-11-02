@@ -278,6 +278,10 @@
     "users": "Navigiere zur Benutzerübersicht",
     "groups": "Navigiere zur Gruppenübersicht",
     "admin": "Navigiere zur Administration",
-    "docs": "Öffne die Tastaturkürzelübersicht"
+    "docs": "Öffne die Tastaturkürzelübersicht",
+    "iterator": {
+      "next": "Bewege den Fokus auf den nächsten Listeneintrag",
+      "previous": "Bewege den Fokus auf den vorherigen Listeneintrag"
+    }
   }
 }

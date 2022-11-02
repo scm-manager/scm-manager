@@ -23,9 +23,9 @@
  */
 
 import {renderHook} from "@testing-library/react-hooks";
-import React, {FC} from "react";
-import {KeyboardIteratorContextProvider, useKeyboardIteratorCallback,} from "./keyboardIterator";
-import {render} from "@testing-library/react";
+import React, { FC } from "react";
+import { KeyboardIteratorContextProvider, useKeyboardIteratorCallback } from "./keyboardIterator";
+import { render } from "@testing-library/react";
 import {ShortcutDocsContextProvider} from "../useShortcutDocs";
 import Mousetrap from "mousetrap";
 
@@ -33,13 +33,15 @@ jest.mock("react-i18next", () => ({
   useTranslation: () => [jest.fn()],
 }));
 
-const Wrapper: FC<{ initialIndex?: number }> = ({children, initialIndex}) => {
+const Wrapper: FC<{ initialIndex?: number }> = ({ children, initialIndex }) => {
   return (
     <ShortcutDocsContextProvider>
       <KeyboardIteratorContextProvider initialIndex={initialIndex}>{children}</KeyboardIteratorContextProvider>
     </ShortcutDocsContextProvider>
   );
 };
+
+const DocsWrapper: FC = ({ children }) => <ShortcutDocsContextProvider>{children}</ShortcutDocsContextProvider>;
 
 const createWrapper =
   (initialIndex?: number): FC =>
@@ -74,7 +76,18 @@ describe("shortcutIterator", () => {
     expect(callback).not.toHaveBeenCalled();
   });
 
-  it("should call first callback upon pressing forward in initial state", async () => {
+  it("should throw if not inside keyboard iterator context", () => {
+    const callback = jest.fn();
+
+    const { result } = renderHook(() => useKeyboardIteratorCallback(callback), {
+      wrapper: DocsWrapper,
+    });
+
+    expect(result.error).toBeInstanceOf(Error);
+    expect(result.error?.message).toEqual("Keyboard iterator targets have to be declared inside a KeyboardIterator");
+  });
+
+  it("should call last callback upon pressing forward in initial state", async () => {
     const callback = jest.fn();
     const callback2 = jest.fn();
     const callback3 = jest.fn();
@@ -87,9 +100,9 @@ describe("shortcutIterator", () => {
 
     Mousetrap.trigger("k");
 
-    expect(callback).toHaveBeenCalledTimes(1);
+    expect(callback).not.toHaveBeenCalled();
     expect(callback2).not.toHaveBeenCalled();
-    expect(callback3).not.toHaveBeenCalled();
+    expect(callback3).toHaveBeenCalledTimes(1);
   });
 
   it("should call first callback once upon pressing backward in initial state", async () => {

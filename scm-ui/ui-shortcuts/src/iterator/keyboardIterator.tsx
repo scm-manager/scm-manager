@@ -9,13 +9,21 @@ type KeyboardIteratorContextType = {
   deregister: (index: number) => void;
 };
 
-const KeyboardIteratorContext = React.createContext({} as KeyboardIteratorContextType);
+const KeyboardIteratorContext = React.createContext<KeyboardIteratorContextType>({
+  register: () => {
+    throw new Error("Keyboard iterator targets have to be declared inside a KeyboardIterator");
+  },
+  deregister: () => {
+    throw new Error("Keyboard iterator targets have to be declared inside a KeyboardIterator");
+  },
+});
 
 export const KeyboardIteratorContextProvider: FC<{ initialIndex?: number }> = ({ children, initialIndex = -1 }) => {
-  const [t] = useTranslation("plugins");
+  const [t] = useTranslation("commons");
   const callbacks = useRef<Array<Callback>>([]);
   const activeIndex = useRef<number>(initialIndex);
   const executeCallback = useCallback((index: number) => callbacks.current[index](), []);
+
   const navigateBackward = useCallback(() => {
     if (activeIndex.current === -1) {
       activeIndex.current = 0;
@@ -25,15 +33,17 @@ export const KeyboardIteratorContextProvider: FC<{ initialIndex?: number }> = ({
       executeCallback(activeIndex.current);
     }
   }, [executeCallback]);
+
   const navigateForward = useCallback(() => {
     if (activeIndex.current === -1) {
-      activeIndex.current = 0;
+      activeIndex.current = callbacks.current.length - 1;
       executeCallback(activeIndex.current);
     } else if (activeIndex.current < callbacks.current.length - 1) {
       activeIndex.current += 1;
       executeCallback(activeIndex.current);
     }
   }, [executeCallback]);
+
   const value = useMemo(
     () => ({
       register: (callback: () => void) => callbacks.current.push(callback) - 1,
@@ -51,17 +61,21 @@ export const KeyboardIteratorContextProvider: FC<{ initialIndex?: number }> = ({
     }),
     [executeCallback]
   );
+
   useShortcut("j", navigateBackward, {
-    description: t("scm-review-plugin.shortcuts.previousPullRequest"),
+    description: t("shortcuts.iterator.previous"),
   });
+
   useShortcut("k", navigateForward, {
-    description: t("scm-review-plugin.shortcuts.nextPullRequest"),
+    description: t("shortcuts.iterator.next"),
   });
+
   useShortcut("tab", () => {
     activeIndex.current = -1;
 
     return true;
   });
+
   return <KeyboardIteratorContext.Provider value={value}>{children}</KeyboardIteratorContext.Provider>;
 };
 
@@ -80,22 +94,25 @@ export const useKeyboardIteratorCallback = (callback: Callback) => {
  * const ref = useKeyboardIteratorTarget();
  * const target = <button ref={ref}>My Iteration Target</button>
  */
-export function useKeyboardIteratorTarget() {
-  const ref = useRef<HTMLElement>(null);
+export function useKeyboardIteratorTarget(): React.RefCallback<HTMLElement> {
+  const ref = useRef<HTMLElement>();
   const callback = useCallback(() => ref.current?.focus(), []);
+  const refCallback: React.RefCallback<HTMLElement> = useCallback((el) => {
+    if (el) {
+      ref.current = el;
+    }
+  }, []);
   useKeyboardIteratorCallback(callback);
-  return ref;
+  return refCallback;
 }
 
 /**
- * Allows users to iterate through a pre-defined list of items, provided by enclosed {@link useKeyboardIteratorTarget} invocations.
+ * Allows keyboard users to iterate through a list of items, defined by enclosed {@link useKeyboardIteratorTarget} invocations.
  *
  * The order is determined by the render order of the target hooks.
  *
- * Users can press `j` to navigate backwards and `k` to navigate forward.
- * Once a user presses `tab`, the iterator is reset to its initial state.
- *
- * Note: When at the end or beginning of the list, moving forward or backward respectively will not continuously trigger the last/first callback.
+ * Press `j` to navigate backwards and `k` to navigate forward.
+ * Pressing `tab` will reset the iterator to its initial state.
  */
 export const KeyboardIterator: FC = ({ children }) => (
   <KeyboardIteratorContextProvider>{children}</KeyboardIteratorContextProvider>

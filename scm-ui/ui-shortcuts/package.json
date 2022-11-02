@@ -15,7 +15,8 @@
     "typecheck": "tsc"
   },
   "peerDependencies": {
-    "react": "17"
+    "react": "17",
+    "react-i18next": "10"
   },
   "dependencies": {
     "mousetrap": "1.6.5"

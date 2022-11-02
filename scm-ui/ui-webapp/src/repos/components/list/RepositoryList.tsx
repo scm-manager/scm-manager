@@ -23,11 +23,12 @@
  */
 import React from "react";
 
-import { NamespaceCollection, Repository } from "@scm-manager/ui-types";
+import {NamespaceCollection, Repository} from "@scm-manager/ui-types";
 
 import groupByNamespace from "./groupByNamespace";
 import RepositoryGroupEntry from "./RepositoryGroupEntry";
-import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
+import {ExtensionPoint, extensionPoints} from "@scm-manager/ui-extensions";
+import {KeyboardIterator} from "@scm-manager/ui-shortcuts";
 
 type Props = {
   repositories: Repository[];
@@ -50,12 +51,14 @@ class RepositoryList extends React.Component<Props> {
           props={{
             page,
             search,
-            namespace
+            namespace,
           }}
         />
-        {groups.map(group => {
-          return <RepositoryGroupEntry group={group} key={group.name} />;
-        })}
+        <KeyboardIterator>
+          {groups.map((group) => {
+            return <RepositoryGroupEntry group={group} key={group.name} />;
+          })}
+        </KeyboardIterator>
       </div>
     );
   }
