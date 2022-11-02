@@ -76,7 +76,7 @@ describe("shortcutIterator", () => {
     expect(callback).not.toHaveBeenCalled();
   });
 
-  it("should throw if not inside keyboard iterator context", () => {
+  it("should not throw if not inside keyboard iterator context", () => {
     const callback = jest.fn();
 
     const { result, unmount } = renderHook(() => useKeyboardIteratorCallback(callback), {
