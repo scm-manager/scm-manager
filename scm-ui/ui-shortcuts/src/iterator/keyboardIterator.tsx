@@ -74,7 +74,11 @@ export const useKeyboardIteratorCallback = (callback: Callback) => {
 };
 
 /**
- * Registers a callback to the nearest enclosing {@link KeyboardIterator}.
+ * Use the {@link React.RefObject} returned from this hook to register a target to the nearest enclosing {@link KeyboardIterator}.
+ *
+ * @example
+ * const ref = useKeyboardIteratorTarget();
+ * const target = <button ref={ref}>My Iteration Target</button>
  */
 export function useKeyboardIteratorTarget() {
   const ref = useRef<HTMLElement>(null);
