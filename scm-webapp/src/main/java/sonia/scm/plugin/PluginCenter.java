@@ -32,6 +32,7 @@ import sonia.scm.SCMContextProvider;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.config.ScmConfigurationChangedEvent;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.SystemUtil;
 
@@ -61,6 +62,12 @@ public class PluginCenter {
 
   @Subscribe
   public void handle(PluginCenterAuthenticationEvent event) {
+    LOG.debug("clear plugin center cache, because of {}", event);
+    pluginCenterResultCache.clear();
+  }
+
+  @Subscribe
+  public void handleEvent(ScmConfigurationChangedEvent event) {
     LOG.debug("clear plugin center cache, because of {}", event);
     pluginCenterResultCache.clear();
   }
