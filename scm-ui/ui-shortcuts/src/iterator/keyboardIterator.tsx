@@ -93,11 +93,11 @@ export const KeyboardIteratorContextProvider: FC<{ initialIndex?: number }> = ({
     [executeCallback]
   );
 
-  useShortcut("j", navigateBackward, {
+  useShortcut("k", navigateBackward, {
     description: t("shortcuts.iterator.previous"),
   });
 
-  useShortcut("k", navigateForward, {
+  useShortcut("j", navigateForward, {
     description: t("shortcuts.iterator.next"),
   });
 
@@ -142,7 +142,7 @@ export function useKeyboardIteratorTarget(): React.RefCallback<HTMLElement> {
  *
  * The order is determined by the render order of the target hooks.
  *
- * Press `j` to navigate backwards and `k` to navigate forward.
+ * Press `k` to navigate backwards and `j` to navigate forward.
  * Pressing `tab` will reset the iterator to its initial state.
  */
 export const KeyboardIterator: FC = ({ children }) => (

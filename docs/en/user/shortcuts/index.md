@@ -26,8 +26,8 @@ If the page supports this feature, the shortcuts show up in the shortcut overvie
 
 | Key Combination | Description              |
 |-----------------|--------------------------|
-| j               | Focus previous list item |
-| k               | Focus next list item     |
+| j               | Focus next list item     |
+| k               | Focus previous list item |
 
 ### Repository-specific Shortcuts
 

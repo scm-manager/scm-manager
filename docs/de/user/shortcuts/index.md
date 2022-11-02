@@ -27,8 +27,8 @@ auf (`?`).
 
 | Key Combination | Description                                       |
 |-----------------|---------------------------------------------------|
-| j               | Bewege den Fokus auf den vorherigen Listeneintrag |
-| k               | Bewege den Fokus auf den nächsten Listeneintrag   |
+| j               | Bewege den Fokus auf den nächsten Listeneintrag   |
+| k               | Bewege den Fokus auf den vorherigen Listeneintrag |
 
 ### Repositoryspezifische Tastenkürzel
 
