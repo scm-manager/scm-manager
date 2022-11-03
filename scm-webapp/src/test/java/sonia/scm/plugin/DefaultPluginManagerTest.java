@@ -770,6 +770,7 @@ class DefaultPluginManagerTest {
       assertThrows(AuthorizationException.class, () -> manager.getAvailable());
       assertThrows(AuthorizationException.class, () -> manager.getAvailable("test"));
       assertThrows(AuthorizationException.class, () -> manager.getPluginSets());
+      assertThrows(AuthorizationException.class, () -> manager.getPlugins());
     }
 
   }
