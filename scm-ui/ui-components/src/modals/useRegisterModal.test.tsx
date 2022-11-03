@@ -72,7 +72,7 @@ describe("useRegisterModal", () => {
     expect(increment).not.toHaveBeenCalled();
   });
 
-  it("should decrement on active de-registration", () => {
+  it("should decrement once on active de-registration", () => {
     const increment = jest.fn();
     const decrement = jest.fn();
 
@@ -82,7 +82,22 @@ describe("useRegisterModal", () => {
 
     result.unmount();
 
-    expect(decrement).toHaveBeenCalled();
+    expect(decrement).toHaveBeenCalledTimes(1);
     expect(increment).not.toHaveBeenCalled();
+  });
+
+  it("should decrement once when switching from active to inactive", () => {
+    const increment = jest.fn();
+    const decrement = jest.fn();
+
+    const result = renderHook(({ active }: { active: boolean }) => useRegisterModal(active), {
+      wrapper: createWrapper({ value: 0, increment, decrement }),
+      initialProps: { active: true },
+    });
+
+    result.rerender({ active: false });
+
+    expect(decrement).toHaveBeenCalledTimes(1);
+    expect(increment).toHaveBeenCalledTimes(1);
   });
 });
