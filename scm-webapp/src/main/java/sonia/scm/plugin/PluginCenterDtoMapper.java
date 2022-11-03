@@ -64,7 +64,7 @@ public abstract class PluginCenterDtoMapper {
       );
       plugins.add(new AvailablePlugin(descriptor));
     }
-    return new PluginCenterResult(plugins, pluginSets);
+    return new PluginCenterResult(plugins, pluginSets, false);
   }
 
   private String getInstallLink(PluginCenterDto.Plugin plugin) {

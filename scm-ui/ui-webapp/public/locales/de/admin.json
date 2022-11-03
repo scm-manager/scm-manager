@@ -44,6 +44,7 @@
     "updateAll": "Alle Plugins aktualisieren",
     "cancelPending": "Änderungen abbrechen",
     "noPlugins": "Keine Plugins gefunden.",
+    "pluginCenterError": "Das Plugin Center ist nicht verfügbar. Plugins können weder installiert noch aktualisiert werden.",
     "modal": {
       "title": {
         "install": "{{name}} Plugin installieren",

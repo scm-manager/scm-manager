@@ -24,6 +24,8 @@
 
 package sonia.scm.plugin;
 
+import lombok.Value;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -56,6 +58,13 @@ public interface PluginManager {
    * @return a list of installed plugins.
    */
   List<InstalledPlugin> getInstalled();
+
+  /**
+   * @since 2.40.0
+   */
+  default PluginResult getPlugins() {
+    return new PluginResult(getInstalled(), getAvailable(), false);
+  }
 
   /**
    * Returns all available plugins. The list contains the plugins which are loaded from the plugin center, but without
@@ -127,4 +136,21 @@ public interface PluginManager {
    * Update all installed plugins.
    */
   void updateAll();
+
+  @Value
+  class PluginResult {
+    List<InstalledPlugin> installedPlugins;
+    List<AvailablePlugin> availablePlugins;
+    boolean pluginCenterError;
+
+    public PluginResult(List<InstalledPlugin> installedPlugins, List<AvailablePlugin> availablePlugins, boolean pluginCenterError) {
+      this.installedPlugins = installedPlugins;
+      this.availablePlugins = availablePlugins;
+      this.pluginCenterError = pluginCenterError;
+    }
+
+    public PluginResult(List<InstalledPlugin> installedPlugins, List<AvailablePlugin> availablePlugins) {
+      this(installedPlugins, availablePlugins, false);
+    }
+  }
 }

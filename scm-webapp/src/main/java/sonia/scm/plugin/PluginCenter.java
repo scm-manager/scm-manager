@@ -82,6 +82,11 @@ public class PluginCenter {
     return getPluginCenterResult(url).getPluginSets();
   }
 
+  synchronized PluginCenterResult getPluginResult() {
+    String url = buildPluginUrl(configuration.getPluginUrl());
+    return getPluginCenterResult(url);
+  }
+
   private PluginCenterResult getPluginCenterResult(String url) {
     PluginCenterResult pluginCenterResult = pluginCenterResultCache.get(url);
     if (pluginCenterResult == null) {

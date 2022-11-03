@@ -29,7 +29,6 @@ import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Links;
 import sonia.scm.plugin.AvailablePlugin;
-import sonia.scm.plugin.InstalledPlugin;
 import sonia.scm.plugin.PluginManager;
 import sonia.scm.plugin.PluginPermissions;
 
@@ -53,17 +52,18 @@ public class PluginDtoCollectionMapper {
     this.manager = manager;
   }
 
-  public HalRepresentation mapInstalled(List<InstalledPlugin> plugins, List<AvailablePlugin> availablePlugins) {
+  public HalRepresentation mapInstalled(PluginManager.PluginResult plugins) {
     List<PluginDto> dtos = plugins
+      .getInstalledPlugins()
       .stream()
-      .map(i -> mapper.mapInstalled(i, availablePlugins))
+      .map(i -> mapper.mapInstalled(i, plugins.getAvailablePlugins()))
       .collect(toList());
-    return new HalRepresentation(createInstalledPluginsLinks(), embedDtos(dtos));
+    return new PluginCollectionDto(createInstalledPluginsLinks(), embedDtos(dtos), plugins.isPluginCenterError());
   }
 
-  public HalRepresentation mapAvailable(List<AvailablePlugin> plugins) {
+  public HalRepresentation mapAvailable(List<AvailablePlugin> plugins, boolean isPluginCenterError) {
     List<PluginDto> dtos = plugins.stream().map(mapper::mapAvailable).collect(toList());
-    return new HalRepresentation(createAvailablePluginsLinks(plugins), embedDtos(dtos));
+    return new PluginCollectionDto(createAvailablePluginsLinks(plugins), embedDtos(dtos), isPluginCenterError);
   }
 
   private Links createInstalledPluginsLinks() {

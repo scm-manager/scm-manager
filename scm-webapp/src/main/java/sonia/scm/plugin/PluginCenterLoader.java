@@ -75,7 +75,7 @@ class PluginCenterLoader {
     } catch (Exception ex) {
       LOG.error("failed to load plugins from plugin center, returning empty list", ex);
       eventBus.post(new PluginCenterErrorEvent());
-      return new PluginCenterResult(Collections.emptySet(), Collections.emptySet());
+      return new PluginCenterResult(Collections.emptySet(), Collections.emptySet(), true);
     }
   }
 }

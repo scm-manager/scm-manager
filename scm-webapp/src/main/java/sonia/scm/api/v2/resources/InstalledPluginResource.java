@@ -95,9 +95,8 @@ public class InstalledPluginResource {
   )
   public Response getInstalledPlugins() {
     PluginPermissions.read().check();
-    List<InstalledPlugin> plugins = pluginManager.getInstalled();
-    List<AvailablePlugin> available = pluginManager.getAvailable();
-    return Response.ok(collectionMapper.mapInstalled(plugins, available)).build();
+    PluginManager.PluginResult plugins = pluginManager.getPlugins();
+    return Response.ok(collectionMapper.mapInstalled(plugins)).build();
   }
 
   /**
