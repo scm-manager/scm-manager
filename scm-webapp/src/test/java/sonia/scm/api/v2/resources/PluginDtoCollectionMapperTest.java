@@ -44,11 +44,12 @@ import sonia.scm.plugin.InstalledPluginDescriptor;
 import sonia.scm.plugin.PluginInformation;
 import sonia.scm.plugin.PluginManager;
 
+import javax.annotation.Nonnull;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.lenient;
@@ -88,6 +89,15 @@ class PluginDtoCollectionMapperTest {
     ThreadContext.unbindSubject();
   }
 
+  @Test
+  void shouldMapErrorStatus() {
+    PluginDtoCollectionMapper mapper = new PluginDtoCollectionMapper(resourceLinks, pluginDtoMapper, manager);
+
+    assertThat(mapper.mapInstalled(emptyPluginResult(true)).isPluginCenterError()).isTrue();
+    assertThat(mapper.mapInstalled(emptyPluginResult(false)).isPluginCenterError()).isFalse();
+    assertThat(mapper.mapAvailable(emptyList(), true).isPluginCenterError()).isTrue();
+    assertThat(mapper.mapAvailable(emptyList(), false).isPluginCenterError()).isFalse();
+  }
 
   @Test
   void shouldMapInstalledPluginsWithoutUpdateWhenNoNewerVersionIsAvailable() {
@@ -106,7 +116,7 @@ class PluginDtoCollectionMapperTest {
 
   @Test
   void shouldSetNewVersionInInstalledPluginWhenAvailableVersionIsNewer() {
-    PluginDtoCollectionMapper mapper = new PluginDtoCollectionMapper(resourceLinks, pluginDtoMapper,manager);
+    PluginDtoCollectionMapper mapper = new PluginDtoCollectionMapper(resourceLinks, pluginDtoMapper, manager);
 
     HalRepresentation result = mapper.mapInstalled(new PluginManager.PluginResult(
       singletonList(createInstalledPlugin("scm-some-plugin", "1")),
@@ -222,5 +232,13 @@ class PluginDtoCollectionMapperTest {
     lenient().when(descriptor.getInformation()).thenReturn(information);
     lenient().when(plugin.getDescriptor()).thenReturn(descriptor);
     return plugin;
+  }
+
+  private static PluginManager.PluginResult emptyPluginResult(boolean pluginCenterError) {
+    return new PluginManager.PluginResult(
+      emptyList(),
+      emptyList(),
+      pluginCenterError
+    );
   }
 }

@@ -26,7 +26,6 @@ package sonia.scm.api.v2.resources;
 
 import com.google.inject.Inject;
 import de.otto.edison.hal.Embedded;
-import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Links;
 import sonia.scm.plugin.AvailablePlugin;
 import sonia.scm.plugin.PluginManager;
@@ -52,7 +51,7 @@ public class PluginDtoCollectionMapper {
     this.manager = manager;
   }
 
-  public HalRepresentation mapInstalled(PluginManager.PluginResult plugins) {
+  public PluginCollectionDto mapInstalled(PluginManager.PluginResult plugins) {
     List<PluginDto> dtos = plugins
       .getInstalledPlugins()
       .stream()
@@ -61,7 +60,7 @@ public class PluginDtoCollectionMapper {
     return new PluginCollectionDto(createInstalledPluginsLinks(), embedDtos(dtos), plugins.isPluginCenterError());
   }
 
-  public HalRepresentation mapAvailable(List<AvailablePlugin> plugins, boolean isPluginCenterError) {
+  public PluginCollectionDto mapAvailable(List<AvailablePlugin> plugins, boolean isPluginCenterError) {
     List<PluginDto> dtos = plugins.stream().map(mapper::mapAvailable).collect(toList());
     return new PluginCollectionDto(createAvailablePluginsLinks(plugins), embedDtos(dtos), isPluginCenterError);
   }

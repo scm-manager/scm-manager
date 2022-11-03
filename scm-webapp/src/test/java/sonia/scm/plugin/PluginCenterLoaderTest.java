@@ -79,6 +79,7 @@ class PluginCenterLoaderTest {
     PluginCenterResult fetched = loader.load(PLUGIN_URL);
     assertThat(fetched.getPlugins()).isSameAs(plugins);
     assertThat(fetched.getPluginSets()).isSameAs(pluginSets);
+    assertThat(fetched.isError()).isFalse();
   }
 
   private AdvancedHttpResponse request() throws IOException {
@@ -96,6 +97,7 @@ class PluginCenterLoaderTest {
     PluginCenterResult fetch = loader.load(PLUGIN_URL);
     assertThat(fetch.getPlugins()).isEmpty();
     assertThat(fetch.getPluginSets()).isEmpty();
+    assertThat(fetch.isError()).isTrue();
   }
 
   @Test

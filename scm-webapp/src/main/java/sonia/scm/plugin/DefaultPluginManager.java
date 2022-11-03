@@ -109,10 +109,11 @@ public class DefaultPluginManager implements PluginManager {
 
   @Override
   public PluginResult getPlugins() {
+    PluginPermissions.read().check();
     PluginCenterResult pluginCenterResult = center.getPluginResult();
     return new PluginResult(
       getInstalled(),
-      filterAvailablePlugins(pluginCenterResult.getPlugins()),
+      filterNotInstalledOrMoreUpToDate(pluginCenterResult.getPlugins()),
       pluginCenterResult.isError()
     );
   }
@@ -154,10 +155,10 @@ public class DefaultPluginManager implements PluginManager {
   @Override
   public List<AvailablePlugin> getAvailable() {
     PluginPermissions.read().check();
-    return filterAvailablePlugins(center.getAvailablePlugins());
+    return filterNotInstalledOrMoreUpToDate(center.getAvailablePlugins());
   }
 
-  private List<AvailablePlugin> filterAvailablePlugins(Set<AvailablePlugin> availablePlugins) {
+  private List<AvailablePlugin> filterNotInstalledOrMoreUpToDate(Set<AvailablePlugin> availablePlugins) {
     return availablePlugins
       .stream()
       .filter(this::isNotInstalledOrMoreUpToDate)

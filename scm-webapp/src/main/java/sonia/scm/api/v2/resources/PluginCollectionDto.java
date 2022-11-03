@@ -34,6 +34,10 @@ public class PluginCollectionDto extends HalRepresentation {
 
   private final boolean pluginCenterError;
 
+  public PluginCollectionDto() {
+    this(null, null, false);
+  }
+
   public PluginCollectionDto(Links links, Embedded embedded, boolean pluginCenterError) {
     super(links, embedded);
     this.pluginCenterError = pluginCenterError;

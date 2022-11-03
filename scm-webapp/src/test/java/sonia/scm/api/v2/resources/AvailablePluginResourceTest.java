@@ -260,7 +260,7 @@ class AvailablePluginResourceTest {
     }
   }
 
-  public class MockedResultDto extends HalRepresentation {
+  public class MockedResultDto extends PluginCollectionDto {
     public String getMarker() {
       return "x";
     }

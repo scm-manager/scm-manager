@@ -24,7 +24,6 @@
     
 package sonia.scm.api.v2.resources;
 
-import de.otto.edison.hal.HalRepresentation;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
@@ -185,7 +184,8 @@ class InstalledPluginResourceTest {
     }
   }
 
-  public class MockedResultDto extends HalRepresentation {
+  public class MockedResultDto extends PluginCollectionDto {
+
     public String getMarker() {
       return "x";
     }

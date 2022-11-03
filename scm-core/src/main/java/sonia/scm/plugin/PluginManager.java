@@ -24,6 +24,7 @@
 
 package sonia.scm.plugin;
 
+import com.google.common.annotations.VisibleForTesting;
 import lombok.Value;
 
 import java.util.List;
@@ -137,6 +138,10 @@ public interface PluginManager {
    */
   void updateAll();
 
+  /**
+   * Returned by {@link #getPlugins()}.
+   * @since 2.40.0
+   */
   @Value
   class PluginResult {
     List<InstalledPlugin> installedPlugins;
@@ -149,6 +154,7 @@ public interface PluginManager {
       this.pluginCenterError = pluginCenterError;
     }
 
+    @VisibleForTesting
     public PluginResult(List<InstalledPlugin> installedPlugins, List<AvailablePlugin> availablePlugins) {
       this(installedPlugins, availablePlugins, false);
     }
