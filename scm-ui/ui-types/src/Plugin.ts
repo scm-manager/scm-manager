@@ -53,7 +53,7 @@ export type Plugin = HalRepresentation & {
 
 export type PluginCollection = HalRepresentationWithEmbedded<{
   plugins: Plugin[];
-}> & { pluginCenterError: boolean };
+}> & { pluginCenterError?: boolean };
 
 export const isPluginCollection = (input: HalRepresentation): input is PluginCollection =>
   input._embedded ? "plugins" in input._embedded : false;
