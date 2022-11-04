@@ -99,7 +99,7 @@ describe("shortcutIterator", () => {
       </Wrapper>
     );
 
-    Mousetrap.trigger("k");
+    Mousetrap.trigger("j");
 
     expect(callback).not.toHaveBeenCalled();
     expect(callback2).not.toHaveBeenCalled();
@@ -117,8 +117,8 @@ describe("shortcutIterator", () => {
       </Wrapper>
     );
 
-    Mousetrap.trigger("j");
-    Mousetrap.trigger("j");
+    Mousetrap.trigger("k");
+    Mousetrap.trigger("k");
 
     expect(callback).toHaveBeenCalledTimes(1);
     expect(callback2).not.toHaveBeenCalled();
@@ -136,8 +136,8 @@ describe("shortcutIterator", () => {
       </Wrapper>
     );
 
-    Mousetrap.trigger("k");
-    Mousetrap.trigger("k");
+    Mousetrap.trigger("j");
+    Mousetrap.trigger("j");
 
     expect(callback).not.toHaveBeenCalled();
     expect(callback2).not.toHaveBeenCalled();
