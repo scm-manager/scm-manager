@@ -22,7 +22,7 @@ verfügbaren Tastenkürzel mittels der `?`-Taste aufrufen.
 ### Navigation von Listen
 
 Einige Seiten mit Listen erlauben die Navigation per Tastatur.
-Wenn die Seite dieses Unterstützt, tauchen die jeweiligen Tastaturkürzel in der Tastaturkürzelübersicht im SCM-Manager
+Wenn die Seite dieses unterstützt, tauchen die Tastaturkürzel in der Übersicht im SCM-Manager
 auf (`?`).
 
 | Key Combination | Description                                       |
