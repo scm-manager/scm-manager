@@ -44,6 +44,10 @@
     "updateAll": "Update All Plugins",
     "cancelPending": "Cancel Changes",
     "noPlugins": "No plugins found.",
+    "pluginCenterStatus": {
+      "ERROR": "The Plugin Center is not available. Plugins can neither be installed nor updated.",
+      "DEACTIVATED": "The Plugin Center is disabled in the configuration. Plugins can neither be installed nor updated."
+    },
     "modal": {
       "title": {
         "install": "Install {{name}} Plugin",

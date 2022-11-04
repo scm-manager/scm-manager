@@ -24,7 +24,6 @@
     
 package sonia.scm.api.v2.resources;
 
-import de.otto.edison.hal.HalRepresentation;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
@@ -110,8 +109,9 @@ class InstalledPluginResourceTest {
     @Test
     void getInstalledPlugins() throws URISyntaxException, UnsupportedEncodingException {
       InstalledPlugin installedPlugin = createInstalled("");
-      when(pluginManager.getInstalled()).thenReturn(Collections.singletonList(installedPlugin));
-      when(collectionMapper.mapInstalled(Collections.singletonList(installedPlugin), Collections.emptyList())).thenReturn(new MockedResultDto());
+      PluginManager.PluginResult pluginResult = new PluginManager.PluginResult(Collections.singletonList(installedPlugin), emptyList());
+      when(pluginManager.getPlugins()).thenReturn(pluginResult);
+      when(collectionMapper.mapInstalled(pluginResult)).thenReturn(new MockedResultDto());
 
       MockHttpRequest request = MockHttpRequest.get("/v2/plugins/installed");
       request.accept(VndMediaType.PLUGIN_COLLECTION);
@@ -184,7 +184,8 @@ class InstalledPluginResourceTest {
     }
   }
 
-  public class MockedResultDto extends HalRepresentation {
+  public class MockedResultDto extends PluginCollectionDto {
+
     public String getMarker() {
       return "x";
     }

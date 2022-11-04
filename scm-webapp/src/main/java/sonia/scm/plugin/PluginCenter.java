@@ -32,6 +32,7 @@ import sonia.scm.SCMContextProvider;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.config.ScmConfigurationChangedEvent;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.SystemUtil;
 
@@ -65,6 +66,12 @@ public class PluginCenter {
     pluginCenterResultCache.clear();
   }
 
+  @Subscribe
+  public void handle(ScmConfigurationChangedEvent event) {
+    LOG.debug("clear plugin center cache, because of {}", event);
+    pluginCenterResultCache.clear();
+  }
+
   synchronized Set<AvailablePlugin> getAvailablePlugins() {
     String url = buildPluginUrl(configuration.getPluginUrl());
     return getPluginCenterResult(url).getPlugins();
@@ -73,6 +80,11 @@ public class PluginCenter {
   synchronized Set<PluginSet> getAvailablePluginSets() {
     String url = buildPluginUrl(configuration.getPluginUrl());
     return getPluginCenterResult(url).getPluginSets();
+  }
+
+  synchronized PluginCenterResult getPluginResult() {
+    String url = buildPluginUrl(configuration.getPluginUrl());
+    return getPluginCenterResult(url);
   }
 
   private PluginCenterResult getPluginCenterResult(String url) {

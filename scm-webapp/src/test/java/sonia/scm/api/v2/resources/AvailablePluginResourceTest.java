@@ -24,7 +24,6 @@
 
 package sonia.scm.api.v2.resources;
 
-import de.otto.edison.hal.HalRepresentation;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
@@ -42,6 +41,7 @@ import sonia.scm.plugin.AvailablePlugin;
 import sonia.scm.plugin.AvailablePluginDescriptor;
 import sonia.scm.plugin.InstalledPlugin;
 import sonia.scm.plugin.InstalledPluginDescriptor;
+import sonia.scm.plugin.PluginCenterStatus;
 import sonia.scm.plugin.PluginCondition;
 import sonia.scm.plugin.PluginInformation;
 import sonia.scm.plugin.PluginManager;
@@ -116,9 +116,9 @@ class AvailablePluginResourceTest {
     void getAvailablePlugins() throws URISyntaxException, UnsupportedEncodingException {
       AvailablePlugin plugin = createAvailablePlugin();
 
-      when(pluginManager.getAvailable()).thenReturn(Collections.singletonList(plugin));
-      when(pluginManager.getInstalled()).thenReturn(Collections.emptyList());
-      when(collectionMapper.mapAvailable(Collections.singletonList(plugin))).thenReturn(new MockedResultDto());
+      when(pluginManager.getPlugins()).thenReturn(new PluginManager.PluginResult(Collections.emptyList(), Collections.singletonList(plugin)));
+
+      when(collectionMapper.mapAvailable(Collections.singletonList(plugin), PluginCenterStatus.OK)).thenReturn(new MockedResultDto());
 
       MockHttpRequest request = MockHttpRequest.get("/v2/plugins/available");
       request.accept(VndMediaType.PLUGIN_COLLECTION);
@@ -135,9 +135,8 @@ class AvailablePluginResourceTest {
       AvailablePlugin availablePlugin = createAvailablePlugin();
       InstalledPlugin installedPlugin = createInstalledPlugin();
 
-      when(pluginManager.getAvailable()).thenReturn(Collections.singletonList(availablePlugin));
-      when(pluginManager.getInstalled()).thenReturn(Collections.singletonList(installedPlugin));
-      lenient().when(collectionMapper.mapAvailable(Collections.singletonList(availablePlugin))).thenReturn(new MockedResultDto());
+      when(pluginManager.getPlugins()).thenReturn(new PluginManager.PluginResult(Collections.singletonList(installedPlugin), Collections.singletonList(availablePlugin)));
+      lenient().when(collectionMapper.mapAvailable(Collections.singletonList(availablePlugin), PluginCenterStatus.OK)).thenReturn(new MockedResultDto());
 
       MockHttpRequest request = MockHttpRequest.get("/v2/plugins/available");
       request.accept(VndMediaType.PLUGIN_COLLECTION);
@@ -261,7 +260,7 @@ class AvailablePluginResourceTest {
     }
   }
 
-  public class MockedResultDto extends HalRepresentation {
+  public class MockedResultDto extends PluginCollectionDto {
     public String getMarker() {
       return "x";
     }

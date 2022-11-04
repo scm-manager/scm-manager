@@ -54,6 +54,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -131,6 +132,27 @@ class DefaultPluginManagerTest {
     @AfterEach
     void clearThreadContext() {
       ThreadContext.unbindSubject();
+    }
+
+    @Test
+    void shouldReturnSuccessfulPluginResult() {
+      AvailablePlugin editor = createAvailable("scm-editor-plugin");
+      AvailablePlugin jenkins = createAvailable("scm-jenkins-plugin");
+      InstalledPlugin review = createInstalled("scm-review-plugin");
+      InstalledPlugin git = createInstalled("scm-git-plugin");
+
+      when(center.getPluginResult()).thenReturn(new PluginCenterResult(
+        ImmutableSet.of(editor, jenkins),
+        emptySet())
+      );
+
+      when(loader.getInstalledPlugins()).thenReturn(ImmutableList.of(review, git));
+
+      PluginManager.PluginResult plugins = manager.getPlugins();
+
+      assertThat(plugins.getAvailablePlugins()).containsOnly(editor, jenkins);
+      assertThat(plugins.getInstalledPlugins()).containsOnly(review, git);
+      assertThat(plugins.getPluginCenterStatus()).isEqualTo(PluginCenterStatus.OK);
     }
 
     @Test
@@ -746,6 +768,7 @@ class DefaultPluginManagerTest {
       assertThrows(AuthorizationException.class, () -> manager.getAvailable());
       assertThrows(AuthorizationException.class, () -> manager.getAvailable("test"));
       assertThrows(AuthorizationException.class, () -> manager.getPluginSets());
+      assertThrows(AuthorizationException.class, () -> manager.getPlugins());
     }
 
   }

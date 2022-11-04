@@ -41,14 +41,15 @@ import sonia.scm.plugin.AvailablePlugin;
 import sonia.scm.plugin.AvailablePluginDescriptor;
 import sonia.scm.plugin.InstalledPlugin;
 import sonia.scm.plugin.InstalledPluginDescriptor;
+import sonia.scm.plugin.PluginCenterStatus;
 import sonia.scm.plugin.PluginInformation;
 import sonia.scm.plugin.PluginManager;
 
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.lenient;
@@ -88,14 +89,23 @@ class PluginDtoCollectionMapperTest {
     ThreadContext.unbindSubject();
   }
 
+  @Test
+  void shouldMapErrorStatus() {
+    PluginDtoCollectionMapper mapper = new PluginDtoCollectionMapper(resourceLinks, pluginDtoMapper, manager);
+
+    assertThat(mapper.mapInstalled(emptyPluginResult(PluginCenterStatus.ERROR)).getPluginCenterStatus()).isEqualTo(PluginCenterStatus.ERROR);
+    assertThat(mapper.mapInstalled(emptyPluginResult(PluginCenterStatus.OK)).getPluginCenterStatus()).isEqualTo(PluginCenterStatus.OK);
+    assertThat(mapper.mapAvailable(emptyList(), PluginCenterStatus.ERROR).getPluginCenterStatus()).isEqualTo(PluginCenterStatus.ERROR);
+    assertThat(mapper.mapAvailable(emptyList(), PluginCenterStatus.OK).getPluginCenterStatus()).isEqualTo(PluginCenterStatus.OK);
+  }
 
   @Test
   void shouldMapInstalledPluginsWithoutUpdateWhenNoNewerVersionIsAvailable() {
     PluginDtoCollectionMapper mapper = new PluginDtoCollectionMapper(resourceLinks, pluginDtoMapper, manager);
 
-    HalRepresentation result = mapper.mapInstalled(
+    HalRepresentation result = mapper.mapInstalled(new PluginManager.PluginResult(
       singletonList(createInstalledPlugin("scm-some-plugin", "1")),
-      singletonList(createAvailablePlugin("scm-other-plugin", "2")));
+      singletonList(createAvailablePlugin("scm-other-plugin", "2"))));
 
     List<HalRepresentation> plugins = result.getEmbedded().getItemsBy("plugins");
     assertThat(plugins).hasSize(1);
@@ -106,11 +116,11 @@ class PluginDtoCollectionMapperTest {
 
   @Test
   void shouldSetNewVersionInInstalledPluginWhenAvailableVersionIsNewer() {
-    PluginDtoCollectionMapper mapper = new PluginDtoCollectionMapper(resourceLinks, pluginDtoMapper,manager);
+    PluginDtoCollectionMapper mapper = new PluginDtoCollectionMapper(resourceLinks, pluginDtoMapper, manager);
 
-    HalRepresentation result = mapper.mapInstalled(
+    HalRepresentation result = mapper.mapInstalled(new PluginManager.PluginResult(
       singletonList(createInstalledPlugin("scm-some-plugin", "1")),
-      singletonList(createAvailablePlugin("scm-some-plugin", "2")));
+      singletonList(createAvailablePlugin("scm-some-plugin", "2"))));
 
     PluginDto plugin = getPluginDtoFromResult(result);
     assertThat(plugin.getVersion()).isEqualTo("1");
@@ -122,9 +132,9 @@ class PluginDtoCollectionMapperTest {
     when(subject.isPermitted("plugin:write")).thenReturn(false);
     PluginDtoCollectionMapper mapper = new PluginDtoCollectionMapper(resourceLinks, pluginDtoMapper, manager);
 
-    HalRepresentation result = mapper.mapInstalled(
+    HalRepresentation result = mapper.mapInstalled(new PluginManager.PluginResult(
       singletonList(createInstalledPlugin("scm-some-plugin", "1")),
-      singletonList(createAvailablePlugin("scm-some-plugin", "2")));
+      singletonList(createAvailablePlugin("scm-some-plugin", "2"))));
 
     PluginDto plugin = getPluginDtoFromResult(result);
     assertThat(plugin.getLinks().getLinkBy("update")).isEmpty();
@@ -137,9 +147,9 @@ class PluginDtoCollectionMapperTest {
 
     AvailablePlugin availablePlugin = createAvailablePlugin("scm-some-plugin", "2");
     when(availablePlugin.isPending()).thenReturn(true);
-    HalRepresentation result = mapper.mapInstalled(
+    HalRepresentation result = mapper.mapInstalled(new PluginManager.PluginResult(
       singletonList(createInstalledPlugin("scm-some-plugin", "1")),
-      singletonList(availablePlugin));
+      singletonList(availablePlugin)));
 
     PluginDto plugin = getPluginDtoFromResult(result);
     assertThat(plugin.getLinks().getLinkBy("update")).isEmpty();
@@ -150,9 +160,9 @@ class PluginDtoCollectionMapperTest {
     when(subject.isPermitted("plugin:write")).thenReturn(true);
     PluginDtoCollectionMapper mapper = new PluginDtoCollectionMapper(resourceLinks, pluginDtoMapper, manager);
 
-    HalRepresentation result = mapper.mapInstalled(
+    HalRepresentation result = mapper.mapInstalled(new PluginManager.PluginResult(
       singletonList(createInstalledPlugin("scm-some-plugin", "1")),
-      singletonList(createAvailablePlugin("scm-some-plugin", "2")));
+      singletonList(createAvailablePlugin("scm-some-plugin", "2"))));
 
     PluginDto plugin = getPluginDtoFromResult(result);
     assertThat(plugin.getLinks().getLinkBy("update")).isNotEmpty();
@@ -164,9 +174,9 @@ class PluginDtoCollectionMapperTest {
     when(subject.isPermitted("plugin:write")).thenReturn(true);
     PluginDtoCollectionMapper mapper = new PluginDtoCollectionMapper(resourceLinks, pluginDtoMapper, manager);
 
-    HalRepresentation result = mapper.mapInstalled(
+    HalRepresentation result = mapper.mapInstalled(new PluginManager.PluginResult(
       singletonList(createInstalledPlugin("scm-some-plugin", "1")),
-      singletonList(createAvailablePlugin("scm-some-plugin", "2")));
+      singletonList(createAvailablePlugin("scm-some-plugin", "2"))));
 
     PluginDto plugin = getPluginDtoFromResult(result);
     assertThat(plugin.getLinks().getLinkBy("update")).isNotEmpty();
@@ -180,9 +190,9 @@ class PluginDtoCollectionMapperTest {
 
     AvailablePlugin availablePlugin = createAvailablePlugin("scm-some-plugin", "2");
     when(availablePlugin.isPending()).thenReturn(true);
-    HalRepresentation result = mapper.mapInstalled(
+    HalRepresentation result = mapper.mapInstalled(new PluginManager.PluginResult(
       singletonList(createInstalledPlugin("scm-some-plugin", "1")),
-      singletonList(availablePlugin));
+      singletonList(availablePlugin)));
 
     PluginDto plugin = getPluginDtoFromResult(result);
     assertThat(plugin.isPending()).isTrue();
@@ -222,5 +232,13 @@ class PluginDtoCollectionMapperTest {
     lenient().when(descriptor.getInformation()).thenReturn(information);
     lenient().when(plugin.getDescriptor()).thenReturn(descriptor);
     return plugin;
+  }
+
+  private static PluginManager.PluginResult emptyPluginResult(PluginCenterStatus status) {
+    return new PluginManager.PluginResult(
+      emptyList(),
+      emptyList(),
+      status
+    );
   }
 }

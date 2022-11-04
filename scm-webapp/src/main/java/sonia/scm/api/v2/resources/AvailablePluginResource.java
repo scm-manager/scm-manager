@@ -95,10 +95,10 @@ public class AvailablePluginResource {
   @Produces(VndMediaType.PLUGIN_COLLECTION)
   public Response getAvailablePlugins() {
     PluginPermissions.read().check();
-    List<InstalledPlugin> installed = pluginManager.getInstalled();
-    List<AvailablePlugin> available = pluginManager.getAvailable().stream().filter(a -> notInstalled(a, installed)).collect(Collectors.toList());
+    PluginManager.PluginResult plugins = pluginManager.getPlugins();
+    List<AvailablePlugin> available = plugins.getAvailablePlugins().stream().filter(a -> notInstalled(a, plugins.getInstalledPlugins())).collect(Collectors.toList());
 
-    return Response.ok(collectionMapper.mapAvailable(available)).build();
+    return Response.ok(collectionMapper.mapAvailable(available, plugins.getPluginCenterStatus())).build();
   }
 
   private boolean notInstalled(AvailablePlugin a, List<InstalledPlugin> installed) {

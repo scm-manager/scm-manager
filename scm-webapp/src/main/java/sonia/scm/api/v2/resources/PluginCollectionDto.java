@@ -22,31 +22,23 @@
  * SOFTWARE.
  */
 
-package sonia.scm.plugin;
+package sonia.scm.api.v2.resources;
 
-import lombok.AllArgsConstructor;
+import de.otto.edison.hal.Embedded;
+import de.otto.edison.hal.HalRepresentation;
+import de.otto.edison.hal.Links;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import sonia.scm.plugin.PluginCenterStatus;
 
-import java.util.Collections;
-import java.util.Set;
-
-@AllArgsConstructor
 @Getter
-class PluginCenterResult {
-  private Set<AvailablePlugin> plugins;
-  private Set<PluginSet> pluginSets;
-  private PluginCenterStatus status;
+@NoArgsConstructor
+public class PluginCollectionDto extends HalRepresentation {
 
-  public PluginCenterResult() {
-    this(Collections.emptySet(), Collections.emptySet(), PluginCenterStatus.OK);
+  private PluginCenterStatus pluginCenterStatus;
+
+  public PluginCollectionDto(Links links, Embedded embedded, PluginCenterStatus pluginCenterStatus) {
+    super(links, embedded);
+    this.pluginCenterStatus = pluginCenterStatus;
   }
-
-  public PluginCenterResult(PluginCenterStatus status) {
-    this(Collections.emptySet(), Collections.emptySet(), status);
-  }
-
-  public PluginCenterResult(Set<AvailablePlugin> plugins, Set<PluginSet> pluginSets) {
-    this(plugins, pluginSets, PluginCenterStatus.OK);
-  }
-
 }

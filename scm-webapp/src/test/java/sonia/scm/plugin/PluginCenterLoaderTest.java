@@ -79,6 +79,7 @@ class PluginCenterLoaderTest {
     PluginCenterResult fetched = loader.load(PLUGIN_URL);
     assertThat(fetched.getPlugins()).isSameAs(plugins);
     assertThat(fetched.getPluginSets()).isSameAs(pluginSets);
+    assertThat(fetched.getStatus()).isEqualTo(PluginCenterStatus.OK);
   }
 
   private AdvancedHttpResponse request() throws IOException {
@@ -89,6 +90,14 @@ class PluginCenterLoaderTest {
   }
 
   @Test
+  void shouldReturnEmptySetIfPluginCenterIsDeactivated() {
+    PluginCenterResult fetch = loader.load("");
+    assertThat(fetch.getPlugins()).isEmpty();
+    assertThat(fetch.getPluginSets()).isEmpty();
+    assertThat(fetch.getStatus()).isSameAs(PluginCenterStatus.DEACTIVATED);
+  }
+
+  @Test
   void shouldReturnEmptySetIfPluginCenterNotBeReached() throws IOException {
     when(client.get(PLUGIN_URL)).thenReturn(request);
     when(request.request()).thenThrow(new IOException("failed to fetch"));
@@ -96,6 +105,7 @@ class PluginCenterLoaderTest {
     PluginCenterResult fetch = loader.load(PLUGIN_URL);
     assertThat(fetch.getPlugins()).isEmpty();
     assertThat(fetch.getPluginSets()).isEmpty();
+    assertThat(fetch.getStatus()).isSameAs(PluginCenterStatus.ERROR);
   }
 
   @Test

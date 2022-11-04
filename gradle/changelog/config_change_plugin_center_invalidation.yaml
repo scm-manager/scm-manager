@@ -1,0 +1,4 @@
+- type: fixed
+  description: Invalidate plugin center cache on global configuration change ([#2147](https://github.com/scm-manager/scm-manager/pull/2147))
+- type: changed
+  description: Provide feedback on plugin center status ([#2147](https://github.com/scm-manager/scm-manager/pull/2147))
