@@ -5,7 +5,7 @@ Der SCM-Manager unterstützt Tastaturinteraktion und -navigation durch zusätzli
 
 ### Übersicht
 
-Während sie den SCM-Manager verwenden, können sie eine Übersicht aller dem aktiven Benutzer auf der aktuellen Seite
+Während Sie den SCM-Manager verwenden, können Sie eine Übersicht aller
 verfügbaren Tastenkürzel mittels der `?`-Taste aufrufen.
 
 ### Globale Tastenkürzel

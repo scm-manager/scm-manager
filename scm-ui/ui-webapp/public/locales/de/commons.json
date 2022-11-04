@@ -280,8 +280,8 @@
     "admin": "Navigiere zur Administration",
     "docs": "Öffne die Tastaturkürzelübersicht",
     "iterator": {
-      "next": "Bewege den Fokus auf den nächsten Listeneintrag",
-      "previous": "Bewege den Fokus auf den vorherigen Listeneintrag"
+      "next": "Fokussiere den nächsten Listeneintrag",
+      "previous": "Fokussiere den vorherigen Listeneintrag"
     }
   }
 }
