@@ -35,7 +35,6 @@ import sonia.scm.cache.MapCacheManager;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.config.ScmConfigurationChangedEvent;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -93,7 +92,7 @@ class PluginCenterTest {
     Set<PluginSet> pluginSets = new HashSet<>();
 
     PluginCenterResult first = new PluginCenterResult(plugins, pluginSets);
-    when(loader.load(anyString())).thenReturn(first, new PluginCenterResult(Collections.emptySet(), Collections.emptySet()));
+    when(loader.load(anyString())).thenReturn(first, new PluginCenterResult());
 
     assertThat(pluginCenter.getAvailablePlugins()).isSameAs(plugins);
     assertThat(pluginCenter.getAvailablePlugins()).isSameAs(plugins);
@@ -107,7 +106,7 @@ class PluginCenterTest {
     Set<PluginSet> pluginSets = new HashSet<>();
 
     PluginCenterResult first = new PluginCenterResult(plugins, pluginSets);
-    when(loader.load(anyString())).thenReturn(first, new PluginCenterResult(Collections.emptySet(), Collections.emptySet()));
+    when(loader.load(anyString())).thenReturn(first, new PluginCenterResult());
 
     assertThat(pluginCenter.getAvailablePlugins()).isSameAs(plugins);
     assertThat(pluginCenter.getAvailablePluginSets()).isSameAs(pluginSets);
@@ -123,7 +122,7 @@ class PluginCenterTest {
     Set<PluginSet> pluginSets = new HashSet<>();
 
     PluginCenterResult first = new PluginCenterResult(plugins, pluginSets);
-    when(loader.load(anyString())).thenReturn(first, new PluginCenterResult(Collections.emptySet(), Collections.emptySet()));
+    when(loader.load(anyString())).thenReturn(first, new PluginCenterResult());
 
     assertThat(pluginCenter.getAvailablePlugins()).isSameAs(plugins);
     assertThat(pluginCenter.getAvailablePluginSets()).isSameAs(pluginSets);

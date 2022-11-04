@@ -37,6 +37,10 @@ class PluginCenterResult {
   private Set<PluginSet> pluginSets;
   private PluginCenterStatus status;
 
+  public PluginCenterResult() {
+    this(Collections.emptySet(), Collections.emptySet(), PluginCenterStatus.OK);
+  }
+
   public PluginCenterResult(PluginCenterStatus status) {
     this(Collections.emptySet(), Collections.emptySet(), status);
   }
