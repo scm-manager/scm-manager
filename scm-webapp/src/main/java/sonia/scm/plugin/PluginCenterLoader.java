@@ -25,6 +25,7 @@
 package sonia.scm.plugin;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.event.ScmEventBus;
@@ -65,6 +66,10 @@ class PluginCenterLoader {
 
   PluginCenterResult load(String url) {
     try {
+      if (Strings.isNullOrEmpty(url)) {
+        LOG.info("plugin center is deactivated, returning empty list");
+        return new PluginCenterResult(PluginManager.PluginResult.Status.DEACTIVATED);
+      }
       LOG.info("fetch plugins from {}", url);
       AdvancedHttpRequest request = client.get(url).spanKind(SPAN_KIND);
       if (authenticator.isAuthenticated()) {
@@ -75,7 +80,7 @@ class PluginCenterLoader {
     } catch (Exception ex) {
       LOG.error("failed to load plugins from plugin center, returning empty list", ex);
       eventBus.post(new PluginCenterErrorEvent());
-      return new PluginCenterResult(Collections.emptySet(), Collections.emptySet(), true);
+      return new PluginCenterResult(PluginManager.PluginResult.Status.ERROR);
     }
   }
 }

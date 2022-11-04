@@ -44,7 +44,6 @@ import sonia.scm.plugin.InstalledPluginDescriptor;
 import sonia.scm.plugin.PluginInformation;
 import sonia.scm.plugin.PluginManager;
 
-import javax.annotation.Nonnull;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -93,10 +92,10 @@ class PluginDtoCollectionMapperTest {
   void shouldMapErrorStatus() {
     PluginDtoCollectionMapper mapper = new PluginDtoCollectionMapper(resourceLinks, pluginDtoMapper, manager);
 
-    assertThat(mapper.mapInstalled(emptyPluginResult(true)).isPluginCenterError()).isTrue();
-    assertThat(mapper.mapInstalled(emptyPluginResult(false)).isPluginCenterError()).isFalse();
-    assertThat(mapper.mapAvailable(emptyList(), true).isPluginCenterError()).isTrue();
-    assertThat(mapper.mapAvailable(emptyList(), false).isPluginCenterError()).isFalse();
+    assertThat(mapper.mapInstalled(emptyPluginResult(PluginManager.PluginResult.Status.ERROR)).getStatus()).isEqualTo(PluginManager.PluginResult.Status.ERROR);
+    assertThat(mapper.mapInstalled(emptyPluginResult(PluginManager.PluginResult.Status.OK)).getStatus()).isEqualTo(PluginManager.PluginResult.Status.OK);
+    assertThat(mapper.mapAvailable(emptyList(), PluginManager.PluginResult.Status.ERROR).getStatus()).isEqualTo(PluginManager.PluginResult.Status.ERROR);
+    assertThat(mapper.mapAvailable(emptyList(), PluginManager.PluginResult.Status.OK).getStatus()).isEqualTo(PluginManager.PluginResult.Status.OK);
   }
 
   @Test
@@ -234,11 +233,11 @@ class PluginDtoCollectionMapperTest {
     return plugin;
   }
 
-  private static PluginManager.PluginResult emptyPluginResult(boolean pluginCenterError) {
+  private static PluginManager.PluginResult emptyPluginResult(PluginManager.PluginResult.Status status) {
     return new PluginManager.PluginResult(
       emptyList(),
       emptyList(),
-      pluginCenterError
+      status
     );
   }
 }

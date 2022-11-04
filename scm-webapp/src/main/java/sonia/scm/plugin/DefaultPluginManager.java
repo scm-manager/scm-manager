@@ -114,7 +114,7 @@ public class DefaultPluginManager implements PluginManager {
     return new PluginResult(
       getInstalled(),
       filterNotInstalledOrMoreUpToDate(pluginCenterResult.getPlugins()),
-      pluginCenterResult.isError()
+      pluginCenterResult.getStatus()
     );
   }
 

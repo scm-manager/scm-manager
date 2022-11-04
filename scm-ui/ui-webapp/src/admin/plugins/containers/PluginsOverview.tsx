@@ -183,8 +183,11 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
 
   const renderPluginsList = () => {
     let pluginCenterErrorNotification: React.ReactNode;
-    if (collection?.pluginCenterError) {
-      pluginCenterErrorNotification = <Notification type="danger">{t("plugins.pluginCenterError")}</Notification>;
+    if (collection?.status && collection.status !== "OK") {
+      const type = collection.status === "DEACTIVATED" ? "info" : "danger";
+      pluginCenterErrorNotification = (
+        <Notification type={type}>{t(`plugins.pluginCenterStatus.${collection.status}`)}</Notification>
+      );
     }
     if (collection?._embedded && collection._embedded.plugins.length > 0) {
       return (

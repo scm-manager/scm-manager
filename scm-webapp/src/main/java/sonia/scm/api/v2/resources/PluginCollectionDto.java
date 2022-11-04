@@ -28,18 +28,17 @@ import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Links;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import sonia.scm.plugin.PluginManager;
 
 @Getter
+@NoArgsConstructor
 public class PluginCollectionDto extends HalRepresentation {
 
-  private final boolean pluginCenterError;
+  private PluginManager.PluginResult.Status status;
 
-  public PluginCollectionDto() {
-    this(null, null, false);
-  }
-
-  public PluginCollectionDto(Links links, Embedded embedded, boolean pluginCenterError) {
+  public PluginCollectionDto(Links links, Embedded embedded, PluginManager.PluginResult.Status status) {
     super(links, embedded);
-    this.pluginCenterError = pluginCenterError;
+    this.status = status;
   }
 }

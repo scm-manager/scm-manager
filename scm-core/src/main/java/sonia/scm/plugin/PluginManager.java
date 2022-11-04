@@ -25,6 +25,7 @@
 package sonia.scm.plugin;
 
 import com.google.common.annotations.VisibleForTesting;
+import lombok.AllArgsConstructor;
 import lombok.Value;
 
 import java.util.List;
@@ -64,7 +65,7 @@ public interface PluginManager {
    * @since 2.40.0
    */
   default PluginResult getPlugins() {
-    return new PluginResult(getInstalled(), getAvailable(), false);
+    return new PluginResult(getInstalled(), getAvailable());
   }
 
   /**
@@ -143,20 +144,21 @@ public interface PluginManager {
    * @since 2.40.0
    */
   @Value
+  @AllArgsConstructor
   class PluginResult {
     List<InstalledPlugin> installedPlugins;
     List<AvailablePlugin> availablePlugins;
-    boolean pluginCenterError;
-
-    public PluginResult(List<InstalledPlugin> installedPlugins, List<AvailablePlugin> availablePlugins, boolean pluginCenterError) {
-      this.installedPlugins = installedPlugins;
-      this.availablePlugins = availablePlugins;
-      this.pluginCenterError = pluginCenterError;
-    }
+    Status status;
 
     @VisibleForTesting
     public PluginResult(List<InstalledPlugin> installedPlugins, List<AvailablePlugin> availablePlugins) {
-      this(installedPlugins, availablePlugins, false);
+      this(installedPlugins, availablePlugins, Status.OK);
+    }
+
+    public enum Status {
+      OK,
+      ERROR,
+      DEACTIVATED
     }
   }
 }

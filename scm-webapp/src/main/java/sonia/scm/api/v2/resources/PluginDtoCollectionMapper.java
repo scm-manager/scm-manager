@@ -57,12 +57,12 @@ public class PluginDtoCollectionMapper {
       .stream()
       .map(i -> mapper.mapInstalled(i, plugins.getAvailablePlugins()))
       .collect(toList());
-    return new PluginCollectionDto(createInstalledPluginsLinks(), embedDtos(dtos), plugins.isPluginCenterError());
+    return new PluginCollectionDto(createInstalledPluginsLinks(), embedDtos(dtos), plugins.getStatus());
   }
 
-  public PluginCollectionDto mapAvailable(List<AvailablePlugin> plugins, boolean isPluginCenterError) {
+  public PluginCollectionDto mapAvailable(List<AvailablePlugin> plugins, PluginManager.PluginResult.Status status) {
     List<PluginDto> dtos = plugins.stream().map(mapper::mapAvailable).collect(toList());
-    return new PluginCollectionDto(createAvailablePluginsLinks(plugins), embedDtos(dtos), isPluginCenterError);
+    return new PluginCollectionDto(createAvailablePluginsLinks(plugins), embedDtos(dtos), status);
   }
 
   private Links createInstalledPluginsLinks() {

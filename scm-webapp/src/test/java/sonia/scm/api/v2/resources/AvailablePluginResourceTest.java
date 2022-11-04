@@ -118,7 +118,7 @@ class AvailablePluginResourceTest {
 
       when(pluginManager.getPlugins()).thenReturn(new PluginManager.PluginResult(Collections.emptyList(), Collections.singletonList(plugin)));
 
-      when(collectionMapper.mapAvailable(Collections.singletonList(plugin), false)).thenReturn(new MockedResultDto());
+      when(collectionMapper.mapAvailable(Collections.singletonList(plugin), PluginManager.PluginResult.Status.OK)).thenReturn(new MockedResultDto());
 
       MockHttpRequest request = MockHttpRequest.get("/v2/plugins/available");
       request.accept(VndMediaType.PLUGIN_COLLECTION);
@@ -136,7 +136,7 @@ class AvailablePluginResourceTest {
       InstalledPlugin installedPlugin = createInstalledPlugin();
 
       when(pluginManager.getPlugins()).thenReturn(new PluginManager.PluginResult(Collections.singletonList(installedPlugin), Collections.singletonList(availablePlugin)));
-      lenient().when(collectionMapper.mapAvailable(Collections.singletonList(availablePlugin), false)).thenReturn(new MockedResultDto());
+      lenient().when(collectionMapper.mapAvailable(Collections.singletonList(availablePlugin), PluginManager.PluginResult.Status.OK)).thenReturn(new MockedResultDto());
 
       MockHttpRequest request = MockHttpRequest.get("/v2/plugins/available");
       request.accept(VndMediaType.PLUGIN_COLLECTION);

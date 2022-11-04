@@ -51,9 +51,11 @@ export type Plugin = HalRepresentation & {
   optionalDependencies: string[];
 };
 
+export type PluginCenterStatus = "OK" | "ERROR" | "DEACTIVATED";
+
 export type PluginCollection = HalRepresentationWithEmbedded<{
   plugins: Plugin[];
-}> & { pluginCenterError?: boolean };
+}> & { status?: PluginCenterStatus };
 
 export const isPluginCollection = (input: HalRepresentation): input is PluginCollection =>
   input._embedded ? "plugins" in input._embedded : false;

@@ -144,8 +144,7 @@ class DefaultPluginManagerTest {
 
       when(center.getPluginResult()).thenReturn(new PluginCenterResult(
         ImmutableSet.of(editor, jenkins),
-        emptySet(),
-        false)
+        emptySet())
       );
 
       when(loader.getInstalledPlugins()).thenReturn(ImmutableList.of(review, git));
@@ -154,7 +153,7 @@ class DefaultPluginManagerTest {
 
       assertThat(plugins.getAvailablePlugins()).containsOnly(editor, jenkins);
       assertThat(plugins.getInstalledPlugins()).containsOnly(review, git);
-      assertThat(plugins.isPluginCenterError()).isFalse();
+      assertThat(plugins.getStatus()).isEqualTo(PluginManager.PluginResult.Status.OK);
     }
 
     @Test
