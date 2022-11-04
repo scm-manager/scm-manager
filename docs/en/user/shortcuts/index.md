@@ -19,15 +19,25 @@ from anywhere by pressing the `?` key.
 | alt g           | Navigate to Groups         |
 | alt a           | Navigate to Administration |
 
+### List Navigation
+
+Some pages with lists on them support keyboard navigation.
+If the page supports this feature, the shortcuts show up in the shortcut overview dialog (`?`).
+
+| Key Combination | Description              |
+|-----------------|--------------------------|
+| j               | Focus next list item     |
+| k               | Focus previous list item |
+
 ### Repository-specific Shortcuts
 
-| Key Combination | Description |
-|-----------------|-------------|
-| g i             | Info        |
-| g b             | Branches    |
-| g t             | Tags        |
-| g c             | Code        |
-| g s             | Settings    |
+| Key Combination | Description               |
+|-----------------|---------------------------|
+| g i             | Switch to repository info |
+| g b             | Switch to branches        |
+| g t             | Switch to tags            |
+| g c             | Switch to code            |
+| g s             | Switch to settings        |
 
 ### Plugin Shortcuts
 

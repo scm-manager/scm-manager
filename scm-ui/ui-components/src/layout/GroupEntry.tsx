@@ -26,6 +26,7 @@ import { Link } from "react-router-dom";
 import classNames from "classnames";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
+import { useKeyboardIteratorTarget } from "@scm-manager/ui-shortcuts";
 
 const StyledGroupEntry = styled.div`
   max-height: calc(90px - 1.5rem);
@@ -82,9 +83,11 @@ type Props = {
 
 const GroupEntry: FC<Props> = ({ link, avatar, title, name, description, contentRight, ariaLabel }) => {
   const [t] = useTranslation("repos");
+  const ref = useKeyboardIteratorTarget();
   return (
     <div className="is-relative">
       <OverlayLink
+        ref={ref}
         to={link}
         className="has-hover-background-blue"
         aria-label={t("overview.ariaLabel", { name: ariaLabel })}

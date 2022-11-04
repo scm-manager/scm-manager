@@ -1,0 +1,2 @@
+- type: added
+  description: Add keyboard navigation to repository overview list ([#2146](https://github.com/scm-manager/scm-manager/pull/2146))

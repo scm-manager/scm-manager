@@ -279,6 +279,10 @@
     "users": "Navigate to Users",
     "groups": "Navigate to Groups",
     "admin": "Navigate to Administration",
-    "docs": "Open the shortcut summary"
+    "docs": "Open the shortcut summary",
+    "iterator": {
+      "next": "Focus next list item",
+      "previous": "Focus previous list item"
+    }
   }
 }

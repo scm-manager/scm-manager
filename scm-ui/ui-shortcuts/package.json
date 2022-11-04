@@ -12,10 +12,13 @@
   "scripts": {
     "build": "tsup ./src/index.ts -d build --format esm,cjs --dts",
     "lint": "eslint src",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "depcheck": "depcheck",
+    "test": "jest"
   },
   "peerDependencies": {
-    "react": "17"
+    "react": "17",
+    "react-i18next": "10"
   },
   "dependencies": {
     "mousetrap": "1.6.5"
@@ -25,7 +28,9 @@
     "@scm-manager/babel-preset": "^2.13.1",
     "@scm-manager/prettier-config": "^2.10.1",
     "@scm-manager/eslint-config": "^2.16.0",
-    "@scm-manager/tsconfig": "^2.13.0"
+    "@scm-manager/tsconfig": "^2.13.0",
+    "@testing-library/react-hooks": "8.0.1",
+    "@testing-library/react": "12.1.5"
   },
   "babel": {
     "presets": [
