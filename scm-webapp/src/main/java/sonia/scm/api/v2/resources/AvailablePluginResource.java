@@ -98,7 +98,7 @@ public class AvailablePluginResource {
     PluginManager.PluginResult plugins = pluginManager.getPlugins();
     List<AvailablePlugin> available = plugins.getAvailablePlugins().stream().filter(a -> notInstalled(a, plugins.getInstalledPlugins())).collect(Collectors.toList());
 
-    return Response.ok(collectionMapper.mapAvailable(available, plugins.getStatus())).build();
+    return Response.ok(collectionMapper.mapAvailable(available, plugins.getPluginCenterStatus())).build();
   }
 
   private boolean notInstalled(AvailablePlugin a, List<InstalledPlugin> installed) {

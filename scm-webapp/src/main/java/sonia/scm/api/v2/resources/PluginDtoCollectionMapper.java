@@ -28,6 +28,7 @@ import com.google.inject.Inject;
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.Links;
 import sonia.scm.plugin.AvailablePlugin;
+import sonia.scm.plugin.PluginCenterStatus;
 import sonia.scm.plugin.PluginManager;
 import sonia.scm.plugin.PluginPermissions;
 
@@ -57,12 +58,12 @@ public class PluginDtoCollectionMapper {
       .stream()
       .map(i -> mapper.mapInstalled(i, plugins.getAvailablePlugins()))
       .collect(toList());
-    return new PluginCollectionDto(createInstalledPluginsLinks(), embedDtos(dtos), plugins.getStatus());
+    return new PluginCollectionDto(createInstalledPluginsLinks(), embedDtos(dtos), plugins.getPluginCenterStatus());
   }
 
-  public PluginCollectionDto mapAvailable(List<AvailablePlugin> plugins, PluginManager.PluginResult.Status status) {
+  public PluginCollectionDto mapAvailable(List<AvailablePlugin> plugins, PluginCenterStatus pluginCenterStatus) {
     List<PluginDto> dtos = plugins.stream().map(mapper::mapAvailable).collect(toList());
-    return new PluginCollectionDto(createAvailablePluginsLinks(plugins), embedDtos(dtos), status);
+    return new PluginCollectionDto(createAvailablePluginsLinks(plugins), embedDtos(dtos), pluginCenterStatus);
   }
 
   private Links createInstalledPluginsLinks() {

@@ -49,7 +49,6 @@ import sonia.scm.lifecycle.Restarter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -153,7 +152,7 @@ class DefaultPluginManagerTest {
 
       assertThat(plugins.getAvailablePlugins()).containsOnly(editor, jenkins);
       assertThat(plugins.getInstalledPlugins()).containsOnly(review, git);
-      assertThat(plugins.getStatus()).isEqualTo(PluginManager.PluginResult.Status.OK);
+      assertThat(plugins.getPluginCenterStatus()).isEqualTo(PluginCenterStatus.OK);
     }
 
     @Test

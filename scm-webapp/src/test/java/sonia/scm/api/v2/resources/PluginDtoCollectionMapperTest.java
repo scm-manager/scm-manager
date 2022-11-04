@@ -41,6 +41,7 @@ import sonia.scm.plugin.AvailablePlugin;
 import sonia.scm.plugin.AvailablePluginDescriptor;
 import sonia.scm.plugin.InstalledPlugin;
 import sonia.scm.plugin.InstalledPluginDescriptor;
+import sonia.scm.plugin.PluginCenterStatus;
 import sonia.scm.plugin.PluginInformation;
 import sonia.scm.plugin.PluginManager;
 
@@ -92,10 +93,10 @@ class PluginDtoCollectionMapperTest {
   void shouldMapErrorStatus() {
     PluginDtoCollectionMapper mapper = new PluginDtoCollectionMapper(resourceLinks, pluginDtoMapper, manager);
 
-    assertThat(mapper.mapInstalled(emptyPluginResult(PluginManager.PluginResult.Status.ERROR)).getStatus()).isEqualTo(PluginManager.PluginResult.Status.ERROR);
-    assertThat(mapper.mapInstalled(emptyPluginResult(PluginManager.PluginResult.Status.OK)).getStatus()).isEqualTo(PluginManager.PluginResult.Status.OK);
-    assertThat(mapper.mapAvailable(emptyList(), PluginManager.PluginResult.Status.ERROR).getStatus()).isEqualTo(PluginManager.PluginResult.Status.ERROR);
-    assertThat(mapper.mapAvailable(emptyList(), PluginManager.PluginResult.Status.OK).getStatus()).isEqualTo(PluginManager.PluginResult.Status.OK);
+    assertThat(mapper.mapInstalled(emptyPluginResult(PluginCenterStatus.ERROR)).getPluginCenterStatus()).isEqualTo(PluginCenterStatus.ERROR);
+    assertThat(mapper.mapInstalled(emptyPluginResult(PluginCenterStatus.OK)).getPluginCenterStatus()).isEqualTo(PluginCenterStatus.OK);
+    assertThat(mapper.mapAvailable(emptyList(), PluginCenterStatus.ERROR).getPluginCenterStatus()).isEqualTo(PluginCenterStatus.ERROR);
+    assertThat(mapper.mapAvailable(emptyList(), PluginCenterStatus.OK).getPluginCenterStatus()).isEqualTo(PluginCenterStatus.OK);
   }
 
   @Test
@@ -233,7 +234,7 @@ class PluginDtoCollectionMapperTest {
     return plugin;
   }
 
-  private static PluginManager.PluginResult emptyPluginResult(PluginManager.PluginResult.Status status) {
+  private static PluginManager.PluginResult emptyPluginResult(PluginCenterStatus status) {
     return new PluginManager.PluginResult(
       emptyList(),
       emptyList(),

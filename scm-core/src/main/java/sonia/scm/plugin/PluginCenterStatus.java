@@ -24,25 +24,11 @@
 
 package sonia.scm.plugin;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
-import java.util.Collections;
-import java.util.Set;
-
-@AllArgsConstructor
-@Getter
-class PluginCenterResult {
-  private Set<AvailablePlugin> plugins;
-  private Set<PluginSet> pluginSets;
-  private PluginCenterStatus status;
-
-  public PluginCenterResult(PluginCenterStatus status) {
-    this(Collections.emptySet(), Collections.emptySet(), status);
-  }
-
-  public PluginCenterResult(Set<AvailablePlugin> plugins, Set<PluginSet> pluginSets) {
-    this(plugins, pluginSets, PluginCenterStatus.OK);
-  }
-
+/**
+ * @since 2.40.0
+ */
+public enum PluginCenterStatus {
+  OK,
+  ERROR,
+  DEACTIVATED
 }

@@ -33,7 +33,6 @@ import sonia.scm.net.ahc.AdvancedHttpClient;
 import sonia.scm.net.ahc.AdvancedHttpRequest;
 
 import javax.inject.Inject;
-import java.util.Collections;
 
 import static sonia.scm.plugin.Tracing.SPAN_KIND;
 
@@ -68,7 +67,7 @@ class PluginCenterLoader {
     try {
       if (Strings.isNullOrEmpty(url)) {
         LOG.info("plugin center is deactivated, returning empty list");
-        return new PluginCenterResult(PluginManager.PluginResult.Status.DEACTIVATED);
+        return new PluginCenterResult(PluginCenterStatus.DEACTIVATED);
       }
       LOG.info("fetch plugins from {}", url);
       AdvancedHttpRequest request = client.get(url).spanKind(SPAN_KIND);
@@ -80,7 +79,7 @@ class PluginCenterLoader {
     } catch (Exception ex) {
       LOG.error("failed to load plugins from plugin center, returning empty list", ex);
       eventBus.post(new PluginCenterErrorEvent());
-      return new PluginCenterResult(PluginManager.PluginResult.Status.ERROR);
+      return new PluginCenterResult(PluginCenterStatus.ERROR);
     }
   }
 }

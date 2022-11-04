@@ -148,17 +148,12 @@ public interface PluginManager {
   class PluginResult {
     List<InstalledPlugin> installedPlugins;
     List<AvailablePlugin> availablePlugins;
-    Status status;
+    PluginCenterStatus pluginCenterStatus;
 
     @VisibleForTesting
     public PluginResult(List<InstalledPlugin> installedPlugins, List<AvailablePlugin> availablePlugins) {
-      this(installedPlugins, availablePlugins, Status.OK);
+      this(installedPlugins, availablePlugins, PluginCenterStatus.OK);
     }
 
-    public enum Status {
-      OK,
-      ERROR,
-      DEACTIVATED
-    }
   }
 }

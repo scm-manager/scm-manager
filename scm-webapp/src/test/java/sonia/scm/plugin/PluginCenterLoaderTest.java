@@ -36,7 +36,6 @@ import sonia.scm.net.ahc.AdvancedHttpRequest;
 import sonia.scm.net.ahc.AdvancedHttpResponse;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
@@ -80,7 +79,7 @@ class PluginCenterLoaderTest {
     PluginCenterResult fetched = loader.load(PLUGIN_URL);
     assertThat(fetched.getPlugins()).isSameAs(plugins);
     assertThat(fetched.getPluginSets()).isSameAs(pluginSets);
-    assertThat(fetched.getStatus()).isEqualTo(PluginManager.PluginResult.Status.OK);
+    assertThat(fetched.getStatus()).isEqualTo(PluginCenterStatus.OK);
   }
 
   private AdvancedHttpResponse request() throws IOException {
@@ -95,7 +94,7 @@ class PluginCenterLoaderTest {
     PluginCenterResult fetch = loader.load("");
     assertThat(fetch.getPlugins()).isEmpty();
     assertThat(fetch.getPluginSets()).isEmpty();
-    assertThat(fetch.getStatus()).isSameAs(PluginManager.PluginResult.Status.DEACTIVATED);
+    assertThat(fetch.getStatus()).isSameAs(PluginCenterStatus.DEACTIVATED);
   }
 
   @Test
@@ -106,7 +105,7 @@ class PluginCenterLoaderTest {
     PluginCenterResult fetch = loader.load(PLUGIN_URL);
     assertThat(fetch.getPlugins()).isEmpty();
     assertThat(fetch.getPluginSets()).isEmpty();
-    assertThat(fetch.getStatus()).isSameAs(PluginManager.PluginResult.Status.ERROR);
+    assertThat(fetch.getStatus()).isSameAs(PluginCenterStatus.ERROR);
   }
 
   @Test

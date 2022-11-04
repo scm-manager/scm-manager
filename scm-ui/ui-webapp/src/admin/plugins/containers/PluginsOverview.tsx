@@ -182,17 +182,17 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
   };
 
   const renderPluginsList = () => {
-    let pluginCenterErrorNotification: React.ReactNode;
-    if (collection?.status && collection.status !== "OK") {
-      const type = collection.status === "DEACTIVATED" ? "info" : "danger";
-      pluginCenterErrorNotification = (
-        <Notification type={type}>{t(`plugins.pluginCenterStatus.${collection.status}`)}</Notification>
+    let pluginCenterStatusNotification: React.ReactNode;
+    if (collection && collection.pluginCenterStatus !== "OK") {
+      const type = collection.pluginCenterStatus === "DEACTIVATED" ? "info" : "danger";
+      pluginCenterStatusNotification = (
+        <Notification type={type}>{t(`plugins.pluginCenterStatus.${collection.pluginCenterStatus}`)}</Notification>
       );
     }
     if (collection?._embedded && collection._embedded.plugins.length > 0) {
       return (
         <>
-          {pluginCenterErrorNotification}
+          {pluginCenterStatusNotification}
           <PluginsList
             plugins={collection._embedded.plugins}
             openModal={setPluginModalContent}
@@ -201,7 +201,7 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
         </>
       );
     }
-    return pluginCenterErrorNotification ?? <Notification type="info">{t("plugins.noPlugins")}</Notification>;
+    return pluginCenterStatusNotification ?? <Notification type="info">{t("plugins.noPlugins")}</Notification>;
   };
 
   const renderModals = () => {

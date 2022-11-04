@@ -114,7 +114,7 @@ describe("Test plugin hooks", () => {
     _embedded: {
       plugins,
     },
-    pluginCenterError: false,
+    pluginCenterStatus: "OK",
   });
 
   const createPendingPlugins = (

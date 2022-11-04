@@ -29,16 +29,16 @@ import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Links;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import sonia.scm.plugin.PluginManager;
+import sonia.scm.plugin.PluginCenterStatus;
 
 @Getter
 @NoArgsConstructor
 public class PluginCollectionDto extends HalRepresentation {
 
-  private PluginManager.PluginResult.Status status;
+  private PluginCenterStatus pluginCenterStatus;
 
-  public PluginCollectionDto(Links links, Embedded embedded, PluginManager.PluginResult.Status status) {
+  public PluginCollectionDto(Links links, Embedded embedded, PluginCenterStatus pluginCenterStatus) {
     super(links, embedded);
-    this.status = status;
+    this.pluginCenterStatus = pluginCenterStatus;
   }
 }
