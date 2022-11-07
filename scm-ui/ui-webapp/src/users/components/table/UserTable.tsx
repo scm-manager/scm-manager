@@ -25,6 +25,7 @@ import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { User } from "@scm-manager/ui-types";
 import UserRow from "./UserRow";
+import { KeyboardIterator } from "@scm-manager/ui-shortcuts";
 
 type Props = {
   users: User[];
@@ -34,20 +35,22 @@ const UserTable: FC<Props> = ({ users }) => {
   const [t] = useTranslation("users");
 
   return (
-    <table className="card-table table is-hoverable is-fullwidth">
-      <thead>
-        <tr>
-          <th>{t("user.name")}</th>
-          <th className="is-hidden-mobile">{t("user.displayName")}</th>
-          <th className="is-hidden-mobile">{t("user.mail")}</th>
-        </tr>
-      </thead>
-      <tbody>
-        {users.map((user, index) => {
-          return <UserRow key={index} user={user} />;
-        })}
-      </tbody>
-    </table>
+    <KeyboardIterator>
+      <table className="card-table table is-hoverable is-fullwidth">
+        <thead>
+          <tr>
+            <th>{t("user.name")}</th>
+            <th className="is-hidden-mobile">{t("user.displayName")}</th>
+            <th className="is-hidden-mobile">{t("user.mail")}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {users.map((user, index) => {
+            return <UserRow key={index} user={user} />;
+          })}
+        </tbody>
+      </table>
+    </KeyboardIterator>
   );
 };
 
