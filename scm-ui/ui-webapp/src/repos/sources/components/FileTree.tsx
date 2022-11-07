@@ -30,6 +30,7 @@ import { File, Repository } from "@scm-manager/ui-types";
 import FileTreeLeaf from "./FileTreeLeaf";
 import TruncatedNotification from "./TruncatedNotification";
 import { isRootPath } from "../utils/files";
+import { KeyboardIterator } from "@scm-manager/ui-shortcuts";
 
 type Props = {
   repository: Repository;
@@ -69,8 +70,8 @@ const FileTree: FC<Props> = ({ repository, directory, baseUrl, revision, fetchNe
       revision,
       _links: {},
       _embedded: {
-        children: []
-      }
+        children: [],
+      },
     });
   }
 
@@ -82,7 +83,7 @@ const FileTree: FC<Props> = ({ repository, directory, baseUrl, revision, fetchNe
     repository,
     directory,
     baseUrl,
-    revision
+    revision,
   };
 
   return (
@@ -105,9 +106,11 @@ const FileTree: FC<Props> = ({ repository, directory, baseUrl, revision, fetchNe
             </tr>
           </thead>
           <tbody>
-            {files.map((file: File) => (
-              <FileTreeLeaf key={file.name} file={file} baseUrl={baseUrlWithRevision} repository={repository} />
-            ))}
+            <KeyboardIterator>
+              {files.map((file: File) => (
+                <FileTreeLeaf key={file.name} file={file} baseUrl={baseUrlWithRevision} repository={repository} />
+              ))}
+            </KeyboardIterator>
           </tbody>
         </table>
         <TruncatedNotification
