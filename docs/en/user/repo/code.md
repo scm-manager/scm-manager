@@ -30,7 +30,7 @@ automatically copied to the user's clipboard.
 
 #### Subrepository
 
-In the code overview, submodules (Git), subrepositories (Hg) and the concept of externals (Svn) are marked with an icon of a outlined folder and linked if the url is resolvable.
+In the code overview, submodules (Git), subrepositories (Hg) and externals (Svn) are marked with an icon of a outlined folder and linked if the url is resolvable.
 
 ### Changesets
 The changesets/commits overview shows the change history of the branch. Each entry represents a commit. 
