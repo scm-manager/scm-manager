@@ -28,6 +28,7 @@ import { useTranslation } from "react-i18next";
 import TagRow from "./TagRow";
 import { ConfirmAlert, ErrorNotification } from "@scm-manager/ui-components";
 import { useDeleteTag } from "@scm-manager/ui-api";
+import { KeyboardIterator } from "@scm-manager/ui-shortcuts";
 
 type Props = {
   repository: Repository;
@@ -76,14 +77,14 @@ const TagTable: FC<Props> = ({ repository, baseUrl, tags }) => {
             {
               label: t("tag.delete.confirmAlert.submit"),
               isLoading,
-              onClick: () => deleteTag()
+              onClick: () => deleteTag(),
             },
             {
               className: "is-info",
               label: t("tag.delete.confirmAlert.cancel"),
               onClick: () => abortDelete(),
-              autofocus: true
-            }
+              autofocus: true,
+            },
           ]}
           close={() => abortDelete()}
         />
@@ -96,9 +97,11 @@ const TagTable: FC<Props> = ({ repository, baseUrl, tags }) => {
           </tr>
         </thead>
         <tbody>
-          {tags.map(tag => (
-            <TagRow key={tag.name} baseUrl={baseUrl} tag={tag} onDelete={onDelete} />
-          ))}
+          <KeyboardIterator>
+            {tags.map((tag) => (
+              <TagRow key={tag.name} baseUrl={baseUrl} tag={tag} onDelete={onDelete} />
+            ))}
+          </KeyboardIterator>
         </tbody>
       </table>
     </>

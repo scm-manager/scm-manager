@@ -27,6 +27,7 @@ import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import { Tag, Link } from "@scm-manager/ui-types";
 import { Button, DateFromNow } from "@scm-manager/ui-components";
+import { useKeyboardIteratorTarget } from "@scm-manager/ui-shortcuts";
 
 type Props = {
   tag: Tag;
@@ -37,6 +38,7 @@ type Props = {
 
 const TagRow: FC<Props> = ({ tag, baseUrl, onDelete }) => {
   const [t] = useTranslation("repos");
+  const ref = useKeyboardIteratorTarget();
 
   let deleteButton;
   if ((tag?._links?.delete as Link)?.href) {
@@ -49,7 +51,7 @@ const TagRow: FC<Props> = ({ tag, baseUrl, onDelete }) => {
   return (
     <tr>
       <td className="is-vertical-align-middle">
-        <RouterLink to={to} title={tag.name}>
+        <RouterLink ref={ref} to={to} title={tag.name}>
           {tag.name}
           <span className={classNames("has-text-secondary", "is-ellipsis-overflow", "ml-2", "is-size-7")}>
             {t("tags.overview.created")} <DateFromNow date={tag.date} />
