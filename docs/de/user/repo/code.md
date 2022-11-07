@@ -12,11 +12,6 @@ Es gibt unter dem Aktionsbalken eine Breadcrumbs Navigation, die den Pfad der an
 
 ![Repository-Code-Sources](assets/repository-code-sourcesView.png)
 
-#### Verlinkungen
-
-Über den Button auf der linken Seite der Breadcrumbs Navigation kann ein permanenter Link 
-zum aktuellen Pfad in die Zwischenablage kopiert werden.
-
 #### Dateinamen Suche
 
 Die Dateinamen Suche kann über das Such Icon neben dem Dateipfad geöffnet werden.
@@ -25,6 +20,11 @@ Bei der Suche werden Treffer im Dateinamen höher gewertet als Suchtreffer im Da
 Sobald mehr als ein Zeichen eingegeben wurde, startet die Suche automatisch und zeigt die Ergebnisse unterhalb des Textfeldes an.
 
 ![Suche nach Dateien](assets/repository-code-filepathsearch.png)
+
+#### Verlinkungen
+
+Über den Button rechts neben der Breadcrumb Navigation kann ein permanenter Link 
+zum aktuellen Pfad in die Zwischenablage kopiert werden.
 
 ### Changesets
 Die Übersicht der Changesets/Commits zeigt die Änderungshistorie je Branch an. Jeder Listeneintrag stellt einen Commit dar. 

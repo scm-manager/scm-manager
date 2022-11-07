@@ -12,11 +12,6 @@ Below the action bar is a breadcrumb navigation that shows the path of the files
 
 ![Repository-Code-Sources](assets/repository-code-sourcesView.png)
 
-#### Permalink
-
-By clicking the Button on the left-hand side of the breadcrumbs navigation, a permalink to the active path is
-automatically copied to the user's clipboard.
-
 #### Search
 
 To search for a file you can click on the search icon next to the file path.
@@ -27,6 +22,11 @@ The search starts automatically as soon as more than one character have been ent
 The results are displayed below the text field.
 
 ![Filepath search](assets/repository-code-filepathsearch.png)
+
+#### Permalink
+
+By clicking the Button on the right-hand side of the breadcrumb navigation, a permalink to the current path is
+automatically copied to the user's clipboard.
 
 ### Changesets
 The changesets/commits overview shows the change history of the branch. Each entry represents a commit. 
