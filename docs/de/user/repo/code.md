@@ -26,6 +26,10 @@ Sobald mehr als ein Zeichen eingegeben wurde, startet die Suche automatisch und 
 Über den Button rechts neben der Breadcrumb Navigation kann ein permanenter Link 
 zum aktuellen Pfad in die Zwischenablage kopiert werden.
 
+#### Subrepository
+
+In der Codeübersicht werden Submodules (Git), Subrepositories (Hg) und das Konzept der Externals (Svn) mit einem Icon eines umrandeten Ordners markiert und verlinkt, sofern die URL auflösbar ist.
+
 ### Changesets
 Die Übersicht der Changesets/Commits zeigt die Änderungshistorie je Branch an. Jeder Listeneintrag stellt einen Commit dar. 
 
