@@ -1,0 +1,2 @@
+- type: added
+  description: Keyboard navigation for users, groups, branches, tags, sources, changesets and plugins ([#2153](https://github.com/scm-manager/scm-manager/pull/2153))
