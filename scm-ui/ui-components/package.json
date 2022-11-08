@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "@scm-manager/ui-syntaxhighlighting": "2.39.2-SNAPSHOT",
+    "@scm-manager/ui-shortcuts": "2.39.2-SNAPSHOT",
     "@scm-manager/ui-text": "2.39.2-SNAPSHOT",
     "@scm-manager/babel-preset": "^2.13.1",
     "@scm-manager/eslint-config": "^2.16.0",

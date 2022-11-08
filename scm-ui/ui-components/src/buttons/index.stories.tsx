@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { ReactElement, ReactNode } from "react";
+import React, { ReactElement, ReactNode, useEffect, useState } from "react";
 import Button from "./Button";
 import { storiesOf } from "@storybook/react";
 import styled from "styled-components";
@@ -85,3 +85,8 @@ buttonStory("DownloadButton", () => <DownloadButton displayName="Download" disab
 );
 buttonStory("EditButton", () => <EditButton>Edit</EditButton>);
 buttonStory("SubmitButton", () => <SubmitButton>Submit</SubmitButton>);
+buttonStory("Button Ref", () => {
+  const [ref, setRef] = useState<HTMLButtonElement | HTMLAnchorElement | null>();
+  useEffect(() => ref?.focus(), [ref]);
+  return <Button ref={setRef}>Focus me!</Button>;
+});

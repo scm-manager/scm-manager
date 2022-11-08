@@ -28,13 +28,15 @@ import styled from "styled-components";
 import { MemoryRouter } from "react-router-dom";
 import repository from "../../__resources__/repository";
 import ChangesetRow from "./ChangesetRow";
-import { one, two, three, four, five } from "../../__resources__/changesets";
+import { five, four, one, three, two } from "../../__resources__/changesets";
 import { Binder, BinderContext } from "@scm-manager/ui-extensions";
 // @ts-ignore
 import hitchhiker from "../../__resources__/hitchhiker.png";
 import { Person } from "../../avatar/Avatar";
 import { Changeset } from "@scm-manager/ui-types";
 import { Replacement } from "@scm-manager/ui-text";
+import ChangesetList from "./ChangesetList";
+import { ShortcutDocsContextProvider } from "@scm-manager/ui-shortcuts";
 
 const Wrapper = styled.div`
   margin: 25rem 4rem;
@@ -287,4 +289,9 @@ storiesOf("Repositories/Changesets", module)
       },
     ];
     return <ChangesetRow repository={repository} changeset={changeset} />;
-  });
+  })
+  .add("List with navigation", () => (
+    <ShortcutDocsContextProvider>
+      <ChangesetList repository={repository} changesets={[copy(one), copy(two), copy(three)]} />
+    </ShortcutDocsContextProvider>
+  ));
