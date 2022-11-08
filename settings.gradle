@@ -33,7 +33,7 @@ buildscript {
     gradlePluginPortal()
   }
   dependencies {
-    classpath 'org.kordamp.gradle:enforcer-gradle-plugin:0.9.0'
+    classpath 'org.kordamp.gradle:enforcer-gradle-plugin:0.10.0'
   }
 }
 apply plugin: 'org.kordamp.gradle.enforcer'
