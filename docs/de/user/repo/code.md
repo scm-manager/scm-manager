@@ -30,6 +30,8 @@ zum aktuellen Pfad in die Zwischenablage kopiert werden.
 
 In der Codeübersicht werden Submodules (Git), Subrepositories (Hg) und Externals (Svn) mit einem Icon eines umrandeten Ordners dargestellt und verlinkt, sofern die URL auflösbar ist.
 
+![Repository-Code-Subrepository](assets/repository-code-subrepository.png)
+
 ### Changesets
 Die Übersicht der Changesets/Commits zeigt die Änderungshistorie je Branch an. Jeder Listeneintrag stellt einen Commit dar. 
 
