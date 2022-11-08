@@ -114,7 +114,7 @@ class FileTreeLeaf extends React.Component<Props> {
         <tr>
           <td>{this.createFileIcon(file)}</td>
           <MinWidthTd className="is-word-break">
-            <FileName file={file} baseUrl={baseUrl}></FileName>
+            <FileName file={file} baseUrl={baseUrl} />
           </MinWidthTd>
           <NoWrapTd className="is-hidden-mobile">
             {file.directory ? "" : this.contentIfPresent(file, "length", renderFileSize)}
