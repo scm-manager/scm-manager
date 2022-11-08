@@ -62,7 +62,7 @@ const ExtensionTd = styled.td`
 const FileName: FC<{ file: File; baseUrl: string }> = ({ file, baseUrl }) => {
   const ref = useKeyboardIteratorTarget();
   return (
-    <FileLink ref={ref} baseUrl={baseUrl} file={file} tabIndex={-1}>
+    <FileLink ref={ref} baseUrl={baseUrl} file={file} tabIndex={0}>
       {file.name}
     </FileLink>
   );
