@@ -37,16 +37,22 @@ export default function useRegisterModal(active: boolean, initialValue: boolean 
   useEffect(() => {
     if (active) {
       previousActiveState.current = true;
-      increment();
+      if (increment) {
+        increment();
+      }
     } else {
       if (previousActiveState.current !== null) {
-        decrement();
+        if (decrement) {
+          decrement();
+        }
       }
       previousActiveState.current = false;
     }
     return () => {
       if (previousActiveState.current) {
-        decrement();
+        if (decrement) {
+          decrement();
+        }
         previousActiveState.current = null;
       }
     };
