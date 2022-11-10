@@ -88,7 +88,7 @@ describe("shortcutIterator", () => {
     expect(result.error).toBeUndefined();
   });
 
-  it("should call last callback upon pressing forward in initial state", async () => {
+  it("should call first callback upon pressing forward in initial state", async () => {
     const callback = jest.fn();
     const callback2 = jest.fn();
     const callback3 = jest.fn();
@@ -101,12 +101,12 @@ describe("shortcutIterator", () => {
 
     Mousetrap.trigger("j");
 
-    expect(callback).not.toHaveBeenCalled();
+    expect(callback).toHaveBeenCalledTimes(1);
     expect(callback2).not.toHaveBeenCalled();
-    expect(callback3).toHaveBeenCalledTimes(1);
+    expect(callback3).not.toHaveBeenCalled();
   });
 
-  it("should call first callback once upon pressing backward in initial state", async () => {
+  it("should call last callback once upon pressing backward in initial state", async () => {
     const callback = jest.fn();
     const callback2 = jest.fn();
     const callback3 = jest.fn();
@@ -118,11 +118,10 @@ describe("shortcutIterator", () => {
     );
 
     Mousetrap.trigger("k");
-    Mousetrap.trigger("k");
 
-    expect(callback).toHaveBeenCalledTimes(1);
+    expect(callback).not.toHaveBeenCalled();
     expect(callback2).not.toHaveBeenCalled();
-    expect(callback3).not.toHaveBeenCalled();
+    expect(callback3).toHaveBeenCalledTimes(1);
   });
 
   it("should not allow moving past the end of the callback array", async () => {
