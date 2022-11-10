@@ -29,6 +29,7 @@ import { orderBranches } from "../util/orderBranches";
 import BranchTable from "../components/BranchTable";
 import { useTranslation } from "react-i18next";
 import { useBranchDetailsCollection } from "@scm-manager/ui-api";
+import { KeyboardIterator } from "@scm-manager/ui-shortcuts";
 
 type Props = {
   repository: Repository;
@@ -40,11 +41,11 @@ const BranchTableWrapper: FC<Props> = ({ repository, baseUrl, data }) => {
   const [t] = useTranslation("repos");
   const branches: Branch[] = (data?._embedded?.branches as Branch[]) || [];
   orderBranches(branches);
-  const staleBranches = branches.filter(b => b.stale);
-  const activeBranches = branches.filter(b => !b.stale);
+  const staleBranches = branches.filter((b) => b.stale);
+  const activeBranches = branches.filter((b) => !b.stale);
   const { error, data: branchesDetails } = useBranchDetailsCollection(repository, [
     ...activeBranches,
-    ...staleBranches
+    ...staleBranches,
   ]);
 
   if (branches.length === 0) {
@@ -54,7 +55,7 @@ const BranchTableWrapper: FC<Props> = ({ repository, baseUrl, data }) => {
   const showCreateButton = !!data._links.create;
 
   return (
-    <>
+    <KeyboardIterator>
       <Subtitle subtitle={t("branches.overview.title")} />
       <ErrorNotification error={error} />
       {activeBranches.length > 0 ? (
@@ -76,7 +77,7 @@ const BranchTableWrapper: FC<Props> = ({ repository, baseUrl, data }) => {
         />
       ) : null}
       {showCreateButton ? <CreateButton label={t("branches.overview.createButton")} link="./create" /> : null}
-    </>
+    </KeyboardIterator>
   );
 };
 

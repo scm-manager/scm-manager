@@ -57,7 +57,7 @@ export const KeyboardIteratorContextProvider: FC<{ initialIndex?: number }> = ({
 
   const navigateBackward = useCallback(() => {
     if (activeIndex.current === -1) {
-      activeIndex.current = 0;
+      activeIndex.current = callbacks.current.length - 1;
       executeCallback(activeIndex.current);
     } else if (activeIndex.current > 0) {
       activeIndex.current -= 1;
@@ -67,7 +67,7 @@ export const KeyboardIteratorContextProvider: FC<{ initialIndex?: number }> = ({
 
   const navigateForward = useCallback(() => {
     if (activeIndex.current === -1) {
-      activeIndex.current = callbacks.current.length - 1;
+      activeIndex.current = 0;
       executeCallback(activeIndex.current);
     } else if (activeIndex.current < callbacks.current.length - 1) {
       activeIndex.current += 1;

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, MouseEvent, ReactNode, KeyboardEvent } from "react";
+import React, { KeyboardEvent, MouseEvent, ReactNode, useCallback } from "react";
 import classNames from "classnames";
 import { Link } from "react-router-dom";
 import Icon from "../Icon";
@@ -40,7 +40,6 @@ export type ButtonProps = {
   reducedMobile?: boolean;
   children?: ReactNode;
   testId?: string;
-  ref?: React.ForwardedRef<HTMLButtonElement>;
 };
 
 type Props = ButtonProps & {
@@ -48,85 +47,95 @@ type Props = ButtonProps & {
   color?: string;
 };
 
-type InnerProps = Props & {
-  innerRef: React.Ref<HTMLButtonElement>;
-};
-
-const Button: FC<InnerProps> = ({
-  link,
-  className,
-  icon,
-  fullWidth,
-  reducedMobile,
-  testId,
-  children,
-  label,
-  type = "button",
-  title,
-  loading,
-  disabled,
-  action,
-  color = "default",
-  innerRef
-}) => {
-  const renderIcon = () => {
-    return (
-      <>
-        {icon ? (
-          <Icon name={icon} color="inherit" className={classNames("is-medium", { "pr-5": label || children })} />
-        ) : null}
-      </>
+const Button = React.forwardRef<HTMLButtonElement | HTMLAnchorElement, Props>(
+  (
+    {
+      link,
+      className,
+      icon,
+      fullWidth,
+      reducedMobile,
+      testId,
+      children,
+      label,
+      type = "button",
+      title,
+      loading,
+      disabled,
+      action,
+      color = "default",
+    },
+    ref
+  ) => {
+    const executeRef = useCallback(
+      (el: HTMLButtonElement | HTMLAnchorElement | null) => {
+        if (typeof ref === "function") {
+          ref(el);
+        } else if (ref) {
+          ref.current = el;
+        }
+      },
+      [ref]
     );
-  };
-
-  const classes = classNames(
-    "button",
-    "is-" + color,
-    { "is-loading": loading },
-    { "is-fullwidth": fullWidth },
-    { "is-reduced-mobile": reducedMobile },
-    className
-  );
-
-  const content = (
-    <span>
-      {renderIcon()}{" "}
-      {(label || children) && (
-        <>
-          {label} {children}
-        </>
-      )}
-    </span>
-  );
-
-  if (link && !disabled) {
-    if (link.includes("://")) {
+    const renderIcon = () => {
       return (
-        <a className={classes} href={link} aria-label={label}>
+        <>
+          {icon ? (
+            <Icon name={icon} color="inherit" className={classNames("is-medium", { "pr-5": label || children })} />
+          ) : null}
+        </>
+      );
+    };
+
+    const classes = classNames(
+      "button",
+      "is-" + color,
+      { "is-loading": loading },
+      { "is-fullwidth": fullWidth },
+      { "is-reduced-mobile": reducedMobile },
+      className
+    );
+
+    const content = (
+      <span>
+        {renderIcon()}{" "}
+        {(label || children) && (
+          <>
+            {label} {children}
+          </>
+        )}
+      </span>
+    );
+
+    if (link && !disabled) {
+      if (link.includes("://")) {
+        return (
+          <a ref={executeRef} className={classes} href={link} aria-label={label}>
+            {content}
+          </a>
+        );
+      }
+      return (
+        <Link ref={executeRef} className={classes} to={link} aria-label={label}>
           {content}
-        </a>
+        </Link>
       );
     }
+
     return (
-      <Link className={classes} to={link} aria-label={label}>
+      <button
+        type={type}
+        title={title}
+        disabled={disabled}
+        onClick={(event) => action && action(event)}
+        className={classes}
+        ref={executeRef}
+        {...createAttributesForTesting(testId)}
+      >
         {content}
-      </Link>
+      </button>
     );
   }
+);
 
-  return (
-    <button
-      type={type}
-      title={title}
-      disabled={disabled}
-      onClick={event => action && action(event)}
-      className={classes}
-      ref={innerRef}
-      {...createAttributesForTesting(testId)}
-    >
-      {content}
-    </button>
-  );
-};
-
-export default React.forwardRef<HTMLButtonElement, Props>((props, ref) => <Button {...props} innerRef={ref} />);
+export default Button;

@@ -22,15 +22,16 @@
  * SOFTWARE.
  */
 import * as React from "react";
+import { FC, ReactElement } from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
 import { binder, ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import { File, Repository } from "@scm-manager/ui-types";
-import { devices, DateFromNow, FileSize, Icon, Tooltip } from "@scm-manager/ui-components";
+import { DateFromNow, devices, FileSize, Icon, Tooltip } from "@scm-manager/ui-components";
 import FileIcon from "./FileIcon";
 import FileLink from "./content/FileLink";
-import { ReactElement } from "react";
+import { useKeyboardIteratorTarget } from "@scm-manager/ui-shortcuts";
 
 type Props = WithTranslation & {
   repository: Repository;
@@ -58,19 +59,20 @@ const ExtensionTd = styled.td`
   }
 `;
 
+const FileName: FC<{ file: File; baseUrl: string }> = ({ file, baseUrl }) => {
+  const ref = useKeyboardIteratorTarget();
+  return (
+    <FileLink ref={ref} baseUrl={baseUrl} file={file} tabIndex={0}>
+      {file.name}
+    </FileLink>
+  );
+};
+
 class FileTreeLeaf extends React.Component<Props> {
   createFileIcon = (file: File) => {
     return (
       <FileLink baseUrl={this.props.baseUrl} file={file} tabIndex={-1}>
         <FileIcon file={file} />
-      </FileLink>
-    );
-  };
-
-  createFileName = (file: File) => {
-    return (
-      <FileLink baseUrl={this.props.baseUrl} file={file} tabIndex={0}>
-        {file.name}
       </FileLink>
     );
   };
@@ -97,27 +99,29 @@ class FileTreeLeaf extends React.Component<Props> {
   };
 
   render() {
-    const { repository, file } = this.props;
+    const { repository, file, baseUrl } = this.props;
 
     const renderFileSize = (file: File) => <FileSize bytes={file?.length ? file.length : 0} />;
     const renderCommitDate = (file: File) => <DateFromNow date={file.commitDate} />;
 
     const extProps: extensionPoints.ReposSourcesTreeRowProps = {
       repository,
-      file
+      file,
     };
 
     return (
       <>
         <tr>
           <td>{this.createFileIcon(file)}</td>
-          <MinWidthTd className="is-word-break">{this.createFileName(file)}</MinWidthTd>
+          <MinWidthTd className="is-word-break">
+            <FileName file={file} baseUrl={baseUrl} />
+          </MinWidthTd>
           <NoWrapTd className="is-hidden-mobile">
             {file.directory ? "" : this.contentIfPresent(file, "length", renderFileSize)}
           </NoWrapTd>
           <td className="is-hidden-mobile">{this.contentIfPresent(file, "commitDate", renderCommitDate)}</td>
           <MinWidthTd className={classNames("is-word-break", "is-hidden-touch")}>
-            {this.contentIfPresent(file, "description", file => file.description)}
+            {this.contentIfPresent(file, "description", (file) => file.description)}
           </MinWidthTd>
 
           {binder.hasExtension<extensionPoints.ReposSourcesTreeRowRight>("repos.sources.tree.row.right", extProps) && (

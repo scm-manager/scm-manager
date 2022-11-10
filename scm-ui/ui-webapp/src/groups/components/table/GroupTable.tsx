@@ -25,6 +25,7 @@ import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { Group } from "@scm-manager/ui-types";
 import GroupRow from "./GroupRow";
+import { KeyboardIterator } from "@scm-manager/ui-shortcuts";
 
 type Props = {
   groups: Group[];
@@ -34,19 +35,21 @@ const GroupTable: FC<Props> = ({ groups }) => {
   const [t] = useTranslation("groups");
 
   return (
-    <table className="card-table table is-hoverable is-fullwidth">
-      <thead>
-        <tr>
-          <th>{t("group.name")}</th>
-          <th className="is-hidden-mobile">{t("group.description")}</th>
-        </tr>
-      </thead>
-      <tbody>
-        {groups.map((group, index) => {
-          return <GroupRow key={index} group={group} />;
-        })}
-      </tbody>
-    </table>
+    <KeyboardIterator>
+      <table className="card-table table is-hoverable is-fullwidth">
+        <thead>
+          <tr>
+            <th>{t("group.name")}</th>
+            <th className="is-hidden-mobile">{t("group.description")}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {groups.map((group, index) => {
+            return <GroupRow key={index} group={group} />;
+          })}
+        </tbody>
+      </table>
+    </KeyboardIterator>
   );
 };
 

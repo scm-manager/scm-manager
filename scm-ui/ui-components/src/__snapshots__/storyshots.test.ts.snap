@@ -934,6 +934,24 @@ exports[`Storyshots Buttons/Button Loading 1`] = `
 </div>
 `;
 
+exports[`Storyshots Buttons/Button Ref Default 1`] = `
+<div
+  className="indexstories__Spacing-sc-bpoict-0 jXUBTh"
+>
+  <button
+    className="button is-default"
+    onClick={[Function]}
+    type="button"
+  >
+    <span>
+       
+       
+      Focus me!
+    </span>
+  </button>
+</div>
+`;
+
 exports[`Storyshots Buttons/CreateButton Default 1`] = `
 <div
   className="indexstories__Spacing-sc-bpoict-0 jXUBTh"
@@ -20096,7 +20114,7 @@ exports[`Storyshots Repositories/Changesets Co-Authors with avatar 1`] = `
           >
             <a
               aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 GkUQw"
+              className="button is-default is-reduced-mobile px-3"
               href="/repo/hitchhiker/heartOfGold/code/changeset/b6c6f8fbd0d490936fae7d26ffdd4695cc2a0930"
               onClick={[Function]}
             >
@@ -20116,7 +20134,7 @@ exports[`Storyshots Repositories/Changesets Co-Authors with avatar 1`] = `
           >
             <a
               aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 GkUQw"
+              className="button is-default is-reduced-mobile px-3"
               href="/repo/hitchhiker/heartOfGold/code/sources/b6c6f8fbd0d490936fae7d26ffdd4695cc2a0930"
               onClick={[Function]}
             >
@@ -20253,7 +20271,7 @@ exports[`Storyshots Repositories/Changesets Commiter and Co-Authors with avatar 
           >
             <a
               aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 GkUQw"
+              className="button is-default is-reduced-mobile px-3"
               href="/repo/hitchhiker/heartOfGold/code/changeset/a88567ef1e9528a700555cad8c4576b72fc7c6dd"
               onClick={[Function]}
             >
@@ -20273,7 +20291,7 @@ exports[`Storyshots Repositories/Changesets Commiter and Co-Authors with avatar 
           >
             <a
               aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 GkUQw"
+              className="button is-default is-reduced-mobile px-3"
               href="/repo/hitchhiker/heartOfGold/code/sources/a88567ef1e9528a700555cad8c4576b72fc7c6dd"
               onClick={[Function]}
             >
@@ -20368,7 +20386,7 @@ exports[`Storyshots Repositories/Changesets Default 1`] = `
           >
             <a
               aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 GkUQw"
+              className="button is-default is-reduced-mobile px-3"
               href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
@@ -20388,7 +20406,371 @@ exports[`Storyshots Repositories/Changesets Default 1`] = `
           >
             <a
               aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 GkUQw"
+              className="button is-default is-reduced-mobile px-3"
+              href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
+              onClick={[Function]}
+            >
+              <span>
+                <i
+                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
+                  onKeyPress={[Function]}
+                />
+                 
+                changeset.buttons.sources
+                 
+              </span>
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Storyshots Repositories/Changesets List with navigation 1`] = `
+<div
+  className="Changesetsstories__Wrapper-sc-122npan-0 bEvXuM box box-link-shadow"
+>
+  <div
+    className="ChangesetRow__Wrapper-sc-tkpti5-0 fyJvMU"
+  >
+    <div
+      className="columns is-variable is-1-mobile is-0-tablet"
+    >
+      <div
+        className="column is-three-fifths is-full-mobile"
+      >
+        <div
+          className="columns is-gapless"
+        >
+          <div
+            className="column is-four-fifths"
+          >
+            <div
+              className="media"
+            >
+              <div
+                className="SingleChangeset__FullWidthDiv-sc-ytpqp9-1 gydPEK media-right ml-0"
+              >
+                <h4
+                  className="has-text-weight-bold is-ellipsis-overflow"
+                >
+                  
+                  The starship Heart of Gold was the first spacecraft to make use of the Infinite Improbability Drive. The craft was stolen by then-President Zaphod Beeblebrox at the official launch of the ship, as he was supposed to be officiating the launch. Later, during the use of the Infinite Improbability Drive, the ship picked up Arthur Dent and Ford Prefect, who were floating unprotected in deep space in the same star sector, having just escaped the destruction of the same planet.
+                  
+                </h4>
+                <p
+                  className="is-hidden-touch"
+                />
+                <p
+                  className="is-hidden-desktop"
+                />
+                <div
+                  className="is-flex"
+                >
+                  <p
+                    className="is-size-7 is-ellipsis-overflow mt-2"
+                  >
+                    changeset.contributors.authoredBy
+                     
+                    <a
+                      href="mailto:scm-admin@scm-manager.org"
+                      title="changeset.contributors.mailto scm-admin@scm-manager.org"
+                    >
+                      SCM Administrator
+                    </a>
+                    , 
+                    changeset.contributors.committedBy
+                     
+                    <a
+                      href="mailto:zaphod.beeblebrox@hitchhiker.cm"
+                      title="changeset.contributors.mailto zaphod.beeblebrox@hitchhiker.cm"
+                    >
+                      Zaphod Beeblebrox
+                    </a>
+                     
+                    commaSeparatedList.lastDivider
+                     
+                    changeset.contributors.coAuthoredBy
+                     
+                    <a
+                      href="mailto:ford.prefect@hitchhiker.com"
+                      title="changeset.contributors.mailto ford.prefect@hitchhiker.com"
+                    >
+                      Ford Prefect
+                    </a>
+                     
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="column is-align-self-center"
+          />
+        </div>
+      </div>
+      <div
+        className="column is-flex is-justify-content-flex-end is-align-items-center"
+      >
+        <div
+          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons m-0"
+        >
+          <p
+            className="control"
+          >
+            <a
+              aria-label="changeset.buttons.details"
+              className="button is-default is-reduced-mobile px-3"
+              href="/repo/hitchhiker/heartOfGold/code/changeset/a88567ef1e9528a700555cad8c4576b72fc7c6dd"
+              onClick={[Function]}
+            >
+              <span>
+                <i
+                  className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
+                  onKeyPress={[Function]}
+                />
+                 
+                changeset.buttons.details
+                 
+              </span>
+            </a>
+          </p>
+          <p
+            className="control"
+          >
+            <a
+              aria-label="changeset.buttons.sources"
+              className="button is-default is-reduced-mobile px-3"
+              href="/repo/hitchhiker/heartOfGold/code/sources/a88567ef1e9528a700555cad8c4576b72fc7c6dd"
+              onClick={[Function]}
+            >
+              <span>
+                <i
+                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
+                  onKeyPress={[Function]}
+                />
+                 
+                changeset.buttons.sources
+                 
+              </span>
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="ChangesetRow__Wrapper-sc-tkpti5-0 fyJvMU"
+  >
+    <div
+      className="columns is-variable is-1-mobile is-0-tablet"
+    >
+      <div
+        className="column is-three-fifths is-full-mobile"
+      >
+        <div
+          className="columns is-gapless"
+        >
+          <div
+            className="column is-four-fifths"
+          >
+            <div
+              className="media"
+            >
+              <div
+                className="SingleChangeset__FullWidthDiv-sc-ytpqp9-1 gydPEK media-right ml-0"
+              >
+                <h4
+                  className="has-text-weight-bold is-ellipsis-overflow"
+                >
+                  
+                  Change heading to "Heart Of Gold"
+                  
+                </h4>
+                <p
+                  className="is-hidden-touch"
+                />
+                <p
+                  className="is-hidden-desktop"
+                />
+                <div
+                  className="is-flex"
+                >
+                  <p
+                    className="is-size-7 is-ellipsis-overflow mt-2"
+                  >
+                    changeset.contributors.authoredBy
+                     
+                    <a
+                      href="mailto:scm-admin@scm-manager.org"
+                      title="changeset.contributors.mailto scm-admin@scm-manager.org"
+                    >
+                      SCM Administrator
+                    </a>
+                     
+                    commaSeparatedList.lastDivider
+                     
+                    changeset.contributors.committedBy
+                     
+                    <a
+                      href="mailto:zaphod.beeblebrox@hitchhiker.cm"
+                      title="changeset.contributors.mailto zaphod.beeblebrox@hitchhiker.cm"
+                    >
+                      Zaphod Beeblebrox
+                    </a>
+                     
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="column is-align-self-center"
+          />
+        </div>
+      </div>
+      <div
+        className="column is-flex is-justify-content-flex-end is-align-items-center"
+      >
+        <div
+          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons m-0"
+        >
+          <p
+            className="control"
+          >
+            <a
+              aria-label="changeset.buttons.details"
+              className="button is-default is-reduced-mobile px-3"
+              href="/repo/hitchhiker/heartOfGold/code/changeset/d21cc6c359270aef2196796f4d96af65f51866dc"
+              onClick={[Function]}
+            >
+              <span>
+                <i
+                  className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
+                  onKeyPress={[Function]}
+                />
+                 
+                changeset.buttons.details
+                 
+              </span>
+            </a>
+          </p>
+          <p
+            className="control"
+          >
+            <a
+              aria-label="changeset.buttons.sources"
+              className="button is-default is-reduced-mobile px-3"
+              href="/repo/hitchhiker/heartOfGold/code/sources/d21cc6c359270aef2196796f4d96af65f51866dc"
+              onClick={[Function]}
+            >
+              <span>
+                <i
+                  className="fas fa-fw fa-code has-text-inherit is-medium pr-5"
+                  onKeyPress={[Function]}
+                />
+                 
+                changeset.buttons.sources
+                 
+              </span>
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="ChangesetRow__Wrapper-sc-tkpti5-0 fyJvMU"
+  >
+    <div
+      className="columns is-variable is-1-mobile is-0-tablet"
+    >
+      <div
+        className="column is-three-fifths is-full-mobile"
+      >
+        <div
+          className="columns is-gapless"
+        >
+          <div
+            className="column is-four-fifths"
+          >
+            <div
+              className="media"
+            >
+              <div
+                className="SingleChangeset__FullWidthDiv-sc-ytpqp9-1 gydPEK media-right ml-0"
+              >
+                <h4
+                  className="has-text-weight-bold is-ellipsis-overflow"
+                >
+                  
+                  initialize repository
+                  
+                </h4>
+                <p
+                  className="is-hidden-touch"
+                />
+                <p
+                  className="is-hidden-desktop"
+                />
+                <div
+                  className="is-flex"
+                >
+                  <p
+                    className="is-size-7 is-ellipsis-overflow mt-2"
+                  >
+                    changeset.contributors.authoredBy
+                     
+                    <a
+                      href="mailto:scm-admin@scm-manager.org"
+                      title="changeset.contributors.mailto scm-admin@scm-manager.org"
+                    >
+                      SCM Administrator
+                    </a>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="column is-align-self-center"
+          />
+        </div>
+      </div>
+      <div
+        className="column is-flex is-justify-content-flex-end is-align-items-center"
+      >
+        <div
+          className="ButtonAddons__Flex-sc-182golj-0 dcwwZy field has-addons m-0"
+        >
+          <p
+            className="control"
+          >
+            <a
+              aria-label="changeset.buttons.details"
+              className="button is-default is-reduced-mobile px-3"
+              href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
+              onClick={[Function]}
+            >
+              <span>
+                <i
+                  className="fas fa-fw fa-exchange-alt has-text-inherit is-medium pr-5"
+                  onKeyPress={[Function]}
+                />
+                 
+                changeset.buttons.details
+                 
+              </span>
+            </a>
+          </p>
+          <p
+            className="control"
+          >
+            <a
+              aria-label="changeset.buttons.sources"
+              className="button is-default is-reduced-mobile px-3"
               href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
@@ -20493,7 +20875,7 @@ exports[`Storyshots Repositories/Changesets Replacements 1`] = `
           >
             <a
               aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 GkUQw"
+              className="button is-default is-reduced-mobile px-3"
               href="/repo/hitchhiker/heartOfGold/code/changeset/d21cc6c359270aef2196796f4d96af65f51866dc"
               onClick={[Function]}
             >
@@ -20513,7 +20895,7 @@ exports[`Storyshots Repositories/Changesets Replacements 1`] = `
           >
             <a
               aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 GkUQw"
+              className="button is-default is-reduced-mobile px-3"
               href="/repo/hitchhiker/heartOfGold/code/sources/d21cc6c359270aef2196796f4d96af65f51866dc"
               onClick={[Function]}
             >
@@ -20620,7 +21002,7 @@ exports[`Storyshots Repositories/Changesets With Committer 1`] = `
           >
             <a
               aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 GkUQw"
+              className="button is-default is-reduced-mobile px-3"
               href="/repo/hitchhiker/heartOfGold/code/changeset/d21cc6c359270aef2196796f4d96af65f51866dc"
               onClick={[Function]}
             >
@@ -20640,7 +21022,7 @@ exports[`Storyshots Repositories/Changesets With Committer 1`] = `
           >
             <a
               aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 GkUQw"
+              className="button is-default is-reduced-mobile px-3"
               href="/repo/hitchhiker/heartOfGold/code/sources/d21cc6c359270aef2196796f4d96af65f51866dc"
               onClick={[Function]}
             >
@@ -20756,7 +21138,7 @@ exports[`Storyshots Repositories/Changesets With Committer and Co-Author 1`] = `
           >
             <a
               aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 GkUQw"
+              className="button is-default is-reduced-mobile px-3"
               href="/repo/hitchhiker/heartOfGold/code/changeset/a88567ef1e9528a700555cad8c4576b72fc7c6dd"
               onClick={[Function]}
             >
@@ -20776,7 +21158,7 @@ exports[`Storyshots Repositories/Changesets With Committer and Co-Author 1`] = `
           >
             <a
               aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 GkUQw"
+              className="button is-default is-reduced-mobile px-3"
               href="/repo/hitchhiker/heartOfGold/code/sources/a88567ef1e9528a700555cad8c4576b72fc7c6dd"
               onClick={[Function]}
             >
@@ -20884,7 +21266,7 @@ exports[`Storyshots Repositories/Changesets With avatar 1`] = `
           >
             <a
               aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 GkUQw"
+              className="button is-default is-reduced-mobile px-3"
               href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
@@ -20904,7 +21286,7 @@ exports[`Storyshots Repositories/Changesets With avatar 1`] = `
           >
             <a
               aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 GkUQw"
+              className="button is-default is-reduced-mobile px-3"
               href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
@@ -21008,7 +21390,7 @@ exports[`Storyshots Repositories/Changesets With contactless signature 1`] = `
           >
             <a
               aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 GkUQw"
+              className="button is-default is-reduced-mobile px-3"
               href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
@@ -21028,7 +21410,7 @@ exports[`Storyshots Repositories/Changesets With contactless signature 1`] = `
           >
             <a
               aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 GkUQw"
+              className="button is-default is-reduced-mobile px-3"
               href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
@@ -21132,7 +21514,7 @@ exports[`Storyshots Repositories/Changesets With invalid signature 1`] = `
           >
             <a
               aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 GkUQw"
+              className="button is-default is-reduced-mobile px-3"
               href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
@@ -21152,7 +21534,7 @@ exports[`Storyshots Repositories/Changesets With invalid signature 1`] = `
           >
             <a
               aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 GkUQw"
+              className="button is-default is-reduced-mobile px-3"
               href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
@@ -21260,7 +21642,7 @@ exports[`Storyshots Repositories/Changesets With multiple Co-Authors 1`] = `
           >
             <a
               aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 GkUQw"
+              className="button is-default is-reduced-mobile px-3"
               href="/repo/hitchhiker/heartOfGold/code/changeset/b6c6f8fbd0d490936fae7d26ffdd4695cc2a0930"
               onClick={[Function]}
             >
@@ -21280,7 +21662,7 @@ exports[`Storyshots Repositories/Changesets With multiple Co-Authors 1`] = `
           >
             <a
               aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 GkUQw"
+              className="button is-default is-reduced-mobile px-3"
               href="/repo/hitchhiker/heartOfGold/code/sources/b6c6f8fbd0d490936fae7d26ffdd4695cc2a0930"
               onClick={[Function]}
             >
@@ -21384,7 +21766,7 @@ exports[`Storyshots Repositories/Changesets With multiple signatures and invalid
           >
             <a
               aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 GkUQw"
+              className="button is-default is-reduced-mobile px-3"
               href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
@@ -21404,7 +21786,7 @@ exports[`Storyshots Repositories/Changesets With multiple signatures and invalid
           >
             <a
               aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 GkUQw"
+              className="button is-default is-reduced-mobile px-3"
               href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
@@ -21508,7 +21890,7 @@ exports[`Storyshots Repositories/Changesets With multiple signatures and not fou
           >
             <a
               aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 GkUQw"
+              className="button is-default is-reduced-mobile px-3"
               href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
@@ -21528,7 +21910,7 @@ exports[`Storyshots Repositories/Changesets With multiple signatures and not fou
           >
             <a
               aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 GkUQw"
+              className="button is-default is-reduced-mobile px-3"
               href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
@@ -21632,7 +22014,7 @@ exports[`Storyshots Repositories/Changesets With multiple signatures and valid s
           >
             <a
               aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 GkUQw"
+              className="button is-default is-reduced-mobile px-3"
               href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
@@ -21652,7 +22034,7 @@ exports[`Storyshots Repositories/Changesets With multiple signatures and valid s
           >
             <a
               aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 GkUQw"
+              className="button is-default is-reduced-mobile px-3"
               href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
@@ -21756,7 +22138,7 @@ exports[`Storyshots Repositories/Changesets With unknown signature 1`] = `
           >
             <a
               aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 GkUQw"
+              className="button is-default is-reduced-mobile px-3"
               href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
@@ -21776,7 +22158,7 @@ exports[`Storyshots Repositories/Changesets With unknown signature 1`] = `
           >
             <a
               aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 GkUQw"
+              className="button is-default is-reduced-mobile px-3"
               href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
@@ -21880,7 +22262,7 @@ exports[`Storyshots Repositories/Changesets With unowned signature 1`] = `
           >
             <a
               aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 GkUQw"
+              className="button is-default is-reduced-mobile px-3"
               href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
@@ -21900,7 +22282,7 @@ exports[`Storyshots Repositories/Changesets With unowned signature 1`] = `
           >
             <a
               aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 GkUQw"
+              className="button is-default is-reduced-mobile px-3"
               href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
@@ -22004,7 +22386,7 @@ exports[`Storyshots Repositories/Changesets With valid signature 1`] = `
           >
             <a
               aria-label="changeset.buttons.details"
-              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 GkUQw"
+              className="button is-default is-reduced-mobile px-3"
               href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >
@@ -22024,7 +22406,7 @@ exports[`Storyshots Repositories/Changesets With valid signature 1`] = `
           >
             <a
               aria-label="changeset.buttons.sources"
-              className="button is-default is-reduced-mobile ChangesetButtonGroup__SwitcherButton-sc-19ag5s8-0 GkUQw"
+              className="button is-default is-reduced-mobile px-3"
               href="/repo/hitchhiker/heartOfGold/code/sources/e163c8f632db571c9aa51a8eb440e37cf550b825"
               onClick={[Function]}
             >

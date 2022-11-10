@@ -24,6 +24,7 @@
 import ChangesetRow from "./ChangesetRow";
 import React, { FC } from "react";
 import { Changeset, File, Repository } from "@scm-manager/ui-types";
+import { KeyboardIterator } from "@scm-manager/ui-shortcuts";
 
 type Props = {
   repository: Repository;
@@ -32,10 +33,13 @@ type Props = {
 };
 
 const ChangesetList: FC<Props> = ({ repository, changesets, file }) => {
-  const content = changesets.map(changeset => {
-    return <ChangesetRow key={changeset.id} repository={repository} changeset={changeset} file={file} />;
-  });
-  return <>{content}</>;
+  return (
+    <KeyboardIterator>
+      {changesets.map((changeset) => {
+        return <ChangesetRow key={changeset.id} repository={repository} changeset={changeset} file={file} />;
+      })}
+    </KeyboardIterator>
+  );
 };
 
 export default ChangesetList;

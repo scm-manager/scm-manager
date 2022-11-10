@@ -32,6 +32,7 @@ import { binder } from "@scm-manager/ui-extensions";
 import DefaultBranchTag from "./DefaultBranchTag";
 import AheadBehindTag from "./AheadBehindTag";
 import BranchCommitDateCommitter from "./BranchCommitDateCommitter";
+import { useKeyboardIteratorTarget } from "@scm-manager/ui-shortcuts";
 
 type Props = {
   repository: Repository;
@@ -64,6 +65,7 @@ const MobileFlowSpan = styled.span`
 const BranchRow: FC<Props> = ({ repository, baseUrl, branch, onDelete, details }) => {
   const to = `${baseUrl}/${encodeURIComponent(branch.name)}/info`;
   const [t] = useTranslation("repos");
+  const ref = useKeyboardIteratorTarget();
 
   let deleteButton;
   if ((branch?._links?.delete as Link)?.href) {
@@ -92,7 +94,7 @@ const BranchRow: FC<Props> = ({ repository, baseUrl, branch, onDelete, details }
   return (
     <AdaptTableFlow>
       <td className="is-vertical-align-middle">
-        <ReactLink to={to} title={branch.name}>
+        <ReactLink ref={ref} to={to} title={branch.name}>
           {branch.name}
         </ReactLink>
         {branch.lastCommitDate && (

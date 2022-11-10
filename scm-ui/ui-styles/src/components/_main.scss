@@ -537,19 +537,11 @@ ul.is-separated {
 }
 .content.is-plugin-page {
   .card-columns {
-    .column.is-half .overlay-column {
-      width: calc(37.5% - 1.5rem);
-    }
-
-    .column.is-full .overlay-column {
-      width: calc(75% - 1.5rem);
-    }
-
-    @media screen and (max-width: 768px) {
-      .column.is-half .overlay-column,
-      .column.is-full .overlay-column {
-        width: calc(100% - 1.5rem);
-      }
+    .column .overlay-column {
+      left: 0.5rem;
+      top: 0.5rem;
+      width: calc(100% - 1rem);
+      height: calc(160px - 1rem);
     }
   }
 }

@@ -28,6 +28,7 @@ import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import { Changeset, File, Repository } from "@scm-manager/ui-types";
 import ChangesetButtonGroup from "./ChangesetButtonGroup";
 import SingleChangeset from "./SingleChangeset";
+import { useKeyboardIteratorTarget } from "@scm-manager/ui-shortcuts";
 
 type Props = {
   repository: Repository;
@@ -46,6 +47,7 @@ const Wrapper = styled.div`
 `;
 
 const ChangesetRow: FC<Props> = ({ repository, changeset, file }) => {
+  const ref = useKeyboardIteratorTarget();
   return (
     <Wrapper>
       <div className={classNames("columns", "is-variable", "is-1-mobile", "is-0-tablet")}>
@@ -53,12 +55,12 @@ const ChangesetRow: FC<Props> = ({ repository, changeset, file }) => {
           <SingleChangeset repository={repository} changeset={changeset} />
         </div>
         <div className={classNames("column", "is-flex", "is-justify-content-flex-end", "is-align-items-center")}>
-          <ChangesetButtonGroup repository={repository} changeset={changeset} file={file} />
+          <ChangesetButtonGroup ref={ref} repository={repository} changeset={changeset} file={file} />
           <ExtensionPoint<extensionPoints.ChangesetRight>
             name="changeset.right"
             props={{
               repository,
-              changeset
+              changeset,
             }}
             renderAll={true}
           />

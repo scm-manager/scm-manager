@@ -41,13 +41,13 @@ class CardColumnGroup extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      collapsed: false
+      collapsed: false,
     };
   }
 
   toggleCollapse = () => {
-    this.setState(prevState => ({
-      collapsed: !prevState.collapsed
+    this.setState((prevState) => ({
+      collapsed: !prevState.collapsed,
     }));
   };
 
@@ -75,7 +75,10 @@ class CardColumnGroup extends React.Component<Props, State> {
         const fullColumnWidth = this.isFullSize(elements, index);
         const sizeClass = fullColumnWidth ? "is-full" : "is-half";
         return (
-          <div className={classNames("box", "box-link-shadow", "column", "is-clipped", sizeClass)} key={index}>
+          <div
+            className={classNames("box", "box-link-shadow", "column", "is-relative", "is-clipped", sizeClass)}
+            key={index}
+          >
             {entry}
           </div>
         );

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, ReactNode } from "react";
+import React, { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { File } from "@scm-manager/ui-types";
@@ -63,10 +63,7 @@ export const createRelativeLink = (repositoryUrl: string) => {
 export const createFolderLink = (base: string, file: File) => {
   let link = base;
   if (file.path) {
-    let path = file.path
-      .split("/")
-      .map(encodePart)
-      .join("/");
+    let path = file.path.split("/").map(encodePart).join("/");
     if (path.startsWith("/")) {
       path = path.substring(1);
     }
@@ -78,7 +75,7 @@ export const createFolderLink = (base: string, file: File) => {
   return link;
 };
 
-const FileLink: FC<Props> = ({ baseUrl, file, children, tabIndex }) => {
+const FileLink = React.forwardRef<HTMLAnchorElement, Props>(({ baseUrl, file, children, tabIndex }, ref) => {
   const [t] = useTranslation("repos");
   if (file?.subRepository?.repositoryUrl) {
     // file link represents a subRepository
@@ -117,10 +114,10 @@ const FileLink: FC<Props> = ({ baseUrl, file, children, tabIndex }) => {
   }
   // normal file or folder
   return (
-    <Link to={createFolderLink(baseUrl, file)} tabIndex={tabIndex}>
+    <Link ref={ref} to={createFolderLink(baseUrl, file)} tabIndex={tabIndex}>
       {children}
     </Link>
   );
-};
+});
 
 export default FileLink;

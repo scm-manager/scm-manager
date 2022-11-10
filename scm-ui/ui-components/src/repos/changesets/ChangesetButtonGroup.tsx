@@ -21,12 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
+import React from "react";
 import { Changeset, File, Repository } from "@scm-manager/ui-types";
 import { Button, ButtonAddons } from "../../buttons";
 import { createChangesetLink, createSourcesLink } from "./changesets";
 import { useTranslation } from "react-i18next";
-import styled from "styled-components";
 
 type Props = {
   repository: Repository;
@@ -34,26 +33,31 @@ type Props = {
   file?: File;
 };
 
-const SwitcherButton = styled(Button)`
-  padding-right: 0.75rem;
-  padding-left: 0.75rem;
-`;
-
-const ChangesetButtonGroup: FC<Props> = ({ repository, changeset, file }) => {
-  const [t] = useTranslation("repos");
-  const changesetLink = createChangesetLink(repository, changeset);
-  const sourcesLink = createSourcesLink(repository, changeset, file);
-  return (
-    <ButtonAddons className="m-0">
-      <SwitcherButton
-        link={changesetLink}
-        icon="exchange-alt"
-        label={t("changeset.buttons.details")}
-        reducedMobile={true}
-      />
-      <SwitcherButton link={sourcesLink} icon="code" label={t("changeset.buttons.sources")} reducedMobile={true} />
-    </ButtonAddons>
-  );
-};
+const ChangesetButtonGroup = React.forwardRef<HTMLButtonElement | HTMLAnchorElement, Props>(
+  ({ repository, changeset, file }, ref) => {
+    const [t] = useTranslation("repos");
+    const changesetLink = createChangesetLink(repository, changeset);
+    const sourcesLink = createSourcesLink(repository, changeset, file);
+    return (
+      <ButtonAddons className="m-0">
+        <Button
+          className="px-3"
+          ref={ref}
+          link={changesetLink}
+          icon="exchange-alt"
+          label={t("changeset.buttons.details")}
+          reducedMobile={true}
+        />
+        <Button
+          className="px-3"
+          link={sourcesLink}
+          icon="code"
+          label={t("changeset.buttons.sources")}
+          reducedMobile={true}
+        />
+      </ButtonAddons>
+    );
+  }
+);
 
 export default ChangesetButtonGroup;
