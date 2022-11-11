@@ -38,12 +38,15 @@ export type Subiterator = {
   [SubiteratorSymbol]: SubiteratorFunction;
   has(direction: Direction): boolean;
   reset: () => void;
+  setParent(parent: CallbackIterator): void;
 };
 
 const isSubiterator = (input?: Callback | Subiterator): input is Subiterator =>
   typeof input === "object" && SubiteratorSymbol in input;
 
 class CallbackIterator implements CallbackRegistry, Subiterator {
+  private parent?: CallbackIterator;
+
   constructor(
     private readonly activeIndexRef: MutableRefObject<number>,
     private readonly callbacksRef: MutableRefObject<Array<Callback | Subiterator>>
@@ -119,6 +122,10 @@ class CallbackIterator implements CallbackRegistry, Subiterator {
     }
   };
 
+  public setParent(parent: CallbackIterator): void {
+    this.parent = parent;
+  }
+
   public has(direction: Direction): boolean {
     if (isSubiterator(this.currentCallback) && this.currentCallback.has(direction)) {
       return true;
@@ -130,17 +137,36 @@ class CallbackIterator implements CallbackRegistry, Subiterator {
 
   public deregister = (index: number) => {
     this.callbacks.splice(index, 1);
-    if (!this.hasCallbacks) {
+    if (!this.isInactive && !this.hasCallbacks) {
       this.reset();
-    } else if (this.activeIndex === index || this.activeIndex >= this.callbacks.length) {
-      if (this.activeIndex > 0) {
-        this.activeIndex -= 1;
+      if (this.parent) {
+        if (this.parent.has("next")) {
+          this.parent.navigate("next");
+        } else if (this.parent.has("previous")) {
+          this.parent.navigate("previous");
+        }
       }
+    } else if (this.activeIndex >= this.callbacks.length) {
+      this.activeIndex = this.callbacks.length - 1;
       this.executeCallback("previous", this.callbacks[this.activeIndex]);
+    } else if (this.activeIndex === index) {
+      let nextIndex: number;
+      if ((nextIndex = this.nextAvailableIndex("previous", index)) !== -1) {
+        this.activeIndex = nextIndex;
+        this.executeCallback("previous", this.callbacks[this.activeIndex]);
+      } else if ((nextIndex = this.nextAvailableIndex("next", index)) !== -1) {
+        this.activeIndex = nextIndex;
+        this.executeCallback("next", this.callbacks[this.activeIndex]);
+      }
     }
   };
 
-  public register = (callback: Callback | Subiterator) => this.callbacks.push(callback) - 1;
+  public register = (callback: Callback | Subiterator) => {
+    if (isSubiterator(callback)) {
+      callback.setParent(this);
+    }
+    return this.callbacks.push(callback) - 1;
+  };
 
   public reset() {
     this.activeIndex = INITIAL_INDEX;
