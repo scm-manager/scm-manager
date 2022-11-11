@@ -24,7 +24,7 @@
 
 import { renderHook } from "@testing-library/react-hooks";
 import React, { FC } from "react";
-import { KeyboardIteratorContextProvider, useKeyboardIteratorCallback } from "./keyboardIterator";
+import { KeyboardIteratorContextProvider, useKeyboardIteratorItem } from "./keyboardIterator";
 import { render } from "@testing-library/react";
 import { ShortcutDocsContextProvider } from "../useShortcutDocs";
 import Mousetrap from "mousetrap";
@@ -49,7 +49,7 @@ const createWrapper =
     <Wrapper initialIndex={initialIndex}>{children}</Wrapper>;
 
 const Item: FC<{ callback: () => void }> = ({ callback }) => {
-  useKeyboardIteratorCallback(callback);
+  useKeyboardIteratorItem(callback);
   return <li>example</li>;
 };
 
@@ -69,7 +69,7 @@ describe("shortcutIterator", () => {
   it("should not call callback upon registration", () => {
     const callback = jest.fn();
 
-    renderHook(() => useKeyboardIteratorCallback(callback), {
+    renderHook(() => useKeyboardIteratorItem(callback), {
       wrapper: Wrapper,
     });
 
@@ -79,7 +79,7 @@ describe("shortcutIterator", () => {
   it("should not throw if not inside keyboard iterator context", () => {
     const callback = jest.fn();
 
-    const { result, unmount } = renderHook(() => useKeyboardIteratorCallback(callback), {
+    const { result, unmount } = renderHook(() => useKeyboardIteratorItem(callback), {
       wrapper: DocsWrapper,
     });
 
