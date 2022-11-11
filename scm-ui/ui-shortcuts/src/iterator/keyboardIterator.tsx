@@ -22,12 +22,12 @@
  * SOFTWARE.
  */
 
-import React, { FC, useCallback, useContext, useEffect, useMemo, useRef } from "react";
+import React, { FC, useCallback, useContext, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useShortcut } from "../index";
-import { Callback, CallbackIterator, createSubiterator, Subiterator, useCallbackIterator } from "./callbackIterator";
+import { Callback, CallbackRegistry, Subiterator, useCallbackIterator } from "./callbackIterator";
 
-const KeyboardIteratorContext = React.createContext<CallbackIterator>({
+const KeyboardIteratorContext = React.createContext<CallbackRegistry>({
   register: () => {
     if (process.env.NODE_ENV === "development") {
       // eslint-disable-next-line no-console
@@ -51,34 +51,33 @@ export const useKeyboardIteratorItem = (item: Callback | Subiterator) => {
   }, [item, register, deregister]);
 };
 
-export const KeyboardSubIteratorContextProvider: FC<{ initialIndex?: number }> = ({ children, initialIndex = -1 }) => {
-  const { activeIndex, callbacks, value } = useCallbackIterator(initialIndex);
-  const subiterator = useMemo(() => createSubiterator(activeIndex, callbacks), [activeIndex, callbacks]);
+export const KeyboardSubIteratorContextProvider: FC = ({ children }) => {
+  const callbackIterator = useCallbackIterator();
 
-  useKeyboardIteratorItem(subiterator);
+  useKeyboardIteratorItem(callbackIterator);
 
-  return <KeyboardIteratorContext.Provider value={value}>{children}</KeyboardIteratorContext.Provider>;
+  return <KeyboardIteratorContext.Provider value={callbackIterator}>{children}</KeyboardIteratorContext.Provider>;
 };
 
-export const KeyboardIteratorContextProvider: FC<{ initialIndex?: number }> = ({ children, initialIndex = -1 }) => {
+export const KeyboardIteratorContextProvider: FC<{ initialIndex?: number }> = ({ children, initialIndex }) => {
   const [t] = useTranslation("commons");
-  const { value, previous, next, reset } = useCallbackIterator(initialIndex);
+  const callbackIterator = useCallbackIterator(initialIndex);
 
-  useShortcut("k", previous, {
+  useShortcut("k", callbackIterator.previous.bind(callbackIterator), {
     description: t("shortcuts.iterator.previous"),
   });
 
-  useShortcut("j", next, {
+  useShortcut("j", callbackIterator.next.bind(callbackIterator), {
     description: t("shortcuts.iterator.next"),
   });
 
   useShortcut("tab", () => {
-    reset();
+    callbackIterator.reset();
 
     return true;
   });
 
-  return <KeyboardIteratorContext.Provider value={value}>{children}</KeyboardIteratorContext.Provider>;
+  return <KeyboardIteratorContext.Provider value={callbackIterator}>{children}</KeyboardIteratorContext.Provider>;
 };
 
 /**

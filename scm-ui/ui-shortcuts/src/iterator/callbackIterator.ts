@@ -22,60 +22,147 @@
  * SOFTWARE.
  */
 
-import { MutableRefObject, useCallback, useMemo, useRef } from "react";
+import { MutableRefObject, useMemo, useRef } from "react";
 
 const INITIAL_INDEX = -1;
+
 const SubiteratorSymbol = Symbol("Subiterator");
 
 export type Callback = () => void;
-type SubiteratorFunction = (forward: boolean, restart: boolean) => boolean;
-export type Subiterator = { [SubiteratorSymbol]: SubiteratorFunction };
+
+type SubiteratorFunction = (direction: Direction, withReset: boolean) => void;
+
+type Direction = "next" | "previous";
+
+export type Subiterator = {
+  [SubiteratorSymbol]: SubiteratorFunction;
+  has(direction: Direction): boolean;
+  reset: () => void;
+};
 
 const isSubiterator = (input?: Callback | Subiterator): input is Subiterator =>
   typeof input === "object" && SubiteratorSymbol in input;
 
-const executeCallback = (forward: boolean, currentCallback?: Callback | Subiterator) => {
-  if (isSubiterator(currentCallback)) {
-    return currentCallback[SubiteratorSymbol](forward, true);
-  } else if (currentCallback) {
-    currentCallback();
-    return true;
-  }
-  return false;
-};
+class CallbackIterator implements CallbackRegistry, Subiterator {
+  constructor(
+    private readonly activeIndexRef: MutableRefObject<number>,
+    private readonly callbacksRef: MutableRefObject<Array<Callback | Subiterator>>
+  ) {}
 
-export const navigate = (
-  forward: boolean,
-  activeIndexRef: MutableRefObject<number>,
-  callbacks: Array<Callback | Subiterator>
-) => {
-  const activeIndex = activeIndexRef.current;
-  const currentCallback = callbacks[activeIndex];
-  if (!isSubiterator(currentCallback) || !currentCallback[SubiteratorSymbol](forward, false)) {
-    if (activeIndex === INITIAL_INDEX) {
-      let nextIndex = forward ? 0 : callbacks.length - 1;
-      let hasNext = forward ? nextIndex < callbacks.length : nextIndex >= 0;
-      while (hasNext && !executeCallback(forward, callbacks[nextIndex])) {
-        nextIndex += forward ? 1 : -1;
-        hasNext = forward ? nextIndex < callbacks.length : nextIndex >= 0;
-      }
-      if (hasNext) {
-        activeIndexRef.current = nextIndex;
-        return true;
-      } else {
-        return false;
-      }
-    } else if (forward ? activeIndex < callbacks.length - 1 : activeIndex > 0) {
-      const nextIndex = activeIndex + (forward ? 1 : -1);
-      if (executeCallback(forward, callbacks[nextIndex])) {
-        activeIndexRef.current = nextIndex;
-      }
-    } else {
-      return false;
+  [SubiteratorSymbol]: SubiteratorFunction = (direction, withReset) => {
+    if (withReset) {
+      this.reset();
+    }
+
+    this.navigate(direction);
+  };
+
+  private get hasCallbacks() {
+    return this.callbacks.length > 0;
+  }
+
+  private get currentCallback() {
+    return this.callbacks[this.activeIndex];
+  }
+
+  private get activeIndex() {
+    return this.activeIndexRef.current;
+  }
+
+  private set activeIndex(newValue: number) {
+    this.activeIndexRef.current = newValue;
+  }
+
+  private isInBounds(direction: Direction, index: number) {
+    return direction === "next" ? index < this.callbacks.length : index >= 0;
+  }
+
+  private executeCallback(direction: Direction, currentCallback: Callback | Subiterator) {
+    if (isSubiterator(currentCallback)) {
+      return currentCallback[SubiteratorSymbol](direction, true);
+    } else if (currentCallback) {
+      currentCallback();
     }
   }
-  return true;
-};
+
+  private get callbacks() {
+    return this.callbacksRef.current;
+  }
+
+  private get isInactive() {
+    return this.activeIndex === INITIAL_INDEX;
+  }
+
+  private nextAvailableIndex(direction: Direction, start = direction === "next" ? 0 : this.callbacks.length - 1) {
+    for (; this.isInBounds(direction, start); start += direction === "next" ? 1 : -1) {
+      const callback = this.callbacks[start];
+      if (!isSubiterator(callback) || callback.has(direction)) {
+        return start;
+      }
+    }
+    return -1;
+  }
+
+  private navigate = (direction: Direction) => {
+    if (isSubiterator(this.currentCallback) && this.currentCallback.has(direction)) {
+      this.currentCallback[SubiteratorSymbol](direction, false);
+    } else {
+      if (isSubiterator(this.currentCallback)) {
+        this.currentCallback.reset();
+      }
+      if (this.isInactive) {
+        this.activeIndex = this.nextAvailableIndex(direction);
+      } else {
+        this.activeIndex = this.nextAvailableIndex(direction, this.activeIndex + (direction === "next" ? 1 : -1));
+      }
+      this.executeCallback(direction, this.currentCallback);
+    }
+  };
+
+  public has(direction: Direction): boolean {
+    if (isSubiterator(this.currentCallback) && this.currentCallback.has(direction)) {
+      return true;
+    } else if (this.isInactive) {
+      return this.nextAvailableIndex(direction) !== -1;
+    }
+    return this.nextAvailableIndex(direction, this.activeIndex + (direction === "next" ? 1 : -1)) !== -1;
+  }
+
+  public deregister = (index: number) => {
+    this.callbacks.splice(index, 1);
+    if (!this.hasCallbacks) {
+      this.reset();
+    } else if (this.activeIndex === index || this.activeIndex >= this.callbacks.length) {
+      if (this.activeIndex > 0) {
+        this.activeIndex -= 1;
+      }
+      this.executeCallback("previous", this.callbacks[this.activeIndex]);
+    }
+  };
+
+  public register = (callback: Callback | Subiterator) => this.callbacks.push(callback) - 1;
+
+  public reset() {
+    this.activeIndex = INITIAL_INDEX;
+    for (const cb of this.callbacks) {
+      if (isSubiterator(cb)) {
+        cb.reset();
+      }
+    }
+  }
+
+  public next() {
+    if (this.has("next")) {
+      return this.navigate("next");
+    }
+  }
+
+  public previous() {
+    if (this.has("previous")) {
+      return this.navigate("previous");
+    }
+  }
+}
 
 const useIteratorRefs = (initialIndex: number) => {
   const callbacks = useRef<Array<Callback | Subiterator>>([]);
@@ -83,50 +170,12 @@ const useIteratorRefs = (initialIndex: number) => {
   return useMemo(() => ({ activeIndex, callbacks } as const), []);
 };
 
-export type CallbackIterator = {
+export type CallbackRegistry = {
   register: (item: Callback | Subiterator) => number;
   deregister: (index: number) => void;
 };
 
-const createCallbackIterator = (
-  activeIndex: MutableRefObject<number>,
-  callbacks: MutableRefObject<Array<Callback | Subiterator>>
-): CallbackIterator => ({
-  register: (callback: Callback | Subiterator) => callbacks.current.push(callback) - 1,
-  deregister: (index: number) => {
-    callbacks.current.splice(index, 1);
-    if (callbacks.current.length === 0) {
-      activeIndex.current = INITIAL_INDEX;
-    } else if (activeIndex.current === index || activeIndex.current >= callbacks.current.length) {
-      if (activeIndex.current > 0) {
-        activeIndex.current -= 1;
-      }
-      executeCallback(false, callbacks.current[activeIndex.current]);
-    }
-  },
-});
-
-export const createSubiterator = (
-  activeIndex: MutableRefObject<number>,
-  callbacks: MutableRefObject<Array<Callback | Subiterator>>
-): Subiterator => ({
-  [SubiteratorSymbol]: (forward, restart) => {
-    if (restart) {
-      activeIndex.current = INITIAL_INDEX;
-    }
-    return navigate(forward, activeIndex, callbacks.current);
-  },
-});
-
-export const useCallbackIterator = (initialIndex: number) => {
+export const useCallbackIterator = (initialIndex = INITIAL_INDEX) => {
   const { activeIndex, callbacks } = useIteratorRefs(initialIndex);
-  const value = useMemo(() => createCallbackIterator(activeIndex, callbacks), [activeIndex, callbacks]);
-  const next = useCallback(() => navigate(true, activeIndex, callbacks.current), [activeIndex, callbacks]);
-  const previous = useCallback(() => navigate(false, activeIndex, callbacks.current), [activeIndex, callbacks]);
-  const reset = useCallback(() => (activeIndex.current = INITIAL_INDEX), [activeIndex]);
-
-  return useMemo(
-    () => ({ activeIndex, callbacks, value, next, previous, reset } as const),
-    [activeIndex, callbacks, next, previous, reset, value]
-  );
+  return useMemo(() => new CallbackIterator(activeIndex, callbacks), [activeIndex, callbacks]);
 };

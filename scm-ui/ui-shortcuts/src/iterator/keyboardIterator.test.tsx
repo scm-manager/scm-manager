@@ -289,6 +289,33 @@ describe("shortcutIterator", () => {
       expect(callback3).not.toHaveBeenCalled();
     });
 
+    it("should skip empty sub-iterators during navigation", () => {
+      const callback = jest.fn();
+      const callback2 = jest.fn();
+      const callback3 = jest.fn();
+
+      render(
+        <Wrapper>
+          <List callbacks={[callback]} />
+          <KeyboardSubIterator>
+            <List callbacks={[]} />
+          </KeyboardSubIterator>
+          <KeyboardSubIterator>
+            <List callbacks={[]} />
+          </KeyboardSubIterator>
+          <List callbacks={[callback2, callback3]} />
+        </Wrapper>
+      );
+
+      Mousetrap.trigger("j");
+      Mousetrap.trigger("j");
+      Mousetrap.trigger("j");
+
+      expect(callback).toHaveBeenCalledTimes(1);
+      expect(callback2).toHaveBeenCalledTimes(1);
+      expect(callback3).toHaveBeenCalledTimes(1);
+    });
+
     it("should not enter subiterator if its empty", () => {
       const callback = jest.fn();
       const callback2 = jest.fn();
@@ -308,6 +335,34 @@ describe("shortcutIterator", () => {
       expect(callback).not.toHaveBeenCalled();
       expect(callback2).not.toHaveBeenCalled();
       expect(callback3).not.toHaveBeenCalled();
+    });
+
+    it("should not loop", () => {
+      const callback = jest.fn();
+      const callback2 = jest.fn();
+      const callback3 = jest.fn();
+
+      render(
+        <Wrapper initialIndex={1}>
+          <KeyboardSubIterator>
+            <List callbacks={[callback, callback2]} />
+          </KeyboardSubIterator>
+          <List callbacks={[callback3]} />
+        </Wrapper>
+      );
+
+      Mousetrap.trigger("k");
+      Mousetrap.trigger("k");
+      Mousetrap.trigger("k");
+      Mousetrap.trigger("k");
+      Mousetrap.trigger("k");
+      Mousetrap.trigger("k");
+
+      expect(callback3).not.toHaveBeenCalled();
+      expect(callback2).toHaveBeenCalledTimes(1);
+      expect(callback).toHaveBeenCalledTimes(1);
+
+      expect(callback2).toHaveBeenCalledBefore(callback);
     });
   });
 });
