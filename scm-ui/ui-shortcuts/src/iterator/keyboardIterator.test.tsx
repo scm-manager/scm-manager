@@ -24,10 +24,11 @@
 
 import { renderHook } from "@testing-library/react-hooks";
 import React, { FC } from "react";
-import { KeyboardIteratorContextProvider, useKeyboardIteratorItem } from "./keyboardIterator";
+import { KeyboardIteratorContextProvider, KeyboardSubIterator, useKeyboardIteratorItem } from "./keyboardIterator";
 import { render } from "@testing-library/react";
 import { ShortcutDocsContextProvider } from "../useShortcutDocs";
 import Mousetrap from "mousetrap";
+import "jest-extended";
 
 jest.mock("react-i18next", () => ({
   useTranslation: () => [jest.fn()],
@@ -235,5 +236,78 @@ describe("shortcutIterator", () => {
     rerender(<List callbacks={[]} />);
 
     expect(callback).not.toHaveBeenCalled();
+  });
+
+  describe("With Subiterator", () => {
+    it("should call in correct order", () => {
+      const callback = jest.fn();
+      const callback2 = jest.fn();
+      const callback3 = jest.fn();
+
+      render(
+        <Wrapper>
+          <KeyboardSubIterator>
+            <List callbacks={[callback, callback2]} />
+          </KeyboardSubIterator>
+          <List callbacks={[callback3]} />
+        </Wrapper>
+      );
+
+      Mousetrap.trigger("j");
+      Mousetrap.trigger("j");
+      Mousetrap.trigger("j");
+
+      expect(callback).toHaveBeenCalledTimes(1);
+      expect(callback2).toHaveBeenCalledTimes(1);
+      expect(callback3).toHaveBeenCalledTimes(1);
+
+      expect(callback).toHaveBeenCalledBefore(callback2);
+      expect(callback2).toHaveBeenCalledBefore(callback3);
+    });
+
+    it("should call first target that is not an empty subiterator", () => {
+      const callback = jest.fn();
+      const callback2 = jest.fn();
+      const callback3 = jest.fn();
+
+      render(
+        <Wrapper>
+          <KeyboardSubIterator>
+            <List callbacks={[]} />
+          </KeyboardSubIterator>
+          <KeyboardSubIterator>
+            <List callbacks={[]} />
+          </KeyboardSubIterator>
+          <List callbacks={[callback, callback2, callback3]} />
+        </Wrapper>
+      );
+
+      Mousetrap.trigger("j");
+
+      expect(callback).toHaveBeenCalledTimes(1);
+      expect(callback2).not.toHaveBeenCalled();
+      expect(callback3).not.toHaveBeenCalled();
+    });
+
+    it("should not enter subiterator if its empty", () => {
+      const callback = jest.fn();
+      const callback2 = jest.fn();
+      const callback3 = jest.fn();
+
+      render(
+        <Wrapper initialIndex={1}>
+          <KeyboardSubIterator>
+            <List callbacks={[]} />
+          </KeyboardSubIterator>
+          <List callbacks={[callback, callback2, callback3]} />
+        </Wrapper>
+      );
+
+      Mousetrap.trigger("k");
+
+      expect(callback).not.toHaveBeenCalled();
+      expect(callback2).not.toHaveBeenCalled();
+      expect(callback3).not.toHaveBeenCalled();
+    });
   });
 });
