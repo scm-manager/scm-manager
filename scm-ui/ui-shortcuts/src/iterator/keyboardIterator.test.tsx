@@ -24,7 +24,12 @@
 
 import { renderHook } from "@testing-library/react-hooks";
 import React, { FC } from "react";
-import { KeyboardIteratorContextProvider, KeyboardSubIterator, useKeyboardIteratorItem } from "./keyboardIterator";
+import {
+  KeyboardIteratorContextProvider,
+  KeyboardSubIterator,
+  KeyboardSubIteratorContextProvider,
+  useKeyboardIteratorItem,
+} from "./keyboardIterator";
 import { render } from "@testing-library/react";
 import { ShortcutDocsContextProvider } from "../useShortcutDocs";
 import Mousetrap from "mousetrap";
@@ -383,6 +388,44 @@ describe("shortcutIterator", () => {
       expect(callback).toHaveBeenCalledTimes(1);
 
       expect(callback2).toHaveBeenCalledBefore(callback);
+    });
+
+    it("should move subiterator if its active callback is de-registered", () => {
+      const callback = jest.fn();
+      const callback2 = jest.fn();
+      const callback3 = jest.fn();
+      const callback4 = jest.fn();
+
+      const { rerender } = render(
+        <>
+          <KeyboardSubIteratorContextProvider initialIndex={1}>
+            <List callbacks={[callback, callback2, callback3]} />
+          </KeyboardSubIteratorContextProvider>
+          <List callbacks={[callback4]} />
+        </>,
+        {
+          wrapper: createWrapper(0),
+        }
+      );
+
+      expect(callback).not.toHaveBeenCalled();
+      expect(callback2).not.toHaveBeenCalled();
+      expect(callback3).not.toHaveBeenCalled();
+      expect(callback4).not.toHaveBeenCalled();
+
+      rerender(
+        <>
+          <KeyboardSubIteratorContextProvider initialIndex={1}>
+            <List callbacks={[callback, callback3]} />
+          </KeyboardSubIteratorContextProvider>
+          <List callbacks={[callback4]} />
+        </>
+      );
+
+      expect(callback).toHaveBeenCalledTimes(1);
+      expect(callback2).not.toHaveBeenCalled();
+      expect(callback3).not.toHaveBeenCalled();
+      expect(callback4).not.toHaveBeenCalled();
     });
   });
 });
