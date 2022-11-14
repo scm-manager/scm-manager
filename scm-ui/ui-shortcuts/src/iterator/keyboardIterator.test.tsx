@@ -204,6 +204,26 @@ describe("shortcutIterator", () => {
     expect(callback3).not.toHaveBeenCalled();
   });
 
+  it("should move to existing index when active index in the middle is deregistered", async () => {
+    const callback = jest.fn();
+    const callback2 = jest.fn();
+    const callback3 = jest.fn();
+
+    const { rerender } = render(<List callbacks={[callback, callback2, callback3]} />, {
+      wrapper: createWrapper(1),
+    });
+
+    expect(callback).not.toHaveBeenCalled();
+    expect(callback2).not.toHaveBeenCalled();
+    expect(callback3).not.toHaveBeenCalled();
+
+    rerender(<List callbacks={[callback, callback3]} />);
+
+    expect(callback).toHaveBeenCalledTimes(1);
+    expect(callback2).not.toHaveBeenCalled();
+    expect(callback3).not.toHaveBeenCalled();
+  });
+
   it("should not move on deregistration if iterator is not active", async () => {
     const callback = jest.fn();
     const callback2 = jest.fn();

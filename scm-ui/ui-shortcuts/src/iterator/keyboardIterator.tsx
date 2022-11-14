@@ -25,7 +25,7 @@
 import React, { FC, useCallback, useContext, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useShortcut } from "../index";
-import { Callback, CallbackRegistry, Subiterator, useCallbackIterator } from "./callbackIterator";
+import { Callback, CallbackIterator, CallbackRegistry, useCallbackIterator } from "./callbackIterator";
 
 const KeyboardIteratorContext = React.createContext<CallbackRegistry>({
   register: () => {
@@ -43,7 +43,7 @@ const KeyboardIteratorContext = React.createContext<CallbackRegistry>({
   },
 });
 
-export const useKeyboardIteratorItem = (item: Callback | Subiterator) => {
+export const useKeyboardIteratorItem = (item: Callback | CallbackIterator) => {
   const { register, deregister } = useContext(KeyboardIteratorContext);
   useEffect(() => {
     const index = register(item);
@@ -51,8 +51,8 @@ export const useKeyboardIteratorItem = (item: Callback | Subiterator) => {
   }, [item, register, deregister]);
 };
 
-export const KeyboardSubIteratorContextProvider: FC = ({ children }) => {
-  const callbackIterator = useCallbackIterator();
+export const KeyboardSubIteratorContextProvider: FC<{ initialIndex?: number }> = ({ children, initialIndex }) => {
+  const callbackIterator = useCallbackIterator(initialIndex);
 
   useKeyboardIteratorItem(callbackIterator);
 
