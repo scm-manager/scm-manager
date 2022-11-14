@@ -138,7 +138,7 @@ export class CallbackIterator implements CallbackRegistry {
     }
   }
 
-  private move = (direction: Direction) => {
+  private move(direction: Direction) {
     if (isSubiterator(this.currentItem) && this.currentItem.hasNext(direction)) {
       this.currentItem.move(direction);
     } else {
@@ -153,7 +153,7 @@ export class CallbackIterator implements CallbackRegistry {
       }
       this.setIndexAndActivateCurrentItem(nextIndex, direction);
     }
-  };
+  }
 
   private hasNext(inDirection: Direction): boolean {
     if (this.isInactive) {
@@ -186,14 +186,14 @@ export class CallbackIterator implements CallbackRegistry {
     }
   }
 
-  public register = (item: Callback | CallbackIterator) => {
+  public register(item: Callback | CallbackIterator) {
     if (isSubiterator(item)) {
       item.parent = this;
     }
     return this.items.push(item) - 1;
-  };
+  }
 
-  public deregister = (index: number) => {
+  public deregister(index: number) {
     this.items.splice(index, 1);
     if (this.activeIndex === index || this.activeIndex >= this.items.length) {
       if (this.hasAvailableIndex("backward", index)) {
@@ -210,7 +210,7 @@ export class CallbackIterator implements CallbackRegistry {
         this.reset();
       }
     }
-  };
+  }
 }
 
 export const useCallbackIterator = (initialIndex = INACTIVE_INDEX) => {
