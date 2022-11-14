@@ -151,9 +151,7 @@ export class CallbackIterator implements CallbackRegistry {
       } else {
         nextIndex = this.firstAvailableIndex(direction, this.activeIndex + offset(direction));
       }
-      if (nextIndex !== null) {
-        this.setIndexAndActivateCurrentItem(nextIndex, direction);
-      }
+      this.setIndexAndActivateCurrentItem(nextIndex, direction);
     }
   };
 
