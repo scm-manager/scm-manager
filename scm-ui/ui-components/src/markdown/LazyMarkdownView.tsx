@@ -47,6 +47,7 @@ import slug from "rehype-slug";
 import merge from "deepmerge";
 import { createComponentList } from "./createComponentList";
 import { ProtocolLinkRendererExtension, ProtocolLinkRendererExtensionMap } from "./markdownExtensions";
+import styled from "styled-components";
 
 export type MarkdownProps = {
   content: string;
@@ -95,18 +96,22 @@ const MarkdownErrorNotification: FC = () => {
   );
 };
 
+const HorizontalScrollDiv = styled.div`
+  overflow-x: auto;
+`;
+
 class LazyMarkdownView extends React.Component<Props, State> {
   static contextType = BinderContext;
 
   static defaultProps: Partial<Props> = {
     enableAnchorHeadings: false,
-    skipHtml: false
+    skipHtml: false,
   };
 
   constructor(props: Props) {
     super(props);
     this.state = {
-      contentRef: null
+      contentRef: null,
     };
   }
 
@@ -150,7 +155,7 @@ class LazyMarkdownView extends React.Component<Props, State> {
       basePath,
       permalink,
       t,
-      mdastPlugins = []
+      mdastPlugins = [],
     } = this.props;
 
     const rendererFactory = this.context.getExtension("markdown-renderer-factory");
@@ -207,27 +212,27 @@ class LazyMarkdownView extends React.Component<Props, State> {
         sanitize,
         merge(gh, {
           attributes: {
-            code: ["className"] // Allow className for code elements, this is necessary to extract the code language
+            code: ["className"], // Allow className for code elements, this is necessary to extract the code language
           },
           clobberPrefix: "", // Do not prefix user-provided ids and class names,
           protocols: {
-            href: Object.keys(protocolLinkRendererExtensions)
-          }
+            href: Object.keys(protocolLinkRendererExtensions),
+          },
         })
       )
       .use(rehype2react, {
         createElement: React.createElement,
         passNode: true,
-        components: createComponentList(remarkRendererList, { permalink })
+        components: createComponentList(remarkRendererList, { permalink }),
       });
 
     const renderedMarkdown: any = processor.processSync(content).result;
 
     return (
       <ErrorBoundary fallback={MarkdownErrorNotification}>
-        <div ref={el => this.setState({ contentRef: el })} className="content">
+        <HorizontalScrollDiv ref={(el) => this.setState({ contentRef: el })} className="content">
           {renderedMarkdown}
-        </div>
+        </HorizontalScrollDiv>
       </ErrorBoundary>
     );
   }
