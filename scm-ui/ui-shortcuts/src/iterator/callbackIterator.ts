@@ -103,11 +103,11 @@ export class CallbackIterator implements CallbackRegistry {
     return this.items.length - 1;
   }
 
-  private firstIndex(direction: "forward" | "backward") {
+  private firstIndex = (direction: "forward" | "backward") => {
     return direction === "forward" ? 0 : this.lastIndex;
-  }
+  };
 
-  private firstAvailableIndex(direction: Direction, fromIndex = this.firstIndex(direction)) {
+  private firstAvailableIndex = (direction: Direction, fromIndex = this.firstIndex(direction)) => {
     for (; direction === "forward" ? fromIndex < this.items.length : fromIndex >= 0; fromIndex += offset(direction)) {
       const callback = this.items[fromIndex];
       if (callback) {
@@ -117,28 +117,28 @@ export class CallbackIterator implements CallbackRegistry {
       }
     }
     return null;
-  }
+  };
 
-  private hasAvailableIndex(direction: Direction, fromIndex?: number) {
+  private hasAvailableIndex = (direction: Direction, fromIndex?: number) => {
     return this.firstAvailableIndex(direction, fromIndex) !== null;
-  }
+  };
 
-  private activateCurrentItem(direction: Direction) {
+  private activateCurrentItem = (direction: Direction) => {
     if (isSubiterator(this.currentItem)) {
       this.currentItem.move(direction);
     } else if (this.currentItem) {
       this.currentItem();
     }
-  }
+  };
 
-  private setIndexAndActivateCurrentItem(index: number | null, direction: Direction) {
+  private setIndexAndActivateCurrentItem = (index: number | null, direction: Direction) => {
     if (index !== null && index !== INACTIVE_INDEX) {
       this.activeIndex = index;
       this.activateCurrentItem(direction);
     }
-  }
+  };
 
-  private move(direction: Direction) {
+  private move = (direction: Direction) => {
     if (isSubiterator(this.currentItem) && this.currentItem.hasNext(direction)) {
       this.currentItem.move(direction);
     } else {
@@ -153,9 +153,9 @@ export class CallbackIterator implements CallbackRegistry {
       }
       this.setIndexAndActivateCurrentItem(nextIndex, direction);
     }
-  }
+  };
 
-  private hasNext(inDirection: Direction): boolean {
+  private hasNext = (inDirection: Direction): boolean => {
     if (this.isInactive) {
       return this.hasAvailableIndex(inDirection);
     }
@@ -163,37 +163,37 @@ export class CallbackIterator implements CallbackRegistry {
       return true;
     }
     return this.hasAvailableIndex(inDirection, this.activeIndex + offset(inDirection));
-  }
+  };
 
-  public next() {
+  public next = () => {
     if (this.hasNext("forward")) {
       return this.move("forward");
     }
-  }
+  };
 
-  public previous() {
+  public previous = () => {
     if (this.hasNext("backward")) {
       return this.move("backward");
     }
-  }
+  };
 
-  public reset() {
+  public reset = () => {
     this.activeIndex = INACTIVE_INDEX;
     for (const cb of this.items) {
       if (isSubiterator(cb)) {
         cb.reset();
       }
     }
-  }
+  };
 
-  public register(item: Callback | CallbackIterator) {
+  public register = (item: Callback | CallbackIterator) => {
     if (isSubiterator(item)) {
       item.parent = this;
     }
     return this.items.push(item) - 1;
-  }
+  };
 
-  public deregister(index: number) {
+  public deregister = (index: number) => {
     this.items.splice(index, 1);
     if (this.activeIndex === index || this.activeIndex >= this.items.length) {
       if (this.hasAvailableIndex("backward", index)) {
@@ -210,7 +210,7 @@ export class CallbackIterator implements CallbackRegistry {
         this.reset();
       }
     }
-  }
+  };
 }
 
 export const useCallbackIterator = (initialIndex = INACTIVE_INDEX) => {
