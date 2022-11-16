@@ -26,4 +26,15 @@ import React from "react";
 
 export type ModalStateContextType = { value: number; increment: () => void; decrement: () => void };
 
-export default React.createContext<ModalStateContextType>({} as ModalStateContextType);
+export default React.createContext<ModalStateContextType>({
+  value: 0,
+  increment: () => {
+    // eslint-disable-next-line no-console
+    console.warn(
+      "Modals should be declared inside a ModalStateContext. Did you use the deprecated 'confirmAlert' function over the 'ConfirmAlert' component ?"
+    );
+  },
+  decrement: () => {
+    /* Do nothing */
+  },
+});

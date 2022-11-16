@@ -28,7 +28,7 @@ import { NamespaceCollection, Repository } from "@scm-manager/ui-types";
 import groupByNamespace from "./groupByNamespace";
 import RepositoryGroupEntry from "./RepositoryGroupEntry";
 import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
-import { KeyboardIterator } from "@scm-manager/ui-shortcuts";
+import { KeyboardIterator, KeyboardSubIterator } from "@scm-manager/ui-shortcuts";
 
 type Props = {
   repositories: Repository[];
@@ -45,16 +45,18 @@ class RepositoryList extends React.Component<Props> {
     const groups = groupByNamespace(repositories, namespaces);
     return (
       <div className="content">
-        <ExtensionPoint<extensionPoints.RepositoryOverviewTop>
-          name="repository.overview.top"
-          renderAll={true}
-          props={{
-            page,
-            search,
-            namespace,
-          }}
-        />
         <KeyboardIterator>
+          <KeyboardSubIterator>
+            <ExtensionPoint<extensionPoints.RepositoryOverviewTop>
+              name="repository.overview.top"
+              renderAll={true}
+              props={{
+                page,
+                search,
+                namespace,
+              }}
+            />
+          </KeyboardSubIterator>
           {groups.map((group) => {
             return <RepositoryGroupEntry group={group} key={group.name} />;
           })}

@@ -22,18 +22,12 @@
  * SOFTWARE.
  */
 
-import React, { FC, useCallback, useContext, useEffect, useMemo, useRef } from "react";
+import React, { FC, useCallback, useContext, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useShortcut } from "../index";
+import { Callback, CallbackIterator, CallbackRegistry, useCallbackIterator } from "./callbackIterator";
 
-type Callback = () => void;
-
-type KeyboardIteratorContextType = {
-  register: (callback: Callback) => number;
-  deregister: (index: number) => void;
-};
-
-const KeyboardIteratorContext = React.createContext<KeyboardIteratorContextType>({
+const KeyboardIteratorContext = React.createContext<CallbackRegistry>({
   register: () => {
     if (process.env.NODE_ENV === "development") {
       // eslint-disable-next-line no-console
@@ -49,77 +43,45 @@ const KeyboardIteratorContext = React.createContext<KeyboardIteratorContextType>
   },
 });
 
-export const KeyboardIteratorContextProvider: FC<{ initialIndex?: number }> = ({ children, initialIndex = -1 }) => {
+export const useKeyboardIteratorItem = (item: Callback | CallbackIterator) => {
+  const { register, deregister } = useContext(KeyboardIteratorContext);
+  useEffect(() => {
+    const index = register(item);
+    return () => deregister(index);
+  }, [item, register, deregister]);
+};
+
+export const KeyboardSubIteratorContextProvider: FC<{ initialIndex?: number }> = ({ children, initialIndex }) => {
+  const callbackIterator = useCallbackIterator(initialIndex);
+
+  useKeyboardIteratorItem(callbackIterator);
+
+  return <KeyboardIteratorContext.Provider value={callbackIterator}>{children}</KeyboardIteratorContext.Provider>;
+};
+
+export const KeyboardIteratorContextProvider: FC<{ initialIndex?: number }> = ({ children, initialIndex }) => {
   const [t] = useTranslation("commons");
-  const callbacks = useRef<Array<Callback>>([]);
-  const activeIndex = useRef<number>(initialIndex);
-  const executeCallback = useCallback((index: number) => callbacks.current[index](), []);
+  const callbackIterator = useCallbackIterator(initialIndex);
 
-  const navigateBackward = useCallback(() => {
-    if (activeIndex.current === -1) {
-      activeIndex.current = callbacks.current.length - 1;
-      executeCallback(activeIndex.current);
-    } else if (activeIndex.current > 0) {
-      activeIndex.current -= 1;
-      executeCallback(activeIndex.current);
-    }
-  }, [executeCallback]);
-
-  const navigateForward = useCallback(() => {
-    if (activeIndex.current === -1) {
-      activeIndex.current = 0;
-      executeCallback(activeIndex.current);
-    } else if (activeIndex.current < callbacks.current.length - 1) {
-      activeIndex.current += 1;
-      executeCallback(activeIndex.current);
-    }
-  }, [executeCallback]);
-
-  const value = useMemo(
-    () => ({
-      register: (callback: () => void) => callbacks.current.push(callback) - 1,
-      deregister: (index: number) => {
-        callbacks.current.splice(index, 1);
-        if (callbacks.current.length === 0) {
-          activeIndex.current = -1;
-        } else if (activeIndex.current === index || activeIndex.current >= callbacks.current.length) {
-          if (activeIndex.current > 0) {
-            activeIndex.current -= 1;
-          }
-          executeCallback(activeIndex.current);
-        }
-      },
-    }),
-    [executeCallback]
-  );
-
-  useShortcut("k", navigateBackward, {
+  useShortcut("k", callbackIterator.previous.bind(callbackIterator), {
     description: t("shortcuts.iterator.previous"),
   });
 
-  useShortcut("j", navigateForward, {
+  useShortcut("j", callbackIterator.next.bind(callbackIterator), {
     description: t("shortcuts.iterator.next"),
   });
 
   useShortcut("tab", () => {
-    activeIndex.current = -1;
+    callbackIterator.reset();
 
     return true;
   });
 
-  return <KeyboardIteratorContext.Provider value={value}>{children}</KeyboardIteratorContext.Provider>;
-};
-
-export const useKeyboardIteratorCallback = (callback: Callback) => {
-  const { register, deregister } = useContext(KeyboardIteratorContext);
-  useEffect(() => {
-    const index = register(callback);
-    return () => deregister(index);
-  }, [callback, register, deregister]);
+  return <KeyboardIteratorContext.Provider value={callbackIterator}>{children}</KeyboardIteratorContext.Provider>;
 };
 
 /**
- * Use the {@link React.RefObject} returned from this hook to register a target to the nearest enclosing {@link KeyboardIterator}.
+ * Use the {@link React.RefObject} returned from this hook to register a target to the nearest enclosing {@link KeyboardIterator} or {@link KeyboardSubIterator}.
  *
  * @example
  * const ref = useKeyboardIteratorTarget();
@@ -133,7 +95,7 @@ export function useKeyboardIteratorTarget(): React.RefCallback<HTMLElement> {
       ref.current = el;
     }
   }, []);
-  useKeyboardIteratorCallback(callback);
+  useKeyboardIteratorItem(callback);
   return refCallback;
 }
 
@@ -144,7 +106,36 @@ export function useKeyboardIteratorTarget(): React.RefCallback<HTMLElement> {
  *
  * Press `k` to navigate backwards and `j` to navigate forward.
  * Pressing `tab` will reset the iterator to its initial state.
+ *
+ * Use the {@link KeyboardSubIterator} to wrap asynchronously loaded targets.
  */
 export const KeyboardIterator: FC = ({ children }) => (
   <KeyboardIteratorContextProvider>{children}</KeyboardIteratorContextProvider>
+);
+
+/**
+ * Allows deferred {@link useKeyboardIteratorTarget} invocations enclosed in this sub-iterator to be registered in the correct order within a {@link KeyboardIterator}.
+ *
+ * This is especially useful for extension points which might contain further iterable elements that are loaded asynchronously.
+ *
+ * @example
+ *  <KeyboardIterator>
+ *     <KeyboardSubIterator>
+ *             <ExtensionPoint<extensionPoints.RepositoryOverviewTop>
+ *               name="repository.overview.top"
+ *               renderAll={true}
+ *               props={{
+ *                 page,
+ *                 search,
+ *                 namespace,
+ *               }}
+ *             />
+ *     </KeyboardSubIterator>
+ *     {groups.map((group) => {
+ *        return <RepositoryGroupEntry group={group} key={group.name} />;
+ *     })}
+ *  </KeyboardIterator>
+ */
+export const KeyboardSubIterator: FC = ({ children }) => (
+  <KeyboardSubIteratorContextProvider>{children}</KeyboardSubIteratorContextProvider>
 );
