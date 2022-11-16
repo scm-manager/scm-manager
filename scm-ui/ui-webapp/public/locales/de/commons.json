@@ -116,6 +116,15 @@
         "displayName": "Systemstandard",
         "description": "Verwendet die Standardeinstellung des Systems"
       }
+    },
+    "accessibility": {
+      "navLink": "Barrierefreiheit",
+      "subtitle": "Barrierefreiheit",
+      "deactivateShortcuts": {
+        "label": "Tastaturkürzel deaktivieren",
+        "helpText": "Deaktiviert alle speziellen Tastaturkombinationen, welche die Barrierefreiheit beeinträchtigen könnten."
+      },
+      "submit": "Speichern"
     }
   },
   "password": {
@@ -133,7 +142,8 @@
   "footer": {
     "user": {
       "profile": "Profil",
-      "theme": "Design"
+      "theme": "Design",
+      "accessibility": "Barrierefreiheit"
     },
     "information": {
       "title": "Information"

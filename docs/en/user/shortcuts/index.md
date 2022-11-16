@@ -45,3 +45,9 @@ Plugins can introduce new shortcuts.
 They may be global, repository-specific or connected to an entirely different context.
 They will automatically be included in the summary generated within the SCM-Manager.
 To find the shortcuts outside the SCM-Manager, please refer to the documentation of the plugin.
+
+### Accessibility
+
+The system described above can be disabled in the profile settings under "Accessibility".
+
+![Accessibility Settings](assets/accessibility_settings.png)

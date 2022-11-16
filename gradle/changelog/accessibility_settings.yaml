@@ -1,0 +1,2 @@
+- type: added
+  description: Accessibility settings where you can disable keyboard shortcuts ([#2157](https://github.com/scm-manager/scm-manager/pull/2157))

@@ -34,7 +34,7 @@ import {
   SecondaryNavigationColumn,
   StateMenuContextProvider,
   SubNavigation,
-  urls
+  urls,
 } from "@scm-manager/ui-components";
 import ChangeUserPassword from "./ChangeUserPassword";
 import ProfileInfo from "./ProfileInfo";
@@ -45,6 +45,7 @@ import SetApiKeys from "../users/components/apiKeys/SetApiKeys";
 import SetApiKeysNavLink from "../users/components/navLinks/SetApiKeysNavLink";
 import { useRequiredMe } from "@scm-manager/ui-api";
 import Theme from "./Theme";
+import Accessibility from "./Accessibility";
 
 const Profile: FC = () => {
   const match = useRouteMatch();
@@ -63,7 +64,7 @@ const Profile: FC = () => {
         subtitle={t("profile.error-subtitle")}
         error={{
           name: t("profile.error"),
-          message: t("profile.error-message")
+          message: t("profile.error-message"),
         }}
       />
     );
@@ -71,7 +72,7 @@ const Profile: FC = () => {
 
   const extensionProps = {
     me,
-    url
+    url,
   };
 
   return (
@@ -84,6 +85,9 @@ const Profile: FC = () => {
             </Route>
             <Route path={`${url}/settings/theme`} exact>
               <Theme />
+            </Route>
+            <Route path={`${url}/settings/accessibility`} exact>
+              <Accessibility />
             </Route>
             {mayChangePassword && (
               <Route path={`${url}/settings/password`}>
@@ -120,6 +124,7 @@ const Profile: FC = () => {
                 title={t("profile.settingsNavLink")}
               >
                 <NavLink to={`${url}/settings/theme`} label={t("profile.theme.navLink")} />
+                <NavLink to={`${url}/settings/accessibility`} label={t("profile.accessibility.navLink")} />
                 {mayChangePassword && (
                   <NavLink to={`${url}/settings/password`} label={t("profile.changePasswordNavLink")} />
                 )}

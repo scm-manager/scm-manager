@@ -22,19 +22,24 @@
  * SOFTWARE.
  */
 
-import { useActiveModals } from "@scm-manager/ui-components";
-import { usePauseShortcuts } from "@scm-manager/ui-shortcuts";
-import { useAccessibilityConfig } from "../accessibilityConfig";
+import { useEffect, useState } from "react";
 
-/**
- * Keyboard shortcuts are not active in modals using {@link useActiveModals} to determine whether any modals are open.
- *
- * Has to be used inside a {@link ActiveModalCountContextProvider}.
- */
-export default function usePauseShortcutsWhenModalsActive() {
-  const areModalsActive = useActiveModals();
-  const {
-    value: { deactivateShortcuts },
-  } = useAccessibilityConfig();
-  usePauseShortcuts(deactivateShortcuts || areModalsActive);
+export default function useLocalStorage<T>(
+  key: string,
+  initialValue: T
+): [value: T, setValue: (value: T | ((previousConfig: T) => T)) => void] {
+  const [value, setValue] = useState<T>(() => {
+    try {
+      const item = localStorage.getItem(key);
+      return item ? JSON.parse(item) : initialValue;
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(error);
+      return initialValue;
+    }
+  });
+
+  useEffect(() => localStorage.setItem(key, JSON.stringify(value)), [key, value]);
+
+  return [value, setValue];
 }

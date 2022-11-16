@@ -14,7 +14,7 @@
   },
   "devDependencies": {
     "@scm-manager/babel-preset": "^2.13.1",
-    "@scm-manager/eslint-config": "^2.16.0",
+    "@scm-manager/eslint-config": "^2.17.0",
     "@scm-manager/jest-preset": "^2.13.0",
     "@scm-manager/plugin-scripts": "^1.2.2",
     "@scm-manager/prettier-config": "^2.11.1",

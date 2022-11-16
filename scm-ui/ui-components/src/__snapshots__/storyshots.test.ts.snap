@@ -1619,6 +1619,16 @@ exports[`Storyshots Footer Default 1`] = `
               footer.user.theme
             </a>
           </li>
+          <li>
+            <a
+              className=""
+              data-testid="footer-user-accessibility"
+              href="/me/settings/accessibility"
+              onClick={[Function]}
+            >
+              footer.user.accessibility
+            </a>
+          </li>
         </ul>
       </section>
       <section
@@ -1774,6 +1784,16 @@ exports[`Storyshots Footer Full 1`] = `
               onClick={[Function]}
             >
               footer.user.theme
+            </a>
+          </li>
+          <li>
+            <a
+              className=""
+              data-testid="footer-user-accessibility"
+              href="/me/settings/accessibility"
+              onClick={[Function]}
+            >
+              footer.user.accessibility
             </a>
           </li>
           <li>
@@ -1972,6 +1992,16 @@ exports[`Storyshots Footer With Avatar 1`] = `
               footer.user.theme
             </a>
           </li>
+          <li>
+            <a
+              className=""
+              data-testid="footer-user-accessibility"
+              href="/me/settings/accessibility"
+              onClick={[Function]}
+            >
+              footer.user.accessibility
+            </a>
+          </li>
         </ul>
       </section>
       <section
@@ -2119,6 +2149,16 @@ exports[`Storyshots Footer With Plugin Links 1`] = `
               onClick={[Function]}
             >
               footer.user.theme
+            </a>
+          </li>
+          <li>
+            <a
+              className=""
+              data-testid="footer-user-accessibility"
+              href="/me/settings/accessibility"
+              onClick={[Function]}
+            >
+              footer.user.accessibility
             </a>
           </li>
           <li>

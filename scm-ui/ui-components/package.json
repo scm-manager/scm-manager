@@ -24,7 +24,7 @@
     "@scm-manager/ui-shortcuts": "2.39.2-SNAPSHOT",
     "@scm-manager/ui-text": "2.39.2-SNAPSHOT",
     "@scm-manager/babel-preset": "^2.13.1",
-    "@scm-manager/eslint-config": "^2.16.0",
+    "@scm-manager/eslint-config": "^2.17.0",
     "@scm-manager/jest-preset": "^2.13.0",
     "@scm-manager/prettier-config": "^2.10.1",
     "@scm-manager/tsconfig": "^2.13.0",
