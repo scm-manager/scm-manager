@@ -43,12 +43,12 @@ const Accessibility: FC = () => {
   return (
     <>
       <Subtitle>{t("profile.accessibility.subtitle")}</Subtitle>
-      <Checkbox
-        label={t("profile.accessibility.deactivateShortcuts.label")}
-        helpText={t("profile.accessibility.deactivateShortcuts.helpText")}
-        {...register("deactivateShortcuts")}
-      />
       <form onSubmit={handleSubmit(setAccessibilityConfig)}>
+        <Checkbox
+          label={t("profile.accessibility.deactivateShortcuts.label")}
+          helpText={t("profile.accessibility.deactivateShortcuts.helpText")}
+          {...register("deactivateShortcuts")}
+        />
         <ButtonGroup className="is-justify-content-flex-end">
           <SubmitButton label={t("profile.accessibility.submit")} disabled={!isDirty} loading={isLoading} />
         </ButtonGroup>
