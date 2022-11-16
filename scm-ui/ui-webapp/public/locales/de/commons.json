@@ -122,7 +122,7 @@
       "subtitle": "Barrierefreiheit",
       "deactivateShortcuts": {
         "label": "Tastaturkürzel deaktivieren",
-        "helpText": "Deaktiviert alle speziellen Tastaturkombinationen welche die Barrierefreiheit beeinträchtigen könnten."
+        "helpText": "Deaktiviert alle speziellen Tastaturkombinationen, welche die Barrierefreiheit beeinträchtigen könnten."
       },
       "submit": "Speichern"
     }
