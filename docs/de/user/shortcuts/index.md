@@ -47,3 +47,9 @@ Diese können global oder repository-spezifisch sein oder in einem komplett ande
 Sie werden automatisch in der Übersicht im SCM-Manager mit aufgelistet.
 Um die Tastenkürzel eines Plugins innerhalb der Benutzerdokumentation zu finden, verweisen wir hier auf die
 Dokumentation des jeweiligen Plugins.
+
+### Barrierefreiheit
+
+Das oben beschriebene System kann in den Profileinstellungen unter "Barrierefreiheit" deaktiviert werden.
+
+![Einstellungen der Barrierefreiheit](assets/accessibility_settings.png)
