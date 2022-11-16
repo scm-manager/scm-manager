@@ -316,6 +316,19 @@ a.has-text-secondary-most:focus {
   }
 }
 
+.button, a {
+  &:focus,
+  &:focus-within,
+  &.is-focused {
+    outline: $focus-outline-style;
+    outline-color: $focus-outline-color;
+    outline-offset: $focus-outline-offset;
+    &:not(:active) {
+      box-shadow: none !important;
+    }
+  }
+}
+
 // buttons
 .button {
   padding-left: 1.5em;
@@ -331,16 +344,6 @@ a.has-text-secondary-most:focus {
   &.is-danger {
     &.is-outlined {
       background-color: inherit;
-    }
-  }
-
-  &:focus,
-  &.is-focused {
-    outline: $focus-outline-style;
-    outline-color: $focus-outline-color;
-    outline-offset: $focus-outline-offset;
-    &:not(:active) {
-      box-shadow: none !important;
     }
   }
 
