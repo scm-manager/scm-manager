@@ -316,13 +316,12 @@ a.has-text-secondary-most:focus {
   }
 }
 
-.button, a {
+a {
   &:focus,
   &:focus-within,
   &.is-focused {
-    outline: $focus-outline-style;
-    outline-color: $focus-outline-color;
-    outline-offset: $focus-outline-offset;
+    outline: $focus-outline-color thin solid;
+    outline-offset: 1px;
     &:not(:active) {
       box-shadow: none !important;
     }
@@ -335,6 +334,15 @@ a.has-text-secondary-most:focus {
   padding-right: 1.5em;
   height: 2.5rem;
   font-weight: $weight-semibold;
+
+  &:focus,
+  &.is-focused {
+    outline: $focus-outline-color $focus-outline-style;
+    outline-offset: $focus-outline-offset;
+    &:not(:active) {
+      box-shadow: none !important;
+    }
+  }
 
   &.is-primary,
   &.is-info,
