@@ -2,7 +2,7 @@
 # Manual edits can break the build and are not advised.
 # This file is expected to be part of source control.
 aopalliance:aopalliance:1.0=compileClasspath,compileClasspathCopy,default,defaultCopy,runtimeClasspath,runtimeClasspathCopy,testCompileClasspath,testCompileClasspathCopy,testRuntimeClasspath,testRuntimeClasspathCopy
-com.cloudogu.legman:core:2.0.0=compileClasspath,compileClasspathCopy,default,defaultCopy,runtimeClasspath,runtimeClasspathCopy,testCompileClasspath,testCompileClasspathCopy,testRuntimeClasspath,testRuntimeClasspathCopy
+com.cloudogu.legman:core:2.0.1=compileClasspath,compileClasspathCopy,default,defaultCopy,runtimeClasspath,runtimeClasspathCopy,testCompileClasspath,testCompileClasspathCopy,testRuntimeClasspath,testRuntimeClasspathCopy
 com.damnhandy:handy-uri-templates:2.1.7=compileClasspath,compileClasspathCopy,default,defaultCopy,runtimeClasspath,runtimeClasspathCopy,testCompileClasspath,testCompileClasspathCopy,testRuntimeClasspath,testRuntimeClasspathCopy
 com.fasterxml.jackson.core:jackson-annotations:2.11.3=default,runtimeClasspath
 com.fasterxml.jackson.core:jackson-annotations:2.13.4=compileClasspath,compileClasspathCopy,defaultCopy,runtimeClasspathCopy,testCompileClasspath,testCompileClasspathCopy,testRuntimeClasspath,testRuntimeClasspathCopy
