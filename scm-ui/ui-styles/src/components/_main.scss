@@ -318,10 +318,17 @@ a.has-text-secondary-most:focus {
 
 a {
   &:focus,
-  &:focus-within,
   &.is-focused {
-    outline: $focus-outline-color thin solid;
+    outline: $focus-outline-color 2px solid;
     outline-offset: 1px;
+  }
+}
+
+button, .button {
+  &:focus,
+  &.is-focused {
+    outline: $focus-outline-color $focus-outline-style;
+    outline-offset: $focus-outline-offset;
     &:not(:active) {
       box-shadow: none !important;
     }
@@ -334,15 +341,6 @@ a {
   padding-right: 1.5em;
   height: 2.5rem;
   font-weight: $weight-semibold;
-
-  &:focus,
-  &.is-focused {
-    outline: $focus-outline-color $focus-outline-style;
-    outline-offset: $focus-outline-offset;
-    &:not(:active) {
-      box-shadow: none !important;
-    }
-  }
 
   &.is-primary,
   &.is-info,
