@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-shortcuts",
-  "version": "2.39.2-SNAPSHOT",
+  "version": "2.40.0",
   "license": "MIT",
   "private": true,
   "main": "build/index.js",
@@ -46,6 +46,8 @@
     "access": "public"
   },
   "jest": {
-    "setupFilesAfterEnv": ["jest-extended/all"]
+    "setupFilesAfterEnv": [
+      "jest-extended/all"
+    ]
   }
 }

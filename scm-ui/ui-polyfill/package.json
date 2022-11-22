@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-polyfill",
-  "version": "2.39.2-SNAPSHOT",
+  "version": "2.40.0",
   "description": "Polyfills for SCM-Manager UI",
   "main": "src/index.js",
   "author": "Sebastian Sdorra <sebastian.sdorra@cloudogu.com>",
