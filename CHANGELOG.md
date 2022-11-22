@@ -5,6 +5,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.40.0] - 2022-11-22
+### Added
+- Keyboard navigation for users, groups, branches, tags, sources, changesets and plugins ([#2153](https://github.com/scm-manager/scm-manager/pull/2153))
+- Accessibility settings where you can disable keyboard shortcuts ([#2157](https://github.com/scm-manager/scm-manager/pull/2157))
+- Keyboard shortcuts for global and repository-specific navigation ([#2122](https://github.com/scm-manager/scm-manager/pull/2122))
+- Git import with lfs support ([#2133](https://github.com/scm-manager/scm-manager/pull/2133))
+- Keyboard shortcut for global search ([#2118](https://github.com/scm-manager/scm-manager/pull/2118))
+- Feedback links to footer ([#2125](https://github.com/scm-manager/scm-manager/pull/2125))
+- Keyboard shortcuts documentation ([#2129](https://github.com/scm-manager/scm-manager/pull/2129))
+- Add keyboard navigation to repository overview list ([#2146](https://github.com/scm-manager/scm-manager/pull/2146))
+
+### Fixed
+- Keyboard shortcuts should be inactive when modals are open ([#2145](https://github.com/scm-manager/scm-manager/pull/2145))
+- Git diff request correctly throws NotFoundException if target revision is non-existent ([#2141](https://github.com/scm-manager/scm-manager/pull/2141))
+- Concurrent access during Copy-on-write ([#2143](https://github.com/scm-manager/scm-manager/pull/2143))
+- Catch SVN error for cat command on non-file nodes ([#2127](https://github.com/scm-manager/scm-manager/pull/2127))
+- Handling of old commits as new ones in new branches ([#2130](https://github.com/scm-manager/scm-manager/pull/2130))
+- Plugin installation conflict ([#2138](https://github.com/scm-manager/scm-manager/pull/2138))
+- Creating a repository permission without a name breaks the repository ([#2126](https://github.com/scm-manager/scm-manager/pull/2126))
+- Clone of git repositories with lfs files via ssh ([#2144](https://github.com/scm-manager/scm-manager/pull/2144))
+- Invalidate plugin center cache on global configuration change ([#2147](https://github.com/scm-manager/scm-manager/pull/2147))
+- Remove forced word break from markdown view ([#2142](https://github.com/scm-manager/scm-manager/pull/2142))
+
+### Changed
+- Upgrade Jackson to 2.13.4
+- Fix navbar at the top of the page ([#2128](https://github.com/scm-manager/scm-manager/pull/2128))
+- Expose api for declaring keyboard shortcuts ([#2139](https://github.com/scm-manager/scm-manager/pull/2139))
+- Provide feedback on plugin center status ([#2147](https://github.com/scm-manager/scm-manager/pull/2147))
+
 ## [2.39.1] - 2022-10-12
 ### Fixed
 - Handling of old commits as new ones in new branches ([#2130](https://github.com/scm-manager/scm-manager/pull/2130))
@@ -1153,3 +1182,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.38.1]: https://scm-manager.org/download/2.38.1
 [2.39.0]: https://scm-manager.org/download/2.39.0
 [2.39.1]: https://scm-manager.org/download/2.39.1
+[2.40.0]: https://scm-manager.org/download/2.40.0

@@ -1,2 +1,0 @@
-- type: fixed
-  description: Catch SVN error for cat command on non-file nodes ([#2127](https://github.com/scm-manager/scm-manager/pull/2127))

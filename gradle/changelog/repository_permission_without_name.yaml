@@ -1,2 +1,0 @@
-- type: fixed
-  description: Creating a repository permission without a name breaks the repository ([#2126](https://github.com/scm-manager/scm-manager/pull/2126))
