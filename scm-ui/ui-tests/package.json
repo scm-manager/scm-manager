@@ -9,7 +9,7 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@wojtekmaj/enzyme-adapter-react-17": "^0.6.0",
+    "@wojtekmaj/enzyme-adapter-react-17": "^0.7.0",
     "babel-plugin-istanbul": "^6.0.0",
     "enzyme": "^3.10.0",
     "enzyme-context": "^1.1.2",
