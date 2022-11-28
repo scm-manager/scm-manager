@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import com.cloudogu.scm.GitHubUploadTask
+import com.cloudogu.scm.ScmManagerUploadTask
 
 plugins {
   id 'org.scm-manager.packaging'
@@ -48,19 +48,16 @@ task distribution(type: ReleaseYaml) {
   configuration = configurations.packageYaml
 }
 
-task publish(type: GitHubUploadTask) {
-  owner = "scm-manager"
+task publish(type: ScmManagerUploadTask) {
+  server = "https://ecosystem.cloudogu.com/scm"
+  namespace = "scm-manager"
   repo = "website"
   path = "content/releases/${project.version.replace('.', '-')}.yml"
   branch = "master"
   message = "Add release descriptor for ${project.version}"
-  author {
-    name = "CES Marvin"
-    email = "cesmarvin@cloudogu.com"
-  }
   artifact = file('build/libs/release.yml')
-  if (project.hasProperty("gitHubApiToken")) {
-    apiToken = project.property("gitHubApiToken")
+  if (project.hasProperty("ecosystemApiToken")) {
+    apiToken = project.property("ecosystemApiToken")
   }
   skip = isSnapshot
   dependsOn 'distribution'

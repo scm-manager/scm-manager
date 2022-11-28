@@ -41,8 +41,8 @@ pipeline {
         script {
           if (isReleaseBuild()) {
             // checkout, reset and merge
-            sh 'git checkout master'
-            sh 'git reset --hard origin/master'
+            sh 'git checkout main'
+            sh 'git reset --hard origin/main'
             sh "git merge --ff-only ${env.BRANCH_NAME}"
           }
         }
@@ -81,7 +81,7 @@ pipeline {
       }
     }
 
-    stage('SonarQube') {
+     stage('SonarQube') {
       steps {
         sh 'git config --replace-all "remote.origin.fetch" "+refs/heads/*:refs/remotes/origin/*"'
         sh 'git fetch origin develop'
@@ -116,7 +116,7 @@ pipeline {
         expression { return isBuildSuccess() }
       }
       steps {
-        withPublishEnivronment {
+        withPublishEnvironment {
           gradle "-PenablePackaging publish"
         }
       }
@@ -146,7 +146,7 @@ pipeline {
         script {
           def imageVersion = readFile 'scm-packaging/docker/build/docker.tag'
 
-          build job: 'scm-manager/next-scm.cloudogu.com', propagate: false, wait: false, parameters: [
+          build job: 'scm-manager/scm-manager/next-scm.cloudogu.com/master', propagate: false, wait: false, parameters: [
             string(name: 'imageTag', value: imageVersion)
           ]
         }
@@ -165,11 +165,11 @@ pipeline {
         script {
           // push changes back to remote repository
           if (isReleaseBuild()) {
-            authGit 'cesmarvin-github', 'push origin master --tags'
+            authGit 'cesmarvin', 'push origin main--tags'
           } else {
-            authGit 'cesmarvin-github', "push origin ${env.BRANCH_NAME} --tags"
+            authGit 'cesmarvin', "push origin ${env.BRANCH_NAME} --tags"
           }
-          authGit 'cesmarvin-github', 'push origin --tags'
+          authGit 'cesmarvin', 'push origin --tags'
         }
       }
     }
@@ -182,13 +182,13 @@ pipeline {
       steps {
         sh returnStatus: true, script: "git branch -D develop"
         sh "git checkout develop"
-        sh "git -c user.name='CES Marvin' -c user.email='cesmarvin@cloudogu.com' merge master"
+        sh "git -c user.name='CES Marvin' -c user.email='cesmarvin@cloudogu.com' merge main"
 
         gradle "setVersionToNextSnapshot"
 
         sh "git add gradle.properties '**.json'"
         commit 'Prepare for next development iteration'
-        authGit 'cesmarvin-github', 'push origin develop'
+        authGit 'cesmarvin', 'push origin develop'
       }
     }
 
@@ -198,7 +198,22 @@ pipeline {
         expression { return isBuildSuccess() }
       }
       steps {
-        authGit 'cesmarvin-github', "push origin :${env.BRANCH_NAME}"
+        authGit 'cesmarvin', "push origin :${env.BRANCH_NAME}"
+      }
+    }
+
+    stage('Push to GitHub') {
+      when {
+        anyOf {
+          branch pattern: 'develop', comparator: 'GLOB'
+          branch pattern: 'main', comparator: 'GLOB'
+          branch pattern: 'support/*', comparator: 'GLOB'
+        }
+        expression { return isBuildSuccess() }
+      }
+      steps {
+        authGit 'cesmarvin', "push https://github.com/scm-manager/scm-manager HEAD:${env.BRANCH_NAME}"
+        authGit 'cesmarvin', "push --tags https://github.com/scm-manager/scm-manager"
       }
     }
 
@@ -211,8 +226,8 @@ pipeline {
         mail to: "scm-team@cloudogu.com",
           subject: "Jenkins Job ${JOB_NAME} - Merge Hotfix Release #${env.BRANCH_NAME}!",
           body: """Please,
-          - merge the hotfix release branch ${env.BRANCH_NAME} into master (keep versions of master, merge changelog to keep both versions),
-          - merge master into develop (the changelog should have no conflicts),
+          - merge the hotfix release branch ${env.BRANCH_NAME} into main (keep versions of main, merge changelog to keep both versions),
+          - merge main into develop (the changelog should have no conflicts),
           - if needed, increase version."""
       }
     }
@@ -268,33 +283,19 @@ boolean isBuildSuccess() {
 }
 
 void withCheckEnvironment(Closure<Void> closure) {
-  // surround call withChromaticEnvironment to enable chromatic analyzation
   closure.call()
 }
 
-void withChromaticEnvironment(Closure<Void> closure) {
-  // apply chromatic environment only if we are on a pr build or on the develop branch
-  if (env.CHANGE_ID || env.BRANCH_NAME == 'develop') {
-    withCredentials([
-      usernamePassword(credentialsId: 'chromatic-scm-manager', usernameVariable: 'CHROMATIC_USERANAME', passwordVariable: 'CHROMATIC_PROJECT_TOKEN'),
-    ]) {
-      closure.call()
-    }
-  } else {
-    closure.call()
-  }
-}
-
-void withPublishEnivronment(Closure<Void> closure) {
+void withPublishEnvironment(Closure<Void> closure) {
   withCredentials([
-    usernamePassword(credentialsId: 'maven.scm-manager.org', usernameVariable: 'ORG_GRADLE_PROJECT_packagesScmManagerUsername', passwordVariable: 'ORG_GRADLE_PROJECT_packagesScmManagerPassword'),
-    usernamePassword(credentialsId: 'cesmarvin-github', usernameVariable: 'ORG_GRADLE_PROJECT_gitHubUsername', passwordVariable: 'ORG_GRADLE_PROJECT_gitHubApiToken'),
-    string(credentialsId: 'cesmarvin_npm_token', variable: 'ORG_GRADLE_PROJECT_npmToken'),
-    file(credentialsId: 'oss-gpg-secring', variable: 'GPG_KEY_RING'),
-    usernamePassword(credentialsId: 'oss-keyid-and-passphrase', usernameVariable: 'GPG_KEY_ID', passwordVariable: 'GPG_KEY_PASSWORD')
+    usernamePassword(credentialsId: 'packages-scm-manager-org', usernameVariable: 'ORG_GRADLE_PROJECT_packagesScmManagerUsername', passwordVariable: 'ORG_GRADLE_PROJECT_packagesScmManagerPassword'),
+    string(credentialsId: 'SCM-Manager_ApiKey', variable: 'ORG_GRADLE_PROJECT_ecosystemApiToken'),
+    string(credentialsId: 'npm-token-scm-manager', variable: 'ORG_GRADLE_PROJECT_npmToken'),
+    file(credentialsId: 'gpg_packages-scm-manager-org', variable: 'GPG_KEY_RING'),
+    usernamePassword(credentialsId: 'gpg_packages-scm-manager-org-credentials', usernameVariable: 'GPG_KEY_ID', passwordVariable: 'GPG_KEY_PASSWORD')
   ]) {
     withEnv(["ORG_GRADLE_PROJECT_npmEmail=cesmarvin@cloudogu.com"]) {
-      docker.withRegistry('', 'hub.docker.com-cesmarvin') {
+      docker.withRegistry('', 'cesmarvin-dockerhub-access-token') {
         closure.call()
       }
     }
