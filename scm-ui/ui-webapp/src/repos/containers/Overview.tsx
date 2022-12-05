@@ -175,6 +175,7 @@ const Overview: FC = () => {
 
   const hasExtensions = extensions.length > 0;
 
+  const createLink = namespace ? `/repos/create/?namespace=${namespace}`: "/repos/create/";
   return (
     <Page
       documentTitle={t("overview.title")}
@@ -205,7 +206,7 @@ const Overview: FC = () => {
             search={search}
             page={page}
           />
-          {showCreateButton ? <CreateButton label={t("overview.createButton")} link="/repos/create/" /> : null}
+          {showCreateButton ? <CreateButton label={t("overview.createButton")} link={createLink} /> : null}
         </div>
       </div>
       <PageActions>
@@ -221,7 +222,7 @@ const Overview: FC = () => {
               groupSelected={namespaceSelected}
               groupAriaLabelledby="select-namespace"
               link={namespace ? `repos/${namespace}` : "repos"}
-              createLink="/repos/create/"
+              createLink={createLink}
               label={t("overview.createButton")}
               testId="repository-overview"
               searchPlaceholder={t("overview.filterRepositories")}

@@ -43,7 +43,7 @@ const RepositoryFormButton: FC<RepositoryForm> = ({ path, icon, label }) => {
     <Button
       className="is-size-6"
       color={isSelected ? "link is-selected" : undefined}
-      link={!isSelected ? href : undefined}
+      link={!isSelected ? href + location.search : undefined}
     >
       <Icon className="pr-2" name={icon} color="inherit" alt="" />
       <span className={classNames("is-hidden-mobile", "is-hidden-tablet-only")}>{t(`plugins:${label}`, label)}</span>

@@ -24,10 +24,11 @@
 import React, { FC, FormEvent, useCallback, useEffect, useState } from "react";
 import { Repository, RepositoryCreation, RepositoryType, RepositoryUrlImport } from "@scm-manager/ui-types";
 import ImportFromUrlForm from "./ImportFromUrlForm";
-import { ErrorNotification, Level, SubmitButton } from "@scm-manager/ui-components";
+import { ErrorNotification, Level, SubmitButton, urls } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 import { useImportRepositoryFromUrl } from "@scm-manager/ui-api";
 import { extensionPoints } from "@scm-manager/ui-extensions";
+import { useLocation } from "react-router-dom";
 
 type Props = {
   repositoryType: RepositoryType;
@@ -44,9 +45,10 @@ const ImportRepositoryFromUrl: FC<Props> = ({
   nameForm: NameForm,
   informationForm: InformationForm
 }) => {
+  const location = useLocation();
   const [repo, setRepo] = useState<RepositoryUrlImport>({
     name: "",
-    namespace: "",
+    namespace: urls.getValueStringFromLocationByKey(location, "namespace") || "",
     type: repositoryType.name,
     contact: "",
     description: "",

@@ -33,9 +33,10 @@ import {
   RepositoryCreation,
   RepositoryType
 } from "@scm-manager/ui-types";
-import { Checkbox, Level, Select, SubmitButton } from "@scm-manager/ui-components";
+import { Checkbox, Level, Select, SubmitButton, urls } from "@scm-manager/ui-components";
 import NamespaceAndNameFields from "../NamespaceAndNameFields";
 import RepositoryInformationForm from "../RepositoryInformationForm";
+import { useLocation } from "react-router-dom";
 
 type Props = {
   createRepository?: (repo: RepositoryCreation, shouldInit: boolean) => void;
@@ -43,6 +44,7 @@ type Props = {
   repository?: Repository;
   repositoryTypes?: RepositoryType[];
   namespaceStrategy?: string;
+  namespace?: string;
   loading: boolean;
   indexResources?: IndexResources;
 };
@@ -56,9 +58,10 @@ const RepositoryForm: FC<Props> = ({
   loading,
   indexResources
 }) => {
+  const location = useLocation();
   const [repo, setRepo] = useState<RepositoryBase>({
     name: "",
-    namespace: "",
+    namespace: urls.getValueStringFromLocationByKey(location, "namespace") || "",
     type: "",
     contact: "",
     description: ""
