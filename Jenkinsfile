@@ -166,11 +166,11 @@ pipeline {
         script {
           // push changes back to remote repository
           if (isReleaseBuild()) {
-            authGit 'cesmarvin', 'push origin main--tags'
+            authGit 'SCM-Manager', 'push origin main--tags'
           } else {
-            authGit 'cesmarvin', "push origin ${env.BRANCH_NAME} --tags"
+            authGit 'SCM-Manager', "push origin ${env.BRANCH_NAME} --tags"
           }
-          authGit 'cesmarvin', 'push origin --tags'
+          authGit 'SCM-Manager', 'push origin --tags'
         }
       }
     }
@@ -189,7 +189,7 @@ pipeline {
 
         sh "git add gradle.properties '**.json'"
         commit 'Prepare for next development iteration'
-        authGit 'cesmarvin', 'push origin develop'
+        authGit 'SCM-Manager', 'push origin develop'
       }
     }
 
@@ -199,7 +199,7 @@ pipeline {
         expression { return isBuildSuccess() }
       }
       steps {
-        authGit 'cesmarvin', "push origin :${env.BRANCH_NAME}"
+        authGit 'SCM-Manager', "push origin :${env.BRANCH_NAME}"
       }
     }
 
