@@ -147,7 +147,7 @@ pipeline {
         script {
           def imageVersion = readFile 'scm-packaging/docker/build/docker.tag'
 
-          build job: 'scm-manager/scm-manager/next-scm.cloudogu.com/master', propagate: false, wait: false, parameters: [
+          build job: 'scm-manager/next-scm.cloudogu.com/master', propagate: false, wait: false, parameters: [
             string(name: 'imageTag', value: imageVersion)
           ]
         }
