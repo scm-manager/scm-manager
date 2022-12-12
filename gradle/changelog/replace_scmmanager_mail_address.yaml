@@ -1,0 +1,2 @@
+- type: changed
+  description: Default host 'scm-manager.org' replaced with 'example.org' in default mail address

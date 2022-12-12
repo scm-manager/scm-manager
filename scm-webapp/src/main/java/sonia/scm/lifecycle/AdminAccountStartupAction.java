@@ -85,7 +85,7 @@ public class AdminAccountStartupAction implements InitializationStep {
     if (startupTokenByProperty != null) {
       String adminUserName = System.getProperty(INITIAL_USER_PROPERTY, "scmadmin");
       context.runAsAdmin((PrivilegedStartupAction) () ->
-        createAdminUser(adminUserName, "SCM Administrator", "scm-admin@scm-manager.org", startupTokenByProperty));
+        createAdminUser(adminUserName, "SCM Administrator", "scm@example.com", startupTokenByProperty));
       LOG.info("================={}========================", adminUserName.replaceAll(".", "="));
       LOG.info("==               {}                      ==", adminUserName.replaceAll(".", " "));
       LOG.info("== Created user '{}' with given password ==", adminUserName);

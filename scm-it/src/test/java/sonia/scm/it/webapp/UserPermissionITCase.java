@@ -122,7 +122,7 @@ public class UserPermissionITCase extends AbstractPermissionITCaseBase<User>
   protected User getModifyItem()
   {
     User user = new User("scmadmin", "SCM Administrator",
-                         "scm-admin@scm-manager.org");
+                         "scm@example.com");
 
     user.setPassword("hallo123");
     user.setType("xml");
