@@ -46,7 +46,7 @@ public final class LoggingExporter implements Exporter {
 
   @Inject
   LoggingExporter() {
-    this(LOG::info);
+    this(LOG::debug);
   }
 
   LoggingExporter(Consumer<String> logger) {
