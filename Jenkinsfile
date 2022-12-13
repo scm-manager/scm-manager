@@ -166,7 +166,7 @@ pipeline {
         script {
           // push changes back to remote repository
           if (isReleaseBuild()) {
-            authGit 'SCM-Manager', 'push origin main--tags'
+            authGit 'SCM-Manager', 'push origin main --tags'
           } else {
             authGit 'SCM-Manager', "push origin ${env.BRANCH_NAME} --tags"
           }
