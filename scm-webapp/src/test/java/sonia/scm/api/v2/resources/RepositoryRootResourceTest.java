@@ -90,6 +90,7 @@ import java.time.Instant;
 import java.util.Set;
 import java.util.function.Predicate;
 
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Stream.of;
 import static javax.servlet.http.HttpServletResponse.SC_ACCEPTED;
@@ -223,7 +224,6 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   @Test
   public void shouldFindExistingRepository() throws URISyntaxException, UnsupportedEncodingException {
     createRepository("space", "repo");
-    when(configuration.getNamespaceStrategy()).thenReturn("CustomNamespaceStrategy");
 
     MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo");
 
@@ -237,7 +237,6 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   public void shouldGetAll() throws URISyntaxException, UnsupportedEncodingException {
     PageResult<Repository> singletonPageResult = createSingletonPageResult(createRepository("space", "repo"));
     when(repositoryManager.getPage(any(), any(), eq(0), eq(10))).thenReturn(singletonPageResult);
-    when(configuration.getNamespaceStrategy()).thenReturn("CustomNamespaceStrategy");
 
     MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2);
 
@@ -248,10 +247,39 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   }
 
   @Test
+  public void shouldGetAllButArchived() throws URISyntaxException {
+    PageResult<Repository> singletonPageResult = new PageResult<>(emptyList(), 0);
+    when(repositoryManager.getPage(filterCaptor.capture(), any(), eq(0), eq(10))).thenReturn(singletonPageResult);
+    MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "?showArchived=false");
+
+    dispatcher.invoke(request, response);
+
+    Predicate<Repository> predicate = filterCaptor.getValue();
+    Repository repository = createRepository("hitchhiker", "hog");
+    assertThat(predicate.test(repository)).isTrue();
+    repository.setArchived(true);
+    assertThat(predicate.test(repository)).isFalse();
+  }
+
+  @Test
+  public void shouldGetAllIncludingArchivedByDefault() throws URISyntaxException {
+    PageResult<Repository> singletonPageResult = new PageResult<>(emptyList(), 0);
+    when(repositoryManager.getPage(filterCaptor.capture(), any(), eq(0), eq(10))).thenReturn(singletonPageResult);
+    MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2);
+
+    dispatcher.invoke(request, response);
+
+    Predicate<Repository> predicate = filterCaptor.getValue();
+    Repository repository = createRepository("hitchhiker", "hog");
+    assertThat(predicate.test(repository)).isTrue();
+    repository.setArchived(true);
+    assertThat(predicate.test(repository)).isTrue();
+  }
+
+  @Test
   public void shouldCreateFilterForSearch() throws URISyntaxException {
     PageResult<Repository> singletonPageResult = createSingletonPageResult(createRepository("space", "repo"));
     when(repositoryManager.getPage(filterCaptor.capture(), any(), eq(0), eq(10))).thenReturn(singletonPageResult);
-    when(configuration.getNamespaceStrategy()).thenReturn("CustomNamespaceStrategy");
 
     MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "?q=Rep");
 
@@ -267,7 +295,6 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   public void shouldCreateFilterForNamespace() throws URISyntaxException {
     PageResult<Repository> singletonPageResult = createSingletonPageResult(createRepository("space", "repo"));
     when(repositoryManager.getPage(filterCaptor.capture(), any(), eq(0), eq(10))).thenReturn(singletonPageResult);
-    when(configuration.getNamespaceStrategy()).thenReturn("CustomNamespaceStrategy");
 
     MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space");
 
@@ -283,7 +310,6 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   public void shouldCreateFilterForNamespaceWithQuery() throws URISyntaxException {
     PageResult<Repository> singletonPageResult = createSingletonPageResult(createRepository("space", "repo"));
     when(repositoryManager.getPage(filterCaptor.capture(), any(), eq(0), eq(10))).thenReturn(singletonPageResult);
-    when(configuration.getNamespaceStrategy()).thenReturn("CustomNamespaceStrategy");
 
     MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space?q=Rep");
 

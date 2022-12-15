@@ -257,6 +257,14 @@ export type RepositoryOverviewTitle = RenderableExtensionPointDefinition<"reposi
 export type RepositoryOverviewSubtitleExtension = RepositoryOverviewSubtitle;
 export type RepositoryOverviewSubtitle = RenderableExtensionPointDefinition<"repository.overview.subtitle">;
 
+/**
+ * Specify options for the repository overview like the page size
+ */
+export type RepositoryOverviewListOptionsExtensionPoint = ExtensionPointDefinition<
+  "repository.overview.listOptions",
+  () => { pageSize?: number; showArchived?: boolean }
+>;
+
 // From docs
 
 export type AdminNavigation = RenderableExtensionPointDefinition<"admin.navigation", { links: Links; url: string }>;

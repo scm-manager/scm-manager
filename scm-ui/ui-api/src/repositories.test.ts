@@ -125,6 +125,34 @@ describe("Test repository hooks", () => {
       });
     });
 
+    it("should hide archived repositories", async () => {
+      const queryClient = createInfiniteCachingClient();
+      setIndexLink(queryClient, "repositories", "/repos");
+      fetchMock.get("/api/v2/repos", repositoryCollection, {
+        query: {
+          showArchived: "false"
+        }
+      });
+
+      await expectCollection(queryClient, {
+        showArchived: false
+      });
+    });
+
+    it("should set the page size", async () => {
+      const queryClient = createInfiniteCachingClient();
+      setIndexLink(queryClient, "repositories", "/repos");
+      fetchMock.get("/api/v2/repos", repositoryCollection, {
+        query: {
+          pageSize: "25"
+        }
+      });
+
+      await expectCollection(queryClient, {
+        pageSize: 25
+      });
+    });
+
     it("should append search query", async () => {
       const queryClient = createInfiniteCachingClient();
       setIndexLink(queryClient, "repositories", "/repos");

@@ -112,9 +112,10 @@ public class RepositoryCollectionResource {
                          @DefaultValue("" + DEFAULT_PAGE_SIZE) @QueryParam("pageSize") int pageSize,
                          @QueryParam("sortBy") String sortBy,
                          @DefaultValue("false") @QueryParam("desc") boolean desc,
+                         @DefaultValue("true") @QueryParam("showArchived") boolean showArchived,
                          @DefaultValue("") @QueryParam("q") String search
   ) {
-    return adapter.getAll(page, pageSize, createSearchPredicate(search), sortBy, desc,
+    return adapter.getAll(page, pageSize, createSearchPredicate(search, showArchived), sortBy, desc,
       pageResult -> repositoryCollectionToDtoMapper.map(page, pageSize, pageResult));
   }
 
@@ -144,9 +145,10 @@ public class RepositoryCollectionResource {
                                  @DefaultValue("" + DEFAULT_PAGE_SIZE) @QueryParam("pageSize") int pageSize,
                                  @QueryParam("sortBy") String sortBy,
                                  @DefaultValue("false") @QueryParam("desc") boolean desc,
+                                 @DefaultValue("true") @QueryParam("showArchived") boolean showArchived,
                                  @DefaultValue("") @QueryParam("q") String search
   ) {
-    return adapter.getAll(page, pageSize, createSearchPredicate(namespace, search), sortBy, desc,
+    return adapter.getAll(page, pageSize, createSearchPredicate(namespace, search, showArchived), sortBy, desc,
       pageResult -> repositoryCollectionToDtoMapper.map(namespace, page, pageSize, pageResult));
   }
 
@@ -221,21 +223,24 @@ public class RepositoryCollectionResource {
     return SecurityUtils.getSubject().getPrincipals().oneByType(User.class).getName();
   }
 
-  private Predicate<Repository> createSearchPredicate(String namespace, String search) {
-    if (isNullOrEmpty(search)) {
+  private Predicate<Repository> createSearchPredicate(String namespace, String search, boolean showArchived) {
+    if (isNullOrEmpty(search) && showArchived) {
       return repository -> repository.getNamespace().equals(namespace);
     }
     SearchRequest searchRequest = new SearchRequest(search, true);
     return repository -> repository.getNamespace().equals(namespace)
+      && (showArchived || !repository.isArchived())
       && SearchUtil.matchesOne(searchRequest, repository.getName(), repository.getNamespace(), repository.getDescription());
   }
 
-  private Predicate<Repository> createSearchPredicate(String search) {
-    if (isNullOrEmpty(search)) {
+  private Predicate<Repository> createSearchPredicate(String search, boolean showArchived) {
+    if (isNullOrEmpty(search) && showArchived) {
       return user -> true;
     }
     SearchRequest searchRequest = new SearchRequest(search, true);
-    return repository -> SearchUtil.matchesOne(searchRequest, repository.getName(), repository.getNamespace(), repository.getDescription());
+    return repository ->
+      (showArchived || !repository.isArchived())
+      && SearchUtil.matchesOne(searchRequest, repository.getName(), repository.getNamespace(), repository.getDescription());
   }
 
 }

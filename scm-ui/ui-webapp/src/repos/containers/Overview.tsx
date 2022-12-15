@@ -37,7 +37,7 @@ import {
 import RepositoryList from "../components/list";
 import { useNamespaceAndNameContext, useNamespaces, useRepositories } from "@scm-manager/ui-api";
 import { NamespaceCollection, RepositoryCollection } from "@scm-manager/ui-types";
-import { ExtensionPoint, extensionPoints, useBinder } from "@scm-manager/ui-extensions";
+import { binder, ExtensionPoint, extensionPoints, useBinder } from "@scm-manager/ui-extensions";
 import styled from "styled-components";
 
 const StickyColumn = styled.div`
@@ -64,12 +64,19 @@ const useOverviewData = () => {
   const location = useLocation();
   const search = urls.getQueryStringFromLocation(location);
 
+  const listOptions = binder.getExtension<extensionPoints.RepositoryOverviewListOptionsExtensionPoint>(
+    "repository.overview.listOptions"
+  );
+
+  const listOptionsValue = listOptions ? listOptions() : { pageSize: 10, showArchived: true };
+
   const request = {
     namespace: namespaces?._embedded.namespaces.find((n) => n.namespace === namespace),
     // ui starts counting by 1,
     // but backend starts counting by 0
     page: page - 1,
     search,
+    ...listOptionsValue,
     // if a namespaces is selected we have to wait
     // until the list of namespaces are loaded from the server
     // also do not fetch repositories if an invalid namespace is selected

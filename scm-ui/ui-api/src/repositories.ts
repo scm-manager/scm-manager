@@ -47,6 +47,8 @@ export type UseRepositoriesRequest = {
   search?: string;
   page?: number | string;
   disabled?: boolean;
+  pageSize?: number;
+  showArchived?: boolean;
 };
 
 export const useRepositories = (request?: UseRepositoriesRequest): ApiResult<RepositoryCollection> => {
@@ -58,6 +60,12 @@ export const useRepositories = (request?: UseRepositoriesRequest): ApiResult<Rep
   const queryParams: Record<string, string> = {};
   if (request?.search) {
     queryParams.q = request.search;
+  }
+  if (request?.pageSize) {
+    queryParams.pageSize = request.pageSize.toString();
+  }
+  if (request?.showArchived !== undefined) {
+    queryParams.showArchived = request.showArchived.toString();
   }
   if (request?.page) {
     queryParams.page = request.page.toString();
