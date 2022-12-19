@@ -780,6 +780,12 @@ class ResourceLinks {
     public String content(String namespace, String name, String revision, String path) {
       return addPath(sourceLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("content").parameters().method("get").parameters(revision, "").href(), path);
     }
+
+    public String content(String namespace, String name) {
+      return content(namespace, name, "_REVISION_", "_PATH_")
+        .replace("_REVISION_", "{revision}")
+        .replace("_PATH_", "{path}");
+    }
   }
 
   public AnnotateLinks annotate() {

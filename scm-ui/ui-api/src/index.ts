@@ -71,3 +71,5 @@ export * from "./ApiProvider";
 
 export * from "./LegacyContext";
 export * from "./NamespaceAndNameContext";
+export * from "./RepositoryContext";
+export * from "./RepositoryRevisionContext";

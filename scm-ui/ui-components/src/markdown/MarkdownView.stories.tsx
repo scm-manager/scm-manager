@@ -32,6 +32,7 @@ import MarkdownXmlCodeBlock from "../__resources__/markdown-xml-codeblock.md";
 import MarkdownUmlCodeBlock from "../__resources__/markdown-uml-codeblock.md";
 import MarkdownInlineXml from "../__resources__/markdown-inline-xml.md";
 import MarkdownLinks from "../__resources__/markdown-links.md";
+import MarkdownImages from "../__resources__/markdown-images.md";
 import MarkdownCommitLinks from "../__resources__/markdown-commit-link.md";
 import MarkdownXss from "../__resources__/markdown-xss.md";
 import MarkdownChangelog from "../__resources__/markdown-changelog.md";
@@ -40,6 +41,7 @@ import { Subtitle } from "../layout";
 import { MemoryRouter } from "react-router-dom";
 import { Binder, BinderContext, extensionPoints } from "@scm-manager/ui-extensions";
 import { ProtocolLinkRendererProps } from "./markdownExtensions";
+import { RepositoryContextProvider, RepositoryRevisionContextProvider } from "@scm-manager/ui-api";
 
 const Spacing = styled.div`
   padding: 2em;
@@ -114,7 +116,19 @@ storiesOf("MarkdownView", module)
       </BinderContext.Provider>
     );
   })
-  .add("XSS Prevention", () => <MarkdownView content={MarkdownXss} skipHtml={false} />);
+  .add("XSS Prevention", () => <MarkdownView content={MarkdownXss} skipHtml={false} />)
+  .add("Images", () => (
+    <RepositoryContextProvider
+      // @ts-ignore We do not need a valid repository here, only one with a content link
+      repository={{
+        _links: { content: { href: "https://my.scm/scm/api/v2/some/repository/content/{revision}/{path}" } }
+      }}
+    >
+      <RepositoryRevisionContextProvider revision={"42"}>
+        <MarkdownView basePath={"/scm/"} content={MarkdownImages} />
+      </RepositoryRevisionContextProvider>
+    </RepositoryContextProvider>
+  ));
 
 export const ProtocolLinkRenderer: FC<ProtocolLinkRendererProps<"scw">> = ({ protocol, href, children }) => {
   return (

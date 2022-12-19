@@ -23,7 +23,7 @@
  */
 import React, { FC, useState } from "react";
 import MarkdownViewer from "./MarkdownViewer";
-import { File } from "@scm-manager/ui-types";
+import { File, Repository } from "@scm-manager/ui-types";
 import { ErrorNotification, Loading, SyntaxHighlighter } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 import { useFileContent } from "@scm-manager/ui-api";
@@ -34,9 +34,10 @@ import classNames from "classnames";
 type Props = {
   file: File;
   basePath: string;
+  repository: Repository;
 };
 
-const SwitchableMarkdownViewer: FC<Props> = ({ file, basePath }) => {
+const SwitchableMarkdownViewer: FC<Props> = ({ file, basePath, repository }) => {
   const { isLoading, error, data: content } = useFileContent(file);
   const { t } = useTranslation("repos");
   const location = useLocation();
@@ -68,7 +69,13 @@ const SwitchableMarkdownViewer: FC<Props> = ({ file, basePath }) => {
         </ul>
       </div>
       {renderMarkdown ? (
-        <MarkdownViewer content={content || ""} basePath={basePath} permalink={permalink} />
+        <MarkdownViewer
+          content={content || ""}
+          basePath={basePath}
+          permalink={permalink}
+          revision={file.revision}
+          repository={repository}
+        />
       ) : (
         <SyntaxHighlighter language="markdown" value={content || ""} permalink={permalink} />
       )}

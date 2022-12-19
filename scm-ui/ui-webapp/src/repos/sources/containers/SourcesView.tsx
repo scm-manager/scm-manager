@@ -66,7 +66,7 @@ const SourcesView: FC<Props> = ({ file, repository, revision }) => {
   if (contentType.startsWith("image/")) {
     sources = <ImageViewer file={file} />;
   } else if (contentType.includes("markdown") || (language && language.toLowerCase() === "markdown")) {
-    sources = <SwitchableMarkdownViewer file={file} basePath={basePath} />;
+    sources = <SwitchableMarkdownViewer file={file} basePath={basePath} repository={repository} />;
   } else if (language) {
     sources = <SourcecodeViewer file={file} language={language} />;
   } else if (contentType.startsWith("text/")) {

@@ -24,7 +24,7 @@
 import React, { FC, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useLocation, useParams } from "react-router-dom";
-import { useSources } from "@scm-manager/ui-api";
+import { RepositoryRevisionContextProvider, useSources } from "@scm-manager/ui-api";
 import { Branch, Repository } from "@scm-manager/ui-types";
 import { Breadcrumb, ErrorNotification, Loading, Notification } from "@scm-manager/ui-components";
 import FileTree from "../components/FileTree";
@@ -178,7 +178,7 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
   };
 
   return (
-    <>
+    <RepositoryRevisionContextProvider revision={revision}>
       {hasBranchesWhenSupporting(repository) && (
         <CodeActionBar
           selectedBranch={selectedBranch}
@@ -193,7 +193,7 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
         />
       )}
       {renderPanelContent()}
-    </>
+    </RepositoryRevisionContextProvider>
   );
 };
 

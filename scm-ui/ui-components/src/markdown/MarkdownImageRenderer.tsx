@@ -22,12 +22,10 @@
  * SOFTWARE.
  */
 import React, { FC } from "react";
-import { Link, useLocation } from "react-router-dom";
-import ExternalLink from "../navigation/ExternalLink";
-import { urls } from "@scm-manager/ui-api";
-import { ProtocolLinkRendererExtensionMap } from "./markdownExtensions";
+import { useLocation } from "react-router-dom";
+import { Link } from "@scm-manager/ui-types";
 import {
-  isAbsolute, isAnchorLink,
+  isAbsolute,
   isExternalLink,
   isInternalScmRepoLink,
   isLinkWithProtocol,
@@ -35,20 +33,29 @@ import {
   join,
   normalizePath
 } from "./paths";
+import { useRepositoryContext, useRepositoryRevisionContext } from "@scm-manager/ui-api";
 
-export const createLocalLink = (basePath: string, currentPath: string, link: string) => {
+export const createLocalLink = (
+  basePath: string,
+  contentLink: string,
+  revision: string,
+  currentPath: string,
+  link: string
+) => {
+  const apiBasePath = contentLink.replace("{revision}", revision);
   if (isInternalScmRepoLink(link)) {
     return link;
   }
   if (isAbsolute(link)) {
-    return join(basePath, link);
+    return apiBasePath.replace("{path}", link.substring(1));
   }
   if (!isSubDirectoryOf(basePath, currentPath)) {
-    return join(basePath, link);
+    return apiBasePath.replace("{path}", link);
   }
-  let path = currentPath;
+  const relativePath = currentPath.substring(basePath.length);
+  let path = relativePath;
   if (currentPath.endsWith("/")) {
-    path = currentPath.substring(0, currentPath.length - 2);
+    path = relativePath.substring(0, relativePath.length - 1);
   }
   const lastSlash = path.lastIndexOf("/");
   if (lastSlash < 0) {
@@ -56,58 +63,54 @@ export const createLocalLink = (basePath: string, currentPath: string, link: str
   } else {
     path = path.substring(0, lastSlash);
   }
-  return "/" + normalizePath(join(path, link));
+  return apiBasePath.replace("{path}", normalizePath(join(path, link)));
 };
 
 type LinkProps = {
-  href: string;
+  src: string;
+  alt: string;
 };
 
 type Props = LinkProps & {
   base?: string;
+  contentLink?: string;
 };
 
-const MarkdownLinkRenderer: FC<Props> = ({ href = "", base, children, ...props }) => {
+const MarkdownImageRenderer: FC<Props> = ({ src = "", alt = "", base, contentLink, children, ...props }) => {
   const location = useLocation();
-  if (isExternalLink(href)) {
-    return <ExternalLink to={href}>{children}</ExternalLink>;
-  } else if (isLinkWithProtocol(href)) {
-    return <a href={href}>{children}</a>;
-  } else if (isAnchorLink(href)) {
-    return <a href={urls.withContextPath(location.pathname) + href}>{children}</a>;
-  } else if (base) {
-    const localLink = createLocalLink(base, location.pathname, href);
-    return <Link to={localLink}>{children}</Link>;
-  } else if (href) {
+  const repository = useRepositoryContext();
+  const revision = useRepositoryRevisionContext();
+
+  if (isExternalLink(src) || isLinkWithProtocol(src)) {
     return (
-      <a href={href} {...props}>
+      <img src={src} alt={alt}>
         {children}
-      </a>
+      </img>
+    );
+  } else if (base && repository && revision) {
+    const localLink = createLocalLink(base, (repository._links.content as Link).href, revision, location.pathname, src);
+    return (
+      <img src={localLink} alt={alt}>
+        {children}
+      </img>
+    );
+  } else if (src) {
+    return (
+      <img src={src} alt={alt}>
+        {children}
+      </img>
     );
   } else {
-    return <a {...props}>{children}</a>;
+    return <img {...props}>{children}</img>;
   }
 };
 
 // we use a factory method, because react-markdown does not pass
 // base as prop down to our link component.
-export const create = (base?: string, protocolExtensions: ProtocolLinkRendererExtensionMap = {}): FC<LinkProps> => {
+export const create = (base: string | undefined): FC<LinkProps> => {
   return (props) => {
-    const protocolLinkContext = isLinkWithProtocol(props.href || "");
-    if (protocolLinkContext) {
-      const { link, protocol } = protocolLinkContext;
-      const ProtocolRenderer = protocolExtensions[protocol];
-      if (ProtocolRenderer) {
-        return (
-          <ProtocolRenderer protocol={protocol} href={link}>
-            {props.children}
-          </ProtocolRenderer>
-        );
-      }
-    }
-
-    return <MarkdownLinkRenderer base={base} {...props} />;
+    return <MarkdownImageRenderer base={base}{...props} />;
   };
 };
 
-export default MarkdownLinkRenderer;
+export default MarkdownImageRenderer;

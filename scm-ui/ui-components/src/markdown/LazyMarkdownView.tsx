@@ -33,6 +33,7 @@ import { BinderContext } from "@scm-manager/ui-extensions";
 import ErrorBoundary from "../ErrorBoundary";
 import { create as createMarkdownHeadingRenderer } from "./MarkdownHeadingRenderer";
 import { create as createMarkdownLinkRenderer } from "./MarkdownLinkRenderer";
+import { create as createMarkdownImageRenderer } from "./MarkdownImageRenderer";
 import { useTranslation, WithTranslation, withTranslation } from "react-i18next";
 import Notification from "../Notification";
 import { createTransformer as createChangesetShortlinkParser } from "./remarkChangesetShortLinkParser";
@@ -172,6 +173,8 @@ class LazyMarkdownView extends React.Component<Props, State> {
     if (enableAnchorHeadings && permalink && !remarkRendererList.heading) {
       remarkRendererList.heading = createMarkdownHeadingRenderer(permalink);
     }
+
+    remarkRendererList.image = createMarkdownImageRenderer(basePath);
 
     let protocolLinkRendererExtensions: ProtocolLinkRendererExtensionMap = {};
     if (!remarkRendererList.link) {

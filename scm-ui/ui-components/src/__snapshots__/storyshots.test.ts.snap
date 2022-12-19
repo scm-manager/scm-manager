@@ -14437,6 +14437,87 @@ and this project adheres to
 </div>
 `;
 
+exports[`Storyshots MarkdownView Images 1`] = `
+<div
+  className="MarkdownViewstories__Spacing-sc-1lofakk-0 isVeYs"
+>
+  <div
+    className="LazyMarkdownView__HorizontalScrollDiv-sc-w02jj8-0 iAcXxX content"
+  >
+    <div>
+      <h1
+        id="images"
+      >
+        Images
+      </h1>
+      
+
+      <p>
+        Show case for different possibilities to render image src links.
+Please note that some of the images do not work in storybook,
+the story is mostly for checking if the src links are rendered correct.
+      </p>
+      
+
+      <h2
+        id="external"
+      >
+        External
+      </h2>
+      
+
+      <p>
+        External images should be rendered with the unaltered link:
+      </p>
+      
+
+      <p>
+        <img
+          alt="external image"
+          src="https://github.com/scm-manager/scm-manager/blob/develop/docs/en/logo/scm-manager_logo.png"
+        />
+      </p>
+      
+
+      <h2
+        id="images-from-repository"
+      >
+        Images from repository
+      </h2>
+      
+
+      <p>
+        Images from the repository should be resolved to an api url:
+      </p>
+      
+
+      <p>
+        <img
+          alt="relative path"
+          src="https://my.scm/scm/api/v2/some/repository/content/42/some_image.jpg"
+        />
+      </p>
+      
+
+      <p>
+        <img
+          alt="path starting with a '.'"
+          src="https://my.scm/scm/api/v2/some/repository/content/42/./some_image.jpg"
+        />
+      </p>
+      
+
+      <p>
+        <img
+          alt="absolute image path"
+          src="https://my.scm/scm/api/v2/some/repository/content/42/path/with/some_image.jpg"
+        />
+      </p>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Storyshots MarkdownView Inline Xml 1`] = `
 <div
   className="MarkdownViewstories__Spacing-sc-1lofakk-0 isVeYs"

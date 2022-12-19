@@ -28,6 +28,7 @@ import { Repository, Branch } from "@scm-manager/ui-types";
 import CodeActionBar from "../codeSection/components/CodeActionBar";
 import { urls } from "@scm-manager/ui-components";
 import Changesets from "./Changesets";
+import { RepositoryRevisionContextProvider } from "@scm-manager/ui-api";
 
 type Props = {
   repository: Repository;
@@ -66,7 +67,7 @@ const ChangesetRoot: FC<Props> = ({ repository, baseUrl, branches, selectedBranc
   };
 
   return (
-    <>
+    <RepositoryRevisionContextProvider revision={selectedBranch}>
       <CodeActionBar
         branches={branches}
         selectedBranch={!isBranchAvailable() ? selectedBranch : defaultBranch?.name}
@@ -76,7 +77,7 @@ const ChangesetRoot: FC<Props> = ({ repository, baseUrl, branches, selectedBranc
       <Route path={`${url}/:page?`}>
         <Changesets repository={repository} branch={branches?.filter(b => b.name === selectedBranch)[0]} url={url} />
       </Route>
-    </>
+    </RepositoryRevisionContextProvider>
   );
 };
 

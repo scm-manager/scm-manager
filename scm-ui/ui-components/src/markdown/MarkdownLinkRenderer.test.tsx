@@ -21,13 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import {
-  isAnchorLink,
-  isExternalLink,
-  isLinkWithProtocol,
-  createLocalLink,
-  isInternalScmRepoLink,
-} from "./MarkdownLinkRenderer";
+import { isAnchorLink, isExternalLink, isLinkWithProtocol, isInternalScmRepoLink } from "./paths";
+import { createLocalLink } from "./MarkdownLinkRenderer";
 
 describe("test isAnchorLink", () => {
   it("should return true", () => {

@@ -226,6 +226,14 @@ public class RepositoryToRepositoryDtoMapperTest {
   }
 
   @Test
+  public void shouldCreateContentLink() {
+    RepositoryDto dto = mapper.map(createTestRepository());
+    assertEquals(
+      "http://example.com/base/v2/repositories/testspace/test/content/{revision}/{path}",
+      dto.getLinks().getLinkBy("content").get().getHref());
+  }
+
+  @Test
   public void shouldCreatePermissionsLink() {
     RepositoryDto dto = mapper.map(createTestRepository());
     assertEquals(

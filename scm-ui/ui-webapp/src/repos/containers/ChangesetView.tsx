@@ -27,7 +27,7 @@ import { Changeset, Repository } from "@scm-manager/ui-types";
 import { ErrorPage, Loading } from "@scm-manager/ui-components";
 import ChangesetDetails from "../components/changesets/ChangesetDetails";
 import { FileControlFactory } from "@scm-manager/ui-components";
-import { useChangeset } from "@scm-manager/ui-api";
+import { RepositoryRevisionContextProvider, useChangeset } from "@scm-manager/ui-api";
 import { useParams } from "react-router-dom";
 
 type Props = {
@@ -53,11 +53,13 @@ const ChangesetView: FC<Props> = ({ repository, fileControlFactoryFactory }) => 
   }
 
   return (
-    <ChangesetDetails
-      changeset={changeset}
-      repository={repository}
-      fileControlFactory={fileControlFactoryFactory && fileControlFactoryFactory(changeset)}
-    />
+    <RepositoryRevisionContextProvider revision={changeset.id}>
+      <ChangesetDetails
+        changeset={changeset}
+        repository={repository}
+        fileControlFactory={fileControlFactoryFactory && fileControlFactoryFactory(changeset)}
+      />
+    </RepositoryRevisionContextProvider>
   );
 };
 
