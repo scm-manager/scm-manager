@@ -20156,10 +20156,14 @@ exports[`Storyshots Repositories/Changesets Co-Authors with avatar 1`] = `
                 </h4>
                 <p
                   className="is-hidden-touch"
-                />
+                >
+                  repos:changeset.summary
+                </p>
                 <p
                   className="is-hidden-desktop"
-                />
+                >
+                  repos:changeset.shortSummary
+                </p>
                 <div
                   className="is-flex"
                 >
@@ -20324,10 +20328,14 @@ exports[`Storyshots Repositories/Changesets Commiter and Co-Authors with avatar 
                 </h4>
                 <p
                   className="is-hidden-touch"
-                />
+                >
+                  repos:changeset.summary
+                </p>
                 <p
                   className="is-hidden-desktop"
-                />
+                >
+                  repos:changeset.shortSummary
+                </p>
                 <div
                   className="is-flex"
                 >
@@ -20468,10 +20476,14 @@ exports[`Storyshots Repositories/Changesets Default 1`] = `
                 </h4>
                 <p
                   className="is-hidden-touch"
-                />
+                >
+                  repos:changeset.summary
+                </p>
                 <p
                   className="is-hidden-desktop"
-                />
+                >
+                  repos:changeset.shortSummary
+                </p>
                 <div
                   className="is-flex"
                 >
@@ -20583,10 +20595,14 @@ exports[`Storyshots Repositories/Changesets List with navigation 1`] = `
                 </h4>
                 <p
                   className="is-hidden-touch"
-                />
+                >
+                  repos:changeset.summary
+                </p>
                 <p
                   className="is-hidden-desktop"
-                />
+                >
+                  repos:changeset.shortSummary
+                </p>
                 <div
                   className="is-flex"
                 >
@@ -20712,10 +20728,14 @@ exports[`Storyshots Repositories/Changesets List with navigation 1`] = `
                 </h4>
                 <p
                   className="is-hidden-touch"
-                />
+                >
+                  repos:changeset.summary
+                </p>
                 <p
                   className="is-hidden-desktop"
-                />
+                >
+                  repos:changeset.shortSummary
+                </p>
                 <div
                   className="is-flex"
                 >
@@ -20832,10 +20852,14 @@ exports[`Storyshots Repositories/Changesets List with navigation 1`] = `
                 </h4>
                 <p
                   className="is-hidden-touch"
-                />
+                >
+                  repos:changeset.summary
+                </p>
                 <p
                   className="is-hidden-desktop"
-                />
+                >
+                  repos:changeset.shortSummary
+                </p>
                 <div
                   className="is-flex"
                 >
@@ -20957,10 +20981,14 @@ exports[`Storyshots Repositories/Changesets Replacements 1`] = `
                 </h4>
                 <p
                   className="is-hidden-touch"
-                />
+                >
+                  repos:changeset.summary
+                </p>
                 <p
                   className="is-hidden-desktop"
-                />
+                >
+                  repos:changeset.shortSummary
+                </p>
                 <div
                   className="is-flex"
                 >
@@ -21072,10 +21100,14 @@ exports[`Storyshots Repositories/Changesets With Committer 1`] = `
                 </h4>
                 <p
                   className="is-hidden-touch"
-                />
+                >
+                  repos:changeset.summary
+                </p>
                 <p
                   className="is-hidden-desktop"
-                />
+                >
+                  repos:changeset.shortSummary
+                </p>
                 <div
                   className="is-flex"
                 >
@@ -21199,10 +21231,14 @@ exports[`Storyshots Repositories/Changesets With Committer and Co-Author 1`] = `
                 </h4>
                 <p
                   className="is-hidden-touch"
-                />
+                >
+                  repos:changeset.summary
+                </p>
                 <p
                   className="is-hidden-desktop"
-                />
+                >
+                  repos:changeset.shortSummary
+                </p>
                 <div
                   className="is-flex"
                 >
@@ -21348,10 +21384,14 @@ exports[`Storyshots Repositories/Changesets With avatar 1`] = `
                 </h4>
                 <p
                   className="is-hidden-touch"
-                />
+                >
+                  repos:changeset.summary
+                </p>
                 <p
                   className="is-hidden-desktop"
-                />
+                >
+                  repos:changeset.shortSummary
+                </p>
                 <div
                   className="is-flex"
                 >
@@ -21463,10 +21503,14 @@ exports[`Storyshots Repositories/Changesets With contactless signature 1`] = `
                 </h4>
                 <p
                   className="is-hidden-touch"
-                />
+                >
+                  repos:changeset.summary
+                </p>
                 <p
                   className="is-hidden-desktop"
-                />
+                >
+                  repos:changeset.shortSummary
+                </p>
                 <div
                   className="is-flex"
                 >
@@ -21587,10 +21631,14 @@ exports[`Storyshots Repositories/Changesets With invalid signature 1`] = `
                 </h4>
                 <p
                   className="is-hidden-touch"
-                />
+                >
+                  repos:changeset.summary
+                </p>
                 <p
                   className="is-hidden-desktop"
-                />
+                >
+                  repos:changeset.shortSummary
+                </p>
                 <div
                   className="is-flex"
                 >
@@ -21711,10 +21759,14 @@ exports[`Storyshots Repositories/Changesets With multiple Co-Authors 1`] = `
                 </h4>
                 <p
                   className="is-hidden-touch"
-                />
+                >
+                  repos:changeset.summary
+                </p>
                 <p
                   className="is-hidden-desktop"
-                />
+                >
+                  repos:changeset.shortSummary
+                </p>
                 <div
                   className="is-flex"
                 >
@@ -21839,10 +21891,14 @@ exports[`Storyshots Repositories/Changesets With multiple signatures and invalid
                 </h4>
                 <p
                   className="is-hidden-touch"
-                />
+                >
+                  repos:changeset.summary
+                </p>
                 <p
                   className="is-hidden-desktop"
-                />
+                >
+                  repos:changeset.shortSummary
+                </p>
                 <div
                   className="is-flex"
                 >
@@ -21963,10 +22019,14 @@ exports[`Storyshots Repositories/Changesets With multiple signatures and not fou
                 </h4>
                 <p
                   className="is-hidden-touch"
-                />
+                >
+                  repos:changeset.summary
+                </p>
                 <p
                   className="is-hidden-desktop"
-                />
+                >
+                  repos:changeset.shortSummary
+                </p>
                 <div
                   className="is-flex"
                 >
@@ -22087,10 +22147,14 @@ exports[`Storyshots Repositories/Changesets With multiple signatures and valid s
                 </h4>
                 <p
                   className="is-hidden-touch"
-                />
+                >
+                  repos:changeset.summary
+                </p>
                 <p
                   className="is-hidden-desktop"
-                />
+                >
+                  repos:changeset.shortSummary
+                </p>
                 <div
                   className="is-flex"
                 >
@@ -22211,10 +22275,14 @@ exports[`Storyshots Repositories/Changesets With unknown signature 1`] = `
                 </h4>
                 <p
                   className="is-hidden-touch"
-                />
+                >
+                  repos:changeset.summary
+                </p>
                 <p
                   className="is-hidden-desktop"
-                />
+                >
+                  repos:changeset.shortSummary
+                </p>
                 <div
                   className="is-flex"
                 >
@@ -22335,10 +22403,14 @@ exports[`Storyshots Repositories/Changesets With unowned signature 1`] = `
                 </h4>
                 <p
                   className="is-hidden-touch"
-                />
+                >
+                  repos:changeset.summary
+                </p>
                 <p
                   className="is-hidden-desktop"
-                />
+                >
+                  repos:changeset.shortSummary
+                </p>
                 <div
                   className="is-flex"
                 >
@@ -22459,10 +22531,14 @@ exports[`Storyshots Repositories/Changesets With valid signature 1`] = `
                 </h4>
                 <p
                   className="is-hidden-touch"
-                />
+                >
+                  repos:changeset.summary
+                </p>
                 <p
                   className="is-hidden-desktop"
-                />
+                >
+                  repos:changeset.shortSummary
+                </p>
                 <div
                   className="is-flex"
                 >

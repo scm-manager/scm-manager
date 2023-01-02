@@ -22,53 +22,18 @@
  * SOFTWARE.
  */
 
-import i18n from "i18next";
-import Backend from "i18next-fetch-backend";
-import LanguageDetector from "i18next-browser-languagedetector";
-import { initReactI18next } from "react-i18next";
-import { urls } from "@scm-manager/ui-components";
+import React from "react";
+import Field from "../base/Field";
+import Control from "../base/Control";
+import Checkbox from "./Checkbox";
 
-const loadPath = urls.withContextPath("/locales/{{lng}}/{{ns}}.json");
+type Props = React.ComponentProps<typeof Checkbox>;
 
-i18n
-  .use(Backend)
-  .use(LanguageDetector)
-  .use(initReactI18next)
-  .init({
-    fallbackLng: "en",
-
-    // try to load only "en" and not "en_US"
-    load: "languageOnly",
-
-    // have a common namespace used around the full app
-    ns: ["commons"],
-    defaultNS: "commons",
-
-    debug: false,
-
-    interpolation: {
-      escapeValue: false, // not needed for react!!
-    },
-
-    react: {
-      useSuspense: false,
-    },
-
-    backend: {
-      loadPath: loadPath,
-      init: {
-        credentials: "same-origin",
-      },
-    },
-
-    // configure LanguageDetector
-    // see https://github.com/i18next/i18next-browser-languageDetector#detector-options
-    detection: {
-      // we only use browser configuration
-      order: ["navigator"],
-      // we do not cache the detected language
-      caches: [],
-    },
-  });
-
-export default i18n;
+const CheckboxField = React.forwardRef<HTMLInputElement, Props>(({ className, ...props }, ref) => (
+  <Field className={className}>
+    <Control>
+      <Checkbox ref={ref} {...props} />
+    </Control>
+  </Field>
+));
+export default CheckboxField;

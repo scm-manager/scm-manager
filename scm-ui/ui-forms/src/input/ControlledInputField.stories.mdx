@@ -1,0 +1,36 @@
+import { Meta, Story } from "@storybook/addon-docs";
+import Form from "../Form";
+import ControlledInputField from "./ControlledInputField";
+
+<Meta
+  title="ControlledInputField"
+  decorators={[
+    (Story) => (
+      <Form onSubmit={console.log} defaultValues={{name: "Initial value"}} translationPath={["sample", "form"]}>
+        <Story />
+      </Form>
+    ),
+  ]}
+/>
+
+<Story name="Default">
+  <ControlledInputField name="name" />
+</Story>
+
+<Story name="WithHardcodedText">
+  <ControlledInputField name="name" label="Name" helpText="A help text" />
+</Story>
+
+<Story name="WithStyling">
+  <ControlledInputField name="name" className="has-background-blue-light" />
+</Story>
+
+<Story name="WithCheck">
+  <ControlledInputField name="name" rules={{
+    required: true
+  }} />
+</Story>
+
+<Story name="WithInitialFocus">
+  <ControlledInputField name="name" autoFocus={true} />
+</Story>

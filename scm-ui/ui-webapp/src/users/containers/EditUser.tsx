@@ -22,30 +22,52 @@
  * SOFTWARE.
  */
 import React, { FC } from "react";
-import UserForm from "../components/UserForm";
 import DeleteUser from "./DeleteUser";
 import { User } from "@scm-manager/ui-types";
-import { ErrorNotification } from "@scm-manager/ui-components";
 import UserConverter from "../components/UserConverter";
-import { useUpdateUser } from "@scm-manager/ui-api";
-import UpdateNotification from "../../components/UpdateNotification";
+import { Form, useUpdateResource } from "@scm-manager/ui-forms";
+import * as userValidator from "../components/userValidation";
+import { Subtitle } from "@scm-manager/ui-components";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   user: User;
 };
 
 const EditUser: FC<Props> = ({ user }) => {
-  const { error, isLoading, update, isUpdated } = useUpdateUser();
+  const [t] = useTranslation("users");
+  const { submit } = useUpdateResource<User>(user, (user) => user.name, {
+    contentType: "application/vnd.scmm-user+json;v=2",
+    collectionName: ["user", "users"],
+  });
 
   return (
-    <div>
-      <UpdateNotification isUpdated={isUpdated} />
-      <ErrorNotification error={error || undefined} />
-      <UserForm submitForm={update} user={user} loading={isLoading} />
+    <>
+      <Subtitle subtitle={t("userForm.subtitle")} />
+      <Form translationPath={["users", "createUser.form"]} defaultValues={user} onSubmit={submit}>
+        <Form.Row>
+          <Form.Input
+            name="displayName"
+            rules={{
+              validate: userValidator.isDisplayNameValid,
+            }}
+          />
+          <Form.Input
+            name="mail"
+            className="is-half"
+            rules={{
+              validate: (email) => !email || userValidator.isMailValid(email),
+            }}
+          />
+        </Form.Row>
+        <Form.Row hidden={user.external}>
+          <Form.Checkbox name="active" />
+        </Form.Row>
+      </Form>
       <hr />
       <UserConverter user={user} />
       <DeleteUser user={user} />
-    </div>
+    </>
   );
 };
 

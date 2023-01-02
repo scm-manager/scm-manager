@@ -1,5 +1,5 @@
 import { Meta, Story } from "@storybook/addon-docs";
-import { Button, ButtonVariantList } from "./button";
+import { Button, ButtonVariantList } from "./Button";
 
 <Meta title="Tests"/>
 
@@ -18,9 +18,10 @@ import { Button, ButtonVariantList } from "./button";
       <th>STATE</th>
       {ButtonVariantList.map(variant => <th>{variant.toUpperCase()}</th>)}
     </tr>
-    {["Normal", "Hover", "Active", "Focus", "Disabled"].map(state => <tr>
+    {["Normal", "Hover", "Active", "Focus", "Disabled", "Loading"].map(state => <tr>
       <td>{state}</td>
       {ButtonVariantList.map(variant => <td><Button id={`${variant}-${state}`} disabled={state === "Disabled"}
+                                                    isLoading={state === "Loading"}
                                                     variant={variant}>Button</Button></td>)}
     </tr>)}
   </table>

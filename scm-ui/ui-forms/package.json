@@ -1,0 +1,49 @@
+{
+  "name": "@scm-manager/ui-forms",
+  "private": true,
+  "version": "2.40.2-SNAPSHOT",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "module": "build/index.mjs",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsup ./src/index.ts -d build --format esm,cjs --dts",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.19.0",
+    "@scm-manager/eslint-config": "^2.16.0",
+    "@scm-manager/prettier-config": "^2.10.1",
+    "@scm-manager/tsconfig": "^2.13.0",
+    "@scm-manager/ui-styles": "2.40.2-SNAPSHOT",
+    "@storybook/addon-actions": "^6.5.10",
+    "@storybook/addon-essentials": "^6.5.10",
+    "@storybook/addon-interactions": "^6.5.10",
+    "@storybook/addon-links": "^6.5.10",
+    "@storybook/builder-webpack5": "^6.5.10",
+    "@storybook/manager-webpack5": "^6.5.10",
+    "@storybook/react": "^6.5.10",
+    "@storybook/testing-library": "^0.0.13",
+    "@storybook/addon-docs": "^6.5.14",
+    "babel-loader": "^8.2.5",
+    "storybook-addon-mock": "^3.2.0",
+    "storybook-addon-themes": "^6.1.0",
+    "tsup": "^6.2.3"
+  },
+  "peerDependencies": {
+    "@scm-manager/ui-components": "^2.40.2-SNAPSHOT",
+    "classnames": "^2.3.1",
+    "react": "17",
+    "react-hook-form": "7",
+    "react-i18next": "11",
+    "react-query": "3"
+  },
+  "dependencies": {
+    "@scm-manager/ui-buttons": "^2.40.2-SNAPSHOT"
+  },
+  "prettier": "@scm-manager/prettier-config",
+  "eslintConfig": {
+    "extends": "@scm-manager/eslint-config"
+  }
+}

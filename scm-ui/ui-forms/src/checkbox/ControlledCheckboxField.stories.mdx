@@ -1,0 +1,36 @@
+import { Meta, Story } from "@storybook/addon-docs";
+import Form from "../Form";
+import ControlledCheckboxField from "./ControlledCheckboxField";
+
+<Meta
+  title="ControlledCheckboxField"
+  decorators={[
+    (Story) => (
+      <Form onSubmit={console.log} defaultValues={{ checkOne: false, checkTwo: true, checkThree: false }} translationPath={["sample", "form"]}>
+        <Story />
+      </Form>
+    ),
+  ]}
+/>
+
+<Story name="Default">
+  <ControlledCheckboxField name="checkOne" />
+</Story>
+
+<Story name="WithHardcodedText">
+  <ControlledCheckboxField name="checkOne" label="Name" helpText="A help text" />
+</Story>
+
+<Story name="WithStyling">
+  <ControlledCheckboxField name="checkOne" className="has-background-blue-light" />
+</Story>
+
+<Story name="WithInitialFocus">
+  <ControlledCheckboxField name="checkOne" autoFocus={true} />
+</Story>
+
+<Story name="WithReadonly">
+  <ControlledCheckboxField name="checkOne" readOnly />
+  <ControlledCheckboxField name="checkTwo" disabled />
+  <ControlledCheckboxField name="checkThree" />
+</Story>

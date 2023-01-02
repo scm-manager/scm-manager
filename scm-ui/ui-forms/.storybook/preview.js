@@ -22,53 +22,51 @@
  * SOFTWARE.
  */
 
+import React, { useEffect } from "react";
+import { I18nextProvider, initReactI18next } from "react-i18next";
 import i18n from "i18next";
-import Backend from "i18next-fetch-backend";
-import LanguageDetector from "i18next-browser-languagedetector";
-import { initReactI18next } from "react-i18next";
-import { urls } from "@scm-manager/ui-components";
 
-const loadPath = urls.withContextPath("/locales/{{lng}}/{{ns}}.json");
+i18n.use(initReactI18next).init({
+  whitelist: ["en", "de"],
+  lng: "en",
+  fallbackLng: "en",
+  interpolation: {
+    escapeValue: false,
+  },
+  react: {
+    useSuspense: false,
+  },
 
-i18n
-  .use(Backend)
-  .use(LanguageDetector)
-  .use(initReactI18next)
-  .init({
-    fallbackLng: "en",
+});
 
-    // try to load only "en" and not "en_US"
-    load: "languageOnly",
+const Decorator = ({ children, themeName }) => {
+  useEffect(() => {
+    const link = document.querySelector("#ui-theme");
+    if (link && link["data-theme"] !== themeName) {
+      link.href = `ui-theme-${themeName}.css`;
+      link["data-theme"] = themeName;
+    }
+  }, [themeName]);
+  return <>{children}</>;
+};
 
-    // have a common namespace used around the full app
-    ns: ["commons"],
-    defaultNS: "commons",
-
-    debug: false,
-
-    interpolation: {
-      escapeValue: false, // not needed for react!!
-    },
-
-    react: {
-      useSuspense: false,
-    },
-
-    backend: {
-      loadPath: loadPath,
-      init: {
-        credentials: "same-origin",
-      },
-    },
-
-    // configure LanguageDetector
-    // see https://github.com/i18next/i18next-browser-languageDetector#detector-options
-    detection: {
-      // we only use browser configuration
-      order: ["navigator"],
-      // we do not cache the detected language
-      caches: [],
-    },
-  });
-
-export default i18n;
+export const parameters = {
+  actions: { argTypesRegex: "^on[A-Z].*" },
+  decorators: [
+    (Story) => (
+      <I18nextProvider i18n={i18n}>
+        <Story />
+      </I18nextProvider>
+    ),
+  ],
+  themes: {
+    Decorator,
+    clearable: false,
+    default: "light",
+    list: [
+      { name: "light", color: "#fff" },
+      { name: "highcontrast", color: "#050514" },
+      { name: "dark", color: "#121212" },
+    ],
+  },
+};

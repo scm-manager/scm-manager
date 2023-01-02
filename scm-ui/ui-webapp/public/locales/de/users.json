@@ -49,7 +49,52 @@
   },
   "createUser": {
     "title": "Benutzer erstellen",
-    "subtitle": "Erstellen eines neuen Benutzers"
+    "subtitle": "Erstellen eines neuen Benutzers",
+    "form": {
+      "submit": "Speichern",
+      "submit-success-notification": "Der Benutzer wurde erfolgreich aktualisiert",
+      "name": {
+        "label": "Benutzername",
+        "helpText": "Einzigartiger Name des Benutzers.",
+        "error": {
+          "validate": "Dieser Name ist ungültig"
+        }
+      },
+      "displayName": {
+        "label": "Anzeigename",
+        "helpText": "Anzeigename des Benutzers.",
+        "error": {
+          "validate": "Dieser Anzeigename ist ungültig"
+        }
+      },
+      "mail": {
+        "label": "E-Mail",
+        "helpText": "E-Mail Adresse des Benutzers.",
+        "error": {
+          "validate": "Diese E-Mail ist ungültig"
+        }
+      },
+      "external": {
+        "label": "Extern",
+        "helpText": "Der Benutzer wird über ein Fremdsystem verwaltet."
+      },
+      "password": {
+        "label": "Neues Passwort",
+        "error": {
+          "validate": "Das Passwort muss zwischen 6 und 1024 Zeichen lang sein"
+        },
+        "confirmation": {
+          "label": "Passwort wiederholen",
+          "error": {
+            "validate": "Passwörter müssen identisch sein"
+          }
+        }
+      },
+      "active": {
+        "label": "Aktiv",
+        "helpText": "Aktivierung oder Deaktivierung eines Benutzers."
+      }
+    }
   },
   "deleteUser": {
     "button": "Benutzer löschen",

@@ -22,53 +22,39 @@
  * SOFTWARE.
  */
 
-import i18n from "i18next";
-import Backend from "i18next-fetch-backend";
-import LanguageDetector from "i18next-browser-languagedetector";
-import { initReactI18next } from "react-i18next";
-import { urls } from "@scm-manager/ui-components";
+import React from "react";
+import Field from "../base/Field";
+import Control from "../base/Control";
+import Label from "../base/label/Label";
+import FieldMessage from "../base/field-message/FieldMessage";
+import Input from "./Input";
+import Help from "../base/help/Help";
 
-const loadPath = urls.withContextPath("/locales/{{lng}}/{{ns}}.json");
+type InputFieldProps = {
+  label: string;
+  helpText?: string;
+  error?: string;
+  type?: "text" | "password" | "email" | "tel";
+} & Omit<React.ComponentProps<typeof Input>, "type">;
 
-i18n
-  .use(Backend)
-  .use(LanguageDetector)
-  .use(initReactI18next)
-  .init({
-    fallbackLng: "en",
-
-    // try to load only "en" and not "en_US"
-    load: "languageOnly",
-
-    // have a common namespace used around the full app
-    ns: ["commons"],
-    defaultNS: "commons",
-
-    debug: false,
-
-    interpolation: {
-      escapeValue: false, // not needed for react!!
-    },
-
-    react: {
-      useSuspense: false,
-    },
-
-    backend: {
-      loadPath: loadPath,
-      init: {
-        credentials: "same-origin",
-      },
-    },
-
-    // configure LanguageDetector
-    // see https://github.com/i18next/i18next-browser-languageDetector#detector-options
-    detection: {
-      // we only use browser configuration
-      order: ["navigator"],
-      // we do not cache the detected language
-      caches: [],
-    },
-  });
-
-export default i18n;
+/**
+ * @see https://bulma.io/documentation/form/input/
+ */
+const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
+  ({ label, helpText, error, className, ...props }, ref) => {
+    const variant = error ? "danger" : undefined;
+    return (
+      <Field className={className}>
+        <Label>
+          {label}
+          {helpText ? <Help className="ml-1" text={helpText} /> : null}
+        </Label>
+        <Control>
+          <Input variant={variant} ref={ref} {...props}></Input>
+        </Control>
+        {error ? <FieldMessage variant={variant}>{error}</FieldMessage> : null}
+      </Field>
+    );
+  }
+);
+export default InputField;

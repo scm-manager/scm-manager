@@ -1,0 +1,22 @@
+import { Meta, Story } from "@storybook/addon-docs";
+import Input from "./Input"
+
+<Meta title="Input" />
+
+This will be our latest input component
+
+<Story name="Default">
+  <Input />
+</Story>
+
+<Story name="With Variant">
+  <Input variant="danger" />
+</Story>
+
+<Story name="With Custom Class">
+  <Input className="is-warning" />
+</Story>
+
+<Story name="With Ref">
+  <Input ref={r => {r.focus()}} />
+</Story>

@@ -22,53 +22,36 @@
  * SOFTWARE.
  */
 
-import i18n from "i18next";
-import Backend from "i18next-fetch-backend";
-import LanguageDetector from "i18next-browser-languagedetector";
-import { initReactI18next } from "react-i18next";
-import { urls } from "@scm-manager/ui-components";
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-const loadPath = urls.withContextPath("/locales/{{lng}}/{{ns}}.json");
+class RemoveThemesPlugin {
+  apply (compiler) {
+    compiler.hooks.compilation.tap('RemoveThemesPlugin', (compilation) => {
 
-i18n
-  .use(Backend)
-  .use(LanguageDetector)
-  .use(initReactI18next)
-  .init({
-    fallbackLng: "en",
+      HtmlWebpackPlugin.getHooks(compilation).beforeAssetTagGeneration.tapAsync(
+        'RemoveThemesPlugin',
+        (data, cb) => {
+          
+          // remove generated style-loader bundles from the page
+          // there should be a better way, which does not generate the bundles at all
+          // but for now it works
+          if (data.assets.js) {
+            data.assets.js = data.assets.js.filter(bundle => !bundle.startsWith("ui-theme-"))
+                                           .filter(bundle => !bundle.startsWith("runtime~ui-theme-"))
+          }
 
-    // try to load only "en" and not "en_US"
-    load: "languageOnly",
+          // remove css links to avoid conflicts with the themes
+          // so we remove all and add our own via preview-head.html
+          if (data.assets.css) {
+            data.assets.css = data.assets.css.filter(css => !css.startsWith("ui-theme-"))
+          }
 
-    // have a common namespace used around the full app
-    ns: ["commons"],
-    defaultNS: "commons",
+          // Tell webpack to move on
+          cb(null, data)
+        }
+      )
+    })
+  }
+}
 
-    debug: false,
-
-    interpolation: {
-      escapeValue: false, // not needed for react!!
-    },
-
-    react: {
-      useSuspense: false,
-    },
-
-    backend: {
-      loadPath: loadPath,
-      init: {
-        credentials: "same-origin",
-      },
-    },
-
-    // configure LanguageDetector
-    // see https://github.com/i18next/i18next-browser-languageDetector#detector-options
-    detection: {
-      // we only use browser configuration
-      order: ["navigator"],
-      // we do not cache the detected language
-      caches: [],
-    },
-  });
-
-export default i18n;
+module.exports = RemoveThemesPlugin

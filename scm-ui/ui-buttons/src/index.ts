@@ -22,4 +22,4 @@
  * SOFTWARE.
  */
 
-export { Button, LinkButton, ExternalLinkButton, ButtonVariants } from "./button";
+export { Button, LinkButton, ExternalLinkButton, ButtonVariants } from "./Button";

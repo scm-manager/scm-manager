@@ -42,7 +42,50 @@
   },
   "createUser": {
     "title": "Crear usuario",
-    "subtitle": "Crear un nuevo usuario"
+    "subtitle": "Crear un nuevo usuario",
+    "form": {
+      "name": {
+        "label": "Nombre de usuario",
+        "helpText": "Nombre único del usuario.",
+        "error": {
+          "validate": "El nombre es incorrecto"
+        }
+      },
+      "displayName": {
+        "label": "Nombre a mostrar",
+        "helpText": "Nombre de usuario a mostrar.",
+        "error": {
+          "validate": "El nombre a mostrar es incorrecto"
+        }
+      },
+      "mail": {
+        "label": "Correo electrónico",
+        "helpText": "Dirección de correo electrónico del usuario.",
+        "error": {
+          "validate": "El correo electrónico es incorrecto"
+        }
+      },
+      "external": {
+        "label": "Externo",
+        "helpText": "This user is managed by an external system."
+      },
+      "password": {
+        "label": "Nueva contraseña",
+        "error": {
+          "validate": "La contraseña debe tener entre 6 y 1024 caracteres"
+        },
+        "confirmation": {
+          "label": "Confirme la contraseña",
+          "error": {
+            "validate": "Las contraseñas deben ser identicas"
+          }
+        }
+      },
+      "active": {
+        "label": "Activo",
+        "helpText": "Activar o desactivar el usuario."
+      }
+    }
   },
   "deleteUser": {
     "button": "Borrar usuario",

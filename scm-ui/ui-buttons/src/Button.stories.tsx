@@ -30,7 +30,7 @@ import {
   ButtonVariants,
   ExternalLinkButton as ExternalLinkButtonComponent,
   LinkButton as LinkButtonComponent,
-} from "./button";
+} from "./Button";
 import StoryRouter from "storybook-react-router";
 import { StoryFn } from "@storybook/react";
 

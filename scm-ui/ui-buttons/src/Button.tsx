@@ -25,6 +25,7 @@
 import React, { AnchorHTMLAttributes, ButtonHTMLAttributes } from "react";
 import { Link as ReactRouterLink, LinkProps as ReactRouterLinkProps } from "react-router-dom";
 import classNames from "classnames";
+import { createAttributesForTesting } from "@scm-manager/ui-components";
 
 export const ButtonVariants = {
   PRIMARY: "primary",
@@ -37,16 +38,19 @@ export const ButtonVariantList = Object.values(ButtonVariants);
 
 type ButtonVariant = typeof ButtonVariants[keyof typeof ButtonVariants];
 
-const createButtonClasses = (variant?: ButtonVariant) =>
+const createButtonClasses = (variant?: ButtonVariant, isLoading?: boolean) =>
   classNames("button", {
     "is-primary": variant === "primary",
     "is-primary is-outlined": variant === "secondary",
     "is-primary is-inverted": variant === "tertiary",
     "is-warning": variant === "signal",
+    "is-loading": isLoading,
   });
 
 type BaseButtonProps = {
-  variant: ButtonVariant;
+  variant?: ButtonVariant;
+  isLoading?: boolean;
+  testId?: string;
 };
 
 type ButtonProps = BaseButtonProps & ButtonHTMLAttributes<HTMLButtonElement>;
@@ -55,8 +59,13 @@ type ButtonProps = BaseButtonProps & ButtonHTMLAttributes<HTMLButtonElement>;
  * Styled html button
  */
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, children, ...props }, ref) => (
-    <button {...props} className={classNames(createButtonClasses(variant), className)} ref={ref}>
+  ({ className, variant, isLoading, testId, children, ...props }, ref) => (
+    <button
+      {...props}
+      className={classNames(createButtonClasses(variant, isLoading), className)}
+      ref={ref}
+      {...createAttributesForTesting(testId)}
+    >
       {children}
     </button>
   )
@@ -68,8 +77,13 @@ type LinkButtonProps = BaseButtonProps & ReactRouterLinkProps;
  * Styled react router link
  */
 export const LinkButton = React.forwardRef<HTMLAnchorElement, LinkButtonProps>(
-  ({ className, variant, children, ...props }, ref) => (
-    <ReactRouterLink {...props} className={classNames(createButtonClasses(variant), className)} ref={ref}>
+  ({ className, variant, isLoading, testId, children, ...props }, ref) => (
+    <ReactRouterLink
+      {...props}
+      className={classNames(createButtonClasses(variant, isLoading), className)}
+      ref={ref}
+      {...createAttributesForTesting(testId)}
+    >
       {children}
     </ReactRouterLink>
   )
@@ -81,8 +95,13 @@ type ExternalLinkButtonProps = BaseButtonProps & AnchorHTMLAttributes<HTMLAnchor
  * Styled html anchor
  */
 export const ExternalLinkButton = React.forwardRef<HTMLAnchorElement, ExternalLinkButtonProps>(
-  ({ className, variant, children, ...props }, ref) => (
-    <a {...props} className={classNames(createButtonClasses(variant), className)} ref={ref}>
+  ({ className, variant, isLoading, testId, children, ...props }, ref) => (
+    <a
+      {...props}
+      className={classNames(createButtonClasses(variant, isLoading), className)}
+      ref={ref}
+      {...createAttributesForTesting(testId)}
+    >
       {children}
     </a>
   )

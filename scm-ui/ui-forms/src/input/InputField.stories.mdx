@@ -1,0 +1,22 @@
+import { Meta, Story } from "@storybook/addon-docs";
+import InputField from "./InputField";
+
+<Meta title="InputField" />
+
+This will be our first form field molecule
+
+<Story name="Default">
+  <InputField label="MyInput" />
+</Story>
+
+<Story name="WithHelp">
+  <InputField label="MyInput" helpText="You can do all sorts of things with this input" />
+</Story>
+
+<Story name="WithError">
+  <InputField label="MyInput" error="This field is super required" />
+</Story>
+
+<Story name="WithWidth">
+    <InputField label="MyInput" className="column is-half" />
+</Story>

@@ -241,4 +241,4 @@ class LazyMarkdownView extends React.Component<Props, State> {
   }
 }
 
-export default withRouter(withTranslation("repos")(LazyMarkdownView));
+export default withTranslation("repos")(withRouter(LazyMarkdownView));

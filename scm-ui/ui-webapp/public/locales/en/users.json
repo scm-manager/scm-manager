@@ -49,7 +49,52 @@
   },
   "createUser": {
     "title": "Create User",
-    "subtitle": "Create a new user"
+    "subtitle": "Create a new user",
+    "form": {
+      "submit": "Submit",
+      "submit-success-notification": "The user was updated successfully",
+      "name": {
+        "label": "User Name",
+        "helpText": "Unique name of the user.",
+        "error": {
+          "validate": "This name is invalid"
+        }
+      },
+      "displayName": {
+        "label": "Display Name",
+        "helpText": "Display name of the user.",
+        "error": {
+          "validate": "This display name is invalid"
+        }
+      },
+      "mail": {
+        "label": "Email",
+        "helpText": "Email address of the user.",
+        "error": {
+          "validate": "This email address is invalid"
+        }
+      },
+      "external": {
+        "label": "External",
+        "helpText": "This user is managed by an external system."
+      },
+      "password": {
+        "label": "New Password",
+        "error": {
+          "validate": "Password has to be between 6 and 1024 characters"
+        },
+        "confirmation": {
+          "label": "Confirm New Password",
+          "error": {
+            "validate": "Passwords have to be identical"
+          }
+        }
+      },
+      "active": {
+        "label": "Active",
+        "helpText": "Activate or deactivate the user."
+      }
+    }
   },
   "deleteUser": {
     "button": "Delete User",

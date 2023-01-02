@@ -39,7 +39,7 @@ export type UseShortcutOptions = {
    *
    * If no description is supplied, there will be no entry in the shortcut summary table.
    */
-  description?: string;
+  description?: string | null;
 };
 
 /**
