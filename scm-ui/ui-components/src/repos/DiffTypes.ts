@@ -64,6 +64,7 @@ export type DiffObjectProps = {
   isCollapsed?: (file: File) => boolean;
   onCollapseStateChange?: (file: File, newState?: boolean) => void;
   hunkClass?: (hunk: Hunk) => string;
+  stickyHeader?: boolean;
   /**
    * Fontawesome Icon Unicode
    *

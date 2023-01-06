@@ -54,7 +54,7 @@ const CompareRoutes: FC<Props> = ({ repository, baseUrl }) => {
     <Switch>
       <Redirect exact from={url} to={`${url}/diff/`} />
       <Route path={`${baseUrl}/:sourceType/:sourceName/:targetType/:targetName/diff/`}>
-        <LoadingDiff url={createDiffUrl(repository, source, target) + "?format=GIT"} />
+        <LoadingDiff url={createDiffUrl(repository, source, target) + "?format=GIT"} stickyHeader={true} />
       </Route>
       <Route path={`${baseUrl}/:sourceType/:sourceName/:targetType/:targetName/changesets/`} exact>
         <IncomingChangesets repository={repository} source={source} target={target} url={`${url}/changesets`} />

@@ -22635,7 +22635,7 @@ exports[`Storyshots Repositories/Diff Binaries 1`] = `
       id="main-java"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -22856,7 +22856,7 @@ exports[`Storyshots Repositories/Diff Binaries 1`] = `
       id="conflict-png"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -22933,7 +22933,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
         id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
       >
         <div
-          className="panel-heading"
+          className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
         >
           <div
             className="level is-flex-wrap-wrap"
@@ -23550,7 +23550,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
         id="src-main-js-changenotification-tsx"
       >
         <div
-          className="panel-heading"
+          className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
         >
           <div
             className="level is-flex-wrap-wrap"
@@ -24504,7 +24504,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
         id="src-main-resources-locales-de-plugins-json"
       >
         <div
-          className="panel-heading"
+          className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
         >
           <div
             className="level is-flex-wrap-wrap"
@@ -25029,7 +25029,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
         id="src-main-resources-locales-en-plugins-json"
       >
         <div
-          className="panel-heading"
+          className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
         >
           <div
             className="level is-flex-wrap-wrap"
@@ -25554,7 +25554,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
         id="src-test-java-com-cloudogu-scm-review-events-clienttest-java"
       >
         <div
-          className="panel-heading"
+          className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
         >
           <div
             className="level is-flex-wrap-wrap"
@@ -26769,7 +26769,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
         id="main-java"
       >
         <div
-          className="panel-heading"
+          className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
         >
           <div
             className="level is-flex-wrap-wrap"
@@ -27344,7 +27344,7 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
       id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -27456,7 +27456,7 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
       id="src-main-js-changenotification-tsx"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -27568,7 +27568,7 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
       id="src-main-resources-locales-de-plugins-json"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -27680,7 +27680,7 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
       id="src-main-resources-locales-en-plugins-json"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -27792,7 +27792,7 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
       id="src-test-java-com-cloudogu-scm-review-events-clienttest-java"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -27904,7 +27904,7 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
       id="main-java"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -28025,7 +28025,7 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
       id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -28099,7 +28099,7 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
       id="src-main-js-changenotification-tsx"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -28956,7 +28956,7 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
       id="src-main-resources-locales-de-plugins-json"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -29409,7 +29409,7 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
       id="src-main-resources-locales-en-plugins-json"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -29862,7 +29862,7 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
       id="src-test-java-com-cloudogu-scm-review-events-clienttest-java"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -29936,7 +29936,7 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
       id="main-java"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -30100,7 +30100,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
       id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -30717,7 +30717,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
       id="src-main-js-changenotification-tsx"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -31671,7 +31671,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
       id="src-main-resources-locales-de-plugins-json"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -32196,7 +32196,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
       id="src-main-resources-locales-en-plugins-json"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -32721,7 +32721,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
       id="src-test-java-com-cloudogu-scm-review-events-clienttest-java"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -33936,7 +33936,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
       id="main-java"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -34510,7 +34510,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
       id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -35127,7 +35127,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
       id="src-main-js-changenotification-tsx"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -36081,7 +36081,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
       id="src-main-resources-locales-de-plugins-json"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -36606,7 +36606,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
       id="src-main-resources-locales-en-plugins-json"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -37131,7 +37131,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
       id="src-test-java-com-cloudogu-scm-review-events-clienttest-java"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -38346,7 +38346,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
       id="main-java"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -38920,7 +38920,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
       id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -39504,7 +39504,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
       id="src-main-js-changenotification-tsx"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -40365,7 +40365,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
       id="src-main-resources-locales-de-plugins-json"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -40822,7 +40822,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
       id="src-main-resources-locales-en-plugins-json"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -41279,7 +41279,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
       id="src-test-java-com-cloudogu-scm-review-events-clienttest-java"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -42343,7 +42343,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
       id="main-java"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -42884,7 +42884,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
       id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -43480,7 +43480,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
       id="src-main-js-changenotification-tsx"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -44353,7 +44353,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
       id="src-main-resources-locales-de-plugins-json"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -44822,7 +44822,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
       id="src-main-resources-locales-en-plugins-json"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -45291,7 +45291,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
       id="src-test-java-com-cloudogu-scm-review-events-clienttest-java"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -46367,7 +46367,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
       id="main-java"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -46920,7 +46920,7 @@ exports[`Storyshots Repositories/Diff Highlight line on hover 1`] = `
       id="src-main-java-com-cloudogu-scm-review-pullrequest-service-defaultpullrequestservice-java"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -47764,7 +47764,7 @@ exports[`Storyshots Repositories/Diff Hunk gutter hover icon 1`] = `
       id="src-main-java-com-cloudogu-scm-review-pullrequest-service-defaultpullrequestservice-java"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -48608,7 +48608,7 @@ exports[`Storyshots Repositories/Diff Hunks 1`] = `
       id="src-main-java-com-cloudogu-scm-review-pullrequest-service-defaultpullrequestservice-java"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -49452,7 +49452,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
       id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -50044,7 +50044,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
       id="src-main-js-changenotification-tsx"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -50913,7 +50913,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
       id="src-main-resources-locales-de-plugins-json"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -51366,7 +51366,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
       id="src-main-resources-locales-en-plugins-json"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -51819,7 +51819,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
       id="src-test-java-com-cloudogu-scm-review-events-clienttest-java"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -52879,7 +52879,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
       id="main-java"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -53428,7 +53428,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
       id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -54048,7 +54048,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
       id="src-main-js-changenotification-tsx"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -54967,7 +54967,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
       id="src-main-resources-locales-de-plugins-json"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -55450,7 +55450,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
       id="src-main-resources-locales-en-plugins-json"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -55933,7 +55933,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
       id="src-test-java-com-cloudogu-scm-review-events-clienttest-java"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -57069,7 +57069,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
       id="main-java"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -57642,7 +57642,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
       id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -58315,7 +58315,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
       id="src-main-js-changenotification-tsx"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -59262,7 +59262,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
       id="src-main-resources-locales-de-plugins-json"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -59767,7 +59767,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
       id="src-main-resources-locales-en-plugins-json"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -60272,7 +60272,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
       id="src-test-java-com-cloudogu-scm-review-events-clienttest-java"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -61501,7 +61501,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
       id="main-java"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -62111,7 +62111,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting (Markdown) 1`] = `
       id="changelog-md"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -62473,7 +62473,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
       id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -63053,7 +63053,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
       id="src-main-js-changenotification-tsx"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -63910,7 +63910,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
       id="src-main-resources-locales-de-plugins-json"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -64363,7 +64363,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
       id="src-main-resources-locales-en-plugins-json"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -64816,7 +64816,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
       id="src-test-java-com-cloudogu-scm-review-events-clienttest-java"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -65876,7 +65876,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
       id="main-java"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -66413,7 +66413,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
       id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -67030,7 +67030,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
       id="src-main-js-changenotification-tsx"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -67984,7 +67984,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
       id="src-main-resources-locales-de-plugins-json"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -68509,7 +68509,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
       id="src-main-resources-locales-en-plugins-json"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -69034,7 +69034,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
       id="src-test-java-com-cloudogu-scm-review-events-clienttest-java"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
@@ -70249,7 +70249,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
       id="main-java"
     >
       <div
-        className="panel-heading"
+        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"

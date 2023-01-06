@@ -61,8 +61,10 @@ type State = Collapsible & {
   expansionError?: any;
 };
 
-const StyledHunk = styled(Hunk)`${props => {
-  let style = props.icon ? `
+const StyledHunk = styled(Hunk)`
+  ${(props) => {
+    let style = props.icon
+      ? `
     .diff-gutter:hover::after {
       font-size: inherit;
       margin-left: 0.5em;
@@ -70,23 +72,25 @@ const StyledHunk = styled(Hunk)`${props => {
       content: "${props.icon}";
       color: var(--scm-column-selection);
     }
-  ` : "";
-  if (!props.actionable) {
-    style += `
+  `
+      : "";
+    if (!props.actionable) {
+      style += `
       .diff-gutter {
         cursor: default;
       }
     `;
-  }
-  if (props.highlightLineOnHover) {
-    style += `
+    }
+    if (props.highlightLineOnHover) {
+      style += `
       tr.diff-line:hover > td {
         background-color: var(--sh-selected-color);
       }
     `;
-  }
-  return style;
-}}`;
+    }
+    return style;
+  }}
+`;
 
 const DiffFilePanel = styled.div`
   /* remove bottom border for collapsed panels */
@@ -106,10 +110,20 @@ const MarginlessModalContent = styled.div`
   }
 `;
 
+const PanelHeading = styled.div<{ sticky: boolean }>`
+  ${(props) =>
+    props.sticky
+      ? `
+   position: sticky;
+   top: 52px;
+  `
+      : ""}
+`;
+
 class DiffFile extends React.Component<Props, State> {
   static defaultProps: Partial<Props> = {
     defaultCollapse: false,
-    markConflicts: true
+    markConflicts: true,
   };
 
   constructor(props: Props) {
@@ -118,14 +132,14 @@ class DiffFile extends React.Component<Props, State> {
       collapsed: this.defaultCollapse(),
       sideBySide: props.sideBySide,
       diffExpander: new DiffExpander(props.file),
-      file: props.file
+      file: props.file,
     };
   }
 
   componentDidUpdate(prevProps: Readonly<Props>) {
     if (!this.props.isCollapsed && this.props.defaultCollapse !== prevProps.defaultCollapse) {
       this.setState({
-        collapsed: this.defaultCollapse()
+        collapsed: this.defaultCollapse(),
       });
     }
   }
@@ -148,8 +162,8 @@ class DiffFile extends React.Component<Props, State> {
       if (onCollapseStateChange) {
         onCollapseStateChange(file);
       } else {
-        this.setState(state => ({
-          collapsed: !state.collapsed
+        this.setState((state) => ({
+          collapsed: !state.collapsed,
         }));
       }
     }
@@ -157,8 +171,8 @@ class DiffFile extends React.Component<Props, State> {
 
   toggleSideBySide = (callback: () => void) => {
     this.setState(
-      state => ({
-        sideBySide: !state.sideBySide
+      (state) => ({
+        sideBySide: !state.sideBySide,
       }),
       () => callback()
     );
@@ -170,7 +184,7 @@ class DiffFile extends React.Component<Props, State> {
       onCollapseStateChange(this.state.file, collapsed);
     } else {
       this.setState({
-        collapsed
+        collapsed,
       });
     }
   };
@@ -264,19 +278,13 @@ class DiffFile extends React.Component<Props, State> {
 
   expandHead = (expandableHunk: ExpandableHunk, count: number) => {
     return () => {
-      return expandableHunk
-        .expandHead(count)
-        .then(this.diffExpanded)
-        .catch(this.diffExpansionFailed);
+      return expandableHunk.expandHead(count).then(this.diffExpanded).catch(this.diffExpansionFailed);
     };
   };
 
   expandBottom = (expandableHunk: ExpandableHunk, count: number) => {
     return () => {
-      return expandableHunk
-        .expandBottom(count)
-        .then(this.diffExpanded)
-        .catch(this.diffExpansionFailed);
+      return expandableHunk.expandBottom(count).then(this.diffExpanded).catch(this.diffExpansionFailed);
     };
   };
 
@@ -294,7 +302,7 @@ class DiffFile extends React.Component<Props, State> {
     if (annotationFactory) {
       return annotationFactory({
         hunk,
-        file
+        file,
       });
     } else {
       return EMPTY_ANNOTATION_FACTORY;
@@ -308,7 +316,7 @@ class DiffFile extends React.Component<Props, State> {
       changeId: getChangeKey(change),
       change,
       hunk,
-      file
+      file,
     };
     if (onClick) {
       onClick(context);
@@ -321,7 +329,7 @@ class DiffFile extends React.Component<Props, State> {
       return {
         onClick: (event: ChangeEvent) => {
           this.handleClickEvent(event.change, hunk);
-        }
+        },
       };
     }
   };
@@ -448,7 +456,7 @@ class DiffFile extends React.Component<Props, State> {
   hasContent = (file: FileDiff) => file && !file.isBinary && file.hunks && file.hunks.length > 0;
 
   render() {
-    const { fileControlFactory, fileAnnotationFactory, t } = this.props;
+    const { fileControlFactory, fileAnnotationFactory, stickyHeader = false, t } = this.props;
     const { file, sideBySide, diffExpander, expansionError } = this.state;
     const viewType = sideBySide ? "split" : "unified";
     const collapsed = this.isCollapsed();
@@ -527,7 +535,7 @@ class DiffFile extends React.Component<Props, State> {
         id={this.getAnchorId(file)}
       >
         {errorModal}
-        <div className="panel-heading">
+        <PanelHeading className="panel-heading" sticky={stickyHeader}>
           <div className={classNames("level", "is-flex-wrap-wrap")}>
             <FullWidthTitleHeader
               className={classNames("level-left", "is-flex", "is-clickable")}
@@ -542,7 +550,7 @@ class DiffFile extends React.Component<Props, State> {
             </FullWidthTitleHeader>
             {headerButtons}
           </div>
-        </div>
+        </PanelHeading>
         {body}
       </DiffFilePanel>
     );

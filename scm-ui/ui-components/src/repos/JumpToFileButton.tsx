@@ -41,7 +41,7 @@ type Props = {
 
 const JumpToFileButton: FC<Props> = ({ link, tooltip }) => {
   return (
-    <Tooltip message={tooltip} location="top">
+    <Tooltip message={tooltip} location="bottom">
       <Button aria-label={tooltip} className="button is-clickable" to={link}>
         <Icon name="file-code" color="inherit" alt="" />
       </Button>

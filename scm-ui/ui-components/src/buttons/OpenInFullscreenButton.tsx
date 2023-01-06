@@ -71,7 +71,7 @@ const OpenInFullscreenButton: FC<Props> = ({ modalTitle, modalBody, tooltipStyle
     return <>{content}</>;
   }
   return (
-    <Tooltip message={tooltip} location="top">
+    <Tooltip message={tooltip} location="bottom">
       {content}
     </Tooltip>
   );

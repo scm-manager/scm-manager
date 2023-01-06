@@ -60,6 +60,7 @@ class ChangesetDiff extends React.Component<Props> {
           defaultCollapse={defaultCollapse}
           sideBySide={false}
           fileControlFactory={fileControlFactory}
+          stickyHeader={true}
         />
       );
     }

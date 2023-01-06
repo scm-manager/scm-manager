@@ -45,7 +45,7 @@ const DiffButton: FC<Props> = ({ icon, tooltip, onClick }) => {
   };
 
   return (
-    <Tooltip message={tooltip} location="top">
+    <Tooltip message={tooltip} location="bottom">
       <Button aria-label={tooltip} className="button is-clickable" onClick={handleClick}>
         <i className={`fas fa-${icon}`} />
       </Button>
