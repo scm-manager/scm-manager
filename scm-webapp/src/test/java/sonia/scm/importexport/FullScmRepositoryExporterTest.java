@@ -39,6 +39,8 @@ import sonia.scm.repository.api.BundleCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.repository.work.WorkdirProvider;
+import sonia.scm.web.security.AdministrationContext;
+import sonia.scm.web.security.PrivilegedAction;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -79,6 +81,8 @@ class FullScmRepositoryExporterTest {
   @Mock
   private RepositoryExportingCheck repositoryExportingCheck;
   @Mock
+  private AdministrationContext administrationContext;
+  @Mock
   private RepositoryImportExportEncryption repositoryImportExportEncryption;
 
   @InjectMocks
@@ -89,14 +93,13 @@ class FullScmRepositoryExporterTest {
   @BeforeEach
   void initRepoService() throws IOException {
     when(serviceFactory.create(REPOSITORY)).thenReturn(repositoryService);
-    when(environmentGenerator.generate()).thenReturn(new byte[0]);
     when(metadataGenerator.generate(REPOSITORY)).thenReturn(new byte[0]);
     when(repositoryExportingCheck.withExportingLock(any(), any())).thenAnswer(invocation -> invocation.getArgument(1, Supplier.class).get());
     when(repositoryImportExportEncryption.optionallyEncrypt(any(), any())).thenAnswer(invocation -> invocation.getArgument(0));
   }
 
   @Test
-  void shouldExportEverythingAsTarArchive(@TempDir Path temp) throws IOException {
+  void shouldExportEverythingAsTarArchive(@TempDir Path temp) {
     BundleCommandBuilder bundleCommandBuilder = mock(BundleCommandBuilder.class);
     when(repositoryService.getBundleCommand()).thenReturn(bundleCommandBuilder);
     when(repositoryService.getRepository()).thenReturn(REPOSITORY);
@@ -105,7 +108,7 @@ class FullScmRepositoryExporterTest {
     exporter.export(REPOSITORY, baos, "");
 
     verify(storeExporter, times(1)).export(eq(REPOSITORY), any(OutputStream.class));
-    verify(environmentGenerator, times(1)).generate();
+    verify(administrationContext, times(1)).runAsAdmin(any(PrivilegedAction.class));
     verify(metadataGenerator, times(1)).generate(REPOSITORY);
     verify(bundleCommandBuilder, times(1)).bundle(any(OutputStream.class));
     verify(repositoryExportingCheck).withExportingLock(eq(REPOSITORY), any());

@@ -21,12 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { binder } from "@scm-manager/ui-extensions";
+import React, { ComponentProps } from "react";
+import { binder, extensionPoints } from "@scm-manager/ui-extensions";
 import { NavLink } from "../navigation";
 import { Route } from "react-router-dom";
 import { WithTranslation, withTranslation } from "react-i18next";
-import { Repository, Links, Link } from "@scm-manager/ui-types";
+import { Link, Links, Repository } from "@scm-manager/ui-types";
 import { urls } from "@scm-manager/ui-api";
 
 type GlobalRouteProps = {
@@ -44,8 +44,13 @@ type RepositoryNavProps = WithTranslation & { url: string };
 class ConfigurationBinder {
   i18nNamespace = "plugins";
 
-  navLink(to: string, labelI18nKey: string, t: any) {
-    return <NavLink to={to} label={t(labelI18nKey)} />;
+  navLink(
+    to: string,
+    labelI18nKey: string,
+    t: any,
+    options: Omit<ComponentProps<typeof NavLink>, "label" | "to"> = {}
+  ) {
+    return <NavLink to={to} label={t(labelI18nKey)} {...options} />;
   }
 
   route(path: string, Component: any) {
@@ -84,6 +89,27 @@ class ConfigurationBinder {
 
     // bind config route to extension point
     binder.bind("admin.route", ConfigRoute, configPredicate);
+  }
+
+  bindAdmin(
+    to: string,
+    labelI18nKey: string,
+    icon: string,
+    linkName: string,
+    Component: React.ComponentType<{ link: string }>
+  ) {
+    const predicate = ({ links }: extensionPoints.AdminRoute["props"]) => links[linkName];
+
+    const AdminNavLink = withTranslation(this.i18nNamespace)(
+      ({ t, url }: WithTranslation & extensionPoints.AdminNavigation["props"]) =>
+        this.navLink(url + to, labelI18nKey, t, { icon })
+    );
+
+    const AdminRoute: extensionPoints.AdminRoute["type"] = ({ links, url }) =>
+      this.route(url + to, <Component link={(links[linkName] as Link).href} />);
+
+    binder.bind<extensionPoints.AdminRoute>("admin.route", AdminRoute, predicate);
+    binder.bind<extensionPoints.AdminNavigation>("admin.navigation", AdminNavLink, predicate);
   }
 
   bindRepository(to: string, labelI18nKey: string, linkName: string, RepositoryComponent: any) {

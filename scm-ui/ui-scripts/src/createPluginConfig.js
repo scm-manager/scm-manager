@@ -35,11 +35,11 @@ if (orgaIndex > 0) {
   name = name.substring(orgaIndex + 1);
 }
 
-module.exports = function(mode) {
+module.exports = function (mode) {
   return {
     context: root,
     entry: {
-      [name]: [path.resolve(__dirname, "webpack-public-path.js"), packageJSON.main || "src/main/js/index.js"]
+      [name]: [path.resolve(__dirname, "webpack-public-path.js"), packageJSON.main || "src/main/js/index.js"],
     },
     mode,
     stats: "minimal",
@@ -48,7 +48,7 @@ module.exports = function(mode) {
     node: {
       fs: "empty",
       net: "empty",
-      tls: "empty"
+      tls: "empty",
     },
     externals: [
       "react",
@@ -59,11 +59,13 @@ module.exports = function(mode) {
       "@scm-manager/ui-types",
       "@scm-manager/ui-extensions",
       "@scm-manager/ui-components",
+      "@scm-manager/ui-forms",
+      "@scm-manager/ui-buttons",
       "classnames",
       "query-string",
       "redux",
       "react-redux",
-      /^@scm-manager\/scm-.*-plugin$/i
+      /^@scm-manager\/scm-.*-plugin$/i,
     ],
     module: {
       rules: [
@@ -73,29 +75,29 @@ module.exports = function(mode) {
           use: {
             loader: "babel-loader",
             options: {
-              presets: ["@scm-manager/babel-preset"]
-            }
-          }
+              presets: ["@scm-manager/babel-preset"],
+            },
+          },
         },
         {
           test: /\.(css|scss|sass)$/i,
-          use: ["style-loader", "css-loader", "sass-loader"]
+          use: ["style-loader", "css-loader", "sass-loader"],
         },
         {
           test: /\.(png|svg|jpg|gif|woff2?|eot|ttf)$/,
-          use: ["file-loader"]
-        }
-      ]
+          use: ["file-loader"],
+        },
+      ],
     },
     resolve: {
-      extensions: [".ts", ".tsx", ".js", ".jsx", ".css", ".scss", ".json"]
+      extensions: [".ts", ".tsx", ".js", ".jsx", ".css", ".scss", ".json"],
     },
     output: {
       path: path.join(root, "target", `${name}-${packageJSON.version}`, "webapp", "assets"),
       filename: "[name].bundle.js",
       chunkFilename: `${name}.[name].chunk.js`,
       library: name,
-      libraryTarget: "amd"
-    }
+      libraryTarget: "amd",
+    },
   };
 };

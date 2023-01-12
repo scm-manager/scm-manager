@@ -29,6 +29,7 @@ import RenameRepository from "./RenameRepository";
 import DeleteRepo from "./DeleteRepo";
 import ArchiveRepo from "./ArchiveRepo";
 import UnarchiveRepo from "./UnarchiveRepo";
+import { ExtensionPoint, extensionPoints, useBinder } from "@scm-manager/ui-extensions";
 
 type Props = {
   repository: Repository;
@@ -36,12 +37,18 @@ type Props = {
 
 const RepositoryDangerZone: FC<Props> = ({ repository }) => {
   const [t] = useTranslation("repos");
+  const binder = useBinder();
 
   const dangerZone = [];
   if (repository?._links?.rename || repository?._links?.renameWithNamespace) {
     dangerZone.push(<RenameRepository repository={repository} />);
   }
-  if (repository?._links?.delete) {
+
+  if (binder.hasExtension<extensionPoints.RepositoryDeleteButton>("repository.deleteButton", { repository })) {
+    dangerZone.push(
+      <ExtensionPoint<extensionPoints.RepositoryDeleteButton> name="repository.deleteButton" props={{ repository }} />
+    );
+  } else if (repository?._links?.delete) {
     dangerZone.push(<DeleteRepo repository={repository} />);
   }
   if (repository?._links?.archive) {

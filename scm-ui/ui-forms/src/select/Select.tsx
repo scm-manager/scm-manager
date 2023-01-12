@@ -22,6 +22,22 @@
  * SOFTWARE.
  */
 
-export { default as Form } from "./Form";
-export { default as ConfigurationForm } from "./ConfigurationForm";
-export * from "./resourceHooks";
+import React, { InputHTMLAttributes } from "react";
+import classNames from "classnames";
+import { createVariantClass, Variant } from "../variants";
+import { createAttributesForTesting } from "@scm-manager/ui-components";
+
+type Props = {
+  variant?: Variant;
+  testId?: string;
+} & InputHTMLAttributes<HTMLSelectElement>;
+
+const Select = React.forwardRef<HTMLSelectElement, Props>(({ variant, children, className, testId, ...props }, ref) => (
+  <div className={classNames("select", { "is-multiple": props.multiple }, createVariantClass(variant), className)}>
+    <select ref={ref} {...props} {...createAttributesForTesting(testId)}>
+      {children}
+    </select>
+  </div>
+));
+
+export default Select;

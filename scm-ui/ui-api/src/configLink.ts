@@ -51,7 +51,7 @@ export const useConfigLink = <C extends HalRepresentation>(link: string) => {
   const {
     isLoading: isUpdating,
     error: mutationError,
-    mutate,
+    mutateAsync,
     data: updateResponse,
   } = useMutation<Response, Error, MutationVariables<C>>(
     (vars: MutationVariables<C>) => apiClient.put(vars.link, vars.configuration, vars.contentType),
@@ -67,7 +67,7 @@ export const useConfigLink = <C extends HalRepresentation>(link: string) => {
   const update = useCallback(
     (configuration: C) => {
       if (data && !isReadOnly) {
-        mutate({
+        return mutateAsync({
           configuration,
           contentType: data.contentType,
           link: (data.configuration._links.update as Link).href,
@@ -76,7 +76,7 @@ export const useConfigLink = <C extends HalRepresentation>(link: string) => {
     },
     // eslint means we should add C to the dependency array, but C is only a type
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [mutate, data, isReadOnly]
+    [mutateAsync, data, isReadOnly]
   );
 
   return {

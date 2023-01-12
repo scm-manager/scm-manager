@@ -57,6 +57,8 @@ import sonia.scm.group.GroupDisplayManager;
 import sonia.scm.group.GroupManager;
 import sonia.scm.group.GroupManagerProvider;
 import sonia.scm.group.xml.XmlGroupDAO;
+import sonia.scm.importexport.FullScmRepositoryExporter;
+import sonia.scm.importexport.FullScmRepositoryImporter;
 import sonia.scm.initialization.DefaultInitializationFinisher;
 import sonia.scm.initialization.InitializationCookieIssuer;
 import sonia.scm.initialization.InitializationFinisher;
@@ -76,24 +78,7 @@ import sonia.scm.notifications.NotificationSender;
 import sonia.scm.plugin.DefaultPluginManager;
 import sonia.scm.plugin.PluginLoader;
 import sonia.scm.plugin.PluginManager;
-import sonia.scm.repository.DefaultHealthCheckService;
-import sonia.scm.repository.DefaultNamespaceManager;
-import sonia.scm.repository.DefaultRepositoryManager;
-import sonia.scm.repository.DefaultRepositoryProvider;
-import sonia.scm.repository.DefaultRepositoryRoleManager;
-import sonia.scm.repository.HealthCheckContextListener;
-import sonia.scm.repository.HealthCheckService;
-import sonia.scm.repository.NamespaceManager;
-import sonia.scm.repository.NamespaceStrategy;
-import sonia.scm.repository.NamespaceStrategyProvider;
-import sonia.scm.repository.PermissionProvider;
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryDAO;
-import sonia.scm.repository.RepositoryManager;
-import sonia.scm.repository.RepositoryManagerProvider;
-import sonia.scm.repository.RepositoryProvider;
-import sonia.scm.repository.RepositoryRoleDAO;
-import sonia.scm.repository.RepositoryRoleManager;
+import sonia.scm.repository.*;
 import sonia.scm.repository.api.HookContextFactory;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.repository.spi.HookEventFacade;
@@ -297,6 +282,9 @@ class ScmServletModule extends ServletModule {
     bind(CentralWorkQueue.class, DefaultCentralWorkQueue.class);
 
     bind(ContentTypeResolver.class).to(DefaultContentTypeResolver.class);
+
+    bind(FullRepositoryImporter.class).to(FullScmRepositoryImporter.class);
+    bind(FullRepositoryExporter.class).to(FullScmRepositoryExporter.class);
   }
 
   private <T> void bind(Class<T> clazz, Class<? extends T> defaultImplementation) {

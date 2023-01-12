@@ -27,7 +27,7 @@ package sonia.scm.importexport;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
-import sonia.scm.ContextEntry;
+import sonia.scm.repository.FullRepositoryExporter;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryExportingCheck;
 import sonia.scm.repository.api.ExportFailedException;
@@ -36,6 +36,7 @@ import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.repository.work.WorkdirProvider;
 import sonia.scm.util.Archives;
 import sonia.scm.util.IOUtil;
+import sonia.scm.web.security.AdministrationContext;
 
 import javax.inject.Inject;
 import java.io.BufferedOutputStream;
@@ -46,8 +47,10 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
 
-public class FullScmRepositoryExporter {
+
+public class FullScmRepositoryExporter implements FullRepositoryExporter {
 
   static final String SCM_ENVIRONMENT_FILE_NAME = "scm-environment.xml";
   static final String METADATA_FILE_NAME = "metadata.xml";
@@ -61,6 +64,8 @@ public class FullScmRepositoryExporter {
   private final RepositoryImportExportEncryption repositoryImportExportEncryption;
   private final ExportNotificationHandler notificationHandler;
 
+  private final AdministrationContext administrationContext;
+
   @Inject
   public FullScmRepositoryExporter(EnvironmentInformationXmlGenerator environmentGenerator,
                                    RepositoryMetadataXmlGenerator metadataGenerator,
@@ -68,7 +73,7 @@ public class FullScmRepositoryExporter {
                                    TarArchiveRepositoryStoreExporter storeExporter,
                                    WorkdirProvider workdirProvider,
                                    RepositoryExportingCheck repositoryExportingCheck,
-                                   RepositoryImportExportEncryption repositoryImportExportEncryption, ExportNotificationHandler notificationHandler) {
+                                   RepositoryImportExportEncryption repositoryImportExportEncryption, ExportNotificationHandler notificationHandler, AdministrationContext administrationContext) {
     this.environmentGenerator = environmentGenerator;
     this.metadataGenerator = metadataGenerator;
     this.serviceFactory = serviceFactory;
@@ -77,6 +82,7 @@ public class FullScmRepositoryExporter {
     this.repositoryExportingCheck = repositoryExportingCheck;
     this.repositoryImportExportEncryption = repositoryImportExportEncryption;
     this.notificationHandler = notificationHandler;
+    this.administrationContext = administrationContext;
   }
 
   public void export(Repository repository, OutputStream outputStream, String password) {
@@ -99,27 +105,33 @@ public class FullScmRepositoryExporter {
       GzipCompressorOutputStream gzos = new GzipCompressorOutputStream(cos);
       TarArchiveOutputStream taos = Archives.createTarOutputStream(gzos);
     ) {
-      writeEnvironmentData(taos);
+      writeEnvironmentData(repository, taos);
       writeMetadata(repository, taos);
       writeStoreData(repository, taos);
       writeRepository(service, taos);
       taos.finish();
     } catch (IOException e) {
       throw new ExportFailedException(
-        ContextEntry.ContextBuilder.entity(repository).build(),
+        entity(repository).build(),
         "Could not export repository with metadata",
         e
       );
     }
   }
 
-  private void writeEnvironmentData(TarArchiveOutputStream taos) throws IOException {
-    byte[] envBytes = environmentGenerator.generate();
-    TarArchiveEntry entry = new TarArchiveEntry(SCM_ENVIRONMENT_FILE_NAME);
-    entry.setSize(envBytes.length);
-    taos.putArchiveEntry(entry);
-    taos.write(envBytes);
-    taos.closeArchiveEntry();
+  private void writeEnvironmentData(Repository repository, TarArchiveOutputStream taos) {
+    administrationContext.runAsAdmin(() -> {
+      byte[] envBytes = environmentGenerator.generate();
+      TarArchiveEntry entry = new TarArchiveEntry(SCM_ENVIRONMENT_FILE_NAME);
+      entry.setSize(envBytes.length);
+      try {
+        taos.putArchiveEntry(entry);
+        taos.write(envBytes);
+        taos.closeArchiveEntry();
+      } catch (IOException e) {
+        throw new ExportFailedException(entity(repository).build(), "Failed to collect instance environment for repository export", e);
+      }
+    });
   }
 
   private void writeMetadata(Repository repository, TarArchiveOutputStream taos) throws IOException {

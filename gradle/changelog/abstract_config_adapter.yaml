@@ -1,0 +1,2 @@
+- type: added
+  description: Add abstract configuration adapter to simply creating new global configurations

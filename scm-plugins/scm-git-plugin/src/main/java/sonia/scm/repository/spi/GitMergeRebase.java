@@ -87,7 +87,7 @@ public class GitMergeRebase extends GitMergeStrategy {
         .include(branchToMerge, sourceRevision)
         .call();
       push();
-      return MergeCommandResult.success(getTargetRevision().name(), branchToMerge, sourceRevision.name());
+      return createSuccessResult(sourceRevision.name());
     } catch (GitAPIException e) {
       return MergeCommandResult.failure(branchToMerge, targetBranch, result.getConflicts());
     }

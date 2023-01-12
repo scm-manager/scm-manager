@@ -22,38 +22,38 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.spi;
+import React from "react";
+import Field from "../base/Field";
+import Control from "../base/Control";
+import Label from "../base/label/Label";
+import FieldMessage from "../base/field-message/FieldMessage";
+import Help from "../base/help/Help";
+import Select from "./Select";
 
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.MergeCommand;
-import org.eclipse.jgit.api.MergeResult;
-import org.eclipse.jgit.revwalk.RevCommit;
-import sonia.scm.NoChangesMadeException;
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.api.MergeCommandResult;
+type Props = {
+  label: string;
+  helpText?: string;
+  error?: string;
+} & React.ComponentProps<typeof Select>;
 
-import java.io.IOException;
-
-import static sonia.scm.repository.spi.GitRevisionExtractor.extractRevisionFromRevCommit;
-
-class GitMergeWithSquash extends GitMergeStrategy {
-
-  GitMergeWithSquash(Git clone, MergeCommandRequest request, GitContext context, Repository repository) {
-    super(clone, request, context, repository);
+/**
+ * @see https://bulma.io/documentation/form/select/
+ */
+const SelectField = React.forwardRef<HTMLSelectElement, Props>(
+  ({ label, helpText, error, className, ...props }, ref) => {
+    const variant = error ? "danger" : undefined;
+    return (
+      <Field className={className}>
+        <Label>
+          {label}
+          {helpText ? <Help className="ml-1" text={helpText} /> : null}
+        </Label>
+        <Control>
+          <Select variant={variant} ref={ref} {...props}></Select>
+        </Control>
+        {error ? <FieldMessage variant={variant}>{error}</FieldMessage> : null}
+      </Field>
+    );
   }
-
-  @Override
-  MergeCommandResult run() throws IOException {
-    MergeCommand mergeCommand = getClone().merge();
-    mergeCommand.setSquash(true);
-    MergeResult result = doMergeInClone(mergeCommand);
-
-    if (result.getMergeStatus().isSuccessful()) {
-      RevCommit revCommit = doCommit().orElseThrow(() -> new NoChangesMadeException(getRepository()));
-      push();
-      return createSuccessResult(extractRevisionFromRevCommit(revCommit));
-    } else {
-      return analyseFailure(result);
-    }
-  }
-}
+);
+export default SelectField;

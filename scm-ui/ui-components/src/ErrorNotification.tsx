@@ -21,14 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
+import React, { ComponentProps, FC } from "react";
 import { useTranslation } from "react-i18next";
 import { BackendError, ForbiddenError, UnauthorizedError, urls } from "@scm-manager/ui-api";
 import Notification from "./Notification";
 import BackendErrorNotification from "./BackendErrorNotification";
 import { useLocation } from "react-router-dom";
 
-type Props = {
+type Props = ComponentProps<typeof BasicErrorMessage> & {
   error?: Error | null;
 };
 
@@ -40,31 +40,31 @@ const LoginLink: FC = () => {
   return <a href={urls.withContextPath(`/login?from=${from}`)}>{t("errorNotification.loginLink")}</a>;
 };
 
-const BasicErrorMessage: FC = ({ children }) => {
+const BasicErrorMessage: FC<Omit<ComponentProps<typeof Notification>, "type" | "role">> = ({ children, ...props }) => {
   const [t] = useTranslation("commons");
 
   return (
-    <Notification type="danger" role="alert">
+    <Notification type="danger" role="alert" {...props}>
       <strong>{t("errorNotification.prefix")}:</strong> {children}
     </Notification>
   );
 };
 
-const ErrorNotification: FC<Props> = ({ error }) => {
+const ErrorNotification: FC<Props> = ({ error, ...props }) => {
   const [t] = useTranslation("commons");
   if (error) {
     if (error instanceof BackendError) {
-      return <BackendErrorNotification error={error} />;
+      return <BackendErrorNotification error={error} {...props} />;
     } else if (error instanceof UnauthorizedError) {
       return (
-        <BasicErrorMessage>
+        <BasicErrorMessage {...props}>
           {t("errorNotification.timeout")} <LoginLink />
         </BasicErrorMessage>
       );
     } else if (error instanceof ForbiddenError) {
-      return <BasicErrorMessage>{t("errorNotification.forbidden")}</BasicErrorMessage>;
+      return <BasicErrorMessage {...props}>{t("errorNotification.forbidden")}</BasicErrorMessage>;
     } else {
-      return <BasicErrorMessage>{error.message}</BasicErrorMessage>;
+      return <BasicErrorMessage {...props}>{error.message}</BasicErrorMessage>;
     }
   }
   return null;

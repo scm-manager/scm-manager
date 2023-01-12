@@ -88,7 +88,7 @@ pipeline {
         sh 'git fetch origin develop'
         script {
           withSonarQubeEnv('sonarcloud.io-scm') {
-            String parameters = ' -Dsonar.organization=scm-manager'
+            String parameters = ' -Dsonar.organization=scm-manager -Dsonar.analysis.scmm-repo=scm-manager/scm-manager'
             if (env.CHANGE_ID) {
               parameters += ' -Dsonar.pullrequest.provider=GitHub'
               parameters += ' -Dsonar.pullrequest.github.repository=scm-manager/scm-manager'

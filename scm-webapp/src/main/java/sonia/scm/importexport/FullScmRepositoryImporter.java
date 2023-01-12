@@ -32,10 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.ContextEntry;
 import sonia.scm.event.ScmEventBus;
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryImportEvent;
-import sonia.scm.repository.RepositoryManager;
-import sonia.scm.repository.RepositoryPermissions;
+import sonia.scm.repository.*;
 import sonia.scm.repository.api.ImportFailedException;
 
 import javax.inject.Inject;
@@ -48,7 +45,7 @@ import static sonia.scm.ContextEntry.ContextBuilder.noContext;
 import static sonia.scm.importexport.RepositoryImportLogger.ImportType.FULL;
 import static sonia.scm.util.Archives.createTarInputStream;
 
-public class FullScmRepositoryImporter {
+public class FullScmRepositoryImporter implements FullRepositoryImporter {
 
   private static final Logger LOG = LoggerFactory.getLogger(FullScmRepositoryImporter.class);
 

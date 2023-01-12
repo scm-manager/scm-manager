@@ -27,6 +27,7 @@ import { Link as ReactRouterLink, LinkProps as ReactRouterLinkProps } from "reac
 import classNames from "classnames";
 import { createAttributesForTesting } from "@scm-manager/ui-components";
 
+/** @Beta */
 export const ButtonVariants = {
   PRIMARY: "primary",
   SECONDARY: "secondary",
@@ -57,6 +58,7 @@ type ButtonProps = BaseButtonProps & ButtonHTMLAttributes<HTMLButtonElement>;
 
 /**
  * Styled html button
+ * @Beta
  */
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, isLoading, testId, children, ...props }, ref) => (
@@ -75,6 +77,7 @@ type LinkButtonProps = BaseButtonProps & ReactRouterLinkProps;
 
 /**
  * Styled react router link
+ * @Beta
  */
 export const LinkButton = React.forwardRef<HTMLAnchorElement, LinkButtonProps>(
   ({ className, variant, isLoading, testId, children, ...props }, ref) => (
@@ -93,6 +96,7 @@ type ExternalLinkButtonProps = BaseButtonProps & AnchorHTMLAttributes<HTMLAnchor
 
 /**
  * Styled html anchor
+ * @Beta
  */
 export const ExternalLinkButton = React.forwardRef<HTMLAnchorElement, ExternalLinkButtonProps>(
   ({ className, variant, isLoading, testId, children, ...props }, ref) => (

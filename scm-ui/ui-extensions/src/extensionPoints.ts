@@ -660,3 +660,8 @@ export type FileViewActionBarOverflowMenu = ExtensionPointDefinition<
 >;
 
 export type LoginForm = RenderableExtensionPointDefinition<"login.form">;
+
+export type RepositoryDeleteButton = RenderableExtensionPointDefinition<
+  "repository.deleteButton",
+  { repository: Repository }
+>;

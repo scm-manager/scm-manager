@@ -13,6 +13,7 @@
     "@scm-manager/ui-shortcuts": "2.40.2-SNAPSHOT",
     "@scm-manager/ui-legacy": "2.40.2-SNAPSHOT",
     "@scm-manager/ui-forms": "2.40.2-SNAPSHOT",
+    "@scm-manager/ui-buttons": "2.40.2-SNAPSHOT",
     "classnames": "^2.2.5",
     "history": "^4.10.1",
     "i18next": "21",

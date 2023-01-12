@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-forms",
-  "private": true,
+  "private": false,
   "version": "2.40.2-SNAPSHOT",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -40,7 +40,8 @@
     "react-query": "3"
   },
   "dependencies": {
-    "@scm-manager/ui-buttons": "^2.40.2-SNAPSHOT"
+    "@scm-manager/ui-buttons": "^2.40.2-SNAPSHOT",
+    "@scm-manager/ui-api": "^2.40.2-SNAPSHOT"
   },
   "prettier": "@scm-manager/prettier-config",
   "eslintConfig": {

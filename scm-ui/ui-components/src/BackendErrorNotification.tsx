@@ -21,16 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
+import React, { ComponentProps, FC } from "react";
 import { BackendError } from "@scm-manager/ui-api";
 import Notification from "./Notification";
 import { useTranslation } from "react-i18next";
 
-type Props = {
+type Props = Omit<ComponentProps<typeof Notification>, "type" | "role"> & {
   error: BackendError;
 };
 
-const BackendErrorNotification: FC<Props> = ({ error }) => {
+const BackendErrorNotification: FC<Props> = ({ error, ...props }) => {
   const [t] = useTranslation("plugins");
 
   const renderErrorName = () => {
@@ -141,7 +141,7 @@ const BackendErrorNotification: FC<Props> = ({ error }) => {
   };
 
   return (
-    <Notification type="danger" role="alert">
+    <Notification type="danger" role="alert" {...props}>
       <div className="content">
         <p className="subtitle">
           {t("error.subtitle")}

@@ -33,6 +33,7 @@ import ControlledInputField from "./input/ControlledInputField";
 import ControlledCheckboxField from "./checkbox/ControlledCheckboxField";
 import ControlledSecretConfirmationField from "./input/ControlledSecretConfirmationField";
 import { HalRepresentation } from "@scm-manager/ui-types";
+import ControlledSelectField from "./select/ControlledSelectField";
 
 type RenderProps<T extends Record<string, unknown>> = Omit<
   UseFormReturn<T>,
@@ -61,6 +62,7 @@ type Props<FormType extends Record<string, unknown>, DefaultValues extends FormT
   submitButtonTestId?: string;
 };
 
+/** @Beta */
 function Form<FormType extends Record<string, unknown>, DefaultValues extends FormType>({
   children,
   onSubmit,
@@ -84,10 +86,10 @@ function Form<FormType extends Record<string, unknown>, DefaultValues extends Fo
   useEffect(() => {
     if (isSubmitSuccessful) {
       setShowSuccessNotification(true);
-      reset(defaultValues as never);
     }
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [isSubmitSuccessful]);
+
+  useEffect(() => reset(defaultValues as never), [defaultValues, reset]);
 
   useEffect(() => {
     if (isDirty) {
@@ -158,4 +160,5 @@ export default Object.assign(Form, {
   Input: ControlledInputField,
   Checkbox: ControlledCheckboxField,
   SecretConfirmation: ControlledSecretConfirmationField,
+  Select: ControlledSelectField,
 });

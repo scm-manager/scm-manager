@@ -21,39 +21,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import {useConfigLink} from "@scm-manager/ui-api";
+import {Loading} from "@scm-manager/ui-components";
+import React, {ComponentProps} from "react";
+import {HalRepresentation} from "@scm-manager/ui-types";
+import Form from "./Form";
 
-package sonia.scm.repository.spi;
+type Props<T extends HalRepresentation> = Pick<ComponentProps<typeof Form<T, T>>, "translationPath" | "children"> & {
+  link: string;
+};
 
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.MergeCommand;
-import org.eclipse.jgit.api.MergeResult;
-import org.eclipse.jgit.revwalk.RevCommit;
-import sonia.scm.NoChangesMadeException;
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.api.MergeCommandResult;
+/** @Beta */
+export function ConfigurationForm<T extends HalRepresentation>({link, translationPath, children}: Props<T>) {
+  const {initialConfiguration, isReadOnly, update, isLoading} = useConfigLink<T>(link);
 
-import java.io.IOException;
-
-import static sonia.scm.repository.spi.GitRevisionExtractor.extractRevisionFromRevCommit;
-
-class GitMergeWithSquash extends GitMergeStrategy {
-
-  GitMergeWithSquash(Git clone, MergeCommandRequest request, GitContext context, Repository repository) {
-    super(clone, request, context, repository);
+  if (isLoading || !initialConfiguration) {
+    return <Loading/>;
   }
 
-  @Override
-  MergeCommandResult run() throws IOException {
-    MergeCommand mergeCommand = getClone().merge();
-    mergeCommand.setSquash(true);
-    MergeResult result = doMergeInClone(mergeCommand);
-
-    if (result.getMergeStatus().isSuccessful()) {
-      RevCommit revCommit = doCommit().orElseThrow(() -> new NoChangesMadeException(getRepository()));
-      push();
-      return createSuccessResult(extractRevisionFromRevCommit(revCommit));
-    } else {
-      return analyseFailure(result);
-    }
-  }
+  return (
+    <Form<T, T>
+      onSubmit={update}
+      translationPath={translationPath}
+      defaultValues={initialConfiguration}
+      readOnly={isReadOnly}
+    >
+      {children}
+    </Form>
+  );
 }
+
+export default ConfigurationForm;
