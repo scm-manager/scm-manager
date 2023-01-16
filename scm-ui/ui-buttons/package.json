@@ -79,6 +79,6 @@
     "extends": "@scm-manager/eslint-config"
   },
   "publishConfig": {
-    "access": "restricted"
+    "access": "public"
   }
 }
