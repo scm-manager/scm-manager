@@ -62,7 +62,10 @@ type Props<FormType extends Record<string, unknown>, DefaultValues extends FormT
   submitButtonTestId?: string;
 };
 
-/** @Beta */
+/**
+ * @beta
+ * @since 2.41.0
+ */
 function Form<FormType extends Record<string, unknown>, DefaultValues extends FormType>({
   children,
   onSubmit,

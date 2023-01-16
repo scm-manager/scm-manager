@@ -31,7 +31,10 @@ type Props<T extends HalRepresentation> = Pick<ComponentProps<typeof Form<T, T>>
   link: string;
 };
 
-/** @Beta */
+/**
+ * @beta
+ * @since 2.41.0
+ */
 export function ConfigurationForm<T extends HalRepresentation>({link, translationPath, children}: Props<T>) {
   const {initialConfiguration, isReadOnly, update, isLoading} = useConfigLink<T>(link);
 

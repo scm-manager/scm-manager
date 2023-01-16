@@ -66,7 +66,10 @@ const createResource = <I, O = never>(link: string, contentType: string) => {
 
 type CreateResourceOptions = MutatingResourceOptions;
 
-/** @Beta */
+/**
+ * @beta
+ * @since 2.41.0
+ */
 export const useCreateResource = <I, O>(
   link: string,
   [entityKey, collectionName]: QueryKeyPair,
@@ -92,7 +95,10 @@ type UpdateResourceOptions = MutatingResourceOptions & {
   collectionName?: QueryKeyPair;
 };
 
-/** @Beta */
+/**
+ * @beta
+ * @since 2.41.0
+ */
 export const useUpdateResource = <T>(
   link: LinkOrHalLink,
   idFactory: (createdResource: T) => string,
@@ -125,7 +131,10 @@ type DeleteResourceOptions = {
   collectionName?: QueryKeyPair;
 };
 
-/** @Beta */
+/**
+ * @beta
+ * @since 2.41.0
+ */
 export const useDeleteResource = <T extends HalRepresentation>(
   idFactory: (createdResource: T) => string,
   { collectionName: [entityQueryKey, collectionName] = ["", ""] }: DeleteResourceOptions = {}
