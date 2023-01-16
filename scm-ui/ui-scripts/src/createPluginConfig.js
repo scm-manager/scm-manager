@@ -61,6 +61,7 @@ module.exports = function (mode) {
       "@scm-manager/ui-components",
       "@scm-manager/ui-forms",
       "@scm-manager/ui-buttons",
+      "@scm-manager/ui-overlays",
       "classnames",
       "query-string",
       "redux",

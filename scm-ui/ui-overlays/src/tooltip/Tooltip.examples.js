@@ -21,36 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, MouseEvent } from "react";
-import styled from "styled-components";
-import { Tooltip } from "@scm-manager/ui-overlays";
 
-const Button = styled.button`
-  width: 50px;
-  &:hover {
-    color: var(--scm-info-color);
-  }
+export const LongText =
+  "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.";
+
+export const ShortList = `  * a
+  * b
+  * c
 `;
 
-type Props = {
-  icon: string;
-  tooltip: string;
-  onClick: () => void;
-};
+export const List = `  Characters:
 
-const DiffButton: FC<Props> = ({ icon, tooltip, onClick }) => {
-  const handleClick = (e: MouseEvent) => {
-    e.preventDefault();
-    onClick();
-  };
-
-  return (
-    <Tooltip message={tooltip} side="top">
-      <Button aria-label={tooltip} className="button is-clickable" onClick={handleClick}>
-        <i className={`fas fa-${icon}`} />
-      </Button>
-    </Tooltip>
-  );
-};
-
-export default DiffButton;
+    - Arthur Dent
+    - Ford Prefect
+    - Zaphod Beeblebrox
+    - Marvin the Paranoid Android
+    - Trillian
+    - Slartibartfast
+`;

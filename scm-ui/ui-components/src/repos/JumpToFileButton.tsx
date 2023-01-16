@@ -24,7 +24,7 @@
 import React, { FC } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import Tooltip from "../Tooltip";
+import { Tooltip } from "@scm-manager/ui-overlays";
 import Icon from "../Icon";
 
 const Button = styled(Link)`
@@ -41,7 +41,7 @@ type Props = {
 
 const JumpToFileButton: FC<Props> = ({ link, tooltip }) => {
   return (
-    <Tooltip message={tooltip} location="bottom">
+    <Tooltip message={tooltip} side="top">
       <Button aria-label={tooltip} className="button is-clickable" to={link}>
         <Icon name="file-code" color="inherit" alt="" />
       </Button>

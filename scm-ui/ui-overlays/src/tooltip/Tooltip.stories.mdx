@@ -1,0 +1,52 @@
+import { Meta, Story } from "@storybook/addon-docs";
+import Tooltip from "./Tooltip"
+import { List, LongText, ShortList } from "./Tooltip.examples";
+
+<Meta title="Tooltip"/>
+
+Here will be some documentation for the Tooltip component.
+
+<Story name="Default">
+  <Tooltip message="I am a tooltip!">
+    <button>Hover me</button>
+  </Tooltip>
+</Story>
+
+<Story name="With Styling">
+  <Tooltip message="I am a tooltip!" className="has-text-warning">
+    <button>Hover me</button>
+  </Tooltip>
+</Story>
+
+<Story name="Long Text">
+  <Tooltip
+    message={LongText}>
+    <button>Hover me</button>
+  </Tooltip>
+</Story>
+
+<Story name="List">
+  <Tooltip message={List}>
+    <button>Hover me</button>
+  </Tooltip>
+</Story>
+
+<Story name="Short List">
+  <Tooltip message={ShortList}>
+    <button>Hover me</button>
+  </Tooltip>
+</Story>
+
+<Story name="With Link">
+  <Tooltip message={<p>
+    For more information look up the documentation on the <a href="https://scm-manager.org">SCM-Manager</a> Website.
+  </p>}>
+    <button>Hover me</button>
+  </Tooltip>
+</Story>
+
+<Story name="Adjust Position">
+  <Tooltip message="I should show where there is space" side="left">
+    <button>Hover me</button>
+  </Tooltip>
+</Story>

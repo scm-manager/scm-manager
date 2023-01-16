@@ -1,0 +1,4 @@
+- type: added
+  description: New overlay ui module with tooltip component
+- type: fixed
+  description: Buttons in diff panel headers stuck together

@@ -21,36 +21,5 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, MouseEvent } from "react";
-import styled from "styled-components";
-import { Tooltip } from "@scm-manager/ui-overlays";
 
-const Button = styled.button`
-  width: 50px;
-  &:hover {
-    color: var(--scm-info-color);
-  }
-`;
-
-type Props = {
-  icon: string;
-  tooltip: string;
-  onClick: () => void;
-};
-
-const DiffButton: FC<Props> = ({ icon, tooltip, onClick }) => {
-  const handleClick = (e: MouseEvent) => {
-    e.preventDefault();
-    onClick();
-  };
-
-  return (
-    <Tooltip message={tooltip} side="top">
-      <Button aria-label={tooltip} className="button is-clickable" onClick={handleClick}>
-        <i className={`fas fa-${icon}`} />
-      </Button>
-    </Tooltip>
-  );
-};
-
-export default DiffButton;
+export { default as Tooltip } from "./tooltip/Tooltip";

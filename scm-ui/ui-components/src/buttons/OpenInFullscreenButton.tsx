@@ -26,7 +26,7 @@ import { FC, ReactNode, useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import FullscreenModal from "../modals/FullscreenModal";
-import Tooltip from "../Tooltip";
+import { Tooltip } from "@scm-manager/ui-overlays";
 
 type Props = {
   modalTitle: string;
@@ -46,34 +46,36 @@ const OpenInFullscreenButton: FC<Props> = ({ modalTitle, modalBody, tooltipStyle
   const [showModal, setShowModal] = useState(false);
 
   const tooltip = t("diff.fullscreen.open");
-  const content = (
-    <>
-      <Button
-        title={tooltipStyle === "htmlTitle" ? tooltip : undefined}
-        className="button"
-        onClick={() => setShowModal(true)}
-        aria-label={tooltip}
-      >
-        <i className="fas fa-search-plus" />
-      </Button>
-      {showModal && (
-        <FullscreenModal
-          title={modalTitle}
-          closeFunction={() => setShowModal(false)}
-          body={modalBody}
-          active={showModal}
-        />
-      )}
-    </>
+  const button = (
+    <Button
+      title={tooltipStyle === "htmlTitle" ? tooltip : undefined}
+      className="button"
+      onClick={() => setShowModal(true)}
+      aria-label={tooltip}
+    >
+      <i className="fas fa-search-plus" />
+    </Button>
+  );
+  const modal = showModal && (
+    <FullscreenModal title={modalTitle} closeFunction={() => setShowModal(false)} body={modalBody} active={showModal} />
   );
 
   if (tooltipStyle === "htmlTitle") {
-    return <>{content}</>;
+    return (
+      <>
+        {button}
+        {modal}
+      </>
+    );
   }
+
   return (
-    <Tooltip message={tooltip} location="bottom">
-      {content}
-    </Tooltip>
+    <>
+      {modal}
+      <Tooltip message={tooltip} side="top">
+        {button}
+      </Tooltip>
+    </>
   );
 };
 

@@ -21,36 +21,52 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, MouseEvent } from "react";
-import styled from "styled-components";
-import { Tooltip } from "@scm-manager/ui-overlays";
 
-const Button = styled.button`
-  width: 50px;
-  &:hover {
-    color: var(--scm-info-color);
-  }
-`;
+import React, { useEffect } from "react";
+import { I18nextProvider, initReactI18next } from "react-i18next";
+import i18n from "i18next";
 
-type Props = {
-  icon: string;
-  tooltip: string;
-  onClick: () => void;
+i18n.use(initReactI18next).init({
+  whitelist: ["en", "de"],
+  lng: "en",
+  fallbackLng: "en",
+  interpolation: {
+    escapeValue: false,
+  },
+  react: {
+    useSuspense: false,
+  },
+
+});
+
+const Decorator = ({ children, themeName }) => {
+  useEffect(() => {
+    const link = document.querySelector("#ui-theme");
+    if (link && link["data-theme"] !== themeName) {
+      link.href = `ui-theme-${themeName}.css`;
+      link["data-theme"] = themeName;
+    }
+  }, [themeName]);
+  return <>{children}</>;
 };
 
-const DiffButton: FC<Props> = ({ icon, tooltip, onClick }) => {
-  const handleClick = (e: MouseEvent) => {
-    e.preventDefault();
-    onClick();
-  };
-
-  return (
-    <Tooltip message={tooltip} side="top">
-      <Button aria-label={tooltip} className="button is-clickable" onClick={handleClick}>
-        <i className={`fas fa-${icon}`} />
-      </Button>
-    </Tooltip>
-  );
+export const parameters = {
+  actions: { argTypesRegex: "^on[A-Z].*" },
+  decorators: [
+    (Story) => (
+      <I18nextProvider i18n={i18n}>
+        <Story />
+      </I18nextProvider>
+    ),
+  ],
+  themes: {
+    Decorator,
+    clearable: false,
+    default: "light",
+    list: [
+      { name: "light", color: "#fff" },
+      { name: "highcontrast", color: "#050514" },
+      { name: "dark", color: "#121212" },
+    ],
+  },
 };
-
-export default DiffButton;
