@@ -213,7 +213,7 @@ pipeline {
         expression { return isBuildSuccess() }
       }
       steps {
-        authGit 'cesmarvin', "push https://github.com/scm-manager/scm-manager HEAD:${env.BRANCH_NAME}"
+        authGit 'cesmarvin', "push -f https://github.com/scm-manager/scm-manager HEAD:${env.BRANCH_NAME}"
         authGit 'cesmarvin', "push --tags https://github.com/scm-manager/scm-manager"
       }
     }
