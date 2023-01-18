@@ -1,7 +1,7 @@
 {
   "name": "@scm-manager/ui-forms",
   "private": false,
-  "version": "2.40.2-SNAPSHOT",
+  "version": "2.41.0",
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "module": "build/index.mjs",
@@ -16,7 +16,7 @@
     "@scm-manager/eslint-config": "^2.16.0",
     "@scm-manager/prettier-config": "^2.10.1",
     "@scm-manager/tsconfig": "^2.13.0",
-    "@scm-manager/ui-styles": "2.40.2-SNAPSHOT",
+    "@scm-manager/ui-styles": "2.41.0",
     "@storybook/addon-actions": "^6.5.10",
     "@storybook/addon-essentials": "^6.5.10",
     "@storybook/addon-interactions": "^6.5.10",
@@ -32,7 +32,7 @@
     "tsup": "^6.2.3"
   },
   "peerDependencies": {
-    "@scm-manager/ui-components": "^2.40.2-SNAPSHOT",
+    "@scm-manager/ui-components": "2.41.0",
     "classnames": "^2.3.1",
     "react": "17",
     "react-hook-form": "7",
@@ -40,8 +40,8 @@
     "react-query": "3"
   },
   "dependencies": {
-    "@scm-manager/ui-buttons": "^2.40.2-SNAPSHOT",
-    "@scm-manager/ui-api": "^2.40.2-SNAPSHOT"
+    "@scm-manager/ui-buttons": "2.41.0",
+    "@scm-manager/ui-api": "2.41.0"
   },
   "prettier": "@scm-manager/prettier-config",
   "eslintConfig": {
