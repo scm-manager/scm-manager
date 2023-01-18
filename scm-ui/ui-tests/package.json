@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-tests",
-  "version": "2.41.0",
+  "version": "2.41.1-SNAPSHOT",
   "description": "UI-Tests helpers",
   "author": "Sebastian Sdorra <sebastian.sdorra@cloudogu.com>",
   "license": "MIT",
