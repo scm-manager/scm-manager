@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.41.0] - 2023-01-18
+### Added
+- Add abstract configuration adapter to simply creating new global configurations
+- Markdown component to render images from repository correctly
+- Extension point for page size
+- New overlay ui module with tooltip component
+
+### Fixed
+- The 'revision to merge' in merge results
+- Buttons in diff panel headers stuck together
+
+### Changed
+- Default host 'scm-manager.org' replaced with 'example.org' in default mail address
+- Make diff header sticky
+
 ## [2.40.1] - 2022-12-06
 ### Fixed
 - Preselect namespace in repository create forms
@@ -1188,3 +1203,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.39.1]: https://scm-manager.org/download/2.39.1
 [2.40.0]: https://scm-manager.org/download/2.40.0
 [2.40.1]: https://scm-manager.org/download/2.40.1
+[2.41.0]: https://scm-manager.org/download/2.41.0
