@@ -31,7 +31,7 @@
     "string_score": "^0.1.22",
     "styled-components": "^5.3.5",
     "systemjs": "0.21.6",
-    "ua-parser-js": "^1.0.2"
+    "ua-parser-js": "^1.0.33"
   },
   "scripts": {
     "test": "jest",
