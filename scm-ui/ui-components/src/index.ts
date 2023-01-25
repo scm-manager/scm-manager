@@ -81,6 +81,7 @@ export { default as CreateTagModal } from "./modals/CreateTagModal";
 export { default as CardColumn } from "./CardColumn";
 export { default as CardColumnSmall } from "./CardColumnSmall";
 export { default as CommaSeparatedList } from "./CommaSeparatedList";
+export { default as PreformattedCodeBlock } from "./PreformattedCodeBlock";
 export { SplitAndReplace, Replacement } from "@scm-manager/ui-text";
 export { useShortcut } from "@scm-manager/ui-shortcuts";
 export { regExpPattern as changesetShortLinkRegex } from "./markdown/remarkChangesetShortLinkParser";

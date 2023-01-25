@@ -25,7 +25,7 @@
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { Tag } from "@scm-manager/ui-types";
-import { SubSubtitle } from "@scm-manager/ui-components";
+import { PreformattedCodeBlock, SubSubtitle } from "@scm-manager/ui-components";
 
 type Props = {
   tag: Tag;
@@ -34,12 +34,12 @@ type Props = {
 const HgTagInformation: FC<Props> = ({ tag }) => {
   const [t] = useTranslation("plugins");
 
+  const hgCheckoutTagCommand = `hg update ${tag.name}`;
+
   return (
     <>
       <SubSubtitle>{t("scm-hg-plugin.information.checkoutTag")}</SubSubtitle>
-      <pre>
-        <code>hg update {tag.name}</code>
-      </pre>
+      <PreformattedCodeBlock>{hgCheckoutTagCommand}</PreformattedCodeBlock>
     </>
   );
 };

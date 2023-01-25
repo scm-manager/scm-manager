@@ -24,7 +24,7 @@
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { Branch } from "@scm-manager/ui-types";
-import { SubSubtitle } from "@scm-manager/ui-components";
+import { PreformattedCodeBlock, SubSubtitle } from "@scm-manager/ui-components";
 
 type Props = WithTranslation & {
   branch: Branch;
@@ -34,16 +34,15 @@ class GitBranchInformation extends React.Component<Props> {
   render() {
     const { branch, t } = this.props;
 
+    const gitFetchCommand = "git fetch";
+    const gitCheckoutCommand = "git checkout " + branch.name;
+
     return (
       <div>
         <SubSubtitle>{t("scm-git-plugin.information.fetch")}</SubSubtitle>
-        <pre>
-          <code>git fetch</code>
-        </pre>
+        <PreformattedCodeBlock>{gitFetchCommand}</PreformattedCodeBlock>
         <SubSubtitle>{t("scm-git-plugin.information.checkout")}</SubSubtitle>
-        <pre>
-          <code>git checkout {branch.name}</code>
-        </pre>
+        <PreformattedCodeBlock>{gitCheckoutCommand}</PreformattedCodeBlock>
       </div>
     );
   }

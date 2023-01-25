@@ -21,27 +21,47 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-import React, { FC } from "react";
+import * as React from "react";
+import { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Tag } from "@scm-manager/ui-types";
-import { PreformattedCodeBlock, SubSubtitle } from "@scm-manager/ui-components";
+import styled from "styled-components";
+import Button from "./buttons/Button";
+import copyToClipboard from "./CopyToClipboard";
 
 type Props = {
-  tag: Tag;
+  children: string;
 };
 
-const GitTagInformation: FC<Props> = ({ tag }) => {
-  const [t] = useTranslation("plugins");
+const TopRightButton = styled(Button)`
+  position: absolute;
+  display: none;
+  height: inherit;
+  top: 1.25em;
+  right: 1.5em;
+`;
 
-  const gitCheckoutTagCommand = `git checkout tags/${tag.name} -b branch/${tag.name}`;
+const Container = styled.div`
+  &:hover > ${TopRightButton} {
+    display: inline-block;
+  }
+`;
+
+const PreformattedCodeBlock: FC<Props> = ({ children }) => {
+  const [t] = useTranslation("repos");
+  const [copied, setCopied] = useState(false);
+
+  const copy = () => copyToClipboard(children).then(() => setCopied(true));
 
   return (
-    <>
-      <SubSubtitle>{t("scm-git-plugin.information.checkoutTag")}</SubSubtitle>
-      <PreformattedCodeBlock>{gitCheckoutTagCommand}</PreformattedCodeBlock>
-    </>
+    <Container className="is-relative">
+      <pre>
+        <code>{children}</code>
+      </pre>
+      <TopRightButton className="is-small" title={t("syntaxHighlighting.copyButton")} action={copy}>
+        <i className={copied ? "fa fa-clipboard-check" : "fa fa-clipboard"} />
+      </TopRightButton>
+    </Container>
   );
 };
 
-export default GitTagInformation;
+export default PreformattedCodeBlock;

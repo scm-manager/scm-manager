@@ -24,7 +24,7 @@
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { Repository } from "@scm-manager/ui-types";
-import { SubSubtitle, ErrorNotification, Loading } from "@scm-manager/ui-components";
+import { SubSubtitle, ErrorNotification, Loading, PreformattedCodeBlock } from "@scm-manager/ui-components";
 import { useChangesets, useDefaultBranch } from "@scm-manager/ui-api";
 
 type Props = {
@@ -34,12 +34,18 @@ type Props = {
 
 const CloneInformation: FC<Props> = ({ url, repository }) => {
   const [t] = useTranslation("plugins");
-  const { data: changesets, error: changesetsError, isLoading: changesetsLoading } = useChangesets(repository, {
-    limit: 1
+  const {
+    data: changesets,
+    error: changesetsError,
+    isLoading: changesetsLoading,
+  } = useChangesets(repository, {
+    limit: 1,
   });
-  const { data: defaultBranchData, isLoading: defaultBranchLoading, error: defaultBranchError } = useDefaultBranch(
-    repository
-  );
+  const {
+    data: defaultBranchData,
+    isLoading: defaultBranchLoading,
+    error: defaultBranchError,
+  } = useDefaultBranch(repository);
 
   if (changesetsLoading || defaultBranchLoading) {
     return <Loading />;
@@ -49,56 +55,34 @@ const CloneInformation: FC<Props> = ({ url, repository }) => {
   const branch = defaultBranchData?.defaultBranch;
   const emptyRepository = (changesets?._embedded?.changesets.length || 0) === 0;
 
+  let gitCloneCommand = `git clone ${url}\ncd ${repository.name}`;
+  if (emptyRepository) {
+    gitCloneCommand += `\ngit checkout -b ${branch}`;
+  }
+  const gitCreateCommand =
+    `git init ${repository.name}\n` +
+    `cd ${repository.name}\n` +
+    `git checkout -b ${branch}\n` +
+    `echo "# ${repository.name}" > README.md\n` +
+    "git add README.md\n" +
+    'git commit -m "Add readme"\n' +
+    `git remote add origin ${url}\n` +
+    `git push -u origin ${branch}`;
+  const gitCommandCreate = `git remote add origin ${url}`;
+
   return (
     <div className="content">
       <ErrorNotification error={error} />
       <SubSubtitle>{t("scm-git-plugin.information.clone")}</SubSubtitle>
-      <pre>
-        <code>
-          git clone {url}
-          <br />
-          cd {repository.name}
-          {emptyRepository && (
-            <>
-              <br />
-              git checkout -b {branch}
-            </>
-          )}
-        </code>
-      </pre>
+      <PreformattedCodeBlock>{gitCloneCommand}</PreformattedCodeBlock>
       {emptyRepository && (
         <>
           <SubSubtitle>{t("scm-git-plugin.information.create")}</SubSubtitle>
-          <pre>
-            <code>
-              git init {repository.name}
-              <br />
-              cd {repository.name}
-              <br />
-              git checkout -b {branch}
-              <br />
-              echo "# {repository.name}
-              " &gt; README.md
-              <br />
-              git add README.md
-              <br />
-              git commit -m "Add readme"
-              <br />
-              git remote add origin {url}
-              <br />
-              git push -u origin {branch}
-              <br />
-            </code>
-          </pre>
+          <PreformattedCodeBlock>{gitCreateCommand}</PreformattedCodeBlock>
         </>
       )}
       <SubSubtitle>{t("scm-git-plugin.information.replace")}</SubSubtitle>
-      <pre>
-        <code>
-          git remote add origin {url}
-          <br />
-        </code>
-      </pre>
+      <PreformattedCodeBlock>{gitCommandCreate}</PreformattedCodeBlock>
     </div>
   );
 };

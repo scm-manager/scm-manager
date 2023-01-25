@@ -24,7 +24,13 @@
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { Repository } from "@scm-manager/ui-types";
-import { ErrorNotification, Loading, SubSubtitle, repositories } from "@scm-manager/ui-components";
+import {
+  ErrorNotification,
+  Loading,
+  SubSubtitle,
+  repositories,
+  PreformattedCodeBlock,
+} from "@scm-manager/ui-components";
 import { useChangesets } from "@scm-manager/ui-api";
 
 type Props = {
@@ -46,53 +52,37 @@ const ProtocolInformation: FC<Props> = ({ repository }) => {
 
   const emptyRepository = (data?._embedded?.changesets.length || 0) === 0;
 
+  const hgCloneCommand = `hg clone ${href}`;
+  const hgCreateCommand =
+    `hg init ${repository.name}\n` +
+    `cd ${repository.name}\n` +
+    'echo "[paths]" > .hg/hgrc\n' +
+    `echo "default = ${href}` +
+    '" >> .hg/hgrc\n' +
+    `echo "# ${repository.name}` +
+    '" > README.md\n' +
+    "hg add README.md\n" +
+    'hg commit -m "added readme"\n\n' +
+    "hg push";
+  const hgReplaceCommand =
+    "# add the repository url as default to your .hg/hgrc e.g:\n" +
+    `default = ${href}\n` +
+    "# push to remote repository\n" +
+    "hg push";
+
   return (
     <div className="content">
       <ErrorNotification error={error} />
       <SubSubtitle>{t("scm-hg-plugin.information.clone")}</SubSubtitle>
-      <pre>
-        <code>hg clone {href}</code>
-      </pre>
+      <PreformattedCodeBlock>{hgCloneCommand}</PreformattedCodeBlock>
       {emptyRepository && (
         <>
           <SubSubtitle>{t("scm-hg-plugin.information.create")}</SubSubtitle>
-          <pre>
-            <code>
-              hg init {repository.name}
-              <br />
-              cd {repository.name}
-              <br />
-              echo "[paths]" &gt; .hg/hgrc
-              <br />
-              echo "default = {href}
-              " &gt;&gt; .hg/hgrc
-              <br />
-              echo "# {repository.name}
-              " &gt; README.md
-              <br />
-              hg add README.md
-              <br />
-              hg commit -m "added readme"
-              <br />
-              <br />
-              hg push
-              <br />
-            </code>
-          </pre>
+          <PreformattedCodeBlock>{hgCreateCommand}</PreformattedCodeBlock>
         </>
       )}
       <SubSubtitle>{t("scm-hg-plugin.information.replace")}</SubSubtitle>
-      <pre>
-        <code>
-          # add the repository url as default to your .hg/hgrc e.g:
-          <br />
-          default = {href}
-          <br />
-          # push to remote repository
-          <br />
-          hg push
-        </code>
-      </pre>
+      <PreformattedCodeBlock>{hgReplaceCommand}</PreformattedCodeBlock>
     </div>
   );
 };

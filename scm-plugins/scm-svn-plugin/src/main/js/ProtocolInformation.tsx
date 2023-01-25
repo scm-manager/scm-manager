@@ -24,7 +24,7 @@
 import React from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 import { Repository } from "@scm-manager/ui-types";
-import { repositories, SubSubtitle } from "@scm-manager/ui-components";
+import { PreformattedCodeBlock, repositories, SubSubtitle } from "@scm-manager/ui-components";
 
 type Props = WithTranslation & {
   repository: Repository;
@@ -37,12 +37,13 @@ class ProtocolInformation extends React.Component<Props> {
     if (!href) {
       return null;
     }
+
+    const svnCheckoutCommand = `svn checkout ${href}`;
+
     return (
       <div className="content">
         <SubSubtitle>{t("scm-svn-plugin.information.checkout")}</SubSubtitle>
-        <pre>
-          <code>svn checkout {href}</code>
-        </pre>
+        <PreformattedCodeBlock>{svnCheckoutCommand}</PreformattedCodeBlock>
       </div>
     );
   }

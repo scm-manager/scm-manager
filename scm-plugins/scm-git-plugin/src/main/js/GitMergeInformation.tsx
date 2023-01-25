@@ -25,7 +25,7 @@
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { Repository } from "@scm-manager/ui-types";
-import { SubSubtitle } from "@scm-manager/ui-components";
+import { PreformattedCodeBlock, SubSubtitle } from "@scm-manager/ui-components";
 
 type Props = WithTranslation & {
   repository: Repository;
@@ -37,35 +37,28 @@ class GitMergeInformation extends React.Component<Props> {
   render() {
     const { source, target, t } = this.props;
 
+    const gitCheckoutCommand = `git checkout ${target}`;
+    const gitUpdateCommand = "git pull";
+    const gitMergeCommand = `git merge ${source}`;
+    const gitResolveCommand = "git add <conflict file>";
+    const gitCommitCommand = `git commit -m "Merge ${source} into ${target}"`;
+    const gitPushCommand = "git push";
+
     return (
       <div>
         <SubSubtitle>{t("scm-git-plugin.information.merge.heading")}</SubSubtitle>
         {t("scm-git-plugin.information.merge.checkout")}
-        <pre>
-          <code>git checkout {target}</code>
-        </pre>
+        <PreformattedCodeBlock>{gitCheckoutCommand}</PreformattedCodeBlock>
         {t("scm-git-plugin.information.merge.update")}
-        <pre>
-          <code>git pull</code>
-        </pre>
+        <PreformattedCodeBlock>{gitUpdateCommand}</PreformattedCodeBlock>
         {t("scm-git-plugin.information.merge.merge")}
-        <pre>
-          <code>git merge {source}</code>
-        </pre>
+        <PreformattedCodeBlock>{gitMergeCommand}</PreformattedCodeBlock>
         {t("scm-git-plugin.information.merge.resolve")}
-        <pre>
-          <code>git add &lt;conflict file&gt;</code>
-        </pre>
+        <PreformattedCodeBlock>{gitResolveCommand}</PreformattedCodeBlock>
         {t("scm-git-plugin.information.merge.commit")}
-        <pre>
-          <code>
-            git commit -m "Merge {source} into {target}"
-          </code>
-        </pre>
+        <PreformattedCodeBlock>{gitCommitCommand}</PreformattedCodeBlock>
         {t("scm-git-plugin.information.merge.push")}
-        <pre>
-          <code>git push</code>
-        </pre>
+        <PreformattedCodeBlock>{gitPushCommand}</PreformattedCodeBlock>
       </div>
     );
   }

@@ -19277,6 +19277,235 @@ exports[`Storyshots Popover Link 1`] = `
 </div>
 `;
 
+exports[`Storyshots PreformattedCodeBlock Combination 1`] = `
+<div
+  className="PreformattedCodeBlockstories__Wrapper-sc-exgqpp-0 m-6"
+>
+  <div
+    className="content"
+  >
+    <h3
+      className="is-size-5"
+    >
+      Clone the Repository
+    </h3>
+    <div
+      className="PreformattedCodeBlock__Container-sc-11slzrr-1 iISymu is-relative"
+    >
+      <pre>
+        <code>
+          git clone https://fancy-scm.url/scm/repo/test/scmm\\n cd scmm
+        </code>
+      </pre>
+      <button
+        className="button is-default PreformattedCodeBlock__TopRightButton-sc-11slzrr-0 dfZgVU is-small"
+        onClick={[Function]}
+        title="syntaxHighlighting.copyButton"
+        type="button"
+      >
+        <span>
+           
+           
+          <i
+            className="fa fa-clipboard"
+          />
+        </span>
+      </button>
+    </div>
+    <h3
+      className="is-size-5"
+    >
+      Git hook for commit message validation
+    </h3>
+    <div
+      className="PreformattedCodeBlock__Container-sc-11slzrr-1 iISymu is-relative"
+    >
+      <pre>
+        <code>
+          #!/bin/bash
+
+### For this hook to work you need the SCM CLI client (https://scm-manager.org/cli/)
+### installed and connected to your SCM Server.
+
+BRANCH_NAME=$(git symbolic-ref --short HEAD)
+COMMIT_MSG_FILE=\`cat $1\`
+
+scm repo commit-message-check aaa/ultimate-repo $BRANCH_NAME "$COMMIT_MSG_FILE"
+        </code>
+      </pre>
+      <button
+        className="button is-default PreformattedCodeBlock__TopRightButton-sc-11slzrr-0 dfZgVU is-small"
+        onClick={[Function]}
+        title="syntaxHighlighting.copyButton"
+        type="button"
+      >
+        <span>
+           
+           
+          <i
+            className="fa fa-clipboard"
+          />
+        </span>
+      </button>
+    </div>
+    <h3
+      className="is-size-5"
+    >
+      Get Remote Changes
+    </h3>
+    <div
+      className="PreformattedCodeBlock__Container-sc-11slzrr-1 iISymu is-relative"
+    >
+      <pre>
+        <code>
+          git fetch
+        </code>
+      </pre>
+      <button
+        className="button is-default PreformattedCodeBlock__TopRightButton-sc-11slzrr-0 dfZgVU is-small"
+        onClick={[Function]}
+        title="syntaxHighlighting.copyButton"
+        type="button"
+      >
+        <span>
+           
+           
+          <i
+            className="fa fa-clipboard"
+          />
+        </span>
+      </button>
+    </div>
+    <h3
+      className="is-size-5"
+    >
+      Switch Branch
+    </h3>
+    <div
+      className="PreformattedCodeBlock__Container-sc-11slzrr-1 iISymu is-relative"
+    >
+      <pre>
+        <code>
+          git checkout feature/something
+        </code>
+      </pre>
+      <button
+        className="button is-default PreformattedCodeBlock__TopRightButton-sc-11slzrr-0 dfZgVU is-small"
+        onClick={[Function]}
+        title="syntaxHighlighting.copyButton"
+        type="button"
+      >
+        <span>
+           
+           
+          <i
+            className="fa fa-clipboard"
+          />
+        </span>
+      </button>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Storyshots PreformattedCodeBlock Default 1`] = `
+<div
+  className="PreformattedCodeBlockstories__Wrapper-sc-exgqpp-0 m-6"
+>
+  <div
+    className="PreformattedCodeBlock__Container-sc-11slzrr-1 iISymu is-relative"
+  >
+    <pre>
+      <code>
+        git checkout main
+      </code>
+    </pre>
+    <button
+      className="button is-default PreformattedCodeBlock__TopRightButton-sc-11slzrr-0 dfZgVU is-small"
+      onClick={[Function]}
+      title="syntaxHighlighting.copyButton"
+      type="button"
+    >
+      <span>
+         
+         
+        <i
+          className="fa fa-clipboard"
+        />
+      </span>
+    </button>
+  </div>
+</div>
+`;
+
+exports[`Storyshots PreformattedCodeBlock Long content 1`] = `
+<div
+  className="PreformattedCodeBlockstories__Wrapper-sc-exgqpp-0 m-6"
+>
+  <div
+    className="PreformattedCodeBlock__Container-sc-11slzrr-1 iISymu is-relative"
+  >
+    <pre>
+      <code>
+        #!/bin/bash
+
+### For this hook to work you need the SCM CLI client (https://scm-manager.org/cli/)
+### installed and connected to your SCM Server.
+
+BRANCH_NAME=$(git symbolic-ref --short HEAD)
+COMMIT_MSG_FILE=\`cat $1\`
+
+scm repo commit-message-check aaa/ultimate-repo $BRANCH_NAME "$COMMIT_MSG_FILE"
+      </code>
+    </pre>
+    <button
+      className="button is-default PreformattedCodeBlock__TopRightButton-sc-11slzrr-0 dfZgVU is-small"
+      onClick={[Function]}
+      title="syntaxHighlighting.copyButton"
+      type="button"
+    >
+      <span>
+         
+         
+        <i
+          className="fa fa-clipboard"
+        />
+      </span>
+    </button>
+  </div>
+</div>
+`;
+
+exports[`Storyshots PreformattedCodeBlock With scrollbar 1`] = `
+<div
+  className="PreformattedCodeBlockstories__Wrapper-sc-exgqpp-0 m-6"
+>
+  <div
+    className="PreformattedCodeBlock__Container-sc-11slzrr-1 iISymu is-relative"
+  >
+    <pre>
+      <code>
+        git remote add origin https://scm-manager-instance4.example.org:8081/scm/repo/my-new-namespace/LoremipsumdolorsitametconsetetursadipscingelitrseddiamnonumyeirmodtemporinviduntutlaboreetdoloremagnaaliquyameratseddiamvoluptuaAtveroeosetaccusametjustoduodoloresetearebumStetclitakasdgubergrennoseatakimatasanctusestLoremipsumdolorsitametLoremipsumdolorsitametconsetetursadipscingelitrseddiamnonumyeirmodtemporinviduntutlaboreetdoloremagnaaliquyameratseddiamvoluptuaAtveroeosetaccusametjustoduodoloresetearebumStetclitakasdgubergrennoseatakimatasanctusestLoremipsumdolorsitamet
+      </code>
+    </pre>
+    <button
+      className="button is-default PreformattedCodeBlock__TopRightButton-sc-11slzrr-0 dfZgVU is-small"
+      onClick={[Function]}
+      title="syntaxHighlighting.copyButton"
+      type="button"
+    >
+      <span>
+         
+         
+        <i
+          className="fa fa-clipboard"
+        />
+      </span>
+    </button>
+  </div>
+</div>
+`;
+
 exports[`Storyshots Repositories/Annotate Default 1`] = `
 <div
   className="Annotatestories__Wrapper-sc-1fdvl94-0 ldNvIm box"
