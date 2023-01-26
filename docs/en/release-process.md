@@ -1,13 +1,36 @@
-# How to release SCM-Manager v2 core
+# How to release SCM-Manager v2 core (Script)
 
+The most easy way to release the core is to use the release script. This will guide you
+through all necessary tasks.
 
-To release a new version of SCM-Manager v2 you have to do the following steps (replace placeholders `<version>` accordingly, eg. with `2.1.0`):
+Mind that the script does not care about `support` branches, so if you have one, take
+the manual way described below!
+
+Make sure you have no changes you want to keep! The script will clean up everything.
+
+```bash
+./release.sh
+```
+
+It will
+
+- Clean up your repository with the latest revision of `develop`,
+- Update the `CHANGELOG` file,
+- Show you the changes it made,
+- Ask you whether to proceed or not,
+- Create a commit with the changes, and
+- Create and push the release branch.
+
+# Manual core release
+
+To release a new version of SCM-Manager v2 "manually", you have to do the following steps
+(replace placeholders `<version>` accordingly, eg. with `2.1.0`):
 
 ## Check out default branch
 
 Make sure you have no changes you want to keep!
 
-```
+```bash
 git fetch && git checkout -f origin/develop && git clean -fd && git checkout -B develop
 ```
 
@@ -15,7 +38,7 @@ git fetch && git checkout -f origin/develop && git clean -fd && git checkout -B 
 
 Check whether there is an integration branch for the previous release or bugfixes not merged into the develop branch. Merge them now.
 
-```
+```bash
 git merge origin/support/<support branch>
 ```
 
@@ -26,9 +49,11 @@ All unreleased changes are stored in the `gradle/changelog` directory.
 The changelog can be updated with the `updateChangelog` gradle task.
 
 ```bash
-export VERSION=<version> \
-&& ./gradlew :updateChangelog --release=$VERSION
+export VERSION=$(./gradlew :updateChangelog | grep -oP "Using next version \K[0-9.]+")
+echo About to release version $VERSION
 ```
+
+The update changelog task will tell you the next version number.
 
 Now we should manually check if the changelog looks good.
 
@@ -42,8 +67,8 @@ If everything looks fine, we can remove the changelog directory.
 
 ```bash
 git rm -rf gradle/changelog \
-&& git checkout -b release/$VERSION \
 && git add CHANGELOG.md \
+&& git checkout -b release/$VERSION \
 && git commit -m "Adjust changelog for release $VERSION" \
 && git push origin release/$VERSION
 ```
@@ -72,7 +97,7 @@ The migration from maven to gradle can easily be done using [this tool](https://
 
 Make sure you have no changes you want to keep!
 
-```
+```bash
 git fetch && git checkout -f origin/develop && git clean -fd && git checkout -B develop
 ```
 
@@ -80,7 +105,7 @@ git fetch && git checkout -f origin/develop && git clean -fd && git checkout -B 
 
 Check whether there is an integration branch for the previous release or bugfixes not merged into the develop branch. Merge them now.
 
-```
+```bash
 git merge origin/support/<support branch>
 ```
 
@@ -97,7 +122,10 @@ Check if all plugin dependencies are proper versions and not SNAPSHOT!
 
 ## Build, commit and push
 
-```
+This step is only needed, when you had to update the version in the prior step.
+If the core version has not been increased, this step can be skipped.
+
+```bash
 ./gradlew build \
 && git add yarn.lock build.gradle package.json \
 && git commit -m "Update to new version of SCM-Manager" \
@@ -113,8 +141,11 @@ All unreleased changes are stored in the `gradle/changelog` directory.
 The changelog can be updated with the `updateChangelog` gradle task.
 
 ```bash
-./gradlew :updateChangelog --release=<version>
+export VERSION=$(./gradlew :updateChangelog | grep -oP "Using next version \K[0-9.]+")
+echo About to release version $VERSION
 ```
+
+The task will tell you the next version number.
 
 Now we should manually check if the changelog looks good.
 
@@ -122,18 +153,15 @@ Now we should manually check if the changelog looks good.
 git diff CHANGELOG.md
 ```
 
-If everything looks fine, we can remove the changelog directory.
-
-```bash
-rm -rf gradle/changelog
-```
-
 ## Create, commit and push release branch
 
-```
-export VERSION=<version> \
+This step needs the `VERSION` set in the step above.
+
+```bash
+git rm -rf gradle/changelog \
+&& git add CHANGELOG.md \
 && git checkout -b release/$VERSION \
-&& git commit -am "Prepare release of $VERSION" \
+&& git commit -m "Prepare release of $VERSION" \
 && git push origin release/$VERSION
 ```
 
@@ -174,3 +202,4 @@ released, yet.
 11. Merge this commit into `develop`
 
 If the hotfix has been created for an older release, this process might be somewhat more complicated.
+
