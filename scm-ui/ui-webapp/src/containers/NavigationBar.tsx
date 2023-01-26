@@ -133,14 +133,14 @@ const NavigationBar: FC<Props> = ({ links }) => {
             <span aria-hidden="true" />
           </button>
         </div>
-        <div className="is-active navbar-header-actions">
-          <Alerts className="navbar-item" />
-          <OmniSearch links={links} />
-          <Notifications className="navbar-item" />
-        </div>
         <StyledMenuBar className={classNames("navbar-menu", { "is-active": burgerActive })}>
           <div className="navbar-start">
             <PrimaryNavigation links={links} />
+          </div>
+          <div className="is-active navbar-header-actions">
+            <Alerts className="navbar-item" />
+            <OmniSearch links={links} />
+            <Notifications className="navbar-item" />
           </div>
           <div className="navbar-end">
             <LogoutButton burgerMode={burgerActive} links={links} />

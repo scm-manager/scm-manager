@@ -70974,7 +70974,6 @@ exports[`Storyshots Repositories/RepositoryEntry Archived 1`] = `
             <a
               className="RepositoryEntry__ContactActionWrapper-sc-6jys82-3 gtjNed is-size-5"
               href="mailto:heart-of-gold@hitchhiker.com"
-              tabIndex={1}
               target="_blank"
               title="overview.contact"
             >
@@ -71100,7 +71099,6 @@ exports[`Storyshots Repositories/RepositoryEntry Avatar EP 1`] = `
             <a
               className="RepositoryEntry__ContactActionWrapper-sc-6jys82-3 gtjNed is-size-5"
               href="mailto:heart-of-gold@hitchhiker.com"
-              tabIndex={1}
               target="_blank"
               title="overview.contact"
             >
@@ -71229,7 +71227,6 @@ exports[`Storyshots Repositories/RepositoryEntry Before Title EP 1`] = `
             <a
               className="RepositoryEntry__ContactActionWrapper-sc-6jys82-3 gtjNed is-size-5"
               href="mailto:heart-of-gold@hitchhiker.com"
-              tabIndex={1}
               target="_blank"
               title="overview.contact"
             >
@@ -71355,7 +71352,6 @@ exports[`Storyshots Repositories/RepositoryEntry Default 1`] = `
             <a
               className="RepositoryEntry__ContactActionWrapper-sc-6jys82-3 gtjNed is-size-5"
               href="mailto:heart-of-gold@hitchhiker.com"
-              tabIndex={1}
               target="_blank"
               title="overview.contact"
             >
@@ -71494,7 +71490,6 @@ exports[`Storyshots Repositories/RepositoryEntry Exporting 1`] = `
             <a
               className="RepositoryEntry__ContactActionWrapper-sc-6jys82-3 gtjNed is-size-5"
               href="mailto:heart-of-gold@hitchhiker.com"
-              tabIndex={1}
               target="_blank"
               title="overview.contact"
             >
@@ -71634,7 +71629,6 @@ exports[`Storyshots Repositories/RepositoryEntry HealthCheck Failure 1`] = `
             <a
               className="RepositoryEntry__ContactActionWrapper-sc-6jys82-3 gtjNed is-size-5"
               href="mailto:heart-of-gold@hitchhiker.com"
-              tabIndex={1}
               target="_blank"
               title="overview.contact"
             >
@@ -71785,7 +71779,6 @@ exports[`Storyshots Repositories/RepositoryEntry MultiRepositoryTags 1`] = `
             <a
               className="RepositoryEntry__ContactActionWrapper-sc-6jys82-3 gtjNed is-size-5"
               href="mailto:heart-of-gold@hitchhiker.com"
-              tabIndex={1}
               target="_blank"
               title="overview.contact"
             >
@@ -71925,7 +71918,6 @@ exports[`Storyshots Repositories/RepositoryEntry RepositoryFlag EP 1`] = `
             <a
               className="RepositoryEntry__ContactActionWrapper-sc-6jys82-3 gtjNed is-size-5"
               href="mailto:heart-of-gold@hitchhiker.com"
-              tabIndex={1}
               target="_blank"
               title="overview.contact"
             >
@@ -72051,7 +72043,6 @@ exports[`Storyshots Repositories/RepositoryEntry With long texts 1`] = `
             <a
               className="RepositoryEntry__ContactActionWrapper-sc-6jys82-3 gtjNed is-size-5"
               href="mailto:heart-of-gold@hitchhiker.com"
-              tabIndex={1}
               target="_blank"
               title="overview.contact"
             >

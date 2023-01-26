@@ -193,6 +193,7 @@ const HeaderDropDown: FC<Props> = ({ className, icon, count, error, isLoading, m
           className
         )}
         onClick={e => e.stopPropagation()}
+        tabIndex={0}
       >
         <DropDownTrigger
           className={classNames("is-flex", "dropdown-trigger", "is-clickable")}

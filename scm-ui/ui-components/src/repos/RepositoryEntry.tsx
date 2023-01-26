@@ -121,7 +121,6 @@ const RepositoryEntry: FC<Props> = ({ repository, baseDate }) => {
             target="_blank"
             className={"is-size-5"}
             title={t("overview.contact", { contact: repository.contact })}
-            tabIndex={1}
           >
             {renderContactIcon()}
           </ContactActionWrapper>
