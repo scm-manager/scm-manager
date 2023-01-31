@@ -116,6 +116,7 @@ const PanelHeading = styled.div<{ sticky: boolean }>`
       ? `
    position: sticky;
    top: 52px;
+   z-index: 1;
   `
       : ""}
 `;
