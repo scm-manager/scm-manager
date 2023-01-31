@@ -36,12 +36,13 @@ type Props = {
   size?: 16 | 24 | 32 | 48 | 64 | 96 | 128;
 };
 
-const renderExtensionPoint = (repository: Repository) => {
+const renderExtensionPoint = (repository: Repository, size: Props["size"]) => {
   return (
     <ExtensionPoint<extensionPoints.PrimaryRepositoryAvatar>
       name="repos.repository-avatar.primary"
       props={{
         repository,
+        size: size || 64
       }}
     >
       <ExtensionPoint<extensionPoints.RepositoryAvatar>
@@ -57,7 +58,7 @@ const renderExtensionPoint = (repository: Repository) => {
 };
 
 const RepositoryAvatar: FC<Props> = ({ repository, size = 64 }) => {
-  return <Avatar className={`image is-${size}x${size}`}>{renderExtensionPoint(repository)}</Avatar>;
+  return <Avatar className={`image is-${size}x${size}`}>{renderExtensionPoint(repository, size)}</Avatar>;
 };
 
 export default RepositoryAvatar;

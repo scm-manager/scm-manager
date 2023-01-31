@@ -433,7 +433,7 @@ export type RepositoryAvatar = RenderableExtensionPointDefinition<
  */
 export type PrimaryRepositoryAvatar = RenderableExtensionPointDefinition<
   "repos.repository-avatar.primary",
-  { repository: Repository }
+  { repository: Repository, size: number }
 >;
 
 /**
