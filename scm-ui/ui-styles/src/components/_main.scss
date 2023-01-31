@@ -710,6 +710,9 @@ form .field:not(.is-grouped) {
     &.disabled::after {
       border-color: #7a7a7a;
     }
+    &::after {
+      z-index: initial;
+    }
   }
 }
 
