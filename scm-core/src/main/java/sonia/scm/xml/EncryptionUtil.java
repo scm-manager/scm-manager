@@ -27,14 +27,14 @@ package sonia.scm.xml;
 import com.google.common.base.Strings;
 import sonia.scm.security.CipherUtil;
 
-final class EncryptionUtil {
+public final class EncryptionUtil {
 
   private static final String PREFIX = "{enc}";
 
   private EncryptionUtil() {
   }
 
-  static String decrypt(String value) {
+  public static String decrypt(String value) {
     if (!value.startsWith(PREFIX)) {
       //Return value if not encrypted yet
       return value;
@@ -43,11 +43,11 @@ final class EncryptionUtil {
     return CipherUtil.getInstance().decode(value.substring(PREFIX.length()));
   }
 
-  static String encrypt(String value) {
+  public static String encrypt(String value) {
     return PREFIX.concat(CipherUtil.getInstance().encode(value));
   }
 
-  static boolean isEncrypted(String value) {
+  public static boolean isEncrypted(String value) {
     return !Strings.isNullOrEmpty(value) && value.startsWith(PREFIX);
   }
 }
