@@ -571,6 +571,7 @@ ul.is-separated {
   th {
     border-color: $white-ter;
     padding: 1rem;
+    overflow-wrap: anywhere;
   }
 }
 
@@ -635,6 +636,7 @@ ul.is-separated {
     background-color: $white-bis;
     border-bottom: 1px solid $white-ter;
     border-left-color: $grey;
+    overflow-wrap: anywhere;
 
     &:first-child {
       border-left: 3px solid;
