@@ -132,7 +132,7 @@ pipeline {
         expression { return isBuildSuccess() }
       }
       steps {
-        build wait: false, propagate: false, job: 'scm-manager-github/homebrew-tap/master', parameters: [
+        build wait: false, propagate: false, job: 'scm-manager/homebrew-tap/master', parameters: [
           string(name: 'Version', value: getReleaseVersion())
         ]
       }
