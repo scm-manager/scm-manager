@@ -567,6 +567,9 @@ ul.is-separated {
 // tables
 .table {
   width: 100%;
+  td {
+    overflow-wrap: anywhere;
+  }
   td,
   th {
     border-color: $white-ter;
