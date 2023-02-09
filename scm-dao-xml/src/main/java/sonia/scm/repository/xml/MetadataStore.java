@@ -38,6 +38,8 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import java.nio.file.Path;
 
+import static sonia.scm.store.CopyOnWrite.compute;
+
 public class MetadataStore implements UpdateStepRepositoryMetadataAccess<Path> {
 
   private static final Logger LOG = LoggerFactory.getLogger(MetadataStore.class);
@@ -54,13 +56,15 @@ public class MetadataStore implements UpdateStepRepositoryMetadataAccess<Path> {
 
   public Repository read(Path path) {
     LOG.trace("read repository metadata from {}", path);
-    try {
-      return (Repository) jaxbContext.createUnmarshaller().unmarshal(resolveDataPath(path).toFile());
-    } catch (JAXBException ex) {
-      throw new InternalRepositoryException(
-        ContextEntry.ContextBuilder.entity(Path.class, path.toString()).build(), "failed read repository metadata", ex
-      );
-    }
+    return compute(() -> {
+      try {
+        return (Repository) jaxbContext.createUnmarshaller().unmarshal(resolveDataPath(path).toFile());
+      } catch (JAXBException ex) {
+        throw new InternalRepositoryException(
+          ContextEntry.ContextBuilder.entity(Path.class, path.toString()).build(), "failed read repository metadata", ex
+        );
+      }
+    }).withLockedFile(path);
   }
 
   void write(Path path, Repository repository) {

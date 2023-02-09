@@ -41,12 +41,14 @@ type Props = {
   loading?: boolean;
   group?: Group;
   loadUserSuggestions: (p: string) => Promise<SelectValue[]>;
+  transmittedName?: string;
+  transmittedExternal?: boolean;
 };
 
-const GroupForm: FC<Props> = ({ submitForm, loading, group, loadUserSuggestions }) => {
+const GroupForm: FC<Props> = ({ submitForm, loading, group, loadUserSuggestions, transmittedName = "", transmittedExternal = false }) => {
   const [t] = useTranslation("groups");
   const [groupState, setGroupState] = useState({
-    name: "",
+    name: transmittedName,
     description: "",
     _embedded: {
       members: [] as Member[]
@@ -54,7 +56,7 @@ const GroupForm: FC<Props> = ({ submitForm, loading, group, loadUserSuggestions 
     _links: {},
     members: [] as string[],
     type: "",
-    external: false
+    external: transmittedExternal
   });
   const [nameValidationError, setNameValidationError] = useState(false);
 

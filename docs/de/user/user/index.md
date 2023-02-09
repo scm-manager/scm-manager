@@ -25,3 +25,19 @@ Die Detailseite eines Benutzers zeigt die Informationen zu diesem an.
 Die Checkbox `Extern` zeigt an, ob es sich um einen internen Benutzer handelt oder der Benutzer von einem Fremdsystem verwaltet wird.
 
 ![Benutzer Informationen](assets/user-information.png)
+
+### Berechtigungsübersicht
+Am unteren Ende der Detailseite kann für einen Benutzer eine Berechtigunsübersicht geladen werden.
+Diese Übersicht listet alle Gruppen, denen der Benutzer im SCM-Manager zugewiesen ist.
+Hat sich der Benutzer bereits mindestens einmal angemeldet, so werden darüber hinaus auch alle
+Gruppen berücksichtigt, die durch externe Berechtigungssysteme (wie z. B. LDAP oder CAS) mitgegeben
+wurden. Gruppen mit konfigurierten Berechtigungen sind mit einem Haken markiert.
+Externe Gruppen, die im SCM-Manager noch nicht angelegt sind, können separat gelistet werden.
+
+Darunter werden alle Namespaces und Repositories gelistet, bei denen für den Benutzer oder
+eine seiner Gruppen eine Berechtigung konfiguriert ist.
+
+Die einzelnen Einstellungsseiten für die Berechtigungen können direkt über die Stifte angesprungen
+werden. Bei bisher noch nicht bekannten Gruppen können diese direkt erstellt werden.
+
+![Benutzer Informationen](assets/user-permission-overview.png)

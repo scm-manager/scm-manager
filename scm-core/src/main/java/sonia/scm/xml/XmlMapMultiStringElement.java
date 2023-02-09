@@ -21,36 +21,43 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
-import { Redirect, useLocation } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import { useCreateGroup, useUserSuggestions, urls } from "@scm-manager/ui-api";
-import { Page } from "@scm-manager/ui-components";
-import GroupForm from "../components/GroupForm";
 
-const CreateGroup: FC = () => {
-  const [t] = useTranslation("groups");
-  const { isLoading, create, error, group } = useCreateGroup();
-  const userSuggestions = useUserSuggestions();
-  const location = useLocation();
+package sonia.scm.xml;
 
-  if (group) {
-    return <Redirect to={`/group/${group.name}`} />;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.util.Set;
+
+@XmlRootElement(name = "element")
+@XmlAccessorType(XmlAccessType.FIELD)
+public class XmlMapMultiStringElement {
+
+  private String key;
+  @XmlJavaTypeAdapter(XmlSetStringAdapter.class)
+  private Set<String> value;
+
+  public XmlMapMultiStringElement() {}
+
+  public XmlMapMultiStringElement(String key, Set<String> value) {
+    this.key = key;
+    this.value = value;
   }
 
-  return (
-    <Page title={t("addGroup.title")} subtitle={t("addGroup.subtitle")} error={error || undefined}>
-      <div>
-        <GroupForm
-          submitForm={create}
-          loading={isLoading}
-          loadUserSuggestions={userSuggestions}
-          transmittedName={urls.getValueStringFromLocationByKey(location, "name")}
-          transmittedExternal={urls.getValueStringFromLocationByKey(location, "external") === "true"}
-        />
-      </div>
-    </Page>
-  );
-};
+  public String getKey() {
+    return key;
+  }
 
-export default CreateGroup;
+  public Set<String> getValue() {
+    return value;
+  }
+
+  public void setKey(String key) {
+    this.key = key;
+  }
+
+  public void setValue(Set<String> value) {
+    this.value = value;
+  }
+}

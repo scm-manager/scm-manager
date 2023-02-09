@@ -21,19 +21,47 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
+import React, { FC, useState } from "react";
+import { useTranslation, WithTranslation } from "react-i18next";
 import { User } from "@scm-manager/ui-types";
-import { Checkbox, createAttributesForTesting, DateFromNow, InfoTable, MailLink } from "@scm-manager/ui-components";
+import {
+  Checkbox,
+  createAttributesForTesting,
+  DateFromNow,
+  Help,
+  InfoTable,
+  MailLink
+} from "@scm-manager/ui-components";
+import { Icon } from "@scm-manager/ui-components";
+import PermissionOverview from "../PermissionOverview";
 
 type Props = WithTranslation & {
   user: User;
 };
 
-class Details extends React.Component<Props> {
-  render() {
-    const { user, t } = this.props;
-    return (
+const Details: FC<Props> = ({ user }) => {
+  const [t] = useTranslation("users");
+  const [collapsed, setCollapsed] = useState(true);
+  const toggleCollapse = () => setCollapsed(!collapsed);
+
+  let permissionOverview;
+  if (user._links.permissionOverview) {
+    let icon = <Icon name="angle-right" color="inherit" alt={t("diff.showContent")} />;
+    if (!collapsed) {
+      icon = <Icon name="angle-down" color="inherit" alt={t("diff.hideContent")} />;
+    }
+    permissionOverview = (
+      <div className="content">
+        <h3 className="is-clickable" onClick={toggleCollapse}>
+          {icon} {t("permissionOverview.title")} <Help message={t("permissionOverview.help")} />
+        </h3>
+        {!collapsed && <PermissionOverview user={user} />}
+      </div>
+    );
+  }
+
+  return (
+    <>
       <InfoTable>
         <tbody>
           <tr>
@@ -76,8 +104,9 @@ class Details extends React.Component<Props> {
           </tr>
         </tbody>
       </InfoTable>
-    );
-  }
-}
+      {permissionOverview}
+    </>
+  );
+};
 
-export default withTranslation("users")(Details);
+export default Details;

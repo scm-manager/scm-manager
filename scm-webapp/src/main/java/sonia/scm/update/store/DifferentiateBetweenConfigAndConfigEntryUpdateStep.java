@@ -49,6 +49,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.stream.Stream;
 
+import static sonia.scm.store.CopyOnWrite.compute;
+
 abstract class DifferentiateBetweenConfigAndConfigEntryUpdateStep {
 
   private static final Logger LOG = LoggerFactory.getLogger(DifferentiateBetweenConfigAndConfigEntryUpdateStep.class);
@@ -90,7 +92,7 @@ abstract class DifferentiateBetweenConfigAndConfigEntryUpdateStep {
   private void updateSingleFile(Path configFile) {
     LOG.info("Updating config entry file: {}", configFile);
 
-    Document configEntryDocument = readAsXmlDocument(configFile);
+    Document configEntryDocument = compute(() -> readAsXmlDocument(configFile)).withLockedFile(configFile);
 
     configEntryDocument.getDocumentElement().setAttribute("type", "config-entry");
 

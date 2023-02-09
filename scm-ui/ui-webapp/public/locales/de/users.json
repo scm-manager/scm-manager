@@ -30,9 +30,6 @@
     "noUsers": "Keine Benutzer gefunden.",
     "createButton": "Benutzer erstellen"
   },
-  "overview": {
-    "filterUser": "Benutzer filtern"
-  },
   "singleUser": {
     "errorTitle": "Fehler",
     "errorSubtitle": "Unbekannter Benutzer Fehler",
@@ -46,6 +43,9 @@
       "setPublicKeyNavLink": "Öffentliche Schlüssel",
       "setApiKeyNavLink": "API Schlüssel"
     }
+  },
+  "overview": {
+    "filterUser": "Benutzer filtern"
   },
   "createUser": {
     "title": "Benutzer erstellen",
@@ -172,5 +172,27 @@
       "submit": "Ja",
       "cancel": "Nein"
     }
+  },
+  "permissionOverview": {
+    "title": "Berechtigungsübersicht",
+    "help": "Nach einer Anmeldung dieses Kontos basiert diese Übersicht auf den Gruppen, die diesem Konto bei der letzten Anmeldung zugeordnet wurden. Daher beinhaltet sie auch solche Gruppen, die nicht im SCM-Manager eingerichtet sind, sondern von externen Systemen bereitgestellt wurden (wie z. B. LDAP). Da solche externen Daten auf der letzten Anmeldung basieren, stellt diese Übersicht unter Umständen nicht den aktuellen Stand dar. Gab es noch keine Anmeldung mit diesem Konto, so werden nur die intern zugewiesenen Gruppen aufgelistet.",
+    "groups": {
+      "noRepositoriesFound": "Keine Namespaces oder Repositories mit Berechtigungen vorhanden.",
+      "showGroupsWithoutPermission": "Noch nicht in SCM-Manager angelegte fremde Gruppen anzeigen",
+      "showGroupsWithoutPermissionHelp": "Diese Option zeigt fremde Gruppen an. Dies sind Gruppen, die im SCM-Manager nicht bekannt sind, sondern von externen Systemen stammen. Um diese Gruppen zu berechtigen, müssen sie zunächst im SCM-Manager (als externe Gruppen) angelegt werden.",
+      "noGroupsFound": "Keine Gruppen vorhanden.",
+      "noUnknownGroupsFound": "Keine weiteren Gruppen vorhanden.",
+      "groupName": "Name",
+      "permissionsConfigured": "Berechtigungen gesetzt",
+      "createGroup": "Erstellen",
+      "editPermissions": "Bearbeiten"
+    },
+    "repositories": {
+      "subtitle": "Namespaces / Repositories",
+      "namespaceName": "Namespace / Name",
+      "permissionsConfigured": "Berechtigungen gesetzt",
+      "editPermissions": "Bearbeiten"
+    },
+    "edit": "bearbeiten"
   }
 }

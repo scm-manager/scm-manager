@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import org.apache.shiro.subject.Subject;
@@ -43,7 +43,6 @@ import java.time.Instant;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -176,5 +175,17 @@ public class UserToUserDtoMapperTest {
     UserDto userDto = mapper.map(trillian);
 
     assertEquals("http://trillian", userDto.getLinks().getLinkBy("sample").get().getHref());
+  }
+
+  @Test
+  public void shouldMapLinks_forPermissionOverview() {
+    User user = createDefaultUser();
+    when(subject.isPermitted("permission:read")).thenReturn(true);
+    when(subject.isPermitted("group:list")).thenReturn(true);
+
+    UserDto userDto = mapper.map(user);
+
+    assertEquals("expected permissions link", expectedBaseUri.resolve("abc/permissions").toString(), userDto.getLinks().getLinkBy("permissions").get().getHref());
+    assertEquals("expected permission overview link", expectedBaseUri.resolve("abc/permissionOverview").toString(), userDto.getLinks().getLinkBy("permissionOverview").get().getHref());
   }
 }

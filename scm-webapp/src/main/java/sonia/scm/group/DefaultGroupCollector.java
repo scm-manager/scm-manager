@@ -34,11 +34,15 @@ import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.security.Authentications;
 import sonia.scm.security.LogoutEvent;
+import sonia.scm.store.ConfigurationStore;
+import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.user.UserEvent;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Stream;
 
 /**
  * Collect groups for a certain principal.
@@ -56,11 +60,14 @@ public class DefaultGroupCollector implements GroupCollector {
   private final Cache<String, Set<String>> cache;
   private final Set<GroupResolver> groupResolvers;
 
+  private final ConfigurationStoreFactory configurationStoreFactory;
+
   @Inject
-  public DefaultGroupCollector(GroupDAO groupDAO, CacheManager cacheManager, Set<GroupResolver> groupResolvers) {
+  public DefaultGroupCollector(GroupDAO groupDAO, CacheManager cacheManager, Set<GroupResolver> groupResolvers, ConfigurationStoreFactory configurationStoreFactory) {
     this.groupDAO = groupDAO;
     this.cache = cacheManager.getCache(CACHE_NAME);
     this.groupResolvers = groupResolvers;
+    this.configurationStoreFactory = configurationStoreFactory;
   }
 
   @Override
@@ -79,7 +86,28 @@ public class DefaultGroupCollector implements GroupCollector {
 
     Set<String> groups = builder.build();
     LOG.debug("collected following groups for principal {}: {}", principal, groups);
+
+    ConfigurationStore<UserGroupCache> store = createStore();
+    UserGroupCache persistentCache = getPersistentCache(store);
+    persistentCache.put(principal, groups);
+    store.set(persistentCache);
+
     return groups;
+  }
+
+  @Override
+  public Set<String> fromLastLoginPlusInternal(String principal) {
+    Set<String> cached = new HashSet<>(getPersistentCache(createStore()).get(principal));
+    computeInternalGroups(principal).forEach(cached::add);
+    return cached;
+  }
+
+  private static UserGroupCache getPersistentCache(ConfigurationStore<UserGroupCache> store) {
+    return store.getOptional().orElseGet(UserGroupCache::new);
+  }
+
+  private ConfigurationStore<UserGroupCache> createStore() {
+    return configurationStoreFactory.withType(UserGroupCache.class).withName("user-group-cache").build();
   }
 
   @Subscribe(async = false)
@@ -95,12 +123,12 @@ public class DefaultGroupCollector implements GroupCollector {
     }
   }
 
+  private Stream<String> computeInternalGroups(String principal) {
+    return groupDAO.getAll().stream().filter(group -> group.isMember(principal)).map(Group::getName);
+  }
+
   private void appendInternalGroups(String principal, ImmutableSet.Builder<String> builder) {
-    for (Group group : groupDAO.getAll()) {
-      if (group.isMember(principal)) {
-        builder.add(group.getName());
-      }
-    }
+    computeInternalGroups(principal).forEach(builder::add);
   }
 
   private Set<String> resolveExternalGroups(String principal) {

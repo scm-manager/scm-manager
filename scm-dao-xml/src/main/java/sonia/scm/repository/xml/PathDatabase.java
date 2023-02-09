@@ -43,6 +43,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
 
+import static sonia.scm.store.CopyOnWrite.execute;
+
 class PathDatabase {
 
   private static final Logger LOG = LoggerFactory.getLogger(PathDatabase.class);
@@ -122,27 +124,29 @@ class PathDatabase {
 
   void read(OnRepositories onRepositories, OnRepository onRepository) {
     LOG.trace("read repository path database from {}", storePath);
-    try (AutoCloseableXMLReader reader = XmlStreams.createReader(storePath)) {
+    execute(() -> {
+      try (AutoCloseableXMLReader reader = XmlStreams.createReader(storePath)) {
 
-      while (reader.hasNext()) {
-        int eventType = reader.next();
+        while (reader.hasNext()) {
+          int eventType = reader.next();
 
-        if (eventType == XMLStreamConstants.START_ELEMENT) {
-          String element = reader.getLocalName();
-          if (ELEMENT_REPOSITORIES.equals(element)) {
-            readRepositories(reader, onRepositories);
-          } else if (ELEMENT_REPOSITORY.equals(element)) {
-            readRepository(reader, onRepository);
+          if (eventType == XMLStreamConstants.START_ELEMENT) {
+            String element = reader.getLocalName();
+            if (ELEMENT_REPOSITORIES.equals(element)) {
+              readRepositories(reader, onRepositories);
+            } else if (ELEMENT_REPOSITORY.equals(element)) {
+              readRepository(reader, onRepository);
+            }
           }
         }
+      } catch (XMLStreamException | IOException ex) {
+        throw new InternalRepositoryException(
+          ContextEntry.ContextBuilder.entity(Path.class, storePath.toString()).build(),
+          "failed to read repository path database",
+          ex
+        );
       }
-    } catch (XMLStreamException | IOException ex) {
-      throw new InternalRepositoryException(
-        ContextEntry.ContextBuilder.entity(Path.class, storePath.toString()).build(),
-        "failed to read repository path database",
-        ex
-      );
-    }
+    }).withLockedFile(storePath);
   }
 
   private void readRepository(XMLStreamReader reader, OnRepository onRepository) throws XMLStreamException {

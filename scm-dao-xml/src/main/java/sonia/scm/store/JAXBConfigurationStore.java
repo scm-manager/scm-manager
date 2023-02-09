@@ -32,6 +32,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.function.BooleanSupplier;
 
+import static sonia.scm.store.CopyOnWrite.compute;
+import static sonia.scm.store.CopyOnWrite.execute;
+
 /**
  * JAXB implementation of {@link ConfigurationStore}.
  *
@@ -69,10 +72,14 @@ public class JAXBConfigurationStore<T> extends AbstractStore<T> {
   protected T readObject() {
     LOG.debug("load {} from store {}", type, configFile);
 
-    if (configFile.exists()) {
-      return context.unmarshall(configFile);
-    }
-    return null;
+    return compute(
+      () -> {
+        if (configFile.exists()) {
+          return context.unmarshall(configFile);
+        }
+        return null;
+      }
+    ).withLockedFile(configFile);
   }
 
   @Override
@@ -87,10 +94,12 @@ public class JAXBConfigurationStore<T> extends AbstractStore<T> {
   @Override
   protected void deleteObject() {
     LOG.debug("deletes {}", configFile.getPath());
-    try {
-      IOUtil.delete(configFile);
-    } catch (IOException e) {
-      throw new StoreException("Failed to delete store object " + configFile.getPath(), e);
-    }
+    execute(() -> {
+      try {
+        IOUtil.delete(configFile);
+      } catch (IOException e) {
+        throw new StoreException("Failed to delete store object " + configFile.getPath(), e);
+      }
+    }).withLockedFile(configFile);
   }
 }

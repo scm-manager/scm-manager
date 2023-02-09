@@ -44,6 +44,7 @@ import java.util.Map.Entry;
 import java.util.function.Predicate;
 
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
+import static sonia.scm.store.CopyOnWrite.execute;
 
 public class JAXBConfigurationEntryStore<V> implements ConfigurationEntryStore<V> {
 
@@ -70,19 +71,21 @@ public class JAXBConfigurationEntryStore<V> implements ConfigurationEntryStore<V
     this.type = type;
     this.context = context;
     // initial load
-    if (file.exists()) {
-      load();
-    }
+    execute(() -> {
+      if (file.exists()) {
+        load();
+      }
+    }).withLockedFile(file);
   }
 
   @Override
   public void clear() {
     LOG.debug("clear configuration store");
 
-    synchronized (file) {
+    execute(() -> {
       entries.clear();
       store();
-    }
+    }).withLockedFile(file);
   }
 
   @Override
@@ -98,20 +101,20 @@ public class JAXBConfigurationEntryStore<V> implements ConfigurationEntryStore<V
   public void put(String id, V item) {
     LOG.debug("put item {} to configuration store", id);
 
-    synchronized (file) {
+    execute(() -> {
       entries.put(id, item);
       store();
-    }
+    }).withLockedFile(file);
   }
 
   @Override
   public void remove(String id) {
     LOG.debug("remove item {} from configuration store", id);
 
-    synchronized (file) {
+    execute(() -> {
       entries.remove(id);
       store();
-    }
+    }).withLockedFile(file);
   }
 
   @Override
@@ -135,47 +138,47 @@ public class JAXBConfigurationEntryStore<V> implements ConfigurationEntryStore<V
 
   private void load() {
     LOG.debug("load configuration from {}", file);
+    execute(() ->
+      context.withUnmarshaller(u -> {
+        try (AutoCloseableXMLReader reader = XmlStreams.createReader(file)) {
 
-    context.withUnmarshaller(u -> {
-      try (AutoCloseableXMLReader reader = XmlStreams.createReader(file)) {
-
-        // configuration
-        reader.nextTag();
-
-        // entry start
-        reader.nextTag();
-
-        while (reader.isStartElement() && reader.getLocalName().equals(TAG_ENTRY)) {
-
-          // read key
+          // configuration
           reader.nextTag();
 
-          String key = reader.getElementText();
-
-          // read value
+          // entry start
           reader.nextTag();
 
-          JAXBElement<V> element = u.unmarshal(reader, type);
+          while (reader.isStartElement() && reader.getLocalName().equals(TAG_ENTRY)) {
 
-          if (!element.isNil()) {
-            V v = element.getValue();
-
-            LOG.trace("add element {} to configuration entry store", v);
-
-            entries.put(key, v);
-          } else {
-            LOG.warn("could not unmarshall object of entry store");
-          }
-
-          // closed or new entry tag
-          if (reader.nextTag() == END_ELEMENT) {
-
-            // fixed format, start new entry
+            // read key
             reader.nextTag();
+
+            String key = reader.getElementText();
+
+            // read value
+            reader.nextTag();
+
+            JAXBElement<V> element = u.unmarshal(reader, type);
+
+            if (!element.isNil()) {
+              V v = element.getValue();
+
+              LOG.trace("add element {} to configuration entry store", v);
+
+              entries.put(key, v);
+            } else {
+              LOG.warn("could not unmarshall object of entry store");
+            }
+
+            // closed or new entry tag
+            if (reader.nextTag() == END_ELEMENT) {
+
+              // fixed format, start new entry
+              reader.nextTag();
+            }
           }
         }
-      }
-    });
+      })).withLockedFile(file);
   }
 
   private void store() {

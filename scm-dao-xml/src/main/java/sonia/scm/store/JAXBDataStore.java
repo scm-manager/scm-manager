@@ -35,6 +35,8 @@ import javax.xml.bind.Marshaller;
 import java.io.File;
 import java.util.Map;
 
+import static sonia.scm.store.CopyOnWrite.compute;
+
 /**
  * Jaxb implementation of {@link DataStore}.
  *
@@ -106,10 +108,12 @@ public class JAXBDataStore<T> extends FileBasedStore<T> implements DataStore<T> 
 
   @Override
   protected T read(File file) {
-    if (file.exists()) {
-      LOG.trace("try to read {}", file);
-      return context.unmarshall(file);
-    }
-    return null;
+    return compute(() -> {
+      if (file.exists()) {
+        LOG.trace("try to read {}", file);
+        return context.unmarshall(file);
+      }
+      return null;
+    }).withLockedFile(file);
   }
 }

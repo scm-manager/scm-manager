@@ -172,5 +172,27 @@
       "submit": "Yes",
       "cancel": "No"
     }
+  },
+  "permissionOverview": {
+    "title": "Permission Overview",
+    "help": "If the user has logged in at leas once, this overview is based on the groups assigned to the user at the last login. Therefor this also includes groups, that have not been set up in SCM-Manager but were provided by external systems (such as LDAP). Because this view is based on the last login of the user, this might not reflect the current state of the external groups if the user would log in now. If the user has never logged in before, only the internal groups for this user will be listed.",
+    "groups": {
+      "noRepositoriesFound": "No namespaces/repositories available.",
+      "showGroupsWithoutPermission": "Show external groups not yet created in SCM-Manager",
+      "showGroupsWithoutPermissionHelp": "This option shows foreign groups. These are groups, that have come from external systems and are unknown to SCM-Manager. The assign permissions for these groups, they have to be created in SCM-Manager first (as external groups).",
+      "noGroupsFound": "No groups available.",
+      "noUnknownGroupsFound": "No further groups available.",
+      "groupName": "Name",
+      "permissionsConfigured": "Permissions set",
+      "createGroup": "Create",
+      "editPermissions": "Edit"
+    },
+    "repositories": {
+      "subtitle": "Namespaces / Repositories",
+      "namespaceName": "Namespace / Name",
+      "permissionsConfigured": "Permissions set",
+      "editPermissions": "Edit"
+    },
+    "edit": "edit"
   }
 }

@@ -29,6 +29,7 @@ import de.otto.edison.hal.Links;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ObjectFactory;
+import sonia.scm.group.GroupPermissions;
 import sonia.scm.security.PermissionPermissions;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
@@ -76,6 +77,9 @@ public abstract class UserToUserDtoMapper extends BaseMapper<User, UserDto> {
     }
     if (PermissionPermissions.read().isPermitted()) {
       linksBuilder.single(link("permissions", resourceLinks.userPermissions().permissions(user.getName())));
+      if (GroupPermissions.list().isPermitted()) {
+        linksBuilder.single(link("permissionOverview", resourceLinks.user().permissionOverview(user.getName())));
+      }
     }
 
     Embedded.Builder embeddedBuilder = embeddedBuilder();

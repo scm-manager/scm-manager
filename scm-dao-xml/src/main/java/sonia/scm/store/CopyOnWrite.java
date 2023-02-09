@@ -28,11 +28,13 @@ import com.google.common.util.concurrent.Striped;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.UUID;
 import java.util.concurrent.locks.Lock;
+import java.util.function.Supplier;
 
 /**
  * CopyOnWrite creates a copy of the target file, before it is modified. This should prevent empty or incomplete files
@@ -46,21 +48,54 @@ public final class CopyOnWrite {
 
   private static final Logger LOG = LoggerFactory.getLogger(CopyOnWrite.class);
 
-  private static final Striped<Lock> concurrencyLock = Striped.lock(10);
+  private static final Striped<Lock> concurrencyLock = Striped.lock(20);
 
   private CopyOnWrite() {
   }
 
   public static void withTemporaryFile(FileWriter writer, Path targetFile) {
     validateInput(targetFile);
-    Lock lock = concurrencyLock.get(targetFile.toString());
-    try {
-      lock.lock();
+    execute(() -> {
       Path temporaryFile = createTemporaryFile(targetFile);
       executeCallback(writer, targetFile, temporaryFile);
       replaceOriginalFile(targetFile, temporaryFile);
-    } finally {
-      lock.unlock();
+    }).withLockedFile(targetFile);
+  }
+
+  public static <R> FileLocker<R> compute(Supplier<R> supplier) {
+    return new FileLocker<>(supplier);
+  }
+
+  public static FileLocker<Void> execute(Runnable runnable) {
+    return new FileLocker<>(() -> {
+      runnable.run();
+      return null;
+    });
+  }
+
+  public static class FileLocker<R> {
+    private final Supplier<R> supplier;
+
+    public FileLocker(Supplier<R> supplier) {
+      this.supplier = supplier;
+    }
+
+    public R withLockedFile(Path file) {
+      return withLockedFile(file.toAbsolutePath().toString());
+    }
+
+    public R withLockedFile(File file) {
+      return withLockedFile(file.getPath());
+    }
+
+    public R withLockedFile(String file) {
+      Lock lock = concurrencyLock.get(file);
+      lock.lock();
+      try {
+        return supplier.get();
+      } finally {
+        lock.unlock();
+      }
     }
   }
 

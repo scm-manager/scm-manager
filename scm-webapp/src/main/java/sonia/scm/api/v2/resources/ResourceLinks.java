@@ -148,6 +148,10 @@ class ResourceLinks {
       return userLinkBuilder.method("getUserResource").parameters(name).method("toInternal").parameters().href();
     }
 
+    public String permissionOverview(String name) {
+      return userLinkBuilder.method("getUserResource").parameters(name).method("permissionOverview").parameters().href();
+    }
+
     public String publicKeys(String name) {
       return publicKeyLinkBuilder.method("findAll").parameters(name).href();
     }

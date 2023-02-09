@@ -31,6 +31,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.apache.shiro.authc.credential.PasswordService;
+import sonia.scm.user.PermissionOverviewCollector;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
 import sonia.scm.web.VndMediaType;
@@ -44,30 +45,36 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 public class UserResource {
 
   private final UserDtoToUserMapper dtoToUserMapper;
   private final UserToUserDtoMapper userToDtoMapper;
+  private final PermissionOverviewToPermissionOverviewDtoMapper permissionOverviewMapper;
 
   private final IdResourceManagerAdapter<User, UserDto> adapter;
   private final UserManager userManager;
   private final PasswordService passwordService;
   private final UserPermissionResource userPermissionResource;
+  private final PermissionOverviewCollector permissionOverviewCollector;
 
   @Inject
-  public UserResource(
-    UserDtoToUserMapper dtoToUserMapper,
-    UserToUserDtoMapper userToDtoMapper,
-    UserManager manager,
-    PasswordService passwordService, UserPermissionResource userPermissionResource) {
+  public UserResource(UserDtoToUserMapper dtoToUserMapper,
+                      UserToUserDtoMapper userToDtoMapper,
+                      PermissionOverviewToPermissionOverviewDtoMapper permissionOverviewMapper, UserManager manager,
+                      PasswordService passwordService,
+                      UserPermissionResource userPermissionResource,
+                      PermissionOverviewCollector permissionOverviewCollector) {
     this.dtoToUserMapper = dtoToUserMapper;
     this.userToDtoMapper = userToDtoMapper;
+    this.permissionOverviewMapper = permissionOverviewMapper;
     this.adapter = new IdResourceManagerAdapter<>(manager, User.class);
     this.userManager = manager;
     this.passwordService = passwordService;
     this.userPermissionResource = userPermissionResource;
+    this.permissionOverviewCollector = permissionOverviewCollector;
   }
 
   /**
@@ -296,6 +303,13 @@ public class UserResource {
     dto.setExternal(true);
     adapter.update(name, existing -> dtoToUserMapper.map(dto, existing.getPassword()));
     return Response.noContent().build();
+  }
+
+  @GET
+  @Path("permissionOverview")
+  @Produces(MediaType.APPLICATION_JSON)
+  public PermissionOverviewDto permissionOverview(@PathParam("id") String name) {
+    return permissionOverviewMapper.toDto(permissionOverviewCollector.create(name), name);
   }
 
   @Path("permissions")

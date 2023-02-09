@@ -48,3 +48,20 @@ export type UserCreation = User;
 export type UserCollection = PagedCollection<{
   users: User[];
 }>;
+
+export type PermissionOverview = HalRepresentation & {
+  relevantGroups: PermissionOverviewGroupEntry[];
+  relevantNamespaces: string[];
+  relevantRepositories: PermissionOverviewRepositoryEntry[];
+};
+
+export type PermissionOverviewGroupEntry = {
+  name: string;
+  permissions: boolean;
+  externalOnly: boolean;
+};
+
+export type PermissionOverviewRepositoryEntry = {
+  namespace: string;
+  name: string;
+};

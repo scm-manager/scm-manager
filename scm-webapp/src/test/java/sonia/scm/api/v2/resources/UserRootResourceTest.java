@@ -41,10 +41,13 @@ import org.mockito.Mock;
 import sonia.scm.ContextEntry;
 import sonia.scm.NotFoundException;
 import sonia.scm.PageResult;
+import sonia.scm.group.GroupManager;
 import sonia.scm.security.ApiKeyService;
 import sonia.scm.security.PermissionAssigner;
 import sonia.scm.security.PermissionDescriptor;
 import sonia.scm.user.ChangePasswordNotAllowedException;
+import sonia.scm.user.PermissionOverview;
+import sonia.scm.user.PermissionOverviewCollector;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
 import sonia.scm.web.RestDispatcher;
@@ -58,6 +61,8 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.function.Predicate;
 
+import static de.otto.edison.hal.Links.emptyLinks;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -95,6 +100,16 @@ public class UserRootResourceTest {
   private ApiKeyService apiKeyService;
   @Mock
   private PermissionAssigner permissionAssigner;
+  @Mock
+  private PermissionOverviewCollector permissionOverviewCollector;
+  @Mock
+  private RepositoryToRepositoryDtoMapper repositoryToRepositoryDtoMapper;
+  @Mock
+  private NamespaceToNamespaceDtoMapper namespaceToNamespaceDtoMapper;
+  @Mock
+  private GroupManager groupManager;
+  @Mock
+  private GroupToGroupDtoMapper groupToGroupDtoMapper;
   @InjectMocks
   private UserDtoToUserMapperImpl dtoToUserMapper;
   @InjectMocks
@@ -103,6 +118,8 @@ public class UserRootResourceTest {
   private PermissionCollectionToDtoMapper permissionCollectionToDtoMapper;
   @InjectMocks
   private ApiKeyToApiKeyDtoMapperImpl apiKeyMapper;
+  @InjectMocks
+  private PermissionOverviewToPermissionOverviewDtoMapperImpl permissionOverviewMapper;
 
   @Captor
   private ArgumentCaptor<User> userCaptor;
@@ -110,6 +127,7 @@ public class UserRootResourceTest {
   private ArgumentCaptor<Predicate<User>> filterCaptor;
 
   private User originalUser;
+  private MockHttpResponse response = new MockHttpResponse();
 
   @Before
   public void prepareEnvironment() {
@@ -125,7 +143,7 @@ public class UserRootResourceTest {
     UserCollectionResource userCollectionResource = new UserCollectionResource(userManager, dtoToUserMapper,
       userCollectionToDtoMapper, resourceLinks, passwordService);
     UserPermissionResource userPermissionResource = new UserPermissionResource(permissionAssigner, permissionCollectionToDtoMapper);
-    UserResource userResource = new UserResource(dtoToUserMapper, userToDtoMapper, userManager, passwordService, userPermissionResource);
+    UserResource userResource = new UserResource(dtoToUserMapper, userToDtoMapper, permissionOverviewMapper, userManager, passwordService, userPermissionResource, permissionOverviewCollector);
     ApiKeyCollectionToDtoMapper apiKeyCollectionToDtoMapper = new ApiKeyCollectionToDtoMapper(apiKeyMapper, resourceLinks);
     UserApiKeyResource userApiKeyResource = new UserApiKeyResource(apiKeyService, apiKeyCollectionToDtoMapper, apiKeyMapper, resourceLinks);
     UserRootResource userRootResource = new UserRootResource(Providers.of(userCollectionResource),
@@ -137,7 +155,6 @@ public class UserRootResourceTest {
   @Test
   public void shouldCreateFullResponseForAdmin() throws URISyntaxException, UnsupportedEncodingException {
     MockHttpRequest request = MockHttpRequest.get("/" + UserRootResource.USERS_PATH_V2 + "Neo");
-    MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
 
@@ -155,7 +172,6 @@ public class UserRootResourceTest {
       .post("/" + UserRootResource.USERS_PATH_V2)
       .contentType(VndMediaType.USER)
       .content(userJson.getBytes());
-    MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
 
@@ -177,7 +193,6 @@ public class UserRootResourceTest {
   @SubjectAware(username = "unpriv")
   public void shouldCreateLimitedResponseForSimpleUser() throws URISyntaxException, UnsupportedEncodingException {
     MockHttpRequest request = MockHttpRequest.get("/" + UserRootResource.USERS_PATH_V2 + "Neo");
-    MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
 
@@ -195,7 +210,6 @@ public class UserRootResourceTest {
       .put("/" + UserRootResource.USERS_PATH_V2 + "Neo/password")
       .contentType(VndMediaType.PASSWORD_OVERWRITE)
       .content(content.getBytes());
-    MockHttpResponse response = new MockHttpResponse();
     when(passwordService.encryptPassword(newPassword)).thenReturn("encrypted123");
 
     dispatcher.invoke(request, response);
@@ -213,7 +227,6 @@ public class UserRootResourceTest {
       .put("/" + UserRootResource.USERS_PATH_V2 + "Neo/password")
       .contentType(VndMediaType.PASSWORD_OVERWRITE)
       .content(content.getBytes());
-    MockHttpResponse response = new MockHttpResponse();
 
     doThrow(new ChangePasswordNotAllowedException(ContextEntry.ContextBuilder.entity("passwordChange", "-"), "xml")).when(userManager).overwritePassword(any(), any());
 
@@ -231,7 +244,6 @@ public class UserRootResourceTest {
       .put("/" + UserRootResource.USERS_PATH_V2 + "Neo/password")
       .contentType(VndMediaType.PASSWORD_OVERWRITE)
       .content(content.getBytes());
-    MockHttpResponse response = new MockHttpResponse();
 
     doThrow(new NotFoundException("Test", "x")).when(userManager).overwritePassword(any(), any());
 
@@ -249,7 +261,6 @@ public class UserRootResourceTest {
       .put("/" + UserRootResource.USERS_PATH_V2 + "Neo/password")
       .contentType(VndMediaType.PASSWORD_OVERWRITE)
       .content(content.getBytes());
-    MockHttpResponse response = new MockHttpResponse();
     when(passwordService.encryptPassword(newPassword)).thenReturn("encrypted123");
 
     dispatcher.invoke(request, response);
@@ -267,7 +278,6 @@ public class UserRootResourceTest {
       .post("/" + UserRootResource.USERS_PATH_V2)
       .contentType(VndMediaType.USER)
       .content(userJson);
-    MockHttpResponse response = new MockHttpResponse();
     when(passwordService.encryptPassword("pwd123")).thenReturn("encrypted123");
 
     dispatcher.invoke(request, response);
@@ -287,7 +297,6 @@ public class UserRootResourceTest {
       .put("/" + UserRootResource.USERS_PATH_V2 + "Neo")
       .contentType(VndMediaType.USER)
       .content(userJson);
-    MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
 
@@ -303,7 +312,6 @@ public class UserRootResourceTest {
       .post("/" + UserRootResource.USERS_PATH_V2)
       .contentType(VndMediaType.USER)
       .content(new byte[]{});
-    MockHttpResponse response = new MockHttpResponse();
     when(passwordService.encryptPassword("pwd123")).thenReturn("encrypted123");
 
     dispatcher.invoke(request, response);
@@ -314,7 +322,6 @@ public class UserRootResourceTest {
   @Test
   public void shouldGetNotFoundForNotExistentUser() throws URISyntaxException {
     MockHttpRequest request = MockHttpRequest.get("/" + UserRootResource.USERS_PATH_V2 + "nosuchuser");
-    MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
 
@@ -324,7 +331,6 @@ public class UserRootResourceTest {
   @Test
   public void shouldDeleteUser() throws Exception {
     MockHttpRequest request = MockHttpRequest.delete("/" + UserRootResource.USERS_PATH_V2 + "Neo");
-    MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
 
@@ -342,7 +348,6 @@ public class UserRootResourceTest {
       .put("/" + UserRootResource.USERS_PATH_V2 + "Other")
       .contentType(VndMediaType.USER)
       .content(userJson);
-    MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
 
@@ -360,7 +365,6 @@ public class UserRootResourceTest {
       .put("/" + UserRootResource.USERS_PATH_V2 + "Neo")
       .contentType(VndMediaType.USER)
       .content(userJson);
-    MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
 
@@ -373,7 +377,6 @@ public class UserRootResourceTest {
     PageResult<User> singletonPageResult = createSingletonPageResult(1);
     when(userManager.getPage(any(), any(), eq(0), eq(10))).thenReturn(singletonPageResult);
     MockHttpRequest request = MockHttpRequest.get("/" + UserRootResource.USERS_PATH_V2);
-    MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
 
@@ -389,7 +392,6 @@ public class UserRootResourceTest {
     PageResult<User> singletonPageResult = createSingletonPageResult(3);
     when(userManager.getPage(any(), any(), eq(1), eq(1))).thenReturn(singletonPageResult);
     MockHttpRequest request = MockHttpRequest.get("/" + UserRootResource.USERS_PATH_V2 + "?page=1&pageSize=1");
-    MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
 
@@ -407,7 +409,6 @@ public class UserRootResourceTest {
     PageResult<User> singletonPageResult = createSingletonPageResult(1);
     when(userManager.getPage(filterCaptor.capture(), any(), eq(0), eq(10))).thenReturn(singletonPageResult);
     MockHttpRequest request = MockHttpRequest.get("/" + UserRootResource.USERS_PATH_V2 + "?q=One");
-    MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
 
@@ -427,7 +428,6 @@ public class UserRootResourceTest {
   @Test
   public void shouldGetPermissionLink() throws URISyntaxException, UnsupportedEncodingException {
     MockHttpRequest request = MockHttpRequest.get("/" + UserRootResource.USERS_PATH_V2 + "Neo");
-    MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
 
@@ -440,7 +440,6 @@ public class UserRootResourceTest {
   public void shouldGetPermissions() throws URISyntaxException, UnsupportedEncodingException {
     when(permissionAssigner.readPermissionsForUser("Neo")).thenReturn(singletonList(new PermissionDescriptor("something:*")));
     MockHttpRequest request = MockHttpRequest.get("/" + UserRootResource.USERS_PATH_V2 + "Neo/permissions");
-    MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
 
@@ -455,7 +454,6 @@ public class UserRootResourceTest {
       .put("/" + UserRootResource.USERS_PATH_V2 + "Neo/permissions")
       .contentType(VndMediaType.PERMISSION_COLLECTION)
       .content("{\"permissions\":[\"other:*\"]}".getBytes());
-    MockHttpResponse response = new MockHttpResponse();
     ArgumentCaptor<Collection<PermissionDescriptor>> captor = ArgumentCaptor.forClass(Collection.class);
     doNothing().when(permissionAssigner).setPermissionsForUser(eq("Neo"), captor.capture());
 
@@ -467,6 +465,19 @@ public class UserRootResourceTest {
   }
 
   @Test
+  public void shouldGetPermissionsOverviewWithNamespaces() throws URISyntaxException, UnsupportedEncodingException {
+    when(permissionOverviewCollector.create("Neo")).thenReturn(new PermissionOverview(emptyList(), singletonList("hog"), emptyList()));
+    when(namespaceToNamespaceDtoMapper.map("hog")).thenReturn(new NamespaceDto("hog", emptyLinks()));
+    MockHttpRequest request = MockHttpRequest.get("/" + UserRootResource.USERS_PATH_V2 + "Neo/permissionOverview");
+
+    dispatcher.invoke(request, response);
+
+    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_OK);
+    assertThat(response.getContentAsString()).contains("hog");
+    assertThat(response.getContentAsString()).contains("\"self\":{\"href\":\"/v2/users/Neo/permissionOverview\"}");
+  }
+
+  @Test
   public void shouldConvertUserToInternalAndSetNewPassword() throws URISyntaxException {
     when(passwordService.encryptPassword(anyString())).thenReturn("abc");
     ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
@@ -474,7 +485,6 @@ public class UserRootResourceTest {
       .put("/" + UserRootResource.USERS_PATH_V2 + "Neo/convert-to-internal")
       .contentType(VndMediaType.USER)
       .content("{\"newPassword\":\"trillian\"}".getBytes());
-    MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
 
@@ -492,7 +502,6 @@ public class UserRootResourceTest {
     MockHttpRequest request = MockHttpRequest
       .put("/" + UserRootResource.USERS_PATH_V2 + "Neo/convert-to-external")
       .contentType(VndMediaType.USER);
-    MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
 

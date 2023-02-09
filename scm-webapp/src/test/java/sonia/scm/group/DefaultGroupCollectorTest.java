@@ -30,17 +30,21 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.HandlerEventType;
 import sonia.scm.cache.MapCache;
 import sonia.scm.cache.MapCacheManager;
 import sonia.scm.security.LogoutEvent;
+import sonia.scm.store.ConfigurationStore;
+import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.user.User;
 import sonia.scm.user.UserEvent;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -59,6 +63,11 @@ class DefaultGroupCollectorTest {
   @Mock
   private GroupResolver groupResolver;
 
+  @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+  private ConfigurationStoreFactory configurationStoreFactory;
+  @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+  private ConfigurationStore configurationStore;
+
   private MapCacheManager mapCacheManager;
 
   private Set<GroupResolver> groupResolvers;
@@ -69,7 +78,14 @@ class DefaultGroupCollectorTest {
   void initCollector() {
     groupResolvers = new HashSet<>();
     mapCacheManager = new MapCacheManager();
-    collector = new DefaultGroupCollector(groupDAO, mapCacheManager, groupResolvers);
+    collector = new DefaultGroupCollector(groupDAO, mapCacheManager, groupResolvers, configurationStoreFactory);
+  }
+
+  @BeforeEach
+  void initStore() {
+    when(configurationStoreFactory.withType(UserGroupCache.class).withName("user-group-cache").build())
+      .thenReturn(configurationStore);
+    when(configurationStore.getOptional()).thenReturn(Optional.empty());
   }
 
   @Test
@@ -141,7 +157,16 @@ class DefaultGroupCollectorTest {
     verify(groupDAO, never()).getAll();
   }
 
+  @Test
+  void shouldGetCachedGroupsFromLastLogin() {
+    UserGroupCache cache = new UserGroupCache();
+    cache.put("trillian", Set.of("hog"));
+    when(configurationStore.getOptional()).thenReturn(Optional.of(cache));
 
+    Set<String> cachedGroups = collector.fromLastLoginPlusInternal("trillian");
+
+    assertThat(cachedGroups).contains("hog");
+  }
 
   @Nested
   class WithGroupsFromDao {
@@ -168,6 +193,24 @@ class DefaultGroupCollectorTest {
       groupResolvers.add(groupResolver);
       Iterable<String> groupNames = collector.collect("trillian");
       assertThat(groupNames).containsOnly("_authenticated", "heartOfGold", "fjordsOfAfrican", "awesome", "incredible");
+    }
+
+    @Test
+    void shouldGetScmGroupsForLastLoginWhenNothingCached() {
+      Set<String> cachedGroups = collector.fromLastLoginPlusInternal("trillian");
+
+      assertThat(cachedGroups).contains("heartOfGold", "fjordsOfAfrican");
+    }
+
+    @Test
+    void shouldGetCachedGroupsFromLastLoginWithInternalGroups() {
+      UserGroupCache cache = new UserGroupCache();
+      cache.put("trillian", Set.of("earth"));
+      when(configurationStore.getOptional()).thenReturn(Optional.of(cache));
+
+      Set<String> cachedGroups = collector.fromLastLoginPlusInternal("trillian");
+
+      assertThat(cachedGroups).contains("earth", "heartOfGold", "fjordsOfAfrican");
     }
   }
 }

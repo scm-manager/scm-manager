@@ -24,7 +24,7 @@
 
 import { ApiResult, useRequiredIndexLink } from "./base";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { Link, Me, User, UserCollection, UserCreation } from "@scm-manager/ui-types";
+import { Link, Me, PermissionOverview, User, UserCollection, UserCreation } from "@scm-manager/ui-types";
 import { apiClient } from "./apiclient";
 import { createQueryString } from "./utils";
 import { concat } from "./urls";
@@ -62,6 +62,13 @@ export const useUser = (name: string): ApiResult<User> => {
   const indexLink = useRequiredIndexLink("users");
   return useQuery<User, Error>(["user", name], () =>
     apiClient.get(concat(indexLink, name)).then((response) => response.json())
+  );
+};
+
+export const useUserPermissionOverview = (user: User): ApiResult<PermissionOverview> => {
+  const overviewLink = user._links.permissionOverview as Link;
+  return useQuery<PermissionOverview, Error>(["user", user.name, "permissionOverview"], () =>
+    apiClient.get(overviewLink.href).then((response) => response.json())
   );
 };
 

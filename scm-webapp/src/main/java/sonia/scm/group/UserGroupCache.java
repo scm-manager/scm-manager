@@ -21,36 +21,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
-import { Redirect, useLocation } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import { useCreateGroup, useUserSuggestions, urls } from "@scm-manager/ui-api";
-import { Page } from "@scm-manager/ui-components";
-import GroupForm from "../components/GroupForm";
 
-const CreateGroup: FC = () => {
-  const [t] = useTranslation("groups");
-  const { isLoading, create, error, group } = useCreateGroup();
-  const userSuggestions = useUserSuggestions();
-  const location = useLocation();
+package sonia.scm.group;
 
-  if (group) {
-    return <Redirect to={`/group/${group.name}`} />;
+import sonia.scm.xml.XmlMapMultiStringAdapter;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+import static java.util.Collections.emptySet;
+
+@XmlRootElement(name = "user-group-cache")
+@XmlAccessorType(XmlAccessType.FIELD)
+class UserGroupCache {
+  @XmlJavaTypeAdapter(XmlMapMultiStringAdapter.class)
+  private Map<String, Set<String>> cache;
+
+  Set<String> get(String user) {
+    if (cache == null) {
+      return emptySet();
+    }
+    return cache.getOrDefault(user, emptySet());
   }
 
-  return (
-    <Page title={t("addGroup.title")} subtitle={t("addGroup.subtitle")} error={error || undefined}>
-      <div>
-        <GroupForm
-          submitForm={create}
-          loading={isLoading}
-          loadUserSuggestions={userSuggestions}
-          transmittedName={urls.getValueStringFromLocationByKey(location, "name")}
-          transmittedExternal={urls.getValueStringFromLocationByKey(location, "external") === "true"}
-        />
-      </div>
-    </Page>
-  );
-};
-
-export default CreateGroup;
+  void put(String user, Set<String> groups) {
+    if (cache == null) {
+      cache = new HashMap<>();
+    }
+    cache.put(user, groups);
+  }
+}

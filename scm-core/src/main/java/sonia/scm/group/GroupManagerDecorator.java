@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.group;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -30,6 +30,7 @@ import sonia.scm.ManagerDecorator;
 import sonia.scm.search.SearchRequest;
 
 import java.util.Collection;
+import java.util.Set;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -100,7 +101,10 @@ public class GroupManagerDecorator
     return decorated.getGroupsForMember(member);
   }
 
-  //~--- fields ---------------------------------------------------------------
+  @Override
+  public Set<String> getAllNames() {
+    return decorated.getAllNames();
+  }
 
   /** Field description */
   private final GroupManager decorated;

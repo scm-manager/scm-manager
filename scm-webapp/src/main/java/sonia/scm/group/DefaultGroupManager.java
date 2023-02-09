@@ -37,7 +37,6 @@ import sonia.scm.HandlerEventType;
 import sonia.scm.ManagerDaoAdapter;
 import sonia.scm.NotFoundException;
 import sonia.scm.SCMContextProvider;
-import sonia.scm.TransformFilter;
 import sonia.scm.search.SearchRequest;
 import sonia.scm.search.SearchUtil;
 import sonia.scm.util.CollectionAppender;
@@ -50,7 +49,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Predicate;
+
+import static java.util.stream.Collectors.toSet;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -346,7 +348,11 @@ public class DefaultGroupManager extends AbstractGroupManager
     return groupDAO.getLastModified();
   }
 
-  //~--- methods --------------------------------------------------------------
+  @Override
+  public Set<String> getAllNames() {
+    GroupPermissions.list().check();
+    return groupDAO.getAll().stream().map(Group::getName).collect(toSet());
+  }
 
   /**
    * Remove duplicate members from group.

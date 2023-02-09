@@ -21,36 +21,42 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
-import { Redirect, useLocation } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import { useCreateGroup, useUserSuggestions, urls } from "@scm-manager/ui-api";
-import { Page } from "@scm-manager/ui-components";
-import GroupForm from "../components/GroupForm";
 
-const CreateGroup: FC = () => {
-  const [t] = useTranslation("groups");
-  const { isLoading, create, error, group } = useCreateGroup();
-  const userSuggestions = useUserSuggestions();
-  const location = useLocation();
+package sonia.scm.api.v2.resources;
 
-  if (group) {
-    return <Redirect to={`/group/${group.name}`} />;
+import de.otto.edison.hal.Embedded;
+import de.otto.edison.hal.HalRepresentation;
+import de.otto.edison.hal.Links;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.Collection;
+
+@Getter
+@Setter
+@SuppressWarnings("java:S2160") // no equals needed in dto
+class PermissionOverviewDto extends HalRepresentation {
+
+  private Collection<PermissionOverviewDto.GroupEntryDto> relevantGroups;
+  private Collection<String> relevantNamespaces;
+  private Collection<RepositoryEntry> relevantRepositories;
+
+  PermissionOverviewDto(Links links, Embedded embedded) {
+    super(links, embedded);
   }
 
-  return (
-    <Page title={t("addGroup.title")} subtitle={t("addGroup.subtitle")} error={error || undefined}>
-      <div>
-        <GroupForm
-          submitForm={create}
-          loading={isLoading}
-          loadUserSuggestions={userSuggestions}
-          transmittedName={urls.getValueStringFromLocationByKey(location, "name")}
-          transmittedExternal={urls.getValueStringFromLocationByKey(location, "external") === "true"}
-        />
-      </div>
-    </Page>
-  );
-};
+  @Getter
+  @Setter
+  static class GroupEntryDto {
+    private String name;
+    private boolean permissions;
+    private boolean externalOnly;
+  }
 
-export default CreateGroup;
+  @Getter
+  @Setter
+  static class RepositoryEntry {
+    private String namespace;
+    private String name;
+  }
+}

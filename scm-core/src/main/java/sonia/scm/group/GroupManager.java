@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.group;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -30,13 +30,14 @@ import sonia.scm.Manager;
 import sonia.scm.search.Searchable;
 
 import java.util.Collection;
+import java.util.Set;
 
 //~--- JDK imports ------------------------------------------------------------
 
 /**
  * The central class for managing {@link Group}s.
  * This class is a singleton and is available via injection.
- * 
+ *
  * @author Sebastian Sdorra
  */
 public interface GroupManager
@@ -51,5 +52,12 @@ public interface GroupManager
    *
    * @return all groups assigned to the given member
    */
-  public Collection<Group> getGroupsForMember(String member);
+  Collection<Group> getGroupsForMember(String member);
+
+  /**
+   * Returns a {@link Set} of all group names.
+   *
+   * @since 2.42.0
+   */
+  Set<String> getAllNames();
 }

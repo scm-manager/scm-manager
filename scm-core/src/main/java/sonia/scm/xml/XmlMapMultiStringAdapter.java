@@ -22,22 +22,53 @@
  * SOFTWARE.
  */
 
-package sonia.scm.group;
+package sonia.scm.xml;
 
+import sonia.scm.util.Util;
+
+import javax.xml.bind.annotation.adapters.XmlAdapter;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
-public interface GroupCollector {
+public class XmlMapMultiStringAdapter
+        extends XmlAdapter<XmlMapMultiStringElement[], Map<String, Set<String>>> {
 
-  String AUTHENTICATED = "_authenticated";
+  @Override
+  public XmlMapMultiStringElement[] marshal(Map<String, Set<String>> map) throws Exception {
+    XmlMapMultiStringElement[] elements;
 
-  Set<String> collect(String principal);
+    if (Util.isNotEmpty(map)) {
+      int i = 0;
+      int s = map.size();
 
-  /**
-   * Returns the groups of the user that had been assigned at the last login (including all
-   * external groups) and the current internal groups associated to the user. If the
-   * user had not logged in before, only the current internal groups will be returned.
-   *
-   * @since 2.42.0
-   */
-  Set<String> fromLastLoginPlusInternal(String principal);
+      elements = new XmlMapMultiStringElement[s];
+
+      for (Map.Entry<String, Set<String>> e : map.entrySet()) {
+        elements[i] = new XmlMapMultiStringElement(e.getKey(), e.getValue());
+        i++;
+      }
+    } else {
+      elements = new XmlMapMultiStringElement[0];
+    }
+
+    return elements;
+  }
+
+  @Override
+  public Map<String, Set<String>> unmarshal(XmlMapMultiStringElement[] elements)
+          throws Exception
+  {
+    Map<String, Set<String>> map = new HashMap<>();
+
+    if (elements != null)
+    {
+      for (XmlMapMultiStringElement e : elements)
+      {
+        map.put(e.getKey(), e.getValue());
+      }
+    }
+
+    return map;
+  }
 }
