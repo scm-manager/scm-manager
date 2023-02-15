@@ -171,6 +171,7 @@ pipeline {
             authGit 'SCM-Manager', "push origin ${env.BRANCH_NAME} --tags"
           }
           authGit 'SCM-Manager', 'push origin --tags'
+          authGit 'cesmarvin', "push --tags https://github.com/scm-manager/scm-manager"
         }
       }
     }
