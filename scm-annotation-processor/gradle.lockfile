@@ -25,5 +25,5 @@ org.ow2.asm:asm-analysis:9.1=jacocoAntCopy
 org.ow2.asm:asm-commons:9.1=jacocoAntCopy
 org.ow2.asm:asm-tree:9.1=jacocoAntCopy
 org.ow2.asm:asm:9.1=jacocoAntCopy
-org.slf4j:slf4j-api:1.7.30=compileClasspath,compileClasspathCopy,default,defaultCopy,runtimeClasspath,runtimeClasspathCopy,testCompileClasspath,testCompileClasspathCopy,testRuntimeClasspath,testRuntimeClasspathCopy
+org.slf4j:slf4j-api:1.7.36=compileClasspath,compileClasspathCopy,default,defaultCopy,runtimeClasspath,runtimeClasspathCopy,testCompileClasspath,testCompileClasspathCopy,testRuntimeClasspath,testRuntimeClasspathCopy
 empty=archives,archivesCopy,testAnnotationProcessor,testAnnotationProcessorCopy

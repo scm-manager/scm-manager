@@ -26,7 +26,7 @@ plugins {
   id 'org.scm-manager.smp' version '0.13.0'
 }
 
-def svnkitVersion = '1.10.3-scm2'
+def svnkitVersion = '1.10.10-scm1'
 
 dependencies {
   implementation("sonia.svnkit:svnkit:${svnkitVersion}") {
