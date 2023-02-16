@@ -219,7 +219,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       defaultBranchSelector.newDefaultBranch().ifPresent(this::setNewDefaultBranch);
 
       String[] pushRefSpecs = generatePushRefSpecs().toArray(new String[0]);
-      push(pushRefSpecs);
+      forcePush(pushRefSpecs);
       ResultType finalResult = lfsUpdateResult.hasFailures()? FAILED: result;
       return new MirrorCommandResult(finalResult, mirrorLog, stopwatch.stop().elapsed(), lfsUpdateResult);
     }

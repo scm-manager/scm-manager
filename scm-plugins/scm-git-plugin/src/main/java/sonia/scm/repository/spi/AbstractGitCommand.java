@@ -42,6 +42,8 @@ import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.RemoteRefUpdate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.ConcurrentModificationException;
+import sonia.scm.ContextEntry;
 import sonia.scm.repository.GitWorkingCopyFactory;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Person;
@@ -62,6 +64,7 @@ import static java.util.Optional.of;
 import static java.util.stream.Collectors.toList;
 import static org.eclipse.jgit.transport.RemoteRefUpdate.Status.NON_EXISTING;
 import static org.eclipse.jgit.transport.RemoteRefUpdate.Status.OK;
+import static org.eclipse.jgit.transport.RemoteRefUpdate.Status.REJECTED_NONFASTFORWARD;
 import static org.eclipse.jgit.transport.RemoteRefUpdate.Status.UP_TO_DATE;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
@@ -247,13 +250,21 @@ class AbstractGitCommand {
     }
 
     void push(String... refSpecs) {
+      push(false, refSpecs);
+    }
+
+    void forcePush(String... refSpecs) {
+      push(true, refSpecs);
+    }
+
+    private void push(boolean force, String... refSpecs) {
       logger.trace("Pushing mirror result to repository {} with refspec '{}'", repository, refSpecs);
       try {
         Iterable<PushResult> pushResults =
           clone
             .push()
             .setRefSpecs(stream(refSpecs).map(RefSpec::new).collect(toList()))
-            .setForce(true)
+            .setForce(force)
             .call();
         Iterator<PushResult> pushResultIterator = pushResults.iterator();
         if (!pushResultIterator.hasNext()) {
@@ -269,8 +280,13 @@ class AbstractGitCommand {
           .filter(remoteRefUpdate -> !ACCEPTED_UPDATE_STATUS.contains(remoteRefUpdate.getStatus()))
           .findAny()
           .ifPresent(remoteRefUpdate -> {
-            logger.info("message for unexpected push result {} for remote {}: {}", remoteRefUpdate.getStatus(), remoteRefUpdate.getRemoteName(), pushResult.getMessages());
-            throw forMessage(repository, pushResult.getMessages());
+            if (remoteRefUpdate.getStatus() == REJECTED_NONFASTFORWARD) {
+              logger.debug("non fast-forward change detected; probably the remote {} has been changed during the modification: {}", remoteRefUpdate.getRemoteName(), pushResult.getMessages());
+              throw new ConcurrentModificationException(ContextEntry.ContextBuilder.entity("Branch", remoteRefUpdate.getRemoteName()).in(repository).build());
+            } else {
+              logger.info("message for unexpected push result {} for remote {}: {}", remoteRefUpdate.getStatus(), remoteRefUpdate.getRemoteName(), pushResult.getMessages());
+              throw forMessage(repository, pushResult.getMessages());
+            }
           });
       } catch (GitAPIException e) {
         throw new InternalRepositoryException(repository, "could not push changes into central repository", e);
