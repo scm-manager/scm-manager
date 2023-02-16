@@ -19,6 +19,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Update svnkit to version 1.10.10-scm1
 
+## [2.41.1] - 2023-02-16
+### Fixed
+- Unconditional force push from editor or merges
+
 ## [2.41.0] - 2023-01-18
 ### Added
 - Add abstract configuration adapter to simply creating new global configurations
@@ -1218,4 +1222,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.40.0]: https://scm-manager.org/download/2.40.0
 [2.40.1]: https://scm-manager.org/download/2.40.1
 [2.41.0]: https://scm-manager.org/download/2.41.0
+[2.41.1]: https://scm-manager.org/download/2.41.1
 [2.42.0]: https://scm-manager.org/download/2.42.0
