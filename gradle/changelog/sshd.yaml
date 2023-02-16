@@ -1,2 +1,0 @@
-- type: fixed
-  description: Remove sshd dependency that may cause an injection failure on server startup with installed ssh plugin
