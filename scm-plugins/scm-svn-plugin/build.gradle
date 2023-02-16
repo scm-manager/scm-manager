@@ -31,8 +31,13 @@ def svnkitVersion = '1.10.10-scm1'
 dependencies {
   implementation("sonia.svnkit:svnkit:${svnkitVersion}") {
     exclude group: 'org.tmatesoft.svnkit', module: 'trilead-ssh2'
+    exclude group: 'org.apache.sshd', module: 'sshd-core'
+    exclude group: 'org.apache.sshd', module: 'sshd-common'
   }
-  implementation "sonia.svnkit:svnkit-dav:${svnkitVersion}"
+  implementation ("sonia.svnkit:svnkit-dav:${svnkitVersion}") {
+    exclude group: 'org.apache.sshd', module: 'sshd-core'
+    exclude group: 'org.apache.sshd', module: 'sshd-common'
+  }
   testImplementation libraries.shiroUnit
 }
 
