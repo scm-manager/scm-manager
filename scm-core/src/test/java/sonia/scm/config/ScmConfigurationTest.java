@@ -25,6 +25,8 @@
 package sonia.scm.config;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -43,4 +45,11 @@ class ScmConfigurationTest {
     assertThat(scmConfiguration.isDefaultPluginAuthUrl()).isFalse();
   }
 
+  @ParameterizedTest
+  @CsvSource({"https://hog.hitchiker.com/scm,scm", "https://hog.hitchiker.com/scm/,scm", "https://hog.hitchiker.com/,", "https://hog.hitchiker.com,"})
+  void shouldReturnContextPath(String input, String expected) {
+    scmConfiguration.setBaseUrl(input);
+
+    assertThat(scmConfiguration.getServerContextPath()).isEqualTo(expected == null ? "" : expected);
+  }
 }

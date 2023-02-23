@@ -1,0 +1,2 @@
+- type: fixed
+  description: Resolution of repositories from ssh urls with context paths

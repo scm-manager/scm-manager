@@ -41,6 +41,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.File;
+import java.net.URI;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -304,6 +305,22 @@ public class ScmConfiguration implements Configuration {
    */
   public String getBaseUrl() {
     return baseUrl;
+  }
+
+  /**
+   * Returns the context path from the base url (see {@link #getBaseUrl()}) without starting or ending slashes.
+   *
+   * @since 2.42.0
+   */
+  public String getServerContextPath() {
+    String path = URI.create(getBaseUrl()).getPath();
+    if (path.startsWith("/") && path.length() > 1) {
+      path = path.substring(1);
+    }
+    if (path.endsWith("/")) {
+      return path.substring(0, path.length() - 1);
+    }
+    return path;
   }
 
   /**
