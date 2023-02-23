@@ -52,6 +52,7 @@ public class GitIncomingCommandTest
 
   private final LfsLoader lfsLoader = mock(LfsLoader.class);
   private final PullHttpConnectionProvider pullHttpConnectionProvider = mock(PullHttpConnectionProvider.class);
+  private final GitRepositoryConfigStoreProvider storeProvider = mock(GitRepositoryConfigStoreProvider.class);
 
   /**
    * Method description
@@ -105,7 +106,8 @@ public class GitIncomingCommandTest
       context,
       postReceiveRepositoryHookEventFactory,
       lfsLoader,
-      pullHttpConnectionProvider);
+      pullHttpConnectionProvider,
+      storeProvider);
     PullCommandRequest req = new PullCommandRequest();
     req.setRemoteRepository(outgoingRepository);
     pull.pull(req);

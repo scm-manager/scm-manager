@@ -33,6 +33,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
 import sonia.scm.repository.GitConfig;
 import sonia.scm.repository.Modifications;
 
@@ -54,6 +55,8 @@ public class GitModificationsCommandTest extends AbstractRemoteCommandTestBase {
   private LfsLoader lfsLoader;
   @Mock
   private PullHttpConnectionProvider pullHttpConnectionProvider;
+  @Mock
+  private GitRepositoryConfigStoreProvider storeProvider;
 
   @Before
   public void init() {
@@ -179,7 +182,8 @@ public class GitModificationsCommandTest extends AbstractRemoteCommandTestBase {
       context,
       postReceiveRepositoryHookEventFactory,
       lfsLoader,
-      pullHttpConnectionProvider);
+      pullHttpConnectionProvider,
+      storeProvider);
     PullCommandRequest pullRequest = new PullCommandRequest();
     pullRequest.setRemoteRepository(incomingRepository);
     pullCommand.pull(pullRequest);

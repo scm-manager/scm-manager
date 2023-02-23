@@ -47,7 +47,6 @@ import sonia.scm.net.HttpURLConnectionFactory;
 import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.GitConfig;
 import sonia.scm.repository.GitHeadModifier;
-import sonia.scm.repository.GitRepositoryConfig;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.api.MirrorCommandResult;
 import sonia.scm.repository.api.MirrorFilter;
@@ -56,7 +55,6 @@ import sonia.scm.repository.work.NoneCachingWorkingCopyPool;
 import sonia.scm.repository.work.SimpleWorkingCopyFactory;
 import sonia.scm.repository.work.WorkdirProvider;
 import sonia.scm.security.GPG;
-import sonia.scm.store.ConfigurationStore;
 import sonia.scm.store.InMemoryConfigurationStoreFactory;
 import sonia.scm.util.IOUtil;
 
@@ -76,13 +74,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.AdditionalMatchers.not;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static sonia.scm.repository.api.MirrorCommandResult.ResultType.FAILED;
 import static sonia.scm.repository.api.MirrorCommandResult.ResultType.OK;
 import static sonia.scm.repository.api.MirrorCommandResult.ResultType.REJECTED_UPDATES;
@@ -107,10 +103,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
   private final GitHeadModifier gitHeadModifier = mock(GitHeadModifier.class);
 
   private final GitRepositoryConfigStoreProvider storeProvider = mock(GitRepositoryConfigStoreProvider.class);
-  private final ConfigurationStore<GitRepositoryConfig> configurationStore = mock(ConfigurationStore.class);
   private final LfsLoader lfsLoader = mock(LfsLoader.class);
-
-  private final GitRepositoryConfig gitRepositoryConfig = new GitRepositoryConfig();
 
   @Before
   public void bendContextToNewRepository() throws IOException, GitAPIException {
@@ -144,12 +137,6 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
       gitHeadModifier,
       storeProvider,
       lfsLoader);
-  }
-
-  @Before
-  public void initializeStores() {
-    when(storeProvider.get(repository)).thenReturn(configurationStore);
-    when(configurationStore.get()).thenReturn(gitRepositoryConfig);
   }
 
   @After
@@ -834,10 +821,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
         assertThat(update.getBranchName()).isEqualTo("master");
         assertThat(update.getNewRevision()).isEmpty();
       });
-    verify(configurationStore).set(argThat(argument -> {
-      assertThat(argument.getDefaultBranch()).isNotEqualTo("master");
-      return true;
-    }));
+    verify(storeProvider).setDefaultBranch(eq(repository), not(eq("master")));
   }
 
   @Test

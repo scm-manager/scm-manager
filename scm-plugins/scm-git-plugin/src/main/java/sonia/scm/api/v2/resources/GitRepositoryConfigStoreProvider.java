@@ -49,6 +49,15 @@ public class GitRepositoryConfigStoreProvider {
     return getFromStore(createStore(repositoryId));
   }
 
+  public void setDefaultBranch(Repository repository, String newDefaultBranch) {
+    ConfigurationStore<GitRepositoryConfig> configStore = get(repository);
+    GitRepositoryConfig gitRepositoryConfig = configStore
+      .getOptional()
+      .orElse(new GitRepositoryConfig());
+    gitRepositoryConfig.setDefaultBranch(newDefaultBranch);
+    configStore.set(gitRepositoryConfig);
+  }
+
   private static GitRepositoryConfig getFromStore(ConfigurationStore<GitRepositoryConfig> store) {
     return store.getOptional().orElse(new GitRepositoryConfig());
   }

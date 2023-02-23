@@ -35,12 +35,10 @@ import sonia.scm.ConcurrentModificationException;
 import sonia.scm.ContextEntry;
 import sonia.scm.NoChangesMadeException;
 import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
-import sonia.scm.repository.GitRepositoryConfig;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.GitWorkingCopyFactory;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
-import sonia.scm.store.ConfigurationStore;
 import sonia.scm.web.lfs.LfsBlobStoreFactory;
 
 import javax.inject.Inject;
@@ -129,13 +127,7 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
     }
 
     private void setBranchInConfig(String branch) {
-      ConfigurationStore<GitRepositoryConfig> store = gitRepositoryConfigStoreProvider
-        .get(repository);
-      GitRepositoryConfig gitRepositoryConfig = store
-        .getOptional()
-        .orElse(new GitRepositoryConfig());
-      gitRepositoryConfig.setDefaultBranch(branch);
-      store.set(gitRepositoryConfig);
+      gitRepositoryConfigStoreProvider.setDefaultBranch(repository, branch);
     }
 
     @Override

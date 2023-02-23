@@ -27,9 +27,10 @@ package sonia.scm.repository.api;
 import lombok.Value;
 
 /**
- * The {@link PullResponse} is the result of the
- * {@link PullCommandBuilder#pull(sonia.scm.repository.Repository)} method and
- * contains informations over the executed pull command.
+ * The {@link PullResponse} is the result of the methods
+ * {@link PullCommandBuilder#pull(sonia.scm.repository.Repository)} and
+ * {@link PullCommandBuilder#pull(String)} and
+ * contains information for the executed pull command.
  *
  * @author Sebastian Sdorra
  * @since 1.31

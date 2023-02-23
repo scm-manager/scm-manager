@@ -30,6 +30,7 @@ import com.google.common.collect.Iterables;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.transport.FetchResult;
 import org.eclipse.jgit.transport.TrackingRefUpdate;
@@ -37,6 +38,7 @@ import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.ContextEntry;
+import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.Repository;
@@ -59,17 +61,20 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
   private final PostReceiveRepositoryHookEventFactory postReceiveRepositoryHookEventFactory;
   private final LfsLoader lfsLoader;
   private final PullHttpConnectionProvider pullHttpConnectionProvider;
+  private final GitRepositoryConfigStoreProvider storeProvider;
 
   @Inject
   public GitPullCommand(GitRepositoryHandler handler,
                         GitContext context,
                         PostReceiveRepositoryHookEventFactory postReceiveRepositoryHookEventFactory,
                         LfsLoader lfsLoader,
-                        PullHttpConnectionProvider pullHttpConnectionProvider) {
+                        PullHttpConnectionProvider pullHttpConnectionProvider,
+                        GitRepositoryConfigStoreProvider storeProvider) {
     super(handler, context);
     this.postReceiveRepositoryHookEventFactory = postReceiveRepositoryHookEventFactory;
     this.lfsLoader = lfsLoader;
     this.pullHttpConnectionProvider = pullHttpConnectionProvider;
+    this.storeProvider = storeProvider;
   }
 
   @Override
@@ -190,6 +195,9 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
       if (request.isFetchLfs()) {
         fetchLfs(request, git, lfsLoaderLogger);
       }
+
+      configureDefaultBranch(result);
+
       response = convert(git, result, lfsLoaderLogger);
     } catch
     (GitAPIException ex) {
@@ -203,6 +211,14 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
     firePostReceiveRepositoryHookEvent(git, result);
 
     return response;
+  }
+
+  private void configureDefaultBranch(FetchResult result) {
+    Ref head = result.getAdvertisedRef("HEAD").getLeaf();
+    if (head.getName().startsWith("refs/heads/")) {
+      String newDefaultBranch = head.getName().substring("refs/heads/".length());
+      storeProvider.setDefaultBranch(repository, newDefaultBranch);
+    }
   }
 
   private void fetchLfs(PullCommandRequest request, Git git, LfsLoader.LfsLoaderLogger lfsLoaderLogger) throws IOException {
