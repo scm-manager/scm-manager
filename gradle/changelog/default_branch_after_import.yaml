@@ -1,0 +1,2 @@
+- type: fixed
+  description: Set the default branch in imported Git repositories correctly to the HEAD of the source repository

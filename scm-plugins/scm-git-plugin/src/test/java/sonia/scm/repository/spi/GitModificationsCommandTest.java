@@ -35,6 +35,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
 import sonia.scm.repository.GitConfig;
+import sonia.scm.repository.GitHeadModifier;
 import sonia.scm.repository.Modifications;
 
 import java.io.File;
@@ -42,6 +43,7 @@ import java.io.IOException;
 import java.util.function.Consumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 
@@ -55,8 +57,6 @@ public class GitModificationsCommandTest extends AbstractRemoteCommandTestBase {
   private LfsLoader lfsLoader;
   @Mock
   private PullHttpConnectionProvider pullHttpConnectionProvider;
-  @Mock
-  private GitRepositoryConfigStoreProvider storeProvider;
 
   @Before
   public void init() {
@@ -183,7 +183,8 @@ public class GitModificationsCommandTest extends AbstractRemoteCommandTestBase {
       postReceiveRepositoryHookEventFactory,
       lfsLoader,
       pullHttpConnectionProvider,
-      storeProvider);
+      mock(GitRepositoryConfigStoreProvider.class),
+      mock(GitHeadModifier.class));
     PullCommandRequest pullRequest = new PullCommandRequest();
     pullRequest.setRemoteRepository(incomingRepository);
     pullCommand.pull(pullRequest);

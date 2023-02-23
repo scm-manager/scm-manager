@@ -39,6 +39,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.ContextEntry;
 import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
+import sonia.scm.repository.GitHeadModifier;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.Repository;
@@ -62,6 +63,7 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
   private final LfsLoader lfsLoader;
   private final PullHttpConnectionProvider pullHttpConnectionProvider;
   private final GitRepositoryConfigStoreProvider storeProvider;
+  private final GitHeadModifier gitHeadModifier;
 
   @Inject
   public GitPullCommand(GitRepositoryHandler handler,
@@ -69,12 +71,13 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
                         PostReceiveRepositoryHookEventFactory postReceiveRepositoryHookEventFactory,
                         LfsLoader lfsLoader,
                         PullHttpConnectionProvider pullHttpConnectionProvider,
-                        GitRepositoryConfigStoreProvider storeProvider) {
+                        GitRepositoryConfigStoreProvider storeProvider, GitHeadModifier gitHeadModifier) {
     super(handler, context);
     this.postReceiveRepositoryHookEventFactory = postReceiveRepositoryHookEventFactory;
     this.lfsLoader = lfsLoader;
     this.pullHttpConnectionProvider = pullHttpConnectionProvider;
     this.storeProvider = storeProvider;
+    this.gitHeadModifier = gitHeadModifier;
   }
 
   @Override
@@ -217,6 +220,7 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
     Ref head = result.getAdvertisedRef("HEAD").getLeaf();
     if (head.getName().startsWith("refs/heads/")) {
       String newDefaultBranch = head.getName().substring("refs/heads/".length());
+      gitHeadModifier.ensure(repository, newDefaultBranch);
       storeProvider.setDefaultBranch(repository, newDefaultBranch);
     }
   }

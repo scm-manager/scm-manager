@@ -24,8 +24,6 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.junit.Ignore;
@@ -33,6 +31,7 @@ import org.junit.Test;
 import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.GitConfig;
+import sonia.scm.repository.GitHeadModifier;
 import sonia.scm.repository.GitTestHelper;
 import sonia.scm.store.InMemoryConfigurationStoreFactory;
 
@@ -42,17 +41,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  * @author Sebastian Sdorra
  */
 public class GitIncomingCommandTest
   extends AbstractRemoteCommandTestBase {
-
-  private final LfsLoader lfsLoader = mock(LfsLoader.class);
-  private final PullHttpConnectionProvider pullHttpConnectionProvider = mock(PullHttpConnectionProvider.class);
-  private final GitRepositoryConfigStoreProvider storeProvider = mock(GitRepositoryConfigStoreProvider.class);
 
   /**
    * Method description
@@ -105,9 +98,10 @@ public class GitIncomingCommandTest
       handler,
       context,
       postReceiveRepositoryHookEventFactory,
-      lfsLoader,
-      pullHttpConnectionProvider,
-      storeProvider);
+      mock(LfsLoader.class),
+      mock(PullHttpConnectionProvider.class),
+      mock(GitRepositoryConfigStoreProvider.class),
+      mock(GitHeadModifier.class));
     PullCommandRequest req = new PullCommandRequest();
     req.setRemoteRepository(outgoingRepository);
     pull.pull(req);
