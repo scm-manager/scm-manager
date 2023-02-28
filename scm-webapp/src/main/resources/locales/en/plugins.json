@@ -410,6 +410,10 @@
     "8OT4gBVvp1": {
       "displayName": "Repository type invalid",
       "description": "The repository type is not supported."
+    },
+    "3ITWbABz91": {
+      "displayName": "API keys disabled",
+      "description": "The usage of API keys has been disabled in the global configuration. To use API keys, this has to be enabled again."
     }
   },
   "healthChecksFailures": {

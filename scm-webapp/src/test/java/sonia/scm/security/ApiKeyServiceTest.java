@@ -35,6 +35,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import sonia.scm.AlreadyExistsException;
 import sonia.scm.HandlerEventType;
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.store.DataStore;
 import sonia.scm.store.DataStoreFactory;
 import sonia.scm.store.InMemoryDataStore;
@@ -61,7 +62,8 @@ class ApiKeyServiceTest {
   ApiKeyTokenHandler tokenHandler = new ApiKeyTokenHandler();
   DataStoreFactory storeFactory = new InMemoryDataStoreFactory(new InMemoryDataStore<ApiKeyCollection>());
   DataStore<ApiKeyCollection> store = storeFactory.withType(ApiKeyCollection.class).withName("apiKeys").build();
-  ApiKeyService service = new ApiKeyService(storeFactory, passwordService, keyGenerator, tokenHandler, passphraseGenerator);
+  ScmConfiguration scmConfiguration = new ScmConfiguration();
+  ApiKeyService service = new ApiKeyService(storeFactory, passwordService, keyGenerator, tokenHandler, passphraseGenerator, scmConfiguration);
 
   @BeforeEach
   void mockPasswordService() {
@@ -176,6 +178,14 @@ class ApiKeyServiceTest {
       service.cleanupForDeletedUser(new UserEvent(HandlerEventType.DELETE, new User("dent")));
 
       assertThat(store.get("dent")).isNull();
+    }
+
+    @Test
+    void shouldFailIfApiKeysAreDisabled() {
+      scmConfiguration.setEnabledApiKeys(false);
+
+      assertThrows(ApiKeysDisabledException.class, () -> service.createNewKey("dent", "1", "READ"));
+
     }
   }
 }

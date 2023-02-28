@@ -29,6 +29,7 @@ import de.otto.edison.hal.Links;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ObjectFactory;
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.group.GroupPermissions;
 import sonia.scm.security.PermissionPermissions;
 import sonia.scm.user.User;
@@ -49,6 +50,8 @@ public abstract class UserToUserDtoMapper extends BaseMapper<User, UserDto> {
 
   @Inject
   private UserManager userManager;
+  @Inject
+  private ScmConfiguration scmConfiguration;
 
   @Override
   @Mapping(target = "attributes", ignore = true)
@@ -67,7 +70,9 @@ public abstract class UserToUserDtoMapper extends BaseMapper<User, UserDto> {
     if (UserPermissions.modify(user).isPermitted()) {
       linksBuilder.single(link("update", resourceLinks.user().update(user.getName())));
       linksBuilder.single(link("publicKeys", resourceLinks.user().publicKeys(user.getName())));
-      linksBuilder.single(link("apiKeys", resourceLinks.user().apiKeys(user.getName())));
+      if (scmConfiguration.isEnabledApiKeys()) {
+        linksBuilder.single(link("apiKeys", resourceLinks.user().apiKeys(user.getName())));
+      }
       if (user.isExternal()) {
         linksBuilder.single(link("convertToInternal", resourceLinks.user().toInternal(user.getName())));
       } else {

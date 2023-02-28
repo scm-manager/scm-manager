@@ -41,6 +41,7 @@ import org.mockito.Mock;
 import sonia.scm.ContextEntry;
 import sonia.scm.NotFoundException;
 import sonia.scm.PageResult;
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.group.GroupManager;
 import sonia.scm.security.ApiKeyService;
 import sonia.scm.security.PermissionAssigner;
@@ -110,6 +111,8 @@ public class UserRootResourceTest {
   private GroupManager groupManager;
   @Mock
   private GroupToGroupDtoMapper groupToGroupDtoMapper;
+  @Mock
+  private ScmConfiguration scmConfiguration;
   @InjectMocks
   private UserDtoToUserMapperImpl dtoToUserMapper;
   @InjectMocks

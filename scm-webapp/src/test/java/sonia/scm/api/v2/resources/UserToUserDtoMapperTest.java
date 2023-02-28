@@ -33,6 +33,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
 import sonia.scm.user.UserTestData;
@@ -55,6 +56,8 @@ public class UserToUserDtoMapperTest {
 
   @Mock
   private UserManager userManager;
+  @Mock
+  private ScmConfiguration scmConfiguration;
 
   @InjectMocks
   private UserToUserDtoMapperImpl mapper;
@@ -187,5 +190,27 @@ public class UserToUserDtoMapperTest {
 
     assertEquals("expected permissions link", expectedBaseUri.resolve("abc/permissions").toString(), userDto.getLinks().getLinkBy("permissions").get().getHref());
     assertEquals("expected permission overview link", expectedBaseUri.resolve("abc/permissionOverview").toString(), userDto.getLinks().getLinkBy("permissionOverview").get().getHref());
+  }
+
+  @Test
+  public void shouldMapApiKeyLinks_IfEnabled() {
+    User user = createDefaultUser();
+    when(subject.isPermitted("user:modify:abc")).thenReturn(true);
+    when(scmConfiguration.isEnabledApiKeys()).thenReturn(true);
+
+    UserDto userDto = mapper.map(user);
+
+    assertEquals("expected api key link", expectedBaseUri.resolve("abc/api_keys").toString(), userDto.getLinks().getLinkBy("apiKeys").get().getHref());
+  }
+
+  @Test
+  public void shouldNotMapApiKeyLinks_IfDisabled() {
+    User user = createDefaultUser();
+    when(subject.isPermitted("user:modify:abc")).thenReturn(true);
+    when(scmConfiguration.isEnabledApiKeys()).thenReturn(false);
+
+    UserDto userDto = mapper.map(user);
+
+    assertThat(userDto.getLinks().getLinkBy("apiKeys")).isEmpty();
   }
 }

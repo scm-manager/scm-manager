@@ -34,6 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.ContextEntry;
 import sonia.scm.HandlerEventType;
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.store.DataStore;
 import sonia.scm.store.DataStoreFactory;
 import sonia.scm.user.UserEvent;
@@ -53,6 +54,7 @@ import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang.RandomStringUtils.random;
 import static sonia.scm.AlreadyExistsException.alreadyExists;
 
+@SuppressWarnings("UnstableApiUsage")
 public class ApiKeyService {
 
   private static final Logger LOG = LoggerFactory.getLogger(ApiKeyService.class);
@@ -63,24 +65,29 @@ public class ApiKeyService {
   private final KeyGenerator keyGenerator;
   private final Supplier<String> passphraseGenerator;
   private final ApiKeyTokenHandler tokenHandler;
+  private final ScmConfiguration scmConfiguration;
 
   private final Striped<ReadWriteLock> locks = Striped.readWriteLock(10);
 
   @Inject
-  ApiKeyService(DataStoreFactory storeFactory, KeyGenerator keyGenerator, PasswordService passwordService, ApiKeyTokenHandler tokenHandler) {
-    this(storeFactory, passwordService, keyGenerator, tokenHandler, () -> random(PASSPHRASE_LENGTH, 0, 0, true, true, null, new SecureRandom()));
+  ApiKeyService(DataStoreFactory storeFactory, KeyGenerator keyGenerator, PasswordService passwordService, ApiKeyTokenHandler tokenHandler, ScmConfiguration scmConfiguration) {
+    this(storeFactory, passwordService, keyGenerator, tokenHandler, () -> random(PASSPHRASE_LENGTH, 0, 0, true, true, null, new SecureRandom()), scmConfiguration);
   }
 
-  ApiKeyService(DataStoreFactory storeFactory, PasswordService passwordService, KeyGenerator keyGenerator, ApiKeyTokenHandler tokenHandler, Supplier<String> passphraseGenerator) {
+  ApiKeyService(DataStoreFactory storeFactory, PasswordService passwordService, KeyGenerator keyGenerator, ApiKeyTokenHandler tokenHandler, Supplier<String> passphraseGenerator, ScmConfiguration scmConfiguration) {
     this.store = storeFactory.withType(ApiKeyCollection.class).withName("apiKeys").build();
     this.passwordService = passwordService;
     this.keyGenerator = keyGenerator;
     this.tokenHandler = tokenHandler;
     this.passphraseGenerator = passphraseGenerator;
+    this.scmConfiguration = scmConfiguration;
   }
 
   public CreationResult createNewKey(String username, String keyDisplayName, String permissionRole) {
     UserPermissions.changeApiKeys(username).check();
+    if (!scmConfiguration.isEnabledApiKeys()) {
+      throw new ApiKeysDisabledException();
+    }
     String passphrase = passphraseGenerator.get();
     String hashedPassphrase = passwordService.encryptPassword(passphrase);
     String id = keyGenerator.createKey();

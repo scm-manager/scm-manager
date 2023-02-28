@@ -45,7 +45,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import java.util.List;
 
@@ -104,11 +103,13 @@ public class CliResource {
     )
   )
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "404", description = "API keys disabled globally")
+  @ApiResponse(responseCode = "409", description = "There already is an API key with this name")
   @ApiResponse(responseCode = "500", description = "internal server error")
-  public Response login(CliAuthenticationDto auth) {
+  public String login(CliAuthenticationDto auth) {
     String username = SecurityUtils.getSubject().getPrincipal().toString();
     ApiKeyService.CreationResult newKey = service.createNewKey(username, auth.getApiKey(), "*");
-    return Response.ok(newKey.getToken()).build();
+    return newKey.getToken();
   }
 
   @DELETE
@@ -117,14 +118,13 @@ public class CliResource {
   @ApiResponse(responseCode = "204", description = "delete success or nothing to delete")
   @ApiResponse(responseCode = "400", description = "bad request, required parameter is missing")
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
-  public Response logout(@PathParam("apiKey") String apiKeyName) {
+  public void logout(@PathParam("apiKey") String apiKeyName) {
     String username = SecurityUtils.getSubject().getPrincipal().toString();
     service.getKeys(username)
       .stream()
       .filter(apiKey -> apiKey.getDisplayName().equals(apiKeyName))
       .findFirst()
       .ifPresent(apiKey -> service.remove(username, apiKey.getId()));
-    return Response.noContent().build();
   }
 
   @Data

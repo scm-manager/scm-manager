@@ -359,17 +359,25 @@
       "displayName": "Repository wird exportiert",
       "description": "Das Repository wird momentan exportiert und darf nicht modifiziert werden."
     },
-    "8YR7aawFW1": {
-      "displayName": "Aktuelles Passwort falsch",
-      "description": "Das aktuelle Passwort ist falsch. Bitte versuchen Sie es noch einmal."
-    },
     "5GSO9ZkzX1": {
       "displayName": "Inkompatible Umgebung",
       "description": "Die Version dieses SCM-Managers oder eines der installierten Plugins ist zu alt für den Import des Dumps. Bitte installieren Sie die neuesten Versionen. Nähere Informationen finden sich im Log."
     },
+    "8YR7aawFW1": {
+      "displayName": "Aktuelles Passwort falsch",
+      "description": "Das aktuelle Passwort ist falsch. Bitte versuchen Sie es noch einmal."
+    },
     "CISPvega31": {
       "displayName": "Ungültiger Repository-Typ für Import",
       "description": "Der Import ist für den gegebenen Repository-Typen nicht möglich."
+    },
+    "3mSmwOtOd1": {
+      "displayName": "Datei gesperrt",
+      "description": "Die Datei oder ihre Sperre kann nicht bearbeitet werden, da eine andere Sperre existiert. Die andere Sperre kann ggf. durch eine 'forcierte' Aktion umgangen werden."
+    },
+    "8wSpi62oJ1": {
+      "displayName": "Änderung fehlgeschlagen",
+      "description": "Die Änderung konnte nicht durchgeführt werden. Dieses kann mehrere Ursachen haben, z. B. eine Datei die nicht verschoben werden kann, ungültige Dateinamen o. ä."
     },
     "5DSqG6Mcg1": {
       "displayName": "Fehlender Source Parameter",
@@ -402,6 +410,10 @@
     "8OT4gBVvp1": {
       "displayName": "Repository Typ ungültig",
       "description": "Dieser Repository Typ wird nicht unterstützt."
+    },
+    "3ITWbABz91": {
+      "displayName": "API Schlüssel deaktiviert",
+      "description": "Die Nutzung von API Schlüsseln ist in der globalen Konfiguration deaktiviert. Zur Nutzung der API Schlüssel muss diese Option wieder aktiviert werden."
     }
   },
   "healthCheckFailures": {
@@ -461,14 +473,6 @@
     "5FSV2kreE1": {
       "summary": "'svn verify' fehlgeschlagen",
       "description": "Die Prüfung 'svn verify' ist für das Repository fehlgeschlagen."
-    },
-    "3mSmwOtOd1": {
-      "displayName": "Datei gesperrt",
-      "description": "Die Datei oder ihre Sperre kann nicht bearbeitet werden, da eine andere Sperre existiert. Die andere Sperre kann ggf. durch eine 'forcierte' Aktion umgangen werden."
-    },
-    "8wSpi62oJ1": {
-      "displayName": "Änderung fehlgeschlagen",
-      "description": "Die Änderung konnte nicht durchgeführt werden. Dieses kann mehrere Ursachen haben, z. B. eine Datei die nicht verschoben werden kann, ungültige Dateinamen o. ä."
     }
   },
   "namespaceStrategies": {
