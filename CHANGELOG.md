@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.42.2] - 2023-03-02
+### Fixed
+- Performance issues from 2.42.x introduced by the permission overview
+- Resolution of repositories from ssh urls with context paths
+- Set the default branch in imported Git repositories correctly to the HEAD of the source repository
+
 ## [2.42.1] - 2023-02-16
 ### Fixed
 - Remove sshd dependency that may cause an injection failure on server startup with installed ssh plugin
@@ -1229,3 +1235,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.41.1]: https://scm-manager.org/download/2.41.1
 [2.42.0]: https://scm-manager.org/download/2.42.0
 [2.42.1]: https://scm-manager.org/download/2.42.1
+[2.42.2]: https://scm-manager.org/download/2.42.2
