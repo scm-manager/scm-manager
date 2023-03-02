@@ -191,6 +191,7 @@ pipeline {
         sh "git add gradle.properties '**.json'"
         commit 'Prepare for next development iteration'
         authGit 'SCM-Manager', 'push origin develop'
+        authGit 'cesmarvin', 'push https://github.com/scm-manager/scm-manager develop'
       }
     }
 
