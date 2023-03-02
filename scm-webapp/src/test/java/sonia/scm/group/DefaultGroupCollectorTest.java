@@ -48,7 +48,10 @@ import java.util.Optional;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static sonia.scm.security.Authentications.PRINCIPAL_ANONYMOUS;
@@ -66,7 +69,7 @@ class DefaultGroupCollectorTest {
   @Mock(answer = Answers.RETURNS_DEEP_STUBS)
   private ConfigurationStoreFactory configurationStoreFactory;
   @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-  private ConfigurationStore configurationStore;
+  private ConfigurationStore<UserGroupCache> configurationStore;
 
   private MapCacheManager mapCacheManager;
 
@@ -74,18 +77,20 @@ class DefaultGroupCollectorTest {
 
   private DefaultGroupCollector collector;
 
+  private UserGroupCache userGroupCache;
+
   @BeforeEach
   void initCollector() {
     groupResolvers = new HashSet<>();
     mapCacheManager = new MapCacheManager();
-    collector = new DefaultGroupCollector(groupDAO, mapCacheManager, groupResolvers, configurationStoreFactory);
-  }
-
-  @BeforeEach
-  void initStore() {
     when(configurationStoreFactory.withType(UserGroupCache.class).withName("user-group-cache").build())
       .thenReturn(configurationStore);
-    when(configurationStore.getOptional()).thenReturn(Optional.empty());
+    when(configurationStore.getOptional()).thenAnswer(invocation -> Optional.ofNullable(userGroupCache));
+    lenient().doAnswer(invocation -> {
+      userGroupCache = invocation.getArgument(0, UserGroupCache.class);
+      return null;
+    }).when(configurationStore).set(any());
+    collector = new DefaultGroupCollector(groupDAO, mapCacheManager, groupResolvers, configurationStoreFactory);
   }
 
   @Test
@@ -140,20 +145,20 @@ class DefaultGroupCollectorTest {
   @Test
   void shouldNotCallResolverForAnonymous() {
     groupResolvers.add(groupResolver);
-    Set<String> groups = collector.collect(PRINCIPAL_ANONYMOUS);
+    collector.collect(PRINCIPAL_ANONYMOUS);
     verify(groupResolver, never()).resolve(PRINCIPAL_ANONYMOUS);
   }
 
   @Test
   void shouldNotCallResolverForSystemAccount() {
     groupResolvers.add(groupResolver);
-    Set<String> groups = collector.collect(PRINCIPAL_SYSTEM);
+    collector.collect(PRINCIPAL_SYSTEM);
     verify(groupResolver, never()).resolve(PRINCIPAL_SYSTEM);
   }
 
   @Test
   void shouldNotResolveInternalGroupsForSystemAccount() {
-    Set<String> groups = collector.collect(PRINCIPAL_SYSTEM);
+    collector.collect(PRINCIPAL_SYSTEM);
     verify(groupDAO, never()).getAll();
   }
 
@@ -166,6 +171,22 @@ class DefaultGroupCollectorTest {
     Set<String> cachedGroups = collector.fromLastLoginPlusInternal("trillian");
 
     assertThat(cachedGroups).contains("hog");
+  }
+
+  @Test
+  void shouldCacheGroups() {
+    collector.collect("trillian");
+
+    Set<String> groups = userGroupCache.get("trillian");
+    assertThat(groups).contains("_authenticated");
+  }
+
+  @Test
+  void shouldNotPersistUnchangedGroups() {
+    collector.collect("trillian");
+    collector.collect("trillian");
+
+    verify(configurationStore, times(1)).set(any());
   }
 
   @Nested

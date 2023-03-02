@@ -60,14 +60,14 @@ public class DefaultGroupCollector implements GroupCollector {
   private final Cache<String, Set<String>> cache;
   private final Set<GroupResolver> groupResolvers;
 
-  private final ConfigurationStoreFactory configurationStoreFactory;
+  private final ConfigurationStore<UserGroupCache> store;
 
   @Inject
   public DefaultGroupCollector(GroupDAO groupDAO, CacheManager cacheManager, Set<GroupResolver> groupResolvers, ConfigurationStoreFactory configurationStoreFactory) {
     this.groupDAO = groupDAO;
     this.cache = cacheManager.getCache(CACHE_NAME);
     this.groupResolvers = groupResolvers;
-    this.configurationStoreFactory = configurationStoreFactory;
+    this.store = configurationStoreFactory.withType(UserGroupCache.class).withName("user-group-cache").build();
   }
 
   @Override
@@ -87,27 +87,23 @@ public class DefaultGroupCollector implements GroupCollector {
     Set<String> groups = builder.build();
     LOG.debug("collected following groups for principal {}: {}", principal, groups);
 
-    ConfigurationStore<UserGroupCache> store = createStore();
-    UserGroupCache persistentCache = getPersistentCache(store);
-    persistentCache.put(principal, groups);
-    store.set(persistentCache);
+    UserGroupCache persistentCache = getPersistentCache();
+    if (persistentCache.put(principal, groups)) {
+      store.set(persistentCache);
+    }
 
     return groups;
   }
 
   @Override
   public Set<String> fromLastLoginPlusInternal(String principal) {
-    Set<String> cached = new HashSet<>(getPersistentCache(createStore()).get(principal));
+    Set<String> cached = new HashSet<>(getPersistentCache().get(principal));
     computeInternalGroups(principal).forEach(cached::add);
     return cached;
   }
 
-  private static UserGroupCache getPersistentCache(ConfigurationStore<UserGroupCache> store) {
+  private UserGroupCache getPersistentCache() {
     return store.getOptional().orElseGet(UserGroupCache::new);
-  }
-
-  private ConfigurationStore<UserGroupCache> createStore() {
-    return configurationStoreFactory.withType(UserGroupCache.class).withName("user-group-cache").build();
   }
 
   @Subscribe(async = false)

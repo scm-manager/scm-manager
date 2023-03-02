@@ -35,10 +35,8 @@ import java.util.function.BooleanSupplier;
  */
 public abstract class AbstractStore<T> implements ConfigurationStore<T> {
 
-  /**
-   * stored object
-   */
   protected T storeObject;
+  private boolean storeAlreadyRead = false;
   private final BooleanSupplier readOnly;
 
   protected AbstractStore(BooleanSupplier readOnly) {
@@ -47,8 +45,9 @@ public abstract class AbstractStore<T> implements ConfigurationStore<T> {
 
   @Override
   public T get() {
-    if (storeObject == null) {
+    if (!storeAlreadyRead) {
       storeObject = readObject();
+      storeAlreadyRead = true;
     }
 
     return storeObject;
@@ -61,6 +60,7 @@ public abstract class AbstractStore<T> implements ConfigurationStore<T> {
     }
     writeObject(object);
     this.storeObject = object;
+    storeAlreadyRead = true;
   }
 
 

@@ -45,6 +45,7 @@
   <logger name="sonia.scm" level="TRACE" />
   <logger name="com.cloudogu.scm" level="TRACE" />
 
+  <logger name="sonia.scm.store.CopyOnWrite" level="DEBUG" />
   <logger name="sonia.scm.security.AuthorizationCollector" level="DEBUG" />
   <logger name="sonia.scm.web.filter.AutoLoginFilter" level="DEBUG" />
   <logger name="sonia.scm.security.XsrfProtectionFilter" level="DEBUG" />

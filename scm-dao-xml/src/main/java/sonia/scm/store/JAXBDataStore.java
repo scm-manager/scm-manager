@@ -114,6 +114,6 @@ public class JAXBDataStore<T> extends FileBasedStore<T> implements DataStore<T> 
         return context.unmarshall(file);
       }
       return null;
-    }).withLockedFile(file);
+    }).withLockedFileForRead(file);
   }
 }

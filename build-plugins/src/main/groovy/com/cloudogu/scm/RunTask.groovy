@@ -120,6 +120,7 @@ class RunTask extends DefaultTask {
     return {
       project.javaexec {
         mainClass.set(ScmServer.name)
+        jvmArgs("-Xverify:none")
         args(new File(project.buildDir, 'server/config.json').toString())
         environment 'NODE_ENV', 'development'
         classpath project.buildscript.configurations.classpath

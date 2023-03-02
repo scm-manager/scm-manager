@@ -92,7 +92,7 @@ abstract class DifferentiateBetweenConfigAndConfigEntryUpdateStep {
   private void updateSingleFile(Path configFile) {
     LOG.info("Updating config entry file: {}", configFile);
 
-    Document configEntryDocument = compute(() -> readAsXmlDocument(configFile)).withLockedFile(configFile);
+    Document configEntryDocument = compute(() -> readAsXmlDocument(configFile)).withLockedFileForRead(configFile);
 
     configEntryDocument.getDocumentElement().setAttribute("type", "config-entry");
 

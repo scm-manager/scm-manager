@@ -34,6 +34,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.UUID;
 import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
 import java.util.function.Supplier;
 
 /**
@@ -48,7 +49,7 @@ public final class CopyOnWrite {
 
   private static final Logger LOG = LoggerFactory.getLogger(CopyOnWrite.class);
 
-  private static final Striped<Lock> concurrencyLock = Striped.lock(20);
+  private static final Striped<ReadWriteLock> concurrencyLock = Striped.readWriteLock(100);
 
   private CopyOnWrite() {
   }
@@ -59,7 +60,7 @@ public final class CopyOnWrite {
       Path temporaryFile = createTemporaryFile(targetFile);
       executeCallback(writer, targetFile, temporaryFile);
       replaceOriginalFile(targetFile, temporaryFile);
-    }).withLockedFile(targetFile);
+    }).withLockedFileForWrite(targetFile);
   }
 
   public static <R> FileLocker<R> compute(Supplier<R> supplier) {
@@ -80,21 +81,45 @@ public final class CopyOnWrite {
       this.supplier = supplier;
     }
 
-    public R withLockedFile(Path file) {
-      return withLockedFile(file.toAbsolutePath().toString());
+    public R withLockedFileForRead(Path file) {
+      return withLockedFileForRead(file.toAbsolutePath().toString());
     }
 
-    public R withLockedFile(File file) {
-      return withLockedFile(file.getPath());
+    public R withLockedFileForRead(File file) {
+      return withLockedFileForRead(file.getPath());
     }
 
-    public R withLockedFile(String file) {
-      Lock lock = concurrencyLock.get(file);
+    public R withLockedFileForRead(String file) {
+      LOG.trace("read lock get {}", file);
+      Lock lock = concurrencyLock.get(file).readLock();
+      LOG.trace("read lock passed {}", file);
       lock.lock();
       try {
         return supplier.get();
       } finally {
         lock.unlock();
+        LOG.trace("read lock released {}", file);
+      }
+    }
+
+    public R withLockedFileForWrite(Path file) {
+      return withLockedFileForWrite(file.toAbsolutePath().toString());
+    }
+
+    public R withLockedFileForWrite(File file) {
+      return withLockedFileForWrite(file.getPath());
+    }
+
+    public R withLockedFileForWrite(String file) {
+      LOG.trace("write lock get > {}", file);
+      Lock lock = concurrencyLock.get(file).writeLock();
+      LOG.trace("write lock passed {}", file);
+      lock.lock();
+      try {
+        return supplier.get();
+      } finally {
+        lock.unlock();
+        LOG.trace("write lock released {}", file);
       }
     }
   }

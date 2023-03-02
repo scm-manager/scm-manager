@@ -75,7 +75,7 @@ public class JAXBConfigurationEntryStore<V> implements ConfigurationEntryStore<V
       if (file.exists()) {
         load();
       }
-    }).withLockedFile(file);
+    }).withLockedFileForRead(file);
   }
 
   @Override
@@ -85,7 +85,7 @@ public class JAXBConfigurationEntryStore<V> implements ConfigurationEntryStore<V
     execute(() -> {
       entries.clear();
       store();
-    }).withLockedFile(file);
+    }).withLockedFileForWrite(file);
   }
 
   @Override
@@ -104,7 +104,7 @@ public class JAXBConfigurationEntryStore<V> implements ConfigurationEntryStore<V
     execute(() -> {
       entries.put(id, item);
       store();
-    }).withLockedFile(file);
+    }).withLockedFileForWrite(file);
   }
 
   @Override
@@ -114,7 +114,7 @@ public class JAXBConfigurationEntryStore<V> implements ConfigurationEntryStore<V
     execute(() -> {
       entries.remove(id);
       store();
-    }).withLockedFile(file);
+    }).withLockedFileForWrite(file);
   }
 
   @Override
@@ -178,7 +178,7 @@ public class JAXBConfigurationEntryStore<V> implements ConfigurationEntryStore<V
             }
           }
         }
-      })).withLockedFile(file);
+      })).withLockedFileForRead(file);
   }
 
   private void store() {

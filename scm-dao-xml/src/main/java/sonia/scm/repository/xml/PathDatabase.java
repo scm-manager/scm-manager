@@ -146,7 +146,7 @@ class PathDatabase {
           ex
         );
       }
-    }).withLockedFile(storePath);
+    }).withLockedFileForRead(storePath);
   }
 
   private void readRepository(XMLStreamReader reader, OnRepository onRepository) throws XMLStreamException {

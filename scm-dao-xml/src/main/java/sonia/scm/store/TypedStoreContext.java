@@ -30,6 +30,8 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -38,15 +40,21 @@ final class TypedStoreContext<T> {
   private final JAXBContext jaxbContext;
   private final TypedStoreParameters<T> parameters;
 
+  private static final Map<Class<?>, JAXBContext> contextCache = new HashMap<>();
+
   private TypedStoreContext(JAXBContext jaxbContext, TypedStoreParameters<T> parameters) {
     this.jaxbContext = jaxbContext;
     this.parameters = parameters;
   }
 
   static <T> TypedStoreContext<T> of(TypedStoreParameters<T> parameters) {
-    try {
-      JAXBContext jaxbContext = JAXBContext.newInstance(parameters.getType());
+      JAXBContext jaxbContext = contextCache.computeIfAbsent(parameters.getType(), type -> createJaxbContext(parameters));
       return new TypedStoreContext<>(jaxbContext, parameters);
+  }
+
+  private static <T> JAXBContext createJaxbContext(TypedStoreParameters<T> parameters) {
+    try {
+      return JAXBContext.newInstance(parameters.getType());
     } catch (JAXBException e) {
       throw new StoreException("failed to create context for store", e);
     }

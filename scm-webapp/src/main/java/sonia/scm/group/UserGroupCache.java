@@ -49,10 +49,14 @@ class UserGroupCache {
     return cache.getOrDefault(user, emptySet());
   }
 
-  void put(String user, Set<String> groups) {
+  boolean put(String user, Set<String> groups) {
     if (cache == null) {
       cache = new HashMap<>();
     }
+    if (groups.equals(cache.get(user))) {
+      return false;
+    }
     cache.put(user, groups);
+    return true;
   }
 }

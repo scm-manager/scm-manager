@@ -79,7 +79,7 @@ public class JAXBConfigurationStore<T> extends AbstractStore<T> {
         }
         return null;
       }
-    ).withLockedFile(configFile);
+    ).withLockedFileForRead(configFile);
   }
 
   @Override
@@ -100,6 +100,6 @@ public class JAXBConfigurationStore<T> extends AbstractStore<T> {
       } catch (IOException e) {
         throw new StoreException("Failed to delete store object " + configFile.getPath(), e);
       }
-    }).withLockedFile(configFile);
+    }).withLockedFileForWrite(configFile);
   }
 }

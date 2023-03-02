@@ -64,7 +64,7 @@ public class MetadataStore implements UpdateStepRepositoryMetadataAccess<Path> {
           ContextEntry.ContextBuilder.entity(Path.class, path.toString()).build(), "failed read repository metadata", ex
         );
       }
-    }).withLockedFile(path);
+    }).withLockedFileForRead(path);
   }
 
   void write(Path path, Repository repository) {
