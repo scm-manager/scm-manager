@@ -267,12 +267,12 @@ const PermissionOverview: FC<{ user: User }> = ({ user }) => {
   const { data, isLoading, error } = useUserPermissionOverview(user);
   const [t] = useTranslation("users");
 
-  if (isLoading || !data) {
-    return <Loading />;
-  }
-
   if (error) {
     return <ErrorNotification error={error} />;
+  }
+
+  if (isLoading || !data) {
+    return <Loading />;
   }
 
   // To test the table with the "not created" groups, you can mock such data
