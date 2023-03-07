@@ -22,6 +22,33 @@
  * SOFTWARE.
  */
 
-export { default as Form } from "./Form";
+import FormCmp from "./Form";
+import FormRow from "./FormRow";
+import ControlledInputField from "./input/ControlledInputField";
+import ControlledCheckboxField from "./checkbox/ControlledCheckboxField";
+import ControlledSecretConfirmationField from "./input/ControlledSecretConfirmationField";
+import ControlledSelectField from "./select/ControlledSelectField";
+import { ScmFormListContextProvider } from "./ScmFormListContext";
+import ControlledList from "./list/ControlledList";
+import ControlledTable from "./table/ControlledTable";
+import ControlledColumn from "./table/ControlledColumn";
+import AddListEntryForm from "./AddListEntryForm";
+import { ScmNestedFormPathContextProvider } from "./FormPathContext";
+
 export { default as ConfigurationForm } from "./ConfigurationForm";
 export * from "./resourceHooks";
+
+export const Form = Object.assign(FormCmp, {
+  Row: FormRow,
+  Input: ControlledInputField,
+  Checkbox: ControlledCheckboxField,
+  SecretConfirmation: ControlledSecretConfirmationField,
+  Select: ControlledSelectField,
+  PathContext: ScmNestedFormPathContextProvider,
+  ListContext: ScmFormListContextProvider,
+  List: ControlledList,
+  AddListEntryForm: AddListEntryForm,
+  Table: Object.assign(ControlledTable, {
+    Column: ControlledColumn,
+  }),
+});

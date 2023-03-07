@@ -24,9 +24,10 @@
 
 import React, { ComponentProps } from "react";
 import { Controller, ControllerRenderProps, Path, RegisterOptions } from "react-hook-form";
-import classNames from "classnames";
 import { useScmFormContext } from "../ScmFormContext";
 import CheckboxField from "./CheckboxField";
+import { useScmFormPathContext } from "../FormPathContext";
+import { prefixWithoutIndices } from "../helpers";
 
 type Props<T extends Record<string, unknown>> = Omit<
   ComponentProps<typeof CheckboxField>,
@@ -42,31 +43,33 @@ function ControlledInputField<T extends Record<string, unknown>>({
   label,
   helpText,
   rules,
-  className,
   testId,
   defaultChecked,
   readOnly,
   ...props
 }: Props<T>) {
-  const { control, t, readOnly: formReadonly } = useScmFormContext();
-  const labelTranslation = label || t(`${name}.label`) || "";
-  const helpTextTranslation = helpText || t(`${name}.helpText`);
+  const { control, t, readOnly: formReadonly, formId } = useScmFormContext();
+  const formPathPrefix = useScmFormPathContext();
+  const nameWithPrefix = formPathPrefix ? `${formPathPrefix}.${name}` : name;
+  const prefixedNameWithoutIndices = prefixWithoutIndices(nameWithPrefix);
+  const labelTranslation = label || t(`${prefixedNameWithoutIndices}.label`) || "";
+  const helpTextTranslation = helpText || t(`${prefixedNameWithoutIndices}.helpText`);
   return (
     <Controller
       control={control}
-      name={name}
+      name={nameWithPrefix}
       rules={rules}
       defaultValue={defaultChecked as never}
       render={({ field }) => (
         <CheckboxField
-          className={classNames("column", className)}
+          form={formId}
           readOnly={readOnly ?? formReadonly}
           defaultChecked={field.value}
           {...props}
           {...field}
           label={labelTranslation}
           helpText={helpTextTranslation}
-          testId={testId ?? `checkbox-${name}`}
+          testId={testId ?? `checkbox-${nameWithPrefix}`}
         />
       )}
     />

@@ -23,14 +23,12 @@
  */
 
 import React from "react";
-import classNames from "classnames";
+import { Tooltip } from "@scm-manager/ui-overlays";
 
 type Props = { text?: string; className?: string };
-
-/**
- * TODO: Implement tooltip
- */
 const Help = ({ text, className }: Props) => (
-  <span className={classNames("fas fa-fw fa-question-circle has-text-blue-light", className)} title={text} />
+  <Tooltip className={className} message={text}>
+    <i className="fas fa-fw fa-question-circle has-text-blue-light" />
+  </Tooltip>
 );
 export default Help;

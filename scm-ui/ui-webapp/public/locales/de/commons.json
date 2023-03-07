@@ -1,4 +1,26 @@
 {
+  "form": {
+    "submit": "Speichern",
+    "submit-success-notification": "Einstellungen wurden erfolgreich geändert!",
+    "table": {
+      "headers": {
+        "action": {
+          "label": "Aktion"
+        }
+      },
+      "delete": {
+        "label": "Löschen"
+      }
+    },
+    "list": {
+      "add": {
+        "label": "{{entity}} hinzufügen"
+      },
+      "delete": {
+        "label": "{{entity}} löschen"
+      }
+    }
+  },
   "login": {
     "title": "Anmeldung",
     "subtitle": "Bitte anmelden, um fortzufahren.",

@@ -22,32 +22,28 @@
  * SOFTWARE.
  */
 
-import React, { InputHTMLAttributes, Key, OptionHTMLAttributes } from "react";
-import classNames from "classnames";
-import { createVariantClass, Variant } from "../variants";
-import { createAttributesForTesting } from "@scm-manager/ui-components";
+import React, { FC, HTMLAttributes, useMemo } from "react";
+import { useScmFormPathContext } from "../FormPathContext";
+import { useScmFormContext } from "../ScmFormContext";
+import { useWatch } from "react-hook-form";
 
 type Props = {
-  variant?: Variant;
-  options?: Array<OptionHTMLAttributes<HTMLOptionElement> & { label: string }>;
-  testId?: string;
-} & InputHTMLAttributes<HTMLSelectElement>;
+  name: string;
+  children?: (value: unknown) => React.ReactNode | React.ReactNode[];
+} & HTMLAttributes<HTMLTableCellElement>;
 
-const Select = React.forwardRef<HTMLSelectElement, Props>(
-  ({ variant, children, className, options, testId, ...props }, ref) => (
-    <div className={classNames("select", { "is-multiple": props.multiple }, createVariantClass(variant), className)}>
-      <select ref={ref} {...props} {...createAttributesForTesting(testId)}>
-        {options
-          ? options.map((option) => (
-              <option {...option} key={option.value as Key}>
-                {option.label}
-                {option.children}
-              </option>
-            ))
-          : children}
-      </select>
-    </div>
-  )
-);
+/**
+ * @beta
+ * @since 2.43.0
+ */
+const ControlledColumn: FC<Props> = ({ name, children, ...props }) => {
+  const { control } = useScmFormContext();
+  const formPathPrefix = useScmFormPathContext();
+  const nameWithPrefix = useMemo(() => (formPathPrefix ? `${formPathPrefix}.${name}` : name), [formPathPrefix, name]);
+  const value = useWatch({ control, name: nameWithPrefix, disabled: typeof children === "function" });
+  const allValues = useWatch({ control, name: formPathPrefix, disabled: typeof children !== "function" });
 
-export default Select;
+  return <td {...props}>{typeof children === "function" ? children(allValues) : value}</td>;
+};
+
+export default ControlledColumn;

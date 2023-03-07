@@ -35,6 +35,9 @@ import * as ClassNames from "classnames";
 import * as QueryString from "query-string";
 import * as UIExtensions from "@scm-manager/ui-extensions";
 import * as UIComponents from "@scm-manager/ui-components";
+import * as UIButtons from "@scm-manager/ui-buttons";
+import * as UIForms from "@scm-manager/ui-forms";
+import * as UIOverlays from "@scm-manager/ui-overlays";
 import * as UIApi from "@scm-manager/ui-api";
 
 declare global {
@@ -56,6 +59,9 @@ defineStatic("classnames", ClassNames);
 defineStatic("query-string", QueryString);
 defineStatic("@scm-manager/ui-extensions", UIExtensions);
 defineStatic("@scm-manager/ui-components", UIComponents);
+defineStatic("@scm-manager/ui-buttons", UIButtons);
+defineStatic("@scm-manager/ui-forms", UIForms);
+defineStatic("@scm-manager/ui-overlays", UIOverlays);
 defineStatic("@scm-manager/ui-api", UIApi);
 
 // redux is deprecated in favor of ui-api

@@ -45,6 +45,10 @@
   --scm-popover-border-color: #{$popover-border-color};
 }
 
+details > * {
+  box-sizing: border-box;
+}
+
 // TODO split into multiple files
 
 .is-ellipsis-overflow {

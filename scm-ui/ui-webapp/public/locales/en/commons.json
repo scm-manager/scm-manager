@@ -1,4 +1,26 @@
 {
+  "form": {
+    "submit": "Submit",
+    "submit-success-notification": "Configuration changed successfully!",
+    "table": {
+      "headers": {
+        "action": {
+          "label": "Action"
+        }
+      },
+      "delete": {
+        "label": "Delete"
+      }
+    },
+    "list": {
+      "add": {
+        "label": "Add {{entity}}"
+      },
+      "delete": {
+        "label": "Delete {{entity}}"
+      }
+    }
+  },
   "login": {
     "title": "Login",
     "subtitle": "Please login to proceed",

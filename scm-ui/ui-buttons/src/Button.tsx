@@ -66,8 +66,9 @@ type ButtonProps = BaseButtonProps & ButtonHTMLAttributes<HTMLButtonElement>;
  * @since 2.41.0
  */
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, isLoading, testId, children, ...props }, ref) => (
+  ({ className, variant, isLoading, testId, type, children, ...props }, ref) => (
     <button
+      type={type ?? "button"}
       {...props}
       className={classNames(createButtonClasses(variant, isLoading), className)}
       ref={ref}

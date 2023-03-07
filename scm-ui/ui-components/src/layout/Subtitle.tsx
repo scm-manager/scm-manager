@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
+import React, { FC } from "react";
 import classNames from "classnames";
 
 type Props = {
@@ -29,16 +29,13 @@ type Props = {
   className?: string;
 };
 
-class Subtitle extends React.Component<Props> {
-  render() {
-    const { subtitle, className, children } = this.props;
-    if (subtitle) {
-      return <h2 className={classNames("subtitle", className)}>{subtitle}</h2>;
-    } else if (children) {
-      return <h2 className={classNames("subtitle", className)}>{children}</h2>;
-    }
-    return null;
+const Subtitle: FC<Props> = ({ subtitle, className, children }) => {
+  if (subtitle) {
+    return <h2 className={classNames("subtitle", className)}>{subtitle}</h2>;
+  } else if (children) {
+    return <h2 className={classNames("subtitle", className)}>{children}</h2>;
   }
-}
+  return null;
+};
 
 export default Subtitle;

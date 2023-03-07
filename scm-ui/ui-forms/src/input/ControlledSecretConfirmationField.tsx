@@ -24,9 +24,10 @@
 
 import React, { ComponentProps } from "react";
 import { Controller, ControllerRenderProps, Path } from "react-hook-form";
-import classNames from "classnames";
 import { useScmFormContext } from "../ScmFormContext";
 import InputField from "./InputField";
+import { useScmFormPathContext } from "../FormPathContext";
+import { prefixWithoutIndices } from "../helpers";
 
 type Props<T extends Record<string, unknown>> = Omit<
   ComponentProps<typeof InputField>,
@@ -56,60 +57,70 @@ export default function ControlledSecretConfirmationField<T extends Record<strin
   readOnly,
   ...props
 }: Props<T>) {
-  const { control, watch, t, readOnly: formReadonly } = useScmFormContext();
-  const labelTranslation = label || t(`${name}.label`) || "";
-  const helpTextTranslation = helpText || t(`${name}.helpText`);
-  const confirmationLabelTranslation = confirmationLabel || t(`${name}.confirmation.label`) || "";
-  const confirmationHelpTextTranslation = confirmationHelpText || t(`${name}.confirmation.helpText`);
-  const confirmationErrorMessageTranslation = confirmationErrorMessage || t(`${name}.confirmation.errorMessage`);
-  const secretValue = watch(name);
+  const { control, watch, t, readOnly: formReadonly, formId } = useScmFormContext();
+  const formPathPrefix = useScmFormPathContext();
+  const nameWithPrefix = formPathPrefix ? `${formPathPrefix}.${name}` : name;
+  const prefixedNameWithoutIndices = prefixWithoutIndices(nameWithPrefix);
+  const labelTranslation = label || t(`${prefixedNameWithoutIndices}.label`) || "";
+  const helpTextTranslation = helpText || t(`${prefixedNameWithoutIndices}.helpText`);
+  const confirmationLabelTranslation = confirmationLabel || t(`${prefixedNameWithoutIndices}.confirmation.label`) || "";
+  const confirmationHelpTextTranslation =
+    confirmationHelpText || t(`${prefixedNameWithoutIndices}.confirmation.helpText`);
+  const confirmationErrorMessageTranslation =
+    confirmationErrorMessage || t(`${prefixedNameWithoutIndices}.confirmation.errorMessage`);
+  const secretValue = watch(nameWithPrefix);
 
   return (
     <>
       <Controller
         control={control}
-        name={name}
+        name={nameWithPrefix}
         defaultValue={defaultValue as never}
         rules={{
           ...rules,
-          deps: [`${name}Confirmation`],
+          deps: [`${nameWithPrefix}Confirmation`],
         }}
         render={({ field, fieldState }) => (
           <InputField
-            className={classNames("column", className)}
+            className={className}
             readOnly={readOnly ?? formReadonly}
             {...props}
             {...field}
+            form={formId}
             required={rules?.required as boolean}
             type="password"
             label={labelTranslation}
             helpText={helpTextTranslation}
             error={
-              fieldState.error ? fieldState.error.message || t(`${name}.error.${fieldState.error.type}`) : undefined
+              fieldState.error
+                ? fieldState.error.message || t(`${prefixedNameWithoutIndices}.error.${fieldState.error.type}`)
+                : undefined
             }
-            testId={testId ?? `input-${name}`}
+            testId={testId ?? `input-${nameWithPrefix}`}
           />
         )}
       />
       <Controller
         control={control}
-        name={`${name}Confirmation`}
+        name={`${nameWithPrefix}Confirmation`}
         defaultValue={defaultValue as never}
         render={({ field, fieldState }) => (
           <InputField
-            className={classNames("column", className)}
+            className={className}
             type="password"
             readOnly={readOnly ?? formReadonly}
             disabled={props.disabled}
             {...field}
+            form={formId}
             label={confirmationLabelTranslation}
             helpText={confirmationHelpTextTranslation}
             error={
               fieldState.error
-                ? fieldState.error.message || t(`${name}.confirmation.error.${fieldState.error.type}`)
+                ? fieldState.error.message ||
+                  t(`${prefixedNameWithoutIndices}.confirmation.error.${fieldState.error.type}`)
                 : undefined
             }
-            testId={confirmationTestId ?? `input-${name}-confirmation`}
+            testId={confirmationTestId ?? `input-${nameWithPrefix}-confirmation`}
           />
         )}
         rules={{

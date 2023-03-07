@@ -22,32 +22,6 @@
  * SOFTWARE.
  */
 
-import React, { InputHTMLAttributes, Key, OptionHTMLAttributes } from "react";
-import classNames from "classnames";
-import { createVariantClass, Variant } from "../variants";
-import { createAttributesForTesting } from "@scm-manager/ui-components";
-
-type Props = {
-  variant?: Variant;
-  options?: Array<OptionHTMLAttributes<HTMLOptionElement> & { label: string }>;
-  testId?: string;
-} & InputHTMLAttributes<HTMLSelectElement>;
-
-const Select = React.forwardRef<HTMLSelectElement, Props>(
-  ({ variant, children, className, options, testId, ...props }, ref) => (
-    <div className={classNames("select", { "is-multiple": props.multiple }, createVariantClass(variant), className)}>
-      <select ref={ref} {...props} {...createAttributesForTesting(testId)}>
-        {options
-          ? options.map((option) => (
-              <option {...option} key={option.value as Key}>
-                {option.label}
-                {option.children}
-              </option>
-            ))
-          : children}
-      </select>
-    </div>
-  )
-);
-
-export default Select;
+export function prefixWithoutIndices(path: string): string {
+  return path.replace(/(\.\d+)/g, "");
+}

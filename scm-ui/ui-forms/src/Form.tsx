@@ -28,12 +28,7 @@ import { ErrorNotification, Level } from "@scm-manager/ui-components";
 import { ScmFormContextProvider } from "./ScmFormContext";
 import { useTranslation } from "react-i18next";
 import { Button } from "@scm-manager/ui-buttons";
-import FormRow from "./FormRow";
-import ControlledInputField from "./input/ControlledInputField";
-import ControlledCheckboxField from "./checkbox/ControlledCheckboxField";
-import ControlledSecretConfirmationField from "./input/ControlledSecretConfirmationField";
 import { HalRepresentation } from "@scm-manager/ui-types";
-import ControlledSelectField from "./select/ControlledSelectField";
 
 type RenderProps<T extends Record<string, unknown>> = Omit<
   UseFormReturn<T>,
@@ -81,9 +76,24 @@ function Form<FormType extends Record<string, unknown>, DefaultValues extends Fo
   const { formState, handleSubmit, reset } = form;
   const [ns, prefix] = translationPath;
   const { t } = useTranslation(ns, { keyPrefix: prefix });
+  const [defaultTranslate] = useTranslation("commons", { keyPrefix: "form" });
+  const translateWithFallback = useCallback<typeof t>(
+    (key, ...args) => {
+      const translation = t(key, ...(args as any));
+      if (translation === `${prefix}.${key}`) {
+        return "";
+      }
+      return translation;
+    },
+    [prefix, t]
+  );
   const { isDirty, isValid, isSubmitting, isSubmitSuccessful } = formState;
   const [error, setError] = useState<Error | null | undefined>();
   const [showSuccessNotification, setShowSuccessNotification] = useState(false);
+  const submitButtonLabel = t("submit", { defaultValue: defaultTranslate("submit") });
+  const successNotification = translateWithFallback("submit-success-notification", {
+    defaultValue: defaultTranslate("submit-success-notification"),
+  });
 
   // See https://react-hook-form.com/api/useform/reset/
   useEffect(() => {
@@ -99,17 +109,6 @@ function Form<FormType extends Record<string, unknown>, DefaultValues extends Fo
       setShowSuccessNotification(false);
     }
   }, [isDirty]);
-
-  const translateWithFallback = useCallback<typeof t>(
-    (key, ...args) => {
-      const translation = t(key, ...(args as any));
-      if (translation === `${prefix}.${key}`) {
-        return "";
-      }
-      return translation;
-    },
-    [prefix, t]
-  );
 
   const submit = useCallback(
     async (data) => {
@@ -128,40 +127,31 @@ function Form<FormType extends Record<string, unknown>, DefaultValues extends Fo
   );
 
   return (
-    <ScmFormContextProvider {...form} readOnly={isSubmitting || readOnly} t={translateWithFallback}>
-      <form onSubmit={handleSubmit(submit)}>
-        {showSuccessNotification ? (
-          <SuccessNotification
-            label={translateWithFallback("submit-success-notification")}
-            hide={() => setShowSuccessNotification(false)}
-          />
-        ) : null}
-        {typeof children === "function" ? children(form) : children}
-        {error ? <ErrorNotification error={error} /> : null}
-        {!readOnly ? (
-          <Level
-            right={
-              <Button
-                type="submit"
-                variant="primary"
-                testId={submitButtonTestId ?? "submit-button"}
-                disabled={!isDirty || !isValid}
-                isLoading={isSubmitting}
-              >
-                {t("submit")}
-              </Button>
-            }
-          />
-        ) : null}
-      </form>
+    <ScmFormContextProvider {...form} readOnly={isSubmitting || readOnly} t={translateWithFallback} formId={prefix}>
+      <form onSubmit={handleSubmit(submit)} id={prefix}></form>
+      {showSuccessNotification ? (
+        <SuccessNotification label={successNotification} hide={() => setShowSuccessNotification(false)} />
+      ) : null}
+      {typeof children === "function" ? children(form) : children}
+      {error ? <ErrorNotification error={error} /> : null}
+      {!readOnly ? (
+        <Level
+          right={
+            <Button
+              type="submit"
+              variant="primary"
+              testId={submitButtonTestId ?? "submit-button"}
+              disabled={!isDirty || !isValid}
+              isLoading={isSubmitting}
+              form={prefix}
+            >
+              {submitButtonLabel}
+            </Button>
+          }
+        />
+      ) : null}
     </ScmFormContextProvider>
   );
 }
 
-export default Object.assign(Form, {
-  Row: FormRow,
-  Input: ControlledInputField,
-  Checkbox: ControlledCheckboxField,
-  SecretConfirmation: ControlledSecretConfirmationField,
-  Select: ControlledSelectField,
-});
+export default Form;

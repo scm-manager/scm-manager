@@ -24,13 +24,26 @@
 
 import React, { HTMLProps } from "react";
 import classNames from "classnames";
+import styled from "styled-components";
+
+const FormRowDiv = styled.div`
+  .field {
+    margin-left: 0;
+  }
+
+  gap: 1rem;
+
+  &:not(:last-child) {
+    margin-bottom: 1rem;
+  }
+`;
 
 const FormRow = React.forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(
   ({ className, children, hidden, ...rest }, ref) =>
     hidden ? null : (
-      <div ref={ref} className={classNames("columns", className)} {...rest}>
+      <FormRowDiv ref={ref} className={classNames("is-flex is-flex-wrap-wrap", className)} {...rest}>
         {children}
-      </div>
+      </FormRowDiv>
     )
 );
 

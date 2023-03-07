@@ -24,9 +24,10 @@
 
 import React, { ComponentProps } from "react";
 import { Controller, ControllerRenderProps, Path } from "react-hook-form";
-import classNames from "classnames";
 import { useScmFormContext } from "../ScmFormContext";
 import InputField from "./InputField";
+import { useScmFormPathContext } from "../FormPathContext";
+import { prefixWithoutIndices } from "../helpers";
 
 type Props<T extends Record<string, unknown>> = Omit<
   ComponentProps<typeof InputField>,
@@ -42,32 +43,38 @@ function ControlledInputField<T extends Record<string, unknown>>({
   label,
   helpText,
   rules,
-  className,
   testId,
   defaultValue,
   readOnly,
   ...props
 }: Props<T>) {
-  const { control, t, readOnly: formReadonly } = useScmFormContext();
-  const labelTranslation = label || t(`${name}.label`) || "";
-  const helpTextTranslation = helpText || t(`${name}.helpText`);
+  const { control, t, readOnly: formReadonly, formId } = useScmFormContext();
+  const formPathPrefix = useScmFormPathContext();
+  const nameWithPrefix = formPathPrefix ? `${formPathPrefix}.${name}` : name;
+  const prefixedNameWithoutIndices = prefixWithoutIndices(nameWithPrefix);
+  const labelTranslation = label || t(`${prefixedNameWithoutIndices}.label`) || "";
+  const helpTextTranslation = helpText || t(`${prefixedNameWithoutIndices}.helpText`);
   return (
     <Controller
       control={control}
-      name={name}
+      name={nameWithPrefix}
       rules={rules}
       defaultValue={defaultValue as never}
       render={({ field, fieldState }) => (
         <InputField
-          className={classNames("column", className)}
           readOnly={readOnly ?? formReadonly}
           required={rules?.required as boolean}
           {...props}
           {...field}
+          form={formId}
           label={labelTranslation}
           helpText={helpTextTranslation}
-          error={fieldState.error ? fieldState.error.message || t(`${name}.error.${fieldState.error.type}`) : undefined}
-          testId={testId ?? `input-${name}`}
+          error={
+            fieldState.error
+              ? fieldState.error.message || t(`${prefixedNameWithoutIndices}.error.${fieldState.error.type}`)
+              : undefined
+          }
+          testId={testId ?? `input-${nameWithPrefix}`}
         />
       )}
     />
