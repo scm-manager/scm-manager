@@ -39,6 +39,7 @@ import sonia.scm.store.JAXBConfigurationStoreFactory;
 import java.nio.file.Path;
 import java.util.Optional;
 
+import static java.util.Collections.emptySet;
 import static org.mockito.Mockito.when;
 import static sonia.scm.update.repository.MigrationStrategy.INLINE;
 
@@ -53,7 +54,7 @@ class DefaultMigrationStrategyDAOTest {
   @BeforeEach
   void initStore(@TempDir Path tempDir) {
     when(contextProvider.getBaseDirectory()).thenReturn(tempDir.toFile());
-    storeFactory = new JAXBConfigurationStoreFactory(contextProvider, null, null);
+    storeFactory = new JAXBConfigurationStoreFactory(contextProvider, null, null, emptySet());
   }
 
   @Test

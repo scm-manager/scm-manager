@@ -21,12 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm;
 
 import com.github.sdorra.ssp.PermissionCheck;
+import sonia.scm.auditlog.AuditEntry;
+import sonia.scm.auditlog.Auditor;
+import sonia.scm.auditlog.EntryCreationContext;
 import sonia.scm.util.AssertUtil;
 
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -34,9 +38,11 @@ import java.util.function.Supplier;
 public class ManagerDaoAdapter<T extends ModelObject> {
 
   private final GenericDAO<T> dao;
+  private final Set<Auditor> auditors;
 
-  public ManagerDaoAdapter(GenericDAO<T> dao) {
+  public ManagerDaoAdapter(GenericDAO<T> dao, Set<Auditor> auditors) {
     this.dao = dao;
+    this.auditors = auditors;
   }
 
   public void modify(T object, Function<T, PermissionCheck> permissionCheck, AroundHandler<T> beforeUpdate, AroundHandler<T> afterUpdate) {
@@ -50,6 +56,8 @@ public class ManagerDaoAdapter<T extends ModelObject> {
 
       object.setLastModified(System.currentTimeMillis());
       object.setCreationDate(notModified.getCreationDate());
+
+      callAuditors(notModified, object);
 
       dao.modify(object);
 
@@ -73,6 +81,7 @@ public class ManagerDaoAdapter<T extends ModelObject> {
     existsCheck.accept(newObject);
     newObject.setCreationDate(System.currentTimeMillis());
     beforeCreate.handle(newObject);
+    callAuditors(null, newObject);
     dao.add(newObject);
     afterCreate.handle(newObject);
     return newObject;
@@ -82,10 +91,17 @@ public class ManagerDaoAdapter<T extends ModelObject> {
     permissionCheck.get().check();
     if (dao.contains(toDelete)) {
       beforeDelete.handle(toDelete);
+      callAuditors(toDelete, null);
       dao.delete(toDelete);
       afterDelete.handle(toDelete);
     } else {
       throw new NotFoundException(toDelete.getClass(), toDelete.getId());
+    }
+  }
+
+  private void callAuditors(T notModified, T newObject) {
+    if ((newObject == null? notModified: newObject).getClass().isAnnotationPresent(AuditEntry.class)) {
+      auditors.forEach(s -> s.createEntry(new EntryCreationContext<>(newObject, notModified)));
     }
   }
 

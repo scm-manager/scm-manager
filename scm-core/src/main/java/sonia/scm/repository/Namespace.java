@@ -28,6 +28,7 @@ import com.github.sdorra.ssp.PermissionObject;
 import com.github.sdorra.ssp.StaticPermissions;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import sonia.scm.auditlog.AuditEntry;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -46,6 +47,7 @@ import static java.util.Collections.unmodifiableCollection;
 )
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "namespaces")
+@AuditEntry(labels = "namespace")
 public class Namespace implements PermissionObject, Cloneable, RepositoryPermissionHolder {
 
   private String namespace;

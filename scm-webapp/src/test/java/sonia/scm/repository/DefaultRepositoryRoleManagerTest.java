@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 import org.apache.shiro.authz.UnauthorizedException;
@@ -48,6 +48,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptySet;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -76,7 +77,6 @@ class DefaultRepositoryRoleManagerTest {
   @Mock
   private RepositoryPermissionProvider permissionProvider;
 
-  @InjectMocks
   private DefaultRepositoryRoleManager manager;
 
   @BeforeEach
@@ -101,6 +101,11 @@ class DefaultRepositoryRoleManagerTest {
   void mockExistingRole() {
     when(dao.get(CUSTOM_ROLE_NAME)).thenReturn(CUSTOM_ROLE);
     when(permissionProvider.availableRoles()).thenReturn(asList(CUSTOM_ROLE, SYSTEM_ROLE));
+  }
+
+  @BeforeEach
+  void initManager() {
+    manager = new DefaultRepositoryRoleManager(dao, permissionProvider, emptySet());
   }
 
   @AfterEach

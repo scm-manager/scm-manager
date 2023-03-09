@@ -119,7 +119,8 @@ public class DefaultRepositoryManagerPerfTest {
       repositoryDAO,
       handlerSet,
       Providers.of(namespaceStrategy),
-      repositoryPostProcessor);
+      repositoryPostProcessor,
+      Collections.emptySet());
 
     setUpTestRepositories();
 

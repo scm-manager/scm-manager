@@ -24,6 +24,8 @@
     
 package sonia.scm.repository;
 
+import sonia.scm.auditlog.AuditEntry;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -36,6 +38,7 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 @XmlRootElement(name = "config")
 @XmlAccessorType(XmlAccessType.FIELD)
+@AuditEntry(labels = {"svn", "config"})
 public class SvnConfig extends RepositoryConfig
 {
 

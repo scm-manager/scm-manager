@@ -21,41 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.repository;
 
-import sonia.scm.auditlog.AuditEntry;
+package sonia.scm.auditlog;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-@XmlRootElement(name = "config")
-@XmlAccessorType(XmlAccessType.FIELD)
-@AuditEntry(labels = {"git", "config"})
-public class GitRepositoryConfig {
-
-  public GitRepositoryConfig() {
-  }
-
-  public GitRepositoryConfig(String defaultBranch) {
-    this.defaultBranch = defaultBranch;
-  }
-
-  private String defaultBranch;
-  private boolean nonFastForwardDisallowed;
-
-  public String getDefaultBranch() {
-    return defaultBranch;
-  }
-
-  public void setDefaultBranch(String defaultBranch) {
-    this.defaultBranch = defaultBranch;
-  }
-
-  public boolean isNonFastForwardDisallowed() { return nonFastForwardDisallowed; }
-
-  public void setNonFastForwardDisallowed(boolean nonFastForwardDisallowed) {
-    this.nonFastForwardDisallowed = nonFastForwardDisallowed;
-  }
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE, ElementType.LOCAL_VARIABLE, ElementType.FIELD, ElementType.PACKAGE, ElementType.METHOD})
+public @interface AuditEntry {
+  String[] labels() default {};
+  String[] maskedFields() default {};
+  String[] ignoredFields() default {};
 }

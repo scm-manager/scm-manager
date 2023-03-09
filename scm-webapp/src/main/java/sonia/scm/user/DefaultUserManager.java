@@ -37,6 +37,7 @@ import sonia.scm.HandlerEventType;
 import sonia.scm.ManagerDaoAdapter;
 import sonia.scm.NotFoundException;
 import sonia.scm.SCMContextProvider;
+import sonia.scm.auditlog.Auditor;
 import sonia.scm.search.SearchRequest;
 import sonia.scm.search.SearchUtil;
 import sonia.scm.security.Authentications;
@@ -48,6 +49,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Predicate;
 
 /**
@@ -76,11 +78,11 @@ public class DefaultUserManager extends AbstractUserManager
    * @param userDAO
    */
   @Inject
-  public DefaultUserManager(PasswordService passwordService, UserDAO userDAO)
+  public DefaultUserManager(PasswordService passwordService, UserDAO userDAO, Set<Auditor> auditors)
   {
     this.passwordService = passwordService;
     this.userDAO = userDAO;
-    this.managerDaoAdapter = new ManagerDaoAdapter<>(userDAO);
+    this.managerDaoAdapter = new ManagerDaoAdapter<>(userDAO, auditors);
   }
 
   //~--- methods --------------------------------------------------------------

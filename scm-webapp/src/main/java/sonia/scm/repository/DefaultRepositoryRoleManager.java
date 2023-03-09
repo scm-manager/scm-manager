@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 import com.google.inject.Inject;
@@ -34,31 +34,35 @@ import sonia.scm.HandlerEventType;
 import sonia.scm.ManagerDaoAdapter;
 import sonia.scm.NotFoundException;
 import sonia.scm.SCMContextProvider;
+import sonia.scm.auditlog.Auditor;
 import sonia.scm.security.RepositoryPermissionProvider;
 import sonia.scm.util.Util;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-@Singleton @EagerSingleton
-public class DefaultRepositoryRoleManager extends AbstractRepositoryRoleManager
-{
+@Singleton
+@EagerSingleton
+public class DefaultRepositoryRoleManager extends AbstractRepositoryRoleManager {
 
-  /** the logger for XmlRepositoryRoleManager */
+  /**
+   * the logger for XmlRepositoryRoleManager
+   */
   private static final Logger logger =
     LoggerFactory.getLogger(DefaultRepositoryRoleManager.class);
 
   @Inject
-  public DefaultRepositoryRoleManager(RepositoryRoleDAO repositoryRoleDAO, RepositoryPermissionProvider repositoryPermissionProvider)
-  {
+  public DefaultRepositoryRoleManager(RepositoryRoleDAO repositoryRoleDAO,
+                                      RepositoryPermissionProvider repositoryPermissionProvider,
+                                      Set<Auditor> auditors) {
     this.repositoryRoleDAO = repositoryRoleDAO;
-    this.managerDaoAdapter = new ManagerDaoAdapter<>(repositoryRoleDAO);
+    this.managerDaoAdapter = new ManagerDaoAdapter<>(repositoryRoleDAO, auditors);
     this.repositoryPermissionProvider = repositoryPermissionProvider;
   }
 
@@ -99,6 +103,7 @@ public class DefaultRepositoryRoleManager extends AbstractRepositoryRoleManager
 
   @Override
   public void init(SCMContextProvider context) {
+    // Nothing
   }
 
   @Override
@@ -179,20 +184,16 @@ public class DefaultRepositoryRoleManager extends AbstractRepositoryRoleManager
   @Override
   public Collection<RepositoryRole> getAll(Comparator<RepositoryRole> comaparator, int start, int limit) {
     return Util.createSubCollection(getAll(), comaparator,
-      (collection, item) -> {
-        collection.add(item.clone());
-      }, start, limit);
+      (collection, item) -> collection.add(item.clone()), start, limit);
   }
 
   @Override
-  public Collection<RepositoryRole> getAll(int start, int limit)
-  {
+  public Collection<RepositoryRole> getAll(int start, int limit) {
     return getAll(null, start, limit);
   }
 
   @Override
-  public Long getLastModified()
-  {
+  public Long getLastModified() {
     return repositoryRoleDAO.getLastModified();
   }
 

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 import com.github.sdorra.ssp.PermissionObject;
@@ -30,6 +30,8 @@ import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 import sonia.scm.ModelObject;
+import sonia.scm.auditlog.AuditEntry;
+import sonia.scm.auditlog.AuditLogEntity;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -51,7 +53,8 @@ import static java.util.Collections.unmodifiableSet;
 @StaticPermissions(value = "repositoryRole", permissions = {}, globalPermissions = {"write"})
 @XmlRootElement(name = "roles")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class RepositoryRole implements ModelObject, PermissionObject {
+@AuditEntry(labels = "role", ignoredFields = "lastModified")
+public class RepositoryRole implements ModelObject, PermissionObject, AuditLogEntity {
 
   private static final long serialVersionUID = -723588336073192740L;
 
@@ -217,5 +220,10 @@ public class RepositoryRole implements ModelObject, PermissionObject {
     } catch (CloneNotSupportedException ex) {
       throw new RuntimeException(ex);
     }
+  }
+
+  @Override
+  public String getEntityName() {
+    return getId();
   }
 }

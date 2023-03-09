@@ -37,6 +37,7 @@ import sonia.scm.HandlerEventType;
 import sonia.scm.ManagerDaoAdapter;
 import sonia.scm.NotFoundException;
 import sonia.scm.SCMContextProvider;
+import sonia.scm.auditlog.Auditor;
 import sonia.scm.search.SearchRequest;
 import sonia.scm.search.SearchUtil;
 import sonia.scm.util.CollectionAppender;
@@ -77,10 +78,10 @@ public class DefaultGroupManager extends AbstractGroupManager
    * @param groupDAO
    */
   @Inject
-  public DefaultGroupManager(GroupDAO groupDAO)
+  public DefaultGroupManager(GroupDAO groupDAO, Set<Auditor> auditors)
   {
     this.groupDAO = groupDAO;
-    this.managerDaoAdapter = new ManagerDaoAdapter<>(groupDAO);
+    this.managerDaoAdapter = new ManagerDaoAdapter<>(groupDAO, auditors);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -285,16 +286,11 @@ public class DefaultGroupManager extends AbstractGroupManager
     final PermissionActionCheck<Group> check = GroupPermissions.read();
 
     return Util.createSubCollection(groupDAO.getAll(), comparator,
-      new CollectionAppender<Group>()
-    {
-      @Override
-      public void append(Collection<Group> collection, Group group)
-      {
+      (collection, group) -> {
         if (check.isPermitted(group)) {
           collection.add(group.clone());
         }
-      }
-    }, start, limit);
+      }, start, limit);
   }
 
   /**

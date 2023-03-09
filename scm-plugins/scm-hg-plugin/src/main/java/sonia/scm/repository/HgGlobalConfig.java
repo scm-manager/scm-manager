@@ -25,6 +25,7 @@
 package sonia.scm.repository;
 
 
+import sonia.scm.auditlog.AuditEntry;
 import sonia.scm.util.Util;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -36,6 +37,7 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author Sebastian Sdorra
  */
 @XmlRootElement(name = "config")
+@AuditEntry(labels = {"hg", "config"})
 public class HgGlobalConfig extends RepositoryConfig {
 
   public static final String PERMISSION = "hg";

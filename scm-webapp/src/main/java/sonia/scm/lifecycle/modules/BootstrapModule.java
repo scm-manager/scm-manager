@@ -26,6 +26,7 @@ package sonia.scm.lifecycle.modules;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
+import com.google.inject.multibindings.Multibinder;
 import com.google.inject.throwingproviders.ThrowingProviderBinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,6 +50,8 @@ import sonia.scm.security.DefaultKeyGenerator;
 import sonia.scm.security.KeyGenerator;
 import sonia.scm.store.BlobStoreFactory;
 import sonia.scm.store.ConfigurationEntryStoreFactory;
+import sonia.scm.store.ConfigurationStore;
+import sonia.scm.store.ConfigurationStoreDecoratorFactory;
 import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.store.DataStoreFactory;
 import sonia.scm.store.DefaultBlobDirectoryAccess;
@@ -100,6 +103,10 @@ public class BootstrapModule extends AbstractModule {
     // note CipherUtil uses an other generator
     bind(CipherHandler.class).toInstance(CipherUtil.getInstance().getCipherHandler());
 
+    // Bind empty set in the bootstrap module
+    Multibinder.newSetBinder(binder(), ConfigurationStoreDecoratorFactory.class).addBinding()
+      .to(NoOpConfigurationStoreDecoratorFactory.class);
+
     // bind core
     bind(RepositoryArchivedCheck.class, EventDrivenRepositoryArchiveCheck.class);
     bind(RepositoryExportingCheck.class, DefaultRepositoryExportingCheck.class);
@@ -136,5 +143,12 @@ public class BootstrapModule extends AbstractModule {
     }
 
     return implementation;
+  }
+
+  private static class NoOpConfigurationStoreDecoratorFactory implements ConfigurationStoreDecoratorFactory {
+    @Override
+    public <T> ConfigurationStore<T> createDecorator(ConfigurationStore<T> object, Context context) {
+      return object;
+    }
   }
 }

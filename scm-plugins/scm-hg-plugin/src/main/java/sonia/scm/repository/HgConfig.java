@@ -25,10 +25,12 @@
 package sonia.scm.repository;
 
 import lombok.Value;
+import sonia.scm.auditlog.AuditEntry;
 
 import java.io.File;
 
 @Value
+@AuditEntry(labels = {"hg", "config"})
 public class HgConfig {
 
   String hgBinary;

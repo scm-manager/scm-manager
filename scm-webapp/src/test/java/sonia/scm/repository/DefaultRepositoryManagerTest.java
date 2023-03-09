@@ -48,6 +48,7 @@ import sonia.scm.NoChangesMadeException;
 import sonia.scm.NotFoundException;
 import sonia.scm.SCMContext;
 import sonia.scm.ScmConstraintViolationException;
+import sonia.scm.TempSCMContextProvider;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.api.HookContext;
 import sonia.scm.repository.api.HookContextFactory;
@@ -87,9 +88,6 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
-
-import sonia.scm.TempSCMContextProvider;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -561,7 +559,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
     when(namespaceStrategy.createNamespace(Mockito.any(Repository.class))).thenAnswer(invocation -> mockedNamespace);
 
     return new DefaultRepositoryManager(contextProvider,
-      keyGenerator, repositoryDAO, handlerSet, Providers.of(namespaceStrategy), postProcessor);
+      keyGenerator, repositoryDAO, handlerSet, Providers.of(namespaceStrategy), postProcessor, emptySet());
   }
 
   private RepositoryDAO createRepositoryDaoMock() {

@@ -25,11 +25,13 @@
 package sonia.scm.repository;
 
 import lombok.Data;
+import sonia.scm.auditlog.AuditEntry;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
 @Data
 @XmlRootElement
+@AuditEntry(labels = {"hg", "config"})
 public class HgRepositoryConfig {
   String encoding;
 }

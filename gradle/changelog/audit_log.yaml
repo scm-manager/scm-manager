@@ -1,0 +1,2 @@
+- type: added
+  description: Initial implementation of an audit log API

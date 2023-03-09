@@ -29,6 +29,7 @@ import com.google.common.collect.Sets;
 import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.auditlog.AuditEntry;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.security.AnonymousMode;
 import sonia.scm.util.HttpUtil;
@@ -57,6 +58,7 @@ import java.util.concurrent.TimeUnit;
 @Singleton
 @XmlRootElement(name = "scm-config")
 @XmlAccessorType(XmlAccessType.FIELD)
+@AuditEntry(labels = "config", maskedFields = "proxyPassword")
 public class ScmConfiguration implements Configuration {
 
   /**

@@ -21,41 +21,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.repository;
 
-import sonia.scm.auditlog.AuditEntry;
+package sonia.scm.auditlog;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
+import lombok.Getter;
 
-@XmlRootElement(name = "config")
-@XmlAccessorType(XmlAccessType.FIELD)
-@AuditEntry(labels = {"git", "config"})
-public class GitRepositoryConfig {
+import java.util.Set;
 
-  public GitRepositoryConfig() {
+import static java.util.Collections.emptySet;
+
+@Getter
+public class EntryCreationContext<T> {
+  private final T object;
+  private final T oldObject;
+  private final String entity;
+  private final Set<String> additionalLabels;
+
+  public EntryCreationContext(T object, T oldObject) {
+    this(object, oldObject, "", emptySet());
   }
 
-  public GitRepositoryConfig(String defaultBranch) {
-    this.defaultBranch = defaultBranch;
+  public EntryCreationContext(T object, T oldObject, Set<String> additionalLabels) {
+    this(object, oldObject, "", additionalLabels);
   }
 
-  private String defaultBranch;
-  private boolean nonFastForwardDisallowed;
-
-  public String getDefaultBranch() {
-    return defaultBranch;
-  }
-
-  public void setDefaultBranch(String defaultBranch) {
-    this.defaultBranch = defaultBranch;
-  }
-
-  public boolean isNonFastForwardDisallowed() { return nonFastForwardDisallowed; }
-
-  public void setNonFastForwardDisallowed(boolean nonFastForwardDisallowed) {
-    this.nonFastForwardDisallowed = nonFastForwardDisallowed;
+  public EntryCreationContext(T object, T oldObject, String entity, Set<String>  additionalLabels) {
+    this.object = object;
+    this.oldObject = oldObject;
+    this.entity = entity;
+    this.additionalLabels = additionalLabels;
   }
 }

@@ -44,6 +44,7 @@ import sonia.scm.api.v2.resources.BranchLinkProvider;
 import sonia.scm.api.v2.resources.DefaultBranchLinkProvider;
 import sonia.scm.api.v2.resources.DefaultRepositoryLinkProvider;
 import sonia.scm.api.v2.resources.RepositoryLinkProvider;
+import sonia.scm.auditlog.AuditLogConfigurationStoreDecoratorFactory;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.cache.GuavaCacheManager;
 import sonia.scm.config.ScmConfiguration;
@@ -98,6 +99,7 @@ import sonia.scm.security.DefaultSecuritySystem;
 import sonia.scm.security.LoginAttemptHandler;
 import sonia.scm.security.RepositoryPermissionProvider;
 import sonia.scm.security.SecuritySystem;
+import sonia.scm.store.ConfigurationStoreDecoratorFactory;
 import sonia.scm.store.FileStoreExporter;
 import sonia.scm.store.StoreExporter;
 import sonia.scm.template.MustacheTemplateEngine;
@@ -153,6 +155,10 @@ class ScmServletModule extends ServletModule {
     ScmConfiguration config = getScmConfiguration();
 
     bind(NamespaceStrategy.class).toProvider(NamespaceStrategyProvider.class);
+
+    // bind store decorators
+    Multibinder<ConfigurationStoreDecoratorFactory> storeDecoratorMultiBinder = Multibinder.newSetBinder(binder(), ConfigurationStoreDecoratorFactory.class);
+    storeDecoratorMultiBinder.addBinding().to(AuditLogConfigurationStoreDecoratorFactory.class);
 
     // bind repository provider
     ThrowingProviderBinder.create(binder())

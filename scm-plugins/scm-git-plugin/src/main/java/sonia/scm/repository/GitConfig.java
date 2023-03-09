@@ -27,6 +27,7 @@ package sonia.scm.repository;
 //~--- JDK imports ------------------------------------------------------------
 
 import com.google.common.base.Strings;
+import sonia.scm.auditlog.AuditEntry;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -39,6 +40,7 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 @XmlRootElement(name = "config")
 @XmlAccessorType(XmlAccessType.FIELD)
+@AuditEntry(labels = {"git", "config"})
 public class GitConfig extends RepositoryConfig {
 
   private static final String FALLBACK_BRANCH = "main";

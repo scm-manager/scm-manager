@@ -35,6 +35,8 @@ import lombok.Setter;
 import sonia.scm.BasicPropertiesAware;
 import sonia.scm.ModelObject;
 import sonia.scm.ReducedModelObject;
+import sonia.scm.auditlog.AuditEntry;
+import sonia.scm.auditlog.AuditLogEntity;
 import sonia.scm.search.Indexed;
 import sonia.scm.search.IndexedType;
 import sonia.scm.util.Util;
@@ -58,7 +60,8 @@ import java.security.Principal;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class User extends BasicPropertiesAware implements Principal, ModelObject, PermissionObject, ReducedModelObject {
+@AuditEntry(labels = "user", maskedFields = "password", ignoredFields = "lastModified")
+public class User extends BasicPropertiesAware implements Principal, ModelObject, PermissionObject, ReducedModelObject, AuditLogEntity {
 
   private static final long serialVersionUID = -3089541936726329663L;
 
@@ -224,5 +227,14 @@ public class User extends BasicPropertiesAware implements Principal, ModelObject
   @Override
   public String getId() {
     return name;
+  }
+
+  /**
+   * Get the entity name which is used for the audit log
+   * @since 2.43.0
+   */
+  @Override
+  public String getEntityName() {
+    return getName();
   }
 }

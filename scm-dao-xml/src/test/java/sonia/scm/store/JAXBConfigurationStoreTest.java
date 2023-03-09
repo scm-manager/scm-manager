@@ -25,9 +25,13 @@
 package sonia.scm.store;
 
 import org.junit.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryReadOnlyChecker;
 
+import java.util.Collections;
+
+import static java.util.Collections.emptySet;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -46,7 +50,7 @@ public class JAXBConfigurationStoreTest extends StoreTestBase {
 
   @Override
   protected JAXBConfigurationStoreFactory createStoreFactory() {
-    return new JAXBConfigurationStoreFactory(contextProvider, repositoryLocationResolver, readOnlyChecker);
+    return new JAXBConfigurationStoreFactory(contextProvider, repositoryLocationResolver, readOnlyChecker, emptySet());
   }
 
 

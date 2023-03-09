@@ -36,6 +36,9 @@ import sonia.scm.NotFoundException;
 import sonia.scm.store.JAXBConfigurationStoreFactory;
 import sonia.scm.user.xml.XmlUserDAO;
 
+import java.util.Collections;
+
+import static java.util.Collections.emptySet;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -64,7 +67,7 @@ public class DefaultUserManagerTest extends UserManagerTestBase {
 
   @Override
   public UserManager createManager() {
-    return new DefaultUserManager(passwordService, createXmlUserDAO());
+    return new DefaultUserManager(passwordService, createXmlUserDAO(), emptySet());
   }
 
   @Before
@@ -78,7 +81,7 @@ public class DefaultUserManagerTest extends UserManagerTestBase {
 
     when(passwordService.encryptPassword(anyString())).thenAnswer(invocation -> invocation.getArgument(0));
 
-    userManager = new DefaultUserManager(passwordService, userDAO);
+    userManager = new DefaultUserManager(passwordService, userDAO, emptySet());
   }
 
   @Test(expected = InvalidPasswordException.class)
@@ -161,6 +164,6 @@ public class DefaultUserManagerTest extends UserManagerTestBase {
   }
 
   private XmlUserDAO createXmlUserDAO() {
-    return new XmlUserDAO(new JAXBConfigurationStoreFactory(contextProvider, locationResolver, null));
+    return new XmlUserDAO(new JAXBConfigurationStoreFactory(contextProvider, locationResolver, null, emptySet()));
   }
 }

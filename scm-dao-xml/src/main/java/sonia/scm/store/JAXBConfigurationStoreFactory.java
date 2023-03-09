@@ -30,6 +30,8 @@ import sonia.scm.SCMContextProvider;
 import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.repository.RepositoryReadOnlyChecker;
 
+import java.util.Set;
+
 /**
  * JAXB implementation of {@link ConfigurationStoreFactory}.
  *
@@ -38,20 +40,24 @@ import sonia.scm.repository.RepositoryReadOnlyChecker;
 @Singleton
 public class JAXBConfigurationStoreFactory extends FileBasedStoreFactory implements ConfigurationStoreFactory {
 
+  private final Set<ConfigurationStoreDecoratorFactory> decoratorFactories;
+
   /**
    * Constructs a new instance.
    *
    * @param repositoryLocationResolver Resolver to get the repository Directory
    */
   @Inject
-  public JAXBConfigurationStoreFactory(SCMContextProvider contextProvider, RepositoryLocationResolver repositoryLocationResolver, RepositoryReadOnlyChecker readOnlyChecker) {
+  public JAXBConfigurationStoreFactory(SCMContextProvider contextProvider, RepositoryLocationResolver repositoryLocationResolver, RepositoryReadOnlyChecker readOnlyChecker, Set<ConfigurationStoreDecoratorFactory> decoratorFactories) {
     super(contextProvider, repositoryLocationResolver, Store.CONFIG, readOnlyChecker);
+    this.decoratorFactories = decoratorFactories;
   }
 
   @Override
-  public <T> JAXBConfigurationStore<T> getStore(TypedStoreParameters<T> storeParameters) {
+  public <T> ConfigurationStore<T> getStore(TypedStoreParameters<T> storeParameters) {
     TypedStoreContext<T> context = TypedStoreContext.of(storeParameters);
-    return new JAXBConfigurationStore<>(
+
+    ConfigurationStore<T> store = new JAXBConfigurationStore<>(
       context,
       storeParameters.getType(),
       getStoreLocation(storeParameters.getName().concat(StoreConstants.FILE_EXTENSION),
@@ -59,5 +65,11 @@ public class JAXBConfigurationStoreFactory extends FileBasedStoreFactory impleme
         storeParameters.getRepositoryId()),
       () -> mustBeReadOnly(storeParameters)
     );
+
+    for (ConfigurationStoreDecoratorFactory factory : decoratorFactories) {
+      store = factory.createDecorator(store, new StoreDecoratorFactory.Context(storeParameters));
+    }
+
+    return store;
   }
 }

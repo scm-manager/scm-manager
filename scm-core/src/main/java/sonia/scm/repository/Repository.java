@@ -31,6 +31,8 @@ import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import sonia.scm.BasicPropertiesAware;
 import sonia.scm.ModelObject;
+import sonia.scm.auditlog.AuditEntry;
+import sonia.scm.auditlog.AuditLogEntity;
 import sonia.scm.search.Indexed;
 import sonia.scm.search.IndexedType;
 import sonia.scm.util.Util;
@@ -64,9 +66,10 @@ import java.util.Set;
     @Guard(guard = RepositoryPermissionGuard.class)
   }
 )
+@AuditEntry(labels = "repository", ignoredFields = "lastModified")
 public class Repository
   extends BasicPropertiesAware
-  implements ModelObject, PermissionObject, RepositoryCoordinates, RepositoryPermissionHolder {
+  implements ModelObject, PermissionObject, RepositoryCoordinates, RepositoryPermissionHolder, AuditLogEntity {
 
   private static final long serialVersionUID = 3486560714961909711L;
 
@@ -412,5 +415,14 @@ public class Repository
       .add("properties", properties)
       .add("healthCheckFailures", healthCheckFailures)
       .toString();
+  }
+
+  /**
+   * Get the entity name which is used for the audit log
+   * @since 2.43.0
+   */
+  @Override
+  public String getEntityName() {
+    return getNamespaceAndName().toString();
   }
 }

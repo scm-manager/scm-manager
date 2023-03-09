@@ -21,41 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.repository;
 
-import sonia.scm.auditlog.AuditEntry;
+package sonia.scm.auditlog;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
+import sonia.scm.repository.RepositoryDAO;
+import sonia.scm.store.ConfigurationStore;
+import sonia.scm.store.ConfigurationStoreDecoratorFactory;
 
-@XmlRootElement(name = "config")
-@XmlAccessorType(XmlAccessType.FIELD)
-@AuditEntry(labels = {"git", "config"})
-public class GitRepositoryConfig {
+import javax.inject.Inject;
+import java.util.Set;
 
-  public GitRepositoryConfig() {
+public class AuditLogConfigurationStoreDecoratorFactory implements ConfigurationStoreDecoratorFactory {
+
+  private final Set<Auditor> auditors;
+  private final RepositoryDAO repositoryDAO;
+
+  @Inject
+  public AuditLogConfigurationStoreDecoratorFactory(Set<Auditor> auditor, RepositoryDAO repositoryDAO) {
+    this.auditors = auditor;
+    this.repositoryDAO = repositoryDAO;
   }
 
-  public GitRepositoryConfig(String defaultBranch) {
-    this.defaultBranch = defaultBranch;
-  }
-
-  private String defaultBranch;
-  private boolean nonFastForwardDisallowed;
-
-  public String getDefaultBranch() {
-    return defaultBranch;
-  }
-
-  public void setDefaultBranch(String defaultBranch) {
-    this.defaultBranch = defaultBranch;
-  }
-
-  public boolean isNonFastForwardDisallowed() { return nonFastForwardDisallowed; }
-
-  public void setNonFastForwardDisallowed(boolean nonFastForwardDisallowed) {
-    this.nonFastForwardDisallowed = nonFastForwardDisallowed;
+  @Override
+  public <T> ConfigurationStore<T> createDecorator(ConfigurationStore<T> object, Context context) {
+    return new AuditLogConfigurationStoreDecorator<>(auditors, repositoryDAO, object, context);
   }
 }

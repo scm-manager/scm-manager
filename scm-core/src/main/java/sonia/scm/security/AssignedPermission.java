@@ -28,6 +28,7 @@ package sonia.scm.security;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
+import sonia.scm.auditlog.AuditEntry;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -45,6 +46,7 @@ import java.io.Serializable;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "assigned-permission")
+@AuditEntry(labels = "permission")
 public class AssignedPermission implements PermissionObject, Serializable
 {
 

@@ -37,6 +37,7 @@ import sonia.scm.NoChangesMadeException;
 import sonia.scm.NotFoundException;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.Type;
+import sonia.scm.auditlog.Auditor;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.security.AuthorizationChangedEvent;
 import sonia.scm.security.KeyGenerator;
@@ -112,9 +113,13 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
   private final RepositoryPostProcessor repositoryPostProcessor;
 
   @Inject
-  public DefaultRepositoryManager(SCMContextProvider contextProvider, KeyGenerator keyGenerator,
-                                  RepositoryDAO repositoryDAO, Set<RepositoryHandler> handlerSet,
-                                  Provider<NamespaceStrategy> namespaceStrategyProvider, RepositoryPostProcessor repositoryPostProcessor) {
+  public DefaultRepositoryManager(SCMContextProvider contextProvider,
+                                  KeyGenerator keyGenerator,
+                                  RepositoryDAO repositoryDAO,
+                                  Set<RepositoryHandler> handlerSet,
+                                  Provider<NamespaceStrategy> namespaceStrategyProvider,
+                                  RepositoryPostProcessor repositoryPostProcessor,
+                                  Set<Auditor> auditors) {
     this.keyGenerator = keyGenerator;
     this.repositoryDAO = repositoryDAO;
     this.namespaceStrategyProvider = namespaceStrategyProvider;
@@ -126,7 +131,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
     for (RepositoryHandler handler : handlerSet) {
       addHandler(contextProvider, handler);
     }
-    managerDaoAdapter = new ManagerDaoAdapter<>(repositoryDAO);
+    managerDaoAdapter = new ManagerDaoAdapter<>(repositoryDAO, auditors);
   }
 
   @Override

@@ -21,41 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.repository;
 
-import sonia.scm.auditlog.AuditEntry;
+package sonia.scm.store;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-
-@XmlRootElement(name = "config")
-@XmlAccessorType(XmlAccessType.FIELD)
-@AuditEntry(labels = {"git", "config"})
-public class GitRepositoryConfig {
-
-  public GitRepositoryConfig() {
-  }
-
-  public GitRepositoryConfig(String defaultBranch) {
-    this.defaultBranch = defaultBranch;
-  }
-
-  private String defaultBranch;
-  private boolean nonFastForwardDisallowed;
-
-  public String getDefaultBranch() {
-    return defaultBranch;
-  }
-
-  public void setDefaultBranch(String defaultBranch) {
-    this.defaultBranch = defaultBranch;
-  }
-
-  public boolean isNonFastForwardDisallowed() { return nonFastForwardDisallowed; }
-
-  public void setNonFastForwardDisallowed(boolean nonFastForwardDisallowed) {
-    this.nonFastForwardDisallowed = nonFastForwardDisallowed;
-  }
+public interface ConfigurationStoreDecoratorFactory extends StoreDecoratorFactory {
+  <T> ConfigurationStore<T> createDecorator(ConfigurationStore<T> object, Context context);
 }
