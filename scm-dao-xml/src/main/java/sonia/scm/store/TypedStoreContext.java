@@ -48,8 +48,11 @@ final class TypedStoreContext<T> {
   }
 
   static <T> TypedStoreContext<T> of(TypedStoreParameters<T> parameters) {
-      JAXBContext jaxbContext = contextCache.computeIfAbsent(parameters.getType(), type -> createJaxbContext(parameters));
-      return new TypedStoreContext<>(jaxbContext, parameters);
+    JAXBContext jaxbContext;
+    synchronized (contextCache) {
+      jaxbContext = contextCache.computeIfAbsent(parameters.getType(), type -> createJaxbContext(parameters));
+    }
+    return new TypedStoreContext<>(jaxbContext, parameters);
   }
 
   private static <T> JAXBContext createJaxbContext(TypedStoreParameters<T> parameters) {
