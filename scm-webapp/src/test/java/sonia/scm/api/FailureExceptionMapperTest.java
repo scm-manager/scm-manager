@@ -48,6 +48,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -98,7 +99,7 @@ class FailureExceptionMapperTest {
   }
 
   private MockHttpResponse dispatch(MockHttpRequest request) {
-    when(this.request.getMethod()).thenReturn(request.getHttpMethod());
+    lenient().when(this.request.getMethod()).thenReturn(request.getHttpMethod());
     MockHttpResponse response = new MockHttpResponse();
     dispatcher.invoke(request, response);
     return response;
