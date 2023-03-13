@@ -42,6 +42,7 @@
   },
   "dependencies": {
     "@scm-manager/ui-buttons": "2.42.4-SNAPSHOT",
+    "@scm-manager/ui-overlays": "2.42.4-SNAPSHOT",
     "@scm-manager/ui-api": "2.42.4-SNAPSHOT"
   },
   "prettier": "@scm-manager/prettier-config",
