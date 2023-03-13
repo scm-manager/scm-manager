@@ -1,15 +1,15 @@
 {
   "name": "@scm-manager/ui-plugins",
-  "version": "2.42.3-SNAPSHOT",
+  "version": "2.42.3",
   "license": "MIT",
   "bin": {
     "ui-plugins": "./bin/ui-plugins.js"
   },
   "dependencies": {
-    "@scm-manager/ui-components": "2.42.3-SNAPSHOT",
-    "@scm-manager/ui-extensions": "2.42.3-SNAPSHOT",
-    "@scm-manager/ui-forms": "2.42.3-SNAPSHOT",
-    "@scm-manager/ui-buttons": "2.42.3-SNAPSHOT",
+    "@scm-manager/ui-components": "2.42.3",
+    "@scm-manager/ui-extensions": "2.42.3",
+    "@scm-manager/ui-forms": "2.42.3",
+    "@scm-manager/ui-buttons": "2.42.3",
     "classnames": "^2.2.6",
     "query-string": "6.14.1",
     "react": "^17.0.1",
@@ -28,9 +28,9 @@
     "@scm-manager/plugin-scripts": "^1.2.2",
     "@scm-manager/prettier-config": "^2.10.1",
     "@scm-manager/tsconfig": "^2.13.0",
-    "@scm-manager/ui-scripts": "2.42.3-SNAPSHOT",
-    "@scm-manager/ui-tests": "2.42.3-SNAPSHOT",
-    "@scm-manager/ui-types": "2.42.3-SNAPSHOT",
+    "@scm-manager/ui-scripts": "2.42.3",
+    "@scm-manager/ui-tests": "2.42.3",
+    "@scm-manager/ui-types": "2.42.3",
     "@types/classnames": "^2.2.9",
     "@types/enzyme": "^3.10.3",
     "@types/fetch-mock": "^7.3.1",

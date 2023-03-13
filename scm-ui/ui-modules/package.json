@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-modules",
-  "version": "2.42.3-SNAPSHOT",
+  "version": "2.42.3",
   "private": true,
   "main": "build/index.js",
   "module": "build/index.mjs",
