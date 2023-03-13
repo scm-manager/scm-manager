@@ -85,6 +85,65 @@ Jenkins will
 
 ## Make a party
 
+# Hotfix Releases of SCM-Manager
+
+To release a hotfix version of SCM-Manager (or in other words a version, that is not based on the current
+`develop` branch but on an older tag), there is a bit more manual work to do and there is no one-fits-all
+ way, so consider each step carefully and don't take this as a copy-paste manual like the normal release.
+
+## Create hotfix branch
+
+To trigger the release, create a hotfix branch on the tag you want to create the hotfix for (lets say,
+that's version `2.30.0`) and prepare the release like above:
+
+```bash
+git checkout 2.30.0
+git checkout -b hotfix/2.30.1
+```
+
+Then apply your fixes (eg. by cherry picking the relevant commits) and update the `CHANGELOG.md` (if you
+have single changelog yaml files, you could use the `updateChangelog` like above). Add the `CHANGELOG.md`,
+remove the yamls, and push the hotfix branch:
+
+```
+git rm -rf gradle/changelog
+git add CHANGELOG.md
+git commit -m "Adjust changelog for release 2.30.1"
+git push origin hotfix/2.30.1
+```
+
+Jenkins will build and release the versions, create the new tag, but **will not** update the `main` or
+`develop` branches. So these updates come next.
+
+## Update Branches
+
+Depending on whether you released a hotfix for an older version or the latest release, you have to update
+the `main` branch to the new tag. So in our example, if there is no version `2.31.x` yet, the new version
+`2.30.1` is the latest version and we have to update `main`:
+
+```
+git checkout main
+git merge 2.30.1
+git push origin main
+```
+
+Regardless of the `main` branch, you should update the `develop` branch and merge the hotfix to make clear,
+that there are no changes that all changes are part of the current `develop` state. Normally, this leads
+to merge conflicts, because the version on `develop` has been set to a new `SNAPSHOT`, while the version
+of the hotfix has been updated to the new release version. So you have to merge all these conflicts manually.
+
+```
+git checkout develop
+git merge 2.30.1
+```
+
+How these conflicts should be merged depends on the version that has been released:
+
+- If it has been a hotfix for an older version, you could keep the SNAPSHOT versions and simply discard the
+  released version.
+- If the hotfix is the new main, you should take this new version and then manually create a new SNAPSHOT
+  based on the new hotfix version number using gradle: `./gradlew setVersionToNextSnapshot`.
+
 # How to release SCM-Manager v2 plugins
 
 To release a new version of a Plugin for SCM-Manager v2 you have to do the following steps (replace placeholder `<version>` accordingly, eg. with `2.1.0`):
