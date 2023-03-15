@@ -156,9 +156,9 @@ class DiffFile extends React.Component<Props, State> {
     }
   };
 
-  toggleCollapse = () => {
-    const { onCollapseStateChange } = this.props;
-    const { file } = this.state;
+  toggleCollapse = (event: React.MouseEvent<HTMLDivElement>) => {
+    const { onCollapseStateChange, isCollapsed } = this.props;
+    const { file, collapsed } = this.state;
     if (this.hasContent(file)) {
       if (onCollapseStateChange) {
         onCollapseStateChange(file);
@@ -166,6 +166,17 @@ class DiffFile extends React.Component<Props, State> {
         this.setState((state) => ({
           collapsed: !state.collapsed,
         }));
+      }
+    }
+    if (this.props.stickyHeader) {
+      const element = document.getElementById(event.currentTarget.id);
+      // Prevent skipping diffs on collapsing long ones because of the sticky header
+      // We jump to the start of the diff and afterwards go slightly up to show the diff header right under the page header
+      // Only scroll if diff is not collapsed and is using the "sticky" mode
+      const pageHeaderSize = 50;
+      if (element && (isCollapsed ? !isCollapsed(file) : !collapsed) && element.getBoundingClientRect().top < pageHeaderSize) {
+        element.scrollIntoView();
+        window.scrollBy(0, -pageHeaderSize);
       }
     }
   };
@@ -542,6 +553,7 @@ class DiffFile extends React.Component<Props, State> {
               className={classNames("level-left", "is-flex", "is-clickable")}
               onClick={this.toggleCollapse}
               title={this.hoverFileTitle(file)}
+              id={this.getAnchorId(file)}
             >
               {collapseIcon}
               <h4 className={classNames("has-text-weight-bold", "is-ellipsis-overflow", "is-size-6", "ml-1")}>

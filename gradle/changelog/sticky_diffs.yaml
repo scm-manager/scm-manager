@@ -1,0 +1,2 @@
+- type: fixed
+  description: Fix sticky diffs page position after collapse
