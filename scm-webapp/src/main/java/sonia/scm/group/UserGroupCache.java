@@ -24,6 +24,7 @@
 
 package sonia.scm.group;
 
+import sonia.scm.auditlog.AuditEntry;
 import sonia.scm.xml.XmlMapMultiStringAdapter;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -36,6 +37,7 @@ import java.util.Set;
 
 import static java.util.Collections.emptySet;
 
+@AuditEntry(ignore = true)
 @XmlRootElement(name = "user-group-cache")
 @XmlAccessorType(XmlAccessType.FIELD)
 class UserGroupCache {

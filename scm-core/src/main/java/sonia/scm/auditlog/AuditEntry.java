@@ -25,14 +25,17 @@
 package sonia.scm.auditlog;
 
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+@Inherited
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE, ElementType.LOCAL_VARIABLE, ElementType.FIELD, ElementType.PACKAGE, ElementType.METHOD})
+@Target({ElementType.TYPE})
 public @interface AuditEntry {
   String[] labels() default {};
   String[] maskedFields() default {};
   String[] ignoredFields() default {};
+  boolean ignore() default false;
 }

@@ -36,6 +36,9 @@ import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.HandlerEventType;
+import sonia.scm.auditlog.AuditEntry;
+import sonia.scm.auditlog.Auditor;
+import sonia.scm.auditlog.EntryCreationContext;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.group.GroupEvent;
 import sonia.scm.plugin.PluginLoader;
@@ -52,19 +55,18 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static java.util.Collections.emptyList;
 import static java.util.Objects.isNull;
 
 
 /**
- * TODO add events
- *
  * @author Sebastian Sdorra
  * @since 1.31
  */
@@ -76,19 +78,23 @@ public class DefaultSecuritySystem implements SecuritySystem {
   private static final String PERMISSION_DESCRIPTOR =
     "META-INF/scm/permissions.xml";
 
-  /**
-   * the logger for DefaultSecuritySystem
-   */
   private static final Logger logger =
     LoggerFactory.getLogger(DefaultSecuritySystem.class);
 
+  private final ConfigurationEntryStore<AssignedPermission> store;
+
+  private final ImmutableSet<PermissionDescriptor> availablePermissions;
+
+  private final Set<Auditor> auditors;
+
   @Inject
-  public DefaultSecuritySystem(ConfigurationEntryStoreFactory storeFactory, PluginLoader pluginLoader) {
+  public DefaultSecuritySystem(ConfigurationEntryStoreFactory storeFactory, PluginLoader pluginLoader, Set<Auditor> auditors) {
     store = storeFactory
       .withType(AssignedPermission.class)
       .withName(NAME)
       .build();
     this.availablePermissions = readAvailablePermissions(pluginLoader);
+    this.auditors = auditors;
   }
 
   @Override
@@ -96,9 +102,9 @@ public class DefaultSecuritySystem implements SecuritySystem {
     assertHasPermission();
     validatePermission(permission);
 
-    String id = store.put(permission);
+    callAuditors(null, permission);
 
-    StoredAssignedPermission sap = new StoredAssignedPermission(id, permission);
+    store.put(permission);
 
     //J-
     ScmEventBus.getInstance().post(
@@ -114,6 +120,7 @@ public class DefaultSecuritySystem implements SecuritySystem {
       && Objects.equal(sap.isGroupPermission(), permission.isGroupPermission())
       && Objects.equal(sap.getPermission(), permission.getPermission()));
     if (deleted) {
+      callAuditors(permission, null);
       ScmEventBus.getInstance().post(
         new AssignedPermissionEvent(HandlerEventType.DELETE, permission)
       );
@@ -170,10 +177,9 @@ public class DefaultSecuritySystem implements SecuritySystem {
     return !toRemove.isEmpty();
   }
 
-  @SuppressWarnings("unchecked")
   private static List<PermissionDescriptor> parsePermissionDescriptor(
     JAXBContext context, URL descriptorUrl) {
-    List<PermissionDescriptor> descriptors = Collections.EMPTY_LIST;
+    List<PermissionDescriptor> descriptors = emptyList();
 
     try {
       PermissionDescriptors descriptorWrapper =
@@ -227,6 +233,15 @@ public class DefaultSecuritySystem implements SecuritySystem {
       "permission is required");
   }
 
+  private void callAuditors(AssignedPermission notModified, AssignedPermission newObject) {
+    AssignedPermission nonNullPermission = newObject == null ? notModified : newObject;
+    if (nonNullPermission.getClass().isAnnotationPresent(AuditEntry.class)) {
+      String label = nonNullPermission.isGroupPermission() ? "group" : "user";
+      EntryCreationContext<AssignedPermission> context = new EntryCreationContext<>(newObject, notModified, nonNullPermission.getEntityName(), Set.of(label));
+      auditors.forEach(s -> s.createEntry(context));
+    }
+  }
+
   /**
    * Descriptor for permissions.
    */
@@ -234,10 +249,9 @@ public class DefaultSecuritySystem implements SecuritySystem {
   @XmlAccessorType(XmlAccessType.FIELD)
   private static class PermissionDescriptors {
 
-    @SuppressWarnings("unchecked")
     public List<PermissionDescriptor> getPermissions() {
       if (permissions == null) {
-        permissions = Collections.EMPTY_LIST;
+        permissions = emptyList();
       }
 
       return permissions;
@@ -246,8 +260,4 @@ public class DefaultSecuritySystem implements SecuritySystem {
     @XmlElement(name = "permission")
     private List<PermissionDescriptor> permissions;
   }
-
-  private final ConfigurationEntryStore<AssignedPermission> store;
-
-  private final ImmutableSet<PermissionDescriptor> availablePermissions;
 }

@@ -24,6 +24,7 @@
 
 package sonia.scm.user.xml;
 
+import sonia.scm.auditlog.AuditEntry;
 import sonia.scm.user.User;
 import sonia.scm.xml.XmlDatabase;
 
@@ -40,6 +41,7 @@ import java.util.TreeMap;
  *
  * @author Sebastian Sdorra
  */
+@AuditEntry(ignore = true)
 @XmlRootElement(name = "user-db")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class XmlUserDatabase implements XmlDatabase<User>

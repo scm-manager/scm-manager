@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.security;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -29,6 +29,7 @@ package sonia.scm.security;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import sonia.scm.auditlog.AuditEntry;
+import sonia.scm.auditlog.AuditLogEntity;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -47,7 +48,7 @@ import java.io.Serializable;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "assigned-permission")
 @AuditEntry(labels = "permission")
-public class AssignedPermission implements PermissionObject, Serializable
+public class AssignedPermission implements PermissionObject, Serializable, AuditLogEntity
 {
 
   /** serial version uid */
@@ -207,4 +208,9 @@ public class AssignedPermission implements PermissionObject, Serializable
 
   /** string representation of the permission */
   private PermissionDescriptor permission;
+
+  @Override
+  public String getEntityName() {
+    return getName();
+  }
 }

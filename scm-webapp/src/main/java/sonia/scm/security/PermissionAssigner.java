@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.security;
 
 import sonia.scm.ContextEntry;
@@ -94,7 +94,7 @@ public class PermissionAssigner {
     permissions.stream()
       .filter(permissionExists(availablePermissions, existingPermissions))
       .map(p -> new AssignedPermission(id, groupPermission, p))
-      .filter(p -> !existingPermissions.contains(p))
+      .filter(p -> existingPermissions.stream().map(AssignedPermission::getPermission).noneMatch(p2 -> p.getPermission().equals(p2)))
       .forEach(securitySystem::addPermission);
   }
 

@@ -24,6 +24,7 @@
 
 package sonia.scm.group.xml;
 
+import sonia.scm.auditlog.AuditEntry;
 import sonia.scm.group.Group;
 import sonia.scm.xml.XmlDatabase;
 
@@ -40,6 +41,7 @@ import java.util.TreeMap;
  *
  * @author Sebastian Sdorra
  */
+@AuditEntry(ignore = true)
 @XmlRootElement(name = "group-db")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class XmlGroupDatabase implements XmlDatabase<Group>

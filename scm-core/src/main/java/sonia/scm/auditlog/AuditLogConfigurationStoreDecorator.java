@@ -29,7 +29,10 @@ import sonia.scm.repository.RepositoryDAO;
 import sonia.scm.store.ConfigurationStore;
 import sonia.scm.store.StoreDecoratorFactory;
 
+import java.util.Optional;
 import java.util.Set;
+
+import static java.util.Collections.emptySet;
 
 public class AuditLogConfigurationStoreDecorator<T> implements ConfigurationStore<T> {
 
@@ -50,13 +53,40 @@ public class AuditLogConfigurationStoreDecorator<T> implements ConfigurationStor
   }
 
   public void set(T object) {
-      String repositoryId = context.getStoreParameters().getRepositoryId();
-      if (!Strings.isNullOrEmpty(repositoryId)) {
-        String name = repositoryDAO.get(repositoryId).getNamespaceAndName().toString();
-        auditors.forEach(s -> s.createEntry(new EntryCreationContext<>(object, get(), name, Set.of("repository"))));
-      } else {
-        auditors.forEach(s -> s.createEntry(new EntryCreationContext<>(object, get(), "", Set.of(context.getStoreParameters().getName()))));
-      }
-      delegate.set(object);
+    if (!shouldBeIgnored(object)) {
+      auditors.forEach(s -> s.createEntry(createEntryCreationContext(object)));
+    }
+    delegate.set(object);
+  }
+
+  private EntryCreationContext<T> createEntryCreationContext(T object) {
+    String repositoryId = context.getStoreParameters().getRepositoryId();
+    if (!Strings.isNullOrEmpty(repositoryId)) {
+      String name = repositoryDAO.get(repositoryId).getNamespaceAndName().toString();
+      return new EntryCreationContext<>(object, get(), name, getRepositoryLabels(object));
+    } else {
+      return new EntryCreationContext<>(object, get(), "", shouldUseStoreNameAsLabel(object) ? Set.of(context.getStoreParameters().getName()) : emptySet());
+    }
+  }
+
+  private boolean shouldBeIgnored(T object) {
+    return getAnnotation(object).map(AuditEntry::ignore).orElse(false);
+  }
+
+  private Set<String> getRepositoryLabels(T object) {
+    Set<String> labels = new java.util.HashSet<>();
+    labels.add("repository");
+    if (shouldUseStoreNameAsLabel(object)) {
+      labels.add(context.getStoreParameters().getName());
+    }
+    return labels;
+  }
+
+  private boolean shouldUseStoreNameAsLabel(T object) {
+    return getAnnotation(object).map(annotation -> annotation.labels().length == 0).orElse(true);
+  }
+
+  private Optional<AuditEntry> getAnnotation(T object) {
+    return Optional.ofNullable(object.getClass().getAnnotation(AuditEntry.class));
   }
 }

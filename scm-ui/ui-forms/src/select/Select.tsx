@@ -36,7 +36,7 @@ type Props = {
 const Select = React.forwardRef<HTMLSelectElement, Props>(
   ({ variant, children, className, options, testId, ...props }, ref) => (
     <div className={classNames("select", { "is-multiple": props.multiple }, createVariantClass(variant), className)}>
-      <select ref={ref} {...props} {...createAttributesForTesting(testId)}>
+      <select ref={ref} {...props} {...createAttributesForTesting(testId)} className={className}>
         {options
           ? options.map((option) => (
               <option {...option} key={option.value as Key}>

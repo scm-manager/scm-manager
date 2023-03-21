@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.xml;
 
+import sonia.scm.auditlog.AuditEntry;
 import sonia.scm.repository.RepositoryRole;
 import sonia.scm.xml.XmlDatabase;
 
@@ -36,6 +37,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
 
+@AuditEntry(ignore = true)
 @XmlRootElement(name = "user-db")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class XmlRepositoryRoleDatabase implements XmlDatabase<RepositoryRole> {

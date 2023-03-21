@@ -30,21 +30,26 @@ import org.apache.shiro.mgt.DefaultSecurityManager;
 import org.apache.shiro.realm.SimpleAccountRealm;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import sonia.scm.AbstractTestBase;
+import sonia.scm.auditlog.Auditor;
 import sonia.scm.plugin.PluginLoader;
 import sonia.scm.store.JAXBConfigurationEntryStoreFactory;
 import sonia.scm.util.ClassLoaders;
 import sonia.scm.util.MockUtil;
 
 import java.util.Collection;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -56,14 +61,11 @@ public class DefaultSecuritySystemTest extends AbstractTestBase
 
   private JAXBConfigurationEntryStoreFactory jaxbConfigurationEntryStoreFactory;
   private PluginLoader pluginLoader;
-  @InjectMocks
+  @Mock
+  private Auditor auditor;
+
   private DefaultSecuritySystem securitySystem;
 
-
-  /**
-   * Method description
-   *
-   */
   @Before
   public void createSecuritySystem()
   {
@@ -73,12 +75,9 @@ public class DefaultSecuritySystemTest extends AbstractTestBase
     when(pluginLoader.getUberClassLoader()).thenReturn(ClassLoaders.getContextClassLoader(DefaultSecuritySystem.class));
 
     MockitoAnnotations.initMocks(this);
+    securitySystem = new DefaultSecuritySystem(jaxbConfigurationEntryStoreFactory, pluginLoader, Set.of(auditor));
   }
 
-  /**
-   * Method description
-   *
-   */
   @Test
   public void testAddPermission()
   {
@@ -91,10 +90,6 @@ public class DefaultSecuritySystemTest extends AbstractTestBase
     assertEquals(false, sap.isGroupPermission());
   }
 
-  /**
-   * Method description
-   *
-   */
   @Test
   public void testAvailablePermissions()
   {
@@ -106,10 +101,6 @@ public class DefaultSecuritySystemTest extends AbstractTestBase
     assertThat(list).isNotEmpty();
   }
 
-  /**
-   * Method description
-   *
-   */
   @Test
   public void testDeletePermission()
   {
@@ -123,10 +114,6 @@ public class DefaultSecuritySystemTest extends AbstractTestBase
     assertThat(securitySystem.getPermissions(p -> p.getName().equals("trillian"))).isEmpty();
   }
 
-  /**
-   * Method description
-   *
-   */
   @Test
   public void testGetAllPermissions()
   {
@@ -145,10 +132,6 @@ public class DefaultSecuritySystemTest extends AbstractTestBase
     assertThat(all).contains(trillian, dent, marvin);
   }
 
-  /**
-   * Method description
-   *
-   */
   @Test
   public void testGetPermission()
   {
@@ -162,10 +145,6 @@ public class DefaultSecuritySystemTest extends AbstractTestBase
     assertThat(other).containsExactly(sap);
   }
 
-  /**
-   * Method description
-   *
-   */
   @Test
   public void testGetPermissionsWithPredicate()
   {
@@ -186,10 +165,6 @@ public class DefaultSecuritySystemTest extends AbstractTestBase
       .contains(trillian, dent);
   }
 
-  /**
-   * Method description
-   *
-   */
   @Test(expected = UnauthorizedException.class)
   public void testUnauthorizedAddPermission()
   {
@@ -197,10 +172,6 @@ public class DefaultSecuritySystemTest extends AbstractTestBase
     createPermission("trillian", false, "repository:*:READ");
   }
 
-  /**
-   * Method description
-   *
-   */
   @Test(expected = UnauthorizedException.class)
   public void testUnauthorizedDeletePermission()
   {
@@ -213,16 +184,94 @@ public class DefaultSecuritySystemTest extends AbstractTestBase
     securitySystem.deletePermission(sap);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param name
-   * @param groupPermission
-   * @param value
-   *
-   * @return
-   */
+  @Test
+  public void shouldCallAuditorForNewUserPermission()
+  {
+    setAdminSubject();
+
+    createPermission("trillian", false, "repository:*:READ");
+
+    verify(auditor).createEntry(argThat(
+      context -> {
+        assertThat(context.getEntity()).isEqualTo("trillian");
+        assertThat(context.getAdditionalLabels()).contains("user");
+        assertThat(context.getOldObject()).isNull();
+        assertThat(context.getObject())
+          .extracting("permission")
+          .extracting("value")
+          .isEqualTo("repository:*:READ");
+        return true;
+      }
+    ));
+  }
+
+  @Test
+  public void shouldCallAuditorForNewGroupPermission()
+  {
+    setAdminSubject();
+
+    createPermission("trillian", true, "repository:*:READ");
+
+    verify(auditor).createEntry(argThat(
+      context -> {
+        assertThat(context.getEntity()).isEqualTo("trillian");
+        assertThat(context.getAdditionalLabels()).contains("group");
+        assertThat(context.getOldObject()).isNull();
+        assertThat(context.getObject())
+          .extracting("permission")
+          .extracting("value")
+          .isEqualTo("repository:*:READ");
+        return true;
+      }
+    ));
+  }
+
+  @Test
+  public void shouldCallAuditorForRemovedUserPermission()
+  {
+    setAdminSubject();
+
+    createPermission("trillian", false, "repository:*:READ");
+    reset(auditor);
+    securitySystem.deletePermission(new AssignedPermission("trillian", false, "repository:*:READ"));
+
+    verify(auditor).createEntry(argThat(
+      context -> {
+        assertThat(context.getEntity()).isEqualTo("trillian");
+        assertThat(context.getAdditionalLabels()).contains("user");
+        assertThat(context.getObject()).isNull();
+        assertThat(context.getOldObject())
+          .extracting("permission")
+          .extracting("value")
+          .isEqualTo("repository:*:READ");
+        return true;
+      }
+    ));
+  }
+
+  @Test
+  public void shouldCallAuditorForRemovedGroupPermission()
+  {
+    setAdminSubject();
+
+    createPermission("trillian", true, "repository:*:READ");
+    reset(auditor);
+    securitySystem.deletePermission(new AssignedPermission("trillian", true, "repository:*:READ"));
+
+    verify(auditor).createEntry(argThat(
+      context -> {
+        assertThat(context.getEntity()).isEqualTo("trillian");
+        assertThat(context.getAdditionalLabels()).contains("group");
+        assertThat(context.getObject()).isNull();
+        assertThat(context.getOldObject())
+          .extracting("permission")
+          .extracting("value")
+          .isEqualTo("repository:*:READ");
+        return true;
+      }
+    ));
+  }
+
   private AssignedPermission createPermission(String name,
     boolean groupPermission, String value)
   {
@@ -235,21 +284,11 @@ public class DefaultSecuritySystemTest extends AbstractTestBase
       && Objects.equal(value, permission.getPermission().getValue())).stream().findAny().orElseThrow(() -> new AssertionError("created permission not found"));
   }
 
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   */
   private void setAdminSubject()
   {
     setSubject(MockUtil.createAdminSubject());
   }
 
-  /**
-   * Method description
-   *
-   */
   private void setUserSubject()
   {
     org.apache.shiro.mgt.SecurityManager sm =
