@@ -50,7 +50,7 @@ class BrowserResultCollapser {
 
     List<FileObject> collapsedChildren = new ArrayList<>();
     for (FileObject child : fo.getChildren()) {
-      if (child.isDirectory()) {
+      if (child.isDirectory() && child.getSubRepository() == null) {
         child = traverseFolder(child);
       }
       collapsedChildren.add(child);

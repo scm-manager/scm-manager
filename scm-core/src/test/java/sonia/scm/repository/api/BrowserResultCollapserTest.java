@@ -30,6 +30,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
+import sonia.scm.NotFoundException;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.FileObject;
 import sonia.scm.repository.SubRepository;
@@ -42,6 +43,8 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -56,7 +59,7 @@ class BrowserResultCollapserTest {
   @BeforeEach
   void setUp() throws Exception {
     browseResults = new HashMap<>();
-    when(browseCommand.getBrowserResult(any(BrowseCommandRequest.class)))
+    lenient().when(browseCommand.getBrowserResult(any(BrowseCommandRequest.class)))
       .thenAnswer(
         (Answer<BrowserResult>) invocation -> {
           BrowseCommandRequest request = (BrowseCommandRequest) invocation.getArguments()[0];
@@ -200,6 +203,31 @@ class BrowserResultCollapserTest {
     assertThat(children).hasSize(2);
     assertContains(children, "folder_a", "folder_a");
     assertContains(children, "folder_b", "folder_b");
+  }
+
+  /*
+    For SVN, externals must not be "browsed" because this throws a not found exception.
+    /
+    └─ folder_b/external
+   */
+  @Test
+  void collapseFoldersShouldNotCollapseSvnExternal() throws Exception {
+    FileObject root = createFolder(null, "");
+
+    FileObject external = createFolder(root, "folder_b/external");
+    external.setSubRepository(mock(SubRepository.class));
+    lenient().when(browseCommand.getBrowserResult(argThat(request -> request.getPath().equals("folder_b/external"))))
+      .thenThrow(NotFoundException.class);
+
+    BrowserResult result = new BrowserResult("revision", root);
+    BrowseCommandRequest request = new BrowseCommandRequest();
+
+    new BrowserResultCollapser().collapseFolders(browseCommand, request, result.getFile());
+
+    FileObject f = result.getFile();
+    Collection<FileObject> children = f.getChildren();
+    assertThat(children).hasSize(1);
+    assertContains(children, "folder_b/external", "folder_b/external");
   }
 
   /*
