@@ -29,6 +29,7 @@ import Label from "../base/label/Label";
 import FieldMessage from "../base/field-message/FieldMessage";
 import Help from "../base/help/Help";
 import Select from "./Select";
+import { useGeneratedId } from "@scm-manager/ui-components";
 
 type Props = {
   label: string;
@@ -40,16 +41,17 @@ type Props = {
  * @see https://bulma.io/documentation/form/select/
  */
 const SelectField = React.forwardRef<HTMLSelectElement, Props>(
-  ({ label, helpText, error, className, ...props }, ref) => {
+  ({ label, helpText, error, className, id, ...props }, ref) => {
+    const selectId = useGeneratedId(id ?? props.testId);
     const variant = error ? "danger" : undefined;
     return (
       <Field className={className}>
-        <Label>
+        <Label htmlFor={selectId}>
           {label}
           {helpText ? <Help className="ml-1" text={helpText} /> : null}
         </Label>
         <Control>
-          <Select variant={variant} ref={ref} {...props}></Select>
+          <Select id={selectId} variant={variant} ref={ref} {...props}></Select>
         </Control>
         {error ? <FieldMessage variant={variant}>{error}</FieldMessage> : null}
       </Field>

@@ -29,6 +29,7 @@ import Label from "../base/label/Label";
 import FieldMessage from "../base/field-message/FieldMessage";
 import Input from "./Input";
 import Help from "../base/help/Help";
+import { useGeneratedId } from "@scm-manager/ui-components";
 
 type InputFieldProps = {
   label: string;
@@ -41,16 +42,17 @@ type InputFieldProps = {
  * @see https://bulma.io/documentation/form/input/
  */
 const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
-  ({ label, helpText, error, className, ...props }, ref) => {
+  ({ label, helpText, error, className, id, ...props }, ref) => {
+    const inputId = useGeneratedId(id ?? props.testId);
     const variant = error ? "danger" : undefined;
     return (
       <Field className={className}>
-        <Label>
+        <Label htmlFor={inputId}>
           {label}
           {helpText ? <Help className="ml-1" text={helpText} /> : null}
         </Label>
         <Control>
-          <Input variant={variant} ref={ref} {...props}></Input>
+          <Input variant={variant} ref={ref} id={inputId} {...props}></Input>
         </Control>
         {error ? <FieldMessage variant={variant}>{error}</FieldMessage> : null}
       </Field>
