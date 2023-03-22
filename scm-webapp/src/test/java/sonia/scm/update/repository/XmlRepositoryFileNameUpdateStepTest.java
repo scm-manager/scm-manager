@@ -47,13 +47,16 @@ class XmlRepositoryFileNameUpdateStepTest {
   SCMContextProvider contextProvider = mock(SCMContextProvider.class);
   XmlRepositoryDAO repositoryDAO = mock(XmlRepositoryDAO.class);
 
+  @TempDir
+  Path tempDir;
+
   @BeforeEach
-  void mockScmHome(@TempDir Path tempDir) {
+  void mockScmHome() {
     when(contextProvider.getBaseDirectory()).thenReturn(tempDir.toFile());
   }
 
   @Test
-  void shouldCopyRepositoriesFileToRepositoryPathsFile(@TempDir Path tempDir) throws IOException {
+  void shouldCopyRepositoriesFileToRepositoryPathsFile() throws IOException {
     XmlRepositoryFileNameUpdateStep updateStep = new XmlRepositoryFileNameUpdateStep(contextProvider, repositoryDAO);
     URL url = Resources.getResource("sonia/scm/update/repository/formerV2RepositoryFile.xml");
     Path configDir = tempDir.resolve("config");

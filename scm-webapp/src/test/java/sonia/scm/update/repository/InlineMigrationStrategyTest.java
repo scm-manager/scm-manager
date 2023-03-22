@@ -50,27 +50,29 @@ class InlineMigrationStrategyTest {
   PathBasedRepositoryLocationResolver locationResolver;
   @Mock
   RepositoryLocationResolver.RepositoryLocationResolverInstance locationResolverInstance;
+  @TempDir
+  Path tempDir;
 
   @BeforeEach
-  void mockContextProvider(@TempDir Path tempDir) {
+  void mockContextProvider() {
     when(locationResolver.forClass(Path.class)).thenReturn(locationResolverInstance);
     when(contextProvider.getBaseDirectory()).thenReturn(tempDir.toFile());
   }
 
   @BeforeEach
-  void createV1Home(@TempDir Path tempDir) throws IOException {
+  void createV1Home() throws IOException {
     V1RepositoryFileSystem.createV1Home(tempDir);
   }
 
   @Test
-  void shouldUseExistingDirectory(@TempDir Path tempDir) {
+  void shouldUseExistingDirectory() {
     Path target = new InlineMigrationStrategy(contextProvider, locationResolver).migrate("b4f-a9f0-49f7-ad1f-37d3aae1c55f", "some/more/directories/than/one", "git").get();
     assertThat(target).isEqualTo(resolveOldDirectory(tempDir));
     verify(locationResolverInstance).setLocation("b4f-a9f0-49f7-ad1f-37d3aae1c55f", target);
   }
 
   @Test
-  void shouldMoveDataDirectory(@TempDir Path tempDir) {
+  void shouldMoveDataDirectory() {
     new InlineMigrationStrategy(contextProvider, locationResolver).migrate("b4f-a9f0-49f7-ad1f-37d3aae1c55f", "some/more/directories/than/one", "git");
     assertThat(resolveOldDirectory(tempDir).resolve("data")).exists();
   }

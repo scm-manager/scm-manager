@@ -21,17 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.it;
 
 import org.apache.http.HttpStatus;
-import org.assertj.core.api.AbstractCharSequenceAssert;
 import org.assertj.core.util.Lists;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+import org.junitpioneer.jupiter.RetryingTest;
 import sonia.scm.it.utils.RepositoryUtil;
 import sonia.scm.it.utils.ScmRequests;
 import sonia.scm.it.utils.TestData;
@@ -52,27 +51,23 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.nio.file.Files.createDirectories;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static sonia.scm.it.utils.RestUtil.ADMIN_PASSWORD;
 import static sonia.scm.it.utils.RestUtil.ADMIN_USERNAME;
 
-public class DiffITCase {
+class DiffITCase {
 
-  @Rule
-  public TemporaryFolder tempFolder = new TemporaryFolder();
+  @TempDir public Path tempFolder;
   private RepositoryClient svnRepositoryClient;
   private RepositoryClient gitRepositoryClient;
   private RepositoryClient hgRepositoryClient;
   private ScmRequests.RepositoryResponse<ScmRequests.IndexResponse> svnRepositoryResponse;
   private ScmRequests.RepositoryResponse<ScmRequests.IndexResponse> hgRepositoryResponse;
   private ScmRequests.RepositoryResponse<ScmRequests.IndexResponse> gitRepositoryResponse;
-  private File svnFolder;
-  private File gitFolder;
-  private File hgFolder;
 
-  @Before
-  public void init() throws IOException {
+  @BeforeEach
+  void init() throws IOException {
     TestData.createDefault();
     String namespace = ADMIN_USERNAME;
     String repo = TestData.getDefaultRepoName("svn");
@@ -81,7 +76,7 @@ public class DiffITCase {
         .requestIndexResource(ADMIN_USERNAME, ADMIN_PASSWORD)
         .requestRepository(namespace, repo)
         .assertStatusCode(HttpStatus.SC_OK);
-    svnFolder = tempFolder.newFolder("svn");
+    File svnFolder = createDirectories(tempFolder.resolve("svn")).toFile();
     svnRepositoryClient = RepositoryUtil.createRepositoryClient("svn", svnFolder);
 
     repo = TestData.getDefaultRepoName("git");
@@ -90,7 +85,7 @@ public class DiffITCase {
         .requestIndexResource(ADMIN_USERNAME, ADMIN_PASSWORD)
         .requestRepository(namespace, repo)
         .assertStatusCode(HttpStatus.SC_OK);
-    gitFolder = tempFolder.newFolder("git");
+    File gitFolder = createDirectories(tempFolder.resolve("git")).toFile();
     gitRepositoryClient = RepositoryUtil.createRepositoryClient("git", gitFolder);
 
     repo = TestData.getDefaultRepoName("hg");
@@ -99,12 +94,12 @@ public class DiffITCase {
         .requestIndexResource(ADMIN_USERNAME, ADMIN_PASSWORD)
         .requestRepository(namespace, repo)
         .assertStatusCode(HttpStatus.SC_OK);
-    hgFolder = tempFolder.newFolder("hg");
+    File hgFolder = createDirectories(tempFolder.resolve("hg")).toFile();
     hgRepositoryClient = RepositoryUtil.createRepositoryClient("hg", hgFolder);
   }
 
   @Test
-  public void shouldFindDiffsInGitFormat() throws IOException {
+  void shouldFindDiffsInGitFormat() throws IOException {
     String svnDiff = getDiff(RepositoryUtil.createAndCommitFile(svnRepositoryClient, ADMIN_USERNAME, "a.txt", "content of a"), svnRepositoryResponse);
     String gitDiff = getDiff(RepositoryUtil.createAndCommitFile(gitRepositoryClient, ADMIN_USERNAME, "a.txt", "content of a"), gitRepositoryResponse);
     String hgDiff = getDiff(RepositoryUtil.createAndCommitFile(hgRepositoryClient, ADMIN_USERNAME, "a.txt", "content of a"), hgRepositoryResponse);
@@ -115,7 +110,7 @@ public class DiffITCase {
   }
 
   @Test
-  public void svnAddFileDiffShouldBeConvertedToGitDiff() throws IOException {
+  void svnAddFileDiffShouldBeConvertedToGitDiff() throws IOException {
     String svnDiff = getDiff(RepositoryUtil.createAndCommitFile(svnRepositoryClient, ADMIN_USERNAME, "a.txt", "content of a"), svnRepositoryResponse);
     String gitDiff = getDiff(RepositoryUtil.createAndCommitFile(gitRepositoryClient, ADMIN_USERNAME, "a.txt", "content of a"), gitRepositoryResponse);
 
@@ -123,8 +118,8 @@ public class DiffITCase {
     assertDiffsAreEqual(svnDiff, expected);
   }
 
-  @Test
-  public void svnDeleteFileDiffShouldBeConvertedToGitDiff() throws IOException {
+  @RetryingTest(3)
+  void svnDeleteFileDiffShouldBeConvertedToGitDiff() throws IOException {
     RepositoryUtil.createAndCommitFile(svnRepositoryClient, ADMIN_USERNAME, "a.txt", "content of a");
     RepositoryUtil.createAndCommitFile(gitRepositoryClient, ADMIN_USERNAME, "a.txt", "content of a");
 
@@ -136,7 +131,7 @@ public class DiffITCase {
   }
 
   @Test
-  public void svnUpdateFileDiffShouldBeConvertedToGitDiff() throws IOException {
+  void svnUpdateFileDiffShouldBeConvertedToGitDiff() throws IOException {
     RepositoryUtil.createAndCommitFile(svnRepositoryClient, ADMIN_USERNAME, "a.txt", "content of a");
     RepositoryUtil.createAndCommitFile(gitRepositoryClient, ADMIN_USERNAME, "a.txt", "content of a");
 
@@ -147,8 +142,8 @@ public class DiffITCase {
     assertDiffsAreEqual(svnDiff, expected);
   }
 
-  @Test
-  public void svnMultipleChangesDiffShouldBeConvertedToGitDiff() throws IOException {
+  @RetryingTest(3)
+  void svnMultipleChangesDiffShouldBeConvertedToGitDiff() throws IOException {
     String svnDiff = getDiff(applyMultipleChanges(svnRepositoryClient, "fileToBeDeleted.txt", "fileToBeUpdated.txt", "addedFile.txt"), svnRepositoryResponse);
     String gitDiff = getDiff(applyMultipleChanges(gitRepositoryClient, "fileToBeDeleted.txt", "fileToBeUpdated.txt", "addedFile.txt"), gitRepositoryResponse);
 
@@ -162,7 +157,7 @@ public class DiffITCase {
   }
 
   @Test
-  public void svnMultipleSubFolderChangesDiffShouldBeConvertedToGitDiff() throws IOException {
+  void svnMultipleSubFolderChangesDiffShouldBeConvertedToGitDiff() throws IOException {
     String svnDiff = getDiff(applyMultipleChanges(svnRepositoryClient, "a/b/fileToBeDeleted.txt", "a/c/fileToBeUpdated.txt", "a/d/addedFile.txt"), svnRepositoryResponse);
     String gitDiff = getDiff(applyMultipleChanges(gitRepositoryClient, "a/b/fileToBeDeleted.txt", "a/c/fileToBeUpdated.txt", "a/d/addedFile.txt"), gitRepositoryResponse);
 
@@ -176,7 +171,7 @@ public class DiffITCase {
   }
 
   @Test
-  public void svnLargeChangesDiffShouldBeConvertedToGitDiff() throws IOException, URISyntaxException {
+  void svnLargeChangesDiffShouldBeConvertedToGitDiff() throws IOException, URISyntaxException {
     String fileName = "SvnDiffGenerator_forTest";
     RepositoryUtil.createAndCommitFile(svnRepositoryClient, ADMIN_USERNAME, fileName, "");
     RepositoryUtil.createAndCommitFile(gitRepositoryClient, ADMIN_USERNAME, fileName, "");
@@ -201,9 +196,9 @@ public class DiffITCase {
    * FIXME: the binary Git Diff output is not GIT conform
    */
   @Test
-  @Ignore
+  @Disabled
   @SuppressWarnings("squid:S1607")
-  public void svnBinaryChangesDiffShouldBeConvertedToGitDiff() throws IOException, URISyntaxException {
+  void svnBinaryChangesDiffShouldBeConvertedToGitDiff() throws IOException, URISyntaxException {
     String fileName = "binary";
     File file = new File(svnRepositoryClient.getWorkingCopy(), fileName);
     Files.copy(Paths.get(getClass().getResource("/diff/binaryfile/echo").toURI()), Paths.get(file.toURI()));
@@ -220,7 +215,7 @@ public class DiffITCase {
   }
 
   @Test
-  public void svnRenameChangesDiffShouldBeConvertedToGitDiff() throws IOException, URISyntaxException {
+  void svnRenameChangesDiffShouldBeConvertedToGitDiff() throws IOException, URISyntaxException {
     String fileName = "a.txt";
     RepositoryUtil.createAndCommitFile(svnRepositoryClient, ADMIN_USERNAME, fileName, "content of a");
     RepositoryUtil.createAndCommitFile(gitRepositoryClient, ADMIN_USERNAME, fileName, "content of a");

@@ -16,7 +16,7 @@ ext {
   jettyVersion = '9.4.44.v20210927'
   luceneVersion = '8.9.0'
 
-  junitJupiterVersion = '5.7.0'
+  junitJupiterVersion = '5.9.2'
   hamcrestVersion = '2.1'
   mockitoVersion = '3.6.28'
   jerseyClientVersion = '1.19.4'
@@ -167,7 +167,7 @@ ext {
     junit: 'junit:junit:4.13.1',
 
     // junit 5 extensions
-    junitPioneer: 'org.junit-pioneer:junit-pioneer:1.6.2',
+    junitPioneer: 'org.junit-pioneer:junit-pioneer:2.0.0',
 
     // assertions
     hamcrestCore: "org.hamcrest:hamcrest-core:${hamcrestVersion}",

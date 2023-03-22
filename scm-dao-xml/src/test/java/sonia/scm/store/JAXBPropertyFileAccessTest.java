@@ -61,8 +61,11 @@ class JAXBPropertyFileAccessTest {
 
   JAXBPropertyFileAccess fileAccess;
 
+  @TempDir
+  private Path tempDir;
+
   @BeforeEach
-  void initTempDir(@TempDir Path tempDir) {
+  void initTempDir() {
     lenient().when(contextProvider.getBaseDirectory()).thenReturn(tempDir.toFile());
     lenient().when(contextProvider.resolve(any())).thenAnswer(invocation -> tempDir.resolve(invocation.getArgument(0).toString()));
 
@@ -98,8 +101,8 @@ class JAXBPropertyFileAccessTest {
     }
 
     @Test
-    void shouldMoveStoreFileToRepositoryBasedLocation(@TempDir Path tempDir) throws IOException {
-      createV1StoreFile(tempDir, "myStore.xml");
+    void shouldMoveStoreFileToRepositoryBasedLocation() throws IOException {
+      createV1StoreFile("myStore.xml");
 
       fileAccess.forStoreName(STORE_NAME).moveAsRepositoryStore(Paths.get("myStore.xml"), REPOSITORY_ID);
 
@@ -107,11 +110,11 @@ class JAXBPropertyFileAccessTest {
     }
 
     @Test
-    void shouldMoveAllStoreFilesToRepositoryBasedLocations(@TempDir Path tempDir) throws IOException {
+    void shouldMoveAllStoreFilesToRepositoryBasedLocations() throws IOException {
       locationResolver.forClass(Path.class).createLocation("repoId2");
 
-      createV1StoreFile(tempDir, REPOSITORY_ID + ".xml");
-      createV1StoreFile(tempDir, "repoId2.xml");
+      createV1StoreFile(REPOSITORY_ID + ".xml");
+      createV1StoreFile("repoId2.xml");
 
       PropertyFileAccess.StoreFileTools statisticStoreAccess = fileAccess.forStoreName(STORE_NAME);
       statisticStoreAccess.forStoreFiles(statisticStoreAccess::moveAsRepositoryStore);
@@ -121,7 +124,7 @@ class JAXBPropertyFileAccessTest {
     }
   }
 
-  private void createV1StoreFile(@TempDir Path tempDir, String name) throws IOException {
+  private void createV1StoreFile(String name) throws IOException {
     Path v1Dir = tempDir.resolve("var").resolve("data").resolve(STORE_NAME);
     IOUtil.mkdirs(v1Dir.toFile());
     Files.createFile(v1Dir.resolve(name));
@@ -131,8 +134,8 @@ class JAXBPropertyFileAccessTest {
   class ForMissingRepository {
 
     @Test
-    void shouldIgnoreStoreFile(@TempDir Path tempDir) throws IOException {
-      createV1StoreFile(tempDir, "myStore.xml");
+    void shouldIgnoreStoreFile() throws IOException {
+      createV1StoreFile("myStore.xml");
 
       fileAccess.forStoreName(STORE_NAME).moveAsRepositoryStore(Paths.get("myStore.xml"), REPOSITORY_ID);
 

@@ -58,13 +58,16 @@ class GitV2UpdateStepTest {
   @InjectMocks
   GitV2UpdateStep updateStep;
 
+  @TempDir
+  Path temp;
+
   @BeforeEach
-  void createDataDirectory(@TempDir Path temp) throws IOException {
+  void createDataDirectory() throws IOException {
     Files.createDirectories(temp.resolve("data"));
   }
 
   @BeforeEach
-  void initRepositoryFolder(@TempDir Path temp) {
+  void initRepositoryFolder() {
     when(locationResolver.forClass(Path.class)).thenReturn(locationResolverInstance);
     when(repositoryMetadataAccess.read(temp)).thenReturn(new Repository("123", "git", "space", "X"));
     doAnswer(invocation -> {
@@ -74,14 +77,14 @@ class GitV2UpdateStepTest {
   }
 
   @Test
-  void shouldWriteConfigFileForBareRepositories(@TempDir Path temp) {
+  void shouldWriteConfigFileForBareRepositories() {
     updateStep.doUpdate();
 
     assertThat(temp.resolve("data").resolve("config")).exists();
   }
 
   @Test
-  void shouldWriteConfigFileForNonBareRepositories(@TempDir Path temp) throws IOException {
+  void shouldWriteConfigFileForNonBareRepositories() throws IOException {
     Files.createDirectories(temp.resolve("data").resolve(".git"));
 
     updateStep.doUpdate();

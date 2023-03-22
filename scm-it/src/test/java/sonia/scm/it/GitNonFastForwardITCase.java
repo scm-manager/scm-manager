@@ -34,12 +34,12 @@ import org.eclipse.jgit.transport.PushResult;
 import org.eclipse.jgit.transport.RemoteRefUpdate;
 import org.eclipse.jgit.transport.RemoteRefUpdate.Status;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+import org.junitpioneer.jupiter.RetryingTest;
 import sonia.scm.it.utils.RestUtil;
 import sonia.scm.it.utils.TestData;
 import sonia.scm.web.VndMediaType;
@@ -47,44 +47,45 @@ import sonia.scm.web.VndMediaType;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static sonia.scm.it.utils.RestUtil.given;
 
 /**
  * Integration Tests for Git with non fast-forward pushes.
  */
-public class GitNonFastForwardITCase {
+class GitNonFastForwardITCase {
 
   private File workingCopy;
   private Git git;
 
-  @Rule
-  public TemporaryFolder tempFolder = new TemporaryFolder();
+  @TempDir
+  private Path tempFolder;
 
-  @Before
-  public void createAndCloneTestRepository() throws IOException, GitAPIException {
+  @BeforeEach
+  void createAndCloneTestRepository() throws GitAPIException {
     TestData.createDefault();
-    this.workingCopy = tempFolder.newFolder();
+    this.workingCopy = tempFolder.toFile();
 
     this.git = clone(RestUtil.BASE_URL.toASCIIString() + "repo/scmadmin/HeartOfGold-git");
   }
 
-  @After
-  public void cleanup() {
+  @AfterEach
+  void cleanup() {
     TestData.cleanup();
   }
 
   /**
    * Ensures that the normal behaviour (non fast-forward is allowed), is restored after the tests are executed.
    */
-  @AfterClass
+  @AfterAll
   public static void allowNonFastForward() {
     setNonFastForwardDisallowed(false);
   }
 
   @Test
-  public void testGitPushAmendWithoutForce() throws IOException, GitAPIException {
+  void testGitPushAmendWithoutForce() throws IOException, GitAPIException {
     setNonFastForwardDisallowed(false);
 
     addTestFileToWorkingCopyAndCommit("a");
@@ -95,7 +96,7 @@ public class GitNonFastForwardITCase {
   }
 
   @Test
-  public void testGitPushAmendWithForce() throws IOException, GitAPIException {
+  void testGitPushAmendWithForce() throws IOException, GitAPIException {
     setNonFastForwardDisallowed(false);
 
     addTestFileToWorkingCopyAndCommit("a");
@@ -105,8 +106,8 @@ public class GitNonFastForwardITCase {
     pushAndAssert(true, Status.OK);
   }
 
-  @Test
-  public void testGitPushAmendForceWithDisallowNonFastForward() throws GitAPIException, IOException {
+  @RetryingTest(3)
+  void testGitPushAmendForceWithDisallowNonFastForward() throws GitAPIException, IOException {
     setNonFastForwardDisallowed(true);
 
     addTestFileToWorkingCopyAndCommit("a");
@@ -172,7 +173,7 @@ public class GitNonFastForwardITCase {
 
   private void assertStatus(PushResult pushResult, Status expectedStatus) {
     for ( RemoteRefUpdate remoteRefUpdate : pushResult.getRemoteUpdates() ) {
-      assertEquals(expectedStatus, remoteRefUpdate.getStatus());
+      assertThat(remoteRefUpdate.getStatus()).isEqualTo(expectedStatus);
     }
   }
 

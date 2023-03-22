@@ -29,7 +29,7 @@ plugins {
 
 dependencies {
   api platform(project(':'))
-  
+
   implementation libraries.commonsDaemon
   implementation libraries.jettyServer
   implementation libraries.jettyWebapp

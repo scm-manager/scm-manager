@@ -58,6 +58,8 @@ dependencies {
   testImplementation libraries.jerseyClientRuntime
   testImplementation libraries.jacksonJaxbAnnotations
 
+  testImplementation libraries.junitPioneer
+
   itWebApp project(path: ':scm-webapp', configuration: 'webapp')
   itPlugin project(path: ':scm-plugins:scm-integration-test-plugin', configuration: 'smp')
 }

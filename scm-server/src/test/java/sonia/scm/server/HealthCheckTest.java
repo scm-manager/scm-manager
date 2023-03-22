@@ -165,12 +165,12 @@ class HealthCheckTest {
   }
 
   @BeforeEach
-  private void setUp() {
+  void setUp() {
     servers = new ArrayList<>();
   }
 
   @AfterEach
-  private void shutdown() {
+  void shutdown() {
     for (Server server : servers) {
       try {
         server.stop();

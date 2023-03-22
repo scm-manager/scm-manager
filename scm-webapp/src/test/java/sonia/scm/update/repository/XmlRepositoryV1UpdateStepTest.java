@@ -82,9 +82,11 @@ class XmlRepositoryV1UpdateStepTest {
   UpdateStepTestUtil testUtil;
 
   XmlRepositoryV1UpdateStep updateStep;
+  @TempDir
+  Path tempDir;
 
   @BeforeEach
-  void createUpdateStepFromMocks(@TempDir Path tempDir) {
+  void createUpdateStepFromMocks() {
     testUtil = new UpdateStepTestUtil(tempDir);
     updateStep = new XmlRepositoryV1UpdateStep(
       testUtil.getContextProvider(),
@@ -99,7 +101,7 @@ class XmlRepositoryV1UpdateStepTest {
   class WithExistingDatabase {
 
     @BeforeEach
-    void createV1Home(@TempDir Path tempDir) throws IOException {
+    void createV1Home() throws IOException {
       V1RepositoryFileSystem.createV1Home(tempDir);
     }
 
@@ -176,7 +178,7 @@ class XmlRepositoryV1UpdateStepTest {
     }
 
     @Test
-    void shouldUseDirectoryFromStrategy(@TempDir Path tempDir) throws JAXBException {
+    void shouldUseDirectoryFromStrategy() throws JAXBException {
       Path targetDir = tempDir.resolve("someDir");
       MigrationStrategy.Instance strategyMock = injectorMock.getInstance(MoveMigrationStrategy.class);
       when(strategyMock.migrate("454972da-faf9-4437-b682-dc4a4e0aa8eb", "simple", "git")).thenReturn(of(targetDir));
@@ -206,7 +208,7 @@ class XmlRepositoryV1UpdateStepTest {
     }
 
     @Test
-    void shouldBackupOldRepositoryDatabaseFile(@TempDir Path tempDir) throws JAXBException {
+    void shouldBackupOldRepositoryDatabaseFile() throws JAXBException {
       updateStep.doUpdate();
 
       assertThat(tempDir.resolve("config").resolve("repositories.xml")).doesNotExist();
@@ -220,15 +222,15 @@ class XmlRepositoryV1UpdateStepTest {
   }
 
   @Test
-  void shouldNotFailIfFormerV2DatabaseExists(@TempDir Path tempDir) throws JAXBException, IOException {
-    createFormerV2RepositoriesFile(tempDir);
+  void shouldNotFailIfFormerV2DatabaseExists() throws JAXBException, IOException {
+    createFormerV2RepositoriesFile();
 
     updateStep.doUpdate();
   }
 
   @Test
-  void shouldNotBackupFormerV2DatabaseFile(@TempDir Path tempDir) throws JAXBException, IOException {
-    createFormerV2RepositoriesFile(tempDir);
+  void shouldNotBackupFormerV2DatabaseFile() throws JAXBException, IOException {
+    createFormerV2RepositoriesFile();
 
     updateStep.doUpdate();
 
@@ -237,14 +239,14 @@ class XmlRepositoryV1UpdateStepTest {
   }
 
   @Test
-  void shouldGetNoMissingStrategiesWithFormerV2DatabaseFile(@TempDir Path tempDir) throws IOException {
-    createFormerV2RepositoriesFile(tempDir);
+  void shouldGetNoMissingStrategiesWithFormerV2DatabaseFile() throws IOException {
+    createFormerV2RepositoriesFile();
 
     assertThat(updateStep.getRepositoriesWithoutMigrationStrategies()).isEmpty();
   }
 
   @Test
-  void shouldFindMissingStrategies(@TempDir Path tempDir) throws IOException {
+  void shouldFindMissingStrategies() throws IOException {
     V1RepositoryFileSystem.createV1Home(tempDir);
 
     assertThat(updateStep.getRepositoriesWithoutMigrationStrategies())
@@ -255,7 +257,7 @@ class XmlRepositoryV1UpdateStepTest {
         "454972da-faf9-4437-b682-dc4a4e0aa8eb");
   }
 
-  private void createFormerV2RepositoriesFile(@TempDir Path tempDir) throws IOException {
+  private void createFormerV2RepositoriesFile() throws IOException {
     URL url = Resources.getResource("sonia/scm/update/repository/formerV2RepositoryFile.xml");
     Path configDir = tempDir.resolve("config");
     Files.createDirectories(configDir);

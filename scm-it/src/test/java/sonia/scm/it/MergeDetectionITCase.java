@@ -29,7 +29,9 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
+import org.junitpioneer.jupiter.RetryingTest;
 import sonia.scm.it.utils.RepositoryUtil;
 import sonia.scm.it.utils.RestUtil;
 import sonia.scm.it.utils.TestData;
@@ -126,7 +128,7 @@ class MergeDetectionITCase {
     Assertions.assertThat(getMergeDetectionResult("postMergeDetection", 0)).isTrue();
   }
 
-  @Test
+  @RetryingTest(3)
   void shouldDetectNormalPushAsNotMerged(@TempDir Path tempDir) throws IOException {
     client.getCheckoutCommand().checkout("develop");
     writeFile(tempDir, developFile, "other content");

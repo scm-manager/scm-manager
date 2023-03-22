@@ -63,8 +63,11 @@ class MigrateVerbsToPermissionRolesTest {
   @InjectMocks
   private MigrateVerbsToPermissionRoles migration;
 
+  @TempDir
+  private Path tempDir;
+
   @BeforeEach
-  void init(@TempDir Path tempDir) throws IOException {
+  void init() throws IOException {
     URL metadataUrl = Resources.getResource("sonia/scm/update/repository/metadataWithoutRoles.xml");
     Files.copy(metadataUrl.openStream(), tempDir.resolve("metadata.xml"));
     doAnswer(invocation -> {
@@ -75,7 +78,7 @@ class MigrateVerbsToPermissionRolesTest {
   }
 
   @Test
-  void shouldUpdateToRolesIfPossible(@TempDir Path tempDir) throws IOException {
+  void shouldUpdateToRolesIfPossible() throws IOException {
     migration.doUpdate();
 
     List<String> newMetadata = Files.readAllLines(tempDir.resolve("metadata.xml"));

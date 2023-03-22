@@ -59,8 +59,11 @@ class XmlSecurityV1UpdateStepTest {
   XmlSecurityV1UpdateStep updateStep;
   ConfigurationEntryStore<AssignedPermission> assignedPermissionStore;
 
+  @TempDir
+  Path tempDir;
+
   @BeforeEach
-  void mockScmHome(@TempDir Path tempDir) {
+  void mockScmHome() {
     when(contextProvider.getBaseDirectory()).thenReturn(tempDir.toFile());
     InMemoryConfigurationEntryStoreFactory inMemoryConfigurationEntryStoreFactory = create();
     assignedPermissionStore = inMemoryConfigurationEntryStoreFactory.get("security");
@@ -71,7 +74,7 @@ class XmlSecurityV1UpdateStepTest {
   class WithExistingDatabase {
 
     @BeforeEach
-    void createConfigV1XML(@TempDir Path tempDir) throws IOException {
+    void createConfigV1XML() throws IOException {
       Path configDir = tempDir.resolve("config");
       Files.createDirectories(configDir);
       copyTestDatabaseFile(configDir, "config.xml");
@@ -111,7 +114,7 @@ class XmlSecurityV1UpdateStepTest {
     private Path configDir;
 
     @BeforeEach
-    void createSecurityV1XML(@TempDir Path tempDir) throws IOException {
+    void createSecurityV1XML() throws IOException {
       configDir = tempDir.resolve("config");
       Files.createDirectories(configDir);
     }

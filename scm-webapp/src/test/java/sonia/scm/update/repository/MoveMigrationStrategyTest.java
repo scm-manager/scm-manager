@@ -48,32 +48,34 @@ class MoveMigrationStrategyTest {
   SCMContextProvider contextProvider;
   @Mock
   RepositoryLocationResolver locationResolver;
+  @TempDir
+  Path tempDir;
 
   @BeforeEach
-  void mockContextProvider(@TempDir Path tempDir) {
+  void mockContextProvider() {
     when(contextProvider.getBaseDirectory()).thenReturn(tempDir.toFile());
   }
 
   @BeforeEach
-  void createV1Home(@TempDir Path tempDir) throws IOException {
+  void createV1Home() throws IOException {
     V1RepositoryFileSystem.createV1Home(tempDir);
   }
 
   @BeforeEach
-  void mockLocationResolver(@TempDir Path tempDir) {
+  void mockLocationResolver() {
     RepositoryLocationResolver.RepositoryLocationResolverInstance instanceMock = mock(RepositoryLocationResolver.RepositoryLocationResolverInstance.class);
     when(locationResolver.forClass(Path.class)).thenReturn(instanceMock);
     when(instanceMock.createLocation(anyString())).thenAnswer(invocation -> tempDir.resolve((String) invocation.getArgument(0)));
   }
 
   @Test
-  void shouldUseStandardDirectory(@TempDir Path tempDir) {
+  void shouldUseStandardDirectory() {
     Path target = new MoveMigrationStrategy(contextProvider, locationResolver).migrate("b4f-a9f0-49f7-ad1f-37d3aae1c55f", "some/more/directories/than/one", "git").get();
     assertThat(target).isEqualTo(tempDir.resolve("b4f-a9f0-49f7-ad1f-37d3aae1c55f"));
   }
 
   @Test
-  void shouldMoveDataDirectory(@TempDir Path tempDir) {
+  void shouldMoveDataDirectory() {
     Path target = new MoveMigrationStrategy(contextProvider, locationResolver).migrate("b4f-a9f0-49f7-ad1f-37d3aae1c55f", "some/more/directories/than/one", "git").get();
     assertThat(target.resolve("data")).exists();
     Path originalDataDir = tempDir

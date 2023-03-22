@@ -41,7 +41,6 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.repository.RepositoryManager;
 
-import java.io.IOException;
 import java.nio.file.Path;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -72,15 +71,18 @@ class GitRepositoryContextResolverTest {
   @Nested
   class WithRepository {
 
+    @TempDir
+    Path repositoryPath;
+
     @BeforeEach
-    void mockRepository(@TempDir Path repositoryPath) throws IOException {
+    void mockRepository() {
       when(scmConfiguration.getBaseUrl()).thenReturn("https://hog.hitchhiker.com/scm");
       when(repositoryManager.get(new NamespaceAndName("space", "X"))).thenReturn(REPOSITORY);
       when(locationResolver.forClass(any()).getLocation("id")).thenReturn(repositoryPath);
     }
 
     @Test
-    void shouldResolveCorrectRepository(@TempDir Path repositoryPath) {
+    void shouldResolveCorrectRepository() {
       RepositoryContext context = resolver.resolve(new String[]{"git", "repo/space/X/something/else"});
 
       assertThat(context.getRepository()).isSameAs(REPOSITORY);
@@ -88,7 +90,7 @@ class GitRepositoryContextResolverTest {
     }
 
     @Test
-    void shouldResolveCorrectRepositoryWithContextPath(@TempDir Path repositoryPath) throws IOException {
+    void shouldResolveCorrectRepositoryWithContextPath() {
       RepositoryContext context = resolver.resolve(new String[]{"git", "scm/repo/space/X/something/else"});
 
       assertThat(context.getRepository()).isSameAs(REPOSITORY);
