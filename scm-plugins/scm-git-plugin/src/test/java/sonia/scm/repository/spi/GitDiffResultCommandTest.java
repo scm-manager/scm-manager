@@ -65,12 +65,12 @@ public class GitDiffResultCommandTest extends AbstractGitCommandTestBase {
     Iterator<DiffFile> iterator = diffResult.iterator();
 
     DiffFile a = iterator.next();
-    assertThat(a.getOldRevision()).isEqualTo("78981922613b2afb6025042ff6bd878ac1994e85");
-    assertThat(a.getNewRevision()).isEqualTo("1dc60c7504f4326bc83b9b628c384ec8d7e57096");
+    assertThat(a.getOldRevision()).isEqualTo("592d797cd36432e591416e8b2b98154f4f163411");
+    assertThat(a.getNewRevision()).isEqualTo("3f76a12f08a6ba0dc988c68b7f0b2cd190efc3c4");
 
     DiffFile b = iterator.next();
-    assertThat(b.getOldRevision()).isEqualTo("61780798228d17af2d34fce4cfbdf35556832472");
-    assertThat(b.getNewRevision()).isEqualTo("0000000000000000000000000000000000000000");
+    assertThat(b.getOldRevision()).isEqualTo("592d797cd36432e591416e8b2b98154f4f163411");
+    assertThat(b.getNewRevision()).isEqualTo("3f76a12f08a6ba0dc988c68b7f0b2cd190efc3c4");
 
     assertThat(iterator.hasNext()).isFalse();
   }

@@ -22860,17 +22860,17 @@ exports[`Storyshots Repositories/Diff Binaries 1`] = `
 >
   <div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="main-java"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="main-java"
             onClick={[Function]}
             title="Main.java"
@@ -22948,7 +22948,7 @@ exports[`Storyshots Repositories/Diff Binaries 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -23080,17 +23080,17 @@ exports[`Storyshots Repositories/Diff Binaries 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 eXWwaR panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 coHXmI panel is-size-6"
       id="conflict-png"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="conflict-png"
             onClick={[Function]}
             title="conflict.png"
@@ -23111,29 +23111,9 @@ exports[`Storyshots Repositories/Diff Binaries 1`] = `
           >
             <div
               className="buttons"
-            >
-              0
-            </div>
+            />
           </div>
         </div>
-      </div>
-      <div
-        className="panel-block p-0"
-      >
-        <table
-          className="diff diff-unified TokenizedDiffView__DiffView-sc-2wiyd4-0 eNnGtg unified"
-          onMouseDown={[Function]}
-        >
-          <colgroup>
-            <col
-              className="diff-gutter-col"
-            />
-            <col
-              className="diff-gutter-col"
-            />
-            <col />
-          </colgroup>
-        </table>
       </div>
     </div>
   </div>
@@ -23158,17 +23138,17 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
     </button>
     <div>
       <div
-        className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+        className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
         id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
       >
         <div
-          className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+          className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
         >
           <div
             className="level is-flex-wrap-wrap"
           >
             <div
-              className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+              className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
               id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
               onClick={[Function]}
               title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
@@ -23245,9 +23225,9 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
               />
               <col />
             </colgroup>
-            <span />
+            <thead />
             <tbody
-              className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+              className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
             >
               <tr
                 className="diff-line"
@@ -23774,17 +23754,17 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
         </div>
       </div>
       <div
-        className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+        className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
         id="src-main-js-changenotification-tsx"
       >
         <div
-          className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+          className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
         >
           <div
             className="level is-flex-wrap-wrap"
           >
             <div
-              className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+              className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
               id="src-main-js-changenotification-tsx"
               onClick={[Function]}
               title="src/main/js/ChangeNotification.tsx"
@@ -23887,7 +23867,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
               </tr>
             </tbody>
             <tbody
-              className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+              className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
             >
               <tr
                 className="diff-line"
@@ -24114,7 +24094,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
               </tr>
             </tbody>
             <tbody
-              className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+              className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
             >
               <tr
                 className="diff-line"
@@ -24727,17 +24707,17 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
         </div>
       </div>
       <div
-        className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+        className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
         id="src-main-resources-locales-de-plugins-json"
       >
         <div
-          className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+          className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
         >
           <div
             className="level is-flex-wrap-wrap"
           >
             <div
-              className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+              className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
               id="src-main-resources-locales-de-plugins-json"
               onClick={[Function]}
               title="src/main/resources/locales/de/plugins.json"
@@ -24851,7 +24831,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
               </tr>
             </tbody>
             <tbody
-              className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+              className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
             >
               <tr
                 className="diff-line"
@@ -25251,17 +25231,17 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
         </div>
       </div>
       <div
-        className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+        className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
         id="src-main-resources-locales-en-plugins-json"
       >
         <div
-          className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+          className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
         >
           <div
             className="level is-flex-wrap-wrap"
           >
             <div
-              className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+              className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
               id="src-main-resources-locales-en-plugins-json"
               onClick={[Function]}
               title="src/main/resources/locales/en/plugins.json"
@@ -25375,7 +25355,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
               </tr>
             </tbody>
             <tbody
-              className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+              className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
             >
               <tr
                 className="diff-line"
@@ -25775,17 +25755,17 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
         </div>
       </div>
       <div
-        className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+        className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
         id="src-test-java-com-cloudogu-scm-review-events-clienttest-java"
       >
         <div
-          className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+          className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
         >
           <div
             className="level is-flex-wrap-wrap"
           >
             <div
-              className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+              className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
               id="src-test-java-com-cloudogu-scm-review-events-clienttest-java"
               onClick={[Function]}
               title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
@@ -25888,7 +25868,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
               </tr>
             </tbody>
             <tbody
-              className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+              className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
             >
               <tr
                 className="diff-line"
@@ -26454,7 +26434,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
               </tr>
             </tbody>
             <tbody
-              className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+              className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
             >
               <tr
                 className="diff-line"
@@ -26704,7 +26684,7 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
               </tr>
             </tbody>
             <tbody
-              className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+              className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
             >
               <tr
                 className="diff-line"
@@ -26989,17 +26969,17 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
         </div>
       </div>
       <div
-        className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+        className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
         id="main-java"
       >
         <div
-          className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+          className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
         >
           <div
             className="level is-flex-wrap-wrap"
           >
             <div
-              className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+              className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
               id="main-java"
               onClick={[Function]}
               title="Main.java"
@@ -27076,9 +27056,9 @@ exports[`Storyshots Repositories/Diff Changing Content 1`] = `
               />
               <col />
             </colgroup>
-            <span />
+            <thead />
             <tbody
-              className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+              className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
             >
               <tr
                 className="diff-line"
@@ -27563,17 +27543,17 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
 >
   <div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 eXWwaR panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 coHXmI panel is-size-6"
       id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
             onClick={[Function]}
             title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
@@ -27672,17 +27652,17 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 eXWwaR panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 coHXmI panel is-size-6"
       id="src-main-js-changenotification-tsx"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-main-js-changenotification-tsx"
             onClick={[Function]}
             title="src/main/js/ChangeNotification.tsx"
@@ -27781,17 +27761,17 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 eXWwaR panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 coHXmI panel is-size-6"
       id="src-main-resources-locales-de-plugins-json"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-main-resources-locales-de-plugins-json"
             onClick={[Function]}
             title="src/main/resources/locales/de/plugins.json"
@@ -27890,17 +27870,17 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 eXWwaR panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 coHXmI panel is-size-6"
       id="src-main-resources-locales-en-plugins-json"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-main-resources-locales-en-plugins-json"
             onClick={[Function]}
             title="src/main/resources/locales/en/plugins.json"
@@ -27999,17 +27979,17 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 eXWwaR panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 coHXmI panel is-size-6"
       id="src-test-java-com-cloudogu-scm-review-events-clienttest-java"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-test-java-com-cloudogu-scm-review-events-clienttest-java"
             onClick={[Function]}
             title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
@@ -28108,17 +28088,17 @@ exports[`Storyshots Repositories/Diff Collapsed 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 eXWwaR panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 coHXmI panel is-size-6"
       id="main-java"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="main-java"
             onClick={[Function]}
             title="Main.java"
@@ -28226,17 +28206,17 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
 >
   <div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 eXWwaR panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 coHXmI panel is-size-6"
       id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
             onClick={[Function]}
             title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
@@ -28299,17 +28279,17 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="src-main-js-changenotification-tsx"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-main-js-changenotification-tsx"
             onClick={[Function]}
             title="src/main/js/ChangeNotification.tsx"
@@ -28387,7 +28367,7 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -28578,7 +28558,7 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -29155,17 +29135,17 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="src-main-resources-locales-de-plugins-json"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-main-resources-locales-de-plugins-json"
             onClick={[Function]}
             title="src/main/resources/locales/de/plugins.json"
@@ -29243,7 +29223,7 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -29607,17 +29587,17 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="src-main-resources-locales-en-plugins-json"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-main-resources-locales-en-plugins-json"
             onClick={[Function]}
             title="src/main/resources/locales/en/plugins.json"
@@ -29695,7 +29675,7 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -30059,17 +30039,17 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 eXWwaR panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 coHXmI panel is-size-6"
       id="src-test-java-com-cloudogu-scm-review-events-clienttest-java"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-test-java-com-cloudogu-scm-review-events-clienttest-java"
             onClick={[Function]}
             title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
@@ -30132,17 +30112,17 @@ exports[`Storyshots Repositories/Diff CollapsingWithFunction 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 eXWwaR panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 coHXmI panel is-size-6"
       id="main-java"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="main-java"
             onClick={[Function]}
             title="Main.java"
@@ -30295,17 +30275,17 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
 >
   <div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
             onClick={[Function]}
             title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
@@ -30382,9 +30362,9 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
             />
             <col />
           </colgroup>
-          <span />
+          <thead />
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -30911,17 +30891,17 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="src-main-js-changenotification-tsx"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-main-js-changenotification-tsx"
             onClick={[Function]}
             title="src/main/js/ChangeNotification.tsx"
@@ -31024,7 +31004,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -31251,7 +31231,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -31864,17 +31844,17 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="src-main-resources-locales-de-plugins-json"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-main-resources-locales-de-plugins-json"
             onClick={[Function]}
             title="src/main/resources/locales/de/plugins.json"
@@ -31988,7 +31968,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -32388,17 +32368,17 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="src-main-resources-locales-en-plugins-json"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-main-resources-locales-en-plugins-json"
             onClick={[Function]}
             title="src/main/resources/locales/en/plugins.json"
@@ -32512,7 +32492,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -32912,17 +32892,17 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="src-test-java-com-cloudogu-scm-review-events-clienttest-java"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-test-java-com-cloudogu-scm-review-events-clienttest-java"
             onClick={[Function]}
             title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
@@ -33025,7 +33005,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -33591,7 +33571,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -33841,7 +33821,7 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -34126,17 +34106,17 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="main-java"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="main-java"
             onClick={[Function]}
             title="Main.java"
@@ -34213,9 +34193,9 @@ exports[`Storyshots Repositories/Diff Expandable 1`] = `
             />
             <col />
           </colgroup>
-          <span />
+          <thead />
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -34699,17 +34679,17 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
 >
   <div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
             onClick={[Function]}
             title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
@@ -34786,9 +34766,9 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
             />
             <col />
           </colgroup>
-          <span />
+          <thead />
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -35315,17 +35295,17 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="src-main-js-changenotification-tsx"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-main-js-changenotification-tsx"
             onClick={[Function]}
             title="src/main/js/ChangeNotification.tsx"
@@ -35428,7 +35408,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -35655,7 +35635,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -36268,17 +36248,17 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="src-main-resources-locales-de-plugins-json"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-main-resources-locales-de-plugins-json"
             onClick={[Function]}
             title="src/main/resources/locales/de/plugins.json"
@@ -36392,7 +36372,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -36792,17 +36772,17 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="src-main-resources-locales-en-plugins-json"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-main-resources-locales-en-plugins-json"
             onClick={[Function]}
             title="src/main/resources/locales/en/plugins.json"
@@ -36916,7 +36896,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -37316,17 +37296,17 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="src-test-java-com-cloudogu-scm-review-events-clienttest-java"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-test-java-com-cloudogu-scm-review-events-clienttest-java"
             onClick={[Function]}
             title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
@@ -37429,7 +37409,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -37995,7 +37975,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -38245,7 +38225,7 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -38530,17 +38510,17 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="main-java"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="main-java"
             onClick={[Function]}
             title="Main.java"
@@ -38617,9 +38597,9 @@ exports[`Storyshots Repositories/Diff External state management 1`] = `
             />
             <col />
           </colgroup>
-          <span />
+          <thead />
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -39103,17 +39083,17 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
 >
   <div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
             onClick={[Function]}
             title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
@@ -39195,7 +39175,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -39686,17 +39666,17 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="src-main-js-changenotification-tsx"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-main-js-changenotification-tsx"
             onClick={[Function]}
             title="src/main/js/ChangeNotification.tsx"
@@ -39778,7 +39758,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -39969,7 +39949,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -40546,17 +40526,17 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="src-main-resources-locales-de-plugins-json"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-main-resources-locales-de-plugins-json"
             onClick={[Function]}
             title="src/main/resources/locales/de/plugins.json"
@@ -40638,7 +40618,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -41002,17 +40982,17 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="src-main-resources-locales-en-plugins-json"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-main-resources-locales-en-plugins-json"
             onClick={[Function]}
             title="src/main/resources/locales/en/plugins.json"
@@ -41094,7 +41074,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -41458,17 +41438,17 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="src-test-java-com-cloudogu-scm-review-events-clienttest-java"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-test-java-com-cloudogu-scm-review-events-clienttest-java"
             onClick={[Function]}
             title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
@@ -41550,7 +41530,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -42058,7 +42038,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -42272,7 +42252,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -42521,17 +42501,17 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="main-java"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="main-java"
             onClick={[Function]}
             title="Main.java"
@@ -42613,7 +42593,7 @@ exports[`Storyshots Repositories/Diff File Annotation 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -43061,17 +43041,17 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
 >
   <div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
             onClick={[Function]}
             title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
@@ -43164,7 +43144,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -43655,17 +43635,17 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="src-main-js-changenotification-tsx"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-main-js-changenotification-tsx"
             onClick={[Function]}
             title="src/main/js/ChangeNotification.tsx"
@@ -43758,7 +43738,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -43949,7 +43929,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -44526,17 +44506,17 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="src-main-resources-locales-de-plugins-json"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-main-resources-locales-de-plugins-json"
             onClick={[Function]}
             title="src/main/resources/locales/de/plugins.json"
@@ -44629,7 +44609,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -44993,17 +44973,17 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="src-main-resources-locales-en-plugins-json"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-main-resources-locales-en-plugins-json"
             onClick={[Function]}
             title="src/main/resources/locales/en/plugins.json"
@@ -45096,7 +45076,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -45460,17 +45440,17 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="src-test-java-com-cloudogu-scm-review-events-clienttest-java"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-test-java-com-cloudogu-scm-review-events-clienttest-java"
             onClick={[Function]}
             title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
@@ -45563,7 +45543,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -46071,7 +46051,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -46285,7 +46265,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -46534,17 +46514,17 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="main-java"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="main-java"
             onClick={[Function]}
             title="Main.java"
@@ -46637,7 +46617,7 @@ exports[`Storyshots Repositories/Diff File Controls 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -47085,17 +47065,17 @@ exports[`Storyshots Repositories/Diff Highlight line on hover 1`] = `
 >
   <div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="src-main-java-com-cloudogu-scm-review-pullrequest-service-defaultpullrequestservice-java"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-main-java-com-cloudogu-scm-review-pullrequest-service-defaultpullrequestservice-java"
             onClick={[Function]}
             title="src/main/java/com/cloudogu/scm/review/pullrequest/service/DefaultPullRequestService.java"
@@ -47173,7 +47153,7 @@ exports[`Storyshots Repositories/Diff Highlight line on hover 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 hAJfJS"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 fvpHiH"
           >
             <tr
               className="diff-line"
@@ -47387,7 +47367,7 @@ exports[`Storyshots Repositories/Diff Highlight line on hover 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 hAJfJS"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 fvpHiH"
           >
             <tr
               className="diff-line"
@@ -47578,7 +47558,7 @@ exports[`Storyshots Repositories/Diff Highlight line on hover 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 hAJfJS"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 fvpHiH"
           >
             <tr
               className="diff-line"
@@ -47928,17 +47908,17 @@ exports[`Storyshots Repositories/Diff Hunk gutter hover icon 1`] = `
 >
   <div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="src-main-java-com-cloudogu-scm-review-pullrequest-service-defaultpullrequestservice-java"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-main-java-com-cloudogu-scm-review-pullrequest-service-defaultpullrequestservice-java"
             onClick={[Function]}
             title="src/main/java/com/cloudogu/scm/review/pullrequest/service/DefaultPullRequestService.java"
@@ -48016,7 +47996,7 @@ exports[`Storyshots Repositories/Diff Hunk gutter hover icon 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 gtRJTD"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 fayzLK"
           >
             <tr
               className="diff-line"
@@ -48230,7 +48210,7 @@ exports[`Storyshots Repositories/Diff Hunk gutter hover icon 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 gtRJTD"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 fayzLK"
           >
             <tr
               className="diff-line"
@@ -48421,7 +48401,7 @@ exports[`Storyshots Repositories/Diff Hunk gutter hover icon 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 gtRJTD"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 fayzLK"
           >
             <tr
               className="diff-line"
@@ -48771,17 +48751,17 @@ exports[`Storyshots Repositories/Diff Hunks 1`] = `
 >
   <div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="src-main-java-com-cloudogu-scm-review-pullrequest-service-defaultpullrequestservice-java"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-main-java-com-cloudogu-scm-review-pullrequest-service-defaultpullrequestservice-java"
             onClick={[Function]}
             title="src/main/java/com/cloudogu/scm/review/pullrequest/service/DefaultPullRequestService.java"
@@ -48859,7 +48839,7 @@ exports[`Storyshots Repositories/Diff Hunks 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -49073,7 +49053,7 @@ exports[`Storyshots Repositories/Diff Hunks 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -49264,7 +49244,7 @@ exports[`Storyshots Repositories/Diff Hunks 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -49608,23 +49588,233 @@ exports[`Storyshots Repositories/Diff Hunks 1`] = `
 </div>
 `;
 
+exports[`Storyshots Repositories/Diff Images 1`] = `
+<div
+  className="Diffstories__Container-sc-28kjjp-0 dmSnCH"
+>
+  <div>
+    <div
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 coHXmI panel is-size-6"
+      id="test-png"
+    >
+      <div
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
+      >
+        <div
+          className="level is-flex-wrap-wrap"
+        >
+          <div
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
+            id="test-png"
+            onClick={[Function]}
+            title="test.png"
+          >
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+            >
+              test.png
+            </h4>
+            <span
+              className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
+            >
+              add
+            </span>
+          </div>
+          <div
+            className="level-right is-flex ml-auto"
+          >
+            <div
+              className="buttons"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 coHXmI panel is-size-6"
+      id="test-png"
+    >
+      <div
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
+      >
+        <div
+          className="level is-flex-wrap-wrap"
+        >
+          <div
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
+            id="test-png"
+            onClick={[Function]}
+            title="test.png"
+          >
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+            >
+              test.png
+            </h4>
+            <span
+              className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
+            >
+              delete
+            </span>
+          </div>
+          <div
+            className="level-right is-flex ml-auto"
+          >
+            <div
+              className="buttons"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 coHXmI panel is-size-6"
+      id="test-png"
+    >
+      <div
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
+      >
+        <div
+          className="level is-flex-wrap-wrap"
+        >
+          <div
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
+            id="test-png"
+            onClick={[Function]}
+            title="test.png"
+          >
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+            >
+              test.png
+            </h4>
+            <span
+              className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
+            >
+              modify
+            </span>
+          </div>
+          <div
+            className="level-right is-flex ml-auto"
+          >
+            <div
+              className="buttons"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 coHXmI panel is-size-6"
+      id="test-png"
+    >
+      <div
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
+      >
+        <div
+          className="level is-flex-wrap-wrap"
+        >
+          <div
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
+            id="test-png"
+            onClick={[Function]}
+            title="newFileName.png > test.png"
+          >
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+            >
+              newFileName.png
+               
+              <i
+                aria-label="diff.renamedTo"
+                className="fas fa-fw fa-arrow-right has-text-inherit"
+                onKeyPress={[Function]}
+              />
+               
+              test.png
+            </h4>
+            <span
+              className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
+            >
+              rename
+            </span>
+          </div>
+          <div
+            className="level-right is-flex ml-auto"
+          >
+            <div
+              className="buttons"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 coHXmI panel is-size-6"
+      id="test-png"
+    >
+      <div
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
+      >
+        <div
+          className="level is-flex-wrap-wrap"
+        >
+          <div
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
+            id="test-png"
+            onClick={[Function]}
+            title="newFileName.png > test.png"
+          >
+            <h4
+              className="has-text-weight-bold is-ellipsis-overflow is-size-6 ml-1"
+            >
+              newFileName.png
+               
+              <i
+                aria-label="diff.renamedTo"
+                className="fas fa-fw fa-arrow-right has-text-inherit"
+                onKeyPress={[Function]}
+              />
+               
+              test.png
+            </h4>
+            <span
+              className="tag is-info is-normal has-text-weight-normal ml-3 is-outlined is-rounded"
+            >
+              copy
+            </span>
+          </div>
+          <div
+            className="level-right is-flex ml-auto"
+          >
+            <div
+              className="buttons"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
 <div
   className="Diffstories__Container-sc-28kjjp-0 dmSnCH"
 >
   <div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
             onClick={[Function]}
             title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
@@ -49702,7 +49892,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -50205,17 +50395,17 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="src-main-js-changenotification-tsx"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-main-js-changenotification-tsx"
             onClick={[Function]}
             title="src/main/js/ChangeNotification.tsx"
@@ -50293,7 +50483,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -50496,7 +50686,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -51073,17 +51263,17 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="src-main-resources-locales-de-plugins-json"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-main-resources-locales-de-plugins-json"
             onClick={[Function]}
             title="src/main/resources/locales/de/plugins.json"
@@ -51161,7 +51351,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -51525,17 +51715,17 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="src-main-resources-locales-en-plugins-json"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-main-resources-locales-en-plugins-json"
             onClick={[Function]}
             title="src/main/resources/locales/en/plugins.json"
@@ -51613,7 +51803,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -51977,17 +52167,17 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="src-test-java-com-cloudogu-scm-review-events-clienttest-java"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-test-java-com-cloudogu-scm-review-events-clienttest-java"
             onClick={[Function]}
             title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
@@ -52065,7 +52255,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -52573,7 +52763,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -52787,7 +52977,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -53036,17 +53226,17 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="main-java"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="main-java"
             onClick={[Function]}
             title="Main.java"
@@ -53124,7 +53314,7 @@ exports[`Storyshots Repositories/Diff Line Annotation 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -53584,17 +53774,17 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
 >
   <div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
             onClick={[Function]}
             title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
@@ -53672,7 +53862,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0"
           >
             <tr
               className="diff-line"
@@ -54203,17 +54393,17 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="src-main-js-changenotification-tsx"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-main-js-changenotification-tsx"
             onClick={[Function]}
             title="src/main/js/ChangeNotification.tsx"
@@ -54291,7 +54481,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0"
           >
             <tr
               className="diff-line"
@@ -54496,7 +54686,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0"
           >
             <tr
               className="diff-line"
@@ -55121,17 +55311,17 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="src-main-resources-locales-de-plugins-json"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-main-resources-locales-de-plugins-json"
             onClick={[Function]}
             title="src/main/resources/locales/de/plugins.json"
@@ -55209,7 +55399,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0"
           >
             <tr
               className="diff-line"
@@ -55603,17 +55793,17 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="src-main-resources-locales-en-plugins-json"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-main-resources-locales-en-plugins-json"
             onClick={[Function]}
             title="src/main/resources/locales/en/plugins.json"
@@ -55691,7 +55881,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0"
           >
             <tr
               className="diff-line"
@@ -56085,17 +56275,17 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="src-test-java-com-cloudogu-scm-review-events-clienttest-java"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-test-java-com-cloudogu-scm-review-events-clienttest-java"
             onClick={[Function]}
             title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
@@ -56173,7 +56363,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0"
           >
             <tr
               className="diff-line"
@@ -56721,7 +56911,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0"
           >
             <tr
               className="diff-line"
@@ -56951,7 +57141,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0"
           >
             <tr
               className="diff-line"
@@ -57220,17 +57410,17 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="main-java"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="main-java"
             onClick={[Function]}
             title="Main.java"
@@ -57308,7 +57498,7 @@ exports[`Storyshots Repositories/Diff OnClick 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0"
           >
             <tr
               className="diff-line"
@@ -57792,17 +57982,17 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
 >
   <div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
             onClick={[Function]}
             title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
@@ -57881,7 +58071,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line diff-line-normal"
@@ -58464,17 +58654,17 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="src-main-js-changenotification-tsx"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-main-js-changenotification-tsx"
             onClick={[Function]}
             title="src/main/js/ChangeNotification.tsx"
@@ -58553,7 +58743,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line diff-line-normal"
@@ -58787,7 +58977,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line diff-line-normal"
@@ -59410,17 +59600,17 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="src-main-resources-locales-de-plugins-json"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-main-resources-locales-de-plugins-json"
             onClick={[Function]}
             title="src/main/resources/locales/de/plugins.json"
@@ -59499,7 +59689,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line diff-line-normal"
@@ -59914,17 +60104,17 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="src-main-resources-locales-en-plugins-json"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-main-resources-locales-en-plugins-json"
             onClick={[Function]}
             title="src/main/resources/locales/en/plugins.json"
@@ -60003,7 +60193,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line diff-line-normal"
@@ -60418,17 +60608,17 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="src-test-java-com-cloudogu-scm-review-events-clienttest-java"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-test-java-com-cloudogu-scm-review-events-clienttest-java"
             onClick={[Function]}
             title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
@@ -60507,7 +60697,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line diff-line-normal"
@@ -61125,7 +61315,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line diff-line-normal"
@@ -61367,7 +61557,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line diff-line-normal"
@@ -61646,17 +61836,17 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="main-java"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="main-java"
             onClick={[Function]}
             title="Main.java"
@@ -61735,7 +61925,7 @@ exports[`Storyshots Repositories/Diff Side-By-Side 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line diff-line-new-only"
@@ -62255,17 +62445,17 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting (Markdown) 1`] = `
 >
   <div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="changelog-md"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="changelog-md"
             onClick={[Function]}
             title="CHANGELOG.md"
@@ -62368,7 +62558,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting (Markdown) 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -62616,17 +62806,17 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
 >
   <div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
             onClick={[Function]}
             title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
@@ -62704,7 +62894,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -63195,17 +63385,17 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="src-main-js-changenotification-tsx"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-main-js-changenotification-tsx"
             onClick={[Function]}
             title="src/main/js/ChangeNotification.tsx"
@@ -63283,7 +63473,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -63474,7 +63664,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -64051,17 +64241,17 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="src-main-resources-locales-de-plugins-json"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-main-resources-locales-de-plugins-json"
             onClick={[Function]}
             title="src/main/resources/locales/de/plugins.json"
@@ -64139,7 +64329,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -64503,17 +64693,17 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="src-main-resources-locales-en-plugins-json"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-main-resources-locales-en-plugins-json"
             onClick={[Function]}
             title="src/main/resources/locales/en/plugins.json"
@@ -64591,7 +64781,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -64955,17 +65145,17 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="src-test-java-com-cloudogu-scm-review-events-clienttest-java"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-test-java-com-cloudogu-scm-review-events-clienttest-java"
             onClick={[Function]}
             title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
@@ -65043,7 +65233,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -65551,7 +65741,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -65765,7 +65955,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -66014,17 +66204,17 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="main-java"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="main-java"
             onClick={[Function]}
             title="Main.java"
@@ -66102,7 +66292,7 @@ exports[`Storyshots Repositories/Diff SyntaxHighlighting 1`] = `
             <col />
           </colgroup>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -66550,17 +66740,17 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
 >
   <div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-main-java-com-cloudogu-scm-review-events-eventlistener-java"
             onClick={[Function]}
             title="src/main/java/com/cloudogu/scm/review/events/EventListener.java"
@@ -66637,9 +66827,9 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
             />
             <col />
           </colgroup>
-          <span />
+          <thead />
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -67166,17 +67356,17 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="src-main-js-changenotification-tsx"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-main-js-changenotification-tsx"
             onClick={[Function]}
             title="src/main/js/ChangeNotification.tsx"
@@ -67279,7 +67469,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -67506,7 +67696,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -68119,17 +68309,17 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="src-main-resources-locales-de-plugins-json"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-main-resources-locales-de-plugins-json"
             onClick={[Function]}
             title="src/main/resources/locales/de/plugins.json"
@@ -68243,7 +68433,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -68643,17 +68833,17 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="src-main-resources-locales-en-plugins-json"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-main-resources-locales-en-plugins-json"
             onClick={[Function]}
             title="src/main/resources/locales/en/plugins.json"
@@ -68767,7 +68957,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -69167,17 +69357,17 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="src-test-java-com-cloudogu-scm-review-events-clienttest-java"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="src-test-java-com-cloudogu-scm-review-events-clienttest-java"
             onClick={[Function]}
             title="src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
@@ -69280,7 +69470,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -69846,7 +70036,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -70096,7 +70286,7 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
             </tr>
           </tbody>
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"
@@ -70381,17 +70571,17 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
       </div>
     </div>
     <div
-      className="LazyDiffFile__DiffFilePanel-sc-pn0jjx-1 bOaYtY panel is-size-6"
+      className="styledElements__DiffFilePanel-sc-1k3r0if-1 hNIArZ panel is-size-6"
       id="main-java"
     >
       <div
-        className="LazyDiffFile__PanelHeading-sc-pn0jjx-4 panel-heading"
+        className="styledElements__PanelHeading-sc-1k3r0if-4 panel-heading"
       >
         <div
           className="level is-flex-wrap-wrap"
         >
           <div
-            className="LazyDiffFile__FullWidthTitleHeader-sc-pn0jjx-2 ecJrIc level-left is-flex is-clickable"
+            className="styledElements__FullWidthTitleHeader-sc-1k3r0if-2 fzamlx level-left is-flex is-clickable"
             id="main-java"
             onClick={[Function]}
             title="Main.java"
@@ -70468,9 +70658,9 @@ exports[`Storyshots Repositories/Diff WithLinkToFile 1`] = `
             />
             <col />
           </colgroup>
-          <span />
+          <thead />
           <tbody
-            className="diff-hunk LazyDiffFile__StyledHunk-sc-pn0jjx-0 fsNoCo"
+            className="diff-hunk styledElements__StyledHunk-sc-1k3r0if-0 ka-DPex"
           >
             <tr
               className="diff-line"

@@ -22,16 +22,25 @@
  * SOFTWARE.
  */
 
-import React, { FC, Suspense } from "react";
-import type { DiffFileProps } from "./diff/types";
-import Loading from "../Loading";
+import { FileDiff } from "@scm-manager/ui-types";
+import Icon from "../../Icon";
+import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
 
-const LazyDiffFile = React.lazy(() => import("./diff/LazyDiffFile"));
+type Props = { file: FileDiff };
 
-const DiffFile: FC<DiffFileProps> = (props) => (
-  <Suspense fallback={<Loading />}>
-    <LazyDiffFile {...props} />
-  </Suspense>
-);
+const FileTitle: FC<Props> = ({ file }) => {
+  const [t] = useTranslation("repos");
+  if (file.oldPath !== file.newPath && (file.type === "copy" || file.type === "rename")) {
+    return (
+      <>
+        {file.oldPath} <Icon name="arrow-right" color="inherit" alt={t("diff.renamedTo")} /> {file.newPath}
+      </>
+    );
+  } else if (file.type === "delete") {
+    return <>{file.oldPath}</>;
+  }
+  return <>{file.newPath}</>;
+};
 
-export default DiffFile;
+export default FileTitle;

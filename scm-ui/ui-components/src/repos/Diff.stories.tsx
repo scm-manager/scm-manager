@@ -24,7 +24,6 @@
 import React, { ReactNode, useEffect, useState } from "react";
 import { storiesOf } from "@storybook/react";
 import Diff from "./Diff";
-// @ts-ignore
 import parser from "gitdiff-parser";
 import simpleDiff from "../__resources__/Diff.simple";
 import hunksDiff from "../__resources__/Diff.hunks";
@@ -40,6 +39,10 @@ import { two } from "../__resources__/changesets";
 import { Changeset, FileDiff } from "@scm-manager/ui-types";
 import JumpToFileButton from "./JumpToFileButton";
 import Button from "../buttons/Button";
+// @ts-ignore ignore unknown png
+import hitchhikerImg from "../__resources__/hitchhiker.png";
+// @ts-ignore ignore unknown jpg
+import marvinImg from "../__resources__/marvin.jpg";
 
 const diffFiles = parser.parse(simpleDiff);
 
@@ -151,6 +154,85 @@ storiesOf("Repositories/Diff", module)
   })
   .add("Binaries", () => {
     const binaryDiffFiles = parser.parse(binaryDiff);
+    return <Diff diff={binaryDiffFiles} />;
+  })
+  .add("Images", () => {
+    const binaryDiffFiles: FileDiff[] = [
+      {
+        type: "add",
+        newPath: "test.png",
+        oldPath: "/dev/null",
+        isBinary: true,
+        newEndingNewLine: false,
+        oldEndingNewLine: false,
+        _links: {
+          newFile: {
+            href: `${window.location.protocol}//${window.location.host}/${hitchhikerImg}`,
+          },
+        },
+      },
+      {
+        type: "delete",
+        newPath: "/dev/null",
+        oldPath: "test.png",
+        isBinary: true,
+        newEndingNewLine: false,
+        oldEndingNewLine: false,
+        _links: {
+          oldFile: {
+            href: `${window.location.protocol}//${window.location.host}/${hitchhikerImg}`,
+          },
+        },
+      },
+      {
+        type: "modify",
+        newPath: "test.png",
+        oldPath: "test.png",
+        isBinary: true,
+        newEndingNewLine: false,
+        oldEndingNewLine: false,
+        _links: {
+          oldFile: {
+            href: `${window.location.protocol}//${window.location.host}/${hitchhikerImg}`,
+          },
+          newFile: {
+            href: `${window.location.protocol}//${window.location.host}/${marvinImg}`,
+          },
+        },
+      },
+      {
+        type: "rename",
+        newPath: "test.png",
+        oldPath: "newFileName.png",
+        isBinary: true,
+        newEndingNewLine: false,
+        oldEndingNewLine: false,
+        _links: {
+          oldFile: {
+            href: `${window.location.protocol}//${window.location.host}/${hitchhikerImg}`,
+          },
+          newFile: {
+            href: `${window.location.protocol}//${window.location.host}/${hitchhikerImg}`,
+          },
+        },
+      },
+      {
+        type: "copy",
+        newPath: "test.png",
+        oldPath: "newFileName.png",
+        isBinary: true,
+        newEndingNewLine: false,
+        oldEndingNewLine: false,
+        _links: {
+          oldFile: {
+            href: `${window.location.protocol}//${window.location.host}/${hitchhikerImg}`,
+          },
+          newFile: {
+            href: `${window.location.protocol}//${window.location.host}/${hitchhikerImg}`,
+          },
+        },
+      },
+    ];
     return <Diff diff={binaryDiffFiles} />;
   })
   .add("SyntaxHighlighting", () => {

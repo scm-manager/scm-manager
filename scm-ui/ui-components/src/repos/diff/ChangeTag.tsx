@@ -22,16 +22,35 @@
  * SOFTWARE.
  */
 
-import React, { FC, Suspense } from "react";
-import type { DiffFileProps } from "./diff/types";
-import Loading from "../Loading";
+import { FileDiff } from "@scm-manager/ui-types";
+import Tag from "../../Tag";
+import classNames from "classnames";
+import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
 
-const LazyDiffFile = React.lazy(() => import("./diff/LazyDiffFile"));
+type Props = { file: FileDiff };
 
-const DiffFile: FC<DiffFileProps> = (props) => (
-  <Suspense fallback={<Loading />}>
-    <LazyDiffFile {...props} />
-  </Suspense>
-);
+const ChangeTag: FC<Props> = ({ file }) => {
+  const [t] = useTranslation("repos");
+  if (!file.type) {
+    return null;
+  }
+  const key = "diff.changes." + file.type;
+  let value = t(key);
+  if (key === value) {
+    value = file.type;
+  }
 
-export default DiffFile;
+  const color = value === "added" ? "success" : value === "deleted" ? "danger" : "info";
+  return (
+    <Tag
+      className={classNames("has-text-weight-normal", "ml-3")}
+      rounded={true}
+      outlined={true}
+      color={color}
+      label={value}
+    />
+  );
+};
+
+export default ChangeTag;

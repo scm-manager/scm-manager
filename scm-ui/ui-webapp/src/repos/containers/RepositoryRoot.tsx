@@ -60,7 +60,12 @@ import SourceExtensions from "../sources/containers/SourceExtensions";
 import TagsOverview from "../tags/container/TagsOverview";
 import CompareRoot from "../compare/CompareRoot";
 import TagRoot from "../tags/container/TagRoot";
-import { RepositoryContextProvider, useIndexLinks, useNamespaceAndNameContext, useRepository } from "@scm-manager/ui-api";
+import {
+  RepositoryContextProvider,
+  useIndexLinks,
+  useNamespaceAndNameContext,
+  useRepository,
+} from "@scm-manager/ui-api";
 import styled from "styled-components";
 import { useShortcut } from "@scm-manager/ui-shortcuts";
 
@@ -204,7 +209,7 @@ const RepositoryRoot = () => {
         }
     }
 
-    return links ? links.map(({ url, label }) => <JumpToFileButton tooltip={label} link={url} />) : null;
+    return links ? links.map(({ url, label }) => <JumpToFileButton key={url} tooltip={label} link={url} />) : null;
   };
 
   const titleComponent = (

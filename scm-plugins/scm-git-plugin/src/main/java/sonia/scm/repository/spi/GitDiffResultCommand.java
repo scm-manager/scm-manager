@@ -88,7 +88,7 @@ public class GitDiffResultCommand extends AbstractGitCommand implements DiffResu
 
     @Override
     public String getOldRevision() {
-      return GitUtil.getId(diff.getCommit().getParent(0).getId());
+      return diff.getCommit().getParentCount() > 0 ? GitUtil.getId(diff.getCommit().getParent(0).getId()) : null;
     }
 
     @Override
@@ -124,73 +124,72 @@ public class GitDiffResultCommand extends AbstractGitCommand implements DiffResu
         .map(DiffFile.class::cast)
         .iterator();
     }
-  }
 
-  private class GitDiffFile implements DiffFile {
+    private class GitDiffFile implements DiffFile {
 
-    private final org.eclipse.jgit.lib.Repository repository;
-    private final DiffEntry diffEntry;
+      private final org.eclipse.jgit.lib.Repository repository;
+      private final DiffEntry diffEntry;
 
-    private GitDiffFile(org.eclipse.jgit.lib.Repository repository, DiffEntry diffEntry) {
-      this.repository = repository;
-      this.diffEntry = diffEntry;
-    }
-
-    @Override
-    public String getOldRevision() {
-      return GitUtil.getId(diffEntry.getOldId().toObjectId());
-    }
-
-    @Override
-    public String getNewRevision() {
-      return GitUtil.getId(diffEntry.getNewId().toObjectId());
-    }
-
-    @Override
-    public String getOldPath() {
-      return diffEntry.getOldPath();
-    }
-
-    @Override
-    public String getNewPath() {
-      return diffEntry.getNewPath();
-    }
-
-    @Override
-    public ChangeType getChangeType() {
-      switch (diffEntry.getChangeType()) {
-        case ADD:
-          return ChangeType.ADD;
-        case MODIFY:
-          return ChangeType.MODIFY;
-        case RENAME:
-          return ChangeType.RENAME;
-        case DELETE:
-          return ChangeType.DELETE;
-        case COPY:
-          return ChangeType.COPY;
-        default:
-          throw new IllegalArgumentException("Unknown change type: " + diffEntry.getChangeType());
+      private GitDiffFile(org.eclipse.jgit.lib.Repository repository, DiffEntry diffEntry) {
+        this.repository = repository;
+        this.diffEntry = diffEntry;
       }
-    }
 
-    @Override
-    public Iterator<Hunk> iterator() {
-      String content = format(repository, diffEntry);
-      GitHunkParser parser = new GitHunkParser();
-      return parser.parse(content).iterator();
-    }
-
-    private String format(org.eclipse.jgit.lib.Repository repository, DiffEntry entry) {
-      try (ByteArrayOutputStream baos = new ByteArrayOutputStream(); DiffFormatter formatter = new DiffFormatter(baos)) {
-        formatter.setRepository(repository);
-        formatter.format(entry);
-        return baos.toString(StandardCharsets.UTF_8);
-      } catch (IOException ex) {
-        throw new InternalRepositoryException(GitDiffResultCommand.this.repository, "failed to format diff entry", ex);
+      @Override
+      public String getOldRevision() {
+        return GitDiffResult.this.getOldRevision();
       }
+
+      @Override
+      public String getNewRevision() {
+        return GitDiffResult.this.getNewRevision();
+      }
+
+      @Override
+      public String getOldPath() {
+        return diffEntry.getOldPath();
+      }
+
+      @Override
+      public String getNewPath() {
+        return diffEntry.getNewPath();
+      }
+
+      @Override
+      public ChangeType getChangeType() {
+        switch (diffEntry.getChangeType()) {
+          case ADD:
+            return ChangeType.ADD;
+          case MODIFY:
+            return ChangeType.MODIFY;
+          case RENAME:
+            return ChangeType.RENAME;
+          case DELETE:
+            return ChangeType.DELETE;
+          case COPY:
+            return ChangeType.COPY;
+          default:
+            throw new IllegalArgumentException("Unknown change type: " + diffEntry.getChangeType());
+        }
+      }
+
+      @Override
+      public Iterator<Hunk> iterator() {
+        String content = format(repository, diffEntry);
+        GitHunkParser parser = new GitHunkParser();
+        return parser.parse(content).iterator();
+      }
+
+      private String format(org.eclipse.jgit.lib.Repository repository, DiffEntry entry) {
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream(); DiffFormatter formatter = new DiffFormatter(baos)) {
+          formatter.setRepository(repository);
+          formatter.format(entry);
+          return baos.toString(StandardCharsets.UTF_8);
+        } catch (IOException ex) {
+          throw new InternalRepositoryException(GitDiffResultCommand.this.repository, "failed to format diff entry", ex);
+        }
+      }
+
     }
-
   }
-
 }

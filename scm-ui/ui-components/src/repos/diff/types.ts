@@ -22,16 +22,11 @@
  * SOFTWARE.
  */
 
-import React, { FC, Suspense } from "react";
-import type { DiffFileProps } from "./diff/types";
-import Loading from "../Loading";
+import { FileDiff } from "@scm-manager/ui-types";
+import { DiffObjectProps } from "../DiffTypes";
 
-const LazyDiffFile = React.lazy(() => import("./diff/LazyDiffFile"));
-
-const DiffFile: FC<DiffFileProps> = (props) => (
-  <Suspense fallback={<Loading />}>
-    <LazyDiffFile {...props} />
-  </Suspense>
-);
-
-export default DiffFile;
+export type DiffFileProps = DiffObjectProps & {
+  file: FileDiff;
+};
+export type DiffExpandedCallback = (newFile: FileDiff) => void;
+export type ErrorHandler = (error: Error | null | undefined) => void;

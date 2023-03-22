@@ -116,6 +116,12 @@ class DiffResultToDiffResultDtoMapper {
     if (file.iterator().hasNext()) {
       links.single(linkBuilder("lines", resourceLinks.source().content(repository.getNamespace(), repository.getName(), revision, file.getNewPath()) + "?start={start}&end={end}").build());
     }
+    if (!file.getChangeType().equals(DiffFile.ChangeType.ADD)) {
+      links.single(linkBuilder("oldFile", resourceLinks.source().content(repository.getNamespace(), repository.getName(), file.getOldRevision(), file.getOldPath())).build());
+    }
+    if (!file.getChangeType().equals(DiffFile.ChangeType.DELETE)) {
+      links.single(linkBuilder("newFile", resourceLinks.source().content(repository.getNamespace(), repository.getName(), file.getNewRevision(), file.getNewPath())).build());
+    }
     DiffResultDto.FileDto dto = new DiffResultDto.FileDto(links.build());
     // ???
     dto.setOldEndingNewLine(true);
