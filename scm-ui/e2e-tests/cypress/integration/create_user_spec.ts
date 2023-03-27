@@ -41,7 +41,7 @@ describe("Create User", () => {
 
     // Act
     cy.visit("/users/create");
-    cy.byTestId("input-username").type(newUser);
+    cy.byTestId("input-username").clear().type(newUser).should("have.value", newUser);
     cy.byTestId("input-displayname").type(newUser);
     cy.byTestId("input-password").type(password);
     cy.byTestId("input-password-confirmation").type(password);
