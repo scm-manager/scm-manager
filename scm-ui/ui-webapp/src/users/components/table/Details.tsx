@@ -34,6 +34,7 @@ import {
 } from "@scm-manager/ui-components";
 import { Icon } from "@scm-manager/ui-components";
 import PermissionOverview from "../PermissionOverview";
+import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 
 type Props = WithTranslation & {
   user: User;
@@ -102,6 +103,7 @@ const Details: FC<Props> = ({ user }) => {
               <DateFromNow date={user.lastModified} />
             </td>
           </tr>
+          <ExtensionPoint<extensionPoints.UserInformationTableBottom> name="user.information.table.bottom" props={{user}} renderAll={true} />
         </tbody>
       </InfoTable>
       {permissionOverview}

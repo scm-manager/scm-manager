@@ -665,3 +665,19 @@ export type RepositoryDeleteButton = RenderableExtensionPointDefinition<
   "repository.deleteButton",
   { repository: Repository }
 >;
+
+export type RepositoryInformationTableBottom = RenderableExtensionPointDefinition<
+  "repository.information.table.bottom",
+  { repository: Repository }
+  >;
+
+export type UserInformationTableBottom = RenderableExtensionPointDefinition<
+  "user.information.table.bottom",
+  { user: User }
+  >;
+
+export type GroupInformationTableBottom = RenderableExtensionPointDefinition<
+  "group.information.table.bottom",
+  { group: Group }
+  >;
+

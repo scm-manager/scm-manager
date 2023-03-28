@@ -26,6 +26,7 @@ import { WithTranslation, withTranslation } from "react-i18next";
 import { Group } from "@scm-manager/ui-types";
 import { Checkbox, DateFromNow, InfoTable } from "@scm-manager/ui-components";
 import GroupMember from "./GroupMember";
+import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 
 type Props = WithTranslation & {
   group: Group;
@@ -68,6 +69,7 @@ class Details extends React.Component<Props> {
             </td>
           </tr>
           {this.renderMembers()}
+          <ExtensionPoint<extensionPoints.GroupInformationTableBottom> name="group.information.table.bottom" props={{group}} renderAll={true} />
         </tbody>
       </InfoTable>
     );

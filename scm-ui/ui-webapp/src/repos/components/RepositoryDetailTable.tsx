@@ -25,6 +25,7 @@ import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { Repository } from "@scm-manager/ui-types";
 import { DateFromNow, InfoTable, MailLink } from "@scm-manager/ui-components";
+import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 
 type Props = WithTranslation & {
   repository: Repository;
@@ -66,6 +67,7 @@ class RepositoryDetailTable extends React.Component<Props> {
               <DateFromNow date={repository.lastModified} />
             </td>
           </tr>
+        <ExtensionPoint<extensionPoints.RepositoryInformationTableBottom> name="repository.information.table.bottom" props={{repository}} renderAll={true} />
         </tbody>
       </InfoTable>
     );
