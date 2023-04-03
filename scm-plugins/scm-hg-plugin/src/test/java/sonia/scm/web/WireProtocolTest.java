@@ -52,31 +52,6 @@ public class WireProtocolTest {
   private HttpServletRequest request;
 
   @Test
-  public void testIsWriteRequestOnPost() {
-    assertIsWriteRequest("capabilities", "unbundle");
-  }
-
-  @Test
-  public void testIsWriteRequest() {
-    assertIsWriteRequest("unbundle");
-    assertIsWriteRequest("capabilities", "unbundle");
-    assertIsWriteRequest("capabilities", "postkeys");
-    assertIsReadRequest();
-    assertIsReadRequest("capabilities");
-    assertIsReadRequest("capabilities", "branches", "branchmap");
-  }
-
-  private void assertIsWriteRequest(String... commands) {
-    List<String> cmdList = Lists.newArrayList(commands);
-    assertTrue(WireProtocol.isWriteRequest(cmdList));
-  }
-
-  private void assertIsReadRequest(String... commands) {
-    List<String> cmdList = Lists.newArrayList(commands);
-    assertFalse(WireProtocol.isWriteRequest(cmdList));
-  }
-
-  @Test
   public void testGetCommandsOf() {
     expectQueryCommand("capabilities", "cmd=capabilities");
     expectQueryCommand("unbundle", "cmd=unbundle");

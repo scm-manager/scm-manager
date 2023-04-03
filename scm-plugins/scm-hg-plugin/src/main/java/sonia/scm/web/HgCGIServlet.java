@@ -31,19 +31,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
-import sonia.scm.repository.HgEnvironmentBuilder;
-import sonia.scm.repository.HgExtensions;
 import sonia.scm.repository.HgConfig;
 import sonia.scm.repository.HgConfigResolver;
+import sonia.scm.repository.HgEnvironmentBuilder;
+import sonia.scm.repository.HgExtensions;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.RepositoryRequestListenerUtil;
 import sonia.scm.repository.spi.ScmProviderHttpServlet;
 import sonia.scm.web.cgi.CGIExecutor;
 import sonia.scm.web.cgi.CGIExecutorFactory;
-
-import javax.annotation.Nonnull;
 import sonia.scm.web.cgi.EnvList;
 
+import javax.annotation.Nonnull;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -147,12 +147,12 @@ public class HgCGIServlet extends HttpServlet implements ScmProviderHttpServlet 
     HgConfig config = configResolver.resolve(repository);
     executor.setWorkDirectory(config.getDirectory());
 
-    executor.setArgs(createArgs(config));
+    executor.setArgs(createArgs(repository, config));
     executor.execute(config.getHgBinary());
   }
 
   @Nonnull
-  private List<String> createArgs(HgConfig config) {
+  private List<String> createArgs(Repository repository, HgConfig config) {
     List<String> args = new ArrayList<>();
     config(args, "extensions.cgiserve", extension.getAbsolutePath());
 
@@ -160,9 +160,19 @@ public class HgCGIServlet extends HttpServlet implements ScmProviderHttpServlet 
     config(args, "hooks.pretxnchangegroup.scm", String.format("python:%s:pre_hook", hooks));
     config(args, "hooks.changegroup.scm", String.format("python:%s:post_hook", hooks));
 
+    if (RepositoryPermissions.push(repository).isPermitted()) {
+      config(args, "web.allow_push", "*");
+    } else {
+      config(args, "web.deny_push", "*");
+    }
+
+    if(RepositoryPermissions.pull(repository).isPermitted()) {
+      config(args, "web.allow_read", "*");
+    } else {
+      config(args, "web.deny_read", "*");
+    }
+
     config(args, "web.push_ssl", "false");
-    config(args, "web.allow_read", "*");
-    config(args, "web.allow_push", "*");
 
     // enable experimental httppostargs protocol of mercurial
     // Issue 970: https://goo.gl/poascp

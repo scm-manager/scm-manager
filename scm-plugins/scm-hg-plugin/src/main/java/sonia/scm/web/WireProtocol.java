@@ -29,14 +29,20 @@ import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
-import com.google.common.collect.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Multimap;
 import sonia.scm.util.HttpUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.*;
+import java.nio.charset.StandardCharsets;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * WireProtocol provides methods for handling the mercurial wire protocol.
@@ -45,50 +51,7 @@ import java.util.*;
  */
 public final class WireProtocol {
 
-  private static final Logger LOG = LoggerFactory.getLogger(WireProtocol.class);
-
-  private static final Set<String> READ_COMMANDS = ImmutableSet.of(
-    "batch", "between", "branchmap", "branches", "capabilities", "changegroup", "changegroupsubset", "clonebundles",
-    "getbundle", "heads", "hello", "listkeys", "lookup", "known", "stream_out",
-    // could not find lheads in the wireprotocol description but mercurial 4.5.2 uses it for clone
-    "lheads",
-    // For HG Evolve Extension
-    "evoext_obshashrange_v1"
-  );
-
-  private static final Set<String> WRITE_COMMANDS = ImmutableSet.of(
-    "pushkey", "unbundle"
-  );
-
   private WireProtocol() {
-  }
-
-  /**
-   * Returns {@code true} if the request is a write request. The method will always return {@code true}, expect for the
-   * following cases:
-   *
-   * - no command was specified with the request (is required for the hgweb ui)
-   * - the command in the query string was found in the list of read request
-   * - if query string contains the batch command, then all commands specified in X-HgArg headers must be
-   *   in the list of read requests
-   * - in case of enabled HttpPostArgs protocol and query string container the batch command, the header X-HgArgs-Post
-   *   is read and the commands which are specified in the body from 0 to the value of X-HgArgs-Post must be in the list
-   *   of read requests
-   *
-   * @param request http request
-   *
-   * @return {@code true} for write requests.
-   */
-  public static boolean isWriteRequest(HttpServletRequest request) {
-    List<String> commands = commandsOf(request);
-    boolean write = isWriteRequest(commands);
-    LOG.trace("mercurial request {} is write: {}", commands, write);
-    return write;
-  }
-
-  @VisibleForTesting
-  static boolean isWriteRequest(List<String> commands) {
-    return !READ_COMMANDS.containsAll(commands);
   }
 
   @VisibleForTesting
@@ -126,7 +89,7 @@ public final class WireProtocol {
       byte[] bytes = hgRequest.getInputStream().readAndCapture(hgArgsPostSize);
       // we use iso-8859-1 for encoding, because the post args are normally http headers which are using iso-8859-1
       // see https://tools.ietf.org/html/rfc7230#section-3.2.4
-      String hgArgs = new String(bytes, Charsets.ISO_8859_1);
+      String hgArgs = new String(bytes, StandardCharsets.ISO_8859_1);
       String decoded = decodeValue(hgArgs);
       parseHgCommandHeader(listOfCmds, decoded);
     } catch (IOException ex) {

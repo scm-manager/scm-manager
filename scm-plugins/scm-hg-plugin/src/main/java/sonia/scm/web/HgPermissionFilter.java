@@ -21,40 +21,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.ImmutableSet;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.spi.ScmProviderHttpServlet;
 import sonia.scm.web.filter.PermissionFilter;
 
-import sonia.scm.repository.HgRepositoryHandler;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Set;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Set;
 
 /**
  * Permission filter for mercurial repositories.
- * 
+ *
  * @author Sebastian Sdorra
  */
-public class HgPermissionFilter extends PermissionFilter
-{
-  
-  private static final Set<String> READ_METHODS = ImmutableSet.of("GET", "HEAD", "OPTIONS", "TRACE");
+public class HgPermissionFilter extends PermissionFilter {
+
+  private static final Set<String> READ_METHODS = Set.of("GET", "HEAD", "OPTIONS", "TRACE");
 
   private final HgRepositoryHandler repositoryHandler;
 
-  public HgPermissionFilter(ScmConfiguration configuration, ScmProviderHttpServlet delegate, HgRepositoryHandler repositoryHandler)
-  {
+  public HgPermissionFilter(ScmConfiguration configuration, ScmProviderHttpServlet delegate, HgRepositoryHandler repositoryHandler) {
     super(configuration, delegate);
     this.repositoryHandler = repositoryHandler;
   }
@@ -73,10 +67,9 @@ public class HgPermissionFilter extends PermissionFilter
   }
 
   @Override
-  public boolean isWriteRequest(HttpServletRequest request)
-  {
+  public boolean isWriteRequest(HttpServletRequest request) {
     if (isHttpPostArgsEnabled()) {
-      return isHttpPostArgsWriteRequest(request);
+      return true;
     }
     return isDefaultWriteRequest(request);
   }
@@ -85,14 +78,7 @@ public class HgPermissionFilter extends PermissionFilter
     return repositoryHandler.getConfig().isEnableHttpPostArgs();
   }
 
-  private boolean isHttpPostArgsWriteRequest(HttpServletRequest request) {
-    return WireProtocol.isWriteRequest(request);
-  }
-
   private boolean isDefaultWriteRequest(HttpServletRequest request) {
-    if (READ_METHODS.contains(request.getMethod())) {
-      return WireProtocol.isWriteRequest(request);
-    }
-    return true;
+    return !READ_METHODS.contains(request.getMethod());
   }
 }

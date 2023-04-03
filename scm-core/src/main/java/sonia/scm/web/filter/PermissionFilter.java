@@ -98,7 +98,7 @@ public abstract class PermissionFilter extends ScmProviderHttpServletDecorator
    */
   @Override
   public void service(HttpServletRequest request,
-    HttpServletResponse response, Repository repository)
+                      HttpServletResponse response, Repository repository)
     throws IOException, ServletException
   {
     Subject subject = SecurityUtils.getSubject();
@@ -121,13 +121,13 @@ public abstract class PermissionFilter extends ScmProviderHttpServletDecorator
           getActionAsString(writeRequest), repository.getName(),
           getUserName(subject));
 
-        sendAccessDenied(request, response, subject);
+        sendAccessDenied(request, response);
       }
     }
     catch (ScmSecurityException | AuthorizationException ex)
     {
       logger.warn("user " + subject.getPrincipal() +  " has not enough permissions", ex);
-      sendAccessDenied(request, response, subject);
+      sendAccessDenied(request, response);
     }
 
   }
@@ -142,7 +142,7 @@ public abstract class PermissionFilter extends ScmProviderHttpServletDecorator
    * @throws IOException
    */
   protected void sendNotEnoughPrivilegesError(HttpServletRequest request,
-    HttpServletResponse response)
+                                              HttpServletResponse response)
     throws IOException
   {
     response.sendError(HttpServletResponse.SC_FORBIDDEN);
@@ -158,7 +158,7 @@ public abstract class PermissionFilter extends ScmProviderHttpServletDecorator
    * @throws IOException
    */
   protected void sendUnauthorizedError(HttpServletRequest request,
-    HttpServletResponse response)
+                                       HttpServletResponse response)
     throws IOException
   {
     HttpUtil.sendUnauthorized(response, configuration.getRealmDescription());
@@ -169,12 +169,11 @@ public abstract class PermissionFilter extends ScmProviderHttpServletDecorator
    *
    * @param request current http request object
    * @param response current http response object
-   * @param subject user subject
    *
    * @throws IOException
    */
   private void sendAccessDenied(HttpServletRequest request,
-    HttpServletResponse response, Subject subject)
+                                HttpServletResponse response)
     throws IOException
   {
     if (!Authentications.isAuthenticatedSubjectAnonymous())
@@ -233,7 +232,7 @@ public abstract class PermissionFilter extends ScmProviderHttpServletDecorator
    *
    * @return true if the current user has the required permissions
    */
-  private boolean hasPermission(Repository repository, boolean writeRequest)
+  public static boolean hasPermission(Repository repository, boolean writeRequest)
   {
     boolean permitted;
 

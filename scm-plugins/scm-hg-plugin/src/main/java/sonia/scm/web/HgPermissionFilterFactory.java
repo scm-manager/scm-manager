@@ -24,7 +24,6 @@
     
 package sonia.scm.web;
 
-import sonia.scm.config.ScmConfiguration;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.spi.ScmProviderHttpServlet;
@@ -35,13 +34,9 @@ import javax.inject.Inject;
 @Extension
 public class HgPermissionFilterFactory implements ScmProviderHttpServletDecoratorFactory {
 
-  private final ScmConfiguration configuration;
-  private final HgRepositoryHandler repositoryHandler;
-
   @Inject
-  public HgPermissionFilterFactory(ScmConfiguration configuration, HgRepositoryHandler repositoryHandler) {
-    this.configuration = configuration;
-    this.repositoryHandler = repositoryHandler;
+  public HgPermissionFilterFactory() {
+    // empty
   }
 
   @Override
@@ -51,6 +46,6 @@ public class HgPermissionFilterFactory implements ScmProviderHttpServletDecorato
 
   @Override
   public ScmProviderHttpServlet createDecorator(ScmProviderHttpServlet delegate) {
-    return new HgPermissionFilter(configuration, delegate,repositoryHandler);
+    return delegate;
   }
 }
