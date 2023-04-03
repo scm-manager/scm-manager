@@ -63,8 +63,10 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
   // redirect to default branch if no branch selected
   useEffect(() => {
     if (branches && branches.length > 0 && !selectedBranch) {
-      const defaultBranch = branches?.filter(b => b.defaultBranch === true)[0];
-      history.replace(`${baseUrl}/sources/${encodeURIComponent(defaultBranch.name)}/`);
+      const defaultBranch = branches?.filter((b) => b.defaultBranch === true)[0];
+      history.replace(
+        `${baseUrl}/sources/${defaultBranch ? encodeURIComponent(defaultBranch.name) : encodeURIComponent(branches[0].name)}/`
+      );
     }
   }, [branches, selectedBranch, history, baseUrl]);
   const { isLoading, error, data: file, isFetchingNextPage, fetchNextPage } = useSources(repository, {
