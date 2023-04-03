@@ -22,12 +22,13 @@
  * SOFTWARE.
  */
 
-import React, { ComponentProps } from "react";
+import React, { ComponentProps, useCallback, useMemo } from "react";
 import { Controller, ControllerRenderProps, Path } from "react-hook-form";
 import { useScmFormContext } from "../ScmFormContext";
 import InputField from "./InputField";
 import { useScmFormPathContext } from "../FormPathContext";
 import { prefixWithoutIndices } from "../helpers";
+import classNames from "classnames";
 
 type Props<T extends Record<string, unknown>> = Omit<
   ComponentProps<typeof InputField>,
@@ -69,6 +70,16 @@ export default function ControlledSecretConfirmationField<T extends Record<strin
   const confirmationErrorMessageTranslation =
     confirmationErrorMessage || t(`${prefixedNameWithoutIndices}.confirmation.errorMessage`);
   const secretValue = watch(nameWithPrefix);
+  const validateConfirmField = useCallback(
+    (value) => secretValue === value || confirmationErrorMessageTranslation,
+    [confirmationErrorMessageTranslation, secretValue]
+  );
+  const confirmFieldRules = useMemo(
+    () => ({
+      validate: validateConfirmField,
+    }),
+    [validateConfirmField]
+  );
 
   return (
     <>
@@ -82,7 +93,7 @@ export default function ControlledSecretConfirmationField<T extends Record<strin
         }}
         render={({ field, fieldState }) => (
           <InputField
-            className={className}
+            className={classNames("column", className)}
             readOnly={readOnly ?? formReadonly}
             {...props}
             {...field}
@@ -104,9 +115,9 @@ export default function ControlledSecretConfirmationField<T extends Record<strin
         control={control}
         name={`${nameWithPrefix}Confirmation`}
         defaultValue={defaultValue as never}
-        render={({ field, fieldState }) => (
+        render={({ field, fieldState: { error } }) => (
           <InputField
-            className={className}
+            className={classNames("column", className)}
             type="password"
             readOnly={readOnly ?? formReadonly}
             disabled={props.disabled}
@@ -115,17 +126,12 @@ export default function ControlledSecretConfirmationField<T extends Record<strin
             label={confirmationLabelTranslation}
             helpText={confirmationHelpTextTranslation}
             error={
-              fieldState.error
-                ? fieldState.error.message ||
-                  t(`${prefixedNameWithoutIndices}.confirmation.error.${fieldState.error.type}`)
-                : undefined
+              error ? error.message || t(`${prefixedNameWithoutIndices}.confirmation.error.${error.type}`) : undefined
             }
             testId={confirmationTestId ?? `input-${nameWithPrefix}-confirmation`}
           />
         )}
-        rules={{
-          validate: (value) => secretValue === value || confirmationErrorMessageTranslation,
-        }}
+        rules={confirmFieldRules}
       />
     </>
   );

@@ -372,3 +372,7 @@ td:first-child.diff-gutter-conflict:before {
   border: 1px solid $info;
   box-shadow: none;
 }
+
+input[type="date"].input::-webkit-calendar-picker-indicator {
+  filter: invert(100%);
+}

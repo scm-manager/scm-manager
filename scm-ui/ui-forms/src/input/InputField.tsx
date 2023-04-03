@@ -35,8 +35,7 @@ type InputFieldProps = {
   label: string;
   helpText?: string;
   error?: string;
-  type?: "text" | "password" | "email" | "tel";
-} & Omit<React.ComponentProps<typeof Input>, "type">;
+} & React.ComponentProps<typeof Input>;
 
 /**
  * @see https://bulma.io/documentation/form/input/

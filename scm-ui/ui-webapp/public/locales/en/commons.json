@@ -1,6 +1,8 @@
 {
   "form": {
     "submit": "Submit",
+    "reset": "Clear",
+    "discardChanges": "Discard changes",
     "submit-success-notification": "Configuration changed successfully!",
     "table": {
       "headers": {

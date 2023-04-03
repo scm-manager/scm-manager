@@ -300,3 +300,7 @@ $danger-25: scale-color($danger, $lightness: -75%);
 .has-hover-visible:hover {
   color: $grey !important;
 }
+
+input[type="date"].input::-webkit-calendar-picker-indicator {
+  filter: invert(100%);
+}

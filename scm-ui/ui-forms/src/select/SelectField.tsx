@@ -51,7 +51,7 @@ const SelectField = React.forwardRef<HTMLSelectElement, Props>(
           {helpText ? <Help className="ml-1" text={helpText} /> : null}
         </Label>
         <Control>
-          <Select id={selectId} variant={variant} ref={ref} {...props}></Select>
+          <Select id={selectId} variant={variant} ref={ref} className="is-full-width" {...props}></Select>
         </Control>
         {error ? <FieldMessage variant={variant}>{error}</FieldMessage> : null}
       </Field>

@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 /* eslint-disable no-console */
-import React from "react";
+import React, { useRef, useState } from "react";
 import { storiesOf } from "@storybook/react";
 import Form from "./Form";
 import FormRow from "./FormRow";
@@ -35,6 +35,7 @@ import ControlledColumn from "./table/ControlledColumn";
 import ControlledTable from "./table/ControlledTable";
 import AddListEntryForm from "./AddListEntryForm";
 import { ScmFormListContextProvider } from "./ScmFormListContext";
+import { HalRepresentation } from "@scm-manager/ui-types";
 
 export type SimpleWebHookConfiguration = {
   urlPattern: string;
@@ -62,7 +63,7 @@ storiesOf("Forms", module)
       }}
     >
       <FormRow>
-        <ControlledInputField name="name" />
+        <ControlledInputField rules={{ required: true }} name="name" />
       </FormRow>
       <FormRow>
         <ControlledSecretConfirmationField name="password" />
@@ -79,6 +80,7 @@ storiesOf("Forms", module)
       defaultValues={{
         name: "trillian",
         password: "secret",
+        passwordConfirmation: "",
         active: true,
       }}
     >
@@ -90,6 +92,77 @@ storiesOf("Forms", module)
       </FormRow>
       <FormRow>
         <ControlledCheckboxField name="active" />
+      </FormRow>
+    </Form>
+  ))
+  .add("Reset", () => {
+    type FormType = {
+      name: string;
+      password: string;
+      passwordConfirmation: string;
+      active: boolean;
+      date: string;
+    };
+    const [defaultValues, setValues] = useState({
+      name: "trillian",
+      password: "secret",
+      passwordConfirmation: "secret",
+      active: true,
+      date: "",
+    });
+    const resetValues = useRef({
+      name: "",
+      password: "",
+      passwordConfirmation: "",
+      active: false,
+      date: "",
+    });
+    return (
+      <Form<FormType>
+        onSubmit={(vals) => {
+          console.log(vals);
+          setValues(vals);
+        }}
+        translationPath={["sample", "form"]}
+        defaultValues={defaultValues as HalRepresentation & FormType}
+        withResetTo={resetValues.current}
+        withDiscardChanges
+      >
+        <FormRow>
+          <ControlledInputField name="name" />
+        </FormRow>
+        <FormRow>
+          <ControlledSecretConfirmationField name="password" rules={{ required: true }} />
+        </FormRow>
+        <FormRow>
+          <ControlledCheckboxField name="active" />
+        </FormRow>
+        <FormRow>
+          <ControlledInputField name="date" type="date" />
+        </FormRow>
+      </Form>
+    );
+  })
+  .add("Layout", () => (
+    <Form
+      onSubmit={console.log}
+      translationPath={["sample", "form"]}
+      defaultValues={{
+        name: "",
+        password: "",
+        method: "",
+      }}
+    >
+      <FormRow>
+        <ControlledInputField name="name" />
+        <ControlledSelectField name="method">
+          {["", "post", "get", "put"].map((value) => (
+            <option value={value} key={value}>
+              {value}
+            </option>
+          ))}
+        </ControlledSelectField>
+        <ControlledSecretConfirmationField name="password" />
       </FormRow>
     </Form>
   ))
@@ -242,6 +315,36 @@ storiesOf("Forms", module)
           },
         ],
       }}
+      withResetTo={{
+        webhooks: [
+          {
+            urlPattern: "https://other.com",
+            executeOnEveryCommit: true,
+            sendCommitData: true,
+            method: "get",
+            headers: [
+              {
+                key: "change",
+                value: "new",
+                concealed: true,
+              },
+            ],
+          },
+          {
+            urlPattern: "http://things.com",
+            executeOnEveryCommit: false,
+            sendCommitData: true,
+            method: "put",
+            headers: [
+              {
+                key: "stuff",
+                value: "haha",
+                concealed: false,
+              },
+            ],
+          },
+        ],
+      }}
     >
       <ScmFormListContextProvider name="webhooks">
         <ControlledList withDelete>
@@ -273,16 +376,22 @@ storiesOf("Forms", module)
                       <ControlledColumn name="concealed">{(value) => (value ? <b>Hallo</b> : null)}</ControlledColumn>
                     </ControlledTable>
                     <AddListEntryForm defaultValues={{ key: "", value: "", concealed: false }}>
-                      <ControlledInputField
-                        name="key"
-                        rules={{
-                          validate: (newKey) =>
-                            !(webhook as SimpleWebHookConfiguration).headers.some(({ key }) => newKey === key),
-                          required: true,
-                        }}
-                      />
-                      <ControlledInputField name="value" />
-                      <ControlledCheckboxField name="concealed" />
+                      <FormRow>
+                        <ControlledInputField
+                          name="key"
+                          rules={{
+                            validate: (newKey) =>
+                              !(webhook as SimpleWebHookConfiguration).headers.some(({ key }) => newKey === key),
+                            required: true,
+                          }}
+                        />
+                      </FormRow>
+                      <FormRow>
+                        <ControlledInputField name="value" />
+                      </FormRow>
+                      <FormRow>
+                        <ControlledCheckboxField name="concealed" />
+                      </FormRow>
                     </AddListEntryForm>
                   </ScmFormListContextProvider>
                 </div>

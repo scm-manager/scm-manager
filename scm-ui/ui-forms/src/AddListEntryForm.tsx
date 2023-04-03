@@ -102,7 +102,7 @@ function AddListEntryForm<FormType extends Record<string, unknown>, DefaultValue
   return (
     <ScmFormContextProvider {...form} t={translateWithExtraPrefix} formId={nameWithPrefix}>
       <ScmFormPathContextProvider path="">
-        <form id={nameWithPrefix} onSubmit={form.handleSubmit(onSubmit)}></form>
+        <form id={nameWithPrefix} onSubmit={form.handleSubmit(onSubmit)} noValidate></form>
         {typeof children === "function" ? children(form) : children}
         <div className="level-right">
           <Button

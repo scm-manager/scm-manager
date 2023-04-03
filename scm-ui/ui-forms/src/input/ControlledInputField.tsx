@@ -28,6 +28,7 @@ import { useScmFormContext } from "../ScmFormContext";
 import InputField from "./InputField";
 import { useScmFormPathContext } from "../FormPathContext";
 import { prefixWithoutIndices } from "../helpers";
+import classNames from "classnames";
 
 type Props<T extends Record<string, unknown>> = Omit<
   ComponentProps<typeof InputField>,
@@ -46,6 +47,7 @@ function ControlledInputField<T extends Record<string, unknown>>({
   testId,
   defaultValue,
   readOnly,
+  className,
   ...props
 }: Props<T>) {
   const { control, t, readOnly: formReadonly, formId } = useScmFormContext();
@@ -64,6 +66,7 @@ function ControlledInputField<T extends Record<string, unknown>>({
         <InputField
           readOnly={readOnly ?? formReadonly}
           required={rules?.required as boolean}
+          className={classNames("column", className)}
           {...props}
           {...field}
           form={formId}

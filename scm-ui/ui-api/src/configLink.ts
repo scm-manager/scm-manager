@@ -32,7 +32,7 @@ type Result<C extends HalRepresentation> = {
   configuration: C;
 };
 
-type MutationVariables<C extends HalRepresentation> = {
+type MutationVariables<C> = {
   configuration: C;
   contentType: string;
   link: string;
@@ -53,8 +53,8 @@ export const useConfigLink = <C extends HalRepresentation>(link: string) => {
     error: mutationError,
     mutateAsync,
     data: updateResponse,
-  } = useMutation<Response, Error, MutationVariables<C>>(
-    (vars: MutationVariables<C>) => apiClient.put(vars.link, vars.configuration, vars.contentType),
+  } = useMutation<Response, Error, MutationVariables<Omit<C, keyof HalRepresentation>>>(
+    (vars) => apiClient.put(vars.link, vars.configuration, vars.contentType),
     {
       onSuccess: async () => {
         await queryClient.invalidateQueries(queryKey);
@@ -65,7 +65,7 @@ export const useConfigLink = <C extends HalRepresentation>(link: string) => {
   const isReadOnly = !data?.configuration._links.update;
 
   const update = useCallback(
-    (configuration: C) => {
+    (configuration: Omit<C, keyof HalRepresentation>) => {
       if (data && !isReadOnly) {
         return mutateAsync({
           configuration,

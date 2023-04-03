@@ -22,6 +22,30 @@
  * SOFTWARE.
  */
 
+import { UseFormReturn } from "react-hook-form";
+
 export function prefixWithoutIndices(path: string): string {
   return path.replace(/(\.\d+)/g, "");
+}
+
+/**
+ * Works like {@link setValue} but recursively applies the whole {@link newValues} object.
+ *
+ * > *Important Note:* This deeply overwrites input values of fields in arrays,
+ * > but does **NOT** add or remove items to existing arrays.
+ * > This can therefore not be used to clear lists.
+ */
+export function setValues<T>(newValues: T, setValue: UseFormReturn<T>["setValue"], path = "") {
+  for (const [key, val] of Object.entries(newValues)) {
+    if (val !== null && typeof val === "object") {
+      if (Array.isArray(val)) {
+        val.forEach((subVal, idx) => setValues(subVal, setValue, path ? `${path}.${key}.${idx}` : `${key}.${idx}`));
+      } else {
+        setValues(val, setValue, path ? `${path}.${key}` : key);
+      }
+    } else {
+      const fullPath = path ? `${path}.${key}` : key;
+      setValue(fullPath as any, val, { shouldValidate: !fullPath.endsWith("Confirmation"), shouldDirty: true });
+    }
+  }
 }

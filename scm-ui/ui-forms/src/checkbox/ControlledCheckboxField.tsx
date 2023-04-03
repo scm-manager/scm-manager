@@ -28,6 +28,7 @@ import { useScmFormContext } from "../ScmFormContext";
 import CheckboxField from "./CheckboxField";
 import { useScmFormPathContext } from "../FormPathContext";
 import { prefixWithoutIndices } from "../helpers";
+import classNames from "classnames";
 
 type Props<T extends Record<string, unknown>> = Omit<
   ComponentProps<typeof CheckboxField>,
@@ -46,6 +47,7 @@ function ControlledInputField<T extends Record<string, unknown>>({
   testId,
   defaultChecked,
   readOnly,
+  className,
   ...props
 }: Props<T>) {
   const { control, t, readOnly: formReadonly, formId } = useScmFormContext();
@@ -64,7 +66,8 @@ function ControlledInputField<T extends Record<string, unknown>>({
         <CheckboxField
           form={formId}
           readOnly={readOnly ?? formReadonly}
-          defaultChecked={field.value}
+          checked={field.value}
+          className={classNames("column", className)}
           {...props}
           {...field}
           label={labelTranslation}

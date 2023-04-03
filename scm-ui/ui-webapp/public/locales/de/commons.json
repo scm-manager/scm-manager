@@ -1,6 +1,8 @@
 {
   "form": {
     "submit": "Speichern",
+    "reset": "Leeren",
+    "discardChanges": "Änderungen verwerfen",
     "submit-success-notification": "Einstellungen wurden erfolgreich geändert!",
     "table": {
       "headers": {
