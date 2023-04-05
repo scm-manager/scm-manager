@@ -48,11 +48,10 @@ const isLocalRepository = (repositoryUrl: string) => {
 };
 
 export const encodePart = (part: string) => {
-  const encoded = encodeURIComponent(part);
   if (part.includes("%")) {
-    return encodeURIComponent(encoded);
+    return encodeURIComponent(part.replace(/%/g, "%25"));
   }
-  return encoded;
+  return encodeURIComponent(part);
 };
 
 export const createRelativeLink = (repositoryUrl: string) => {

@@ -30,8 +30,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnitRunner;
+import sonia.scm.ScmConstraintViolationException;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.Branch;
 import sonia.scm.repository.Changeset;
@@ -42,7 +42,6 @@ import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.PreReceiveRepositoryHookEvent;
 import sonia.scm.repository.api.BranchRequest;
 import sonia.scm.repository.api.HookChangesetBuilder;
-import sonia.scm.repository.api.HookContext;
 import sonia.scm.repository.api.HookContextFactory;
 
 import java.io.IOException;
@@ -128,6 +127,15 @@ public class GitBranchCommandTest extends AbstractGitCommandTestBase {
     String branchToBeDeleted = "master";
     GitBranchCommand command = createCommand();
     assertThrows(CannotDeleteDefaultBranchException.class, () -> command.deleteOrClose(branchToBeDeleted));
+  }
+
+  @Test
+  public void shouldThrowViolationExceptionForInvalidBranchName() {
+    BranchRequest branchRequest = new BranchRequest();
+    branchRequest.setNewBranch("invalid..name");
+
+    GitBranchCommand command = createCommand();
+    assertThrows(ScmConstraintViolationException.class, () -> command.branch(branchRequest));
   }
 
   private GitBranchCommand createCommand() {

@@ -28,7 +28,9 @@ export const isNameValid = (name: string) => {
   return nameRegex.test(name);
 };
 
-export const branchRegex = /^[\w-,;\]{}@&+=$#`|<>]([\w-,;\]{}@&+=$#`|<>/.]*[\w-,;\]{}@&+=$#`|<>])?$/;
+// See validation regex in Java class "Branch" for further details
+export const branchRegex =
+  /^[^.\\\s[~^:?*](?:[^\\\s[~^:?*]*[^.\\\s[~^:?*])?(?:\/[^.\\\s[~^:?*](?:[^\\\s[~^:?*]*[^.\\\s[~^:?*])?)*$/;
 
 export const isBranchValid = (name: string) => {
   return branchRegex.test(name);

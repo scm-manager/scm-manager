@@ -45,9 +45,28 @@ import java.util.regex.Pattern;
 @XmlAccessorType(XmlAccessType.FIELD)
 public final class Branch implements Serializable, Validateable {
 
-  private static final String VALID_CHARACTERS_AT_START_AND_END = "\\w-,;\\]{}@&+=$#`|<>";
-  private static final String VALID_CHARACTERS = VALID_CHARACTERS_AT_START_AND_END + "/.";
-  public static final String VALID_BRANCH_NAMES = "[" + VALID_CHARACTERS_AT_START_AND_END + "]([" + VALID_CHARACTERS + "]*[" + VALID_CHARACTERS_AT_START_AND_END + "])?";
+  /*
+  The regex for branches is based on the rules for git branch names taken
+  from the reference format check (https://git-scm.com/docs/git-check-ref-format)
+
+  Below you find the rules, taken from the site. Rules 3, 8 and 9 are not implemented,
+  because they cannot simply be checked using a regular expression.
+
+  1. They can include slash / for hierarchical (directory) grouping, but no slash-separated component can begin with a dot . or end with the sequence .lock.
+  2. [not relevant for branches]
+  3. They cannot have two consecutive dots .. anywhere.
+  4. They cannot have ASCII control characters (i.e. bytes whose values are lower than \040, or \177 DEL), space, tilde ~, caret ^, or colon : anywhere.
+  5. They cannot have question-mark ?, asterisk *, or open bracket [ anywhere. See the --refspec-pattern option below for an exception to this rule.
+  6. They cannot begin or end with a slash / or contain multiple consecutive slashes (see the --normalize option below for an exception to this rule)
+  7. They cannot end with a dot ..
+  8. They cannot contain a sequence @{.
+  9. They cannot be the single character @.
+  10. They cannot contain a \.
+   */
+
+  private static final String ILLEGAL_CHARACTERS = "\\\\/\\s\\[~^:?*";
+  private static final String VALID_PATH_PART = "[^." + ILLEGAL_CHARACTERS + "](?:[^" + ILLEGAL_CHARACTERS + "]*[^." + ILLEGAL_CHARACTERS + "])?";
+  public static final String VALID_BRANCH_NAMES = VALID_PATH_PART + "(?:/" + VALID_PATH_PART + ")*";
   public static final Pattern VALID_BRANCH_NAME_PATTERN = Pattern.compile(VALID_BRANCH_NAMES);
 
   private static final long serialVersionUID = -4602244691711222413L;

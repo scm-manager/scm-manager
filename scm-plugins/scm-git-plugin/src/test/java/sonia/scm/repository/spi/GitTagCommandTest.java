@@ -41,6 +41,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import sonia.scm.ScmConstraintViolationException;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.GitChangesetConverter;
@@ -63,6 +64,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
@@ -182,6 +184,14 @@ public class GitTagCommandTest extends AbstractGitCommandTestBase {
     assertThat(changesetProvider.getRemovedChangesets())
       .extracting("id")
       .containsExactly("383b954b27e052db6880d57f1c860dc208795247");
+  }
+
+  @Test
+  public void shouldThrowViolationExceptionForInvalidBranchName() {
+    TagCreateRequest tagRequest = new TagCreateRequest("592d797cd36432e591416e8b2b98154f4f163411", "invalid..name");
+
+    GitTagCommand command = createCommand();
+    assertThrows(ScmConstraintViolationException.class, () -> command.create(tagRequest));
   }
 
   private GitTagCommand createCommand() {

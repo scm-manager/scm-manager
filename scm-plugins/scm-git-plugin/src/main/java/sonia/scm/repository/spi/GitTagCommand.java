@@ -25,9 +25,11 @@
 package sonia.scm.repository.spi;
 
 import com.google.common.base.Strings;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.InvalidTagNameException;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Ref;
@@ -68,7 +70,9 @@ import static org.eclipse.jgit.lib.ObjectId.fromString;
 import static org.eclipse.jgit.lib.ObjectId.zeroId;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
+import static sonia.scm.ScmConstraintViolationException.Builder.doThrow;
 
+@Slf4j
 public class GitTagCommand extends AbstractGitCommand implements TagCommand {
   public static final String REFS_TAGS_PREFIX = "refs/tags/";
   private final HookContextFactory hookContextFactory;
@@ -129,6 +133,10 @@ public class GitTagCommand extends AbstractGitCommand implements TagCommand {
       eventBus.post(new PostReceiveRepositoryHookEvent(hookEvent));
 
       return tag;
+    } catch (InvalidTagNameException e) {
+      log.debug("got exception for invalid tag name {}", request.getName(), e);
+      doThrow().violation("Invalid tag name", "name").when(true);
+      return null;
     } catch (IOException | GitAPIException ex) {
       throw new InternalRepositoryException(repository, "could not create tag " + name + " for revision " + revision, ex);
     }

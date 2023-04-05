@@ -29,6 +29,7 @@ import { Repository } from "@scm-manager/ui-types";
 import { ErrorNotification, Loading, Subtitle } from "@scm-manager/ui-components";
 import BranchForm from "../components/BranchForm";
 import { useBranches, useCreateBranch } from "@scm-manager/ui-api";
+import { encodePart } from "../../sources/components/content/FileLink";
 
 type Props = {
   repository: Repository;
@@ -54,7 +55,7 @@ const CreateBranch: FC<Props> = ({ repository }) => {
   if (createdBranch) {
     return (
       <Redirect
-        to={`/repo/${repository.namespace}/${repository.name}/branch/${encodeURIComponent(createdBranch.name)}/info`}
+        to={`/repo/${repository.namespace}/${repository.name}/branch/${encodeURIComponent(encodePart(createdBranch.name))}/info`}
       />
     );
   }

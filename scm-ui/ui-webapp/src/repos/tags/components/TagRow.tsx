@@ -28,6 +28,7 @@ import classNames from "classnames";
 import { Tag, Link } from "@scm-manager/ui-types";
 import { Button, DateFromNow } from "@scm-manager/ui-components";
 import { useKeyboardIteratorTarget } from "@scm-manager/ui-shortcuts";
+import { encodePart } from "../../sources/components/content/FileLink";
 
 type Props = {
   tag: Tag;
@@ -47,7 +48,7 @@ const TagRow: FC<Props> = ({ tag, baseUrl, onDelete }) => {
     );
   }
 
-  const to = `${baseUrl}/${encodeURIComponent(tag.name)}/info`;
+  const to = `${baseUrl}/${encodePart(tag.name)}/info`;
   return (
     <tr>
       <td className="is-vertical-align-middle">

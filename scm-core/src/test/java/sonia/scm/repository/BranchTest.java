@@ -21,33 +21,50 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
-import { Branch, Repository } from "@scm-manager/ui-types";
-import { Button, ButtonAddons } from "@scm-manager/ui-components";
-import { encodePart } from "../../sources/components/content/FileLink";
 
-type Props = WithTranslation & {
-  repository: Repository;
-  branch: Branch;
-};
+package sonia.scm.repository;
 
-class BranchButtonGroup extends React.Component<Props> {
-  render() {
-    const { repository, branch, t } = this.props;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-    const changesetLink = `/repo/${repository.namespace}/${repository.name}/branch/${encodePart(
-      branch.name
-    )}/changesets/`;
-    const sourcesLink = `/repo/${repository.namespace}/${repository.name}/sources/${encodePart(branch.name)}/`;
+import static org.assertj.core.api.Assertions.assertThat;
 
-    return (
-      <ButtonAddons>
-        <Button link={changesetLink} icon="exchange-alt" label={t("branch.commits")} reducedMobile={true} />
-        <Button link={sourcesLink} icon="code" label={t("branch.sources")} reducedMobile={true} />
-      </ButtonAddons>
-    );
+@ExtendWith(MockitoExtension.class)
+class BranchTest {
+
+  @ParameterizedTest
+  @ValueSource(strings = {
+    "a",
+    "test",
+    "feature/nöice",
+    "😄",
+    "very_long/and/complex%branch+name"
+  })
+  void shouldAcceptValidBranchName(String branchName) {
+    assertThat(branchName).matches(Branch.VALID_BRANCH_NAME_PATTERN);
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {
+    "/",
+    "/feature/ugly",
+    "./start",
+    ".hidden",
+    "full_stop.",
+    "very/.hidden",
+    "some\\place",
+    "some//place",
+    "some space",
+    "home/~",
+    "some_:",
+    "2^8",
+    "real?",
+    "find*all",
+    "some[set"
+  })
+  void shouldRejectInvalidBranchName(String branchName) {
+    assertThat(branchName).doesNotMatch(Branch.VALID_BRANCH_NAME_PATTERN);
   }
 }
-
-export default withTranslation("repos")(BranchButtonGroup);

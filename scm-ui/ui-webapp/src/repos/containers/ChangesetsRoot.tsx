@@ -29,6 +29,7 @@ import CodeActionBar from "../codeSection/components/CodeActionBar";
 import { urls } from "@scm-manager/ui-components";
 import Changesets from "./Changesets";
 import { RepositoryRevisionContextProvider } from "@scm-manager/ui-api";
+import { encodePart } from "../sources/components/content/FileLink";
 
 type Props = {
   repository: Repository;
@@ -53,14 +54,14 @@ const ChangesetRoot: FC<Props> = ({ repository, baseUrl, branches, selectedBranc
 
   const evaluateSwitchViewLink = () => {
     if (selectedBranch) {
-      return `${baseUrl}/sources/${encodeURIComponent(selectedBranch)}/`;
+      return `${baseUrl}/sources/${encodePart(selectedBranch)}/`;
     }
     return `${baseUrl}/sources/`;
   };
 
   const onSelectBranch = (branch?: Branch) => {
     if (branch) {
-      history.push(`${baseUrl}/branch/${encodeURIComponent(branch.name)}/changesets/`);
+      history.push(`${baseUrl}/branch/${encodePart(branch.name)}/changesets/`);
     } else {
       history.push(`${baseUrl}/changesets/`);
     }

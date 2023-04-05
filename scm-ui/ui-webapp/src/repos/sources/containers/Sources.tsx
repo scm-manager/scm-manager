@@ -34,6 +34,7 @@ import replaceBranchWithRevision from "../ReplaceBranchWithRevision";
 import FileSearchButton from "../../codeSection/components/FileSearchButton";
 import { isEmptyDirectory, isRootFile } from "../utils/files";
 import CompareLink from "../../compare/CompareLink";
+import { encodePart } from "../components/content/FileLink";
 
 type Props = {
   repository: Repository;
@@ -65,7 +66,7 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
     if (branches && branches.length > 0 && !selectedBranch) {
       const defaultBranch = branches?.filter((b) => b.defaultBranch === true)[0];
       history.replace(
-        `${baseUrl}/sources/${defaultBranch ? encodeURIComponent(defaultBranch.name) : encodeURIComponent(branches[0].name)}/`
+        `${baseUrl}/sources/${defaultBranch ? encodePart(defaultBranch.name) : encodePart(branches[0].name)}/`
       );
     }
   }, [branches, selectedBranch, history, baseUrl]);
@@ -93,10 +94,10 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
     let url;
     if (branch) {
       if (path) {
-        url = `${baseUrl}/sources/${encodeURIComponent(branch.name)}/${path}`;
+        url = `${baseUrl}/sources/${encodePart(branch.name)}/${path}`;
         url = !url.endsWith("/") ? url + "/" : url;
       } else {
-        url = `${baseUrl}/sources/${encodeURIComponent(branch.name)}/`;
+        url = `${baseUrl}/sources/${encodePart(branch.name)}/`;
       }
     } else {
       return;

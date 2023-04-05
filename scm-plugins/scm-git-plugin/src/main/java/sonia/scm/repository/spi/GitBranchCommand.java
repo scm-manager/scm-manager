@@ -24,9 +24,11 @@
 
 package sonia.scm.repository.spi;
 
+import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.CannotDeleteCurrentBranchException;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.InvalidRefNameException;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
@@ -59,7 +61,9 @@ import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static org.eclipse.jgit.lib.ObjectId.zeroId;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import static sonia.scm.ScmConstraintViolationException.Builder.doThrow;
 
+@Slf4j
 public class GitBranchCommand extends AbstractGitCommand implements BranchCommand {
 
   private final HookContextFactory hookContextFactory;
@@ -88,6 +92,10 @@ public class GitBranchCommand extends AbstractGitCommand implements BranchComman
       Ref ref = git.branchCreate().setStartPoint(request.getParentBranch()).setName(request.getNewBranch()).call();
       eventBus.post(new PostReceiveRepositoryHookEvent(hookEvent));
       return Branch.normalBranch(request.getNewBranch(), GitUtil.getId(ref.getObjectId()));
+    } catch (InvalidRefNameException e) {
+      log.debug("got exception for invalid branch name {}", request.getNewBranch(), e);
+      doThrow().violation("Invalid branch name", "name").when(true);
+      return null;
     } catch (GitAPIException | IOException ex) {
       throw new InternalRepositoryException(repository, "could not create branch " + request.getNewBranch(), ex);
     }

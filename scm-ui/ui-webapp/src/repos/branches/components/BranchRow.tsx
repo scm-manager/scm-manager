@@ -33,6 +33,7 @@ import DefaultBranchTag from "./DefaultBranchTag";
 import AheadBehindTag from "./AheadBehindTag";
 import BranchCommitDateCommitter from "./BranchCommitDateCommitter";
 import { useKeyboardIteratorTarget } from "@scm-manager/ui-shortcuts";
+import { encodePart } from "../../sources/components/content/FileLink";
 
 type Props = {
   repository: Repository;
@@ -63,7 +64,7 @@ const MobileFlowSpan = styled.span`
 `;
 
 const BranchRow: FC<Props> = ({ repository, baseUrl, branch, onDelete, details }) => {
-  const to = `${baseUrl}/${encodeURIComponent(branch.name)}/info`;
+  const to = `${baseUrl}/${encodePart(branch.name)}/info`;
   const [t] = useTranslation("repos");
   const ref = useKeyboardIteratorTarget();
 
