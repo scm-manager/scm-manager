@@ -232,7 +232,7 @@ class AbstractGitCommand {
         if (!status.isClean() || isInMerge()) {
           return of(clone.commit()
             .setAuthor(authorToUse.getName(), authorToUse.getMail())
-            .setCommitter("SCM-Manager", "noreply@scm-manager.org")
+            .setCommitter(authorToUse.getName(), authorToUse.getMail())
             .setMessage(message)
             .setSign(sign)
             .setSigningKey(sign ? "SCM-MANAGER-DEFAULT-KEY" : null)

@@ -25,6 +25,7 @@
 package sonia.scm.repository.spi;
 
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
 import org.junit.After;
@@ -41,6 +42,7 @@ import sonia.scm.repository.api.FileLockedException;
 import sonia.scm.repository.work.NoneCachingWorkingCopyPool;
 import sonia.scm.repository.work.WorkdirProvider;
 import sonia.scm.repository.work.WorkingCopy;
+import sonia.scm.user.User;
 
 import java.io.File;
 import java.io.IOException;
@@ -75,7 +77,10 @@ public class SvnModifyCommandTest extends AbstractSvnCommandTestBase {
   @Before
   public void initSecurityManager() {
     Subject subject = mock(Subject.class);
+    PrincipalCollection principalCollection = mock(PrincipalCollection.class);
     when(subject.getPrincipal()).thenReturn("alThor");
+    when(subject.getPrincipals()).thenReturn(principalCollection);
+    when(principalCollection.oneByType(User.class)).thenReturn(new User("galaxy", "quest", "galaxy@quest.com"));
     ThreadContext.bind(subject);
   }
 

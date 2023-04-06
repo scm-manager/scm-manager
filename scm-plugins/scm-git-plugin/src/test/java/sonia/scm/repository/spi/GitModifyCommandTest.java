@@ -24,6 +24,9 @@
 
 package sonia.scm.repository.spi;
 
+import com.github.sdorra.shiro.SubjectAware;
+import org.apache.shiro.subject.SimplePrincipalCollection;
+import org.apache.shiro.subject.Subject;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ObjectId;
@@ -39,6 +42,7 @@ import sonia.scm.ScmConstraintViolationException;
 import sonia.scm.repository.GitTestHelper;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.RepositoryHookType;
+import sonia.scm.user.User;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,6 +58,8 @@ import static org.mockito.Mockito.description;
 import static org.mockito.Mockito.verify;
 
 public class GitModifyCommandTest extends GitModifyCommandTestBase {
+
+  private static final String REALM = "AdminRealm";
 
   @Override
   protected String getZippedRepositoryResource() {
@@ -75,6 +81,8 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
       RevCommit lastCommit = getLastCommit(git);
       assertThat(lastCommit.getFullMessage()).isEqualTo("Make some change");
       assertThat(lastCommit.getAuthorIdent().getName()).isEqualTo("Dirk Gently");
+      assertThat(lastCommit.getCommitterIdent().getName()).isEqualTo("Dirk Gently");
+      assertThat(lastCommit.getCommitterIdent().getEmailAddress()).isEqualTo("dirk@holistic.det");
       assertThat(newRef).isEqualTo(lastCommit.toObjectId().name());
     }
   }
@@ -525,6 +533,13 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
     ModifyCommandRequest request = new ModifyCommandRequest();
     request.setCommitMessage("Make some change");
     request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
+    return request;
+  }
+
+  private ModifyCommandRequest prepareModifyCommandRequestWithoutAuthorEmail() {
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.setAuthor(new Person("Dirk Gently", ""));
+    request.setCommitMessage("Make some change");
     return request;
   }
 

@@ -91,6 +91,14 @@ public class SvnModifyCommand implements ModifyCommand {
     }
   }
 
+  private String getCurrentUserName() {
+    if (SecurityUtils.getSubject() != null && SecurityUtils.getSubject().getPrincipal() != null) {
+      return SecurityUtils.getSubject().getPrincipal().toString();
+    } else {
+      return "SCM-Manager";
+    }
+  }
+
   private String commitChanges(SVNClientManager clientManager, File workingDirectory, String commitMessage) {
     try {
       clientManager.setAuthenticationManager(SVNWCUtil.createDefaultAuthenticationManager(getCurrentUserName(), new char[0]));
@@ -107,14 +115,6 @@ public class SvnModifyCommand implements ModifyCommand {
       return String.valueOf(svnCommitInfo.getNewRevision());
     } catch (SVNException e) {
       throw withPattern(SVN_ERROR_PATTERN).forMessage(repository, e.getErrorMessage().getRootErrorMessage().getFullMessage());
-    }
-  }
-
-  private String getCurrentUserName() {
-    if (SecurityUtils.getSubject() != null && SecurityUtils.getSubject().getPrincipal() != null) {
-      return SecurityUtils.getSubject().getPrincipal().toString();
-    } else {
-      return "SCM-Manager";
     }
   }
 
