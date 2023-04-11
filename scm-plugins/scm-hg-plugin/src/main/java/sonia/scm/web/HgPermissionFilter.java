@@ -35,7 +35,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Set;
 
 /**
  * Permission filter for mercurial repositories.
@@ -43,8 +42,6 @@ import java.util.Set;
  * @author Sebastian Sdorra
  */
 public class HgPermissionFilter extends PermissionFilter {
-
-  private static final Set<String> READ_METHODS = Set.of("GET", "HEAD", "OPTIONS", "TRACE");
 
   private final HgRepositoryHandler repositoryHandler;
 
@@ -68,17 +65,12 @@ public class HgPermissionFilter extends PermissionFilter {
 
   @Override
   public boolean isWriteRequest(HttpServletRequest request) {
-    if (isHttpPostArgsEnabled()) {
-      return true;
-    }
-    return isDefaultWriteRequest(request);
+    // The repository permissions for read and write are handled by hg internally.
+    // Therefore, we ignore the checks here.
+    return false;
   }
 
   private boolean isHttpPostArgsEnabled() {
     return repositoryHandler.getConfig().isEnableHttpPostArgs();
-  }
-
-  private boolean isDefaultWriteRequest(HttpServletRequest request) {
-    return !READ_METHODS.contains(request.getMethod());
   }
 }
