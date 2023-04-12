@@ -41,37 +41,25 @@ import java.io.OutputStream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-//~--- JDK imports ------------------------------------------------------------
-
-/**
- *
- * @author Sebastian Sdorra <s.sdorra@gmail.com>
- */
 public class SvnBundleCommand extends AbstractSvnCommand
-  implements BundleCommand
-{
+  implements BundleCommand {
 
   private static final String DUMP = "dump";
 
-  public SvnBundleCommand(SvnContext context)
-  {
+  public SvnBundleCommand(SvnContext context) {
     super(context);
   }
 
   private static void dump(SVNAdminClient adminClient, File repository,
-    ByteSink target)
-    throws SVNException, IOException
-  {
+                           ByteSink target)
+    throws SVNException, IOException {
     OutputStream outputStream = null;
 
-    try
-    {
+    try {
       outputStream = target.openBufferedStream();
       adminClient.doDump(repository, outputStream, SVNRevision.create(-1l),
         SVNRevision.HEAD, false, false);
-    }
-    finally
-    {
+    } finally {
       Closeables.close(outputStream, true);
     }
   }
@@ -79,27 +67,22 @@ public class SvnBundleCommand extends AbstractSvnCommand
   @Override
   public BundleResponse bundle(BundleCommandRequest request) throws IOException {
     ByteSink archive = checkNotNull(request.getArchive(),
-                         "archive is required");
+      "archive is required");
 
     BundleResponse response;
 
     SVNClientManager clientManager = null;
 
-    try
-    {
+    try {
       clientManager = SVNClientManager.newInstance();
 
       SVNAdminClient adminClient = clientManager.getAdminClient();
 
       dump(adminClient, context.getDirectory(), archive);
       response = new BundleResponse(context.open().getLatestRevision());
-    }
-    catch (SVNException ex)
-    {
+    } catch (SVNException ex) {
       throw new IOException("could not create dump", ex);
-    }
-    finally
-    {
+    } finally {
       SvnUtil.dispose(clientManager);
     }
 

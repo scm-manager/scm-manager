@@ -71,13 +71,12 @@ public class GitRepositoryResolver implements RepositoryResolver<HttpServletRequ
    * Method description
    *
    *
-   * @param request
-   * @param repositoryName
+   * @param request http request
+   * @param repositoryName repository name
    *
-   * @return
+   * @return jgit repository
    *
    * @throws RepositoryNotFoundException
-   * @throws ServiceNotAuthorizedException
    * @throws ServiceNotEnabledException
    */
   @Override

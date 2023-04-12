@@ -21,38 +21,42 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.config;
 
-import com.github.legman.Subscribe;
-import com.google.inject.Inject;
-import sonia.scm.EagerSingleton;
+package sonia.scm.lifecycle.modules;
+
+import sonia.scm.ConfigurationException;
 import sonia.scm.SCMContext;
-import sonia.scm.plugin.Extension;
-import sonia.scm.security.AnonymousMode;
-import sonia.scm.user.UserManager;
+import sonia.scm.config.ScmConfiguration;
 
-@Extension
-@EagerSingleton
-public class ScmConfigurationChangedListener {
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import java.io.File;
+public final class ScmConfigurationLoader {
 
-  private final UserManager userManager;
+  private final JAXBContext context;
 
-  @Inject
-  public ScmConfigurationChangedListener(UserManager userManager) {
-    this.userManager = userManager;
-  }
+  private final File file;
 
-  @Subscribe
-  public void handleEvent(ScmConfigurationChangedEvent event) {
-    createAnonymousUserIfRequired(event);
-  }
-
-  private void createAnonymousUserIfRequired(ScmConfigurationChangedEvent event) {
-    if (event.getConfiguration().getAnonymousMode() != AnonymousMode.OFF && !userManager.contains(SCMContext.USER_ANONYMOUS)) {
-      userManager.create(SCMContext.ANONYMOUS);
+  ScmConfigurationLoader() {
+    try {
+      context = JAXBContext.newInstance(ScmConfiguration.class);
+      file = new File(SCMContext.getContext().getBaseDirectory(),
+        ScmConfiguration.PATH);
+    } catch (JAXBException ex) {
+      throw new ConfigurationException(ex);
     }
   }
+
+  public ScmConfiguration load() {
+    if (file.exists()) {
+      try {
+        Unmarshaller unmarshaller = context.createUnmarshaller();
+        return (ScmConfiguration) unmarshaller.unmarshal(file);
+      } catch (Exception ex) {
+        throw new ConfigurationException("could not load config", ex);
+      }
+    }
+    return new ScmConfiguration();
+  }
 }
-
-

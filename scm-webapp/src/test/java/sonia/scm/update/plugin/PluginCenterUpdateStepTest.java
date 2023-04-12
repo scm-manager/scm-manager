@@ -24,7 +24,6 @@
 
 package sonia.scm.update.plugin;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.store.ConfigurationStore;
@@ -53,6 +52,6 @@ class PluginCenterUpdateStepTest {
     new PluginCenterUpdateStep(configurationStoreFactory)
       .doUpdate();
     ScmConfiguration config = configurationStore.get();
-    assertThat(config.getPluginUrl()).isEqualTo(ScmConfiguration.DEFAULT_PLUGINURL);
+    assertThat(config.getPluginUrl()).isEqualTo(ScmConfiguration.DEFAULT_PLUGIN_URL);
   }
 }

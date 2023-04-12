@@ -38,7 +38,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.NamespaceStrategyValidator;
+import sonia.scm.store.InMemoryConfigurationStoreFactory;
 import sonia.scm.util.JsonMerger;
+import sonia.scm.admin.ScmConfigurationStore;
 import sonia.scm.web.RestDispatcher;
 import sonia.scm.web.VndMediaType;
 
@@ -78,9 +80,7 @@ class ConfigResourceTest {
 
   @BeforeEach
   void prepareEnvironment() {
-    ConfigResource configResource = new ConfigResource(dtoToConfigMapper, configToDtoMapper, createConfiguration(), namespaceStrategyValidator, jsonMerger);
-    configResource.setStore(config -> {
-    });
+    ConfigResource configResource = new ConfigResource(new ScmConfigurationStore(new InMemoryConfigurationStoreFactory(), new ScmConfiguration()), dtoToConfigMapper, configToDtoMapper, namespaceStrategyValidator, jsonMerger);
 
     dispatcher.addSingletonResource(configResource);
   }
@@ -95,7 +95,8 @@ class ConfigResourceTest {
     dispatcher.invoke(request, response);
 
     assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_OK);
-    assertThat(response.getContentAsString()).contains("\"proxyPassword\":\"heartOfGold\"");
+    assertThat(response.getContentAsString()).contains("\"proxyServer\":\"proxy.mydomain.com\"");
+    assertThat(response.getContentAsString()).contains("\"namespaceStrategy\":\"UsernameNamespaceStrategy\"");
     assertThat(response.getContentAsString()).contains("\"self\":{\"href\":\"/v2/config");
     assertThat(response.getContentAsString()).doesNotContain("\"update\":{\"href\":\"/v2/config");
   }
@@ -204,12 +205,5 @@ class ConfigResourceTest {
     return MockHttpRequest.patch("/" + ConfigResource.CONFIG_PATH_V2)
       .contentType(VndMediaType.CONFIG)
       .content(json.getBytes());
-  }
-
-  private static ScmConfiguration createConfiguration() {
-    ScmConfiguration scmConfiguration = new ScmConfiguration();
-    scmConfiguration.setProxyPassword("heartOfGold");
-
-    return scmConfiguration;
   }
 }

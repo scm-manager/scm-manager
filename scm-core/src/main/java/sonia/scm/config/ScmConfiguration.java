@@ -26,15 +26,16 @@ package sonia.scm.config;
 
 
 import com.google.common.collect.Sets;
-import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.auditlog.AuditEntry;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.security.AnonymousMode;
 import sonia.scm.util.HttpUtil;
+import sonia.scm.xml.XmlCipherStringAdapter;
 import sonia.scm.xml.XmlSetStringAdapter;
 
+import javax.inject.Singleton;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -46,11 +47,8 @@ import java.net.URI;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  * The main configuration object for SCM-Manager.
- * This class is a singleton and is available via injection.
  *
  * @author Sebastian Sdorra
  */
@@ -58,7 +56,7 @@ import java.util.concurrent.TimeUnit;
 @Singleton
 @XmlRootElement(name = "scm-config")
 @XmlAccessorType(XmlAccessType.FIELD)
-@AuditEntry(labels = "config", maskedFields = "proxyPassword")
+@AuditEntry(labels = {"general","config"}, maskedFields = "proxyPassword")
 public class ScmConfiguration implements Configuration {
 
   /**
@@ -66,10 +64,7 @@ public class ScmConfiguration implements Configuration {
    */
   public static final String DEFAULT_DATEFORMAT = "YYYY-MM-DD HH:mm:ss";
 
-  /**
-   * Default plugin url
-   */
-  public static final String DEFAULT_PLUGINURL =
+  public static final String DEFAULT_PLUGIN_URL =
     "https://plugin-center-api.scm-manager.org/api/v1/plugins/{version}?os={os}&arch={arch}&jre={jre}";
 
   /**
@@ -77,22 +72,16 @@ public class ScmConfiguration implements Configuration {
    *
    * @since 2.28.0
    */
-  public static final String DEFAULT_PLUGIN_AUTH_URL =
-    "https://plugin-center-api.scm-manager.org/api/v1/auth/oidc";
+  public static final String DEFAULT_PLUGIN_AUTH_URL = "https://plugin-center-api.scm-manager.org/api/v1/auth/oidc";
 
   /**
    * SCM Manager alerts url.
    *
    * @since 2.30.0
    */
-  public static final String DEFAULT_ALERTS_URL =
-    "https://alerts.scm-manager.org/api/v1/alerts";
+  public static final String DEFAULT_ALERTS_URL = "https://alerts.scm-manager.org/api/v1/alerts";
 
-  /**
-   * SCM Manager release feed url
-   */
-  public static final String DEFAULT_RELEASE_FEED_URL =
-    "https://scm-manager.org/download/rss.xml";
+  public static final String DEFAULT_RELEASE_FEED_URL = "https://scm-manager.org/download/rss.xml";
 
   /**
    * Default url for login information (plugin and feature tips on the login page).
@@ -116,13 +105,9 @@ public class ScmConfiguration implements Configuration {
   /**
    * Path to the configuration file
    */
-  public static final String PATH =
-    "config".concat(File.separator).concat("config.xml");
+  public static final String PATH = "config".concat(File.separator).concat("config.xml");
 
-  /**
-   * the logger for ScmConfiguration
-   */
-  private static final Logger logger = LoggerFactory.getLogger(ScmConfiguration.class);
+  private static final Logger LOG = LoggerFactory.getLogger(ScmConfiguration.class);
 
   @SuppressWarnings("WeakerAccess") // This might be needed for permission checking
   public static final String PERMISSION = "global";
@@ -150,6 +135,7 @@ public class ScmConfiguration implements Configuration {
   private Set<String> proxyExcludes;
 
 
+  @XmlJavaTypeAdapter(XmlCipherStringAdapter.class)
   private String proxyPassword;
 
 
@@ -171,7 +157,7 @@ public class ScmConfiguration implements Configuration {
 
 
   @XmlElement(name = "plugin-url")
-  private String pluginUrl = DEFAULT_PLUGINURL;
+  private String pluginUrl = DEFAULT_PLUGIN_URL;
 
   @XmlElement(name = "plugin-auth-url")
   private String pluginAuthUrl = DEFAULT_PLUGIN_AUTH_URL;
@@ -252,12 +238,9 @@ public class ScmConfiguration implements Configuration {
   @XmlElement(name = "emergency-contacts")
   private Set<String> emergencyContacts;
 
-  /**
-   * Fires the {@link ScmConfigurationChangedEvent}.
-   */
   public void fireChangeEvent() {
-    if (logger.isDebugEnabled()) {
-      logger.debug("fire config changed event");
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("fire config changed event");
     }
 
     // fire event to event bus

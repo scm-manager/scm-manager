@@ -21,10 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.config;
 
-//~--- non-JDK imports --------------------------------------------------------
+package sonia.scm.config;
 
 import sonia.scm.event.Event;
 
@@ -36,35 +34,15 @@ import sonia.scm.event.Event;
  * @since 1.34
  */
 @Event
-public final class ScmConfigurationChangedEvent
-{
+public final class ScmConfigurationChangedEvent {
 
-  /**
-   * Constructs a new {@link ScmConfigurationChangedEvent}.
-   *
-   *
-   * @param configuration
-   */
-  public ScmConfigurationChangedEvent(ScmConfiguration configuration)
-  {
+  private final ScmConfiguration configuration;
+
+  public ScmConfigurationChangedEvent(ScmConfiguration configuration) {
     this.configuration = configuration;
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Returns the changed configuration.
-   *
-   *
-   * @return changed configuration
-   */
-  public ScmConfiguration getConfiguration()
-  {
+  public ScmConfiguration getConfiguration() {
     return configuration;
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** main configuration */
-  private final ScmConfiguration configuration;
 }

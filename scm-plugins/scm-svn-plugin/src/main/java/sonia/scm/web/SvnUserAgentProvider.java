@@ -33,7 +33,6 @@ import sonia.scm.plugin.Extension;
 
 /**
  *
- * @author Sebastian Sdorra <s.sdorra@gmail.com>
  * @since 1.45
  */
 @Extension

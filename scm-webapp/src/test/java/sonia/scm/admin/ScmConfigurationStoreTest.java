@@ -21,38 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.config;
 
-import com.github.legman.Subscribe;
-import com.google.inject.Inject;
-import sonia.scm.EagerSingleton;
-import sonia.scm.SCMContext;
-import sonia.scm.plugin.Extension;
-import sonia.scm.security.AnonymousMode;
-import sonia.scm.user.UserManager;
+package sonia.scm.admin;
 
-@Extension
-@EagerSingleton
-public class ScmConfigurationChangedListener {
+import org.junit.jupiter.api.Test;
+import sonia.scm.config.ScmConfiguration;
+import sonia.scm.store.InMemoryConfigurationStoreFactory;
 
-  private final UserManager userManager;
+import static org.assertj.core.api.Assertions.assertThat;
 
-  @Inject
-  public ScmConfigurationChangedListener(UserManager userManager) {
-    this.userManager = userManager;
+class ScmConfigurationStoreTest {
+
+  @Test
+  void shouldGetDefaultConfig() {
+    ScmConfiguration scmConfiguration = new ScmConfigurationStore(new InMemoryConfigurationStoreFactory(), new ScmConfiguration()).get();
+
+    assertThat(scmConfiguration.getPluginUrl()).isEqualTo("https://plugin-center-api.scm-manager.org/api/v1/plugins/{version}?os={os}&arch={arch}&jre={jre}");
   }
 
-  @Subscribe
-  public void handleEvent(ScmConfigurationChangedEvent event) {
-    createAnonymousUserIfRequired(event);
+  @Test
+  void shouldUpdateConfig() {
+    ScmConfigurationStore store = new ScmConfigurationStore(new InMemoryConfigurationStoreFactory(), new ScmConfiguration());
+
+    ScmConfiguration config = new ScmConfiguration();
+    config.setBaseUrl("test.de");
+    config.setProxyPassword("secret");
+    store.store(config);
+
+    ScmConfiguration scmConfiguration = store.get();
+
+    assertThat(scmConfiguration.getBaseUrl()).isEqualTo("test.de");
+    assertThat(scmConfiguration.getProxyPassword()).isEqualTo("secret");
   }
 
-  private void createAnonymousUserIfRequired(ScmConfigurationChangedEvent event) {
-    if (event.getConfiguration().getAnonymousMode() != AnonymousMode.OFF && !userManager.contains(SCMContext.USER_ANONYMOUS)) {
-      userManager.create(SCMContext.ANONYMOUS);
-    }
-  }
 }
-
-

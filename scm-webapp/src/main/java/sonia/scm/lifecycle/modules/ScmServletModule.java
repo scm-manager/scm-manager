@@ -79,7 +79,26 @@ import sonia.scm.notifications.NotificationSender;
 import sonia.scm.plugin.DefaultPluginManager;
 import sonia.scm.plugin.PluginLoader;
 import sonia.scm.plugin.PluginManager;
-import sonia.scm.repository.*;
+import sonia.scm.repository.DefaultHealthCheckService;
+import sonia.scm.repository.DefaultNamespaceManager;
+import sonia.scm.repository.DefaultRepositoryManager;
+import sonia.scm.repository.DefaultRepositoryProvider;
+import sonia.scm.repository.DefaultRepositoryRoleManager;
+import sonia.scm.repository.FullRepositoryExporter;
+import sonia.scm.repository.FullRepositoryImporter;
+import sonia.scm.repository.HealthCheckContextListener;
+import sonia.scm.repository.HealthCheckService;
+import sonia.scm.repository.NamespaceManager;
+import sonia.scm.repository.NamespaceStrategy;
+import sonia.scm.repository.NamespaceStrategyProvider;
+import sonia.scm.repository.PermissionProvider;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryDAO;
+import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.RepositoryManagerProvider;
+import sonia.scm.repository.RepositoryProvider;
+import sonia.scm.repository.RepositoryRoleDAO;
+import sonia.scm.repository.RepositoryRoleManager;
 import sonia.scm.repository.api.HookContextFactory;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.repository.spi.HookEventFacade;
@@ -115,7 +134,7 @@ import sonia.scm.user.UserManager;
 import sonia.scm.user.UserManagerProvider;
 import sonia.scm.user.xml.XmlUserDAO;
 import sonia.scm.util.DebugServlet;
-import sonia.scm.util.ScmConfigurationUtil;
+import sonia.scm.admin.ScmConfigurationStore;
 import sonia.scm.web.UserAgentParser;
 import sonia.scm.web.cgi.CGIExecutorFactory;
 import sonia.scm.web.cgi.DefaultCGIExecutorFactory;
@@ -152,8 +171,6 @@ class ScmServletModule extends ServletModule {
   protected void configureServlets() {
     install(ThrowingProviderBinder.forModule(this));
 
-    ScmConfiguration config = getScmConfiguration();
-
     bind(NamespaceStrategy.class).toProvider(NamespaceStrategyProvider.class);
 
     // bind store decorators
@@ -170,7 +187,8 @@ class ScmServletModule extends ServletModule {
     bind(ScmEventBus.class).toInstance(ScmEventBus.getInstance());
 
     // bind core
-    bind(ScmConfiguration.class).toInstance(config);
+    bind(ScmConfigurationStore.class);
+    bind(ScmConfiguration.class).toInstance(new ScmConfigurationLoader().load());
     bind(PluginManager.class, DefaultPluginManager.class);
 
     // bind scheduler
@@ -323,11 +341,4 @@ class ScmServletModule extends ServletModule {
 
     return implementation;
   }
-
-  private ScmConfiguration getScmConfiguration() {
-    ScmConfiguration configuration = new ScmConfiguration();
-    ScmConfigurationUtil.getInstance().load(configuration);
-    return configuration;
-  }
-
 }

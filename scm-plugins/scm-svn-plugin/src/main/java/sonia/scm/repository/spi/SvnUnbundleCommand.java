@@ -55,9 +55,6 @@ import java.util.concurrent.Callable;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static sonia.scm.repository.RepositoryHookType.POST_RECEIVE;
 
-/**
- * @author Sebastian Sdorra <s.sdorra@gmail.com>
- */
 public class SvnUnbundleCommand extends AbstractSvnCommand implements UnbundleCommand {
 
   private static final Logger LOG = LoggerFactory.getLogger(SvnUnbundleCommand.class);

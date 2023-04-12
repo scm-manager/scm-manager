@@ -24,6 +24,7 @@
     
 package sonia.scm.config;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -41,15 +42,19 @@ import static org.mockito.Mockito.when;
 class ScmConfigurationChangedListenerTest {
 
   @Mock
-  UserManager userManager;
+  private UserManager userManager;
 
-  ScmConfiguration scmConfiguration = new ScmConfiguration();
+  private final ScmConfiguration scmConfiguration = new ScmConfiguration();
 
-  @InjectMocks
-  ScmConfigurationChangedListener listener = new ScmConfigurationChangedListener(userManager);
+  private ScmConfigurationChangedListener listener;
+
+  @BeforeEach
+  void initListener() {
+    listener = new ScmConfigurationChangedListener(userManager);
+  }
 
   @Test
-  void shouldCreateAnonymousUserIfAnoymousAccessEnabled() {
+  void shouldCreateAnonymousUserIfAnonymousAccessEnabled() {
     when(userManager.contains(any())).thenReturn(false);
 
     ScmConfiguration changes = new ScmConfiguration();

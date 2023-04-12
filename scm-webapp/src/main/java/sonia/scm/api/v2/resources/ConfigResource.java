@@ -25,7 +25,6 @@
 package sonia.scm.api.v2.resources;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.google.common.annotations.VisibleForTesting;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -38,7 +37,7 @@ import sonia.scm.config.ConfigurationPermissions;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.NamespaceStrategyValidator;
 import sonia.scm.util.JsonMerger;
-import sonia.scm.util.ScmConfigurationUtil;
+import sonia.scm.admin.ScmConfigurationStore;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
@@ -50,7 +49,6 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
-import java.util.function.Consumer;
 
 /**
  * RESTful Web Service Resource to manage the configuration.
@@ -64,28 +62,22 @@ public class ConfigResource {
   static final String CONFIG_PATH_V2 = "v2/config";
   private final ConfigDtoToScmConfigurationMapper dtoToConfigMapper;
   private final ScmConfigurationToConfigDtoMapper configToDtoMapper;
-  private final ScmConfiguration configuration;
+  private final ScmConfigurationStore store;
+
   private final NamespaceStrategyValidator namespaceStrategyValidator;
   private final JsonMerger jsonMerger;
 
-  private Consumer<ScmConfiguration> store = config -> ScmConfigurationUtil.getInstance().store(config);
 
   @Inject
-  public ConfigResource(ConfigDtoToScmConfigurationMapper dtoToConfigMapper,
+  public ConfigResource(ScmConfigurationStore store, ConfigDtoToScmConfigurationMapper dtoToConfigMapper,
                         ScmConfigurationToConfigDtoMapper configToDtoMapper,
-                        ScmConfiguration configuration,
                         NamespaceStrategyValidator namespaceStrategyValidator,
                         JsonMerger jsonMerger) {
     this.dtoToConfigMapper = dtoToConfigMapper;
     this.configToDtoMapper = configToDtoMapper;
-    this.configuration = configuration;
+    this.store = store;
     this.namespaceStrategyValidator = namespaceStrategyValidator;
     this.jsonMerger = jsonMerger;
-  }
-
-  @VisibleForTesting
-  void setStore(Consumer<ScmConfiguration> store) {
-    this.store = store;
   }
 
   /**
@@ -116,9 +108,10 @@ public class ConfigResource {
   public Response get() {
     // We do this permission check in Resource and not in ScmConfiguration, because it must be available for reading
     // from within the code (plugins, etc.), but not for the whole anonymous world outside.
-    ConfigurationPermissions.read(configuration).check();
+    ScmConfiguration scmConfiguration = store.get();
+    ConfigurationPermissions.read(scmConfiguration).check();
 
-    return Response.ok(configToDtoMapper.map(configuration)).build();
+    return Response.ok(configToDtoMapper.map(scmConfiguration)).build();
   }
 
   /**
@@ -157,7 +150,8 @@ public class ConfigResource {
     )
   )
   public Response update(@Valid ConfigDto configDto) {
-    ConfigurationPermissions.write(configuration).check();
+    ScmConfiguration scmConfiguration = store.get();
+    ConfigurationPermissions.write(scmConfiguration).check();
     updateConfig(configDto);
 
     return Response.noContent().build();
@@ -199,10 +193,11 @@ public class ConfigResource {
     )
   )
   public Response updatePartially(JsonNode updateNode) {
-    ConfigurationPermissions.write(configuration).check();
+    ScmConfiguration scmConfiguration = store.get();
+    ConfigurationPermissions.write(scmConfiguration).check();
 
     ConfigDto updatedConfigDto = jsonMerger
-      .fromObject(configToDtoMapper.map(configuration))
+      .fromObject(configToDtoMapper.map(scmConfiguration))
       .mergeWithJson(updateNode)
       .toObject(ConfigDto.class)
       .withValidation()
@@ -213,17 +208,8 @@ public class ConfigResource {
   }
 
   private void updateConfig(ConfigDto updatedConfigDto) {
-    // This *could* be moved to ScmConfiguration or ScmConfigurationUtil classes.
-    // But to where to check? load() or store()? Leave it for now, SCMv1 legacy that can be cleaned up later.
-
     // ensure the namespace strategy is valid
     namespaceStrategyValidator.check(updatedConfigDto.getNamespaceStrategy());
-
-    ScmConfiguration config = dtoToConfigMapper.map(updatedConfigDto);
-    synchronized (ScmConfiguration.class) {
-      configuration.load(config);
-      store.accept(configuration);
-    }
+    store.store(dtoToConfigMapper.map(updatedConfigDto));
   }
-
 }

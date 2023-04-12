@@ -22,49 +22,43 @@
  * SOFTWARE.
  */
 
-package sonia.scm.update.plugin;
+package sonia.scm.admin;
 
 import sonia.scm.config.ScmConfiguration;
-import sonia.scm.migration.UpdateStep;
-import sonia.scm.plugin.Extension;
 import sonia.scm.store.ConfigurationStore;
 import sonia.scm.store.ConfigurationStoreFactory;
-import sonia.scm.version.Version;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
-import static sonia.scm.version.Version.parse;
+@Singleton
+public final class ScmConfigurationStore {
 
-@Extension
-public class PluginCenterUpdateStep implements UpdateStep {
-
-  private final ConfigurationStoreFactory configurationStoreFactory;
+  private static final String STORE_NAME = "config";
+  private final ConfigurationStoreFactory storeFactory;
+  private final ScmConfiguration scmConfiguration;
 
   @Inject
-  public PluginCenterUpdateStep(ConfigurationStoreFactory configurationStoreFactory) {
-    this.configurationStoreFactory = configurationStoreFactory;
+  public ScmConfigurationStore(ConfigurationStoreFactory configurationStoreFactory, ScmConfiguration scmConfiguration) {
+    this.storeFactory = configurationStoreFactory;
+    this.scmConfiguration = scmConfiguration;
   }
 
-  @Override
-  public void doUpdate() {
-    ConfigurationStore<ScmConfiguration> configurationStore = configurationStoreFactory
-      .withType(ScmConfiguration.class)
-      .withName("config")
-      .build();
-    configurationStore.getOptional()
-      .ifPresent(config -> {
-        config.setPluginUrl(ScmConfiguration.DEFAULT_PLUGIN_URL);
-        configurationStore.set(config);
-      });
+  public ScmConfiguration get() {
+    ConfigurationStore<ScmConfiguration> store = createStore();
+    return store.getOptional().orElse(new ScmConfiguration());
   }
 
-  @Override
-  public Version getTargetVersion() {
-    return parse("2.0.0");
+  public void store(ScmConfiguration updatedConfig) {
+    synchronized (ScmConfiguration.class) {
+      // We must update the injectable "ScmConfiguration" instance, which is directly injected into several classes.
+      scmConfiguration.load(updatedConfig);
+      createStore().set(updatedConfig);
+      updatedConfig.fireChangeEvent();
+    }
   }
 
-  @Override
-  public String getAffectedDataType() {
-    return "sonia.scm.plugin-center";
+  private ConfigurationStore<ScmConfiguration> createStore() {
+    return storeFactory.withType(ScmConfiguration.class).withName(STORE_NAME).build();
   }
 }

@@ -30,7 +30,7 @@ import sonia.scm.store.ConfigurationStore;
 import sonia.scm.store.InMemoryConfigurationStoreFactory;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static sonia.scm.config.ScmConfiguration.DEFAULT_PLUGINURL;
+import static sonia.scm.config.ScmConfiguration.DEFAULT_PLUGIN_URL;
 
 class PluginCenterJreVersionUpdateStepTest {
 
@@ -56,7 +56,7 @@ class PluginCenterJreVersionUpdateStepTest {
     new PluginCenterJreVersionUpdateStep(configurationStoreFactory)
       .doUpdate();
 
-    assertThat(configurationStore.get().getPluginUrl()).isEqualTo(DEFAULT_PLUGINURL);
+    assertThat(configurationStore.get().getPluginUrl()).isEqualTo(DEFAULT_PLUGIN_URL);
   }
 
   private void mockPluginUrl(String pluginUrl) {
