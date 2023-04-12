@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.43.0] - 2023-04-12
+### Added
+- Extension points for bottom of information table
+- Display images in diffs
+- Optional reset button for forms
+- Initial implementation of an audit log API
+- Enable developers to manage array properties in forms
+
+### Fixed
+- Error in frontend without 'default' branch in hg repositories
+- Not found exception with SVN externals
+- Fix sticky diffs page position after collapse
+- Connect labels with their respective inputs for improved accessibility
+- Branch and tag validation regarding special characters
+- Concurrent modification exception in JAXB stores
+
+### Changed
+- Improve committer accuracy
+- Use standard configuration store api for general config
+
 ## [2.42.3] - 2023-03-10
 ### Fixed
 - Concurrent modification exception in JAXB stores
@@ -1241,3 +1261,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.42.1]: https://scm-manager.org/download/2.42.1
 [2.42.2]: https://scm-manager.org/download/2.42.2
 [2.42.3]: https://scm-manager.org/download/2.42.3
+[2.43.0]: https://scm-manager.org/download/2.43.0
