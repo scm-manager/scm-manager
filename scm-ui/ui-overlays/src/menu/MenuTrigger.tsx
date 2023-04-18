@@ -22,5 +22,38 @@
  * SOFTWARE.
  */
 
-export { Button, LinkButton, ExternalLinkButton, ButtonVariants } from "./Button";
-export { default as Icon } from "./Icon";
+import React, { ComponentProps } from "react";
+import { Button, Icon } from "@scm-manager/ui-buttons";
+import * as RadixMenu from "@radix-ui/react-dropdown-menu";
+import styled from "styled-components";
+
+type Props = ComponentProps<typeof Button>;
+
+/**
+ * @beta
+ * @since 2.44.0
+ */
+const MenuTrigger = React.forwardRef<HTMLButtonElement, Props>(({ children, ...props }, ref) => (
+  <RadixMenu.Trigger asChild>
+    <Button ref={ref} {...props}>
+      {children}
+    </Button>
+  </RadixMenu.Trigger>
+));
+
+const StyledMenuTrigger = styled(MenuTrigger)`
+  padding-left: 1em;
+  padding-right: 1em;
+`;
+
+/**
+ * @beta
+ * @since 2.44.0
+ */
+export const DEFAULT_MENU_TRIGGER = (
+  <StyledMenuTrigger className="is-borderless has-background-transparent has-hover-color-blue">
+    <Icon>ellipsis-v</Icon>
+  </StyledMenuTrigger>
+);
+
+export default MenuTrigger;

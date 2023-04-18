@@ -45,6 +45,29 @@
   --scm-popover-border-color: #{$popover-border-color};
 }
 
+// Workaround for https://github.com/radix-ui/primitives/issues/1572
+@supports (scrollbar-gutter: stable) {
+  html body {
+    margin-right: 0 !important;
+  }
+}
+
+.has-box-shadow {
+  box-shadow: $box-shadow;
+}
+
+.is-borderless {
+  border: none;
+}
+
+.has-background-transparent {
+  background-color: transparent;
+}
+
+.has-hover-color-blue:hover {
+  color: $blue !important;
+}
+
 details > * {
   box-sizing: border-box;
 }

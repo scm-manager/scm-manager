@@ -22,5 +22,37 @@
  * SOFTWARE.
  */
 
-export { Button, LinkButton, ExternalLinkButton, ButtonVariants } from "./Button";
-export { default as Icon } from "./Icon";
+import StoryRouter from "storybook-react-router";
+import { ComponentMeta, StoryFn } from "@storybook/react";
+import React, { ComponentProps } from "react";
+import { ExtractProps } from "@scm-manager/ui-extensions";
+import Menu, { MenuButton, MenuExternalLink, MenuLink } from "./Menu";
+import { Icon } from "@scm-manager/ui-buttons";
+
+export default {
+  title: "Menu",
+  component: Menu,
+  decorators: [StoryRouter()],
+} as ComponentMeta<typeof Menu>;
+
+const Template: StoryFn<ExtractProps<typeof Menu>> = (args) => <Menu {...args} />;
+
+export const Default = Template.bind({});
+// More on args: https://storybook.js.org/docs/react/writing-stories/args
+Default.args = {
+  children: [
+    // eslint-disable-next-line no-console
+    <MenuButton onSelect={() => console.log("A button has been clicked")}>
+      <Icon />A button
+    </MenuButton>,
+    <MenuLink to="/repos">
+      <Icon />A link
+    </MenuLink>,
+    <MenuExternalLink href="https://scm-manager.org">
+      <Icon>link</Icon>An external link
+    </MenuExternalLink>,
+    <MenuButton disabled>
+      <Icon>trash</Icon>A disabled button
+    </MenuButton>,
+  ],
+} as ComponentProps<typeof Menu>;

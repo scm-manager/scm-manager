@@ -103,7 +103,9 @@ export const LinkButton = React.forwardRef<HTMLAnchorElement, LinkButtonProps>(
 type ExternalLinkButtonProps = BaseButtonProps & AnchorHTMLAttributes<HTMLAnchorElement>;
 
 /**
- * Styled html anchor
+ * Styled html anchor.
+ *
+ * External links open in a new browser tab with rel flags "noopener" and "noreferrer" set by default.
  *
  * @beta
  * @since 2.41.0
@@ -111,6 +113,8 @@ type ExternalLinkButtonProps = BaseButtonProps & AnchorHTMLAttributes<HTMLAnchor
 export const ExternalLinkButton = React.forwardRef<HTMLAnchorElement, ExternalLinkButtonProps>(
   ({ className, variant, isLoading, testId, children, ...props }, ref) => (
     <a
+      target="_blank"
+      rel="noreferrer noopener"
       {...props}
       className={classNames(createButtonClasses(variant, isLoading), className)}
       ref={ref}

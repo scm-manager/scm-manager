@@ -22,5 +22,30 @@
  * SOFTWARE.
  */
 
-export { Button, LinkButton, ExternalLinkButton, ButtonVariants } from "./Button";
-export { default as Icon } from "./Icon";
+import React from "react";
+import classNames from "classnames";
+
+type Props = React.HTMLProps<HTMLElement> & {
+  children?: string;
+};
+
+/**
+ * @beta
+ * @since 2.44.0
+ * @see https://bulma.io/documentation/elements/icon/
+ */
+const Icon = React.forwardRef<HTMLElement, Props>(({ children, className, ...props }, ref) => {
+  return (
+    <span className={classNames(className, "icon")} {...props} ref={ref}>
+      <i
+        className={classNames(`fas fa-fw fa-${children}`, {
+          "fa-xs": className?.includes("is-small"),
+          "fa-lg": className?.includes("is-medium"),
+          "fa-2x": className?.includes("is-large"),
+        })}
+      />
+    </span>
+  );
+});
+
+export default Icon;

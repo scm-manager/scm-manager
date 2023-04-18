@@ -32,12 +32,16 @@
     "tsup": "^6.2.3"
   },
   "peerDependencies": {
-    "classnames": "^2.3.1",
     "react": "17",
-    "styled-components": "^5.3.6"
+    "react-dom": "17",
+    "react-router-dom": "5",
+    "classnames": "2",
+    "styled-components": "5"
   },
   "dependencies": {
-    "@radix-ui/react-tooltip": "1.0.2"
+    "@radix-ui/react-tooltip": "1.0.2",
+    "@radix-ui/react-dropdown-menu": "2.0.4",
+    "@scm-manager/ui-buttons": "2.43.1-SNAPSHOT"
   },
   "prettier": "@scm-manager/prettier-config",
   "eslintConfig": {

@@ -23,8 +23,9 @@
  */
 
 import React, { useEffect } from "react";
-import { I18nextProvider, initReactI18next } from "react-i18next";
+import { initReactI18next } from "react-i18next";
 import i18n from "i18next";
+import { withThemes } from "storybook-addon-themes";
 
 i18n.use(initReactI18next).init({
   whitelist: ["en", "de"],
@@ -36,7 +37,6 @@ i18n.use(initReactI18next).init({
   react: {
     useSuspense: false,
   },
-
 });
 
 const Decorator = ({ children, themeName }) => {
@@ -50,15 +50,10 @@ const Decorator = ({ children, themeName }) => {
   return <>{children}</>;
 };
 
+export const decorators = [withThemes];
+
 export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
-  decorators: [
-    (Story) => (
-      <I18nextProvider i18n={i18n}>
-        <Story />
-      </I18nextProvider>
-    ),
-  ],
   themes: {
     Decorator,
     clearable: false,

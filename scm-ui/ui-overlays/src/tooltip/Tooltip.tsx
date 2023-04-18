@@ -82,7 +82,8 @@ const Tooltip = React.forwardRef<HTMLDivElement, Props>(({ children, className, 
             className
           )}
           side={side}
-          sideOffset={5}
+          sideOffset={4}
+          collisionPadding={4}
           ref={ref}
         >
           {message}
