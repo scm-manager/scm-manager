@@ -84,13 +84,14 @@ const PluginEntry: FC<Props> = ({ plugin, openModal, pluginCenterAuthInfo }) => 
     return undefined;
   };
 
-  const pendingSpinner = () => (
-    <Icon
-      className="fa-spin fa-lg"
-      name="spinner"
-      color={plugin.markedForUninstall ? "danger" : "info"}
+  const pendingInfo = () => (
+    <>
+      <Icon
+      className="fa-lg"
+      name="check"
+      color="info"
       alt={t("plugins.markedAsPending")}
-    />
+    /></>
   );
   const actionBar = () => (
     <ActionbarWrapper className="is-flex">
@@ -125,7 +126,7 @@ const PluginEntry: FC<Props> = ({ plugin, openModal, pluginCenterAuthInfo }) => 
         avatar={<PluginAvatar plugin={plugin} />}
         title={plugin.displayName ? <strong>{plugin.displayName}</strong> : <strong>{plugin.name}</strong>}
         description={plugin.description}
-        contentRight={plugin.pending || plugin.markedForUninstall ? pendingSpinner() : actionBar()}
+        contentRight={plugin.pending || plugin.markedForUninstall ? pendingInfo() : actionBar()}
         footerLeft={<small>{plugin.version}</small>}
         footerRight={null}
       />

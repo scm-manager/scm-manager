@@ -25,18 +25,9 @@ import * as React from "react";
 import { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Plugin } from "@scm-manager/ui-types";
-import {
-  Button,
-  ButtonGroup,
-  ErrorNotification,
-  Loading,
-  Notification,
-  Subtitle,
-  Title,
-} from "@scm-manager/ui-components";
+import { ButtonGroup, ErrorNotification, Loading, Notification, Subtitle, Title } from "@scm-manager/ui-components";
 import PluginsList from "../components/PluginList";
 import PluginTopActions from "../components/PluginTopActions";
-import PluginBottomActions from "../components/PluginBottomActions";
 import ExecutePendingActionModal from "../components/ExecutePendingActionModal";
 import CancelPendingActionModal from "../components/CancelPendingActionModal";
 import UpdateAllActionModal from "../components/UpdateAllActionModal";
@@ -50,6 +41,8 @@ import {
 import PluginModal from "../components/PluginModal";
 import MyCloudoguBanner from "../components/MyCloudoguBanner";
 import PluginCenterAuthInfo from "../components/PluginCenterAuthInfo";
+import styled from "styled-components";
+import { Button } from "@scm-manager/ui-buttons";
 
 export enum PluginAction {
   INSTALL = "install",
@@ -66,6 +59,17 @@ export type PluginModalContent = {
 type Props = {
   installed: boolean;
 };
+
+const StickyHeader = styled.div`
+  position: sticky;
+  top: 52px;
+  z-index: 10;
+  margin-bottom: 1rem;
+  margin-top: -1rem;
+  border-bottom: solid 2px var(--scm-border-color);
+  padding-bottom: 1rem;
+  padding-top: 1rem;
+`;
 
 const PluginsOverview: FC<Props> = ({ installed }) => {
   const [t] = useTranslation("admin");
@@ -90,25 +94,20 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
   const error = (installed ? installedPluginsError : availablePluginsError) || pendingPluginsError;
   const loading = (installed ? isLoadingInstalledPlugins : isLoadingAvailablePlugins) || isLoadingPendingPlugins;
 
-  const renderHeader = (actions: React.ReactNode) => {
+  const renderHeader = (actions: React.ReactElement) => {
     return (
-      <div className="columns">
-        <div className="column">
-          <Title className="is-flex">
-            {t("plugins.title")} <PluginCenterAuthInfo {...pluginCenterAuthInfo} />
-          </Title>
-          <Subtitle subtitle={installed ? t("plugins.installedSubtitle") : t("plugins.availableSubtitle")} />
+      <StickyHeader className="has-background-secondary-least ">
+        <div className="is-flex is-justify-content-space-between is-align-items-baseline">
+          <div>
+            <Title>
+              {t("plugins.title")} <PluginCenterAuthInfo {...pluginCenterAuthInfo} />
+            </Title>
+            <Subtitle subtitle={installed ? t("plugins.installedSubtitle") : t("plugins.availableSubtitle")} />
+          </div>
+          <PluginTopActions>{actions}</PluginTopActions>
         </div>
-        <PluginTopActions>{actions}</PluginTopActions>
-      </div>
+      </StickyHeader>
     );
-  };
-
-  const renderFooter = (actions: React.ReactNode) => {
-    if (actions) {
-      return <PluginBottomActions>{actions}</PluginBottomActions>;
-    }
-    return null;
   };
 
   const createActions = () => {
@@ -117,61 +116,38 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
     if (pendingPlugins && pendingPlugins._links) {
       if (pendingPlugins._links.execute) {
         buttons.push(
-          <Button
-            color="primary"
-            reducedMobile={true}
-            key={"executePending"}
-            icon={"arrow-circle-right"}
-            label={t("plugins.executePending")}
-            action={() => setShowExecutePendingModal(true)}
-          />
+          <Button variant="primary" key={"executePending"} onClick={() => setShowExecutePendingModal(true)}>
+            {t("plugins.executePending")}
+          </Button>
         );
       }
 
-      if (pendingPlugins._links.cancel) {
-        if (!pendingPlugins._links.execute) {
-          buttons.push(
-            <Button
-              color="primary"
-              reducedMobile={true}
-              key={"showPending"}
-              icon={"info"}
-              label={t("plugins.showPending")}
-              action={() => setShowPendingModal(true)}
-            />
-          );
-        }
-
+      if (pendingPlugins._links.cancel && !pendingPlugins._links.execute) {
         buttons.push(
-          <Button
-            color="primary"
-            reducedMobile={true}
-            key={"cancelPending"}
-            icon={"times"}
-            label={t("plugins.cancelPending")}
-            action={() => setShowCancelModal(true)}
-          />
+          <Button variant="primary" key={"showPending"} onClick={() => setShowPendingModal(true)}>
+            {t("plugins.showPending")}
+          </Button>
         );
       }
     }
 
     if (collection && collection._links && collection._links.update) {
       buttons.push(
-        <Button
-          color="primary"
-          reducedMobile={true}
-          key={"updateAll"}
-          icon={"sync-alt"}
-          label={computeUpdateAllSize()}
-          action={() => setShowUpdateAllModal(true)}
-        />
+        <Button variant="secondary" key={"updateAll"} onClick={() => setShowUpdateAllModal(true)}>
+          {computeUpdateAllSize()}
+        </Button>
       );
     }
 
-    if (buttons.length > 0) {
-      return <ButtonGroup>{buttons}</ButtonGroup>;
+    if (pendingPlugins && pendingPlugins._links && pendingPlugins._links.cancel) {
+      buttons.push(
+        <Button key={"cancelPending"} onClick={() => setShowCancelModal(true)}>
+          {t("plugins.cancelPending")}
+        </Button>
+      );
     }
-    return null;
+
+    return <>{buttons.length > 0 ? <ButtonGroup>{buttons}</ButtonGroup> : null}</>;
   };
 
   const computeUpdateAllSize = () => {
@@ -238,10 +214,8 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
   return (
     <>
       {renderHeader(actions)}
-      <hr className="header-with-actions" />
       {pluginCenterAuthInfo.data?.default ? <MyCloudoguBanner info={pluginCenterAuthInfo.data} /> : null}
       {renderPluginsList()}
-      {renderFooter(actions)}
       {renderModals()}
     </>
   );

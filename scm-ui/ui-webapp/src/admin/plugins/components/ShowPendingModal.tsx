@@ -22,10 +22,11 @@
  * SOFTWARE.
  */
 import React, { FC } from "react";
-import { Button, Modal, Notification } from "@scm-manager/ui-components";
+import { Modal, Notification } from "@scm-manager/ui-components";
 import { PendingPlugins } from "@scm-manager/ui-types";
 import { useTranslation } from "react-i18next";
 import PendingPluginsQueue from "./PendingPluginsQueue";
+import { Button } from "@scm-manager/ui-buttons";
 
 type ModalBodyProps = {
   pendingPlugins: PendingPlugins;
@@ -60,7 +61,7 @@ const ShowPendingModal: FC<Props> = ({ pendingPlugins, onClose }) => {
       title={t("plugins.showPending")}
       closeFunction={onClose}
       body={<ModalBody pendingPlugins={pendingPlugins} />}
-      footer={<Button label={t("plugins.modal.close")} action={onClose} />}
+      footer={<Button onClick={onClose}>{t("plugins.modal.close")}</Button>}
       active={true}
     />
   );

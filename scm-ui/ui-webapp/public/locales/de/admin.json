@@ -38,11 +38,11 @@
     },
     "markedAsPending": "Als ausstehend markiert",
     "showPending": "Änderungen anzeigen",
-    "executePending": "Änderungen ausführen",
+    "executePending": "Warten auf Neustart",
     "outdatedPlugins": "{{count}} Plugin aktualisieren",
     "outdatedPlugins_plural": "{{count}} Plugins aktualisieren",
     "updateAll": "Alle Plugins aktualisieren",
-    "cancelPending": "Änderungen abbrechen",
+    "cancelPending": "Änderungen verwerfen",
     "noPlugins": "Keine Plugins gefunden.",
     "pluginCenterStatus": {
       "ERROR": "Das Plugin Center ist nicht verfügbar. Plugins können weder installiert noch aktualisiert werden.",

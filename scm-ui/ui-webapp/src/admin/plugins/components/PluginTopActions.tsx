@@ -25,7 +25,7 @@ import * as React from "react";
 import classNames from "classnames";
 
 type Props = {
-  children?: React.Node;
+  children?: React.ReactElement;
 };
 
 export default class PluginTopActions extends React.Component<Props> {
@@ -34,9 +34,6 @@ export default class PluginTopActions extends React.Component<Props> {
     return (
       <div
         className={classNames(
-          "column",
-          "is-one-fifths",
-          "is-mobile-action-spacing",
           "is-flex",
           "is-justify-content-flex-end",
           "is-align-items-center"

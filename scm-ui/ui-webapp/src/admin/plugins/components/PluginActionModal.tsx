@@ -25,8 +25,9 @@ import * as React from "react";
 import { FC, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { PendingPlugins, PluginCollection } from "@scm-manager/ui-types";
-import { Button, ButtonGroup, ErrorNotification, Modal } from "@scm-manager/ui-components";
+import { ButtonGroup, ErrorNotification, Modal } from "@scm-manager/ui-components";
 import SuccessNotification from "./SuccessNotification";
+import {Button} from "@scm-manager/ui-buttons";
 
 type Props = {
   onClose: () => void;
@@ -143,22 +144,20 @@ const PluginActionModal: FC<Props> = ({
     <ButtonGroup>
       {success ? (
         <Button
-          label={t("plugins.modal.reload")}
-          action={() => window.location.reload()}
+          onClick={() => window.location.reload()}
+          variant="primary"
           color="success"
-          icon="sync-alt"
-        />
+        >{t("plugins.modal.reload")}</Button>
       ) : (
         <>
           <Button
-            color="warning"
-            label={label}
-            loading={loading}
-            action={execute}
+            variant="primary"
+            isLoading={loading}
+            onClick={execute}
             disabled={!!error || success}
             ref={initialFocusRef}
-          />
-          <Button label={t("plugins.modal.abort")} action={onClose} />
+          >{label}</Button>
+          <Button onClick={onClose} >{t("plugins.modal.abort")}</Button>
         </>
       )}
     </ButtonGroup>
