@@ -39,6 +39,8 @@ type Props = {
 
 /**
  * @see https://bulma.io/documentation/form/select/
+ * @beta
+ * @since 2.44.0
  */
 const SelectField = React.forwardRef<HTMLSelectElement, Props>(
   ({ label, helpText, error, className, id, ...props }, ref) => {

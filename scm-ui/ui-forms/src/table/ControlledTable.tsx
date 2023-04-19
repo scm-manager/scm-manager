@@ -31,6 +31,7 @@ import { prefixWithoutIndices } from "../helpers";
 import classNames from "classnames";
 import { useScmFormListContext } from "../ScmFormListContext";
 import { useTranslation } from "react-i18next";
+import { Notification } from "@scm-manager/ui-components";
 
 type RenderProps<T extends Record<string, unknown>, PATH extends Path<T>> = {
   value: PathValue<T, PATH>;
@@ -59,11 +60,8 @@ function ControlledTable<T extends Record<string, unknown>, PATH extends Path<T>
   const prefixedNameWithoutIndices = prefixWithoutIndices(nameWithPrefix);
   const { fields, remove } = useScmFormListContext();
   const deleteLabel = t(`${prefixedNameWithoutIndices}.delete`) || defaultTranslate("delete.label");
+  const emptyTableLabel = t(`${prefixedNameWithoutIndices}.empty`) || defaultTranslate("empty.label");
   const actionHeaderLabel = t(`${prefixedNameWithoutIndices}.action.label`) || defaultTranslate("headers.action.label");
-
-  if (!fields.length) {
-    return null;
-  }
 
   return (
     <table className={classNames("table content is-hoverable", className)}>
@@ -76,6 +74,7 @@ function ControlledTable<T extends Record<string, unknown>, PATH extends Path<T>
         </tr>
       </thead>
       <tbody>
+      {fields.length === 0 ? <tr><td colSpan={1000}><Notification type="info">{emptyTableLabel}</Notification></td></tr> : null}
         {fields.map((value, index) => (
           <ScmFormPathContextProvider key={value.id} path={`${nameWithPrefix}.${index}`}>
             <tr>

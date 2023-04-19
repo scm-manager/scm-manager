@@ -12,6 +12,9 @@
       },
       "delete": {
         "label": "Delete"
+      },
+      "empty": {
+        "label": "No entries"
       }
     },
     "list": {
@@ -20,6 +23,9 @@
       },
       "delete": {
         "label": "Delete {{entity}}"
+      },
+      "title": {
+        "label": "Add new {{entity}}"
       }
     }
   },

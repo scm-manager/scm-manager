@@ -88,6 +88,9 @@ function AddListEntryForm<FormType extends Record<string, unknown>, DefaultValue
   const submitButtonLabel = translateWithExtraPrefix("add", {
     defaultValue: defaultTranslate("list.add.label", { entity: translateWithExtraPrefix("entity") }),
   });
+  const titleLabel = translateWithExtraPrefix("title", {
+    defaultValue: defaultTranslate("list.title.label", { entity: translateWithExtraPrefix("entity") }),
+  });
 
   useEffect(() => {
     if (isSubmitSuccessful) {
@@ -102,9 +105,10 @@ function AddListEntryForm<FormType extends Record<string, unknown>, DefaultValue
   return (
     <ScmFormContextProvider {...form} t={translateWithExtraPrefix} formId={nameWithPrefix}>
       <ScmFormPathContextProvider path="">
+        <h3 className="subtitle is-5">{titleLabel}</h3>
         <form id={nameWithPrefix} onSubmit={form.handleSubmit(onSubmit)} noValidate></form>
         {typeof children === "function" ? children(form) : children}
-        <div className="level-right">
+        <div className="level-left">
           <Button
             form={nameWithPrefix}
             type="submit"

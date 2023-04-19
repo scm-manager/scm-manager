@@ -55,7 +55,7 @@ class ConfigurationBinder {
 
   route(path: string, Component: any) {
     return (
-      <Route path={urls.escapeUrlForRoute(path)} exact>
+      <Route path={urls.escapeUrlForRoute(path)}>
         {Component}
       </Route>
     );
@@ -70,7 +70,7 @@ class ConfigurationBinder {
 
     // create NavigationLink with translated label
     const ConfigNavLink = withTranslation(this.i18nNamespace)(({ t }) => {
-      return this.navLink("/admin/settings" + to, labelI18nKey, t);
+      return this.navLink("/admin/settings" + to, labelI18nKey, t, { activeOnlyWhenExact: false });
     });
 
     // bind navigation link to extension point
@@ -151,7 +151,7 @@ class ConfigurationBinder {
 
     // create NavigationLink with translated label
     const RepoNavLink = withTranslation(this.i18nNamespace)(({ t, url }: RepositoryNavProps) => {
-      return this.navLink(url + "/settings" + to, labelI18nKey, t);
+      return this.navLink(url + "/settings" + to, labelI18nKey, t, { activeOnlyWhenExact: false });
     });
 
     // bind navigation link to extension point

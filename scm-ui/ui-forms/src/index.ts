@@ -36,6 +36,8 @@ import AddListEntryForm from "./AddListEntryForm";
 import { ScmNestedFormPathContextProvider } from "./FormPathContext";
 
 export { default as ConfigurationForm } from "./ConfigurationForm";
+export { default as SelectField } from "./select/SelectField";
+export { default as Select } from "./select/Select";
 export * from "./resourceHooks";
 
 export const Form = Object.assign(FormCmp, {

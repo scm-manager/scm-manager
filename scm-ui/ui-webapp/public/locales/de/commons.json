@@ -12,6 +12,9 @@
       },
       "delete": {
         "label": "Löschen"
+      },
+      "empty": {
+        "label": "Keine Einträge"
       }
     },
     "list": {
@@ -20,6 +23,9 @@
       },
       "delete": {
         "label": "{{entity}} löschen"
+      },
+      "title": {
+        "label": "Neuen {{entity}} hinzufügen"
       }
     }
   },
