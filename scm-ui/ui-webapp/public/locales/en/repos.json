@@ -191,9 +191,17 @@
   },
   "tags": {
     "overview": {
-      "title": "Overview of All Tags",
+      "title": "Tags",
       "noTags": "No tags found.",
-      "created": "Created"
+      "created": "Created",
+      "sort": {
+        "label": "Sort by",
+        "option": {
+          "default": "Most recently created",
+          "name_asc": "Name A-Z",
+          "name_desc": "Name Z-A"
+        }
+      }
     },
     "table": {
       "tags": "Tags"

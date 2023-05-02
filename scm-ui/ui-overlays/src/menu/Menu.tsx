@@ -25,7 +25,7 @@
 import React, { AnchorHTMLAttributes, ButtonHTMLAttributes, FC } from "react";
 import * as RadixMenu from "@radix-ui/react-dropdown-menu";
 import styled from "styled-components";
-import { DEFAULT_MENU_TRIGGER } from "./MenuTrigger";
+import { DefaultMenuTrigger } from "./MenuTrigger";
 import classNames from "classnames";
 import { Link as ReactRouterLink, LinkProps as ReactRouterLinkProps } from "react-router-dom";
 
@@ -116,7 +116,7 @@ type Props = {
  * @since 2.44.0
  * @see https://www.w3.org/WAI/ARIA/apg/patterns/menubar/
  */
-const Menu: FC<Props> = ({ children, side, className, trigger = DEFAULT_MENU_TRIGGER }) => {
+const Menu: FC<Props> = ({ children, side, className, trigger = <DefaultMenuTrigger /> }) => {
   return (
     <RadixMenu.Root>
       {trigger}

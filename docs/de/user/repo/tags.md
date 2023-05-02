@@ -3,7 +3,9 @@ title: Repository
 subtitle: Tags
 ---
 ### Übersicht
-Auf der Tags-Übersicht sind die existierenden Tags nach Erstelldatum absteigend aufgeführt. Bei einem Klick auf einen Tag wird der Benutzer zur Detailseite des Tags weitergeleitet. 
+Auf der Tags-Übersicht sind die existierenden Tags aufgeführt.
+Die Tags sind standardmäßig nach Erstelldatum absteigend sortiert, können aber auch alphabetisch sortiert werden.
+Bei einem Klick auf einen Tag wird der Benutzer zur Detailseite des Tags weitergeleitet. 
 
 ![Tags Übersicht](assets/repository-tags-overview.png)
 

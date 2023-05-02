@@ -22,37 +22,36 @@
  * SOFTWARE.
  */
 
-import React from "react";
-import classNames from "classnames";
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-type Props = React.HTMLProps<HTMLElement> & {
-  children?: string;
-};
+class RemoveThemesPlugin {
+  apply (compiler) {
+    compiler.hooks.compilation.tap('RemoveThemesPlugin', (compilation) => {
 
-/**
- * Icons are hidden to assistive technologies by default.
- *
- * If your icon does convey a state, unset `aria-hidden` and set an appropriate `aria-label`.
- *
- * The children have to be a single text node containing a valid fontawesome icon name.
- *
- * @beta
- * @since 2.44.0
- * @see https://bulma.io/documentation/elements/icon/
- * @see https://fontawesome.com/search?o=r&m=free
- */
-const Icon = React.forwardRef<HTMLElement, Props>(({ children, className, ...props }, ref) => {
-  return (
-    <span className={classNames(className, "icon")} aria-hidden="true" {...props} ref={ref}>
-      <i
-        className={classNames(`fas fa-fw fa-${children}`, {
-          "fa-xs": className?.includes("is-small"),
-          "fa-lg": className?.includes("is-medium"),
-          "fa-2x": className?.includes("is-large"),
-        })}
-      />
-    </span>
-  );
-});
+      HtmlWebpackPlugin.getHooks(compilation).beforeAssetTagGeneration.tapAsync(
+        'RemoveThemesPlugin',
+        (data, cb) => {
+          
+          // remove generated style-loader bundles from the page
+          // there should be a better way, which does not generate the bundles at all
+          // but for now it works
+          if (data.assets.js) {
+            data.assets.js = data.assets.js.filter(bundle => !bundle.startsWith("ui-theme-"))
+                                           .filter(bundle => !bundle.startsWith("runtime~ui-theme-"))
+          }
 
-export default Icon;
+          // remove css links to avoid conflicts with the themes
+          // so we remove all and add our own via preview-head.html
+          if (data.assets.css) {
+            data.assets.css = data.assets.css.filter(css => !css.startsWith("ui-theme-"))
+          }
+
+          // Tell webpack to move on
+          cb(null, data)
+        }
+      )
+    })
+  }
+}
+
+module.exports = RemoveThemesPlugin

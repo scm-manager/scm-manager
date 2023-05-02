@@ -32,6 +32,7 @@
   --scm-success-color: #{$success};
   --scm-warning-color: #{$warning};
   --scm-danger-color: #{$danger};
+  --scm-hover-color-blue: #{scale-color($blue, $alpha: -90%)};
 
   --scm-secondary-least-color: #{$secondary-least};
   --scm-secondary-less-color: #{$secondary-less};
@@ -367,6 +368,7 @@ button, .button {
   padding-left: 1.5em;
   padding-right: 1.5em;
   height: 2.5rem;
+  min-width: 2.5rem;
   font-weight: $weight-semibold;
 
   &.is-primary,

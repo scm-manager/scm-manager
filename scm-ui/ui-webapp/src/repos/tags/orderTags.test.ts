@@ -49,4 +49,14 @@ describe("order tags", () => {
     orderTags(tags);
     expect(tags).toEqual([tag2, tag3, tag1]);
   });
+  it("should order tags ascending by name", () => {
+    const tags = [tag1, tag2, tag3];
+    orderTags(tags, "name_asc");
+    expect(tags).toEqual([tag1, tag2, tag3]);
+  });
+  it("should order tags descending by name", () => {
+    const tags = [tag1, tag2, tag3];
+    orderTags(tags, "name_desc");
+    expect(tags).toEqual([tag3, tag2, tag1]);
+  });
 });

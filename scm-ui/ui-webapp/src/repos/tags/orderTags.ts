@@ -25,8 +25,20 @@
 // sort tags by date beginning with latest first
 import { Tag } from "@scm-manager/ui-types";
 
-export default (tags: Tag[]) => {
-  tags.sort((a, b) => {
-    return new Date(b.date) - new Date(a.date);
+export const SORT_OPTIONS = ["default", "name_asc", "name_desc"] as const;
+
+export type SortOption = typeof SORT_OPTIONS[number];
+
+export default (tags: Tag[], sort?: SortOption) => {
+  return tags.sort((a, b) => {
+    switch (sort) {
+      case "name_asc":
+        return a.name > b.name ? 1 : -1;
+      case "name_desc":
+        return a.name > b.name ? -1 : 1;
+      default:
+        // @ts-ignore Comparing dates is a valid operation. It is unknown why typescript shows an error here.
+        return new Date(b.date) - new Date(a.date);
+    }
   });
 };

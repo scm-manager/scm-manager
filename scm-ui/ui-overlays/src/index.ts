@@ -23,7 +23,7 @@
  */
 
 import MenuComponent, { MenuButton, MenuExternalLink, MenuLink } from "./menu/Menu";
-import MenuTrigger, { DEFAULT_MENU_TRIGGER } from "./menu/MenuTrigger";
+import MenuTrigger, { DefaultMenuTrigger } from "./menu/MenuTrigger";
 
 export { default as Tooltip } from "./tooltip/Tooltip";
 
@@ -32,5 +32,5 @@ export const Menu = Object.assign(MenuComponent, {
   Link: MenuLink,
   ExternalLink: MenuExternalLink,
   Trigger: MenuTrigger,
-  DEFAULT_TRIGGER: DEFAULT_MENU_TRIGGER,
+  DefaultTrigger: DefaultMenuTrigger,
 });

@@ -60,7 +60,9 @@ type BaseButtonProps = {
 type ButtonProps = BaseButtonProps & ButtonHTMLAttributes<HTMLButtonElement>;
 
 /**
- * Styled html button
+ * Styled html button.
+ *
+ * A button has to declare an `aria-label` if it exclusively contains an {@link Icon} as its children.
  *
  * @beta
  * @since 2.41.0
@@ -82,7 +84,9 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 type LinkButtonProps = BaseButtonProps & ReactRouterLinkProps;
 
 /**
- * Styled react router link
+ * Styled react router link.
+ *
+ * A button has to declare an `aria-label` if it exclusively contains an {@link Icon} as its children.
  *
  * @beta
  * @since 2.41.0
@@ -100,27 +104,40 @@ export const LinkButton = React.forwardRef<HTMLAnchorElement, LinkButtonProps>(
   )
 );
 
-type ExternalLinkButtonProps = BaseButtonProps & AnchorHTMLAttributes<HTMLAnchorElement>;
-
 /**
- * Styled html anchor.
- *
  * External links open in a new browser tab with rel flags "noopener" and "noreferrer" set by default.
  *
  * @beta
+ * @since 2.44.0
+ */
+export const ExternalLink = React.forwardRef<HTMLAnchorElement, AnchorHTMLAttributes<HTMLAnchorElement>>(
+  ({ children, ...props }, ref) => (
+    <a target="_blank" rel="noreferrer noopener" {...props} ref={ref}>
+      {children}
+    </a>
+  )
+);
+
+type ExternalLinkButtonProps = BaseButtonProps & AnchorHTMLAttributes<HTMLAnchorElement>;
+
+/**
+ * Styled {@link ExternalLink}.
+ *
+ * A button has to declare an `aria-label` if it exclusively contains an {@link Icon} as its children.
+ *
+ * @beta
  * @since 2.41.0
+ * @see ExternalLink
  */
 export const ExternalLinkButton = React.forwardRef<HTMLAnchorElement, ExternalLinkButtonProps>(
   ({ className, variant, isLoading, testId, children, ...props }, ref) => (
-    <a
-      target="_blank"
-      rel="noreferrer noopener"
+    <ExternalLink
       {...props}
       className={classNames(createButtonClasses(variant, isLoading), className)}
       ref={ref}
       {...createAttributesForTesting(testId)}
     >
       {children}
-    </a>
+    </ExternalLink>
   )
 );

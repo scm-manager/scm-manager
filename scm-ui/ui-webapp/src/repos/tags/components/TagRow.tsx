@@ -25,10 +25,13 @@ import React, { FC } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
-import { Tag, Link } from "@scm-manager/ui-types";
-import { Button, DateFromNow } from "@scm-manager/ui-components";
+import { Link, Tag } from "@scm-manager/ui-types";
+import { DateFromNow } from "@scm-manager/ui-components";
 import { useKeyboardIteratorTarget } from "@scm-manager/ui-shortcuts";
 import { encodePart } from "../../sources/components/content/FileLink";
+import { Menu } from "@scm-manager/ui-overlays";
+import { CardList } from "@scm-manager/ui-layout";
+import { Icon } from "@scm-manager/ui-buttons";
 
 type Props = {
   tag: Tag;
@@ -41,26 +44,32 @@ const TagRow: FC<Props> = ({ tag, baseUrl, onDelete }) => {
   const [t] = useTranslation("repos");
   const ref = useKeyboardIteratorTarget();
 
-  let deleteButton;
-  if ((tag?._links?.delete as Link)?.href) {
-    deleteButton = (
-      <Button color="text" icon="trash" action={() => onDelete(tag)} title={t("tag.delete.button")} className="px-2" />
-    );
-  }
-
   const to = `${baseUrl}/${encodePart(tag.name)}/info`;
   return (
-    <tr>
-      <td className="is-vertical-align-middle">
-        <RouterLink ref={ref} to={to} title={tag.name}>
-          {tag.name}
-          <span className={classNames("has-text-secondary", "is-ellipsis-overflow", "ml-2", "is-size-7")}>
-            {t("tags.overview.created")} <DateFromNow date={tag.date} />
-          </span>
-        </RouterLink>
-      </td>
-      <td className="is-vertical-align-middle has-text-centered">{deleteButton}</td>
-    </tr>
+    <CardList.Card
+      key={tag.name}
+      action={
+        (tag?._links?.delete as Link)?.href ? (
+          <Menu>
+            <Menu.Button onSelect={() => onDelete(tag)}>
+              <Icon>trash</Icon>
+              {t("tag.delete.button")}
+            </Menu.Button>
+          </Menu>
+        ) : undefined
+      }
+    >
+      <CardList.Card.Row>
+        <CardList.Card.Title>
+          <RouterLink ref={ref} to={to}>
+            {tag.name}
+          </RouterLink>
+        </CardList.Card.Title>
+      </CardList.Card.Row>
+      <CardList.Card.Row className={classNames("is-size-7", "has-text-secondary")}>
+        {t("tags.overview.created")} <DateFromNow className="is-relative" date={tag.date} />
+      </CardList.Card.Row>
+    </CardList.Card>
   );
 };
 

@@ -22,37 +22,46 @@
  * SOFTWARE.
  */
 
-import React from "react";
-import classNames from "classnames";
+import React, { useEffect } from "react";
+import { initReactI18next } from "react-i18next";
+import i18n from "i18next";
+import { withThemes } from "storybook-addon-themes";
 
-type Props = React.HTMLProps<HTMLElement> & {
-  children?: string;
-};
-
-/**
- * Icons are hidden to assistive technologies by default.
- *
- * If your icon does convey a state, unset `aria-hidden` and set an appropriate `aria-label`.
- *
- * The children have to be a single text node containing a valid fontawesome icon name.
- *
- * @beta
- * @since 2.44.0
- * @see https://bulma.io/documentation/elements/icon/
- * @see https://fontawesome.com/search?o=r&m=free
- */
-const Icon = React.forwardRef<HTMLElement, Props>(({ children, className, ...props }, ref) => {
-  return (
-    <span className={classNames(className, "icon")} aria-hidden="true" {...props} ref={ref}>
-      <i
-        className={classNames(`fas fa-fw fa-${children}`, {
-          "fa-xs": className?.includes("is-small"),
-          "fa-lg": className?.includes("is-medium"),
-          "fa-2x": className?.includes("is-large"),
-        })}
-      />
-    </span>
-  );
+i18n.use(initReactI18next).init({
+  whitelist: ["en", "de"],
+  lng: "en",
+  fallbackLng: "en",
+  interpolation: {
+    escapeValue: false,
+  },
+  react: {
+    useSuspense: false,
+  },
 });
 
-export default Icon;
+const Decorator = ({ children, themeName }) => {
+  useEffect(() => {
+    const link = document.querySelector("#ui-theme");
+    if (link && link["data-theme"] !== themeName) {
+      link.href = `ui-theme-${themeName}.css`;
+      link["data-theme"] = themeName;
+    }
+  }, [themeName]);
+  return <>{children}</>;
+};
+
+export const decorators = [withThemes];
+
+export const parameters = {
+  actions: { argTypesRegex: "^on[A-Z].*" },
+  themes: {
+    Decorator,
+    clearable: false,
+    default: "light",
+    list: [
+      { name: "light", color: "#fff" },
+      { name: "highcontrast", color: "#050514" },
+      { name: "dark", color: "#121212" },
+    ],
+  },
+};

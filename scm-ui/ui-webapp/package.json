@@ -15,6 +15,7 @@
     "@scm-manager/ui-forms": "2.43.1-SNAPSHOT",
     "@scm-manager/ui-buttons": "2.43.1-SNAPSHOT",
     "@scm-manager/ui-overlays": "2.43.1-SNAPSHOT",
+    "@scm-manager/ui-layout": "2.43.1-SNAPSHOT",
     "classnames": "^2.2.5",
     "history": "^4.10.1",
     "i18next": "21",

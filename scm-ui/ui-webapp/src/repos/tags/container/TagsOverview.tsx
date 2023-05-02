@@ -22,13 +22,14 @@
  * SOFTWARE.
  */
 
-import React, { FC } from "react";
+import React, { FC, useMemo, useState } from "react";
 import { Repository } from "@scm-manager/ui-types";
 import { ErrorNotification, Loading, Notification, Subtitle } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
-import orderTags from "../orderTags";
+import orderTags, { SORT_OPTIONS, SortOption } from "../orderTags";
 import TagTable from "../components/TagTable";
 import { useTags } from "@scm-manager/ui-api";
+import { Select } from "@scm-manager/ui-forms";
 
 type Props = {
   repository: Repository;
@@ -38,6 +39,8 @@ type Props = {
 const TagsOverview: FC<Props> = ({ repository, baseUrl }) => {
   const { isLoading, error, data } = useTags(repository);
   const [t] = useTranslation("repos");
+  const [sort, setSort] = useState<SortOption | undefined>();
+  const tags = useMemo(() => orderTags(data?._embedded?.tags || [], sort), [data, sort]);
 
   if (error) {
     return <ErrorNotification error={error} />;
@@ -47,12 +50,19 @@ const TagsOverview: FC<Props> = ({ repository, baseUrl }) => {
     return <Loading />;
   }
 
-  const tags = data?._embedded?.tags || [];
-  orderTags(tags);
-
   return (
     <>
       <Subtitle subtitle={t("tags.overview.title")} />
+      <div className="is-flex is-align-items-center mb-3">
+        <label className="mr-2" htmlFor="tags-overview-sort">
+          {t("tags.overview.sort.label")}
+        </label>
+        <Select id="tags-overview-sort" onChange={(e) => setSort(e.target.value as SortOption)}>
+          {SORT_OPTIONS.map((sortOption) => (
+            <option value={sortOption}>{t(`tags.overview.sort.option.${sortOption}`)}</option>
+          ))}
+        </Select>
+      </div>
       {tags.length > 0 ? (
         <TagTable repository={repository} baseUrl={baseUrl} tags={tags} />
       ) : (

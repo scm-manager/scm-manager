@@ -28,6 +28,7 @@ import { useTranslation } from "react-i18next";
 import TagRow from "./TagRow";
 import { ConfirmAlert, ErrorNotification } from "@scm-manager/ui-components";
 import { useDeleteTag } from "@scm-manager/ui-api";
+import { CardListBox } from "@scm-manager/ui-layout";
 import { KeyboardIterator } from "@scm-manager/ui-shortcuts";
 
 type Props = {
@@ -90,20 +91,13 @@ const TagTable: FC<Props> = ({ repository, baseUrl, tags }) => {
         />
       ) : null}
       {error ? <ErrorNotification error={error} /> : null}
-      <table className="card-table table is-hoverable is-fullwidth is-word-break">
-        <thead>
-          <tr>
-            <th>{t("tags.table.tags")}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <KeyboardIterator>
-            {tags.map((tag) => (
-              <TagRow key={tag.name} baseUrl={baseUrl} tag={tag} onDelete={onDelete} />
-            ))}
-          </KeyboardIterator>
-        </tbody>
-      </table>
+      <CardListBox>
+        <KeyboardIterator>
+          {tags.map((tag) => (
+            <TagRow key={tag.name} baseUrl={baseUrl} tag={tag} onDelete={onDelete} />
+          ))}
+        </KeyboardIterator>
+      </CardListBox>
     </>
   );
 };

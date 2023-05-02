@@ -22,5 +22,5 @@
  * SOFTWARE.
  */
 
-export { Button, LinkButton, ExternalLinkButton, ButtonVariants } from "./Button";
+export { Button, LinkButton, ExternalLinkButton, ExternalLink, ButtonVariants } from "./Button";
 export { default as Icon } from "./Icon";

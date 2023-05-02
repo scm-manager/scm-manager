@@ -22,37 +22,36 @@
  * SOFTWARE.
  */
 
-import React from "react";
+import React, { LiHTMLAttributes } from "react";
+import styled from "styled-components";
 import classNames from "classnames";
 
-type Props = React.HTMLProps<HTMLElement> & {
-  children?: string;
+const CardElement = styled.li`
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) min-content;
+  grid-template-rows: auto;
+`;
+
+const CardActionContainer = styled.span`
+  grid-column: -1;
+  grid-row: 1;
+  margin-top: -0.5rem;
+  margin-right: -0.5rem;
+`;
+
+type Props = LiHTMLAttributes<HTMLLIElement> & {
+  action?: React.ReactElement;
 };
 
 /**
- * Icons are hidden to assistive technologies by default.
- *
- * If your icon does convey a state, unset `aria-hidden` and set an appropriate `aria-label`.
- *
- * The children have to be a single text node containing a valid fontawesome icon name.
- *
  * @beta
  * @since 2.44.0
- * @see https://bulma.io/documentation/elements/icon/
- * @see https://fontawesome.com/search?o=r&m=free
  */
-const Icon = React.forwardRef<HTMLElement, Props>(({ children, className, ...props }, ref) => {
-  return (
-    <span className={classNames(className, "icon")} aria-hidden="true" {...props} ref={ref}>
-      <i
-        className={classNames(`fas fa-fw fa-${children}`, {
-          "fa-xs": className?.includes("is-small"),
-          "fa-lg": className?.includes("is-medium"),
-          "fa-2x": className?.includes("is-large"),
-        })}
-      />
-    </span>
-  );
-});
+const Card = React.forwardRef<HTMLLIElement, Props>(({ className, children, action, ...props }, ref) => (
+  <CardElement className={classNames(className, "is-relative", "p-2")} ref={ref} {...props}>
+    {children}
+    {action ? <CardActionContainer>{action}</CardActionContainer> : null}
+  </CardElement>
+));
 
-export default Icon;
+export default Card;

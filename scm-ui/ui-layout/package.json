@@ -1,6 +1,6 @@
 {
-  "name": "@scm-manager/ui-overlays",
-  "private": false,
+  "name": "@scm-manager/ui-layout",
+  "private": true,
   "version": "2.43.1-SNAPSHOT",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -17,6 +17,8 @@
     "@scm-manager/prettier-config": "^2.10.1",
     "@scm-manager/tsconfig": "^2.13.0",
     "@scm-manager/ui-styles": "2.43.1-SNAPSHOT",
+    "@scm-manager/ui-overlays": "2.43.1-SNAPSHOT",
+    "@scm-manager/ui-buttons": "2.43.1-SNAPSHOT",
     "@storybook/addon-actions": "^6.5.10",
     "@storybook/addon-essentials": "^6.5.10",
     "@storybook/addon-interactions": "^6.5.10",
@@ -34,21 +36,14 @@
   "peerDependencies": {
     "react": "17",
     "react-dom": "17",
-    "react-router-dom": "5",
     "classnames": "2",
-    "styled-components": "5",
-    "react-i18next": "11"
-  },
-  "dependencies": {
-    "@radix-ui/react-tooltip": "1.0.2",
-    "@radix-ui/react-dropdown-menu": "2.0.4",
-    "@scm-manager/ui-buttons": "2.43.1-SNAPSHOT"
+    "styled-components": "5"
   },
   "prettier": "@scm-manager/prettier-config",
   "eslintConfig": {
     "extends": "@scm-manager/eslint-config"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "restricted"
   }
 }

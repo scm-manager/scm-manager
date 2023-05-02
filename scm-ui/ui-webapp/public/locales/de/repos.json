@@ -191,9 +191,17 @@
   },
   "tags": {
     "overview": {
-      "title": "Übersicht aller verfügbaren Tags",
+      "title": "Tags",
       "noTags": "Keine Tags gefunden.",
-      "created": "Erstellt"
+      "created": "Erstellt",
+      "sort": {
+        "label": "Sortierung nach",
+        "option": {
+          "default": "Als letztes erstellt",
+          "name_asc": "Name A-Z",
+          "name_desc": "Name Z-A"
+        }
+      }
     },
     "table": {
       "tags": "Tags"

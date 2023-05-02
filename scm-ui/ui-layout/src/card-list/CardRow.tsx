@@ -22,37 +22,24 @@
  * SOFTWARE.
  */
 
-import React from "react";
+import React, { HTMLAttributes } from "react";
+import styled from "styled-components";
 import classNames from "classnames";
 
-type Props = React.HTMLProps<HTMLElement> & {
-  children?: string;
-};
+const CardRowElement = styled.div`
+  grid-column: 1 / 2;
+`;
+
+type Props = HTMLAttributes<HTMLDivElement>;
 
 /**
- * Icons are hidden to assistive technologies by default.
- *
- * If your icon does convey a state, unset `aria-hidden` and set an appropriate `aria-label`.
- *
- * The children have to be a single text node containing a valid fontawesome icon name.
- *
  * @beta
  * @since 2.44.0
- * @see https://bulma.io/documentation/elements/icon/
- * @see https://fontawesome.com/search?o=r&m=free
  */
-const Icon = React.forwardRef<HTMLElement, Props>(({ children, className, ...props }, ref) => {
-  return (
-    <span className={classNames(className, "icon")} aria-hidden="true" {...props} ref={ref}>
-      <i
-        className={classNames(`fas fa-fw fa-${children}`, {
-          "fa-xs": className?.includes("is-small"),
-          "fa-lg": className?.includes("is-medium"),
-          "fa-2x": className?.includes("is-large"),
-        })}
-      />
-    </span>
-  );
-});
+const CardRow = React.forwardRef<HTMLDivElement, Props>(({ className, children, ...props }, ref) => (
+  <CardRowElement className={classNames(className)} ref={ref} {...props}>
+    {children}
+  </CardRowElement>
+));
 
-export default Icon;
+export default CardRow;

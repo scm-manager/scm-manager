@@ -3,7 +3,9 @@ title: Repository
 subtitle: Tags
 ---
 ### Overview
-The tag overview shows the tags that exist for this repository. By clicking on a tag, the details page of the tag is shown.
+The tag overview shows the tags that exist for this repository.
+The tags are sorted by creation date in descending order by default, but can also be sorted alphabetically.
+By clicking on a tag, the details page of the tag is shown.
 
 ![Tags Overview](assets/repository-tags-overview.png)
 

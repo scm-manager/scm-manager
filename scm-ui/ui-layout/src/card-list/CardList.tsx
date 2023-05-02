@@ -22,42 +22,46 @@
  * SOFTWARE.
  */
 
-import React, { ComponentProps } from "react";
-import { Button, Icon } from "@scm-manager/ui-buttons";
-import * as RadixMenu from "@radix-ui/react-dropdown-menu";
-import { useTranslation } from "react-i18next";
+import React, { HTMLAttributes } from "react";
 import classNames from "classnames";
+import styled from "styled-components";
 
-type Props = ComponentProps<typeof Button>;
+const CardListElement = styled.ul`
+  > * + * {
+    border-top: var(--scm-border);
+    margin-top: 0.5rem;
+    padding-top: 1rem !important;
+
+    *:is(h1, h2, h3, h4, h5, h6) a::after {
+      top: 0.5rem !important;
+    }
+  }
+`;
+
+type Props = HTMLAttributes<HTMLUListElement>;
 
 /**
+ * The {@link CardList.Card.Title} is currently represented as a `h3`, which means the list can only be used on the top level of the page without breaking accessibility.
+ *
  * @beta
  * @since 2.44.0
  */
-const MenuTrigger = React.forwardRef<HTMLButtonElement, Props>(({ children, ...props }, ref) => (
-  <RadixMenu.Trigger asChild>
-    <Button ref={ref} {...props}>
-      {children}
-    </Button>
-  </RadixMenu.Trigger>
+const CardList = React.forwardRef<HTMLUListElement, Props>(({ children, className, ...props }, ref) => (
+  <CardListElement ref={ref} {...props} className={classNames(className, "is-flex", "is-flex-direction-column")}>
+    {children}
+  </CardListElement>
 ));
 
 /**
+ * The {@link CardList.Card.Title} is currently represented as a `h3`, which means the list can only be used on the top level of the page without breaking accessibility.
+ *
  * @beta
  * @since 2.44.0
  */
-export const DefaultMenuTrigger = React.forwardRef<HTMLButtonElement, Props>(({ className, ...props }, ref) => {
-  const [t] = useTranslation("commons");
-  return (
-    <MenuTrigger
-      aria-label={t("menu.defaultTriggerLabel")}
-      className={classNames(className, "is-borderless has-background-transparent has-hover-color-blue px-2")}
-      ref={ref}
-      {...props}
-    >
-      <Icon>ellipsis-v</Icon>
-    </MenuTrigger>
-  );
-});
+export const CardListBox = React.forwardRef<HTMLUListElement, Props>(({ className, children, ...props }, ref) => (
+  <CardList className={classNames(className, "p-2 box")} ref={ref} {...props}>
+    {children}
+  </CardList>
+));
 
-export default MenuTrigger;
+export default CardList;

@@ -1,4 +1,7 @@
 {
+  "menu": {
+    "defaultTriggerLabel": "Menü"
+  },
   "form": {
     "submit": "Speichern",
     "reset": "Leeren",
