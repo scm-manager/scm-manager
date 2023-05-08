@@ -27,10 +27,11 @@ package sonia.scm.security.gpg;
 import org.apache.shiro.SecurityUtils;
 import org.bouncycastle.bcpg.ArmoredInputStream;
 import org.bouncycastle.openpgp.PGPException;
-import org.bouncycastle.openpgp.PGPKeyRingGenerator;
 import org.bouncycastle.openpgp.PGPObjectFactory;
+import org.bouncycastle.openpgp.PGPSecretKeyRing;
 import org.bouncycastle.openpgp.PGPSignatureList;
 import org.bouncycastle.openpgp.operator.jcajce.JcaKeyFingerprintCalculator;
+import org.pgpainless.PGPainless;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.security.GPG;
@@ -40,8 +41,8 @@ import sonia.scm.security.PublicKey;
 import javax.inject.Inject;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -99,18 +100,18 @@ public class DefaultGPG implements GPG {
     final String userId = SecurityUtils.getSubject().getPrincipal().toString();
     final Optional<String> privateRawKey = privateKeyStore.getForUserId(userId);
 
-    if (!privateRawKey.isPresent()) {
+    if (privateRawKey.isEmpty()) {
       try {
-        final PGPKeyRingGenerator keyPair = GPGKeyPairGenerator.generateKeyPair();
+        PGPSecretKeyRing secretKeys = GPGKeyPairGenerator.generateKeyPair();
 
-        final String rawPublicKey = GPGKeyExporter.exportKeyRing(keyPair.generatePublicKeyRing());
-        final String rawPrivateKey = GPGKeyExporter.exportKeyRing(keyPair.generateSecretKeyRing());
+        final String rawPublicKey = PGPainless.asciiArmor(PGPainless.extractCertificate(secretKeys));
+        final String rawPrivateKey = PGPainless.asciiArmor(secretKeys);
 
         privateKeyStore.setForUserId(userId, rawPrivateKey);
         publicKeyStore.add("Default SCM-Manager Signing Key", userId, rawPublicKey, true);
 
         return DefaultPrivateKey.parseRaw(rawPrivateKey);
-      } catch (PGPException | NoSuchAlgorithmException | NoSuchProviderException | IOException e) {
+      } catch (PGPException | NoSuchAlgorithmException | InvalidAlgorithmParameterException | IOException e) {
         throw new GPGException("Private key could not be generated", e);
       }
     } else {

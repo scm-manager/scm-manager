@@ -73,6 +73,8 @@ dependencies {
   implementation libraries.bouncycastleProv
   implementation libraries.bouncycastlePkix
 
+  implementation 'org.pgpainless:pgpainless-core:1.5.0'
+
   // json
   implementation libraries.jacksonJaxbAnnotations
   implementation libraries.jacksonJaxRsBase

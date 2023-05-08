@@ -12,7 +12,7 @@ ext {
   shiroVersion = '1.10.0'
   sspVersion = '1.3.0'
   jjwtVersion = '0.11.5'
-  bouncycastleVersion = '1.67'
+  bouncycastleVersion = '1.73'
   jettyVersion = '9.4.44.v20210927'
   luceneVersion = '8.9.0'
 
@@ -112,9 +112,9 @@ ext {
     jjwtJackson: "io.jsonwebtoken:jjwt-jackson:${jjwtVersion}",
 
     // gpg
-    bouncycastlePg: "org.bouncycastle:bcpg-jdk15on:${bouncycastleVersion}",
-    bouncycastleProv: "org.bouncycastle:bcprov-jdk15on:${bouncycastleVersion}",
-    bouncycastlePkix: "org.bouncycastle:bcpkix-jdk15on:${bouncycastleVersion}",
+    bouncycastlePg: "org.bouncycastle:bcpg-jdk15to18:${bouncycastleVersion}",
+    bouncycastleProv: "org.bouncycastle:bcprov-jdk15to18:${bouncycastleVersion}",
+    bouncycastlePkix: "org.bouncycastle:bcpkix-jdk15to18:${bouncycastleVersion}",
 
     // service registration
     metainfServices: 'org.kohsuke.metainf-services:metainf-services:1.8',

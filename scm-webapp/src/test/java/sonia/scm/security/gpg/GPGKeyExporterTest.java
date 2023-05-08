@@ -26,19 +26,19 @@ package sonia.scm.security.gpg;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.mgt.DefaultSecurityManager;
-import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.openpgp.PGPException;
-import org.bouncycastle.openpgp.PGPKeyRingGenerator;
+import org.bouncycastle.openpgp.PGPSecretKeyRing;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.pgpainless.PGPainless;
 import sonia.scm.util.MockUtil;
 
 import java.io.IOException;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.security.Security;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -66,16 +66,16 @@ class GPGKeyExporterTest {
   }
 
   @Test
-  void shouldExportGeneratedKeyPair() throws NoSuchProviderException, NoSuchAlgorithmException, PGPException, IOException {
-    final PGPKeyRingGenerator keyRingGenerator = GPGKeyPairGenerator.generateKeyPair();
+  void shouldExportGeneratedKeyPair() throws NoSuchAlgorithmException, PGPException, IOException, InvalidAlgorithmParameterException {
+    final PGPSecretKeyRing secretKeys = GPGKeyPairGenerator.generateKeyPair();
 
-    final String exportedPublicKey = GPGKeyExporter.exportKeyRing(keyRingGenerator.generatePublicKeyRing());
+    final String exportedPublicKey = PGPainless.asciiArmor(PGPainless.extractCertificate(secretKeys));
     assertThat(exportedPublicKey)
       .isNotBlank()
       .startsWith("-----BEGIN PGP PUBLIC KEY BLOCK-----")
       .contains("-----END PGP PUBLIC KEY BLOCK-----");
 
-    final String exportedPrivateKey = GPGKeyExporter.exportKeyRing(keyRingGenerator.generateSecretKeyRing());
+    final String exportedPrivateKey = PGPainless.asciiArmor(secretKeys);
     assertThat(exportedPrivateKey)
       .isNotBlank()
       .startsWith("-----BEGIN PGP PRIVATE KEY BLOCK-----")

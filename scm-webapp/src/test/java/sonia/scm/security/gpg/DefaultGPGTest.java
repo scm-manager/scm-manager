@@ -32,8 +32,8 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.openpgp.PGPException;
-import org.bouncycastle.openpgp.PGPKeyRingGenerator;
 import org.bouncycastle.openpgp.PGPPrivateKey;
+import org.bouncycastle.openpgp.PGPSecretKeyRing;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,14 +41,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.pgpainless.PGPainless;
 import sonia.scm.repository.Person;
 import sonia.scm.security.PrivateKey;
 import sonia.scm.security.PublicKey;
 import sonia.scm.util.MockUtil;
 
 import java.io.IOException;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.security.Security;
 import java.time.Instant;
 import java.util.Collections;
@@ -58,7 +59,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -81,8 +81,6 @@ class DefaultGPGTest {
   @InjectMocks
   private DefaultGPG gpg;
 
-  private Subject subjectUnderTest;
-
   @AfterEach
   void unbindThreadContext() {
     ThreadContext.unbindSubject();
@@ -94,7 +92,7 @@ class DefaultGPGTest {
     registerBouncyCastleProviderIfNecessary();
 
     SecurityUtils.setSecurityManager(new DefaultSecurityManager());
-    subjectUnderTest = MockUtil.createUserSubject(SecurityUtils.getSecurityManager());
+    Subject subjectUnderTest = MockUtil.createUserSubject(SecurityUtils.getSecurityManager());
     ThreadContext.bind(subjectUnderTest);
   }
 
@@ -141,9 +139,9 @@ class DefaultGPGTest {
   }
 
   @Test
-  void shouldImportExportedGeneratedPrivateKey() throws NoSuchProviderException, NoSuchAlgorithmException, PGPException, IOException {
-    final PGPKeyRingGenerator keyRingGenerator = GPGKeyPairGenerator.generateKeyPair();
-    final String exportedPrivateKey = GPGKeyExporter.exportKeyRing(keyRingGenerator.generateSecretKeyRing());
+  void shouldImportExportedGeneratedPrivateKey() throws NoSuchAlgorithmException, PGPException, IOException, InvalidAlgorithmParameterException {
+    final PGPSecretKeyRing secretKeys = GPGKeyPairGenerator.generateKeyPair();
+    final String exportedPrivateKey = PGPainless.asciiArmor(secretKeys);
     final PGPPrivateKey privateKey = KeysExtractor.extractPrivateKey(exportedPrivateKey);
     assertThat(privateKey).isNotNull();
   }

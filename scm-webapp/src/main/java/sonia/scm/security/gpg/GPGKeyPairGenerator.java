@@ -25,27 +25,17 @@
 package sonia.scm.security.gpg;
 
 import org.apache.shiro.SecurityUtils;
-import org.bouncycastle.bcpg.HashAlgorithmTags;
-import org.bouncycastle.bcpg.PublicKeyAlgorithmTags;
-import org.bouncycastle.bcpg.SymmetricKeyAlgorithmTags;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.openpgp.PGPException;
-import org.bouncycastle.openpgp.PGPKeyPair;
-import org.bouncycastle.openpgp.PGPKeyRingGenerator;
-import org.bouncycastle.openpgp.PGPSignature;
-import org.bouncycastle.openpgp.operator.jcajce.JcaPGPContentSignerBuilder;
-import org.bouncycastle.openpgp.operator.jcajce.JcaPGPDigestCalculatorProviderBuilder;
-import org.bouncycastle.openpgp.operator.jcajce.JcaPGPKeyPair;
-import org.bouncycastle.openpgp.operator.jcajce.JcePBESecretKeyEncryptorBuilder;
+import org.bouncycastle.openpgp.PGPSecretKeyRing;
+import org.pgpainless.PGPainless;
+import org.pgpainless.key.generation.type.rsa.RsaLength;
 import sonia.scm.repository.Person;
 import sonia.scm.user.User;
 
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.security.Security;
-import java.util.Date;
 
 final class GPGKeyPairGenerator {
 
@@ -57,25 +47,10 @@ final class GPGKeyPairGenerator {
 
   private GPGKeyPairGenerator() {}
 
-  static PGPKeyRingGenerator generateKeyPair() throws PGPException, NoSuchProviderException, NoSuchAlgorithmException {
-    KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA", "BC");
-    keyPairGenerator.initialize(2048);
-
-    KeyPair pair = keyPairGenerator.generateKeyPair();
-
-    PGPKeyPair keyPair = new JcaPGPKeyPair(PublicKeyAlgorithmTags.RSA_GENERAL, pair, new Date());
+  static PGPSecretKeyRing generateKeyPair() throws PGPException, NoSuchAlgorithmException, InvalidAlgorithmParameterException {
     final User user = SecurityUtils.getSubject().getPrincipals().oneByType(User.class);
     final Person person = new Person(user.getDisplayName(), user.getMail());
 
-    return new PGPKeyRingGenerator(
-      PGPSignature.POSITIVE_CERTIFICATION,
-      keyPair,
-      person.toString(),
-      new JcaPGPDigestCalculatorProviderBuilder().build().get(HashAlgorithmTags.SHA1),
-      null,
-      null,
-      new JcaPGPContentSignerBuilder(PublicKeyAlgorithmTags.RSA_GENERAL, HashAlgorithmTags.SHA1),
-      new JcePBESecretKeyEncryptorBuilder(SymmetricKeyAlgorithmTags.AES_256).build(new char[]{})
-    );
+    return PGPainless.generateKeyRing().simpleRsaKeyRing(person.toString(),  RsaLength._4096);
   }
 }
