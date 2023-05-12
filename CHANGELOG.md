@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.43.1] - 2023-05-12
+### Fixed
+- Configuration of default branch in the git mirror command
+
 ## [2.43.0] - 2023-04-12
 ### Added
 - Extension points for bottom of information table
@@ -1262,3 +1266,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.42.2]: https://scm-manager.org/download/2.42.2
 [2.42.3]: https://scm-manager.org/download/2.42.3
 [2.43.0]: https://scm-manager.org/download/2.43.0
+[2.43.1]: https://scm-manager.org/download/2.43.1
