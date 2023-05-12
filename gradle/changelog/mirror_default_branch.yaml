@@ -1,0 +1,2 @@
+- type: fixed
+  description: Configuration of default branch in the git mirror command

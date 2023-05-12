@@ -26,6 +26,7 @@ package sonia.scm.repository.spi;
 
 import com.google.common.base.Stopwatch;
 import com.google.common.base.Strings;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jgit.api.FetchCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -214,7 +215,9 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
         return new MirrorCommandResult(result, mirrorLog, stopwatch.stop().elapsed(), lfsUpdateResult);
       }
 
-      defaultBranchSelector.newDefaultBranch().ifPresent(this::setNewDefaultBranch);
+      String currentDefaultBranchInRepository = getCurrentDefaultBranch();
+      defaultBranchSelector.newDefaultBranch(currentDefaultBranchInRepository)
+        .ifPresent(this::setNewDefaultBranch);
 
       String[] pushRefSpecs = generatePushRefSpecs().toArray(new String[0]);
       forcePush(pushRefSpecs);
@@ -223,23 +226,32 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
     }
 
     private void setNewDefaultBranch(String newDefaultBranch) {
-      mirrorLog.add("Old default branch deleted. Setting default branch to '" + newDefaultBranch + "'.");
-
       try {
-        String oldBranch = git.getRepository().getBranch();
-        RefUpdate refUpdate = git.getRepository().getRefDatabase().newUpdate(Constants.HEAD, true);
-        refUpdate.setForceUpdate(true);
-        RefUpdate.Result result = refUpdate.link(Constants.R_HEADS + newDefaultBranch);
-        if (result != RefUpdate.Result.FORCED) {
-          throw new InternalRepositoryException(getRepository(), "Could not set HEAD to new default branch");
+        String oldBranch = getCurrentDefaultBranch();
+        if (!StringUtils.equals(oldBranch, newDefaultBranch)) {
+          mirrorLog.add("Old default branch deleted. Setting default branch to '" + newDefaultBranch + "'.");
+          RefUpdate refUpdate = git.getRepository().getRefDatabase().newUpdate(Constants.HEAD, true);
+          refUpdate.setForceUpdate(true);
+          RefUpdate.Result result = refUpdate.link(Constants.R_HEADS + newDefaultBranch);
+          if (result != RefUpdate.Result.FORCED) {
+            throw new InternalRepositoryException(getRepository(), "Could not set HEAD to new default branch");
+          }
+          git.branchDelete().setBranchNames(oldBranch).setForce(true).call();
         }
-        git.branchDelete().setBranchNames(oldBranch).setForce(true).call();
       } catch (GitAPIException | IOException e) {
         throw new InternalRepositoryException(getRepository(), "Error while switching branch to change default branch", e);
       }
 
       gitHeadModifier.ensure(repository, newDefaultBranch);
       storeProvider.setDefaultBranch(repository, newDefaultBranch);
+    }
+
+    private String getCurrentDefaultBranch() {
+      try {
+        return git.getRepository().getBranch();
+      } catch (IOException e) {
+        return null;
+      }
     }
 
     private Collection<String> generatePushRefSpecs() {
@@ -759,9 +771,9 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       return changed;
     }
 
-    public Optional<String> newDefaultBranch() {
-      if (initialDefaultBranch == null && newBranches.contains("master") || remainingBranches.contains(initialDefaultBranch)) {
-        return empty();
+    public Optional<String> newDefaultBranch(String currentDefaultBranchInRepository) {
+      if (initialDefaultBranch == null && newBranches.contains(currentDefaultBranchInRepository) || remainingBranches.contains(initialDefaultBranch)) {
+        return of(currentDefaultBranchInRepository);
       } else if (!newBranches.isEmpty() && initialBranches.isEmpty()) {
         return of(newBranches.iterator().next());
       } else if (initialDefaultBranch == null && newBranches.isEmpty()) {
