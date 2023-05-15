@@ -28,6 +28,7 @@ import { Link, Notification, NotificationCollection } from "@scm-manager/ui-type
 import { apiClient } from "./apiclient";
 import { useCallback, useEffect, useState } from "react";
 import { requiredLink } from "./links";
+import { useCancellablePromise } from "./utils";
 
 export const useNotifications = () => {
   const { data: me } = useMe();
@@ -95,22 +96,30 @@ export const useNotificationSubscription = (
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [disconnectedAt, setDisconnectedAt] = useState<Date>();
   const link = (notificationCollection?._links.subscribe as Link)?.href;
+  const cancelOnUnmount = useCancellablePromise();
 
   const onVisible = useCallback(() => {
     // we don't need to catch the error,
     // because if the refetch throws an error the parent useNotifications should catch it
-    refetch().then((collection) => {
-      if (collection) {
-        const newNotifications = collection._embedded?.notifications.filter((n) => {
-          return disconnectedAt && disconnectedAt < new Date(n.createdAt);
-        });
-        if (newNotifications && newNotifications.length > 0) {
-          setNotifications((previous) => [...previous, ...newNotifications]);
+    cancelOnUnmount(refetch()).then(
+      (collection) => {
+        if (collection) {
+          const newNotifications = collection._embedded?.notifications.filter((n) => {
+            return disconnectedAt && disconnectedAt < new Date(n.createdAt);
+          });
+          if (newNotifications && newNotifications.length > 0) {
+            setNotifications((previous) => [...previous, ...newNotifications]);
+          }
+          setDisconnectedAt(undefined);
         }
-        setDisconnectedAt(undefined);
+      },
+      (reason) => {
+        if (!reason.isCanceled) {
+          throw reason;
+        }
       }
-    });
-  }, [disconnectedAt, refetch]);
+    );
+  }, [cancelOnUnmount, disconnectedAt, refetch]);
 
   const onHide = useCallback(() => {
     setDisconnectedAt(new Date());

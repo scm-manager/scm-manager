@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
+import React, { FC, useRef } from "react";
 import { Redirect } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useRequiredIndexLink } from "@scm-manager/ui-api";
@@ -45,6 +45,15 @@ const CreateUser: FC = () => {
       contentType: "application/vnd.scmm-user+json;v=2",
     }
   );
+  const defaultValuesRef = useRef({
+    name: "",
+    password: "",
+    passwordConfirmation: "",
+    active: true,
+    external: false,
+    displayName: "",
+    mail: "",
+  });
 
   if (!!createdUser) {
     return <Redirect to={`/user/${createdUser.name}`} />;
@@ -52,19 +61,7 @@ const CreateUser: FC = () => {
 
   return (
     <Page title={t("createUser.title")} subtitle={t("createUser.subtitle")} showContentOnError={true}>
-      <Form
-        onSubmit={submit}
-        translationPath={["users", "createUser.form"]}
-        defaultValues={{
-          name: "",
-          password: "",
-          passwordConfirmation: "",
-          active: true,
-          external: false,
-          displayName: "",
-          mail: "",
-        }}
-      >
+      <Form onSubmit={submit} translationPath={["users", "createUser.form"]} defaultValues={defaultValuesRef.current}>
         {({ watch }) => (
           <>
             <Form.Row>

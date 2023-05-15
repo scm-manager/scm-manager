@@ -36,6 +36,9 @@ class ModuleResolutionError extends Error {
 const modules: { [name: string]: unknown } = {};
 const lazyModules: { [name: string]: () => Promise<unknown> } = {};
 const queue: { [name: string]: Module } = {};
+const bundleLoaderPromises: {
+  [name: string]: { resolve: (module: unknown) => void; reject: (reason?: unknown) => void };
+} = {};
 
 export const defineLazy = (name: string, cmp: () => Promise<unknown>) => {
   lazyModules[name] = cmp;
@@ -45,56 +48,108 @@ export const defineStatic = (name: string, cmp: unknown) => {
   modules[name] = cmp;
 };
 
-const resolveModule = (name: string) => {
+/**
+ * Attempt to retrieve a module from the registry.
+ *
+ * If a lazy module is requested, it will be loaded and then returned after adding it to the registry.
+ *
+ * @see defineLazy
+ * @see defineStatic
+ * @see defineModule
+ * @throws {ModuleResolutionError} If the requested module cannot be found/loaded
+ */
+const resolveModule = async (name: string) => {
   const module = modules[name];
   if (module) {
-    return Promise.resolve(module);
+    return module;
   }
 
-  const lazyModule = lazyModules[name];
-  if (lazyModule) {
-    return lazyModule().then((mod: unknown) => {
-      modules[name] = mod;
-      return mod;
-    });
+  const lazyModuleLoader = lazyModules[name];
+  if (lazyModuleLoader) {
+    const lazyModule = await lazyModuleLoader();
+    modules[name] = lazyModule;
+    return lazyModule;
   }
 
-  return Promise.reject(new ModuleResolutionError(name));
+  throw new ModuleResolutionError(name);
 };
 
-const defineModule = (name: string, module: Module) => {
-  Promise.all(module.dependencies.map(resolveModule))
-    .then((resolvedDependencies) => {
-      modules["@scm-manager/" + name] = module.fn(...resolvedDependencies);
+/**
+ * Executes a module and attempts to resolve all of its dependencies.
+ *
+ * If a dependency is not (yet) present, the module loading is deferred.
+ *
+ * Once a module on which the given module depends loaded successfully, it will
+ * kickstart another attempt at loading the given module.
+ */
+const defineModule = async (name: string, module: Module) => {
+  try {
+    const resolvedDependencies = await Promise.all(module.dependencies.map(resolveModule));
+    const loadedModuleName = "@scm-manager/" + name;
 
-      Object.keys(queue).forEach((queuedModuleName) => {
-        const queueModule = queue[queuedModuleName];
+    // Store module to be used as dependency for other modules
+    modules[loadedModuleName] = module.fn(...resolvedDependencies);
+
+    // Resolve bundle in which module was defined
+    if (name in bundleLoaderPromises) {
+      bundleLoaderPromises[name].resolve(modules[loadedModuleName]);
+      delete bundleLoaderPromises[name];
+    }
+
+    // Executed queued modules that depend on the loaded module
+    for (const [queuedModuleName, queuedModule] of Object.entries(queue)) {
+      if (queuedModule.dependencies.includes(loadedModuleName)) {
         delete queue[queuedModuleName];
-        defineModule(queuedModuleName, queueModule);
-      });
-    })
-    .catch((e) => {
-      if (e instanceof ModuleResolutionError) {
-        queue[name] = module;
-      } else {
-        throw e;
+        defineModule(queuedModuleName, queuedModule);
       }
-    });
+    }
+  } catch (reason) {
+    if (reason instanceof ModuleResolutionError) {
+      // Wait for module dependency to load
+      queue[name] = module;
+    } else if (name in bundleLoaderPromises) {
+      // Forward error to bundle loader in which module was defined
+      bundleLoaderPromises[name].reject(reason);
+      delete bundleLoaderPromises[name];
+    } else {
+      // Throw unhandled exception
+      throw reason;
+    }
+  }
 };
 
+/**
+ * This is attached to the global window scope and is automatically executed when a plugin module bundle is loaded.
+ *
+ * @see https://github.com/amdjs/amdjs-api/blob/master/AMD.md
+ */
 export const define = (name: string, dependencies: string[], fn: (...args: unknown[]) => Module) => {
   defineModule(name, { dependencies, fn });
 };
 
-export const load = (resource: string) => {
-  return new Promise((resolve, reject) => {
+/**
+ * Asynchronously loads and executes a given resource bundle.
+ *
+ * If a module name is supplied, the bundle is expected to contain a single (AMD)[https://github.com/amdjs/amdjs-api/blob/master/AMD.md]
+ * module matching the provided module name.
+ *
+ * The promise will only resolve once the bundle loaded and, if it is a module,
+ * all dependencies are resolved and the module executed.
+ */
+export const load = (resource: string, moduleName?: string) =>
+  new Promise((resolve, reject) => {
     const script = document.createElement("script");
     script.src = resource;
-    script.onload = resolve;
+
+    if (moduleName) {
+      bundleLoaderPromises[moduleName] = { resolve, reject };
+    } else {
+      script.onload = resolve;
+    }
+
     script.onerror = reject;
 
     const body = document.querySelector("body");
     body?.appendChild(script);
     body?.removeChild(script);
   });
-};

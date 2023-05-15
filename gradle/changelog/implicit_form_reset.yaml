@@ -1,0 +1,6 @@
+- type: fixed
+  description: Forms randomly resetting when OpenAPI plugin is installed
+- type: fixed
+  description: React error in global notifications
+- type: fixed
+  description: User creation form resetting on re-render
