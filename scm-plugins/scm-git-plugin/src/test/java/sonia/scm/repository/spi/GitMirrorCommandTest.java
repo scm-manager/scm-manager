@@ -78,6 +78,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static sonia.scm.repository.api.MirrorCommandResult.ResultType.FAILED;
 import static sonia.scm.repository.api.MirrorCommandResult.ResultType.OK;
@@ -165,7 +166,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
 
   @Test
   public void shouldAcceptEmptyInitialMirror() throws IOException, GitAPIException {
-    MirrorCommandResult result = callMirrorCommand(repositoryDirectory.getAbsolutePath(), c -> {
+    MirrorCommandResult result = callMirrorCommand(repositoryDirectory.getAbsolutePath(), c ->
       c.setFilter(new MirrorFilter() {
         @Override
         public Filter getFilter(FilterContext context) {
@@ -181,8 +182,8 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
             }
           };
         }
-      });
-    });
+      })
+    );
 
     assertThat(result.getResult()).isEqualTo(REJECTED_UPDATES);
     assertThat(result.getLog()).contains("Branches:")
@@ -200,7 +201,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
   @Test
   public void shouldAcceptOnlyTagInInitialMirror() {
     assertThrows(IllegalStateException.class, () ->
-      callMirrorCommand(repositoryDirectory.getAbsolutePath(), c -> {
+      callMirrorCommand(repositoryDirectory.getAbsolutePath(), c ->
         c.setFilter(new MirrorFilter() {
           @Override
           public Filter getFilter(FilterContext context) {
@@ -211,13 +212,13 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
               }
             };
           }
-        });
-      }));
+        })
+      ));
   }
 
   @Test
   public void shouldFilterMasterBranchWhenFilteredOnInitialMirror() throws IOException, GitAPIException {
-    MirrorCommandResult result = callMirrorCommand(repositoryDirectory.getAbsolutePath(), c -> {
+    MirrorCommandResult result = callMirrorCommand(repositoryDirectory.getAbsolutePath(), c ->
       c.setFilter(new MirrorFilter() {
         @Override
         public Filter getFilter(FilterContext context) {
@@ -232,8 +233,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
             }
           };
         }
-      });
-    });
+      }));
 
     assertThat(result.getResult()).isEqualTo(REJECTED_UPDATES);
     assertThat(result.getLog())
@@ -808,6 +808,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
   @Test
   public void shouldSelectNewHeadIfOldHeadIsDeleted() throws IOException, GitAPIException {
     callMirrorCommand();
+    reset(storeProvider);
 
     try (Git updatedSource = Git.open(repositoryDirectory)) {
       updatedSource.checkout().setName("test-branch").call();
@@ -879,7 +880,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
       selector.accepted(BRANCH, "master");
       selector.accepted(BRANCH, "something");
 
-      assertThat(selector.newDefaultBranch()).isEmpty();
+      assertThat(selector.newDefaultBranch("master")).get().isEqualTo("master");
     }
 
     @Test
@@ -890,7 +891,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
       selector.accepted(BRANCH, "new");
       selector.deleted(BRANCH, "two");
 
-      assertThat(selector.newDefaultBranch()).isEmpty();
+      assertThat(selector.newDefaultBranch("master")).get().isEqualTo("master");
     }
 
     @Test
@@ -900,7 +901,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
 
       selector.deleted(BRANCH, "master");
 
-      assertThat(selector.newDefaultBranch()).get().isIn("one", "two", "three");
+      assertThat(selector.newDefaultBranch("master")).get().isIn("one", "two", "three");
     }
 
     @Test
@@ -912,7 +913,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
       selector.deleted(BRANCH, "one");
       selector.deleted(BRANCH, "three");
 
-      assertThat(selector.newDefaultBranch()).get().isEqualTo("two");
+      assertThat(selector.newDefaultBranch("master")).get().isEqualTo("two");
     }
 
     @Test
@@ -924,7 +925,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
       selector.deleted(BRANCH, "one");
       selector.deleted(BRANCH, "three");
 
-      assertThat(selector.newDefaultBranch()).get().isEqualTo("two");
+      assertThat(selector.newDefaultBranch("master")).get().isEqualTo("two");
     }
 
     @Test
@@ -938,7 +939,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
       selector.accepted(BRANCH, "new");
       selector.deleted(BRANCH, "three");
 
-      assertThrows(IllegalStateException.class, selector::newDefaultBranch);
+      assertThrows(IllegalStateException.class, () -> selector.newDefaultBranch("master"));
     }
 
     @Test
@@ -949,7 +950,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
       selector.accepted(BRANCH, "main");
       selector.deleted(BRANCH, "master");
 
-      assertThat(selector.newDefaultBranch()).get().isEqualTo("main");
+      assertThat(selector.newDefaultBranch("master")).get().isEqualTo("main");
     }
 
     @Test
@@ -959,7 +960,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
 
       selector.accepted(BRANCH, "main");
 
-      assertThat(selector.newDefaultBranch()).get().isEqualTo("main");
+      assertThat(selector.newDefaultBranch("master")).get().isEqualTo("main");
     }
   }
 
@@ -1112,5 +1113,11 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     public void contextClosed(SimpleWorkingCopyFactory<?, ?, ?>.WorkingCopyContext workingCopyContext, File workdir) {
       workdirAfterClose = workdir;
     }
+  }
+
+  @Override
+  protected String getZippedRepositoryResource()
+  {
+    return "sonia/scm/repository/spi/scm-git-spi-mirror-test.zip";
   }
 }
