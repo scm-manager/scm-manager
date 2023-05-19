@@ -42,7 +42,7 @@
   "dependencies": {
     "@radix-ui/react-tooltip": "1.0.2",
     "@radix-ui/react-dropdown-menu": "2.0.4",
-    "@scm-manager/ui-buttons": "2.43.1-SNAPSHOT"
+    "@scm-manager/ui-buttons": "2.43.1"
   },
   "prettier": "@scm-manager/prettier-config",
   "eslintConfig": {
