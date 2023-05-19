@@ -1,0 +1,2 @@
+- type: fixed
+  description: Broken HG write access when anonymous users have read access

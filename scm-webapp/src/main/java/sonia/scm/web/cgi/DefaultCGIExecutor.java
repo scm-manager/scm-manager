@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.security.Authentications;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.SystemUtil;
@@ -444,7 +445,11 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
     if (status < 304) {
       response.setStatus(status);
     } else {
-      response.sendError(status);
+      if (status == 401 && Authentications.isAuthenticatedSubjectAnonymous()) {
+        HttpUtil.sendUnauthorized(response, configuration.getRealmDescription());
+      } else {
+        response.sendError(status);
+      }
     }
   }
 
