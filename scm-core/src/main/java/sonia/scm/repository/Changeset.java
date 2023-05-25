@@ -240,6 +240,9 @@ public class Changeset extends BasicPropertiesAware implements ModelObject {
    * @since 2.1.0
    */
   public Collection<Contributor> getContributors() {
+    if (contributors == null) {
+      return new ArrayList<>();
+    }
     return contributors;
   }
 

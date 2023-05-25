@@ -54,6 +54,7 @@ public class ChangesetDescriptionContributorProvider implements ChangesetPreProc
     private Worker(Changeset changeset) {
       this.changeset = changeset;
     }
+
     private void process() {
       try (Scanner scanner = new Scanner(changeset.getDescription())) {
         while (scanner.hasNextLine()) {
@@ -76,13 +77,34 @@ public class ChangesetDescriptionContributorProvider implements ChangesetPreProc
     }
 
     private boolean checkForContributor(String line) {
-      Optional<Contributor> contributor = Contributor.fromCommitLine(line);
-      if (contributor.isPresent()) {
-        changeset.addContributor(contributor.get());
+      Optional<Contributor> optionalContributor = Contributor.fromCommitLine(line);
+      if (optionalContributor.isPresent()) {
+        Contributor contributor = optionalContributor.get();
+        if (acceptContributor(contributor)) {
+          changeset.addContributor(contributor);
+        }
         return true;
-      } else{
+      }
+      return false;
+    }
+
+    private boolean acceptContributor(Contributor contributor) {
+      if (isCoAuthorEqualToAuthor(contributor)) {
         return false;
       }
+
+      return
+        changeset.getContributors().stream()
+        .noneMatch(c ->
+          c.getType().equals(contributor.getType())
+            && c.getPerson().getMail().equals(contributor.getPerson().getMail()
+          )
+        );
+    }
+
+    private boolean isCoAuthorEqualToAuthor(Contributor contributor) {
+      return contributor.getType().equals(Contributor.CO_AUTHORED_BY)
+        && contributor.getPerson().getMail().equals(changeset.getAuthor().getMail());
     }
 
     private void handleEmptyLine(Scanner scanner, String line) {

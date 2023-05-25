@@ -53,15 +53,28 @@ class ChangesetDescriptionContributorProviderTest {
 
   @Test
   void shouldConvertTrailerWithCoAuthors() {
-    Person person = createPerson("Arthur Dent", "dent@hitchhiker.org");
+    Person person = createPerson("Tricia McMillan", "trillian@hitchhiker.org");
     Changeset changeset = createChangeset("zaphod beeblebrox\n\nCo-authored-by: Arthur Dent <dent@hitchhiker.org>");
-
+    changeset.setAuthor(person);
     changesetDescriptionContributors.createPreProcessor(REPOSITORY).process(changeset);
     Collection<Contributor> contributors = changeset.getContributors();
 
     Contributor contributor = contributors.iterator().next();
     assertThat(contributor.getType()).isEqualTo("Co-authored-by");
-    assertThat(contributor.getPerson()).isEqualTo(person);
+    assertThat(contributor.getPerson()).isEqualTo(createPerson("Arthur Dent", "dent@hitchhiker.org"));
+    assertThat(changeset.getDescription()).isEqualTo("zaphod beeblebrox\n\n");
+  }
+
+  @Test
+  void shouldIgnoreCoAuthorIfEqualToAuthor() {
+    Person person = createPerson("Arthur Dent", "dent@hitchhiker.org");
+    Changeset changeset = createChangeset("zaphod beeblebrox\n\nCo-authored-by: Arthur Dent <dent@hitchhiker.org>");
+    changeset.setAuthor(person);
+
+    changesetDescriptionContributors.createPreProcessor(REPOSITORY).process(changeset);
+    Collection<Contributor> contributors = changeset.getContributors();
+
+    assertThat(contributors).isEmpty();
     assertThat(changeset.getDescription()).isEqualTo("zaphod beeblebrox\n\n");
   }
 
@@ -99,6 +112,21 @@ class ChangesetDescriptionContributorProviderTest {
   void shouldConvertTrailerWithCommitter() {
     Person person = createPerson("Tricia McMillan", "trillian@hitchhiker.org");
     Changeset changeset = createChangeset("zaphod beeblebrox\n\nCommitted-by: Tricia McMillan <trillian@hitchhiker.org>");
+
+    changesetDescriptionContributors.createPreProcessor(REPOSITORY).process(changeset);
+    Collection<Contributor> contributors = changeset.getContributors();
+
+    Contributor contributor = contributors.iterator().next();
+
+    assertThat(contributor.getType()).isEqualTo("Committed-by");
+    assertThat(contributor.getPerson()).isEqualTo(person);
+    assertThat(changeset.getDescription()).isEqualTo("zaphod beeblebrox\n\n");
+  }
+
+  @Test
+  void shouldIgnoreDuplicateContributorWithSameTypeAndMail() {
+    Person person = createPerson("Tricia McMillan", "trillian@hitchhiker.org");
+    Changeset changeset = createChangeset("zaphod beeblebrox\n\nCommitted-by: Tricia McMillan <trillian@hitchhiker.org>\nCommitted-by: Tricia McMillan <trillian@hitchhiker.org>");
 
     changesetDescriptionContributors.createPreProcessor(REPOSITORY).process(changeset);
     Collection<Contributor> contributors = changeset.getContributors();
