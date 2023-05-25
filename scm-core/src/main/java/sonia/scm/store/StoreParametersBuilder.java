@@ -53,6 +53,7 @@ public final class StoreParametersBuilder<S> {
   private static class StoreParametersImpl implements StoreParameters {
     private final String name;
     private String repositoryId;
+    private String namespace;
   }
 
 

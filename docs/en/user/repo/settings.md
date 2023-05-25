@@ -63,6 +63,12 @@ that contain several permissions. Roles can be defined in the administration are
 Namespace-wide permissions can be configured in the namespace settings. These can be accessed via the settings icon on
 the right-hand side of the namespace heading in the repository overview.
 
+Permissions configured for namespaces will be applied to the namespace itself and to all repositories in this namespace.
+For example, the permission "own namespace" that can be set either with the role "OWNER" or manually grants the
+configured user or group all permissions to configure everything regarding the namespace itself (including the
+permission settings) and gives full access to all repositories for this namespace, again including all configurations
+and the repository data itself.
+
 ![Repository-Settings-PermissionOverview](assets/repository-settings-permissionOverview.png)
 
 To manage permissions individually, an "Advanced" dialog can be opened to manage every single permission.

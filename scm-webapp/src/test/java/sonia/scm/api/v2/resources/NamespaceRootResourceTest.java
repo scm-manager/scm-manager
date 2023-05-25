@@ -98,7 +98,10 @@ class NamespaceRootResourceTest {
 
   @BeforeEach
   void setUpResources() {
-    NamespaceToNamespaceDtoMapper namespaceMapper = new NamespaceToNamespaceDtoMapper(links, searchEngine);
+    NamespaceToNamespaceDtoMapper namespaceMapper = new NamespaceToNamespaceDtoMapperImpl();
+    namespaceMapper.setLinks(links);
+    namespaceMapper.setSearchEngine(searchEngine);
+    namespaceMapper.setNamespaceManager(namespaceManager);
     NamespaceCollectionToDtoMapper namespaceCollectionToDtoMapper = new NamespaceCollectionToDtoMapper(namespaceMapper, links);
     RepositoryPermissionCollectionToDtoMapper repositoryPermissionCollectionToDtoMapper = new RepositoryPermissionCollectionToDtoMapper(repositoryPermissionToRepositoryPermissionDtoMapper, links);
     RepositoryPermissionDtoToRepositoryPermissionMapperImpl dtoToModelMapper = new RepositoryPermissionDtoToRepositoryPermissionMapperImpl();

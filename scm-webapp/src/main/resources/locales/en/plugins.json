@@ -183,6 +183,12 @@
         "displayName": "own repository",
         "description": "May change everything for the repository (includes all other permissions)"
       }
+    },
+    "namespace": {
+      "*": {
+        "displayName": "own namespace",
+        "description": "May change everything for the namespace and all its repositories (includes all other permissions)"
+      }
     }
   },
   "errors": {

@@ -24,32 +24,48 @@
 
 package sonia.scm.api.v2.resources;
 
+import com.google.common.annotations.VisibleForTesting;
+import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.Link;
 import de.otto.edison.hal.Links;
+import org.mapstruct.InjectionStrategy;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.ObjectFactory;
+import sonia.scm.repository.Namespace;
+import sonia.scm.repository.NamespaceManager;
 import sonia.scm.repository.NamespacePermissions;
 import sonia.scm.search.SearchEngine;
 import sonia.scm.search.SearchableType;
+import sonia.scm.web.EdisonHalAppender;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static de.otto.edison.hal.Embedded.embeddedBuilder;
 import static de.otto.edison.hal.Link.link;
 import static de.otto.edison.hal.Link.linkBuilder;
 import static de.otto.edison.hal.Links.linkingTo;
 
-class NamespaceToNamespaceDtoMapper {
-
-  private final ResourceLinks links;
-  private final SearchEngine searchEngine;
+// Mapstruct does not support parameterized (i.e. non-default) constructors. Thus, we need to use field injection.
+@SuppressWarnings("squid:S3306")
+@Mapper
+public abstract class NamespaceToNamespaceDtoMapper extends BaseMapper<Namespace, NamespaceDto> {
 
   @Inject
-  NamespaceToNamespaceDtoMapper(ResourceLinks links, SearchEngine searchEngine) {
-    this.links = links;
-    this.searchEngine = searchEngine;
-  }
+  protected ResourceLinks links;
+  @Inject
+  protected SearchEngine searchEngine;
+  @Inject
+  protected NamespaceManager namespaceManager;
 
-  NamespaceDto map(String namespace) {
+  @Mapping(target = "attributes", ignore = true) // We do not map HAL attributes
+  public abstract NamespaceDto map(String namespace);
+
+  @ObjectFactory
+  NamespaceDto createDto(String namespace) {
     Links.Builder linkingTo = linkingTo();
     linkingTo
       .self(links.namespace().self(namespace))
@@ -61,7 +77,28 @@ class NamespaceToNamespaceDtoMapper {
     }
     linkingTo.array(searchLinks(namespace));
     linkingTo.single(link("searchableTypes", links.searchableTypes().searchableTypesForNamespace(namespace)));
+    Optional<Namespace> optionalNamespace = namespaceManager.get(namespace);
+    if (optionalNamespace.isPresent()) {
+      Embedded.Builder embeddedBuilder = embeddedBuilder();
+      applyEnrichers(new EdisonHalAppender(linkingTo, embeddedBuilder), optionalNamespace.get(), namespace);
+    }
+
     return new NamespaceDto(namespace, linkingTo.build());
+  }
+
+  @VisibleForTesting
+  void setLinks(ResourceLinks links) {
+    this.links = links;
+  }
+
+  @VisibleForTesting
+  void setSearchEngine(SearchEngine searchEngine) {
+    this.searchEngine = searchEngine;
+  }
+
+  @VisibleForTesting
+  void setNamespaceManager(NamespaceManager namespaceManager) {
+    this.namespaceManager = namespaceManager;
   }
 
   private List<Link> searchLinks(String namespace) {

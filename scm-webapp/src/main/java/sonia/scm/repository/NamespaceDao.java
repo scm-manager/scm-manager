@@ -28,6 +28,7 @@ import sonia.scm.store.DataStore;
 import sonia.scm.store.DataStoreFactory;
 
 import javax.inject.Inject;
+import java.util.Collection;
 import java.util.Optional;
 
 public class NamespaceDao {
@@ -49,5 +50,9 @@ public class NamespaceDao {
 
   public void delete(String namespace) {
     store.remove(namespace);
+  }
+
+  public Collection<Namespace> allWithPermissions() {
+    return store.getAll().values();
   }
 }

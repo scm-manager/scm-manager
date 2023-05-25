@@ -389,6 +389,7 @@
   },
   "permission": {
     "title": "Permissions",
+    "namespace-help": "Permissions set here do not only apply for this namespace, but also for all repositories in this namespace.",
     "noPermissions": "No permissions found.",
     "user": "User",
     "group": "Group",

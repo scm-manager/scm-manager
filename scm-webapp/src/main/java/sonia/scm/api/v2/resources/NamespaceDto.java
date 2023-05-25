@@ -27,10 +27,13 @@ package sonia.scm.api.v2.resources;
 import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Links;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@SuppressWarnings("java:S2160") // we don't need equals and hashcode
 public class NamespaceDto extends HalRepresentation {
 
   private String namespace;

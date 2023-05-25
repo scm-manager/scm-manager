@@ -45,9 +45,8 @@ import java.nio.file.Path;
  */
 public abstract class FileBasedStoreFactory {
 
-  /**
-   * the logger for FileBasedStoreFactory
-   */
+  private static final String NAMESPACES_DIR = "namespaces";
+
   private static final Logger LOG = LoggerFactory.getLogger(FileBasedStoreFactory.class);
   private final SCMContextProvider contextProvider;
   private final RepositoryLocationResolver repositoryLocationResolver;
@@ -62,16 +61,19 @@ public abstract class FileBasedStoreFactory {
   }
 
   protected File getStoreLocation(StoreParameters storeParameters) {
-    return getStoreLocation(storeParameters.getName(), null, storeParameters.getRepositoryId());
+    return getStoreLocation(storeParameters.getName(), null, storeParameters.getRepositoryId(), storeParameters.getNamespace());
   }
 
-  protected File getStoreLocation(TypedStoreParameters storeParameters) {
-    return getStoreLocation(storeParameters.getName(), storeParameters.getType(), storeParameters.getRepositoryId());
+  protected File getStoreLocation(TypedStoreParameters<?> storeParameters) {
+    return getStoreLocation(storeParameters.getName(), storeParameters.getType(), storeParameters.getRepositoryId(), storeParameters.getNamespace());
   }
 
-  protected File getStoreLocation(String name, Class type, String repositoryId) {
+  protected File getStoreLocation(String name, Class<?> type, String repositoryId, String namespace) {
     File storeDirectory;
-    if (repositoryId != null) {
+    if (namespace != null) {
+      LOG.debug("create store with type: {}, name: {} and namespace: {}", type, name, namespace);
+      storeDirectory = this.getNamespaceStoreDirectory(store, namespace);
+    } else if (repositoryId != null) {
       LOG.debug("create store with type: {}, name: {} and repository id: {}", type, name, repositoryId);
       storeDirectory = this.getStoreDirectory(store, repositoryId);
     } else {
@@ -95,6 +97,17 @@ public abstract class FileBasedStoreFactory {
    */
   private File getStoreDirectory(Store store, String repositoryId) {
     return new File(repositoryLocationResolver.forClass(Path.class).getLocation(repositoryId).toFile(), store.getRepositoryStoreDirectory());
+  }
+
+  /**
+   * Get the store directory of a specific namespace
+   *
+   * @param store        the type of the store
+   * @param namespace the name of the namespace
+   * @return the store directory of a specific namespace
+   */
+  private File getNamespaceStoreDirectory(Store store, String namespace) {
+    return new File(contextProvider.getBaseDirectory().toPath().resolve(NAMESPACES_DIR).resolve(namespace).toString(), store.getNamespaceStoreDirectory());
   }
 
   /**

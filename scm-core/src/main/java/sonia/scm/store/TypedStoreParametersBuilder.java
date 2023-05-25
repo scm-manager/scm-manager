@@ -71,6 +71,7 @@ public final class TypedStoreParametersBuilder<T,S> {
     private final Class<T> type;
     private String name;
     private String repositoryId;
+    private String namespace;
     private ClassLoader classLoader;
     private Set<XmlAdapter<?, ?>> adapters;
 
@@ -90,6 +91,9 @@ public final class TypedStoreParametersBuilder<T,S> {
      * @return Floating API to finish the call.
      */
     public OptionalRepositoryBuilder forRepository(Repository repository) {
+      if (parameters.getNamespace() != null) {
+        throw new IllegalStateException("Namespace for store already set. Cannot apply repository id for store.");
+      }
       parameters.setRepositoryId(repository.getId());
       return this;
     }
@@ -101,7 +105,26 @@ public final class TypedStoreParametersBuilder<T,S> {
      * @return Floating API to finish the call.
      */
     public OptionalRepositoryBuilder forRepository(String repositoryId) {
+      if (parameters.getNamespace() != null) {
+        throw new IllegalStateException("Namespace for store already set. Cannot apply repository id for store.");
+      }
       parameters.setRepositoryId(repositoryId);
+      return this;
+    }
+
+    /**
+     * Use this to create or get a store for a specific namespace. This step is optional. If you
+     * want to have a global store, omit this.
+     * @param namespace The name of the optional namespace for the store.
+     * @return Floating API to finish the call.
+     *
+     * @since 2.44.0
+     */
+    public OptionalRepositoryBuilder forNamespace(String namespace) {
+      if (parameters.getRepositoryId() != null) {
+        throw new IllegalStateException("Repository id for store already set. Cannot apply namespace for store.");
+      }
+      parameters.setNamespace(namespace);
       return this;
     }
 

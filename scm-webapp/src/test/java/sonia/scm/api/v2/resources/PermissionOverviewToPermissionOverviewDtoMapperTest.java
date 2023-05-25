@@ -96,7 +96,7 @@ class PermissionOverviewToPermissionOverviewDtoMapperTest {
 
   @BeforeEach
   void initNamespaceMapper() {
-    when(namespaceToNamespaceDtoMapper.map(any()))
+    when(namespaceToNamespaceDtoMapper.map(any(String.class)))
       .thenAnswer(invocation -> new NamespaceDto(invocation.getArgument(0, String.class), Links.emptyLinks()));
   }
 

@@ -57,6 +57,10 @@ const PermissionIcon: FC<{ permission: Permission }> = ({ permission }) => {
   }
 };
 
+const isRepository = (namespaceOrRepository: Namespace | Repository): namespaceOrRepository is Repository => {
+  return (namespaceOrRepository as Repository).name !== undefined;
+};
+
 const SinglePermission: FC<Props> = ({
   namespaceOrRepository,
   availableRoles,
@@ -129,6 +133,7 @@ const SinglePermission: FC<Props> = ({
             selectedVerbs={selectedVerbs || []}
             onClose={() => setShowAdvancedDialog(false)}
             onSubmit={handleVerbsChange}
+            entityType={isRepository(namespaceOrRepository) ? "repository" : "namespace"}
           />
         ) : null}
       </VCenteredTd>

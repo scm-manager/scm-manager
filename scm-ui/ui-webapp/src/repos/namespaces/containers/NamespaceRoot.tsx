@@ -87,17 +87,17 @@ const NamespaceRoot: FC = () => {
               <Route path={`${url}/settings/permissions`}>
                 <Permissions namespaceOrRepository={namespace} />
               </Route>
+              <ExtensionPoint<extensionPoints.NamespaceRoute>
+                name="namespace.route"
+                props={extensionProps}
+                renderAll={true}
+              />
             </Switch>
           </PrimaryContentColumn>
           <SecondaryNavigationColumn>
             <SecondaryNavigation label={t("namespaceRoot.menu.navigationLabel")}>
               <ExtensionPoint<extensionPoints.NamespaceTopLevelNavigation>
                 name="namespace.navigation.topLevel"
-                props={extensionProps}
-                renderAll={true}
-              />
-              <ExtensionPoint<extensionPoints.NamespaceRoute>
-                name="namespace.route"
                 props={extensionProps}
                 renderAll={true}
               />

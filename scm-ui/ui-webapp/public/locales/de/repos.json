@@ -389,6 +389,7 @@
   },
   "permission": {
     "title": "Berechtigungen",
+    "namespace-help": "Die hier gesetzten Berechtigungen gelten nicht nur für diesen Namespace, sondern auch für alle Repositories dieses Namespace.",
     "noPermissions": "Keine Berechtigungen gefunden.",
     "user": "Benutzer",
     "group": "Gruppe",

@@ -34,6 +34,7 @@ type Props = {
   readOnly: boolean;
   onSubmit: (verbs: string[]) => void;
   onClose: () => void;
+  entityType: "namespace" | "repository";
 };
 
 const createPreSelection = (availableVerbs: string[], selectedVerbs?: string[]): SelectedVerbs => {
@@ -42,7 +43,7 @@ const createPreSelection = (availableVerbs: string[], selectedVerbs?: string[]):
   return verbs;
 };
 
-const AdvancedPermissionsDialog: FC<Props> = ({ availableVerbs, selectedVerbs, readOnly, onSubmit, onClose }) => {
+const AdvancedPermissionsDialog: FC<Props> = ({ availableVerbs, selectedVerbs, entityType, readOnly, onSubmit, onClose }) => {
   const [verbs, setVerbs] = useState<SelectedVerbs>({});
   const [t] = useTranslation("repos");
   const initialFocusRef = useRef<HTMLInputElement>(null);
@@ -68,6 +69,7 @@ const AdvancedPermissionsDialog: FC<Props> = ({ availableVerbs, selectedVerbs, r
       onChange={handleChange}
       disabled={readOnly}
       role={true}
+      entityType={entityType}
       ref={index === 0 ? initialFocusRef : undefined}
     />
   ));

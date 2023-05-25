@@ -67,6 +67,13 @@ Berechtigungsrollen können in der Administrations-Oberfläche definiert werden.
 Berechtigungen auf Namespace-Ebene können über die Einstellungen für Namespaces bearbeitet werden. Diese sind über das
 Einstellungs-Symbol neben den Namespace-Überschriften auf der Repository-Übersicht erreichbar.
 
+Auf Namespace-Ebene vergebene Berechtigungen gelten für den Namespace selber als auch für alle Repositories in diesem
+Namespace. Die Berechtigung "Alle Namespace Rechte" zum Beispiel, die entweder über die Rolle "OWNER" oder manuell
+gesetzt werden kann, erlaubt konfigurierten Nutzer:innen bzw. Gruppen Zugriff auf alle Einstellungen betreffend des
+Namespaces selber (inclusive der Berechtigungen) und darüber hinaus vollen Zugriff auf alle in diesem Namespace
+befindlichen Repositories, wiederum mit allen Berechtigungen für Konfigurationen und dem vollen Zugriff auf die
+Repository-Daten.
+
 ![Repository-Settings-PermissionOverview](assets/repository-settings-permissionOverview.png)
 
 Für individuelle Berechtigungen kann man über "Erweitert" einen Dialog öffnen, um jede Berechtigung einzeln zu vergeben.

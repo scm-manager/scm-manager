@@ -21,17 +21,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { ComponentProps } from "react";
+import React, { ComponentProps, ComponentType, FC } from "react";
 import { binder, extensionPoints } from "@scm-manager/ui-extensions";
 import { NavLink } from "../navigation";
 import { Route } from "react-router-dom";
-import { WithTranslation, withTranslation } from "react-i18next";
-import { Link, Links, Repository } from "@scm-manager/ui-types";
+import { useTranslation, WithTranslation, withTranslation } from "react-i18next";
+import { Link, Links, Namespace, Repository } from "@scm-manager/ui-types";
 import { urls } from "@scm-manager/ui-api";
 
 type GlobalRouteProps = {
   url: string;
   links: Links;
+};
+
+type NamespaceRouteProps = {
+  url: string;
+  namespace: Namespace;
 };
 
 type RepositoryRouteProps = {
@@ -40,6 +45,8 @@ type RepositoryRouteProps = {
 };
 
 type RepositoryNavProps = WithTranslation & { url: string };
+
+type NamespaceNavProps = WithTranslation & { url: string };
 
 class ConfigurationBinder {
   i18nNamespace = "plugins";
@@ -54,11 +61,7 @@ class ConfigurationBinder {
   }
 
   route(path: string, Component: any) {
-    return (
-      <Route path={urls.escapeUrlForRoute(path)}>
-        {Component}
-      </Route>
-    );
+    return <Route path={urls.escapeUrlForRoute(path)}>{Component}</Route>;
   }
 
   bindGlobal(to: string, labelI18nKey: string, linkName: string, ConfigurationComponent: any) {
@@ -170,6 +173,36 @@ class ConfigurationBinder {
 
     // bind config route to extension point
     binder.bind("repository.route", RepoRoute, repoPredicate);
+  }
+
+  bindNamespaceSetting(
+    to: string,
+    labelI18nKey: string,
+    linkName: string,
+    ConfigurationComponent: ComponentType<{ link: string; namespace: Namespace }>
+  ) {
+    const namespacePredicate = (props: (extensionPoints.NamespaceSetting | extensionPoints.NamespaceRoute)["props"]) =>
+      props.namespace && props.namespace._links && props.namespace._links[linkName];
+
+    const NamespaceNavLink: FC<extensionPoints.NamespaceRoute["props"]> = ({ url }) => {
+      const [t] = useTranslation(this.i18nNamespace);
+      return this.navLink(url + "/settings" + to, labelI18nKey, t, { activeOnlyWhenExact: false });
+    };
+
+    binder.bind<extensionPoints.NamespaceSetting>("namespace.setting", NamespaceNavLink, namespacePredicate);
+
+    const NamespaceRoute: FC<extensionPoints.NamespaceRoute["props"]> = ({ url, namespace, ...additionalProps }) => {
+      const link = namespace._links[linkName];
+      if (link) {
+        return this.route(
+          urls.unescapeUrlForRoute(url) + "/settings" + to,
+          <ConfigurationComponent namespace={namespace} link={(link as Link).href} {...additionalProps} />
+        );
+      }
+      return null;
+    };
+
+    binder.bind<extensionPoints.NamespaceRoute>("namespace.route", NamespaceRoute, namespacePredicate);
   }
 }
 

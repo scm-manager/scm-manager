@@ -58,35 +58,25 @@ import java.util.Set;
 
 import static java.util.Collections.emptySet;
 
-/**
- *
- * @author Sebastian Sdorra
- */
 @Singleton
 @Extension
-public class DefaultAuthorizationCollector implements AuthorizationCollector
-{
+public class DefaultAuthorizationCollector implements AuthorizationCollector {
 
-  /** Field description */
   private static final String CACHE_NAME = "sonia.cache.authorizing";
 
-  /**
-   * the logger for DefaultAuthorizationCollector
-   */
   private static final Logger logger =
     LoggerFactory.getLogger(DefaultAuthorizationCollector.class);
 
-  //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   * @param cacheManager
-   * @param repositoryDAO
-   * @param securitySystem
-   * @param repositoryPermissionProvider
-   * @param groupCollector
-   * @param namespaceDao
-   */
+  /** authorization cache */
+  private final Cache<CacheKey, AuthorizationInfo> cache;
+
+  private final RepositoryDAO repositoryDAO;
+  private final NamespaceDao namespaceDao;
+  private final SecuritySystem securitySystem;
+  private final RepositoryPermissionProvider repositoryPermissionProvider;
+  private final GroupCollector groupCollector;
+
   @Inject
   public DefaultAuthorizationCollector(CacheManager cacheManager,
                                        RepositoryDAO repositoryDAO, SecuritySystem securitySystem, RepositoryPermissionProvider repositoryPermissionProvider, GroupCollector groupCollector, NamespaceDao namespaceDao)
@@ -99,14 +89,6 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
     this.namespaceDao = namespaceDao;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @VisibleForTesting
   AuthorizationInfo collect()
   {
@@ -125,13 +107,6 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
     return authorizationInfo;
   }
 
-  /**
-   * Method description
-   *
-   * @param principals
-   *
-   * @return
-   */
   @Override
   public AuthorizationInfo collect(PrincipalCollection principals)
   {
@@ -173,6 +148,35 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
 
       logger.trace("add permission {} for user {}", permission, user.getName());
       builder.add(permission);
+    }
+  }
+
+  private void collectNamespacePermissions(Builder<String> builder, User user, Set<String> groups) {
+    for (Namespace namespace : namespaceDao.allWithPermissions()) {
+      collectNamespacePermissions(builder, namespace, user, groups);
+    }
+  }
+
+  private void collectNamespacePermissions(Builder<String> builder, Namespace namespace, User user, Set<String> groups) {
+    for (RepositoryPermission permission : namespace.getPermissions()) {
+      if (isUserPermitted(user, groups, permission)) {
+        addNamespacePermission(builder, namespace, user, permission);
+      }
+    }
+  }
+
+  private void addNamespacePermission(Builder<String> builder, Namespace namespace, User user, RepositoryPermission permission) {
+    Collection<String> verbs = getVerbs(permission);
+    if (!verbs.isEmpty())
+    {
+      String perm = "namespace:" + String.join(",", verbs) + ":" + namespace.getId();
+      if (logger.isTraceEnabled())
+      {
+        logger.trace("add namespace permission {} for user {} at namespace {}",
+          perm, user.getName(), namespace.getNamespace());
+      }
+
+      builder.add(perm);
     }
   }
 
@@ -245,6 +249,7 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
 
     collectGlobalPermissions(builder, user, groups);
     collectRepositoryPermissions(builder, user, groups);
+    collectNamespacePermissions(builder, user, groups);
     builder.add(canReadOwnUser(user));
     if (!Authentications.isSubjectAnonymous(user.getName())) {
       builder.add(getUserAutocompletePermission());
@@ -254,7 +259,7 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
       builder.add(getPublicKeyPermission(user));
     }
 
-    SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(ImmutableSet.of(Role.USER));
+    SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(Set.of(Role.USER));
     info.addStringPermissions(builder.build());
 
     return info;
@@ -314,24 +319,17 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
     cache.clear();
   }
 
-  //~--- inner classes --------------------------------------------------------
-
-  /**
-   * Cache key.
-   */
   private static class CacheKey
   {
+    private final Set<String> groupnames;
+    private final String username;
+
     private CacheKey(String username, Set<String> groupnames)
     {
       this.username = username;
       this.groupnames = groupnames;
     }
 
-    //~--- methods ------------------------------------------------------------
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean equals(Object obj)
     {
@@ -351,36 +349,10 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
         && Objects.equal(groupnames, other.groupnames);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int hashCode()
     {
       return Objects.hashCode(username, groupnames);
     }
-
-    //~--- fields -------------------------------------------------------------
-
-    /** group names */
-    private final Set<String> groupnames;
-
-    /** username */
-    private final String username;
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** authorization cache */
-  private final Cache<CacheKey, AuthorizationInfo> cache;
-
-  /** repository dao */
-  private final RepositoryDAO repositoryDAO;
-
-  /** security system */
-  private final SecuritySystem securitySystem;
-
-  private final RepositoryPermissionProvider repositoryPermissionProvider;
-  private final GroupCollector groupCollector;
-  private final NamespaceDao namespaceDao;
 }

@@ -183,6 +183,12 @@
         "displayName": "Alle Repository Rechte",
         "description": "Darf im Repository Kontext alles ausführen. Dies beinhaltet alle Repository Berechtigungen."
       }
+    },
+    "namespace": {
+      "*": {
+        "displayName": "Alle Namespace Rechte",
+        "description": "Darf im Namespace und allen darin enthaltenen Repositories alles ausführen. Dies beinhaltet alle Namespace und Repository Berechtigungen."
+      }
     }
   },
   "errors": {

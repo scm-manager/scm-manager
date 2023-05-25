@@ -48,7 +48,7 @@ enum Store {
     }
   }
 
-  private String directory;
+  private final String directory;
 
   Store(String directory) {
 
@@ -66,6 +66,20 @@ enum Store {
    * @return the relative store directory path to be stored in the repository root
    */
   public String getRepositoryStoreDirectory() {
+    return STORE_DIRECTORY + File.separator + directory;
+  }
+
+  /**
+   * Get the relative store directory path to be stored in the namespace root
+   * <p>
+   * The namespace store directories are:
+   * namespace_dir/store/config/
+   * namespace_dir/store/blob/
+   * namespace_dir/store/data/
+   *
+   * @return the relative store directory path to be stored in the namespace root
+   */
+  public String getNamespaceStoreDirectory() {
     return STORE_DIRECTORY + File.separator + directory;
   }
 

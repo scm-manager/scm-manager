@@ -53,6 +53,7 @@ public interface StoreUpdateStepUtilFactory {
     private final StoreType type;
     private final String name;
     private String repositoryId;
+    private String namespace;
 
     public UtilForNameBuilder(StoreUpdateStepUtilFactory factory, StoreType type, String name) {
       this.factory = factory;
@@ -62,6 +63,11 @@ public interface StoreUpdateStepUtilFactory {
 
     public UtilForNameBuilder forRepository(String repositoryId) {
       this.repositoryId = repositoryId;
+      return this;
+    }
+
+    public UtilForNameBuilder forNamespace(String namespace) {
+      this.namespace = namespace;
       return this;
     }
 
@@ -77,6 +83,11 @@ public interface StoreUpdateStepUtilFactory {
           @Override
           public String getRepositoryId() {
             return repositoryId;
+          }
+
+          @Override
+          public String getNamespace() {
+            return namespace;
           }
         }
       );

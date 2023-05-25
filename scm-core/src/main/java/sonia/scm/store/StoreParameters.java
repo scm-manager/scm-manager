@@ -33,6 +33,12 @@ package sonia.scm.store;
 public interface StoreParameters {
 
   String getName();
-
   String getRepositoryId();
+
+  /**
+   * Returns optional namespace to which the store is related
+   * @return namespace
+   * @since 2.44.0
+   */
+  String getNamespace();
 }

@@ -36,14 +36,13 @@ import sonia.scm.security.KeyGenerator;
 //~--- JDK imports ------------------------------------------------------------
 
 /**
- *
  * @author Sebastian Sdorra
  */
 @Singleton
 public class JAXBConfigurationEntryStoreFactory extends FileBasedStoreFactory
   implements ConfigurationEntryStoreFactory {
 
-  private KeyGenerator keyGenerator;
+  private final KeyGenerator keyGenerator;
 
   @Inject
   public JAXBConfigurationEntryStoreFactory(SCMContextProvider contextProvider, RepositoryLocationResolver repositoryLocationResolver, KeyGenerator keyGenerator, RepositoryReadOnlyChecker readOnlyChecker) {
@@ -54,7 +53,10 @@ public class JAXBConfigurationEntryStoreFactory extends FileBasedStoreFactory
   @Override
   public <T> ConfigurationEntryStore<T> getStore(TypedStoreParameters<T> storeParameters) {
     return new JAXBConfigurationEntryStore<>(
-      getStoreLocation(storeParameters.getName().concat(StoreConstants.FILE_EXTENSION), storeParameters.getType(), storeParameters.getRepositoryId()),
+      getStoreLocation(storeParameters.getName().concat(StoreConstants.FILE_EXTENSION),
+        storeParameters.getType(),
+        storeParameters.getRepositoryId(),
+        storeParameters.getNamespace()),
       keyGenerator,
       storeParameters.getType(),
       TypedStoreContext.of(storeParameters)

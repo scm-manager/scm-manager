@@ -62,7 +62,7 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyObject;
 import static org.mockito.Mockito.verify;
@@ -239,12 +239,24 @@ public class DefaultAuthorizationCollectorTest {
     when(repositoryDAO.getAll()).thenReturn(newArrayList(heartOfGold, puzzle42));
     when(namespaceDao.get(heartOfGold.getNamespace())).thenReturn(of(heartOfGoldNamespace));
     when(namespaceDao.get(puzzle42.getNamespace())).thenReturn(of(puzzleNamespace));
+    when(namespaceDao.allWithPermissions()).thenReturn(asList(heartOfGoldNamespace, puzzleNamespace));
 
     // execute and assert
     AuthorizationInfo authInfo = collector.collect();
     assertThat(authInfo.getRoles(), Matchers.containsInAnyOrder(Role.USER));
     assertThat(authInfo.getObjectPermissions(), nullValue());
-    assertThat(authInfo.getStringPermissions(), containsInAnyOrder("user:autocomplete", "group:autocomplete", "user:changePassword:trillian", "repository:read,pull:one", "repository:read,pull,push:two", "user:read:trillian", "user:changeApiKeys:trillian", "user:changePublicKeys:trillian"));
+    assertThat(authInfo.getStringPermissions(), containsInAnyOrder(
+      "user:autocomplete",
+      "group:autocomplete",
+      "user:changePassword:trillian",
+      "repository:read,pull:one",
+      "repository:read,pull,push:two",
+      "namespace:read,pull:hitchhiker",
+      "namespace:read,pull,push:guide",
+      "user:read:trillian",
+      "user:changeApiKeys:trillian",
+      "user:changePublicKeys:trillian")
+    );
   }
 
   /**

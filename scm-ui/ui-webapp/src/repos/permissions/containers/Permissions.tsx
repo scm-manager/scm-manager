@@ -33,6 +33,10 @@ type Props = {
   namespaceOrRepository: Namespace | Repository;
 };
 
+const isRepository = (namespaceOrRepository: Namespace | Repository): namespaceOrRepository is Repository => {
+  return (namespaceOrRepository as Repository).name !== undefined;
+};
+
 const usePermissionData = (namespaceOrRepository: Namespace | Repository) => {
   const permissions = usePermissions(namespaceOrRepository);
   const availablePermissions = useAvailablePermissions();
@@ -56,9 +60,12 @@ const Permissions: FC<Props> = ({ namespaceOrRepository }) => {
     return <Loading />;
   }
 
+  const helpText = isRepository(namespaceOrRepository) ? null : <div>{t("permission.namespace-help")}</div>;
+
   return (
     <div>
       <Subtitle subtitle={t("permission.title")} />
+      {helpText}
       <PermissionsTable
         availableRoles={availablePermissions.repositoryRoles}
         availableVerbs={availablePermissions.repositoryVerbs}

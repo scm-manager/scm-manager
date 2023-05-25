@@ -27,6 +27,7 @@ import { Checkbox } from "@scm-manager/ui-components";
 
 type Props = {
   name: string;
+  entityType: "namespace" | "repository";
   checked: boolean;
   onChange?: (value: boolean, name?: string) => void;
   disabled: boolean;
@@ -37,7 +38,7 @@ type InnerProps = Props & {
   innerRef: React.Ref<HTMLInputElement>;
 };
 
-const PermissionCheckbox: FC<InnerProps> = ({ name, checked, onChange, disabled, role, innerRef }) => {
+const PermissionCheckbox: FC<InnerProps> = ({ name, entityType, checked, onChange, disabled, role, innerRef }) => {
   const [t] = useTranslation("plugins");
   const key = name.split(":").join(".");
 
@@ -50,11 +51,19 @@ const PermissionCheckbox: FC<InnerProps> = ({ name, checked, onChange, disabled,
     }
   };
 
+  const namespaceOrRepositoryLabel = (name: string, type: "displayName" | "description") => {
+    if (entityType === "repository") {
+      return t("verbs.repository." + name + "." + type);
+    } else {
+      return translateOrDefault("verbs.namespace." + name + "." + type, t("verbs.repository." + name + "." + type));
+    }
+  };
+
   const label = role
-    ? t("verbs.repository." + name + ".displayName")
+    ? namespaceOrRepositoryLabel(name, "displayName")
     : translateOrDefault("permissions." + key + ".displayName", key);
   const helpText = role
-    ? t("verbs.repository." + name + ".description")
+    ? namespaceOrRepositoryLabel(name, "description")
     : translateOrDefault("permissions." + key + ".description", t("permissions.unknown"));
 
   const commonCheckboxProps = {
