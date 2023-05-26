@@ -100,7 +100,7 @@ const defineModule = async (name: string, module: Module) => {
     for (const [queuedModuleName, queuedModule] of Object.entries(queue)) {
       if (queuedModule.dependencies.includes(loadedModuleName)) {
         delete queue[queuedModuleName];
-        defineModule(queuedModuleName, queuedModule);
+        defineModule(queuedModuleName, queuedModule).then();
       }
     }
   } catch (reason) {
@@ -124,7 +124,7 @@ const defineModule = async (name: string, module: Module) => {
  * @see https://github.com/amdjs/amdjs-api/blob/master/AMD.md
  */
 export const define = (name: string, dependencies: string[], fn: (...args: unknown[]) => Module) => {
-  defineModule(name, { dependencies, fn });
+  defineModule(name, { dependencies, fn }).then();
 };
 
 /**
