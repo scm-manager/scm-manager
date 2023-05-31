@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-layout",
-  "private": true,
+  "private": false,
   "version": "2.43.2-SNAPSHOT",
   "main": "build/index.js",
   "types": "build/index.d.ts",

@@ -38,6 +38,7 @@ import * as UIComponents from "@scm-manager/ui-components";
 import * as UIButtons from "@scm-manager/ui-buttons";
 import * as UIForms from "@scm-manager/ui-forms";
 import * as UIOverlays from "@scm-manager/ui-overlays";
+import * as UILayout from "@scm-manager/ui-layout";
 import * as UIApi from "@scm-manager/ui-api";
 
 declare global {
@@ -62,6 +63,7 @@ defineStatic("@scm-manager/ui-components", UIComponents);
 defineStatic("@scm-manager/ui-buttons", UIButtons);
 defineStatic("@scm-manager/ui-forms", UIForms);
 defineStatic("@scm-manager/ui-overlays", UIOverlays);
+defineStatic("@scm-manager/ui-layout", UILayout);
 defineStatic("@scm-manager/ui-api", UIApi);
 
 // redux is deprecated in favor of ui-api
