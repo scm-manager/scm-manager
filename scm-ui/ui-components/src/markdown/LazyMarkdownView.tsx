@@ -49,9 +49,11 @@ import merge from "deepmerge";
 import { createComponentList } from "./createComponentList";
 import { ProtocolLinkRendererExtension, ProtocolLinkRendererExtensionMap } from "./markdownExtensions";
 import styled from "styled-components";
+import classNames from "classnames";
 
 export type MarkdownProps = {
   content: string;
+  className?: string;
   renderContext?: object;
   renderers?: any;
   skipHtml?: boolean;
@@ -156,6 +158,7 @@ class LazyMarkdownView extends React.Component<Props, State> {
       basePath,
       permalink,
       t,
+      className,
       mdastPlugins = [],
     } = this.props;
 
@@ -233,7 +236,10 @@ class LazyMarkdownView extends React.Component<Props, State> {
 
     return (
       <ErrorBoundary fallback={MarkdownErrorNotification}>
-        <HorizontalScrollDiv ref={(el) => this.setState({ contentRef: el })} className="content">
+        <HorizontalScrollDiv
+          ref={(el) => this.setState({ contentRef: el })}
+          className={classNames("content", className)}
+        >
           {renderedMarkdown}
         </HorizontalScrollDiv>
       </ErrorBoundary>
