@@ -36,6 +36,7 @@ import ControlledTable from "./table/ControlledTable";
 import AddListEntryForm from "./AddListEntryForm";
 import { ScmFormListContextProvider } from "./ScmFormListContext";
 import { HalRepresentation } from "@scm-manager/ui-types";
+import ControlledChipInputField from "./chip-input/ControlledChipInputField";
 
 export type SimpleWebHookConfiguration = {
   urlPattern: string;
@@ -239,6 +240,7 @@ storiesOf("Forms", module)
         disableA: false,
         disableB: false,
         disableC: true,
+        labels: ["test"],
       }}
     >
       <ControlledInputField name="url" />
@@ -247,6 +249,7 @@ storiesOf("Forms", module)
       <ControlledCheckboxField name="disableA" />
       <ControlledCheckboxField name="disableB" />
       <ControlledCheckboxField name="disableC" />
+      <ControlledChipInputField name="labels" />
     </Form>
   ))
   .add("ReadOnly", () => (
@@ -257,6 +260,7 @@ storiesOf("Forms", module)
         name: "trillian",
         password: "secret",
         active: true,
+        labels: ["test", "hero"],
       }}
       readOnly
     >
@@ -268,6 +272,9 @@ storiesOf("Forms", module)
       </FormRow>
       <FormRow>
         <ControlledCheckboxField name="active" />
+      </FormRow>
+      <FormRow>
+        <ControlledChipInputField name="labels" aria-label="Test" placeholder="New label..." />
       </FormRow>
     </Form>
   ))

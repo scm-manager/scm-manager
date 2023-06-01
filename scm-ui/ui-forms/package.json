@@ -43,7 +43,9 @@
   "dependencies": {
     "@scm-manager/ui-buttons": "2.43.2-SNAPSHOT",
     "@scm-manager/ui-overlays": "2.43.2-SNAPSHOT",
-    "@scm-manager/ui-api": "2.43.2-SNAPSHOT"
+    "@scm-manager/ui-api": "2.43.2-SNAPSHOT",
+    "@radix-ui/react-slot": "^1.0.1",
+    "@radix-ui/react-visually-hidden": "^1.0.3"
   },
   "prettier": "@scm-manager/prettier-config",
   "eslintConfig": {

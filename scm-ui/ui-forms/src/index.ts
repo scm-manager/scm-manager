@@ -28,6 +28,7 @@ import ControlledInputField from "./input/ControlledInputField";
 import ControlledCheckboxField from "./checkbox/ControlledCheckboxField";
 import ControlledSecretConfirmationField from "./input/ControlledSecretConfirmationField";
 import ControlledSelectField from "./select/ControlledSelectField";
+import ControlledChipInputField from "./chip-input/ControlledChipInputField";
 import { ScmFormListContextProvider } from "./ScmFormListContext";
 import ControlledList from "./list/ControlledList";
 import ControlledTable from "./table/ControlledTable";
@@ -37,6 +38,7 @@ import { ScmNestedFormPathContextProvider } from "./FormPathContext";
 
 export { default as ConfigurationForm } from "./ConfigurationForm";
 export { default as SelectField } from "./select/SelectField";
+export { default as ChipInputField } from "./chip-input/ChipInputField";
 export { default as Select } from "./select/Select";
 export * from "./resourceHooks";
 
@@ -53,4 +55,5 @@ export const Form = Object.assign(FormCmp, {
   Table: Object.assign(ControlledTable, {
     Column: ControlledColumn,
   }),
+  ChipInput: ControlledChipInputField,
 });

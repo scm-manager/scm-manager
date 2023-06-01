@@ -22,13 +22,19 @@
  * SOFTWARE.
  */
 
-import React from "react";
-import { Tooltip } from "@scm-manager/ui-overlays";
+import { storiesOf } from "@storybook/react";
+import React, { useState } from "react";
+import ChipInputField from "./ChipInputField";
 
-type Props = { text?: string; className?: string };
-const Help = ({ text, className }: Props) => (
-  <Tooltip className={className} message={text}>
-    <i className="fas fa-fw fa-question-circle has-text-blue-light" aria-hidden />
-  </Tooltip>
-);
-export default Help;
+storiesOf("Chip Input Field", module).add("Default", () => {
+  const [value, setValue] = useState(["test"]);
+  return (
+    <ChipInputField
+      value={value}
+      onChange={setValue}
+      label="Test Chips"
+      placeholder="This is a placeholder..."
+      aria-label="My personal chip list"
+    />
+  );
+});

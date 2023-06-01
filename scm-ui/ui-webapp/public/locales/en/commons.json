@@ -7,6 +7,12 @@
     "reset": "Clear",
     "discardChanges": "Discard changes",
     "submit-success-notification": "Configuration changed successfully!",
+    "chipList": {
+      "delete": "Delete '{{item}}'",
+      "input": {
+        "description": "Press enter to add value to list."
+      }
+    },
     "table": {
       "headers": {
         "action": {
