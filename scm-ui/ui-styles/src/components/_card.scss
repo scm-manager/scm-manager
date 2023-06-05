@@ -22,19 +22,18 @@
  * SOFTWARE.
  */
 
-import React, { HTMLAttributes } from "react";
-import styled from "styled-components";
-import classNames from "classnames";
+.scmm-card {
+  padding: 0.5rem;
 
-const CardTitleElement = styled.h3`
-  a {
+  *:is(h1, h2, h3, h4, h5, h6) a {
     color: var(--scm-secondary-text);
 
     &:focus {
       outline: none;
+
       &::after {
-        outline: #af3ee7 3px solid;
-        outline-offset: 0px;
+        outline: #af3ee7 2px solid;
+        outline-offset: 0;
       }
     }
 
@@ -52,28 +51,4 @@ const CardTitleElement = styled.h3`
       border-radius: 4px;
     }
   }
-`;
-
-type Props = HTMLAttributes<HTMLHeadingElement>;
-
-/**
- * A card title may contain a link as its only child which will be automatically stretched to cover the whole card area.
- *
- * If a card title has a link, individual card elements which should be interactive have to get the `is-relative` class.
- *
- * The card title (or enclosed link) content must be an accessible text and must not contain any other interactive elements.
- *
- * You can wrap the title in a {@link CardList.Card.Row} to introduce other elements next to the title.
- *
- * The title (or its enclosing row) must be the first element in a {@link CardList.Card}.
- *
- * @beta
- * @since 2.44.0
- */
-const CardTitle = React.forwardRef<HTMLHeadingElement, Props>(({ children, className, ...props }, ref) => (
-  <CardTitleElement className={classNames(className, "is-ellipsis-overflow")} ref={ref} {...props}>
-    {children}
-  </CardTitleElement>
-));
-
-export default CardTitle;
+}

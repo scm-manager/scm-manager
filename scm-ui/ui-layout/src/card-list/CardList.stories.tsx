@@ -27,12 +27,11 @@ import { ComponentMeta, StoryFn } from "@storybook/react";
 import React, { ComponentProps } from "react";
 import { ExtractProps } from "@scm-manager/ui-extensions";
 import { Link } from "react-router-dom";
-import CardList, { CardListBox } from "./CardList";
-import Card from "./Card";
-import CardTitle from "./CardTitle";
+import CardList, { CardListBox, CardListCard } from "./CardList";
+import CardTitle from "../card/CardTitle";
 import { Menu } from "@scm-manager/ui-overlays";
 import { Icon } from "@scm-manager/ui-buttons";
-import CardRow from "./CardRow";
+import CardRow from "../card/CardRow";
 
 export default {
   title: "CardList",
@@ -46,22 +45,50 @@ export const Default = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 Default.args = {
   children: [
-    // eslint-disable-next-line no-console
-    <Card>
-      <CardRow>
-        <CardTitle>My favorite repository</CardTitle>
-      </CardRow>
-    </Card>,
-    <Card>
-      <CardRow>
-        <CardTitle>
-          <Link aria-label="Edit My least liked repo" to="/cards/1">
-            My least liked repo
-          </Link>
-        </CardTitle>
-      </CardRow>
-    </Card>,
-    <Card
+    <CardListCard>
+      <CardTitle>My favorite repository</CardTitle>
+    </CardListCard>,
+    <CardListCard
+      action={
+        <Menu>
+          <Menu.Button>
+            <Icon>trash</Icon>
+            Delete
+          </Menu.Button>
+        </Menu>
+      }
+    >
+      Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et
+      dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita
+      kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur
+      sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam
+      voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata
+      sanctus est Lorem ipsum dolor sit amet.
+    </CardListCard>,
+    <CardListCard
+      action={
+        <Menu>
+          <Menu.Button>
+            <Icon>trash</Icon>
+            Delete
+          </Menu.Button>
+        </Menu>
+      }
+    >
+      <CardTitle level={5}>
+        <Link aria-label="Edit My least liked repo" to="/cards/1">
+          My favorite repository with a very long title and some other things
+        </Link>
+      </CardTitle>
+    </CardListCard>,
+    <CardListCard>
+      <CardTitle>
+        <Link aria-label="Edit My least liked repo" to="/cards/1">
+          My least liked repo
+        </Link>
+      </CardTitle>
+    </CardListCard>,
+    <CardListCard
       action={
         <Menu>
           <Menu.Button>
@@ -86,8 +113,8 @@ Default.args = {
       <CardRow className="is-size-6 is-flex is-justify-content-space-between">
         <span>This is a third row, lets see how this works out.</span>(MERGED)
       </CardRow>
-    </Card>,
-    <Card>
+    </CardListCard>,
+    <CardListCard>
       <CardRow className="is-flex is-align-items-center">
         <CardTitle>
           <Link
@@ -112,6 +139,6 @@ Default.args = {
         </div>
         <span>(OPEN)</span>
       </CardRow>
-    </Card>,
+    </CardListCard>,
   ],
 } as ComponentProps<typeof CardListBox>;

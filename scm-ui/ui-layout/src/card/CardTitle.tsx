@@ -22,36 +22,40 @@
  * SOFTWARE.
  */
 
-import React, { LiHTMLAttributes } from "react";
-import styled from "styled-components";
+import React, { HTMLAttributes } from "react";
 import classNames from "classnames";
 
-const CardElement = styled.li`
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) min-content;
-  grid-template-rows: auto;
-`;
-
-const CardActionContainer = styled.span`
-  grid-column: -1;
-  grid-row: 1;
-  margin-top: -0.5rem;
-  margin-right: -0.5rem;
-`;
-
-type Props = LiHTMLAttributes<HTMLLIElement> & {
-  action?: React.ReactElement;
+type Props = HTMLAttributes<HTMLHeadingElement> & {
+  /**
+   * @default 3
+   */
+  level?: number;
 };
 
 /**
+ * A card title may contain a link as its only child which will be automatically stretched to cover the whole card area.
+ *
+ * If a card title has a link, individual card elements which should be interactive have to get the `is-relative` class.
+ *
+ * The card title (or enclosed link) content must be an accessible text and must not contain any other interactive elements.
+ *
+ * You can wrap the title in a {@link CardList.Card.Row} to introduce other elements next to the title.
+ *
+ * The title (or its enclosing row) must be the first element in a {@link CardList.Card}.
+ *
  * @beta
  * @since 2.44.0
  */
-const Card = React.forwardRef<HTMLLIElement, Props>(({ className, children, action, ...props }, ref) => (
-  <CardElement className={classNames(className, "is-relative", "p-2")} ref={ref} {...props}>
-    {children}
-    {action ? <CardActionContainer>{action}</CardActionContainer> : null}
-  </CardElement>
-));
+const CardTitle = React.forwardRef<HTMLHeadingElement, Props>(({ children, level = 3, className, ...props }, ref) =>
+  React.createElement(
+    `h${level}`,
+    {
+      className: classNames(className, "is-ellipsis-overflow"),
+      ref,
+      ...props,
+    },
+    children
+  )
+);
 
-export default Card;
+export default CardTitle;

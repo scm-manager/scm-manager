@@ -22,18 +22,30 @@
  * SOFTWARE.
  */
 
-import React, { HTMLAttributes } from "react";
+import React, { ComponentProps, HTMLAttributes } from "react";
 import classNames from "classnames";
 import styled from "styled-components";
+import Card from "../card/Card";
+
+/**
+ * @beta
+ * @since 2.44.0
+ */
+export const CardListCard = React.forwardRef<HTMLElement, Omit<ComponentProps<typeof Card>, "as">>((props, ref) => (
+  <Card ref={ref} {...props} as="li" />
+));
 
 const CardListElement = styled.ul`
   > * + * {
-    border-top: var(--scm-border);
-    margin-top: 0.5rem;
-    padding-top: 1rem !important;
+    margin-top: calc(0.5rem + 1px);
 
-    *:is(h1, h2, h3, h4, h5, h6) a::after {
-      top: 0.5rem !important;
+    &::before {
+      content: "";
+      position: absolute;
+      width: 100%;
+      border-top: var(--scm-border);
+      left: 0;
+      top: calc(-0.25rem - 1px);
     }
   }
 `;
@@ -41,8 +53,6 @@ const CardListElement = styled.ul`
 type Props = HTMLAttributes<HTMLUListElement>;
 
 /**
- * The {@link CardList.Card.Title} is currently represented as a `h3`, which means the list can only be used on the top level of the page without breaking accessibility.
- *
  * @beta
  * @since 2.44.0
  */
@@ -53,8 +63,6 @@ const CardList = React.forwardRef<HTMLUListElement, Props>(({ children, classNam
 ));
 
 /**
- * The {@link CardList.Card.Title} is currently represented as a `h3`, which means the list can only be used on the top level of the page without breaking accessibility.
- *
  * @beta
  * @since 2.44.0
  */

@@ -22,24 +22,10 @@
  * SOFTWARE.
  */
 
-import React, { HTMLAttributes } from "react";
-import styled from "styled-components";
-import classNames from "classnames";
-
-const CardRowElement = styled.div`
-  grid-column: 1 / 2;
-`;
-
-type Props = HTMLAttributes<HTMLDivElement>;
-
 /**
  * @beta
  * @since 2.44.0
  */
-const CardRow = React.forwardRef<HTMLDivElement, Props>(({ className, children, ...props }, ref) => (
-  <CardRowElement className={classNames(className)} ref={ref} {...props}>
-    {children}
-  </CardRowElement>
-));
+const CardRow = "div";
 
 export default CardRow;

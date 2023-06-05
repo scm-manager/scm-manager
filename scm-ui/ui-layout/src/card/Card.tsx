@@ -22,16 +22,39 @@
  * SOFTWARE.
  */
 
-import CardListComponent, { CardListBox as CardListBoxComponent, CardListCard } from "./card-list/CardList";
-import CardTitle from "./card/CardTitle";
-import CardRow from "./card/CardRow";
+import React, { ComponentType, HTMLAttributes, ReactHTML, Ref } from "react";
+import styled from "styled-components";
+import classNames from "classnames";
 
-const CardListExport = {
-  Card: Object.assign(CardListCard, {
-    Row: CardRow,
-    Title: CardTitle,
-  }),
+const CardRowsContainer = styled.div`
+  overflow: hidden;
+`;
+
+type Props = HTMLAttributes<HTMLElement> & {
+  action?: React.ReactElement;
+  /**
+   * @default 'div'
+   */
+  as?: keyof ReactHTML | ComponentType<HTMLAttributes<HTMLElement> & { ref?: Ref<HTMLElement> }>;
 };
 
-export const CardList = Object.assign(CardListComponent, CardListExport);
-export const CardListBox = Object.assign(CardListBoxComponent, CardListExport);
+/**
+ * @beta
+ * @since 2.44.0
+ */
+const Card = React.forwardRef<HTMLElement, Props>(({ className, children, as: Comp = "div", action, ...props }, ref) =>
+  React.createElement(
+    Comp,
+    {
+      className: classNames(className, "is-relative", "is-flex", "scmm-card"),
+      ref,
+      ...props,
+    },
+    <CardRowsContainer className="is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1">
+      {children}
+    </CardRowsContainer>,
+    action ? <span className="ml-2">{action}</span> : null
+  )
+);
+
+export default Card;
