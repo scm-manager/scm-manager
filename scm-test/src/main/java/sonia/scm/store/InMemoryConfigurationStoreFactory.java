@@ -21,10 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.store;
 
-//~--- non-JDK imports --------------------------------------------------------
+package sonia.scm.store;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,10 +30,11 @@ import java.util.Map;
 /**
  * In memory configuration store factory for testing purposes.
  *
- * Use {@link #create()} to get a store that creates the same store on each request.
- * 
  * @author Sebastian Sdorra
+ *
+ * @deprecated Use the {@link InMemoryByteConfigurationStoreFactory} to verify JaxB serialization, too.
  */
+@Deprecated(since = "2.44.0")
 public class InMemoryConfigurationStoreFactory implements ConfigurationStoreFactory {
 
   private final Map<String, InMemoryConfigurationStore> stores = new HashMap<>();

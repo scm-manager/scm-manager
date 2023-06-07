@@ -24,6 +24,8 @@
 
 package sonia.scm.store;
 
+import com.google.common.collect.Collections2;
+
 import java.util.Collection;
 import java.util.function.Predicate;
 
@@ -42,10 +44,13 @@ public interface ConfigurationEntryStore<V> extends DataStore<V> {
   /**
    * Return all values matching the given {@link Predicate}.
    *
+   * Default implementation since 2.44.0
    *
    * @param predicate predicate to match values
    *
    * @return filtered collection of values
    */
-  Collection<V> getMatchingValues(Predicate<V> predicate);
+  default Collection<V> getMatchingValues(Predicate<V> predicate) {
+    return Collections2.filter(getAll().values(), predicate::test);
+  }
 }

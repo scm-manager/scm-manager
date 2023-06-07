@@ -21,16 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.store;
 
 /**
  * In memory store implementation of {@link ConfigurationStore}.
- * 
+ *
  * @author Sebastian Sdorra
  *
  * @param <T> type of stored object
+ *
+ * @deprecated Replaced by the {@link InMemoryByteConfigurationStore}
  */
+@Deprecated(since = "2.44.0")
 public class InMemoryConfigurationStore<T> implements ConfigurationStore<T> {
 
   private T object;

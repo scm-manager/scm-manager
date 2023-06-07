@@ -33,15 +33,20 @@ import java.util.Map;
  *
  * @since 2.18.0
  */
-public class InMemoryByteDataStoreFactory implements DataStoreFactory {
+public class InMemoryByteDataStoreFactory implements DataStoreFactory, InMemoryStoreParameterNameComputer {
 
   @SuppressWarnings("rawtypes")
   private final Map<String, InMemoryByteDataStore> stores = new HashMap<>();
 
   @Override
-  @SuppressWarnings("unchecked")
   public <T> DataStore<T> getStore(TypedStoreParameters<T> storeParameters) {
-    String name = storeParameters.getName();
-    return stores.computeIfAbsent(name, n -> new InMemoryByteDataStore<T>(storeParameters.getType()));
+    String name = computeKey(storeParameters);
+    Class<T> type = storeParameters.getType();
+    return getStore(type, name);
+  }
+
+  @SuppressWarnings("unchecked")
+  public  <T> DataStore<T> getStore(Class<T> type, String name) {
+    return stores.computeIfAbsent(name, n -> new InMemoryByteDataStore<>(type));
   }
 }

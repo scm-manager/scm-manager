@@ -27,6 +27,10 @@ package sonia.scm.store;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @deprecated Use {@link InMemoryByteConfigurationEntryStoreFactory} instead to verify JaxB serialization, too.
+ */
+@Deprecated(since = "2.44.0")
 public class InMemoryConfigurationEntryStoreFactory implements ConfigurationEntryStoreFactory {
 
   private final Map<String, InMemoryConfigurationEntryStore> stores = new HashMap<>();

@@ -40,8 +40,9 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.xml.XmlRepositoryDAO;
 import sonia.scm.store.ConfigurationEntryStore;
-import sonia.scm.store.InMemoryConfigurationEntryStoreFactory;
+import sonia.scm.store.InMemoryByteConfigurationEntryStoreFactory;
 import sonia.scm.update.UpdateStepTestUtil;
+import sonia.scm.update.V1Properties;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
@@ -72,7 +73,7 @@ class XmlRepositoryV1UpdateStepTest {
   @Mock
   DefaultMigrationStrategyDAO migrationStrategyDao;
 
-  InMemoryConfigurationEntryStoreFactory configurationEntryStoreFactory = new InMemoryConfigurationEntryStoreFactory();
+  InMemoryByteConfigurationEntryStoreFactory configurationEntryStoreFactory = new InMemoryByteConfigurationEntryStoreFactory();
 
   @Captor
   ArgumentCaptor<Repository> storeCaptor;
@@ -172,7 +173,7 @@ class XmlRepositoryV1UpdateStepTest {
     void shouldExtractPropertiesFromRepositories() throws JAXBException {
       updateStep.doUpdate();
 
-      ConfigurationEntryStore store = configurationEntryStoreFactory.get("repository-properties-v1");
+      ConfigurationEntryStore store = configurationEntryStoreFactory.get(V1Properties.class,"repository-properties-v1");
       assertThat(store.getAll())
         .hasSize(3);
     }

@@ -58,6 +58,16 @@ public class InMemoryByteDataStore<T> implements DataStore<T> {
     store.put(id, baos.toByteArray());
   }
 
+  /**
+   * This method can be used to mock stores with old types to test update steps or otherwise the compatability of
+   * objects with old versions.
+   */
+  public void putOldObject(String id, Object item) {
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    JAXB.marshal(item, baos);
+    store.put(id, baos.toByteArray());
+  }
+
   @Override
   public Map<String, T> getAll() {
     Map<String, T> all = new HashMap<>();

@@ -36,7 +36,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.group.Group;
 import sonia.scm.group.xml.XmlGroupDAO;
 import sonia.scm.store.ConfigurationEntryStore;
-import sonia.scm.store.InMemoryConfigurationEntryStoreFactory;
+import sonia.scm.store.InMemoryByteConfigurationEntryStoreFactory;
 import sonia.scm.update.UpdateStepTestUtil;
 import sonia.scm.update.V1Properties;
 
@@ -51,7 +51,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static sonia.scm.store.InMemoryConfigurationEntryStoreFactory.create;
+import static sonia.scm.store.InMemoryByteConfigurationEntryStoreFactory.create;
 
 @ExtendWith(MockitoExtension.class)
 class XmlGroupV1UpdateStepTest {
@@ -62,7 +62,7 @@ class XmlGroupV1UpdateStepTest {
   @Captor
   ArgumentCaptor<Group> groupCaptor;
 
-  InMemoryConfigurationEntryStoreFactory storeFactory = create();
+  InMemoryByteConfigurationEntryStoreFactory storeFactory = create();
 
   XmlGroupV1UpdateStep updateStep;
 
@@ -111,7 +111,7 @@ class XmlGroupV1UpdateStepTest {
     @Test
     void shouldExtractProperties() throws JAXBException {
       updateStep.doUpdate();
-      ConfigurationEntryStore<V1Properties> propertiesStore = storeFactory.get("group-properties-v1");
+      ConfigurationEntryStore<V1Properties> propertiesStore = storeFactory.get(V1Properties.class, "group-properties-v1");
       V1Properties properties = propertiesStore.get("normals");
       assertThat(properties).isNotNull();
       assertThat(properties.get("mostly")).isEqualTo("humans");

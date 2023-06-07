@@ -35,7 +35,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.security.AssignedPermission;
 import sonia.scm.store.ConfigurationEntryStore;
-import sonia.scm.store.InMemoryConfigurationEntryStoreFactory;
+import sonia.scm.store.InMemoryByteConfigurationEntryStoreFactory;
 import sonia.scm.update.UpdateStepTestUtil;
 import sonia.scm.update.V1Properties;
 import sonia.scm.user.User;
@@ -51,7 +51,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static sonia.scm.store.InMemoryConfigurationEntryStoreFactory.create;
+import static sonia.scm.store.InMemoryByteConfigurationEntryStoreFactory.create;
 
 @ExtendWith(MockitoExtension.class)
 class XmlUserV1UpdateStepTest {
@@ -62,7 +62,7 @@ class XmlUserV1UpdateStepTest {
   @Captor
   ArgumentCaptor<User> userCaptor;
 
-  InMemoryConfigurationEntryStoreFactory storeFactory = create();
+  InMemoryByteConfigurationEntryStoreFactory storeFactory = create();
 
   XmlUserV1UpdateStep updateStep;
 
@@ -91,7 +91,7 @@ class XmlUserV1UpdateStepTest {
     void shouldCreateNewPermissionsForV1AdminUser() throws JAXBException {
       updateStep.doUpdate();
       Optional<AssignedPermission> assignedPermission =
-        storeFactory.<AssignedPermission>get("security")
+        storeFactory.<AssignedPermission>get(AssignedPermission.class, "security")
           .getAll()
           .values()
           .stream()
@@ -126,7 +126,7 @@ class XmlUserV1UpdateStepTest {
     @Test
     void shouldExtractProperties() throws JAXBException {
       updateStep.doUpdate();
-      ConfigurationEntryStore<V1Properties> propertiesStore = storeFactory.<V1Properties>get("user-properties-v1");
+      ConfigurationEntryStore<V1Properties> propertiesStore = storeFactory.<V1Properties>get(V1Properties.class, "user-properties-v1");
       V1Properties properties = propertiesStore.get("dent");
       assertThat(properties).isNotNull();
       assertThat(properties.get("born.on")).isEqualTo("earth");

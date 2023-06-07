@@ -34,7 +34,7 @@ import org.junit.rules.ExpectedException;
 import sonia.scm.NotFoundException;
 import sonia.scm.auditlog.Auditor;
 import sonia.scm.plugin.PluginLoader;
-import sonia.scm.store.InMemoryConfigurationEntryStoreFactory;
+import sonia.scm.store.InMemoryByteConfigurationEntryStoreFactory;
 import sonia.scm.util.ClassLoaders;
 
 import java.util.Arrays;
@@ -70,7 +70,7 @@ public class PermissionAssignerTest {
     PluginLoader pluginLoader = mock(PluginLoader.class);
     when(pluginLoader.getUberClassLoader()).thenReturn(ClassLoaders.getContextClassLoader(DefaultSecuritySystem.class));
 
-    securitySystem = new DefaultSecuritySystem(new InMemoryConfigurationEntryStoreFactory(), pluginLoader, Set.of(auditor)) {
+    securitySystem = new DefaultSecuritySystem(new InMemoryByteConfigurationEntryStoreFactory(), pluginLoader, Set.of(auditor)) {
       @Override
       public Collection<PermissionDescriptor> getAvailablePermissions() {
         return Arrays.stream(new String[]{"perm:read:1", "perm:read:2", "perm:read:3", "perm:read:4"})

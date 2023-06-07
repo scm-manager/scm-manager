@@ -131,11 +131,6 @@ public class JAXBConfigurationEntryStore<V> implements ConfigurationEntryStore<V
     return Collections.unmodifiableMap(entries);
   }
 
-  @Override
-  public Collection<V> getMatchingValues(Predicate<V> predicate) {
-    return Collections2.filter(entries.values(), predicate::test);
-  }
-
   private void load() {
     LOG.debug("load configuration from {}", file);
     execute(() ->

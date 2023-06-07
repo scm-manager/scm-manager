@@ -27,26 +27,30 @@ package sonia.scm.store;
 import java.util.HashMap;
 import java.util.Map;
 
-public class InMemoryBlobStoreFactory implements BlobStoreFactory, InMemoryStoreParameterNameComputer {
+/**
+ * Stores data in memory but in contrast to {@link InMemoryConfigurationEntryStoreFactory}
+ * it uses jaxb to marshal and unmarshall the objects.
+ *
+ * @since 2.44.0
+ */
+public class InMemoryByteConfigurationEntryStoreFactory implements ConfigurationEntryStoreFactory, InMemoryStoreParameterNameComputer {
 
-  private final Map<String, BlobStore> stores = new HashMap<>();
+  @SuppressWarnings("rawtypes")
+  private final Map<String, InMemoryByteConfigurationEntryStore> stores = new HashMap<>();
 
-  private final BlobStore fixedStore;
-
-  public InMemoryBlobStoreFactory() {
-    this(null);
-  }
-
-  public InMemoryBlobStoreFactory(BlobStore fixedStore) {
-    this.fixedStore = fixedStore;
+  public static InMemoryByteConfigurationEntryStoreFactory create() {
+    return new InMemoryByteConfigurationEntryStoreFactory();
   }
 
   @Override
-  public BlobStore getStore(StoreParameters storeParameters) {
-    if (fixedStore == null) {
-      return stores.computeIfAbsent(computeKey(storeParameters), key -> new InMemoryBlobStore());
-    } else {
-      return fixedStore;
-    }
+  public <T> ConfigurationEntryStore<T> getStore(TypedStoreParameters<T> storeParameters) {
+    String name = computeKey(storeParameters);
+    Class<T> type = storeParameters.getType();
+    return get(type, name);
+  }
+
+  @SuppressWarnings("unchecked")
+  public <T> ConfigurationEntryStore<T> get(Class<T> type, String name) {
+    return stores.computeIfAbsent(name, n -> new InMemoryByteConfigurationEntryStore<>(type));
   }
 }

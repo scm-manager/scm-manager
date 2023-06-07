@@ -27,26 +27,25 @@ package sonia.scm.store;
 import java.util.HashMap;
 import java.util.Map;
 
-public class InMemoryBlobStoreFactory implements BlobStoreFactory, InMemoryStoreParameterNameComputer {
+/**
+ * In memory configuration store factory for testing purposes that uses JaxB for serialization.
+ *
+ * @since 2.44.0
+ */
+public class InMemoryByteConfigurationStoreFactory implements ConfigurationStoreFactory, InMemoryStoreParameterNameComputer {
 
-  private final Map<String, BlobStore> stores = new HashMap<>();
-
-  private final BlobStore fixedStore;
-
-  public InMemoryBlobStoreFactory() {
-    this(null);
-  }
-
-  public InMemoryBlobStoreFactory(BlobStore fixedStore) {
-    this.fixedStore = fixedStore;
-  }
+  @SuppressWarnings("rawtypes")
+  private final Map<String, InMemoryByteConfigurationStore> stores = new HashMap<>();
 
   @Override
-  public BlobStore getStore(StoreParameters storeParameters) {
-    if (fixedStore == null) {
-      return stores.computeIfAbsent(computeKey(storeParameters), key -> new InMemoryBlobStore());
-    } else {
-      return fixedStore;
-    }
+  public <T> ConfigurationStore<T> getStore(TypedStoreParameters<T> storeParameters) {
+    String name = computeKey(storeParameters);
+    Class<T> type = storeParameters.getType();
+    return getStore(type, name);
+  }
+
+  @SuppressWarnings("unchecked")
+  public <T> ConfigurationStore<T> getStore(Class<T> type, String name) {
+    return stores.computeIfAbsent(name, n -> new InMemoryByteConfigurationStore<>(type));
   }
 }

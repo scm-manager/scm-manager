@@ -24,29 +24,15 @@
 
 package sonia.scm.store;
 
-import java.util.HashMap;
-import java.util.Map;
+interface InMemoryStoreParameterNameComputer {
 
-public class InMemoryBlobStoreFactory implements BlobStoreFactory, InMemoryStoreParameterNameComputer {
-
-  private final Map<String, BlobStore> stores = new HashMap<>();
-
-  private final BlobStore fixedStore;
-
-  public InMemoryBlobStoreFactory() {
-    this(null);
-  }
-
-  public InMemoryBlobStoreFactory(BlobStore fixedStore) {
-    this.fixedStore = fixedStore;
-  }
-
-  @Override
-  public BlobStore getStore(StoreParameters storeParameters) {
-    if (fixedStore == null) {
-      return stores.computeIfAbsent(computeKey(storeParameters), key -> new InMemoryBlobStore());
+  default String computeKey(StoreParameters storeParameters) {
+    if (storeParameters.getNamespace() != null) {
+      return storeParameters.getName() + "/" + storeParameters.getNamespace();
+    } else if (storeParameters.getRepositoryId() != null) {
+      return storeParameters.getName() + "/" + storeParameters.getRepositoryId();
     } else {
-      return fixedStore;
+      return storeParameters.getName();
     }
   }
 }

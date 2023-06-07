@@ -24,29 +24,44 @@
 
 package sonia.scm.store;
 
-import java.util.HashMap;
-import java.util.Map;
+import javax.xml.bind.JAXB;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 
-public class InMemoryBlobStoreFactory implements BlobStoreFactory, InMemoryStoreParameterNameComputer {
+/**
+ * In memory store implementation of {@link ConfigurationStore} using a byte array to store the serialized object.
+ */
+public class InMemoryByteConfigurationStore<T> implements ConfigurationStore<T> {
 
-  private final Map<String, BlobStore> stores = new HashMap<>();
+  private final Class<T> type;
+  byte[] store;
 
-  private final BlobStore fixedStore;
-
-  public InMemoryBlobStoreFactory() {
-    this(null);
-  }
-
-  public InMemoryBlobStoreFactory(BlobStore fixedStore) {
-    this.fixedStore = fixedStore;
+  public InMemoryByteConfigurationStore(Class<T> type) {
+    this.type = type;
   }
 
   @Override
-  public BlobStore getStore(StoreParameters storeParameters) {
-    if (fixedStore == null) {
-      return stores.computeIfAbsent(computeKey(storeParameters), key -> new InMemoryBlobStore());
-    } else {
-      return fixedStore;
+  public T get() {
+    if (store != null) {
+      return JAXB.unmarshal(new ByteArrayInputStream(store), type);
     }
+    return null;
+  }
+
+  @Override
+  public void set(T object) {
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    JAXB.marshal(object, baos);
+    store = baos.toByteArray();
+  }
+
+  /**
+   * This method can be used to mock stores with old types to test update steps or otherwise the compatability of
+   * objects with old versions.
+   */
+  public void setOldObject(Object object) {
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    JAXB.marshal(object, baos);
+    store = baos.toByteArray();
   }
 }

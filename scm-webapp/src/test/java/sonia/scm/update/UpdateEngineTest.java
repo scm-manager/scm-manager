@@ -30,7 +30,7 @@ import sonia.scm.migration.RepositoryUpdateContext;
 import sonia.scm.migration.RepositoryUpdateStep;
 import sonia.scm.migration.UpdateStep;
 import sonia.scm.store.ConfigurationEntryStoreFactory;
-import sonia.scm.store.InMemoryConfigurationEntryStoreFactory;
+import sonia.scm.store.InMemoryByteConfigurationEntryStoreFactory;
 import sonia.scm.version.Version;
 
 import java.util.ArrayList;
@@ -50,7 +50,7 @@ import static sonia.scm.version.Version.parse;
 
 class UpdateEngineTest {
 
-  ConfigurationEntryStoreFactory storeFactory = new InMemoryConfigurationEntryStoreFactory();
+  ConfigurationEntryStoreFactory storeFactory = new InMemoryByteConfigurationEntryStoreFactory();
   RepositoryUpdateIterator repositoryUpdateIterator = mock(RepositoryUpdateIterator.class, CALLS_REAL_METHODS);
   UpdateStepStore updateStepStore = new UpdateStepStore(storeFactory);
 

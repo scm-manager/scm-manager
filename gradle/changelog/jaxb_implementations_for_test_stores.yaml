@@ -1,0 +1,2 @@
+- type: added
+  description: New in-memory implementations of the store api for unit tests using JaxB 

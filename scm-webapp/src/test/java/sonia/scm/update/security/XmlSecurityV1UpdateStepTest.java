@@ -35,7 +35,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.security.AssignedPermission;
 import sonia.scm.store.ConfigurationEntryStore;
-import sonia.scm.store.InMemoryConfigurationEntryStoreFactory;
+import sonia.scm.store.InMemoryByteConfigurationEntryStoreFactory;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
@@ -43,12 +43,11 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Map;
 
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
-import static sonia.scm.store.InMemoryConfigurationEntryStoreFactory.create;
+import static sonia.scm.store.InMemoryByteConfigurationEntryStoreFactory.create;
 
 @ExtendWith(MockitoExtension.class)
 class XmlSecurityV1UpdateStepTest {
@@ -65,8 +64,8 @@ class XmlSecurityV1UpdateStepTest {
   @BeforeEach
   void mockScmHome() {
     when(contextProvider.getBaseDirectory()).thenReturn(tempDir.toFile());
-    InMemoryConfigurationEntryStoreFactory inMemoryConfigurationEntryStoreFactory = create();
-    assignedPermissionStore = inMemoryConfigurationEntryStoreFactory.get("security");
+    InMemoryByteConfigurationEntryStoreFactory inMemoryConfigurationEntryStoreFactory = create();
+    assignedPermissionStore = inMemoryConfigurationEntryStoreFactory.get(AssignedPermission.class, "security");
     updateStep = new XmlSecurityV1UpdateStep(contextProvider, inMemoryConfigurationEntryStoreFactory);
   }
 
@@ -129,8 +128,9 @@ class XmlSecurityV1UpdateStepTest {
           .filter(a -> a.getPermission().getValue().contains("repository:"))
           .map(AssignedPermission::getName)
           .collect(toList());
-      assertThat(assignedPermission).contains("scmadmin");
-      assertThat(assignedPermission).contains("test");
+      assertThat(assignedPermission)
+        .contains("scmadmin")
+        .contains("test");
     }
 
     @Test
