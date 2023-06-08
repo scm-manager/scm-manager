@@ -1,6 +1,0 @@
-- type: fixed
-  description: ConfigurationBinder Navlink does not only match exact routes
-- type: changed
-  description: Move form list entry button to left side
-- type: changed
-  description: Show empty message for form list table without entries

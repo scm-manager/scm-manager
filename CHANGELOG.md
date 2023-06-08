@@ -5,6 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.44.0] - 2023-06-08
+### Added
+- New chip input component
+- New menu component
+- New card list component
+- New in-memory implementations of the store api for unit tests using JaxB
+
+### Fixed
+- Implement delete for audit log wrapper
+- Forms randomly resetting when OpenAPI plugin is installed
+- React error in global notifications
+- User creation form resetting on re-render
+- Broken HG write access when anonymous users have read access
+- ConfigurationBinder Navlink does not only match exact routes
+- Duplicate contributors for single changeset
+- Automatically created gpg keys can now be verified by Github
+- Allow passing a ref through FileInput to one of its children
+
+### Changed
+- Revamp repository tags overview
+- Move form list entry button to left side
+- Show empty message for form list table without entries
+
 ## [2.43.1] - 2023-05-12
 ### Fixed
 - Configuration of default branch in the git mirror command
@@ -1267,3 +1290,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.42.3]: https://scm-manager.org/download/2.42.3
 [2.43.0]: https://scm-manager.org/download/2.43.0
 [2.43.1]: https://scm-manager.org/download/2.43.1
+[2.44.0]: https://scm-manager.org/download/2.44.0
