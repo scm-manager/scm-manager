@@ -58,6 +58,7 @@ class AuditLogConfigurationStoreDecoratorTest {
   @Mock
   private StoreDecoratorFactory.Context storeContext;
   @Mock
+  @SuppressWarnings("rawtypes")
   private TypedStoreParameters parameters;
 
   private AuditLogConfigurationStoreDecorator<Object> decorator;
@@ -71,6 +72,7 @@ class AuditLogConfigurationStoreDecoratorTest {
   class WithAuditableEntries {
 
     @BeforeEach
+    @SuppressWarnings("unchecked")
     void setUpStoreContext() {
       when(storeContext.getStoreParameters()).thenReturn(parameters);
       lenient().when(parameters.getName()).thenReturn("hog");
@@ -88,6 +90,24 @@ class AuditLogConfigurationStoreDecoratorTest {
           assertThat(context.getAdditionalLabels()).contains("hog");
           assertThat(context.getObject()).isSameAs(entry);
           assertThat(context.getOldObject()).isNull();
+          return true;
+        }
+      ));
+    }
+
+    @Test
+    void shouldCallAuditorForDeletedEntry() {
+      SimpleEntry oldEntry = new SimpleEntry();
+      when(delegate.get()).thenReturn(oldEntry);
+
+      decorator.delete();
+
+      verify(auditor).createEntry(argThat(
+        context -> {
+          assertThat(context.getEntity()).isEmpty();
+          assertThat(context.getAdditionalLabels()).contains("hog");
+          assertThat(context.getObject()).isNull();
+          assertThat(context.getOldObject()).isSameAs(oldEntry);
           return true;
         }
       ));

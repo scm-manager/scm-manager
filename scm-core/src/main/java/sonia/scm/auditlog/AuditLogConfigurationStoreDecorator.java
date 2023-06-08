@@ -32,6 +32,7 @@ import sonia.scm.store.StoreDecoratorFactory;
 import java.util.Optional;
 import java.util.Set;
 
+import static com.google.common.base.MoreObjects.firstNonNull;
 import static java.util.Collections.emptySet;
 
 public class AuditLogConfigurationStoreDecorator<T> implements ConfigurationStore<T> {
@@ -48,29 +49,58 @@ public class AuditLogConfigurationStoreDecorator<T> implements ConfigurationStor
     this.context = context;
   }
 
+  @Override
   public T get() {
     return delegate.get();
   }
 
+  @Override
   public void set(T object) {
-    if (!shouldBeIgnored(object)) {
+    if (shouldAudit(object)) {
       auditors.forEach(s -> s.createEntry(createEntryCreationContext(object)));
     }
     delegate.set(object);
   }
 
+  @Override
+  public void delete() {
+    if (shouldAudit(get())) {
+      auditors.forEach(s -> s.createEntry(createEntryDeletionContext()));
+    }
+    delegate.delete();
+  }
+
   private EntryCreationContext<T> createEntryCreationContext(T object) {
-    String repositoryId = context.getStoreParameters().getRepositoryId();
+    return createContext(context.getStoreParameters().getRepositoryId(), get(), object);
+  }
+
+  private EntryCreationContext<T> createEntryDeletionContext() {
+    return createContext(context.getStoreParameters().getRepositoryId(), get(), null);
+  }
+
+  private EntryCreationContext<T> createContext(String repositoryId, T oldObject, T newObject) {
     if (!Strings.isNullOrEmpty(repositoryId)) {
       String name = repositoryDAO.get(repositoryId).getNamespaceAndName().toString();
-      return new EntryCreationContext<>(object, get(), name, getRepositoryLabels(object));
+      return new EntryCreationContext<>(
+        newObject,
+        oldObject,
+        name,
+        getRepositoryLabels(firstNonNull(newObject, oldObject))
+      );
     } else {
-      return new EntryCreationContext<>(object, get(), "", shouldUseStoreNameAsLabel(object) ? Set.of(context.getStoreParameters().getName()) : emptySet());
+      return new EntryCreationContext<>(
+        newObject,
+        oldObject,
+        shouldUseStoreNameAsLabel(firstNonNull(newObject, oldObject)) ? Set.of(context.getStoreParameters().getName()) : emptySet()
+      );
     }
   }
 
-  private boolean shouldBeIgnored(T object) {
-    return getAnnotation(object).map(AuditEntry::ignore).orElse(false);
+  private boolean shouldAudit(T object) {
+    return getAnnotation(object)
+      .map(AuditEntry::ignore)
+      .map(b -> !b)
+      .orElse(true);
   }
 
   private Set<String> getRepositoryLabels(T object) {
