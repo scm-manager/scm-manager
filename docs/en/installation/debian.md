@@ -9,8 +9,18 @@ displayToc: true
 The following code block will configure an apt repository for scm-manager and install it.
 
 ```bash
-echo 'deb [arch=all] https://packages.scm-manager.org/repository/apt-v2-releases/ stable main' | sudo tee /etc/apt/sources.list.d/scm-manager.list
-sudo apt-key adv --recv-keys --keyserver hkps://keys.openpgp.org 0x975922F193B07D6E
+echo 'X-Repolib-Name: SCM-Manager
+Enabled: yes
+Types: deb
+URIs: https://packages.scm-manager.org/repository/apt-v2-releases/
+Suites: stable
+Components: main
+Architectures: all
+Signed-By: /etc/apt/keyrings/scmm-archive-keyring.gpg' | sudo tee /etc/apt/sources.list.d/scm-manager.sources
+sudo mkdir -p /etc/apt/keyrings
+sudo chmod 0755 /etc/apt/keyrings
+sudo sh -c 'curl -s https://keys.openpgp.org/vks/v1/by-fingerprint/23D2625B235E25A4719875A2975922F193B07D6E | gpg --dearmor > /etc/apt/keyrings/scmm-archive-keyring.gpg'
+sudo chmod +r /etc/apt/keyrings/scmm-archive-keyring.gpg
 sudo apt-get update
 sudo apt-get install scm-server
 ```
@@ -21,18 +31,35 @@ You can find more detailed information here: [first startup](../../first-startup
 
 ## Detailed installation
 
-To install SCM-Manager as a debian package (.deb), we have to configure an apt repository.
-Create a file at `/etc/apt/sources.list.d/scm-manager.list` with the following content:
+To install SCM-Manager as a debian package (.deb), we have to configure a [third-party APT repository](https://wiki.debian.org/DebianRepository/UseThirdParty).
+Create a file at `/etc/apt/sources.list.d/scm-manager.sources` with the following content:
 
-```text
-deb [arch=all] https://packages.scm-manager.org/repository/apt-v2-releases/ stable main
+```bash
+echo 'X-Repolib-Name: SCM-Manager
+Enabled: yes
+Types: deb
+URIs: https://packages.scm-manager.org/repository/apt-v2-releases/
+Suites: stable
+Components: main
+Architectures: all
+Signed-By: /etc/apt/keyrings/scmm-archive-keyring.gpg' | sudo tee /etc/apt/sources.list.d/scm-manager.sources
+```
+
+We are using the deb822 style format supported by apt itself since version 1.1. Previous versions ignore such files with a notice message. In this case, the one-line-style format can be used:
+
+```bash
+echo 'deb [arch=all signed-by=/etc/apt/keyrings/scmm-archive-keyring.gpg] https://packages.scm-manager.org/repository/apt-v2-releases/ stable main' | sudo tee /etc/apt/sources.list.d/scm-manager.list
 ```
 
 This will add the apt repository of the scm-manager stable releases to the list of your apt repositories.
-To ensure the integrity of the debian packages we have to import the gpg key for the repository.
+To ensure the integrity of the debian packages, we have to import the gpg key for the repository.
+In addition, the keyrings directory should be created beforehand, since it does not always exist by default:
 
 ```bash
-sudo apt-key adv --recv-keys --keyserver hkps://keys.openpgp.org 0x975922F193B07D6E
+sudo mkdir -p /etc/apt/keyrings
+sudo chmod 0755 /etc/apt/keyrings
+sudo sh -c 'curl -s https://keys.openpgp.org/vks/v1/by-fingerprint/23D2625B235E25A4719875A2975922F193B07D6E | gpg --dearmor > /etc/apt/keyrings/scmm-archive-keyring.gpg'
+sudo chmod +r /etc/apt/keyrings/scmm-archive-keyring.gpg
 ```
 
 After we have imported the gpg key, we can update the package index and install scm-manager:
