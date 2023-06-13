@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-buttons",
-  "version": "2.44.1-SNAPSHOT",
+  "version": "2.44.1",
   "private": false,
   "main": "build/index.js",
   "module": "build/index.mjs",
@@ -24,11 +24,11 @@
     "react-dom": "^17.0.1",
     "react-router-dom": "^5.3.1",
     "classnames": "^2.2.6",
-    "@scm-manager/ui-components": "2.44.1-SNAPSHOT"
+    "@scm-manager/ui-components": "2.44.1"
   },
   "devDependencies": {
     "@scm-manager/prettier-config": "^2.11.1",
-    "@scm-manager/ui-api": "2.44.1-SNAPSHOT",
+    "@scm-manager/ui-api": "2.44.1",
     "@scm-manager/eslint-config": "^2.17.0",
     "@babel/core": "^7.17.8",
     "@scm-manager/tsconfig": "^2.12.0",
