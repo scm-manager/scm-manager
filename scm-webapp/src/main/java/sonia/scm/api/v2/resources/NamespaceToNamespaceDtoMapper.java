@@ -28,7 +28,6 @@ import com.google.common.annotations.VisibleForTesting;
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.Link;
 import de.otto.edison.hal.Links;
-import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ObjectFactory;
@@ -41,13 +40,14 @@ import sonia.scm.web.EdisonHalAppender;
 
 import javax.inject.Inject;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static de.otto.edison.hal.Embedded.embeddedBuilder;
 import static de.otto.edison.hal.Link.link;
 import static de.otto.edison.hal.Link.linkBuilder;
 import static de.otto.edison.hal.Links.linkingTo;
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import static sonia.scm.NotFoundException.notFound;
 
 // Mapstruct does not support parameterized (i.e. non-default) constructors. Thus, we need to use field injection.
 @SuppressWarnings("squid:S3306")
@@ -61,29 +61,30 @@ public abstract class NamespaceToNamespaceDtoMapper extends BaseMapper<Namespace
   @Inject
   protected NamespaceManager namespaceManager;
 
+  public NamespaceDto map(String namespace) {
+    return map(namespaceManager.get(namespace).orElseThrow(() -> notFound(entity(Namespace.class, namespace))));
+  }
+
   @Mapping(target = "attributes", ignore = true) // We do not map HAL attributes
-  public abstract NamespaceDto map(String namespace);
+  public abstract NamespaceDto map(Namespace namespace);
 
   @ObjectFactory
-  NamespaceDto createDto(String namespace) {
+  NamespaceDto createDto(Namespace namespace) {
     Links.Builder linkingTo = linkingTo();
     linkingTo
-      .self(links.namespace().self(namespace))
-      .single(link("repositories", links.repositoryCollection().forNamespace(namespace)));
+      .self(links.namespace().self(namespace.getNamespace()))
+      .single(link("repositories", links.repositoryCollection().forNamespace(namespace.getNamespace())));
 
     if (NamespacePermissions.permissionRead().isPermitted()) {
       linkingTo
-        .single(link("permissions", links.namespacePermission().all(namespace)));
+        .single(link("permissions", links.namespacePermission().all(namespace.getNamespace())));
     }
-    linkingTo.array(searchLinks(namespace));
-    linkingTo.single(link("searchableTypes", links.searchableTypes().searchableTypesForNamespace(namespace)));
-    Optional<Namespace> optionalNamespace = namespaceManager.get(namespace);
-    if (optionalNamespace.isPresent()) {
-      Embedded.Builder embeddedBuilder = embeddedBuilder();
-      applyEnrichers(new EdisonHalAppender(linkingTo, embeddedBuilder), optionalNamespace.get(), namespace);
-    }
+    linkingTo.array(searchLinks(namespace.getNamespace()));
+    linkingTo.single(link("searchableTypes", links.searchableTypes().searchableTypesForNamespace(namespace.getNamespace())));
+    Embedded.Builder embeddedBuilder = embeddedBuilder();
+    applyEnrichers(new EdisonHalAppender(linkingTo, embeddedBuilder), namespace, namespace.getNamespace());
 
-    return new NamespaceDto(namespace, linkingTo.build());
+    return new NamespaceDto(namespace.getNamespace(), linkingTo.build());
   }
 
   @VisibleForTesting

@@ -29,7 +29,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.NamespaceManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
@@ -39,11 +39,11 @@ import javax.ws.rs.Produces;
 
 public class NamespaceCollectionResource {
 
-  private final RepositoryManager manager;
+  private final NamespaceManager manager;
   private final NamespaceCollectionToDtoMapper repositoryCollectionToDtoMapper;
 
   @Inject
-  public NamespaceCollectionResource(RepositoryManager manager, NamespaceCollectionToDtoMapper repositoryCollectionToDtoMapper) {
+  public NamespaceCollectionResource(NamespaceManager manager, NamespaceCollectionToDtoMapper repositoryCollectionToDtoMapper) {
     this.manager = manager;
     this.repositoryCollectionToDtoMapper = repositoryCollectionToDtoMapper;
   }
@@ -72,6 +72,6 @@ public class NamespaceCollectionResource {
       schema = @Schema(implementation = ErrorDto.class)
     ))
   public HalRepresentation getAll() {
-    return repositoryCollectionToDtoMapper.map(manager.getAllNamespaces());
+    return repositoryCollectionToDtoMapper.map(manager.getAll());
   }
 }

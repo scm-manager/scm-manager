@@ -26,6 +26,7 @@ package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.HalRepresentation;
+import sonia.scm.repository.Namespace;
 
 import javax.inject.Inject;
 import java.util.Collection;
@@ -45,7 +46,7 @@ public class NamespaceCollectionToDtoMapper {
     this.links = links;
   }
 
-  public HalRepresentation map(Collection<String> namespaces) {
+  public HalRepresentation map(Collection<Namespace> namespaces) {
     Embedded namespaceDtos = embeddedBuilder()
       .with("namespaces", namespaces.stream().map(namespaceMapper::map).collect(toList()))
       .build();

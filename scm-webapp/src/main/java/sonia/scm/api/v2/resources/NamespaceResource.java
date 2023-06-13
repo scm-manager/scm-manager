@@ -28,7 +28,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.NamespaceManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
@@ -43,12 +43,12 @@ import static sonia.scm.NotFoundException.notFound;
 
 public class NamespaceResource {
 
-  private final RepositoryManager manager;
+  private final NamespaceManager manager;
   private final NamespaceToNamespaceDtoMapper namespaceMapper;
   private final Provider<NamespacePermissionResource> namespacePermissionResource;
 
   @Inject
-  public NamespaceResource(RepositoryManager manager, NamespaceToNamespaceDtoMapper namespaceMapper, Provider<NamespacePermissionResource> namespacePermissionResource) {
+  public NamespaceResource(NamespaceManager manager, NamespaceToNamespaceDtoMapper namespaceMapper, Provider<NamespacePermissionResource> namespacePermissionResource) {
     this.manager = manager;
     this.namespaceMapper = namespaceMapper;
     this.namespacePermissionResource = namespacePermissionResource;
@@ -92,11 +92,8 @@ public class NamespaceResource {
     )
   )
   public NamespaceDto get(@PathParam("namespace") String namespace) {
-    return manager.getAllNamespaces()
-      .stream()
-      .filter(n -> n.equals(namespace))
+    return manager.get(namespace)
       .map(namespaceMapper::map)
-      .findFirst()
       .orElseThrow(() -> notFound(entity("Namespace", namespace)));
   }
 

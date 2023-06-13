@@ -1,0 +1,2 @@
+- type: fixed
+  description: Performance (prevent reading of repositories in namespace mapper)

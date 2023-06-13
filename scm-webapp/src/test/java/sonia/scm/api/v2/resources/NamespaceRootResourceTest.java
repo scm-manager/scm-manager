@@ -39,7 +39,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.repository.Namespace;
 import sonia.scm.repository.NamespaceManager;
-import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.search.SearchEngine;
 import sonia.scm.search.SearchableType;
@@ -66,8 +65,6 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class NamespaceRootResourceTest {
 
-  @Mock
-  RepositoryManager repositoryManager;
   @Mock
   NamespaceManager namespaceManager;
   @Mock
@@ -106,15 +103,15 @@ class NamespaceRootResourceTest {
     RepositoryPermissionCollectionToDtoMapper repositoryPermissionCollectionToDtoMapper = new RepositoryPermissionCollectionToDtoMapper(repositoryPermissionToRepositoryPermissionDtoMapper, links);
     RepositoryPermissionDtoToRepositoryPermissionMapperImpl dtoToModelMapper = new RepositoryPermissionDtoToRepositoryPermissionMapperImpl();
 
-    NamespaceCollectionResource namespaceCollectionResource = new NamespaceCollectionResource(repositoryManager, namespaceCollectionToDtoMapper);
+    NamespaceCollectionResource namespaceCollectionResource = new NamespaceCollectionResource(namespaceManager, namespaceCollectionToDtoMapper);
     NamespacePermissionResource namespacePermissionResource = new NamespacePermissionResource(dtoToModelMapper, repositoryPermissionToRepositoryPermissionDtoMapper, repositoryPermissionCollectionToDtoMapper, links, namespaceManager);
-    NamespaceResource namespaceResource = new NamespaceResource(repositoryManager, namespaceMapper, of(namespacePermissionResource));
+    NamespaceResource namespaceResource = new NamespaceResource(namespaceManager, namespaceMapper, of(namespacePermissionResource));
     dispatcher.addSingletonResource(new NamespaceRootResource(of(namespaceCollectionResource), of(namespaceResource)));
   }
 
   @BeforeEach
   void mockExistingNamespaces() {
-    lenient().when(repositoryManager.getAllNamespaces()).thenReturn(asList("hitchhiker", "space"));
+    lenient().when(namespaceManager.getAll()).thenReturn(asList(new Namespace("hitchhiker"), new Namespace("space")));
     Namespace hitchhikerNamespace = new Namespace("hitchhiker");
     hitchhikerNamespace.setPermissions(singleton(new RepositoryPermission("humans", "READ", true)));
     Namespace spaceNamespace = new Namespace("space");
