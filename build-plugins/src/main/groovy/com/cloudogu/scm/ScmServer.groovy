@@ -142,6 +142,7 @@ class ScmServer {
 
     cfg.setRequestHeaderSize(configuration.headerSize)
     cfg.setResponseHeaderSize(configuration.headerSize)
+    cfg.setSendServerVersion(false)
 
     connector.setConnectionFactories([new HttpConnectionFactory(cfg)])
     connector.setPort(configuration.port)

@@ -38,6 +38,7 @@
     <!-- increase header size for mercurial -->
     <Set name="requestHeaderSize">16384</Set>
     <Set name="responseHeaderSize">16384</Set>
+    <Set name="sendServerVersion">false</Set>
 
     <Call name="addCustomizer">
       <Arg><New class="org.eclipse.jetty.server.ForwardedRequestCustomizer"/></Arg>

@@ -41,6 +41,7 @@ data:
         <!-- increase header size for mercurial -->
         <Set name="requestHeaderSize">16384</Set>
         <Set name="responseHeaderSize">16384</Set>
+        <Set name="sendServerVersion">false</Set>
 
         {{- if .Values.ingress.enabled -}}
         <!--

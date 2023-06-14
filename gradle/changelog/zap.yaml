@@ -1,0 +1,2 @@
+- type: fixed
+  description: Security findings (security headers and jetty server information)
