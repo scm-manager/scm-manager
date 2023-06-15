@@ -59,19 +59,19 @@ const ExtensionTd = styled.td`
   }
 `;
 
-const FileName: FC<{ file: File; baseUrl: string }> = ({ file, baseUrl }) => {
+const FileName: FC<{ file: File; baseUrl: string; repositoryType: string }> = ({ file, baseUrl, repositoryType }) => {
   const ref = useKeyboardIteratorTarget();
   return (
-    <FileLink ref={ref} baseUrl={baseUrl} file={file} tabIndex={0}>
+    <FileLink ref={ref} baseUrl={baseUrl} file={file} tabIndex={0} repositoryType={repositoryType}>
       {file.name}
     </FileLink>
   );
 };
 
 class FileTreeLeaf extends React.Component<Props> {
-  createFileIcon = (file: File) => {
+  createFileIcon = (file: File, repositoryType: string) => {
     return (
-      <FileLink baseUrl={this.props.baseUrl} file={file} tabIndex={-1}>
+      <FileLink baseUrl={this.props.baseUrl} file={file} tabIndex={-1} repositoryType={repositoryType}>
         <FileIcon file={file} />
       </FileLink>
     );
@@ -112,9 +112,9 @@ class FileTreeLeaf extends React.Component<Props> {
     return (
       <>
         <tr>
-          <td>{this.createFileIcon(file)}</td>
+          <td>{this.createFileIcon(file, repository.type)}</td>
           <MinWidthTd className="is-word-break">
-            <FileName file={file} baseUrl={baseUrl} />
+            <FileName file={file} baseUrl={baseUrl} repositoryType={repository.type} />
           </MinWidthTd>
           <NoWrapTd className="is-hidden-mobile">
             {file.directory ? "" : this.contentIfPresent(file, "length", renderFileSize)}

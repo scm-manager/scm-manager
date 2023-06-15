@@ -25,16 +25,17 @@ import React, { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { File } from "@scm-manager/ui-types";
-import { Tooltip } from "@scm-manager/ui-components";
+import { Tooltip, urls } from "@scm-manager/ui-components";
 
 type Props = {
   baseUrl: string;
   file: File;
   children: ReactNode;
   tabIndex?: number;
+  repositoryType: string;
 };
 
-const isLocalRepository = (repositoryUrl: string) => {
+const getHostname = (repositoryUrl: string) => {
   let host = repositoryUrl.split("/")[2];
   if (host.includes("@")) {
     // remove prefix
@@ -44,7 +45,11 @@ const isLocalRepository = (repositoryUrl: string) => {
   host = host.split(":")[0];
   // remove query
   host = host.split("?")[0];
-  return host === window.location.hostname;
+  return host;
+};
+
+const isLocalRepository = (repositoryUrl: string) => {
+  return getHostname(repositoryUrl) === window.location.hostname;
 };
 
 export const encodePart = (part: string) => {
@@ -54,9 +59,30 @@ export const encodePart = (part: string) => {
   return encodeURIComponent(part);
 };
 
-export const createRelativeLink = (repositoryUrl: string) => {
+export const createRelativeLink = (
+  repositoryUrl: string,
+  contextPath: string,
+  revision?: string,
+  repositoryType?: string
+) => {
   const paths = repositoryUrl.split("/");
-  return "/" + paths.slice(3).join("/");
+  const CONTEXT_PART_IN_URL = 3;
+  const FOLDER_PART_IN_URL = 7;
+
+  const folder = paths.splice(FOLDER_PART_IN_URL).join("/");
+  let url = "/" + paths.slice(CONTEXT_PART_IN_URL, FOLDER_PART_IN_URL).join("/");
+  url = url.replace(contextPath, "");
+  url += "/code/sources/";
+  if (revision) {
+    url += revision + "/";
+    if (folder !== "") {
+      url += folder + "/";
+    }
+  } else if (repositoryType === "svn" && folder !== "") {
+    // type of outgoing repo is svn
+    url += `-1/${folder}/`;
+  }
+  return url;
 };
 
 export const createFolderLink = (base: string, file: File) => {
@@ -74,49 +100,46 @@ export const createFolderLink = (base: string, file: File) => {
   return link;
 };
 
-const FileLink = React.forwardRef<HTMLAnchorElement, Props>(({ baseUrl, file, children, tabIndex }, ref) => {
-  const [t] = useTranslation("repos");
-  if (file?.subRepository?.repositoryUrl) {
-    // file link represents a subRepository
-    let link = file.subRepository.repositoryUrl;
-    if (file.subRepository.browserUrl) {
-      // replace upstream url with public browser url
-      link = file.subRepository.browserUrl;
-    }
-    if (link.startsWith("http://") || link.startsWith("https://")) {
-      if (file.subRepository.revision && isLocalRepository(link)) {
-        link += "/code/sources/" + file.subRepository.revision;
+const FileLink = React.forwardRef<HTMLAnchorElement, Props>(
+  ({ baseUrl, file, children, tabIndex, repositoryType }, ref) => {
+    const [t] = useTranslation("repos");
+    if (file?.subRepository?.repositoryUrl) {
+      // file link represents a subRepository
+      let link = file.subRepository.repositoryUrl;
+      if (file.subRepository.browserUrl) {
+        // replace upstream url with public browser url
+        link = file.subRepository.browserUrl;
       }
-      return (
-        <a href={link} tabIndex={tabIndex}>
-          {children}
-        </a>
-      );
-    } else if (link.startsWith("ssh://") && isLocalRepository(link)) {
-      link = createRelativeLink(link);
-      if (file.subRepository.revision) {
-        link += "/code/sources/" + file.subRepository.revision;
+
+      if (isLocalRepository(link)) {
+        link = createRelativeLink(link, urls.withContextPath(""), file.subRepository.revision, repositoryType);
+        return (
+          <Link to={link} tabIndex={tabIndex}>
+            {children}
+          </Link>
+        );
+      } else if (link.startsWith("http://") || link.startsWith("https://")) {
+        return (
+          <a href={link} tabIndex={tabIndex}>
+            {children}
+          </a>
+        );
+      } else {
+        // subRepository url cannot be linked
+        return (
+          <Tooltip location="top" message={t("sources.fileTree.subRepository") + ": \n" + link}>
+            {children}
+          </Tooltip>
+        );
       }
-      return (
-        <Link to={link} tabIndex={tabIndex}>
-          {children}
-        </Link>
-      );
-    } else {
-      // subRepository url cannot be linked
-      return (
-        <Tooltip location="top" message={t("sources.fileTree.subRepository") + ": \n" + link}>
-          {children}
-        </Tooltip>
-      );
     }
+    // normal file or folder
+    return (
+      <Link ref={ref} to={createFolderLink(baseUrl, file)} tabIndex={tabIndex}>
+        {children}
+      </Link>
+    );
   }
-  // normal file or folder
-  return (
-    <Link ref={ref} to={createFolderLink(baseUrl, file)} tabIndex={tabIndex}>
-      {children}
-    </Link>
-  );
-});
+);
 
 export default FileLink;

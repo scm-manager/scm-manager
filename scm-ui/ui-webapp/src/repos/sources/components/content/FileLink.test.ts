@@ -28,13 +28,31 @@ import { File } from "@scm-manager/ui-types";
 
 describe("create relative link tests", () => {
   it("should create relative link", () => {
-    expect(createRelativeLink("http://localhost:8081/scm/repo/scmadmin/scm-manager")).toBe(
-      "/scm/repo/scmadmin/scm-manager"
+    expect(createRelativeLink("http://localhost:8081/scm/repo/scmadmin/scm-manager", "/scm")).toBe(
+      "/repo/scmadmin/scm-manager/code/sources/"
     );
-    expect(createRelativeLink("ssh://_anonymous@repo.scm-manager.org:1234/repo/public/anonymous-access")).toBe(
-      "/repo/public/anonymous-access"
+    expect(createRelativeLink("ssh://_anonymous@repo.scm-manager.org:1234/repo/public/anonymous-access", "")).toBe(
+      "/repo/public/anonymous-access/code/sources/"
     );
-    expect(createRelativeLink("ssh://server.local/project.git")).toBe("/project.git");
+    expect(createRelativeLink("ssh://server.local/project.git", "")).toBe("/project.git/code/sources/");
+    expect(createRelativeLink("https://localhost:8081/scm/repo/scmadmin/scm-manager", "/scm", "2", "svn")).toBe(
+      "/repo/scmadmin/scm-manager/code/sources/2/"
+    );
+    expect(createRelativeLink("https://localhost:8081/longContext/repo/scmadmin/scm-manager", "/longContext")).toBe(
+      "/repo/scmadmin/scm-manager/code/sources/"
+    );
+  });
+
+  it("with sub directory", () => {
+    expect(createRelativeLink("http://localhost:8081/scm/repo/scmadmin/test02/subfolder", "/scm")).toBe(
+      "/repo/scmadmin/test02/code/sources/"
+    );
+    expect(createRelativeLink("https://localhost:8081/scm/repo/scmadmin/test02/subfolder", "/scm", "2")).toBe(
+      "/repo/scmadmin/test02/code/sources/2/subfolder/"
+    );
+    expect(createRelativeLink("http://localhost:8081/scm/repo/scmadmin/test02/dir1/dir2/dir3", "/scm", null, "svn")).toBe(
+      "/repo/scmadmin/test02/code/sources/-1/dir1/dir2/dir3/"
+    );
   });
 });
 
@@ -48,8 +66,8 @@ describe("create folder link tests", () => {
       revision: "1a",
       _links: {},
       _embedded: {
-        children: []
-      }
+        children: [],
+      },
     };
   }
 
