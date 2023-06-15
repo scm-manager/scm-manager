@@ -105,7 +105,7 @@ public class SvnBrowseCommand extends AbstractSvnCommand
       if (FS_NO_SUCH_REVISION.equals(ex.getErrorMessage().getErrorCode())) {
         throw notFound(entity("Revision", Long.toString(revisionNumber)).in(this.repository));
       }
-      logger.error("could not open repository", ex);
+      logger.error("could not open repository: " + repository.getNamespaceAndName(), ex);
     }
 
     return result;

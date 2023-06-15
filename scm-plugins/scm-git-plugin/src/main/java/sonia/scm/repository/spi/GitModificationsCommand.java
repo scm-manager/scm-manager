@@ -81,8 +81,8 @@ public class GitModificationsCommand extends AbstractGitCommand implements Modif
         return new Modifications(baseRevision, revision, createModifications(treeWalk, commit));
       }
     } catch (IOException ex) {
-      log.error("could not open repository", ex);
-      throw new InternalRepositoryException(entity(repository), "could not open repository", ex);
+      log.error("could not open repository: " + repository.getNamespaceAndName(), ex);
+      throw new InternalRepositoryException(entity(repository), "could not open repository: " + repository.getNamespaceAndName(), ex);
     } finally {
       GitUtil.release(revWalk);
     }

@@ -138,7 +138,7 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
     }
     catch (IOException ex)
     {
-      logger.error("could not open repository", ex);
+      logger.error("could not open repository: " + repository.getNamespaceAndName(), ex);
     }
     catch (NullPointerException e)
     {

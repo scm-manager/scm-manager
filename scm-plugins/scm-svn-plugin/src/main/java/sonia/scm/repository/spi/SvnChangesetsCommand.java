@@ -51,7 +51,7 @@ public class SvnChangesetsCommand extends AbstractSvnCommand implements Changese
       repo.log(null, startRev, endRev, true, true, new ChangesetCollector(changesets));
       return changesets;
     } catch (SVNException ex) {
-      throw new InternalRepositoryException(repository, "could not open repository", ex);
+      throw new InternalRepositoryException(repository, "could not open repository: " + repository.getNamespaceAndName(), ex);
     }
   }
 
@@ -69,7 +69,7 @@ public class SvnChangesetsCommand extends AbstractSvnCommand implements Changese
       }
       return Optional.empty();
     } catch (SVNException ex) {
-      throw new InternalRepositoryException(repository, "could not open repository", ex);
+      throw new InternalRepositoryException(repository, "could not open repository: " + repository.getNamespaceAndName(), ex);
     }
   }
 }
