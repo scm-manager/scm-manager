@@ -107,6 +107,12 @@ persistence:
   # persistence.size -- The size of the PVC
   size: 40Gi
 
+livenessProbe:
+  initialDelaySeconds: 60
+
+readinessProbe:
+  initialDelaySeconds: 20
+
 # resources -- Resources allocation (Requests and Limits)
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

@@ -1,0 +1,2 @@
+- type: added
+  description: Add variables for liveness probe and readiness probe delay in helm chart
