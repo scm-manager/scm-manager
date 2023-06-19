@@ -24,14 +24,13 @@
 import React, { FC } from "react";
 import { Redirect, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { useCreateGroup, useUserSuggestions, urls } from "@scm-manager/ui-api";
+import { useCreateGroup, urls } from "@scm-manager/ui-api";
 import { Page } from "@scm-manager/ui-components";
 import GroupForm from "../components/GroupForm";
 
 const CreateGroup: FC = () => {
   const [t] = useTranslation("groups");
   const { isLoading, create, error, group } = useCreateGroup();
-  const userSuggestions = useUserSuggestions();
   const location = useLocation();
 
   if (group) {
@@ -44,7 +43,6 @@ const CreateGroup: FC = () => {
         <GroupForm
           submitForm={create}
           loading={isLoading}
-          loadUserSuggestions={userSuggestions}
           transmittedName={urls.getValueStringFromLocationByKey(location, "name")}
           transmittedExternal={urls.getValueStringFromLocationByKey(location, "external") === "true"}
         />

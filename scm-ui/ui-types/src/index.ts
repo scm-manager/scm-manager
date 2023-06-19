@@ -54,6 +54,8 @@ export * from "./Sources";
 
 export { SelectValue, AutocompleteObject } from "./Autocomplete";
 
+export { Option } from "./Option";
+
 export * from "./Plugin";
 
 export * from "./RepositoryRole";

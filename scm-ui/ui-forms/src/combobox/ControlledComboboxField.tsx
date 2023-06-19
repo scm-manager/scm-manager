@@ -28,26 +28,24 @@ import { useScmFormContext } from "../ScmFormContext";
 import { useScmFormPathContext } from "../FormPathContext";
 import { defaultOptionFactory, prefixWithoutIndices } from "../helpers";
 import classNames from "classnames";
-import ChipInputField from "./ChipInputField";
+import ComboboxField from "./ComboboxField";
 import { Option } from "@scm-manager/ui-types";
 
 type Props<T extends Record<string, unknown>> = Omit<
-  Parameters<typeof ChipInputField>[0],
-  "error" | "createDeleteText" | "label" | "defaultChecked" | "required" | keyof ControllerRenderProps
+  Parameters<typeof ComboboxField>[0],
+  "error" | "label" | keyof ControllerRenderProps
 > & {
   rules?: ComponentProps<typeof Controller>["rules"];
   name: Path<T>;
   label?: string;
-  defaultValue?: string[];
-  createDeleteText?: (value: string) => string;
   optionFactory?: (val: any) => Option<unknown>;
 };
 
 /**
  * @beta
- * @since 2.44.0
+ * @since 2.45.0
  */
-function ControlledChipInputField<T extends Record<string, unknown>>({
+function ControlledComboboxField<T extends Record<string, unknown>>({
   name,
   label,
   helpText,
@@ -55,52 +53,44 @@ function ControlledChipInputField<T extends Record<string, unknown>>({
   testId,
   defaultValue,
   readOnly,
-  placeholder,
   className,
-  createDeleteText,
-  children,
   optionFactory = defaultOptionFactory,
   ...props
 }: Props<T>) {
-  const { control, t, readOnly: formReadonly } = useScmFormContext();
+  const { control, t, readOnly: formReadonly, formId } = useScmFormContext();
   const formPathPrefix = useScmFormPathContext();
-
   const nameWithPrefix = formPathPrefix ? `${formPathPrefix}.${name}` : name;
   const prefixedNameWithoutIndices = prefixWithoutIndices(nameWithPrefix);
   const labelTranslation = label || t(`${prefixedNameWithoutIndices}.label`) || "";
-  const placeholderTranslation = placeholder || t(`${prefixedNameWithoutIndices}.placeholder`) || "";
-  const ariaLabelTranslation = t(`${prefixedNameWithoutIndices}.ariaLabel`);
   const helpTextTranslation = helpText || t(`${prefixedNameWithoutIndices}.helpText`);
   return (
     <Controller
       control={control}
       name={nameWithPrefix}
       rules={rules}
-      defaultValue={defaultValue}
-      render={({ field: { value, onChange, ...field }, fieldState }) => (
-        <ChipInputField
-          label={labelTranslation}
-          helpText={helpTextTranslation}
-          placeholder={placeholderTranslation}
-          aria-label={ariaLabelTranslation}
-          value={value ? value.map(optionFactory) : []}
-          onChange={(selectedOptions) => onChange(selectedOptions.map((item) => item.value))}
-          {...props}
-          {...field}
+      defaultValue={defaultValue as never}
+      render={({ field: { onChange, value, ...field }, fieldState }) => (
+        // @ts-ignore
+        <ComboboxField
+          form={formId}
           readOnly={readOnly ?? formReadonly}
           className={classNames("column", className)}
+          {...props}
+          {...field}
+          label={labelTranslation}
+          helpText={helpTextTranslation}
+          onChange={(e) => onChange(e?.value)}
+          value={optionFactory(value)}
           error={
             fieldState.error
               ? fieldState.error.message || t(`${prefixedNameWithoutIndices}.error.${fieldState.error.type}`)
               : undefined
           }
-          testId={testId ?? `input-${nameWithPrefix}`}
-        >
-          {children}
-        </ChipInputField>
+          testId={testId ?? `select-${nameWithPrefix}`}
+        />
       )}
     />
   );
 }
 
-export default ControlledChipInputField;
+export default ControlledComboboxField;

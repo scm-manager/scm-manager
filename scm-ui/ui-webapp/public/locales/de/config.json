@@ -79,8 +79,8 @@
     "emergencyContacts": {
       "label": "Notfallkontakte",
       "helpText": "Liste der Benutzer, die über administrative Vorfälle informiert werden.",
-      "addButton": "Kontakt hinzufügen",
-      "autocompletePlaceholder": "Nutzer zum Benachrichtigen hinzufügen"
+      "autocompletePlaceholder": "Nutzer zum Benachrichtigen hinzufügen",
+      "ariaLabel": "Neuen Nutzer zum Benachrichtigen hinzufügen"
     }
   },
   "validation": {

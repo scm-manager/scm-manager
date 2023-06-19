@@ -24,30 +24,30 @@
 import React, { FC, FormEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
+  AutocompleteObject,
   Link,
   Namespace,
   PermissionCollection,
   PermissionCreateEntry,
   Repository,
   RepositoryRole,
-  SelectValue
 } from "@scm-manager/ui-types";
 import {
   Button,
   ErrorNotification,
-  GroupAutocomplete,
   LabelWithHelpIcon,
   Level,
   Radio,
   SubmitButton,
   Subtitle,
-  UserAutocomplete
 } from "@scm-manager/ui-components";
 import * as validator from "../utils/permissionValidation";
 import RoleSelector from "../components/RoleSelector";
 import AdvancedPermissionsDialog from "./AdvancedPermissionsDialog";
-import { useCreatePermission, useIndexLinks } from "@scm-manager/ui-api";
+import { useCreatePermission, useGroupOptions, useIndexLinks, useUserOptions, Option } from "@scm-manager/ui-api";
 import findVerbsForRole from "../utils/findVerbsForRole";
+import { ComboboxField } from "@scm-manager/ui-forms";
+import classNames from "classnames";
 
 type Props = {
   availableRoles: RepositoryRole[];
@@ -58,29 +58,33 @@ type Props = {
 
 type PermissionState = PermissionCreateEntry & {
   valid: boolean;
-  value?: SelectValue;
+  value?: Option<AutocompleteObject>;
 };
 
 const useAutoCompleteLinks = () => {
   const links = useIndexLinks()?.autocomplete as Link[];
   return {
-    groups: links?.find(l => l.name === "groups"),
-    users: links?.find(l => l.name === "users")
+    groups: links?.find((l) => l.name === "groups"),
+    users: links?.find((l) => l.name === "users"),
   };
+};
+
+const isRepository = (namespaceOrRepository: Namespace | Repository): namespaceOrRepository is Repository => {
+  return (namespaceOrRepository as Repository).name !== undefined;
 };
 
 const CreatePermissionForm: FC<Props> = ({
   availableRoles,
   availableVerbs,
   currentPermissions,
-  namespaceOrRepository
+  namespaceOrRepository,
 }) => {
   const initialPermissionState = {
     name: "",
     role: "READ",
     verbs: [],
     groupPermission: false,
-    valid: false
+    valid: false,
   };
   const links = useAutoCompleteLinks();
   const { isLoading, error, create, permission: createdPermission } = useCreatePermission(namespaceOrRepository);
@@ -92,23 +96,29 @@ const CreatePermissionForm: FC<Props> = ({
       ...initialPermissionState,
       groupPermission: createdPermission ? createdPermission.groupPermission : initialPermissionState.groupPermission,
       role: createdPermission ? createdPermission.role : initialPermissionState.role,
-      verbs: createdPermission ? createdPermission?.verbs : initialPermissionState.verbs
+      verbs: createdPermission ? createdPermission?.verbs : initialPermissionState.verbs,
     });
     //eslint-disable-next-line
   }, [createdPermission]);
   const selectedVerbs = permission.role ? findVerbsForRole(availableRoles, permission.role) : permission.verbs;
+  const [userQuery, setUserQuery] = useState("");
+  const [groupQuery, setGroupQuery] = useState("");
+  const { data: userOptions, isLoading: userOptionsLoading } = useUserOptions(userQuery);
+  const { data: groupOptions, isLoading: groupOptionsLoading } = useGroupOptions(groupQuery);
 
-  const selectName = (value: SelectValue) => {
-    setPermission({
-      ...permission,
-      value,
-      name: value.value.id,
-      valid: validator.isPermissionValid(
-        value.value.id,
-        permission.groupPermission,
-        currentPermissions._embedded?.permissions || []
-      )
-    });
+  const selectName = (value?: Option<AutocompleteObject>) => {
+    if (value) {
+      setPermission((prevState) => ({
+        ...prevState,
+        value,
+        name: value.value.id,
+        valid: validator.isPermissionValid(
+          value.value.id,
+          permission.groupPermission,
+          currentPermissions._embedded?.permissions || []
+        ),
+      }));
+    }
   };
 
   const groupPermissionScopeChanged = (value: boolean) => {
@@ -126,7 +136,7 @@ const CreatePermissionForm: FC<Props> = ({
   const permissionScopeChanged = (groupPermission: boolean) => {
     setPermission({
       ...permission,
-      groupPermission
+      groupPermission,
     });
   };
 
@@ -138,7 +148,7 @@ const CreatePermissionForm: FC<Props> = ({
     setPermission({
       ...permission,
       verbs: [],
-      role
+      role,
     });
   };
 
@@ -146,7 +156,7 @@ const CreatePermissionForm: FC<Props> = ({
     setPermission({
       ...permission,
       role: undefined,
-      verbs
+      verbs,
     });
     setShowAdvancedDialog(false);
   };
@@ -157,7 +167,7 @@ const CreatePermissionForm: FC<Props> = ({
   };
 
   const findAvailableRole = (roleName: string) => {
-    return availableRoles.find(role => role.name === roleName);
+    return availableRoles.find((role) => role.name === roleName);
   };
 
   const empty = { value: { id: "", displayName: "" }, label: "" };
@@ -173,6 +183,7 @@ const CreatePermissionForm: FC<Props> = ({
           onClose={() => setShowAdvancedDialog(false)}
           onSubmit={submitAdvancedPermissionsDialog}
           readOnly={!create}
+          entityType={isRepository(namespaceOrRepository) ? "repository" : "namespace"}
         />
       ) : null}
       <ErrorNotification error={error} />
@@ -198,17 +209,23 @@ const CreatePermissionForm: FC<Props> = ({
         <div className="columns">
           <div className="column is-half">
             {permission.groupPermission && links.groups ? (
-              <GroupAutocomplete
-                autocompleteLink={links.groups.href}
-                valueSelected={selectName}
+              <ComboboxField<AutocompleteObject>
+                label={t("permission.group-select")}
+                options={groupOptions || []}
+                onChange={selectName}
+                onQueryChange={setGroupQuery}
                 value={permission.value || empty}
+                className={classNames({ "is-loading": groupOptionsLoading })}
               />
             ) : null}
             {!permission.groupPermission && links.users ? (
-              <UserAutocomplete
-                autocompleteLink={links.users.href}
-                valueSelected={selectName}
+              <ComboboxField<AutocompleteObject>
+                label={t("permission.user-select")}
+                options={userOptions || []}
+                onQueryChange={setUserQuery}
+                onChange={selectName}
                 value={permission.value || empty}
+                className={classNames({ "is-loading": userOptionsLoading })}
               />
             ) : null}
           </div>
@@ -216,7 +233,7 @@ const CreatePermissionForm: FC<Props> = ({
             <div className="columns">
               <div className="column is-narrow">
                 <RoleSelector
-                  availableRoles={availableRoles.map(r => r.name)}
+                  availableRoles={availableRoles.map((r) => r.name)}
                   label={t("permission.role")}
                   helpText={t("permission.help.roleHelpText")}
                   handleRoleChange={handleRoleChange}

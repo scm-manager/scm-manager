@@ -21,40 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
-import { SelectValue } from "@scm-manager/ui-types";
-import Autocomplete from "./Autocomplete";
-import { useSuggestions } from "@scm-manager/ui-api";
 
-export type AutocompleteProps = {
-  autocompleteLink?: string;
-  valueSelected?: (p: SelectValue) => void;
-  value?: SelectValue;
-};
-
-type Props = AutocompleteProps & {
+export type Option<T> = {
   label: string;
-  noOptionsMessage: string;
-  loadingMessage: string;
-  placeholder: string;
+  value: T;
+  /**
+   * Takes precedence over the label in alternative selection modes (i.e. popups in combo-boxes).
+   */
+  displayValue?: string;
 };
-
-/**
- * @deprecated
- * @since 2.45.0
- *
- * Use {@link Combobox} instead
- */
-const UserGroupAutocomplete: FC<Props> = ({ autocompleteLink, valueSelected, ...props }) => {
-  const loadSuggestions = useSuggestions(autocompleteLink);
-
-  const selectName = (selection: SelectValue) => {
-    if (valueSelected) {
-      valueSelected(selection);
-    }
-  };
-
-  return <Autocomplete loadSuggestions={loadSuggestions} valueSelected={selectName} creatable={true} {...props} />;
-};
-
-export default UserGroupAutocomplete;

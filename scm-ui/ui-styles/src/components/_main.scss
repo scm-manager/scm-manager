@@ -53,6 +53,12 @@
   }
 }
 
+
+
+.is-absolute {
+  position: absolute;
+}
+
 .has-box-shadow {
   box-shadow: $box-shadow;
 }
@@ -924,6 +930,10 @@ form .field:not(.is-grouped) {
   .modal-card-foot {
     justify-content: flex-end; // pulled-right
   }
+}
+
+.is-overflow-hidden {
+  overflow: hidden;
 }
 
 .is-overflow-visible {

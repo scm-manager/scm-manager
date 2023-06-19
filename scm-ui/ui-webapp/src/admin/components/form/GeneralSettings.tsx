@@ -21,18 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useUserSuggestions } from "@scm-manager/ui-api";
-import { AnonymousMode, ConfigChangeHandler, NamespaceStrategies, SelectValue } from "@scm-manager/ui-types";
-import {
-  AutocompleteAddEntryToTableField,
-  Checkbox,
-  InputField,
-  MemberNameTagGroup,
-  Select
-} from "@scm-manager/ui-components";
+import { useUserOptions, Option } from "@scm-manager/ui-api";
+import { AnonymousMode, AutocompleteObject, ConfigChangeHandler, NamespaceStrategies } from "@scm-manager/ui-types";
+import { Checkbox, InputField, Select } from "@scm-manager/ui-components";
 import NamespaceStrategySelect from "./NamespaceStrategySelect";
+import { ChipInputField, Combobox } from "@scm-manager/ui-forms";
+import classNames from "classnames";
 
 type Props = {
   realmDescription: string;
@@ -68,10 +64,11 @@ const GeneralSettings: FC<Props> = ({
   namespaceStrategy,
   namespaceStrategies,
   onChange,
-  hasUpdatePermission
+  hasUpdatePermission,
 }) => {
   const { t } = useTranslation("config");
-  const userSuggestions = useUserSuggestions();
+  const [query, setQuery] = useState("");
+  const { data: userOptions, isLoading: userOptionsLoading } = useUserOptions(query);
 
   const handleLoginInfoUrlChange = (value: string) => {
     onChange(true, value, "loginInfoUrl");
@@ -103,19 +100,12 @@ const GeneralSettings: FC<Props> = ({
   const handleEnabledApiKeysChange = (value: boolean) => {
     onChange(true, value, "enabledApiKeys");
   };
-  const handleEmergencyContactsChange = (p: string[]) => {
-    onChange(true, p, "emergencyContacts");
-  };
-
-  const isMember = (name: string) => {
-    return emergencyContacts.includes(name);
-  };
-
-  const addEmergencyContact = (value: SelectValue) => {
-    if (isMember(value.value.id)) {
-      return;
-    }
-    handleEmergencyContactsChange([...emergencyContacts, value.value.id]);
+  const handleEmergencyContactsChange = (p: Option<AutocompleteObject>[]) => {
+    onChange(
+      true,
+      p.map((c) => c.value.id),
+      "emergencyContacts"
+    );
   };
 
   return (
@@ -173,7 +163,7 @@ const GeneralSettings: FC<Props> = ({
             options={[
               { label: t("general-settings.anonymousMode.full"), value: "FULL" },
               { label: t("general-settings.anonymousMode.protocolOnly"), value: "PROTOCOL_ONLY" },
-              { label: t("general-settings.anonymousMode.off"), value: "OFF" }
+              { label: t("general-settings.anonymousMode.off"), value: "OFF" },
             ]}
             helpText={t("help.allowAnonymousAccessHelpText")}
             testId={"anonymous-mode-select"}
@@ -233,19 +223,20 @@ const GeneralSettings: FC<Props> = ({
       </div>
       <div className="columns">
         <div className="column is-full">
-          <MemberNameTagGroup
-            members={emergencyContacts}
-            memberListChanged={handleEmergencyContactsChange}
+          <ChipInputField<AutocompleteObject>
             label={t("general-settings.emergencyContacts.label")}
             helpText={t("general-settings.emergencyContacts.helpText")}
-          />
-          <AutocompleteAddEntryToTableField
-            addEntry={addEmergencyContact}
-            buttonLabel={t("general-settings.emergencyContacts.addButton")}
-            loadSuggestions={userSuggestions}
             placeholder={t("general-settings.emergencyContacts.autocompletePlaceholder")}
-            helpText={t("general-settings.emergencyContacts.helpText")}
-          />
+            aria-label="general-settings.emergencyContacts.ariaLabel"
+            value={emergencyContacts.map((m) => ({ label: m, value: { id: m, displayName: m } }))}
+            onChange={handleEmergencyContactsChange}
+          >
+            <Combobox<AutocompleteObject>
+              options={userOptions || []}
+              className={classNames({ "is-loading": userOptionsLoading })}
+              onQueryChange={setQuery}
+            />
+          </ChipInputField>
         </div>
       </div>
     </div>

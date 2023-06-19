@@ -44,6 +44,7 @@
     "@scm-manager/ui-buttons": "2.44.2-SNAPSHOT",
     "@scm-manager/ui-overlays": "2.44.2-SNAPSHOT",
     "@scm-manager/ui-api": "2.44.2-SNAPSHOT",
+    "@headlessui/react": "^1.7.15",
     "@radix-ui/react-slot": "^1.0.1",
     "@radix-ui/react-visually-hidden": "^1.0.3"
   },

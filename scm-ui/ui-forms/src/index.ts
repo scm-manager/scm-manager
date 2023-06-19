@@ -35,10 +35,13 @@ import ControlledTable from "./table/ControlledTable";
 import ControlledColumn from "./table/ControlledColumn";
 import AddListEntryForm from "./AddListEntryForm";
 import { ScmNestedFormPathContextProvider } from "./FormPathContext";
+import ControlledComboboxField from "./combobox/ControlledComboboxField";
 
+export { default as Combobox } from "./combobox/Combobox";
 export { default as ConfigurationForm } from "./ConfigurationForm";
 export { default as SelectField } from "./select/SelectField";
 export { default as ChipInputField } from "./chip-input/ChipInputField";
+export { default as ComboboxField } from "./combobox/ComboboxField";
 export { default as Select } from "./select/Select";
 export * from "./resourceHooks";
 
@@ -56,4 +59,5 @@ export const Form = Object.assign(FormCmp, {
     Column: ControlledColumn,
   }),
   ChipInput: ControlledChipInputField,
+  Combobox: ControlledComboboxField,
 });

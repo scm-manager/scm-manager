@@ -43,7 +43,7 @@ type Options = {
   timeZone?: string;
 };
 
-export const chooseLocale = (language: string, languages?: string[]) => {
+export const chooseLocale = (language: string, languages?: readonly string[]) => {
   for (const lng of languages || []) {
     const locale = supportedLocales[lng];
     if (locale) {

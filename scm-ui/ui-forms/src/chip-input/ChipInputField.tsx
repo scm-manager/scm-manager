@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import React, { ComponentProps, useCallback } from "react";
+import React, { KeyboardEventHandler, ReactElement, useCallback } from "react";
 import { createAttributesForTesting, useGeneratedId } from "@scm-manager/ui-components";
 import Field from "../base/Field";
 import Label from "../base/label/Label";
@@ -34,8 +34,10 @@ import { createVariantClass } from "../variants";
 import ChipInput, { NewChipInput } from "../headless-chip-input/ChipInput";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { useTranslation } from "react-i18next";
+import { withForwardRef } from "../helpers";
+import { Option } from "@scm-manager/ui-types";
 
-const StyledChipInput = styled(ChipInput)`
+const StyledChipInput: typeof ChipInput = styled(ChipInput)`
   min-height: 40px;
   height: min-content;
   gap: 0.5rem;
@@ -48,79 +50,102 @@ const StyledChipInput = styled(ChipInput)`
 const StyledInput = styled(NewChipInput)`
   color: var(--scm-secondary-more-color);
   font-size: 1rem;
+  height: initial;
+  padding: 0;
+  border-radius: 0;
   &:focus {
     outline: none;
   }
+` as unknown as typeof NewChipInput;
+
+const StyledDelete = styled(ChipInput.Chip.Delete)`
+  &:focus {
+    outline-offset: 0;
+  }
 `;
 
-type InputFieldProps = {
+type InputFieldProps<T> = {
   label: string;
   createDeleteText?: (value: string) => string;
   helpText?: string;
   error?: string;
   testId?: string;
   id?: string;
-} & Pick<ComponentProps<typeof NewChipInput>, "placeholder"> &
-  Pick<ComponentProps<typeof ChipInput>, "onChange" | "value" | "readOnly" | "disabled"> &
-  Pick<ComponentProps<typeof Field>, "className">;
+  children?: ReactElement;
+  placeholder?: string;
+  onChange?: (newValue: Option<T>[]) => void;
+  value?: Option<T>[] | null;
+  onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
+  readOnly?: boolean;
+  disabled?: boolean;
+  className?: string;
+  isLoading?: boolean;
+  isNewItemDuplicate?: (existingItem: Option<T>, newItem: Option<T>) => boolean;
+};
 
 /**
  * @beta
  * @since 2.44.0
  */
-const ChipInputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
-  (
-    {
-      label,
-      helpText,
-      readOnly,
-      disabled,
-      error,
-      createDeleteText,
-      onChange,
-      placeholder,
-      value,
-      className,
-      testId,
-      id,
-      ...props
-    },
-    ref
-  ) => {
-    const [t] = useTranslation("commons", { keyPrefix: "form.chipList" });
-    const deleteTextCallback = useCallback(
-      (item) => (createDeleteText ? createDeleteText(item) : t("delete", { item })),
-      [createDeleteText, t]
-    );
-    const inputId = useGeneratedId(id ?? testId);
-    const labelId = useGeneratedId();
-    const inputDescriptionId = useGeneratedId();
-    const variant = error ? "danger" : undefined;
-    return (
-      <Field className={className} aria-owns={inputId}>
-        <Label id={labelId}>
-          {label}
-          {helpText ? <Help className="ml-1" text={helpText} /> : null}
-        </Label>
+const ChipInputField = function ChipInputField<T>(
+  {
+    label,
+    helpText,
+    readOnly,
+    disabled,
+    error,
+    createDeleteText,
+    onChange,
+    placeholder,
+    value,
+    className,
+    testId,
+    id,
+    children,
+    isLoading,
+    isNewItemDuplicate,
+    ...props
+  }: InputFieldProps<T>,
+  ref: React.ForwardedRef<HTMLInputElement>
+) {
+  const [t] = useTranslation("commons", { keyPrefix: "form.chipList" });
+  const deleteTextCallback = useCallback(
+    (item) => (createDeleteText ? createDeleteText(item) : t("delete", { item })),
+    [createDeleteText, t]
+  );
+  const inputId = useGeneratedId(id ?? testId);
+  const labelId = useGeneratedId();
+  const inputDescriptionId = useGeneratedId();
+  const variant = error ? "danger" : undefined;
+  return (
+    <Field className={className} aria-owns={inputId}>
+      <Label id={labelId}>
+        {label}
+        {helpText ? <Help className="ml-1" text={helpText} /> : null}
+      </Label>
+      <div className={classNames("control", { "is-loading": isLoading })}>
         <StyledChipInput
           value={value}
-          onChange={onChange}
+          onChange={(e) => onChange && onChange(e ?? [])}
           className="is-flex is-flex-wrap-wrap input"
           aria-labelledby={labelId}
           disabled={readOnly || disabled}
+          isNewItemDuplicate={isNewItemDuplicate}
         >
-          {value?.map((val, index) => (
-            <ChipInput.Chip key={`${val}-${index}`} className="tag is-light">
-              {val}
-              <ChipInput.Chip.Delete aria-label={deleteTextCallback(val)} index={index} className="delete is-small" />
+          {value?.map((option, index) => (
+            <ChipInput.Chip key={option.label} className="tag is-light is-overflow-hidden">
+              <span className="is-ellipsis-overflow">{option.label}</span>
+              <StyledDelete aria-label={deleteTextCallback(option.label)} index={index} className="delete is-small" />
             </ChipInput.Chip>
           ))}
           <StyledInput
             {...props}
             className={classNames(
               "is-borderless",
-              "is-flex-grow-1",
               "has-background-transparent",
+              "is-shadowless",
+              "input",
+              "is-ellipsis-overflow",
               createVariantClass(variant)
             )}
             placeholder={!readOnly && !disabled ? placeholder : ""}
@@ -128,14 +153,16 @@ const ChipInputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
             ref={ref}
             aria-describedby={inputDescriptionId}
             {...createAttributesForTesting(testId)}
-          />
+          >
+            {children ? children : null}
+          </StyledInput>
         </StyledChipInput>
-        <VisuallyHidden aria-hidden id={inputDescriptionId}>
-          {t("input.description")}
-        </VisuallyHidden>
-        {error ? <FieldMessage variant={variant}>{error}</FieldMessage> : null}
-      </Field>
-    );
-  }
-);
-export default ChipInputField;
+      </div>
+      <VisuallyHidden aria-hidden id={inputDescriptionId}>
+        {t("input.description")}
+      </VisuallyHidden>
+      {error ? <FieldMessage variant={variant}>{error}</FieldMessage> : null}
+    </Field>
+  );
+};
+export default withForwardRef(ChipInputField);

@@ -23,42 +23,36 @@
  */
 import React, { FC, FormEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Group, Member, SelectValue } from "@scm-manager/ui-types";
-import {
-  AutocompleteAddEntryToTableField,
-  Checkbox,
-  InputField,
-  Level,
-  MemberNameTagGroup,
-  SubmitButton,
-  Subtitle,
-  Textarea
-} from "@scm-manager/ui-components";
+import { AutocompleteObject, Group, Member, Option } from "@scm-manager/ui-types";
+import { Checkbox, InputField, Level, SubmitButton, Subtitle, Textarea } from "@scm-manager/ui-components";
 import * as validator from "./groupValidation";
+import { ChipInputField, Combobox } from "@scm-manager/ui-forms";
+import { useUserOptions } from "@scm-manager/ui-api";
 
 type Props = {
   submitForm: (p: Group) => void;
   loading?: boolean;
   group?: Group;
-  loadUserSuggestions: (p: string) => Promise<SelectValue[]>;
   transmittedName?: string;
   transmittedExternal?: boolean;
 };
 
-const GroupForm: FC<Props> = ({ submitForm, loading, group, loadUserSuggestions, transmittedName = "", transmittedExternal = false }) => {
+const GroupForm: FC<Props> = ({ submitForm, loading, group, transmittedName = "", transmittedExternal = false }) => {
   const [t] = useTranslation("groups");
   const [groupState, setGroupState] = useState({
     name: transmittedName,
     description: "",
     _embedded: {
-      members: [] as Member[]
+      members: [] as Member[],
     },
     _links: {},
     members: [] as string[],
     type: "",
-    external: transmittedExternal
+    external: transmittedExternal,
   });
   const [nameValidationError, setNameValidationError] = useState(false);
+  const [query, setQuery] = useState("");
+  const { data: userOptions, isLoading: userOptionsLoading } = useUserOptions(query);
 
   useEffect(() => {
     if (group) {
@@ -84,21 +78,17 @@ const GroupForm: FC<Props> = ({ submitForm, loading, group, loadUserSuggestions,
     }
 
     return (
-      <>
-        <MemberNameTagGroup
-          members={groupState.members}
-          memberListChanged={(memberNames: string[]) => setGroupState({ ...groupState, members: memberNames })}
-        />
-        <AutocompleteAddEntryToTableField
-          addEntry={addMember}
-          disabled={false}
-          buttonLabel={t("groupForm.addMemberAutocomplete.buttonLabel")}
-          loadSuggestions={loadUserSuggestions}
-          placeholder={t("groupForm.addMemberAutocomplete.placeholder")}
-          loadingMessage={t("groupForm.addMemberAutocomplete.loading")}
-          noOptionsMessage={t("groupForm.addMemberAutocomplete.noOptions")}
-        />
-      </>
+      <ChipInputField<AutocompleteObject>
+        label={t("groupForm.addMemberAutocomplete.buttonLabel")}
+        aria-label="groupForm.addMemberAutocomplete.ariaLabel"
+        placeholder={t("groupForm.addMemberAutocomplete.placeholder")}
+        value={groupState.members.map((m) => ({ label: m, value: { id: m, displayName: m } }))}
+        onChange={updateMembers}
+        isLoading={userOptionsLoading}
+        isNewItemDuplicate={(prev, cur) => prev.value.id === cur.value.id}
+      >
+        <Combobox<AutocompleteObject> options={userOptions || []} onQueryChange={setQuery} />
+      </ChipInputField>
     );
   };
 
@@ -111,16 +101,13 @@ const GroupForm: FC<Props> = ({ submitForm, loading, group, loadUserSuggestions,
         label={t("group.external")}
         checked={groupState.external}
         helpText={t("groupForm.help.externalHelpText")}
-        onChange={external => setGroupState({ ...groupState, external })}
+        onChange={(external) => setGroupState({ ...groupState, external })}
       />
     );
   };
 
-  const addMember = (value: SelectValue) => {
-    if (groupState.members.includes(value.value.id)) {
-      return;
-    }
-    setGroupState({ ...groupState, members: [...groupState.members, value.value.id] });
+  const updateMembers = (members: Array<Option<AutocompleteObject>>) => {
+    setGroupState((prevState) => ({ ...prevState, members: members.map((m) => m.value.id) }));
   };
 
   let nameField = null;
@@ -131,7 +118,7 @@ const GroupForm: FC<Props> = ({ submitForm, loading, group, loadUserSuggestions,
       <InputField
         label={t("group.name")}
         errorMessage={t("groupForm.nameError")}
-        onChange={name => {
+        onChange={(name) => {
           setNameValidationError(!validator.isNameValid(name));
           setGroupState({ ...groupState, name });
         }}
@@ -154,7 +141,7 @@ const GroupForm: FC<Props> = ({ submitForm, loading, group, loadUserSuggestions,
         <Textarea
           label={t("group.description")}
           errorMessage={t("groupForm.descriptionError")}
-          onChange={description => setGroupState({ ...groupState, description })}
+          onChange={(description) => setGroupState({ ...groupState, description })}
           value={groupState.description}
           validationError={false}
           helpText={t("groupForm.help.descriptionHelpText")}

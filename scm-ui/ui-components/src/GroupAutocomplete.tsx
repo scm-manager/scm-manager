@@ -25,6 +25,12 @@ import React, { FC } from "react";
 import UserGroupAutocomplete, { AutocompleteProps } from "./UserGroupAutocomplete";
 import { useTranslation } from "react-i18next";
 
+/**
+ * @deprecated
+ * @since 2.45.0
+ *
+ * Use {@link Combobox} instead
+ */
 const GroupAutocomplete: FC<AutocompleteProps> = (props) => {
   const [t] = useTranslation("commons");
   return (

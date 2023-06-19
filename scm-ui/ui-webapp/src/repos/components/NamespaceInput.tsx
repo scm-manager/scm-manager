@@ -22,12 +22,12 @@
  * SOFTWARE.
  */
 
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { CUSTOM_NAMESPACE_STRATEGY } from "@scm-manager/ui-types";
-import { Autocomplete } from "@scm-manager/ui-components";
 import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import { useTranslation } from "react-i18next";
-import { useNamespaceSuggestions } from "@scm-manager/ui-api";
+import { ComboboxField } from "@scm-manager/ui-forms";
+import { useNamespaceOptions } from "@scm-manager/ui-api";
 
 type Props = {
   namespace: string;
@@ -42,17 +42,18 @@ const NamespaceInput: FC<Props> = ({
   handleNamespaceChange,
   namespaceStrategy,
   namespaceValidationError,
-  disabled
+  disabled,
 }) => {
   const [t] = useTranslation("repos");
-  const loadNamespaceSuggestions = useNamespaceSuggestions();
+  const [query, setQuery] = useState("");
+  const { isLoading, data } = useNamespaceOptions(query);
 
   let informationMessage = undefined;
   if (namespace?.indexOf(" ") > 0) {
     informationMessage = t("validation.namespaceSpaceWarningText");
   }
 
-  const repositorySelectValue = namespace ? { value: { id: namespace, displayName: "" }, label: namespace } : undefined;
+  const repositorySelectValue = namespace ? { value: { id: namespace, displayName: "" }, label: namespace } : null;
   const props = {
     label: t("repository.namespace"),
     helpText: t("help.namespaceHelpText"),
@@ -61,18 +62,21 @@ const NamespaceInput: FC<Props> = ({
     errorMessage: namespaceValidationError ? t("validation.namespace-invalid") : "",
     informationMessage: informationMessage,
     validationError: namespaceValidationError,
-    disabled: disabled
+    disabled: disabled,
   };
 
   if (namespaceStrategy === CUSTOM_NAMESPACE_STRATEGY) {
     return (
-      <Autocomplete
-        {...props}
-        loadSuggestions={loadNamespaceSuggestions}
+      // @ts-ignore
+      <ComboboxField
+        label={props.label}
+        helpText={props.helpText}
         value={repositorySelectValue}
-        valueSelected={namespaceValue => handleNamespaceChange(namespaceValue.value.id)}
-        placeholder={""}
-        creatable={true}
+        onChange={(option) => handleNamespaceChange(option?.value.id ?? "")}
+        onQueryChange={setQuery}
+        options={data}
+        isLoading={isLoading}
+        nullable
       />
     );
   }

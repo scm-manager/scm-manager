@@ -1,0 +1,4 @@
+- type: added
+  description: New accessible Combobox component
+- type: changed
+  description: Replace outdated `Autocomplete` component with new combobox

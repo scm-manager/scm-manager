@@ -25,16 +25,45 @@
 import { storiesOf } from "@storybook/react";
 import React, { useState } from "react";
 import ChipInputField from "./ChipInputField";
+import Combobox from "../combobox/Combobox";
+import { Option } from "@scm-manager/ui-types";
 
-storiesOf("Chip Input Field", module).add("Default", () => {
-  const [value, setValue] = useState(["test"]);
-  return (
-    <ChipInputField
-      value={value}
-      onChange={setValue}
-      label="Test Chips"
-      placeholder="This is a placeholder..."
-      aria-label="My personal chip list"
-    />
-  );
-});
+storiesOf("Chip Input Field", module)
+  .add("Default", () => {
+    const [value, setValue] = useState<Option<string>[]>([]);
+    return (
+      <ChipInputField
+        value={value}
+        onChange={setValue}
+        label="Test Chips"
+        placeholder="Type a new chip name and press enter to add"
+        aria-label="My personal chip list"
+      />
+    );
+  })
+  .add("With Autocomplete", () => {
+    const people = ["Durward Reynolds", "Kenton Towne", "Therese Wunsch", "Benedict Kessler", "Katelyn Rohan"];
+
+    const [value, setValue] = useState<Option<string>[]>([]);
+
+    return (
+      <ChipInputField
+        value={value}
+        onChange={setValue}
+        label="Persons"
+        placeholder="Enter a new person"
+        aria-label="Enter a new person"
+      >
+        <Combobox
+          options={(query: string) =>
+            Promise.resolve(
+              people
+                .map<Option<string>>((p) => ({ label: p, value: p }))
+                .filter((t) => !value.some((val) => val.label === t.label) && t.label.startsWith(query))
+                .concat({ label: query, value: query, displayValue: `Use '${query}'` })
+            )
+          }
+        />
+      </ChipInputField>
+    );
+  });

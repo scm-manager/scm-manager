@@ -401,6 +401,8 @@
     "permissions": "Berechtigung",
     "group-permission": "Gruppenberechtigung",
     "user-permission": "Benutzerberechtigung",
+    "group-select": "Gruppe auswählen",
+    "user-select": "Benutzer auswählen",
     "edit-permission": {
       "delete-button": "Löschen",
       "save-button": "Änderungen speichern"

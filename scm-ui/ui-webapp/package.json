@@ -3,7 +3,7 @@
   "version": "2.44.2-SNAPSHOT",
   "private": true,
   "dependencies": {
-    "@headlessui/react": "^1.4.3",
+    "@headlessui/react": "^1.7.15",
     "@scm-manager/ui-api": "2.44.2-SNAPSHOT",
     "@scm-manager/ui-components": "2.44.2-SNAPSHOT",
     "@scm-manager/ui-extensions": "2.44.2-SNAPSHOT",

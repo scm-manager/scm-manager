@@ -37,6 +37,9 @@ import AddListEntryForm from "./AddListEntryForm";
 import { ScmFormListContextProvider } from "./ScmFormListContext";
 import { HalRepresentation } from "@scm-manager/ui-types";
 import ControlledChipInputField from "./chip-input/ControlledChipInputField";
+import Combobox from "./combobox/Combobox";
+import ControlledComboboxField from "./combobox/ControlledComboboxField";
+import { defaultOptionFactory } from "./helpers";
 
 export type SimpleWebHookConfiguration = {
   urlPattern: string;
@@ -241,6 +244,8 @@ storiesOf("Forms", module)
         disableB: false,
         disableC: true,
         labels: ["test"],
+        people: [{ displayName: "Trillian", id: 2 }],
+        author: null,
       }}
     >
       <ControlledInputField name="url" />
@@ -250,6 +255,23 @@ storiesOf("Forms", module)
       <ControlledCheckboxField name="disableB" />
       <ControlledCheckboxField name="disableC" />
       <ControlledChipInputField name="labels" />
+      <ControlledChipInputField
+        name="people"
+        optionFactory={(person) => ({ label: person.displayName, value: person })}
+      >
+        <Combobox
+          options={[
+            { label: "Zenod", value: { id: 1, displayName: "Zenod" } },
+            { label: "Arthur", value: { id: 3, displayName: "Arthur" } },
+            { label: "Cookie Monster", value: { id: 4, displayName: "Cookie Monster" } },
+          ]}
+        />
+      </ControlledChipInputField>
+      <ControlledComboboxField
+        options={["Zenod", "Arthur", "Trillian"].map(defaultOptionFactory)}
+        name="author"
+        nullable
+      />
     </Form>
   ))
   .add("ReadOnly", () => (

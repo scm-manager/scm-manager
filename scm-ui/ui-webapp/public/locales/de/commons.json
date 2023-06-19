@@ -7,6 +7,9 @@
     "reset": "Leeren",
     "discardChanges": "Änderungen verwerfen",
     "submit-success-notification": "Einstellungen wurden erfolgreich geändert!",
+    "combobox": {
+      "arbitraryDisplayValue": "Verwende '{{query}}'"
+    },
     "chipList": {
       "delete": "'{{item}}' löschen",
       "input": {

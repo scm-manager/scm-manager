@@ -46,11 +46,17 @@ type Props = {
 
 type State = {};
 
+/**
+ * @deprecated
+ * @since 2.45.0
+ *
+ * Use {@link Combobox} instead
+ */
 class Autocomplete extends React.Component<Props, State> {
   static defaultProps = {
     placeholder: "Type here",
     loadingMessage: "Loading...",
-    noOptionsMessage: "No suggestion available"
+    noOptionsMessage: "No suggestion available",
   };
 
   handleInputChange = (newValue: ValueType<SelectValue>, action: ActionMeta) => {
@@ -67,7 +73,7 @@ class Autocomplete extends React.Component<Props, State> {
     selectValue: ValueType<SelectValue>,
     selectOptions: readonly SelectValue[]
   ): boolean => {
-    const isNotDuplicated = !selectOptions.map(option => option.label).includes(inputValue);
+    const isNotDuplicated = !selectOptions.map((option) => option.label).includes(inputValue);
     const isNotEmpty = inputValue !== "";
     return isNotEmpty && isNotDuplicated;
   };
@@ -85,7 +91,7 @@ class Autocomplete extends React.Component<Props, State> {
       informationMessage,
       creatable,
       className,
-      disabled
+      disabled,
     } = this.props;
 
     const asyncProps = {
@@ -99,7 +105,7 @@ class Autocomplete extends React.Component<Props, State> {
       loadingMessage: () => loadingMessage,
       noOptionsMessage: () => noOptionsMessage,
       isDisabled: disabled,
-      "aria-label": helpText || label
+      "aria-label": helpText || label,
     };
 
     return (
@@ -110,13 +116,13 @@ class Autocomplete extends React.Component<Props, State> {
             <AsyncCreatable
               {...asyncProps}
               isValidNewOption={this.isValidNewOption}
-              onCreateOption={newValue => {
+              onCreateOption={(newValue) => {
                 this.selectValue({
                   label: newValue,
                   value: {
                     id: newValue,
-                    displayName: newValue
-                  }
+                    displayName: newValue,
+                  },
                 });
               }}
             />

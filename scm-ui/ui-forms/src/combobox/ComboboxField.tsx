@@ -21,40 +21,42 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
-import { SelectValue } from "@scm-manager/ui-types";
-import Autocomplete from "./Autocomplete";
-import { useSuggestions } from "@scm-manager/ui-api";
 
-export type AutocompleteProps = {
-  autocompleteLink?: string;
-  valueSelected?: (p: SelectValue) => void;
-  value?: SelectValue;
-};
-
-type Props = AutocompleteProps & {
-  label: string;
-  noOptionsMessage: string;
-  loadingMessage: string;
-  placeholder: string;
-};
+import Field from "../base/Field";
+import Label from "../base/label/Label";
+import Help from "../base/help/Help";
+import React from "react";
+import { useGeneratedId } from "@scm-manager/ui-components";
+import { withForwardRef } from "../helpers";
+import Combobox, { ComboboxProps } from "./Combobox";
+import classNames from "classnames";
 
 /**
- * @deprecated
+ * @beta
  * @since 2.45.0
- *
- * Use {@link Combobox} instead
  */
-const UserGroupAutocomplete: FC<Props> = ({ autocompleteLink, valueSelected, ...props }) => {
-  const loadSuggestions = useSuggestions(autocompleteLink);
-
-  const selectName = (selection: SelectValue) => {
-    if (valueSelected) {
-      valueSelected(selection);
-    }
-  };
-
-  return <Autocomplete loadSuggestions={loadSuggestions} valueSelected={selectName} creatable={true} {...props} />;
+const ComboboxField = function ComboboxField<T>(
+  {
+    label,
+    helpText,
+    error,
+    className,
+    isLoading,
+    ...props
+  }: ComboboxProps<T> & { label: string; helpText?: string; error?: string; isLoading?: boolean },
+  ref: React.ForwardedRef<HTMLInputElement>
+) {
+  const labelId = useGeneratedId();
+  return (
+    <Field className={className}>
+      <Label id={labelId}>
+        {label}
+        {helpText ? <Help className="ml-1" text={helpText} /> : null}
+      </Label>
+      <div className={classNames("control", { "is-loading": isLoading })}>
+        <Combobox {...props} ref={ref} aria-labelledby={labelId} />
+      </div>
+    </Field>
+  );
 };
-
-export default UserGroupAutocomplete;
+export default withForwardRef(ComboboxField);

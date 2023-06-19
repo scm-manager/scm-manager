@@ -35,13 +35,12 @@ type Props = {
 
 const EditGroup: FC<Props> = ({ group }) => {
   const { error, isLoading, update, isUpdated } = useUpdateGroup();
-  const userSuggestions = useUserSuggestions();
 
   return (
     <div>
       <UpdateNotification isUpdated={isUpdated} />
       <ErrorNotification error={error || undefined} />
-      <GroupForm group={group} submitForm={update} loading={isLoading} loadUserSuggestions={userSuggestions} />
+      <GroupForm group={group} submitForm={update} loading={isLoading} />
       <DeleteGroup group={group} />
     </div>
   );

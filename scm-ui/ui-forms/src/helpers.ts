@@ -23,6 +23,7 @@
  */
 
 import { UseFormReturn } from "react-hook-form";
+import { ForwardedRef, forwardRef, MutableRefObject, Ref, RefCallback } from "react";
 
 export function prefixWithoutIndices(path: string): string {
   return path.replace(/(\.\d+)/g, "");
@@ -48,4 +49,26 @@ export function setValues<T>(newValues: T, setValue: UseFormReturn<T>["setValue"
       setValue(fullPath as any, val, { shouldValidate: !fullPath.endsWith("Confirmation"), shouldDirty: true });
     }
   }
+}
+
+export function withForwardRef<T extends { name: string }>(component: T): T {
+  return forwardRef(component as unknown as any) as any;
+}
+
+export const defaultOptionFactory = (item: any) =>
+  typeof item === "object" && item !== null && "value" in item && typeof item["label"] === "string"
+    ? item
+    : { label: item as string, value: item };
+
+export function mergeRefs<T>(...refs: Array<RefCallback<T> | MutableRefObject<T> | ForwardedRef<T>>) {
+  return (el: T) =>
+    refs.forEach((ref) => {
+      if (ref) {
+        if (typeof ref === "function") {
+          ref(el);
+        } else {
+          ref.current = el;
+        }
+      }
+    });
 }

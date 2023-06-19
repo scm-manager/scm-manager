@@ -401,6 +401,8 @@
     "permissions": "Permissions",
     "group-permission": "Group Permission",
     "user-permission": "User Permission",
+    "group-select": "Select group",
+    "user-select": "Select user",
     "edit-permission": {
       "delete-button": "Delete",
       "save-button": "Save Changes"
