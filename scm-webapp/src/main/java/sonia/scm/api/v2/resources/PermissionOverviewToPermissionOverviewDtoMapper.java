@@ -34,6 +34,7 @@ import sonia.scm.user.PermissionOverview;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.Objects;
 
 import static de.otto.edison.hal.Links.linkingTo;
 import static java.util.stream.Collectors.toList;
@@ -83,6 +84,7 @@ abstract class PermissionOverviewToPermissionOverviewDtoMapper {
       .stream()
       .map(PermissionOverview.GroupEntry::getName)
       .map(groupManager::get)
+      .filter(Objects::nonNull)
       .map(groupToGroupDtoMapper::map)
       .collect(toList());
     Embedded.Builder embedded = new Embedded.Builder()
