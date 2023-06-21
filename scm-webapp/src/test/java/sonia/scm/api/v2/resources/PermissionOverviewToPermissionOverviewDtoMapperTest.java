@@ -26,6 +26,7 @@ package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.Links;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -100,57 +101,78 @@ class PermissionOverviewToPermissionOverviewDtoMapperTest {
       .thenAnswer(invocation -> new NamespaceDto(invocation.getArgument(0, String.class), Links.emptyLinks()));
   }
 
-  @BeforeEach
-  void initGroupMapper() {
+  @Nested
+  class WithInternalGroups {
+    @BeforeEach
+    void initGroupMapper() {
+      when(groupManager.get(anyString()))
+        .thenAnswer(invocation -> new Group("xml", invocation.getArgument(0, String.class)));
+      when(groupToGroupDtoMapper.map(any()))
+        .thenAnswer(invocation -> {
+          GroupDto groupDto = new GroupDto();
+          groupDto.setName(invocation.getArgument(0, Group.class).getName());
+          return groupDto;
+        });
+    }
+
+    @Test
+    void shouldMapRepositories() {
+      PermissionOverviewDto dto = permissionOverviewToPermissionOverviewDtoMapper
+        .toDto(PERMISSION_OVERVIEW, "Neo");
+
+      assertThat(dto.getRelevantRepositories())
+        .extracting("namespace")
+        .contains("hog", "vogon");
+      assertThat(dto.getRelevantRepositories())
+        .extracting("name")
+        .contains("marvin", "jeltz");
+
+      assertThat(
+        dto.
+          getEmbedded()
+          .getItemsBy("repositories")
+      ).hasSize(2);
+    }
+
+    @Test
+    void shouldMapNamespaces() {
+      PermissionOverviewDto dto = permissionOverviewToPermissionOverviewDtoMapper
+        .toDto(PERMISSION_OVERVIEW, "Neo");
+
+      assertThat(dto.getRelevantNamespaces())
+        .contains("hog", "earth");
+
+      assertThat(dto.getEmbedded().getItemsBy("relevantNamespaces"))
+        .hasSize(2)
+        .extracting("namespace")
+        .contains("hog", "earth");
+      assertThat(dto.getEmbedded().getItemsBy("otherNamespaces"))
+        .hasSize(1)
+        .extracting("namespace")
+        .contains("vogon");
+    }
+
+    @Test
+    void shouldMapGroups() {
+      PermissionOverviewDto dto = permissionOverviewToPermissionOverviewDtoMapper
+        .toDto(PERMISSION_OVERVIEW, "Neo");
+
+      assertThat(dto.getRelevantGroups())
+        .extracting("name")
+        .contains("hitchhiker", "vogons");
+
+      assertThat(dto.getEmbedded().getItemsBy("groups"))
+        .hasSize(2)
+        .extracting("name")
+        .contains("hitchhiker", "vogons");
+    }
+  }
+
+  @Test
+  void shouldExcludeExternalGroups() {
     when(groupManager.get(anyString()))
-      .thenAnswer(invocation -> new Group("xml", invocation.getArgument(0, String.class)));
-    when(groupToGroupDtoMapper.map(any()))
-      .thenAnswer(invocation -> {
-        GroupDto groupDto = new GroupDto();
-        groupDto.setName(invocation.getArgument(0, Group.class).getName());
-        return groupDto;
-      });
-  }
+      .thenAnswer(invocation -> null);
 
-  @Test
-  void shouldMapRepositories() {
-    PermissionOverviewDto dto = permissionOverviewToPermissionOverviewDtoMapper
-      .toDto(PERMISSION_OVERVIEW, "Neo");
-
-    assertThat(dto.getRelevantRepositories())
-      .extracting("namespace")
-      .contains("hog", "vogon");
-    assertThat(dto.getRelevantRepositories())
-      .extracting("name")
-      .contains("marvin", "jeltz");
-
-    assertThat(
-      dto.
-        getEmbedded()
-        .getItemsBy("repositories")
-    ).hasSize(2);
-  }
-
-  @Test
-  void shouldMapNamespaces() {
-    PermissionOverviewDto dto = permissionOverviewToPermissionOverviewDtoMapper
-      .toDto(PERMISSION_OVERVIEW, "Neo");
-
-    assertThat(dto.getRelevantNamespaces())
-      .contains("hog", "earth");
-
-    assertThat(dto.getEmbedded().getItemsBy("relevantNamespaces"))
-      .hasSize(2)
-      .extracting("namespace")
-      .contains("hog", "earth");
-    assertThat(dto.getEmbedded().getItemsBy("otherNamespaces"))
-      .hasSize(1)
-      .extracting("namespace")
-      .contains("vogon");
-  }
-
-  @Test
-  void shouldMapGroups() {
     PermissionOverviewDto dto = permissionOverviewToPermissionOverviewDtoMapper
       .toDto(PERMISSION_OVERVIEW, "Neo");
 
@@ -159,8 +181,6 @@ class PermissionOverviewToPermissionOverviewDtoMapperTest {
       .contains("hitchhiker", "vogons");
 
     assertThat(dto.getEmbedded().getItemsBy("groups"))
-      .hasSize(2)
-      .extracting("name")
-      .contains("hitchhiker", "vogons");
+      .isEmpty();
   }
 }
