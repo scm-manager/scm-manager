@@ -91,7 +91,7 @@ ext {
     elRuntime: 'org.glassfish:javax.el:3.0.1-b11',
 
     // utils
-    guava: 'com.google.guava:guava:30.1-jre',
+    guava: 'com.google.guava:guava:32.0.1-jre',
     commonsLang: 'commons-lang:commons-lang:2.6',
     commonsCompress: 'org.apache.commons:commons-compress:1.20',
 
