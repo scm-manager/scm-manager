@@ -27,7 +27,9 @@ import { useTranslation } from "react-i18next";
 import {
   CreateButton,
   devices,
+  ErrorNotification,
   LinkPaginator,
+  Loading,
   Notification,
   OverviewPageActions,
   Page,
@@ -39,6 +41,8 @@ import { useNamespaceAndNameContext, useNamespaces, useRepositories } from "@scm
 import { NamespaceCollection, RepositoryCollection } from "@scm-manager/ui-types";
 import { binder, ExtensionPoint, extensionPoints, useBinder } from "@scm-manager/ui-extensions";
 import styled from "styled-components";
+import { KeyboardIterator, KeyboardSubIterator } from "@scm-manager/ui-shortcuts";
+import classNames from "classnames";
 
 const StickyColumn = styled.div`
   align-self: flex-start;
@@ -100,32 +104,68 @@ const useOverviewData = () => {
 type RepositoriesProps = {
   namespaces?: NamespaceCollection;
   repositories?: RepositoryCollection;
-  search: string;
+  search?: string;
   page: number;
-  namespace?: string;
+  isLoading?: boolean;
+  error?: Error;
+  hasTopExtension?: boolean;
 };
 
-const Repositories: FC<RepositoriesProps> = ({ namespaces, namespace, repositories, search, page }) => {
+const Repositories: FC<RepositoriesProps> = ({
+  namespaces,
+  repositories,
+  hasTopExtension,
+  search,
+  page,
+  error,
+  isLoading,
+}) => {
   const [t] = useTranslation("repos");
-  if (namespaces && repositories) {
+  let header;
+  if (hasTopExtension) {
+    header = (
+      <div className={classNames("is-flex", "is-align-items-center", "is-size-6", "has-text-weight-bold", "p-3")}>
+        {t("overview.title")}
+      </div>
+    );
+  }
+  if (error) {
+    return (
+      <>
+        {header}
+        <ErrorNotification error={error} />
+      </>
+    );
+  } else if (isLoading) {
+    return (
+      <>
+        {header}
+        <Loading />
+      </>
+    );
+  } else if (namespaces && repositories) {
     if (repositories._embedded && repositories._embedded.repositories.length > 0) {
       return (
         <>
-          <RepositoryList
-            repositories={repositories._embedded.repositories}
-            namespaces={namespaces}
-            page={page}
-            search={search}
-            namespace={namespace}
-          />
+          <RepositoryList repositories={repositories._embedded.repositories} namespaces={namespaces} />
           <LinkPaginator collection={repositories} page={page} filter={search} />
         </>
       );
     } else {
-      return <Notification type="info">{t("overview.noRepositories")}</Notification>;
+      return (
+        <>
+          {header}
+          <Notification type="info">{t("overview.noRepositories")}</Notification>
+        </>
+      );
     }
   } else {
-    return <Notification type="info">{t("overview.invalidNamespace")}</Notification>;
+    return (
+      <>
+        {header}
+        <Notification type="info">{t("overview.invalidNamespace")}</Notification>
+      </>
+    );
   }
 };
 
@@ -145,8 +185,6 @@ const Overview: FC = () => {
       context.setNamespace("");
     };
   }, [namespace, context]);
-
-  const extensions = binder.getExtensions<extensionPoints.RepositoryOverviewLeft>("repository.overview.left");
 
   // we keep the create permission in the state,
   // because it does not change during searching or paging
@@ -180,9 +218,7 @@ const Overview: FC = () => {
     }
   };
 
-  const hasExtensions = extensions.length > 0;
-
-  const createLink = namespace ? `/repos/create/?namespace=${namespace}`: "/repos/create/";
+  const createLink = namespace ? `/repos/create/?namespace=${namespace}` : "/repos/create/";
   return (
     <Page
       documentTitle={t("overview.title")}
@@ -196,23 +232,40 @@ const Overview: FC = () => {
           {t("overview.subtitle")}
         </ExtensionPoint>
       }
-      loading={isLoading}
-      error={error}
     >
       <div className="columns">
-        {hasExtensions ? (
+        {binder.hasExtension<extensionPoints.RepositoryOverviewLeft>("repository.overview.left") ? (
           <StickyColumn className="column is-one-third">
-            {extensions.map((extension) => React.createElement(extension))}
+            {<ExtensionPoint<extensionPoints.RepositoryOverviewLeft> name="repository.overview.left" renderAll />}
           </StickyColumn>
         ) : null}
         <div className="column is-clipped">
-          <Repositories
-            namespaces={namespaces}
-            namespace={namespace}
-            repositories={repositories}
-            search={search}
-            page={page}
-          />
+          <KeyboardIterator>
+            <KeyboardSubIterator>
+              <ExtensionPoint<extensionPoints.RepositoryOverviewTop>
+                name="repository.overview.top"
+                renderAll={true}
+                props={{
+                  page,
+                  search,
+                  namespace,
+                }}
+              />
+            </KeyboardSubIterator>
+            <Repositories
+              namespaces={namespaces}
+              repositories={repositories}
+              search={search}
+              page={page}
+              isLoading={isLoading}
+              error={error}
+              hasTopExtension={binder.hasExtension<extensionPoints.RepositoryOverviewTop>("repository.overview.top", {
+                page,
+                search,
+                namespace,
+              })}
+            />
+          </KeyboardIterator>
           {showCreateButton ? <CreateButton label={t("overview.createButton")} link={createLink} /> : null}
         </div>
       </div>

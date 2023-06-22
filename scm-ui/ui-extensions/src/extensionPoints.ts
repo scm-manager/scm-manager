@@ -234,7 +234,7 @@ export type RepositoryOverviewTop = RenderableExtensionPointDefinition<
   "repository.overview.top",
   {
     page: number;
-    search: string;
+    search?: string;
     namespace?: string;
   }
 >;

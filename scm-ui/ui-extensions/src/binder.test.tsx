@@ -106,7 +106,7 @@ describe("binder tests", () => {
     type TestExtensionPointA = ExtensionPointDefinition<"test.extension.a", number, undefined>;
     type TestExtensionPointB = ExtensionPointDefinition<"test.extension.b", number, { testProp: boolean[] }>;
 
-    binder.bind<TestExtensionPointA>("test.extension.a", 2, () => false);
+    binder.bind<TestExtensionPointA>("test.extension.a", 2, () => true);
     const binderExtensionA = binder.getExtension<TestExtensionPointA>("test.extension.a");
     expect(binderExtensionA).not.toBeNull();
     binder.bind<TestExtensionPointB>("test.extension.b", 2);
@@ -114,7 +114,7 @@ describe("binder tests", () => {
       testProp: [true, false],
     });
     expect(binderExtensionsB).toHaveLength(1);
-    binder.bind("test.extension.c", 2, () => false);
+    binder.bind("test.extension.c", 2, () => true);
     const binderExtensionC = binder.getExtension("test.extension.c");
     expect(binderExtensionC).not.toBeNull();
   });
@@ -126,7 +126,7 @@ describe("binder tests", () => {
     binder.bind<TestExtensionPointA>(
       "test.extension.a",
       () => <h1>Hello world</h1>,
-      () => false
+      () => true
     );
     const binderExtensionA = binder.getExtension<TestExtensionPointA>("test.extension.a");
     expect(binderExtensionA).not.toBeNull();

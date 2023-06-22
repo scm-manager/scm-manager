@@ -53,8 +53,8 @@ export type BindOptions<Props> = {
   priority?: number;
 };
 
-function isBindOptions<Props>(input?: Predicate<Props> | BindOptions<Props>): input is BindOptions<Props> {
-  return typeof input !== "function" && typeof input === "object";
+function isBindOptions<Props>(input?: string | Predicate<Props> | BindOptions<Props>): input is BindOptions<Props> {
+  return typeof input !== "string" && typeof input !== "function" && typeof input === "object";
 }
 
 /**
@@ -105,11 +105,25 @@ export class Binder {
     extension: E["type"],
     options?: BindOptions<E["props"]>
   ): void;
+  /**
+   * Binds an extension to the extension point.
+   *
+   * @param extensionPoint name of extension point
+   * @param extension provided extension
+   * @param predicate to decide if the extension gets rendered for the given props
+   * @param options object with additional settings
+   */
+  bind<E extends ExtensionPointDefinition<string, unknown, any>>(
+    extensionPoint: E["name"],
+    extension: E["type"],
+    predicate?: Predicate<E["props"]>,
+    options?: BindOptions<E["props"]>
+  ): void;
   bind<E extends ExtensionPointDefinition<string, unknown, any>>(
     extensionPoint: E["name"],
     extension: E["type"],
     predicateOrOptions?: Predicate<E["props"]> | BindOptions<E["props"]>,
-    extensionName?: string
+    extensionNameOrOptions?: string | BindOptions<E["props"]>
   ) {
     let predicate: Predicate<E["props"]> = () => true;
     let priority = 0;
@@ -118,13 +132,23 @@ export class Binder {
         predicate = predicateOrOptions.predicate;
       }
       if (predicateOrOptions.extensionName) {
-        extensionName = predicateOrOptions.extensionName;
+        extensionNameOrOptions = predicateOrOptions.extensionName;
       }
       if (typeof predicateOrOptions.priority === "number") {
         priority = predicateOrOptions.priority;
       }
     } else if (predicateOrOptions) {
       predicate = predicateOrOptions;
+      if (isBindOptions(extensionNameOrOptions)) {
+        if (typeof extensionNameOrOptions.priority === "number") {
+          priority = extensionNameOrOptions.priority;
+        }
+        if (extensionNameOrOptions?.extensionName) {
+          extensionNameOrOptions = extensionNameOrOptions.extensionName;
+        } else {
+          extensionNameOrOptions = undefined;
+        }
+      }
     }
     if (!this.extensionPoints[extensionPoint]) {
       this.extensionPoints[extensionPoint] = [];
@@ -132,7 +156,7 @@ export class Binder {
     const registration = {
       predicate,
       extension,
-      extensionName: extensionName ? extensionName : "",
+      extensionName: extensionNameOrOptions ? extensionNameOrOptions : "",
       priority,
     } as ExtensionRegistration<E["props"], E["type"]>;
     this.extensionPoints[extensionPoint].push(registration);
@@ -186,9 +210,7 @@ export class Binder {
     props?: E["props"]
   ): Array<E["type"]> {
     let registrations = this.extensionPoints[extensionPoint] || [];
-    if (props) {
-      registrations = registrations.filter((reg) => reg.predicate(props));
-    }
+    registrations = registrations.filter((reg) => reg.predicate(props));
     registrations.sort(this.sortExtensions);
     return registrations.map((reg) => reg.extension);
   }
