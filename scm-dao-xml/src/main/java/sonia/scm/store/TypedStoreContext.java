@@ -86,6 +86,10 @@ final class TypedStoreContext<T> {
     withClassLoader(consumer, unmarshaller);
   }
 
+  Class<?> getType() {
+    return parameters.getType();
+  }
+
   private <C> void withClassLoader(ThrowingConsumer<C> consumer, C consume) {
     ClassLoader contextClassLoader = null;
     Optional<ClassLoader> classLoader = parameters.getClassLoader();

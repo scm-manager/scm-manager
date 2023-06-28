@@ -40,9 +40,8 @@ import static sonia.scm.store.CopyOnWrite.compute;
 /**
  * Jaxb implementation of {@link DataStore}.
  *
- * @author Sebastian Sdorra
- *
  * @param <T> type of stored data.
+ * @author Sebastian Sdorra
  */
 public class JAXBDataStore<T> extends FileBasedStore<T> implements DataStore<T> {
 
@@ -53,10 +52,12 @@ public class JAXBDataStore<T> extends FileBasedStore<T> implements DataStore<T> 
 
   private final KeyGenerator keyGenerator;
   private final TypedStoreContext<T> context;
+  private final DataFileCache.DataFileCacheInstance cache;
 
-  JAXBDataStore(KeyGenerator keyGenerator, TypedStoreContext<T> context, File directory, boolean readOnly) {
+  JAXBDataStore(KeyGenerator keyGenerator, TypedStoreContext<T> context, File directory, boolean readOnly, DataFileCache.DataFileCacheInstance cache) {
     super(directory, StoreConstants.FILE_EXTENSION, readOnly);
     this.keyGenerator = keyGenerator;
+    this.cache = cache;
     this.directory = directory;
     this.context = context;
   }
@@ -75,10 +76,10 @@ public class JAXBDataStore<T> extends FileBasedStore<T> implements DataStore<T> 
       marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
       CopyOnWrite.withTemporaryFile(
         temp -> marshaller.marshal(item, temp.toFile()),
-        file.toPath()
+        file.toPath(),
+        () -> cache.put(file, item)
       );
-    }
-    catch (JAXBException ex) {
+    } catch (JAXBException ex) {
       throw new StoreException("could not write object with id ".concat(id),
         ex);
     }
@@ -107,13 +108,21 @@ public class JAXBDataStore<T> extends FileBasedStore<T> implements DataStore<T> 
   }
 
   @Override
+  protected void remove(File file) {
+    cache.remove(file);
+    super.remove(file);
+  }
+
+  @Override
   protected T read(File file) {
-    return compute(() -> {
-      if (file.exists()) {
-        LOG.trace("try to read {}", file);
-        return context.unmarshall(file);
-      }
-      return null;
-    }).withLockedFileForRead(file);
+    return cache.get(file, () ->
+      compute(() -> {
+        if (file.exists()) {
+          LOG.trace("try to read {}", file);
+          return context.unmarshall(file);
+        }
+        return null;
+      }).withLockedFileForRead(file)
+    );
   }
 }

@@ -24,16 +24,12 @@
 
 package sonia.scm.store;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.repository.RepositoryReadOnlyChecker;
 import sonia.scm.security.KeyGenerator;
-
-//~--- JDK imports ------------------------------------------------------------
 
 /**
  * @author Sebastian Sdorra
@@ -44,14 +40,22 @@ public class JAXBConfigurationEntryStoreFactory extends FileBasedStoreFactory
 
   private final KeyGenerator keyGenerator;
 
+  private final StoreCache<ConfigurationEntryStore<?>> storeCache;
+
   @Inject
   public JAXBConfigurationEntryStoreFactory(SCMContextProvider contextProvider, RepositoryLocationResolver repositoryLocationResolver, KeyGenerator keyGenerator, RepositoryReadOnlyChecker readOnlyChecker) {
     super(contextProvider, repositoryLocationResolver, Store.CONFIG, readOnlyChecker);
     this.keyGenerator = keyGenerator;
+    this.storeCache = new StoreCache<>(this::createStore);
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public <T> ConfigurationEntryStore<T> getStore(TypedStoreParameters<T> storeParameters) {
+    return (ConfigurationEntryStore<T>) storeCache.getStore(storeParameters);
+  }
+
+  private  <T> ConfigurationEntryStore<T> createStore(TypedStoreParameters<T> storeParameters) {
     return new JAXBConfigurationEntryStore<>(
       getStoreLocation(storeParameters.getName().concat(StoreConstants.FILE_EXTENSION),
         storeParameters.getType(),

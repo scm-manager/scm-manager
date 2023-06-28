@@ -163,4 +163,12 @@ Search cache for repository changesets
     maximumSize="500"
   />
 
+  <!--
+    data files cache
+  -->
+  <cache
+    name="sonia.cache.dataFile"
+    maximumSize="10000"
+  />
+
 </caches>

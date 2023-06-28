@@ -28,14 +28,19 @@ import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.Multibinder;
 import com.google.inject.throwingproviders.ThrowingProviderBinder;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContext;
 import sonia.scm.SCMContextProvider;
+import sonia.scm.cache.CacheManager;
+import sonia.scm.cache.GuavaCacheManager;
 import sonia.scm.io.DefaultFileSystem;
 import sonia.scm.io.FileSystem;
 import sonia.scm.lifecycle.DefaultRestarter;
 import sonia.scm.lifecycle.Restarter;
+import sonia.scm.metrics.MeterRegistryProvider;
+import sonia.scm.metrics.MonitoringSystem;
 import sonia.scm.plugin.PluginLoader;
 import sonia.scm.repository.DefaultRepositoryExportingCheck;
 import sonia.scm.repository.EventDrivenRepositoryArchiveCheck;
@@ -121,6 +126,14 @@ public class BootstrapModule extends AbstractModule {
     bind(RepositoryUpdateIterator.class, FileRepositoryUpdateIterator.class);
     bind(StoreUpdateStepUtilFactory.class, FileStoreUpdateStepUtilFactory.class);
     bind(new TypeLiteral<UpdateStepRepositoryMetadataAccess<Path>>() {}).to(new TypeLiteral<MetadataStore>() {});
+
+    // bind metrics
+    bind(MeterRegistry.class).toProvider(MeterRegistryProvider.class).asEagerSingleton();
+    Multibinder.newSetBinder(binder(), MonitoringSystem.class);
+
+    // bind cache
+    bind(CacheManager.class, GuavaCacheManager.class);
+    bind(org.apache.shiro.cache.CacheManager.class, GuavaCacheManager.class);
   }
 
   private <T> void bind(Class<T> clazz, Class<? extends T> defaultImplementation) {

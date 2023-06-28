@@ -42,6 +42,8 @@ public class JAXBConfigurationStoreFactory extends FileBasedStoreFactory impleme
 
   private final Set<ConfigurationStoreDecoratorFactory> decoratorFactories;
 
+  private final StoreCache<ConfigurationStore<?>> storeCache;
+
   /**
    * Constructs a new instance.
    *
@@ -51,10 +53,16 @@ public class JAXBConfigurationStoreFactory extends FileBasedStoreFactory impleme
   public JAXBConfigurationStoreFactory(SCMContextProvider contextProvider, RepositoryLocationResolver repositoryLocationResolver, RepositoryReadOnlyChecker readOnlyChecker, Set<ConfigurationStoreDecoratorFactory> decoratorFactories) {
     super(contextProvider, repositoryLocationResolver, Store.CONFIG, readOnlyChecker);
     this.decoratorFactories = decoratorFactories;
+    this.storeCache = new StoreCache<>(this::createStore);
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public <T> ConfigurationStore<T> getStore(TypedStoreParameters<T> storeParameters) {
+    return (ConfigurationStore<T>) storeCache.getStore(storeParameters);
+  }
+
+  private  <T> ConfigurationStore<T> createStore(TypedStoreParameters<T> storeParameters) {
     TypedStoreContext<T> context = TypedStoreContext.of(storeParameters);
 
     ConfigurationStore<T> store = new JAXBConfigurationStore<>(

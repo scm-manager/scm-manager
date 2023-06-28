@@ -30,7 +30,6 @@ import com.google.inject.multibindings.Multibinder;
 import com.google.inject.servlet.RequestScoped;
 import com.google.inject.servlet.ServletModule;
 import com.google.inject.throwingproviders.ThrowingProviderBinder;
-import io.micrometer.core.instrument.MeterRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.Default;
@@ -39,14 +38,13 @@ import sonia.scm.PushStateDispatcher;
 import sonia.scm.PushStateDispatcherProvider;
 import sonia.scm.RootURL;
 import sonia.scm.Undecorated;
+import sonia.scm.admin.ScmConfigurationStore;
 import sonia.scm.api.rest.ObjectMapperProvider;
 import sonia.scm.api.v2.resources.BranchLinkProvider;
 import sonia.scm.api.v2.resources.DefaultBranchLinkProvider;
 import sonia.scm.api.v2.resources.DefaultRepositoryLinkProvider;
 import sonia.scm.api.v2.resources.RepositoryLinkProvider;
 import sonia.scm.auditlog.AuditLogConfigurationStoreDecoratorFactory;
-import sonia.scm.cache.CacheManager;
-import sonia.scm.cache.GuavaCacheManager;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.group.DefaultGroupCollector;
@@ -65,7 +63,6 @@ import sonia.scm.initialization.InitializationCookieIssuer;
 import sonia.scm.initialization.InitializationFinisher;
 import sonia.scm.io.ContentTypeResolver;
 import sonia.scm.io.DefaultContentTypeResolver;
-import sonia.scm.metrics.MeterRegistryProvider;
 import sonia.scm.migration.MigrationDAO;
 import sonia.scm.net.SSLContextProvider;
 import sonia.scm.net.TrustManagerProvider;
@@ -134,7 +131,6 @@ import sonia.scm.user.UserManager;
 import sonia.scm.user.UserManagerProvider;
 import sonia.scm.user.xml.XmlUserDAO;
 import sonia.scm.util.DebugServlet;
-import sonia.scm.admin.ScmConfigurationStore;
 import sonia.scm.web.UserAgentParser;
 import sonia.scm.web.cgi.CGIExecutorFactory;
 import sonia.scm.web.cgi.DefaultCGIExecutorFactory;
@@ -200,8 +196,6 @@ class ScmServletModule extends ServletModule {
     // bind extensions
     pluginLoader.getExtensionProcessor().processAutoBindExtensions(binder());
 
-    // bind metrics
-    bind(MeterRegistry.class).toProvider(MeterRegistryProvider.class).asEagerSingleton();
 
     // bind security stuff
     bind(LoginAttemptHandler.class).to(ConfigurableLoginAttemptHandler.class);
@@ -209,10 +203,6 @@ class ScmServletModule extends ServletModule {
 
     bind(SecuritySystem.class).to(DefaultSecuritySystem.class);
     bind(AdministrationContext.class, DefaultAdministrationContext.class);
-
-    // bind cache
-    bind(CacheManager.class, GuavaCacheManager.class);
-    bind(org.apache.shiro.cache.CacheManager.class, GuavaCacheManager.class);
 
     // bind dao
     bind(GroupDAO.class, XmlGroupDAO.class);

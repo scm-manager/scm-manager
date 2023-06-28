@@ -55,11 +55,16 @@ public final class CopyOnWrite {
   }
 
   public static void withTemporaryFile(FileWriter writer, Path targetFile) {
+    withTemporaryFile(writer, targetFile, () -> {});
+  }
+
+  public static void withTemporaryFile(FileWriter writer, Path targetFile, Runnable onSuccess) {
     validateInput(targetFile);
     execute(() -> {
       Path temporaryFile = createTemporaryFile(targetFile);
       executeCallback(writer, targetFile, temporaryFile);
       replaceOriginalFile(targetFile, temporaryFile);
+      onSuccess.run();
     }).withLockedFileForWrite(targetFile);
   }
 

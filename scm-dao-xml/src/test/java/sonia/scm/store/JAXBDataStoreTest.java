@@ -24,9 +24,8 @@
 
 package sonia.scm.store;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import org.junit.Test;
+import sonia.scm.cache.MapCache;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryReadOnlyChecker;
 import sonia.scm.security.UUIDKeyGenerator;
@@ -47,7 +46,13 @@ public class JAXBDataStoreTest extends DataStoreTestBase {
   @Override
   protected DataStoreFactory createDataStoreFactory()
   {
-    return new JAXBDataStoreFactory(contextProvider, repositoryLocationResolver, new UUIDKeyGenerator(), readOnlyChecker);
+    return new JAXBDataStoreFactory(
+      contextProvider,
+      repositoryLocationResolver,
+      new UUIDKeyGenerator(),
+      readOnlyChecker,
+      new DataFileCache(null, false)
+    );
   }
 
   @Override

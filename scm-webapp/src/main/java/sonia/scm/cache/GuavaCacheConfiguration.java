@@ -21,10 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.cache;
 
-//~--- non-JDK imports --------------------------------------------------------
+package sonia.scm.cache;
 
 import com.google.common.base.MoreObjects;
 
@@ -35,215 +33,138 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 
-//~--- JDK imports ------------------------------------------------------------
-
-/**
- *
- * @author Sebastian Sdorra
- */
 @XmlRootElement(name = "cache")
-@XmlAccessorType(XmlAccessType.FIELD)
-public class GuavaCacheConfiguration implements Serializable
-{
+@XmlAccessorType(XmlAccessType.PROPERTY)
+public class GuavaCacheConfiguration implements Serializable {
 
-  /** Field description */
   private static final long serialVersionUID = -8734373158089010603L;
 
-  //~--- methods --------------------------------------------------------------
+  private Integer concurrencyLevel;
+  private CopyStrategy copyStrategy;
+  private Long expireAfterAccess;
+  private Long expireAfterWrite;
+  private Integer initialCapacity;
+  private Long maximumSize;
+  private Long maximumWeight;
+  private Boolean recordStats;
+  private Boolean softValues;
+  private Boolean weakKeys;
+  private Boolean weakValues;
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public String toString()
-  {
-    //J-
+  public String toString() {
     return MoreObjects.toStringHelper(this)
-                  .add("concurrencyLevel", concurrencyLevel)
-                  .add("copyStrategy", copyStrategy)
-                  .add("expireAfterAccess", expireAfterAccess)
-                  .add("expireAfterWrite", expireAfterWrite)
-                  .add("initialCapacity", initialCapacity)
-                  .add("maximumSize", maximumSize)
-                  .add("maximumWeight", maximumWeight)
-                  .add("recordStats", recordStats)
-                  .add("softValues", softValues)
-                  .add("weakKeys", weakKeys)
-                  .add("weakValues", weakValues)
-                  .omitNullValues().toString();
-    //J+
+      .add("concurrencyLevel", concurrencyLevel)
+      .add("copyStrategy", copyStrategy)
+      .add("expireAfterAccess", expireAfterAccess)
+      .add("expireAfterWrite", expireAfterWrite)
+      .add("initialCapacity", initialCapacity)
+      .add("maximumSize", maximumSize)
+      .add("maximumWeight", maximumWeight)
+      .add("recordStats", recordStats)
+      .add("softValues", softValues)
+      .add("weakKeys", weakKeys)
+      .add("weakValues", weakValues)
+      .omitNullValues().toString();
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Integer getConcurrencyLevel()
-  {
+  public Integer getConcurrencyLevel() {
     return concurrencyLevel;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public CopyStrategy getCopyStrategy()
-  {
+  public CopyStrategy getCopyStrategy() {
     return copyStrategy;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Long getExpireAfterAccess()
-  {
+  public Long getExpireAfterAccess() {
     return expireAfterAccess;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Long getExpireAfterWrite()
-  {
+  public Long getExpireAfterWrite() {
     return expireAfterWrite;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Integer getInitialCapacity()
-  {
+  public Integer getInitialCapacity() {
     return initialCapacity;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Long getMaximumSize()
-  {
+  public Long getMaximumSize() {
     return maximumSize;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Long getMaximumWeight()
-  {
+  public Long getMaximumWeight() {
     return maximumWeight;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Boolean getRecordStats()
-  {
+  public Boolean getRecordStats() {
     return recordStats;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Boolean getSoftValues()
-  {
+  public Boolean getSoftValues() {
     return softValues;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Boolean getWeakKeys()
-  {
+  public Boolean getWeakKeys() {
     return weakKeys;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Boolean getWeakValues()
-  {
+  public Boolean getWeakValues() {
     return weakValues;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
   @XmlAttribute
-  private Integer concurrencyLevel;
+  void setConcurrencyLevel(Integer concurrencyLevel) {
+    this.concurrencyLevel = concurrencyLevel;
+  }
 
-  /** Field description */
   @XmlAttribute
   @XmlJavaTypeAdapter(XmlCopyStrategyAdapter.class)
-  private CopyStrategy copyStrategy;
+  void setCopyStrategy(CopyStrategy copyStrategy) {
+    this.copyStrategy = copyStrategy;
+  }
 
-  /** Field description */
   @XmlAttribute
-  private Long expireAfterAccess;
+  void setExpireAfterAccess(Long expireAfterAccess) {
+    this.expireAfterAccess = expireAfterAccess;
+  }
 
-  /** Field description */
   @XmlAttribute
-  private Long expireAfterWrite;
+  void setExpireAfterWrite(Long expireAfterWrite) {
+    this.expireAfterWrite = expireAfterWrite;
+  }
 
-  /** Field description */
   @XmlAttribute
-  private Integer initialCapacity;
+  void setInitialCapacity(Integer initialCapacity) {
+    this.initialCapacity = initialCapacity;
+  }
 
-  /** Field description */
   @XmlAttribute
-  private Long maximumSize;
+  void setMaximumSize(Long maximumSize) {
+    this.maximumSize = maximumSize;
+  }
 
-  /** Field description */
   @XmlAttribute
-  private Long maximumWeight;
+  void setMaximumWeight(Long maximumWeight) {
+    this.maximumWeight = maximumWeight;
+  }
 
-  /** Field description */
   @XmlAttribute
-  private Boolean recordStats;
+  void setRecordStats(Boolean recordStats) {
+    this.recordStats = recordStats;
+  }
 
-  /** Field description */
   @XmlAttribute
-  private Boolean softValues;
+  void setSoftValues(Boolean softValues) {
+    this.softValues = softValues;
+  }
 
-  /** Field description */
   @XmlAttribute
-  private Boolean weakKeys;
+  void setWeakKeys(Boolean weakKeys) {
+    this.weakKeys = weakKeys;
+  }
 
-  /** Field description */
   @XmlAttribute
-  private Boolean weakValues;
+  void setWeakValues(Boolean weakValues) {
+    this.weakValues = weakValues;
+  }
 }

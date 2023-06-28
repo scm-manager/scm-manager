@@ -26,6 +26,7 @@ package sonia.scm.store;
 
 import com.google.common.collect.ImmutableSet;
 import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -67,6 +68,7 @@ public final class TypedStoreParametersBuilder<T,S> {
   @Getter
   @Setter(AccessLevel.PRIVATE)
   @RequiredArgsConstructor
+  @EqualsAndHashCode(exclude = {"classLoader", "adapters"})
   private static class TypedStoreParametersImpl<T> implements TypedStoreParameters<T> {
     private final Class<T> type;
     private String name;

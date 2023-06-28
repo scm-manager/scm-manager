@@ -24,8 +24,6 @@
 
 package sonia.scm.store;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import sonia.scm.SCMContextProvider;
@@ -46,16 +44,33 @@ public class JAXBDataStoreFactory extends FileBasedStoreFactory
 
   private final KeyGenerator keyGenerator;
 
+  private final StoreCache<DataStore<?>> storeCache;
+
+  private final DataFileCache dataFileCache;
+
   @Inject
-  public JAXBDataStoreFactory(SCMContextProvider contextProvider , RepositoryLocationResolver repositoryLocationResolver, KeyGenerator keyGenerator, RepositoryReadOnlyChecker readOnlyChecker) {
+  public JAXBDataStoreFactory(SCMContextProvider contextProvider , RepositoryLocationResolver repositoryLocationResolver, KeyGenerator keyGenerator, RepositoryReadOnlyChecker readOnlyChecker, DataFileCache dataFileCache) {
     super(contextProvider, repositoryLocationResolver, Store.DATA, readOnlyChecker);
     this.keyGenerator = keyGenerator;
+    this.dataFileCache = dataFileCache;
+    this.storeCache = new StoreCache<>(this::createStore);
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public <T> DataStore<T> getStore(TypedStoreParameters<T> storeParameters) {
+    return (DataStore<T>) storeCache.getStore(storeParameters);
+  }
+
+  private  <T> DataStore<T> createStore(TypedStoreParameters<T> storeParameters) {
     File storeLocation = getStoreLocation(storeParameters);
     IOUtil.mkdirs(storeLocation);
-    return new JAXBDataStore<>(keyGenerator, TypedStoreContext.of(storeParameters), storeLocation, mustBeReadOnly(storeParameters));
+    return new JAXBDataStore<>(
+      keyGenerator,
+      TypedStoreContext.of(storeParameters),
+      storeLocation,
+      mustBeReadOnly(storeParameters),
+      dataFileCache.instanceFor(storeParameters.getType())
+    );
   }
 }
