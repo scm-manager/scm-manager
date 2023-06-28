@@ -116,7 +116,7 @@ public final class ModificationsCommandBuilder {
   public Modifications getModifications() throws IOException {
     Modifications modifications;
     if (disableCache) {
-      log.info("Get modifications for {} with disabled cache", request);
+      log.debug("Get modifications for {} with disabled cache", request);
       modifications = modificationsCommand.getModifications(request);
     } else {
       ModificationsCommandBuilder.CacheKey key = new ModificationsCommandBuilder.CacheKey(repository.getId(), request);
@@ -124,7 +124,7 @@ public final class ModificationsCommandBuilder {
         modifications = cache.get(key);
         log.debug("Get modifications for {} from the cache", request);
       } else {
-        log.info("Get modifications for {} with enabled cache", request);
+        log.debug("Get modifications for {} with enabled cache", request);
         modifications = modificationsCommand.getModifications(request);
         if (modifications != null) {
           cache.put(key, modifications);

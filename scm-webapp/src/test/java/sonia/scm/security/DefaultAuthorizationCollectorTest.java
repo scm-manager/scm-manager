@@ -138,7 +138,9 @@ public class DefaultAuthorizationCollectorTest {
     authenticate(UserTestData.createTrillian(), "main");
 
     AuthorizationInfo authInfo = collector.collect();
-    assertSame(info, authInfo);
+    assertSame(info.getStringPermissions(), authInfo.getStringPermissions());
+    assertSame(info.getObjectPermissions(), authInfo.getObjectPermissions());
+    assertSame(info.getRoles(), authInfo.getRoles());
   }
 
   /**

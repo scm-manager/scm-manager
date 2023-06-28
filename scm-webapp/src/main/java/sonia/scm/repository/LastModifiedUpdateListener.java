@@ -21,10 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
+package sonia.scm.repository;
 
 import com.github.legman.Subscribe;
 import com.google.inject.Inject;
@@ -36,138 +34,70 @@ import sonia.scm.plugin.Extension;
 import sonia.scm.web.security.AdministrationContext;
 import sonia.scm.web.security.PrivilegedAction;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
- *
  * @author Sebastian Sdorra
  * @since 1.37
  */
 @Extension
 @EagerSingleton
-public final class LastModifiedUpdateListener
-{
+public final class LastModifiedUpdateListener {
 
-  /**
-   * the logger for LastModifiedUpdateListener
-   */
-  private static final Logger logger =
-    LoggerFactory.getLogger(LastModifiedUpdateListener.class);
+  private static final Logger LOG = LoggerFactory.getLogger(LastModifiedUpdateListener.class);
 
-  //~--- constructors ---------------------------------------------------------
+  private final AdministrationContext adminContext;
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param adminContext
-   * @param repositoryManager
-   */
+  private final RepositoryManager repositoryManager;
+
   @Inject
   public LastModifiedUpdateListener(AdministrationContext adminContext,
-    RepositoryManager repositoryManager)
-  {
+                                    RepositoryManager repositoryManager) {
     this.adminContext = adminContext;
     this.repositoryManager = repositoryManager;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param event
-   */
   @Subscribe
-  public void onPostReceive(PostReceiveRepositoryHookEvent event)
-  {
+  public void onPostReceive(PostReceiveRepositoryHookEvent event) {
     final Repository repository = event.getRepository();
 
-    if (repository != null)
-    {
+    if (repository != null) {
       //J-
       adminContext.runAsAdmin(
         new LastModifiedPrivilegedAction(repositoryManager, repository)
       );
       //J+
-    }
-    else
-    {
-      logger.warn("recevied hook without repository");
+    } else {
+      LOG.warn("received hook without repository");
     }
   }
 
-  //~--- inner classes --------------------------------------------------------
+  static class LastModifiedPrivilegedAction implements PrivilegedAction {
 
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 14/04/20
-   * @author         Enter your name here...
-   */
-  static class LastModifiedPrivilegedAction implements PrivilegedAction
-  {
+    private final Repository repository;
 
-    /**
-     * Constructs ...
-     *
-     *
-     * @param repositoryManager
-     * @param repository
-     */
+    private final RepositoryManager repositoryManager;
+
     public LastModifiedPrivilegedAction(RepositoryManager repositoryManager,
-      Repository repository)
-    {
+                                        Repository repository) {
       this.repositoryManager = repositoryManager;
       this.repository = repository;
     }
 
-    //~--- methods ------------------------------------------------------------
-
-    /**
-     * Method description
-     *
-     */
     @Override
-    public void run()
-    {
+    public void run() {
       Repository dbr = repositoryManager.get(repository.getId());
 
-      if (dbr != null)
-      {
-        logger.info("update last modified date of repository {}", dbr.getId());
+      if (dbr != null) {
+        LOG.debug("update last modified date of repository {}", dbr.getId());
         dbr.setLastModified(System.currentTimeMillis());
 
         try {
           repositoryManager.modify(dbr);
         } catch (NotFoundException e) {
-          logger.error("could not modify repository", e);
+          LOG.error("could not modify repository", e);
         }
-      }
-      else
-      {
-        logger.error("could not find repository with id {}",
-          repository.getId());
+      } else {
+        LOG.error("could not find repository with id {}", repository.getId());
       }
     }
-
-    //~--- fields -------------------------------------------------------------
-
-    /** Field description */
-    private final Repository repository;
-
-    /** Field description */
-    private final RepositoryManager repositoryManager;
   }
-
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final AdministrationContext adminContext;
-
-  /** Field description */
-  private final RepositoryManager repositoryManager;
 }

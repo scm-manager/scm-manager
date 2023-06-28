@@ -53,83 +53,43 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 /**
- *
  * @author Sebastian Sdorra
  */
-@Singleton @EagerSingleton
-public class DefaultUserManager extends AbstractUserManager
-{
+@Singleton
+@EagerSingleton
+public class DefaultUserManager extends AbstractUserManager {
 
-  /** Field description */
   public static final String STORE_NAME = "users";
+  private static final Logger LOG = LoggerFactory.getLogger(DefaultUserManager.class);
 
-  /** the logger for XmlUserManager */
-  private static final Logger logger =
-    LoggerFactory.getLogger(DefaultUserManager.class);
-
-  //~--- constructors ---------------------------------------------------------
-
+  private final UserDAO userDAO;
+  private final ManagerDaoAdapter<User> managerDaoAdapter;
   private final PasswordService passwordService;
 
-  /**
-   * Constructs ...
-   *
-   * @param passwordService
-   * @param userDAO
-   */
   @Inject
-  public DefaultUserManager(PasswordService passwordService, UserDAO userDAO, Set<Auditor> auditors)
-  {
+  public DefaultUserManager(PasswordService passwordService, UserDAO userDAO, Set<Auditor> auditors) {
     this.passwordService = passwordService;
     this.userDAO = userDAO;
     this.managerDaoAdapter = new ManagerDaoAdapter<>(userDAO, auditors);
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
   @Override
-  public void close() throws IOException
-  {
-
+  public void close() throws IOException {
     // do nothing
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param username
-   *
-   * @return
-   */
   @Override
-  public boolean contains(String username)
-  {
+  public boolean contains(String username) {
     return userDAO.contains(username);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param user
-   *
-   * @throws IOException
-   */
   @Override
   public User create(User user) {
     String type = user.getType();
     if (Util.isEmpty(type)) {
       user.setType(userDAO.getType());
     }
-
-    logger.info("create user {} of type {}", user.getName(), user.getType());
+    LOG.info("create user {}", user.getName());
     ensurePasswordEncrypted(user);
 
     return managerDaoAdapter.create(
@@ -142,7 +102,7 @@ public class DefaultUserManager extends AbstractUserManager
 
   @Override
   public void delete(User user) {
-    logger.info("delete user {} of type {}", user.getName(), user.getType());
+    LOG.info("delete user {} of type {}", user.getName());
     managerDaoAdapter.delete(
       user,
       () -> UserPermissions.delete(user.getName()),
@@ -151,28 +111,13 @@ public class DefaultUserManager extends AbstractUserManager
     );
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param context
-   */
   @Override
-  public void init(SCMContextProvider context)
-  {
+  public void init(SCMContextProvider context) {
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param user
-   *
-   * @throws IOException
-   */
   @Override
   public void modify(User user) {
-    logger.info("modify user {} of type {}", user.getName(), user.getType());
+    LOG.info("modify user {}", user.getName());
     ensurePasswordEncrypted(user);
     managerDaoAdapter.modify(
       user,
@@ -185,47 +130,23 @@ public class DefaultUserManager extends AbstractUserManager
     user.setPassword(passwordService.encryptPassword(user.getPassword()));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param user
-   *
-   * @throws IOException
-   */
   @Override
   public void refresh(User user) {
-    if (logger.isInfoEnabled())
-    {
-      logger.info("refresh user {} of type {}", user.getName(), user.getType());
-    }
+    LOG.info("refresh user {}", user.getName());
 
     UserPermissions.read(user).check();
     User fresh = userDAO.get(user.getName());
 
-    if (fresh == null)
-    {
+    if (fresh == null) {
       throw new NotFoundException(User.class, user.getName());
     }
 
     fresh.copyProperties(user);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param searchRequest
-   *
-   * @return
-   */
   @Override
-  public Collection<User> search(final SearchRequest searchRequest)
-  {
-    if (logger.isDebugEnabled())
-    {
-      logger.debug("search user with query {}", searchRequest.getQuery());
-    }
+  public Collection<User> search(final SearchRequest searchRequest) {
+    LOG.debug("search user with query {}", searchRequest.getQuery());
 
     final PermissionActionCheck<User> check = UserPermissions.read();
     return SearchUtil.search(searchRequest, userDAO.getAll(), user -> {
@@ -240,54 +161,26 @@ public class DefaultUserManager extends AbstractUserManager
     return SearchUtil.matchesOne(searchRequest, user.getName(), user.getDisplayName(), user.getMail());
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   *
-   * @return
-   */
   @Override
-  public User get(String id)
-  {
+  public User get(String id) {
     UserPermissions.read().check(id);
 
     User user = userDAO.get(id);
 
-    if (user != null)
-    {
+    if (user != null) {
       user = user.clone();
     }
 
     return user;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public Collection<User> getAll()
-  {
+  public Collection<User> getAll() {
     return getAll(user -> true, null);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param comparator
-   *
-   * @return
-   */
   @Override
-  public Collection<User> getAll(Predicate<User> filter, Comparator<User> comparator)
-  {
+  public Collection<User> getAll(Predicate<User> filter, Comparator<User> comparator) {
     List<User> users = new ArrayList<>();
 
     PermissionActionCheck<User> check = UserPermissions.read();
@@ -304,17 +197,6 @@ public class DefaultUserManager extends AbstractUserManager
     return users;
   }
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param comaparator
-   * @param start
-   * @param limit
-   *
-   * @return
-   */
   @Override
   public Collection<User> getAll(Comparator<User> comaparator, int start, int limit) {
     final PermissionActionCheck<User> check = UserPermissions.read();
@@ -326,42 +208,18 @@ public class DefaultUserManager extends AbstractUserManager
       }, start, limit);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param start
-   * @param limit
-   *
-   * @return
-   */
   @Override
-  public Collection<User> getAll(int start, int limit)
-  {
+  public Collection<User> getAll(int start, int limit) {
     return getAll(null, start, limit);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public String getDefaultType()
-  {
+  public String getDefaultType() {
     return userDAO.getType();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public Long getLastModified()
-  {
+  public Long getLastModified() {
     return userDAO.getLastModified();
   }
 
@@ -401,8 +259,4 @@ public class DefaultUserManager extends AbstractUserManager
     return Authentications.isSubjectAnonymous(user.getName());
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  private final UserDAO userDAO;
-  private final ManagerDaoAdapter<User> managerDaoAdapter;
 }

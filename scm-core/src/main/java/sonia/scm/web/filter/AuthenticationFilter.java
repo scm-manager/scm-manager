@@ -231,7 +231,7 @@ public class AuthenticationFilter extends HttpFilter {
       logger.trace("handle token validation failed exception");
       handleTokenValidationFailedException(request, response, chain, ex);
     } catch (AuthenticationException ex) {
-      logger.warn("authentication failed", ex);
+      logger.warn("authentication failed: {}", ex.getMessage());
       handleUnauthorized(request, response, chain);
     }
   }

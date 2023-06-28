@@ -52,7 +52,7 @@
     maximumSize="1000"
     expireAfterAccess="1200"
     expireAfterWrite="2400"
-    copyStrategy="read"
+    copyStrategy="none"
   />
 
   <!--

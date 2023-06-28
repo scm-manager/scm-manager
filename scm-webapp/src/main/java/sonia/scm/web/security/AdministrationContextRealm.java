@@ -49,7 +49,7 @@ public class AdministrationContextRealm extends AuthorizingRealm {
   protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
     AdministrationContextMarker marker = principals.oneByType(AdministrationContextMarker.class);
     if (marker == AdministrationContextMarker.MARKER) {
-      LOG.info("assign admin permissions to admin context user {}", principals.getPrimaryPrincipal());
+      LOG.debug("assign admin permissions to admin context user {}", principals.getPrimaryPrincipal());
       SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo(Sets.newHashSet(Role.USER));
       authorizationInfo.setStringPermissions(Sets.newHashSet("*"));
       return authorizationInfo;

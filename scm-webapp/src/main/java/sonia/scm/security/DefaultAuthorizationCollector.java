@@ -34,6 +34,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.Permission;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
@@ -57,6 +58,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import static java.util.Collections.emptySet;
+import static java.util.Collections.unmodifiableCollection;
 
 @Singleton
 @Extension
@@ -133,7 +135,7 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector {
       logger.trace("retrieve AuthorizationInfo for user {} from cache", user.getName());
     }
 
-    return info;
+    return new UnmodifiableAuthorizationInfo(info);
   }
 
   private void collectGlobalPermissions(Builder<String> builder,
@@ -353,6 +355,37 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector {
     public int hashCode()
     {
       return Objects.hashCode(username, groupnames);
+    }
+  }
+
+  private static class UnmodifiableAuthorizationInfo implements AuthorizationInfo {
+    private final AuthorizationInfo info;
+
+    public UnmodifiableAuthorizationInfo(AuthorizationInfo info) {
+      this.info = info;
+    }
+
+    @Override
+    public Collection<String> getRoles() {
+      return nullsafeUnmodifiable(info.getRoles());
+    }
+
+    @Override
+    public Collection<String> getStringPermissions() {
+      return nullsafeUnmodifiable(info.getStringPermissions());
+    }
+
+    @Override
+    public Collection<Permission> getObjectPermissions() {
+      return nullsafeUnmodifiable(info.getObjectPermissions());
+    }
+
+    private <T> Collection<T> nullsafeUnmodifiable(Collection<T> collection) {
+      if (collection == null) {
+        return null;
+      } else {
+        return unmodifiableCollection(collection);
+      }
     }
   }
 }

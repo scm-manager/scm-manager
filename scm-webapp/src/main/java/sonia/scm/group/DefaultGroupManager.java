@@ -24,8 +24,6 @@
 
 package sonia.scm.group;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.github.sdorra.ssp.PermissionActionCheck;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
@@ -40,7 +38,6 @@ import sonia.scm.SCMContextProvider;
 import sonia.scm.auditlog.Auditor;
 import sonia.scm.search.SearchRequest;
 import sonia.scm.search.SearchUtil;
-import sonia.scm.util.CollectionAppender;
 import sonia.scm.util.Util;
 
 import java.io.IOException;
@@ -55,47 +52,24 @@ import java.util.function.Predicate;
 
 import static java.util.stream.Collectors.toSet;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
- *
  * @author Sebastian Sdorra
  */
 @Singleton
-public class DefaultGroupManager extends AbstractGroupManager
-{
+public class DefaultGroupManager extends AbstractGroupManager {
 
-  /** the logger for XmlGroupManager */
-  private static final Logger logger =
-    LoggerFactory.getLogger(DefaultGroupManager.class);
+  private static final Logger LOG = LoggerFactory.getLogger(DefaultGroupManager.class);
+  private final GroupDAO groupDAO;
+  private final ManagerDaoAdapter<Group> managerDaoAdapter;
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param groupDAO
-   */
   @Inject
-  public DefaultGroupManager(GroupDAO groupDAO, Set<Auditor> auditors)
-  {
+  public DefaultGroupManager(GroupDAO groupDAO, Set<Auditor> auditors) {
     this.groupDAO = groupDAO;
     this.managerDaoAdapter = new ManagerDaoAdapter<>(groupDAO, auditors);
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
   @Override
-  public void close() throws IOException
-  {
-
+  public void close() throws IOException {
     // do nothing
   }
 
@@ -106,7 +80,7 @@ public class DefaultGroupManager extends AbstractGroupManager
       group.setType(groupDAO.getType());
     }
 
-    logger.info("create group {} of type {}", group.getName(), group.getType());
+    LOG.info("create group {} of type {}", group.getName(), group.getType());
 
     removeDuplicateMembers(group);
 
@@ -119,8 +93,8 @@ public class DefaultGroupManager extends AbstractGroupManager
   }
 
   @Override
-  public void delete(Group group){
-    logger.info("delete group {} of type {}", group.getName(), group.getType());
+  public void delete(Group group) {
+    LOG.info("delete group {} of type {}", group.getName(), group.getType());
     managerDaoAdapter.delete(
       group,
       () -> GroupPermissions.delete(group.getName()),
@@ -129,18 +103,13 @@ public class DefaultGroupManager extends AbstractGroupManager
     );
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param context
-   */
   @Override
-  public void init(SCMContextProvider context) {}
+  public void init(SCMContextProvider context) {
+  }
 
   @Override
-  public void modify(Group group){
-    logger.info("modify group {} of type {}", group.getName(), group.getType());
+  public void modify(Group group) {
+    LOG.info("modify group {} of type {}", group.getName(), group.getType());
 
     managerDaoAdapter.modify(
       group,
@@ -154,39 +123,23 @@ public class DefaultGroupManager extends AbstractGroupManager
   }
 
   @Override
-  public void refresh(Group group){
+  public void refresh(Group group) {
     String name = group.getName();
-    if (logger.isInfoEnabled())
-    {
-      logger.info("refresh group {} of type {}", name, group.getType());
-    }
+    LOG.info("refresh group {} of type {}", name, group.getType());
 
     GroupPermissions.read(name).check();
     Group fresh = groupDAO.get(name);
 
-    if (fresh == null)
-    {
+    if (fresh == null) {
       throw new NotFoundException(Group.class, group.getId());
     }
 
     fresh.copyProperties(group);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param searchRequest
-   *
-   * @return
-   */
   @Override
-  public Collection<Group> search(final SearchRequest searchRequest)
-  {
-    if (logger.isDebugEnabled())
-    {
-      logger.debug("search group with query {}", searchRequest.getQuery());
-    }
+  public Collection<Group> search(final SearchRequest searchRequest) {
+    LOG.debug("search group with query {}", searchRequest.getQuery());
 
     final PermissionActionCheck<Group> check = GroupPermissions.read();
     return SearchUtil.search(searchRequest, groupDAO.getAll(),
@@ -202,87 +155,45 @@ public class DefaultGroupManager extends AbstractGroupManager
     return SearchUtil.matchesOne(searchRequest, group.getName(), group.getDescription());
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   *
-   * @return
-   */
   @Override
-  public Group get(String id)
-  {
+  public Group get(String id) {
     GroupPermissions.read(id).check();
 
     Group group = groupDAO.get(id);
 
-    if (group != null)
-    {
+    if (group != null) {
       group = group.clone();
     }
 
     return group;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public Collection<Group> getAll()
-  {
+  public Collection<Group> getAll() {
     return getAll(group -> true, null);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param comparator
-   *
-   * @return
-   */
   @Override
-  public Collection<Group> getAll(Predicate<Group> filter, Comparator<Group> comparator)
-  {
+  public Collection<Group> getAll(Predicate<Group> filter, Comparator<Group> comparator) {
     List<Group> groups = new ArrayList<>();
 
     PermissionActionCheck<Group> check = GroupPermissions.read();
-    for (Group group : groupDAO.getAll())
-    {
+    for (Group group : groupDAO.getAll()) {
       if (filter.test(group) && check.isPermitted(group)) {
         groups.add(group.clone());
       }
     }
 
-    if (comparator != null)
-    {
+    if (comparator != null) {
       Collections.sort(groups, comparator);
     }
 
     return groups;
   }
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param comparator
-   * @param start
-   * @param limit
-   *
-   * @return
-   */
   @Override
   public Collection<Group> getAll(Comparator<Group> comparator, int start,
-    int limit)
-  {
+                                  int limit) {
     final PermissionActionCheck<Group> check = GroupPermissions.read();
 
     return Util.createSubCollection(groupDAO.getAll(), comparator,
@@ -293,38 +204,17 @@ public class DefaultGroupManager extends AbstractGroupManager
       }, start, limit);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param start
-   * @param limit
-   *
-   * @return
-   */
   @Override
-  public Collection<Group> getAll(int start, int limit)
-  {
+  public Collection<Group> getAll(int start, int limit) {
     return getAll(null, start, limit);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param member
-   *
-   * @return
-   */
   @Override
-  public Collection<Group> getGroupsForMember(String member)
-  {
+  public Collection<Group> getGroupsForMember(String member) {
     LinkedList<Group> groups = new LinkedList<>();
 
-    for (Group group : groupDAO.getAll())
-    {
-      if (group.isMember(member))
-      {
+    for (Group group : groupDAO.getAll()) {
+      if (group.isMember(member)) {
         groups.add(group.clone());
       }
     }
@@ -332,15 +222,8 @@ public class DefaultGroupManager extends AbstractGroupManager
     return groups;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public Long getLastModified()
-  {
+  public Long getLastModified() {
     return groupDAO.getLastModified();
   }
 
@@ -354,20 +237,12 @@ public class DefaultGroupManager extends AbstractGroupManager
    * Remove duplicate members from group.
    * Have a look at issue #439
    *
-   *
    * @param group group
    */
-  private void removeDuplicateMembers(Group group)
-  {
+  private void removeDuplicateMembers(Group group) {
     List<String> members =
       Lists.newArrayList(ImmutableSet.copyOf(group.getMembers()));
 
     group.setMembers(members);
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private GroupDAO groupDAO;
-  private final ManagerDaoAdapter<Group> managerDaoAdapter;
 }

@@ -58,7 +58,7 @@ import static sonia.scm.NotFoundException.notFound;
 
 public class GitCatCommand extends AbstractGitCommand implements CatCommand {
 
-  private static final Logger logger = LoggerFactory.getLogger(GitCatCommand.class);
+  private static final Logger LOG = LoggerFactory.getLogger(GitCatCommand.class);
 
   private final LfsBlobStoreFactory lfsBlobStoreFactory;
 
@@ -70,7 +70,7 @@ public class GitCatCommand extends AbstractGitCommand implements CatCommand {
 
   @Override
   public void getCatResult(CatCommandRequest request, OutputStream output) throws IOException {
-    logger.debug("try to read content for {}", request);
+    LOG.debug("try to read content for {}", request);
     try (Loader closableObjectLoaderContainer = getLoader(request)) {
       closableObjectLoaderContainer.copyTo(output);
     }
@@ -78,7 +78,7 @@ public class GitCatCommand extends AbstractGitCommand implements CatCommand {
 
   @Override
   public InputStream getCatResultStream(CatCommandRequest request) throws IOException {
-    logger.debug("try to read content for {}", request);
+    LOG.debug("try to read content for {}", request);
     return new InputStreamWrapper(getLoader(request));
   }
 
@@ -94,16 +94,14 @@ public class GitCatCommand extends AbstractGitCommand implements CatCommand {
     if (revId == null) {
       throw notFound(entity("Revision", request.getRevision()).in(repository));
     }
-    logger.info("loading content for file {} for revision {} in repository {}", request.getPath(), revId, repository);
+    LOG.debug("loading content for file {} for revision {} in repository {}", request.getPath(), revId, repository);
     return getLoader(repo, revId, request.getPath());
   }
 
   private Loader getLoader(Repository repo, ObjectId revId, String path) throws IOException {
     TreeWalk treeWalk = new TreeWalk(repo);
     treeWalk.setRecursive(Util.nonNull(path).contains("/"));
-
-    logger.debug("load content for {} at {}", path, revId.name());
-
+    LOG.debug("load content for {} at {}", path, revId.name());
     RevWalk revWalk = new RevWalk(repo);
 
     RevCommit entry = null;
@@ -117,7 +115,7 @@ public class GitCatCommand extends AbstractGitCommand implements CatCommand {
     if (revTree != null) {
       treeWalk.addTree(revTree);
     } else {
-      logger.error("could not find tree for {}", revId.name());
+      LOG.error("could not find tree for {}", revId.name());
     }
 
     treeWalk.setFilter(PathFilter.create(path));
@@ -146,7 +144,7 @@ public class GitCatCommand extends AbstractGitCommand implements CatCommand {
     String oid = lfsPointer.getOid().getName();
     Blob blob = lfsBlobStore.get(oid);
     if (blob == null) {
-      logger.error("lfs blob for lob id {} not found in lfs store of repository {}", oid, repository);
+      LOG.error("lfs blob for lob id {} not found in lfs store of repository {}", oid, repository);
       throw notFound(entity("LFS", oid).in(repository));
     }
     GitUtil.release(revWalk);
