@@ -27,6 +27,7 @@ package sonia.scm.store;
 import javax.xml.bind.JAXB;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
 
 /**
  * In memory store implementation of {@link ConfigurationStore} using a byte array to store the serialized object.
@@ -63,5 +64,13 @@ public class InMemoryByteConfigurationStore<T> implements ConfigurationStore<T> 
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     JAXB.marshal(object, baos);
     store = baos.toByteArray();
+  }
+
+  /**
+   * This method can be used to mock stores with raw xml data to test update steps or otherwise the compatability of
+   * objects with old versions.
+   */
+  public void setRawXml(String xml) {
+    store = xml.getBytes(StandardCharsets.UTF_8);
   }
 }

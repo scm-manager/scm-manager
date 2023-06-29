@@ -30,6 +30,7 @@ import sonia.scm.security.UUIDKeyGenerator;
 import javax.xml.bind.JAXB;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -66,6 +67,14 @@ public class InMemoryByteConfigurationEntryStore<V> implements ConfigurationEntr
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     JAXB.marshal(item, baos);
     store.put(id, baos.toByteArray());
+  }
+
+  /**
+   * This method can be used to mock stores with raw xml data to test update steps or otherwise the compatability of
+   * objects with old versions.
+   */
+  public void putRawXml(String id, String xml) {
+    store.put(id, xml.getBytes(StandardCharsets.UTF_8));
   }
 
   @Override
