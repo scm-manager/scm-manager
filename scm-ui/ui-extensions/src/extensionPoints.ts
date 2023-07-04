@@ -433,7 +433,7 @@ export type RepositoryAvatar = RenderableExtensionPointDefinition<
  */
 export type PrimaryRepositoryAvatar = RenderableExtensionPointDefinition<
   "repos.repository-avatar.primary",
-  { repository: Repository, size: number }
+  { repository: Repository; size: number }
 >;
 
 /**
@@ -644,7 +644,7 @@ type BaseActionBarOverflowMenuProps = {
   category: string;
   label: string;
   icon: string;
-  props?: unknown;
+  props?: Record<string | number | symbol, unknown>;
 };
 
 export type ActionMenuProps = BaseActionBarOverflowMenuProps & { action: (props: ContentActionExtensionProps) => void };
@@ -669,15 +669,14 @@ export type RepositoryDeleteButton = RenderableExtensionPointDefinition<
 export type RepositoryInformationTableBottom = RenderableExtensionPointDefinition<
   "repository.information.table.bottom",
   { repository: Repository }
-  >;
+>;
 
 export type UserInformationTableBottom = RenderableExtensionPointDefinition<
   "user.information.table.bottom",
   { user: User }
-  >;
+>;
 
 export type GroupInformationTableBottom = RenderableExtensionPointDefinition<
   "group.information.table.bottom",
   { group: Group }
-  >;
-
+>;

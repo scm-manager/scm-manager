@@ -24,39 +24,30 @@
 
 import React, { FC, ReactElement } from "react";
 import { useTranslation } from "react-i18next";
-import classNames from "classnames";
 import { Icon } from "@scm-manager/ui-components";
-import { MenuItemContainer } from "./ContentActionMenu";
 import { extensionPoints } from "@scm-manager/ui-extensions";
+import { Menu } from "@scm-manager/ui-overlays";
 
 const ModalMenuItem: FC<
   extensionPoints.ModalMenuProps & {
-    active: boolean;
-    onClick: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
     setSelectedModal: (element: ReactElement | undefined) => void;
     extensionProps: extensionPoints.ContentActionExtensionProps;
   }
-> = ({ modalElement, active, label, icon, props, extensionProps, setSelectedModal, ...rest }) => {
+> = ({ modalElement, label, icon, props, extensionProps, setSelectedModal }) => {
   const [t] = useTranslation("plugins");
 
   return (
-    <MenuItemContainer
-      className={classNames("is-clickable", "is-flex", "is-align-items-centered", {
-        "has-background-info has-text-white": active,
-      })}
-      title={t(label)}
-      {...props}
-      {...rest}
-      onClick={(event) => {
+    <Menu.Button
+      onSelect={() =>
         setSelectedModal(
           React.createElement(modalElement, { ...extensionProps, close: () => setSelectedModal(undefined) })
-        );
-        rest.onClick(event);
-      }}
+        )
+      }
+      {...props}
     >
-      <Icon name={icon} color="inherit" className="pr-5" />
+      <Icon name={icon} className="pr-5 has-text-inherit" />
       <span>{t(label)}</span>
-    </MenuItemContainer>
+    </Menu.Button>
   );
 };
 

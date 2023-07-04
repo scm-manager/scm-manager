@@ -24,11 +24,11 @@
 
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
-import classNames from "classnames";
 import { Icon } from "@scm-manager/ui-components";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { extensionPoints } from "@scm-manager/ui-extensions";
+import { Menu } from "@scm-manager/ui-overlays";
 
 const MenuItemLinkContainer = styled(Link)<{ active: boolean }>`
   border-radius: 5px;
@@ -40,24 +40,15 @@ const MenuItemLinkContainer = styled(Link)<{ active: boolean }>`
 `;
 
 const LinkMenuItem: FC<
-  extensionPoints.LinkMenuProps & { active: boolean; extensionProps: extensionPoints.ContentActionExtensionProps }
-> = ({ link, active, label, icon, props, extensionProps, ...rest }) => {
+  extensionPoints.LinkMenuProps & { extensionProps: extensionPoints.ContentActionExtensionProps }
+> = ({ link, label, props, icon, extensionProps }) => {
   const [t] = useTranslation("plugins");
 
   return (
-    <MenuItemLinkContainer
-      className={classNames("is-clickable", "is-flex", "is-align-items-centered", {
-        "has-background-info": active,
-      })}
-      to={link(extensionProps)}
-      title={t(label)}
-      active={active}
-      {...props}
-      {...rest}
-    >
-      <Icon name={icon} color="inherit" className="pr-5" />
+    <Menu.Link to={link(extensionProps)} {...props}>
+      <Icon name={icon} className="pr-5 has-text-inherit" />
       <span>{t(label)}</span>
-    </MenuItemLinkContainer>
+    </Menu.Link>
   );
 };
 

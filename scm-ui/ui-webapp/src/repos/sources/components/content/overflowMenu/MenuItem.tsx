@@ -30,12 +30,10 @@ import { extensionPoints } from "@scm-manager/ui-extensions";
 
 const MenuItem: FC<
   extensionPoints.FileViewActionBarOverflowMenu["type"] & {
-    active: boolean;
-    onClick: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
     setSelectedModal: (element: ReactElement | undefined) => void;
     extensionProps: extensionPoints.ContentActionExtensionProps;
   }
-> = ({ extensionProps, label, icon, props, category, active, onClick, setSelectedModal, ...rest }) => {
+> = ({ extensionProps, label, icon, props, category, setSelectedModal, ...rest }) => {
   if ("action" in rest) {
     return (
       <ActionMenuItem
@@ -43,8 +41,6 @@ const MenuItem: FC<
         icon={icon}
         category={category}
         extensionProps={extensionProps}
-        active={active}
-        onClick={onClick}
         props={props}
         {...rest}
       />
@@ -56,7 +52,6 @@ const MenuItem: FC<
         category={category}
         label={label}
         icon={icon}
-        active={active}
         extensionProps={extensionProps}
         props={props}
         {...rest}
@@ -70,8 +65,6 @@ const MenuItem: FC<
         label={label}
         icon={icon}
         extensionProps={extensionProps}
-        active={active}
-        onClick={onClick}
         setSelectedModal={setSelectedModal}
         props={props}
         {...rest}

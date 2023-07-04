@@ -362,6 +362,7 @@
       "file": "File"
     },
     "content": {
+      "actionMenuTrigger": "Actions",
       "historyButton": "History",
       "sourcesButton": "Sources",
       "annotateButton": "Annotate",

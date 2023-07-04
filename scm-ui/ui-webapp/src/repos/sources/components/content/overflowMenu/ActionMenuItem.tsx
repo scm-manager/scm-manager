@@ -24,36 +24,22 @@
 
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
-import classNames from "classnames";
 import { Icon } from "@scm-manager/ui-components";
 import { extensionPoints } from "@scm-manager/ui-extensions";
-import { MenuItemContainer } from "./ContentActionMenu";
+import { Menu } from "@scm-manager/ui-overlays";
 
 const ActionMenuItem: FC<
   extensionPoints.ActionMenuProps & {
-    active: boolean;
-    onClick: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
     extensionProps: extensionPoints.ContentActionExtensionProps;
   }
-> = ({ action, active, label, icon, props, extensionProps, ...rest }) => {
+> = ({ action, label, props, icon, extensionProps }) => {
   const [t] = useTranslation("plugins");
 
   return (
-    <MenuItemContainer
-      className={classNames("is-clickable", "is-flex", "is-align-items-centered", {
-        "has-background-info has-text-white": active,
-      })}
-      title={t(label)}
-      {...props}
-      {...rest}
-      onClick={(event) => {
-        rest.onClick(event);
-        action(extensionProps);
-      }}
-    >
-      <Icon name={icon} color="inherit" className="pr-5" />
-      <span>{t(label)}</span>
-    </MenuItemContainer>
+    <Menu.Button onSelect={() => action(extensionProps)} {...props}>
+      <Icon name={icon} className="pr-5 has-text-inherit" />
+      {t(label)}
+    </Menu.Button>
   );
 };
 

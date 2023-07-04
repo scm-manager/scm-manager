@@ -32,6 +32,8 @@ import { Link as ReactRouterLink, LinkProps as ReactRouterLinkProps } from "reac
 const MenuContent = styled(RadixMenu.Content)`
   border: var(--scm-border);
   background-color: var(--scm-secondary-background);
+  z-index: 400;
+  position: relative;
 `;
 
 const MenuItem = styled(RadixMenu.Item).attrs({

@@ -24,36 +24,12 @@
 
 import { binder, extensionPoints } from "@scm-manager/ui-extensions";
 import React, { FC, ReactElement, useState } from "react";
-import { Icon } from "@scm-manager/ui-components";
 import styled from "styled-components";
-import { Menu } from "@headlessui/react";
+import { Menu } from "@scm-manager/ui-overlays";
 import FallbackMenuButton from "./FallbackMenuButton";
 import MenuItem from "./MenuItem";
-
-const MenuButton = styled(Menu.Button)`
-  background: transparent;
-  border: none;
-  font-size: 1.5rem;
-  height: 2.5rem;
-  width: 50px;
-  margin-bottom: 0.5rem;
-`;
-
-const MenuItems = styled(Menu.Items)`
-  padding: 0.5rem;
-  position: absolute;
-  z-index: 999;
-  width: max-content;
-  border: var(--scm-border);
-  border-radius: 5px;
-  background-color: var(--scm-secondary-background);
-  box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1), 0 0px 0 1px rgba(10, 10, 10, 0.02);
-`;
-
-export const MenuItemContainer = styled.div`
-  border-radius: 5px;
-  padding: 0.5rem;
-`;
+import { Icon } from "@scm-manager/ui-buttons";
+import { useTranslation } from "react-i18next";
 
 const HR = styled.hr`
   margin: 0.25rem;
@@ -65,6 +41,7 @@ type Props = {
 };
 
 const ContentActionMenu: FC<Props> = ({ extensionProps }) => {
+  const [t] = useTranslation("repos");
   const [selectedModal, setSelectedModal] = useState<ReactElement | undefined>();
   const extensions = binder.getExtensions<extensionPoints.FileViewActionBarOverflowMenu>(
     "repos.sources.content.actionbar.menu",
@@ -81,47 +58,6 @@ const ContentActionMenu: FC<Props> = ({ extensionProps }) => {
     {}
   );
 
-  const renderMenu = () => (
-    <>
-      <Menu as="div" className="is-relative">
-        {({ open }) => (
-          <>
-            <MenuButton>
-              <Icon name="ellipsis-v" className="has-text-default" />
-            </MenuButton>
-            {open && (
-              <div className="has-background-secondary-least">
-                <MenuItems>
-                  {Object.entries(categories).map(([_category, extensionSet], index) => (
-                    <>
-                      {extensionSet.map((extension) => (
-                        <Menu.Item as={React.Fragment} key={extension.label}>
-                          {({ active }) => {
-                            return (
-                              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                              // @ts-ignore onClick prop required but gets provided implicit by the Menu.Item from headless ui
-                              <MenuItem
-                                extensionProps={extensionProps}
-                                active={active}
-                                setSelectedModal={setSelectedModal}
-                                {...extension}
-                              />
-                            );
-                          }}
-                        </Menu.Item>
-                      ))}
-                      {Object.keys(categories).length > index + 1 ? <HR /> : null}
-                    </>
-                  ))}
-                </MenuItems>
-              </div>
-            )}
-          </>
-        )}
-      </Menu>
-    </>
-  );
-
   if (extensions.length <= 0) {
     return null;
   }
@@ -135,7 +71,30 @@ const ContentActionMenu: FC<Props> = ({ extensionProps }) => {
           setSelectedModal={setSelectedModal}
         />
       ) : (
-        renderMenu()
+        <Menu
+          trigger={
+            <Menu.Trigger
+              className="has-background-transparent has-hover-color-blue px-2"
+              aria-label={t("sources.content.actionMenuTrigger")}
+            >
+              <Icon>ellipsis-v</Icon>
+            </Menu.Trigger>
+          }
+        >
+          {Object.entries(categories).map(([_category, extensionSet], index) => (
+            <>
+              {extensionSet.map((extension) => (
+                <MenuItem
+                  key={extension.label}
+                  extensionProps={extensionProps}
+                  setSelectedModal={setSelectedModal}
+                  {...extension}
+                />
+              ))}
+              {Object.keys(categories).length > index + 1 ? <HR /> : null}
+            </>
+          ))}
+        </Menu>
       )}
       {selectedModal || null}
     </>
