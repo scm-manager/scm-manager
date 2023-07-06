@@ -30,6 +30,7 @@ import GeneralSettings from "./GeneralSettings";
 import BaseUrlSettings from "./BaseUrlSettings";
 import LoginAttempt from "./LoginAttempt";
 import PluginSettings from "./PluginSettings";
+import FunctionSettings from "./FunctionSettings";
 
 type Props = {
   submitForm: (p: Config) => void;
@@ -46,7 +47,7 @@ const ConfigForm: FC<Props> = ({
   loading,
   configReadPermission,
   configUpdatePermission,
-  namespaceStrategies
+  namespaceStrategies,
 }) => {
   const [t] = useTranslation("config");
   const [innerConfig, setInnerConfig] = useState<Config>({
@@ -77,7 +78,7 @@ const ConfigForm: FC<Props> = ({
     mailDomainName: "",
     emergencyContacts: [],
     enabledApiKeys: true,
-    _links: {}
+    _links: {},
   });
   const [showNotification, setShowNotification] = useState(false);
   const [changed, setChanged] = useState(false);
@@ -86,7 +87,7 @@ const ConfigForm: FC<Props> = ({
     loginAttemptLimit: boolean;
   }>({
     loginAttemptLimitTimeout: false,
-    loginAttemptLimit: false
+    loginAttemptLimit: false,
   });
 
   useEffect(() => {
@@ -149,10 +150,16 @@ const ConfigForm: FC<Props> = ({
         releaseFeedUrl={innerConfig.releaseFeedUrl}
         mailDomainName={innerConfig.mailDomainName}
         enabledXsrfProtection={innerConfig.enabledXsrfProtection}
-        enabledUserConverter={innerConfig.enabledUserConverter}
-        enabledApiKeys={innerConfig.enabledApiKeys}
         emergencyContacts={innerConfig.emergencyContacts}
         namespaceStrategy={innerConfig.namespaceStrategy}
+        onChange={onChange}
+        hasUpdatePermission={configUpdatePermission}
+      />
+      <hr />
+      <FunctionSettings
+        enabledUserConverter={innerConfig.enabledUserConverter}
+        enabledApiKeys={innerConfig.enabledApiKeys}
+        enabledFileSearch={innerConfig.enabledFileSearch}
         onChange={onChange}
         hasUpdatePermission={configUpdatePermission}
       />

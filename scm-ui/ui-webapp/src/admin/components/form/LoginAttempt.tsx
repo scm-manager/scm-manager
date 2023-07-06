@@ -44,7 +44,7 @@ class LoginAttempt extends React.Component<Props, State> {
 
     this.state = {
       loginAttemptLimitError: false,
-      loginAttemptLimitTimeoutError: false
+      loginAttemptLimitTimeoutError: false,
     };
   }
   render() {
@@ -54,7 +54,7 @@ class LoginAttempt extends React.Component<Props, State> {
       <div>
         <Subtitle subtitle={t("login-attempt.name")} />
         <div className="columns">
-          <div className="column is-half">
+          <div className="column">
             <InputField
               type="number"
               label={t("login-attempt.login-attempt-limit")}
@@ -66,7 +66,9 @@ class LoginAttempt extends React.Component<Props, State> {
               helpText={t("help.loginAttemptLimitHelpText")}
             />
           </div>
-          <div className="column is-half">
+        </div>
+        <div className="columns">
+          <div className="column">
             <InputField
               type="number"
               label={t("login-attempt.login-attempt-limit-timeout")}
@@ -87,7 +89,7 @@ class LoginAttempt extends React.Component<Props, State> {
   handleLoginAttemptLimitChange = (value: string) => {
     this.setState({
       ...this.state,
-      loginAttemptLimitError: !validator.isNumberValid(value)
+      loginAttemptLimitError: !validator.isNumberValid(value),
     });
     this.props.onChange(validator.isNumberValid(value), Number(value), "loginAttemptLimit");
   };
@@ -95,7 +97,7 @@ class LoginAttempt extends React.Component<Props, State> {
   handleLoginAttemptLimitTimeoutChange = (value: string) => {
     this.setState({
       ...this.state,
-      loginAttemptLimitTimeoutError: !validator.isNumberValid(value)
+      loginAttemptLimitTimeoutError: !validator.isNumberValid(value),
     });
     this.props.onChange(validator.isNumberValid(value), Number(value), "loginAttemptLimitTimeout");
   };

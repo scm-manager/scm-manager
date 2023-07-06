@@ -34,13 +34,16 @@ import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.ContextEntry;
 import sonia.scm.NotFoundException;
 import sonia.scm.PageResult;
+import sonia.scm.admin.ScmConfigurationStore;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.group.GroupManager;
 import sonia.scm.security.ApiKeyService;
@@ -84,6 +87,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
   password = "secret",
   configuration = "classpath:sonia/scm/repository/shiro.ini"
 )
+@ExtendWith(MockitoExtension.class)
 public class UserRootResourceTest {
 
   @Rule
@@ -112,6 +116,8 @@ public class UserRootResourceTest {
   @Mock
   private GroupToGroupDtoMapper groupToGroupDtoMapper;
   @Mock
+  private ScmConfigurationStore scmConfigurationStore;
+  @Mock
   private ScmConfiguration scmConfiguration;
   @InjectMocks
   private UserDtoToUserMapperImpl dtoToUserMapper;
@@ -135,6 +141,7 @@ public class UserRootResourceTest {
   @Before
   public void prepareEnvironment() {
     initMocks(this);
+    when(scmConfigurationStore.get()).thenReturn(scmConfiguration);
     originalUser = createDummyUser("Neo");
     when(userManager.create(userCaptor.capture())).thenAnswer(invocation -> invocation.getArguments()[0]);
     when(userManager.isTypeDefault(userCaptor.capture())).thenCallRealMethod();

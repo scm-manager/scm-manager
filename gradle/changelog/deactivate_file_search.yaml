@@ -1,0 +1,2 @@
+- type: added
+  description: Make file search deactivatable via global config

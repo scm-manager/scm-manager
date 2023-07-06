@@ -57,6 +57,9 @@
     "login-attempt-limit": "Limit für Anmeldeversuche",
     "login-attempt-limit-timeout": "Timeout bei fehlgeschlagenen Anmeldeversuchen"
   },
+  "function-settings": {
+    "name": "Funktionen"
+  },
   "general-settings": {
     "realm-description": "Realm Beschreibung",
     "disable-grouping-grid": "Gruppen deaktivieren",
@@ -74,6 +77,7 @@
     "enabled-xsrf-protection": "XSRF Protection aktivieren",
     "enabled-user-converter": "Benutzer Konverter aktivieren",
     "enabled-api-keys": "API Schlüssel aktivieren",
+    "enabled-file-search": "Dateisuche aktivieren",
     "namespace-strategy": "Namespace Strategie",
     "login-info-url": "Login Info URL",
     "emergencyContacts": {
@@ -110,6 +114,7 @@
     "enableXsrfProtectionHelpText": "Xsrf Cookie Protection aktivieren. Hinweis: Dieses Feature befindet sich noch im Experimentalstatus.",
     "enabledUserConverterHelpText": "Benutzer Konverter aktivieren. Interne Benutzer werden beim Einloggen über ein Fremdsystem zu externen Benutzern konvertiert.",
     "enabledApiKeysHelpText": "API Schlüssel aktivieren. Alle Benutzer dürfen API Schlüssel als zusätzliche Methode zur Authentifizierung nutzen.",
+    "enabledFileSearchHelpText": "Dateisuche aktivieren. Dateipfade können innerhalb eines Repositories im Source Viewer gesucht werden.",
     "nameSpaceStrategyHelpText": "Strategie für Namespaces.",
     "loginInfoUrlHelpText": "URL zu der Login Information (Plugin und Feature Tipps auf der Login Seite). Um die Login Information zu deaktivieren, kann das Feld leer gelassen werden."
   }

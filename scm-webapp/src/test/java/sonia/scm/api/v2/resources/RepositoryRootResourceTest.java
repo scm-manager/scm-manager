@@ -46,6 +46,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.NotFoundException;
 import sonia.scm.PageResult;
+import sonia.scm.admin.ScmConfigurationStore;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.importexport.ExportFileExtensionResolver;
@@ -146,6 +147,8 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   @Mock
   private RepositoryInitializer repositoryInitializer;
   @Mock
+  private ScmConfigurationStore configurationStore;
+  @Mock
   private ScmConfiguration configuration;
   @Mock
   private Set<NamespaceStrategy> strategies;
@@ -189,6 +192,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
 
   @Before
   public void prepareEnvironment() throws IOException {
+    when(configurationStore.get()).thenReturn(configuration);
     super.repositoryToDtoMapper = repositoryToDtoMapper;
     super.dtoToRepositoryMapper = dtoToRepositoryMapper;
     super.manager = repositoryManager;

@@ -43,6 +43,9 @@ Die URL des RSS Release Feed des SCM-Managers. Darüber wird über die neue SCM-
 #### User converter
 Ist der Benutzer Konverter aktiviert, werden alle internen Benutzer beim Einloggen über ein externes System automatisch zu externen Benutzern konvertiert. Nach dem Konvertieren können sich die Benutzer nicht mehr mit dem lokalen SCM-Manager Passwort einloggen, sondern nur noch über das Fremdsystem.
 
+#### Datei Suche
+Die Dateisuche ermöglicht es Dateipfade in Repositories zu suchen. Bei sehr großen Repositories kann die Suche zu Speicherproblemen führen. In diesem Fall kann die Suchfunktion hier deaktiviert werden.
+
 #### Fallback E-Mail Domain Name
 Dieser Domain Name wird genutzt, wenn für einen User eine E-Mail-Adresse benötigt wird, für den keine hinterlegt ist. Diese Domain wird nicht zum Versenden von E-Mails genutzt und auch keine anderweitige Verbindung aufgebaut.
 

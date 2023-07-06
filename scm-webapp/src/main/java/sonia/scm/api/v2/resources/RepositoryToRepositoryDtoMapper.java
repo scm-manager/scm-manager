@@ -33,6 +33,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.ObjectFactory;
 import sonia.scm.SCMContextProvider;
+import sonia.scm.admin.ScmConfigurationStore;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.DefaultRepositoryExportingCheck;
 import sonia.scm.repository.Feature;
@@ -51,6 +52,7 @@ import sonia.scm.web.EdisonHalAppender;
 import sonia.scm.web.api.RepositoryToHalMapper;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -69,7 +71,7 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
   @Inject
   private ResourceLinks resourceLinks;
   @Inject
-  private ScmConfiguration scmConfiguration;
+  private ScmConfigurationStore scmConfigurationStore;
   @Inject
   private RepositoryServiceFactory serviceFactory;
   @Inject
@@ -171,7 +173,9 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
     linksBuilder.single(link("changesets", resourceLinks.changeset().all(repository.getNamespace(), repository.getName())));
     linksBuilder.single(link("sources", resourceLinks.source().selfWithoutRevision(repository.getNamespace(), repository.getName())));
     linksBuilder.single(link("content", resourceLinks.source().content(repository.getNamespace(), repository.getName())));
-    linksBuilder.single(link("paths", resourceLinks.repository().paths(repository.getNamespace(), repository.getName())));
+    if (scmConfigurationStore.get().isEnabledFileSearch()) {
+      linksBuilder.single(link("paths", resourceLinks.repository().paths(repository.getNamespace(), repository.getName())));
+    }
     if (RepositoryPermissions.healthCheck(repository).isPermitted() && !healthCheckService.checkRunning(repository)) {
       linksBuilder.single(link("runHealthCheck", resourceLinks.repository().runHealthCheck(repository.getNamespace(), repository.getName())));
     }
@@ -198,7 +202,7 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
 
   private boolean isRenameNamespacePossible() {
     for (NamespaceStrategy strategy : strategies) {
-      if (strategy.getClass().getSimpleName().equals(scmConfiguration.getNamespaceStrategy())) {
+      if (strategy.getClass().getSimpleName().equals(scmConfigurationStore.get().getNamespaceStrategy())) {
         return strategy.canBeChanged();
       }
     }

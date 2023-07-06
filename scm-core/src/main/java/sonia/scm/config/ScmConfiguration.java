@@ -221,6 +221,14 @@ public class ScmConfiguration implements Configuration {
   @XmlElement(name = "api-keys")
   private boolean enabledApiKeys = true;
 
+  /**
+   * Enables file search inside repositories.
+   *
+   * @since 2.45.0
+   */
+  @XmlElement(name = "file-search")
+  private boolean enabledFileSearch = true;
+
   @XmlElement(name = "namespace-strategy")
   private String namespaceStrategy = "UsernameNamespaceStrategy";
 
@@ -500,6 +508,14 @@ public class ScmConfiguration implements Configuration {
     return enableProxy;
   }
 
+  /**
+   * Returns {@code true} if the repository file search is enabled.
+   *
+   * @return {@code true} if the api keys is enabled
+   * @since 2.45.0
+   */
+  public boolean isEnabledFileSearch() { return enabledFileSearch; }
+
   public boolean isForceBaseUrl() {
     return forceBaseUrl;
   }
@@ -709,6 +725,16 @@ public class ScmConfiguration implements Configuration {
    */
   public void setEnabledApiKeys(boolean enabledApiKeys) {
     this.enabledApiKeys = enabledApiKeys;
+  }
+
+  /**
+   * Set {@code true} to enable file search for repositories.
+   *
+   * @param enabledFileSearch {@code true} to enable file search for repositories
+   * @since 2.45.0
+   */
+  public void setEnabledFileSearch(boolean enabledFileSearch) {
+    this.enabledFileSearch = enabledFileSearch;
   }
 
   public void setNamespaceStrategy(String namespaceStrategy) {

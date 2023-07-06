@@ -38,10 +38,10 @@ class BaseUrlSettings extends React.Component<Props> {
     const { t, baseUrl, forceBaseUrl, hasUpdatePermission } = this.props;
 
     return (
-      <div>
+      <>
         <Subtitle subtitle={t("base-url-settings.name")} />
         <div className="columns">
-          <div className="column is-half">
+          <div className="column">
             <InputField
               label={t("base-url-settings.base-url")}
               onChange={this.handleBaseUrlChange}
@@ -58,7 +58,7 @@ class BaseUrlSettings extends React.Component<Props> {
             />
           </div>
         </div>
-      </div>
+      </>
     );
   }
 

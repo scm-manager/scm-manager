@@ -35,6 +35,7 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import sonia.scm.SCMContextProvider;
+import sonia.scm.admin.ScmConfigurationStore;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.CustomNamespaceStrategy;
 import sonia.scm.repository.HealthCheckFailure;
@@ -87,6 +88,8 @@ public class RepositoryToRepositoryDtoMapperTest {
   @Mock
   private ScmPathInfo uriInfo;
   @Mock
+  private ScmConfigurationStore scmConfigurationStore;
+  @Mock
   private ScmConfiguration configuration;
   @Mock
   private Set<NamespaceStrategy> strategies;
@@ -110,6 +113,7 @@ public class RepositoryToRepositoryDtoMapperTest {
     when(configuration.getNamespaceStrategy()).thenReturn("CustomNamespaceStrategy");
     when(uriInfo.getApiRestUri()).thenReturn(URI.create("/x/y"));
     doReturn(ImmutableSet.of(new CustomNamespaceStrategy()).iterator()).when(strategies).iterator();
+    when(scmConfigurationStore.get()).thenReturn(configuration);
   }
 
   @After
@@ -322,7 +326,15 @@ public class RepositoryToRepositoryDtoMapperTest {
   }
 
   @Test
+  public void shouldNotCreatePathsLink() {
+    when(configuration.isEnabledFileSearch()).thenReturn(false);
+    RepositoryDto dto = mapper.map(createTestRepository());
+    assertThat(dto.getLinks().getLinkBy("paths")).isNotPresent();
+  }
+
+  @Test
   public void shouldCreatePathsLink() {
+    when(configuration.isEnabledFileSearch()).thenReturn(true);
     RepositoryDto dto = mapper.map(createTestRepository());
     assertThat(dto.getLinks().getLinkBy("paths"))
                   .isPresent()

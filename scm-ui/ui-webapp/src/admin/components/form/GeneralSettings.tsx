@@ -41,8 +41,6 @@ type Props = {
   releaseFeedUrl: string;
   mailDomainName: string;
   enabledXsrfProtection: boolean;
-  enabledUserConverter: boolean;
-  enabledApiKeys: boolean;
   emergencyContacts: string[];
   namespaceStrategy: string;
   namespaceStrategies?: NamespaceStrategies;
@@ -58,8 +56,6 @@ const GeneralSettings: FC<Props> = ({
   releaseFeedUrl,
   mailDomainName,
   enabledXsrfProtection,
-  enabledUserConverter,
-  enabledApiKeys,
   emergencyContacts,
   namespaceStrategy,
   namespaceStrategies,
@@ -79,9 +75,6 @@ const GeneralSettings: FC<Props> = ({
   const handleEnabledXsrfProtectionChange = (value: boolean) => {
     onChange(true, value, "enabledXsrfProtection");
   };
-  const handleEnabledUserConverterChange = (value: boolean) => {
-    onChange(true, value, "enabledUserConverter");
-  };
   const handleAnonymousMode = (value: string) => {
     onChange(true, value as AnonymousMode, "anonymousMode");
   };
@@ -97,9 +90,6 @@ const GeneralSettings: FC<Props> = ({
   const handleMailDomainNameChange = (value: string) => {
     onChange(true, value, "mailDomainName");
   };
-  const handleEnabledApiKeysChange = (value: boolean) => {
-    onChange(true, value, "enabledApiKeys");
-  };
   const handleEmergencyContactsChange = (p: Option<AutocompleteObject>[]) => {
     onChange(
       true,
@@ -111,7 +101,7 @@ const GeneralSettings: FC<Props> = ({
   return (
     <div>
       <div className="columns">
-        <div className="column is-half">
+        <div className="column">
           <InputField
             label={t("general-settings.realm-description")}
             onChange={handleRealmDescriptionChange}
@@ -120,7 +110,9 @@ const GeneralSettings: FC<Props> = ({
             helpText={t("help.realmDescriptionHelpText")}
           />
         </div>
-        <div className="column is-half">
+      </div>
+      <div className="columns">
+        <div className="column">
           <NamespaceStrategySelect
             label={t("general-settings.namespace-strategy")}
             onChange={handleNamespaceStrategyChange}
@@ -132,7 +124,7 @@ const GeneralSettings: FC<Props> = ({
         </div>
       </div>
       <div className="columns">
-        <div className="column is-half">
+        <div className="column">
           <InputField
             label={t("general-settings.login-info-url")}
             onChange={handleLoginInfoUrlChange}
@@ -141,7 +133,9 @@ const GeneralSettings: FC<Props> = ({
             helpText={t("help.loginInfoUrlHelpText")}
           />
         </div>
-        <div className="column is-half">
+      </div>
+      <div className="columns">
+        <div className="column">
           <Checkbox
             label={t("general-settings.enabled-xsrf-protection")}
             onChange={handleEnabledXsrfProtectionChange}
@@ -153,7 +147,7 @@ const GeneralSettings: FC<Props> = ({
         </div>
       </div>
       <div className="columns">
-        <div className="column is-half">
+        <div className="column">
           <Select
             label={t("general-settings.anonymousMode.title")}
             onChange={handleAnonymousMode}
@@ -169,19 +163,9 @@ const GeneralSettings: FC<Props> = ({
             testId={"anonymous-mode-select"}
           />
         </div>
-        <div className="column is-half">
-          <Checkbox
-            label={t("general-settings.enabled-user-converter")}
-            onChange={handleEnabledUserConverterChange}
-            checked={enabledUserConverter}
-            title={t("general-settings.enabled-user-converter")}
-            disabled={!hasUpdatePermission}
-            helpText={t("help.enabledUserConverterHelpText")}
-          />
-        </div>
       </div>
       <div className="columns">
-        <div className="column is-half">
+        <div className="column">
           <InputField
             label={t("general-settings.mail-domain-name")}
             onChange={handleMailDomainNameChange}
@@ -190,19 +174,9 @@ const GeneralSettings: FC<Props> = ({
             helpText={t("help.mailDomainNameHelpText")}
           />
         </div>
-        <div className="column is-half">
-          <Checkbox
-            label={t("general-settings.enabled-api-keys")}
-            onChange={handleEnabledApiKeysChange}
-            checked={enabledApiKeys}
-            title={t("general-settings.enabled-api-keys")}
-            disabled={!hasUpdatePermission}
-            helpText={t("help.enabledApiKeysHelpText")}
-          />
-        </div>
       </div>
       <div className="columns">
-        <div className="column is-half">
+        <div className="column">
           <InputField
             label={t("general-settings.alerts-url")}
             onChange={handleAlertsUrlChange}
@@ -211,7 +185,9 @@ const GeneralSettings: FC<Props> = ({
             helpText={t("help.alertsUrlHelpText")}
           />
         </div>
-        <div className="column is-half">
+      </div>
+      <div className="columns">
+        <div className="column">
           <InputField
             label={t("general-settings.release-feed-url")}
             onChange={handleReleaseFeedUrlChange}

@@ -48,7 +48,7 @@ const PluginSettings: FC<Props> = ({ pluginUrl, pluginAuthUrl, onChange, hasUpda
     <div>
       <Subtitle subtitle={t("pluginSettings.subtitle")} />
       <div className="columns">
-        <div className="column is-half">
+        <div className="column">
           <InputField
             label={t("pluginSettings.pluginUrl")}
             onChange={handlePluginCenterUrlChange}
@@ -57,7 +57,9 @@ const PluginSettings: FC<Props> = ({ pluginUrl, pluginAuthUrl, onChange, hasUpda
             helpText={t("help.pluginUrlHelpText")}
           />
         </div>
-        <div className="column is-half">
+      </div>
+      <div className="columns">
+        <div className="column">
           <InputField
             label={t("pluginSettings.pluginAuthUrl")}
             onChange={handlePluginCenterAuthUrlChange}

@@ -54,4 +54,5 @@ export type Config = HalRepresentation & {
   mailDomainName: string;
   emergencyContacts: string[];
   enabledApiKeys: boolean;
+  enabledFileSearch: boolean;
 };

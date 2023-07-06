@@ -40,16 +40,8 @@ type Props = WithTranslation & {
 
 class ProxySettings extends React.Component<Props> {
   render() {
-    const {
-      t,
-      proxyPassword,
-      proxyPort,
-      proxyServer,
-      proxyUser,
-      enableProxy,
-      proxyExcludes,
-      hasUpdatePermission
-    } = this.props;
+    const { t, proxyPassword, proxyPort, proxyServer, proxyUser, enableProxy, proxyExcludes, hasUpdatePermission } =
+      this.props;
 
     return (
       <div>
@@ -66,7 +58,7 @@ class ProxySettings extends React.Component<Props> {
           </div>
         </div>
         <div className="columns">
-          <div className="column is-half">
+          <div className="column is-full">
             <InputField
               label={t("proxySettings.server")}
               value={proxyServer}
@@ -75,7 +67,9 @@ class ProxySettings extends React.Component<Props> {
               helpText={t("proxySettings.serverHelpText")}
             />
           </div>
-          <div className="column is-half">
+        </div>
+        <div className="columns">
+          <div className="column is-full">
             <InputField
               label={t("proxySettings.port")}
               value={proxyPort}
@@ -86,7 +80,7 @@ class ProxySettings extends React.Component<Props> {
           </div>
         </div>
         <div className="columns">
-          <div className="column is-half">
+          <div className="column is-full">
             <InputField
               label={t("proxySettings.user")}
               value={proxyUser}
@@ -95,7 +89,9 @@ class ProxySettings extends React.Component<Props> {
               helpText={t("proxySettings.userHelpText")}
             />
           </div>
-          <div className="column is-half">
+        </div>
+        <div className="columns">
+          <div className="column">
             <InputField
               label={t("proxySettings.password")}
               onChange={this.handleProxyPasswordChange}

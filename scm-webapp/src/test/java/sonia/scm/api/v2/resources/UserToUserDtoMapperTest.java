@@ -33,6 +33,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import sonia.scm.admin.ScmConfigurationStore;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
@@ -57,6 +58,8 @@ public class UserToUserDtoMapperTest {
   @Mock
   private UserManager userManager;
   @Mock
+  private ScmConfigurationStore scmConfigurationStore;
+  @Mock
   private ScmConfiguration scmConfiguration;
 
   @InjectMocks
@@ -74,6 +77,8 @@ public class UserToUserDtoMapperTest {
     expectedBaseUri = baseUri.resolve(UserRootResource.USERS_PATH_V2 + "/");
     subjectThreadState.bind();
     ThreadContext.bind(subject);
+
+    when(scmConfigurationStore.get()).thenReturn(scmConfiguration);
   }
 
   @After
