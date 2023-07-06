@@ -1,0 +1,2 @@
+- type: fixed
+  description: Copying source code in Firefox incorrectly adds extra line breaks

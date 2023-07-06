@@ -31,17 +31,6 @@ import { useTranslation } from "react-i18next";
 import { useHistory, useLocation } from "react-router-dom";
 
 const RowContainer = styled.div`
-  .linenumber {
-    display: inline-block;
-    min-width: 3em;
-    padding-right: 0.75em;
-    text-align: right;
-    user-select: none;
-    color: var(--scm-secondary-text);
-  }
-  span.linenumber:hover {
-    cursor: pointer;
-  }
   span.linenumber + span > span.linenumber {
     display: none !important;
   }
@@ -67,6 +56,20 @@ const RowContainer = styled.div`
   }
   & > span:last-child {
     margin-left: 0.75em;
+  }
+`;
+
+const LineNumber = styled.span<{ value: number }>`
+  display: inline-block;
+  min-width: 3em;
+  padding-right: 0.75em;
+  text-align: right;
+  color: var(--scm-secondary-text);
+  &:hover {
+    cursor: pointer;
+  }
+  &::before {
+    content: "${({ value }) => `${value}`}";
   }
 `;
 
@@ -127,12 +130,11 @@ const SyntaxHighlighterRenderer: FC<Props> = ({ children: rows, createLinePermaL
                     />
                   </Tooltip>
                 )}
-                <span
+                <LineNumber
                   onClick={() => history.push(location.pathname + "#line-" + lineNumber)}
                   className="linenumber react-syntax-highlighter-line-number"
-                >
-                  {lineNumber}
-                </span>
+                  value={lineNumber}
+                />
               </>
             )}
             {line}
