@@ -30,7 +30,7 @@ import { Button, ButtonGroup, Checkbox, ErrorNotification, Modal, Notification }
 import SuccessNotification from "./SuccessNotification";
 import { useInstallPlugin, usePluginCenterAuthInfo, useUninstallPlugin, useUpdatePlugins } from "@scm-manager/ui-api";
 import { PluginAction } from "../containers/PluginsOverview";
-import MyCloudoguTag from "./MyCloudoguTag";
+import CloudoguPlatformTag from "./CloudoguPlatformTag";
 
 type Props = {
   plugin: Plugin;
@@ -223,7 +223,7 @@ const PluginModal: FC<Props> = ({ onClose, pluginAction, plugin }) => {
           {pluginAction === PluginAction.CLOUDOGU && (
             <>
               <div className="field is-horizontal">
-                <MyCloudoguTag />
+                <CloudoguPlatformTag />
               </div>
               <div className="field is-horizontal">
                 <Notification type="info" className="is-full-width">

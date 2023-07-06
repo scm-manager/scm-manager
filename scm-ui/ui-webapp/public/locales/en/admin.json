@@ -73,8 +73,8 @@
       "version": "Version",
       "currentVersion": "Installed version",
       "newVersion": "New version",
-      "cloudoguInstallInfo": "Connect your SCM-Manager instance with your myCloudogu account to access myCloudogu plugins. If you do not already have an account you can easily register for free.",
-      "cloudoguInstall": "Connect myCloudogu and install",
+      "cloudoguInstallInfo": "Connect your SCM-Manager instance with your cloudogu platform account to access cloudogu platform plugins. If you do not already have an account you can easily register for free.",
+      "cloudoguInstall": "Connect cloudogu platform and install",
       "dependencyNotification": "With this plugin, the following dependencies will be installed/updated if their latest versions are not installed yet!",
       "optionalDependencyNotification": "With this plugin, the following optional dependencies will be updated if they are installed!",
       "dependencies": "Dependencies",
@@ -90,24 +90,24 @@
       "manualRestartRequired": "After the plugin change has been made, SCM-Manager must be restarted.",
       "showPending": "To execute the following plugin changes, SCM-Manager must be restarted."
     },
-    "myCloudogu": {
-      "connectionInfo": "Instance is connected to myCloudogu.\nAccount: {{pluginCenterSubject}}",
+    "cloudoguPlatform": {
+      "connectionInfo": "Instance is connected to the cloudogu platform.\nAccount: {{pluginCenterSubject}}",
       "error": {
-        "info": "Failed to retrieve myCloudogu authentication information. Click for more details.",
+        "info": "Failed to retrieve cloudogu platform authentication information. Click for more details.",
         "title": "Error"
       },
       "failed": {
-        "info": "Connection to myCloudogu failed for account {{pluginCenterSubject}}",
-        "message": "The connection of the SCM Manager instance with <0>myCloudogu</0> failed. The user <1>{{subject}}</1> could not be authenticated. Click Reconnect to restore the connection.",
+        "info": "Connection to the cloudogu platform failed for account {{pluginCenterSubject}}",
+        "message": "The connection of the SCM-Manager instance with the <0>cloudogu platform</0> failed. The user <1>{{subject}}</1> could not be authenticated. Click Reconnect to restore the connection.",
         "button": {
-          "label": "Reconnect to <0>myCloudogu</0>"
+          "label": "Reconnect to the <0>cloudogu platform</0>"
         }
       },
       "login": {
         "button": {
-          "label": "Connect to <0>myCloudogu</0>"
+          "label": "Connect to the <0>cloudogu platform</0>"
         },
-        "description": "Connect your SCM-Manager with <0>myCloudogu</0> to install special plugins. myCloudogu is the home of the SCM-Manager Community, sustained by the maintainers of the SCM-Manager. You don't have an account yet? Create a free myCloudogu account while connecting your SCM-Manager instance. <1>More details on data processing.</1>"
+        "description": "Connect your SCM-Manager with the <0>cloudogu platform</0> to install special plugins. The cloudogu platform is the home of the SCM-Manager Community, sustained by the maintainers of the SCM-Manager. You don't have an account yet? Create a free cloudogu platform account while connecting your SCM-Manager instance. <1>More details on data processing.</1>"
       }
     }
   },

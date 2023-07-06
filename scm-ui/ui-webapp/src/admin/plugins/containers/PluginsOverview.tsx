@@ -39,7 +39,7 @@ import {
   usePluginCenterAuthInfo,
 } from "@scm-manager/ui-api";
 import PluginModal from "../components/PluginModal";
-import MyCloudoguBanner from "../components/MyCloudoguBanner";
+import CloudoguPlatformBanner from "../components/CloudoguPlatformBanner";
 import PluginCenterAuthInfo from "../components/PluginCenterAuthInfo";
 import styled from "styled-components";
 import { Button } from "@scm-manager/ui-buttons";
@@ -214,7 +214,7 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
   return (
     <>
       {renderHeader(actions)}
-      {pluginCenterAuthInfo.data?.default ? <MyCloudoguBanner info={pluginCenterAuthInfo.data} /> : null}
+      {pluginCenterAuthInfo.data?.default ? <CloudoguPlatformBanner info={pluginCenterAuthInfo.data} /> : null}
       {renderPluginsList()}
       {renderModals()}
     </>

@@ -33,7 +33,7 @@ type Props = {
   info: PluginCenterAuthenticationInfo;
 };
 
-const MyCloudoguBanner: FC<Props> = ({ info }) => {
+const CloudoguPlatformBanner: FC<Props> = ({ info }) => {
   const loginLink = (info._links.login as Link)?.href;
   if (loginLink) {
     return <Unauthenticated info={info} link={loginLink} />;
@@ -60,16 +60,16 @@ const FailedAuthentication: FC<PropsWithLink> = ({ info, link }) => {
       <p className="is-align-self-flex-start">
         <Trans
           t={t}
-          i18nKey="plugins.myCloudogu.failed.message"
+          i18nKey="plugins.cloudoguPlatform.failed.message"
           values={{ subject: info.pluginCenterSubject }}
-          components={[<a href="https://my.cloudogu.com/">myCloudogu</a>, <strong />]}
+          components={[<a href="https://platform.cloudogu.com/">cloudogu platform</a>, <strong />]}
         />
       </p>
       <Button className="mt-5 has-text-weight-normal has-border-info" reducedMobile={true} link={link}>
         <Trans
           t={t}
-          i18nKey="plugins.myCloudogu.failed.button.label"
-          components={[<span className="mx-1 has-text-info">myCloudogu</span>]}
+          i18nKey="plugins.cloudoguPlatform.failed.button.label"
+          components={[<span className="mx-1 has-text-info">cloudogu platform</span>]}
         />
       </Button>
     </Container>
@@ -102,16 +102,16 @@ const Unauthenticated: FC<PropsWithLink> = ({ link, info }) => {
       <Button className="mb-5 has-text-weight-normal has-border-info" reducedMobile={true} link={link}>
         <Trans
           t={t}
-          i18nKey="plugins.myCloudogu.login.button.label"
-          components={[<span className="mx-1 has-text-info">myCloudogu</span>]}
+          i18nKey="plugins.cloudoguPlatform.login.button.label"
+          components={[<span className="mx-1 has-text-info">cloudogu platform</span>]}
         />
       </Button>
       <p className="is-align-self-flex-start is-size-7">
         <Trans
           t={t}
-          i18nKey="plugins.myCloudogu.login.description"
+          i18nKey="plugins.cloudoguPlatform.login.description"
           components={[
-            <a href="https://my.cloudogu.com/">myCloudogu</a>,
+            <a href="https://platform.cloudogu.com/">cloudogu platform</a>,
             <a href="https://scm-manager.org/data-processing">Data Processing</a>
           ]}
         />
@@ -120,4 +120,4 @@ const Unauthenticated: FC<PropsWithLink> = ({ link, info }) => {
   );
 };
 
-export default MyCloudoguBanner;
+export default CloudoguPlatformBanner;

@@ -24,14 +24,14 @@
 import React from "react";
 import styled from "styled-components";
 
-const MyCloudoguTagWrapper = styled.span`
+const CloudoguPlatformTagWrapper = styled.span`
   border: solid 1px;
 `;
 
-const MyCloudoguTag = () => (
-  <MyCloudoguTagWrapper className="has-text-info has-border-info has-rounded-border p-1 is-size-7">
-    myCloudogu
-  </MyCloudoguTagWrapper>
+const CloudoguPlatformTag = () => (
+  <CloudoguPlatformTagWrapper className="has-text-info has-border-info has-rounded-border p-1 is-size-7">
+    cloudogu platform
+  </CloudoguPlatformTagWrapper>
 );
 
-export default MyCloudoguTag;
+export default CloudoguPlatformTag;

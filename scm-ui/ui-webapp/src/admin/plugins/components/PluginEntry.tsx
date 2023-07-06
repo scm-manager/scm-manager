@@ -29,7 +29,7 @@ import { PluginAction, PluginModalContent } from "../containers/PluginsOverview"
 import { useTranslation } from "react-i18next";
 import PluginAvatar from "./PluginAvatar";
 import classNames from "classnames";
-import MyCloudoguTag from "./MyCloudoguTag";
+import CloudoguPlatformTag from "./CloudoguPlatformTag";
 import { useKeyboardIteratorTarget } from "@scm-manager/ui-shortcuts";
 
 type Props = {
@@ -136,7 +136,7 @@ const PluginEntry: FC<Props> = ({ plugin, openModal, pluginCenterAuthInfo }) => 
           "is-justify-content-end": !isCloudoguPlugin,
         })}
       >
-        {isCloudoguPlugin ? <MyCloudoguTag /> : null}
+        {isCloudoguPlugin ? <CloudoguPlatformTag /> : null}
         <small className="level-item is-block shorten-text is-align-self-flex-end">{plugin.author}</small>
       </div>
     </>

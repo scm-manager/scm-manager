@@ -8,25 +8,25 @@ Die Plugins können über Aktions-Icons auf den Kacheln verwaltet werden. System
 
 Damit Änderungen der Plugins wirksam werden, muss der SCM-Manager-Server neu gestartet werden. Das kann nach jeder einzelnen Aktion erfolgen. Es ist aber auch möglich viele unterschiedliche Aktionen wie Installieren, Aktualisieren und Löschen in eine Warteschlange einzureihen und alle Aktionen mit einem einzigen Neustart auszuführen. Wird eine Aktion (Installieren, Deinstallieren, Aktualisieren) für ein Plugin ausgewählt, erscheinen die Schaltflächen „Änderungen ausführen“ und „Änderungen abbrechen“. Über „Änderungen ausführen“ öffnet sich ein Pop-Up Fenster, in dem die aktuelle Warteschlange (alle ausgeführten Aktionen ohne Neustart) angezeigt werden. Der Anwender hat nun die Möglichkeit zu entscheiden, ob die Änderungen durch einen Neustart ausgeführt werden sollen. Falls Aktionen, die sich bereits in der Warteschlange befinden nicht mehr erwünscht sind, kann die gesamte Warteschlange über den Button „Änderungen abbrechen“ verworfen werden.
 
-### myCloudogu-Plugins
-Einige besondere Plugins sind nur für Instanzen des SCM-Managers verfügbar, die mit myCloudogu verbunden sind. Der SCM-Manager kann über den Button „Mit myCloudogu verbinden“ mit myCloudogu verbunden werden.
+### cloudogu platform-Plugins
+Einige besondere Plugins sind nur für Instanzen des SCM-Managers verfügbar, die mit der cloudogu platform verbunden sind. Der SCM-Manager kann über den Button „Mit cloudogu platform verbinden“ mit der cloudogu platform verbunden werden.
 [Mehr Details zur Datenverarbeitung.](https://scm-manager.org/data-processing)
 
-![Plugin-Center nicht verbunden, Button zur Verbindung mit myCloudogu](assets/administration-plugin-center-not-connected.png)
-Sie werden dann zur myCloudogu-Login-Maske weitergeleitet. 
-![myCloudogu-Login-Maske](assets/myCloudogu-login.png)
-Wenn Sie über ein myCloudogu-Konto verfügen, können Sie sich einloggen. Ansonsten erstellen Sie über einen konföderierten Identitätsanbieter (Google oder github) oder Ihre Email-Adresse ein Konto.
+![Plugin-Center nicht verbunden, Button zur Verbindung mit der cloudogu platform](assets/administration-plugin-center-not-connected.png)
+Sie werden dann zur cloudogu platform-Login-Maske weitergeleitet. 
+![cloudogu platform-Login-Maske](assets/cloudogu-platform-Login.png)
+Wenn Sie über ein cloudogu platform-Konto verfügen, können Sie sich einloggen. Ansonsten erstellen Sie über einen konföderierten Identitätsanbieter (Google oder github) oder Ihre Email-Adresse ein Konto.
 Anschließend werden Sie zurück zum SCM-Manager geleitet und können Details zur verbundenen Instanz und Konto überprüfen. Mit „Verbinden“ bestätigen Sie die Verbindung, mit „Abbrechen“ brechen Sie den Vorgang ab.
-![Bestätigung der Verbindung mit myCloudogu](assets/administration-myC-confirmation.png)
-Jetzt können Sie im Plugin-Center myCloudogu-Plugins genau wie Basis-Plugins installieren.
-![SCM-Manager mit myCloudogu verbunden](assets/administration-plugin-center-connected.png)
-Eine Instanz des SCM-Managers muss nur mit einem Konto verbunden werden, damit die myCloudogu-Plugins für die gesamte Instanz zur Verfügung stehen.
-Sie können die Verbindung zu myCloudogu jederzeit unter Plugin Center Einstellungen in den Settings lösen.
+![Bestätigung der Verbindung mit mcloudogu platform](assets/administration-cloudogu-platform-confirmation.png)
+Jetzt können Sie im Plugin-Center cloudogu platform-Plugins genau wie Basis-Plugins installieren.
+![SCM-Manager mit cloudogu platform verbunden](assets/administration-plugin-center-connected.png)
+Eine Instanz des SCM-Managers muss nur mit einem Konto verbunden werden, damit die cloudogu platform-Plugins für die gesamte Instanz zur Verfügung stehen.
+Sie können die Verbindung zur cloudogu platform jederzeit unter Plugin Center Einstellungen in den Settings lösen.
 
-#### Was ist myCloudogu und warum sollte ich ein Konto erstellen?
-myCloudogu ist nicht nur die Heimat der SCM-Manager-Community. Sie können sich auch mit anderen Nutzenden austauschen, Bugs melden oder neue Funktionen im Forum zur Diskussion stellen.
-myCloudogu bietet weiter besondere Plugins speziell für die Community an. In der Zukunft folgen weitere nützliche Plugins, die auch gemeinsam mit Partnern bereitgestellt werden.
-Nutzen Sie erweiterte Plugin-Funktionen im SCM-Managers, treten Sie mit den Entwicklern in Kontakt und schließen Sie sich [myCloudogu](https://my.cloudogu.com) kostenfrei an!
+#### Was ist die cloudogu platform und warum sollte ich ein Konto erstellen?
+Die cloudogu platform ist nicht nur die Heimat der SCM-Manager-Community. Sie können sich auch mit anderen Nutzenden austauschen, Bugs melden oder neue Funktionen im Forum zur Diskussion stellen.
+Die cloudogu platform bietet weiter besondere Plugins speziell für die Community an. In der Zukunft folgen weitere nützliche Plugins, die auch gemeinsam mit Partnern bereitgestellt werden.
+Nutzen Sie erweiterte Plugin-Funktionen im SCM-Managers, treten Sie mit den Entwicklern in Kontakt und schließen Sie sich der [cloudogu platform](https://platform.cloudogu.com) kostenfrei an!
 
 ### Installiert
 Auf der Übersicht für installierte Plugins werden alle auf der SCM-Manager Instanz installierten Plugins angezeigt. Optionale Plugins können hier aktualisiert und deinstalliert werden. 
