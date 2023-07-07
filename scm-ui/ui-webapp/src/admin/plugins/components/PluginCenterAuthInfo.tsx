@@ -29,7 +29,7 @@ import {
   Modal,
   NoStyleButton,
   SmallLoadingSpinner,
-  Tooltip
+  Tooltip,
 } from "@scm-manager/ui-components";
 import { PluginCenterAuthenticationInfo } from "@scm-manager/ui-types";
 import { useTranslation } from "react-i18next";
@@ -40,7 +40,7 @@ type PluginCenterAuthInfoProps = {
   error: Error | null;
 };
 
-const PluginCenterAuthInfo: FC<PluginCenterAuthInfoProps> = props => (
+const PluginCenterAuthInfo: FC<PluginCenterAuthInfoProps> = (props) => (
   <div className="ml-3 is-flex is-align-items-center is-size-5">
     <Inner {...props} />
   </div>
@@ -72,7 +72,7 @@ const AuthenticationError: FC<ErrorProps> = ({ error }) => {
   const [showModal, setShowModal] = useState(false);
   return (
     <>
-      <Tooltip message={t("plugins.myCloudogu.error.info")} multiline={true}>
+      <Tooltip message={t("plugins.cloudoguPlatform.error.info")} multiline={true}>
         <NoStyleButton onClick={() => setShowModal(true)}>
           <Icon name="exclamation-triangle" color="danger" className="is-size-5" />
         </NoStyleButton>
@@ -90,7 +90,7 @@ type ErrorModalProps = {
 const ErrorModal: FC<ErrorModalProps> = ({ error, onClose }) => {
   const [t] = useTranslation("admin");
   return (
-    <Modal title={t("plugins.myCloudogu.error.title")} closeFunction={onClose} active={true}>
+    <Modal title={t("plugins.cloudoguPlatform.error.title")} closeFunction={onClose} active={true}>
       <ErrorNotification error={error} />
     </Modal>
   );
@@ -104,8 +104,8 @@ const AuthenticationFailed: FC<InfoProps> = ({ info }) => {
   const [t] = useTranslation("admin");
   return (
     <Tooltip
-      message={t("plugins.myCloudogu.failed.info", {
-        pluginCenterSubject: info.pluginCenterSubject
+      message={t("plugins.cloudoguPlatform.failed.info", {
+        pluginCenterSubject: info.pluginCenterSubject,
       })}
       multiline={true}
     >
@@ -118,8 +118,8 @@ const Authenticated: FC<InfoProps> = ({ info }) => {
   const [t] = useTranslation("admin");
   return (
     <Tooltip
-      message={t("plugins.myCloudogu.connectionInfo", {
-        pluginCenterSubject: info.pluginCenterSubject
+      message={t("plugins.cloudoguPlatform.connectionInfo", {
+        pluginCenterSubject: info.pluginCenterSubject,
       })}
       multiline={true}
     >

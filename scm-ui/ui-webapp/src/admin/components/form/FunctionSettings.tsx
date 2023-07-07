@@ -89,7 +89,7 @@ const FunctionSettings: FC<Props> = ({
             checked={enabledFileSearch}
             title={t("general-settings.enabled-file-search")}
             disabled={!hasUpdatePermission}
-            helpText={t("help.enabledFileSearch")}
+            helpText={t("help.enabledFileSearchHelpText")}
           />
         </div>
       </div>
