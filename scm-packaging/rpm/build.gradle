@@ -80,7 +80,7 @@ task rpm(type: Rpm) {
   requires 'procps'
   // recommends (weak dependency) is not supported,
   // so we define a hard dependencies for java and mercurial
-  requires 'java-11-openjdk-headless'
+  requires 'java-17-openjdk-headless'
   requires 'mercurial'
 
   preInstall file('src/main/scripts/before-installation.sh')

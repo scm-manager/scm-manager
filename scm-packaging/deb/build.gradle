@@ -61,7 +61,7 @@ task deb(type: Deb) {
   requires 'procps'
   requires 'psmisc'
   requires 'net-tools'
-  recommends 'openjdk-11-jre-headless'
+  recommends 'openjdk-17-jre-headless'
   recommends 'mercurial'
 
   preInstallFile file('src/main/scripts/preinst')

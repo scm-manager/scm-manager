@@ -23,10 +23,10 @@
 #
 
 # Create minimal java version
-FROM alpine:3.16.0 as jre-build
+FROM alpine:3.18.2 as jre-build
 
 RUN set -x \
- && apk add --no-cache openjdk11-jdk openjdk11-jmods \
+ && apk add --no-cache openjdk17-jdk openjdk17-jmods binutils \
  && jlink \
     --add-modules ALL-MODULE-PATH \
     --strip-debug \
@@ -39,7 +39,7 @@ RUN set -x \
 # ---
 
 # SCM-Manager runtime
-FROM alpine:3.16.0 as runtime
+FROM alpine:3.18.2 as runtime
 
 ENV SCM_HOME /var/lib/scm
 ENV CACHE_DIR /var/cache/scm/work
