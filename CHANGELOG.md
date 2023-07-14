@@ -5,6 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.45.0] - 2023-07-14
+### Added
+- Optional caching for stores and data files
+- Add variables for liveness probe and readiness probe delay in helm chart
+- New accessible Combobox component
+- Make file search deactivatable via global config
+- Architecture documentation for integration and tech stack
+
+### Fixed
+- Internal server error with external groups in permission overview
+- Svn external contains sub directory
+- Security findings (security headers and jetty server information)
+- Broken file action menu keyboard interaction
+- Improve general performance
+- Copying source code in Firefox incorrectly adds extra line breaks
+
+### Changed
+- Optimize ui performance for repository overview
+- Enhance extensions name logic by allow bind options
+- Replace outdated `Autocomplete` component with new combobox
+- Change `myCloudogu` to new brand name `cloudogu platform`
+- Use Java 17 for Docker containers
+
 ## [2.44.2] - 2023-06-23
 ### Fixed
 - Internal server error with external groups in permission overview
@@ -1301,3 +1324,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.44.0]: https://scm-manager.org/download/2.44.0
 [2.44.1]: https://scm-manager.org/download/2.44.1
 [2.44.2]: https://scm-manager.org/download/2.44.2
+[2.45.0]: https://scm-manager.org/download/2.45.0
