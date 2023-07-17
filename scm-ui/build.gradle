@@ -217,9 +217,9 @@ task publish(type: YarnTask) {
       if (project.hasProperty('npmEmail')) {
         yarnrc.append "email ${project.property('npmEmail')}\n"
       }
+      args = ['run', 'deploy', project.version]
     }
   }
-  args = ['run', 'deploy', project.version]
   finalizedBy 'cleanUpAfterPublishing'
   dependsOn 'yarn_install'
 }
