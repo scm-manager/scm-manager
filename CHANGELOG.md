@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.45.1] - 2023-07-18
+### Fixed
+- Re-Release of 2.45.0 due to errors during release
+
 ## [2.45.0] - 2023-07-14
 ### Added
 - Optional caching for stores and data files
@@ -1325,3 +1329,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.44.1]: https://scm-manager.org/download/2.44.1
 [2.44.2]: https://scm-manager.org/download/2.44.2
 [2.45.0]: https://scm-manager.org/download/2.45.0
+[2.45.1]: https://scm-manager.org/download/2.45.1
