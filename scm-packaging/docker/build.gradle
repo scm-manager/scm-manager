@@ -77,7 +77,7 @@ task setupBuilder() {
     }
     if (inspect.exitValue != 0) {
       exec {
-        commandLine = ["docker", "run", "--privileged", "--rm", "tonistiigi/binfmt", "--install", "arm,arm64"]
+        commandLine = ["docker", "run", "--privileged", "--rm", "tonistiigi/binfmt", "--install", "arm64"]
       }
       exec {
         commandLine = ["docker", "buildx", "create", "--name", "scm-builder", "--driver", "docker-container", "--platform", "linux/arm/v7,linux/arm64/v8,linux/amd64"]
@@ -112,27 +112,6 @@ task pushImages(type: Exec) {
 }
 
 task publish() {
-  doLast {
-    if (!isSnapshot) {
-      // get digest of debian arm v7 image
-      def stdout = new ByteArrayOutputStream()
-      exec {
-        commandLine = ["docker", "buildx", "imagetools", "inspect", "--raw", "${dockerRepository}:${dockerTag}-debian"]
-        standardOutput = stdout
-      }
-      def inspect = new JsonSlurper().parseText(stdout.toString())
-      def manifest = inspect.manifests.find { m -> m.platform.architecture == "arm" }
-
-      // append arm image to manifest with version and without os suffix
-      exec {
-        commandLine = ["docker", "buildx", "imagetools", "create", "--append", "-t", "${dockerRepository}:${dockerTag}", "${dockerRepository}:${dockerTag}-debian@${manifest.digest}"]
-      }
-      // append arm image to latest manifest
-      exec {
-        commandLine = ["docker", "buildx", "imagetools", "create", "--append", "-t", "${dockerRepository}:latest", "${dockerRepository}:${dockerTag}-debian@${manifest.digest}"]
-      }
-    }
-  }
   dependsOn 'pushImages'
 }
 
