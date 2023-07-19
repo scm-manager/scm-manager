@@ -27,7 +27,7 @@ ext {
 
   libraries = [
     // lombok
-    lombok: 'org.projectlombok:lombok:1.18.10',
+    lombok: 'org.projectlombok:lombok:1.18.28',
 
     // servlet api
     servletApi: 'javax.servlet:javax.servlet-api:3.1.0',
