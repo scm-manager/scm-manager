@@ -13,7 +13,7 @@ ext {
   sspVersion = '1.3.0'
   jjwtVersion = '0.11.5'
   bouncycastleVersion = '1.73'
-  jettyVersion = '9.4.44.v20210927'
+  jettyVersion = '9.4.51.v20230217'
   luceneVersion = '8.9.0'
 
   junitJupiterVersion = '5.9.2'
