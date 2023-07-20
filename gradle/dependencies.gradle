@@ -12,7 +12,7 @@ ext {
   shiroVersion = '1.10.0'
   sspVersion = '1.3.0'
   jjwtVersion = '0.11.5'
-  bouncycastleVersion = '1.73'
+  bouncycastleVersion = '1.75'
   jettyVersion = '9.4.51.v20230217'
   luceneVersion = '8.9.0'
 
