@@ -16,7 +16,7 @@ ext {
   jettyVersion = '9.4.51.v20230217'
   luceneVersion = '8.9.0'
 
-  junitJupiterVersion = '5.9.2'
+  junitJupiterVersion = '5.9.3'
   hamcrestVersion = '2.1'
   mockitoVersion = '3.6.28'
   jerseyClientVersion = '1.19.4'
