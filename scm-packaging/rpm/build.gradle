@@ -36,7 +36,7 @@ import org.gradle.util.VersionNumber
 buildscript {
   configurations.all {
     resolutionStrategy {
-      force "org.redline-rpm:redline:1.2.10"
+      force "org.redline-rpm:redline:1.2.9-rsa4096"
     }
   }
   repositories {
