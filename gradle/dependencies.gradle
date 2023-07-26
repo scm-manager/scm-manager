@@ -164,7 +164,7 @@ ext {
 
     // junit 4 support
     junitVintageEngine: "org.junit.vintage:junit-vintage-engine:${junitJupiterVersion}",
-    junit: 'junit:junit:4.13.1',
+    junit: 'junit:junit:4.13.2',
 
     // junit 5 extensions
     junitPioneer: 'org.junit-pioneer:junit-pioneer:2.0.0',
