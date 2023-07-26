@@ -99,7 +99,7 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
       <StickyHeader className="has-background-secondary-least ">
         <div className="is-flex is-justify-content-space-between is-align-items-baseline">
           <div>
-            <Title>
+            <Title className="is-flex">
               {t("plugins.title")} <PluginCenterAuthInfo {...pluginCenterAuthInfo} />
             </Title>
             <Subtitle subtitle={installed ? t("plugins.installedSubtitle") : t("plugins.availableSubtitle")} />
