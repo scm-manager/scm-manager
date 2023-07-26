@@ -1,0 +1,6 @@
+- type: changed
+  description: Bump Shiro from 1.10.0 to 1.12.0
+- type: changed
+  description: Bump Apache Commons Compress from 1.20 to 1.23.0
+- type: changed
+  description: Bump Tika from 1.25 to 1.28.5
