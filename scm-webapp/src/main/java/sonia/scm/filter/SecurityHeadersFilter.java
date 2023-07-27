@@ -44,7 +44,6 @@ public class SecurityHeadersFilter extends HttpFilter {
         "form-action 'self'; " +
         "object-src 'none'; " +
         "frame-ancestors 'none'; " +
-        "upgrade-insecure-requests; " +
         "block-all-mixed-content"
     );
     response.setHeader("Permissions-Policy",
