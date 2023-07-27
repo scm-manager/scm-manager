@@ -45,6 +45,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import static sonia.scm.security.JwtSystemProperties.ENDLESS_JWT;
+
 /**
  * Jwt implementation of {@link AccessTokenBuilder}.
  *
@@ -184,9 +186,11 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
     Claims claims = Jwts.claims(customClaims)
       .setSubject(sub)
       .setId(id)
-      .setIssuedAt(Date.from(now))
-      .setExpiration(new Date(now.toEpochMilli() + expiration));
+      .setIssuedAt(Date.from(now));
 
+    if(!JwtSystemProperties.isEndlessJwtEnabled()) {
+      claims.setExpiration(new Date(now.toEpochMilli() + expiration));
+    }
 
     if (refreshableFor > 0) {
       long re = refreshableForUnit.toMillis(refreshableFor);

@@ -36,6 +36,8 @@ import io.jsonwebtoken.SigningKeyResolverAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.lifecycle.jwt.JwtSettings;
+import sonia.scm.lifecycle.jwt.JwtSettingsStore;
 import sonia.scm.store.ConfigurationEntryStore;
 import sonia.scm.store.ConfigurationEntryStoreFactory;
 
@@ -82,16 +84,17 @@ public class SecureKeyResolver extends SigningKeyResolverAdapter
    */
   @Inject
   @SuppressWarnings("unchecked")
-  public SecureKeyResolver(ConfigurationEntryStoreFactory storeFactory) {
-    this(storeFactory, new SecureRandom());
+  public SecureKeyResolver(ConfigurationEntryStoreFactory storeFactory, JwtSettingsStore jwtSettingsStore) {
+    this(storeFactory, jwtSettingsStore, new SecureRandom());
   }
 
-  SecureKeyResolver(ConfigurationEntryStoreFactory storeFactory, Random random)
+  SecureKeyResolver(ConfigurationEntryStoreFactory storeFactory, JwtSettingsStore jwtSettingsStore, Random random)
   {
     store = storeFactory
       .withType(SecureKey.class)
       .withName(STORE_NAME)
       .build();
+    this.jwtSettingsStore = jwtSettingsStore;
     this.random = random;
   }
 
@@ -109,13 +112,7 @@ public class SecureKeyResolver extends SigningKeyResolverAdapter
 
     checkArgument(!Strings.isNullOrEmpty(subject), "subject is required");
 
-    SecureKey key = store.get(subject);
-
-    if (key == null) {
-      return getSecureKey(subject).getBytes();
-    }
-
-    return key.getBytes();
+    return getSecureKey(subject).getBytes();
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -132,7 +129,7 @@ public class SecureKeyResolver extends SigningKeyResolverAdapter
   {
     SecureKey key = store.get(subject);
 
-    if (key == null)
+    if (key == null || isKeyExpired(key))
     {
       logger.trace("create new key for subject");
       key = createNewKey();
@@ -140,6 +137,12 @@ public class SecureKeyResolver extends SigningKeyResolverAdapter
     }
 
     return key;
+  }
+
+  private boolean isKeyExpired(SecureKey key) {
+    JwtSettings settings = jwtSettingsStore.get();
+
+    return key.getCreationDate() < settings.getKeysValidAfterTimestampInMs();
   }
 
   //~--- methods --------------------------------------------------------------
@@ -166,4 +169,6 @@ public class SecureKeyResolver extends SigningKeyResolverAdapter
 
   /** configuration entry store */
   private final ConfigurationEntryStore<SecureKey> store;
+
+  private final JwtSettingsStore jwtSettingsStore;
 }

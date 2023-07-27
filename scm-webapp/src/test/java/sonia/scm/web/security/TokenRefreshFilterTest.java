@@ -45,6 +45,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Date;
 import java.util.Set;
 
 import static java.util.Collections.singleton;
@@ -54,6 +55,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static sonia.scm.security.BearerToken.valueOf;
 
@@ -129,11 +131,27 @@ class TokenRefreshFilterTest {
     when(tokenGenerator.createToken(request)).thenReturn(token);
     when(resolver.resolve(token)).thenReturn(jwtToken);
     when(refresher.refresh(jwtToken)).thenReturn(of(newJwtToken));
+    when(jwtToken.getExpiration()).thenReturn(new Date());
 
     filter.doFilter(request, response, filterChain);
 
     verify(issuer).authenticate(request, response, newJwtToken);
     verify(filterChain).doFilter(request, response);
+  }
+
+  @Test
+  void shouldNotRefreshEndlessToken() throws IOException, ServletException {
+    BearerToken token = createValidToken();
+    when(tokenGenerator.createToken(request)).thenReturn(token);
+
+    JwtAccessToken jwtToken = mock(JwtAccessToken.class);
+    when(resolver.resolve(token)).thenReturn(jwtToken);
+
+    filter.doFilter(request, response, filterChain);
+
+    verify(filterChain).doFilter(request, response);
+    verifyNoInteractions(refresher);
+    verifyNoInteractions(issuer);
   }
 
   @Test
@@ -144,6 +162,7 @@ class TokenRefreshFilterTest {
     when(tokenGenerator.createToken(request)).thenReturn(token);
     when(resolver.resolve(token)).thenReturn(jwtToken);
     when(refresher.refresh(jwtToken)).thenReturn(of(newJwtToken));
+    when(jwtToken.getExpiration()).thenReturn(new Date());
 
     filter.doFilter(request, response, filterChain);
 

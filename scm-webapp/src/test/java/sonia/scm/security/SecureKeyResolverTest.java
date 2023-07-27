@@ -32,12 +32,16 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import sonia.scm.lifecycle.jwt.JwtSettings;
+import sonia.scm.lifecycle.jwt.JwtSettingsStore;
 import sonia.scm.store.ConfigurationEntryStore;
 import sonia.scm.store.ConfigurationEntryStoreFactory;
 
+import java.util.Arrays;
 import java.util.Random;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.not;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
@@ -66,10 +70,28 @@ public class SecureKeyResolverTest
 
     assertNotNull(key);
     when(store.get("test")).thenReturn(key);
+    when(jwtSettingsStore.get()).thenReturn(settings);
 
     SecureKey sameKey = resolver.getSecureKey("test");
 
     assertSame(key, sameKey);
+  }
+
+  @Test
+  public void shouldReturnRegeneratedKey() {
+    when(jwtSettingsStore.get()).thenReturn(settings);
+    SecureKey expiredKey = new SecureKey("oldKey".getBytes(), 0);
+    when(store.get("test")).thenReturn(expiredKey);
+
+    SecureKey regeneratedKey = resolver.getSecureKey("test");
+    assertThat(Arrays.equals(regeneratedKey.getBytes(), expiredKey.getBytes())).isFalse();
+    assertThat(regeneratedKey.getCreationDate() > settings.getKeysValidAfterTimestampInMs()).isTrue();
+
+
+    when(store.get("test")).thenReturn(regeneratedKey);
+    SecureKey sameRegeneratedKey = resolver.getSecureKey("test");
+    assertThat(Arrays.equals(sameRegeneratedKey.getBytes(), regeneratedKey.getBytes())).isTrue();
+    assertThat(sameRegeneratedKey.getCreationDate()).isEqualTo(regeneratedKey.getCreationDate());
   }
 
   /**
@@ -82,6 +104,7 @@ public class SecureKeyResolverTest
     SecureKey key = resolver.getSecureKey("test");
 
     when(store.get("test")).thenReturn(key);
+    when(jwtSettingsStore.get()).thenReturn(settings);
 
     byte[] bytes = resolver.resolveSigningKeyBytes(null,
                      Jwts.claims().setSubject("test"));
@@ -129,7 +152,7 @@ public class SecureKeyResolverTest
     }))).thenReturn(store);
     Random random = mock(Random.class);
     doAnswer(invocation -> ((byte[]) invocation.getArguments()[0])[0] = 42).when(random).nextBytes(any());
-    resolver = new SecureKeyResolver(factory, random);
+    resolver = new SecureKeyResolver(factory, jwtSettingsStore, random);
   }
 
   //~--- fields ---------------------------------------------------------------
@@ -140,4 +163,9 @@ public class SecureKeyResolverTest
   /** Field description */
   @Mock
   private ConfigurationEntryStore<SecureKey> store;
+
+  @Mock
+  private JwtSettingsStore jwtSettingsStore;
+
+  private JwtSettings settings = new JwtSettings(false, 100);
 }

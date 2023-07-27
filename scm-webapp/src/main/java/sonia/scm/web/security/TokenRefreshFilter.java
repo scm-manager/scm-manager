@@ -105,7 +105,7 @@ public class TokenRefreshFilter extends HttpFilter {
       LOG.trace("could not resolve token", e);
       return;
     }
-    if (accessToken instanceof JwtAccessToken) {
+    if (accessToken instanceof JwtAccessToken && !isEndlessToken((JwtAccessToken) accessToken)) {
       refresher.refresh((JwtAccessToken) accessToken)
         .ifPresent(jwtAccessToken -> refreshJwtToken(request, response, jwtAccessToken));
     }
@@ -115,5 +115,9 @@ public class TokenRefreshFilter extends HttpFilter {
     tokenRefreshCounter.increment();
     LOG.debug("refreshing JWT authentication token");
     issuer.authenticate(request, response, jwtAccessToken);
+  }
+
+  private boolean isEndlessToken(JwtAccessToken token) {
+    return token.getExpiration() == null;
   }
 }

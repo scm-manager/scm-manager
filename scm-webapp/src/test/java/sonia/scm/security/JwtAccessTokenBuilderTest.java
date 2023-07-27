@@ -95,6 +95,11 @@ class JwtAccessTokenBuilderTest {
     factory = new JwtAccessTokenBuilderFactory(keyGenerator, secureKeyResolver, enrichers);
   }
 
+  @BeforeEach
+  void clearSystemProperties() {
+    System.clearProperty(JwtSystemProperties.ENDLESS_JWT);
+  }
+
   @Nested
   class SimpleTests {
 
@@ -260,6 +265,71 @@ class JwtAccessTokenBuilderTest {
       enrichers.add((b) -> b.custom("c", "d"));
       JwtAccessToken token = factory.create().subject("dent").build();
       assertThat(token.getCustom("c")).get().isEqualTo("d");
+    }
+
+
+  }
+
+  @Nested
+  class WithEndlessJwtFeature {
+
+    @Test
+    void testBuildWithEndlessJwtEnabled() {
+      System.setProperty(JwtSystemProperties.ENDLESS_JWT, "true");
+
+      JwtAccessToken token = factory.create().subject("Red").issuer("https://scm-manager.org").build();
+
+      assertThat(token.getId()).isNotEmpty();
+      assertThat(token.getIssuedAt()).isNotNull();
+      assertThat(token.getExpiration()).isNull();
+      assertThat(token.getSubject()).isEqualTo("Red");
+      assertThat(token.getIssuer()).isNotEmpty();
+      assertThat(token.getIssuer().get()).isEqualTo("https://scm-manager.org");
+    }
+
+    @Test
+    void testBuildWithEndlessJwtDisabled() {
+      System.setProperty(JwtSystemProperties.ENDLESS_JWT, "false");
+
+      JwtAccessToken token = factory.create().subject("Red").issuer("https://scm-manager.org").build();
+
+      assertThat(token.getId()).isNotEmpty();
+      assertThat(token.getIssuedAt()).isNotNull();
+      assertThat(token.getExpiration()).isNotNull();
+      assertThat(token.getExpiration().getTime() > token.getIssuedAt().getTime()).isTrue();
+      assertThat(token.getSubject()).isEqualTo("Red");
+      assertThat(token.getIssuer()).isNotEmpty();
+      assertThat(token.getIssuer().get()).isEqualTo("https://scm-manager.org");
+    }
+
+    @Test
+    void testBuildWithInvalidConfig() {
+      System.setProperty(JwtSystemProperties.ENDLESS_JWT, "invalidStuff");
+
+      JwtAccessToken token = factory.create().subject("Red").issuer("https://scm-manager.org").build();
+
+      assertThat(token.getId()).isNotEmpty();
+      assertThat(token.getIssuedAt()).isNotNull();
+      assertThat(token.getExpiration()).isNotNull();
+      assertThat(token.getExpiration().getTime() > token.getIssuedAt().getTime()).isTrue();
+      assertThat(token.getSubject()).isEqualTo("Red");
+      assertThat(token.getIssuer()).isNotEmpty();
+      assertThat(token.getIssuer().get()).isEqualTo("https://scm-manager.org");
+    }
+
+    @Test
+    void testBuildWithMissingConfig() {
+      System.clearProperty(JwtSystemProperties.ENDLESS_JWT);
+
+      JwtAccessToken token = factory.create().subject("Red").issuer("https://scm-manager.org").build();
+
+      assertThat(token.getId()).isNotEmpty();
+      assertThat(token.getIssuedAt()).isNotNull();
+      assertThat(token.getExpiration()).isNotNull();
+      assertThat(token.getExpiration().getTime() > token.getIssuedAt().getTime()).isTrue();
+      assertThat(token.getSubject()).isEqualTo("Red");
+      assertThat(token.getIssuer()).isNotEmpty();
+      assertThat(token.getIssuer().get()).isEqualTo("https://scm-manager.org");
     }
   }
 }
