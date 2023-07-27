@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-extensions",
-  "version": "2.45.2-SNAPSHOT",
+  "version": "2.45.3-SNAPSHOT",
   "license": "MIT",
   "private": false,
   "author": "Sebastian Sdorra <sebastian.sdorra@cloudogu.com>",
@@ -17,7 +17,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@scm-manager/ui-types": "2.45.2-SNAPSHOT",
+    "@scm-manager/ui-types": "2.45.3-SNAPSHOT",
     "react": "^17.0.1"
   },
   "devDependencies": {
