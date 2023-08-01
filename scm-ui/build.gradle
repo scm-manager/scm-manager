@@ -114,35 +114,13 @@ task test(type: YarnTask) {
   }
 }
 
-task chromatic(type: YarnTask) {
-  args = ['run', 'chromatic']
-  workingDir = file('ui-components')
-  inputs.files(fileTree(project.projectDir) {
-    include 'ui-components/src/**'
-    include 'ui-components/.storybook/**'
-  })
-    .withPathSensitivity(PathSensitivity.RELATIVE)
-  outputs.file('build/tmp/chromatic/marker')
-
-  enabled = System.getenv('CHROMATIC_PROJECT_TOKEN') != null
-  ignoreExitValue = project.isCI
-  dependsOn('yarn_install')
-
-  doLast {
-    File directory = new File(project.buildDir, 'tmp/chromatic')
-    directory.mkdirs()
-    File marker = new File(directory, 'marker')
-    marker.createNewFile()
-  }
-}
-
 task updateUiTestTimestamps(type: TouchFiles) {
   directory = project.file('build/jest-reports')
   extension = "xml"
 }
 
 task check {
-  dependsOn('typecheck', 'test', 'chromatic', 'checkLicenses', 'lint', 'depcheck')
+  dependsOn('typecheck', 'test', 'checkLicenses', 'lint', 'depcheck')
 }
 
 yarn_install {

@@ -63,9 +63,7 @@ pipeline {
     stage('Check') {
       steps {
         catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
-            withCheckEnvironment {
-              gradle 'check'
-            }
+          gradle 'check'
         }
         junit allowEmptyResults: true, testResults: '**/build/test-results/test/TEST-*.xml,**/build/test-results/tests/test/TEST-*.xml,**/build/jest-reports/TEST-*.xml'
       }
@@ -283,10 +281,6 @@ void tag(String version) {
 
 boolean isBuildSuccess() {
   return currentBuild.result == null || currentBuild.result == 'SUCCESS'
-}
-
-void withCheckEnvironment(Closure<Void> closure) {
-  closure.call()
 }
 
 void withPublishEnvironment(Closure<Void> closure) {
