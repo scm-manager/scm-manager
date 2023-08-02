@@ -1,0 +1,2 @@
+- type: fixed
+  description: Deactivate Shiro's new `blockTraversal` check in their `InvalidRequestFilter`

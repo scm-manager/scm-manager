@@ -121,6 +121,7 @@ public class ScmSecurityModule extends ShiroWebModule
     // do not block non ascii character,
     // because this would exclude languages which are non ascii based
     bindConstant().annotatedWith(Names.named("shiro.blockNonAscii")).to(false);
+    bindConstant().annotatedWith(Names.named("shiro.blockTraversal")).to(false);
 
     // disable access to mustache resources
     addFilterChain("/**.mustache", filterConfig(ROLES, "nobody"));
