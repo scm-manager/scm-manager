@@ -22,17 +22,28 @@
  * SOFTWARE.
  */
 
-import React, { AnchorHTMLAttributes, ButtonHTMLAttributes, FC } from "react";
+import React, {
+  AnchorHTMLAttributes,
+  ButtonHTMLAttributes,
+  ComponentProps,
+  createContext,
+  FC,
+  ReactNode,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from "react";
 import * as RadixMenu from "@radix-ui/react-dropdown-menu";
 import styled from "styled-components";
 import { DefaultMenuTrigger } from "./MenuTrigger";
 import classNames from "classnames";
 import { Link as ReactRouterLink, LinkProps as ReactRouterLinkProps } from "react-router-dom";
+import Dialog from "../dialog/Dialog";
 
 const MenuContent = styled(RadixMenu.Content)`
   border: var(--scm-border);
   background-color: var(--scm-secondary-background);
-  z-index: 400;
   position: relative;
 `;
 
@@ -105,6 +116,53 @@ export const MenuButton = React.forwardRef<HTMLButtonElement, MenuButtonProps>(
   )
 );
 
+type MenuContextType = {
+  handleDialogItemOpenChange: (open: boolean) => void;
+};
+const MenuContext = createContext<MenuContextType>(null as unknown as MenuContextType);
+
+type MenuDialogProps = Omit<MenuButtonProps, "onSelect"> &
+  Omit<ComponentProps<typeof Dialog>, "trigger"> & {
+    dialogContent?: ReactNode;
+  };
+
+/**
+ * @beta
+ * @since 2.46.0
+ * @see {@link Dialog}
+ */
+export const MenuDialog = React.forwardRef<HTMLButtonElement, MenuDialogProps>(
+  ({ children, dialogContent, title, description, footer }, ref) => {
+    const { handleDialogItemOpenChange } = useContext(MenuContext);
+    const [open, setOpen] = useState(false);
+    const handleSelect = useCallback((event: Event) => event.preventDefault(), []);
+    const changeOpen = useCallback(
+      (newValue: boolean) => {
+        setOpen(newValue);
+        handleDialogItemOpenChange(newValue);
+      },
+      [handleDialogItemOpenChange]
+    );
+
+    return (
+      <Dialog
+        trigger={
+          <MenuButton ref={ref} onSelect={handleSelect}>
+            {children}
+          </MenuButton>
+        }
+        title={title}
+        description={description}
+        footer={footer}
+        onOpenChange={changeOpen}
+        open={open}
+      >
+        {dialogContent}
+      </Dialog>
+    );
+  }
+);
+
 type Props = {
   className?: string;
   trigger?: React.ReactElement;
@@ -119,8 +177,23 @@ type Props = {
  * @see https://www.w3.org/WAI/ARIA/apg/patterns/menubar/
  */
 const Menu: FC<Props> = ({ children, side, className, trigger = <DefaultMenuTrigger /> }) => {
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [hasOpenDialog, setHasOpenDialog] = useState(false);
+  const handleDialogItemOpenChange = useCallback((open: boolean) => {
+    setHasOpenDialog(open);
+    if (!open) {
+      setDropdownOpen(false);
+    }
+  }, []);
+  const menuContextValue = useMemo<MenuContextType>(
+    () => ({
+      handleDialogItemOpenChange,
+    }),
+    [handleDialogItemOpenChange]
+  );
+
   return (
-    <RadixMenu.Root>
+    <RadixMenu.Root open={dropdownOpen} onOpenChange={setDropdownOpen}>
       {trigger}
       <RadixMenu.Portal>
         <MenuContent
@@ -128,8 +201,9 @@ const Menu: FC<Props> = ({ children, side, className, trigger = <DefaultMenuTrig
           side={side}
           sideOffset={4}
           collisionPadding={4}
+          hidden={hasOpenDialog}
         >
-          {children}
+          <MenuContext.Provider value={menuContextValue}>{children}</MenuContext.Provider>
         </MenuContent>
       </RadixMenu.Portal>
     </RadixMenu.Root>

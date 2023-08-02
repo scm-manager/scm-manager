@@ -41,7 +41,8 @@
   },
   "dependencies": {
     "@radix-ui/react-tooltip": "1.0.2",
-    "@radix-ui/react-dropdown-menu": "2.0.4",
+    "@radix-ui/react-dialog": "1.0.2",
+    "@radix-ui/react-dropdown-menu": "2.0.1",
     "@scm-manager/ui-buttons": "2.45.3-SNAPSHOT"
   },
   "prettier": "@scm-manager/prettier-config",
@@ -52,3 +53,4 @@
     "access": "public"
   }
 }
+

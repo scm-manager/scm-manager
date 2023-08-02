@@ -22,8 +22,9 @@
  * SOFTWARE.
  */
 
-import MenuComponent, { MenuButton, MenuExternalLink, MenuLink } from "./menu/Menu";
+import MenuComponent, { MenuButton, MenuDialog, MenuExternalLink, MenuLink } from "./menu/Menu";
 import MenuTrigger, { DefaultMenuTrigger } from "./menu/MenuTrigger";
+import DialogComponent, { CloseButton } from "./dialog/Dialog";
 
 export { default as Tooltip } from "./tooltip/Tooltip";
 
@@ -31,6 +32,11 @@ export const Menu = Object.assign(MenuComponent, {
   Button: MenuButton,
   Link: MenuLink,
   ExternalLink: MenuExternalLink,
+  DialogButton: MenuDialog,
   Trigger: MenuTrigger,
   DefaultTrigger: DefaultMenuTrigger,
+});
+
+export const Dialog = Object.assign(DialogComponent, {
+  CloseButton,
 });

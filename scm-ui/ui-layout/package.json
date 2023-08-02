@@ -20,6 +20,7 @@
     "@scm-manager/ui-overlays": "2.45.3-SNAPSHOT",
     "@scm-manager/ui-buttons": "2.45.3-SNAPSHOT",
     "@storybook/addon-actions": "^6.5.10",
+    "@storybook/addon-docs": "^6.5.14",
     "@storybook/addon-essentials": "^6.5.10",
     "@storybook/addon-interactions": "^6.5.10",
     "@storybook/addon-links": "^6.5.10",
@@ -27,17 +28,18 @@
     "@storybook/manager-webpack5": "^6.5.10",
     "@storybook/react": "^6.5.10",
     "@storybook/testing-library": "^0.0.13",
-    "@storybook/addon-docs": "^6.5.14",
     "babel-loader": "^8.2.5",
     "storybook-addon-mock": "^3.2.0",
     "storybook-addon-themes": "^6.1.0",
     "tsup": "^6.2.3"
   },
   "peerDependencies": {
+    "classnames": "2",
     "react": "17",
     "react-dom": "17",
-    "classnames": "2",
-    "styled-components": "5"
+    "styled-components": "5",
+    "@scm-manager/ui-buttons": "2.45.3-SNAPSHOT",
+    "@scm-manager/ui-overlays": "2.45.3-SNAPSHOT"
   },
   "prettier": "@scm-manager/prettier-config",
   "eslintConfig": {
@@ -45,5 +47,9 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "dependencies": {
+    "@radix-ui/react-collapsible": "^1.0.3"
   }
 }
+

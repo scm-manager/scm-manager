@@ -121,15 +121,24 @@
   },
   "branches": {
     "overview": {
-      "title": "Overview of All Branches",
+      "title": "Branches",
       "noBranches": "No branches found.",
       "createButton": "Create Branch",
-      "lastCommit": "Last commit"
+      "lastCommit": "Last commit",
+      "sort": {
+        "label": "Sort by",
+        "option": {
+          "default": "Default",
+          "name_asc": "Name A-Z",
+          "name_desc": "Name Z-A"
+        }
+      }
     },
     "table": {
       "branches": {
         "active": "Active Branches",
-        "stale": "Stale Branches"
+        "stale": "Stale Branches",
+        "subtitle": "Last commit <date /> by {{author}}"
       },
       "lastCommit": "Last commit",
       "lastCommitter": "by {{name}}"
@@ -153,7 +162,7 @@
       "behindLabel": "{{count}} behind"
     },
     "delete": {
-      "button": "Delete Branch",
+      "button": "Delete",
       "subtitle": "Delete Branch",
       "description": "Deleted branches cannot be restored.",
       "confirmAlert": {

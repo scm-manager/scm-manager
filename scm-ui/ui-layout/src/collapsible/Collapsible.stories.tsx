@@ -26,54 +26,25 @@ import StoryRouter from "storybook-react-router";
 import { ComponentMeta, StoryFn } from "@storybook/react";
 import React, { ComponentProps } from "react";
 import { ExtractProps } from "@scm-manager/ui-extensions";
-import Menu, { MenuButton, MenuDialog, MenuExternalLink, MenuLink } from "./Menu";
-import { Button, Icon } from "@scm-manager/ui-buttons";
-import { CloseButton } from "../dialog/Dialog";
+import { Link } from "react-router-dom";
+import { Menu } from "@scm-manager/ui-overlays";
+import { Icon } from "@scm-manager/ui-buttons";
+import CardRow from "../card/CardRow";
+import Collapsible from "./Collapsible";
 
 export default {
-  title: "Menu",
-  component: Menu,
+  title: "Collapsible",
+  component: Collapsible,
   decorators: [StoryRouter()],
-} as ComponentMeta<typeof Menu>;
+} as ComponentMeta<typeof Collapsible>;
 
-const Template: StoryFn<ExtractProps<typeof Menu>> = (args) => <Menu {...args} />;
+const Template: StoryFn<ExtractProps<typeof Collapsible>> = (args) => <Collapsible {...args} />;
 
 export const Default = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 Default.args = {
   children: [
-    // eslint-disable-next-line no-console
-    <MenuButton onSelect={() => console.log("A button has been clicked")}>
-      <Icon />A button
-    </MenuButton>,
-    <MenuLink to="/repos">
-      <Icon />A link
-    </MenuLink>,
-    <MenuExternalLink href="https://scm-manager.org">
-      <Icon>link</Icon>An external link
-    </MenuExternalLink>,
-    <MenuButton disabled>
-      <Icon>trash</Icon>A disabled button
-    </MenuButton>,
-    <MenuDialog
-      title="My Dialog"
-      description="Do you really want to do this ?"
-      footer={[<Button autoFocus>Do it</Button>, <CloseButton variant="primary">Cancel</CloseButton>]}
-      dialogContent={
-        <table>
-          <tr>
-            <th>Yes</th>
-            <th>No</th>
-          </tr>
-          <tr>
-            <td>42</td>
-            <td>12</td>
-          </tr>
-        </table>
-      }
-    >
-      <Icon />
-      Open Dialog
-    </MenuDialog>,
+    "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
   ],
-} as ComponentProps<typeof Menu>;
+  header: "This is a collapsible",
+} as ComponentProps<typeof Collapsible>;

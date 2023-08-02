@@ -25,6 +25,7 @@
 import React, { ComponentType, HTMLAttributes, ReactHTML, Ref } from "react";
 import styled from "styled-components";
 import classNames from "classnames";
+import CSS from "csstype";
 
 const CardRowsContainer = styled.div`
   overflow: hidden;
@@ -33,28 +34,38 @@ const CardRowsContainer = styled.div`
 type Props = HTMLAttributes<HTMLElement> & {
   action?: React.ReactElement;
   /**
-   * @default 'div'
+   * @default "div"
    */
   as?: keyof ReactHTML | ComponentType<HTMLAttributes<HTMLElement> & { ref?: Ref<HTMLElement> }>;
+
+  /**
+   * @default "0.5rem"
+   * @since 2.46.0
+   */
+  rowGap?: CSS.Properties<string | number>["gap"];
 };
 
 /**
  * @beta
  * @since 2.44.0
  */
-const Card = React.forwardRef<HTMLElement, Props>(({ className, children, as: Comp = "div", action, ...props }, ref) =>
-  React.createElement(
-    Comp,
-    {
-      className: classNames(className, "is-relative", "is-flex", "scmm-card"),
-      ref,
-      ...props,
-    },
-    <CardRowsContainer className="is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1">
-      {children}
-    </CardRowsContainer>,
-    action ? <span className="ml-2">{action}</span> : null
-  )
+const Card = React.forwardRef<HTMLElement, Props>(
+  ({ className, rowGap = "0.5rem", children, as: Comp = "div", action, ...props }, ref) =>
+    React.createElement(
+      Comp,
+      {
+        className: classNames(className, "is-relative", "is-flex", "scmm-card"),
+        ref,
+        ...props,
+      },
+      <CardRowsContainer
+        className="is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1"
+        style={{ gap: rowGap }}
+      >
+        {children}
+      </CardRowsContainer>,
+      action ? <span className="ml-2">{action}</span> : null
+    )
 );
 
 export default Card;

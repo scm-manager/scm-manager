@@ -26,6 +26,7 @@ import React, { ComponentType, ReactNode } from "react";
 import {
   Branch,
   Changeset,
+  ContentType,
   File,
   Group,
   HalRepresentation,
@@ -44,7 +45,6 @@ import {
   RepositoryTypeCollection,
   Tag,
   User,
-  ContentType,
 } from "@scm-manager/ui-types";
 import { ExtensionPointDefinition } from "./binder";
 import { RenderableExtensionPointDefinition, SimpleRenderableDynamicExtensionPointDefinition } from "./ExtensionPoint";
@@ -679,4 +679,22 @@ export type UserInformationTableBottom = RenderableExtensionPointDefinition<
 export type GroupInformationTableBottom = RenderableExtensionPointDefinition<
   "group.information.table.bottom",
   { group: Group }
+>;
+
+type BranchListDetailProps = {
+  repository: Repository;
+  branch: Branch;
+  labelId: string;
+};
+
+/**
+ * @since 2.46.0
+ */
+export type BranchListDetail = ExtensionPointDefinition<
+  "branches.list.detail",
+  {
+    name: string;
+    render: (props: BranchListDetailProps) => ReactNode | null;
+  },
+  Omit<BranchListDetailProps, "labelId">
 >;

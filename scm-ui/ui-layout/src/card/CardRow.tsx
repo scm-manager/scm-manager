@@ -26,6 +26,6 @@
  * @beta
  * @since 2.44.0
  */
-const CardRow = "div";
+const CardRow = "div" as const;
 
 export default CardRow;

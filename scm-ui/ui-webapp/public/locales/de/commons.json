@@ -1,4 +1,9 @@
 {
+  "dialog": {
+    "closeButton": {
+      "ariaLabel": "Dialog schließen"
+    }
+  },
   "menu": {
     "defaultTriggerLabel": "Menü"
   },

@@ -22,14 +22,23 @@
  * SOFTWARE.
  */
 
-import React, { FC } from "react";
+import React, { FC, useMemo, useState } from "react";
 import { Branch, HalRepresentation, Repository } from "@scm-manager/ui-types";
-import { CreateButton, ErrorNotification, Notification, Subtitle } from "@scm-manager/ui-components";
+import { ErrorNotification, Notification, Subtitle } from "@scm-manager/ui-components";
 import { orderBranches } from "../util/orderBranches";
-import BranchTable from "../components/BranchTable";
 import { useTranslation } from "react-i18next";
 import { useBranchDetailsCollection } from "@scm-manager/ui-api";
 import { KeyboardIterator } from "@scm-manager/ui-shortcuts";
+import BranchList from "../components/BranchList";
+import { Collapsible } from "@scm-manager/ui-layout";
+import { LinkButton } from "@scm-manager/ui-buttons";
+import { Select } from "@scm-manager/ui-forms";
+import { SORT_OPTIONS, SortOption } from "../../tags/orderTags";
+import styled from "styled-components";
+
+const BranchListWrapper = styled.div`
+  gap: 1rem;
+`;
 
 type Props = {
   repository: Repository;
@@ -39,8 +48,11 @@ type Props = {
 
 const BranchTableWrapper: FC<Props> = ({ repository, baseUrl, data }) => {
   const [t] = useTranslation("repos");
-  const branches: Branch[] = (data?._embedded?.branches as Branch[]) || [];
-  orderBranches(branches);
+  const [sort, setSort] = useState<SortOption | undefined>();
+  const branches: Branch[] = useMemo(
+    () => orderBranches((data?._embedded?.branches as Branch[]) || [], sort),
+    [data, sort]
+  );
   const staleBranches = branches.filter((b) => b.stale);
   const activeBranches = branches.filter((b) => !b.stale);
   const { error, data: branchesDetails } = useBranchDetailsCollection(repository, [
@@ -55,29 +67,55 @@ const BranchTableWrapper: FC<Props> = ({ repository, baseUrl, data }) => {
   const showCreateButton = !!data._links.create;
 
   return (
-    <KeyboardIterator>
+    <>
       <Subtitle subtitle={t("branches.overview.title")} />
       <ErrorNotification error={error} />
-      {activeBranches.length > 0 ? (
-        <BranchTable
-          repository={repository}
-          baseUrl={baseUrl}
-          type="active"
-          branches={activeBranches}
-          branchesDetails={branchesDetails}
-        />
-      ) : null}
-      {staleBranches.length > 0 ? (
-        <BranchTable
-          repository={repository}
-          baseUrl={baseUrl}
-          type="stale"
-          branches={staleBranches}
-          branchesDetails={branchesDetails}
-        />
-      ) : null}
-      {showCreateButton ? <CreateButton label={t("branches.overview.createButton")} link="./create" /> : null}
-    </KeyboardIterator>
+      <div className="is-flex mb-3 is-justify-content-space-between">
+        <div>
+          <div className="is-flex is-align-items-center mb-3">
+            <label className="mr-2" htmlFor="branches-overview-sort">
+              {t("branches.overview.sort.label")}
+            </label>
+            <Select id="branches-overview-sort" onChange={(e) => setSort(e.target.value as SortOption)}>
+              {SORT_OPTIONS.map((sortOption) => (
+                <option key={sortOption} value={sortOption}>
+                  {t(`branches.overview.sort.option.${sortOption}`)}
+                </option>
+              ))}
+            </Select>
+          </div>
+        </div>
+        {showCreateButton ? (
+          <LinkButton variant="primary" to="./create">
+            {t("branches.overview.createButton")}
+          </LinkButton>
+        ) : null}
+      </div>
+      <BranchListWrapper className="is-flex is-flex-direction-column">
+        <KeyboardIterator>
+          {activeBranches.length > 0 ? (
+            <Collapsible header={t("branches.table.branches.active")} defaultOpen>
+              <BranchList
+                repository={repository}
+                baseUrl={baseUrl}
+                branches={activeBranches}
+                branchesDetails={branchesDetails}
+              />
+            </Collapsible>
+          ) : null}
+          {staleBranches.length > 0 ? (
+            <Collapsible header={t("branches.table.branches.stale")}>
+              <BranchList
+                repository={repository}
+                baseUrl={baseUrl}
+                branches={staleBranches}
+                branchesDetails={branchesDetails}
+              />
+            </Collapsible>
+          ) : null}
+        </KeyboardIterator>
+      </BranchListWrapper>
+    </>
   );
 };
 

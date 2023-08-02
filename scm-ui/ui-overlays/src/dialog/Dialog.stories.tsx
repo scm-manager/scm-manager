@@ -22,18 +22,44 @@
  * SOFTWARE.
  */
 
-import CardListComponent, { CardListBox as CardListBoxComponent, CardListCard } from "./card-list/CardList";
-import CardTitle from "./card/CardTitle";
-import CardRow from "./card/CardRow";
+import StoryRouter from "storybook-react-router";
+import { ComponentMeta, StoryFn } from "@storybook/react";
+import React, { ComponentProps } from "react";
+import { ExtractProps } from "@scm-manager/ui-extensions";
+import { Button } from "@scm-manager/ui-buttons";
+import Dialog from "./Dialog";
 
-export { default as Collapsible } from "./collapsible/Collapsible";
+export default {
+  title: "Dialog",
+  component: Dialog,
+  decorators: [StoryRouter()],
+  render: (story) => <div style={{ height: "100vh" }}>{story}</div>,
+} as ComponentMeta<typeof Dialog>;
 
-const CardListExport = {
-  Card: Object.assign(CardListCard, {
-    Row: CardRow,
-    Title: CardTitle,
-  }),
-};
+const Template: StoryFn<ExtractProps<typeof Dialog>> = (args) => <Dialog {...args} />;
 
-export const CardList = Object.assign(CardListComponent, CardListExport);
-export const CardListBox = Object.assign(CardListBoxComponent, CardListExport);
+export const Default = Template.bind({});
+// More on args: https://storybook.js.org/docs/react/writing-stories/args
+Default.args = {
+  title: "My Dialog",
+  trigger: <Button>Open Dialog</Button>,
+  description: "Do you really want to do this ?",
+  children: (
+    <table>
+      <tr>
+        <th>Yes</th>
+        <th>No</th>
+      </tr>
+      <tr>
+        <td>42</td>
+        <td>12</td>
+      </tr>
+    </table>
+  ),
+  footer: [
+    <Button>Do it</Button>,
+    <Button variant="primary" autoFocus>
+      Cancel
+    </Button>,
+  ],
+} as ComponentProps<typeof Dialog>;
