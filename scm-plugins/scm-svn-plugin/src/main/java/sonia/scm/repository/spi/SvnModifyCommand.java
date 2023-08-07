@@ -35,6 +35,7 @@ import org.tmatesoft.svn.core.wc.SVNWCClient;
 import org.tmatesoft.svn.core.wc.SVNWCUtil;
 import sonia.scm.ConcurrentModificationException;
 import sonia.scm.ContextEntry;
+import sonia.scm.NoChangesMadeException;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.SvnWorkingCopyFactory;
@@ -112,6 +113,9 @@ public class SvnModifyCommand implements ModifyCommand {
         true,
         SVNDepth.INFINITY
       );
+      if (svnCommitInfo.toString().equals("EMPTY COMMIT")) {
+        throw new NoChangesMadeException(repository);
+      }
       return String.valueOf(svnCommitInfo.getNewRevision());
     } catch (SVNException e) {
       throw withPattern(SVN_ERROR_PATTERN).forMessage(repository, e.getErrorMessage().getRootErrorMessage().getFullMessage());

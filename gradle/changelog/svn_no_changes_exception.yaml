@@ -1,0 +1,2 @@
+- type: fixed
+  description: Throw `NoChangesMadeException` for empty commits in SVN repositories

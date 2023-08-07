@@ -35,6 +35,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import sonia.scm.AlreadyExistsException;
 import sonia.scm.ConcurrentModificationException;
+import sonia.scm.NoChangesMadeException;
 import sonia.scm.ScmConstraintViolationException;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.api.FileLock;
@@ -122,6 +123,16 @@ public class SvnModifyCommandTest extends AbstractSvnCommandTestBase {
 
     WorkingCopy<File, File> workingCopy = workingCopyFactory.createWorkingCopy(context, null);
     assertThat(new File(workingCopy.getWorkingRepository(), "Test123")).exists();
+  }
+
+  @Test
+  public void shouldThrowNoChangesMadeExceptionIfEmptyCommit() throws IOException {
+    File testfile = temporaryFolder.newFile("Test123");
+
+    ModifyCommandRequest request = prepareModifyCommandRequest();
+    request.addRequest(new ModifyCommandRequest.ModifyFileRequest("g/h/j.txt", testfile));
+
+    assertThrows(NoChangesMadeException.class, () -> svnModifyCommand.execute(request));
   }
 
   @Test
