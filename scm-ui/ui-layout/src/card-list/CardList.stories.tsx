@@ -32,6 +32,7 @@ import CardTitle from "../card/CardTitle";
 import { Menu } from "@scm-manager/ui-overlays";
 import { Icon } from "@scm-manager/ui-buttons";
 import CardRow from "../card/CardRow";
+import { CardDetail, CardDetailLabel, CardDetails, CardDetailTag } from "../card/CardDetail";
 
 export default {
   title: "CardList",
@@ -138,6 +139,31 @@ Default.args = {
           <span>Workflow (✓)</span>
         </div>
         <span>(OPEN)</span>
+      </CardRow>
+    </CardListCard>,
+    <CardListCard>
+      <CardTitle>
+        <Link aria-label="Edit My least liked repo" to="/cards/1">
+          My least liked repo
+        </Link>
+      </CardTitle>
+      <CardRow>
+        <CardDetails>
+          <CardDetail>
+            {({ labelId }) => (
+              <>
+                <CardDetailLabel id={labelId}>Workers</CardDetailLabel>
+                <CardDetailTag aria-labelledby={labelId}>2/3</CardDetailTag>
+              </>
+            )}
+          </CardDetail>
+          <CardDetail>
+            <CardDetailLabel>MyCustomDetail</CardDetailLabel>
+            <a className="is-relative" href="https://scm-manager.org">
+              Docs
+            </a>
+          </CardDetail>
+        </CardDetails>
       </CardRow>
     </CardListCard>,
   ],

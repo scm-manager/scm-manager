@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import React, { ComponentType, ReactNode } from "react";
+import React, { ComponentType, FC, ReactNode } from "react";
 import {
   Branch,
   Changeset,
@@ -49,6 +49,7 @@ import {
 import { ExtensionPointDefinition } from "./binder";
 import { RenderableExtensionPointDefinition, SimpleRenderableDynamicExtensionPointDefinition } from "./ExtensionPoint";
 import ExtractProps from "./extractProps";
+import { useGeneratedId } from "@scm-manager/ui-components";
 
 type RepositoryCreatorSubFormProps = {
   repository: RepositoryCreation;
@@ -684,17 +685,22 @@ export type GroupInformationTableBottom = RenderableExtensionPointDefinition<
 type BranchListDetailProps = {
   repository: Repository;
   branch: Branch;
-  labelId: string;
 };
 
 /**
  * @since 2.46.0
+ * @example
+ * ```typescript
+ * import { Card } from "@scm-manager/ui-layout";
+ * import { extensionPoints, binder } from "@scm-manager/ui-extensions";
+ *
+ * binder.bind<extensionPoints.BranchListDetail>(
+ *  "branches.list.detail",
+ *  <Card.Details.Detail>
+ *   <Card.Details.Detail.Label>Reviewers</Card.Details.Detail.Label>
+ *   <Card.Details.Detail.Tag>2 / 3</Card.Details.Detail.Tag>
+ *  </Card.Details.Detail>
+ * )
+ * ```
  */
-export type BranchListDetail = ExtensionPointDefinition<
-  "branches.list.detail",
-  {
-    name: string;
-    render: (props: BranchListDetailProps) => ReactNode | null;
-  },
-  Omit<BranchListDetailProps, "labelId">
->;
+export type BranchListDetail = RenderableExtensionPointDefinition<"branches.list.detail", BranchListDetailProps>;

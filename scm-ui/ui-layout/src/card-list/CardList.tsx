@@ -30,6 +30,7 @@ import Card from "../card/Card";
 /**
  * @beta
  * @since 2.44.0
+ * @see Card
  */
 export const CardListCard = React.forwardRef<HTMLElement, Omit<ComponentProps<typeof Card>, "as">>((props, ref) => (
   <Card ref={ref} {...props} as="li" />

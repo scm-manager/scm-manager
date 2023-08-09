@@ -17,8 +17,6 @@
     "@scm-manager/prettier-config": "^2.10.1",
     "@scm-manager/tsconfig": "^2.13.0",
     "@scm-manager/ui-styles": "2.45.3-SNAPSHOT",
-    "@scm-manager/ui-overlays": "2.45.3-SNAPSHOT",
-    "@scm-manager/ui-buttons": "2.45.3-SNAPSHOT",
     "@storybook/addon-actions": "^6.5.10",
     "@storybook/addon-docs": "^6.5.14",
     "@storybook/addon-essentials": "^6.5.10",
@@ -39,7 +37,8 @@
     "react-dom": "17",
     "styled-components": "5",
     "@scm-manager/ui-buttons": "2.45.3-SNAPSHOT",
-    "@scm-manager/ui-overlays": "2.45.3-SNAPSHOT"
+    "@scm-manager/ui-overlays": "2.45.3-SNAPSHOT",
+    "@scm-manager/ui-components": "2.45.3-SNAPSHOT"
   },
   "prettier": "@scm-manager/prettier-config",
   "eslintConfig": {

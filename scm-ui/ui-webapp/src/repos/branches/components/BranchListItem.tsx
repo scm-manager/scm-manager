@@ -24,53 +24,29 @@
 
 import { Dialog, Menu } from "@scm-manager/ui-overlays";
 import { Icon } from "@scm-manager/ui-buttons";
-import { CardList } from "@scm-manager/ui-layout";
+import { CardList, Card } from "@scm-manager/ui-layout";
 import { Link } from "react-router-dom";
 import { encodePart } from "../../sources/components/content/FileLink";
 import { useKeyboardIteratorTarget } from "@scm-manager/ui-shortcuts";
 import { Trans, useTranslation } from "react-i18next";
-import { DateFromNow, useGeneratedId } from "@scm-manager/ui-components";
-import { extensionPoints, useBinder } from "@scm-manager/ui-extensions";
+import { DateFromNow } from "@scm-manager/ui-components";
+import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import React, { FC } from "react";
 import { Branch, BranchDetails, Repository } from "@scm-manager/ui-types";
-import styled from "styled-components";
-
-const DetailsContainer = styled(CardList.Card.Row)`
-  gap: 0.5rem 1rem;
-`;
-
-const BranchDetail: FC<{
-  branch: Branch;
-  repository: Repository;
-  detail: extensionPoints.BranchListDetail["type"];
-}> = ({ repository, detail, branch }) => {
-  const labelId = useGeneratedId();
-  const renderedDetail = detail.render({ branch, repository, labelId });
-  if (!renderedDetail) {
-    return null;
-  }
-  return (
-    <span key={detail.name}>
-      <span className="has-text-secondary mr-1" id={labelId}>
-        {detail.name}
-      </span>
-      {renderedDetail}
-    </span>
-  );
-};
+import AheadBehindTag from "./AheadBehindTag";
 
 type Props = {
   branch: Branch;
-  defaultBranchDetails: extensionPoints.BranchListDetail["type"][];
   remove: (branch: Branch) => void;
   isLoading: boolean;
   baseUrl: string;
   repository: Repository;
-  branchDetails?: BranchDetails;
+  branchesDetails?: BranchDetails[];
 };
 
-const BranchListItem: FC<Props> = ({ branch, defaultBranchDetails, remove, isLoading, baseUrl, repository }) => {
-  const binder = useBinder();
+
+
+const BranchListItem: FC<Props> = ({ branch, remove, isLoading, branchesDetails, baseUrl, repository }) => {
   const [t] = useTranslation("repos");
 
   return (
@@ -98,14 +74,14 @@ const BranchListItem: FC<Props> = ({ branch, defaultBranchDetails, remove, isLoa
         ) : undefined
       }
     >
-      <CardList.Card.Row className="is-flex">
-        <CardList.Card.Title>
+      <Card.Row className="is-flex">
+        <Card.Title>
           <Link to={`${baseUrl}/${encodePart(branch.name)}/info`} ref={useKeyboardIteratorTarget()}>
             {branch.name}
           </Link>
-        </CardList.Card.Title>
-      </CardList.Card.Row>
-      <CardList.Card.Row className="is-flex is-flex-wrap-wrap is-size-7 has-text-secondary is-white-space-pre">
+        </Card.Title>
+      </Card.Row>
+      <Card.Row className="is-flex is-flex-wrap-wrap is-size-7 has-text-secondary is-white-space-pre">
         <Trans
           t={t}
           i18nKey="branches.table.branches.subtitle"
@@ -117,18 +93,33 @@ const BranchListItem: FC<Props> = ({ branch, defaultBranchDetails, remove, isLoa
             space: <span />,
           }}
         />
-      </CardList.Card.Row>
-      <DetailsContainer className="is-flex is-flex-wrap-wrap is-align-items-center">
-        {[
-          ...defaultBranchDetails,
-          ...binder.getExtensions<extensionPoints.BranchListDetail>("branches.list.detail", {
-            branch,
-            repository,
-          }),
-        ].map((detail) => (
-          <BranchDetail key={detail.name} branch={branch} detail={detail} repository={repository} />
-        ))}
-      </DetailsContainer>
+      </Card.Row>
+      <Card.Row>
+        <Card.Details>
+          <Card.Details.Detail>
+            {({ labelId }) => (
+              <>
+                <Card.Details.Detail.Label id={labelId}>
+                  {branch.defaultBranch ? null : t("branch.aheadBehind.label")}
+                </Card.Details.Detail.Label>
+                <AheadBehindTag
+                  branch={branch}
+                  details={branchesDetails?.find(({ branchName }) => branchName === branch.name)}
+                  labelId={labelId}
+                />
+              </>
+            )}
+          </Card.Details.Detail>
+          <ExtensionPoint<extensionPoints.BranchListDetail>
+            name="branches.list.detail"
+            props={{
+              branch,
+              repository,
+            }}
+            renderAll
+          />
+        </Card.Details>
+      </Card.Row>
     </CardList.Card>
   );
 };

@@ -25,14 +25,26 @@
 import CardListComponent, { CardListBox as CardListBoxComponent, CardListCard } from "./card-list/CardList";
 import CardTitle from "./card/CardTitle";
 import CardRow from "./card/CardRow";
+import { CardDetail, CardDetailLabel, CardDetails, CardDetailTag } from "./card/CardDetail";
+import CardComponent from "./card/Card";
 
 export { default as Collapsible } from "./collapsible/Collapsible";
 
-const CardListExport = {
-  Card: Object.assign(CardListCard, {
-    Row: CardRow,
-    Title: CardTitle,
+const CardExport = {
+  Title: CardTitle,
+  Row: CardRow,
+  Details: Object.assign(CardDetails, {
+    Detail: Object.assign(CardDetail, {
+      Label: CardDetailLabel,
+      Tag: CardDetailTag,
+    }),
   }),
+};
+
+export const Card = Object.assign(CardComponent, CardExport);
+
+const CardListExport = {
+  Card: Object.assign(CardListCard, CardExport),
 };
 
 export const CardList = Object.assign(CardListComponent, CardListExport);

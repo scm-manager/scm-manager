@@ -40,6 +40,10 @@ const BranchListWrapper = styled.div`
   gap: 1rem;
 `;
 
+const HeaderWrapper = styled.div`
+  gap: 0.5rem 1rem;
+`;
+
 type Props = {
   repository: Repository;
   baseUrl: string;
@@ -70,27 +74,25 @@ const BranchTableWrapper: FC<Props> = ({ repository, baseUrl, data }) => {
     <>
       <Subtitle subtitle={t("branches.overview.title")} />
       <ErrorNotification error={error} />
-      <div className="is-flex mb-3 is-justify-content-space-between">
-        <div>
-          <div className="is-flex is-align-items-center mb-3">
-            <label className="mr-2" htmlFor="branches-overview-sort">
-              {t("branches.overview.sort.label")}
-            </label>
-            <Select id="branches-overview-sort" onChange={(e) => setSort(e.target.value as SortOption)}>
-              {SORT_OPTIONS.map((sortOption) => (
-                <option key={sortOption} value={sortOption}>
-                  {t(`branches.overview.sort.option.${sortOption}`)}
-                </option>
-              ))}
-            </Select>
-          </div>
+      <HeaderWrapper className="is-flex is-flex-wrap-wrap is-justify-content-space-between mb-3">
+        <div className="is-flex is-align-items-center">
+          <label className="mr-2" htmlFor="branches-overview-sort">
+            {t("branches.overview.sort.label")}
+          </label>
+          <Select id="branches-overview-sort" onChange={(e) => setSort(e.target.value as SortOption)}>
+            {SORT_OPTIONS.map((sortOption) => (
+              <option key={sortOption} value={sortOption}>
+                {t(`branches.overview.sort.option.${sortOption}`)}
+              </option>
+            ))}
+          </Select>
         </div>
         {showCreateButton ? (
           <LinkButton variant="primary" to="./create">
             {t("branches.overview.createButton")}
           </LinkButton>
         ) : null}
-      </div>
+      </HeaderWrapper>
       <BranchListWrapper className="is-flex is-flex-direction-column">
         <KeyboardIterator>
           {activeBranches.length > 0 ? (

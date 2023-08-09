@@ -25,7 +25,7 @@ import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import { Branch, Repository } from "@scm-manager/ui-types";
-import { SmallLoadingSpinner, Subtitle } from "@scm-manager/ui-components";
+import {SmallLoadingSpinner, Subtitle, useGeneratedId} from "@scm-manager/ui-components";
 import BranchButtonGroup from "./BranchButtonGroup";
 import DefaultBranchTag from "./DefaultBranchTag";
 import AheadBehindTag from "./AheadBehindTag";
@@ -41,12 +41,12 @@ type Props = {
 const BranchDetail: FC<Props> = ({ repository, branch }) => {
   const [t] = useTranslation("repos");
   const { data, isLoading } = useBranchDetails(repository, branch);
-
+  const labelId = useGeneratedId();
   let aheadBehind;
   if (isLoading) {
     aheadBehind = <SmallLoadingSpinner />;
   } else if (data) {
-    aheadBehind = <AheadBehindTag branch={branch} details={data} verbose={true} />;
+    aheadBehind = <AheadBehindTag branch={branch} details={data} labelId={labelId} />;
   } else {
     aheadBehind = null;
   }
@@ -77,7 +77,7 @@ const BranchDetail: FC<Props> = ({ repository, branch }) => {
           <BranchButtonGroup repository={repository} branch={branch} />
         </div>
       </div>
-      {aheadBehind}
+      <span id={labelId} className="is-size-7 has-text-secondary">{t("branch.aheadBehind.label")}</span>{aheadBehind}
     </>
   );
 };

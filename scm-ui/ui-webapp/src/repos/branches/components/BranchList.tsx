@@ -23,8 +23,7 @@
  */
 
 import { Branch, BranchDetails, Repository } from "@scm-manager/ui-types";
-import React, { FC, useMemo } from "react";
-import { extensionPoints } from "@scm-manager/ui-extensions";
+import React, { FC } from "react";
 import { CardList } from "@scm-manager/ui-layout";
 import { ErrorNotification } from "@scm-manager/ui-components";
 import { useDeleteBranch } from "@scm-manager/ui-api";
@@ -39,7 +38,6 @@ type Props = {
 
 const BranchList: FC<Props> = ({ repository, baseUrl, branches, branchesDetails }) => {
   const { isLoading, error, remove } = useDeleteBranch(repository);
-  const defaultBranchDetails = useMemo<extensionPoints.BranchListDetail["type"][]>(() => [], []);
 
   return (
     <>
@@ -49,12 +47,11 @@ const BranchList: FC<Props> = ({ repository, baseUrl, branches, branchesDetails 
           <BranchListItem
             key={branch.name}
             branch={branch}
-            defaultBranchDetails={defaultBranchDetails}
             remove={remove}
             isLoading={isLoading}
             baseUrl={baseUrl}
             repository={repository}
-            branchDetails={branchesDetails?.find(({ branchName }) => branchName === branch.name)}
+            branchesDetails={branchesDetails}
           />
         ))}
       </CardList>

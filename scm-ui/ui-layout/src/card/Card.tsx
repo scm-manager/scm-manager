@@ -46,6 +46,9 @@ type Props = HTMLAttributes<HTMLElement> & {
 };
 
 /**
+ * If the Card's title contains a link, the whole Card becomes a click target for that link.
+ * Because of this, any interactive elements require the <code>is-relative</code> class to receive cursor events.
+ *
  * @beta
  * @since 2.44.0
  */
