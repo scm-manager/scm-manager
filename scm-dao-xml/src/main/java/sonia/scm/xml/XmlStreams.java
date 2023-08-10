@@ -95,7 +95,8 @@ public final class XmlStreams {
 
   private static AutoCloseableXMLWriter createWriter(Writer writer) throws XMLStreamException {
     IndentXMLStreamWriter indentXMLStreamWriter = new IndentXMLStreamWriter(XMLOutputFactory.newFactory().createXMLStreamWriter(writer));
-    return new AutoCloseableXMLWriter(indentXMLStreamWriter, writer);
+    FilterInvalidCharXMLStreamWriter filterInvalidCharXMLStreamWriter = new FilterInvalidCharXMLStreamWriter(indentXMLStreamWriter);
+    return new AutoCloseableXMLWriter(filterInvalidCharXMLStreamWriter, writer);
   }
 
   public static final class AutoCloseableXMLReader extends StreamReaderDelegate implements AutoCloseable {

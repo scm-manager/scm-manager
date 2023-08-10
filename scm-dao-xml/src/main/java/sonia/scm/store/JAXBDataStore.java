@@ -29,6 +29,7 @@ import com.google.common.collect.ImmutableMap.Builder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.security.KeyGenerator;
+import sonia.scm.xml.XmlStreams;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -75,7 +76,7 @@ public class JAXBDataStore<T> extends FileBasedStore<T> implements DataStore<T> 
 
       marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
       CopyOnWrite.withTemporaryFile(
-        temp -> marshaller.marshal(item, temp.toFile()),
+        temp -> marshaller.marshal(item, XmlStreams.createWriter(temp.toFile())),
         file.toPath(),
         () -> cache.put(file, item)
       );

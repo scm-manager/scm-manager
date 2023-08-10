@@ -24,6 +24,8 @@
 
 package sonia.scm.store;
 
+import sonia.scm.xml.XmlStreams;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -73,7 +75,7 @@ final class TypedStoreContext<T> {
   }
 
   void marshal(Object object, File file) {
-    withMarshaller(marshaller -> marshaller.marshal(object, file));
+    withMarshaller(marshaller -> marshaller.marshal(object, XmlStreams.createWriter(file)));
   }
 
   void withMarshaller(ThrowingConsumer<Marshaller> consumer) {
