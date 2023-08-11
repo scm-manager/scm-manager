@@ -44,10 +44,9 @@ type Props = {
   branchesDetails?: BranchDetails[];
 };
 
-
-
 const BranchListItem: FC<Props> = ({ branch, remove, isLoading, branchesDetails, baseUrl, repository }) => {
   const [t] = useTranslation("repos");
+  const branchDetails = branchesDetails?.find(({ branchName }) => branchName === branch.name);
 
   return (
     <CardList.Card
@@ -70,6 +69,14 @@ const BranchListItem: FC<Props> = ({ branch, remove, isLoading, branchesDetails,
               <Icon>trash</Icon>
               {t("branch.delete.button")}
             </Menu.DialogButton>
+            <ExtensionPoint<extensionPoints.BranchListMenu>
+              name="branches.list.menu"
+              props={{
+                repository,
+                branch,
+              }}
+              renderAll
+            />
           </Menu>
         ) : undefined
       }
@@ -102,19 +109,16 @@ const BranchListItem: FC<Props> = ({ branch, remove, isLoading, branchesDetails,
                 <Card.Details.Detail.Label id={labelId}>
                   {branch.defaultBranch ? null : t("branch.aheadBehind.label")}
                 </Card.Details.Detail.Label>
-                <AheadBehindTag
-                  branch={branch}
-                  details={branchesDetails?.find(({ branchName }) => branchName === branch.name)}
-                  labelId={labelId}
-                />
+                <AheadBehindTag branch={branch} details={branchDetails} labelId={labelId} />
               </>
             )}
           </Card.Details.Detail>
           <ExtensionPoint<extensionPoints.BranchListDetail>
             name="branches.list.detail"
             props={{
-              branch,
               repository,
+              branch,
+              branchDetails,
             }}
             renderAll
           />

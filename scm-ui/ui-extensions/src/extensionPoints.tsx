@@ -25,6 +25,7 @@
 import React, { ComponentType, FC, ReactNode } from "react";
 import {
   Branch,
+  BranchDetails,
   Changeset,
   ContentType,
   File,
@@ -682,12 +683,38 @@ export type GroupInformationTableBottom = RenderableExtensionPointDefinition<
   { group: Group }
 >;
 
-type BranchListDetailProps = {
+type BranchMenuDetailProps = {
   repository: Repository;
   branch: Branch;
 };
 
 /**
+ * @beta
+ * @since 2.46.0
+ * @example
+ * ```typescript
+ * import { Menu } from "@scm-manager/ui-overlays";
+ * import { Icon } from "@scm-manager/ui-buttons";
+ *
+ * binder.bind<extensionPoints.BranchListMenu>(
+ *  "branches.list.menu",
+ *  <Menu.Link to="/code/sources/etc">
+ *   <Icon>code</Icon>
+ *   <span>Jump to source</span>
+ *  </Menu.Link>
+ * )
+ * ```
+ */
+export type BranchListMenu = RenderableExtensionPointDefinition<"branches.list.menu", BranchMenuDetailProps>;
+
+type BranchListDetailProps = {
+  repository: Repository;
+  branch: Branch;
+  branchDetails?: BranchDetails;
+};
+
+/**
+ * @beta
  * @since 2.46.0
  * @example
  * ```typescript
