@@ -1,0 +1,2 @@
+- type: fixed
+  description: Set git default branch on first push to not-initialized repository
