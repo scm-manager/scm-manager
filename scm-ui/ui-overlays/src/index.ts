@@ -40,3 +40,5 @@ export const Menu = Object.assign(MenuComponent, {
 export const Dialog = Object.assign(DialogComponent, {
   CloseButton,
 });
+
+export { default as Popover } from "./popover/Popover";
