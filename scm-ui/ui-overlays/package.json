@@ -18,6 +18,7 @@
     "@scm-manager/tsconfig": "^2.13.0",
     "@scm-manager/ui-styles": "2.45.3-SNAPSHOT",
     "@storybook/addon-actions": "^6.5.10",
+    "@storybook/addon-docs": "^6.5.14",
     "@storybook/addon-essentials": "^6.5.10",
     "@storybook/addon-interactions": "^6.5.10",
     "@storybook/addon-links": "^6.5.10",
@@ -25,24 +26,24 @@
     "@storybook/manager-webpack5": "^6.5.10",
     "@storybook/react": "^6.5.10",
     "@storybook/testing-library": "^0.0.13",
-    "@storybook/addon-docs": "^6.5.14",
     "babel-loader": "^8.2.5",
     "storybook-addon-mock": "^3.2.0",
     "storybook-addon-themes": "^6.1.0",
     "tsup": "^6.2.3"
   },
   "peerDependencies": {
+    "classnames": "2",
     "react": "17",
     "react-dom": "17",
+    "react-i18next": "11",
     "react-router-dom": "5",
-    "classnames": "2",
-    "styled-components": "5",
-    "react-i18next": "11"
+    "styled-components": "5"
   },
   "dependencies": {
-    "@radix-ui/react-tooltip": "1.0.2",
     "@radix-ui/react-dialog": "1.0.2",
     "@radix-ui/react-dropdown-menu": "2.0.1",
+    "@radix-ui/react-popover": "1.0.6",
+    "@radix-ui/react-tooltip": "1.0.2",
     "@scm-manager/ui-buttons": "2.45.3-SNAPSHOT"
   },
   "prettier": "@scm-manager/prettier-config",
@@ -53,4 +54,3 @@
     "access": "public"
   }
 }
-

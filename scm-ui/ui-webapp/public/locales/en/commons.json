@@ -4,6 +4,11 @@
       "ariaLabel": "Close Dialog"
     }
   },
+  "popover": {
+    "closeButton": {
+      "ariaLabel": "Close Popover"
+    }
+  },
   "menu": {
     "defaultTriggerLabel": "Menu"
   },

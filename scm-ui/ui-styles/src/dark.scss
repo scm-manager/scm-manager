@@ -304,3 +304,7 @@ $danger-25: scale-color($danger, $lightness: -75%);
 input[type="date"].input::-webkit-calendar-picker-indicator {
   filter: invert(100%);
 }
+
+.popover-close {
+  background: $background;
+}

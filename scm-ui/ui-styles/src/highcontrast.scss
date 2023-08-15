@@ -376,3 +376,7 @@ td:first-child.diff-gutter-conflict:before {
 input[type="date"].input::-webkit-calendar-picker-indicator {
   filter: invert(100%);
 }
+
+.popover-close {
+  background: $white-ter;
+}
