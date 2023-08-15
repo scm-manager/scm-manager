@@ -28,11 +28,12 @@ import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { Tooltip } from "@scm-manager/ui-overlays";
 import { Icon } from "@scm-manager/ui-buttons";
+import { SmallLoadingSpinner } from "@scm-manager/ui-components";
 
 type Props = {
   branch: Branch;
   details?: BranchDetails;
-  labelId?: string
+  labelId?: string;
 };
 
 const Count = styled.span`
@@ -43,13 +44,12 @@ const Count = styled.span`
 const AheadBehindTag: FC<Props> = ({ branch, details, labelId }) => {
   const [t] = useTranslation("repos");
 
-  if (
-    branch.defaultBranch ||
-    !details ||
-    typeof details.changesetsBehind !== "number" ||
-    typeof details.changesetsAhead !== "number"
-  ) {
+  if (branch.defaultBranch) {
     return null;
+  }
+
+  if (!details || typeof details.changesetsBehind !== "number" || typeof details.changesetsAhead !== "number") {
+    return <SmallLoadingSpinner />;
   }
 
   return (
@@ -58,9 +58,13 @@ const AheadBehindTag: FC<Props> = ({ branch, details, labelId }) => {
     >
       <span aria-labelledby={labelId} className="is-inline-flex is-align-items-center">
         <Icon className={details.changesetsAhead > 0 ? "has-text-success" : "has-text-grey-light"}>arrow-up</Icon>
-        <Count aria-label={t("branch.aheadBehind.ahead")} className="is-size-7 pl-0">{details.changesetsAhead}</Count>
+        <Count aria-label={t("branch.aheadBehind.ahead")} className="is-size-7 pl-0">
+          {details.changesetsAhead}
+        </Count>
         <Icon className={details.changesetsBehind > 0 ? "has-text-warning" : "has-text-grey-light"}>arrow-down</Icon>
-        <Count aria-label={t("branch.aheadBehind.behind")} className="is-size-7 pr-1">{details.changesetsBehind}</Count>
+        <Count aria-label={t("branch.aheadBehind.behind")} className="is-size-7 pr-1">
+          {details.changesetsBehind}
+        </Count>
       </span>
     </Tooltip>
   );

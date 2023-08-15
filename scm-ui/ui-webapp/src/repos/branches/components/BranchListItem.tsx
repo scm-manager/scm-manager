@@ -29,7 +29,7 @@ import { Link } from "react-router-dom";
 import { encodePart } from "../../sources/components/content/FileLink";
 import { useKeyboardIteratorTarget } from "@scm-manager/ui-shortcuts";
 import { Trans, useTranslation } from "react-i18next";
-import {DateFromNow, SmallLoadingSpinner} from "@scm-manager/ui-components";
+import { DateFromNow } from "@scm-manager/ui-components";
 import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import React, { FC } from "react";
 import { Branch, BranchDetails, Repository } from "@scm-manager/ui-types";
@@ -108,7 +108,7 @@ const BranchListItem: FC<Props> = ({ branch, remove, isLoading, branchesDetails,
                 <Card.Details.Detail.Label id={labelId}>
                   {branch.defaultBranch ? null : t("branch.aheadBehind.label")}
                 </Card.Details.Detail.Label>
-                {isLoading? <SmallLoadingSpinner/> : <AheadBehindTag branch={branch} details={branchDetails} labelId={labelId} />}
+                <AheadBehindTag branch={branch} details={branchDetails} labelId={labelId} />
               </>
             )}
           </Card.Details.Detail>
