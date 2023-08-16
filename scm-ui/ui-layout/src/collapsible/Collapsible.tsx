@@ -26,6 +26,7 @@ import React, { ComponentProps, ReactNode, useState } from "react";
 import * as RadixCollapsible from "@radix-ui/react-collapsible";
 import { Icon } from "@scm-manager/ui-buttons";
 import styled from "styled-components";
+import { useGeneratedId } from "@scm-manager/ui-components";
 
 const StyledTrigger = styled(RadixCollapsible.Trigger)`
   margin-right: 0.5rem;
@@ -40,16 +41,19 @@ type Props = {
 } & Pick<ComponentProps<typeof RadixCollapsible.Root>, "defaultOpen">;
 
 /**
- * @beta;
+ * @beta
  * @since 2.46.0
  */
 const Collapsible = React.forwardRef<HTMLButtonElement, Props>(({ children, header, defaultOpen }, ref) => {
   const [open, setOpen] = useState(defaultOpen);
+  const titleId = useGeneratedId();
   return (
     <RadixCollapsible.Root className="card" open={open} onOpenChange={setOpen} defaultOpen={defaultOpen}>
       <StyledCollapsibleHeader className="card-header is-flex is-justify-content-space-between is-shadowless">
-        <span className="card-header-title">{header}</span>
-        <StyledTrigger className="card-header-icon" ref={ref}>
+        <span id={titleId} className="card-header-title">
+          {header}
+        </span>
+        <StyledTrigger aria-labelledby={titleId} className="card-header-icon" ref={ref}>
           <Icon>{open ? "angle-up" : "angle-down"}</Icon>
         </StyledTrigger>
       </StyledCollapsibleHeader>
