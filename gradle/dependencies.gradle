@@ -167,7 +167,7 @@ ext {
     junit: 'junit:junit:4.13.2',
 
     // junit 5 extensions
-    junitPioneer: 'org.junit-pioneer:junit-pioneer:2.0.0',
+    junitPioneer: 'org.junit-pioneer:junit-pioneer:2.0.1',
 
     // assertions
     hamcrestCore: "org.hamcrest:hamcrest-core:${hamcrestVersion}",
