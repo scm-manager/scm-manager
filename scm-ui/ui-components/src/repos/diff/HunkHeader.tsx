@@ -47,7 +47,8 @@ const HunkHeader: FC<Props> = ({ expandableHunk, diffExpanded, diffExpansionFail
           <HunkExpandLink
             icon={"fa-angle-double-up"}
             onClick={expandHead(expandableHunk, expandableHunk.maxExpandHeadRange)}
-            text={t("diff.expandComplete", { count: expandableHunk.maxExpandHeadRange })}
+            text={t("diff.expandComplete", { count: expandableHunk.maxExpandHeadRange })
+            }
           />
         </HunkExpandDivider>
       );

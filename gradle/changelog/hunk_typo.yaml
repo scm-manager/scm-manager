@@ -1,0 +1,2 @@
+- type: bugfix
+  description: A typo on a button for loading more lines in the diff tab has been fixed
