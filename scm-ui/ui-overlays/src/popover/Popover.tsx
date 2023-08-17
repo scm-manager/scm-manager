@@ -78,8 +78,8 @@ const Popover = React.forwardRef<HTMLDivElement, Props>(({ title, className, tri
           ref={ref}
           className={classNames("has-rounded-border", "p-2", "popover-content", "box", "popover", className)}
         >
-          <div className="is-flex">
-            <TitleContainer>{title}</TitleContainer>
+          <div className="is-flex is-align-items-center">
+            <TitleContainer className="mr-4">{title}</TitleContainer>
             <RadixPopover.Close asChild>
               <button className="delete popover-close" aria-label={t("popover.closeButton.ariaLabel")} />
             </RadixPopover.Close>

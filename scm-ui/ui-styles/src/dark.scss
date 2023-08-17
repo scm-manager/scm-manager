@@ -308,3 +308,11 @@ input[type="date"].input::-webkit-calendar-picker-indicator {
 .popover-close {
   background: $background;
 }
+
+.popover-close:hover {
+  background: $grey-darker !important;
+}
+
+.popover-close:focus {
+  background: $grey-darker !important;
+}

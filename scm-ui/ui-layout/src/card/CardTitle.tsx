@@ -23,7 +23,6 @@
  */
 
 import React, { HTMLAttributes } from "react";
-import classNames from "classnames";
 
 type Props = HTMLAttributes<HTMLHeadingElement> & {
   /**
@@ -46,11 +45,10 @@ type Props = HTMLAttributes<HTMLHeadingElement> & {
  * @beta
  * @since 2.44.0
  */
-const CardTitle = React.forwardRef<HTMLHeadingElement, Props>(({ children, level = 3, className, ...props }, ref) =>
+const CardTitle = React.forwardRef<HTMLHeadingElement, Props>(({ children, level = 3, ...props }, ref) =>
   React.createElement(
     `h${level}`,
     {
-      className: classNames(className, "is-ellipsis-overflow"),
       ref,
       ...props,
     },

@@ -23,13 +23,8 @@
  */
 
 import React, { ComponentType, HTMLAttributes, ReactHTML, Ref } from "react";
-import styled from "styled-components";
 import classNames from "classnames";
 import CSS from "csstype";
-
-const CardRowsContainer = styled.div`
-  overflow: hidden;
-`;
 
 type Props = HTMLAttributes<HTMLElement> & {
   action?: React.ReactElement;
@@ -61,12 +56,12 @@ const Card = React.forwardRef<HTMLElement, Props>(
         ref,
         ...props,
       },
-      <CardRowsContainer
+      <div
         className="is-flex is-flex-direction-column is-justify-content-center is-flex-grow-1"
         style={{ gap: rowGap }}
       >
         {children}
-      </CardRowsContainer>,
+      </div>,
       action ? <span className="ml-2">{action}</span> : null
     )
 );

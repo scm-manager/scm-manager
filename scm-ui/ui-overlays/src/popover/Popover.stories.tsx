@@ -33,6 +33,13 @@ export default {
 
 const Template: ComponentStory<typeof Popover> = (args) => <Popover {...args} />;
 
+export const WithShortBody = Template.bind({});
+WithShortBody.args = {
+  trigger: <button>a button</button>,
+  title: <h1>A title longer than the body</h1>,
+  children: <div>very short body</div>,
+};
+
 export const CiStatus = Template.bind({});
 CiStatus.args = {
   trigger: (
