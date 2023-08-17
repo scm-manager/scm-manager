@@ -40,7 +40,7 @@ Depending on the type of the new repository, there are different "ways" to impor
 - **Import via URL** (Git and Mercurial only): Here the repository is imported from a remote server specified by the
   remote repository's URL. In addition, a username and a password can be provided. Furthermore, for Git repositories
   LFS files can be excluded (if LFS is used in the remote repository).
-- **Import from dump without metadata**: Here a file can be uploaded. This may be a simple export from another SCN-Manager
+- **Import from dump without metadata**: Here a file can be uploaded. This may be a simple export from another SCM-Manager
   instance, or a dump file from another repository:
   - For Git and Mercurial, this has to be a tar packed file of the "internal" repository (the `.git` or the
     `.hg` directory).
