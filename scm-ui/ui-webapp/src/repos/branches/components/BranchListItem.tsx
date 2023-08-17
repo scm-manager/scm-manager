@@ -22,18 +22,18 @@
  * SOFTWARE.
  */
 
-import { Dialog, Menu } from "@scm-manager/ui-overlays";
-import { Icon } from "@scm-manager/ui-buttons";
-import { CardList, Card } from "@scm-manager/ui-layout";
+import { Card, CardList } from "@scm-manager/ui-layout";
 import { Link } from "react-router-dom";
 import { encodePart } from "../../sources/components/content/FileLink";
 import { useKeyboardIteratorTarget } from "@scm-manager/ui-shortcuts";
 import { Trans, useTranslation } from "react-i18next";
 import { DateFromNow } from "@scm-manager/ui-components";
-import { ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
+import { ExtensionPoint, extensionPoints, useBinder } from "@scm-manager/ui-extensions";
 import React, { FC } from "react";
 import { Branch, BranchDetails, Repository } from "@scm-manager/ui-types";
 import AheadBehindTag from "./AheadBehindTag";
+import { Dialog, Menu } from "@scm-manager/ui-overlays";
+import { Icon } from "@scm-manager/ui-buttons";
 
 type Props = {
   branch: Branch;
@@ -46,28 +46,45 @@ type Props = {
 
 const BranchListItem: FC<Props> = ({ branch, remove, isLoading, branchesDetails, baseUrl, repository }) => {
   const [t] = useTranslation("repos");
+  const binder = useBinder();
   const branchDetails = branchesDetails?.find(({ branchName }) => branchName === branch.name);
+  const canDelete = "delete" in branch._links;
+  const hasAction =
+    canDelete ||
+    binder.hasExtension<extensionPoints.BranchListMenu>("branches.list.menu", {
+      repository,
+      branch,
+    });
+  const hasDetails =
+    !branch.defaultBranch ||
+    binder.hasExtension<extensionPoints.BranchListDetail>("branches.list.detail", {
+      branch,
+      branchDetails,
+      repository,
+    });
   return (
     <CardList.Card
       key={branch.name}
       action={
-        "delete" in branch._links ? (
+        hasAction ? (
           <Menu>
-            <Menu.DialogButton
-              title={t("branch.delete.confirmAlert.title")}
-              description={t("branch.delete.confirmAlert.message", { branch: branch.name })}
-              footer={[
-                <Dialog.CloseButton key="yes" onClick={() => remove(branch)} isLoading={isLoading}>
-                  {t("branch.delete.confirmAlert.submit")}
-                </Dialog.CloseButton>,
-                <Dialog.CloseButton key="no" variant="primary" autoFocus>
-                  {t("branch.delete.confirmAlert.cancel")}
-                </Dialog.CloseButton>,
-              ]}
-            >
-              <Icon>trash</Icon>
-              {t("branch.delete.button")}
-            </Menu.DialogButton>
+            {canDelete ? (
+              <Menu.DialogButton
+                title={t("branch.delete.confirmAlert.title")}
+                description={t("branch.delete.confirmAlert.message", { branch: branch.name })}
+                footer={[
+                  <Dialog.CloseButton key="yes" onClick={() => remove(branch)} isLoading={isLoading}>
+                    {t("branch.delete.confirmAlert.submit")}
+                  </Dialog.CloseButton>,
+                  <Dialog.CloseButton key="no" variant="primary" autoFocus>
+                    {t("branch.delete.confirmAlert.cancel")}
+                  </Dialog.CloseButton>,
+                ]}
+              >
+                <Icon>trash</Icon>
+                {t("branch.delete.button")}
+              </Menu.DialogButton>
+            ) : null}
             <ExtensionPoint<extensionPoints.BranchListMenu>
               name="branches.list.menu"
               props={{
@@ -100,29 +117,31 @@ const BranchListItem: FC<Props> = ({ branch, remove, isLoading, branchesDetails,
           }}
         />
       </Card.Row>
-      <Card.Row>
-        <Card.Details>
-          <Card.Details.Detail>
-            {({ labelId }) => (
-              <>
-                <Card.Details.Detail.Label id={labelId}>
-                  {branch.defaultBranch ? null : t("branch.aheadBehind.label")}
-                </Card.Details.Detail.Label>
-                <AheadBehindTag branch={branch} details={branchDetails} labelId={labelId} />
-              </>
-            )}
-          </Card.Details.Detail>
-          <ExtensionPoint<extensionPoints.BranchListDetail>
-            name="branches.list.detail"
-            props={{
-              repository,
-              branch,
-              branchDetails,
-            }}
-            renderAll
-          />
-        </Card.Details>
-      </Card.Row>
+      {hasDetails ? (
+        <Card.Row>
+          <Card.Details>
+            {!branch.defaultBranch ? (
+              <Card.Details.Detail>
+                {({ labelId }) => (
+                  <>
+                    <Card.Details.Detail.Label id={labelId}>{t("branch.aheadBehind.label")}</Card.Details.Detail.Label>
+                    <AheadBehindTag branch={branch} details={branchDetails} labelId={labelId} />
+                  </>
+                )}
+              </Card.Details.Detail>
+            ) : null}
+            <ExtensionPoint<extensionPoints.BranchListDetail>
+              name="branches.list.detail"
+              props={{
+                repository,
+                branch,
+                branchDetails,
+              }}
+              renderAll
+            />
+          </Card.Details>
+        </Card.Row>
+      ) : null}
     </CardList.Card>
   );
 };
