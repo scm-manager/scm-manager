@@ -1577,7 +1577,7 @@ exports[`Storyshots Footer Default 1`] = `
 <footer
   className="footer"
 >
-  <section
+  <div
     className="section container"
   >
     <div
@@ -1586,7 +1586,7 @@ exports[`Storyshots Footer Default 1`] = `
       <section
         className="column is-one-third"
       >
-        <div
+        <h2
           className="has-text-weight-bold mb-2"
         >
           <i
@@ -1595,7 +1595,7 @@ exports[`Storyshots Footer Default 1`] = `
           />
            
           Trillian McMillian
-        </div>
+        </h2>
         <ul
           className="FooterSection__Menu-sc-lx0ikb-0 nwglg"
         >
@@ -1634,7 +1634,7 @@ exports[`Storyshots Footer Default 1`] = `
       <section
         className="column is-one-third"
       >
-        <div
+        <h2
           className="has-text-weight-bold mb-2"
         >
           <i
@@ -1643,7 +1643,7 @@ exports[`Storyshots Footer Default 1`] = `
           />
            
           footer.information.title
-        </div>
+        </h2>
         <ul
           className="FooterSection__Menu-sc-lx0ikb-0 nwglg"
         >
@@ -1672,7 +1672,7 @@ exports[`Storyshots Footer Default 1`] = `
       <section
         className="column is-one-third"
       >
-        <div
+        <h2
           className="has-text-weight-bold mb-2"
         >
           <i
@@ -1681,7 +1681,7 @@ exports[`Storyshots Footer Default 1`] = `
           />
            
           footer.support.title
-        </div>
+        </h2>
         <ul
           className="FooterSection__Menu-sc-lx0ikb-0 nwglg"
         >
@@ -1728,7 +1728,7 @@ exports[`Storyshots Footer Default 1`] = `
         </ul>
       </section>
     </div>
-  </section>
+  </div>
 </footer>
 `;
 
@@ -1736,7 +1736,7 @@ exports[`Storyshots Footer Full 1`] = `
 <footer
   className="footer"
 >
-  <section
+  <div
     className="section container"
   >
     <div
@@ -1745,7 +1745,7 @@ exports[`Storyshots Footer Full 1`] = `
       <section
         className="column is-one-third"
       >
-        <div
+        <h2
           className="has-text-weight-bold mb-2"
         >
           <div
@@ -1762,7 +1762,7 @@ exports[`Storyshots Footer Full 1`] = `
             </span>
             Trillian McMillian
           </div>
-        </div>
+        </h2>
         <ul
           className="FooterSection__Menu-sc-lx0ikb-0 nwglg"
         >
@@ -1810,7 +1810,7 @@ exports[`Storyshots Footer Full 1`] = `
       <section
         className="column is-one-third"
       >
-        <div
+        <h2
           className="has-text-weight-bold mb-2"
         >
           <i
@@ -1819,7 +1819,7 @@ exports[`Storyshots Footer Full 1`] = `
           />
            
           footer.information.title
-        </div>
+        </h2>
         <ul
           className="FooterSection__Menu-sc-lx0ikb-0 nwglg"
         >
@@ -1868,7 +1868,7 @@ exports[`Storyshots Footer Full 1`] = `
       <section
         className="column is-one-third"
       >
-        <div
+        <h2
           className="has-text-weight-bold mb-2"
         >
           <i
@@ -1877,7 +1877,7 @@ exports[`Storyshots Footer Full 1`] = `
           />
            
           footer.support.title
-        </div>
+        </h2>
         <ul
           className="FooterSection__Menu-sc-lx0ikb-0 nwglg"
         >
@@ -1934,7 +1934,7 @@ exports[`Storyshots Footer Full 1`] = `
         </ul>
       </section>
     </div>
-  </section>
+  </div>
 </footer>
 `;
 
@@ -1942,7 +1942,7 @@ exports[`Storyshots Footer With Avatar 1`] = `
 <footer
   className="footer"
 >
-  <section
+  <div
     className="section container"
   >
     <div
@@ -1951,7 +1951,7 @@ exports[`Storyshots Footer With Avatar 1`] = `
       <section
         className="column is-one-third"
       >
-        <div
+        <h2
           className="has-text-weight-bold mb-2"
         >
           <div
@@ -1968,7 +1968,7 @@ exports[`Storyshots Footer With Avatar 1`] = `
             </span>
             Trillian McMillian
           </div>
-        </div>
+        </h2>
         <ul
           className="FooterSection__Menu-sc-lx0ikb-0 nwglg"
         >
@@ -2007,7 +2007,7 @@ exports[`Storyshots Footer With Avatar 1`] = `
       <section
         className="column is-one-third"
       >
-        <div
+        <h2
           className="has-text-weight-bold mb-2"
         >
           <i
@@ -2016,7 +2016,7 @@ exports[`Storyshots Footer With Avatar 1`] = `
           />
            
           footer.information.title
-        </div>
+        </h2>
         <ul
           className="FooterSection__Menu-sc-lx0ikb-0 nwglg"
         >
@@ -2045,7 +2045,7 @@ exports[`Storyshots Footer With Avatar 1`] = `
       <section
         className="column is-one-third"
       >
-        <div
+        <h2
           className="has-text-weight-bold mb-2"
         >
           <i
@@ -2054,7 +2054,7 @@ exports[`Storyshots Footer With Avatar 1`] = `
           />
            
           footer.support.title
-        </div>
+        </h2>
         <ul
           className="FooterSection__Menu-sc-lx0ikb-0 nwglg"
         >
@@ -2101,7 +2101,7 @@ exports[`Storyshots Footer With Avatar 1`] = `
         </ul>
       </section>
     </div>
-  </section>
+  </div>
 </footer>
 `;
 
@@ -2109,7 +2109,7 @@ exports[`Storyshots Footer With Plugin Links 1`] = `
 <footer
   className="footer"
 >
-  <section
+  <div
     className="section container"
   >
     <div
@@ -2118,7 +2118,7 @@ exports[`Storyshots Footer With Plugin Links 1`] = `
       <section
         className="column is-one-third"
       >
-        <div
+        <h2
           className="has-text-weight-bold mb-2"
         >
           <i
@@ -2127,7 +2127,7 @@ exports[`Storyshots Footer With Plugin Links 1`] = `
           />
            
           Trillian McMillian
-        </div>
+        </h2>
         <ul
           className="FooterSection__Menu-sc-lx0ikb-0 nwglg"
         >
@@ -2175,7 +2175,7 @@ exports[`Storyshots Footer With Plugin Links 1`] = `
       <section
         className="column is-one-third"
       >
-        <div
+        <h2
           className="has-text-weight-bold mb-2"
         >
           <i
@@ -2184,7 +2184,7 @@ exports[`Storyshots Footer With Plugin Links 1`] = `
           />
            
           footer.information.title
-        </div>
+        </h2>
         <ul
           className="FooterSection__Menu-sc-lx0ikb-0 nwglg"
         >
@@ -2233,7 +2233,7 @@ exports[`Storyshots Footer With Plugin Links 1`] = `
       <section
         className="column is-one-third"
       >
-        <div
+        <h2
           className="has-text-weight-bold mb-2"
         >
           <i
@@ -2242,7 +2242,7 @@ exports[`Storyshots Footer With Plugin Links 1`] = `
           />
            
           footer.support.title
-        </div>
+        </h2>
         <ul
           className="FooterSection__Menu-sc-lx0ikb-0 nwglg"
         >
@@ -2299,7 +2299,7 @@ exports[`Storyshots Footer With Plugin Links 1`] = `
         </ul>
       </section>
     </div>
-  </section>
+  </div>
 </footer>
 `;
 

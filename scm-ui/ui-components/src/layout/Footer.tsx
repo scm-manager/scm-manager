@@ -95,7 +95,7 @@ const Footer: FC<Props> = ({ me, version, links }) => {
 
   return (
     <footer className="footer">
-      <section className="section container">
+      <div className="section container">
         <div className="columns is-size-7">
           {me ? (
             <FooterSection title={meSectionTile}>
@@ -146,7 +146,7 @@ const Footer: FC<Props> = ({ me, version, links }) => {
             <ExtensionPoint name="footer.support" props={extensionProps} renderAll={true} />
           </FooterSection>
         </div>
-      </section>
+      </div>
     </footer>
   );
 };

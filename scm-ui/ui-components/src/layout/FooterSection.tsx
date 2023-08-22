@@ -36,7 +36,7 @@ const Menu = styled.ul`
 const FooterSection: FC<Props> = ({ title, children }) => {
   return (
     <section className={classNames("column", "is-one-third")}>
-      <div className={classNames("has-text-weight-bold", "mb-2")}>{title}</div>
+      <h2 className={classNames("has-text-weight-bold", "mb-2")}>{title}</h2>
       <Menu>{children}</Menu>
     </section>
   );
