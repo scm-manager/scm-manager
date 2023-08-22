@@ -26,75 +26,75 @@ import groupByNamespace from "./groupByNamespace";
 
 const base = {
   type: "git",
-  _links: {}
+  _links: {},
 };
 
 const slartiBlueprintsFjords = {
   ...base,
   namespace: "slarti",
-  name: "fjords-blueprints"
+  name: "fjords-blueprints",
 };
 
 const slartiFjords = {
   ...base,
   namespace: "slarti",
-  name: "fjords"
+  name: "fjords",
 };
 
 const hitchhikerRestand = {
   ...base,
   namespace: "hitchhiker",
-  name: "restand"
+  name: "restand",
 };
 const hitchhikerPuzzle42 = {
   ...base,
   namespace: "hitchhiker",
-  name: "puzzle42"
+  name: "puzzle42",
 };
 
 const hitchhikerHeartOfGold = {
   ...base,
   namespace: "hitchhiker",
-  name: "heartOfGold"
+  name: "heartOfGold",
 };
 
 const zaphodMarvinFirmware = {
   ...base,
   namespace: "zaphod",
-  name: "marvin-firmware"
+  name: "marvin-firmware",
 };
 
 it("should group the repositories by their namespace", () => {
   const repositories = [
     zaphodMarvinFirmware,
-    slartiBlueprintsFjords,
-    hitchhikerRestand,
     slartiFjords,
+    slartiBlueprintsFjords,
     hitchhikerHeartOfGold,
-    hitchhikerPuzzle42
+    hitchhikerPuzzle42,
+    hitchhikerRestand,
   ];
   const namespaces = {
     _embedded: {
-      namespaces: [{ namespace: "hitchhiker" }, { namespace: "slarti" }, { namespace: "zaphod" }]
-    }
+      namespaces: [{ namespace: "hitchhiker" }, { namespace: "slarti" }, { namespace: "zaphod" }],
+    },
   };
 
   const expected = [
     {
       name: "hitchhiker",
       namespace: { namespace: "hitchhiker" },
-      repositories: [hitchhikerHeartOfGold, hitchhikerPuzzle42, hitchhikerRestand]
+      repositories: [hitchhikerHeartOfGold, hitchhikerPuzzle42, hitchhikerRestand],
     },
     {
       name: "slarti",
       namespace: { namespace: "slarti" },
-      repositories: [slartiFjords, slartiBlueprintsFjords]
+      repositories: [slartiFjords, slartiBlueprintsFjords],
     },
     {
       name: "zaphod",
       namespace: { namespace: "zaphod" },
-      repositories: [zaphodMarvinFirmware]
-    }
+      repositories: [zaphodMarvinFirmware],
+    },
   ];
 
   expect(groupByNamespace(repositories, namespaces)).toEqual(expected);

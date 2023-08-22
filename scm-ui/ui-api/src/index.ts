@@ -65,6 +65,7 @@ export * from "./usePluginCenterAuthInfo";
 export * from "./compare";
 export * from "./utils";
 export * from "./links";
+export * from "./localStorage";
 export { useNamespaceOptions, useGroupOptions, useUserOptions } from "./useAutocompleteOptions";
 
 export { default as ApiProvider } from "./ApiProvider";

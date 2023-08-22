@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import useLocalStorage from "./useLocalStorage";
+import { useLocalStorage } from "@scm-manager/ui-api";
 import { useCallback, useState } from "react";
 
 const LOCAL_STORAGE_KEY = "scm.accessibility";

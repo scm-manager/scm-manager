@@ -24,7 +24,7 @@
 
 import { useEffect, useState } from "react";
 
-export default function useLocalStorage<T>(
+export function useLocalStorage<T>(
   key: string,
   initialValue: T
 ): [value: T, setValue: (value: T | ((previousConfig: T) => T)) => void] {

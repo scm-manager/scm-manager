@@ -1,0 +1,2 @@
+- type: added
+  description: Make namespaces collapsible and save the collapsed state in local storage

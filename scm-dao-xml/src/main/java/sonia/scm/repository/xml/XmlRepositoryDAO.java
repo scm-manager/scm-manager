@@ -41,6 +41,7 @@ import javax.inject.Inject;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -48,6 +49,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  * @author Sebastian Sdorra
@@ -146,7 +148,7 @@ public class XmlRepositoryDAO implements RepositoryDAO {
 
   @Override
   public Collection<Repository> getAll() {
-    return withReadLockedMaps(() -> ImmutableList.copyOf(byNamespaceAndName.values()));
+    return withReadLockedMaps(() -> ImmutableList.copyOf(byNamespaceAndName.values().stream().sorted(Comparator.comparing(v -> v.getNamespaceAndName().toString().toLowerCase())).collect(Collectors.toList())));
   }
 
   @Override
