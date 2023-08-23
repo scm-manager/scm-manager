@@ -1,4 +1,4 @@
 - type: changed
   description: Apply new design to ahead behind tag
-- type: bugfix
-  description: Fixed a bug where the loadingspinner would not show up
+- type: fixed
+  description: Loadingspinner not showing up
