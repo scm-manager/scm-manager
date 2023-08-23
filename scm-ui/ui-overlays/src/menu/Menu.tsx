@@ -193,7 +193,7 @@ const Menu: FC<Props> = ({ children, side, className, trigger = <DefaultMenuTrig
   );
 
   return (
-    <RadixMenu.Root open={dropdownOpen} onOpenChange={setDropdownOpen}>
+    <RadixMenu.Root open={dropdownOpen} onOpenChange={setDropdownOpen} modal={false}>
       {trigger}
       <RadixMenu.Portal>
         <MenuContent
