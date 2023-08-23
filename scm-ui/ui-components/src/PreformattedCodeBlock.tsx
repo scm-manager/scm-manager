@@ -47,7 +47,7 @@ const Container = styled.div`
 `;
 
 const PreformattedCodeBlock: FC<Props> = ({ children }) => {
-  const [t] = useTranslation("repos");
+  const [t] = useTranslation("commons");
   const [copied, setCopied] = useState(false);
 
   const copy = () => copyToClipboard(children).then(() => setCopied(true));
