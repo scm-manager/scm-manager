@@ -24,25 +24,17 @@
 import React, { FC, ReactNode } from "react";
 import classNames from "classnames";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import { RepositoryGroup } from "@scm-manager/ui-types";
-import { useLocalStorage } from "@scm-manager/ui-api";
-import Icon from "../Icon";
 
 const Separator = styled.div`
   border-bottom: 1px solid rgb(219, 219, 219, 0.5);
 `;
 
 type Props = {
-  group: RepositoryGroup;
+  namespaceHeader: ReactNode;
   elements: ReactNode[];
 };
 
-const GroupEntries: FC<Props> = ({ group, elements }) => {
-  const [t] = useTranslation("namespaces");
-  const [collapsed, setCollapsed] = useLocalStorage<boolean | null>(`repoNamespace.${group.name}.collapsed`, null);
-
+const GroupEntries: FC<Props> = ({ namespaceHeader, elements }) => {
   const content = elements.map((entry, index) => (
     <React.Fragment key={index}>
       <div>{entry}</div>
@@ -50,45 +42,12 @@ const GroupEntries: FC<Props> = ({ group, elements }) => {
     </React.Fragment>
   ));
 
-  const settingsLink = group.namespace?._links?.permissions && (
-    <Link to={`/namespace/${group.name}/settings`} aria-label={t("repositoryOverview.settings.tooltip")}>
-      <Icon
-        color="inherit"
-        name="cog"
-        title={t("repositoryOverview.settings.tooltip")}
-        className="is-size-6 ml-2 has-text-link"
-      />
-    </Link>
-  );
-
   return (
     <>
-      <div
-        className={classNames(
-          "is-flex",
-          "is-align-items-center",
-          "is-justify-content-space-between",
-          "is-size-6",
-          "has-text-weight-bold",
-          "p-3",
-          "has-cursor-pointer"
-        )}
-        onClick={() => setCollapsed(!collapsed)}
-      >
-        <span>
-          <Link to={`/repos/${group.name}/`} className="has-text-inherit">
-            {group.name}
-          </Link>{" "}
-          {settingsLink}
-        </span>
-        <Icon
-          color="inherit"
-          name={collapsed ? "caret-left" : "caret-down"}
-          title={t("repositoryOverview.settings.tooltip")}
-          className="is-size-6 ml-2"
-        />
+      <div className={classNames("is-flex", "is-align-items-center", "is-size-6", "has-text-weight-bold", "p-3")}>
+        {namespaceHeader}
       </div>
-      {collapsed ? null : <div className={classNames("box", "p-2")}>{content}</div>}
+      <div className={classNames("box", "p-2")}>{content}</div>
       <div className="is-clearfix" />
     </>
   );
