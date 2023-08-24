@@ -5,6 +5,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.46.0] - 2023-08-24
+### Added
+- Popover component
+- User sessions can now be configured to be endless
+
+### Fixed
+- A typo on a button for loading more lines in the diff tab has been fixed
+- Loadingspinner not showing up
+- Set git default branch on first push to not-initialized repository
+- Programmatically accessible subheadings in footer
+- Throw `NoChangesMadeException` for empty commits in SVN repositories
+- Position of the cloudogu platform plugin connection checkmark
+- Menu moving the repository sidebar if open
+- Deactivate Shiro's new `blockTraversal` check in their `InvalidRequestFilter`
+- Marshalling of invalid xml characters
+
+### Changed
+- Sort repositories alphanumerically per namespace
+- Apply new design to ahead behind tag
+- Rework branch overview
+- Bump Shiro from 1.10.0 to 1.12.0
+- Bump Apache Commons Compress from 1.20 to 1.23.0
+- Bump Tika from 1.25 to 1.28.5
+
+### Removed
+- Chromatic integration
+
 ## [2.45.1] - 2023-07-18
 ### Fixed
 - Re-Release of 2.45.0 due to errors during release
@@ -1330,3 +1357,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.44.2]: https://scm-manager.org/download/2.44.2
 [2.45.0]: https://scm-manager.org/download/2.45.0
 [2.45.1]: https://scm-manager.org/download/2.45.1
+[2.46.0]: https://scm-manager.org/download/2.46.0
