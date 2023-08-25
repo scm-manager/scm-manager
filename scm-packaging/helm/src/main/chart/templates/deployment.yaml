@@ -44,6 +44,10 @@ spec:
       labels:
         app: {{ include "scm-manager.name" . }}
         release: {{ .Release.Name }}
+      {{- if .Values.forceRedeploy }}
+      annotations:
+        timestamp: {{ now | quote }}
+      {{- end }}
     spec:
       {{- if .Values.image.pullSecret }}
       imagePullSecrets:

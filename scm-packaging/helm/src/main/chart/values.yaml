@@ -180,3 +180,6 @@ extraVolumeMounts: |
 extraArgs: []
 #  - "-Dscm.initialPassword=admin"
 #  - "-Dscm.initialUser=admin"
+
+# forceRedeploy - Forces a redeployment in the cluster on every change even if the chart has not changed significantly
+forceRedeploy: false
